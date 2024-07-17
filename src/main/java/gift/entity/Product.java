@@ -1,10 +1,6 @@
 package gift.entity;
 
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.Size;
@@ -28,44 +24,42 @@ public class Product {
    @Column(nullable = false, length = 255)
    private String imageUrl;
 
-    public Product(Long id, String name, int price, String imageUrl) {
+   @ManyToOne
+   private Category category;
+
+    public Product(Long id, String name, int price, String imageUrl, Category category) {
         this.id = id;
         this.price = price;
         this.name = name;
         this.imageUrl = imageUrl;
+        this.category = category;
+    }
+
+    public Product() {
+
     }
 
     public int getPrice() {
         return price;
     }
 
-    public void setPrice(int price) {
-        this.price = price;
-    }
-
     public Long getId() {
         return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 
     public String getName() {
         return name;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
     public String getImageUrl() {
         return imageUrl;
     }
 
-    public void setImageUrl(String imageUrl) {
+    public void update(int price, String name, String imageUrl, Category category) {
+        this.price = price;
+        this.name = name;
         this.imageUrl = imageUrl;
+        this.category = category;
     }
-
 
 }
