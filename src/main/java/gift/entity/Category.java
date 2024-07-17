@@ -16,10 +16,13 @@ public class Category {
     private String name;
 
     @Column(nullable = false)
-    private String description;
+    private String color;
 
     @Column(nullable = false, length = 255)
     private String imageUrl;
+
+    @Column(nullable = false)
+    private String description;
 
     public Category() {}
 
@@ -27,14 +30,17 @@ public class Category {
 
     public String getName() {return name;}
 
-    public String getDescription() {return description;}
+    public String getColor() {return color;}
 
     public String getImageUrl() {return imageUrl;}
 
-    public void update(String id, String name, String description, String imageUrl) {
+    public String getDescription() {return description;}
+
+    public void update(String name, String color,  String imageUrl, String description) {
         this.name = name;
         this.description = description;
         this.imageUrl = imageUrl;
+        this.color = color;
     }
 
 }
