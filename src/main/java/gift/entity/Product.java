@@ -5,6 +5,8 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.Size;
 
+import java.util.List;
+
 @Entity
 public class Product {
    @Positive(message = "price must be positive")
@@ -26,6 +28,9 @@ public class Product {
 
    @ManyToOne
    private Category category;
+
+   @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
+   private List<Option> options;
 
     public Product() {
 
@@ -65,6 +70,8 @@ public class Product {
     }
 
     public Category getCategory() {return category;}
+
+    public List<Option> getOptions() {return options;}
 
     public void update(int price, String name, String imageUrl, Category category) {
         this.price = price;
