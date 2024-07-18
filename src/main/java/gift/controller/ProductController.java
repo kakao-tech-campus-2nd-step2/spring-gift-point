@@ -2,6 +2,7 @@ package gift.controller;
 
 import gift.dto.ProductRequest;
 import gift.dto.ProductResponse;
+import gift.entity.Category;
 import gift.entity.Product;
 import gift.service.ProductService;
 import jakarta.validation.Valid;
@@ -32,7 +33,8 @@ public class ProductController {
                 product.getId(),
                 product.getName(),
                 product.getPrice(),
-                product.getImageUrl()
+                product.getImageUrl(),
+                product.getCategory().getName()
         ));
         return ResponseEntity.ok(response);
     }
@@ -43,18 +45,20 @@ public class ProductController {
             String errors = bindingResult.getAllErrors().stream().map(error -> error.getDefaultMessage()).collect(Collectors.joining(","));
             return ResponseEntity.badRequest().body(errors);
         }
+        Category category = productService.getCategoryById(productRequest.getCategoryId()).orElseThrow(() -> new RuntimeException("Category not found"));
         Product product = new Product(
-                null,
                 productRequest.getName(),
                 productRequest.getPrice(),
                 productRequest.getImageUrl(),
-                null // Category 설정
+                category
         );
+        Product savedProduct = productService.save(product);
         return ResponseEntity.ok(new ProductResponse(
-                productService.save(product).getId(),
-                product.getName(),
-                product.getPrice(),
-                product.getImageUrl()
+           savedProduct.getId(),
+                savedProduct.getName(),
+                savedProduct.getPrice(),
+                savedProduct.getImageUrl(),
+                savedProduct.getCategory().getName()
         ));
     }
 
@@ -68,18 +72,21 @@ public class ProductController {
         if(existingOpt.isEmpty()) {
             return ResponseEntity.notFound().build();
         }
+        Category category = productService.getCategoryById(productRequest.getCategoryId()).orElseThrow(() -> new RuntimeException("Category not found"));
         Product existingProduct = existingOpt.get();
         existingProduct.update(
-          productRequest.getPrice(),
-          productRequest.getName(),
-          productRequest.getImageUrl(),
-          null // Category
+                productRequest.getPrice(),
+                productRequest.getName(),
+                productRequest.getImageUrl(),
+                category
         );
-        return ResponseEntity.ok(new ProductResponse(
-                productService.save(existingProduct).getId(),
-                existingProduct.getName(),
-                existingProduct.getPrice(),
-                existingProduct.getImageUrl()
+        Product updatedProduct = productService.save(existingProduct);
+        return ResponseEntity.ok(new ProductResponse( //Long id, String name, Integer price, String imageUrl, String categoryName
+                updatedProduct.getId(),
+                updatedProduct.getName(),
+                updatedProduct.getPrice(),
+                updatedProduct.getImageUrl(),
+                updatedProduct.getCategory().getName()
         ));
     }
 
