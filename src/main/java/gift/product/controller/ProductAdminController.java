@@ -1,8 +1,8 @@
 package gift.product.controller;
 
 import gift.product.model.dto.CreateProductAdminRequest;
-import gift.product.model.dto.CreateProductRequest;
 import gift.product.model.dto.UpdateProductRequest;
+import gift.product.service.ProductAdminService;
 import gift.product.service.ProductService;
 import gift.user.model.dto.AppUser;
 import gift.user.resolver.LoginUser;
@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -23,23 +24,21 @@ import org.springframework.web.bind.annotation.RestController;
 public class ProductAdminController {
 
     private final ProductService productService;
+    private final ProductAdminService productAdminService;
     private final UserService userService;
 
-    public ProductAdminController(ProductService productService, UserService userService) {
+    public ProductAdminController(ProductService productService, ProductAdminService productAdminService,
+                                  UserService userService) {
         this.productService = productService;
+        this.productAdminService = productAdminService;
         this.userService = userService;
     }
 
     @PostMapping
     public ResponseEntity<String> addProductForAdmin(@LoginUser AppUser loginAppUser,
-                                                     @Valid @RequestBody CreateProductAdminRequest createProductRequest) {
+                                                     @Valid @RequestBody CreateProductAdminRequest createProductAdminRequest) {
         userService.verifyAdminAccess(loginAppUser);
-        CreateProductRequest req = new CreateProductRequest(createProductRequest.name(), createProductRequest.price(),
-                createProductRequest.imageUrl());
-
-        AppUser seller = userService.findUser(createProductRequest.sellerId());
-
-        productService.addProduct(seller, req);
+        productAdminService.addProduct(createProductAdminRequest);
         return ResponseEntity.status(HttpStatus.CREATED).body("ok");
     }
 
@@ -58,4 +57,14 @@ public class ProductAdminController {
         productService.deleteProduct(loginAppUser, id);
         return ResponseEntity.ok().body("ok");
     }
+
+    @PutMapping("/{productId}/category")
+    public ResponseEntity<String> updateCategoryForProduct(@LoginUser AppUser loginAppUser,
+                                                           @PathVariable Long productId,
+                                                           @RequestParam Long categoryId) {
+        userService.verifyAdminAccess(loginAppUser);
+        productAdminService.updateCategory(productId, categoryId);
+        return ResponseEntity.ok().body("ok");
+    }
 }
+

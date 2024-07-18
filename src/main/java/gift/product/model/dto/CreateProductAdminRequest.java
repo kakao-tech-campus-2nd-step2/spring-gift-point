@@ -23,6 +23,9 @@ public record CreateProductAdminRequest(
         String imageUrl,
 
         @NotNull
-        Long sellerId
+        Long sellerId,
+
+        @NotNull
+        Long categoryId
 ) {
 }

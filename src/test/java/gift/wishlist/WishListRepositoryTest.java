@@ -2,6 +2,8 @@ package gift.wishlist;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import gift.category.model.CategoryRepository;
+import gift.category.model.dto.Category;
 import gift.product.model.ProductRepository;
 import gift.product.model.dto.Product;
 import gift.user.model.UserRepository;
@@ -24,6 +26,9 @@ public class WishListRepositoryTest {
     private WishListRepository wishListRepository;
 
     @Autowired
+    private CategoryRepository categoryRepository;
+
+    @Autowired
     private ProductRepository productRepository;
 
     @Autowired
@@ -31,13 +36,16 @@ public class WishListRepositoryTest {
 
     private AppUser appUser;
     private Product product;
+    private Category category;
 
     @BeforeEach
     public void setUp() {
         appUser = new AppUser("aabb@kakao.com", "1234", Role.USER, "aaaa");
-        product = new Product("Test", 1000, "url", appUser);
+        category = new Category("기타", "");
+        product = new Product("Test", 1000, "url", appUser, category);
 
         appUser = userRepository.save(appUser);
+        category = categoryRepository.save(category);
         product = productRepository.save(product);
 
         Wish wish = new Wish(appUser, product, 1);

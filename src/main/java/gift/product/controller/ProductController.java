@@ -46,6 +46,14 @@ public class ProductController {
         return ResponseEntity.ok().body(response);
     }
 
+    @GetMapping("/category/{categoryId}")
+    public ResponseEntity<Page<ProductResponse>> findActiveProductsByCategoryWithWishCount(
+            @PathVariable Long categoryId,
+            @PageableDefault(size = DEFAULT_PAGE_SIZE, sort = "wishCount", direction = Sort.Direction.DESC) Pageable pageable) {
+        Page<ProductResponse> response = productService.findActiveProductsByCategoryWithWishCount(categoryId, pageable);
+        return ResponseEntity.ok().body(response);
+    }
+
     @PostMapping
     public ResponseEntity<String> addProduct(@LoginUser AppUser loginAppUser,
                                              @Valid @RequestBody CreateProductRequest createProductRequest) {

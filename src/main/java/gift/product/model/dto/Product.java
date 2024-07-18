@@ -2,6 +2,7 @@ package gift.product.model.dto;
 
 
 import gift.BaseTimeEntity;
+import gift.category.model.dto.Category;
 import gift.user.model.dto.AppUser;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -33,14 +34,19 @@ public class Product extends BaseTimeEntity {
     @JoinColumn(name = "user_id", nullable = false)
     private AppUser seller;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "category_id", nullable = false)
+    private Category category;
+
     @Column(name = "is_active", nullable = false, columnDefinition = "boolean default true")
     private boolean isActive = true; // 선물의 활성화 상태
 
-    public Product(String name, int price, String imageUrl, AppUser seller) {
+    public Product(String name, int price, String imageUrl, AppUser seller, Category category) {
         this.name = name;
         this.price = price;
         this.imageUrl = imageUrl;
         this.seller = seller;
+        this.category = category;
     }
 
     public Product() {
@@ -81,6 +87,14 @@ public class Product extends BaseTimeEntity {
 
     public void setSeller(AppUser seller) {
         this.seller = seller;
+    }
+
+    public Category getCategory() {
+        return category;
+    }
+
+    public void setCategory(Category category) {
+        this.category = category;
     }
 
     public boolean isActive() {

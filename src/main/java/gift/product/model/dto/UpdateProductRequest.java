@@ -27,12 +27,4 @@ public record UpdateProductRequest(
         @Nullable
         String imageUrl
 ) {
-    public UpdateProductRequest {
-        if (name.isBlank()) {
-            name = null;
-        }
-        if (imageUrl != null && imageUrl.isBlank()) {
-            imageUrl = null;
-        }
-    }
 }

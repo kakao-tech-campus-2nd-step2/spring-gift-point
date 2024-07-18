@@ -1,17 +1,19 @@
 package gift.product.model.dto;
 
 public class ProductResponse {
-    private Long id;
-    private String name;
-    private int price;
-    private String imageUrl;
-    private Long wishCount;
+    private final Long id;
+    private final String name;
+    private final int price;
+    private final String imageUrl;
+    private final Long categoryId;
+    private final Long wishCount;
 
     public ProductResponse(Product product, Long wishCount) {
         this.id = product.getId();
         this.name = product.getName();
         this.price = product.getPrice();
         this.imageUrl = product.getImageUrl();
+        this.categoryId = product.getCategory().getId();
         this.wishCount = wishCount;
     }
 
@@ -29,6 +31,10 @@ public class ProductResponse {
 
     public String getImageUrl() {
         return imageUrl;
+    }
+
+    public Long getCategoryId() {
+        return categoryId;
     }
 
     public Long getWishCount() {

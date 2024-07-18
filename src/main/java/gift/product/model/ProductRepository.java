@@ -20,4 +20,8 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
 
     @Query("SELECT p AS product, COUNT(w) AS wishCount FROM Product p LEFT JOIN Wish w ON w.product = p WHERE p.isActive = true GROUP BY p")
     Page<Tuple> findAllActiveProductsWithWishCountPageable(Pageable pageable);
+
+    @Query("SELECT p AS product, COUNT(w) AS wishCount FROM Product p LEFT JOIN Wish w ON w.product = p WHERE p.category.id = :categoryId AND p.isActive = true GROUP BY p")
+    Page<Tuple> findActiveProductsByCategoryWithWishCount(Long categoryId, Pageable pageable);
+
 }
