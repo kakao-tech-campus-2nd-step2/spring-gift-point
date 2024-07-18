@@ -9,8 +9,12 @@ import java.util.Optional;
 
 @Service
 public class MemberService {
+    private final MemberRepository memberRepository;
+
     @Autowired
-    private MemberRepository memberRepository;
+    public MemberService(MemberRepository memberRepository) {
+        this.memberRepository = memberRepository;
+    }
 
     public Optional<Member> findByEmail(String email) {
         return memberRepository.findByEmail(email);
