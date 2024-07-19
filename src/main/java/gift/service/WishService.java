@@ -11,8 +11,12 @@ import java.util.Optional;
 
 @Service
 public class WishService {
+    private final WishRepository wishRepository;
+
     @Autowired
-    private WishRepository wishRepository;
+    public WishService (WishRepository wishRepository) {
+        this.wishRepository = wishRepository;
+    }
 
     public Wish save(Wish wish) {
         return wishRepository.save(wish);
