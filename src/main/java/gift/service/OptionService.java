@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class OptionService {
@@ -28,9 +29,17 @@ public class OptionService {
 
     @Transactional
     public Option addOptionToProduct(Long productId, OptionDTO optionDTO) {
-        Product product = productRepository.findById(productId).orElseThrow(()-> new RuntimeException("Product not found"));
+        Product product = productRepository.findById(productId)
+                .orElseThrow(() -> new RuntimeException("Product not found"));
+        // redundancy option check
+        Optional<Option> existingOption = optionRepository.findByProductIdAndName(productId, optionDTO.getName());
+        if (existingOption.isPresent()) {
+            throw new RuntimeException("Duplicate option name");
+        }
+
         Option option = new Option();
         option.update(optionDTO.getName(), optionDTO.getQuantity());
+        optionRepository.save(option);
 
         product.getOptions().add(option);
         return optionRepository.save(option);
