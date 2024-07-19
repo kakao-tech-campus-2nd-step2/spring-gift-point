@@ -5,8 +5,11 @@ import gift.dto.ProductResponse;
 import gift.entity.Category;
 import gift.entity.Product;
 import gift.service.ProductService;
+import gift.util.ProductValidator;
 import jakarta.validation.Valid;
+import jakarta.validation.ValidationException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
@@ -45,6 +48,13 @@ public class ProductController {
             String errors = bindingResult.getAllErrors().stream().map(error -> error.getDefaultMessage()).collect(Collectors.joining(","));
             return ResponseEntity.badRequest().body(errors);
         }
+        // Perform verifications using ProductValidator
+        try {
+            ProductValidator.validateProductRequest(productRequest);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+
         Category category = productService.getCategoryById(productRequest.getCategoryId()).orElseThrow(() -> new RuntimeException("Category not found"));
         Product product = new Product(
                 productRequest.getName(),
@@ -65,13 +75,20 @@ public class ProductController {
     @PutMapping("/{id}")
     public ResponseEntity<?> updateProduct(@PathVariable Long id, @RequestBody ProductRequest productRequest, BindingResult bindingResult) {
         if(bindingResult.hasErrors()) {
-            String errors = bindingResult.getAllErrors().stream().map(error -> error.getDefaultMessage()).collect(Collectors.joining(","));
+            String errors = bindingResult.getAllErrors().stream().map(DefaultMessageSourceResolvable::getDefaultMessage).collect(Collectors.joining(","));
             return ResponseEntity.badRequest().body(errors);
         }
         Optional<Product> existingOpt = productService.findById(id);
         if(existingOpt.isEmpty()) {
             return ResponseEntity.notFound().build();
         }
+
+        try {
+            ProductValidator.validateProductRequest(productRequest);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+
         Category category = productService.getCategoryById(productRequest.getCategoryId()).orElseThrow(() -> new RuntimeException("Category not found"));
         Product existingProduct = existingOpt.get();
         existingProduct.update(
@@ -81,7 +98,7 @@ public class ProductController {
                 category
         );
         Product updatedProduct = productService.save(existingProduct);
-        return ResponseEntity.ok(new ProductResponse( //Long id, String name, Integer price, String imageUrl, String categoryName
+        return ResponseEntity.ok(new ProductResponse(
                 updatedProduct.getId(),
                 updatedProduct.getName(),
                 updatedProduct.getPrice(),
