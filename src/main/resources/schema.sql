@@ -18,3 +18,11 @@ CREATE TABLE IF NOT EXISTS wishlist (
     FOREIGN KEY (member_id) REFERENCES member(id),
     FOREIGN KEY (product_id) REFERENCES product(id)
 );
+
+CREATE TABLE IF NOT EXISTS option (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(50) NOT NULL,
+    quantity BIGINT NOT NULL,
+    product_id BIGINT NOT NULL,
+    FOREIGN KEY (product_id) REFERENCES product(id)
+);
