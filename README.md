@@ -31,7 +31,12 @@ Content-Type: application/json
    ]
 
    ```
-
+3. 상품 옵션의 수량을 지정된 숫자만큼 빼는 기능을 구현한다.
+   1. 별도의 HTTP API를 만들 필요는 없다.
+   2. 서비스 클래스 또는 엔티티 클래스에서 기능을 구현하고 나중에 사용할 수 있도록 한다.
+   3. 힌트
+      ```var option = optionRepository.findByProductId(productId).orElseThrow();
+         option.subtract(quantity) ```
 
 <details>
 <summary> Step1 정리 </summary>
