@@ -45,4 +45,19 @@ public class OptionService {
         return optionRepository.save(option);
     }
 
+    // Stay until use this method.
+    public void decreseOptionQuantity(Long optionId, Long quantity) {
+        Option option = optionRepository.findById(optionId).orElseThrow(() -> new RuntimeException("Option not found"));
+
+        if(quantity <= 0) {
+            throw new IllegalArgumentException("Quantity must be greater than zero");
+        }
+        if(option.getQuantity() < quantity) {
+            throw new IllegalArgumentException("Not enough quantity available");
+        }
+
+        option.setQuantity(option.getQuantity() - quantity);
+        optionRepository.save(option);
+    }
+
 }
