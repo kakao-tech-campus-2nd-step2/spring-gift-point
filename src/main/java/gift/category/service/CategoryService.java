@@ -44,8 +44,7 @@ public class CategoryService {
     public void updateCategory(Long id, CategoryRequest categoryRequest) {
         Optional<Category> categoryOptional = categoryRepository.findByIdAndIsActiveTrue(id);
         Category category = categoryOptional.orElseThrow(() -> new EntityNotFoundException("Category"));
-        category.setName(categoryRequest.name());
-        category.setDescription(categoryRequest.description());
+        category.updateCategory(categoryRequest.name(), categoryRequest.description());
         categoryRepository.save(category);
     }
 
@@ -53,7 +52,7 @@ public class CategoryService {
     public void deleteCategory(Long id) {
         Optional<Category> categoryOptional = categoryRepository.findByIdAndIsActiveTrue(id);
         Category category = categoryOptional.orElseThrow(() -> new EntityNotFoundException("Category"));
-        category.setActive(false);
+        category.inactive();
         categoryRepository.save(category);
     }
 

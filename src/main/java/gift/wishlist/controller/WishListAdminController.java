@@ -23,7 +23,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/api/wishes/admin")
+@RequestMapping("/api/admin/wishes")
 public class WishListAdminController {
     private final WishListService wishListService;
     private final UserService userService;

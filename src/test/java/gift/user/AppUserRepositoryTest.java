@@ -37,7 +37,7 @@ public class AppUserRepositoryTest {
 
     @Test
     public void testFindByEmailAndIsActiveTrueIfUserFalse() {
-        appUser.setIsActive(false);
+        appUser.inactive();
         userRepository.save(appUser);
 
         Optional<AppUser> foundUser = userRepository.findByEmailAndIsActiveTrue(appUser.getEmail());
@@ -53,7 +53,7 @@ public class AppUserRepositoryTest {
 
     @Test
     public void testUpdatePassword() {
-        appUser.setPassword("1111");
+        appUser.updatePassword("1111");
         userRepository.save(appUser);
         Optional<AppUser> updatedUser = userRepository.findById(appUser.getId());
         assertThat(updatedUser.get().getPassword()).isEqualTo("1111");

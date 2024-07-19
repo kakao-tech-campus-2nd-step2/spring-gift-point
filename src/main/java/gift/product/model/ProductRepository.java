@@ -1,6 +1,6 @@
 package gift.product.model;
 
-import gift.product.model.dto.Product;
+import gift.product.model.dto.product.Product;
 import jakarta.persistence.Tuple;
 import java.util.Optional;
 import org.springframework.data.domain.Page;

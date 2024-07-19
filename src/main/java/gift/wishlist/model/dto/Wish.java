@@ -1,7 +1,7 @@
 package gift.wishlist.model.dto;
 
 import gift.BaseTimeEntity;
-import gift.product.model.dto.Product;
+import gift.product.model.dto.product.Product;
 import gift.user.model.dto.AppUser;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -56,10 +56,6 @@ public class Wish extends BaseTimeEntity {
         return appUser;
     }
 
-    public void setUser(AppUser appUser) {
-        this.appUser = appUser;
-    }
-
     public Product getProduct() {
         return product;
     }
@@ -72,7 +68,7 @@ public class Wish extends BaseTimeEntity {
         return quantity;
     }
 
-    public void setQuantity(int quantity) {
+    public void updateQuantity(int quantity) {
         this.quantity = quantity;
     }
 
@@ -80,7 +76,7 @@ public class Wish extends BaseTimeEntity {
         return isActive;
     }
 
-    public void setActive(boolean active) {
-        isActive = active;
+    public void inactive() {
+        isActive = false;
     }
 }

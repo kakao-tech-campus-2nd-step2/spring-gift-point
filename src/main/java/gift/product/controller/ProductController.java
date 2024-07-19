@@ -2,9 +2,9 @@ package gift.product.controller;
 
 import static gift.util.Utils.DEFAULT_PAGE_SIZE;
 
-import gift.product.model.dto.CreateProductRequest;
-import gift.product.model.dto.ProductResponse;
-import gift.product.model.dto.UpdateProductRequest;
+import gift.product.model.dto.product.CreateProductRequest;
+import gift.product.model.dto.product.ProductResponse;
+import gift.product.model.dto.product.UpdateProductRequest;
 import gift.product.service.ProductService;
 import gift.user.model.dto.AppUser;
 import gift.user.resolver.LoginUser;

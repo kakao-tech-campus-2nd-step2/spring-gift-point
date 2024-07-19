@@ -21,10 +21,12 @@ import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
+import org.mockito.junit.jupiter.MockitoExtension;
 
+@ExtendWith(MockitoExtension.class)
 public class CategoryServiceTest {
     @Mock
     private CategoryRepository categoryRepository;
@@ -37,7 +39,6 @@ public class CategoryServiceTest {
 
     @BeforeEach
     void setUp() {
-        MockitoAnnotations.openMocks(this);
         defaultCategory = new Category("기본", "기본 카테고리");
         defaultRequest = new CategoryRequest("수정/추가 카테고리", "새 카테고리입니다");
     }

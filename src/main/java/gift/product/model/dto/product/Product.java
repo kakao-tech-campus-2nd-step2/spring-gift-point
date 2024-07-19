@@ -1,4 +1,4 @@
-package gift.product.model.dto;
+package gift.product.model.dto.product;
 
 
 import gift.BaseTimeEntity;
@@ -39,7 +39,7 @@ public class Product extends BaseTimeEntity {
     private Category category;
 
     @Column(name = "is_active", nullable = false, columnDefinition = "boolean default true")
-    private boolean isActive = true; // 선물의 활성화 상태
+    private boolean isActive = true;
 
     public Product(String name, int price, String imageUrl, AppUser seller, Category category) {
         this.name = name;
@@ -50,59 +50,48 @@ public class Product extends BaseTimeEntity {
     }
 
     public Product() {
-
     }
 
     public Long getId() {
         return id;
     }
 
-    public String getName() {
-        return name;
+    public void setId(Long id) {
+        this.id = id;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public String getName() {
+        return name;
     }
 
     public int getPrice() {
         return price;
     }
 
-    public void setPrice(int price) {
-        this.price = price;
-    }
-
     public String getImageUrl() {
         return imageUrl;
-    }
-
-    public void setImageUrl(String imageUrl) {
-        this.imageUrl = imageUrl;
     }
 
     public AppUser getSeller() {
         return seller;
     }
 
-    public void setSeller(AppUser seller) {
-        this.seller = seller;
-    }
-
     public Category getCategory() {
         return category;
     }
 
-    public void setCategory(Category category) {
+    public void updateCategory(Category category) {
         this.category = category;
     }
 
-    public boolean isActive() {
-        return isActive;
+    public void inactive() {
+        isActive = false;
     }
 
-    public void setActive(boolean active) {
-        isActive = active;
+    public void updateProduct(String name, int price, String imageUrl) {
+        this.name = name;
+        this.price = price;
+        this.imageUrl = imageUrl;
     }
 
     public boolean isOwner(Long id) {

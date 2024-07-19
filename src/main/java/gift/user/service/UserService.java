@@ -37,7 +37,7 @@ public class UserService {
         String newHashedPassword = SHA256Util.encodePassword(updatePasswordRequest.newPassword(),
                 loginAppUser.getSalt());
 
-        loginAppUser.setPassword(newHashedPassword);
+        loginAppUser.updatePassword(newHashedPassword);
         userRepository.save(loginAppUser);
     }
 

@@ -45,7 +45,7 @@ public class CategoryRepositoryTest {
 
     @Test
     public void testFindCategoryIsFalse() {
-        category.setActive(false);
+        category.inactive();
         categoryRepository.save(category);
 
         Optional<Category> optionalResult = categoryRepository.findByIdAndIsActiveTrue(category.getId());
