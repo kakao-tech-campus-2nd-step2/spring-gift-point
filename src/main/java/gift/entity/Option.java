@@ -26,5 +26,13 @@ public class Option {
         this.quantity = quantity;
     }
 
+    public Long getQuantity() {
+        return quantity;
+    }
+
+    public void setQuantity(Long quantity) {
+        this.quantity = quantity;
+    }
+
     // (selectable feature) admin only has right to add option.
 }
