@@ -30,23 +30,22 @@ public class AppUserRepositoryTest {
 
     @Test
     public void testFindByEmailAndIsActiveTrue() {
-        Optional<AppUser> foundUser = userRepository.findByEmailAndIsActiveTrue(appUser.getEmail());
+        Optional<AppUser> foundUser = userRepository.findByEmail(appUser.getEmail());
         assertThat(foundUser).isPresent();
         assertThat(appUser).isEqualTo(foundUser.get());
     }
 
     @Test
     public void testFindByEmailAndIsActiveTrueIfUserFalse() {
-        appUser.inactive();
-        userRepository.save(appUser);
+        userRepository.delete(appUser);
 
-        Optional<AppUser> foundUser = userRepository.findByEmailAndIsActiveTrue(appUser.getEmail());
+        Optional<AppUser> foundUser = userRepository.findByEmail(appUser.getEmail());
         assertThat(foundUser).isEmpty();
     }
 
     @Test
     public void testFindByIdAndIsActiveTrue() {
-        Optional<AppUser> foundUser = userRepository.findByIdAndIsActiveTrue(appUser.getId());
+        Optional<AppUser> foundUser = userRepository.findById(appUser.getId());
         assertThat(foundUser).isPresent();
         assertThat(appUser).isEqualTo(foundUser.get());
     }

@@ -21,7 +21,7 @@ public class JwtUserService {
 
     @Transactional(readOnly = true)
     public String login(LoginRequest loginRequest) {
-        AppUser appUser = userRepository.findByEmailAndIsActiveTrue(loginRequest.email())
+        AppUser appUser = userRepository.findByEmail(loginRequest.email())
                 .orElseThrow(() -> new EntityNotFoundException("AppUser"));
         if (!appUser.isPasswordCorrect(loginRequest.password())) {
             throw new ForbiddenException("로그인 실패: 비밀번호 불일치");

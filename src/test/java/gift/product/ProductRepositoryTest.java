@@ -62,7 +62,7 @@ public class ProductRepositoryTest {
 
     @Test
     public void testFindActiveProductById() {
-        Product foundProduct = productRepository.findByIdAndIsActiveTrue(product.getId())
+        Product foundProduct = productRepository.findById(product.getId())
                 .orElseThrow(() -> new EntityNotFoundException("Product"));
         assertEquals(product.getName(), foundProduct.getName());
     }

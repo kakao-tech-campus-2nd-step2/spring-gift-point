@@ -20,11 +20,18 @@ public abstract class BaseTimeEntity {
     @Column(name = "modification_date", nullable = false)
     private LocalDateTime modificationDate;
 
+    @Column(name = "deletion_date")
+    private LocalDateTime deletionDate = null;
+
     public LocalDateTime getRegistrationDate() {
         return registrationDate;
     }
 
     public LocalDateTime getModificationDate() {
         return modificationDate;
+    }
+
+    public LocalDateTime getDeletionDate() {
+        return deletionDate;
     }
 }

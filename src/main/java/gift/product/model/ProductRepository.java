@@ -12,16 +12,14 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface ProductRepository extends JpaRepository<Product, Long> {
-    Optional<Product> findByIdAndIsActiveTrue(Long id);
 
-    // 특정 ID의 Product와 관련 Wish 개수 조회
-    @Query("SELECT p AS product, COUNT(w) AS wishCount FROM Product p LEFT JOIN Wish w ON w.product = p WHERE p.id = :id AND p.isActive = true GROUP BY p")
+    @Query("SELECT p AS product, COUNT(w) AS wishCount FROM Product p LEFT JOIN Wish w ON w.product = p WHERE p.id = :id GROUP BY p")
     Optional<Tuple> findProductByIdWithWishCount(@Param("id") Long id);
 
-    @Query("SELECT p AS product, COUNT(w) AS wishCount FROM Product p LEFT JOIN Wish w ON w.product = p WHERE p.isActive = true GROUP BY p")
+    @Query("SELECT p AS product, COUNT(w) AS wishCount FROM Product p LEFT JOIN Wish w ON w.product = p GROUP BY p")
     Page<Tuple> findAllActiveProductsWithWishCountPageable(Pageable pageable);
 
-    @Query("SELECT p AS product, COUNT(w) AS wishCount FROM Product p LEFT JOIN Wish w ON w.product = p WHERE p.category.id = :categoryId AND p.isActive = true GROUP BY p")
+    @Query("SELECT p AS product, COUNT(w) AS wishCount FROM Product p LEFT JOIN Wish w ON w.product = p WHERE p.category.id = :categoryId GROUP BY p")
     Page<Tuple> findActiveProductsByCategoryWithWishCount(Long categoryId, Pageable pageable);
 
 }

@@ -2,7 +2,6 @@ package gift.product;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.times;
@@ -10,6 +9,8 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import gift.category.model.dto.Category;
+import gift.product.exception.ProductCustomException.NotEnoughStockException;
+import gift.product.exception.ProductCustomException.ProductMustHaveOptionException;
 import gift.product.model.OptionRepository;
 import gift.product.model.dto.option.CreateOptionRequest;
 import gift.product.model.dto.option.Option;
@@ -67,7 +68,7 @@ public class OptionServiceTest {
     @DisplayName("수정 요청 시 옵션이 존재할 때 옵션을 수정할 수 있다")
     public void updateOption_ShouldUpdateOption_WhenProductExists() {
         // given
-        when(optionRepository.findByIdAndIsActiveTrue(option.getId())).thenReturn(Optional.of(option));
+        when(optionRepository.findById(option.getId())).thenReturn(Optional.of(option));
 
         // when, then
         assertDoesNotThrow(() -> optionService.updateOption(product, option.getId(), updateRequest));
@@ -79,7 +80,7 @@ public class OptionServiceTest {
     @DisplayName("수정 요청 시 옵션이 존재하지 않으면 EntityNotFoundException을 던진다.")
     public void updateOption_ShouldThrowEntityNotFoundException_WhenOptionNotExists() {
         // given
-        when(optionRepository.findByIdAndIsActiveTrue(option.getId())).thenReturn(Optional.empty());
+        when(optionRepository.findById(option.getId())).thenReturn(Optional.empty());
 
         // when,then
         assertThrows(EntityNotFoundException.class,
@@ -91,26 +92,25 @@ public class OptionServiceTest {
     @DisplayName("삭제 요청 시 2개 이상의 옵션이 존재할 때 옵션을 삭제할 수 있다.")
     public void deleteOption_ShouldDeleteOption_WhenProductExists() {
         // given
-        when(optionRepository.findByIdAndIsActiveTrue(option.getId())).thenReturn(Optional.of(option));
-        when(optionRepository.countByProductIdAndIsActiveTrue(product.getId())).thenReturn(2);
+        when(optionRepository.findById(option.getId())).thenReturn(Optional.of(option));
+        when(optionRepository.countByProductId(product.getId())).thenReturn(2);
 
         // when
         optionService.deleteOption(product, option.getId());
 
         // then
-        verify(optionRepository, times(1)).save(any(Option.class));
-        assertFalse(option.isActive());
+        verify(optionRepository, times(1)).delete(any(Option.class));
     }
 
     @Test
     @DisplayName("삭제 요청 시 1개의 옵션이 존재할 때 옵션을 삭제할 수 없다.")
-    public void deleteOption_ShouldNotDeleteOption_WhenProductExists() {
+    public void deleteOption_ShouldThrowProductMustHaveOptionExceptiong_WhenProductExists() {
         // given
-        when(optionRepository.findByIdAndIsActiveTrue(option.getId())).thenReturn(Optional.of(option));
-        when(optionRepository.countByProductIdAndIsActiveTrue(product.getId())).thenReturn(1);
+        when(optionRepository.findById(option.getId())).thenReturn(Optional.of(option));
+        when(optionRepository.countByProductId(product.getId())).thenReturn(1);
 
         // when, then
-        assertThrows(IllegalStateException.class, () -> optionService.deleteOption(product, option.getId()));
+        assertThrows(ProductMustHaveOptionException.class, () -> optionService.deleteOption(product, option.getId()));
         verify(optionRepository, times(0)).save(any(Option.class));
     }
 
@@ -118,10 +118,40 @@ public class OptionServiceTest {
     @DisplayName("삭제 요청 시 옵션이 존재하지 않으면 EntityNotFoundException을 던진다.")
     public void deleteOption_ShouldThrowEntityNotFoundException_WhenProductExists() {
         // given
-        when(optionRepository.findByIdAndIsActiveTrue(option.getId())).thenReturn(Optional.empty());
+        when(optionRepository.findById(option.getId())).thenReturn(Optional.empty());
 
         // when,then
         assertThrows(EntityNotFoundException.class, () -> optionService.deleteOption(product, option.getId()));
+        verify(optionRepository, times(0)).save(any(Option.class));
+    }
+
+    @Test
+    @DisplayName("옵션의 수량이 충분히 남아있다면 옵션의 수량을 감소시킨다")
+    void subtractOptionQuantity_ShouldSubtractQuantity_WhenEnoughQuantity() {
+        //given
+        int oldQuantity = option.getQuantity();
+        int requestedQuantity = 5;
+        when(optionRepository.findById(option.getId())).thenReturn(Optional.of(option));
+
+        //when
+        optionService.subtractOptionQuantity(option.getId(), requestedQuantity);
+
+        //then
+        assertEquals(oldQuantity - requestedQuantity, option.getQuantity());
+        verify(optionRepository, times(1)).save(any(Option.class));
+    }
+
+    @Test
+    @DisplayName("옵션의 수량이 충분히 남아있지 않다면 오류를 발생시킨다")
+    void subtractOptionQuantity_ShouldThrowIllegalArgumentException_WhenEnoughQuantity() {
+        //given
+        int oldQuantity = option.getQuantity();
+        int requestedQuantity = oldQuantity + 1;
+        when(optionRepository.findById(option.getId())).thenReturn(Optional.of(option));
+
+        //when, then
+        assertThrows(NotEnoughStockException.class,
+                () -> optionService.subtractOptionQuantity(option.getId(), requestedQuantity));
         verify(optionRepository, times(0)).save(any(Option.class));
     }
 }

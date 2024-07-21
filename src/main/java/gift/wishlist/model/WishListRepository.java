@@ -11,9 +11,9 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface WishListRepository extends JpaRepository<Wish, Long> {
-    List<Wish> findWishesByAppUserIdAndIsActiveTrue(@Param("userId") Long userId);
+    List<Wish> findWishesByAppUserId(@Param("userId") Long userId);
 
-    Optional<Wish> findByIdAndAppUserIdAndIsActiveTrue(Long id, Long userId);
+    Optional<Wish> findByIdAndAppUserId(Long id, Long userId);
 
-    Page<Wish> findWishesByAppUserIdAndIsActiveTrue(@Param("userId") Long userId, Pageable pageable);
+    Page<Wish> findWishesByAppUserId(@Param("userId") Long userId, Pageable pageable);
 }

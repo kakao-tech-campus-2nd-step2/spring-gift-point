@@ -1,6 +1,8 @@
 package gift.product.model.dto.option;
 
 
+import gift.BaseTimeEntity;
+import gift.product.exception.ProductCustomException.NotEnoughStockException;
 import gift.product.model.dto.product.Product;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -14,10 +16,14 @@ import jakarta.persistence.UniqueConstraint;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.Size;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.SQLRestriction;
 
 @Entity
-@Table(name = "Option", uniqueConstraints = {@UniqueConstraint(columnNames = {"product_id", "name"})})
-public class Option {
+@Table(name = "option", uniqueConstraints = {@UniqueConstraint(columnNames = {"product_id", "name"})})
+@SQLDelete(sql = "UPDATE option SET deletion_date = CURRENT_TIMESTAMP WHERE id = ?")
+@SQLRestriction("deletion_date IS NULL")
+public class Option extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -39,9 +45,6 @@ public class Option {
     @ManyToOne
     @JoinColumn(name = "product_id", nullable = false)
     private Product product;
-
-    @Column(name = "is_active", nullable = false, columnDefinition = "boolean default true")
-    private boolean isActive = true;
 
     public Option(String name, Integer quantity, Integer additionalCost, Product product) {
         this.name = name;
@@ -79,15 +82,15 @@ public class Option {
         this.additionalCost = additionalCost;
     }
 
-    public void inactive() {
-        isActive = false;
-    }
-
-    public boolean isActive() {
-        return isActive;
-    }
-
     public boolean isOwner(Long productId) {
         return product.getId().equals(productId);
     }
+
+    public void subtract(int quantity) {
+        if (this.quantity < quantity) {
+            throw new NotEnoughStockException();
+        }
+        this.quantity -= quantity;
+    }
+
 }

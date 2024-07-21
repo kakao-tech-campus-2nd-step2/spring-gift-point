@@ -38,7 +38,7 @@ public class ProductService {
 
     @Transactional(readOnly = true)
     public Product findProduct(Long id) {
-        return productRepository.findByIdAndIsActiveTrue(id)
+        return productRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Product"));
     }
 
@@ -87,8 +87,7 @@ public class ProductService {
         Product product = findProduct(id);
         checkProductOwner(appUser, product);
 
-        product.inactive();
-        productRepository.save(product);
+        productRepository.delete(product);
     }
 
     private void checkProductOwner(AppUser appUser, Product product) {

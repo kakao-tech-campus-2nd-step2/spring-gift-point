@@ -1,4 +1,4 @@
-package gift.user.resolver;
+package gift.resolver;
 
 import gift.user.exception.ForbiddenException;
 import gift.user.jwt.JwtService;

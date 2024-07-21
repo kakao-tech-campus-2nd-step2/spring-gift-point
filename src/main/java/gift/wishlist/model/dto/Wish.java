@@ -12,9 +12,13 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.SQLRestriction;
 
 @Entity
 @Table(name = "wish")
+@SQLDelete(sql = "UPDATE wish SET deletion_date = CURRENT_TIMESTAMP WHERE id = ?")
+@SQLRestriction("deletion_date IS NULL")
 public class Wish extends BaseTimeEntity {
 
     @Id
@@ -31,9 +35,6 @@ public class Wish extends BaseTimeEntity {
 
     @Column(nullable = false)
     private int quantity;
-
-    @Column(name = "is_active", nullable = false, columnDefinition = "boolean default true")
-    private boolean isActive = true;
 
     public Wish() {
     }
@@ -72,11 +73,4 @@ public class Wish extends BaseTimeEntity {
         this.quantity = quantity;
     }
 
-    public boolean isActive() {
-        return isActive;
-    }
-
-    public void inactive() {
-        isActive = false;
-    }
 }

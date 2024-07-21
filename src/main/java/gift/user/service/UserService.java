@@ -43,20 +43,15 @@ public class UserService {
 
     @Transactional(readOnly = true)
     public AppUser findUser(Long id) {
-        return userRepository.findByIdAndIsActiveTrue(id)
+        return userRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("AppUser"));
     }
 
     @Transactional(readOnly = true)
     public String findEmail(Long id) {
-        AppUser appUser = userRepository.findByIdAndIsActiveTrue(id)
+        AppUser appUser = userRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("AppUser"));
         return appUser.getEmail();
     }
 
-    public void verifyAdminAccess(AppUser appUser) {
-        if (!appUser.isAdmin()) {
-            throw new ForbiddenException("해당 요청에 대한 관리자 권한이 없습니다.");
-        }
-    }
 }

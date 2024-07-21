@@ -29,7 +29,7 @@ public class WishListService {
 
     @Transactional(readOnly = true)
     public Page<WishListResponse> getWishList(Long userId, Pageable pageable) {
-        Page<Wish> wishes = wishListRepository.findWishesByAppUserIdAndIsActiveTrue(userId, pageable);
+        Page<Wish> wishes = wishListRepository.findWishesByAppUserId(userId, pageable);
         return wishes.map(w -> new WishListResponse(
                 w.getId(),
                 w.getProduct().getId(),
@@ -49,7 +49,7 @@ public class WishListService {
 
     @Transactional
     public void updateWishQuantity(Long userId, Long wishId, int quantity) {
-        Wish wish = wishListRepository.findByIdAndAppUserIdAndIsActiveTrue(wishId, userId)
+        Wish wish = wishListRepository.findByIdAndAppUserId(wishId, userId)
                 .orElseThrow(() -> new EntityNotFoundException("Wish"));
         wish.updateQuantity(quantity);
         wishListRepository.save(wish);
@@ -57,9 +57,8 @@ public class WishListService {
 
     @Transactional
     public void deleteWish(Long userId, Long wishId) {
-        Wish wish = wishListRepository.findByIdAndAppUserIdAndIsActiveTrue(wishId, userId)
+        Wish wish = wishListRepository.findByIdAndAppUserId(wishId, userId)
                 .orElseThrow(() -> new EntityNotFoundException("Wish"));
-        wish.inactive();
-        wishListRepository.save(wish);
+        wishListRepository.delete(wish);
     }
 }

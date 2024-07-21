@@ -9,10 +9,14 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.SQLRestriction;
 import security.SHA256Util;
 
 @Entity
 @Table(name = "app_user")
+@SQLDelete(sql = "UPDATE app_user SET deletion_date = CURRENT_TIMESTAMP WHERE id = ?")
+@SQLRestriction("deletion_date IS NULL")
 public class AppUser extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -23,9 +27,6 @@ public class AppUser extends BaseTimeEntity {
 
     @Column(nullable = false, length = 100)
     private String password;
-
-    @Column(name = "is_active", nullable = false, columnDefinition = "boolean default true")
-    private Boolean isActive = true;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 50)
@@ -71,14 +72,6 @@ public class AppUser extends BaseTimeEntity {
 
     public String getSalt() {
         return salt;
-    }
-
-    public Boolean isActive() {
-        return isActive;
-    }
-
-    public void inactive() {
-        this.isActive = false;
     }
 
     public boolean isPasswordCorrect(String inputPassword) {

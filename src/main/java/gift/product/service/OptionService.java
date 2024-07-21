@@ -1,5 +1,6 @@
 package gift.product.service;
 
+import gift.product.exception.ProductCustomException.ProductMustHaveOptionException;
 import gift.product.model.OptionRepository;
 import gift.product.model.dto.option.CreateOptionRequest;
 import gift.product.model.dto.option.Option;
@@ -24,7 +25,7 @@ public class OptionService {
 
     @Transactional(readOnly = true)
     public List<OptionResponse> findOptionsByProductId(Long productId) {
-        List<Option> options = optionRepository.findAllByProductIdAndIsActiveTrue(productId);
+        List<Option> options = optionRepository.findAllByProductId(productId);
         return options.stream()
                 .map(o -> new OptionResponse(o.getId(), o.getName(), o.getQuantity(), o.getAdditionalCost()))
                 .collect(Collectors.toList());
@@ -39,6 +40,10 @@ public class OptionService {
 
     @Transactional
     public void addOptionList(Product product, List<CreateOptionRequest> createOptionRequests) {
+        if (createOptionRequests.isEmpty()) {
+            throw new ProductMustHaveOptionException();
+        }
+
         for (CreateOptionRequest request : createOptionRequests) {
             addOption(product, request);
         }
@@ -57,16 +62,15 @@ public class OptionService {
     public void deleteOption(Product product, Long optionId) {
         Option option = getOption(optionId);
         checkOptionOwner(product, option);
-        if (optionRepository.countByProductIdAndIsActiveTrue(product.getId()) <= 1) {
-            throw new IllegalStateException("상품은 하나 이상의 옵션을 가지고 있어야 합니다.");
+        if (optionRepository.countByProductId(product.getId()) <= 1) {
+            throw new ProductMustHaveOptionException();
         }
-        option.inactive();
-        optionRepository.save(option);
+        optionRepository.delete(option);
     }
 
     @Transactional(readOnly = true)
     public Option getOption(Long optionId) {
-        Optional<Option> option = optionRepository.findByIdAndIsActiveTrue(optionId);
+        Optional<Option> option = optionRepository.findById(optionId);
         return option.orElseThrow(() -> new EntityNotFoundException("Option"));
     }
 
@@ -74,5 +78,14 @@ public class OptionService {
         if (!option.isOwner(product.getId())) {
             throw new EntityNotFoundException("Option");
         }
+    }
+
+    @Transactional
+    public void subtractOptionQuantity(Long optionId, int quantity) {
+        Option option = optionRepository.findById(optionId)
+                .orElseThrow(() -> new EntityNotFoundException("Option"));
+
+        option.subtract(quantity);
+        optionRepository.save(option);
     }
 }

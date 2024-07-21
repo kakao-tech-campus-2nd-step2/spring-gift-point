@@ -2,8 +2,8 @@ package gift.wishlist.controller;
 
 import static gift.util.Utils.DEFAULT_PAGE_SIZE;
 
+import gift.resolver.LoginUser;
 import gift.user.model.dto.AppUser;
-import gift.user.resolver.LoginUser;
 import gift.wishlist.model.dto.AddWishRequest;
 import gift.wishlist.model.dto.WishListResponse;
 import gift.wishlist.service.WishListService;

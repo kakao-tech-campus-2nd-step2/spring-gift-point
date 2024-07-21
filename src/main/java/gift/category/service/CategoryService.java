@@ -21,7 +21,7 @@ public class CategoryService {
 
     @Transactional(readOnly = true)
     public CategoryResponse findCategoryById(Long id) {
-        Optional<Category> categoryOptional = categoryRepository.findByIdAndIsActiveTrue(id);
+        Optional<Category> categoryOptional = categoryRepository.findById(id);
         return categoryOptional.map(CategoryResponse::new)
                 .orElseThrow(() -> new EntityNotFoundException("Category"));
     }
@@ -42,7 +42,7 @@ public class CategoryService {
 
     @Transactional
     public void updateCategory(Long id, CategoryRequest categoryRequest) {
-        Optional<Category> categoryOptional = categoryRepository.findByIdAndIsActiveTrue(id);
+        Optional<Category> categoryOptional = categoryRepository.findById(id);
         Category category = categoryOptional.orElseThrow(() -> new EntityNotFoundException("Category"));
         category.updateCategory(categoryRequest.name(), categoryRequest.description());
         categoryRepository.save(category);
@@ -50,15 +50,14 @@ public class CategoryService {
 
     @Transactional
     public void deleteCategory(Long id) {
-        Optional<Category> categoryOptional = categoryRepository.findByIdAndIsActiveTrue(id);
+        Optional<Category> categoryOptional = categoryRepository.findById(id);
         Category category = categoryOptional.orElseThrow(() -> new EntityNotFoundException("Category"));
-        category.inactive();
-        categoryRepository.save(category);
+        categoryRepository.delete(category);
     }
 
     @Transactional(readOnly = true)
     public Category getCategory(Long id) {
-        Optional<Category> categoryOptional = categoryRepository.findByIdAndIsActiveTrue(id);
+        Optional<Category> categoryOptional = categoryRepository.findById(id);
         return categoryOptional.orElseThrow(() -> new EntityNotFoundException("Category"));
     }
 }

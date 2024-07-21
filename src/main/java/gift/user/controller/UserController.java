@@ -1,11 +1,11 @@
 package gift.user.controller;
 
+import gift.resolver.LoginUser;
 import gift.user.exception.ForbiddenException;
 import gift.user.model.dto.AppUser;
 import gift.user.model.dto.LoginRequest;
 import gift.user.model.dto.SignUpRequest;
 import gift.user.model.dto.UpdatePasswordRequest;
-import gift.user.resolver.LoginUser;
 import gift.user.service.JwtUserService;
 import gift.user.service.UserService;
 import jakarta.validation.Valid;

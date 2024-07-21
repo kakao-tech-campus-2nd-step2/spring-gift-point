@@ -1,4 +1,4 @@
-package gift.user.resolver;
+package gift.resolver;
 
 import gift.user.jwt.JwtService;
 import java.util.List;

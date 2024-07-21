@@ -1,8 +1,8 @@
 package gift.wishlist.controller;
 
+import gift.aspect.AdminController;
+import gift.resolver.LoginUser;
 import gift.user.model.dto.AppUser;
-import gift.user.resolver.LoginUser;
-import gift.user.service.UserService;
 import gift.wishlist.model.dto.AddWishRequest;
 import gift.wishlist.model.dto.WishListResponse;
 import gift.wishlist.service.WishListService;
@@ -23,14 +23,13 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
+@AdminController
 @RequestMapping("/api/admin/wishes")
 public class WishListAdminController {
     private final WishListService wishListService;
-    private final UserService userService;
 
-    public WishListAdminController(WishListService wishListService, UserService userService) {
+    public WishListAdminController(WishListService wishListService) {
         this.wishListService = wishListService;
-        this.userService = userService;
     }
 
     @GetMapping("/{userId}")
@@ -38,7 +37,6 @@ public class WishListAdminController {
                                                                       @PathVariable("userId") Long userId,
                                                                       @PageableDefault(size = 10, sort = "id", direction = Sort.Direction.DESC)
                                                                       Pageable pageable) {
-        userService.verifyAdminAccess(loginAppUser);
         Page<WishListResponse> responses = wishListService.getWishList(userId, pageable);
         return ResponseEntity.ok().body(responses);
     }
@@ -46,7 +44,6 @@ public class WishListAdminController {
     @PostMapping("/{userId}")
     public ResponseEntity<String> addWishForAdmin(@LoginUser AppUser loginAppUser, @PathVariable("userId") Long userId,
                                                   @RequestBody AddWishRequest addWishRequest) {
-        userService.verifyAdminAccess(loginAppUser);
         wishListService.addWish(userId, addWishRequest);
         return ResponseEntity.status(HttpStatus.CREATED).body("ok");
     }
@@ -56,7 +53,6 @@ public class WishListAdminController {
                                                              @PathVariable("userId") Long userId,
                                                              @RequestParam Long wishId,
                                                              @RequestParam int quantity) {
-        userService.verifyAdminAccess(loginAppUser);
         wishListService.updateWishQuantity(userId, wishId, quantity);
         return ResponseEntity.ok().body("ok");
     }
@@ -66,7 +62,6 @@ public class WishListAdminController {
     public ResponseEntity<String> deleteWishForAdmin(@LoginUser AppUser loginAppUser,
                                                      @PathVariable("userId") Long userId,
                                                      @RequestParam Long wishId) {
-        userService.verifyAdminAccess(loginAppUser);
         wishListService.deleteWish(userId, wishId);
         return ResponseEntity.ok().body("ok");
     }

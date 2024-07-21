@@ -1,4 +1,4 @@
-package gift;
+package gift.globalException;
 
 import gift.wishlist.exception.InvalidForeignKeyException;
 import jakarta.persistence.EntityNotFoundException;

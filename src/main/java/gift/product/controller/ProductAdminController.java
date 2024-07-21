@@ -1,12 +1,12 @@
 package gift.product.controller;
 
+import gift.aspect.AdminController;
 import gift.product.model.dto.product.CreateProductAdminRequest;
 import gift.product.model.dto.product.UpdateProductRequest;
 import gift.product.service.ProductAdminService;
 import gift.product.service.ProductService;
+import gift.resolver.LoginUser;
 import gift.user.model.dto.AppUser;
-import gift.user.resolver.LoginUser;
-import gift.user.service.UserService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,24 +20,21 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
+@AdminController
 @RequestMapping("/api/admin/products")
 public class ProductAdminController {
 
     private final ProductService productService;
     private final ProductAdminService productAdminService;
-    private final UserService userService;
 
-    public ProductAdminController(ProductService productService, ProductAdminService productAdminService,
-                                  UserService userService) {
+    public ProductAdminController(ProductService productService, ProductAdminService productAdminService) {
         this.productService = productService;
         this.productAdminService = productAdminService;
-        this.userService = userService;
     }
 
     @PostMapping
     public ResponseEntity<String> addProductForAdmin(@LoginUser AppUser loginAppUser,
                                                      @Valid @RequestBody CreateProductAdminRequest createProductAdminRequest) {
-        userService.verifyAdminAccess(loginAppUser);
         productAdminService.addProduct(createProductAdminRequest);
         return ResponseEntity.status(HttpStatus.CREATED).body("ok");
     }
@@ -45,7 +42,6 @@ public class ProductAdminController {
     @PutMapping("/{id}")
     public ResponseEntity<String> updateProductForAdmin(@LoginUser AppUser loginAppUser, @PathVariable Long id,
                                                         @Valid @RequestBody UpdateProductRequest updateProductRequest) {
-        userService.verifyAdminAccess(loginAppUser);
         productService.updateProduct(loginAppUser, id, updateProductRequest);
         return ResponseEntity.ok().body("ok");
     }
@@ -53,7 +49,6 @@ public class ProductAdminController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteProductByIdForAdmin(@LoginUser AppUser loginAppUser, @PathVariable Long id) {
-        userService.verifyAdminAccess(loginAppUser);
         productService.deleteProduct(loginAppUser, id);
         return ResponseEntity.ok().body("ok");
     }
@@ -62,7 +57,6 @@ public class ProductAdminController {
     public ResponseEntity<String> updateCategoryForProduct(@LoginUser AppUser loginAppUser,
                                                            @PathVariable Long productId,
                                                            @RequestParam Long categoryId) {
-        userService.verifyAdminAccess(loginAppUser);
         productAdminService.updateCategory(productId, categoryId);
         return ResponseEntity.ok().body("ok");
     }
