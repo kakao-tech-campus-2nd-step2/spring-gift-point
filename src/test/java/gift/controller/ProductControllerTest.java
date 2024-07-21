@@ -2,14 +2,17 @@ package gift.controller;
 
 import gift.entity.Category;
 import gift.entity.Product;
+import gift.exception.GlobalExceptionHandler;
 import gift.service.ProductService;
+import gift.util.JwtUtil;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -18,12 +21,11 @@ import jakarta.persistence.EntityNotFoundException;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.when;
-import static org.mockito.MockitoAnnotations.openMocks;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-@SpringBootTest
-@AutoConfigureMockMvc
+@WebMvcTest(ProductController.class)
+@Import(GlobalExceptionHandler.class)
 public class ProductControllerTest {
 
     @Autowired
@@ -32,17 +34,20 @@ public class ProductControllerTest {
     @MockBean
     private ProductService productService;
 
+    @MockBean
+    private JwtUtil jwtUtil;
+
     @BeforeEach
     public void setUp() {
-        openMocks(this);
+        Mockito.reset(productService, jwtUtil);
     }
 
     @Test
     @DisplayName("GET /api/products/{id} - Found")
     public void testGetProductById() throws Exception {
         Category category = new Category();
-        category.update("Test Category", "Red", "http://example.com/image.jpg", "Category Description");
-        Product product = new Product("Test Product", 1000, "http://example.com/image.jpg", category);
+        category.update("Test Category", "Red", "https://example.com/image.jpg", "Category Description");
+        Product product = new Product("Test Product", 1000, "https://example.com/image.jpg", category);
         product.updateId(1L);
 
         when(productService.findById(anyLong())).thenReturn(product);
@@ -62,15 +67,15 @@ public class ProductControllerTest {
         mockMvc.perform(get("/api/products/1")
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNotFound())
-                .andExpect(content().string("Product not found"));  // 여기서 반환되는 메시지 확인
+                .andExpect(content().string("Product not found"));
     }
 
     @Test
     @DisplayName("POST /api/products - Add Product")
     public void testAddProduct() throws Exception {
         Category category = new Category();
-        category.update("Test Category", "Red", "http://example.com/image.jpg", "Category Description");
-        Product product = new Product("Test Product", 1000, "http://example.com/image.jpg", category);
+        category.update("Test Category", "Red", "https://example.com/image.jpg", "Category Description");
+        Product product = new Product("Test Product", 1000, "https://example.com/image.jpg", category);
         product.updateId(1L);
 
         when(productService.getCategoryById(anyLong())).thenReturn(category);
@@ -78,7 +83,7 @@ public class ProductControllerTest {
 
         mockMvc.perform(post("/api/products")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content("{\"name\":\"Test Product\",\"price\":1000,\"imageUrl\":\"http://example.com/image.jpg\",\"categoryId\":1}"))
+                        .content("{\"name\":\"Test Product\",\"price\":1000,\"imageUrl\":\"https://example.com/image.jpg\",\"categoryId\":1, \"options\":[{\"name\":\"Option1\",\"quantity\":10}]}"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(1L))
                 .andExpect(jsonPath("$.name").value("Test Product"));
@@ -88,13 +93,13 @@ public class ProductControllerTest {
     @DisplayName("PUT /api/products/{id} - Update Product")
     public void testUpdateProduct() throws Exception {
         Category existingCategory = new Category();
-        existingCategory.update("Existing Category", "Blue", "http://example.com/existing_image.jpg", "Existing Description");
-        Product existingProduct = new Product("Existing Product", 1000, "http://example.com/existing_image.jpg", existingCategory);
+        existingCategory.update("Existing Category", "Blue", "https://example.com/existing_image.jpg", "Existing Description");
+        Product existingProduct = new Product("Existing Product", 1000, "https://example.com/existing_image.jpg", existingCategory);
         existingProduct.updateId(1L);
 
         Category updatedCategory = new Category();
-        updatedCategory.update("Updated Category", "Red", "http://example.com/updated_image.jpg", "Updated Description");
-        Product updatedProduct = new Product("Updated Product", 1500, "http://example.com/image_updated.jpg", updatedCategory);
+        updatedCategory.update("Updated Category", "Red", "https://example.com/updated_image.jpg", "Updated Description");
+        Product updatedProduct = new Product("Updated Product", 1500, "https://example.com/image_updated.jpg", updatedCategory);
         updatedProduct.updateId(1L);
 
         when(productService.findById(anyLong())).thenReturn(existingProduct);
@@ -103,7 +108,7 @@ public class ProductControllerTest {
 
         mockMvc.perform(put("/api/products/1")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content("{\"name\":\"Updated Product\",\"price\":1500,\"imageUrl\":\"http://example.com/image_updated.jpg\",\"categoryId\":1}"))
+                        .content("{\"name\":\"Updated Product\",\"price\":1500,\"imageUrl\":\"https://example.com/image_updated.jpg\",\"categoryId\":1, \"options\":[{\"name\":\"Option1\",\"quantity\":10}]}"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(1L))
                 .andExpect(jsonPath("$.name").value("Updated Product"));
