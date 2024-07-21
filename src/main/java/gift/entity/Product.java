@@ -32,8 +32,16 @@ public class Product {
    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
    private List<Option> options;
 
-    public Product() {
-    }
+   private Product(Builder builder) {
+       this.id = builder.id;
+       this.name = builder.name;
+       this.price = builder.price;
+       this.imageUrl = builder.imageUrl;
+       this.category = builder.category;
+   }
+
+   public Product() {
+   }
 
     public Product(Long id, String name, int price, String imageUrl, Category category) {
         this.id = id;
@@ -81,5 +89,37 @@ public class Product {
 
     public void updateId(Long id) {
         this.id = id;
+    }
+
+    public static class Builder {
+       private Long id;
+       private String name;
+       private int price;
+       private String imageUrl;
+       private Category category;
+
+       public Builder id(Long id) {
+           this.id = id;
+           return this;
+       }
+       public Builder name(String name) {
+           this.name = name;
+           return this;
+       }
+       public Builder price(int price) {
+           this.price = price;
+           return this;
+       }
+       public Builder imageUrl(String imageUrl) {
+           this.imageUrl = imageUrl;
+           return this;
+       }
+       public Builder category(Category category) {
+           this.category = category;
+           return this;
+       }
+       public Product build() {
+           return new Product(this);
+       }
     }
 }
