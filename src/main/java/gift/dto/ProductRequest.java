@@ -23,7 +23,7 @@ public class ProductRequest {
     private Long categoryId;
 
     @NotNull
-    private List<OptionDTO> options;
+    private List<OptionRequest> options;
 
     public String getName() {
         return name;
@@ -53,10 +53,10 @@ public class ProductRequest {
 
     public void setCategoryId(Long categoryId) {this.categoryId = categoryId;}
 
-    public List<OptionDTO> getOptions() {
+    public List<OptionRequest> getOptions() {
         return options;
     }
-    public void setOptions(List<OptionDTO> options) {
+    public void setOptions(List<OptionRequest> options) {
         this.options = options;
     }
 }
