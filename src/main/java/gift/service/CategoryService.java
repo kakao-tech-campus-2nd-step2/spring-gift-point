@@ -2,6 +2,7 @@ package gift.service;
 
 import gift.repository.CategoryRepository;
 import gift.entity.Category;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -28,7 +29,7 @@ public class CategoryService {
     }
 
     public Category updateCategory(Long id, Category categoryDetails) {
-        Category category = categoryRepository.findById(id).orElseThrow(() -> new RuntimeException("Category not found"));
+        Category category = categoryRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Category not found"));
         category.update(
                 categoryDetails.getName(),
                 categoryDetails.getColor(),

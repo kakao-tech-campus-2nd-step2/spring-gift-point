@@ -4,12 +4,11 @@ import gift.entity.Category;
 import gift.entity.Product;
 import gift.repository.CategoryRepository;
 import gift.repository.ProductRepository;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-
-import java.util.Optional;
 
 @Service
 public class ProductService {
@@ -26,19 +25,22 @@ public class ProductService {
         return productRepository.findAll(pageable);
     }
 
-    public Optional<Product> findById(Long id) {
-        return productRepository.findById(id);
+    public Product findById(Long ProductId) {
+        return productRepository.findById(ProductId).orElseThrow(()-> new EntityNotFoundException("Product not found"));
     }
 
     public Product save(Product product) {
         return productRepository.save(product);
     }
 
-    public void deleteById(Long id) {
-        productRepository.deleteById(id);
+    public void deleteById(Long ProductId) {
+        productRepository.deleteById(ProductId);
     }
 
-    public Optional<Category> getCategoryById(Long id) {return categoryRepository.findById(id);}
+    public Category getCategoryById(Long categoryId) {
+        return categoryRepository.findById(categoryId)
+                .orElseThrow(() -> new EntityNotFoundException("Category not found"));
+    }
 }
 
 
