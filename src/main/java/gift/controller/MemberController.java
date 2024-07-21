@@ -1,6 +1,7 @@
 package gift.controller;
 
 import gift.entity.Member;
+import gift.exception.CustomException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -10,8 +11,6 @@ import gift.util.JwtUtil;
 import jakarta.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Optional;
-
 
 @RestController
 @RequestMapping("/member")
@@ -36,24 +35,27 @@ public class MemberController {
 
     @PostMapping
     public ResponseEntity<Map<String, String>> login(@RequestBody Member loginRequest) {
-        Optional<Member> memberOpt = memberService.findByEmail(loginRequest.getEmail());
-        if(memberOpt.isPresent() && memberOpt.get().getPassword().equals(loginRequest.getPassword())) {
-            String token = jwtUtil.generateToken(memberOpt.get().getEmail());
-            Map<String, String> response = new HashMap<>();
-            response.put("message", "success");
-            response.put("token", token);
-            return ResponseEntity.ok(response);
+        Member member = memberService.findByEmail(loginRequest.getEmail()).orElseThrow(() -> new CustomException.InvalidCredentialsException("Invalid credentials"));
+
+        if(!member.getPassword().equals(loginRequest.getPassword())) {
+            throw new CustomException.InvalidCredentialsException("Invalid credentials");
         }
-        return ResponseEntity.status(401).body(Map.of("message", "Invalid credentials"));
+
+        String token = jwtUtil.generateToken(member.getEmail());
+        Map<String, String> response = new HashMap<>();
+        response.put("message", "success");
+        response.put("token", token);
+        return ResponseEntity.ok(response);
     }
 
     @GetMapping("/me")
     public ResponseEntity<?> getCurrentMember(HttpServletRequest request) {
         String email = jwtUtil.getEmailFromRequest(request);
-        if(email != null) {
-            return memberService.findByEmail(email).map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.status(401).build());
+        if(email == null) {
+            throw new CustomException.InvalidCredentialsException("Invalid token");
         }
-        return ResponseEntity.status(401).body("Invalid token");
+        Member member = memberService.findByEmail(email).orElseThrow(() -> new CustomException.EntityNotFoundException("Member not found"));
+        return ResponseEntity.ok(member);
     }
 
 }

@@ -8,14 +8,10 @@ import gift.service.ProductService;
 import gift.util.ProductValidator;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/products")
@@ -48,33 +44,24 @@ public class ProductController {
                 product.getName(),
                 product.getPrice(),
                 product.getImageUrl(),
-                product.getCategory().getName());
+                product.getCategory().getName()
+        );
         return ResponseEntity.ok(response);
     }
 
     @PostMapping
-    public ResponseEntity<?> addProduct(@Valid @RequestBody ProductRequest productRequest, BindingResult bindingResult) {
-        if (bindingResult.hasErrors()) {
-            String errors = bindingResult.getAllErrors().stream()
-                    .map(DefaultMessageSourceResolvable::getDefaultMessage)
-                    .collect(Collectors.joining(","));
-            return ResponseEntity.badRequest().body(errors);
-        }
-
-        try {
-            ProductValidator.validateProductRequest(productRequest);
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
+    public ResponseEntity<?> addProduct(@Valid @RequestBody ProductRequest productRequest) {
+        ProductValidator.validateProductRequest(productRequest);
 
         Category category = productService.getCategoryById(productRequest.getCategoryId());
         Product product = new Product(
                 productRequest.getName(),
                 productRequest.getPrice(),
                 productRequest.getImageUrl(),
-                category
-        );
+                category);
+
         Product savedProduct = productService.save(product);
+
         return ResponseEntity.ok(new ProductResponse(
                 savedProduct.getId(),
                 savedProduct.getName(),
@@ -85,21 +72,9 @@ public class ProductController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> updateProduct(@PathVariable Long id, @Valid @RequestBody ProductRequest productRequest, BindingResult bindingResult) {
-        if (bindingResult.hasErrors()) {
-            String errors = bindingResult.getAllErrors().stream()
-                    .map(DefaultMessageSourceResolvable::getDefaultMessage)
-                    .collect(Collectors.joining(","));
-            return ResponseEntity.badRequest().body(errors);
-        }
-
+    public ResponseEntity<?> updateProduct(@PathVariable Long id, @Valid @RequestBody ProductRequest productRequest) {
+        ProductValidator.validateProductRequest(productRequest);
         Product existingProduct = productService.findById(id);
-
-        try {
-            ProductValidator.validateProductRequest(productRequest);
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
 
         Category category = productService.getCategoryById(productRequest.getCategoryId());
         existingProduct.update(
