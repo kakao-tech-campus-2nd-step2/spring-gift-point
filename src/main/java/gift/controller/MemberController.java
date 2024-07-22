@@ -1,7 +1,6 @@
 package gift.controller;
 
 import gift.entity.Member;
-import gift.exception.CustomException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -11,18 +10,19 @@ import gift.util.JwtUtil;
 import jakarta.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
+
 
 @RestController
 @RequestMapping("/member")
 public class MemberController {
-
     private final MemberService memberService;
     private final JwtUtil jwtUtil;
 
     @Autowired
-    public MemberController(MemberService memberService, JwtUtil jwtUtil) {
-        this.memberService = memberService;
-        this.jwtUtil = jwtUtil;
+    public MemberController(MemberService service, JwtUtil util) {
+        this.memberService = service;
+        this.jwtUtil = util;
     }
 
     @PostMapping("/register")
@@ -33,29 +33,39 @@ public class MemberController {
         return ResponseEntity.ok(response);
     }
 
-    @PostMapping
+    @PostMapping("/login")
     public ResponseEntity<Map<String, String>> login(@RequestBody Member loginRequest) {
-        Member member = memberService.findByEmail(loginRequest.getEmail()).orElseThrow(() -> new CustomException.InvalidCredentialsException("Invalid credentials"));
-
-        if(!member.getPassword().equals(loginRequest.getPassword())) {
-            throw new CustomException.InvalidCredentialsException("Invalid credentials");
+        Optional<Member> memberOpt = memberService.findByEmail(loginRequest.getEmail());
+        if(memberOpt.isPresent() && memberOpt.get().getPassword().equals(loginRequest.getPassword())) {
+            String token = jwtUtil.generateToken(memberOpt.get().getEmail());
+            Map<String, String> response = new HashMap<>();
+            response.put("message", "success");
+            response.put("token", token);
+            return ResponseEntity.ok(response);
         }
-
-        String token = jwtUtil.generateToken(member.getEmail());
-        Map<String, String> response = new HashMap<>();
-        response.put("message", "success");
-        response.put("token", token);
-        return ResponseEntity.ok(response);
+        return  ResponseEntity.status(401).body(null);
     }
 
+    // endpoint that checking member information
     @GetMapping("/me")
-    public ResponseEntity<?> getCurrentMember(HttpServletRequest request) {
-        String email = jwtUtil.getEmailFromRequest(request);
-        if(email == null) {
-            throw new CustomException.InvalidCredentialsException("Invalid token");
+    public ResponseEntity<Member> getCurrentMember(HttpServletRequest request) {
+        String email = getEmailFromRequest(request);
+        if(email != null) {
+            Optional<Member> memberOpt = memberService.findByEmail(email);
+            if(memberOpt.isPresent()) {
+                return ResponseEntity.ok(memberOpt.get());
+            }
         }
-        Member member = memberService.findByEmail(email).orElseThrow(() -> new CustomException.EntityNotFoundException("Member not found"));
-        return ResponseEntity.ok(member);
+        return ResponseEntity.status(401).body(null);
     }
 
+    // Extracting email from token using HttpServletRequest
+    private String getEmailFromRequest(HttpServletRequest request) {
+        String authorizationHeader = request.getHeader("Authorization");
+        if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
+            String token = authorizationHeader.substring(7);
+            return jwtUtil.extractEmail(token);
+        }
+        return null;
+    }
 }
