@@ -1,0 +1,28 @@
+spring:
+  application:
+    name: spring-gift
+
+  h2:
+    console:
+      enabled: true
+
+  datasource:
+    url: jdbc:h2:mem:serverdb;MODE=MYSQL;DB_CLOSE_DELAY=-1
+
+  jpa:
+    hibernate:
+      ddl-auto: create
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+
+  mvc:
+    hidden method:
+      filter:
+        enabled: true
+
+  jwt:
+    secret: ${jwt_secret}
+    access_expiration: 3600000
+    refresh_expiration: 604800000
