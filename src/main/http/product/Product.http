@@ -1,0 +1,37 @@
+### get product list
+GET http://localhost:8080/api/products/all
+Content-Type: application/json
+
+### get product page
+GET http://localhost:8080/api/products?page=0
+Content-Type: application/json
+
+### get product
+GET http://localhost:8080/api/products/1
+Content-Type: application/json
+
+### create product
+POST http://localhost:8080/api/products
+Content-Type: application/json
+
+{
+  "name": "!@#!$Q@#%",
+  "price": "4500",
+  "imageUrl": "http://hello",
+  "categoryId": 1
+}
+
+### update product
+PUT http://localhost:8080/api/products/1
+Content-Type: application/json
+
+{
+  "name": "아메리카노2",
+  "price": "5000",
+  "imageUrl": "http://hello",
+  "categoryId": 2
+}
+
+### delete product
+DELETE http://localhost:8080/api/products/3
+Content-Type: application/json

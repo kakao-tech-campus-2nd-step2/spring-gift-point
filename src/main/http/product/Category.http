@@ -1,0 +1,33 @@
+### get category list
+GET http://localhost:8080/api/categories
+Content-Type: application/json
+
+### get category
+GET http://localhost:8080/api/categories/1
+Content-Type: application/json
+
+### create category
+POST http://localhost:8080/api/categories
+Content-Type: application/json
+
+{
+  "name": "컴퓨터",
+  "color": "#123",
+  "imageUrl": "http://hello",
+  "description": "description"
+}
+
+### update category
+PUT http://localhost:8080/api/categories/1
+Content-Type: application/json
+
+{
+  "name": "카테카테",
+  "color": "#123",
+  "imageUrl": "http://hello",
+  "description": "description"
+}
+
+### delete category
+DELETE http://localhost:8080/api/categories/1
+Content-Type: application/json

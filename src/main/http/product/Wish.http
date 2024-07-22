@@ -1,0 +1,42 @@
+### get wish list
+GET http://localhost:8080/api/wishes/all
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJtZW1iZXJfaWQiOjEsIm1lbWJlcl90eXBlIjoiVVNFUiIsImlhdCI6MTcyMDY3NTM1MiwiZXhwIjo0NjA1NTgwOTc4fQ.wkX4AiHs8ucCfYpWQMxduNUmX9IQWu16b64HWO3p4x0jorEWp9LjeRxDh2cRIgbi6eqnwTUzzpZGexX3ZPYVmA
+Content-Type: application/json
+
+### get wish list
+GET http://localhost:8080/api/wishes?page=2
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJtZW1iZXJfaWQiOjEsIm1lbWJlcl90eXBlIjoiVVNFUiIsImlhdCI6MTcyMDY3NTM1MiwiZXhwIjo0NjA1NTgwOTc4fQ.wkX4AiHs8ucCfYpWQMxduNUmX9IQWu16b64HWO3p4x0jorEWp9LjeRxDh2cRIgbi6eqnwTUzzpZGexX3ZPYVmA
+Content-Type: application/json
+
+### get wish
+GET http://localhost:8080/api/wishes/2
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJtZW1iZXJfaWQiOjEsIm1lbWJlcl90eXBlIjoiVVNFUiIsImlhdCI6MTcyMDY3NTM1MiwiZXhwIjo0NjA1NTgwOTc4fQ.wkX4AiHs8ucCfYpWQMxduNUmX9IQWu16b64HWO3p4x0jorEWp9LjeRxDh2cRIgbi6eqnwTUzzpZGexX3ZPYVmA
+Content-Type: application/json
+
+
+### create wish
+POST http://localhost:8080/api/wishes
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJtZW1iZXJfaWQiOjEsIm1lbWJlcl90eXBlIjoiVVNFUiIsImlhdCI6MTcyMDY3NTM1MiwiZXhwIjo0NjA1NTgwOTc4fQ.wkX4AiHs8ucCfYpWQMxduNUmX9IQWu16b64HWO3p4x0jorEWp9LjeRxDh2cRIgbi6eqnwTUzzpZGexX3ZPYVmA
+Content-Type: application/json
+
+{
+  "memberId": 1,
+  "productId": 2,
+  "productCount": 5
+}
+
+### update wish
+PUT http://localhost:8080/api/wishes/1
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJtZW1iZXJfaWQiOjEsIm1lbWJlcl90eXBlIjoiVVNFUiIsImlhdCI6MTcyMDY3NTM1MiwiZXhwIjo0NjA1NTgwOTc4fQ.wkX4AiHs8ucCfYpWQMxduNUmX9IQWu16b64HWO3p4x0jorEWp9LjeRxDh2cRIgbi6eqnwTUzzpZGexX3ZPYVmA
+Content-Type: application/json
+
+{
+  "memberId": 1,
+  "productId": 2,
+  "productCount": 10
+}
+
+### delete wish
+DELETE http://localhost:8080/api/wishes/1
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJtZW1iZXJfaWQiOjEsIm1lbWJlcl90eXBlIjoiVVNFUiIsImlhdCI6MTcyMDY3NTM1MiwiZXhwIjo0NjA1NTgwOTc4fQ.wkX4AiHs8ucCfYpWQMxduNUmX9IQWu16b64HWO3p4x0jorEWp9LjeRxDh2cRIgbi6eqnwTUzzpZGexX3ZPYVmA
+Content-Type: application/json
