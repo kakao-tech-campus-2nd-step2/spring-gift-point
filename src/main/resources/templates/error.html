@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>Error Page</title>
+</head>
+<body>
+  <h1>Error</h1>
+  <p th:if="${nameError}" th:text="${nameError}"></p>
+  <p th:if="${priceError}" th:text="${priceError}"></p>
+  <p th:if="${imageUrlError}" th:text="${imageUrlError}"></p>
+  <a href="javascript:history.back()">Go to Previous Page</a>
+</body>
+</html>

@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>Product List</title>
+</head>
+<body>
+<h1>Product List</h1>
+<a th:href="@{/admin/product/add}">Add New Product</a>
+<table>
+  <thead>
+  <tr>
+    <th>ID</th>
+    <th>Name</th>
+    <th>Price</th>
+    <th>Image URL</th>
+    <th>Category ID</th>
+    <th>Option</th>
+    <th>Actions</th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr th:each="product : ${products}">
+    <td th:text="${product.id}"></td>
+    <td th:text="${product.name}"></td>
+    <td th:text="${product.price}"></td>
+    <td th:text="${product.imageUrl}"></td>
+    <td th:text="${product.categoryId}"></td>
+    <td >
+      <a th:href="@{/admin/product/{id}/option/list(id=${product.id})}">Options</a>
+    </td>
+    <td>
+      <a th:href="@{'/admin/product/edit/' + ${product.id}}">Edit</a>
+      <a href="javascript:void(0);"
+         th:onclick="'deleteProduct(' + ${product.id} + ')'">Delete</a>
+    </td>
+  </tr>
+  </tbody>
+</table>
+
+<script th:inline="javascript">
+  function deleteProduct(productId) {
+    if (confirm('상품을 삭제하시겠습니까?')) {
+      fetch('/admin/product/delete/' + productId, {
+        method: 'DELETE',
+      }).then(response => {
+        if (response.ok) {
+          window.location.reload();
+        } else {
+          alert('오류가 발생했습니다.');
+        }
+      }).catch(error => {
+        console.error('Error:', error);
+        alert('오류가 발생했습니다.');
+      });
+    }
+  }
+
+
+
+</script>
+</body>
+</html>
