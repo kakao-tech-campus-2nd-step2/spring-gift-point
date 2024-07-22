@@ -1,5 +1,6 @@
 package gift.util;
 
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.stereotype.Component;
 
 import java.util.Base64;
@@ -54,5 +55,19 @@ public class JwtUtil {
         } catch (Exception e) {
             throw new RuntimeException("Failed to calculate HMAC-SHA256", e);
         }
+    }
+
+    // Extract getEmailFromRequest logic as JwtUtil to reduce redundancy
+    public String getEmailFromRequest(HttpServletRequest request) {
+        String authorizationHeader = request.getHeader("Authorization");
+        if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
+            String token = authorizationHeader.substring(7);
+            try {
+                return extractEmail(token);
+            } catch (Exception e) {
+                return null;
+            }
+        }
+        return null;
     }
 }

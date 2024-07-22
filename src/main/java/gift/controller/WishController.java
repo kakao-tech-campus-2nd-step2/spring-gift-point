@@ -1,8 +1,10 @@
 package gift.controller;
 
 import gift.entity.Member;
+import gift.entity.Product;
 import gift.entity.Wish;
 import gift.repository.MemberRepository;
+import gift.repository.ProductRepository;
 import gift.service.WishService;
 import gift.util.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,65 +15,65 @@ import jakarta.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.Optional;
 
-
 @RestController
 @RequestMapping("/wishes")
 public class WishController {
-    @Autowired
-    private WishService wishService;
+    private final WishService wishService;
+    private final MemberRepository memberRepository;
+    private final ProductRepository productRepository;
+    private final JwtUtil jwtUtil;
 
     @Autowired
-    private MemberRepository memberRepository;
-
-    @Autowired
-    private JwtUtil jwtUtil;
+    public WishController(WishService wishService, MemberRepository memberRepository, ProductRepository productRepository, JwtUtil jwtUtil) {
+        this.wishService = wishService;
+        this.memberRepository = memberRepository;
+        this.productRepository = productRepository;
+        this.jwtUtil = jwtUtil;
+    }
 
     @PostMapping
     public ResponseEntity<Wish> addWish(@RequestBody Wish wish, HttpServletRequest request) {
-        String email = getEmailFromRequest(request);
-        if (email != null) {
-            Optional<Member> memberOpt = memberRepository.findByEmail(email);
-            if(memberOpt.isPresent()) {
-                wish.setMember(memberOpt.get());
-                wishService.save(wish);
-                return ResponseEntity.ok(wish);
-            }
+        String email = jwtUtil.getEmailFromRequest(request);
+        if(email == null) {
+            return ResponseEntity.status(401).body(null);
         }
-        return ResponseEntity.status(401).body(null);
+        Optional<Member> memberOpt = memberRepository.findByEmail(email);
+        if(memberOpt.isEmpty()) {
+            return ResponseEntity.status(401).body(null);
+        }
+        Optional<Product> productOpt = productRepository.findById(wish.getProductId());
+        if(productOpt.isEmpty()) {
+            return ResponseEntity.status(401).body(null);
+        }
+        wish.setMember(memberOpt.get());
+        wish.setProduct(productOpt.get());
+        Wish savedWish = wishService.save(wish);
+        return ResponseEntity.status(201).body(savedWish);
     }
 
     @GetMapping
     public ResponseEntity<List<Wish>> getWishes(HttpServletRequest request) {
-        String email = getEmailFromRequest(request);
+        String email = jwtUtil.getEmailFromRequest(request);
         if (email != null) {
             Optional<Member> memberOpt = memberRepository.findByEmail(email);
-            if(memberOpt.isPresent()) {
-                return ResponseEntity.ok(wishService.findByMember(memberOpt.get()));
+            if (memberOpt.isPresent()) {
+                List<Wish> wishes = wishService.findByMember(memberOpt.get());
+                return ResponseEntity.ok(wishes);
             }
         }
         return ResponseEntity.status(401).body(null);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> deleteWish(@PathVariable Long id, HttpServletRequest request) {
-        String email = getEmailFromRequest(request);
+    public ResponseEntity<Void> deleteWish(@PathVariable Long id, HttpServletRequest request) {
+        String email = jwtUtil.getEmailFromRequest(request);
         if (email != null) {
             Optional<Member> memberOpt = memberRepository.findByEmail(email);
-            if(memberOpt.isPresent()) {
+            if (memberOpt.isPresent()) {
                 wishService.deleteById(id);
-                return ResponseEntity.ok("Wish deleted successfully");
+                return ResponseEntity.noContent().build(); // 204 No Content
             }
         }
-        return ResponseEntity.status(401).body(null);
-    }
-
-    // Extracting email from token using HttpServletRequest
-    private String getEmailFromRequest(HttpServletRequest request) {
-        String authorizationHeader = request.getHeader("Authorization");
-        if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
-            String token = authorizationHeader.substring(7);
-            return jwtUtil.extractEmail(token);
-        }
-        return null;
+        return ResponseEntity.status(401).build();
     }
 }

@@ -5,12 +5,14 @@ public class ProductResponse {
     private String name;
     private Integer price;
     private String imageUrl;
+    private String categoryName;
 
-    public ProductResponse(Long id, String name, Integer price, String imageUrl) {
+    public ProductResponse(Long id, String name, Integer price, String imageUrl, String categoryName) {
         this.id = id;
         this.name = name;
         this.price = price;
         this.imageUrl = imageUrl;
+        this.categoryName = categoryName;
     }
 
     public Long getId() {
@@ -44,4 +46,8 @@ public class ProductResponse {
     public void setImageUrl(String imageUrl) {
         this.imageUrl = imageUrl;
     }
+
+    public String getCategoryName() {return categoryName;}
+
+    public void setCategoryName(String categoryName) {this.categoryName = categoryName;}
 }

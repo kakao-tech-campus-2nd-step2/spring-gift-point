@@ -17,6 +17,9 @@ public class ProductRequest {
     @NotEmpty
     private String imageUrl;
 
+    @NotNull
+    private Long categoryId;
+
     public String getName() {
         return name;
     }
@@ -40,4 +43,8 @@ public class ProductRequest {
     public void setImageUrl(String imageUrl) {
         this.imageUrl = imageUrl;
     }
+
+    public Long getCategoryId() {return categoryId;}
+
+    public void setCategoryId(Long categoryId) {this.categoryId = categoryId;}
 }
