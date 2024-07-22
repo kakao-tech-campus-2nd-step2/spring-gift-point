@@ -1,0 +1,79 @@
+/* 공통 스타일 */
+body {
+  background-color: #f7f7f7;
+  font-family: Arial, sans-serif;
+}
+
+.container {
+  background-color: white;
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  padding: 30px;
+}
+
+.form-label {
+  font-weight: bold;
+}
+
+.form-control:focus {
+  box-shadow: none;
+  border-color: #007bff;
+}
+
+.text-danger {
+  margin-top: 5px;
+}
+
+.btn-primary,
+.btn-success,
+.btn-warning,
+.btn-danger {
+  border-color: transparent;
+}
+
+.btn-warning {
+  background-color: #ffc107;
+}
+
+.btn-danger {
+  background-color: #dc3545;
+}
+
+.scrollable-table {
+  max-height: 600px;
+  overflow-y: auto;
+  margin-bottom: 15px;
+}
+
+.scrollable-table thead th {
+  position: sticky;
+  top: 0;
+  background-color: #f8f9fa;
+  z-index: 1;
+}
+
+/* 관리자 페이지 스타일 */
+.admin-container h1 {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+/* 회원 목록 페이지 스타일 */
+.members-container .table-hover tbody tr:hover {
+  background-color: #f1f1f1;
+}
+
+/* 상품 목록 페이지 스타일 */
+.products-container .img-thumbnail {
+  max-width: 100px;
+}
+
+.members-container .table thead th,
+.products-container .table thead th {
+  background-color: #f8f9fa;
+}
+
+/* 상품 수정 페이지 스타일 */
+.product-edit-container .scrollable-table {
+  max-height: 200px;
+}

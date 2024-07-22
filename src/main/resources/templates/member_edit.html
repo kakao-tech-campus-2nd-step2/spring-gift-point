@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ko">
+
+<head>
+  <!-- meta -->
+  <meta charset="UTF-8">
+  <meta name="author" content="충남대 BE 이경빈">
+  <meta name="keywords" content="카카오 테크 캠퍼스">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>회원 수정</title>
+
+  <!-- CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css"
+        rel="stylesheet">
+  <link rel="stylesheet" th:href="@{/css/stylesheet.css}">
+
+  <!-- JS -->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+  <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"></script>
+  <script th:src="@{/script.js}"></script>
+</head>
+
+<body>
+<div class="container member-edit-container mt-5">
+  <h1 class="text-center mb-4">회원 수정</h1>
+  <form th:action="@{'/admin/members/' + ${member.id}}" th:object="${member}" method="post">
+    <input type="hidden" name="_method" value="put">
+    <div class="mb-3">
+      <label for="email" class="form-label">이메일</label>
+      <input type="email" th:field="*{email}" class="form-control" id="email">
+      <div th:if="${#fields.hasErrors('email')}" class="text-danger">
+        <p th:each="err : ${#fields.errors('email')}" th:text="${err}"></p>
+      </div>
+    </div>
+    <div class="mb-3">
+      <label for="password" class="form-label">비밀번호</label>
+      <input type="password" th:field="*{password}" class="form-control" id="password">
+      <div th:if="${#fields.hasErrors('password')}" class="text-danger">
+        <p th:each="err : ${#fields.errors('password')}" th:text="${err}"></p>
+      </div>
+    </div>
+    <button type="submit" class="btn btn-primary">회원 수정</button>
+  </form>
+</div>
+</body>
+
+</html>
