@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Edit Product</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+</head>
+<body>
+<div class="container">
+    <h1>Edit Product</h1>
+    <form id="productForm" onsubmit="submitEditProductForm(event)">
+        <input type="hidden" id="productId" name="id" th:value="${product.id}">
+        <div class="form-group">
+            <label for="productName">Name</label>
+            <input type="text" class="form-control" id="productName" name="name" th:value="${product.name}" required>
+        </div>
+        <div class="form-group">
+            <label for="productPrice">Price</label>
+            <input type="number" class="form-control" id="productPrice" name="price" th:value="${product.price}" required>
+        </div>
+        <div class="form-group">
+            <label for="productImgUrl">Image URL</label>
+            <input type="text" class="form-control" id="productImgUrl" name="imgUrl" th:value="${product.imgUrl}" required>
+        </div>
+        <button type="submit" class="btn btn-primary">Save</button>
+        <a href="/admin" class="btn btn-secondary">Cancel</a>
+    </form>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+<script>
+    function submitEditProductForm(event) {
+        event.preventDefault();
+        var id = $('#productId').val();
+        var formData = {
+            name: $('#productName').val(),
+            price: $('#productPrice').val(),
+            imgUrl: $('#productImgUrl').val()
+        };
+
+        $.ajax({
+            url: '/admin/products/' + id,
+            type: 'PATCH',
+            contentType: 'application/json',
+            data: JSON.stringify(formData),
+            success: function() {
+                window.location.href = '/admin';
+            },
+            error: function(error) {
+                console.error('Error saving product:', error);
+            }
+        });
+    }
+</script>
+</body>
+</html>
