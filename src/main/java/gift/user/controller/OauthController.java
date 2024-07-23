@@ -26,7 +26,7 @@ public class OauthController {
         return new RedirectView(kakaoService.buildAuthorizeUrl());
     }
 
-    @GetMapping("/oauth/kakao")
+    @GetMapping("/kakao")
     public ResponseEntity<String> kakaoCallback(@RequestParam String code) {
         KakaoAuthToken token = kakaoService.getAccessToken(code);
         String nickname = kakaoService.getUserInfo(token.accessToken());
