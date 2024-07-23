@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Manage Products</title>
+    <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+<div class="container mt-4">
+    <h1>Manage Products</h1>
+    <div th:if="${errorMessage}">
+        <p class="error" th:text="${errorMessage}"></p>
+    </div>
+    <div class="d-flex justify-content-end mb-2">
+        <a href="/products/add" class="btn btn-success">Add New Product</a>
+    </div>
+    <table class="table table-bordered">
+        <thead>
+        <tr>
+            <th>Name</th>
+            <th>Price</th>
+            <th>Image URL</th>
+            <th>Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="product : ${products}">
+            <td th:text="${product.name}">Product Name</td>
+            <td th:text="${product.price}">Product Price</td>
+            <td th:text="${product.imageUrl}">Product Image URL</td>
+            <td>
+                <a th:href="@{/products/edit/{id}(id=${product.id})}" class="btn btn-warning">Edit</a>
+                <a th:href="@{/products/delete/{id}(id=${product.id})}" class="btn btn-danger">Delete</a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+<script src="/js/scripts.js"></script>
+</body>
+</html>
