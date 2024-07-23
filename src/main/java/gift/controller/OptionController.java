@@ -1,6 +1,6 @@
 package gift.controller;
 
-import gift.dto.OptionDTO;
+import gift.dto.OptionRequest;
 import gift.entity.Option;
 import gift.service.OptionService;
 import jakarta.validation.Valid;
@@ -25,8 +25,20 @@ public class OptionController {
     }
 
     @PostMapping
-    public ResponseEntity<Option> addOptionToProduct(@PathVariable Long productId, @Valid @RequestBody OptionDTO optionDTO) {
+    public ResponseEntity<Option> addOptionToProduct(@PathVariable Long productId, @Valid @RequestBody OptionRequest optionDTO) {
         Option option = optionService.addOptionToProduct(productId, optionDTO);
         return ResponseEntity.ok(option);
+    }
+
+    @PutMapping("/{optionId}")
+    public ResponseEntity<Option> updateOption(@PathVariable Long optionId, @RequestBody OptionRequest optionRequest, @PathVariable String productId) {
+        Option updatedOption = optionService.updateOption(optionId, optionRequest.getName(), optionRequest.getQuantity());
+        return ResponseEntity.ok(updatedOption);
+    }
+
+    @DeleteMapping("/{optionId}")
+    public ResponseEntity<Void> deleteOption(@PathVariable Long optionId, @PathVariable String productId) {
+        optionService.deleteOption(optionId);
+        return ResponseEntity.noContent().build();
     }
 }

@@ -1,7 +1,8 @@
 package gift.service;
 
-import gift.repository.CategoryRepository;
 import gift.entity.Category;
+import gift.exception.CustomException;
+import gift.repository.CategoryRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -28,7 +29,8 @@ public class CategoryService {
     }
 
     public Category updateCategory(Long id, Category categoryDetails) {
-        Category category = categoryRepository.findById(id).orElseThrow(() -> new RuntimeException("Category not found"));
+        Category category = categoryRepository.findById(id)
+                .orElseThrow(() -> new CustomException.EntityNotFoundException("Category not found"));
         category.update(
                 categoryDetails.getName(),
                 categoryDetails.getColor(),
@@ -39,6 +41,9 @@ public class CategoryService {
     }
 
     public void deleteCategory(Long id) {
+        if (!categoryRepository.existsById(id)) {
+            throw new CustomException.EntityNotFoundException("Category not found");
+        }
         categoryRepository.deleteById(id);
     }
 }

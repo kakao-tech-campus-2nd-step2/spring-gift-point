@@ -2,6 +2,7 @@ package gift.service;
 
 import gift.entity.Member;
 import gift.entity.Wish;
+import gift.exception.CustomException;
 import gift.repository.WishRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -32,5 +33,10 @@ public class WishService {
 
     public void deleteById(Long id) {
         wishRepository.deleteById(id);
+    }
+
+    public Wish updateWish(Long wishId) {
+        Wish wish = wishRepository.findById(wishId).orElseThrow(() -> new CustomException.EntityNotFoundException("Wish not found"));
+        return wishRepository.save(wish);
     }
 }

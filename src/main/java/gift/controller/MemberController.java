@@ -16,14 +16,13 @@ import java.util.Optional;
 @RestController
 @RequestMapping("/member")
 public class MemberController {
-
     private final MemberService memberService;
     private final JwtUtil jwtUtil;
 
     @Autowired
-    public MemberController(MemberService memberService, JwtUtil jwtUtil) {
-        this.memberService = memberService;
-        this.jwtUtil = jwtUtil;
+    public MemberController(MemberService service, JwtUtil util) {
+        this.memberService = service;
+        this.jwtUtil = util;
     }
 
     @PostMapping("/register")
@@ -34,7 +33,7 @@ public class MemberController {
         return ResponseEntity.ok(response);
     }
 
-    @PostMapping
+    @PostMapping("/login")
     public ResponseEntity<Map<String, String>> login(@RequestBody Member loginRequest) {
         Optional<Member> memberOpt = memberService.findByEmail(loginRequest.getEmail());
         if(memberOpt.isPresent() && memberOpt.get().getPassword().equals(loginRequest.getPassword())) {
@@ -44,16 +43,29 @@ public class MemberController {
             response.put("token", token);
             return ResponseEntity.ok(response);
         }
-        return ResponseEntity.status(401).body(Map.of("message", "Invalid credentials"));
+        return  ResponseEntity.status(401).body(null);
     }
 
+    // endpoint that checking member information
     @GetMapping("/me")
-    public ResponseEntity<?> getCurrentMember(HttpServletRequest request) {
-        String email = jwtUtil.getEmailFromRequest(request);
+    public ResponseEntity<Member> getCurrentMember(HttpServletRequest request) {
+        String email = getEmailFromRequest(request);
         if(email != null) {
-            return memberService.findByEmail(email).map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.status(401).build());
+            Optional<Member> memberOpt = memberService.findByEmail(email);
+            if(memberOpt.isPresent()) {
+                return ResponseEntity.ok(memberOpt.get());
+            }
         }
-        return ResponseEntity.status(401).body("Invalid token");
+        return ResponseEntity.status(401).body(null);
     }
 
+    // Extracting email from token using HttpServletRequest
+    private String getEmailFromRequest(HttpServletRequest request) {
+        String authorizationHeader = request.getHeader("Authorization");
+        if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
+            String token = authorizationHeader.substring(7);
+            return jwtUtil.extractEmail(token);
+        }
+        return null;
+    }
 }

@@ -1,8 +1,9 @@
 package gift.service;
 
-import gift.dto.OptionDTO;
+import gift.dto.OptionRequest;
 import gift.entity.Option;
 import gift.entity.Product;
+import gift.exception.CustomException;
 import gift.repository.OptionRepository;
 import gift.repository.ProductRepository;
 import jakarta.transaction.Transactional;
@@ -24,40 +25,58 @@ public class OptionService {
     }
 
     public List<Option> getOptionsByProductId(long productId) {
-        return optionRepository.findByProductId(productId);
+        Product product = productRepository.findById(productId).orElseThrow(()-> new CustomException.EntityNotFoundException("Product not found"));
+        return product.getOptions();
+    }
+
+    public Option updateOption(Long optionId, String name, Long quantity) {
+        Option option = optionRepository.findById(optionId).orElseThrow(()-> new CustomException.EntityNotFoundException("Option not found"));
+
+        option.update(name, quantity);
+        return optionRepository.save(option);
     }
 
     @Transactional
-    public Option addOptionToProduct(Long productId, OptionDTO optionDTO) {
+    public Option addOptionToProduct(Long productId, OptionRequest optionRequest) {
         Product product = productRepository.findById(productId)
-                .orElseThrow(() -> new RuntimeException("Product not found"));
-        // redundancy option check
-        Optional<Option> existingOption = optionRepository.findByProductIdAndName(productId, optionDTO.getName());
+                .orElseThrow(() -> new CustomException.EntityNotFoundException("Product not found"));
+
+        Optional<Option> existingOption = optionRepository.findByProductIdAndName(productId, optionRequest.getName());
         if (existingOption.isPresent()) {
-            throw new RuntimeException("Duplicate option name");
+            throw new CustomException.ValidationException("Duplicate option name");
         }
 
-        Option option = new Option();
-        option.update(optionDTO.getName(), optionDTO.getQuantity());
+        Option option = new Option.Builder()
+                .name(optionRequest.getName())
+                .quantity(optionRequest.getQuantity())
+                .product(product)
+                .build();
         optionRepository.save(option);
 
         product.getOptions().add(option);
         return optionRepository.save(option);
     }
 
-    // Stay until use this method.
-    public void decreseOptionQuantity(Long optionId, Long quantity) {
-        Option option = optionRepository.findById(optionId).orElseThrow(() -> new RuntimeException("Option not found"));
-
-        if(quantity <= 0) {
-            throw new IllegalArgumentException("Quantity must be greater than zero");
-        }
-        if(option.getQuantity() < quantity) {
-            throw new IllegalArgumentException("Not enough quantity available");
-        }
-
-        option.setQuantity(option.getQuantity() - quantity);
-        optionRepository.save(option);
+    public void deleteOption(Long optionId) {
+        optionRepository.deleteById(optionId);
     }
 
+    public void decreaseOptionQuantity(Long optionId, Long quantity) {
+        Option decreaseOption = optionRepository.findById(optionId).orElseThrow(() -> new CustomException.EntityNotFoundException("Option not found"));
+
+        if (quantity <= 0) {
+            throw new CustomException.InvalidQuantityException("Quantity must be greater than zero");
+        }
+        if(decreaseOption.getQuantity() < quantity) {
+            throw new CustomException.InvalidQuantityException("Not enough quantity available");
+        }
+        Option updatedOption = new Option.Builder()
+                .id(decreaseOption.getId())
+                .name(decreaseOption.getName())
+                .quantity(decreaseOption.getQuantity()-quantity)
+                .product(decreaseOption.getProduct())
+                .build();
+
+        optionRepository.save(updatedOption);
+    }
 }
