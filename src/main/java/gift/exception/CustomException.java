@@ -24,4 +24,8 @@ public class CustomException {
             super(message);
         }
     }
+
+    public static class InvalidQuantityException extends RuntimeException {
+        public InvalidQuantityException(String message) {super(message);}
+    }
 }
