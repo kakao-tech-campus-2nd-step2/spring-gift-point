@@ -1,19 +1,20 @@
 package gift.controller;
 
 import gift.entity.Category;
+import gift.exception.CustomException;
 import gift.service.CategoryService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
-
 
 @RestController
 @RequestMapping("/api/categories")
 public class CategoryController {
     private final CategoryService categoryService;
 
+    @Autowired
     public CategoryController(CategoryService categoryService) {
         this.categoryService = categoryService;
     }
@@ -26,14 +27,14 @@ public class CategoryController {
 
     @GetMapping("/{id}")
     public ResponseEntity<Category> getCategoryById(@PathVariable Long id) {
-        Optional<Category> category = categoryService.getCategoryById(id);
-        return category.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+        Category category = categoryService.getCategoryById(id).orElseThrow(() -> new CustomException.EntityNotFoundException("Category not found"));
+        return ResponseEntity.ok(category);
     }
 
     @PostMapping
-    public ResponseEntity<Category> createCategory(@RequestBody Category category) {
+    public ResponseEntity<Category> addCategory(@RequestBody Category category) {
         Category createdCategory = categoryService.createCategory(category);
-        return ResponseEntity.ok(createdCategory);
+        return ResponseEntity.status(201).body(createdCategory);
     }
 
     @PutMapping("/{id}")

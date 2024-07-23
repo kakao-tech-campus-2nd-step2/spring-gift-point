@@ -5,6 +5,7 @@ import gift.dto.ProductResponse;
 import gift.entity.Category;
 import gift.entity.Product;
 import gift.service.ProductService;
+import gift.util.ProductValidator;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -43,45 +44,53 @@ public class ProductController {
                 product.getName(),
                 product.getPrice(),
                 product.getImageUrl(),
-                product.getCategory().getName());
+                product.getCategory().getName()
+        );
         return ResponseEntity.ok(response);
     }
 
     @PostMapping
-    public ResponseEntity<ProductResponse> addProduct(@Valid @RequestBody ProductRequest productRequest) {
+    public ResponseEntity<?> addProduct(@Valid @RequestBody ProductRequest productRequest) {
+        ProductValidator.validateProductRequest(productRequest);
+
         Category category = productService.getCategoryById(productRequest.getCategoryId());
         Product product = new Product(
                 productRequest.getName(),
                 productRequest.getPrice(),
                 productRequest.getImageUrl(),
                 category);
+
         Product savedProduct = productService.save(product);
-        ProductResponse productResponse = new ProductResponse(
+
+        return ResponseEntity.ok(new ProductResponse(
                 savedProduct.getId(),
                 savedProduct.getName(),
                 savedProduct.getPrice(),
                 savedProduct.getImageUrl(),
-                savedProduct.getCategory().getName());
-        return ResponseEntity.ok(productResponse);
+                savedProduct.getCategory().getName()
+        ));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<ProductResponse> updateProduct(@PathVariable Long id, @Valid @RequestBody ProductRequest productRequest) {
+    public ResponseEntity<?> updateProduct(@PathVariable Long id, @Valid @RequestBody ProductRequest productRequest) {
+        ProductValidator.validateProductRequest(productRequest);
         Product existingProduct = productService.findById(id);
+
         Category category = productService.getCategoryById(productRequest.getCategoryId());
         existingProduct.update(
                 productRequest.getPrice(),
                 productRequest.getName(),
                 productRequest.getImageUrl(),
-                category);
+                category
+        );
         Product updatedProduct = productService.save(existingProduct);
-        ProductResponse response = new ProductResponse(
+        return ResponseEntity.ok(new ProductResponse(
                 updatedProduct.getId(),
                 updatedProduct.getName(),
                 updatedProduct.getPrice(),
                 updatedProduct.getImageUrl(),
-                updatedProduct.getCategory().getName());
-        return ResponseEntity.ok(response);
+                updatedProduct.getCategory().getName()
+        ));
     }
 
     @DeleteMapping("/{id}")

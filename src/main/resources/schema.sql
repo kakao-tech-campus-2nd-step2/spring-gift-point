@@ -21,6 +21,14 @@ CREATE TABLE IF NOT EXISTS product(
     FOREIGN KEY (category_id) REFERENCES category(id)
 );
 
+CREATE TABLE IF NOT EXISTS option (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(50) NOT NULL,
+    quantity BIGINT NOT NULL,
+    product_id BIGINT NOT NULL,
+    FOREIGN KEY (product_id) REFERENCES product(id)
+);
+
 CREATE TABLE IF NOT EXISTS wishlist (
     member_id BIGINT,
     product_id BIGINT,

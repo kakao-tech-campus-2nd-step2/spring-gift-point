@@ -5,6 +5,8 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.Size;
 
+import java.util.List;
+
 @Entity
 public class Product {
     @Positive(message = "price must be positive")
@@ -27,8 +29,19 @@ public class Product {
     @ManyToOne
     private Category category;
 
-    public Product() {
-    }
+   @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
+   private List<Option> options;
+
+   private Product(Builder builder) {
+       this.id = builder.id;
+       this.name = builder.name;
+       this.price = builder.price;
+       this.imageUrl = builder.imageUrl;
+       this.category = builder.category;
+   }
+
+   public Product() {
+   }
 
     public Product(Long id, String name, int price, String imageUrl, Category category) {
         this.id = id;
@@ -65,6 +78,8 @@ public class Product {
         return category;
     }
 
+    public List<Option> getOptions() {return options;}
+
     public void update(int price, String name, String imageUrl, Category category) {
         this.price = price;
         this.name = name;
@@ -74,5 +89,37 @@ public class Product {
 
     public void updateId(Long id) {
         this.id = id;
+    }
+
+    public static class Builder {
+       private Long id;
+       private String name;
+       private int price;
+       private String imageUrl;
+       private Category category;
+
+       public Builder id(Long id) {
+           this.id = id;
+           return this;
+       }
+       public Builder name(String name) {
+           this.name = name;
+           return this;
+       }
+       public Builder price(int price) {
+           this.price = price;
+           return this;
+       }
+       public Builder imageUrl(String imageUrl) {
+           this.imageUrl = imageUrl;
+           return this;
+       }
+       public Builder category(Category category) {
+           this.category = category;
+           return this;
+       }
+       public Product build() {
+           return new Product(this);
+       }
     }
 }

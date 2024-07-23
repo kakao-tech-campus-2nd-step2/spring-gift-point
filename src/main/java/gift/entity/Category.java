@@ -3,8 +3,6 @@ package gift.entity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 
-import java.util.List;
-
 @Entity
 public class Category {
     @Id
@@ -24,6 +22,14 @@ public class Category {
     @Column(nullable = false)
     private String description;
 
+    private Category(Builder builder) {
+        this.id = builder.id;
+        this.name = builder.name;
+        this.color = builder.color;
+        this.imageUrl = builder.imageUrl;
+        this.description = builder.description;
+    }
+
     public Category() {}
 
     public Long getId() {return id;}
@@ -41,6 +47,38 @@ public class Category {
         this.description = description;
         this.imageUrl = imageUrl;
         this.color = color;
+    }
+
+    public static class Builder {
+        private Long id;
+        private String name;
+        private String color;
+        private String imageUrl;
+        private String description;
+
+        public Builder id(Long id) {
+            this.id = id;
+            return this;
+        }
+        public Builder name(String name) {
+            this.name = name;
+            return this;
+        }
+        public Builder color(String color) {
+            this.color = color;
+            return this;
+        }
+        public Builder imageUrl(String imageUrl) {
+            this.imageUrl = imageUrl;
+            return this;
+        }
+        public Builder description(String description) {
+            this.description = description;
+            return this;
+        }
+        public Category build() {
+            return new Category(this);
+        }
     }
 
 }
