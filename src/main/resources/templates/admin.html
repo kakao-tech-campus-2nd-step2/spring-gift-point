@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Product Management</title>
+</head>
+<body>
+<h2><a href="/admin/products/add">새 상품 추가</a></h2>
+
+<h2>전체 상품 목록</h2>
+<table>
+  <thead>
+  <tr>
+    <th>ID</th>
+    <th>Name</th>
+    <th>Price</th>
+    <th>Category</th>
+    <th>Image</th>
+    <th>Actions</th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr th:each="product : ${products}">
+    <td th:text="${product.id}"></td>
+    <td th:text="${product.name}"></td>
+    <td th:text="${product.price}"></td>
+    <td th:text="${product.categoryName}"></td>
+    <td><img th:src="${product.imageUrl}" alt="Product Image" width="50"/></td>
+    <td>
+      <!-- 수정 폼 -->
+      <form th:action="@{/admin/products/update/{id}(id=${product.id})}" th:method="get" style="display:inline">
+        <button type="submit">수정</button>
+      </form>
+
+      <!-- 삭제 폼 -->
+      <form th:action="@{/admin/products/delete/{id}(id=${product.id})}" method="post" style="display:inline">
+        <button type="submit">삭제</button>
+      </form>
+    </td>
+  </tr>
+  </tbody>
+</table>
+
+<div>
+  <span th:text="'Page ' + ${products.number + 1} + ' of ' + ${products.totalPages}"></span>
+</div>
+
+<div>
+  <a th:if="${products.number > 0}"
+     th:href="@{/admin/products(pageNumber=${products.number - 1}, pageSize=${products.size}, sortBy=${sortBy})}">
+    Previous
+  </a>
+
+  <a th:if="${products.number < products.totalPages - 1}"
+     th:href="@{/admin/products(pageNumber=${products.number + 1}, pageSize=${products.size}, sortBy=${sortBy})}">
+    Next
+  </a>
+</div>
+</body>
+</html>
