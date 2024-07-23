@@ -3,6 +3,9 @@ VALUES ('yoo@example.com', '1234', 'ADMIN', NOW(), NOW()),
        ('kyeong@example.com', '1234', 'USER', NOW(), NOW()),
        ('miiii@example.com', '1234', 'USER', NOW(), NOW());
 
+INSERT INTO app_user (email, name, password, role, registration_date, modification_date)
+VALUES ('yoo2@example.com', '유경미', '1234', 'ADMIN', NOW(), NOW());
+
 INSERT INTO category (name, description, registration_date, modification_date)
 VALUES ('기타', '기타 카테고리 입니다', NOW(), NOW()),
        ('교환권', '교환권 카테고리 입니다', NOW(), NOW()),
