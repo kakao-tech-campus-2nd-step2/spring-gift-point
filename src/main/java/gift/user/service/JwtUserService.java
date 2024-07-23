@@ -6,6 +6,7 @@ import gift.user.model.UserRepository;
 import gift.user.model.dto.AppUser;
 import gift.user.model.dto.LoginRequest;
 import jakarta.persistence.EntityNotFoundException;
+import java.util.Optional;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -27,5 +28,14 @@ public class JwtUserService {
             throw new ForbiddenException("로그인 실패: 비밀번호 불일치");
         }
         return jwtService.createToken(appUser.getId());
+    }
+
+    @Transactional(readOnly = true)
+    public String loginOauth(String name) {
+        Optional<AppUser> appUser = userRepository.findByName(name);
+        if (appUser.isEmpty()) {
+            return null;
+        }
+        return jwtService.createToken(appUser.get().getId());
     }
 }
