@@ -2,7 +2,6 @@ package gift.user.oauth;
 
 import java.net.URI;
 import java.util.Map;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
@@ -14,7 +13,6 @@ public class KakaoService {
     private final RestClient client = RestClient.builder().build();
     private final KakaoProperties kakaoProperties;
 
-    @Autowired
     public KakaoService(KakaoProperties kakaoProperties) {
         this.kakaoProperties = kakaoProperties;
     }
@@ -33,10 +31,18 @@ public class KakaoService {
         return new KakaoAuthToken(accessToken, refreshToken);
     }
 
+    // 현재는 닉네임 권한만 허용이 되는 상태라, 유저 정보를 닉네임으로 한정지었습니다.
+    public String getUserInfo(String accessToken) {
+        Map response = getInfoResponse(accessToken);
+        Map<String, Object> kakaoAccount = (Map<String, Object>) response.get("kakao_account");
+        Map<String, Object> profile = (Map<String, Object>) kakaoAccount.get("profile");
+        return (String) profile.get("nickname");
+    }
+
     private Map getTokenResponse(String code) {
-        var url = "https://kauth.kakao.com/oauth/token";
-        var body = buildTokenRequest(code);
-        var response = client.post()
+        String url = "https://kauth.kakao.com/oauth/token";
+        LinkedMultiValueMap<String, String> body = buildTokenRequest(code);
+        Map response = client.post()
                 .uri(URI.create(url))
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .body(body)
@@ -56,5 +62,18 @@ public class KakaoService {
         return body;
     }
 
+    private Map getInfoResponse(String accessToken) {
+        String url = "https://kapi.kakao.com/v2/user/me";
+        String header = "Bearer " + accessToken;
+
+        Map response = client.get()
+                .uri(URI.create(url))
+                .header("Authorization", header)
+                .retrieve()
+                .toEntity(Map.class)
+                .getBody();
+
+        return response;
+    }
 
 }
