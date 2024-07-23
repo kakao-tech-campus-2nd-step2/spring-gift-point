@@ -1,5 +1,6 @@
 package gift.user.oauth;
 
+import config.KakaoProperties;
 import java.net.URI;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +19,7 @@ public class RestTest {
     @Autowired
     private KakaoProperties kakaoProperties;
 
+    // 코드를 새로 발급받지 않으면 오류가 납니다..
     @Test
     void test1() {
         var url = "https://kauth.kakao.com/oauth/token";

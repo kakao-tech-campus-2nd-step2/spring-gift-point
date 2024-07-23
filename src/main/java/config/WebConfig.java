@@ -1,5 +1,6 @@
-package gift.resolver;
+package config;
 
+import gift.resolver.LoginUserArgumentResolver;
 import gift.user.jwt.JwtService;
 import java.util.List;
 import org.springframework.context.annotation.Configuration;

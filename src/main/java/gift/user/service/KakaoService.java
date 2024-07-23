@@ -1,5 +1,7 @@
-package gift.user.oauth;
+package gift.user.service;
 
+import config.KakaoProperties;
+import gift.user.model.dto.KakaoAuthToken;
 import java.net.URI;
 import java.util.Map;
 import org.springframework.http.MediaType;
