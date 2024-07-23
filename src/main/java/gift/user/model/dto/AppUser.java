@@ -25,6 +25,9 @@ public class AppUser extends BaseTimeEntity {
     @Column(nullable = false, unique = true)
     private String email;
 
+    @Column(length = 50)
+    private String name;
+
     @Column(nullable = false, length = 100)
     private String password;
 
@@ -57,14 +60,18 @@ public class AppUser extends BaseTimeEntity {
         return email;
     }
 
-
     public String getPassword() {
         return password;
+    }
+
+    public String getName() {
+        return name;
     }
 
     public void updatePassword(String password) {
         this.password = password;
     }
+
 
     public Role getRole() {
         return role;
