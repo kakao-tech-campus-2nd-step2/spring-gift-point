@@ -11,11 +11,11 @@ import org.springframework.data.repository.query.Param;
 
 public interface OptionRepository extends JpaRepository<Option, Long> {
 
-    List<Option> findByProductId(Long productId);
+    List<Option> findByProduct_Id(Long productId);
 
     @Lock(LockModeType.PESSIMISTIC_WRITE)
     @Query("select o from Option o where o.id = :optionId and o.product.id = :productId")
-    Optional<Option> findByIdAndProductIdWithLock(
+    Optional<Option> findByIdAndProduct_IdWithLock(
         @Param("productId") Long productId,
         @Param("optionId") Long optionId
     );

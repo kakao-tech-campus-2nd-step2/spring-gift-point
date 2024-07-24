@@ -58,6 +58,10 @@ body {
   margin-bottom: 30px;
 }
 
+.admin-container .btn-wrapper {
+  gap: 1rem;
+}
+
 /* 회원 목록 페이지 스타일 */
 .members-container .table-hover tbody tr:hover {
   background-color: #f1f1f1;

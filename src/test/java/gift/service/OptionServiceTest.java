@@ -56,7 +56,7 @@ public class OptionServiceTest {
         Product product = new Product(1L, "Product", 100, "imageUrl", category);
         Option option = new Option(1L, "Option1", 100, product);
 
-        when(optionRepository.findByProductId(1L)).thenReturn(List.of(option));
+        when(optionRepository.findByProduct_Id(1L)).thenReturn(List.of(option));
 
         List<OptionResponse> options = optionService.getOptionsByProductId(1L);
         assertEquals(1, options.size());
@@ -163,7 +163,7 @@ public class OptionServiceTest {
         OptionCreateRequest optionCreateRequest = new OptionCreateRequest("Option1", 200);
 
         when(productService.getProductById(1L)).thenReturn(productResponse);
-        when(optionRepository.findByProductId(1L)).thenReturn(List.of(existingOption));
+        when(optionRepository.findByProduct_Id(1L)).thenReturn(List.of(existingOption));
 
         IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
             optionService.addOptionToProduct(1L, optionCreateRequest);
@@ -283,7 +283,7 @@ public class OptionServiceTest {
         when(productService.getProductById(1L)).thenReturn(productResponse);
         when(optionRepository.findById(1L)).thenReturn(Optional.of(option1));
         when(optionRepository.findById(2L)).thenReturn(Optional.of(option2));
-        when(optionRepository.findByProductId(1L)).thenReturn(List.of(option1, option2));
+        when(optionRepository.findByProduct_Id(1L)).thenReturn(List.of(option1, option2));
         doNothing().when(optionRepository).delete(option1);
 
         optionService.deleteOption(1L, 1L);
@@ -340,7 +340,7 @@ public class OptionServiceTest {
 
         when(productService.getProductById(1L)).thenReturn(productResponse);
         when(optionRepository.findById(1L)).thenReturn(Optional.of(option));
-        when(optionRepository.findByProductId(1L)).thenReturn(List.of(option));
+        when(optionRepository.findByProduct_Id(1L)).thenReturn(List.of(option));
         doThrow(new IllegalArgumentException(OPTION_REQUIRED)).when(optionRepository)
             .delete(option);
 
@@ -358,7 +358,10 @@ public class OptionServiceTest {
         Product product = new Product(1L, "Product", 100, "imageUrl", category);
         Option option = new Option(1L, "Option1", 100, product);
 
-        when(optionRepository.findByIdAndProductIdWithLock(1L, 1L)).thenReturn(Optional.of(option));
+        when(optionRepository.findByIdAndProduct_IdWithLock(
+            1L,
+            1L
+        )).thenReturn(Optional.of(option));
         when(optionRepository.save(any(Option.class))).thenReturn(option);
 
         optionService.subtractOptionQuantity(1L, 1L, 10);
@@ -385,7 +388,10 @@ public class OptionServiceTest {
         Product product = new Product(1L, "Product", 100, "imageUrl", category);
         Option option = new Option(1L, "Option1", 5, product);
 
-        when(optionRepository.findByIdAndProductIdWithLock(1L, 1L)).thenReturn(Optional.of(option));
+        when(optionRepository.findByIdAndProduct_IdWithLock(
+            1L,
+            1L
+        )).thenReturn(Optional.of(option));
 
         IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
             optionService.subtractOptionQuantity(1L, 1L, 10);
@@ -401,7 +407,10 @@ public class OptionServiceTest {
         Product product = new Product(1L, "Product", 100, "imageUrl", category);
         Option option = new Option(1L, "Option1", 100, product);
 
-        when(optionRepository.findByIdAndProductIdWithLock(1L, 1L)).thenReturn(Optional.of(option));
+        when(optionRepository.findByIdAndProduct_IdWithLock(
+            1L,
+            1L
+        )).thenReturn(Optional.of(option));
         when(optionRepository.save(any(Option.class))).thenReturn(option);
 
         int numberOfThreads = 10;
@@ -434,7 +443,10 @@ public class OptionServiceTest {
         Product product = new Product(1L, "Product", 100, "imageUrl", category);
         Option option = new Option(1L, "Option1", 50, product);
 
-        when(optionRepository.findByIdAndProductIdWithLock(1L, 1L)).thenReturn(Optional.of(option));
+        when(optionRepository.findByIdAndProduct_IdWithLock(
+            1L,
+            1L
+        )).thenReturn(Optional.of(option));
         when(optionRepository.save(any(Option.class))).thenReturn(option);
 
         int numberOfThreads = 10;
@@ -466,7 +478,10 @@ public class OptionServiceTest {
         Product product = new Product(1L, "Product", 100, "imageUrl", category);
         Option option = new Option(1L, "Option1", 60, product);
 
-        when(optionRepository.findByIdAndProductIdWithLock(1L, 1L)).thenReturn(Optional.of(option));
+        when(optionRepository.findByIdAndProduct_IdWithLock(
+            1L,
+            1L
+        )).thenReturn(Optional.of(option));
         when(optionRepository.save(any(Option.class))).thenReturn(option);
 
         int numberOfThreads = 10;
@@ -498,7 +513,10 @@ public class OptionServiceTest {
         Product product = new Product(1L, "Product", 100, "imageUrl", category);
         Option option = new Option(1L, "Option1", 100, product);
 
-        when(optionRepository.findByIdAndProductIdWithLock(1L, 1L)).thenReturn(Optional.of(option));
+        when(optionRepository.findByIdAndProduct_IdWithLock(
+            1L,
+            1L
+        )).thenReturn(Optional.of(option));
         when(optionRepository.save(any(Option.class))).thenReturn(option);
 
         int numberOfThreads = 10;
@@ -536,7 +554,7 @@ public class OptionServiceTest {
         Product product = new Product(1L, "Product", 100, "imageUrl", category);
         Option option = new Option(1L, "Option1", 100, product);
 
-        when(optionRepository.findByIdAndProductIdWithLock(1L, 1L)).thenAnswer(invocation -> {
+        when(optionRepository.findByIdAndProduct_IdWithLock(1L, 1L)).thenAnswer(invocation -> {
             throw new PessimisticLockingFailureException("Locking failed");
         });
 

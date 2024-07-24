@@ -24,9 +24,10 @@
 <body>
 <div class="container admin-container mt-5">
   <h1 class="mb-4" th:text="${message}"></h1>
-  <div class="d-flex justify-content-center mb-4">
-    <a href="/admin/products" class="btn btn-primary me-2">상품 관리</a>
+  <div class="d-flex justify-content-center mb-4 btn-wrapper">
+    <a href="/admin/products" class="btn btn-primary">상품 관리</a>
     <a href="/admin/members" class="btn btn-primary">회원 관리</a>
+    <a href="/oauth/kakao" class="btn btn-primary">카카오 로그인 테스트</a>
   </div>
 </div>
 </body>

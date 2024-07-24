@@ -38,7 +38,7 @@ public class Option {
 
     @Column(nullable = false)
     @Min(value = 1, message = QUANTITY_MIN)
-    @Max(value = 99999999, message = QUANTITY_MAX)
+    @Max(value = 99_999_999, message = QUANTITY_MAX)
     private int quantity;
 
     @ManyToOne

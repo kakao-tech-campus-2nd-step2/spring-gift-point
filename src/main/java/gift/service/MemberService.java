@@ -16,8 +16,10 @@ import gift.util.JWTUtil;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@Transactional
 public class MemberService {
 
     private final MemberRepository memberRepository;
@@ -52,12 +54,22 @@ public class MemberService {
         return new MemberResponse(member.getId(), member.getEmail(), token);
     }
 
+    public MemberResponse loginKakaoMember(String email) {
+        Member member = memberRepository.findByEmail(email)
+            .orElseThrow(() -> new ForbiddenException(INVALID_CREDENTIALS));
+
+        String token = jwtUtil.generateToken(member.getId(), member.getEmail());
+        return new MemberResponse(member.getId(), member.getEmail(), token);
+    }
+
+    @Transactional(readOnly = true)
     public List<MemberResponse> getAllMembers() {
         return memberRepository.findAll().stream()
             .map(this::convertToDTO)
             .collect(Collectors.toList());
     }
 
+    @Transactional(readOnly = true)
     public MemberResponse getMemberById(Long id) {
         return memberRepository.findById(id)
             .map(this::convertToDTO)

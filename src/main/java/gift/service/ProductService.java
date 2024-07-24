@@ -18,8 +18,10 @@ import gift.repository.ProductRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@Transactional
 public class ProductService {
 
     private final ProductRepository productRepository;
@@ -36,10 +38,12 @@ public class ProductService {
         this.optionRepository = optionRepository;
     }
 
+    @Transactional(readOnly = true)
     public Page<ProductResponse> getAllProducts(Pageable pageable) {
         return productRepository.findAll(pageable).map(this::convertToDTO);
     }
 
+    @Transactional(readOnly = true)
     public ProductResponse getProductById(Long id) {
         return productRepository.findById(id)
             .map(this::convertToDTO)
