@@ -33,8 +33,6 @@ out/
 /nbdist/
 /.nb-gradle/
 
-### VS Code ###
-.vscode/
-
-### Mac OS ###
-.DS_Store
+# API Key Concealing
+application.properties
+application-API-KEY.properties

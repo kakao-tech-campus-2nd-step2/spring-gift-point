@@ -1,5 +1,5 @@
 package gift.controller;
 
-public class OAuthController {
+public class KakaoController {
 
 }

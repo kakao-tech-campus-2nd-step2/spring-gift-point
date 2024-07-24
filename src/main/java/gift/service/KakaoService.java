@@ -1,2 +1,4 @@
-package gift.service;public class KakaoService {
+package gift.service;
+
+public class KakaoService {
 }
