@@ -81,11 +81,11 @@ public class OptionService {
     }
 
     @Transactional
-    public void subtractOptionQuantity(Long optionId, int quantity) {
+    public Option subtractOptionQuantity(Long optionId, int quantity) {
         Option option = optionRepository.findById(optionId)
                 .orElseThrow(() -> new EntityNotFoundException("Option"));
 
         option.subtract(quantity);
-        optionRepository.save(option);
+        return optionRepository.save(option);
     }
 }
