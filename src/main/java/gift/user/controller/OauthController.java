@@ -1,6 +1,6 @@
 package gift.user.controller;
 
-import gift.user.model.dto.KakaoAuthToken;
+import gift.user.model.dto.KakaoTokenResponse;
 import gift.user.service.JwtUserService;
 import gift.user.service.KakaoService;
 import org.springframework.http.ResponseEntity;
@@ -28,9 +28,9 @@ public class OauthController {
 
     @GetMapping("/kakao")
     public ResponseEntity<String> kakaoCallback(@RequestParam String code) {
-        KakaoAuthToken token = kakaoService.getAccessToken(code);
-        String nickname = kakaoService.getUserInfo(token.accessToken());
-        String jwt = jwtUserService.loginOauth(nickname);
+        KakaoTokenResponse token = kakaoService.getAccessToken(code);
+        String email = kakaoService.getUserInfo(token.accessToken());
+        String jwt = jwtUserService.loginOauth(email);
 
         if (jwt == null) {
             return ResponseEntity.badRequest().body("회원가입이 필요합니다.");
@@ -40,6 +40,5 @@ public class OauthController {
                 .header("Authorization", jwt)
                 .body("로그인 성공");
     }
-
 }
 
