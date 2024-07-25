@@ -30,9 +30,12 @@ public class JwtUserService {
     }
 
     @Transactional(readOnly = true)
-    public String loginOauth(String email) {
+    public String loginOauth(String email, String token) {
         return userRepository.findByEmail(email)
-                .map(user -> jwtService.createToken(user.getId()))
+                .map(appUser -> {
+                    appUser.setAccessToken(token);
+                    return jwtService.createToken(appUser.getId());
+                })
                 .orElse(null);
     }
 }

@@ -30,7 +30,7 @@ public class OauthController {
     public ResponseEntity<String> kakaoCallback(@RequestParam String code) {
         KakaoTokenResponse token = kakaoService.getAccessToken(code);
         String email = kakaoService.getUserInfo(token.accessToken());
-        String jwt = jwtUserService.loginOauth(email);
+        String jwt = jwtUserService.loginOauth(email, token.accessToken());
 
         if (jwt == null) {
             return ResponseEntity.badRequest().body("회원가입이 필요합니다.");
