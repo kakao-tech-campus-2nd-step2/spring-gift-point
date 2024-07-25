@@ -54,4 +54,9 @@ public class UserService {
         return appUser.getEmail();
     }
 
+    public void saveToken(AppUser appUser, String token) {
+        appUser.setAccessToken(token);
+        userRepository.save(appUser);
+    }
+
 }
