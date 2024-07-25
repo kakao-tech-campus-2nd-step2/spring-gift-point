@@ -1,5 +1,6 @@
 package gift.user.service;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import config.KakaoProperties;
 import gift.user.model.dto.KakaoTokenResponse;
 import gift.user.model.dto.KakaoUserInfoResponse;
@@ -10,12 +11,13 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestClient;
 
 @Service
-public class KakaoService {
+public class KakaoLoginService {
 
     private final RestClient client = RestClient.builder().build();
     private final KakaoProperties kakaoProperties;
+    private final ObjectMapper objectMapper = new ObjectMapper();
 
-    public KakaoService(KakaoProperties kakaoProperties) {
+    public KakaoLoginService(KakaoProperties kakaoProperties) {
         this.kakaoProperties = kakaoProperties;
     }
 
@@ -56,5 +58,4 @@ public class KakaoService {
 
         return body.kakaoAccount().email();
     }
-
 }
