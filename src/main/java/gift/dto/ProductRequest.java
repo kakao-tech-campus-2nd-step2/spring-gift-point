@@ -10,7 +10,7 @@ import java.util.List;
 public class ProductRequest {
     @NotEmpty
     @Size(max = 15)
-    @Pattern(regexp = "^[a-zA-Z0-9()\\[\\]+\\-&/_ ]+$", message = "Invalid characters in name")
+    @Pattern(regexp = "^[a-zA-Z0-9()\\[\\]+\\-&/_가-힣]+$", message = "Invalid characters in name")
     private String name;
 
     @NotNull
