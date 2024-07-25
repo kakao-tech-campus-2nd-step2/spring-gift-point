@@ -72,7 +72,6 @@ public class AppUser extends BaseTimeEntity {
         this.password = password;
     }
 
-
     public Role getRole() {
         return role;
     }
