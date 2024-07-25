@@ -13,12 +13,6 @@ public class CustomException {
         }
     }
 
-    public static class GenericException extends RuntimeException {
-        public GenericException(String message) {
-            super(message);
-        }
-    }
-
     public static class InvalidCredentialsException extends RuntimeException {
         public InvalidCredentialsException(String message) {
             super(message);
@@ -27,5 +21,12 @@ public class CustomException {
 
     public static class InvalidQuantityException extends RuntimeException {
         public InvalidQuantityException(String message) {super(message);}
+    }
+
+    public static class GenericException extends RuntimeException {
+        public GenericException(String message) {
+            super(message);
+        }
+
     }
 }
