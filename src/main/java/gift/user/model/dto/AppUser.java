@@ -35,6 +35,8 @@ public class AppUser extends BaseTimeEntity {
     @Column(length = 255)
     private String salt;
 
+    private String accessToken;
+
     public AppUser() {
     }
 
@@ -57,9 +59,16 @@ public class AppUser extends BaseTimeEntity {
         return email;
     }
 
-
     public String getPassword() {
         return password;
+    }
+
+    public String getAccessToken() {
+        return accessToken;
+    }
+
+    public void setAccessToken(String accessToken) {
+        this.accessToken = accessToken;
     }
 
     public void updatePassword(String password) {

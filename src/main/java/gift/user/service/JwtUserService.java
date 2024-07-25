@@ -28,4 +28,11 @@ public class JwtUserService {
         }
         return jwtService.createToken(appUser.getId());
     }
+
+    @Transactional(readOnly = true)
+    public String loginOauth(String email) {
+        return userRepository.findByEmail(email)
+                .map(user -> jwtService.createToken(user.getId()))
+                .orElse(null);
+    }
 }
