@@ -61,4 +61,10 @@ public class WishListService {
                 .orElseThrow(() -> new EntityNotFoundException("Wish"));
         wishListRepository.delete(wish);
     }
+
+    @Transactional
+    public void deleteWishIfExists(Long userId, Long productId) {
+        wishListRepository.findByProductIdAndAppUserId(productId, userId)
+                .ifPresent(wishListRepository::delete);
+    }
 }
