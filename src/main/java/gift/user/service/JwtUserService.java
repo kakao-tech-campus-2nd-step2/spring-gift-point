@@ -6,7 +6,6 @@ import gift.user.model.UserRepository;
 import gift.user.model.dto.AppUser;
 import gift.user.model.dto.LoginRequest;
 import jakarta.persistence.EntityNotFoundException;
-import java.util.Optional;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -31,11 +30,9 @@ public class JwtUserService {
     }
 
     @Transactional(readOnly = true)
-    public String loginOauth(String name) {
-        Optional<AppUser> appUser = userRepository.findByName(name);
-        if (appUser.isEmpty()) {
-            return null;
-        }
-        return jwtService.createToken(appUser.get().getId());
+    public String loginOauth(String email) {
+        return userRepository.findByEmail(email)
+                .map(user -> jwtService.createToken(user.getId()))
+                .orElse(null);
     }
 }

@@ -25,9 +25,6 @@ public class AppUser extends BaseTimeEntity {
     @Column(nullable = false, unique = true)
     private String email;
 
-    @Column(length = 50)
-    private String name;
-
     @Column(nullable = false, length = 100)
     private String password;
 
@@ -37,6 +34,8 @@ public class AppUser extends BaseTimeEntity {
 
     @Column(length = 255)
     private String salt;
+
+    private String accessToken;
 
     public AppUser() {
     }
@@ -64,8 +63,12 @@ public class AppUser extends BaseTimeEntity {
         return password;
     }
 
-    public String getName() {
-        return name;
+    public String getAccessToken() {
+        return accessToken;
+    }
+
+    public void setAccessToken(String accessToken) {
+        this.accessToken = accessToken;
     }
 
     public void updatePassword(String password) {
