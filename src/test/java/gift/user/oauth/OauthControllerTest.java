@@ -65,7 +65,7 @@ public class OauthControllerTest {
     public void testKakaoCallbackSuccess() throws Exception {
         when(kakaoService.getAccessToken(anyString())).thenReturn(mockToken);
         when(kakaoService.getUserInfo(mockToken.accessToken())).thenReturn("email");
-        when(jwtUserService.loginOauth("email")).thenReturn("jwt_token");
+        when(jwtUserService.loginOauth("email", mockToken.accessToken())).thenReturn("jwt_token");
 
         mockMvc.perform(get("/oauth/kakao").param("code", "codecode"))
                 .andExpect(status().isOk())
@@ -77,7 +77,7 @@ public class OauthControllerTest {
     public void testKakaoCallbackFailure() throws Exception {
         when(kakaoService.getAccessToken(anyString())).thenReturn(mockToken);
         when(kakaoService.getUserInfo(mockToken.accessToken())).thenReturn("email");
-        when(jwtUserService.loginOauth("email")).thenReturn(null);
+        when(jwtUserService.loginOauth("email", mockToken.accessToken())).thenReturn(null);
 
         mockMvc.perform(get("/oauth/kakao").param("code", "codecode"))
                 .andExpect(status().isBadRequest())
