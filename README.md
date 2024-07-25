@@ -58,15 +58,16 @@
 
 ### 데이터베이스 테이블: Order
 
-| 필드명              | 데이터 타입    | 설명           | 기타 조건                  |
-|------------------|-----------|--------------|------------------------|
-| id               | Long      | 주문 고유 식별자    | Primary Key, 자동 생성     |
-| optionId         | Long      | 옵션 고유 식별자    | FK (Option)  , not null |
-| quantity         | int       | 주문 수량        | 1 이상 , not null        |
-| message          | String    | 수령인에게 보낼 메세지 |                        |
-| registrationDate | DateTime | 생성일자         |   |
-| modificationDate | DateTime | 수정일자         | |
-| deletionDate     | DateTime   | 삭제일자         |   |
+| 필드명              | 데이터 타입    | 설명           | 기타 조건                    |
+|------------------|-----------|--------------|--------------------------|
+| id               | Long      | 주문 고유 식별자    | Primary Key, 자동 생성       |
+| optionId         | Long      | 옵션 고유 식별자    | FK (Option)  , not null  |
+| userId           | Long      | 주문자 고유 식별자   | FK (AppUser)  , not null |
+| quantity         | int       | 주문 수량        | 1 이상 , not null          |
+| message          | String    | 수령인에게 보낼 메세지 |                          |
+| registrationDate | DateTime | 생성일자         |                          |
+| modificationDate | DateTime | 수정일자         |                          |
+| deletionDate     | DateTime   | 삭제일자         |                          |
 
 ### 기능 목록
 #### Order

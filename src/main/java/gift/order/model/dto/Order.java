@@ -2,6 +2,7 @@ package gift.order.model.dto;
 
 import gift.BaseTimeEntity;
 import gift.product.model.dto.option.Option;
+import gift.user.model.dto.AppUser;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -26,6 +27,10 @@ public class Order extends BaseTimeEntity {
     @JoinColumn(name = "option_id", nullable = false)
     private Option option;
 
+    @ManyToOne
+    @JoinColumn(name = "user_id", nullable = false)
+    private AppUser user;
+    
     @Min(1)
     @Column(nullable = false)
     private int quantity;
@@ -35,8 +40,9 @@ public class Order extends BaseTimeEntity {
     public Order() {
     }
 
-    public Order(Option option, int quantity, String message) {
+    public Order(Option option, AppUser user, int quantity, String message) {
         this.option = option;
+        this.user = user;
         this.quantity = quantity;
         this.message = message;
     }
@@ -49,7 +55,10 @@ public class Order extends BaseTimeEntity {
         return option;
     }
 
-    @Min(1)
+    public AppUser getUser() {
+        return user;
+    }
+
     public int getQuantity() {
         return quantity;
     }
