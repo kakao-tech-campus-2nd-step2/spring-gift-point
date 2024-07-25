@@ -1,4 +1,4 @@
-package gift.order.model;
+package gift.order.model.dto;
 
 import gift.BaseTimeEntity;
 import gift.product.model.dto.option.Option;
