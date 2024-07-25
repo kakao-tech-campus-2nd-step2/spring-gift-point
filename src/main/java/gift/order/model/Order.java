@@ -23,7 +23,7 @@ public class Order extends BaseTimeEntity {
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "optionId", nullable = false)
+    @JoinColumn(name = "option_id", nullable = false)
     private Option option;
 
     @Min(1)
