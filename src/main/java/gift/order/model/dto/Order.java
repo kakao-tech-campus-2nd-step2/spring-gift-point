@@ -10,12 +10,14 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
 import jakarta.validation.constraints.Min;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.SQLRestriction;
 
 @Entity
-@SQLDelete(sql = "UPDATE option SET deletion_date = CURRENT_TIMESTAMP WHERE id = ?")
+@Table(name = "`order`")
+@SQLDelete(sql = "UPDATE `order` SET deletion_date = CURRENT_TIMESTAMP WHERE id = ?")
 @SQLRestriction("deletion_date IS NULL")
 public class Order extends BaseTimeEntity {
 
@@ -30,7 +32,7 @@ public class Order extends BaseTimeEntity {
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
     private AppUser user;
-    
+
     @Min(1)
     @Column(nullable = false)
     private int quantity;
