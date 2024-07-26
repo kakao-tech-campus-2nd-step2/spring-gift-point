@@ -13,6 +13,10 @@ public class CustomException {
         }
     }
 
+    public static class AccessDeniedException extends RuntimeException {
+        public AccessDeniedException(String message) { super(message); }
+    }
+
     public static class InvalidCredentialsException extends RuntimeException {
         public InvalidCredentialsException(String message) {
             super(message);
