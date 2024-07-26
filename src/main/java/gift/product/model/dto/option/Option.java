@@ -39,7 +39,7 @@ public class Option extends BaseTimeEntity {
     private int quantity;
 
     @Min(0)
-    @Column(nullable = false)
+    @Column(name = "additional_cost", nullable = false)
     private int additionalCost = 0;
 
     @ManyToOne
