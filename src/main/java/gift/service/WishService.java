@@ -35,6 +35,10 @@ public class WishService {
         wishRepository.deleteById(id);
     }
 
+    public void deleteByProductId(Long productId) {
+        wishRepository.deleteByProductId(productId);
+    }
+
     public Wish updateWish(Long wishId) {
         Wish wish = wishRepository.findById(wishId).orElseThrow(() -> new CustomException.EntityNotFoundException("Wish not found"));
         return wishRepository.save(wish);

@@ -11,10 +11,12 @@ import org.springframework.stereotype.Service;
 public class OrderService {
     private final OrderRepository orderRepository;
     private final OptionService optionService;
+    private final WishService wishService;
 
-    public OrderService(OrderRepository orderRepository, OptionService optionService) {
+    public OrderService(OrderRepository orderRepository, OptionService optionService, WishService wishService) {
         this.orderRepository = orderRepository;
         this.optionService = optionService;
+        this.wishService = wishService;
     }
 
     @Transactional
@@ -28,6 +30,8 @@ public class OrderService {
                 .message(orderRequest.getMessage())
                 .build();
         order = orderRepository.save(order);
+
+        wishService.deleteByProductId(orderRequest.getProductId());
 
         return new OrderResponse.Builder()
                 .id(order.getId())
