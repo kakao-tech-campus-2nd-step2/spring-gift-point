@@ -65,6 +65,9 @@ public class Option {
     }
 
     public void subtractQuantity(Integer quantity) {
+        if(quantity > this.quantity) {
+            throw new IllegalArgumentException("주문한 옵션 수량이 현재 재고보다 많습니다.");
+        }
         this.quantity -= quantity;
     }
 }

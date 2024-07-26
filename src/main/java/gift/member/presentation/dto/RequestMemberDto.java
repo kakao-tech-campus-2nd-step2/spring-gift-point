@@ -1,7 +1,6 @@
 package gift.member.presentation.dto;
 
-import gift.member.business.dto.MemberRegisterDto;
-import gift.member.business.dto.MemberLoginDto;
+import gift.member.business.dto.MemberIn;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 
@@ -12,11 +11,11 @@ public record RequestMemberDto(
     String password
 ) {
 
-    public MemberRegisterDto toMemberRegisterDto() {
-        return new MemberRegisterDto(email, password);
+    public MemberIn.Register toMemberRegisterDto() {
+        return new MemberIn.Register(email, password);
     }
 
-    public MemberLoginDto toMemberLoginDto() {
-        return new MemberLoginDto(email, password);
+    public MemberIn.Login toMemberLoginDto() {
+        return new MemberIn.Login(email, password);
     }
 }

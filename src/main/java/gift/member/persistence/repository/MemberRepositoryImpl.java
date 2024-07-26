@@ -40,4 +40,9 @@ public class MemberRepositoryImpl implements MemberRepository{
     public Member getReferencedMember(Long memberId) {
         return memberJpaRepository.getReferenceById(memberId);
     }
+
+    @Override
+    public boolean existsByEmail(String email) {
+        return memberJpaRepository.existsByEmail(email);
+    }
 }

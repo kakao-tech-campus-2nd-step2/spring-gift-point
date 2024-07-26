@@ -11,4 +11,6 @@ public interface MemberRepository {
     Member getMemberById(Long id);
 
     Member getReferencedMember(Long memberId);
+
+    boolean existsByEmail(String email);
 }

@@ -26,3 +26,11 @@ spring:
     secret: ${jwt_secret}
     access_expiration: 3600000
     refresh_expiration: 604800000
+
+  oauth:
+    kakao:
+      client_id: ${kakao_client_id}
+      redirect_uri: ${kakao_redirect_uri}
+      grant_type: authorization_code
+      code-url: https://kauth.kakao.com/oauth/authorize
+      secret: ${kakao_secret}

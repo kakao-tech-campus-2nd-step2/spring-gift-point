@@ -5,9 +5,8 @@ import gift.global.authentication.jwt.JwtValidator;
 import gift.global.authentication.jwt.TokenType;
 import gift.global.exception.ErrorCode;
 import gift.global.exception.custrom.LoginException;
-import gift.member.business.dto.MemberRegisterDto;
+import gift.member.business.dto.MemberIn;
 import gift.member.persistence.repository.MemberRepository;
-import gift.member.business.dto.MemberLoginDto;
 import io.jsonwebtoken.Jwts;
 import java.util.Date;
 import java.util.Map;
@@ -35,17 +34,32 @@ public class MemberService {
         this.jwtValidator = jwtValidator;
     }
 
-    public JwtToken registerMember(MemberRegisterDto memberRegisterDto) {
-        var member = memberRegisterDto.toMember();
+    public JwtToken registerMember(MemberIn.Register MemberInRegister) {
+        var member = MemberInRegister.toMember();
         var id = memberRepository.saveMember(member);
         return createToken(id);
     }
 
-    public JwtToken loginMember(MemberLoginDto memberLoginDto) {
-        var member = memberRepository.getMemberByEmail(memberLoginDto.email());
-        if (!member.getPassword().equals(memberLoginDto.password())) {
+    public JwtToken loginMember(MemberIn.Login MemberInLogin) {
+        var member = memberRepository.getMemberByEmail(MemberInLogin.email());
+        if (!member.getPassword().equals(MemberInLogin.password())) {
             throw new LoginException(ErrorCode.LOGIN_ERROR, "패스워드가 이메일과 일치하지 않습니다.");
         }
+        return createToken(member.getId());
+    }
+
+    public JwtToken registerVendorMember(MemberIn.VendorRegister memberInRegister) {
+        var member = memberInRegister.toMember();
+        var id = memberRepository.saveMember(member);
+        return createToken(id);
+    }
+
+    public JwtToken loginVendorMember(MemberIn.VendorLogin memberInLogin) {
+        var member = memberRepository.getMemberByEmail(memberInLogin.email());
+        if(member.getOAuthProvider() != memberInLogin.oAuthProvider()) {
+            throw new LoginException(ErrorCode.LOGIN_ERROR, "OAuthProvider가 일치하지 않습니다.");
+        }
+        member.updateToken(memberInLogin.accessToken(), memberInLogin.refreshToken());
         return createToken(member.getId());
     }
 

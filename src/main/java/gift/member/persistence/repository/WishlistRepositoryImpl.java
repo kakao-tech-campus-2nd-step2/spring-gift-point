@@ -3,6 +3,7 @@ package gift.member.persistence.repository;
 import gift.global.exception.ErrorCode;
 import gift.global.exception.custrom.NotFoundException;
 import gift.member.persistence.entity.Wishlist;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
@@ -36,7 +37,14 @@ public class WishlistRepositoryImpl implements WishlistRepository{
 
     @Override
     public void deleteWishlist(Long memberId, Long productId) {
-        wishlistJpaRepository.deleteByMemberIdAndProductId(memberId, productId);
+        try {
+            wishlistJpaRepository.deleteByMemberIdAndProductId(memberId, productId);
+        } catch (EmptyResultDataAccessException e) {
+            throw new NotFoundException(
+                ErrorCode.DB_NOT_FOUND,
+                "Wishlist with member id " + memberId + " and product id " + productId + " not found"
+            );
+        }
     }
 
     @Override
