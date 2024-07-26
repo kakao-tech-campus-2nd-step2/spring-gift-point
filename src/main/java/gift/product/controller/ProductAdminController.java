@@ -7,6 +7,8 @@ import gift.product.service.ProductAdminService;
 import gift.product.service.ProductService;
 import gift.resolver.LoginUser;
 import gift.user.model.dto.AppUser;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,6 +24,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @AdminController
 @RequestMapping("/api/admin/products")
+@Tag(name = "Product", description = "Product Admin API")
 public class ProductAdminController {
 
     private final ProductService productService;
@@ -32,6 +35,7 @@ public class ProductAdminController {
         this.productAdminService = productAdminService;
     }
 
+    @Operation(summary = "관리자 권한으로 상품 추가", description = "키워드 제약 없이 상품 추가 가능")
     @PostMapping
     public ResponseEntity<String> addProductForAdmin(@LoginUser AppUser loginAppUser,
                                                      @Valid @RequestBody CreateProductAdminRequest createProductAdminRequest) {
@@ -39,6 +43,7 @@ public class ProductAdminController {
         return ResponseEntity.status(HttpStatus.CREATED).body("ok");
     }
 
+    @Operation(summary = "관리자 권한으로 상품 수정", description = "판매자가 아니더라도 상품 수정 가능")
     @PutMapping("/{id}")
     public ResponseEntity<String> updateProductForAdmin(@LoginUser AppUser loginAppUser, @PathVariable Long id,
                                                         @Valid @RequestBody UpdateProductRequest updateProductRequest) {
@@ -46,13 +51,14 @@ public class ProductAdminController {
         return ResponseEntity.ok().body("ok");
     }
 
-
+    @Operation(summary = "관리자 권한으로 상품 삭제", description = "판매자가 아니더라도 상품 삭제 가능")
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteProductByIdForAdmin(@LoginUser AppUser loginAppUser, @PathVariable Long id) {
         productService.deleteProduct(loginAppUser, id);
         return ResponseEntity.ok().body("ok");
     }
 
+    @Operation(summary = "관리자 권한으로 상품 카테고리 수정", description = "관리자만 상품 카테고리 수정 가능")
     @PutMapping("/{productId}/category")
     public ResponseEntity<String> updateCategoryForProduct(@LoginUser AppUser loginAppUser,
                                                            @PathVariable Long productId,

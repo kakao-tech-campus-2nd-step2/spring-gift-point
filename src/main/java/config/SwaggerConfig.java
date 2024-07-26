@@ -2,6 +2,7 @@ package config;
 
 import io.swagger.v3.oas.models.Components;
 import io.swagger.v3.oas.models.OpenAPI;
+import io.swagger.v3.oas.models.info.Contact;
 import io.swagger.v3.oas.models.info.Info;
 import io.swagger.v3.oas.models.security.SecurityRequirement;
 import io.swagger.v3.oas.models.security.SecurityScheme;
@@ -29,8 +30,9 @@ public class SwaggerConfig {
 
     private Info apiInfo() {
         return new Info()
-                .title("Kakao Gift API") // API의 제목
-                .description("Kakao Gift Service API Document") // API에 대한 설명
-                .version("1.0.0"); // API의 버전
+                .title("카카오톡 선물하기 API ")
+                .description("카카오톡 선물하기 API 명세서 - 부산대 BE 유경미 ")
+                .contact(new Contact().name("유경미").email("yookm02@pusan.ac.kr"))
+                .version("1.0.0");
     }
 }

@@ -8,6 +8,8 @@ import gift.user.model.dto.SignUpRequest;
 import gift.user.model.dto.UpdatePasswordRequest;
 import gift.user.service.JwtUserService;
 import gift.user.service.UserService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,6 +23,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api/users")
+@Tag(name = "User", description = "User API")
 public class UserController {
     private final UserService userService;
     private final JwtUserService jwtUserService;
@@ -30,12 +33,14 @@ public class UserController {
         this.jwtUserService = jwtUserService;
     }
 
+    @Operation(summary = "회원가입", description = "회원가입 후 로그인 필요함")
     @PostMapping
     public ResponseEntity<String> signUp(@Valid @RequestBody SignUpRequest signUpRequest) {
         userService.signUp(signUpRequest);
         return ResponseEntity.status(HttpStatus.CREATED).body("ok");
     }
 
+    @Operation(summary = "로그인", description = "로그인 성공 후 jwt 토큰 발급")
     @PostMapping("/login")
     public ResponseEntity<String> login(@Valid @RequestBody LoginRequest loginRequest) {
         String token = jwtUserService.login(loginRequest);
@@ -44,6 +49,7 @@ public class UserController {
                 .body("로그인 성공");
     }
 
+    @Operation(summary = "로그인 유저 비밀번호 수정")
     @PatchMapping("/password")
     public ResponseEntity<String> updatePassword(@Valid @RequestBody UpdatePasswordRequest updatePasswordRequest,
                                                  @LoginUser AppUser loginAppUser) {
@@ -51,6 +57,7 @@ public class UserController {
         return ResponseEntity.ok().body("ok");
     }
 
+    @Operation(summary = "로그인 유저 이메일 찾기")
     @GetMapping("/email")
     public ResponseEntity<String> findEmail(@Valid @RequestParam Long id,
                                             @LoginUser AppUser loginAppUser) {

@@ -5,6 +5,8 @@ import gift.category.model.dto.CategoryRequest;
 import gift.category.service.CategoryService;
 import gift.resolver.LoginUser;
 import gift.user.model.dto.AppUser;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,6 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @AdminController
 @RequestMapping("/api/admin/categories")
+@Tag(name = "Category", description = "Category Admin API")
 public class CategoryAdminController {
     private final CategoryService categoryService;
 
@@ -26,6 +29,7 @@ public class CategoryAdminController {
         this.categoryService = categoryService;
     }
 
+    @Operation(summary = "관리자 권한으로 카테고리 추가")
     @PostMapping
     public ResponseEntity<String> addCategoryForAdmin(@LoginUser AppUser loginAppUser,
                                                       @Valid @RequestBody CategoryRequest categoryRequest) {
@@ -33,6 +37,7 @@ public class CategoryAdminController {
         return ResponseEntity.status(HttpStatus.CREATED).body("ok");
     }
 
+    @Operation(summary = "관리자 권한으로 카테고리 수정")
     @PutMapping("/{id}")
     public ResponseEntity<String> updateCategoryForAdmin(@LoginUser AppUser loginAppUser, @PathVariable Long id,
                                                          @Valid @RequestBody CategoryRequest categoryRequest) {
@@ -40,6 +45,7 @@ public class CategoryAdminController {
         return ResponseEntity.ok().body("ok");
     }
 
+    @Operation(summary = "관리자 권한으로 카테고리 삭제")
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteCategoryByIdForAdmin(@LoginUser AppUser loginAppUser, @PathVariable Long id) {
         categoryService.deleteCategory(id);

@@ -6,6 +6,8 @@ import gift.product.model.dto.option.UpdateOptionRequest;
 import gift.product.model.dto.product.Product;
 import gift.product.service.OptionService;
 import gift.product.service.ProductService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import java.util.List;
 import org.springframework.http.ResponseEntity;
@@ -20,6 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api/products")
+@Tag(name = "Option", description = "Option API")
 public class OptionController {
     private final OptionService optionService;
     private final ProductService productService;
@@ -29,12 +32,14 @@ public class OptionController {
         this.productService = productService;
     }
 
+    @Operation(summary = "옵션 id로 옵션 상세 조회")
     @GetMapping("/{productId}/options")
     public ResponseEntity<List<OptionResponse>> findOptionsByProductId(@PathVariable Long productId) {
         List<OptionResponse> options = optionService.findOptionsByProductId(productId);
         return ResponseEntity.ok().body(options);
     }
 
+    @Operation(summary = "상품 id로 옵션 추가")
     @PostMapping("/{productId}/options")
     public ResponseEntity<String> addOption(@PathVariable Long productId,
                                             @Valid @RequestBody CreateOptionRequest createOptionRequest) {
@@ -43,6 +48,7 @@ public class OptionController {
         return ResponseEntity.ok().body("ok");
     }
 
+    @Operation(summary = "옵션 Id로 옵션 수정")
     @PutMapping("/{productId}/options/{optionId}")
     public ResponseEntity<String> updateOption(@PathVariable Long productId,
                                                @PathVariable Long optionId,
@@ -52,6 +58,7 @@ public class OptionController {
         return ResponseEntity.ok().body("ok");
     }
 
+    @Operation(summary = "옵션 id로 옵션 삭제", description = "상품에 옵션이 하나 이상 남아있을 때 옵션 id로 옵션 삭제")
     @DeleteMapping("/{productId}/options/{optionId}")
     public ResponseEntity<String> deleteOption(@PathVariable Long productId,
                                                @PathVariable Long optionId) {

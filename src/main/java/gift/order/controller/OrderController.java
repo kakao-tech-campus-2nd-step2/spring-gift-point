@@ -6,6 +6,8 @@ import gift.order.service.OrderService;
 import gift.resolver.LoginUser;
 import gift.user.model.dto.AppUser;
 import gift.user.service.KakaoService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -14,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api/orders")
+@Tag(name = "Order", description = "Order API")
 public class OrderController {
     private final OrderService orderService;
     private final KakaoService kakaoService;
@@ -23,6 +26,7 @@ public class OrderController {
         this.kakaoService = kakaoService;
     }
 
+    @Operation(summary = "로그인한 사용자의 주문 생성")
     @PostMapping
     public ResponseEntity<OrderResponse> createOrder(@LoginUser AppUser loginAppUser,
                                                      @RequestBody OrderRequest orderRequest) {
