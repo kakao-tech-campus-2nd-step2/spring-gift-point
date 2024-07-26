@@ -140,7 +140,7 @@ public class ProductAdminController {
         @PathVariable Long productId,
         @PathVariable Long optionId, Model model
     ) {
-        OptionResponse optionResponse = optionService.getOptionById(productId, optionId);
+        OptionResponse optionResponse = optionService.getOptionById(optionId);
         model.addAttribute("option", optionResponse);
         model.addAttribute("productId", productId);
         return "option_edit";

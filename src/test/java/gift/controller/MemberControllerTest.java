@@ -13,6 +13,7 @@ import gift.dto.member.MemberRegisterRequest;
 import gift.dto.member.MemberResponse;
 import gift.exception.member.EmailAlreadyUsedException;
 import gift.exception.member.ForbiddenException;
+import gift.model.RegisterType;
 import gift.service.MemberService;
 import gift.util.TokenValidator;
 import org.junit.jupiter.api.BeforeEach;
@@ -40,7 +41,7 @@ public class MemberControllerTest {
 
     @BeforeEach
     public void setUp() {
-        memberResponse = new MemberResponse(1L, "test@example.com", "token");
+        memberResponse = new MemberResponse(1L, "test@example.com", "token", RegisterType.DEFAULT);
     }
 
     @Test
@@ -51,7 +52,7 @@ public class MemberControllerTest {
 
         mockMvc.perform(post("/api/members/register")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content("{\"email\": \"test@example.com\", \"password\": \"password\"}"))
+                .content("{\"email\": \"test@example.com\", \"password\": \"password\", \"registerType\":  \"DEFAULT\"}"))
             .andExpect(status().isCreated())
             .andExpect(jsonPath("$.email").value("test@example.com"));
     }
@@ -64,7 +65,7 @@ public class MemberControllerTest {
 
         mockMvc.perform(post("/api/members/register")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content("{\"email\": \"test@example.com\", \"password\": \"password\"}"))
+                .content("{\"email\": \"test@example.com\", \"password\": \"password\", \"registerType\":  \"DEFAULT\"}"))
             .andExpect(status().isConflict())
             .andExpect(jsonPath("$.error").value(EMAIL_ALREADY_USED));
     }

@@ -72,6 +72,11 @@ public class WishService {
         wishRepository.delete(wish);
     }
 
+    public void deleteWishByProductIdAndMemberId(Long productId, Long memberId) {
+        wishRepository.findByMember_IdAndProduct_Id(memberId, productId)
+            .ifPresent(wishRepository::delete);
+    }
+
     // Mapper methods
     private WishResponse convertToDTO(Wish wish) {
         return new WishResponse(wish.getId(), wish.getMemberId(), wish.getProductId());

@@ -3,6 +3,7 @@ package gift.controller.admin;
 import gift.dto.member.MemberEditRequest;
 import gift.dto.member.MemberRegisterRequest;
 import gift.dto.member.MemberResponse;
+import gift.model.RegisterType;
 import gift.service.MemberService;
 import jakarta.validation.Valid;
 import org.springframework.stereotype.Controller;
@@ -34,7 +35,7 @@ public class MemberAdminController {
 
     @GetMapping("/new")
     public String showAddMemberForm(Model model) {
-        model.addAttribute("member", new MemberRegisterRequest("", ""));
+        model.addAttribute("member", new MemberRegisterRequest("", "", RegisterType.DEFAULT));
         return "member_form";
     }
 
@@ -55,7 +56,7 @@ public class MemberAdminController {
         MemberResponse memberResponse = memberService.getMemberById(id);
         model.addAttribute(
             "member",
-            new MemberEditRequest(memberResponse.id(), memberResponse.email(), null)
+            new MemberEditRequest(memberResponse.id(), memberResponse.email(), null, memberResponse.registerType())
         );
         return "member_edit";
     }

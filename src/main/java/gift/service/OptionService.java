@@ -38,13 +38,9 @@ public class OptionService {
     }
 
     @Transactional(readOnly = true)
-    public OptionResponse getOptionById(Long productId, Long optionId) {
+    public OptionResponse getOptionById(Long optionId) {
         Option option = optionRepository.findById(optionId)
             .orElseThrow(() -> new OptionNotFoundException(OPTION_NOT_FOUND + optionId));
-
-        if (!option.isProductIdMatching(productId)) {
-            throw new OptionNotFoundException(OPTION_NOT_FOUND + optionId);
-        }
 
         return convertToDTO(option);
     }
@@ -136,6 +132,18 @@ public class OptionService {
             option.getName(),
             option.getQuantity(),
             option.getProduct().getId()
+        );
+    }
+
+    public Option convertToEntity(OptionResponse optionResponse) {
+        ProductResponse productResponse = productService.getProductById(optionResponse.productId());
+        Product product = productService.convertToEntity(productResponse);
+
+        return new Option(
+            optionResponse.id(),
+            optionResponse.name(),
+            optionResponse.quantity(),
+            product
         );
     }
 }

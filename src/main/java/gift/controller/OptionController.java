@@ -37,10 +37,9 @@ public class OptionController {
 
     @GetMapping("/{optionId}")
     public ResponseEntity<OptionResponse> getOptionById(
-        @PathVariable Long productId,
         @PathVariable Long optionId
     ) {
-        OptionResponse option = optionService.getOptionById(productId, optionId);
+        OptionResponse option = optionService.getOptionById(optionId);
         return ResponseEntity.ok(option);
     }
 

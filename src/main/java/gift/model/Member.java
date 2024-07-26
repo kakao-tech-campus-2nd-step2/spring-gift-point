@@ -5,6 +5,8 @@ import static gift.util.constants.MemberConstants.INVALID_PASSWORD;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -28,18 +30,24 @@ public class Member {
     @Size(min = 4, message = INVALID_PASSWORD)
     private String password;
 
+    @Enumerated(EnumType.STRING)
+    @Column(name = "register_type", nullable = false)
+    private RegisterType registerType;
+
     protected Member() {
     }
 
-    public Member(Long id, String email, String password) {
+    public Member(Long id, String email, String password, RegisterType registerType) {
         this.id = id;
         this.email = email;
         this.password = password;
+        this.registerType = registerType;
     }
 
-    public Member(String email, String password) {
+    public Member(String email, String password, RegisterType registerType) {
         this.email = email;
         this.password = password;
+        this.registerType = registerType;
     }
 
     public Long getId() {
@@ -48,6 +56,10 @@ public class Member {
 
     public String getEmail() {
         return email;
+    }
+
+    public RegisterType getRegisterType() {
+        return registerType;
     }
 
     public void update(String email, String password) {
@@ -65,5 +77,9 @@ public class Member {
 
     public boolean isIdMatching(Long id) {
         return this.id.equals(id);
+    }
+
+    public boolean isRegisterTypeDefault() {
+        return this.registerType == RegisterType.DEFAULT;
     }
 }

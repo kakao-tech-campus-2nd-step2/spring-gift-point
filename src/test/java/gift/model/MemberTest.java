@@ -26,7 +26,7 @@ public class MemberTest {
     @Test
     @DisplayName("Member 모델 생성 테스트")
     public void testCreateMember() {
-        Member member = new Member(1L, "test@example.com", "password");
+        Member member = new Member(1L, "test@example.com", "password", RegisterType.DEFAULT);
 
         Set<ConstraintViolation<Member>> violations = validator.validate(member);
 
@@ -39,7 +39,7 @@ public class MemberTest {
     @Test
     @DisplayName("잘못된 이메일 형식으로 Member 생성")
     public void testCreateMemberInvalidEmail() {
-        Member member = new Member(1L, "invalid-email", "password");
+        Member member = new Member(1L, "invalid-email", "password", RegisterType.DEFAULT);
 
         Set<ConstraintViolation<Member>> violations = validator.validate(member);
 
@@ -53,7 +53,7 @@ public class MemberTest {
     @Test
     @DisplayName("비밀번호가 너무 짧을 때 Member 생성")
     public void testCreateMemberShortPassword() {
-        Member member = new Member(1L, "test@example.com", "123");
+        Member member = new Member(1L, "test@example.com", "123", RegisterType.DEFAULT);
 
         Set<ConstraintViolation<Member>> violations = validator.validate(member);
 
@@ -67,7 +67,7 @@ public class MemberTest {
     @Test
     @DisplayName("Member 모델 업데이트 테스트")
     public void testUpdateMember() {
-        Member member = new Member(1L, "test@example.com", "password");
+        Member member = new Member(1L, "test@example.com", "password", RegisterType.DEFAULT);
         member.update("new@example.com", "newpassword");
 
         Set<ConstraintViolation<Member>> violations = validator.validate(member);
@@ -80,7 +80,7 @@ public class MemberTest {
     @Test
     @DisplayName("잘못된 이메일 형식으로 Member 업데이트")
     public void testUpdateMemberInvalidEmail() {
-        Member member = new Member(1L, "test@example.com", "password");
+        Member member = new Member(1L, "test@example.com", "password", RegisterType.DEFAULT);
         member.update("invalid-email", "newpassword");
 
         Set<ConstraintViolation<Member>> violations = validator.validate(member);
@@ -95,7 +95,7 @@ public class MemberTest {
     @Test
     @DisplayName("비밀번호가 너무 짧을 때 Member 업데이트")
     public void testUpdateMemberShortPassword() {
-        Member member = new Member(1L, "test@example.com", "password");
+        Member member = new Member(1L, "test@example.com", "password", RegisterType.DEFAULT);
         member.update("new@example.com", "123");
 
         Set<ConstraintViolation<Member>> violations = validator.validate(member);
@@ -110,7 +110,7 @@ public class MemberTest {
     @Test
     @DisplayName("Member 모델 이메일 매칭 테스트")
     public void testEmailMatching() {
-        Member member = new Member(1L, "test@example.com", "password");
+        Member member = new Member(1L, "test@example.com", "password", RegisterType.DEFAULT);
 
         assertThat(member.isEmailMatching("test@example.com")).isTrue();
         assertThat(member.isEmailMatching("wrong@example.com")).isFalse();
@@ -119,7 +119,7 @@ public class MemberTest {
     @Test
     @DisplayName("Member 모델 비밀번호 매칭 테스트")
     public void testPasswordMatching() {
-        Member member = new Member(1L, "test@example.com", "password");
+        Member member = new Member(1L, "test@example.com", "password", RegisterType.DEFAULT);
 
         assertThat(member.isPasswordMatching("password")).isTrue();
         assertThat(member.isPasswordMatching("wrongpassword")).isFalse();
@@ -128,7 +128,7 @@ public class MemberTest {
     @Test
     @DisplayName("Member 모델 ID 매칭 테스트")
     public void testIdMatching() {
-        Member member = new Member(1L, "test@example.com", "password");
+        Member member = new Member(1L, "test@example.com", "password", RegisterType.DEFAULT);
 
         assertThat(member.isIdMatching(1L)).isTrue();
         assertThat(member.isIdMatching(2L)).isFalse();

@@ -6,6 +6,7 @@ import gift.model.Category;
 import gift.model.Member;
 import gift.model.Option;
 import gift.model.Product;
+import gift.model.RegisterType;
 import gift.model.Wish;
 import java.util.List;
 import java.util.Optional;
@@ -52,7 +53,7 @@ public class WishRepositoryTest {
         Option option = new Option("Option1", 100, savedProduct);
         optionRepository.save(option);
 
-        Member member = new Member(1L, "test@example.com", "password");
+        Member member = new Member(1L, "test@example.com", "password", RegisterType.DEFAULT);
 
         Wish wish = new Wish(member, savedProduct);
         Wish savedWish = wishRepository.save(wish);
@@ -80,7 +81,7 @@ public class WishRepositoryTest {
         Option option3 = new Option("Option3", 300, product2);
         optionRepository.saveAll(List.of(option1, option2, option3));
 
-        Member member = new Member(1L, "test@example.com", "password");
+        Member member = new Member(1L, "test@example.com", "password", RegisterType.DEFAULT);
 
         Wish wish1 = new Wish(member, product1);
         Wish wish2 = new Wish(member, product2);
@@ -108,7 +109,7 @@ public class WishRepositoryTest {
         Option option = new Option("Option1", 100, savedProduct);
         optionRepository.save(option);
 
-        Member member = new Member(1L, "test@example.com", "password");
+        Member member = new Member(1L, "test@example.com", "password", RegisterType.DEFAULT);
 
         Wish wish = new Wish(member, savedProduct);
         Wish savedWish = wishRepository.save(wish);
@@ -131,7 +132,7 @@ public class WishRepositoryTest {
         Option option = new Option("Option1", 100, savedProduct);
         optionRepository.save(option);
 
-        Member member = new Member(1L, "test@example.com", "password");
+        Member member = new Member(1L, "test@example.com", "password", RegisterType.DEFAULT);
 
         Wish wish = new Wish(member, savedProduct);
         wishRepository.save(wish);

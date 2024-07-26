@@ -6,13 +6,17 @@ import gift.dto.oauth.KakaoScopeResponse;
 import gift.dto.oauth.KakaoTokenResponse;
 import gift.dto.oauth.KakaoUnlinkResponse;
 import gift.dto.oauth.KakaoUserResponse;
+import gift.service.MemberService;
 import gift.service.oauth.KakaoOAuthService;
 import java.net.URI;
+import java.util.HashMap;
+import java.util.Map;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -23,10 +27,16 @@ public class KakaoOAuthController {
 
     private final KakaoProperties kakaoProperties;
     private final KakaoOAuthService kakaoOAuthService;
+    private final MemberService memberService;
 
-    public KakaoOAuthController(KakaoProperties kakaoProperties, KakaoOAuthService kakaoOAuthService) {
+    public KakaoOAuthController(
+        KakaoProperties kakaoProperties,
+        KakaoOAuthService kakaoOAuthService,
+        MemberService memberService
+    ) {
         this.kakaoProperties = kakaoProperties;
         this.kakaoOAuthService = kakaoOAuthService;
+        this.memberService = memberService;
     }
 
     @GetMapping
@@ -40,30 +50,37 @@ public class KakaoOAuthController {
     }
 
     @GetMapping("/callback")
-    public ResponseEntity<MemberResponse> kakaoCallback(@RequestParam("code") String code) {
+    public ResponseEntity<Map<String, String>> kakaoCallback(@RequestParam("code") String code) {
         KakaoTokenResponse tokenResponse = kakaoOAuthService.getAccessToken(code);
         KakaoUserResponse userResponse = kakaoOAuthService.getUserInfo(tokenResponse.accessToken());
-
         MemberResponse memberResponse = kakaoOAuthService.registerOrLoginKakaoUser(userResponse);
 
-        return ResponseEntity.ok(memberResponse);
-    }
+        kakaoOAuthService.saveToken(tokenResponse, memberResponse.id());
 
-    @GetMapping("/unlink/{accessToken}")
-    public ResponseEntity<KakaoUnlinkResponse> unlink(@PathVariable String accessToken) {
-        KakaoUnlinkResponse response = kakaoOAuthService.unlinkUser(accessToken);
+        String jwt = kakaoOAuthService.generateJwt(memberResponse.id(), memberResponse.email());
+
+        Map<String, String> response = new HashMap<>();
+        response.put("token", jwt);
+
         return ResponseEntity.ok(response);
     }
 
-    @GetMapping("/scopes/{accessToken}")
-    public ResponseEntity<KakaoScopeResponse> getUserScopes(@PathVariable String accessToken) {
-        KakaoScopeResponse response = kakaoOAuthService.getUserScopes(accessToken);
+    @GetMapping("/scopes")
+    public ResponseEntity<KakaoScopeResponse> getUserScopes(@RequestAttribute("memberId") Long memberId) {
+        KakaoScopeResponse response = kakaoOAuthService.getUserScopes(memberId);
         return ResponseEntity.ok(response);
     }
 
-    @GetMapping("/userinfo/{accessToken}")
-    public ResponseEntity<KakaoUserResponse> getUserInfo(@PathVariable String accessToken) {
-        KakaoUserResponse response = kakaoOAuthService.getUserInfo(accessToken);
+    @GetMapping("/userinfo")
+    public ResponseEntity<KakaoUserResponse> getUserInfo(@RequestAttribute("memberId") Long memberId) {
+        KakaoUserResponse response = kakaoOAuthService.getUserInfo(memberId);
         return ResponseEntity.ok(response);
+    }
+
+    @DeleteMapping("/unlink")
+    public ResponseEntity<KakaoUnlinkResponse> unlink(@RequestAttribute("memberId") Long memberId) {
+        kakaoOAuthService.unlinkUser(memberId);
+        memberService.deleteMember(memberId);
+        return ResponseEntity.noContent().build();
     }
 }

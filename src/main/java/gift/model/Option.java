@@ -37,7 +37,7 @@ public class Option {
     private String name;
 
     @Column(nullable = false)
-    @Min(value = 1, message = QUANTITY_MIN)
+    @Min(value = 0, message = QUANTITY_MIN)
     @Max(value = 99_999_999, message = QUANTITY_MAX)
     private int quantity;
 

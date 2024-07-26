@@ -1,15 +1,8 @@
 package gift.service.oauth;
 
-import static gift.util.constants.KakaoOAuthConstants.SCOPES_FAILURE_ERROR;
-import static gift.util.constants.KakaoOAuthConstants.TOKEN_FAILURE_ERROR;
-import static gift.util.constants.KakaoOAuthConstants.TOKEN_RESPONSE_ERROR;
-import static gift.util.constants.KakaoOAuthConstants.UNLINK_FAILURE_ERROR;
-import static gift.util.constants.KakaoOAuthConstants.UNLINK_RESPONSE_ERROR;
-import static gift.util.constants.KakaoOAuthConstants.USERINFO_FAILURE_ERROR;
-import static gift.util.constants.KakaoOAuthConstants.USERINFO_RESPONSE_ERROR;
+import static gift.util.constants.auth.KakaoOAuthConstants.TOKEN_NOT_FOUND;
 
-import gift.config.KakaoProperties;
-import gift.dto.member.MemberLoginRequest;
+import gift.client.KakaoApiClient;
 import gift.dto.member.MemberRegisterRequest;
 import gift.dto.member.MemberResponse;
 import gift.dto.oauth.KakaoScopeResponse;
@@ -17,144 +10,122 @@ import gift.dto.oauth.KakaoTokenResponse;
 import gift.dto.oauth.KakaoUnlinkResponse;
 import gift.dto.oauth.KakaoUserResponse;
 import gift.exception.member.EmailAlreadyUsedException;
-import gift.exception.oauth.KakaoScopeException;
-import gift.exception.oauth.KakaoTokenException;
-import gift.exception.oauth.KakaoUnlinkException;
-import gift.exception.oauth.KakaoUserInfoException;
+import gift.exception.oauth.KakaoTokenNotFoundException;
+import gift.model.RegisterType;
+import gift.model.oauth.KakaoToken;
+import gift.repository.TokenRepository;
 import gift.service.MemberService;
-import java.net.URI;
-import java.util.Map;
+import gift.util.JWTUtil;
+import java.time.LocalDateTime;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestClient;
-import org.springframework.web.client.RestClientResponseException;
 
 @Service
 public class KakaoOAuthService {
 
-    private final KakaoProperties kakaoProperties;
-    private final RestClient client;
+    private final KakaoApiClient kakaoApiClient;
     private final MemberService memberService;
+    private final TokenRepository tokenRepository;
+    private final JWTUtil jwtUtil;
+    private final RestClient restClient;
 
     @Value("${kakao.password}")
     private String kakaoPassword;
 
-    public KakaoOAuthService(KakaoProperties kakaoProperties, RestClient client, MemberService memberService) {
-        this.kakaoProperties = kakaoProperties;
-        this.client = client;
+    public KakaoOAuthService(
+        KakaoApiClient kakaoApiClient,
+        MemberService memberService,
+        TokenRepository tokenRepository,
+        JWTUtil jwtUtil,
+        RestClient restClient
+    ) {
+        this.kakaoApiClient = kakaoApiClient;
         this.memberService = memberService;
+        this.tokenRepository = tokenRepository;
+        this.jwtUtil = jwtUtil;
+        this.restClient = restClient;
     }
 
     public KakaoTokenResponse getAccessToken(String code) {
-        String kakaoTokenUrl = "https://kauth.kakao.com/oauth/token";
-        LinkedMultiValueMap<String, String> requestBody = new LinkedMultiValueMap<>();
-
-        requestBody.add("grant_type", "authorization_code");
-        requestBody.add("client_id", kakaoProperties.clientId());
-        requestBody.add("redirect_uri", kakaoProperties.redirectUrl());
-        requestBody.add("code", code);
-
-        try {
-            ResponseEntity<Map<String, Object>> response = client.post()
-                .uri(URI.create(kakaoTokenUrl))
-                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                .body(requestBody)
-                .retrieve()
-                .toEntity(new ParameterizedTypeReference<Map<String, Object>>() {
-                });
-            Map<String, Object> responseBody = response.getBody();
-
-            if (responseBody != null) {
-                String accessToken = (String) responseBody.get("access_token");
-                Integer expiresIn = (Integer) responseBody.get("expires_in");
-                String refreshToken = (String) responseBody.get("refresh_token");
-                Integer refreshTokenExpiresIn = (Integer) responseBody.get("refresh_token_expires_in");
-
-                return new KakaoTokenResponse(accessToken, expiresIn, refreshToken, refreshTokenExpiresIn);
-            } else {
-                throw new KakaoTokenException(TOKEN_RESPONSE_ERROR);
-            }
-        } catch (RestClientResponseException e) {
-            throw new KakaoTokenException(TOKEN_FAILURE_ERROR);
-        }
-    }
-
-    public KakaoUnlinkResponse unlinkUser(String accessToken) {
-        String kakaoUnlinkUrl = "https://kapi.kakao.com/v1/user/unlink";
-
-        try {
-            ResponseEntity<Map<String, Object>> response = client.post()
-                .uri(URI.create(kakaoUnlinkUrl))
-                .headers(headers -> headers.setBearerAuth(accessToken))
-                .retrieve()
-                .toEntity(new ParameterizedTypeReference<Map<String, Object>>() {
-                });
-            Map<String, Object> responseBody = response.getBody();
-
-            if (responseBody != null) {
-                Long id = ((Number) responseBody.get("id")).longValue();
-                return new KakaoUnlinkResponse(id);
-            } else {
-                throw new KakaoUnlinkException(UNLINK_RESPONSE_ERROR);
-            }
-        } catch (RestClientResponseException e) {
-            throw new KakaoUnlinkException(UNLINK_FAILURE_ERROR);
-        }
-    }
-
-    public KakaoScopeResponse getUserScopes(String accessToken) {
-        String kakaoScopesUrl = "https://kapi.kakao.com/v2/user/scopes";
-
-        try {
-            ResponseEntity<KakaoScopeResponse> response = client.get()
-                .uri(URI.create(kakaoScopesUrl))
-                .headers(headers -> headers.setBearerAuth(accessToken))
-                .retrieve()
-                .toEntity(KakaoScopeResponse.class);
-
-            return response.getBody();
-        } catch (RestClientResponseException e) {
-            throw new KakaoScopeException(SCOPES_FAILURE_ERROR);
-        }
+        return kakaoApiClient.getAccessToken(code);
     }
 
     public KakaoUserResponse getUserInfo(String accessToken) {
-        String kakaoUserInfoUrl = "https://kapi.kakao.com/v2/user/me";
+        return kakaoApiClient.getUserInfo(accessToken);
+    }
 
+    public KakaoUnlinkResponse unlinkUser(Long memberId) {
+        KakaoToken kakaoToken = tokenRepository.findByMemberId(memberId)
+            .orElseThrow(() -> new KakaoTokenNotFoundException(TOKEN_NOT_FOUND));
+        return kakaoApiClient.unlinkUser(kakaoToken.getAccessToken());
+    }
+
+    public KakaoScopeResponse getUserScopes(Long memberId) {
+        KakaoToken kakaoToken = tokenRepository.findByMemberId(memberId)
+            .orElseThrow(() -> new KakaoTokenNotFoundException(TOKEN_NOT_FOUND));
+        return kakaoApiClient.getUserScopes(kakaoToken.getAccessToken());
+    }
+
+    public KakaoUserResponse getUserInfo(Long memberId) {
+        KakaoToken kakaoToken = tokenRepository.findByMemberId(memberId)
+            .orElseThrow(() -> new KakaoTokenNotFoundException(TOKEN_NOT_FOUND));
+        return kakaoApiClient.getUserInfo(kakaoToken.getAccessToken());
+    }
+
+    @Transactional
+    public MemberResponse registerOrLoginKakaoUser(KakaoUserResponse userResponse) {
         try {
-            ResponseEntity<Map<String, Object>> response = client.get()
-                .uri(URI.create(kakaoUserInfoUrl))
-                .headers(headers -> headers.setBearerAuth(accessToken))
-                .retrieve()
-                .toEntity(new ParameterizedTypeReference<Map<String, Object>>() {
-                });
-            Map<String, Object> responseBody = response.getBody();
-
-            if (responseBody != null) {
-                Long id = ((Number) responseBody.get("id")).longValue();
-                Map<String, Object> kakaoAccount = (Map<String, Object>) responseBody.get("kakao_account");
-                String nickname = (String) ((Map<String, Object>) kakaoAccount.get("profile")).get("nickname");
-                String email = (String) kakaoAccount.get("email");
-
-                return new KakaoUserResponse(id, nickname, email);
-            } else {
-                throw new KakaoUserInfoException(USERINFO_RESPONSE_ERROR);
-            }
-        } catch (RestClientResponseException e) {
-            throw new KakaoUserInfoException(USERINFO_FAILURE_ERROR);
+            MemberRegisterRequest registerRequest = new MemberRegisterRequest(
+                userResponse.email(),
+                kakaoPassword,
+                RegisterType.KAKAO
+            );
+            System.out.println("회원가입 완료");
+            return memberService.registerMember(registerRequest);
+        } catch (EmailAlreadyUsedException e) {
+            System.out.println("로그인 완료");
+            return memberService.loginKakaoMember(userResponse.email());
         }
     }
 
-    public MemberResponse registerOrLoginKakaoUser(KakaoUserResponse userResponse) {
-        try {
-            MemberRegisterRequest registerRequest = new MemberRegisterRequest(userResponse.email(), kakaoPassword);
-            return memberService.registerMember(registerRequest);
-        } catch (EmailAlreadyUsedException e) {
-            return memberService.loginKakaoMember(userResponse.email());
-        }
+    @Transactional
+    public void saveToken(KakaoTokenResponse tokenResponse, Long memberId) {
+        LocalDateTime now = LocalDateTime.now();
+        KakaoToken kakaoToken = new KakaoToken(
+            memberId,
+            tokenResponse.accessToken(),
+            tokenResponse.refreshToken(),
+            now.plusSeconds(tokenResponse.expiresIn()),
+            now.plusSeconds(tokenResponse.refreshTokenExpiresIn())
+        );
+        tokenRepository.save(kakaoToken);
+    }
+
+    public String generateJwt(Long memberId, String email) {
+        return jwtUtil.generateToken(memberId, email);
+    }
+
+    public void sendMessage(Long memberId, String templateObject) {
+        String url = "https://kapi.kakao.com/v2/api/talk/memo/default/send";
+        MultiValueMap<String, String> requestBody = new LinkedMultiValueMap<>();
+        requestBody.add("template_object", templateObject);
+
+        KakaoToken kakaoToken = tokenRepository.findByMemberId(memberId)
+            .orElseThrow(() -> new KakaoTokenNotFoundException(TOKEN_NOT_FOUND));
+
+        restClient.post()
+            .uri(url)
+            .headers(headers -> {
+                headers.setBearerAuth(kakaoToken.getAccessToken());
+                headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+            })
+            .body(requestBody)
+            .retrieve()
+            .toBodilessEntity();
     }
 }

@@ -31,6 +31,7 @@
       <tr>
         <th>ID</th>
         <th>이메일</th>
+        <th>가입 유형</th>
         <th>수정/삭제</th>
       </tr>
       </thead>
@@ -38,6 +39,7 @@
       <tr th:each="member : ${members}">
         <td th:text="${member.id}">ID</td>
         <td th:text="${member.email}">Email</td>
+        <td th:text="${member.registerType}">RegisterType</td>
         <td>
           <a th:href="@{'/admin/members/' + ${member.id} + '/edit'}"
              class="btn btn-warning btn-sm">수정</a>

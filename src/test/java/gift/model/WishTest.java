@@ -11,7 +11,7 @@ public class WishTest {
     @DisplayName("Wish 모델 생성 테스트")
     public void testCreateWish() {
         Category category = new Category("Category", "#000000", "imageUrl", "description");
-        Member member = new Member(1L, "test@example.com", "password");
+        Member member = new Member(1L, "test@example.com", "password", RegisterType.DEFAULT);
         Product product = new Product(1L, "Product1", 100, "imageUrl1", category);
         Wish wish = new Wish(1L, member, product);
 
@@ -24,7 +24,7 @@ public class WishTest {
     @DisplayName("Wish 소유자 확인 테스트")
     public void testIsOwnedBy() {
         Category category = new Category("Category", "#000000", "imageUrl", "description");
-        Member member = new Member(1L, "test@example.com", "password");
+        Member member = new Member(1L, "test@example.com", "password", RegisterType.DEFAULT);
         Product product = new Product(1L, "Product1", 100, "imageUrl1", category);
         Wish wish = new Wish(1L, member, product);
 

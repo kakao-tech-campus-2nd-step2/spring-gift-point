@@ -21,6 +21,7 @@ import gift.exception.wish.WishNotFoundException;
 import gift.model.Category;
 import gift.model.Member;
 import gift.model.Product;
+import gift.model.RegisterType;
 import gift.model.Wish;
 import gift.repository.WishRepository;
 import java.util.List;
@@ -59,8 +60,8 @@ public class WishServiceTest {
     @DisplayName("위시리스트에 상품 추가 성공 테스트")
     public void testAddWishSuccess() {
         Category category = new Category("Category", "#000000", "imageUrl", "description");
-        Member member = new Member(1L, "test@example.com", "password");
-        MemberResponse memberResponse = new MemberResponse(1L, "test@example.com", null);
+        Member member = new Member(1L, "test@example.com", "password", RegisterType.DEFAULT);
+        MemberResponse memberResponse = new MemberResponse(1L, "test@example.com", null, RegisterType.DEFAULT);
         ProductResponse productResponse = new ProductResponse(
             1L,
             "Product",
@@ -111,8 +112,8 @@ public class WishServiceTest {
     @DisplayName("위시리스트에 이미 존재하는 상품 추가 시도")
     public void testAddWishDuplicate() {
         Category category = new Category("Category", "#000000", "imageUrl", "description");
-        Member member = new Member(1L, "test@example.com", "password");
-        MemberResponse memberResponse = new MemberResponse(1L, "test@example.com", null);
+        Member member = new Member(1L, "test@example.com", "password", RegisterType.DEFAULT);
+        MemberResponse memberResponse = new MemberResponse(1L, "test@example.com", null, RegisterType.DEFAULT);
         Product product = new Product(1L, "Product", 100, "imageUrl", category);
         ProductResponse productResponse = new ProductResponse(
             1L,
@@ -141,7 +142,7 @@ public class WishServiceTest {
     @DisplayName("위시리스트에서 상품 삭제 성공 테스트")
     public void testDeleteWishSuccess() {
         Category category = new Category("Category", "#000000", "imageUrl", "description");
-        Member member = new Member(1L, "test@example.com", "password");
+        Member member = new Member(1L, "test@example.com", "password", RegisterType.DEFAULT);
         Product product = new Product(1L, "Product", 100, "imageUrl", category);
         Wish wish = new Wish(1L, member, product);
 
@@ -166,7 +167,7 @@ public class WishServiceTest {
     @DisplayName("위시리스트에서 다른 사용자의 상품 삭제 시도")
     public void testDeleteWishPermissionDenied() {
         Category category = new Category("Category", "#000000", "imageUrl", "description");
-        Member member = new Member(1L, "test@example.com", "password");
+        Member member = new Member(1L, "test@example.com", "password", RegisterType.DEFAULT);
         Product product = new Product(1L, "Product", 100, "imageUrl", category);
         Wish wish = new Wish(1L, member, product);
 
@@ -183,7 +184,7 @@ public class WishServiceTest {
     @DisplayName("회원의 위시리스트 조회 테스트 (페이지네이션 적용)")
     public void testGetWishlistByMemberId() {
         Category category = new Category("Category", "#000000", "imageUrl", "description");
-        Member member = new Member(1L, "test@example.com", "password");
+        Member member = new Member(1L, "test@example.com", "password", RegisterType.DEFAULT);
         Product product = new Product(1L, "Product", 100, "imageUrl", category);
         Wish wish = new Wish(1L, member, product);
         Pageable pageable = PageRequest.of(0, 10);

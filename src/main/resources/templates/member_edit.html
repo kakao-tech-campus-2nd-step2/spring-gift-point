@@ -35,7 +35,8 @@
     </div>
     <div class="mb-3">
       <label for="password" class="form-label">비밀번호</label>
-      <input type="password" th:field="*{password}" class="form-control" id="password">
+      <input type="password" th:field="*{password}" class="form-control" id="password"
+             th:disabled="${member.registerType.name() != 'DEFAULT'}">
       <div th:if="${#fields.hasErrors('password')}" class="text-danger">
         <p th:each="err : ${#fields.errors('password')}" th:text="${err}"></p>
       </div>

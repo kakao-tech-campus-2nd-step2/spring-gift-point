@@ -1,5 +1,8 @@
 package gift.util;
 
+import static gift.util.constants.auth.TokenConstants.EXPIRED_TOKEN;
+import static gift.util.constants.auth.TokenConstants.INVALID_TOKEN;
+
 import gift.exception.member.ExpiredTokenException;
 import gift.exception.member.InvalidTokenException;
 import io.jsonwebtoken.Claims;
@@ -48,9 +51,9 @@ public class JWTUtil {
                 .parseClaimsJws(token)
                 .getBody();
         } catch (ExpiredJwtException e) {
-            throw new ExpiredTokenException("토큰이 만료되었습니다.");
+            throw new ExpiredTokenException(EXPIRED_TOKEN);
         } catch (JwtException e) {
-            throw new InvalidTokenException("유효하지 않은 토큰입니다.");
+            throw new InvalidTokenException(INVALID_TOKEN);
         }
     }
 }

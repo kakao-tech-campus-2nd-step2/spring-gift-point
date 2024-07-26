@@ -72,7 +72,7 @@ public class OptionServiceTest {
 
         when(optionRepository.findById(1L)).thenReturn(Optional.of(option));
 
-        OptionResponse optionResponse = optionService.getOptionById(1L, 1L);
+        OptionResponse optionResponse = optionService.getOptionById(1L);
         assertEquals("Option1", optionResponse.name());
     }
 
@@ -82,7 +82,7 @@ public class OptionServiceTest {
         when(optionRepository.findById(1L)).thenReturn(Optional.empty());
 
         OptionNotFoundException exception = assertThrows(OptionNotFoundException.class, () -> {
-            optionService.getOptionById(1L, 1L);
+            optionService.getOptionById(1L);
         });
 
         assertEquals(OPTION_NOT_FOUND + 1, exception.getMessage());

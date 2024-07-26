@@ -3,6 +3,7 @@ package gift.dto.member;
 import static gift.util.constants.GeneralConstants.REQUIRED_FIELD_MISSING;
 import static org.assertj.core.api.Assertions.assertThat;
 
+import gift.model.RegisterType;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validation;
 import jakarta.validation.Validator;
@@ -27,7 +28,8 @@ public class MemberRegisterRequestTest {
     public void testRegisterMemberValid() {
         MemberRegisterRequest memberRegisterRequest = new MemberRegisterRequest(
             "valid@example.com",
-            "validpassword"
+            "validpassword",
+            RegisterType.DEFAULT
         );
 
         Set<ConstraintViolation<MemberRegisterRequest>> violations = validator.validate(
@@ -41,7 +43,8 @@ public class MemberRegisterRequestTest {
     public void testRegisterMemberNullEmail() {
         MemberRegisterRequest memberRegisterRequest = new MemberRegisterRequest(
             null,
-            "validpassword"
+            "validpassword",
+            RegisterType.DEFAULT
         );
 
         Set<ConstraintViolation<MemberRegisterRequest>> violations = validator.validate(
@@ -59,7 +62,8 @@ public class MemberRegisterRequestTest {
     public void testRegisterMemberNullPassword() {
         MemberRegisterRequest memberRegisterRequest = new MemberRegisterRequest(
             "valid@example.com",
-            null
+            null,
+            RegisterType.DEFAULT
         );
 
         Set<ConstraintViolation<MemberRegisterRequest>> violations = validator.validate(

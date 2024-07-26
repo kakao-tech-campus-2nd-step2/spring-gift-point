@@ -28,9 +28,9 @@ VALUES ('Product1', 1000, 'https://via.placeholder.com/150?text=product1', 1),
        ('Product11', 11000, 'https://via.placeholder.com/150?text=product11', 11);
 
 -- 예시 회원 데이터
-INSERT INTO member (email, password)
-VALUES ('admin@kakao.com', 'admin'),
-       ('tester@kakao.com', 'test');
+INSERT INTO member (email, password, register_type)
+VALUES  ('admin@kakao.com', 'admin', 'DEFAULT'),
+        ('tester@kakao.com', 'test', 'DEFAULT');
 
 -- 예시 위시 리스트 데이터
 INSERT INTO wish (member_id, product_id)

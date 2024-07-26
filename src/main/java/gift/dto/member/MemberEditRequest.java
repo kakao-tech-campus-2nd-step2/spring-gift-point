@@ -2,6 +2,7 @@ package gift.dto.member;
 
 import static gift.util.constants.GeneralConstants.REQUIRED_FIELD_MISSING;
 
+import gift.model.RegisterType;
 import jakarta.validation.constraints.NotNull;
 
 public record MemberEditRequest(
@@ -10,7 +11,11 @@ public record MemberEditRequest(
     @NotNull(message = REQUIRED_FIELD_MISSING)
     String email,
 
-    String password
+    @NotNull(message = REQUIRED_FIELD_MISSING)
+    String password,
+
+    @NotNull(message = REQUIRED_FIELD_MISSING)
+    RegisterType registerType
 ) {
 
 }
