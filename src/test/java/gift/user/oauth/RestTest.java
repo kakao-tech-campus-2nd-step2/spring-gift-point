@@ -21,7 +21,7 @@ public class RestTest {
 
     // 코드를 새로 발급받지 않으면 오류가 납니다..
     @Test
-    void test1() {
+    void test_KakaoLoginAPI() {
         var url = "https://kauth.kakao.com/oauth/token";
         var body = new LinkedMultiValueMap<String, String>();
         body.add("grant_type", "authorization_code");
