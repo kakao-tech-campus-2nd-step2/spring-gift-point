@@ -1,5 +1,6 @@
 package gift.user.service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import gift.user.exception.OauthCustomException.FailedToSendMessageException;
 import gift.user.model.dto.AppUser;
@@ -22,8 +23,12 @@ public class KakaoService {
             MultiValueMap<String, String> multiValueMap = new LinkedMultiValueMap<>();
 
             KakaoMessageTemplate template = new KakaoMessageTemplate(message);
-            String jsonTemplate = objectMapper.writeValueAsString(template);
-            multiValueMap.add("template_object", jsonTemplate);
+            try {
+                String jsonTemplate = objectMapper.writeValueAsString(template);
+                multiValueMap.add("template_object", jsonTemplate);
+            } catch (JsonProcessingException e) {
+                throw new FailedToSendMessageException();
+            }
 
             client.post()
                     .uri(URI.create(url))
@@ -36,4 +41,19 @@ public class KakaoService {
         }
     }
 
+    private boolean sendRequest(String url, String header, MultiValueMap<String, String> values) {
+        try {
+            client.post()
+                    .uri(URI.create(url))
+                    .body(values)
+                    .header("Authorization", header)
+                    .retrieve()
+                    .body(String.class);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    
 }
