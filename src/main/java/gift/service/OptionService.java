@@ -61,7 +61,7 @@ public class OptionService {
         optionRepository.deleteById(optionId);
     }
 
-    public void decreaseOptionQuantity(Long optionId, Long quantity) {
+    public void decreaseOptionQuantity(Long optionId, int quantity) {
         Option decreaseOption = optionRepository.findById(optionId).orElseThrow(() -> new CustomException.EntityNotFoundException("Option not found"));
 
         if (quantity <= 0) {
