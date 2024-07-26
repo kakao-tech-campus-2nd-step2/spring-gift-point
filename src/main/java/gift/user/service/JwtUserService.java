@@ -29,11 +29,12 @@ public class JwtUserService {
         return jwtService.createToken(appUser.getId());
     }
 
-    @Transactional(readOnly = true)
+    @Transactional
     public String loginOauth(String email, String token) {
         return userRepository.findByEmail(email)
                 .map(appUser -> {
                     appUser.setAccessToken(token);
+                    userRepository.save(appUser);
                     return jwtService.createToken(appUser.getId());
                 })
                 .orElse(null);
