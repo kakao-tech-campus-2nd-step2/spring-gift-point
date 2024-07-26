@@ -1,5 +1,5 @@
 package gift.model;
 
-public record MemberDTO(long id, String email, String password) {
+public record MemberDTO(Long id, String email, String password) {
 
 }
