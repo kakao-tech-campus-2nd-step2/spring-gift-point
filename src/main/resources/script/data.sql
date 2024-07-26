@@ -1,7 +1,7 @@
 INSERT INTO app_user (email, password, role, registration_date, modification_date)
 VALUES ('yoo@example.com', '1234', 'ADMIN', NOW(), NOW()),
        ('kyeong@example.com', '1234', 'USER', NOW(), NOW()),
-       ('miiii@example.com', '1234', 'USER', NOW(), NOW());
+       ('yookyungmi02@gmail.com', '1234', 'USER', NOW(), NOW());
 
 INSERT INTO category (name, description, registration_date, modification_date)
 VALUES ('기타', '기타 카테고리 입니다', NOW(), NOW()),
@@ -20,3 +20,8 @@ VALUES (1, 1, 2, NOW(), NOW()),
        (2, 3, 3, NOW(), NOW()),
        (2, 1, 1, NOW(), NOW()),
        (3, 1, 1, NOW(), NOW());
+
+INSERT INTO option (name, quantity, additional_cost, product_id, registration_date, modification_date)
+VALUES ('옵션 1', 10, 0, 1, NOW(), NOW()),
+       ('옵션 2', 20, 2000, 1, NOW(), NOW()),
+       ('옵션 3', 30, 3000, 1, NOW(), NOW());
