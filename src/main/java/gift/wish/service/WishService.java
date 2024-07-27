@@ -1,6 +1,7 @@
 package gift.wish.service;
 
 import gift.member.model.Member;
+import gift.wish.model.Wish;
 import gift.wish.model.WishDTO;
 import org.springframework.data.domain.Page;
 
@@ -11,4 +12,6 @@ public interface WishService {
     List<WishDTO> getWishlistByMemberId(Member member);
     void deleteWish(Long wishId);
     Page<WishDTO> getWishlistByPage(int page, int size, String sortBy, String direction);
+
+    Wish getWishByProductId(Long productId);
 }

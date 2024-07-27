@@ -7,6 +7,7 @@ import jakarta.validation.ConstraintViolationException;
 import org.springframework.boot.web.server.ErrorPage;
 import org.springframework.http.HttpStatus;
 import org.springframework.ui.Model;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -43,7 +44,23 @@ public class GlobalExceptionHandler {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public String handleMethodArgumentNotValidException(MethodArgumentNotValidException ex, Model model) {
-        model.addAttribute("errorMessage", ex.getMessage());
+        StringBuilder errorMessage = new StringBuilder("Validation failed: ");
+
+        ex.getBindingResult().getAllErrors().forEach(error -> {
+            if (error instanceof FieldError) {
+                FieldError fieldError = (FieldError) error;
+                errorMessage.append(fieldError.getField())
+                        .append(" - ")
+                        .append(fieldError.getDefaultMessage())
+                        .append("; ");
+                System.out.println(fieldError.getField() + ": " + fieldError.getDefaultMessage());
+            } else {
+                errorMessage.append(error.getDefaultMessage()).append("; ");
+                System.out.println(error.getDefaultMessage());
+            }
+        });
+
+        model.addAttribute("errorMessage", errorMessage.toString());
         return "ErrorPage/BadRequest";
     }
 

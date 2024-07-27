@@ -20,4 +20,6 @@ public interface WishRepository extends JpaRepository<Wish, Long> {
 
     @Query("SELECT w FROM Wish w JOIN w.product p ORDER BY p.price ASC")
     Page<Wish> findAllByOrderByProductPriceAsc(Pageable pageable);
+
+    Optional<Wish> findByProductId(Long productId);
 }

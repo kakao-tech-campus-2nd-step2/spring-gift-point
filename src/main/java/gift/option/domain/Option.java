@@ -14,8 +14,11 @@ public class Option {
 
     @Column(nullable = false)
     @Size(max = 50, message = "옵션 이름은 공백을 포함하여 최대 50자입니다.")
-    @Pattern(regexp = "^[a-zA-Z0-9가-힣 ()\\[\\]\\+\\-\\&\\/\\_]*$", message = "특수 문자 중 ()[]+-&/_만 사용 가능하며, 영어와 한국어만 허용됩니다.")
+    @Pattern(regexp = "^[가-힣a-zA-Z0-9 ()\\[\\]\\+\\-&/_]*$",
+            message = "특수 문자 중 ()[]+-&/_만 사용 가능하며, 영어와 한국어만 허용됩니다.")
     private String name;
+
+
 
     @Column(nullable = false)
     @Min(value = 1, message = "Quantity은 최소 1개 이상이어야 합니다.")

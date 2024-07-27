@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -62,6 +63,13 @@ public class WishServiceImpl implements WishService {
         return wishlist.stream()
                 .map(wish -> new WishDTO(wish.getId(), wish.getProduct().getId(), wish.getProduct().getName(), wish.getProduct().getPrice(), wish.getProduct().getImageUrl()))
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Wish getWishByProductId(Long productId) {
+        Optional<Wish> wish = wishRepository.findByProductId(productId);
+        return wish.orElse(null);
     }
 
     @Override

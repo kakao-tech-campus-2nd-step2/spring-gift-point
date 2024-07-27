@@ -20,7 +20,7 @@ public class WebConfig implements WebMvcConfigurer {
         this.memberRepository = memberRepository;
     }
 
-
+    // LoginMember인지 판별하기
     @Override
     public void addArgumentResolvers(List<HandlerMethodArgumentResolver> resolvers) {
         resolvers.add(new LoginMemberArgumentResolver(jwtUtil, memberRepository));

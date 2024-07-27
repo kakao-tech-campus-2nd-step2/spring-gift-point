@@ -5,7 +5,8 @@ import jakarta.validation.constraints.*;
 public class OptionRequest {
 
     @Size(max = 50, message = "옵션 이름은 공백을 포함하여 최대 50자입니다.")
-    @Pattern(regexp = "^[a-zA-Z0-9 ()\\[\\]\\+\\-\\&\\/\\_]*$", message = "특수 문자 중 ()[]+-&/_만 사용 가능합니다.")
+    @Pattern(regexp = "^[가-힣a-zA-Z0-9 ()\\[\\]\\+\\-&/_]*$",
+            message = "특수 문자 중 ()[]+-&/_만 사용 가능합니다.")
     private String name;
 
     @Min(value = 1, message = "Quantity은 최소 1개 이상이어야 합니다.")

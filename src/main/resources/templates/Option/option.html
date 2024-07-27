@@ -26,9 +26,9 @@
         <td th:text="${option.name}"></td>
         <td th:text="${option.quantity}"></td>
         <td>
-            <a th:href="@{/api/products/{productId}/options/edit/{optionId}(productId=${product.id},optionId=${option.id})}" class="edit-button">수정</a>
+            <a th:href="@{/api/products/{productId}/options/edit/{optionId}(productId=${product.id},optionId=${option.id})}" class="button">수정</a>
             <form th:action="@{/api/options/delete/{id}(id=${option.id})}" method="post" style="display:inline;">
-                <button type="submit" class="delete-button">삭제</button>
+                <button type="submit" class="button">삭제</button>
             </form>
         </td>
     </tr>
