@@ -1,7 +1,7 @@
 package gift.user.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import config.KakaoProperties;
+import gift.config.KakaoProperties;
 import gift.user.model.dto.KakaoTokenResponse;
 import gift.user.model.dto.KakaoUserInfoResponse;
 import java.net.URI;

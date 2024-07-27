@@ -1,6 +1,6 @@
 package gift.user.oauth;
 
-import config.KakaoProperties;
+import gift.config.KakaoProperties;
 import java.net.URI;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

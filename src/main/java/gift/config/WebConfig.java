@@ -1,4 +1,4 @@
-package config;
+package gift.config;
 
 import gift.resolver.LoginUserArgumentResolver;
 import gift.user.jwt.JwtService;

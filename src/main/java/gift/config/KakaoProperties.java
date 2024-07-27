@@ -1,4 +1,4 @@
-package config;
+package gift.config;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
