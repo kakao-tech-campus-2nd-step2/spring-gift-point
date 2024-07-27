@@ -75,7 +75,7 @@ public class ProductControllerTest {
     public void testAddProduct() throws Exception {
         Category category = new Category();
         category.update("Test Category", "Red", "https://example.com/image.jpg", "Category Description");
-        Product product = new Product("Test Product", 1000, "https://example.com/image.jpg", category);
+        Product product = new Product("ValidProduct", 1000, "https://example.com/image.jpg", category);
         product.updateId(1L);
 
         when(productService.getCategoryById(anyLong())).thenReturn(category);
@@ -83,23 +83,23 @@ public class ProductControllerTest {
 
         mockMvc.perform(post("/api/products")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content("{\"name\":\"Test Product\",\"price\":1000,\"imageUrl\":\"https://example.com/image.jpg\",\"categoryId\":1, \"options\":[{\"name\":\"Option1\",\"quantity\":10}]}"))
+                        .content("{\"name\":\"ValidProduct\",\"price\":1000,\"imageUrl\":\"https://example.com/image.jpg\",\"categoryId\":1, \"options\":[{\"name\":\"Option1\",\"quantity\":10}]}"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(1L))
-                .andExpect(jsonPath("$.name").value("Test Product"));
+                .andExpect(jsonPath("$.name").value("ValidProduct"));
     }
 
     @Test
     @DisplayName("PUT /api/products/{id} - Update Product")
     public void testUpdateProduct() throws Exception {
         Category existingCategory = new Category();
-        existingCategory.update("Existing Category", "Blue", "https://example.com/existing_image.jpg", "Existing Description");
-        Product existingProduct = new Product("Existing Product", 1000, "https://example.com/existing_image.jpg", existingCategory);
+        existingCategory.update("Test Category", "Blue", "https://example.com/existing_image.jpg", "Existing Description");
+        Product existingProduct = new Product("Test Product", 1000, "https://example.com/existing_image.jpg", existingCategory);
         existingProduct.updateId(1L);
 
         Category updatedCategory = new Category();
-        updatedCategory.update("Updated Category", "Red", "https://example.com/updated_image.jpg", "Updated Description");
-        Product updatedProduct = new Product("Updated Product", 1500, "https://example.com/image_updated.jpg", updatedCategory);
+        updatedCategory.update("updatedCategory", "Red", "https://example.com/updated_image.jpg", "Updated Description");
+        Product updatedProduct = new Product("updatedProduct", 1500, "https://example.com/image_updated.jpg", updatedCategory);
         updatedProduct.updateId(1L);
 
         when(productService.findById(anyLong())).thenReturn(existingProduct);
@@ -108,10 +108,10 @@ public class ProductControllerTest {
 
         mockMvc.perform(put("/api/products/1")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content("{\"name\":\"Updated Product\",\"price\":1500,\"imageUrl\":\"https://example.com/image_updated.jpg\",\"categoryId\":1, \"options\":[{\"name\":\"Option1\",\"quantity\":10}]}"))
+                        .content("{\"name\":\"updatedProduct\",\"price\":1500,\"imageUrl\":\"https://example.com/image_updated.jpg\",\"categoryId\":1, \"options\":[{\"name\":\"Option1\",\"quantity\":10}]}"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(1L))
-                .andExpect(jsonPath("$.name").value("Updated Product"));
+                .andExpect(jsonPath("$.name").value("updatedProduct"));
     }
 
     @Test
