@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>옵션 정보 페이지</title>
+    <link rel="stylesheet" type="text/css" href="/css/main.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+<h1>옵션 정보 페이지</h1>
+<div class="top-right">
+    <a th:href="@{/api/products}" class="button">상품 목록으로 돌아가기</a>
+    <a th:href="@{/api/products/{id}/options/new(id=${product.id})}" class="button">옵션 추가하기</a>
+</div>
+<table>
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>옵션명</th>
+        <th>수량</th>
+        <th>수정/삭제</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="option : ${options}">
+        <td th:text="${option.id}"></td>
+        <td th:text="${option.name}"></td>
+        <td th:text="${option.quantity}"></td>
+        <td>
+            <a th:href="@{/api/products/{productId}/options/edit/{optionId}(productId=${product.id},optionId=${option.id})}" class="edit-button">수정</a>
+            <form th:action="@{/api/options/delete/{id}(id=${option.id})}" method="post" style="display:inline;">
+                <button type="submit" class="delete-button">삭제</button>
+            </form>
+        </td>
+    </tr>
+    </tbody>
+</table>
+
+</body>
+</html>
