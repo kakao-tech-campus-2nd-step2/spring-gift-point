@@ -11,6 +11,7 @@ import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
+import org.springframework.web.client.RestTemplate;
 
 import java.net.URI;
 import java.util.Map;
@@ -19,9 +20,9 @@ import java.util.Optional;
 @Service
 @RequiredArgsConstructor
 public class KakaoService {
-    private static final Logger logger = LoggerFactory.getLogger(KakaoService.class);
     private final KakaoAuthProvider kakaoAuthProvider;
     private final MemberRepository memberRepository;
+    private static final Logger logger = LoggerFactory.getLogger(KakaoService.class);
 
     public String getAccessToken(String authorizationCode) {
         logger.debug("Requesting access token with authorization code: {}", authorizationCode);
@@ -48,8 +49,7 @@ public class KakaoService {
 
         try {
             ResponseEntity<Map<String, Object>> response = kakaoAuthProvider.getRestTemplate().exchange(requestEntity, new ParameterizedTypeReference<>() {});
-
-            logger.debug("Response: {}", response);
+            logger.info("Kakao token response: {}", response);
 
             if(!response.getStatusCode().is2xxSuccessful()) {
                 throw new CustomException.GenericException("Failed to get access token");

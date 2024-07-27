@@ -46,7 +46,6 @@ public class MemberController {
         return  ResponseEntity.status(401).body(null);
     }
 
-    // endpoint that checking member information
     @GetMapping("/me")
     public ResponseEntity<Member> getCurrentMember(HttpServletRequest request) {
         String email = getEmailFromRequest(request);
@@ -59,7 +58,6 @@ public class MemberController {
         return ResponseEntity.status(401).body(null);
     }
 
-    // Extracting email from token using HttpServletRequest
     private String getEmailFromRequest(HttpServletRequest request) {
         String authorizationHeader = request.getHeader("Authorization");
         if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {

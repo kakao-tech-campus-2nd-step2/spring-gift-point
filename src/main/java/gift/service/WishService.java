@@ -36,7 +36,7 @@ public class WishService {
     }
 
     public void deleteByProductId(Long productId) {
-        wishRepository.deleteByProductId(productId);
+        wishRepository.deleteByProduct_Id(productId);
     }
 
     public Wish updateWish(Long wishId) {

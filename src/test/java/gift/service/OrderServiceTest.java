@@ -33,7 +33,7 @@ public class OrderServiceTest {
 
     @Test
     public void PlaceOrderSuccess() {
-        OrderRequest orderRequest = new OrderRequest(1L, 1L, 2 , "Test message", LocalDateTime.now());
+        OrderRequest orderRequest = new OrderRequest(1L, 1L, 1, "Test message", LocalDateTime.now(), "user@example.com");
 
         Order order = new Order.Builder()
                 .id(1L)
@@ -41,6 +41,7 @@ public class OrderServiceTest {
                 .quantity(2)
                 .orderTime(LocalDateTime.now())
                 .message("Test message")
+                .email("user@example.com")
                 .build();
 
         when(orderRepository.save(any(Order.class))).thenReturn(order);

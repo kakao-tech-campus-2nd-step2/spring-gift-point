@@ -3,18 +3,22 @@ package gift.dto;
 import java.time.LocalDateTime;
 
 public class OrderRequest {
-    private final Long productId;
-    private final Long optionId;
-    private final int quantity;
-    private final String message;
-    private final LocalDateTime orderTime;
+    private Long productId;
+    private Long optionId;
+    private int quantity;
+    private String message;
+    private LocalDateTime orderTime;
+    private String email;
 
-    public OrderRequest(Long productId, Long optionId, int quantity, String message, LocalDateTime orderTime) {
+    public OrderRequest() {}
+
+    public OrderRequest(Long productId, Long optionId, int quantity, String message, LocalDateTime orderTime, String email) {
         this.productId = productId;
         this.optionId = optionId;
         this.quantity = quantity;
         this.message = message;
         this.orderTime = orderTime;
+        this.email = email;
     }
 
     public Long getProductId() {
@@ -35,5 +39,9 @@ public class OrderRequest {
 
     public LocalDateTime getOrderTime() {
         return orderTime;
+    }
+
+    public String getEmail() {
+        return email;
     }
 }

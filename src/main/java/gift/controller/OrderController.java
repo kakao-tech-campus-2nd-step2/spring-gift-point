@@ -3,24 +3,76 @@ package gift.controller;
 import gift.dto.OrderRequest;
 import gift.dto.OrderResponse;
 import gift.service.OrderService;
+import gift.util.JwtUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.time.Instant;
+import java.time.LocalDateTime;
 
 @RestController
 @RequestMapping("/api/orders")
 public class OrderController {
     private final OrderService orderService;
+    private final JwtUtil jwtUtil;
+    private static final Logger logger = LoggerFactory.getLogger(OrderController.class);
 
-    public OrderController(OrderService orderService) {
+    public OrderController(OrderService orderService, JwtUtil jwtUtil) {
         this.orderService = orderService;
+        this.jwtUtil = jwtUtil;
     }
 
     @PostMapping
-    public ResponseEntity<OrderResponse> placeOrder(@RequestBody OrderRequest orderRequest) {
-        OrderResponse orderResponse = orderService.placeOrder(orderRequest);
-        return ResponseEntity.status(201).body(orderResponse);
+    public ResponseEntity<OrderResponse> placeOrder(@RequestBody OrderRequest orderRequest, @RequestHeader("Authorization") String authorizationHeader) {
+        logger.info("Received request to place order");
+        logger.info("Server current time: {}", Instant.now().getEpochSecond());
+
+        if (authorizationHeader == null || !authorizationHeader.startsWith("Bearer ")) {
+            logger.warn("Authorization header is missing or invalid");
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new OrderResponse("Authorization header is missing or invalid"));
+        }
+
+        String token = authorizationHeader.substring("Bearer ".length());
+        logger.info("Token: {}", token);
+
+        try {
+            if (!jwtUtil.validateToken(token)) {
+                logger.warn("Token validation failed");
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new OrderResponse("Token validation failed"));
+            }
+
+            if (jwtUtil.isTokenExpired(token)) {
+                logger.warn("Token is expired");
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new OrderResponse("Token is expired"));
+            }
+
+            String email = jwtUtil.extractEmail(token);
+            logger.info("Email extracted from token: {}", email);
+
+            if (email == null) {
+                logger.warn("Failed to extract email from token");
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new OrderResponse("Failed to extract email from token"));
+            }
+
+            OrderRequest newOrderRequest = new OrderRequest(
+                    orderRequest.getProductId(),
+                    orderRequest.getOptionId(),
+                    orderRequest.getQuantity(),
+                    orderRequest.getMessage(),
+                    LocalDateTime.now(),
+                    email
+            );
+
+            OrderResponse orderResponse = orderService.placeOrder(newOrderRequest);
+            logger.info("Order placed successfully");
+            return ResponseEntity.status(HttpStatus.CREATED).body(orderResponse);
+
+        } catch (Exception e) {
+            logger.error("Error processing order placement", e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new OrderResponse("Internal server error"));
+        }
     }
 }
