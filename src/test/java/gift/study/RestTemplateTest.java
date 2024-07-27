@@ -24,10 +24,8 @@ public class RestTemplateTest {
         // 헤더
         var headers = new HttpHeaders();
         headers.add(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_FORM_URLENCODED_VALUE);
-
         // 본문
         final var body = createBody();
-
         var request = new RequestEntity<>(body, headers, HttpMethod.POST, URI.create(url));
 
         /// 2. 응답
