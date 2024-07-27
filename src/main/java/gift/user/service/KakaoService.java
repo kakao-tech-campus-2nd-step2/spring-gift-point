@@ -14,7 +14,11 @@ import org.springframework.web.client.RestClient;
 @Service
 public class KakaoService {
     private final ObjectMapper objectMapper = new ObjectMapper();
-    private final RestClient client = RestClient.builder().build();
+    private final RestClient client;
+
+    public KakaoService(RestClient client) {
+        this.client = client;
+    }
 
     public void sendMessageToMe(AppUser user, String message) {
         try {
@@ -40,20 +44,4 @@ public class KakaoService {
             throw new FailedToSendMessageException();
         }
     }
-
-    private boolean sendRequest(String url, String header, MultiValueMap<String, String> values) {
-        try {
-            client.post()
-                    .uri(URI.create(url))
-                    .body(values)
-                    .header("Authorization", header)
-                    .retrieve()
-                    .body(String.class);
-            return true;
-        } catch (Exception e) {
-            return false;
-        }
-    }
-
-    
 }

@@ -13,11 +13,12 @@ import org.springframework.web.client.RestClient;
 @Service
 public class KakaoLoginService {
 
-    private final RestClient client = RestClient.builder().build();
+    private final RestClient client;
     private final KakaoProperties kakaoProperties;
     private final ObjectMapper objectMapper = new ObjectMapper();
 
-    public KakaoLoginService(KakaoProperties kakaoProperties) {
+    public KakaoLoginService(RestClient client, KakaoProperties kakaoProperties) {
+        this.client = client;
         this.kakaoProperties = kakaoProperties;
     }
 
