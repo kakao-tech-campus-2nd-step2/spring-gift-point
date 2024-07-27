@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order Form</title>
+</head>
+<body>
+<button id="loginButton">Login with Kakao</button>
+
+<form id="orderForm" style="display:none;">
+    <label for="optionId">Option ID:</label>
+    <input type="number" id="optionId" name="optionId" required><br>
+
+    <label for="quantity">Quantity:</label>
+    <input type="number" id="quantity" name="quantity" required><br>
+
+    <label for="message">Message:</label>
+    <input type="text" id="message" name="message" required><br>
+
+    <button type="submit">Submit Order</button>
+</form>
+
+<script>
+    const clientId = '647c6bf223e4001f71ab7910b12738d4'; // 카카오 개발자 콘솔에서 발급받은 REST API 키
+    const redirectUri = 'http://localhost:8080';
+
+    // 로그인 버튼 클릭 시 카카오 로그인 페이지로 이동
+    document.getElementById('loginButton').addEventListener('click', function() {
+        window.location.href = `https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=${clientId}&redirect_uri=${redirectUri}`;
+    });
+
+    // URL에서 인증 코드 추출
+    const urlParams = new URLSearchParams(window.location.search);
+    const authorizationCode = urlParams.get('code');
+
+    if (authorizationCode) {
+        // 인증 코드가 있으면 토큰 발급 요청
+        fetch('https://kauth.kakao.com/oauth/token', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded'
+            },
+            body: new URLSearchParams({
+                grant_type: 'authorization_code',
+                client_id: clientId,
+                redirect_uri: redirectUri,
+                code: authorizationCode
+            })
+        })
+            .then(response => response.json())
+            .then(data => {
+                if (data.access_token) {
+                    const accessToken = data.access_token;
+                    console.log('Access token: ', accessToken);
+                    document.getElementById('orderForm').style.display = 'block';
+                    document.getElementById('orderForm').addEventListener('submit', function(event) {
+                        event.preventDefault();
+
+                        const optionId = document.getElementById('optionId').value;
+                        const quantity = document.getElementById('quantity').value;
+                        const message = document.getElementById('message').value;
+
+                        fetch('http://localhost:8080/api/orders', {
+                            method: 'POST',
+                            headers: {
+                                'Authorization': 'Bearer ' + accessToken,
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify({
+                                optionId: optionId,
+                                quantity: quantity,
+                                message: message
+                            })
+                        })
+                            .then(response => {
+                                if (!response.ok) {
+                                    throw new Error('Network response was not ok ' + response.statusText);
+                                }
+                                return response.json();
+                            })
+                            .then(data => {
+                                console.log('Success:', data);
+                            })
+                            .catch((error) => {
+                                console.error('Error:', error);
+                            });
+                    });
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+    }
+</script>
+</body>
+</html>

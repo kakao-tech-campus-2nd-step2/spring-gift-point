@@ -5,6 +5,7 @@ import gift.dto.OrderResponse;
 import gift.entity.Order;
 import gift.repository.OrderRepository;
 import jakarta.transaction.Transactional;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -13,6 +14,7 @@ public class OrderService {
     private final OptionService optionService;
     private final WishService wishService;
 
+    @Autowired
     public OrderService(OrderRepository orderRepository, OptionService optionService, WishService wishService) {
         this.orderRepository = orderRepository;
         this.optionService = optionService;
@@ -28,6 +30,7 @@ public class OrderService {
                 .quantity(orderRequest.getQuantity())
                 .orderTime(orderRequest.getOrderTime())
                 .message(orderRequest.getMessage())
+                .email(orderRequest.getEmail())
                 .build();
         order = orderRepository.save(order);
 

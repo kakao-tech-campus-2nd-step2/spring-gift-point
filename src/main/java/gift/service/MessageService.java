@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import gift.dto.MessageTemplate;
 import gift.exception.CustomException.GenericException;
 import gift.exception.CustomException.ValidationException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
@@ -18,8 +19,14 @@ public class MessageService {
     @Value("${kakao-api-url}")
     private String apiUrl;
 
-    private final RestTemplate restTemplate = new RestTemplate();
-    private final ObjectMapper objectMapper = new ObjectMapper();
+    private final RestTemplate restTemplate;
+    private final ObjectMapper objectMapper;
+
+    @Autowired
+    public MessageService(RestTemplate restTemplate, ObjectMapper objectMapper) {
+        this.restTemplate = restTemplate;
+        this.objectMapper = objectMapper;
+    }
 
     public String sendMessage(String recipient) throws GenericException {
         try {

@@ -4,6 +4,8 @@ import gift.entity.Member;
 import gift.exception.CustomException;
 import gift.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
@@ -20,6 +22,7 @@ import java.util.Optional;
 public class KakaoService {
     private final KakaoAuthProvider kakaoAuthProvider;
     private final MemberRepository memberRepository;
+    private static final Logger logger = LoggerFactory.getLogger(KakaoService.class);
 
     public String getAccessToken(String authorizationCode) {
         String url = kakaoAuthProvider.getTokenRequestUri();
@@ -38,6 +41,7 @@ public class KakaoService {
 
         try {
             ResponseEntity<Map<String, Object>> response = restTemplate.exchange(requestEntity, new ParameterizedTypeReference<>() {});
+            logger.info("Kakao token response: {}", response);
 
             if(!response.getStatusCode().is2xxSuccessful()) {
                 throw new CustomException.GenericException("Failed to get access token");
@@ -49,6 +53,7 @@ public class KakaoService {
             return responseBody.get("access_token").toString();
 
         } catch (Exception ex) {
+            logger.error("Failed to get access token", ex);
             throw new CustomException.GenericException("Failed to get access token: " + ex.getMessage());
         }
     }
@@ -63,6 +68,7 @@ public class KakaoService {
 
         try {
             ResponseEntity<Map<String, Object>> response = restTemplate.exchange(url, HttpMethod.GET, request, new ParameterizedTypeReference<>() {});
+            logger.info("Kakao token response: {}", response);
 
             if(!response.getStatusCode().is2xxSuccessful()) {
                 throw new CustomException.GenericException("Failed to get user");
@@ -100,6 +106,7 @@ public class KakaoService {
             }
             return member;
         } catch (Exception ex) {
+            logger.error("Failed to get member", ex);
             throw new CustomException.GenericException("Failed to get member: " + ex.getMessage());
         }
     }

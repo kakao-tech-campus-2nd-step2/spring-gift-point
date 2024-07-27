@@ -9,6 +9,23 @@ public class OrderResponse {
     private final LocalDateTime orderTime;
     private final String message;
 
+    // Public no-args constructor for error responses
+    public OrderResponse() {
+        this.id = null;
+        this.optionId = null;
+        this.quantity = 0;
+        this.orderTime = null;
+        this.message = null;
+    }
+
+    public OrderResponse(String message) {
+        this.id = null;
+        this.optionId = null;
+        this.quantity = 0;
+        this.orderTime = null;
+        this.message = message;
+    }
+
     private OrderResponse(Builder builder) {
         this.id = builder.id;
         this.optionId = builder.optionId;

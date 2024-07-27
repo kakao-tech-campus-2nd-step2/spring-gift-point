@@ -10,6 +10,6 @@ import java.util.List;
 @Repository
 public interface WishRepository extends JpaRepository<Wish, Long> {
     List<Wish> findByMember(Member member);
-    List<Wish> findByProductId(Long productId);
-    void deleteByProductId(Long productId);
+    List<Wish> findByProduct_Id(Long productId);
+    void deleteByProduct_Id(Long productId);
 }
