@@ -12,13 +12,12 @@ import javax.crypto.spec.SecretKeySpec;
 @Component
 public class JwtUtil {
     private static final String SECRET_KEY = "my_secure_secret_key";
-    private static final long EXPIRATION_TIME = 86400000; // 1 day
+    private static final long EXPIRATION_TIME = 86400000;
 
     public String generateToken(String email) {
-        long now = System.currentTimeMillis() / 1000L; // 초 단위로 변환
-        long exp = now + (EXPIRATION_TIME / 1000L); // 초 단위로 변환
+        long now = System.currentTimeMillis() / 1000L;
+        long exp = now + (EXPIRATION_TIME / 1000L);
 
-        // 로그 추가: 현재 시간 및 만료 시간 출력
         System.out.println("Generating token. Current time: " + now + ", Expiration time: " + exp);
 
         String header = Base64.getUrlEncoder().withoutPadding().encodeToString("{\"alg\":\"HS256\",\"typ\":\"JWT\"}".getBytes());
@@ -33,25 +32,20 @@ public class JwtUtil {
         String[] parts = token.split("\\.");
         if (parts.length == 3) {
             try {
-                // Base64 디코딩을 시도
                 String payload = new String(Base64.getUrlDecoder().decode(parts[1]));
                 Map<String, Object> payloadMap = parsePayload(payload);
 
-                // 페이로드 맵과 토큰 유효성을 확인
                 if (payloadMap != null && validateToken(token)) {
                     return (String) payloadMap.get("sub");
                 }
             } catch (IllegalArgumentException e) {
-                // Base64 디코딩 예외 처리
                 System.err.println("Failed to decode Base64: " + e.getMessage());
-                e.printStackTrace(); // 스택 트레이스 기록
+                e.printStackTrace();
             } catch (RuntimeException e) {
-                // 기타 예외 처리
                 System.err.println("Failed to parse payload or validate token: " + e.getMessage());
-                e.printStackTrace(); // 스택 트레이스 기록
+                e.printStackTrace();
             }
         } else {
-            // 토큰 형식 오류
             System.err.println("Invalid token format");
         }
         return null;
@@ -111,9 +105,8 @@ public class JwtUtil {
                 String payload = new String(Base64.getUrlDecoder().decode(parts[1]));
                 Map<String, Object> payloadMap = parsePayload(payload);
                 long exp = Long.parseLong(payloadMap.get("exp").toString());
-                long now = System.currentTimeMillis() / 1000L; // 초 단위로 변환
+                long now = System.currentTimeMillis() / 1000L;
 
-                // 로그 추가: 만료 시간 및 현재 시간 출력
                 System.out.println("Token expiration time: " + exp + ", Current time: " + now);
 
                 return exp < now;
