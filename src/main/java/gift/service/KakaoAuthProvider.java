@@ -13,7 +13,6 @@ public class KakaoAuthProvider {
     public static final String BEARER_PREFIX = "Bearer ";
 
     private final KakaoProperties kakaoProperties;
-
     private final RestTemplate restTemplate;
 
     public String getTokenRequestUri() {
