@@ -34,7 +34,7 @@ public class MemberController {
 
         memberService.registerMember(email, password);
         String token = memberService.login(email, password);
-        return ResponseEntity.ok(new CommonResponse<>(token, "회원가입 성공", true));
+        return ResponseEntity.ok(new CommonResponse<>(token, "회원 가입 후 토큰 받기 성공", true));
     }
 
     // 로그인
@@ -49,6 +49,6 @@ public class MemberController {
             return ResponseEntity.status(401).build(); // Unauthorized
         }
 
-        return ResponseEntity.ok(new CommonResponse<>(token, "로그인 성공 후 토큰 발급 성공", true));
+        return ResponseEntity.ok(new CommonResponse<>(token, "로그인 후 토큰 발기 성공", true));
     }
 }
