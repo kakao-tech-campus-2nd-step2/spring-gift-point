@@ -6,6 +6,7 @@ import gift.order.dto.OrderResponse;
 import gift.order.dto.OrderRequest;
 import gift.order.service.KakaoService;
 import gift.order.service.OrderService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api/orders")
+@Tag(name = "Wish", description = "WishList API")
 public class OrderController {
     private final OrderService orderService;
     private final KakaoService kakaoService;
