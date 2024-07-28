@@ -50,9 +50,9 @@ public class ProductController {
     @GetMapping("/page")
     @ResponseBody
     public ResponseEntity<?> getProductsByPage(@RequestParam int page,
-                                            @RequestParam int size,
-                                            @RequestParam(defaultValue = "price") String sortBy,
-                                            @RequestParam(defaultValue = "desc") String direction) {
+                                               @RequestParam int size,
+                                               @RequestParam(defaultValue = "price") String sortBy,
+                                               @RequestParam(defaultValue = "desc") String direction) {
         Page<Product> productPage = productService.getProductsByPage(page, size, sortBy, direction);
 
         return ResponseEntity.ok(new CommonResponse<>(productPage, "제품 페이지를 받아오는데 성공하였습니다.", true));

@@ -6,6 +6,8 @@ import gift.member.model.Member;
 import gift.wish.model.WishDTO;
 import gift.wish.model.WishRequest;
 import gift.wish.service.WishService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -14,6 +16,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/wish")
+@Tag(name = "Wish API", description = "사용자(Member)의 위시리스트 추가, 조회, 삭제 API 및 전체 사용자의 위시리스트 조회 API")
 public class WishController {
 
     private final WishService wishService;
@@ -24,6 +27,7 @@ public class WishController {
 
 
     // 1. 사용자 위시리스트에 상품 추가
+    @Operation(summary = "위시리스트에 상품 추가", description = "사용자의 위시리스트에 상품을 추가합니다.")
     @PostMapping
     public ResponseEntity<?> createWish(@LoginMember Member member, @RequestBody WishRequest wishRequest) {
         wishService.createWish(member, wishRequest.getProductId());
