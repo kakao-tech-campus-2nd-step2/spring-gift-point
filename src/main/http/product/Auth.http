@@ -6,3 +6,12 @@ Content-Type: application/json
   "email": "email",
   "password": "password"
 }
+
+### login
+GET http://localhost:8080/api/auth/kakao
+Content-Type: application/json
+
+{
+  "email": "email",
+  "password": "password"
+}

@@ -1,60 +1,68 @@
-CREATE TABLE IF NOT EXISTS products (
-    id BIGINT AUTO_INCREMENT PRIMARY KEY,
-    name VARCHAR(255) NOT NULL,
-    price BIGINT NOT NULL,
-    image_url VARCHAR(255) NULL
-) engine=InnoDB;
-
-CREATE TABLE IF NOT EXISTS options (
-    id BIGINT AUTO_INCREMENT PRIMARY KEY,
-    name VARCHAR(255) NOT NULL,
-    count BIGINT NOT NULL
-) engine=InnoDB;
-
-create table categories
+CREATE TABLE IF NOT EXISTS categories
 (
-    id BIGINT AUTO_INCREMENT PRIMARY KEY,
-    name VARCHAR(255) NOT NULL,
-    color VARCHAR(255) NULL,
-    image_url VARCHAR(255) NULL,
-    description VARCHAR(255) NULL
-) engine=InnoDB;
+    id            BIGINT AUTO_INCREMENT NOT NULL,
+    name          VARCHAR(255)          NULL,
+    color         VARCHAR(255)          NULL,
+    image_url     VARCHAR(255)          NULL,
+    `description` VARCHAR(255)          NULL,
+    CONSTRAINT pk_categories PRIMARY KEY (id)
+);
 
-CREATE TABLE IF NOT EXISTS members (
-    id BIGINT AUTO_INCREMENT PRIMARY KEY,
-    member_type VARCHAR(255) NOT NULL,
-    email VARCHAR(255) NOT NULL,
-    password VARCHAR(255) NOT NULL,
-    nickname VARCHAR(255) NOT NULL
-) engine=InnoDB;
+CREATE TABLE IF NOT EXISTS members
+(
+    id          BIGINT AUTO_INCREMENT NOT NULL,
+    member_type VARCHAR(255)          NULL,
+    email       VARCHAR(255)          NULL,
+    password    VARCHAR(255)          NULL,
+    nickname    VARCHAR(255)          NULL,
+    CONSTRAINT pk_members PRIMARY KEY (id)
+);
 
-CREATE TABLE wishes (
-    id BIGINT AUTO_INCREMENT PRIMARY KEY,
-    member_id BIGINT NOT NULL,
-    product_id BIGINT NOT NULL,
-    product_count BIGINT NOT NULL,
-    FOREIGN KEY (member_id) REFERENCES members(id),
-    FOREIGN KEY (product_id) REFERENCES products(id)
-) engine=InnoDB;
+CREATE TABLE IF NOT EXISTS options
+(
+    id         BIGINT AUTO_INCREMENT NOT NULL,
+    product_id BIGINT                NULL,
+    name       VARCHAR(255)          NULL,
+    count      BIGINT                NULL,
+    CONSTRAINT pk_options PRIMARY KEY (id)
+);
 
-alter table members
-    add constraint uk_member_email unique (email);
+CREATE TABLE IF NOT EXISTS products
+(
+    id          BIGINT AUTO_INCREMENT NOT NULL,
+    category_id BIGINT                NULL,
+    name        VARCHAR(255)          NULL,
+    price       BIGINT                NULL,
+    image_url   VARCHAR(255)          NULL,
+    CONSTRAINT pk_products PRIMARY KEY (id)
+);
 
-alter table members
-    add constraint uk_member_nickname unique (nickname);
+CREATE TABLE IF NOT EXISTS wishes
+(
+    id            BIGINT AUTO_INCREMENT NOT NULL,
+    member_id     BIGINT                NULL,
+    product_id    BIGINT                NULL,
+    product_count BIGINT                NULL,
+    CONSTRAINT pk_wishes PRIMARY KEY (id)
+);
 
--- 외래키 NULL 을 허용하여, 카테고리 없이 상품 생성이 가능하도록 하였다
-ALTER TABLE products
-    ADD COLUMN category_id BIGINT NULL;
+ALTER TABLE members
+    ADD CONSTRAINT uc_members_email UNIQUE (email);
 
-alter table products
-    add constraint fk_product_category_id_ref_category_id
-        foreign key (category_id) references categories (id);
-
+ALTER TABLE members
+    ADD CONSTRAINT uc_members_nickname UNIQUE (nickname);
 
 ALTER TABLE options
-    ADD COLUMN product_id BIGINT NULL;
+    ADD CONSTRAINT uc_options_name UNIQUE (name);
 
-alter table options
-    add constraint fk_option_product_id_ref_product_id
-        foreign key (product_id) references products (id);
+ALTER TABLE options
+    ADD CONSTRAINT FK_OPTIONS_ON_PRODUCT FOREIGN KEY (product_id) REFERENCES products (id);
+
+ALTER TABLE products
+    ADD CONSTRAINT FK_PRODUCTS_ON_CATEGORY FOREIGN KEY (category_id) REFERENCES categories (id);
+
+ALTER TABLE wishes
+    ADD CONSTRAINT FK_WISHES_ON_MEMBER FOREIGN KEY (member_id) REFERENCES members (id);
+
+ALTER TABLE wishes
+    ADD CONSTRAINT FK_WISHES_ON_PRODUCT FOREIGN KEY (product_id) REFERENCES products (id);

@@ -4,4 +4,28 @@
 <body>
 <h1>Welcome to the Shopping Mall</h1>
 </body>
+<script>
+    $(document).ready(function() {
+        const urlParams = new URLSearchParams(window.location.search);
+        const code = urlParams.get('code');
+        if (code) {
+            $.ajax({
+                url: '/api/auth/kakao/login?code=' + code,
+                type: 'GET',
+                success: function(response, textStatus, request) {
+                    const kakaoAuth = request.getResponseHeader('Authorization');
+                    if (kakaoAuth) {
+                        document.cookie = "accessToken=" + kakaoAuth + "; path=/";
+                        window.location.href = "/";
+                    } else {
+                        alert("Kakao login failed: Authorization not found");
+                    }
+                },
+                error: function() {
+                    alert("Kakao login failed: invalid credentials");
+                }
+            });
+        }
+    });
+</script>
 </html>

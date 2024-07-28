@@ -23,17 +23,11 @@ public class ResponseHelper {
     }
 
 
-    public static ResponseEntity<SimpleResultResponseDto> createSimpleResponse(ResultCode resultCode, Map<String, String> headers) {
+    public static ResponseEntity<SimpleResultResponseDto> createSimpleResponse(ResultCode resultCode, HttpHeaders headers) {
         var resultResponseDto = new SimpleResultResponseDto(resultCode);
-        HttpHeaders httpHeaders = new HttpHeaders();
-
-        // 입력받은 헤더를 HttpHeaders 객체에 추가
-        for (Map.Entry<String, String> header : headers.entrySet()) {
-            httpHeaders.add(header.getKey(), header.getValue());
-        }
 
         return ResponseEntity.status(resultCode.getStatus())
-                .headers(httpHeaders)
+                .headers(headers)
                 .body(resultResponseDto);
     }
 

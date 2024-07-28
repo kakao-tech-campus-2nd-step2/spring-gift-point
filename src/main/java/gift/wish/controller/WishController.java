@@ -9,6 +9,7 @@ import gift.global.response.ResultResponseDto;
 import gift.global.response.SimpleResultResponseDto;
 import gift.global.security.Login;
 import gift.global.utils.ResponseHelper;
+import gift.member.service.MemberService;
 import gift.wish.domain.Wish;
 import gift.wish.dto.WishRequestDto;
 import gift.wish.dto.WishResponseDto;
@@ -23,23 +24,23 @@ import java.util.List;
 @RequestMapping("/api/wishes")
 public class WishController {
     private final WishService wishService;
-    private final AuthService authService;
+    private final MemberService memberService;
 
-    public WishController(WishService wishService, AuthService authService) {
+    public WishController(WishService wishService, MemberService memberService) {
         this.wishService = wishService;
-        this.authService = authService;
+        this.memberService = memberService;
     }
 
     // 차후에 삭제 예정
     @GetMapping("/all")
     public ResponseEntity<ResultResponseDto<List<WishResponseDto>>> getAllWishes(@Login AuthInfo authInfo) {
-        List<WishResponseDto> wishResponseDtos = wishService.getAllWishesByMember(authService.getMemberById(authInfo.memberId()));
+        List<WishResponseDto> wishResponseDtos = wishService.getAllWishesByMember(memberService.getMemberById(authInfo.memberId()));
         return ResponseHelper.createResponse(ResultCode.GET_ALL_WISHES_SUCCESS, wishResponseDtos);
     }
 
     @GetMapping("")
     public ResponseEntity<ResultResponseDto<WishResponseListDto>> getWishesByPage(@RequestParam(name = "page") int page, @Login AuthInfo authInfo) {
-        WishResponseListDto wishResponseDtos = wishService.getWishesByMemberAndPage(authService.getMemberById(authInfo.memberId()), page);
+        WishResponseListDto wishResponseDtos = wishService.getWishesByMemberAndPage(memberService.getMemberById(authInfo.memberId()), page);
         return ResponseHelper.createResponse(ResultCode.GET_ALL_WISHES_SUCCESS, wishResponseDtos);
     }
 

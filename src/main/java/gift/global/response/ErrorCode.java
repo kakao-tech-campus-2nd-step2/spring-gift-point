@@ -8,6 +8,10 @@ public enum ErrorCode {
     ACCESS_TOKEN_NOT_EXISTS_ERROR(HttpStatus.BAD_REQUEST, "EG002", "Access Token Not Exists Error"),
     JWT_ERROR(HttpStatus.UNAUTHORIZED, "EG003", "JWT token is not valid"),
 
+    // Auth
+    KAKAO_TOKEN_ERROR(HttpStatus.UNAUTHORIZED, "EA001", "Kakao token is not valid"),
+    KAKAO_MEMBER_ERROR(HttpStatus.UNAUTHORIZED, "EA001", "Kakao member is not valid"),
+
     // Member
     MEMBER_NOT_FOUND_ERROR(HttpStatus.BAD_REQUEST, "EM001", "Member Not Found Error"),
     DUPLICATE_EMAIL_ERROR(HttpStatus.BAD_REQUEST, "EM002", "Duplicate Email Error"),

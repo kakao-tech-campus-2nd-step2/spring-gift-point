@@ -8,7 +8,7 @@ import java.util.Objects;
 
 @Embeddable
 public class Nickname {
-    @Column(name = "nickname")
+    @Column(name = "nickname", unique = true)
     private String nicknameValue;
 
     public Nickname() {

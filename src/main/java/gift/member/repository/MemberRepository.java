@@ -11,6 +11,8 @@ import java.util.Optional;
 public interface MemberRepository extends MyCrudRepository<Member, Long> {
     Optional<Member> findByEmailAndPassword(Email email, Password password);
 
+    Optional<Member> findByEmail(Email email);
+
     boolean existsById(Long id);
 
     boolean existsByEmail(Email email);

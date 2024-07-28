@@ -15,6 +15,7 @@
         </div>
         <button type="submit" class="btn btn-primary">Login</button>
     </form>
+    <button id="kakaoLoginButton" class="btn btn-warning mt-2">Login with Kakao</button>
 </div>
 
 <script>
@@ -44,6 +45,10 @@
                     alert("Login failed: invalid credentials");
                 }
             });
+        });
+
+        $('#kakaoLoginButton').click(function () {
+            window.location.href = '/api/auth/kakao';
         });
     });
 </script>

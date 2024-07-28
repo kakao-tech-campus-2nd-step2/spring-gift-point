@@ -31,6 +31,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorResponseDto> handleException(Exception e) {
         System.out.println(e);
+        e.printStackTrace();
         ErrorCode errorCode = ErrorCode.UNEXPECTED_ERROR;
         return ResponseHelper.createErrorResponse(errorCode);
     }
