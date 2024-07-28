@@ -15,10 +15,10 @@ POST http://localhost:8080/api/products
 Content-Type: application/json
 
 {
-  "name": "!@#!$Q@#%",
+  "name": "123",
   "price": "4500",
   "imageUrl": "http://hello",
-  "categoryId": 1
+  "categoryId": 2
 }
 
 ### update product
@@ -29,7 +29,7 @@ Content-Type: application/json
   "name": "아메리카노2",
   "price": "5000",
   "imageUrl": "http://hello",
-  "categoryId": 2
+  "categoryId": 3
 }
 
 ### delete product

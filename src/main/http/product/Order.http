@@ -1,0 +1,32 @@
+### get order list
+GET http://localhost:8080/api/orders
+Content-Type: application/json
+
+### get order
+#GET http://localhost:8080/api/orders/1
+#Content-Type: application/json
+
+### create order
+POST http://localhost:8080/api/orders
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJtZW1iZXJfaWQiOjQsIm1lbWJlcl90eXBlIjoiVVNFUiIsImlhdCI6MTcyMjA5MDE0OCwiZXhwIjo0NjA2OTk1Nzc1fQ.tLN2ZPKGNm2mnnN3fBlhm405cagpGIA029xZbBzb7Yz-u6fPrmerExyirvdg0hPyi_Sgn4G1dMAyXU9kkuBZQA
+Content-Type: application/json
+
+{
+  "count": 12,
+  "message": "message",
+  "optionId": 2
+}
+
+### update order
+#PUT http://localhost:8080/api/orders/1
+#Content-Type: application/json
+#
+#{
+#  "name": "aaa",
+#  "count": 123,
+#  "productId": 1
+#}
+
+### delete order
+#DELETE http://localhost:8080/api/orders/1
+#Content-Type: application/json

@@ -85,12 +85,12 @@ class OptionServiceTest {
     }
 
     @Test
-    void testGetOptionById() {
+    void testGetOptionResponseDtoById() {
         // given
         given(optionRepository.findById(anyLong())).willReturn(Optional.of(option));
 
         // when
-        OptionResponseDto foundOption = optionService.getOptionById(option.getId());
+        OptionResponseDto foundOption = optionService.getOptionResponseDtoById(option.getId());
 
         // then
         assertThat(foundOption.name().getOptionNameValue()).isEqualTo("Option Name");
@@ -98,12 +98,12 @@ class OptionServiceTest {
     }
 
     @Test
-    void testGetOptionById_NotFound() {
+    void testGetOptionResponseDtoById_NotFound() {
         // given
         given(optionRepository.findById(anyLong())).willReturn(Optional.empty());
 
         // when / then
-        assertThatThrownBy(() -> optionService.getOptionById(1L))
+        assertThatThrownBy(() -> optionService.getOptionResponseDtoById(1L))
                 .isInstanceOf(OptionNotFoundException.class);
 
         verify(optionRepository, times(1)).findById(anyLong());

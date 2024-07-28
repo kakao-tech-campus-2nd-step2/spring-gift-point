@@ -1,22 +1,17 @@
 package gift.option.controller;
 
-import gift.global.exception.BusinessException;
 import gift.global.exception.DomainValidationException;
 import gift.global.response.ErrorResponseDto;
 import gift.global.response.ResultCode;
 import gift.global.response.ResultResponseDto;
 import gift.global.response.SimpleResultResponseDto;
 import gift.global.utils.ResponseHelper;
-import gift.option.domain.Option;
 import gift.option.dto.OptionListResponseDto;
 import gift.option.dto.OptionRequestDto;
 import gift.option.dto.OptionResponseDto;
-import gift.option.exception.OptionValidException;
 import gift.option.service.OptionService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/options")
@@ -41,7 +36,7 @@ public class OptionController {
 
     @GetMapping("/{id}")
     public ResponseEntity<ResultResponseDto<OptionResponseDto>> getOptionById(@PathVariable(name = "id") Long id) {
-        OptionResponseDto optionResponseDto = optionService.getOptionById(id);
+        OptionResponseDto optionResponseDto = optionService.getOptionResponseDtoById(id);
         return ResponseHelper.createResponse(ResultCode.GET_OPTION_BY_ID_SUCCESS, optionResponseDto);
     }
 

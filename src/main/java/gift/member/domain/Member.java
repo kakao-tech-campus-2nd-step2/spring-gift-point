@@ -22,6 +22,7 @@ public class Member {
     private Password password;
     @Embedded
     private Nickname nickname;
+    private String accessToken;
 
     @OneToMany(mappedBy = "member", cascade = CascadeType.PERSIST, orphanRemoval = true)
     private List<Wish> wishes = new ArrayList<>();
@@ -36,6 +37,20 @@ public class Member {
         this.email = email;
         this.password = password;
         this.nickname = nickname;
+        this.accessToken = accessToken;
+    }
+
+    public Member(Long id, MemberType memberType, Email email, Password password, Nickname nickname, String accessToken) {
+        this.id = id;
+        this.memberType = memberType;
+        this.email = email;
+        this.password = password;
+        this.nickname = nickname;
+        this.accessToken = accessToken;
+    }
+
+    public void updateAccessToken(String accessToken) {
+        this.accessToken = accessToken;
     }
 
     public Long getId() {
@@ -56,6 +71,10 @@ public class Member {
 
     public MemberType getMemberType() {
         return memberType;
+    }
+
+    public String getAccessToken() {
+        return accessToken;
     }
 
     public boolean checkNew() {

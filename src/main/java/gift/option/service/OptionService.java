@@ -1,6 +1,5 @@
 package gift.option.service;
 
-import gift.member.exception.DuplicateEmailException;
 import gift.option.domain.Option;
 import gift.option.dto.OptionListResponseDto;
 import gift.option.dto.OptionResponseDto;
@@ -30,9 +29,13 @@ public class OptionService {
         return OptionListResponseDto.optionListToOptionListResponseDto(optionRepository.findByProductId(productId));
     }
 
-    public OptionResponseDto getOptionById(Long id) {
-        return OptionResponseDto.optionToOptionResponseDto(optionRepository.findById(id)
-                .orElseThrow(OptionNotFoundException::new));
+    public OptionResponseDto getOptionResponseDtoById(Long id) {
+        return OptionResponseDto.optionToOptionResponseDto(getOptionById(id));
+    }
+
+    public Option getOptionById(Long id) {
+        return optionRepository.findById(id)
+                .orElseThrow(OptionNotFoundException::new);
     }
 
     public Option createOption(OptionServiceDto optionServiceDto) {
@@ -53,12 +56,14 @@ public class OptionService {
         optionRepository.deleteById(id);
     }
 
-    public void orderOption(Long id, int count) {
-        Option option = optionRepository.findById(id)
+/*    @Transactional
+    public void orderOption(OrderRequestDto orderRequestDto) {
+        Option option = optionRepository.findById(orderRequestDto.optionId())
                 .orElseThrow(OptionNotFoundException::new);
-        option.subtract(count);
+        option.subtract(orderRequestDto.count());
         optionRepository.save(option);
-    }
+        sendMessage(orderRequestDto.message());
+    }*/
 
     private void validateOptionExists(Long id) {
         if (!optionRepository.existsById(id)) {
@@ -70,5 +75,8 @@ public class OptionService {
         if (optionRepository.existsByName(optionServiceDto.name())) {
             throw new DuplicateOptionNameException();
         }
+    }
+
+    private void sendMessage(String message) {
     }
 }

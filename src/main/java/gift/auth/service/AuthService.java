@@ -30,7 +30,7 @@ public class AuthService {
     private final KakaoProperties kakaoProperties;
     private final ObjectMapper objectMapper;
 
-    public static final String BEARER_TYPE = "Bearer";
+    public static final String BEARER_TYPE = "Bearer ";
     private static final String AUTHORIZE_URL_FORMAT = "https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=%s&redirect_uri=%s";
     private static final String TOKEN_URL = "https://kauth.kakao.com/oauth/token";
     private static final String GET_MEMBER_INFO_URL = "https://kapi.kakao.com/v2/user/me";
@@ -63,7 +63,7 @@ public class AuthService {
     }
 
     private HttpHeaders getAuthorizationHeader(Member member) {
-        String accessToken = BEARER_TYPE + " " + tokenManager.createAccessToken(new AuthInfo(member));
+        String accessToken = BEARER_TYPE + tokenManager.createAccessToken(new AuthInfo(member));
         HttpHeaders headers = new HttpHeaders();
         headers.add(HttpHeaders.AUTHORIZATION, accessToken);
         return headers;
@@ -92,7 +92,7 @@ public class AuthService {
 
     private Member getKakaoMember(String accessToken) throws JsonProcessingException {
         var headers = new HttpHeaders();
-        headers.add(HttpHeaders.AUTHORIZATION, BEARER_TYPE + " " + accessToken);
+        headers.add(HttpHeaders.AUTHORIZATION, BEARER_TYPE + accessToken);
         headers.add(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_FORM_URLENCODED_VALUE);
 
         URI uri = UriComponentsBuilder.fromHttpUrl(GET_MEMBER_INFO_URL)
@@ -110,8 +110,13 @@ public class AuthService {
 
         Member responseMember = response.getBody().toMember();
 
-        // Member를 이메일로 조회하고, 없으면 responseMember를 저장
-        return memberRepository.findByEmail(responseMember.getEmail())
+        Member member = memberRepository.findByEmail(responseMember.getEmail())
                 .orElseGet(() -> memberRepository.save(responseMember));
+
+        member.updateAccessToken(accessToken);
+        memberRepository.save(member);
+
+        // Member를 이메일로 조회하고, 없으면 responseMember를 저장
+        return member;
     }
 }

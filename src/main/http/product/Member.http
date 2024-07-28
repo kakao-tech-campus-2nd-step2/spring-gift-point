@@ -9,9 +9,9 @@ POST http://localhost:8080/api/members
 Content-Type: application/json
 
 {
-  "email": "email5",
+  "email": "email6",
   "password": "password3",
-  "nickName": "nickname3"
+  "nickName": "nickname6"
 }
 
 ### update member
@@ -19,9 +19,9 @@ PUT http://localhost:8080/api/members/1
 Content-Type: application/json
 
 {
-  "email": "email10",
+  "email": "email12",
   "password": "password3",
-  "nickName": "nickname3"
+  "nickName": "nickname9"
 }
 
 ### delete member
