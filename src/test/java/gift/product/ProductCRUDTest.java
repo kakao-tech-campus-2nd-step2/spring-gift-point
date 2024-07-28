@@ -1,6 +1,6 @@
 package gift.product;
 
-import gift.category.model.Category;
+import gift.category.domain.Category;
 import gift.category.repository.CategoryRepository;
 import gift.product.model.Product;
 import gift.product.repository.ProductRepository;

@@ -1,6 +1,6 @@
 package gift.product.model;
 
-import gift.category.model.Category;
+import gift.category.domain.Category;
 import gift.option.domain.Option;
 import gift.wish.model.Wish;
 import jakarta.persistence.*;

@@ -11,7 +11,7 @@
 - [x] springdoc-openapi의 swagger를 이용해 API 명세서를 작성한다.
 - [ ] API 명세 작성하기
   - [x] 회원 API
-  - [ ] 카테고리 API
+  - [x] 카테고리 API
   - [ ] 상품 API
   - [ ] 상품 옵션 API
   - [ ] 위시리스트 API

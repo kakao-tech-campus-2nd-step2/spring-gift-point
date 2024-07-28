@@ -1,6 +1,7 @@
 package gift.category.service;
 
-import gift.category.model.Category;
+import gift.category.domain.Category;
+import gift.category.dto.CategoryListDTO;
 import gift.category.repository.CategoryRepository;
 import gift.product.model.Product;
 import gift.product.model.ProductDTO;
@@ -32,14 +33,15 @@ public class CategoryService {
         categoryRepository.save(existingCategory);
     }
 
-    // 3. 삭제 로직
-    public void deleteCategory(Long id) {
-        Category existingCategory = categoryRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Category with id " + id + " not found"));
-        categoryRepository.delete(existingCategory);
-    }
 
-    // 4. 조회 로직
+    // 3. 조회 로직
+    // 카테고리 전부 조회
+    public List<CategoryListDTO> getAllCategories() {
+        List<Category> categoryList = categoryRepository.findAll();
+        return categoryList.stream()
+                .map(category -> new CategoryListDTO(category.getId(), category.getName()))
+                .toList();
+    }
     // 상품 전부 조회
     @Transactional(readOnly = true)
     public List<ProductDTO> getAllProducts() {
@@ -54,10 +56,4 @@ public class CategoryService {
 
         return productDTOs;
     }
-
-    // 카테고리 전부 조회
-    public List<Category> getAllCategories() {
-        return categoryRepository.findAll();
-    }
-
 }

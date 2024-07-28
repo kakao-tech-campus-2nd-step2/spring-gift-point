@@ -1,6 +1,6 @@
 package gift.option;
 
-import gift.category.model.Category;
+import gift.category.domain.Category;
 import gift.category.repository.CategoryRepository;
 import gift.option.domain.Option;
 import gift.option.repository.OptionJpaRepository;

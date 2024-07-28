@@ -1,14 +1,12 @@
 package gift.product.service;
 
-import gift.category.model.Category;
+import gift.category.domain.Category;
 import gift.category.repository.CategoryRepository;
 import gift.common.exception.ProductAlreadyExistsException;
 import gift.option.domain.Option;
-import gift.option.domain.OptionRequest;
 import gift.option.repository.OptionJpaRepository;
 import gift.product.model.Product;
 import gift.product.repository.ProductRepository;
-import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
