@@ -21,14 +21,14 @@ public class MemberController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<String> register(@Valid @RequestBody MemberDto memberDTO) {
-        String newMemberEmail = memberService.registerMember(memberDTO);
+    public ResponseEntity<String> register(@Valid @RequestBody MemberDto memberDto) {
+        String newMemberEmail = memberService.registerMember(memberDto);
         return ResponseEntity.status(HttpStatus.CREATED).body("새 멤버의 이메일: " + newMemberEmail);
     }
 
     @PostMapping("/login")
-    public ResponseEntity<JwtResponse> login(@Valid @RequestBody MemberDto memberDTO) {
-        String jwt = memberService.login(memberDTO);
+    public ResponseEntity<JwtResponse> login(@Valid @RequestBody MemberDto memberDto) {
+        String jwt = memberService.login(memberDto);
         return ResponseEntity.ok()
             .body(new JwtResponse(jwt));
     }

@@ -12,6 +12,7 @@ public class Member {
     private String email;
     @Column(nullable = false)
     private String password;
+    private String accessToken;
 
     public Member() {
     }
@@ -25,6 +26,12 @@ public class Member {
     public Member(String email, String password) {
         this.email = email;
         this.password = password;
+    }
+
+    public Member(String email, String password, String accessToken) {
+        this.email = email;
+        this.password = password;
+        this.accessToken = accessToken;
     }
 
     public Long getId() {
@@ -49,5 +56,13 @@ public class Member {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public String getAccessToken() {
+        return accessToken;
+    }
+
+    public void setAccessToken(String accessToken) {
+        this.accessToken = accessToken;
     }
 }

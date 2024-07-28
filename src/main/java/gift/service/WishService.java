@@ -8,7 +8,9 @@ import gift.dto.WishResponseDto;
 import gift.repository.MemberRepository;
 import gift.repository.ProductRepository;
 import gift.repository.WishRepository;
+import jakarta.transaction.Transactional;
 import java.util.List;
+import java.util.Optional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -45,6 +47,16 @@ public class WishService {
         Member member = memberRepository.findById(id).orElseThrow();
         Page<Wish> wishPage= wishRepository.findByMember(member, pageable);
         return wishPage.map(WishResponseDto::convertToDto);
+    }
+
+    @Transactional
+    public void deleteProductFromWishList(Long memberId, Long productId) {
+        Optional<Wish> optionalWishList = wishRepository.findByMemberIdAndProductId(memberId, productId);
+
+        if (optionalWishList.isPresent()) {
+            Wish wishList = optionalWishList.get();
+            wishRepository.delete(wishList);
+        }
     }
 
 }

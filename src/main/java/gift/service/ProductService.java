@@ -96,10 +96,10 @@ public class ProductService {
     }
 
     @Transactional
-    public void decreaseOptionQuantity(Long productId, String optionName, int amount) {
+    public void decreaseOptionQuantity(Long productId, Long optionId, int amount) {
         Product product = productRepository.findById(productId)
             .orElseThrow(() -> new NoSuchElementException("해당 id의 상품 없음: " + productId));
-        product.subtractOptionQuantity(optionName, amount);
+        product.subtractOptionQuantity(optionId, amount);
         productRepository.save(product);
     }
 }

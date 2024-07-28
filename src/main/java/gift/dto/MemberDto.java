@@ -12,13 +12,16 @@ public class MemberDto {
     @Size(min = 5, message = "비밀번호는 최소 5자 이상이어야 합니다.")
     private String password;
 
+    private String accessToken;
+
     public MemberDto() {
     }
 
-    public MemberDto(Long id, String email, String password) {
+    public MemberDto(Long id, String email, String password, String accessToken) {
         this.id = id;
         this.email = email;
         this.password = password;
+        this.accessToken = accessToken;
     }
 
     public Long getId() {
@@ -43,5 +46,9 @@ public class MemberDto {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public String getAccessToken() {
+        return accessToken;
     }
 }

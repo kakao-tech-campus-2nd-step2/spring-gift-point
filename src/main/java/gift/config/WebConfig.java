@@ -23,8 +23,7 @@ public class WebConfig implements WebMvcConfigurer {
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(jwtInterceptor)
-            .addPathPatterns("/**")
-            .excludePathPatterns("/login", "/register","/admin/products", "/admin/products/**", "/members", "/members/*", "/api/**");
+            .addPathPatterns("/wishlist", "/wishlist/**", "/api/orders");
     }
     @Override
     public void addArgumentResolvers(List<HandlerMethodArgumentResolver> resolvers) {

@@ -14,6 +14,7 @@ import gift.repository.MemberRepository;
 import gift.repository.ProductRepository;
 import gift.repository.WishRepository;
 import java.util.List;
+import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -76,4 +77,24 @@ public class WishRepositoryTest {
         boolean exists = wishRepository.existsById(wishID);
         assertThat(exists).isFalse();
     }
+
+    @Test
+    public void testFindByMemberIdAndProductId() {
+        Member member = new Member("testemail@email", "testpassword");
+        Member savedMember = memberRepository.save(member);
+        Category category = new Category("category", "color", "image", "");
+        categoryRepository.save(category);
+        Product product = new Product("Test", 1000, "test.jpg", category);
+        Product savedProduct = productRepository.save(product);
+        Wish wish = new Wish(savedMember, savedProduct);
+        Wish savedWish = wishRepository.save(wish);
+
+        Optional<Wish> foundWish = wishRepository.findByMemberIdAndProductId(savedMember.getId(), savedProduct.getId());
+
+        assertThat(foundWish.isPresent()).isTrue();
+        assertThat(foundWish.get()).isEqualTo(savedWish);
+        assertThat(foundWish.get().getMember()).isEqualTo(savedMember);
+        assertThat(foundWish.get().getProduct()).isEqualTo(savedProduct);
+    }
+
 }
