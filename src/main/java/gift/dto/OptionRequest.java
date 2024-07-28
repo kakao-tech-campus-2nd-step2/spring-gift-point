@@ -9,7 +9,7 @@ public class OptionRequest {
 
     @NotBlank
     @Size(max = 50, message = "The option name must be less than 50 characters, including spaces.") // since @NotBlank means constraints greater than 0, doesn't need to check min value.
-    @Pattern(regexp = "^[\\w\\s()\\[\\]+\\-&/_]*$", message = "Invalid characters in option name")
+    @Pattern(regexp = "^[\\w\\s()\\[\\]+\\-&/_가-힣]*$", message = "Invalid characters in option name")
     private String name;
 
     @NotNull
