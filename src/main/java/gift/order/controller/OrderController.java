@@ -4,7 +4,6 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import gift.common.util.CommonResponse;
 import gift.option.domain.OrderResponse;
 import gift.order.dto.OrderRequest;
-import gift.order.repository.TokenJPARepository;
 import gift.order.service.KakaoService;
 import gift.order.service.OrderService;
 import jakarta.validation.Valid;

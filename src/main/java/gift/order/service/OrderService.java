@@ -9,7 +9,6 @@ import gift.order.repository.OrderJPARepository;
 import gift.wish.service.WishService;
 import jakarta.validation.Valid;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestClient;
 
 import java.time.LocalDateTime;
 
@@ -19,7 +18,6 @@ public class OrderService {
     private final OptionJpaRepository optionJpaRepository;
     private final WishService wishService;
     private final OrderJPARepository orderJPARepository;
-    private final RestClient restClient = RestClient.builder().build();
 
     public OrderService(OptionJpaRepository optionJpaRepository, WishService wishService, OrderJPARepository orderJPARepository) {
         this.optionJpaRepository = optionJpaRepository;

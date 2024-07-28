@@ -14,6 +14,8 @@ import jakarta.validation.constraints.NotNull;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.client.ClientHttpRequestFactory;
+import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.LinkedMultiValueMap;
@@ -27,12 +29,20 @@ import java.net.URI;
 @Service
 public class KakaoService {
     private final KakaoProperties kakaoProperties;
-    private final RestClient restClient = RestClient.builder().build();
+    private final RestClient restClient = RestClient.builder().requestFactory(getClientHttpRequestFactory()).build();
     private final ObjectMapper objectMapper = new ObjectMapper();
     private final TokenJPARepository tokenJPARepository;
     public KakaoService(KakaoProperties kakaoProperties, TokenJPARepository tokenJPARepository) {
         this.kakaoProperties = kakaoProperties;
         this.tokenJPARepository = tokenJPARepository;
+    }
+
+    // RestClinet Timeout 설정
+    private ClientHttpRequestFactory getClientHttpRequestFactory() {
+        HttpComponentsClientHttpRequestFactory clientHttpRequestFactory = new HttpComponentsClientHttpRequestFactory();
+        clientHttpRequestFactory.setConnectTimeout(5000); // 서버에 연결하는 데 걸리는 최대 시간이 5000ms(5초)
+        clientHttpRequestFactory.setConnectionRequestTimeout(5000); // 커넥션 풀에서 커넥션을 얻는데 걸리는 최대 시간이 5000ms(5초)
+        return clientHttpRequestFactory;
     }
 
     // accessToken과 refreshToken을 받아와 저장하기
