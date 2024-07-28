@@ -6,6 +6,8 @@ import gift.order.dto.OrderResponse;
 import gift.order.dto.OrderRequest;
 import gift.order.service.KakaoService;
 import gift.order.service.OrderService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
@@ -16,7 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api/orders")
-@Tag(name = "Wish", description = "WishList API")
+@Tag(name = "Order", description = "Order API")
 public class OrderController {
     private final OrderService orderService;
     private final KakaoService kakaoService;
@@ -26,9 +28,10 @@ public class OrderController {
     }
 
     @PostMapping()
+    @Operation(summary = "주문하기", description = "새 주문을 생성한다.")
     public ResponseEntity<?> requestOrder(
             @Valid OrderRequest orderRequest,
-            @RequestHeader("Authorization") String authorizationHeader
+            @RequestHeader("Authorization") @Parameter(hidden = true) String authorizationHeader
     ) throws JsonProcessingException
     {
         // Bearer 접두사를 제거하여 액세스 토큰만 추출
