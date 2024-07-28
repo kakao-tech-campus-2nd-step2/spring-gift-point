@@ -62,7 +62,8 @@ public class Product extends BaseTimeEntity {
         this.category = category;
     }
 
-    protected Product() {}
+    protected Product() {
+    }
 
     public Long getId() {
         return id;

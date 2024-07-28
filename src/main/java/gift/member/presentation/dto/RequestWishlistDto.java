@@ -9,6 +9,7 @@ public record RequestWishlistDto(
     @Min(1)
     Integer count
 ) {
+
     public WishlistUpdateDto toWishListUpdateDto(Long productId) {
         return new WishlistUpdateDto(productId, count());
     }

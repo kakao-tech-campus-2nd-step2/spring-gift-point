@@ -14,6 +14,7 @@ public class OrderRequest {
         Integer quantity,
         String message
     ) {
+
         public OrderIn.Create toOrderInCreate(Long memberId) {
             return new OrderIn.Create(memberId, productId, optionId, quantity, message);
         }

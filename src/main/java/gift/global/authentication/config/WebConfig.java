@@ -10,10 +10,12 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration
 public class WebConfig implements WebMvcConfigurer {
+
     private final TokenCheckInterceptor tokenCheckInterceptor;
     private final MemberIdResolver memberIdResolver;
 
-    public WebConfig(TokenCheckInterceptor tokenCheckInterceptor, MemberIdResolver memberIdResolver) {
+    public WebConfig(TokenCheckInterceptor tokenCheckInterceptor,
+        MemberIdResolver memberIdResolver) {
         this.tokenCheckInterceptor = tokenCheckInterceptor;
         this.memberIdResolver = memberIdResolver;
     }

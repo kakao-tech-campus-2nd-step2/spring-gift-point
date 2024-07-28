@@ -11,6 +11,7 @@ import jakarta.persistence.Id;
 
 @Entity
 public class Member {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "member_id")
@@ -27,15 +28,17 @@ public class Member {
         this.email = email;
         this.password = password;
     }
-    
-    public Member(String email, OAuthProvider oAuthProvider, String accessToken, String refreshToken) {
+
+    public Member(String email, OAuthProvider oAuthProvider, String accessToken,
+        String refreshToken) {
         this.email = email;
         this.oAuthProvider = oAuthProvider;
         this.accessToken = accessToken;
         this.refreshToken = refreshToken;
     }
 
-    protected Member() {}
+    protected Member() {
+    }
 
     public Long getId() {
         return id;

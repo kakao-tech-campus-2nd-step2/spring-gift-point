@@ -1,5 +1,6 @@
 package gift.product.presentation.restcontroller;
 
+import gift.docs.product.OrderApiDocs;
 import gift.global.authentication.annotation.MemberId;
 import gift.product.business.service.OrderService;
 import gift.product.presentation.dto.OrderRequest;
@@ -12,7 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api/orders")
-public class OrderController {
+public class OrderController implements OrderApiDocs {
 
     private final OrderService orderService;
 

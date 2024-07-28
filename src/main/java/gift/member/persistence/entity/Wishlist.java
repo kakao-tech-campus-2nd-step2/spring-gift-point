@@ -18,6 +18,7 @@ import jakarta.persistence.Table;
     indexes = {@Index(name = "idx_modified_date", columnList = "modified_date")}
 )
 public class Wishlist extends BaseTimeEntity {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "wishlist_id")
@@ -39,7 +40,8 @@ public class Wishlist extends BaseTimeEntity {
         this.count = count;
     }
 
-    protected Wishlist() {}
+    protected Wishlist() {
+    }
 
     public Integer getCount() {
         return count;

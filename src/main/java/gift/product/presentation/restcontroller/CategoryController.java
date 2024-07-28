@@ -1,5 +1,6 @@
 package gift.product.presentation.restcontroller;
 
+import gift.docs.product.CategoryApiDocs;
 import gift.product.business.service.CategoryService;
 import gift.product.presentation.dto.RequestCategoryDto;
 import gift.product.presentation.dto.ResponseCategoryDto;
@@ -17,7 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api/categories")
-public class CategoryController {
+public class CategoryController implements CategoryApiDocs {
 
     private final CategoryService categoryService;
 
@@ -33,7 +34,8 @@ public class CategoryController {
     }
 
     @PostMapping
-    public ResponseEntity<Long> createCategory(@Valid @RequestBody RequestCategoryDto requestCategoryDto) {
+    public ResponseEntity<Long> createCategory(
+        @Valid @RequestBody RequestCategoryDto requestCategoryDto) {
         var categoryRegisterDto = requestCategoryDto.toCategoryRegisterDto();
         var createdCategoryId = categoryService.createCategory(categoryRegisterDto);
         return ResponseEntity.ok(createdCategoryId);
@@ -52,7 +54,6 @@ public class CategoryController {
         var deletedCategoryId = categoryService.deleteCategory(id);
         return ResponseEntity.ok(deletedCategoryId);
     }
-
 
 
 }

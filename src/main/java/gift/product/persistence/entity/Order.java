@@ -14,6 +14,7 @@ import jakarta.validation.constraints.NotNull;
 
 @Entity
 public class Order extends BaseTimeEntity {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "order_id")

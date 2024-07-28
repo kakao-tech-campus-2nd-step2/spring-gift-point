@@ -1,5 +1,6 @@
 package gift.member.presentation.restcontroller;
 
+import gift.docs.member.MemberApiDocs;
 import gift.global.authentication.annotation.MemberId;
 import gift.member.business.dto.JwtToken;
 import gift.member.business.service.MemberService;
@@ -27,7 +28,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api/members")
-public class MemberController {
+public class MemberController implements MemberApiDocs {
 
     private final MemberService memberService;
     private final WishlistService wishlistService;

@@ -51,7 +51,8 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(JwtException.class)
     public ResponseEntity<ErrorResponseDto> handleJwtException(JwtException e) {
-        return createErrorResponseEntity(ErrorCode.JWT_UNAUTHORIZED, Map.of("description", e.getMessage()));
+        return createErrorResponseEntity(ErrorCode.JWT_UNAUTHORIZED,
+            Map.of("description", e.getMessage()));
     }
 
     @ExceptionHandler(LoginException.class)
@@ -60,14 +61,17 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(IllegalArgumentException.class)
-    public ResponseEntity<ErrorResponseDto> handleIllegalArgumentException(IllegalArgumentException e) {
-        return createErrorResponseEntity(ErrorCode.INVALID_REQUEST, Map.of("description", e.getMessage()));
+    public ResponseEntity<ErrorResponseDto> handleIllegalArgumentException(
+        IllegalArgumentException e) {
+        return createErrorResponseEntity(ErrorCode.INVALID_REQUEST,
+            Map.of("description", e.getMessage()));
     }
 
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorResponseDto> handleGenericException(Exception e) {
-        return createErrorResponseEntity(ErrorCode.INTERNAL_SERVER_ERROR, Map.of("description", e.getMessage()));
+        return createErrorResponseEntity(ErrorCode.INTERNAL_SERVER_ERROR,
+            Map.of("description", e.getMessage()));
     }
 
 
@@ -80,5 +84,7 @@ public class GlobalExceptionHandler {
     record ErrorResponseDto(
         String message,
         Map<String, String> details
-    ) {}
+    ) {
+
+    }
 }

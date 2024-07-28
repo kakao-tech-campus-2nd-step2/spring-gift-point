@@ -1,6 +1,5 @@
 package gift.oauth.business.service;
 
-import gift.global.util.EncryptionUtils;
 import gift.member.business.dto.JwtToken;
 import gift.member.business.dto.MemberIn;
 import gift.member.business.service.MemberService;
@@ -17,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class OAuthService {
+
     private final Map<OAuthProvider, OAuthApiClient> clients;
     private final MemberRepository memberRepository;
     private final MemberService memberService;
@@ -34,13 +34,13 @@ public class OAuthService {
         OAuthApiClient client = clients.get(param.oAuthProvider());
         var oAuthToken = client.getOAuthToken(param);
         var email = client.getEmail(oAuthToken.accessToken(), param);
-        if(memberRepository.existsByEmail(email)) {
+        if (memberRepository.existsByEmail(email)) {
             var memberInVendorLogin = new MemberIn.VendorLogin(
                 email, param.oAuthProvider(),
                 oAuthToken.accessToken(), oAuthToken.refreshToken());
             return memberService.loginVendorMember(memberInVendorLogin);
         }
-        var memberInVendorRegister = new MemberIn.VendorRegister(email,  param.oAuthProvider(),
+        var memberInVendorRegister = new MemberIn.VendorRegister(email, param.oAuthProvider(),
             oAuthToken.accessToken(), oAuthToken.refreshToken());
         return memberService.registerVendorMember(memberInVendorRegister);
     }

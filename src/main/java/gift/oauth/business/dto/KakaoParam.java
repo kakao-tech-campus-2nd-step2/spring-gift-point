@@ -6,6 +6,7 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
 public class KakaoParam implements OAuthParam {
+
     private final String grantType;
     private final String clientId;
     private final String redirectUri;

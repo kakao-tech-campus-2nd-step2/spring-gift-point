@@ -11,6 +11,7 @@ import java.util.List;
 import org.hibernate.validator.constraints.URL;
 
 public class ProductRequest {
+
     private static final String nameRegex = "^[a-zA-Z0-9ㄱ-ㅎ가-힣 ()\\[\\]+\\-&/_]*$";
     private static final String nameMessage = "오직 문자, 공백 그리고 특수문자 (),[],+,&,-,/,_만 허용됩니다.";
     private static final String kakaoRegex = "(?!.*카카오).*";
@@ -34,6 +35,7 @@ public class ProductRequest {
         @NotNull Long categoryId,
         @Size(min = 1) List<OptionRequest.Create> options
     ) {
+
         public ProductIn.Create toProductInCreate() {
             return new ProductIn.Create(
                 name,
@@ -44,7 +46,7 @@ public class ProductRequest {
                 options.stream()
                     .map(OptionRequest.Create::toOptionInCreate)
                     .toList()
-                );
+            );
         }
     }
 
@@ -65,6 +67,7 @@ public class ProductRequest {
         @URL String imageUrl,
         @NotNull Long categoryId
     ) {
+
         public ProductIn.Update toProductInUpdate() {
             return new ProductIn.Update(name, price, description, imageUrl, categoryId);
         }
@@ -75,6 +78,7 @@ public class ProductRequest {
         @Size(min = 1, max = 10)
         List<Long> productIds
     ) {
+
     }
 
 }

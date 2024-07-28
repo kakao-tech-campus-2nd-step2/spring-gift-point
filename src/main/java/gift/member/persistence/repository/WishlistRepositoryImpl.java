@@ -9,7 +9,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public class WishlistRepositoryImpl implements WishlistRepository{
+public class WishlistRepositoryImpl implements WishlistRepository {
+
     private final WishlistJpaRepository wishlistJpaRepository;
 
     public WishlistRepositoryImpl(WishlistJpaRepository wishlistJpaRepository) {
@@ -26,7 +27,8 @@ public class WishlistRepositoryImpl implements WishlistRepository{
         return wishlistJpaRepository.findByMemberIdAndProductId(memberId, productId)
             .orElseThrow(() -> new NotFoundException(
                 ErrorCode.DB_NOT_FOUND,
-                "Wishlist with member id " + memberId + " and product id " + productId + " not found"
+                "Wishlist with member id " + memberId + " and product id " + productId
+                    + " not found"
             ));
     }
 
@@ -42,7 +44,8 @@ public class WishlistRepositoryImpl implements WishlistRepository{
         } catch (EmptyResultDataAccessException e) {
             throw new NotFoundException(
                 ErrorCode.DB_NOT_FOUND,
-                "Wishlist with member id " + memberId + " and product id " + productId + " not found"
+                "Wishlist with member id " + memberId + " and product id " + productId
+                    + " not found"
             );
         }
     }

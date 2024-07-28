@@ -6,7 +6,8 @@ import gift.member.persistence.entity.Member;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public class MemberRepositoryImpl implements MemberRepository{
+public class MemberRepositoryImpl implements MemberRepository {
+
     private final MemberJpaRepository memberJpaRepository;
 
     public MemberRepositoryImpl(MemberJpaRepository memberJpaRepository) {

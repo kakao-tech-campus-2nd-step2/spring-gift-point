@@ -1,5 +1,6 @@
 package gift.product.presentation.restcontroller;
 
+import gift.docs.product.ProductApiDocs;
 import gift.product.presentation.dto.OptionRequest;
 import gift.product.presentation.dto.OptionRequest.Create;
 import gift.product.presentation.dto.ProductRequest;
@@ -17,7 +18,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/products")
-public class ProductController {
+public class ProductController implements ProductApiDocs {
 
     private final ProductService productService;
 

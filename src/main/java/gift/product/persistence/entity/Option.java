@@ -17,6 +17,7 @@ import jakarta.validation.constraints.NotNull;
     indexes = {@Index(name = "idx_product_id", columnList = "product_id")}
 )
 public class Option {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "option_id")
@@ -65,7 +66,7 @@ public class Option {
     }
 
     public void subtractQuantity(Integer quantity) {
-        if(quantity > this.quantity) {
+        if (quantity > this.quantity) {
             throw new IllegalArgumentException("주문한 옵션 수량이 현재 재고보다 많습니다.");
         }
         this.quantity -= quantity;

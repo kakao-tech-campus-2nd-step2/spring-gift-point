@@ -6,6 +6,7 @@ import gift.global.authentication.jwt.TokenType;
 import gift.global.exception.ErrorCode;
 import gift.global.exception.custrom.LoginException;
 import gift.member.business.dto.MemberIn;
+import gift.member.persistence.entity.Member;
 import gift.member.persistence.repository.MemberRepository;
 import io.jsonwebtoken.Jwts;
 import java.util.Date;
@@ -56,7 +57,7 @@ public class MemberService {
 
     public JwtToken loginVendorMember(MemberIn.VendorLogin memberInLogin) {
         var member = memberRepository.getMemberByEmail(memberInLogin.email());
-        if(member.getOAuthProvider() != memberInLogin.oAuthProvider()) {
+        if (member.getOAuthProvider() != memberInLogin.oAuthProvider()) {
             throw new LoginException(ErrorCode.LOGIN_ERROR, "OAuthProvider가 일치하지 않습니다.");
         }
         member.updateToken(memberInLogin.accessToken(), memberInLogin.refreshToken());
@@ -68,6 +69,10 @@ public class MemberService {
         long current = System.currentTimeMillis();
         var accessExpireTime = new Date(current + ACCESS_TOKEN_EXPIRE_TIME);
         return generateToken(id, accessExpireTime, Map.of("type", TokenType.ACCESS));
+    }
+
+    public Member getMemberById(Long memberId) {
+        return memberRepository.getMemberById(memberId);
     }
 
     private JwtToken createToken(Long id) {

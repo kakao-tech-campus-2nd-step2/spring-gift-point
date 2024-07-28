@@ -5,7 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import gift.oauth.business.dto.KakaoParam;
 import gift.oauth.business.dto.OAuthParam;
-import gift.oauth.business.dto.OauthToken;
+import gift.oauth.business.dto.OAuthToken;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -47,7 +47,7 @@ public class KaKaoAuthTest {
                     throw new RuntimeException("Failed to get access token from Kakao API.");
                 }
             )
-            .body(OauthToken.Kakao.class);
+            .body(OAuthToken.Kakao.class);
 
         // then
         assertAll (

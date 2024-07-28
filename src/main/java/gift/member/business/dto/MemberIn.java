@@ -9,12 +9,14 @@ public class MemberIn {
         String email,
         String password
     ) {
+
     }
 
     public record Register(
         String email,
         String password
     ) {
+
         public Member toMember() {
             return new Member(email, password);
         }
@@ -26,6 +28,7 @@ public class MemberIn {
         String accessToken,
         String refreshToken
     ) {
+
         public Member toMember() {
             return new Member(email, oAuthProvider, accessToken, refreshToken);
         }
@@ -37,5 +40,6 @@ public class MemberIn {
         String accessToken,
         String refreshToken
     ) {
+
     }
 }

@@ -7,7 +7,7 @@ import org.springframework.data.domain.Pageable;
 public interface WishlistRepository {
 
     Long saveWishList(Wishlist wishList);
-    
+
     Wishlist getWishListByMemberIdAndProductId(Long memberId, Long productId);
 
     Long updateWishlist(Wishlist wishList);

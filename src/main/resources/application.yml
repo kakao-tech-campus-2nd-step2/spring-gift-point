@@ -33,4 +33,10 @@ spring:
       redirect_uri: ${kakao_redirect_uri}
       grant_type: authorization_code
       code-url: https://kauth.kakao.com/oauth/authorize
-      secret: ${kakao_secret}
+
+springdoc:
+  use-fqn: true
+  swagger-ui:
+    tags-sorter: alpha
+    operations-sorter: alpha
+    doc-expansion: none

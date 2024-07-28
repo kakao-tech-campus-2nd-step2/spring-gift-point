@@ -10,6 +10,7 @@ import org.springframework.web.servlet.HandlerInterceptor;
 
 @Component
 public class TokenCheckInterceptor implements HandlerInterceptor {
+
     private final JwtValidator jwtValidator;
 
     public TokenCheckInterceptor(JwtValidator jwtValidator) {
@@ -17,8 +18,9 @@ public class TokenCheckInterceptor implements HandlerInterceptor {
     }
 
     @Override
-    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
-        if(request.getMethod().equals(HttpMethod.OPTIONS.name())) {
+    public boolean preHandle(HttpServletRequest request, HttpServletResponse response,
+        Object handler) {
+        if (request.getMethod().equals(HttpMethod.OPTIONS.name())) {
             return true;
         }
 

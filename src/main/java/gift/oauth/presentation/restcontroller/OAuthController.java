@@ -1,5 +1,6 @@
 package gift.oauth.presentation.restcontroller;
 
+import gift.docs.oauth.OAuthApiDocs;
 import gift.member.business.dto.JwtToken;
 import gift.oauth.business.dto.KakaoParam;
 import gift.oauth.business.dto.OAuthParam;
@@ -15,11 +16,12 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
 
 @RestController
-public class OauthController {
+public class OAuthController implements OAuthApiDocs{
+
     private final OAuthService oauthService;
     private final KakaoConfig kakaoConfig;
 
-    public OauthController(OAuthService oauthService, KakaoConfig kakaoConfig) {
+    public OAuthController(OAuthService oauthService, KakaoConfig kakaoConfig) {
         this.oauthService = oauthService;
         this.kakaoConfig = kakaoConfig;
     }

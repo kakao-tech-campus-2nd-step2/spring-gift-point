@@ -2,7 +2,8 @@ package gift.global.exception.custrom;
 
 import gift.global.exception.ErrorCode;
 
-public abstract class CustomException extends RuntimeException{
+public abstract class CustomException extends RuntimeException {
+
     private final ErrorCode errorCode;
     private final String details;
 

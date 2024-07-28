@@ -9,7 +9,8 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public class CategoryRepositoryImpl implements CategoryRepository{
+public class CategoryRepositoryImpl implements CategoryRepository {
+
     private final CategoryJpaRepository categoryJpaRepository;
 
     public CategoryRepositoryImpl(CategoryJpaRepository categoryJpaRepository) {
@@ -35,14 +36,14 @@ public class CategoryRepositoryImpl implements CategoryRepository{
     public Category getCategory(Long id) {
         return categoryJpaRepository.findById(id)
             .orElseThrow(() -> new NotFoundException(
-                    ErrorCode.DB_NOT_FOUND,
-                    "Category with id " + id + " not found")
+                ErrorCode.DB_NOT_FOUND,
+                "Category with id " + id + " not found")
             );
     }
 
     @Override
     public Long deleteCategory(Long id) {
-        if(!categoryJpaRepository.existsById(id)) {
+        if (!categoryJpaRepository.existsById(id)) {
             throw new NotFoundException(
                 ErrorCode.DB_NOT_FOUND,
                 "Category with id " + id + " not found"

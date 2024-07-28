@@ -5,6 +5,7 @@ import gift.product.persistence.entity.Order;
 import gift.product.persistence.entity.Product;
 
 public class OrderIn {
+
     public record Create(
         Long memberId,
         Long productId,

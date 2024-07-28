@@ -22,7 +22,8 @@ public class ProductService {
     private final ProductRepository productRepository;
     private final CategoryRepository categoryRepository;
 
-    public ProductService(ProductRepository productRepository, CategoryRepository categoryRepository) {
+    public ProductService(ProductRepository productRepository,
+        CategoryRepository categoryRepository) {
         this.productRepository = productRepository;
         this.categoryRepository = categoryRepository;
     }
@@ -101,6 +102,10 @@ public class ProductService {
         var product = productRepository.getProductById(productId);
         product.subtractOption(optionInSubtract.id(), optionInSubtract.quantity());
         productRepository.saveProduct(product);
+    }
+
+    public Product getProductById(Long productId) {
+        return productRepository.getProductById(productId);
     }
 
 }

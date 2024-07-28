@@ -13,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class WishlistService {
+
     private final WishlistRepository wishlistRepository;
     private final ProductRepository productRepository;
     private final MemberRepository memberRepository;
