@@ -130,10 +130,9 @@ public class ProductService {
 
         // Product 엔티티를 ProductResponse DTO로 변환
         Page<Product> productPage = productRepository.findAllByCategoryId(categoryId, pageable);
-        Page<ProductResponse> productResponsePage = productPage.map(product ->
+
+        return productPage.map(product ->
                 new ProductResponse(product.getId(), product.getName(), product.getPrice(), product.getImageUrl(), product.getCategory().getId())
         );
-
-        return productResponsePage;
     }
 }

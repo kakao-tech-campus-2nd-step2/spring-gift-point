@@ -1,7 +1,7 @@
 package gift.order.service;
 
 import gift.option.domain.Option;
-import gift.option.domain.OrderResponse;
+import gift.order.dto.OrderResponse;
 import gift.option.repository.OptionJpaRepository;
 import gift.order.domain.Order;
 import gift.order.dto.OrderRequest;

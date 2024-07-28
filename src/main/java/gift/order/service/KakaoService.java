@@ -3,7 +3,7 @@ package gift.order.service;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import gift.common.config.KakaoProperties;
-import gift.option.domain.OrderResponse;
+import gift.order.dto.OrderResponse;
 import gift.order.domain.Token;
 import gift.order.dto.KakaoUser;
 import gift.order.dto.KakaoTokenResponse;
