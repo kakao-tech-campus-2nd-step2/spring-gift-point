@@ -12,7 +12,7 @@ import gift.user.controller.OauthController;
 import gift.user.jwt.JwtService;
 import gift.user.model.dto.KakaoTokenResponse;
 import gift.user.service.JwtUserService;
-import gift.user.service.KakaoService;
+import gift.user.service.KakaoLoginService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,7 +31,7 @@ public class OauthControllerTest {
     private MockMvc mockMvc;
 
     @MockBean
-    private KakaoService kakaoService;
+    private KakaoLoginService kakaoLoginService;
 
     @MockBean
     private JwtUserService jwtUserService;
@@ -54,7 +54,7 @@ public class OauthControllerTest {
 
     @Test
     public void testKakaoLoginRedirect() throws Exception {
-        when(kakaoService.buildAuthorizeUrl()).thenReturn("https://kauth.kakao.com/oauth/authorize?client_id=123");
+        when(kakaoLoginService.buildAuthorizeUrl()).thenReturn("https://kauth.kakao.com/oauth/authorize?client_id=123");
 
         mockMvc.perform(get("/oauth/login/kakao"))
                 .andExpect(status().is3xxRedirection())
@@ -63,9 +63,9 @@ public class OauthControllerTest {
 
     @Test
     public void testKakaoCallbackSuccess() throws Exception {
-        when(kakaoService.getAccessToken(anyString())).thenReturn(mockToken);
-        when(kakaoService.getUserInfo(mockToken.accessToken())).thenReturn("email");
-        when(jwtUserService.loginOauth("email")).thenReturn("jwt_token");
+        when(kakaoLoginService.getAccessToken(anyString())).thenReturn(mockToken);
+        when(kakaoLoginService.getUserInfo(mockToken.accessToken())).thenReturn("email");
+        when(jwtUserService.loginOauth("email", mockToken.accessToken())).thenReturn("jwt_token");
 
         mockMvc.perform(get("/oauth/kakao").param("code", "codecode"))
                 .andExpect(status().isOk())
@@ -75,9 +75,9 @@ public class OauthControllerTest {
 
     @Test
     public void testKakaoCallbackFailure() throws Exception {
-        when(kakaoService.getAccessToken(anyString())).thenReturn(mockToken);
-        when(kakaoService.getUserInfo(mockToken.accessToken())).thenReturn("email");
-        when(jwtUserService.loginOauth("email")).thenReturn(null);
+        when(kakaoLoginService.getAccessToken(anyString())).thenReturn(mockToken);
+        when(kakaoLoginService.getUserInfo(mockToken.accessToken())).thenReturn("email");
+        when(jwtUserService.loginOauth("email", mockToken.accessToken())).thenReturn(null);
 
         mockMvc.perform(get("/oauth/kakao").param("code", "codecode"))
                 .andExpect(status().isBadRequest())
