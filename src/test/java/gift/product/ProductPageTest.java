@@ -1,6 +1,7 @@
 package gift.product;
 
-import gift.product.model.Product;
+import gift.product.domain.Product;
+import gift.product.dto.ProductResponse;
 import gift.product.repository.ProductRepository;
 import gift.product.service.ProductService;
 import org.junit.jupiter.api.BeforeEach;
@@ -45,8 +46,8 @@ public class ProductPageTest {
     @Test
     public void testPagination() {
         // When
-        Page<Product> page1 = productService.getProductsByPage(0, 2, "price", "desc");
-        Page<Product> page2 = productService.getProductsByPage(1, 2, "price", "desc");
+        Page<ProductResponse> page1 = productService.getProductsByPage(0, 2, "price", "desc",1L);
+        Page<ProductResponse> page2 = productService.getProductsByPage(1, 2, "price", "desc",1L);
 
         // Then
         // Page 1 assertions
@@ -67,8 +68,8 @@ public class ProductPageTest {
     @Test
     public void testPaginationAsc() {
         // When
-        Page<Product> page1 = productService.getProductsByPage(0, 2, "price", "asc");
-        Page<Product> page2 = productService.getProductsByPage(1, 2, "price", "asc");
+        Page<ProductResponse> page1 = productService.getProductsByPage(0, 2, "price", "asc",1L);
+        Page<ProductResponse> page2 = productService.getProductsByPage(1, 2, "price", "asc",1L);
 
         // Then
         // Page 1 assertions

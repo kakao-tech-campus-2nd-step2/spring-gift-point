@@ -5,7 +5,7 @@ import gift.category.dto.CategoryListDTO;
 import gift.category.dto.CategoryRequest;
 import gift.category.service.CategoryService;
 import gift.common.util.CommonResponse;
-import gift.product.model.ProductDTO;
+import gift.product.domain.ProductDTO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;

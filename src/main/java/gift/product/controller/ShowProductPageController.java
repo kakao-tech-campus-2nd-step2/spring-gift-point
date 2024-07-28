@@ -1,11 +1,10 @@
 package gift.product.controller;
 
-import gift.category.domain.Category;
 import gift.category.dto.CategoryListDTO;
 import gift.category.service.CategoryService;
 import gift.common.exception.ProductNotFoundException;
 import gift.option.service.OptionService;
-import gift.product.model.Product;
+import gift.product.domain.Product;
 import gift.product.service.ProductService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -16,7 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import java.util.List;
 
 @Controller
-@RequestMapping("/api/products")
+@RequestMapping("/show/products")
 public class ShowProductPageController {
     private final ProductService productService;
     private final CategoryService categoryService;

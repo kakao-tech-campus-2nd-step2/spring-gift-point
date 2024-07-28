@@ -3,8 +3,8 @@ package gift.category.service;
 import gift.category.domain.Category;
 import gift.category.dto.CategoryListDTO;
 import gift.category.repository.CategoryRepository;
-import gift.product.model.Product;
-import gift.product.model.ProductDTO;
+import gift.product.domain.Product;
+import gift.product.domain.ProductDTO;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

@@ -1,7 +1,7 @@
 package gift.wish.model;
 
 import gift.member.model.Member;
-import gift.product.model.Product;
+import gift.product.domain.Product;
 import jakarta.persistence.*;
 
 @Entity

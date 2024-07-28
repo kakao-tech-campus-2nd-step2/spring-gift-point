@@ -2,7 +2,7 @@ package gift.wish;
 
 import gift.member.model.Member;
 import gift.member.repository.MemberRepository;
-import gift.product.model.Product;
+import gift.product.domain.Product;
 import gift.product.repository.ProductRepository;
 import gift.wish.model.Wish;
 import gift.wish.model.WishDTO;

@@ -1,6 +1,6 @@
 package gift.category.domain;
 
-import gift.product.model.Product;
+import gift.product.domain.Product;
 import jakarta.persistence.*;
 
 import java.util.ArrayList;

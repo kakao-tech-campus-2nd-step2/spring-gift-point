@@ -3,7 +3,7 @@ package gift.option.service;
 import gift.option.domain.Option;
 import gift.option.domain.OptionRequest;
 import gift.option.repository.OptionJpaRepository;
-import gift.product.model.Product;
+import gift.product.domain.Product;
 import gift.product.repository.ProductRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

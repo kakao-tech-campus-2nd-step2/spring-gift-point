@@ -4,7 +4,7 @@ import gift.common.exception.ProductNotFoundException;
 import gift.option.domain.Option;
 import gift.option.domain.OptionRequest;
 import gift.option.service.OptionService;
-import gift.product.model.Product;
+import gift.product.domain.Product;
 import gift.product.service.ProductService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;

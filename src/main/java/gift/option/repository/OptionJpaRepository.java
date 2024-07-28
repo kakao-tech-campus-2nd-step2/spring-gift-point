@@ -1,7 +1,7 @@
 package gift.option.repository;
 
 import gift.option.domain.Option;
-import gift.product.model.Product;
+import gift.product.domain.Product;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
