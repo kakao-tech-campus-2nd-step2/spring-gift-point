@@ -11,11 +11,12 @@ import gift.order.dto.Link;
 import gift.order.dto.TemplateObject;
 import gift.order.repository.TokenJPARepository;
 import jakarta.validation.constraints.NotNull;
+import org.springframework.boot.web.client.ClientHttpRequestFactories;
+import org.springframework.boot.web.client.ClientHttpRequestFactorySettings;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.http.client.ClientHttpRequestFactory;
-import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
+import org.springframework.http.client.JdkClientHttpRequestFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.LinkedMultiValueMap;
@@ -25,24 +26,27 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.io.IOException;
 import java.net.URI;
+import java.time.Duration;
 
 @Service
 public class KakaoService {
     private final KakaoProperties kakaoProperties;
-    private final RestClient restClient = RestClient.builder().requestFactory(getClientHttpRequestFactory()).build();
+    private final RestClient restClient;
     private final ObjectMapper objectMapper = new ObjectMapper();
     private final TokenJPARepository tokenJPARepository;
-    public KakaoService(KakaoProperties kakaoProperties, TokenJPARepository tokenJPARepository) {
+    public KakaoService(KakaoProperties kakaoProperties, TokenJPARepository tokenJPARepository, RestClient.Builder builder) {
         this.kakaoProperties = kakaoProperties;
         this.tokenJPARepository = tokenJPARepository;
+        this.restClient = createRestClient(builder);
     }
 
-    // RestClinet Timeout 설정
-    private ClientHttpRequestFactory getClientHttpRequestFactory() {
-        HttpComponentsClientHttpRequestFactory clientHttpRequestFactory = new HttpComponentsClientHttpRequestFactory();
-        clientHttpRequestFactory.setConnectTimeout(5000); // 서버에 연결하는 데 걸리는 최대 시간이 5000ms(5초)
-        clientHttpRequestFactory.setConnectionRequestTimeout(5000); // 커넥션 풀에서 커넥션을 얻는데 걸리는 최대 시간이 5000ms(5초)
-        return clientHttpRequestFactory;
+    private RestClient createRestClient(RestClient.Builder builder) {
+        ClientHttpRequestFactorySettings requestFactorySettings = ClientHttpRequestFactorySettings.DEFAULTS
+                .withConnectTimeout(Duration.ofMillis(5000))
+                .withReadTimeout(Duration.ofMillis(5000));
+        JdkClientHttpRequestFactory clientHttpRequestFactory = ClientHttpRequestFactories.get(JdkClientHttpRequestFactory.class, requestFactorySettings);
+
+        return builder.requestFactory(clientHttpRequestFactory).build();
     }
 
     // accessToken과 refreshToken을 받아와 저장하기
@@ -81,13 +85,17 @@ public class KakaoService {
     public KakaoUser getUserInfo(String accessToken) throws IOException {
         String url = "https://kapi.kakao.com/v2/user/me";
 
-        // RestClient 사용하여 GET 요청
+        // RestClient 사용하여 GET 요청하여 사용자 정보 받아오기
         String response = restClient.get()
                 .uri(URI.create(url))
                 .header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken)
                 .retrieve()
                 .toEntity(String.class)
                 .getBody();
+
+        if (response == null) {
+            throw new IllegalArgumentException("[ERROR] 사용자 정보를 받아는데 실패했습니다.");
+        }
 
         // KakaoMember
         JsonNode jsonNode = objectMapper.readTree(response);

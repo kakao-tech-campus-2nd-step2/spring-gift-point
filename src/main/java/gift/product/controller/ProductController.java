@@ -1,9 +1,11 @@
 package gift.product.controller;
 
+import gift.common.util.CommonResponse;
 import gift.product.model.Product;
 import gift.product.service.ProductService;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
@@ -47,10 +49,12 @@ public class ProductController {
     // product pagination
     @GetMapping("/page")
     @ResponseBody
-    public Page<Product> getProductsByPage(@RequestParam int page,
-                                           @RequestParam int size,
-                                           @RequestParam(defaultValue = "price") String sortBy,
-                                           @RequestParam(defaultValue = "desc") String direction) {
-        return productService.getProductsByPage(page, size, sortBy, direction);
+    public ResponseEntity<?> getProductsByPage(@RequestParam int page,
+                                            @RequestParam int size,
+                                            @RequestParam(defaultValue = "price") String sortBy,
+                                            @RequestParam(defaultValue = "desc") String direction) {
+        Page<Product> productPage = productService.getProductsByPage(page, size, sortBy, direction);
+
+        return ResponseEntity.ok(new CommonResponse<>(productPage, "제품 페이지를 받아오는데 성공하였습니다.", true));
     }
 }
