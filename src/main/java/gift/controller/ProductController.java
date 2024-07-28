@@ -4,6 +4,7 @@ import gift.dto.product.ProductCreateRequest;
 import gift.dto.product.ProductResponse;
 import gift.dto.product.ProductUpdateRequest;
 import gift.service.ProductService;
+import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -30,6 +31,7 @@ public class ProductController {
         this.productService = productService;
     }
 
+    @Operation(summary = "모든 상품 조회", description = "모든 상품을 페이징하여 조회합니다.")
     @GetMapping
     public ResponseEntity<Page<ProductResponse>> getAllProducts(
         @PageableDefault(size = 10, sort = "id", direction = Sort.Direction.ASC) Pageable pageable
@@ -38,12 +40,14 @@ public class ProductController {
         return ResponseEntity.ok(products);
     }
 
+    @Operation(summary = "상품 조회", description = "ID를 사용하여 특정 상품을 조회합니다.")
     @GetMapping("/{id}")
     public ResponseEntity<ProductResponse> getProductById(@PathVariable Long id) {
         ProductResponse product = productService.getProductById(id);
         return ResponseEntity.ok(product);
     }
 
+    @Operation(summary = "상품 추가", description = "새로운 상품을 추가합니다.")
     @PostMapping
     public ResponseEntity<ProductResponse> addProduct(
         @Valid @RequestBody ProductCreateRequest productCreateRequest
@@ -52,6 +56,7 @@ public class ProductController {
         return ResponseEntity.status(HttpStatus.CREATED).body(createdProduct);
     }
 
+    @Operation(summary = "상품 수정", description = "기존 상품을 수정합니다.")
     @PutMapping("/{id}")
     public ResponseEntity<ProductResponse> updateProduct(
         @PathVariable Long id,
@@ -61,6 +66,7 @@ public class ProductController {
         return ResponseEntity.ok(updatedProduct);
     }
 
+    @Operation(summary = "상품 삭제", description = "기존 상품을 삭제합니다.")
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteProduct(@PathVariable Long id) {
         productService.deleteProduct(id);

@@ -12,12 +12,10 @@ import gift.dto.member.MemberResponse;
 import gift.exception.member.EmailAlreadyUsedException;
 import gift.exception.member.ForbiddenException;
 import gift.model.Member;
-import gift.model.RegisterType;
 import gift.repository.MemberRepository;
 import gift.util.JWTUtil;
 import java.util.List;
 import java.util.stream.Collectors;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -27,9 +25,6 @@ public class MemberService {
 
     private final MemberRepository memberRepository;
     private final JWTUtil jwtUtil;
-
-    @Value("${kakao.password}")
-    private String kakaoPassword;
 
     public MemberService(MemberRepository memberRepository, JWTUtil jwtUtil) {
         this.memberRepository = memberRepository;
@@ -47,8 +42,14 @@ public class MemberService {
             memberRegisterRequest.registerType()
         );
         Member savedMember = memberRepository.save(member);
-
         String token = jwtUtil.generateToken(savedMember.getId(), member.getEmail());
+
+        if (!savedMember.isRegisterTypeDefault()) {
+            savedMember.update(
+                savedMember.getEmail(),
+                token
+            );
+        }
         return new MemberResponse(savedMember.getId(), savedMember.getEmail(), token, savedMember.getRegisterType());
     }
 
@@ -56,7 +57,7 @@ public class MemberService {
         Member member = memberRepository.findByEmail(memberLoginRequest.email())
             .orElseThrow(() -> new ForbiddenException(INVALID_CREDENTIALS));
 
-        if (member.getRegisterType() != RegisterType.DEFAULT) {
+        if (!member.isRegisterTypeDefault()) {
             throw new ForbiddenException(INVALID_REGISTER_TYPE);
         }
 
@@ -72,7 +73,7 @@ public class MemberService {
         Member member = memberRepository.findByEmail(email)
             .orElseThrow(() -> new ForbiddenException(INVALID_CREDENTIALS));
 
-        if (member.getRegisterType() != RegisterType.KAKAO) {
+        if (!member.isRegisterTypeKakao()) {
             throw new ForbiddenException(INVALID_REGISTER_TYPE);
         }
 
@@ -106,8 +107,8 @@ public class MemberService {
         }
 
         String changedPassword = memberEditRequest.password();
-        if (!member.isRegisterTypeDefault()) {
-            changedPassword = kakaoPassword;
+        if (member.isRegisterTypeKakao()) {
+            changedPassword = member.getPassword();
         }
 
         member.update(memberEditRequest.email(), changedPassword);

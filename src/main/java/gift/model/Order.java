@@ -28,7 +28,7 @@ public class Order {
         this.orderDateTime = orderDateTime;
     }
 
-    public Order() {
+    protected Order() {
 
     }
 

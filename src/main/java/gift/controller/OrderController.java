@@ -3,6 +3,7 @@ package gift.controller;
 import gift.dto.order.OrderRequest;
 import gift.dto.order.OrderResponse;
 import gift.service.OrderService;
+import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -21,12 +22,13 @@ public class OrderController {
         this.orderService = orderService;
     }
 
+    @Operation(summary = "주문 생성", description = "새로운 주문을 생성합니다.")
     @PostMapping
     public ResponseEntity<OrderResponse> createOrder(
         @RequestBody OrderRequest orderRequest,
         @RequestAttribute("memberId") Long memberId
     ) {
         OrderResponse orderResponse = orderService.createOrder(orderRequest, memberId);
-        return new ResponseEntity<>(orderResponse, HttpStatus.CREATED);
+        return ResponseEntity.status(HttpStatus.CREATED).body(orderResponse);
     }
 }

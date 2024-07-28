@@ -17,7 +17,6 @@ import gift.repository.TokenRepository;
 import gift.service.MemberService;
 import gift.util.JWTUtil;
 import java.time.LocalDateTime;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -33,9 +32,6 @@ public class KakaoOAuthService {
     private final TokenRepository tokenRepository;
     private final JWTUtil jwtUtil;
     private final RestClient restClient;
-
-    @Value("${kakao.password}")
-    private String kakaoPassword;
 
     public KakaoOAuthService(
         KakaoApiClient kakaoApiClient,
@@ -82,13 +78,11 @@ public class KakaoOAuthService {
         try {
             MemberRegisterRequest registerRequest = new MemberRegisterRequest(
                 userResponse.email(),
-                kakaoPassword,
+                "KAKAO_LOGIN",
                 RegisterType.KAKAO
             );
-            System.out.println("회원가입 완료");
             return memberService.registerMember(registerRequest);
         } catch (EmailAlreadyUsedException e) {
-            System.out.println("로그인 완료");
             return memberService.loginKakaoMember(userResponse.email());
         }
     }

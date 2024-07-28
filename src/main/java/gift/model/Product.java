@@ -45,7 +45,7 @@ public class Product {
     @JoinColumn(name = "category_id", nullable = false)
     private Category category;
 
-    public Product() {
+    protected Product() {
     }
 
     public Product(Long id, String name, int price, String imageUrl, Category category) {

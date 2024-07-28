@@ -4,6 +4,7 @@ import gift.dto.category.CategoryCreateRequest;
 import gift.dto.category.CategoryResponse;
 import gift.dto.category.CategoryUpdateRequest;
 import gift.service.CategoryService;
+import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import java.util.List;
 import org.springframework.http.HttpStatus;
@@ -26,18 +27,21 @@ public class CategoryController {
         this.categoryService = categoryService;
     }
 
+    @Operation(summary = "모든 카테고리 조회", description = "모든 카테고리를 조회합니다.")
     @GetMapping
     public ResponseEntity<List<CategoryResponse>> getAllCategories() {
         List<CategoryResponse> categories = categoryService.getAllCategories();
         return ResponseEntity.ok(categories);
     }
 
+    @Operation(summary = "카테고리 조회", description = "ID를 사용하여 특정 카테고리를 조회합니다.")
     @GetMapping("/{id}")
     public ResponseEntity<CategoryResponse> getCategoryById(@PathVariable Long id) {
         CategoryResponse category = categoryService.getCategoryById(id);
         return ResponseEntity.ok(category);
     }
 
+    @Operation(summary = "카테고리 추가", description = "새로운 카테고리를 추가합니다.")
     @PostMapping
     public ResponseEntity<CategoryResponse> addCategory(
         @Valid @RequestBody CategoryCreateRequest categoryCreateRequest
@@ -46,6 +50,7 @@ public class CategoryController {
         return ResponseEntity.status(HttpStatus.CREATED).body(createdCategory);
     }
 
+    @Operation(summary = "카테고리 수정", description = "기존 카테고리를 수정합니다.")
     @PutMapping("/{id}")
     public ResponseEntity<CategoryResponse> updateCategory(
         @PathVariable Long id,

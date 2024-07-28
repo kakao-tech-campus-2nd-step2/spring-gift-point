@@ -62,7 +62,7 @@ public class OptionControllerTest {
     @Test
     @DisplayName("옵션 ID로 조회")
     public void testGetOptionById() throws Exception {
-        when(optionService.getOptionById( 1L)).thenReturn(optionResponse);
+        when(optionService.getOptionById(1L)).thenReturn(optionResponse);
 
         mockMvc.perform(get("/api/products/1/options/1"))
             .andExpect(status().isOk())

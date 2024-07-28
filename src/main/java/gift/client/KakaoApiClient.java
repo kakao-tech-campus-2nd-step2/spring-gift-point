@@ -1,5 +1,9 @@
 package gift.client;
 
+import static gift.util.constants.auth.KakaoOAuthConstants.KAKAO_SCOPES_URL;
+import static gift.util.constants.auth.KakaoOAuthConstants.KAKAO_TOKEN_URL;
+import static gift.util.constants.auth.KakaoOAuthConstants.KAKAO_UNLINK_URL;
+import static gift.util.constants.auth.KakaoOAuthConstants.KAKAO_USER_INFO_URL;
 import static gift.util.constants.auth.KakaoOAuthConstants.SCOPES_FAILURE_ERROR;
 import static gift.util.constants.auth.KakaoOAuthConstants.TOKEN_FAILURE_ERROR;
 import static gift.util.constants.auth.KakaoOAuthConstants.TOKEN_RESPONSE_ERROR;
@@ -39,7 +43,6 @@ public class KakaoApiClient {
     }
 
     public KakaoTokenResponse getAccessToken(String code) {
-        String kakaoTokenUrl = "https://kauth.kakao.com/oauth/token";
         LinkedMultiValueMap<String, String> requestBody = new LinkedMultiValueMap<>();
 
         requestBody.add("grant_type", "authorization_code");
@@ -49,7 +52,7 @@ public class KakaoApiClient {
 
         try {
             ResponseEntity<Map<String, Object>> response = client.post()
-                .uri(URI.create(kakaoTokenUrl))
+                .uri(URI.create(KAKAO_TOKEN_URL))
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .body(requestBody)
                 .retrieve()
@@ -74,11 +77,9 @@ public class KakaoApiClient {
     }
 
     public KakaoUnlinkResponse unlinkUser(String accessToken) {
-        String kakaoUnlinkUrl = "https://kapi.kakao.com/v1/user/unlink";
-
         try {
             ResponseEntity<Map<String, Object>> response = client.post()
-                .uri(URI.create(kakaoUnlinkUrl))
+                .uri(URI.create(KAKAO_UNLINK_URL))
                 .headers(headers -> headers.setBearerAuth(accessToken))
                 .retrieve()
                 .toEntity(new ParameterizedTypeReference<Map<String, Object>>() {
@@ -98,11 +99,9 @@ public class KakaoApiClient {
     }
 
     public KakaoScopeResponse getUserScopes(String accessToken) {
-        String kakaoScopesUrl = "https://kapi.kakao.com/v2/user/scopes";
-
         try {
             ResponseEntity<KakaoScopeResponse> response = client.get()
-                .uri(URI.create(kakaoScopesUrl))
+                .uri(URI.create(KAKAO_SCOPES_URL))
                 .headers(headers -> headers.setBearerAuth(accessToken))
                 .retrieve()
                 .toEntity(KakaoScopeResponse.class);
@@ -114,11 +113,9 @@ public class KakaoApiClient {
     }
 
     public KakaoUserResponse getUserInfo(String accessToken) {
-        String kakaoUserInfoUrl = "https://kapi.kakao.com/v2/user/me";
-
         try {
             ResponseEntity<Map<String, Object>> response = client.get()
-                .uri(URI.create(kakaoUserInfoUrl))
+                .uri(URI.create(KAKAO_USER_INFO_URL))
                 .headers(headers -> headers.setBearerAuth(accessToken))
                 .retrieve()
                 .toEntity(new ParameterizedTypeReference<Map<String, Object>>() {

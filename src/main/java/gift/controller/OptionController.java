@@ -4,6 +4,7 @@ import gift.dto.option.OptionCreateRequest;
 import gift.dto.option.OptionResponse;
 import gift.dto.option.OptionUpdateRequest;
 import gift.service.OptionService;
+import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import java.util.List;
 import org.springframework.http.HttpStatus;
@@ -27,6 +28,7 @@ public class OptionController {
         this.optionService = optionService;
     }
 
+    @Operation(summary = "상품 옵션 조회", description = "특정 상품의 모든 옵션을 조회합니다.")
     @GetMapping
     public ResponseEntity<List<OptionResponse>> getOptionsByProductId(
         @PathVariable Long productId
@@ -35,6 +37,7 @@ public class OptionController {
         return ResponseEntity.ok(options);
     }
 
+    @Operation(summary = "옵션 조회", description = "ID를 사용하여 특정 옵션을 조회합니다.")
     @GetMapping("/{optionId}")
     public ResponseEntity<OptionResponse> getOptionById(
         @PathVariable Long optionId
@@ -43,6 +46,7 @@ public class OptionController {
         return ResponseEntity.ok(option);
     }
 
+    @Operation(summary = "옵션 추가", description = "특정 상품에 새로운 옵션을 추가합니다.")
     @PostMapping
     public ResponseEntity<OptionResponse> addOptionToProduct(
         @PathVariable Long productId,
@@ -55,6 +59,7 @@ public class OptionController {
         return ResponseEntity.status(HttpStatus.CREATED).body(createdOption);
     }
 
+    @Operation(summary = "옵션 수정", description = "기존 옵션 정보를 수정합니다.")
     @PutMapping("/{optionId}")
     public ResponseEntity<OptionResponse> updateOption(
         @PathVariable Long productId,
@@ -69,6 +74,7 @@ public class OptionController {
         return ResponseEntity.ok(updatedOption);
     }
 
+    @Operation(summary = "옵션 삭제", description = "기존 옵션을 삭제합니다.")
     @DeleteMapping("/{optionId}")
     public ResponseEntity<Void> deleteOption(
         @PathVariable Long productId,

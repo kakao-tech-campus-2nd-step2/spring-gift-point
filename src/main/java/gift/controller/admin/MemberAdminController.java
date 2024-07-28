@@ -5,6 +5,7 @@ import gift.dto.member.MemberRegisterRequest;
 import gift.dto.member.MemberResponse;
 import gift.model.RegisterType;
 import gift.service.MemberService;
+import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -27,18 +28,21 @@ public class MemberAdminController {
         this.memberService = memberService;
     }
 
+    @Operation(summary = "모든 회원 조회", description = "모든 회원 정보를 조회합니다.")
     @GetMapping
     public String getAllMembers(Model model) {
         model.addAttribute("members", memberService.getAllMembers());
         return "members";
     }
 
+    @Operation(summary = "회원 추가 폼", description = "새로운 회원을 추가하는 폼을 보여줍니다.")
     @GetMapping("/new")
     public String showAddMemberForm(Model model) {
         model.addAttribute("member", new MemberRegisterRequest("", "", RegisterType.DEFAULT));
         return "member_form";
     }
 
+    @Operation(summary = "회원 추가", description = "새로운 회원을 시스템에 추가합니다.")
     @PostMapping
     public String addMember(
         @Valid @ModelAttribute("member") MemberRegisterRequest memberRegisterRequest,
@@ -51,6 +55,7 @@ public class MemberAdminController {
         return "redirect:/admin/members";
     }
 
+    @Operation(summary = "회원 수정 폼", description = "기존 회원 정보를 수정하는 폼을 보여줍니다.")
     @GetMapping("/{id}/edit")
     public String showEditMemberForm(@PathVariable("id") Long id, Model model) {
         MemberResponse memberResponse = memberService.getMemberById(id);
@@ -61,6 +66,7 @@ public class MemberAdminController {
         return "member_edit";
     }
 
+    @Operation(summary = "회원 수정", description = "기존 회원 정보를 수정합니다.")
     @PutMapping("/{id}")
     public String updateMember(
         @PathVariable("id") Long id,
@@ -77,6 +83,7 @@ public class MemberAdminController {
         return "redirect:/admin/members";
     }
 
+    @Operation(summary = "회원 삭제", description = "기존 회원을 삭제합니다.")
     @DeleteMapping("/{id}")
     public String deleteMember(@PathVariable("id") Long id) {
         memberService.deleteMember(id);
