@@ -41,9 +41,13 @@ public class KakaoService {
     }
 
     private RestClient createRestClient(RestClient.Builder builder) {
+        // timeout 시간 설정
+        Duration delayMillis = Duration.ofMillis(1000); // 1초
+
+        // RestClient 생성
         ClientHttpRequestFactorySettings requestFactorySettings = ClientHttpRequestFactorySettings.DEFAULTS
-                .withConnectTimeout(Duration.ofMillis(5000))
-                .withReadTimeout(Duration.ofMillis(5000));
+                .withConnectTimeout(delayMillis)
+                .withReadTimeout(delayMillis);
         JdkClientHttpRequestFactory clientHttpRequestFactory = ClientHttpRequestFactories.get(JdkClientHttpRequestFactory.class, requestFactorySettings);
 
         return builder.requestFactory(clientHttpRequestFactory).build();
