@@ -1,10 +1,9 @@
 package gift.user.service;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import gift.user.exception.OauthCustomException.FailedToSendMessageException;
-import gift.user.model.dto.AppUser;
-import gift.user.model.dto.KakaoMessageTemplate;
+import gift.config.KakaoProperties;
+import gift.user.model.dto.KakaoTokenResponse;
+import gift.user.model.dto.KakaoUserInfoResponse;
 import java.net.URI;
 import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
@@ -12,36 +11,52 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestClient;
 
 @Service
-public class KakaoService {
-    private final ObjectMapper objectMapper = new ObjectMapper();
-    private final RestClient client;
+public class KakaoLoginService {
 
-    public KakaoService(RestClient client) {
+    private final RestClient client;
+    private final KakaoProperties kakaoProperties;
+    private final ObjectMapper objectMapper = new ObjectMapper();
+
+    public KakaoLoginService(RestClient client, KakaoProperties kakaoProperties) {
         this.client = client;
+        this.kakaoProperties = kakaoProperties;
     }
 
-    public void sendMessageToMe(AppUser user, String message) {
-        try {
-            String url = "https://kapi.kakao.com/v2/api/talk/memo/default/send";
-            String header = "Bearer " + user.getAccessToken();
-            MultiValueMap<String, String> multiValueMap = new LinkedMultiValueMap<>();
+    public String buildAuthorizeUrl() {
+        return "https://kauth.kakao.com/oauth/authorize?" +
+                "client_id=" + kakaoProperties.clientId() +
+                "&redirect_uri=" + kakaoProperties.redirectUri() +
+                "&response_type=code";
+    }
 
-            KakaoMessageTemplate template = new KakaoMessageTemplate(message);
-            try {
-                String jsonTemplate = objectMapper.writeValueAsString(template);
-                multiValueMap.add("template_object", jsonTemplate);
-            } catch (JsonProcessingException e) {
-                throw new FailedToSendMessageException();
-            }
+    public KakaoTokenResponse getAccessToken(String code) {
+        String url = "https://kauth.kakao.com/oauth/token";
+        MultiValueMap<String, String> multiValueMap = new LinkedMultiValueMap<>();
 
-            client.post()
-                    .uri(URI.create(url))
-                    .body(multiValueMap)
-                    .header("Authorization", header)
-                    .retrieve()
-                    .body(String.class);
-        } catch (Exception e) {
-            throw new FailedToSendMessageException();
-        }
+        multiValueMap.add("grant_type", "authorization_code");
+        multiValueMap.add("redirect_uri", kakaoProperties.redirectUri());
+        multiValueMap.add("client_id", kakaoProperties.clientId());
+        multiValueMap.add("code", code);
+
+        return client
+                .post()
+                .uri(URI.create(url))
+                .body(multiValueMap)
+                .retrieve()
+                .body(KakaoTokenResponse.class);
+    }
+
+    public String getUserInfo(String accessToken) {
+        String url = "https://kapi.kakao.com/v2/user/me";
+        String header = "Bearer " + accessToken;
+
+        KakaoUserInfoResponse body = client
+                .get()
+                .uri(URI.create(url))
+                .header("Authorization", header)
+                .retrieve()
+                .body(KakaoUserInfoResponse.class);
+
+        return body.kakaoAccount().email();
     }
 }
