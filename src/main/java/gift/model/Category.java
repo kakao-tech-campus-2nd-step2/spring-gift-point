@@ -37,12 +37,26 @@ public class Category {
     public Category() {
     }
 
+    public Category(Long id){
+        this.id = id;
+    }
+
     public Category(Long id, String name, String color, String description, String imageUrl) {
         this.id = id;
         this.name = name;
         this.color = color;
         this.description = description;
         this.imageUrl = imageUrl;
+    }
+
+    public void addProduct(Product product) {
+        if(productList.stream().noneMatch(savedproduct->savedproduct==product)){
+            productList.add(product);
+        }
+    }
+
+    public void deleteProduct(Product product) {
+        productList.remove(product);
     }
 
     //getter

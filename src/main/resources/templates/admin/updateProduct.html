@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>상품 수정하기</title>
+  <style>
+    table,th,td {
+      border: 2px solid black;
+      border-collapse: collapse;
+      text-align: center;
+      width: fit-content;
+    }
+  </style>
+</head>
+<body>
+  <form th:action="@{/admin/{id}(id=${product.id})}" th:object="${productDTO}" method="#" th:method="put">
+            <div>
+              <label for="fixName">상품 이름</label>
+              <input type="text" id="fixName" th:field="*{name}">
+            </div>
+            <div>
+              <label for="fixPrice">상품 가격</label>
+              <input type="text" id="fixPrice" th:field="*{price}">
+            </div>
+            <div>
+              <label for="fixImg">상품 이미지</label>
+              <input type="text" id="fixImg" th:field="*{imageUrl}">
+            </div>
+            <div>
+              <label for="fixCategoryId">카테고리Id</label>
+              <input type="text" id="fixCategoryId" th:field="*{categoryId}">
+            </div>
+            <button type="submit">확인</button>
+          </form>
+</body>
+</html>

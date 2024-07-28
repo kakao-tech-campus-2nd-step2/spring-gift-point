@@ -2,9 +2,9 @@ package gift.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import gift.database.JpaMemberRepository;
-import gift.database.JpaProductRepository;
-import gift.database.JpaWishRepository;
+import gift.database.repository.JpaMemberRepository;
+import gift.database.repository.JpaProductRepository;
+import gift.database.repository.JpaWishRepository;
 import gift.model.Member;
 import gift.model.MemberRole;
 import gift.model.Product;
@@ -16,7 +16,7 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
 
 @DataJpaTest
-class WishListServiceImplTest {
+class WishListServiceTest {
     @Autowired
     private JpaWishRepository jpaWishRepository;
     @Autowired

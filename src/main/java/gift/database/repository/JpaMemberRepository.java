@@ -1,4 +1,4 @@
-package gift.database;
+package gift.database.repository;
 
 import gift.model.Member;
 import java.util.List;

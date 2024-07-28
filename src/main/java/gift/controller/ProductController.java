@@ -1,6 +1,7 @@
 package gift.controller;
 
-import gift.dto.ProductDTO;
+import gift.dto.ProductRequest;
+import gift.dto.ProductResponse;
 import gift.service.ProductService;
 import jakarta.validation.Valid;
 import java.util.List;
@@ -30,22 +31,22 @@ public class ProductController {
     }
 
     @GetMapping("/products")
-    public ResponseEntity<List<ProductDTO>> getList() {
+    public ResponseEntity<List<ProductResponse>> getList() {
         return ResponseEntity.ok(productService.readAll());
     }
 
     @PostMapping("/products")
-    public ResponseEntity<Void> add(@RequestBody @Valid ProductDTO dto) {
-        productService.create(dto);
+    public ResponseEntity<Void> add(@RequestBody @Valid ProductRequest productRequest) {
+        productService.create(productRequest);
         return ResponseEntity.ok().build();
     }
 
     @PutMapping("/products/{id}")
-    public ResponseEntity<Void> update(@PathVariable Long id, @RequestBody @Valid ProductDTO dto) {
+    public ResponseEntity<Void> update(@PathVariable Long id, @RequestBody @Valid ProductRequest productRequest) {
         if (id == null) {
             throw new IllegalArgumentException("id를 입력해주세요");
         }
-        productService.update(id, dto);
+        productService.update(id, productRequest);
         return ResponseEntity.ok().build();
     }
 
@@ -57,8 +58,9 @@ public class ProductController {
 
 
     @GetMapping("/products/{page}")
-    public ResponseEntity<List<ProductDTO>> getPage(@PathVariable int page) {
-        return ResponseEntity.ok(productService.readProduct(page, 10));
+    public ResponseEntity<List<ProductResponse>> getPage(@PathVariable int page) {
+        return null;
+        //return ResponseEntity.ok(productService.readProduct(page, 10));
     }
 
 }

@@ -1,6 +1,6 @@
-package gift.ArgumentResolver;
+package gift.argumentResolver;
 
-import gift.exceptionAdvisor.exceptions.MemberAuthenticationException;
+import gift.exceptionAdvisor.exceptions.GiftUnauthorizedException;
 import gift.service.MemberService;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.core.MethodParameter;
@@ -30,7 +30,7 @@ public class LoginMemberArgumentResolver implements HandlerMethodArgumentResolve
         HttpServletRequest request = (HttpServletRequest) webRequest.getNativeRequest();
         String token = request.getHeader("Authorization");
         if (token == null) {
-            throw new MemberAuthenticationException("Authorization 값이 없습니다.");
+            throw new GiftUnauthorizedException("Authorization 값이 없습니다.");
         }
         return memberService.getLoginUser(token);
     }

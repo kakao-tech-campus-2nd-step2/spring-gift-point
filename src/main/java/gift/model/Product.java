@@ -39,7 +39,7 @@ public class Product {
     @OneToMany(mappedBy = "product")
     private List<GiftOption> giftOptionList = new ArrayList<>();
 
-
+    public Product() {}
 
     public Product(Long id, String name, Integer price, String imageUrl) {
         this.id = id;
@@ -48,9 +48,16 @@ public class Product {
         this.imageUrl = imageUrl;
     }
 
-    public Product() {
+    public Product(Long id, String name, Integer price, String imageUrl, Category category,GiftOption giftOption) {
+        this.id = id;
+        this.name = name;
+        this.price = price;
+        this.imageUrl = imageUrl;
+        this.category = category;
 
+        giftOptionList.add(giftOption);
     }
+
 
     public void updateCategory(Category category) {
         this.category = category;
@@ -85,11 +92,17 @@ public class Product {
         return imageUrl;
     }
 
-    public Long getCategoryId() {
-        return category.getId();
+    public Category getCategory() {
+        return category;
     }
 
     public List<GiftOption> getGiftOptionList() {
         return giftOptionList;
+    }
+
+    public void update(String name, Integer price, String imageUrl) {
+        this.name = name;
+        this.price = price;
+        this.imageUrl = imageUrl;
     }
 }

@@ -6,48 +6,39 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 
-@Deprecated
-public class ProductDTO {
+public class ProductRequest {
 
     private Long id;
+
     @Pattern(regexp = "^[ㄱ-ㅎ가-힣a-zA-Z0-9\\(\\)\\[\\]\\+\\-&/_]+$", message = "잘못된 이름입니다.")
     @Size(min = 1, max = 15, message = "잘못된 이름입니다.")
-    //이 정규표현식을 만족해야지만 ok
     private String name;
+
     @NotNull(message = "가격을 입력해주세요")
     private Integer price;
+
     @NotBlank(message = "이미지 주소를 입력해주세요")
     private String imageUrl;
+
     @NotNull(message = "카테고리를 입력해주세요")
     private Long categoryId;
 
-    //타임리프 사용을 위한 기본 생성자
-    public ProductDTO() {
-    }
+    @NotNull(message = "선물 옵션을 입력해주세요")
+    private String giftOptionName;
 
-    public ProductDTO(Long id, String name, Integer price, String imageUrl) {
-        this.id = id;
-        this.name = name;
-        this.price = price;
-        this.imageUrl = imageUrl;
-    }
+    @NotNull(message = "선물 옵션 수량을 입력해주세요")
+    private Integer giftOptionQuantity;
 
-    public ProductDTO(Long id, String name, Integer price, String imageUrl, Long categoryId) {
+    public ProductRequest(Long id, String name, Integer price, String imageUrl, Long categoryId,
+        String giftOptionName, Integer giftOptionQuantity) {
         this.id = id;
         this.name = name;
         this.price = price;
         this.imageUrl = imageUrl;
         this.categoryId = categoryId;
+        this.giftOptionName = giftOptionName;
+        this.giftOptionQuantity = giftOptionQuantity;
     }
-
-    //상품 모델을 DTO로 빠르게 전환
-    public ProductDTO(Product product) {
-        this.id = product.getId();
-        this.name = product.getName();
-        this.price = product.getPrice();
-        this.imageUrl = product.getImageUrl();
-    }
-
 
     public Long getId() {
         return id;
@@ -65,23 +56,15 @@ public class ProductDTO {
         return imageUrl;
     }
 
-    public Long getCategoryId() { return categoryId; }
-
-    public void setId(Long id) {
-        this.id = id;
+    public Long getCategoryId() {
+        return categoryId;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public String getGiftOptionName() {
+        return giftOptionName;
     }
 
-    public void setPrice(Integer price) {
-        this.price = price;
+    public Integer getGiftOptionQuantity() {
+        return giftOptionQuantity;
     }
-
-    public void setImageUrl(String imageUrl) {
-        this.imageUrl = imageUrl;
-    }
-
-    public void setCategoryId(Long categoryId) { this.categoryId = categoryId; }
 }

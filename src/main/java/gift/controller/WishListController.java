@@ -1,6 +1,6 @@
 package gift.controller;
 
-import gift.ArgumentResolver.LoginMember;
+import gift.argumentResolver.LoginMember;
 import gift.dto.MemberRequest;
 import gift.dto.WishListRequest;
 import gift.dto.WishListResponse;

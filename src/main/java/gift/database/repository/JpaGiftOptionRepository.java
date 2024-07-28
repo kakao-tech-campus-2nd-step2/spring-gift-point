@@ -1,4 +1,4 @@
-package gift.database;
+package gift.database.repository;
 
 import gift.model.GiftOption;
 import gift.model.Product;

@@ -1,10 +1,10 @@
 package gift.service;
 
-import gift.database.JpaGiftOptionRepository;
-import gift.database.JpaProductRepository;
+import gift.database.repository.JpaGiftOptionRepository;
+import gift.database.repository.JpaProductRepository;
 import gift.dto.GiftOptionRequest;
 import gift.dto.GiftOptionResponse;
-import gift.exceptionAdvisor.exceptions.ProductNoSuchException;
+import gift.exceptionAdvisor.exceptions.GiftNotFoundException;
 import gift.model.GiftOption;
 import gift.model.Product;
 import java.util.List;
@@ -57,6 +57,6 @@ public class GiftOptionService {
     }
 
     private Product getProduct(Long productId) {
-        return jpaProductRepository.findById(productId).orElseThrow(ProductNoSuchException::new);
+        return jpaProductRepository.findById(productId).orElseThrow(()->new GiftNotFoundException("상품이 존재하지않습니다."));
     }
 }
