@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width">
+    <title>Admin</title>
+    <link rel="stylesheet" th:href="@{/style.css}">
+</head>
+<body>
+<div class="container">
+    <div class="header">
+        <div class="header-txt">
+            <a th:href="@{/admin/products}">
+                <h1>Manage Products</h1>
+            </a>
+        </div>
+        <div class="green-btn">
+            <a href="/admin/products/add">ADD</a>
+        </div>
+    </div>
+    <table>
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Price</th>
+            <th>Image URL</th>
+            <th>Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="product : ${products}">
+            <td th:text="${product.id}"></td>
+            <td th:text="${product.name}"></td>
+            <td th:text="${product.price}"></td>
+            <td th:text="${product.imageUrl}"></td>
+            <td>
+                <div class="actions">
+                    <div class="darkblue-btn">
+                        <a th:href="@{/admin/products/edit/{id}(id=${product.id})}">UPDATE</a>
+                    </div>
+                    <div class="red-btn">
+                        <a th:href="@{/admin/products/delete/{id}(id=${product.id})}">DELETE</a>
+                    </div>
+                </div>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+</body>
+</html>

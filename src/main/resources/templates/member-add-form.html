@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width">
+  <title>Member Add</title>
+  <link rel="stylesheet" th:href="@{/style.css}">
+</head>
+<body>
+<div class="container">
+  <div class="header">
+    <div class="header-txt">
+        <a th:href="@{/admin/members}">
+          <h1>Add member</h1>
+        </a>
+    </div>
+    <div class="back-btn">
+        <a th:href="|javascript:history.back()|" class="btn">back</a>
+    </div>
+  </div>
+  <h1>Member Add</h1>
+  <form th:action="@{/admin/members/add}" th:object="${member}" method="post">
+    <p>Email: <input type="text" th:field="*{email}"></p>
+    <p>nickName: <input type="text" th:field="*{nickName}"></p>
+    <p>Password: <input type="password" th:field="*{password}"></p>
+    <button type="submit" class="btn-submit"><a>SUBMIT</a></button>
+  </form>
+</div>
+</body>
+</html>

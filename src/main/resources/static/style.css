@@ -1,0 +1,99 @@
+body {
+  padding: 0;
+  margin: 0;
+  background-color: #ffffff;
+}
+.container {
+  background-color: #445D7D;
+  height: 150px;
+}
+.header {
+  height: 100%;
+  display: flex;
+  align-items: center;
+  color: navy;
+}
+h1 {
+  color: #ffffff;
+  padding-left: 40px;
+  font-size: 40px;
+}
+.green-btn, .darkblue-btn, .red-btn, .btn-submit, .back-btn {
+  border: none;
+  width: 120px;
+  height: 60px;
+  border-radius: 5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.green-btn {
+  margin-left: auto;
+  background: #5BB85C;
+  margin-right: 100px;
+}
+.back-btn {
+  margin-left: auto;
+  background: #D9534F;
+  margin-right: 100px;
+}
+.darkblue-btn {
+  background: #445D7D;
+  margin-right: 30px;
+}
+.red-btn {
+  background: #D9534F;
+}
+.actions {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+a {
+  font-size: 20px;
+  text-decoration: none;
+  text-align: center;
+  color: white;
+}
+table {
+  width: calc(100% - 40px);
+  border-collapse: collapse;
+  margin: 0 20px;
+}
+table, th, td {
+  padding: 20px;
+  text-align: center;
+}
+thead {
+  font-size: 20px;
+  font-weight: bold;
+}
+th {
+  border-bottom: 2px solid lightgray;
+}
+td {
+  border-bottom: 1px solid lightgray;
+  font-size: 15px;
+  vertical-align: middle;
+}
+form {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 25px;
+}
+.btn-submit {
+  background: #445D7D;
+  color: #ffffff;
+  margin-left: 10px;
+}
+p {
+  font-size: 20px;
+  font-weight: bold;
+  padding: 0 20px;
+}
+input::placeholder {
+  color: grey;
+  font-style: italic;
+}
