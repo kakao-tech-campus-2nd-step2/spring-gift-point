@@ -2,6 +2,7 @@ package gift.controller;
 
 import gift.service.KakaoApiService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api/oauth/kakao")
+@Tag(name = "카카오 API", description = "카카오 OAuth 2.0을 통한 로그인에 관련된 API를 제공합니다.")
 public class KakaoApiController {
 
     private final KakaoApiService kakaoApiService;

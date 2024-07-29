@@ -10,12 +10,14 @@ import gift.vo.Option;
 import gift.vo.Order;
 import gift.vo.Product;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/orders")
+@Tag(name = "주문 관리", description = "주문 처리 및 관련된 API들을 제공합니다.")
 public class OrderController {
 
     private final OrderService orderService;

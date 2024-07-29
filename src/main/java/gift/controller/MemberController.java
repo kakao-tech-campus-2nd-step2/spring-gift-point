@@ -5,6 +5,7 @@ import gift.dto.LoginDto;
 import gift.service.MemberService;
 import gift.vo.Member;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -14,6 +15,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @RestController
+@Tag(name = "회원 관리", description = "회원 로그인 및 회원가입과 관련된 API들을 제공합니다.")
 public class MemberController {
 
     private final MemberService service;

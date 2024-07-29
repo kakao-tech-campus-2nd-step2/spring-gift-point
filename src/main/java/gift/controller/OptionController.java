@@ -5,6 +5,7 @@ import gift.dto.OptionResponseDto;
 import gift.service.OptionService;
 import gift.vo.Option;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,6 +16,7 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/products/")
+@Tag(name = "옵션 관리", description = "상품에 대한 옵션 조회, 추가에 관련된 API들을 제공합니다.")
 public class OptionController {
 
     private final OptionService optionService;

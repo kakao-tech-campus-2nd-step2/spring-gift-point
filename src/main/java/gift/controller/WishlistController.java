@@ -5,12 +5,14 @@ import gift.auth.JwtUtil;
 import gift.service.WishlistService;
 import gift.vo.Wish;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
+@Tag(name = "위시리스트 관리", description = "위시리스트 조회, 추가, 삭제와 관련된 API들을 제공합니다.")
 public class WishlistController {
 
     private final WishlistService service;

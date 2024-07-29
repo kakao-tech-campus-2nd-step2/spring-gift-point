@@ -6,6 +6,7 @@ import gift.dto.ProductUpdateDto;
 import gift.service.ProductService;
 import gift.vo.Product;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/products")
+@Tag(name = "상품 관리", description = "상품 조회, 추가, 업데이트, 삭제와 관련된 API들을 제공합니다.")
 public class ProductController {
 
     private final ProductService service;
