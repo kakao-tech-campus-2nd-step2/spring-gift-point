@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>로그인</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f5f5f5;
+        }
+
+        .container {
+            width: 80%;
+            max-width: 500px;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+        }
+
+        label {
+            margin-bottom: 10px;
+            color: #555;
+        }
+
+        input[type="text"], input[type="password"] {
+            padding: 10px;
+            margin-bottom: 20px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+
+        button {
+            padding: 10px 20px;
+            border: none;
+            background-color: #007bff;
+            color: white;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #0069d9;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>로그인</h1>
+    <form onsubmit="event.preventDefault(); loginUser();">
+        <label>이메일: <input type="text" id="email"></label><br>
+        <label>비밀번호: <input type="password" id="password"></label><br>
+        <button type="submit">로그인</button>
+    </form>
+</div>
+<script>
+    function loginUser() {
+        const email = document.getElementById('email').value;
+        const password = document.getElementById('password').value;
+
+        fetch('/api/users/login', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({email: email, password: password})
+        })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok ' + response.statusText);
+                }
+                return response.json();
+            })
+            .then(data => {
+                alert('로그인 성공!');
+                console.log('Access Token:', data.accessToken);
+                // 토큰을 로컬 스토리지에 저장
+                localStorage.setItem('accessToken', data.accessToken);
+                // 보호된 엔드포인트에 요청을 보내어 헤더에 토큰이 포함되었는지 확인
+                return fetchWithAuth('/api/products');
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok ' + response.statusText);
+                }
+                return response.json();
+            })
+            .then(data => {
+                console.log('Protected resource:', data);
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('로그인 중 오류가 발생했습니다.');
+            });
+    }
+
+    function fetchWithAuth(url, options = {}) {
+        const token = localStorage.getItem('accessToken');
+        if (token) {
+            if (!options.headers) {
+                options.headers = {};
+            }
+            options.headers['Authorization'] = `Bearer ${token}`;
+        }
+        return fetch(url, options);
+    }
+</script>
+</body>
+</html>
