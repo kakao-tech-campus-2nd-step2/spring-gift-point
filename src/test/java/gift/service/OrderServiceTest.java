@@ -70,7 +70,7 @@ public class OrderServiceTest {
         given(wishRepository.findByMemberAndProduct(any(Member.class), any(Product.class))).willReturn(Optional.of(new Wish()));
         willDoNothing().given(wishRepository).delete(any(Wish.class));
         willDoNothing().given(kakaoApiService).sendKakaoMessage(anyString(), anyString());
-        given(orderRepository.save(any(Order.class))).willReturn(new Order(option, orderQuantity, message));
+        given(orderRepository.save(any(Order.class))).willReturn(new Order(option, orderQuantity, message, member));
 
         //when
         OrderDto result = orderService.processOrder(orderDto);
@@ -111,7 +111,7 @@ public class OrderServiceTest {
         given(wishRepository.findByMemberAndProduct(any(Member.class), any(Product.class))).willReturn(Optional.of(new Wish()));
         willDoNothing().given(wishRepository).delete(any(Wish.class));
         willDoNothing().given(kakaoApiService).sendKakaoMessage(anyString(), anyString());
-        given(orderRepository.save(any(Order.class))).willReturn(new Order(option, orderQuantity, message));
+        given(orderRepository.save(any(Order.class))).willReturn(new Order(option, orderQuantity, message, member));
 
         //when
         OrderDto result = orderService.processOrder(orderDto);
