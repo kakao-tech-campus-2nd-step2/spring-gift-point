@@ -12,8 +12,10 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class ProductService {
@@ -46,25 +48,39 @@ public class ProductService {
             productDTO.price(),
             productDTO.imageUrl()
         );
-
+        // 상품 저장
         Product savedProduct = productRepository.save(product);
         // 옵션 저장
         optionService.addOption(savedProduct, productDTO.option());
     }
 
     /**
-     * 전체 싱픔 목록 조회 - 페이징(매개변수별)
+     * 특정 삼품 조회
      */
-    public Page<Product> getProductsByPageAndSort(int page, int size, Sort sort) {
-        PageRequest pageRequest = PageRequest.of(page, size, sort);
-        Page<Product> products = productRepository.findAll(pageRequest);
+    public Product getProduct(Long id) {
+        Product product = productRepository.findById(id)
+            .orElseThrow(() -> new ProductNotFoundException(id));
 
-        return products;
+        return product;
     }
 
     /**
-     * 상품 수정
+     * 전체 싱픔 목록 조회 - 페이징(매개변수별)
      */
+    public Page<Product> getProductsByPage(int page, int size, Sort sort, Long categoryId) {
+        PageRequest pageRequest = PageRequest.of(page, size, sort);
+        // 카테고리 조건 X
+        if(categoryId.equals(0)){
+            return productRepository.findAll(pageRequest);
+        }
+        // 카테고리 조건 O
+        return productRepository.findAllByCategoryId(pageRequest);
+    }
+
+    /**
+     * 상품 수정 - (현재) 상품의 옵션은 따로 수정
+     */
+    @Transactional
     public void updateProduct(Long id, ProductDTO productDTO) {
         Product product = productRepository.findById(id)
             .orElseThrow(() -> new ProductNotFoundException(id));
@@ -75,14 +91,15 @@ public class ProductService {
 
         product.update(productDTO.name(), category, productDTO.price(),
             productDTO.imageUrl());
-
-        productRepository.save(product);
     }
 
     /**
      * 상품 삭제
      */
     public void deleteProduct(Long id) {
+        if (!productRepository.existsById(id)) {
+            throw new ProductNotFoundException(id);
+        }
         productRepository.deleteById(id);
     }
 
@@ -98,12 +115,14 @@ public class ProductService {
     }
 
 
+    // 상품 생성 시 이름 중복 확인
     private void validateUniqueName(String productName) {
         if (productRepository.existsByName(productName)) {
             throw new ProductDuplicateException(productName);
         }
     }
 
+    // 상품 수정 시 이름 중복 확인
     private void validateUniqueNameWithoutMe(Long productId, String productName) {
         productRepository.findByName(productName)
             .filter(product -> !product.getId().equals(productId))

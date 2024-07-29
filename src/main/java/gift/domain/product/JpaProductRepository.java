@@ -14,9 +14,9 @@ import org.springframework.transaction.annotation.Transactional;
 public interface JpaProductRepository extends JpaRepository<Product, Long> {
 
     @Modifying
-    @Query(value = "DELETE FROM cart_item WHERE product_id = :productId; " +
-                   "DELETE FROM option WHERE product_id = :productId;" +
-                   "DELETE FROM product WHERE id = :productId; "
+    @Query(value = "DELETE FROM cart_item WHERE product_id = :productId; " + // 해당 상품을 포함하는 장바구니 정보 삭제
+                   "DELETE FROM option WHERE product_id = :productId;" + // 해당 상품의 옵션 정보 삭제
+                   "DELETE FROM preoduct WHERE id = :productId; " // 상품 삭제
         , nativeQuery = true)
     void deleteById(Long productId);
 
@@ -27,10 +27,11 @@ public interface JpaProductRepository extends JpaRepository<Product, Long> {
 
     List<Product> findAll();
 
-    // paging
-    Page<Product> findAll(Pageable pageable);
-
-    Page<Product> findAllByIdIn(List<Long> cartItemIds, Pageable pageable);
-
     Optional<Product> findByName(String productName);
+
+
+    // paging
+    Page<Product> findAllByCategoryId(Pageable pageable);
+    Page<Product> findAll(Pageable pageable);
 }
+

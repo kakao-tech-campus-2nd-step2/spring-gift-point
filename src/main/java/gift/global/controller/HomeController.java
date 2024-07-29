@@ -4,6 +4,7 @@ import gift.domain.category.Category;
 import gift.domain.category.CategoryService;
 import gift.domain.product.Product;
 import gift.domain.product.ProductService;
+import io.swagger.v3.oas.annotations.Parameter;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -33,12 +34,13 @@ public class HomeController {
     @GetMapping
     String homePage(
         Model model,
-        @RequestParam(value = "page", defaultValue = "0") int page,
-        @RequestParam(value = "sort", defaultValue = "id_asc") String sort
+        @Parameter(description = "페이지 번호") @RequestParam(value = "page", defaultValue = "0") int page,
+        @Parameter(description = "페이지 크기") @RequestParam(value = "size", defaultValue = "10") int size,
+        @Parameter(description = "정렬 기준") @RequestParam(value = "sort", defaultValue = "id_asc") String sort,
+        @Parameter(description = "카테고리 ID") @RequestParam(value = "categoryId", defaultValue = "0") Long categoryId
     ) {
-        int size = 10; // default
         Sort sortObj = getSortObject(sort);
-        Page<Product> products = productService.getProductsByPageAndSort(page, size, sortObj);
+        Page<Product> products = productService.getProductsByPage(page, size, sortObj, categoryId);
         List<Category> categories = categoryService.getCategories();
 
         model.addAttribute("products", products);

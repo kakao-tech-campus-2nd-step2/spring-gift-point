@@ -54,12 +54,10 @@ public class OptionService {
         optionRepository.save(option);
     }
 
-    // 상품 생성 시 옵션 입력
-    public void addOption(Product product, OptionRequestDTO optionRequestDTO) {
-        List<Option> options = optionRepository.findAllByProduct(product);
-
+    // 새로운 상품 생성 시 옵션 입력
+    public void addOption(Product savedProduct, OptionRequestDTO optionRequestDTO) {
         Option option = new Option(optionRequestDTO.name(), optionRequestDTO.quantity(),
-            product);
+            savedProduct);
 
         optionRepository.save(option);
     }
