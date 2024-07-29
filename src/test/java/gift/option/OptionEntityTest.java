@@ -10,7 +10,7 @@ import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
-import gift.category.Category;
+import gift.category.entity.Category;
 import gift.option.OptionTestCase.OptionNameAllowedCharacterError;
 import gift.option.OptionTestCase.OptionNameLengthError;
 import gift.option.OptionTestCase.OptionQuantitySizeError;

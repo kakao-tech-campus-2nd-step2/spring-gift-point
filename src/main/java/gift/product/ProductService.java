@@ -3,7 +3,7 @@ package gift.product;
 import static gift.exception.ErrorMessage.CATEGORY_NOT_FOUND;
 import static gift.exception.ErrorMessage.PRODUCT_NOT_FOUND;
 
-import gift.category.Category;
+import gift.category.entity.Category;
 import gift.category.CategoryRepository;
 import gift.product.dto.ProductRequestDTO;
 import gift.product.dto.ProductResponseDTO;

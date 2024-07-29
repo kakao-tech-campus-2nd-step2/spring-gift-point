@@ -1,8 +1,7 @@
 package gift.product.entity;
 
-import gift.category.Category;
+import gift.category.entity.Category;
 import gift.product.entity.embedded.Name;
-import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.AttributeOverride;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;

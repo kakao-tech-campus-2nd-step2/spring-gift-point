@@ -1,6 +1,6 @@
 package gift.product.dto;
 
-import gift.category.Category;
+import gift.category.entity.Category;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.util.Objects;
 

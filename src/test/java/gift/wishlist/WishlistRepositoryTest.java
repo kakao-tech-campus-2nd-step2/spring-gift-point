@@ -3,7 +3,7 @@ package gift.wishlist;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
-import gift.category.Category;
+import gift.category.entity.Category;
 import gift.category.CategoryRepository;
 import gift.member.Member;
 import gift.member.MemberRepository;

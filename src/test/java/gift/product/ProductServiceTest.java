@@ -7,8 +7,8 @@ import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.when;
 
-import gift.category.Category;
-import gift.category.CategoryDTO;
+import gift.category.entity.Category;
+import gift.category.dto.CategoryDTO;
 import gift.category.CategoryRepository;
 import gift.product.dto.ProductRequestDTO;
 import gift.product.dto.ProductResponseDTO;
