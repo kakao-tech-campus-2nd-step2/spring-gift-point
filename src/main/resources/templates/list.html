@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>Manage Products</title>
+  <link rel="stylesheet"
+        href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+</head>
+<body>
+<div class="container mt-4">
+  <div class="card">
+    <div class="card-header">
+      <h3>Manage Products</h3>
+      <a class="btn btn-success float-right" th:href="@{/products/new}">Add New Product</a>
+    </div>
+    <div class="card-body">
+      <table class="table table-hover">
+        <thead>
+        <tr>
+          <th>Name</th>
+          <th>Price</th>
+          <th>Image URL</th>
+          <th>Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="product : ${products}">
+          <td th:text="${product.name}">Name</td>
+          <td th:text="${product.price}">Price</td>
+          <td th:text="${product.imageUrl}">Image URL</td>
+          <td>
+            <a class="btn btn-primary btn-sm" th:href="@{/products/edit/{id}(id=${product.id})}">Edit</a>
+            <form th:action="@{/products/delete/{id}(id=${product.id})}" method="post"
+                  style="display:inline;">
+              <button type="submit">Delete</button>
+            </form>
+          </td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+</body>
+</html>
