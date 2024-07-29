@@ -26,8 +26,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-import static org.springframework.data.domain.Sort.Direction.DESC;
-
 @Tag(name = "Product API", description = "상품 관련 API")
 @RequestMapping("/api/products")
 @RestController
@@ -41,15 +39,22 @@ public class ProductController {
 
     @Operation(summary = "상품 목록 조회", description = "모든 상품의 목록을 페이지별로 조회합니다.")
     @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "상품 목록 조회 성공", content = @Content(schema = @Schema(implementation = PagedModel.class)))
+            @ApiResponse(responseCode = "200", description = "상품 목록 조회 성공", content = @Content(schema = @Schema(implementation = PagedModel.class))),
+            @ApiResponse(responseCode = "400", description = "잘못된 요청", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
     })
     @GetMapping
     public ResponseEntity<Page<ProductResponse>> productList(@Parameter(description = "페이지 번호 (기본: 0)")
                                                              @RequestParam(value = "page", defaultValue = "0") int page,
 
                                                              @Parameter(description = "페이지 크기 (기본: 20)")
-                                                             @RequestParam(value = "size", defaultValue = "20") int size) {
-        Pageable pageable = PageRequest.of(page, size, DESC, "id");
+                                                             @RequestParam(value = "size", defaultValue = "20") int size,
+
+                                                             @Parameter(description = "정렬 기준 (예: name,asc) (기본: id,desc)")
+                                                             @RequestParam(defaultValue = "id,desc", required = false) String sort) {
+        String[] sortParams = sort.split(",");
+        Sort.Direction direction = sortParams[1].equalsIgnoreCase("asc") ? Sort.Direction.ASC : Sort.Direction.DESC;
+        Pageable pageable = PageRequest.of(page, size, Sort.by(direction, sortParams[0]));
+
         List<ProductDto> productDtoList = productService.getProducts(pageable);
 
         List<ProductResponse> productResponseList = productDtoList.stream()
@@ -168,20 +173,6 @@ public class ProductController {
                                              @Parameter(description = "옵션 ID", required = true) @PathVariable Long optionId) {
         productService.removeOption(productId, optionId);
 
-        return ResponseEntity.ok().build();
-    }
-
-    @Operation(summary = "상품 옵션 수량 감소", description = "특정 상품의 옵션 수량을 감소시킵니다.")
-    @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "옵션 수량이 성공적으로 감소됨"),
-            @ApiResponse(responseCode = "400", description = "잘못된 요청", content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
-            @ApiResponse(responseCode = "404", description = "상품 또는 옵션을 찾을 수 없음")
-    })
-    @PutMapping("/{productId}/options/{optionId}/subtract")
-    public ResponseEntity<Void> subtractOptionQuantity(@Parameter(description = "상품 ID", required = true) @PathVariable Long productId,
-                                                       @Parameter(description = "옵션 ID", required = true) @PathVariable Long optionId,
-                                                       @Parameter(description = "감소할 수량", required = true) @RequestParam Long quantity) {
-        productService.subtractOptionQuantity(productId, optionId, quantity);
         return ResponseEntity.ok().build();
     }
 

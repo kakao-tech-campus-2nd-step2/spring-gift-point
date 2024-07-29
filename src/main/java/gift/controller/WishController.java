@@ -16,18 +16,13 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.*;
 import org.springframework.data.web.PagedModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-
-import static org.springframework.data.domain.Sort.Direction.DESC;
 
 @Tag(name = "Wish API", description = "위시(장바구니) 관련 API")
 @SecurityRequirement(name = "bearerAuth")
@@ -43,16 +38,24 @@ public class WishController {
 
     @Operation(summary = "위시 리스트 조회", description = "로그인한 사용자의 위시 리스트를 페이지별로 조회합니다.")
     @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "성공", content = @Content(schema = @Schema(implementation = PagedModel.class))),
+            @ApiResponse(responseCode = "200", description = "위시 리스트 조회 성공", content = @Content(schema = @Schema(implementation = PagedModel.class))),
+            @ApiResponse(responseCode = "400", description = "잘못된 요청", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
     })
     @GetMapping
     public ResponseEntity<Page<ProductResponse>> productList(@Parameter(hidden = true) @LoginMember Member member,
+
                                                              @Parameter(description = "페이지 번호 (기본: 0)")
                                                              @RequestParam(value = "page", defaultValue = "0") int page,
 
                                                              @Parameter(description = "페이지 크기 (기본: 20)")
-                                                             @RequestParam(value = "size", defaultValue = "20") int size) {
-        Pageable pageable = PageRequest.of(page, size, DESC, "id");
+                                                             @RequestParam(value = "size", defaultValue = "20") int size,
+
+                                                             @Parameter(description = "정렬 기준 (예: name,asc) (기본: id,desc)")
+                                                             @RequestParam(defaultValue = "id,desc", required = false) String sort) {
+        String[] sortParams = sort.split(",");
+        Sort.Direction direction = sortParams[1].equalsIgnoreCase("asc") ? Sort.Direction.ASC : Sort.Direction.DESC;
+        Pageable pageable = PageRequest.of(page, size, Sort.by(direction, sortParams[0]));
+
         List<ProductDto> productDtoList = wishService.getProducts(member, pageable);
 
         List<ProductResponse> productResponseList = productDtoList.stream()
