@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>관리자 페이지</title>
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+<div class="sidebar" th:fragment="sidebarFragment">
+  <h2>관리자 메뉴</h2>
+  <ul>
+    <li><a th:href="@{/admin/product-management}">상품 관리</a></li>
+    <li><a th:href="@{/admin/product-add}">상품 추가</a></li>
+    <li><a th:href="@{/admin/settings}">설정</a></li>
+    <li><a th:href="@{/admin/logout}">로그아웃</a></li>
+  </ul>
+</div>
+
+
+</body>
+</html>
