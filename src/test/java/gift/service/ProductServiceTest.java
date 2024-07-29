@@ -98,6 +98,11 @@ class ProductServiceTest {
     }
 
     @Test
+    void getProduct(){
+        assertThat(productService.getProduct(1L)).isNotNull();
+    }
+
+    @Test
     void updateProduct() {
         productService.addProduct(productPostRequestDTO);
 

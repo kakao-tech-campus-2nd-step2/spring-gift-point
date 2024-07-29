@@ -1,16 +1,20 @@
 package gift.controller;
 
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.doNothing;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import gift.dto.betweenClient.category.CategoryDTO;
 import gift.dto.betweenClient.member.MemberDTO;
+import gift.dto.betweenClient.product.ProductResponseDTO;
 import gift.service.MemberService;
 import gift.service.ProductService;
 import gift.util.JwtUtil;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -34,11 +38,23 @@ class ProductControllerTest {
     @Autowired
     private JwtUtil jwtUtil;
 
+    @Mock
+    CategoryDTO categoryDTO;
+
     private String token;
 
     @BeforeEach
     void setUp() {
         token = "Bearer " + jwtUtil.generateToken(new MemberDTO("1234@1234.com", "1234", "basic"));
+    }
+
+    @Test
+    void getOneProduct() throws Exception {
+        given(productService.getProduct(any())).willReturn(new ProductResponseDTO(1L, "a", 123, "asdfasdf", categoryDTO));
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/products/1").contentType(
+                        MediaType.APPLICATION_JSON)).andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON));
     }
 
 

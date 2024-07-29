@@ -56,6 +56,20 @@ public class ProductController {
         return "getProducts";
     }
 
+
+    @Operation(description = "서버가 클라이언트에게 제품 하나의 정보를 제공합니다.", tags = "Product")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "정상적으로 제품 정보를 제공합니다.",
+                    content = @Content(mediaType = "text/html", schema =  @Schema(implementation = ProductResponseDTO.class))),
+            @ApiResponse(responseCode = "400", description = "잘못된 요청입니다. 보통 해당 productId가 존재하지 않는 경우입니다.",
+                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = ResponseDTO.class))),
+            @ApiResponse(responseCode = "500", description = "서버에 의한 오류입니다.",
+                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = ResponseDTO.class)))})
+    @GetMapping("/{id}")
+    public ResponseEntity<ProductResponseDTO> getOneProduct(@PathVariable @Min(1) @NotNull Long id) {
+        return new ResponseEntity<>(productService.getProduct(id), HttpStatus.OK);
+    }
+
     @PostMapping
     @Operation(description = "서버가 클라이언트가 제출한 제품을 추가합니다.", tags = "Product")
     @ApiResponses(value = {

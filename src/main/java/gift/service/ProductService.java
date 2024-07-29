@@ -69,6 +69,12 @@ public class ProductService {
                 productPage.getTotalElements());
     }
 
+    @Transactional(readOnly = true)
+    public ProductResponseDTO getProduct(Long id) throws RuntimeException {
+        Product product = productRepository.findById(id).orElseThrow(() -> new NoSuchProductIdException("id가 %d인 상품은 존재하지 않습니다.".formatted(id)));
+        return ProductResponseDTO.convertToProductResponseDTO(product);
+    }
+
     @Transactional
     public void updateProduct(Long id, ProductRequestDTO productRequestDTO) throws RuntimeException {
         try {
