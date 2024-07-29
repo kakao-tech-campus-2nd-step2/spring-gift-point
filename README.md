@@ -15,3 +15,10 @@
 - [x] 상품 옵션과 해당 수량을 선택하여 주문하면 해당 상품 옵션의 수량이 차감된다.
 - [x] 해당 상품이 위시 리스트에 있는 경우 위시 리스트에서 삭제한다.
 - [x] 주문 내역을 카카오톡 메시지로 전송한다.
+## step 3
+### 기능 요구사항
+API 문서 만들기
+
+- [x] Swagger 를 사용하여 KakaoApiController, OrderController 에 대한 API 문서 만들기
+- [x] Product, WishList, Category 에 대한 API 문서 만들기
+- [x] Member 에 대한 API 문서 만들기

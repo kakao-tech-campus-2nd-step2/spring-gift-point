@@ -1,4 +1,4 @@
-package gift.webconfig;
+package gift.config;
 
 import gift.argumentresolver.AuthArgumentResolver;
 import gift.argumentresolver.KakaoAuthArgumentResolver;

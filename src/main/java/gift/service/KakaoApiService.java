@@ -1,6 +1,7 @@
 package gift.service;
 
 import gift.model.KakaoTokenDTO;
+import gift.model.MemberDTO;
 import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
@@ -19,13 +20,15 @@ import org.springframework.web.client.RestTemplate;
 public class KakaoApiService {
 
     private final RestTemplate restTemplate;
+    private final MemberService memberService;
     @Value("${kakao.client-id}")
     private String clientId;
     @Value("${kakao.redirect-uri}")
     private String redirectUri;
 
-    public KakaoApiService(RestTemplate restTemplate) {
+    public KakaoApiService(RestTemplate restTemplate, MemberService memberService) {
         this.restTemplate = restTemplate;
+        this.memberService = memberService;
     }
 
     public String getAccessToken(String code) {
@@ -47,12 +50,23 @@ public class KakaoApiService {
             request,
             KakaoTokenDTO.class
         );
-
         KakaoTokenDTO responseBody = response.getBody();
         if (responseBody == null) {
             return null;
         }
         return responseBody.access_token();
+    }
+
+    public Map<String, String> createKakaoMember(String code) {
+        String accessToken = getAccessToken(code);
+        String nickName = getKakaoProfileNickname(accessToken);
+        Map<String, String> credential = new HashMap<>();
+        MemberDTO createdMember = memberService.createMember(
+            new MemberDTO(null, nickName, accessToken));
+        credential.put("Member ID", createdMember.id().toString());
+        credential.put("Access Token", accessToken);
+
+        return credential;
     }
 
     public String getKakaoProfileNickname(String accessToken) {

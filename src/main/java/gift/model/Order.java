@@ -24,9 +24,10 @@ public class Order {
 
     protected Order() {}
 
-    public Order(long optionId, long quantity, String message) {
+    public Order(long optionId, long quantity, String orderDate, String message) {
         this.optionId = optionId;
         this.quantity = quantity;
+        this.orderDate = orderDate;
         this.message = message;
     }
 

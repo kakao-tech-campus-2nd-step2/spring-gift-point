@@ -49,9 +49,8 @@ public class OrderService {
             wishListRepository.deleteById(wishlist.getId());
         }
         option.subtract(orderDTO.quantity());
-        Order order = new Order(orderDTO.optionId(), orderDTO.quantity(), orderDTO.message());
-        order.updateOrderDate(LocalDateTime.now()
-            .format(DateTimeFormatter.ISO_LOCAL_DATE_TIME));
+        Order order = new Order(orderDTO.optionId(), orderDTO.quantity(),
+            LocalDateTime.now().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME), orderDTO.message());
         return convertToDTO(orderRepository.save(order));
     }
 
