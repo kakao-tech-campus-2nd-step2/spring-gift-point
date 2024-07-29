@@ -37,7 +37,7 @@ public class LoginService {
         this.apiCall = apiCall;
     }
 
-    public Token Login(Login login) {
+    public Token login(Login login) {
         UserEntity user = userRepository.findByEmailAndIsDelete(login.getEmail(), 0).orElseThrow(
             () -> new BaseHandler(HttpStatus.NOT_FOUND, "유저가 존재하지 않습니다.")
         );
