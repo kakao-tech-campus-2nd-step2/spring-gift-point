@@ -89,7 +89,7 @@ public class OrderService {
             message = null;
         }
 
-        Order order = new Order(option, quantity, message);
+        Order order = new Order(option, quantity, message, member);
         return orderRepository.save(order);
     }
 

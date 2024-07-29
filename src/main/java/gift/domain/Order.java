@@ -1,5 +1,6 @@
 package gift.domain;
 
+import gift.domain.member.Member;
 import jakarta.persistence.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -24,20 +25,20 @@ public class Order {
 
     private String message;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Member member;
+
     @CreatedDate
     private LocalDateTime orderDateTime;
 
     public Order() {
     }
 
-    public Order(Option option) {
-        this.option = option;
-    }
-
-    public Order(Option option, Long quantity, String message) {
+    public Order(Option option, Long quantity, String message, Member member) {
         this.option = option;
         this.quantity = quantity;
         this.message = message;
+        this.member = member;
     }
 
     public Long getId() {
