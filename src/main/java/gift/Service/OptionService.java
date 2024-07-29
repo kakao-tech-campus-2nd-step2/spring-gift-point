@@ -1,7 +1,8 @@
 package gift.Service;
 
+import gift.DTO.OptionDTO;
 import gift.Model.Option;
-import gift.Model.OrderRequestDTO;
+import gift.DTO.OrderRequestDTO;
 import gift.Model.Product;
 import gift.Repository.OptionRepository;
 import gift.Repository.ProductRepository;
@@ -29,15 +30,15 @@ public class OptionService {
         return optionRepository.findAllById(productId);
     }
 
-    public Option addOption(Option option, Long productId){
+    public Option addOption(OptionDTO optionDTO, Long productId){
         Product product = productRepository.findProductById(productId);
-        Option newOption = new Option(option.getId(), product, option.getName(), option.getQuantity());
+        Option newOption = new Option(optionDTO.getId(), product, optionDTO.getName(), optionDTO.getQuantity());
         return optionRepository.save(newOption);
     }
 
-    public Option updateOption(Option option, Long productId, Long optionId){
+    public Option updateOption(OptionDTO optionDTO, Long productId, Long optionId){
         Product product = productRepository.findProductById(productId);
-        Option newOption = new Option(optionId, product, option.getName(), option.getQuantity());
+        Option newOption = new Option(optionId, product, optionDTO.getName(), optionDTO.getQuantity());
         return optionRepository.save(newOption);
     }
 

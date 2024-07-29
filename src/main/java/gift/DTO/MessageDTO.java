@@ -1,4 +1,6 @@
-package gift.Model;
+package gift.DTO;
+
+import gift.Model.Link;
 
 public class MessageDTO {
     private String object_type;

@@ -1,6 +1,7 @@
 package gift.Controller;
 
 
+import gift.DTO.ProductDTO;
 import gift.Model.Category;
 import gift.Model.Option;
 import gift.Model.Product;
@@ -63,7 +64,7 @@ public class ProductController {
     @Parameter(name = "model", description = "html파일로 보낼 객체를 담을 객체")
     @GetMapping("/api/products/add")
     public String newProductForm(Model model) {
-        model.addAttribute("product", new Product(0L,"",0,"",new Category(0L,"","","","",null),null));
+        model.addAttribute("product", new ProductDTO(0L,"",0,"",new Category(0L,"","","","",null),null));
         model.addAttribute("categories", productService.getAllCategory());
         return "post";
     }
@@ -78,8 +79,8 @@ public class ProductController {
     )
     @Parameter(name = "product", description = "더할 상품 객체")
     @PostMapping("/api/products")
-    public String createProduct(@Valid @ModelAttribute Product product) {
-        productService.addProduct(product);
+    public String createProduct(@Valid @ModelAttribute ProductDTO productDTO) {
+        productService.addProduct(productDTO);
         return "redirect:/api/products";
     }
 
@@ -114,8 +115,8 @@ public class ProductController {
     })
 
     @PostMapping("/api/products/update/{productId}")
-    public String updateProduct(@PathVariable(value = "productId") Long productId, @Valid @ModelAttribute Product newProduct) {
-        productService.updateProduct(newProduct);
+    public String updateProduct(@PathVariable(value = "productId") Long productId, @Valid @ModelAttribute ProductDTO newProductDTO) {
+        productService.updateProduct(newProductDTO);
         return "redirect:/api/products";
     }
 

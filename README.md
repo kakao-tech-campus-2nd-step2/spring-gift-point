@@ -1,4 +1,4 @@
-# spring-gift-order
+# spring-gift-point
 
 # 진행 방식
 - 미션은 과제 진행 요구 사항, 기능 요구 사항, 프로그래밍 요구 사항 세 가지로 구성되어 있다.
@@ -11,7 +11,5 @@
 - AngularJS Git Commit Message Conventions을 참고해 커밋 메시지를 작성한다.
 
 # 기능 요구 사항
-- API 사양에 관해 클라이언트와 어떻게 소통할 수 있을까? 어떻게 하면 편하게 소통할 수 있을지 고민해 보고 그 방법을 구현한다.
 
 # 기능 구현
-- swagger로 구현하기

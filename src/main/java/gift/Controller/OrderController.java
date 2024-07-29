@@ -1,7 +1,7 @@
 package gift.Controller;
 
-import gift.Model.OrderRequestDTO;
-import gift.Model.OrderResponseDTO;
+import gift.DTO.OrderRequestDTO;
+import gift.DTO.OrderResponseDTO;
 
 import gift.Service.OrderService;
 

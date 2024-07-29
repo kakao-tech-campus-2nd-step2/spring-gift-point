@@ -1,5 +1,6 @@
 package gift.Controller;
 
+import gift.DTO.OptionDTO;
 import gift.Model.Option;
 import gift.Service.OptionService;
 
@@ -55,8 +56,8 @@ public class OptionController {
         @Parameter(name = "productId", description = "옵션에 해당하는 상품 ID")
     })
     @PostMapping("/api/products/{productId}/options")
-    public ResponseEntity<Option> addOption(@RequestBody Option option, @PathVariable(name = "productId") Long productId){
-        return ResponseEntity.ok().body(optionService.addOption(option, productId));
+    public ResponseEntity<Option> addOption(@RequestBody OptionDTO optionDTO, @PathVariable(name = "productId") Long productId){
+        return ResponseEntity.ok().body(optionService.addOption(optionDTO, productId));
     }
 
     @Operation(
@@ -73,8 +74,8 @@ public class OptionController {
         @Parameter(name = "optionId", description = "수정 되는 옵션 ID"),
     })
     @PutMapping("/api/products/{productId}/options/{optionId}")
-    public ResponseEntity<Option> updateOption(@RequestBody Option option, @PathVariable(name = "productId") Long productId, @PathVariable(value = "optionId") Long optionId){
-        return ResponseEntity.ok().body(optionService.updateOption(option,productId,optionId));
+    public ResponseEntity<Option> updateOption(@RequestBody OptionDTO optionDTO, @PathVariable(name = "productId") Long productId, @PathVariable(value = "optionId") Long optionId){
+        return ResponseEntity.ok().body(optionService.updateOption(optionDTO,productId,optionId));
     }
 
     @Operation(

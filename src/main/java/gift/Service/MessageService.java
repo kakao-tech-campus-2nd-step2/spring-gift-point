@@ -3,7 +3,7 @@ package gift.Service;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import gift.Model.Link;
-import gift.Model.MessageDTO;
+import gift.DTO.MessageDTO;
 import java.net.URI;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;

@@ -1,5 +1,6 @@
 package gift.Controller;
 
+import gift.DTO.CategoryDTO;
 import gift.Model.Category;
 import gift.Service.CategoryService;
 
@@ -65,8 +66,8 @@ public class CategoryController {
     )
     @Parameter(name = "category", description = "추가할 새로운 카테고리")
     @PostMapping("/api/category")
-    public ResponseEntity<Category> addCategory(@RequestBody Category category){
-        return ResponseEntity.ok().body(categoryService.addCategory(category));
+    public ResponseEntity<Category> addCategory(@RequestBody CategoryDTO categoryDTO){
+        return ResponseEntity.ok().body(categoryService.addCategory(categoryDTO));
     }
 
     @Operation(
@@ -79,8 +80,8 @@ public class CategoryController {
     )
     @Parameter(name = "category", description = "해당하는 카테고리 ID")
     @PutMapping("/api/category")
-    public ResponseEntity<Category> updateCategory(@RequestBody Category category){
-        return ResponseEntity.ok().body(categoryService.updateCategory(category));
+    public ResponseEntity<Category> updateCategory(@RequestBody CategoryDTO categoryDTO){
+        return ResponseEntity.ok().body(categoryService.updateCategory(categoryDTO));
     }
 
     @Operation(

@@ -1,24 +1,16 @@
 package gift.Service;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
-import gift.Model.Link;
 import gift.Model.Member;
-import gift.Model.MessageDTO;
 import gift.Model.Option;
-import gift.Model.OrderRequestDTO;
-import gift.Model.OrderResponseDTO;
+import gift.DTO.OrderRequestDTO;
+import gift.DTO.OrderResponseDTO;
 
 import gift.Model.Product;
-import java.net.URI;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.web.client.RestClient;
 
 @Service

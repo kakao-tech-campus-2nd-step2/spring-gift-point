@@ -3,7 +3,7 @@ package gift.Service;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import gift.Model.KakaoLoginRequestDTO;
+import gift.DTO.KakaoLoginRequestDTO;
 import gift.Model.KakaoProperties;
 import gift.Model.Member;
 import gift.Repository.MemberRepository;
@@ -12,7 +12,6 @@ import java.net.URI;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;

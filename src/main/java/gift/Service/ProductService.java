@@ -1,5 +1,6 @@
 package gift.Service;
 
+import gift.DTO.ProductDTO;
 import gift.Model.Category;
 import gift.Model.Option;
 import gift.Model.Product;
@@ -34,14 +35,16 @@ public class ProductService {
         return productRepository.findProductById(productId);
     }
 
-    public Product addProduct(Product product){
+    public Product addProduct(ProductDTO productDTO){
+        Product product = new Product(productDTO.getId(), productDTO.getName(), productDTO.getPrice(), productDTO.getImageUrl(), productDTO.getCategory(), productDTO.getOptions());
         Option defaultOption = new Option(null, product,product.getName(),1);
         productRepository.save(product);
         product.getOptions().add(optionRepository.save(defaultOption));
         return productRepository.findProductById(product.getId());
     }
 
-    public void updateProduct(Product product){
+    public void updateProduct(ProductDTO productDTO){
+        Product product = new Product(productDTO.getId(), productDTO.getName(), productDTO.getPrice(), productDTO.getImageUrl(), productDTO.getCategory(), productDTO.getOptions());
         productRepository.save(product);
     }
 

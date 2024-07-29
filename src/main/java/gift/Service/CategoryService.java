@@ -1,8 +1,10 @@
 package gift.Service;
 
+import gift.DTO.CategoryDTO;
 import gift.Model.Category;
 import gift.Repository.CategoryRepository;
 import gift.Repository.ProductRepository;
+import java.util.ArrayList;
 import java.util.List;
 import org.springframework.stereotype.Service;
 
@@ -23,11 +25,13 @@ public class CategoryService {
         return categoryRepository.findCategoryById(categoryId);
     }
 
-    public Category addCategory(Category category){
+    public Category addCategory(CategoryDTO categoryDTO){
+        Category category = new Category(categoryDTO.getId(),categoryDTO.getName(),categoryDTO.getColor(),categoryDTO.getImageUrl(),categoryDTO.getDescription(),new ArrayList<>());
         return categoryRepository.save(category);
     }
 
-    public Category updateCategory(Category category){
+    public Category updateCategory(CategoryDTO categoryDTO){
+        Category category = new Category(categoryDTO.getId(), categoryDTO.getName(),categoryDTO.getColor(),categoryDTO.getImageUrl(),categoryDTO.getDescription(),categoryDTO.getProducts());
         return categoryRepository.save(category);
     }
 

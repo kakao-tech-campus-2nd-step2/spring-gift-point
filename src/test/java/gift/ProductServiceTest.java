@@ -3,6 +3,7 @@ package gift;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
+import gift.DTO.ProductDTO;
 import gift.Model.Category;
 import gift.Model.Product;
 import gift.Repository.OptionRepository;
@@ -32,8 +33,8 @@ public class ProductServiceTest {
     @DirtiesContext
     @Test
     void findAll(){
-        Product expected1 = new Product(1L,"A",1000,"A",category,new ArrayList<>());
-        Product expected2 = new Product(2L,"B",2000,"B",category,new ArrayList<>());
+        ProductDTO expected1 = new ProductDTO(1L,"A",1000,"A",category,new ArrayList<>());
+        ProductDTO expected2 = new ProductDTO(2L,"B",2000,"B",category,new ArrayList<>());
 
         productService.addProduct(expected1);
         productService.addProduct(expected2);
@@ -78,7 +79,7 @@ public class ProductServiceTest {
     @DirtiesContext
     @Test
     void findProductById(){
-        Product expected = new Product(1L,"A",1000,"A",category,new ArrayList<>());
+        ProductDTO expected = new ProductDTO(1L,"A",1000,"A",category,new ArrayList<>());
         Product product = productService.addProduct(expected);
         Product actual = productService.getProductById(product.getId());
 
@@ -102,7 +103,7 @@ public class ProductServiceTest {
     @DirtiesContext
     @Test
     void save(){
-        Product expected = new Product(1L,"A",1000,"A",category,new ArrayList<>());
+        ProductDTO expected = new ProductDTO(1L,"A",1000,"A",category,new ArrayList<>());
         Product actual = productService.addProduct(expected);
         assertAll(
             () -> assertThat(actual.getId()).isNotNull(),
@@ -124,7 +125,7 @@ public class ProductServiceTest {
     @DirtiesContext
     @Test
     void deleteById(){
-        Product expected = new Product(1L,"A",1000,"A",category,new ArrayList<>());
+        ProductDTO expected = new ProductDTO(1L,"A",1000,"A",category,new ArrayList<>());
         Product product = productService.addProduct(expected);
         productService.deleteProduct(product.getId());
         assertAll(

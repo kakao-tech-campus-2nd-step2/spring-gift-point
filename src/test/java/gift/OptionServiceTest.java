@@ -3,6 +3,9 @@ package gift;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
+import gift.DTO.CategoryDTO;
+import gift.DTO.OptionDTO;
+import gift.DTO.ProductDTO;
 import gift.Model.Category;
 import gift.Model.Option;
 import gift.Model.Product;
@@ -32,18 +35,19 @@ public class OptionServiceTest {
     private CategoryService categoryService;
 
     private final Category category = new Category(1L, "교환권","#6c95d1","https://gift-s.kakaocdn.net/dn/gift/images/m640/dimm_theme.png","",null);
-
+    private final CategoryDTO categoryDTO = new CategoryDTO(1L, "교환권","#6c95d1","https://gift-s.kakaocdn.net/dn/gift/images/m640/dimm_theme.png","",null);
     @DirtiesContext
     @Test
     void getAllOptions() {
 
-        categoryService.addCategory(category);
+        categoryService.addCategory(categoryDTO);
 
-        Product product = new Product(1L, "test", 1000, "test", category, new ArrayList<>());
-        productService.addProduct(product);
+        ProductDTO productDTO = new ProductDTO(1L, "test", 1000, "test", category, new ArrayList<>());
+        Product product = new Product(productDTO.getId(), productDTO.getName(), productDTO.getPrice(), productDTO.getImageUrl(), productDTO.getCategory(), productDTO.getOptions());
+        productService.addProduct(productDTO);
         // 기본 옵션과 옵션 2개 생성하여 총 3개 생성
-        Option expect2 = new Option(2L, product, "option1", 100);
-        Option expect3 = new Option(3L, product, "option2", 200);
+        OptionDTO expect2 = new OptionDTO(2L, product, "option1", 100);
+        OptionDTO expect3 = new OptionDTO(3L, product, "option2", 200);
         optionService.addOption(expect2,product.getId());
         optionService.addOption(expect3,product.getId());
 
@@ -70,9 +74,9 @@ public class OptionServiceTest {
     @DirtiesContext
     @Test
     void addDefaultOption(){
-        categoryService.addCategory(category);
+        categoryService.addCategory(categoryDTO);
 
-        Product product = new Product(1L, "test", 1000, "test", category, new ArrayList<>());
+        ProductDTO product = new ProductDTO(1L, "test", 1000, "test", category, new ArrayList<>());
         productService.addProduct(product);
 
         Option actual = productService.getProductById(product.getId()).getOptions().getFirst();
@@ -86,12 +90,13 @@ public class OptionServiceTest {
     @DirtiesContext
     @Test
     void addNewOption(){
-        categoryService.addCategory(category);
+        categoryService.addCategory(categoryDTO);
 
-        Product product = new Product(1L, "test", 1000, "test", category, new ArrayList<>());
-        productService.addProduct(product);
+        ProductDTO productDTO = new ProductDTO(1L, "test", 1000, "test", category, new ArrayList<>());
+        Product product = new Product(productDTO.getId(), productDTO.getName(), productDTO.getPrice(), productDTO.getImageUrl(), productDTO.getCategory(), productDTO.getOptions());
+        productService.addProduct(productDTO);
 
-        Option expect = new Option(2L, product, "option1", 100);
+        OptionDTO expect = new OptionDTO(2L, product, "option1", 100);
         optionService.addOption(expect,product.getId());
         Option actual = productService.getProductById(product.getId()).getOptions().get(1);
         assertAll(
