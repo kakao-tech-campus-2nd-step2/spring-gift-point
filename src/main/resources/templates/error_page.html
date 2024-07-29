@@ -1,0 +1,13 @@
+<!DOCTYPE HTML>
+<html>
+<head> 
+    <title>error_page</title> 
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</head>
+<body>
+    <div th:if="${errorMessage}">
+        <p th:text="${errorMessage}"></p>
+    </div>
+    <a href="/api/products">Back to Product List</a>
+</body>
+</html>

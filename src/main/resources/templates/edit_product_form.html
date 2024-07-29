@@ -1,0 +1,38 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Edit Product</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</head>
+<body>
+    <p>Edit Product Form</p>
+    <form th:action="@{'/api/products/edit/' + ${product.getId()}}" th:object="${product}" method="post">
+        <div>
+            <label>id</label>
+            <input type="text" th:value="${product.getId()}" readonly/>
+        </div>
+        <div>
+            <label>name</label> 
+            <input type="text" id="name" th:field="*{name}"/> 
+            <div th:if="${#fields.hasErrors('name')}" th:errors="*{name}">Name Error</div>
+        </div>
+        <div>
+            <label>price</label>
+            <input type="number" name="price" th:value="${product.getPrice()}"/>
+        </div>
+        <div>
+            <label>imageUrl</label>
+            <input type="text" name="imageUrl" th:value="${product.getImageUrl()}"/>
+        </div>
+        <div>
+            <select th:field="*{category}">
+                <option th:each="category : ${categories}" th:value="${category.name}" th:text="${category.name}"></option>
+            </select>
+        </div>
+        <div>
+            <button type="submit">Save</button>
+        </div>
+    </form>
+    <a href="/api/products">Back to Product List</a>
+</body>
+</html>
