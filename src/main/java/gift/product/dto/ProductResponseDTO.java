@@ -2,6 +2,7 @@ package gift.product.dto;
 
 import gift.category.Category;
 import io.swagger.v3.oas.annotations.media.Schema;
+import java.util.Objects;
 
 @Schema(description = "상품 응답 DTO")
 public class ProductResponseDTO {
@@ -55,4 +56,20 @@ public class ProductResponseDTO {
         return category;
     }
 
+    @Override
+    public boolean equals(Object object) {
+        if (object instanceof ProductResponseDTO productResponseDTO) {
+            return price == productResponseDTO.price
+                   && Objects.equals(id, productResponseDTO.id)
+                   && Objects.equals(name, productResponseDTO.name)
+                   && Objects.equals(imageUrl, productResponseDTO.imageUrl)
+                   && Objects.equals(category, productResponseDTO.category);
+        }
+        return false;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, name, price, imageUrl, category);
+    }
 }

@@ -259,16 +259,16 @@ public class OptionEntityTest {
                 )),
                 Arguments.of(new Option(
                     1L,
-                    "differentOptionName",
+                    "diffOptionName",
                     10,
                     new Product(
                         10L,
-                        "differentProductName",
+                        "diffProduct",
                         100,
-                        "differentImageUrl",
+                        "diffImageUrl",
                         new Category(
                             1000L,
-                            "differentCategory"
+                            "diffCategory"
                         )
                     )
                 ))

@@ -10,7 +10,8 @@ import static org.mockito.Mockito.when;
 import gift.category.Category;
 import gift.category.CategoryDTO;
 import gift.category.CategoryRepository;
-import gift.product.dto.ProductDTO;
+import gift.product.dto.ProductRequestDTO;
+import gift.product.dto.ProductResponseDTO;
 import gift.product.entity.Product;
 import java.util.List;
 import java.util.Optional;
@@ -37,14 +38,24 @@ class ProductServiceTest {
     @DisplayName("[Unit] get all products test")
     void getAllProductsTest() {
         //given
-        List<Product> expect = List.of(
+        List<Product> expectFromRepository = List.of(
             new Product(1L, "product-1", 1, "product-1-image", new Category(1, "category-1")),
             new Product(2L, "product-2", 2, "product-2-image", new Category(1, "category-1")),
             new Product(3L, "product-3", 3, "product-3-image", new Category(2, "category-2"))
         );
-        when(productRepository.findAll()).thenReturn(expect);
+
+        List<ProductResponseDTO> expect = List.of(
+            new ProductResponseDTO(1L, "product-1", 1, "product-1-image",
+                new Category(1, "category-1")),
+            new ProductResponseDTO(2L, "product-2", 2, "product-2-image",
+                new Category(1, "category-1")),
+            new ProductResponseDTO(3L, "product-3", 3, "product-3-image",
+                new Category(2, "category-2"))
+        );
+
         //when
-        List<Product> actual = productService.getAllProducts();
+        when(productRepository.findAll()).thenReturn(expectFromRepository);
+        List<ProductResponseDTO> actual = productService.getAllProducts();
 
         //then
         assertEquals(expect, actual);
@@ -58,7 +69,7 @@ class ProductServiceTest {
         @DisplayName("success")
         void success() {
             //given
-            ProductDTO productDTO = new ProductDTO(
+            ProductRequestDTO productDTO = new ProductRequestDTO(
                 "product",
                 1,
                 "product-image",
@@ -79,7 +90,7 @@ class ProductServiceTest {
         @DisplayName("category not found error")
         void addCategoryNotFoundError() {
             //given
-            ProductDTO productDTO = new ProductDTO(
+            ProductRequestDTO productDTO = new ProductRequestDTO(
                 "product",
                 1,
                 "product-image",
@@ -105,12 +116,12 @@ class ProductServiceTest {
         @DisplayName("success")
         void success() {
             //given
-            ProductDTO productDTO = new ProductDTO("product", 1, "product-image",
+            ProductRequestDTO productDTO = new ProductRequestDTO("product", 1, "product-image",
                 new CategoryDTO("category-1"));
             long id = 1L;
 
             //when
-            when(categoryRepository.findByName(productDTO.category().getName()))
+            when(categoryRepository.findByName(productDTO.getCategory().getName()))
                 .thenReturn(Optional.of(new Category(1L, "category-1")));
 
             when(productRepository.findById(id))
@@ -127,12 +138,12 @@ class ProductServiceTest {
         @DisplayName("category not found error")
         void categoryNotFoundError() {
             //given
-            ProductDTO productDTO = new ProductDTO("product", 1, "product-image",
+            ProductRequestDTO productDTO = new ProductRequestDTO("product", 1, "product-image",
                 new CategoryDTO("wrong-category"));
             long id = 1L;
 
             //when
-            when(categoryRepository.findByName(productDTO.category().getName()))
+            when(categoryRepository.findByName(productDTO.getCategory().getName()))
                 .thenReturn(Optional.empty());
             when(productRepository.findById(id))
                 .thenReturn(Optional.of(new Product(1L, "prev-product", 1, "prev-product-image",
@@ -148,12 +159,12 @@ class ProductServiceTest {
         @DisplayName("product not found error")
         void productNotFoundError() {
             //given
-            ProductDTO productDTO = new ProductDTO("product", 1, "product-image",
+            ProductRequestDTO productDTO = new ProductRequestDTO("product", 1, "product-image",
                 new CategoryDTO("category-1"));
             long id = 1L;
 
             //when
-            when(categoryRepository.findByName(productDTO.category().getName()))
+            when(categoryRepository.findByName(productDTO.getCategory().getName()))
                 .thenReturn(Optional.of(new Category(1L, "category-1")));
             when(productRepository.findById(id))
                 .thenReturn(Optional.empty());

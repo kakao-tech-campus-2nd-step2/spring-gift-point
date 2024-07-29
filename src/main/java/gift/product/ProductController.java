@@ -37,8 +37,8 @@ public class ProductController {
     @Operation(summary = "상품 추가", description = "상품을 추가합니다.")
     @ApiResponse(responseCode = "200", description = "상품 추가 성공")
     @ApiResponse(responseCode = "400", description = "잘못된 입력 양식입니다.")
-    public void addProduct(@RequestBody ProductRequestDTO productDto) {
-        productService.addProduct(productDto);
+    public void addProduct(@RequestBody ProductRequestDTO productRequestDTO) {
+        productService.addProduct(productRequestDTO);
     }
 
     @PatchMapping("/{id}")
@@ -47,9 +47,9 @@ public class ProductController {
     @ApiResponse(responseCode = "400", description = "존재하지 않는 상품이거나, 입력 양식이 잘못되었습니다.")
     public void updateProduct(
         @PathVariable(value = "id") Long id,
-        @RequestBody ProductRequestDTO productDto
+        @RequestBody ProductRequestDTO productRequestDTO
     ) {
-        productService.updateProduct(id, productDto);
+        productService.updateProduct(id, productRequestDTO);
     }
 
     @DeleteMapping("/{id}")

@@ -3,6 +3,10 @@ package gift.product;
 import static gift.exception.ErrorMessage.PRODUCT_NAME_ALLOWED_CHARACTER;
 import static gift.exception.ErrorMessage.PRODUCT_NAME_KAKAO_STRING;
 import static gift.exception.ErrorMessage.PRODUCT_NAME_LENGTH;
+import static gift.exception.ErrorMessage.PRODUCT_NOT_FOUND;
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.when;
+import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
@@ -13,23 +17,16 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.fasterxml.jackson.databind.ObjectMapper;
 import gift.category.Category;
 import gift.category.CategoryDTO;
-import gift.product.dto.ProductDTO;
-import gift.product.entity.Product;
+import gift.product.dto.ProductRequestDTO;
+import gift.product.dto.ProductResponseDTO;
 import gift.token.JwtProvider;
-import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Stream;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.Arguments;
-import org.junit.jupiter.params.provider.MethodSource;
-import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
 @WebMvcTest(ProductController.class)
@@ -54,162 +51,258 @@ class ProductControllerTest {
     @DisplayName("[Unit] getAllProduct method test")
     void getAllProductsTest() throws Exception {
         // given
-        Product product1 = new Product(
-            1L,
-            "Product1",
-            100,
-            "product1-image-url",
-            new Category(1L, "category-1")
+        List<ProductResponseDTO> expect = List.of(
+            new ProductResponseDTO(
+                1L,
+                "product1",
+                100,
+                "product1-imageUrl",
+                new Category(1L, "category-1")
+            ),
+            new ProductResponseDTO(
+                2L,
+                "Product2",
+                200,
+                "product2-image-url",
+                new Category(2L, "category-2")
+            )
         );
-        Product product2 = new Product(
-            2L,
-            "Product2",
-            200,
-            "product2-image-url",
-            new Category(2L, "category-2")
-        );
-        List<Product> products = Arrays.asList(product1, product2);
 
         //when
-        Mockito.when(productService.getAllProducts()).thenReturn(products);
+        when(productService.getAllProducts()).thenReturn(expect);
 
         //then
         mockMvc.perform(get(apiUrl))
             .andExpect(status().isOk())
-            .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-            .andExpect(content().json(objectMapper.writeValueAsString(products)));
+            .andExpect(content().contentType(APPLICATION_JSON))
+            .andExpect(content().json(objectMapper.writeValueAsString(expect)));
     }
 
-    @ParameterizedTest
-    @DisplayName("[Unit] addProduct test")
-    @MethodSource(value = "addProductTestValues")
-    void addProductTest(
-        ProductDTO productDTO,
-        String errorMessage,
-        HttpStatus httpStatus
-    ) throws Exception {
-        mockMvc.perform(post(apiUrl)
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(productDTO))
-            ).andExpect(status().is(httpStatus.value()))
-            .andExpect(content().string(errorMessage));
+    @Nested
+    @DisplayName("[Unit] add product test")
+    class addProductTest {
+
+        @Test
+        @DisplayName("success")
+        void addProductTest() throws Exception {
+            //given
+            ProductRequestDTO productRequestDTO = new ProductRequestDTO(
+                "product",
+                100,
+                "product-image-url",
+                new CategoryDTO("category-1")
+            );
+
+            //when & then
+            mockMvc.perform(post(apiUrl)
+                    .contentType(APPLICATION_JSON)
+                    .content(objectMapper.writeValueAsString(productRequestDTO))
+                ).andExpect(status().isOk())
+                .andExpect(content().string(""));
+        }
+
+        @Test
+        @DisplayName("product name length error")
+        void addProductNameLengthError() throws Exception {
+            //given
+            ProductRequestDTO productRequestDTO = new ProductRequestDTO(
+                "ThisSequenceIsTooLongForProductName",
+                300,
+                "ThisSequenceIsTooLongForProductName-image-url",
+                new CategoryDTO("category-1")
+            );
+
+            doThrow(new IllegalArgumentException(PRODUCT_NAME_LENGTH))
+                .when(productService)
+                .addProduct(productRequestDTO);
+
+            // when & then
+            mockMvc.perform(post(apiUrl)
+                    .contentType(APPLICATION_JSON)
+                    .content(objectMapper.writeValueAsString(productRequestDTO))
+                ).andExpect(status().isBadRequest())
+                .andExpect(content().string(PRODUCT_NAME_LENGTH));
+        }
+
+        @Test
+        @DisplayName("kakao name error")
+        void addProductKakaoStringError() throws Exception {
+            //given
+            ProductRequestDTO productRequestDTO = new ProductRequestDTO(
+                "kakaoProduct",
+                100,
+                "kakaoProduct-image-url",
+                new CategoryDTO("category-1")
+            );
+
+            //when
+            doThrow(new IllegalArgumentException(PRODUCT_NAME_KAKAO_STRING))
+                .when(productService)
+                .addProduct(productRequestDTO);
+
+            //then
+            mockMvc.perform(post(apiUrl)
+                    .contentType(APPLICATION_JSON)
+                    .content(objectMapper.writeValueAsString(productRequestDTO))
+                ).andExpect(status().isBadRequest())
+                .andExpect(content().string(PRODUCT_NAME_KAKAO_STRING));
+        }
+
+        @Test
+        @DisplayName("special character error")
+        void addProductSpecialCharacterError() throws Exception {
+            //given
+            ProductRequestDTO productRequestDTO = new ProductRequestDTO(
+                "Special😀",
+                200,
+                "SpecialCharacter-image-url",
+                new CategoryDTO("category-1")
+            );
+
+            //when
+            doThrow(new IllegalArgumentException(PRODUCT_NAME_ALLOWED_CHARACTER))
+                .when(productService)
+                .addProduct(productRequestDTO);
+
+            //then
+            mockMvc.perform(post(apiUrl)
+                    .contentType(APPLICATION_JSON)
+                    .content(objectMapper.writeValueAsString(productRequestDTO))
+                ).andExpect(status().isBadRequest())
+                .andExpect(content().string(PRODUCT_NAME_ALLOWED_CHARACTER));
+        }
     }
 
-    private static Stream<Arguments> addProductTestValues() {
-        return Stream.of(
-            Arguments.of(
-                new ProductDTO(
-                    "product1",
-                    100,
-                    "product1-image-url",
-                    new CategoryDTO("category-1")
-                ),
-                "",
-                HttpStatus.OK
-            ),
-            Arguments.of(
-                new ProductDTO(
-                    "kakaoProduct",
-                    100,
-                    "kakaoProduct-image-url",
-                    new CategoryDTO("category-1")
-                ),
-                PRODUCT_NAME_KAKAO_STRING,
-                HttpStatus.BAD_REQUEST
-            ),
-            Arguments.of(
-                new ProductDTO(
-                    "Special😀",
-                    200,
-                    "SpecialCharacter-image-url",
-                    new CategoryDTO("category-1")
-                ),
-                PRODUCT_NAME_ALLOWED_CHARACTER,
-                HttpStatus.BAD_REQUEST
-            ),
-            Arguments.of(
-                new ProductDTO(
-                    "ThisSequenceIsTooLongForProductName",
-                    300,
-                    "ThisSequenceIsTooLongForProductName-image-url",
-                    new CategoryDTO("category-1")
-                ),
-                PRODUCT_NAME_LENGTH,
-                HttpStatus.BAD_REQUEST
-            )
-        );
+    @Nested
+    @DisplayName("[Unit] update product test")
+    class updateProductTest {
+
+        @Test
+        @DisplayName("success")
+        void success() throws Exception {
+            //given
+            long productId = 1L;
+            ProductRequestDTO productRequestDTO = new ProductRequestDTO(
+                "product",
+                100,
+                "product-image-url",
+                new CategoryDTO("category-1")
+            );
+
+            //when & then
+            mockMvc.perform(patch(apiUrl + "/" + productId)
+                    .contentType(APPLICATION_JSON)
+                    .content(objectMapper.writeValueAsString(productRequestDTO)))
+                .andExpect(status().isOk())
+                .andExpect(content().string(""));
+        }
+
+        @Test
+        @DisplayName("product name length error")
+        void updateProductNameLengthError() throws Exception {
+            //given
+            long productId = 1L;
+            ProductRequestDTO productRequestDTO = new ProductRequestDTO(
+                "ThisSequenceIsTooLongForProductName",
+                300,
+                "ThisSequenceIsTooLongForProductName-image-url",
+                new CategoryDTO("category-1")
+            );
+
+            doThrow(new IllegalArgumentException(PRODUCT_NAME_LENGTH))
+                .when(productService)
+                .updateProduct(productId, productRequestDTO);
+
+            // when & then
+            mockMvc.perform(patch(apiUrl + "/" + productId)
+                    .contentType(APPLICATION_JSON)
+                    .content(objectMapper.writeValueAsString(productRequestDTO)))
+                .andExpect(status().isBadRequest())
+                .andExpect(content().string(PRODUCT_NAME_LENGTH));
+        }
+
+        @Test
+        @DisplayName("kakao name error")
+        void updateProductKakaoStringError() throws Exception {
+            //given
+            long productId = 1L;
+            ProductRequestDTO productRequestDTO = new ProductRequestDTO(
+                "kakaoProduct",
+                100,
+                "kakaoProduct-image-url",
+                new CategoryDTO("category-1")
+            );
+
+            //when
+            doThrow(new IllegalArgumentException(PRODUCT_NAME_KAKAO_STRING))
+                .when(productService)
+                .updateProduct(productId, productRequestDTO);
+
+            //then
+            mockMvc.perform(patch(apiUrl + "/" + productId)
+                    .contentType(APPLICATION_JSON)
+                    .content(objectMapper.writeValueAsString(productRequestDTO)))
+                .andExpect(status().isBadRequest())
+                .andExpect(content().string(PRODUCT_NAME_KAKAO_STRING));
+        }
+
+        @Test
+        @DisplayName("special character error")
+        void updateProductSpecialCharacterError() throws Exception {
+            //given
+            long productId = 1L;
+            ProductRequestDTO productRequestDTO = new ProductRequestDTO(
+                "Special😀",
+                200,
+                "SpecialCharacter-image-url",
+                new CategoryDTO("category-1")
+            );
+
+            //when
+            doThrow(new IllegalArgumentException(PRODUCT_NAME_ALLOWED_CHARACTER))
+                .when(productService)
+                .updateProduct(productId, productRequestDTO);
+
+            //then
+            mockMvc.perform(patch(apiUrl + "/" + productId)
+                    .contentType(APPLICATION_JSON)
+                    .content(objectMapper.writeValueAsString(productRequestDTO)))
+                .andExpect(status().isBadRequest())
+                .andExpect(content().string(PRODUCT_NAME_ALLOWED_CHARACTER));
+        }
     }
 
-    @ParameterizedTest
-    @DisplayName("[Unit] updateProduct test")
-    @MethodSource("updateProductTest")
-    void updateProductTest(
-        long id,
-        ProductDTO productDTO,
-        String errorMessage,
-        HttpStatus httpStatus
-    ) throws Exception {
-        mockMvc.perform(patch(apiUrl + "/" + id)
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(productDTO))
-            ).andExpect(status().is(httpStatus.value()))
-            .andExpect(content().string(errorMessage));
-    }
+    @Nested
+    @DisplayName("[Unit] delete product test")
+    class deleteProductTest {
 
-    private static Stream<Arguments> updateProductTest() {
-        return Stream.of(
-            Arguments.of(
-                1L,
-                new ProductDTO(
-                    "product1",
-                    100,
-                    "product1-image-url",
-                    new CategoryDTO("category-1")
-                ),
-                "",
-                HttpStatus.OK
-            ),
-            Arguments.of(
-                2L,
-                new ProductDTO(
-                    "kakaoProduct",
-                    100,
-                    "kakaoProduct-image-url",
-                    new CategoryDTO("category-1")
-                ),
-                PRODUCT_NAME_KAKAO_STRING,
-                HttpStatus.BAD_REQUEST
-            ),
-            Arguments.of(
-                3L,
-                new ProductDTO(
-                    "Special😀",
-                    200,
-                    "SpecialCharacter-image-url",
-                    new CategoryDTO("category-1")
-                ),
-                PRODUCT_NAME_ALLOWED_CHARACTER,
-                HttpStatus.BAD_REQUEST
-            ),
-            Arguments.of(
-                4L,
-                new ProductDTO(
-                    "ThisSequenceIsTooLongForProductName",
-                    300,
-                    "ThisSequenceIsTooLongForProductName-image-url",
-                    new CategoryDTO("category-1")
-                ),
-                PRODUCT_NAME_LENGTH,
-                HttpStatus.BAD_REQUEST
-            )
-        );
-    }
+        @Test
+        @DisplayName("success")
+        void success() throws Exception {
+            //given
+            long productId = 1L;
 
-    @Test
-    @DisplayName("[Unit] deleteProduct test")
-    void deleteProduct() throws Exception {
-        mockMvc.perform(delete(apiUrl + "/" + 1L))
-            .andExpect(status().isOk())
-            .andExpect(content().string(""));
+            //when & then
+            mockMvc.perform(delete(apiUrl + "/" + productId))
+                .andExpect(status().isOk())
+                .andExpect(content().string(""));
+        }
+
+        @Test
+        @DisplayName("product not found error")
+        void productNotFoundError() throws Exception {
+            //given
+            long productId = 1L;
+
+            //when
+            doThrow(new IllegalArgumentException(PRODUCT_NOT_FOUND))
+                .when(productService)
+                .deleteProduct(productId);
+
+            //then
+            mockMvc.perform(delete(apiUrl + "/" + productId))
+                .andExpect(status().isBadRequest())
+                .andExpect(content().string(PRODUCT_NOT_FOUND));
+        }
     }
 }

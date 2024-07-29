@@ -1,8 +1,9 @@
 package gift.wishlist;
 
 import gift.member.MemberTokenResolver;
-import gift.product.entity.Product;
 import gift.product.ProductService;
+import gift.product.dto.ProductResponseDTO;
+import gift.product.entity.Product;
 import gift.token.MemberTokenDTO;
 import java.util.List;
 import java.util.stream.IntStream;
@@ -42,7 +43,7 @@ public class WishlistPageController {
     ) {
         pageable = changePageable(pageable);
         Page<Product> wishProducts = wishlistService.getAllWishlists(token, pageable);
-        List<Product> allProducts = productService.getAllProducts();
+        List<ProductResponseDTO> allProducts = productService.getAllProducts();
         wishProducts.getSort().getOrderFor("product.id");
 
         model.addAttribute("wishProducts", wishProducts);
