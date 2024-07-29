@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage options</title>
+    <link rel="stylesheet" th:href="@{/css/manage.css}"/>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <script defer th:src="@{/js/addKakaoWishOption.js}"></script>
+</head>
+<body>
+<div class="container">
+    <div class="header">
+        <h1>Add <span>Wish Options</span></h1>
+        <div class="button-container">
+            <button class="add-btn" type="button" id="add-wish-btn">
+                Add New Wish Option
+            </button>
+        </div>
+    </div>
+    <table>
+        <thead class="table-header">
+        <tr>
+            <th><input type="checkbox" id="select-all"></th>
+            <th>Category</th>
+            <th>Product Name</th>
+            <th>Option</th>
+            <th>Price</th>
+            <th>Left Quantity</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="option : ${options.optionList}" th:data-id="${option.id}">
+            <td><input type="checkbox"></td>
+            <td th:text="${option.product.category.name}"></td>
+            <td th:text="${option.product.name}"></td>
+            <td th:text="${option.name}"></td>
+            <td th:text="${option.product.price}"></td>
+            <td th:text="${option.quantity}"></td>
+        </tr>
+        </tbody>
+    </table>
+    <ul class="pagination justify-content-center">
+        <li class="page-item" th:classappend="${options.currentPage == 0} ? 'disabled'">
+            <button class="page-link" aria-label="Previous" th:onclick="'loadPage(' + (${options.currentPage - 1}) + ')'" th:disabled="${options.currentPage == 0}">
+                <span aria-hidden="true">&laquo;</span>
+            </button>
+        </li>
+        <li class="page-item" th:each="pageNum : ${#numbers.sequence(0, options.totalPages - 1)}" th:classappend="${pageNum == options.currentPage} ? 'active'">
+            <button class="page-link" th:text="${pageNum + 1}" th:onclick="'loadPage(' + ${pageNum} + ')'"></button>
+        </li>
+        <li class="page-item" th:classappend="${options.currentPage + 1 == options.totalPages} ? 'disabled'">
+            <button class="page-link" aria-label="Next" th:onclick="'loadPage(' + (${options.currentPage + 1}) + ')'" th:disabled="${options.currentPage + 1 == options.totalPages}">
+                <span aria-hidden="true">&raquo;</span>
+            </button>
+        </li>
+    </ul>
+</div>
+</body>
+</html>

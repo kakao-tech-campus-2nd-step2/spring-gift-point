@@ -1,0 +1,78 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f4f4;
+}
+
+.container {
+    width: 80%;
+    margin: 50px auto;
+    background: #fff;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.header {
+    background: #2c3e50;
+    color: #fff;
+    padding: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid black;
+}
+
+.header h1 {
+    margin: 0;
+    padding-left: 20px;
+}
+
+.header h1 span {
+    font-weight: normal;
+}
+
+.button-container {
+    display: flex;
+}
+
+.button-container button {
+    margin-left: 10px;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    color: #fff;
+    cursor: pointer;
+}
+
+.button-container .add-btn {
+    background: #27ae60;
+}
+
+.button-container .delete-btn {
+    background: #e74c3c;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+table thead {
+    background: #2c3e50;
+    color: #fff;
+}
+
+.table-header {
+    border-bottom: 2px solid white;
+}
+
+table th, table td {
+    padding: 15px;
+    text-align: center;
+}
+
+table tbody tr:nth-child(even) {
+    background: #f4f4f4;
+}

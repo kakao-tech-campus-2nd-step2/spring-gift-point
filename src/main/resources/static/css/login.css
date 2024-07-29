@@ -1,0 +1,58 @@
+/* Styling the container */
+.container {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  max-width: 400px;
+  padding: 20px;
+  background-color: #f5f5f5;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  text-align: center;
+  font-family: "Roboto", sans-serif; /* Apply Roboto font */
+}
+
+/* Styling the login form */
+#login-form {
+  display: inline-block;
+  text-align: left;
+}
+
+/* Styling the heading */
+h2 {
+  font-size: 35px;
+  margin-bottom: 20px;
+  margin-top: 10px;
+}
+
+/* Styling the input fields and submit button */
+.login-input input {
+  border: 2px solid lightgrey;
+  border-radius: 40px;
+  outline: none;
+  width: 98%;
+  height: 30px;
+  text-indent: 7px;
+  margin-bottom: 8px;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Styling the submit button */
+.submit_button input[type="submit"] {
+  width: 100%;
+  padding: 10px;
+  background-color: black;
+  color: #fff;
+  border: 1px solid;
+  border-radius: 40px;
+  outline: none;
+  font-size: 14px;
+  box-sizing: border-box; /* 추가: 박스 모델에 패딩과 테두리 포함 */
+}
+
+/* Hover effect for the submit button */
+.submit_button input[type="submit"]:hover {
+  background-color: #0056b3;
+}
