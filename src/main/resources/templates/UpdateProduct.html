@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>상품 수정</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
+    <style>
+        .field-error {
+            border-color: #dc3545;
+            color: #dc3545;
+        }
+    </style>
+</head>
+<body>
+<div class="p-5 mb-5 text-center</> bg-light">
+    <h1 class="mb-3" th:align="center"><b>상품 관리</b></h1>
+    <h4 class="mb-3" th:align="center">관리자 전용 상품 관리 페이지</h4>
+</div>
+<div class="container">
+    <form action="ProductInfo.html" th:action th:object="${product}" method="post">
+        <div>
+            <div>
+                <label for="name">카테고리</label>
+                <select id="category" th:field="*{categoryID}" class="form-control">
+                    <option value="">==카테고리 선택==</option>
+                    <option th:each="category : ${categories}" th:selected="${category.id() == product.categoryID}" th:value="${category.id()}"
+                            th:text="${category.name}"></option>
+                </select>
+                <div th:if="${#fields.hasErrors('categoryID')}">
+                    <p class="field-error" th:each="err : ${#fields.errors('categoryID')}"
+                       th:text="${err}"></p>
+
+                </div>
+            </div>
+            <label for="name">상품명</label>
+            <input type="text" id="name" th:field="*{name}" class="form-control" placeholder="이름을 입력하세요">
+            <div class="field-error" th:errors="*{name}">
+                상품명 오류
+            </div>
+        </div>
+        <div>
+            <label for="price">가격</label>
+            <input type="text" id="price" th:field="*{price}" class="form-control" placeholder="가격을 입력하세요">
+            <div class="field-error" th:errors="*{price}">
+                가격 오류
+            </div>
+        </div>
+        <div>
+            <label for="imageUrl">이미지 URL</label>
+            <input type="text" id="imageUrl" th:field="*{imageUrl}" class="form-control" placeholder="이미지 URL을 입력하세요">
+            <div class="field-error" th:errors="*{imageUrl}">
+                이미지 URL 오류
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col">
+                <button class="w-100 btn btn-primary btn-lg" type="submit">상품 수정</button>
+            </div>
+            <div class="col">
+                <button class="w-100 btn btn-secondary btn-lg"
+                        onclick="location.href='ManageProduct.html'"
+                        th:onclick="|location.href='@{/manager/products}'|"
+                        type="button">취소</button>
+            </div>
+        </div>
+        <input type="hidden" name="_method" value="PUT"/>
+    </form>
+
+</div>
+</body>

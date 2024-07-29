@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>상품 등록</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
+    <style>
+        .field-error {
+            border-color: #dc3545;
+            color: #dc3545;
+        }
+    </style>
+</head>
+<body>
+<div class="p-5 mb-5 text-center</> bg-light">
+    <h1 class="mb-3" th:align="center"><b>상품 관리</b></h1>
+    <h4 class="mb-3" th:align="center">관리자 전용 상품 관리 페이지</h4>
+</div>
+<div class="container">
+    <form action="ProductInfo.html" th:action method="post">
+        <div>
+            <label for="category">카테고리</label>
+            <select id="category" th:field="*{newProduct.categoryID}" class="form-control">
+                <option value="">==카테고리 선택==</option>
+                <option th:each="category : ${categories}" th:value="${category.id()}"
+                        th:text="${category.name}"></option>
+            </select>
+        </div>
+        <div>
+            <label for="name">상품명</label>
+            <input type="text" id="name" th:field="*{newProduct.name}" class="form-control" placeholder="이름을 입력하세요">
+
+            <div class="field-error" th:errors="*{newProduct.name}">
+                상품명 오류
+            </div>
+            <div class="field-error" th:errors="*{newProduct.nameNotContainingKakao}">
+                상품명 오류
+            </div>
+
+        </div>
+        <div>
+            <label for="price">가격</label>
+            <input type="text" id="price" th:field="*{newProduct.price}" class="form-control" placeholder="가격을 입력하세요">
+            <div class="field-error" th:errors="*{newProduct.price}">
+                가격 오류
+            </div>
+        </div>
+        <div>
+            <label for="imageUrl">이미지 URL</label>
+            <input type="text" id="imageUrl" th:field="*{newProduct.imageUrl}" class="form-control" placeholder="이미지 URL을 입력하세요">
+            <div class="field-error" th:errors="*{newProduct.imageUrl}">
+                이미지 URL 오류
+            </div>
+        </div>
+        <div>
+            <label for="optionName">옵션명</label>
+            <input type="text" id="optionName" th:field="*{option.optionName}" class="form-control" placeholder="옵션명을 입력하세요">
+            <div class="field-error" th:errors="*{option.optionName}">
+                옵션명 오류
+            </div>
+        </div>
+        <div>
+            <label for="quantity">수량</label>
+            <input type="text" id="quantity" th:field="*{option.quantity}" class="form-control" placeholder="수량을 입력하세요">
+            <div class="field-error" th:errors="*{option.quantity}">
+                수량 오류
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col">
+                <button class="w-100 btn btn-primary btn-lg" type="submit">상품 등록</button>
+            </div>
+            <div class="col">
+                <button class="w-100 btn btn-secondary btn-lg"
+                        onclick="location.href='ManageProduct.html'"
+                        th:onclick="|location.href='@{/manager/products}'|"
+                        type="button">취소</button>
+            </div>
+        </div>
+    </form>
+
+</div>
+</body>
