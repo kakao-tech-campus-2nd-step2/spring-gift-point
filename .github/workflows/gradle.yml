@@ -35,8 +35,9 @@ jobs:
         run: chmod +x gradlew
 
       - name: 빌드 작업
-        run: ./gradlew build
-
+        run: |
+          ./gradlew build
+          sleep 10
       - name: 테스트 작업
         run: ./gradlew test
 
