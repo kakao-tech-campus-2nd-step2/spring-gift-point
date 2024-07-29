@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>Manage Products</title>
+    <style>
+      table {
+        width: 100%;
+        border-collapse: collapse;
+      }
+      th, td {
+        border: 1px solid black;
+        text-align: center;
+        padding: 8px;
+      }
+      th {
+        background-color: #f2f2f2;
+      }
+      .product-img {
+        width: 100px;
+        height: auto;
+      }
+    </style>
+</head>
+<body>
+    <div>
+        <h1>Manage Products</h1>
+        <a href="/showNewProducts">Add New Product</a>
+        <table>
+            <thead>
+            <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Price</th>
+                <th>Image</th>
+                <th>Category</th>
+                <th>Action</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="product : ${productsList}">
+                <td th:text="${product.id}">ID</td>
+                <td th:text="${product.name}">Name</td>
+                <td th:text="${product.price}">Price</td>
+                <td><img th:src="@{${product.imgUrl}}" class="product-img"/></td>
+                <td th:text="${product.category.name}">Category</td>
+                <td>
+                    <a th:href="@{/showUpdateProducts/{id}(id=${product.id})}">Edit</a>
+                    <a th:href="@{/deleteProduct/{id}(id=${product.id})}">Delete</a>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>

@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>Login</title>
+</head>
+<body>
+    <!-- kakao button -->
+    <div class="text-center">
+        <a href="https://kauth.kakao.com/oauth/authorize"
+           th:href="@{https://kauth.kakao.com/oauth/authorize(client_id=${kakaoClientId}, redirect_uri=${kakaoRedirectUrl}, response_type='code')}">
+            <img src="https://k.kakaocdn.net/14/dn/btqCn0WEmI3/nijroPfbpCa4at5EIsjyf0/o.jpg" width="222">
+        </a>
+    </div>
+</body>
+</html>
