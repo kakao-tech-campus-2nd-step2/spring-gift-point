@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Wish List</title>
+    <script>
+        function deleteWish(productId) {
+            const requestWishDTO = { productId: productId };
+
+            fetch('/member/wishes/delete', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(requestWishDTO)
+            })
+            .then(response => {
+                if (response.ok) {
+                    window.location.reload();
+                } else {
+                    alert('Failed to delete wish.');
+                }
+            });
+        }
+    </script>
+</head>
+<body>
+<h1>Wish List</h1>
+<a th:href="@{/member/wishes/new}">Add New Wish</a>
+<table>
+    <thead>
+    <tr>
+        <th>Product Name</th>
+        <th>Count</th>
+        <th>Actions</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="wish : ${wishes}">
+        <td th:text="${wish.product.name}">Product Name</td>
+        <td th:text="${wish.count}">Count</td>
+        <td>
+            <a th:href="@{'/member/wishes/edit/' + ${wish.product.id}}">Edit</a>
+            <button type="button" th:onclick="'deleteWish(' + ${wish.product.id} + ')'">Delete</button>
+        </td>
+    </tr>
+    </tbody>
+</table>
+<div>
+    <span th:if="${currentPage > 0}">
+        <a th:href="@{/member/wishes(page=${currentPage - 1}, size=${size}, sort=${sortField},${sortDir})}">Previous</a>
+    </span>
+    <span th:each="i : ${#numbers.sequence(0, totalPages - 1)}">
+        <a th:href="@{/member/wishes(page=${i}, size=${size}, sort=${sortField},${sortDir})}"
+           th:text="${i + 1}">Page Number</a>
+    </span>
+    <span th:if="${currentPage < totalPages - 1}">
+        <a th:href="@{/member/wishes(page=${currentPage + 1}, size=${size}, sort=${sortField},${sortDir})}">Next</a>
+    </span>
+</div>
+</body>
+</html>
