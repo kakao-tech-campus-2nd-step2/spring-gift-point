@@ -88,10 +88,8 @@ public class OptionService {
 
     @Transactional
     public void removeOption(Option option, int num){
-        System.out.println(option);
         Option updateOption = option.quantityUpdate(-num);
         optionRepository.save(updateOption);
-        System.out.println(option);
     }
 
     public GetOptionDTO getOptions(Long productId){

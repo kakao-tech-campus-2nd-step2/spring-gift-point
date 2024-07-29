@@ -3,11 +3,14 @@ package gift.service;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import gift.config.KakaoProperties;
+import gift.controller.KakaoController;
 import gift.model.*;
 import gift.repository.MemberRepository;
 import gift.repository.OptionRepository;
 import gift.repository.WishRepository;
 import jakarta.validation.constraints.NotNull;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.client.ClientHttpRequestFactories;
 import org.springframework.boot.web.client.ClientHttpRequestFactorySettings;
@@ -28,6 +31,8 @@ import java.util.Optional;
 
 @Service
 public class KakaoAuthService {
+    private static final Logger logger = LoggerFactory.getLogger(KakaoAuthService.class);
+
     private final RestClient client;
 
     private final KakaoProperties kakaoProperties;
@@ -67,7 +72,7 @@ public class KakaoAuthService {
                 .body(body)
                 .retrieve()
                 .toEntity(KakaoAuth.class);
-        System.out.println("getKakaoToekon" + response);
+        logger.info("getKakaoToekon" + response);
 
         //email 카카오 아이디로
         Long memberid = getKakakoMemberId(response.getBody().getAccessToken());
@@ -123,12 +128,12 @@ public class KakaoAuthService {
                 })
                 .retrieve()
                 .toEntity(KakaoMember.class);
-        System.out.println("getKakaoMeberId" + response);
+        logger.info("getKakaoMeberId{}", response);
         return response.getBody().getId();
     }
 
     public void sendKakaoMessage(String token, String productName, String optionName, int num){
-        System.out.println("sendKakaoMessage");
+        logger.info("sendKakaoMessage");
         var url = "https://kapi.kakao.com/v2/api/talk/memo/default/send";
         var headers = new HttpHeaders();
         headers.setBearerAuth(token);
@@ -145,7 +150,7 @@ public class KakaoAuthService {
                 .retrieve()
                 .toEntity(String.class);
 
-        System.out.println("sendKakaoMessget result" + response);
+        logger.info("sendKakaoMessget result" + response);
     }
 
     private @NotNull LinkedMultiValueMap<String, String> createBody(String code){

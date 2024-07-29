@@ -4,6 +4,8 @@ import gift.config.KakaoProperties;
 import gift.model.BearerToken;
 import gift.service.KakaoAuthService;
 import jakarta.servlet.http.HttpServletRequest;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -11,6 +13,8 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 @Controller
 public class KakaoController {
+    private static final Logger logger = LoggerFactory.getLogger(KakaoController.class);
+
     private final KakaoAuthService kakaoAuthService;
     private final KakaoProperties kakaoProperties;
 
@@ -21,8 +25,8 @@ public class KakaoController {
 
     @GetMapping(value="/kakao")
     public String kakaoConnect() {
-        System.out.println("redirect_uri=" + kakaoProperties.getRedirectUrl());
-        System.out.println("client_id=" + kakaoProperties.getClientId());
+        logger.info("redirect_uri={}", kakaoProperties.getRedirectUrl());
+        logger.info("client_id=" + kakaoProperties.getClientId());
         String url = UriComponentsBuilder.fromHttpUrl(kakaoProperties.getLoginUrl())
                 .queryParam("redirect_uri", kakaoProperties.getRedirectUrl())
                 .queryParam("client_id", kakaoProperties.getClientId())
@@ -34,7 +38,7 @@ public class KakaoController {
     @GetMapping("/kakaoAuth")
     public String getKakaoAuthToken(@RequestParam String code){
         String token = kakaoAuthService.getKakaoToken(code);
-        System.out.println("kakoAuth return : " + token);
+        logger.info("kakaoAuth return : {}", token);
         return "redirect:/products";
     }
 
