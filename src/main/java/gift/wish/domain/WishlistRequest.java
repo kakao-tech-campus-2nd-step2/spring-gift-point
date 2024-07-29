@@ -1,11 +1,11 @@
 package gift.wish.domain;
 
-public class WishlistDTO {
+public class WishlistRequest {
     Long userId;
     Long productId;
     Long amount;
 
-    public WishlistDTO(Long userId, Long productId, Long amount) {
+    public WishlistRequest(Long userId, Long productId, Long amount) {
         this.userId = userId;
         this.productId = productId;
         this.amount = amount;
