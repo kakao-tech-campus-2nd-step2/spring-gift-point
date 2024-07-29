@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>상품 수정</title>
+  <link rel="stylesheet" th:href="@{/Add_Edit_product.css}">
+</head>
+<body>
+<h1>상품 수정</h1>
+
+<form th:action="@{/admin/products/{id}(id=${product.id})}" th:object="${product}" method="post">
+  <input type="hidden" name="_method" value="PUT" /> <!-- PUT 요청을 처리하기 위한 숨겨진 필드 -->
+  <div>
+    <label for="name">이름:</label>
+    <input type="text" id="name" th:field="*{name.name}" required />
+    <div th:if="${#fields.hasErrors('name.name')}" th:errors="*{name.name}" class="error-message"></div>
+  </div>
+  <div>
+    <label for="price">가격:</label>
+    <input type="number" id="price" th:field="*{price}" required />
+    <div th:if="${#fields.hasErrors('price')}" th:errors="*{price}" class="error-message"></div>
+  </div>
+  <div>
+    <label for="imageUrl">이미지 URL:</label>
+    <input type="text" id="imageUrl" th:field="*{imageUrl}" required />
+    <div th:if="${#fields.hasErrors('imageUrl')}" th:errors="*{imageUrl}" class="error-message"></div>
+  </div>
+  <div>
+    <label for="categoryId">Category ID:</label>
+    <input type="number" id="categoryId" th:field="*{categoryId}" required />
+    <div th:if="${#fields.hasErrors('categoryId')}" th:errors="*{categoryId}" class="error-message"></div>
+  </div>
+  <div>
+    <button type="submit">수정하기</button>
+  </div>
+</form>
+</body>
+</html>

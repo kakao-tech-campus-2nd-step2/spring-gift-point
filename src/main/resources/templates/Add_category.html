@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>카테고리 추가</title>
+  <link rel="stylesheet" th:href="@{/Add_Edit_category.css}">
+</head>
+<body>
+<h1>카테고리 추가</h1>
+<form th:action="@{/admin/categories}" th:object="${category}" method="post">
+  <div>
+    <label for="name">Name:</label>
+    <input type="text" id="name" th:field="*{name}" required />
+    <div th:if="${#fields.hasErrors('name')}" th:errors="*{name}" class="error-message"></div>
+  </div>
+  <div>
+    <button type="submit">추가하기</button>
+  </div>
+</form>
+</body>
+</html>

@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>위시 리스트에 상품 추가</title>
+
+</head>
+<body>
+<h1>위시 리스트에 상품 추가</h1>
+<form th:action="@{/wishlist/add}" method="post">
+  <div>
+    <label for="productId">상품 ID:</label>
+    <input type="number" id="productId" name="productId" required />
+  </div>
+  <div>
+    <button type="submit">추가하기</button>
+  </div>
+</form>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const form = document.querySelector('form');
+    form.addEventListener('submit', function(event) {
+      event.preventDefault(); // 기본 form 제출 동작 방지
+      const token = localStorage.getItem('jwtToken');
+      if (!token) {
+        alert('로그인이 필요합니다.');
+        window.location.href = '/users/login';
+      } else {
+        const productId = document.getElementById('productId').value;
+        fetch(form.action, {
+          method: 'POST',
+          headers: {
+            'Authorization': 'Bearer ' + token,
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ productId: productId })
+        })
+        .then(response => {
+          if (response.status === 200) {
+            return response.text();
+          } else {
+            throw new Error('상품을 추가하는 데 실패했습니다.');
+          }
+        })
+        .then(html => {
+          document.open();
+          document.write(html);
+          document.close();
+        })
+        .catch(error => {
+          alert(error.message);
+        });
+      }
+    });
+  });
+</script>
+
+</body>
+</html>
