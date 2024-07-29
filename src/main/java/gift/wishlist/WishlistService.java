@@ -5,7 +5,7 @@ import static gift.exception.ErrorMessage.PRODUCT_NOT_FOUND;
 import static gift.exception.ErrorMessage.WISHLIST_ALREADY_EXISTS;
 import static gift.exception.ErrorMessage.WISHLIST_NOT_FOUND;
 
-import gift.member.Member;
+import gift.member.entity.Member;
 import gift.member.MemberRepository;
 import gift.product.entity.Product;
 import gift.product.ProductRepository;

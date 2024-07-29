@@ -1,6 +1,6 @@
 package gift.wishlist;
 
-import gift.member.Member;
+import gift.member.entity.Member;
 import gift.product.entity.Product;
 import java.util.List;
 import java.util.Optional;

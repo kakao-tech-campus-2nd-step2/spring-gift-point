@@ -1,5 +1,6 @@
-package gift.member;
+package gift.member.dto;
 
+import gift.member.entity.Member;
 import gift.token.MemberTokenDTO;
 import io.swagger.v3.oas.annotations.media.Schema;
 

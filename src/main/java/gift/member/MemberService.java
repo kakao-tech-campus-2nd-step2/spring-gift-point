@@ -5,6 +5,8 @@ import static gift.exception.ErrorMessage.MEMBER_NOT_FOUND;
 import static gift.exception.ErrorMessage.WRONG_PASSWORD;
 
 import gift.exception.FailedLoginException;
+import gift.member.dto.MemberDTO;
+import gift.member.entity.Member;
 import gift.token.JwtProvider;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

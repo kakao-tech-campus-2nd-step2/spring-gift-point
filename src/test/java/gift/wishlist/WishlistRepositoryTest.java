@@ -5,7 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 
 import gift.category.entity.Category;
 import gift.category.CategoryRepository;
-import gift.member.Member;
+import gift.member.entity.Member;
 import gift.member.MemberRepository;
 import gift.product.entity.Product;
 import gift.product.ProductRepository;

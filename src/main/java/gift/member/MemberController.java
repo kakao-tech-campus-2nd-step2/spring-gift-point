@@ -1,5 +1,6 @@
 package gift.member;
 
+import gift.member.dto.MemberDTO;
 import gift.token.Token;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
