@@ -17,6 +17,8 @@ import jakarta.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -62,12 +64,15 @@ public class OrderService {
             request.getMessage());
     }
 
-    public List<OrderDetailResponse> getAllOrders(Long userId) {
-        List<Order> orders = orderRepository.findAllByUserId(userId);
-        return orders.stream()
-            .map(order -> new OrderDetailResponse(order.getId(), order.getOption(), order.getUser(),
-                order.getQuantity(), order.getLocalDateTime(), order.getMessage()))
-            .collect(Collectors.toList());
-
+    public Page<OrderDetailResponse> getAllOrders(Long userId, Pageable pageable) {
+        Page<Order> orders = orderRepository.findAllByUserId(userId, pageable);
+        return orders.map(order -> new OrderDetailResponse(
+            order.getId(),
+            order.getOption(),
+            order.getUser(),
+            order.getQuantity(),
+            order.getOrderDateTime(),
+            order.getMessage()
+        ));
     }
 }

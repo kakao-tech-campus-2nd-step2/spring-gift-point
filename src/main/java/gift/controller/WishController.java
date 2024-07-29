@@ -29,7 +29,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/wishes")
+@RequestMapping("/api/wishes")
 @Tag(name = "Wish Management", description = "APIs for managing wishes")
 public class WishController {
 
@@ -52,7 +52,7 @@ public class WishController {
     @Operation(summary = "사용자 모든 위시 조회", description = "사용자의 모든 위시를 조회합니다.",
         responses = @ApiResponse(responseCode = "200", description = "위시 조회 성공", content = @Content(mediaType = "application/json", schema = @Schema(implementation = Wish.class))))
     public Page<Wish> getWishes(@Parameter(hidden = true) @LoginUser User user,
-        @ParameterObject @PageableDefault(sort = "id", direction = Sort.Direction.ASC) Pageable pageable) {
+        @ParameterObject @PageableDefault(sort = "createdDate", direction = Sort.Direction.DESC) Pageable pageable) {
         return wishService.getWishes(user.getId(), pageable);
     }
 

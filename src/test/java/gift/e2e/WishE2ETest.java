@@ -80,7 +80,7 @@ class WishE2ETest {
     void addWishTest() throws Exception {
         WishRequest wishRequest = new WishRequest(productId, 5);
 
-        mockMvc.perform(post("/wishes")
+        mockMvc.perform(post("/api/wishes")
                 .header("Authorization", token)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(wishRequest)))
@@ -91,7 +91,7 @@ class WishE2ETest {
     @Test
     @DisplayName("read test")
     void getAllWishesTest() throws Exception {
-        mockMvc.perform(get("/wishes")
+        mockMvc.perform(get("/api/wishes")
                 .header("Authorization", token)
                 .contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk())
@@ -103,13 +103,13 @@ class WishE2ETest {
     void updateWishTest() throws Exception {
         WishRequest wishRequest = new WishRequest(productId, 15);
 
-        mockMvc.perform(put("/wishes/" + wishId)
+        mockMvc.perform(put("/api/wishes/" + wishId)
                 .header("Authorization", token)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(wishRequest)))
             .andExpect(status().isOk());
 
-        mockMvc.perform(get("/wishes/" + wishId)
+        mockMvc.perform(get("/api/wishes/" + wishId)
                 .header("Authorization", token)
                 .contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk())
@@ -119,7 +119,7 @@ class WishE2ETest {
     @Test
     @DisplayName("delete test")
     void deleteWishTest() throws Exception {
-        mockMvc.perform(delete("/wishes/" + wishId)
+        mockMvc.perform(delete("/api/wishes/" + wishId)
                 .header("Authorization", token)
                 .contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk())

@@ -42,7 +42,7 @@ public class ProductController {
     @Operation(summary = "모든 상품 조회", description = "모든 상품을 조회합니다.",
         responses = @ApiResponse(responseCode = "200", description = "상품 조회 성공", content = @Content(mediaType = "application/json", schema = @Schema(implementation = Page.class))))
     public Page<Product> getProduct(
-        @ParameterObject @PageableDefault(sort = "id", direction = Sort.Direction.ASC) Pageable pageable) {
+        @ParameterObject @PageableDefault(sort = "name", direction = Sort.Direction.ASC) Pageable pageable) {
         return productService.getAllProducts(pageable);
     }
 
