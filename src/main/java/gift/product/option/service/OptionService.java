@@ -1,8 +1,8 @@
-package gift.option.service;
+package gift.product.option.service;
 
-import gift.option.domain.Option;
-import gift.option.domain.OptionDTO;
-import gift.option.repository.OptionRepository;
+import gift.product.option.domain.Option;
+import gift.product.option.domain.OptionDTO;
+import gift.product.option.repository.OptionRepository;
 import gift.product.domain.Product;
 import gift.product.domain.ProductDTO;
 import gift.product.repository.ProductRepository;
@@ -10,7 +10,6 @@ import gift.product.service.ProductService;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.ConstraintViolationException;
 import java.util.List;
-import java.util.Optional;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -85,6 +84,20 @@ public class OptionService {
 
         return convertToDTO(save(optionDTO));
     }
+    public OptionDTO updateOption(Long productId, Long optionId, OptionDTO optionDTO){
+        Option option = optionRepository.findById(optionId)
+            .orElseThrow(() -> new IllegalArgumentException("optionId " + optionId + "가 없습니다."));
+        option.setQuantity(optionDTO.getQuantity());
+        option.setName(optionDTO.getName());
+        option.setProduct(productRepository.findById(productId)
+            .orElseThrow(() -> new IllegalArgumentException("productId " + productId + "가 없습니다.")));
+        return convertToDTO(optionRepository.save(option));
+    }
+
+    public void deleteOption(Long productId, Long optionId){
+        optionRepository.deleteById(optionId);
+    }
+
     public OptionDTO convertToDTO(Option option){
         return new OptionDTO(
             option.getId(),
