@@ -18,7 +18,7 @@ public class IntegrationTest {
 
     private static final String REGISTER_URL = "/api/members/register";
     private static final String LOGIN_URL = "/api/members/login";
-    private static final String ADD_GIFT_URL = "/wish/";
+    private static final String ADD_GIFT_URL = "api/wishes/";
     @LocalServerPort
     private int port;
     private RestTemplate restTemplate;

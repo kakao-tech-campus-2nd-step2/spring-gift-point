@@ -17,7 +17,7 @@ import java.util.stream.Collectors;
 
 
 @RestController
-@RequestMapping("/wish")
+@RequestMapping("/api/wishes")
 public class WishListController implements WishListSpecification {
 
     private final WishService wishService;
