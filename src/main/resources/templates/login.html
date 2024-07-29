@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Login</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+</head>
+<body>
+<div class="container">
+    <h1 class="mt-4">로그인</h1>
+    <form id="loginForm">
+        <div class="form-group">
+            <label>Email:</label>
+            <input type="email" class="form-control" id="email" required/>
+        </div>
+        <div class="form-group">
+            <label>Password:</label>
+            <input type="password" class="form-control" id="password" required/>
+        </div>
+        <button type="submit" class="btn btn-primary">Login</button>
+    </form>
+    <div class="mt-4">
+        <a th:href="@{'https://kauth.kakao.com/oauth/authorize?scope=talk_message,account_email&response_type=code&redirect_uri=' + ${redirectUrl} + '&client_id=' + ${clientId}}" class="btn btn-warning">Login with Kakao</a>
+    </div>
+</div>
+
+<script>
+    document.getElementById('loginForm').addEventListener('submit', function(event) {
+        event.preventDefault();
+
+        const email = document.getElementById('email').value;
+        const password = document.getElementById('password').value;
+
+        fetch('/members/login', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                email: email,
+                password: password
+            })
+        })
+            .then(response => {
+                if (response.ok) {
+                    return response.text();
+                } else if (response.status === 401) {
+                    throw new Error('Invalid email or password');
+                } else {
+                    throw new Error('Login failed');
+                }
+            })
+            .then(token => {
+                localStorage.setItem('jwtToken', token);
+                alert('Login successful');
+                window.location.href = "/user-products";
+            })
+            .catch(error => {
+                alert(error.message);
+            });
+    });
+</script>
+</body>
+</html>

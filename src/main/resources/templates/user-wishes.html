@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Wish List</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <style>
+        body, html {
+            height: 100%;
+            margin: 0;
+        }
+        .container {
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+        .table-responsive {
+            flex-grow: 1;
+        }
+        .thead-dark th {
+            text-align: center;
+        }
+        .table td, .table th {
+            vertical-align: middle;
+            text-align: center;
+        }
+        .table td img {
+            max-width: 100%;
+            height: auto;
+        }
+        .break-word {
+            word-wrap: break-word;
+            word-break: break-all;
+            white-space: normal;
+        }
+        .font-weight-bold {
+            font-weight: bold;
+        }
+        .pagination {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+        }
+        .pagination button {
+            margin: 0 5px;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1 class="mt-4">위시 리스트</h1>
+    <div class="table-responsive">
+        <table class="table table-bordered table-hover">
+            <thead class="thead-dark">
+            <tr>
+                <th style="width: 20%;">Name</th>
+                <th style="width: 15%;">Price</th>
+                <th style="width: 30%;">Image URL</th>
+                <th style="width: 15%;">Option</th>
+                <th style="width: 10%;">Actions</th>
+            </tr>
+            </thead>
+            <tbody id="wish-list">
+            <!-- 위시 리스트 항목이 여기에 동적으로 추가됩니다 -->
+            </tbody>
+        </table>
+    </div>
+    <div class="pagination" id="pagination">
+        <!-- 페이지네이션 버튼이 여기에 동적으로 추가됩니다 -->
+    </div>
+</div>
+
+<script>
+    let currentPage = 0;
+    const size = 5;
+
+    document.addEventListener('DOMContentLoaded', function() {
+        loadWishes(currentPage);
+    });
+
+    function loadWishes(page) {
+        const token = localStorage.getItem('jwtToken');
+        fetch(`/wishes?page=${page}&size=${size}`, {
+            method: 'GET',
+            headers: {
+                'Authorization': 'Bearer ' + token,
+                'Content-Type': 'application/json'
+            }
+        })
+            .then(response => response.json())
+            .then(data => {
+                const wishList = document.getElementById('wish-list');
+                wishList.innerHTML = '';
+
+                data.content.forEach(wish => {
+                    const wishRow = document.createElement('tr');
+                    wishRow.innerHTML = `
+                        <td class="font-weight-bold">${wish.productName}</td>
+                        <td>${wish.productPrice}</td>
+                        <td>
+                            <img src="${wish.productImageurl}" alt="Product Image" style="max-width: 100px; height: auto;">
+                        </td>
+                        <td>${wish.optionName}</td>
+                        <td>
+                            <button class="btn btn-danger btn-sm" onclick="removeFromWishList(${wish.id})">Remove</button>
+                        </td>
+                    `;
+                    wishList.appendChild(wishRow);
+                });
+
+                updatePagination(data.totalPages, data.number);
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Failed to load wish list.');
+            });
+    }
+
+    function updatePagination(totalPages, currentPage) {
+        const pagination = document.getElementById('pagination');
+        pagination.innerHTML = '';
+
+        for (let i = 0; i < totalPages; i++) {
+            const pageButton = document.createElement('button');
+            pageButton.innerText = i + 1;
+            pageButton.classList.add('btn', 'btn-primary');
+            if (i === currentPage) {
+                pageButton.classList.add('active');
+            }
+            pageButton.addEventListener('click', () => {
+                loadWishes(i);
+            });
+            pagination.appendChild(pageButton);
+        }
+    }
+
+    function removeFromWishList(wishId) {
+        const token = localStorage.getItem('jwtToken');
+        fetch('/wishes/' + wishId, {
+            method: 'DELETE',
+            headers: {
+                'Authorization': 'Bearer ' + token,
+                'Content-Type': 'application/json'
+            }
+        })
+            .then(response => {
+                if (response.ok) {
+                    alert('Product removed from wish list!');
+                    loadWishes(currentPage);
+                } else {
+                    response.text().then(text => {
+                        alert('Error: ' + text);
+                    });
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Failed to remove product from wish list.');
+            });
+    }
+</script>
+</body>
+</html>

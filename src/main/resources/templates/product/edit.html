@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Edit Product</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <style>
+        .btn-update {
+            display: block;
+            width: 15%;
+            font-size: 1.3em;
+            margin-top: 20px;
+        }
+        .error {
+            color: red;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1 class="mt-4">상품 수정</h1>
+    <form th:action="@{/products/{id}(id=${product.id})}" th:object="${product}" method="post" onsubmit="return validateOptions()">
+        <div class="form-group">
+            <label>Name:</label>
+            <input type="text" class="form-control" th:field="*{name}" required/>
+            <div class="error" th:if="${valid_name}" th:text="${valid_name}"></div>
+        </div>
+        <div class="form-group">
+            <label>Price:</label>
+            <input type="number" class="form-control" th:field="*{price}" required/>
+            <div class="error" th:if="${valid_price}" th:text="${valid_price}"></div>
+        </div>
+        <div class="form-group">
+            <label>Image URL:</label>
+            <input type="url" class="form-control" th:field="*{imageurl}" required/>
+            <div class="error" th:if="${valid_imageurl}" th:text="${valid_imageurl}"></div>
+        </div>
+        <div class="form-group">
+            <label>Category:</label>
+            <select class="form-control" th:field="*{category.id}" required>
+                <option th:each="category : ${categories}" th:value="${category.id}" th:text="${category.name}" th:selected="${category.id == product.category.id}"></option>
+            </select>
+        </div>
+
+        <!-- Options Section -->
+        <div id="optionsSection">
+            <h3>Options</h3>
+            <div class="form-group" th:each="option, stat : ${product.options}">
+                <label>Option Name:</label>
+                <input type="text" class="form-control" th:field="*{options[__${stat.index}__].name}" required/>
+                <label>Option Quantity:</label>
+                <input type="number" class="form-control" th:field="*{options[__${stat.index}__].quantity}" required/>
+                <button type="button" class="btn btn-danger" th:if="${stat.count > 1}" onclick="removeOption(this)">Remove Option</button>
+            </div>
+        </div>
+        <button type="button" class="btn btn-secondary" onclick="addOption()">Add Option</button>
+
+        <button type="submit" class="btn btn-success btn-update">Update</button>
+        <div class="error" id="optionError" style="display:none;">Product must have at least one option.</div>
+    </form>
+</div>
+
+<script>
+    function addOption() {
+        const optionsSection = document.getElementById('optionsSection');
+        const optionCount = optionsSection.querySelectorAll('.form-group').length;
+        const optionGroup = document.createElement('div');
+        optionGroup.classList.add('form-group');
+        optionGroup.innerHTML = `
+            <label>Option Name:</label>
+            <input type="text" class="form-control" name="options[${optionCount}].name" required/>
+            <label>Option Quantity:</label>
+            <input type="number" class="form-control" name="options[${optionCount}].quantity" required/>
+            <button type="button" class="btn btn-danger" onclick="removeOption(this)">Remove Option</button>
+        `;
+        optionsSection.appendChild(optionGroup);
+    }
+
+    function removeOption(button) {
+        const optionGroup = button.parentElement;
+        optionGroup.remove();
+    }
+
+    function validateOptions() {
+        const optionsSection = document.getElementById('optionsSection');
+        const optionCount = optionsSection.querySelectorAll('.form-group').length;
+        if (optionCount < 1) {
+            document.getElementById('optionError').style.display = 'block';
+            return false;
+        }
+        return true;
+    }
+</script>
+</body>
+</html>

@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Product List</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <style>
+        body, html {
+            height: 100%;
+            margin: 0;
+        }
+        .container {
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+        .table-responsive {
+            flex-grow: 1;
+        }
+        .thead-dark th {
+            text-align: center;
+        }
+        .table td, .table th {
+            vertical-align: middle;
+            text-align: center;
+        }
+        .table td img {
+            max-width: 100%;
+            height: auto;
+        }
+        .break-word {
+            word-wrap: break-word;
+            word-break: break-all;
+            white-space: normal;
+        }
+        .font-weight-bold {
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1 class="mt-4">상품 관리</h1>
+    <div class="d-flex justify-content-end mb-3">
+        <a th:href="@{/products/new}" class="btn btn-success ml-auto">상품 추가</a>
+    </div>
+    <div class="table-responsive">
+        <table class="table table-bordered table-hover">
+            <thead class="thead-dark">
+            <tr>
+                <th style="width: 20%;">Name</th>
+                <th style="width: 20%;">Category</th>
+                <th style="width: 15%;">Price</th>
+                <th style="width: 20%;">Image URL</th>
+                <th style="width: 25%;">Actions</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="product : ${products}">
+                <td class="font-weight-bold" th:text="${product.name}"></td>
+                <td th:text="${product.category.name}"></td>
+                <td th:text="${product.price}"></td>
+                <td class="break-word">
+                    <img th:src="${product.imageurl}" style="max-width: 100px; height: auto;">
+                </td>
+                <td>
+                    <a th:href="@{/products/edit/{id}(id=${product.id})}" class="btn btn-warning btn-sm">Edit</a>
+                    <a th:href="@{/products/delete/{id}(id=${product.id})}" class="btn btn-danger btn-sm">Delete</a>
+                    <a th:href="@{/products/{id}/options(id=${product.id})}" class="btn btn-info btn-sm">View Options</a>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="d-flex justify-content-center">
+        <nav aria-label="Page navigation example">
+            <ul class="pagination">
+                <li class="page-item" th:classappend="${currentPage == 0} ? 'disabled'">
+                    <a class="page-link" th:href="@{/products(page=${currentPage - 1}, size=${pageSize})}" aria-label="Previous">
+                        <span aria-hidden="true">&laquo;</span>
+                    </a>
+                </li>
+                <li class="page-item" th:each="i : ${#numbers.sequence(0, totalPages - 1)}" th:classappend="${i == currentPage} ? 'active'">
+                    <a class="page-link" th:href="@{/products(page=${i}, size=${pageSize})}" th:text="${i + 1}">1</a>
+                </li>
+                <li class="page-item" th:classappend="${currentPage + 1 == totalPages} ? 'disabled'">
+                    <a class="page-link" th:href="@{/products(page=${currentPage + 1}, size=${pageSize})}" aria-label="Next">
+                        <span aria-hidden="true">&raquo;</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Place Order</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+</head>
+<body>
+<div class="container">
+    <h1 class="mt-4">Place Order</h1>
+    <form id="orderForm">
+        <div class="form-group">
+            <label>Option ID:</label>
+            <input type="number" class="form-control" id="optionId" th:value="${optionId}" required/>
+        </div>
+        <div class="form-group">
+            <label>Quantity:</label>
+            <input type="number" class="form-control" id="quantity" required/>
+        </div>
+        <div class="form-group">
+            <label>Message:</label>
+            <input type="text" class="form-control" id="message" required/>
+        </div>
+        <button type="submit" class="btn btn-primary">Order</button>
+    </form>
+</div>
+
+<script>
+    document.getElementById('orderForm').addEventListener('submit', function(event) {
+        event.preventDefault();
+
+        const optionId = document.getElementById('optionId').value;
+        const quantity = document.getElementById('quantity').value;
+        const message = document.getElementById('message').value;
+
+        const token = localStorage.getItem('jwtToken');
+
+        fetch('/api/orders', {
+            method: 'POST',
+            headers: {
+                'Authorization': 'Bearer ' + token,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                optionId: optionId,
+                quantity: quantity,
+                message: message
+            })
+        })
+            .then(response => {
+                if (response.ok) {
+                    alert('Order placed successfully');
+                    window.location.href = "/user-products";
+                } else {
+                    response.text().then(text => {
+                        alert('Error: ' + text);
+                    });
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+    });
+</script>
+</body>
+</html>
