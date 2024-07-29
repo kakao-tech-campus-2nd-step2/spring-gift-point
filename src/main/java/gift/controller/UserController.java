@@ -27,7 +27,7 @@ public class UserController {
     /*
      * 로그인 ( 유저 정보 인증 )
      */
-    @PostMapping("/api/member/login")
+    @PostMapping("/api/members/login")
     public ResponseEntity<Token> giveToken(@RequestBody UserRequest user) throws IllegalAccessException {
         if(!userService.login(user)){
             throw new IllegalArgumentException("아이디나 비밀번호를 다시 확인해주세요!");
@@ -39,7 +39,7 @@ public class UserController {
     /*
      * 회원가입 ( 유저 추가 )
      */
-    @PostMapping("/api/member/register")
+    @PostMapping("/api/members/register")
     public ResponseEntity<Void> register(@RequestBody UserRequest user){
         if(userService.isUserIdDuplicate(user.getUserId()))
             throw new AlreadyExistException("이미 존재하는 유저 아이디입니다!");

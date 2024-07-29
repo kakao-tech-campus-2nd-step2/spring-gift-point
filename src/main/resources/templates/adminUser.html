@@ -79,7 +79,7 @@
 
     function getUsers(page){
         $.ajax({
-            url: '/api/users',
+            url: '/api/members',
             method: 'GET',
             data : {
                 page : page,
@@ -158,7 +158,7 @@
 
         $.ajax({
             type : "POST",
-            url : "register",
+            url : "api/members/register",
             contentType: "application/json",
             datatype : "json",
             data : JSON.stringify(user),
@@ -180,7 +180,7 @@
     function deleteFunction(id){
         $.ajax({
             type: "DELETE",
-            url: "api/users/" + id,
+            url: "api/members/" + id,
             headers : {
                 Authorization: 'Bearer ' + localStorage.getItem("token"),
             },
@@ -210,7 +210,7 @@
 
         $.ajax({
             type : "PUT",
-            url : "api/users/" + $("#p_id").val(),
+            url : "api/members/" + $("#p_id").val(),
             contentType: "application/json",
             datatype : "json",
             data : JSON.stringify(user),
