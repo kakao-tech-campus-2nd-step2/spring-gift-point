@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>상품 추가</title>
+</head>
+<body>
+<h1>상품 추가</h1>
+<form th:action="@{/products/add}" th:object="${productDTO}" method="post">
+  <div>
+    <label for="category" class="form-label">카테고리</label>
+    <select id="category" class="form-control" th:field="*{categoryId}">
+      <option value="" selected>카테고리 선택</option>
+      <option th:each="category : ${categories}" th:value="${category.id}"
+              th:text="${category.name}">NAME
+      </option>
+    </select>
+    <div th:if="${#fields.hasErrors('categoryId')}" th:errors="*{categoryId}">Category Error</div>
+  </div>
+  <label>이름: <input type="text" id="name" name="name" th:value="*{name}"
+                    placeholder="이름을 입력하세요"/></label><br>
+  <div th:if="${#fields.hasErrors('name')}" th:errors="*{name}">Name Error</div>
+  <label>가격: <input type="number" id="price" name="price" th:value="*{price}"
+                    placeholder="가격을 입력하세요"/></label><br>
+  <div th:if="${#fields.hasErrors('price')}" th:errors="*{price}">Price Error</div>
+  <label>이미지: <input type="text" id="imageUrl" name="imageUrl" th:value="*{imageUrl}"
+                     placeholder="이미지 링크를 입력하세요"/></label><br>
+  <div th:if="${#fields.hasErrors('imageUrl')}" th:errors="*{imageUrl}">imageUrl Error</div>
+  <button type="submit">추가하기</button>
+</form>
+<a href="/products">돌아가기</a>
+</body>
+</html>
