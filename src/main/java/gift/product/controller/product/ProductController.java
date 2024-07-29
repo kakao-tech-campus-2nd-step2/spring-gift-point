@@ -6,6 +6,7 @@ import gift.product.service.ProductService;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import java.util.List;
@@ -54,14 +55,20 @@ public class ProductController {
         return ResponseEntity.ok(products);
     }
 
-    @ApiResponse(responseCode = "404", description = "존재하지 않는 리소스", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProblemDetail.class)))
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "성공", content = @Content(mediaType = "application/json", schema = @Schema(implementation = Product.class))),
+        @ApiResponse(responseCode = "404", description = "존재하지 않는 리소스", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProblemDetail.class)))
+    })
     @GetMapping("/{id}")
     public ResponseEntity<Product> getProduct(@PathVariable(name = "id") Long id) {
         Product product = productService.getProduct(id);
         return ResponseEntity.ok(product);
     }
 
-    @ApiResponse(responseCode = "404", description = "존재하지 않는 리소스", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProblemDetail.class)))
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "성공", content = @Content(mediaType = "application/json", schema = @Schema(implementation = Product.class))),
+        @ApiResponse(responseCode = "404", description = "존재하지 않는 리소스", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProblemDetail.class)))
+    })
     @PostMapping("/insert")
     public ResponseEntity<Product> insertProduct(@Valid @RequestBody ClientProductDto productDto) {
         Product responseProduct = productService.insertProduct(productDto);
@@ -69,7 +76,10 @@ public class ProductController {
         return ResponseEntity.status(HttpStatus.CREATED).body(responseProduct);
     }
 
-    @ApiResponse(responseCode = "404", description = "존재하지 않는 리소스", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProblemDetail.class)))
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "성공", content = @Content(mediaType = "application/json", schema = @Schema(implementation = Product.class))),
+        @ApiResponse(responseCode = "404", description = "존재하지 않는 리소스", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProblemDetail.class)))
+    })
     @PutMapping("/update/{id}")
     public ResponseEntity<Product> updateProduct(@PathVariable(name = "id") Long id,
         @Valid @RequestBody ClientProductDto productDto) {
@@ -77,7 +87,10 @@ public class ProductController {
         return ResponseEntity.ok(product);
     }
 
-    @ApiResponse(responseCode = "404", description = "존재하지 않는 리소스", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProblemDetail.class)))
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "성공"),
+        @ApiResponse(responseCode = "404", description = "존재하지 않는 리소스", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProblemDetail.class)))
+    })
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<Void> deleteProduct(@PathVariable(name = "id") Long id) {
         productService.deleteProduct(id);

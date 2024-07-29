@@ -57,7 +57,10 @@ public class WishController {
         return ResponseEntity.ok(wishes);
     }
 
-    @ApiResponse(responseCode = "404", description = "존재하지 않는 리소스", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProblemDetail.class)))
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "성공", content = @Content(mediaType = "application/json", schema = @Schema(implementation = Wish.class))),
+        @ApiResponse(responseCode = "404", description = "존재하지 않는 리소스", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProblemDetail.class)))
+    })
     @GetMapping("/{id}")
     public ResponseEntity<Wish> getWish(@PathVariable(name = "id") Long id,
         HttpServletRequest request) {
@@ -67,6 +70,7 @@ public class WishController {
     }
 
     @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "성공", content = @Content(mediaType = "application/json", schema = @Schema(implementation = Wish.class))),
         @ApiResponse(responseCode = "400", description = "잘못된 요청", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProblemDetail.class))),
         @ApiResponse(responseCode = "404", description = "존재하지 않는 리소스", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProblemDetail.class)))
     })
@@ -79,7 +83,10 @@ public class WishController {
         return ResponseEntity.status(HttpStatus.CREATED).body(responseWish);
     }
 
-    @ApiResponse(responseCode = "404", description = "존재하지 않는 리소스", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProblemDetail.class)))
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "성공"),
+        @ApiResponse(responseCode = "404", description = "존재하지 않는 리소스", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProblemDetail.class)))
+    })
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<Void> deleteWish(@PathVariable(name = "id") Long id,
         HttpServletRequest request) {

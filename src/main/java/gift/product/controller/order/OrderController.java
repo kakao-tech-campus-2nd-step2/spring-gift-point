@@ -43,7 +43,10 @@ public class OrderController {
         return ResponseEntity.ok(orderAll);
     }
 
-    @ApiResponse(responseCode = "404", description = "존재하지 않는 리소스", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProblemDetail.class)))
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "성공", content = @Content(mediaType = "application/json", schema = @Schema(implementation = Order.class))),
+        @ApiResponse(responseCode = "404", description = "존재하지 않는 리소스", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProblemDetail.class)))
+    })
     @GetMapping("/{id}")
     public ResponseEntity<Order> getOrder(@PathVariable(name = "id") Long id,
         HttpServletRequest request) {
@@ -54,6 +57,7 @@ public class OrderController {
     }
 
     @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "성공", content = @Content(mediaType = "application/json", schema = @Schema(implementation = Order.class))),
         @ApiResponse(responseCode = "403", description = "사용자 인증 도중 발생한 에러", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProblemDetail.class))),
         @ApiResponse(responseCode = "404", description = "존재하지 않는 리소스", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProblemDetail.class)))
     })
@@ -66,7 +70,10 @@ public class OrderController {
         return ResponseEntity.status(HttpStatus.CREATED).body(order);
     }
 
-    @ApiResponse(responseCode = "404", description = "존재하지 않는 리소스", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProblemDetail.class)))
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "성공"),
+        @ApiResponse(responseCode = "404", description = "존재하지 않는 리소스", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProblemDetail.class))),
+    })
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<Void> deleteOrder(@PathVariable(name = "id") Long id,
         HttpServletRequest request) {

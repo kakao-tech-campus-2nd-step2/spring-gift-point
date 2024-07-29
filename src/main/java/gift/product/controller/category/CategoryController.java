@@ -7,6 +7,7 @@ import gift.product.service.CategoryService;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import java.util.List;
 import org.springframework.http.HttpStatus;
@@ -38,21 +39,30 @@ public class CategoryController {
         return ResponseEntity.ok(categories);
     }
 
-    @ApiResponse(responseCode = "404", description = "존재하지 않는 리소스", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProblemDetail.class)))
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "성공", content = @Content(mediaType = "application/json", schema = @Schema(implementation = Category.class))),
+        @ApiResponse(responseCode = "404", description = "존재하지 않는 리소스", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProblemDetail.class)))
+    })
     @GetMapping("/{id}")
     public ResponseEntity<Category> getCategory(@PathVariable(name = "id") Long id) {
         Category category = categoryService.getCategory(id);
         return ResponseEntity.ok(category);
     }
 
-    @ApiResponse(responseCode = "400", description = "잘못된 요청", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProblemDetail.class)))
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "성공", content = @Content(mediaType = "application/json", schema = @Schema(implementation = Category.class))),
+        @ApiResponse(responseCode = "400", description = "잘못된 요청", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProblemDetail.class)))
+    })
     @PostMapping("/insert")
     public ResponseEntity<Category> insertCategory(@RequestBody CategoryDto categoryDto) {
         Category category = categoryService.insertCategory(categoryDto);
         return ResponseEntity.status(HttpStatus.CREATED).body(category);
     }
 
-    @ApiResponse(responseCode = "404", description = "존재하지 않는 리소스", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProblemDetail.class)))
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "성공", content = @Content(mediaType = "application/json", schema = @Schema(implementation = Category.class))),
+        @ApiResponse(responseCode = "404", description = "존재하지 않는 리소스", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProblemDetail.class)))
+    })
     @PutMapping("/update/{id}")
     public ResponseEntity<Category> updateCategory(@PathVariable(name = "id") Long id,
         @RequestBody CategoryDto categoryDto) {
@@ -60,7 +70,10 @@ public class CategoryController {
         return ResponseEntity.ok(category);
     }
 
-    @ApiResponse(responseCode = "404", description = "존재하지 않는 리소스", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProblemDetail.class)))
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "성공"),
+        @ApiResponse(responseCode = "404", description = "존재하지 않는 리소스", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProblemDetail.class)))
+    })
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<Void> deleteCategory(@PathVariable(name = "id") Long id) {
         categoryService.deleteCategory(id);

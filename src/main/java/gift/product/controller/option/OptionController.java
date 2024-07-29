@@ -4,6 +4,7 @@ import gift.product.dto.option.OptionDto;
 import gift.product.dto.option.OptionResponse;
 import gift.product.model.Option;
 import gift.product.service.OptionService;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -34,18 +35,25 @@ public class OptionController {
         this.optionService = optionService;
     }
 
+
     @GetMapping("/options")
     public ResponseEntity<List<Option>> getOptionAll() {
         return ResponseEntity.ok(optionService.getOptionAll());
     }
 
-    @ApiResponse(responseCode = "404", description = "존재하지 않는 리소스", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProblemDetail.class)))
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "성공", content = @Content(mediaType = "application/json", schema = @Schema(implementation = Option.class))),
+        @ApiResponse(responseCode = "404", description = "존재하지 않는 리소스", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProblemDetail.class)))
+    })
     @GetMapping("/options/{id}")
     public ResponseEntity<Option> getOption(@PathVariable(name = "id") Long id) {
         return ResponseEntity.ok(optionService.getOption(id));
     }
 
-    @ApiResponse(responseCode = "404", description = "존재하지 않는 리소스", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProblemDetail.class)))
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "성공", content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = OptionResponse.class)))),
+        @ApiResponse(responseCode = "404", description = "존재하지 않는 리소스", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProblemDetail.class)))
+    })
     @GetMapping("/products/{id}/options")
     public ResponseEntity<List<OptionResponse>> getOptionAllByProductId(
         @PathVariable(name = "id") Long productId) {
@@ -53,6 +61,7 @@ public class OptionController {
     }
 
     @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "성공", content = @Content(mediaType = "application/json", schema = @Schema(implementation = Option.class))),
         @ApiResponse(responseCode = "400", description = "잘못된 요청", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProblemDetail.class))),
         @ApiResponse(responseCode = "404", description = "존재하지 않는 리소스", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProblemDetail.class)))
     })
@@ -62,7 +71,10 @@ public class OptionController {
             .body(optionService.insertOption(optionDto));
     }
 
-    @ApiResponse(responseCode = "404", description = "존재하지 않는 리소스", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProblemDetail.class)))
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "성공", content = @Content(mediaType = "application/json", schema = @Schema(implementation = Option.class))),
+        @ApiResponse(responseCode = "404", description = "존재하지 않는 리소스", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProblemDetail.class)))
+    })
     @PutMapping("/options/update/{id}")
     public ResponseEntity<Option> updateOption(@PathVariable(name = "id") Long id,
         @Valid @RequestBody OptionDto optionDto) {
@@ -70,6 +82,7 @@ public class OptionController {
     }
 
     @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "성공"),
         @ApiResponse(responseCode = "400", description = "잘못된 요청", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProblemDetail.class))),
         @ApiResponse(responseCode = "404", description = "존재하지 않는 리소스", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProblemDetail.class)))
     })

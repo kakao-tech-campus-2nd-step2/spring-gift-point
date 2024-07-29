@@ -43,11 +43,6 @@ public class SwaggerConfig {
                         this::addErrorResponse
                     );
                 }
-
-                pathItem.readOperations().forEach(
-                    operation -> operation.getResponses()
-                        .addApiResponse("200", new ApiResponse().description("성공"))
-                );
             });
     }
 
