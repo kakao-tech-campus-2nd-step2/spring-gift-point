@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>로그인</title>
+</head>
+<body>
+<h1>로그인</h1>
+<form th:action="@{/users/login}" method="post" th:object="${userDto}">
+  <div>
+    <label>이메일:</label>
+    <input type="email" th:field="*{email}" />
+  </div>
+  <div>
+    <label>비밀번호:</label>
+    <input type="password" th:field="*{password}" />
+  </div>
+  <div>
+    <button type="submit">로그인</button>
+  </div>
+</form>
+<<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> c23c9cf (부산대 BE_이가현 5주차 과제(1단계) (#169))
+<div>
+  <a th:href="'https://kauth.kakao.com/oauth/authorize?client_id=' + ${kakaoClientId} + '&redirect_uri=' + ${kakaoRedirectUri} + '&response_type=code'">
+    <button type="button">카카오 로그인</button>
+  </a>
+</div>
+<<<<<<< HEAD
+=======
+>>>>>>> 524b151 (feat: 기본 코드 준비 (#98))
+=======
+>>>>>>> c23c9cf (부산대 BE_이가현 5주차 과제(1단계) (#169))
+<p>계정이 없으신가요? <a th:href="@{/users/register}">회원가입</a></p>
+</body>
+</html>
