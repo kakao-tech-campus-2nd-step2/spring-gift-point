@@ -30,7 +30,7 @@ public class LoginController {
     @Operation(summary  = "이메일로 로그인", description  = "이메일과 비밀번호로 로그인해 JWT토큰을 반환한다.")
     @PostMapping
     public SingleResult<Token> Login(@Valid @RequestBody Login login) {
-        return new SingleResult<>(loginService.Login(login));
+        return new SingleResult<>(loginService.login(login));
     }
 
     @Operation(summary  = "소셜 로그인(카카오)", description  = "카카오에서 발급한 엑세스 토큰으로 로그인해 JWT토큰을 반환한다.")
