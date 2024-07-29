@@ -51,7 +51,7 @@ public class ProductService {
         // 상품 저장
         Product savedProduct = productRepository.save(product);
         // 옵션 저장
-        optionService.addOption(savedProduct, productDTO.option());
+        optionService.addOptionToNewProduct(savedProduct, productDTO.option());
     }
 
     /**

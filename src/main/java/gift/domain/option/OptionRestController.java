@@ -64,7 +64,7 @@ public class OptionRestController {
         @Parameter(description = "상품 ID") @PathVariable("productId") Long productId,
         OptionRequestDTO optionRequestDTO
     ) {
-        optionService.addOption(productId, optionRequestDTO);
+        optionService.addOptionToExistsProduct(productId, optionRequestDTO);
 
         return ResponseMaker.createSimpleResponse(HttpStatus.OK, "해당 상품에 옵션 추가 성공");
     }

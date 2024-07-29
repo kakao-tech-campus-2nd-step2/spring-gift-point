@@ -36,17 +36,12 @@ public class OptionService {
     }
 
     // 기존 상품에 옵션 추가
-    public void addOption(Long productId, OptionRequestDTO optionRequestDTO) {
+    public void addOptionToExistsProduct(Long productId, OptionRequestDTO optionRequestDTO) {
         Product product = productRepository.findById(productId)
             .orElseThrow(() -> new ProductNotFoundException(productId));
 
         List<Option> options = optionRepository.findAllByProductId(productId);
-
-        for (Option option : options) {
-            if (option.getName().equals(optionRequestDTO.name())) {
-                throw new OptionDuplicateException(optionRequestDTO.name());
-            }
-        }
+        validateDuplicateOptionName(optionRequestDTO.name(), options);
 
         Option option = new Option(optionRequestDTO.name(), optionRequestDTO.quantity(),
             product);
@@ -54,8 +49,8 @@ public class OptionService {
         optionRepository.save(option);
     }
 
-    // 새로운 상품 생성 시 옵션 입력
-    public void addOption(Product savedProduct, OptionRequestDTO optionRequestDTO) {
+    // 새 상품에 옵션 입력
+    public void addOptionToNewProduct(Product savedProduct, OptionRequestDTO optionRequestDTO) {
         Option option = new Option(optionRequestDTO.name(), optionRequestDTO.quantity(),
             savedProduct);
 
@@ -110,6 +105,14 @@ public class OptionService {
         }
         // 수량만 차감
         option.decrease(quantity);
+    }
+
+    private void validateDuplicateOptionName(String name, List<Option> options) {
+        for (Option option : options) {
+            if (option.getName().equals(name)) {
+                throw new OptionDuplicateException(name);
+            }
+        }
     }
 
 }
