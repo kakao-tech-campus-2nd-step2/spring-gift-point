@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Modify Form</title>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .form-container {
+            max-width: 600px;
+            margin: 50px auto;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            background-color: #f9f9f9;
+        }
+
+        .form-header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            font-weight: bold;
+        }
+
+        .form-control {
+            margin-bottom: 15px;
+        }
+
+        .btn-submit {
+            display: block;
+            width: 100%;
+        }
+
+        .gift-name {
+            text-align: center;
+            font-size: 24px;
+            margin-bottom: 20px;
+            font-weight: bold;
+        }
+
+        .btn-container {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn-container .btn {
+            flex: 1;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="form-container">
+        <div class="gift-name" th:text="${gift.name}"></div>
+        <h5 class="form-header">상품 수정</h5>
+        <form method="post" th:action="@{|/admin/gift/modify/${gift.id}|}">
+            <input name="_method" type="hidden" value="put">
+            <div class="form-group">
+                <label class="form-label" for="name">상품명</label>
+                <input class="form-control" id="name" name="name" required th:value="${gift.name}" type="text">
+            </div>
+            <div class="form-group">
+                <label class="form-label" for="price">가격</label>
+                <input class="form-control" id="price" name="price" required th:value="${gift.price}" type="number">
+            </div>
+            <div class="form-group">
+                <label class="form-label" for="imageUrl">이미지 URL</label>
+                <input class="form-control" id="imageUrl" name="imageUrl" required th:value="${gift.imageUrl}"
+                       type="text">
+            </div>
+            <div class="form-group">
+                <label class="form-label" for="categoryId">카테고리</label>
+                <select class="form-control" id="categoryId" name="categoryId" required>
+                    <option disabled value="">카테고리 선택</option>
+                    <option th:each="category : ${categories}"
+                            th:selected="${gift.category.id == category.id}"
+                            th:text="${category.name}"
+                            th:value="${category.id}"></option>
+                </select>
+            </div>
+            <div class="btn-container">
+                <input class="btn btn-primary" type="submit" value="수정하기">
+                <a class="btn btn-secondary" th:href="@{/admin}">메인으로</a>
+            </div>
+        </form>
+    </div>
+</div>
+</body>
+</html>
+

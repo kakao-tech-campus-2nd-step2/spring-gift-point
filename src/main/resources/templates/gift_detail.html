@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Gift Detail</title>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .gift-container {
+            max-width: 600px;
+            margin: 50px auto;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .gift-image {
+            width: 100%;
+            height: auto;
+            border-radius: 8px;
+        }
+
+        .gift-details {
+            margin-top: 20px;
+        }
+
+        .gift-details h2 {
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+<div class="container gift-container">
+    <h2 class="text-center">상품 상세 설명</h2>
+    <div class="gift-details">
+        <p><strong>이름:</strong> <span th:text="${gift.name}"></span></p>
+        <p><strong>가격:</strong> <span th:text="${gift.price}"></span> 원</p>
+        <p><strong>이미지 URL:</strong> <span target="_blank" th:text="${gift.imageUrl}"></span></p>
+        <p><strong>카테고리:</strong> <span th:text="${gift.category.name}"></span></p>
+    </div>
+    <h3 class="mt-5">옵션 목록</h3>
+    <table class="table table-bordered mt-3">
+        <thead>
+        <tr>
+            <th>옵션 ID</th>
+            <th>옵션 이름</th>
+            <th>수량</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="option : ${gift.options}">
+            <td th:text="${option.id}"></td>
+            <td th:text="${option.name}"></td>
+            <td th:text="${option.quantity}"></td>
+        </tr>
+        </tbody>
+    </table>
+    <div class="text-center mt-4">
+        <a class="btn btn-warning" th:href="@{|/admin/gift/modify/${gift.id}|}">상품 수정</a>
+        <a class="btn btn-primary" th:href="@{|/admin/gift/${gift.id}/option/create|}">옵션 추가</a>
+        <form class="d-inline-block" method="post" th:action="@{|/admin/gift/delete/${gift.id}|}">
+            <input name="_method" type="hidden" value="delete">
+            <input class="btn btn-danger" type="submit" value="상품 삭제">
+        </form>
+        <a class="btn btn-secondary" th:href="@{/admin}">메인으로</a>
+    </div>
+</div>
+</body>
+</html>
