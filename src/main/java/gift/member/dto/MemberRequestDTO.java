@@ -22,8 +22,8 @@ public class MemberRequestDTO {
         return email;
     }
 
-    public Member toEntity() {
-        return new Member(email, password);
+    public String getPassword() {
+        return password;
     }
 
     public MemberTokenDTO toTokenDTO() {

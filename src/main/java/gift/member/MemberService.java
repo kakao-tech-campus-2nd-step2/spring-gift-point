@@ -37,7 +37,9 @@ public class MemberService {
                 e -> {
                     throw new IllegalArgumentException(MEMBER_ALREADY_EXISTS);
                 },
-                () -> memberRepository.save(memberRequestDTO.toEntity())
+                () -> memberRepository.save(
+                    new Member(memberRequestDTO.getEmail(), memberRequestDTO.getPassword())
+                )
             );
 
         return jwtProvider.generateToken(memberRequestDTO.toTokenDTO());
@@ -60,7 +62,8 @@ public class MemberService {
     }
 
     private void verifyPassword(Member member, MemberRequestDTO memberRequestDTO) {
-        if (!member.isSamePassword(memberRequestDTO.toEntity())) {
+        if (!member.isSamePassword(
+            new Member(memberRequestDTO.getEmail(), memberRequestDTO.getPassword()))) {
             throw new IllegalArgumentException(WRONG_PASSWORD);
         }
     }
