@@ -1,4 +1,4 @@
-package gift.option.domain;
+package gift.option.dto;
 
 import jakarta.validation.constraints.*;
 
@@ -13,8 +13,6 @@ public class OptionRequest {
     @Max(value = 99999999, message = "Quantity는 최대 1억 미만 개까지 가능합니다.")
     private Long quantity;
 
-    @NotNull(message = "Product ID는 필수입니다.")
-    private Long productId;
 
     // Getters and setters
     public String getName() {
@@ -31,13 +29,5 @@ public class OptionRequest {
 
     public void setQuantity(Long quantity) {
         this.quantity = quantity;
-    }
-
-    public Long getProductId() {
-        return productId;
-    }
-
-    public void setProductId(Long productId) {
-        this.productId = productId;
     }
 }

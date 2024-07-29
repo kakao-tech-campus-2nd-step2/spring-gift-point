@@ -1,8 +1,8 @@
 package gift.product;
 
-import gift.category.model.Category;
+import gift.category.domain.Category;
 import gift.category.repository.CategoryRepository;
-import gift.product.model.Product;
+import gift.product.domain.Product;
 import gift.product.repository.ProductRepository;
 import gift.product.service.ProductService;
 import org.junit.jupiter.api.BeforeEach;

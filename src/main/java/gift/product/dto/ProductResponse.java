@@ -1,20 +1,23 @@
-package gift.product.model;
+package gift.product.dto;
 
-public class ProductDTO {
+public class ProductResponse {
     private Long id;
     private String name;
-    private int price;
+    private Integer price;
     private String imageUrl;
+    private Long categoryId;
 
-    // Constructors
-    public ProductDTO(Long id, String name, int price, String imageUrl) {
+    // 생성자
+    public ProductResponse(Long id, String name, Integer price, String imageUrl, Long categoryId) {
         this.id = id;
         this.name = name;
         this.price = price;
         this.imageUrl = imageUrl;
+        this.categoryId = categoryId;
     }
 
-    // Getters and setters
+    // getter & setter
+
     public Long getId() {
         return id;
     }
@@ -31,11 +34,11 @@ public class ProductDTO {
         this.name = name;
     }
 
-    public int getPrice() {
+    public Integer getPrice() {
         return price;
     }
 
-    public void setPrice(int price) {
+    public void setPrice(Integer price) {
         this.price = price;
     }
 
@@ -45,5 +48,13 @@ public class ProductDTO {
 
     public void setImageUrl(String imageUrl) {
         this.imageUrl = imageUrl;
+    }
+
+    public Long getCategoryId() {
+        return categoryId;
+    }
+
+    public void setCategoryId(Long categoryId) {
+        this.categoryId = categoryId;
     }
 }

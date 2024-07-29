@@ -1,6 +1,6 @@
 package gift.option.domain;
 
-import gift.product.model.Product;
+import gift.product.domain.Product;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 

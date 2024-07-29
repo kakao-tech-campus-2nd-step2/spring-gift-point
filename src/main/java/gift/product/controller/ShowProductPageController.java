@@ -1,11 +1,10 @@
 package gift.product.controller;
 
-import gift.category.model.Category;
+import gift.category.dto.CategoryListDTO;
 import gift.category.service.CategoryService;
 import gift.common.exception.ProductNotFoundException;
-import gift.option.domain.Option;
 import gift.option.service.OptionService;
-import gift.product.model.Product;
+import gift.product.domain.Product;
 import gift.product.service.ProductService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -16,7 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import java.util.List;
 
 @Controller
-@RequestMapping("/api/products")
+@RequestMapping("/show/products")
 public class ShowProductPageController {
     private final ProductService productService;
     private final CategoryService categoryService;
@@ -39,7 +38,7 @@ public class ShowProductPageController {
     // 상품 등록 페이지 반환
     @GetMapping("/new")
     public String showProductCreateForm(Model model) {
-        List<Category> categories = categoryService.getAllCategories();
+        List<CategoryListDTO> categories = categoryService.getAllCategories();
         model.addAttribute("categories", categories);
         model.addAttribute("product", new Product());
         return "Product/create_product";
@@ -52,7 +51,7 @@ public class ShowProductPageController {
         if (product == null) {
             throw new ProductNotFoundException(id);
         }
-        List<Category> categories = categoryService.getAllCategories();
+        List<CategoryListDTO> categories = categoryService.getAllCategories();
         model.addAttribute("categories", categories);
         model.addAttribute("product", product);
         return "Product/edit_product";

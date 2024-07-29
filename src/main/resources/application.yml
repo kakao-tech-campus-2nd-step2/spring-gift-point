@@ -27,3 +27,8 @@ logging:
   level:
     root: INFO
     org.springframework.web: DEBUG
+
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html # Swagger UI 경로 설정
+  use-fqn: true # 패키지 경로 표시 여부

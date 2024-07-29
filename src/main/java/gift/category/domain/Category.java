@@ -1,6 +1,6 @@
-package gift.category.model;
+package gift.category.domain;
 
-import gift.product.model.Product;
+import gift.product.domain.Product;
 import jakarta.persistence.*;
 
 import java.util.ArrayList;
@@ -16,8 +16,6 @@ public class Category {
 
     @OneToMany(mappedBy = "category", cascade = CascadeType.REMOVE, orphanRemoval = true)
     private List<Product> products = new ArrayList<>();
-
-
 
     // 활용 메서드들
     public void addProduct(Product product) {

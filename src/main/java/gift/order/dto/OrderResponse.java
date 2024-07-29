@@ -1,4 +1,4 @@
-package gift.option.domain;
+package gift.order.dto;
 
 import java.time.LocalDateTime;
 

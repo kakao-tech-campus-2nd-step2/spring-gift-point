@@ -28,13 +28,15 @@ public class KakaoLoginController {
     // sendRedirect 함수를 통하여 HTTP 상태 코드 302를 전송한다. 이때, 클라이언트는 해당 URL로 리다이렉트 된다.
     // 이를 통해 Location: ${REDIRECT_URI}?code=${AUTHORIZE_CODE}로 Get 요청이 이루어진다.
     @GetMapping()
-    public void requestKakaoLoginScreen(HttpServletResponse response) throws IOException {
+    public ResponseEntity<?> requestKakaoLoginScreen(HttpServletResponse response) throws IOException {
         String url = kakaoProperties.getAuthCodeUri() +
                 "?client_id=" + kakaoProperties.clientId() +
                 "&redirect_uri=" + kakaoProperties.redirectUri() +
                 "&response_type=code";
 
         response.sendRedirect(url);
+
+        return ResponseEntity.ok(new CommonResponse<>(null, "카카오 로그인 화면 요청 성공", true));
     }
 
 

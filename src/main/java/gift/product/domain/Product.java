@@ -1,6 +1,7 @@
-package gift.product.model;
+package gift.product.domain;
 
-import gift.category.model.Category;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import gift.category.domain.Category;
 import gift.option.domain.Option;
 import gift.wish.model.Wish;
 import jakarta.persistence.*;

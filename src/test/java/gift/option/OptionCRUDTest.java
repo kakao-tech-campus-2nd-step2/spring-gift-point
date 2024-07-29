@@ -1,10 +1,10 @@
 package gift.option;
 
-import gift.category.model.Category;
+import gift.category.domain.Category;
 import gift.category.repository.CategoryRepository;
 import gift.option.domain.Option;
 import gift.option.repository.OptionJpaRepository;
-import gift.product.model.Product;
+import gift.product.domain.Product;
 import gift.product.repository.ProductRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

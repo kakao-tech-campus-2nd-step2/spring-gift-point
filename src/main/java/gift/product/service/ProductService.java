@@ -1,14 +1,14 @@
 package gift.product.service;
 
-import gift.category.model.Category;
+import gift.category.domain.Category;
 import gift.category.repository.CategoryRepository;
 import gift.common.exception.ProductAlreadyExistsException;
 import gift.option.domain.Option;
-import gift.option.domain.OptionRequest;
 import gift.option.repository.OptionJpaRepository;
-import gift.product.model.Product;
+import gift.product.domain.Product;
+import gift.product.dto.ProductRequest;
+import gift.product.dto.ProductResponse;
 import gift.product.repository.ProductRepository;
-import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -18,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @Validated
@@ -36,8 +37,16 @@ public class ProductService {
         return productRepository.findAllWithCategory();
     }
 
+    public ProductResponse getProductDTOById(Long id) {
+        Product product = productRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Product with id " + id + " not found"));
+
+        return new ProductResponse(product.getId(), product.getName(), product.getPrice(), product.getImageUrl(), product.getCategory().getId());
+    }
+
     public Product getProductById(Long id) {
-        return productRepository.findById(id).orElse(null);
+        return productRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Product with id " + id + " not found"));
     }
 
     @Transactional
@@ -102,33 +111,28 @@ public class ProductService {
 
     // 페이지네이션 기능
     @Transactional(readOnly = true)
-    public Page<Product> getProductsByPage(int page, int size, String sortBy, String direction) {
+    public Page<ProductResponse> getProductsByPage(int page, int size, String sortBy, String direction, Long categoryId) {
         // validation
         if (page < 0 || size <= 0) {
             throw new IllegalArgumentException("Invalid page or size");
         }
 
         // sorting
-        Sort sort;
-        if (direction.equalsIgnoreCase("asc")) {
-            sort = Sort.by(sortBy).ascending();
-        } else {
-            sort = Sort.by(sortBy).descending();
+        Sort sort = direction.equalsIgnoreCase("asc") ? Sort.by(sortBy).ascending() : Sort.by(sortBy).descending();
+
+        // paging
+        Pageable pageable = PageRequest.of(page, size, sort);
+
+        // 카테고리가 없는 경우
+        if (categoryId == null) {
+            throw new IllegalArgumentException("Invalid category id");
         }
 
-        Pageable pageable = PageRequest.of(page, size, sort);
-        return productRepository.findAll(pageable);
-    }
+        // Product 엔티티를 ProductResponse DTO로 변환
+        Page<Product> productPage = productRepository.findAllByCategoryId(categoryId, pageable);
 
-    // 카테고리 목록을 반환하는 메서드 추가
-    public List<Category> getAllCategories() {
-        return categoryRepository.findAll();
-    }
-
-    // id에 해당하는 option들 전부 조회
-    public List<Option> getOptionsByProductId(Long id) {
-        Product product = productRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("[ERROR] 다음 id의 상품은 존재하지 않음 : " + id));
-        return optionJpaRepository.findAllByProduct(product);
+        return productPage.map(product ->
+                new ProductResponse(product.getId(), product.getName(), product.getPrice(), product.getImageUrl(), product.getCategory().getId())
+        );
     }
 }

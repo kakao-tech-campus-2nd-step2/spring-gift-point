@@ -1,14 +1,16 @@
 package gift.option.service;
 
 import gift.option.domain.Option;
-import gift.option.domain.OptionRequest;
+import gift.option.dto.OptionRequest;
+import gift.option.dto.OptionResponse;
 import gift.option.repository.OptionJpaRepository;
-import gift.product.model.Product;
+import gift.product.domain.Product;
 import gift.product.repository.ProductRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class OptionService {
@@ -21,7 +23,10 @@ public class OptionService {
 
     // 1. option create
     @Transactional
-    public Option createOption(Long productId, OptionRequest optionRequest) {
+    public void createOption(Long productId, OptionRequest optionRequest) {
+        System.out.println("123123123optionRequest.getName() = " + optionRequest.getName());
+        System.out.println("optionRequest.getQuantity() = " + optionRequest.getQuantity());
+
         Product product = productRepository.findById(productId)
                 .orElseThrow(() -> new IllegalArgumentException("[ERROR] 다음 id의 상품은 존재하지 않음 : " + productId));
 
@@ -40,7 +45,7 @@ public class OptionService {
 
         checkForDuplicateOption(option);
 
-        return optionJpaRepository.save(option);
+        optionJpaRepository.save(option);
     }
 
     // 2. option read
@@ -57,32 +62,59 @@ public class OptionService {
 
     // 3. option update
     @Transactional
-    public Option updateOption(Long productId, OptionRequest optionRequest) {
+    public void updateOption(Long productId, OptionRequest optionRequest, Long optionId) {
+        // 상품 id로 상품 조회하고 해당 상품의 옵션들 중 optionId와 같은 옵션을 찾기
         Product product = productRepository.findById(productId)
                 .orElseThrow(() -> new IllegalArgumentException("[ERROR] 다음 id의 상품은 존재하지 않음 : " + productId));
 
-        Option existingOption = optionJpaRepository.findByProduct(product)
-                .orElseThrow(() -> new IllegalArgumentException("[ERROR] 다음 상품 id의 옵션은 존재하지 않음 : " + productId));
+        List<Option> options = optionJpaRepository.findAllByProduct(product);
+        Option targetOption = null;
+        for (Option option : options) {
+            if (option.getId().equals(optionId)) {
+                targetOption = option;
+                break;
+            }
+        }
 
-        if (optionRequest.getQuantity() < 0 || optionRequest.getQuantity() > 100000000) {
+        // valid
+        if (targetOption == null || optionRequest.getQuantity() < 0 || optionRequest.getQuantity() > 100000000) {
             throw new IllegalArgumentException("[ERROR] 옵션의 수량은 0 이상 1억 미만이어야 함");
         }
 
-        existingOption.update(optionRequest.getName(), optionRequest.getQuantity());
+        // update
+        targetOption.update(optionRequest.getName(), optionRequest.getQuantity());
+        System.out.println("targetOption.getName() = " + targetOption.getName());
+        System.out.println("targetOption.getQuantity() = " + targetOption.getQuantity());
 
-        checkForDuplicateOption(existingOption);
+        checkForDuplicateOption(targetOption);
 
-        return optionJpaRepository.save(existingOption);
-
+        optionJpaRepository.save(targetOption);
     }
 
     // 4. option delete
     @Transactional
-    public Long deleteOption(Long id) {
-        Option existingOption = optionJpaRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("[ERROR] 다음 id의 옵션은 존재하지 않음 : " + id));
-        Long productId = existingOption.getProduct().getId();
-        optionJpaRepository.delete(existingOption);
+    public Long deleteOption(Long optionId, Long productId) {
+        // 상품 id로 상품 조회하고 해당 상품의 옵션들 중 optionId와 같은 옵션을 찾기
+        Product product = productRepository.findById(productId)
+                .orElseThrow(() -> new IllegalArgumentException("[ERROR] 다음 id의 상품은 존재하지 않음 : " + productId));
+
+        List<Option> options = optionJpaRepository.findAllByProduct(product);
+        Option targetOption = null;
+        for (Option option : options) {
+            if (option.getId().equals(optionId)) {
+                targetOption = option;
+                break;
+            }
+        }
+
+        // valid
+        if (targetOption == null) {
+            throw new IllegalArgumentException("[ERROR] 다음 id의 옵션은 존재하지 않음 : " + optionId);
+        }
+
+        // delete
+        optionJpaRepository.delete(targetOption);
+
         return productId;
     }
 
@@ -90,9 +122,21 @@ public class OptionService {
     public void checkForDuplicateOption(Option option) {
         List<Option> options = optionJpaRepository.findAll();
         for (Option o : options) {
-            if (o.equals(option)) {
+            if (!o.getId().equals(option.getId()) && o.equals(option)) {
                 throw new IllegalArgumentException("[ERROR] 중복된 옵션 존재 : " + option.getName());
             }
         }
+    }
+
+    public List<OptionResponse> getOptions(Long productId) {
+        // 상품 id로 상품 조회하고 해당 상품의 옵션들 조회
+        Product product = productRepository.findById(productId)
+                .orElseThrow(() -> new IllegalArgumentException("[ERROR] 다음 id의 상품은 존재하지 않음 : " + productId));
+        List<Option> options = optionJpaRepository.findAllByProduct(product);
+
+        // 옵션들을 OptionResponse로 변환하여 반환
+        return options.stream()
+                .map(option -> new OptionResponse(option.getId(), option.getName(), option.getQuantity(), product.getName()))
+                .collect(Collectors.toList());
     }
 }

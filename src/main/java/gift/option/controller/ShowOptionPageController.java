@@ -2,9 +2,9 @@ package gift.option.controller;
 
 import gift.common.exception.ProductNotFoundException;
 import gift.option.domain.Option;
-import gift.option.domain.OptionRequest;
+import gift.option.dto.OptionRequest;
 import gift.option.service.OptionService;
-import gift.product.model.Product;
+import gift.product.domain.Product;
 import gift.product.service.ProductService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import java.util.List;
 
 @Controller
-@RequestMapping("/api/products")
+@RequestMapping("/show/products")
 public class ShowOptionPageController {
     private final OptionService optionService;
     private final ProductService productService;
@@ -39,7 +39,7 @@ public class ShowOptionPageController {
     @GetMapping("/{id}/options/new")
     public String showOptionCreateForm(@PathVariable("id") Long productId, Model model) {
         OptionRequest optionRequest = new OptionRequest();
-        optionRequest.setProductId(productId);
+        //optionRequest.setProductId(productId);
         model.addAttribute("option", optionRequest);
         return "Option/create_option";
     }
