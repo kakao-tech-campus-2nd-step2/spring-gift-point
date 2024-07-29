@@ -38,3 +38,7 @@ out/
 
 ### Mac OS ###
 .DS_Store
+
+# API Key Concealing
+application.properties
+application-API-KEY.properties
