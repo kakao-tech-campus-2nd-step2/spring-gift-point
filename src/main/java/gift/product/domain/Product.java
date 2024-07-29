@@ -1,7 +1,7 @@
 package gift.product.domain;
 
 import gift.category.domain.Category;
-import gift.option.domain.Option;
+import gift.product.option.domain.Option;
 import gift.wish.domain.WishlistItem;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;

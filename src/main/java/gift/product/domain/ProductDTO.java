@@ -1,6 +1,6 @@
 package gift.product.domain;
 
-import gift.option.domain.OptionDTO;
+import gift.product.option.domain.OptionDTO;
 import java.util.ArrayList;
 import java.util.List;
 

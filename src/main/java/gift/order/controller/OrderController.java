@@ -1,6 +1,6 @@
 package gift.order.controller;
 
-import gift.option.service.OptionService;
+import gift.product.option.service.OptionService;
 import gift.order.domain.OrderRequest;
 import gift.order.domain.OrderResponse;
 import gift.order.service.OrderService;
