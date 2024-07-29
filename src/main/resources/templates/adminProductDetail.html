@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Add Product</title>
+    <link rel="stylesheet" href="https://unpkg.com/mvp.css">
+</head>
+<body>
+
+<h1 th:id="${product.id}">Edit Product</h1>
+
+<form id="productForm">
+    <div>
+        <label for="name">Name:</label>
+        <input type="text" id="name" name="name" th:value="${product.name}"/>
+    </div>
+    <div>
+        <label for="price">Price:</label>
+        <input type="number" id="price" name="price" th:value="${product.price}"/>
+    </div>
+    <div>
+        <label for="imageUrl">Image URL:</label>
+        <input type="text" id="imageUrl" name="imageUrl" th:value="${product.imageUrl}"/>
+    </div>
+    <div>
+        <button type="button" onclick="submitForm()">Edit Product</button>
+    </div>
+</form>
+
+<div>
+    <button type="button" onclick="deleteProduct()">Delete Product</button>
+</div>
+<div>
+    <button type="button" onclick="gotoHome()">home</button>
+</div>
+
+<script>
+    const adminHomeUrl = "http://localhost:8080/api/products";
+
+    const h1 = document.querySelector("h1");
+
+    function deleteProduct() {
+        fetch(`${adminHomeUrl}/${h1.id}`, {
+            method: 'DELETE',
+        })
+        window.location.href = `http://localhost:8080/admin/deleted`;
+    }
+
+    function submitForm() {
+        const form = document.getElementById('productForm');
+        const formData = {
+            name: form.name.value,
+            price: form.price.value,
+            imageUrl: form.imageUrl.value
+        };
+
+        fetch(`${adminHomeUrl}/${h1.id}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(formData)
+        })
+
+        alert("Successfully edited");
+    }
+</script>
+<script th:src="@{/js/gotoPage.js}"></script>
+</body>
+</html>

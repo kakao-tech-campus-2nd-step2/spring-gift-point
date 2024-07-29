@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Add Product</title>
+    <link rel="stylesheet" href="https://unpkg.com/mvp.css">
+</head>
+<body>
+
+<h1>Add Product</h1>
+
+<form id="productForm">
+    <div>
+        <label for="name">Name:</label>
+        <input type="text" id="name" name="name"/>
+    </div>
+    <div>
+        <label for="price">Price:</label>
+        <input type="number" id="price" name="price"/>
+    </div>
+    <div>
+        <label for="imageUrl">Image URL:</label>
+        <input type="text" id="imageUrl" name="imageUrl"/>
+    </div>
+    <div>
+        <button type="button" onclick="submitForm()">Add Product</button>
+    </div>
+</form>
+
+<div>
+    <button type="button" onclick="gotoHome()">home</button>
+</div>
+
+<script>
+    const adminHomeUrl = "http://localhost:8080/api/products"
+
+    function submitForm() {
+        const form = document.getElementById('productForm');
+        const formData = {
+            name: form.name.value,
+            price: form.price.value,
+            imageUrl: form.imageUrl.value
+        };
+
+        fetch(adminHomeUrl, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(formData)
+        })
+
+        form.name.value = "";
+        form.price.value = "";
+        form.imageUrl.value = "";
+
+        alert("Successfully added");
+    }
+</script>
+<script th:src="@{/js/gotoPage.js}"></script>
+</body>
+</html>
