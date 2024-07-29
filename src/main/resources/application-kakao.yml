@@ -1,0 +1,10 @@
+# Kakao API 설정
+
+kakao:
+  token_request_uri: https://kauth.kakao.com/oauth/token
+  user_request_uri: https://kapi.kakao.com/v2/user/me?=property_keys
+  message_request_uri: https://kapi.kakao.com/v2/api/talk/memo/default/send
+  redirect_uri: ${REDIRECT_URI}
+  client_id: ${CLIENT_ID}
+  grant_type: authorization_code
+  refresh_grant_type: refresh_token
