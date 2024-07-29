@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Spring Gift</title>
+    <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+<h1>Product List</h1>
+<div class="top-bar">
+    <a href="/api/products/new" class="add-product-link">Add new product</a>
+</div>
+<div class="table-container">
+    <table>
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Price</th>
+            <th>Category</th>
+            <th>Image URL</th>
+            <th>Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="product : ${products}">
+            <td th:text="${product.id}"></td>
+            <td th:text="${product.name}"></td>
+            <td th:text="${product.price}"></td>
+            <td th:text="${product.category.name}"></td>
+            <td><img th:src="${product.imageUrl}" alt="product image" width="100"></td>
+            <td>
+                <div class="action-cell">
+                    <a th:href="@{/api/products/{id}/edit(id=${product.id})}" class="action-link">✏️</a>
+                    <form th:action="@{/api/products/{id}(id=${product.id})}" method="post" style="display:inline;" class="action-link">
+                        <input type="hidden" name="_method" value="delete" />
+                        <button type="submit" class="delete-btn">❌</button>
+                    </form>
+                </div>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+<div class="pagination">
+    <ul>
+        <li th:if="${currentPage > 0}">
+            <a th:href="@{/api/products(page=${currentPage - 1}, size=${pageSize})}">Previous</a>
+        </li>
+        <li th:each="i : ${#numbers.sequence(0, totalPages - 1)}"
+            th:classappend="${i == currentPage} ? 'active'">
+            <a th:href="@{/api/products(page=${i}, size=${pageSize})}" th:text="${i + 1}"></a>
+        </li>
+        <li th:if="${currentPage < totalPages - 1}">
+            <a th:href="@{/api/products(page=${currentPage + 1}, size=${pageSize})}">Next</a>
+        </li>
+    </ul>
+</div>
+
+<button onclick="redirectToKakaoLogin()">카카오 로그인</button>
+
+<script>
+    function redirectToKakaoLogin() {
+        var clientId = /*[[${kakao.clientId}]]*/ '';
+        var redirectUri = /*[[${kakao.redirectUri}]]*/ 'http://localhost:8080';
+        var kakaoAuthUrl = `https://kauth.kakao.com/oauth/authorize?client_id=${clientId}&redirect_uri=${redirectUri}&response_type=code`;
+        window.location.href = kakaoAuthUrl;
+    }
+</script>
+
+</body>
+</html>

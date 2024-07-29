@@ -1,0 +1,270 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 20px;
+}
+
+h1 {
+    text-align: center;
+    color: #333;
+}
+
+a {
+    text-decoration: none;
+    color: #191919;
+}
+
+.top-bar {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 20px;
+}
+
+.add-product-link {
+    font-size: 16px;
+    padding: 10px 15px;
+    background-color: #FEE500;
+    border: 1px solid #FEE500;
+    border-radius: 5px;
+    transition: background-color 0.3s, border 0.3s;
+}
+
+.add-product-link:hover {
+    background-color: #FFD100;
+    border: 1px solid #FFD100;
+}
+
+.table-container {
+    width: 100%;
+    overflow-x: auto;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: #fff;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+th, td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+}
+
+th {
+    background-color: #f2f2f2;
+}
+
+img {
+    display: block;
+    margin: auto;
+    width: 100px;
+    height: auto;
+}
+
+.action-cell {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.action-link {
+    flex: 1;
+    text-align: center;
+}
+
+.product-form {
+    max-width: 400px;
+    margin: 0 auto;
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+.form-group input {
+    width: calc(100% - 22px);
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 16px;
+}
+
+.form-group .alert-danger {
+    color: #721c24;
+    background-color: #f8d7da;
+    border: 1px solid #f5c6cb;
+    padding: 10px;
+    border-radius: 5px;
+    margin-top: 5px;
+}
+
+.form-actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.btn {
+    display: inline-block;
+    padding: 10px 20px;
+    font-size: 16px;
+    color: #191919;
+    background-color: #FEE500;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.btn:hover {
+    background-color: #FFD100;
+}
+
+.delete-btn {
+    background: none;
+    border: none;
+    color: inherit;
+}
+
+.delete-btn:hover {
+    cursor: pointer;
+}
+
+.pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 20px;
+}
+
+.pagination ul {
+    list-style-type: none;
+    padding: 0;
+    display: flex;
+    gap: 10px;
+}
+
+.pagination li {
+    display: inline;
+}
+
+.pagination a {
+    text-decoration: none;
+    color: #191919;
+    padding: 10px 20px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.pagination a:hover {
+    background-color: #FFD100;
+    border: 1px solid #FFD100;
+    color: #191919;
+}
+
+.pagination .active a {
+    background-color: #FEE500;
+    border: 1px solid #FEE500;
+    color: #191919;
+    cursor: default;
+}
+
+.category-container {
+    display: flex;
+    overflow-x: auto;
+    gap: 10px;
+    padding: 10px;
+    white-space: nowrap;
+    margin-bottom: 20px;
+}
+
+.category-card {
+    display: inline-block;
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    padding: 10px;
+    width: 120px;
+    text-align: center;
+    transition: transform 0.3s;
+}
+
+.category-card img {
+    width: 80px;
+    height: 80px;
+    object-fit: cover;
+    margin-bottom: 5px;
+}
+
+.category-card h2 {
+    font-size: 14px;
+    margin-bottom: 5px;
+}
+
+.category-card p {
+    color: #777;
+    font-size: 12px;
+}
+
+.category-card:hover {
+    transform: scale(1.05);
+    cursor: pointer;
+}
+
+.category-card.selected {
+    border: 2px solid #FFD100;
+}
+
+.options-container {
+    margin-top: 20px;
+}
+
+.option-group {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.option-group input {
+    flex: 1;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 16px;
+    margin-right: 10px;
+}
+
+.add-option-btn,
+.delete-option-btn {
+    display: inline-block;
+    padding: 10px 15px;
+    font-size: 16px;
+    color: #fff;
+    background-color: #dddcd1;
+    border: none;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    min-width: 40px;
+    text-align: center;
+}
+
+.add-option-btn:hover,
+.delete-option-btn:hover{
+    background-color: #FFD100;
+}
