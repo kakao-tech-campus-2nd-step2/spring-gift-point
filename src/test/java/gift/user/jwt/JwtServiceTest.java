@@ -3,8 +3,9 @@ package gift.user.jwt;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-import gift.user.model.dto.AppUser;
-import gift.user.model.dto.Role;
+import gift.domain.AppUser;
+import gift.domain.Role;
+import gift.util.jwt.JwtService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;

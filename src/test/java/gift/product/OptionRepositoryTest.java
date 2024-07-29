@@ -2,17 +2,17 @@ package gift.product;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 
-import gift.category.model.CategoryRepository;
-import gift.category.model.dto.Category;
-import gift.product.model.OptionRepository;
-import gift.product.model.ProductRepository;
-import gift.product.model.dto.option.Option;
-import gift.product.model.dto.product.Product;
-import gift.user.model.UserRepository;
-import gift.user.model.dto.AppUser;
-import gift.user.model.dto.Role;
-import gift.wishlist.model.WishListRepository;
-import gift.wishlist.model.dto.Wish;
+import gift.domain.AppUser;
+import gift.domain.Category;
+import gift.domain.Option;
+import gift.domain.Product;
+import gift.domain.Role;
+import gift.domain.Wish;
+import gift.repository.CategoryRepository;
+import gift.repository.OptionRepository;
+import gift.repository.ProductRepository;
+import gift.repository.UserRepository;
+import gift.repository.WishListRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

@@ -8,11 +8,11 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import gift.category.model.CategoryRepository;
-import gift.category.model.dto.Category;
-import gift.category.model.dto.CategoryRequest;
-import gift.category.model.dto.CategoryResponse;
-import gift.category.service.CategoryService;
+import gift.domain.Category;
+import gift.dto.category.CategoryRequest;
+import gift.dto.category.CategoryResponse;
+import gift.repository.CategoryRepository;
+import gift.service.CategoryService;
 import jakarta.persistence.EntityNotFoundException;
 import java.util.Arrays;
 import java.util.List;

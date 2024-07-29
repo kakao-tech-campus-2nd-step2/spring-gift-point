@@ -2,15 +2,15 @@ package gift.wishlist;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import gift.category.model.CategoryRepository;
-import gift.category.model.dto.Category;
-import gift.product.model.ProductRepository;
-import gift.product.model.dto.product.Product;
-import gift.user.model.UserRepository;
-import gift.user.model.dto.AppUser;
-import gift.user.model.dto.Role;
-import gift.wishlist.model.WishListRepository;
-import gift.wishlist.model.dto.Wish;
+import gift.domain.AppUser;
+import gift.domain.Category;
+import gift.domain.Product;
+import gift.domain.Role;
+import gift.domain.Wish;
+import gift.repository.CategoryRepository;
+import gift.repository.ProductRepository;
+import gift.repository.UserRepository;
+import gift.repository.WishListRepository;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

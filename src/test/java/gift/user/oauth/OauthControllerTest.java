@@ -8,11 +8,11 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import gift.user.controller.OauthController;
-import gift.user.jwt.JwtService;
-import gift.user.model.dto.KakaoTokenResponse;
-import gift.user.service.JwtUserService;
-import gift.user.service.KakaoLoginService;
+import gift.controller.OauthController;
+import gift.dto.oauth.KakaoTokenResponse;
+import gift.service.JwtUserService;
+import gift.service.KakaoLoginService;
+import gift.util.jwt.JwtService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

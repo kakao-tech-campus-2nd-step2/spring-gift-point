@@ -4,9 +4,9 @@ package gift.user;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 
-import gift.user.model.UserRepository;
-import gift.user.model.dto.AppUser;
-import gift.user.model.dto.Role;
+import gift.domain.AppUser;
+import gift.domain.Role;
+import gift.repository.UserRepository;
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

@@ -2,7 +2,6 @@ package gift.user.oauth;
 
 import gift.config.KakaoProperties;
 import java.net.URI;
-import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.client.RestTemplateBuilder;
@@ -20,7 +19,7 @@ public class RestTest {
     private KakaoProperties kakaoProperties;
 
     // 코드를 새로 발급받지 않으면 오류가 납니다..
-    @Test
+    // @Test
     void test_KakaoLoginAPI() {
         var url = "https://kauth.kakao.com/oauth/token";
         var body = new LinkedMultiValueMap<String, String>();
