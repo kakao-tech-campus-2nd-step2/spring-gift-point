@@ -9,8 +9,6 @@ import gift.dto.WishResponse;
 import gift.entity.Wish;
 import gift.repository.WishRepository;
 import jakarta.transaction.Transactional;
-import java.util.List;
-import java.util.stream.Collectors;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
@@ -28,32 +26,16 @@ public class WishService {
     }
 
     public WishResponse addWish(Member member, WishRequest request) {
-        Product product = validateProductExist(request.getProduct().getId());
+        Product product = validateProductExist(request.getProductId());
+
         Wish wish = new Wish();
         wish.addWish(member, product);
-
         wishRepository.save(wish);
         return new WishResponse(wish.getId(), wish.getProduct());
     }
 
-    public List<WishResponse> getWishes(Member member) {
-        List<Wish> wishes = wishRepository.findByMemberId(member.getId());
-        return wishes.stream()
-            .map(wish -> new WishResponse(wish.getId(), wish.getProduct()))
-            .collect(Collectors.toList());
-    }
-
     public Slice<Wish> getWishes(Member member, Pageable pageable) {
         return wishRepository.findByMemberId(member.getId(), pageable);
-    }
-
-    public void deleteWishByProductId(Member member, Long productId) {
-        List<Wish> wishes = wishRepository.findByMemberIdAndProductId(member.getId(), productId);
-        if (wishes.isEmpty()) {
-            throw new WishNotFoundException(
-                "Wishlist에 Product ID: " + productId + "인 상품은 존재하지 않습니다.");
-        }
-        wishRepository.delete(wishes.get(0));
     }
 
     public void deleteWishById(Long id) {
