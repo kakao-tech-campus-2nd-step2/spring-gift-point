@@ -27,6 +27,7 @@ jobs:
 
           # application.yml 파일에 있는 환경 변수를 secrets에 저장된 값으로 변경합니다.
       - name: Replace environment variables in application-kakao.yml
+        uses: microsoft/variable-substitution@v1
         with:
           files: ./src/main/resources/application-kakao.yml
         env:
@@ -34,6 +35,7 @@ jobs:
           kakao.client_id: ${{ secrets.CLIENT_ID }}
 
       - name: Replace environment variables in application.yml
+        uses: microsoft/variable-substitution@v1
         with:
           files: ./src/main/resources/application.yml
         env:
