@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>상품 관리</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
+</head>
+<body>
+<div class="p-5 mb-5 text-center</> bg-light">
+    <h1 class="mb-3" th:align="center"><b>상품 관리</b></h1>
+    <h2 class="mb-3" th:align="center">관리자 전용 상품 관리 페이지</h2>
+</div>
+
+<div class="container">
+
+    <button type="button" id="create-btn"
+            th:onclick="|location.href='@{/manager/products/add}'|"
+            class="btn btn-secondary btn-sm mb-3">상품 추가</button>
+
+    <div>
+        <table class="table">
+            <thead>
+            <tr>
+                <th>ID</th>
+                <th>카테고리</th>
+                <th>상품명</th>
+                <th>가격</th>
+                <th>이미지 URL</th>
+
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="product : ${products}">
+                <td><a href="ProductInfo.html" th:href="@{/manager/products/{id}(id=${product.id()})}" th:text="${product.id}">회원id</a></td>
+                <td th:text="${categories.get(product.categoryID()).name()}">카테고리</a></td>
+                <td th:text="${product.name()}">상품명</a></td>
+                <td th:text="${product.price()}">10000</td>
+                <td th:text="${product.imageUrl()}">10</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+</body>
+</html>
