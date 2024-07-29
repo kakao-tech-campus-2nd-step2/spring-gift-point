@@ -1,7 +1,6 @@
 package gift.category;
 
 import gift.category.dto.CategoryResponseDTO;
-import gift.category.entity.Category;
 import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,6 +19,7 @@ public class CategoryService {
         return categoryRepository.findAll()
             .stream()
             .map(category -> new CategoryResponseDTO(
+                category.getId(),
                 category.getName()
             ))
             .toList();

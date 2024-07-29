@@ -7,6 +7,7 @@ import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.when;
 
+import gift.category.dto.CategoryResponseDTO;
 import gift.category.entity.Category;
 import gift.category.dto.CategoryRequestDTO;
 import gift.category.CategoryRepository;
@@ -46,11 +47,11 @@ class ProductServiceTest {
 
         List<ProductResponseDTO> expect = List.of(
             new ProductResponseDTO(1L, "product-1", 1, "product-1-image",
-                new Category(1, "category-1")),
+                new CategoryResponseDTO(1L, "category-1")),
             new ProductResponseDTO(2L, "product-2", 2, "product-2-image",
-                new Category(1, "category-1")),
+                new CategoryResponseDTO(1L, "category-1")),
             new ProductResponseDTO(3L, "product-3", 3, "product-3-image",
-                new Category(2, "category-2"))
+                new CategoryResponseDTO(2L, "category-2"))
         );
 
         //when

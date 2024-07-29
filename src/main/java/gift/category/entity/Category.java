@@ -21,16 +21,20 @@ public class Category {
     @Schema(description = "카테고리명")
     private String name;
 
-    public String getName() {
-        return name;
-    }
-
     protected Category() {
     }
 
     public Category(long id, String name) {
         this.id = id;
         this.name = name;
+    }
+
+    public long getId() {
+        return id;
+    }
+
+    public String getName() {
+        return name;
     }
 
     @Override

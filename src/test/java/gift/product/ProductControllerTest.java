@@ -15,6 +15,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import gift.category.dto.CategoryResponseDTO;
 import gift.category.entity.Category;
 import gift.category.dto.CategoryRequestDTO;
 import gift.product.dto.ProductRequestDTO;
@@ -57,14 +58,14 @@ class ProductControllerTest {
                 "product1",
                 100,
                 "product1-imageUrl",
-                new Category(1L, "category-1")
+                new CategoryResponseDTO(1L, "category-1")
             ),
             new ProductResponseDTO(
                 2L,
                 "Product2",
                 200,
                 "product2-image-url",
-                new Category(2L, "category-2")
+                new CategoryResponseDTO(2L, "category-2")
             )
         );
 

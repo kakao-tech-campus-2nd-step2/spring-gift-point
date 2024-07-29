@@ -3,8 +3,9 @@ package gift.product;
 import static gift.exception.ErrorMessage.CATEGORY_NOT_FOUND;
 import static gift.exception.ErrorMessage.PRODUCT_NOT_FOUND;
 
-import gift.category.entity.Category;
 import gift.category.CategoryRepository;
+import gift.category.dto.CategoryResponseDTO;
+import gift.category.entity.Category;
 import gift.product.dto.ProductRequestDTO;
 import gift.product.dto.ProductResponseDTO;
 import gift.product.entity.Product;
@@ -38,7 +39,10 @@ public class ProductService {
                 product.getName(),
                 product.getPrice(),
                 product.getImageUrl(),
-                product.getCategory()
+                new CategoryResponseDTO(
+                    product.getCategory().getId(),
+                    product.getCategory().getName()
+                )
             ))
             .toList();
     }
