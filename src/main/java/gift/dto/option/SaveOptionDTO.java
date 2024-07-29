@@ -1,4 +1,4 @@
 package gift.dto.option;
 
-public record SaveOptionDTO(String name) {
+public record SaveOptionDTO(int product_id, String option) {
 }

@@ -1,11 +1,11 @@
 package gift.entity;
 
-import gift.dto.category.ResponseCategoryDTO;
-import gift.dto.category.SaveCategoryDTO;
+import gift.dto.category.CategoryDTO;
 import gift.exception.exception.BadRequestException;
 import jakarta.persistence.*;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 @Entity
@@ -29,11 +29,9 @@ public class Category {
         this.name = name;
     }
 
-    public Category(SaveCategoryDTO saveCategoryDTO) {
-        this.name = saveCategoryDTO.name();
-        this.imageUrl = saveCategoryDTO.imageUrl();
-        this.color = saveCategoryDTO.color();
-        this.description = saveCategoryDTO.description();
+    public Category(CategoryDTO categoryDTO) {
+        this.id = categoryDTO.id();
+        this.name = categoryDTO.name();
     }
 
     public Category(int id, String name) {
@@ -62,19 +60,15 @@ public class Category {
         this.products.remove(product);
     }
 
-    public ResponseCategoryDTO toResponseDTO() {
-        return new ResponseCategoryDTO(this.id, this.name, this.description, this.color, this.imageUrl);
+    public void updateCategoryName(String name) {
+        this.name = name;
+    }
+
+    public CategoryDTO toDTO() {
+        return new CategoryDTO(this.id, this.name);
     }
 
     public void checkEmpty() {
-        if (!this.products.isEmpty()) throw new BadRequestException("해당 카테고리에 물품이 존재합니다.");
-    }
-
-    public Category updateCategory(SaveCategoryDTO saveCategoryDTO) {
-        this.name = saveCategoryDTO.name();
-        this.color = saveCategoryDTO.color();
-        this.description = saveCategoryDTO.description();
-        this.imageUrl = saveCategoryDTO.imageUrl();
-        return this;
+        if (this.products.isEmpty()) throw new BadRequestException("해당 카테고리에 물품이 존재합니다.");
     }
 }

@@ -1,47 +1,50 @@
 package gift.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import gift.dto.option.*;
+import gift.dto.option.OptionQuantityDTO;
+import gift.dto.option.OrderResponseDTO;
+import gift.dto.option.SaveOptionDTO;
+import gift.dto.option.UpdateOptionDTO;
 import gift.service.OptionService;
-import gift.service.ProductService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
 @RestController
 @RequiredArgsConstructor
 public class OptionController {
     private final OptionService optionService;
-    private final ProductService productService;
 
-    @PostMapping("/api/products/{productId}/options")
+    @PostMapping("/api/option")
     @ResponseStatus(HttpStatus.CREATED)
-    public OptionResponseDTO addOption(@PathVariable int productId, @RequestBody SaveOptionDTO saveOptionDTO) {
-        return optionService.saveOption(productId, saveOptionDTO);
+    public String addOption(@RequestBody SaveOptionDTO saveOptionDTO) {
+        optionService.saveOption(saveOptionDTO);
+        return "옵션 저장";
     }
 
-    @DeleteMapping("/api/products/{productId}/options/{optionId}")
+    @DeleteMapping("/api/option/{id}")
     @ResponseStatus(HttpStatus.CREATED)
-    public OptionResponseDTO deleteOption(@PathVariable int productId, @PathVariable int optionId) {
-        return optionService.deleteOption(productId, optionId);
+    public String deleteOption(@PathVariable int id) {
+        optionService.deleteOption(id);
+        return "옵션 삭제";
     }
 
-    @PutMapping("/api/products/{productId}/options/{optionId}")
-    public OptionResponseDTO updateOption(@PathVariable int productId, @PathVariable int optionId, @RequestBody SaveOptionDTO saveOptionDTO) {
-        return optionService.updateOption(productId, optionId, saveOptionDTO);
+    @PutMapping("/api/option")
+    public String updateOption(@RequestBody UpdateOptionDTO updateOptionDTO) {
+        optionService.updateOption(updateOptionDTO);
+        return "옵션 수정";
     }
 
-    @GetMapping("/api/products/{productId}/options")
-    public List<OptionResponseDTO> getOptions(@PathVariable int productId) {
-        return optionService.getOptions(productId);
+    @PostMapping("/api/option/refill")
+    public String refill(@RequestBody OptionQuantityDTO optionQuantityDTO) {
+        optionService.refillQuantity(optionQuantityDTO);
+        return "수량 증가";
     }
 
-    @PostMapping("/api/products/{productId}/options/{optionId}")
-    public OptionResponseDTO refill(@PathVariable int productId, @PathVariable int optionId, @RequestBody OptionQuantityDTO optionQuantityDTO) {
-        return optionService.refillQuantity(productId, optionId, optionQuantityDTO);
+    @PostMapping("/api/option/order")
+    public OrderResponseDTO order(@RequestHeader("Authorization") String token, @RequestBody OptionQuantityDTO optionQuantityDTO) {
+        return optionService.order(optionQuantityDTO, token);
     }
 }

@@ -1,7 +1,7 @@
 package gift.entity;
 
-import gift.dto.order.OrderResponseDTO;
-import gift.dto.order.OrderRequestDTO;
+import gift.dto.option.OptionQuantityDTO;
+import gift.dto.option.OrderResponseDTO;
 import jakarta.persistence.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -50,10 +50,10 @@ public class Order {
         return orderDateTime;
     }
 
-    public Order(OrderRequestDTO orderRequestDTO, Option option, User user) {
+    public Order(OptionQuantityDTO optionQuantityDTO, Option option, User user) {
         this.option = option;
-        this.quantity = orderRequestDTO.quantity();
-        this.message = orderRequestDTO.message();
+        this.quantity = optionQuantityDTO.quantity();
+        this.message = optionQuantityDTO.message();
         this.user = user;
     }
 

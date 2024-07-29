@@ -1,8 +1,6 @@
 package gift.entity;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
-import gift.dto.option.OptionResponseDTO;
-import gift.dto.option.SaveOptionDTO;
 import gift.exception.exception.BadRequestException;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Min;
@@ -21,7 +19,7 @@ public class Option {
     Product product;
 
     @Pattern(regexp = "^[a-zA-Z0-9()\\[\\]+\\-&/_]+$", message = "특수기호 안됨")
-    String name;
+    String option;
 
     @Min(0)
     int quantity;
@@ -33,12 +31,8 @@ public class Option {
     public Option(Product product, String option) {
         this.product = product;
         product.addOptions(this);
-        this.name = option;
+        this.option = option;
         this.quantity = 0;
-    }
-
-    public OptionResponseDTO toResponseDTO() {
-        return new OptionResponseDTO(this.id, this.name, this.quantity, this.product.id);
     }
 
     public int getId() {
@@ -46,7 +40,7 @@ public class Option {
     }
 
     public String getOption() {
-        return this.name;
+        return this.option;
     }
 
     public int getQuantity() {
@@ -56,9 +50,8 @@ public class Option {
     public Option() {
     }
 
-    public Option addQuantity(int num) {
+    public void addQuantity(int num) {
         this.quantity += num;
-        return this;
     }
 
     public void subQuantity(int num) {
@@ -66,12 +59,8 @@ public class Option {
         this.quantity -= num;
     }
 
-    public Option changeOption(SaveOptionDTO saveOptionDTO) {
-        this.name = saveOptionDTO.name();
+    public Option changeOption(String option) {
+        this.option = option;
         return this;
-    }
-
-    public void setProduct(Product product) {
-        this.product = product;
     }
 }

@@ -35,55 +35,101 @@ import java.util.Map;
 public class OptionService {
     private final ProductRepository productRepository;
     private final OptionRepository optionRepository;
+    private final OrderRepository orderRepository;
+    private final JWTUtil jwtUtil;
+    private final UserRepository userRepository;
+    private final WishListRepository wishListRepository;
+    RestTemplate restTemplate = new RestTemplate();
+    ObjectMapper objectMapper = new ObjectMapper();
+    @Value("${kakao.send_message_url}")
+    String send_message_url;
 
-
-    public OptionResponseDTO saveOption(int productId, SaveOptionDTO saveOptionDTO) {
-        Product product = productRepository.findById(productId).orElseThrow(() -> new NotFoundException("해당 물품이 없음"));
-        optionRepository.findByOption(productId, saveOptionDTO.name()).ifPresent(c -> {
-            throw new BadRequestException("이미 존재하는 옵션");
-        });
-        Option option = new Option(product, saveOptionDTO.name());
-        return optionRepository.save(option).toResponseDTO();
+    @Transactional
+    public void refillQuantity(OptionQuantityDTO optionQuantityDTO) {
+        Option option = optionRepository.findById(optionQuantityDTO.optionId()).orElseThrow(() -> new NotFoundException("해당 옵션이 없음"));
+        option.addQuantity(optionQuantityDTO.quantity());
     }
 
-    public OptionResponseDTO deleteOption(int productId, int optionId) {
-        Product product = productRepository.findById(productId).orElseThrow(() -> new NotFoundException("해당 제품이 없음"));
-        Option option = optionRepository.findById(optionId).orElseThrow(() -> new NotFoundException("해당 옵션이 없음"));
-        if (!product.getOptions().contains(option)) throw new NotFoundException("제품id에 해당하는 옵션id가 없음");
+    @Transactional
+    public OrderResponseDTO order(OptionQuantityDTO optionQuantityDTO, String token) {
+        Option option = optionRepository.findById(optionQuantityDTO.optionId()).orElseThrow(() -> new NotFoundException("해당 옵션이 없음"));
+        option.subQuantity(optionQuantityDTO.quantity());
 
+        User user = userRepository.findById(jwtUtil.getUserIdFromToken(token)).orElseThrow(() -> new NotFoundException("유저 없음"));
+        String kakaoToken = jwtUtil.getKakaoTokenFromToken(token);
+
+        Order order = new Order(optionQuantityDTO, option, user);
+        user.addOrder(order);
+
+        if (kakaoToken != null) sendMessage(order, kakaoToken);
+
+        wishListRepository.findByUserAndProduct(user, option.getProduct()).ifPresent(wishList -> wishListRepository.deleteById(wishList.getId()));
+        order = orderRepository.save(order);
+        return order.toResponseDTO();
+    }
+
+    private void sendMessage(Order order, String token) {
+        var url = send_message_url;
+        var headers = makeSendMessageHeader(token);
+        var body = makeSendMessageBody(order);
+
+        HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(body, headers);
+        ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.POST, request, String.class);
+
+        if (response.getStatusCode() == HttpStatus.UNAUTHORIZED) throw new UnAuthException("인증되지 않은 요청");
+        if (response.getStatusCode() != HttpStatus.OK) throw new BadRequestException("잘못된 요청");
+    }
+
+    private HttpHeaders makeSendMessageHeader(String token) {
+        HttpHeaders headers = new HttpHeaders();
+        headers.add(HttpHeaders.AUTHORIZATION, "Bearer " + token);
+        headers.add(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_FORM_URLENCODED_VALUE);
+        return headers;
+    }
+
+    private MultiValueMap<String, String> makeSendMessageBody(Order order) {
+        MultiValueMap<String, String> body = new LinkedMultiValueMap<>();
+        Map<String, Object> templateObject = new HashMap<>();
+        templateObject.put("object_type", "text");
+        templateObject.put("text", order.getMessage());
+
+        Map<String, String> link = new HashMap<>();
+        link.put("web_url", "https://developers.kakao.com");
+        link.put("mobile_web_url", "https://developers.kakao.com");
+        templateObject.put("link", link);
+
+        String templateObjectJson;
+        try {
+            templateObjectJson = objectMapper.writeValueAsString(templateObject);
+        } catch (JsonProcessingException e) {
+            throw new ServerInternalException("파싱 에러");
+        }
+        body.add("template_object", templateObjectJson);
+        return body;
+    }
+
+    public void saveOption(SaveOptionDTO saveOptionDTO) {
+        Product product = productRepository.findById(saveOptionDTO.product_id()).orElseThrow(() -> new NotFoundException("해당 물품이 없음"));
+        optionRepository.findByOption(saveOptionDTO.option()).ifPresent(c -> {
+            throw new BadRequestException("이미 존재하는 옵션");
+        });
+        Option option = new Option(product, saveOptionDTO.option());
+        optionRepository.save(option);
+    }
+
+    public void deleteOption(int id) {
+        Option option = optionRepository.findById(id).orElseThrow(() -> new NotFoundException("해당 옵션이 없음"));
         option.getProduct().deleteOption(option);
-        optionRepository.deleteById(optionId);
-        return option.toResponseDTO();
+        optionRepository.deleteById(id);
     }
 
     @Transactional
-    public OptionResponseDTO updateOption(int productId, int optionId, SaveOptionDTO saveOptionDTO) {
-        Option option = optionRepository.findById(optionId).orElseThrow(() -> new NotFoundException("해당 옵션이 없음"));
-        Product product = productRepository.findById(productId).orElseThrow(() -> new NotFoundException("해당 제품이 없음"));
-        if (!product.getOptions().contains(option)) throw new NotFoundException("제품id에 해당하는 옵션id가 없음");
-        product.getOptions().remove(option);
-
-        optionRepository.findByOption(productId, saveOptionDTO.name()).ifPresent(c -> {
+    public void updateOption(UpdateOptionDTO updateOptionDTO) {
+        Option option = optionRepository.findById(updateOptionDTO.id()).orElseThrow(() -> new NotFoundException("해당 옵션이 없음"));
+        optionRepository.findByOption(updateOptionDTO.option()).ifPresent(c -> {
             throw new BadRequestException("이미 존재하는 옵션");
         });
-        option = option.changeOption(saveOptionDTO);
-        product.addOptions(option);
-
-        return option.toResponseDTO();
+        option.changeOption(updateOptionDTO.option());
     }
 
-    public List<OptionResponseDTO> getOptions(int productId) {
-        productRepository.findById(productId).orElseThrow(() -> new NotFoundException("해당 제품이 없음"));
-        return optionRepository.findByProductId(productId);
-    }
-
-    @Transactional
-    public OptionResponseDTO refillQuantity(int productId, int optionId, OptionQuantityDTO optionQuantityDTO) {
-        Product product = productRepository.findById(productId).orElseThrow(() -> new NotFoundException("해당 제품이 없음"));
-        Option option = optionRepository.findById(optionId).orElseThrow(() -> new NotFoundException("해당 옵션이 없음"));
-        if (!product.getOptions().contains(option)) throw new NotFoundException("제품id에 해당하는 옵션id가 없음");
-
-        option = option.addQuantity(optionQuantityDTO.quantity());
-        return option.toResponseDTO();
-    }
 }
