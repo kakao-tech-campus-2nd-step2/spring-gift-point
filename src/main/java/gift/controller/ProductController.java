@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import gift.dto.ProductDto;
 import gift.dto.request.ProductCreateRequest;
-import gift.service.CategoryService;
 import gift.service.ProductService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
@@ -31,11 +30,9 @@ import java.util.List;
 public class ProductController {
 
     private final ProductService productService;
-    private final CategoryService categoryService;
 
-    public ProductController(ProductService productService, CategoryService categoryService){
+    public ProductController(ProductService productService){
         this.productService = productService;
-        this.categoryService = categoryService;
     }
 
     @GetMapping
