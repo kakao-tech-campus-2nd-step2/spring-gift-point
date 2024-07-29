@@ -1,0 +1,50 @@
+* { padding: 0; margin: 0; }
+
+html, body {
+    height: 100%;
+    background: #ffffff;
+}
+
+#container {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+}
+
+#loginBox {
+    width: 300px;
+    text-align: center;
+    background-color: #ffffff;
+}
+.input-form-box {
+    border: 0px solid #ff0000;
+    display: flex;
+    margin-bottom: 5px;
+}
+.input-form-box > span {
+    display: block;
+    text-align: left;
+    font-size: 14px;
+    padding-top: 5px;
+    min-width: 65px;
+}
+.button-login-box {
+    margin: 10px 0;
+}
+#loginBoxTitle {
+    color:#000000;
+    font-weight: bold;
+    font-size: 32px;
+    text-transform: uppercase;
+    padding: 5px;
+    margin-bottom: 20px;
+}
+#inputBox {
+    margin: 10px;
+}
+
+#inputBox button {
+    padding: 3px 5px;
+}

@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Order</title>
+  <link rel="stylesheet" href="/style.css">
+  <script defer src="/main.js"></script>
+</head>
+<body>
+<div class="container">
+  <div class="table-wrapper">
+    <div class="table-title">
+      <div class="row">
+        <div class="col-sm-6">
+          <h2>Products</h2>
+        </div>
+      </div>
+    </div>
+    <table class="table table-striped table-hover">
+      <thead>
+      <tr>
+        <th>Name</th>
+        <th>Price</th>
+        <th>Image</th>
+        <th>Category</th>
+        <th>Option</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr th:each="product : ${productList}" th:id="'row-' + ${product.id}" th:onclick="|selectRow(this, ${product.id})|">
+        <td th:text="${product.name}"></td>
+        <td th:text="${product.price}"></td>
+        <td><img th:src="${product.imageUrl}" alt="img" width="100px"></td>
+        <td th:text="${product.categoryName}"></td>
+        <td>
+          <select th:id="'option'+${product.id}">
+            <option th:each="option : ${product.options}"
+                    th:text="|${option.name} : ${option.quantity}|"
+                    th:value="${option.id}"></option>
+          </select>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+    <div class="order-part">
+      <input type="number" id="quantity"/>
+      <label for="message">
+        <textarea id="message">Message</textarea>
+      </label>
+      <button th:onclick="orderProduct()">
+        주문하기
+      </button>
+    </div>
+    <div class="paging">
+      <ul class="pagination">
+        <th:block th:each="page : ${#numbers.sequence(pageInfo.startPageNum, pageInfo.endPageNum)}">
+          <li><a th:if="${page != pageInfo.currentPageNum}" th:href="@{/admin(page = ${page - 1})}" th:text="${page}"></a></li>
+          <li><a class="active" th:if="${page == pageInfo.currentPageNum}" th:text="${page}"></a></li>
+        </th:block>
+      </ul>
+    </div>
+  </div>
+</div>
+<script th:inline="javascript">
+    /*<![CDATA[*/
+    const token = /*[[${tokenResponse != null ? tokenResponse.token : ''}]]*/ '';
+
+    if (token) {
+        localStorage.setItem('token', token);
+    }
+    /*]]>*/
+
+    let selectedProductId = null;
+
+    function selectRow(row, productId) {
+        const previousSelected = document.querySelector('.selected-row');
+        if (previousSelected) {
+            previousSelected.classList.remove('selected-row');
+        }
+
+        row.classList.add('selected-row');
+
+        selectedProductId = productId;
+    }
+
+</script>
+</body>
+</html>
