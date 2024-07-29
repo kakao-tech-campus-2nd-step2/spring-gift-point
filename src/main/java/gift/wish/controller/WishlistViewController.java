@@ -1,10 +1,9 @@
 package gift.wish.controller;
 
 import gift.kakao.login.dto.KakaoUser;
-import gift.product.domain.Product;
 import gift.product.domain.ProductDTO;
 import gift.user.repository.UserRepository;
-import gift.wish.domain.WishlistDTO;
+import gift.wish.domain.WishlistRequest;
 import gift.wish.domain.WishlistItem;
 import gift.product.service.ProductService;
 import gift.user.service.UserService;
@@ -65,19 +64,19 @@ public class WishlistViewController {
         return "add_wishlist";
     }
     @PostMapping("{id}/save")
-    public String saveWishlist(@PathVariable("id") Long userId, @RequestBody List<WishlistDTO> wishlistDTOList) {
+    public String saveWishlist(@PathVariable("id") Long userId, @RequestBody List<WishlistRequest> wishlistRequests) {
         List<WishlistItem> wishlistItemList = new ArrayList<>();
-        for(WishlistDTO wishlistDTO : wishlistDTOList){
+        for(WishlistRequest wishlistRequest : wishlistRequests){
             WishlistItem wishlistItem = new WishlistItem();
             wishlistItem.setUser(userService.findById(userId).get());
 
-            Long productId = wishlistDTO.getProductId();
+            Long productId = wishlistRequest.getProductId();
             wishlistItem.setProduct(productService.getProductById(productId).get());
 
-            wishlistItem.setAmount(wishlistDTO.getAmount());
+            wishlistItem.setAmount(wishlistRequest.getAmount());
             wishlistItemList.add(wishlistItem);
         }
-        wishlistService.saveWishlistItemsWithUserId(userId, wishlistItemList);
+        wishlistService.addWishes(wishlistRequests);
         return "redirect:/wishlist/" + userId;
     }
 }
