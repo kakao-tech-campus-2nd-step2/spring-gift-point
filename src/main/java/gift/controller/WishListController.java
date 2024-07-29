@@ -12,6 +12,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 public class WishListController {
     private final WishListService wishListService;
@@ -43,14 +45,13 @@ public class WishListController {
             @AuthenticateMember UserResponse user,
             @RequestParam(value = "page", defaultValue = "0") int page,
             @RequestParam(value = "size", defaultValue = "5") int size,
-            @RequestParam(value = "sort", defaultValue = "asc") String sort,
-            @RequestParam(value = "field", defaultValue = "id") String field
+            @RequestParam(value = "sort") List<String> sort
     ){
-        if(sort.equals("asc")){
-            Page<WishProductResponse> wishList = wishListService.findWishListASC(user.getId(), page, size, field);
+        if(sort.getLast().equals("asc")){
+            Page<WishProductResponse> wishList = wishListService.findWishListASC(user.getId(), page, size, sort.getFirst());
             return new ResponseEntity<>(wishList, HttpStatus.OK);
         }
-        Page<WishProductResponse> wishList = wishListService.findWishListDESC(user.getId(), page, size, field);
+        Page<WishProductResponse> wishList = wishListService.findWishListDESC(user.getId(), page, size, sort.getFirst());
         return new ResponseEntity<>(wishList, HttpStatus.OK);
     }
     /*

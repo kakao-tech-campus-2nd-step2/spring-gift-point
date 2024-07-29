@@ -13,6 +13,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 public class UserController {
     private final UserService userService;
@@ -55,15 +57,14 @@ public class UserController {
     public ResponseEntity<Page<UserResponse>> readUsers(
             @RequestParam(value = "page", defaultValue = "0") int page,
             @RequestParam(value = "size", defaultValue = "5") int size,
-            @RequestParam(value = "sort", defaultValue = "asc") String sort,
-            @RequestParam(value = "field", defaultValue = "id") String field
+            @RequestParam(value = "sort") List<String> sort
     ) {
-        if(sort.equals("asc")) {
-            Page<UserResponse> users = userService.findAllASC(page, size,field);
+        if(sort.getLast().equals("asc")) {
+            Page<UserResponse> users = userService.findAllASC(page, size, sort.getFirst());
             return new ResponseEntity<>(users, HttpStatus.OK);
         }
 
-        Page<UserResponse> users = userService.findAllDESC(page, size,field);
+        Page<UserResponse> users = userService.findAllDESC(page, size, sort.getFirst());
         return new ResponseEntity<>(users, HttpStatus.OK);
     }
     /*
