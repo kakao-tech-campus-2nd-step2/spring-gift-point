@@ -1,0 +1,62 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <style>
+      .container {
+        max-width: 560px;
+      }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="text-center">
+        <h2>상품 상세</h2>
+    </div>
+
+    <div>
+        <label for="id">상품 ID</label>
+        <input type="text" id="id" name="id" th:value="${productDto.id}" readonly>
+    </div>
+
+    <div>
+        <label for="name">상품명</label>
+        <input type="text" id="name" name="name" th:value="${productDto.name}" readonly>
+    </div>
+
+    <div>
+        <label for="price">가격</label>
+        <input type="text" id="price" name="price" th:value="${productDto.price}" readonly>
+    </div>
+
+    <div>
+        <label for="productImage">이미지 URL</label>
+        <input type="text" id="productImage" name="productImage" th:value="${productDto.imageUrl}" readonly>
+    </div>
+
+    <div>
+        <label for="category">카테고리</label>
+        <input type="text" id="category" name="category" th:value="${category.name}" readonly>
+    </div>
+    
+    <hr>
+
+    <div>
+        <div>
+
+
+            <button th:onclick="|location.href='@{/products/{id}/edit(id=${productDto.id})}'|"
+                    type="button">상품 수정</button>
+        </div>
+        <div>
+            <button th:onclick="|location.href='@{/products/{id}/delete(id=${productDto.id})}'|"
+                    type="button">상품 삭제</button>
+        </div>
+        <div>
+            <button th:onclick="|location.href='@{/products}'|"
+                    type="button">목록으로</button>
+        </div>
+    </div>
+</div> <!-- /container -->
+</body>
+</html>
