@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Login Page</title>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/styles.css}">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+<div class="container">
+    <h2>Login</h2>
+    <form id="login-form">
+        <div class="form-group">
+            <label for="email">Email:</label>
+            <input type="email" id="email" name="email" class="form-control" required>
+        </div>
+        <div class="form-group">
+            <label for="password">Password:</label>
+            <input type="password" id="password" name="password" class="form-control" required>
+        </div>
+        <button type="submit" class="btn btn-primary">Login</button>
+    </form>
+</div>
+
+<!-- kakao login button -->
+<div class="text-center">
+    <a href="https://kauth.kakao.com/oauth/authorize"
+       th:href="@{https://kauth.kakao.com/oauth/authorize(client_id=${kakaoClientId}, redirect_uri=${kakaoRedirectUrl}, response_type='code')}">
+        <img th:src="@{/img/kakao_login_button.png}" alt="카카오 로그인 버튼">
+    </a>
+</div>
+
+<script>
+    $(document).ready(function() {
+        $('#login-form').on('submit', function(event) {
+            event.preventDefault();
+            const formData = {
+                email: $('#email').val(),
+                password: $('#password').val()
+            };
+
+            $.post('/login', formData)
+                .done(function(response) {
+                    localStorage.setItem('token', response.token);
+                    window.location.href = '/';
+                })
+                .fail(function() {
+                    alert('Login failed!');
+                });
+        });
+    });
+
+    // 카카오 로그인 버튼 클릭 시 실행되는 함수
+    function handleKakaoLogin() {
+        const urlParams = new URLSearchParams(window.location.search);
+        const code = urlParams.get('code');
+
+        if (code) {
+            $.post('/auth/kakao', { code: code })
+                .done(function(response) {
+                    localStorage.setItem('token', response.token);
+                    window.location.href = '/';
+                })
+                .fail(function() {
+                    alert('Kakao login failed!');
+                });
+        }
+    }
+
+    $(document).ready(function() {
+        handleKakaoLogin();
+    });
+</script>
+</body>
+</html>

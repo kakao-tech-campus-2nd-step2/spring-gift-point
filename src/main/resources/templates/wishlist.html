@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>위시리스트</title>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/styles.css}">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        .heart-button {
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 24px;
+            color: red;
+            transition: color 0.3s, background-color 0.3s;
+        }
+
+        .heart-button:hover {
+            background-color: #f1f1f1;
+        }
+
+        .heart-button i {
+            transition: color 0.3s;
+        }
+
+        .heart-button:hover i {
+            color: grey;
+        }
+    </style>
+</head>
+<body>
+<div class="header">
+    <h1>🛒<span id="memberName"></span>님의 위시리스트</h1>
+</div>
+
+<table>
+    <thead>
+    <tr>
+        <th>상품명</th>
+        <th>가격</th>
+        <th>이미지</th>
+        <th>위시</th>
+    </tr>
+    </thead>
+    <tbody id="wishlist-items">
+    <!-- 위시리스트 항목이 여기에 추가됩니다. -->
+    </tbody>
+</table>
+
+<div id="pagination" class="pagination">
+    <!-- 페이지네이션 버튼이 여기에 추가됩니다. -->
+</div>
+
+<br>
+
+<script>
+    let currentPage = 0;
+    const pageSize = 5;  // 페이지 당 상품 수
+    const buttonsPerPage = 5;
+
+    $(document).ready(function() {
+        fetchWishlist();
+    });
+
+    function fetchWishlist(pageNumber = 1) {
+        $.ajax({
+            url: `/wishlist?pageNumber=${pageNumber}&pageSize=${pageSize}`,
+            headers: {
+                Authorization: "Bearer " + localStorage.getItem('token')
+            },
+            type: 'GET',
+            success: function(response) {
+                const wishlistItems = response.content;
+                const totalPages = response.totalPages;
+
+                // Display member's name
+                const memberName = wishlistItems.length > 0 ? wishlistItems[0].memberDto.email : '';
+                $('#memberName').text(memberName);
+
+                // Display wishlist items
+                const wishlistTable = $("#wishlist-items");
+                wishlistTable.empty();
+                wishlistItems.forEach(function(item) {
+                    console.log(item)
+                    wishlistTable.append(`
+                        <tr>
+                            <td>${item.productResponseDto.name}</td>
+                            <td>${item.productResponseDto.price}</td>
+                            <td><img src="${item.productResponseDto.imageUrl}" alt="상품 이미지" width="100"></td>
+                            <td><button class="heart-button" onclick="removeFromWishlist(${item.id})" onmouseover="unfillHeart(this)" onmouseout="fillHeart(this)"><i class="fas fa-heart"></i></button></td>
+                        </tr>
+                    `);
+                });
+
+                // Update pagination
+                updatePagination(totalPages, pageNumber);
+            },
+            error: function() {
+                alert('위시리스트를 불러오는 중 오류가 발생했습니다.');
+            }
+        });
+    }
+
+    function updatePagination(totalPages, page) {
+        currentPage = page;
+        const pagination = $("#pagination");
+        pagination.empty();
+
+        const currentGroup = Math.floor(currentPage / buttonsPerPage);
+        const startPage = currentGroup * buttonsPerPage + 1;
+        const endPage = Math.min(startPage + buttonsPerPage, totalPages);
+
+        if (currentGroup > 0) {
+            pagination.append(`<button onclick="fetchWishlist(${startPage - 1})"><</button>`);
+        }
+
+        for (let i = startPage; i <= endPage; i++) {
+            pagination.append(`<button onclick="fetchWishlist(${i})" class="${i === currentPage ? 'active' : ''}">${i}</button>`);
+        }
+
+        if (endPage < totalPages) {
+            pagination.append(`<button onclick="fetchWishlist(${endPage})">></button>`);
+        }
+    }
+
+    function removeFromWishlist(wishId) {
+        $.ajax({
+            url: `/wishlist/${wishId}`,
+            headers: {
+                Authorization: "Bearer " + localStorage.getItem('token')
+            },
+            type: 'DELETE',
+            success: function() {
+                fetchWishlist(currentPage);
+                alert('위시리스트에서 삭제되었습니다.');
+            },
+            error: function() {
+                alert('위시리스트 삭제 중 오류가 발생했습니다.');
+            }
+        });
+    }
+
+    // 하트 아이콘
+    function fillHeart(button) {
+        const icon = button.querySelector('i');
+        icon.classList.remove('far');
+        icon.classList.add('fas');
+    }
+
+    function unfillHeart(button) {
+        const icon = button.querySelector('i');
+        icon.classList.remove('fas');
+        icon.classList.add('far');
+    }
+</script>
+
+</body>
+</html>
