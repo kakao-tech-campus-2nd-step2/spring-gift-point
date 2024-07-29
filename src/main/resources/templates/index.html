@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Product Management System</title>
+  <!-- Bootstrap CSS 추가 -->
+  <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+        rel="stylesheet">
+  <style>
+    .table-container {
+      max-height: 400px;
+      overflow-y: auto;
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <h1>Products List</h1>
+  <button class="btn btn-primary" data-target="#addProductModal" data-toggle="modal">Add Product
+  </button>
+  <button class="btn btn-danger ml-2" onclick="showDeleteSelectedModal()">Delete Selected</button>
+  <button class="btn btn-success ml-2" id="loginButton" onclick="location.href='/users/login'"
+          type="button">Login
+  </button>
+  <button class="btn btn-success ml-2" id="logoutButton" onclick="logout()" style="display: none;"
+          type="button">Logout
+  </button>
+  <div class="table-container">
+    <table class="table">
+      <thead>
+      <tr>
+        <th>Select</th>
+        <th>ID</th>
+        <th>Name</th>
+        <th>category</th>
+        <th>Price</th>
+        <th>Image URL</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr th:each="product : ${products.content}">
+        <td>
+          <input th:id="${product.id}" th:value="${product.id}" type="checkbox">
+        </td>
+        <td th:text="${product.id}"></td>
+        <td th:text="${product.name}"></td>
+        <td th:text="${product.category.name}"></td>
+        <td th:text="${product.price}"></td>
+        <td th:text="${product.imageUrl}"></td>
+        <td>
+          <!-- 수정 버튼 -->
+          <button class="btn btn-info" th:data-target="'#editProductModal_' + ${product.id}"
+                  th:data-toggle="modal">Edit
+          </button>
+          <!-- 삭제 버튼 -->
+          <button class="btn btn-danger"
+                  th:attr="onclick='confirmDelete(\''+ ${product.id} +'\', \'' + ${product.name} + '\')'">
+            Delete
+          </button>
+          <!-- 장바구니 버튼 -->
+          <button class="btn btn-success" th:attr="onclick='addToCart(\''+ ${product.id} +'\')'">Add
+            to Cart
+          </button>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- 상품 추가 모달 -->
+<div aria-hidden="true" aria-labelledby="addProductModalLabel" class="modal fade"
+     id="addProductModal"
+     role="dialog" tabindex="-1">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="addProductModalLabel">Add New Product</h5>
+        <button aria-label="Close" class="close" data-dismiss="modal" type="button">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form id="addProductForm">
+          <div class="form-group">
+            <label for="productName">Name</label>
+            <input class="form-control" id="productName" name="name" required type="text">
+          </div>
+          <div class="form-group">
+            <label for="productCategory">Category</label>
+            <select class="form-control" id="productCategory" name="categoryId" required>
+              <option disabled selected value="">Select Category</option>
+              <tr th:each="category : ${categories}">
+                <option th:text="${category.name}" th:value="${category.id}"></option>
+              </tr>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="productPrice">Price</label>
+            <input class="form-control" id="productPrice" name="price" required type="number">
+          </div>
+          <div class="form-group">
+            <label for="productImageUrl">Image URL</label>
+            <input class="form-control" id="productImageUrl" name="imageUrl" required type="url">
+          </div>
+          <div class="form-group">
+            <label for="optionName">Option Name</label>
+            <input class="form-control" id="optionName" name="option.name" required type="text">
+          </div>
+          <div class="form-group">
+            <label for="optionQuantity">Option Quantity</label>
+            <input class="form-control" id="optionQuantity" name="option.quantity" required
+                   type="number">
+          </div>
+          <button class="btn btn-primary" onclick="submitProduct()" type="button">Submit</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 상품 삭제 모달 -->
+<div aria-hidden="true" aria-labelledby="deleteProductModalLabel" class="modal fade"
+     id="deleteProductModal"
+     role="dialog" tabindex="-1">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="deleteProductModalLabel">Delete Product</h5>
+        <button aria-label="Close" class="close" data-dismiss="modal" type="button">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <p id="deleteProductName"></p>
+        <p>해당 아이템을 정말 삭제하시겠습니까?</p>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" data-dismiss="modal" type="button">Cancel</button>
+        <button class="btn btn-danger" onclick="deleteConfirmed()" type="button">Delete</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 선택된 상품들 삭제 모달 -->
+<div aria-hidden="true" aria-labelledby="deleteSelectedProductModalLabel" class="modal fade"
+     id="deleteSelectedProductModal"
+     role="dialog" tabindex="-1">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="deleteSelectedProductModalLabel">Delete Selected Products</h5>
+        <button aria-label="Close" class="close" data-dismiss="modal" type="button">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <p id="selectedProductsMessage"></p>
+        <p>선택된 모든 상품을 정말 삭제하시겠습니까?</p>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" data-dismiss="modal" type="button">Cancel</button>
+        <button class="btn btn-danger" onclick="deleteSelectedConfirmed()" type="button">Delete
+          Selected
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 상품 수정 모달 -->
+<div th:each="product : ${products}">
+  <div aria-hidden="true" aria-labelledby="'editProductModalLabel_' + ${product.value.id}"
+       class="modal fade" role="dialog"
+       tabindex="-1" th:id="'editProductModal_' + ${product.id}">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" th:id="'editProductModalLabel_' + ${product.id}">Edit Product</h5>
+          <button aria-label="Close" class="close" data-dismiss="modal" type="button">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <form th:id="'editProductForm_' + ${product.id}">
+            <input th:id="'editProductId_' + ${product.id}" th:value="${product.id}" type="hidden">
+            <div class="form-group">
+              <label th:for="'editProductName_' + ${product.id}">Name</label>
+              <input class="form-control" th:id="'editProductName_' + ${product.id}"
+                     th:required="${true}"
+                     th:value="${product.name}" type="text">
+            </div>
+            <div class="form-group">
+              <label th:for="'editProductCategory_' + ${product.id}">Category</label>
+              <select class="form-control" name="categoryId"
+                      required th:id="'editProductCategory_' + ${product.id}">
+                <tr th:each="category : ${categories}">
+                  <option th:selected="${category.id == product.category.id}"
+                          th:text="${category.name}"
+                          th:value="${category.id}"></option>
+                </tr>
+              </select>
+            </div>
+            <div class="form-group">
+              <label th:for="'editProductPrice_' + ${product.id}">Price</label>
+              <input class="form-control" th:id="'editProductPrice_' + ${product.id}"
+                     th:required="${true}"
+                     th:value="${product.price}" type="number">
+            </div>
+            <div class="form-group">
+              <label th:for="'editProductImageUrl_' + ${product.id}">Image URL</label>
+              <input class="form-control" th:id="'editProductImageUrl_' + ${product.id}"
+                     th:required="${true}"
+                     th:value="${product.imageUrl}" type="url">
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-secondary" data-dismiss="modal" type="button">Cancel</button>
+          <button class="btn btn-primary"
+                  th:attr="onclick='updateProduct(\'' + ${product.id} + '\')'">Update
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Bootstrap JS 및 jQuery 추가 -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<!-- Axios 추가 -->
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
+<!-- JavaScript 함수 추가 -->
+<script>
+  function submitProduct() {
+    var productName = document.getElementById('productName').value;
+    var categoryId = document.getElementById('productCategory').value;
+    var productPrice = document.getElementById('productPrice').value;
+    var productImageUrl = document.getElementById('productImageUrl').value;
+    var optionName = document.getElementById('optionName').value;
+    var optionQuantity = document.getElementById('optionQuantity').value;
+
+    axios.post('/api/products', {
+      name: productName,
+      categoryId: categoryId,
+      price: productPrice,
+      imageUrl: productImageUrl,
+      option: {
+        name: optionName,
+        quantity: optionQuantity
+      }
+    })
+    .then(function (response) {
+      alert(response.data.message);
+      // 모달 닫기
+      $('#addProductModal').modal('hide');
+      // 페이지 리로드
+      location.reload();
+    })
+    .catch(function (error) {
+      alert(error.response.data.message);
+    });
+  }
+
+  function confirmDelete(productId, productName) {
+    // 삭제 모달에 상품 이름 설정
+    $('#deleteProductName').text('상품 이름: ' + productName);
+    // 모달 열기
+    $('#deleteProductModal').modal('show');
+    // 삭제 확인 버튼에 삭제 함수 연결
+    $('#deleteProductModal').find('.btn-danger').on('click', function () {
+      deleteProduct(productId);
+    });
+  }
+
+  function deleteProduct(productId) {
+    axios.delete('/api/products/' + productId)
+    .then(function (response) {
+      alert(response.data.message);
+      // 모달 닫기
+      $('#deleteProductModal').modal('hide');
+      // 페이지 리로드
+      location.reload();
+    })
+    .catch(function (error) {
+      alert(error.response.data.message);
+    });
+  }
+
+  function showDeleteSelectedModal() {
+    var selectedIds = [];
+    var selectedNames = [];
+
+    // 선택된 상품들의 ID와 이름을 배열에 추가
+    $('input[type="checkbox"]:checked').each(function () {
+      var id = $(this).val();
+      selectedIds.push(id);
+    });
+
+    if (selectedIds.length === 0) {
+      alert('삭제할 상품을 한 개 이상 선택하세요.');
+      return;
+    }
+
+    // 삭제 모달에 선택된 상품 이름들 설정
+    $('#selectedProductsMessage').text('삭제할 상품의 갯수: ' + selectedIds.length + "개");
+    // 모달 열기
+    $('#deleteSelectedProductModal').modal('show');
+  }
+
+  function deleteSelectedConfirmed() {
+    var selectedIds = [];
+
+    // 선택된 상품들의 ID를 배열에 추가
+    $('input[type="checkbox"]:checked').each(function () {
+      selectedIds.push($(this).val());
+    });
+
+    if (selectedIds.length === 0) {
+      alert('Please select at least one product to delete.');
+      return;
+    }
+
+    axios.delete('/api/products', {data: selectedIds})
+    .then(function (response) {
+      alert(response.data.message);
+      // 모달 닫기
+      $('#deleteSelectedProductModal').modal('hide');
+      // 페이지 리로드
+      location.reload();
+    })
+    .catch(function (error) {
+      alert(error.response.data.message);
+    });
+  }
+
+  function updateProduct(productId) {
+    // Form에서 변경된 데이터 가져오기
+    var productName = $('#editProductName_' + productId).val();
+    var productCategory = $('#editProductCategory_' + productId).val();
+    var productPrice = $('#editProductPrice_' + productId).val();
+    var productImageUrl = $('#editProductImageUrl_' + productId).val();
+
+    // PUT 또는 PATCH 요청 보내기
+    axios.put('/api/products/' + productId, {
+      name: productName,
+      categoryId: productCategory,
+      price: productPrice,
+      imageUrl: productImageUrl
+    })
+    .then(function (response) {
+      alert(response.data.message);
+      // 모달 닫기
+      $('#editProductModal_' + productId).modal('hide');
+      // 페이지 리로드
+      location.reload();
+    })
+    .catch(function (error) {
+      alert(error.response.data.message);
+    });
+  }
+
+  function addToCart(productId) {
+    const jwt = getCookie("jwt");
+    console.log(jwt);
+    axios.post('/api/users/cart/' + productId, {}, {
+      headers: {
+        'Authorization': `${jwt}`
+      }
+    })
+    .then(function (response) {
+      alert("장바구니에 추가되었습니다. 현재 장바구니에 담긴 개수: " + response.data.data);
+    })
+    .catch(function (error) {
+      alert("로그인이 필요합니다.");
+      window.location.href = "/users/login";
+    });
+  }
+
+  function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+      const cookies = document.cookie.split(';');
+      for (let i = 0; i < cookies.length; i++) {
+        const cookie = cookies[i].trim();
+        // 쿠키가 우리가 찾는 이름으로 시작하는지 확인합니다.
+        if (cookie.substring(0, name.length + 1) === (name + '=')) {
+          cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+          break;
+        }
+      }
+    }
+    return cookieValue;
+  }
+
+  // 페이지가 로드될 때 실행
+  document.addEventListener('DOMContentLoaded', function () {
+    // jwt 쿠키 확인
+    const jwtCookie = getCookie('jwt');
+    if (jwtCookie) {
+      document.getElementById('loginButton').style.display = 'none';
+      document.getElementById('logoutButton').style.display = 'inline';
+    } else {
+      document.getElementById('loginButton').style.display = 'inline';
+      document.getElementById('logoutButton').style.display = 'none';
+    }
+  });
+
+  // 로그아웃
+  function logout() {
+    var cookieName = 'jwt'
+    document.cookie = cookieName + '=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+    alert("로그아웃 되었습니다.")
+    // 리다이렉트
+    window.location.href = "/";
+  }
+</script>
+</body>
+</html>
