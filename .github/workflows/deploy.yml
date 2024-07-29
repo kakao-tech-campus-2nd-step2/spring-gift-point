@@ -39,7 +39,7 @@ jobs:
         with:
           files: ./src/main/resources/application.yml
         env:
-          spring.jwt.secret: ${{ secrets.JWT_SECRET }}
+          jwt.secret: ${{ secrets.JWT_SECRET }}
       
       # 빌드 실행
       - name: Build with Gradle
