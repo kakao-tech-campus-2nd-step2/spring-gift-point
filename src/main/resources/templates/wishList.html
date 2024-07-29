@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>위시리스트</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+<div class="container my-5">
+    <div class="row mb-3">
+        <div class="col-12">
+            <a th:href="@{/}" class="btn btn-primary">상품 관리</a>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12">
+            <h1>위시리스트</h1>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12">
+            <form th:action="@{/wishes}" method="get" class="form-inline">
+                <div class="form-group mr-3">
+                    <label for="sort">정렬 기준:</label>
+                    <select class="form-control" id="sort" name="sort">
+                        <option value="name" th:selected="${sort == 'name'}">이름순</option>
+                        <option value="price" th:selected="${sort == 'price'}">가격순</option>
+                    </select>
+                </div>
+                <div class="form-group mr-3">
+                    <label for="direction">정렬 방향:</label>
+                    <select class="form-control" id="direction" name="direction">
+                        <option value="asc" th:selected="${direction == 'asc'}">오름차순</option>
+                        <option value="desc" th:selected="${direction == 'desc'}">내림차순</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-primary">검색</button>
+            </form>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12">
+            <table class="table table-striped">
+                <thead>
+                <tr>
+                    <th>상품 이름</th>
+                    <th>가격</th>
+                    <th>수정/삭제</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="wish : ${wishes}">
+                    <td th:text="${wish.product.name}"></td>
+                    <td th:text="${wish.product.price}"></td>
+                    <td>
+                        <button type="button" class="btn btn-danger" data-toggle="modal" th:data-target="${'#deleteModal' + wish.id}">삭제</button>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12 d-flex justify-content-center">
+            <nav aria-label="Page navigation">
+                <ul class="pagination">
+                    <li class="page-item" th:each="page : ${#numbers.sequence(1, totalPages)}" th:classappend="${currentPage == page - 1} ? 'active' : ''">
+                        <a class="page-link" th:href="@{/wishes(page=${page - 1}, sort=${sort}, direction=${direction})}" th:text="${page}"></a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </div>
+    <div th:each="wish : ${wishes}" class="modal fade" th:id="${'deleteModal' + wish.id}" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" th:id="${'deleteModalLabel' + wish.id}">위시 삭제</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    이 상품을 위시리스트에서 정말 삭제하시겠습니까? : <span th:text="${wish.product.name}"></span>?
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">취소</button>
+                    <a th:href="@{/api/wishes(product=${wish.product.id})}" class="btn btn-danger">삭제</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

@@ -1,0 +1,52 @@
+<!-- ProductUpdatePage.html -->
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>상품 수정</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+<div class="container my-5">
+    <div class="row mb-3">
+        <div class="col-12">
+            <a th:href="@{/}" class="btn btn-primary">상품 목록</a>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12">
+            <h1>상품 수정</h1>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12">
+            <form th:action="@{/products/{id}(id=${product.id})}" th:object="${product}" method="post">
+                <div class="form-group">
+                    <label for="name">상품명 :</label>
+                    <input type="text" class="form-control" id="name" th:field="*{name}" required>
+                </div>
+                <div class="form-group">
+                    <label for="price">가격 :</label>
+                    <input type="number" class="form-control" id="price" th:field="*{price}" required>
+                </div>
+                <div class="form-group">
+                    <label for="imageUrl">이미지 URL:</label>
+                    <input type="text" class="form-control" id="imageUrl" th:field="*{imageUrl}" required>
+                </div>
+                <div class="form-group">
+                    <label for="description">설명:</label>
+                    <textarea class="form-control" id="description" th:field="*{description}" required></textarea>
+                </div>
+                <div class="d-flex justify-content-between">
+                    <button type="submit" class="btn btn-primary">상품 수정</button>
+                    <a th:href="@{/products/{id}(id=${product.id})}" class="btn btn-secondary">취소</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>
