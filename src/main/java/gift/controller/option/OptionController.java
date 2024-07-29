@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/gifts")
+@RequestMapping("/api/products")
 public class OptionController implements OptionSpecification {
 
     private final OptionService optionService;
@@ -40,7 +40,7 @@ public class OptionController implements OptionSpecification {
         return ResponseEntity.ok("옵션이 상품에 추가되었습니다!");
     }
 
-    @PutMapping("/options/{giftId}/{optionId}")
+    @PutMapping("/{giftId}/options/{optionId}")
     public ResponseEntity<String> updateOptionToGift(@PathVariable("giftId") Long giftId,
                                                      @PathVariable("optionId") Long optionId,
                                                      @Valid @RequestBody OptionRequest.Update optionRequest) {
@@ -56,7 +56,7 @@ public class OptionController implements OptionSpecification {
         return ResponseEntity.ok(giftId + "번 상품에서" + optionId + "번 옵션 수량이" + quantity + "만큼 차감되었습니다!");
     }
 
-    @DeleteMapping("/options/{giftId}/{optionId}")
+    @DeleteMapping("/{giftId}/options/{optionId}")
     public ResponseEntity<String> deleteOptionFromGift(@PathVariable("giftId") Long giftId,
                                                        @PathVariable("optionId") Long optionId) {
         optionService.deleteOptionFromGift(giftId, optionId);

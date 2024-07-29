@@ -16,8 +16,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class IntegrationTest {
 
-    private static final String REGISTER_URL = "/auth/register";
-    private static final String LOGIN_URL = "/auth/login";
+    private static final String REGISTER_URL = "/api/members/register";
+    private static final String LOGIN_URL = "/api/members/login";
     private static final String ADD_GIFT_URL = "/wish/";
     @LocalServerPort
     private int port;

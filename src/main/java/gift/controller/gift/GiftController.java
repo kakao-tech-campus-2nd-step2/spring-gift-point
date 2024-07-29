@@ -13,16 +13,14 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/gifts")
+@RequestMapping("/api/products")
 public class GiftController implements GiftSpecification {
 
     private final GiftService giftService;
-    private final OptionService optionService;
 
     @Autowired
-    public GiftController(GiftService giftService, OptionService optionService) {
+    public GiftController(GiftService giftService) {
         this.giftService = giftService;
-        this.optionService = optionService;
     }
 
     @PostMapping
