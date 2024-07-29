@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>spring gift product admin page</title>
+  <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/reset-css@5.0.2/reset.min.css"
+  />
+  <link rel="stylesheet" th:href="@{../product/page.css}"/>
+  <link rel="stylesheet" th:href="@{../product/modal.css}"/>
+
+  <!-- edit icon & delete icon -->
+  <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"
+  />
+  <script type="module" th:src="@{../product/page.js}" defer></script>
+</head>
+<body>
+<!-- MODAL -->
+<div id="productModal" class="modal">
+  <div class="modal-content">
+    <div class="modal-title">
+      <h1></h1>
+      <span class="close">&times;</span>
+    </div>
+    <form id="product-form">
+      <div class="form-label-input">
+        <label for="productName">Name:</label>
+        <input
+            type="text"
+            id="productName"
+            name="productName"
+            autocomplete="off"
+        />
+        <div id="product-name-error-message"></div>
+      </div>
+      <div class="form-label-input">
+        <label for="productPrice">Price:</label>
+        <input
+            type="number"
+            id="productPrice"
+            name="productPrice"
+            autocomplete="off"
+        />
+      </div>
+      <div class="form-label-input">
+        <label for="productImageUrl">Image URL:</label>
+        <input
+            type="text"
+            id="productImageUrl"
+            name="productImageUrl"
+            autocomplete="off"
+        />
+      </div>
+      <div class="form-label-input">
+        <label for="category">Category:</label>
+        <select id="category" th:each="category : ${categories}">
+          <option
+              th:value="${category.getName()}"
+              th:text="${category.getName()}"
+          />
+        </select>
+      </div>
+      <button type="button">Submit</button>
+    </form>
+  </div>
+</div>
+<div class="main-container">
+  <!-- HEADER -->
+  <div class="header">
+    <text>Mange Products</text>
+    <div>
+      <button
+          class="header-delete"
+          th:onclick="'deleteCheckedProductsOnClick()'"
+      >
+        Delete
+      </button>
+      <button
+          class="header-add"
+          th:onclick="'addProductbtnOnClick()'"
+      >
+        Add new Product
+      </button>
+    </div>
+  </div>
+
+  <!-- CONTENT -->
+  <div class="content">
+    <div class="page-size-selector-container">
+      Page Size :
+      <select id="page-size" onchange="pageSizeSelected()">
+        <option value=5 th:selected="${products.getSize()} == 5">5</option>
+        <option value=10 th:selected="${products.getSize()} == 10">10</option>
+        <option value=20 th:selected="${products.getSize()} == 20">20</option>
+      </select>
+    </div>
+    <table>
+      <tr>
+        <th>
+          <input type="checkbox" th:onclick="mainCheckboxOnClick()"/>
+        </th>
+        <th>
+          ID
+          <button
+              id="page-sort-by-id"
+              th:data-sort-order="${products.getSort().getOrderFor('id')}"
+              onclick=idColumnPageSort()>
+            O
+          </button>
+        </th>
+        <th>Product Name</th>
+        <th>
+          Price
+          <button
+              id="page-sort-by-price"
+              th:data-sort-order="${products.getSort().getOrderFor('price')}"
+              onclick=priceColumnPageSort()
+          >O
+          </button>
+        </th>
+        <th>ImageUrl</th>
+        <th>Category</th>
+        <th>Action</th>
+      </tr>
+
+      <tr th:each="product : ${products}">
+        <td><input type="checkbox" th:onclick="checkboxOnClick()"/></td>
+        <td th:text="${product.getId()}" id="id"></td>
+        <td th:text="${product.getName()}"></td>
+        <td th:text="${product.getPrice()}"></td>
+        <td th:text="${product.getImageUrl()}"></td>
+        <td th:text="${product.getCategory().getName()}"></td>
+        <td>
+          <button
+              class="material-symbols-outlined content-edit"
+              th:onclick="'editProductbtnOnClick(' + ${product.getId()} + ',' + ${page} + ')'"
+          >
+            edit
+          </button>
+          <button
+              class="material-symbols-outlined content-delete"
+              th:onclick="'deleteProduct(' + ${product.getId()} + ',' + ${page} + ')'"
+          >
+            delete
+          </button>
+        </td>
+      </tr>
+    </table>
+
+    <!-- CONTENT FOOTER -->
+    <div class="content-footer-container">
+      <div
+          class="content-showing"
+          th:text="'Showing ' + ${currentPageProductSize} + ' out of ' + ${totalProductsSize} + ' entries'"
+      >
+        Showing n out of m entries
+      </div>
+      <div class="content-index">
+        <button>Previous</button>
+        <div th:each="pageList : ${pageLists}">
+          <button
+              th:text="${pageList}"
+              th:classappend="${pageList == page} ? 'selected-page' : ''"
+              th:onclick="'pagination(' + ${pageList} + ', ' + ${null} + ', '+ ${null} + ')'"
+          />
+        </div>
+        <button>Next</button>
+      </div>
+    </div>
+  </div>
+</div>
+</body>
+</html>
