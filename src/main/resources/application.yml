@@ -1,0 +1,7 @@
+jwt:
+  secret-key: JUNGHUN-KAKAO-TECH-CAMPUS-MEMBER-SECRET-KEY
+  expired-time: 8640000
+kakao:
+  rest-api-key: ed597f321982f0abf0d592fbd5fdcd3b
+  redirect-uri: http://localhost:8080/api/members/oauth/kakao
+  token-uri: http://localhost:8080/api/kakao/token
