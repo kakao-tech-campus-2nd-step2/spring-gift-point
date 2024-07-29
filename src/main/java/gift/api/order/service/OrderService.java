@@ -13,6 +13,7 @@ import gift.api.order.repository.OrderRepository;
 import gift.api.wishlist.dto.WishDeleteRequest;
 import gift.api.wishlist.service.WishService;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.LinkedMultiValueMap;
 
 @Service
@@ -23,16 +24,20 @@ public class OrderService {
     private final OptionService optionService;
     private final OptionDao optionDao;
     private final WishService wishService;
+    private final ObjectMapper objectMapper;
 
     public OrderService(KakaoService kakaoService, OrderRepository orderRepository,
-        OptionService optionService, OptionDao optionDao, WishService wishService) {
+        OptionService optionService, OptionDao optionDao, WishService wishService,
+        ObjectMapper objectMapper) {
         this.kakaoService = kakaoService;
         this.orderRepository = orderRepository;
         this.optionService = optionService;
         this.optionDao = optionDao;
         this.wishService = wishService;
+        this.objectMapper = objectMapper;
     }
 
+    @Transactional
     public OrderResponse order(Long memberId, OrderRequest orderRequest) {
         optionService.subtract(orderRequest.optionId(), orderRequest.quantity());
         wishService.delete(memberId,
@@ -48,7 +53,6 @@ public class OrderService {
         LinkedMultiValueMap<Object, Object> body = new LinkedMultiValueMap<>();
         TemplateObject templateObject = TemplateObject.of(orderRequest.message(), "", "", "바로 확인");
         try {
-            ObjectMapper objectMapper = new ObjectMapper();
             body.add("template_object", objectMapper.writeValueAsString(templateObject));
         } catch (JsonProcessingException ignored) {
         }
