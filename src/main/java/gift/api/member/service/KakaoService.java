@@ -36,14 +36,25 @@ public class KakaoService {
         this.properties = properties;
         restClient = RestClient.create();
     }
+    public ResponseEntity<TokenResponse> obtainToken(String code) {
+        return restClient.post()
+            .uri(URI.create(properties.url().token()))
+            .contentType(APPLICATION_FORM_URLENCODED)
+            .body(createBody(code))
+            .retrieve()
+            .toEntity(TokenResponse.class);
+    }
 
-    @Transactional
-    public void login(String code) {
-        ResponseEntity<TokenResponse> tokenResponse = obtainToken(code);
-        ResponseEntity<UserInfoResponse> userInfoResponse = obtainUserInfo(tokenResponse);
-        verifyEmail(userInfoResponse.getBody().kakaoAccount());
-        saveKakaoToken(userInfoResponse.getBody().kakaoAccount().email(),
-            tokenResponse.getBody().accessToken());
+    public ResponseEntity<UserInfoResponse> obtainUserInfo(
+        ResponseEntity<TokenResponse> tokenResponse) {
+        return restClient.get()
+            .uri(properties.url().user(), uriBuilder -> uriBuilder
+                .queryParam("property_keys", "[\"kakao_account.email\"]")
+                .build())
+            .header(CONTENT_TYPE, APPLICATION_FORM_URLENCODED_VALUE)
+            .header(AUTHORIZATION, "Bearer " + tokenResponse.getBody().accessToken())
+            .retrieve()
+            .toEntity(UserInfoResponse.class);
     }
 
     public void sendMessage(Long memberId, LinkedMultiValueMap<Object, Object> body) {
@@ -61,15 +72,6 @@ public class KakaoService {
         }
     }
 
-    private ResponseEntity<TokenResponse> obtainToken(String code) {
-        return restClient.post()
-            .uri(URI.create(properties.url().token()))
-            .contentType(APPLICATION_FORM_URLENCODED)
-            .body(createBody(code))
-            .retrieve()
-            .toEntity(TokenResponse.class);
-    }
-
     private LinkedMultiValueMap<Object, Object> createBody(String code) {
         var body = new LinkedMultiValueMap<>();
         body.add("grant_type", properties.grantType());
@@ -77,33 +79,5 @@ public class KakaoService {
         body.add("redirect_url", properties.url().redirect());
         body.add("code", code);
         return body;
-    }
-
-    private ResponseEntity<UserInfoResponse> obtainUserInfo(
-        ResponseEntity<TokenResponse> tokenResponse) {
-        return restClient.get()
-            .uri(properties.url().user(), uriBuilder -> uriBuilder
-                .queryParam("property_keys", "[\"kakao_account.email\"]")
-                .build())
-            .header(CONTENT_TYPE, APPLICATION_FORM_URLENCODED_VALUE)
-            .header(AUTHORIZATION, "Bearer " + tokenResponse.getBody().accessToken())
-            .retrieve()
-            .toEntity(UserInfoResponse.class);
-    }
-
-    private void verifyEmail(KakaoAccount kakaoAccount) {
-        if (kakaoAccount.emailNeedsAgreement()) {
-            throw new EmailAgreementNeededException();
-        }
-        if (kakaoAccount.isEmailValid()) {
-            if (!memberDao.hasMemberByEmail(kakaoAccount.email())) {
-                throw new RegisterNeededException();
-            }
-        }
-    }
-
-    private void saveKakaoToken(String email, String accessToken) {
-        Member member = memberDao.findMemberByEmail(email);
-        member.saveKakaoToken(accessToken);
     }
 }

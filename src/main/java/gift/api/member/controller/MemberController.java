@@ -2,6 +2,7 @@ package gift.api.member.controller;
 
 import gift.api.member.dto.MemberRequest;
 import gift.api.member.service.KakaoService;
+import gift.api.member.service.MemberFacade;
 import gift.api.member.service.MemberService;
 import gift.global.utils.JwtUtil;
 import io.swagger.v3.oas.annotations.Operation;
@@ -22,12 +23,12 @@ import org.springframework.web.bind.annotation.RestController;
 @Tag(name = "Member", description = "Member API")
 public class MemberController {
 
+    private final MemberFacade memberFacade;
     private final MemberService memberService;
-    private final KakaoService kakaoService;
 
-    public MemberController(MemberService memberService, KakaoService kakaoService) {
+    public MemberController(MemberFacade memberFacade, MemberService memberService) {
+        this.memberFacade = memberFacade;
         this.memberService = memberService;
-        this.kakaoService = kakaoService;
     }
 
     @PostMapping("/register")
@@ -49,7 +50,7 @@ public class MemberController {
     @GetMapping("/oauth/kakao")
     @Operation(summary = "카카오 로그인")
     public ResponseEntity<Void> loginKakao(@RequestParam("code") String code) {
-        kakaoService.login(code);
+        memberFacade.loginKakao(code);
         return ResponseEntity.ok().build();
     }
 }
