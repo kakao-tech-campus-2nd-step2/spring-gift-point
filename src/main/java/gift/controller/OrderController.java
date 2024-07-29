@@ -6,12 +6,12 @@ import gift.DTO.Order.OrderResponse;
 import gift.DTO.User.UserResponse;
 import gift.security.AuthenticateMember;
 import gift.service.OrderService;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 public class OrderController {
@@ -32,5 +32,22 @@ public class OrderController {
         OrderResponse order = orderService.order(orderRequest, user, productId);
 
         return new ResponseEntity<>(order, HttpStatus.CREATED);
+    }
+    /*
+     * 주문 내역 조회
+     */
+    @GetMapping("/api/orders")
+    public ResponseEntity<Page<OrderResponse>> orderLog(
+            @RequestParam(value = "page", defaultValue = "0") int page,
+            @RequestParam(value = "size", defaultValue = "5") int size,
+            @RequestParam(value = "sort") List<String> sort
+    ){
+        if(sort.getLast().equals("asc")) {
+            Page<OrderResponse> orders = orderService.findAllASC(page, size, sort.getFirst());
+            return new ResponseEntity<>(orders, HttpStatus.OK);
+        }
+
+        Page<OrderResponse> orders = orderService.findAllDESC(page, size, sort.getFirst());
+        return new ResponseEntity<>(orders, HttpStatus.OK);
     }
 }

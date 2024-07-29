@@ -15,7 +15,14 @@ import gift.repository.OrderRepository;
 import gift.repository.ProductRepository;
 import gift.repository.WishListRepository;
 import jakarta.transaction.Transactional;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 public class OrderService {
@@ -82,5 +89,27 @@ public class OrderService {
         );
 
         return save(orderRequest);
+    }
+    /*
+     * 주문 기록을 오름차순으로 정렬하여 조회
+     */
+    public Page<OrderResponse> findAllASC(int page, int size, String field){
+        List<Sort.Order> sorts = new ArrayList<>();
+        sorts.add(Sort.Order.asc(field));
+        Pageable pageable = PageRequest.of(page, size, Sort.by(sorts));
+        Page<Order> orders = orderRepository.findAll(pageable);
+
+        return orders.map(OrderResponse::new);
+    }
+    /*
+     * 주문 기록을 내림차순으로 정렬하여 조회
+     */
+    public Page<OrderResponse> findAllDESC(int page, int size, String field){
+        List<Sort.Order> sorts = new ArrayList<>();
+        sorts.add(Sort.Order.desc(field));
+        Pageable pageable = PageRequest.of(page, size, Sort.by(sorts));
+        Page<Order> orders = orderRepository.findAll(pageable);
+
+        return orders.map(OrderResponse::new);
     }
 }
