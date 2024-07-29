@@ -16,11 +16,11 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import org.springframework.data.domain.*;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 import static org.springframework.http.HttpStatus.CREATED;
 
@@ -34,6 +34,33 @@ public class OrderController {
 
     public OrderController(OrderService orderService) {
         this.orderService = orderService;
+    }
+
+    @GetMapping
+    public ResponseEntity<Page<OrderResponse>> orderList(@Parameter(hidden = true) @LoginMember Member member,
+
+                                                         @Parameter(description = "페이지 번호 (기본: 0)")
+                                                         @RequestParam(value = "page", defaultValue = "0") int page,
+
+                                                         @Parameter(description = "페이지 크기 (기본: 20)")
+                                                         @RequestParam(value = "size", defaultValue = "20") int size,
+
+                                                         @Parameter(description = "정렬 기준 (예: name,asc) (기본: id,desc)")
+                                                         @RequestParam(defaultValue = "id,desc", required = false) String sort) {
+        String[] sortParams = sort.split(",");
+        Sort.Direction direction = sortParams[1].equalsIgnoreCase("asc") ? Sort.Direction.ASC : Sort.Direction.DESC;
+        Pageable pageable = PageRequest.of(page, size, Sort.by(direction, sortParams[0]));
+
+        List<OrderDto> dtos = orderService.getOrders(member, pageable);
+
+        List<OrderResponse> orderResponses = dtos.stream()
+                .map(OrderDto::toResponseDto)
+                .toList();
+
+        PageImpl<OrderResponse> response = new PageImpl<>(orderResponses, pageable, orderResponses.size());
+
+        return ResponseEntity.ok()
+                .body(response);
     }
 
     @Operation(summary = "상품 주문", description = "사용자가 상품을 주문합니다.")

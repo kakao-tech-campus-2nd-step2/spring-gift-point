@@ -12,13 +12,17 @@ import gift.repository.OrderRepository;
 import gift.repository.WishRepository;
 import gift.service.kakao.KakaoApiService;
 import gift.service.kakao.Oauth2TokenService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
 
 import static gift.exception.ErrorCode.OPTION_NOT_FOUND;
 
+@Transactional
 @Service
 public class OrderService {
 
@@ -36,7 +40,6 @@ public class OrderService {
         this.kakaoApiService = kakaoApiService;
     }
 
-    @Transactional
     public OrderDto processOrder(OrderDto dto) {
         Member member = dto.getMember();
 
@@ -47,6 +50,15 @@ public class OrderService {
                 .orElseGet(() -> processWithoutSocialAccount(dto));
 
         return OrderDto.from(order);
+    }
+
+    @Transactional(readOnly = true)
+    public List<OrderDto> getOrders(Member member, Pageable pageable) {
+        Page<Order> orders = orderRepository.findByMember(member, pageable);
+
+        return orders.stream()
+                .map(OrderDto::from)
+                .toList();
     }
 
     private Order processWithSocialAccount(SocialAccount socialAccount, OrderDto dto) {
