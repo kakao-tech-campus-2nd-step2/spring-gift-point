@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <link rel="stylesheet" th:href="@{/bootstrap.min.css}" type="text/css">
+  <title>admin - categories</title>
+</head>
+<body>
+<div class="container"
+     style="display: flex; flex-direction: column; justify-content: center; margin-top: 50px;">
+  <h2 class="py-4 text-center border-bottom mb-5">카테고리 목록 (관리자)</h2>
+  <div class="row">
+    <div class="col">
+      <button class="btn btn-primary mb-5 me-3"
+              onclick="location.href='insertCategoryForm.html'"
+              th:onclick="|location.href='@{/admin/categories/insert}'|"
+              type="button">카테고리 추가
+      </button>
+      <button class="btn btn-outline-secondary mb-5"
+              onclick="location.href='products.html'"
+              th:onclick="|location.href='@{/admin/products}'|"
+              type="button">상품 목록으로 돌아가기
+      </button>
+    </div>
+  </div>
+  <div>
+    <table class="table">
+      <thead>
+      <tr>
+        <th class="text-center">카테고리 ID</th>
+        <th class="text-center">카테고리 이름</th>
+        <th class="text-center"></th>
+        <th class="text-center"></th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr th:each="category:${categories}">
+        <td class="text-center">
+          <span th:text="${category.id}">카테고리 ID tmp</span>
+        </td>
+        <td class="text-center">
+          <span th:text="${category.name}">카테고리 이름 tmp</span>
+        </td>
+        <td class="text-center">
+          <button class="btn btn-primary"
+                  onclick="location.href='updateForm.html'"
+                  th:onclick="|location.href='@{/admin/categories/update/{categoryId}(categoryId=${category.id})}'|"
+                  type="button">수정
+          </button>
+        </td>
+        <td class="text-center">
+          <form method="post"
+                th:action="@{/admin/categories/delete/{categoryId}(categoryId=${category.id})}" th:method="delete">
+            <button class="btn btn-danger" type="submit">삭제</button>
+          </form>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <link rel="stylesheet" th:href="@{/bootstrap.min.css}" type="text/css">
+  <title>admin - products</title>
+</head>
+<body>
+<div class="container"
+     style="display: flex; flex-direction: column; justify-content: center; margin-top: 50px;">
+  <h2 class="py-4 text-center border-bottom mb-5">상품 전체 목록</h2>
+  <div class="row">
+    <div class="col">
+      <button class="btn btn-primary mb-5 me-3"
+              onclick="location.href='insertForm.html'"
+              th:onclick="|location.href='@{/admin/products/insert}'|"
+              type="button">상품 추가
+      </button>
+      <button class="btn btn-outline-secondary mb-5 me-3"
+              onclick="location.href='wishes.html'"
+              th:onclick="|location.href='@{/admin/wishes}'|"
+              type="button">위시 리스트로 이동
+      </button>
+      <button class="btn btn-outline-secondary mb-5"
+              onclick="location.href='categories.html'"
+              th:onclick="|location.href='@{/admin/categories}'|"
+              type="button">카테고리 목록으로 이동
+      </button>
+    </div>
+  </div>
+  <div>
+    <table class="table">
+      <thead>
+      <tr>
+        <th class="text-center">상품 ID</th>
+        <th class="text-center">상품명</th>
+        <th class="text-center">가격</th>
+        <th class="text-center">상품 이미지</th>
+        <th class="text-center">카테고리</th>
+        <th class="text-center"></th>
+        <th class="text-center"></th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr th:each="product:${products}">
+        <td class="text-center">
+          <span th:text="${product.id}">상품 ID tmp</span>
+        </td>
+        <td class="text-center">
+          <span th:text="${product.name}">상품명 tmp</span>
+        </td>
+        <td class="text-center">
+          <span th:text="${product.price}">가격 tmp</span>
+        </td>
+        <td class="text-center" style="max-width: 200px; word-break: break-all">
+          <span th:text="${product.imageUrl}">상품 이미지 tmp</span>
+        </td>
+        <td class="text-center">
+          <span th:text="${product.category.name}">카테고리 tmp</span>
+        </td>
+        <td class="text-center">
+          <button class="btn btn-primary"
+                  onclick="location.href='updateForm.html'"
+                  th:onclick="|location.href='@{/admin/products/update/{productId}(productId=${product.id})}'|"
+                  type="button">수정
+          </button>
+        </td>
+        <td class="text-center">
+          <form method="post"
+                th:action="@{/admin/products/delete/{productId}(productId=${product.id})}" th:method="delete">
+            <button class="btn btn-danger" type="submit">삭제</button>
+          </form>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+</body>
+</html>

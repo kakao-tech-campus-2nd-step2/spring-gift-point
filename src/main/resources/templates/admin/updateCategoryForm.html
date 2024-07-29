@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <link rel="stylesheet" th:href="@{/bootstrap.min.css}" type="text/css">
+  <title>admin - update category</title>
+</head>
+<body>
+<div class="container"
+     style="display: flex; flex-direction: column; justify-content: center; margin-top: 50px;">
+  <h2 class="py-4 text-center border-bottom mb-5">카테고리 수정</h2>
+  <div>
+    <form method="post" th:action th:method="put">
+      <div class="mb-3">
+        <label class="mb-2" for="name">카테고리 이름</label>
+        <input class="form-control" id="name" name="name" placeholder="카테고리 이름을 입력하세요." th:value="${category.name}"
+               type="text">
+      </div>
+      <div class="row mt-5">
+        <div class="col">
+          <button class="btn btn-primary w-100" type="submit">적용</button>
+        </div>
+        <div class="col">
+          <button class="btn btn-primary w-100" onclick="location.href='categories.html'"
+                  th:onclick="|location.href='@{/admin/categories}'|" type="button">취소
+          </button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+</body>
+</html>
