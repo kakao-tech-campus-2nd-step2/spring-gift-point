@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>상품 추가 페이지</title>
+  <link href="/css/styles.css" rel="stylesheet" type="text/css">
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script>
+    $(document).ready(function () {
+      let optionIndex = 0;
+
+      $('#addOptionButton').click(function () {
+        const optionTemplate = `
+          <div class="option-group" id="option-group-${optionIndex}">
+            <h3>옵션 추가</h3>
+            <p>Name: <input type="text" name="options[${optionIndex}].name" /></p>
+            <div id="options[${optionIndex}].name-error" style="color: red;"></div>
+            <p>Quantity: <input type="number" name="options[${optionIndex}].quantity" /></p>
+            <div id="options[${optionIndex}].quantity-error" style="color: red;"></div>
+            <button type="button" class="removeOptionButton" data-index="${optionIndex}">옵션 삭제</button>
+          </div>
+        `;
+        $('#optionsContainer').append(optionTemplate);
+        optionIndex++;
+      });
+
+      $(document).on('click', '.removeOptionButton', function () {
+        const index = $(this).data('index');
+        $(`#option-group-${index}`).remove();
+      });
+    });
+  </script>
+</head>
+<body>
+<h1>상품 추가 페이지</h1>
+<form method="post" th:action="@{/admin/products/add}" th:object="${productCreateRequest}">
+  <h3>상품 추가</h3>
+  <p>Name: <input th:field="*{name}" type="text"></p>
+  <div style="color: red;" th:errors="*{name}" th:if="${#fields.hasErrors('name')}"></div>
+  <p>Price: <input th:field="*{price}" type="number"></p>
+  <div style="color: red;" th:errors="*{price}" th:if="${#fields.hasErrors('price')}"></div>
+  <p>Image URL: <input th:field="*{img}" type="text"></p>
+  <div style="color: red;" th:errors="*{img}" th:if="${#fields.hasErrors('img')}"></div>
+  <p>Category:
+    <select th:field="*{categoryId}">
+      <option th:each="category : ${categories}" th:text="${category.name}"
+              th:value="${category.id}"></option>
+    </select>
+  </p>
+  <div id="optionsContainer"></div>
+  <div style="color: red;" th:errors="*{options}" th:if="${#fields.hasErrors('options')}"></div>
+  <button id="addOptionButton" type="button">옵션 추가</button>
+  <p>
+    <button type="submit">저장</button>
+  </p>
+</form>
+<a href="/admin/products">뒤로 가기</a>
+</body>
+</html>
