@@ -1,8 +1,6 @@
 package gift.wishlist;
 
-import gift.member.MemberTokenResolver;
 import gift.product.entity.Product;
-import gift.token.MemberTokenDTO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -11,6 +9,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -29,8 +28,10 @@ public class WishlistController {
     @Operation(summary = "위시리스트 조회", description = "사용자의 토큰을 통해 위시리스트를 조회합니다.")
     @ApiResponse(responseCode = "200", description = "조회 성공")
     @ApiResponse(responseCode = "403", description = "잘못된 유저 토큰")
-    public List<Product> getAllWishlists(@MemberTokenResolver MemberTokenDTO memberTokenDTO) {
-        return wishlistService.getAllWishlists(memberTokenDTO);
+    public List<Product> getAllWishlists(
+        @RequestHeader("Authorization") String token
+    ) {
+        return wishlistService.getAllWishlists(token);
     }
 
     @PostMapping("/{product_id}")
@@ -39,10 +40,10 @@ public class WishlistController {
     @ApiResponse(responseCode = "400", description = "이미 위시리스트에 존재하는 상품")
     @ApiResponse(responseCode = "403", description = "잘못된 유저 토큰")
     public void addWishlist(
-        @MemberTokenResolver MemberTokenDTO memberTokenDTO,
+        @RequestHeader("Authorization") String token,
         @PathVariable(name = "product_id") long productId
     ) {
-        wishlistService.addWishlist(memberTokenDTO, productId);
+        wishlistService.addWishlist(token, productId);
     }
 
     @DeleteMapping("/{product_id}")
@@ -51,9 +52,9 @@ public class WishlistController {
     @ApiResponse(responseCode = "400", description = "존재하지 않는 위시리스트")
     @ApiResponse(responseCode = "403", description = "잘못된 유저 토큰")
     public void deleteWishlist(
-        @MemberTokenResolver MemberTokenDTO memberTokenDTO,
+        @RequestHeader("Authorization") String token,
         @PathVariable(name = "product_id") long productId
     ) {
-        wishlistService.deleteWishlist(memberTokenDTO, productId);
+        wishlistService.deleteWishlist(token, productId);
     }
 }

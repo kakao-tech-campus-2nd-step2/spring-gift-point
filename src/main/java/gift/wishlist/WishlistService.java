@@ -5,11 +5,11 @@ import static gift.exception.ErrorMessage.PRODUCT_NOT_FOUND;
 import static gift.exception.ErrorMessage.WISHLIST_ALREADY_EXISTS;
 import static gift.exception.ErrorMessage.WISHLIST_NOT_FOUND;
 
-import gift.member.entity.Member;
 import gift.member.MemberRepository;
-import gift.product.entity.Product;
+import gift.member.entity.Member;
 import gift.product.ProductRepository;
-import gift.token.MemberTokenDTO;
+import gift.product.entity.Product;
+import gift.token.JwtProvider;
 import gift.wishlist.entity.Wishlist;
 import java.util.List;
 import org.springframework.data.domain.Page;
@@ -25,20 +25,23 @@ public class WishlistService {
     private final WishlistRepository wishlistRepository;
     private final ProductRepository productRepository;
     private final MemberRepository memberRepository;
+    private final JwtProvider jwtProvider;
 
     public WishlistService(
         WishlistRepository wishlistRepository,
         ProductRepository productRepository,
-        MemberRepository memberRepository
+        MemberRepository memberRepository,
+        JwtProvider jwtProvider
     ) {
         this.wishlistRepository = wishlistRepository;
         this.productRepository = productRepository;
         this.memberRepository = memberRepository;
+        this.jwtProvider = jwtProvider;
     }
 
     @Transactional(readOnly = true)
-    public Page<Product> getAllWishlists(MemberTokenDTO memberTokenDTO, Pageable pageable) {
-        Member member = memberTokenDTOToMember(memberTokenDTO);
+    public Page<Product> getAllWishlists(String token, Pageable pageable) {
+        Member member = getMemberFromToken(token);
 
         return wishlistRepository
             .findAllByMember(member, pageable)
@@ -46,8 +49,8 @@ public class WishlistService {
     }
 
     @Transactional(readOnly = true)
-    public List<Product> getAllWishlists(MemberTokenDTO memberTokenDTO) {
-        Member member = memberTokenDTOToMember(memberTokenDTO);
+    public List<Product> getAllWishlists(String token) {
+        Member member = getMemberFromToken(token);
 
         return wishlistRepository.findAllByMember(member)
             .stream()
@@ -55,8 +58,8 @@ public class WishlistService {
             .toList();
     }
 
-    public void addWishlist(MemberTokenDTO memberTokenDTO, long productId) {
-        Pair<Product, Member> verified = verifyTokenAndProductId(memberTokenDTO, productId);
+    public void addWishlist(String token, long productId) {
+        Pair<Product, Member> verified = verifyTokenAndProductId(token, productId);
 
         wishlistRepository.findByProductAndMember(verified.getFirst(), verified.getSecond())
             .ifPresent(e -> {
@@ -66,8 +69,8 @@ public class WishlistService {
         wishlistRepository.save(new Wishlist(verified.getFirst(), verified.getSecond()));
     }
 
-    public void deleteWishlist(MemberTokenDTO memberTokenDTO, long productId) {
-        Pair<Product, Member> verified = verifyTokenAndProductId(memberTokenDTO, productId);
+    public void deleteWishlist(String token, long productId) {
+        Pair<Product, Member> verified = verifyTokenAndProductId(token, productId);
 
         Wishlist findWishlist = wishlistRepository
             .findByProductAndMember(verified.getFirst(), verified.getSecond())
@@ -82,20 +85,17 @@ public class WishlistService {
         ).ifPresent(wishlistRepository::delete);
     }
 
-    private Pair<Product, Member> verifyTokenAndProductId(
-        MemberTokenDTO memberTokenDTO,
-        long productId
-    ) {
+    private Pair<Product, Member> verifyTokenAndProductId(String token, long productId) {
         Product product = productRepository.findById(productId)
             .orElseThrow(() -> new IllegalArgumentException(PRODUCT_NOT_FOUND));
 
-        Member member = memberTokenDTOToMember(memberTokenDTO);
+        Member member = getMemberFromToken(token);
 
         return Pair.of(product, member);
     }
 
-    private Member memberTokenDTOToMember(MemberTokenDTO memberTokenDTO) {
-        return memberRepository.findById(memberTokenDTO.getEmail())
+    private Member getMemberFromToken(String token) {
+        return memberRepository.findById(jwtProvider.getMemberTokenDTOFromToken(token).getEmail())
             .orElseThrow(() -> new IllegalArgumentException(MEMBER_NOT_FOUND));
     }
 }

@@ -1,10 +1,8 @@
 package gift.wishlist;
 
-import gift.member.MemberTokenResolver;
 import gift.product.ProductService;
 import gift.product.dto.ProductResponseDTO;
 import gift.product.entity.Product;
-import gift.token.MemberTokenDTO;
 import java.util.List;
 import java.util.stream.IntStream;
 import org.springframework.data.domain.Page;
@@ -15,6 +13,7 @@ import org.springframework.data.domain.Sort.Order;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestHeader;
 
 @Controller
 public class WishlistPageController {
@@ -37,7 +36,7 @@ public class WishlistPageController {
 
     @GetMapping("/wishlistPage")
     public String wishlistPage(
-        @MemberTokenResolver MemberTokenDTO token,
+        @RequestHeader("Authorization") String token,
         Model model,
         Pageable pageable
     ) {
