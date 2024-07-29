@@ -19,4 +19,7 @@ public class Message {
     public static final String INVALID_QUANTITY_ERROR_MSG = "옵션 수량은 1개 이상 1억 개 미만이어야 합니다.";
     public static final String DUPLICATE_OPTION_NAME_MSG = "하나의 상품에 중복된 이름의 옵션은 생성할 수 없습니다.";
     public static final String INVALID_AMOUNT_ERROR_MSG = "1 이상, 남은 물품 수 미만의 수량만 차감할 수 있습니다.";
+    public static final String KAKAO_LOGIN_FAILED_ERROR_MSG = "카카오 로그인에 실패하였습니다.";
+    public static final String ALREADY_REGISTERED_ERROR_MSG = "이미 가입된 회원입니다.";
+    public static final String KAKAO_LOGIN_USER_MSG = "카카오 로그인 이용 회원입니다.";
 }
