@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>옵션 페이지</title>
+  <link href="/css/styles.css" rel="stylesheet" type="text/css">
+</head>
+<body>
+<h1>옵션 페이지</h1>
+<form method="post"
+      th:action="@{/admin/products/{productId}/options/add(productId=${productId})}"
+      th:if="${optionId == null}" th:object="${optionRequest}">
+  <h3>옵션 추가</h3>
+  <p>Name: <input th:field="*{name}" type="text"></p>
+  <div th:errors="*{name}" th:if="${#fields.hasErrors('name')}">Name Error</div>
+  <p>Quantity: <input th:field="*{quantity}" type="number"></p>
+  <div th:errors="*{quantity}" th:if="${#fields.hasErrors('quantity')}">Quantity Error</div>
+  <p>
+    <button type="submit">저장</button>
+  </p>
+</form>
+<form
+    method="post"
+    th:action="@{/admin/products/{productId}/options/edit/{optionId}(productId=${productId}, optionId=${optionId})}"
+    th:if="${optionId != null}" th:object="${optionRequest}">
+  <h3>옵션 수정</h3>
+  <p>ID: <span th:text="${optionId}"></span></p>
+  <p>Name: <input th:field="*{name}" type="text"></p>
+  <div th:errors="*{name}" th:if="${#fields.hasErrors('name')}">Name Error</div>
+  <p>Quantity: <input th:field="*{quantity}" type="number"></p>
+  <div th:errors="*{quantity}" th:if="${#fields.hasErrors('quantity')}">Quantity Error</div>
+  <p>
+    <button type="submit">저장</button>
+  </p>
+</form>
+<a th:href="@{'/admin/products/edit/' + ${productId}}">뒤로 가기</a>
+</body>
+</html>

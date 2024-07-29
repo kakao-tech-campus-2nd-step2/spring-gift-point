@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>상품 수정 페이지</title>
+  <link href="/css/styles.css" rel="stylesheet" type="text/css">
+</head>
+<body>
+<h1>상품 수정 페이지</h1>
+<form method="post" th:action="@{/admin/products/edit/{id}(id=${product.id})}"
+      th:object="${productRequest}">
+  <h3>상품 정보 수정</h3>
+  <p>ID: <span th:text="${product.id}"></span></p>
+  <p>Name: <input th:field="*{name}" th:value="${product.name}" type="text"></p>
+  <div style="color: red;" th:errors="*{name}" th:if="${#fields.hasErrors('name')}"></div>
+  <p>Price: <input th:field="*{price}" th:value="${product.price}" type="number"></p>
+  <div style="color: red;" th:errors="*{price}" th:if="${#fields.hasErrors('price')}"></div>
+  <p>Image URL: <input th:field="*{img}" th:value="${product.img}" type="text"></p>
+  <div style="color: red;" th:errors="*{img}" th:if="${#fields.hasErrors('img')}"></div>
+  <p>Category:
+    <select th:field="*{categoryId}">
+      <option th:each="category : ${categories}" th:selected="${category.id == product.category.id}"
+              th:text="${category.name}" th:value="${category.id}"></option>
+    </select>
+  </p>
+  <p>
+    <button type="submit">저장</button>
+  </p>
+</form>
+<div>
+  <h3>옵션 리스트</h3>
+  <table>
+    <thead>
+    <tr>
+      <th>ID</th>
+      <th>Name</th>
+      <th>Quantity</th>
+      <th>Actions</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="option : ${productOptions}">
+      <td th:text="${option.id}">ID</td>
+      <td th:text="${option.name}">Name</td>
+      <td th:text="${option.quantity}">Quantity</td>
+      <td>
+        <a th:href="@{'/admin/products/' + ${product.id} + '/options/edit/' + ${option.id}}">수정</a>
+        <a th:href="@{'/admin/products/' + ${product.id} + '/options/delete/' + ${option.id}}">삭제</a>
+      </td>
+    </tr>
+    </tbody>
+  </table>
+  <a th:href="@{'/admin/products/' + ${product.id} + '/options/add'}">옵션 추가</a>
+</div>
+<a href="/admin/products">뒤로 가기</a>
+</body>
+</html>
