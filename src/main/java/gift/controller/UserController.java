@@ -25,7 +25,7 @@ public class UserController {
     /*
      * 로그인 ( 유저 정보 인증 )
      */
-    @PostMapping("/login")
+    @PostMapping("/api/member/login")
     public ResponseEntity<Token> giveToken(@RequestBody UserRequest user) throws IllegalAccessException {
         if(!userService.login(user)){
             throw new IllegalArgumentException("아이디나 비밀번호를 다시 확인해주세요!");
@@ -37,7 +37,7 @@ public class UserController {
     /*
      * 회원가입 ( 유저 추가 )
      */
-    @PostMapping("/register")
+    @PostMapping("/api/member/register")
     public ResponseEntity<Void> register(@RequestBody UserRequest user){
         if(userService.isUserIdDuplicate(user.getUserId()))
             throw new AlreadyExistException("이미 존재하는 유저 아이디입니다!");
@@ -51,7 +51,7 @@ public class UserController {
     /*
      * 유저 조회
      */
-    @GetMapping("/api/users")
+    @GetMapping("/api/members")
     public ResponseEntity<Page<UserResponse>> readUsers(
             @RequestParam(value = "page", defaultValue = "0") int page,
             @RequestParam(value = "size", defaultValue = "5") int size,
@@ -69,7 +69,7 @@ public class UserController {
     /*
      * 유저 수정
      */
-    @PutMapping("/api/users/{id}")
+    @PutMapping("/api/members/{id}")
     public ResponseEntity<Void> updateUsers(
             @PathVariable("id") Long id,
             @RequestBody UserRequest user,
@@ -90,7 +90,7 @@ public class UserController {
     /*
      * 유저 삭제
      */
-    @DeleteMapping("/api/users/{id}")
+    @DeleteMapping("/api/members/{id}")
     public ResponseEntity<Void> deleteUsers(
             @PathVariable("id") Long id,
             @AuthenticateMember UserResponse user
