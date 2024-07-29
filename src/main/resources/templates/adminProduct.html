@@ -133,8 +133,7 @@
             data : {
                 page : page,
                 size : pageSize,
-                sort : $('#p_sort').val(),
-                field : $('#p_field').val()
+                sort : [$('#p_field').val(), $('#p_sort').val()],
             },
             success: function(data) {
                 var contents = data.content;
@@ -200,6 +199,12 @@
                 '            <a href="adminProducts" className="header-link">상품관리</a>' +
                 '            <a href="adminUsers" className="header-link">유저관리</a>' +
                 '            <a href="adminCategories" className="header-link">카테고리관리</a>');
+        }
+        else{
+            var inline = $('#header');
+            inline.empty();
+            inline.append('<a href="/login" className="header-link">로그인</a>\n' +
+                '            <a href="/register" className="header-link">회원가입</a>');
         }
     });
 
