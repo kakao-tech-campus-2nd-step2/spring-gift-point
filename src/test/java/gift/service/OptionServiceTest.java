@@ -4,9 +4,9 @@ import static org.assertj.core.api.Assertions.*;
 
 import gift.category.domain.Category;
 import gift.category.repository.CategoryRepository;
-import gift.option.domain.Option;
-import gift.option.domain.OptionDTO;
+import gift.product.option.domain.OptionDTO;
 import gift.product.domain.Product;
+import gift.product.option.service.OptionService;
 import gift.product.repository.ProductRepository;
 import jakarta.validation.ConstraintViolationException;
 import org.junit.jupiter.api.BeforeEach;

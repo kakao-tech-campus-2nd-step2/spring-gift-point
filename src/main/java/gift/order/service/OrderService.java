@@ -2,8 +2,8 @@ package gift.order.service;
 
 import gift.kakao.login.dto.KakaoMessageSendResponse;
 import gift.kakao.login.service.KakaoLoginService;
-import gift.option.domain.Option;
-import gift.option.repository.OptionRepository;
+import gift.product.option.domain.Option;
+import gift.product.option.repository.OptionRepository;
 import gift.order.domain.Order;
 import gift.order.domain.OrderRequest;
 import gift.order.domain.OrderResponse;
