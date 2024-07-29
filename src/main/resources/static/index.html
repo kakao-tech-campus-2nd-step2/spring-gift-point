@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>상품 관리</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<div class="container">
+    <h1>상품 관리</h1>
+    <div id="product-list"></div>
+    <button id="add-product-btn">상품 추가</button>
+</div>
+
+<div id="product-form-modal" class="modal">
+    <div class="modal-content">
+        <span class="close">&times;</span>
+        <h2 id="form-title">상품 추가</h2>
+        <form id="product-form">
+            <input type="hidden" id="product-id">
+            <label for="name">상품명:</label>
+            <input type="text" id="name" required>
+            <label for="price">가격:</label>
+            <input type="number" id="price" required>
+            <label for="imageUrl">이미지 URL:</label>
+            <input type="url" id="imageUrl" required>
+            <button type="submit">저장</button>
+        </form>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+<script src="script.js"></script>
+</body>
+</html>
