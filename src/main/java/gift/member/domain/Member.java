@@ -145,12 +145,12 @@ public class Member {
     public void updateKakaoTokens(
             String accessToken,
             String refreshToken,
-            LocalDateTime plusSeconds,
-            LocalDateTime plusSeconds1
+            LocalDateTime kakaoAccessTokenExpiresAt,
+            LocalDateTime kakaoRefreshTokenExpiresAt
     ) {
         this.kakaoAccessToken = accessToken;
         this.kakaoRefreshToken = refreshToken != null ? refreshToken : this.kakaoRefreshToken;
-        this.kakaoAccessTokenExpiresAt = plusSeconds;
-        this.kakaoRefreshTokenExpiresAt = plusSeconds1;
+        this.kakaoAccessTokenExpiresAt = kakaoAccessTokenExpiresAt;
+        this.kakaoRefreshTokenExpiresAt = kakaoRefreshTokenExpiresAt;
     }
 }
