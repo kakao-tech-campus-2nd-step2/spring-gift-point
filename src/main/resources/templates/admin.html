@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Product Management</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f4f4f4;
+    }
+    h1, h2 {
+      color: #333;
+      text-align: center;
+    }
+    h1 {
+      margin-top: 20px;
+    }
+    .container {
+      width: 80%;
+      margin: 0 auto;
+    }
+    table {
+      width: 100%;
+      margin-top: 20px;
+      border-collapse: collapse;
+      background-color: #fff;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    th, td {
+      padding: 15px;
+      text-align: left;
+    }
+    th {
+      background-color: #f8f8f8;
+      border-bottom: 2px solid #eaeaea;
+    }
+    td {
+      border-bottom: 1px solid #eaeaea;
+    }
+    tr:hover {
+      background-color: #f1f1f1;
+    }
+    form {
+      margin-bottom: 20px;
+      background-color: #fff;
+      padding: 20px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    form div {
+      margin-bottom: 15px;
+    }
+    label {
+      display: block;
+      margin-bottom: 5px;
+      color: #333;
+    }
+    input[type="text"] {
+      width: 100%;
+      padding: 8px;
+      box-sizing: border-box;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+    button {
+      display: inline-block;
+      padding: 10px 20px;
+      color: #fff;
+      background-color: #28a745;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #218838;
+    }
+  </style>
+</head>
+<body>
+<div class="container">
+  <h1>Product Management</h1>
+
+  <h2>Product List</h2>
+  <table>
+    <thead>
+    <tr>
+      <th>ID</th>
+      <th>Name</th>
+      <th>Price</th>
+      <th>Image</th>
+      <th>Actions</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="product : ${products}">
+      <td th:text="${product.id}">1</td>
+      <td th:text="${product.name}">Product Name</td>
+      <td th:text="${product.price}">100.00</td>
+      <td><img th:src="@{${product.imageUrl}}" alt="no image" style="width: 50px; height: 50px; object-fit: cover;" /></td>
+      <td>
+        <form th:action="@{/products/delete/{id}(id=${product.id})}" th:object="${product}" method="post" th:method="delete" class="delete-form">
+          <button type="submit">Delete</button>
+        </form>
+      </td>
+    </tr>
+    </tbody>
+  </table>
+
+  <h2>Create New Product</h2>
+  <form th:action="@{/products/post}" th:object="${newProduct}" method="post" class="create-form">
+    <div>
+      <label>Name:</label>
+      <input type="text" th:field="*{name}" />
+    </div>
+    <div>
+      <label>Price:</label>
+      <input type="text" th:field="*{price}" />
+    </div>
+    <div>
+      <label>ImageUrl:</label>
+      <input type="text" th:field="*{imageUrl}" />
+    </div>
+    <button type="submit">Save</button>
+  </form>
+
+  <h2>Update Product</h2>
+  <form th:action="@{/products/update}" th:object="${product}" th:method="PUT" class="update-form">
+    <div>
+      <label>Id:</label>
+      <input type="text" th:field="*{id}" />
+    </div>
+    <div>
+      <label>Name:</label>
+      <input type="text" th:field="*{name}" />
+    </div>
+    <div>
+      <label>Price:</label>
+      <input type="text" th:field="*{price}" />
+    </div>
+    <div>
+      <label>ImageUrl:</label>
+      <input type="text" th:field="*{imageUrl}" />
+    </div>
+    <button type="submit">Update</button>
+  </form>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    const forms = document.querySelectorAll('form');
+    forms.forEach(form => {
+      form.addEventListener('submit', function (event) {
+        event.preventDefault();
+
+        const formData = new FormData(form);
+        const action = form.getAttribute('action');
+        const method = form.getAttribute('method') || form.getAttribute('th:method').toLowerCase();
+
+        fetch(action, {
+          method: method,
+          body: formData,
+          headers: {
+            'X-CSRF-TOKEN': formData.get('_csrf') // if CSRF token is used
+          }
+        })
+        .then(response => {
+          if (!response.ok) {
+            if (response.status === 400) {
+              response.json().then(data => alert(data.message));
+            }
+            throw new Error('Error response was not ok');
+          }
+          location.reload();
+          return response.json();
+        })
+        .then(data => {
+          // Handle success
+          console.log('Success:', data);
+          // Reload the page to reflect the changes
+          location.reload(); // Reload the current page
+        })
+        .catch(error => {
+          console.error('Error:', error);
+        });
+      });
+    });
+  });
+</script>
+
+</body>
+</html>
