@@ -56,7 +56,7 @@ public class OptionServiceTest {
     }
 
     @Test
-    @DisplayName("findOptionASCTest")
+    @DisplayName("findOptionsTest")
     void test2(){
         // given
         Product product = new Product("product", 10000, "url", new Category("신규"));
@@ -69,38 +69,12 @@ public class OptionServiceTest {
 
         given(productRepository.findById(1L)).willAnswer(invocation -> Optional.of(product));
         // when
-        Page<OptionResponse> pageResult = optionService.findOptionASC(1L, 0, 5, "name");
+        List<OptionResponse> savedOptions = optionService.findOptions(1L);
         // then
-        Assertions.assertThat(pageResult).isNotNull();
-        Assertions.assertThat(pageResult.get().count()).isEqualTo(5);
-        List<OptionResponse> content = pageResult.getContent();
+        Assertions.assertThat(savedOptions).isNotNull();
+        Assertions.assertThat((long) savedOptions.size()).isEqualTo(5);
         for(int i = 1; i <= 5; i++){
-            String name = content.get(i-1).getName();
-            Assertions.assertThat(name).isEqualTo("옵션"+i);
-        }
-    }
-
-    @Test
-    @DisplayName("findOptionDESCTest")
-    void test3(){
-        // given
-        Product product = new Product("product", 10000, "url", new Category("신규"));
-        for(int i = 1; i <= 5; i++){
-            product.addOption(
-                    new Option("옵션" + i, (long)i)
-            );
-        }
-        TestUtil.setId(product, 1L);
-
-        given(productRepository.findById(1L)).willAnswer(invocation -> Optional.of(product));
-        // when
-        Page<OptionResponse> pageResult = optionService.findOptionDESC(1L, 0, 5, "name");
-        // then
-        Assertions.assertThat(pageResult).isNotNull();
-        Assertions.assertThat(pageResult.get().count()).isEqualTo(5);
-        List<OptionResponse> content = pageResult.getContent();
-        for(int i = 5; i >= 1; i--){
-            String name = content.get(i-1).getName();
+            String name = savedOptions.get(i-1).getName();
             Assertions.assertThat(name).isEqualTo("옵션"+i);
         }
     }
