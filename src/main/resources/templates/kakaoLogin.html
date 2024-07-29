@@ -1,0 +1,7 @@
+<!-- kakao button -->
+<div class="text-center">
+  <a href="https://kauth.kakao.com/oauth/authorize"
+     th:href="@{https://kauth.kakao.com/oauth/authorize(client_id=${client_id}, redirect_uri=${redirect_uri}, response_type='code', scope='talk_message')}">
+    <img src="../images/kakao_login_large_narrow.png">
+  </a>
+</div>
