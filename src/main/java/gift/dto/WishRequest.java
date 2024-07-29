@@ -1,13 +1,18 @@
 package gift.dto;
 
-import gift.entity.Product;
-
 public class WishRequest {
 
-    private Product product;
+    private Long productId;
 
-    public Product getProduct() {
-        return product;
+    public WishRequest() {
+    }
+
+    public WishRequest(Long productId) {
+        this.productId = productId;
+    }
+
+    public Long getProductId() {
+        return productId;
     }
 
 }
