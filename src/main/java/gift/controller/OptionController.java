@@ -5,6 +5,7 @@ import gift.dto.option.OptionResponse;
 import gift.dto.option.OptionUpdateRequest;
 import gift.service.OptionService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import java.util.List;
 import org.springframework.http.HttpStatus;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+@Tag(name = "Option API", description = "옵션 관리 API")
 @RestController
 @RequestMapping("/api/products/{productId}/options")
 public class OptionController {

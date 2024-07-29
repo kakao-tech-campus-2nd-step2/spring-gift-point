@@ -11,6 +11,7 @@ import gift.dto.oauth.KakaoUserResponse;
 import gift.service.MemberService;
 import gift.service.oauth.KakaoOAuthService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
@@ -24,6 +25,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+@Tag(name = "Kakao OAuth API", description = "카카오 OAuth API")
 @RestController
 @RequestMapping("/oauth/kakao")
 public class KakaoOAuthController {

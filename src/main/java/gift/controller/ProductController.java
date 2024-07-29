@@ -5,6 +5,7 @@ import gift.dto.product.ProductResponse;
 import gift.dto.product.ProductUpdateRequest;
 import gift.service.ProductService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -21,6 +22,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+@Tag(name = "Product API", description = "상품 관리 API")
 @RestController
 @RequestMapping("/api/products")
 public class ProductController {

@@ -6,6 +6,7 @@ import gift.dto.member.MemberResponse;
 import gift.model.RegisterType;
 import gift.service.MemberService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+@Tag(name = "Admin Page - Member API", description = "관리자 페이지 - 회원 관리 API")
 @Controller
 @RequestMapping("/admin/members")
 public class MemberAdminController {

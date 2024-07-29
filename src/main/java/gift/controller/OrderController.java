@@ -4,6 +4,7 @@ import gift.dto.order.OrderRequest;
 import gift.dto.order.OrderResponse;
 import gift.service.OrderService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+@Tag(name = "Order API", description = "주문 관리 API")
 @RestController
 @RequestMapping("/api/orders")
 public class OrderController {

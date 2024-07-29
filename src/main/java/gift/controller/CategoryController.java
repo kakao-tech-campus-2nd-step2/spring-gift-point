@@ -5,6 +5,7 @@ import gift.dto.category.CategoryResponse;
 import gift.dto.category.CategoryUpdateRequest;
 import gift.service.CategoryService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import java.util.List;
 import org.springframework.http.HttpStatus;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+@Tag(name = "Category API", description = "카테고리 관리 API")
 @RestController
 @RequestMapping("/api/categories")
 public class CategoryController {

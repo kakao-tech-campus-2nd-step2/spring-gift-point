@@ -11,6 +11,7 @@ import gift.service.CategoryService;
 import gift.service.OptionService;
 import gift.service.ProductService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import java.util.List;
 import org.springframework.data.domain.Page;
@@ -28,6 +29,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+@Tag(name = "Admin Page - Product API", description = "관리자 페이지 - 상품 관리 API")
 @Controller
 @RequestMapping("/admin/products")
 public class ProductAdminController {

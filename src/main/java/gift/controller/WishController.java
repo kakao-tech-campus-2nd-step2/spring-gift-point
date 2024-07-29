@@ -4,6 +4,7 @@ import gift.dto.wish.WishCreateRequest;
 import gift.dto.wish.WishResponse;
 import gift.service.WishService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -20,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+@Tag(name = "Wish API", description = "위시 관리 API")
 @RestController
 @RequestMapping("/api/wishes")
 public class WishController {
