@@ -40,6 +40,10 @@ jobs:
       - name: Run Tests
         run: ./gradlew test
 
+      - name: Add EC2 server to known_hosts
+        run: |
+          ssh-keyscan ${{ secrets.DEPLOY_SERVER }} >> ~/.ssh/known_hosts
+
       - name: Deploy to Server
         env:
           SSH_KEY: ${{ secrets.SSH_KEY }}
