@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width">
+  <title>members</title>
+  <link rel="stylesheet" th:href="@{/style.css}">
+</head>
+<body>
+<div class="container">
+  <div class="header">
+    <div class="header-txt">
+      <a th:href="@{/admin/members}">
+        <h1>Manage Members</h1>
+      </a>
+    </div>
+    <div class="green-btn">
+      <a href="/admin/members/add">SIGN UP</a>
+    </div>
+  </div>
+  <table>
+    <thead>
+    <tr>
+      <th>EMAIL</th>
+      <th>NICKNAME</th>
+      <th>GRADE</th>
+      <th>ACTION</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="member : ${members}">
+      <td th:text="${member.email}"></td>
+      <td th:text="${member.nickName}"></td>
+      <td th:text="${member.grade}"></td>
+      <td>
+      <div class="actions">
+        <div class="darkblue-btn">
+          <a th:href="@{/admin/members/edit/{id}(id=${member.id})}">UPDATE</a>
+        </div>
+        <div class="red-btn">
+          <a th:href="@{/admin/members/delete/{id}(id=${member.id})}">DELETE</a>
+        </div>
+      </div>
+      </td>
+    </tr>
+    </tbody>
+  </table>
+</div>
+</body>
+</html>

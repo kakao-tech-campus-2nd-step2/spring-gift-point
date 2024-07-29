@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width">
+  <title th:text="${headTitle}">Exception Occured</title>
+  <link rel="stylesheet" th:href="@{/style.css}">
+</head>
+<body>
+<div class="container">
+  <div class="header">
+    <div class="header-txt">
+        <h1>Exception Occured</h1>
+      </a>
+    </div>
+    <div class="back-btn">
+      <a th:href="|javascript:history.back()|" class="btn">back</a>
+    </div>
+  </div>
+</div>
+<p th:text="${message}">알 수 없는 오류가 발생했습니다. 다시 시도해 주세요.</p>
+</body>
+</html>

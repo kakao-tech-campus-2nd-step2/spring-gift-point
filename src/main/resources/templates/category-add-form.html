@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width">
+  <title>Category Add</title>
+  <link rel="stylesheet" th:href="@{/style.css}">
+</head>
+<body>
+<div class="container">
+  <div class="header">
+    <div class="header-txt">
+        <a th:href="@{/admin/categories}">
+          <h1>Add Category</h1>
+        </a>
+    </div>
+    <div class="back-btn">
+        <a th:href="|javascript:history.back()|" class="btn">back</a>
+    </div>
+  </div>
+  <h1>Category Add</h1>
+  <form th:action="@{/admin/categories/add}" th:object="${category}" method="post">
+    <p>Name: <input type="text" th:field="*{name}"></p>
+    <p>Color: <input type="text" th:field="*{color}"></p>
+    <p>Description: <input type="text" th:field="*{description}"></p>
+    <p>Image URL: <input type="text" th:field="*{imageUrl}"></p>
+    <button type="submit" class="btn-submit"><a>SUBMIT</a></button>
+  </form>
+</div>
+</body>
+</html>
