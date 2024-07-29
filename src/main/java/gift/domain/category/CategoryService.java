@@ -56,7 +56,7 @@ public class CategoryService {
     private boolean hasDuplicateName(Long id, String name) {
         return categoryRepository
             .findByName(name)
-            .filter(c -> c.getId().equals(id))
+            .filter(c -> !c.getId().equals(id))
             .isPresent();
     }
 }
