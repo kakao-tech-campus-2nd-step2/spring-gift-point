@@ -1,11 +1,9 @@
-package gift.option.repository;
+package gift.product.option.repository;
 
-import gift.option.domain.Option;
+import gift.product.option.domain.Option;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 @Repository
