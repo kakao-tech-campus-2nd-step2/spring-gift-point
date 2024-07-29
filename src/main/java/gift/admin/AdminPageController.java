@@ -1,8 +1,8 @@
 package gift.admin;
 
 import gift.category.CategoryService;
-import gift.product.entity.Product;
 import gift.product.ProductService;
+import gift.product.dto.ProductResponseDTO;
 import java.util.stream.IntStream;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -26,7 +26,7 @@ public class AdminPageController {
 
     @GetMapping(path = "/admin")
     public String adminPage(Model model, Pageable pageable) {
-        Page<Product> products = productService.getAllProducts(pageable);
+        Page<ProductResponseDTO> products = productService.getAllProducts(pageable);
 
         model.addAttribute("products", products);
         model.addAttribute("page", pageable.getPageNumber() + 1);

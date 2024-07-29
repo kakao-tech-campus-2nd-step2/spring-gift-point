@@ -15,9 +15,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import gift.category.dto.CategoryResponseDTO;
-import gift.category.entity.Category;
 import gift.category.dto.CategoryRequestDTO;
+import gift.category.dto.CategoryResponseDTO;
 import gift.product.dto.ProductRequestDTO;
 import gift.product.dto.ProductResponseDTO;
 import gift.token.JwtProvider;
@@ -28,6 +27,9 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.test.web.servlet.MockMvc;
 
 @WebMvcTest(ProductController.class)
@@ -52,31 +54,35 @@ class ProductControllerTest {
     @DisplayName("[Unit] getAllProduct method test")
     void getAllProductsTest() throws Exception {
         // given
-        List<ProductResponseDTO> expect = List.of(
-            new ProductResponseDTO(
-                1L,
-                "product1",
-                100,
-                "product1-imageUrl",
-                new CategoryResponseDTO(1L, "category-1")
-            ),
-            new ProductResponseDTO(
-                2L,
-                "Product2",
-                200,
-                "product2-image-url",
-                new CategoryResponseDTO(2L, "category-2")
+        Page<ProductResponseDTO> expect = new PageImpl<>(
+            List.of(
+                new ProductResponseDTO(
+                    1L,
+                    "product1",
+                    100,
+                    "product1-imageUrl",
+                    new CategoryResponseDTO(1L, "category-1")
+                ),
+                new ProductResponseDTO(
+                    2L,
+                    "Product2",
+                    200,
+                    "product2-image-url",
+                    new CategoryResponseDTO(2L, "category-2")
+                )
             )
         );
 
         //when
-        when(productService.getAllProducts()).thenReturn(expect);
+        when(productService.getAllProducts(PageRequest.of(0, 10)))
+            .thenReturn(expect);
 
         //then
-        mockMvc.perform(get(apiUrl))
-            .andExpect(status().isOk())
-            .andExpect(content().contentType(APPLICATION_JSON))
-            .andExpect(content().json(objectMapper.writeValueAsString(expect)));
+        mockMvc.perform(get(apiUrl)
+                .param("page", "0")
+                .param("size", "10")
+            ).andExpect(status().isOk())
+            .andExpect(content().string(objectMapper.writeValueAsString(expect)));
     }
 
     @Nested

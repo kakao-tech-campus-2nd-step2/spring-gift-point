@@ -5,7 +5,9 @@ import gift.product.dto.ProductResponseDTO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import java.util.List;
+import org.springdoc.core.annotations.ParameterObject;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -29,8 +31,8 @@ public class ProductController {
     @GetMapping
     @Operation(summary = "상품 조회", description = "모든 상품을 조회합니다.")
     @ApiResponse(responseCode = "200", description = "상품 조회 성공")
-    public List<ProductResponseDTO> getProducts() {
-        return productService.getAllProducts();
+    public Page<ProductResponseDTO> getProducts(@ParameterObject Pageable pageable) {
+        return productService.getAllProducts(pageable);
     }
 
     @PostMapping

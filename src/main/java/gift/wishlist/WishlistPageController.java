@@ -41,7 +41,9 @@ public class WishlistPageController {
     ) {
         pageable = changePageable(pageable);
         Page<ProductResponseDTO> wishProducts = wishlistService.getAllWishlists(token, pageable);
-        List<ProductResponseDTO> allProducts = productService.getAllProducts();
+        Page<ProductResponseDTO> allProducts = productService.getAllProducts(
+            PageRequest.of(0, Integer.MAX_VALUE)
+        );
         wishProducts.getSort().getOrderFor("product.id");
 
         model.addAttribute("wishProducts", wishProducts);

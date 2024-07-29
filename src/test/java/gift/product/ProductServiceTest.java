@@ -3,14 +3,15 @@ package gift.product;
 import static gift.exception.ErrorMessage.CATEGORY_NOT_FOUND;
 import static gift.exception.ErrorMessage.PRODUCT_NOT_FOUND;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.when;
 
+import gift.category.CategoryRepository;
+import gift.category.dto.CategoryRequestDTO;
 import gift.category.dto.CategoryResponseDTO;
 import gift.category.entity.Category;
-import gift.category.dto.CategoryRequestDTO;
-import gift.category.CategoryRepository;
 import gift.product.dto.ProductRequestDTO;
 import gift.product.dto.ProductResponseDTO;
 import gift.product.entity.Product;
@@ -22,6 +23,9 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 
 @SpringBootTest
 class ProductServiceTest {
@@ -39,27 +43,34 @@ class ProductServiceTest {
     @DisplayName("[Unit] get all products test")
     void getAllProductsTest() {
         //given
-        List<Product> expectFromRepository = List.of(
+        Page<Product> expectFromRepository = new PageImpl<>(List.of(
             new Product(1L, "product-1", 1, "product-1-image", new Category(1, "category-1")),
             new Product(2L, "product-2", 2, "product-2-image", new Category(1, "category-1")),
             new Product(3L, "product-3", 3, "product-3-image", new Category(2, "category-2"))
-        );
+        ));
 
-        List<ProductResponseDTO> expect = List.of(
+        Page<ProductResponseDTO> expect = new PageImpl<>(List.of(
             new ProductResponseDTO(1L, "product-1", 1, "product-1-image",
                 new CategoryResponseDTO(1L, "category-1")),
             new ProductResponseDTO(2L, "product-2", 2, "product-2-image",
                 new CategoryResponseDTO(1L, "category-1")),
             new ProductResponseDTO(3L, "product-3", 3, "product-3-image",
                 new CategoryResponseDTO(2L, "category-2"))
-        );
+        ));
+
+        PageRequest pageable = PageRequest.of(0, Integer.MAX_VALUE);
 
         //when
-        when(productRepository.findAll()).thenReturn(expectFromRepository);
-        List<ProductResponseDTO> actual = productService.getAllProducts();
+        when(productRepository.findAll(pageable))
+            .thenReturn(expectFromRepository);
+        Page<ProductResponseDTO> actual = productService.getAllProducts(pageable);
 
         //then
-        assertEquals(expect, actual);
+        assertAll(
+            () -> assertEquals(expect.getContent(), actual.getContent()),
+            () -> assertEquals(expect.getTotalElements(), actual.getTotalElements()),
+            () -> assertEquals(expect.getTotalPages(), actual.getTotalPages())
+        );
     }
 
     @Nested

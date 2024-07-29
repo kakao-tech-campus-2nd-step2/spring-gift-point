@@ -11,6 +11,7 @@ import gift.product.dto.ProductResponseDTO;
 import gift.product.entity.Product;
 import java.util.List;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -31,8 +32,8 @@ public class ProductService {
     }
 
     @Transactional(readOnly = true)
-    public List<ProductResponseDTO> getAllProducts() {
-        return productRepository.findAll()
+    public Page<ProductResponseDTO> getAllProducts(Pageable pageable) {
+        List<ProductResponseDTO> productResponseDTOS = productRepository.findAll(pageable)
             .stream()
             .map(product -> new ProductResponseDTO(
                 product.getId(),
@@ -43,13 +44,9 @@ public class ProductService {
                     product.getCategory().getId(),
                     product.getCategory().getName()
                 )
-            ))
-            .toList();
-    }
+            )).toList();
 
-    @Transactional(readOnly = true)
-    public Page<Product> getAllProducts(Pageable pageable) {
-        return productRepository.findAll(pageable);
+        return new PageImpl<>(productResponseDTOS, pageable, productResponseDTOS.size());
     }
 
     public void addProduct(ProductRequestDTO productDTO) {
