@@ -60,12 +60,6 @@
         $.ajax({
             url: '/api/products/' + product_id + '/options',
             method: 'GET',
-            data : {
-                page : page,
-                size : pageSize,
-                sort : $('#p_sort').val(),
-                field : $('#p_field').val()
-            },
             success: function(data) {
                 var contents = data.content;
                 var tbody = $('#option-tbody');

@@ -85,8 +85,6 @@
     <select name="p_field" id="p_field">
         <option value="id">id</option>
         <option value="name">name</option>
-        <option value="price">price</option>
-        <option value="category">category</option>
     </select>
     <button id="search" onclick="getProducts(currentPage)">검색</button>
     <button id="nextPage">Next</button>
@@ -102,7 +100,8 @@
             method: 'GET',
             data : {
                 page : page,
-                size : pageSize
+                size : pageSize,
+                sort : [$('#p_field').val(), $('#p_sort').val()]
             },
             success: function(data) {
                 console.log(data);

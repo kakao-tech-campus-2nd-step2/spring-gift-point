@@ -66,12 +66,6 @@
         $.ajax({
             url: '/api/categories',
             method: 'GET',
-            data : {
-                page : page,
-                size : pageSize,
-                sort : $('#p_sort').val(),
-                field : $('#p_field').val()
-            },
             success: function(data) {
                 var contents = data.content;
                 var tbody = $('#category-tbody');
