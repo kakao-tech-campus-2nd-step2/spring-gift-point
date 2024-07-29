@@ -53,8 +53,8 @@ public class JwtUtil {
         }
     }
 
-    public boolean isJwtToken(String token) {
-        return token.split("\\.").length == 3;
+    public boolean isNotJwtToken(String token) {
+        return token.split("\\.").length != 3;
     }
 
 }

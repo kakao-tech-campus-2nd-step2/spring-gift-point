@@ -39,7 +39,8 @@ public class OrderController {
         Order savedOrder = orderService.createOrder(memberId, orderRequestDto);
 
         String accessToken = jwtUtil.getBearerTokenFromAuthorizationHeader(authorizationHeader);
-        if (! jwtUtil.isJwtToken(accessToken)) {
+
+        if (jwtUtil.isNotJwtToken(accessToken)) {
             Option option = orderService.getOptionByOptionId(savedOrder.getOptionId());
             Product product = option.getProduct();
             KakaoMessageRequestDto kakaoMessageRequestDto = KakaoMessageRequestDto.toKakaoMessageRequestDto(savedOrder, product.getName(), option.getName());

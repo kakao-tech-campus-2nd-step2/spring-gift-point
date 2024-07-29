@@ -80,13 +80,13 @@ public class KakaoApiService {
     public void kakaoLogin(String accessToken) {
         String loginMemberEmail = getMemberEmailFromKakao(accessToken);
 
-        boolean hasMember = memberService.hasMemberByEmail(loginMemberEmail);
+        boolean isNotExistMember = !memberService.hasMemberByEmail(loginMemberEmail);
 
-        kakaoJoin(hasMember, loginMemberEmail);
+        kakaoJoin(isNotExistMember, loginMemberEmail);
     }
 
-    private void kakaoJoin(boolean hasMember, String loginMemberEmail) {
-        if (!hasMember) {
+    private void kakaoJoin(boolean noExistMember, String loginMemberEmail) {
+        if (noExistMember) {
             memberService.join(new Member(loginMemberEmail, KakaoApiProvider.KAKAO_PASSWORD));
         }
     }
