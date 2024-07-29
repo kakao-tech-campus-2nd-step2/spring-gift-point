@@ -5,14 +5,17 @@ import static gift.exception.ErrorMessage.PRODUCT_NOT_FOUND;
 import static gift.exception.ErrorMessage.WISHLIST_ALREADY_EXISTS;
 import static gift.exception.ErrorMessage.WISHLIST_NOT_FOUND;
 
+import gift.category.dto.CategoryResponseDTO;
 import gift.member.MemberRepository;
 import gift.member.entity.Member;
 import gift.product.ProductRepository;
+import gift.product.dto.ProductResponseDTO;
 import gift.product.entity.Product;
 import gift.token.JwtProvider;
 import gift.wishlist.entity.Wishlist;
 import java.util.List;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.util.Pair;
 import org.springframework.stereotype.Service;
@@ -40,22 +43,26 @@ public class WishlistService {
     }
 
     @Transactional(readOnly = true)
-    public Page<Product> getAllWishlists(String token, Pageable pageable) {
+    public Page<ProductResponseDTO> getAllWishlists(String token, Pageable pageable) {
         Member member = getMemberFromToken(token);
 
-        return wishlistRepository
-            .findAllByMember(member, pageable)
-            .map(Wishlist::getProduct);
-    }
-
-    @Transactional(readOnly = true)
-    public List<Product> getAllWishlists(String token) {
-        Member member = getMemberFromToken(token);
-
-        return wishlistRepository.findAllByMember(member)
+        List<ProductResponseDTO> wishlistProducts = wishlistRepository.findAllByMember(member)
             .stream()
-            .map(Wishlist::getProduct)
-            .toList();
+            .map(wishlist -> {
+                Product product = wishlist.getProduct();
+                return new ProductResponseDTO(
+                    product.getId(),
+                    product.getName(),
+                    product.getPrice(),
+                    product.getImageUrl(),
+                    new CategoryResponseDTO(
+                        product.getCategory().getId(),
+                        product.getCategory().getName()
+                    )
+                );
+            }).toList();
+
+        return new PageImpl<>(wishlistProducts, pageable, wishlistProducts.size());
     }
 
     public void addWishlist(String token, long productId) {

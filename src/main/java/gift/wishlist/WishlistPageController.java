@@ -2,7 +2,6 @@ package gift.wishlist;
 
 import gift.product.ProductService;
 import gift.product.dto.ProductResponseDTO;
-import gift.product.entity.Product;
 import java.util.List;
 import java.util.stream.IntStream;
 import org.springframework.data.domain.Page;
@@ -41,7 +40,7 @@ public class WishlistPageController {
         Pageable pageable
     ) {
         pageable = changePageable(pageable);
-        Page<Product> wishProducts = wishlistService.getAllWishlists(token, pageable);
+        Page<ProductResponseDTO> wishProducts = wishlistService.getAllWishlists(token, pageable);
         List<ProductResponseDTO> allProducts = productService.getAllProducts();
         wishProducts.getSort().getOrderFor("product.id");
 
