@@ -1,0 +1,678 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"/><title>API 명세서</title><style>
+/* cspell:disable-file */
+/* webkit printing magic: print all background colors */
+html {
+	-webkit-print-color-adjust: exact;
+}
+* {
+	box-sizing: border-box;
+	-webkit-print-color-adjust: exact;
+}
+
+html,
+body {
+	margin: 0;
+	padding: 0;
+}
+@media only screen {
+	body {
+		margin: 2em auto;
+		max-width: 900px;
+		color: rgb(55, 53, 47);
+	}
+}
+
+body {
+	line-height: 1.5;
+	white-space: pre-wrap;
+}
+
+a,
+a.visited {
+	color: inherit;
+	text-decoration: underline;
+}
+
+.pdf-relative-link-path {
+	font-size: 80%;
+	color: #444;
+}
+
+h1,
+h2,
+h3 {
+	letter-spacing: -0.01em;
+	line-height: 1.2;
+	font-weight: 600;
+	margin-bottom: 0;
+}
+
+.page-title {
+	font-size: 2.5rem;
+	font-weight: 700;
+	margin-top: 0;
+	margin-bottom: 0.75em;
+}
+
+h1 {
+	font-size: 1.875rem;
+	margin-top: 1.875rem;
+}
+
+h2 {
+	font-size: 1.5rem;
+	margin-top: 1.5rem;
+}
+
+h3 {
+	font-size: 1.25rem;
+	margin-top: 1.25rem;
+}
+
+.source {
+	border: 1px solid #ddd;
+	border-radius: 3px;
+	padding: 1.5em;
+	word-break: break-all;
+}
+
+.callout {
+	border-radius: 3px;
+	padding: 1rem;
+}
+
+figure {
+	margin: 1.25em 0;
+	page-break-inside: avoid;
+}
+
+figcaption {
+	opacity: 0.5;
+	font-size: 85%;
+	margin-top: 0.5em;
+}
+
+mark {
+	background-color: transparent;
+}
+
+.indented {
+	padding-left: 1.5em;
+}
+
+hr {
+	background: transparent;
+	display: block;
+	width: 100%;
+	height: 1px;
+	visibility: visible;
+	border: none;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.09);
+}
+
+img {
+	max-width: 100%;
+}
+
+@media only print {
+	img {
+		max-height: 100vh;
+		object-fit: contain;
+	}
+}
+
+@page {
+	margin: 1in;
+}
+
+.collection-content {
+	font-size: 0.875rem;
+}
+
+.column-list {
+	display: flex;
+	justify-content: space-between;
+}
+
+.column {
+	padding: 0 1em;
+}
+
+.column:first-child {
+	padding-left: 0;
+}
+
+.column:last-child {
+	padding-right: 0;
+}
+
+.table_of_contents-item {
+	display: block;
+	font-size: 0.875rem;
+	line-height: 1.3;
+	padding: 0.125rem;
+}
+
+.table_of_contents-indent-1 {
+	margin-left: 1.5rem;
+}
+
+.table_of_contents-indent-2 {
+	margin-left: 3rem;
+}
+
+.table_of_contents-indent-3 {
+	margin-left: 4.5rem;
+}
+
+.table_of_contents-link {
+	text-decoration: none;
+	opacity: 0.7;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.18);
+}
+
+table,
+th,
+td {
+	border: 1px solid rgba(55, 53, 47, 0.09);
+	border-collapse: collapse;
+}
+
+table {
+	border-left: none;
+	border-right: none;
+}
+
+th,
+td {
+	font-weight: normal;
+	padding: 0.25em 0.5em;
+	line-height: 1.5;
+	min-height: 1.5em;
+	text-align: left;
+}
+
+th {
+	color: rgba(55, 53, 47, 0.6);
+}
+
+ol,
+ul {
+	margin: 0;
+	margin-block-start: 0.6em;
+	margin-block-end: 0.6em;
+}
+
+li > ol:first-child,
+li > ul:first-child {
+	margin-block-start: 0.6em;
+}
+
+ul > li {
+	list-style: disc;
+}
+
+ul.to-do-list {
+	padding-inline-start: 0;
+}
+
+ul.to-do-list > li {
+	list-style: none;
+}
+
+.to-do-children-checked {
+	text-decoration: line-through;
+	opacity: 0.375;
+}
+
+ul.toggle > li {
+	list-style: none;
+}
+
+ul {
+	padding-inline-start: 1.7em;
+}
+
+ul > li {
+	padding-left: 0.1em;
+}
+
+ol {
+	padding-inline-start: 1.6em;
+}
+
+ol > li {
+	padding-left: 0.2em;
+}
+
+.mono ol {
+	padding-inline-start: 2em;
+}
+
+.mono ol > li {
+	text-indent: -0.4em;
+}
+
+.toggle {
+	padding-inline-start: 0em;
+	list-style-type: none;
+}
+
+/* Indent toggle children */
+.toggle > li > details {
+	padding-left: 1.7em;
+}
+
+.toggle > li > details > summary {
+	margin-left: -1.1em;
+}
+
+.selected-value {
+	display: inline-block;
+	padding: 0 0.5em;
+	background: rgba(206, 205, 202, 0.5);
+	border-radius: 3px;
+	margin-right: 0.5em;
+	margin-top: 0.3em;
+	margin-bottom: 0.3em;
+	white-space: nowrap;
+}
+
+.collection-title {
+	display: inline-block;
+	margin-right: 1em;
+}
+
+.page-description {
+    margin-bottom: 2em;
+}
+
+.simple-table {
+	margin-top: 1em;
+	font-size: 0.875rem;
+	empty-cells: show;
+}
+.simple-table td {
+	height: 29px;
+	min-width: 120px;
+}
+
+.simple-table th {
+	height: 29px;
+	min-width: 120px;
+}
+
+.simple-table-header-color {
+	background: rgb(247, 246, 243);
+	color: black;
+}
+.simple-table-header {
+	font-weight: 500;
+}
+
+time {
+	opacity: 0.5;
+}
+
+.icon {
+	display: inline-block;
+	max-width: 1.2em;
+	max-height: 1.2em;
+	text-decoration: none;
+	vertical-align: text-bottom;
+	margin-right: 0.5em;
+}
+
+img.icon {
+	border-radius: 3px;
+}
+
+.user-icon {
+	width: 1.5em;
+	height: 1.5em;
+	border-radius: 100%;
+	margin-right: 0.5rem;
+}
+
+.user-icon-inner {
+	font-size: 0.8em;
+}
+
+.text-icon {
+	border: 1px solid #000;
+	text-align: center;
+}
+
+.page-cover-image {
+	display: block;
+	object-fit: cover;
+	width: 100%;
+	max-height: 30vh;
+}
+
+.page-header-icon {
+	font-size: 3rem;
+	margin-bottom: 1rem;
+}
+
+.page-header-icon-with-cover {
+	margin-top: -0.72em;
+	margin-left: 0.07em;
+}
+
+.page-header-icon img {
+	border-radius: 3px;
+}
+
+.link-to-page {
+	margin: 1em 0;
+	padding: 0;
+	border: none;
+	font-weight: 500;
+}
+
+p > .user {
+	opacity: 0.5;
+}
+
+td > .user,
+td > time {
+	white-space: nowrap;
+}
+
+input[type="checkbox"] {
+	transform: scale(1.5);
+	margin-right: 0.6em;
+	vertical-align: middle;
+}
+
+p {
+	margin-top: 0.5em;
+	margin-bottom: 0.5em;
+}
+
+.image {
+	border: none;
+	margin: 1.5em 0;
+	padding: 0;
+	border-radius: 0;
+	text-align: center;
+}
+
+.code,
+code {
+	background: rgba(135, 131, 120, 0.15);
+	border-radius: 3px;
+	padding: 0.2em 0.4em;
+	border-radius: 3px;
+	font-size: 85%;
+	tab-size: 2;
+}
+
+code {
+	color: #eb5757;
+}
+
+.code {
+	padding: 1.5em 1em;
+}
+
+.code-wrap {
+	white-space: pre-wrap;
+	word-break: break-all;
+}
+
+.code > code {
+	background: none;
+	padding: 0;
+	font-size: 100%;
+	color: inherit;
+}
+
+blockquote {
+	font-size: 1.25em;
+	margin: 1em 0;
+	padding-left: 1em;
+	border-left: 3px solid rgb(55, 53, 47);
+}
+
+.bookmark {
+	text-decoration: none;
+	max-height: 8em;
+	padding: 0;
+	display: flex;
+	width: 100%;
+	align-items: stretch;
+}
+
+.bookmark-title {
+	font-size: 0.85em;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	height: 1.75em;
+	white-space: nowrap;
+}
+
+.bookmark-text {
+	display: flex;
+	flex-direction: column;
+}
+
+.bookmark-info {
+	flex: 4 1 180px;
+	padding: 12px 14px 14px;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+}
+
+.bookmark-image {
+	width: 33%;
+	flex: 1 1 180px;
+	display: block;
+	position: relative;
+	object-fit: cover;
+	border-radius: 1px;
+}
+
+.bookmark-description {
+	color: rgba(55, 53, 47, 0.6);
+	font-size: 0.75em;
+	overflow: hidden;
+	max-height: 4.5em;
+	word-break: break-word;
+}
+
+.bookmark-href {
+	font-size: 0.75em;
+	margin-top: 0.25em;
+}
+
+.sans { font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol"; }
+.code { font-family: "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace; }
+.serif { font-family: Lyon-Text, Georgia, ui-serif, serif; }
+.mono { font-family: iawriter-mono, Nitti, Menlo, Courier, monospace; }
+.pdf .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK JP'; }
+.pdf:lang(zh-CN) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK SC'; }
+.pdf:lang(zh-TW) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK TC'; }
+.pdf:lang(ko-KR) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK KR'; }
+.pdf .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
+.pdf:lang(zh-CN) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
+.pdf:lang(zh-TW) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
+.pdf:lang(ko-KR) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
+.pdf .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK JP'; }
+.pdf:lang(zh-CN) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK SC'; }
+.pdf:lang(zh-TW) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK TC'; }
+.pdf:lang(ko-KR) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK KR'; }
+.pdf .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
+.pdf:lang(zh-CN) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
+.pdf:lang(zh-TW) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
+.pdf:lang(ko-KR) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
+.highlight-default {
+	color: rgba(55, 53, 47, 1);
+}
+.highlight-gray {
+	color: rgba(120, 119, 116, 1);
+	fill: rgba(120, 119, 116, 1);
+}
+.highlight-brown {
+	color: rgba(159, 107, 83, 1);
+	fill: rgba(159, 107, 83, 1);
+}
+.highlight-orange {
+	color: rgba(217, 115, 13, 1);
+	fill: rgba(217, 115, 13, 1);
+}
+.highlight-yellow {
+	color: rgba(203, 145, 47, 1);
+	fill: rgba(203, 145, 47, 1);
+}
+.highlight-teal {
+	color: rgba(68, 131, 97, 1);
+	fill: rgba(68, 131, 97, 1);
+}
+.highlight-blue {
+	color: rgba(51, 126, 169, 1);
+	fill: rgba(51, 126, 169, 1);
+}
+.highlight-purple {
+	color: rgba(144, 101, 176, 1);
+	fill: rgba(144, 101, 176, 1);
+}
+.highlight-pink {
+	color: rgba(193, 76, 138, 1);
+	fill: rgba(193, 76, 138, 1);
+}
+.highlight-red {
+	color: rgba(212, 76, 71, 1);
+	fill: rgba(212, 76, 71, 1);
+}
+.highlight-gray_background {
+	background: rgba(241, 241, 239, 1);
+}
+.highlight-brown_background {
+	background: rgba(244, 238, 238, 1);
+}
+.highlight-orange_background {
+	background: rgba(251, 236, 221, 1);
+}
+.highlight-yellow_background {
+	background: rgba(251, 243, 219, 1);
+}
+.highlight-teal_background {
+	background: rgba(237, 243, 236, 1);
+}
+.highlight-blue_background {
+	background: rgba(231, 243, 248, 1);
+}
+.highlight-purple_background {
+	background: rgba(244, 240, 247, 0.8);
+}
+.highlight-pink_background {
+	background: rgba(249, 238, 243, 0.8);
+}
+.highlight-red_background {
+	background: rgba(253, 235, 236, 1);
+}
+.block-color-default {
+	color: inherit;
+	fill: inherit;
+}
+.block-color-gray {
+	color: rgba(120, 119, 116, 1);
+	fill: rgba(120, 119, 116, 1);
+}
+.block-color-brown {
+	color: rgba(159, 107, 83, 1);
+	fill: rgba(159, 107, 83, 1);
+}
+.block-color-orange {
+	color: rgba(217, 115, 13, 1);
+	fill: rgba(217, 115, 13, 1);
+}
+.block-color-yellow {
+	color: rgba(203, 145, 47, 1);
+	fill: rgba(203, 145, 47, 1);
+}
+.block-color-teal {
+	color: rgba(68, 131, 97, 1);
+	fill: rgba(68, 131, 97, 1);
+}
+.block-color-blue {
+	color: rgba(51, 126, 169, 1);
+	fill: rgba(51, 126, 169, 1);
+}
+.block-color-purple {
+	color: rgba(144, 101, 176, 1);
+	fill: rgba(144, 101, 176, 1);
+}
+.block-color-pink {
+	color: rgba(193, 76, 138, 1);
+	fill: rgba(193, 76, 138, 1);
+}
+.block-color-red {
+	color: rgba(212, 76, 71, 1);
+	fill: rgba(212, 76, 71, 1);
+}
+.block-color-gray_background {
+	background: rgba(241, 241, 239, 1);
+}
+.block-color-brown_background {
+	background: rgba(244, 238, 238, 1);
+}
+.block-color-orange_background {
+	background: rgba(251, 236, 221, 1);
+}
+.block-color-yellow_background {
+	background: rgba(251, 243, 219, 1);
+}
+.block-color-teal_background {
+	background: rgba(237, 243, 236, 1);
+}
+.block-color-blue_background {
+	background: rgba(231, 243, 248, 1);
+}
+.block-color-purple_background {
+	background: rgba(244, 240, 247, 0.8);
+}
+.block-color-pink_background {
+	background: rgba(249, 238, 243, 0.8);
+}
+.block-color-red_background {
+	background: rgba(253, 235, 236, 1);
+}
+.select-value-color-uiBlue { background-color: rgba(35, 131, 226, .07); }
+.select-value-color-pink { background-color: rgba(245, 224, 233, 1); }
+.select-value-color-purple { background-color: rgba(232, 222, 238, 1); }
+.select-value-color-green { background-color: rgba(219, 237, 219, 1); }
+.select-value-color-gray { background-color: rgba(227, 226, 224, 1); }
+.select-value-color-transparentGray { background-color: rgba(227, 226, 224, 0); }
+.select-value-color-translucentGray { background-color: rgba(0, 0, 0, 0.06); }
+.select-value-color-orange { background-color: rgba(250, 222, 201, 1); }
+.select-value-color-brown { background-color: rgba(238, 224, 218, 1); }
+.select-value-color-red { background-color: rgba(255, 226, 221, 1); }
+.select-value-color-yellow { background-color: rgba(253, 236, 200, 1); }
+.select-value-color-blue { background-color: rgba(211, 229, 239, 1); }
+.select-value-color-pageGlass { background-color: undefined; }
+.select-value-color-washGlass { background-color: undefined; }
+
+.checkbox {
+	display: inline-flex;
+	vertical-align: text-bottom;
+	width: 16;
+	height: 16;
+	background-size: 16px;
+	margin-left: 2px;
+	margin-right: 5px;
+}
+
+.checkbox-on {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20width%3D%2216%22%20height%3D%2216%22%20fill%3D%22%2358A9D7%22%2F%3E%0A%3Cpath%20d%3D%22M6.71429%2012.2852L14%204.9995L12.7143%203.71436L6.71429%209.71378L3.28571%206.2831L2%207.57092L6.71429%2012.2852Z%22%20fill%3D%22white%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+
+.checkbox-off {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20x%3D%220.75%22%20y%3D%220.75%22%20width%3D%2214.5%22%20height%3D%2214.5%22%20fill%3D%22white%22%20stroke%3D%22%2336352F%22%20stroke-width%3D%221.5%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+	
+</style></head><body><article id="fa7a0490-8c93-4345-a9b0-49133f1af3ae" class="page sans"><header><h1 class="page-title">API 명세서</h1><p class="page-description"></p></header><div class="page-body"><hr id="c2b8ed57-a702-41d7-8e0d-5c8ede862753"/><nav id="13a083f0-fe65-456d-930e-d3f93720382d" class="block-color-gray table_of_contents"><div class="table_of_contents-item table_of_contents-indent-0"><a class="table_of_contents-link" href="#747a7472-efc3-4e94-bfed-eb8faffeb44c">공통</a></div><div class="table_of_contents-item table_of_contents-indent-0"><a class="table_of_contents-link" href="#76e116b5-d7f7-48b7-b591-33d4f578e0a3">상품 ( Product )</a></div><div class="table_of_contents-item table_of_contents-indent-0"><a class="table_of_contents-link" href="#629b330f-ab1b-4e12-a06e-4902413671e2">사용자 ( User )</a></div><div class="table_of_contents-item table_of_contents-indent-0"><a class="table_of_contents-link" href="#4c1e4395-8c7e-4f09-b8e3-e864b1439085">위시 리스트 ( WishProduct )</a></div><div class="table_of_contents-item table_of_contents-indent-0"><a class="table_of_contents-link" href="#f52bdedc-9697-4219-bb12-fd2011b3bd75">카테고리 ( Category )</a></div><div class="table_of_contents-item table_of_contents-indent-0"><a class="table_of_contents-link" href="#ddb4e9c4-e907-49f8-a1c5-3e27a4a2fe31">옵션 ( Option )</a></div><div class="table_of_contents-item table_of_contents-indent-0"><a class="table_of_contents-link" href="#e7cecf15-cf05-4166-8071-47e37ffdddde">주문 ( Order )</a></div><div class="table_of_contents-item table_of_contents-indent-0"><a class="table_of_contents-link" href="#57afe62b-a47e-42c9-aea5-3d846405f404">카카오 로그인 ( kakao )</a></div><div class="table_of_contents-item table_of_contents-indent-0"><a class="table_of_contents-link" href="#a1535298-8b6f-4c62-97af-94697984ceae">기타 페이지 </a></div></nav><h3 id="747a7472-efc3-4e94-bfed-eb8faffeb44c" class="">공통</h3><ul id="558c3e88-71b0-411b-826a-2785dfdba555" class="toggle"><li><details open=""><summary><strong>GET 요청으로 모든 특정 엔티티 리소스를 불러올 때, 공통적으로 다음과 같은 쿼리 파라미터 양식을 따른다.</strong></summary><ul id="56968efb-5d4b-4c6e-bcef-84d75c18d744" class="bulleted-list"><li style="list-style-type:disc">Page : 페이지 순서<ul id="f965182d-f6b5-4684-9ec2-513c4917f6f9" class="bulleted-list"><li style="list-style-type:circle">기본 값 : 0</li></ul></li></ul><ul id="cc6bf38d-334e-4151-8903-c15598eada91" class="bulleted-list"><li style="list-style-type:disc">Size : 페이지 크기<ul id="1ab9e36e-171a-485c-bbfb-3ea2f974c2f2" class="bulleted-list"><li style="list-style-type:circle">기본 값 : 5</li></ul></li></ul><ul id="d41e0f38-f3df-4b67-8d60-069040f0da8a" class="bulleted-list"><li style="list-style-type:disc">Sort : 정렬 기준과 정렬 방식<ul id="fbcf2b35-5bb4-43dc-b64a-2b49320b02dc" class="bulleted-list"><li style="list-style-type:circle">[ a, b ] </li></ul><ul id="3eb5529a-a3f8-4927-8566-7e76d525b17f" class="bulleted-list"><li style="list-style-type:circle">a : 정렬 기준 ( 해당 도메인 필드 )</li></ul><ul id="cfa537b1-c553-4eb8-8f22-225553e9c1bb" class="bulleted-list"><li style="list-style-type:circle">b : 정렬 방식 ( <strong>asc</strong> or <strong>desc )</strong></li></ul></li></ul></details></li></ul><ul id="6aa6f0fc-4c7d-4457-9a39-24abf2250fdd" class="toggle"><li><details open=""><summary><strong>각 요청 성공 시 다음과 같은 상태코드가 주어진다</strong></summary><ul id="383a5242-733d-4e9a-acc7-1e34f0eee825" class="bulleted-list"><li style="list-style-type:disc">조회, 수정, 로그인 성공 시 → <strong>200 OK</strong></li></ul><ul id="c6f225b3-ecce-4caf-ba04-45c5d263c1f6" class="bulleted-list"><li style="list-style-type:disc">추가 성공 시 → <strong>201 Created</strong></li></ul><ul id="53f45434-839b-44e2-b532-dea10e907d0a" class="bulleted-list"><li style="list-style-type:disc">삭제 성공 시 → <strong>204 No Content</strong></li></ul></details></li></ul><ul id="331ef551-e57f-483e-a4cf-ace8c5fdc370" class="toggle"><li><details open=""><summary><strong>각 요청 실패 시 다음과 같은 상태코드가 주어진다</strong></summary><ul id="e25ff13f-3cef-4b77-a16a-23a9247b58cf" class="bulleted-list"><li style="list-style-type:disc">Validation check를 통과하지 못한 경우 → <strong>400 Bad Request</strong></li></ul><ul id="74902e66-05fd-41af-a5c0-0cc2abaa8e24" class="bulleted-list"><li style="list-style-type:disc">인증 ( 로그인, 유저 정보 ) 에 실패한 경우 → <strong>401 Unauthorized</strong></li></ul><ul id="4e4870e9-3212-4424-bcaa-d7117e811d7c" class="bulleted-list"><li style="list-style-type:disc">입력 값에 해당하는 리소스가 없거나, 잘못된 접근인 경우 → <strong>404 Not Found</strong></li></ul><ul id="873b79ed-a0e5-497e-b1b0-f71218b97a35" class="bulleted-list"><li style="list-style-type:disc">이미 존재하는 값에 대한 허용되지 않은 접근인 경우 ( 중복 불가 값 ) → <strong>409 Conflict</strong></li></ul><ul id="64f91db7-c452-42fb-a11e-e083e0bc6a7f" class="bulleted-list"><li style="list-style-type:disc">논리적인 오류가 발생한 경우 ( 수량보다 많은 값을 구매하는 등 ) → <strong>400 Bad Request</strong></li></ul></details></li></ul><h3 id="76e116b5-d7f7-48b7-b591-33d4f578e0a3" class="">상품 ( Product )</h3><table id="11a642b8-d8c2-42ed-916a-fae77c490764" class="simple-table"><tbody><tr id="49197328-5bbe-47d0-9406-91f1e18c4fbf"><td id="xEcZ" class="" style="width:78px"><mark class="highlight-yellow_background"><strong>Products</strong></mark></td><td id="yaBz" class="" style="width:120px"><strong>URI</strong></td><td id="bQfU" class="" style="width:247px"><strong>Request Data</strong></td><td id="J]pT" class="" style="width:245px"><strong>Response Data</strong></td><td id="DmGR" class="" style="width:211px"><strong>기타</strong></td></tr><tr id="395c9250-092e-4a63-afce-e06e73578480"><td id="xEcZ" class="" style="width:78px"><strong>GET</strong></td><td id="yaBz" class="" style="width:120px"><code>/api/products</code></td><td id="bQfU" class="" style="width:247px">&lt;Query Parameter&gt;<br/>page : 페이지 순서<br/>size : 페이지 크기<br/>sort : 정렬 기준과 방식<br/></td><td id="J]pT" class="" style="width:245px"><mark class="highlight-default"><strong>&lt;Application/Json&gt;<br/><br/></strong></mark><mark class="highlight-default">Page</mark><mark class="highlight-default"><strong>&lt;</strong></mark><mark class="highlight-default">ProductResponse</mark><mark class="highlight-default"><strong>&gt; </strong></mark><mark class="highlight-default">products</mark></td><td id="DmGR" class="" style="width:211px">모든 상품 리소스를 조회 <br/>( Paging 적용 )<br/></td></tr><tr id="d9529de8-9210-41f7-b301-2e36bc30495a"><td id="xEcZ" class="" style="width:78px"><strong>GET</strong></td><td id="yaBz" class="" style="width:120px"><code>/api/products/{productId}</code></td><td id="bQfU" class="" style="width:247px">Header Only</td><td id="J]pT" class="" style="width:245px"><mark class="highlight-default"><strong>&lt;Application/Json&gt;<br/><br/></strong></mark><mark class="highlight-default">ProductResponse productResponse</mark></td><td id="DmGR" class="" style="width:211px">상품 리소스 하나를 조회</td></tr><tr id="edc118ad-11f5-4b89-81e1-464d94c282bc"><td id="xEcZ" class="" style="width:78px"><strong>POST</strong></td><td id="yaBz" class="" style="width:120px"><code>/api/products</code></td><td id="bQfU" class="" style="width:247px"><mark class="highlight-default"><strong>&lt;Application/Json&gt;<br/><br/></strong></mark>ProductRequest productRequest</td><td id="J]pT" class="" style="width:245px">Header Only</td><td id="DmGR" class="" style="width:211px">상품 리소스를 추가<br/><br/><strong>JWT Token</strong>을 이용한 검증 사용</td></tr><tr id="5963428f-5a24-4a6a-b29e-bdf95fcf3478"><td id="xEcZ" class="" style="width:78px"><strong>PUT</strong></td><td id="yaBz" class="" style="width:120px"><code>/api/products/{productId}</code></td><td id="bQfU" class="" style="width:247px"><mark class="highlight-default"><strong>&lt;Application/Json&gt;<br/><br/></strong></mark>ProductRequest productRequest</td><td id="J]pT" class="" style="width:245px">Header Only</td><td id="DmGR" class="" style="width:211px">상품 리소스를 수정<br/><br/><strong>JWT Token</strong>을 이용한 검증 사용</td></tr><tr id="af4e093f-c8b0-4506-9b93-3e9771370883"><td id="xEcZ" class="" style="width:78px"><strong>DELETE</strong></td><td id="yaBz" class="" style="width:120px"><code>/api/products/{productId}</code></td><td id="bQfU" class="" style="width:247px">Header Only</td><td id="J]pT" class="" style="width:245px">Header Only</td><td id="DmGR" class="" style="width:211px">상품 리소스를 삭제<br/><br/><strong>JWT Token</strong>을 이용한 검증 사용</td></tr></tbody></table><ul id="1e2dcd3d-480a-4bb8-8ec5-ffa9894b5e2d" class="bulleted-list"><li style="list-style-type:disc"><strong>ProductRequest</strong><ul id="69e86b55-2896-4dd5-ab37-ba26c6fcf1ea" class="bulleted-list"><li style="list-style-type:circle"><mark class="highlight-default">String : name</mark></li></ul><ul id="5c7012ad-5f69-4089-bef7-cef543393b12" class="bulleted-list"><li style="list-style-type:circle"><mark class="highlight-default">int : price </mark></li></ul><ul id="f01480d3-8baa-495a-aa9f-b56a52630a3a" class="bulleted-list"><li style="list-style-type:circle"><mark class="highlight-default">String imageUrl</mark></li></ul><ul id="b6637413-9224-43e7-a7d8-e3a0b9f08ef8" class="bulleted-list"><li style="list-style-type:circle"><mark class="highlight-default">String : basicOption</mark></li></ul></li></ul><ul id="c19a2f3b-dbe7-4004-8f7b-f84c2b262455" class="bulleted-list"><li style="list-style-type:disc"><strong>ProductResponse</strong><ul id="fbcae034-4de0-4e8d-8455-e5e417b9273b" class="bulleted-list"><li style="list-style-type:circle">Long : id</li></ul><ul id="d74bd30a-cc1f-4886-8081-dd1da7a5c1da" class="bulleted-list"><li style="list-style-type:circle"><mark class="highlight-default">String : name</mark></li></ul><ul id="4ad784b2-9fc5-490b-843d-2d3e2962b198" class="bulleted-list"><li style="list-style-type:circle"><mark class="highlight-default">int : price </mark></li></ul><ul id="6bd77dd3-ebd0-4007-9dd1-37c038343b58" class="bulleted-list"><li style="list-style-type:circle"><mark class="highlight-default">String imageUrl</mark></li></ul><ul id="ed6f7362-336b-4492-932b-59a37e5a55bb" class="bulleted-list"><li style="list-style-type:circle"><mark class="highlight-default">String : basicOption</mark></li></ul><ul id="c7f90da6-7f92-49f3-8e82-d24e600abc72" class="bulleted-list"><li style="list-style-type:circle"><strong>CategoryResponse</strong> : category</li></ul><ul id="629e72e0-1958-4d17-9400-e4cd5ece4fcc" class="bulleted-list"><li style="list-style-type:circle">List&lt;<strong>OptionResponse</strong>&gt; : options</li></ul></li></ul><ul id="f25db780-2f17-4f71-89e6-c7639eab7a4b" class="bulleted-list"><li style="list-style-type:disc"><strong><span style="border-bottom:0.05em solid">유의 사항</span></strong><ul id="55384f46-62ec-4a5b-8183-6623aeb7954c" class="bulleted-list"><li style="list-style-type:circle"><strong>상품명에 대한 제약조건</strong><ul id="44a84a09-f12c-445a-9961-20fe264564be" class="bulleted-list"><li style="list-style-type:square">상품명은 1자 이상 15자 이하여야 한다</li></ul><ul id="dadd69a6-5494-4a0f-9e71-433c0ba53ccb" class="bulleted-list"><li style="list-style-type:square">상품명에 특수문자는 ( ), [ ], +, -, &amp;, /, _ 만 허용되며, 한글, 영어, 숫자만 입력 가능하다</li></ul><ul id="59e71e63-cf15-47ba-bace-e9d80cca109b" class="bulleted-list"><li style="list-style-type:square">&#x27;카카오&#x27;가 포함된 상품명은 MD와 협의 후 사용해야 한다</li></ul></li></ul><ul id="a60282d8-c358-44b6-8cf9-0d9a9ebc7f87" class="bulleted-list"><li style="list-style-type:circle"><strong>조회를 제외한 CUD 기능</strong>은 모두 <strong>Admin</strong>이어야 사용할 수 있다<ul id="d7d35861-50d7-41c5-8a73-a387b9864d88" class="bulleted-list"><li style="list-style-type:square">로그인을 통한 토큰 발급이 선행되어야 한다 ( <strong>인증</strong> )</li></ul><ul id="043b8dc9-f880-4b68-a00b-d01b2f7eb22a" class="bulleted-list"><li style="list-style-type:square">또한, 유저가 Admin이어야 한다 ( <strong>인가</strong> )</li></ul></li></ul></li></ul><hr id="b95ca17e-960b-4252-bba9-7abae7119db8"/><h3 id="629b330f-ab1b-4e12-a06e-4902413671e2" class="">사용자 ( User )</h3><table id="1509aca9-b604-4da4-8fa6-7fb2184665a3" class="simple-table"><tbody><tr id="a644c807-7ce6-4513-893d-884578773554"><td id="@VfF" class="" style="width:72px"><strong>Users</strong></td><td id="fwlm" class="" style="width:107.5875015258789px"><strong>URI</strong></td><td id="@&gt;~E" class="" style="width:188.8000030517578px"><strong>Request Data</strong></td><td id="J_K=" class="" style="width:197px"><strong>Response Data</strong></td><td id="`;BJ" class="" style="width:211.8125px"><strong>기타</strong></td></tr><tr id="158afc6f-30c9-4d24-8e14-5872c6c888b2"><td id="@VfF" class="" style="width:72px"><strong>GET</strong></td><td id="fwlm" class="" style="width:107.5875015258789px"><code>/api/members</code></td><td id="@&gt;~E" class="" style="width:188.8000030517578px">&lt;Query Parameter&gt;<br/>page : 페이지 순서<br/>size : 페이지 크기<br/>sort : 정렬 기준과 방식<br/></td><td id="J_K=" class="" style="width:197px"><mark class="highlight-default"><strong>&lt;Application/Json&gt;<br/><br/></strong></mark><mark class="highlight-default">Page&lt;UserResponse&gt; users</mark></td><td id="`;BJ" class="" style="width:211.8125px">모든 유저 리소스를 조회 <br/>( Paging 적용 )<br/></td></tr><tr id="adfae462-3735-4ffb-8e3a-405165117294"><td id="@VfF" class="" style="width:72px"><strong>POST</strong></td><td id="fwlm" class="" style="width:107.5875015258789px"><code>/api/members/register</code> </td><td id="@&gt;~E" class="" style="width:188.8000030517578px"><strong>&lt;Application/Json&gt;<br/><br/></strong>UserRequest userRequest</td><td id="J_K=" class="" style="width:197px">Header Only</td><td id="`;BJ" class="" style="width:211.8125px">유저 리소스를 추가<br/><br/></td></tr><tr id="366005c0-9a33-4a26-a484-576d5862e6a3"><td id="@VfF" class="" style="width:72px"><strong>POST</strong></td><td id="fwlm" class="" style="width:107.5875015258789px"><code>/api/members/login</code></td><td id="@&gt;~E" class="" style="width:188.8000030517578px"><strong>&lt;Application/Json&gt;<br/><br/></strong>UserRequest userRequest</td><td id="J_K=" class="" style="width:197px"><strong>&lt;Application/Json&gt;<br/>token : 유저 인증 토큰<br/></strong></td><td id="`;BJ" class="" style="width:211.8125px">유저 리소스를 검증<br/><br/><strong>JWT Token을 발급</strong></td></tr><tr id="fd179609-9097-4932-8844-ff19e9938945"><td id="@VfF" class="" style="width:72px"><strong>PUT</strong></td><td id="fwlm" class="" style="width:107.5875015258789px"><code>/api/members/{user_id}</code></td><td id="@&gt;~E" class="" style="width:188.8000030517578px"><strong>&lt;Application/Json&gt;<br/><br/></strong>UserRequest userRequest</td><td id="J_K=" class="" style="width:197px">Header Only</td><td id="`;BJ" class="" style="width:211.8125px">유저 리소스를 수정<br/><br/><strong>JWT Token</strong>을 이용한 검증 사용</td></tr><tr id="8870b24d-9d81-4bfe-ae76-8bbb7e05a15d"><td id="@VfF" class="" style="width:72px"><strong>DELETE</strong></td><td id="fwlm" class="" style="width:107.5875015258789px"><code>/api/members/{user_id}</code></td><td id="@&gt;~E" class="" style="width:188.8000030517578px">Header Only</td><td id="J_K=" class="" style="width:197px">Header Only</td><td id="`;BJ" class="" style="width:211.8125px">유저 리소스를 삭제<br/><br/><strong>JWT Token</strong>을 이용한 검증 사용</td></tr></tbody></table><ul id="82758641-ac4a-43bc-94d1-6a9612bdaa9a" class="bulleted-list"><li style="list-style-type:disc"><strong>UserRequest</strong><ul id="a2bca971-b423-44a1-90f9-70faeedf0777" class="bulleted-list"><li style="list-style-type:circle">String : userId</li></ul><ul id="a5526d7f-4479-4ab2-aa34-2b996d2539b4" class="bulleted-list"><li style="list-style-type:circle">String : email</li></ul><ul id="183b60ef-a864-4338-ada8-c652cebb6a52" class="bulleted-list"><li style="list-style-type:circle">String : password</li></ul></li></ul><ul id="e219a908-0a8b-43eb-97bd-a565421f4f24" class="bulleted-list"><li style="list-style-type:disc"><strong>UserResponse</strong><ul id="b593cd7f-60b8-4780-ba8d-816ab26a9a5a" class="bulleted-list"><li style="list-style-type:circle">Long : id</li></ul><ul id="c90a5adf-63db-4eaa-9caa-b06d9df5aec5" class="bulleted-list"><li style="list-style-type:circle">String : userId</li></ul><ul id="5105ac0a-c3b8-4659-a12a-d86a98913793" class="bulleted-list"><li style="list-style-type:circle">String : email</li></ul><ul id="eec9f3a1-621a-490a-aaab-401d18046f75" class="bulleted-list"><li style="list-style-type:circle">String : password</li></ul><ul id="e2cc531b-318f-495f-b4e9-2e8200a5984e" class="bulleted-list"><li style="list-style-type:circle">String : token ( <strong>카카오 Only</strong> )</li></ul></li></ul><ul id="dda112bc-25b5-453e-819b-f672ca18db5e" class="bulleted-list"><li style="list-style-type:disc"><strong><span style="border-bottom:0.05em solid">유의사항 </span></strong><ul id="026eff9c-c143-4861-9be1-9f63c800a7e3" class="bulleted-list"><li style="list-style-type:circle">조회와 인증과 생성을 제외한 UD 기능은 모두 <strong>Admin</strong>이어야 사용할 수 있다<ul id="221f3532-5eb9-4a3b-9867-8e160e5a8234" class="bulleted-list"><li style="list-style-type:square">유저 정보의 경우 생성에는 <strong>토큰 인증</strong>이 필요하지 않고, 당연히 <strong>인가</strong>역시 필요하지 않다</li></ul></li></ul><ul id="9ed5749e-f096-420d-8efe-209e5fef6f80" class="bulleted-list"><li style="list-style-type:circle"><strong>URI의 user_id와 필드의 userId는 다르다 ( Long, String )</strong></li></ul><ul id="6b7dd26c-632f-43dc-8cca-b26259b07a12" class="bulleted-list"><li style="list-style-type:circle"><strong>Email 과 UserId는 Unique한 값이다</strong></li></ul><ul id="2f513703-20e0-47f2-bc38-9439b6b041aa" class="bulleted-list"><li style="list-style-type:circle"><strong>카카오 서비스 이용을 위해서는 카카오 로그인을 해야한다</strong><ul id="3a08fb59-1a13-4448-bc70-b7e41b09cfd3" class="bulleted-list"><li style="list-style-type:square"><strong>내부 로그인으로는 카카오 토큰을 발급 및 저장할 수 없다</strong></li></ul></li></ul></li></ul><hr id="2c25ee68-92e2-4777-80b6-2ca1aa3d1046"/><h3 id="4c1e4395-8c7e-4f09-b8e3-e864b1439085" class="">위시 리스트 ( WishProduct )</h3><table id="ea33f660-959a-452e-a6e0-364e30a47b7d" class="simple-table"><tbody><tr id="bc2916a6-b0c9-4846-ba28-f81b700b4729"><td id="}aG]" class=""><strong>Wishes</strong></td><td id="ZG?H" class="" style="width:107px"><strong>URI</strong></td><td id="M`P;" class="" style="width:147px"><strong>Request Data</strong></td><td id="PHLn" class="" style="width:251px"><strong>Response Data</strong></td><td id="rmhh" class="" style="width:225.33749389648438px"><strong>기타</strong></td></tr><tr id="972a25ab-f343-4bf5-87bf-af0d429d562c"><td id="}aG]" class=""><strong>GET</strong></td><td id="ZG?H" class="" style="width:107px"><code>/api/wishes/</code></td><td id="M`P;" class="" style="width:147px">&lt;Query Parameter&gt;<br/>page : 페이지 순서<br/>size : 페이지 크기<br/>sort : 정렬 기준과 방식<br/></td><td id="PHLn" class="" style="width:251px"><mark class="highlight-default"><strong>&lt;Application/Json&gt;<br/><br/></strong></mark><mark class="highlight-default">Page&lt;WishProductResponse&gt; wishes</mark></td><td id="rmhh" class="" style="width:225.33749389648438px">모든 위시 리스트 리소스를 조회<br/>( Paging 적용 )<br/></td></tr><tr id="742461ab-6231-4ea2-8a69-b3eef2a604ad"><td id="}aG]" class=""><strong>POST</strong></td><td id="ZG?H" class="" style="width:107px"><code>/api/wishes/{product_id}</code></td><td id="M`P;" class="" style="width:147px">Header Only</td><td id="PHLn" class="" style="width:251px">Header Only</td><td id="rmhh" class="" style="width:225.33749389648438px">위시 리스트 리소스를 추가<br/><br/><strong>JWT Token</strong>을 이용한 검증 사용</td></tr><tr id="005b117c-d492-4239-9c3c-759c7afc3650"><td id="}aG]" class=""><strong>DELETE</strong></td><td id="ZG?H" class="" style="width:107px"><code>/api/wishes/{wish_id}</code></td><td id="M`P;" class="" style="width:147px">Header Only</td><td id="PHLn" class="" style="width:251px">Header Only</td><td id="rmhh" class="" style="width:225.33749389648438px">위시 리스트 리소스를 삭제<br/><br/><strong>JWT Token</strong>을 이용한 검증 사용</td></tr></tbody></table><ul id="3d6fd079-fc26-416b-b687-fe16094e540a" class="bulleted-list"><li style="list-style-type:disc"><strong>WishProductResponse</strong><ul id="8391590a-6b32-40ae-a409-d10a6992a114" class="bulleted-list"><li style="list-style-type:circle">Long : id</li></ul><ul id="f0ef5df5-a124-4ec8-beb3-d540c20cf70b" class="bulleted-list"><li style="list-style-type:circle">UserResponse : userResponse</li></ul><ul id="4708d17b-9fed-4ee3-a817-accb43720469" class="bulleted-list"><li style="list-style-type:circle">ProductResponse : productResponse</li></ul><ul id="0538c453-0f80-4d86-83f7-aa0a4f36cb60" class="bulleted-list"><li style="list-style-type:circle">String : createDate</li></ul></li></ul><ul id="8ae0ec74-e319-4138-84bf-d81165d1b69e" class="bulleted-list"><li style="list-style-type:disc"><strong><span style="border-bottom:0.05em solid">유의사항 </span></strong><ul id="cc7c92ba-cc7b-4ac9-b42c-bba6f117e5ca" class="bulleted-list"><li style="list-style-type:circle">조회, 추가, 삭제 모든 기능은 <strong>인증</strong>만 필요하다</li></ul><ul id="8d161eb4-c30e-47d9-906d-6428a1e9ffb1" class="bulleted-list"><li style="list-style-type:circle">단순 리스트 작업이므로, 현재는 Update 관련 기능을 넣지 않았다</li></ul></li></ul><hr id="63d56a04-8a47-462b-8996-e4c6ad75078b"/><h3 id="f52bdedc-9697-4219-bb12-fd2011b3bd75" class="">카테고리 ( Category )</h3><table id="38abfe70-f370-4d38-b6a2-607f02c1172f" class="simple-table"><tbody><tr id="6a4b13eb-ed56-4cad-bf6c-47391fdb74a4"><td id="FHi&gt;" class="" style="width:89px"><strong>Categories</strong></td><td id="qnF[" class="" style="width:129.5500030517578px"><strong>URI</strong></td><td id="Yr^Q" class="" style="width:237px"><strong>Request Data</strong></td><td id="Na\=" class="" style="width:250.55001831054688px"><strong>Response Data</strong></td><td id="fCrq" class="" style="width:215px"><strong>기타</strong></td></tr><tr id="1f0940ff-fd0e-483a-bbb9-bf21dfa3ff3c"><td id="FHi&gt;" class="" style="width:89px"><strong>GET</strong></td><td id="qnF[" class="" style="width:129.5500030517578px"><code>/api/categories</code></td><td id="Yr^Q" class="" style="width:237px">&lt;Query Parameter&gt;<br/>page : 페이지 순서<br/>size : 페이지 크기<br/>sort : 정렬 기준과 방식<br/></td><td id="Na\=" class="" style="width:250.55001831054688px"><strong>&lt;Application/Json&gt;<br/><br/></strong>Page&lt;CategoryResponse&gt; categories</td><td id="fCrq" class="" style="width:215px">모든 카테고리 리소스를 조회 <br/>( Paging 적용 )<br/></td></tr><tr id="1cd42799-b0fa-4d8a-b8a7-22dbc9b0abe6"><td id="FHi&gt;" class="" style="width:89px"><strong>POST</strong></td><td id="qnF[" class="" style="width:129.5500030517578px"><code>/api/categories</code></td><td id="Yr^Q" class="" style="width:237px"><strong>&lt;Application/Json&gt;<br/><br/></strong>CategoryRequest categoryRequest</td><td id="Na\=" class="" style="width:250.55001831054688px">Header Only</td><td id="fCrq" class="" style="width:215px">카테고리 리소스를 추가</td></tr><tr id="fd23653a-e3f0-4555-9e0c-c85474718f3a"><td id="FHi&gt;" class="" style="width:89px"><strong>PUT</strong></td><td id="qnF[" class="" style="width:129.5500030517578px"><code>/api/categories/{category_id}</code></td><td id="Yr^Q" class="" style="width:237px"><strong>&lt;Application/Json&gt;<br/><br/></strong>CategoryRequest categoryRequest</td><td id="Na\=" class="" style="width:250.55001831054688px">Header Only</td><td id="fCrq" class="" style="width:215px">카테가리 리소스를 수정<br/><br/><strong>JWT Token</strong>을 이용한 검증 사용</td></tr><tr id="f6e359f5-00ea-4b7e-aa18-53d4c715ac48"><td id="FHi&gt;" class="" style="width:89px"><strong>DELETE</strong></td><td id="qnF[" class="" style="width:129.5500030517578px"><code>/api/categories/{category_id}</code></td><td id="Yr^Q" class="" style="width:237px">Header Only</td><td id="Na\=" class="" style="width:250.55001831054688px">Header Only</td><td id="fCrq" class="" style="width:215px">카테고리 리소스를 삭제<br/><br/><strong>JWT Token</strong>을 이용한 검증 사용</td></tr></tbody></table><ul id="3789f5c6-173c-48c6-a092-8712c76aa5f4" class="bulleted-list"><li style="list-style-type:disc"><strong>CategoryRequest</strong><ul id="249259c5-0bf3-4737-8e9c-ff36f27f0d25" class="bulleted-list"><li style="list-style-type:circle">String : name</li></ul></li></ul><ul id="d9548073-16eb-47c7-97ac-540b47681e31" class="bulleted-list"><li style="list-style-type:disc"><strong>CategoryResponse</strong><ul id="d4b3b770-8b1f-4b45-b657-23c01947bf4b" class="bulleted-list"><li style="list-style-type:circle">Long : id</li></ul><ul id="c0e72c2e-5475-43e3-944f-af0ca0fdc3a6" class="bulleted-list"><li style="list-style-type:circle">String : name</li></ul></li></ul><ul id="d85751eb-8b8f-49d6-8bdd-46b8eec3b513" class="bulleted-list"><li style="list-style-type:disc"><strong><span style="border-bottom:0.05em solid">유의사항</span></strong><ul id="23b2ae00-7d87-41ae-8cb5-5ddc8979ad3f" class="bulleted-list"><li style="list-style-type:circle">CRUD 모든 작업은 모두 <strong>Admin</strong>이어야 사용할 수 있다<ul id="932fdfaf-32e2-4f99-b14c-8b857eb5d72f" class="bulleted-list"><li style="list-style-type:square">카테고리 관리는 관리자가 전담하기 때문에</li></ul><ul id="a91a0888-b658-4756-84aa-e66adc823a41" class="bulleted-list"><li style="list-style-type:square">로그인을 통한 토큰 발급이 선행되어야 한다 ( <strong>인증</strong> )</li></ul><ul id="b71a00cb-a0d7-4aa6-a769-2cd3e110277c" class="bulleted-list"><li style="list-style-type:square">또한, 유저가 Admin이어야 한다 ( <strong>인가</strong> )</li></ul></li></ul></li></ul><hr id="0f9628c3-89f7-417a-8c55-d44a32fd47bf"/><h3 id="ddb4e9c4-e907-49f8-a1c5-3e27a4a2fe31" class="">옵션 ( Option )</h3><table id="872e223c-1a05-4c45-a596-1dd44d6f80c7" class="simple-table"><tbody><tr id="76dc3f4d-5700-4773-8744-4a5c1e2eaa1b"><td id="wG_D" class="" style="width:91px"><strong>Categories</strong></td><td id="KBHT" class="" style="width:194px"><strong>URI</strong></td><td id="FjhC" class="" style="width:219px"><strong>Request Data</strong></td><td id="p]dY" class="" style="width:146px"><strong>Response Data</strong></td><td id="Gwm=" class="" style="width:237.30001831054688px"><strong>기타</strong></td></tr><tr id="9e7c98fd-c0b0-486d-b2a4-b0f4589a88cc"><td id="wG_D" class="" style="width:91px"><strong>GET</strong></td><td id="KBHT" class="" style="width:194px"><code>/api/products/{product_id}/options</code></td><td id="FjhC" class="" style="width:219px">&lt;Query Parameter&gt;<br/>page : 페이지 순서<br/>size : 페이지 크기<br/>sort : 정렬 기준과 방식<br/></td><td id="p]dY" class="" style="width:146px"><strong>&lt;Application/Json&gt;</strong>Page&lt;OptionResponse&gt; options</td><td id="Gwm=" class="" style="width:237.30001831054688px">한 상품의 모든 옵션 리소스를 조회 ( Paging 적용 )</td></tr><tr id="32116ee4-8a70-491e-aeb6-2df9a3a0b6ff"><td id="wG_D" class="" style="width:91px"><strong>POST</strong></td><td id="KBHT" class="" style="width:194px"><code>/api/products/{product_id}/options</code></td><td id="FjhC" class="" style="width:219px"><strong>&lt;Application/Json&gt;<br/><br/></strong>OptionRequest categoryRequest</td><td id="p]dY" class="" style="width:146px">Header Only</td><td id="Gwm=" class="" style="width:237.30001831054688px">유저 리소스를 추가</td></tr><tr id="9969a638-91f3-49a0-a875-d79215c56ea7"><td id="wG_D" class="" style="width:91px"><strong>PUT</strong></td><td id="KBHT" class="" style="width:194px"><code>/api/products/{product_id}/options/{option_id}</code></td><td id="FjhC" class="" style="width:219px"><strong>&lt;Application/Json&gt;<br/><br/></strong>OptionRequest categoryRequest</td><td id="p]dY" class="" style="width:146px">Header Only</td><td id="Gwm=" class="" style="width:237.30001831054688px">유저 리소스를 수정<br/><br/><strong>JWT Token</strong>을 이용한 검증 사용</td></tr><tr id="6ca1cd56-bf88-4e21-9c4d-ece5ca6c8e88"><td id="wG_D" class="" style="width:91px"><strong>DELETE</strong></td><td id="KBHT" class="" style="width:194px"><code>/api/products/{product_id}/options/{option_id}</code></td><td id="FjhC" class="" style="width:219px">Header Only</td><td id="p]dY" class="" style="width:146px">Header Only</td><td id="Gwm=" class="" style="width:237.30001831054688px">유저 리소스를 삭제<br/><br/><strong>JWT Token</strong>을 이용한 검증 사용</td></tr></tbody></table><ul id="4d9af014-449b-448d-9d30-d38638796692" class="bulleted-list"><li style="list-style-type:disc"><strong>OptionRequest </strong><ul id="4c0ac166-fd4d-4e43-81cc-db121f4f5c6a" class="bulleted-list"><li style="list-style-type:circle">String : name</li></ul><ul id="48d53873-0f6e-446b-8d3b-5e0058e11133" class="bulleted-list"><li style="list-style-type:circle">Long : quantity</li></ul></li></ul><ul id="15e2b1f8-a147-4e0a-bf47-629cf6bc4ab1" class="bulleted-list"><li style="list-style-type:disc"><strong>OptionResponse</strong><ul id="2df6ecbc-e39a-456e-8728-8ac4d70a7894" class="bulleted-list"><li style="list-style-type:circle">Long : id</li></ul><ul id="1a37d230-b490-4ebd-8fb5-697cdcd84bcf" class="bulleted-list"><li style="list-style-type:circle">String : name</li></ul><ul id="150c6e35-9e15-406a-bfc3-833563bec7e3" class="bulleted-list"><li style="list-style-type:circle">Long : quantity</li></ul></li></ul><ul id="7c3591d8-5d6b-4199-a815-870bb2e16f94" class="bulleted-list"><li style="list-style-type:disc"><strong><span style="border-bottom:0.05em solid">유의사항</span></strong><ul id="07f98cd0-56a5-49dc-8913-3448abe3071b" class="bulleted-list"><li style="list-style-type:circle"><strong>조회를 제외한 CUD 기능</strong>은 모두 <strong>Admin</strong>이어야 사용할 수 있다<ul id="8a0be4b9-6a7e-4c4e-8c93-9c83ef2576c5" class="bulleted-list"><li style="list-style-type:square">로그인을 통한 토큰 발급이 선행되어야 한다 ( <strong>인증</strong> )</li></ul><ul id="4a88ecc0-7e62-4192-9fc4-191d369988a8" class="bulleted-list"><li style="list-style-type:square">또한, 유저가 Admin이어야 한다 ( <strong>인가</strong> )</li></ul></li></ul></li></ul><hr id="a6fac7d1-2a1f-436a-859d-ff7459cfac96"/><h3 id="e7cecf15-cf05-4166-8071-47e37ffdddde" class="">주문 ( Order )</h3><table id="8c7b5c2a-fe8c-4023-9c38-af18cbefff0a" class="simple-table"><tbody><tr id="a0735e9a-5819-4dd4-9172-c5ded59cc349"><td id="@mKU" class="" style="width:89px"><strong>Categories</strong></td><td id="bf\b" class="" style="width:101px"><strong>URI</strong></td><td id="IIpP" class="" style="width:193.7624969482422px"><strong>Request Data</strong></td><td id="fwa=" class="" style="width:239px"><strong>Response Data</strong></td><td id="RMYy" class="" style="width:289px"><strong>기타</strong></td></tr><tr id="f5c4496d-4af2-4b4d-bde1-0f51976cd478"><td id="@mKU" class="" style="width:89px"><strong>POST</strong></td><td id="bf\b" class="" style="width:101px"><code>/api/orders</code></td><td id="IIpP" class="" style="width:193.7624969482422px"><strong>&lt;Application/Json&gt;<br/><br/></strong>OrderRequest orderRequest<br/>&lt;Query Parameter&gt;<br/>Long productId<br/></td><td id="fwa=" class="" style="width:239px">Header Only</td><td id="RMYy" class="" style="width:289px">주문 리소스를 추가</td></tr><tr id="38b114ba-09ff-4a3d-bfca-7de72b7f9498"><td id="@mKU" class="" style="width:89px"><strong>GET</strong></td><td id="bf\b" class="" style="width:101px"><code>/api/orders</code></td><td id="IIpP" class="" style="width:193.7624969482422px">&lt;Query Parameter&gt;<br/>page : 페이지 순서<br/>size : 페이지 크기<br/>sort : 정렬 기준과 방식<br/></td><td id="fwa=" class="" style="width:239px"><strong>&lt;Application/Json&gt;<br/><br/></strong>Page&lt;OrderResponse&gt; orders</td><td id="RMYy" class="" style="width:289px">모든 주문 리소스를 조회<br/>( Paging 적용 )<br/></td></tr></tbody></table><ul id="073f71dd-9703-43d4-9b3f-701d674b9646" class="bulleted-list"><li style="list-style-type:disc"><strong>OrderRequest</strong><ul id="f632822d-90f4-42eb-96e1-02d7cfff3cd4" class="bulleted-list"><li style="list-style-type:circle">Long : optionId</li></ul><ul id="ed125edd-aae3-4adc-9c5c-c3f66e62c935" class="bulleted-list"><li style="list-style-type:circle">Long : quantity</li></ul><ul id="fa00a90b-1f47-4783-97ef-dc2a8f6c1900" class="bulleted-list"><li style="list-style-type:circle">String : message</li></ul></li></ul><ul id="747900ff-40a1-42ae-a03c-b5ae52e2ead4" class="bulleted-list"><li style="list-style-type:disc"><strong>OrderResponse</strong><ul id="85150b72-bff1-4b2e-8eb0-02af1ccbdd7a" class="bulleted-list"><li style="list-style-type:circle">Long : id</li></ul><ul id="1e15648a-77c9-4740-8e2d-8f9155b7442e" class="bulleted-list"><li style="list-style-type:circle">Long : optionId</li></ul><ul id="a72db784-9394-4429-93ea-8fd5d6aa6746" class="bulleted-list"><li style="list-style-type:circle">Long : quantity</li></ul><ul id="ab3c1ba8-1bd0-4ada-9acf-80728c7c9b2a" class="bulleted-list"><li style="list-style-type:circle">String : message</li></ul><ul id="3dfc9a69-a62b-457d-8fc3-a3375dd6808b" class="bulleted-list"><li style="list-style-type:circle">String : orderDateTime</li></ul></li></ul><ul id="f60cdc68-06c0-4541-8373-4035ea97c6d7" class="bulleted-list"><li style="list-style-type:disc"><strong><span style="border-bottom:0.05em solid">유의사항</span></strong><ul id="2af54e3f-26c9-4e98-8aee-73c893d2714b" class="bulleted-list"><li style="list-style-type:circle"><strong>인증</strong>만 필요하다<ul id="ed289094-0e95-448f-8deb-6be58d85e998" class="bulleted-list"><li style="list-style-type:square">로그인을 통한 토큰 발급이 선행되어야 한다 ( <strong>인증</strong> )</li></ul></li></ul></li></ul><hr id="7a619564-0c1c-474e-9a53-50cc35a58d85"/><h3 id="57afe62b-a47e-42c9-aea5-3d846405f404" class="">카카오 로그인 ( kakao )</h3><table id="173e55a3-f3f4-49d0-bf7b-6a8ed49b72ea" class="simple-table"><tbody><tr id="48637bf2-d064-4897-b15c-500c9d132cdc"><td id="X?{r" class="" style="width:88px"><strong>Kakao</strong></td><td id="N`FG" class=""><strong>URI</strong></td><td id="^tvH" class="" style="width:149px"><strong>Request Data</strong></td><td id="^@XB" class="" style="width:189px"><strong>Response Data</strong></td><td id="OGNX" class="" style="width:284.4750061035156px"><strong>기타</strong></td></tr><tr id="da5218c4-dcb3-40ff-aecd-858ccaf1374b"><td id="X?{r" class="" style="width:88px"><strong>GET</strong></td><td id="N`FG" class=""><code>/kakaoLogin</code></td><td id="^tvH" class="" style="width:149px">HeaderOnly</td><td id="^@XB" class="" style="width:189px">redirect : 카카오 로그인 url</td><td id="OGNX" class="" style="width:284.4750061035156px">카카오 로그인 화면 연결<br/>로그인 이후 아래의 url로 리다이렉트<br/></td></tr><tr id="41a7c4bb-d13e-448b-80b0-2cc2425ac5d3"><td id="X?{r" class="" style="width:88px"><strong>GET</strong></td><td id="N`FG" class=""><code>/</code></td><td id="^tvH" class="" style="width:149px">&lt;Query Parameter&gt;<br/>String code<br/></td><td id="^@XB" class="" style="width:189px">redirect : 메인 페이지 url</td><td id="OGNX" class="" style="width:284.4750061035156px">토큰 전달과 함께 메인 화면 연결</td></tr></tbody></table><hr id="8c193534-2178-4b48-9520-d9b85991594e"/><hr id="b0503925-a45c-46b7-8815-b40f99c69bdf"/><h3 id="a1535298-8b6f-4c62-97af-94697984ceae" class="">기타 페이지 </h3><table id="1b3b9f13-8bd3-42c4-8af8-5abddf3e0bd1" class="simple-table"><tbody><tr id="a0630b99-8051-44af-b129-5b6941811012"><td id="LUky" class="" style="width:88px"><strong>Kakao</strong></td><td id="}_m;" class="" style="width:137px"><strong>URI</strong></td><td id="QQKx" class="" style="width:147px"><strong>Request Data</strong></td><td id="{mPz" class="" style="width:191px"><strong>Response Data</strong></td><td id="LCjC" class="" style="width:285.6875px"><strong>기타</strong></td></tr><tr id="d91cd581-beb5-437f-913a-9d7658f0bf8b"><td id="LUky" class="" style="width:88px"><strong>GET</strong></td><td id="}_m;" class="" style="width:137px"><code>/home</code></td><td id="QQKx" class="" style="width:147px">HeaderOnly</td><td id="{mPz" class="" style="width:191px">메인 화면 View</td><td id="LCjC" class="" style="width:285.6875px">Data가 아닌 View 반환</td></tr><tr id="11531ea1-146c-43a0-833e-68f4dfaa49b8"><td id="LUky" class="" style="width:88px"><strong>GET</strong></td><td id="}_m;" class="" style="width:137px"><code>/login</code></td><td id="QQKx" class="" style="width:147px">HeaderOnly</td><td id="{mPz" class="" style="width:191px">로그인 화면 View</td><td id="LCjC" class="" style="width:285.6875px">Data가 아닌 View 반환</td></tr><tr id="dc7a9338-aeb1-4550-80f2-0db06ca805b1"><td id="LUky" class="" style="width:88px"><strong>GET</strong></td><td id="}_m;" class="" style="width:137px"><code>/register</code></td><td id="QQKx" class="" style="width:147px">HeaderOnly</td><td id="{mPz" class="" style="width:191px">회원가입 화면 View</td><td id="LCjC" class="" style="width:285.6875px">Data가 아닌 View 반환</td></tr><tr id="edb45b0e-25d6-47e1-8442-6b464044735a"><td id="LUky" class="" style="width:88px"><strong>GET</strong></td><td id="}_m;" class="" style="width:137px"><code>/wishList</code></td><td id="QQKx" class="" style="width:147px">HeaderOnly</td><td id="{mPz" class="" style="width:191px">위시 리스트 화면 View</td><td id="LCjC" class="" style="width:285.6875px">Data가 아닌 View 반환</td></tr><tr id="cb80a24d-cd59-4446-8229-cb3bd5cd3b56"><td id="LUky" class="" style="width:88px"><strong>GET</strong></td><td id="}_m;" class="" style="width:137px"><code>/adminProducts</code></td><td id="QQKx" class="" style="width:147px">HeaderOnly</td><td id="{mPz" class="" style="width:191px">상품 관리 화면 View</td><td id="LCjC" class="" style="width:285.6875px">Data가 아닌 View 반환</td></tr><tr id="b600817a-96cc-4af7-ba4e-303379fd64b1"><td id="LUky" class="" style="width:88px"><strong>GET</strong></td><td id="}_m;" class="" style="width:137px"><code>/adminUsers</code></td><td id="QQKx" class="" style="width:147px">HeaderOnly</td><td id="{mPz" class="" style="width:191px">유저 관리 화면 View</td><td id="LCjC" class="" style="width:285.6875px">Data가 아닌 View 반환</td></tr><tr id="d28cfd40-181a-4c5d-a842-572e78fe7dcd"><td id="LUky" class="" style="width:88px"><strong>GET</strong></td><td id="}_m;" class="" style="width:137px"><code>/adminCategories</code></td><td id="QQKx" class="" style="width:147px">HeaderOnly</td><td id="{mPz" class="" style="width:191px">카테고리 관리 화면 View</td><td id="LCjC" class="" style="width:285.6875px">Data가 아닌 View 반환</td></tr><tr id="a48743bd-4acd-4b75-b92e-b6ac4017eefb"><td id="LUky" class="" style="width:88px"><strong>GET</strong></td><td id="}_m;" class="" style="width:137px"><code>/adminOptions</code></td><td id="QQKx" class="" style="width:147px">&lt;Query Parameter&gt;<br/>Long productId<br/></td><td id="{mPz" class="" style="width:191px">옵션 관리 화면 View</td><td id="LCjC" class="" style="width:285.6875px">Data가 아닌 View 반환</td></tr><tr id="82796923-6eec-4e61-b1cf-c82a80515718"><td id="LUky" class="" style="width:88px"><strong>GET</strong></td><td id="}_m;" class="" style="width:137px"><code>/orders</code></td><td id="QQKx" class="" style="width:147px">&lt;Query Parameter&gt;<br/>Long productId<br/></td><td id="{mPz" class="" style="width:191px">주문 화면 View</td><td id="LCjC" class="" style="width:285.6875px">Data가 아닌 View 반환</td></tr></tbody></table><p id="eac622db-b7ed-4c1b-b669-444c87622f18" class="">
+</p></div></article><span class="sans" style="font-size:14px;padding-top:2em"></span></body></html>
