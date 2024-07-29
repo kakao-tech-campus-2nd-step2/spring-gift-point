@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Spring Gift</title>
+    <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+<h1>Edit Product</h1>
+<form action="#" th:action="@{/api/products/{id}(id=${product.id})}" th:object="${product}" method="post" class="product-form">
+    <input type="hidden" name="_method" value="put"/>
+    <div class="form-group">
+        <label for="name">Name:</label>
+        <input type="text" id="name" th:field="*{name}" value="${product.name}">
+        <div th:if="${#fields.hasErrors('name')}" class="alert-danger" th:errors="*{name}">Name Error</div>
+    </div>
+    <div class="form-group">
+        <label for="price">Price:</label>
+        <input type="text" id="price" th:field="*{price}" value="${product.price}">
+    </div>
+    <div class="form-group">
+        <label for="imageUrl">ImageURL:</label>
+        <input type="text" id="imageUrl" th:field="*{imageUrl}" value="${product.imageUrl}">
+    </div>
+    <div class="form-group">
+        <label>Category</label>
+        <div class="category-container">
+            <div class="category-card" data-category-id="1">
+                <img src="https://gift-s.kakaocdn.net/dn/gift/images/m640/dimm_theme.png" alt="Category Image">
+                <h2>교환권</h2>
+            </div>
+            <div class="category-card" data-category-id="2">
+                <img src="https://gift-s.kakaocdn.net/dn/gift/images/m640/dimm_theme.png" alt="Category Image">
+                <h2>상품권</h2>
+            </div>
+            <div class="category-card" data-category-id="3">
+                <img src="https://gift-s.kakaocdn.net/dn/gift/images/m640/dimm_theme.png" alt="Category Image">
+                <h2>뷰티</h2>
+            </div>
+            <div class="category-card" data-category-id="4">
+                <img src="https://gift-s.kakaocdn.net/dn/gift/images/m640/dimm_theme.png" alt="Category Image">
+                <h2>패션</h2>
+            </div>
+            <div class="category-card" data-category-id="5">
+                <img src="https://gift-s.kakaocdn.net/dn/gift/images/m640/dimm_theme.png" alt="Category Image">
+                <h2>식품</h2>
+            </div>
+            <div class="category-card" data-category-id="6">
+                <img src="https://gift-s.kakaocdn.net/dn/gift/images/m640/dimm_theme.png" alt="Category Image">
+                <h2>리빙/도서</h2>
+            </div>
+            <div class="category-card" data-category-id="7">
+                <img src="https://gift-s.kakaocdn.net/dn/gift/images/m640/dimm_theme.png" alt="Category Image">
+                <h2>레저/스포츠</h2>
+            </div>
+            <div class="category-card" data-category-id="8">
+                <img src="https://gift-s.kakaocdn.net/dn/gift/images/m640/dimm_theme.png" alt="Category Image">
+                <h2>아티스트/캐릭터</h2>
+            </div>
+            <div class="category-card" data-category-id="9">
+                <img src="https://gift-s.kakaocdn.net/dn/gift/images/m640/dimm_theme.png" alt="Category Image">
+                <h2>유아동/반려</h2>
+            </div>
+            <div class="category-card" data-category-id="10">
+                <img src="https://gift-s.kakaocdn.net/dn/gift/images/m640/dimm_theme.png" alt="Category Image">
+                <h2>디지털/가전</h2>
+            </div>
+            <div class="category-card" data-category-id="11">
+                <img src="https://gift-s.kakaocdn.net/dn/gift/images/m640/dimm_theme.png" alt="Category Image">
+                <h2>카카오프렌즈</h2>
+            </div>
+            <div class="category-card" data-category-id="12">
+                <img src="https://gift-s.kakaocdn.net/dn/gift/images/m640/dimm_theme.png" alt="Category Image">
+                <h2>트렌드 선물</h2>
+            </div>
+            <div class="category-card" data-category-id="13">
+                <img src="https://gift-s.kakaocdn.net/dn/gift/images/m640/dimm_theme.png" alt="Category Image">
+                <h2>백화점</h2>
+            </div>
+        </div>
+        <input type="hidden" id="category_id" name="category_id" th:field="*{category}" required>
+    </div>
+    <div class="form-actions">
+        <a href="/api/products" class="back-link">Cancle</a>
+        <button type="submit" class="btn">Edit</button>
+    </div>
+</form>
+
+<script>
+    const categoryCards = document.querySelectorAll('.category-card');
+    const categoryIdInput = document.getElementById('category_id');
+
+    categoryCards.forEach(card => {
+        card.addEventListener('click', () => {
+            categoryCards.forEach(c => c.classList.remove('selected'));
+            card.classList.add('selected');
+            categoryIdInput.value = card.getAttribute('data-category-id');
+        });
+    });
+</script>
+
+</body>
+</html>
