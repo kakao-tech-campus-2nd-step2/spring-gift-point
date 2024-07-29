@@ -1,0 +1,65 @@
+### Send PUT memberRequestDto with json body
+PUT http://localhost:8080/product/jdbc/1
+Content-Type: application/json
+
+{
+  "id": 1,
+  "name": "이름수정",
+  "price": 100055,
+  "imageUrl": "url수정"
+}
+
+### Send PUT memberRequestDto with json body
+PUT http://localhost:8080/product/jdbc/1
+Content-Type: application/json
+
+{
+  "name": "이름수정 id 없이",
+  "price": 100055,
+  "imageUrl": "url수정"
+}
+
+###예외처리
+###IllegalProductNameLengthException
+### Send PUT memberRequestDto with json body
+PUT http://localhost:8080/product/jdbc/1
+Content-Type: application/json
+
+{
+  "name": "이름수정길이길게이이이이이이이이이이이이이이 ",
+  "price": 100055,
+  "imageUrl": "url수정"
+}
+
+### IllegalProductNameKeywordException
+### Send PUT memberRequestDto with json body
+PUT http://localhost:8080/product/jdbc/1
+Content-Type: application/json
+
+{
+  "name": "이름수정 카카오 적힌거 ",
+  "price": 100055,
+  "imageUrl": "url수정"
+}
+
+### IllegalProductNameCharacterException
+### Send PUT memberRequestDto with json body
+PUT http://localhost:8080/product/jdbc/1
+Content-Type: application/json
+
+{
+  "name": "이름-쓸수없는 특수문자?",
+  "price": 100055,
+  "imageUrl": "url수정"
+}
+
+### Send PUT memberRequestDto with json body
+PUT http://localhost:8080/product/jdbc/1
+Content-Type: application/json
+
+{
+  "name": "[사용가능문자+-&/_()]",
+  "price": 100055,
+  "imageUrl": "url수정"
+}
+

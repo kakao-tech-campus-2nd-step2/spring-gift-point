@@ -1,0 +1,4 @@
+GET /api/products?page=0&size=10&sort=name,asc
+
+###
+GET /api/wishes?page=0&size=10&sort=id,desc

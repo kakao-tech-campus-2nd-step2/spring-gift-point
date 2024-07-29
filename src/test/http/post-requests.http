@@ -1,0 +1,10 @@
+### Send POST memberRequestDto with json body
+POST http://localhost:8080/api/products
+Content-Type: application/json
+
+{
+  "id": 999,
+  "name": "이름",
+  "price": 1000,
+  "imageUrl": "url"
+}

@@ -1,0 +1,9 @@
+### Send PUT memberRequestDto with json body
+PUT http://localhost:8080/api/products/999
+Content-Type: application/json
+
+{
+  "name": "이름수정",
+  "price": 100055,
+  "imageUrl": "url수정"
+}
