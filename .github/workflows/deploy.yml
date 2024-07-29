@@ -65,7 +65,7 @@ jobs:
           key: ${{ secrets.KEY }}
           port: 22
           script: |
-            sudo docker rm -f $(docker ps -a -p)
+            sudo docker rm -f $(docker ps -a -q)
             sudo docker pull ${{ secrets.DOCKER_REPO }}
             sudo docker run -p 8080:8080 momnpa333/kakao
             sudo docker image prune -f
