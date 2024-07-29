@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>상품 정보를 다시 입력해주세요</title>
+    <link rel="stylesheet" type="text/css" href="/css/error_style.css">
+</head>
+<body>
+<h1>ERROR!!!!</h1>
+<div>
+    <p th:text="${errorMessage}"></p>
+</div>
+<a href="/api/products" class="button">상품 정보 페이지로 돌아가기</a>
+</body>
+</html>

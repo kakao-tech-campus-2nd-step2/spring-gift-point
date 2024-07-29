@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>옵션 정보 수정하기</title>
+    <link rel="stylesheet" type="text/css" href="/css/crud_style.css">
+</head>
+<body>
+<h1>옵션 정보 수정하기</h1>
+<form th:action="@{/api/options/update/{id}(id=${option.id})}" th:object="${option}" method="post">
+    <label>옵션명 : <input type="text" th:field="*{name}" /></label>
+    <label>수량 : <input type="text" th:field="*{quantity}" /></label>
+    <input type="hidden" th:field="*{productId}" />
+    <button type="submit" class="button">옵션 정보 수정하기</button>
+</form>
+<a th:href="@{/api/products/{id}/options(id=${option.product.id})}" class="button">옵션 목록으로 돌아가기</a>
+</body>
+</html>

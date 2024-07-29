@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>상품 정보 페이지</title>
+    <link rel="stylesheet" type="text/css" href="/css/main.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+<h1>상품 정보 페이지</h1>
+<div class="top-right">
+    <a href="products/new" class="button">상품 등록하기</a>
+</div>
+<table>
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>상품명</th>
+        <th>상품 가격</th>
+        <th>이미지 URL</th>
+        <th>카테고리</th>
+        <th>옵션/수정/삭제</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="product : ${products}">
+        <td th:text="${product.id}"></td>
+        <td th:text="${product.name}"></td>
+        <td th:text="${product.price}"></td>
+        <td th:text="${product.imageUrl}"></td>
+        <td th:text="${product.category.name}"></td>
+        <td>
+            <a th:href="@{/api/products/{id}/options(id=${product.id})}" class="button">옵션</a>
+
+            <a th:href="@{/api/products/edit/{id}(id=${product.id})}" class="button">수정</a>
+
+            <form th:action="@{'/products/' + ${product.id}}" method="post" style="display:inline;">
+                <input type="hidden" name="_method" value="delete"/>
+                <button type="submit" class="button">삭제</button>
+            </form>
+        </td>
+    </tr>
+    </tbody>
+</table>
+</body>
+</html>

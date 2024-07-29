@@ -1,0 +1,54 @@
+body {
+    font-family: Arial, sans-serif;
+}
+h1 {
+    text-align: center; /* 제목 중앙 정렬 */
+}
+.top-right {
+    text-align: right; /* 링크 오른쪽 정렬 */
+    margin-bottom: 20px; /* 링크와 테이블 간의 간격 추가 */
+}
+.button {
+    display: inline-block;
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    text-align: center;
+    text-decoration: none;
+    color: #fff;
+    background-color: #4CAF50;
+    border: none;
+    border-radius: 5px;
+}
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+th, td {
+    border: 1px solid #ddd;
+    padding: 15px; /* 셀 간의 간격을 늘림 */
+    text-align: center; /* 텍스트 중앙 정렬 */
+}
+th {
+    background-color: #f2f2f2;
+}
+tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+tr:hover {
+    background-color: #ddd;
+}
+
+.button {
+    background-color: #4CAF50; /* Green */
+    border: none;
+    color: white;
+    padding: 10px 20px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+    cursor: pointer;
+    border-radius: 4px;
+}
