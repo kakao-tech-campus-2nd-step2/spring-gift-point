@@ -49,7 +49,7 @@ public class LoginService {
     }
 
     public Token kakaoLogin(kakaoToken token) {
-//        토큰, type 으로 유저 조회
+        //        토큰, type 으로 유저 조회
         kakaoInfo info = apiCall.getKakaoTokenInfo(token.getAccess_token());
         UserEntity user = socialRepository.findBySocialIdAndType(info.getId(), SocialType.KAKAO)
             .orElseThrow(

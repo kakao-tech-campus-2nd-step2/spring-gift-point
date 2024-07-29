@@ -43,18 +43,18 @@ public class SocialService {
 
     @Transactional
     public Long SetToKakao(HttpServletRequest req, kakaoToken token) {
-//        유저 검증
+        //        유저 검증
         UserEntity user = userRepository.findByIdAndIsDelete(parsingPram.getId(req), 0).orElseThrow(
             () -> new BaseHandler(HttpStatus.NOT_FOUND, "유저가 존재하지 않습니다.")
         );
 
         kakaoInfo info = apiCall.getKakaoTokenInfo(token.getAccess_token());
-//        이미 소셜 로그인이 등록된 경우
+        //        이미 소셜 로그인이 등록된 경우
         if (socialRepository.findBySocialIdAndType(info.getId(), SocialType.KAKAO).isPresent()) {
             throw new BaseHandler(HttpStatus.BAD_REQUEST, "카카오 소셜로그인이 이미 등록되어 있습니다.");
         }
 
-//      등록
+        //      등록
         SocialEntity socialLogin = new SocialEntity(info.getId(), SocialType.KAKAO, user);
         socialRepository.save(socialLogin);
 

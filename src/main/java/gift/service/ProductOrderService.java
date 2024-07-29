@@ -43,20 +43,20 @@ public class ProductOrderService {
     public optionDetail decreaseProductOption(HttpServletRequest req,
         Long productId, Long optionId, decreaseProductOption decrease) {
 
-//        상품이 존재여부부
+        //        상품이 존재여부부
         ProductOptionEntity entity = productOptionRepository.findByProductIdAndId(
                 productId, optionId)
             .orElseThrow(() -> new BaseHandler(HttpStatus.NOT_FOUND, "해당 상품의 옵션이 존재하지 않습니다."));
 
-//        재고가 요구치보다 적을경우
+        //        재고가 요구치보다 적을경우
         if (entity.getQuantity() < decrease.getQuantity()) {
             throw new BaseHandler(HttpStatus.BAD_REQUEST, "재고가 부족합니다.");
         }
 
-//        재고 감소(수정)
+        //        재고 감소(수정)
         entity.setQuantity(entity.getQuantity() - decrease.getQuantity());
 
-//        위시리스트 포함되어 있으면 삭제
+        //        위시리스트 포함되어 있으면 삭제
         Optional<WishEntity> wish = wishRepository.findByUserEntityIdAndProductEntityId(
             parsingPram.getId(req),
             productId);
