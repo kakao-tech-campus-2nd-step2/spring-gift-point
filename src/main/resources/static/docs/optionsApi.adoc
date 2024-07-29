@@ -1,0 +1,6 @@
+== 상품 옵션 생성
+operation::rest-docs-options-test/add-options[snippets="http-request,path-parameters,http-response"]
+== 상품 옵션 수정
+operation::rest-docs-options-test/update-options[snippets="http-request,path-parameters,query-parameters,http-response"]
+== 상품 옵션 삭제
+operation::rest-docs-options-test/delete-options[snippets="http-request,path-parameters,http-response"]

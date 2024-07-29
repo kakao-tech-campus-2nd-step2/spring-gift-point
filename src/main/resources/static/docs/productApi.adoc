@@ -1,0 +1,17 @@
+== 전체 상품 조회
+operation::rest-docs-product-test/get-all-products[snippets="http-request,query-parameters,http-response"]
+
+== 상품 + 전체 옵션 조회
+operation::rest-docs-product-test/get-product-with-all-options[snippets="http-request,path-parameters,http-response"]
+
+== 상품 + 단일 옵션 조회
+operation::rest-docs-product-test/get-product-with-option[snippets="http-request,path-parameters,query-parameters,http-response"]
+
+== 상품 생성(최소 하나의 옵션과 함께)
+operation::rest-docs-product-test/add-product[snippets="http-request,http-response"]
+
+== 상품 수정
+operation::rest-docs-product-test/update-product[snippets="http-request,http-response"]
+
+== 상품 삭제
+operation::rest-docs-product-test/delete-product[snippets="http-request,query-parameters,http-response"]

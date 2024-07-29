@@ -1,0 +1,3 @@
+[submodule "spring-gift-private"]
+	path = spring-gift-private
+	url = https://github.com/anaconda77/spring-gift-private.git

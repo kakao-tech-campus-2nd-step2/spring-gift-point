@@ -1,0 +1,6 @@
+== 위시 리스트 조회
+operation::rest-docs-wish-test/get-wish-list[snippets="http-request,query-parameters,http-response"]
+== 위시 생성
+operation::rest-docs-wish-test/add-wish-list[snippets="http-request,http-response"]
+== 위시 삭제
+operation::rest-docs-wish-test/delete-wish-list[snippets="http-request,http-response"]

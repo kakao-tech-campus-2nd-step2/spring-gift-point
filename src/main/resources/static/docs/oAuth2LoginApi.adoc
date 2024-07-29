@@ -1,0 +1,2 @@
+== 카카오 로그인 후 토큰 반환
+operation::rest-docs-o-auth2-login-test/get-token[snippets="http-request,query-parameters,http-response"]

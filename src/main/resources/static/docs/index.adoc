@@ -1,0 +1,14 @@
+= Spring API 명세서
+:doctype: book
+:source-highlighter: highlightjs
+:toc: left
+:toclevels: 2
+:seclinks:
+
+include::productApi.adoc[]
+include::categoryApi.adoc[]
+include::optionsApi.adoc[]
+include::orderApi.adoc[]
+include::wishApi.adoc[]
+include::loginApi.adoc[]
+include::oAuth2LoginApi.adoc[]

@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <link href="../css/bootstrap.min.css"
+        th:href="@{/css/bootstrap.min.css}" rel="stylesheet">
+  <style>
+    th {
+      text-align: center;
+    }
+    td {
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+<div class="container" style="max-width: 600px">
+  <div class="py-5 text-center">
+    <h2>상품 목록</h2>
+  </div>
+
+  <div class="row">
+    <div class="col">
+      <button class="btn btn-primary float-end"
+              onclick="location.href='addForm.html'"
+              th:onclick="|location.href='@{/step2/products/add}'|" type="button">상품 등록</button>
+    </div>
+  </div>
+
+  <hr class="my-4">
+  <div>
+    <table class="table">
+      <thead>
+      <tr>
+        <th>ID</th>
+        <th>상품명</th>
+        <th>가격</th>
+        <th>이미지-URL</th>
+        <th>옵션</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr th:each="product : ${products}">
+        <td th:text="${product.id}">상품 ID</td>
+        <td th:text="${product.name}">상품명</td>
+        <td th:text="${product.price}">0원</td>
+        <td th:text="${product.imageUrl}">link</td>
+        <td>
+          <button class="btn btn-secondary"
+                  onclick="location.href='editForm.html'"
+                  th:onclick="|location.href='@{/step2/products/edit(id=${product.id})}'|" type="button">수정</button>
+          <button class="btn btn-danger"
+                  onclick="location.href='products.html'"
+                  th:onclick="|deleteConfirm([[${product.id}]])|" type="button">삭제</button>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+</body>
+
+<script th:inline="javascript">
+
+  function deleteConfirm(id) {
+
+    if (!confirm('해당 제품을 삭제할까요?')) {
+      return false;
+    }
+
+    let form = document.createElement('form');
+    let obj;
+    obj = document.createElement('input');
+    obj.setAttribute('type', 'hidden');
+    obj.setAttribute('name', 'id')
+    obj.setAttribute('value', id);
+
+    form.appendChild(obj);
+    form.setAttribute('method', 'post');
+    form.setAttribute('action', '/step2/products/delete');
+    document.body.appendChild(form);
+    form.submit();
+  }
+</script>
+
+</html>

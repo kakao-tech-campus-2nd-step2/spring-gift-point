@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns="">
+<head>
+  <meta charset="UTF-8">
+  <link href="../css/bootstrap.min.css"
+        th:href="@{/css/bootstrap.min.css}" rel="stylesheet">
+  <style>
+    th {
+      text-align: center;
+    }
+
+    td {
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+<div class="container" style="max-width: 600px">
+  <div class="py-5 text-center">
+    <h2>상품 목록</h2>
+  </div>
+
+  <div class="row">
+    <div class="col">
+      <button class="btn btn-primary float-end"
+              onclick="location.href='joinForm.html'"
+              th:onclick="|location.href='@{/view/join}'|" type="button">회원가입
+      </button>
+    </div>
+    <div class="col">
+      <button class="btn btn-primary float-end"
+              onclick="location.href='loginForm.html'"
+              th:onclick="|location.href='@{/view/login}'|" type="button">로그인
+      </button>
+    </div>
+    <div class="col">
+      <button class="btn btn-primary float-end"
+              onclick="location.href='wish.html'"
+              th:onclick="|location.href='@{/view/wish}'|" type="button">위시 리스트
+      </button>
+    </div>
+  </div>
+
+  <hr class="my-4">
+  <div>
+    <table class="table">
+      <thead>
+      <tr>
+        <th>ID</th>
+        <th>상품명</th>
+        <th>가격</th>
+        <th>이미지-URL</th>
+        <th><label>
+          <select
+              th:attr="onchange=|location.href='/view/products?page=${pagingInfo.currentPage}&sortOption=' + this.value|">
+            <option th:value="id" th:selected="${sortOption == 'id'}" th:text="아이디순">아이디순</option>
+            <option th:value="name" th:selected="${sortOption == 'name'}" th:text="이름순">이름순</option>
+            <option th:value="price" th:selected="${sortOption == 'price'}" th:text="가격순">가격순
+            </option>
+          </select>
+        </label>
+        </th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr th:each="product : ${products}">
+        <td th:text="${product.id}">상품 ID</td>
+        <td th:text="${product.name}">상품명</td>
+        <td th:text="${product.price}">0원</td>
+        <td th:text="${product.imageUrl}">link</td>
+        <td>
+          <button class="btn btn-secondary"
+                  onclick="location.href='wish.html'"
+                  th:onclick="|addConfirm([[${product.id}]])|" type="button">🤍
+          </button>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+
+    <div th:if="${!products.isEmpty()}">
+      <ul class="pagination"
+          th:with="
+                pageNumber = ${pagingInfo.currentPage},
+                pageSize = ${pagingInfo.docsPerPage},
+                totalPages = ${pagingInfo.totalPages},
+                startPage = ${pagingInfo.startPage},
+                endPage = ${pagingInfo.endPage},
+                hasPrevious = ${pagingInfo.hasPrevious},
+                hasNext = ${pagingInfo.hasNext}
+      ">
+
+        <li th:classappend="${hasPrevious}==false ? 'disabled'" class="page-item">
+          <a class="page-link"
+             th:href="${pageNumber}==1 ? '#' : @{/view/products(page=${pageNumber - 1}, sortOption=${sortOption})}">
+            <span aria-hidden="true">&lt</span>
+          </a>
+        </li>
+
+        <li th:each="page: ${#numbers.sequence(startPage, endPage)}"
+            th:classappend="${page == pageNumber} ? 'active'" class="page-item">
+          <a th:text="${page}" class="page-link"
+             th:href="@{/view/products(page=${page}, sortOption=${sortOption})}"></a>
+        </li>
+
+        <li th:classappend="${hasNext}==false ? 'disabled'" class="page-item">
+          <a class="page-link"
+             th:href="${pageNumber}==${totalPages} ? '#' : @{/view/products(page=${pageNumber + 1}, sortOption=${sortOption})}"
+             aria-label="Next">
+            <span aria-hidden="true">&gt</span>
+          </a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</div>
+</body>
+
+<script th:inline="javascript">
+
+  function addConfirm(id) {
+
+    if (!confirm('해당 제품을 위시 리스트에 추가할까요?')) {
+      return false;
+    }
+
+    let form = document.createElement('form');
+    let obj;
+    obj = document.createElement('input');
+    obj.setAttribute('type', 'hidden');
+    obj.setAttribute('name', 'id')
+    obj.setAttribute('value', id);
+
+    form.appendChild(obj);
+    form.setAttribute('method', 'post');
+    form.setAttribute('action', '/view/wish/add');
+    document.body.appendChild(form);
+    form.submit();
+  }
+</script>
+
+</html>
