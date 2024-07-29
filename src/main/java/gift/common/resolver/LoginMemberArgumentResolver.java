@@ -1,5 +1,6 @@
 package gift.common.resolver;
 
+import gift.common.annotation.LoginMember;
 import gift.entity.Member;
 import gift.service.MemberService;
 import org.springframework.core.MethodParameter;
@@ -20,7 +21,7 @@ public class LoginMemberArgumentResolver implements HandlerMethodArgumentResolve
 
     @Override
     public boolean supportsParameter(MethodParameter parameter) {
-        return Member.class.isAssignableFrom(parameter.getParameterType());
+        return parameter.hasParameterAnnotation(LoginMember.class);
     }
 
     @Override
