@@ -42,7 +42,15 @@ public class ProductService {
         Category findCategory = categoryRepository.findByName(productDTO.category().getName())
             .orElseThrow(() -> new IllegalArgumentException(CATEGORY_NOT_FOUND));
 
-        productRepository.save(new Product(productDTO, findCategory));
+        productRepository.save(
+            new Product(
+                -1,
+                productDTO.name(),
+                productDTO.price(),
+                productDTO.imageUrl(),
+                findCategory
+            )
+        );
     }
 
     public void updateProduct(long id, ProductDTO productDTO) {

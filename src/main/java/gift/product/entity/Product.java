@@ -1,8 +1,11 @@
 package gift.product.entity;
 
 import gift.category.Category;
+import gift.product.entity.embedded.Name;
 import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.persistence.AttributeOverride;
 import jakarta.persistence.Column;
+import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -19,9 +22,13 @@ public class Product {
     @Schema(description = "상품 id")
     private long id;
 
-    @Column(nullable = false, length = 15)
+    @Embedded
+    @AttributeOverride(
+        name = "value",
+        column = @Column(name = "name", nullable = false)
+    )
     @Schema(description = "상품명")
-    private String name;
+    private Name name;
 
     @Column(nullable = false)
     @Schema(description = "상품 가격")
@@ -41,7 +48,7 @@ public class Product {
     }
 
     public String getName() {
-        return name;
+        return name.getValue();
     }
 
     public int getPrice() {
@@ -59,26 +66,27 @@ public class Product {
     protected Product() {
     }
 
-    public Product(long id, String name, int price, String imageUrl, Category category) {
+    public Product(
+        long id,
+        String name,
+        int price,
+        String imageUrl,
+        Category category
+    ) {
         this.id = id;
-        this.name = name;
+        this.name = new Name(name);
         this.price = price;
         this.imageUrl = imageUrl;
         this.category = category;
     }
 
-    public Product(ProductDTO productDTO, Category category) {
-        this(
-            -1L,
-            productDTO.name(),
-            productDTO.price(),
-            productDTO.imageUrl(),
-            category
-        );
-    }
-
-    public void update(String name, int price, String imageUrl, Category category) {
-        this.name = name;
+    public void update(
+        String name,
+        int price,
+        String imageUrl,
+        Category category
+    ) {
+        this.name.update(name);
         this.price = price;
         this.imageUrl = imageUrl;
         this.category = category;
