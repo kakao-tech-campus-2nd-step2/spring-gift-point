@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+  <style>
+    table {
+      font-family: arial, sans-serif;
+      border-collapse: collapse;
+      width: 100%;
+    }
+
+    td, th {
+      border: 1px solid #dddddd;
+      text-align: left;
+      padding: 8px;
+    }
+
+    tr:nth-child(even) {
+      background-color: #dddddd;
+    }
+
+  </style>
+  <script>
+    window.onload = function() {
+      console.log("");
+      console.log("[window onload] : [start]");
+      console.log("");
+    };
+  </script>
+</head>
+<body>
+<div class="container mt-5">
+  <h1>관리자 화면</h1>
+  <div class="mb-3">
+    <button class="btn btn-success" onclick="location.href='/api/products/add'">Add</button>
+  </div>
+  <table class="table table-striped">
+    <thead>
+    <tr>
+      <th>Id</th>
+      <th>Name</th>
+      <th>Price</th>
+      <th>Image URL</th>
+      <th>category</th>
+      <th>Update</th>
+      <th>Delete</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="product : ${products}">
+      <td th:text="${product.id}"></td>
+      <td th:text="${product.name}"></td>
+      <td th:text="${product.price}"></td>
+      <td th:text="${product.imageUrl}"></td>
+      <td th:text="${product.category == null  ? 'null' : product.category.name}"></td>
+      <td>
+        <button class="btn btn-warning" th:onclick="'location.href=\'/api/products/update/' + ${product.id} + '\';'">Update</button>
+      </td>
+      <td>
+        <form th:action="@{/api/products/delete/{id}(id=${product.id})}" method="post" style="display:inline;">
+          <button class="btn btn-danger" type="submit">Delete</button>
+        </form>
+      </td>
+    </tr>
+    </tbody>
+  </table>
+</div>
+</body>
+</html>
+

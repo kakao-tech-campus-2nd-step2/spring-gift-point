@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+  <style>
+    table {
+      font-family: arial, sans-serif;
+      border-collapse: collapse;
+      width: 100%;
+    }
+
+    td, th {
+      border: 1px solid #dddddd;
+      text-align: left;
+      padding: 8px;
+    }
+
+    tr:nth-child(even) {
+      background-color: #dddddd;
+    }
+
+  </style>
+  <script>
+    window.onload = function() {
+      fetch('/api/wishlist', {
+        method: 'GET',
+        headers: {
+                  'Content-Type': 'application/json',
+                  'Authorization': `Bearer ` + localStorage.getItem("jwt"),
+             }
+      });
+    };
+  </script>
+</head>
+<body>
+<div class="container mt-5">
+  <h1>상품 목록</h1>
+  <table class="table table-striped">
+    <thead>
+    <tr>
+      <th>Id</th>
+      <th>Name</th>
+      <th>Price</th>
+      <th>Image URL</th>
+      <th>Category</th>
+      <th>추가</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="product : ${products}">
+      <td th:text="${product.id}"></td>
+      <td th:text="${product.name}"></td>
+      <td th:text="${product.price}"></td>
+      <td th:text="${product.imageUrl}"></td>
+      <td th:text="${product.category.name}"></td>
+
+      <td>
+        <button class="btn btn-danger" type="submit" th:onclick="addWishlist(/*[[${product.id}]]*/)">Add</button>
+        <script th:inline="javascript">
+          /*<![CDATA[*/
+      function addWishlist(id) {
+          const url = "/api/wish/add/" + id;
+          fetch(url, {
+              method: 'POST',
+              headers: {
+                  'Content-Type': 'application/json',
+                  'Authorization': `Bearer ` + localStorage.getItem("jwt"),
+              }
+          })
+          .then(response => {
+          });
+      }
+          /*]]>*/
+        </script>
+      </td>
+    </tr>
+    </tbody>
+  </table>
+
+
+  <h1>위시 리스트</h1>
+  <table class="table table-striped">
+    <thead>
+    <tr>
+      <th>Name</th>
+      <th>Price</th>
+      <th>Image URL</th>
+      <th>Category</th>
+      <th>Delete</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="wishlist : ${wishlists}">
+      <td th:text="${wishlist.name}"></td>
+      <td th:text="${wishlist.price}"></td>
+      <td th:text="${wishlist.imageUrl}"></td>
+      <td th:text="${wishlist.category.name}"></td>
+      <td>
+        <button class="btn btn-danger" type="submit" th:onclick="deleteWishlist(/*[[${wishlist.id}]]*/)">Delete</button>
+        <script th:inline="javascript">
+          /*<![CDATA[*/
+      function deleteWishlist(id) {
+          const url = "/api/wish/delete/" + id;
+          fetch(url, {
+              method: 'POST',
+              headers: {
+                  'Content-Type': 'application/json',
+                  'Authorization': `Bearer ` + localStorage.getItem("jwt"),
+              }
+          })
+          .then(response => {
+          });
+      }
+          /*]]>*/
+        </script>
+      </td>
+    </tr>
+    </tbody>
+  </table>
+
+</div>
+</body>
+</html>
