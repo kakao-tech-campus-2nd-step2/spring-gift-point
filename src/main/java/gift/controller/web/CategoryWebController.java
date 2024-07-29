@@ -37,4 +37,10 @@ public class CategoryWebController {
         model.addAttribute("category", category);
         return "categoryDetail";
     }
+
+    @GetMapping("/web")
+    public String getCategoriesForWeb(Model model) {
+        model.addAttribute("categories", categoryService.getAllCategories());
+        return "category";
+    }
 }
