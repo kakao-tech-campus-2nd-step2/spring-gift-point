@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>상품 목록 관리</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+<div class="container">
+  <h1 class="mt-5">상품 목록</h1>
+  <table class="table table-striped mt-3">
+    <thead class="thead-dark">
+    <tr>
+      <th>Id</th>
+      <th>이름</th>
+      <th>가격</th>
+      <th>이미지</th>
+      <th>카테고리</th>
+      <th></th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="product : ${products}">
+      <td th:text="${product.id}"></td>
+      <td th:text="${product.name}"></td>
+      <td th:text="${product.price}"></td>
+      <td th:text="${product.imageUrl}"></td>
+      <td th:text="${product.categoryName}"></td>
+      <td>
+        <a th:href="@{/products/update/{id}(id=${product.id})}" class="btn btn-warning btn-sm">수정</a>
+        <a th:href="@{/products/delete/{id}(id=${product.id})}" class="btn btn-danger btn-sm">삭제</a>
+      </td>
+    </tr>
+    </tbody>
+  </table>
+  <a href="/products/add" class="btn btn-primary mt-3">새 상품 추가</a>
+  <a href="/products/categories/add" class="btn btn-secondary mt-3">새 카테고리 추가</a>
+</div>
+</body>
+</html>
