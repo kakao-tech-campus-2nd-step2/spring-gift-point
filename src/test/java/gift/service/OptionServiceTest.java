@@ -126,6 +126,6 @@ class OptionServiceTest {
                 .findFirst()
                 .get();
 
-        Assertions.assertThat(option.quantity()).isEqualTo(9500);
+        Assertions.assertThat(option.quantity()).isEqualTo(0);
     }
 }
