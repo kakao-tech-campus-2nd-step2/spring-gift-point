@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Products</title>
+    <link rel="stylesheet" th:href="@{/css/manage.css}"/>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <script defer th:src="@{/js/manage.js}"></script>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</head>
+<body>
+<div class="container">
+    <div class="header">
+        <h1>Manage <span>Products</span></h1>
+        <div class="button-container">
+            <button type="submit" class="delete-btn" id="delete-selected">Delete</button>
+            <button class="add-btn" type="button" data-toggle="modal" data-target="#addProduct">
+                Add New Product
+            </button>
+        </div>
+    </div>
+    <table>
+        <thead class="table-header">
+        <tr>
+            <th><input type="checkbox" id="select-all"></th>
+            <th>Id</th>
+            <th>Name</th>
+            <th>Price</th>
+            <th>Image-Url</th>
+            <th>Category</th>
+            <th>Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="product : ${products.products}" th:data-id="${product.id}">
+            <td><input type="checkbox"></td>
+            <td th:text="${product.id}"></td>
+            <td th:text="${product.name}"></td>
+            <td th:text="${product.price}"></td>
+            <td th:text="${product.imageUrl}"></td>
+            <td th:text="${product.category.name}"></td>
+            <td>
+                <button class="edit-btn" type="button" data-toggle="modal" data-target="#editProduct"
+                        th:data-id="${product.id}" th:data-name="${product.name}" th:data-price="${product.price}" th:data-imageurl="${product.imageUrl}">
+                    <i class="fas fa-pencil-alt"></i>
+                </button>
+                <button type="button" class="option-btn" th:data-id="${product.id}"><i class="fas fa-search"></i></button>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+    <ul class="pagination justify-content-center">
+        <li class="page-item" th:classappend="${products.currentPage == 0} ? 'disabled'">
+            <a class="page-link" th:href="@{/api/products(page=${products.currentPage - 1})}" aria-label="Previous">
+                <span aria-hidden="true">&laquo;</span>
+            </a>
+        </li>
+        <li class="page-item" th:each="pageNum : ${#numbers.sequence(0, products.totalPages - 1)}"
+            th:classappend="${pageNum == products.currentPage} ? 'active'">
+            <a class="page-link" th:href="@{/api/products(page=${pageNum})}" th:text="${pageNum + 1}">1</a>
+        </li>
+        <li class="page-item" th:classappend="${products.currentPage + 1 == products.totalPages} ? 'disabled'">
+            <a class="page-link" th:href="@{/api/products(page=${products.currentPage + 1})}" aria-label="Next">
+                <span aria-hidden="true">&raquo;</span>
+            </a>
+        </li>
+    </ul>
+</div>
+
+<!-- Modal -->
+<div th:replace="~{fragments/addProduct :: modal}"></div>
+<div th:replace="~{fragments/editProduct :: modal}"></div> 
+</body>
+</html>

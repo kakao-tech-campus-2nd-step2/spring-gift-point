@@ -1,0 +1,31 @@
+<div th:fragment="modal" xmlns:th="http://www.thymeleaf.org">
+    <div class="modal fade" id="addOption" tabindex="-1" role="dialog" aria-labelledby="addOptionLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addOptionLabel">add Product</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form id="addOptionForm">
+                        <div id="addOptionErrorMessage" class="alert alert-danger" style="display: none;"></div>
+                        <div class="form-group">
+                            <label for="name">name:</label>
+                            <input type="text" id="name" name="name" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="quantity">quantity:</label>
+                            <input type="number" id="quantity" name="quantity" class="form-control" required>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" onclick="postOption()" class="btn btn-primary">Add Option</button>
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

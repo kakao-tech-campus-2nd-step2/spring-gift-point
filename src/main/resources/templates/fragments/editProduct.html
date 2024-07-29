@@ -1,0 +1,44 @@
+<div th:fragment="modal" xmlns:th="http://www.thymeleaf.org">
+    <div class="modal fade" id="editProduct" tabindex="-1" role="dialog" aria-labelledby="editProductLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="editProductLabel">Edit Product</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form id="editProductForm">
+                        <div id="editProductErrorMessage" class="alert alert-danger" style="display: none;"></div>
+                        <div class="form-group">
+                            <label for="name">New Name:</label>
+                            <input type="text" id="name" name="name" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label for="price">New Price:</label>
+                            <input type="number" id="price" name="price" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label for="imageUrl">New Image URL:</label>
+                            <input type="text" id="imageUrl" name="imageUrl" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label for="category">New Category:</label>
+                            <select id="category" name="category" class="form-control">
+                                <option th:each="category : ${categories.categoryList}"
+                                        th:value="${category.id}"
+                                        th:text="${category.name}">
+                                </option>
+                            </select>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="submit" class="btn btn-primary">edit Product</button>
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

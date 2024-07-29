@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" th:href="@{/css/login.css}"/>
+    <script defer th:src="@{/js/login.js}"></script>
+</head>
+</head>
+
+<body>
+<div class="container">
+    <h2>Login</h2>
+    <form id="login-form">
+        <div class="login-input">
+            <input type="text" id="email" name="email" placeholder="EMAIL" required/>
+            <input type="password" id="password" name="password" placeholder="PASSWORD" required/>
+        </div>
+        <div class="submit_button">
+            <input type="submit" class="login-data">
+        </div>
+        <div>
+            <button class="login-btn" type="button" id="api-login-btn">
+                카카오 로그인
+            </button>
+        </div>
+    </form>
+</div>
+
+</body>
+</html>
