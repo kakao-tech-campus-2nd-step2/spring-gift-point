@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Menu List</title>
+</head>
+<body>
+<h1>Menu List</h1>
+<table>
+    <tr>
+        <th>Name</th>
+        <th>Price</th>
+        <th>Image</th>
+        <th>Actions</th>
+    </tr>
+    <tr th:each="menu : ${menus}">
+        <td th:text="${menu.name}">Menu Name</td>
+        <td th:text="${menu.price}">Menu Price</td>
+        <td><img th:src="${menu.imageUrl}" alt="Menu Image"></td>
+        <td>
+            <a th:href="@{/menu/edit/{id}(id=${menu.id})}">Edit</a>
+        </td>
+        <td>
+            <a th:href="@{/menu/delete/{id}(id=${menu.id})}">Delete</a>
+        </td>
+    </tr>
+</table>
+
+<h2>ADD DATA</h2>
+<form th:action="@{/menu}" method="post">
+    <ul>
+        <li>
+            <label for="name">Name:</label>
+            <input type="text" id="name" name="name" />
+        </li>
+        <dd th:text="${errors}" style="color: red"></dd>
+        <li>
+            <label for="price">Price:</label>
+            <input type="number" id="price" name="price" />
+        </li>
+        <li>
+            <label for="imageUrl">ImageUrl:</label>
+            <input type="url" id="imageUrl" name="imageUrl" />
+        </li>
+        <li class="button">
+            <button type="submit">Submit</button>
+        </li>
+    </ul>
+</form>
+</body>
+</html>
