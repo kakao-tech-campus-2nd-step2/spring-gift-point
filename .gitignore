@@ -1,4 +1,8 @@
 HELP.md
+
+### 민감 정보 ##
+src/main/resources/application-local.properties
+
 .gradle
 build/
 !gradle/wrapper/gradle-wrapper.jar

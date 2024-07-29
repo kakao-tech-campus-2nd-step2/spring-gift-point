@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>상품 정보 수정</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+<div class="container mt-5">
+    <h1 class="mb-4">상품 정보 수정</h1>
+    <form th:action="@{/products/update/{id}(id=${productDto.id})}" th:object="${productDto}" method="post">
+        <div class="form-group">
+            <label for="name">Name</label>
+            <input type="text" id="name" th:field="*{name}" class="form-control"/>
+        </div>
+        <div class="form-group">
+            <label for="price">Price</label>
+            <input type="text" id="price" th:field="*{price}" class="form-control"/>
+        </div>
+        <div class="form-group">
+            <label for="imageUrl">Image URL</label>
+            <input type="text" id="imageUrl" th:field="*{imageUrl}" class="form-control"/>
+        </div>
+        <div class="form-group">
+            <label for="category">Category</label>
+            <select id="category" th:field="*{categoryId}" class="form-control">
+                <option value="" disabled selected>카테고리 선택</option>
+                <option th:each="category : ${categories}" th:value="${category.id}" th:text="${category.name}"
+                        th:selected="${category.id} == ${productDto.categoryId}"></option>
+            </select>
+        </div>
+        <button type="submit" class="btn btn-primary">수정</button>
+        <a th:href="@{/products}" class="btn btn-secondary">상품 목록으로 돌아가기</a>
+    </form>
+</div>
+
+<!-- Bootstrap JS and dependencies -->
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

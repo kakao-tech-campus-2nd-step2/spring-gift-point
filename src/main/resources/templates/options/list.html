@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>옵션 목록</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+<div class="container mt-5">
+    <h1 class="mb-4">옵션 목록</h1>
+    <a href="#" th:href="@{/products}" class="btn btn-primary mb-3">상품목록으로 돌아가기</a>
+    <a href="#" th:href="@{/products/{productId}/options/new(productId=${productId})}" class="btn btn-primary mb-3">새 옵션 등록하기</a>
+    <table class="table table-striped">
+        <thead class="thead-dark">
+        <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Quantity</th>
+            <th>Actions</th> <!-- Actions 열 추가 -->
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="option : ${options}">
+            <td th:text="${option.id}">ID</td>
+            <td th:text="${option.name}">Name</td>
+            <td th:text="${option.quantity}">Quantity</td>
+            <td>
+                <a th:href="@{options/edit/{optionId}(optionId=${option.id})}" class="btn btn-sm btn-warning">수정</a>
+                <a th:href="@{options/delete/{optionId}(optionId=${option.id})}" class="btn btn-sm btn-danger">삭제</a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+<!-- Bootstrap JS and dependencies -->
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>
