@@ -1,0 +1,67 @@
+ifndef::snippets[]
+:snippets: ../../../build/generated-snippets
+endif::[]
+
+= Spring REST Docs
+:toc: left
+:toclevels: 2
+:sectlinks:
+
+[[resources-product]]
+== Product
+
+[[resources-product-create]]
+=== Product 생성
+
+==== HTTP request
+
+include::{snippets}/product-create/http-request.adoc[]
+
+==== HTTP response
+
+include::{snippets}/product-create/http-response.adoc[]
+
+
+[[resources-product-get-all]]
+=== Product 모두 조회
+
+==== HTTP request
+
+include::{snippets}/product-get-all/http-request.adoc[]
+
+==== HTTP response
+
+include::{snippets}/product-get-all/http-response.adoc[]
+
+[[resources-product-get-one]]
+=== Product 하나만 조회
+
+==== HTTP request
+
+include::{snippets}/product-get-one/http-request.adoc[]
+
+==== HTTP response
+
+include::{snippets}/product-get-one/http-response.adoc[]
+
+[[resources-product-update]]
+=== Product 수정
+
+==== HTTP request
+
+include::{snippets}/product-update/http-request.adoc[]
+
+==== HTTP response
+
+include::{snippets}/product-update/http-response.adoc[]
+
+[[resources-product-delete]]
+=== Product 삭제
+
+==== HTTP request
+
+include::{snippets}/product-delete/http-request.adoc[]
+
+==== HTTP response
+
+include::{snippets}/product-delete/http-response.adoc[]
