@@ -7,13 +7,13 @@ import gift.repository.token.OAuthTokenRepository;
 import org.springframework.stereotype.Component;
 
 @Component
-public class TokenManager {
+public class TokenUtil {
 
     private final KakaoApiCaller kakaoApiCaller;
 
     private final OAuthTokenRepository OAuthTokenRepository;
 
-    public TokenManager(KakaoApiCaller kakaoApiCaller, OAuthTokenRepository OAuthTokenRepository) {
+    public TokenUtil(KakaoApiCaller kakaoApiCaller, OAuthTokenRepository OAuthTokenRepository) {
         this.kakaoApiCaller = kakaoApiCaller;
         this.OAuthTokenRepository = OAuthTokenRepository;
     }

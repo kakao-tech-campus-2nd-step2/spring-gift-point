@@ -55,7 +55,7 @@ public class KakaoAuthService {
                     OAuthTokenRepository.save(existingToken);
                 },
                 () -> {
-                    OAuthToken newToken = new OAuthToken(user, refreshToken, accessToken, TokenType.KAKAO);
+                    OAuthToken newToken = new OAuthToken(user, accessToken, refreshToken, TokenType.KAKAO);
                     OAuthTokenRepository.save(newToken);
                 }
         );
