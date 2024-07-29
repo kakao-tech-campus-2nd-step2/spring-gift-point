@@ -21,8 +21,14 @@ jobs:
           java-version: '21'
           distribution: 'temurin'
           cache: gradle
+
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@417ae3ccd767c252f5661f1ace9f835f9654f2b5
+
+      - name: make application.yml
+      - run: touch ./src/main/resources/application.yml
+      - run: echo "${{ secrets.APPLICATION }}" > ./src/main/resources/application.yml
+      - run: cat ./src/main/resources/application.yml
 
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
@@ -32,24 +38,6 @@ jobs:
 
       - name: Run Tests
         run: ./gradlew test
-
-      - name: make application.yml
-        run: |
-          cat <<EOT >> src/main/resources/application.yml
-          jwt:
-            secret-key: ${JWT_SECRET_KEY}
-            expired-time: ${JWT_EXPIRED_TIME}
-          kakao:
-            rest-api-key: ${KAKAO_REST_API_KEY}
-            redirect-uri: ${KAKAO_REDIRECT_URI}
-            token-uri: ${KAKAO_TOKEN_URI}
-          EOT
-        env:
-          JWT_SECRET_KEY: ${{ secrets.JWT_SECRET_KEY }}
-          JWT_EXPIRED_TIME: ${{ secrets.JWT_EXPIRED_TIME }}
-          KAKAO_REST_API_KEY: ${{ secrets.KAKAO_REST_API_KEY }}
-          KAKAO_REDIRECT_URI: ${{ secrets.KAKAO_REDIRECT_URI }}
-          KAKAO_TOKEN_URI: ${{ secrets.KAKAO_TOKEN_URI }}
 
   dependency-submission:
 
