@@ -1,4 +1,4 @@
-package gift.option.domain;
+package gift.product.option.domain;
 
 import gift.category.domain.Category;
 import gift.product.domain.Product;
