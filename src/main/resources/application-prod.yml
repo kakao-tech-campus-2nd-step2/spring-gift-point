@@ -1,0 +1,19 @@
+spring:
+  datasource:
+    url: jdbc:h2:mem:testdb
+    username: sa
+    password:
+
+  h2:
+    console:
+      enabled: true
+
+  jpa:
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+
+kakao:
+  client-id: ${KAKAO_CLIENT_ID}
+  redirect-url: ${KAKAO_REDIRECT_URL}
