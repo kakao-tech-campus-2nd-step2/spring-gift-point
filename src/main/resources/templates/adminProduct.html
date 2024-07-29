@@ -99,13 +99,11 @@
             url: '/api/categories',
             method: 'GET',
             success: function(data) {
-                console.log(data);
-                var contents = data.content;
                 var select = $('#category');
                 var p_select = $('#p_category');
 
                 // 데이터에 따라 테이블 행을 생성
-                contents.forEach(function(category) {
+                data.forEach(function(category) {
                     // 한 행의 내용
                     var row = `
                         <option value="${category.name}">${category.name}</option>
