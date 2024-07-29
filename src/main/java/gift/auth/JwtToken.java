@@ -1,6 +1,6 @@
 package gift.auth;
 
-import gift.auth.domain.JWT;
+import gift.auth.domain.JWTParameter;
 import gift.auth.domain.Token;
 import gift.entity.enums.SocialType;
 import gift.util.errorException.BaseHandler;
@@ -28,17 +28,17 @@ public class JwtToken {
         this.tokenExpTime = tokenExpTime;
     }
 
-    public Token createToken(JWT jwt) {
+    public Token createToken(JWTParameter jwtParameter) {
         Claims claims = Jwts.claims();
-        claims.put("id", jwt.getId());
-        claims.put("email", jwt.getEmail());
-        claims.put("socialToken", jwt.getSocialToken());
-        claims.put("socialType", jwt.getSocialType());
+        claims.put("id", jwtParameter.getId());
+        claims.put("email", jwtParameter.getEmail());
+        claims.put("socialToken", jwtParameter.getSocialToken());
+        claims.put("socialType", jwtParameter.getSocialType());
 
         ZonedDateTime now = ZonedDateTime.now().withZoneSameInstant(ZoneId.of("UTC"));
         ZonedDateTime expirationDateTime = now.plusSeconds(tokenExpTime);
-        if (tokenExpTime > jwt.getExp() && jwt.getExp() != -1) {
-            expirationDateTime = now.plusSeconds(jwt.getExp());
+        if (tokenExpTime > jwtParameter.getExp() && jwtParameter.getExp() != -1) {
+            expirationDateTime = now.plusSeconds(jwtParameter.getExp());
         }
 
         return new Token(Jwts.builder()

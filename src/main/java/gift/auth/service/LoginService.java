@@ -1,7 +1,7 @@
 package gift.auth.service;
 
 import gift.auth.JwtToken;
-import gift.auth.domain.JWT;
+import gift.auth.domain.JWTParameter;
 import gift.auth.domain.KakaoToken.kakaoInfo;
 import gift.auth.domain.KakaoToken.kakaoToken;
 import gift.auth.domain.Login;
@@ -45,7 +45,7 @@ public class LoginService {
         if (!passwordCrypto.matchesPassword(login.getPassword(), user.getPassword())) {
             throw new BaseHandler(HttpStatus.UNAUTHORIZED, "비밀번호가 일치하지 않습니다.");
         }
-        return jwtToken.createToken(new JWT(user.getId(), user.getEmail()));
+        return jwtToken.createToken(new JWTParameter(user.getId(), user.getEmail()));
     }
 
     public Token kakaoLogin(kakaoToken token) {
@@ -61,7 +61,7 @@ public class LoginService {
             ).getUserEntity();
 
         return jwtToken.createToken(
-            new JWT(user.getId(), user.getEmail(), token.getAccess_token(), SocialType.KAKAO,
+            new JWTParameter(user.getId(), user.getEmail(), token.getAccess_token(), SocialType.KAKAO,
                 token.getExpires_in()));
     }
 }

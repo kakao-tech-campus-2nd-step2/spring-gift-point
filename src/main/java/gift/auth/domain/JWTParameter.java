@@ -2,7 +2,7 @@ package gift.auth.domain;
 
 import gift.entity.enums.SocialType;
 
-public class JWT {
+public class JWTParameter {
 
     private Long id;
     private String email;
@@ -10,12 +10,12 @@ public class JWT {
     private SocialType socialType = SocialType.OTHER;
     private Integer exp = -1;
 
-    public JWT(Long id, String email) {
+    public JWTParameter(Long id, String email) {
         this.id = id;
         this.email = email;
     }
 
-    public JWT(Long id, String email, String socialToken, SocialType socialType, Integer exp) {
+    public JWTParameter(Long id, String email, String socialToken, SocialType socialType, Integer exp) {
         this.id = id;
         this.email = email;
         this.socialToken = socialToken;
