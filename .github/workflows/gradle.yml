@@ -37,7 +37,7 @@ jobs:
       - name: Add Host Key
         run: |
           mkdir -p ~/.ssh
-          ssh-keyscan ${{ secrets.SSH_KEY }} >> ~/.ssh/known_hosts
+          ssh-keyscan ${{ secrets.DEPLOY_USER }} >> ~/.ssh/known_hosts
 
       - name: Build with Gradle
         run: ./gradlew build
