@@ -52,8 +52,8 @@ public class KakaoAuthService {
         this.wishRepository = wishRepository;
 
         SimpleClientHttpRequestFactory requestFactory = new SimpleClientHttpRequestFactory();
-        requestFactory.setConnectTimeout((int) Duration.ofSeconds(1L).toMillis());
-        requestFactory.setReadTimeout((int) Duration.ofSeconds(5L).toMillis());
+        requestFactory.setConnectTimeout(kakaoProperties.getConnectTimeout());
+        requestFactory.setReadTimeout(kakaoProperties.getReadTimeout());
 
         this.client = builder
                 .requestFactory(requestFactory)
