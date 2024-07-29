@@ -5,7 +5,7 @@ import static gift.exception.ErrorMessage.MEMBER_NOT_FOUND;
 import static gift.exception.ErrorMessage.WRONG_PASSWORD;
 
 import gift.exception.FailedLoginException;
-import gift.member.dto.MemberDTO;
+import gift.member.dto.MemberRequestDTO;
 import gift.member.entity.Member;
 import gift.token.JwtProvider;
 import org.springframework.stereotype.Service;
@@ -31,16 +31,16 @@ public class MemberService {
             .orElseThrow(() -> new IllegalArgumentException(MEMBER_NOT_FOUND));
     }
 
-    public String register(MemberDTO memberDTO) {
-        memberRepository.findById(memberDTO.getEmail())
+    public String register(MemberRequestDTO memberRequestDTO) {
+        memberRepository.findById(memberRequestDTO.getEmail())
             .ifPresentOrElse(
                 e -> {
                     throw new IllegalArgumentException(MEMBER_ALREADY_EXISTS);
                 },
-                () -> memberRepository.save(memberDTO.toEntity())
+                () -> memberRepository.save(memberRequestDTO.toEntity())
             );
 
-        return jwtProvider.generateToken(memberDTO.toTokenDTO());
+        return jwtProvider.generateToken(memberRequestDTO.toTokenDTO());
     }
 
     public void registerIfNotExists(String email, String password) {
@@ -50,17 +50,17 @@ public class MemberService {
     }
 
     @Transactional(readOnly = true)
-    public String login(MemberDTO memberDTO) {
-        Member findMember = memberRepository.findById(memberDTO.getEmail())
+    public String login(MemberRequestDTO memberRequestDTO) {
+        Member findMember = memberRepository.findById(memberRequestDTO.getEmail())
             .orElseThrow(() -> new FailedLoginException(MEMBER_NOT_FOUND));
 
-        verifyPassword(findMember, memberDTO);
+        verifyPassword(findMember, memberRequestDTO);
 
-        return jwtProvider.generateToken(memberDTO.toTokenDTO());
+        return jwtProvider.generateToken(memberRequestDTO.toTokenDTO());
     }
 
-    private void verifyPassword(Member member, MemberDTO memberDTO) {
-        if (!member.isSamePassword(memberDTO.toEntity())) {
+    private void verifyPassword(Member member, MemberRequestDTO memberRequestDTO) {
+        if (!member.isSamePassword(memberRequestDTO.toEntity())) {
             throw new IllegalArgumentException(WRONG_PASSWORD);
         }
     }

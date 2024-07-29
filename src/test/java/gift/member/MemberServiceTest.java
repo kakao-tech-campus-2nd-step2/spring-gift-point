@@ -6,7 +6,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.when;
 
-import gift.member.dto.MemberDTO;
+import gift.member.dto.MemberRequestDTO;
 import gift.member.entity.Member;
 import gift.token.JwtProvider;
 import java.util.Optional;
@@ -41,7 +41,7 @@ class MemberServiceTest {
         @DisplayName("success")
         void success() {
             //given
-            MemberDTO inputMemberDTO = new MemberDTO("aaa@email.com", "password");
+            MemberRequestDTO inputMemberDTO = new MemberRequestDTO("aaa@email.com", "password");
             Member except = new Member("aaa@email.com", "password");
 
             //when
@@ -57,7 +57,7 @@ class MemberServiceTest {
         @DisplayName("member not found error")
         void memberNotFoundError() {
             //given
-            MemberDTO inputMemberDTO = new MemberDTO("aaa@email.com", "password");
+            MemberRequestDTO inputMemberDTO = new MemberRequestDTO("aaa@email.com", "password");
 
             //when
             when(memberRepository.findById(inputMemberDTO.getEmail()))
@@ -73,7 +73,7 @@ class MemberServiceTest {
         @DisplayName("wrong password error")
         void wrongPasswordError() {
             //given
-            MemberDTO inputMemberDTO = new MemberDTO("aaa@email.com", "wrong-password");
+            MemberRequestDTO inputMemberDTO = new MemberRequestDTO("aaa@email.com", "wrong-password");
             Member except = new Member("aaa@email.com", "right-password");
 
             //when
