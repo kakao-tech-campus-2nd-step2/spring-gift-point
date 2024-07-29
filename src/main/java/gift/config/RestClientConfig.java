@@ -17,8 +17,8 @@ public class RestClientConfig {
     private final HttpRestClientResponseErrorHandler errorHandler = new HttpRestClientResponseErrorHandler();
 
     @Bean
-    public RestClient restClient() {
-        return RestClient.builder()
+    public RestClient restClient(RestClient.Builder builder) {
+        return builder
             .requestFactory(getClientHttpRequestFactory())
             .defaultStatusHandler(errorHandler)
             .build();
