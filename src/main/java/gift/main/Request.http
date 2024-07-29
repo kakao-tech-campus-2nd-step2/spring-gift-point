@@ -1,0 +1,36 @@
+### Join Request
+POST http://localhost:8080/spring-gift/members/join
+Content-Type: application/json
+
+{
+  "name": "admin소문자",
+  "email": "1234ds@123",
+  "password": "1234",
+  "role": "ADMIN"
+}
+
+### Product Request with Headers
+POST http://localhost:8080/spring-gift/admin/product
+Content-Type: application/json
+Authorization: "Bearer eyJhbGciOiJIUzI1NiJ9.eyJpZCI6MSwibmFtZSI6ImFkbWlu7IaM66y47J6QIiwiZW1haWwiOiIxMjM0ZHNAMTIzIiwicm9sZSI6IkFETUlOIiwiaWF0IjoxNzIxNzk2MzAzLCJleHAiOjE3MjE3OTg3MDN9.HKn0olll5OAQz6Zw5F08-m-CizFj4kxp-CS0FQh96F4"
+
+{
+  "productRequest": {
+    "name": "샘플 제품명",
+    "price": 10000,
+    "imageUrl": "http://example.com/sample.jpg",
+    "categoryUniNumber": 1
+  },
+  "optionListRequest": {
+    "optionRequests": [
+      {
+        "name": "옵션 1",
+        "quantity": 10
+      },
+      {
+        "name": "옵션 2",
+        "quantity": 20
+      }
+    ]
+  }
+}
