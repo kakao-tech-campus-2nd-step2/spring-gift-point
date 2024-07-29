@@ -43,7 +43,7 @@ jobs:
       - name: Deploy to Server
         env:
           SSH_KEY: ${{ secrets.SSH_KEY }}
-          DEPLOY_SERVER: 52.78.6.254
+          DEPLOY_SERVER: ${{ secrets.DEPLOY_SERVER }}
           DEPLOY_USER: ${{ secrets.DEPLOY_USER }}
         run: |
           echo "$SSH_KEY" > key.pem
