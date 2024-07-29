@@ -6,6 +6,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import gift.api.OrderRequest;
+import gift.dto.OrderDTO;
 import gift.model.Name;
 import gift.model.Option;
 import gift.model.OptionName;
@@ -91,18 +92,14 @@ public class OrderControllerTest {
 
         Mockito.when(optionService.decreaseOptionQuantity(Mockito.anyLong(), Mockito.anyInt())).thenReturn(false);
 
-        OrderRequest orderRequest = new OrderRequest();
-        orderRequest.setProductId(product.getId());
-        orderRequest.setOptionId(option.getId());
-        orderRequest.setQuantity(11);
-        orderRequest.setMessage("Order message");
+        OrderDTO orderDTO = new OrderDTO(null, option.getId(), 11, "Order message");
 
         String accessToken = "some-valid-token";
 
         mockMvc.perform(post("/api/orders")
                 .header("Authorization", "Bearer " + accessToken)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(orderRequest)))
+                .content(objectMapper.writeValueAsString(orderDTO)))
             .andExpect(status().isBadRequest())
             .andExpect(result -> assertEquals("Insufficient product quantity.", result.getResponse().getContentAsString()));
     }
@@ -132,18 +129,14 @@ public class OrderControllerTest {
 
         Mockito.when(kakaoService.getUserEmail(Mockito.anyString())).thenReturn("test@example.com");
 
-        OrderRequest orderRequest = new OrderRequest();
-        orderRequest.setProductId(product.getId());
-        orderRequest.setOptionId(option.getId());
-        orderRequest.setQuantity(1);
-        orderRequest.setMessage("Order message");
+        OrderDTO orderDTO = new OrderDTO(null, option.getId(), 1, "Order message");
 
         String accessToken = "some-valid-token";
 
         mockMvc.perform(post("/api/orders")
                 .header("Authorization", "Bearer " + accessToken)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(orderRequest)))
+                .content(objectMapper.writeValueAsString(orderDTO)))
             .andExpect(status().isInternalServerError())
             .andExpect(result -> assertEquals("Order created but failed to send message.", result.getResponse().getContentAsString()));
     }
