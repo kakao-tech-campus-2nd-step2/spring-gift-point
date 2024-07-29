@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<table class="table table-striped table-hover">
+  <thead>
+  <tr>
+    <th>ID</th>
+    <th>Name</th>
+    <th>Price</th>
+    <th>Image</th>
+    <th>Category</th>
+    <th></th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr th:each="wish : ${wishlist}">
+    <td th:text="${wish.id}"></td>
+    <td th:text="${wish.name}"></td>
+    <td th:text="${wish.price}"></td>
+    <td><img th:src="${wish.imageUrl}" alt="img" width="100px"></td>
+    <td th:text="${wish.categoryName}"></td>
+    <td>
+      <form>
+        <button type="button" th:onclick="|deleteProductFromWishlist(${wish.id})|">-</button>
+      </form>
+    </td>
+  </tr>
+  </tbody>
+</table>
+<div class="paging">
+  <ul class="pagination">
+    <th:block th:each="page : ${#numbers.sequence(wishlistPageInfo.startPageNum, wishlistPageInfo.endPageNum)}">
+      <li><a th:if="${page != wishlistPageInfo.currentPageNum}" th:onclick="|moveWishlistPage(${page - 1})|" th:text="${page}"></a></li>
+      <li><a class="active" th:if="${page == wishlistPageInfo.currentPageNum}" th:text="${page}"></a></li>
+    </th:block>
+  </ul>
+</div>
+</html>

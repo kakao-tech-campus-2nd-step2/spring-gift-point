@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Admin</title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+<div class="container">
+  <div class="table-wrapper">
+    <div class="table-title">
+      <div class="row">
+        <div class="col-sm-6">
+          <h2>Products <a th:href="@{/admin/add}">Add</a></h2>
+        </div>
+      </div>
+    </div>
+    <table class="table table-striped table-hover">
+      <thead>
+      <tr>
+        <th>ID</th>
+        <th>Name</th>
+        <th>Price</th>
+        <th>Image</th>
+        <th>Category</th>
+        <th>Option</th>
+        <th>Actions</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr th:each="product : ${productList}">
+        <td th:text="${product.id}"></td>
+        <td th:text="${product.name}"></td>
+        <td th:text="${product.price}"></td>
+        <td><img th:src="${product.imageUrl}" alt="img" width="100px"></td>
+        <td th:text="${product.categoryName}"></td>
+        <td>
+          <select th:id="'option'+${product.id}">
+            <option th:each="option : ${product.options}"
+                    th:text="|${option.name} : ${option.quantity}|"
+                    th:value="${option}"></option>
+          </select>
+          <form>
+            <button type="button" th:onclick="|location.href='@{/admin/options/add/{id}(id=${product.id})}'|">+</button>
+            <button type="button" th:onclick="|deleteProductOption(${product.id})|">-</button>
+          </form>
+        </td>
+        <td>
+          <form>
+            <button type="button" th:onclick="|location.href='@{/admin/edit/{id}(id=${product.id})}'|">Edit</button>
+            <button type="button" th:onclick="|deleteProductById(${product.id})|">Delete</button>
+          </form>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+    <div class="paging">
+      <ul class="pagination">
+        <th:block th:each="page : ${#numbers.sequence(pageInfo.startPageNum, pageInfo.endPageNum)}">
+          <li><a th:if="${page != pageInfo.currentPageNum}" th:href="@{/admin(page = ${page - 1})}" th:text="${page}"></a></li>
+          <li><a class="active" th:if="${page == pageInfo.currentPageNum}" th:text="${page}"></a></li>
+        </th:block>
+      </ul>
+    </div>
+  </div>
+</div>
+<script>
+  function deleteProductById(productId) {
+      const token = localStorage.getItem('token');
+
+      fetch(`/api/products/${productId}`, {
+          method: 'DELETE',
+          headers: {
+              'Authorization': `Bearer ${token}`
+          }
+      })
+          .then(response => {
+              if (!response.ok) {
+                  return response.text().then(text => {
+                      throw new Error(text)
+                  });
+              }
+              alert('상품이 삭제되었습니다.');
+              window.location.href = "admin";
+          })
+          .catch(error => {
+              alert(error);
+          });
+  }
+
+  function parseOption(optionStr) {
+      let jsonString = optionStr.replace('OptionResponse[', '{').replace(']', '}');
+
+      jsonString = jsonString.replace(/(\w+)=([^,}]+)/g, function(match, key, value) {
+          if (isNaN(value)) {
+              return `"${key}":"${value}"`;
+          } else {
+              return `"${key}":${value}`;
+          }
+      });
+
+      return JSON.parse(jsonString);
+  }
+
+  function deleteProductOption(productId) {
+      const option = parseOption(document.getElementById('option' + productId).value);
+      const name = option['name'];
+      const quantity = parseInt(option['quantity']);
+      const token = localStorage.getItem('token');
+
+      fetch(`/api/products/${productId}/options`, {
+          method: 'DELETE',
+          headers: {
+              'Authorization': `Bearer ${token}`,
+              'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+                  name: name,
+                  quantity: quantity
+          })
+      })
+          .then(response => {
+              if (!response.ok) {
+                  return response.text().then(text => {
+                      throw new Error(text)
+                  });
+              }
+              alert("상품 옵션이 삭제되었습니다.");
+              window.location.href = "admin";
+          })
+          .catch(error => {
+              alert(error);
+          });
+  }
+</script>
+</body>
+</html>

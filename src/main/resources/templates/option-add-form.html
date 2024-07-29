@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>Option Add Form</title>
+</head>
+<body>
+<h1>Add New Product Option</h1>
+<form>
+  <input type="hidden"/>
+  <div>
+    <label for="name">Name</label>
+    <input type="text" id="name" required/>
+  </div>
+  <div>
+    <label for="quantity">Quantity</label>
+    <input type="number" id="quantity" required/>
+  </div>
+  <div>
+    <button type="button" th:onclick="|addOption(${productId})|">Save</button>
+    <a th:href="@{/admin}">Cancel</a>
+  </div>
+</form>
+<script>
+    async function addOption(productId) {
+        const name = document.getElementById('name').value;
+        const quantity = parseInt(document.getElementById('quantity').value);
+
+        const token = localStorage.getItem('token');
+
+        fetch(`/api/products/${productId}/options`, {
+            method: 'POST',
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                name: name,
+                quantity: quantity
+            })
+        })
+            .then(response => {
+                if (!response.ok) {
+                    return response.text().then(text => {
+                        throw new Error(text)
+                    });
+                }
+                alert('상품 옵션이 추가되었습니다.');
+                window.location.href = "http://localhost:8080/admin";
+            })
+            .catch(error => {
+                alert(error);
+            });
+
+    }
+</script>
+</body>
+</html>
