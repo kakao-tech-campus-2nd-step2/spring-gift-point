@@ -5,10 +5,12 @@ import gift.dto.LoginDto;
 import gift.service.MemberService;
 import gift.vo.Member;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.HashMap;
@@ -29,7 +31,6 @@ public class MemberController {
     /**
      *
      * @param loginDto LoginDto {email, password}
-     * @param model Model
      * @return JSON { "token" : ""}
      */
     @PostMapping("/login")
@@ -37,7 +38,8 @@ public class MemberController {
             summary = "로그인",
             description = "로그인하여 accessToken을 제공 받는 API입니다."
     )
-    public ResponseEntity<Map<String, String>> login(LoginDto loginDto, Model model) {
+    @Parameter(name = "loginDto", description = "로그인에 필요한 이메일과 비밀번호를 포함하는 DTO", required = true)
+    public ResponseEntity<Map<String, String>> login(LoginDto loginDto) {
         Member member = loginDto.toUser();
         String token = service.login(member);
 
@@ -52,7 +54,8 @@ public class MemberController {
             summary = "회원가입",
             description = "회원가입을 수행하고 access token을 받는 API입니다."
     )
-    public ResponseEntity<Map<String, String>>  join(JoinMemberDto memberDto, Model model) {
+    @Parameter(name = "memberDto", description = "회원가입에 필요한 회원 정보를 포함하는 DTO", required = true)
+    public ResponseEntity<Map<String, String>> join(JoinMemberDto memberDto) {
         String token = service.join(memberDto.toMember());
 
         Map<String, String> response = new HashMap<>();
