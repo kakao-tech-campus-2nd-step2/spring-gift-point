@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Manage Products</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+<div class="container my-5">
+    <h1>Manage Products</h1>
+    <div class="d-flex justify-content-end mb-3">
+        <button type="button" class="btn btn-success" onclick="createProduct()">Create New Product</button>
+    </div>
+    <table class="table table-striped" id="productTable">
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Price</th>
+            <th>Image URL</th>
+            <th>Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        </tbody>
+    </table>
+</div>
+
+<script th:inline="javascript">
+    window.onload = function() {
+        fetchProducts();
+    };
+    function fetchProducts() {
+        fetch('/products')
+            .then(response => response.json())
+            .then(data => {
+                const tableBody = document.getElementById('productTable').getElementsByTagName('tbody')[0];
+                tableBody.innerHTML = '';
+                data.content.forEach(product => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                            <td>${product.id}</td>
+                            <td>${product.name}</td>
+                            <td>${product.price}</td>
+                            <td>${product.imageUrl}</td>
+                            <td>
+                                <button type="button" class="btn btn-primary" onclick="updateProduct(${product.id})">Edit</button>
+                                <button type="button" class="btn btn-danger" onclick="deleteProduct(${product.id})">Delete</button>
+                            </td>
+                        `;
+                    tableBody.appendChild(row);
+                });
+            })
+            .catch(error => console.error('Error fetching products:', error));
+    }
+
+    function createProduct() {
+        let name = prompt("Enter product name:");
+        let price = prompt("Enter product price:");
+        let imageUrl = prompt("Enter image URL:");
+        let category = prompt("Enter Category:");
+
+        fetch('/products', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ name, price, imageUrl, category })
+        }).then(response => {
+            if (response.status.toString().startsWith('4')) {
+                response.json().then(data => alert(data.message));
+            } else {
+                fetchProducts()
+            }
+        });
+    }
+
+    function updateProduct(id) {
+        let name = prompt("Enter new product name:");
+        let price = prompt("Enter new product price:");
+        let imageUrl = prompt("Enter new image URL:");
+
+        fetch(`/products/${id}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ name, price, imageUrl })
+        }).then(response => {
+            if (response.status.toString().startsWith('4')) {
+                response.json().then(data => alert(data.message));
+            } else {
+                fetchProducts()
+            }
+        });
+    }
+
+    function deleteProduct(id) {
+        fetch(`/products/${id}`, {
+            method: 'DELETE'
+        }).then(response => {
+            if (response.status.toString().startsWith('4')) {
+                response.json().then(data => alert(data.message));
+            } else {
+                fetchProducts()
+            }
+        });
+    }
+</script>
+</body>
+</html>
