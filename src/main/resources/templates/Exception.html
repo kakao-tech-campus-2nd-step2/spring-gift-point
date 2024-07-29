@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Edit Menu</title>
+</head>
+<body>
+<script th:inline="javascript">
+    var message = [[${message}]]
+    alert(message);
+    location.href = '/menu'
+</script>
+</body>
+</html>

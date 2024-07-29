@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Edit Menu</title>
+</head>
+<body>
+<h1>Edit Menu</h1>
+<form th:action="@{/menu/update/{id}(id=${menu.id})}" method="post">
+    <ul>
+        <li>
+            <label for="name">Name:</label>
+            <input type="text" id="name" name="name" th:value="${menu.name}" />
+        </li>
+        <li>
+            <label for="price">Price:</label>
+            <input type="number" id="price" name="price" th:value="${menu.price}" />
+        </li>
+        <li>
+            <label for="imageUrl">ImageUrl:</label>
+            <input type="url" id="imageUrl" name="imageUrl" th:value="${menu.imageUrl}" />
+        </li>
+        <li class="button">
+            <button type="submit">Update</button>
+        </li>
+    </ul>
+</form>
+</body>
+</html>
