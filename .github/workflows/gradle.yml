@@ -27,9 +27,8 @@ jobs:
 
       - name: 설정파일 생성
         run: |
-          touch ./src/main/resources/application.yml
           echo "${{ secrets.APPLICATION_PROPERTIES }}" >> ./src/main/resources/application.properties
-          cat ./src/main/resources/application.yml
+          cat ./src/main/resources/application.properties
 
       - name: gradlew 권한 추가
         run: chmod +x gradlew
@@ -49,7 +48,7 @@ jobs:
           echo "$SSH_KEY" > key.pem
           chmod 400 key.pem
           scp -o StrictHostKeyChecking=no -i key.pem build/libs/*.jar $DEPLOY_USER@$DEPLOY_SERVER:~/spring-gift-point/build/libs/
-          scp -o StrictHostKeyChecking=no -i key.pem ./src/main/resources/application.yml $DEPLOY_USER@$DEPLOY_SERVER:~/spring-gift-point/src/main/resources/application.yml
+          scp -o StrictHostKeyChecking=no -i key.pem ./src/main/resources/application.properties $DEPLOY_USER@$DEPLOY_SERVER:~/spring-gift-point/src/main/resources/application.properties
           ssh -o StrictHostKeyChecking=no -i key.pem $DEPLOY_USER@$DEPLOY_SERVER "
             sudo lsof -t -i:8080 | xargs -r sudo kill -9
             nohup java -jar ~/spring-gift-point/build/libs/spring-gift-0.0.1-SNAPSHOT.jar &"
