@@ -50,7 +50,8 @@ public class OrderController {
     @Operation(summary = "사용자 모든 주문 조회", description = "사용자의 모든 주문을 조회합니다.",
         responses = @ApiResponse(responseCode = "200", description = "주문 조회 성공", content = @Content(mediaType = "application/json", schema = @Schema(implementation = OrderDetailResponse.class))))
     public Page<OrderDetailResponse> getAllOrders(
-        @Parameter(hidden = true) @LoginUser User user, @ParameterObject @PageableDefault(sort = "orderDateTime", direction = Sort.Direction.DESC) Pageable pageable) {
+        @Parameter(hidden = true) @LoginUser User user,
+        @ParameterObject @PageableDefault(sort = "orderDateTime", direction = Sort.Direction.DESC) Pageable pageable) {
         return orderService.getAllOrders(user.getId(), pageable);
     }
 }

@@ -12,11 +12,8 @@ import gift.exception.OptionNotFoundException;
 import gift.exception.ProductNotFoundException;
 import gift.repository.OptionRepository;
 import gift.repository.OrderRepository;
-import gift.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import java.time.LocalDateTime;
-import java.util.List;
-import java.util.stream.Collectors;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -26,16 +23,14 @@ public class OrderService {
 
     private final OrderRepository orderRepository;
     private final OptionRepository optionRepository;
-    private final UserRepository userRepository;
     private final KakaoMessageService kakaoMessageService;
     private final KakaoProperties kakaoProperties;
 
     public OrderService(OrderRepository orderRepository, OptionRepository optionRepository,
-        UserRepository userRepository, KakaoMessageService kakaoMessageService,
+        KakaoMessageService kakaoMessageService,
         KakaoProperties kakaoProperties) {
         this.orderRepository = orderRepository;
         this.optionRepository = optionRepository;
-        this.userRepository = userRepository;
         this.kakaoMessageService = kakaoMessageService;
         this.kakaoProperties = kakaoProperties;
     }

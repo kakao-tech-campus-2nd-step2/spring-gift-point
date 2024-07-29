@@ -22,7 +22,8 @@ public class KakaoMessageService {
         this.restTemplate = restTemplate;
     }
 
-    public void sendOrderMessage(String message, String productName, Integer quantity, Integer totalPrice) {
+    public void sendOrderMessage(String message, String productName, Integer quantity,
+        Integer totalPrice) {
         String url = "https://kapi.kakao.com/v2/api/talk/memo/default/send";
         HttpHeaders headers = new HttpHeaders();
         headers.add(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_FORM_URLENCODED_VALUE);
@@ -38,7 +39,8 @@ public class KakaoMessageService {
         restTemplate.exchange(request, String.class);
     }
 
-    private String createTemplateObject(String message, String productName, Integer quantity, Integer totalPrice) {
+    private String createTemplateObject(String message, String productName, Integer quantity,
+        Integer totalPrice) {
         return """
                 {
                     "object_type": "feed",
