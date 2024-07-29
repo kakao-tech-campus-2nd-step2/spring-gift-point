@@ -35,7 +35,7 @@ logging:
             sql: trace
 
 jwt:
-  secret: secret!!secret!!secret!!secret!!
+  secret: ${JWT_SECRET}
   expiration: 604800000  # 1000 * 60 * 60 * 24 * 7; // 7일
 
 springdoc:
