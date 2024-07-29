@@ -25,17 +25,14 @@ jobs:
           java-version: '21'
           distribution: 'adopt'
 
-      #      # application.yml 파일에 있는 환경 변수를 secrets에 저장된 값으로 변경합니다.
-      #      - name: Replace environment variables in application.yml
-      #        run: |
-      #          sed -i 's/${END_POINT}/'"${{ secrets.END_POINT }}"'/g' src/main/resources/application.yml
-      #          sed -i 's/${DB_NAME}/'"${{ secrets.DB_NAME }}"'/g' src/main/resources/application.yml
-      #          sed -i 's/${DB_USERNAME}/'"${{ secrets.DB_USERNAME }}"'/g' src/main/resources/application.yml
-      #          sed -i 's/${DB_PASSWORD}/'"${{ secrets.DB_PASSWORD }}"'/g' src/main/resources/application.yml
-      #
-      #          sed -i 's/${SECRET}/'"${{ secrets.JWT_SECRET }}"'/g' src/main/resources/application.yml
-      #          sed -i 's/${CLIENT_ID}/'"${{ secrets.CLIENT_ID }}"'/g' src/main/resources/application.yml
-      #
+          # application.yml 파일에 있는 환경 변수를 secrets에 저장된 값으로 변경합니다.
+      - name: Replace environment variables in application-kakao.yml
+        run: |
+          sed -i 's/${CLIENT_ID}/'"${{ secrets.CLIENT_ID }}"'/g' src/main/resources/application-kakao.yml
+          sed -i 's/${REDIRECT_URI}/'"${{ secrets.REDIRECT_URI }}"'/g' src/main/resources/application-kakao.yml
+          sed -i 's/${JWT_SECRET}/'"${{ secrets.JWT_SECRET }}"'/g' src/main/resources/application.yml
+      
+      
       
       
       
@@ -65,5 +62,5 @@ jobs:
           script: |
             sudo docker rm -f $(docker ps -qa)
             sudo docker pull ${{ secrets.DOCKER_REPO }}
-            sudo docker docker run -p 8080:8080 kakao
+            sudo docker docker run -p 8080:8080 momnpa333/kakao
             sudo docker image prune -f
