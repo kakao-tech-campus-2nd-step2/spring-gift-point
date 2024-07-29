@@ -1,6 +1,6 @@
-package gift.domain.Member.kakao;
+package gift.domain.member.kakao;
 
-import gift.domain.Member.Member;
+import gift.domain.member.Member;
 import gift.global.jwt.JwtProvider;
 import gift.global.response.ResponseMaker;
 import gift.global.response.SimpleResultResponseDto;

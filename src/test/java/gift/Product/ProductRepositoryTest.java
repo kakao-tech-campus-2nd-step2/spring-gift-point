@@ -4,14 +4,14 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-import gift.domain.Member.Member;
+import gift.domain.member.Member;
 import gift.domain.category.Category;
 import gift.domain.category.JpaCategoryRepository;
 import gift.domain.cartItem.CartItem;
 import gift.domain.cartItem.JpaCartItemRepository;
 import gift.domain.product.JpaProductRepository;
 import gift.domain.product.Product;
-import gift.domain.Member.JpaMemberRepository;
+import gift.domain.member.JpaMemberRepository;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import java.util.ArrayList;

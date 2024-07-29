@@ -1,10 +1,10 @@
-package gift.domain.Member.kakao;
+package gift.domain.member.kakao;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import gift.domain.Member.JpaMemberRepository;
-import gift.domain.Member.Member;
+import gift.domain.member.JpaMemberRepository;
+import gift.domain.member.Member;
 import gift.global.exception.BusinessException;
 import gift.global.exception.ErrorCode;
 import java.net.URI;

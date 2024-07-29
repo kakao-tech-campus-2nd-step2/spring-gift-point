@@ -1,6 +1,6 @@
 package gift.domain.order;
 
-import gift.domain.Member.dto.LoginInfo;
+import gift.domain.member.dto.LoginInfo;
 import gift.global.resolver.Login;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;

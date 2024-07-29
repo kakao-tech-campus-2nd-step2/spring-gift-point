@@ -1,6 +1,6 @@
 package gift.global.resolver;
 
-import gift.domain.Member.dto.LoginInfo;
+import gift.domain.member.dto.LoginInfo;
 import gift.global.jwt.JwtProvider;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.core.MethodParameter;

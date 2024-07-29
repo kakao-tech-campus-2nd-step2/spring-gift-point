@@ -1,4 +1,4 @@
-package gift.domain.Member;
+package gift.domain.member;
 
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;

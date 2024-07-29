@@ -1,7 +1,6 @@
 package gift.domain.cartItem;
 
-import gift.domain.Member.Member;
-import gift.domain.product.Product;
+import gift.domain.member.Member;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.data.domain.Page;

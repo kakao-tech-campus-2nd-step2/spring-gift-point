@@ -1,6 +1,6 @@
-package gift.domain.Member;
+package gift.domain.member;
 
-import gift.domain.Member.dto.MemberDTO;
+import gift.domain.member.dto.MemberDTO;
 import gift.global.response.ResponseMaker;
 import gift.global.response.SimpleResultResponseDto;
 import io.swagger.v3.oas.annotations.Operation;

@@ -1,6 +1,6 @@
 package gift.domain.cartItem;
 
-import gift.domain.Member.dto.LoginInfo;
+import gift.domain.member.dto.LoginInfo;
 import gift.domain.cartItem.dto.CartItemDTO;
 import gift.global.resolver.Login;
 import java.util.List;

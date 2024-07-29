@@ -1,7 +1,7 @@
 package gift.domain.cartItem;
 
 import gift.domain.cartItem.dto.CartItemDTO;
-import gift.domain.Member.dto.LoginInfo;
+import gift.domain.member.dto.LoginInfo;
 import gift.global.resolver.Login;
 import gift.global.response.ResponseMaker;
 import gift.global.response.ResultResponseDto;
@@ -13,7 +13,6 @@ import java.util.List;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;

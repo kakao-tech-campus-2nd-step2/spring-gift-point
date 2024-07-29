@@ -1,6 +1,6 @@
 package gift.global.dataLoader;
 
-import gift.domain.Member.Member;
+import gift.domain.member.Member;
 import gift.domain.cartItem.CartItem;
 import gift.domain.cartItem.JpaCartItemRepository;
 import gift.domain.category.Category;
@@ -9,7 +9,7 @@ import gift.domain.option.JpaOptionRepository;
 import gift.domain.option.Option;
 import gift.domain.product.JpaProductRepository;
 import gift.domain.product.Product;
-import gift.domain.Member.JpaMemberRepository;
+import gift.domain.member.JpaMemberRepository;
 import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;

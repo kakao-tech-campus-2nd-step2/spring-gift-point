@@ -1,6 +1,6 @@
-package gift.domain.Member;
+package gift.domain.member;
 
-import gift.domain.Member.dto.MemberDTO;
+import gift.domain.member.dto.MemberDTO;
 import gift.global.exception.BusinessException;
 import gift.global.exception.ErrorCode;
 import gift.global.exception.user.UserDuplicateException;

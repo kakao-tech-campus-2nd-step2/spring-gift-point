@@ -1,6 +1,6 @@
 package gift.domain.cartItem;
 
-import gift.domain.Member.Member;
+import gift.domain.member.Member;
 import gift.domain.product.Product;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;

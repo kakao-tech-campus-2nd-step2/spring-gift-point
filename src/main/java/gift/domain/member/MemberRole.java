@@ -1,4 +1,4 @@
-package gift.domain.Member;
+package gift.domain.member;
 
 public enum MemberRole {
     USER,

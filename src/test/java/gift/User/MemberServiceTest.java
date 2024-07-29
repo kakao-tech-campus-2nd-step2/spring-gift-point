@@ -2,11 +2,11 @@ package gift.User;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import gift.domain.Member.JpaMemberRepository;
-import gift.domain.Member.Member;
-import gift.domain.Member.MemberService;
-import gift.domain.Member.dto.LoginInfo;
-import gift.domain.Member.dto.MemberDTO;
+import gift.domain.member.JpaMemberRepository;
+import gift.domain.member.Member;
+import gift.domain.member.MemberService;
+import gift.domain.member.dto.LoginInfo;
+import gift.domain.member.dto.MemberDTO;
 import gift.global.jwt.JwtProvider;
 import jdk.jfr.Description;
 import org.junit.jupiter.api.BeforeEach;

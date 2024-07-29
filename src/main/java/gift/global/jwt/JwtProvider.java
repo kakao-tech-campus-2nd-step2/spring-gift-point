@@ -1,7 +1,7 @@
 package gift.global.jwt;
 
-import gift.domain.Member.Member;
-import gift.domain.Member.dto.LoginInfo;
+import gift.domain.member.Member;
+import gift.domain.member.dto.LoginInfo;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.JwtException;

@@ -1,6 +1,6 @@
-package gift.domain.Member.dto;
+package gift.domain.member.dto;
 
-import gift.domain.Member.Member;
+import gift.domain.member.Member;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 

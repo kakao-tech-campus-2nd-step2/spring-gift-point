@@ -1,4 +1,4 @@
-package gift.domain.Member.dto;
+package gift.domain.member.dto;
 
 
 /**

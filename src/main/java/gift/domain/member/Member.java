@@ -1,7 +1,7 @@
-package gift.domain.Member;
+package gift.domain.member;
 
 import gift.domain.BaseTimeEntity;
-import gift.domain.Member.kakao.KaKaoToken;
+import gift.domain.member.kakao.KaKaoToken;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;

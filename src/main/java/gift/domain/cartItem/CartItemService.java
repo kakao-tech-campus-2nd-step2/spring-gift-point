@@ -1,12 +1,12 @@
 package gift.domain.cartItem;
 
-import gift.domain.Member.Member;
+import gift.domain.member.Member;
 import gift.domain.cartItem.dto.CartItemDTO;
 import gift.domain.option.JpaOptionRepository;
 import gift.domain.option.Option;
 import gift.domain.product.JpaProductRepository;
 import gift.domain.product.Product;
-import gift.domain.Member.JpaMemberRepository;
+import gift.domain.member.JpaMemberRepository;
 import gift.global.exception.cartItem.CartItemNotFoundException;
 import gift.global.exception.product.ProductNotFoundException;
 import gift.global.exception.user.UserNotFoundException;
