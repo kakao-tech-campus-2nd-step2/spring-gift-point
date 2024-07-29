@@ -1,0 +1,69 @@
+spring:
+  config:
+    import: ./API-KEY.properties
+
+  http:
+    encoding:
+      charset: UTF-8
+      enabled: true
+      force: true
+
+  security:
+    oauth2:
+      client:
+        registration:
+          kakao:
+            client-id: ${kakao.client-id}
+            redirect-uri: ${kakao.redirect-uri}
+            authorization-grant-type: authorization_code
+            scope: profile_nickname, talk_message
+            client-name: Kakao
+        provider:
+          kakao:
+            authorization-uri: https://kauth.kakao.com/oauth/authorize
+            token-uri: https://kauth.kakao.com/oauth/token
+            user-info-uri: https://kapi.kakao.com/v2/user/me
+            user-name-attribute: id
+
+  thymeleaf:
+    enabled: true
+    prefix: classpath:/templates/
+    suffix: .html
+
+  application:
+    name: spring-gift
+
+  datasource:
+    url: jdbc:h2:mem:test;MODE=MYSQL;DB_CLOSE_DELAY=-1
+    driverClassName: org.h2.Driver
+    username: sa
+    password:
+    initialization-mode: always
+
+
+jpa:
+  hibernate:
+    ddl-auto: update
+  show-sql: true
+  properties:
+    hibernate:
+      format_sql: true
+      dialect: org.hibernate.dialect.MySQLDialect
+  main:
+    allow-bean-definition-overriding: true
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
+
+logging:
+  level:
+    org:
+      springframework:
+        jdbc: DEBUG
+        jdbc.core.JdbcTemplate: DEBUG
+        transaction: DEBUG
+
+jwt:
+  secret: dGVzdHNlY3JldGtleWZvckpXVGVuY3J5cHRpb24xMjM0NTY=
+  token-validity-in-seconds: 86400

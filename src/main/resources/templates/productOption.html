@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>제품 상세 및 옵션</title>
+  <style>
+    .container {
+        display: flex;
+    }
+    .product-image {
+        flex: 1;
+        text-align: center;
+    }
+    .product-details {
+        flex: 2;
+        padding: 20px;
+    }
+    .total-price {
+        text-align: right;
+        padding: 20px;
+    }
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
+    }
+    table, th, td {
+        border: 1px solid black;
+    }
+    th, td {
+        padding: 10px;
+        text-align: left;
+    }
+    .btn {
+        display: inline-block;
+        padding: 10px 20px;
+        margin: 5px;
+        text-align: center;
+        text-decoration: none;
+        color: white;
+        background-color: #4CAF50;
+        border-radius: 5px;
+    }
+    .btn-secondary {
+        background-color: #f44336;
+    }
+    .wishlist-btn {
+        text-align: center;
+        margin-top: 20px;
+    }
+  </style>
+  <script src="/js/productOption.js"></script>
+</head>
+<body>
+<div class="container">
+  <div class="product-image">
+    <img th:src="${product.imageUrl}" alt="제품 이미지" width="200"/>
+  </div>
+  <div class="product-details">
+    <h1>제품 상세</h1>
+    <p>ID: <span th:text="${product.id}">1</span></p>
+    <p>이름: <span th:text="${product.name}">이름</span></p>
+    <p>가격: <span id="product-price" th:text="${product.price}">가격</span></p>
+    <p>카테고리: <span th:text="${product.categoryName}">카테고리</span></p>
+    <a href="/web/products/list" class="btn">목록으로 돌아가기</a>
+  </div>
+</div>
+<div class="total-price">
+  <h2>총 가격: <span id="total-price">0</span></h2>
+</div>
+<h2>제품 옵션</h2>
+<table>
+  <thead>
+  <tr>
+    <th>이름</th>
+    <th>가격</th>
+    <th>수량</th>
+    <th>최대 수량</th> <!-- 최대 수량 추가 -->
+    <th>선택</th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr class="option-row" th:each="option, iterStat : ${options}" th:data-option-id="${option.id}">
+    <td th:text="${option.name}">옵션 이름</td>
+    <td class="option-price" th:text="${option.price}">가격</td>
+    <td>
+      <select class="option-quantity" th:attr="disabled=${iterStat.index == 0}" onchange="updateTotalPrice()">
+        <option th:each="i : ${#numbers.sequence(1, 10)}" th:value="${i}" th:text="${i}"></option>
+      </select>
+    </td>
+    <td th:text="${option.maxQuantity}">최대 수량</td> <!-- 최대 수량 표시 -->
+    <td>
+      <input type="checkbox" name="optionSelect" th:checked="${iterStat.index == 0}" th:attr="disabled=${iterStat.index == 0}" onclick="updateTotalPrice()">
+    </td>
+  </tr>
+  </tbody>
+</table>
+<div class="wishlist-btn">
+  <button class="btn add-to-wishlist" th:data-product-id="${product.id}">찜하기</button>
+</div>
+</body>
+</html>

@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+  <meta charset="UTF-8">
+  <title>카테고리 리스트</title>
+  <style>
+    .category-container {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: flex-start;
+    }
+    .category-card {
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        padding: 20px;
+        margin: 10px;
+        text-align: center;
+        flex: 0 1 calc(25% - 20px);
+        box-sizing: border-box;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+    .category-card a {
+        display: inline-block;
+        background-color: #6c95d1;
+        color: white;
+        text-decoration: none;
+        border-radius: 5px;
+        padding: 10px;
+        cursor: pointer;
+        width: 100%;
+        text-align: center;
+    }
+    .category-card a:hover {
+        background-color: #577ab5;
+    }
+    .category-image {
+        width: 180px;
+        height: 180px;
+        margin-bottom: 10px;
+    }
+    .all-products-button {
+        display: inline-block;
+        background-color: #4CAF50;
+        color: white;
+        text-decoration: none;
+        border-radius: 5px;
+        padding: 10px;
+        margin: 20px auto;
+        cursor: pointer;
+        width: calc(100% - 40px);
+        text-align: center;
+    }
+  </style>
+</head>
+<body>
+<h1>카테고리 리스트</h1>
+<div class="category-container">
+  <div th:each="category : ${categories}" class="category-card">
+    <img th:src="${category.imageUrl}" alt="Category Image" class="category-image">
+    <h2 th:text="${category.name}"></h2>
+    <p th:text="${category.description}"></p>
+    <a th:href="@{'/web/products/list?categoryId=' + ${category.id}}">상품 보기</a>
+  </div>
+</div>
+<a href="/web/products/list" class="all-products-button">모든 상품 보기</a>
+
+</body>
+</html>
