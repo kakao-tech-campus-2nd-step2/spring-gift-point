@@ -3,7 +3,6 @@ package gift.service;
 import gift.dto.ProductRequest;
 import gift.dto.ProductResponse;
 import gift.entity.Category;
-import gift.entity.Option;
 import gift.entity.Product;
 import gift.repository.ProductRepository;
 import gift.validator.ProductNameValidator;
@@ -37,8 +36,14 @@ public class ProductService {
         return productRepository.findAll();
     }
 
-    public Slice<Product> findAll(Pageable pageable) {
-        return productRepository.findAll(pageable);
+    public Slice<ProductResponse> findAll(Pageable pageable, Long categoryId) {
+        Slice<Product> products;
+        if (categoryId != null) {
+            products = productRepository.findByCategoryId(categoryId, pageable);
+        } else {
+            products = productRepository.findAll(pageable);
+        }
+        return products.map(ProductResponse::from);
     }
 
     public Optional<Product> findById(Long id) {
@@ -51,15 +56,6 @@ public class ProductService {
             .orElseThrow(() -> new IllegalArgumentException("category ID를 찾을 수 없음"));
 
         Product product = ProductRequest.toEntity(productRequest, category);
-
-        List<Option> options = productRequest.getOptions().stream()
-            .map(optionRequest -> new Option(optionRequest.getName(), optionRequest.getQuantity(),
-                product))
-            .toList();
-
-        options.forEach(product::addOption);
-
-        validateProduct(product);
 
         Product savedProduct = productRepository.save(product);
         return ProductResponse.from(savedProduct);
