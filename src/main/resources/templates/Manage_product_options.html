@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>상품 옵션 관리</title>
+  <link rel="stylesheet" th:href="@{/Manage_product_options.css}">
+</head>
+<body>
+<h1>상품 옵션 관리</h1>
+<form th:action="@{/admin/products/{id}/options(id=${product.id})}" method="post">
+  <div>
+    <label for="options">옵션:</label>
+    <select multiple id="options" name="optionIds">
+      <option th:each="option : ${options}" th:value="${option.id}" th:text="${option.name.name}" th:selected="${#lists.contains(product.options, option)}"></option>
+    </select>
+  </div>
+  <div>
+    <button type="submit">저장하기</button>
+  </div>
+</form>
+</body>
+</html>

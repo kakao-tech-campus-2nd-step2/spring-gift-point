@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>옵션 목록</title>
+  <link rel="stylesheet" th:href="@{/Options.css}">
+</head>
+<body>
+<h1>옵션 목록</h1>
+<div>
+  <a href="/admin/options/add" id="add">옵션 추가</a>
+</div>
+<table>
+  <thead>
+  <tr>
+    <th><a th:href="@{/admin/options(sortBy='id', direction=${sortDirection == 'asc' ? 'desc' : 'asc'})}">ID</a></th>
+    <th><a th:href="@{/admin/options(sortBy='productId', direction=${sortDirection == 'asc' ? 'desc' : 'asc'})}">상품 ID</a></th>
+    <th><a th:href="@{/admin/options(sortBy='name.name', direction=${sortDirection == 'asc' ? 'desc' : 'asc'})}">이름</a></th>
+    <th><a th:href="@{/admin/options(sortBy='quantity.quantity', direction=${sortDirection == 'asc' ? 'desc' : 'asc'})}">수량</a></th>
+    <th>Actions</th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr th:each="option : ${options}">
+    <td th:text="${option.id}"></td>
+    <td th:text="${option.productId}"></td>
+    <td th:text="${option.name.name}"></td>
+    <td th:text="${option.quantity.quantity}"></td>
+    <td>
+      <a th:href="@{/admin/options/edit/{id}(id=${option.id})}">수정</a> |
+      <form th:action="@{/admin/options/{id}(id=${option.id})}" method="post" style="display:inline;">
+        <input type="hidden" name="_method" value="DELETE" />
+        <button type="submit">삭제</button>
+      </form>
+    </td>
+  </tr>
+  </tbody>
+</table>
+<div>
+  <span th:if="${currentPage > 0}">
+    <a th:href="@{/admin/options(page=${currentPage - 1}, size=${10}, sortBy=${sortBy}, direction=${direction})}">Previous</a>
+  </span>
+  <span th:each="i : ${#numbers.sequence(0, totalPages - 1)}">
+    <a th:href="@{/admin/options(page=${i}, size=${10}, sortBy=${sortBy}, direction=${direction})}" th:text="${i + 1}"></a>
+  </span>
+  <span th:if="${currentPage < totalPages - 1}">
+    <a th:href="@{/admin/options(page=${currentPage + 1}, size=${10}, sortBy=${sortBy}, direction=${direction})}">Next</a>
+  </span>
+</div>
+</body>
+</html>

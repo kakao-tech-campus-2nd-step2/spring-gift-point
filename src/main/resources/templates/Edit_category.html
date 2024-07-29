@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>카테고리 수정</title>
+  <link rel="stylesheet" th:href="@{/Add_Edit_category.css}">
+</head>
+<body>
+<h1>카테고리 수정</h1>
+
+<form th:action="@{/admin/categories/{id}(id=${category.id})}" th:object="${category}" method="post">
+  <input type="hidden" name="_method" value="PUT" /> <!-- PUT 요청을 처리하기 위한 숨겨진 필드 -->
+  <div>
+    <label for="name">이름:</label>
+    <input type="text" id="name" th:field="*{name}" required />
+    <div th:if="${#fields.hasErrors('name')}" th:errors="*{name}" class="error-message"></div>
+  </div>
+  <div>
+    <button type="submit">수정하기</button>
+  </div>
+</form>
+</body>
+</html>

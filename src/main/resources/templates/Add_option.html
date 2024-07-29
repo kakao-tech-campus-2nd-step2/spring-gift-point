@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>옵션 추가</title>
+  <link rel="stylesheet" th:href="@{/Add_Edit_option.css}">
+</head>
+<body>
+<h1>옵션 추가</h1>
+<form th:action="@{/admin/options}" th:object="${option}" method="post">
+  <div>
+    <label for="productId">상품 ID:</label>
+    <input type="number" id="productId" th:field="*{productId}" required />
+    <div th:if="${#fields.hasErrors('productId')}" th:errors="*{productId}" class="error-message"></div>
+  </div>
+  <div>
+    <label for="name">이름:</label>
+    <input type="text" id="name" th:field="*{name.name}" required />
+    <div th:if="${#fields.hasErrors('name.name')}" th:errors="*{name.name}" class="error-message"></div>
+  </div>
+  <div>
+    <label for="quantity">수량:</label>
+    <input type="number" id="quantity" th:field="*{quantity.quantity}" required />
+    <div th:if="${#fields.hasErrors('quantity.quantity')}" th:errors="*{quantity.quantity}" class="error-message"></div>
+  </div>
+  <div>
+    <button type="submit">추가하기</button>
+  </div>
+</form>
+</body>
+</html>

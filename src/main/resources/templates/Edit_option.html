@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>옵션 수정</title>
+  <link rel="stylesheet" th:href="@{/Add_Edit_option.css}">
+</head>
+<body>
+<h1>옵션 수정</h1>
+
+<form th:action="@{/admin/options/{id}(id=${option.id})}" th:object="${option}" method="post">
+  <input type="hidden" name="_method" value="PUT" /> <!-- PUT 요청을 처리하기 위한 숨겨진 필드 -->
+  <div>
+    <label for="productId">상품 ID:</label>
+    <input type="number" id="productId" th:field="*{productId}" readonly />
+  </div>
+  <div>
+    <label for="name">이름:</label>
+    <input type="text" id="name" th:field="*{name.name}" required />
+    <div th:if="${#fields.hasErrors('name')}" th:errors="*{name.name}" class="error-message"></div>
+  </div>
+  <div>
+    <label for="quantity">수량:</label>
+    <input type="number" id="quantity" th:field="*{quantity.quantity}" required />
+    <div th:if="${#fields.hasErrors('quantity')}" th:errors="*{quantity.quantity}" class="error-message"></div>
+  </div>
+  <div>
+    <button type="submit">수정하기</button>
+  </div>
+</form>
+</body>
+</html>

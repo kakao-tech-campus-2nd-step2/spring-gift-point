@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>로그인</title>
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const form = document.querySelector('form');
+      form.addEventListener('submit', function(event) {
+        event.preventDefault(); // 기본 폼 제출 동작 방지
+        const formData = new FormData(form);
+        fetch(form.action, {
+          method: 'POST',
+          body: new URLSearchParams(formData)
+        }).then(response => response.json())
+        .then(data => {
+          if (data.token) {
+            localStorage.setItem('jwtToken', data.token);
+            alert('토큰이 저장되었습니다.');
+
+
+            fetch('/wishlist', {
+              method: 'GET',
+              headers: {
+                'Authorization': 'Bearer ' + data.token,
+                'Content-Type': 'application/json'
+              }
+            }).then(response => {
+              if (response.status === 401) {
+                alert('인증 실패: 토큰이 유효하지 않거나 만료되었습니다.');
+                window.location.href = '/users/login';
+              } else {
+                return response.text();
+              }
+            }).then(html => {
+              document.open();
+              document.write(html);
+              document.close();
+            }).catch(error => console.error('Error:', error));
+          } else {
+            alert('로그인 실패: ' + data.error);
+          }
+        });
+      });
+    });
+  </script>
+</head>
+<body>
+<h1>로그인</h1>
+<form th:action="@{/users/login}" method="post" th:object="${user}">
+  <div>
+    <label for="email">이메일:</label>
+    <input type="email" id="email" th:field="*{email}" required />
+  </div>
+  <div>
+    <label for="password">비밀번호:</label>
+    <input type="password" id="password" th:field="*{password}" required />
+  </div>
+  <div>
+    <button type="submit">로그인</button>
+  </div>
+  <div th:if="${error}">
+    <p th:text="${error}"></p>
+  </div>
+</form>
+<p>계정이 없으신가요? <a th:href="@{/users/register}">회원 가입</a></p>
+</body>
+</html>

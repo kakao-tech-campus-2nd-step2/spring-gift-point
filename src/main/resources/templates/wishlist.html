@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>위시 리스트</title>
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const token = localStorage.getItem('jwtToken');
+      if (!token) {
+        alert('로그인이 필요합니다.');
+        window.location.href = '/users/login';
+      }
+
+      document.querySelector('.btn.btn-primary').addEventListener('click', function(event) {
+        event.preventDefault();
+
+        fetch('/wishlist/add', {
+          method: 'GET',
+          headers: {
+            'Authorization': 'Bearer ' + token,
+            'Content-Type': 'application/json'
+          }
+        })
+        .then(response => {
+          if (response.status === 200) {
+            return response.text();
+          } else {
+            throw new Error('제품 추가 페이지를 불러오는 데 실패했습니다.');
+          }
+        })
+        .then(html => {
+          document.open();
+          document.write(html);
+          document.close();
+        })
+        .catch(error => alert(error.message));
+      });
+
+      document.querySelectorAll('form').forEach(form => {
+        form.addEventListener('submit', function(event) {
+          event.preventDefault();
+          const action = form.getAttribute('action');
+
+          fetch(action, {
+            method: 'DELETE',
+            headers: {
+              'Authorization': 'Bearer ' + token,
+              'Content-Type': 'application/json'
+            }
+          })
+          .then(response => {
+            if (response.status === 200) {
+              window.location.reload();
+            } else {
+              throw new Error('삭제하는 데 실패했습니다.');
+            }
+          })
+          .catch(error => alert(error.message));
+        });
+      });
+
+      // 추가: 정렬 링크 클릭 이벤트 처리
+      document.querySelectorAll('.sort-link').forEach(link => {
+        link.addEventListener('click', function(event) {
+          event.preventDefault();
+          const url = link.getAttribute('href');
+
+          fetch(url, {
+            method: 'GET',
+            headers: {
+              'Authorization': 'Bearer ' + token,
+              'Content-Type': 'application/json'
+            }
+          })
+          .then(response => {
+            if (response.status === 200) {
+              return response.text();
+            } else {
+              throw new Error('페이지를 불러오는 데 실패했습니다.');
+            }
+          })
+          .then(html => {
+            document.open();
+            document.write(html);
+            document.close();
+          })
+          .catch(error => alert(error.message));
+        });
+      });
+
+      document.querySelectorAll('.pagination-link').forEach(link => {
+        link.addEventListener('click', function(event) {
+          event.preventDefault();
+          const url = link.getAttribute('href');
+
+          fetch(url, {
+            method: 'GET',
+            headers: {
+              'Authorization': 'Bearer ' + token,
+              'Content-Type': 'application/json'
+            }
+          })
+          .then(response => {
+            if (response.status === 200) {
+              return response.text();
+            } else {
+              throw new Error('페이지를 불러오는 데 실패했습니다.');
+            }
+          })
+          .then(html => {
+            document.open();
+            document.write(html);
+            document.close();
+          })
+          .catch(error => alert(error.message));
+        });
+      });
+    });
+  </script>
+</head>
+<body>
+<h1>위시 리스트</h1>
+<div>
+  <a href="#" class="btn btn-primary">제품 추가</a>
+</div>
+<table>
+  <thead>
+  <tr>
+    <th><a th:href="@{/wishlist(sortBy='product.id', direction=${direction == 'asc' ? 'desc' : 'asc'})}" class="sort-link">ID</a></th>
+    <th><a th:href="@{/wishlist(sortBy='product.name.name', direction=${direction == 'asc' ? 'desc' : 'asc'})}" class="sort-link">이름</a></th>
+    <th><a th:href="@{/wishlist(sortBy='product.price', direction=${direction == 'asc' ? 'desc' : 'asc'})}" class="sort-link">가격</a></th>
+    <th>URL</th>
+    <th>액션</th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr th:if="${wishList == null || wishList.isEmpty()}">
+    <td colspan="5">위시 리스트가 비어 있습니다.</td>
+  </tr>
+  <tr th:each="item : ${wishList}">
+    <td th:text="${item.product.id}"></td>
+    <td th:text="${item.product.name.name}"></td>
+    <td th:text="${item.product.price}"></td>
+    <td th:text="${item.product.imageUrl}"></td>
+    <td>
+      <form th:action="@{/wishlist/remove/{productId}(productId=${item.product.id})}" method="post" style="display:inline;">
+        <input type="hidden" name="_method" value="DELETE" />
+        <button type="submit">삭제</button>
+      </form>
+    </td>
+  </tr>
+  </tbody>
+</table>
+<div>
+  <span th:if="${currentPage > 0}">
+    <a th:href="@{/wishlist(page=${currentPage - 1}, size=${10}, sortBy=${sortBy}, direction=${direction})}" class="pagination-link">Previous</a>
+  </span>
+  <span th:each="i : ${#numbers.sequence(0, totalPages - 1)}">
+    <a th:href="@{/wishlist(page=${i}, size=${10}, sortBy=${sortBy}, direction=${direction})}" th:text="${i + 1}" class="pagination-link"></a>
+  </span>
+  <span th:if="${currentPage < totalPages - 1}">
+    <a th:href="@{/wishlist(page=${currentPage + 1}, size=${10}, sortBy=${sortBy}, direction=${direction})}" class="pagination-link">Next</a>
+  </span>
+</div>
+</body>
+</html>

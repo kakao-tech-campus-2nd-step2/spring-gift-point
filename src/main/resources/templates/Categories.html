@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>카테고리 목록</title>
+  <link rel="stylesheet" th:href="@{/Categories.css}">
+</head>
+<body>
+<h1>카테고리 목록</h1>
+<div>
+  <a href="/admin/categories/add" id="add">카테고리 추가</a>
+</div>
+<table>
+  <thead>
+  <tr>
+    <th><a th:href="@{/admin/categories(sortBy='id', direction=${sortDirection == 'asc' ? 'desc' : 'asc'})}">ID</a></th>
+    <th><a th:href="@{/admin/categories(sortBy='name', direction=${sortDirection == 'asc' ? 'desc' : 'asc'})}">이름</a></th>
+    <th>Actions</th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr th:each="category : ${categories}">
+    <td th:text="${category.id}"></td>
+    <td th:text="${category.name}"></td>
+    <td>
+      <a th:href="@{/admin/categories/edit/{id}(id=${category.id})}">수정</a> |
+      <form th:action="@{/admin/categories/{id}(id=${category.id})}" method="post" style="display:inline;">
+        <input type="hidden" name="_method" value="DELETE" />
+        <button type="submit">삭제</button>
+      </form>
+    </td>
+  </tr>
+  </tbody>
+</table>
+<div>
+  <span th:if="${currentPage > 0}">
+    <a th:href="@{/admin/categories(page=${currentPage - 1}, size=${10}, sortBy=${sortBy}, direction=${direction})}">Previous</a>
+  </span>
+  <span th:each="i : ${#numbers.sequence(0, totalPages - 1)}">
+    <a th:href="@{/admin/categories(page=${i}, size=${10}, sortBy=${sortBy}, direction=${direction})}" th:text="${i + 1}"></a>
+  </span>
+  <span th:if="${currentPage < totalPages - 1}">
+    <a th:href="@{/admin/categories(page=${currentPage + 1}, size=${10}, sortBy=${sortBy}, direction=${direction})}">Next</a>
+  </span>
+</div>
+</body>
+</html>
