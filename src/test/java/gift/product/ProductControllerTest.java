@@ -16,7 +16,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import gift.category.entity.Category;
-import gift.category.dto.CategoryDTO;
+import gift.category.dto.CategoryRequestDTO;
 import gift.product.dto.ProductRequestDTO;
 import gift.product.dto.ProductResponseDTO;
 import gift.token.JwtProvider;
@@ -90,7 +90,7 @@ class ProductControllerTest {
                 "product",
                 100,
                 "product-image-url",
-                new CategoryDTO("category-1")
+                new CategoryRequestDTO("category-1")
             );
 
             //when & then
@@ -109,7 +109,7 @@ class ProductControllerTest {
                 "ThisSequenceIsTooLongForProductName",
                 300,
                 "ThisSequenceIsTooLongForProductName-image-url",
-                new CategoryDTO("category-1")
+                new CategoryRequestDTO("category-1")
             );
 
             doThrow(new IllegalArgumentException(PRODUCT_NAME_LENGTH))
@@ -132,7 +132,7 @@ class ProductControllerTest {
                 "kakaoProduct",
                 100,
                 "kakaoProduct-image-url",
-                new CategoryDTO("category-1")
+                new CategoryRequestDTO("category-1")
             );
 
             //when
@@ -156,7 +156,7 @@ class ProductControllerTest {
                 "Special😀",
                 200,
                 "SpecialCharacter-image-url",
-                new CategoryDTO("category-1")
+                new CategoryRequestDTO("category-1")
             );
 
             //when
@@ -186,7 +186,7 @@ class ProductControllerTest {
                 "product",
                 100,
                 "product-image-url",
-                new CategoryDTO("category-1")
+                new CategoryRequestDTO("category-1")
             );
 
             //when & then
@@ -206,7 +206,7 @@ class ProductControllerTest {
                 "ThisSequenceIsTooLongForProductName",
                 300,
                 "ThisSequenceIsTooLongForProductName-image-url",
-                new CategoryDTO("category-1")
+                new CategoryRequestDTO("category-1")
             );
 
             doThrow(new IllegalArgumentException(PRODUCT_NAME_LENGTH))
@@ -230,7 +230,7 @@ class ProductControllerTest {
                 "kakaoProduct",
                 100,
                 "kakaoProduct-image-url",
-                new CategoryDTO("category-1")
+                new CategoryRequestDTO("category-1")
             );
 
             //when
@@ -255,7 +255,7 @@ class ProductControllerTest {
                 "Special😀",
                 200,
                 "SpecialCharacter-image-url",
-                new CategoryDTO("category-1")
+                new CategoryRequestDTO("category-1")
             );
 
             //when

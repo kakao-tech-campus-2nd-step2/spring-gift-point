@@ -8,7 +8,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.when;
 
 import gift.category.entity.Category;
-import gift.category.dto.CategoryDTO;
+import gift.category.dto.CategoryRequestDTO;
 import gift.category.CategoryRepository;
 import gift.product.dto.ProductRequestDTO;
 import gift.product.dto.ProductResponseDTO;
@@ -73,7 +73,7 @@ class ProductServiceTest {
                 "product",
                 1,
                 "product-image",
-                new CategoryDTO("category-1")
+                new CategoryRequestDTO("category-1")
             );
 
             //when
@@ -94,7 +94,7 @@ class ProductServiceTest {
                 "product",
                 1,
                 "product-image",
-                new CategoryDTO("category-1")
+                new CategoryRequestDTO("category-1")
             );
 
             //when
@@ -117,7 +117,7 @@ class ProductServiceTest {
         void success() {
             //given
             ProductRequestDTO productDTO = new ProductRequestDTO("product", 1, "product-image",
-                new CategoryDTO("category-1"));
+                new CategoryRequestDTO("category-1"));
             long id = 1L;
 
             //when
@@ -139,7 +139,7 @@ class ProductServiceTest {
         void categoryNotFoundError() {
             //given
             ProductRequestDTO productDTO = new ProductRequestDTO("product", 1, "product-image",
-                new CategoryDTO("wrong-category"));
+                new CategoryRequestDTO("wrong-category"));
             long id = 1L;
 
             //when
@@ -160,7 +160,7 @@ class ProductServiceTest {
         void productNotFoundError() {
             //given
             ProductRequestDTO productDTO = new ProductRequestDTO("product", 1, "product-image",
-                new CategoryDTO("category-1"));
+                new CategoryRequestDTO("category-1"));
             long id = 1L;
 
             //when

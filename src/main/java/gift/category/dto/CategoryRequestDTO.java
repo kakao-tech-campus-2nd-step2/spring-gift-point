@@ -4,7 +4,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import java.util.Objects;
 
 @Schema(description = "카테고리 수신용 DTO")
-public class CategoryDTO {
+public class CategoryRequestDTO {
 
     @Schema(description = "카테고리 명")
     private String name;
@@ -13,16 +13,16 @@ public class CategoryDTO {
         return name;
     }
 
-    public CategoryDTO() {
+    public CategoryRequestDTO() {
     }
 
-    public CategoryDTO(String name) {
+    public CategoryRequestDTO(String name) {
         this.name = name;
     }
 
     @Override
     public boolean equals(Object object) {
-        if (object instanceof CategoryDTO categoryDTO) {
+        if (object instanceof CategoryRequestDTO categoryDTO) {
             return Objects.equals(name, categoryDTO.name);
         }
         return false;

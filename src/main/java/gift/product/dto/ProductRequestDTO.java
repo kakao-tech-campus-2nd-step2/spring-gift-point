@@ -1,6 +1,6 @@
 package gift.product.dto;
 
-import gift.category.dto.CategoryDTO;
+import gift.category.dto.CategoryRequestDTO;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.util.Objects;
 
@@ -17,13 +17,13 @@ public class ProductRequestDTO {
     private String imageUrl;
 
     @Schema(description = "상품 카테고리")
-    private CategoryDTO category;
+    private CategoryRequestDTO category;
 
     public ProductRequestDTO(
         String name,
         int price,
         String imageUrl,
-        CategoryDTO category
+        CategoryRequestDTO category
     ) {
         this.name = name;
         this.price = price;
@@ -43,7 +43,7 @@ public class ProductRequestDTO {
         return imageUrl;
     }
 
-    public CategoryDTO getCategory() {
+    public CategoryRequestDTO getCategory() {
         return category;
     }
 
