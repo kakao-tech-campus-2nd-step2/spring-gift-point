@@ -8,12 +8,12 @@ import gift.dto.WishResponseDto;
 import gift.repository.MemberRepository;
 import gift.repository.ProductRepository;
 import gift.repository.WishRepository;
-import jakarta.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class WishService {
@@ -27,22 +27,26 @@ public class WishService {
         this.productRepository = productRepository;
     }
 
+    @Transactional
     public void addWish(Long memberId, WishDto wishDto) {
         Member member = memberRepository.findById(memberId).orElseThrow();
-        Product product = productRepository.findById(wishDto.getProductId()).orElseThrow();
+        Product product = productRepository.findById(wishDto.productId()).orElseThrow();
         Wish newWish = new Wish(member, product);
         wishRepository.save(newWish);
     }
 
+    @Transactional
     public void deleteWish(Long wishId){
         wishRepository.deleteById(wishId);
     }
 
+    @Transactional(readOnly = true)
     public List<Wish> findByMemberId(Long id) {
         Member member = memberRepository.findById(id).orElseThrow();
         return wishRepository.findByMember(member);
     }
 
+    @Transactional(readOnly = true)
     public Page<WishResponseDto> findByMemberId(Long id, Pageable pageable) {
         Member member = memberRepository.findById(id).orElseThrow();
         Page<Wish> wishPage= wishRepository.findByMember(member, pageable);

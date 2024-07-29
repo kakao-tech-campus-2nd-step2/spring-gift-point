@@ -7,6 +7,10 @@ import gift.dto.OrderResponseDto;
 import gift.service.OrderService;
 import gift.service.ProductService;
 import gift.service.WishService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,25 +21,19 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api/orders")
+@Tag(name = "Order", description = "주문 API")
 public class OrderController {
-    private final ProductService productService;
-    private final WishService wishService;
     private final OrderService orderService;
 
-    public OrderController(ProductService productService, WishService wishService,
-        OrderService orderService) {
-        this.productService = productService;
-        this.wishService = wishService;
+    public OrderController(OrderService orderService) {
         this.orderService = orderService;
     }
 
     @PostMapping
-    public ResponseEntity<OrderResponseDto> createOrder(@Valid @RequestBody OrderRequestDto orderRequestDto, @LoginMember Member member) {
-        productService.decreaseOptionQuantity(orderRequestDto.productId(), orderRequestDto.optionId(),orderRequestDto.quantity());
-        wishService.deleteProductFromWishList(member.getId(), orderRequestDto.productId());
-        OrderResponseDto orderResponseDto = orderService.createOrder(orderRequestDto);
-
-        orderService.sendOrderMessage(orderRequestDto, member);
+    @Operation(summary = "주문 처리", description = "주문을 처리합니다.")
+    @SecurityRequirement(name = "Authorization")
+    public ResponseEntity<OrderResponseDto> createOrder(@Valid @RequestBody OrderRequestDto orderRequestDto, @Parameter(hidden = true)@LoginMember Member member) {
+        OrderResponseDto orderResponseDto = orderService.processOrder(orderRequestDto, member);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(orderResponseDto);
     }

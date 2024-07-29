@@ -45,8 +45,8 @@ public class ProductServiceOptionTest {
         List<OptionDto> optionDtoList = productService.getOptionsByProductId(product.getId());
 
         assertEquals(1, optionDtoList.size());
-        assertEquals("Test Option", optionDtoList.get(0).getName());
-        assertEquals(10, optionDtoList.get(0).getQuantity());
+        assertEquals("Test Option", optionDtoList.get(0).name());
+        assertEquals(10, optionDtoList.get(0).quantity());
     }
 
     @Test
@@ -66,7 +66,7 @@ public class ProductServiceOptionTest {
         product.addOption(existingOption);
         given(productRepository.findById(product.getId())).willReturn(Optional.of(product)); // option이 들어간 product 리턴
 
-        OptionDto optionDto = new OptionDto("Test Option", 10);
+        OptionDto optionDto = new OptionDto(1L, "Test Option", 10);
 
         assertThatExceptionOfType(IllegalStateException.class)
             .isThrownBy(()->productService.saveOption(product.getId(), optionDto));

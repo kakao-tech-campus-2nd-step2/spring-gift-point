@@ -1,13 +1,16 @@
 package gift.config;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.boot.context.properties.ConfigurationPropertiesScan;
 
 @ConfigurationProperties(prefix = "kakao")
-@ConfigurationPropertiesScan
 public class KakaoAuthProperties {
-    private String clientId;
-    private String redirectUri;
+    private final String clientId;
+    private final String redirectUri;
+
+    public KakaoAuthProperties(String clientId, String redirectUri) {
+        this.clientId = clientId;
+        this.redirectUri = redirectUri;
+    }
 
     public String getClientId() {
         return clientId;
@@ -15,13 +18,5 @@ public class KakaoAuthProperties {
 
     public String getRedirectUri() {
         return redirectUri;
-    }
-
-    public void setClientId(String clientId) {
-        this.clientId = clientId;
-    }
-
-    public void setRedirectUri(String redirectUri) {
-        this.redirectUri = redirectUri;
     }
 }

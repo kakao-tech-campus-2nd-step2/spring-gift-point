@@ -8,6 +8,8 @@ import gift.service.CategoryService;
 import gift.service.ProductService;
 import jakarta.validation.Valid;
 import java.util.List;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
@@ -16,7 +18,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
 @RequestMapping("/admin/products")
@@ -48,8 +52,10 @@ public class ProductAdminController {
     }
 
     @PostMapping("/add")
-    public String addProduct(@Valid @ModelAttribute ProductRegisterRequestDto productDto) {
-        productService.addProduct(productDto);
+    public String addProduct(@Valid @RequestBody ProductRegisterRequestDto productDto) {
+        Long categoryId = categoryService.findIdByName(productDto.getCategoryName());
+        productService.addProduct(new ProductRegisterRequestDto(productDto.getName(), productDto.getPrice(), productDto.getImageUrl(), categoryId));
+
         return "redirect:/admin/products";
     }
 
@@ -67,11 +73,14 @@ public class ProductAdminController {
     }
 
     @PostMapping("/update/{id}")
-    public String updateProduct(@PathVariable("id") Long id, @Valid @ModelAttribute ProductRegisterRequestDto productDto) {
+    public String updateProduct(@PathVariable("id") Long id, @Valid @RequestBody ProductRegisterRequestDto productDto) {
         if (id == null || id <= 0) {
             throw new IllegalArgumentException("ID는 null, 0, 음수는 불가입니다.");
         }
-        productService.updateProduct(id, productDto);
+
+        Long categoryId = categoryService.findIdByName(productDto.getCategoryName());
+        productService.updateProduct(id, new ProductRegisterRequestDto(productDto.getName(), productDto.getPrice(), productDto.getImageUrl(), categoryId));
+
         return "redirect:/admin/products";
     }
 

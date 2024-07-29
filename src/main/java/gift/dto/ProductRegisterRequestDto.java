@@ -15,7 +15,8 @@ public class ProductRegisterRequestDto {
     private int price;
     private String imageUrl;
     private String categoryName;
-    private Set<OptionDto> options = new HashSet<>();
+    private Long categoryId;
+    private final Set<OptionDto> options = new HashSet<>();
 
     public ProductRegisterRequestDto() {
     }
@@ -25,6 +26,13 @@ public class ProductRegisterRequestDto {
         this.price = price;
         this.imageUrl = imageUrl;
         this.categoryName = categoryName;
+    }
+
+    public ProductRegisterRequestDto(String name, int price, String imageUrl, Long categoryId) {
+        this.name = name;
+        this.price = price;
+        this.imageUrl = imageUrl;
+        this.categoryId = categoryId;
     }
 
     public String getName() {
@@ -39,6 +47,18 @@ public class ProductRegisterRequestDto {
         return imageUrl;
     }
 
+    public Long getCategoryId() {
+        return categoryId;
+    }
+
+    public Set<OptionDto> getOptions() {
+        return options;
+    }
+
+    public String getCategoryName() {
+        return categoryName;
+    }
+
     public void setName(String name) {
         this.name = name;
     }
@@ -46,20 +66,10 @@ public class ProductRegisterRequestDto {
     public void setPrice(int price) {
         this.price = price;
     }
-
     public void setImageUrl(String imageUrl) {
         this.imageUrl = imageUrl;
     }
-
-    public String getCategoryName() {
-        return categoryName;
-    }
-
     public void setCategoryName(String categoryName) {
         this.categoryName = categoryName;
-    }
-
-    public Set<OptionDto> getOptions() {
-        return options;
     }
 }

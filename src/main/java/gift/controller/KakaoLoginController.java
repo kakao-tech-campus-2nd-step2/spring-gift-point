@@ -6,6 +6,8 @@ import gift.dto.MemberDto;
 import gift.response.JwtResponse;
 import gift.service.KakaoService;
 import gift.service.MemberService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
+@Tag(name = "카카오 OAuth", description = "카카오 OAuth API")
 public class KakaoLoginController {
     private final KakaoService kakaoService;
     private final MemberService memberService;
@@ -23,7 +26,8 @@ public class KakaoLoginController {
     }
 
     @GetMapping("/kakao")
-    public ResponseEntity<JwtResponse> kakaoLogin(@RequestParam("code") String code) {
+    @Operation(summary = "카카오 로그인", description = "카카오 계정으로 로그인합니다.")
+    public ResponseEntity<JwtResponse> loginByKakao(@RequestParam("code") String code) {
         // 1. 인가 코드 받기 (code)
 
         try {

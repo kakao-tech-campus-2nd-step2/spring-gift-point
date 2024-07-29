@@ -14,7 +14,7 @@ public class Member {
     private String password;
     private String accessToken;
 
-    public Member() {
+    protected Member() {
     }
 
     public Member(Long id, String email, String password) {
