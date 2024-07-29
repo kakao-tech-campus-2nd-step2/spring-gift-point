@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>Add Product</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" th:href="@{/css/add-product.css}">
+</head>
+<body>
+<div th:if="${errorMessage}" class="error-message">
+  <p th:text="${errorMessage}"></p>
+</div>
+
+<h1>Add New Product</h1>
+<form action="#" th:action="@{/product/add}" th:object="${productDto}" method="post">
+  <div>
+    <label for="name">Name:</label>
+    <input type="text" id="name" th:field="*{name}" placeholder="Enter product name"/>
+  </div>
+  <div>
+    <label for="price">Price:</label>
+    <input type="number" id="price" th:field="*{price}" placeholder="Enter product price"/>
+  </div>
+  <div>
+    <label for="imageUrl">Image URL:</label>
+    <input type="text" id="imageUrl" th:field="*{imageUrl}" placeholder="Enter image URL"/>
+  </div>
+  <div>
+    Category:
+    <select th:field="*{categoryId}">
+      <option th:each="category : ${categories}"
+              th:value="${category.id}"
+              th:text="${category.name}">
+      </option>
+    </select>
+  </div>
+  <div>
+    <button type="submit">Add Product</button>
+  </div>
+</form>
+</body>
+</html>

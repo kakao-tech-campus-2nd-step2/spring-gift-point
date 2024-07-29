@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>Delete Product</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+  <link rel="stylesheet" th:href="@{/css/delete-product.css}">
+</head>
+<body>
+<div th:if="${errorMessage}" class="error-message">
+  <p th:text="${errorMessage}"></p>
+</div>
+<h1>Delete Product</h1>
+<form th:action="@{/product/delete}" th:object="${product}" method="get">
+  <!-- Thymeleaf의 hidden 필드를 사용하여 Delete 메서드로 오버라이딩 -->
+  <input type="hidden" name="_method" value="delete"/>
+
+  <div>
+    <label for="id">ID:</label>
+    <input type="number" id="id" th:field="*{id}" placeholder="Enter product ID"/>
+  </div>
+
+  <div>
+    <button type="submit">Update Product</button>
+  </div>
+</form>
+</body>
+</html>
