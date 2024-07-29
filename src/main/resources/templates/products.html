@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Product List</title>
+</head>
+<body>
+<h1>Product List</h1>
+<a href="/api/products/new">Add New Product</a>
+<table>
+    <thead>
+    <tr>
+        <th><a th:href="@{/api/products(page=${currentPage}, size=${size}, sort='id,' + ${reverseSortDir})}">ID</a></th>
+        <th><a th:href="@{/api/products(page=${currentPage}, size=${size}, sort='name,' + ${reverseSortDir})}">Name</a>
+        </th>
+        <th>
+            <a th:href="@{/api/products(page=${currentPage}, size=${size}, sort='price,' + ${reverseSortDir})}">Price</a>
+        </th>
+        <th>Image URL</th>
+        <th>Category ID</th> <!-- New Column -->
+        <th>Actions</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="product : ${products}">
+        <td th:text="${product.id}">ID</td>
+        <td th:text="${product.name}">Name</td>
+        <td th:text="${product.price}">Price</td>
+        <td th:text="${product.imageUrl}">Image URL</td>
+        <td th:text="${product.category.id}">Category ID</td> <!-- New Column Data -->
+        <td>
+            <a th:href="@{/api/products/edit/{id}(id=${product.id})}">Edit</a>
+            <form th:action="@{/api/products/delete/{id}(id=${product.id})}" method="post" style="display:inline;">
+                <input type="hidden" name="_method" value="delete"/>
+                <button type="submit">Delete</button>
+            </form>
+        </td>
+    </tr>
+    </tbody>
+</table>
+<div>
+    <span th:if="${currentPage > 0}">
+        <a th:href="@{/api/products(page=${currentPage - 1}, size=${size}, sort=${sortField + ',' + sortDir})}">Previous</a>
+    </span>
+    <span th:each="i : ${#numbers.sequence(0, totalPages - 1)}">
+        <a th:href="@{/api/products(page=${i}, size=${size}, sort=${sortField + ',' + sortDir})}" th:text="${i + 1}">Page Number</a>
+    </span>
+    <span th:if="${currentPage < totalPages - 1}">
+        <a th:href="@{/api/products(page=${currentPage + 1}, size=${size}, sort=${sortField + ',' + sortDir})}">Next</a>
+    </span>
+</div>
+</body>
+</html>

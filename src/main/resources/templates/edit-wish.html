@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Edit Wish</title>
+</head>
+<body>
+<h1>Edit Wish</h1>
+<form th:action="@{/member/wishes/edit}" th:object="${requestWishDTO}" method="post">
+    <input type="hidden" th:field="*{productId}"/>
+    <label for="count">Count:</label>
+    <input type="number" id="count" th:field="*{count}"/>
+    <button type="submit">Update Wish</button>
+</form>
+</body>
+</html>
