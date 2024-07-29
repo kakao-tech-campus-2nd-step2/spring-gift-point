@@ -4,7 +4,9 @@ import gift.option.domain.Option;
 import gift.option.domain.OptionDTO;
 import gift.option.repository.OptionRepository;
 import gift.product.domain.Product;
+import gift.product.domain.ProductDTO;
 import gift.product.repository.ProductRepository;
+import gift.product.service.ProductService;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.ConstraintViolationException;
 import java.util.List;
@@ -16,10 +18,13 @@ public class OptionService {
 
     private final OptionRepository optionRepository;
     private final ProductRepository productRepository;
+    private final ProductService productService;
 
-    public OptionService(OptionRepository optionRepository, ProductRepository productRepository) {
+    public OptionService(OptionRepository optionRepository, ProductRepository productRepository,
+        ProductService productService) {
         this.optionRepository = optionRepository;
         this.productRepository = productRepository;
+        this.productService = productService;
     }
 
     public List<OptionDTO> findAll(){
@@ -72,7 +77,14 @@ public class OptionService {
         }
         return optionRepository.save(option);
     }
+    public OptionDTO addOption(Long productId, Long optionId, OptionDTO optionDTO){
+        ProductDTO productDTO = productService.getProductDTOById(productId)
+            .orElseThrow(() -> new IllegalArgumentException("productId" + productId + "가 없습니다."));
+        productDTO.getOptionDTOList().add(optionDTO);
+        productService.updateProduct(productId, productDTO);
 
+        return convertToDTO(save(optionDTO));
+    }
     public OptionDTO convertToDTO(Option option){
         return new OptionDTO(
             option.getId(),
