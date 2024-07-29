@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>WishList</title>
+    <link rel="stylesheet" href="/style/index_style.css">
+    <script type="text/javascript" src="http://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+<h1>위시리스트</h1>
+<table id="product-table">
+    <thead>
+    <tr>
+        <th scope="col">Uid</th>
+        <th scope="col">Pid</th>
+        <th scope="col">Name</th>
+        <th scope="col">Price</th>
+        <th scope="col">Image</th>
+        <th scope="col">Option</th>
+    </tr>
+    </thead>
+    <tbody id="wishList-tbody">
+    <!-- AJAX를 통해 데이터를 로드 -->
+    </tbody>
+</table>
+<div>
+    <button id="prevPage">Previous</button>
+    <label for="p_sort"></label>
+    <select name="p_sort" id="p_sort">
+        <option value="asc">오름차순</option>
+        <option value="desc">내림차순</option>
+    </select>
+    <label for="p_field"></label>
+    <select name="p_field" id="p_field">
+        <option value="id">id</option>
+    </select>
+    <button id="search" onclick="getWishList(currentPage)">검색</button>
+    <button id="nextPage">Next</button>
+</div>
+</body>
+<script>
+    var currentPage = 0;
+    var pageSize = 5;
+
+    function getWishList(page){
+        $.ajax({
+            url: '/api/wishes',
+            method: 'GET',
+            dataType: 'json',
+            contentType: "application/json",
+            data : {
+                page : page,
+                size : pageSize,
+                sort : $('#p_sort').val(),
+                field : $('#p_field').val()
+            },
+            headers : {
+                Authorization: 'Bearer ' + localStorage.getItem("token"),
+            },
+            success: function (data) {
+                var contents = data.content;
+                var tbody = $('#wishList-tbody');
+                tbody.empty(); // 초기화
+                // 데이터에 따라 테이블 행을 생성
+                contents.forEach(function(wishProduct) {
+                    // 한 행의 내용
+                    var row = `
+                        <tr>
+                            <td>${wishProduct.user.id}</td>
+                            <td>${wishProduct.product.id}</td>
+                            <td>${wishProduct.product.name}</td>
+                            <td>${wishProduct.product.price}</td>
+                            <td><img src="${wishProduct.product.imageUrl}" alt="image"/></td>
+                            <td>
+                                <a href="#" onclick="deleteFunction(${wishProduct.id})">삭제</a>
+                            </td>
+                        </tr>
+                    `;
+                    tbody.append(row);
+
+                    currentPage = data.number;
+
+                    $('#prevPage').prop('disabled', data.first);
+                    $('#nextPage').prop('disabled', data.last);
+                });
+            },
+            error: function (err) {
+                if(err.responseJSON){
+                    var s = JSON.stringify(err.responseJSON);
+                    alert(s);
+                }
+                else{
+                    alert("문제가 발생했습니다! 상태 코드 : " + err.status)
+                }
+            }
+        })
+    }
+    $(document).ready(function() {
+        // 페이지 로드 시 AJAX를 통해 데이터 가져오기
+        getWishList(currentPage);
+
+        $('#prevPage').click(function() {
+            if (currentPage > 0) {
+                getWishList(currentPage - 1);
+            }
+        });
+
+        $('#nextPage').click(function() {
+            getWishList(currentPage + 1);
+        });
+    })
+
+    function deleteFunction(id){
+        var token = {
+            token : localStorage.getItem('token')
+        }
+        $.ajax({
+            type: "DELETE",
+            url: '/api/wishes/' + id,
+            contentType: "application/json",
+            datatype : "json",
+            data : JSON.stringify(token),
+            headers : {
+                Authorization: 'Bearer ' + localStorage.getItem("token"),
+            },
+            success : function(res){
+                $('#product-table').find('tr[data-id="' + id + '"]').remove();
+                alert("상품 ID : " + id + "가 삭제되었습니다.");
+                location.reload();
+            },
+            error : function(error){
+                if(err.responseJSON){
+                    var s = JSON.stringify(err.responseJSON);
+                    alert(s);
+                }
+                else{
+                    alert("문제가 발생했습니다! 상태 코드 : " + err.status)
+                }
+            }
+        })
+    }
+</script>
+</html>

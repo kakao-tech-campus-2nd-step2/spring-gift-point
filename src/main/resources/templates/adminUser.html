@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="KR" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>상품 관리</title>
+    <link rel="stylesheet" href="/style/index_style.css">
+    <script type="text/javascript" src="http://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="/js/index_ajax.js"></script>
+</head>
+<body>
+<div class="header" id="header">
+
+</div>
+<h1>Administrator User Manage Page</h1>
+<div class="form-inline">
+    <label for="id">Id:</label>
+    <input type="text" id="id" name="id" disabled>
+
+    <label for="userId">UserId:</label>
+    <input type="text" id="userId" name="userId" required>
+
+    <label for="email">Email:</label>
+    <input type="text" id="email" name="email" required>
+
+    <label for="password">Password:</label>
+    <input type="password" id="password" name="password" required>
+
+    <input type="button" id="post" value="추가">
+</div>
+<div class="form-inline">
+    <label for="p_id">Id:</label>
+    <input type="text" id="p_id" name="p_id" required>
+
+    <label for="p_userId">UserId:</label>
+    <input type="text" id="p_userId" name="p_userId" required>
+
+    <label for="p_email">Email:</label>
+    <input type="text" id="p_email" name="p_email" required>
+
+    <label for="p_password">Password:</label>
+    <input type="password" id="p_password" name="p_password" required>
+
+    <input type="button" id="put" value="수정">
+</div>
+<table id="user-table">
+    <thead>
+    <tr>
+        <th scope="col">Id</th>
+        <th scope="col">UserId</th>
+        <th scope="col">Email</th>
+        <th scope="col">Password</th>
+        <th scope="col">Option</th>
+    </tr>
+    </thead>
+    <tbody id="user-tbody">
+    <!-- AJAX를 통해 데이터를 로드 -->
+    </tbody>
+</table>
+<div>
+    <button id="prevPage">Previous</button>
+    <label for="p_sort"></label>
+    <select name="p_sort" id="p_sort">
+        <option value="asc">오름차순</option>
+        <option value="desc">내림차순</option>
+    </select>
+    <label for="p_field"></label>
+    <select name="p_field" id="p_field">
+        <option value="id">id</option>
+        <option value="userId">userId</option>
+        <option value="Email">Email</option>
+    </select>
+    <button id="search" onclick="getUsers(currentPage)">검색</button>
+    <button id="nextPage">Next</button>
+</div>
+</body>
+<script>
+    var currentPage = 0;
+    var pageSize = 5;
+
+    function getUsers(page){
+        $.ajax({
+            url: '/api/users',
+            method: 'GET',
+            data : {
+                page : page,
+                size : pageSize,
+                sort : $('#p_sort').val(),
+                field : $('#p_field').val()
+            },
+            success: function(data) {
+                var contents = data.content;
+                var tbody = $('#user-tbody');
+                tbody.empty(); // 초기화
+
+                // 데이터에 따라 테이블 행을 생성
+                contents.forEach(function(user) {
+                    // 한 행의 내용
+                    var row = `
+                        <tr>
+                            <td>${user.id}</td>
+                            <td>${user.userId}</td>
+                            <td>${user.email}</td>
+                            <td>${user.password}</td>
+                            <td>
+                                <a href="#" onclick="deleteFunction(${user.id})">삭제</a>
+                            </td>
+                        </tr>
+                    `;
+                    tbody.append(row);
+
+                    currentPage = data.number;
+
+                    $('#prevPage').prop('disabled', data.first);
+                    $('#nextPage').prop('disabled', data.last);
+                });
+            },
+            error: function(err) {
+                if(err.responseJSON){
+                    var s = JSON.stringify(err.responseJSON);
+                    alert(s);
+                }
+                else{
+                    alert("문제가 발생했습니다! 상태 코드 : " + err.status)
+                }
+            }
+        });
+    }
+
+    $(document).ready(function() {
+        // 페이지 로드 시 AJAX를 통해 데이터 가져오기
+        getUsers(currentPage);
+
+        $('#prevPage').click(function() {
+            if (currentPage > 0) {
+                getUsers(currentPage - 1);
+            }
+        });
+
+        $('#nextPage').click(function() {
+            getUsers(currentPage + 1);
+        });
+
+        if(localStorage.getItem('token')){
+            var inline = $('#header');
+            inline.empty();
+            inline.append('<a href="" onclick="logoutFunction()" className="header-link">로그아웃</a>\n' +
+                '            <a href="adminProducts" className="header-link">상품관리</a>' +
+                '            <a href="adminUsers" className="header-link">유저관리</a>' +
+                '            <a href="adminCategories" className="header-link">카테고리관리</a>');
+        }
+    });
+
+    $("#post").click(function () {
+        var user = {
+            userId : $("#userId").val(),
+            email : $("#email").val(),
+            password : $("#password").val()
+        }
+
+        $.ajax({
+            type : "POST",
+            url : "register",
+            contentType: "application/json",
+            datatype : "json",
+            data : JSON.stringify(user),
+            success : function(res){
+                location.reload();
+            },
+            error : function(err){
+                if(err.responseJSON){
+                    var s = JSON.stringify(err.responseJSON);
+                    alert(s);
+                }
+                else{
+                    alert("문제가 발생했습니다! 상태 코드 : " + err.status)
+                }
+            }
+        })
+    });
+
+    function deleteFunction(id){
+        $.ajax({
+            type: "DELETE",
+            url: "api/users/" + id,
+            headers : {
+                Authorization: 'Bearer ' + localStorage.getItem("token"),
+            },
+            success : function(res){
+                $('#user-table').find('tr[data-id="' + id + '"]').remove();
+                alert("유저 ID : " + id + "가 삭제되었습니다.");
+                location.reload();
+            },
+            error : function(error){
+                if(err.responseJSON){
+                    var s = JSON.stringify(err.responseJSON);
+                    alert(s);
+                }
+                else{
+                    alert("문제가 발생했습니다! 상태 코드 : " + err.status)
+                }
+            }
+        })
+    }
+
+    $("#put").click(function(){
+        var user ={
+            userId : $("#p_userId").val(),
+            email: $("#p_email").val(),
+            password : $("#p_password").val()
+        }
+
+        $.ajax({
+            type : "PUT",
+            url : "api/users/" + $("#p_id").val(),
+            contentType: "application/json",
+            datatype : "json",
+            data : JSON.stringify(user),
+            headers : {
+                Authorization: 'Bearer ' + localStorage.getItem("token"),
+            },
+            success : function(res){
+                location.reload();
+            },
+            error : function(err){
+                if(err.responseJSON){
+                    var s = JSON.stringify(err.responseJSON);
+                    alert(s);
+                }
+                else{
+                    alert("문제가 발생했습니다! 상태 코드 : " + err.status)
+                }
+            }
+        })
+    })
+
+    function logoutFunction(){
+        localStorage.removeItem('token');
+        localStorage.removeItem('email');
+        backToHome();
+    }
+</script>
+</html>

@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>OrderProduct</title>
+    <link rel="stylesheet" href="/style/index_style.css">
+    <script type="text/javascript" src="http://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+<h1 th:text="'Product no.' + ${product_id} + ' Buying Page'"></h1>
+<data id="product_id" th:value="${product_id}"></data>
+<div class="form-inline">
+    <label for="optionId">OptionId:</label>
+    <input type="text" id="optionId" name="id" required>
+
+    <label for="quantity">Quantity:</label>
+    <input type="number" id="quantity" name="quantity" required>
+
+    <label for="message">Message:</label>
+    <input type="text" id="message" name="message" required>
+
+    <input type="button" id="post" value="구매">
+</div>
+<table id="product-table">
+    <thead>
+    <tr>
+        <th scope="col">Id</th>
+        <th scope="col">Name</th>
+        <th scope="col">Left_Quantity</th>
+    </tr>
+    </thead>
+    <tbody id="option-tbody">
+    <!-- AJAX를 통해 데이터를 로드 -->
+    </tbody>
+</table>
+<div>
+    <button id="prevPage">Previous</button>
+    <label for="p_sort"></label>
+    <select name="p_sort" id="p_sort">
+        <option value="asc">오름차순</option>
+        <option value="desc">내림차순</option>
+    </select>
+    <label for="p_field"></label>
+    <select name="p_field" id="p_field">
+        <option value="id">id</option>
+    </select>
+    <button id="search" onclick="getWishList(currentPage)">검색</button>
+    <button id="nextPage">Next</button>
+</div>
+</body>
+<script>
+    const url = new URL(window.location.href);
+    const params = new URLSearchParams(url.search);
+    var product_id = params.get('product_id');
+
+    var currentPage = 0;
+    var pageSize = 5;
+
+    function getOptions(page){
+        $.ajax({
+            url: '/api/products/' + product_id + '/options',
+            method: 'GET',
+            data : {
+                page : page,
+                size : pageSize,
+                sort : $('#p_sort').val(),
+                field : $('#p_field').val()
+            },
+            success: function(data) {
+                var contents = data.content;
+                var tbody = $('#option-tbody');
+                tbody.empty(); // 초기화
+
+                // 데이터에 따라 테이블 행을 생성
+                contents.forEach(function(option) {
+                    // 한 행의 내용
+                    var row = `
+                        <tr>
+                            <td>${option.id}</td>
+                            <td>${option.name}</td>
+                            <td>${option.quantity}</td>
+                        </tr>
+                    `;
+                    tbody.append(row);
+
+                    currentPage = data.number;
+
+                    $('#prevPage').prop('disabled', data.first);
+                    $('#nextPage').prop('disabled', data.last);
+                });
+            },
+            error: function(err) {
+                if(err.responseJSON){
+                    var s = JSON.stringify(err.responseJSON);
+                    alert(s);
+                }
+                else{
+                    alert("문제가 발생했습니다! 상태 코드 : " + err.status)
+                }
+            }
+        });
+    }
+
+    $(document).ready(function() {
+        getOptions(currentPage);
+
+        $('#prevPage').click(function() {
+            if (currentPage > 0) {
+                getOptions(currentPage - 1);
+            }
+        });
+
+        $('#nextPage').click(function() {
+            getOptions(currentPage + 1);
+        });
+
+        if(localStorage.getItem('token')){
+            var inline = $('#header');
+            inline.empty();
+            inline.append('<a href="/wishList" className="header-link">위시리스트</a>\n' +
+                '            <a href="" onclick="logoutFunction()" className="header-link">로그아웃</a>');
+        }
+        else {
+            var inline = $('#header');
+            inline.empty();
+            inline.append('<a href="/login" className="header-link">로그인</a>\n' +
+                '            <a href="/register" className="header-link">회원가입</a>');
+        }
+    });
+
+    $("#post").click(function () {
+        var order = {
+            optionId : $("#optionId").val(),
+            quantity : $("#quantity").val(),
+            message : $("#message").val()
+        }
+
+        $.ajax({
+            type : "POST",
+            url : "api/orders" + "?" + "productId=" + $("#product_id").val(),
+            contentType: "application/json",
+            datatype : "json",
+            data : JSON.stringify(order),
+            headers : {
+                Authorization: 'Bearer ' + localStorage.getItem("token"),
+            },
+            success : function(res){
+                alert("구매에 성공했습니다!")
+                getOptions(currentPage);
+            },
+            error : function(err){
+                if(err.responseJSON){
+                    var s = JSON.stringify(err.responseJSON);
+                    alert(s);
+                }
+                else{
+                    alert("문제가 발생했습니다! 상태 코드 : " + err.status)
+                }
+            }
+        })
+    });
+</script>
+</html>
