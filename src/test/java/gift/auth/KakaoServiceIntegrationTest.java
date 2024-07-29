@@ -4,7 +4,6 @@ import gift.exception.type.InvalidTokenException;
 import gift.member.domain.Member;
 import gift.member.domain.MemberRepository;
 import gift.member.domain.OauthProvider;
-import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -31,7 +30,6 @@ class KakaoServiceIntegrationTest {
     private MemberRepository memberRepository;
 
     @Test
-    @Tag("excludeFromBuild")
     void getKakaoRedirectUrl_통합테스트() {
         // When
         String redirectUrl = kakaoService.getKakaoRedirectUrl();
@@ -46,7 +44,6 @@ class KakaoServiceIntegrationTest {
     }
 
     @Test
-    @Tag("excludeFromBuild")
     void fetchToken_통합테스트() {
         // Given
         String code = "dsAikckSBofevMDWyf-Tul7fqX7T-sULH7GsiH-RvIDuf_lWWDF0vgAAAAQKKclgAAABkO8OE-L_A_o_BVb6-Q";
@@ -78,7 +75,6 @@ class KakaoServiceIntegrationTest {
     }
 
     @Test
-    @Tag("excludeFromBuild")
     void refreshToken_통합테스트() {
         // Given
         String refreshToken = "1FSGDX9YLSIdja4gfN1C5JQh4uaqc8X3AAAAAgo9cxcAAAGQ5Rb4nBamEcnPBcmr";
@@ -97,7 +93,6 @@ class KakaoServiceIntegrationTest {
     }
 
     @Test
-    @Tag("excludeFromBuild")
     void fetchMemberInfo_통합테스트() {
         // Given
         String accessToken = "usBKw-_NO-6mF5yaScDoVq1UO0t6HAWcAAAAAQoqJY8AAAGQ7w6rVRamEcnPBcmr";
@@ -125,7 +120,6 @@ class KakaoServiceIntegrationTest {
     }
 
     @Test
-    @Tag("excludeFromBuild")
     void unlink_및_unlink_후_연결_통합테스트() {
         // Given
         Long userId = 3636131132L;
@@ -149,7 +143,6 @@ class KakaoServiceIntegrationTest {
     }
 
     @Test
-    @Tag("excludeFromBuild")
     void sendOrderMessage_통합테스트() {
         // Given
         Long kakaoId = 3636131132L;
@@ -168,7 +161,6 @@ class KakaoServiceIntegrationTest {
     }
 
     @Test
-    @Tag("excludeFromBuild")
     void getValidAccessToken_통합테스트() {
         // Given
         Long kakaoId = 1L;
@@ -198,7 +190,6 @@ class KakaoServiceIntegrationTest {
     }
 
     @Test
-    @Tag("excludeFromBuild")
     void 갱신_불가능한_토큰_통합테스트() {
         // Given
         Long kakaoId = 1L;
