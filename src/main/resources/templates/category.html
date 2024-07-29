@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>카테고리 관리 페이지</title>
+</head>
+<body>
+<a href="/admin/product/list">[ 상품 관리 ]</a>
+
+<h1>카테고리 관리 페이지</h1>
+<a href="/admin/category/register">[ 카테고리 추가 ]</a>
+<h2>전체 카테고리 목록</h2>
+<table id="productList">
+    <thead>
+    <tr>
+        <th>Name</th>
+        <th>Action</th>
+    </tr>
+    </thead>
+    <tbody th:each="category : ${categoryList}">
+    <tr>
+        <td>
+            <span th:text="${category.name}"></span>
+        </td>
+        <td>
+            <form th:action="@{/admin/category/{id}(id=${category.id})}" method="get">
+                <button type="submit">수정</button>
+            </form>
+            <form th:action="@{/admin/category/{id}(id=${category.id})}" method="post">
+                <input type="hidden" name="_method" value="delete" />
+                <button type="submit">삭제</button>
+            </form>
+        </td>
+    </tr>
+    </tbody>
+</table>
+</body>
+</html>
