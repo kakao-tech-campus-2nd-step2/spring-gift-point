@@ -3,6 +3,7 @@ package gift.service;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import gift.KakaoProperties;
 import gift.api.OrderRequest;
+import gift.dto.OrderDTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpHeaders;
@@ -37,20 +38,20 @@ public class KakaoMessageService {
         this.productService = productService;
     }
 
-    public boolean sendKakaoMessage(String accessToken, OrderRequest orderRequest) {
+    public boolean sendKakaoMessage(String accessToken, OrderDTO orderDTO) {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
         headers.set("Authorization", "Bearer " + accessToken);
 
-        String productName = productService.getProductNameById(orderRequest.getProductId());
-        String optionName = optionService.getOptionNameById(orderRequest.getOptionId());
+        String productName = productService.getProductNameById(orderDTO.getOrderId());
+        String optionName = optionService.getOptionNameById(orderDTO.getOptionId());
         LocalDateTime orderDateTime = LocalDateTime.now();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         String formattedDateTime = orderDateTime.format(formatter);
 
         String messageContent = String.format(
             "Order Details:\nProduct: %s\nOption: %s\nQuantity: %d\nMessage: %s\nOrder DateTime: %s",
-            productName, optionName, orderRequest.getQuantity(), orderRequest.getMessage(), formattedDateTime
+            productName, optionName, orderDTO.getQuantity(), orderDTO.getMessage(), formattedDateTime
         );
 
         try {

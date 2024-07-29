@@ -3,7 +3,10 @@ package gift.service;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import gift.KakaoProperties;
 import gift.api.OrderRequest;
+import gift.converter.OrderConverter;
+import gift.dto.OrderDTO;
 import gift.model.User;
+import gift.repository.OrderRepository;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
@@ -30,19 +33,21 @@ public class OrderService {
     private final WishListService wishListService;
     private final KakaoService kakaoService;
     private final KakaoMessageService kakaoMessageService;
+    private final OrderRepository orderRepository;
 
     public OrderService(OptionService optionService, UserService userService,
-        WishListService wishListService, KakaoService kakaoService, KakaoMessageService kakaoMessageService) {
+        WishListService wishListService, KakaoService kakaoService, KakaoMessageService kakaoMessageService, OrderRepository orderRepository) {
         this.optionService = optionService;
         this.userService = userService;
         this.wishListService = wishListService;
         this.kakaoService = kakaoService;
         this.kakaoMessageService = kakaoMessageService;
+        this.orderRepository = orderRepository;
     }
 
-    public String createOrder(String authorization, OrderRequest orderRequest) {
+    public String createOrder(String authorization, OrderDTO orderDTO) {
         // Option 수량 차감
-        boolean updated = optionService.decreaseOptionQuantity(orderRequest.getOptionId(), orderRequest.getQuantity());
+        boolean updated = optionService.decreaseOptionQuantity(orderDTO.getOptionId(), orderDTO.getQuantity());
 
         if (!updated) {
             throw new IllegalArgumentException("Insufficient product quantity.");
@@ -50,7 +55,7 @@ public class OrderService {
 
         // 카카오톡 메시지 전송
         String token = authorization.replace("Bearer ", "");
-        boolean messageSent = kakaoMessageService.sendKakaoMessage(token, orderRequest);
+        boolean messageSent = kakaoMessageService.sendKakaoMessage(token, orderDTO);
 
         if (!messageSent) {
             throw new RuntimeException("Order created but failed to send message.");
@@ -61,9 +66,16 @@ public class OrderService {
 
         // 이메일로 사용자 조회
         User user = userService.findByEmail(email);
-        if (wishListService.isProductInWishList(email, orderRequest.getProductId())) {
+
+        // DTO를 엔티티로 변환
+        OrderRequest orderRequest = OrderConverter.convertToEntity(orderDTO);
+
+        // 저장
+        orderRepository.save(orderRequest);
+
+        if (wishListService.isProductInWishList(email, orderDTO.getOrderId())) {
             // 위시리스트에서 주문한 제품 ID 삭제
-            wishListService.removeProductFromWishList(email, orderRequest.getProductId());
+            wishListService.removeProductFromWishList(email, orderDTO.getOrderId());
         }
 
         return "Order created and message sent.";

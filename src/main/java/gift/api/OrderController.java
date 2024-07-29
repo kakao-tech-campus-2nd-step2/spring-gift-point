@@ -1,5 +1,6 @@
 package gift.api;
 
+import gift.dto.OrderDTO;
 import gift.service.OrderService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -28,9 +29,9 @@ public class OrderController {
         @ApiResponse(responseCode = "400", description = "Invalid product quantity."),
         @ApiResponse(responseCode = "500", description = "Order created but failed to send message.")
     })
-    public ResponseEntity<String> createOrder(@RequestHeader("Authorization") String authorization, @RequestBody OrderRequest orderRequest) {
+    public ResponseEntity<String> createOrder(@RequestHeader("Authorization") String authorization, @RequestBody OrderDTO orderDTO) {
         try {
-            String responseMessage = orderService.createOrder(authorization, orderRequest);
+            String responseMessage = orderService.createOrder(authorization, orderDTO);
             return ResponseEntity.ok(responseMessage);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());

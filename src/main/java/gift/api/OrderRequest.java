@@ -1,41 +1,53 @@
 package gift.api;
 
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+
+@Entity
+@Table(name = "orders")
 public class OrderRequest {
-    private Long productId;
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "order_id", columnDefinition = "BIGINT COMMENT '주문 ID'")
+    private Long orderId;
+
+    @Column(name = "option_id", columnDefinition = "BIGINT COMMENT '옵션 ID'")
     private Long optionId;
+
+    @Column(name = "quantity", columnDefinition = "INTEGER COMMENT '수량'")
     private int quantity;
+
+    @Column(name = "message", columnDefinition = "VARCHAR(255) COMMENT '메시지'")
     private String message;
 
-    // Getters and setters
-    public Long getProductId() {
-        return productId;
+    public OrderRequest() {}
+
+    public OrderRequest(Long orderId, Long optionId, int quantity, String message) {
+        this.orderId = orderId;
+        this.optionId = optionId;
+        this.quantity = quantity;
+        this.message = message;
     }
 
-    public void setProductId(Long productId) {
-        this.productId = productId;
+    // Getters only
+    public Long getOrderId() {
+        return orderId;
     }
 
     public Long getOptionId() {
         return optionId;
     }
 
-    public void setOptionId(Long optionId) {
-        this.optionId = optionId;
-    }
-
     public int getQuantity() {
         return quantity;
     }
 
-    public void setQuantity(int quantity) {
-        this.quantity = quantity;
-    }
-
     public String getMessage() {
         return message;
-    }
-
-    public void setMessage(String message) {
-        this.message = message;
     }
 }
