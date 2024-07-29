@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="ko"
+      xmlns:th="http://www.thymeleaf.org"
+      th:fragment="header">
+<th:block>
+  <h1>Manage Products</h1>
+  <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addModal">
+    Add New Product
+  </button>
+  <div class="modal fade" id="addModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Add New Product</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <form th:action="@{/admin}" th:object="${productRequest}" method="post">
+          <div class="modal-body">
+              <label>Name
+                <input type="text" name="name" required="required">
+              </label>
+              <label>Price
+                <input type="text" name="price" required="required">
+              </label>
+              <label>Image Url
+                <input type="text" name="imageUrl" required="required">
+              </label>
+          </div>
+          <div class="modal-footer">
+            <button type="submit" class="btn btn-primary">Add</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+<!--  <button>Delete</button>-->
+</th:block>
+</html>
