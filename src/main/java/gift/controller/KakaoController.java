@@ -1,5 +1,6 @@
 package gift.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import gift.config.KakaoProperties;
 import gift.model.BearerToken;
 import gift.service.KakaoAuthService;
@@ -45,7 +46,7 @@ public class KakaoController {
     @GetMapping("/KakaoOrder/{productId}/{optionName}/{num}")
     @ResponseBody
     public void orderProduct(HttpServletRequest request, @PathVariable Long productId,
-                             @PathVariable String optionName, @PathVariable int num){
+                             @PathVariable String optionName, @PathVariable int num) throws JsonProcessingException {
         BearerToken token = (BearerToken) request.getAttribute("bearerToken");
         kakaoAuthService.orderProduct(token.getToken(), productId, optionName, num);
     }

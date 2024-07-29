@@ -1,5 +1,6 @@
 package gift.service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import gift.config.KakaoProperties;
@@ -84,7 +85,7 @@ public class KakaoAuthService {
         return response.getBody().getAccessToken();
     }
 
-    public void orderProduct(String token, Long productId, String optionName, int num){
+    public void orderProduct(String token, Long productId, String optionName, int num) throws JsonProcessingException {
         //상품 찾음 productID
         Product product = productService.getProductById(productId);
         //옵션 찾음 productID optionName
@@ -131,7 +132,7 @@ public class KakaoAuthService {
         return response.getBody().getId();
     }
 
-    public void sendKakaoMessage(String token, String productName, String optionName, int num){
+    public void sendKakaoMessage(String token, String productName, String optionName, int num) throws JsonProcessingException {
         logger.info("sendKakaoMessage");
         var url = "https://kapi.kakao.com/v2/api/talk/memo/default/send";
         var headers = new HttpHeaders();
@@ -161,26 +162,21 @@ public class KakaoAuthService {
         return body;
     }
 
-    private @NotNull LinkedMultiValueMap<String, String> createTemplateObject(String productName, String optionName, int num){
+    private @NotNull LinkedMultiValueMap<String, String> createTemplateObject(String productName, String optionName, int num) throws JsonProcessingException {
+        String objectType = "text";
         String text = productName + "[" + optionName + "]" + " 상품이 "
                         + Integer.toString(num) + "개 주문되었습니다.";
         String webUrl = "http://localhost:8080/";
         String buttonTitle = "바로가기";
 
+        LinkObject link = new LinkObject(webUrl);
+        TemplateObject templateObject = new TemplateObject(objectType, text, link, buttonTitle);
+
         ObjectMapper mapper = new ObjectMapper();
-        ObjectNode jsonObject = mapper.createObjectNode();
-        jsonObject.put("object_type", "text");
-        jsonObject.put("text", text);
+        String jsonString = mapper.writeValueAsString(templateObject);
 
-        ObjectNode linkObject = mapper.createObjectNode();
-        linkObject.put("web_url", webUrl);
-        jsonObject.set("link", linkObject);
-
-        jsonObject.put("button_title", buttonTitle);
-
-        String templateObject = jsonObject.toString();
         LinkedMultiValueMap<String, String> body = new LinkedMultiValueMap<>();
-        body.add("template_object", templateObject);
+        body.add("template_object", jsonString);
 
         return body;
     }
