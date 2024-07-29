@@ -1,0 +1,42 @@
+spring:
+  application:
+    name: spring-gift
+
+  h2:
+    console:
+      enabled: true
+
+  datasource:
+    url: jdbc:h2:mem:serverdb;MODE=MYSQL;DB_CLOSE_DELAY=-1
+
+  jpa:
+    hibernate:
+      ddl-auto: create
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+
+  mvc:
+    hidden method:
+      filter:
+        enabled: true
+
+  jwt:
+    secret: ${jwt_secret}
+    access_expiration: 3600000
+    refresh_expiration: 604800000
+
+  oauth:
+    kakao:
+      client_id: ${kakao_client_id}
+      redirect_uri: ${kakao_redirect_uri}
+      grant_type: authorization_code
+      code-url: https://kauth.kakao.com/oauth/authorize
+
+springdoc:
+  use-fqn: true
+  swagger-ui:
+    tags-sorter: alpha
+    operations-sorter: alpha
+    doc-expansion: none

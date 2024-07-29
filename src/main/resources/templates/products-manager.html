@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Product List</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+        h1, h2 {
+            color: #333;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+            background-color: #fff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        th, td {
+            padding: 10px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        tr:hover {
+            background-color: #f1f1f1;
+        }
+        form {
+            background-color: #fff;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            margin: 10px 0 5px;
+        }
+        input[type="text"],
+        input[type="number"] {
+            width: 100%;
+            padding: 8px;
+            margin: 5px 0 20px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        .form-container {
+            display: flex;
+            gap: 20px;
+        }
+        .form-container > div {
+            flex: 1;
+        }
+    </style>
+</head>
+<body>
+<h1>Product List</h1>
+<form id="deleteForm">
+    <table>
+        <thead>
+        <tr>
+            <th>Select</th>
+            <th>Product ID</th>
+            <th>Product Name</th>
+            <th>Description</th>
+            <th>Price</th>
+            <th>ImageUrl</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="product : ${products}">
+            <td><input type="checkbox" name="productIds" th:value="${product.id}"/></td>
+            <td th:text="${product.id}">Product ID</td>
+            <td th:text="${product.name}">Product Name</td>
+            <td th:text="${product.description}">Description</td>
+            <td th:text="${product.price}">Price</td>
+            <td th:text="${product.imageUrl}">ImageUrl</td>
+        </tr>
+        </tbody>
+    </table>
+    <button type="button" onclick="deleteProducts()">Delete Selected</button>
+</form>
+
+<script>
+    function deleteProducts() {
+        var checkboxes = document.querySelectorAll('input[type="checkbox"][name="productIds"]:checked');
+        if (checkboxes.length === 0) {
+            alert('최소 1개의 상품을 선택해주세요');
+            return;
+        }
+        if (checkboxes.length > 10) {
+            alert('최대 10개까지 선택 가능합니다');
+            return;
+        }
+
+        var productIds = Array.from(checkboxes).map(cb => cb.value);
+
+        fetch('/products', {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ productIds: productIds })
+        })
+            .then(response => {
+                if (response.ok) {
+                    window.location.href = '/products/manager';
+                } else {
+                    alert('상품 삭제에 실패했습니다');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('상품 삭제 중 오류가 발생했습니다');
+            });
+    }
+</script>
+
+
+<div class="form-container">
+    <div>
+        <h2>Add New Product</h2>
+        <form id="addProductForm" method="post">
+            <label for="productName">Product Name:</label>
+            <input type="text" id="productName" name="name" required/>
+
+            <label for="productDescription">Description:</label>
+            <input type="text" id="productDescription" name="description" required/>
+
+            <label for="productPrice">Price:</label>
+            <input type="number" id="productPrice" name="price" step="1" required/>
+
+            <label for="productImageUrl">ImageUrl:</label>
+            <input type="text" id="productImageUrl" name="imageUrl" required/>
+
+            <button type="submit">Add Product</button>
+        </form>
+
+        <script>
+            document.getElementById('addProductForm').addEventListener('submit', function(event) {
+                event.preventDefault();
+
+                const name = document.getElementById('productName').value;
+                const description = document.getElementById('productDescription').value;
+                const price = document.getElementById('productPrice').value;
+                const imageUrl = document.getElementById('productImageUrl').value;
+
+                const data = {
+                    name: name,
+                    description: description,
+                    price: price,
+                    imageUrl: imageUrl
+                };
+
+                fetch('/products', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(data)
+                })
+                    .then(response => {
+                        if (response.ok) {
+                            window.location.href = '/products/manager';
+                        } else {
+                            alert('상품 추가에 실패했습니다');
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        alert('상품 추가 중 오류가 발생했습니다');
+                    });
+            });
+        </script>
+    </div>
+    <div>
+        <h2>Edit Product</h2>
+        <form id="editProductForm" method="post">
+            <label for="productId">PRODUCT ID:</label>
+            <input type="text" id="productId" name="id" required/>
+
+            <label for="editProductName">PRODUCT NAME:</label>
+            <input type="text" id="editProductName" name="name" required/>
+
+            <label for="editProductDescription">DESCRIPTION:</label>
+            <input type="text" id="editProductDescription" name="description" required/>
+
+            <label for="editProductPrice">PRICE:</label>
+            <input type="number" id="editProductPrice" name="price" step="1" required/>
+
+            <label for="editProductImageUrl">IMAGE URL:</label>
+            <input type="text" id="editProductImageUrl" name="imageUrl" required/>
+
+            <button type="submit">제품 수정</button>
+        </form>
+
+        <script>
+            document.getElementById('editProductForm').addEventListener('submit', function(event) {
+                event.preventDefault();
+
+                const id = document.getElementById('productId').value;
+                const name = document.getElementById('editProductName').value;
+                const description = document.getElementById('editProductDescription').value;
+                const price = document.getElementById('editProductPrice').value;
+                const imageUrl = document.getElementById('editProductImageUrl').value;
+
+                const data = {
+                    name: name,
+                    description: description,
+                    price: price,
+                    imageUrl: imageUrl
+                };
+
+                fetch(`/products/${id}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(data)
+                })
+                    .then(response => {
+                        if (response.ok) {
+                            window.location.href = '/products/manager';
+                        } else {
+                            alert('상품 수정에 실패했습니다');
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        alert('상품 수정 중 오류가 발생했습니다');
+                    });
+            });
+        </script>
+    </div>
+</div>
+
+</body>
+</html>
