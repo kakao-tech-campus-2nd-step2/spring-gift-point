@@ -1,5 +1,7 @@
 package gift.product;
 
+import gift.product.dto.ProductDTO;
+import gift.product.entity.Product;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;

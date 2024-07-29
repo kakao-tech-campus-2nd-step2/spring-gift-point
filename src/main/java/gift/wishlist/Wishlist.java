@@ -1,7 +1,7 @@
 package gift.wishlist;
 
 import gift.member.Member;
-import gift.product.Product;
+import gift.product.entity.Product;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;

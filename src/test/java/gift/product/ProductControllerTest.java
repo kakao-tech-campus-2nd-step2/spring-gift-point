@@ -13,6 +13,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.fasterxml.jackson.databind.ObjectMapper;
 import gift.category.Category;
 import gift.category.CategoryDTO;
+import gift.product.dto.ProductDTO;
+import gift.product.entity.Product;
 import gift.token.JwtProvider;
 import java.util.Arrays;
 import java.util.List;

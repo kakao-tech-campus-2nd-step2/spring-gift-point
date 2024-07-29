@@ -1,6 +1,6 @@
 package gift.option.entity;
 
-import gift.product.Product;
+import gift.product.entity.Product;
 import jakarta.persistence.AttributeOverride;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;

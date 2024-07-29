@@ -5,7 +5,7 @@ import static gift.exception.ErrorMessage.OPTION_NOT_FOUND;
 import static gift.exception.ErrorMessage.PRODUCT_NOT_FOUND;
 
 import gift.option.entity.Option;
-import gift.product.Product;
+import gift.product.entity.Product;
 import gift.product.ProductRepository;
 import java.util.List;
 import org.springframework.stereotype.Service;

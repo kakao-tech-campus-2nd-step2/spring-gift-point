@@ -5,6 +5,8 @@ import static gift.exception.ErrorMessage.PRODUCT_NOT_FOUND;
 
 import gift.category.Category;
 import gift.category.CategoryRepository;
+import gift.product.dto.ProductDTO;
+import gift.product.entity.Product;
 import java.util.List;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

@@ -1,7 +1,7 @@
 package gift.admin;
 
 import gift.category.CategoryService;
-import gift.product.Product;
+import gift.product.entity.Product;
 import gift.product.ProductService;
 import java.util.stream.IntStream;
 import org.springframework.data.domain.Page;

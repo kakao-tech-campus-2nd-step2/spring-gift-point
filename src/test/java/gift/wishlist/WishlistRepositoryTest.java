@@ -7,7 +7,7 @@ import gift.category.Category;
 import gift.category.CategoryRepository;
 import gift.member.Member;
 import gift.member.MemberRepository;
-import gift.product.Product;
+import gift.product.entity.Product;
 import gift.product.ProductRepository;
 import java.util.List;
 import java.util.Optional;

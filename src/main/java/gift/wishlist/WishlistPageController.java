@@ -1,7 +1,7 @@
 package gift.wishlist;
 
 import gift.member.MemberTokenResolver;
-import gift.product.Product;
+import gift.product.entity.Product;
 import gift.product.ProductService;
 import gift.token.MemberTokenDTO;
 import java.util.List;

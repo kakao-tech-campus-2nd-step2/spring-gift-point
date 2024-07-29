@@ -10,6 +10,8 @@ import static org.mockito.Mockito.when;
 import gift.category.Category;
 import gift.category.CategoryDTO;
 import gift.category.CategoryRepository;
+import gift.product.dto.ProductDTO;
+import gift.product.entity.Product;
 import java.util.List;
 import java.util.Optional;
 import org.junit.jupiter.api.DisplayName;

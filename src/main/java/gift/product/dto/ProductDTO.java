@@ -1,4 +1,4 @@
-package gift.product;
+package gift.product.dto;
 
 import static gift.exception.ErrorMessage.PRODUCT_NAME_ALLOWED_CHARACTER;
 import static gift.exception.ErrorMessage.PRODUCT_NAME_KAKAO_STRING;

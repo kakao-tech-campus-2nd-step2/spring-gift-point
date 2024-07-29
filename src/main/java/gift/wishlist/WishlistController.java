@@ -1,7 +1,7 @@
 package gift.wishlist;
 
 import gift.member.MemberTokenResolver;
-import gift.product.Product;
+import gift.product.entity.Product;
 import gift.token.MemberTokenDTO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;

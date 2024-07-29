@@ -7,7 +7,7 @@ import static gift.exception.ErrorMessage.WISHLIST_NOT_FOUND;
 
 import gift.member.Member;
 import gift.member.MemberRepository;
-import gift.product.Product;
+import gift.product.entity.Product;
 import gift.product.ProductRepository;
 import gift.token.MemberTokenDTO;
 import java.util.List;
