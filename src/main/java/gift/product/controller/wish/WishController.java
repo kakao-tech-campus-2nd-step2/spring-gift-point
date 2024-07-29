@@ -1,5 +1,6 @@
 package gift.product.controller.wish;
 
+import gift.product.ProblemDetailResponse;
 import gift.product.dto.auth.LoginMemberIdDto;
 import gift.product.dto.wish.WishDto;
 import gift.product.model.Wish;
@@ -59,7 +60,7 @@ public class WishController {
 
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "성공", content = @Content(mediaType = "application/json", schema = @Schema(implementation = Wish.class))),
-        @ApiResponse(responseCode = "404", description = "존재하지 않는 리소스", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProblemDetail.class)))
+        @ApiResponse(responseCode = "404", description = "존재하지 않는 리소스", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProblemDetailResponse.class)))
     })
     @GetMapping("/{id}")
     public ResponseEntity<Wish> getWish(@PathVariable(name = "id") Long id,
@@ -71,8 +72,8 @@ public class WishController {
 
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "성공", content = @Content(mediaType = "application/json", schema = @Schema(implementation = Wish.class))),
-        @ApiResponse(responseCode = "400", description = "잘못된 요청", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProblemDetail.class))),
-        @ApiResponse(responseCode = "404", description = "존재하지 않는 리소스", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProblemDetail.class)))
+        @ApiResponse(responseCode = "400", description = "잘못된 요청", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProblemDetailResponse.class))),
+        @ApiResponse(responseCode = "404", description = "존재하지 않는 리소스", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProblemDetailResponse.class)))
     })
     @PostMapping("/insert")
     public ResponseEntity<Wish> insertWish(@Valid @RequestBody WishDto wishDto,
@@ -85,7 +86,7 @@ public class WishController {
 
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "성공"),
-        @ApiResponse(responseCode = "404", description = "존재하지 않는 리소스", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProblemDetail.class)))
+        @ApiResponse(responseCode = "404", description = "존재하지 않는 리소스", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProblemDetailResponse.class)))
     })
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<Void> deleteWish(@PathVariable(name = "id") Long id,

@@ -1,5 +1,6 @@
 package gift.product.controller.order;
 
+import gift.product.ProblemDetailResponse;
 import gift.product.dto.auth.LoginMemberIdDto;
 import gift.product.dto.order.OrderDto;
 import gift.product.model.Order;
@@ -45,7 +46,7 @@ public class OrderController {
 
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "성공", content = @Content(mediaType = "application/json", schema = @Schema(implementation = Order.class))),
-        @ApiResponse(responseCode = "404", description = "존재하지 않는 리소스", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProblemDetail.class)))
+        @ApiResponse(responseCode = "404", description = "존재하지 않는 리소스", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProblemDetailResponse.class)))
     })
     @GetMapping("/{id}")
     public ResponseEntity<Order> getOrder(@PathVariable(name = "id") Long id,
@@ -58,8 +59,8 @@ public class OrderController {
 
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "성공", content = @Content(mediaType = "application/json", schema = @Schema(implementation = Order.class))),
-        @ApiResponse(responseCode = "403", description = "사용자 인증 도중 발생한 에러", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProblemDetail.class))),
-        @ApiResponse(responseCode = "404", description = "존재하지 않는 리소스", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProblemDetail.class)))
+        @ApiResponse(responseCode = "403", description = "사용자 인증 도중 발생한 에러", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProblemDetailResponse.class))),
+        @ApiResponse(responseCode = "404", description = "존재하지 않는 리소스", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProblemDetailResponse.class)))
     })
     @PostMapping
     public ResponseEntity<Order> doOrder(@RequestBody OrderDto orderDto,
@@ -72,7 +73,7 @@ public class OrderController {
 
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "성공"),
-        @ApiResponse(responseCode = "404", description = "존재하지 않는 리소스", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProblemDetail.class))),
+        @ApiResponse(responseCode = "404", description = "존재하지 않는 리소스", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProblemDetailResponse.class))),
     })
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<Void> deleteOrder(@PathVariable(name = "id") Long id,

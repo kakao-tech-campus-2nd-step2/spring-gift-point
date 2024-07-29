@@ -1,5 +1,6 @@
 package gift.product.controller.product;
 
+import gift.product.ProblemDetailResponse;
 import gift.product.dto.product.ClientProductDto;
 import gift.product.model.Product;
 import gift.product.service.ProductService;
@@ -57,7 +58,7 @@ public class ProductController {
 
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "성공", content = @Content(mediaType = "application/json", schema = @Schema(implementation = Product.class))),
-        @ApiResponse(responseCode = "404", description = "존재하지 않는 리소스", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProblemDetail.class)))
+        @ApiResponse(responseCode = "404", description = "존재하지 않는 리소스", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProblemDetailResponse.class)))
     })
     @GetMapping("/{id}")
     public ResponseEntity<Product> getProduct(@PathVariable(name = "id") Long id) {
@@ -67,7 +68,7 @@ public class ProductController {
 
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "성공", content = @Content(mediaType = "application/json", schema = @Schema(implementation = Product.class))),
-        @ApiResponse(responseCode = "404", description = "존재하지 않는 리소스", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProblemDetail.class)))
+        @ApiResponse(responseCode = "404", description = "존재하지 않는 리소스", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProblemDetailResponse.class)))
     })
     @PostMapping("/insert")
     public ResponseEntity<Product> insertProduct(@Valid @RequestBody ClientProductDto productDto) {
@@ -78,7 +79,7 @@ public class ProductController {
 
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "성공", content = @Content(mediaType = "application/json", schema = @Schema(implementation = Product.class))),
-        @ApiResponse(responseCode = "404", description = "존재하지 않는 리소스", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProblemDetail.class)))
+        @ApiResponse(responseCode = "404", description = "존재하지 않는 리소스", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProblemDetailResponse.class)))
     })
     @PutMapping("/update/{id}")
     public ResponseEntity<Product> updateProduct(@PathVariable(name = "id") Long id,
@@ -89,7 +90,7 @@ public class ProductController {
 
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "성공"),
-        @ApiResponse(responseCode = "404", description = "존재하지 않는 리소스", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProblemDetail.class)))
+        @ApiResponse(responseCode = "404", description = "존재하지 않는 리소스", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProblemDetailResponse.class)))
     })
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<Void> deleteProduct(@PathVariable(name = "id") Long id) {

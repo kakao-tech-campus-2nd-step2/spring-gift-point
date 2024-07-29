@@ -1,6 +1,7 @@
 package gift.product.controller.category;
 
 
+import gift.product.ProblemDetailResponse;
 import gift.product.dto.category.CategoryDto;
 import gift.product.model.Category;
 import gift.product.service.CategoryService;
@@ -41,7 +42,7 @@ public class CategoryController {
 
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "성공", content = @Content(mediaType = "application/json", schema = @Schema(implementation = Category.class))),
-        @ApiResponse(responseCode = "404", description = "존재하지 않는 리소스", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProblemDetail.class)))
+        @ApiResponse(responseCode = "404", description = "존재하지 않는 리소스", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProblemDetailResponse.class)))
     })
     @GetMapping("/{id}")
     public ResponseEntity<Category> getCategory(@PathVariable(name = "id") Long id) {
@@ -51,7 +52,7 @@ public class CategoryController {
 
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "성공", content = @Content(mediaType = "application/json", schema = @Schema(implementation = Category.class))),
-        @ApiResponse(responseCode = "400", description = "잘못된 요청", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProblemDetail.class)))
+        @ApiResponse(responseCode = "400", description = "잘못된 요청", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProblemDetailResponse.class)))
     })
     @PostMapping("/insert")
     public ResponseEntity<Category> insertCategory(@RequestBody CategoryDto categoryDto) {
@@ -61,7 +62,7 @@ public class CategoryController {
 
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "성공", content = @Content(mediaType = "application/json", schema = @Schema(implementation = Category.class))),
-        @ApiResponse(responseCode = "404", description = "존재하지 않는 리소스", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProblemDetail.class)))
+        @ApiResponse(responseCode = "404", description = "존재하지 않는 리소스", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProblemDetailResponse.class)))
     })
     @PutMapping("/update/{id}")
     public ResponseEntity<Category> updateCategory(@PathVariable(name = "id") Long id,
@@ -72,7 +73,7 @@ public class CategoryController {
 
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "성공"),
-        @ApiResponse(responseCode = "404", description = "존재하지 않는 리소스", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProblemDetail.class)))
+        @ApiResponse(responseCode = "404", description = "존재하지 않는 리소스", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProblemDetailResponse.class)))
     })
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<Void> deleteCategory(@PathVariable(name = "id") Long id) {

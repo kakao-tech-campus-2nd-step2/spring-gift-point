@@ -1,5 +1,6 @@
 package gift.product.controller.auth;
 
+import gift.product.ProblemDetailResponse;
 import gift.product.dto.auth.JwtResponse;
 import gift.product.dto.auth.LoginMemberIdDto;
 import gift.product.dto.auth.MemberDto;
@@ -39,7 +40,7 @@ public class AuthController {
 
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "성공", content = @Content(mediaType = "application/json", schema = @Schema(implementation = RegisterSuccessResponse.class))),
-        @ApiResponse(responseCode = "400", description = "잘못된 요청", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProblemDetail.class)))
+        @ApiResponse(responseCode = "400", description = "잘못된 요청", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProblemDetailResponse.class)))
     })
     @PostMapping("/members/register")
     public ResponseEntity<RegisterSuccessResponse> registerMember(
@@ -52,7 +53,7 @@ public class AuthController {
 
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "성공", content = @Content(mediaType = "application/json", schema = @Schema(implementation = JwtResponse.class))),
-        @ApiResponse(responseCode = "403", description = "로그인 실패", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProblemDetail.class)))
+        @ApiResponse(responseCode = "403", description = "로그인 실패", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProblemDetailResponse.class)))
     })
     @PostMapping("/members/login")
     public ResponseEntity<JwtResponse> loginMember(@RequestBody MemberDto memberDto) {
@@ -80,7 +81,7 @@ public class AuthController {
 
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "성공", content = @Content(mediaType = "application/json", schema = @Schema(implementation = Long.class))),
-        @ApiResponse(responseCode = "403", description = "로그인 실패", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProblemDetail.class)))
+        @ApiResponse(responseCode = "403", description = "로그인 실패", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProblemDetailResponse.class)))
     })
     @PostMapping("/members/login/kakao/unlink")
     public ResponseEntity<Long> unlinkKakaoAccount(HttpServletRequest request) {
