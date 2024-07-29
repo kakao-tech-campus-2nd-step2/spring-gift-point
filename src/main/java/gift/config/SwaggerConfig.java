@@ -15,6 +15,7 @@ import org.springframework.context.annotation.Configuration;
 public class SwaggerConfig {
 
     private final String serverUrl;
+    private final String JWT = "JWT";
 
     public SwaggerConfig(@Value("${swagger.server-url}") String serverUrl) {
         this.serverUrl = serverUrl;
@@ -22,12 +23,11 @@ public class SwaggerConfig {
 
     @Bean
     public OpenAPI openAPI() {
-        String jwt = "JWT";
         SecurityRequirement securityRequirement = new SecurityRequirement()
-                .addList(jwt);
+                .addList(JWT);
         Components components = new Components()
-                .addSecuritySchemes(jwt, new SecurityScheme()
-                        .name(jwt)
+                .addSecuritySchemes(JWT, new SecurityScheme()
+                        .name(JWT)
                         .type(SecurityScheme.Type.HTTP)
                         .scheme("bearer")
                         .description("토큰값을 입력하여 인증을 활성화할 수 있습니다.")
