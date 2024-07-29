@@ -71,7 +71,9 @@ public class KakaoApiProvider {
         String optionName = kakaoMessageRequestDto.optionName();
         int num = kakaoMessageRequestDto.quantity();
 
-        return productName + "[" + optionName + "]" + " 상품이 " + num + "개 주문되었습니다.";
+        String message = kakaoMessageRequestDto.message();
+
+        return productName + "[" + optionName + "]" + " 상품이 " + num + "개 주문되었습니다." + "\n메시지: " + message;
     }
 
     private ObjectNode createLinkNode() {
