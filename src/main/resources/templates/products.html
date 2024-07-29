@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>상품 목록</title>
+</head>
+<body>
+<h1>상품 목록</h1>
+<button class="btn btn-primary float-end"
+        th:onclick="|location.href='@{/products/add}'|"
+        type="button">상품 추가
+</button>
+<div>
+  <table class="table">
+
+    <thead>
+    <tr>
+      <th>이름</th>
+      <th>가격</th>
+      <th>이미지</th>
+      <th>카테고리</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    <tr th:each="product, status:${products}">
+      <td th:text="${product.name}">NAME</td>
+      <td th:text="${product.price}">PRICE</td>
+      <td th:text="${product.imageUrl}">IMAGE</td>
+      <td th:text="${categories[status.index]}">CATEGORY</td>
+      <td>
+        <a th:href="@{/products/update/{id}(id=${product.id})}">수정</a>
+        <a th:href="@{/products/delete/{id}(id=${product.id})}">삭제</a>
+      </td>
+    </tr>
+    </tbody>
+
+  </table>
+</div>
+<div th:if="${!products.isEmpty()}">
+  <ul class="pagination justify-content-center">
+    <li class="page-item" th:classappend="${currentPage == 0} ? 'disabled'">
+      <a class="page-link"
+         th:href="${currentPage == 0} ? '#' : @{'/products?page=' + (${currentPage} - 1) + '&size=' + ${products.size} + '&sortBy=' + ${sortBy} + '&sortDirection=' + ${sortDirection}}">
+        <span>이전</span>
+      </a>
+    </li>
+    <li class="page-item" th:classappend="${currentPage + 1 >= products.totalPages} ? 'disabled'">
+      <a class="page-link"
+         th:href="${currentPage + 1 >= products.totalPages} ? '#' : @{'/products?page=' + (${currentPage} + 1) + '&size=' + ${products.size} + '&sortBy=' + ${sortBy} + '&sortDirection=' + ${sortDirection}}">
+        <span>다음</span>
+      </a>
+    </li>
+  </ul>
+</div>
+</body>
+</html>
