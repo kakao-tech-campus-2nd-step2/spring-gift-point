@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        * {
+            margin:0;
+            padding: 0;
+        }
+        #content {
+           width: 700px;
+           height: 500px;
+           position: absolute;
+           left: 50%;
+           top: 50%;
+           margin-left: -350px;
+           margin-top: -250px;
+           background-color: #EEEDEB;
+           border-radius: 5%;
+           padding: 50px;
+        }
+        #header{
+            margin-bottom: 30px;;
+        }
+        .space {
+            height: 30px;
+        }
+        input {
+            height: 30px;
+            width: 100%;
+        }
+        button {
+            width: 100%;
+            height: 50px;
+            margin-top: 120px;
+            background: hsl(155, 70%, 59%);
+            cursor: pointer;
+            border: none;
+            text-decoration: none;
+            border-radius: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div id="content">
+        <h1 id="header">상품 등록</h1>
+        <form onsubmit="
+        event.preventDefault();
+        addProduct();
+        ">
+            상품 이름: <input type="text" id="name"><br>
+            <div class="space"></div>
+            상품 가격: <input type="text" id="price"><br>
+            <div class="space"></div>
+            상품 이미지 URL: <input type="text" id="imageUrl">
+            <button type="submit">등록</button>
+        </form>
+    </div>
+    <script>
+        function addProduct() {
+            const name = document.getElementById("name").value;
+            const price = parseInt(document.getElementById("price").value);
+            const imageUrl = document.getElementById("imageUrl").value;
+
+            fetch('/api/products', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({name: name, price: price, imageUrl: imageUrl})
+            })
+            .then(response => {
+                if (response.ok) {
+                    window.location.href = '/products'
+                } else {
+                    alert("상품 생성 중 오류 발생");
+                }
+            })
+        }
+    </script>
+</body>
+</html>
