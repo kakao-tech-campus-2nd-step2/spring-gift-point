@@ -10,6 +10,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 public class CategoryController {
     private final CategoryService categoryService;
@@ -21,17 +23,9 @@ public class CategoryController {
      * 카테고리 조회
      */
     @GetMapping("api/categories")
-    public ResponseEntity<Page<CategoryResponse>> readCategory(
-            @RequestParam(value = "page", defaultValue = "0") int page,
-            @RequestParam(value = "size", defaultValue = "5") int size,
-            @RequestParam(value = "sort", defaultValue = "asc") String sort,
-            @RequestParam(value = "field", defaultValue = "id") String field
-    ){
-        if(sort.equals("asc")){
-            Page<CategoryResponse> categories = categoryService.findAllASC(page, size, field);
-            return new ResponseEntity<>(categories, HttpStatus.OK);
-        }
-        Page<CategoryResponse> categories = categoryService.findAllDESC(page, size, field);
+    public ResponseEntity<List<CategoryResponse>> readCategory(){
+        List<CategoryResponse> categories = categoryService.findAll();
+
         return new ResponseEntity<>(categories, HttpStatus.OK);
     }
     /*
