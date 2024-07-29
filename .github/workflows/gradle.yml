@@ -30,13 +30,14 @@ jobs:
           touch ./src/main/resources/application.yml
           echo "${{ secrets.APPLICATION }}" > ./src/main/resources/application.yml
           cat ./src/main/resources/application.yml
-      - name: Add EC2 Host Key
-        run: |
-          mkdir -p ~/.ssh
-          ssh-keyscan ${{ secrets.EC2_HOST }} >> ~/.ssh/known_hosts
 
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
+
+      - name: Add Host Key
+        run: |
+          mkdir -p ~/.ssh
+          ssh-keyscan ${{ secrets.SSH_KEY }} >> ~/.ssh/known_hosts
 
       - name: Build with Gradle
         run: ./gradlew build
