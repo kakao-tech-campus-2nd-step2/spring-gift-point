@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Gift List</title>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+<div class="container">
+    <h1 class="mt-5">Gift List</h1>
+    <table class="table table-bordered mt-3">
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Price</th>
+            <th>Image</th>
+            <th>Category</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="gift : ${giftlist}">
+            <td th:text="${gift.id}"></td>
+            <td><a th:href="@{|/admin/gift/detail/${gift.id}|}" th:text="${gift.name}"></a></td>
+            <td th:text="${gift.price}"></td>
+            <td th:text="${gift.imageUrl}"></td>
+            <td th:text="${gift.category.name}"></td>
+        </tr>
+        </tbody>
+    </table>
+    <a class="btn btn-primary" th:href="@{/admin/gift/create}">상품 등록</a>
+</div>
+</body>
+</html>
