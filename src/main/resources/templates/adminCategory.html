@@ -42,27 +42,9 @@
     <!-- AJAX를 통해 데이터를 로드 -->
     </tbody>
 </table>
-<div>
-    <button id="prevPage">Previous</button>
-    <label for="p_sort"></label>
-    <select name="p_sort" id="p_sort">
-        <option value="asc">오름차순</option>
-        <option value="desc">내림차순</option>
-    </select>
-    <label for="p_field"></label>
-    <select name="p_field" id="p_field">
-        <option value="id">id</option>
-        <option value="name">name</option>
-    </select>
-    <button id="search" onclick="getCategories(currentPage)">검색</button>
-    <button id="nextPage">Next</button>
-</div>
 </body>
 <script>
-    var currentPage = 0;
-    var pageSize = 5;
-
-    function getCategories(page){
+    function getCategories(){
         $.ajax({
             url: '/api/categories',
             method: 'GET',
@@ -84,11 +66,6 @@
                         </tr>
                     `;
                     tbody.append(row);
-
-                    currentPage = data.number;
-
-                    $('#prevPage').prop('disabled', data.first);
-                    $('#nextPage').prop('disabled', data.last);
                 });
             },
             error: function(err) {
@@ -104,17 +81,7 @@
     }
 
     $(document).ready(function() {
-        getCategories(currentPage);
-
-        $('#prevPage').click(function() {
-            if (currentPage > 0) {
-                getCategories(currentPage - 1);
-            }
-        });
-
-        $('#nextPage').click(function() {
-            getCategories(currentPage + 1);
-        });
+        getCategories();
 
         if(localStorage.getItem('token')){
             var inline = $('#header');

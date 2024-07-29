@@ -94,15 +94,10 @@
     var currentPage = 0;
     var pageSize = 5;
 
-    function getCategories(page){
+    function getCategories(){
         $.ajax({
             url: '/api/categories',
             method: 'GET',
-            data : {
-                page : page,
-                size : pageSize,
-                sort : [$('#p_field').val(), $('#p_sort').val()]
-            },
             success: function(data) {
                 console.log(data);
                 var contents = data.content;
@@ -118,9 +113,6 @@
                     select.append(row);
                     p_select.append(row);
                 });
-
-                if(data.numberOfElements !== 0)
-                    getCategories(page + 1);
             },
             error: function(err) {
                 if(err.responseJSON){
@@ -188,7 +180,7 @@
     }
 
     $(document).ready(function() {
-        getCategories(0);
+        getCategories();
         getProducts(currentPage);
 
         $('#prevPage').click(function() {

@@ -49,32 +49,9 @@
     <!-- AJAX를 통해 데이터를 로드 -->
     </tbody>
 </table>
-<div>
-    <button id="prevPage">Previous</button>
-    <label for="p_sort"></label>
-    <select name="p_sort" id="p_sort">
-        <option value="asc">오름차순</option>
-        <option value="desc">내림차순</option>
-    </select>
-    <label for="p_field"></label>
-    <select name="p_field" id="p_field">
-        <option value="id">id</option>
-        <option value="name">name</option>
-        <option value="quantity">quantity</option>
-    </select>
-    <button id="search" onclick="getCategories(currentPage)">검색</button>
-    <button id="nextPage">Next</button>
-</div>
 </body>
 <script>
-    const url = new URL(window.location.href);
-    const params = new URLSearchParams(url.search);
-    var product_id = params.get('product_id');
-
-    var currentPage = 0;
-    var pageSize = 5;
-
-    function getOptions(page){
+    function getOptions(){
         $.ajax({
             url: '/api/products/' + product_id + '/options',
             method: 'GET',
@@ -99,9 +76,6 @@
                     tbody.append(row);
 
                     currentPage = data.number;
-
-                    $('#prevPage').prop('disabled', data.first);
-                    $('#nextPage').prop('disabled', data.last);
                 });
             },
             error: function(err) {
@@ -117,17 +91,7 @@
     }
 
     $(document).ready(function() {
-        getOptions(currentPage);
-
-        $('#prevPage').click(function() {
-            if (currentPage > 0) {
-                getOptions(currentPage - 1);
-            }
-        });
-
-        $('#nextPage').click(function() {
-            getOptions(currentPage + 1);
-        });
+        getOptions();
 
         if(localStorage.getItem('token')){
             var inline = $('#header');
