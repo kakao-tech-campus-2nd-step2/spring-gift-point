@@ -20,10 +20,10 @@ public class RestCall {
             return restTemplate.exchange(url, method, requestEntity, responseType);
         } catch (HttpClientErrorException e) {
             // 4xx 에러 처리
-            throw new BaseHandler(e.getStatusCode(), "ClientError");
+            throw new BaseHandler(e.getStatusCode(), e.getStatusText());
         } catch (HttpServerErrorException e) {
             // 5xx 에러 처리
-            throw new BaseHandler(e.getStatusCode(), "ServerError");
+            throw new BaseHandler(e.getStatusCode(), e.getStatusText());
         }
     }
 }

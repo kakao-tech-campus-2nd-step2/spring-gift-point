@@ -49,10 +49,6 @@ public class LoginService {
     }
 
     public Token kakaoLogin(kakaoToken token) {
-//        토큰 만료 검증
-        if (token.getCode() == -401) {
-            throw new BaseHandler(HttpStatus.UNAUTHORIZED, "카카오 토큰이 만료됨");
-        }
 //        토큰, type 으로 유저 조회
         kakaoInfo info = apiCall.getKakaoTokenInfo(token.getAccess_token());
         UserEntity user = socialRepository.findBySocialIdAndType(info.getId(), SocialType.KAKAO)
