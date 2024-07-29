@@ -1,4 +1,4 @@
-package gift;
+package gift.auth;
 
 public record OAuthToken (
         String access_token,

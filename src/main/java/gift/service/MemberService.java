@@ -1,5 +1,6 @@
 package gift.service;
 
+import gift.auth.JwtHelper;
 import gift.repository.MemberRepository;
 import gift.vo.Member;
 import org.springframework.stereotype.Service;

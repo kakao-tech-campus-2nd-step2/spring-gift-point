@@ -1,6 +1,6 @@
 package gift.controller;
 
-import gift.KakaoProperties;
+import gift.component.kakao.KakaoProperties;
 import gift.vo.Product;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;

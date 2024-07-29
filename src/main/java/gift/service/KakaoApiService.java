@@ -1,9 +1,9 @@
 package gift.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import gift.KakaoApiProvider;
-import gift.KakaoUserInfoResponse;
-import gift.OAuthToken;
+import gift.component.kakao.KakaoApiProvider;
+import gift.dto.KakaoUserInfoResponseDto;
+import gift.auth.OAuthToken;
 import gift.dto.KakaoMessageRequestDto;
 import gift.vo.Member;
 import org.springframework.http.*;
@@ -34,11 +34,11 @@ public class KakaoApiService {
 
         HttpEntity<Object> request = new HttpEntity<>(headers);
 
-        ResponseEntity<KakaoUserInfoResponse> response = restTemplate.exchange(
+        ResponseEntity<KakaoUserInfoResponseDto> response = restTemplate.exchange(
                 KakaoApiProvider.KAKAO_USER_PROFILE_URI,
                 HttpMethod.POST,
                 request,
-                KakaoUserInfoResponse.class);
+                KakaoUserInfoResponseDto.class);
 
         return response.getBody().id();
     }

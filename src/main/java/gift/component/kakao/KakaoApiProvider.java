@@ -1,8 +1,9 @@
-package gift;
+package gift.component.kakao;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import gift.auth.OAuthToken;
 import gift.dto.KakaoMessageRequestDto;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;

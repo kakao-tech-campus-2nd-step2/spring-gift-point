@@ -3,7 +3,7 @@ package gift.controller;
 import gift.dto.KakaoMessageRequestDto;
 import gift.dto.OrderRequestDto;
 import gift.dto.OrderResponseDto;
-import gift.service.JwtUtil;
+import gift.auth.JwtUtil;
 import gift.service.KakaoApiService;
 import gift.service.OrderService;
 import gift.vo.Option;

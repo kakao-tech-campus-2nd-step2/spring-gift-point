@@ -1,4 +1,4 @@
-package gift.service;
+package gift.auth;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;

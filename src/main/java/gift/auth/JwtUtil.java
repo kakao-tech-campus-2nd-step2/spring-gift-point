@@ -1,5 +1,7 @@
-package gift.service;
+package gift.auth;
 
+import gift.service.KakaoApiService;
+import gift.service.MemberService;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.stereotype.Component;
 

@@ -1,4 +1,4 @@
-package gift;
+package gift.config;
 
 import gift.exception.CustomResponseErrorHandler;
 import org.springframework.boot.web.client.RestTemplateBuilder;

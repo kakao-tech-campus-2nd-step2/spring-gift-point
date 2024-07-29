@@ -1,7 +1,7 @@
 package gift.controller;
 
 import gift.dto.WishDto;
-import gift.service.JwtUtil;
+import gift.auth.JwtUtil;
 import gift.service.WishlistService;
 import gift.vo.Wish;
 import io.swagger.v3.oas.annotations.Operation;
