@@ -14,6 +14,9 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.Executors;
+
 
 @SpringBootTest
 @Transactional
@@ -96,5 +99,33 @@ class OptionServiceTest {
         Assertions.assertThatThrownBy(() -> optionService.orderOption(savedOption.id(), orderRequest)).isInstanceOf(BadRequestException.class);
 
         optionService.deleteOption(savedOption.id());
+    }
+
+    @Test
+    @DisplayName("동시성 테스트 - 5개의 쓰레드풀에 100개의 요청을 보냈을 때에도 정상적으로 요청이 처리 된다.")
+    public void concurrencyTest() throws InterruptedException {
+        //given
+        var orderRequest = new GiftOrderRequest(1L, 1, "hello");
+        int requestCount = 100;
+        var executorService = Executors.newFixedThreadPool(5);
+        var countDownLatch = new CountDownLatch(requestCount);
+        //when
+        for (int i = 0; i < requestCount; i++) {
+            executorService.execute(() -> {
+                try {
+                    optionService.orderOption(1L, orderRequest);
+                } finally {
+                    countDownLatch.countDown();
+                }
+            });
+        }
+        countDownLatch.await();
+        //then
+        var option = optionService.getOptions(3L, Pageable.unpaged()).stream()
+                .filter((op) -> op.id().equals(1L))
+                .findFirst()
+                .get();
+
+        Assertions.assertThat(option.quantity()).isEqualTo(9500);
     }
 }
