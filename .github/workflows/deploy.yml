@@ -27,14 +27,17 @@ jobs:
 
           # application.yml 파일에 있는 환경 변수를 secrets에 저장된 값으로 변경합니다.
       - name: Replace environment variables in application-kakao.yml
-        run: |
-          sed -i 's/${CLIENT_ID}/'"${{ secrets.CLIENT_ID }}"'/g' src/main/resources/application-kakao.yml
-          sed -i 's/${REDIRECT_URI}/'"${{ secrets.REDIRECT_URI }}"'/g' src/main/resources/application-kakao.yml
-          sed -i 's/${JWT_SECRET}/'"${{ secrets.JWT_SECRET }}"'/g' src/main/resources/application.yml
-      
-      
-      
-      
+        with:
+          files: ./src/main/resources/application-kakao.yml
+        env:
+          kakao.redirect_uri: ${{ secrets.REDIRECT_URI }}
+          kakao.client_id: ${{ secrets.CLIENT_ID }}
+
+      - name: Replace environment variables in application.yml
+        with:
+          files: ./src/main/resources/application.yml
+        env:
+          spring.jwt: ${{ secrets.JWT_SECRET }}
       
       # 빌드 실행
       - name: Build with Gradle
