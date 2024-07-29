@@ -18,6 +18,7 @@ public class WishProductResponse {
         this.id = wishProduct.getId();
         this.user = new UserResponse(wishProduct.getUser());
         this.product = new ProductResponse(wishProduct.getProduct());
+        this.createDate = wishProduct.getCreateDate();
     }
 
     public Long getId(){
