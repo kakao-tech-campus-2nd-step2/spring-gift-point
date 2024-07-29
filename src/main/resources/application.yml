@@ -1,0 +1,43 @@
+spring:
+  config:
+    import: application-kakao.yml
+  application:
+    name: spring-gift
+  datasource:
+    url: jdbc:h2:mem:dev;MODE=MYSQL;DB_CLOSE_DELAY=-1
+
+  h2:
+    console:
+      enabled: true
+
+  sql:
+    init:
+      data-locations: classpath:/static/sql/data.sql
+      mode: always
+
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    properties:
+      hibernate:
+        format_sql: true
+        use_sql_comments: true
+        dialect: org.hibernate.dialect.H2Dialect
+        show_sql: true
+    defer-datasource-initialization: true
+
+logging:
+  level:
+    org:
+      hibernate:
+        type:
+          descriptor:
+            sql: trace
+
+jwt:
+  secret: secret!!secret!!secret!!secret!!
+  expiration: 604800000  # 1000 * 60 * 60 * 24 * 7; // 7일
+
+springdoc:
+  use-fqn: true
+
