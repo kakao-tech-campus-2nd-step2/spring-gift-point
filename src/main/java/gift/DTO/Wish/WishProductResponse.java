@@ -8,6 +8,7 @@ public class WishProductResponse {
     Long id;
     UserResponse user;
     ProductResponse product;
+    String createDate;
 
     public WishProductResponse(){
 
@@ -28,5 +29,9 @@ public class WishProductResponse {
 
     public ProductResponse getProduct() {
         return product;
+    }
+
+    public String getCreateDate() {
+        return createDate;
     }
 }

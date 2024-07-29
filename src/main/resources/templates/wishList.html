@@ -16,6 +16,7 @@
         <th scope="col">Name</th>
         <th scope="col">Price</th>
         <th scope="col">Image</th>
+        <th scope="col">Date</th>
         <th scope="col">Option</th>
     </tr>
     </thead>
@@ -33,6 +34,7 @@
     <label for="p_field"></label>
     <select name="p_field" id="p_field">
         <option value="id">id</option>
+        <option value="createDate">createDate</option>
     </select>
     <button id="search" onclick="getWishList(currentPage)">검색</button>
     <button id="nextPage">Next</button>
@@ -70,6 +72,7 @@
                             <td>${wishProduct.product.name}</td>
                             <td>${wishProduct.product.price}</td>
                             <td><img src="${wishProduct.product.imageUrl}" alt="image"/></td>
+                            <td>${wishProduct.createDate}</td>
                             <td>
                                 <a href="#" onclick="deleteFunction(${wishProduct.id})">삭제</a>
                             </td>
