@@ -5,7 +5,6 @@ import gift.domain.Option;
 import gift.domain.Product;
 import gift.dto.request.AddOptionRequest;
 import gift.dto.request.AddProductRequest;
-import gift.dto.request.SubtractOptionRequest;
 import gift.dto.request.UpdateProductRequest;
 import gift.dto.response.MessageResponse;
 import gift.exception.CustomException;
@@ -71,8 +70,4 @@ public class ProductService {
         return optionService.addOption(product, addOptionRequest);
     }
 
-    public void subtractOptionQuantity(Long productId, SubtractOptionRequest subtractOptionRequest) {
-        Product product = productRepository.findProductById(productId).orElseThrow(() -> new CustomException(DATA_NOT_FOUND));
-        optionService.subtractOptionQuantity(product, subtractOptionRequest);
-    }
 }

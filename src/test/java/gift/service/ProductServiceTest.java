@@ -5,7 +5,6 @@ import gift.domain.Option;
 import gift.domain.Product;
 import gift.dto.request.AddOptionRequest;
 import gift.dto.request.AddProductRequest;
-import gift.dto.request.SubtractOptionRequest;
 import gift.dto.request.UpdateProductRequest;
 import gift.dto.response.MessageResponse;
 import gift.repository.CategoryRepository;
@@ -79,7 +78,7 @@ class ProductServiceTest {
         MessageResponse successMsg = productService.updateProduct(requestId, updateProductRequest);
 
         // then
-        Assertions.assertThat(successMsg).isEqualTo(new MessageResponse (UPDATE_SUCCESS_MSG));
+        Assertions.assertThat(successMsg).isEqualTo(new MessageResponse(UPDATE_SUCCESS_MSG));
     }
 
     @Test
@@ -103,29 +102,5 @@ class ProductServiceTest {
         assertThrows(PersistenceException.class, () -> {
             productService.addOption(requestId, addOptionRequest);
         });
-    }
-
-    @Test
-    void subtractQuantityOfOption() {
-        // given
-        Product product = new Product(1L, "name", 500, "image.image");
-        Category category1 = new Category(1L, "상품권");
-        Option option = new Option("optionName", 100, product);
-        int initQuantity = option.getQuantity();
-        product.setCategory(category1);
-        product.setOption(option);
-
-        Long requestId = 1L;
-        SubtractOptionRequest subtractOptionRequest = new SubtractOptionRequest("optionName", 9);
-
-        given(productRepository.findProductById(any())).willReturn(Optional.of(product));
-        given(optionRepository.findAllByProductAndName(any(), any())).willReturn(Optional.of(option));
-
-        // when
-        productService.subtractOptionQuantity(requestId, subtractOptionRequest);
-
-        // then
-        Assertions.assertThat(option.getQuantity())
-                .isEqualTo(initQuantity - subtractOptionRequest.amount());
     }
 }

@@ -1,5 +1,6 @@
 package gift.domain;
 
+import gift.LoginType;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -27,7 +28,7 @@ public class Member {
     private String password;
 
     @Column(nullable = false)
-    private Boolean isKakao;
+    private LoginType loginType;
 
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Wish> wishes;
@@ -35,10 +36,17 @@ public class Member {
     public Member() {
     }
 
-    public Member(String email, String password, Boolean isKakao) {
+    public Member(String email, String password, LoginType loginType) {
         this.email = email;
         this.password = password;
-        this.isKakao = isKakao;
+        this.loginType = loginType;
+    }
+
+    public Member(Long id, String email, String password, LoginType loginType) {
+        this.id = id;
+        this.email = email;
+        this.password = password;
+        this.loginType = loginType;
     }
 
     public Long getId() {
@@ -53,8 +61,8 @@ public class Member {
         return password;
     }
 
-    public Boolean getIsKakao() {
-        return isKakao;
+    public LoginType getLoginType() {
+        return loginType;
     }
 
     public void setId(Long id) {
@@ -69,7 +77,7 @@ public class Member {
         this.password = password;
     }
 
-    public void setKakao(Boolean kakao) {
-        isKakao = kakao;
+    public void setLoginType(LoginType loginType) {
+        this.loginType = loginType;
     }
 }

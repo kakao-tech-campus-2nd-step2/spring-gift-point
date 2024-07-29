@@ -21,5 +21,6 @@ public class Message {
     public static final String INVALID_AMOUNT_ERROR_MSG = "1 이상, 남은 물품 수 미만의 수량만 차감할 수 있습니다.";
     public static final String KAKAO_LOGIN_FAILED_ERROR_MSG = "카카오 로그인에 실패하였습니다.";
     public static final String ALREADY_REGISTERED_ERROR_MSG = "이미 가입된 회원입니다.";
+    public static final String SEND_MSG_FAILED_ERROR_MSG = "'나에게 메세지 보내기'에 실패하였습니다.";
     public static final String KAKAO_LOGIN_USER_MSG = "카카오 로그인 이용 회원입니다.";
 }

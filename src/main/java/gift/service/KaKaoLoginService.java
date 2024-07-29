@@ -2,11 +2,14 @@ package gift.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import gift.LoginType;
+import gift.domain.KakaoToken;
 import gift.domain.Member;
 import gift.dto.KakaoTokenInfo;
 import gift.dto.KakaoUserInfo;
 import gift.dto.response.AuthResponse;
 import gift.exception.CustomException;
+import gift.repository.KakaoTokenRepository;
 import gift.repository.MemberRepository;
 import gift.util.JwtUtil;
 import org.springframework.beans.factory.annotation.Value;
@@ -43,17 +46,20 @@ public class KaKaoLoginService {
     private String getUserInfoUrl;
 
     private final MemberRepository memberRepository;
+    private final KakaoTokenRepository kakaoTokenRepository;
     private final JwtUtil jwtUtil;
 
-    public KaKaoLoginService(MemberRepository memberRepository, JwtUtil jwtUtil) {
+    public KaKaoLoginService(MemberRepository memberRepository, KakaoTokenRepository kakaoTokenRepository, JwtUtil jwtUtil) {
         this.memberRepository = memberRepository;
+        this.kakaoTokenRepository = kakaoTokenRepository;
         this.jwtUtil = jwtUtil;
     }
 
     public AuthResponse kakaoLogin(String code) {
         RestClient client = RestClient.builder().build();
         ObjectMapper objectMapper = new ObjectMapper();
-        String accessToken = getAccessToken(code);
+        KakaoTokenInfo kakaoTokenInfo = getAccessToken(code);
+        String accessToken = kakaoTokenInfo.access_token();
         String email;
 
         ResponseEntity<String> response = client.get()
@@ -68,13 +74,13 @@ public class KaKaoLoginService {
 
         try {
             email = objectMapper.readValue(response.getBody(), KakaoUserInfo.class).kakao_account().email;
-            return new AuthResponse(SaveMemberAndReturnJWT(email));
+            return new AuthResponse(SaveMemberAndReturnJWT(email, kakaoTokenInfo));
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
         }
     }
 
-    private String getAccessToken(String code) {
+    private KakaoTokenInfo getAccessToken(String code) {
         RestClient client = RestClient.builder().build();
         ObjectMapper objectMapper = new ObjectMapper();
 
@@ -92,7 +98,7 @@ public class KaKaoLoginService {
         }
 
         try {
-            return objectMapper.readValue(response.getBody(), KakaoTokenInfo.class).access_token();
+            return objectMapper.readValue(response.getBody(), KakaoTokenInfo.class);
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
         }
@@ -107,14 +113,15 @@ public class KaKaoLoginService {
         return body;
     }
 
-    private String SaveMemberAndReturnJWT(String email) {
+    private String SaveMemberAndReturnJWT(String email, KakaoTokenInfo kakaoTokenInfo) {
         Optional<Member> existMember = memberRepository.findMemberByEmail(email);
         if (existMember.isPresent()) {
             throw new CustomException(ALREADY_REGISTERED_ERROR);
         }
+        Member savedMember = memberRepository.save(new Member(email, generateRandomPassword(), LoginType.KAKAO));
+        kakaoTokenRepository.save(new KakaoToken(savedMember, kakaoTokenInfo.access_token(), kakaoTokenInfo.refresh_token()));
 
-        Member savedMember = memberRepository.save(new Member(email, generateRandomPassword(), true));
-        return jwtUtil.createJWT(savedMember.getId());
+        return jwtUtil.createJWT(savedMember.getId(), savedMember.getLoginType());
     }
 
     private String generateRandomPassword() {
