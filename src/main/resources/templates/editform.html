@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <style>
+        button {
+            top:50%;
+            background-color:#0a0a23;
+            color: #fff;
+            border:none;
+            border-radius:10px;
+            padding:10px;
+            min-height:15px;
+            min-width: 90px;
+            margin-top: 5px
+        }
+
+        div{
+            margin-top: 5px;
+            margin-bottom: 5px
+        }
+    </style>
+    <title>Edit Form</title>
+</head>
+<body>
+<h1>Edit</h1>
+<form th:action="@{/products}" method="get" style="display: inline;">
+    <button type="submit">Back To List</button>
+</form>
+<div>
+    product ID: <span th:text="${product.id}"></span>
+    <form th:action="@{/products/update/{id}(id=${product.id})}" method="post">
+        name: <input type="text" id="name" name="name"><br>
+        price: <input type="number" id="price" name="price"><br>
+        imageUrl: <input type="text" id="imageUrl" name="imageUrl"><br>
+        <label for="category">Category:</label>
+        <select id="category" name="category">
+            <option value="">Select a category</option>
+            <option th:each="category : ${categoryList}"
+                    th:value="${category}"
+                    th:text="${category}">
+            </option>
+        </select><br>
+        <button type="submit">Edit Product</button>
+    </form>
+</div>
+</body>
+</html>

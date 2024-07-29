@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <style>
+        button {
+            top:50%;
+            background-color:#0a0a23;
+            color: #fff;
+            border:none;
+            border-radius:10px;
+            padding:10px;
+            min-height:15px;
+            min-width: 90px;
+            margin-top: 5px
+        }
+
+        div{
+            margin-top: 5px;
+            margin-bottom: 5px
+        }
+    </style>
+    <title>Post Form</title>
+</head>
+<body>
+<h1>Post</h1>
+<form th:action="@{/products}" method="get" style="display: inline;">
+    <button type="submit">Back To List</button>
+</form>
+<div>
+    <form action="/products" method="post">
+        name: <input type="text" id="name" name="name" required><br>
+        price: <input type="number" id="price" name="price" required><br>
+        imageUrl: <input type="text" id="imageUrl" name="imageUrl" required><br>
+                <label for="category">Category:</label>
+        <select id="category" name="category">
+            <option value="">Select a category</option>
+            <option th:each="category : ${categoryList}"
+                    th:value="${category}"
+                    th:text="${category}">
+            </option>
+        </select><br>
+        option: <input type="text" id="option" name="option" required><br>
+        option quantity: <input type="text" id="quantity" name="quantity" required><br>
+        <button type="submit">Add Product</button>
+    </form>
+</div>
+</body>
+</html>
