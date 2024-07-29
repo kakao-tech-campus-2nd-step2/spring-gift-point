@@ -1,5 +1,6 @@
 package gift.exception;
 
+import gift.constants.ResponseMsgConstants;
 import gift.dto.betweenClient.ResponseDTO;
 import gift.exception.BadRequestExceptions.BadRequestException;
 import gift.exception.BadRequestExceptions.EmailAlreadyHereException;
@@ -84,6 +85,6 @@ public class GlobalExceptionHandler {
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public ResponseEntity<ResponseDTO> handleValidationExceptions(RuntimeException ex) {
         logger.error(ex.getMessage(), ex);
-        return new ResponseEntity<>(new ResponseDTO(true, "예상치 못한 에러입니다. 관리자에게 연락 주시기 바랍니다."), HttpStatus.INTERNAL_SERVER_ERROR);
+        return new ResponseEntity<>(new ResponseDTO(true, ResponseMsgConstants.CRITICAL_ERROR_MESSAGE), HttpStatus.INTERNAL_SERVER_ERROR);
     }
 }
