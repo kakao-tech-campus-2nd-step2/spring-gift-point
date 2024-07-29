@@ -30,12 +30,12 @@ public class AuthService {
         return new UserResponseDTO(token);
     }
 
-    public UserResponseDTO login(User user, UserLoginRequestDTO userLoginRequestDTO) {
+    public UserResponseDTO login(User user, UserLoginRequestDTO userLoginRequestDTO, String accessToken) {
         if (!user.getPassword().equals(userLoginRequestDTO.password())) {
             throw new NoSuchElementException("회원의 정보가 일치하지 않습니다.");
         }
         String token = jwtUtil.createToken(user.getEmail(), user.getRole());
-        user.updateAccessToken(token);
+        user.updateAccessToken(accessToken);
         return new UserResponseDTO(token);
     }
 

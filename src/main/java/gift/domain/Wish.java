@@ -10,6 +10,9 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
 
 @Entity
 public class Wish {
@@ -49,4 +52,20 @@ public class Wish {
     public int getCount() {
         return count;
     }
+
+    public static class WishList {
+        List<Wish> wishList;
+
+        public WishList(List<Wish> wishList) {
+            this.wishList = wishList;
+        }
+
+        public Optional<Wish> checkWishList(Product orderProduct) {
+            return wishList.stream()
+                .filter(wish -> wish.getProduct().getId().equals(orderProduct.getId()))
+                .findFirst();
+            }
+        }
+
+
 }

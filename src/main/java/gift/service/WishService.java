@@ -72,8 +72,7 @@ public class WishService {
     }
 
     private Wish getWish(Long wishId) {
-        Wish wish = jpaWishRepository.findById(wishId)
+        return jpaWishRepository.findById(wishId)
             .orElseThrow(() -> new NoSuchElementException("id가 잘못되었습니다."));
-        return wish;
     }
 }

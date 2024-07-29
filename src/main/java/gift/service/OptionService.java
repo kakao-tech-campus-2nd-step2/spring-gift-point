@@ -33,7 +33,7 @@ public class OptionService {
 
         return optionList.getOptionList()
             .stream()
-            .map(OptionResponseDTO::of)
+            .map(OptionResponseDTO::from)
             .toList();
     }
 
@@ -69,7 +69,7 @@ public class OptionService {
         option.subtract(count);
     }
 
-    private Option getOption(Long optionId) {
+    public Option getOption(Long optionId) {
         return jpaOptionRepository.findById(optionId)
             .orElseThrow(() -> new NoSuchElementException("id가 잘못되었습니다."));
     }
