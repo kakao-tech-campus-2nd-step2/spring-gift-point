@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>관리자 화면 - 제품 목록</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}" />
+</head>
+<body>
+<h1>제품 목록</h1>
+<form th:action="@{/admin/products/add}" th:object="${product}" method="get">
+    <button onclick="location.href='/admin/products/add'">제품 추가</button>
+</form>
+<table>
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>CategoryName</th>
+        <th>Name</th>
+        <th>Price</th>
+        <th>Image</th>
+        <th>Actions</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="product : ${products}">
+        <td th:text="${product.id}"></td>
+        <td th:text="${product.categoryName}"></td>
+        <td th:text="${product.name}"></td>
+        <td th:text="${product.price}"></td>
+        <td><img th:src="${product.imageUrl}" alt="Product Image" style="width:100px; height:auto;"></td>
+        <td class="actions">
+            <form th:action="@{/admin/products/delete/{id}(id=${product.id})}" method="get" style="display:inline;">
+                <input type="hidden" name="_method" value="delete" />
+                <button type="submit" onclick="return confirm('정말로 삭제하시겠습니까?')">삭제</button>
+            </form>
+            <form th:action="@{/admin/products/edit/{id}(id = ${product.id})}" th:object="${product}" method="get">
+                <input type="hidden" name="_method" value="edit" />
+                <button type="submit">편집</button>
+            </form>
+        </td>
+    </tr>
+    </tbody>
+</table>
+<div th:if="${products.totalPages > 1}" class="pagination-container">
+    <button th:disabled="${!products.hasPrevious}"
+            th:onclick="|window.location.href='/admin/products?page=${products.number-1}'|">이전</button>
+    <span th:each="page : ${#numbers.sequence(0, products.totalPages-1)}"
+          th:if="${page >= products.number-2 and page <= products.number+2}">
+        <button th:classappend="${page == products.number} ? 'active'"
+                th:onclick="|window.location.href='/admin/products?page=${page}'|"
+                th:text="${page + 1}">1</button>
+    </span>
+    <button th:disabled="${!products.hasNext}"
+            th:onclick="|window.location.href='/admin/products?page=${products.number+1}'|">다음</button>
+</div>
+</body>
+</html>

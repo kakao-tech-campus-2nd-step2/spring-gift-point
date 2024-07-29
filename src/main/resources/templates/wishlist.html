@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>위시리스트</title>
+    <link rel="stylesheet" th:href="@{/css/wishlist.css}" />
+</head>
+<body>
+<h1>위시리스트</h1>
+<table>
+    <thead>
+    <tr>
+        <th>위시리스트 항목</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="item : ${wishlists}">
+        <td th:text="${item}"></td>
+    </tr>
+    </tbody>
+</table>
+
+<!-- 페이징 -->
+<div th:if="${wishlists.totalPages > 1}" class="pagination-container">
+    <button th:disabled="${!wishlists.hasPrevious}"
+            th:onclick="|window.location.href='/admin/wishlist?page=${wishlists.number-1}'|">이전</button>
+    <span th:each="page : ${#numbers.sequence(0, wishlists.totalPages-1)}"
+          th:if="${page >= wishlists.number-2 and page <= wishlists.number+2}">
+            <button th:classappend="${page == wishlists.number} ? 'active'"
+                    th:onclick="|window.location.href='/admin/wishlist?page=${page}'|"
+                    th:text="${page + 1}">1</button>
+        </span>
+    <button th:disabled="${!wishlists.hasNext}"
+            th:onclick="|window.location.href='/admin/wishlist?page=${wishlists.number+1}'|">다음</button>
+</div>
+</body>
+</html>
