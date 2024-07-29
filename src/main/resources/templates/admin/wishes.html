@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <link rel="stylesheet" th:href="@{/bootstrap.min.css}" type="text/css">
+  <title>admin - wishes</title>
+</head>
+<body>
+<div class="container"
+     style="display: flex; flex-direction: column; justify-content: center; margin-top: 50px;">
+  <h2 class="py-4 text-center border-bottom mb-5">위시 리스트 (관리자)</h2>
+  <div class="row">
+    <div class="col">
+      <button class="btn btn-primary mb-5 me-3"
+              onclick="location.href='insertWishForm.html'"
+              th:onclick="|location.href='@{/admin/wishes/insert}'|"
+              type="button">위시 추가
+      </button>
+      <button class="btn btn-outline-secondary mb-5"
+              onclick="location.href='products.html'"
+              th:onclick="|location.href='@{/admin/products}'|"
+              type="button">상품 목록으로 돌아가기
+      </button>
+    </div>
+  </div>
+  <div>
+    <table class="table">
+      <thead>
+      <tr>
+        <th class="text-center">위시 ID</th>
+        <th class="text-center">회원 ID</th>
+        <th class="text-center">상품 ID</th>
+        <th class="text-center">상품명</th>
+        <th class="text-center">상품 가격</th>
+        <th class="text-center">상품 이미지 주소</th>
+        <th class="text-center">카테고리</th>
+        <th class="text-center"></th>
+        <th class="text-center"></th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr th:each="wish:${wishes}">
+        <td class="text-center">
+          <span th:text="${wish.id}">위시 ID tmp</span>
+        </td>
+        <td class="text-center">
+          <span th:text="${wish.member.id}">회원 ID tmp</span>
+        </td>
+        <td class="text-center">
+          <span th:text="${wish.product.id}">상품 ID tmp</span>
+        </td>
+        <td class="text-center">
+          <span th:text="${wish.product.name}">상품명 tmp</span>
+        </td>
+        <td class="text-center">
+          <span th:text="${wish.product.price}">상품 가격 tmp</span>
+        </td>
+        <td class="text-center">
+          <span th:text="${wish.product.imageUrl}">상품 이미지 주소 tmp</span>
+        </td>
+        <td class="text-center">
+          <span th:text="${wish.product.category.name}">카테고리 tmp</span>
+        </td>
+        <td class="text-center">
+          <form method="post"
+                th:action="@{/admin/wishes/delete/{wishId}(wishId=${wish.id})}" th:method="delete">
+            <button class="btn btn-danger" type="submit">삭제</button>
+          </form>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+</body>
+</html>

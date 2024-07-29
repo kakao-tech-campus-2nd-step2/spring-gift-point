@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <link rel="stylesheet" th:href="@{/bootstrap.min.css}" type="text/css">
+  <title>admin - login processing...</title>
+</head>
+<body>
+<form id="form" method="post" th:action>
+</form>
+</body>
+<script th:inline="javascript">
+  let accessToken = [[${accessToken}]];
+  let refreshToken = [[${refreshToken}]];
+  localStorage.setItem("accessToken", accessToken);
+  localStorage.setItem("refreshToken", refreshToken);
+  let form = document.getElementById("form");
+  form.submit();
+</script>
+</html>
