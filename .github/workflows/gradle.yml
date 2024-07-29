@@ -28,7 +28,7 @@ jobs:
       - name: 설정파일 생성
         run: |
           touch ./src/main/resources/application.yml
-          echo "${{ secrets.APPLICATION }}" > ./src/main/resources/application.yml
+          echo "${{ secrets.APPLICATION_PROPERTIES }}" >> ./src/main/resources/application.properties
           cat ./src/main/resources/application.yml
 
       - name: gradlew 권한 추가
