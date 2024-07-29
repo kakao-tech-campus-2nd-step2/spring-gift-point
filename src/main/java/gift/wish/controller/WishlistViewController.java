@@ -65,17 +65,6 @@ public class WishlistViewController {
     }
     @PostMapping("{id}/save")
     public String saveWishlist(@PathVariable("id") Long userId, @RequestBody List<WishlistRequest> wishlistRequests) {
-        List<WishlistItem> wishlistItemList = new ArrayList<>();
-        for(WishlistRequest wishlistRequest : wishlistRequests){
-            WishlistItem wishlistItem = new WishlistItem();
-            wishlistItem.setUser(userService.findById(userId).get());
-
-            Long productId = wishlistRequest.getProductId();
-            wishlistItem.setProduct(productService.getProductById(productId).get());
-
-            wishlistItem.setAmount(wishlistRequest.getAmount());
-            wishlistItemList.add(wishlistItem);
-        }
         wishlistService.addWishes(wishlistRequests);
         return "redirect:/wishlist/" + userId;
     }
