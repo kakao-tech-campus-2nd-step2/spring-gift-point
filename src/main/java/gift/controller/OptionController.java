@@ -2,7 +2,6 @@ package gift.controller;
 
 import gift.dto.AddOptionDTO;
 import gift.dto.GetOptionDTO;
-import gift.dto.InputProductDTO;
 import gift.service.OptionService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;

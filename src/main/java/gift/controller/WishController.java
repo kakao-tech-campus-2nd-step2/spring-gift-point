@@ -28,7 +28,6 @@ public class WishController {
     public List<WishDTO> getWishlistController(HttpServletRequest request, @RequestParam(defaultValue = "0") int page,
                                                @RequestParam(defaultValue = "id") String sortBy,
                                                @RequestParam(defaultValue = "asc") String sortOrder) throws AuthenticationException {
-        //long memberId = (long) request.getAttribute("memberId");
         BearerToken token = (BearerToken) request.getAttribute("bearerToken");
         long memberId = kakaoAuthService.getDBMemberByToken(token.getToken()).getId();
         PageRequestDTO pageRequestDTO = new PageRequestDTO(page, sortBy, sortOrder);
@@ -40,7 +39,6 @@ public class WishController {
     //위시리스트 상품 추가
     @PostMapping("/{productid}")
     public void postWishlist(@PathVariable Long productid, HttpServletRequest request) throws AuthenticationException {
-        //Member member = (Member) request.getAttribute("member");
         BearerToken token = (BearerToken) request.getAttribute("bearerToken");
         Member member = kakaoAuthService.getDBMemberByToken(token.getToken());
         wishService.postWishlist(productid, member);

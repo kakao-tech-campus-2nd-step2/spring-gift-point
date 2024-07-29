@@ -15,12 +15,6 @@ import java.util.NoSuchElementException;
 
 @Component
 public class TokenInterceptor implements HandlerInterceptor {
-//    private final MemberRepository memberRepository;
-//
-//    public TokenInterceptor(MemberRepository memberRepository) {
-//        this.memberRepository = memberRepository;
-//    }
-
     @Value("${secret_key}")
     private String secretKey;
 
@@ -29,17 +23,7 @@ public class TokenInterceptor implements HandlerInterceptor {
         try{String authHeader = request.getHeader("Authorization");
             BearerToken token = new BearerToken(authHeader);
             request.setAttribute("bearerToken", token);
-//
-//        Claims claims = getClaims(token);
-//        request.setAttribute("claims", claims);
-//
-//        Integer idInt = (Integer) claims.get("id");
-//        Long memberId = idInt.longValue();
-//        request.setAttribute("memberId", memberId);
-//
-//        Member member = getMemberByAuth(memberId);
-//        request.setAttribute("member", member);
-//
+
             return true;
         } catch (Exception e) {
             e.printStackTrace();
@@ -47,17 +31,4 @@ public class TokenInterceptor implements HandlerInterceptor {
             return false;
         }
     }
-
-//    public Claims getClaims(BearerToken token) {
-//        Claims claims = Jwts.parser()
-//                .setSigningKey(secretKey)
-//                .parseClaimsJws(token.getToken())
-//                .getBody();
-//        return claims;
-//    }
-//
-//    public Member getMemberByAuth(Long memberId) {
-//        return memberRepository.findById(memberId)
-//                .orElseThrow(() -> new NoSuchElementException("해당 멤버가 없습니다."));
-//    }
 }
