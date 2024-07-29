@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>spring gift product login page</title>
+  <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/reset-css@5.0.2/reset.min.css"
+  />
+  <script th:src="@{../login/API.js}" defer></script>
+</head>
+<body>
+<form id="loginForm">
+  <div>
+    Email:
+    <input type="email" name="email"/>
+  </div>
+  <div>
+    Password:
+    <input type="password" name="password"/>
+  </div>
+  <button type="submit">Login</button>
+</form>
+</body>
+</html>

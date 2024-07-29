@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>spring gift product admin page</title>
+  <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/reset-css@5.0.2/reset.min.css"
+  />
+  <link rel="stylesheet" th:href="@{../wishlist/page.css}"/>
+  <link rel="stylesheet" th:href="@{../wishlist/modal.css}"/>
+
+  <!-- edit icon & delete icon -->
+  <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"
+  />
+  <script type="module" th:src="@{../wishlist/page.js}" defer></script>
+</head>
+<body>
+<!-- MODAL -->
+<div id="productModal" class="modal">
+  <div class="modal-content">
+    <div class="modal-title">
+      <h1></h1>
+      <span class="close">&times;</span>
+    </div>
+    <form id="product-form">
+      <select id="select-product">
+        <label for="product">Product:</label>
+        <option
+            th:each="product : ${allProducts}"
+            th:value="${product.getId()}"
+            th:text="${product.getName()}"
+        />
+      </select>
+      <button type="button">Submit</button>
+    </form>
+  </div>
+</div>
+<div class="main-container">
+  <!-- HEADER -->
+  <div class="header">
+    <text>Mange Wishlists</text>
+    <div>
+      <button
+          class="header-delete"
+          th:onclick="'deleteCheckedProductsOnClick()'"
+      >
+        Delete
+      </button>
+      <button
+          class="header-add"
+          th:onclick="'addProductbtnOnClick()'"
+      >
+        Add new Product
+      </button>
+    </div>
+  </div>
+
+  <!-- CONTENT -->
+  <div class="content">
+    <div class="page-size-selector-container">
+      Page Size :
+      <select id="page-size" onchange="pageSizeSelected()">
+        <option value=5 th:selected="${wishProducts.getSize()} == 5">5</option>
+        <option value=10 th:selected="${wishProducts.getSize()} == 10">10</option>
+        <option value=20 th:selected="${wishProducts.getSize()} == 20">20</option>
+      </select>
+    </div>
+    <table>
+      <tr>
+        <th>
+          <input type="checkbox" th:onclick="mainCheckboxOnClick()"/>
+        </th>
+        <th>
+          ID
+          <button
+              id="page-sort-by-id"
+              th:data-sort-order="${wishProducts.getSort().getOrderFor('product.id')}"
+              onclick=idColumnPageSort()>
+            O
+          </button>
+        </th>
+        <th>Product Name</th>
+        <th>
+          Price
+          <button
+              id="page-sort-by-price"
+              th:data-sort-order="${wishProducts.getSort().getOrderFor('product.price')}"
+              onclick=priceColumnPageSort()
+          >O
+          </button>
+        </th>
+        <th>ImageUrl</th>
+        <th>Action</th>
+      </tr>
+
+      <tr th:each="wishPorduct : ${wishProducts}">
+        <td><input type="checkbox" th:onclick="checkboxOnClick()"/></td>
+        <td th:text="${wishPorduct.getId()}" id="id"></td>
+        <td th:text="${wishPorduct.getName()}"></td>
+        <td th:text="${wishPorduct.getPrice()}"></td>
+        <td th:text="${wishPorduct.getImageUrl()}"></td>
+        <td>
+          <button
+              class="material-symbols-outlined content-edit"
+              th:onclick="'editProductbtnOnClick(' + ${wishPorduct.getId()} + ',' + ${page} + ')'"
+          >
+            edit
+          </button>
+          <button
+              class="material-symbols-outlined content-delete"
+              th:onclick="'deleteProduct(' + ${wishPorduct.getId()} + ',' + ${page} + ')'"
+          >
+            delete
+          </button>
+        </td>
+      </tr>
+    </table>
+
+    <!-- CONTENT FOOTER -->
+    <div class="content-footer-container">
+      <div
+          class="content-showing"
+          th:text="'Showing ' + ${currentPageProductSize} + ' out of ' + ${totalProductsSize} + ' entries'"
+      >
+        Showing n out of m entries
+      </div>
+      <div class="content-index">
+        <button>Previous</button>
+        <div th:each="pageList : ${pageLists}">
+          <button
+              th:text="${pageList}"
+              th:classappend="${pageList == page} ? 'selected-page' : ''"
+              th:onclick="'pagination(' + ${pageList} + ', ' + ${null} + ', '+ ${null} + ')'"
+          />
+        </div>
+        <button>Next</button>
+      </div>
+    </div>
+  </div>
+</div>
+</body>
+</html>
