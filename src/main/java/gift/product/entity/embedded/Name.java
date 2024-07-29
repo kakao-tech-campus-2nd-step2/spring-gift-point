@@ -43,7 +43,7 @@ public class Name {
     }
 
     private void isNameIncludeKakao(String value) {
-        if (value.matches("^(?i)(?!.*(kakao|카카오)).*$")) {
+        if (!value.matches("^(?i)(?!.*(kakao|카카오)).*$")) {
             throw new IllegalArgumentException(PRODUCT_NAME_KAKAO_STRING);
         }
     }

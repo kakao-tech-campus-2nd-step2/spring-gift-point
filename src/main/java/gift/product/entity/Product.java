@@ -14,12 +14,10 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 
 @Entity
-@Schema(description = "상품")
 public class Product {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Schema(description = "상품 id")
     private long id;
 
     @Embedded
@@ -27,20 +25,16 @@ public class Product {
         name = "value",
         column = @Column(name = "name", nullable = false)
     )
-    @Schema(description = "상품명")
     private Name name;
 
     @Column(nullable = false)
-    @Schema(description = "상품 가격")
     private int price;
 
     @Column(nullable = false)
-    @Schema(description = "상품 이미지 url")
     private String imageUrl;
 
     @JoinColumn(name = "category", nullable = false)
     @ManyToOne
-    @Schema(description = "카테고리")
     private Category category;
 
     public long getId() {

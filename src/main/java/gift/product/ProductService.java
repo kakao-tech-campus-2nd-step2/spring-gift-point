@@ -5,7 +5,8 @@ import static gift.exception.ErrorMessage.PRODUCT_NOT_FOUND;
 
 import gift.category.Category;
 import gift.category.CategoryRepository;
-import gift.product.dto.ProductDTO;
+import gift.product.dto.ProductRequestDTO;
+import gift.product.dto.ProductResponseDTO;
 import gift.product.entity.Product;
 import java.util.List;
 import org.springframework.data.domain.Page;
@@ -29,8 +30,17 @@ public class ProductService {
     }
 
     @Transactional(readOnly = true)
-    public List<Product> getAllProducts() {
-        return productRepository.findAll();
+    public List<ProductResponseDTO> getAllProducts() {
+        return productRepository.findAll()
+            .stream()
+            .map(product -> new ProductResponseDTO(
+                product.getId(),
+                product.getName(),
+                product.getPrice(),
+                product.getImageUrl(),
+                product.getCategory()
+            ))
+            .toList();
     }
 
     @Transactional(readOnly = true)
@@ -38,32 +48,32 @@ public class ProductService {
         return productRepository.findAll(pageable);
     }
 
-    public void addProduct(ProductDTO productDTO) {
-        Category findCategory = categoryRepository.findByName(productDTO.category().getName())
+    public void addProduct(ProductRequestDTO productDTO) {
+        Category findCategory = categoryRepository.findByName(productDTO.getCategory().getName())
             .orElseThrow(() -> new IllegalArgumentException(CATEGORY_NOT_FOUND));
 
         productRepository.save(
             new Product(
                 -1,
-                productDTO.name(),
-                productDTO.price(),
-                productDTO.imageUrl(),
+                productDTO.getName(),
+                productDTO.getPrice(),
+                productDTO.getImageUrl(),
                 findCategory
             )
         );
     }
 
-    public void updateProduct(long id, ProductDTO productDTO) {
-        Category findCategory = categoryRepository.findByName(productDTO.category().getName())
+    public void updateProduct(long id, ProductRequestDTO productDTO) {
+        Category findCategory = categoryRepository.findByName(productDTO.getCategory().getName())
             .orElseThrow(() -> new IllegalArgumentException(CATEGORY_NOT_FOUND));
 
         Product findProduct = productRepository.findById(id)
             .orElseThrow(() -> new IllegalArgumentException(PRODUCT_NOT_FOUND));
 
         findProduct.update(
-            productDTO.name(),
-            productDTO.price(),
-            productDTO.imageUrl(),
+            productDTO.getName(),
+            productDTO.getPrice(),
+            productDTO.getImageUrl(),
             findCategory
         );
         productRepository.save(findProduct);
