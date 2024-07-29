@@ -40,15 +40,17 @@ public class CategoryController {
     }
 
     @PostMapping
-    @Operation(summary = "category 정보 저장")
+    @Operation(summary = "새 카테고리를 등록한다.")
     public ResponseEntity<CategoryDTO> save(@RequestBody CategoryDTO categoryDTO){
         return new ResponseEntity<>(categoryService.save(categoryDTO), HttpStatus.OK);
     }
 
-    @PutMapping
+    @PutMapping("/{categoryId}")
     @Operation(summary = "category 정보 업데이트")
-    public ResponseEntity<CategoryDTO> updateCategory(@RequestBody CategoryDTO categoryDTO){
-        return new ResponseEntity<>(categoryService.update(categoryDTO), HttpStatus.OK);
+    public ResponseEntity<CategoryDTO> updateCategory(
+        @PathVariable("categoryId") Long categoryId,
+        @RequestBody CategoryDTO categoryDTO){
+        return new ResponseEntity<>(categoryService.update(categoryId, categoryDTO), HttpStatus.OK);
     }
 
     @DeleteMapping

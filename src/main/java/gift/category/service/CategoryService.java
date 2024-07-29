@@ -43,4 +43,12 @@ public class CategoryService {
         categoryRepository.save(category);
         return new CategoryDTO(category.getId(), category.getName());
     }
+
+    public CategoryDTO update(Long categoryId, CategoryDTO categoryDTO){
+        Category category = categoryRepository.findById(categoryId)
+            .orElseThrow(() -> new EntityNotFoundException("Category Id " + categoryDTO.id() + "가 없습니다."));
+        category.setName(categoryDTO.name());
+        categoryRepository.save(category);
+        return new CategoryDTO(category.getId(), category.getName());
+    }
 }
