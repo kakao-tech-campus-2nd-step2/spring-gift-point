@@ -13,8 +13,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("api/categories")
-@Tag(name = "Front Category API", description = "사용자 카테고리 관련 API")
+@RequestMapping("/api/categories")
+@Tag(name = "Category API", description = "카테고리 관련 API")
 public class FrontCategoryController {
 
     private CategoryService categoryService;
@@ -24,7 +24,7 @@ public class FrontCategoryController {
     }
 
     @GetMapping
-    @Operation(summary = "모든 카테고리 조회", description = "모든 카테고리를 조회합니다.")
+    @Operation(summary = "카테고리 목록 조회", description = "모든 카테고리의 목록을 조회한다.")
     public ResponseEntity<List<CategoryResponse>> getAllCategories() {
         List<Category> categories = categoryService.findAll();
         List<CategoryResponse> response = categories.stream()

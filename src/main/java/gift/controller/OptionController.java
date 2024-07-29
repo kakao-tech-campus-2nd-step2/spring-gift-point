@@ -34,7 +34,7 @@ public class OptionController {
     }
 
     @GetMapping
-    @Operation(summary = "옵션 조회", description = "상품에 대한 모든 옵션을 조회합니다.")
+    @Operation(summary = "상품 옵션 목록 조회", description = "특정 상품에 대한 모든 옵션을 조회한다.")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "성공",
             content = {@Content(schema = @Schema(implementation = OptionResponse.class))})
@@ -45,7 +45,7 @@ public class OptionController {
     }
 
     @PostMapping
-    @Operation(summary = "옵션 추가", description = "새로운 옵션을 추가합니다.")
+    @Operation(summary = "상품 옵션 추가", description = "상품에 옵션을 추가한다.")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "201", description = "옵션 추가 성공",
             content = {@Content(schema = @Schema(implementation = OptionResponse.class))}),
@@ -58,7 +58,7 @@ public class OptionController {
     }
 
     @PutMapping("/{optionId}")
-    @Operation(summary = "옵션 수정", description = "기존 옵션을 수정합니다.")
+    @Operation(summary = "상품 옵션 수정", description = "기존 상품 옵션의 정보를 수정한다.")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "옵션 수정 성공",
             content = {@Content(schema = @Schema(implementation = OptionResponse.class))}),
@@ -72,7 +72,7 @@ public class OptionController {
     }
 
     @DeleteMapping("/{optionId}")
-    @Operation(summary = "옵션 삭제", description = "기존 옵션을 삭제합니다.")
+    @Operation(summary = "상품 옵션 삭제", description = "기존 제품 옵션을 삭제한다.")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "204", description = "옵션 삭제 성공"),
         @ApiResponse(responseCode = "400", description = "요청 데이터가 유효하지 않음 (옵션 이름 또는 해당 옵션을 찾을 수 없음)"),

@@ -18,18 +18,10 @@ public class SwaggerConfig {
     }
 
     @Bean
-    public GroupedOpenApi optionApi() {
-        return GroupedOpenApi.builder()
-            .group("option")
-            .pathsToMatch("/api/products/{productId}/options}/**")
-            .build();
-    }
-
-    @Bean
     public GroupedOpenApi productApi() {
         return GroupedOpenApi.builder()
             .group("product")
-            .pathsToMatch("/api/products/**")
+            .pathsToMatch("/api/products/**", "/api/products/{productId}", "/api/products/paged")
             .build();
     }
 
@@ -37,7 +29,7 @@ public class SwaggerConfig {
     public GroupedOpenApi memberApi() {
         return GroupedOpenApi.builder()
             .group("member")
-            .pathsToMatch("/members/**")
+            .pathsToMatch("/api/members/**")
             .build();
     }
 
@@ -45,7 +37,7 @@ public class SwaggerConfig {
     public GroupedOpenApi categoryApi() {
         return GroupedOpenApi.builder()
             .group("category")
-            .pathsToMatch("/admin/**", "/api/categories")
+            .pathsToMatch("/api/categories/**")
             .build();
     }
 
@@ -53,7 +45,7 @@ public class SwaggerConfig {
     public GroupedOpenApi wishApi() {
         return GroupedOpenApi.builder()
             .group("wish")
-            .pathsToMatch("/wishes/**")
+            .pathsToMatch("/api/wishes/**")
             .build();
     }
 
@@ -61,7 +53,7 @@ public class SwaggerConfig {
     public GroupedOpenApi kakaoApi() {
         return GroupedOpenApi.builder()
             .group("kakao")
-            .pathsToMatch("/login", "/", "/direct/login", "/user")
+            .pathsToMatch("/api/kakao/**")
             .build();
     }
 

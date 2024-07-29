@@ -13,6 +13,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -48,7 +49,7 @@ public class OrderController {
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
-    @GetMapping("/paged")
+    @GetMapping
     @Operation(summary = "주문 목록 조회 (페이지네이션 적용)", description = "주문 목록을 페이지 단위로 조회한다.")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "성공",
@@ -56,8 +57,11 @@ public class OrderController {
     })
     public ResponseEntity<Slice<OrderResponse>> getPagedOrders(
         @RequestParam(defaultValue = "0") int page,
-        @RequestParam(defaultValue = "5") int size) {
-        Pageable pageable = PageRequest.of(page, size);
+        @RequestParam(defaultValue = "10") int size,
+        @RequestParam(defaultValue = "orderDateTime,desc") String[] sort) {
+
+        Sort sorting = Sort.by(Sort.Order.by(sort[0]).with(Sort.Direction.fromString(sort[1])));
+        Pageable pageable = PageRequest.of(page, size, sorting);
         Slice<OrderResponse> ordersSlice = orderService.getPagedOrders(pageable);
         return ResponseEntity.ok(ordersSlice);
     }

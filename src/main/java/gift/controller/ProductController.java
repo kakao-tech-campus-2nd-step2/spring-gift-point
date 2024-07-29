@@ -16,6 +16,7 @@ import java.util.Optional;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -33,36 +34,24 @@ public class ProductController {
     }
 
     @GetMapping
-    @Operation(summary = "모든 상품 조회", description = "모든 상품을 조회합니다.")
-    @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "성공",
-            content = {@Content(schema = @Schema(implementation = ProductResponse.class))})
-    })
-    public ResponseEntity<List<ProductResponse>> getAllProducts() {
-        List<Product> products = productService.findAll();
-        List<ProductResponse> response = products.stream()
-            .map(ProductResponse::from)
-            .toList();
-        return ResponseEntity.ok(response);
-    }
-
-    @GetMapping("/paged")
-    @Operation(summary = "페이징된 상품 조회", description = "페이지별로 상품을 조회합니다.")
+    @Operation(summary = "상품 목록 조회 (페이지네이션 적용)", description = "모든 상품의 목록을 페이지 단위로 조회한다.")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "성공",
             content = {@Content(schema = @Schema(implementation = ProductResponse.class))})
     })
     public ResponseEntity<Slice<ProductResponse>> getPagedProducts(
         @RequestParam(defaultValue = "0") int page,
-        @RequestParam(defaultValue = "5") int size) {
-        Pageable pageable = PageRequest.of(page, size);
-        Slice<Product> productsPage = productService.findAll(pageable);
-        Slice<ProductResponse> responsePage = productsPage.map(ProductResponse::from);
-        return ResponseEntity.ok(responsePage);
+        @RequestParam(defaultValue = "10") int size,
+        @RequestParam(defaultValue = "name,asc") String[] sort,
+        @RequestParam(required = false) Long categoryId) {
+        Sort sorting = Sort.by(Sort.Order.by(sort[0]).with(Sort.Direction.fromString(sort[1])));
+        Pageable pageable = PageRequest.of(page, size, sorting);
+        Slice<ProductResponse> productsPage = productService.findAll(pageable, categoryId);
+        return ResponseEntity.ok(productsPage);
     }
 
     @GetMapping("/{productId}")
-    @Operation(summary = "특정 상품 조회", description = "ID로 특정 상품을 조회합니다.")
+    @Operation(summary = "상품 조회", description = "특정 상품의 정보를 조회한다.")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "성공",
             content = {@Content(schema = @Schema(implementation = ProductResponse.class))}),
@@ -78,7 +67,7 @@ public class ProductController {
     }
 
     @PostMapping
-    @Operation(summary = "상품 추가", description = "새로운 상품을 추가합니다.")
+    @Operation(summary = "상품 생성", description = "새 상품을 등록한다.")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "201", description = "상품 추가 성공",
             content = {@Content(schema = @Schema(implementation = ProductResponse.class))}),
@@ -91,7 +80,7 @@ public class ProductController {
     }
 
     @PutMapping("/{productId}")
-    @Operation(summary = "특정 상품 수정", description = "기존 상품을 수정합니다.")
+    @Operation(summary = "상품 수정", description = "기존 상품의 정보를 수정한다.")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "성공",
             content = {@Content(schema = @Schema(implementation = ProductResponse.class))}),
@@ -105,7 +94,7 @@ public class ProductController {
     }
 
     @DeleteMapping("/{productId}")
-    @Operation(summary = "특정 상품 삭제", description = "기존 상품을 삭제합니다.")
+    @Operation(summary = "상품 삭제", description = "특정 상품을 삭제한다.")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "204", description = "상품 삭제 성공"),
         @ApiResponse(responseCode = "404", description = "ID에 해당하는 상품이 존재하지 않음")
