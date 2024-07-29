@@ -5,7 +5,7 @@ import gift.dto.option.OptionResponse;
 import gift.dto.order.OrderRequest;
 import gift.dto.order.OrderResponse;
 import gift.model.Option;
-import gift.model.Order;
+import gift.model.OrderDetail;
 import gift.model.Product;
 import gift.model.RegisterType;
 import gift.repository.OrderRepository;
@@ -46,39 +46,39 @@ public class OrderService {
         optionService.subtractOptionQuantity(optionResponse.productId(), optionResponse.id(), orderRequest.quantity());
         Option option = optionService.convertToEntity(optionResponse);
 
-        Order order = new Order(option, orderRequest.quantity(), orderRequest.message(), LocalDateTime.now());
-        Order savedOrder = orderRepository.save(order);
+        OrderDetail orderDetail = new OrderDetail(option, orderRequest.quantity(), orderRequest.message(), LocalDateTime.now());
+        OrderDetail savedOrderDetail = orderRepository.save(orderDetail);
 
         MemberResponse memberResponse = memberService.getMemberById(memberId);
         if (memberResponse.registerType() == RegisterType.KAKAO) {
-            sendKakaoMessage(savedOrder, memberId);
+            sendKakaoMessage(savedOrderDetail, memberId);
         }
 
         wishService.deleteWishByProductIdAndMemberId(option.getProduct().getId(), memberId);
 
         return new OrderResponse(
-            savedOrder.getId(),
+            savedOrderDetail.getId(),
             option.getId(),
-            order.getQuantity(),
-            order.getOrderDateTime(),
-            order.getMessage()
+            orderDetail.getQuantity(),
+            orderDetail.getOrderDateTime(),
+            orderDetail.getMessage()
         );
     }
 
-    private void sendKakaoMessage(Order order, Long memberId) {
-        String message = createKakaoMessage(order);
+    private void sendKakaoMessage(OrderDetail orderDetail, Long memberId) {
+        String message = createKakaoMessage(orderDetail);
         kakaoOAuthService.sendMessage(memberId, message);
     }
 
-    private String createKakaoMessage(Order order) {
-        Option option = order.getOption();
+    private String createKakaoMessage(OrderDetail orderDetail) {
+        Option option = orderDetail.getOption();
         Product product = option.getProduct();
 
         NumberFormat numberFormat = NumberFormat.getNumberInstance(Locale.US);
 
         String priceFormatted = numberFormat.format(product.getPrice());
-        String quantityFormatted = numberFormat.format(order.getQuantity());
-        String totalFormatted = numberFormat.format((long) product.getPrice() * order.getQuantity());
+        String quantityFormatted = numberFormat.format(orderDetail.getQuantity());
+        String totalFormatted = numberFormat.format((long) product.getPrice() * orderDetail.getQuantity());
 
         String template = """
             {
@@ -122,7 +122,7 @@ public class OrderService {
             """;
 
         return String.format(template,
-            option.getId().toString(), option.getName(), order.getMessage(),
+            option.getId().toString(), option.getName(), orderDetail.getMessage(),
             product.getImageUrl(), product.getName(), product.getCategoryName(),
             priceFormatted, quantityFormatted, totalFormatted
         );

@@ -9,8 +9,8 @@ import jakarta.persistence.Table;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "orders")
-public class Order {
+@Table(name = "orderdetail")
+public class OrderDetail {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -21,14 +21,14 @@ public class Order {
     private String message;
     private LocalDateTime orderDateTime;
 
-    public Order(Option option, int quantity, String message, LocalDateTime orderDateTime) {
+    public OrderDetail(Option option, int quantity, String message, LocalDateTime orderDateTime) {
         this.option = option;
         this.quantity = quantity;
         this.message = message;
         this.orderDateTime = orderDateTime;
     }
 
-    protected Order() {
+    protected OrderDetail() {
 
     }
 
