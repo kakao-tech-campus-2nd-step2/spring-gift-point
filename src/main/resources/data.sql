@@ -1,5 +1,8 @@
-INSERT INTO members (email, password)
-VALUES ('admin@email.com', 'password');
+INSERT INTO members (email, password, role)
+VALUES ('user@example.com', 'userpassword', 'USER');
+
+INSERT INTO members (email, password, role)
+VALUES ('admin@example.com', 'adminpassword@!', 'ADMIN');
 
 INSERT INTO categories (name, color, img_url, description)
 VALUES ('교환권', '#6c95d1', 'https://gift-s.kakaocdn.net/dn/gift/images/m640/dimm_theme.png', '');
