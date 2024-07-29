@@ -9,6 +9,7 @@ import gift.member.entity.Member;
 import gift.member.MemberRepository;
 import gift.product.entity.Product;
 import gift.product.ProductRepository;
+import gift.wishlist.entity.Wishlist;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.LongStream;

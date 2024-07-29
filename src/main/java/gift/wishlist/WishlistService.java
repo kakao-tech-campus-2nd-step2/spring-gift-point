@@ -10,6 +10,7 @@ import gift.member.MemberRepository;
 import gift.product.entity.Product;
 import gift.product.ProductRepository;
 import gift.token.MemberTokenDTO;
+import gift.wishlist.entity.Wishlist;
 import java.util.List;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

@@ -2,6 +2,7 @@ package gift.wishlist;
 
 import gift.member.entity.Member;
 import gift.product.entity.Product;
+import gift.wishlist.entity.Wishlist;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.data.domain.Page;

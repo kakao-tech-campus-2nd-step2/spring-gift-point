@@ -1,4 +1,4 @@
-package gift.wishlist;
+package gift.wishlist.entity;
 
 import gift.member.entity.Member;
 import gift.product.entity.Product;
