@@ -1,6 +1,7 @@
 package gift.exception;
 
 import io.jsonwebtoken.ExpiredJwtException;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.mapping.PropertyReferenceException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -16,14 +17,16 @@ import java.net.URI;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
-    static final String NOT_FOUND_MESSAGE = "존재하지 않는 리소스에 대한 접근입니다.";
-    static final String INVALID_PRODUCT_NAME_WITH_KAKAO_MESSAGE = "카카오가 포함된 문구는 담당 MD와 협의한 경우에만 사용할 수 있습니다.";
-    static final String DUPLICATED_EMAIL_MESSAGE = "이미 존재하는 이메일입니다.";
-    static final String DUPLICATED_NAME_MESSAGE = "이미 존재하는 이름입니다.";
-    static final String INVALID_LOGIN_INFO_MESSAGE = "로그인 정보가 유효하지 않습니다.";
-    static final String INVALID_PAGE_REQUEST_MESSAGE = "요청에 담긴 페이지 정보가 유효하지 않습니다.";
-    static final String UNAUTHORIZED_ACCESS_MESSAGE = "인가되지 않은 요청입니다.";
-    static final String EXPIRED_JWT_MESSAGE = "인증 정보가 만료되었습니다.";
+    private static final String NOT_FOUND_MESSAGE = "존재하지 않는 리소스에 대한 접근입니다.";
+    private static final String INVALID_PRODUCT_NAME_WITH_KAKAO_MESSAGE = "카카오가 포함된 문구는 담당 MD와 협의한 경우에만 사용할 수 있습니다.";
+    private static final String DUPLICATED_EMAIL_MESSAGE = "이미 존재하는 이메일입니다.";
+    private static final String DUPLICATED_NAME_MESSAGE = "이미 존재하는 이름입니다.";
+    private static final String INVALID_LOGIN_INFO_MESSAGE = "로그인 정보가 유효하지 않습니다.";
+    private static final String INVALID_PAGE_REQUEST_MESSAGE = "요청에 담긴 페이지 정보가 유효하지 않습니다.";
+    private static final String UNAUTHORIZED_ACCESS_MESSAGE = "인가되지 않은 요청입니다.";
+    private static final String EXPIRED_JWT_MESSAGE = "인증 정보가 만료되었습니다.";
+    @Value("${kakao.redirect-token-uri}")
+    private String redirectTokenUri;
 
     @ExceptionHandler(value = NotFoundElementException.class)
     public ResponseEntity<String> notFoundElementExceptionHandling() {
@@ -63,7 +66,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(value = InvalidKakaoTokenException.class)
     public ResponseEntity<Void> invalidKakaoTokenExceptionHandling() {
         var headers = new HttpHeaders();
-        String redirectLocation = "http://localhost:8080/api/kakao/set-token";
+        String redirectLocation = redirectTokenUri;
         headers.setLocation(URI.create(redirectLocation));
         return new ResponseEntity<>(headers, HttpStatus.MOVED_PERMANENTLY);
     }

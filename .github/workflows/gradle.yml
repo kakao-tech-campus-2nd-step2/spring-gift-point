@@ -51,8 +51,8 @@ jobs:
           scp -o StrictHostKeyChecking=no -i key.pem build/libs/*.jar $DEPLOY_USER@$DEPLOY_SERVER:~/spring-gift-point/build/libs/
           scp -o StrictHostKeyChecking=no -i key.pem ./src/main/resources/application.yml $DEPLOY_USER@$DEPLOY_SERVER:~/spring-gift-point/src/main/resources/application.yml
           ssh -o StrictHostKeyChecking=no -i key.pem $DEPLOY_USER@$DEPLOY_SERVER "
-            pkill -f 'java -jar ~/spring-gift-point/build/libs/spring-gift-0.0.1-SNAPSHOT.jar' || true && \
-            nohup java -jar ~/spring-gift-point/build/libs/spring-gift-0.0.1-SNAPSHOT.jar &"
+            pkill -f 'java -jar spring-gift-0.0.1-SNAPSHOT.jar' || true && \
+            nohup java -jar spring-gift-0.0.1-SNAPSHOT.jar &"
 
   dependency-submission:
 
