@@ -9,7 +9,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import java.sql.Timestamp;
-import org.hibernate.annotations.CreationTimestamp;
+import org.springframework.data.annotation.CreatedDate;
 
 @Entity
 @Table(name = "orders")
@@ -18,7 +18,7 @@ public class Order extends BaseEntity {
     @ManyToOne
     @JoinColumn(name = "option_id", nullable = false, foreignKey = @ForeignKey(name = "fk_order_option_id_ref_option_id"))
     private Option option;
-    @CreationTimestamp
+    @CreatedDate
     @Column(nullable = false)
     private Timestamp orderDateTime;
     private String message;
@@ -33,6 +33,14 @@ public class Order extends BaseEntity {
 
     public Option getOption() {
         return option;
+    }
+
+    public Long getOptionId() {
+        return option.getId();
+    }
+
+    public Integer getQuantity() {
+        return option.getQuantity();
     }
 
     public Timestamp getOrderDateTime() {

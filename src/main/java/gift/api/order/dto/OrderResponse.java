@@ -13,8 +13,8 @@ public record OrderResponse(
 
     public static OrderResponse of(Order order) {
         return new OrderResponse(order.getId(),
-            order.getOption().getId(),
-            order.getOption().getQuantity(),
+            order.getOptionId(),
+            order.getQuantity(),
             order.getOrderDateTime(),
             order.getMessage());
     }
