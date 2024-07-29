@@ -60,6 +60,15 @@ public class ProductService{
         );
     }
 
+    public List<ProductDto> findAll(){
+
+        List<Product> products = productRepository.findAll();
+        return products
+                .stream()
+                .map(ProductDto::fromEntity)
+                .toList();
+    }
+
     public ProductDto findById(Long id){
         Product product = productRepository.findById(id)
             .orElseThrow(() -> new CustomException("Product with id " + id + " not found", HttpStatus.NOT_FOUND));

@@ -49,10 +49,17 @@ public class CategoryService {
             new CustomException("Category with name" + categoryDto.getName() + "exists" , HttpStatus.CONFLICT);
         }
     }
+    @Transactional
+    public void updateCategory(Long categoryId, CategoryDto categoryDto){
+
+        Category category = categoryRepository.findById(categoryId)
+            .orElseThrow(() -> new CustomException("Category with id " + categoryId + " not exists", HttpStatus.NOT_FOUND));
+            
+        category.update(categoryDto);
+    }
 
     public Category toEntity(CategoryDto categoryDto){
         return new Category(categoryDto.getName(), categoryDto.getColor(), categoryDto.getImageUrl(), categoryDto.getDescription());
     }
-
     
 }
