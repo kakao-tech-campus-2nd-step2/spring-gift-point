@@ -16,5 +16,6 @@ public interface OptionRepository extends JpaRepository<Option, Long> {
     @Query("select o from Option o where o.id = :id")
     Optional<Option> findByIdWithPessimisticWrite(Long id);
 
+    @Query("select o from Option o join fetch Product p where p.id = :productId")
     List<Option> findAllByProductId(Long productId);
 }

@@ -47,4 +47,9 @@ public class OptionService {
             .orElseThrow(() -> new NoSuchEntityException("option"));
         option.subtract(quantity);
     }
+
+    public Option findOptionById(Long id) {
+        return optionRepository.findById(id)
+            .orElseThrow(() -> new NoSuchEntityException("option"));
+    }
 }

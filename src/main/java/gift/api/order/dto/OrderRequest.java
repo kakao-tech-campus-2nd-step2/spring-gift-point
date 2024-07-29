@@ -9,7 +9,7 @@ public record OrderRequest(
     String message
 ) {
 
-    public Order toEntity(Option option, String message) {
+    public Order toEntity(Option option) {
         return new Order(option, message);
     }
 }
