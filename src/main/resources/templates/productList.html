@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>상품 목록</title>
+  <style>
+    table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+    table, th, td {
+        border: 1px solid black;
+    }
+    th, td {
+        padding: 10px;
+        text-align: left;
+    }
+    .btn {
+        display: inline-block;
+        padding: 10px 20px;
+        margin: 5px;
+        text-align: center;
+        text-decoration: none;
+        color: white;
+        background-color: #4CAF50;
+        border-radius: 5px;
+    }
+    .btn-secondary {
+        background-color: #f44336;
+    }
+    .btn-group .btn {
+        margin-right: 5px;
+    }
+    .header-container {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+    .header-container h1 {
+        margin-right: 20px;
+    }
+    .pagination {
+        display: flex;
+        align-items: center;
+    }
+    .pagination .page-btn {
+        background-color: #f1f1f1;
+        border: none;
+        padding: 10px;
+        margin: 0 5px;
+        cursor: pointer;
+        border-radius: 5px;
+        width: 50px;
+        text-align: center;
+    }
+    .pagination .current-page {
+        background-color: #4CAF50;
+        color: white;
+        border: 2px solid #4CAF50;
+        border-radius: 5px;
+        width: 50px;
+        text-align: center;
+    }
+    .sort-buttons {
+        display: flex;
+        align-items: center;
+    }
+    .sort-buttons .btn {
+        margin-left: 10px;
+    }
+    .sort-buttons .sort-btn {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 80px;
+        height: 40px;
+        background-color: #4CAF50;
+        color: white;
+        border: none;
+        cursor: pointer;
+        border-radius: 5px;
+        margin-left: 10px;
+        text-align: center;
+    }
+    .sort-buttons .sort-btn span {
+        margin-left: 5px;
+    }
+  </style>
+</head>
+<body>
+
+<nav th:replace="~{navbar :: navbarFragment}"></nav>
+
+<div class="header-container">
+  <h1>상품 목록</h1>
+  <div class="pagination">
+    <a th:if="${productPage.hasPrevious()}"
+       th:href="@{/web/products/list(page=${currentPage - 1}, size=${pageSize}, sort=${sort}, direction=${direction}, categoryId=${categoryId})}"
+       class="page-btn">Prev</a>
+
+    <span th:each="i : ${#numbers.sequence(0, productPage.totalPages - 1)}">
+            <a th:href="@{/web/products/list(page=${i}, size=${pageSize}, sort=${sort}, direction=${direction}, categoryId=${categoryId})}"
+               th:text="${i + 1}"
+               th:classappend="${i == currentPage} ? 'current-page' : ''"
+               class="page-btn"></a>
+        </span>
+
+    <a th:if="${productPage.hasNext()}"
+       th:href="@{/web/products/list(page=${currentPage + 1}, size=${pageSize}, sort=${sort}, direction=${direction}, categoryId=${categoryId})}"
+       class="page-btn">Next</a>
+  </div>
+</div>
+
+<div class="header-container">
+  <a href="/web/products/add" class="btn">상품 추가</a>
+  <!-- 카테고리로 이동 버튼 추가 -->
+  <a href="/web/categories/web" class="btn">카테고리로 이동</a>
+  <div class="sort-buttons">
+    <a th:href="@{/web/products/list(sort='id', direction=${direction == 'asc' ? 'desc' : 'asc'}, page=${currentPage}, size=${pageSize}, categoryId=${categoryId})}" class="sort-btn">
+      ID<span th:text="${sort == 'id' ? (direction == 'asc' ? '↑' : '↓') : ''}"></span>
+    </a>
+    <a th:href="@{/web/products/list(sort='name', direction=${direction == 'asc' ? 'desc' : 'asc'}, page=${currentPage}, size=${pageSize}, categoryId=${categoryId})}" class="sort-btn">
+      Name<span th:text="${sort == 'name' ? (direction == 'desc' ? '↑' : '↓') : ''}"></span>
+    </a>
+    <a th:href="@{/web/products/list(sort='price', direction=${direction == 'asc' ? 'desc' : 'asc'}, page=${currentPage}, size=${pageSize}, categoryId=${categoryId})}" class="sort-btn">
+      Price<span th:text="${sort == 'price' ? (direction == 'desc' ? '↑' : '↓') : ''}"></span>
+    </a>
+  </div>
+</div>
+
+<table>
+  <thead>
+  <tr>
+    <th>ID</th>
+    <th>Name</th>
+    <th>Price</th>
+    <th>Category</th>
+    <th>Image</th>
+    <th>Actions</th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr th:each="product : ${productPage.content}">
+    <td th:text="${product.id}">1</td>
+    <td th:text="${product.name}">Name</td>
+    <td th:text="${product.price}">Price</td>
+    <td th:text="${product.categoryName}">Category</td>
+    <td><img th:src="${product.imageUrl}" alt="product image" width="100"/></td>
+    <td class="btn-group">
+      <a th:href="@{/web/products/detail/{id}(id=${product.id})}" class="btn">상세보기</a>
+      <a th:href="@{/web/products/edit/{id}(id=${product.id})}" class="btn">수정</a>
+      <a th:href="@{/web/products/delete/{id}(id=${product.id})}" class="btn btn-secondary">삭제</a>
+      <a th:href="@{/web/products/{id}/options(id=${product.id})}" class="btn">구매하기</a>
+    </td>
+  </tr>
+  </tbody>
+</table>
+</body>
+</html>

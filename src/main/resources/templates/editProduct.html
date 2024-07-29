@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>Edit Product</title>
+</head>
+<body>
+<h1>Edit Product</h1>
+<form th:action="@{/web/products/edit/{id}(id=${product.id})}" th:object="${product}" method="post">
+  <input type="hidden" th:field="*{id}"/>
+  <p>Name: <input type="text" th:field="*{name}"/></p>
+  <p>Price: <input type="text" th:field="*{price}"/></p>
+  <p>Image URL: <input type="text" th:field="*{imageUrl}"/></p>
+  <p>Category:
+    <select th:field="*{category}" multiple>
+      <option value="1">교환권</option>
+      <option value="2">상품권</option>
+      <option value="3">뷰티</option>
+      <option value="4">패션</option>
+      <option value="5">식품</option>
+      <option value="6">리빙/도서</option>
+      <option value="7">레저/스포츠</option>
+      <option value="8">아티스트/캐릭터</option>
+      <option value="9">유아동/반려</option>
+      <option value="10">디지털/가전</option>
+      <option value="11">카카오프렌즈</option>
+      <option value="12">트렌드 선물</option>
+      <option value="13">백화점</option>
+    </select>
+  </p>
+  <button type="submit">Update Product</button>
+</form>
+<a href="/web/products/list">Back to List</a>
+</body>
+</html>

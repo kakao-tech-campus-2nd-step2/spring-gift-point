@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html layout:decorate="~{layout}" xmlns:layout="http://www.w3.org/1999/xhtml"
+			xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+	<title>로그인</title>
+	<style>
+		.login-container {
+      max-width: 500px;
+      margin: auto;
+      padding: 2rem;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      border-radius: 10px;
+      background-color: #f9f9f9;
+    }
+    .btn-kakao {
+      background-color: #F7E600;
+      color: #3C1E1E;
+      border: none;
+      padding: 10px 20px;
+      text-align: center;
+      text-decoration: none;
+      display: inline-block;
+      font-size: 16px;
+      margin: 4px 2px;
+      cursor: pointer;
+      border-radius: 5px;
+    }
+	</style>
+</head>
+<body>
+<div layout:fragment="content" class="container my-3">
+	<div class="login-container">
+		<form th:action="@{/user/login}" method="post">
+			<div th:if="${param.error}">
+				<div class="alert alert-danger">
+					사용자ID 또는 비밀번호를 확인해 주세요.
+				</div>
+			</div>
+			<div class="mb-3">
+				<label for="username" class="form-label">사용자ID</label>
+				<input type="text" name="username" id="username" class="form-control">
+			</div>
+			<div class="mb-3">
+				<label for="password" class="form-label">비밀번호</label>
+				<input type="password" name="password" id="password" class="form-control">
+			</div>
+			<button type="submit" class="btn btn-primary">로그인</button>
+		</form>
+		<a href="/login/kakao" class="btn-kakao">마카오 로그인</a>
+	</div>
+</div>
+</body>
+</html>
