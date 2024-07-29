@@ -46,8 +46,8 @@ public class ProductController {
     @GetMapping
     @Operation(description = "서버가 클라이언트에게 제품 목록 페이지를 제공합니다.", tags = "Product")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "정상적으로 회원가입 페이지를 제공합니다.",
-                    content = @Content(mediaType = "text/html", schema = @Schema(type = "String"))),
+            @ApiResponse(responseCode = "200", description = "정상적으로 제품 목록 페이지를 제공합니다.",
+                    content = @Content(mediaType = "text/html", schema =  @Schema(implementation = String.class))),
             @ApiResponse(responseCode = "500", description = "서버에 의한 오류입니다.",
                     content = @Content(mediaType = "application/json", schema = @Schema(implementation = ResponseDTO.class)))})
     public String getProducts(Model model, Pageable pageable) {
