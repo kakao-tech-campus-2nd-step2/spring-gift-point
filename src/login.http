@@ -1,0 +1,145 @@
+### GET request to example server
+POST /members/products/add HTTP/1.1
+content-type: application/json
+host: localhost:8080
+
+{
+  "price": "15000",
+  "name": "dolce",
+  "image_url": "exampleurl.com"
+}
+###
+
+POST /members/register HTTP/1.1
+content-type: application/json
+host: localhost:8080
+
+{
+  "email": "admin8@email.com",
+  "password": "passwrod",
+  "name": "Admin8",
+  "role": "admin8"
+}
+###
+POST /members/login HTTP/1.1
+content-type: application/json
+host: localhost:8080
+
+{
+  "email": "3635099980문성민",
+  "password": "password"
+}
+###
+POST /wishlist/add HTTP/1.1
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIiwiZW1haWwiOiJwYXNzd29yZCIsImlhdCI6MTcyMTk4NTU5OSwiZXhwIjoxNzIxOTg3OTk5fQ.eNn6z-6tCjXbZPxT7oQ3VvtYsuKWZkksNddqL3gdTu8
+content-type: application/x-www-form-urlencoded
+host: localhost:8080
+
+
+productId: 77
+
+####
+POST /wishlist/add HTTP/1.1
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIiwiZW1haWwiOiJwYXNzd29yZCIsImlhdCI6MTcyMTk4NTU5OSwiZXhwIjoxNzIxOTg3OTk5fQ.eNn6z-6tCjXbZPxT7oQ3VvtYsuKWZkksNddqL3gdTu8
+content-type: application/json
+host: localhost:8080
+
+{
+  "productId": 1
+}
+####
+POST /wishlist/add HTTP/1.1
+Authorization: Bearer POST /wishlist/add HTTP/1.1
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIiwiZW1haWwiOiJwYXNzd29yZCIsImlhdCI6MTcyMTk4MzI1MCwiZXhwIjoxNzIxOTg1NjUwfQ.5q0Q-cAQG3U--CvHdDFm21ZM1fJoEzGfKcFn4jQxXt0
+content-type: application/json
+host: localhost:8080
+
+{
+  "member_id": 74,
+  "product_id": 77,
+  "product_name": "아메리가",
+  "product_price": 10003
+}
+####
+content-type: application/json
+host: localhost:8080
+
+{
+  "member_id": 74,
+  "product_id": 77,
+  "product_name": "아메리가",
+  "product_price": 10003
+}
+####
+# @no-redirect
+GET /wishlist/items HTTP/1.1
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIyIiwiZW1haWwiOiJhZG1pbjhAZW1haWwuY29tIiwiaWF0IjoxNzIwNTU0MzgxLCJleHAiOjE3MjA1NTY3ODF9._St1Dim9BB9wQAEM4N748zJHDM7WGb4XRrQs-wb_Lqk
+content-type: application/json
+host: localhost:8080
+
+{
+
+}
+#######
+
+DELETE /wishlist/delete/6 HTTP/1.1
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIyIiwiZW1haWwiOiJhZG1pbjhAZW1haWwuY29tIiwiaWF0IjoxNzIwNTcwNzk1LCJleHAiOjE3MjA1NzMxOTV9.lyrcE5jVzwmB3UKtAjKXAh-FvzX0O1RLAc9-urZo9jk
+content-type: application/json
+host: localhost:8080
+
+{
+  "id": 78
+}
+###
+POST /products/add HTTP/1.1
+content-type: application/json
+host: localhost:8080
+
+{
+  "price": 1500,
+  "name": "돌체",
+  "image_url": "example"
+}
+###
+DELETE /products/delete/2 HTTP/1.1
+content-type: application/json
+host: localhost:8080
+
+{
+  "id": 2
+}
+#####
+POST /category/add HTTP/1.1
+content-type: application/json
+host: localhost:8080
+
+{
+  "categoryName": "패션"
+}
+###
+POST /category/delete/1 HTTP/1.1
+content-type: application/json
+host: localhost:8080
+
+{
+  "id": 1,
+  "categoryName": "상품권"
+}
+####
+POST /option/add HTTP/1.1
+content-type: application/json
+host: localhost:8080
+
+{
+  "optionName": "라지 사이즈"
+}
+###
+POST http://localhost:8080/orders HTTP/1.1
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIiwiZW1haWwiOiJwYXNzd29yZCIsImlhdCI6MTcyMjE0MjI2NSwiZXhwIjoxNzIyMTQ0NjY1fQ.4OgdjJSz3whQjZnkvlSvr6S5l-aOgNlhhPXFZmUe4gY
+Content-Type: application/json
+
+{
+  "optionId": 1,
+  "quantity": 1,
+  "message": "조심하세요."
+}

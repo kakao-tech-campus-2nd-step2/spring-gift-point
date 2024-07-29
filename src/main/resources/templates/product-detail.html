@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>Product Detail</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+<div class="container">
+  <h1 class="my-4">Product <strong>Details</strong></h1>
+
+  <div th:if="${message}" class="alert alert-success" role="alert">
+    <p th:text="${message}"></p>
+  </div>
+
+  <div class="card mb-4">
+    <div class="card-header">
+      Product Information
+    </div>
+    <div class="card-body">
+      <form th:action="@{/products/update}" th:object="${product}" method="post">
+        <input type="hidden" th:field="*{id}" />
+        <div class="form-group">
+          <label for="name">Name</label>
+          <input type="text" class="form-control" id="name" th:field="*{name}" required readonly />
+        </div>
+        <div class="form-group">
+          <label for="price">Price</label>
+          <input type="text" class="form-control" id="price" th:field="*{price}" required readonly />
+        </div>
+        <div class="form-group">
+          <label>Image URL</label>
+          <img th:src="*{imageUrl}" alt="Product Image" style="width:100px;height:auto;"/></td>
+        </div>
+        <div class="form-group">
+          <label for="category">Category</label>
+          <select class="form-control" id="category" th:field="*{category.id}" required readonly>
+            <option th:each="category : ${categories}"
+                    th:value="${category.id}"
+                    th:text="${category.categoryName}"
+                    th:selected="${category.id == product.category.id}"></option>
+          </select>
+        </div>
+        <div id="options">
+          <div th:each="option : ${product.options}">
+            <div class="form-group">
+              <label>Option Name</label>
+              <input type="text" class="form-control" th:value="${option.optionName}" readonly />
+            </div>
+            <div class="form-group">
+              <label>Option Quantity</label>
+              <input type="number" class="form-control" th:value="${option.quantity}" readonly />
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" onclick="window.history.back()">Back</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>
