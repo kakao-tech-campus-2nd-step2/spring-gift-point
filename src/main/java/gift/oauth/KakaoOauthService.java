@@ -16,6 +16,7 @@ import java.util.Objects;
 import org.springframework.data.util.Pair;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.web.client.RestClient;
@@ -88,6 +89,7 @@ public class KakaoOauthService {
         );
     }
 
+    @Async
     public void sendMessage(String message, String accessToken) {
         restClient.post()
             .uri(kakaoOauthConfigure.getMessageSendURL())

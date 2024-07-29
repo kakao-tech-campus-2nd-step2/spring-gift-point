@@ -48,6 +48,8 @@ public class OrderService {
             )
         );
 
+        kakaoOauthService.sendMessage(createOrderRequestDTO.getMessage(), accessToken);
+
         return new CreateOrderResponseDTO(
             option.getProduct().getId(),
             createOrderRequestDTO.getOptionId(),
