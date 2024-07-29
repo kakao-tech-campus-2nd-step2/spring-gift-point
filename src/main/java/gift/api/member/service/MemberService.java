@@ -1,39 +1,39 @@
 package gift.api.member.service;
 
-import gift.api.member.dao.MemberDao;
 import gift.api.member.domain.Member;
 import gift.api.member.dto.KakaoAccount;
 import gift.api.member.dto.MemberRequest;
 import gift.api.member.exception.EmailAgreementNeededException;
 import gift.api.member.exception.EmailAlreadyExistsException;
 import gift.api.member.exception.RegisterNeededException;
+import gift.api.member.repository.MemberRepository;
 import gift.global.exception.ForbiddenMemberException;
+import gift.global.exception.NoSuchEntityException;
 import gift.global.exception.UnauthorizedMemberException;
 import gift.global.utils.JwtUtil;
-import org.apache.catalina.connector.RequestFacade;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class MemberService {
 
-    private final MemberDao memberDao;
+    private final MemberRepository memberRepository;
 
-    public MemberService(MemberDao memberDao) {
-        this.memberDao = memberDao;
+    public MemberService(MemberRepository memberRepository) {
+        this.memberRepository = memberRepository;
     }
 
     @Transactional
     public Long register(MemberRequest memberRequest) {
-        if (memberDao.hasMemberByEmail(memberRequest.email())) {
+        if (memberRepository.existsByEmail(memberRequest.email())) {
             throw new EmailAlreadyExistsException();
         }
-        return memberDao.saveMember(memberRequest.toEntity());
+        return memberRepository.save(memberRequest.toEntity()).getId();
     }
 
     public void login(MemberRequest memberRequest, String token) {
-        if (memberDao.hasMemberByEmailAndPassword(memberRequest.email(), memberRequest.password())) {
-            Long id = memberDao.findMemberByEmail(memberRequest.email()).getId();
+        if (memberRepository.existsByEmailAndPassword(memberRequest.email(), memberRequest.password())) {
+            Long id = findMemberByEmail(memberRequest.email()).getId();
             if (token.equals(JwtUtil.generateAccessToken(id, memberRequest.email(), memberRequest.role()))) {
                 return;
             }
@@ -47,7 +47,7 @@ public class MemberService {
             throw new EmailAgreementNeededException();
         }
         if (kakaoAccount.isEmailValid()) {
-            if (!memberDao.hasMemberByEmail(kakaoAccount.email())) {
+            if (!memberRepository.existsByEmail(kakaoAccount.email())) {
                 throw new RegisterNeededException();
             }
         }
@@ -55,7 +55,12 @@ public class MemberService {
 
     @Transactional
     public void saveKakaoToken(String email, String accessToken) {
-        Member member = memberDao.findMemberByEmail(email);
+        Member member = findMemberByEmail(email);
         member.saveKakaoToken(accessToken);
+    }
+
+    public Member findMemberByEmail(String email) {
+        return memberRepository.findByEmail(email)
+            .orElseThrow(() -> new NoSuchEntityException("member"));
     }
 }

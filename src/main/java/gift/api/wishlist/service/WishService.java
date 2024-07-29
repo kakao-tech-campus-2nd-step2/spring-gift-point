@@ -1,7 +1,7 @@
 package gift.api.wishlist.service;
 
-import gift.api.member.dao.MemberDao;
 import gift.api.member.domain.Member;
+import gift.api.member.repository.MemberRepository;
 import gift.api.product.domain.Product;
 import gift.api.product.repository.ProductRepository;
 import gift.api.wishlist.domain.Wish;
@@ -24,20 +24,19 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class WishService {
 
-    private final MemberDao memberDao;
+    private final MemberRepository memberRepository;
     private final ProductRepository productRepository;
     private final WishRepository wishRepository;
 
-    public WishService(MemberDao memberDao, ProductRepository productRepository,
-                                                    WishRepository wishRepository) {
-        this.memberDao = memberDao;
+    public WishService(MemberRepository memberRepository, ProductRepository productRepository,
+        WishRepository wishRepository) {
+        this.memberRepository = memberRepository;
         this.productRepository = productRepository;
         this.wishRepository = wishRepository;
     }
 
     public List<WishResponse> getItems(Long memberId, Pageable pageable) {
-        Member member = memberDao.findMemberById(memberId);
-        Page<Wish> wishes = wishRepository.findAllByMember(member, createPageableWithProduct(pageable));
+        Page<Wish> wishes = wishRepository.findAllByMemberId(memberId, createPageableWithProduct(pageable));
         if (wishes.hasContent()) {
             return wishes.getContent()
                     .stream()
@@ -49,7 +48,8 @@ public class WishService {
 
     @Transactional
     public void add(Long memberId, WishAddUpdateRequest wishAddUpdateRequest) {
-        Member member = memberDao.findMemberById(memberId);
+        Member member = memberRepository.findById(memberId)
+            .orElseThrow(() -> new NoSuchEntityException("member"));
         Product product = productRepository.findById(wishAddUpdateRequest.productId())
             .orElseThrow(() -> new NoSuchEntityException("product"));
         wishRepository.save(wishAddUpdateRequest.toEntity(member, product));

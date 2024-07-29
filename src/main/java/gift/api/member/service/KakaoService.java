@@ -5,37 +5,34 @@ import static org.springframework.http.HttpHeaders.CONTENT_TYPE;
 import static org.springframework.http.MediaType.APPLICATION_FORM_URLENCODED;
 import static org.springframework.http.MediaType.APPLICATION_FORM_URLENCODED_VALUE;
 
-import gift.api.member.dao.MemberDao;
-import gift.api.member.domain.Member;
-import gift.api.member.dto.KakaoAccount;
 import gift.api.member.dto.TokenResponse;
 import gift.api.member.dto.UserInfoResponse;
-import gift.api.member.exception.EmailAgreementNeededException;
-import gift.api.member.exception.RegisterNeededException;
+import gift.api.member.repository.MemberRepository;
 import gift.api.order.dto.MsgMeResponse;
 import gift.api.order.exception.MessageFailException;
 import gift.global.config.KakaoProperties;
+import gift.global.exception.NoSuchEntityException;
 import java.net.URI;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.web.client.RestClient;
 
 @Service
 public class KakaoService {
 
-    private final MemberDao memberDao;
+    private final MemberRepository memberRepository;
     private final KakaoProperties properties;
     private final RestClient restClient;
 
-    public KakaoService(MemberDao memberDao, KakaoProperties properties) {
-        this.memberDao = memberDao;
+    public KakaoService(MemberRepository memberRepository, KakaoProperties properties) {
+        this.memberRepository = memberRepository;
         this.properties = properties;
         restClient = RestClient.create();
     }
+
     public ResponseEntity<TokenResponse> obtainToken(String code) {
         return restClient.post()
             .uri(URI.create(properties.url().token()))
@@ -61,7 +58,9 @@ public class KakaoService {
         MsgMeResponse msgMeResponse = restClient.post()
             .uri(properties.url().defaultTemplateMsgMe())
             .header(HttpHeaders.AUTHORIZATION,
-                "Bearer " + memberDao.findMemberById(memberId).getKakaoAccessToken())
+                "Bearer " + memberRepository.findById(memberId)
+                    .orElseThrow(() -> new NoSuchEntityException("member"))
+                    .getKakaoAccessToken())
             .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_FORM_URLENCODED_VALUE)
             .body(body)
             .retrieve()
