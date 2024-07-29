@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="KR" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>상품 목록</title>
+    <link rel="stylesheet" href="/style/index_style.css">
+    <script type="text/javascript" src="http://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="/js/index_ajax.js"></script>
+</head>
+<body>
+<data id="token" th:value="${token != null ? token : 'null'}"></data>
+<div class="header" id="header">
+    <!-- 조건에 따라 데이터를 로드 -->
+</div>
+<h1>Product List Page</h1>
+<table id="product-table">
+    <thead>
+    <tr>
+        <th scope="col">Id</th>
+        <th scope="col">Name</th>
+        <th scope="col">Price</th>
+        <th scope="col">Image</th>
+        <th scope="col">Category </th>
+        <th scope="col">Choose</th>
+        <th scope="col">Buy</th>
+    </tr>
+    </thead>
+    <tbody id="product-tbody">
+    <!-- AJAX를 통해 데이터를 로드 -->
+    </tbody>
+</table>
+<div>
+    <button id="prevPage">Previous</button>
+    <label for="p_sort"></label>
+    <select name="p_sort" id="p_sort">
+        <option value="asc">오름차순</option>
+        <option value="desc">내림차순</option>
+    </select>
+    <label for="p_field"></label>
+    <select name="p_field" id="p_field">
+        <option value="id">id</option>
+        <option value="name">name</option>
+        <option value="price">price</option>
+        <option value="category">category</option>
+    </select>
+    <button id="search" onclick="getProducts()">검색</button>
+    <button id="nextPage">Next</button>
+</div>
+</body>
+<script>
+    var currentPage = 0;
+    var pageSize = 5;
+
+    function getProducts(page){
+        $.ajax({
+            url: '/api/products',
+            method: 'GET',
+            data : {
+                page : page,
+                size : pageSize,
+                sort : $('#p_sort').val(),
+                field : $('#p_field').val()
+            },
+            success: function(data) {
+                var contents = data.content;
+                var tbody = $('#product-tbody');
+                tbody.empty(); // 초기화
+
+                // 데이터에 따라 테이블 행을 생성
+                contents.forEach(function(product) {
+                    // 한 행의 내용
+                    var row = `
+                        <tr>
+                            <td>${product.id}</td>
+                            <td>${product.name}</td>
+                            <td>${product.price}</td>
+                            <td><img src="${product.imageUrl}" alt="image"/></td>
+                            <td>${product.category.name}</td>
+                            <td>
+                                <a href="#" onclick="chooseFunction(${product.id})">추가</a>
+                            </td>
+                            <td>
+                                <a href="/orders?product_id=${product.id}">구매</a>
+                            </td>
+                        </tr>
+                    `;
+                    tbody.append(row);
+
+                    currentPage = data.number;
+
+                    $('#prevPage').prop('disabled', data.first);
+                    $('#nextPage').prop('disabled', data.last);
+                });
+            },
+            error: function(err) {
+                if(err.responseJSON){
+                    var s = JSON.stringify(err.responseJSON);
+                    alert(s);
+                }
+                else{
+                    alert("문제가 발생했습니다! 상태 코드 : " + err.status)
+                }
+            }
+        });
+    }
+
+    $(document).ready(function() {
+        if($('#token').val() !== 'null')
+            localStorage.setItem('token', $('#token').val());
+        getProducts(currentPage);
+
+        $('#prevPage').click(function() {
+            if (currentPage > 0) {
+                getProducts(currentPage - 1);
+            }
+        });
+
+        $('#nextPage').click(function() {
+            getProducts(currentPage + 1);
+        });
+
+        if(localStorage.getItem('token')){
+            var inline = $('#header');
+            inline.empty();
+            inline.append('<a href="/wishList" className="header-link">위시리스트</a>\n' +
+                '            <a href="" onclick="logoutFunction()" className="header-link">로그아웃</a>');
+        }
+        else {
+            var inline = $('#header');
+            inline.empty();
+            inline.append('<a href="/login" className="header-link">로그인</a>\n' +
+                '            <a href="/register" className="header-link">회원가입</a>');
+        }
+    });
+
+    function chooseFunction(id){
+        $.ajax({
+            type : "post",
+            url : "api/wishes/" +  id,
+            headers : {
+                Authorization: 'Bearer ' + localStorage.getItem("token"),
+            },
+            success : function(res){
+                alert("상품이 위시 리스트에 등록되었습니다");
+            },
+            error : function(err){
+                if(err.responseJSON){
+                    var s = JSON.stringify(err.responseJSON);
+                    alert(s);
+                }
+                else{
+                    alert("문제가 발생했습니다! 상태 코드 : " + err.status)
+                }
+            }
+        })
+        console.log(localStorage.getItem("token"));
+    }
+
+    function logoutFunction(){
+        localStorage.removeItem('token');
+        location.href = "/";
+    }
+</script>
+</html>

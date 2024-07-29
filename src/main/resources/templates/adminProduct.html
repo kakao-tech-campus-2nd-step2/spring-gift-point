@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="KR" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>상품 관리</title>
+    <link rel="stylesheet" href="/style/index_style.css">
+    <script type="text/javascript" src="http://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="/js/index_ajax.js"></script>
+</head>
+<body>
+<div class="header" id="header">
+
+</div>
+<h1>Administrator Product Manage Page</h1>
+<div class="form-inline">
+    <label for="id">Id:</label>
+    <input type="text" id="id" name="id" disabled>
+
+    <label for="name">Name:</label>
+    <input type="text" id="name" name="name" required>
+
+    <label for="price">Price:</label>
+    <input type="number" id="price" name="price" required>
+
+    <label for="image">Image:</label>
+    <input type="text" id="image" name="imageUrl" required>
+
+    <label for="category">Category:</label>
+    <select name="category" id="category" >
+
+    </select>
+
+    <label for="basicOption">BasicOption:</label>
+    <input type="text" id="basicOption" name="basicOption" required>
+
+    <input type="button" id="post" value="추가">
+</div>
+<div class="form-inline">
+    <label for="p_id">Id:</label>
+    <input type="text" id="p_id" name="id" required>
+
+    <label for="p_name">Name:</label>
+    <input type="text" id="p_name" name="name" required>
+
+    <label for="p_price">Price:</label>
+    <input type="number" id="p_price" name="price" required>
+
+    <label for="p_image">Image:</label>
+    <input type="text" id="p_image" name="imageUrl" required>
+
+    <label for="p_category">Category:</label>
+    <select name="p_category" id="p_category">
+
+    </select>
+
+    <label for="p_basicOption">BasicOption:</label>
+    <input type="text" id="p_basicOption" name="p_basicOption" disabled>
+
+    <input type="button" id="put" value="수정">
+</div>
+<table id="product-table">
+    <thead>
+    <tr>
+        <th scope="col">Id</th>
+        <th scope="col">Name</th>
+        <th scope="col">Price</th>
+        <th scope="col">Image</th>
+        <th scope="col">Category</th>
+        <th scope="col">BasicOption</th>
+        <th scope="col">Option</th>
+    </tr>
+    </thead>
+    <tbody id="product-tbody">
+    <!-- AJAX를 통해 데이터를 로드 -->
+    </tbody>
+</table>
+<div>
+    <button id="prevPage">Previous</button>
+    <label for="p_sort"></label>
+    <select name="p_sort" id="p_sort">
+        <option value="asc">오름차순</option>
+        <option value="desc">내림차순</option>
+    </select>
+    <label for="p_field"></label>
+    <select name="p_field" id="p_field">
+        <option value="id">id</option>
+        <option value="name">name</option>
+        <option value="price">price</option>
+        <option value="category">category</option>
+    </select>
+    <button id="search" onclick="getProducts(currentPage)">검색</button>
+    <button id="nextPage">Next</button>
+</div>
+</body>
+<script>
+    var currentPage = 0;
+    var pageSize = 5;
+
+    function getCategories(page){
+        $.ajax({
+            url: '/api/categories',
+            method: 'GET',
+            data : {
+                page : page,
+                size : pageSize
+            },
+            success: function(data) {
+                console.log(data);
+                var contents = data.content;
+                var select = $('#category');
+                var p_select = $('#p_category');
+
+                // 데이터에 따라 테이블 행을 생성
+                contents.forEach(function(category) {
+                    // 한 행의 내용
+                    var row = `
+                        <option value="${category.name}">${category.name}</option>
+                    `;
+                    select.append(row);
+                    p_select.append(row);
+                });
+
+                if(data.numberOfElements !== 0)
+                    getCategories(page + 1);
+            },
+            error: function(err) {
+                if(err.responseJSON){
+                    var s = JSON.stringify(err.responseJSON);
+                    alert(s);
+                }
+                else{
+                    alert("문제가 발생했습니다! 상태 코드 : " + err.status)
+                }
+            }
+        });
+    }
+
+    function getProducts(page){
+        $.ajax({
+            url: '/api/products',
+            method: 'GET',
+            data : {
+                page : page,
+                size : pageSize,
+                sort : $('#p_sort').val(),
+                field : $('#p_field').val()
+            },
+            success: function(data) {
+                var contents = data.content;
+                var tbody = $('#product-tbody');
+                tbody.empty(); // 초기화
+
+                // 데이터에 따라 테이블 행을 생성
+                contents.forEach(function(product) {
+                    // 한 행의 내용
+                    var row = `
+                        <tr>
+                            <td>${product.id}</td>
+                            <td>${product.name}</td>
+                            <td>${product.price}</td>
+                            <td><img src="${product.imageUrl}" alt="image"/></td>
+                            <td>${product.category.name}</td>
+                            <td>
+                                <a href="/adminOptions?product_id=${product.id}">옵션</a>
+                            </td>
+                            <td>
+                                <a href="#" onclick="deleteFunction(${product.id})">삭제</a>
+                            </td>
+                        </tr>
+                    `;
+                    tbody.append(row);
+
+                    currentPage = data.number;
+
+                    $('#prevPage').prop('disabled', data.first);
+                    $('#nextPage').prop('disabled', data.last);
+                });
+            },
+            error: function(err) {
+                if(err.responseJSON){
+                    var s = JSON.stringify(err.responseJSON);
+                    alert(s);
+                }
+                else{
+                    alert("문제가 발생했습니다! 상태 코드 : " + err.status)
+                }
+            }
+        });
+    }
+
+    $(document).ready(function() {
+        getCategories(0);
+        getProducts(currentPage);
+
+        $('#prevPage').click(function() {
+            if (currentPage > 0) {
+                getProducts(currentPage - 1);
+            }
+        });
+
+        $('#nextPage').click(function() {
+            getProducts(currentPage + 1);
+        });
+
+        if(localStorage.getItem('token')){
+            var inline = $('#header');
+            inline.empty();
+            inline.append('<a href="" onclick="logoutFunction()" className="header-link">로그아웃</a>\n' +
+                '            <a href="adminProducts" className="header-link">상품관리</a>' +
+                '            <a href="adminUsers" className="header-link">유저관리</a>' +
+                '            <a href="adminCategories" className="header-link">카테고리관리</a>');
+        }
+    });
+
+    $("#post").click(function () {
+        var product = {
+            name : $("#name").val(),
+            price : $("#price").val(),
+            imageUrl : $("#image").val(),
+            categoryName : $("#category").val(),
+            basicOption : $("#basicOption").val()
+        }
+
+        $.ajax({
+            type : "POST",
+            url : "api/products",
+            contentType: "application/json",
+            datatype : "json",
+            data : JSON.stringify(product),
+            headers : {
+                Authorization: 'Bearer ' + localStorage.getItem("token"),
+            },
+            success : function(res){
+                getProducts(currentPage);
+            },
+            error : function(err){
+                if(err.responseJSON){
+                    var s = JSON.stringify(err.responseJSON);
+                    alert(s);
+                }
+                else{
+                    alert("문제가 발생했습니다! 상태 코드 : " + err.status)
+                }
+            }
+        })
+    });
+
+    function deleteFunction(id){
+        $.ajax({
+            type: "DELETE",
+            url: "api/products/" + id,
+            headers : {
+                Authorization: 'Bearer ' + localStorage.getItem("token"),
+            },
+            success : function(res){
+                $('#product-table').find('tr[data-id="' + id + '"]').remove();
+                alert("상품 ID : " + id + "가 삭제되었습니다.");
+                getProducts(currentPage);
+            },
+            error : function(error){
+                if(err.responseJSON){
+                    var s = JSON.stringify(err.responseJSON);
+                    alert(s);
+                }
+                else{
+                    alert("문제가 발생했습니다! 상태 코드 : " + err.status)
+                }
+            }
+        })
+    }
+
+    $("#put").click(function(){
+        var product ={
+            name : $("#p_name").val(),
+            price : $("#p_price").val(),
+            imageUrl : $("#p_image").val(),
+            categoryName: $("#p_category").val(),
+            basicOption: $("#p_basicOption").val()
+        }
+
+        $.ajax({
+            type : "PUT",
+            url : "api/products/" + $("#p_id").val(),
+            contentType: "application/json",
+            datatype : "json",
+            data : JSON.stringify(product),
+            headers : {
+                Authorization: 'Bearer ' + localStorage.getItem("token"),
+            },
+            success : function(res){
+                getProducts(currentPage);
+            },
+            error : function(err){
+                if(err.responseJSON){
+                    var s = JSON.stringify(err.responseJSON);
+                    alert(s);
+                }
+                else{
+                    alert("문제가 발생했습니다! 상태 코드 : " + err.status)
+                }
+            }
+        })
+    })
+
+    function logoutFunction(){
+        localStorage.removeItem('token');
+        backToHome();
+    }
+</script>
+</html>
