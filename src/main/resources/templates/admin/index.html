@@ -1,0 +1,31 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/header}"/>
+<body>
+<div class="container">
+  <header id="header">
+    <div class="title">
+      상품 목록
+    </div>
+  </header>
+  <table id="products-table" class="table table-striped">
+    <thead>
+    <tr>
+      <th>#</th>
+      <th>상품명</th>
+      <th>상품 가격</th>
+      <th>상품 이미지 URL</th>
+      <th></th>
+    </tr>
+    </thead>
+    <tbody>
+    </tbody>
+  </table>
+  <div class="position-relative">
+    <a href="/admin/products/new" class="btn btn-primary position-absolute top-50 end-0">상품 등록</a>
+  </div>
+</div>
+<div th:replace="~{fragments/footer}"/>
+<script src="/js/index.js"></script>
+</body>
+</html>
