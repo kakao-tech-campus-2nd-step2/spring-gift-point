@@ -1,7 +1,5 @@
 package gift.member.dto;
 
-import gift.member.entity.Member;
-import gift.token.MemberTokenDTO;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 @Schema(description = "사용자 정보 수신용 DTO", example = "{\"email\":\"aaa@email.com,\"password\":\"aaa\"}")
@@ -26,7 +24,4 @@ public class MemberRequestDTO {
         return password;
     }
 
-    public MemberTokenDTO toTokenDTO() {
-        return new MemberTokenDTO(email);
-    }
 }

@@ -8,6 +8,7 @@ import gift.exception.FailedLoginException;
 import gift.member.dto.MemberRequestDTO;
 import gift.member.entity.Member;
 import gift.token.JwtProvider;
+import gift.token.MemberTokenDTO;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -42,7 +43,9 @@ public class MemberService {
                 )
             );
 
-        return jwtProvider.generateToken(memberRequestDTO.toTokenDTO());
+        return jwtProvider.generateToken(
+            new MemberTokenDTO(memberRequestDTO.getEmail())
+        );
     }
 
     public void registerIfNotExists(String email, String password) {
@@ -58,7 +61,9 @@ public class MemberService {
 
         verifyPassword(findMember, memberRequestDTO);
 
-        return jwtProvider.generateToken(memberRequestDTO.toTokenDTO());
+        return jwtProvider.generateToken(
+            new MemberTokenDTO(memberRequestDTO.getEmail())
+        );
     }
 
     private void verifyPassword(Member member, MemberRequestDTO memberRequestDTO) {

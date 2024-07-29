@@ -9,6 +9,7 @@ import static org.mockito.Mockito.when;
 import gift.member.dto.MemberRequestDTO;
 import gift.member.entity.Member;
 import gift.token.JwtProvider;
+import gift.token.MemberTokenDTO;
 import java.util.Optional;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -50,7 +51,10 @@ class MemberServiceTest {
 
             //then
             assertThat(memberService.login(inputMemberDTO))
-                .isEqualTo(jwtProvider.generateToken(inputMemberDTO.toTokenDTO()));
+                .isEqualTo(jwtProvider.generateToken(
+                        new MemberTokenDTO(inputMemberDTO.getEmail())
+                    )
+                );
         }
 
         @Test
@@ -73,7 +77,8 @@ class MemberServiceTest {
         @DisplayName("wrong password error")
         void wrongPasswordError() {
             //given
-            MemberRequestDTO inputMemberDTO = new MemberRequestDTO("aaa@email.com", "wrong-password");
+            MemberRequestDTO inputMemberDTO = new MemberRequestDTO("aaa@email.com",
+                "wrong-password");
             Member except = new Member("aaa@email.com", "right-password");
 
             //when
