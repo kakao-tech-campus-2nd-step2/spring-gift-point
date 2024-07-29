@@ -33,11 +33,23 @@ jobs:
       - name: Run Tests
         run: ./gradlew test
 
-      - name: make application-prod.yml
+      - name: make application.yml
         run: |
-          cd ./src/main/resources
-          touch ./application.yml
-          echo "${{ secrets.APPLICATION }}" > ./application.yml
+          cat <<EOT >> src/main/resources/application.yml
+          jwt:
+            secret-key: ${JWT_SECRET_KEY}
+            expired-time: ${JWT_EXPIRED_TIME}
+          kakao:
+            rest-api-key: ${REST_API_KEY}
+            redirect-uri: ${REDIRECT_URI}
+            token-uri: ${TOKEN_URI}
+          EOT
+        env:
+          JWT_SECRET_KEY: ${{ secrets.JWT_SECRET_KEY }}
+          JWT_EXPIRED_TIME: ${{ secrets.JWT_EXPIRED_TIME }}
+          REST_API_KEY: ${{ secrets.REST_API_KEY }}
+          REDIRECT_URI: ${{ secrets.REDIRECT_URI }}
+          TOKEN_URI: ${{ secrets.TOKEN_URI }}
 
       - name: Deploy to Server
         env:
