@@ -22,7 +22,6 @@ import org.springframework.util.MultiValueMap;
 @Component
 public class ApiCall {
 
-    private HttpHeaders headers;
     //    private final RestTemplate restTemplate = new RestTemplate();
     private final RestCall restCall;
     private final String clientId;
@@ -50,7 +49,7 @@ public class ApiCall {
     }
 
     public kakaoToken getKakaoToken(String code) {
-        headers = new HttpHeaders();
+        HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
 
         HttpEntity<Long> requestEntity = new HttpEntity(null, headers);
@@ -67,7 +66,7 @@ public class ApiCall {
     }
 
     public kakaoInfo getKakaoTokenInfo(String token) {
-        headers = new HttpHeaders();
+        HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
         headers.setBearerAuth(token);
 
@@ -86,7 +85,7 @@ public class ApiCall {
         MultiValueMap<String, Object> body = new LinkedMultiValueMap<>();
         body.add("template_object", message.toString());
 
-        headers = new HttpHeaders();
+        HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
         headers.setBearerAuth(token);
 
