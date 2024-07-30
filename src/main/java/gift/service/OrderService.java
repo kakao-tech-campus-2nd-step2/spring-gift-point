@@ -2,11 +2,13 @@ package gift.service;
 
 import gift.exception.ErrorCode;
 import gift.exception.RepositoryException;
+import gift.model.Member;
 import gift.model.Option;
 import gift.model.Order;
 import gift.model.OrderDTO;
 import gift.model.Product;
 import gift.model.WishList;
+import gift.repository.MemberRepository;
 import gift.repository.OptionRepository;
 import gift.repository.OrderRepository;
 import gift.repository.WishListRepository;
@@ -27,13 +29,16 @@ public class OrderService {
     private final OrderRepository orderRepository;
     private final OptionRepository optionRepository;
     private final WishListRepository wishListRepository;
+    private final MemberRepository memberRepository;
     private final RestTemplate restTemplate;
 
     public OrderService(OrderRepository orderRepository, OptionRepository optionRepository,
-        WishListRepository wishListRepository, RestTemplate restTemplate) {
+        WishListRepository wishListRepository, MemberRepository memberRepository,
+        RestTemplate restTemplate) {
         this.orderRepository = orderRepository;
         this.optionRepository = optionRepository;
         this.wishListRepository = wishListRepository;
+        this.memberRepository = memberRepository;
         this.restTemplate = restTemplate;
     }
 
@@ -54,7 +59,10 @@ public class OrderService {
         return convertToDTO(orderRepository.save(order));
     }
 
-    public void sendOrderMessage(OrderDTO orderDTO, String accessToken) {
+    public void sendOrderMessage(OrderDTO orderDTO, long memberId) {
+        Member member = memberRepository.findById(memberId)
+            .orElseThrow(() -> new RepositoryException(ErrorCode.MEMBER_NOT_FOUND, memberId));
+        String accessToken = member.getPassword();
         String url = "https://kapi.kakao.com/v2/api/talk/memo/default/send";
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);

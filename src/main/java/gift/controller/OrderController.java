@@ -1,15 +1,15 @@
 package gift.controller;
 
-import gift.model.KakaoAuthInfo;
+import gift.model.AuthInfo;
 import gift.model.OrderDTO;
 import gift.service.OrderService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
-import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -44,16 +44,16 @@ public class OrderController {
     @ApiResponses(value = {
         @ApiResponse(responseCode = "201", description = "정상적으로 주문 카카오톡 메시지가 전송됩니다.",
             content = {@Content(mediaType = "application/json",
-            schema = @Schema(implementation = OrderDTO.class))}),
+                schema = @Schema(implementation = OrderDTO.class))}),
         @ApiResponse(responseCode = "400", description = "입력값이 유효하지 않습니다.", content = @Content),
         @ApiResponse(responseCode = "500", description = "내부 서버 에러입니다.", content = @Content)}
     )
     public ResponseEntity<?> sendOrderMessage(
         @Parameter(description = "주문 메시지에 대한 내용", required = true)
         @RequestBody OrderDTO orderDTO,
-        KakaoAuthInfo kakaoAuthInfo) {
+        AuthInfo authInfo) {
         OrderDTO response = orderService.createOrder(orderDTO);
-        orderService.sendOrderMessage(orderDTO, kakaoAuthInfo.token());
+        orderService.sendOrderMessage(orderDTO, authInfo.id());
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
