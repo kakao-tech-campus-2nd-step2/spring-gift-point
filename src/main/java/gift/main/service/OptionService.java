@@ -63,7 +63,6 @@ public class OptionService {
         List<Option> options = validOptions(productId);
 
         options.forEach(option -> option.isDuplicate(optionId, optionRequest));
-
         targetOption.updateValue(optionRequest);
     }
 

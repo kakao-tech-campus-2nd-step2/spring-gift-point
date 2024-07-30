@@ -32,7 +32,6 @@ public class Order {
     @JoinColumn(name = "product_id")
     private Product product;
 
-
     public Order() {
     }
 
@@ -75,4 +74,5 @@ public class Order {
     public int getTotalPrice() {
         return totalPrice;
     }
+
 }
