@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Add Product</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            let optionIndex = 0;
+
+            $("#addOptionButton").click(function () {
+                const newOption = `
+          <div class="form-group" id="option-${optionIndex}">
+            <label>Option Name</label>
+            <input type="text" class="form-control" name="options[${optionIndex}].name">
+            <label>Option Quantity</label>
+            <input type="number" class="form-control" name="options[${optionIndex}].quantity">
+            <button type="button" class="btn btn-danger mt-2" onclick="removeOption(${optionIndex})">Remove Option</button>
+          </div>`;
+
+                $("#optionsContainer").append(newOption);
+                optionIndex++;
+            });
+        });
+
+        function removeOption(index) {
+            $(`#option-${index}`).remove();
+        }
+    </script>
+</head>
+<body>
+<div class="container">
+    <h1>Add Product</h1>
+    <form th:action="@{/web/products/add}" th:object="${product}" method="post">
+        <div class="form-group">
+            <label>Name</label>
+            <input type="text" class="form-control" th:field="*{name}">
+        </div>
+        <div class="form-group">
+            <label>Price</label>
+            <input type="number" class="form-control" th:field="*{price}">
+        </div>
+        <div class="form-group">
+            <label>Image URL</label>
+            <input type="text" class="form-control" th:field="*{imageUrl}">
+        </div>
+        <div class="form-group">
+            <label>Category</label>
+            <select class="form-control" name="categoryId">
+                <option th:each="category : ${categories}"
+                        th:value="${category.id}"
+                        th:text="${category.name}">Category Name
+                </option>
+            </select>
+        </div>
+        <div class="form-group" id="optionsContainer">
+            <h4>Options</h4>
+        </div>
+        <button type="button" class="btn btn-secondary" id="addOptionButton">Add Option</button>
+        <button type="submit" class="btn btn-primary">Add Product</button>
+    </form>
+</div>
+</body>
+</html>
