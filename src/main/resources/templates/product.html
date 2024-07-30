@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>Manage Products</title>
+  <link rel="stylesheet" type="text/css" href="/css/style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+<div class="container">
+  <h1>Product Details</h1>
+  <div class="product-details">
+    <img th:src="@{${product.imageUrl}}" alt="Product Image" class="product-image"/>
+    <div class="product-info">
+      <table class="table">
+        <tbody>
+        <tr>
+          <th>Id</th>
+          <td th:text="${product.id}"></td>
+        </tr>
+        <tr>
+          <th>Name</th>
+          <td th:text="${product.name}"></td>
+        </tr>
+        <tr>
+          <th>Price</th>
+          <td th:text="${product.price}"></td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="button-group">
+      <a href="/products"><button class="btn btn-back"><i class="fa-solid fa-circle-arrow-left"></i>Back</button></a>
+    </div>
+  </div>
+</div>
+</body>
+</html>
