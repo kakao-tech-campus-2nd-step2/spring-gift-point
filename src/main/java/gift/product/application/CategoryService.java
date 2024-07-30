@@ -22,7 +22,8 @@ public class CategoryService {
     }
 
     public void addCategory(CreateCategoryRequest request) {
-        if (categoryRepository.findByName(request.getName()) != null) {
+
+        if (categoryRepository.findByName(request.getName()).isPresent()) {
             throw new IllegalArgumentException("이미 존재하는 카테고리입니다.");
         }
         Category category = new Category(request);
@@ -30,19 +31,11 @@ public class CategoryService {
         categoryRepository.save(category);
     }
 
-    public void deleteById(Long id) {
-        categoryRepository.deleteById(id);
-    }
-
-    public Category findByName(String name) {
-        return categoryRepository.findByName(name);
-    }
-
     public List<Category> getCategory() {
         return categoryRepository.findAll();
     }
 
     public Category getCategoryByName(String category) {
-        return Optional.ofNullable(categoryRepository.findByName(category)).orElseThrow(() -> new IllegalArgumentException("해당 이름의 카테고리가 존재하지 않습니다."));
+        return categoryRepository.findValidCategoryByName(category);
     }
 }

@@ -4,6 +4,7 @@ import gift.product.domain.Category;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public class CategoryRepository {
@@ -27,9 +28,13 @@ public class CategoryRepository {
         categoryJpaRepository.deleteById(id);
     }
 
-    public Category findByName(String name) {
+    public Category findValidCategoryByName(String name) {
         return categoryJpaRepository.findByName(name)
                 .orElseThrow(() -> new IllegalArgumentException("해당 이름의 카테고리가 존재하지 않습니다."));
+    }
+
+    public Optional<Category> findByName(String name) {
+        return categoryJpaRepository.findByName(name);
     }
 
     public List<Category> findAll() {

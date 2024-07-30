@@ -2,6 +2,7 @@ package gift.product.domain;
 
 import jakarta.persistence.*;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,6 +17,8 @@ public class Product {
     private String name;
     private Double price;
     private String imageUrl;
+
+    private LocalDateTime createdAt = LocalDateTime.now();
 
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<WishListProduct> wishListProducts = new ArrayList<>();

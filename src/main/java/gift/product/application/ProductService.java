@@ -1,6 +1,9 @@
 package gift.product.application;
 
-import gift.product.domain.*;
+import gift.product.domain.Category;
+import gift.product.domain.CreateProductOptionRequestDTO;
+import gift.product.domain.CreateProductRequestDTO;
+import gift.product.domain.Product;
 import gift.product.exception.ProductException;
 import gift.product.infra.ProductRepository;
 import gift.util.ErrorCode;
@@ -83,10 +86,17 @@ public class ProductService {
         }
     }
 
-    public Page<ProductListResponse> getProduct(Pageable pageable) {
+    public GetProductListResponse getProduct(Pageable pageable) {
         Page<Product> all = productRepository.findAll(pageable);
-
-        return all.map(product -> new ProductListResponse(product.getId(), product.getName(), product.getPrice(), product.getImageUrl()));
+        return new GetProductListResponse(
+                all.getContent().stream()
+                        .map(product -> new ProductListResponse(product.getId(), product.getName(), product.getPrice(), product.getImageUrl()))
+                        .toList(),
+                all.getNumber(),
+                all.getTotalPages(),
+                all.getSize(),
+                all.isLast()
+        );
     }
 
     public class ProductListResponse {
@@ -116,6 +126,42 @@ public class ProductService {
 
         public String getImageUrl() {
             return imageUrl;
+        }
+    }
+
+    public class GetProductListResponse {
+        private List<ProductService.ProductListResponse> content;
+        private int number;
+        private int totalElement;
+        private int size;
+        private boolean last;
+
+        public GetProductListResponse(List<ProductListResponse> content, int number, int totalElement, int size, boolean last) {
+            this.content = content;
+            this.number = number;
+            this.totalElement = totalElement;
+            this.size = size;
+            this.last = last;
+        }
+
+        public List<ProductListResponse> getContent() {
+            return content;
+        }
+
+        public int getNumber() {
+            return number;
+        }
+
+        public int getTotalElement() {
+            return totalElement;
+        }
+
+        public int getSize() {
+            return size;
+        }
+
+        public boolean isLast() {
+            return last;
         }
     }
 

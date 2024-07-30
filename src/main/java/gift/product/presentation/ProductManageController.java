@@ -44,16 +44,16 @@ public class ProductManageController {
         return ResponseEntity.ok(productService.getProduct(pageable));
     }
 
-    @AdminAuthenticated
+    //    @AdminAuthenticated
     @Operation(summary = "상품 추가", description = "새로운 상품을 추가합니다.")
-    @PostMapping("product/create")
-    public ResponseEntity<CommonResponse<Long>> addProduct(
+    @PostMapping("/product/create")
+    public ResponseEntity<?> addProduct(
             @Valid @RequestBody CreateProductRequestDTO createProductRequestDTO) {
         Long productId = productService.saveProduct(createProductRequestDTO);
         return ResponseEntity.ok(new CommonResponse<>(productId, "상품이 정상적으로 추가 되었습니다", true));
     }
 
-    @AdminAuthenticated
+    //    @AdminAuthenticated
     @Operation(summary = "상품 옵션 추가", description = "기존 상품에 옵션을 추가합니다.")
     @PostMapping("/{id}")
     public ResponseEntity<CommonResponse<Void>> addProductOption(
@@ -63,7 +63,7 @@ public class ProductManageController {
         return ResponseEntity.ok(new CommonResponse<>(null, "상품 옵션이 정상적으로 추가 되었습니다", true));
     }
 
-    @AdminAuthenticated
+    //    @AdminAuthenticated
     @Operation(summary = "상품 삭제", description = "상품을 삭제합니다.")
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<CommonResponse<Void>> deleteProduct(
@@ -71,4 +71,6 @@ public class ProductManageController {
         productService.deleteProduct(id);
         return ResponseEntity.ok(new CommonResponse<>(null, "상품이 정상적으로 삭제 되었습니다", true));
     }
+
+
 }
