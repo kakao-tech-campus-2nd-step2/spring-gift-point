@@ -3,9 +3,9 @@ package gift.controller;
 import gift.annotation.LoginMember;
 import gift.constants.ResponseMsgConstants;
 import gift.dto.betweenClient.member.MemberDTO;
-import gift.dto.betweenClient.product.ProductRequestDTO;
 import gift.dto.betweenClient.ResponseDTO;
-import gift.dto.betweenClient.wish.WishDTO;
+import gift.dto.betweenClient.wish.WishRequestDTO;
+import gift.dto.betweenClient.wish.WishResponseDTO;
 import gift.service.WishListService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -23,8 +23,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -32,8 +30,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-@Controller
+@RestController
 @RequestMapping("/api/products/wishes")
 public class WishListController {
 
@@ -49,13 +48,11 @@ public class WishListController {
             " 클라이언트는 'Authorization' 헤더에 'Bearer {토큰}' 형식으로 토큰을 제출해야 합니다.", tags = "WishList")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "정상적으로 위시리스트를 제공합니다.",
-                    content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = WishDTO.class)))),
+                    content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = WishResponseDTO.class)))),
             @ApiResponse(responseCode = "500", description = "서버에 의한 오류입니다.",
                     content = @Content(mediaType = "application/json", schema = @Schema(implementation = ResponseDTO.class)))})
-    public String getWishes(Model model, @Parameter(hidden = true) @LoginMember MemberDTO memberDTO, Pageable pageable) {
-        Page<WishDTO> wishDTOPage = wishListService.getWishList(memberDTO, pageable);
-        model.addAttribute("wishDTOPage", wishDTOPage);
-        return "getWishes";
+    public Page<WishResponseDTO> getWishes(@Parameter(hidden = true) @LoginMember MemberDTO memberDTO, Pageable pageable) {
+        return wishListService.getWishList(memberDTO, pageable);
     }
 
     @PostMapping
@@ -69,9 +66,8 @@ public class WishListController {
                     content = @Content(mediaType = "application/json", schema = @Schema(implementation = ResponseDTO.class))),
             @ApiResponse(responseCode = "500", description = "서버에 의한 오류입니다.",
                     content = @Content(mediaType = "application/json", schema = @Schema(implementation = ResponseDTO.class)))})
-    public ResponseEntity<ResponseDTO> addWishes(@RequestBody @Valid ProductRequestDTO productRequestDTO,
-            @Parameter(hidden = true) @LoginMember MemberDTO memberDTO) {
-        wishListService.addWishes(memberDTO, productRequestDTO);
+    public ResponseEntity<ResponseDTO> addWishes(@RequestBody @Valid WishRequestDTO wishRequestDTO, @Parameter(hidden = true) @LoginMember MemberDTO memberDTO) {
+        wishListService.addWishes(memberDTO, wishRequestDTO);
         return new ResponseEntity<>(new ResponseDTO(false, ResponseMsgConstants.WELL_DONE_MESSAGE), HttpStatus.CREATED);
     }
 
@@ -104,8 +100,8 @@ public class WishListController {
             @ApiResponse(responseCode = "500", description = "서버에 의한 오류입니다.",
                     content = @Content(mediaType = "application/json", schema = @Schema(implementation = ResponseDTO.class)))})
     public ResponseEntity<ResponseDTO> setWishes(@PathVariable @Min(0) @NotNull Integer quantity, @Parameter(hidden = true) @LoginMember MemberDTO MemberDTO,
-            @RequestBody @Valid ProductRequestDTO productRequestDTO) {
-        wishListService.setWishListNumber(MemberDTO, productRequestDTO, quantity);
+            @RequestBody @Valid WishRequestDTO wishRequestDTO) {
+        wishListService.setWishListNumber(MemberDTO, wishRequestDTO, quantity);
         return new ResponseEntity<>(new ResponseDTO(false, ResponseMsgConstants.WELL_DONE_MESSAGE), HttpStatus.OK);
     }
 }

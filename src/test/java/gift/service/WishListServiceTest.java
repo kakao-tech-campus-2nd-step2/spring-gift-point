@@ -5,9 +5,12 @@ import static org.mockito.BDDMockito.given;
 
 import gift.dto.betweenClient.member.MemberDTO;
 import gift.dto.betweenClient.product.ProductPostRequestDTO;
-import gift.dto.betweenClient.product.ProductRequestDTO;
-import gift.dto.betweenClient.wish.WishDTO;
+import gift.dto.betweenClient.wish.WishRequestDTO;
+import gift.dto.betweenClient.wish.WishResponseDTO;
+import gift.entity.Category;
+import gift.entity.Product;
 import gift.repository.CategoryRepository;
+import gift.repository.ProductRepository;
 import gift.repository.WishRepository;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
@@ -41,23 +44,30 @@ class WishListServiceTest {
 
     ProductPostRequestDTO productPostRequestDTO;
 
-    ProductRequestDTO productRequestDTO;
+    WishRequestDTO wishRequestDTO;
 
     @Mock
     Pageable pageable;
     @Autowired
     private CategoryRepository categoryRepository;
 
+    @Autowired
+    private ProductRepository productRepository;
+
     @BeforeEach
     void setUp() throws Exception {
         MockitoAnnotations.openMocks(this);
 
-        memberDTO = new MemberDTO("1234@1234.com", "1234", "basic");
-        productRequestDTO = new ProductRequestDTO(1L, "제품", 1000,
-                "https://gift-s.kakaocdn.net/dn/gift/images/m640/dimm_theme.png",
-                "기타");
+        productRepository.deleteAll();
 
-        productPostRequestDTO = new ProductPostRequestDTO(1L, "제품", 1000,
+        Category category = categoryRepository.findByName("기타").get();
+        productRepository.save(new Product( "제품", 1000,
+                "https://gift-s.kakaocdn.net/dn/gift/images/m640/dimm_theme.png", category));
+
+        memberDTO = new MemberDTO("1234@1234.com", "1234", "basic");
+        wishRequestDTO = new WishRequestDTO(1L);
+
+        productPostRequestDTO = new ProductPostRequestDTO("제품", 1000,
                 "https://gift-s.kakaocdn.net/dn/gift/images/m640/dimm_theme.png",
                 "기타", "옵션1", 10);
 
@@ -72,21 +82,21 @@ class WishListServiceTest {
 
     @Test
     void addWishes() {
-        wishListService.addWishes(memberDTO, productRequestDTO);
+        wishListService.addWishes(memberDTO, wishRequestDTO);
         assertThat(wishRepository.count()).isEqualTo(1);
     }
 
     @Test
     void getWishList() {
-        wishListService.addWishes(memberDTO, productRequestDTO);
-        List<WishDTO> wishList = wishListService.getWishList(memberDTO, pageable).getContent();
+        wishListService.addWishes(memberDTO, wishRequestDTO);
+        List<WishResponseDTO> wishList = wishListService.getWishList(memberDTO, pageable).getContent();
 
         assertThat(wishList.size()).isEqualTo(1);
     }
 
     @Test
     void removeWishListProduct() {
-        wishListService.addWishes(memberDTO, productRequestDTO);
+        wishListService.addWishes(memberDTO, wishRequestDTO);
         assertThat(wishRepository.count()).isEqualTo(1);
 
         wishListService.removeWishListProduct(memberDTO, 1L);
@@ -95,8 +105,8 @@ class WishListServiceTest {
 
     @Test
     void setWishListNumber() {
-        wishListService.addWishes(memberDTO, productRequestDTO);
-        wishListService.setWishListNumber(memberDTO, productRequestDTO, 10);
+        wishListService.addWishes(memberDTO, wishRequestDTO);
+        wishListService.setWishListNumber(memberDTO, wishRequestDTO, 10);
 
         assertThat(wishListService.getWishList(memberDTO, pageable).getContent().getFirst().quantity())
                 .isEqualTo(10);
