@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Manage Products</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+</head>
+<body>
+<div class="container">
+    <h1>Manage Products</h1>
+    <a class="btn btn-primary" th:href="@{/web/products/add}">Add New Product</a>
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <th>Name</th>
+            <th>Price</th>
+            <th>Image URL</th>
+            <th>Actions</th>
+            <th>Category</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="product : ${products}">
+            <td th:text="${product.name}">Product Name</td>
+            <td th:text="${product.price}">Product Price</td>
+            <td th:text="${product.imageUrl}">Product Image URL</td>
+            <td>
+                <a class="btn btn-warning" th:href="@{/web/products/edit/{id}(id=${product.id})}">Edit</a>
+                <a class="btn btn-danger" th:href="@{/web/products/delete/{id}(id=${product.id})}">Delete</a>
+            <td th:text="${product.category}">Product Category</td>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+    <div>
+        <nav aria-label="Page navigation">
+            <ul class="pagination">
+                <li th:classappend="${currentPage == 0} ? 'disabled'">
+                    <a th:href="@{/api/products(page=${currentPage - 1}, size=${pageSize}, sort=${sortField + ',' + sortDirection})}"
+                       aria-label="Previous">
+                        <span aria-hidden="true">&laquo;</span>
+                    </a>
+                </li>
+                <li th:each="pageNum : ${#numbers.sequence(0, totalPages - 1)}"
+                    th:classappend="${pageNum == currentPage} ? 'active'">
+                    <a th:href="@{/api/products(page=${pageNum}, size=${pageSize}, sort=${sortField + ',' + sortDirection})}"
+                       th:text="${pageNum + 1}">1</a>
+                </li>
+                <li th:classappend="${currentPage == totalPages - 1} ? 'disabled'">
+                    <a th:href="@{/api/products(page=${currentPage + 1}, size=${pageSize}, sort=${sortField + ',' + sortDirection})}"
+                       aria-label="Next">
+                        <span aria-hidden="true">&raquo;</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+</div>
+</body>
+</html>
