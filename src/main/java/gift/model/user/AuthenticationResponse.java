@@ -1,14 +1,14 @@
 package gift.model.user;
 
 public class AuthenticationResponse {
-    private String accessToken;
+    private String access_token;
 
     public AuthenticationResponse(String accessToken) {
-        this.accessToken = accessToken;
+        this.access_token = accessToken;
     }
 
     // getters
     public String getAccessToken() {
-        return accessToken;
+        return access_token;
     }
 }

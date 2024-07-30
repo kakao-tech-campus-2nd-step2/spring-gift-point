@@ -9,7 +9,8 @@ CREATE TABLE product (
     name VARCHAR(255),
     price INT,
     image_url VARCHAR(255),
-    category_id LONG
+    category_id LONG,
+    FOREIGN KEY (category_id) REFERENCES category(id) ON DELETE CASCADE
 );
 CREATE TABLE users (
     id LONG AUTO_INCREMENT PRIMARY KEY,
@@ -22,7 +23,9 @@ CREATE TABLE wishlist (
     id LONG AUTO_INCREMENT PRIMARY KEY,
     user_id LONG NOT NULL,
     product_id LONG NOT NULL,
-    quantity INT
+    quantity INT,
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+    FOREIGN KEY (product_id) REFERENCES product(id) ON DELETE CASCADE
 );
 CREATE TABLE category (
     id LONG AUTO_INCREMENT PRIMARY KEY,
@@ -35,7 +38,8 @@ CREATE TABLE option (
     id LONG AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(255) UNIQUE,
     quantity INT,
-    product_id LONG
+    product_id LONG,
+    FOREIGN KEY (product_id) REFERENCES product(id) ON DELETE CASCADE
 );
 CREATE TABLE orders(
     id LONG AUTO_INCREMENT PRIMARY KEY,
@@ -44,5 +48,9 @@ CREATE TABLE orders(
     product_id LONG,
     quantity INT,
     message VARCHAR(255),
-    order_date_time TIMESTAMP
+    order_date_time TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+    FOREIGN KEY (product_id) REFERENCES product(id) ON DELETE CASCADE,
+    FOREIGN KEY (option_id) REFERENCES option(id) ON DELETE CASCADE
 );
+

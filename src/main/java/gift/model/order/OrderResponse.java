@@ -4,8 +4,20 @@ import java.time.LocalDateTime;
 
 public record OrderResponse(
     Long id,
-    Long optionId,
+    Long product_id,
+    Long option_id,
     int quantity,
-    String message,
-    LocalDateTime orderDateTime
-) {}
+    LocalDateTime orderDateTime,
+    String message
+) {
+    public static OrderResponse from(Order order) {
+        return new OrderResponse(
+            order.getId(),
+            order.getProductId(),
+            order.getOption().getId(),
+            order.getQuantity(),
+            order.getOrderDateTime(),
+            order.getMessage()
+        );
+    }
+}
