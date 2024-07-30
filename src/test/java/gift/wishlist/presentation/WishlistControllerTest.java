@@ -2,6 +2,7 @@ package gift.wishlist.presentation;
 
 import gift.auth.TokenService;
 import gift.member.application.MemberService;
+import gift.member.application.MemberServiceResponse;
 import gift.member.presentation.request.ResolvedMember;
 import gift.wishlist.application.WishlistService;
 import gift.wishlist.application.WishlistServiceResponse;
@@ -56,6 +57,7 @@ public class WishlistControllerTest {
     void 위시리스트_추가_테스트() throws Exception {
         // Given
         doNothing().when(wishlistService).save(anyLong(), anyLong());
+        when(memberService.findById(memberId)).thenReturn(new MemberServiceResponse(1L, "test@example.com", "123"));
 
         // When & Then
         mockMvc.perform(post("/api/wishlist")
@@ -81,6 +83,7 @@ public class WishlistControllerTest {
         when(wishlistService.findAllByMemberId(eq(1L), any(Pageable.class)))
                 .thenReturn(firstPage)
                 .thenReturn(secondPage);
+        when(memberService.findById(memberId)).thenReturn(new MemberServiceResponse(1L, "test@example.com", "123"));
 
         // When & Then
         mockMvc.perform(get("/api/wishlist")
