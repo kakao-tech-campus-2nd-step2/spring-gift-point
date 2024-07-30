@@ -22,7 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api/wish")
-@Tag(name = "Wishlist")
+@Tag(name = "위시 리스트 API")
 public class WishlistController {
 
     private final WishlistService wishlistService;
