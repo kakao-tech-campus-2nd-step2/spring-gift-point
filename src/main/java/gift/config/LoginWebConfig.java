@@ -24,7 +24,7 @@ public class LoginWebConfig implements WebMvcConfigurer {
         registry.addInterceptor(new AuthApiInterceptor(jwtTokenProvider))
             .order(1)
             .addPathPatterns("/api/**")
-            .excludePathPatterns("/api/members/**",
+            .excludePathPatterns("/api/members/**", "/api/oauth2/kakao",
                 "/view/**");
         registry.addInterceptor(new AuthMvcInterceptor(jwtTokenProvider))
             .order(2)

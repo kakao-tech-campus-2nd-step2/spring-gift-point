@@ -84,7 +84,7 @@ public class RestDocsOAuth2LoginTest extends AbstractRestDocsTest {
         doNothing().when(oAuth2LoginService).saveAccessToken(any(Long.class), any(String.class));
 
         //when //then
-        mockMvc.perform(get("/kakao/login/oauth2?code=" + authorizationCode))
+        mockMvc.perform(get("/api/oauth2/kakao?code=" + authorizationCode))
             .andExpect(status().isOk())
             .andExpect(cookie().value("access_token", token))
             .andDo(MockMvcRestDocumentation.document("rest-docs-o-auth2-login-test/get-token",
