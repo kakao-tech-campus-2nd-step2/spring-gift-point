@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Manage Products</title>
+</head>
+<body>
+<div class="header-container">
+    <h1>Manage Products</h1>
+    <a href="/admin/products/add"> 상품 추가</a>
+</div>
+<table class="product-table">
+    <thead>
+    <tr style="background-color:lightgray">
+        <th>id</th>
+        <th>name</th>
+        <th>price</th>
+        <th>imageUrl</th>
+        <th>Actions</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="product: ${productList.content}">
+        <td><span th:text="${product.id}"></span></td>
+        <td><span th:text="${product.name}"></span></td>
+        <td><span th:text="${product.price}"></span></td>
+        <td><img th:text="${product.imageUrl}" alt="no image"></img></td>
+        <td><span th:text="${product.categoryId}"></span>></td>
+        <td>
+            <a th:href="@{/admin/products/edit/{id}(id = ${product.id})}">수정</a>
+            <a th:href="@{/admin/products/delete/{id}(id = ${product.id})}">삭제</a>
+        </td>
+    </tr>
+    </tbody>
+</table>
+
+<div>
+        <span th:if="${productList.hasPrevious()}">
+            <a th:href="@{/admin/products(pageNo=${productList.number - 1}, pageSize=${productList.size})}">Previous</a>
+        </span>
+    <span th:each="i : ${#numbers.sequence(0, productList.totalPages - 1)}">
+            <a th:href="@{/admin/products(pageNo=${i}, pageSize=${productList.size})}"
+               th:text="${i + 1}"
+               th:classappend="${i == productList.number} ? 'current' : ''">1</a>
+        </span>
+    <span th:if="${productList.hasNext()}">
+            <a th:href="@{/admin/products(pageNo=${productList.number + 1}, pageSize=${productList.size})}">Next</a>
+        </span>
+</div>
+</body>
+</html>
