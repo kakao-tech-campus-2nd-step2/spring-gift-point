@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
 @RestController
-@RequestMapping("/oauth")
+@RequestMapping("/kakao")
 public class KakaoController {
 
     private final KakaoProperties kakaoProperties;
@@ -24,14 +24,14 @@ public class KakaoController {
         this.kakaoService = kakaoService;
     }
 
-    @GetMapping("/kakao")
+    @GetMapping("/login")
     public ModelAndView redirectToKakaoLogin() {
         String url = kakaoProperties.authUrl() + "?response_type=code&client_id="
             + kakaoProperties.clientId() + "&redirect_uri=" + kakaoProperties.redirectUri();
         return new ModelAndView("redirect:" + url);
     }
 
-    @GetMapping("/kakao/callback")
+    @GetMapping("/login/callback")
     public ResponseEntity<String> loginWithKakao(@RequestParam String code) {
         String token = kakaoService.getAccessToken(code);
         String kakaoUserId = kakaoService.getKakaoUserId(token);

@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/products")
 public class OptionController {
 
     private OptionService optionService;
@@ -28,13 +28,13 @@ public class OptionController {
         this.optionService = optionService;
     }
 
-    @GetMapping("/products/{productId}/options")
+    @GetMapping("/{productId}/options")
     public ResponseEntity<List<OptionResponseDto>> getOptionsByProductId(@PathVariable Long productId) {
         List<OptionResponseDto> optionList = optionService.getOptionsByProductId(productId);
         return new ResponseEntity<>(optionList, HttpStatus.OK);
     }
 
-    @PostMapping("/products/{productId}/options")
+    @PostMapping("/{productId}/options")
     public ResponseEntity<String> addOptionToProduct(@PathVariable Long productId, @Valid @RequestBody OptionRequestDto optionRequestDto) {
         optionService.addOptionToProduct(productId, optionRequestDto);
         return new ResponseEntity<>(HttpStatus.CREATED);
