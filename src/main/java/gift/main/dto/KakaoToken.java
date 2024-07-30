@@ -2,7 +2,6 @@ package gift.main.dto;
 
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
-import org.springframework.data.annotation.CreatedDate;
 
 import java.time.LocalDateTime;
 

@@ -45,16 +45,16 @@ public class KakaoService {
         map.add("redirect_uri", kakaoProperties.redirectUri());
         map.add("code", code);
 
-        KakaoToken kakaoToken= restClient.post()
+        KakaoToken kakaoToken = restClient.post()
                 .uri(kakaoProperties.tokenRequestUri())
                 .contentType(FORM_URLENCODED)
                 .body(map)
-        .exchange((request, response) -> {
-            System.out.println("response.getClass() = " + response.getClass());
-            System.out.println("response = " + response);
-            KakaoToken token = new KakaoToken(Objects.requireNonNull(response.bodyTo(TempToken.class)),LocalDateTime.now());
-                return token;
-        });
+                .exchange((request, response) -> {
+                    System.out.println("response.getClass() = " + response.getClass());
+                    System.out.println("response = " + response);
+                    KakaoToken token = new KakaoToken(Objects.requireNonNull(response.bodyTo(TempToken.class)), LocalDateTime.now());
+                    return token;
+                });
         System.out.println("kakaoToken = " + kakaoToken);
         return kakaoToken;
     }

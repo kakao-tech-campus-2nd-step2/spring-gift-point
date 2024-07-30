@@ -30,7 +30,7 @@ public class Product {
     }
 
 
-    public Product(ProductRequest productRequest,Category category) {
+    public Product(ProductRequest productRequest, Category category) {
         this.name = productRequest.name();
         this.price = productRequest.price();
         this.imageUrl = productRequest.imageUrl();
@@ -78,7 +78,6 @@ public class Product {
     public String getCategoryName() {
         return this.category.getName();
     }
-
 
 
     public Category getCategory() {

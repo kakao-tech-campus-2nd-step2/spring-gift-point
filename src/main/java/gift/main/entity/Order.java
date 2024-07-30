@@ -33,8 +33,6 @@ public class Order {
     private Product product;
 
 
-
-
     public Order() {
     }
 

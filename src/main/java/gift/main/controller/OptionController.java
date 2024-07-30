@@ -1,6 +1,5 @@
 package gift.main.controller;
 
-import gift.main.dto.OptionChangeQuantityRequest;
 import gift.main.dto.OptionRequest;
 import gift.main.dto.OptionResponse;
 import gift.main.service.OptionService;
@@ -50,8 +49,6 @@ public class OptionController {
         optionService.deleteOption(optionId);
         return ResponseEntity.ok("Option deleted successfully");
     }
-
-
 
     //옵션 업데이트
     @PutMapping("/{productId}/option/{optionId}")
