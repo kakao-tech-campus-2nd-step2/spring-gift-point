@@ -12,8 +12,9 @@ import gift.domain.wishlist.entity.Wish;
 import gift.domain.wishlist.exception.WishDuplicateException;
 import gift.domain.wishlist.exception.WishNotFoundException;
 import gift.domain.wishlist.repository.WishRepository;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -34,9 +35,7 @@ public class WishService {
 
     }
 
-    public Page<WishResponse> getWishesByMember(Member member, int pageNo, int pageSize) {
-
-        Pageable pageable = PageRequest.of(pageNo, pageSize);
+    public Page<WishResponse> getWishesByMember(Member member, Pageable pageable) {
         return wishRepository
             .findAllByMember(member, pageable)
             .map(this::entityToDto);
@@ -53,7 +52,7 @@ public class WishService {
             throw new WishDuplicateException("중복된 위시리스트 입니다.");
         }
 
-        Wish wish = new Wish(member, product);
+        Wish wish = new Wish(member, product, LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss")));
         wish.getMember().addWish(wish);
         return entityToDto(wishRepository.save(wish));
     }
@@ -72,6 +71,6 @@ public class WishService {
 
     private WishResponse entityToDto(Wish wish) {
         return new WishResponse(wish.getId(), wish.getMember().getId(),
-            wish.getProduct().getId());
+            wish.getProduct().getId(), wish.getCreatedDate());
     }
 }
