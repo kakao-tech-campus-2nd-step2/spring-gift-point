@@ -33,7 +33,7 @@ public class AdminOptionController {
         @PathVariable("id") @NotNull @Min(1) Long productId,
         @RequestParam("option-id") @NotNull @Min(1) Long optionId
     ) {
-        OptionResponse option = productService.findOptionById(productId, optionId);
+        OptionResponse.Info option = productService.findOptionById(productId, optionId);
         model.addAttribute("option", option);
         return "option/editOption";
     }

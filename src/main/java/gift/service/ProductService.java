@@ -30,9 +30,17 @@ public class ProductService {
     }
 
     @Transactional(readOnly = true)
-    public PagingResponse<ProductResponse.WithOption> findAllProductPaging(Pageable pageable) {
-        Page<ProductResponse.WithOption> pages = productRepository.findProductAndCategoryFetchJoin(pageable)
-                .map(ProductResponse.WithOption::from);
+    public PagingResponse<ProductResponse.Info> findAllProductPaging(Pageable pageable) {
+        Page<ProductResponse.Info> pages = productRepository.findProductAndCategoryFetchJoin(pageable)
+                .map(ProductResponse.Info::from);
+        return PagingResponse.from(pages);
+    }
+
+
+    @Transactional(readOnly = true)
+    public PagingResponse<ProductResponse.Info> findAllProductPagingByCategoryId(Pageable pageable, Long categoryId) {
+        Page<ProductResponse.Info> pages = productRepository.findByCategoryIdFetchJoin(pageable, categoryId)
+                .map(ProductResponse.Info::from);
         return PagingResponse.from(pages);
     }
 
@@ -75,13 +83,6 @@ public class ProductService {
         productRepository.deleteById(id);
     }
 
-    @Transactional(readOnly = true)
-    public PagingResponse<ProductResponse.Info> findAllProductPagingByCategoryId(Pageable pageable, Long categoryId) {
-        Page<ProductResponse.Info> pages = productRepository.findByCategoryIdFetchJoin(pageable, categoryId)
-                .map(ProductResponse.Info::from);
-        return PagingResponse.from(pages);
-    }
-
     @Transactional
     public void deleteByIdAndOptionId(Long id, Long optionId) {
         Product product = productRepository.findProductAndOptionByIdFetchJoin(id)
@@ -91,12 +92,10 @@ public class ProductService {
     }
 
     @Transactional(readOnly = true)
-    public List<OptionResponse> getAllOptions(Long productId) {
+    public OptionResponse.InfoList getAllOptions(Long productId) {
         Product product = productRepository.findProductAndOptionByIdFetchJoin(productId)
                 .orElseThrow(() -> new EntityNotFoundException("Product with productId " + productId + " not found"));
-        return product.getOptions().stream()
-                .map(OptionResponse::from)
-                .toList();
+        return OptionResponse.InfoList.from(product.getOptions());
     }
 
     @Transactional
@@ -117,11 +116,11 @@ public class ProductService {
     }
 
     @Transactional(readOnly = true)
-    public OptionResponse findOptionById(Long id, Long optionId) {
+    public OptionResponse.Info findOptionById(Long id, Long optionId) {
         Product product = productRepository.findProductAndOptionByIdFetchJoin(id)
                 .orElseThrow(() -> new EntityNotFoundException("Product with productId " + id + " not found"));
         Option option = product.findOptionByOptionId(optionId);
-        return OptionResponse.from(option);
+        return OptionResponse.Info.from(option);
     }
 
     @Transactional

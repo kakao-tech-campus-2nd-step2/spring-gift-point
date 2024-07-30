@@ -30,7 +30,7 @@ public class AdminProductController {
     @GetMapping("")
     public String getProducts(Model model,
               @PageableDefault(size = 10) Pageable pageable) {
-        PagingResponse<ProductResponse.WithOption> products = productService.findAllProductPaging(pageable);
+        PagingResponse<ProductResponse.Info> products = productService.findAllProductPaging(pageable);
         model.addAttribute("products", products);
         return "product/products";
     }

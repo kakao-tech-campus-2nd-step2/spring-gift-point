@@ -18,11 +18,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
-import java.util.List;
 
 @Tag(name = "Product", description = "상품 API")
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/products")
 public class ProductRestController {
     private final ProductService productService;
 
@@ -30,7 +29,7 @@ public class ProductRestController {
         this.productService = productService;
     }
 
-    @GetMapping("/products")
+    @GetMapping("")
     @Operation(summary = "카테고리 상품 조회", description = "특정 카테고리의 모든 상품을 조회합니다.")
     public ResponseEntity<PagingResponse<ProductResponse.Info>> getProductsByCategoryId(
             @RequestParam("categoryId") @NotNull @Min(1) Long categoryId,
@@ -40,7 +39,7 @@ public class ProductRestController {
         return ResponseEntity.ok().body(responses);
     }
 
-    @GetMapping("/products/{id}")
+    @GetMapping("/{id}")
     @Operation(summary = "상품 조회", description = "특정 상품을 조회합니다.")
     public ResponseEntity<ProductResponse.Info> getProduct(
             @PathVariable("id") @NotNull @Min(1) Long id
@@ -49,7 +48,7 @@ public class ProductRestController {
         return ResponseEntity.ok().body(response);
     }
 
-    @PostMapping("/products")
+    @PostMapping("")
     @Operation(summary = "상품 추가", description = "상품을 추가합니다.")
     @ApiResponse(responseCode = "201")
     public ResponseEntity<Long> createProduct(
@@ -59,7 +58,7 @@ public class ProductRestController {
         return ResponseEntity.created(URI.create("/api/v1/product" + id)).body(id);
     }
 
-    @PutMapping("/products")
+    @PutMapping("")
     @Operation(summary = "상품 수정", description = "상품을 수정합니다.")
     public ResponseEntity<Void> updateProduct(
             @Valid @RequestBody ProductRequest.UpdateProduct request
@@ -68,7 +67,7 @@ public class ProductRestController {
         return ResponseEntity.ok().build();
     }
 
-    @DeleteMapping("/products/{id}")
+    @DeleteMapping("/{id}")
     @Operation(summary = "상품 삭제", description = "상품을 삭제합니다.")
     public ResponseEntity<Void> deleteProduct(
             @PathVariable("id") @NotNull @Min(1) Long id
@@ -77,12 +76,12 @@ public class ProductRestController {
         return ResponseEntity.ok().build();
     }
 
-    @GetMapping("/products/{id}/options")
+    @GetMapping("/{id}/options")
     @Operation(summary = "상품 옵션 조회", description = "상품의 옵션을 조회합니다.")
-    public ResponseEntity<List<OptionResponse>> getOptions(
+    public ResponseEntity<OptionResponse.InfoList> getOptions(
             @PathVariable("id") @NotNull @Min(1) Long id
     ) {
-        List<OptionResponse> options = productService.getAllOptions(id);
+        OptionResponse.InfoList options = productService.getAllOptions(id);
         return ResponseEntity.ok().body(options);
     }
 }

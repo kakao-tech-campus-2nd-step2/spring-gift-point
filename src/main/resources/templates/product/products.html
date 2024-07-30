@@ -20,25 +20,22 @@
             <th th:width="100">상품명</th>
             <th th:width="100">가격</th>
             <th th:width="300">이미지주소</th>
-            <th th:width="200">생성일</th>
-            <th th:width="100">카테고리</th>
             <th th:width="100">수정</th>
             <th th:width="100">삭제</th>
         </tr>
         </thead>
         <tbody id="table-body">
         <tr th:if="${products.content?.isEmpty()}">
-            <td colspan="7">No Products Available</td>
+            <td colspan="6">No Products Available</td>
         </tr>
         <tr th:each="product : ${products.content}">
-            <td th:text="${product.id}"/>
-            <td><a th:href="@{/admin/product/{id}(id=${product.id})}" th:text="${product.name}"></a></td>
+            <td th:text="${product.productId}"/>
+            <td><a th:href="@{/admin/product/{id}(id=${product.productId})}" th:text="${product.name}"></a></td>
             <td th:text="${product.price}"/>
             <td th:text="${product.imageUrl}"/>
-            <td th:text="${product.createdAt}"/>
-            <td><button><a th:href="@{/admin/product/{id}(id=${product.id})}">수정</a></button></td>
+            <td><button><a th:href="@{/admin/product/{id}(id=${product.productId})}">수정</a></button></td>
             <td>
-                <form th:action="@{/admin/product/{id}(id=${product.id})}" method="post">
+                <form th:action="@{/admin/product/{id}(id=${product.productId})}" method="post">
                     <input type="hidden" name="_method" value="DELETE" />
                     <button type="submit">삭제</button>
                 </form>

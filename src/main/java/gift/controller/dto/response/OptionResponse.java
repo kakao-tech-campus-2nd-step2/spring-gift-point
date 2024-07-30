@@ -2,18 +2,33 @@ package gift.controller.dto.response;
 
 import gift.model.Option;
 
-public record OptionResponse(
+import java.util.List;
+
+public class OptionResponse{
+
+    public record InfoList(
+            int optionCount,
+            List<Info> options
+    ) {
+        public static InfoList from(List<Option> options) {
+            return new InfoList(
+                    options.size(),
+                    options.stream().map(Info::from).toList()
+            );
+        }
+    }
+
+    public record Info(
         Long id,
         String name,
-        int quantity,
-        Long productId) {
-
-    public static OptionResponse from(Option option) {
-        return new OptionResponse(
-                option.getId(),
-                option.getName(),
-                option.getQuantity(),
-                option.getProduct().getId()
-        );
+        int quantity
+    ) {
+        public static Info from(Option option) {
+            return new Info(
+                    option.getId(),
+                    option.getName(),
+                    option.getQuantity()
+            );
+        }
     }
 }
