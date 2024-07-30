@@ -37,7 +37,7 @@ public class OptionController {
     }
 
     @Operation(summary = "옵션 목록 조회", description = "옵션 목록 조회 api")
-    @GetMapping("/products/{id}/options")
+    @GetMapping("/api/products/{id}/options")
     public ResponseEntity<OptionResponse.InfoList> getOptions(
         @PathVariable("id") Long productId
     ) {
@@ -48,7 +48,7 @@ public class OptionController {
 
     @Operation(summary = "옵션 생성", description = "옵션 생성 api")
     @Authorization(role = Role.ADMIN)
-    @PostMapping("/products/{id}/options")
+    @PostMapping("/api/products/{id}/options")
     public ResponseEntity<OptionResponse.InfoList> createOption(
         @PathVariable("id") Long productId,
         @RequestBody @Valid OptionRequest.Register request
@@ -60,7 +60,7 @@ public class OptionController {
 
     @Operation(summary = "옵션 수정", description = "옵션 수정 api")
     @Authorization(role = Role.ADMIN)
-    @PutMapping("/products/{productId}/options/{optionId}")
+    @PutMapping("/api/products/{productId}/options/{optionId}")
     public ResponseEntity<OptionResponse.Info> updateOption(
         @PathVariable("optionId") Long optionId,
         @PathVariable("productId") Long productId,
@@ -74,7 +74,7 @@ public class OptionController {
 
     @Operation(summary = "옵션 삭제", description = "옵션 삭제 api")
     @Authorization(role = Role.ADMIN)
-    @DeleteMapping("/products/{productId}/options/{optionId}")
+    @DeleteMapping("/api/products/{productId}/options/{optionId}")
     public ResponseEntity<String> deleteOption(
         @PathVariable("productId") Long productId,
         @PathVariable("optionId") Long optionId
@@ -85,7 +85,7 @@ public class OptionController {
 
     @Operation(summary = "옵션 구매", description = "옵션 구매 api")
     @Authorization(role = Role.USER)
-    @PostMapping("/products/options/purchase")
+    @PostMapping("/api/products/options/purchase")
     public ResponseEntity<String> purchaseOption(
         @RequestBody @Valid OptionRequest.Purchase request,
         @Authenticate LoginInfo loginInfo
