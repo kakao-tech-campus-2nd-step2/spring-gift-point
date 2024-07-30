@@ -28,6 +28,17 @@ public class UserService {
         );
     }
 
+    public User login(String email, String password) {
+        User user = userRepository.findByEmail(email).orElseThrow(
+                () -> new UserException(ErrorCode.USER_NOT_FOUND)
+        );
+        if (passwordEncoder.matches(password, user.getPassword())) {
+            return user;
+        } else {
+            throw new UserException(ErrorCode.INVALID_PASSWORD);
+        }
+    }
+
     public List<User> getUsers() {
         return userRepository.findAll();
     }

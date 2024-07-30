@@ -1,4 +1,4 @@
 package gift.user.domain;
 
-public class UserLoginRequest {
+public interface UserLoginRequest {
 }

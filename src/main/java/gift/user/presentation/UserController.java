@@ -1,9 +1,7 @@
 package gift.user.presentation;
 
 import gift.user.application.UserService;
-import gift.user.domain.NormalUserRegisterRequest;
-import gift.user.domain.User;
-import gift.user.domain.UserRegisterRequest;
+import gift.user.domain.*;
 import gift.util.CommonResponse;
 import gift.util.JwtUtil;
 import io.swagger.v3.oas.annotations.Operation;
@@ -24,17 +22,18 @@ public class UserController {
         this.jwtUtil = jwtUtil;
     }
 
-    @Operation(summary = "일반 유저 등록(kakao x)", description = "새로운 유저를 등록합니다.")
+    @Operation(summary = "일반 유저 등록", description = "새로운 유저를 등록합니다.")
     @PostMapping("/register")
     public ResponseEntity<?> registerUser(@RequestBody NormalUserRegisterRequest request) {
         User user = userService.registerUser(request);
         String tokenResponse = jwtUtil.generateToken(user, 60L);
-        return ResponseEntity.ok(tokenResponse);
+        return ResponseEntity.ok(new AuthenticationResponse(tokenResponse, user.getEmail()));
     }
 
-    @Operation(summary = "유저 로그인", description = "유저 로그인을 처리합니다.")
+    @Operation(summary = "일반 유저 로그인", description = "유저 로그인을 처리합니다.")
     @PostMapping("/login")
-    public ResponseEntity<?> createAuthenticationToken(@RequestBody User user) {
+    public ResponseEntity<?> createAuthenticationToken(@RequestBody NormalLoginRequest request) {
+        User user = userService.login(request.getEmail(), request.getPassword());
         String tokenResponse = jwtUtil.generateToken(user, 60L);
         return ResponseEntity.ok(new AuthenticationResponse(tokenResponse, user.getEmail()));
     }
@@ -49,14 +48,4 @@ public class UserController {
         ));
     }
 
-    public static class AuthenticationResponse {
-
-        private final String token;
-        private final String email;
-
-        public AuthenticationResponse(String token, String email) {
-            this.token = token;
-            this.email = email;
-        }
-    }
 }
