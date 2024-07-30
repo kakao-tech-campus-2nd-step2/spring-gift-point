@@ -4,14 +4,14 @@ public class OptionResponse {
     private Long id;
     private String name;
     private Long quantity;
-    String productName;
+    private Long productId;
 
     // constructor
-    public OptionResponse(Long id, String name, Long quantity, String productName) {
+    public OptionResponse(Long id, String name, Long quantity, Long productId) {
         this.id = id;
         this.name = name;
         this.quantity = quantity;
-        this.productName = productName;
+        this.productId = productId;
     }
 
     // Getters and setters
@@ -39,11 +39,11 @@ public class OptionResponse {
         this.quantity = quantity;
     }
 
-    public String getProductName() {
-        return productName;
+    public Long getProductId() {
+        return productId;
     }
 
-    public void setProductName(String productName) {
-        this.productName = productName;
+    public void setProductId(Long productId) {
+        this.productId = productId;
     }
 }
