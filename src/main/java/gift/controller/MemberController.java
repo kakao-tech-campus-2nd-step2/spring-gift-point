@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/member")
+@RequestMapping("/api/members")
 @Tag(name = "Member(회원)", description = "Member관련 API입니다.")
 public class MemberController {
 
@@ -26,7 +26,7 @@ public class MemberController {
     }
 
     @Operation(summary = "회원가입", description = "Id, Password로 회원을 생성합니다.")
-    @PostMapping("/signup")
+    @PostMapping("/register")
     public ResponseEntity<String> signUp(@Valid @RequestBody MemberDTO memberDTO) {
         Member member = memberDTO.toEntity();
         userService.generateUser(member);

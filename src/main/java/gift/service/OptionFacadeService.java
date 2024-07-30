@@ -50,6 +50,10 @@ public class OptionFacadeService {
         optionService.deleteOption(id);
     }
 
+    public List<Option> getAllProductOption(Long id) {
+        return optionService.getOptionByProductId(id);
+    }
+
     public OrderResponseDTO orderOption(OrderRequestDTO orderRequestDTO, String email) {
         Option option = optionService.getOptionById(orderRequestDTO.getOptionId());
         int quantity = orderRequestDTO.getQuantity();

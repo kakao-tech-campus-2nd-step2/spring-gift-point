@@ -42,9 +42,7 @@ public class ProductFacadeService {
         return productService.getProductById(id);
     }
 
-    public List<Option> getAllProductOption(Long id) {
-        return optionService.getOptionByProductId(id);
-    }
+
 
     public void updateProduct(Product product, Long id) {
         productService.updateProduct(product, id);

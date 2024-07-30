@@ -18,17 +18,10 @@ import java.util.List;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PatchMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/product")
+@RequestMapping("/api/products")
 @Tag(name = "Product(상품)", description = "Product관련 API입니다.")
 public class ProductController {
 
@@ -41,32 +34,30 @@ public class ProductController {
     }
 
 
-    @Operation(summary = "전체 Product 목록 조회", description = "저장된 모든 상품의 정보를 가져옵니다.")
-    @GetMapping
-    public List<Product> getProduct() {
-        return productService.getAllProducts();
-    }
+//    @Operation(summary = "전체 Product 목록 조회", description = "저장된 모든 상품의 정보를 가져옵니다.")
+//    @GetMapping
+//    public List<Product> getProduct() {
+//        return productService.getAllProducts();
+//    }
 
-    @GetMapping("/{id}")
+    @GetMapping("/{productId}")
     @Operation(summary = "ID로 Product 조회", description = "Product의 Id로 상품의 정보를 가져옵니다.")
-    public Product getProductById(@Parameter(name = "id", description = "Product Id", example = "1")
-    @PathVariable("id") long id) {
-        return productService.getProductById(id);
-    }
-
-    @GetMapping("/{id}/options")
-    @Operation(summary = "ID로 Product 옵션 조회", description = "Product의 Id로 상품의 옵션을 가져옵니다.")
-    public List<Option> getProductByIdWithOption(
-        @Parameter(name = "id", description = "Product Id", example = "1") @PathVariable("id") long id) {
-        return productService.getAllProductOption(id);
+    public Product getProductById(@Parameter(name = "productId", description = "Product Id", example = "1")
+    @PathVariable("productId") long productId) {
+        return productService.getProductById(productId);
     }
 
 
     //Product Pagination
-    @GetMapping("/page/{page}")
+    @GetMapping
     @Operation(summary = "Product를 Page로 조회", description = "여러개의 Product를 페이지네이션 하여 가져옵니다. 페이지당 Product의 기본 설정 개수는 5개입니다.")
     public ResponseEntity<Page<Product>> getProductPage(
-        @Parameter(name = "page", description = "가져올 Page의 번호", example = "1") @PathVariable("page") int page) {
+            @RequestParam int page,
+            @RequestParam int size,
+            @RequestParam String[] sort,
+            @RequestParam Long categoryId,
+            @RequestHeader String header
+    ) {
         Page<Product> products = productService.getProductPage(page);
         return new ResponseEntity<>(products, HttpStatus.OK);
     }
@@ -88,25 +79,25 @@ public class ProductController {
 
 
     //product 수정
-    @PatchMapping("/{id}")
+    @PatchMapping("/{productId}")
     @Operation(summary = "Product 수정", description = "id에 해당하는 Product를 새로운 정보로 수정합니다.")
     public ResponseEntity<String> editProduct(
-        @Parameter(name = "id", description = "Product Id", example = "1") @PathVariable("id") Long id,
+        @Parameter(name = "productId", description = "Product Id", example = "1") @PathVariable("productId") Long productId,
         @RequestBody ProductDTO productDTO) {
         Category category = productService.findCategoryById(productDTO.getCategoryId());
         Product product = productDTO.toEntity(category);
-        productService.updateProduct(product, id);
+        productService.updateProduct(product, productId);
 
         return new ResponseEntity<>("product edit success", HttpStatus.OK);
 
     }
 
     //product 삭제
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/{productId}")
     @Operation(summary = "Product 삭제", description = "id에 해당하는 Product를 삭제합니다.")
     public ResponseEntity<String> deleteProduct(
-        @Parameter(name = "id", description = "Product Id", example = "1") @PathVariable("id") Long id) {
-        productService.deleteProduct(id);
+        @Parameter(name = "productId", description = "Product Id", example = "1") @PathVariable("productId") Long productId) {
+        productService.deleteProduct(productId);
         return new ResponseEntity<>("product delete success", HttpStatus.NO_CONTENT);
     }
 
