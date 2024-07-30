@@ -1,4 +1,4 @@
-package gift.kakao.login.controller;
+package gift.login.controller;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
