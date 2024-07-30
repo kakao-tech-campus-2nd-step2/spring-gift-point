@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  <title>Kakao OAuth Request</title>
+</head>
+<body>
+<h1>Kakao OAuth Request</h1>
+<button id="request-button">Send OAuth Request</button>
+<p id="response-message"></p>
+
+<script>
+  document.getElementById('request-button').addEventListener('click', () => {
+    // 변수 설정
+    const clientId = /*[[${restApiKey}]]*/ '';
+    const redirectUri = 'http://localhost:8080';
+    const scope = 'talk_message';
+    const responseType = 'code';
+
+    // 요청 URL 구성
+    const url = `https://kauth.kakao.com/oauth/authorize?scope=${scope}&response_type=${responseType}&redirect_uri=${redirectUri}&client_id=${clientId}`;
+
+    // 요청 보내기
+    fetch(url, {
+      method: 'GET',
+      redirect: 'follow'
+    })
+    .then(response => {
+      if (response.ok) {
+        document.getElementById('response-message').textContent = 'Request was successful!';
+        window.location.href = response.url; // 성공적으로 응답을 받으면 해당 URL로 리다이렉트
+      } else {
+        document.getElementById('response-message').textContent = `Request failed: ${response.status} ${response.statusText}`;
+      }
+    })
+    .catch(error => {
+      document.getElementById('response-message').textContent = `Error occurred: ${error}`;
+    });
+  });
+</script>
+</body>
+</html>
