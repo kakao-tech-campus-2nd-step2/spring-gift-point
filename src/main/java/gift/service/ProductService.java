@@ -52,8 +52,14 @@ public class ProductService {
         return ProductResponse.from(product);
     }
 
-    public PageResponse<ProductResponse> findAllProduct(Pageable pageable) {
-        Page<Product> productList = productRepository.findAll(pageable);
+    public PageResponse<ProductResponse> findAllProduct(Long categoryId, Pageable pageable) {
+        Page<Product> productList;
+
+        if (categoryId != null) {
+            productList = productRepository.findByCategoryId(categoryId, pageable);
+        } else {
+            productList = productRepository.findAll(pageable);
+        }
 
         List<ProductResponse> productResponses = productList.getContent().stream()
             .map(ProductResponse::from)

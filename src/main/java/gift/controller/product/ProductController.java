@@ -51,7 +51,7 @@ public class ProductController {
         @RequestParam(value = "categoryId", required = false) Long categoryId,
         @PageableDefault(page = 0, size = 10, sort = "id", direction = Sort.Direction.DESC) Pageable pageable
     ) {
-        PageResponse<ProductResponse> response = productService.findAllProduct(pageable);
+        PageResponse<ProductResponse> response = productService.findAllProduct(categoryId, pageable);
         return ResponseEntity.ok().body(response);
     }
 

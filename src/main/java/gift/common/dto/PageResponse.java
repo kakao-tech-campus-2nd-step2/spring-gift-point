@@ -17,7 +17,7 @@ public record PageResponse<E>(
             page.getNumber(),
             page.getSize(),
             page.getTotalPages(),
-            page.getTotalPages()
+            (int) page.getTotalElements()
         );
     }
 }
