@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Wishlist</title>
+  <style>
+    .active {
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+<h1>Wishlist</h1>
+<a th:href="@{/wishlist/new}">Add New Wishlist Item</a>
+<table>
+  <thead>
+  <tr>
+    <th>ID</th>
+    <th>Product Name</th>
+    <th>Actions</th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr th:each="item : ${wishlist.content}">
+    <td th:text="${item.id}"></td>
+    <td th:text="${item.product.name}"></td>
+    <td>
+      <a th:href="@{/wishlist/delete/{productId}(productId=${item.product.id})}">Delete</a>
+    </td>
+  </tr>
+  </tbody>
+</table>
+
+<div>
+  <span th:text="'Page ' + (${wishlist.number} + 1) + ' of ' + ${wishlist.totalPages}"></span>
+</div>
+
+<div>
+  <ul>
+    <li th:if="${wishlist.hasPrevious()}">
+      <a th:href="@{/wishlist?page=${wishlist.number - 1}&amp;size=${wishlist.size}}">Previous</a>
+    </li>
+    <li th:each="i : ${#numbers.sequence(0, wishlist.totalPages - 1)}"
+        th:classappend="${wishlist.number == i} ? 'active'">
+      <a th:href="@{/wishlist?page=${i}&amp;size=${wishlist.size}}" th:text="${i + 1}">1</a>
+    </li>
+    <li th:if="${wishlist.hasNext()}">
+      <a th:href="@{/wishlist?page=${wishlist.number + 1}&amp;size=${wishlist.size}}">Next</a>
+    </li>
+  </ul>
+</div>
+
+</body>
+</html>
