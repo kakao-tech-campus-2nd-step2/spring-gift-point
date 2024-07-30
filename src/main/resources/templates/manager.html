@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>매니저 화면</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+<div class="container mt-5">
+    <h1 class="mb-4">Manager Employees</h1>
+
+    <form th:action="@{/products/new}" method="get" class="mb-3">
+        <button type="submit" class="btn btn-primary">상품 저장</button>
+    </form>
+
+    <table class="table table-bordered">
+        <thead class="thead-light">
+        <tr>
+            <th>Name</th>
+            <th>Price</th>
+            <th>Image</th>
+            <th>Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="productDto : ${productDtos}">
+            <td th:text="${productDto.name()}"></td>
+            <td th:text="${productDto.price()}"></td>
+            <td th:text="${productDto.imageUrl()}"></td>
+            <td>
+                <form th:action="@{/products/{id}/options(id=${productDto.id()})}" method="get" class="d-inline">
+                    <button type="submit" class="btn btn-success btn-sm">상품 옵션 보기</button>
+                </form>
+                <form th:action="@{/products/{id}/edit(id=${productDto.id()})}" method="get" class="d-inline">
+                    <button type="submit" class="btn btn-warning btn-sm">상품 정보 수정</button>
+                </form>
+                <form th:action="@{/products/{id}/delete(id=${productDto.id()})}" method="post" class="d-inline">
+                    <button type="submit" class="btn btn-danger btn-sm">상품 삭제</button>
+                </form>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

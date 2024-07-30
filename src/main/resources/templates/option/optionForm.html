@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Product Options</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+</head>
+<body>
+<div class="container mt-5">
+    <h1>Product Options</h1>
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Quantity</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="option : ${options}">
+            <td th:text="${option.id}">Option ID</td>
+            <td th:text="${option.name}">Option Name</td>
+            <td th:text="${option.quantity}">Option Quantity</td>
+            <td>
+            <form th:action="@{/products/{product_id}/delete/{option_id}(product_id=${productId}, option_id=${option.id})}" method="post" class="d-inline">
+                <button type="submit" class="btn btn-success btn-sm">상품 옵션 삭제</button>
+            </form>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+    <form th:action="@{/products/new/{id}/options(id=${productId})}" method="get" class="d-inline">
+        <button type="submit" class="btn btn-danger btn-sm">상품 옵션 추가</button>
+    </form>
+
+</div>
+</body>
+</html>
