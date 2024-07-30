@@ -52,10 +52,8 @@ public class OptionService {
         Product product = productRepository.findById(productId)
             .orElseThrow(() -> new BusinessException("해당 id의 상품이 존재하지 않습니다."));
 
-        for (Option option : product.getOptions()) {
-            if (option.getName().equals(request.getName())) {
-                throw new BusinessException("같은 상품 내에는 동일한 옵션 이름을 가질 수 없습니다.");
-            }
+        if (optionRepository.existsByNameAndProductId(request.getName(), productId)) {
+            throw new BusinessException("동일한 상품 내의 옵션 이름은 중복될 수 없습니다.");
         }
 
         var option = new Option(request.getName(), request.getQuantity(), product);
