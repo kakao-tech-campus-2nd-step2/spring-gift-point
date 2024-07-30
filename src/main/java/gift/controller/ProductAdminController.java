@@ -43,7 +43,7 @@ public class ProductAdminController {
         @RequestParam(defaultValue = "10") int size,
         @RequestParam(defaultValue = "name") String sortBy) {
         Pageable pageable = PageRequest.of(page, size, Sort.by(sortBy));
-        Page<Product> productPage = productService.getAllProducts(pageable);
+        Page<Product> productPage = productService.getAllProducts(null, pageable);
         model.addAttribute("productPage", productPage);
         model.addAttribute("sortBy", sortBy);
         model.addAttribute("productRequest", new ProductRequest());

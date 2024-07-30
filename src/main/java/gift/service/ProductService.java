@@ -29,7 +29,10 @@ public class ProductService {
         this.optionRepository = optionRepository;
     }
 
-    public Page<Product> getAllProducts(Pageable pageable) {
+    public Page<Product> getAllProducts(Long categoryId, Pageable pageable) {
+        if (categoryId != null) {
+            return productRepository.findByCategoryId(categoryId, pageable);
+        }
         return productRepository.findAll(pageable);
     }
 
