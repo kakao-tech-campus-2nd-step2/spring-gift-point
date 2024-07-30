@@ -43,7 +43,11 @@ class CategoryServiceTest {
         categoryService.updateCategory(category.getId(), udateCategoryRequest);
 
         //then
+<<<<<<< HEAD
         assertThat(categoryRepository.findById(1L).get()).isEqualTo(category);
+=======
+        assertThat(categoryRepository.findByUniNumber(1000).get()).isEqualTo(category);
+>>>>>>> upstream/jinseohyun1228
 
     }
 

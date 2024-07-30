@@ -10,6 +10,7 @@ import org.springframework.http.HttpStatus;
 public class TextTemplateFactory {
 
     public static String convertOrderResponseToTextTemplateJson(OrderResponse orderResponse) {
+
         ObjectMapper objectMapper = new ObjectMapper();
 
         String objectType = "text";

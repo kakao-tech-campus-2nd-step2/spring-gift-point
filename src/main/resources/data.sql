@@ -1,3 +1,4 @@
+
 INSERT INTO Category (name, color, image_url, description)
 VALUES ('패션', 'RED', 'http://example.com/fashion.jpg', '패션 관련 카테고리');
 INSERT INTO Category (name, color, image_url, description)

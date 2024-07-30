@@ -48,7 +48,7 @@ public class ApiTokenService {
         ApiToken apiToken = apiTokenRepository.findByUserId(userVo.getId())
                 .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_TOKEN));
 
-        if (apiToken.getExpirationDate().isAfter(LocalDateTime.now())) {
+        if (apiToken.getAccessTokenExpirationDate().isAfter(LocalDateTime.now())) {
             return apiToken;
         }
 
