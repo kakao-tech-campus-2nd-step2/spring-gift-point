@@ -59,10 +59,16 @@ public class ProductController {
         @RequestParam(defaultValue = "10") @Min(1) @Max(30) int size,
         @RequestParam(defaultValue = "name") String sortBy,
         @RequestParam(defaultValue = "asc") String direction,
-        Model model) {
+        @RequestParam(required = false) Long categoryId) {
 
         PageRequestDTO pageRequestDTO = new PageRequestDTO(page, size, sortBy, direction);
-        Page<ProductDTO> productPage = productService.findAllProducts(pageRequestDTO);
+        Page<ProductDTO> productPage;
+
+        if (categoryId != null) {
+            productPage = productService.findProductsByCategory(categoryId, pageRequestDTO);
+        } else {
+            productPage = productService.findAllProducts(pageRequestDTO);
+        }
 
         List<ProductDTO> productList = productPage.getContent();
 

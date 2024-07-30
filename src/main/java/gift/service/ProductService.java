@@ -115,4 +115,10 @@ public class ProductService {
             .orElseThrow(() -> new IllegalArgumentException("상품을 찾을 수 없습니다."));
         return product.getName();
     }
+    public Page<ProductDTO> findProductsByCategory(Long categoryId, PageRequestDTO pageRequestDTO) {
+        Pageable pageable = pageRequestDTO.toPageRequest();
+        Page<Product> products = productRepository.findByCategoryId(categoryId, pageable);
+        return products.map(ProductConverter::convertToDTO);
+    }
+
 }

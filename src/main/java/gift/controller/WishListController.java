@@ -10,8 +10,12 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import org.springframework.data.domain.Page;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.annotation.Validated;
@@ -24,7 +28,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
-@RequestMapping("/wishlist")
+@RequestMapping("/api/wishes")
 @Validated
 @Tag(name = "WishList Management", description = "APIs for managing wishlists")
 public class WishListController {
@@ -43,29 +47,24 @@ public class WishListController {
         @ApiResponse(responseCode = "401", description = "User not logged in."),
         @ApiResponse(responseCode = "500", description = "Internal server error.")
     })
-    public String viewWishList(
+    public ResponseEntity<List<WishListDTO>> viewWishList(
         @RequestParam(defaultValue = "0") int page,
         @RequestParam(defaultValue = "10") @Min(1) @Max(30) int size,
-        @RequestParam(defaultValue = "id") String sortBy,
-        @RequestParam(defaultValue = "asc") String direction,
-        HttpServletRequest request, Model model) {
+        @RequestParam(defaultValue = "createdDate,desc") String[] sort,
+        HttpServletRequest request) {
 
         String email = (String) request.getAttribute("email");
         if (email == null) {
-            return "redirect:/users/login";
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
+
+        String sortBy = sort[0];
+        String direction = sort[1];
 
         PageRequestDTO pageRequestDTO = new PageRequestDTO(page, size, sortBy, direction);
         Page<WishListDTO> wishListPage = wishListService.getWishListByUser(email, pageRequestDTO);
 
-        // 모델에 데이터 추가
-        model.addAttribute("wishList", wishListPage.getContent());
-        model.addAttribute("currentPage", page);
-        model.addAttribute("totalPages", wishListPage.getTotalPages());
-        model.addAttribute("sortBy", sortBy);
-        model.addAttribute("direction", direction);
-
-        return "wishlist";
+        return ResponseEntity.ok(wishListPage.getContent());
     }
 
     @GetMapping("/add")
@@ -75,7 +74,7 @@ public class WishListController {
         return "add_product_to_wishlist";
     }
 
-    @PostMapping("/add")
+    @PostMapping
     @Operation(summary = "Add a product to wishlist", description = "This API adds a new product to the wishlist.")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "201", description = "Successfully added product to wish list."),
@@ -83,14 +82,22 @@ public class WishListController {
         @ApiResponse(responseCode = "401", description = "User not logged in."),
         @ApiResponse(responseCode = "500", description = "Internal server error.")
     })
-    public String addProductToWishList(@RequestBody Map<String, Long> payload, HttpServletRequest request) {
+    public ResponseEntity<Map<String, Long>> addProductToWishList(@RequestBody Map<String, Long> payload, HttpServletRequest request) {
         String email = (String) request.getAttribute("email");
+        if (email == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+
         Long productId = payload.get("productId");
         wishListService.addProductToWishList(email, productId);
-        return "redirect:/wishlist";
+
+        Map<String, Long> response = new HashMap<>();
+        response.put("productId", productId);
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
-    @DeleteMapping("/remove/{productId}")
+    @DeleteMapping("/{productId}")
     @Operation(summary = "Remove a product from wishlist", description = "This API removes a product from the wishlist.")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "Successfully removed product from wish list."),
@@ -98,9 +105,14 @@ public class WishListController {
         @ApiResponse(responseCode = "401", description = "User not logged in."),
         @ApiResponse(responseCode = "500", description = "Internal server error.")
     })
-    public String removeProductFromWishList(@PathVariable Long productId, HttpServletRequest request) {
+    public ResponseEntity<Void> removeProductFromWishList(@PathVariable Long productId, HttpServletRequest request) {
         String email = (String) request.getAttribute("email");
+        if (email == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+
         wishListService.removeProductFromWishList(email, productId);
-        return "redirect:/wishlist";
+
+        return ResponseEntity.ok().build();
     }
 }
