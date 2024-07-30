@@ -20,6 +20,7 @@ import gift.category.entity.Category;
 import gift.option.OptionTestCase.OptionNameAllowedCharacterError;
 import gift.option.OptionTestCase.OptionNameLengthError;
 import gift.option.OptionTestCase.OptionQuantitySizeError;
+import gift.option.dto.OptionRequestDTO;
 import gift.option.entity.Option;
 import gift.product.entity.Product;
 import gift.product.ProductRepository;
@@ -50,7 +51,7 @@ public class OptionServiceTest {
     // given values
     private long productId;
     private Product product;
-    private OptionDTO optionDTO;
+    private OptionRequestDTO optionDTO;
     private Option option;
 
     @BeforeEach
@@ -65,7 +66,7 @@ public class OptionServiceTest {
             new Category(1L, "category")
         );
 
-        optionDTO = new OptionDTO(
+        optionDTO = new OptionRequestDTO(
             1L,
             "option-1",
             100
@@ -106,14 +107,14 @@ public class OptionServiceTest {
         @DisplayName("success")
         void success() {
             //given
-            List<OptionDTO> expected = List.of(
-                new OptionDTO(1L, "option-1", 1),
-                new OptionDTO(2L, "option-2", 2),
-                new OptionDTO(3L, "option-3", 3)
+            List<OptionRequestDTO> expected = List.of(
+                new OptionRequestDTO(1L, "option-1", 1),
+                new OptionRequestDTO(2L, "option-2", 2),
+                new OptionRequestDTO(3L, "option-3", 3)
             );
 
             //when
-            List<OptionDTO> actual = optionService.getOptions(productId);
+            List<OptionRequestDTO> actual = optionService.getOptions(productId);
 
             //then
             assertEquals(actual, expected);
@@ -207,7 +208,7 @@ public class OptionServiceTest {
         @DisplayName("option name allowed character error")
         void optionNameAllowedCharacterError(String optionName) {
             //given
-            optionDTO = new OptionDTO(
+            optionDTO = new OptionRequestDTO(
                 1L,
                 optionName,
                 1
@@ -224,7 +225,7 @@ public class OptionServiceTest {
         @DisplayName("option name length error")
         void optionNameLengthError(String optionName) {
             //given
-            optionDTO = new OptionDTO(
+            optionDTO = new OptionRequestDTO(
                 1L,
                 optionName,
                 1
@@ -241,7 +242,7 @@ public class OptionServiceTest {
         @DisplayName("option quantity size error")
         void optionQuantitySizeError(int quantity) {
             //given
-            optionDTO = new OptionDTO(
+            optionDTO = new OptionRequestDTO(
                 1L,
                 "option-1",
                 quantity
@@ -261,7 +262,7 @@ public class OptionServiceTest {
         @BeforeEach
         void setUp() {
             //given
-            optionDTO = new OptionDTO(
+            optionDTO = new OptionRequestDTO(
                 1L,
                 "update-option",
                 2
@@ -339,7 +340,7 @@ public class OptionServiceTest {
         @DisplayName("option name allowed character error")
         void optionNameAllowedCharacterError(String optionName) {
             //given
-            optionDTO = new OptionDTO(
+            optionDTO = new OptionRequestDTO(
                 1L,
                 optionName,
                 1
@@ -356,7 +357,7 @@ public class OptionServiceTest {
         @DisplayName("option name length error")
         void optionNameLengthError(String optionName) {
             //given
-            optionDTO = new OptionDTO(
+            optionDTO = new OptionRequestDTO(
                 1L,
                 optionName,
                 1
@@ -373,7 +374,7 @@ public class OptionServiceTest {
         @DisplayName("option quantity size error")
         void optionQuantitySizeError(int quantity) {
             //given
-            optionDTO = new OptionDTO(
+            optionDTO = new OptionRequestDTO(
                 1L,
                 "update-option",
                 quantity
