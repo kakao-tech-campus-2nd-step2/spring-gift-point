@@ -88,7 +88,7 @@ public class CategoryRepositoryTest {
     void testCategoryDeleteFailed() {
         // given
         Category savedCategory = categoryRepository.saveAndFlush(category1);
-        Product product = new Product("아이스 아메리카노 T", savedCategory, 4500,
+        Product product = new Product("아이스 아메리카노 T", savedCategory, 4500, "description",
             "https://example.com/image.jpg");
 
         // when

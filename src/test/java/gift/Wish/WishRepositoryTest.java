@@ -55,8 +55,8 @@ public class WishRepositoryTest {
         Member savedMember = memberRepository.saveAndFlush(user);
         this.member = savedMember;
 
-        Product product1 = new Product("아이스 아메리카노 T",  ethiopia, 4500, "https://example.com/image.jpg");
-        Product product2 = new Product("아이스 카페모카 M", jamaica, 6300, "https://example.com/image.jpg");
+        Product product1 = new Product("아이스 아메리카노 T",  ethiopia, 4500, "description","https://example.com/image.jpg");
+        Product product2 = new Product("아이스 카페모카 M", jamaica, 6300, "description","https://example.com/image.jpg");
         Product savedProduct1 = productRepository.save(product1);
         Product savedProduct2 = productRepository.save(product2);
         this.product1 = savedProduct1;

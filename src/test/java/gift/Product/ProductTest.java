@@ -27,7 +27,7 @@ public class ProductTest {
 
         // when, then
         assertThatExceptionOfType(BusinessException.class)
-            .isThrownBy(() -> new Product("카카오이름", category, 1000, "https://example.com/image.jpg"))
+            .isThrownBy(() -> new Product("카카오이름", category, 1000, "description","https://example.com/image.jpg"))
             .withMessageContaining("'카카오' 문구를 포함할 수 없습니다. 담당 MD와 협의하세요.");
     }
 
@@ -38,7 +38,7 @@ public class ProductTest {
 
         // when, then
         assertThatCode(() -> {
-            new Product("일반이름", category, 1000, "https://example.com/image.jpg");
+            new Product("일반이름", category, 1000, "description","https://example.com/image.jpg");
         }).doesNotThrowAnyException();
     }
 

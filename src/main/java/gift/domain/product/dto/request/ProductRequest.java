@@ -1,6 +1,6 @@
 package gift.domain.product.dto.request;
 
-import gift.domain.option.dto.OptionRequestDTO;
+import gift.domain.option.dto.request.OptionRequest;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
@@ -30,7 +30,7 @@ public record ProductRequest(
     String imageUrl,
 
     @NotEmpty(message = "옵션은 최소 한 개 이상이어야 합니다.")
-    List<OptionRequestDTO> options
+    List<OptionRequest> options
 ) {
 
 }

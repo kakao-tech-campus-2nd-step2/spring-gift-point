@@ -1,17 +1,14 @@
 package gift.domain.option;
 
-import gift.domain.option.dto.OptionRequestDTO;
-import gift.domain.option.dto.OptionResponseDTO;
-import gift.global.response.ResponseMaker;
-import gift.global.response.ResultResponseDto;
-import gift.global.response.SimpleResultResponseDto;
+import gift.domain.option.dto.request.OptionRequest;
+import gift.domain.option.dto.response.OptionResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import java.util.List;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -21,7 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/products")
 @Tag(name = "Option", description = "Option API")
 public class OptionRestController {
 
@@ -32,56 +29,54 @@ public class OptionRestController {
     }
 
     /**
-     * 모든 옵션 목록 조회
-     */
-    @GetMapping("/options")
-    @Operation(summary = "모든 옵션 조회")
-    public ResponseEntity<ResultResponseDto<List<Option>>> getOptions() {
-        List<Option> options = optionService.getOptions();
-        return ResponseMaker.createResponse(HttpStatus.OK, options);
-    }
-
-    /**
      * 특정 상품의 옵션 목록 조회
      */
-    @GetMapping("/products/{productId}/options")
+    @GetMapping("/{productId}/options")
     @Operation(summary = "특정 상품의 옵션 목록 조회")
-    public ResponseEntity<ResultResponseDto<OptionResponseDTO>> getOptionsByProductId(
+    public ResponseEntity<List<OptionResponse>> getOptions(
         @Parameter(description = "상품 ID") @PathVariable("productId") Long productId
     ) {
-        List<Option> options = optionService.getOptionsByProductId(productId);
-        OptionResponseDTO optionResponseDTO = new OptionResponseDTO(options);
-
-        return ResponseMaker.createResponse(HttpStatus.OK, optionResponseDTO);
+        List<OptionResponse> optionsResponse = optionService.getOptions(productId);
+        return ResponseEntity.ok(optionsResponse);
     }
 
     /**
      * 특정 상품에 옵션 추가
      */
-    @PostMapping("/products/{productId}/options")
+    @PostMapping("/{productId}/options")
     @Operation(summary = "특정 상품에 옵션 추가")
-    public ResponseEntity<SimpleResultResponseDto> addOption(
+    public ResponseEntity addOption(
         @Parameter(description = "상품 ID") @PathVariable("productId") Long productId,
-        OptionRequestDTO optionRequestDTO
+        @Valid @RequestBody gift.domain.option.dto.request.OptionRequest optionRequest
     ) {
-        optionService.addOptionToExistsProduct(productId, optionRequestDTO);
-
-        return ResponseMaker.createSimpleResponse(HttpStatus.OK);
+        optionService.addOptionToExistsProduct(productId, optionRequest);
+        return ResponseEntity.ok().build();
     }
 
     /**
      * 특정 상품의 옵션 수정
      */
-    @PutMapping("/products/{productId}/options/{optionId}")
+    @PutMapping("/{productId}/options/{optionId}")
     @Operation(summary = "특정 상품의 옵션 수정")
-    public ResponseEntity<SimpleResultResponseDto> updateOption(
+    public ResponseEntity updateOption(
         @Parameter(description = "상품 ID") @PathVariable("productId") Long productId,
         @Parameter(description = "옵션 ID") @PathVariable("optionId") Long optionId,
-        @Valid @RequestBody OptionRequestDTO optionRequestDTO
+        @Valid @RequestBody OptionRequest optionRequest
     ) {
-        optionService.updateOption(productId, optionId, optionRequestDTO);
+        optionService.updateOption(productId, optionId, optionRequest);
+        return ResponseEntity.ok().build();
+    }
 
-        return ResponseMaker.createSimpleResponse(HttpStatus.OK);
+    /**
+     * 특정 상품의 옵션 삭제
+     */
+    @DeleteMapping("/{productId}/options/{optionId}")
+    public ResponseEntity deleteOption(
+        @Parameter(description = "상품 ID") @PathVariable("productId") Long productId,
+        @Parameter(description = "옵션 ID") @PathVariable("optionId") Long optionId
+    ) {
+        optionService.deleteOption(productId, optionId);
+        return ResponseEntity.ok().build();
     }
 
 

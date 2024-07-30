@@ -60,10 +60,10 @@ public class ProductRepositoryTest {
         ethiopia = categoryRepository.saveAndFlush(new Category("에티오피아산", "에티오피아 산 원두를 사용했습니다.","color code", "http://www.example.com/index.html"));
         jamaica = categoryRepository.saveAndFlush(new Category("자메이카산", "자메이카산 원두를 사용했습니다.","color code", "http://www.example.com/index.html"));
 
-        Product product1 = new Product("아이스 아메리카노 T", ethiopia, 4500,
+        Product product1 = new Product("아이스 아메리카노 T", ethiopia, 4500,"description",
             "https://example.com/image.jpg");
         this.product1 = product1;
-        Product product2 = new Product("아이스 말차라떼 T", jamaica, 4500,
+        Product product2 = new Product("아이스 말차라떼 T", jamaica, 4500,"description",
             "https://example.com/image.jpg");
         this.product2 = product2;
     }
@@ -84,9 +84,9 @@ public class ProductRepositoryTest {
     @Description("상품 저장 시 이름 중복 검증")
     void saveWithSameName() {
         // given
-        Product product1 = new Product("아이스 아메리카노 T", ethiopia, 4500,
+        Product product1 = new Product("아이스 아메리카노 T", ethiopia, 4500,"description",
             "https://example.com/image.jpg");
-        Product product2 = new Product("아이스 아메리카노 T", jamaica, 4700,
+        Product product2 = new Product("아이스 아메리카노 T", jamaica, 4700,"description",
             "https://example.com/image.jpg");
 
         // when

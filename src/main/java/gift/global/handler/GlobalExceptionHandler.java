@@ -2,6 +2,7 @@ package gift.global.handler;
 
 import gift.global.exception.BusinessException;
 import gift.global.exception.ErrorCode;
+import gift.global.exception.option.OptionOnlyOneDeleteException;
 import gift.global.exception.restTemplate.RestTemplateException;
 import gift.global.exception.wish.WishNotFoundException;
 import gift.global.exception.category.CategoryDuplicateException;
@@ -78,13 +79,17 @@ public class GlobalExceptionHandler {
         return ResponseMaker.createErrorResponse(ErrorCode.INTERNAL_SERVER_ERROR,
             "예상치 못한 문제가 발생했습니다. " + e.getMessage());
     }
+
     @ExceptionHandler(RestTemplateClientException.class)
-    public ResponseEntity<ErrorResponseDto> RestTemplateClientException(RestTemplateClientException e) {
+    public ResponseEntity<ErrorResponseDto> RestTemplateClientException(
+        RestTemplateClientException e) {
         return ResponseMaker.createErrorResponse(ErrorCode.BAD_REQUEST,
             "카카오톡 메시지 전송에 실패했습니다. " + e.getMessage());
     }
+
     @ExceptionHandler(RestTemplateServerException.class)
-    public ResponseEntity<ErrorResponseDto> RestTemplateServerException(RestTemplateServerException e) {
+    public ResponseEntity<ErrorResponseDto> RestTemplateServerException(
+        RestTemplateServerException e) {
         return ResponseMaker.createErrorResponse(ErrorCode.INTERNAL_SERVER_ERROR,
             "카카오톡 서버에 문제가 발생했습니다. " + e.getMessage());
     }
@@ -141,4 +146,12 @@ public class GlobalExceptionHandler {
         return ResponseMaker.createErrorResponse(ErrorCode.NOT_FOUND, e.getMessage());
     }
 
+    /**
+     * Option 삭제 관련 에러
+     */
+    @ExceptionHandler(OptionOnlyOneDeleteException.class)
+    public ResponseEntity<ErrorResponseDto> OptionOnlyOneDeleteException(
+        OptionOnlyOneDeleteException e) {
+        return ResponseMaker.createErrorResponse(ErrorCode.BAD_REQUEST, e.getMessage());
+    }
 }

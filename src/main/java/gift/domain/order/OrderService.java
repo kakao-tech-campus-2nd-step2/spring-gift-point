@@ -31,7 +31,7 @@ public class OrderService {
     private final String SEND_ME_URL = "https://kapi.kakao.com/v2/api/talk/memo/default/send";
     private final JpaOptionRepository optionRepository;
     private final OptionService optionService;
-    private final JpaWishRepository cartItemRepository;
+    private final JpaWishRepository wishRepository;
     private final RestTemplate restTemplate;
     private final ObjectMapper objectMapper;
     private final JpaMemberRepository memberRepository;
@@ -49,7 +49,7 @@ public class OrderService {
     ) {
         optionRepository = jpaOptionRepository;
         this.optionService = optionService;
-        cartItemRepository = jpaWishRepository;
+        wishRepository = jpaWishRepository;
         this.restTemplate = restTemplate;
         this.objectMapper = objectMapper;
         this.memberRepository = memberRepository;
