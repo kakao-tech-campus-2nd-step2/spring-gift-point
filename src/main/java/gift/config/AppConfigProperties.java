@@ -1,27 +1,23 @@
 package gift.config;
 
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.context.annotation.Configuration;
+import org.springframework.stereotype.Component;
 
-@Configuration
-@ConfigurationProperties(prefix = "app.dev")
+@Component
+@ConfigurationProperties(prefix = "app")
 public class AppConfigProperties {
 
-    @Value("${app.dev.connect.timeout}")
     private int devConnectTimeout;
-
-    @Value("${app.dev.read.timeout}")
     private int devReadTimeout;
-
-    @Value("${app.prod.connect.timeout}")
     private int prodConnectTimeout;
-
-    @Value("${app.prod.read.timeout}")
     private int prodReadTimeout;
 
     public int getDevConnectTimeout() {
         return devConnectTimeout;
+    }
+
+    public void setDevConnectTimeout(int devConnectTimeout) {
+        this.devConnectTimeout = devConnectTimeout;
     }
 
     public int getDevReadTimeout() {

@@ -1,8 +1,10 @@
 package gift.config;
 
 import gift.exception.ApiRequestException;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.env.Environment;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.client.ClientHttpRequestFactory;
 import org.springframework.http.client.ClientHttpResponse;
@@ -12,14 +14,17 @@ import org.springframework.web.client.ResponseErrorHandler;
 import org.springframework.web.client.DefaultResponseErrorHandler;
 
 import java.io.IOException;
+import java.util.Map;
 
 @Configuration
 public class AppConfig {
 
     private final AppConfigProperties appConfigProperties;
+    private final Environment environment;
 
-    public AppConfig(AppConfigProperties appConfigProperties) {
+    public AppConfig(AppConfigProperties appConfigProperties, Environment environment) {
         this.appConfigProperties = appConfigProperties;
+        this.environment = environment;
     }
 
     @Bean
@@ -32,37 +37,43 @@ public class AppConfig {
     private ClientHttpRequestFactory clientHttpRequestFactory() {
         SimpleClientHttpRequestFactory factory = new SimpleClientHttpRequestFactory();
 
-        // 운영 환경에서는 prod 타임아웃값 사용
-        if (isProduction()) {
-            factory.setConnectTimeout(appConfigProperties.getProdConnectTimeout());
-            factory.setReadTimeout(appConfigProperties.getProdReadTimeout());
-        } else { // 개발 환경에서는 dev 타임아웃값 사용
-            factory.setConnectTimeout(appConfigProperties.getDevConnectTimeout());
-            factory.setReadTimeout(appConfigProperties.getDevReadTimeout());
-        }
+        Map<String, Integer> connectTimeouts = Map.of(
+                "dev", appConfigProperties.getDevConnectTimeout(),
+                "prod", appConfigProperties.getProdConnectTimeout()
+        );
+
+        Map<String, Integer> readTimeouts = Map.of(
+                "dev", appConfigProperties.getDevReadTimeout(),
+                "prod", appConfigProperties.getProdReadTimeout()
+        );
+
+        String activeProfile = environment.getActiveProfiles().length > 0 ? environment.getActiveProfiles()[0] : "default";
+
+        factory.setConnectTimeout(connectTimeouts.getOrDefault(activeProfile, 10000));
+        factory.setReadTimeout(readTimeouts.getOrDefault(activeProfile, 10000));
 
         return factory;
     }
 
     private ResponseErrorHandler errorHandler() {
+        Map<HttpStatus, String> errorMessages = Map.of(
+                HttpStatus.BAD_REQUEST, "Bad Request",
+                HttpStatus.NOT_FOUND, "Not Found",
+                HttpStatus.INTERNAL_SERVER_ERROR, "Internal Server Error"
+        );
+
         return new DefaultResponseErrorHandler() {
             @Override
             public void handleError(ClientHttpResponse response) throws IOException {
-                if (response.getStatusCode() == HttpStatus.BAD_REQUEST) {
-                    throw new ApiRequestException("Bad Request");
-                } else if (response.getStatusCode() == HttpStatus.NOT_FOUND) {
-                    throw new ApiRequestException("Not Found");
-                } else if (response.getStatusCode() == HttpStatus.INTERNAL_SERVER_ERROR) {
-                    throw new ApiRequestException("Internal Server Error");
+                HttpStatus statusCode = HttpStatus.resolve(response.getStatusCode().value());
+                String statusText = response.getStatusText();
+
+                if (statusCode != null && errorMessages.containsKey(statusCode)) {
+                    throw new ApiRequestException(errorMessages.get(statusCode) + ": " + statusText);
                 } else {
                     super.handleError(response);
                 }
             }
         };
-    }
-
-    private boolean isProduction() {
-        // 운영 환경을 식별하는 로직 구현. 예를 들어, 특정 환경 변수를 통해 운영 환경 식별
-        return "prod".equals(System.getenv("ENVIRONMENT"));
     }
 }
