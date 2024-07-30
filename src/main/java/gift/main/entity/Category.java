@@ -11,37 +11,37 @@ public class Category {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    @Column(nullable = false, unique = true)
-    private int uniNumber;
+    @Column(nullable = false)
+    private String color;
+
+    @Column(nullable = false)
+    private String imageUrl;
+
+    @Column(nullable = false)
+    private String description;
 
     @Column(nullable = false, unique = true)
     private String name;
 
 
     public Category() {
+
     }
 
     public Category(CategoryRequest categoryRequest) {
+        this.color = categoryRequest.color();
+        this.imageUrl = categoryRequest.imageUrl();
+        this.description = categoryRequest.description();
         this.name = categoryRequest.name();
-        this.uniNumber = categoryRequest.uniNumber();
     }
 
     public void updateCategory(CategoryRequest categoryRequest) {
+        this.color = categoryRequest.color();
+        this.imageUrl = categoryRequest.imageUrl();
+        this.description = categoryRequest.description();
         this.name = categoryRequest.name();
-        this.uniNumber = categoryRequest.uniNumber();
     }
 
-    public long getId() {
-        return id;
-    }
-
-    public int getUniNumber() {
-        return uniNumber;
-    }
-
-    public String getName() {
-        return name;
-    }
 
     @Override
     public boolean equals(Object o) {
