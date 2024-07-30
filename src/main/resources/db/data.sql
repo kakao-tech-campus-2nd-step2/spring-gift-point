@@ -1,6 +1,7 @@
 -- 사용자 데이터 삽입
 INSERT INTO users (role, name, email, password, profile_image_url, kakao_id, login_type)
-VALUES ('USER', '테스트유저', 'test@test.com', 'test', NULL, NULL, 'NORMAL');
+VALUES ('USER', '테스트유저', 'test@test.com', '$2a$10$SGtj9v1PCwZNmTGxwAHi3.YwwHW1xjeHLp13FEUfMAnaA8a/jJsdy', NULL, NULL,
+        'NORMAL');
 
 -- 카테고리 데이터 삽입
 INSERT INTO category (name, description, image_url, color)
