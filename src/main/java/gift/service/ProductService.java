@@ -76,11 +76,10 @@ public class ProductService {
     }
 
     @Transactional(readOnly = true)
-    public List<ProductResponse.Info> findProductsByCategoryId(Long categoryId) {
-        List<Product> products = productRepository.findByCategoryId(categoryId);
-        return products.stream()
-                .map(ProductResponse.Info::from)
-                .toList();
+    public PagingResponse<ProductResponse.Info> findAllProductPagingByCategoryId(Pageable pageable, Long categoryId) {
+        Page<ProductResponse.Info> pages = productRepository.findByCategoryIdFetchJoin(pageable, categoryId)
+                .map(ProductResponse.Info::from);
+        return PagingResponse.from(pages);
     }
 
     @Transactional

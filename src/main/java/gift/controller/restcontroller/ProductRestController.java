@@ -31,11 +31,12 @@ public class ProductRestController {
     }
 
     @GetMapping("/products")
-    @Operation(summary = "전체 상품 조회", description = "전체 상품을 조회합니다.")
-    public ResponseEntity<PagingResponse<ProductResponse.WithOption>> getProducts(
+    @Operation(summary = "카테고리 상품 조회", description = "특정 카테고리의 모든 상품을 조회합니다.")
+    public ResponseEntity<PagingResponse<ProductResponse.Info>> getProductsByCategoryId(
+            @RequestParam("categoryId") @NotNull @Min(1) Long categoryId,
             @PageableDefault(size = 10, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable
     ) {
-        PagingResponse<ProductResponse.WithOption> responses = productService.findAllProductPaging(pageable);
+        PagingResponse<ProductResponse.Info> responses = productService.findAllProductPagingByCategoryId(pageable, categoryId);
         return ResponseEntity.ok().body(responses);
     }
 
@@ -74,15 +75,6 @@ public class ProductRestController {
     ) {
         productService.deleteById(id);
         return ResponseEntity.ok().build();
-    }
-
-    @GetMapping("/category/{id}/products")
-    @Operation(summary = "카테고리에 해당하는 상품 조회", description = "카테고리에 해당하는 상품을 조회합니다.")
-    public ResponseEntity<List<ProductResponse.Info>> getProductsByCategoryId(
-            @PathVariable("id") @NotNull @Min(1) Long id
-    ) {
-        List<ProductResponse.Info> responses = productService.findProductsByCategoryId(id);
-        return ResponseEntity.ok().body(responses);
     }
 
     @GetMapping("/products/{id}/options")

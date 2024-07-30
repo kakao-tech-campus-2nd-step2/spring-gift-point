@@ -58,19 +58,19 @@
             </form>
         </div>
         <span>
-            <button th:disabled="${products.number <= 0}">
-                <a th:href="@{/admin/product(page=${products.number - 1}, size=${products.size()})}">&lt;</a>
+            <button th:disabled="${products.page <= 0}">
+                <a th:href="@{/admin/product(page=${products.page - 1}, size=${products.size()})}">&lt;</a>
             </button>
         </span>
         <span th:each="i : ${#numbers.sequence(0, products.totalPages - 1)}"
-              th:if="${i >= (products.number / 5) * 5} and ${i < (products.number / 5) * 5 + 5}">
-            <button th:class="${i == products.number} ? 'active' : ''">
+              th:if="${i >= (products.page / 5) * 5} and ${i < (products.page / 5) * 5 + 5}">
+            <button th:class="${i == products.page} ? 'active' : ''">
                 <a th:href="@{/admin/product(page=${i}, size=${products.size()})}"
                th:text="${i + 1}"/></button>
         </span>
         <span>
-            <button th:disabled="${products.number >= products.totalPages - 1}">
-                <a th:href="@{/admin/product(page=${products.number + 1}, size=${products.size()})}">&gt;</a>
+            <button th:disabled="${products.page >= products.totalPages - 1}">
+                <a th:href="@{/admin/product(page=${products.page + 1}, size=${products.size()})}">&gt;</a>
             </button>
         </span>
     </div>

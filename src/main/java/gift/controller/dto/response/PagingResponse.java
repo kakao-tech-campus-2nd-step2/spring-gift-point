@@ -9,7 +9,7 @@ public record PagingResponse <T> (
         long totalElements,
         int totalPages,
         int size,
-        int number
+        int page
 ){
     public static <T> PagingResponse<T> from(Page<T> page) {
         return new PagingResponse<>(

@@ -58,19 +58,19 @@
             </form>
         </div>
         <span>
-            <button th:disabled="${categories.number() <= 0}">
-                <a th:href="@{/admin/member(page=${categories.number() - 1}, size=${categories.size()})}">&lt;</a>
+            <button th:disabled="${categories.page() <= 0}">
+                <a th:href="@{/admin/member(page=${categories.page() - 1}, size=${categories.size()})}">&lt;</a>
             </button>
         </span>
         <span th:each="i : ${#numbers.sequence(0, categories.totalPages() - 1)}"
-              th:if="${i >= (categories.number() / 5) * 5} and ${i < (categories.number() / 5) * 5 + 5}">
-            <button th:class="${i == categories.number()} ? 'active' : ''">
+              th:if="${i >= (categories.page() / 5) * 5} and ${i < (categories.page() / 5) * 5 + 5}">
+            <button th:class="${i == categories.page()} ? 'active' : ''">
                 <a th:href="@{/admin/categories(page=${i}, size=${categories.size()})}"
                    th:text="${i + 1}"/></button>
         </span>
         <span>
-            <button th:disabled="${categories.number() >= categories.totalPages() - 1}">
-                <a th:href="@{/admin/categories(page=${categories.number() + 1}, size=${categories.size()})}">&gt;</a>
+            <button th:disabled="${categories.page() >= categories.totalPages() - 1}">
+                <a th:href="@{/admin/categories(page=${categories.page() + 1}, size=${categories.size()})}">&gt;</a>
             </button>
         </span>
     </div>

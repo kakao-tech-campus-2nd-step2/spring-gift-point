@@ -2,11 +2,11 @@ package gift.model;
 
 import gift.common.enums.Role;
 import gift.common.enums.SocialLoginType;
-import gift.common.exception.AuthenticationException;
+import gift.common.exception.AuthorizationException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 
 class MemberTest {
 
@@ -20,7 +20,7 @@ class MemberTest {
 
         // when
         // then
-        assertThatExceptionOfType(AuthenticationException.class)
+        assertThatExceptionOfType(AuthorizationException.class)
                 .isThrownBy(() -> member.checkLoginType(SocialLoginType.DEFAULT));
     }
 }
