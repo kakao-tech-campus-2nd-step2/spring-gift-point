@@ -54,20 +54,24 @@ public class ProductService {
     }
 
     @Transactional(readOnly = true)
-    public Page<ProductModel.InfoWithOption> getProductsPaging(
+    public Page<ProductModel.Info> getProductsPaging(
         SearchType searchType,
         String searchValue,
+        Long categoryId,
         Pageable pageable
     ) {
+        if (categoryId != null) {
+            return productRepository.findByCategoryId(categoryId, pageable)
+                .map(ProductModel.Info::from);
+        }
 
         Page<Product> productPage = switch (searchType) {
             case NAME -> productRepository.findByNameContaining(searchValue, pageable);
             case PRICE -> productRepository.findAllOrderByPrice(pageable);
-            case CATEGORY -> productRepository.findByCategoryId(searchValue, pageable);
             default -> productRepository.findAll(pageable);
         };
 
-        return productPage.map(ProductModel.InfoWithOption::from);
+        return productPage.map(ProductModel.Info::from);
     }
 }
 
