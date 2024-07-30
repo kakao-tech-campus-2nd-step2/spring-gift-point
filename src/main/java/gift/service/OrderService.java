@@ -1,6 +1,7 @@
 package gift.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import gift.domain.OrderEvent;
 import gift.domain.Member;
 import gift.domain.Option;
 import gift.domain.Order;
@@ -11,6 +12,7 @@ import gift.dto.OrderResponseDto;
 import gift.repository.OrderRepository;
 import gift.repository.ProductRepository;
 import java.util.NoSuchElementException;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,25 +24,29 @@ public class OrderService {
     private final ProductService productService;
     private final WishService wishService;
 
+    private final ApplicationEventPublisher applicationEventPublisher;
+
     public OrderService(ProductRepository productRepository, OrderRepository orderRepository, KakaoService kakaoService,
-        ProductService productService, WishService wishService) {
+        ProductService productService, WishService wishService,
+        ApplicationEventPublisher applicationEventPublisher) {
         this.productRepository = productRepository;
         this.orderRepository = orderRepository;
         this.kakaoService = kakaoService;
         this.productService = productService;
         this.wishService = wishService;
+        this.applicationEventPublisher = applicationEventPublisher;
     }
 
     @Transactional
     public OrderResponseDto processOrder(OrderRequestDto orderRequestDto, Member member) {
         // 재고 처리
         productService.decreaseOptionQuantity(orderRequestDto.productId(), orderRequestDto.optionId(),orderRequestDto.quantity());
-        // 위시리스트 삭제
-        wishService.deleteProductFromWishList(member.getId(), orderRequestDto.productId());
         // 주문 생성 및 저장
         OrderResponseDto orderResponseDto = createOrder(orderRequestDto);
-        // 주문 메시지 발송
-        sendOrderMessage(orderRequestDto, member);
+
+        // 위시리스트 삭제 & 주문 메시지 발송
+        OrderEvent orderEvent = new OrderEvent(orderRequestDto, member);
+        applicationEventPublisher.publishEvent(orderEvent);
 
         return orderResponseDto;
     }
@@ -52,6 +58,7 @@ public class OrderService {
         return OrderResponseDto.convertToDto(savedOrder);
     }
 
+    @Transactional(readOnly = true)
     public void sendOrderMessage(OrderRequestDto orderRequestDto, Member member) {
         try {
             kakaoService.sendKakaoMessageToMe(
