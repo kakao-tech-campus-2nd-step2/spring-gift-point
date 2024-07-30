@@ -7,4 +7,8 @@ public interface ProductCategoryService {
 
     PagedDto<ProductCategory> findAll(Pageable pageable);
 
+    void createCategory(ProductCategory category);
+
+    void updateCategory(ProductCategory category);
+
 }

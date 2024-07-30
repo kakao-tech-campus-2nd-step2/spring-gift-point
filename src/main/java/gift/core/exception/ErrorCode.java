@@ -6,6 +6,8 @@ public enum ErrorCode {
     PRODUCT_NOT_FOUND(HttpStatus.NOT_FOUND, "상품을 찾을 수 없습니다!"),
     PRODUCT_ALREADY_EXISTS(HttpStatus.BAD_REQUEST, "이미 존재하는 상품입니다."),
     NEGATIVE_PRODUCT_PRICE(HttpStatus.BAD_REQUEST, "상품 가격은 음수가 될 수 없습니다."),
+    PRODUCT_CATEGORY_NOT_FOUND(HttpStatus.NOT_FOUND, "상품 카테고리를 찾을 수 없습니다!"),
+    PRODUCT_CATEGORY_ALREADY_EXISTS(HttpStatus.BAD_REQUEST, "이미 존재하는 상품 카테고리입니다."),
 
     OPTION_ALREADY_EXISTS(HttpStatus.BAD_REQUEST, "이미 존재하는 옵션입니다."),
     OPTION_NOT_FOUND(HttpStatus.NOT_FOUND, "옵션을 찾을 수 없습니다!"),
