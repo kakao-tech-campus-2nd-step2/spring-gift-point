@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8"/>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+  <title>상품 관리</title>
+  <style>
+    table {
+      border: 3;
+      width: 400px;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+<h2>상품 관리</h2>
+<a href="/add">상품추가</a>
+
+<hr/>
+<table>
+  <thead>
+  <tr>
+    <th>id</th>
+    <th>name</th>
+    <th>price</th>
+    <th>imageUrl</th>
+    <th>actions</th>
+    <th>category</th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr th:each="product : ${products}">
+    <td th:text="${product.id}"></td>
+    <td th:text="${product.name}"></td>
+    <td th:text="${product.price}"></td>
+    <td th:text="${product.imageUrl}"></td>
+    <td th:text="${product.category.name}"></td>
+    <td>
+      <a style="display:inline" th:href="@{/update?id={id}(id=${product.id})}"
+      ><img src="update.png" style="width: 20px"
+      /></a>
+      <a style="display:inline" th:href="@{/api/products/delete/{id}(id=${product.id})}"
+      ><img src="update.png" style="width: 20px"
+      /></a>
+
+    </td>
+  </tr>
+  </tbody>
+</table>
+
+<th:block th:each="page : ${#numbers.sequence(startPage, endPage)}">
+  <a th:href="@{/(page = ${page -1})}" th:if="${page != nowPage}" th:text="${page}"></a>
+  <strong style="color : red" th:if="${page == nowPage}" th:text="${page}"></strong>
+</th:block>
+
+</body>
+</html>
