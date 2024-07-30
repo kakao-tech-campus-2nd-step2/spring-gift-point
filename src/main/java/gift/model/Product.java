@@ -52,6 +52,25 @@ public class Product {
             option.assignProduct(this);
         }
     }
+    // Option management methods
+    public void addOption(Option option) {
+        options.add(option);
+        option.assignProduct(this);
+    }
+
+    public void clearOptions() {
+        for (Option option : options) {
+            option.removeProduct();
+        }
+        options.clear();
+    }
+
+    public void update(Name name, int price, String imageUrl, Long categoryId) {
+        this.name = name;
+        this.price = price;
+        this.imageUrl = imageUrl;
+        this.categoryId = categoryId;
+    }
 
     // Getters
     public Long getId() {
@@ -78,24 +97,5 @@ public class Product {
         return options;
     }
 
-    // Option management methods
-    public void addOption(Option option) {
-        options.add(option);
-        option.assignProduct(this);
-    }
-
-    public void clearOptions() {
-        for (Option option : options) {
-            option.removeProduct();
-        }
-        options.clear();
-    }
-
-    public void update(Name name, int price, String imageUrl, Long categoryId) {
-        this.name = name;
-        this.price = price;
-        this.imageUrl = imageUrl;
-        this.categoryId = categoryId;
-    }
 
 }

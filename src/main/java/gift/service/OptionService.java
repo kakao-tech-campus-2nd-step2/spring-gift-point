@@ -88,13 +88,13 @@ public class OptionService {
         Option option = optionRepository.findById(optionId)
             .orElseThrow(() -> new IllegalArgumentException("옵션을 찾을 수 없습니다."));
 
-        if (option.getQuantity().getQuantity() < amount) {
+        try {
+            option.decreaseQuantity(amount);
+            optionRepository.save(option);
+            return true;
+        } catch (IllegalArgumentException e) {
             return false;
         }
-
-        option.decreaseQuantity(amount);
-        optionRepository.save(option);
-        return true;
     }
 
     public String getOptionNameById(Long optionId) {

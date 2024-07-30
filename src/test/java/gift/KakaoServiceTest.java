@@ -3,6 +3,7 @@ package gift;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import gift.exception.KakaoServiceException;
 import gift.service.KakaoService;
 import java.io.IOException;
@@ -48,8 +49,13 @@ public class KakaoServiceTest {
         }
 
         @Bean
-        public KakaoWebClient kakaoWebClient(KakaoProperties kakaoProperties) {
-            return new KakaoWebClient(kakaoProperties);
+        public ObjectMapper objectMapper() {
+            return new ObjectMapper();
+        }
+
+        @Bean
+        public KakaoWebClient kakaoWebClient(KakaoProperties kakaoProperties, ObjectMapper objectMapper) {
+            return new KakaoWebClient(kakaoProperties, objectMapper);
         }
 
         @Bean
@@ -73,7 +79,8 @@ public class KakaoServiceTest {
             mockWebServer.url("/").toString()
         );
 
-        kakaoWebClient = new KakaoWebClient(kakaoProperties);
+        ObjectMapper objectMapper = new ObjectMapper();
+        kakaoWebClient = new KakaoWebClient(kakaoProperties, objectMapper);
         kakaoService = new KakaoService(kakaoProperties, kakaoWebClient);
     }
 

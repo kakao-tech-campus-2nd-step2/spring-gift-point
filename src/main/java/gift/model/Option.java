@@ -24,6 +24,7 @@ public class Option {
 
     @Embedded
     @Valid
+    @Column(nullable = false)
     private OptionName name;
 
     @Embedded
@@ -89,6 +90,9 @@ public class Option {
     }
 
     public void decreaseQuantity(int amount) {
-        this.quantity = new OptionQuantity(Math.max(1, this.quantity.getQuantity() - amount));
+        if (this.quantity.getQuantity() < amount) {
+            throw new IllegalArgumentException("Insufficient quantity to decrease");
+        }
+        this.quantity = new OptionQuantity(this.quantity.getQuantity() - amount);
     }
 }
