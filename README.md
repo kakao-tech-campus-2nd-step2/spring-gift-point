@@ -1,4 +1,4 @@
-# spring-gift-order
+# spring-gift-point
 
 # 기능 요구사항
 
