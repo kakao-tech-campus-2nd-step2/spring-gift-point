@@ -44,10 +44,15 @@ GET http://localhost:8080/api/oauth/callback
 ##### Header
 ```http
 HTTP/1.1 200 OK
-Authorization: Bearer [JWT_TOKEN]
 Content-Type: application/json
 ```
 
+##### Body
+```http
+{
+  "token": ""
+}
+```
 
 ---
 
