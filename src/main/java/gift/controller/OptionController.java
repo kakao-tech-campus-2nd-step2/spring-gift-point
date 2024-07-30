@@ -44,7 +44,7 @@ public class OptionController {
                 .map(OptionResponseDto::toOptionResponseDto)
                 .collect(Collectors.toList());
 
-        return new ResponseEntity<>(allOptionsDtos, HttpStatus.OK);
+        return ResponseEntity.ok().body(allOptionsDtos);
     }
 
     @Parameter(name = "optionRequestDtos", description = "추가할 옵션의 리스트", required = true)
@@ -56,7 +56,7 @@ public class OptionController {
     @Parameter(name = "optionRequestDtos", description = "상품에 추가할 옵션 Dto 리스트", required = true, example = "1")
     public ResponseEntity<Void> addOption(@Valid @RequestBody List<OptionRequestDto> optionRequestDtos) {
         optionService.addOption(optionRequestDtos);
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
 }

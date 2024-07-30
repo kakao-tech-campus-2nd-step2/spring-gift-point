@@ -56,7 +56,7 @@ public class OrderController {
             kakaoApiService.sendKakaoMessage(token, kakaoMessageRequestDto);
         }
 
-        return new ResponseEntity<>(OrderResponseDto.toOrderResponseDto(savedOrder), HttpStatus.CREATED);
+        return ResponseEntity.status(HttpStatus.CREATED).body(OrderResponseDto.toOrderResponseDto(savedOrder));
     }
 
 }
