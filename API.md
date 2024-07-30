@@ -404,11 +404,11 @@ Content-Type: application/json
 ## Option API
 ### Endpoint: `/options`
 
-| 제목                     | 메서드 | URL                              | 요청 컨텐트 타입 / 요청 객체                                 | 응답 객체                      | 설명                                      |
-|--------------------------|--------|----------------------------------|---------------------------------------------------|----------------------------|-------------------------------------------|
-| 특정 제품의 옵션 목록 조회 | `GET`    | `/api/options/{product_id}`        | `Content-Type: application/json`                    | `Status: 200 OK`<br>`Body: {options}` | 제품 ID에 해당하는 모든 옵션을 반환합니다. |
-| 새로운 옵션 추가          | `POST`   | `/api/options`                     | `Content-Type: application/json`<br> `body: {option}` | `Status: 200 OK`             | 제품에 새로운 옵션을 추가합니다.           |
-| 옵션 삭제                 | `DELETE` | `/api/options/{option_id}`         | `Content-Type: application/json`                    | `Status: 200 OK`             | 지정된 ID의 옵션을 삭제합니다.             |
+| 제목                     | 메서드 | URL                         | 요청 컨텐트 타입 / 요청 객체                                 | 응답 객체                      | 설명                                      |
+|--------------------------|--------|-----------------------------|---------------------------------------------------|----------------------------|-------------------------------------------|
+| 특정 제품의 옵션 목록 조회 | `GET`    | `/api/options/{product_id}` | `Content-Type: application/json`                    | `Status: 200 OK`<br>`Body: {options}` | 제품 ID에 해당하는 모든 옵션을 반환합니다. |
+| 새로운 옵션 추가          | `POST`   | `/api/options/{product_id}`             | `Content-Type: application/json`<br> `body: {option}` | `Status: 200 OK`             | 제품에 새로운 옵션을 추가합니다.           |
+| 옵션 삭제                 | `DELETE` | `/api/options/{option_id}`  | `Content-Type: application/json`                    | `Status: 200 OK`             | 지정된 ID의 옵션을 삭제합니다.             |
 
 
 <details>
