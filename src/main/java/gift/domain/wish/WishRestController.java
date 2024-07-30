@@ -1,15 +1,18 @@
 package gift.domain.wish;
 
-import gift.domain.wish.dto.WishDTO;
+import static org.springframework.data.domain.Sort.Direction.*;
+
 import gift.domain.member.dto.LoginInfo;
+import gift.domain.wish.dto.WishPageResponse;
+import gift.domain.wish.dto.WishResponse;
 import gift.global.resolver.Login;
 import gift.global.response.ResponseMaker;
-import gift.global.response.ResultResponseDto;
 import gift.global.response.SimpleResultResponseDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import java.util.List;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,7 +26,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/api/members/wishes")
+@RequestMapping("/api/wishes")
 @Tag(name = "Wish", description = "Wish API")
 public class WishRestController {
 
@@ -37,38 +40,14 @@ public class WishRestController {
     /**
      * 장바구니에 상품 담기
      */
-    @PostMapping("/{productId}")
-    @Operation(summary = "장바구니에 상품 담기")
-    public ResponseEntity<ResultResponseDto<Integer>> addWish(
+    @PostMapping("/products/{productId}")
+    @Operation(summary = "위시 리스트 상품 추가")
+    public ResponseEntity addWish(
         @Parameter(description = "상품 ID") @PathVariable("productId") Long productId,
         @Parameter(description = "로그인 유저 정보") @Login LoginInfo loginInfo
     ) {
-        int currentCount = wishService.addWish(loginInfo.getId(), productId);
-
-        return ResponseMaker.createResponse(HttpStatus.OK, currentCount);
-    }
-
-    /**
-     * 장바구니 조회 - 페이징(매개변수별)
-     */
-    @GetMapping
-    @Operation(summary = "장바구니 조회 - 페이징")
-    public ResponseEntity<ResultResponseDto<List<WishDTO>>> getProductsInWishByUserIdAndPageAndSort(
-        @Parameter(description = "페이지 번호") @RequestParam(value = "page", defaultValue = "0") int page,
-        @Parameter(description = "정렬 기준") @RequestParam(value = "sort", defaultValue = "id_asc") String sort,
-        @Parameter(description = "로그인 유저 정보") @Login LoginInfo loginInfo
-    ) {
-        int size = 10; // default
-        Sort sortObj = getSortObject(sort);
-
-        List<WishDTO> wishDTOS = wishService.getProductsInWishByMemberIdAndPageAndSort(
-            loginInfo.getId(),
-            page,
-            size,
-            sortObj
-        );
-
-        return ResponseMaker.createResponse(HttpStatus.OK, wishDTOS);
+        wishService.addWish(loginInfo.getId(), productId);
+        return ResponseEntity.ok().build();
     }
 
     /**
@@ -76,45 +55,57 @@ public class WishRestController {
      */
     @DeleteMapping("/{wishId}")
     @Operation(summary = "장바구니 상품 삭제")
-    public ResponseEntity<SimpleResultResponseDto> deleteWish(
+    public ResponseEntity deleteWish(
         @Parameter(description = "장바구니 상품(Wish) ID") @PathVariable("wishId") Long wishId,
         @Parameter(description = "로그인 유저 정보") @Login LoginInfo loginInfo
     ) {
         wishService.deleteWish(wishId);
+        return ResponseEntity.ok().build();
+    }
 
-        return ResponseMaker.createSimpleResponse(HttpStatus.OK);
+    /**
+     * 장바구니 조회 - 페이징(매개변수별)
+     */
+    @GetMapping
+    @Operation(summary = "장바구니 조회 - 페이징")
+    public ResponseEntity<WishPageResponse> getProductsInWishByUserIdAndPageAndSort(
+        @Parameter(description = "페이지 번호") @RequestParam(value = "page", defaultValue = "0") int page,
+        @Parameter(description = "페이지 크기") @RequestParam(value = "size", defaultValue = "10") int size,
+        @Parameter(description = "정렬 기준") @RequestParam(value = "sort", defaultValue = "createdDate_desc") String sort,
+        @Parameter(description = "로그인 유저 정보") @Login LoginInfo loginInfo
+    ) {
+        Sort sortObj = getSortObject(sort);
+        PageRequest pageRequest = PageRequest.of(page, size, sortObj);
+
+        WishPageResponse wishPageResponse = wishService.getProductsInWish(loginInfo.getId(),
+            pageRequest);
+        return ResponseEntity.ok(wishPageResponse);
     }
 
     /**
      * 장바구니 상품 수량 변경
      */
-    // TODO Wish 에 userId, productId, + 상품 정보까지 담는걸로
-    // 안그러면 productId 로 다시 상품 정보를 불러와야 함..페이징할때도 wish 에서 바로 할 수 있으니 나을 것 같다
     @PutMapping("/{wishId}")
     @Operation(summary = "장바구니 상품 수량 변경")
-    public ResponseEntity<SimpleResultResponseDto> updateWish(
+    public ResponseEntity<SimpleResultResponseDto> updateWishCount(
         @Parameter(description = "장바구니 상품(Wish) ID") @PathVariable("wishId") Long wishId,
         @Parameter(description = "변경할 상품 수량") @RequestParam("count") int count,
         @Parameter(description = "로그인 유저 정보") @Login LoginInfo loginInfo
     ) {
-        int modifiedCount = wishService.updateWish(wishId, count);
-
-        return ResponseMaker.createSimpleResponse(HttpStatus.OK);
+        wishService.updateWishCount(wishId, count);
+        return ResponseEntity.ok().build();
     }
 
-    // TODO 페이징 기준을 wish 에 맞춰서 수정해야함.. 간단한건 생성날짜? <- 추가 속성 필요
     private Sort getSortObject(String sort) {
         switch (sort) {
             case "price_asc":
-                return Sort.by(Sort.Direction.ASC, "price");
+                return Sort.by(ASC, "price");
             case "price_desc":
-                return Sort.by(Sort.Direction.DESC, "price");
-            case "name_asc":
-                return Sort.by(Sort.Direction.ASC, "name");
-            case "name_desc":
-                return Sort.by(Sort.Direction.DESC, "name");
+                return Sort.by(DESC, "price");
+            case "createdDate_asc":
+                return Sort.by(ASC, "createdDate");
             default:
-                return Sort.by(Sort.Direction.ASC, "id");
+                return Sort.by(DESC, "createdDate");
         }
     }
 }

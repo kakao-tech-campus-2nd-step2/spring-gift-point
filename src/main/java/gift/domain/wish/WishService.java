@@ -1,20 +1,20 @@
 package gift.domain.wish;
 
+import gift.domain.member.JpaMemberRepository;
 import gift.domain.member.Member;
-import gift.domain.wish.dto.WishDTO;
 import gift.domain.option.JpaOptionRepository;
 import gift.domain.option.Option;
 import gift.domain.product.JpaProductRepository;
 import gift.domain.product.Product;
-import gift.domain.member.JpaMemberRepository;
-import gift.global.exception.wish.WishNotFoundException;
+import gift.domain.wish.dto.WishPageResponse;
+import gift.domain.wish.dto.WishResponse;
 import gift.global.exception.product.ProductNotFoundException;
 import gift.global.exception.user.MemberNotFoundException;
+import gift.global.exception.wish.WishNotFoundException;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -42,7 +42,7 @@ public class WishService {
      * 장바구니에 상품 ID 추가
      */
     @Transactional
-    public int addWish(Long memberId, Long productId) {
+    public void addWish(Long memberId, Long productId) {
         Member member = userRepository.findById(memberId)
             .orElseThrow(() -> new MemberNotFoundException(memberId));
         Product product = productRepository.findById(productId)
@@ -52,38 +52,37 @@ public class WishService {
         Optional<Wish> findWish = wishRepository.findByMemberIdAndProductId(memberId,
             productId);
         if (findWish.isPresent()) {
-            return findWish.get().addOneMore();
+            findWish.get().addOneMore();
+            return;
         }
         // 기존에 없었으면 new
         Wish newWish = new Wish(member, product);
         wishRepository.save(newWish);
-        return newWish.getCount();
     }
 
     /**
      * 장바구니 상품 조회 - 페이징(매개변수별)
      */
-    public List<WishDTO> getProductsInWishByMemberIdAndPageAndSort(Long memberId, int page,
-        int size, Sort sort) {
-        PageRequest pageRequest = PageRequest.of(page, size, sort);
-
+    public WishPageResponse getProductsInWish(Long memberId, PageRequest pageRequest) {
         Page<Wish> wishesPage = wishRepository.findAllByMemberId(memberId,
             pageRequest);
 
-        List<WishDTO> wishDTOS = wishesPage.getContent().stream()
-            .map(wish -> {
-                return new WishDTO(wish);
-            })
+        boolean hasNext = wishesPage.hasNext();
+        List<WishResponse> wishesResponse = wishesPage.getContent().stream()
+            .map(wish -> wish.toWishResponse())
             .toList();
 
         // 새 Page 객체 생성
-        return wishDTOS;
+        return new WishPageResponse(hasNext, wishesResponse);
     }
 
     /**
      * 장바구니 상품 삭제`
      */
     public void deleteWish(Long wishId) {
+        if (!wishRepository.existsById(wishId)) {
+            throw new WishNotFoundException(wishId);
+        }
         wishRepository.deleteById(wishId);
     }
 
@@ -91,12 +90,11 @@ public class WishService {
      * 장바구니 상품 수량 수정
      */
     @Transactional
-    public int updateWish(Long wishId, int count) {
+    public void updateWishCount(Long wishId, int count) {
         Wish findWish = wishRepository.findById(wishId)
             .orElseThrow(() -> new WishNotFoundException(wishId));
 
         findWish.updateCount(count); // 수량 수정
-        return count;
     }
 
     /**

@@ -1,7 +1,9 @@
 package gift.domain.wish;
 
+import gift.domain.BaseTimeEntity;
 import gift.domain.member.Member;
 import gift.domain.product.Product;
+import gift.domain.wish.dto.WishResponse;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -12,7 +14,7 @@ import jakarta.persistence.ManyToOne;
 import java.util.Objects;
 
 @Entity
-public class Wish {
+public class Wish extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -73,9 +75,8 @@ public class Wish {
                '}';
     }
 
-    public int addOneMore() {
+    public void addOneMore() {
         this.count += 1;
-        return count;
     }
 
     public void updateCount(int count) {
@@ -101,5 +102,15 @@ public class Wish {
     @Override
     public int hashCode() {
         return Objects.hash(id, member, product, count);
+    }
+
+    public WishResponse toWishResponse() {
+        return new WishResponse(
+            id,
+            product.getId(),
+            product.getName(),
+            product.getPrice(),
+            product.getImageUrl()
+        );
     }
 }

@@ -1,9 +1,15 @@
 package gift.domain.wish;
 
+import static org.springframework.data.domain.Sort.Direction.ASC;
+import static org.springframework.data.domain.Sort.Direction.DESC;
+
 import gift.domain.member.dto.LoginInfo;
-import gift.domain.wish.dto.WishDTO;
+import gift.domain.wish.dto.WishPageResponse;
+import gift.domain.wish.dto.WishResponse;
 import gift.global.resolver.Login;
+import io.swagger.v3.oas.annotations.Parameter;
 import java.util.List;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
@@ -27,34 +33,28 @@ public class WishController {
         Model model,
         @PageableDefault(page = 0, sort = "id_asc")
         @RequestParam(value = "page", defaultValue = "0") int page,
-        @RequestParam(value = "sort", defaultValue = "id_asc") String sort,
+        @RequestParam(value = "size", defaultValue = "10") int size,
+        @Parameter(description = "정렬 기준") @RequestParam(value = "sort", defaultValue = "createdDate_desc") String sort,
         @Login LoginInfo loginInfo) {
-        int size = 10; // default
         Sort sortObj = getSortObject(sort);
+        PageRequest pageRequest = PageRequest.of(page, size, sortObj);
+        WishPageResponse wishPageResponse = wishService.getProductsInWish(loginInfo.getId(),
+            pageRequest);
 
-        List<WishDTO> wishDTOS = wishService.getProductsInWishByMemberIdAndPageAndSort(
-            loginInfo.getId(),
-            page,
-            size,
-            sortObj
-        );
-
-        model.addAttribute("products", wishDTOS);
+        model.addAttribute("wishes", wishPageResponse);
         return "wish";
     }
 
     private Sort getSortObject(String sort) {
         switch (sort) {
             case "price_asc":
-                return Sort.by(Sort.Direction.ASC, "price");
+                return Sort.by(ASC, "price");
             case "price_desc":
-                return Sort.by(Sort.Direction.DESC, "price");
-            case "name_asc":
-                return Sort.by(Sort.Direction.ASC, "name");
-            case "name_desc":
-                return Sort.by(Sort.Direction.DESC, "name");
+                return Sort.by(DESC, "price");
+            case "createdDate_asc":
+                return Sort.by(ASC, "createdDate");
             default:
-                return Sort.by(Sort.Direction.ASC, "id");
+                return Sort.by(DESC, "createdDate");
         }
     }
 }
