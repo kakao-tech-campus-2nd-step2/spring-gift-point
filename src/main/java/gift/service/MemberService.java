@@ -3,6 +3,7 @@ package gift.service;
 import gift.domain.LoginType;
 import gift.domain.Member;
 import gift.dto.request.MemberRequest;
+import gift.dto.response.KakaoLoginResponse;
 import gift.dto.response.KakaoProfileResponse;
 import gift.dto.response.KakaoTokenResponse;
 import gift.exception.DuplicateMemberEmailException;
@@ -65,7 +66,7 @@ public class MemberService {
     }
 
     @Transactional
-    public Map<String, String> handleKakaoLogin(String code) {
+    public KakaoLoginResponse handleKakaoLogin(String code) {
         KakaoTokenResponse tokenResponse = kakaoAuthService.getKakaoToken(code);
         KakaoProfileResponse profileResponse = kakaoAuthService.getUserProfile(tokenResponse.accessToken());
 
@@ -85,12 +86,7 @@ public class MemberService {
 
         String accessToken = tokenService.saveToken(member, tokenResponse.accessToken());
 
-        Map<String, String> response = new HashMap<>();
-        response.put("authorizationCode", code);
-        response.put("accessToken", accessToken);
-        response.put("email", email);
-
-        return response;
+        return new KakaoLoginResponse(code, accessToken, email);
     }
 
 }

@@ -2,6 +2,7 @@ package gift.controller;
 
 import gift.domain.Member;
 import gift.dto.request.MemberRequest;
+import gift.dto.response.KakaoLoginResponse;
 import gift.service.MemberService;
 import gift.service.TokenService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -53,8 +54,8 @@ public class MemberController {
 
     @GetMapping("/kakao/login")
     @Operation(summary = "카카오 로그인 콜백", description = "카카오 API로 회원을 인증하고 토큰을 받는다.")
-    public ResponseEntity<Map<String, String>> kakaoCallback(@RequestParam String code) {
-        Map<String, String> response = memberService.handleKakaoLogin(code);
+    public ResponseEntity<KakaoLoginResponse> kakaoCallback(@RequestParam String code) {
+        KakaoLoginResponse response = memberService.handleKakaoLogin(code);
         return ResponseEntity.ok(response);
 
     }
