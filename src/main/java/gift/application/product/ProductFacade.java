@@ -4,10 +4,12 @@ import gift.application.product.dto.OptionCommand;
 import gift.application.product.dto.OptionCommand.Purchase;
 import gift.application.product.dto.OptionModel;
 import gift.application.product.dto.OptionModel.Info;
+import gift.application.product.dto.OptionModel.PurchaseInfo;
 import gift.application.product.dto.ProductCommand;
 import gift.application.product.dto.ProductModel;
 import gift.application.product.service.CategoryService;
 import gift.application.product.service.OptionService;
+import gift.application.product.service.OrdersService;
 import gift.application.product.service.ProductKakaoService;
 import gift.application.product.service.ProductService;
 
@@ -22,13 +24,16 @@ public class ProductFacade {
     private final OptionService optionService;
     private final ProductService productService;
     private final ProductKakaoService productKakaoService;
+    private final OrdersService ordersService;
 
     public ProductFacade(OptionService optionService,
         ProductService productService,
-        ProductKakaoService productKakaoService) {
+        ProductKakaoService productKakaoService,
+        OrdersService ordersService) {
         this.optionService = optionService;
         this.productService = productService;
         this.productKakaoService = productKakaoService;
+        this.ordersService = ordersService;
     }
 
     @Transactional
@@ -53,10 +58,11 @@ public class ProductFacade {
     }
 
 
-    public Info purchase(Long memberId, Purchase command) {
-        Info info = optionService.purchaseOption(command);
-        productKakaoService.sendPurchaseMessage(memberId, info.name());
-        return info;
+    public PurchaseInfo purchase(Long memberId, Purchase command) {
+        PurchaseInfo purchaseInfo = optionService.purchaseOption(command);
+        ordersService.saveOrders(memberId, purchaseInfo);
+        productKakaoService.sendPurchaseMessage(memberId, command.message());
+        return purchaseInfo;
     }
 
 }
