@@ -1,5 +1,6 @@
 package gift.repository;
 
+import gift.entity.Option;
 import gift.entity.OptionName;
 import gift.entity.Product;
 import gift.entity.ProductOption;
@@ -10,6 +11,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface ProductOptionRepository extends JpaRepository<ProductOption, Long> {
 
@@ -20,4 +22,7 @@ public interface ProductOptionRepository extends JpaRepository<ProductOption, Lo
     ProductOption findByIdWithLock(@Param("id") Long id);
 
     List<ProductOption> findByProduct(Product product);
+
+    @Query("SELECT po FROM ProductOption po WHERE po.product = :product AND po.option = :option")
+    Optional<ProductOption> findByProductAndOption(@Param("product") Product product, @Param("option") Option option);
 }

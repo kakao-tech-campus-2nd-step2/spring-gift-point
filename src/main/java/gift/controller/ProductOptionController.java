@@ -24,7 +24,7 @@ public class ProductOptionController {
     @PostMapping("/{productId}/options")
     @Operation(summary = "상품 옵션 추가", description = "새로운 상품 옵션을 추가합니다.")
     public ResponseEntity<ProductOptionResponseDto> addProductOption(@PathVariable Long productId, @RequestBody ProductOptionRequestDto productOptionRequestDto) {
-        ProductOptionResponseDto createdProductOption = productOptionService.addProductOption(productOptionRequestDto);
+        ProductOptionResponseDto createdProductOption = productOptionService.addProductOption(productId, productOptionRequestDto);
         return new ResponseEntity<>(createdProductOption, HttpStatus.CREATED);
     }
 
@@ -35,17 +35,17 @@ public class ProductOptionController {
         return new ResponseEntity<>(productOptions, HttpStatus.OK);
     }
 
-    @PutMapping("/options/{id}")
+    @PutMapping("/{productId}/options/{optionId}")
     @Operation(summary = "상품 옵션 수정", description = "기존 상품 옵션을 수정합니다.")
-    public ResponseEntity<ProductOptionResponseDto> updateProductOption(@PathVariable Long id, @RequestBody ProductOptionRequestDto productOptionRequestDto) {
-        ProductOptionResponseDto updatedProductOption = productOptionService.updateProductOption(id, productOptionRequestDto);
+    public ResponseEntity<ProductOptionResponseDto> updateProductOption(@PathVariable Long productId, @PathVariable Long optionId, @RequestBody ProductOptionRequestDto productOptionRequestDto) {
+        ProductOptionResponseDto updatedProductOption = productOptionService.updateProductOption(productId, optionId, productOptionRequestDto);
         return new ResponseEntity<>(updatedProductOption, HttpStatus.OK);
     }
 
-    @DeleteMapping("/options/{id}")
+    @DeleteMapping("/{productId}/options/{optionId}")
     @Operation(summary = "상품 옵션 삭제", description = "기존 상품 옵션을 삭제합니다.")
-    public ResponseEntity<Void> deleteProductOption(@PathVariable Long id) {
-        productOptionService.deleteProductOption(id);
+    public ResponseEntity<Void> deleteProductOption(@PathVariable Long productId, @PathVariable Long optionId) {
+        productOptionService.deleteProductOption(productId, optionId);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }

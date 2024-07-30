@@ -3,6 +3,7 @@ package gift.service;
 import gift.dto.ProductOptionRequestDto;
 import gift.dto.ProductOptionResponseDto;
 import gift.entity.Option;
+import gift.entity.OptionName;
 import gift.entity.Product;
 import gift.entity.ProductOption;
 import gift.exception.BusinessException;
@@ -32,13 +33,16 @@ public class ProductOptionService {
     }
 
     @Transactional
-    public ProductOptionResponseDto addProductOption(ProductOptionRequestDto requestDto) {
-        Product product = getProductById(requestDto.getProductId());
-        Option option = getOptionById(requestDto.getOptionId());
+    public ProductOptionResponseDto addProductOption(Long productId, ProductOptionRequestDto requestDto) {
+        Product product = getProductById(productId);
+        OptionName optionName = requestDto.getOptionName();
 
-        boolean isDuplicateOption = productOptionRepository.existsByProductAndOptionName(product, option.getName());
+        Option option = optionRepository.findByName(optionName)
+                .orElseGet(() -> optionRepository.save(new Option(optionName)));
+
+        boolean isDuplicateOption = productOptionRepository.existsByProductAndOptionName(product, optionName);
         if (isDuplicateOption) {
-            throw new BusinessException(ErrorCode.DUPLICATE_OPTION, " 옵션 : " + option.getName().getValue());
+            throw new BusinessException(ErrorCode.DUPLICATE_OPTION, " 옵션 : " + optionName.getValue());
         }
 
         ProductOption productOption = new ProductOption(product, option, requestDto.getQuantity());
@@ -57,16 +61,30 @@ public class ProductOptionService {
     }
 
     @Transactional
-    public ProductOptionResponseDto updateProductOption(Long id, ProductOptionRequestDto productOptionRequestDto) {
-        ProductOption productOption = getProductOptionById(id);
-        productOption.updateQuantity(productOptionRequestDto.getQuantity());
+    public ProductOptionResponseDto updateProductOption(Long productId, Long productOptionId, ProductOptionRequestDto productOptionRequestDto) {
+        ProductOption productOption = getProductOptionById(productOptionId);
+
+        if (!productOption.getProduct().getId().equals(productId)) {
+            throw new BusinessException(ErrorCode.PRODUCT_OPTION_NOT_FOUND, "Product ID: " + productId + ", Product Option ID: " + productOptionId);
+        }
+
+        OptionName optionName = productOptionRequestDto.getOptionName();
+        Option option = optionRepository.findByName(optionName)
+                .orElseGet(() -> optionRepository.save(new Option(optionName)));
+
+        productOption.update(option, productOptionRequestDto.getQuantity());
         productOptionRepository.save(productOption);
         return ProductOptionMapper.toProductOptionResponseDto(productOption);
     }
 
     @Transactional
-    public void deleteProductOption(Long id) {
-        ProductOption productOption = getProductOptionById(id);
+    public void deleteProductOption(Long productId, Long productOptionId) {
+        ProductOption productOption = getProductOptionById(productOptionId);
+
+        if (!productOption.getProduct().getId().equals(productId)) {
+            throw new BusinessException(ErrorCode.PRODUCT_OPTION_NOT_FOUND, "Product ID: " + productId + ", Product Option ID: " + productOptionId);
+        }
+
         productOptionRepository.delete(productOption);
     }
 
@@ -84,11 +102,6 @@ public class ProductOptionService {
     private Product getProductById(Long id) {
         return productRepository.findById(id)
                 .orElseThrow(() -> new BusinessException(ErrorCode.PRODUCT_NOT_FOUND, "ID: " + id));
-    }
-
-    private Option getOptionById(Long id) {
-        return optionRepository.findById(id)
-                .orElseThrow(() -> new BusinessException(ErrorCode.OPTION_NOT_FOUND, "ID: " + id));
     }
 
     private ProductOption getProductOptionById(Long id) {

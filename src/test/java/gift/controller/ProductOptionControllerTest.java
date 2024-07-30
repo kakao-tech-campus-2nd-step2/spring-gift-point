@@ -66,18 +66,12 @@ public class ProductOptionControllerTest {
         return productRepository.save(new Product(new ProductName(productRequestDto.getName()), productRequestDto.getPrice(), productRequestDto.getImageUrl(), categoryRepository.findById(categoryId).get())).getId();
     }
 
-    private Long createOption(String optionName) {
-        OptionRequestDto optionRequestDto = new OptionRequestDto(optionName);
-        return optionRepository.save(new Option(new OptionName(optionRequestDto.getName()))).getId();
-    }
-
     @Test
     public void 상품_옵션_추가_성공() {
         Long categoryId = createCategory();
         Long productId = createProduct(categoryId);
-        Long optionId = createOption("옵션1");
 
-        ProductOptionRequestDto requestDto = new ProductOptionRequestDto(productId, optionId, 10);
+        ProductOptionRequestDto requestDto = new ProductOptionRequestDto(new OptionName("옵션1"), 10);
 
         given()
                 .contentType(ContentType.JSON)
@@ -95,11 +89,9 @@ public class ProductOptionControllerTest {
     public void 상품_옵션_조회_성공() {
         Long categoryId = createCategory();
         Long productId = createProduct(categoryId);
-        Long optionId1 = createOption("옵션1");
-        Long optionId2 = createOption("옵션2");
 
-        productOptionService.addProductOption(new ProductOptionRequestDto(productId, optionId1, 10));
-        productOptionService.addProductOption(new ProductOptionRequestDto(productId, optionId2, 20));
+        productOptionService.addProductOption(productId, new ProductOptionRequestDto(new OptionName("옵션1"), 10));
+        productOptionService.addProductOption(productId, new ProductOptionRequestDto(new OptionName("옵션2"), 20));
 
         given()
                 .when()
@@ -116,17 +108,15 @@ public class ProductOptionControllerTest {
     public void 상품_옵션_수정_성공() {
         Long categoryId = createCategory();
         Long productId = createProduct(categoryId);
-        Long optionId = createOption("옵션1");
+        ProductOptionResponseDto createdProductOption = productOptionService.addProductOption(productId, new ProductOptionRequestDto(new OptionName("옵션1"), 10));
 
-        ProductOptionResponseDto createdProductOption = productOptionService.addProductOption(new ProductOptionRequestDto(productId, optionId, 10));
-
-        ProductOptionRequestDto updateDto = new ProductOptionRequestDto(productId, optionId, 20);
+        ProductOptionRequestDto updateDto = new ProductOptionRequestDto(new OptionName("옵션1"), 20);
 
         given()
                 .contentType(ContentType.JSON)
                 .body(updateDto)
                 .when()
-                .put("/api/products/options/" + createdProductOption.getId())
+                .put("/api/products/" + productId + "/options/" + createdProductOption.getId())
                 .then()
                 .statusCode(HttpStatus.OK.value())
                 .body("quantity", equalTo(20));
@@ -136,13 +126,11 @@ public class ProductOptionControllerTest {
     public void 상품_옵션_삭제_성공() {
         Long categoryId = createCategory();
         Long productId = createProduct(categoryId);
-        Long optionId = createOption("옵션1");
-
-        ProductOptionResponseDto createdProductOption = productOptionService.addProductOption(new ProductOptionRequestDto(productId, optionId, 10));
+        ProductOptionResponseDto createdProductOption = productOptionService.addProductOption(productId, new ProductOptionRequestDto(new OptionName("옵션1"), 10));
 
         given()
                 .when()
-                .delete("/api/products/options/" + createdProductOption.getId())
+                .delete("/api/products/" + productId + "/options/" + createdProductOption.getId())
                 .then()
                 .statusCode(HttpStatus.NO_CONTENT.value());
     }
