@@ -73,7 +73,7 @@
         const userId = document.getElementById('userId').value;
 
         if (userId) {
-            fetch(`/api/users/${userId}`)
+            fetch(`/api/members/${userId}`)
                 .then(response => response.json())
                 .then(user => {
                     document.getElementById('email').value = user.email || '';
@@ -90,7 +90,7 @@
         const email = document.getElementById('email').value;
         const password = document.getElementById('password').value;
 
-        fetch(`/api/users/${userId}`, {
+        fetch(`/api/members/${userId}`, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json'
