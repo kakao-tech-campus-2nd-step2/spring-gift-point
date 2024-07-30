@@ -9,7 +9,7 @@ public class PageRequestDTO {
 
     public PageRequestDTO(int page, String sortBy, String sortOrder) {
         this.page = page;
-        this.size = 10;
+        this.size = 20;
         this.sort = getSort(sortBy, sortOrder);
     }
 
