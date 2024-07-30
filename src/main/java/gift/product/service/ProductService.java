@@ -70,12 +70,9 @@ public class ProductService {
         Long productId = product.getId();
         productDTO.getOptionDTOList().forEach(optionDTO -> optionDTO.setProductId(productId));
 
-        ProductDTO response = updateProduct(product.getId(), productDTO);
-        optionService.saveAll(productDTO.getOptionDTOList());
-        return response;
+        return updateProduct(product.getId(), productDTO);
     }
 
-    @Transactional
     public ProductDTO updateProduct(Long id, @Valid ProductDTO productDTO) {
         System.out.println("update");
         Category category = categoryRepository.findById(productDTO.getCategoryId())
