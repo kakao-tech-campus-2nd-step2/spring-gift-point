@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>Edit Product</title>
+</head>
+<body>
+<h1>Edit Product</h1>
+<form th:action="@{/products/{id}(id=${product.id})}" th:object="${product}" method="post">
+  <input type="hidden" name="_method" value="put"/>
+  <div>
+    <label>Name:</label>
+    <input type="text" th:field="*{name}" />
+    <span th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></span>
+  </div>
+  <div>
+    <label>Image URL:</label>
+    <input type="text" th:field="*{imageUrl}" />
+    <span th:if="${#fields.hasErrors('imageUrl')}" th:errors="*{imageUrl}"></span>
+  </div>
+  <div>
+    <label>Price:</label>
+    <input type="text" th:field="*{price}" />
+    <span th:if="${#fields.hasErrors('price')}" th:errors="*{price}"></span>
+  </div>
+  <div>
+    <button type="submit">Update</button>
+  </div>
+</form>
+</body>
+</html>
