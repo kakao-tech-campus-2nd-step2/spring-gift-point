@@ -74,24 +74,6 @@ public class ProductService {
                 .orElseThrow(() -> new NoSuchElementException("존재하지 않는 상품입니다."));
     }
 
-    public void updateProductCategoryToNone(Long id) {
-        Category category = getCategoryById(id);
-        Category noneCategory = getCategoryById(1L);
-
-        List<Product> products = productRepository.findByCategory(category);
-        for (Product product : products) {
-            Product updateProduct = new Product(
-                    product.getId(),
-                    product.getName(),
-                    product.getPrice(),
-                    product.getImageUrl(),
-                    noneCategory,
-                    product.getOptions()
-            );
-            productRepository.save(updateProduct);
-        }
-    }
-
     private Category getCategoryById(Long categoryId) {
         return categoryRepository.findById(categoryId)
                 .orElseThrow(() -> new NoSuchElementException("존재하지 않는 카테고리입니다."));

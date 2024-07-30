@@ -39,7 +39,6 @@ public class OrderController {
     public ResponseEntity<Order> createOrder(@RequestBody @Valid OrderDto orderDto,
                                              @RequestHeader(HttpHeaders.AUTHORIZATION) String authHeader) {
         String token = authHeader.substring(7);
-        memberService.isTokenBlacklisted(token);
         Member member = memberService.findByActiveToken(token);
         Order order = orderService.createOrder(orderDto, member.getId());
         return ResponseEntity.status(201).body(order);
@@ -48,10 +47,7 @@ public class OrderController {
     @GetMapping
     @Operation(summary = "모든 주문 조회", description = "모든 주문을 조회합니다.")
     public ResponseEntity<Page<Order>> getAllOrders(
-            @RequestHeader(HttpHeaders.AUTHORIZATION) String authHeader,
             @PageableDefault(sort = "id", direction = Sort.Direction.ASC) Pageable pageable) {
-        String token = authHeader.substring(7);
-        memberService.isTokenBlacklisted(token);
         Page<Order> orderPage = orderService.getOrders(pageable);
         return ResponseEntity.ok(orderPage);
     }

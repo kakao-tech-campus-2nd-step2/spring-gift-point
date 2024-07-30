@@ -3,7 +3,6 @@ package gift.controller;
 import gift.model.Member;
 import gift.model.Wishlist;
 import gift.repository.MemberRepository;
-import gift.service.MemberService;
 import gift.service.WishlistService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -30,12 +29,10 @@ import java.net.URI;
 public class WishlistController {
     private final WishlistService wishlistService;
     private final MemberRepository memberRepository;
-    private final MemberService memberService;
 
-    public WishlistController(WishlistService wishlistService, MemberRepository memberRepository, MemberService memberService) {
+    public WishlistController(WishlistService wishlistService, MemberRepository memberRepository) {
         this.wishlistService = wishlistService;
         this.memberRepository = memberRepository;
-        this.memberService = memberService;
     }
 
     @GetMapping
@@ -44,7 +41,6 @@ public class WishlistController {
             @RequestHeader(HttpHeaders.AUTHORIZATION) String authHeader,
             @PageableDefault(sort = {"id"}, direction = Sort.Direction.ASC) Pageable pageable) {
         String token = authHeader.substring(7);
-        memberService.isTokenBlacklisted(token);
         Member member = memberRepository.findByActiveToken(token)
                 .orElseThrow(() -> new RuntimeException("Invalid token"));
         Page<Wishlist> wishlistPage = wishlistService.getWishlist(member.getId(), pageable);
@@ -55,7 +51,6 @@ public class WishlistController {
     @Operation(summary = "상품 id로 위시리스트 추가", description = "상품 id로 위시리스트 추가합니다.")
     public ResponseEntity<Void> addProductToWishlist(@RequestHeader(HttpHeaders.AUTHORIZATION) String authHeader, @PathVariable Long productId) {
         String token = authHeader.substring(7);
-        memberService.isTokenBlacklisted(token);
         Member member = memberRepository.findByActiveToken(token)
                 .orElseThrow(() -> new RuntimeException("Invalid token"));
         wishlistService.addProductToWishlist(member.getId(), productId);
@@ -66,7 +61,6 @@ public class WishlistController {
     @Operation(summary = "상품 id로 위시리스트 삭제", description = "상품 id로 위시리스트 삭제합니다.")
     public ResponseEntity<Void> removeProductFromWishlist(@RequestHeader(HttpHeaders.AUTHORIZATION) String authHeader, @PathVariable Long productId) {
         String token = authHeader.substring(7);
-        memberService.isTokenBlacklisted(token);
         Member member = memberRepository.findByActiveToken(token)
                 .orElseThrow(() -> new RuntimeException("Invalid token"));
         wishlistService.removeProductFromWishlist(member.getId(), productId);
