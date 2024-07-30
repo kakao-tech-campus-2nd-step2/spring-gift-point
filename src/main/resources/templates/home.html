@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Home Page</title>
+</head>
+<body>
+<h1 th:text="${message}">Welcome to the Home Page!</h1>
+<p>Access Token: <span th:text="${accessToken}"></span></p>
+<div id="myInfo"></div>
+<button id="sendMessageButton" style="display:none;">Send Message to Me</button>
+
+<script>
+    document.getElementById('getInfoButton').addEventListener('click', function() {
+        fetch('/sendmessage', {
+            method: 'POST',
+            headers: {
+                'Authorization': 'Bearer ' + document.querySelector('span[th\\:text="${accessToken}"]').textContent,
+                'Content-Type': 'application/json'
+            }
+        })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then(data => {
+                document.getElementById('myInfo').textContent = JSON.stringify(data);
+                document.getElementById('sendMessageButton').style.display = 'block';
+                alert('Message sent: ' + JSON.stringify(data));
+            })
+            .catch(error => {
+                console.error('There was a problem with the fetch operation:', error);
+            });
+    });
+</script>
+</body>
+</html>
