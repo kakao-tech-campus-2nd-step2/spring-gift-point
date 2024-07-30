@@ -1,8 +1,5 @@
 package gift.api.product.controller;
 
-import gift.api.option.dto.OptionRequest;
-import gift.api.option.dto.OptionResponse;
-import gift.api.option.service.OptionService;
 import gift.api.product.dto.ProductRequest;
 import gift.api.product.dto.ProductResponse;
 import gift.api.product.service.ProductService;
@@ -28,11 +25,9 @@ import org.springframework.web.bind.annotation.RestController;
 public class ProductController {
 
     private final ProductService productService;
-    private final OptionService optionService;
 
-    public ProductController(ProductService productService, OptionService optionService) {
+    public ProductController(ProductService productService) {
         this.productService = productService;
-        this.optionService = optionService;
     }
 
     @GetMapping()
@@ -60,19 +55,5 @@ public class ProductController {
     public ResponseEntity<Void> delete(@PathVariable("id") Long id) {
         productService.delete(id);
         return ResponseEntity.noContent().build();
-    }
-
-    @GetMapping("/{id}/options")
-    @Operation(summary = "옵션 조회", description = "상품 옵션 조회")
-    public ResponseEntity<List<OptionResponse>> getOptions(@PathVariable("id") Long productId) {
-        return ResponseEntity.ok().body(optionService.getOptions(productId));
-    }
-
-    @PostMapping("/{id}/options")
-    @Operation(summary = "옵션 추가", description = "상품 옵션 추가")
-    public ResponseEntity<Void> addOption(@PathVariable("id") Long id,
-                                    @RequestBody OptionRequest optionRequest) {
-        optionService.add(id, optionRequest);
-        return ResponseEntity.created(URI.create("/api/products/" + id)).build();
     }
 }
