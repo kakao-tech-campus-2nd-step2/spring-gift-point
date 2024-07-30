@@ -11,8 +11,6 @@ import gift.model.Product;
 import gift.repository.OptionRepository;
 import gift.repository.ProductRepository;
 import java.util.List;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -41,28 +39,29 @@ public class OptionService {
         return option.getId();
     }
 
-    public PageResponse<OptionResponse> getAllProductOptions(Long productId, Pageable pageable) {
-        Page<Option> optionList = optionRepository.findAllByProductId(productId, pageable);
-        List<OptionResponse> responses = optionList.getContent().stream().map(OptionResponse::from)
-            .toList();
-        return PageResponse.from(responses, optionList);
+    public OptionResponse.InfoList getAllProductOptions(Long productId) {
+        Product product = productRepository.findByProductId(productId)
+            .orElseThrow(() -> new ProductException(ErrorCode.PRODUCT_NOT_FOUND));
+        List<Option> options = product.getOptions();
+
+        return OptionResponse.InfoList.from(options);
     }
 
-    public OptionResponse findOption(Long id) {
+    public OptionResponse.Info findOption(Long id) {
         Option option = optionRepository.findById(id)
             .orElseThrow(() -> new OptionException(ErrorCode.OPTION_NOT_FOUND));
-        return OptionResponse.from(option);
+        return OptionResponse.Info.from(option);
     }
 
     @Transactional
-    public OptionResponse updateOption(Long productId, Long optionId,
+    public OptionResponse.Info updateOption(Long productId, Long optionId,
         OptionRequest.Update request) {
         Option option = optionRepository.findById(optionId)
             .orElseThrow(() -> new OptionException(ErrorCode.OPTION_NOT_FOUND));
         Product product = option.getProduct();
         product.checkDuplicateName(request.name());
         option.updateOption(request.name(), request.quantity());
-        return OptionResponse.from(option);
+        return OptionResponse.Info.from(option);
     }
 
     @Transactional
