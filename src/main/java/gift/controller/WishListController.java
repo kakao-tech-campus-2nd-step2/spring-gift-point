@@ -70,7 +70,7 @@ public class WishListController {
     @GetMapping("/add")
     @Operation(summary = "Show add product form", description = "This API returns the form to add a new product to the wishlist.")
     public String showAddProductForm(Model model) {
-        model.addAttribute("productId", new Long(0));
+        model.addAttribute("productId", 0L);
         return "add_product_to_wishlist";
     }
 

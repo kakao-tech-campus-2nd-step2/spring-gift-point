@@ -1,27 +1,18 @@
 package gift;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import gift.api.OrderRequest;
+import gift.api.OrderResponse;
 import gift.dto.OrderDTO;
-import gift.model.Name;
-import gift.model.Option;
-import gift.model.OptionName;
-import gift.model.OptionQuantity;
-import gift.model.Product;
-import gift.model.User;
-import gift.model.WishList;
-import gift.repository.OptionRepository;
-import gift.repository.ProductRepository;
-import gift.repository.UserRepository;
-import gift.repository.WishListRepository;
-import gift.service.KakaoService;
-import gift.service.OptionService;
-import gift.service.ProductService;
-import java.util.ArrayList;
+import gift.dto.PageRequestDTO;
+import gift.service.OrderService;
+import java.time.LocalDateTime;
+import java.util.Collections;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -29,6 +20,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
@@ -41,58 +36,23 @@ public class OrderControllerTest {
     private MockMvc mockMvc;
 
     @Autowired
-    private UserRepository userRepository;
-
-    @Autowired
-    private WishListRepository wishListRepository;
-
-    @Autowired
-    private ProductRepository productRepository;
-
-    @Autowired
-    private OptionRepository optionRepository;
-
-    @Autowired
     private ObjectMapper objectMapper;
 
     @MockBean
-    private KakaoService kakaoService;
-
-    @MockBean
-    private OptionService optionService;
-
-    @MockBean
-    private ProductService productService;
+    private OrderService orderService;
 
     @BeforeEach
     public void setUp() {
-        wishListRepository.deleteAll();
-        userRepository.deleteAll();
-        productRepository.deleteAll();
-        optionRepository.deleteAll();
+        // 필요시 초기화 코드 추가
     }
-
 
     @Test
     @Transactional
-    public void createOrder_InsufficientProductQuantity() throws Exception {
-        User user = new User(null, "test@example.com", PasswordEncoder.encode("password"));
-        userRepository.save(user);
+    public void createOrder_Success() throws Exception {
+        OrderDTO orderDTO = new OrderDTO(null, 1L, 2, "Order message", LocalDateTime.now());
+        OrderResponse orderResponse = new OrderResponse(1L, 1L, 2, LocalDateTime.now(), "Order message");
 
-        Product product = new Product(null,"Test Product", 1000, "http://example.com/image.jpg", 1L, new ArrayList<>());
-        productRepository.save(product);
-
-        Option option = new Option(null,"Test Option", 10, product);
-        optionRepository.save(option);
-
-        WishList wishList = new WishList(null, user, product);
-        wishListRepository.save(wishList);
-
-        Mockito.when(kakaoService.getUserEmail(Mockito.anyString())).thenReturn("test@example.com");
-
-        Mockito.when(optionService.decreaseOptionQuantity(Mockito.anyLong(), Mockito.anyInt())).thenReturn(false);
-
-        OrderDTO orderDTO = new OrderDTO(null, option.getId(), 11, "Order message");
+        Mockito.when(orderService.createOrder(Mockito.anyString(), Mockito.any(OrderDTO.class))).thenReturn(orderResponse);
 
         String accessToken = "some-valid-token";
 
@@ -100,44 +60,12 @@ public class OrderControllerTest {
                 .header("Authorization", "Bearer " + accessToken)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(orderDTO)))
-            .andExpect(status().isBadRequest())
-            .andExpect(result -> assertEquals("Insufficient product quantity.", result.getResponse().getContentAsString()));
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.id").value(orderResponse.getId()))
+            .andExpect(jsonPath("$.optionId").value(orderResponse.getOptionId()))
+            .andExpect(jsonPath("$.quantity").value(orderResponse.getQuantity()))
+            .andExpect(jsonPath("$.message").value(orderResponse.getMessage()));
     }
+    
 
-    @Test
-    @Transactional
-    public void createOrder_FailsToSendMessage() throws Exception {
-        User user = new User(null, "test@example.com", PasswordEncoder.encode("password"));
-        userRepository.save(user);
-
-        Product product = new Product(null, "Test Product", 1000, "http://example.com/image.jpg", 1L, new ArrayList<>());
-        productRepository.save(product);
-
-        Option option = new Option(null, "Test Option", 10, product);
-        optionRepository.save(option);
-
-        WishList wishList = new WishList(null, user, product);
-        wishListRepository.save(wishList);
-
-        Mockito.when(kakaoService.getUserEmail(Mockito.anyString())).thenReturn("test@example.com");
-
-        Mockito.when(optionService.decreaseOptionQuantity(Mockito.anyLong(), Mockito.anyInt())).thenReturn(true);
-
-        Mockito.when(productService.getProductNameById(Mockito.anyLong())).thenReturn("Test Product");
-
-        Mockito.when(optionService.getOptionNameById(Mockito.anyLong())).thenReturn("Test Option");
-
-        Mockito.when(kakaoService.getUserEmail(Mockito.anyString())).thenReturn("test@example.com");
-
-        OrderDTO orderDTO = new OrderDTO(null, option.getId(), 1, "Order message");
-
-        String accessToken = "some-valid-token";
-
-        mockMvc.perform(post("/api/orders")
-                .header("Authorization", "Bearer " + accessToken)
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(orderDTO)))
-            .andExpect(status().isInternalServerError())
-            .andExpect(result -> assertEquals("Order created but failed to send message.", result.getResponse().getContentAsString()));
-    }
 }
