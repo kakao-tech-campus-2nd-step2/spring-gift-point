@@ -1,0 +1,49 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head> 
+    <title>index</title> 
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</head>
+<body>
+    <p>product_form page</p>
+    <form th:action="@{/api/products/new}" th:object="${product}" method="post">
+        <div>
+            <label>product name</label> 
+            <input type="text" id="productName" th:field="*{productName}"/> 
+            <div th:if="${#fields.hasErrors('productName')}" th:errors="*{productName}">product name Error</div>
+        </div>
+        <div>
+            <label>price</label>
+            <input type="number" name="price"/>
+        </div>
+        <div>
+            <label>imageUrl</label>
+            <input type="text" name="imageUrl"/> 
+        </div>
+        <div>
+            <label>category</label>
+            <select th:field="*{category}">
+                <option th:each="category : ${categories}" th:value="${category.name}" th:text="${category.name}"></option>
+            </select>
+        </div>
+        <p>Setting basic option</p>
+        <div>
+            <label>option name</label>
+            <input type="text" id="optionName" th:field="*{optionName}"/> 
+            <div th:if="${#fields.hasErrors('optionName')}" th:errors="*{optionName}">product name Error</div>
+
+        </div>
+        <div>
+            <label>quantity</label>
+            <input type="number" name="quantity"/>
+        </div>
+        <div>
+            <button type="submit">Save</button>
+        </div>
+    </form>
+    <div th:if="${errorMessage}">
+        <p th:text="${errorMessage}"></p>
+    </div>
+    <a href="/api/products">Back to Product List</a>
+</body>
+</html>
