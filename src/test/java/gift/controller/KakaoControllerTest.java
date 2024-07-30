@@ -49,7 +49,7 @@ class KakaoControllerTest {
     void login() throws Exception {
         //given
         String code = "test_code";
-        TokenResponse tokenResponse = new TokenResponse("test_access_token", "test_jwt");
+        TokenResponse tokenResponse = new TokenResponse("test_jwt");
 
         given(kakaoLoginService.processKakaoAuth(code)).willReturn(tokenResponse);
 
@@ -60,8 +60,7 @@ class KakaoControllerTest {
         //then
         result
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("accessToken").value(tokenResponse.getAccessToken()))
-                .andExpect(jsonPath("jwt").value(tokenResponse.getJwt()));
+                .andExpect(jsonPath("token").value(tokenResponse.getToken()));
 
         then(kakaoLoginService).should().processKakaoAuth(code);
     }

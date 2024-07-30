@@ -44,7 +44,7 @@ public class KakaoLoginService {
         Member kakaoMember = getKakaoMember(accessToken, refreshToken);
         String jwt = jwtProvider.create(kakaoMember);
 
-        return new TokenResponse(accessToken, jwt);
+        return new TokenResponse(jwt);
     }
 
     private Member getKakaoMember(String accessToken, String refreshToken) {
