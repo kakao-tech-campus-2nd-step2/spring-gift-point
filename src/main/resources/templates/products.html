@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>상품 관리 페이지</title>
+</head>
+<body>
+<h1>상품 관리 페이지</h1>
+
+<form th:action="@{/web/products}" method="post" enctype="application/x-www-form-urlencoded;charset=UTF-8">
+  <label for="name">상품 이름:</label>
+  <input type="text" id="name" name="name" required>
+
+  <label for="price">상품 가격:</label>
+  <input type="number" id="price" name="price" step="0.01" required>
+
+  <label for="imageUrl">이미지 URL :</label>
+  <input type="text" id="imageUrl" name="imageUrl">
+
+  <label for="description">상품 설명:</label>
+  <input type="text" id="description" name="description"><br><br>
+
+  <label for="category">카테고리:</label>
+  <select id="category" name="categoryName" required>
+    <option value="">Select Category</option>
+    <option th:each="category : ${categories}" th:value="${category.name}" th:text="${category.name}"></option>
+  </select><br><br>
+
+  <label for="optionNames">옵션 이름:</label>
+  <input type="text" id="optionNames" name="optionNames"><br><br>
+
+  <button type="submit">상품 추가</button>
+</form>
+
+<h2>상품 목록</h2>
+<form th:action="@{/web/products/delete}" method="post">
+  <table border="1" cellpadding="10" cellspacing="0" style="width: 100%; margin-top: 20px;">
+    <thead>
+    <tr>
+      <th>선택</th>
+      <th>상품 번호</th>
+      <th>상품 이름</th>
+      <th>상품 가격</th>
+      <th>이미지 URL</th>
+      <th>수정</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="product : ${products}">
+      <td><input type="checkbox" name="productIds" th:value="${product.id}"></td>
+      <td th:text="${product.id}"></td>
+      <td th:text="${product.name}"></td>
+      <td th:text="${product.price}"></td>
+      <td th:text="${product.imageUrl}"></td>
+      <td><a th:href="@{'/web/products/edit/' + ${product.id}}">수정</a></td>
+    </tr>
+    </tbody>
+  </table>
+  <button type="submit">선택 상품 삭제</button>
+</form>
+
+</body>
+</html>
