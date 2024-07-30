@@ -1,5 +1,6 @@
 package gift.entity;
 
+import gift.dto.ProductResponseDto;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -112,5 +113,15 @@ public class Product {
     public void removeOption(Option option) {
         options.remove(option);
         option.setProduct(null);
+    }
+
+    public ProductResponseDto toResponseDto() {
+        return new ProductResponseDto(
+            this.id,
+            this.name,
+            this.price,
+            this.imageUrl,
+            this.category.getId()
+        );
     }
 }
