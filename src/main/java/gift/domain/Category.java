@@ -20,12 +20,25 @@ public class Category extends TimeStamp {
     @Column(nullable = false)
     private String color;
 
+    @Column(nullable = false)
+    String imageUrl;
+
+    String description;
+
     public Category() {
     }
 
-    public Category(String name, String color) {
+    public Category(String name, String color, String imageUrl) {
         this.name = name;
         this.color = color;
+        this.imageUrl = imageUrl;
+    }
+
+    public Category(String name, String color, String imageUrl, String description) {
+        this.name = name;
+        this.color = color;
+        this.imageUrl = imageUrl;
+        this.description = description;
     }
 
     @OneToMany(mappedBy = "category")
@@ -40,6 +53,15 @@ public class Category extends TimeStamp {
     public String getColor() {
         return color;
     }
+
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
     public List<Product> getProducts() {
         return products;
     }
