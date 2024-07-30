@@ -27,7 +27,6 @@ public interface OrderSpecification {
                             )
                     )
             })
-    ResponseEntity<OrderResponse> order(@Parameter(hidden = true) @RequestAttribute("user") User user,
-                                        @Parameter(description = "주문할 상품의 ID") @PathVariable Long giftId,
+    ResponseEntity<OrderResponse.Info> order(@Parameter(hidden = true) @RequestAttribute("user") User user,
                                         @Valid @RequestBody OrderRequest.Create orderRequest);
 }

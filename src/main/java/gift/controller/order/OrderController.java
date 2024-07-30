@@ -2,6 +2,8 @@ package gift.controller.order;
 
 import gift.dto.order.OrderRequest;
 import gift.dto.order.OrderResponse;
+import gift.dto.paging.PagingRequest;
+import gift.dto.paging.PagingResponse;
 import gift.model.user.User;
 import gift.service.order.OrderService;
 import jakarta.validation.Valid;
@@ -20,12 +22,18 @@ public class OrderController implements OrderSpecification {
         this.orderService = orderService;
     }
 
-    @PostMapping("/{giftId}")
-    public ResponseEntity<OrderResponse> order(@RequestAttribute("user") User user,
-                                               @PathVariable Long giftId,
+    @PostMapping
+    public ResponseEntity<OrderResponse.Info> order(@RequestAttribute("user") User user,
                                                @Valid @RequestBody OrderRequest.Create orderRequest) {
-        OrderResponse orderResponse = orderService.order(user.getId(), giftId, orderRequest);
-        orderService.sendMessage(orderRequest, user, giftId);
+        OrderResponse.Info orderResponse = orderService.order(user.getId(), orderRequest.productId(), orderRequest);
+        orderService.sendMessage(orderRequest, user, orderRequest.productId());
         return ResponseEntity.ok(orderResponse);
+    }
+
+    @GetMapping
+    public ResponseEntity<PagingResponse<OrderResponse.DetailInfo>> getOrderList(@RequestAttribute("user") User user,
+                                                                                 @ModelAttribute PagingRequest pagingRequest){
+        PagingResponse<OrderResponse.DetailInfo> response = orderService.getOrderList(user.getId(),pagingRequest.getPage(),pagingRequest.getSize());
+        return ResponseEntity.ok(response);
     }
 }

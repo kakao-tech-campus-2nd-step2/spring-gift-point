@@ -3,6 +3,7 @@ package gift.service.order;
 import gift.common.enums.LoginType;
 import gift.dto.order.OrderRequest;
 import gift.dto.order.OrderResponse;
+import gift.dto.paging.PagingResponse;
 import gift.model.option.Option;
 import gift.model.order.Order;
 import gift.model.product.Product;
@@ -17,12 +18,14 @@ import gift.repository.wish.WishRepository;
 import gift.util.KakaoApiCaller;
 import gift.util.TokenUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.*;
 import org.springframework.orm.ObjectOptimisticLockingFailureException;
 import org.springframework.retry.annotation.Backoff;
 import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.NoSuchElementException;
 
 @Service
@@ -68,7 +71,7 @@ public class OrderService {
             maxAttempts = 50,
             backoff = @Backoff(delay = 200)
     )
-    public OrderResponse order(Long userId, Long giftId, OrderRequest.Create orderRequest) {
+    public OrderResponse.Info order(Long userId, Long giftId, OrderRequest.Create orderRequest) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("해당 유저를 찾을 수 없습니다."));
         user.checkLoginType(LoginType.KAKAO);
@@ -78,16 +81,25 @@ public class OrderService {
         Option option = optionRepository.findById(orderRequest.optionId())
                 .orElseThrow(() -> new NoSuchElementException("해당 옵션을 찾을 수 없습니다 id :  " + orderRequest.optionId()));
 
-        checkOptionInGift(product, orderRequest.optionId());
+        checkOptionInProduct(product, orderRequest.optionId());
         option.subtract(orderRequest.quantity());
         optionRepository.save(option);
 
         wishRepository.findByUserAndProduct(user, product)
                 .ifPresent(wish -> wishRepository.deleteById(wish.getId()));
 
-        Order order = new Order(option, orderRequest.quantity(), orderRequest.message());
+        Order order = new Order(product, option, orderRequest.quantity(), orderRequest.message());
         orderRepository.save(order);
-        return OrderResponse.fromEntity(order);
+        return OrderResponse.Info.fromEntity(order);
+    }
+
+    public PagingResponse<OrderResponse.DetailInfo> getOrderList(Long userId,int page,int size){
+        PageRequest pageRequest = PageRequest.of(page, size, Sort.by("id").ascending());
+        Page<Order> orders = orderRepository.findAll(pageRequest);
+        List<OrderResponse.DetailInfo> detailInfos = orders.stream()
+                .map(OrderResponse.DetailInfo::fromEntity)
+                .toList();
+        return new PagingResponse<>(page, detailInfos, size, orders.getTotalElements(), orders.getTotalPages());
     }
 
     public void sendMessage(OrderRequest.Create orderRequest, User user, Long giftId) {
@@ -102,7 +114,7 @@ public class OrderService {
         kakaoApiCaller.sendMessage(OAuthToken.getAccessToken(), message);
     }
 
-    public void checkOptionInGift(Product product, Long optionId) {
+    public void checkOptionInProduct(Product product, Long optionId) {
 
         if (!product.hasOption(optionId)) {
             throw new NoSuchElementException("해당 상품에 해당 옵션이 없습니다!");

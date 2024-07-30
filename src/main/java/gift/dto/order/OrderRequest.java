@@ -6,6 +6,8 @@ import jakarta.validation.constraints.NotNull;
 public class OrderRequest {
     public record Create(
             @NotNull
+            Long productId,
+            @NotNull
             Long optionId,
             @Min(1)
             @NotNull
