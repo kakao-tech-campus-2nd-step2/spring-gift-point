@@ -17,13 +17,10 @@ public class OptionService {
 
     private final OptionRepository optionRepository;
     private final ProductRepository productRepository;
-    private final ProductService productService;
 
-    public OptionService(OptionRepository optionRepository, ProductRepository productRepository,
-        ProductService productService) {
+    public OptionService(OptionRepository optionRepository, ProductRepository productRepository) {
         this.optionRepository = optionRepository;
         this.productRepository = productRepository;
-        this.productService = productService;
     }
 
     public List<OptionDTO> findAll(){
@@ -77,10 +74,10 @@ public class OptionService {
         return optionRepository.save(option);
     }
     public OptionDTO addOption(Long productId, Long optionId, OptionDTO optionDTO){
-        ProductDTO productDTO = productService.getProductDTOById(productId)
+        Product product = productRepository.findById(productId)
             .orElseThrow(() -> new IllegalArgumentException("productId" + productId + "가 없습니다."));
-        productDTO.getOptionDTOList().add(optionDTO);
-        productService.updateProduct(productId, productDTO);
+        product.getOptionList().add(convertToEntity(optionDTO));
+        productRepository.save(product);
 
         return convertToDTO(save(optionDTO));
     }

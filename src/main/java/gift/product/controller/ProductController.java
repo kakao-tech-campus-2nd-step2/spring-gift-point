@@ -19,6 +19,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.Mapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -29,7 +30,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api/products")
-@Tag(name = "Product")
+@Tag(name = "상품 API")
 public class ProductController {
 
     private final ProductService productService;
@@ -38,15 +39,6 @@ public class ProductController {
     public ProductController(ProductService productService, OptionService optionService) {
         this.productService = productService;
         this.optionService = optionService;
-    }
-
-    @GetMapping("")
-    @Operation(summary = "상품목록조회")
-    public ResponseEntity<Page<ProductDTO>> getAllProducts(@RequestParam(defaultValue = "0") int page,
-                                                        @RequestParam(defaultValue = "10") int size){
-        Pageable pageable = PageRequest.of(page, size);
-        Page<ProductDTO> productPages = productService.getAllProducts(pageable);
-        return new ResponseEntity<>(productPages, HttpStatus.OK);
     }
 
     @GetMapping("")
@@ -129,7 +121,7 @@ public class ProductController {
         return ResponseEntity.ok(optionDTO);
     }
 
-    @PostMapping("{productId}/options/{optionId}")
+    @PutMapping("{productId}/options/{optionId}")
     @Operation(summary = "상품 옵션 수정")
     public ResponseEntity<OptionDTO> updateOption(@PathVariable Long productId,
         @PathVariable Long optionId,
