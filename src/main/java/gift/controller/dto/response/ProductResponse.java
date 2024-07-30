@@ -8,19 +8,15 @@ import java.util.List;
 public class ProductResponse {
 
     public record Info(
-            Long id,
+            Long productId,
             String name,
             int price,
-            String imageUrl,
-            String category,
-            LocalDateTime createdAt,
-            LocalDateTime updatedAt
+            String imageUrl
     ) {
         public static Info from(Product product) {
             return new Info(
                     product.getId(), product.getName(), product.getPrice(),
-                    product.getImageUrl(), product.getCategory().getName(),
-                    product.getCreatedAt(), product.getUpdatedAt());
+                    product.getImageUrl());
         }
     }
 

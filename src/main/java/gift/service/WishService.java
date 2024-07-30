@@ -31,7 +31,7 @@ public class WishService {
     @Transactional
     public void update(WishRequest.UpdateWish request, Long memberId) {
         Wish wish = wishRepository.findByIdFetchJoin(request.id())
-                .orElseThrow(() -> new EntityNotFoundException("Wish with id " + request.id() + " Does not exist"));
+                .orElseThrow(() -> new EntityNotFoundException("Wish with productId " + request.id() + " Does not exist"));
         wish.checkWishByMemberId(memberId);
         wish.checkWishByProductId(request.productId());
         if (request.productCount() == 0) {
@@ -71,13 +71,13 @@ public class WishService {
 
     private void checkProductByProductId(Long productId) {
         if (!productRepository.existsById(productId)) {
-            throw new EntityNotFoundException("Product with id " + productId + " does not exist");
+            throw new EntityNotFoundException("Product with productId " + productId + " does not exist");
         }
     }
 
     private void checkDuplicateWish(Long productId, Long memberId) {
         if (wishRepository.existsByProductIdAndMemberId(productId, memberId)) {
-            throw new DuplicateDataException("Product with id " + productId + " already exists in wish", "Duplicate Wish");
+            throw new DuplicateDataException("Product with productId " + productId + " already exists in wish", "Duplicate Wish");
         }
     }
 }

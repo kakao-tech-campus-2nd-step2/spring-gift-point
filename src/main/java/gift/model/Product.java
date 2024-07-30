@@ -76,7 +76,7 @@ public class Product extends BasicEntity{
         return options.stream()
                 .filter(option -> option.getId().equals(optionId))
                 .findFirst()
-                .orElseThrow(() -> new EntityNotFoundException("Option with id " + optionId + " not found"));
+                .orElseThrow(() -> new EntityNotFoundException("Option with productId " + optionId + " not found"));
     }
 
     public void checkDuplicateOptionName(Long theirId, String theirName) {

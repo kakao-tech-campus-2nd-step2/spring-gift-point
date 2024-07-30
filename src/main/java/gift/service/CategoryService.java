@@ -35,14 +35,14 @@ public class CategoryService {
     @Transactional(readOnly = true)
     public CategoryResponse.Info findById(Long id) {
         return CategoryResponse.Info.from(categoryRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Category with id " + id + " not found")));
+                .orElseThrow(() -> new EntityNotFoundException("Category with productId " + id + " not found")));
     }
 
     @Transactional
     public void updateById(CategoryRequest.UpdateCategory request) {
         Category category = categoryRepository.findById(request.id())
                 .orElseThrow(() ->
-                        new EntityNotFoundException("Category with id " + request.id() + " not found"));
+                        new EntityNotFoundException("Category with productId " + request.id() + " not found"));
         category.updateCategory(request.name(), request.color(), request.imageUrl(), request.description());
     }
 

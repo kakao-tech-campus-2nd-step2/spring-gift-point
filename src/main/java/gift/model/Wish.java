@@ -41,7 +41,7 @@ public class Wish extends BasicEntity{
 
     public void checkWishByProductId(Long productId) {
         if (!containsProduct(productId)) {
-            throw new EntityNotFoundException("Product with id " + productId + " does not exist");
+            throw new EntityNotFoundException("Product with productId " + productId + " does not exist");
         }
     }
 

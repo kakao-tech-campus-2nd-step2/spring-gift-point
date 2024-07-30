@@ -37,10 +37,16 @@ public class ProductService {
     }
 
     @Transactional(readOnly = true)
-    public ProductResponse.WithOption findById(Long id) {
+    public ProductResponse.Info findById(Long id) {
+        Product product = productRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Product with productId " + id + " not found"));
+        return ProductResponse.Info.from(product);
+    }
+
+    @Transactional(readOnly = true)
+    public ProductResponse.WithOption findWIthOptionById(Long id) {
         Product product = productRepository.findAllByIdFetchJoin(id)
-                .orElseThrow(() ->
-                        new EntityNotFoundException("Product with id " + id + " not found"));
+                .orElseThrow(() -> new EntityNotFoundException("Product with productId " + id + " not found"));
         return ProductResponse.WithOption.from(product);
     }
 
@@ -50,7 +56,7 @@ public class ProductService {
                 optionRq -> new Option(optionRq.name(), optionRq.quantity())
         ).toList();
         Category category = categoryRepository.findById(request.categoryId())
-                .orElseThrow(() -> new EntityNotFoundException("Category with id " + request.categoryId() + " not found"));
+                .orElseThrow(() -> new EntityNotFoundException("Category with productId " + request.categoryId() + " not found"));
         Product product = productRepository.save(new Product(request.name(), request.price(), request.imageUrl(), category, options));
         return product.getId();
     }
@@ -58,7 +64,7 @@ public class ProductService {
     @Transactional
     public void updateProduct(UpdateProductDto request) {
         Product product = productRepository.findById(request.id())
-                .orElseThrow(() -> new EntityNotFoundException("Product with id " + request.id() + " not found"));
+                .orElseThrow(() -> new EntityNotFoundException("Product with productId " + request.id() + " not found"));
         Category category = categoryRepository.findById(request.categoryId())
                 .orElseThrow(() -> new EntityNotFoundException("Category with name " + request.categoryId() + " not found"));
         product.updateProduct(request.name(), request.price(), request.imageUrl(), category);
@@ -80,7 +86,7 @@ public class ProductService {
     @Transactional
     public void deleteByIdAndOptionId(Long id, Long optionId) {
         Product product = productRepository.findProductAndOptionByIdFetchJoin(id)
-                .orElseThrow(() -> new EntityNotFoundException("Product with id " + id + " not found"));
+                .orElseThrow(() -> new EntityNotFoundException("Product with productId " + id + " not found"));
         Option option = product.findOptionByOptionId(optionId);
         product.subOption(option);
     }
@@ -88,7 +94,7 @@ public class ProductService {
     @Transactional(readOnly = true)
     public List<OptionResponse> getAllOptions(Long productId) {
         Product product = productRepository.findProductAndOptionByIdFetchJoin(productId)
-                .orElseThrow(() -> new EntityNotFoundException("Product with id " + productId + " not found"));
+                .orElseThrow(() -> new EntityNotFoundException("Product with productId " + productId + " not found"));
         return product.getOptions().stream()
                 .map(OptionResponse::from)
                 .toList();
@@ -105,7 +111,7 @@ public class ProductService {
     @Transactional
     public void updateOption(OptionRequest.UpdateOption request) {
         Product product = productRepository.findProductAndOptionByIdFetchJoin(request.productId())
-                .orElseThrow(() -> new EntityNotFoundException("Product with id " + request.productId() + " not found"));
+                .orElseThrow(() -> new EntityNotFoundException("Product with productId " + request.productId() + " not found"));
         Option option = product.findOptionByOptionId(request.id());
         product.checkDuplicateOptionName(request.id(), request.name());
         option.updateOption(request.name(), request.quantity());
@@ -114,7 +120,7 @@ public class ProductService {
     @Transactional(readOnly = true)
     public OptionResponse findOptionById(Long id, Long optionId) {
         Product product = productRepository.findProductAndOptionByIdFetchJoin(id)
-                .orElseThrow(() -> new EntityNotFoundException("Product with id " + id + " not found"));
+                .orElseThrow(() -> new EntityNotFoundException("Product with productId " + id + " not found"));
         Option option = product.findOptionByOptionId(optionId);
         return OptionResponse.from(option);
     }
@@ -122,13 +128,13 @@ public class ProductService {
     @Transactional
     public void subtractQuantity(Long productId, Long optionId, int amount) {
         Product product = productRepository.findProductAndOptionByIdFetchJoin(productId)
-                .orElseThrow(() -> new EntityNotFoundException("Product with id " + productId + " not found"));
+                .orElseThrow(() -> new EntityNotFoundException("Product with productId " + productId + " not found"));
         product.subtractOptionQuantity(optionId, amount);
     }
 
     private void checkProductExist(Long id) {
         if(!productRepository.existsById(id)) {
-            throw new EntityNotFoundException("Product with id " + id + " not found");
+            throw new EntityNotFoundException("Product with productId " + id + " not found");
         }
     }
 }

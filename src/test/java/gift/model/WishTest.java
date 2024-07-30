@@ -27,7 +27,7 @@ class WishTest {
     }
 
     @Test
-    @DisplayName("Wish의 Product 확인[실패] - wish의 product id 불일치")
+    @DisplayName("Wish의 Product 확인[실패] - wish의 product productId 불일치")
     void checkWishByProductId() {
         // given
         Long productId = 1L;

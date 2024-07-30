@@ -41,7 +41,7 @@ public class MemberService {
     public MemberResponse findById(Long id) {
         Member member = memberRepository.findById(id)
                 .orElseThrow(()->
-                        new EntityNotFoundException("Member with id " + id + " not found"));
+                        new EntityNotFoundException("Member with productId " + id + " not found"));
         return MemberResponse.from(member);
     }
 
@@ -49,7 +49,7 @@ public class MemberService {
     public void updateById(Long id, MemberRequest request) {
         Member member = memberRepository.findById(id)
                 .orElseThrow(()->
-                        new EntityNotFoundException("Member with id " + id + " not found"));
+                        new EntityNotFoundException("Member with productId " + id + " not found"));
         member.updateMember(request.email(), request.password(), request.role());
     }
 
