@@ -28,7 +28,7 @@ public class UserController {
      * 로그인 ( 유저 정보 인증 )
      */
     @PostMapping("/api/members/login")
-    public ResponseEntity<Token> giveToken(@RequestBody UserRequest user) throws IllegalAccessException {
+    public ResponseEntity<Token> giveToken(@RequestBody UserRequest user) {
         if(!userService.login(user)){
             throw new IllegalArgumentException("아이디나 비밀번호를 다시 확인해주세요!");
         }
