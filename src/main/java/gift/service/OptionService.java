@@ -74,4 +74,9 @@ public class OptionService {
 
         option.subtract(requestQuantity);
     }
+
+    public void deleteOption(Long productId, Long optionId) {
+        Option option = optionRepository.findById(optionId).orElseThrow(() -> new BusinessException("해당 id에 대한 옵션이 없습니다."));
+        optionRepository.delete(option);
+    }
 }
