@@ -43,7 +43,7 @@ public class WishlistController {
 
         Page<Wish> allWishlistsPaged = service.getWishProductList(memberId, pageNumber-1, pageSize);
 
-        return new ResponseEntity<>(allWishlistsPaged.map(WishDto::toWishDto), HttpStatus.OK);
+        return ResponseEntity.ok().body(allWishlistsPaged.map(WishDto::toWishDto));
     }
 
     @PostMapping("/wishlist/{productId}")
@@ -59,7 +59,7 @@ public class WishlistController {
         Long memberId = jwtUtil.getMemberIdFromAuthorizationHeader(authorizationHeader);
 
         service.addWishProduct(memberId, productId);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
     @DeleteMapping("/wishlist/{wishProductId}")

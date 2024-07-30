@@ -46,7 +46,7 @@ public class ProductController {
             @RequestParam(defaultValue = "1") int pageNumber,
             @RequestParam(defaultValue = "5") int pageSize) {
         Page<Product> allProductsPaged = service.getAllProducts(pageNumber-1, pageSize);
-        return new ResponseEntity<>(allProductsPaged.map(ProductResponseDto::toProductResponseDto), HttpStatus.OK);
+        return ResponseEntity.ok().body(allProductsPaged.map(ProductResponseDto::toProductResponseDto));
     }
 
     /**
@@ -64,7 +64,7 @@ public class ProductController {
         Product product = service.getProductById(id);
         ProductResponseDto productResponseDto = ProductResponseDto.toProductResponseDto(product);
 
-        return new ResponseEntity<>(productResponseDto, HttpStatus.OK);
+        return ResponseEntity.ok().body(productResponseDto);
     }
 
     /**

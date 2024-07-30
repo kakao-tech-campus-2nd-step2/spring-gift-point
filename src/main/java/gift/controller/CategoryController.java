@@ -5,7 +5,6 @@ import gift.service.CategoryService;
 import gift.vo.Category;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.Parameters;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -29,10 +28,12 @@ public class CategoryController {
             summary = "전체 카테고리 조회",
             description = "모든 카테고리를 조회하는 API입니다."
     )
-    public ResponseEntity<List<Category>> getCategories() {
+    public ResponseEntity<List<CategoryDto>> getCategories() {
         List<Category> categories = service.getCategories();
-        return new ResponseEntity<>(categories, HttpStatus.OK);
+
+        return ResponseEntity.ok().body(categories.stream().map(CategoryDto::fromCategory).toList());
     }
+
 
     @PostMapping()
     @Operation(
@@ -42,7 +43,7 @@ public class CategoryController {
     @Parameter(name = "categoryDto", description = "생성할 카테고리 정보를 포함하는 Dto", required = true)
     public ResponseEntity<Void> addCategory(@RequestBody CategoryDto categoryDto) {
         service.addCategory(categoryDto.toCategory());
-        return ResponseEntity.ok().build();
+        return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
     @PutMapping()
