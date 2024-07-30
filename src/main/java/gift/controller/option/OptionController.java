@@ -3,9 +3,13 @@ package gift.controller.option;
 import gift.config.LoginAdmin;
 import gift.config.LoginUser;
 import gift.controller.auth.LoginResponse;
+import gift.controller.category.CategoryResponse;
+import gift.controller.response.ApiResponseBody;
+import gift.controller.response.ApiResponseBuilder;
 import gift.service.OptionService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import java.util.List;
 import java.util.UUID;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -24,7 +28,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @Tag(name = "Option", description = "Option API")
-@RequestMapping("/api")
+@RequestMapping("/api/products")
 public class OptionController {
 
     private final OptionService optionService;
@@ -35,57 +39,81 @@ public class OptionController {
 
     @GetMapping("/options")
     @Operation(summary = "get All Options", description = "모든 옵션 불러오기")
-    public ResponseEntity<Page<OptionResponse>> getAllOptions(
+    public ResponseEntity<ApiResponseBody<Page<OptionResponse>>> getAllOptions(
         @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "5") int size) {
         Pageable pageable = PageRequest.of(page, size);
-        return ResponseEntity.status(HttpStatus.OK).body(optionService.findAll(pageable));
+        return new ApiResponseBuilder<Page<OptionResponse>>()
+            .httpStatus(HttpStatus.OK)
+            .data(optionService.findAll(pageable))
+            .messages("모든 옵션 조회")
+            .build();
     }
 
-    @GetMapping("/products/{productId}/options")
+    @GetMapping("/{productId}/options")
     @Operation(summary = "get All Options By ProductId", description = "해당 옵션의 모든 옵션불러오기")
-    public ResponseEntity<Page<OptionResponse>> getAllOptionsByProductId(
+    public ResponseEntity<ApiResponseBody<List<OptionResponse>>> getAllOptionsByProductId(
         @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "5") int size,
         @PathVariable UUID productId) {
-        Pageable pageable = PageRequest.of(page, size);
-        return ResponseEntity.status(HttpStatus.OK)
-            .body(optionService.findAllByProductId(productId, pageable));
+        return new ApiResponseBuilder<List<OptionResponse>>()
+            .httpStatus(HttpStatus.OK)
+            .data(optionService.findAllByProductId(productId))
+            .messages("상품별 모든 옵션 조회")
+            .build();
     }
 
     @GetMapping("/options/{optionId}")
     @Operation(summary = "get Option", description = "옵션 조회")
-    public ResponseEntity<OptionResponse> getOption(@PathVariable UUID optionId) {
-        return ResponseEntity.status(HttpStatus.OK).body(optionService.getOptionResponseById(optionId));
+    public ResponseEntity<ApiResponseBody<OptionResponse>> getOption(@PathVariable UUID optionId) {
+        return new ApiResponseBuilder<OptionResponse>()
+            .httpStatus(HttpStatus.OK)
+            .data(optionService.getOptionResponseById(optionId))
+            .messages("옵션 조회")
+            .build();
     }
 
-    @PostMapping("/options/{productId}")
+    @PostMapping("{productId}/options")
     @Operation(summary = "create Option", description = "옵션 생성")
-    public ResponseEntity<OptionResponse> createOption(@LoginUser LoginResponse member,
+    public ResponseEntity<ApiResponseBody<OptionResponse>> createOption(@LoginUser LoginResponse member,
         @RequestBody OptionRequest option,
         @PathVariable UUID productId) {
-        return ResponseEntity.status(HttpStatus.CREATED)
-            .body(optionService.save(productId, option));
+        return new ApiResponseBuilder<OptionResponse>()
+            .httpStatus(HttpStatus.OK)
+            .data(optionService.save(productId, option))
+            .messages("옵션 생성")
+            .build();
     }
 
-    @PutMapping("/options/{optionId}")
+    @PutMapping("{productsId}/options/{optionId}")
     @Operation(summary = "modify Option", description = "옵션 수정")
-    public ResponseEntity<OptionResponse> updateOption(@LoginAdmin LoginResponse member,
+    public ResponseEntity<ApiResponseBody<OptionResponse>> updateOption(@LoginUser LoginResponse member,
         @PathVariable UUID optionId, @RequestBody OptionRequest option) {
-        return ResponseEntity.status(HttpStatus.OK).body(optionService.update(optionId, option));
+        return new ApiResponseBuilder<OptionResponse>()
+            .httpStatus(HttpStatus.OK)
+            .data(optionService.update(optionId, option))
+            .messages("옵션 수정")
+            .build();
     }
 
     @PutMapping("/options/{optionId}/buy/{quantity}")
     @Operation(summary = "substract option count", description = "옵션 구매(옵션 개수 1차감)")
-    public ResponseEntity<OptionResponse> subtractOption(@LoginUser LoginResponse member,
+    public ResponseEntity<ApiResponseBody<OptionResponse>> subtractOption(@LoginUser LoginResponse member,
         @PathVariable UUID optionId, @PathVariable Integer quantity) {
-        return ResponseEntity.status(HttpStatus.OK)
-            .body(optionService.subtract(optionId, quantity));
+        return new ApiResponseBuilder<OptionResponse>()
+            .httpStatus(HttpStatus.OK)
+            .data(optionService.subtract(optionId, quantity))
+            .messages("옵션 1개 차감")
+            .build();
     }
 
-    @DeleteMapping("/{optionId}")
+    @DeleteMapping("/{productId}/options/{optionId}")
     @Operation(summary = "delete Option", description = "옵션 삭제")
-    public ResponseEntity<Void> deleteOption(@LoginAdmin LoginResponse loginMember,
+    public ResponseEntity<ApiResponseBody<Void>> deleteOption(@LoginUser LoginResponse loginMember,
         @PathVariable UUID optionId) {
         optionService.delete(optionId);
-        return ResponseEntity.status(HttpStatus.NO_CONTENT).body(null);
+        return new ApiResponseBuilder<Void>()
+            .httpStatus(HttpStatus.OK)
+            .data(null)
+            .messages("옵션 삭제")
+            .build();
     }
 }
