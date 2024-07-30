@@ -4,7 +4,6 @@ import gift.domain.category.entity.Category;
 import gift.domain.category.exception.CategoryNotFoundException;
 import gift.domain.category.repository.CategoryRepository;
 import gift.domain.option.dto.OptionResponse;
-import gift.domain.option.repository.OptionRepository;
 import gift.domain.option.service.OptionService;
 import gift.domain.product.dto.ProductCreateResponse;
 import gift.domain.product.dto.ProductRequest;
@@ -13,7 +12,6 @@ import gift.domain.product.entity.Product;
 import gift.domain.product.exception.ProductNotFoundException;
 import gift.domain.product.repository.ProductRepository;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -42,9 +40,13 @@ public class ProductService {
         return entityToDto(product);
     }
 
-    public Page<ProductResponse> getAllProducts(int pageNo, int pageSize) {
-        Pageable pageable = PageRequest.of(pageNo, pageSize);
-        return productRepository.findAll(pageable).map(this::entityToDto);
+    public Page<ProductResponse> getAllProducts(Pageable pageable, Long categoryId) {
+        if (categoryId == null){
+            return productRepository.findAll(pageable).map(this::entityToDto);
+        }
+
+        Category findCategory = categoryRepository.findById(categoryId).orElseThrow(()->new CategoryNotFoundException("해당 카테고리가 존재하지 않습니다."));
+        return productRepository.findAllByCategory(pageable,findCategory).map(this::entityToDto);
     }
 
     @Transactional
