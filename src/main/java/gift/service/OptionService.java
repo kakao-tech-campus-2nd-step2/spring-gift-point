@@ -40,8 +40,8 @@ public class OptionService {
     }
 
     @Transactional
-    public Long deleteOption(Long id) {
-        optionRepository.findById(id).orElseThrow(
+    public Long deleteOption(Long id,String email) {
+        optionRepository.(id).orElseThrow(
             () -> new OptionNotFoundException("Option Not Found")
         );
         optionRepository.deleteById(id);

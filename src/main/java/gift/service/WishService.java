@@ -10,7 +10,6 @@ import gift.repository.WishRepository;
 import gift.utils.error.ProductNotFoundException;
 import gift.utils.error.UserNotFoundException;
 import gift.utils.error.WishListNotFoundException;
-import java.util.Optional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -47,22 +46,12 @@ public class WishService {
 
     }
     @Transactional
-    public boolean removeFromWishlist(String email, Long productId) {
-        UserInfo userInfo = userInfoRepository.findByEmail(email).orElseThrow(
-            () -> new UserNotFoundException("User Not Found")
-        );
-        Product product = productRepository.findById(productId).orElseThrow(
-            () -> new ProductNotFoundException("Product Not Found")
-        );
-        if (!wishRepository.existsByUserInfoIdAndProductId(userInfo.getId(), productId)) {
-            throw new WishListNotFoundException("Not Found");
-        }
-        Wish wish = wishRepository.findByUserInfoIdAndProductId(userInfo.getId(), productId).orElseThrow(
+    public boolean removeFromWishlist(String email, Long wishId) {
+
+        Wish wish = wishRepository.findById(wishId).orElseThrow(
             () -> new WishListNotFoundException("Wish Not Found")
         );
 
-        product.removeWish(wish);
-        userInfo.removeWish(wish);
 
         wishRepository.deleteByProductIdAndUserInfoId(productId, userInfo.getId());
         return true;

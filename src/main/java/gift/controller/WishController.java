@@ -41,11 +41,11 @@ public class WishController {
 
     }
 
-    @DeleteMapping("/{productId}")
-    public ResponseEntity<String> removeFromWishlist(@PathVariable Long productId,
+    @DeleteMapping("/{wisgId}")
+    public ResponseEntity<String> removeFromWishlist(@PathVariable("wisgId") Long wisgId,
         @RequestHeader("Authorization") String token) {
         String email = jwtTokenProvider.getEmailFromToken(token.substring(7));
-        wishlistService.removeFromWishlist(email, productId);
+        wishlistService.removeFromWishlist(email, wisgId);
         return ResponseEntity.ok("Product removed from wishlist");
 
     }

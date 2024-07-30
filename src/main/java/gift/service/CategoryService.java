@@ -37,18 +37,23 @@ public class CategoryService {
             save.getDescription());
     }
     @Transactional
-    public void updateCategory(Long id, CategoryRequest categoryRequest){
+    public CategoryResponse updateCategory(Long id, CategoryRequest categoryRequest){
         Category category = categoryRepository.findById(id).orElseThrow(
             () -> new CategoryNotFoundException("Category Not Found")
         );
         category.updateCategory(categoryRequest);
+        Category save = categoryRepository.save(category);
+        return new CategoryResponse(save.getId(),save.getName(), save.getColor(), save.getImageUrl(),
+            save.getDescription());
 
     }
     @Transactional
-    public void deleteCategory(Long id){
+    public CategoryResponse deleteCategory(Long id){
         Category category = categoryRepository.findById(id).orElseThrow(
             () -> new CategoryNotFoundException("Category Not Found")
         );
         categoryRepository.deleteById(id);
+        return new CategoryResponse(category.getId(),category.getName(), category.getColor(), category.getImageUrl(),
+            category.getDescription());
     }
 }

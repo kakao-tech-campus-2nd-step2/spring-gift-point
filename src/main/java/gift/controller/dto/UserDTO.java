@@ -5,11 +5,12 @@ import jakarta.validation.constraints.NotNull;
 
 public class UserDTO {
 
-    private long id;
-    @NotNull
-    private String password;
     @NotNull
     private String email;
+
+    @NotNull
+    private String password;
+
 
     public UserDTO(String password, String email) {
         this.password = password;
