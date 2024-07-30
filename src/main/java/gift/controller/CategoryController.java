@@ -30,7 +30,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
-@RequestMapping("/admin/categories")
+@RequestMapping("/api/categories")
 @Validated
 @Tag(name = "Category Management", description = "APIs for managing categories")
 public class CategoryController {
@@ -91,7 +91,7 @@ public class CategoryController {
             return "Add_category";
         }
         categoryService.addCategory(categoryDTO);
-        return "redirect:/admin/categories";
+        return "redirect:/api/categories";
     }
 
     @GetMapping("/edit/{id}")
@@ -118,7 +118,7 @@ public class CategoryController {
             return "Edit_category";
         }
         categoryService.updateCategory(categoryDTO);
-        return "redirect:/admin/categories";
+        return "redirect:/api/categories";
     }
 
     @DeleteMapping("/{id}")
@@ -130,6 +130,6 @@ public class CategoryController {
     })
     public String deleteCategory(@PathVariable Long id) {
         categoryService.deleteCategory(id);
-        return "redirect:/admin/categories";
+        return "redirect:/api/categories";
     }
 }

@@ -33,7 +33,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
-@RequestMapping("/admin/products")
+@RequestMapping("/api/products")
 @Validated
 @Tag(name = "Product Management", description = "APIs for managing products")
 public class ProductController {
@@ -58,7 +58,7 @@ public class ProductController {
     public ResponseEntity<List<ProductDTO>> allProducts(
         @RequestParam(defaultValue = "0") int page,
         @RequestParam(defaultValue = "10") @Min(1) @Max(30) int size,
-        @RequestParam(defaultValue = "id") String sortBy,
+        @RequestParam(defaultValue = "name") String sortBy,
         @RequestParam(defaultValue = "asc") String direction,
         Model model) {
 
@@ -105,7 +105,7 @@ public class ProductController {
             return "Add_product";
         }
         productService.addProduct(productDTO);
-        return "redirect:/admin/products";
+        return "redirect:/api/products";
     }
 
     @GetMapping("/edit/{id}")
@@ -113,7 +113,7 @@ public class ProductController {
     public String editProductForm(@PathVariable Long id, Model model) {
         Optional<ProductDTO> productDTO = productService.findProductById(id);
         if (productDTO.isEmpty()) {
-            return "redirect:/admin/products";
+            return "redirect:/api/products";
         }
         model.addAttribute("product", productDTO.get());
         model.addAttribute("categories", categoryService.findAllCategories());
@@ -134,7 +134,7 @@ public class ProductController {
             return "Edit_product";
         }
         productService.updateProduct(productDTO);
-        return "redirect:/admin/products";
+        return "redirect:/api/products";
     }
 
     @DeleteMapping("/{id}")
@@ -146,7 +146,7 @@ public class ProductController {
     })
     public String deleteProduct(@PathVariable Long id) {
         productService.deleteProduct(id);
-        return "redirect:/admin/products";
+        return "redirect:/api/products";
     }
 
 

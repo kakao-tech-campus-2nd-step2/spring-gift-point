@@ -7,7 +7,7 @@
 <body>
 <h1>카테고리 수정</h1>
 
-<form th:action="@{/admin/categories/{id}(id=${category.id})}" th:object="${category}" method="post">
+<form th:action="@{/api/categories/{id}(id=${category.id})}" th:object="${category}" method="post">
   <input type="hidden" name="_method" value="PUT" /> <!-- PUT 요청을 처리하기 위한 숨겨진 필드 -->
   <div>
     <label for="name">이름:</label>

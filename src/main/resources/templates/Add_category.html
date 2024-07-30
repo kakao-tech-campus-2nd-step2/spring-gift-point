@@ -6,7 +6,7 @@
 </head>
 <body>
 <h1>카테고리 추가</h1>
-<form th:action="@{/admin/categories}" th:object="${category}" method="post">
+<form th:action="@{/api/categories}" th:object="${category}" method="post">
   <div>
     <label for="name">이름:</label>
     <input type="text" id="name" th:field="*{name}" required />
