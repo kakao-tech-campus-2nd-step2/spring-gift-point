@@ -16,6 +16,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.data.domain.*;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.data.web.PagedModel;
@@ -44,9 +45,7 @@ public class WishController {
     })
     @GetMapping
     public ResponseEntity<Page<ProductResponse>> productList(@Parameter(hidden = true) @LoginMember Member member,
-
-                                                             @Parameter(description = "쿼리 파라미터: page, size, sort 지정")
-                                                             @PageableDefault(page = 0, size = 20, sort = "id", direction = Sort.Direction.DESC) Pageable pageable) {
+                                                             @ParameterObject @PageableDefault(page = 0, size = 20, sort = "id", direction = Sort.Direction.DESC) Pageable pageable) {
         List<ProductDto> productDtoList = wishService.getProducts(member, pageable);
 
         List<ProductResponse> productResponseList = productDtoList.stream()

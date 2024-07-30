@@ -16,7 +16,11 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
-import org.springframework.data.domain.*;
+import org.springdoc.core.annotations.ParameterObject;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.data.web.PagedModel;
 import org.springframework.http.ResponseEntity;
@@ -45,9 +49,7 @@ public class OrderController {
     })
     @GetMapping
     public ResponseEntity<Page<OrderResponse>> orderList(@Parameter(hidden = true) @LoginMember Member member,
-
-                                                         @Parameter(description = "쿼리 파라미터: page, size, sort 지정")
-                                                         @PageableDefault(page = 0, size = 20, sort = "id", direction = Sort.Direction.DESC) Pageable pageable) {
+                                                         @ParameterObject @PageableDefault(page = 0, size = 20, sort = "id", direction = Sort.Direction.DESC) Pageable pageable) {
         List<OrderDto> dtos = orderService.getOrders(member, pageable);
 
         List<OrderResponse> orderResponses = dtos.stream()
