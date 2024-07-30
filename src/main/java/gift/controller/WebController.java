@@ -60,11 +60,8 @@ public class WebController {
         if (response.getStatusCode() != HttpStatus.OK || response.getBody() == null) {
             return "error/500";
         }
-        Page<Product> productPage = (Page<Product>) response.getBody().getDomain().get(0).get("products");
-        model.addAttribute("products", productPage.getContent());
-        model.addAttribute("currentPage", productPage.getNumber());
-        model.addAttribute("totalPages", productPage.getTotalPages());
-        model.addAttribute("pageSize", size);
+        List<Product> products = (List<Product>) response.getBody().getDomain().get(0).get("products");
+        model.addAttribute("products", products);
         return "user-products";
     }
 
@@ -116,15 +113,16 @@ public class WebController {
 
     @GetMapping("/products/edit/{id}")
     public String showEditProductForm(@PathVariable Long id, Model model) {
-        ResponseEntity<DomainResponse> response = productController.getProductById(id);
-        if (response.getStatusCode() != HttpStatus.OK || response.getBody() == null) {
+        Product product = productService.findById(id);
+        if (product == null) {
             return "error/500";
         }
         List<Category> categories = categoryService.getAllCategories();
-        model.addAttribute("product", response.getBody().getDomain().get(0));
+        model.addAttribute("product", product);
         model.addAttribute("categories", categories);
         return "product/edit";
     }
+
 
     @PostMapping("/products/{id}")
     public String updateProduct(@PathVariable Long id, @Valid @ModelAttribute("product") Product product, BindingResult bindingResult, Model model) {

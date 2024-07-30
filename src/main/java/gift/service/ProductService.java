@@ -45,10 +45,10 @@ public class ProductService {
         }
     }
 
-    public ResponseEntity<Page<Product>> getAllProducts(Pageable pageable) {
-        Page<Product> products = productRepository.findAll(pageable);
-        return new ResponseEntity<>(products, HttpStatus.OK);
+    public Page<Product> getAllProducts(Pageable pageable) {
+        return productRepository.findAll(pageable);
     }
+
 
     public void update(Product updatedProduct) {
         validateProductOptions(updatedProduct);

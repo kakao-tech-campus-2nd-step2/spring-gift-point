@@ -46,7 +46,7 @@ public class ProductServiceTest {
         Page<Product> productPage = new PageImpl<>(productList, PageRequest.of(0, 5), 1);
         Mockito.when(productRepository.findAll(Mockito.any(Pageable.class))).thenReturn(productPage);
 
-        ResponseEntity<Page<Product>> response = productService.getAllProducts(PageRequest.of(0, 5));
+        <Page<Product>> response = productService.getAllProducts(PageRequest.of(0, 5));
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertThat(response.getBody().getContent()).hasSize(1);

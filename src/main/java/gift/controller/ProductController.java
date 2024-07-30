@@ -17,6 +17,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -81,18 +82,9 @@ public class ProductController {
     @Operation(summary = "상품 목록 조회 (페이지네이션 적용)", description = "모든 상품의 목록을 페이지 단위로 조회한다.")
     @GetMapping
     public ResponseEntity<DomainResponse> getAllProducts(Pageable pageable) {
-        Page<Product> products = productService.getAllProducts(pageable).getBody();
-        List<Map<String, Object>> productList = products.stream()
-                .map(product -> {
-                    Map<String, Object> map = new HashMap<>();
-                    map.put("id", product.getId());
-                    map.put("name", product.getName());
-                    map.put("price", product.getPrice());
-                    map.put("imageurl", product.getImageurl());
-                    map.put("category", product.getCategory().getName());
-                    return map;
-                })
-                .collect(Collectors.toList());
+        Page<Product> products = productService.getAllProducts(pageable);
+        List<Map<String, Object>> productList = new ArrayList<>();
+        productList.add(Map.of("products", products));
         HttpResult httpResult = new HttpResult(HttpStatus.OK.value(), "Products retrieved successfully");
         return ResponseEntity.ok(new DomainResponse(httpResult, productList, HttpStatus.OK));
     }
