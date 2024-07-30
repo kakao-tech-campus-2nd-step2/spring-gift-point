@@ -557,7 +557,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <h3 id="_전체_상품_조회_http_request">HTTP request</h3>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight nowrap"><code data-lang="http">GET /api/products?page=1&amp;sort=id HTTP/1.1
+<pre class="CodeRay highlight nowrap"><code data-lang="http">GET /api/products?page=1&amp;size=10&amp;sort=id HTTP/1.1
 Authorization: Bearer {ACCESS_TOKEN}
 Host: localhost:8080</code></pre>
 </div>
@@ -582,8 +582,12 @@ Host: localhost:8080</code></pre>
 <td class="tableblock halign-left valign-top"><p class="tableblock">page number</p></td>
 </tr>
 <tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>size</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">number of products</p></td>
+</tr>
+<tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>sort</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">sort option\n\tex) id, name, quantity</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">sort option ex) id, name, quantity</p></td>
 </tr>
 </tbody>
 </table>
@@ -603,129 +607,10 @@ Content-Length: 471
 </div>
 </div>
 <div class="sect1">
-<h2 id="_상품_전체_옵션_조회">상품 + 전체 옵션 조회</h2>
+<h2 id="_상품_생성">상품 생성</h2>
 <div class="sectionbody">
 <div class="sect2">
-<h3 id="_상품_전체_옵션_조회_http_request">HTTP request</h3>
-<div class="listingblock">
-<div class="content">
-<pre class="CodeRay highlight nowrap"><code data-lang="http">GET /api/products/1/all HTTP/1.1
-Authorization: Bearer {ACCESS_TOKEN}
-Host: localhost:8080</code></pre>
-</div>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_상품_전체_옵션_조회_path_parameters">Path parameters</h3>
-<table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 1. /api/products/{id}/all</caption>
-<colgroup>
-<col style="width: 50%;">
-<col style="width: 50%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">Parameter</th>
-<th class="tableblock halign-left valign-top">Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>id</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Product id</p></td>
-</tr>
-</tbody>
-</table>
-</div>
-<div class="sect2">
-<h3 id="_상품_전체_옵션_조회_http_response">HTTP response</h3>
-<div class="listingblock">
-<div class="content">
-<pre class="CodeRay highlight nowrap"><code data-lang="http">HTTP/1.1 200 OK
-Content-Type: application/json;charset=UTF-8
-Content-Length: 195
-
-{&quot;product&quot;:{&quot;id&quot;:1,&quot;name&quot;:&quot;상품1&quot;,&quot;price&quot;:1000,&quot;image_url&quot;:&quot;http://a.com&quot;,&quot;category_name&quot;:&quot;교환권&quot;},&quot;options&quot;:[{&quot;id&quot;:1,&quot;name&quot;:&quot;옵션1&quot;,&quot;quantity&quot;:1},{&quot;id&quot;:2,&quot;name&quot;:&quot;옵션2&quot;,&quot;quantity&quot;:1}]}</code></pre>
-</div>
-</div>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_상품_단일_옵션_조회">상품 + 단일 옵션 조회</h2>
-<div class="sectionbody">
-<div class="sect2">
-<h3 id="_상품_단일_옵션_조회_http_request">HTTP request</h3>
-<div class="listingblock">
-<div class="content">
-<pre class="CodeRay highlight nowrap"><code data-lang="http">GET /api/products/1?option_id=1 HTTP/1.1
-Authorization: Bearer {ACCESS_TOKEN}
-Host: localhost:8080</code></pre>
-</div>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_상품_단일_옵션_조회_path_parameters">Path parameters</h3>
-<table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 1. /api/products/{id}</caption>
-<colgroup>
-<col style="width: 50%;">
-<col style="width: 50%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">Parameter</th>
-<th class="tableblock halign-left valign-top">Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>id</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Product id</p></td>
-</tr>
-</tbody>
-</table>
-</div>
-<div class="sect2">
-<h3 id="_상품_단일_옵션_조회_query_parameters">Query parameters</h3>
-<table class="tableblock frame-all grid-all stretch">
-<colgroup>
-<col style="width: 50%;">
-<col style="width: 50%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">Parameter</th>
-<th class="tableblock halign-left valign-top">Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>option_id</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Option id</p></td>
-</tr>
-</tbody>
-</table>
-</div>
-<div class="sect2">
-<h3 id="_상품_단일_옵션_조회_http_response">HTTP response</h3>
-<div class="listingblock">
-<div class="content">
-<pre class="CodeRay highlight nowrap"><code data-lang="http">HTTP/1.1 200 OK
-Content-Type: application/json;charset=UTF-8
-Content-Length: 118
-
-{&quot;product&quot;:{&quot;id&quot;:1,&quot;name&quot;:&quot;상품1&quot;,&quot;price&quot;:1000,&quot;image_url&quot;:&quot;http://a.com&quot;,&quot;category_name&quot;:&quot;교환권&quot;},&quot;options&quot;:[]}</code></pre>
-</div>
-</div>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_상품_생성최소_하나의_옵션과_함께">상품 생성(최소 하나의 옵션과 함께)</h2>
-<div class="sectionbody">
-<div class="sect2">
-<h3 id="_상품_생성최소_하나의_옵션과_함께_http_request">HTTP request</h3>
+<h3 id="_상품_생성_http_request">HTTP request</h3>
 <div class="listingblock">
 <div class="content">
 <pre class="CodeRay highlight nowrap"><code data-lang="http">POST /api/products HTTP/1.1
@@ -746,7 +631,7 @@ Host: localhost:8080
 </div>
 </div>
 <div class="sect2">
-<h3 id="_상품_생성최소_하나의_옵션과_함께_http_response">HTTP response</h3>
+<h3 id="_상품_생성_http_response">HTTP response</h3>
 <div class="listingblock">
 <div class="content">
 <pre class="CodeRay highlight nowrap"><code data-lang="http">HTTP/1.1 201 Created</code></pre>
@@ -762,21 +647,37 @@ Host: localhost:8080
 <h3 id="_상품_수정_http_request">HTTP request</h3>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight nowrap"><code data-lang="http">PUT /api/products HTTP/1.1
+<pre class="CodeRay highlight nowrap"><code data-lang="http">PUT /api/products/1 HTTP/1.1
 Content-Type: application/json;charset=UTF-8
 Authorization: Bearer {ACCESS_TOKEN}
-Content-Length: 152
+Content-Length: 119
 Host: localhost:8080
 
-{
-  &quot;id&quot; : 1,
-  &quot;name&quot; : &quot;수정된 상품명&quot;,
-  &quot;price&quot; : 1500,
-  &quot;image_url&quot; : &quot;http://update.com&quot;,
-  &quot;category_name&quot; : &quot;수정된 카테고리명&quot;
-}</code></pre>
+{&quot;name&quot;:&quot;수정된 상품명&quot;,&quot;price&quot;:1500,&quot;image_url&quot;:&quot;http://update.com&quot;,&quot;category_name&quot;:&quot;수정된 카테고리명&quot;}</code></pre>
 </div>
 </div>
+</div>
+<div class="sect2">
+<h3 id="_상품_수정_path_parameters">Path parameters</h3>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 1. /api/products/{productId}</caption>
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Parameter</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>productId</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Product id</p></td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="sect2">
 <h3 id="_상품_수정_http_response">HTTP response</h3>
@@ -795,7 +696,7 @@ Host: localhost:8080
 <h3 id="_상품_삭제_http_request">HTTP request</h3>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight nowrap"><code data-lang="http">DELETE /api/products?id=1 HTTP/1.1
+<pre class="CodeRay highlight nowrap"><code data-lang="http">DELETE /api/products/1 HTTP/1.1
 Content-Type: application/json;charset=UTF-8
 Authorization: Bearer {ACCESS_TOKEN}
 Host: localhost:8080</code></pre>
@@ -803,8 +704,9 @@ Host: localhost:8080</code></pre>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_상품_삭제_query_parameters">Query parameters</h3>
+<h3 id="_상품_삭제_path_parameters">Path parameters</h3>
 <table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 1. /api/products/{productId}</caption>
 <colgroup>
 <col style="width: 50%;">
 <col style="width: 50%;">
@@ -817,7 +719,7 @@ Host: localhost:8080</code></pre>
 </thead>
 <tbody>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>id</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>productId</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Product id</p></td>
 </tr>
 </tbody>
@@ -836,7 +738,7 @@ Host: localhost:8080</code></pre>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2024-07-29 14:51:29 +0900
+Last updated 2024-07-30 15:41:16 +0900
 </div>
 </div>
 <script>

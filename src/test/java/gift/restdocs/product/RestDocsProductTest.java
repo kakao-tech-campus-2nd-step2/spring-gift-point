@@ -73,61 +73,33 @@ public class RestDocsProductTest extends AbstractRestDocsTest {
         //given
         Product product = demoProduct(1L);
         int page = 1;
+        int size = 10;
         String sort = "id";
         PageRequest pageRequest = PageRequest.of(page - 1, 10,
             Sort.by(Direction.ASC, sort));
         List<Product> products = new ArrayList<>();
-        LongStream.range(1, 6)
+        LongStream.range(1, 11)
             .forEach(i -> products.add(demoProduct(i)));
 
         List<ProductResponse> response = products.stream()
             .map(ProductResponse::createProductResponse)
             .toList();
 
-        given(pagingService.makeProductsPageRequest(any(int.class), any(String.class)))
+        given(pagingService.makeProductsPageRequest(any(int.class), any(int.class), any(String.class)))
             .willReturn(pageRequest);
         given(productService.getPagedAllProducts(any(PageRequest.class)))
             .willReturn(response);
 
         //when //then
-        mockMvc.perform(get("/api/products?page=" + page + "&sort=" + sort)
+        mockMvc.perform(get("/api/products?page=" + page + "&size=" + size + "&sort=" + sort)
                 .header("Authorization", "Bearer " + token))
             .andExpect(status().isOk())
             .andDo(document("rest-docs-product-test/get-all-products",
                 queryParameters(
                     parameterWithName("page").description("page number"),
+                    parameterWithName("size").description("number of products"),
                     parameterWithName("sort").description("sort option ex) id, name, quantity")
                 )));
-    }
-
-    @Test
-    void getProductWithOption() throws Exception {
-        //given
-        Long optionId = 1L;
-        Product product = demoProduct(1L);
-        List<OptionResponse> options = new ArrayList<>();
-        ProductResponse productResponse = ProductResponse.createProductResponse(product);
-        ProductOptionsResponse response = new ProductOptionsResponse(productResponse, options);
-
-        given(productService.getProduct(any(Long.class)))
-            .willReturn(product);
-        given(optionsService.getProductOption(any(Product.class), any(Long.class)))
-            .willReturn(response);
-
-        //when //then
-        mockMvc.perform(
-                RestDocumentationRequestBuilders.get("/api/products/{productId}?option_id=" + optionId,
-                        product.getId())
-                    .header("Authorization", "Bearer " + token))
-            .andExpect(status().isOk())
-            .andDo(document("rest-docs-product-test/get-product-with-option",
-                pathParameters(
-                    parameterWithName("productId").description("Product id")
-                ),
-                queryParameters(
-                    parameterWithName("option_id").description("Option id")
-                )));
-
     }
 
     @Test

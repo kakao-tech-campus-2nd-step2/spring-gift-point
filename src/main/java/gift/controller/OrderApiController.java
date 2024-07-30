@@ -2,7 +2,9 @@ package gift.controller;
 
 import gift.auth.CheckRole;
 import gift.auth.JwtService;
+import gift.auth.LoginMember;
 import gift.exception.InputException;
+import gift.request.LoginMemberDto;
 import gift.request.OrderRequest;
 import gift.response.OrderResponse;
 import gift.service.KakaoMessageService;
@@ -10,6 +12,7 @@ import gift.service.OptionsService;
 import gift.service.OrderService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
+import java.util.List;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
@@ -46,8 +49,8 @@ public class OrderApiController {
 
     @CheckRole("ROLE_USER")
     @GetMapping("/api/orders")
-    public ResponseEntity<OrderResponse> getOrder(@RequestParam("id") Long id) {
-        return new ResponseEntity<>(orderService.getOrder(id), HttpStatus.OK);
+    public ResponseEntity<List<OrderResponse>> getOrder(@LoginMember LoginMemberDto dto) {
+        return new ResponseEntity<>(orderService.getOrder(dto.id()), HttpStatus.OK);
     }
 
 }

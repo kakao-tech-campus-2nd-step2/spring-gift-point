@@ -43,21 +43,9 @@ public class ProductApiController {
     @CheckRole("ROLE_ADMIN")
     @GetMapping("/api/products")
     public ResponseEntity<List<ProductResponse>> getAllProducts(@RequestParam(defaultValue = "1", name = "page") int page,
-        @RequestParam(defaultValue = "id", name = "sort") String sort) {
-        PageRequest pageRequest = pagingService.makeProductsPageRequest(page, sort);
+        @RequestParam(defaultValue = "10", name = "size") int size, @RequestParam(defaultValue = "id", name = "sort") String sort) {
+        PageRequest pageRequest = pagingService.makeProductsPageRequest(page, size, sort);
         List<ProductResponse> dto = productService.getPagedAllProducts(pageRequest);
-        return new ResponseEntity<>(dto, HttpStatus.OK);
-    }
-
-    @CheckRole("ROLE_ADMIN")
-    @GetMapping("/api/products/{productId}")
-    public ResponseEntity<ProductOptionsResponse> getProductWithOption(
-        @PathVariable("productId") Long id, @RequestParam("option_id") Long optionId) {
-        Product product = productService.getProduct(id);
-        if (product == null) {
-            return new ResponseEntity<>(HttpStatus.OK);
-        }
-        ProductOptionsResponse dto = optionsService.getProductOption(product, optionId);
         return new ResponseEntity<>(dto, HttpStatus.OK);
     }
 

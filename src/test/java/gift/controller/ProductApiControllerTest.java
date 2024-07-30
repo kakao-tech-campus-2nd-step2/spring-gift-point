@@ -83,30 +83,6 @@ public class ProductApiControllerTest {
             .andDo(print());
     }
 
-    @DisplayName("하나의 옵션과 함께 상품 조회 요청 테스트")
-    @Test
-    void getProductWithOption() throws Exception {
-        //given
-        Long optionId = 1L;
-        Product product = demoProduct();
-        List<OptionResponse> options = new ArrayList<>();
-        ProductResponse productResponse = ProductResponse.createProductResponse(product);
-        ProductOptionsResponse response = new ProductOptionsResponse(productResponse, options);
-
-        given(productService.getProduct(any(Long.class)))
-            .willReturn(product);
-        given(optionsService.getProductOption(any(Product.class), any(Long.class)))
-            .willReturn(response);
-
-        //when //then
-        mockMvc.perform(
-                MockMvcRequestBuilders.get("/api/products/{id}", product.getId())
-                    .param("option_id", String.valueOf(optionId))
-                    .header("Authorization", "Bearer " + token))
-            .andExpect(status().isOk())
-            .andDo(print());
-    }
-
     @DisplayName("옵션과 함게 상품 생성 요청 테스트")
     @Test
     void add() throws Exception {

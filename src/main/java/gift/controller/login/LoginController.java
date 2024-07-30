@@ -27,7 +27,7 @@ public class LoginController {
         this.jwtService = jwtService;
     }
 
-    @PostMapping("/api/members/join")
+    @PostMapping("/api/members/register")
     public ResponseEntity<JoinResponse> join(@RequestBody @Valid JoinRequest joinRequest,
         BindingResult bindingResult, HttpServletResponse response) {
         if (bindingResult.hasErrors()) {

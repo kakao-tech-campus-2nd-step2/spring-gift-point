@@ -38,9 +38,10 @@ public class WishListApiController {
     @GetMapping("/api/wishes")
     public ResponseEntity<List<ProductResponse>> getWishList(
         @RequestParam(defaultValue = "1", name = "page") int page,
+        @RequestParam(defaultValue = "10", name = "size") int size,
         @RequestParam(defaultValue = "id", name = "sort") String sort,
         @LoginMember LoginMemberDto memberDto) {
-        PageRequest pageRequest = pagingService.makeWishPageRequest(page, sort);
+        PageRequest pageRequest = pagingService.makeWishPageRequest(page, size, sort);
         List<ProductResponse> dto = wishService.getPagedWishList(memberDto.id(),
             pageRequest);
         return new ResponseEntity<>(dto, HttpStatus.OK);
@@ -61,7 +62,6 @@ public class WishListApiController {
     @CheckRole("ROLE_USER")
     @DeleteMapping("/api/wishes/{wishId}")
     public ResponseEntity<Void> deleteWishList(@PathVariable("wishId") Long id) {
-
         wishService.deleteMyWish(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }

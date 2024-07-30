@@ -67,30 +67,32 @@ public class RestDocsWishTest extends AbstractRestDocsTest {
     void getWishList() throws Exception {
         //given
         Long memberId = 1L;
+        int size = 10;
         int page = 1;
         String sort = "id";
         PageRequest pageRequest = PageRequest.of(page - 1, 10,
             Sort.by(Direction.ASC, sort));
         List<Product> products = new ArrayList<>();
-        LongStream.range(1, 6)
+        LongStream.range(1, 11)
             .forEach(i -> products.add(demoProduct(i)));
 
         List<ProductResponse> response = products.stream()
             .map(ProductResponse::createProductResponse)
             .toList();
 
-        given(pagingService.makeWishPageRequest(any(int.class), any(String.class)))
+        given(pagingService.makeWishPageRequest(any(int.class), any(int.class), any(String.class)))
             .willReturn(pageRequest);
         given(wishService.getPagedWishList(any(Long.class), any(PageRequest.class)))
             .willReturn(response);
 
         //when //then
-        mockMvc.perform(get("/api/wishes?page=" + page + "&sort=" + sort)
+        mockMvc.perform(get("/api/wishes?page=" + page + "&size=" + size +  "&sort=" + sort)
                     .header("Authorization", "Bearer " + token))
             .andExpect(status().isOk())
             .andDo(document("rest-docs-wish-test/get-wish-list",
                 queryParameters(
                     parameterWithName("page").description("page number"),
+                    parameterWithName("size").description("number of wishlist"),
                     parameterWithName("sort").description("sort option ex) id, name, quantity")
                 )));
     }

@@ -16,6 +16,9 @@ import gift.request.OrderRequest;
 import gift.response.OrderResponse;
 import gift.restdocs.AbstractRestDocsTest;
 import gift.service.OrderService;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.LongStream;
 import org.junit.jupiter.api.Test;
 import org.mockito.BDDMockito;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -73,21 +76,20 @@ public class RestDocsOrderTest extends AbstractRestDocsTest {
     @Test
     void getOrder() throws Exception {
         //given
-        Long memberId = 1L;
-        Long optionId = 1L;
-        OrderResponse orderResponse = new OrderResponse(memberId, optionId,
-            1, "2024.01.01 00:00:00", "주문 메시지");
+        List<OrderResponse> orderResponseList = new ArrayList<>();
+
+        LongStream.range(1, 6)
+            .forEach(i ->  orderResponseList.add(new OrderResponse(i, i,
+                1, "2024.01.01 00:00:00", "주문 메시지")));
+
         given(orderService.getOrder(any(Long.class)))
-            .willReturn(orderResponse);
+            .willReturn(orderResponseList);
 
         //when //then
-        mockMvc.perform(get("/api/orders?id=" + optionId)
+        mockMvc.perform(get("/api/orders")
                 .header("Authorization", "Bearer " + token))
             .andExpect(status().isOk())
-            .andDo(document("rest-docs-order-test/get-order",
-                queryParameters(
-                    parameterWithName("id").description("Order id")
-                )));
+            .andDo(print());
     }
 
 

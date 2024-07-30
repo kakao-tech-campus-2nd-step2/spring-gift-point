@@ -8,6 +8,7 @@ import gift.repository.OptionsRepository;
 import gift.repository.OrderRepository;
 import gift.repository.WishRepository;
 import gift.response.OrderResponse;
+import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -28,10 +29,11 @@ public class OrderService {
         this.kakaoMessageService = kakaoMessageService;
     }
 
-    public OrderResponse getOrder(Long orderId) {
-        Order order = orderRepository.findById(orderId)
-            .orElseThrow(NotFoundOrderException::new);
-        return OrderResponse.createOrderResponse(order);
+    public List<OrderResponse> getOrder(Long memberId) {
+        return orderRepository.findByMemberId(memberId)
+            .stream()
+            .map(OrderResponse::createOrderResponse)
+            .toList();
     }
 
     public OrderResponse makeOrder(Long memberId, Long productId, Long optionId, Integer quantity, String message) {

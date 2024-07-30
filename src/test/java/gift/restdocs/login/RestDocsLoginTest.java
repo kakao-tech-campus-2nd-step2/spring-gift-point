@@ -72,7 +72,7 @@ public class RestDocsLoginTest extends AbstractRestDocsTest {
             .willReturn(token);
 
         //when //then
-        mockMvc.perform(post("/api/members/join")
+        mockMvc.perform(post("/api/members/register")
                 .content(content)
                 .contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isCreated())

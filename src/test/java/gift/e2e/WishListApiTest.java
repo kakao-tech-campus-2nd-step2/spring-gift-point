@@ -115,7 +115,7 @@ class WishListApiTest {
 
         //then
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-        assertThat(response.getBody()).hasSize(5);
+        assertThat(response.getBody()).hasSize(10);
         IntStream.range(0, 5)
             .forEach(i -> {
                 ProductResponse pr = response.getBody().get(i);
