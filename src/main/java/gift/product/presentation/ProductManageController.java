@@ -77,7 +77,6 @@ public class ProductManageController {
         return ResponseEntity.ok(new CommonResponse<>(product.getProductOptions(), "상품 옵션이 정상적으로 추가 되었습니다", true));
     }
 
-    //    @AdminAuthenticated
     @Operation(summary = "상품 삭제", description = "상품을 삭제합니다.")
     @DeleteMapping("/products/delete/{id}")
     public ResponseEntity<CommonResponse<Void>> deleteProduct(

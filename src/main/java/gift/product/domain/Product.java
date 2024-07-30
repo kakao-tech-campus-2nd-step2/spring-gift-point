@@ -29,7 +29,7 @@ public class Product {
 
     @OneToMany
     @JoinColumn(name = "product_id")
-    private List<ProductOption> productOptions = new ArrayList<>();
+    private List<ProductOption> productOptions;
 
 
     public Product() {
@@ -72,11 +72,6 @@ public class Product {
 
     public void setImageUrl(String imageUrl) {
         this.imageUrl = imageUrl;
-    }
-
-    public void addProductOption(CreateProductOptionRequestDTO createProductOptionRequestDTO) {
-        ProductOption productOption = new ProductOption(createProductOptionRequestDTO.getName(), createProductOptionRequestDTO.getQuantity(), this);
-        productOptions.add(productOption);
     }
 
 

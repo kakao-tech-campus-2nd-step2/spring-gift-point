@@ -38,8 +38,7 @@ public class ProductService {
     @Transactional
     public Product addProductOption(Long id, CreateProductOptionRequestDTO createProductOptionRequestDTO) {
         Product product = productRepository.findById(id);
-
-        product.addProductOption(createProductOptionRequestDTO);
+//        product.addProductOption(createProductOptionRequestDTO);
         return productRepository.updateProductOption(product, createProductOptionRequestDTO);
     }
 

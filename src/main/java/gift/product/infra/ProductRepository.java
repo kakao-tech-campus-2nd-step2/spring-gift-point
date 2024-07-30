@@ -44,10 +44,6 @@ public class ProductRepository {
         return productOptionJpaRepository.findByProductId(productId);
     }
 
-    public ProductOption saveProductOption(ProductOption productOption) {
-        return productOptionJpaRepository.save(productOption);
-    }
-
     public ProductOption getProductWithOption(Long productId, Long optionId) {
         return productOptionJpaRepository.findByProductIdAndId(productId, optionId)
                 .orElseThrow(() -> new ProductException(ErrorCode.PRODUCT_OPTION_NOT_FOUND));

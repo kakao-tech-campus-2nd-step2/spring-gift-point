@@ -20,6 +20,7 @@ public class ProductOption {
     public ProductOption(String name, Long quantity, Product product) {
         this.name = name;
         this.quantity = quantity;
+        this.product = product;
         product.addProductOption(this);
     }
 
