@@ -1,0 +1,174 @@
+/*body {*/
+/*    height: 100%;*/
+/*    margin: 0;*/
+/*    display: flex;*/
+/*    justify-content: center;*/
+/*    align-items: center;*/
+/*}*/
+
+/*.container {*/
+/*    text-align: center;*/
+/*}*/
+/* style.css */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f9;
+    margin: 0;
+    padding: 0;
+}
+
+.container {
+    width: 80%;
+    margin: 20px auto;
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+h1 {
+    font-size: 24px;
+    margin-bottom: 20px;
+}
+
+
+#addButton {
+    background-color: forestgreen;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 19px;
+}
+
+#addButton:hover {
+    background-color: darkgreen;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 19px;
+}
+
+#selectDeleteButton {
+    background-color: darkred;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 19px;
+}
+
+#selectDeleteButton:hover {
+    background-color: orangered;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 19px;
+}
+
+#deleteButton {
+    background-color: darkred;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 19px;
+}
+
+#deleteButton:hover {
+    background-color: orangered;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 19px;
+}
+
+#editButton {
+    background-color: blue;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 19px;
+}
+
+#editButton:hover {
+    background-color: cornflowerblue;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 19px;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+thead {
+    background-color: #343a40;
+    color: #fff;
+}
+
+thead th {
+    padding: 10px;
+    text-align: center;
+}
+
+tbody tr {
+    border-bottom: 1px solid #ddd;
+}
+
+tbody tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+tbody td {
+    padding: 10px;
+    text-align: center; /* Center-align body cells */
+
+}
+
+img {
+    border-radius: 4px;
+}
+
+input[type="checkbox"] {
+    width: 16px;
+    height: 16px;
+}
+
+
+/*a{*/
+/*    background-color: darkgreen;*/
+/*    border: none;*/
+/*    color: white;*/
+/*    text-decoration-line: none;*/
+/*    padding: 5px 10px;*/
+/*    border-radius: 3px;*/
+/*    cursor: pointer;*/
+/*    margin-right: 5px;*/
+/*    text-decoration: none;*/
+
+/*}*/
+/*a:hover{*/
+/*    background-color: forestgreen;*/
+
+/*}*/
+
+button[type="submit"]:hover {
+    background-color: #0056b3;
+}
