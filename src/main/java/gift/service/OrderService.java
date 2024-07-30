@@ -35,6 +35,9 @@ public class OrderService {
     }
 
     public void sendOrderMessage(OrderRequest request, Member member) {
+        if (member.getAccessToken() == null) {
+            return;
+        }
         KakaoMessageRequest kakaoMessageRequest = new KakaoMessageRequest(
                 "text",
                 request.message(),

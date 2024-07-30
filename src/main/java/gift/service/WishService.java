@@ -58,4 +58,8 @@ public class WishService {
         }
         throw new UnauthorizedException("해당 id의 wish는 본인의 wish가 아닙니다.");
     }
+
+    public void deleteWishByOrder(Member member, Product product) {
+        wishRepository.deleteByMemberAndProduct(member, product);
+    }
 }

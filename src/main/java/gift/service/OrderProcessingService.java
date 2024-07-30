@@ -26,9 +26,9 @@ public class OrderProcessingService {
         optionService.subtractQuantity(request);
 
         // 해당 상품이 wish list 에 있다면 제거
-        wishService.deleteWish(
-                optionService.getProductById(request).getId(),
-                member
+        wishService.deleteWishByOrder(
+                member,
+                optionService.getProductById(request)
         );
 
         // 주문
