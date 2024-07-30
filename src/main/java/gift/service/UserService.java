@@ -2,14 +2,17 @@ package gift.service;
 
 import gift.domain.model.dto.KakaoTokenResponseDto;
 import gift.domain.model.dto.KakaoUserInfo;
+import gift.domain.model.dto.TokenRefreshDto;
 import gift.domain.model.dto.TokenResponseDto;
 import gift.domain.model.entity.User;
 import gift.domain.model.dto.UserRequestDto;
 import gift.domain.model.dto.UserResponseDto;
+import gift.domain.model.entity.User.AuthProvider;
 import gift.domain.repository.UserRepository;
 import gift.exception.BadCredentialsException;
 import gift.exception.DuplicateEmailException;
 import gift.exception.NoSuchEmailException;
+import gift.exception.UnauthorizedException;
 import gift.util.JwtUtil;
 import java.time.LocalDateTime;
 import org.mindrot.jbcrypt.BCrypt;
@@ -82,7 +85,8 @@ public class UserService {
         return new TokenResponseDto(jwtToken);
     }
 
-    private User registerNewKakaoUser(KakaoUserInfo kakaoUserInfo, KakaoTokenResponseDto kakaoToken) {
+    private User registerNewKakaoUser(KakaoUserInfo kakaoUserInfo,
+        KakaoTokenResponseDto kakaoToken) {
         User newUser = new User(
             kakaoUserInfo.getEmail(),
             User.AuthProvider.KAKAO,
@@ -94,7 +98,22 @@ public class UserService {
     }
 
     private void updateKakaoTokenInfo(User user, KakaoTokenResponseDto kakaoToken) {
-        user.updateKakaoToken(kakaoToken.getAccessToken(), LocalDateTime.now().plusSeconds(kakaoToken.getExpiresIn()));
+        user.updateKakaoToken(kakaoToken.getAccessToken(),
+            LocalDateTime.now().plusSeconds(kakaoToken.getExpiresIn()));
         userRepository.save(user);
+    }
+
+    public TokenRefreshDto refreshToken(String userEmail) {
+        User user = getUserByEmail(userEmail);
+        if (user.getAuthProvider() == AuthProvider.KAKAO && isKakaoTokenValid(user)) {
+            String newToken = jwtUtil.generateToken(userEmail);
+            return new TokenRefreshDto(true, newToken, user);
+        }
+        throw new UnauthorizedException("Token expired");
+    }
+
+    private boolean isKakaoTokenValid(User user) {
+        return user.getKakaoTokenExpireAt() != null &&
+            user.getKakaoTokenExpireAt().isAfter(LocalDateTime.now());
     }
 }

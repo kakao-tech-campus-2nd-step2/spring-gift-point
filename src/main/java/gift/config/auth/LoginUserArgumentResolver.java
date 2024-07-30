@@ -1,9 +1,12 @@
 package gift.config.auth;
 
+import gift.domain.model.dto.TokenRefreshDto;
 import gift.domain.model.entity.User;
+import gift.domain.model.entity.User.AuthProvider;
 import gift.exception.UnauthorizedException;
 import gift.service.UserService;
 import gift.util.JwtUtil;
+import java.time.LocalDateTime;
 import org.springframework.core.MethodParameter;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.support.WebDataBinderFactory;
@@ -36,12 +39,19 @@ public class LoginUserArgumentResolver implements HandlerMethodArgumentResolver 
             throw new UnauthorizedException("No authentication token found");
         }
 
+        String userEmail = jwtUtil.extractUserEmail(token);
+
         if (jwtUtil.isTokenExpired(token)) {
-            throw new UnauthorizedException("Token has expired");
+            return handleExpiredToken(userEmail, webRequest);
         }
 
-        String userEmail = jwtUtil.extractUserEmail(token);
         return userService.getUserByEmail(userEmail);
+    }
+
+    private User handleExpiredToken(String userEmail, NativeWebRequest webRequest) {
+        TokenRefreshDto result = userService.refreshToken(userEmail);
+        webRequest.setAttribute("newJwtToken", result.getNewToken(), NativeWebRequest.SCOPE_REQUEST);
+        return result.getUser();
     }
 
     private String extractToken(NativeWebRequest request) {
