@@ -32,7 +32,7 @@ public class CategoryControllerTest {
     private CategoryService categoryService;
 
     @MockBean
-    private TokenService tokenService;  // 추가된 부분
+    private TokenService tokenService;
 
     private Category category1;
     private Category category2;
