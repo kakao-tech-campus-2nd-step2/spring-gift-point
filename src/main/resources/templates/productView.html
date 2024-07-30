@@ -1,0 +1,57 @@
+<!-- ProductView.html -->
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>상품 상세</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+<div class="container my-5">
+    <div class="row">
+        <div class="col-12">
+            <a th:href="@{main.html}" class="btn btn-primary mb-3">상품 관리</a>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-6">
+            <img th:src="${product.imageUrl}" class="img-fluid" alt="상품 이미지">
+        </div>
+        <div class="col-md-6">
+            <h2 th:text="${product.name}">상품명</h2>
+            <p th:text="${product.description}">상품 설명</p>
+            <p>가격 : <span th:text="${product.price}">₩</span></p>
+            <div class="d-flex justify-content-end">
+                <a th:href="@{/products/{id}/edit(id=${product.id})}" class="btn btn-primary mr-2">수정</a>
+                <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#deleteModal">삭제</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Delete Confirmation Modal -->
+<div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="deleteModalLabel">상품 삭제</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                이 상품을 정말 삭제하시겠습니까?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">취소</button>
+                <a th:href="@{/products/{id}/delete(id=${product.id})}" class="btn btn-danger">삭제</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>
