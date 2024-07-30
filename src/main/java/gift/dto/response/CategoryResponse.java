@@ -27,4 +27,7 @@ public class CategoryResponse {
         );
     }
 
+    public String getName() {
+        return name;
+    }
 }

@@ -2,6 +2,7 @@ package gift.service;
 
 import gift.domain.Category;
 import gift.dto.request.CategoryRequest;
+import gift.dto.response.CategoryResponse;
 import gift.exception.CategoryNotFoundException;
 import gift.exception.DuplicateCategoryNameException;
 import gift.repository.category.CategorySpringDataJpaRepository;
@@ -44,7 +45,7 @@ public class CategoryServiceTest {
         List<Category> mockCategories = List.of(mockCategory1, mockCategory2);
         when(categoryRepository.findAll()).thenReturn(mockCategories);
 
-        List<Category> categories = categoryService.getCategories();
+        List<CategoryResponse> categories = categoryService.getCategories();
 
         assertEquals(2, categories.size());
         assertEquals("교환권", categories.get(0).getName());
@@ -60,7 +61,7 @@ public class CategoryServiceTest {
         when(mockCategory1.getName()).thenReturn("교환권");
         when(categoryRepository.findById(categoryId)).thenReturn(Optional.of(mockCategory1));
 
-        Category category = categoryService.getCategory(categoryId);
+        CategoryResponse category = categoryService.getCategory(categoryId);
 
         assertEquals("교환권", category.getName());
 
@@ -84,7 +85,7 @@ public class CategoryServiceTest {
         when(categoryRepository.save(any(Category.class))).thenReturn(mockCategory1);
         when(mockCategory1.getName()).thenReturn("교환권");
 
-        Category createdCategory = categoryService.createCategory(categoryRequest);
+        CategoryResponse createdCategory = categoryService.createCategory(categoryRequest);
 
         assertEquals("교환권", createdCategory.getName());
 
@@ -115,7 +116,7 @@ public class CategoryServiceTest {
         when(updatedCategory.getName()).thenReturn("뷰티");
         when(categoryRepository.save(any(Category.class))).thenReturn(updatedCategory);
 
-        Category result = categoryService.updateCategory(categoryId, categoryRequest);
+        CategoryResponse result = categoryService.updateCategory(categoryId, categoryRequest);
 
         assertEquals("뷰티", result.getName());
         verify(categoryRepository, times(1)).findById(categoryId);

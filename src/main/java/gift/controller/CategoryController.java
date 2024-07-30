@@ -50,9 +50,10 @@ public class CategoryController {
     }
 
     @DeleteMapping("/{id}")
-    @Operation(summary = "카테고리 삭제", description = "카테고리를 삭제한다.")
-    public void deleteCategory(@PathVariable Long id) {
+    @Operation(summary = "카테고리 삭제", description = "기존 카테고리를 삭제한다.")
+    public ResponseEntity<Void> deleteCategory(@PathVariable Long id) {
         categoryService.deleteCategory(id);
+        return ResponseEntity.noContent().build();
     }
 }
 

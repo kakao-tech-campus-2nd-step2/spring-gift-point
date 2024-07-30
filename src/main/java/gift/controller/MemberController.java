@@ -4,7 +4,6 @@ import gift.dto.request.MemberRequest;
 import gift.dto.response.KakaoLoginResponse;
 import gift.dto.response.TokenResponse;
 import gift.service.MemberService;
-import gift.service.TokenService;
 import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
