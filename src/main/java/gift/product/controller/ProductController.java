@@ -30,7 +30,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api/products")
-@Tag(name = "상품 API")
 public class ProductController {
 
     private final ProductService productService;
@@ -41,8 +40,15 @@ public class ProductController {
         this.optionService = optionService;
     }
 
+    @PostMapping("")
+    @Operation(summary = "상품 생성", tags = {"상품 API"})
+    public ResponseEntity<Void> createProduct(@Valid @RequestBody ProductDTO productDTO) {
+        productService.createProduct(productDTO);
+        return new ResponseEntity<>(HttpStatus.CREATED);
+    }
+
     @GetMapping("")
-    @Operation(summary = "상품목록조회")
+    @Operation(summary = "상품목록조회", tags = {"상품 API"})
     public ResponseEntity<Page<ProductDTO>> getAllProductsWishCategoryId(
         @RequestParam(defaultValue = "0") int page,
         @RequestParam(defaultValue = "10") int size,
@@ -64,22 +70,16 @@ public class ProductController {
     }
 
     @GetMapping("/{productId}")
-    @Operation(summary = "product id로 찾기")
+    @Operation(summary = "상품 조회", tags = {"상품 API"})
     public ResponseEntity<ProductDTO> findById(@PathVariable("productId") Long id) {
         Optional<ProductDTO> productDTO = productService.getProductDTOById(id);
         return productDTO.map(value -> new ResponseEntity<>(value, HttpStatus.OK))
             .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
-    @PostMapping("")
-    @Operation(summary = "상품 생성")
-    public ResponseEntity<Void> createProduct(@Valid @RequestBody ProductDTO productDTO) {
-        productService.createProduct(productDTO);
-        return new ResponseEntity<>(HttpStatus.CREATED);
-    }
 
     @PutMapping("/{productId}")
-    @Operation(summary = "상품 수정")
+    @Operation(summary = "상품 수정", tags = {"상품 API"})
     public ResponseEntity<ProductDTO> updateProduct(@PathVariable("productId") Long id, @Valid @RequestBody ProductDTO productDTO) {
         Optional<ProductDTO> existingProductDTO = productService.getProductDTOById(id);
         if (existingProductDTO.isEmpty()) {
@@ -93,7 +93,7 @@ public class ProductController {
     }
 
     @DeleteMapping("/{productId}")
-    @Operation(summary = "상품 삭제")
+    @Operation(summary = "상품 삭제", tags = {"상품 API"})
     public ResponseEntity<Void> deleteProduct(@PathVariable("productId") Long id) {
         if (productService.getProductDTOById(id).isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -101,15 +101,15 @@ public class ProductController {
         productService.deleteProduct(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
-
+    // option
     @GetMapping("{productId}/options")
-    @Operation(summary = "상품옵션 목록 조회")
+    @Operation(summary = "상품옵션 목록 조회", tags = {"상품 옵션 API"})
     public ResponseEntity<List<OptionDTO>> getOptionList(@PathVariable Long productId){
         return new ResponseEntity<>(optionService.findAllByProductId(productId),HttpStatus.OK);
     }
 
     @PostMapping("{productId}/options/{optionId}")
-    @Operation(summary = "상품 옵션 추가")
+    @Operation(summary = "상품 옵션 추가", tags = {"상품 옵션 API"})
     public ResponseEntity<OptionDTO> addOption(@PathVariable Long productId,
         @PathVariable Long optionId,
         @RequestBody OptionDTO optionDTO){
@@ -122,7 +122,7 @@ public class ProductController {
     }
 
     @PutMapping("{productId}/options/{optionId}")
-    @Operation(summary = "상품 옵션 수정")
+    @Operation(summary = "상품 옵션 수정", tags = {"상품 옵션 API"})
     public ResponseEntity<OptionDTO> updateOption(@PathVariable Long productId,
         @PathVariable Long optionId,
         @RequestBody OptionDTO optionDTO){
@@ -135,16 +135,17 @@ public class ProductController {
     }
 
     @DeleteMapping("{productId}/options/{optionId}")
-    @Operation(summary = "상품 옵션 삭제")
+    @Operation(summary = "상품 옵션 삭제", tags = {"상품 옵션 API"})
     public ResponseEntity<Void> deleteOption(@PathVariable Long productId,
         @PathVariable Long optionId){
         optionService.deleteOption(productId, optionId);
         return new ResponseEntity<>(HttpStatus.OK);
     }
-
+    /*
     @PostMapping("/subtract")
     @Operation(summary = "option의 quantity 줄이기")
     public Option subtractQuantity(@RequestBody OptionDTO optionDTO, @RequestParam Long orderedQuantity) {
         return optionService.subtract(optionDTO, orderedQuantity);
     }
+     */
 }
