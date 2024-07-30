@@ -1,6 +1,6 @@
 package gift.member.model;
 
-import gift.wish.model.Wish;
+import gift.wish.domain.Wish;
 import jakarta.persistence.*;
 import java.util.ArrayList;
 import java.util.Iterator;

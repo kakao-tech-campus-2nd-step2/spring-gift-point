@@ -1,12 +1,12 @@
-package gift.wish.model;
+package gift.wish.dto;
 
-public class WishRequest {
+public class WishCreateRequest {
     private Long productId;
 
     // Constructor 추가
-    public WishRequest() {}
+    public WishCreateRequest() {}
 
-    public WishRequest(Long productId) {
+    public WishCreateRequest(Long productId) {
         this.productId = productId;
     }
 

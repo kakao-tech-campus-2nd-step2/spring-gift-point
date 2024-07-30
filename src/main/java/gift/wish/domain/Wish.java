@@ -1,4 +1,4 @@
-package gift.wish.model;
+package gift.wish.domain;
 
 import gift.member.model.Member;
 import gift.product.domain.Product;
