@@ -9,12 +9,14 @@ import gift.exception.customException.EntityNotFoundException;
 import gift.exception.customException.KakaoInNameException;
 import gift.repository.category.CategoryRepository;
 import gift.repository.product.ProductRepository;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static gift.exception.exceptionMessage.ExceptionMessage.CATEGORY_NOT_FOUND;
 import static gift.exception.exceptionMessage.ExceptionMessage.PRODUCT_NOT_FOUND;
@@ -25,7 +27,6 @@ public class ProductService {
 
     private final ProductRepository productRepository;
     private final CategoryRepository categoryRepository;
-
     private final OptionService optionService;
 
     public ProductService(ProductRepository productRepository,
@@ -75,6 +76,11 @@ public class ProductService {
         return productRepository.findAll(pageable).stream()
                 .map(ProductResponseDto::from)
                 .collect(Collectors.toList());
+    }
+
+    public Page<ProductResponseDto> findProductsUsingPaging(Pageable pageable,
+                                                            Long categoryId) {
+        return productRepository.findAllByCategoryId(pageable, categoryId).map(ProductResponseDto::from);
     }
 
     @Transactional
