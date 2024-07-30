@@ -45,9 +45,9 @@ public class ProductService {
     /*
     페이지를 제공하는 부분도 어디까지가 역할일지
      */
-    public Page<ProductResponse> getProductPage(int pageNum) {
+    public Page<ProductResponse> getProductPage(int pageNum,int categoryId) {
         Pageable pageable = PageRequest.of(pageNum, PAGE_SIZE);
-        return productRepository.findAll(pageable)
+        return productRepository.findAllByCategoryId(pageable, (long) categoryId)
                 .map(ProductResponse::new);
     }
 
