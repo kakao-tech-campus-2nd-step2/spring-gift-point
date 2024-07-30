@@ -1,11 +1,15 @@
 package gift.domain;
 
-import gift.utils.TimeStamp;
 import jakarta.persistence.*;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "ORDERS")
-public class Order extends TimeStamp {
+@EntityListeners(AuditingEntityListener.class)
+public class Order {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -22,6 +26,10 @@ public class Order extends TimeStamp {
     @Column(nullable = false)
     private int quantity;
     private String message;
+
+    @CreatedDate
+    @Column(updatable = false)
+    private LocalDateTime orderDateTime;
 
     public Order() {
     }
@@ -83,5 +91,9 @@ public class Order extends TimeStamp {
 
     public String getMessage() {
         return message;
+    }
+
+    public LocalDateTime getOrderDateTime() {
+        return orderDateTime;
     }
 }
