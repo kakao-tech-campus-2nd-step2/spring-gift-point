@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>상품 관리</title>
+    <link rel="stylesheet" th:href="@{/style.css}"/>
+
+    <script>
+        function submitForm(id) {
+            // 직접적으로 폼을 서밋하는 방식으로 수정
+            document.getElementById('deleteFormInputId').value = id;//
+            document.getElementById('deleteForm').submit();
+        }
+
+        function checkIfAnyCheckboxChecked() {
+            var checkboxes = document.getElementsByName('productIds');
+            for (var i = 0; i < checkboxes.length; i++) {
+                if (checkboxes[i].checked) {
+                    return true; // 하나 이상의 체크박스가 체크되어 있음
+                }
+            }
+            return false; // 체크된 체크박스가 없음
+        }
+
+        function submitSelectDelete() {
+            if (!checkIfAnyCheckboxChecked()) {
+                // event.preventDefault(); // 체크된 체크박스가 없으면 기본 동작을 막음
+                alert('삭제할 상품을 선택해 주세요.'); // 사용자에게 알림을 줄 수도 있음
+            } else {
+                document.getElementById('all').submit();
+            }
+        }
+
+        document.getElementById('selectDeleteButton').addEventListener('click', function (event) {
+            if (!checkIfAnyCheckboxChecked()) {
+                event.preventDefault(); // 체크된 체크박스가 없으면 기본 동작을 막음
+                alert('삭제할 상품을 선택해 주세요.'); // 사용자에게 알림을 줄 수도 있음
+            }
+        });
+    </script>
+</head>
+<body>
+<div class="container">
+    <a th:href="@{/add}">
+        <button id="addButton">상품 추가</button>
+    </a>
+    <button form="all" id="selectDeleteButton" onclick="submitSelectDelete()" type="button">선택된 상품들 일괄 삭제</button>
+    <form id="all" method="post" th:action="@{/deleteSelected}">
+
+        <div>
+            <table>
+                <thead>
+                <tr>
+                    <th>선택</th>
+                    <th>Actions</th>
+                    <th>ID</th>
+                    <th>Category</th>
+                    <th>NAME</th>
+                    <th>PRICE</th>
+                    <th>IMAGE</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="product : ${products}">
+                    <td>
+                        <input name="productIds" th:value="${product.id}" type="checkbox"/>
+                    </td>
+                    <td>
+                        <!-- 삭제 폼 -->
+                        <button id="deleteButton" th:onclick="'submitForm(\'' + ${product.id} + '\')'" type="button">
+                            삭제
+                        </button>
+
+                        <a th:href="@{/edit/{id}(id=${product.id})}">
+                            <button id="editButton" type="button">수정</button>
+                        </a>
+                    </td>
+                    <td th:text="${product.id}">id</td>
+                    <td th:text="${product.categoryName}">category</td>
+                    <td th:text="${product.name}">name</td>
+                    <td th:text="${product.price}">price</td>
+                    <td>
+                        <img alt="Product Image" height="200" th:src="${product.imageUrl}" width="200"/>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </form>
+
+</div>
+
+<!-- 단일 상품 삭제 폼 -->
+<form id="deleteForm" method="post" style="display:none;" th:action="@{/delete}">
+    <input \ id="deleteFormInputId" name="productId" type="hidden">  <!--name은 모델의 이름 -->
+</form>
+
+</body>
+</html>

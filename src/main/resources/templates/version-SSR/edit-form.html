@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0"
+          name="viewport">
+    <meta content="ie=edge" http-equiv="X-UA-Compatible">
+    <title>상품 수정</title>
+    <link rel="stylesheet" th:href="@{/add.css}"/>
+
+</head>
+<body>
+<form class="container" method="post" th:action="@{/edit}" th:object="${updateProductRequest}">
+    <h1>상품 수정</h1>
+    <!-- ID는 readonly 속성 수정 불가하게 -->
+    <label for="id">ID:</label>
+    <input id="id" readonly th:field="*{id}" type="text"/><br/>
+
+    <!-- 카테고리  -->
+    <label for="category">Category:</label>
+    <select id="category" th:field="*{categoryId}">
+        <option th:each="category : ${categories}" th:selected="${category.id == updateProductRequest.categoryId}"
+                th:text="${category.name}" th:value="${category.id}"></option>
+    </select><br/><br/>
+
+    <!--그 외 값들-->
+    <label style="color: #888">Current Name: <span style="color: #888;"
+                                                   th:text="${updateProductRequest.name}"></span></label>
+    <label for="name">New Name:</label>
+    <input id="name" required th:field="*{name}" type="text"/><br/>
+
+    <label style="color: #888">Current Price: <span style="color: #888;" th:text="${updateProductRequest.price}"></span></label>
+    <label for="price">New Price:</label>
+    <input id="price" required th:field="*{price}" type="text"/><br/>
+
+    <label style="color: #888">Current Image URL: <span th:text="${updateProductRequest.imageUrl}"></span></label>
+    <label for="imageUrl">New Image URL:</label>
+    <input id="imageUrl" required th:field="*{imageUrl}" type="text"/><br/>
+
+    <button type="submit">수정</button>
+</form>
+</body>
+</html>
