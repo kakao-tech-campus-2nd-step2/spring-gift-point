@@ -42,6 +42,10 @@ public class Category {
         this(categoryRequest.getName(), categoryRequest.getColor(), categoryRequest.getImageUrl(), categoryRequest.getDescription());
     }
 
+    public Long getId() {
+        return id;
+    }
+
     public String getName() {
         return name;
     }
@@ -50,8 +54,16 @@ public class Category {
         this.name = name;
     }
 
-    public Long getId() {
-        return id;
+    public String getColor() {
+        return color;
+    }
+
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public String getDescription() {
+        return description;
     }
 
     public List<Product> getProducts() {
@@ -64,4 +76,5 @@ public class Category {
         this.imageUrl = categoryRequest.getImageUrl();
         this.description = categoryRequest.getDescription();
     }
+
 }
