@@ -44,9 +44,16 @@ public class ProductManageController {
         return ResponseEntity.ok(productService.getProduct(pageable));
     }
 
+    @Operation(summary = "상품 단건 조회", description = "특정 상품을 조회합니다.")
+    @GetMapping("/products/{id}")
+    public ResponseEntity<?> getProduct(@PathVariable Long id) {
+        return ResponseEntity.ok(new CommonResponse<>(productService.getProductById(id), "상품 조회 성공", true));
+    }
+
+
     //    @AdminAuthenticated
     @Operation(summary = "상품 추가", description = "새로운 상품을 추가합니다.")
-    @PostMapping("/product/create")
+    @PostMapping("/products/create")
     public ResponseEntity<?> addProduct(
             @Valid @RequestBody CreateProductRequestDTO createProductRequestDTO) {
         Long productId = productService.saveProduct(createProductRequestDTO);
@@ -55,7 +62,7 @@ public class ProductManageController {
 
     //    @AdminAuthenticated
     @Operation(summary = "상품 옵션 추가", description = "기존 상품에 옵션을 추가합니다.")
-    @PostMapping("/{id}")
+    @PostMapping("/products/{id}")
     public ResponseEntity<CommonResponse<Void>> addProductOption(
             @Parameter(description = "상품 ID") @PathVariable Long id,
             @RequestBody CreateProductOptionRequestDTO createProductOptionRequestDTO) {
@@ -65,7 +72,7 @@ public class ProductManageController {
 
     //    @AdminAuthenticated
     @Operation(summary = "상품 삭제", description = "상품을 삭제합니다.")
-    @DeleteMapping("/delete/{id}")
+    @DeleteMapping("/products/delete/{id}")
     public ResponseEntity<CommonResponse<Void>> deleteProduct(
             @Parameter(description = "상품 ID") @PathVariable Long id) {
         productService.deleteProduct(id);

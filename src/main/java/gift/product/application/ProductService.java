@@ -86,11 +86,11 @@ public class ProductService {
         }
     }
 
-    public GetProductListResponse getProduct(Pageable pageable) {
+    public ProductListResponse getProduct(Pageable pageable) {
         Page<Product> all = productRepository.findAll(pageable);
-        return new GetProductListResponse(
+        return new ProductListResponse(
                 all.getContent().stream()
-                        .map(product -> new ProductListResponse(product.getId(), product.getName(), product.getPrice(), product.getImageUrl()))
+                        .map(product -> new ProductResponse(product.getId(), product.getName(), product.getPrice(), product.getImageUrl()))
                         .toList(),
                 all.getNumber(),
                 all.getTotalPages(),
@@ -99,13 +99,18 @@ public class ProductService {
         );
     }
 
-    public class ProductListResponse {
+    public ProductResponse getProductById(Long id) {
+        Product product = productRepository.findById(id);
+        return new ProductResponse(product.getId(), product.getName(), product.getPrice(), product.getImageUrl());
+    }
+
+    public class ProductResponse {
         private Long id;
         private String name;
         private Double price;
         private String imageUrl;
 
-        public ProductListResponse(Long id, String name, Double price, String imageUrl) {
+        public ProductResponse(Long id, String name, Double price, String imageUrl) {
             this.id = id;
             this.name = name;
             this.price = price;
@@ -129,14 +134,14 @@ public class ProductService {
         }
     }
 
-    public class GetProductListResponse {
-        private List<ProductService.ProductListResponse> content;
+    public class ProductListResponse {
+        private List<ProductResponse> content;
         private int number;
         private int totalElement;
         private int size;
         private boolean last;
 
-        public GetProductListResponse(List<ProductListResponse> content, int number, int totalElement, int size, boolean last) {
+        public ProductListResponse(List<ProductResponse> content, int number, int totalElement, int size, boolean last) {
             this.content = content;
             this.number = number;
             this.totalElement = totalElement;
@@ -144,7 +149,7 @@ public class ProductService {
             this.last = last;
         }
 
-        public List<ProductListResponse> getContent() {
+        public List<ProductResponse> getContent() {
             return content;
         }
 
