@@ -1,7 +1,6 @@
 package gift.Service;
 
 import gift.Exception.Login.AuthorizedException;
-import gift.Model.DTO.OrderDTO;
 import gift.Model.Entity.MemberEntity;
 import gift.Model.Entity.OptionEntity;
 import gift.Model.Entity.OrderEntity;
@@ -54,7 +53,7 @@ public class OrderService {
         return new OrderResponse(orderEntity.getId(), orderRequest.optionId(), orderEntity.getQuantity(), orderEntity.getOrderDateTime(), orderEntity.getMessage());
     }
 
-    public List<OrderDTO> read(String email){
+    public List<OrderResponse> read(String email){
         Optional<MemberEntity> memberOptional = memberRepository.findByEmail(email);
 
         if(memberOptional.isEmpty()) {
@@ -66,24 +65,24 @@ public class OrderService {
             throw new AuthorizedException("접근 권한이 없습니다.");
         }
         List<OrderEntity> orderEntities = orderRepository.findAll();
-        List<OrderDTO> orderDTOs = new ArrayList<>();
+        List<OrderResponse> orderDTOs = new ArrayList<>();
 
         for(OrderEntity o : orderEntities){
-            orderDTOs.add(new OrderDTO(o.getId(),o.getOptionEntity().getId(), o.getQuantity(), o.getOrderDateTime(), o.getMessage()));
+            orderDTOs.add(new OrderResponse(o.getId(), o.getOptionEntity().getId(), o.getQuantity(), o.getOrderDateTime(), o.getMessage()));
         }
 
         return orderDTOs;
     }
 
-    public Page<OrderDTO> getPage(String email, int page, int size, String sort){
-        List<OrderDTO> dtoList = read(email);
+    public Page<OrderResponse> getPage(String email, int page, int size, String sort){
+        List<OrderResponse> dtoList = read(email);
         Sort sortType = Sort.by(Sort.Direction.DESC, sort);
         Pageable pageable = PageRequest.of(page, size, sortType);
 
         int start = (int) pageable.getOffset();
         int end = Math.min((start + pageable.getPageSize()), dtoList.size());
 
-        List<OrderDTO> subList = dtoList.subList(start, end);
+        List<OrderResponse> subList = dtoList.subList(start, end);
 
         return new PageImpl<>(subList, pageable, dtoList.size());
     }

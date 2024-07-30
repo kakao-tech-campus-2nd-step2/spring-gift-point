@@ -1,6 +1,5 @@
 package gift.Controller;
 
-import gift.Model.DTO.OrderDTO;
 import gift.Model.request.OrderRequest;
 import gift.Model.response.OrderResponse;
 import gift.Service.OrderService;
@@ -32,7 +31,7 @@ public class OrderRestController {
     }
 
     @GetMapping("/orders")
-    public Page<OrderDTO> readPage(@RequestAttribute("Email") String email, @RequestParam(value = "page", defaultValue = "0") int page,
+    public Page<OrderResponse> readPage(@RequestAttribute("Email") String email, @RequestParam(value = "page", defaultValue = "0") int page,
                                    @RequestParam(value = "size", defaultValue = "10") int size,
                                    @RequestParam(value = "sort", defaultValue = "10") String sort){
         return orderService.getPage(email, page, size, sort);
