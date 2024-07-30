@@ -29,14 +29,10 @@ public class OrderController {
         @ApiResponse(responseCode = "400", description = "Invalid product quantity."),
         @ApiResponse(responseCode = "500", description = "Order created but failed to send message.")
     })
-    public ResponseEntity<String> createOrder(@RequestHeader("Authorization") String authorization, @RequestBody OrderDTO orderDTO) {
-        try {
-            String responseMessage = orderService.createOrder(authorization, orderDTO);
-            return ResponseEntity.ok(responseMessage);
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
-        } catch (RuntimeException e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
-        }
+    public ResponseEntity<OrderResponse> createOrder(@RequestHeader("Authorization") String authorization, @RequestBody OrderDTO orderDTO) {
+
+        OrderResponse orderResponse = orderService.createOrder(authorization, orderDTO);
+        return ResponseEntity.ok(orderResponse);
+
     }
 }

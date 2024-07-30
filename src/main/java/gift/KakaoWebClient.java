@@ -1,5 +1,6 @@
 package gift;
 
+import gift.api.OrderResponse;
 import gift.dto.OrderDTO;
 import gift.service.KakaoMessageService;
 import io.netty.channel.ChannelOption;
@@ -79,7 +80,7 @@ public class KakaoWebClient {
             .block();
     }
 
-    public boolean send(String accessToken, OrderDTO orderDTO, String productName, String optionName) {
+    public OrderResponse send(String accessToken, OrderDTO orderDTO, String productName, String optionName) {
         HttpHeaders headers = new HttpHeaders();
         headers.set("Authorization", "Bearer " + accessToken);
 
@@ -87,28 +88,36 @@ public class KakaoWebClient {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         String formattedDateTime = orderDateTime.format(formatter);
 
+        OrderResponse orderResponse = new OrderResponse(
+            orderDTO.getOrderId(),
+            orderDTO.getOptionId(),
+            orderDTO.getQuantity(),
+            orderDateTime,
+            orderDTO.getMessage()
+        );
+
         String messageContent = String.format(
             "Order Details:\nProduct: %s\nOption: %s\nQuantity: %d\nMessage: %s\nOrder DateTime: %s",
-            productName, optionName, orderDTO.getQuantity(), orderDTO.getMessage(), formattedDateTime
+            productName, optionName, orderResponse.getQuantity(), orderResponse.getMessage(), formattedDateTime
         );
 
         try {
             MultiValueMap<String, String> parameters = new LinkedMultiValueMap<>();
             parameters.add("template_object", objectMapper.writeValueAsString(createMessagePayload(messageContent)));
 
-            return webClient.post()
+            webClient.post()
                 .uri(kakaoProperties.getSendMessageUrl())
                 .headers(httpHeaders -> httpHeaders.addAll(headers))
                 .body(BodyInserters.fromFormData(parameters))
                 .retrieve()
                 .onStatus(status -> status.isError(), response -> Mono.error(new RuntimeException("Error while sending Kakao message")))
                 .bodyToMono(String.class)
-                .map(response -> true)
-                .onErrorReturn(false)
                 .block();
+
+            return orderResponse;
         } catch (Exception e) {
             logger.error("Failed to send Kakao message", e);
-            return false;
+            return null;
         }
     }
 

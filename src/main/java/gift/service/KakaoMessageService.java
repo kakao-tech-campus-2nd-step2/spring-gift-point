@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import gift.KakaoProperties;
 import gift.KakaoWebClient;
 import gift.api.OrderRequest;
+import gift.api.OrderResponse;
 import gift.dto.OrderDTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,7 +36,7 @@ public class KakaoMessageService {
         this.productService = productService;
     }
 
-    public boolean sendKakaoMessage(String accessToken, OrderDTO orderDTO) {
+    public OrderResponse sendKakaoMessage(String accessToken, OrderDTO orderDTO) {
         String productName = productService.getProductNameById(orderDTO.getOrderId());
         String optionName = optionService.getOptionNameById(orderDTO.getOptionId());
         return kakaoWebClient.send(accessToken, orderDTO, productName, optionName);
