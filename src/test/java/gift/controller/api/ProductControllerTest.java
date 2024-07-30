@@ -60,8 +60,8 @@ class ProductControllerTest {
     void getProducts() throws Exception {
         // Given
         List<ProductResponse> products = List.of(
-                new ProductResponse(1L, "Product 1", 100, "img1.com", "Cloth"),
-                new ProductResponse(2L, "Product 2", 200, "img2.com", "Food")
+                new ProductResponse(1L, "Product 1", 100, "img1.com", 1L, "Cloth"),
+                new ProductResponse(2L, "Product 2", 200, "img2.com", 2L, "Food")
         );
         Page<ProductResponse> page = new PageImpl<>(products);
         when(productService.getProductResponses(any(Pageable.class))).thenReturn(page);
@@ -88,7 +88,8 @@ class ProductControllerTest {
                                         fieldWithPath("content[].name").description("상품의 이름"),
                                         fieldWithPath("content[].price").description("상품의 가격"),
                                         fieldWithPath("content[].imageUrl").description("상품 이미지의 URL"),
-                                        fieldWithPath("content[].categoryName").description("상품이 속한 카테고리"),
+                                        fieldWithPath("content[].categoryId").description("상품이 속한 카테고리의 ID"),
+                                        fieldWithPath("content[].categoryName").description("상품이 속한 카테고리의 이름"),
                                         fieldWithPath("number").description("현재 페이지 번호"),
                                         fieldWithPath("sort.empty").description("정렬이 비어 있는지 여부를 나타내는 boolean 값"),
                                         fieldWithPath("sort.sorted").description("결과가 정렬되어 있는지 여부를 나타내는 boolean 값"),
