@@ -58,7 +58,7 @@ public class ProductViewController
         ProductDTO productDTO = productService.getProductDTOById(id).get();
         model.addAttribute("product", productDTO);
         model.addAttribute("categories", categoryService.findAll());
-        return "add_product";
+        return "edit_product";
     }
 
     @PostMapping("/edit/{id}")
