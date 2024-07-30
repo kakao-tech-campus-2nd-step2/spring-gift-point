@@ -72,7 +72,7 @@ public class ProductController {
     @DeleteMapping("/delete/{id}")
     @Operation(summary = "상품 삭제", description = "파라미터로 받은 상품을 삭제합니다." )
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "204", description = "상품 추가 성공"),
+        @ApiResponse(responseCode = "204", description = "상품 삭제 성공"),
         @ApiResponse(responseCode = "404", description = "존재하지 않는 상품")
     })
     public ResponseEntity<Void> deleteProduct(@PathVariable Long id) {

@@ -4,6 +4,8 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
+import gift.dto.response.ErrorResponse;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
@@ -15,8 +17,9 @@ import java.util.HashMap;
 public class GlobalExceptionHandler {
 
     @ExceptionHandler(CustomException.class)
-    public ResponseEntity<String>handleCustomException(CustomException e){
-        return new ResponseEntity<>(e.getMessage(), e.getHttpStatus());
+    public ResponseEntity<ErrorResponse>handleCustomException(CustomException e){
+        ErrorResponse errorResponse = new ErrorResponse(e.getMessage(), e.getCode());
+        return new ResponseEntity<>(errorResponse, e.getHttpStatus());
 
     }
     
