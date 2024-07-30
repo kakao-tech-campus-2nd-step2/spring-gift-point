@@ -10,6 +10,10 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,7 +21,7 @@ import java.util.List;
 
 @Tag(name = "ProductManageController", description = "상품 관리 관련 API")
 @RestController
-@RequestMapping("/api/v1/product")
+@RequestMapping("/api")
 public class ProductManageController {
 
     private final ProductService productService;
@@ -27,15 +31,22 @@ public class ProductManageController {
     }
 
     @Operation(summary = "상품 조회", description = "모든 상품을 조회합니다.")
-    @GetMapping("")
-    public ResponseEntity<CommonResponse<List<Product>>> getProducts() {
-        List<Product> productList = productService.getProduct();
-        return ResponseEntity.ok(new CommonResponse<>(productList, "상품 조회가 정상적으로 완료되었습니다", true));
+    @GetMapping("/products")
+    public ResponseEntity<?> getProducts(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "20") int size,
+            @RequestParam(defaultValue = "createdAt,desc") String sort
+    ) {
+        String[] sortParams = sort.split(",");
+        Sort sorting = Sort.by(Sort.Direction.fromString(sortParams[1]), sortParams[0]);
+        Pageable pageable = PageRequest.of(page, size, sorting);
+
+        return ResponseEntity.ok(productService.getProduct(pageable));
     }
 
     @AdminAuthenticated
     @Operation(summary = "상품 추가", description = "새로운 상품을 추가합니다.")
-    @PostMapping("")
+    @PostMapping("product/create")
     public ResponseEntity<CommonResponse<Long>> addProduct(
             @Valid @RequestBody CreateProductRequestDTO createProductRequestDTO) {
         Long productId = productService.saveProduct(createProductRequestDTO);

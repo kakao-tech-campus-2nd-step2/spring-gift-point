@@ -4,6 +4,8 @@ import gift.product.domain.Product;
 import gift.product.domain.ProductOption;
 import gift.product.exception.ProductException;
 import gift.util.ErrorCode;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -32,9 +34,10 @@ public class ProductRepository {
         productJpaRepository.deleteById(id);
     }
 
-    public List<Product> findAll() {
-        return productJpaRepository.findAll();
+    public Page<Product> findAll(Pageable pageable) {
+        return productJpaRepository.findAll(pageable);
     }
+
 
     public List<ProductOption> findProductOptionsByProductId(Long productId) {
         return productOptionJpaRepository.findByProductId(productId);

@@ -4,6 +4,8 @@ import gift.product.domain.*;
 import gift.product.exception.ProductException;
 import gift.product.infra.ProductRepository;
 import gift.util.ErrorCode;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -81,8 +83,40 @@ public class ProductService {
         }
     }
 
-    public List<Product> getProduct() {
-        return productRepository.findAll();
+    public Page<ProductListResponse> getProduct(Pageable pageable) {
+        Page<Product> all = productRepository.findAll(pageable);
+
+        return all.map(product -> new ProductListResponse(product.getId(), product.getName(), product.getPrice(), product.getImageUrl()));
+    }
+
+    public class ProductListResponse {
+        private Long id;
+        private String name;
+        private Double price;
+        private String imageUrl;
+
+        public ProductListResponse(Long id, String name, Double price, String imageUrl) {
+            this.id = id;
+            this.name = name;
+            this.price = price;
+            this.imageUrl = imageUrl;
+        }
+
+        public Long getId() {
+            return id;
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public Double getPrice() {
+            return price;
+        }
+
+        public String getImageUrl() {
+            return imageUrl;
+        }
     }
 
 }
