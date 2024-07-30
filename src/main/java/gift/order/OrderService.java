@@ -28,7 +28,14 @@ public class OrderService {
     private final OptionService optionService;
     private final WishlistRepository wishlistRepository;
 
-    public OrderService(OrderRepository orderRepository, OptionRepository optionRepository, MemberRepository memberRepository, KakaoClient kakaoClient, OptionService optionService, WishlistRepository wishlistRepository) {
+    public OrderService(
+        OrderRepository orderRepository,
+        OptionRepository optionRepository,
+        MemberRepository memberRepository,
+        KakaoClient kakaoClient,
+        OptionService optionService,
+        WishlistRepository wishlistRepository
+    ) {
         this.orderRepository = orderRepository;
         this.optionRepository = optionRepository;
         this.memberRepository = memberRepository;
