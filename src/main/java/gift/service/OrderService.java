@@ -1,6 +1,7 @@
 package gift.service;
 
-import gift.dto.OrderDto;
+import gift.dto.OrderRequestDto;
+import gift.dto.OrderResponseDto;
 import gift.model.Option;
 import gift.model.Order;
 import gift.model.Product;
@@ -27,15 +28,15 @@ public class OrderService {
     }
 
     @Transactional
-    public Order createOrder(OrderDto orderDto, Long memberId) {
-        Option option = optionService.findOptionById(orderDto.getOptionId());
+    public Order createOrder(OrderRequestDto orderRequestDto, Long memberId) {
+        Option option = optionService.findOptionById(orderRequestDto.getOptionId());
 
-        if (option.getQuantity() < orderDto.getQuantity()) {
+        if (option.getQuantity() < orderRequestDto.getQuantity()) {
             throw new IllegalArgumentException("주문 수량이 재고 수량보다 많습니다.");
         }
-        optionService.decreaseOptionQuantity(orderDto.getOptionId(), orderDto.getQuantity());
+        optionService.decreaseOptionQuantity(orderRequestDto.getOptionId(), orderRequestDto.getQuantity());
 
-        Order order = new Order(option, orderDto.getQuantity(), orderDto.getMessage());
+        Order order = new Order(option, orderRequestDto.getQuantity(), orderRequestDto.getMessage());
         orderRepository.save(order);
         Product product = optionService.findProductByOptionId(option.getId());
 

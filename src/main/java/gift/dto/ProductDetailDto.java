@@ -1,11 +1,22 @@
 package gift.dto;
 
+import gift.model.Product;
+
 public class ProductDetailDto {
     private String name;
     private int price;
     private String imageUrl;
 
-    // Getters and setters
+    public ProductDetailDto(String name, int price, String imageUrl) {
+        this.name = name;
+        this.price = price;
+        this.imageUrl = imageUrl;
+    }
+
+    public ProductDetailDto(Product product){
+        this(product.getName(),product.getPrice(),product.getImageUrl());
+    }
+
     public String getName() {
         return name;
     }

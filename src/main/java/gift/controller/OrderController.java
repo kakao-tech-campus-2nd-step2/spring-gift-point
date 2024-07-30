@@ -1,6 +1,7 @@
 package gift.controller;
 
-import gift.dto.OrderDto;
+import gift.dto.OrderRequestDto;
+import gift.dto.OrderResponseDto;
 import gift.model.Member;
 import gift.model.Order;
 import gift.service.MemberService;
@@ -36,12 +37,13 @@ public class OrderController {
 
     @PostMapping
     @Operation(summary = "주문하기", description = "주문을 합니다.")
-    public ResponseEntity<Order> createOrder(@RequestBody @Valid OrderDto orderDto,
+    public ResponseEntity<OrderResponseDto> createOrder(@RequestBody @Valid OrderRequestDto orderRequestDto,
                                              @RequestHeader(HttpHeaders.AUTHORIZATION) String authHeader) {
         String token = authHeader.substring(7);
         Member member = memberService.findByActiveToken(token);
-        Order order = orderService.createOrder(orderDto, member.getId());
-        return ResponseEntity.status(201).body(order);
+        Order order = orderService.createOrder(orderRequestDto, member.getId());
+        OrderResponseDto orderResponseDto = new OrderResponseDto(order);
+        return ResponseEntity.status(201).body(orderResponseDto);
     }
 
     @GetMapping
