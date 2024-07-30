@@ -13,4 +13,9 @@ public record KakaoProperties(
     String refreshGrantType
 ) {
 
+    public String getKakaoLoginUrl() {
+        var responseType = "code";
+        return "https://kauth.kakao.com/oauth/authorize?client_id=" + clientId + "&response_type="
+            + responseType + "&redirect_uri=" + redirectUri;
+    }
 }
