@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Sign Up</title>
+    <link rel="stylesheet" type="text/css" href="styles.css">
+</head>
+<body>
+<h2>Sign Up</h2>
+<form th:action="@{/signup}" method="post" th:object="${userDTO}">
+    <div>
+        <label for="email">Email:</label>
+        <input type="text" id="email" name="email" />
+    </div>
+    <div>
+        <label for="password">Password:</label>
+        <input type="password" id="password" name="password" />
+    </div>
+    <div>
+        <button type="submit">Sign Up</button>
+    </div>
+</form>
+</body>
+</html>

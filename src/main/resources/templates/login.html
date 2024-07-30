@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Login</title>
+    <link rel="stylesheet" type="text/css" href="styles.css">
+</head>
+<body>
+<h2>Login</h2>
+<form th:action="@{/login}" method="post" th:object="${userDTO}">
+    <div>
+        <label for="email">Username:</label>
+        <input type="text" id="email" name="email" />
+    </div>
+    <div>
+        <label for="password">Password:</label>
+        <input type="password" id="password" name="password" />
+    </div>
+
+    <div>
+        <button type="submit">Login</button>
+        <a th:href="@{/signup}"><button type="button">Sign Up</button></a>
+    </div>
+    <a href = /kakao-login> <img src="/kakao_login_medium_narrow.png" alt="Kakao Login"/></a>
+</form>
+</body>
+</html>

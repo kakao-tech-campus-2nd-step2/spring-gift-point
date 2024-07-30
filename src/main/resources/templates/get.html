@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Product Details</title>
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+    </style>
+</head>
+<body>
+<h1>Product Details</h1>
+<table>
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>상품명</th>
+        <th>가격</th>
+        <th>Image URL</th>
+        <th>카테고리</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="product : ${products}">
+        <td><span th:text="${product.id}"></span></td>
+        <td><span th:text="${product.name}"></span></td>
+        <td><span th:text="${product.price}"></span></td>
+        <td><span th:text="${product.imageUrl}"></span></td>
+        <td><span th:text="${product.categoryName}"></span></td>
+    </tr>
+    </tbody>
+</table>
+</body>
+</html>

@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin Main</title>
+</head>
+<body>
+<h1>Admin Main Page!</h1>
+
+
+<form th:action="@{/admin/get}" method="get">
+    <button type="submit">get</button>
+</form>
+
+<form th:action="@{/admin/post}" method="get">
+    <button type="submit">post</button>
+</form>
+
+<form th:action="@{/admin/delete}" method="get">
+    <button type="submit">delete</button>
+</form>
+
+<form th:action="@{/admin/put}" method="get">
+    <button type="submit">update</button>
+</form>
+
+</body>
+</html>

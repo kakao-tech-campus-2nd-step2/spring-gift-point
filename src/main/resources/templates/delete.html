@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Delete Page!</title>
+</head>
+<body>
+<h1>Delete Page!</h1>
+<p>삭제하고자 하는 상품의 id를 입력하세요.</p>
+<form th:action="@{/admin/delete/submit}" method="post">
+    <label for="id">ID:</label>
+    <input type="text" id="id" name="productId" required><br><br>
+    <button type="submit">Submit</button>
+</form>
+</body>
+</html>
