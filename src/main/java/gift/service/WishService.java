@@ -1,7 +1,10 @@
 package gift.service;
 
+import gift.dto.ProductResponse;
 import gift.dto.WishRequest;
+import gift.dto.WishResponse;
 import gift.exception.NotFoundException;
+import gift.exception.auth.UnauthorizedException;
 import gift.model.Member;
 import gift.model.Product;
 import gift.model.Wish;
@@ -32,14 +35,27 @@ public class WishService {
         return wish;
     }
 
-    public Page<Product> getAllWishProductsByMember(Member member, Pageable pageable) {
-        return wishRepository.findAllByMemberId(member.getId(), pageable);
+    public Page<WishResponse> getWishesByMember(Member member, Pageable pageable) {
+        Page<Wish> wishes = wishRepository.findByMember(member, pageable);
+        Page<WishResponse> wishResponses = wishes.map(wish -> new WishResponse(
+                wish.getId(),
+                wish.getProduct().getId(),
+                wish.getProduct().getName(),
+                wish.getProduct().getPrice(),
+                wish.getProduct().getImageUrl(),
+                wish.getProduct().getCategory()
+        ));
+        return wishResponses;
     }
 
     @Transactional
-    public void deleteWish(Long productId, Member member) {
-        Product product = productRepository.findById(productId)
-                .orElseThrow(() -> new NotFoundException("해당 productId의 상품을 찾을 수 없습니다."));
-        wishRepository.deleteByProductAndMember(product, member);
+    public void deleteWish(Long id, Member member) {
+        Wish wish = wishRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("해당 id의 wish가 없습니다."));
+        if (wish.getMember().getId() == member.getId()) {
+            wishRepository.delete(wish);
+            return;
+        }
+        throw new UnauthorizedException("해당 id의 wish는 본인의 wish가 아닙니다.");
     }
 }
