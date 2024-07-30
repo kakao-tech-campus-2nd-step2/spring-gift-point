@@ -35,8 +35,10 @@ public class AdminController {
     }
 
     @GetMapping
-    public String getAllProducts(@RequestParam(value = "page", defaultValue = "0") int page, Model model){
-        Page<ProductDTO> products = productService.getPage(email, page);
+    public String getAllProducts(@RequestParam(value = "page", defaultValue = "0") int page,
+                                 @RequestParam(value = "size", defaultValue = "10") int size,
+                                 @RequestParam(value = "sort", defaultValue = "10") String sort, Model model){
+        Page<ProductDTO> products = productService.getPage(email, page, size, sort);
         model.addAttribute("products", products);
         return "products";
     }
