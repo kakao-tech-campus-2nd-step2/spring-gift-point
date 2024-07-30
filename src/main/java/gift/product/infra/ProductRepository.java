@@ -53,4 +53,8 @@ public class ProductRepository {
         productOptionJpaRepository.save(new ProductOption(createProductOptionRequestDTO.getName(), createProductOptionRequestDTO.getQuantity(), product));
         return productJpaRepository.save(product);
     }
+
+    public Page<Product> findByCategoryId(Long categoryId, Pageable pageable) {
+        return productJpaRepository.findByCategoryId(categoryId, pageable);
+    }
 }

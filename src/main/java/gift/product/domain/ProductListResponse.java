@@ -5,11 +5,11 @@ import java.util.List;
 public class ProductListResponse {
     private List<ProductResponse> products;
     private int number;
-    private int totalElement;
+    private long totalElement;
     private int size;
     private boolean last;
 
-    public ProductListResponse(List<ProductResponse> products, int number, int totalElement, int size, boolean last) {
+    public ProductListResponse(List<ProductResponse> products, int number, long totalElement, int size, boolean last) {
         this.products = products;
         this.number = number;
         this.totalElement = totalElement;
@@ -29,7 +29,7 @@ public class ProductListResponse {
         return number;
     }
 
-    public int getTotalElement() {
+    public long getTotalElement() {
         return totalElement;
     }
 

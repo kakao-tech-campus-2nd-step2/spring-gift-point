@@ -9,6 +9,7 @@ import gift.util.annotation.AdminAuthenticated;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.annotation.Nullable;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -30,9 +31,10 @@ public class ProductManageController {
         this.productService = productService;
     }
 
-    @Operation(summary = "상품 조회", description = "모든 상품을 조회합니다.")
+    @Operation(summary = "상품 조회", description = "상품을 조회합니다.")
     @GetMapping("/products")
     public ResponseEntity<?> getProducts(
+            @RequestParam @Nullable Long categoryId,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "20") int size,
             @RequestParam(defaultValue = "createdAt,desc") String sort
@@ -41,7 +43,7 @@ public class ProductManageController {
         Sort sorting = Sort.by(Sort.Direction.fromString(sortParams[1]), sortParams[0]);
         Pageable pageable = PageRequest.of(page, size, sorting);
 
-        return ResponseEntity.ok(productService.getProduct(pageable));
+        return ResponseEntity.ok(productService.getProductByCategory(categoryId, pageable));
     }
 
     @Operation(summary = "상품 단건 조회", description = "특정 상품을 조회합니다.")
