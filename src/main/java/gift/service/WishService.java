@@ -5,7 +5,6 @@ import static gift.controller.wish.WishMapper.toWishResponse;
 import gift.controller.wish.WishCreateRequest;
 import gift.controller.wish.WishMapper;
 import gift.controller.wish.WishResponse;
-import gift.controller.wish.WishUpdateRequest;
 import gift.domain.Member;
 import gift.domain.Product;
 import gift.domain.Wish;
@@ -64,15 +63,7 @@ public class WishService {
         Product product = productRepository.findById(wish.productId())
             .orElseThrow(ProductNotExistsException::new);
 
-        return toWishResponse(wishRepository.save(new Wish(member, product, wish.count())));
-    }
-
-    @Transactional
-    public WishResponse update(UUID memberId, UUID productId, WishUpdateRequest wish) {
-        Wish target = wishRepository.findByMemberIdAndProductId(memberId, productId)
-            .orElseThrow(WishNotExistsException::new);
-        target.setCount(wish.count());
-        return toWishResponse(wishRepository.save(target));
+        return toWishResponse(wishRepository.save(new Wish(member, product)));
     }
 
     @Transactional

@@ -1,5 +1,7 @@
 package gift.controller.product;
 
-public record WishProductResponse(String name, Long price, String imageUrl) {
+import java.util.UUID;
+
+public record WishProductResponse(UUID id, String name, Long price, String imageUrl, String categoryName) {
 
 }
