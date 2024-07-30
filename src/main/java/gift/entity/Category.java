@@ -63,7 +63,7 @@ public class Category {
     }
 
     public ResponseCategoryDTO toResponseDTO() {
-        return new ResponseCategoryDTO(this.id, this.name,this.description,this.color,this.imageUrl);
+        return new ResponseCategoryDTO(this.id, this.name, this.description, this.color, this.imageUrl);
     }
 
     public void checkEmpty() {

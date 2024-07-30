@@ -37,7 +37,6 @@ public class OptionService {
     private final OptionRepository optionRepository;
 
 
-
     public OptionResponseDTO saveOption(int productId, SaveOptionDTO saveOptionDTO) {
         Product product = productRepository.findById(productId).orElseThrow(() -> new NotFoundException("해당 물품이 없음"));
         optionRepository.findByOption(productId, saveOptionDTO.name()).ifPresent(c -> {
@@ -50,7 +49,7 @@ public class OptionService {
     public OptionResponseDTO deleteOption(int productId, int optionId) {
         Product product = productRepository.findById(productId).orElseThrow(() -> new NotFoundException("해당 제품이 없음"));
         Option option = optionRepository.findById(optionId).orElseThrow(() -> new NotFoundException("해당 옵션이 없음"));
-        if(!product.getOptions().contains(option))throw new NotFoundException("제품id에 해당하는 옵션id가 없음");
+        if (!product.getOptions().contains(option)) throw new NotFoundException("제품id에 해당하는 옵션id가 없음");
 
         option.getProduct().deleteOption(option);
         optionRepository.deleteById(optionId);
@@ -61,7 +60,7 @@ public class OptionService {
     public OptionResponseDTO updateOption(int productId, int optionId, SaveOptionDTO saveOptionDTO) {
         Option option = optionRepository.findById(optionId).orElseThrow(() -> new NotFoundException("해당 옵션이 없음"));
         Product product = productRepository.findById(productId).orElseThrow(() -> new NotFoundException("해당 제품이 없음"));
-        if(!product.getOptions().contains(option))throw new NotFoundException("제품id에 해당하는 옵션id가 없음");
+        if (!product.getOptions().contains(option)) throw new NotFoundException("제품id에 해당하는 옵션id가 없음");
         product.getOptions().remove(option);
 
         optionRepository.findByOption(productId, saveOptionDTO.name()).ifPresent(c -> {
@@ -82,7 +81,7 @@ public class OptionService {
     public OptionResponseDTO refillQuantity(int productId, int optionId, OptionQuantityDTO optionQuantityDTO) {
         Product product = productRepository.findById(productId).orElseThrow(() -> new NotFoundException("해당 제품이 없음"));
         Option option = optionRepository.findById(optionId).orElseThrow(() -> new NotFoundException("해당 옵션이 없음"));
-        if(!product.getOptions().contains(option))throw new NotFoundException("제품id에 해당하는 옵션id가 없음");
+        if (!product.getOptions().contains(option)) throw new NotFoundException("제품id에 해당하는 옵션id가 없음");
 
         option = option.addQuantity(optionQuantityDTO.quantity());
         return option.toResponseDTO();

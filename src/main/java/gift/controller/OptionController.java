@@ -36,7 +36,7 @@ public class OptionController {
     }
 
     @GetMapping("/api/products/{productId}/options")
-    public List<OptionResponseDTO> getOptions(@PathVariable int productId){
+    public List<OptionResponseDTO> getOptions(@PathVariable int productId) {
         return optionService.getOptions(productId);
     }
 

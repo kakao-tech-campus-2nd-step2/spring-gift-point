@@ -36,7 +36,8 @@ public class Option {
         this.name = option;
         this.quantity = 0;
     }
-    public OptionResponseDTO toResponseDTO(){
+
+    public OptionResponseDTO toResponseDTO() {
         return new OptionResponseDTO(this.id, this.name, this.quantity, this.product.id);
     }
 
