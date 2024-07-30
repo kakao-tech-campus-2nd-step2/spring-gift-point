@@ -43,7 +43,7 @@ public class KakaoService {
     }
 
     public OauthToken saveKakaoToken(Member member, KakaoTokenResponse kakaoTokenResponse) {
-        if (oauthTokenRepository.existsByMemberId(member.getId())) {
+        if (oauthTokenRepository.existsByMemberIdAndOauthType(member.getId(), OauthType.KAKAO)) {
             return updateOauthToken(member, kakaoTokenResponse);
         }
         return createAndSaveOauthToken(member, kakaoTokenResponse);
@@ -65,8 +65,8 @@ public class KakaoService {
     }
 
     public void deleteByMemberId(Long memberId) {
-        if (!oauthTokenRepository.existsByMemberId(memberId)) return;
-        oauthTokenRepository.deleteByMemberId(memberId);
+        if (!oauthTokenRepository.existsByMemberIdAndOauthType(memberId, OauthType.KAKAO)) return;
+        oauthTokenRepository.deleteAllByMemberId(memberId);
     }
 
     private OauthToken tokenValidation(OauthToken oauthToken) {

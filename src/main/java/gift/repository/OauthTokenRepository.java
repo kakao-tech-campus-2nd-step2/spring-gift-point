@@ -10,9 +10,9 @@ import java.util.Optional;
 @Repository
 public interface OauthTokenRepository extends JpaRepository<OauthToken, Long> {
 
-    boolean existsByMemberId(Long memberId);
+    boolean existsByMemberIdAndOauthType(Long memberId, OauthType oauthType);
 
     Optional<OauthToken> findByMemberIdAndOauthType(Long memberId, OauthType oauthType);
 
-    void deleteByMemberId(Long memberId);
+    void deleteAllByMemberId(Long memberId);
 }
