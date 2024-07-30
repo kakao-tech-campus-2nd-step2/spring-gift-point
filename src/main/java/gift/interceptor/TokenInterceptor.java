@@ -10,6 +10,12 @@ import org.springframework.web.servlet.HandlerInterceptor;
 @Component
 public class TokenInterceptor implements HandlerInterceptor {
 
+    private final TokenService tokenService;
+
+    public TokenInterceptor(TokenService tokenService) {
+        this.tokenService = tokenService;
+    }
+
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         String authorizationHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
@@ -21,7 +27,7 @@ public class TokenInterceptor implements HandlerInterceptor {
 
         String token = authorizationHeader.substring(7); // "Bearer " 이후의 실제 토큰 값
         try {
-            String email = TokenService.extractEmailFromToken(token);
+            String email = tokenService.extractEmailFromToken(token);
             request.setAttribute("email", email);
         } catch (IllegalArgumentException e) {
             response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "잘못된 토큰입니다.");

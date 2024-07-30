@@ -23,13 +23,15 @@ public class OrderService {
     private final WishRepository wishRepository;
     private final KakaoMessageService kakaoMessageService;
     private final MemberService memberService;
+    private final TokenService tokenService;
 
-    public OrderService(OrderRepository orderRepository, OptionRepository optionRepository, WishRepository wishRepository, KakaoMessageService kakaoMessageService, MemberService memberService) {
+    public OrderService(OrderRepository orderRepository, OptionRepository optionRepository, WishRepository wishRepository, KakaoMessageService kakaoMessageService, MemberService memberService, TokenService tokenService) {
         this.orderRepository = orderRepository;
         this.optionRepository = optionRepository;
         this.wishRepository = wishRepository;
         this.kakaoMessageService = kakaoMessageService;
         this.memberService = memberService;
+        this.tokenService = tokenService;
     }
 
     @Transactional
@@ -57,8 +59,8 @@ public class OrderService {
         );
 
         // JWT 토큰인지 카카오 엑세스 토큰인지 확인하기
-        if (TokenService.isJwtToken(token)) {
-            String email = TokenService.extractEmailFromToken(token);
+        if (tokenService.isJwtToken(token)) {
+            String email = tokenService.extractEmailFromToken(token);
             // JWT 토큰일 경우 메시지 응답 바디에 포함
             logger.info("Order created for email: {}", email);
         } else {

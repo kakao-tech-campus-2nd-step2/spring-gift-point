@@ -14,15 +14,17 @@ public class MemberService {
 
     private static final Logger logger = LoggerFactory.getLogger(MemberService.class);
     private final MemberRepository memberRepository;
+    private final TokenService tokenService;
 
-    public MemberService(MemberRepository memberRepository) {
+    public MemberService(MemberRepository memberRepository, TokenService tokenService) {
         this.memberRepository = memberRepository;
+        this.tokenService = tokenService;
     }
 
     public MemberDto register(MemberDto memberDto) {
         Member member = new Member(memberDto.getEmail(), memberDto.getPassword());
         Member savedMember = memberRepository.save(member);
-        String token = TokenService.generateToken(member.getEmail(), member.getPassword());
+        String token = tokenService.generateToken(member.getEmail(), member.getPassword());
         return new MemberDto(savedMember.getId(), savedMember.getEmail(), savedMember.getPassword(), token);
     }
 
@@ -31,7 +33,7 @@ public class MemberService {
         Member member = memberOptional.orElseThrow(() -> new RuntimeException("잘못된 인증입니다."));
 
         if (member.checkPassword(password)) {
-            String token = TokenService.generateToken(email, password);
+            String token = tokenService.generateToken(email, password);
             return new MemberDto(member.getId(), email, password, token);
         } else {
             throw new RuntimeException("잘못된 인증입니다.");
@@ -40,7 +42,7 @@ public class MemberService {
 
     public MemberDto validateToken(String token) {
         logger.info("Validating token: {}", token);
-        String[] parts = TokenService.decodeToken(token);
+        String[] parts = tokenService.decodeToken(token);
         String email = parts[0];
         String password = parts[1];
         logger.info("Decoded token - email: {}, password: {}", email, password);
