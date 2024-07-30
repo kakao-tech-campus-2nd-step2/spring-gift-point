@@ -10,9 +10,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface WishRepository extends JpaRepository<Wish, Long> {
-    List<Wish> findByMemberId(Long memberId);
-    Optional<Wish> findByIdAndMemberId(Long id, Long memberId);
     Page<Wish> findByMemberId(Long memberId, Pageable pageable);
-    boolean existsByOptionId(Long optionId);
-    void deleteByOptionId(Long optionId);
+    boolean existsByProductId(Long optionId);
+    void deleteByProductId(Long productId);
 }
