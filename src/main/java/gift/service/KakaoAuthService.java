@@ -77,31 +77,24 @@ public class KakaoAuthService {
     }
 
     public void orderProduct(String token, OrderDTO orderDTO) throws JsonProcessingException {
-        Long productId = orderDTO.getProductId();
+        Long optionId = orderDTO.getOptionId();
         int quantity = orderDTO.getQuantity();
-        //상품 찾음 productID
-        Product product = productService.getProductById(productId);
-        //프론트에서 옵션 쓰지 않음.
-//        //옵션 찾음 productID optionName
-//        List<Option> optionList = optionRepository.findAllByProduct_Id(productId);
-//        List<String> optionNameList = optionList.stream()
-//                .map(Option::getName)
-//                .toList();
-//        if(!optionNameList.contains(optionName)){
-//            throw new IllegalArgumentException("해당 옵션이 없습니다.");
-//        }
-//        //옵션 수량 만큼 감소(remove) num
-//        Optional<Option> Optionaloption = optionRepository.findByNameAndProduct_Id(optionName, productId);
-//        Optionaloption.ifPresent(option ->
-//                optionService.removeOption(option, num));
+
+        //옵션 수량 만큼 감소(remove) num
+        Optional<Option> Optionaloption = optionRepository.findById(optionId);
+        if(!Optionaloption.isPresent()){
+            throw new NoSuchElementException("해당옵션이 없습니다.");
+        }
+        Option option = Optionaloption.get();
+        optionService.removeOption(option, quantity);
         //멤버 ID찾음 token
         Member member = getDBMemberByToken(token);
         //위시리스트에 상품있으면 삭제 멤버iD, productID
-        Optional<Wish> OptionalWish = wishRepository.findByMember_IdAndProduct_Id(member.getId(), productId);
+        Optional<Wish> OptionalWish = wishRepository.findByMember_IdAndProduct_Id(member.getId(), option.getProductID());
         OptionalWish.ifPresent(wish ->
                 wishRepository.deleteById(wish.getId()));
         //카카오톡 메세지 보내기
-        sendKakaoMessage(token, product.getName(), quantity);
+        sendKakaoMessage(token, orderDTO.getMessage());
     }
 
     public Member getDBMemberByToken(String token){
@@ -126,14 +119,14 @@ public class KakaoAuthService {
         return response.getBody().getId();
     }
 
-    public void sendKakaoMessage(String token, String productName, int num) throws JsonProcessingException {
+    public void sendKakaoMessage(String token, String message) throws JsonProcessingException {
         logger.info("sendKakaoMessage");
         var url = "https://kapi.kakao.com/v2/api/talk/memo/default/send";
         var headers = new HttpHeaders();
         headers.setBearerAuth(token);
         headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
 
-        var body = createTemplateObject(productName, num);
+        var body = createTemplateObject(message);
 
         var response = this.client.post()
                 .uri(url)
@@ -156,15 +149,13 @@ public class KakaoAuthService {
         return body;
     }
 
-    private @NotNull LinkedMultiValueMap<String, String> createTemplateObject(String productName, int num) throws JsonProcessingException {
+    private @NotNull LinkedMultiValueMap<String, String> createTemplateObject(String message) throws JsonProcessingException {
         String objectType = "text";
-        String text = productName + " 상품이 "
-                        + Integer.toString(num) + "개 주문되었습니다.";
         String webUrl = "http://localhost:8080/";
         String buttonTitle = "바로가기";
 
         LinkObject link = new LinkObject(webUrl);
-        TemplateObject templateObject = new TemplateObject(objectType, text, link, buttonTitle);
+        TemplateObject templateObject = new TemplateObject(objectType, message, link, buttonTitle);
 
         ObjectMapper mapper = new ObjectMapper();
         String jsonString = mapper.writeValueAsString(templateObject);

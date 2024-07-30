@@ -47,8 +47,8 @@ public class Option {
         return name;
     }
 
-    public Product getProductID() {
-        return product;
+    public Long getProductID() {
+        return product.getId();
     }
 
     public void updateName(String name){
