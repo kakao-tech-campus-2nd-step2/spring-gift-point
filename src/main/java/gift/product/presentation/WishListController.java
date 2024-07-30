@@ -45,41 +45,27 @@ public class WishListController {
         Long userId = (Long) authentication.getPrincipal();
 
         List<WishListResponse> products = wishListService.getWishListByUserId(userId, pageable);
-
         return ResponseEntity.ok(products);
     }
 
     @JwtAuthenticated
-    @Operation(summary = "위시리스트 생성", description = "새로운 위시리스트를 생성합니다.")
-    @PostMapping("/wishes/create")
-    public ResponseEntity<?> createWishList() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        Long userId = (Long) authentication.getPrincipal();
-
-        wishListService.createWishList(userId);
-        return ResponseEntity.ok(new CommonResponse<>(null, "위시리스트 생성 성공", true));
-    }
-
-    @JwtAuthenticated
-    @Operation(summary = "위시리스트에 제품 추가", description = "위시리스트에 제품을 추가합니다.")
-    @PostMapping("/{wishListId}/add/{productId}/{optionId}/{quentity}")
-    public ResponseEntity<?> addProductToWishList(
-            @PathVariable Long wishListId,
-            @PathVariable Long productId,
-            @PathVariable Long optionId,
-            @PathVariable Long quentity) {
+    @Operation(summary = "위시리스트 생성", description = "위시리스트에 제품을 추가합니다.")
+    @PostMapping("/wishes")
+    public ResponseEntity<?> addProductToWishList(@RequestBody CreateWishListRequest request) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         Long userId = Long.valueOf(authentication.getName());
-        wishListService.addProductToWishList(new AddWishListRequest(userId, wishListId, productId, optionId, quentity));
+        wishListService.addProductToWishList(new AddWishListRequest(userId, request.getProductId()));
         return ResponseEntity.ok(new CommonResponse<>(null, "위시리스트에 제품 추가 성공", true));
     }
 
     @JwtAuthenticated
     @Operation(summary = "위시리스트에서 제품 삭제", description = "위시리스트에서 제품을 삭제합니다.")
-    @DeleteMapping("/{userId}/delete/{productId}")
+    @DeleteMapping("/wishes/{productId}")
     public ResponseEntity<?> deleteProductFromWishList(
-            @PathVariable Long userId,
-            @PathVariable Long productId) {
+            @PathVariable Long productId
+    ) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        Long userId = Long.valueOf(authentication.getName());
         wishListService.deleteProductFromWishList(userId, productId);
         return ResponseEntity.ok(new CommonResponse<>(null, "제품 삭제 성공", true));
     }
