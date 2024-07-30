@@ -12,6 +12,7 @@ import gift.domain.wishlist.dto.ProductIdRequest;
 import gift.domain.wishlist.entity.Wish;
 import gift.domain.wishlist.repository.WishRepository;
 import java.net.URI;
+import java.time.LocalDateTime;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -119,7 +120,7 @@ class WishControllerTest {
 
             Product product = new Product("name", 1000, "imageUrl", savedCategory);
             productRepository.save(product);
-            Wish newWish = new Wish(memberService.getMemberFromToken(token), product);
+            Wish newWish = new Wish(memberService.getMemberFromToken(token), product, LocalDateTime.now());
             wishRepository.save(newWish);
 
             return null;

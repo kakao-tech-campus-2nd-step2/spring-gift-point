@@ -2,6 +2,7 @@ package gift.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doReturn;
@@ -91,11 +92,12 @@ class ProductServiceTest {
         Page<Product> pageList = new PageImpl<>(productList, pageable, productList.size());
         Page<ProductResponse> expected = pageList.map(this::entityToDto);
 
-        doReturn(pageList).when(productRepository).findAll(pageable);
+        Category category = new Category(1L, "category", "color", "url", "");
+        doReturn(Optional.of(category)).when(categoryRepository).findById(category.getId());
+        doReturn(pageList).when(productRepository).findAllByCategory(pageable, category);
 
         // when
-        Page<ProductResponse> actual = productService.getAllProducts(pageable.getPageNumber(),
-            pageable.getPageSize());
+        Page<ProductResponse> actual = productService.getAllProducts(pageable, category.getId());
 
         // then
         assertAll(
@@ -125,25 +127,11 @@ class ProductServiceTest {
 
         doReturn(Optional.of(newProduct.getCategory())).when(categoryRepository).findById(any());
         doReturn(newProduct).when(productRepository).save(any());
-        doReturn(optionResponse).when(optionService).addOptionToProduct(any(), any());
-
-        ProductCreateResponse expected = new ProductCreateResponse(entityToDto(newProduct),
-            optionResponse);
+        doNothing().when(optionService).addOptionToProduct(any(), any());
 
         // when
-        ProductCreateResponse actual = productService.createProduct(productRequest);
-
         // then
-        assertAll(
-            () -> assertThat(actual.name()).isEqualTo(expected.name()),
-            () -> assertThat(actual.price()).isEqualTo(expected.price()),
-            () -> assertThat(actual.imageUrl()).isEqualTo(expected.imageUrl()),
-            () -> assertThat(actual.categoryId()).isEqualTo(expected.categoryId()),
-            () -> assertThat(actual.optionResponse().name()).isEqualTo(
-                expected.optionResponse().name()),
-            () -> assertThat(actual.optionResponse().quantity()).isEqualTo(
-                expected.optionResponse().quantity())
-        );
+        assertDoesNotThrow(()->productService.createProduct(productRequest));
     }
 
     @Test
@@ -156,8 +144,6 @@ class ProductServiceTest {
         Product updatedProduct = createProduct();
         Product spyProduct = spy(updatedProduct);
 
-        ProductResponse expected = entityToDto(updatedProduct);
-
         doReturn(Optional.of(updatedProduct.getCategory())).when(categoryRepository)
             .findById(any());
         doReturn(Optional.of(spyProduct)).when(productRepository).findById(any());
@@ -165,15 +151,9 @@ class ProductServiceTest {
             productRequest.getImageUrl(), updatedProduct.getCategory());
 
         // when
-        ProductResponse actual = productService.updateProduct(requestId, productRequest);
-
         // then
-        assertAll(
-            () -> assertThat(actual.name()).isEqualTo(expected.name()),
-            () -> assertThat(actual.price()).isEqualTo(expected.price()),
-            () -> assertThat(actual.imageUrl()).isEqualTo(expected.imageUrl()),
-            () -> assertThat(actual.categoryId()).isEqualTo(expected.categoryId())
-        );
+        assertDoesNotThrow(()->
+            productService.updateProduct(requestId, productRequest));
     }
 
     @Test
