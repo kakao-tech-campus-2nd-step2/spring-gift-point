@@ -36,7 +36,7 @@ public class AuthController {
     @Operation(summary = "로그인", description = "사용자 정보와 저장된 정보를 비교해서 로그인을 진행한다.")
     @PostMapping("/login")
     public ResponseEntity<?> loginUser(@RequestBody AuthenticationRequest authenticationRequest) {
-        User user = userService.valid(authenticationRequest.getEmail(), authenticationRequest.getPassword());
+        User user = userService.valid(authenticationRequest.email(), authenticationRequest.password());
         String token = jwtUtil.generateToken(user.getEmail());
         return ResponseEntity.ok(new AuthenticationResponse(token));
     }
