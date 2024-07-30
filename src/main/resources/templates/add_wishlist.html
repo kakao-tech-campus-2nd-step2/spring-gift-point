@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>Add to Wishlist</title>
+</head>
+<body>
+<h1>Add to Wishlist</h1>
+<table id="productsTable">
+  <thead>
+  <tr>
+    <th>ID</th>
+    <th>Name</th>
+    <th>Price</th>
+    <th>Image</th>
+    <th>Amount</th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr th:each="product : ${products.content}">
+    <td th:text="${product.id}"></td>
+    <td th:text="${product.name}"></td>
+    <td th:text="${product.price}"></td>
+    <td th:text="${product.imageUrl}"></td>
+    <td>
+      <input type="number" class="amountInput" min="0" value="0"
+             th:data-product-id="${product.id}"
+             th:data-user-id="${userId}"/>
+    </td>
+  </tr>
+  </tbody>
+</table>
+<div th:if="${products.totalPages > 1}">
+  <ul class="pagination">
+    <li th:class="${products.first ? 'disabled' : ''}">
+      <a th:href="@{/wishlist/{userId}/new(userId=${userId})}" th:text="First"></a>
+    </li>
+    <li th:class="${products.first ? 'disabled' : ''}">
+      <a th:href="@{/wishlist/{userId}/new(userId=${userId}, page=${products.number - 1}, size=${products.size})}" th:text="Previous"></a>
+    </li>
+    <li th:each="pageNumber : ${#numbers.sequence(0, products.totalPages - 1)}"
+        th:class="${pageNumber == products.number ? 'active' : ''}">
+      <a th:href="@{/wishlist/{userId}/new(userId=${userId}, page=${pageNumber}, size=${products.size})}" th:text="${pageNumber + 1}"></a>
+    </li>
+    <li th:class="${products.last ? 'disabled' : ''}">
+      <a th:href="@{/wishlist/{userId}/new(userId=${userId}, page=${products.number + 1}, size=${products.size})}" th:text="Next"></a>
+    </li>
+    <li th:class="${products.last ? 'disabled' : ''}">
+      <a th:href="@{/wishlist/{userId}/new(userId=${userId}, page=${products.totalPages - 1}, size=${products.size})}" th:text="Last"></a>
+    </li>
+  </ul>
+</div>
+<button id="addToWishlistBtn">Add to Wishlist</button>
+
+<script th:inline="javascript">
+  /*<![CDATA[*/
+  document.getElementById('addToWishlistBtn').addEventListener('click', function() {
+    var wishlistItems = [];
+
+    // 각 제품의 Amount 값을 wishlistItems 배열에 추가
+    var amountInputs = document.getElementsByClassName('amountInput');
+    for (var i = 0; i < amountInputs.length; i++) {
+      var productId = amountInputs[i].getAttribute('data-product-id');
+      var userId = amountInputs[i].getAttribute('data-user-id');
+      var amount = amountInputs[i].value;
+
+      // Amount가 0보다 큰 경우에만 wishlistItems에 추가
+      if (amount > 0) {
+        wishlistItems.push({
+          userId: parseInt(userId),
+          productId: parseInt(productId),  // Ensure productId is a number
+          amount: parseInt(amount)        // Ensure amount is a number
+        });
+      }
+    }
+
+    // JSON으로 변환
+    var jsonWishlistItems = JSON.stringify(wishlistItems);
+
+    // AJAX 요청 설정
+    var xhr = new XMLHttpRequest();
+    var url = '/wishlist/' + userId + '/save';
+    xhr.open('POST', url);
+    xhr.setRequestHeader('Content-Type', 'application/json');
+
+    // 요청 완료 후 리다이렉트
+    xhr.onload = function() {
+      if (xhr.status === 201 || xhr.status === 200) {
+        window.location.href = '/wishlist/' + userId;
+      } else {
+        console.error('Error:', xhr.status);
+        alert('Failed to add to wishlist');
+      }
+    };
+
+    // 요청 보내기
+    xhr.send(jsonWishlistItems);
+  });
+  /*]]>*/
+</script>
+</body>
+</html>
