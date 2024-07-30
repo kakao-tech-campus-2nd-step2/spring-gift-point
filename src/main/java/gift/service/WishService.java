@@ -4,6 +4,7 @@ import gift.dto.WishlistResponseDto;
 import gift.entity.Member;
 import gift.entity.Product;
 import gift.entity.Wish;
+import gift.exception.WishException;
 import gift.repository.MemberRepository;
 import gift.repository.ProductRepository;
 import gift.repository.WishRepository;
@@ -29,39 +30,40 @@ public class WishService {
 
     }
 
-    public List<WishlistResponseDto> getWishListByMemberId(Long memberId) {
-        List<Wish> wishList = wishRepository.findByMemberId(memberId);
-        return wishList.stream()
-            .map(wish -> new WishlistResponseDto(wish.getMember().getId(), wish.getProduct().getId()))
-            .collect(Collectors.toList());
-    }
+//    public List<WishlistResponseDto> getWishListByMemberId(Long memberId) {
+//        List<Wish> wishList = wishRepository.findByMemberId(memberId);
+//        return wishList.stream()
+//            .map(wish -> new WishlistResponseDto(wish.getId(), wish.getProduct()))
+//            .collect(Collectors.toList());
+//    }
 
     public List<Wish> getWishlist(Long memberId) {
         return wishRepository.findByMemberId(memberId);
     }
 
-    public boolean addWishlist(Long memberId, Long productId){
+    public void addWishlist(Long memberId, Long productId) throws WishException {
         Optional<Member> member = memberRepository.findById(memberId);
         Optional<Product> product = productRepository.findById(productId);
 
         if(member.isEmpty() || product.isEmpty()){
-            return false;
+            throw new WishException("존재하지 않는 회원 또는 상품입니다.");
+        }
+        if (wishRepository.findByMemberIdAndProductId(memberId, productId).isPresent()) {
+           throw new WishException("이미 위시리스트에 있는 상품입니다.");
         }
         Wish wish = new Wish(member.get(), product.get());
         wishRepository.save(wish);
-        return true;
     }
 
-    public boolean deleteWishlist(Long memberId, Long productId){
+    public void deleteWishlist(Long memberId, Long productId) throws WishException {
         Optional<Wish> wish = wishRepository.findByMemberIdAndProductId(memberId, productId);
-        if (wish.isPresent()){
-            wishRepository.delete(wish.get());
-            return true;
+        if (wish.isEmpty()){
+            throw new WishException("위시리스트에 존재하지 않는 상품입니다.");
         }
-        return false;
+        wishRepository.delete(wish.get());
     }
 
     public Page<Wish> findByMemberId(Long memberId, Pageable pageable) {
-        return wishRepository.findByMemberId(memberId, pageable);
+       return wishRepository.findByMemberId(memberId, pageable);
     }
 }

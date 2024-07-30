@@ -3,6 +3,7 @@ package gift.controller;
 import gift.annotation.LoginUser;
 import gift.dto.OrderRequestDto;
 import gift.dto.OrderResponseDto;
+import gift.exception.WishException;
 import gift.service.OrderService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -40,7 +41,8 @@ public class OrderController {
         }
     )
     @PostMapping
-    public ResponseEntity<OrderResponseDto> addOrder(@LoginUser String email, @Valid @RequestBody OrderRequestDto orderRequestDto){
+    public ResponseEntity<OrderResponseDto> addOrder(@LoginUser String email, @Valid @RequestBody OrderRequestDto orderRequestDto)
+        throws WishException {
         OrderResponseDto orderResponseDto = orderService.addOrder(email, orderRequestDto);
         return new ResponseEntity<>(orderResponseDto, HttpStatus.CREATED);
     }

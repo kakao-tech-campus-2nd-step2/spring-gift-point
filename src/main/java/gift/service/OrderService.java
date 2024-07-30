@@ -8,6 +8,7 @@ import gift.entity.Option;
 import gift.entity.Order;
 import gift.exception.LoginException;
 import gift.exception.OptionException;
+import gift.exception.WishException;
 import gift.repository.MemberRepository;
 import gift.repository.OptionRepository;
 import gift.repository.OrderRepository;
@@ -34,7 +35,8 @@ public class OrderService {
         this.kakaoService = kakaoService;
     }
 
-    public OrderResponseDto addOrder(String email, OrderRequestDto orderRequestDto) {
+    public OrderResponseDto addOrder(String email, OrderRequestDto orderRequestDto)
+        throws WishException {
         Member member = memberRepository.findByEmail(email)
             .orElseThrow(() -> new LoginException("올바르지 않은 사용자 입니다."));
         Option option = optionRepository.findById(orderRequestDto.getOptionId())

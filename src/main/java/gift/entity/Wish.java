@@ -8,6 +8,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "wish")
@@ -24,11 +25,17 @@ public class Wish {
     @JoinColumn(name = "product_id", nullable = false)
     private Product product;
 
-    public Wish() {}
+    private LocalDateTime createdDate;
+
+
+    public Wish() {
+        this.createdDate = LocalDateTime.now();
+    }
 
     public Wish(Member member, Product product) {
         this.member = member;
         this.product = product;
+        this.createdDate = LocalDateTime.now();
     }
 
     public Long getId() {

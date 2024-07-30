@@ -70,11 +70,9 @@ public class ProductController {
     ) {
         String[] sortParams = sort.split(",");
         Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.fromString(sortParams[1]), sortParams[0]));
-        Page<Product> productPage;
+        Page<Product> productPage = productService.findAll(pageable);
         if (categoryId != null) {
             productPage = productService.findAllByCategoryId(categoryId, pageable);
-        } else {
-            productPage = productService.findAll(pageable);
         }
         List<ProductResponseDto> productList = productPage.stream()
             .map(product -> new ProductResponseDto(
