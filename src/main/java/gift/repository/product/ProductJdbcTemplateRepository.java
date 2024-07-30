@@ -75,4 +75,9 @@ public class ProductJdbcTemplateRepository implements ProductRepository {
         return null;
     }
 
+    @Override
+    public Page<Product> findByCategoryId(Long categoryId, Pageable pageable) {
+        return null;
+    }
+
 }
