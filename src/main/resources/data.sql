@@ -58,7 +58,6 @@ VALUES ('백화점', '#6c95dd',
 
 -- 제품 더미 데이터 추가 (카테고리와 연관)
 INSERT INTO products (name, price, image_url, category_id)
-<<<<<<< HEAD
 VALUES ('이마트 모바일 금액권', 50000,
         'https://img1.kakaocdn.net/thumb/C320x320@2x.fwebp.q82/?fname=https%3A%2F%2Fst.kakaocdn.net%2Fproduct%2Fgift%2Fproduct%2F20240319133340_790b6fb28fa24f1fbb3eee4471c0a7fb.jpg',
         1);
@@ -118,37 +117,6 @@ INSERT INTO products (name, price, image_url, category_id)
 VALUES ('카카오페이 상품권', 30000,
         'https://img1.kakaocdn.net/thumb/C320x320@2x.fwebp.q82/?fname=https%3A%2F%2Fst.kakaocdn.net%2Fproduct%2Fgift%2Fproduct%2F20220218175702_d408d902f38d496790467e6999dd7ed5.png',
         2);
-=======
-VALUES ('Product 1', 100, 'image1.jpg', 1);
-INSERT INTO products (name, price, image_url, category_id)
-VALUES ('Product 2', 200, 'image2.jpg', 2);
-INSERT INTO products (name, price, image_url, category_id)
-VALUES ('Product 3', 300, 'image3.jpg', 3);
-INSERT INTO products (name, price, image_url, category_id)
-VALUES ('Product 4', 400, 'image4.jpg', 4);
-INSERT INTO products (name, price, image_url, category_id)
-VALUES ('Product 5', 500, 'image5.jpg', 5);
-INSERT INTO products (name, price, image_url, category_id)
-VALUES ('Product 6', 600, 'image6.jpg', 6);
-INSERT INTO products (name, price, image_url, category_id)
-VALUES ('Product 7', 700, 'image7.jpg', 7);
-INSERT INTO products (name, price, image_url, category_id)
-VALUES ('Product 8', 800, 'image8.jpg', 8);
-INSERT INTO products (name, price, image_url, category_id)
-VALUES ('Product 9', 900, 'image9.jpg', 9);
-INSERT INTO products (name, price, image_url, category_id)
-VALUES ('Product 10', 1000, 'image10.jpg', 10);
-INSERT INTO products (name, price, image_url, category_id)
-VALUES ('Product 11', 1100, 'image11.jpg', 11);
-INSERT INTO products (name, price, image_url, category_id)
-VALUES ('Product 12', 1200, 'image12.jpg', 12);
-INSERT INTO products (name, price, image_url, category_id)
-VALUES ('Product 13', 1300, 'image13.jpg', 1);
-INSERT INTO products (name, price, image_url, category_id)
-VALUES ('Product 14', 1400, 'image14.jpg', 2);
-INSERT INTO products (name, price, image_url, category_id)
-VALUES ('Product 15', 1500, 'image15.jpg', 3);
->>>>>>> bb7d360 (refactor: 필드네임 수정)
 
 -- 옵션 더미 데이터 추가 (각 제품당 2개 옵션)
 
