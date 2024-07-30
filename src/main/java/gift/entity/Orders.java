@@ -1,6 +1,7 @@
 package gift.entity;
 
 import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -9,7 +10,8 @@ import jakarta.persistence.ManyToOne;
 import java.time.LocalDateTime;
 import org.springframework.data.annotation.CreatedDate;
 
-public class Order {
+@Entity
+public class Orders {
 
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
@@ -30,10 +32,10 @@ public class Order {
     @CreatedDate
     private LocalDateTime orderDateTime;
 
-    public Order() {
+    public Orders() {
     }
 
-    public Order(Option option, int quantity, String message, Member member) {
+    public Orders(Option option, int quantity, String message, Member member,LocalDateTime time) {
         this.option = option;
         this.quantity = quantity;
         this.message = message;

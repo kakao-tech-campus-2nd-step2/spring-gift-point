@@ -54,34 +54,7 @@ public class OptionFacadeService {
         return optionService.getOptionByProductId(id);
     }
 
-    public OrderResponseDTO orderOption(OrderRequestDTO orderRequestDTO, String email) {
-        Option option = optionService.getOptionById(orderRequestDTO.getOptionId());
-        int quantity = orderRequestDTO.getQuantity();
-        String message = orderRequestDTO.getMessage();
 
-        //상품이 wishlist에 있을 시 위시리스트에서 삭제
-        List<Wish> list = wishlistService.getWishlistByEmail(email);
-        for (Wish wish : list) {
-            if (wish.getProduct().equals(option.getProduct())) {
-                wishlistService.deleteWishlist(wish.getProduct().getId(), email);
-            }
-        }
-        //옵션 수량 감소
-        optionService.subtractOption(option.getId(), quantity);
-
-        //카카오톡 메시지 보내기
-        sendMessage(message, snsMemberService.getOauthAccessTokenByEmail(email), option, quantity);
-
-        return new OrderResponseDTO(1L, option.getId(), quantity, LocalDateTime.now(), message);
-    }
-
-    private void sendMessage(String text, String accessToken, Option option, int quantity) {
-        String sb = text + "\n["
-            + option.getProduct().getName() + "] 상품을 선물하셨습니다.\n"
-            + "상품 옵션: [" + option.getName() + "]\n"
-            + "상품 수량: " + quantity;
-        kakaoApiUtil.SendOrderMessage(sb, accessToken);
-    }
 
 
 }

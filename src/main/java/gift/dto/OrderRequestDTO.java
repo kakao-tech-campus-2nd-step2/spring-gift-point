@@ -1,9 +1,12 @@
 package gift.dto;
 
+import gift.entity.Member;
+import gift.entity.Option;
+import gift.entity.Orders;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.DecimalMin;
-import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotEmpty;
+import java.time.LocalDateTime;
 
 public class OrderRequestDTO {
 
@@ -36,5 +39,9 @@ public class OrderRequestDTO {
 
     public String getMessage() {
         return message;
+    }
+
+    public Orders toEntity(Option option, Member member) {
+        return new Orders(option, quantity, message, member, LocalDateTime.now());
     }
 }
