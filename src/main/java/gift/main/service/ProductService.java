@@ -31,7 +31,6 @@ public class ProductService {
     private final OptionService optionService;
 
     public ProductService(ProductRepository productRepository,
-                          UserRepository userRepository,
                           CategoryRepository categoryRepository,
                           WishProductRepository wishProductRepository,
                           OptionService optionService) {

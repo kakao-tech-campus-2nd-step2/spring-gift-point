@@ -28,7 +28,7 @@ public class ApiToken {
         this.user = user;
         this.accessToken = kakaoToken.accessToken();
         this.refreshToken = kakaoToken.refreshToken();
-        this.accessTokenExpirationDate = kakaoToken.expirationDate();
+        this.accessTokenExpirationDate = kakaoToken.accessTokenExpirationDate();
     }
 
     public ApiToken() {
@@ -40,7 +40,7 @@ public class ApiToken {
         if (renewToken.refreshToken() != null && !renewToken.refreshToken().isBlank() && !renewToken.refreshToken().equals("null")) {
             this.refreshToken = renewToken.refreshToken();
         }
-        this.accessTokenExpirationDate = renewToken.expirationDate();
+        this.accessTokenExpirationDate = renewToken.accessTokenExpirationDate();
     }
 
     public long getId() {
