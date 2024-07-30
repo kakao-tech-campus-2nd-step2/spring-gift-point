@@ -33,12 +33,12 @@ public class ViewController {
         return "admin";
     }
 
-    @GetMapping("/join")
-    public String join(Model model) {
+    @GetMapping("/api/members/register")
+    public String join() {
         return "join";
     }
 
-    @GetMapping("/login")
+    @GetMapping("/api/members/login")
     public String login(Model model) {
         model.addAttribute("kakaoClientId", kakaoProperties.kakaoClientId());
         model.addAttribute("kakaoRedirectUrl", kakaoProperties.kakaoRedirectUrl());

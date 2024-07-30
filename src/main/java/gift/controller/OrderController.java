@@ -1,5 +1,6 @@
 package gift.controller;
 
+import gift.auth.Token;
 import gift.dto.KakaoMessageRequestDto;
 import gift.dto.OrderRequestDto;
 import gift.dto.OrderResponseDto;
@@ -46,13 +47,13 @@ public class OrderController {
 
         Order savedOrder = orderService.createOrder(memberId, orderRequestDto);
 
-        String accessToken = jwtUtil.getBearerTokenFromAuthorizationHeader(authorizationHeader);
+        Token token = jwtUtil.getBearerTokenFromAuthorizationHeader(authorizationHeader);
 
-        if (jwtUtil.isNotJwtToken(accessToken)) {
+        if (jwtUtil.isNotJwtToken(token)) {
             Option option = orderService.getOptionByOptionId(savedOrder.getOptionId());
             Product product = option.getProduct();
             KakaoMessageRequestDto kakaoMessageRequestDto = KakaoMessageRequestDto.toKakaoMessageRequestDto(savedOrder, product.getName(), option.getName());
-            kakaoApiService.sendKakaoMessage(accessToken, kakaoMessageRequestDto);
+            kakaoApiService.sendKakaoMessage(token, kakaoMessageRequestDto);
         }
 
         return new ResponseEntity<>(OrderResponseDto.toOrderResponseDto(savedOrder), HttpStatus.CREATED);

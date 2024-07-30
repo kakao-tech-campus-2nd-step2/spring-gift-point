@@ -1,6 +1,7 @@
 package gift.service;
 
 import gift.auth.JwtHelper;
+import gift.auth.Token;
 import gift.repository.MemberRepository;
 import gift.vo.Member;
 import org.springframework.stereotype.Service;
@@ -16,14 +17,15 @@ public class MemberService {
         this.jwtHelper = jwtHelper;
     }
 
-    public String login(Member member) {
+    public Token login(Member member) {
         Member foundMember = repository.findByEmail(member.getEmail())
                 .orElseThrow(() -> new IllegalArgumentException("해당 회원이 존재하지 않습니다."));
         foundMember.validateEmail(foundMember.getEmail());
-        return createJwtToken(foundMember.getId(), foundMember.getEmail());
+        String jwtToken = createJwtToken(foundMember.getId(), foundMember.getEmail());
+        return new Token(jwtToken);
     }
 
-    public String join(Member member) {
+    public Token join(Member member) {
         Member joinedMember = repository.save(member);
         return login(joinedMember);
     }

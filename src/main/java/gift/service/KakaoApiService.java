@@ -1,6 +1,7 @@
 package gift.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import gift.auth.Token;
 import gift.component.kakao.KakaoApiProvider;
 import gift.dto.KakaoUserInfoResponseDto;
 import gift.auth.OAuthToken;
@@ -43,11 +44,11 @@ public class KakaoApiService {
         return response.getBody().id();
     }
 
-    public String getMemberEmailFromKakao(String accessToken) {
-        return KakaoApiProvider.KAKAO_EMAIL+getKakaoUserId(accessToken);
+    public String getMemberEmailFromKakao(Token accessToken) {
+        return KakaoApiProvider.KAKAO_EMAIL+getKakaoUserId(accessToken.token());
     }
 
-    public String getAccessToken(String code) {
+    public Token getAccessToken(String code) {
         HttpHeaders headers = kakaoApiProvider.makeHeaders();
         MultiValueMap<String, String> body = kakaoApiProvider.makeGetAccessTokenBody(code);
 
@@ -64,7 +65,7 @@ public class KakaoApiService {
 
             OAuthToken oauthToken = kakaoApiProvider.parseOAuthToken(response.getBody());
 
-            return oauthToken.access_token();
+            return new Token(oauthToken.access_token());
         } catch (HttpClientErrorException | HttpServerErrorException ex) {
             throw ex; // 예외를 던져 GlobalExceptionHandler에서 처리
         } catch (JsonProcessingException e) {
@@ -77,7 +78,7 @@ public class KakaoApiService {
      * @param accessToken Access Token
      */
     @Transactional
-    public void kakaoLogin(String accessToken) {
+    public void kakaoLogin(Token accessToken) {
         String loginMemberEmail = getMemberEmailFromKakao(accessToken);
 
         boolean isNotExistMember = !memberService.hasMemberByEmail(loginMemberEmail);
@@ -91,10 +92,10 @@ public class KakaoApiService {
         }
     }
 
-    public void sendKakaoMessage(String accessToken, KakaoMessageRequestDto kakaoMessageRequestDto) {
+    public void sendKakaoMessage(Token token, KakaoMessageRequestDto kakaoMessageRequestDto) {
         HttpHeaders headers = kakaoApiProvider.makeHeaders();
         headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
-        headers.setBearerAuth(accessToken);
+        headers.setBearerAuth(token.token());
 
         MultiValueMap<String, String> body = kakaoApiProvider.makeTemplateObject(kakaoMessageRequestDto);
 
