@@ -2,18 +2,24 @@ package gift.dto;
 
 import gift.entity.Category;
 import gift.entity.Option;
+import io.swagger.v3.oas.annotations.media.Schema;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
 import java.util.List;
 
+@Schema(description = "상품 요청 DTO")
 public class ProductRequestDto {
-
+    @Schema(description = "상품 고유 id")
     private Long id;
+    @Schema(description = "상품 이름")
     private String name;
+    @Schema(description = "상품 가격")
     private Integer price;
+    @Schema(description = "상품 url")
     private String url;
+    @Schema(description = "상품이 속한 카테고리")
     private Category category;
-
+    @Schema(description = "상품이 갖고 있는 옵션들")
     private List<Option> options;
 
     public ProductRequestDto(String name, Integer price, String url, Category category) {

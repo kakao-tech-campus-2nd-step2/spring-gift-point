@@ -1,31 +1,28 @@
 package gift.dto;
 
 import gift.entity.Member;
+import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.validation.constraints.Email;
 
+@Schema(description = "멤버 응답 DTO")
 public class MemberResponseDto {
 
-    private Long id;
+    @Schema(description = "멤버 고유 id ")
+    private final Long id;
+    @Email
+    @Schema(description = "멤버 email ")
     private final String email;
-    private final String password;
-
+    @Schema(description = "멤버 토큰")
     private String token;
 
-    public MemberResponseDto(Long id, String email, String password) {
+    public MemberResponseDto(Long id, String email) {
         this.id = id;
         this.email = email;
-        this.password = password;
     }
-
-    public MemberResponseDto(String email, String password) {
-        this.email = email;
-        this.password = password;
-    }
-
 
     public MemberResponseDto(Member actualMember, String token) {
         this.id = actualMember.getId();
         this.email = actualMember.getEmail();
-        this.password = actualMember.getPassword();
         this.token = actualMember.getToken();
     }
 
@@ -37,8 +34,8 @@ public class MemberResponseDto {
         return email;
     }
 
-    public String getPassword() {
-        return password;
+    public String getToken() {
+        return token;
     }
-
 }
+

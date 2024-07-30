@@ -35,7 +35,7 @@ public class WishService {
 
     public Wish findByProductIdAndMemberId(Long productId, Long memberId) {
         Product product = productRepository.findById(productId).get();
-        Member member =memberRepository.findById(memberId).get();
+        Member member = memberRepository.findById(memberId).get();
         Wish wish = wishRepository.findByProductAndMember(product, member);
         return wish;
     }

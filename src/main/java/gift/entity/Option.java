@@ -1,5 +1,6 @@
 package gift.entity;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -11,18 +12,23 @@ import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "option")
+@Schema(description = "옵션")
 public class Option {
 
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
+    @Schema(description = "옵션 고유 id")
     private Long id;
     @Column(nullable = false)
+    @Schema(description = "옵션 이름")
     private String name;
     @Column(nullable = false)
+    @Schema(description = "옵션 개수")
     private Long quantity;
 
     @ManyToOne
     @JoinColumn(name = "product_id")
+    @Schema(description = "옵션이 속한 상품 id")
     private Product product;
 
     public Option() {

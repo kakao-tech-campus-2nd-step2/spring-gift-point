@@ -1,5 +1,6 @@
 package gift.service;
 
+import gift.dto.MemberRequestDto;
 import gift.dto.MemberResponseDto;
 import gift.entity.Member;
 import gift.repository.MemberRepository;
@@ -33,7 +34,7 @@ public class MemberService {
     }
 
     public List<MemberResponseDto> getAllMemberResponseDto() {
-        return getAll().stream().map(this::fromEntity).toList();
+        return getAll().stream().map(this::fromEntity2).toList();
     }
 
     public String generateTokenFrom(String userEmail) {
@@ -45,13 +46,17 @@ public class MemberService {
     }
 
     public boolean login(String email, String password) throws AuthenticationException {
-        MemberResponseDto dbUserDto = fromEntity(memberRepository.findByEmail(email));
+        MemberRequestDto dbUserDto = fromEntity(memberRepository.findByEmail(email));
 
         return validatePassword(password, dbUserDto.getPassword());
     }
 
-    public MemberResponseDto fromEntity(Member member) {
-        return new MemberResponseDto(member.getId(), member.getEmail(), member.getPassword());
+    public MemberRequestDto fromEntity(Member member) {
+        return new MemberRequestDto(member.getId(), member.getEmail());
+    }
+
+    public MemberResponseDto fromEntity2(Member member) {
+        return new MemberResponseDto(member.getId(), member.getEmail());
     }
 
     private boolean validatePassword(String inputPassword, String dbUserPassword) throws AuthenticationException {
