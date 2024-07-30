@@ -6,6 +6,7 @@ import gift.dto.request.MemberRequest;
 import gift.dto.response.KakaoLoginResponse;
 import gift.dto.response.KakaoProfileResponse;
 import gift.dto.response.KakaoTokenResponse;
+import gift.dto.response.TokenResponse;
 import gift.exception.DuplicateMemberEmailException;
 import gift.exception.InvalidCredentialsException;
 import gift.exception.MemberNotFoundException;
@@ -14,10 +15,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Optional;
 
+import static gift.domain.LoginType.NORMAL;
 import static gift.exception.ErrorCode.*;
 
 @Service
@@ -63,6 +63,20 @@ public class MemberService {
     public Member findByEmailAndLoginType(String email, LoginType loginType) {
         return memberRepository.findByEmailAndLoginType(email, loginType)
                 .orElseThrow(() -> new MemberNotFoundException(MEMBER_NOT_FOUND));
+    }
+
+    @Transactional
+    public TokenResponse handleNormalRegister(MemberRequest memberRequest) {
+        Member member = register(memberRequest, NORMAL);
+        String token = tokenService.saveToken(member);
+        return new TokenResponse(token);
+    }
+
+    @Transactional
+    public TokenResponse handleNormalAuthenticate(MemberRequest memberRequest) {
+        Member member = authenticate(memberRequest, NORMAL);
+        String token = tokenService.saveToken(member);
+        return new TokenResponse(token);
     }
 
     @Transactional

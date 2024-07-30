@@ -1,8 +1,8 @@
 package gift.controller;
 
-import gift.domain.Member;
 import gift.dto.request.MemberRequest;
 import gift.dto.response.KakaoLoginResponse;
+import gift.dto.response.TokenResponse;
 import gift.service.MemberService;
 import gift.service.TokenService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -10,45 +10,32 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import static gift.domain.LoginType.NORMAL;
-
 @RestController
 @RequestMapping("/members")
 public class MemberController {
 
     private final MemberService memberService;
-    private final TokenService tokenService;
 
     @Autowired
-    public MemberController(MemberService memberService, TokenService tokenService) {
+    public MemberController(MemberService memberService) {
         this.memberService = memberService;
-        this.tokenService = tokenService;
     }
 
     @PostMapping("/register")
     @Operation(summary = "회원 가입", description = "새 회원을 등록하고 토큰을 받는다.")
-    public ResponseEntity<Map<String, String>> register(@RequestBody MemberRequest memberRequest) {
-        Member member = memberService.register(memberRequest, NORMAL);
-        String token = tokenService.saveToken(member);
-        Map<String, String> responseBody = new HashMap<>();
-        responseBody.put("token", token);
+    public ResponseEntity<TokenResponse> register(@RequestBody MemberRequest memberRequest) {
+        TokenResponse responseBody = memberService.handleNormalRegister(memberRequest);
         return ResponseEntity.ok()
-                .header("Authorization", "Bearer " + token)
+                .header("Authorization", "Bearer " + responseBody.getToken())
                 .body(responseBody);
     }
 
     @PostMapping("/login")
     @Operation(summary = "로그인", description = "회원을 인증하고 토큰을 받는다.")
-    public ResponseEntity<Map<String, String>> login(@RequestBody MemberRequest memberRequest) {
-        Member member = memberService.authenticate(memberRequest, NORMAL);
-        String token = tokenService.saveToken(member);
-        Map<String, String> responseBody = new HashMap<>();
-        responseBody.put("token", token);
+    public ResponseEntity<TokenResponse> login(@RequestBody MemberRequest memberRequest) {
+        TokenResponse responseBody = memberService.handleNormalAuthenticate(memberRequest);
         return ResponseEntity.ok()
-                .header("Authorization", "Bearer " + token)
+                .header("Authorization", "Bearer " + responseBody.getToken())
                 .body(responseBody);
     }
 
