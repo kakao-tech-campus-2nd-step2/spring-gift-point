@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Admin Page</title>
+    <style>
+        table{
+            margin-top: 5px;
+            margin-bottom: 5px;
+            border: 2px solid;
+            border-collapse: collapse;
+            width: 80%;
+            text-align: center;
+            background-color:#0a0a23;
+            }
+
+        th, td{
+            border: 1px solid;
+            padding: 10px 5px;
+            text-align: center;
+            }
+
+        thead{
+            color: #fff;
+        }
+        tbody{
+            background-color: #fff;
+        }
+
+        button {
+            top:50%;
+            background-color:#0a0a23;
+            color: #fff;
+            border:none;
+            border-radius:10px;
+            padding:10px;
+            min-height:15px;
+            min-width: 90px;
+        }
+    </style>
+</head>
+<body>
+<h1>
+    Admin
+</h1>
+<div>
+    <form th:action="@{/kakao}" method="Get" style="display: inline;">
+        <button type="submit">KakaoLogin</button>
+    </form><br>
+    <form th:action="@{/postform}" method="Get" style="display: inline;">
+        <button type="submit">Add</button>
+    </form>
+
+    <form th:action="@{/products}" method="get">
+        <label for="sortBy">Sort by:</label>
+        <select id="sortBy" name="sortBy">
+            <option value="id" th:selected="${sortBy == 'id'}">ID</option>
+            <option value="name" th:selected="${sortBy == 'name'}">Name</option>
+            <option value="price" th:selected="${sortBy == 'price'}">Price</option>
+        </select>
+
+        <label for="sortOrder">Order:</label>
+        <select id="sortOrder" name="sortOrder">
+            <option value="asc" th:selected="${sortOrder == 'asc'}">Ascending</option>
+            <option value="desc" th:selected="${sortOrder == 'desc'}">Descending</option>
+        </select>
+
+        <button type="submit">Apply</button>
+    </form>
+</div>
+    <table>
+        <thead>
+        <tr>
+            <td>id</td>
+            <td>name</td>
+            <td>price</td>
+            <td>imageUrl</td>
+            <td>category</td>
+            <td>option</td>
+            <td>edit</td>
+            <td>delete</td>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="product : ${productList}">
+            <td th:text="${product.id}"></td>
+            <td th:text="${product.name}"></td>
+            <td th:text="${product.price}"></td>
+            <td th:text="${product.imageUrl}"></td>
+            <td th:text="${product.category}"></td>
+            <td>
+                <form th:action="@{/options/{id}(id=${product.id})}" method="Post" style="display: inline;">
+                    <button type="submit">Option</button>
+                </form>
+            </td>
+            <td>
+                <form th:action="@{/editform/{id}(id=${product.id})}" method="Post" style="display: inline;">
+                    <button type="submit">Edit</button>
+                </form>
+            </td>
+            <td>
+                <form th:action="@{/products/delete/{id}(id=${product.id})}" method="Get" style="display: inline;">
+                    <button type="submit">Delete</button>
+                </form>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+
+    <div>
+    <span th:if="${previousPage != -1}">
+        <a th:href="@{/products(page=${previousPage})}">◀ Previous</a>
+    </span>
+    <span th:if="${nextPage != -1}">
+        <a th:href="@{/products(page=${nextPage})}">Next ▶</a>
+    </span>
+    </div>
+</div>
+</body>
+</html>

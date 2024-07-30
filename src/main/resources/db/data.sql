@@ -1,0 +1,41 @@
+INSERT INTO CATEGORY (name)
+VALUES ('교환권');
+
+INSERT INTO CATEGORY (name)
+VALUES ('상품권');
+
+INSERT INTO CATEGORY (name)
+VALUES ('뷰티');
+
+INSERT INTO CATEGORY (name)
+VALUES ('패션');
+
+INSERT INTO CATEGORY (name)
+VALUES ('식품');
+
+INSERT INTO CATEGORY (name)
+VALUES ('리빙/도서');
+
+INSERT INTO CATEGORY (name)
+VALUES ('레저/스포츠');
+
+INSERT INTO CATEGORY (name)
+VALUES ('아티스트/캐릭터');
+
+INSERT INTO CATEGORY (name)
+VALUES ('유아동/반려');
+
+INSERT INTO CATEGORY (name)
+VALUES ('디지털/가전');
+
+INSERT INTO CATEGORY (name)
+VALUES ('카카오프렌즈');
+
+INSERT INTO CATEGORY (name)
+VALUES ('트렌드선물');
+
+INSERT INTO CATEGORY (name)
+VALUES ('백화점');
+
+INSERT INTO CATEGORY (name)
+VALUES ('NONE');

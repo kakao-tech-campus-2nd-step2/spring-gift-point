@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Option</title>
+    <style>
+        table{
+            margin-top: 5px;
+            margin-bottom: 5px;
+            border: 2px solid;
+            border-collapse: collapse;
+            width: 80%;
+            text-align: center;
+            background-color:#0a0a23;
+            }
+
+        th, td{
+            border: 1px solid;
+            padding: 10px 5px;
+            text-align: center;
+            }
+
+        thead{
+            color: #fff;
+        }
+        tbody{
+            background-color: #fff;
+        }
+
+        button {
+            top:50%;
+            background-color:#0a0a23;
+            color: #fff;
+            border:none;
+            border-radius:10px;
+            padding:10px;
+            min-height:15px;
+            min-width: 90px;
+        }
+    </style>
+</head>
+<body>
+<h1>
+    Option
+</h1>
+<h3>
+    product Id <td th:text="${productId}"></td>
+    <form th:action="@{/products}" method="get" style="display: inline;">
+        <button type="submit">Back To List</button>
+    </form>
+</h3>
+<div>
+    <form th:action="@{/options/add/{productId}(productId=${productId})}" method="post">
+        <input type="hidden" name="productId" th:value="${productId}">
+        new option: <input type="text" id="optionName" name="optionName" required>
+        new option: <input type="text" id="quantity" name="quantity" required>
+        <button type="submit">Add</button>
+    </form>
+</div>
+<table>
+    <thead>
+    <tr>
+        <td>option</td>
+        <td>update</td>
+        <td>delete</td>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="option : ${options}">
+        <td>
+            <span th:text="${option}"></span>
+        </td>
+        <td>
+            <form th:action="@{/options/update/{productId}/{oldName}(productId=${productId}, oldName=${option})}" method="post">
+                <input type="hidden" name="productId" th:value="${productId}">
+                update option: <br> <input type="text" id="updateOption" name="newName" th:value="${option}" required>
+                <button type="submit">Update</button>
+            </form>
+        </td>
+        <td>
+            <form th:action="@{/options/delete/{productId}/{optionName}(productId=${productId}, optionName=${option})}" method="get">
+                <input type="hidden" name="productId" th:value="${productId}">
+                <button type="submit">Delete</button>
+            </form>
+        </td>
+    </tr>
+    </tbody>
+</table>
+</body>
+</html>
