@@ -73,7 +73,6 @@ public class KakaoLoginController {
 
         ResponseEntity<String> response = memberService.getResponseEntity(authCode);
         String accessToken = memberService.getAccessToken(response.getBody());
-        System.out.println(accessToken);
         var headers = getHttpHeaders(accessToken);
         var responseEntity = getHttpResponse(headers);
 
