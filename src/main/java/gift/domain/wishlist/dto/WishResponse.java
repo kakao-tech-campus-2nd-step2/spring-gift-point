@@ -1,5 +1,7 @@
 package gift.domain.wishlist.dto;
 
-public record WishResponse(Long id, Long memberId, Long productId, String createdDate) {
+import java.time.LocalDateTime;
+
+public record WishResponse(Long id, Long memberId, Long productId, LocalDateTime createdDate) {
 
 }
