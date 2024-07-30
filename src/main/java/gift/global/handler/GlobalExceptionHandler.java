@@ -3,7 +3,7 @@ package gift.global.handler;
 import gift.global.exception.BusinessException;
 import gift.global.exception.ErrorCode;
 import gift.global.exception.restTemplate.RestTemplateException;
-import gift.global.exception.cartItem.CartItemNotFoundException;
+import gift.global.exception.wish.WishNotFoundException;
 import gift.global.exception.category.CategoryDuplicateException;
 import gift.global.exception.category.CategoryNotFoundException;
 import gift.global.exception.option.OptionDuplicateException;
@@ -13,7 +13,7 @@ import gift.global.exception.product.ProductNotFoundException;
 import gift.global.exception.restTemplate.RestTemplateClientException;
 import gift.global.exception.restTemplate.RestTemplateServerException;
 import gift.global.exception.user.UserDuplicateException;
-import gift.global.exception.user.UserNotFoundException;
+import gift.global.exception.user.MemberNotFoundException;
 import gift.global.response.ErrorResponseDto;
 import gift.global.response.ResponseMaker;
 import io.jsonwebtoken.JwtException;
@@ -131,13 +131,13 @@ public class GlobalExceptionHandler {
         return ResponseMaker.createErrorResponse(ErrorCode.NOT_FOUND, e.getMessage());
     }
 
-    @ExceptionHandler(UserNotFoundException.class)
-    public ResponseEntity<ErrorResponseDto> UserNotFoundException(UserNotFoundException e) {
+    @ExceptionHandler(MemberNotFoundException.class)
+    public ResponseEntity<ErrorResponseDto> UserNotFoundException(MemberNotFoundException e) {
         return ResponseMaker.createErrorResponse(ErrorCode.NOT_FOUND, e.getMessage());
     }
 
-    @ExceptionHandler(CartItemNotFoundException.class)
-    public ResponseEntity<ErrorResponseDto> CartItemNotFoundException(CartItemNotFoundException e) {
+    @ExceptionHandler(WishNotFoundException.class)
+    public ResponseEntity<ErrorResponseDto> WishNotFoundException(WishNotFoundException e) {
         return ResponseMaker.createErrorResponse(ErrorCode.NOT_FOUND, e.getMessage());
     }
 

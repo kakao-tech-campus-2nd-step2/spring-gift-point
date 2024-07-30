@@ -77,7 +77,7 @@ public class OptionServiceTest {
         OptionRequestDTO optionRequestDTO = new OptionRequestDTO("optionName", 100L);
 
         // when
-        optionService.addOption(product, optionRequestDTO);
+        optionService.addOptionToNewProduct(product, optionRequestDTO);
 
         // then
         assertThat(product.getOptions()).hasSize(1);
@@ -94,7 +94,7 @@ public class OptionServiceTest {
         OptionRequestDTO optionRequestDTO = new OptionRequestDTO("에티오피아산 커피 옵션3", 300L);
 
         // when
-        optionService.addOption(product.getId(), optionRequestDTO);
+        optionService.addOptionToExistsProduct(product.getId(), optionRequestDTO);
         flushAndClear();
         Product findProduct = productRepository.findById(product.getId()).get();
 

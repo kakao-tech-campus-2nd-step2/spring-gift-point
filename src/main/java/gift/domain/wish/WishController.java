@@ -1,7 +1,7 @@
-package gift.domain.cartItem;
+package gift.domain.wish;
 
 import gift.domain.member.dto.LoginInfo;
-import gift.domain.cartItem.dto.CartItemDTO;
+import gift.domain.wish.dto.WishDTO;
 import gift.global.resolver.Login;
 import java.util.List;
 import org.springframework.data.domain.Sort;
@@ -13,17 +13,17 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
-@RequestMapping("/members/cart")
-public class CartItemController {
+@RequestMapping("/members/wishes")
+public class WishController {
 
-    private final CartItemService cartItemService;
+    private final WishService wishService;
 
-    public CartItemController(CartItemService cartItemService) {
-        this.cartItemService = cartItemService;
+    public WishController(WishService wishService) {
+        this.wishService = wishService;
     }
 
     @GetMapping
-    public String cartPage(
+    public String wishPage(
         Model model,
         @PageableDefault(page = 0, sort = "id_asc")
         @RequestParam(value = "page", defaultValue = "0") int page,
@@ -32,15 +32,15 @@ public class CartItemController {
         int size = 10; // default
         Sort sortObj = getSortObject(sort);
 
-        List<CartItemDTO> cartItemDTOS = cartItemService.getProductsInCartByMemberIdAndPageAndSort(
+        List<WishDTO> wishDTOS = wishService.getProductsInWishByMemberIdAndPageAndSort(
             loginInfo.getId(),
             page,
             size,
             sortObj
         );
 
-        model.addAttribute("products", cartItemDTOS);
-        return "cart";
+        model.addAttribute("products", wishDTOS);
+        return "wish";
     }
 
     private Sort getSortObject(String sort) {

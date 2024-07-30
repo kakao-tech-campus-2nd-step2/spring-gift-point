@@ -1,6 +1,6 @@
-package gift.domain.cartItem;
+package gift.domain.wish;
 
-import gift.domain.cartItem.dto.CartItemDTO;
+import gift.domain.wish.dto.WishDTO;
 import gift.domain.member.dto.LoginInfo;
 import gift.global.resolver.Login;
 import gift.global.response.ResponseMaker;
@@ -23,14 +23,14 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/api/members/cart")
-@Tag(name = "CartItem", description = "CartItem API")
-public class CartItemRestController {
+@RequestMapping("/api/members/wishes")
+@Tag(name = "Wish", description = "Wish API")
+public class WishRestController {
 
-    private final CartItemService cartItemService;
+    private final WishService wishService;
 
-    public CartItemRestController(CartItemService cartItemService) {
-        this.cartItemService = cartItemService;
+    public WishRestController(WishService wishService) {
+        this.wishService = wishService;
     }
 
 
@@ -39,11 +39,11 @@ public class CartItemRestController {
      */
     @PostMapping("/{productId}")
     @Operation(summary = "장바구니에 상품 담기")
-    public ResponseEntity<ResultResponseDto<Integer>> addCartItem(
+    public ResponseEntity<ResultResponseDto<Integer>> addWish(
         @Parameter(description = "상품 ID") @PathVariable("productId") Long productId,
         @Parameter(description = "로그인 유저 정보") @Login LoginInfo loginInfo
     ) {
-        int currentCount = cartItemService.addCartItem(loginInfo.getId(), productId);
+        int currentCount = wishService.addWish(loginInfo.getId(), productId);
 
         return ResponseMaker.createResponse(HttpStatus.OK,
             "상품이 장바구니에 추가되었습니다. 총 개수: " + currentCount, currentCount);
@@ -54,7 +54,7 @@ public class CartItemRestController {
      */
     @GetMapping
     @Operation(summary = "장바구니 조회 - 페이징")
-    public ResponseEntity<ResultResponseDto<List<CartItemDTO>>> getProductsInCartByUserIdAndPageAndSort(
+    public ResponseEntity<ResultResponseDto<List<WishDTO>>> getProductsInWishByUserIdAndPageAndSort(
         @Parameter(description = "페이지 번호") @RequestParam(value = "page", defaultValue = "0") int page,
         @Parameter(description = "정렬 기준") @RequestParam(value = "sort", defaultValue = "id_asc") String sort,
         @Parameter(description = "로그인 유저 정보") @Login LoginInfo loginInfo
@@ -62,26 +62,26 @@ public class CartItemRestController {
         int size = 10; // default
         Sort sortObj = getSortObject(sort);
 
-        List<CartItemDTO> cartItemDTOS = cartItemService.getProductsInCartByMemberIdAndPageAndSort(
+        List<WishDTO> wishDTOS = wishService.getProductsInWishByMemberIdAndPageAndSort(
             loginInfo.getId(),
             page,
             size,
             sortObj
         );
 
-        return ResponseMaker.createResponse(HttpStatus.OK, "장바구니 조회에 성공했습니다.", cartItemDTOS);
+        return ResponseMaker.createResponse(HttpStatus.OK, "장바구니 조회에 성공했습니다.", wishDTOS);
     }
 
     /**
      * 장바구니 상품 삭제
      */
-    @DeleteMapping("/{cartItemId}")
+    @DeleteMapping("/{wishId}")
     @Operation(summary = "장바구니 상품 삭제")
-    public ResponseEntity<SimpleResultResponseDto> deleteCartItem(
-        @Parameter(description = "장바구니 상품(CartItem) ID") @PathVariable("cartItemId") Long cartItemId,
+    public ResponseEntity<SimpleResultResponseDto> deleteWish(
+        @Parameter(description = "장바구니 상품(Wish) ID") @PathVariable("wishId") Long wishId,
         @Parameter(description = "로그인 유저 정보") @Login LoginInfo loginInfo
     ) {
-        cartItemService.deleteCartItem(cartItemId);
+        wishService.deleteWish(wishId);
 
         return ResponseMaker.createSimpleResponse(HttpStatus.OK, "장바구니에서 상품이 삭제되었습니다.");
     }
@@ -89,22 +89,22 @@ public class CartItemRestController {
     /**
      * 장바구니 상품 수량 변경
      */
-    // TODO cartItem 에 userId, productId, + 상품 정보까지 담는걸로
-    // 안그러면 productId 로 다시 상품 정보를 불러와야 함..페이징할때도 cartItem 에서 바로 할 수 있으니 나을 것 같다
-    @PutMapping("/{cartItemId}")
+    // TODO Wish 에 userId, productId, + 상품 정보까지 담는걸로
+    // 안그러면 productId 로 다시 상품 정보를 불러와야 함..페이징할때도 wish 에서 바로 할 수 있으니 나을 것 같다
+    @PutMapping("/{wishId}")
     @Operation(summary = "장바구니 상품 수량 변경")
-    public ResponseEntity<SimpleResultResponseDto> updateCartItem(
-        @Parameter(description = "장바구니 상품(CartItem) ID") @PathVariable("cartItemId") Long cartItemId,
+    public ResponseEntity<SimpleResultResponseDto> updateWish(
+        @Parameter(description = "장바구니 상품(Wish) ID") @PathVariable("wishId") Long wishId,
         @Parameter(description = "변경할 상품 수량") @RequestParam("count") int count,
         @Parameter(description = "로그인 유저 정보") @Login LoginInfo loginInfo
     ) {
-        int modifiedCount = cartItemService.updateCartItem(cartItemId, count);
+        int modifiedCount = wishService.updateWish(wishId, count);
 
         return ResponseMaker.createSimpleResponse(HttpStatus.OK,
             "해당 상품의 수량이 변경되었습니다. 총 개수: " + modifiedCount + "개");
     }
 
-    // TODO 페이징 기준을 cartItem 에 맞춰서 수정해야함.. 간단한건 생성날짜? <- 추가 속성 필요
+    // TODO 페이징 기준을 wish 에 맞춰서 수정해야함.. 간단한건 생성날짜? <- 추가 속성 필요
     private Sort getSortObject(String sort) {
         switch (sort) {
             case "price_asc":

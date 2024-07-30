@@ -74,7 +74,7 @@ public class ProductService {
             return productRepository.findAll(pageRequest);
         }
         // 카테고리 조건 O
-        return productRepository.findAllByCategoryId(pageRequest);
+        return productRepository.findAllByCategoryId(categoryId, pageRequest);
     }
 
     /**

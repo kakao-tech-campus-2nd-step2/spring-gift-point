@@ -1,8 +1,7 @@
 package gift.global.dataLoader;
 
 import gift.domain.member.Member;
-import gift.domain.cartItem.CartItem;
-import gift.domain.cartItem.JpaCartItemRepository;
+import gift.domain.wish.JpaWishRepository;
 import gift.domain.category.Category;
 import gift.domain.category.JpaCategoryRepository;
 import gift.domain.option.JpaOptionRepository;
@@ -10,6 +9,7 @@ import gift.domain.option.Option;
 import gift.domain.product.JpaProductRepository;
 import gift.domain.product.Product;
 import gift.domain.member.JpaMemberRepository;
+import gift.domain.wish.Wish;
 import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
@@ -22,20 +22,20 @@ public class DataLoader {
     private final JpaProductRepository jpaProductRepository;
     private final JpaMemberRepository jpaMemberRepository;
     private final JpaCategoryRepository jpaCategoryRepository;
-    private final JpaCartItemRepository jpaCartItemRepository;
+    private final JpaWishRepository jpaWishRepository;
     private final JpaOptionRepository jpaOptionRepository;
 
     @Autowired
     public DataLoader(
         JpaProductRepository jpaProductRepository,
         JpaMemberRepository jpaMemberRepository,
-        JpaCartItemRepository jpaCartItemRepository,
+        JpaWishRepository jpaWishRepository,
         JpaCategoryRepository jpaCategoryRepository,
         JpaOptionRepository jpaOptionRepository
     ) {
         this.jpaProductRepository = jpaProductRepository;
         this.jpaMemberRepository = jpaMemberRepository;
-        this.jpaCartItemRepository = jpaCartItemRepository;
+        this.jpaWishRepository = jpaWishRepository;
         this.jpaCategoryRepository = jpaCategoryRepository;
         this.jpaOptionRepository = jpaOptionRepository;
     }
@@ -82,9 +82,9 @@ public class DataLoader {
         jpaMemberRepository.save(donghyun);
 
         // CartItem
-        jpaCartItemRepository.save(new CartItem(minji, malcha));
-        jpaCartItemRepository.save(new CartItem(junseo, cafuchino));
-        jpaCartItemRepository.save(new CartItem(donghyun, cafuchino));
+        jpaWishRepository.save(new Wish(minji, malcha));
+        jpaWishRepository.save(new Wish(junseo, cafuchino));
+        jpaWishRepository.save(new Wish(donghyun, cafuchino));
 
     }
 }

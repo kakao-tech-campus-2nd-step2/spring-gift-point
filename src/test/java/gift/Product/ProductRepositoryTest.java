@@ -7,11 +7,11 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import gift.domain.member.Member;
 import gift.domain.category.Category;
 import gift.domain.category.JpaCategoryRepository;
-import gift.domain.cartItem.CartItem;
-import gift.domain.cartItem.JpaCartItemRepository;
+import gift.domain.wish.JpaWishRepository;
 import gift.domain.product.JpaProductRepository;
 import gift.domain.product.Product;
 import gift.domain.member.JpaMemberRepository;
+import gift.domain.wish.Wish;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import java.util.ArrayList;
@@ -42,7 +42,7 @@ public class ProductRepositoryTest {
     @Autowired
     private JpaMemberRepository memberRepository;
     @Autowired
-    private JpaCartItemRepository cartItemRepository;
+    private JpaWishRepository cartItemRepository;
 
     @PersistenceContext
     private EntityManager entityManager;
@@ -135,7 +135,7 @@ public class ProductRepositoryTest {
         // given
         Product savedProduct = productRepository.saveAndFlush(product1);
         Member savedMember = memberRepository.saveAndFlush(new Member("minji@example.com", "password1"));
-        CartItem savedCartItem = cartItemRepository.saveAndFlush(new CartItem(savedMember, savedProduct));
+        Wish savedWish = cartItemRepository.saveAndFlush(new Wish(savedMember, savedProduct));
         clear();
 
         // when
@@ -143,7 +143,7 @@ public class ProductRepositoryTest {
         flush();
 
         // then
-        assertThat(cartItemRepository.existsById(savedCartItem.getId())).isFalse();
+        assertThat(cartItemRepository.existsById(savedWish.getId())).isFalse();
     }
 
     @Test

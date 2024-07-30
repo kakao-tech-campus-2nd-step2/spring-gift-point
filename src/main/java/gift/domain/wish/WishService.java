@@ -1,15 +1,15 @@
-package gift.domain.cartItem;
+package gift.domain.wish;
 
 import gift.domain.member.Member;
-import gift.domain.cartItem.dto.CartItemDTO;
+import gift.domain.wish.dto.WishDTO;
 import gift.domain.option.JpaOptionRepository;
 import gift.domain.option.Option;
 import gift.domain.product.JpaProductRepository;
 import gift.domain.product.Product;
 import gift.domain.member.JpaMemberRepository;
-import gift.global.exception.cartItem.CartItemNotFoundException;
+import gift.global.exception.wish.WishNotFoundException;
 import gift.global.exception.product.ProductNotFoundException;
-import gift.global.exception.user.UserNotFoundException;
+import gift.global.exception.user.MemberNotFoundException;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.data.domain.Page;
@@ -19,21 +19,21 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
-public class CartItemService {
+public class WishService {
 
     private final JpaProductRepository productRepository;
-    private final JpaCartItemRepository cartItemRepository;
+    private final JpaWishRepository wishRepository;
     private final JpaMemberRepository userRepository;
     private final JpaOptionRepository optionRepository;
 
-    public CartItemService(
+    public WishService(
         JpaProductRepository jpaProductRepository,
-        JpaCartItemRepository jpaCartItemRepository,
+        JpaWishRepository jpaWishRepository,
         JpaMemberRepository jpaMemberRepository,
         JpaOptionRepository jpaOptionRepository
     ) {
         this.userRepository = jpaMemberRepository;
-        this.cartItemRepository = jpaCartItemRepository;
+        this.wishRepository = jpaWishRepository;
         this.productRepository = jpaProductRepository;
         this.optionRepository = jpaOptionRepository;
     }
@@ -42,69 +42,69 @@ public class CartItemService {
      * 장바구니에 상품 ID 추가
      */
     @Transactional
-    public int addCartItem(Long memberId, Long productId) {
+    public int addWish(Long memberId, Long productId) {
         Member member = userRepository.findById(memberId)
-            .orElseThrow(() -> new UserNotFoundException(memberId));
+            .orElseThrow(() -> new MemberNotFoundException(memberId));
         Product product = productRepository.findById(productId)
             .orElseThrow(() -> new ProductNotFoundException(productId));
 
         // 기존에 존재하면 update
-        Optional<CartItem> findCartItem = cartItemRepository.findByMemberIdAndProductId(memberId,
+        Optional<Wish> findWish = wishRepository.findByMemberIdAndProductId(memberId,
             productId);
-        if (findCartItem.isPresent()) {
-            return findCartItem.get().addOneMore();
+        if (findWish.isPresent()) {
+            return findWish.get().addOneMore();
         }
         // 기존에 없었으면 new
-        CartItem newCartItem = new CartItem(member, product);
-        cartItemRepository.save(newCartItem);
-        return newCartItem.getCount();
+        Wish newWish = new Wish(member, product);
+        wishRepository.save(newWish);
+        return newWish.getCount();
     }
 
     /**
      * 장바구니 상품 조회 - 페이징(매개변수별)
      */
-    public List<CartItemDTO> getProductsInCartByMemberIdAndPageAndSort(Long memberId, int page,
+    public List<WishDTO> getProductsInWishByMemberIdAndPageAndSort(Long memberId, int page,
         int size, Sort sort) {
         PageRequest pageRequest = PageRequest.of(page, size, sort);
 
-        Page<CartItem> cartItemsPage = cartItemRepository.findAllByMemberId(memberId,
+        Page<Wish> wishesPage = wishRepository.findAllByMemberId(memberId,
             pageRequest);
 
-        List<CartItemDTO> cartItemDTOS = cartItemsPage.getContent().stream()
-            .map(cartItem -> {
-                return new CartItemDTO(cartItem);
+        List<WishDTO> wishDTOS = wishesPage.getContent().stream()
+            .map(wish -> {
+                return new WishDTO(wish);
             })
             .toList();
 
         // 새 Page 객체 생성
-        return cartItemDTOS;
+        return wishDTOS;
     }
 
     /**
      * 장바구니 상품 삭제`
      */
-    public void deleteCartItem(Long cartItemId) {
-        cartItemRepository.deleteById(cartItemId);
+    public void deleteWish(Long wishId) {
+        wishRepository.deleteById(wishId);
     }
 
     /**
      * 장바구니 상품 수량 수정
      */
     @Transactional
-    public int updateCartItem(Long cartItemId, int count) {
-        CartItem findCartItem = cartItemRepository.findById(cartItemId)
-            .orElseThrow(() -> new CartItemNotFoundException(cartItemId));
+    public int updateWish(Long wishId, int count) {
+        Wish findWish = wishRepository.findById(wishId)
+            .orElseThrow(() -> new WishNotFoundException(wishId));
 
-        findCartItem.updateCount(count); // 수량 수정
+        findWish.updateCount(count); // 수량 수정
         return count;
     }
 
     /**
      * 장바구니에 해당 옵션의 상품이 존재하면 삭제
      */
-    public void deleteCartItemIfExists(Long memberId, Long optionId) {
+    public void deleteWishIfExists(Long memberId, Long optionId) {
         Option option = optionRepository.findById(optionId).get();
-        cartItemRepository.findByMemberIdAndProductId(memberId, option.getProduct().getId())
-            .ifPresent(cartItemRepository::delete);
+        wishRepository.findByMemberIdAndProductId(memberId, option.getProduct().getId())
+            .ifPresent(wishRepository::delete);
     }
 }

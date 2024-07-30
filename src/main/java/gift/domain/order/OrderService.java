@@ -3,10 +3,10 @@ package gift.domain.order;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
+import gift.domain.wish.WishService;
 import gift.domain.member.Member;
 import gift.domain.member.dto.LoginInfo;
-import gift.domain.cartItem.CartItemService;
-import gift.domain.cartItem.JpaCartItemRepository;
+import gift.domain.wish.JpaWishRepository;
 import gift.domain.option.JpaOptionRepository;
 import gift.domain.option.OptionService;
 import gift.domain.member.JpaMemberRepository;
@@ -31,29 +31,29 @@ public class OrderService {
     private final String SEND_ME_URL = "https://kapi.kakao.com/v2/api/talk/memo/default/send";
     private final JpaOptionRepository optionRepository;
     private final OptionService optionService;
-    private final JpaCartItemRepository cartItemRepository;
+    private final JpaWishRepository cartItemRepository;
     private final RestTemplate restTemplate;
     private final ObjectMapper objectMapper;
     private final JpaMemberRepository memberRepository;
-    private final CartItemService cartItemService;
+    private final WishService wishService;
 
     @Autowired
     public OrderService(
         JpaOptionRepository jpaOptionRepository,
         OptionService optionService,
-        JpaCartItemRepository jpaCartItemRepository,
+        JpaWishRepository jpaWishRepository,
         RestTemplate restTemplate,
         ObjectMapper objectMapper,
         JpaMemberRepository memberRepository,
-        CartItemService cartItemService
+        WishService wishService
     ) {
         optionRepository = jpaOptionRepository;
         this.optionService = optionService;
-        cartItemRepository = jpaCartItemRepository;
+        cartItemRepository = jpaWishRepository;
         this.restTemplate = restTemplate;
         this.objectMapper = objectMapper;
         this.memberRepository = memberRepository;
-        this.cartItemService = cartItemService;
+        this.wishService = wishService;
     }
 
     /**
@@ -70,7 +70,7 @@ public class OrderService {
             orderRequestDTO.quantity());
 
         // 해당 상품이 (나의) 위시리스트에 있는 경우 위시 리스트에서 삭제
-        cartItemService.deleteCartItemIfExists(loginInfo.getId(), orderRequestDTO.optionId());
+        wishService.deleteWishIfExists(loginInfo.getId(), orderRequestDTO.optionId());
     }
     private void sendMessage(OrderRequestDTO orderRequestDTO, LoginInfo loginInfo) {
         // 메세지 작성
