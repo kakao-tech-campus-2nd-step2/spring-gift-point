@@ -75,12 +75,12 @@ public class GlobalExceptionHandler {
     }
     @ExceptionHandler(CustomClientErrorException.class)
     public ResponseEntity<String> handleCustomClientErrorException(CustomClientErrorException ex) {
-        return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(ex.getMessage(), ex.getCode());
     }
 
     @ExceptionHandler(CustomServerErrorException.class)
     public ResponseEntity<String> handleCustomServerErrorException(CustomServerErrorException ex) {
-        return new ResponseEntity<>(ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        return new ResponseEntity<>(ex.getMessage(), ex.getCode());
     }
 
     @ExceptionHandler(RuntimeException.class)

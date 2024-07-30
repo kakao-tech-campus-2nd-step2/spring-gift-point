@@ -1,8 +1,15 @@
 package gift.common.exception;
 
-public class CustomClientErrorException extends RuntimeException{
+import org.springframework.http.HttpStatusCode;
 
-    public CustomClientErrorException(String message) {
+public class CustomClientErrorException extends RuntimeException{
+    private HttpStatusCode code;
+    public CustomClientErrorException(HttpStatusCode code, String message) {
         super(message);
+        this.code = code;
+    }
+
+    public HttpStatusCode getCode() {
+        return code;
     }
 }

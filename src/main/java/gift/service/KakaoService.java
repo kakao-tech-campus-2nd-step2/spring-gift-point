@@ -42,10 +42,10 @@ public class KakaoService {
             .body(body)
             .retrieve()
             .onStatus(HttpStatusCode::is4xxClientError, (request, responses) -> {
-                throw new CustomClientErrorException("4XX 에러 발생");
+                throw new CustomClientErrorException(responses.getStatusCode(), "4XX 에러 발생");
         })
             .onStatus(HttpStatusCode::is5xxServerError, (request, responses) -> {
-                throw new CustomServerErrorException("5XX 에러 발생");
+                throw new CustomServerErrorException(responses.getStatusCode(),"5XX 에러 발생");
             })
             .toEntity(KakaoResponse.class);
         return response.getBody().getAccessToken();
