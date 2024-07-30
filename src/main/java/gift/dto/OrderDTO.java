@@ -1,7 +1,5 @@
 package gift.dto;
 
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
 
 public class OrderDTO {
     private Long orderId;

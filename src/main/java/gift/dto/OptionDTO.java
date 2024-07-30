@@ -1,6 +1,5 @@
 package gift.dto;
 
-import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 
 public class OptionDTO {

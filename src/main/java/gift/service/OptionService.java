@@ -4,8 +4,6 @@ import gift.converter.OptionConverter;
 import gift.dto.OptionDTO;
 import gift.dto.PageRequestDTO;
 import gift.model.Option;
-import gift.model.OptionName;
-import gift.model.OptionQuantity;
 import gift.model.Product;
 import gift.repository.OptionRepository;
 import gift.repository.ProductRepository;

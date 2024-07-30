@@ -1,11 +1,7 @@
 package gift.converter;
 
 import gift.dto.OptionDTO;
-import gift.dto.OptionNameDTO;
-import gift.dto.OptionQuantityDTO;
 import gift.model.Option;
-import gift.model.OptionName;
-import gift.model.OptionQuantity;
 
 public class OptionConverter {
 
