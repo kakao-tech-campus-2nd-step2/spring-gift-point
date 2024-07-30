@@ -1,8 +1,12 @@
 package gift.service;
 
+import gift.common.exception.badRequest.RequestValidationException;
 import gift.common.exception.conflict.ProductAlreadyExistsException;
+import gift.common.exception.notFound.ProductNotFoundException;
 import gift.dto.ProductRequest;
 import gift.dto.ProductResponse;
+import gift.dto.ProductUpdateRequest;
+import gift.dto.ProductUpdateResponse;
 import gift.entity.Category;
 import gift.entity.Product;
 import gift.repository.ProductRepository;
@@ -48,8 +52,9 @@ public class ProductService {
         return products.map(ProductResponse::from);
     }
 
-    public Optional<Product> findById(Long id) {
-        return productRepository.findById(id);
+    public Product findById(Long id) {
+        return productRepository.findById(id)
+            .orElseThrow(ProductNotFoundException::new);
     }
 
     public ProductResponse addProduct(@Valid ProductRequest productRequest) {
@@ -67,11 +72,16 @@ public class ProductService {
         return ProductResponse.from(savedProduct);
     }
 
-    public ProductResponse updateProduct(Long id, @Valid ProductRequest updatedProductRequest) {
-        Product product = productRepository.findById(id)
-            .orElseThrow(() -> new IllegalArgumentException("상품을 찾을 수 없음"));
+    public ProductUpdateResponse updateProduct(Long id, @Valid ProductUpdateRequest updatedProductRequest) {
+        Product product = findById(id);
+
         Category category = categoryService.findById(updatedProductRequest.getCategoryId())
-            .orElseThrow(() -> new IllegalArgumentException("category ID를 찾을 수 없음"));
+            .orElseThrow(CategoryNotFoundException::new);
+
+        Optional<Product> existingProduct = productRepository.findByName(updatedProductRequest.getName());
+        if (existingProduct.isPresent() && !existingProduct.get().getId().equals(id)) {
+            throw new ProductAlreadyExistsException();
+        }
 
         product.updateProduct(updatedProductRequest.getName(), updatedProductRequest.getPrice(),
             updatedProductRequest.getImgUrl(), category);
@@ -79,7 +89,7 @@ public class ProductService {
         validateProduct(product);
 
         Product savedProduct = productRepository.save(product);
-        return ProductResponse.from(savedProduct);
+        return ProductUpdateResponse.from(savedProduct);
     }
 
     public void deleteById(Long id) {
@@ -90,7 +100,7 @@ public class ProductService {
         BindingResult result = new BeanPropertyBindingResult(product, "product");
         productNameValidator.validate(product, result);
         if (result.hasErrors()) {
-            throw new IllegalArgumentException(result.getFieldError().getDefaultMessage());
+            throw new RequestValidationException(result.getFieldError().getDefaultMessage());
         }
     }
 

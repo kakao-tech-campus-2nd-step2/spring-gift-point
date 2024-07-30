@@ -12,4 +12,9 @@ public class RequestValidationException extends CustomException {
         super(ErrorCode.REQUEST_VALIDATION, HttpStatus.BAD_REQUEST);
     }
 
+    public RequestValidationException(String message) {
+        super(ErrorCode.REQUEST_VALIDATION, HttpStatus.BAD_REQUEST);
+        ErrorCode.REQUEST_VALIDATION.setCustomMessage(message);
+    }
+
 }

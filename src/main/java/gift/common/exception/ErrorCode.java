@@ -30,18 +30,27 @@ public enum ErrorCode {
     WISH_ALREADY_EXISTS(-40905, "위시리스트에 이미 상품이 존재함");
 
     private final int code;
-    private final String message;
+    private final String defaultMessage;
+    private String customMessage;
 
-    ErrorCode(int code, String message) {
+    ErrorCode(int code, String defaultMessage) {
         this.code = code;
-        this.message = message;
+        this.defaultMessage = defaultMessage;
     }
 
     public int getCode() {
         return code;
     }
 
+    public String getDefaultMessage() {
+        return defaultMessage;
+    }
+
     public String getMessage() {
-        return message;
+        return customMessage != null ? customMessage : defaultMessage;
+    }
+
+    public void setCustomMessage(String customMessage) {
+        this.customMessage = customMessage;
     }
 }
