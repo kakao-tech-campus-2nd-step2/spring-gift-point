@@ -16,7 +16,6 @@ import gift.product.repository.OptionRepository;
 import gift.product.repository.OrderRepository;
 import gift.product.repository.WishRepository;
 import java.net.URI;
-import java.util.List;
 import java.util.NoSuchElementException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

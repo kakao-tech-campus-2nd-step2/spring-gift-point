@@ -66,7 +66,8 @@ public class OptionController {
         @ApiResponse(responseCode = "404", description = "존재하지 않는 리소스", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProblemDetailResponse.class)))
     })
     @PostMapping("/products/{productId}/options")
-    public ResponseEntity<Option> insertOption(@PathVariable(name = "productId") Long productId, @Valid @RequestBody OptionDto optionDto) {
+    public ResponseEntity<Option> insertOption(@PathVariable(name = "productId") Long productId,
+        @Valid @RequestBody OptionDto optionDto) {
         return ResponseEntity.status(HttpStatus.CREATED)
             .body(optionService.insertOption(optionDto, productId));
     }
@@ -76,7 +77,9 @@ public class OptionController {
         @ApiResponse(responseCode = "404", description = "존재하지 않는 리소스", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProblemDetailResponse.class)))
     })
     @PutMapping("/products/{productId}/options/{optionId}")
-    public ResponseEntity<Option> updateOption(@PathVariable(name = "optionId") Long optionId, @PathVariable(name = "productId") Long productId, @Valid @RequestBody OptionDto optionDto) {
+    public ResponseEntity<Option> updateOption(@PathVariable(name = "optionId") Long optionId,
+        @PathVariable(name = "productId") Long productId,
+        @Valid @RequestBody OptionDto optionDto) {
         return ResponseEntity.ok(optionService.updateOption(optionId, optionDto, productId));
     }
 
@@ -86,7 +89,8 @@ public class OptionController {
         @ApiResponse(responseCode = "404", description = "존재하지 않는 리소스", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProblemDetailResponse.class)))
     })
     @DeleteMapping("/products/{productId}/options/{optionId}")
-    public ResponseEntity<Void> deleteOption(@PathVariable(name = "optionId") Long optionId, @PathVariable(name = "productId") Long productId) {
+    public ResponseEntity<Void> deleteOption(@PathVariable(name = "optionId") Long optionId,
+        @PathVariable(name = "productId") Long productId) {
         optionService.deleteOption(optionId, productId);
         return ResponseEntity.ok().build();
     }

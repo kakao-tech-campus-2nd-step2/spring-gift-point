@@ -11,7 +11,6 @@ import gift.product.dto.option.OptionResponse;
 import gift.product.model.Category;
 import gift.product.model.Option;
 import gift.product.model.Product;
-import gift.product.repository.CategoryRepository;
 import gift.product.repository.OptionRepository;
 import gift.product.repository.ProductRepository;
 import gift.product.service.OptionService;
