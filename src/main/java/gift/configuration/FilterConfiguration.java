@@ -10,6 +10,8 @@ import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import static gift.utils.FilterConstant.*;
+
 @Configuration
 public class FilterConfiguration {
 
@@ -54,8 +56,8 @@ public class FilterConfiguration {
         FilterRegistrationBean<Filter> filterRegistrationBean = new FilterRegistrationBean<>();
         filterRegistrationBean.setFilter(new LoginFilter(tokenRepository));
         filterRegistrationBean.setOrder(4);
-        filterRegistrationBean.addUrlPatterns("/members/login");
-        filterRegistrationBean.addUrlPatterns("/members/login/oauth/kakao");
+        filterRegistrationBean.addUrlPatterns(MY_SERVER_LOGIN_URL);
+        filterRegistrationBean.addUrlPatterns(KAKAO_OAUTH_LOGIN_REDIRECT_URL);
 
         return filterRegistrationBean;
     }
