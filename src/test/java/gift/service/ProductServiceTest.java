@@ -78,7 +78,7 @@ public class ProductServiceTest {
         Pageable pageable = PageRequest.of(0, 10, Sort.by("id").descending());
         given(productRepository.findAll((Pageable) any())).willReturn(Page.empty());
 
-        productService.findAllProduct(pageable);
+        productService.findAllProduct(1L, pageable);
 
         then(productRepository).should().findAll(pageable);
     }

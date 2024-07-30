@@ -15,9 +15,5 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
 
     boolean existsByCategoryId(Long categoryId);
 
-    @Query("select p from Product p join p.options o where o.id = :optionId")
-    Product findByOptionId(Long optionId);
-
-    @Query("select case when count(p) > 0 then true else false end from Product p join p.options o where o.id = :optionId")
-    boolean existsByOptionId(@Param("optionId") Long optionId);
+    Page<Product> findByCategoryId(Long categoryId, Pageable pageable);
 }
