@@ -51,9 +51,8 @@ public class OrderService {
         User user = findUserById(userId);
         ProductOption productOption = findProductOptionById(requestDto.getProductOptionId());
 
-        validateProductOptionQuantity(productOption, requestDto.getQuantity());
-
-        updateProductOptionQuantity(productOption, requestDto.getQuantity());
+        productOption.decreaseQuantity(requestDto.getQuantity());
+        productOptionRepository.save(productOption);
 
         Order order = saveOrder(user, productOption, requestDto);
 
@@ -72,17 +71,6 @@ public class OrderService {
     private ProductOption findProductOptionById(Long productOptionId) {
         return productOptionRepository.findById(productOptionId)
                 .orElseThrow(() -> new BusinessException(ErrorCode.PRODUCT_OPTION_NOT_FOUND));
-    }
-
-    private void validateProductOptionQuantity(ProductOption productOption, int requestedQuantity) {
-        if (productOption.getQuantity() < requestedQuantity) {
-            throw new BusinessException(ErrorCode.INSUFFICIENT_QUANTITY);
-        }
-    }
-
-    private void updateProductOptionQuantity(ProductOption productOption, int requestedQuantity) {
-        productOption.decreaseQuantity(requestedQuantity);
-        productOptionRepository.save(productOption);
     }
 
     private Order saveOrder(User user, ProductOption productOption, OrderRequestDto requestDto) {
