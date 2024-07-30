@@ -9,6 +9,8 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Optional;
 
+import static gift.utils.FilterConstant.*;
+
 public class AuthFilter implements Filter {
 
     private final TokenRepository tokenRepository;
@@ -35,7 +37,7 @@ public class AuthFilter implements Filter {
         String path = httpRequest.getRequestURI();
 
         // Filter 를 통과하지 않아도 되는 url
-        if (path.equals("/home") || path.equals("/oauth/renew/kakao") || path.startsWith("/members") || path.startsWith("/login/oauth") || path.startsWith("/h2-console")
+        if (path.equals(HOME_URL) || path.equals(KAKAO_TOKEN_RENEW_URL) || path.startsWith(LOGIN_URL_PREFIX) || path.startsWith(LOGIN_OAUTH_URL_PREFIX) || path.startsWith(H2_DB_URL)
                 || path.equals("/swagger-ui.html") // 변경
                 || path.startsWith("/swagger-ui")
                 || path.startsWith("/api-docs") // 추가
@@ -50,14 +52,14 @@ public class AuthFilter implements Filter {
         String authHeader = httpRequest.getHeader("Authorization");
 
         if (authHeader == null || authHeader.isEmpty()){
-            httpResponse.sendRedirect("/home");
+            httpResponse.sendRedirect(NO_AUTHORIZATION_REDIRECT_URL);
             return;
         }
 
         Optional<AuthToken> token = tokenRepository.findAuthTokenByToken(authHeader.substring(7));
 
         if (token.isEmpty()){
-            httpResponse.sendRedirect("/home");
+            httpResponse.sendRedirect(NO_AUTHORIZATION_REDIRECT_URL);
             return;
         }
 

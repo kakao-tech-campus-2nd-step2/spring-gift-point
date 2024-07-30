@@ -10,6 +10,8 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Optional;
 
+import static gift.utils.FilterConstant.NO_AUTHORIZATION_REDIRECT_URL;
+
 /**
  * post /login/token 요청 시 Authorization 토큰 값을 이미 가지고 있다면 /home(누구나 접근할 수 있는 페이지) 으로 리다이렉션 하기 위한 필터
  */
@@ -48,7 +50,7 @@ public class LoginFilter implements Filter {
                 return;
             }
 
-            httpResponse.sendRedirect("/home");
+            httpResponse.sendRedirect(NO_AUTHORIZATION_REDIRECT_URL);
             return;
         }
 
