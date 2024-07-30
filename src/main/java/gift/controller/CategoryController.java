@@ -12,7 +12,9 @@ import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -45,8 +47,10 @@ public class CategoryController {
                     content = @Content(mediaType = "application/json",  array = @ArraySchema(schema = @Schema(implementation = CategoryDTO.class)))),
             @ApiResponse(responseCode = "500", description = "서버에 의한 오류입니다.",
                     content = @Content(mediaType = "application/json", schema = @Schema(implementation = ResponseDTO.class)))})
-    public ResponseEntity<List<CategoryDTO>> getCategories() {
-        return new ResponseEntity<>(categoryService.getCategories(), HttpStatus.OK);
+    public ResponseEntity<Map<String, List<CategoryDTO>>> getCategories() {
+        Map<String, List<CategoryDTO>> response = new HashMap<>();
+        response.put("categories", categoryService.getCategories());
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @PostMapping

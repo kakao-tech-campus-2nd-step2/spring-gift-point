@@ -3,6 +3,7 @@ package gift.controller;
 import gift.constants.ResponseMsgConstants;
 import gift.dto.betweenClient.option.OptionRequestDTO;
 import gift.dto.betweenClient.ResponseDTO;
+import gift.dto.betweenClient.option.OptionResponseDTO;
 import gift.service.OptionService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
@@ -12,6 +13,9 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -44,8 +48,10 @@ public class OptionController {
                     content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = OptionRequestDTO.class)))),
             @ApiResponse(responseCode = "500", description = "서버에 의한 오류입니다",
                     content = @Content(mediaType = "application/json", schema = @Schema(implementation = ResponseDTO.class)))})
-    public ResponseEntity<?> getOneProductIdAllOptions(@PathVariable Long productId) {
-        return new ResponseEntity<>(optionService.getOneProductIdAllOptions(productId), HttpStatus.OK);
+    public ResponseEntity<Map<String, List<OptionResponseDTO>>> getOneProductIdAllOptions(@PathVariable Long productId) {
+        Map<String, List<OptionResponseDTO>> response = new HashMap<>();
+        response.put("options", optionService.getOneProductIdAllOptions(productId));
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @PostMapping

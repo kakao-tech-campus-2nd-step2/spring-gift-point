@@ -54,7 +54,7 @@ public class ProductController {
         return productService.getProductListByCategoryId(categoryId, pageable);
     }
 
-
+    @GetMapping("/{id}")
     @Operation(description = "서버가 클라이언트에게 제품 하나의 정보를 제공합니다.", tags = "Product")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "정상적으로 제품 정보를 제공합니다.",
@@ -63,7 +63,6 @@ public class ProductController {
                     content = @Content(mediaType = "application/json", schema = @Schema(implementation = ResponseDTO.class))),
             @ApiResponse(responseCode = "500", description = "서버에 의한 오류입니다.",
                     content = @Content(mediaType = "application/json", schema = @Schema(implementation = ResponseDTO.class)))})
-    @GetMapping("/{id}")
     public ResponseEntity<ProductResponseDTO> getOneProduct(@PathVariable @Min(1) @NotNull Long id) {
         return new ResponseEntity<>(productService.getProduct(id), HttpStatus.OK);
     }
