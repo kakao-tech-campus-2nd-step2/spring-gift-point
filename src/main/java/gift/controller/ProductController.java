@@ -88,7 +88,27 @@ public class ProductController {
     @PostMapping("/{productId}/options")
     @Operation(summary = "상품 옵션 추가", description = "상품에 옵션을 추가한다.")
     public ResponseEntity<OptionDto> addOption(@PathVariable("productId") Long productId, @Valid @RequestBody OptionDto optionDto) {
-        OptionDto savedOption = productService.saveOption(productId , optionDto);
+        OptionDto savedOption = productService.addOption(productId , optionDto);
         return ResponseEntity.ok(savedOption);
+    }
+
+    @PutMapping("/{productId}/options/{optionId}")
+    @Operation(summary = "상품 옵션 수정", description = "기존 상품 옵션의 정보를 수정한다.")
+    public ResponseEntity<OptionDto> updateOption(
+        @PathVariable("productId") Long productId,
+        @PathVariable("optionId") Long optionId,
+        @Valid @RequestBody OptionDto optionDto
+    ) {
+        OptionDto savedOption = productService.updateOption(productId , optionId, optionDto);
+        return ResponseEntity.ok(savedOption);
+    }
+
+    @DeleteMapping("/{productId}/options/{optionId}")
+    @Operation(summary = "상품 옵션 삭제", description = "기존 상품 옵션을 삭제한다.")
+    public ResponseEntity<List<OptionDto>> deleteOption(
+        @PathVariable("productId") Long productId,
+        @PathVariable("optionId") Long optionId
+    ) {
+        return ResponseEntity.ok(productService.deleteOption(productId , optionId));
     }
 }

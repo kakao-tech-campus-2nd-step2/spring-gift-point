@@ -97,7 +97,7 @@ public class ProductService {
     }
 
     @Transactional
-    public OptionDto saveOption(Long productId , OptionDto optionDto) {
+    public OptionDto addOption(Long productId , OptionDto optionDto) {
         Product product = productRepository.findById(productId)
             .orElseThrow(() -> new NoSuchElementException("해당 id의 상품 없음: " + productId));
         Option newOption = new Option(optionDto.name(), optionDto.quantity(), product);
@@ -108,6 +108,31 @@ public class ProductService {
         Option addedOption = addedOptionProduct.getOptionByName(optionDto.name());
 
         return new OptionDto(addedOption.getId(), addedOption.getName(), addedOption.getQuantity());
+    }
+
+    @Transactional
+    public OptionDto updateOption(Long productId, Long optionId, OptionDto optionDto) {
+        Product product = productRepository.findById(productId)
+            .orElseThrow(() -> new NoSuchElementException("해당 id의 상품 없음: " + productId));
+        Option updatedOption = new Option(optionId, optionDto.name(), optionDto.quantity(), product);
+        product.updateOption(updatedOption);
+
+        productRepository.save(product);
+
+        return new OptionDto(updatedOption.getId(), updatedOption.getName(), updatedOption.getQuantity());
+    }
+
+    @Transactional
+    public List<OptionDto> deleteOption(Long productId, Long optionId) {
+        Product product = productRepository.findById(productId)
+            .orElseThrow(() -> new NoSuchElementException("해당 id의 상품 없음: " + productId));
+
+        product.deleteOption(optionId);
+        productRepository.save(product);
+
+        return product.getOptions().stream()
+            .map(OptionDto::convertToDto)
+            .collect(Collectors.toList());
     }
 
     @Transactional
