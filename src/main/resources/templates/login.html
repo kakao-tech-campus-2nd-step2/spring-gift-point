@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  <title>Login Page</title>
+  <!-- 부트스트랩 CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+        rel="stylesheet">
+  <style>
+    /* 추가적인 커스텀 스타일링 */
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      background-color: #f0f0f0;
+    }
+
+    .card {
+      width: 300px;
+      padding: 20px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      background-color: #fff;
+    }
+
+    .card-title {
+      font-size: 1.5rem;
+      font-weight: bold;
+      text-align: center;
+    }
+
+    .form-group {
+      margin-bottom: 1rem;
+    }
+  </style>
+</head>
+<body>
+<div class="card">
+  <h1 class="card-title">Login</h1>
+  <form id="loginForm">
+    <div class="form-group">
+      <label for="email">Email:</label>
+      <input class="form-control" id="email" name="email" required type="email">
+    </div>
+
+    <div class="form-group">
+      <label for="password">Password:</label>
+      <input class="form-control" id="password" name="password" required type="password">
+    </div>
+
+    <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+      <button class="btn btn-primary" type="submit">Login</button>
+      <button class="btn btn-warning" id="kakaoLoginButton" type="button">KaKao Login</button>
+    </div>
+  </form>
+</div>
+
+<!-- 부트스트랩 JS와 Axios -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+<script>
+  document.getElementById('loginForm').addEventListener('submit', function (event) {
+    event.preventDefault(); // 폼의 기본 제출 동작을 막음
+
+    const email = document.getElementById('email').value;
+    const password = document.getElementById('password').value;
+
+    axios.post('/api/users/login', {
+      email: email,
+      password: password
+    })
+    .then(function (response) {
+      console.log(response);
+      document.cookie = "jwt=" + response.headers['authorization'] + "; Path=/";
+
+      // 리다이렉트
+      window.location.href = "/";
+      alert('로그인에 성공했습니다.');
+    })
+    .catch(function (error) {
+      console.error(error);
+      alert('로그인에 실패했습니다.');
+    });
+  });
+
+  document.getElementById('kakaoLoginButton').addEventListener('click', function () {
+    // 카카오 로그인 페이지로 리다이렉트
+    window.location.href = '/api/users/oauth/kakao/login';
+  });
+
+  // 페이지 로드 시 code 파라미터를 추출하여 JWT 발급 요청
+  window.onload = function () {
+    const urlParams = new URLSearchParams(window.location.search);
+    const code = urlParams.get('code');
+
+    if (code) {
+      axios.get(`/api/users/oauth/kakao?code=${code}`)
+      .then(function (response) {
+        const jwt = response.headers['authorization'].split(' ')[1];
+        document.cookie = "jwt=" + jwt + "; Path=/";
+        alert('카카오 로그인에 성공했습니다.');
+        // 로그인 성공 후 홈 페이지로 이동
+        window.location.href = "/";
+      })
+      .catch(function (error) {
+        console.error('Error:', error);
+        alert('카카오 로그인에 실패했습니다.');
+      });
+    }
+  };
+</script>
+</body>
+</html>
