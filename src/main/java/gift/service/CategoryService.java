@@ -3,8 +3,6 @@ package gift.service;
 import gift.dto.CategoryDto;
 import gift.model.Category;
 import gift.repository.CategoryRepository;
-import jakarta.annotation.PostConstruct;
-import jakarta.transaction.Transactional;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
 
@@ -21,11 +19,6 @@ public class CategoryService {
 
     public List<Category> getAllCategories() {
         return categoryRepository.findAll();
-    }
-
-    public Category getCategoryById(Long id) {
-        return categoryRepository.findById(id)
-                .orElseThrow(() -> new NoSuchElementException("존재하지 않는 카테고리 입니다."));
     }
 
     public Category addCategory(CategoryDto categoryDto) {
@@ -59,16 +52,5 @@ public class CategoryService {
         );
         categoryRepository.save(updatedCategory);
         return existingCategory;
-    }
-
-    @Transactional
-    public void deleteCategory(Long id) {
-        categoryRepository.deleteById(id);
-    }
-
-    @PostConstruct
-    public void init() {
-        Category noneCategory = new Category(1L, "없음");
-        categoryRepository.save(noneCategory);
     }
 }
