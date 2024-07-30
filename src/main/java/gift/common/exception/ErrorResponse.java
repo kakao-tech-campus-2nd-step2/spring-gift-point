@@ -1,7 +1,9 @@
 package gift.common.exception;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
+@JsonPropertyOrder({"error_code", "message"})
 public class ErrorResponse {
     @JsonProperty("error_code")
     private int errorCode;
