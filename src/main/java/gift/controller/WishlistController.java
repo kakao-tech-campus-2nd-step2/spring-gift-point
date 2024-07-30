@@ -37,16 +37,16 @@ public class WishlistController {
 
     @PostMapping
     @Operation(summary = "위시 리스트 상품 추가", description = "회원의 위시 리스트에 상품을 추가한다.")
-    public String addToWishlist(@Valid @ModelAttribute WishlistRequest request, @LoginMember TokenAuth tokenAuth) {
-        wishlistService.addItemToWishlist(request, tokenAuth.getToken());
-        return "redirect:/wishlist";
+    public void addToWishlist(@Valid @RequestBody WishlistRequest request, @LoginMember TokenAuth tokenAuth) {
+        Long memberId = tokenAuth.getMemberId();
+        wishlistService.addItemToWishlist(request, memberId);
     }
 
-    @DeleteMapping("/delete/{productId}")
+    @DeleteMapping("/{productId}")
     @Operation(summary = "위시 리스트 상품 삭제", description = "회원의 위시 리스트에서 상품을 삭제한다.")
-    public String deleteItemFromWishlist(@PathVariable Long productId, @LoginMember TokenAuth tokenAuth) {
-        wishlistService.deleteItemFromWishlist(productId, tokenAuth.getToken());
-        return "redirect:/wishlist";
+    public void deleteItemFromWishlist(@PathVariable Long productId, @LoginMember TokenAuth tokenAuth) {
+        Long memberId = tokenAuth.getMemberId();
+        wishlistService.deleteItemFromWishlist(productId, memberId);
     }
 
     @GetMapping

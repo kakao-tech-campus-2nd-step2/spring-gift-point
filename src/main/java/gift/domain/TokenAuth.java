@@ -45,4 +45,8 @@ public class TokenAuth {
     public void setToken(String token) {
         this.token = token;
     }
+
+    public Long getMemberId(){
+        return member.getId();
+    }
 }
