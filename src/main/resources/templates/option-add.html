@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>Add or Edit Option to Product</title>
+</head>
+<body>
+<h1>Option</h1>
+<form th:action="@{/admin/product/{productId}/option/add(productId=${productId})}" method="post" th:object="${option}">
+  <input type="hidden" th:field="*{id}">
+  <div>
+    <label for="name">Name:</label>
+    <input type="text" id="name" name="name" th:field="*{name}" required/>
+  </div>
+  <div>
+    <label for="quantity">Quantity:</label>
+    <input type="text" id="quantity" name="quantity" th:field="*{quantity}" required/>
+  </div>
+  <div>
+    <button type="submit">Save</button>
+    <a th:href="@{/admin/product/{productId}/option/list}">Cancel</a>
+  </div>
+</form>
+</body>
+</html>
