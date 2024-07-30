@@ -12,7 +12,7 @@
 <div id="container">
   <div id="loginBox">
     <div id="loginBoxTitle">Login</div>
-    <a th:href="@{/members/register}">Sign Up</a>
+    <a th:href="@{/api/members/register}">Sign Up</a>
     <div id="inputBox">
       <div class="input-form-box"><span>Email </span><input type="text" id="email" class="form-control"></div>
       <div class="input-form-box"><span>Password </span><input type="password" id="password" class="form-control"></div>
@@ -20,7 +20,7 @@
         <button type="button" onclick="login()" class="btn btn-primary btn-xs" style="width:100%">로그인</button>
       </div>
       <div>
-        <a th:href="@{/oauth/kakao}">
+        <a th:href="@{/api/oauth}">
           <img src="/images/kakao_login_medium_narrow.png" alt="kakao login image">
         </a>
       </div>

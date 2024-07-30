@@ -2,7 +2,7 @@ function login() {
     const email = document.getElementById('email').value;
     const password = document.getElementById('password').value;
 
-    fetch('/members/login', {
+    fetch('/api/members/login', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
@@ -39,7 +39,7 @@ function loadWishlist() {
         return;
     }
 
-    fetch('/members/wishlist', {
+    fetch('/api/members/wishlist', {
         method: 'GET',
         headers: {
             'Authorization': `Bearer ${token}`,

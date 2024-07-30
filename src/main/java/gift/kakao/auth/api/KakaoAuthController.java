@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
-@RequestMapping("/oauth/kakao")
+@RequestMapping("/api/oauth")
 public class KakaoAuthController {
 
     private final AuthService authService;

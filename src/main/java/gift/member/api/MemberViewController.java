@@ -1,15 +1,10 @@
 package gift.member.api;
 
-import gift.auth.application.AuthService;
 import gift.global.pagination.dto.PageResponse;
+import gift.member.validator.LoginMember;
+import gift.product.api.ProductController;
 import gift.product.dto.ProductResponse;
 import gift.wishlist.api.WishesController;
-import gift.member.validator.LoginMember;
-import gift.member.application.MemberService;
-import gift.auth.dto.AuthResponse;
-import gift.member.dto.MemberDto;
-import gift.product.api.ProductController;
-import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -17,26 +12,17 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
 @RequestMapping("/members")
-public class MemberController {
+public class MemberViewController {
 
-    private final MemberService memberService;
-    private final AuthService authService;
     private final ProductController productController;
     private final WishesController wishesController;
 
-    public MemberController(MemberService memberService,
-                            AuthService authService,
-                            ProductController productController,
-                            WishesController wishesController) {
-        this.memberService = memberService;
-        this.authService = authService;
+    public MemberViewController(ProductController productController,
+                                WishesController wishesController) {
         this.productController = productController;
         this.wishesController = wishesController;
     }
@@ -46,21 +32,9 @@ public class MemberController {
         return "register";
     }
 
-    @PostMapping("/register")
-    @ResponseBody
-    public void signUp(@RequestBody @Valid MemberDto memberDto) {
-        memberService.registerMember(memberDto);
-    }
-
     @GetMapping("/login")
     public String showLoginView() {
         return "login";
-    }
-
-    @PostMapping("/login")
-    @ResponseBody
-    public AuthResponse login(@RequestBody @Valid MemberDto memberDto) {
-        return authService.authenticate(memberDto);
     }
 
     @GetMapping("/wishlist")
