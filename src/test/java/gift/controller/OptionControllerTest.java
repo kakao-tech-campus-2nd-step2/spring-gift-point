@@ -46,7 +46,7 @@ class OptionControllerTest {
     @DisplayName("잘못된 수량으로 된 오류 상품 옵션 생성하기")
     void failAddOptionWithWrongQuantity() throws Exception {
         //given
-        var postRequest = post("/api/options/add")
+        var postRequest = post("/api/options")
                 .contentType(MediaType.APPLICATION_JSON)
                 .header("Authorization", "Bearer " + memberToken)
                 .content(objectMapper.writeValueAsString(new OptionAddRequest("기본", 0, 1L)));
@@ -61,7 +61,7 @@ class OptionControllerTest {
     @DisplayName("빈 이름을 가진 오류 상품 옵션 생성하기")
     void failAddOptionWithEmptyName() throws Exception {
         //given
-        var postRequest = post("/api/options/add")
+        var postRequest = post("/api/options")
                 .contentType(MediaType.APPLICATION_JSON)
                 .header("Authorization", "Bearer " + memberToken)
                 .content(objectMapper.writeValueAsString(new OptionAddRequest("", 1000, 1L)));
@@ -76,7 +76,7 @@ class OptionControllerTest {
     @DisplayName("이름의 길이가 50초과인 오류 상품 생성하기")
     void failAddOptionWithNameOverLength() throws Exception {
         //given
-        var postRequest = post("/api/options/add")
+        var postRequest = post("/api/options")
                 .contentType(MediaType.APPLICATION_JSON)
                 .header("Authorization", "Bearer " + memberToken)
                 .content(objectMapper.writeValueAsString(new OptionAddRequest("aaaaaaaaaaaaaaaaaabbbbbbbbbbbbcccccccccccccccddddddddddddddddddddwwwwwwwwwwqqqqqqqqqqqqqqq", 1000, 1L)));
@@ -91,7 +91,7 @@ class OptionControllerTest {
     @DisplayName("정상 상품 옵션 생성하기")
     void successAddOption() throws Exception {
         //given
-        var postRequest = post("/api/options/add")
+        var postRequest = post("/api/options")
                 .contentType(MediaType.APPLICATION_JSON)
                 .header("Authorization", "Bearer " + memberToken)
                 .content(objectMapper.writeValueAsString(new OptionAddRequest("Large", 1500, 1L)));
@@ -107,7 +107,7 @@ class OptionControllerTest {
     @DisplayName("존재하지 않는 상품에 대한 옵션 생성하기")
     void failAddOptionWithNotExistProductId() throws Exception {
         //given
-        var postRequest = post("/api/options/add")
+        var postRequest = post("/api/options")
                 .contentType(MediaType.APPLICATION_JSON)
                 .header("Authorization", "Bearer " + memberToken)
                 .content(objectMapper.writeValueAsString(new OptionAddRequest("Large", 1500, 1000L)));
@@ -121,7 +121,7 @@ class OptionControllerTest {
     @DisplayName("정상 옵션 생성하기 - 특수문자 포함")
     void successAddOptionWithSpecialChar() throws Exception {
         //given
-        var postRequest = post("/api/options/add")
+        var postRequest = post("/api/options")
                 .contentType(MediaType.APPLICATION_JSON)
                 .header("Authorization", "Bearer " + memberToken)
                 .content(objectMapper.writeValueAsString(new OptionAddRequest("햄버거()[]+-&/_", 1000, 1L)));
@@ -137,7 +137,7 @@ class OptionControllerTest {
     @DisplayName("정상 옵션 생성하기 - 공백 포함")
     void successAddOptionWithEmptySpace() throws Exception {
         //given
-        var postRequest = post("/api/options/add")
+        var postRequest = post("/api/options")
                 .contentType(MediaType.APPLICATION_JSON)
                 .header("Authorization", "Bearer " + memberToken)
                 .content(objectMapper.writeValueAsString(new OptionAddRequest("햄버거 햄버거 햄버거", 1000, 1L)));
@@ -153,7 +153,7 @@ class OptionControllerTest {
     @DisplayName("오류 상품 생성하기 - 허용되지 않은 특수문자 포함")
     void failAddOptionWithSpecialChar() throws Exception {
         //given
-        var postRequest = post("/api/options/add")
+        var postRequest = post("/api/options")
                 .contentType(MediaType.APPLICATION_JSON)
                 .header("Authorization", "Bearer " + memberToken)
                 .content(objectMapper.writeValueAsString(new OptionAddRequest("햄버거()[]+-&/_**", 1000, 1L)));

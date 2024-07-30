@@ -58,7 +58,7 @@ class WishProductControllerTest {
     @DisplayName("잘못된 수량으로 된 위시 리스트 상품 추가하기")
     void failAddWishProductWithZeroCount() throws Exception {
         //given
-        var postRequest = post("/api/wishes/add")
+        var postRequest = post("/api/wishes")
                 .contentType(MediaType.APPLICATION_JSON)
                 .header("Authorization", "Bearer " + memberToken)
                 .content(objectMapper.writeValueAsString(new WishProductAddRequest(1L, 0)));
@@ -73,7 +73,7 @@ class WishProductControllerTest {
     @DisplayName("위시 리스트 상품 추가하기")
     void successAddWishProduct() throws Exception {
         //given
-        var postRequest = post("/api/wishes/add")
+        var postRequest = post("/api/wishes")
                 .contentType(MediaType.APPLICATION_JSON)
                 .header("Authorization", "Bearer " + memberToken)
                 .content(objectMapper.writeValueAsString(new WishProductAddRequest(1L, 10)));
@@ -110,7 +110,7 @@ class WishProductControllerTest {
         //given
         var wishProductAddRequest = new WishProductAddRequest(1L, 10);
         var wishProduct = wishProductService.addWishProduct(wishProductAddRequest, 1L);
-        var postRequest = post("/api/wishes/add")
+        var postRequest = post("/api/wishes")
                 .contentType(MediaType.APPLICATION_JSON)
                 .header("Authorization", "Bearer " + memberToken)
                 .content(objectMapper.writeValueAsString(wishProductAddRequest));
@@ -154,7 +154,7 @@ class WishProductControllerTest {
         //given
         var wishProduct = wishProductService
                 .addWishProduct(new WishProductAddRequest(1L, 10), 1L);
-        var putRequest = put("/api/wishes/update/" + wishProduct.id())
+        var putRequest = put("/api/wishes/" + wishProduct.id())
                 .contentType(MediaType.APPLICATION_JSON)
                 .header("Authorization", "Bearer " + memberToken)
                 .content(objectMapper.writeValueAsString(new WishProductUpdateRequest(30)));
@@ -176,7 +176,7 @@ class WishProductControllerTest {
         var wishProduct = wishProductService
                 .addWishProduct(new WishProductAddRequest(1L, 10),
                         1L);
-        var putRequest = put("/api/wishes/update/" + wishProduct.id())
+        var putRequest = put("/api/wishes/" + wishProduct.id())
                 .contentType(MediaType.APPLICATION_JSON)
                 .header("Authorization", "Bearer " + memberToken)
                 .content(objectMapper.writeValueAsString(new WishProductUpdateRequest(0)));
