@@ -9,8 +9,8 @@ API 사용 중 궁금하거나 불명확한 부분이 있으시면 언제든지 
 이 API 문서는 다음과 같은 기능들을 제공합니다:
 
 #### 회원 관련 기능:
-- 로그인 : 카카오 서버를 통한 로그인 지원 및 자체 회원가입을 통한 로그인 로직을 포함합니다.
-- JWT 토큰 관리: JWT 토큰은 자체 로그인, 회원가입 , 카카오 로그인 성공 시 응답 헤더를 통해 발급받을 수 있습니다.
+- 로그인 : 카카오 서버를 통한 로그인만 지원한다.
+- JWT 토큰 관리: JWT 토큰은 카카오 로그인 성공 시 응답 헤더를 통해 발급받을 수 있습니다.
 
 #### 상품 관련 기능:
 - 상품 등록: 각 상품은 하나 이상의 카테고리와 옵션을 포함합니다. 
@@ -24,7 +24,6 @@ API 사용 중 궁금하거나 불명확한 부분이 있으시면 언제든지 
 
 ## 목차
 - [Kakao Authentication API](#kakao-authentication-api) 
-- [Member API](#member-api)
 - [Category API](#category-api)
 - [Product API](#product-api)
 - [Option API](#option-api)
@@ -75,74 +74,6 @@ HTTP/1.1 200 OK
 Authorization: Bearer <JWT_TOKEN>
 Content-Type: application/json
 ```
-
-</details>
-
----
-
-## Member API
-### Endpoint: `/members`
-
-| 제목             | 메서드 | URL                              | 요청 컨텐트 타입 / 요청 객체                              | 응답 객체                                                   | 설명                        |
-|------------------|--------|----------------------------------|------------------------------------------------|---------------------------------------------------------|-----------------------------|
-| 로그인 요청       | `POST`   | `/api/members/login`               | `Content-Type: application/json`<br>`body: {user}` |` Status: 200 OK`<br>`Header: Authorization: Bearer {Token}` | 사용자 로그인을 처리합니다. |
-| 새로운 회원 추가  | `POST`   | `/api/members/register`            | `Content-Type: application/json`<br>`body: {user}` | `Status: 200 OK`<br>`Header: Authorization: Bearer {Token}`      | 새로운 회원을 추가합니다.   |
-* 로직 단순화를 위해 회원가입후에도 JWT token을 반환하고 있습니다.
-
-<details>
-<summary>POST: 로그인 요청</summary>
-
-#### Request:
-```http
-POST http://localhost:8080/api/members/login
-Content-Type: application/json
-
-body 
-{
-  "email": "email",          
-  "password": "password"     
-}
-```
-
-#### Response:
-
-
-##### Header:
-```http
-HTTP/1.1 200 OK
-Authorization: Bearer <JWT_TOKEN>
-Content-Type: application/json
-```
-
-
-</details>
-
-
-<details>
-<summary>POST: 새로운 회원 추가</summary>
-
-#### Request:
-```http
-POST http://localhost:8080/api/members/register
-Content-Type: application/json
-
-body
-{
-  "email": "email5",          
-  "password": "password3"
-}
-```
-
-#### Response:
-
-##### Header:
-```http
-HTTP/1.1 200 OK
-Authorization: Bearer <JWT_TOKEN>
-Content-Type: application/json
-```
-
-##### Body:
 
 </details>
 
