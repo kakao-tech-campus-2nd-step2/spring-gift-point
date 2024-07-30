@@ -73,7 +73,7 @@ public class OptionService {
         }
         return optionRepository.save(option);
     }
-    public OptionDTO addOption(Long productId, Long optionId, OptionDTO optionDTO){
+    public OptionDTO addOption(Long productId, OptionDTO optionDTO){
         Product product = productRepository.findById(productId)
             .orElseThrow(() -> new IllegalArgumentException("productId" + productId + "가 없습니다."));
         product.getOptionList().add(convertToEntity(optionDTO));
