@@ -1,0 +1,126 @@
+## 카카오 로그인
+
+## 카테고리
+### 카테고리 목록 조회
+GET http://localhost:8080/api/categories
+Content-Type: application/json
+
+### 카테고리 삭제
+DELETE http://localhost:8080/api/categories/1
+Content-Type: application/json
+
+### 새 카테고리 추가
+POST http://localhost:8080/api/categories
+Content-Type: application/json
+
+{
+  "name": "컴퓨터df",
+  "color": "#123",
+  "image_url": "http://hello",
+  "description": "description"
+}
+
+### 상품
+### 제품 페이지 조회
+GET http://localhost:8080/api/products?page=0&category=1
+Content-Type: application/json
+
+### 제품 상세 조회
+GET http://localhost:8080/api/products/1
+Content-Type: application/json
+
+### 새 제품 등록
+POST http://localhost:8080/api/products
+Content-Type: application/json
+
+{
+  "name": "카테고리1",
+  "price": 10000,
+  "image_url": "http://example.com/sample.jpg",
+  "category_id": 1,
+  "options": [
+    {
+      "name": "옵션 1",
+      "quantity": 10
+    },
+    {
+      "name": "옵션 2",
+      "quantity": 20
+    }
+  ]
+}
+
+### 제품 업데이트
+PUT http://localhost:8080/api/products/1
+Content-Type: application/json
+
+{
+  "name": "아메리카노2",
+  "price": 5000,
+  "image_url": "http://hello",
+  "category_id": 2
+}
+
+### 제품 삭제
+DELETE http://localhost:8080/api/products/1
+Content-Type: application/json
+
+## 옵션
+### 특정 제품의 옵션 목록 조회
+GET http://localhost:8080/api/options/1
+Content-Type: application/json
+
+### 새로운 옵션 추가
+POST http://localhost:8080/api/options/1
+Content-Type: application/json
+
+{
+  "name": "name",
+  "quantity": 1000,
+  "product_id": 1
+}
+
+### 옵션 삭제
+DELETE http://localhost:8080/api/options/1
+Content-Type: application/json
+
+
+## 위시
+
+### 특정 페이지의 위시 목록 조회
+# 사용자의 세션 정보를 포함하여 특정 페이지의 위시 목록을 조회합니다.
+GET http://localhost:8080/api/wishes?page=1
+Authorization: Bearer {your_token_here}
+Accept: application/json
+
+### 새로운 위시 추가
+# 새로운 상품을 위시리스트에 추가합니다.
+POST http://localhost:8080/api/wishes
+Content-Type: application/json
+Authorization: Bearer {your_token_here}
+Accept: application/json
+
+{
+  "product_id": 2
+}
+
+### 위시 삭제
+# 위시리스트에서 특정 상품을 삭제합니다.
+DELETE http://localhost:8080/api/wishes/1
+Authorization: Bearer {your_token_here}
+Accept: application/json
+
+
+## 오더
+
+### 새 주문 등록
+POST http://localhost:8080/api/orders
+Content-Type: application/json
+Authorization: Bearer {{access_token}}
+
+{
+  "quantity": 1,
+  "message": "message",
+  "option_id": 1
+}
+
