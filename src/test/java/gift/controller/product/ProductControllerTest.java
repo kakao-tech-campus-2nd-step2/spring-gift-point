@@ -1,10 +1,10 @@
-package gift.controller.gift;
+package gift.controller.product;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import gift.dto.gift.ProductRequest;
-import gift.dto.gift.ProductResponse;
+import gift.dto.product.ProductRequest;
+import gift.dto.product.ProductResponse;
 import gift.dto.option.OptionRequest;
-import gift.service.gift.ProductService;
+import gift.service.product.ProductService;
 import gift.service.option.OptionService;
 import org.junit.jupiter.api.*;
 import org.mockito.Mockito;
@@ -37,7 +37,7 @@ class ProductControllerTest {
 
     private ProductRequest.Create giftRequest;
 
-    private ProductResponse productResponse;
+    private ProductResponse.Info productResponse;
     private ObjectMapper objectMapper;
 
     @BeforeEach
@@ -45,7 +45,7 @@ class ProductControllerTest {
         OptionRequest.Create option = new OptionRequest.Create("testOption", 1);
         List<OptionRequest.Create> optionList = Arrays.asList(option);
         giftRequest = new ProductRequest.Create("Test Gift", 1000, "test.jpg", 1L, optionList);
-        productResponse = new ProductResponse(1L, "Test Gift", 1000, "test.jpg", null, null);
+        productResponse = new ProductResponse.Info(1L, "Test Gift", 1000, "test.jpg");
         objectMapper = new ObjectMapper();
 
     }

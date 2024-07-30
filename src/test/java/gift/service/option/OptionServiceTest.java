@@ -2,9 +2,9 @@ package gift.service.option;
 
 import gift.dto.option.OptionRequest;
 import gift.model.category.Category;
-import gift.model.gift.Product;
+import gift.model.product.Product;
 import gift.model.option.Option;
-import gift.repository.gift.ProductRepository;
+import gift.repository.product.ProductRepository;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;

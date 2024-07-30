@@ -1,6 +1,6 @@
 package gift.model.category;
 
-import gift.model.gift.Product;
+import gift.model.product.Product;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 

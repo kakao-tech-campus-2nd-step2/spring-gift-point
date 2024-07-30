@@ -2,13 +2,13 @@ package gift.controller.admin;
 
 
 import gift.dto.category.CategoryResponse;
-import gift.dto.gift.ProductRequest;
-import gift.dto.gift.ProductResponse;
+import gift.dto.product.ProductRequest;
+import gift.dto.product.ProductResponse;
 import gift.dto.option.OptionRequest;
 import gift.dto.paging.PagingRequest;
 import gift.dto.paging.PagingResponse;
 import gift.service.category.CategoryService;
-import gift.service.gift.ProductService;
+import gift.service.product.ProductService;
 import gift.service.option.OptionService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,7 +39,7 @@ public class AdminController {
 
     @GetMapping("/admin")
     public String adminHome(Model model, @ModelAttribute PagingRequest pagingRequest) {
-        PagingResponse<ProductResponse> giftlist = productService.getAllGifts(pagingRequest.getPage(), pagingRequest.getSize());
+        PagingResponse<ProductResponse.Info> giftlist = productService.getAllGifts(pagingRequest.getPage(), pagingRequest.getSize());
         model.addAttribute("giftlist", giftlist.getContent());
         return "admin";
     }
@@ -54,16 +54,16 @@ public class AdminController {
 
     @PostMapping("/admin/gift/create")
     public String giftCreate(@Valid @ModelAttribute ProductRequest.Create giftRequest) {
-        ProductResponse productResponse = productService.addGift(giftRequest);
+        ProductResponse.Info productResponse = productService.addGift(giftRequest);
         for (OptionRequest.Create optionRequest : giftRequest.options()) {
-            optionService.addOptionToGift(productResponse.getId(), optionRequest);
+            optionService.addOptionToGift(productResponse.productId(), optionRequest);
         }
         return "redirect:/admin";
     }
 
     @GetMapping("/admin/gift/detail/{id}")
     public String detail(Model model, @PathVariable("id") Long id) {
-        ProductResponse gift = productService.getGift(id);
+        ProductResponse.Info gift = productService.getGift(id);
         model.addAttribute("gift", gift);
         return "gift_detail";
     }
@@ -73,7 +73,7 @@ public class AdminController {
         CategoryResponse.InfoList infoList = categoryService.getAllCategories();
         List<CategoryResponse.Info> categories = infoList.categories();
         model.addAttribute("categories", categories);
-        ProductResponse gift = productService.getGift(id);
+        ProductResponse.Info gift = productService.getGift(id);
         model.addAttribute("gift", gift);
         return "modify_form";
     }

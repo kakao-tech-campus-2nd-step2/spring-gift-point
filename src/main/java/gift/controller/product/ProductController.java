@@ -1,10 +1,10 @@
-package gift.controller.gift;
+package gift.controller.product;
 
-import gift.dto.gift.ProductRequest;
-import gift.dto.gift.ProductResponse;
+import gift.dto.product.ProductRequest;
+import gift.dto.product.ProductResponse;
 import gift.dto.paging.PagingRequest;
 import gift.dto.paging.PagingResponse;
-import gift.service.gift.ProductService;
+import gift.service.product.ProductService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -29,14 +29,14 @@ public class ProductController implements ProductSpecification {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ProductResponse> getGift(@PathVariable Long id) {
-        ProductResponse gift = productService.getGift(id);
+    public ResponseEntity<ProductResponse.Info> getGift(@PathVariable Long id) {
+        ProductResponse.Info gift = productService.getGift(id);
         return ResponseEntity.ok(gift);
     }
 
     @GetMapping
-    public ResponseEntity<PagingResponse<ProductResponse>> getAllGift(@ModelAttribute PagingRequest pagingRequest) {
-        PagingResponse<ProductResponse> response = productService.getAllGifts(pagingRequest.getPage(), pagingRequest.getSize());
+    public ResponseEntity<PagingResponse<ProductResponse.Info>> getAllGift(@ModelAttribute PagingRequest pagingRequest) {
+        PagingResponse<ProductResponse.Info> response = productService.getAllGifts(pagingRequest.getPage(), pagingRequest.getSize());
         return ResponseEntity.ok(response);
     }
 

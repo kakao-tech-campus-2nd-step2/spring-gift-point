@@ -1,6 +1,6 @@
 package gift.repository.wish;
 
-import gift.model.gift.Product;
+import gift.model.product.Product;
 import gift.model.user.User;
 import gift.model.wish.Wish;
 import org.springframework.data.domain.Page;

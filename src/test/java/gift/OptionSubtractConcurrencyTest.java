@@ -1,9 +1,9 @@
 package gift;
 
 import gift.model.category.Category;
-import gift.model.gift.Product;
+import gift.model.product.Product;
 import gift.model.option.Option;
-import gift.repository.gift.ProductRepository;
+import gift.repository.product.ProductRepository;
 import gift.repository.option.OptionRepository;
 import gift.service.option.OptionService;
 import org.junit.jupiter.api.*;

@@ -1,4 +1,4 @@
-package gift.dto.gift;
+package gift.dto.product;
 
 import gift.dto.option.OptionRequest;
 import jakarta.validation.Valid;

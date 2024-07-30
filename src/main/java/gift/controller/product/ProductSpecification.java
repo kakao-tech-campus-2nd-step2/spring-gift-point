@@ -1,7 +1,7 @@
-package gift.controller.gift;
+package gift.controller.product;
 
-import gift.dto.gift.ProductRequest;
-import gift.dto.gift.ProductResponse;
+import gift.dto.product.ProductRequest;
+import gift.dto.product.ProductResponse;
 import gift.dto.paging.PagingRequest;
 import gift.dto.paging.PagingResponse;
 import io.swagger.v3.oas.annotations.Operation;
@@ -38,7 +38,7 @@ public interface ProductSpecification {
                     ),
                     @ApiResponse(responseCode = "404", description = "상품을 찾을 수 없음")
             })
-    ResponseEntity<ProductResponse> getGift(@Parameter(description = "조회할 상품의 ID") @PathVariable Long id);
+    ResponseEntity<ProductResponse.Info> getGift(@Parameter(description = "조회할 상품의 ID") @PathVariable Long id);
 
     @Operation(summary = "모든 상품 조회", description = "모든 상품을 페이징하여 조회합니다.",
             responses = {
@@ -49,7 +49,7 @@ public interface ProductSpecification {
                             )
                     )
             })
-    ResponseEntity<PagingResponse<ProductResponse>> getAllGift(@Parameter(description = "페이징 요청 정보") @ModelAttribute PagingRequest pagingRequest);
+    ResponseEntity<PagingResponse<ProductResponse.Info>> getAllGift(@Parameter(description = "페이징 요청 정보") @ModelAttribute PagingRequest pagingRequest);
 
     @Operation(summary = "상품 수정", description = "주어진 ID에 해당하는 상품을 수정합니다.",
             responses = {

@@ -1,4 +1,4 @@
-package gift.model.gift;
+package gift.model.product;
 
 import gift.model.category.Category;
 import gift.model.option.Option;

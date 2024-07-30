@@ -1,6 +1,6 @@
 package gift.model.option;
 
-import gift.model.gift.Product;
+import gift.model.product.Product;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import org.hibernate.annotations.ColumnDefault;

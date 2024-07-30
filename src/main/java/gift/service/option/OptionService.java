@@ -2,9 +2,9 @@ package gift.service.option;
 
 import gift.dto.option.OptionRequest;
 import gift.dto.option.OptionResponse;
-import gift.model.gift.Product;
+import gift.model.product.Product;
 import gift.model.option.Option;
-import gift.repository.gift.ProductRepository;
+import gift.repository.product.ProductRepository;
 import gift.repository.option.OptionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.orm.ObjectOptimisticLockingFailureException;

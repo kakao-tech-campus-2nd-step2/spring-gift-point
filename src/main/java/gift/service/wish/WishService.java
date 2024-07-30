@@ -2,10 +2,10 @@ package gift.service.wish;
 
 import gift.dto.paging.PagingResponse;
 import gift.exception.WishItemNotFoundException;
-import gift.model.gift.Product;
+import gift.model.product.Product;
 import gift.model.user.User;
 import gift.model.wish.Wish;
-import gift.repository.gift.ProductRepository;
+import gift.repository.product.ProductRepository;
 import gift.repository.user.UserRepository;
 import gift.repository.wish.WishRepository;
 import jakarta.transaction.Transactional;
