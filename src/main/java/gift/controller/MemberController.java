@@ -27,8 +27,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-@Controller
+@RestController
 @PropertySource("classpath:application-secret.properties")
 @PropertySource("classpath:application-kakao-login.properties")
 @Validated
@@ -50,20 +51,6 @@ public class MemberController {
         this.jwtUtil = jwtUtil;
     }
 
-
-    @GetMapping("/register")
-    @Operation(description = "서버가 클라이언트에게 회원 가입 페이지를 제공합니다.", tags = "Member")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "정상적으로 회원가입 페이지를 제공합니다.",
-                    content = @Content(mediaType = "text/html", schema = @Schema(implementation = String.class))),
-            @ApiResponse(responseCode = "500", description = "서버에 의한 오류입니다.",
-                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = ResponseDTO.class)))})
-    public String register(){
-        return "register";
-    }
-
-
-
     @PostMapping("/register")
     @Operation(description = "서버가 클라이언트가 제출한 사용자 정보를 가지고 회원가입을 진행합니다.", tags = "Member")
     @ApiResponses(value = {
@@ -81,22 +68,6 @@ public class MemberController {
         String token = jwtUtil.generateToken(memberDTO);
         return new ResponseEntity<>(new JwtDTO(token), HttpStatus.CREATED);
     }
-
-
-
-    @GetMapping("/login")
-    @Operation(description = "서버가 클라이언트에게 로그인 페이지를 제공합니다.", tags = "Member")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "정상적으로 로그인 페이지를 제공합니다.",
-                    content = @Content(mediaType = "text/html", schema =  @Schema(implementation = String.class))),
-            @ApiResponse(responseCode = "500", description = "서버에 의한 오류입니다.",
-                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = ResponseDTO.class)))})
-    public String login(Model model){
-        String kakaoAuthUrl = "https://kauth.kakao.com/oauth/authorize?response_type=code&client_id="+clientId+"&redirect_uri="+redirectUri;
-        model.addAttribute("kakaoAuthUrl", kakaoAuthUrl);
-        return "login";
-    }
-
 
 
     @PostMapping("/login")

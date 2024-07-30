@@ -21,14 +21,14 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-@Controller
+@RestController
 @RequestMapping("/api/orders")
 public class OrderController {
 
@@ -39,8 +39,7 @@ public class OrderController {
     private final OrderService orderService;
 
     public OrderController(KakaoTokenService kakaoTokenService, MemberService memberService,
-            OptionService optionService, WishListService wishListService,
-            OrderService orderService) {
+            OptionService optionService, WishListService wishListService, OrderService orderService) {
         this.kakaoTokenService = kakaoTokenService;
         this.memberService = memberService;
         this.optionService = optionService;
@@ -76,11 +75,9 @@ public class OrderController {
     public ResponseEntity<?> order(@Parameter(hidden = true) @LoginMember MemberDTO memberDTO, @RequestBody OrderRequestDTO orderRequestDTO) {
         String accessToken = memberService.getMemberAccessToken(memberDTO.getEmail());
 
-        optionService.subtractOptionQuantity(orderRequestDTO.optionId(),
-                orderRequestDTO.quantity());
+        optionService.subtractOptionQuantity(orderRequestDTO.optionId(), orderRequestDTO.quantity());
 
         Option option = optionService.getOption(orderRequestDTO.optionId());
-
 
         wishListService.removeWishListProduct(memberDTO, option.getProduct().getId());
         kakaoTokenService.sendMsgToMe(accessToken, option, orderRequestDTO.message());

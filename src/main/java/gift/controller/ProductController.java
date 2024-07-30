@@ -20,8 +20,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -30,8 +28,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
-@Controller
+@RestController
 @Validated
 @RequestMapping("/api/products")
 public class ProductController {
@@ -50,10 +50,8 @@ public class ProductController {
                     content = @Content(mediaType = "text/html", schema =  @Schema(implementation = String.class))),
             @ApiResponse(responseCode = "500", description = "서버에 의한 오류입니다.",
                     content = @Content(mediaType = "application/json", schema = @Schema(implementation = ResponseDTO.class)))})
-    public String getProducts(Model model, Pageable pageable) {
-        Page<ProductResponseDTO> productPage = productService.getProductList(pageable);
-        model.addAttribute("productPage", productPage);
-        return "getProducts";
+    public Page<ProductResponseDTO> getProducts(@RequestParam(defaultValue = "1") Long categoryId, Pageable pageable) {
+        return productService.getProductListByCategoryId(categoryId, pageable);
     }
 
 
@@ -114,8 +112,7 @@ public class ProductController {
                     content = @Content(mediaType = "application/json", schema = @Schema(implementation = ResponseDTO.class))),
             @ApiResponse(responseCode = "500", description = "서버에 의한 오류입니다.",
                     content = @Content(mediaType = "application/json", schema = @Schema(implementation = ResponseDTO.class)))})
-    public ResponseEntity<ResponseDTO> updateProduct(@PathVariable @Min(1) @NotNull Long id,
-            @RequestBody @Valid ProductRequestDTO productRequestDTO) {
+    public ResponseEntity<ResponseDTO> updateProduct(@PathVariable @Min(1) @NotNull Long id, @RequestBody @Valid ProductRequestDTO productRequestDTO) {
         productService.updateProduct(id, productRequestDTO);
         return new ResponseEntity<>(new ResponseDTO(false, ResponseMsgConstants.WELL_DONE_MESSAGE), HttpStatus.OK);
     }
