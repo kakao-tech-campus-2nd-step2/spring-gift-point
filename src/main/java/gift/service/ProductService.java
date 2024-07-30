@@ -7,7 +7,6 @@ import gift.dto.betweenClient.product.ProductRequestDTO;
 import gift.entity.Category;
 import gift.entity.Product;
 import gift.exception.BadRequestExceptions.BadRequestException;
-import gift.exception.BadRequestExceptions.InvalidIdException;
 import gift.exception.BadRequestExceptions.NoSuchProductIdException;
 import gift.exception.InternalServerExceptions.InternalServerException;
 import gift.repository.CategoryRepository;
@@ -61,8 +60,8 @@ public class ProductService {
     }
 
     @Transactional(readOnly = true)
-    public Page<ProductResponseDTO> getProductList(Pageable pageable) throws RuntimeException {
-        Page<Product> productPage = productRepository.findAll(pageable);
+    public Page<ProductResponseDTO> getProductListByCategoryId(Long categoryId, Pageable pageable) throws RuntimeException {
+        Page<Product> productPage = productRepository.findByCategoryId(categoryId, pageable);
         List<ProductResponseDTO> productResponseDTOList = productPage.getContent().stream()
                 .map(ProductResponseDTO::convertToProductResponseDTO).toList();
         return new PageImpl<>(productResponseDTOList, productPage.getPageable(),
@@ -78,9 +77,6 @@ public class ProductService {
     @Transactional
     public void updateProduct(Long id, ProductRequestDTO productRequestDTO) throws RuntimeException {
         try {
-            if (!id.equals(productRequestDTO.id()))
-                throw new InvalidIdException("올바르지 않은 id입니다.");
-
             Category categoryToReplace = categoryRepository.findByName(productRequestDTO.categoryName()).orElseThrow(() -> new BadRequestException("그러한 카테코리를 찾을 수 없습니다."));
             Product productInDb = productRepository.findById(id).orElseThrow(() -> new NoSuchProductIdException("id가 %d인 상품은 존재하지 않습니다.".formatted(id)));
             Product productToUpdate = productRequestDTO.convertToProduct(categoryToReplace);

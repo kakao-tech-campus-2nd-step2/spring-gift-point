@@ -3,6 +3,7 @@ package gift.service;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.doThrow;
 
 import gift.dto.betweenClient.product.ProductPostRequestDTO;
@@ -21,6 +22,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.annotation.DirtiesContext.ClassMode;
 
@@ -61,11 +63,16 @@ class ProductServiceTest {
                 "https://st.kakaocdn.net/product/gift/product/20231010111814_9a667f9eccc943648797925498bdd8a3.jpg",
                 categoryRepository.findByName("테스트1").get()));
 
-        productPostRequestDTO = new ProductPostRequestDTO(1L, "커피", 1234,
+        productPostRequestDTO = new ProductPostRequestDTO("커피", 1234,
                 "https://st.kakaocdn.net/product/gift/product/20231010111814_9a667f9eccc943648797925498bdd8a3.jpg",
                 category1.getName(), "옵션", 1234);
 
-        productPutRequestDTO = new ProductRequestDTO(1L, "제품2", 1000, "https://gift-s.kakaocdn.net/dn/gift/images/m640/dimm_theme.png", "기타");
+        productPutRequestDTO = new ProductRequestDTO("제품2", 1000, "https://gift-s.kakaocdn.net/dn/gift/images/m640/dimm_theme.png", "기타");
+
+        given(pageable.getPageSize()).willReturn(5);
+        given(pageable.getPageNumber()).willReturn(1);
+        given(pageable.getSort()).willReturn(Sort.by("categoryId"));
+        given(pageable.getPageSize()).willReturn(10);
     }
 
 
@@ -94,7 +101,7 @@ class ProductServiceTest {
     void getProductList() {
         productService.addProduct(productPostRequestDTO);
 
-        assertThat(productService.getProductList(pageable).getContent().getFirst()).isNotNull();
+        assertThat(productService.getProductListByCategoryId(2L, pageable).getContent().getFirst()).isNotNull();
     }
 
     @Test
