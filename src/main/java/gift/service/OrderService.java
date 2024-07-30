@@ -12,8 +12,13 @@ import gift.repository.OptionRepository;
 import gift.repository.OrderRepository;
 import gift.repository.WishRepository;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -31,6 +36,15 @@ public class OrderService {
         this.optionRepository = optionRepository;
         this.memberRepository = memberRepository;
         this.wishRepository = wishRepository;
+    }
+
+    public Page<OrderResponseDto> findAll(Pageable pageable) {
+        Page<Order> orderPage = orderRepository.findAll(pageable);
+
+        List<OrderResponseDto> orderResponseDtoList = orderPage.stream().map(OrderResponseDto::new)
+            .collect(Collectors.toList());
+
+        return new PageImpl<>(orderResponseDtoList, pageable, orderPage.getTotalElements());
     }
 
     public OrderResponseDto createOrder(Long memberId, OrderRequestDto request) {
