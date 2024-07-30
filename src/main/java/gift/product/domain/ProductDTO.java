@@ -6,17 +6,22 @@ import java.util.List;
 
 public class ProductDTO {
 
-    private Long id;
+    private Long id = 0L;
     private String name;
     private Long price;
     private String imageUrl;
     private Long categoryId;
 
-    private List<OptionDTO> optionDTOList;
+    private List<OptionDTO> optionDTOList = new ArrayList<>();
 
     public ProductDTO() {
-        id = 0L;
-        optionDTOList = new ArrayList<>();
+    }
+
+    public ProductDTO(String name, Long price, String imageUrl, Long categoryId) {
+        this.name = name;
+        this.price = price;
+        this.imageUrl = imageUrl;
+        this.categoryId = categoryId;
     }
 
     public ProductDTO(Long id, String name, Long price, String imageUrl, Long categoryId,

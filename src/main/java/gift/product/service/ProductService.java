@@ -63,15 +63,16 @@ public class ProductService {
         return productRepository.findById((id));
     }
 
-    public void createProduct(@Valid ProductDTO productDTO) {
+    public ProductDTO createProduct(@Valid ProductDTO productDTO) {
         Product product = convertToEntityWithoutOptions(productDTO);
         product = productRepository.save(product);
 
         Long productId = product.getId();
         productDTO.getOptionDTOList().forEach(optionDTO -> optionDTO.setProductId(productId));
 
-        updateProduct(product.getId(), productDTO);
+        ProductDTO response = updateProduct(product.getId(), productDTO);
         optionService.saveAll(productDTO.getOptionDTOList());
+        return response;
     }
 
     @Transactional
