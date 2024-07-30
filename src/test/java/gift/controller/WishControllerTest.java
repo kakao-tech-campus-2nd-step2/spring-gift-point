@@ -2,9 +2,7 @@ package gift.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import gift.domain.*;
-import gift.dto.request.WishCreateRequest;
-import gift.dto.request.WishDeleteRequest;
-import gift.dto.request.WishEditRequest;
+import gift.dto.request.WishRequestDto;
 import gift.dto.response.WishResponseDto;
 import gift.filter.AuthFilter;
 import gift.filter.LoginFilter;
@@ -19,9 +17,7 @@ import org.mockito.BDDMockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.*;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
@@ -30,6 +26,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static gift.utils.FilterConstant.NO_AUTHORIZATION_REDIRECT_URL;
 import static org.hamcrest.Matchers.hasSize;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.BDDMockito.given;
@@ -73,8 +70,8 @@ class WishControllerTest {
                 .addFilter(new LoginFilter(tokenRepository))
                 .build();
 
-        mockMvc.perform(get("/wishes"))
-                .andExpect(redirectedUrl("/home"))
+        mockMvc.perform(get("/api/wishes"))
+                .andExpect(redirectedUrl(NO_AUTHORIZATION_REDIRECT_URL))
                 .andExpect(status().is3xxRedirection())
                 .andDo(print());
     }
@@ -88,7 +85,7 @@ class WishControllerTest {
                 .password("abc")
                 .build();
 
-        Category category = new Category("TEST_CATEGORY", "#0000");
+        Category category = new Category("TEST_CATEGORY", "#0000", "abc.png");
 
         List<Wish> wishes = new ArrayList<>();
 
@@ -109,23 +106,28 @@ class WishControllerTest {
             wishes.add(wish);
         }
 
-        PageRequest pageRequest = PageRequest.of(0, 5, Sort.by(Sort.Direction.DESC, "createdAt"));
+        PageRequest pageRequest = PageRequest.of(0, 5, Sort.by(Sort.Direction.DESC, "createdDate"));
 
         List<WishResponseDto> wishResponseDtos = wishes.subList(15, 20).reversed().stream()
                 .map(WishResponseDto::from)
                 .collect(Collectors.toList());
 
+        Page<WishResponseDto> wishResponseDtoPage = new PageImpl<>(wishResponseDtos, pageRequest, wishResponseDtos.size());
+
         AuthToken authToken = new AuthToken("테스트용 인증코드", "abc@pusan.ac.kr");
 
         given(tokenService.findToken(authToken.getToken())).willReturn(authToken);
-        given(wishService.findWishesPaging(authToken.getEmail(), pageRequest)).willReturn(wishResponseDtos);
+        given(wishService.findWishesPaging(authToken.getEmail(), pageRequest)).willReturn(wishResponseDtoPage);
 
         //expected
-        mvc.perform(get("/wishes")
+        mvc.perform(get("/api/wishes")
                         .header("Authorization","Bearer 테스트용 인증코드")
+                        .param("page","0")
+                        .param("size","5")
+                        .param("sort","createdDate,desc")
                 )
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$", hasSize(5)))
+                .andExpect(jsonPath("$.content", hasSize(5)))
                 .andDo(print());
 
 
@@ -139,19 +141,19 @@ class WishControllerTest {
         //given
         AuthToken authToken = new AuthToken("테스트용 인증코드", "abc@pusan.ac.kr");
         given(tokenService.findToken(authToken.getToken())).willReturn(authToken);
-        WishCreateRequest inValidWishCreateRequest = new WishCreateRequest(null, -1);
+        WishRequestDto inValidWishRequestDto = new WishRequestDto(null, -1);
 
 
         //expected
-        mvc.perform(post("/wishes")
+        mvc.perform(post("/api/wishes")
                         .header("Authorization","Bearer 테스트용 인증코드")
                         .contentType(APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(inValidWishCreateRequest))
+                        .content(objectMapper.writeValueAsString(inValidWishRequestDto))
                 )
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.code").value("400"))
                 .andExpect(jsonPath("$.message").value("잘못된 요청입니다."))
-                .andExpect(jsonPath("$.validation.product_id").value("WISH LIST에 추가하고 싶은 상품을 선택해 주세요"))
+                .andExpect(jsonPath("$.validation.productId").value("WISH LIST에 추가하고 싶은 상품을 선택해 주세요"))
                 .andExpect(jsonPath("$.validation.count").value("개수은 1개 이상이어야 합니다"))
                 .andDo(print());
     }
@@ -161,115 +163,50 @@ class WishControllerTest {
         //given
         AuthToken authToken = new AuthToken("테스트용 인증코드", "abc@pusan.ac.kr");
 
-        given(tokenService.findToken(authToken.getToken())).willReturn(authToken);
+        WishRequestDto wishRequestDto = new WishRequestDto(1L, 20);
+        WishResponseDto wishResponseDto = new WishResponseDto(1L, 1L, 20);
 
-        WishCreateRequest wishCreateRequest = new WishCreateRequest(1L, 20);
+        given(tokenService.findToken(authToken.getToken())).willReturn(authToken);
+        given(wishService.addWish(1L, authToken.getEmail(), 20)).willReturn(wishResponseDto);
+
 
         //expected
-        mvc.perform(post("/wishes")
+        mvc.perform(post("/api/wishes")
                         .header("Authorization","Bearer 테스트용 인증코드")
                         .contentType(APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(wishCreateRequest))
+                        .content(objectMapper.writeValueAsString(wishRequestDto))
                 )
-                .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl("/wishes"))
+                .andExpect(status().isCreated())
+                .andExpect(content().contentType(APPLICATION_JSON))
+                .andExpect(jsonPath("$.id").value("1"))
+                .andExpect(jsonPath("$.productId").value("1"))
+                .andExpect(jsonPath("$.count").value("20"))
                 .andDo(print());
 
         verify(wishService, times(1)).addWish(anyLong(), anyString(), anyInt());
     }
 
-    @Test
-    @DisplayName("위시 수정 DTO INVALID 테스트")
-    void 위시_수정_DTO_INVALID_테스트() throws Exception{
-        //given
-        AuthToken authToken = new AuthToken("테스트용 인증코드", "abc@pusan.ac.kr");
-
-        given(tokenService.findToken(authToken.getToken())).willReturn(authToken);
-
-        WishEditRequest inValidWishEditRequest = new WishEditRequest(null, -1);
-
-
-        //expected
-        mvc.perform(put("/wishes")
-                        .header("Authorization","Bearer 테스트용 인증코드")
-                        .contentType(APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(inValidWishEditRequest))
-                )
-                .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.code").value("400"))
-                .andExpect(jsonPath("$.message").value("잘못된 요청입니다."))
-                .andExpect(jsonPath("$.validation.wish_id").value("WISH LIST에서 수정하고 싶은 상품을 선택해 주세요"))
-                .andExpect(jsonPath("$.validation.count").value("개수은 1개 이상이어야 합니다"))
-                .andDo(print());
-    }
-
-    @Test
-    @DisplayName("위시 정상 수정 테스트")
-    void 위시_정상_수정_테스트() throws Exception {
-        //given
-        AuthToken authToken = new AuthToken("테스트용 인증코드", "abc@pusan.ac.kr");
-
-        given(tokenService.findToken(authToken.getToken())).willReturn(authToken);
-
-        WishEditRequest wishEditRequest = new WishEditRequest(1L, 20);
-
-        //expected
-        mvc.perform(put("/wishes")
-                        .header("Authorization","Bearer 테스트용 인증코드")
-                        .contentType(APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(wishEditRequest))
-                )
-                .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl("/wishes"));
-
-        verify(wishService, times(1)).editWish(anyLong(), anyString(), anyInt());
-    }
-
-    @Test
-    @DisplayName("위시 삭제 시 DTO INVALID 테스트")
-    void 위시_삭제_DTO_INVALID_테스트() throws Exception {
-        //given
-        AuthToken authToken = new AuthToken("테스트용 인증코드", "abc@pusan.ac.kr");
-
-        given(tokenService.findToken(authToken.getToken())).willReturn(authToken);
-
-        WishDeleteRequest inValidWishDeleteRequest = new WishDeleteRequest(null);
-
-
-        //expected
-        mvc.perform(delete("/wishes")
-                        .header("Authorization","Bearer 테스트용 인증코드")
-                        .contentType(APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(inValidWishDeleteRequest))
-                )
-                .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.code").value("400"))
-                .andExpect(jsonPath("$.message").value("잘못된 요청입니다."))
-                .andExpect(jsonPath("$.validation.wish_id").value("WISH LIST에 삭제하고 싶은 상품을 선택해 주세요"))
-                .andDo(print());
-    }
 
     @Test
     @DisplayName("위시 정상 삭제 테스트")
     void 위시_정상_삭제_테스트() throws Exception {
         //given
         AuthToken authToken = new AuthToken("테스트용 인증코드", "abc@pusan.ac.kr");
+        WishResponseDto wishResponseDto = new WishResponseDto(1L, 1L, 3);
 
         given(tokenService.findToken(authToken.getToken())).willReturn(authToken);
-
-        WishDeleteRequest wishDeleteRequest = new WishDeleteRequest(1L);
+        given(wishService.deleteWish(1L, authToken.getEmail())).willReturn(wishResponseDto);
 
         //expected
-        mvc.perform(delete("/wishes")
+        mvc.perform(delete("/api/wishes/{wishId}","1")
                         .header("Authorization","Bearer 테스트용 인증코드")
-                        .contentType(APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(wishDeleteRequest))
                 )
-                .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl("/wishes"))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(APPLICATION_JSON))
+                .andExpect(jsonPath("$.id").value("1"))
+                .andExpect(jsonPath("$.productId").value("1"))
+                .andExpect(jsonPath("$.count").value("3"))
                 .andDo(print());
-
-        verify(wishService, times(1)).deleteWish(anyLong(), anyString());
     }
 
 }

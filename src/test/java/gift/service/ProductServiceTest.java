@@ -84,7 +84,7 @@ class ProductServiceTest {
         ProductRequestDto productRequestDto = new ProductRequestDto("테스트 상품", 1000, "abc.png", 1L);
         OptionRequestDto optionRequestDto = new OptionRequestDto("TEST", 100);
 
-        Category category = new Category("상품권", "#0000");
+        Category category = new Category("상품권", "#0000", "abc.png");
 
         Product product = new Product.Builder()
                 .name("테스트 상품")
@@ -108,7 +108,6 @@ class ProductServiceTest {
                 () -> assertThat(productResponseDto.name()).isEqualTo(product.getName()),
                 () -> assertThat(productResponseDto.price()).isEqualTo(product.getPrice()),
                 () -> assertThat(productResponseDto.imageUrl()).isEqualTo(product.getImageUrl()),
-                () -> assertThat(productResponseDto.categoryResponseDto().name()).isEqualTo("상품권"),
                 () -> verify(optionService, times(1)).saveOption(any(OptionRequestDto.class), any(Long.class))
         );
     }
@@ -117,7 +116,7 @@ class ProductServiceTest {
     @DisplayName("상품 전체 조회 테스트")
     void 상품_전체_조회_테스트(){
         //given
-        Category category = new Category("상품권", "#0000");
+        Category category = new Category("상품권", "#0000", "abc.png");
 
         Product product1 = new Product.Builder()
                 .name("테스트 상품1")
@@ -177,7 +176,7 @@ class ProductServiceTest {
         //given
         Long testId = 1L;
         Long nullId = 2L;
-        Category category = new Category("상품권", "#0000");
+        Category category = new Category("상품권", "#0000", "abc.png");
         ProductRequestDto productRequestDto = new ProductRequestDto("테스트 상품", 1000, "abc.png", nullId);
 
         Product product = new Product.Builder()
@@ -202,7 +201,7 @@ class ProductServiceTest {
     void 상품_수정_테스트(){
         //given
         Long testId = 1L;
-        Category category = new Category("상품권", "#0000");
+        Category category = new Category("상품권", "#0000", "abc.png");
         ProductRequestDto productRequestDto = new ProductRequestDto("테스트 상품", 1000, "abc.png", 1L);
 
         Product product = new Product.Builder()
@@ -248,7 +247,7 @@ class ProductServiceTest {
     void 상품_삭제_테스트(){
         //given
         Long testId = 1L;
-        Category category = new Category("상품권", "#0000");
+        Category category = new Category("상품권", "#0000", "abc.png");
         Product product = new Product.Builder()
                 .name("테스트 상품")
                 .price(1000)
@@ -276,7 +275,7 @@ class ProductServiceTest {
     void 상품_페이지_기능_테스트(){
         //given
         List<Product> products = new ArrayList<>();
-        Category category = new Category("상품권", "#0000");
+        Category category = new Category("상품권", "#0000", "abc.png");
         for(int i=0; i<20; i++){
             Product product = new Product.Builder()
                     .name("테스트" + i)

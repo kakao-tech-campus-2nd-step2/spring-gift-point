@@ -22,6 +22,7 @@ import org.springframework.web.context.WebApplicationContext;
 
 import java.time.LocalDateTime;
 
+import static gift.utils.FilterConstant.NO_AUTHORIZATION_REDIRECT_URL;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -62,7 +63,7 @@ class OrderControllerTest {
                 .build();
 
         mockMvc.perform(post("/api/orders"))
-                .andExpect(redirectedUrl("/home"))
+                .andExpect(redirectedUrl(NO_AUTHORIZATION_REDIRECT_URL))
                 .andExpect(status().is3xxRedirection())
                 .andDo(print());
     }
@@ -93,7 +94,7 @@ class OrderControllerTest {
         //given
         AuthToken authToken = new AuthToken("테스트용 인증코드", "123@kakao.com");
         OrderRequestDto orderRequestDto = new OrderRequestDto(1L, 100, "해피");
-        OrderResponseDto orderResponseDto = new OrderResponseDto(1L, 1L, 100, LocalDateTime.now().toString(), "해피");
+        OrderResponseDto orderResponseDto = new OrderResponseDto(1L, 1L, 100, LocalDateTime.now(), "해피");
 
         given(tokenService.findToken("테스트용 인증코드")).willReturn(authToken);
         given(orderService.addOrder(orderRequestDto, authToken)).willReturn(orderResponseDto);

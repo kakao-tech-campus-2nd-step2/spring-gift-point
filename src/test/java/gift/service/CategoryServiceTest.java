@@ -37,8 +37,8 @@ class CategoryServiceTest {
     @DisplayName("카테고리 저장 시 카테고리 이름 중복으로 인한 EXCEPTION TEST")
     void 카테고리_저장_이름_중복_EXCEPTION_테스트(){
         //given
-        CategoryRequestDto inValidCategoryDto = new CategoryRequestDto("고기", "#0000");
-        Category category = new Category(inValidCategoryDto.name(), inValidCategoryDto.color());
+        CategoryRequestDto inValidCategoryDto = new CategoryRequestDto("고기", "#0000", "abc.png" ,"");
+        Category category = new Category(inValidCategoryDto.name(), inValidCategoryDto.color(), inValidCategoryDto.imageUrl());
         given(categoryRepository.findCategoryByName(inValidCategoryDto.name())).willReturn(Optional.of(category));
 
         //expected
@@ -52,7 +52,7 @@ class CategoryServiceTest {
     @DisplayName("카테고리 정상 저장 테스트")
     void 카테고리_저장_테스트(){
         //given
-        CategoryRequestDto categoryRequestDto = new CategoryRequestDto("상품권", "#0000");
+        CategoryRequestDto categoryRequestDto = new CategoryRequestDto("상품권", "#0000", "abc.png", "");
 
         given(categoryRepository.findCategoryByName(categoryRequestDto.name())).willReturn(Optional.empty());
 
@@ -71,9 +71,9 @@ class CategoryServiceTest {
     @DisplayName("카테고리 전체 조회 테스트")
     void 카테고리_전체_조회_테스트(){
         //given
-        Category category1 = new Category("상품권", "#0000");
-        Category category2 = new Category("고기", "#0000");
-        Category category3 = new Category("생선", "#0000");
+        Category category1 = new Category("상품권", "#0000", "abc.png");
+        Category category2 = new Category("고기", "#0000", "abc.png");
+        Category category3 = new Category("생선", "#0000", "abc.png");
 
         List<Category> categories = Arrays.asList(category1, category2, category3);
 
@@ -106,7 +106,7 @@ class CategoryServiceTest {
     @DisplayName("카테고리 단건 정상 조회 테스트")
     void 카테고리_단건_정상_조회_테스트(){
         //given
-        Category category = new Category("상품권", "#0000");
+        Category category = new Category("상품권", "#0000", "abc.png");
 
         given(categoryRepository.findById(1L)).willReturn(Optional.of(category));
 
@@ -124,7 +124,7 @@ class CategoryServiceTest {
     @DisplayName("카테고리 수정 시 카테고리 NOT FOUND EXCEPTION 테스트")
     void 카테고리_수정_NOT_FOUND_EXCEPTION_테스트(){
         //given
-        CategoryRequestDto categoryRequestDto = new CategoryRequestDto("고기", "#1234");
+        CategoryRequestDto categoryRequestDto = new CategoryRequestDto("고기", "#1234", "abc.png" ,"");
 
         given(categoryRepository.findById(2L)).willReturn(Optional.empty());
 
@@ -140,9 +140,9 @@ class CategoryServiceTest {
     @DisplayName("카테고리 수정 시 카테고리 이름 중복 EXCEPTION 테스트")
     void 카테고리_수정_이름_중복_EXCEPTION_테스트(){
         //given
-        Category category = new Category("상품권", "#0000");
-        Category inValidCategory = new Category("생선", "#0000");
-        CategoryRequestDto inValidCategoryRequestDto = new CategoryRequestDto("생선", "#1234");
+        Category category = new Category("상품권", "#0000", "abc.png");
+        Category inValidCategory = new Category("생선", "#0000", "abc.png");
+        CategoryRequestDto inValidCategoryRequestDto = new CategoryRequestDto("생선", "#1234", "abc.png", "");
 
         given(categoryRepository.findById(1L)).willReturn(Optional.of(category));
         given(categoryRepository.findCategoryByName(inValidCategoryRequestDto.name())).willReturn(Optional.of(inValidCategory));
@@ -160,8 +160,8 @@ class CategoryServiceTest {
     @DisplayName("카테고리 정상 수정 테스트")
     void 카테고리_정상_수정_테스트(){
         //given
-        Category category = new Category("상품권", "#0000");
-        CategoryRequestDto categoryRequestDto = new CategoryRequestDto("고기", "#1234");
+        Category category = new Category("상품권", "#0000", "abc.png");
+        CategoryRequestDto categoryRequestDto = new CategoryRequestDto("고기", "#1234", "abc.png", "");
 
         given(categoryRepository.findById(1L)).willReturn(Optional.of(category));
         given(categoryRepository.findCategoryByName(categoryRequestDto.name())).willReturn(Optional.empty());
@@ -196,7 +196,7 @@ class CategoryServiceTest {
     @DisplayName("카테고리 삭제 테스트")
     void 카테고리_삭제_테스트(){
         //given
-        Category category = new Category("상품권", "#0000");
+        Category category = new Category("상품권", "#0000", "abc.png");
 
         given(categoryRepository.findById(1L)).willReturn(Optional.of(category));
 

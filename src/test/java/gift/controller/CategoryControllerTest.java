@@ -19,6 +19,7 @@ import org.springframework.web.context.WebApplicationContext;
 import java.util.Arrays;
 import java.util.List;
 
+import static gift.utils.FilterConstant.NO_AUTHORIZATION_REDIRECT_URL;
 import static org.hamcrest.Matchers.hasSize;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
@@ -55,7 +56,7 @@ class CategoryControllerTest {
                 .build();
 
         mockMvc.perform(get("/api/categories"))
-                .andExpect(redirectedUrl("/home"))
+                .andExpect(redirectedUrl(NO_AUTHORIZATION_REDIRECT_URL))
                 .andExpect(status().is3xxRedirection())
                 .andDo(print());
     }
@@ -64,9 +65,9 @@ class CategoryControllerTest {
     @DisplayName("카테고리 전체 조회 API 테스트")
     void 카테고리_전체_조회_API_테스트() throws Exception{
         //given
-        CategoryResponseDto categoryResponseDto1 = new CategoryResponseDto(1L, "상품권", "#0000");
-        CategoryResponseDto categoryResponseDto2 = new CategoryResponseDto(2L, "고기", "#0001");
-        CategoryResponseDto categoryResponseDto3 = new CategoryResponseDto(3L, "생선", "#0002");
+        CategoryResponseDto categoryResponseDto1 = new CategoryResponseDto(1L, "상품권", "#0000", "abc.png", "");
+        CategoryResponseDto categoryResponseDto2 = new CategoryResponseDto(2L, "고기", "#0001", "abc.png", "");
+        CategoryResponseDto categoryResponseDto3 = new CategoryResponseDto(3L, "생선", "#0002", "abc.png", "");
 
         List<CategoryResponseDto> categoryResponseDtos = Arrays.asList(categoryResponseDto1, categoryResponseDto2, categoryResponseDto3);
 
@@ -84,7 +85,7 @@ class CategoryControllerTest {
     @DisplayName("카테고리 단건 조회 API 테스트")
     void 카테고리_단건_조회_API_테스트() throws Exception{
         //given
-        CategoryResponseDto categoryResponseDto = new CategoryResponseDto(1L, "상품권", "#0000");
+        CategoryResponseDto categoryResponseDto = new CategoryResponseDto(1L, "상품권", "#0000", "abc.png", "");
 
         given(categoryService.findOneCategoryById(categoryResponseDto.id())).willReturn(categoryResponseDto);
 
@@ -101,7 +102,7 @@ class CategoryControllerTest {
     @DisplayName("카테고리 저장,수정 시 CategoryDto Invalid 테스트")
     void 카테고리_저장_수정_DTO_INVALID_테스트() throws Exception{
         //given
-        CategoryRequestDto inValidcategoryRequestDto = new CategoryRequestDto(null, null);
+        CategoryRequestDto inValidcategoryRequestDto = new CategoryRequestDto(null, null, null, null);
 
         //expected
         mvc.perform(post("/api/categories")
@@ -121,8 +122,8 @@ class CategoryControllerTest {
     @DisplayName("카테고리 저장 API 테스트")
     void 카테고리_저장_API_테스트() throws Exception{
         //given
-        CategoryRequestDto categoryRequestDto = new CategoryRequestDto("상품권", "#0000");
-        CategoryResponseDto categoryResponseDto = new CategoryResponseDto(1L, "상품권", "#0000");
+        CategoryRequestDto categoryRequestDto = new CategoryRequestDto("상품권", "#0000", "abc.png", "");
+        CategoryResponseDto categoryResponseDto = new CategoryResponseDto(1L, "상품권", "#0000", "abc.png", "");
 
         given(categoryService.saveCategory(categoryRequestDto)).willReturn(categoryResponseDto);
 
@@ -142,13 +143,13 @@ class CategoryControllerTest {
     @DisplayName("카테고리 수정 API 테스트")
     void 카테고리_수정_API_테스트() throws Exception{
         //given
-        CategoryRequestDto categoryRequestDto = new CategoryRequestDto("상품권", "#0000");
-        CategoryResponseDto categoryResponseDto = new CategoryResponseDto(1L, "상품권", "#0000");
+        CategoryRequestDto categoryRequestDto = new CategoryRequestDto("상품권", "#0000", "abc.png", "");
+        CategoryResponseDto categoryResponseDto = new CategoryResponseDto(1L, "상품권", "#0000", "abc.png", "");
 
         given(categoryService.updateCategory(1L, categoryRequestDto)).willReturn(categoryResponseDto);
 
         //expected
-        mvc.perform(patch("/api/categories/{id}",1L)
+        mvc.perform(put("/api/categories/{id}",1L)
                         .content(objectMapper.writeValueAsString(categoryRequestDto))
                         .contentType(APPLICATION_JSON)
                 )
@@ -163,7 +164,7 @@ class CategoryControllerTest {
     @DisplayName("카테고리 삭제 API 테스트")
     void 카테고리_삭제_API_테스트() throws Exception{
         //given
-        CategoryResponseDto categoryResponseDto = new CategoryResponseDto(1L, "상품권", "#0000");
+        CategoryResponseDto categoryResponseDto = new CategoryResponseDto(1L, "상품권", "#0000", "abc.png", "");
 
         given(categoryService.deleteCategory(categoryResponseDto.id())).willReturn(categoryResponseDto);
 

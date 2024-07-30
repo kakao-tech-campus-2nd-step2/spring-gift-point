@@ -1,9 +1,6 @@
 package gift.service;
 
-import gift.domain.Category;
-import gift.domain.Member;
-import gift.domain.Product;
-import gift.domain.Wish;
+import gift.domain.*;
 import gift.dto.response.WishResponseDto;
 import gift.exception.customException.EntityNotFoundException;
 import gift.exception.customException.ForbiddenException;
@@ -16,10 +13,12 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -69,7 +68,7 @@ class WishServiceTest {
     void 위시_저장_멤버_NOT_FOUND_EXCEPTION_테스트(){
         //given
         Long productId = 1L;
-        Category category = new Category("상품권", "#0000");
+        Category category = new Category("상품권", "#0000", "abc.png");
         Product product = new Product.Builder()
                 .name("테스트 상품")
                 .price(1000)
@@ -91,16 +90,20 @@ class WishServiceTest {
     }
     @Test
     @DisplayName("WISH 저장 테스트")
-    void 위시_저장_테스트(){
+    void 위시_저장_테스트() throws Exception{
         //given
         Long productId = 1L;
-        Category category = new Category("상품권", "#0000");
+        Category category = new Category("상품권", "#0000", "abc.png");
         Product product = new Product.Builder()
                 .name("테스트 상품")
                 .price(1000)
                 .imageUrl("abc.png")
                 .category(category)
                 .build();
+
+        Field idField = Product.class.getDeclaredField("id");
+        idField.setAccessible(true);
+        idField.set(product, 1L);
 
         String email = "abc@pusan.ac.kr";
         Member member = new Member.Builder()
@@ -124,9 +127,7 @@ class WishServiceTest {
         //then
         assertAll(
                 () -> assertThat(wishResponseDto.count()).isEqualTo(100),
-                () -> assertThat(wishResponseDto.productResponseDto().name()).isEqualTo(product.getName()),
-                () -> assertThat(wishResponseDto.productResponseDto().price()).isEqualTo(product.getPrice()),
-                () -> assertThat(wishResponseDto.productResponseDto().imageUrl()).isEqualTo(product.getImageUrl())
+                () -> assertThat(wishResponseDto.productId()).isEqualTo(1L)
         );
     }
     @Test
@@ -166,13 +167,13 @@ class WishServiceTest {
 
     @Test
     @DisplayName("WISH 정상 수정 테스트")
-    void 위시_정상_수정_테스트(){
+    void 위시_정상_수정_테스트() throws Exception{
         //given
         Long validId = 1L;
 
         String validEmail = "abc@pusan.ac.kr";
 
-        Category category = new Category("상품권", "#0000");
+        Category category = new Category("상품권", "#0000", "abc.png");
 
         Product product = new Product.Builder()
                 .name("테스트 상품")
@@ -180,6 +181,10 @@ class WishServiceTest {
                 .imageUrl("abc.png")
                 .category(category)
                 .build();
+
+        Field idField = Product.class.getDeclaredField("id");
+        idField.setAccessible(true);
+        idField.set(product, 1L);
 
         Member member = new Member.Builder()
                 .email(validEmail)
@@ -201,9 +206,7 @@ class WishServiceTest {
         //then
         assertAll(
                 () -> assertThat(wishResponseDto.count()).isEqualTo(1000),
-                () -> assertThat(wishResponseDto.productResponseDto().name()).isEqualTo(product.getName()),
-                () -> assertThat(wishResponseDto.productResponseDto().price()).isEqualTo(product.getPrice()),
-                () -> assertThat(wishResponseDto.productResponseDto().imageUrl()).isEqualTo(product.getImageUrl())
+                () -> assertThat(wishResponseDto.productId()).isEqualTo(1L)
         );
     }
 
@@ -244,13 +247,13 @@ class WishServiceTest {
 
     @Test
     @DisplayName("WISH 정상 삭제 테스트")
-    void 위시_정상_삭제_테스트(){
+    void 위시_정상_삭제_테스트() throws Exception{
         //given
         Long validId = 1L;
 
         String validEmail = "abc@pusan.ac.kr";
 
-        Category category = new Category("상품권", "#0000");
+        Category category = new Category("상품권", "#0000", "abc.png");
 
         Product product = new Product.Builder()
                 .name("테스트 상품")
@@ -258,6 +261,10 @@ class WishServiceTest {
                 .imageUrl("abc.png")
                 .category(category)
                 .build();
+
+        Field idField = Product.class.getDeclaredField("id");
+        idField.setAccessible(true);
+        idField.set(product, 1L);
 
         Member member = new Member.Builder()
                 .email(validEmail)
@@ -279,24 +286,26 @@ class WishServiceTest {
         //then
         assertAll(
                 () -> assertThat(wishResponseDto.count()).isEqualTo(100),
-                () -> assertThat(wishResponseDto.productResponseDto().name()).isEqualTo(product.getName()),
-                () -> assertThat(wishResponseDto.productResponseDto().price()).isEqualTo(product.getPrice()),
-                () -> assertThat(wishResponseDto.productResponseDto().imageUrl()).isEqualTo(product.getImageUrl()),
+                () -> assertThat(wishResponseDto.productId()).isEqualTo(1L),
                 () -> verify(wishRepository, times(1)).delete(any(Wish.class))
         );
     }
 
     @Test
     @DisplayName("WISH 전체 조회 테스트")
-    void 위시_전체_조회_테스트(){
+    void 위시_전체_조회_테스트() throws Exception{
         //given
-        Category category = new Category("상품권", "#0000");
+        Category category = new Category("상품권", "#0000", "abc.png");
         Product product = new Product.Builder()
                 .name("테스트 상품")
                 .price(1000)
                 .imageUrl("abc.png")
                 .category(category)
                 .build();
+
+        Field idField = Product.class.getDeclaredField("id");
+        idField.setAccessible(true);
+        idField.set(product, 1L);
 
         Product product2 = new Product.Builder()
                 .name("테스트 상품2")
@@ -331,7 +340,7 @@ class WishServiceTest {
         //then
         assertAll(
                 () -> assertThat(wishDtos.size()).isEqualTo(2),
-                () -> assertThat(wishDtos.get(0).productResponseDto().name()).isEqualTo("테스트 상품")
+                () -> assertThat(wishDtos.get(0).productId()).isEqualTo(1L)
         );
     }
 
@@ -346,7 +355,7 @@ class WishServiceTest {
 
         List<Wish> wishes = new ArrayList<>();
 
-        Category category = new Category("상품권", "#0000");
+        Category category = new Category("상품권", "#0000", "abc.png");
         for(int i=0; i<20; i++){
             Product product = new Product.Builder()
                     .name("테스트" + i)
@@ -369,12 +378,12 @@ class WishServiceTest {
         given(wishRepository.findWishesByMemberEmail(member.getEmail(), pageRequest)).willReturn(new PageImpl<>(wishes.subList(15, 20).reversed(), pageRequest, wishes.size()));
 
         //when
-        List<WishResponseDto> wishDtos = wishService.findWishesPaging(member.getEmail(), pageRequest);
+        Page<WishResponseDto> wishDtos = wishService.findWishesPaging(member.getEmail(), pageRequest);
 
         //then
         assertAll(
-                () -> assertThat(wishDtos.size()).isEqualTo(5),
-                () -> assertThat(wishDtos.get(0).count()).isEqualTo(19)
+                () -> assertThat(wishDtos.getSize()).isEqualTo(5),
+                () -> assertThat(wishDtos.getContent().get(0).count()).isEqualTo(19)
         );
     }
 

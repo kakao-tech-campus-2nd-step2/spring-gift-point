@@ -8,7 +8,6 @@ import gift.repository.member.MemberRepository;
 import gift.repository.option.OptionRepository;
 import gift.repository.order.OrderRepository;
 import gift.repository.wish.WishRepository;
-import gift.utils.TimeStamp;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -119,7 +118,7 @@ class OrderServiceTest {
                 .message(orderRequestDto.message())
                 .build();
 
-        Field createdAtField = TimeStamp.class.getDeclaredField("createdAt");
+        Field createdAtField = Order.class.getDeclaredField("orderDateTime");
         createdAtField.setAccessible(true);
         createdAtField.set(order, LocalDateTime.now());
 
@@ -188,7 +187,7 @@ class OrderServiceTest {
                 .message(orderRequestDto.message())
                 .build();
 
-        Field createdAtField = TimeStamp.class.getDeclaredField("createdAt");
+        Field createdAtField = Order.class.getDeclaredField("orderDateTime");
         createdAtField.setAccessible(true);
         createdAtField.set(order, LocalDateTime.now());
 
