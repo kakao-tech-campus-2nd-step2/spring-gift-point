@@ -11,12 +11,15 @@ import gift.main.repository.ProductRepository;
 import gift.main.repository.UserRepository;
 import gift.main.repository.WishProductRepository;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class WishProductService {
+
+    private static final int PAGE_SIZE = 20;
 
     private final WishProductRepository wishProductRepository;
     private final ProductRepository productRepository;
@@ -28,11 +31,10 @@ public class WishProductService {
         this.userRepository = userRepository;
     }
 
-    public Page<WishProductResponse> getWishProductPage(UserVo sessionUser, Pageable pageable) {
-        Page<WishProductResponse> wishProductResponsePage = wishProductRepository.findAllByUserId(sessionUser.getId(), pageable)
+    public Page<WishProductResponse> getWishProductPage(UserVo sessionUser, int pageNum) {
+        Pageable pageable = PageRequest.of(pageNum, PAGE_SIZE);
+        return wishProductRepository.findAllByUserId(sessionUser.getId(), pageable)
                 .map(wishProduct -> new WishProductResponse(wishProduct));
-        return wishProductResponsePage;
-
     }
 
     @Transactional
@@ -48,20 +50,18 @@ public class WishProductService {
     }
 
     @Transactional
-    public void deleteProducts(Long productId, UserVo sessionUserVo) {
-        wishProductRepository.deleteByProductIdAndUserId(productId, sessionUserVo.getId());
+    public void deleteWishProduct(Long wishId) {
+        wishProductRepository.deleteById(wishId);
     }
 
     private Product validateProduct(Long productId) {
-        Product product = productRepository.findById(productId)
+        return productRepository.findById(productId)
                 .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_PRODUCT));
-        return product;
     }
 
     private User validateUser(UserVo sessionUser) {
-        User user = userRepository.findByEmail(sessionUser.getEmail())
+        return userRepository.findByEmail(sessionUser.getEmail())
                 .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_USER));
-        return user;
     }
 
 
