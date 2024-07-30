@@ -11,6 +11,7 @@ import gift.service.CategoryService;
 import gift.service.MemberService;
 import gift.service.ProductService;
 import jakarta.validation.Valid;
+import java.util.List;
 import java.util.UUID;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -40,10 +41,8 @@ public class AdminController {
     }
 
     @GetMapping("/categories")
-    public String listCategories(Model model, @RequestParam(defaultValue = "0") int page,
-        @RequestParam(defaultValue = "5") int size) {
-        Pageable pageable = PageRequest.of(page, size);
-        Page<CategoryResponse> categories = categoryService.findAll(pageable);
+    public String listCategories(Model model) {
+        List<CategoryResponse> categories = categoryService.findAll();
         model.addAttribute("categories", categories);
         return "categories";
     }
@@ -89,7 +88,7 @@ public class AdminController {
 
     @GetMapping("/members/add")
     public String memberAddForm(Model model) {
-        model.addAttribute("member", new SignUpRequest("", "", ""));
+        model.addAttribute("member", new SignUpRequest("", ""));
         return "member-add-form";
     }
 
