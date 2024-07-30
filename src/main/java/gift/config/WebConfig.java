@@ -19,9 +19,7 @@ public class WebConfig implements WebMvcConfigurer {
         registry.addInterceptor(authInterceptor)
                 .addPathPatterns("/**")
                 .excludePathPatterns("/swagger-resources/**", "/swagger-ui/**", "/v3/api-docs/**")
-                .excludePathPatterns("/api/members/oauth/kakao")
-                .excludePathPatterns("/api/members/login")
-                .excludePathPatterns("/api/members/register")
-                .excludePathPatterns("/api/kakao/get-oauth");
+                .excludePathPatterns("/api/members/login/**")
+                .excludePathPatterns("/api/members/register");
     }
 }

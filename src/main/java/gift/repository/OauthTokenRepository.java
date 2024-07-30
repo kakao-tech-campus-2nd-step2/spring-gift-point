@@ -1,6 +1,7 @@
 package gift.repository;
 
 import gift.model.OauthToken;
+import gift.model.OauthType;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -11,7 +12,7 @@ public interface OauthTokenRepository extends JpaRepository<OauthToken, Long> {
 
     boolean existsByMemberId(Long memberId);
 
-    Optional<OauthToken> findByMemberId(Long memberId);
+    Optional<OauthToken> findByMemberIdAndOauthType(Long memberId, OauthType oauthType);
 
     void deleteByMemberId(Long memberId);
 }

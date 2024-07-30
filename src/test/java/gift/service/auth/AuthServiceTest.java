@@ -46,7 +46,7 @@ class AuthServiceTest {
     void mockKakaoServiceSetUp() {
         authService = new AuthService(memberRepository, kakaoService, jwtProperties);
         Mockito.doNothing().when(kakaoService).saveKakaoToken(any(Long.class), any(String.class));
-        Mockito.doNothing().when(kakaoService).sendSelfMessageOrder(any(Long.class), any(GiftOrderResponse.class));
+        Mockito.doNothing().when(kakaoService).sendOrderResponseWithKakaoMessage(any(Long.class), any(GiftOrderResponse.class));
         Mockito.doNothing().when(kakaoService).deleteByMemberId(any(Long.class));
 
         var mockMember = new Member("MOCK", "MOCK@naver.com", MemberRole.MEMBER, OauthType.KAKAO);

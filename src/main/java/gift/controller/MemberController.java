@@ -1,7 +1,7 @@
 package gift.controller;
 
+import gift.controller.api.MemberApi;
 import gift.service.MemberService;
-import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.RequestAttribute;
@@ -10,8 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api/members")
-@Tag(name = "MEMBER")
-public class MemberController {
+public class MemberController implements MemberApi {
 
     private final MemberService memberService;
 

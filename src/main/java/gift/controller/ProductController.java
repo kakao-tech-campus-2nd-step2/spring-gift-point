@@ -1,10 +1,10 @@
 package gift.controller;
 
+import gift.controller.api.ProductApi;
 import gift.dto.product.ProductRequest;
 import gift.dto.product.ProductResponse;
 import gift.model.MemberRole;
 import gift.service.ProductService;
-import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -25,8 +25,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/products")
-@Tag(name = "PRODUCT")
-public class ProductController {
+public class ProductController implements ProductApi {
 
     private final ProductService productService;
 
@@ -34,13 +33,13 @@ public class ProductController {
         this.productService = productService;
     }
 
-    @PostMapping("/add")
+    @PostMapping
     public ResponseEntity<Void> addProduct(@Valid @RequestBody ProductRequest productRequest, @RequestAttribute("memberRole") String memberRole) {
         var product = productService.addProduct(productRequest, MemberRole.valueOf(memberRole));
         return ResponseEntity.created(URI.create("/api/products/" + product.id())).build();
     }
 
-    @PutMapping("/update/{id}")
+    @PutMapping("/{id}")
     public ResponseEntity<Void> updateProduct(@PathVariable Long id, @Valid @RequestBody ProductRequest productRequest) {
         productService.updateProduct(id, productRequest);
         return ResponseEntity.noContent().build();

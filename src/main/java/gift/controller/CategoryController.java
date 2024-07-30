@@ -1,9 +1,9 @@
 package gift.controller;
 
+import gift.controller.api.CategoryApi;
 import gift.dto.category.CategoryRequest;
 import gift.dto.category.CategoryResponse;
 import gift.service.CategoryService;
-import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -23,8 +23,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/categories")
-@Tag(name = "CATEGORY")
-public class CategoryController {
+public class CategoryController implements CategoryApi {
 
     private final CategoryService categoryService;
 
@@ -32,13 +31,13 @@ public class CategoryController {
         this.categoryService = categoryService;
     }
 
-    @PostMapping("/add")
+    @PostMapping
     public ResponseEntity<Void> addCategory(@Valid @RequestBody CategoryRequest categoryRequest) {
         var category = categoryService.addCategory(categoryRequest);
         return ResponseEntity.created(URI.create("/api/categories/" + category.id())).build();
     }
 
-    @PutMapping("/update/{id}")
+    @PutMapping("/{id}")
     public ResponseEntity<Void> updateCategory(@PathVariable Long id, @Valid @RequestBody CategoryRequest categoryRequest) {
         categoryService.updateCategory(id, categoryRequest);
         return ResponseEntity.noContent().build();

@@ -1,10 +1,10 @@
 package gift.controller;
 
+import gift.controller.api.WishProductApi;
 import gift.dto.wishproduct.WishProductAddRequest;
 import gift.dto.wishproduct.WishProductResponse;
 import gift.dto.wishproduct.WishProductUpdateRequest;
 import gift.service.WishProductService;
-import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -25,8 +25,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/wishes")
-@Tag(name = "WISH_PRODUCT")
-public class WishProductController {
+public class WishProductController implements WishProductApi {
 
     private final WishProductService wishProductService;
 
@@ -34,21 +33,20 @@ public class WishProductController {
         this.wishProductService = wishProductService;
     }
 
-    @PostMapping("/add")
+    @PostMapping
     public ResponseEntity<Void> addWishProduct(@Valid @RequestBody WishProductAddRequest wishProductAddRequest, @RequestAttribute("memberId") Long memberId) {
         var wishProduct = wishProductService.addWishProduct(wishProductAddRequest, memberId);
         return ResponseEntity.created(URI.create("/api/wishes/" + wishProduct.id())).build();
     }
 
-    @PutMapping("/update/{id}")
+    @PutMapping("/{id}")
     public ResponseEntity<Void> updateWishProduct(@PathVariable Long id, @Valid @RequestBody WishProductUpdateRequest wishProductUpdateRequest) {
         wishProductService.updateWishProduct(id, wishProductUpdateRequest);
         return ResponseEntity.noContent().build();
     }
 
     @GetMapping
-    public ResponseEntity<List<WishProductResponse>> getWishProducts(@RequestAttribute("memberId") Long memberId,
-                                                                     @PageableDefault(sort = "id", direction = Sort.Direction.DESC) Pageable pageable) {
+    public ResponseEntity<List<WishProductResponse>> getWishProducts(@RequestAttribute("memberId") Long memberId, @PageableDefault(sort = "id", direction = Sort.Direction.DESC) Pageable pageable) {
         var wishProducts = wishProductService.getWishProducts(memberId, pageable);
         return ResponseEntity.ok(wishProducts);
     }
