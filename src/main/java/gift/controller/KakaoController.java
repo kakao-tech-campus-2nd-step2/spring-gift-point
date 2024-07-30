@@ -1,6 +1,8 @@
 package gift.controller;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import gift.config.KakaoProperties;
+import gift.entity.TokenResponseEntity;
 import gift.service.KakaoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -17,6 +19,7 @@ public class KakaoController {
 
     private final KakaoProperties kakaoProperties;
     private final KakaoService kakaoService;
+    private final ObjectMapper objectMapper = new ObjectMapper();
 
     @Autowired
     public KakaoController(KakaoProperties kakaoProperties, KakaoService kakaoService) {
@@ -32,10 +35,11 @@ public class KakaoController {
     }
 
     @GetMapping("/login/callback")
-    public ResponseEntity<String> loginWithKakao(@RequestParam String code) {
+    public ResponseEntity<String> loginWithKakao(@RequestParam String code) throws Exception {
         String token = kakaoService.getAccessToken(code);
         String kakaoUserId = kakaoService.getKakaoUserId(token);
         String jwtToken = kakaoService.registerKakaoMember(kakaoUserId, token);
-        return new ResponseEntity<>(jwtToken, HttpStatus.OK);
+        return new ResponseEntity<>(
+            objectMapper.writeValueAsString(new TokenResponseEntity(jwtToken)), HttpStatus.OK);
     }
 }
