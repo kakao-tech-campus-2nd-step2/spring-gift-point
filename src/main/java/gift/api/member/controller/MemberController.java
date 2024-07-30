@@ -1,7 +1,6 @@
 package gift.api.member.controller;
 
 import gift.api.member.dto.MemberRequest;
-import gift.api.member.service.KakaoService;
 import gift.api.member.service.MemberFacade;
 import gift.api.member.service.MemberService;
 import gift.global.utils.JwtUtil;
@@ -19,7 +18,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/members")
+@RequestMapping("/api/members")
 @Tag(name = "Member", description = "Member API")
 public class MemberController {
 

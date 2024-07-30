@@ -1,4 +1,4 @@
-package gift.api.category;
+package gift.api.category.domain;
 
 import gift.global.BaseEntity;
 import jakarta.persistence.Column;

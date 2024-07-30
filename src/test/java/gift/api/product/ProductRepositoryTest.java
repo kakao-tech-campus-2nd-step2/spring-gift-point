@@ -3,8 +3,8 @@ package gift.api.product;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
-import gift.api.category.Category;
-import gift.api.category.CategoryRepository;
+import gift.api.category.domain.Category;
+import gift.api.category.repository.CategoryRepository;
 import gift.api.product.domain.Product;
 import gift.api.product.repository.ProductRepository;
 import org.junit.jupiter.api.Test;

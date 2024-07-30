@@ -1,7 +1,7 @@
 package gift.api.product.service;
 
-import gift.api.category.Category;
-import gift.api.category.CategoryRepository;
+import gift.api.category.domain.Category;
+import gift.api.category.repository.CategoryRepository;
 import gift.api.product.domain.Product;
 import gift.api.product.dto.ProductRequest;
 import gift.api.product.dto.ProductResponse;

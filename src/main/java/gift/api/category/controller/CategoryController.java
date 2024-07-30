@@ -1,6 +1,8 @@
-package gift.api.category;
+package gift.api.category.controller;
 
 import gift.api.category.dto.CategoryRequest;
+import gift.api.category.dto.CategoryResponse;
+import gift.api.category.service.CategoryService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import java.net.URI;

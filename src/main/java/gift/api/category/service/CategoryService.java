@@ -1,6 +1,9 @@
-package gift.api.category;
+package gift.api.category.service;
 
+import gift.api.category.domain.Category;
 import gift.api.category.dto.CategoryRequest;
+import gift.api.category.dto.CategoryResponse;
+import gift.api.category.repository.CategoryRepository;
 import gift.global.exception.NoSuchEntityException;
 import java.util.Collections;
 import java.util.List;
