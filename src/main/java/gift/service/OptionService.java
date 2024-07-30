@@ -34,9 +34,7 @@ public class OptionService {
         }
 
         List<Option> options = optionRepository.findByProductId(productId);
-        return options.stream()
-                .map(option -> new OptionResponse(option.getId(), option.getName(), option.getQuantity()))
-                .collect(Collectors.toList());
+        return OptionResponse.fromOptionList(options);
     }
 
     @Transactional
