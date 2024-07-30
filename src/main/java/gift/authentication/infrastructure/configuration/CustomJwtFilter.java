@@ -68,7 +68,8 @@ public class CustomJwtFilter extends OncePerRequestFilter {
 
     private boolean shouldSkipRequest(HttpServletRequest request) {
         String path = request.getRequestURI();
-        return path.startsWith("/api/auth")
+        return path.startsWith("/api/members/login")
+                || path.startsWith("/api/members/register")
                 || path.startsWith("/api/oauth")
                 || path.startsWith("/swagger-ui")
                 || path.startsWith("/v3/api-docs");

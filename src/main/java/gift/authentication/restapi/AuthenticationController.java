@@ -35,7 +35,7 @@ public class AuthenticationController {
         this.userService = userService;
     }
 
-    @PostMapping("/api/auth/login")
+    @PostMapping("/api/members/login")
     @Operation(summary = "로그인 API", description = "이메일과 비밀번호로 로그인을 수행합니다.")
     @ApiResponses(
            value = {
@@ -56,7 +56,7 @@ public class AuthenticationController {
         return LoginResponse.of(token);
     }
 
-    @PostMapping("/api/auth/signup")
+    @PostMapping("/api/members/register")
     @Operation(summary = "회원가입 API", description = "이름, 이메일, 비밀번호로 회원가입을 수행합니다.")
     @ApiResponses(
             value = {
