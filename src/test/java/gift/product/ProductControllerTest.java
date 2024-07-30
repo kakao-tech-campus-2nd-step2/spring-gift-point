@@ -66,7 +66,7 @@ public class ProductControllerTest {
 
         //when
         ResultActions resultActions = mockMvc.perform(
-            MockMvcRequestBuilders.get("/products/1/options")
+            MockMvcRequestBuilders.get("/api/products/1/options")
         );
 
         //then
@@ -88,7 +88,7 @@ public class ProductControllerTest {
 
         //when
         ResultActions resultActions = mockMvc.perform(
-            MockMvcRequestBuilders.post("/products/1/options")
+            MockMvcRequestBuilders.post("/api/products/1/options")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(new Gson().toJson(optionRequest))
         );
@@ -108,7 +108,7 @@ public class ProductControllerTest {
         OptionRequest optionRequest = new OptionRequest(null, notValidName, 1);
         //when
         ResultActions resultActions = mockMvc.perform(
-            MockMvcRequestBuilders.post("/products/1/options")
+            MockMvcRequestBuilders.post("/api/products/1/options")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(new Gson().toJson(optionRequest))
         );
@@ -127,7 +127,7 @@ public class ProductControllerTest {
         OptionRequest optionRequest = new OptionRequest(null, notValidName, 1);
         //when
         ResultActions resultActions = mockMvc.perform(
-            MockMvcRequestBuilders.post("/products/1/options")
+            MockMvcRequestBuilders.post("/api/products/1/options")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(new Gson().toJson(optionRequest))
         );
@@ -145,7 +145,7 @@ public class ProductControllerTest {
         OptionRequest optionRequest = new OptionRequest(null, notValidName, 1);
         //when
         ResultActions resultActions = mockMvc.perform(
-            MockMvcRequestBuilders.post("/products/1/options")
+            MockMvcRequestBuilders.post("/api/products/1/options")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(new Gson().toJson(optionRequest))
         );
@@ -163,7 +163,7 @@ public class ProductControllerTest {
         OptionRequest optionRequest = new OptionRequest(null, "name", notValidQuantity);
         //when
         ResultActions resultActions = mockMvc.perform(
-            MockMvcRequestBuilders.post("/products/1/options")
+            MockMvcRequestBuilders.post("/api/products/1/options")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(new Gson().toJson(optionRequest))
         );
@@ -180,7 +180,7 @@ public class ProductControllerTest {
 
         //when
         ResultActions resultActions = mockMvc.perform(
-            MockMvcRequestBuilders.put("/products/1/options")
+            MockMvcRequestBuilders.put("/api/products/1/options/1")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(new Gson().toJson(optionRequest))
         );
@@ -196,8 +196,7 @@ public class ProductControllerTest {
     void deleteOption() throws Exception {
         //given//when
         ResultActions resultActions = mockMvc.perform(
-            MockMvcRequestBuilders.delete("/products/1/options")
-                .param("optionId", "1")
+            MockMvcRequestBuilders.delete("/api/products/1/options/1")
         );
 
         //then
