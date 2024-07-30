@@ -49,7 +49,7 @@ public class ProductManageController {
     @Operation(summary = "상품 단건 조회", description = "특정 상품을 조회합니다.")
     @GetMapping("/products/{id}")
     public ResponseEntity<?> getProduct(@PathVariable Long id) {
-        return ResponseEntity.ok(new CommonResponse<>(productService.getProductById(id), "상품 조회 성공", true));
+        return ResponseEntity.ok(productService.getProductById(id));
     }
 
     @Operation(summary = "상품 옵션 조회", description = "특정 상품의 옵션을 조회합니다.")
