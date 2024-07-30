@@ -102,4 +102,9 @@ public class OptionService {
         );
         return getOptionDTO;
     }
+
+    public Option getOption(Long id){
+        return optionRepository.findById(id)
+                .orElseThrow(() -> new NoSuchElementException("해당 옵션이 없습니다."));
+    }
 }

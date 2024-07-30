@@ -6,6 +6,7 @@ import gift.dto.InputProductDTO;
 import gift.dto.OrderDTO;
 import gift.model.BearerToken;
 import gift.service.KakaoAuthService;
+import gift.service.OrderService;
 import jakarta.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,15 +17,15 @@ import org.springframework.web.bind.annotation.*;
 public class OrderController {
     private static final Logger logger = LoggerFactory.getLogger(KakaoController.class);
 
-    private final KakaoAuthService kakaoAuthService;
+    private final OrderService orderService;
 
-    public OrderController(KakaoAuthService kakaoAuthService) {
-        this.kakaoAuthService = kakaoAuthService;
+    public OrderController(OrderService orderService) {
+        this.orderService = orderService;
     }
 
     @PostMapping
     public void orderProduct(HttpServletRequest request, @RequestBody OrderDTO orderDTO) throws JsonProcessingException {
         BearerToken token = (BearerToken) request.getAttribute("bearerToken");
-        kakaoAuthService.orderProduct(token.getToken(), orderDTO);
+        orderService.orderProduct(token.getToken(), orderDTO);
     }
 }
