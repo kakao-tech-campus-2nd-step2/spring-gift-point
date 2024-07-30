@@ -55,7 +55,7 @@ public class ProductAdminController {
     public String addProduct(@Valid AddProductRequest request) {
         try {
             productService.addProduct(request);
-            return "redirect:/";
+            return "redirect:/product";
         } catch (Exception e) {
             return "version-SSR/add-error";
         }
@@ -64,28 +64,30 @@ public class ProductAdminController {
     @PostMapping("/deleteSelected")
     public String deleteSelectedProduct(@RequestParam("productIds") List<Long> productIds) {
         productService.deleteProducts(productIds);
-        return "redirect:/";
+        return "redirect:/product";
     }
 
     @PostMapping("/delete")
     public String deleteProduct(@RequestParam("productId") Long productId) {
         productService.deleteProduct(productId);
-        return "redirect:/";
+        return "redirect:/product";
     }
 
     @GetMapping("/edit/{id}")
     public String getEditForm(@PathVariable("id") long id, Model model) {
         Product existingProduct = productService.getProduct(id);
-        model.addAttribute("updateProductRequest", new UpdateProductRequest(existingProduct.getId(), existingProduct.getName(), existingProduct.getPrice(), existingProduct.getImageUrl(), existingProduct.getId()));
+        model.addAttribute("updateProductRequest", new UpdateProductRequest( existingProduct.getName(), existingProduct.getPrice(), existingProduct.getImageUrl(), existingProduct.getId()));
         model.addAttribute("categories", categoryService.getAllCategoryResponses());
+        model.addAttribute("productId", id);
         return "version-SSR/edit-form";
     }
 
-    @PostMapping("/edit")
-    public String editProduct(@Valid UpdateProductRequest request) {
+    @PostMapping("/edit/{id}")
+    public String editProduct(@Valid UpdateProductRequest request,@PathVariable("id") Long productId) {
+        System.out.println("??????");
         try {
-            productService.updateProduct(request);
-            return "redirect:/";
+            productService.updateProduct(request,productId);
+            return "redirect:/product";
         } catch (Exception e) {
             return "version-SSR/edit-error";
         }

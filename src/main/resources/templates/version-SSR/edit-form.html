@@ -10,12 +10,8 @@
 
 </head>
 <body>
-<form class="container" method="post" th:action="@{/edit}" th:object="${updateProductRequest}">
+<form class="container" method="post" th:action="@{/edit/{id}(id=${productId})}" th:object="${updateProductRequest}">
     <h1>상품 수정</h1>
-    <!-- ID는 readonly 속성 수정 불가하게 -->
-    <label for="id">ID:</label>
-    <input id="id" readonly th:field="*{id}" type="text"/><br/>
-
     <!-- 카테고리  -->
     <label for="category">Category:</label>
     <select id="category" th:field="*{categoryId}">
