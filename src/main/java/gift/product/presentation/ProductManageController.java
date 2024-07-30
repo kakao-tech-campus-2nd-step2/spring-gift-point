@@ -50,6 +50,12 @@ public class ProductManageController {
         return ResponseEntity.ok(new CommonResponse<>(productService.getProductById(id), "상품 조회 성공", true));
     }
 
+    @Operation(summary = "상품 옵션 조회", description = "특정 상품의 옵션을 조회합니다.")
+    @GetMapping("/products/{id}/options")
+    public ResponseEntity<?> getProductOptions(@PathVariable Long id) {
+        return ResponseEntity.ok(productService.getProductOptions(id));
+    }
+
 
     //    @AdminAuthenticated
     @Operation(summary = "상품 추가", description = "새로운 상품을 추가합니다.")
@@ -63,11 +69,12 @@ public class ProductManageController {
     //    @AdminAuthenticated
     @Operation(summary = "상품 옵션 추가", description = "기존 상품에 옵션을 추가합니다.")
     @PostMapping("/products/{id}")
-    public ResponseEntity<CommonResponse<Void>> addProductOption(
+    public ResponseEntity<?> addProductOption(
             @Parameter(description = "상품 ID") @PathVariable Long id,
             @RequestBody CreateProductOptionRequestDTO createProductOptionRequestDTO) {
-        productService.addProductOption(id, createProductOptionRequestDTO);
-        return ResponseEntity.ok(new CommonResponse<>(null, "상품 옵션이 정상적으로 추가 되었습니다", true));
+        Product product = productService.addProductOption(id, createProductOptionRequestDTO);
+
+        return ResponseEntity.ok(new CommonResponse<>(product.getProductOptions(), "상품 옵션이 정상적으로 추가 되었습니다", true));
     }
 
     //    @AdminAuthenticated

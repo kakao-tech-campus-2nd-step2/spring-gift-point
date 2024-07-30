@@ -34,7 +34,7 @@ public class PaymentService {
 
         for (WishListProduct product : wishList.getWishListProducts()) {
             Product wishListProduct = product.getProduct();
-            ProductOption productOption = product.getProductOption();
+            ProductOption productOption = productRepository.getProductWithOption(wishListProduct.getId(), product.getId());
             productOption.decreaseQuantity(product.getQuantity());
 
             productRepository.save(wishListProduct);

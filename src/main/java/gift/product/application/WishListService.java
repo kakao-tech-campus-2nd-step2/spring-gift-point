@@ -53,11 +53,8 @@ public class WishListService {
         if (!Objects.equals(wishList.getUser().getId(), request.getUserId())) {
             throw new ProductException(ErrorCode.NOT_USER_OWNED);
         }
-
         Product product = productRepository.findById(request.getProductId());
-        ProductOption productOption = productRepository.getProductWithOption(request.getProductId(), request.getOptionId());
-
-        wishList.addWishListProduct(new WishListProduct(wishList, product, productOption, request.getQuantity()));
+        wishList.addWishListProduct(new WishListProduct(wishList, product, request.getQuantity()));
 
 
         wishListRepository.save(wishList);

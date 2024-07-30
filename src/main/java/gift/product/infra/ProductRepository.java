@@ -1,5 +1,6 @@
 package gift.product.infra;
 
+import gift.product.domain.CreateProductOptionRequestDTO;
 import gift.product.domain.Product;
 import gift.product.domain.ProductOption;
 import gift.product.exception.ProductException;
@@ -50,5 +51,10 @@ public class ProductRepository {
     public ProductOption getProductWithOption(Long productId, Long optionId) {
         return productOptionJpaRepository.findByProductIdAndId(productId, optionId)
                 .orElseThrow(() -> new ProductException(ErrorCode.PRODUCT_OPTION_NOT_FOUND));
+    }
+
+    public Product updateProductOption(Product product, CreateProductOptionRequestDTO createProductOptionRequestDTO) {
+        productOptionJpaRepository.save(new ProductOption(createProductOptionRequestDTO.getName(), createProductOptionRequestDTO.getQuantity(), product));
+        return productJpaRepository.save(product);
     }
 }

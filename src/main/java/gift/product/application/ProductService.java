@@ -1,9 +1,6 @@
 package gift.product.application;
 
-import gift.product.domain.Category;
-import gift.product.domain.CreateProductOptionRequestDTO;
-import gift.product.domain.CreateProductRequestDTO;
-import gift.product.domain.Product;
+import gift.product.domain.*;
 import gift.product.exception.ProductException;
 import gift.product.infra.ProductRepository;
 import gift.util.ErrorCode;
@@ -39,24 +36,15 @@ public class ProductService {
     }
 
     @Transactional
-    public void addProductOption(Long id, CreateProductOptionRequestDTO createProductOptionRequestDTO) {
+    public Product addProductOption(Long id, CreateProductOptionRequestDTO createProductOptionRequestDTO) {
         Product product = productRepository.findById(id);
 
         product.addProductOption(createProductOptionRequestDTO);
-
-        productRepository.save(product);
+        return productRepository.updateProductOption(product, createProductOptionRequestDTO);
     }
 
     public void deleteProduct(Long id) {
         productRepository.deleteById(id);
-    }
-
-    public void updateProduct(Long id, String name, Double price, String imageUrl) {
-        Product product = productRepository.findById(id);
-        product.setName(name);
-        product.setPrice(price);
-        product.setImageUrl(imageUrl);
-        productRepository.save(product);
     }
 
     private void validateProduct(Product product) {
@@ -102,6 +90,13 @@ public class ProductService {
     public ProductResponse getProductById(Long id) {
         Product product = productRepository.findById(id);
         return new ProductResponse(product.getId(), product.getName(), product.getPrice(), product.getImageUrl());
+    }
+
+    public List<ProductOptionData> getProductOptions(Long id) {
+        List<ProductOption> productOptions = productRepository.findProductOptionsByProductId(id);
+        return productOptions.stream()
+                .map(productOption -> new ProductOptionData(productOption.getId(), productOption.getName(), productOption.getQuantity(), productOption.getProduct().getId()))
+                .toList();
     }
 
     public class ProductResponse {
@@ -167,6 +162,36 @@ public class ProductService {
 
         public boolean isLast() {
             return last;
+        }
+    }
+
+    public class ProductOptionData {
+        private Long id;
+        private String name;
+        private Long quantity;
+        private Long productId;
+
+        public ProductOptionData(Long id, String name, Long quantity, Long productId) {
+            this.id = id;
+            this.name = name;
+            this.quantity = quantity;
+            this.productId = productId;
+        }
+
+        public Long getId() {
+            return id;
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public Long getQuantity() {
+            return quantity;
+        }
+
+        public Long getProductId() {
+            return productId;
         }
     }
 
