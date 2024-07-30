@@ -3,6 +3,8 @@ package gift.restdocs.wish;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.doNothing;
+import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
+import static org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
 import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
@@ -94,6 +96,9 @@ public class RestDocsWishTest extends AbstractRestDocsTest {
                     .header("Authorization", "Bearer " + token))
             .andExpect(status().isOk())
             .andDo(document("rest-docs-wish-test/get-wish-list",
+                requestHeaders(
+                    headerWithName("Authorization").description("service access token")
+                ),
                 queryParameters(
                     parameterWithName("page").description("page number"),
                     parameterWithName("size").description("number of wishlist"),
@@ -117,7 +122,10 @@ public class RestDocsWishTest extends AbstractRestDocsTest {
                 .content(content)
                 .contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isCreated())
-            .andDo(print());
+            .andDo(document("rest-docs-wish-test/add-wish-list",
+                requestHeaders(
+                    headerWithName("Authorization").description("service access token")
+                )));
     }
 
     @Test
@@ -133,6 +141,9 @@ public class RestDocsWishTest extends AbstractRestDocsTest {
                 .contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isNoContent())
             .andDo(document("rest-docs-wish-test/delete-wish-list",
+                requestHeaders(
+                    headerWithName("Authorization").description("service access token")
+                ),
                 pathParameters(
                     parameterWithName("wishId").description("wish id")
                 ))

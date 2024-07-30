@@ -557,11 +557,32 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <h3 id="_위시_리스트_조회_http_request">HTTP request</h3>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight nowrap"><code data-lang="http">GET /api/wishes?page=1&amp;sort=id HTTP/1.1
+<pre class="CodeRay highlight nowrap"><code data-lang="http">GET /api/wishes?page=1&amp;size=10&amp;sort=id HTTP/1.1
 Authorization: Bearer {ACCESS_TOKEN}
 Host: localhost:8080</code></pre>
 </div>
 </div>
+</div>
+<div class="sect2">
+<h3 id="_위시_리스트_조회_request_headers">Request headers</h3>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Name</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Authorization</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">service access token</p></td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="sect2">
 <h3 id="_위시_리스트_조회_query_parameters">Query parameters</h3>
@@ -582,6 +603,10 @@ Host: localhost:8080</code></pre>
 <td class="tableblock halign-left valign-top"><p class="tableblock">page number</p></td>
 </tr>
 <tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>size</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">number of wishlist</p></td>
+</tr>
+<tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>sort</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">sort option ex) id, name, quantity</p></td>
 </tr>
@@ -594,9 +619,9 @@ Host: localhost:8080</code></pre>
 <div class="content">
 <pre class="CodeRay highlight nowrap"><code data-lang="http">HTTP/1.1 200 OK
 Content-Type: application/json;charset=UTF-8
-Content-Length: 471
+Content-Length: 1009
 
-[{&quot;id&quot;:1,&quot;name&quot;:&quot;상품1&quot;,&quot;price&quot;:1000,&quot;image_url&quot;:&quot;http://a.com&quot;,&quot;category_name&quot;:&quot;교환권&quot;},{&quot;id&quot;:2,&quot;name&quot;:&quot;상품2&quot;,&quot;price&quot;:1000,&quot;image_url&quot;:&quot;http://a.com&quot;,&quot;category_name&quot;:&quot;교환권&quot;},{&quot;id&quot;:3,&quot;name&quot;:&quot;상품3&quot;,&quot;price&quot;:1000,&quot;image_url&quot;:&quot;http://a.com&quot;,&quot;category_name&quot;:&quot;교환권&quot;},{&quot;id&quot;:4,&quot;name&quot;:&quot;상품4&quot;,&quot;price&quot;:1000,&quot;image_url&quot;:&quot;http://a.com&quot;,&quot;category_name&quot;:&quot;교환권&quot;},{&quot;id&quot;:5,&quot;name&quot;:&quot;상품5&quot;,&quot;price&quot;:1000,&quot;image_url&quot;:&quot;http://a.com&quot;,&quot;category_name&quot;:&quot;교환권&quot;}]</code></pre>
+{&quot;contents&quot;:[{&quot;id&quot;:1,&quot;name&quot;:&quot;상품1&quot;,&quot;price&quot;:1000,&quot;image_url&quot;:&quot;http://a.com&quot;,&quot;category_name&quot;:&quot;교환권&quot;},{&quot;id&quot;:2,&quot;name&quot;:&quot;상품2&quot;,&quot;price&quot;:1000,&quot;image_url&quot;:&quot;http://a.com&quot;,&quot;category_name&quot;:&quot;교환권&quot;},{&quot;id&quot;:3,&quot;name&quot;:&quot;상품3&quot;,&quot;price&quot;:1000,&quot;image_url&quot;:&quot;http://a.com&quot;,&quot;category_name&quot;:&quot;교환권&quot;},{&quot;id&quot;:4,&quot;name&quot;:&quot;상품4&quot;,&quot;price&quot;:1000,&quot;image_url&quot;:&quot;http://a.com&quot;,&quot;category_name&quot;:&quot;교환권&quot;},{&quot;id&quot;:5,&quot;name&quot;:&quot;상품5&quot;,&quot;price&quot;:1000,&quot;image_url&quot;:&quot;http://a.com&quot;,&quot;category_name&quot;:&quot;교환권&quot;},{&quot;id&quot;:6,&quot;name&quot;:&quot;상품6&quot;,&quot;price&quot;:1000,&quot;image_url&quot;:&quot;http://a.com&quot;,&quot;category_name&quot;:&quot;교환권&quot;},{&quot;id&quot;:7,&quot;name&quot;:&quot;상품7&quot;,&quot;price&quot;:1000,&quot;image_url&quot;:&quot;http://a.com&quot;,&quot;category_name&quot;:&quot;교환권&quot;},{&quot;id&quot;:8,&quot;name&quot;:&quot;상품8&quot;,&quot;price&quot;:1000,&quot;image_url&quot;:&quot;http://a.com&quot;,&quot;category_name&quot;:&quot;교환권&quot;},{&quot;id&quot;:9,&quot;name&quot;:&quot;상품9&quot;,&quot;price&quot;:1000,&quot;image_url&quot;:&quot;http://a.com&quot;,&quot;category_name&quot;:&quot;교환권&quot;},{&quot;id&quot;:10,&quot;name&quot;:&quot;상품10&quot;,&quot;price&quot;:1000,&quot;image_url&quot;:&quot;http://a.com&quot;,&quot;category_name&quot;:&quot;교환권&quot;}],&quot;page&quot;:1,&quot;size&quot;:10,&quot;totalElements&quot;:20,&quot;totalPages&quot;:2}</code></pre>
 </div>
 </div>
 </div>
@@ -612,14 +637,33 @@ Content-Length: 471
 <pre class="CodeRay highlight nowrap"><code data-lang="http">POST /api/wishes HTTP/1.1
 Content-Type: application/json;charset=UTF-8
 Authorization: Bearer {ACCESS_TOKEN}
-Content-Length: 22
+Content-Length: 16
 Host: localhost:8080
 
-{
-  &quot;product_id&quot; : 1
-}</code></pre>
+{&quot;product_id&quot;:1}</code></pre>
 </div>
 </div>
+</div>
+<div class="sect2">
+<h3 id="_위시_생성_request_headers">Request headers</h3>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Name</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Authorization</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">service access token</p></td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="sect2">
 <h3 id="_위시_생성_http_response">HTTP response</h3>
@@ -641,12 +685,30 @@ Host: localhost:8080
 <pre class="CodeRay highlight nowrap"><code data-lang="http">DELETE /api/wishes/1 HTTP/1.1
 Content-Type: application/json;charset=UTF-8
 Authorization: Bearer {ACCESS_TOKEN}
-Content-Length: 16
-Host: localhost:8080
-
-{&quot;product_id&quot;:1}</code></pre>
+Host: localhost:8080</code></pre>
 </div>
 </div>
+</div>
+<div class="sect2">
+<h3 id="_위시_삭제_request_headers">Request headers</h3>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Name</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Authorization</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">service access token</p></td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="sect2">
 <h3 id="_위시_삭제_path_parameters">Path parameters</h3>
@@ -683,7 +745,7 @@ Host: localhost:8080
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2024-07-30 15:07:57 +0900
+Last updated 2024-07-31 00:04:44 +0900
 </div>
 </div>
 <script>

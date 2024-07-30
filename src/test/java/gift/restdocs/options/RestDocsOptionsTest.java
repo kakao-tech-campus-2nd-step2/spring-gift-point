@@ -3,6 +3,8 @@ package gift.restdocs.options;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.doNothing;
+import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
+import static org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
 import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
@@ -83,6 +85,9 @@ public class RestDocsOptionsTest extends AbstractRestDocsTest {
                     .header("Authorization", "Bearer " + token))
             .andExpect(status().isOk())
             .andDo(document("rest-docs-options-test/get-product-with-all-options",
+                requestHeaders(
+                    headerWithName("Authorization").description("service access token")
+                ),
                 pathParameters(
                     parameterWithName("productId").description("Product id")
                 )));
@@ -109,6 +114,9 @@ public class RestDocsOptionsTest extends AbstractRestDocsTest {
                     .contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isCreated())
             .andDo(document("rest-docs-options-test/add-options",
+                requestHeaders(
+                    headerWithName("Authorization").description("service access token")
+                ),
                 pathParameters(
                     parameterWithName("productId").description("Product id")
                 )));
@@ -135,6 +143,9 @@ public class RestDocsOptionsTest extends AbstractRestDocsTest {
                     .contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isNoContent())
             .andDo(document("rest-docs-options-test/update-options",
+                requestHeaders(
+                    headerWithName("Authorization").description("service access token")
+                ),
                 pathParameters(
                     parameterWithName("productId").description("Product id"),
                     parameterWithName("optionId").description("Option id")
@@ -156,6 +167,9 @@ public class RestDocsOptionsTest extends AbstractRestDocsTest {
                     .contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isNoContent())
             .andDo(document("rest-docs-options-test/delete-options",
+                requestHeaders(
+                    headerWithName("Authorization").description("service access token")
+                ),
                 pathParameters(
                     parameterWithName("productId").description("Product id"),
                     parameterWithName("optionId").description("Option id")

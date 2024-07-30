@@ -84,7 +84,10 @@ public class RestDocsCategoryTest extends AbstractRestDocsTest {
         mockMvc.perform(get("/api/categories")
                 .header("Authorization", "Bearer " + token))
             .andExpect(status().isOk())
-            .andDo(print());
+            .andDo(document("rest-docs-category-test/get-all-categories",
+                requestHeaders(
+                    headerWithName("Authorization").description("service access token")
+                )));
     }
 
     @Test
@@ -97,11 +100,15 @@ public class RestDocsCategoryTest extends AbstractRestDocsTest {
             .willReturn(categoryResponse);
 
         //when then
-        mockMvc.perform(RestDocumentationRequestBuilders.get("/api/categories/{categoryId}", categoryId)
-                .header("Authorization", "Bearer " + token))
+        mockMvc.perform(
+                RestDocumentationRequestBuilders.get("/api/categories/{categoryId}", categoryId)
+                    .header("Authorization", "Bearer " + token))
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.id").value(equalTo(categoryId.intValue())))
             .andDo(document("rest-docs-category-test/get-category",
+                requestHeaders(
+                    headerWithName("Authorization").description("service access token")
+                ),
                 pathParameters(
                     parameterWithName("categoryId").description("Category id")
                 )));
@@ -123,7 +130,10 @@ public class RestDocsCategoryTest extends AbstractRestDocsTest {
                 .content(content)
                 .contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isCreated())
-            .andDo(print());
+            .andDo(document("rest-docs-category-test/add-category",
+                requestHeaders(
+                    headerWithName("Authorization").description("service access token")
+                )));
     }
 
     @Test
@@ -138,12 +148,16 @@ public class RestDocsCategoryTest extends AbstractRestDocsTest {
             .willReturn(savedCategory);
 
         //when //then
-        mockMvc.perform(RestDocumentationRequestBuilders.put("/api/categories/{categoryId}", savedCategoryId)
-                .header("Authorization", "Bearer " + token)
-                .content(content)
-                .contentType(MediaType.APPLICATION_JSON))
+        mockMvc.perform(
+                RestDocumentationRequestBuilders.put("/api/categories/{categoryId}", savedCategoryId)
+                    .header("Authorization", "Bearer " + token)
+                    .content(content)
+                    .contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isNoContent())
             .andDo(document("rest-docs-category-test/update-category",
+                requestHeaders(
+                    headerWithName("Authorization").description("service access token")
+                ),
                 pathParameters(
                     parameterWithName("categoryId").description("Category id")
                 )));
@@ -161,6 +175,9 @@ public class RestDocsCategoryTest extends AbstractRestDocsTest {
             .andExpect(status().isNoContent())
             .andDo(
                 document("rest-docs-category-test/delete-category",
+                    requestHeaders(
+                        headerWithName("Authorization").description("service access token")
+                    ),
                     queryParameters(
                         parameterWithName("id").description("Category id")
                     )));

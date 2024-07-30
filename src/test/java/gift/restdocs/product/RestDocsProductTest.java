@@ -5,6 +5,8 @@ import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
 import static org.mockito.Mockito.doCallRealMethod;
 import static org.mockito.Mockito.doNothing;
+import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
+import static org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.request.RequestDocumentation.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -88,7 +90,8 @@ public class RestDocsProductTest extends AbstractRestDocsTest {
             .forEach(i -> products.add(demoProduct(i)));
         Page<Product> pagedAllProducts = createPage(products, page, size);
 
-        given(pagingService.makeProductsPageRequest(any(int.class), any(int.class), any(String.class)))
+        given(pagingService.makeProductsPageRequest(any(int.class), any(int.class),
+            any(String.class)))
             .willReturn(pageRequest);
         given(productService.getPagedAllProducts(any(PageRequest.class)))
             .willReturn(pagedAllProducts);
@@ -98,6 +101,9 @@ public class RestDocsProductTest extends AbstractRestDocsTest {
                 .header("Authorization", "Bearer " + token))
             .andExpect(status().isOk())
             .andDo(document("rest-docs-product-test/get-all-products",
+                requestHeaders(
+                    headerWithName("Authorization").description("service access token")
+                ),
                 queryParameters(
                     parameterWithName("page").description("page number"),
                     parameterWithName("size").description("number of products"),
@@ -126,7 +132,10 @@ public class RestDocsProductTest extends AbstractRestDocsTest {
                 .content(content)
                 .contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isCreated())
-            .andDo(print());
+            .andDo(document("rest-docs-product-test/add-product",
+                requestHeaders(
+                    headerWithName("Authorization").description("service access token")
+                )));
     }
 
     @Test
@@ -152,6 +161,9 @@ public class RestDocsProductTest extends AbstractRestDocsTest {
                     .contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isNoContent())
             .andDo(document("rest-docs-product-test/update-product",
+                requestHeaders(
+                    headerWithName("Authorization").description("service access token")
+                ),
                 pathParameters(
                     parameterWithName("productId").description("Product id")
                 )));
@@ -165,11 +177,15 @@ public class RestDocsProductTest extends AbstractRestDocsTest {
         doNothing().when(optionsService).deleteAllOptions(productId);
 
         //when //then
-        mockMvc.perform(RestDocumentationRequestBuilders.delete("/api/products/{productId}", productId)
-                .header("Authorization", "Bearer " + token)
-                .contentType(MediaType.APPLICATION_JSON))
+        mockMvc.perform(
+                RestDocumentationRequestBuilders.delete("/api/products/{productId}", productId)
+                    .header("Authorization", "Bearer " + token)
+                    .contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isNoContent())
             .andDo(document("rest-docs-product-test/delete-product",
+                requestHeaders(
+                    headerWithName("Authorization").description("service access token")
+                ),
                 pathParameters(
                     parameterWithName("productId").description("Product id")
                 )));
@@ -178,7 +194,7 @@ public class RestDocsProductTest extends AbstractRestDocsTest {
         then(optionsService).should().deleteAllOptions(productId);
     }
 
-    private  <T> Page<T> createPage(List<T> content, int page, int size) {
+    private <T> Page<T> createPage(List<T> content, int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
         return new PageImpl<>(content, pageable, content.size());
     }
@@ -189,7 +205,7 @@ public class RestDocsProductTest extends AbstractRestDocsTest {
     }
 
     private ProductUpdateRequest demoUpdateRequest() {
-        return new ProductUpdateRequest( "수정된 상품명", 1500, "http://update.com",
+        return new ProductUpdateRequest("수정된 상품명", 1500, "http://update.com",
             "수정된 카테고리명");
     }
 

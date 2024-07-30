@@ -1,4 +1,4 @@
 == 주문 생성
 operation::rest-docs-order-test/make-order[snippets="http-request,request-headers,http-response"]
 == 주문 조회
-operation::rest-docs-order-test/get-order[snippets="http-request,http-response"]
+operation::rest-docs-order-test/get-order[snippets="http-request,request-headers,http-response"]

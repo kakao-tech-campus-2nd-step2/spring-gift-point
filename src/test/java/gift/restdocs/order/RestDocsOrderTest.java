@@ -80,7 +80,8 @@ public class RestDocsOrderTest extends AbstractRestDocsTest {
             .andExpect(status().isOk())
             .andDo(document("rest-docs-order-test/make-order",
                 requestHeaders(
-                    headerWithName("Authorization").description("service access token")
+                    headerWithName("Authorization").description("Our service access token"),
+                    headerWithName("X-OAuth-Token").description("OAuth2 access token")
                 )));
     }
 
@@ -100,7 +101,10 @@ public class RestDocsOrderTest extends AbstractRestDocsTest {
         mockMvc.perform(get("/api/orders")
                 .header("Authorization", "Bearer " + token))
             .andExpect(status().isOk())
-            .andDo(print());
+            .andDo(document("rest-docs-order-test/get-order",
+                requestHeaders(
+                    headerWithName("Authorization").description("service access token")
+                )));
     }
 
 
