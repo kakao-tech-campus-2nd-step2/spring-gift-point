@@ -51,11 +51,11 @@ public class DataLoader {
                 "http://www.example.com/index.html"));
 
         // Product
-        Product americano = new Product("아이스 아메리카노 T", ethiopia, 4500,
+        Product americano = new Product("아이스 아메리카노 T", ethiopia, 4500, "description",
             "https://example.com/image.jpg");
-        Product cafuchino = new Product("아이스 카푸치노 M", jamaica, 4700,
+        Product cafuchino = new Product("아이스 카푸치노 M", jamaica, 4700,"description",
             "https://example.com/image.jpg");
-        Product malcha = new Product("핫 말차라떼 L", ethiopia, 6800,
+        Product malcha = new Product("핫 말차라떼 L", ethiopia, 6800,"description",
             "https://example.com/image.jpg");
         jpaProductRepository.save(americano);
         jpaProductRepository.save(cafuchino);
@@ -67,6 +67,7 @@ public class DataLoader {
                 "더미 커피 " + (i + 1),
                 ethiopia,
                 1000 + (i * 10),
+                "description",
                 "https://example.com/dummy" + (i + 1) + ".jpg"
             );
             Product savedProduct = jpaProductRepository.save(dummyProduct);

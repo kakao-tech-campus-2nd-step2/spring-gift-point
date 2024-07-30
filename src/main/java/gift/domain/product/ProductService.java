@@ -3,6 +3,11 @@ package gift.domain.product;
 import gift.domain.category.Category;
 import gift.domain.category.JpaCategoryRepository;
 import gift.domain.option.OptionService;
+import gift.domain.product.dto.request.ProductRequest;
+import gift.domain.product.dto.request.UpdateProductRequest;
+import gift.domain.product.dto.response.ProductPageResponse;
+import gift.domain.product.dto.response.ProductPageResponse.ProductForPage;
+import gift.domain.product.dto.response.ProductResponse;
 import gift.global.exception.BusinessException;
 import gift.global.exception.ErrorCode;
 import gift.global.exception.category.CategoryNotFoundException;
@@ -12,7 +17,6 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -36,26 +40,27 @@ public class ProductService {
     }
 
     /**
-     * 상품 추가
+     * 상품 생성
      */
-    public void createProduct(ProductDTO productDTO) {
-        validateUniqueName(productDTO.name());
-        validateCategoryExists(productDTO.categoryId());
+    public void createProduct(ProductRequest productRequest) {
+        validateUniqueName(productRequest.name());
+        validateCategoryExists(productRequest.categoryId());
 
         Product product = new Product(
-            productDTO.name(),
-            categoryRepository.findById(productDTO.categoryId()).get(),
-            productDTO.price(),
-            productDTO.imageUrl()
+            productRequest.name(),
+            categoryRepository.findById(productRequest.categoryId()).get(),
+            productRequest.price(),
+            productRequest.description(),
+            productRequest.imageUrl()
         );
         // 상품 저장
         Product savedProduct = productRepository.save(product);
-        // 옵션 저장
-        optionService.addOptionToNewProduct(savedProduct, productDTO.option());
+        // 상품의 옵션들 저장
+        optionService.addOptionsToNewProduct(savedProduct, productRequest.options());
     }
 
     /**
-     * 특정 삼품 조회
+     * 상품 조회
      */
     public Product getProduct(Long id) {
         Product product = productRepository.findById(id)
@@ -65,32 +70,34 @@ public class ProductService {
     }
 
     /**
-     * 전체 싱픔 목록 조회 - 페이징(매개변수별)
+     * 전체 상픔 목록 조회 - 페이징(매개변수별)
      */
-    public Page<Product> getProductsByPage(int page, int size, Sort sort, Long categoryId) {
+    public ProductPageResponse getProductsByPage(int page, int size, Sort sort, Long categoryId) {
         PageRequest pageRequest = PageRequest.of(page, size, sort);
-        // 카테고리 조건 X
-        if(categoryId.equals(0)){
-            return productRepository.findAll(pageRequest);
+        // 카테고리 조건 X -> 모든 상품 조회
+        if(categoryId.equals(0L)){
+            Page<Product> productPage = productRepository.findAll(pageRequest);
+            return createProductPageResponse(productPage);
         }
-        // 카테고리 조건 O
-        return productRepository.findAllByCategoryId(categoryId, pageRequest);
+        // 카테고리 조건 O -> 해당 카테고리 상품 조회
+        Page<Product> productPage = productRepository.findAllByCategoryId(categoryId, pageRequest);
+        return createProductPageResponse(productPage);
     }
 
     /**
-     * 상품 수정 - (현재) 상품의 옵션은 따로 수정
+     * 상품 수정 - (현재) 상품의 옵션은 "따로" 수정
      */
     @Transactional
-    public void updateProduct(Long id, ProductDTO productDTO) {
+    public void updateProduct(Long id, UpdateProductRequest productRequest) {
         Product product = productRepository.findById(id)
             .orElseThrow(() -> new ProductNotFoundException(id));
-        validateUniqueNameWithoutMe(id, productDTO.name());
+        validateUniqueNameWithoutMe(id, productRequest.name());
 
-        Category category = categoryRepository.findById(productDTO.categoryId())
-            .orElseThrow(() -> new CategoryNotFoundException(productDTO.categoryId()));
+        Category category = categoryRepository.findById(productRequest.categoryId())
+            .orElseThrow(() -> new CategoryNotFoundException(productRequest.categoryId()));
 
-        product.update(productDTO.name(), category, productDTO.price(),
-            productDTO.imageUrl());
+        product.update(productRequest.name(), category, productRequest.price(), productRequest.description(),
+            productRequest.imageUrl());
     }
 
     /**
@@ -135,6 +142,13 @@ public class ProductService {
         if (!categoryRepository.existsById(categoryId)) {
             throw new CategoryNotFoundException(categoryId);
         }
+    }
+
+    public ProductPageResponse createProductPageResponse(Page<Product> productPage) {
+        boolean hasNext = productPage.hasNext();
+        List<ProductForPage> products = productPage.stream().map(product -> product.toProductForPage())
+            .toList();
+        return new ProductPageResponse(hasNext, products);
     }
 }
 

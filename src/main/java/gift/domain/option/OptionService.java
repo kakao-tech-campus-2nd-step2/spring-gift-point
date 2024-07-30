@@ -49,12 +49,14 @@ public class OptionService {
         optionRepository.save(option);
     }
 
-    // 새 상품에 옵션 입력
-    public void addOptionToNewProduct(Product savedProduct, OptionRequestDTO optionRequestDTO) {
-        Option option = new Option(optionRequestDTO.name(), optionRequestDTO.quantity(),
-            savedProduct);
+    // 새 상품에 옵션들 입력
+    public void addOptionsToNewProduct(Product savedProduct, List<OptionRequestDTO> optionRequestDTOS) {
+        for (OptionRequestDTO optionRequestDTO : optionRequestDTOS) {
+            Option option = new Option(optionRequestDTO.name(), optionRequestDTO.quantity(),
+                savedProduct);
 
-        optionRepository.save(option);
+            optionRepository.save(option);
+        }
     }
 
     // 옵션 수정

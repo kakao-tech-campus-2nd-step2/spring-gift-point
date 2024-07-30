@@ -4,6 +4,7 @@ import gift.domain.category.Category;
 import gift.domain.category.CategoryService;
 import gift.domain.product.Product;
 import gift.domain.product.ProductService;
+import gift.domain.product.dto.response.ProductPageResponse;
 import io.swagger.v3.oas.annotations.Parameter;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,10 +41,11 @@ public class HomeController {
         @Parameter(description = "카테고리 ID") @RequestParam(value = "categoryId", defaultValue = "0") Long categoryId
     ) {
         Sort sortObj = getSortObject(sort);
-        Page<Product> products = productService.getProductsByPage(page, size, sortObj, categoryId);
+        ProductPageResponse productPageResponse = productService.getProductsByPage(page, size,
+            sortObj, categoryId);
         List<Category> categories = categoryService.getCategories();
 
-        model.addAttribute("products", products);
+        model.addAttribute("products", productPageResponse.products());
         model.addAttribute("categories", categories);
         // 성공 시
         return "index";
