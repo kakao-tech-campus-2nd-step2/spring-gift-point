@@ -30,8 +30,10 @@ public class Option {
 
     @Column
     private int quantity;
+
     @OneToMany(mappedBy = "option", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Orders> orders;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "product_id")
     private Product product;
@@ -108,5 +110,10 @@ public class Option {
             throw new OptionQuantityValidException("수량이 부족합니다.");
         }
         this.quantity -= quantity;
+    }
+
+    public void updateNameAndQuantity(String name, int quantity){
+        this.name = name;
+        this.quantity = quantity;
     }
 }
