@@ -10,6 +10,8 @@ import gift.utils.PaginationUtils;
 import gift.utils.config.KakaoProperties;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -47,7 +49,6 @@ public class KakaoApiController {
         return ResponseEntity.ok(kakaoToken);
     }
 
-    //proudct 컨트롤러로 추가 product/order
 
     @PostMapping("/orders")
     public ResponseEntity<KakaoApiDTO.KakaoOrderResponse> kakaoOrder(@RequestHeader("Authorization") String token,
@@ -57,11 +58,9 @@ public class KakaoApiController {
         return ResponseEntity.ok(kakaoOrderResponse);
     }
 
-//    @GetMapping("orders")
-//    public ResponseEntity<Page<KakaoApiDTO.KakaoOrderResponse>> orderGet(@RequestBody PaginationDTO paginationDTO){
-//        Pageable pageable = PaginationUtils.createPageable(paginationDTO, "order");
-//
-//        Page<Wish> orderList = kakaoApiService.(pageable);
-//        return ResponseEntity.ok(orderList);
-//    }
+    @GetMapping("orders")
+    public ResponseEntity<Page<KakaoApiDTO.KakaoOrderResponse>> orderGet(@PageableDefault(size = 5, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable){
+        Page<KakaoOrderResponse> kakaoOrderResponses = kakaoApiService.kakaoGetOrder(pageable);
+        return ResponseEntity.ok(kakaoOrderResponses);
+    }
 }

@@ -137,10 +137,16 @@ public class KakaoApiService {
 
     }
 
-//    @Transactional
-//    public KakaoApiDTO.KakaoOrderResponse kakaoGetOrder(Pageable pageable){
-//        Page<Order> all = orderRepository.findAll(pageable);
-//    }
+    @Transactional
+    public Page<KakaoApiDTO.KakaoOrderResponse> kakaoGetOrder(Pageable pageable){
+        Page<Order> all = orderRepository.findAll(pageable);
+        return all.map(this::convertToOrderDto);
+    }
+
+    private KakaoApiDTO.KakaoOrderResponse convertToOrderDto(Order order){
+        return new KakaoOrderResponse(order.getId(),order.getOption().getId(),order.getQuantity(),
+            order.getOrderDateTime(),order.getMessage());
+    }
 
 
 
