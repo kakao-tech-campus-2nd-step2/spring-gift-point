@@ -14,10 +14,10 @@ public class OptionConverter {
         if (option.getProduct() != null) {
             productId = option.getProduct().getId();
         }
-        return new OptionDTO(option.getId(), new OptionNameDTO(option.getName().getName()), new OptionQuantityDTO(option.getQuantity().getQuantity()), productId);
+        return new OptionDTO(option.getId(), option.getName(), option.getQuantity(), productId);
     }
 
     public static Option convertToEntity(OptionDTO optionDTO) {
-        return new Option(optionDTO.getId(), new OptionName(optionDTO.getName().getName()), new OptionQuantity(optionDTO.getQuantity().getQuantity()));
+        return new Option(optionDTO.getId(), optionDTO.getName(), optionDTO.getQuantity());
     }
 }

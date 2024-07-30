@@ -79,10 +79,10 @@ public class OrderControllerTest {
         User user = new User(null, "test@example.com", PasswordEncoder.encode("password"));
         userRepository.save(user);
 
-        Product product = new Product(null, new Name("Test Product"), 1000, "http://example.com/image.jpg", 1L, new ArrayList<>());
+        Product product = new Product(null,"Test Product", 1000, "http://example.com/image.jpg", 1L, new ArrayList<>());
         productRepository.save(product);
 
-        Option option = new Option(null, new OptionName("Test Option"), new OptionQuantity(10), product);
+        Option option = new Option(null,"Test Option", 10, product);
         optionRepository.save(option);
 
         WishList wishList = new WishList(null, user, product);
@@ -110,10 +110,10 @@ public class OrderControllerTest {
         User user = new User(null, "test@example.com", PasswordEncoder.encode("password"));
         userRepository.save(user);
 
-        Product product = new Product(null, new Name("Test Product"), 1000, "http://example.com/image.jpg", 1L, new ArrayList<>());
+        Product product = new Product(null, "Test Product", 1000, "http://example.com/image.jpg", 1L, new ArrayList<>());
         productRepository.save(product);
 
-        Option option = new Option(null, new OptionName("Test Option"), new OptionQuantity(10), product);
+        Option option = new Option(null, "Test Option", 10, product);
         optionRepository.save(option);
 
         WishList wishList = new WishList(null, user, product);

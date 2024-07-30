@@ -62,6 +62,6 @@ public class KakaoController {
             userService.save(user);
         }
 
-        return ResponseEntity.ok("Login successful: " + accessToken);
+        return ResponseEntity.ok(accessToken);
     }
 }

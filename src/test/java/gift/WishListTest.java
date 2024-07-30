@@ -33,7 +33,7 @@ class WishListTest {
         User user = new User(null, "test@example.com", "password");
         userRepository.save(user);
 
-        Product product = new Product(null, new Name("TestProduct"), 100, "http://example.com/image.png", 1L, new ArrayList<>());
+        Product product = new Product(null, "TestProduct", 100, "http://example.com/image.png", 1L, new ArrayList<>());
         productRepository.save(product);
 
         WishList wishList = new WishList(null, user, product);

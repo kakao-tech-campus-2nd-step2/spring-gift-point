@@ -28,7 +28,6 @@ public class OptionService {
         this.productRepository = productRepository;
     }
 
-
     public Page<OptionDTO> findAllOptions(PageRequestDTO pageRequestDTO) {
         Pageable pageable = pageRequestDTO.toPageRequest();
         Page<Option> options = optionRepository.findAll(pageable);
@@ -49,8 +48,8 @@ public class OptionService {
 
         Option option = new Option(
             null,
-            new OptionName(optionDTO.getName().getName()),
-            new OptionQuantity(optionDTO.getQuantity().getQuantity()),
+            optionDTO.getName(),
+            optionDTO.getQuantity(),
             product
         );
 
@@ -68,7 +67,7 @@ public class OptionService {
         Option existingOption = optionRepository.findById(optionDTO.getId())
             .orElseThrow(() -> new IllegalArgumentException("옵션을 찾을 수 없습니다."));
 
-        existingOption.update(new OptionName(optionDTO.getName().getName()), new OptionQuantity(optionDTO.getQuantity().getQuantity()));
+        existingOption.update(optionDTO.getName(), optionDTO.getQuantity());
         optionRepository.save(existingOption);
     }
 
@@ -100,7 +99,6 @@ public class OptionService {
     public String getOptionNameById(Long optionId) {
         Option option = optionRepository.findById(optionId)
             .orElseThrow(() -> new IllegalArgumentException("옵션을 찾을 수 없습니다."));
-        return option.getName().getName();
+        return option.getName();
     }
-
 }

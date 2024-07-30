@@ -17,6 +17,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import org.springframework.data.domain.Page;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -53,7 +55,7 @@ public class ProductController {
         @ApiResponse(responseCode = "400", description = "Invalid request parameters."),
         @ApiResponse(responseCode = "500", description = "Internal server error.")
     })
-    public String allProducts(
+    public ResponseEntity<List<ProductDTO>> allProducts(
         @RequestParam(defaultValue = "0") int page,
         @RequestParam(defaultValue = "10") @Min(1) @Max(30) int size,
         @RequestParam(defaultValue = "id") String sortBy,
@@ -63,13 +65,23 @@ public class ProductController {
         PageRequestDTO pageRequestDTO = new PageRequestDTO(page, size, sortBy, direction);
         Page<ProductDTO> productPage = productService.findAllProducts(pageRequestDTO);
 
-        model.addAttribute("products", productPage.getContent());
-        model.addAttribute("currentPage", page);
-        model.addAttribute("totalPages", productPage.getTotalPages());
-        model.addAttribute("sortBy", sortBy);
-        model.addAttribute("direction", direction);
+        List<ProductDTO> productList = productPage.getContent();
 
-        return "Products";
+        return new ResponseEntity<>(productList, HttpStatus.OK);
+    }
+
+    @GetMapping("/{productId}")
+    @Operation(summary = "Get product by ID", description = "This API retrieves a specific product by its ID.")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Successfully retrieved product."),
+        @ApiResponse(responseCode = "404", description = "Product not found."),
+        @ApiResponse(responseCode = "500", description = "Internal server error.")
+    })
+    public ResponseEntity<ProductDTO> getProductById(@PathVariable Long productId) {
+        Optional<ProductDTO> productDTO = productService.findProductById(productId);
+        return productDTO
+            .map(dto -> new ResponseEntity<>(dto, HttpStatus.OK))
+            .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
     @GetMapping("/add")
@@ -137,37 +149,53 @@ public class ProductController {
         return "redirect:/admin/products";
     }
 
-    @GetMapping("/{id}/options")
-    @Operation(summary = "Manage product options", description = "This API returns the form to manage options for a product.")
+//    @GetMapping("/{id}/options")
+//    @Operation(summary = "Manage product options", description = "This API returns the form to manage options for a product.")
+//    @ApiResponses(value = {
+//        @ApiResponse(responseCode = "200", description = "Successfully retrieved product options."),
+//        @ApiResponse(responseCode = "404", description = "Product not found."),
+//        @ApiResponse(responseCode = "500", description = "Internal server error.")
+//    })
+//    public String manageProductOptions(@PathVariable Long id, Model model) {
+//        ProductDTO productDTO = productService.findProductById(id)
+//            .orElseThrow(() -> new IllegalArgumentException("Product not found"));
+//
+//        List<OptionDTO> productOptions = productDTO.getOptions();
+//        List<OptionDTO> allOptions = optionService.findAllOptions();
+//
+//        model.addAttribute("product", productDTO);
+//        model.addAttribute("options", allOptions.stream()
+//            .filter(option -> productOptions.stream().anyMatch(productOption -> productOption.getId().equals(option.getId())))
+//            .collect(Collectors.toList()));
+//
+//        return "Manage_product_options";
+//    }
+
+//    @PostMapping("/update/{id}/options")
+//    @Operation(summary = "Update product options", description = "This API updates the options for a product.")
+//    @ApiResponses(value = {
+//        @ApiResponse(responseCode = "200", description = "Successfully updated product options."),
+//        @ApiResponse(responseCode = "404", description = "Product not found."),
+//        @ApiResponse(responseCode = "500", description = "Internal server error.")
+//    })
+//    public String updateProductOptions(@PathVariable Long id, @RequestParam List<Long> optionIds) {
+//        productService.updateProductOptions(id, optionIds);
+//        return "redirect:/admin/products";
+//    }
+
+    @GetMapping("/{productId}/options")
+    @Operation(summary = "Get product options by product ID", description = "This API retrieves all options for a specific product.")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "Successfully retrieved product options."),
         @ApiResponse(responseCode = "404", description = "Product not found."),
         @ApiResponse(responseCode = "500", description = "Internal server error.")
     })
-    public String manageProductOptions(@PathVariable Long id, Model model) {
-        ProductDTO productDTO = productService.findProductById(id)
-            .orElseThrow(() -> new IllegalArgumentException("Product not found"));
-
-        List<OptionDTO> productOptions = productDTO.getOptions();
-        List<OptionDTO> allOptions = optionService.findAllOptions();
-
-        model.addAttribute("product", productDTO);
-        model.addAttribute("options", allOptions.stream()
-            .filter(option -> productOptions.stream().anyMatch(productOption -> productOption.getId().equals(option.getId())))
-            .collect(Collectors.toList()));
-
-        return "Manage_product_options";
-    }
-
-    @PostMapping("/{id}/options")
-    @Operation(summary = "Update product options", description = "This API updates the options for a product.")
-    @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "Successfully updated product options."),
-        @ApiResponse(responseCode = "404", description = "Product not found."),
-        @ApiResponse(responseCode = "500", description = "Internal server error.")
-    })
-    public String updateProductOptions(@PathVariable Long id, @RequestParam List<Long> optionIds) {
-        productService.updateProductOptions(id, optionIds);
-        return "redirect:/admin/products";
+    public ResponseEntity<List<OptionDTO>> getProductOptions(@PathVariable Long productId) {
+        Optional<ProductDTO> productDTO = productService.findProductById(productId);
+        if (productDTO.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        List<OptionDTO> productOptions = productDTO.get().getOptions();
+        return new ResponseEntity<>(productOptions, HttpStatus.OK);
     }
 }

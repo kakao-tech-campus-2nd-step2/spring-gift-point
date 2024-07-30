@@ -7,19 +7,17 @@ public class OptionDTO {
 
     private Long id;
 
-    @Valid
     @NotNull(message = "옵션 이름을 입력해주세요.")
-    private OptionNameDTO name;
+    private String name;
 
-    @Valid
     @NotNull(message = "옵션 수량을 입력해주세요.")
-    private OptionQuantityDTO quantity;
+    private Integer quantity;
 
     private Long productId;
 
     public OptionDTO() {}
 
-    public OptionDTO(Long id, OptionNameDTO name, OptionQuantityDTO quantity, Long productId) {
+    public OptionDTO(Long id, String name, Integer quantity, Long productId) {
         this.id = id;
         this.name = name;
         this.quantity = quantity;
@@ -35,19 +33,19 @@ public class OptionDTO {
         this.id = id;
     }
 
-    public OptionNameDTO getName() {
+    public String getName() {
         return name;
     }
 
-    public void setName(OptionNameDTO name) {
+    public void setName(String name) {
         this.name = name;
     }
 
-    public OptionQuantityDTO getQuantity() {
+    public Integer getQuantity() {
         return quantity;
     }
 
-    public void setQuantity(OptionQuantityDTO quantity) {
+    public void setQuantity(Integer quantity) {
         this.quantity = quantity;
     }
 

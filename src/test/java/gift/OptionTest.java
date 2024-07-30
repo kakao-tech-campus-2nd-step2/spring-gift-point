@@ -29,29 +29,29 @@ class OptionTest {
 
     @Test
     void whenOptionIsCreated_thenOptionSavedCorrectly() {
-        Product product = new Product(null, new Name("TestProduct"), 100, "http://example.com/image.png", 1L, new ArrayList<>());
+        Product product = new Product(null, "TestProduct", 100, "http://example.com/image.png", 1L, new ArrayList<>());
         productRepository.save(product);
 
-        Option option = new Option(null, new OptionName("TestOption"), new OptionQuantity(10), product);
+        Option option = new Option(null, "TestOption", 10, product);
         Option savedOption = optionRepository.save(option);
 
         assertAll(
             () -> assertNotNull(savedOption.getId()),
-            () -> assertEquals("TestOption", savedOption.getName().getName()),
-            () -> assertEquals(10, savedOption.getQuantity().getQuantity()),
+            () -> assertEquals("TestOption", savedOption.getName()),
+            () -> assertEquals(10, savedOption.getQuantity()),
             () -> assertEquals(product, savedOption.getProduct())
         );
     }
 
     @Test
     void whenAssignProduct_thenProductAssignedCorrectly() {
-        Product product1 = new Product(null, new Name("Product1"), 100, "http://example.com/image1.png", 1L, new ArrayList<>());
+        Product product1 = new Product(null, "Product1", 100, "http://example.com/image1.png", 1L, new ArrayList<>());
         productRepository.save(product1);
 
-        Product product2 = new Product(null, new Name("Product2"), 200, "http://example.com/image2.png", 2L, new ArrayList<>());
+        Product product2 = new Product(null, "Product2", 200, "http://example.com/image2.png", 2L, new ArrayList<>());
         productRepository.save(product2);
 
-        Option option = new Option(null, new OptionName("TestOption"), new OptionQuantity(10), product1);
+        Option option = new Option(null, "TestOption", 10, product1);
         optionRepository.save(option);
 
         option.assignProduct(product2);
@@ -64,10 +64,10 @@ class OptionTest {
     @Test
     void whenRemoveProduct_thenProductEmpty() {
         // given
-        Product product = new Product(null, new Name("TestProduct"), 100, "http://example.com/image.png", 1L, new ArrayList<>());
+        Product product = new Product(null, "TestProduct", 100, "http://example.com/image.png", 1L, new ArrayList<>());
         productRepository.save(product);
 
-        Option option = new Option(null, new OptionName("TestOption"), new OptionQuantity(10), product);
+        Option option = new Option(null,"TestOption",10, product);
         optionRepository.save(option);
 
         // when
@@ -89,37 +89,37 @@ class OptionTest {
 
     @Test
     void whenUpdateOption_thenOptionUpdatedCorrectly() {
-        Product product = new Product(null, new Name("TestProduct"), 100, "http://example.com/image.png", 1L, new ArrayList<>());
+        Product product = new Product(null, "TestProduct", 100, "http://example.com/image.png", 1L, new ArrayList<>());
         productRepository.save(product);
 
-        Option option = new Option(null, new OptionName("TestOption"), new OptionQuantity(10), product);
+        Option option = new Option(null, "TestOption", 10, product);
         optionRepository.save(option);
 
         OptionName updatedName = new OptionName("UpdatedOption");
         OptionQuantity updatedQuantity = new OptionQuantity(20);
-        option.update(updatedName, updatedQuantity);
+        option.update("updatedName", 20);
         optionRepository.save(option);
 
         Option updatedOption = optionRepository.findById(option.getId()).orElseThrow();
         assertAll(
-            () -> assertEquals("UpdatedOption", updatedOption.getName().getName()),
-            () -> assertEquals(20, updatedOption.getQuantity().getQuantity())
+            () -> assertEquals("UpdatedOption", updatedOption.getName()),
+            () -> assertEquals(20, updatedOption.getQuantity())
         );
     }
 
     @Test
     void whenDecreaseQuantity_thenQuantityDecreased() {
-        Product product = new Product(null, new Name("TestProduct"), 100, "http://example.com/image.png", 1L, new ArrayList<>());
+        Product product = new Product(null, "TestProduct", 100, "http://example.com/image.png", 1L, new ArrayList<>());
         productRepository.save(product);
 
-        Option option = new Option(null, new OptionName("TestOption"), new OptionQuantity(10), product);
+        Option option = new Option(null, "TestOption", 10, product);
         optionRepository.save(option);
 
         option.decreaseQuantity(5);
         optionRepository.save(option);
 
         Option updatedOption = optionRepository.findById(option.getId()).orElseThrow();
-        assertEquals(5, updatedOption.getQuantity().getQuantity());
+        assertEquals(5, updatedOption.getQuantity());
     }
 
 

@@ -126,7 +126,7 @@
   <thead>
   <tr>
     <th><a th:href="@{/wishlist(sortBy='product.id', direction=${direction == 'asc' ? 'desc' : 'asc'})}" class="sort-link">ID</a></th>
-    <th><a th:href="@{/wishlist(sortBy='product.name.name', direction=${direction == 'asc' ? 'desc' : 'asc'})}" class="sort-link">이름</a></th>
+    <th><a th:href="@{/wishlist(sortBy='product.name', direction=${direction == 'asc' ? 'desc' : 'asc'})}" class="sort-link">이름</a></th>
     <th><a th:href="@{/wishlist(sortBy='product.price', direction=${direction == 'asc' ? 'desc' : 'asc'})}" class="sort-link">가격</a></th>
     <th>URL</th>
     <th>액션</th>
@@ -138,7 +138,7 @@
   </tr>
   <tr th:each="item : ${wishList}">
     <td th:text="${item.product.id}"></td>
-    <td th:text="${item.product.name.name}"></td>
+    <td th:text="${item.product.name}"></td>
     <td th:text="${item.product.price}"></td>
     <td th:text="${item.product.imageUrl}"></td>
     <td>

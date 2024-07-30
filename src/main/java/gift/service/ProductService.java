@@ -45,7 +45,7 @@ public class ProductService {
         Product product = ProductConverter.convertToEntity(productDTO);
 
         // 기본 옵션 추가
-        Option defaultOption = new Option(null, new OptionName("기본 옵션"), new OptionQuantity(1), product);
+        Option defaultOption = new Option(null, "기본 옵션", 1, product);
         product.addOption(defaultOption);
 
         productRepository.save(product);
@@ -97,7 +97,7 @@ public class ProductService {
 
         // 기존 Product 객체 업데이트
         existingProduct.update(
-            NameConverter.convertToEntity(productDTO.getName()),
+            productDTO.getName(),
             productDTO.getPrice(),
             productDTO.getImageUrl(),
             productDTO.getCategoryId()
@@ -116,6 +116,6 @@ public class ProductService {
     public String getProductNameById(Long productId) {
         Product product = productRepository.findById(productId)
             .orElseThrow(() -> new IllegalArgumentException("상품을 찾을 수 없습니다."));
-        return product.getName().getName();
+        return product.getName();
     }
 }
