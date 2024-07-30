@@ -1,0 +1,177 @@
+@baseUrl = http://localhost:8080
+
+### 모든 상품 조회
+GET {{baseUrl}}/api/products?page=0&size=10
+
+### 상품 추가 (유효한 데이터)
+POST {{baseUrl}}/api/products
+Content-Type: application/json
+
+{
+  "name": "Product3",
+  "price": 100,
+  "imageUrl": "http://example.com/image.jpg",
+  "category": {
+    "name": "교환권"
+  },
+  "options": [
+    {
+      "name": "Option A",
+      "quantity": 100
+    },
+    {
+      "name": "Option B",
+      "quantity": 200
+    }
+  ]
+}
+
+### 상품 추가 (유효하지 않은 데이터)
+POST {{baseUrl}}/api/products
+Content-Type: application/json
+
+{
+  "name": "hello카카오",
+  "price": 100,
+  "imageUrl": "",
+  "category": {
+    "name": "패션"
+  }
+}
+
+### 특정 상품 조회
+GET {{baseUrl}}/api/products/1
+
+### 특정 상품 수정 (유효한 데이터)
+PUT {{baseUrl}}/api/products/1
+Content-Type: application/json
+
+{
+  "name": "Updated Product",
+  "price": 200,
+  "imageUrl": "http://example.com/updated.jpg",
+  "category": {
+    "name": "교환권"
+  },
+  "options": [
+    {
+      "name": "Updated Option A",
+      "quantity": 120
+    },
+    {
+      "name": "Updated Option B",
+      "quantity": 220
+    }
+  ]
+}
+
+### 특정 상품 삭제
+DELETE {{baseUrl}}/api/products/1
+
+### 회원가입
+POST {{baseUrl}}/members/register
+Content-Type: application/json
+
+{
+  "email": "seolbin@example.com",
+  "password": "password123"
+}
+
+### 로그인
+POST {{baseUrl}}/members/login
+Content-Type: application/json
+
+{
+  "email": "seolbin@example.com",
+  "password": "password123"
+}
+
+### 위시리스트에 상품 추가
+POST {{baseUrl}}/api/wishlist/1
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{}
+
+### 위시리스트 조회
+GET {{baseUrl}}/api/wishlist
+Authorization: Bearer {{token}}
+
+### 위시리스트에서 상품 삭제
+DELETE {{baseUrl}}/api/wishlist/2
+Authorization: Bearer {{token}}
+
+### 모든 카테고리 조회
+GET {{baseUrl}}/api/categories?page=0&size=10
+
+### 카테고리 추가
+POST {{baseUrl}}/api/categories
+Content-Type: application/json
+
+{
+  "name": "교환권",
+  "color": "#0000FF",
+  "imageUrl": "http://example.com/image.jpg",
+  "description": ""
+}
+
+### 카테고리 수정
+PUT {{baseUrl}}/api/categories/1
+Content-Type: application/json
+
+{
+  "name": "수정된 카테고리",
+  "color": "#FF0000",
+  "imageUrl": "http://example.com/image_updated.jpg",
+  "description": ""
+}
+
+### 상품 옵션 조회
+GET {{baseUrl}}/api/products/1/options
+
+### 상품 옵션 추가
+POST {{baseUrl}}/api/products/1/options
+Content-Type: application/json
+
+{
+  "name": "New Option",
+  "quantity": 150
+}
+
+### 특정 옵션 조회
+GET {{baseUrl}}/api/products/1/options/1
+
+### 특정 옵션 수정
+PUT {{baseUrl}}/api/products/1/options/1
+Content-Type: application/json
+
+{
+  "name": "Updated Option",
+  "quantity": 180
+}
+
+### 특정 옵션 삭제
+DELETE {{baseUrl}}/api/products/1/options/1
+
+### 주문 생성 요청
+@token =eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJzZW91bGJpbkBuYXZlci5jb20iLCJpYXQiOjE3MjIzMzMzMzIsImV4cCI6MTcyMjMzNjkzMn0.qORec5Vz3MqPd0kG9ZKEQ9EiCh_VZIrcTdgZ8ZyffJE
+POST http://localhost:8080/api/orders
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "optionId": 1,
+  "quantity": 2,
+  "message": "Please handle this order with care."
+}
+
+### 주문 생성 (유효하지 않은 데이터 - 옵션 수량 부족)
+POST {{baseUrl}}/api/orders
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "optionId": 1,
+  "quantity": 1000,
+  "message": ""
+}

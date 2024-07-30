@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Order Page</title>
+</head>
+<body>
+<h1>Order Page</h1>
+<form action="/api/orders" method="post">
+    <label for="optionId">Option ID:</label>
+    <input type="text" id="optionId" name="optionId">
+    <label for="quantity">Quantity:</label>
+    <input type="text" id="quantity" name="quantity">
+    <label for="message">Message:</label>
+    <input type="text" id="message" name="message">
+    <button type="submit">Submit Order</button>
+</form>
+</body>
+</html>
