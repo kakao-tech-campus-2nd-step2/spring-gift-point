@@ -1,6 +1,6 @@
 # spring-gift-point
 
-## 구현사항 
+## To - Do 
 - [ ] 카카오 로그인 API 수정   
 - [ ] 카테고리 API 수정
 - [ ] 상품 API 수정
