@@ -57,7 +57,7 @@ public class WishService {
             throw new WishException(ErrorCode.EXIST_WISH);
         }
 
-        Wish wish = wishRepository.save(request.toEntity(user, product, request.count()));
+        Wish wish = wishRepository.save(request.toEntity(user, product));
         return wish.getId();
     }
 
@@ -75,7 +75,7 @@ public class WishService {
             throw new WishException(ErrorCode.WISH_NOT_FOUND);
         }
 
-        wish.updateWish(request.count());
+        //wish.updateWish(request.count());
     }
 
     @Transactional

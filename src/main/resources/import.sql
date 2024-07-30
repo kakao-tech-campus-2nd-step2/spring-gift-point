@@ -12,10 +12,10 @@ insert into product(name, price, image_url, category_id) values ('product6', 300
 
 insert into users(password, email, social_Type) values ('yso3865', 'yso829612@gmail.com', 'DEFAULT')
 
-insert into wish(user_id, product_id, count) values(1, 1, 3)
-insert into wish(user_id, product_id, count) values(1, 2, 3)
-insert into wish(user_id, product_id, count) values(1, 3, 3)
-insert into wish(user_id, product_id, count) values(1, 4, 3)
+insert into wish(user_id, product_id) values(1, 1)
+insert into wish(user_id, product_id) values(1, 2)
+insert into wish(user_id, product_id) values(1, 3)
+insert into wish(user_id, product_id) values(1, 4)
 
 insert into options(name, quantity, product_id) values('option1', 100, 1)
 insert into options(name, quantity, product_id) values('option2', 100, 2)
