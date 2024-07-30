@@ -3,7 +3,11 @@ package gift.service;
 import gift.config.KakaoProperties;
 import gift.model.Member;
 import gift.repository.MemberRepository;
-import org.springframework.http.*;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.MediaType;
+import org.springframework.http.RequestEntity;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.web.client.RestTemplate;
@@ -69,7 +73,7 @@ public class KakaoLoginService {
             return "회원가입 및 로그인 되었습니다.";
         }
         Member existingMember = memberRepository.findByEmail(email)
-                .orElseThrow(() -> new RuntimeException(email+ " : 이메일을 찾을 수 없습니다."));
+                .orElseThrow(() -> new RuntimeException(email + " : 이메일을 찾을 수 없습니다."));
         Member updatedMember = new Member(existingMember, accessToken);
         memberRepository.save(updatedMember);
         return "로그인 되었습니다";
