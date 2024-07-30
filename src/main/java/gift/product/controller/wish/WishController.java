@@ -43,7 +43,7 @@ public class WishController {
     public ResponseEntity<Page<Wish>> getWishAll(
         @RequestParam(name = "page", defaultValue = "0") int page,
         @RequestParam(name = "size", defaultValue = "5") int size,
-        @RequestParam(name = "sort", defaultValue = "id,asc") String sortParam) {
+        @RequestParam(name = "sort", defaultValue = "createdDate,asc") String sortParam) {
 
         String[] sortParamSplited = sortParam.split(",");
         String sort = sortParamSplited[0];
@@ -84,8 +84,8 @@ public class WishController {
         @ApiResponse(responseCode = "200", description = "성공"),
         @ApiResponse(responseCode = "404", description = "존재하지 않는 리소스", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProblemDetailResponse.class)))
     })
-    @DeleteMapping("/{wishId}")
-    public ResponseEntity<Void> deleteWish(@PathVariable(name = "wishId") Long wishId,
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteWish(@PathVariable(name = "id") Long wishId,
         HttpServletRequest request) {
         LoginMemberIdDto loginMemberIdDto = getLoginMember(request);
         wishService.deleteWish(wishId, loginMemberIdDto);

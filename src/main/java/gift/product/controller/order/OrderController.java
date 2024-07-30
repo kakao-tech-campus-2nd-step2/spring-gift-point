@@ -5,7 +5,6 @@ import gift.product.dto.auth.LoginMemberIdDto;
 import gift.product.dto.order.OrderDto;
 import gift.product.model.Order;
 import gift.product.service.OrderService;
-import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -13,6 +12,10 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import java.util.List;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -21,6 +24,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @Tag(name = "order", description = "주문 실행 및 주문 내역 관련 API")
@@ -36,11 +40,19 @@ public class OrderController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Order>> getOrderAll(HttpServletRequest request) {
-        LoginMemberIdDto loginMemberIdDto = getLoginMember(request);
-        List<Order> orderAll = orderService.getOrderAll(loginMemberIdDto);
+    public ResponseEntity<Page<Order>> getOrderAll(
+        @RequestParam(name = "page", defaultValue = "0") int page,
+        @RequestParam(name = "size", defaultValue = "5") int size,
+        @RequestParam(name = "sort", defaultValue = "orderDateTime,asc") String sortParam,
+        HttpServletRequest request) {
+        String[] sortParamSplited = sortParam.split(",");
+        String sort = sortParamSplited[0];
+        String direction = (sortParamSplited.length > 1) ? sortParamSplited[1] : "asc";
 
-        return ResponseEntity.ok(orderAll);
+        Pageable pageable = PageRequest.of(page, size, Sort.Direction.fromString(direction), sort);
+        LoginMemberIdDto loginMemberIdDto = getLoginMember(request);
+
+        return ResponseEntity.ok(orderService.getOrderAll(pageable, loginMemberIdDto));
     }
 
     @ApiResponses(value = {
@@ -63,7 +75,7 @@ public class OrderController {
     })
     @PostMapping
     public ResponseEntity<Order> doOrder(@RequestBody OrderDto orderDto,
-        @Parameter(description = "엑세스 토큰", example = "Bearer {access_token}") HttpServletRequest request) {
+        HttpServletRequest request) {
         LoginMemberIdDto loginMemberIdDto = getLoginMember(request);
         Order order = orderService.doOrder(orderDto, loginMemberIdDto, KAKAO_SEND_MESSAGE_ME_URL);
 
@@ -74,7 +86,7 @@ public class OrderController {
         @ApiResponse(responseCode = "200", description = "성공"),
         @ApiResponse(responseCode = "404", description = "존재하지 않는 리소스", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProblemDetailResponse.class))),
     })
-    @DeleteMapping("/delete/{id}")
+    @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteOrder(@PathVariable(name = "id") Long id,
         HttpServletRequest request) {
         LoginMemberIdDto loginMemberIdDto = getLoginMember(request);

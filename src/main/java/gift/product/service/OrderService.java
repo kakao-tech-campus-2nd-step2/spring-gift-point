@@ -18,6 +18,8 @@ import gift.product.repository.WishRepository;
 import java.net.URI;
 import java.util.List;
 import java.util.NoSuchElementException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -48,8 +50,8 @@ public class OrderService {
         this.kakaoTokenRepository = kakaoTokenRepository;
     }
 
-    public List<Order> getOrderAll(LoginMemberIdDto loginMemberIdDto) {
-        return orderRepository.findAllByMemberId(loginMemberIdDto.id());
+    public Page<Order> getOrderAll(Pageable pageable, LoginMemberIdDto loginMemberIdDto) {
+        return orderRepository.findAllByMemberId(pageable, loginMemberIdDto.id());
     }
 
     public Order getOrder(Long id, LoginMemberIdDto loginMemberIdDto) {

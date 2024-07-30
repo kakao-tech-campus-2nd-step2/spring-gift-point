@@ -35,6 +35,9 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 
 @ExtendWith(MockitoExtension.class)
 @DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
@@ -83,13 +86,18 @@ class OrderServiceTest {
     @Test
     void 주문_전체_조회() {
         //given
+        int PAGE = 1;
+        int SIZE = 4;
+        String SORT = "orderDateTime";
+        String DIRECTION = "desc";
+        Pageable pageable = PageRequest.of(PAGE, SIZE, Sort.Direction.fromString(DIRECTION), SORT);
         LoginMemberIdDto loginMemberIdDto = new LoginMemberIdDto(1L);
 
         //when
-        orderService.getOrderAll(loginMemberIdDto);
+        orderService.getOrderAll(pageable, loginMemberIdDto);
 
         //then
-        then(orderRepository).should().findAllByMemberId(loginMemberIdDto.id());
+        then(orderRepository).should().findAllByMemberId(pageable, loginMemberIdDto.id());
     }
 
     @Test
