@@ -10,9 +10,11 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 @Tag(name = "member", description = "유저 관련 API")
 @Controller
+@RequestMapping("/api/members")
 public class MemberController {
 
     private final MemberService memberService;
@@ -24,14 +26,14 @@ public class MemberController {
     }
 
     @Operation(summary = "회원가입 페이지", description = "작동하지 않습니다.")
-    @GetMapping("/signup")
+    @GetMapping("/page")
     public String signup(Model model){
         model.addAttribute("newSiteUser", new Member());
         return "signup";
     }
 
     @Operation(summary = "회원가입", description = "회원가입 합니다.")
-    @PostMapping("/signup")
+    @PostMapping("/register")
     public ResponseEntity<LoginResponse> createUser(@RequestBody Member newMember){
         memberService.createMember(newMember.getUsername(), newMember.getEmail(), newMember.getPassword());
         return ResponseEntity.status(HttpStatus.CREATED).body(new LoginResponse(""));
