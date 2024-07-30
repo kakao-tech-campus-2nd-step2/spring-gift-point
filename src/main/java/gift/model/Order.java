@@ -23,19 +23,25 @@ public class Order extends BaseEntity{
     @NotNull
     private Option option;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "product_id")
+    @NotNull
+    private Product product;
+
     @NotNull
     private int quantity;
 
     @NotNull
-    private String message;
+    private Long userId;
 
     protected Order() {
     }
 
-    public Order(Option option, int quantity, String message) {
+    public Order(Option option, Product product, int quantity, Long userId) {
         this.option = option;
+        this.product = product;
         this.quantity = quantity;
-        this.message = message;
+        this.userId = userId;
     }
 
     public Long getId() {
@@ -50,7 +56,11 @@ public class Order extends BaseEntity{
         return quantity;
     }
 
-    public String getMessage() {
-        return message;
+    public Product getProduct() {
+        return product;
+    }
+
+    public Long getUserId() {
+        return userId;
     }
 }
