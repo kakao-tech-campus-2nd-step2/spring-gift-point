@@ -17,6 +17,7 @@ import java.util.Optional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 
 @Service
@@ -73,7 +74,9 @@ public class ProductService {
         optionService.saveAll(productDTO.getOptionDTOList());
     }
 
+    @Transactional
     public ProductDTO updateProduct(Long id, @Valid ProductDTO productDTO) {
+        System.out.println("update");
         Category category = categoryRepository.findById(productDTO.getCategoryId())
             .orElseThrow(() -> new EntityNotFoundException("Category id " + productDTO.getCategoryId() + "가 없습니다."));
 
@@ -85,6 +88,8 @@ public class ProductService {
         product.setImageUrl(productDTO.getImageUrl());
         product.setCategory(category);
 
+        productDTO.getOptionDTOList().forEach(optionDTO -> optionDTO.setProductId(id));
+
         List<Option> optionList = productDTO.getOptionDTOList().stream()
             .map(optionService::convertToEntity)
             .peek(option -> option.setProduct(product))
@@ -92,8 +97,8 @@ public class ProductService {
 
         product.getOptionList().clear();
         product.getOptionList().addAll(optionList);
-
-        return convertToDTO(productRepository.save(product));
+        productRepository.save(product);
+        return convertToDTO(product);
     }
 
     public void deleteProduct(Long id) {
