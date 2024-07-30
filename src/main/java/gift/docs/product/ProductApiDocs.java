@@ -2,7 +2,7 @@ package gift.docs.product;
 
 import gift.product.presentation.dto.OptionRequest;
 import gift.product.presentation.dto.ProductRequest;
-import gift.product.presentation.dto.ProductResponse;
+import gift.product.presentation.dto.ProductResponse.Paging;
 import gift.product.presentation.dto.ProductResponse.WithOptions;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -18,7 +18,7 @@ public interface ProductApiDocs {
     public ResponseEntity<WithOptions> getProduct(Long id);
 
     @Operation(summary = "상품 목록 페이지로 조회")
-    public ResponseEntity<ProductResponse.PagingInfo> getProductsByPage(
+    public ResponseEntity<Paging> getProductsByPage(
         Pageable pageable,
         @Parameter(hidden = true) Integer size,
         Long categoryId

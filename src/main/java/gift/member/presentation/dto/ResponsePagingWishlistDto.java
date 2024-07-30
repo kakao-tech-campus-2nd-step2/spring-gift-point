@@ -5,7 +5,7 @@ import java.util.List;
 
 public record ResponsePagingWishlistDto(
     boolean hasNext,
-    List<ResponseWishListDto> wishlistList) {
+    List<ResponseWishListDto> wishes) {
 
     public static ResponsePagingWishlistDto from(WishlistPagingDto wishListPagingDto) {
         return new ResponsePagingWishlistDto(

@@ -5,6 +5,7 @@ import gift.product.presentation.dto.OptionRequest;
 import gift.product.presentation.dto.ProductRequest;
 import gift.product.presentation.dto.ProductResponse;
 import gift.product.business.service.ProductService;
+import gift.product.presentation.dto.ProductResponse.Paging;
 import jakarta.validation.Valid;
 import java.util.List;
 import org.springframework.data.domain.PageRequest;
@@ -33,7 +34,7 @@ public class ProductController implements ProductApiDocs {
     }
 
     @GetMapping
-    public ResponseEntity<ProductResponse.PagingInfo> getProductsByPage(
+    public ResponseEntity<Paging> getProductsByPage(
         @PageableDefault(size = 20, sort = "name", direction = Direction.ASC) Pageable pageable,
         @RequestParam(name = "size", required = false) Integer size,
         @RequestParam("categoryId") Long categoryId
@@ -45,7 +46,7 @@ public class ProductController implements ProductApiDocs {
             pageable = PageRequest.of(pageable.getPageNumber(), size, pageable.getSort());
         }
         var productOutPaging = productService.getProductsByPage(pageable, categoryId);
-        var productResponsePagingInfo = ProductResponse.PagingInfo.from(productOutPaging);
+        var productResponsePagingInfo = Paging.from(productOutPaging);
         return ResponseEntity.ok(productResponsePagingInfo);
     }
 

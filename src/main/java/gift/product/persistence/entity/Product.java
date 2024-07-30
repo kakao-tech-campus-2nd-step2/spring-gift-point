@@ -151,4 +151,11 @@ public class Product extends BaseTimeEntity {
             .orElseThrow(() -> new IllegalArgumentException("Option not found"));
         option.update(name, quantity);
     }
+
+    public Option getOptionByOptionId(Long optionId) {
+        return options.stream()
+            .filter(option -> option.getId().equals(optionId))
+            .findFirst()
+            .orElseThrow(() -> new IllegalArgumentException("Option not found"));
+    }
 }
