@@ -32,13 +32,12 @@ public class PaymentService {
             throw new ProductException(ErrorCode.NOT_USER_OWNED);
         }
 
-        for (WishListProduct product : wishList.getWishListProducts()) {
-            Product wishListProduct = product.getProduct();
-            ProductOption productOption = productRepository.getProductWithOption(wishListProduct.getId(), product.getId());
-            productOption.decreaseQuantity(product.getQuantity());
+        WishListProduct product = wishList.getWishListProduct();
+        Product wishListProduct = product.getProduct();
+        ProductOption productOption = productRepository.getProductWithOption(wishListProduct.getId(), product.getId());
+        productOption.decreaseQuantity(product.getQuantity());
 
-            productRepository.save(wishListProduct);
-        }
+        productRepository.save(wishListProduct);
         wishListRepository.delete(wishList);
     }
 }

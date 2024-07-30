@@ -64,7 +64,7 @@ public class ProductService {
         }
     }
 
-    private void validatePrice(Double price) {
+    private void validatePrice(Long price) {
         if (price == null) {
             throw new ProductException(ErrorCode.INVALID_PRICE);
         }

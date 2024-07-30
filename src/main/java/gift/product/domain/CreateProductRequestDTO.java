@@ -12,7 +12,7 @@ public class CreateProductRequestDTO {
     private String name;
 
     @NotNull(message = "가격은 필수 입력 값입니다.")
-    private Double price;
+    private Long price;
 
     @Size(max = MAX_INPUT_LENGTH, message = "이미지 URL은 255자를 넘을 수 없습니다.")
     private String imageUrl;
@@ -25,7 +25,7 @@ public class CreateProductRequestDTO {
         return name;
     }
 
-    public Double getPrice() {
+    public Long getPrice() {
         return price;
     }
 
