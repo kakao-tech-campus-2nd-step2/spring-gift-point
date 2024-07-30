@@ -2,6 +2,7 @@ package gift.service;
 
 import gift.DTO.Product.ProductRequest;
 import gift.DTO.Product.ProductResponse;
+import gift.TestUtil;
 import gift.domain.Category;
 import gift.domain.Option;
 import gift.domain.Product;
@@ -71,6 +72,7 @@ public class ProductServiceTest {
         List<Product> products = new ArrayList<>();
         for (int i = 1; i <= 5; i++) {
             Category category = new Category("물품");
+            TestUtil.setId(category, 1L);
             Product product = new Product("product" + i, 4500, "url" + i, category);
             Option option = new Option("[0] 기본", 100L);
             product.addOption(option);
@@ -87,7 +89,7 @@ public class ProductServiceTest {
         Page<Product> page = new PageImpl<>(subList, pageable, products.size());
         given(productRepository.findAll(pageable)).willAnswer(invocation -> page);
         // when
-        Page<ProductResponse> pageResult = productService.readAllProductASC(0, 5, "name");
+        Page<ProductResponse> pageResult = productService.readAllProductASC(0, 5, "name", 1L);
         // then
         Assertions.assertThat(pageResult).isNotNull();
         Assertions.assertThat(pageResult.get().count()).isEqualTo(5);
@@ -105,6 +107,7 @@ public class ProductServiceTest {
         List<Product> products = new ArrayList<>();
         for (int i = 1; i <= 5; i++) {
             Category category = new Category("물품");
+            TestUtil.setId(category, 1L);
             Product product = new Product("product" + i, 4500, "url" + i, category);
             Option option = new Option("[0] 기본", 100L);
             product.addOption(option);
@@ -121,7 +124,7 @@ public class ProductServiceTest {
         Page<Product> page = new PageImpl<>(subList, pageable, products.size());
         given(productRepository.findAll(pageable)).willAnswer(invocation -> page);
         // when
-        Page<ProductResponse> pageResult = productService.readAllProductDESC(0, 5, "name");
+        Page<ProductResponse> pageResult = productService.readAllProductDESC(0, 5, "name", 1L);
         // then
         Assertions.assertThat(pageResult).isNotNull();
         Assertions.assertThat(pageResult.get().count()).isEqualTo(5);

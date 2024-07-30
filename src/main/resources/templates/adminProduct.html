@@ -76,16 +76,24 @@
 </table>
 <div>
     <button id="prevPage">Previous</button>
+
     <label for="p_sort"></label>
     <select name="p_sort" id="p_sort">
         <option value="asc">오름차순</option>
         <option value="desc">내림차순</option>
     </select>
+
     <label for="p_field"></label>
     <select name="p_field" id="p_field">
         <option value="id">id</option>
         <option value="name">name</option>
     </select>
+
+    <label for="categoryId"></label>
+    <select name="categoryId" id="categoryId">
+
+    </select>
+
     <button id="search" onclick="getProducts(currentPage)">검색</button>
     <button id="nextPage">Next</button>
 </div>
@@ -101,6 +109,7 @@
             success: function(data) {
                 var select = $('#category');
                 var p_select = $('#p_category');
+                var categoryId = $('#categoryId');
 
                 // 데이터에 따라 테이블 행을 생성
                 data.forEach(function(category) {
@@ -108,8 +117,12 @@
                     var row = `
                         <option value="${category.name}">${category.name}</option>
                     `;
+                    var p_row = `
+                        <option value="${category.id}">${category.name}</option>
+                    `;
                     select.append(row);
                     p_select.append(row);
+                    categoryId.append(p_row);
                 });
             },
             error: function(err) {
@@ -132,6 +145,7 @@
                 page : page,
                 size : pageSize,
                 sort : [$('#p_field').val(), $('#p_sort').val()],
+                categoryId : $('#categoryId').val()
             },
             success: function(data) {
                 var contents = data.content;

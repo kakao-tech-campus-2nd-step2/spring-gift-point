@@ -33,14 +33,15 @@ public class ProductController {
     public ResponseEntity<Page<ProductResponse>> readAllProduct(
             @RequestParam(value = "page", defaultValue = "0") int page,
             @RequestParam(value = "size", defaultValue = "5") int size,
-            @RequestParam(value = "sort") List<String> sort
+            @RequestParam(value = "sort") List<String> sort,
+            @RequestParam(value = "categoryId", defaultValue = "1") Long categoryId
             ) {
         if(sort.getLast().equals("asc")) {
-            Page<ProductResponse> products = productService.readAllProductASC(page, size, sort.getFirst());
+            Page<ProductResponse> products = productService.readAllProductASC(page, size, sort.getFirst(), categoryId);
             return new ResponseEntity<>(products, HttpStatus.OK);
         }
 
-        Page<ProductResponse> products = productService.readAllProductDESC(page, size, sort.getFirst());
+        Page<ProductResponse> products = productService.readAllProductDESC(page, size, sort.getFirst(), categoryId);
         return new ResponseEntity<>(products, HttpStatus.OK);
     }
     /*
