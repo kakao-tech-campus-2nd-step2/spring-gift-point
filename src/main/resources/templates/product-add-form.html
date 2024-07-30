@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Product Form</title>
+</head>
+<body>
+<h1>Product Form</h1>
+<form th:action="@{/api/products}" th:object="${product}" method="post">
+    <div>
+        <label>Name:</label>
+        <input type="text" th:field="*{name}" />
+    </div>
+    <div>
+        <label>Price:</label>
+        <input type="number" th:field="*{price}" />
+    </div>
+    <div>
+        <label>Image URL:</label>
+        <input type="text" th:field="*{imageUrl}" />
+    </div>
+    <div>
+        <label>Category:</label>
+        <select th:field="*{categoryName}">
+            <option th:each="category : ${categories}" th:value="${category.name}" th:text="${category.name}"></option>
+        </select>
+    </div>
+    <div>
+        <h3>Option</h3>
+        <div>
+            <label>Option Name:</label>
+            <input type="text" th:field="*{option.name}" placeholder="Option Name" />
+        </div>
+        <div>
+            <label>Option Quantity:</label>
+            <input type="number" th:field="*{option.quantity}" placeholder="Quantity" />
+        </div>
+    </div>
+    <div>
+        <button type="submit">Save</button>
+    </div>
+</form>
+
+<a href="/api/products">Back to Product List</a>
+
+</body>
+</html>

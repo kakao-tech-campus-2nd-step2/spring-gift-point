@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Add to Wishlist</title>
+</head>
+<body>
+<h1>Add to Wishlist</h1>
+<form onsubmit="event.preventDefault(); submitForm();">
+    <div>
+        <label for="productId">Product ID:</label>
+        <input type="number" id="productId" required/>
+    </div>
+    <button type="submit">Add to Wishlist</button>
+</form>
+
+<script>
+    function submitForm() {
+        const productId = document.getElementById("productId").value;
+        const token = [[${token}]];
+
+        if (!token) {
+            alert("Authorization token is missing");
+            return;
+        }
+
+        const data = {
+            productId: productId
+        };
+
+        fetch('/wishlist', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + token
+            },
+            body: JSON.stringify(data)
+        })
+            .then(response => {
+                if (response.ok) {
+                    window.location.href = '/wishlist';
+                } else {
+                    alert('Failed to add to wishlist');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Error adding to wishlist');
+            });
+    }
+</script>
+</body>
+</html>
