@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>로그인 성공</title>
+  <script>
+    function saveToken() {
+      const token = document.getElementById("token").innerText;
+      localStorage.setItem("jwtToken", token);
+    }
+
+    window.onload = saveToken;
+  </script>
+</head>
+<body>
+<h1>로그인 성공</h1>
+<p>로그인이 성공적으로 완료되었습니다.</p>
+<p id="token" th:text="${token}" style="display: none"></p>
+<a href="/admin/products">상품 목록으로 이동</a>
+</body>
+</html>

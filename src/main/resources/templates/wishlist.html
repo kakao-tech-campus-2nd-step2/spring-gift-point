@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>위시리스트</title>
+  <script>
+    function removeFromWishlist(productId) {
+      const token = localStorage.getItem("authToken");
+      if (token) {
+        fetch(`/wishlist/${productId}`, {
+          method: 'DELETE',
+          headers: {
+            'Authorization': 'Bearer ' + token,
+            'Content-Type': 'application/json'
+          }
+        })
+        .then(response => {
+          if (response.ok) {
+            alert("위시리스트에서 삭제되었습니다.");
+            location.reload();
+          } else {
+            alert("위시리스트에서 삭제할 수 없습니다. 다시 시도해주세요.");
+          }
+        })
+        .catch(error => {
+          console.error('Error:', error);
+          alert("위시리스트에서 삭제할 수 없습니다. 다시 시도해주세요.");
+        });
+      } else {
+        alert("로그인이 필요합니다.");
+      }
+    }
+
+    function addTokenToLinks() {
+      const token = localStorage.getItem("authToken");
+      if (token) {
+        document.querySelectorAll('.pagination-link').forEach(link => {
+          link.addEventListener('click', function (event) {
+            event.preventDefault();
+            fetch(this.href, {
+              method: 'GET',
+              headers: {
+                'Authorization': 'Bearer ' + token
+              }
+            })
+            .then(response => response.text())
+            .then(html => {
+              document.open();
+              document.write(html);
+              document.close();
+            })
+            .catch(error => {
+              console.error('Error:', error);
+              alert("페이지를 불러올 수 없습니다. 다시 시도해주세요.");
+            });
+          });
+        });
+      }
+    }
+
+    window.onload = addTokenToLinks;
+  </script>
+</head>
+<body>
+<h1>위시리스트</h1>
+<table>
+  <thead>
+  <tr>
+    <th>ID</th>
+    <th>상품 이름</th>
+    <th>가격</th>
+    <th>카테고리</th>
+    <th>Image URL</th>
+    <th>삭제</th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr th:each="wishlistItem : ${wishlist}">
+    <td th:text="${wishlistItem.id}">id</td>
+    <td th:text="${wishlistItem.name}">name</td>
+    <td th:text="${wishlistItem.price}">price</td>
+    <td th:text="${wishlistItem.getCategory().getName()}">category</td>
+    <td><a th:href="${wishlistItem.imageUrl}" th:text="${wishlistItem.imageUrl}">imageurl</a></td>
+    <td>
+      <button th:attr="onclick='removeFromWishlist(' + ${wishlistItem.id} + ')'">삭제</button>
+    </td>
+  </tr>
+  </tbody>
+</table>
+<div>
+  <ul>
+    <li th:each="pageNum : ${#numbers.sequence(0, wishlist.totalPages - 1)}">
+      <a th:if="${pageNum != wishlist.number}" th:href="@{/wishlist(page=${pageNum})}"
+         th:text="${pageNum + 1}" class="pagination-link">1</a>
+      <span th:if="${pageNum == wishlist.number}" th:text="${pageNum + 1}">1</span>
+    </li>
+  </ul>
+</div>
+<form th:action="@{/admin/products}" method="get">
+  <button type="submint">상품 목록으로 이동</button>
+</form>
+</body>
+</html>

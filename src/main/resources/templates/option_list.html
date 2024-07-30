@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>옵션 목록</title>
+</head>
+<body>
+<h1>옵션 목록</h1>
+<h2 th:text="${product.name}">상품 이름</h2>
+<form th:action="@{/admin/products/{productId}/options/new(productId=${product.id})}" method="get">
+  <button type="submit">옵션 추가</button>
+</form>
+<div th:if="${deleteError}" style="color:red;">
+  <p th:text="${deleteError}">삭제 에러 메시지</p>
+</div>
+<table>
+  <thead>
+  <tr>
+    <th>옵션 ID</th>
+    <th>옵션 이름</th>
+    <th>수량</th>
+    <th>수정</th>
+    <th>삭제</th>
+    <th>주문하기</th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr th:each="option : ${options}">
+    <td th:text="${option.id}">옵션 ID</td>
+    <td th:text="${option.name}">옵션 이름</td>
+    <td th:text="${option.quantity}">수량</td>
+    <td>
+      <form
+          th:action="@{/admin/products/{productId}/options/{optionId}(productId=${product.id}, optionId=${option.id})}"
+          metho="get">
+        <button type="submit">수정</button>
+      </form>
+    </td>
+    <td>
+      <form
+          th:action="@{/admin/products/{productId}/options/{optionId}(productId=${product.id}, optionId=${option.id})}"
+          method="post">
+        <input type="hidden" name="_method" value="delete"/>
+        <button type="submit">삭제</button>
+      </form>
+    </td>
+    <td>
+      <form
+          th:action="@{/orders/{optionId}(optionId=${option.id})}" method="get">
+        <button type="submit">주문하기</button>
+      </form>
+    </td>
+  </tr>
+  </tbody>
+</table>
+<form th:action="@{/admin/products}" method="get">
+  <button type="submint">상품 목록으로 이동</button>
+</form>
+</body>
+</html>

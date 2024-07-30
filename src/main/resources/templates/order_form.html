@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>주문하기</title>
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      const orderForm = document.getElementById("orderForm");
+
+      orderForm.addEventListener("submit", function (event) {
+        event.preventDefault();
+
+        const optionIdElement = document.getElementById("optionId");
+        const quantityElement = document.getElementById("quantity");
+        const messageElement = document.getElementById("message");
+
+        if (!optionIdElement || !quantityElement || !messageElement) {
+          console.error("폼 요소를 찾을 수 없습니다.");
+          return;
+        }
+
+        const optionId = document.getElementById("optionId").value;
+        const quantity = document.getElementById("quantity").value;
+        const message = document.getElementById("message").value;
+        const accessToken = localStorage.getItem("accessToken");
+        const jwtToken = localStorage.getItem("jwtToken");
+
+        const orderRequestDTO = {
+          optionId: optionId,
+          quantity: quantity,
+          message: message,
+          accessToken: accessToken
+        };
+
+        fetch(orderForm.action, {
+          method: 'POST',
+          headers: {
+            'Authorization': 'Bearer ' + jwtToken,
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(orderRequestDTO)
+        })
+        .then(response => {
+          if (response.ok) {
+            window.location.href = "/admin/products"
+          } else {
+            console.error("주문 실패");
+          }
+        })
+        .catch(error => {
+          console.error("에러 발생:", error);
+        });
+      });
+    });
+  </script>
+</head>
+<body>
+<h1>주문하기</h1>
+<form id="orderForm" th:action="@{/orders/{optionId}(optionId=${orderRequestDTO.optionId})}"
+      th:object="${orderRequestDTO}" method="post">
+  <div>
+    <label for="quantity">수량:</label>
+    <input type="number" id="quantity" th:field="*{quantity}" name="quantity"/>
+    <div th:if="${#fields.hasErrors('quantity')}" th:errors="*{quantity}" style="color:red;"></div>
+  </div>
+  <div>
+    <label for="message">메시지:</label>
+    <input type="text" id="message" th:field="*{message}" name="message"/>
+    <div th:if="${#fields.hasErrors('message')}" th:errors="*{message}" style="color:red;"></div>
+  </div>
+  <input type="hidden" id="optionId" name="optionId" th:value="${orderRequestDTO.optionId}"/>
+  <div>
+    <button type="submit">주문</button>
+  </div>
+</form>
+</body>
+</html>

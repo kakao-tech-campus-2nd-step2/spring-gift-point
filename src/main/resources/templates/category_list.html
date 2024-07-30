@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>카테고리 목록</title>
+  <script>
+    function checkAuth() {
+      const token = localStorage.getItem("authToken");
+      if (token) {
+        document.querySelectorAll('.auth-required').forEach(element => {
+          element.style.display = 'inline';
+        });
+      }
+    }
+
+    window.onload = function () {
+      checkAuth();
+    };
+  </script>
+</head>
+<body>
+<h1>카테고리 목록</h1>
+<form th:action="@{/admin/categories/new}" method="get" style="display:none;" class="auth-required">
+  <button type="submit">카테고리 추가</button>
+</form>
+<table>
+  <thead>
+  <tr>
+    <th>ID</th>
+    <th>카테고리 이름</th>
+    <th class="auth-required"> 수정 및 삭제</th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr th:each="category : ${categories}">
+    <td th:text="${category.id}">id</td>
+    <td th:text="${category.name}">name</td>
+    <td>
+      <form th:action="@{/admin/categories/{id}(id=${category.id})}" method="get"
+            style="display:none;" class="auth-required">
+        <button type="submit">수정</button>
+      </form>
+      <form th:action="@{/admin/categories/{id}(id=${category.id})}" method="post"
+            style="display:none;" class="auth-required">
+        <input type="hidden" name="_method" value="delete"/>
+        <button type="submit">삭제</button>
+      </form>
+    </td>
+  </tr>
+  </tbody>
+</table>
+<form th:action="@{/admin/products}" method="get">
+  <button type="submint">상품 목록으로 이동</button>
+</form>
+</body>
+</html>
