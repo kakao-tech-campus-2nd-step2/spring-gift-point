@@ -36,7 +36,7 @@ public class AuthFilter implements Filter {
         String path = httpRequest.getRequestURI();
 
         // Filter 를 통과하지 않아도 되는 url
-        if (path.equals("/api/user/login") || path.equals("/api/user/register") || path.startsWith("/user")
+        if (path.equals("/api/members/login") || path.equals("/api/members/register") || path.startsWith("/api/members")
             || path.startsWith("/h2-console") || path.equals("/api/oauth/authorize")
             || path.equals("/api/oauth/token")
             || path.equals("/swagger-ui.html") // 변경
