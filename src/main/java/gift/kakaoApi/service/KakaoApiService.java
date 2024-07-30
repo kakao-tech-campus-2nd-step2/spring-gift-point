@@ -82,7 +82,7 @@ public class KakaoApiService {
             });
     }
 
-    public String createOrderMessage(Orders order) {
+    private String createOrderMessage(Orders order) {
         String messageTemplate = "[주문 내역]\n"
             + "\n[상품]\n"
             + "  상품명: %s\n"
