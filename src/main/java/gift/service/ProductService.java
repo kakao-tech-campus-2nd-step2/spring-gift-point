@@ -37,7 +37,8 @@ public class ProductService {
         Page<ResponseProductDTO> page = productRepository.findByCategoryId(pageable, categoryId);
         return pageToResponse(page);
     }
-    private ProductPageDTO pageToResponse(Page<ResponseProductDTO> page){
+
+    private ProductPageDTO pageToResponse(Page<ResponseProductDTO> page) {
         return new ProductPageDTO(
                 page.getContent(),
                 page.getPageable().getPageNumber(),
@@ -88,7 +89,9 @@ public class ProductService {
     @Transactional
     public ResponseProductDTO updateProduct(int id, SaveProductDTO saveProductDTO) {
         Product product = productRepository.findById(id).orElseThrow(() -> new NotFoundException("물건이 없습니다."));
-        productRepository.findByNameAndCategory(saveProductDTO.name(),product.getCategory().getId()).ifPresent(c-> {throw new BadRequestException("해당 카테고리에 같은 이름의 물품이 존재");});
+        productRepository.findByNameAndCategory(saveProductDTO.name(), product.getCategory().getId()).ifPresent(c -> {
+            throw new BadRequestException("해당 카테고리에 같은 이름의 물품이 존재");
+        });
         product.getCategory().deleteProduct(product);
         product = product.modifyProduct(saveProductDTO);
         product.getCategory().addProduct(product);

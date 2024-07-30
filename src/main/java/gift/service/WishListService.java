@@ -51,7 +51,7 @@ public class WishListService {
 
     public WishPageDTO getWishList(String token, Pageable pageable) {
         User user = getUserFromToken(token);
-        Page<WishList> wishListPage =  wishListRepository.findAllByUserId(user.getId(), pageable);
+        Page<WishList> wishListPage = wishListRepository.findAllByUserId(user.getId(), pageable);
 
         List<ResponseWishDTO> responseWishDTOs = wishListPage.getContent().stream()
                 .map(wishList -> new ResponseWishDTO(
@@ -72,7 +72,7 @@ public class WishListService {
     public ResponseWishDTO deleteWishList(String token, int wishId) {
         User user = getUserFromToken(token);
         WishList wishlist = wishListRepository.findById(wishId).orElseThrow(() -> new NotFoundException("존재하지 않는 위시리스트."));
-        if(wishlist.getUser().getId() != user.getId())throw new UnAuthException("해당 위시리스트를 삭제할 권한이 없습니다.");
+        if (wishlist.getUser().getId() != user.getId()) throw new UnAuthException("해당 위시리스트를 삭제할 권한이 없습니다.");
 
         user.deleteWishlist(wishlist);
         wishListRepository.deleteById(wishlist.getId());
