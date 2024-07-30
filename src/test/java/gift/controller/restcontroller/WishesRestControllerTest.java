@@ -2,7 +2,6 @@ package gift.controller.restcontroller;
 
 import gift.common.annotation.LoginMember;
 import gift.controller.dto.response.PagingResponse;
-import gift.controller.dto.response.ProductResponse;
 import gift.controller.dto.response.WishResponse;
 import gift.service.WishService;
 import org.junit.jupiter.api.BeforeEach;
@@ -95,9 +94,12 @@ class WishesRestControllerTest {
     private PagingResponse<WishResponse> wishList(int count) {
         List<WishResponse> wishList = new ArrayList<>();
         for (int i = 1; i <= count; i++) {
-            wishList.add(new WishResponse((long) i, i + 1,
-                    new ProductResponse.Info((long)i, "testProduct", i * 1000, "URL"),
-                    null, null));
+            wishList.add(new WishResponse(
+                    (long) i,
+                    (long)i + 1,
+                    "Name",
+                    1000,
+                    "url"));
         }
         Page<WishResponse> pages = new PageImpl<>(wishList, PageRequest.of(0, 10), count);
         return PagingResponse.from(pages);

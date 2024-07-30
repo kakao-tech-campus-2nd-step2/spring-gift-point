@@ -10,7 +10,7 @@ import java.util.Optional;
 
 public interface WishRepository extends JpaRepository<Wish, Long> {
 
-    @Query("SELECT w FROM Wish w JOIN FETCH w.product p JOIN FETCH w.member m JOIN FETCH p.category WHERE m.id= :memberId")
+    @Query("SELECT w FROM Wish w JOIN FETCH w.product p JOIN FETCH w.member m WHERE m.id= :memberId")
     Page<Wish> findAllByMemberIdFetchJoin(Long memberId, Pageable pageable);
 
     @Query("SELECT w FROM Wish w JOIN FETCH w.product JOIN FETCH w.member WHERE w.id= :id")
