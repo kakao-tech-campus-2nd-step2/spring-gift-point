@@ -15,16 +15,13 @@ import org.springframework.web.bind.annotation.RestController;
 
 @Tag(name = "OAuth", description = "OAuth API")
 @RestController
-@RequestMapping("/api/v1/kakao/login")
+@RequestMapping("/api/oauth/kakao/login")
 public class OAuthController {
 
-    private final KakaoProperties kakaoProperties;
     private final OAuthService OAuthService;
     private final KakaoUtil kakaoUtil;
 
-    public OAuthController(KakaoProperties kakaoProperties, OAuthService OAuthService,
-        KakaoUtil kakaoUtil) {
-        this.kakaoProperties = kakaoProperties;
+    public OAuthController(OAuthService OAuthService, KakaoUtil kakaoUtil) {
         this.OAuthService = OAuthService;
         this.kakaoUtil = kakaoUtil;
     }

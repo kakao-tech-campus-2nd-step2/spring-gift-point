@@ -1,6 +1,7 @@
 package gift.controller.user;
 
 import gift.controller.user.dto.UserRequest;
+import gift.controller.user.dto.UserResponse;
 import gift.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -14,7 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @Tag(name = "User", description = "유저 API")
 @RestController
-@RequestMapping("/api/v1/user")
+@RequestMapping("/api/members")
 public class UserController {
 
     private final UserService userService;
@@ -27,13 +28,13 @@ public class UserController {
     @Operation(summary = "회원가입", description = "회원가입을 시도합니다.")
     public ResponseEntity<Void> register(@Valid @RequestBody UserRequest.Create request) {
         Long id = userService.register(request);
-        return ResponseEntity.created(URI.create("/api/v1/user/" + id)).build();
+        return ResponseEntity.created(URI.create("/api/members/" + id)).build();
     }
 
     @PostMapping("/login")
     @Operation(summary = "로그인", description = "로그인을 시도합니다.")
-    public ResponseEntity<String> login(@Valid @RequestBody UserRequest.Update request) {
-        String token = userService.login(request);
-        return ResponseEntity.ok().header("Authorization", "Bearer " + token).body(token);
+    public ResponseEntity<UserResponse> login(@Valid @RequestBody UserRequest.Update request) {
+        UserResponse response = userService.login(request);
+        return ResponseEntity.ok().body(response);
     }
 }

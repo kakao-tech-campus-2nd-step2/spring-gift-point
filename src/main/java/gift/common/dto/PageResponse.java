@@ -4,10 +4,11 @@ import java.util.List;
 import org.springframework.data.domain.Page;
 
 public record PageResponse<E>(
-    List<E> responses,
+    List<E> content,
     int page,
     int size,
-    int totalPage
+    int totalPages,
+    int totalElements
 ) {
 
     public static <E, T> PageResponse<E> from(List<E> response, Page<T> page) {
@@ -15,6 +16,7 @@ public record PageResponse<E>(
             response,
             page.getNumber(),
             page.getSize(),
+            page.getTotalPages(),
             page.getTotalPages()
         );
     }

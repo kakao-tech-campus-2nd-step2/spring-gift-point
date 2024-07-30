@@ -1,11 +1,37 @@
 package gift.controller.category.dto;
 
 import gift.model.Category;
+import java.util.List;
 
-public record CategoryResponse(Long id, String name, String color, String imageUrl, String description) {
+public class CategoryResponse {
 
-    public static CategoryResponse from(Category category) {
-        return new CategoryResponse(category.getId(), category.getName(), category.getColor(),
-            category.getImageUrl(), category.getDescription());
+    public record InfoList(
+        List<Info> categories
+    ) {
+        public static InfoList from(List<Category> categories) {
+            return new InfoList(
+                categories.stream()
+                    .map(Info::from)
+                    .toList()
+            );
+        }
+    }
+
+    public record Info(
+        Long id,
+        String name,
+        String imageUrl,
+        String description,
+        String color
+    ) {
+        public static Info from(Category category) {
+            return new Info(
+                category.getId(),
+                category.getName(),
+                category.getImageUrl(),
+                category.getDescription(),
+                category.getColor()
+            );
+        }
     }
 }

@@ -3,6 +3,7 @@ package gift.controller.category;
 import gift.common.dto.PageResponse;
 import gift.controller.category.dto.CategoryRequest;
 import gift.controller.category.dto.CategoryResponse;
+import gift.controller.category.dto.CategoryResponse.InfoList;
 import gift.service.CategoryService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -25,7 +26,7 @@ import org.springframework.web.bind.annotation.RestController;
 @Tag(name = "Category", description = "카테고리 API")
 @SecurityRequirement(name = "Authorization")
 @RestController
-@RequestMapping("/api/v1/category")
+@RequestMapping("/api/categories")
 public class CategoryController {
 
     private final CategoryService categoryService;
@@ -38,30 +39,28 @@ public class CategoryController {
     @Operation(summary = "카테고리 등록", description = "카테고리를 생성합니다.")
     public ResponseEntity<Void> registerCategory(@Valid @RequestBody CategoryRequest.Create request) {
         Long id = categoryService.register(request);
-        return ResponseEntity.created(URI.create("/api/v1/category/" + id)).build();
+        return ResponseEntity.created(URI.create("/api/categories/" + id)).build();
     }
 
     @GetMapping("")
     @Operation(summary = "전체 카테고리 조회", description = "전체 카테고리를 조회합니다.")
-    public ResponseEntity<PageResponse<CategoryResponse>> getAllCategory(
-        @PageableDefault(page = 0, size = 10, sort = "id", direction = Sort.Direction.DESC) Pageable pageable
-    ) {
-        PageResponse<CategoryResponse> response = categoryService.findAllCategory(pageable);
-        return ResponseEntity.ok().body(response);
+    public ResponseEntity<CategoryResponse.InfoList> getAllCategory() {
+        CategoryResponse.InfoList responses = categoryService.findAllCategory();
+        return ResponseEntity.ok().body(responses);
     }
 
     @GetMapping("/{id}")
     @Operation(summary = "카테고리 조회", description = "카테고리를 조회합니다.")
-    public ResponseEntity<CategoryResponse> getCategory(@PathVariable("id") Long id) {
-        CategoryResponse response = categoryService.findCategory(id);
+    public ResponseEntity<CategoryResponse.Info> getCategory(@PathVariable("id") Long id) {
+        CategoryResponse.Info response = categoryService.findCategory(id);
         return ResponseEntity.ok().body(response);
     }
 
     @PatchMapping("/{id}")
     @Operation(summary = "카테고리 수정", description = "카테고리를 수정합니다.")
-    public ResponseEntity<CategoryResponse> updateCategory(@PathVariable("id") Long id,
+    public ResponseEntity<CategoryResponse.Info> updateCategory(@PathVariable("id") Long id,
         @Valid @RequestBody CategoryRequest.Update request) {
-        CategoryResponse response = categoryService.updateCategory(id, request);
+        CategoryResponse.Info response = categoryService.updateCategory(id, request);
         return ResponseEntity.ok().body(response);
     }
 
