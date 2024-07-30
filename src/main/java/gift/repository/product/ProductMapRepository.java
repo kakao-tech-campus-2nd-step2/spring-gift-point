@@ -40,6 +40,11 @@ public class ProductMapRepository implements ProductRepository {
     }
 
     @Override
+    public Page<Product> findByCategoryId(Long categoryId, Pageable pageable) {
+        return null;
+    }
+
+    @Override
     public Optional<Product> findById(Long id) {
         return Optional.ofNullable(database.get(id));
     }
