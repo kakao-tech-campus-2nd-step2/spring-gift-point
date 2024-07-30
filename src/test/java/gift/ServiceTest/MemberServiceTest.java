@@ -65,7 +65,7 @@ public class MemberServiceTest {
     @DisplayName("로그인 성공 테스트")
     public void testLogin_Success() {
         MemberRequest memberRequest = new MemberRequest("testId", "testPassword","김민지");
-        Member member = new Member("testId", "testPassword","김민지", new LinkedList<WishList>());
+        Member member = new Member("testId", "김민지","testPassword", new LinkedList<WishList>());
 
         Mockito.when(memberRepository.findById(memberRequest.id())).thenReturn(Optional.of(member));
         Mockito.when(jwtService.createJWT(memberRequest.id())).thenReturn("token");

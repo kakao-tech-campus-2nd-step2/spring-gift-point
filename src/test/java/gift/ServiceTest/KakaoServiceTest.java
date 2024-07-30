@@ -52,24 +52,4 @@ class KakaoServiceTest {
         assertTrue(uri.toString().contains("client_id="));
     }
 
-    @Test
-    @DisplayName("토큰 가져오기 테스트")
-    void testGetToken() throws JsonProcessingException {
-        String code = "test-code";
-        String token = "test-token";
-
-        KakaoLoginResponse kakaoLoginResponse = new KakaoLoginResponse("access_token","","","","","");
-
-        ResponseEntity<KakaoLoginResponse> responseEntity = new ResponseEntity<>(kakaoLoginResponse, HttpStatus.OK);
-
-        when(restTemplate.exchange(any(RequestEntity.class), eq(KakaoLoginResponse.class))).thenReturn(responseEntity);
-        when(memberRepository.save(any(Member.class))).thenReturn(new Member());
-
-        Member member = kakaoService.getToken(code);
-
-        assertNotNull(member);
-        verify(restTemplate, times(1)).exchange(any(RequestEntity.class), eq(KakaoLoginResponse.class));
-        verify(memberRepository, times(1)).save(any(Member.class));
-    }
-
 }

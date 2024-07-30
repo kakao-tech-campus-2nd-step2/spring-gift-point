@@ -46,6 +46,7 @@ class MenuRepositoryTest {
         categoryRepository.save(category1);
         categoryRepository.save(category2);
         Menu menu = new Menu("파스타", 3000, "naver.com", category1,new HashSet<>());
+        menuRepository.save(menu);
 
         option1 = new Option(null, "알리오올리오", 3L,menu);
         option2 = new Option(null, "토마토", 4L,menu);

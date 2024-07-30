@@ -56,7 +56,6 @@ public class KakaoTest {
     void setUp() {
         category1 = new Category(null, "양식", new LinkedList<Menu>());
         category2 = new Category(null, "한식", new LinkedList<Menu>());
-        categoryRepository.save(category1);
         categoryRepository.save(category2);
         Menu menu = new Menu("파스타", 3000, "naver.com", category1,new HashSet<>());
         menuRepository.save(menu);
