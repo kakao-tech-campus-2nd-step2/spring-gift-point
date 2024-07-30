@@ -17,7 +17,7 @@ public class Orders {
     @Id
     private Long id;
 
-    @JoinColumn(name="option_id", nullable = false)
+    @JoinColumn(name = "option_id", nullable = false)
     @ManyToOne
     private Option option;
 
@@ -35,11 +35,12 @@ public class Orders {
     public Orders() {
     }
 
-    public Orders(Option option, int quantity, String message, Member member,LocalDateTime time) {
+    public Orders(Option option, int quantity, String message, Member member, LocalDateTime time) {
         this.option = option;
         this.quantity = quantity;
         this.message = message;
         this.member = member;
+        this.orderDateTime = time;
     }
 
     public Long getId() {

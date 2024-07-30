@@ -89,7 +89,7 @@ public class OrderService {
 
         //주문목록 추가
         orderRepository.save(order);
-        return new OrderResponseDTO( option.getId(), quantity, LocalDateTime.now(), message);
+        return new OrderResponseDTO(option.getId(), quantity, LocalDateTime.now(), message);
     }
 
     private void sendMessage(String text, String accessToken, Option option, int quantity) {

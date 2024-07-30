@@ -57,6 +57,7 @@ public class WishlistController {
         return new ResponseEntity<>(wishlist, HttpStatus.OK);
     }
 
+    @Operation(summary = "Wishlist 에 상품 추가", description = "로그인한 사용자의 Wishlist에 상품을 추가합니다.")
     @PostMapping
     public ResponseEntity<String> addWishlist(@RequestBody WishRequest wishRequest,
         @LoginUser String email) {
@@ -67,6 +68,7 @@ public class WishlistController {
         return new ResponseEntity<>("위시리스트 상품 추가 완료", HttpStatus.OK);
     }
 
+    @Operation(summary = "Wishlist 의 상품 제거", description = "로그인한 사용자의 Wishlist에서 상품을 제거합니다.")
     @DeleteMapping()
     public ResponseEntity<String> deleteWishlist(@LoginUser String email, @RequestBody WishRequest wishRequest) {
         wishlistService.deleteWishlist(wishRequest.getProductId(), email);
