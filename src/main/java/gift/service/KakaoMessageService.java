@@ -38,17 +38,14 @@ public class KakaoMessageService {
         this.objectMapper = objectMapper;
     }
 
-    public void sendMessageToMe(Long memberId, String message) {
-
-        OAuth2AccessToken oAuth2AccessToken = accessTokenRepository.findByMemberId(memberId)
-            .orElseThrow(() -> new OAuth2TokenException("토큰이 존재하지 않습니다."));
+    public void sendMessageToMe(String accessToken, String message) {
 
         KakaoLink link = KakaoLink.createLink();
 
         try {
             KakaoMessageToMeResponse response = client.post()
                 .uri(URI.create(MESSAGE_REQUEST_TO_ME_URI))
-                .header("Authorization", "Bearer " + oAuth2AccessToken.getAccessToken())
+                .header("Authorization", "Bearer " + accessToken)
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .body(Mono.just(createTextMessage(message, link)),
                     LinkedMultiValueMap.class)

@@ -37,7 +37,10 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.ComponentScan.Filter;
 import org.springframework.context.annotation.FilterType;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.data.jpa.mapping.JpaMetamodelMappingContext;
@@ -76,14 +79,12 @@ public class RestDocsWishTest extends AbstractRestDocsTest {
         LongStream.range(1, 11)
             .forEach(i -> products.add(demoProduct(i)));
 
-        List<ProductResponse> response = products.stream()
-            .map(ProductResponse::createProductResponse)
-            .toList();
+        Page<Product> pagedAllWishes = createPage(products, page, size);
 
         given(pagingService.makeWishPageRequest(any(int.class), any(int.class), any(String.class)))
             .willReturn(pageRequest);
         given(wishService.getPagedWishList(any(Long.class), any(PageRequest.class)))
-            .willReturn(response);
+            .willReturn(pagedAllWishes);
 
         //when //then
         mockMvc.perform(get("/api/wishes?page=" + page + "&size=" + size +  "&sort=" + sort)
@@ -136,12 +137,16 @@ public class RestDocsWishTest extends AbstractRestDocsTest {
 
     }
 
+
+    private  <T> Page<T> createPage(List<T> content, int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        return new PageImpl<>(content, pageable, content.size());
+    }
+
     private ProductAddRequest demoAddRequest() {
         return new ProductAddRequest("상품1", 1000, "http://a.com",
             "교환권", "옵션A", 1);
     }
-
-
 
     private Options demoOptions(Long id, Product product) {
         return new Options(id, "옵션" + id, 1, product);

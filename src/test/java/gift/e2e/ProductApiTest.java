@@ -14,6 +14,7 @@ import gift.repository.OptionsRepository;
 import gift.repository.ProductRepository;
 import gift.request.ProductAddRequest;
 import gift.request.ProductUpdateRequest;
+import gift.response.ProductListResponse;
 import gift.response.ProductResponse;
 import gift.service.MemberService;
 import java.net.URI;
@@ -109,17 +110,17 @@ class ProductApiTest {
             headers, HttpMethod.GET, URI.create(url));
 
         //when
-        ResponseEntity<List<ProductResponse>> response
+        ResponseEntity<ProductListResponse> response
             = restTemplate.exchange(request,
             new ParameterizedTypeReference<>() {
             });
 
         //then
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-        assertThat(response.getBody()).hasSize(10);
+        assertThat(response.getBody().contents()).hasSize(10);
         IntStream.range(0, 10)
             .forEach(i -> {
-                ProductResponse pr = response.getBody().get(i);
+                ProductResponse pr = response.getBody().contents().get(i);
                 assertThat(pr.id()).isEqualTo(savedProducts.get(i).getId());
                 assertThat(pr.name()).isEqualTo(savedProducts.get(i).getName());
                 assertThat(pr.price()).isEqualTo(savedProducts.get(i).getPrice());

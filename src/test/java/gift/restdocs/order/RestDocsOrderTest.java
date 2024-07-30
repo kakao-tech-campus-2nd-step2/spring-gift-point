@@ -30,6 +30,7 @@ import org.springframework.context.annotation.FilterType;
 import org.springframework.data.jpa.mapping.JpaMetamodelMappingContext;
 import org.springframework.http.MediaType;
 import org.springframework.restdocs.mockmvc.MockMvcRestDocumentation;
+import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders;
 import org.springframework.restdocs.request.RequestDocumentation;
 import org.springframework.test.web.client.match.MockRestRequestMatchers;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -50,6 +51,7 @@ public class RestDocsOrderTest extends AbstractRestDocsTest {
     private OrderService orderService;
 
     private String token = "{ACCESS_TOKEN}";
+    private String oAuthToken = "OAUTH_TOKEN";
 
 
     @Test
@@ -60,17 +62,20 @@ public class RestDocsOrderTest extends AbstractRestDocsTest {
         String content = objectMapper.writeValueAsString(orderRequest);
         OrderResponse orderResponse = new OrderResponse(memberId, orderRequest.optionId(),
             orderRequest.quantity(), "2024.01.01 00:00:00", orderRequest.message());
-        given(orderService.makeOrder(any(Long.class),
+        given(orderService.makeOrder(any(Long.class), any(String.class),
             any(Long.class), any(Long.class), any(Integer.class), any(String.class)))
             .willReturn(orderResponse);
 
         //when //then
-        mockMvc.perform(post("/api/orders")
+        mockMvc.perform(RestDocumentationRequestBuilders.post("/api/orders?access_token=" + oAuthToken)
                 .header("Authorization", "Bearer " + token)
                 .content(content)
                 .contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk())
-            .andDo(print());
+            .andDo(document("rest-docs-order-test/make-order",
+                queryParameters(
+                    parameterWithName("access_token").description("kakao access token")
+                )));
     }
 
     @Test

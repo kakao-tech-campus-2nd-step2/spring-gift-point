@@ -3,6 +3,7 @@ package gift.controller;
 import gift.auth.CheckRole;
 import gift.paging.PagingService;
 import gift.request.ProductAddRequest;
+import gift.response.ProductListResponse;
 import gift.response.ProductOptionsResponse;
 import gift.response.ProductResponse;
 import gift.request.ProductUpdateRequest;
@@ -42,10 +43,18 @@ public class ProductApiController {
 
     @CheckRole("ROLE_ADMIN")
     @GetMapping("/api/products")
-    public ResponseEntity<List<ProductResponse>> getAllProducts(@RequestParam(defaultValue = "1", name = "page") int page,
+    public ResponseEntity<ProductListResponse> getAllProducts(@RequestParam(defaultValue = "1", name = "page") int page,
         @RequestParam(defaultValue = "10", name = "size") int size, @RequestParam(defaultValue = "id", name = "sort") String sort) {
         PageRequest pageRequest = pagingService.makeProductsPageRequest(page, size, sort);
-        List<ProductResponse> dto = productService.getPagedAllProducts(pageRequest);
+        Page<Product> pagedAllProducts = productService.getPagedAllProducts(pageRequest);
+        List<ProductResponse> productResponses = pagedAllProducts.getContent()
+            .stream()
+            .map(ProductResponse::createProductResponse)
+            .toList();
+        ProductListResponse dto = new ProductListResponse(productResponses,
+            pagedAllProducts.getNumber(),
+            pagedAllProducts.getSize(), pagedAllProducts.getTotalElements(),
+            pagedAllProducts.getTotalPages());
         return new ResponseEntity<>(dto, HttpStatus.OK);
     }
 

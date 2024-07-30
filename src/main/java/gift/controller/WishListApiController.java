@@ -4,6 +4,7 @@ import gift.auth.CheckRole;
 import gift.auth.LoginMember;
 import gift.paging.PagingService;
 import gift.request.LoginMemberDto;
+import gift.response.ProductListResponse;
 import gift.response.ProductResponse;
 import gift.request.WishListRequest;
 import gift.exception.InputException;
@@ -11,6 +12,7 @@ import gift.model.Product;
 import gift.service.WishService;
 import jakarta.validation.Valid;
 import java.util.List;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -36,14 +38,23 @@ public class WishListApiController {
 
     @CheckRole("ROLE_USER")
     @GetMapping("/api/wishes")
-    public ResponseEntity<List<ProductResponse>> getWishList(
+    public ResponseEntity<ProductListResponse> getWishList(
         @RequestParam(defaultValue = "1", name = "page") int page,
         @RequestParam(defaultValue = "10", name = "size") int size,
         @RequestParam(defaultValue = "id", name = "sort") String sort,
         @LoginMember LoginMemberDto memberDto) {
         PageRequest pageRequest = pagingService.makeWishPageRequest(page, size, sort);
-        List<ProductResponse> dto = wishService.getPagedWishList(memberDto.id(),
+        Page<Product> pagedWishList = wishService.getPagedWishList(memberDto.id(),
             pageRequest);
+        List<ProductResponse> productResponses = pagedWishList.getContent()
+            .stream()
+            .map(ProductResponse::createProductResponse)
+            .toList();
+        ProductListResponse dto = new ProductListResponse(productResponses,
+            pagedWishList.getNumber(),
+            pagedWishList.getSize(), pagedWishList.getTotalElements(),
+            pagedWishList.getTotalPages());
+
         return new ResponseEntity<>(dto, HttpStatus.OK);
     }
 

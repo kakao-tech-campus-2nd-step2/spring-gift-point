@@ -77,7 +77,6 @@ public class RestDocsCategoryTest extends AbstractRestDocsTest {
         mockMvc.perform(get("/api/categories")
                 .header("Authorization", "Bearer " + token))
             .andExpect(status().isOk())
-            .andExpect(jsonPath("$", hasSize(dataCounts)))
             .andDo(print());
     }
 

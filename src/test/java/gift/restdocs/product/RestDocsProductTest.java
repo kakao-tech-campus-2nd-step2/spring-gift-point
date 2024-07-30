@@ -38,7 +38,10 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.ComponentScan.Filter;
 import org.springframework.context.annotation.FilterType;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.data.jpa.mapping.JpaMetamodelMappingContext;
@@ -80,15 +83,12 @@ public class RestDocsProductTest extends AbstractRestDocsTest {
         List<Product> products = new ArrayList<>();
         LongStream.range(1, 11)
             .forEach(i -> products.add(demoProduct(i)));
-
-        List<ProductResponse> response = products.stream()
-            .map(ProductResponse::createProductResponse)
-            .toList();
+        Page<Product> pagedAllProducts = createPage(products, page, size);
 
         given(pagingService.makeProductsPageRequest(any(int.class), any(int.class), any(String.class)))
             .willReturn(pageRequest);
         given(productService.getPagedAllProducts(any(PageRequest.class)))
-            .willReturn(response);
+            .willReturn(pagedAllProducts);
 
         //when //then
         mockMvc.perform(get("/api/products?page=" + page + "&size=" + size + "&sort=" + sort)
@@ -175,6 +175,10 @@ public class RestDocsProductTest extends AbstractRestDocsTest {
         then(optionsService).should().deleteAllOptions(productId);
     }
 
+    private  <T> Page<T> createPage(List<T> content, int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        return new PageImpl<>(content, pageable, content.size());
+    }
 
     private ProductAddRequest demoAddRequest() {
         return new ProductAddRequest("상품1", 1000, "http://a.com",

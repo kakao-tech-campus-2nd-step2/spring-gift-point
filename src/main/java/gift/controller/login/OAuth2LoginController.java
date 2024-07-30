@@ -47,13 +47,10 @@ public class OAuth2LoginController {
         HttpServletResponse response) {
         loginService.checkRedirectUriParams(request);
         String code = request.getParameter("code");
+
         OAuth2TokenResponse dto = loginService.getToken(code);
+        jwtService.addOAuthTokenInCookie(dto.accessToken(), response);
 
-        String kakaoId = loginService.getMemberInfo(dto.accessToken());
-        Member member = memberService.loginByOAuth2(kakaoId + "@kakao.com");
-        jwtService.addTokenInCookie(member, response);
-
-        loginService.saveAccessToken(member.getId(), dto.accessToken());
         return new ResponseEntity<>(HttpStatus.OK);
     }
 

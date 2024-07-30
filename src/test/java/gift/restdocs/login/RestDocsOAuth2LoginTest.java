@@ -64,24 +64,15 @@ public class RestDocsOAuth2LoginTest extends AbstractRestDocsTest {
         //given
         ReflectionTestUtils.setField(jwtService, "jwtTokenProvider", jwtTokenProvider);
         String authorizationCode = "KAKAO_AUTHORIZATION_CODE";
-        String kakaoId = "123123@kakao.com";
-        Member member = new Member(1L, kakaoId, "OAUTH2", Role.ROLE_USER);
+
         OAuth2TokenResponse oAuth2TokenResponse = new OAuth2TokenResponse(token, "bearer", null,
             21599, null, "talk_message");
 
         doNothing().when(oAuth2LoginService).checkRedirectUriParams(any(HttpServletRequest.class));
         given(oAuth2LoginService.getToken(any(String.class)))
             .willReturn(oAuth2TokenResponse);
-        given(oAuth2LoginService.getMemberInfo(any(String.class)))
-            .willReturn(kakaoId);
-        given(memberService.loginByOAuth2(any(String.class)))
-            .willReturn(member);
-
-        doCallRealMethod().when(jwtService).addTokenInCookie(any(Member.class), any(
+        doCallRealMethod().when(jwtService).addOAuthTokenInCookie(any(String.class), any(
             HttpServletResponse.class));
-        given(jwtTokenProvider.generateToken(any(Member.class)))
-            .willReturn(token);
-        doNothing().when(oAuth2LoginService).saveAccessToken(any(Long.class), any(String.class));
 
         //when //then
         mockMvc.perform(get("/api/oauth2/kakao?code=" + authorizationCode))

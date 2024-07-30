@@ -5,6 +5,7 @@ import gift.exception.InputException;
 import gift.model.Category;
 import gift.request.CategoryAddRequest;
 import gift.request.CategoryUpdateRequest;
+import gift.response.CategoryListResponse;
 import gift.response.CategoryResponse;
 import gift.service.CategoryService;
 import jakarta.validation.Valid;
@@ -32,8 +33,9 @@ public class CategoryApiController {
 
     @CheckRole("ROLE_ADMIN")
     @GetMapping("/api/categories")
-    public ResponseEntity<List<CategoryResponse>> getAllCategories() {
-        return new ResponseEntity<>(categoryService.getAllCategories(), HttpStatus.OK);
+    public ResponseEntity<CategoryListResponse> getAllCategories() {
+        List<CategoryResponse> dto = categoryService.getAllCategories();
+        return new ResponseEntity<>(new CategoryListResponse(dto), HttpStatus.OK);
     }
 
     @CheckRole("ROLE_ADMIN")

@@ -36,9 +36,9 @@ public class OrderService {
             .toList();
     }
 
-    public OrderResponse makeOrder(Long memberId, Long productId, Long optionId, Integer quantity, String message) {
+    public OrderResponse makeOrder(Long memberId, String accessToken, Long productId, Long optionId, Integer quantity, String message) {
         OrderResponse response = addOrder(memberId, productId, optionId, quantity, message);
-        sendKakaoMessageToMe(memberId, message);
+        sendKakaoMessageToMe(accessToken, message);
         return response;
     }
 
@@ -54,8 +54,8 @@ public class OrderService {
         return OrderResponse.createOrderResponse(savedOrder);
     }
 
-    public void sendKakaoMessageToMe(Long memberId, String message) {
-        kakaoMessageService.sendMessageToMe(memberId, message);
+    public void sendKakaoMessageToMe(String accessToken, String message) {
+        kakaoMessageService.sendMessageToMe( accessToken, message);
     }
 
 }

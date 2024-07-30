@@ -12,6 +12,7 @@ import gift.repository.MemberRepository;
 import gift.repository.ProductRepository;
 import gift.repository.WishRepository;
 import gift.request.WishListRequest;
+import gift.response.ProductListResponse;
 import gift.response.ProductResponse;
 import gift.service.MemberService;
 import java.net.URI;
@@ -27,6 +28,10 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
@@ -108,17 +113,17 @@ class WishListApiTest {
             headers, HttpMethod.GET, URI.create(url));
 
         //when
-        ResponseEntity<List<ProductResponse>> response
+        ResponseEntity<ProductListResponse> response
             = restTemplate.exchange(request,
             new ParameterizedTypeReference<>() {
             });
 
         //then
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-        assertThat(response.getBody()).hasSize(10);
+        assertThat(response.getBody().contents()).hasSize(10);
         IntStream.range(0, 5)
             .forEach(i -> {
-                ProductResponse pr = response.getBody().get(i);
+                ProductResponse pr = response.getBody().contents().get(i);
                 assertThat(pr.id()).isEqualTo(savedProducts.get(i).getId());
                 assertThat(pr.name()).isEqualTo(savedProducts.get(i).getName());
                 assertThat(pr.price()).isEqualTo(savedProducts.get(i).getPrice());
