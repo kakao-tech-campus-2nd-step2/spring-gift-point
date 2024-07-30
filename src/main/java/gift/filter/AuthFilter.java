@@ -38,11 +38,11 @@ public class AuthFilter implements Filter {
 
         // Filter 를 통과하지 않아도 되는 url
         if (path.equals(HOME_URL) || path.equals(KAKAO_TOKEN_RENEW_URL) || path.startsWith(LOGIN_URL_PREFIX) || path.startsWith(LOGIN_OAUTH_URL_PREFIX) || path.startsWith(H2_DB_URL)
-                || path.equals("/swagger-ui.html") // 변경
-                || path.startsWith("/swagger-ui")
-                || path.startsWith("/api-docs") // 추가
-                || path.startsWith("/v3/api-docs")
-                || path.startsWith("/swagger-resources")) {
+                || path.equals(SWAGGER_UI_HTML) // 변경
+                || path.startsWith(SWAGGER_UI)
+                || path.startsWith(API_DOCS) // 추가
+                || path.startsWith(V3_API_DOCS)
+                || path.startsWith(SWAGGER_RESOURCES)) {
             filterChain.doFilter(request, response);
             return;
         }
