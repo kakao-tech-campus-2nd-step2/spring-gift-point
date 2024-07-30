@@ -58,8 +58,8 @@ public class ProductService {
     }
 
     @Transactional
-    public void updateProduct(UpdateProductRequest request) {
-        Product product = productRepository.findById(request.id())
+    public void updateProduct(UpdateProductRequest request, Long productId) {
+        Product product = productRepository.findById(productId)
                 .orElseThrow(ProductNotFoundException::new);
 
         Category category = categoryService.getCategory(request.categoryId());
@@ -96,5 +96,10 @@ public class ProductService {
         product.addOption(savedOption);
 
         return new AddedOptionIdResponse(savedOption.getId());
+    }
+
+    public ProductResponse getProductResponse(Long productId) {
+        Product product = getProduct(productId);
+        return ProductResponse.fromProduct(product);
     }
 }
