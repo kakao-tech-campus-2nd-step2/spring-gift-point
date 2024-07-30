@@ -3,7 +3,6 @@ package gift.controller;
 import gift.config.properties.KakaoProperties;
 import gift.controller.api.KakaoApi;
 import gift.service.KakaoService;
-import io.swagger.v3.oas.annotations.Hidden;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -33,7 +32,6 @@ public class KakaoController implements KakaoApi {
         return new ResponseEntity<>(headers, HttpStatus.MOVED_PERMANENTLY);
     }
 
-    @Hidden
     @GetMapping("/token")
     public ResponseEntity<Void> setToken(@RequestParam String code, @RequestParam String state) {
         var memberId = Long.valueOf(state);
