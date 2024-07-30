@@ -36,8 +36,7 @@ public class ProductService {
         this.optionRepository = optionRepository;
     }
 
-    public Page<ProductResponseDto> findAll(int page, int size) {
-        Pageable pageable = PageRequest.of(page, size);
+    public Page<ProductResponseDto> findAll(Pageable pageable) {
         Page<Product> productPage = productRepository.findAll(pageable);
 
         List<ProductResponseDto> productResponseDtoList = productPage.stream()

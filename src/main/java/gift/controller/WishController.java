@@ -33,8 +33,9 @@ public class WishController {
 
     @GetMapping
     public ResponseEntity<Page<WishResponseDto>> getAllByMemberId(@LoginMember Long memberId,
-        @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size) {
-        Pageable pageable = PageRequest.of(page, size, Sort.by("id").descending());
+        @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size, @RequestParam(defaultValue = "id,asc") String[] sort) {
+        Sort.Direction direction = Sort.Direction.fromString(sort[1]);
+        Pageable pageable = PageRequest.of(page, size, Sort.by(direction, sort[0]));
         Page<WishResponseDto> wishlist = wishService.getWishlist(memberId, pageable);
 
         return new ResponseEntity<>(wishlist, HttpStatus.OK);

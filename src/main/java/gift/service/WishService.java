@@ -30,15 +30,7 @@ public class WishService {
 
     public Page<WishResponseDto> getWishlist(Long memberId, Pageable pageable) {
         Page<Wish> wishes = wishRepository.findByMemberId(memberId, pageable);
-        return wishes.map(wish -> {
-            WishResponseDto response = new WishResponseDto();
-            response.setId(wish.getId());
-            response.setProductId(wish.getProduct().getId());
-            response.setProductName(wish.getProduct().getName());
-            response.setProductImageUrl(wish.getProduct().getImageUrl());
-            response.setProductQuantity(wish.getQuantity());
-            return response;
-        });
+        return wishes.map(WishResponseDto::new);
     }
 
     public void addWishlist(Long memberId, Long productId, int quantity) {

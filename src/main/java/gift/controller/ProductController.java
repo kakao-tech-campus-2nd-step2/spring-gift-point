@@ -3,10 +3,12 @@ package gift.controller;
 import gift.dto.ProductRequestDto;
 import gift.dto.ProductResponseDto;
 import gift.dto.ProductWithOptionRequest;
-import gift.entity.Product;
 import gift.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -31,9 +33,13 @@ public class ProductController {
     }
 
     @GetMapping
-    public Page<ProductResponseDto> getAllProducts(@RequestParam(defaultValue = "0") int page,
-        @RequestParam(defaultValue = "10") int size) {
-        return productService.findAll(page, size);
+    public ResponseEntity<Page<ProductResponseDto>> getAllProducts(@RequestParam(defaultValue = "0") int page,
+        @RequestParam(defaultValue = "20") int size, @RequestParam(defaultValue = "id,asc") String[] sort) {
+        Sort.Direction direction = Sort.Direction.fromString(sort[1]);
+        Pageable pageable = PageRequest.of(page, size, Sort.by(direction, sort[0]));
+        Page<ProductResponseDto> productList = productService.findAll(pageable);
+
+        return new ResponseEntity<>(productList, HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
