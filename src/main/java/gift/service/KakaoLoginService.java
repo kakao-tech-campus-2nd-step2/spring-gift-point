@@ -3,6 +3,7 @@ package gift.service;
 import gift.config.KakaoProperties;
 import gift.model.Member;
 import gift.repository.MemberRepository;
+import gift.util.JwtUtility;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
@@ -51,7 +52,6 @@ public class KakaoLoginService {
         var request = new RequestEntity<>(body, headers, HttpMethod.POST, URI.create(url));
         var responseEntity = restTemplate.exchange(request, Map.class);
         var response = responseEntity.getBody();
-        System.out.println(response);
 
         if (response == null) {
             throw new NoSuchElementException("Response가 없습니다.");
@@ -67,6 +67,9 @@ public class KakaoLoginService {
         var request = new RequestEntity<>(headers, HttpMethod.GET, URI.create(url));
         var responseEntity = restTemplate.exchange(request, Map.class);
         String email = getEmail(responseEntity);
+
+        String jwtToken = JwtUtility.generateToken(email);
+        System.out.println(jwtToken);
 
         if (!memberRepository.existsByEmail(email)) {
             memberRepository.save(new Member(email, "비밀번호", accessToken));
