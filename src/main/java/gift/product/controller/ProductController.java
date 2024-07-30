@@ -44,6 +44,7 @@ public class ProductController {
     @Operation(summary = "상품 생성", tags = {"상품 API"})
     public ResponseEntity<ProductDTO> createProduct(@Valid @RequestBody ProductDTO productDTO) {
         ProductDTO response = productService.createProduct(productDTO);
+        optionService.saveAllwithProductId(productDTO.getOptionDTOList(), response.getId());
         return new ResponseEntity<>(response,HttpStatus.CREATED);
     }
 
