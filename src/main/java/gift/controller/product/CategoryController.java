@@ -28,7 +28,7 @@ public class CategoryController {
     }
 
     @Operation(summary = "카테고리 목록 조회", description = "카테고리 목록 조회 api")
-    @GetMapping("/categories")
+    @GetMapping("/api/categories")
     public ResponseEntity<CategoryResponse.InfoList> getCategories() {
         List<CategoryModel.Info> model = categoryService.getCategories();
         return ResponseEntity.ok(CategoryResponse.InfoList.from(model));
