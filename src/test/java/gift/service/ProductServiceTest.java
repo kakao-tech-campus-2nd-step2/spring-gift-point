@@ -92,15 +92,27 @@ class ProductServiceTest {
         //given
         int PAGE = 1;
         int SIZE = 4;
-        String SORT = "name";
-        String DIRECTION = "desc";
-        Pageable pageable = PageRequest.of(PAGE, SIZE, Sort.Direction.fromString(DIRECTION), SORT);
+        Pageable pageable = PageRequest.of(PAGE, SIZE, Sort.Direction.fromString("desc"), "name");
 
         //when
         productService.getProductAll(pageable);
 
         //then
         then(productRepository).should().findAll(pageable);
+    }
+
+    @Test
+    void 상품_전체_조회_페이지_특정_카테고리만() {
+        //given
+        int PAGE = 1;
+        int SIZE = 4;
+        Pageable pageable = PageRequest.of(PAGE, SIZE, Sort.Direction.fromString("desc"), "name");
+
+        //when
+        productService.getProductAll(pageable, 1L);
+
+        //then
+        then(productRepository).should().findAllByCategoryId(pageable, 1L);
     }
 
     @Test

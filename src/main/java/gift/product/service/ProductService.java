@@ -37,6 +37,10 @@ public class ProductService {
         return productRepository.findAll(pageable);
     }
 
+    public Page<Product> getProductAll(Pageable pageable, Long categoryId) {
+        return productRepository.findAllByCategoryId(pageable, categoryId);
+    }
+
     public Product getProduct(Long id) {
         return getValidatedProduct(id);
     }

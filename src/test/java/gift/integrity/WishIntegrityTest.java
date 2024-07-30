@@ -73,7 +73,7 @@ class WishIntegrityTest {
         CategoryDto categoryDto = new CategoryDto("테스트카테고리1");
         categoryService.insertCategory(categoryDto);
 
-        String url = BASE_URL + port + "/api/products/insert";
+        String url = BASE_URL + port + "/api/products";
         ProductDto productDto = new ClientProductDto("테스트1", 1500, "테스트주소1", categoryDto.name());
         RequestEntity<ProductDto> requestEntity = new RequestEntity<>(productDto, HttpMethod.POST,
             URI.create(url));

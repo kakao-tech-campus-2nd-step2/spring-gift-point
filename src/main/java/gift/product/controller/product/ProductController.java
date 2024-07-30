@@ -39,20 +39,23 @@ public class ProductController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Product>> getProductAll() {
-        List<Product> productAll = productService.getProductAll();
-        return ResponseEntity.ok(productAll);
-    }
-
-    @GetMapping("/paged")
     public ResponseEntity<Page<Product>> getProductAll(
         @RequestParam(name = "page", defaultValue = "0") int page,
         @RequestParam(name = "size", defaultValue = "5") int size,
-        @RequestParam(name = "sort", defaultValue = "id") String sort,
-        @RequestParam(name = "direction", defaultValue = "asc") String direction) {
+        @RequestParam(name = "sort", defaultValue = "name,asc") String sortParam,
+        @RequestParam(name = "categoryId", required = false) Long categoryId) {
+
+        String[] sortParamSplited = sortParam.split(",");
+        String sort = sortParamSplited[0];
+        String direction = (sortParamSplited.length > 1) ? sortParamSplited[1] : "asc";
+
         Pageable pageable = PageRequest.of(page, size, Sort.Direction.fromString(direction), sort);
-        Page<Product> products = productService.getProductAll(pageable);
-        return ResponseEntity.ok(products);
+
+        if (categoryId == null) {
+            return ResponseEntity.ok(productService.getProductAll(pageable));
+        }
+
+        return ResponseEntity.ok(productService.getProductAll(pageable, categoryId));
     }
 
     @ApiResponses(value = {
@@ -69,7 +72,7 @@ public class ProductController {
         @ApiResponse(responseCode = "200", description = "성공", content = @Content(mediaType = "application/json", schema = @Schema(implementation = Product.class))),
         @ApiResponse(responseCode = "404", description = "존재하지 않는 리소스", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProblemDetailResponse.class)))
     })
-    @PostMapping("/insert")
+    @PostMapping
     public ResponseEntity<Product> insertProduct(@Valid @RequestBody ClientProductDto productDto) {
         Product responseProduct = productService.insertProduct(productDto);
 
@@ -80,7 +83,7 @@ public class ProductController {
         @ApiResponse(responseCode = "200", description = "성공", content = @Content(mediaType = "application/json", schema = @Schema(implementation = Product.class))),
         @ApiResponse(responseCode = "404", description = "존재하지 않는 리소스", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProblemDetailResponse.class)))
     })
-    @PutMapping("/update/{id}")
+    @PutMapping("/{id}")
     public ResponseEntity<Product> updateProduct(@PathVariable(name = "id") Long id,
         @Valid @RequestBody ClientProductDto productDto) {
         Product product = productService.updateProduct(id, productDto);
@@ -91,7 +94,7 @@ public class ProductController {
         @ApiResponse(responseCode = "200", description = "성공"),
         @ApiResponse(responseCode = "404", description = "존재하지 않는 리소스", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProblemDetailResponse.class)))
     })
-    @DeleteMapping("/delete/{id}")
+    @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteProduct(@PathVariable(name = "id") Long id) {
         productService.deleteProduct(id);
 
