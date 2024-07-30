@@ -5,6 +5,7 @@ import gift.domain.Product;
 import gift.domain.TokenAuth;
 import gift.domain.WishlistItem;
 import gift.dto.request.WishlistRequest;
+import gift.dto.response.WishlistPageResponse;
 import gift.exception.ProductNotFoundException;
 import gift.exception.WishlistNotFoundException;
 import gift.repository.product.ProductSpringDataJpaRepository;
@@ -60,8 +61,9 @@ public class WishlistService {
         return wishlistRepository.findByMemberId(memberId);
     }
 
-    public Page<WishlistItem> getWishlistByMemberId(Long memberId, Pageable pageable) {
-        return wishlistRepository.findByMemberId(memberId, pageable);
+    public WishlistPageResponse getWishlistByMemberId(Long memberId, Pageable pageable) {
+        Page<WishlistItem> wishlist = wishlistRepository.findByMemberId(memberId, pageable);
+        return WishlistPageResponse.fromWishlistPage(wishlist);
     }
 
 

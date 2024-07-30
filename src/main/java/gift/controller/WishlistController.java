@@ -4,17 +4,20 @@ import gift.annotation.LoginMember;
 import gift.domain.TokenAuth;
 import gift.domain.WishlistItem;
 import gift.dto.request.WishlistRequest;
+import gift.dto.response.WishlistPageResponse;
 import gift.service.WishlistService;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/wishlist")
+@RequestMapping("api/wishes")
 public class WishlistController {
 
     private final WishlistService wishlistService;
@@ -48,12 +51,13 @@ public class WishlistController {
 
     @GetMapping
     @Operation(summary = "위시 리스트 상품 조회 (페이지네이션 적용)", description = "회원의 위시 리스트에 있는 상품을 페이지 단위로 조회한다.")
-    public String getWishlistForCurrentUser(Model model, Pageable pageable, @LoginMember TokenAuth tokenAuth) {
+    public WishlistPageResponse getWishlistForCurrentUser(@RequestParam(defaultValue = "20") int size,
+                                                          @RequestParam(defaultValue = "0") int page,
+                                                          @RequestParam(defaultValue = "createdDate,desc") String sort,
+                                                          @LoginMember TokenAuth tokenAuth) {
         Long memberId = tokenAuth.getMember().getId();
-        Page<WishlistItem> wishlist = wishlistService.getWishlistByMemberId(memberId, pageable);
-        model.addAttribute("wishlist", wishlist);
-        model.addAttribute("memberId", memberId);
-        return "wishlist-list";
+        Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Order.desc(sort)));
+        return wishlistService.getWishlistByMemberId(memberId, pageable);
     }
 
 }

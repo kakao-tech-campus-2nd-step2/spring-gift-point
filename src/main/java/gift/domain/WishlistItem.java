@@ -26,6 +26,10 @@ public class WishlistItem {
 
     public WishlistItem() { }
 
+    public Long getId() {
+        return id;
+    }
+
     public Member getMember() {
         return member;
     }
@@ -41,4 +45,5 @@ public class WishlistItem {
     public void setProduct(Product product) {
         this.product = product;
     }
+
 }
