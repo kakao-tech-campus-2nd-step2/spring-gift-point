@@ -9,9 +9,6 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import java.net.URI;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -25,7 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 @Tag(name = "Option", description = "옵션 API")
 @SecurityRequirement(name = "Authorization")
 @RestController
-@RequestMapping("/api/v1/products")
+@RequestMapping("/api/products")
 public class OptionController {
 
     private final OptionService optionService;
@@ -41,37 +38,35 @@ public class OptionController {
         @Valid @RequestBody OptionRequest.Create request
     ) {
         Long id = optionService.register(productId, request);
-        return ResponseEntity.created(URI.create("/api/v1/products/" + productId + "/options/" + id)).build();
+        return ResponseEntity.created(URI.create("/api/products/" + productId + "/options/" + id)).build();
     }
 
     @GetMapping("{productId}/options")
     @Operation(summary = "전체 옵션 등록", description = "전체 옵션을 조회합니다.")
-    public ResponseEntity<PageResponse<OptionResponse>> getAllOption(
-        @PathVariable("productId") Long productId,
-        @PageableDefault(page = 0, size = 10, sort = "id", direction = Sort.Direction.DESC) Pageable pageable
+    public ResponseEntity<OptionResponse.InfoList> getAllOption(
+        @PathVariable("productId") Long productId
     ) {
-        PageResponse<OptionResponse> response = optionService.getAllProductOptions(productId,
-            pageable);
+        OptionResponse.InfoList response = optionService.getAllProductOptions(productId);
         return ResponseEntity.ok().body(response);
     }
 
     @GetMapping("{productId}/options/{optionId}")
     @Operation(summary = "옵션 조회", description = "옵션을 조회합니다.")
-    public ResponseEntity<OptionResponse> getOption(
+    public ResponseEntity<OptionResponse.Info> getOption(
         @PathVariable("productId") Long productId,
         @PathVariable("optionId") Long optionId
     ) {
-        OptionResponse response = optionService.findOption(optionId);
+        OptionResponse.Info response = optionService.findOption(optionId);
         return ResponseEntity.ok().body(response);
     }
 
     @PatchMapping("/{productId}/options/{optionId}")
     @Operation(summary = "옵션 수정", description = "옵션을 수정합니다.")
-    public ResponseEntity<OptionResponse> updateOption(
+    public ResponseEntity<OptionResponse.Info> updateOption(
         @PathVariable("productId") Long productId,
         @PathVariable("optionId") Long optionId,
         @Valid @RequestBody OptionRequest.Update request) {
-        OptionResponse response = optionService.updateOption(productId, optionId, request);
+        OptionResponse.Info response = optionService.updateOption(productId, optionId, request);
         return ResponseEntity.ok().body(response);
     }
 

@@ -5,18 +5,6 @@ import java.util.List;
 
 public class CategoryResponse {
 
-    public record InfoList(
-        List<Info> categories
-    ) {
-        public static InfoList from(List<Category> categories) {
-            return new InfoList(
-                categories.stream()
-                    .map(Info::from)
-                    .toList()
-            );
-        }
-    }
-
     public record Info(
         Long id,
         String name,
@@ -31,6 +19,18 @@ public class CategoryResponse {
                 category.getImageUrl(),
                 category.getDescription(),
                 category.getColor()
+            );
+        }
+    }
+
+    public record InfoList(
+        List<Info> categories
+    ) {
+        public static InfoList from(List<Category> categories) {
+            return new InfoList(
+                categories.stream()
+                    .map(Info::from)
+                    .toList()
             );
         }
     }
