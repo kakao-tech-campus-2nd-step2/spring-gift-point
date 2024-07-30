@@ -1,52 +1,44 @@
-### API Readme
+# Spring-Gift API 문서
+#### 개요
+이 문서는 Spring-Gift 플랫폼에서 제공하는 모든 API에 대한 상세한 설명과 지침을 제공합니다.    
+각 API 기능별로 세분화하여 표 형식의 개요와 함께 요청 객체 및 응답 객체의 상세 정보를 포함하고 있습니다.
+
+API 사용 중 궁금하거나 불명확한 부분이 있으시면 언제든지 문의해 주세요.‍🙇‍♀️🙇‍♀️
+****
+### API 기능 개요
+이 API 문서는 다음과 같은 기능들을 제공합니다:
+
+#### 회원 관련 기능:
+- 로그인 : 카카오 서버를 통한 로그인만 지원한다.
+- JWT 토큰 관리: JWT 토큰은 카카오 로그인 성공 시 응답 헤더를 통해 발급받을 수 있습니다.
+
+#### 상품 관련 기능:
+- 상품 등록: 각 상품은 하나 이상의 카테고리와 옵션을 포함합니다.
+    - 필수 정보: 상품 등록 시, 옵션 리스트와 카테고리 정보가 요구됩니다. 상세한 형식은 요청 객체 섹션을 참조하세요.
+- JWT 토큰 : 발급받은 JWT 토큰은 위시리스트와 주문 API에서 사용됩니다.
+
+### 참고사항
+- 모든 api는 `/api`로 시작합니다.
 
 ---
 
 ## 목차
-- [Authentication API](#authentication-api)
+- [Kakao Authentication API](#kakao-authentication-api)
 - [Category API](#category-api)
-- [Member API](#member-api)
-- [Option API](#option-api)
-- [Order API](#order-api)
 - [Product API](#product-api)
+- [Option API](#option-api)
 - [Wish API](#wish-api)
-
+- [Order API](#order-api)
 ---
 
-## Authentication API
+## Kakao Authentication API
 ### Endpoint: `/auth`
-<details>
-<summary>POST: 로그인 요청</summary>
 
-#### Request:
-```http
-POST http://localhost:8080/api/auth/login
-Content-Type: application/json
-
-{
-  "email": "email",          // String, 필수, 유효한 이메일 형식
-  "password": "password"     // String, 필수, 최소 길이: 8, 최대 길이: 100
-}
-```
-
-#### Response:
-
-##### Header:
-```http
-HTTP/1.1 200 OK
-Authorization: Bearer <JWT_TOKEN>
-Content-Type: application/json
-```
-
-##### Body:
-```json
-{
-  "code": "A001",
-  "message": "로그인 성공"
-}
-```
-
-</details>
+| 제목                     | 메서드 | URL                             | 요청 컨텐트 타입 / 요청 객체 | 응답 객체                                                    | 설명                                           |
+|----------|--------|---------------------|---------------------|----------------------------------------------------------|------------------------------------------------|
+| 카카오 로그인 리다이렉트  | `GET`    | `/api/auth/kakao`                 | -                            | `Status: 302 Found`<br> `Header: Location: {Kakao Auth URL}` | 카카오 로그인을 위한 리다이렉트 URL을 반환합니다. |
+| 카카오 로그인            | `GET`    | `/api/auth/kakao/callback`        | -                            | `Status: 200 OK`<br> `Header: Authorization: Bearer {Token}` | 카카오 로그인 후 JWT 토큰을 반환합니다.          |
+* 이 부분 BE에서 유저를 자동으로 카카오 로그인 창으로 리다이렉트 보내고 있습니다. 따라서 FE분들은 `/kakao`로 요청 후`/callback`으로 응답을 받게 됩니다.
 
 <details>
 <summary>GET: 카카오 로그인 리다이렉트 요청</summary>
@@ -66,10 +58,38 @@ Location: https://kauth.kakao.com/oauth/authorize?response_type=code&client_id={
 
 </details>
 
+<details>
+<summary>GET: 카카오 로그인</summary>
+
+#### Request:
+```http
+GET http://localhost:8080/api/auth/kakao/callback
+```
+
+#### Response:
+
+##### Header:
+```http
+HTTP/1.1 200 OK
+Authorization: Bearer <JWT_TOKEN>
+Content-Type: application/json
+```
+
+</details>
+
 ---
 
 ## Category API
 ### Endpoint: `/categories`
+
+| 제목                 | 메서드    | URL                                 | 요청 컨텐트 타입 / 요청 객체                                       | 응답 객체                                | 설명                                  |
+|----------------------|--------|-------------------------------------|---------------------------------------------------------|--------------------------------------|---------------------------------------|
+| 카테고리 목록 조회    | `GET`  | `/api/categories `                    | `Content-Type: application/json`                          | `Status: 200 OK`<br>`Body: {categories}` | 모든 카테고리 정보를 반환합니다.       |
+| 특정 카테고리 조회   | `GET`  | `/api/categories/{id}`                | `Content-Type: application/json`                          | `Status: 200 OK`<br>`Body: {category}`           | ID에 해당하는 카테고리 정보를 반환합니다. |
+| 새로운 카테고리 추가 | `POST` | `/api/categories`                     | `Content-Type: application/json`<br>`body : {category}` | `Status: 200 OK`                       | 새로운 카테고리를 추가합니다.           |
+| 카테고리 삭제       | `DELETE` | `/api/categories/{category_id}`       | `Content-Type: application/json`                          | `Status: 200 OK`                       | 지정된 ID의 카테고리를 삭제합니다.       |
+
+
 <details>
 <summary>GET: 카테고리 목록 조회</summary>
 
@@ -90,14 +110,19 @@ Content-Type: application/json
 ##### Body:
 ```json
 {
-  "code": "P001",
-  "message": "모든 카테고리 조회 성공",
-  "data": [
+  "categories": [
     {
       "id": 1,
       "name": "교환권",
       "color": "#6c95d1",
-      "imageUrl": "https://example.com/image.jpg",
+      "image_url": "https://example.com/image.jpg",
+      "description": "카테고리 설명"
+    },
+    {
+      "id": 1,
+      "name": "교환권",
+      "color": "#6c95d1",
+      "image_url": "https://example.com/image.jpg",
       "description": "카테고리 설명"
     }
   ]
@@ -126,13 +151,11 @@ Content-Type: application/json
 ##### Body:
 ```json
 {
-  "code": "P002",
-  "message": "단일 카테고리 조회 성공",
-  "data": {
+  "category": {
     "id": 1,
     "name": "교환권",
     "color": "#6c95d1",
-    "imageUrl": "https://example.com/image.jpg",
+    "image_url": "https://example.com/image.jpg",
     "description": "카테고리 설명"
   }
 }
@@ -148,45 +171,12 @@ Content-Type: application/json
 POST http://localhost:8080/api/categories
 Content-Type: application/json
 
+body 
 {
-  "name": "컴퓨터",            // String, 필수, 최소 길이: 1, 최대 길이: 100
-  "color": "#123",           // String, 필수, 유효한 색상 코드 형식
-  "imageUrl": "http://hello",// String, 필수, 유효한 URL 형식
-  "description": "description" // String, 선택, 최대 길이: 255
-}
-```
-
-#### Response:
-
-##### Header:
-```http
-HTTP/1.1 201 Created
-Content-Type: application/json
-```
-
-##### Body:
-```json
-{
-  "code": "P003",
-  "message": "카테고리 추가 성공"
-}
-```
-
-</details>
-
-<details>
-<summary>PUT: 카테고리 업데이트</summary>
-
-#### Request:
-```http
-PUT http://localhost:8080/api/categories/1
-Content-Type: application/json
-
-{
-  "name": "카테카테",            // String, 필수, 최소 길이: 1, 최대 길이: 100
-  "color": "#123",           // String, 필수, 유효한 색상 코드 형식
-  "imageUrl": "http://hello",// String, 필수, 유효한 URL 형식
-  "description": "description" // String, 선택, 최대 길이: 255
+  "name": "컴퓨터",            
+  "color": "#123",           
+  "image_url": "http://hello",
+  "description": "description" 
 }
 ```
 
@@ -199,21 +189,16 @@ Content-Type: application/json
 ```
 
 ##### Body:
-```json
-{
-  "code": "P004",
-  "message": "카테고리 수정 성공"
-}
-```
 
 </details>
+
 
 <details>
 <summary>DELETE: 카테고리 삭제</summary>
 
 #### Request:
 ```http
-DELETE http://localhost:8080/api/categories/1
+DELETE http://localhost:8080/api/categories/{category_id}
 Content-Type: application/json
 ```
 
@@ -226,590 +211,34 @@ Content-Type: application/json
 ```
 
 ##### Body:
-```json
-{
-  "code": "P005",
-  "message": "카테고리 삭제 성공"
-}
-```
 
 </details>
 
 ---
 
-## Member API
-### Endpoint: `/members`
-<details>
-<summary>GET: 회원 목록 조회</summary>
 
-#### Request:
-```http
-GET http://localhost:8080/api/members
-Content-Type: application/json
-```
-
-#### Response:
-
-##### Header:
-```http
-HTTP/1.1 200 OK
-Content-Type: application/json
-```
-
-##### Body:
-```json
-{
-  "code": "M001",
-  "message": "모든 회원 조회 성공",
-  "data": [
-    {
-      "id": 1,
-      "memberType": "USER",
-      "email": "email",
-      "password": "password",
-      "nickname": "nickname",
-      "accessToken": null
-    },
-    {
-      "id": 2,
-      "memberType": "USER",
-      "email": "email1",
-      "password": "password1",
-      "nickname": "nickname1",
-      "accessToken": null
-    }
-  ]
-}
-```
-
-</details>
-
-<details>
-<summary>GET: 특정 회원 조회</summary>
-
-#### Request:
-```http
-GET http://localhost:8080/api/members/3
-Content-Type: application/json
-```
-
-#### Response:
-
-##### Header:
-```http
-HTTP/1.1 200 OK
-Content-Type: application/json
-```
-
-##### Body:
-```json
-{
-  "code": "M002",
-  "message": "단일 회원 조회 성공",
-  "data": {
-    "id": 3,
-    "memberType": "USER",
-    "email": "email2",
-    "password": "password2",
-    "nickname": "nickname2",
-    "accessToken": null
-  }
-}
-```
-
-</details>
-
-<details>
-<summary>POST: 새로운 회원 추가</summary>
-
-#### Request:
-```http
-POST http://localhost:8080/api/members
-Content-Type: application/json
-
-{
-  "email": "email5",          // String, 필수, 유효한 이메일 형식
-  "password": "password3",    // String, 필수, 최소 길이: 8, 최대 길이: 100
-  "nickName": "nickname3"     // String, 필수, 최소 길이: 1, 최대 길이: 50
-}
-```
-
-#### Response:
-
-##### Header:
-```http
-HTTP/1.1 201 Created
-Content-Type: application/json
-```
-
-##### Body:
-```json
-{
-  "code": "M003",
-  "message": "회원 가입 성공"
-}
-```
-
-</details>
-
-<details>
-<summary>PUT: 회원 정보 업데이트</summary>
-
-#### Request:
-```http
-PUT http://localhost:8080/api/members/1
-Content-Type: application/json
-
-{
-  "email": "email10",          // String, 필수, 유효한 이메일 형식
-  "password": "password3",     // String, 필수, 최소 길이: 8, 최대 길이: 100
-  "nickName": "nickname3"      // String, 필수, 최소 길이: 1, 최대 길이: 50
-}
-```
-
-#### Response:
-
-##### Header:
-```http
-HTTP/1.1 200 OK
-Content-Type: application/json
-```
-
-##### Body:
-```json
-{
-  "code": "M004",
-  "message": "회원 수정 성공"
-}
-```
-
-</details>
-
-<details>
-<summary>DELETE: 회원 삭제</summary>
-
-#### Request:
-```http
-DELETE http://localhost:8080/api/members/1
-Content-Type: application/json
-```
-
-#### Response:
-
-##### Header:
-```http
-HTTP/1.1 200 OK
-Content-Type: application/json
-```
-
-##### Body:
-```json
-{
-  "code": "M005",
-  "message": "회원 삭제 성공"
-}
-```
-
-</details>
-
----
-
-## Option API
-### Endpoint: `/options`
-<details>
-<summary>GET: 옵션 목록 조회</summary>
-
-#### Request:
-```http
-GET http://localhost:8080/api/options
-Content-Type: application/json
-```
-
-#### Response:
-
-##### Header:
-```http
-HTTP/1.1 200 OK
-Content-Type: application/json
-```
-
-##### Body:
-```json
-{
-  "code": "O001",
-  "message": "모든 옵션 조회 성공",
-  "data": [
-    {
-      "id": 1,
-      "name": "name1",
-      "count": 20000,
-      "productId": 1
-    },
-    {
-      "id": 2,
-      "name": "name2",
-      "count": 20000,
-      "productId": 1
-    }
-  ]
-}
-```
-
-</details>
-
-<details>
-<summary>GET: 특정 제품의 옵션 목록 조회</summary>
-
-#### Request:
-```http
-GET http://localhost:8080/api/options/products/1
-Content-Type: application/json
-```
-
-#### Response:
-
-##### Header:
-```http
-HTTP/1.1 200 OK
-Content-Type: application/json
-```
-
-##### Body:
-```json
-{
-  "code": "O002",
-  "message": "특정 제품의 옵션 조회 성공",
-  "data": [
-    {
-      "id": 1,
-      "name": "name1",
-      "count": 20000,
-      "productId": 1
-    },
-    {
-      "id": 2,
-      "name": "name2",
-      "count": 20000,
-      "productId": 1
-    }
-  ]
-}
-```
-
-</details>
-
-<details>
-<summary>GET: 특정 옵션 조회</summary>
-
-#### Request:
-```http
-GET http://localhost:8080/api/options/1
-Content-Type: application/json
-```
-
-#### Response:
-
-##### Header:
-```http
-HTTP/1.1 200 OK
-Content-Type: application/json
-```
-
-##### Body:
-```json
-{
-  "code": "O003",
-  "message": "단일 옵션 조회 성공",
-  "data": {
-    "id": 1,
-    "name": "name1",
-    "count": 20000,
-    "productId": 1
-  }
-}
-```
-
-</details>
-
-<details>
-<summary>POST: 새로운 옵션 추가</summary>
-
-#### Request:
-```http
-POST http://localhost:8080/api/options
-Content-Type: application/json
-
-{
-  "name": "123",       // String, 필수, 최소 길이: 1, 최대 길이: 100
-  "count": 1000,       // Integer, 필수, 최소: 1
-  "productId": 1       // Integer, 필수, 유효한 제품 ID
-}
-```
-
-#### Response:
-
-##### Header:
-```http
-HTTP/1.1 201 Created
-Content-Type: application/json
-```
-
-##### Body:
-```json
-{
-  "code": "O004",
-  "message": "옵션 생성 성공"
-}
-```
-
-</details>
-
-<details>
-<summary>PUT: 옵션 업데이트</summary>
-
-#### Request:
-```http
-PUT http://localhost:8080/api/options/1
-Content-Type: application/json
-
-{
-  "name": "aaa",       // String, 필수, 최소 길이: 1, 최대 길이: 100
-  "count": 123,        // Integer, 필수, 최소: 1
-  "productId": 1       // Integer, 필수, 유효한 제품 ID
-}
-```
-
-#### Response:
-
-##### Header:
-```http
-HTTP/1.1 200 OK
-Content-Type: application/json
-```
-
-##### Body:
-```json
-{
-  "code": "O005",
-  "message": "옵션 수정 성공"
-}
-```
-
-</details>
-
-<details>
-<summary>DELETE: 옵션 삭제</summary>
-
-#### Request:
-```http
-DELETE http://localhost:8080/api/options/1
-Content-Type: application/json
-```
-
-#### Response:
-
-##### Header:
-```http
-HTTP/1.1 200 OK
-Content-Type: application/json
-```
-
-##### Body:
-```json
-{
-  "code": "O006",
-  "message": "옵션 삭제 성공"
-}
-```
-
-</details>
-
----
-
-## Order API
-### Endpoint: `/orders`
-<details>
-<summary>GET: 주문 목록 조회</summary>
-
-#### Request:
-```http
-GET http://localhost:8080/api/orders
-Content-Type: application/json
-```
-
-#### Response:
-
-##### Header:
-```http
-HTTP/1.1 200 OK
-Content-Type: application/json
-```
-
-##### Body:
-```json
-{
-  "code": "O007",
-  "message": "모든 주문 조회 성공",
-  "data": [
-    {
-      "id": 1,
-      "count": 12,
-      "message": "message",
-      "optionId": 2
-    }
-  ]
-}
-```
-
-</details>
-
-<details>
-<summary>POST: 새로운 주문 추가</summary>
-
-#### Request:
-```http
-POST http://localhost:8080/api/orders
-Authorization: Bearer <JWT_TOKEN>
-Content-Type: application/json
-
-{
-  "count": 12,         // Integer, 필수, 최소: 1
-  "message": "message",// String, 선택, 최대 길이: 255
-  "optionId": 1        // Integer, 필수, 유효한 옵션 ID
-}
-```
-
-#### Response:
-
-##### Header:
-```http
-HTTP/1.1 201 Created
-Content-Type: application/json
-```
-
-##### Body:
-```json
-{
-  "code": "O008",
-  "message": "주문 생성 성공"
-}
-```
-
-</details>
-
-<details>
-<summary>PUT: 주문 업데이트</summary>
-
-#### Request:
-```http
-PUT http://localhost:8080/api/orders/1
-Content-Type: application/json
-
-{
-  "count": 123,        // Integer, 필수, 최소: 1
-  "message": "새로운 메시지",  // String, 선택, 최대 길이: 255
-  "optionId": 1        // Integer, 필수, 유효한 옵션 ID
-}
-```
-
-#### Response:
-
-##### Header:
-```http
-HTTP/1.1 200 OK
-Content-Type: application/json
-```
-
-##### Body:
-```json
-{
-  "code": "O009",
-  "message": "주문 수정 성공"
-}
-```
-
-</details>
-
-<details>
-<summary>DELETE: 주문 삭제</summary>
-
-#### Request:
-```http
-DELETE http://localhost:8080/api/orders/1
-Content-Type: application/json
-```
-
-#### Response:
-
-##### Header:
-```http
-HTTP/1.1 200 OK
-Content-Type: application/json
-```
-
-##### Body:
-```json
-{
-  "code": "O010",
-  "message": "주문 삭제 성공"
-}
-```
-
-</details>
-
----
 
 ## Product API
 ### Endpoint: `/products`
-<details>
-<summary>GET: 모든 제품 목록 조회</summary>
 
-#### Request:
-```http
-GET http://localhost:8080/api/products/all
-Content-Type: application/json
-```
+| 제목               | 메서드 | URL                                                    | 요청 컨텐트 타입 / 요청 객체                    | 응답 객체                                        | 설명                                     |
+|------------------|--------|--------------------------------------------------------|------------------------------------------------|----------------------------------------------|------------------------------------------|
+| 카테고리 별 제품 페이지 조회 | `GET`    | `/api/products?page={page_num}&category={category_id}` | `Content-Type: application/json`                 | `Status: 200 OK<br>Body: {data}` | 페이지네이션을 이용한 제품 목록을 반환합니다. |
+| 특정 제품 조회         | `GET`    | `/api/products/{product_id}`                           | `Content-Type: application/json`                 | `Status: 200 OK<br>Body: {product}`            | 제품 ID에 해당하는 상세 제품 정보를 반환합니다. |
+| 새로운 제품 추가        | `POST`   | `/api/products`                                        | `Content-Type: application/json<br>{product data}` | `Status: 200 OK`                              | 새로운 제품을 추가합니다.                  |
+| 제품 정보 업데이트       | `PUT`    | `/api/products/{product_id}`                           | `Content-Type: application/json<br>{product data}` | `Status: 200 OK`                              | 지정된 제품의 정보를 업데이트합니다.       |
+| 제품 삭제            | `DELETE` | `/api/products/{product_id}`                           | `Content-Type: application/json`                 | `Status: 200 OK `                             | 지정된 제품을 삭제합니다.                 |
+* 각 요청마다 요청 바디 타입이 다르니 주의하시길 바랍니다.
 
-#### Response:
-
-##### Header:
-```http
-HTTP/1.1 200 OK
-Content-Type: application/json
-```
-
-##### Body:
-```json
-{
-  "code": "P001",
-  "message": "모든 제품 조회 성공",
-  "data": [
-    {
-      "id": 1,
-      "name": "test1",
-      "price": 10000,
-      "imageUrl": "http://example.com/image.jpg",
-      "category": null
-    },
-    {
-      "id": 2,
-      "name": "test2",
-      "price": 20000,
-      "imageUrl": "http://example.com/image2.jpg",
-      "category": null
-    }
-  ]
-}
-```
-
-</details>
 
 <details>
 <summary>GET: 제품 페이지 조회</summary>
 
+* Default 상품 반환 개수 : 20개
+
 #### Request:
 ```http
-GET http://localhost:8080/api/products?page=0
+/api/products?page={page_num}&category={category_id}
 Content-Type: application/json
 ```
 
@@ -822,26 +251,25 @@ Content-Type: application/json
 ```
 
 ##### Body:
+- `"total_page"` 는 전체 페이지 수 입니다. 예를 들어 3이 반환된 경우 페이지 개수는 전체 1,2,3 총 3개입니다.
 ```json
 {
-  "code": "P002",
-  "message": "제품 페이지 조회 성공",
   "data": {
-    "page": 3,
+    "total_page": 3,
     "products": [
       {
         "id": 1,
         "name": "test1",
         "price": 10000,
-        "imageUrl": "http://example.com/image.jpg",
-        "category": null
+        "image_url": "http://example.com/image.jpg",
+        "category_id": 1
       },
       {
         "id": 2,
         "name": "test2",
         "price": 20000,
-        "imageUrl": "http://example.com/image2.jpg",
-        "category": null
+        "image_url": "http://example.com/image2.jpg",
+        "category_id": 1
       }
     ]
   }
@@ -855,7 +283,7 @@ Content-Type: application/json
 
 #### Request:
 ```http
-GET http://localhost:8080/api/products/1
+GET http://localhost:8080/api/products/{product_id}
 Content-Type: application/json
 ```
 
@@ -869,16 +297,13 @@ Content-Type: application/json
 
 ##### Body:
 ```json
+
 {
-  "code": "P003",
-  "message": "단일 제품 조회 성공",
-  "data": {
     "id": 1,
     "name": "test1",
     "price": 10000,
-    "imageUrl": "http://example.com/image.jpg",
-    "category": null
-  }
+    "image_url": "http://example.com/image.jpg",
+    "category_id": 1
 }
 ```
 
@@ -892,11 +317,22 @@ Content-Type: application/json
 POST http://localhost:8080/api/products
 Content-Type: application/json
 
+body
 {
-  "name": "!@#!$Q@#%",        // String, 필수, 최소 길이: 1, 최대 길이: 100
-  "price": 4500,              // Integer, 필수, 최소: 0
-  "imageUrl": "http://hello", // String, 필수, 유효한 URL 형식
-  "categoryId": 1             // Integer, 필수, 유효한 카테고리 ID
+  "name": "name",        
+  "price": 4500,              
+  "image_url": "http://hello", 
+  "category_id": 1,
+  "options": [
+    {
+      "name": "name1",
+      "quantity": 20000
+    },
+    {
+      "name": "name2",
+      "quantity": 20000
+    }
+  ]
 }
 ```
 
@@ -904,17 +340,11 @@ Content-Type: application/json
 
 ##### Header:
 ```http
-HTTP/1.1 201 Created
+HTTP/1.1 200 Ok
 Content-Type: application/json
 ```
 
 ##### Body:
-```json
-{
-  "code": "P004",
-  "message": "제품 추가 성공"
-}
-```
 
 </details>
 
@@ -923,14 +353,15 @@ Content-Type: application/json
 
 #### Request:
 ```http
-PUT http://localhost:8080/api/products/1
+PUT http://localhost:8080/api/products/{product_id}
 Content-Type: application/json
 
+body
 {
-  "name": "아메리카노2",        // String, 필수, 최소 길이: 1, 최대 길이: 100
-  "price": 5000,              // Integer, 필수, 최소: 0
-  "imageUrl": "http://hello", // String, 필수, 유효한 URL 형식
-  "categoryId": 2             // Integer, 필수, 유효한 카테고리 ID
+  "name": "아메리카노2",        
+  "price": 5000,              
+  "image_url": "http://hello", 
+  "category_id": 2             
 }
 ```
 
@@ -943,12 +374,6 @@ Content-Type: application/json
 ```
 
 ##### Body:
-```json
-{
-  "code": "P005",
-  "message": "제품 수정 성공"
-}
-```
 
 </details>
 
@@ -957,7 +382,7 @@ Content-Type: application/json
 
 #### Request:
 ```http
-DELETE http://localhost:8080/api/products/3
+DELETE http://localhost:8080/api/products/{product_id}
 Content-Type: application/json
 ```
 
@@ -969,27 +394,29 @@ HTTP/1.1 200 OK
 Content-Type: application/json
 ```
 
+
 ##### Body:
-```json
-{
-  "code": "P006",
-  "message": "제품 삭제 성공"
-}
-```
 
 </details>
 
 ---
 
-## Wish API
-### Endpoint: `/wishes`
+## Option API
+### Endpoint: `/options`
+
+| 제목                     | 메서드 | URL                              | 요청 컨텐트 타입 / 요청 객체                                 | 응답 객체                      | 설명                                      |
+|--------------------------|--------|----------------------------------|---------------------------------------------------|----------------------------|-------------------------------------------|
+| 특정 제품의 옵션 목록 조회 | `GET`    | `/api/options/{product_id}`        | `Content-Type: application/json`                    | `Status: 200 OK`<br>`Body: {options}` | 제품 ID에 해당하는 모든 옵션을 반환합니다. |
+| 새로운 옵션 추가          | `POST`   | `/api/options`                     | `Content-Type: application/json`<br> `body: {option}` | `Status: 200 OK`             | 제품에 새로운 옵션을 추가합니다.           |
+| 옵션 삭제                 | `DELETE` | `/api/options/{option_id}`         | `Content-Type: application/json`                    | `Status: 200 OK`             | 지정된 ID의 옵션을 삭제합니다.             |
+
+
 <details>
-<summary>GET: 모든 위시 목록 조회</summary>
+<summary>GET: 특정 제품의 옵션 목록 조회</summary>
 
 #### Request:
 ```http
-GET http://localhost:8080/api/wishes/all
-Authorization: Bearer <JWT_TOKEN>
+GET http://localhost:8080/api/options/{product_id}
 Content-Type: application/json
 ```
 
@@ -1004,22 +431,16 @@ Content-Type: application/json
 ##### Body:
 ```json
 {
-  "code": "W001",
-  "message": "모든 위시 리스트 조회 성공",
-  "data": [
+  "options": [
     {
       "id": 1,
-      "productId": 1,
-      "productName": "test1",
-      "imageUrl": "http://example.com/image.jpg",
-      "productCount": 10
+      "name": "name1",
+      "quantity": 20000
     },
     {
       "id": 2,
-      "productId": 2,
-      "productName": "test2",
-      "imageUrl": "http://example.com/image2.jpg",
-      "productCount": 10
+      "name": "name2",
+      "quantity": 20000
     }
   ]
 }
@@ -1027,12 +448,78 @@ Content-Type: application/json
 
 </details>
 
+
+<details>
+<summary>POST: 새로운 옵션 추가</summary>
+
+#### Request:
+```http
+POST http://localhost:8080/api/options
+Content-Type: application/json
+
+body
+{
+  "name": "name",       
+  "quanatity": 1000,       
+  "product_id": 1       
+}
+```
+
+#### Response:
+
+##### Header:
+```http
+HTTP/1.1 200 OK
+Content-Type: application/json
+```
+
+##### Body:
+
+</details>
+
+
+<details>
+<summary>DELETE: 옵션 삭제</summary>
+
+#### Request:
+```http
+DELETE http://localhost:8080/api/options/{option_id}
+Content-Type: application/json
+```
+
+#### Response:
+
+##### Header:
+```http
+HTTP/1.1 200 OK
+Content-Type: application/json
+```
+
+##### Body:
+
+
+</details>
+
+---
+
+## Wish API
+### Endpoint: `/wishes`
+
+
+| 제목                     | 메서드 | URL                            | 요청 컨텐트 타입 / 요청 객체                                                                    | 응답 객체                          | 설명                                       |
+|--------------------------|--------|--------------------------------|--------------------------------------------------------------------------------------|--------------------------------|--------------------------------------------|
+| 특정 페이지의 위시 목록 조회 | `GET`    | `/api/wishes?page={page_num}`    | `Authorization: Bearer {Token}`<br>`Content-Type: application/json`                      | `Status: 200 OK`<br>`Body: {data}` | 페이지네이션을 이용한 위시 목록을 반환합니다. |
+| 새로운 위시 추가          | `POST`   | `/api/wishes`                    | `Authorization: Bearer {Token}`<br>`Content-Type: application/json<br>body: {wish data}` | `Status: 200 OK`                 | 새로운 위시를 추가합니다.                    |
+| 위시 삭제                 | `DELETE` | `/api/wishes/{wish_id}`          | `Authorization: Bearer {Token}`<br>`Content-Type: application/json<br>body: {wish data}` | `Status: 200 OK`                 | 지정된 위시를 삭제합니다.                    |
+
+
+
 <details>
 <summary>GET: 특정 페이지의 위시 목록 조회</summary>
 
 #### Request:
 ```http
-GET http://localhost:8080/api/wishes?page=2
+GET http://localhost:8080/api/wishes?page={page_num}
 Authorization: Bearer <JWT_TOKEN>
 Content-Type: application/json
 ```
@@ -1048,49 +535,22 @@ Content-Type: application/json
 ##### Body:
 ```json
 {
-  "code": "W002",
-  "message": "특정 페이지의 위시 리스트 조회 성공",
   "data": {
-    "id": 2,
-    "productId": 2,
-    "productName": "test2",
-    "imageUrl": "http://example.com/image2.jpg",
-    "productCount": 10
-  }
-}
-```
-
-</details>
-
-<details>
-<summary>GET: 특정 위시 조회</summary>
-
-#### Request:
-```http
-GET http://localhost:8080/api/wishes/2
-Authorization: Bearer <JWT_TOKEN>
-Content-Type: application/json
-```
-
-#### Response:
-
-##### Header:
-```http
-HTTP/1.1 200 OK
-Content-Type: application/json
-```
-
-##### Body:
-```json
-{
-  "code": "W003",
-  "message": "단일 위시 조회 성공",
-  "data": {
-    "id": 2,
-    "productId": 2,
-    "productName": "test2",
-    "imageUrl": "http://example.com/image2.jpg",
-    "productCount": 10
+    "total_page": 3,
+    "wishes": [
+      {
+        "id": 21,
+        "product_id": 21,
+        "product_name": "test21",
+        "image_url": "http://"
+      },
+      {
+        "id": 22,
+        "product_id": 21,
+        "product_name": "test21",
+        "image_url": "http://"
+      }
+    ]
   }
 }
 ```
@@ -1106,44 +566,9 @@ POST http://localhost:8080/api/wishes
 Authorization: Bearer <JWT_TOKEN>
 Content-Type: application/json
 
+body
 {
-  "memberId": 1,     // Integer, 필수, 유효한 회원 ID
-  "productId": 2,    // Integer, 필수, 유효한 제품 ID
-  "productCount": 5  // Integer, 필수, 최소: 1
-}
-```
-
-#### Response:
-
-##### Header:
-```http
-HTTP/1.1 201 Created
-Content-Type: application/json
-```
-
-##### Body:
-```json
-{
-  "code": "W004",
-  "message": "위시 추가 성공"
-}
-```
-
-</details>
-
-<details>
-<summary>PUT: 위시 업데이트</summary>
-
-#### Request:
-```http
-PUT http://localhost:8080/api/wishes/1
-Authorization: Bearer <JWT_TOKEN>
-Content-Type: application/json
-
-{
-  "memberId": 1,     // Integer, 필수, 유효한 회원 ID
-  "productId": 2,    // Integer, 필수, 유효한 제품 ID
-  "productCount": 10 // Integer, 필수, 최소: 1
+  "product_id": 2
 }
 ```
 
@@ -1156,12 +581,6 @@ Content-Type: application/json
 ```
 
 ##### Body:
-```json
-{
-  "code": "W005",
-  "message": "위시 수정 성공"
-}
-```
 
 </details>
 
@@ -1170,8 +589,7 @@ Content-Type: application/json
 
 #### Request:
 ```http
-DELETE http://localhost:8080/api/wishes/1
-Authorization: Bearer <JWT_TOKEN>
+DELETE http://localhost:8080/api/wishes/{wish_id}
 Content-Type: application/json
 ```
 
@@ -1184,13 +602,47 @@ Content-Type: application/json
 ```
 
 ##### Body:
-```json
+
+</details>
+
+---
+
+
+## Order API
+### Endpoint: `/orders`
+
+| 제목                 | 메서드 | URL                               | 요청 컨텐트 타입 / 요청 객체                                                                 | 응답 객체                                   | 설명                                     |
+|----------------------|--------|-----------------------------------|-----------------------------------------------------------------------------------|---------------------------------------------|-----------------------------------------|
+| 새로운 주문 추가        | `POST`   | `/api/orders`                          | `Authorization: Bearer {Token}` <br>`Content-Type: application/json<br>body: {order}` | `Status: 200 OK`               |   새로운 주문을 추가합니다.                        |
+<details>
+<summary>POST: 새로운 주문 추가</summary>
+
+#### Request:
+```http
+POST http://localhost:8080/api/orders
+Authorization: Bearer <JWT_TOKEN>
+Content-Type: application/json
+
+body 
 {
-  "code": "W006",
-  "message": "위시 삭제 성공"
+  "quantity": 12,         
+  "message": "message",
+  "option_id": 1    
 }
 ```
 
+#### Response:
+
+##### Header:
+```http
+HTTP/1.1 200 OK
+Content-Type: application/json
+```
+
+##### Body:
+
+
 </details>
+
 
 ---
