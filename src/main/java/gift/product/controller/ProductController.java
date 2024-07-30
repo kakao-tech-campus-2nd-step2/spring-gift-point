@@ -108,13 +108,12 @@ public class ProductController {
         return new ResponseEntity<>(optionService.findAllByProductId(productId),HttpStatus.OK);
     }
 
-    @PostMapping("{productId}/options/{optionId}")
+    @PostMapping("{productId}/options")
     @Operation(summary = "상품 옵션 추가", tags = {"상품 옵션 API"})
     public ResponseEntity<OptionDTO> addOption(@PathVariable Long productId,
-        @PathVariable Long optionId,
         @RequestBody OptionDTO optionDTO){
         try{
-            optionDTO = optionService.addOption(productId, optionId, optionDTO);
+            optionDTO = optionService.addOption(productId, optionDTO);
         }catch(IllegalArgumentException e){
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
@@ -141,11 +140,4 @@ public class ProductController {
         optionService.deleteOption(productId, optionId);
         return new ResponseEntity<>(HttpStatus.OK);
     }
-    /*
-    @PostMapping("/subtract")
-    @Operation(summary = "option의 quantity 줄이기")
-    public Option subtractQuantity(@RequestBody OptionDTO optionDTO, @RequestParam Long orderedQuantity) {
-        return optionService.subtract(optionDTO, orderedQuantity);
-    }
-     */
 }
