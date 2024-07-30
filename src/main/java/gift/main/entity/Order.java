@@ -18,6 +18,8 @@ public class Order {
 
     private String message;
 
+    private int totalPrice;
+
     @ManyToOne
     @JoinColumn(name = "seller_id")
     private User buyer;
@@ -30,15 +32,22 @@ public class Order {
     @JoinColumn(name = "product_id")
     private Product product;
 
+
+
+
     public Order() {
     }
 
+
+    //buyer, option, purchasedProduct)
     public Order(OrderRequest orderRequest, User buyer, Option option, Product product) {
         this.quantity = orderRequest.quantity();
         this.message = orderRequest.message();
+        this.totalPrice = product.getPrice() * orderRequest.quantity();
         this.buyer = buyer;
         this.option = option;
         this.product = product;
+
     }
 
     public long getId() {
@@ -63,5 +72,9 @@ public class Order {
 
     public Product getProduct() {
         return product;
+    }
+
+    public int getTotalPrice() {
+        return totalPrice;
     }
 }
