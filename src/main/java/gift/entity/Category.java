@@ -49,6 +49,8 @@ public class Category {
         this.color = color;
     }
 
+    public void updateId(Long id) {this.id = id;}
+
     public static class Builder {
         private Long id;
         private String name;

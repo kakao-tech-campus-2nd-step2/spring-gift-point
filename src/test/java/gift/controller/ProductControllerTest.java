@@ -53,7 +53,7 @@ public class ProductControllerTest {
         when(productService.findById(anyLong())).thenReturn(product);
 
         mockMvc.perform(get("/api/products/1")
-                        .accept(MediaType.APPLICATION_JSON))
+                .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(1L))
                 .andExpect(jsonPath("$.name").value("Test Product"));
