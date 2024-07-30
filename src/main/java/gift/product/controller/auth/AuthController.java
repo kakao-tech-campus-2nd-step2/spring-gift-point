@@ -21,10 +21,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
+@RequestMapping("/api/members")
 @Tag(name = "auth", description = "회원가입, 로그인, 탈퇴 관련 API")
 public class AuthController {
 
@@ -41,7 +43,7 @@ public class AuthController {
         @ApiResponse(responseCode = "200", description = "성공", content = @Content(mediaType = "application/json", schema = @Schema(implementation = RegisterSuccessResponse.class))),
         @ApiResponse(responseCode = "400", description = "잘못된 요청", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProblemDetailResponse.class)))
     })
-    @PostMapping("/members/register")
+    @PostMapping("/register")
     public ResponseEntity<RegisterSuccessResponse> registerMember(
         @RequestBody MemberDto memberDto) {
         authService.register(memberDto);
@@ -54,7 +56,7 @@ public class AuthController {
         @ApiResponse(responseCode = "200", description = "성공", content = @Content(mediaType = "application/json", schema = @Schema(implementation = JwtResponse.class))),
         @ApiResponse(responseCode = "403", description = "로그인 실패", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProblemDetailResponse.class)))
     })
-    @PostMapping("/members/login")
+    @PostMapping("/login")
     public ResponseEntity<JwtResponse> loginMember(@RequestBody MemberDto memberDto) {
         JwtResponse jwtResponse = authService.login(memberDto);
 
@@ -62,7 +64,7 @@ public class AuthController {
     }
 
     @ApiResponse(responseCode = "303", description = "카카오 로그인 진행 후 특정 URL로 리다이렉트 되어 아래의 응답을 받음 (전달 형식은 임시)", content = @Content(mediaType = "application/json", schema = @Schema(implementation = JwtResponse.class)))
-    @GetMapping("/members/login/kakao")
+    @GetMapping("/login/kakao")
     public ResponseEntity<Void> loginKakao() {
         HttpHeaders headers = new HttpHeaders();
         headers.setLocation(URI.create(authService.getKakaoAuthCodeUrl()));
@@ -70,7 +72,7 @@ public class AuthController {
     }
 
     @Hidden
-    @GetMapping
+    @GetMapping("/login/kakao/callback")
     public ResponseEntity<JwtResponse> getKakaoJwt(@RequestParam(name = "code") String code) {
         OAuthJwt oAuthJwt = authService.getOAuthToken(code, KAKAO_AUTH_TOKEN_URL);
         JwtResponse jwtResponse = authService.registerKakaoMember(oAuthJwt,
@@ -82,7 +84,7 @@ public class AuthController {
         @ApiResponse(responseCode = "200", description = "성공", content = @Content(mediaType = "application/json", schema = @Schema(implementation = Long.class))),
         @ApiResponse(responseCode = "403", description = "로그인 실패", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProblemDetailResponse.class)))
     })
-    @PostMapping("/members/login/kakao/unlink")
+    @PostMapping("/login/kakao/unlink")
     public ResponseEntity<Long> unlinkKakaoAccount(HttpServletRequest request) {
         LoginMemberIdDto loginMemberIdDto = getLoginMember(request);
         return ResponseEntity.ok(authService.unlinkKakaoAccount(loginMemberIdDto,
