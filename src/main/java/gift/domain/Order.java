@@ -22,6 +22,8 @@ public class Order {
     @JoinColumn(name = "optionId", nullable = false)
     private Option option;
     @Column
+    private Integer quantity;
+    @Column
     LocalDateTime orderDateTime;
     @Column
     String message;
@@ -29,8 +31,9 @@ public class Order {
     public Order() {
     }
 
-    public Order(Option option, LocalDateTime orderDateTime, String message) {
+    public Order(Option option, Integer quantity, LocalDateTime orderDateTime, String message) {
         this.option = option;
+        this.quantity = quantity;
         this.orderDateTime = orderDateTime;
         this.message = message;
     }
@@ -41,6 +44,10 @@ public class Order {
 
     public Option getOption() {
         return option;
+    }
+
+    public Integer getQuantity() {
+        return quantity;
     }
 
     public LocalDateTime getOrderDateTime() {

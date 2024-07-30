@@ -5,12 +5,17 @@ import static gift.controller.order.OrderMapper.toOrderResponse;
 import static gift.util.KakaoUtil.SendKakaoMessageToMe;
 
 import gift.controller.auth.KakaoTokenResponse;
+import gift.controller.order.OrderMapper;
 import gift.controller.order.OrderRequest;
 import gift.controller.order.OrderResponse;
 import gift.domain.Order;
 import gift.repository.OrderRepository;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.UUID;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -30,17 +35,25 @@ public class OrderService {
         this.kakaoTokenService = kakaoTokenService;
     }
 
+    @Transactional(readOnly = true)
+    public Page<OrderResponse> findAll(Pageable pageable) {
+        Page<Order> orderPage = orderRepository.findAll(pageable);
+        List<OrderResponse> orderResponses = orderPage.stream()
+            .map(OrderMapper::toOrderResponse).toList();
+        return new PageImpl<>(orderResponses, pageable, orderPage.getTotalElements());
+    }
+
     @Transactional
     public OrderResponse save(UUID memberId, OrderRequest orderRequest) {
         optionService.subtract(orderRequest.optionId(), orderRequest.quantity());
         wishService.delete(memberId,
-            optionService.getOptionResponseById(orderRequest.optionId()).productId());
+            optionService.findById(orderRequest.optionId()).getProductId());
         Order target = orderRepository.save(
-            toOrder(optionService.findById(orderRequest.optionId()), LocalDateTime.now(),
+            toOrder(optionService.findById(orderRequest.optionId()), orderRequest.quantity(),
+                LocalDateTime.now(),
                 orderRequest.message()));
         KakaoTokenResponse token = kakaoTokenService.findAccessTokenByMemberId(memberId);
         SendKakaoMessageToMe(orderRequest, token);
-        return toOrderResponse(target.getId(), target.getOption().getId(), orderRequest.quantity(),
-            target.getOrderDateTime(), target.getMessage());
+        return toOrderResponse(target);
     }
 }
