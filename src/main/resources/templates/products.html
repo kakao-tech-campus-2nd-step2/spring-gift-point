@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>Product List</title>
+</head>
+<body>
+<h1>Product List</h1>
+<a th:href="@{/admin/products/new}">Create New Product</a>
+<table>
+  <thead>
+  <tr>
+    <th>ID</th>
+    <th>Name</th>
+    <th>Price</th>
+    <th>Image</th>
+    <th>Actions</th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr th:each="product : ${products.content}">
+    <td th:text="${product.getId()}"></td>
+    <td th:text="${product.getName()}"></td>
+    <td th:text="${product.getPrice()}"></td>
+    <td th:text="${product.getImageUrl()}"></td>
+    <td>
+      <a th:href="@{/admin/products/edit/{id}(id=${product.getId()})}">Edit</a>
+      <form th:action="@{/admin/products/delete/{id}(id=${product.getId()})}" method="post" style="display:inline;">
+        <button type="submit">Delete</button>
+      </form>
+    </td>
+  </tr>
+  </tbody>
+</table>
+<div th:if="${products.totalPages > 1}">
+  <ul class="pagination">
+    <li th:class="${products.first ? 'disabled' : ''}">
+      <a th:href="@{/admin/products(page=0, size=${products.size})}">First</a>
+    </li>
+    <li th:class="${products.first ? 'disabled' : ''}">
+      <a th:href="@{/admin/products(page=${products.number - 1}, size=${products.size})}" th:text="Previous"></a>
+    </li>
+    <li th:each="pageNumber : ${#numbers.sequence(0, products.totalPages - 1)}" th:class="${pageNumber == products.number ? 'active' : ''}">
+      <a th:href="@{/admin/products(page=${pageNumber}, size=${products.size})}" th:text="${pageNumber + 1}"></a>
+    </li>
+    <li th:class="${products.last ? 'disabled' : ''}">
+      <a th:href="@{/admin/products(page=${products.number + 1}, size=${products.size})}" th:text="Next"></a>
+    </li>
+    <li th:class="${products.last ? 'disabled' : ''}">
+      <a th:href="@{/admin/products(page=${products.totalPages - 1}, size=${products.size})}">Last</a>
+    </li>
+  </ul>
+</div>
+</body>
+</html>

@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>Wishlist List</title>
+  <script>
+    function placeOrder(rowId, token) {
+      const userId = document.querySelector(`#userId_${rowId}`).textContent;
+      const selectedOption = document.querySelector(`#optionSelect_${rowId}`).value;
+      const amount = parseInt(document.querySelector(`#amount_${rowId}`).textContent, 10);
+      const message = document.querySelector(`#message_${rowId}`).value;
+
+      const data = {
+        optionId: selectedOption,
+        quantity: amount,
+        message: message
+      };
+
+      fetch(`/api/orders?userId=${userId}`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)
+      }).then(response => {
+        if (response.ok) {
+          alert('Order placed successfully');
+        } else {
+          alert('Failed to place order');
+        }
+      }).catch(error => {
+        console.error('Error:', error);
+        alert('Failed to place order');
+      });
+    }
+  </script>
+</head>
+<body>
+<h1>Wishlist List</h1>
+<a th:href="@{'/wishlist/' + ${id} + '/new'}">Add Product</a>
+<table>
+  <thead>
+  <tr>
+    <th>USER ID</th>
+    <th>PRODUCT ID</th>
+    <th>NAME</th>
+    <th>PRICE</th>
+    <th>CATEGORY</th>
+    <th>AMOUNT</th>
+    <th>OPTION SELECTION</th>
+    <th>MESSAGE</th>
+    <th>Actions</th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr th:each="wishlist, iterStat : ${wishlists.content}">
+    <td th:id="'userId_' + ${iterStat.index}" th:text="${wishlist.userId}"></td>
+    <td th:text="${wishlist.productDTO().id}"></td>
+    <td th:text="${wishlist.productDTO().name}"></td>
+    <td th:text="${wishlist.productDTO().price}"></td>
+    <td th:text="${wishlist.productDTO().categoryId}"></td>
+    <td th:id="'amount_' + ${iterStat.index}" th:text="${wishlist.amount}"></td>
+    <td>
+      <select th:id="'optionSelect_' + ${iterStat.index}">
+        <option th:each="option : ${wishlist.productDTO().optionDTOList}"
+                th:value="${option.getId()}"
+                th:text="${option.getName()}">
+        </option>
+      </select>
+    </td>
+    <td>
+      <textarea th:id="'message_' + ${iterStat.index}"></textarea>
+    </td>
+    <td>
+      <button type="button" th:data-row-id="${iterStat.index}" th:data-token="${token}"
+              onclick="placeOrder(this.getAttribute('data-row-id'), this.getAttribute('data-token'))">Order</button>
+    </td>
+  </tr>
+  </tbody>
+</table>
+<div th:if="${wishlists.totalPages > 1}">
+  <ul class="pagination">
+    <li th:class="${wishlists.first ? 'disabled' : ''}">
+      <a th:href="@{/wishlist/{id}(id=${id}, page=0, size=${wishlists.size})}">First</a>
+    </li>
+    <li th:class="${wishlists.first ? 'disabled' : ''}">
+      <a th:href="@{/wishlist/{id}(id=${id}, page=${wishlists.number - 1}, size=${wishlists.size})}" th:text="Previous"></a>
+    </li>
+    <li th:each="pageNumber : ${#numbers.sequence(0, wishlists.totalPages - 1)}" th:class="${pageNumber == wishlists.number ? 'active' : ''}">
+      <a th:href="@{/wishlist/{id}(id=${id}, page=${pageNumber}, size=${wishlists.size})}" th:text="${pageNumber + 1}"></a>
+    </li>
+    <li th:class="${wishlists.last ? 'disabled' : ''}">
+      <a th:href="@{/wishlist/{id}(id=${id}, page=${wishlists.number + 1}, size=${wishlists.size})}" th:text="Next"></a>
+    </li>
+    <li th:class="${wishlists.last ? 'disabled' : ''}">
+      <a th:href="@{/wishlist/{id}(id=${id}, page=${wishlists.totalPages - 1}, size=${wishlists.size})}">Last</a>
+    </li>
+  </ul>
+</div>
+</body>
+</html>
