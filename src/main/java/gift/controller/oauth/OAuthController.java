@@ -2,6 +2,7 @@ package gift.controller.oauth;
 
 import gift.common.properties.KakaoProperties;
 import gift.common.util.KakaoUtil;
+import gift.controller.user.dto.UserResponse;
 import gift.service.OAuthService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -39,8 +40,8 @@ public class OAuthController {
 
     @GetMapping("/callback")
     @Operation(summary = "카카오 로그인", description = "카카오 로그인을 시도합니다.")
-    public ResponseEntity<String> registerUser(@RequestParam("code") String code) {
-        String token = OAuthService.register(code);
-        return ResponseEntity.ok().header("Authorization", "Bearer " + token).body(token);
+    public ResponseEntity<UserResponse> registerUser(@RequestParam("code") String code) {
+        UserResponse response = OAuthService.register(code);
+        return ResponseEntity.ok().body(response);
     }
 }

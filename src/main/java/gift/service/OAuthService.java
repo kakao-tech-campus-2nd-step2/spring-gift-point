@@ -6,6 +6,7 @@ import gift.common.exception.ErrorCode;
 import gift.common.exception.OAuthException;
 import gift.common.util.KakaoUtil;
 import gift.controller.oauth.dto.TokenInfoResponse;
+import gift.controller.user.dto.UserResponse;
 import gift.model.Token;
 import gift.model.User;
 import gift.repository.TokenRepository;
@@ -28,7 +29,7 @@ public class OAuthService {
         this.kakaoUtil = kakaoUtil;
     }
 
-    public String register(String code) {
+    public UserResponse register(String code) {
         TokenInfoResponse response = kakaoUtil.getToken(code);
         String accessToken = response.access_token();
         String refreshToken = response.refresh_token();
@@ -44,6 +45,8 @@ public class OAuthService {
 
         tokenRepository.save(new Token(accessToken, refreshToken, user, expiresIn));
 
-        return jwtTokenProvider.createToken(user.getEmail());
+        String token = jwtTokenProvider.createToken(user.getEmail());
+
+        return UserResponse.from(token);
     }
 }
