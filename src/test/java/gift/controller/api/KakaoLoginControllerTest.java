@@ -32,7 +32,7 @@ class KakaoLoginControllerTest {
 
     @Test
     void redirect() throws Exception {
-        mockMvc.perform(RestDocumentationRequestBuilders.get("/kakaologin"))
+        mockMvc.perform(RestDocumentationRequestBuilders.get("/api/kakaologin"))
                 .andExpect(status().isFound())
                 .andDo(document("kakaologin"));
     }

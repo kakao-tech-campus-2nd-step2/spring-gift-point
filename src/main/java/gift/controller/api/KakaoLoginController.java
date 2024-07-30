@@ -43,7 +43,7 @@ public class KakaoLoginController {
         return ResponseEntity.ok().body(JwtResponse);
     }
 
-    @GetMapping("/kakaologin")
+    @GetMapping("/api/kakaologin")
     public ResponseEntity<Void> redirect() {
         HttpHeaders headers = new HttpHeaders();
         headers.setLocation(URI.create(authorizationCodeRequestUri));
