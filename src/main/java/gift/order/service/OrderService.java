@@ -10,6 +10,8 @@ import gift.order.domain.OrderResponse;
 import gift.order.repository.OrderRepository;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -37,6 +39,10 @@ public class OrderService {
     public KakaoMessageSendResponse sendMessage(String jwtAccessToken, String message){
         return kakaoLoginService.sendMessage(jwtAccessToken, message);
     }
+    public Page<OrderResponse> getOrderResponses(Pageable pageable) {
+        return orderRepository.findAll(pageable)
+            .map(this::convertEntityToResponse);
+    }
     private Order convertRequestToEntity(OrderRequest orderRequest){
         Option option = optionRepository.findById(orderRequest.optionId())
             .orElseThrow(() -> new IllegalArgumentException("OrderService: OptionId가 없다."));
@@ -50,4 +56,5 @@ public class OrderService {
                         order.getOrderDateTime(),
                         order.getMessage());
     }
+
 }
