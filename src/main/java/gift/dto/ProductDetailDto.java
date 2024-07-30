@@ -13,8 +13,8 @@ public class ProductDetailDto {
         this.imageUrl = imageUrl;
     }
 
-    public ProductDetailDto(Product product){
-        this(product.getName(),product.getPrice(),product.getImageUrl());
+    public ProductDetailDto(Product product) {
+        this(product.getName(), product.getPrice(), product.getImageUrl());
     }
 
     public String getName() {

@@ -49,4 +49,9 @@ public class MemberService {
         return memberRepository.findByActiveToken(token)
                 .orElseThrow(() -> new NoSuchElementException("유효하지 않은 토큰입니다."));
     }
+
+    public Member getMemberByEmail(String email) {
+        return memberRepository.findByEmail(email)
+                .orElseThrow(() -> new NoSuchElementException("존재하지 않는 이메일입니다."));
+    }
 }

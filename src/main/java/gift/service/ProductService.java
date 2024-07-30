@@ -87,7 +87,7 @@ public class ProductService {
     }
 
     private ProductDetailDto convertToDetailDto(Product product) {
-        ProductDetailDto dto = new ProductDetailDto(product.getName(),product.getPrice(),product.getImageUrl());
+        ProductDetailDto dto = new ProductDetailDto(product.getName(), product.getPrice(), product.getImageUrl());
         return dto;
     }
 
