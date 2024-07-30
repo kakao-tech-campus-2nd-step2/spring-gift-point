@@ -56,7 +56,7 @@ public class ProductController {
         model.addAttribute("categories", categories);
 
         ProductResponse productDto = productService.findById(productId);
-        model.addAttribute("productDto", new ProductRequest(productId, productDto.name(), productDto.price(), productDto.imageUrl(), productDto.categoryResponse().id()));
+        model.addAttribute("productDto", new ProductRequest(productId, productDto.name(), productDto.price(), productDto.imageUrl(), productDto.categoryId()));
         return "products/edit";
     }
 
