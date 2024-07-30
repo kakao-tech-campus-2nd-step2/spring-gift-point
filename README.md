@@ -4,17 +4,19 @@
 
 ## 1단계 - API 명세
 
-- [Authentication API](#authentication-api)
-- [Category API](#category-api)
-- [Member API](#member-api)
-- [Option API](#option-api)
-- [Order API](#order-api)
-- [Product API](#product-api)
-- [Wish API](#wish-api)
+### [API 명세서 노션 링크](https://fuchsia-tabletop-6fc.notion.site/22-438e773c1c0d475da1e87b4ef4ef42d8)
+
+- [인증 API](#인증-api)
+- [카테고리 API](#카테고리-api)
+- [회원 API](#회원-api)
+- [옵션 API](#옵션-api)
+- [주문 API](#주문-api)
+- [상품 API](#상품-api)
+- [위시 리스트 API](#위시 리스트-api)
 
 ---
 
-## Authentication API
+## 인증 API
 - ### Endpoint: `/oauth`
 
 ### **[GET]** 카카오 로그인 리다이렉트 요청
@@ -56,7 +58,7 @@ Content-Type: application/json
 
 ---
 
-## Category API
+## 카테고리 API
 - ### Endpoint: `/categories`
 ### **[GET]** 카테고리 목록 조회
 
@@ -172,7 +174,7 @@ Content-Type: application/json
 
 ---
 
-## Member API
+## 회원 API
 - ### Endpoint: `/members`
 
 ### **[POST]** 로그인 요청
@@ -223,7 +225,7 @@ Content-Type: application/json
 
 ---
 
-## Option API
+## 옵션 API
 - ### Endpoint: `/options`
 
 ### **[GET]** 특정 제품의 옵션 목록 조회
@@ -306,7 +308,7 @@ Content-Type: application/json
 
 ---
 
-## Order API
+## 주문 API
 - ### Endpoint: `/orders`
 
 ### **[POST]** 새로운 주문 추가
@@ -337,7 +339,7 @@ Content-Type: application/json
 
 ---
 
-## Product API
+## 상품 API
 - ### Endpoint: `/products`
 
 ### **[GET]** 제품 페이지 조회
@@ -498,7 +500,7 @@ Content-Type: application/json
 
 ---
 
-## Wish API
+## 위시 리스트 API
 - ### Endpoint: `/wishes`
 
 ### **[GET]** 특정 페이지의 위시 목록 조회
