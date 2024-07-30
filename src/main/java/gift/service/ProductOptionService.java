@@ -1,7 +1,9 @@
 package gift.service;
 
+import gift.model.Product;
 import gift.model.ProductOption;
 import gift.repository.ProductOptionRepository;
+import gift.repository.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -13,6 +15,9 @@ public class ProductOptionService {
 
     @Autowired
     private ProductOptionRepository productOptionRepository;
+
+    @Autowired
+    private ProductRepository productRepository;
 
     public List<ProductOption> getOptionsByProductId(Long productId) {
         return productOptionRepository.findByProductId(productId);
@@ -54,6 +59,27 @@ public class ProductOptionService {
         }
         option.subtractQuantity(quantityToSubtract);
         productOptionRepository.save(option);
+    }
+
+    public void addProductOption(Long productId, ProductOption productOption) {
+        Product product = productRepository.findById(productId).orElseThrow(() -> new IllegalArgumentException("Product not found"));
+        productOption.setProduct(product);
+        validateProductOption(productOption);
+        productOptionRepository.save(productOption);
+    }
+
+    public void updateProductOption(Long productId, Long optionId, ProductOption productOption) {
+        ProductOption existingOption = productOptionRepository.findById(optionId).orElseThrow(() -> new IllegalArgumentException("Option not found"));
+        Product product = productRepository.findById(productId).orElseThrow(() -> new IllegalArgumentException("Product not found"));
+        existingOption.setName(productOption.getName());
+        existingOption.setQuantity(productOption.getQuantity());
+        existingOption.setProduct(product);
+        validateProductOption(existingOption);
+        productOptionRepository.save(existingOption);
+    }
+
+    public void deleteProductOption(Long productId, Long optionId) {
+        productOptionRepository.deleteById(optionId);
     }
 
     private void validateProductOption(ProductOption option) {

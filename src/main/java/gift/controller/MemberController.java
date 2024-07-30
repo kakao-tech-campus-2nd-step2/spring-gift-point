@@ -1,6 +1,8 @@
 package gift.controller;
 
 import gift.auth.JwtTokenUtil;
+import gift.dto.DomainResponse;
+import gift.model.HttpResult;
 import gift.model.Member;
 import gift.service.MemberService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -10,42 +12,48 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @RestController
-@RequestMapping("/members")
+@RequestMapping("/api/members")
 @Tag(name = "Member API", description = "APIs related to member operations")
 public class MemberController {
 
     @Autowired
     private MemberService memberService;
 
-    @Operation(summary = "회원 가입", description = "새로운 회원을 등록한다.")
+    @Operation(summary = "회원 가입", description = "새 회원을 등록하고 토큰을 받는다.")
     @PostMapping("/register")
-    public ResponseEntity<String> register(@Valid @RequestBody Member member, BindingResult bindingResult) {
+    public ResponseEntity<DomainResponse> register(@Valid @RequestBody Member member, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
-            return new ResponseEntity<>(bindingResult.getAllErrors().toString(), HttpStatus.BAD_REQUEST);
+            HttpResult httpResult = new HttpResult(HttpStatus.BAD_REQUEST.value(), "Validation errors");
+            return new ResponseEntity<>(new DomainResponse(httpResult, List.of(Map.of("errors", bindingResult.getAllErrors().toString())), HttpStatus.BAD_REQUEST), HttpStatus.BAD_REQUEST);
         }
         try {
             memberService.register(member.getEmail(), member.getPassword());
-            return new ResponseEntity<>("User registered successfully", HttpStatus.OK);
+            HttpResult httpResult = new HttpResult(HttpStatus.OK.value(), "User registered successfully");
+            return new ResponseEntity<>(new DomainResponse(httpResult, List.of(Map.of("message", "User registered successfully")), HttpStatus.OK), HttpStatus.OK);
         } catch (IllegalArgumentException e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+            HttpResult httpResult = new HttpResult(HttpStatus.BAD_REQUEST.value(), e.getMessage());
+            return new ResponseEntity<>(new DomainResponse(httpResult, List.of(Map.of("error", e.getMessage())), HttpStatus.BAD_REQUEST), HttpStatus.BAD_REQUEST);
         }
     }
 
-    @Operation(summary = "로그인", description = "회원 로그인")
+    @Operation(summary = "로그인", description = "회원을 인증하고 토큰을 받는다.")
     @PostMapping("/login")
-    public ResponseEntity<String> login(@RequestBody Member member) {
+    public ResponseEntity<DomainResponse> login(@RequestBody Member member) {
         Member authenticatedMember = memberService.authenticate(member.getEmail(), member.getPassword());
         if (authenticatedMember != null) {
             String token = JwtTokenUtil.generateToken(authenticatedMember);
-            return new ResponseEntity<>(token, HttpStatus.OK);
+            HttpResult httpResult = new HttpResult(HttpStatus.OK.value(), "Login successful");
+            return new ResponseEntity<>(new DomainResponse(httpResult, List.of(Map.of("token", token)), HttpStatus.OK), HttpStatus.OK);
         } else {
-            return new ResponseEntity<>("Invalid email or password", HttpStatus.UNAUTHORIZED);
+            HttpResult httpResult = new HttpResult(HttpStatus.UNAUTHORIZED.value(), "Invalid email or password");
+            return new ResponseEntity<>(new DomainResponse(httpResult, List.of(Map.of("error", "Invalid email or password")), HttpStatus.UNAUTHORIZED), HttpStatus.UNAUTHORIZED);
         }
     }
 }

@@ -28,13 +28,13 @@ public class ProductService {
 
     public void save(Product product) {
         validateProductOptions(product);
-        productRepository.save(product);
+        Product savedProduct = productRepository.save(product);  // 상품을 먼저 저장
         List<ProductOption> options = product.getOptions().stream()
                 .map(option -> {
                     ProductOption newOption = new ProductOption();
                     newOption.setName(option.getName());
                     newOption.setQuantity(option.getQuantity());
-                    newOption.setProduct(product);
+                    newOption.setProduct(savedProduct);  // 연관된 상품 설정
                     return newOption;
                 })
                 .collect(Collectors.toList());

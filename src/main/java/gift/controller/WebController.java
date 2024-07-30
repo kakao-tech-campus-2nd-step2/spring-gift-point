@@ -1,5 +1,6 @@
 package gift.controller;
 
+import gift.dto.DomainResponse;
 import gift.model.Category;
 import gift.model.Product;
 import gift.model.ProductOption;
@@ -47,11 +48,6 @@ public class WebController {
         return "order";
     }
 
-    // @GetMapping("/login")
-    // public String showLoginForm() {
-    //    return "login";
-    // }
-
     @GetMapping("/user-wishes")
     public String showWishesPage() {
         return "user-wishes";
@@ -60,22 +56,26 @@ public class WebController {
     @GetMapping("/user-products")
     public String showUserProductsPage(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "5") int size, Model model) {
         Pageable pageable = PageRequest.of(page, size);
-        ResponseEntity<Page<Product>> response = productController.getAllProducts(pageable);
+        ResponseEntity<DomainResponse> response = productController.getAllProducts(pageable);
         if (response.getStatusCode() != HttpStatus.OK || response.getBody() == null) {
             return "error/500";
         }
-        model.addAttribute("products", response.getBody());
+        Page<Product> productPage = (Page<Product>) response.getBody().getDomain().get(0).get("products");
+        model.addAttribute("products", productPage.getContent());
+        model.addAttribute("currentPage", productPage.getNumber());
+        model.addAttribute("totalPages", productPage.getTotalPages());
+        model.addAttribute("pageSize", size);
         return "user-products";
     }
 
     @GetMapping("/products")
     public String viewProductPage(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "5") int size, Model model) {
         Pageable pageable = PageRequest.of(page, size);
-        ResponseEntity<Page<Product>> response = productController.getAllProducts(pageable);
+        ResponseEntity<DomainResponse> response = productController.getAllProducts(pageable);
         if (response.getStatusCode() != HttpStatus.OK || response.getBody() == null) {
             return "error/500";
         }
-        Page<Product> productPage = response.getBody();
+        Page<Product> productPage = (Page<Product>) response.getBody().getDomain().get(0).get("products");
         model.addAttribute("products", productPage.getContent());
         model.addAttribute("currentPage", productPage.getNumber());
         model.addAttribute("totalPages", productPage.getTotalPages());
@@ -103,9 +103,9 @@ public class WebController {
             return "product/new";
         }
         setProductOptions(product);
-        ResponseEntity<Object> response = productController.addProduct(product, bindingResult);
+        ResponseEntity<DomainResponse> response = productController.addProduct(product, bindingResult);
         if (response.getStatusCode() == HttpStatus.BAD_REQUEST) {
-            Map<String, Object> errors = (Map<String, Object>) response.getBody();
+            Map<String, Object> errors = (Map<String, Object>) response.getBody().getDomain().get(0);
             errors.forEach((key, value) -> model.addAttribute("valid_" + key, value.toString()));
             List<Category> categories = categoryService.getAllCategories();
             model.addAttribute("categories", categories);
@@ -116,12 +116,12 @@ public class WebController {
 
     @GetMapping("/products/edit/{id}")
     public String showEditProductForm(@PathVariable Long id, Model model) {
-        ResponseEntity<Product> response = productController.getProductById(id);
+        ResponseEntity<DomainResponse> response = productController.getProductById(id);
         if (response.getStatusCode() != HttpStatus.OK || response.getBody() == null) {
             return "error/500";
         }
         List<Category> categories = categoryService.getAllCategories();
-        model.addAttribute("product", response.getBody());
+        model.addAttribute("product", response.getBody().getDomain().get(0));
         model.addAttribute("categories", categories);
         return "product/edit";
     }
@@ -137,9 +137,9 @@ public class WebController {
             return "product/edit";
         }
         setProductOptions(product);
-        ResponseEntity<Object> response = productController.updateProduct(id, product, bindingResult);
+        ResponseEntity<DomainResponse> response = productController.updateProduct(id, product, bindingResult);
         if (response.getStatusCode() == HttpStatus.BAD_REQUEST) {
-            Map<String, Object> errors = (Map<String, Object>) response.getBody();
+            Map<String, Object> errors = (Map<String, Object>) response.getBody().getDomain().get(0);
             errors.forEach((key, value) -> model.addAttribute("valid_" + key, value.toString()));
             List<Category> categories = categoryService.getAllCategories();
             model.addAttribute("categories", categories);
@@ -150,7 +150,7 @@ public class WebController {
 
     @GetMapping("/products/delete/{id}")
     public String deleteProduct(@PathVariable Long id) {
-        ResponseEntity<Void> response = productController.deleteProduct(id);
+        ResponseEntity<DomainResponse> response = productController.deleteProduct(id);
         if (response.getStatusCode() != HttpStatus.NO_CONTENT) {
             return "error/500";
         }
