@@ -9,6 +9,7 @@ import gift.auth.domain.KakaoToken.kakaoToken;
 import gift.domain.SendKakao.Link;
 import gift.domain.SendKakao.Message;
 import gift.util.url.KakaoUrl;
+import gift.util.url.ServerUrl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.http.HttpEntity;
@@ -25,7 +26,7 @@ public class ApiCall {
     //    private final RestTemplate restTemplate = new RestTemplate();
     private final RestCall restCall;
     private final String clientId;
-    private final String commonUrl = "http://localhost:8080";
+    private final String commonUrl = ServerUrl.commonUrl;
 
     @ConfigurationProperties("kakao")
     public record kakaoProperties(String clientId) {
