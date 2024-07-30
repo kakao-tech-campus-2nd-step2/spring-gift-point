@@ -29,6 +29,7 @@ public class KakaoOauthController {
         return "kakaoOauth.html";
     }
 
+
     @Operation(summary = "kakaologin", description = "카카오에서 리다이렉트 토큰 받아오는 곳")
     @GetMapping("/code")
     public ResponseEntity<KakaoToken> kakoLogin(@RequestParam("code") String code) {
