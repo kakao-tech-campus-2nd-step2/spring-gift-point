@@ -15,7 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/wishlist")
+@RequestMapping("/api/wish")
 @Tag(name = "WishList", description = "위시리스트 API")
 public class WishListController {
 
@@ -27,15 +27,15 @@ public class WishListController {
         this.jwtUtil = jwtUtil;
     }
 
-    @GetMapping
-    @Operation(summary = "전체 위시리스트 출력", description = "해당 멤버의 전체 위시리스트 출력")
-    public ResponseEntity<?> getWishListItems(HttpServletRequest request) {
-        Long memberId = jwtUtil.extractMemberId(request);
-        List<WishList> wishLists = wishListService.getWishListItems(memberId);
-        return ResponseEntity.ok(wishLists);
-    }
+//    @GetMapping
+//    @Operation(summary = "전체 위시리스트 출력", description = "해당 멤버의 전체 위시리스트 출력")
+//    public ResponseEntity<?> getWishListItems(HttpServletRequest request) {
+//        Long memberId = jwtUtil.extractMemberId(request);
+//        List<WishList> wishLists = wishListService.getWishListItems(memberId);
+//        return ResponseEntity.ok(wishLists);
+//    }
 
-    @GetMapping("/page")
+    @GetMapping("")
     @Operation(summary = "전체 위시리스트 출력", description = "해당 멤버의 전체 위시리스트를 페이지네이션 방식으로 출력")
     public ResponseEntity<?> getWishListItems(
         HttpServletRequest request,

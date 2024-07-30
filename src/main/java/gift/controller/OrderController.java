@@ -14,10 +14,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/api/orders")
+@RequestMapping("/api/order/{optionId}")
 @Tag(name = "Order", description = "주문 API")
 public class OrderController {
 
@@ -33,9 +34,12 @@ public class OrderController {
 
     @PostMapping
     @Operation(summary = "주문 추가", description = "해당 회원이 해당 상품에 대한 주문 추가")
-    public ResponseEntity<?> addOrder(HttpServletRequest request, @Valid @RequestBody Order order) throws JsonProcessingException {
+    public ResponseEntity<?> addOrder(
+        HttpServletRequest request,
+        @Valid @RequestBody Order order,
+        @RequestParam("optionId") Long optionId) throws JsonProcessingException {
         Long memberId = jwtUtil.extractMemberId(request);
-        Order addedOrder = orderService.addOrder(memberId, order);
+        Order addedOrder = orderService.addOrder(memberId, order, optionId);
         kakaoService.sendOrderMessage(memberId, order);
         return ResponseEntity.status(HttpStatus.CREATED).body(addedOrder);
     }

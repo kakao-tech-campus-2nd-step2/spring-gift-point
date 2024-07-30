@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/api/products/{product_id}/options")
+@RequestMapping("/api/products/{productId}/options")
 @Tag(name = "Option", description = "옵션 API")
 public class OptionController {
 
@@ -30,7 +30,7 @@ public class OptionController {
 
     @GetMapping
     @Operation(summary = "전체 옵션 조회", description = "해당 상품의 전체 옵션을 조회합니다.")
-    public ResponseEntity<?> getAllOptions(@PathVariable("product_id") Long productId) {
+    public ResponseEntity<?> getAllOptions(@PathVariable("productId") Long productId) {
         return ResponseEntity.ok(optionService.getAllOptionByProductId(productId));
     }
 
@@ -45,7 +45,7 @@ public class OptionController {
     @PostMapping
     @Operation(summary = "옵션 추가", description = "해당 상품에 옵션을 추가합니다.")
     public ResponseEntity<?> addOption(
-        @PathVariable("product_id") Long productId,
+        @PathVariable("productId") Long productId,
         @Valid @RequestBody Option option) {
         optionService.addOption(productId, option);
         return ResponseEntity.status(HttpStatus.CREATED).body("Option added");

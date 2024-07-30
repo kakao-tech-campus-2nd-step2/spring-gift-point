@@ -71,9 +71,9 @@ public class OptionService {
 
     //옵션 수정 기능
     @Transactional
-    public void updateOption(Long id, Option option) {
-        validateOptionUniqueness(option, id);
-        OptionEntity optionEntity = optionRepository.findById(id)
+    public void updateOption(Long optionId, Option option) {
+        validateOptionUniqueness(option, optionId);
+        OptionEntity optionEntity = optionRepository.findById(optionId)
             .orElseThrow(() -> new NotFoundException("Option not found"));
         optionEntity.setName(option.getName());
         optionEntity.setQuantity(option.getQuantity());

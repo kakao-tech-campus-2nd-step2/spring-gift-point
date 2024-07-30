@@ -35,10 +35,10 @@ public class OrderService {
     }
 
     @Transactional
-    public Order addOrder(Long memberId, Order order) {
+    public Order addOrder(Long memberId, Order order, Long optionId) {
         MemberEntity memberEntity = memberRepository.findById(memberId)
             .orElseThrow(() -> new NotFoundException("Not found Member"));
-        OptionEntity optionEntity = optionRepository.findById(order.getOptionId())
+        OptionEntity optionEntity = optionRepository.findById(optionId)
             .orElseThrow(() -> new NotFoundException("Not found Option"));
 
         //주문 저장

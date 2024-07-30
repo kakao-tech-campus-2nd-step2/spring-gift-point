@@ -46,8 +46,8 @@ public class MemberService {
     }
 
     @Transactional
-    public Token kakaoLogin(Long id, String kakaoToken) {
-        String email = id + "@kakao.com";
+    public Token kakaoLogin(Long kakaoId, String kakaoToken) {
+        String email = kakaoId + "@kakao.com";
         MemberEntity memberEntity = memberRepository.findByEmail(email)
             .orElseGet(() -> memberRepository.save(
                 new MemberEntity(email,PasswordUtil.encodePassword("1111"), kakaoToken)

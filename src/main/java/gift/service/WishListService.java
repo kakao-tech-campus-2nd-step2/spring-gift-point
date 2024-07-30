@@ -24,7 +24,9 @@ public class WishListService {
     private final MemberRepository memberRepository;
     private final ProductRepository productRepository;
 
-    public WishListService(WishListRepository wishListRepository, MemberRepository memberRepository,
+    public WishListService(
+        WishListRepository wishListRepository,
+        MemberRepository memberRepository,
         ProductRepository productRepository) {
         this.wishListRepository = wishListRepository;
         this.memberRepository = memberRepository;

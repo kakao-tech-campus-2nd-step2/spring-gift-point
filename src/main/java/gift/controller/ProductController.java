@@ -29,13 +29,13 @@ public class ProductController {
 
     // 상품 추가 데이터 응답
     @PostMapping
-    public ResponseEntity<String> create(@Valid @RequestBody Product formProduct) {
-        productService.addProduct(formProduct);
+    public ResponseEntity<String> create(@Valid @RequestBody Product product) {
+        productService.addProduct(product);
         return ResponseEntity.status(HttpStatus.CREATED).body("Product added");
     }
 
     // 상품 단일 조회 기능
-    @GetMapping("/{id}")
+    @GetMapping("/{productId}")
     public ResponseEntity<Product> getProduct(@PathVariable("id") Long id) {
         Product product = productService.getProductById(id);
         return ResponseEntity.ok(product);
@@ -51,8 +51,8 @@ public class ProductController {
     // 상품 수정 기능
     @PutMapping("/{id}")
     public ResponseEntity<Product> updateProduct(@PathVariable("id") Long id,
-        @Valid @RequestBody Product updateProduct) {
-        productService.updateProduct(id, updateProduct);
+        @Valid @RequestBody Product product) {
+        productService.updateProduct(id, product);
         return ResponseEntity.ok().build();
     }
 }
