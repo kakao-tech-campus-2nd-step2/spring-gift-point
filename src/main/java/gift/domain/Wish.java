@@ -1,5 +1,6 @@
 package gift.domain;
 
+import gift.utils.TimeStamp;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -10,7 +11,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 
 @Entity
-public class Wish {
+public class Wish extends TimeStamp  {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

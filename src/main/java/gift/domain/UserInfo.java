@@ -1,5 +1,6 @@
 package gift.domain;
 
+import gift.utils.TimeStamp;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -14,7 +15,7 @@ import java.util.List;
 import java.util.Objects;
 
 @Entity
-public class UserInfo {
+public class UserInfo extends TimeStamp {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

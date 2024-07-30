@@ -41,7 +41,7 @@ public class GiftController {
     }
 
     @GetMapping("/{id}/options")
-    public ResponseEntity<List<OptionResponse>> getProductOption(@PathVariable Long id){
+    public ResponseEntity<List<OptionResponse>> getProductOption(@PathVariable("id") Long id){
         List<OptionResponse> option = giftService.getOption(id);
         return ResponseEntity.ok(option);
     }
