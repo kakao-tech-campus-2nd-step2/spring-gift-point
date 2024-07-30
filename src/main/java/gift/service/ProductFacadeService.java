@@ -3,6 +3,8 @@ package gift.service;
 import gift.entity.Category;
 import gift.entity.Option;
 import gift.entity.Product;
+import gift.exception.CustomException;
+import gift.exception.ErrorCode;
 import java.util.List;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
@@ -25,7 +27,7 @@ public class ProductFacadeService {
 
     public void addProduct(Product product, List<Option> options) {
         if (options.isEmpty()) {
-            throw new IllegalArgumentException("최소 1개의 상품을 입력해야합니다.");
+            throw new CustomException(ErrorCode.PRODUCT_HAVE_NO_OPTION);
         }
         productService.saveProduct(product);
         for (Option option : options) {

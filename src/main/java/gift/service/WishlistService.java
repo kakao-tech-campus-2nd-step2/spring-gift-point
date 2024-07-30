@@ -2,7 +2,9 @@ package gift.service;
 
 import gift.entity.Member;
 import gift.entity.Wish;
-import gift.exception.DataNotFoundException;
+import gift.exception.CustomException;
+
+import gift.exception.ErrorCode;
 import gift.repository.MemberRepository;
 import gift.repository.WishRepository;
 
@@ -41,7 +43,7 @@ public class WishlistService {
 
     public Wish findById(Long id) {
         return wishRepository.findById(id)
-            .orElseThrow(() -> new DataNotFoundException("위시리스트가 존재하지 않습니다."));
+            .orElseThrow(() -> new CustomException(ErrorCode.WISHLIST_NOT_FOUND));
     }
 
 

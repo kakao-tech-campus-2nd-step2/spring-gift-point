@@ -12,7 +12,7 @@ import java.lang.annotation.Target;
 @Constraint(validatedBy = ProductNameValidator.class) // 검증 클래스 설정
 public @interface ProductName {
 
-    String message() default "이름 규칙"; // 기본 메시지 설정
+    String message() default "이름 규칙이 일치하지 않습니다."; // 기본 메시지 설정
 
     Class[] groups() default {};
 

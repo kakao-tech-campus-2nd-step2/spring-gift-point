@@ -7,7 +7,7 @@ import java.util.List;
 
 public class CustomException extends RuntimeException {
 
-    private ErrorCode errorCode;
+    private final ErrorCode errorCode;
     private List<FieldError> errors = new ArrayList<>();
 
     public CustomException(String message, ErrorCode errorCode) {

@@ -56,6 +56,18 @@ public class ErrorResponse {
         return new ErrorResponse(ErrorCode.INVALID_TYPE_VALUE, errors);
     }
 
+    public HttpStatus getStatus() {
+        return status;
+    }
+
+    public String getMessage() {
+        return message;
+    }
+
+    public List<FieldError> getErrors() {
+        return errors;
+    }
+
     public static class FieldError {
 
         private String field;

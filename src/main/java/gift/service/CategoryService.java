@@ -1,7 +1,8 @@
 package gift.service;
 
 import gift.entity.Category;
-import gift.exception.DataNotFoundException;
+import gift.exception.CustomException;
+import gift.exception.ErrorCode;
 import gift.repository.CategoryRepository;
 import java.util.List;
 import org.springframework.stereotype.Service;
@@ -18,7 +19,7 @@ public class CategoryService {
 
     public Category findById(Long id) {
         return categoryRepository.findById(id)
-            .orElseThrow(() -> new DataNotFoundException("존재하지 않는 Category"));
+            .orElseThrow(() -> new CustomException(ErrorCode.CATEGORY_NOT_FOUND));
     }
 
     public List<Category> findAll() {

@@ -8,6 +8,7 @@ import gift.entity.Orders;
 import gift.service.OrderService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -43,7 +44,7 @@ public class OrderController {
 
     @Operation(summary = "상품 주문", description = "사용자가 상품을 주문합니다.")
     @PostMapping
-    public ResponseEntity<String> addOrder(@RequestBody OrderRequestDTO orderRequest, @LoginUser String email){
+    public ResponseEntity<String> addOrder(@Valid @RequestBody OrderRequestDTO orderRequest, @LoginUser String email){
         Option option = orderService.findOptionById(orderRequest.getOptionId());
         Member member = orderService.findMemberByEmail(email);
         orderService.orderOption(orderRequest,email);

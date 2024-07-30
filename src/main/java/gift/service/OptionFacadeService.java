@@ -18,19 +18,9 @@ public class OptionFacadeService {
     private final OptionService optionService;
     private final ProductService productService;
 
-    private final WishlistService wishlistService;
-
-    private final KakaoApiUtil kakaoApiUtil;
-    private final SnsMemberService snsMemberService;
-
-    public OptionFacadeService(OptionService optionService, ProductService productService,
-        WishlistService wishlistService, KakaoApiUtil kakaoApiUtil,
-        SnsMemberService snsMemberService) {
+    public OptionFacadeService(OptionService optionService, ProductService productService) {
         this.optionService = optionService;
         this.productService = productService;
-        this.wishlistService = wishlistService;
-        this.kakaoApiUtil = kakaoApiUtil;
-        this.snsMemberService = snsMemberService;
     }
 
 
@@ -53,8 +43,6 @@ public class OptionFacadeService {
     public List<Option> getAllProductOption(Long id) {
         return optionService.getOptionByProductId(id);
     }
-
-
 
 
 }

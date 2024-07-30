@@ -1,19 +1,12 @@
 package gift.service;
 
-import gift.entity.Category;
-import gift.entity.Member;
-import gift.entity.Option;
+
 import gift.entity.Product;
-
-import gift.exception.DataNotFoundException;
-import gift.exception.DuplicateUserEmailException;
-import gift.repository.CategoryRepository;
+import gift.exception.CustomException;
+import gift.exception.ErrorCode;
 import gift.repository.ProductRepository;
-
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
-
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -40,7 +33,7 @@ public class ProductService {
 
     public Product getProductById(Long id) {
         return productRepository.findById(id).
-            orElseThrow(() -> new DataNotFoundException("존재하지 않는 Product입니다."));
+            orElseThrow(() -> new CustomException(ErrorCode.PRODUCT_NOT_FOUND));
     }
 
 
