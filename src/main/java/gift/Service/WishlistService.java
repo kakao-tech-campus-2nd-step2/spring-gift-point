@@ -44,9 +44,11 @@ public class WishlistService {
         return wishlistRepository.getWishlistIdByMemberEmailAndProductId(email, productId);
     }
 
-    public void deleteWishlist(String email, Long productId, Long wishlistId){
+    public Product deleteWishlist(String email, Long productId, Long wishlistId){
+        Product deleteProduct = productRepository.findProductById(productId);
         wishlistRepository.changeProductMemberNull(email,productId);
         wishlistRepository.deleteById(wishlistId);
+        return deleteProduct;
     }
 
     public void checkUserByMemberEmail(String email){
