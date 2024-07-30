@@ -10,7 +10,8 @@ public class OrderConverter {
             orderRequest.getOrderId(),
             orderRequest.getOptionId(),
             orderRequest.getQuantity(),
-            orderRequest.getMessage()
+            orderRequest.getMessage(),
+            orderRequest.getOrderDateTime()
         );
     }
 
@@ -18,7 +19,8 @@ public class OrderConverter {
         return new OrderRequest(
             orderDTO.getOptionId(),
             orderDTO.getQuantity(),
-            orderDTO.getMessage()
+            orderDTO.getMessage(),
+            orderDTO.getOrderDateTime()
         );
     }
 }

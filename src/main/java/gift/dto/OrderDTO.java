@@ -1,20 +1,24 @@
 package gift.dto;
 
 
+import java.time.LocalDateTime;
+
 public class OrderDTO {
     private Long orderId;
     private Long optionId;
     private int quantity;
     private String message;
+    private LocalDateTime orderDateTime;
 
     public OrderDTO() {}
 
 
-    public OrderDTO(Long orderId, Long optionId, int quantity, String message) {
+    public OrderDTO(Long orderId, Long optionId, int quantity, String message, LocalDateTime orderDateTime) {
         this.orderId = orderId;
         this.optionId = optionId;
         this.quantity = quantity;
         this.message = message;
+        this.orderDateTime = orderDateTime;
     }
 
     // Getters and setters
@@ -48,5 +52,13 @@ public class OrderDTO {
 
     public void setMessage(String message) {
         this.message = message;
+    }
+
+    public LocalDateTime getOrderDateTime() {
+        return orderDateTime;
+    }
+
+    public void setOrderDateTime(LocalDateTime orderDateTime) {
+        this.orderDateTime = orderDateTime;
     }
 }

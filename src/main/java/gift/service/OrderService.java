@@ -2,8 +2,13 @@ package gift.service;
 
 import gift.api.OrderRequest;
 import gift.api.OrderResponse;
+import gift.converter.OrderConverter;
 import gift.dto.OrderDTO;
+import gift.dto.PageRequestDTO;
 import gift.repository.OrderRepository;
+import java.time.LocalDateTime;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -34,13 +39,16 @@ public class OrderService {
             throw new IllegalArgumentException("Insufficient product quantity.");
         }
 
+        LocalDateTime now = LocalDateTime.now();
         OrderRequest order = new OrderRequest(
             orderDTO.getOptionId(),
             orderDTO.getQuantity(),
-            orderDTO.getMessage()
+            orderDTO.getMessage(),
+            now
         );
         orderRepository.save(order);
         orderDTO.setOrderId(order.getOrderId());
+        orderDTO.setOrderDateTime(now);
 
         // 카카오톡 메시지 전송
         String token = authorization.replace("Bearer ", "");
@@ -57,5 +65,10 @@ public class OrderService {
         }
 
         return orderResponse;
+    }
+    public Page<OrderDTO> getOrderList(PageRequestDTO pageRequestDTO) {
+        Pageable pageable = pageRequestDTO.toPageRequest();
+        Page<OrderRequest> orders = orderRepository.findAll(pageable);
+        return orders.map(OrderConverter::convertToDTO);
     }
 }

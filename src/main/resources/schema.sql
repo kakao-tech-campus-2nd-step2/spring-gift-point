@@ -50,5 +50,6 @@ CREATE TABLE orders (
                         option_id BIGINT NOT NULL COMMENT '옵션 ID',
                         quantity INTEGER NOT NULL COMMENT '수량',
                         message VARCHAR(255) COMMENT '메시지',
+                        order_date_time TIMESTAMP NOT NULL COMMENT '주문 일시',
                         FOREIGN KEY (option_id) REFERENCES options(id)
 );
