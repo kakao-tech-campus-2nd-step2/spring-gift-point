@@ -42,9 +42,9 @@ public class ProductController {
 
     @PostMapping("")
     @Operation(summary = "상품 생성", tags = {"상품 API"})
-    public ResponseEntity<Void> createProduct(@Valid @RequestBody ProductDTO productDTO) {
-        productService.createProduct(productDTO);
-        return new ResponseEntity<>(HttpStatus.CREATED);
+    public ResponseEntity<ProductDTO> createProduct(@Valid @RequestBody ProductDTO productDTO) {
+        ProductDTO response = productService.createProduct(productDTO);
+        return new ResponseEntity<>(response,HttpStatus.CREATED);
     }
 
     @GetMapping("")
