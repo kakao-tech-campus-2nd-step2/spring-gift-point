@@ -181,12 +181,12 @@ class ProductControllerTest {
 
         // When
         mockMvc.perform(RestDocumentationRequestBuilders
-                        .delete(URL + "/{id}", deleteTargetId))
+                        .delete(URL + "/{productId}", deleteTargetId))
                 //Then
                 .andExpect(status().isOk())
                 .andDo(document("product-delete",
                                 pathParameters(
-                                        parameterWithName("id").description("삭제하고 싶은 상품 ID")
+                                        parameterWithName("productId").description("삭제하고 싶은 상품 ID")
                                 )
                         )
                 );

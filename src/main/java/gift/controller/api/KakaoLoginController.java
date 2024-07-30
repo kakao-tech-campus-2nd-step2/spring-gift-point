@@ -41,12 +41,13 @@ public class KakaoLoginController {
         tokenService.saveKakaoAccessToken(memberId, kakaoToken);
 
         return ResponseEntity.ok().body(JwtResponse);
-    }
+    }//TuEtyGAtbTm0T6qg3-HIdIzPnqGNeTopGvNObVeCaDNanh9CXXxj1gAAAAQKPXQRAAABkQMNKJPMISgqRbFCUQ
 
     @GetMapping("/api/kakaologin")
     public ResponseEntity<Void> redirect() {
         HttpHeaders headers = new HttpHeaders();
-        headers.setLocation(URI.create(authorizationCodeRequestUri));
+        headers.setLocation(URI.create("https://kauth.kakao.com/oauth/authorize?scope=talk_message,account_email&response_type=code&redirect_uri=http://43.201.254.198:8080&client_id=40d60fbf668010d5178941357a2013f2"));
+        //headers.setLocation(URI.create("https://kauth.kakao.com/oauth/authorize?scope=talk_message,account_email&response_type=code&redirect_uri=http://localhost:8080/&client_id=40d60fbf668010d5178941357a2013f2"));
 
         return new ResponseEntity<>(headers, HttpStatus.FOUND);
     }

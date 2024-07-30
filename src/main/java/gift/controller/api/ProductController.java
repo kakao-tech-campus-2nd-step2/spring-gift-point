@@ -57,15 +57,23 @@ public class ProductController {
         return ResponseEntity.ok().build();
     }
 
-    @GetMapping("api/products/{id}/options")
-    public ResponseEntity<List<OptionResponse>> getOptionResponses(@PathVariable("id") Long productId) {
-        return ResponseEntity.ok(productService.getOptionResponses(productId));
-    }
-
     @PostMapping("api/products/{id}/options")
     public ResponseEntity<AddedOptionIdResponse> addOptionToProduct(@PathVariable("id") Long productId,
                                                                     @Valid @RequestBody OptionRequest optionRequest) {
         AddedOptionIdResponse addedOptionId = productService.addOptionToProduct(productId, optionRequest);
         return ResponseEntity.status(HttpStatus.CREATED).body(addedOptionId);
     }
+
+    @GetMapping("api/products/{id}/options")
+    public ResponseEntity<List<OptionResponse>> getOptionResponses(@PathVariable("id") Long productId) {
+        return ResponseEntity.ok(productService.getOptionResponses(productId));
+    }
+
+    @PutMapping ("api/products/{productId}/options/{optionId}")
+    public ResponseEntity<List<OptionResponse>> updateOption(@PathVariable("productId") Long productId,
+                                                             @PathVariable("optionId") Long optionId) {
+        return ResponseEntity.ok(productService.getOptionResponses(productId));
+    }
+
+
 }
