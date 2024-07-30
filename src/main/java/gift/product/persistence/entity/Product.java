@@ -143,4 +143,12 @@ public class Product extends BaseTimeEntity {
             .orElseThrow(() -> new IllegalArgumentException("Option not found"));
         option.subtractQuantity(quantity);
     }
+
+    public void updateOption(Long id, String name, Integer quantity) {
+        var option = options.stream()
+            .filter(o -> o.getId().equals(id))
+            .findFirst()
+            .orElseThrow(() -> new IllegalArgumentException("Option not found"));
+        option.update(name, quantity);
+    }
 }

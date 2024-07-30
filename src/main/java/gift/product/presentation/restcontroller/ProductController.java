@@ -2,7 +2,6 @@ package gift.product.presentation.restcontroller;
 
 import gift.docs.product.ProductApiDocs;
 import gift.product.presentation.dto.OptionRequest;
-import gift.product.presentation.dto.OptionRequest.Create;
 import gift.product.presentation.dto.ProductRequest;
 import gift.product.presentation.dto.ProductResponse;
 import gift.product.business.service.ProductService;
@@ -10,7 +9,6 @@ import jakarta.validation.Valid;
 import java.util.List;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
@@ -79,9 +77,9 @@ public class ProductController implements ProductApiDocs {
         return ResponseEntity.ok().build();
     }
 
-    @PostMapping("/{id}/options")
+//    @PostMapping("/{id}/options")
     public ResponseEntity<Void> addOptions(
-        @RequestBody @Valid List<Create> optionRequests,
+        @RequestBody @Valid List<OptionRequest.Create> optionRequests,
         @PathVariable("id") Long productId) {
         var optionInCreates = optionRequests.stream()
             .map(OptionRequest.Create::toOptionInCreate)
@@ -90,14 +88,23 @@ public class ProductController implements ProductApiDocs {
         return ResponseEntity.ok().build();
     }
 
-    @PutMapping("/{id}/options")
-    public ResponseEntity<Void> updateOption(
-        @RequestBody @Valid List<OptionRequest.Update> optionRequestUpdate,
+    @PostMapping("/{id}/options")
+    public ResponseEntity<Void> addOption(
+        @RequestBody @Valid OptionRequest.Create optionRequestCreate,
         @PathVariable("id") Long productId) {
-        var optionInUpdates = optionRequestUpdate.stream()
-            .map(OptionRequest.Update::toOptionInUpdate)
-            .toList();
-        productService.updateOptions(optionInUpdates, productId);
+        var optionInCreate = optionRequestCreate.toOptionInCreate();
+        productService.addOption(optionInCreate, productId);
+        return ResponseEntity.ok().build();
+    }
+
+    @PutMapping("/{productId}/options/{optionId}")
+    public ResponseEntity<Void> updateOption(
+        @RequestBody @Valid OptionRequest.Update optionRequestUpdate,
+        @PathVariable("productId") Long productId,
+        @PathVariable("optionId") Long optionId
+        ) {
+        var optionInUpdate = optionRequestUpdate.toOptionInUpdate(optionId);
+        productService.updateOption(optionInUpdate, productId);
         return ResponseEntity.ok().build();
     }
 

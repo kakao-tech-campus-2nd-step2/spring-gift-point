@@ -1,7 +1,6 @@
 package gift.docs.product;
 
 import gift.product.presentation.dto.OptionRequest;
-import gift.product.presentation.dto.OptionRequest.Create;
 import gift.product.presentation.dto.ProductRequest;
 import gift.product.presentation.dto.ProductResponse;
 import gift.product.presentation.dto.ProductResponse.WithOptions;
@@ -40,15 +39,21 @@ public interface ProductApiDocs {
     @Operation(summary = "상품 id 리스트로 다중 삭제")
     public ResponseEntity<Void> deleteProducts(ProductRequest.Ids ids);
 
-    @Operation(summary = "상품 옵션 추가")
+    @Operation(summary = "상품 옵션 다중 추가")
     public ResponseEntity<Void> addOptions(
-        List<Create> optionRequests,
+        List<OptionRequest.Create> optionRequests,
+        Long productId);
+
+    @Operation(summary = "상품 옵션 단일 추가")
+    public ResponseEntity<Void> addOption(
+        OptionRequest.Create optionRequestCreate,
         Long productId);
 
     @Operation(summary = "상품 옵션 수정")
     public ResponseEntity<Void> updateOption(
-        List<OptionRequest.Update> optionRequestUpdate,
-        Long productId);
+        OptionRequest.Update optionRequestUpdate,
+        Long productId,
+        Long optionId);
 
     @Operation(summary = "상품 옵션 삭제")
     public ResponseEntity<List<Long>> deleteOption(
