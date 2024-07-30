@@ -305,7 +305,7 @@ Content-Type: application/json
 <details>
 <summary>GET: 제품 페이지 조회</summary>
 
-Default 상품 반환 개수 : 10개
+* Default 상품 반환 개수 : 10개
 
 #### Request:
 ```http
