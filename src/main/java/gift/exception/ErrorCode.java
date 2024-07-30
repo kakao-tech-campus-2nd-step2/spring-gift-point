@@ -4,6 +4,9 @@ import org.springframework.http.HttpStatus;
 
 public enum ErrorCode {
 
+    INVALID_TYPE_VALUE("입력 데이터가 잘못되었습니다.", HttpStatus.BAD_REQUEST),
+    METHOD_NOT_ALLOWED("지원하지 않는 HTTP 메서드입니다.", HttpStatus.METHOD_NOT_ALLOWED),
+
     //Products
     PRODUCT_NOT_FOUND("존재하지 않는 상품입니다.",HttpStatus.NOT_FOUND),
     PRODUCT_NAME_NOT_ALLOWED("상품 이름 규칙에 맞지 않습니다.",HttpStatus.BAD_REQUEST),

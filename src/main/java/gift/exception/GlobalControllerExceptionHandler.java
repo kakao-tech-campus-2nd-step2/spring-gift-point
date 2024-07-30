@@ -1,74 +1,50 @@
 package gift.exception;
 
-import jakarta.validation.ConstraintViolationException;
-import java.nio.file.AccessDeniedException;
-import java.util.HashMap;
-import java.util.Map;
-import org.springframework.dao.DataIntegrityViolationException;
+
+import gift.dto.ErrorResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.FieldError;
-import org.springframework.web.bind.MethodArgumentNotValidException;
+
+
+import org.springframework.validation.BindException;
+import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
+
+import static gift.exception.ErrorCode.*;
 
 @RestControllerAdvice
 public class GlobalControllerExceptionHandler {
 
-
-    //@Valid에서 발생한 예외 처리
-    @ExceptionHandler(value = MethodArgumentNotValidException.class)
-    public ResponseEntity<Map<String, String>> handleValidationException(
-        MethodArgumentNotValidException ex) {
-        Map<String, String> errors = new HashMap<>();
-        ex.getBindingResult().getAllErrors().forEach(error -> {
-            String fieldName = ((FieldError) error).getField();
-            String errorMessage = error.getDefaultMessage();
-            errors.put(fieldName, errorMessage);
-        });
-        return new ResponseEntity<>(errors, HttpStatus.BAD_REQUEST);
+    //잘못된 파라미터 handling
+    @ExceptionHandler
+    protected ResponseEntity<ErrorResponse> handleMethodArgumentTypeMismatchException(
+        MethodArgumentTypeMismatchException ex) {
+        final ErrorResponse response = ErrorResponse.of(ex);
+        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
 
-    @ExceptionHandler(value = NullPointerException.class)
-    public ResponseEntity<String> handleNullPointerException(NullPointerException ex) {
-        return new ResponseEntity<>(ex.getMessage(),
-            HttpStatus.INTERNAL_SERVER_ERROR);
+    //지원하지 않는 HTTP요청 핸들링
+    @ExceptionHandler
+    protected ResponseEntity<ErrorResponse> handleHttpRequestMethodNotSupportedException(
+        HttpRequestMethodNotSupportedException ex) {
+        final ErrorResponse response = ErrorResponse.of(METHOD_NOT_ALLOWED);
+        return new ResponseEntity<>(response, METHOD_NOT_ALLOWED.getStatus());
     }
 
-    @ExceptionHandler(value = IllegalArgumentException.class)
-    public ResponseEntity<String> handleIllegalArgumentException(IllegalArgumentException ex) {
-        return new ResponseEntity<>(ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+    //@Valid 에러 핸들링
+    protected ResponseEntity<ErrorResponse> handleBindException(BindException ex) {
+        final ErrorResponse response = ErrorResponse.of(INVALID_TYPE_VALUE, ex.getBindingResult());
+        return new ResponseEntity<>(response, INVALID_TYPE_VALUE.getStatus());
     }
 
-    //Product 중복 이름값을 추가했을 때 Handling
-    @ExceptionHandler(value = DuplicateProductNameException.class)
-    public ResponseEntity<String> handleDuplicatedId(DuplicateProductNameException ex) {
-        return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
+    //비즈니스 과정 중 CustomException 핸들링
+    protected ResponseEntity<ErrorResponse> handleCustomException(CustomException ex) {
+        final ErrorCode errorCode = ex.getErrorCode();
+        final ErrorResponse response = ErrorResponse.of(errorCode, ex.getErrors());
+        return new ResponseEntity<>(response, errorCode.getStatus());
     }
 
-    @ExceptionHandler(value = AccessDeniedException.class)
-    public ResponseEntity<String> handleAccessDenied(AccessDeniedException ex) {
-        return new ResponseEntity<>(ex.getMessage(), HttpStatus.UNAUTHORIZED);
-    }
-
-    @ExceptionHandler(value = DuplicateUserEmailException.class)
-    public ResponseEntity<String> handleDuplicatedEmail(DuplicateUserEmailException ex) {
-        return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
-    }
-
-    @ExceptionHandler(value = DataNotFoundException.class)
-    public ResponseEntity<String> handleDataNotFound(DataNotFoundException ex) {
-        return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
-    }
-
-    @ExceptionHandler(value = ConstraintViolationException.class)
-    public ResponseEntity<String> handleDataIntegritViolation(ConstraintViolationException ex) {
-        return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
-    }
-
-    @ExceptionHandler(value = MemberNotFoundException.class)
-    public ResponseEntity<String> handleMemberNotFound(MemberNotFoundException ex) {
-        return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
-    }
 
 }
