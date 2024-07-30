@@ -39,27 +39,20 @@ public class ProductService {
 
     public Page<ProductResponse> getAllProducts(Pageable pageable) {
         Page<Product> pageProducts = productRepository.findAll(pageable);
-        Page<ProductResponse> pageToDto = pageProducts.map(product -> new ProductResponse(
-                product.getId(),
-                product.getName(),
-                product.getPrice(),
-                product.getImageUrl(),
-                product.getCategory()
-        ));
-        return pageToDto;
+        return pageProducts.map(Product::toDto);
     }
 
     public ProductResponse getProduct(Long id) {
         Product product = productRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("해당 id의 상품이 존재하지 않습니다."));
-        ProductResponse response = new ProductResponse(
-                product.getId(),
-                product.getName(),
-                product.getPrice(),
-                product.getImageUrl(),
-                product.getCategory()
-        );
-        return response;
+        return product.toDto();
+    }
+
+    public Page<ProductResponse> getAllByCategoryId(Long categoryId, Pageable pageable) {
+        Category category = categoryRepository.findById(categoryId)
+                .orElseThrow(() -> new NotFoundException("해당 id의 카테고리가 존재하지 않습니다."));
+        Page<Product> pageProducts = productRepository.findByCategory(category, pageable);
+        return pageProducts.map(Product::toDto);
     }
 
     @Transactional

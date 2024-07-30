@@ -1,5 +1,6 @@
 package gift.model;
 
+import gift.dto.ProductResponse;
 import jakarta.persistence.*;
 
 import java.util.ArrayList;
@@ -82,5 +83,14 @@ public class Product {
     public boolean checkDuplicateOptionName(String optionName) {
         return options.stream()
                 .anyMatch(option -> option.getName().equals(optionName));
+    }
+    public ProductResponse toDto() {
+        return new ProductResponse(
+                this.id,
+                this.name,
+                this.price,
+                this.imageUrl,
+                this.category
+        );
     }
 }

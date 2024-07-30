@@ -27,7 +27,7 @@ public class ProductController {
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
-    @GetMapping("/products")
+    @GetMapping("/products/all")
     public ResponseEntity<Page<ProductResponse>> getAllProducts(@PageableDefault(page = 0, size = 5) Pageable pageable) {
         Page<ProductResponse> productsList = productService.getAllProducts(pageable);
         return ResponseEntity.ok().body(productsList);
@@ -36,6 +36,12 @@ public class ProductController {
     @GetMapping("/products/{id}")
     public ResponseEntity<ProductResponse> getProduct(@PathVariable("id") Long id) {
         ProductResponse product = productService.getProduct(id);
+        return ResponseEntity.ok().body(product);
+    }
+
+    @GetMapping("/products")
+    public ResponseEntity<Page<ProductResponse>> getAllByCategoryId(@RequestParam("categoryId") Long categoryId, @PageableDefault(page = 0, size = 5) Pageable pageable) {
+        Page<ProductResponse> product = productService.getAllByCategoryId(categoryId, pageable);
         return ResponseEntity.ok().body(product);
     }
 
