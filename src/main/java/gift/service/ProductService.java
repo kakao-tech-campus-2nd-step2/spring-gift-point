@@ -60,15 +60,6 @@ public class ProductService {
         return convertToResponseDto(savedProduct);
     }
 
-    private ProductResponseDto convertToResponseDto(Product product) {
-        ProductResponseDto dto = new ProductResponseDto();
-        dto.setId(product.getId());
-        dto.setName(product.getName());
-        dto.setPrice(product.getPrice());
-        dto.setImageUrl(product.getImageUrl());
-        return dto;
-    }
-
     public Product updateProduct(Long id, ProductRequestDto productRequestDto) {
         Category category = getCategoryById(productRequestDto.getCategoryId());
         List<Option> options = convertOptions(productRequestDto.getOptions());
@@ -96,7 +87,13 @@ public class ProductService {
     }
 
     private ProductDetailDto convertToDetailDto(Product product) {
-        ProductDetailDto dto = new ProductDetailDto();
+        ProductDetailDto dto = new ProductDetailDto(product.getName(),product.getPrice(),product.getImageUrl());
+        return dto;
+    }
+
+    private ProductResponseDto convertToResponseDto(Product product) {
+        ProductResponseDto dto = new ProductResponseDto();
+        dto.setId(product.getId());
         dto.setName(product.getName());
         dto.setPrice(product.getPrice());
         dto.setImageUrl(product.getImageUrl());
