@@ -23,7 +23,7 @@ public class ProductApiController {
 
     @GetMapping
     public Page<ProductDTO> getAllProducts(@RequestParam(defaultValue = "0") @Min(0) @Max(10000) int page) {
-        PageRequestDTO pageRequestDTO = new PageRequestDTO(page, "Id", "asc");
+        PageRequestDTO pageRequestDTO = new PageRequestDTO(page, "id", "asc");
         Page<ProductDTO> productPage = productService.getAllProducts(pageRequestDTO);
 
         return productPage;

@@ -23,18 +23,13 @@ public class WishService {
         this.wishRepository = wishRepository;
     }
 
-    public List<WishDTO> getWishlist(long memberId, PageRequestDTO pageRequestDTO) throws AuthenticationException {
+    public Page<WishDTO> getWishlist(long memberId, PageRequestDTO pageRequestDTO) throws AuthenticationException {
         Pageable pageable = PageRequest.of(pageRequestDTO.getPage(),
                 pageRequestDTO.getSize(), pageRequestDTO.getSort());
 
-        Page<Wish> pageWishlist = wishRepository.findByMember_Id(memberId, pageable);
-        List<Wish> wishlist = pageWishlist.getContent();
+        Page<Wish> WishlistPage = wishRepository.findByMember_Id(memberId, pageable);
 
-        List<WishDTO> list = wishlist.stream()
-                .map(WishDTO::getWishDTO)
-                .collect(Collectors.toList());
-
-        return list;
+        return WishlistPage.map(WishDTO::getWishProductDTO);
     }
 
     public void postWishlist(Long productId, Member member) throws AuthenticationException {

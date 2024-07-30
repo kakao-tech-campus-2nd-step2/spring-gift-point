@@ -7,6 +7,7 @@ import gift.model.Member;
 import gift.service.KakaoAuthService;
 import gift.service.WishService;
 import jakarta.servlet.http.HttpServletRequest;
+import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
 
 import javax.naming.AuthenticationException;
@@ -26,11 +27,11 @@ public class WishController {
 
     //멤버 id로 해당 멤버의 위시리스트 가져옴
     @GetMapping
-    public List<WishDTO> getWishlistController(HttpServletRequest request, @RequestParam(defaultValue = "0") int page) throws AuthenticationException {
+    public Page<WishDTO> getWishlistController(HttpServletRequest request, @RequestParam(defaultValue = "0") int page) throws AuthenticationException {
         BearerToken token = (BearerToken) request.getAttribute("bearerToken");
         long memberId = kakaoAuthService.getDBMemberByToken(token.getToken()).getId();
-        PageRequestDTO pageRequestDTO = new PageRequestDTO(page, "Id", "asc");
-        List<WishDTO> wishlist = wishService.getWishlist(memberId, pageRequestDTO);
+        PageRequestDTO pageRequestDTO = new PageRequestDTO(page, "id", "asc");
+        Page<WishDTO> wishlist = wishService.getWishlist(memberId, pageRequestDTO);
 
         return wishlist;
     }
