@@ -1,5 +1,6 @@
 package gift.controller;
 
+import gift.controller.dto.OptionRequest;
 import gift.controller.dto.ProductRequest;
 import gift.controller.dto.ProductResponse;
 import gift.service.GiftService;
@@ -26,22 +27,23 @@ public class GiftAdminController {
 
 
     @PostMapping
-    public ResponseEntity<ProductResponse> postProduct(@Valid @RequestBody ProductRequest productRequest) {
-        ProductResponse DTO = giftService.postProducts(productRequest);
+    public ResponseEntity<ProductResponse> postProduct(@Valid @RequestBody ProductRequest productRequest,
+        @Valid @RequestBody OptionRequest optionRequest) {
+        ProductResponse DTO = giftService.postProducts(productRequest,optionRequest);
         return new ResponseEntity<>(DTO, HttpStatus.CREATED);
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<ProductResponse> updateProduct(@PathVariable Long id,
+    @PutMapping("/{productId}")
+    public ResponseEntity<ProductResponse> updateProduct(@PathVariable("productId") Long id,
         @Valid @RequestBody ProductRequest productRequest) {
         ProductResponse DTO = giftService.putProducts(productRequest, id);
         return ResponseEntity.ok(DTO);
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Long> deleteProduct(@PathVariable Long id) {
-        Long i = giftService.deleteProducts(id);
-        return ResponseEntity.ok(i);
+    @DeleteMapping("/{productId}")
+    public ResponseEntity<ProductResponse> deleteProduct(@PathVariable("productId") Long id) {
+        ProductResponse productResponse = giftService.deleteProducts(id);
+        return ResponseEntity.ok(productResponse);
     }
 
 }

@@ -23,8 +23,8 @@ public class OptionService {
         this.productRepository = productRepository;
     }
 
-    public OptionResponse addOption(OptionRequest optionRequest) {
-        Product product = productRepository.findById(optionRequest.getProductId()).orElseThrow(
+    public OptionResponse addOption(OptionRequest optionRequest,Long productId) {
+        Product product = productRepository.findById(productId).orElseThrow(
             () -> new ProductNotFoundException("Product Not Found")
         );
         if (product.getOptions().stream()
@@ -41,7 +41,7 @@ public class OptionService {
 
     @Transactional
     public Long deleteOption(Long id,String email) {
-        optionRepository.(id).orElseThrow(
+        optionRepository.findById(id).orElseThrow(
             () -> new OptionNotFoundException("Option Not Found")
         );
         optionRepository.deleteById(id);

@@ -137,10 +137,10 @@ public class KakaoApiService {
 
     }
 
-    @Transactional
-    public KakaoApiDTO.KakaoOrderResponse kakaoGetOrder(Pageable pageable){
-        Page<Order> all = orderRepository.findAll(pageable);
-    }
+//    @Transactional
+//    public KakaoApiDTO.KakaoOrderResponse kakaoGetOrder(Pageable pageable){
+//        Page<Order> all = orderRepository.findAll(pageable);
+//    }
 
 
 
