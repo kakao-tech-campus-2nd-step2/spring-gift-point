@@ -35,12 +35,12 @@ class CategoryServiceTest {
         when(categoryRepository.findById(categoryId)).thenReturn(Optional.of(category));
 
         // when
-        CategoryResponse responseCategory = categoryService.getCategory(categoryId);
+        CategoryResponse.Info responseCategory = categoryService.getCategory(categoryId);
 
         // then
         assertThat(responseCategory).isNotNull();
-        assertThat(categoryId).isEqualTo(responseCategory.getId());
-        assertThat(responseCategory.getName()).isEqualTo("testName");
+        assertThat(categoryId).isEqualTo(responseCategory.id());
+        assertThat(responseCategory.name()).isEqualTo("testName");
     }
 
     @Test

@@ -1,9 +1,9 @@
 package gift.controller.product;
 
-import gift.dto.product.ProductRequest;
-import gift.dto.product.ProductResponse;
 import gift.dto.paging.PagingRequest;
 import gift.dto.paging.PagingResponse;
+import gift.dto.product.ProductRequest;
+import gift.dto.product.ProductResponse;
 import gift.service.product.ProductService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;

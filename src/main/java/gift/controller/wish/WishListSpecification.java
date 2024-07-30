@@ -1,6 +1,5 @@
 package gift.controller.wish;
 
-import gift.dto.product.ProductResponse;
 import gift.dto.paging.PagingRequest;
 import gift.dto.paging.PagingResponse;
 import gift.dto.wish.WishRequest;
@@ -66,5 +65,5 @@ public interface WishListSpecification {
                     )
             })
     ResponseEntity<PagingResponse<WishResponse.Info>> getUserGifts(@Parameter(hidden = true) @RequestAttribute("user") User user,
-                                                              @Parameter(description = "페이징 요청 정보") @ModelAttribute PagingRequest pagingRequest);
+                                                                   @Parameter(description = "페이징 요청 정보") @ModelAttribute PagingRequest pagingRequest);
 }

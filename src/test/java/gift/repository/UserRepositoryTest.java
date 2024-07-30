@@ -3,7 +3,6 @@ package gift.repository;
 import gift.common.enums.LoginType;
 import gift.model.user.User;
 import gift.repository.user.UserRepository;
-import org.apache.juli.logging.Log;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;

@@ -1,11 +1,11 @@
 package gift.controller.product;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import gift.dto.option.OptionRequest;
 import gift.dto.product.ProductRequest;
 import gift.dto.product.ProductResponse;
-import gift.dto.option.OptionRequest;
-import gift.service.product.ProductService;
 import gift.service.option.OptionService;
+import gift.service.product.ProductService;
 import org.junit.jupiter.api.*;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,7 +43,7 @@ class ProductControllerTest {
     @BeforeEach
     void setUp() {
         OptionRequest.Create option = new OptionRequest.Create("testOption", 1);
-        List<OptionRequest.Create> optionList = Arrays.asList(option);
+        List<OptionRequest.Create> optionList = List.of(option);
         giftRequest = new ProductRequest.Create("Test Gift", 1000, "test.jpg", 1L, optionList);
         productResponse = new ProductResponse.Info(1L, "Test Gift", 1000, "test.jpg");
         objectMapper = new ObjectMapper();
@@ -75,6 +75,7 @@ class ProductControllerTest {
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.options").value("옵션은 최소 하나 이상 포함되어야 합니다."));
     }
+
     @Test
     @DisplayName("상품 업데이트 메서드가 잘 동작하는지 테스트")
     void testupdateGift() throws Exception {

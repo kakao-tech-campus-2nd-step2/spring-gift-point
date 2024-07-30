@@ -22,7 +22,7 @@ public class OptionController implements OptionSpecification {
     }
 
     @GetMapping("/options")
-    public ResponseEntity< OptionResponse.InfoList> getAllOptions() {
+    public ResponseEntity<OptionResponse.InfoList> getAllOptions() {
         OptionResponse.InfoList options = optionService.getAllOptions();
         return ResponseEntity.ok(options);
     }

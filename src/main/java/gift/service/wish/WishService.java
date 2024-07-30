@@ -61,7 +61,7 @@ public class WishService {
         Page<Wish> wishes = wishRepository.findByUser(user, pageRequest);
         List<WishResponse.Info> wishResponses = wishes.getContent()
                 .stream()
-                .map(wish -> new WishResponse.Info(wish.getId(),wish.getProduct().getId(), wish.getProduct().getName(), wish.getProduct().getPrice(), wish.getProduct().getImageUrl()))
+                .map(wish -> new WishResponse.Info(wish.getId(), wish.getProduct().getId(), wish.getProduct().getName(), wish.getProduct().getPrice(), wish.getProduct().getImageUrl()))
                 .collect(Collectors.toList());
         return new PagingResponse<>(page, wishResponses, size, wishes.getTotalElements(), wishes.getTotalPages());
     }

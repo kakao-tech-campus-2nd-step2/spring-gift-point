@@ -2,10 +2,10 @@ package gift.service.option;
 
 import gift.dto.option.OptionRequest;
 import gift.dto.option.OptionResponse;
-import gift.model.product.Product;
 import gift.model.option.Option;
-import gift.repository.product.ProductRepository;
+import gift.model.product.Product;
 import gift.repository.option.OptionRepository;
+import gift.repository.product.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.orm.ObjectOptimisticLockingFailureException;
 import org.springframework.retry.annotation.Backoff;

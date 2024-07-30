@@ -50,7 +50,7 @@ public class WishListController implements WishListSpecification {
 
     @GetMapping
     public ResponseEntity<PagingResponse<WishResponse.Info>> getUserGifts(@RequestAttribute("user") User user,
-                                                                     @ModelAttribute PagingRequest pagingRequest) {
+                                                                          @ModelAttribute PagingRequest pagingRequest) {
         PagingResponse<WishResponse.Info> userWishes = wishService.getGiftsFromUser(user.getId(), pagingRequest.getPage(), pagingRequest.getSize());
         return ResponseEntity.ok(userWishes);
     }

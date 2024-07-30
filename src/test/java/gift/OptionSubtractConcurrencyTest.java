@@ -1,10 +1,10 @@
 package gift;
 
 import gift.model.category.Category;
-import gift.model.product.Product;
 import gift.model.option.Option;
-import gift.repository.product.ProductRepository;
+import gift.model.product.Product;
 import gift.repository.option.OptionRepository;
+import gift.repository.product.ProductRepository;
 import gift.service.option.OptionService;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;

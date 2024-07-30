@@ -1,9 +1,9 @@
 package gift.repository.order;
 
 import gift.model.category.Category;
-import gift.model.product.Product;
 import gift.model.option.Option;
 import gift.model.order.Order;
+import gift.model.product.Product;
 import gift.repository.product.ProductRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -30,11 +30,11 @@ class OrderRepositoryTest {
         //given
         Category category = new Category(10L, "test", "test", "test", "test");
         Option option1 = new Option("testOption", 1);
-        List<Option> option = Arrays.asList(option1);
+        List<Option> option = List.of(option1);
         Product product = new Product("test", 1000, "abc.jpg", category, option);
         productRepository.save(product);
 
-        Order order = new Order(product.getOptions().get(0),5,"testMessage");
+        Order order = new Order(product.getOptions().get(0), 5, "testMessage");
 
         //when
         Order savedOrder = orderRepository.save(order);

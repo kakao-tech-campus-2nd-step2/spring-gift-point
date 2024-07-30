@@ -3,8 +3,8 @@ package gift.repository;
 import gift.common.enums.LoginType;
 import gift.exception.WishItemNotFoundException;
 import gift.model.category.Category;
-import gift.model.product.Product;
 import gift.model.option.Option;
+import gift.model.product.Product;
 import gift.model.user.User;
 import gift.model.wish.Wish;
 import gift.repository.product.ProductRepository;
@@ -19,7 +19,6 @@ import java.util.*;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @DataJpaTest
 class WishRepositoryTest {
@@ -45,7 +44,7 @@ class WishRepositoryTest {
 
         Category category = new Category(10L, "test", "test", "test", "test");
         Option option1 = new Option("testOption", 1);
-        List<Option> option = Arrays.asList(option1);
+        List<Option> option = List.of(option1);
 
         product = new Product("Test Gift", 100, "test.jpg", category, option);
         productRepository.save(product);
@@ -62,7 +61,7 @@ class WishRepositoryTest {
 
         assertThat(wishes).isNotNull();
         assertThat(wishes.getContent()).hasSize(1);
-        assertThat(wishes.getContent().get(0).getGift().getName()).isEqualTo("Test Gift");
+        assertThat(wishes.getContent().get(0).getProduct().getName()).isEqualTo("Test Gift");
     }
 
     @Test

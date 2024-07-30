@@ -1,8 +1,8 @@
 package gift.repository;
 
 import gift.model.category.Category;
-import gift.model.product.Product;
 import gift.model.option.Option;
+import gift.model.product.Product;
 import gift.repository.product.ProductRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -33,7 +33,7 @@ class ProductRepositoryTest {
     void testSave() {
         Category category = new Category(10L, "test", "test", "test", "test");
         Option option1 = new Option("testOption", 1);
-        List<Option> option = Arrays.asList(option1);
+        List<Option> option = List.of(option1);
         Product product = new Product("test", 1000, "abc.jpg", category, option);
         Product actual = productRepository.save(product);
 

@@ -8,7 +8,7 @@ public class ProductResponse {
             String name,
             int price,
             String imageUrl
-    ){
+    ) {
         public static ProductResponse.Info fromEntity(Product product) {
             return new ProductResponse.Info(product.getId(),
                     product.getName(),

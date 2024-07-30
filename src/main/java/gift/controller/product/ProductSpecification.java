@@ -1,9 +1,9 @@
 package gift.controller.product;
 
-import gift.dto.product.ProductRequest;
-import gift.dto.product.ProductResponse;
 import gift.dto.paging.PagingRequest;
 import gift.dto.paging.PagingResponse;
+import gift.dto.product.ProductRequest;
+import gift.dto.product.ProductResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.*;

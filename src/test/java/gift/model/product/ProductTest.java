@@ -19,7 +19,7 @@ class ProductTest {
 
         Category category = new Category(10L, "test", "test", "test", "test");
         Option option1 = new Option(10L, "testOption", 1);
-        List<Option> option = Arrays.asList(option1);
+        List<Option> option = List.of(option1);
 
         assertThatThrownBy(() -> new Product(invalidName, price, imageUrl, category, option))
                 .isInstanceOf(IllegalArgumentException.class)

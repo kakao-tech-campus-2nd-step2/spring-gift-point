@@ -2,8 +2,8 @@ package gift.service.option;
 
 import gift.dto.option.OptionRequest;
 import gift.model.category.Category;
-import gift.model.product.Product;
 import gift.model.option.Option;
+import gift.model.product.Product;
 import gift.repository.product.ProductRepository;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -32,7 +32,7 @@ class OptionServiceTest {
     void setUp() {
         Category category = new Category(10L, "test", "test", "test", "test");
         Option option1 = new Option("testOption", 10);
-        List<Option> options = Arrays.asList(option1);
+        List<Option> options = List.of(option1);
 
         product = new Product("Test Gift", 100, "test.jpg", category, options);
     }
