@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ko">
+<head>
+    <title>Management Products</title>
+    <link rel="stylesheet" type="text/css" href="/css/styles.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
+    <style>
+        .edit-input {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+<h1>Management Products_부산대 BE_박민재</h1>
+<div class="container">
+    <button id="addProductBtn" class="add-btn">Add New Product</button>
+</div>
+<div class="table-container">
+    <table>
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Price</th>
+            <th>ImageUrl</th>
+            <th>Category</th>
+            <th class="actions-column">Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:if="${#lists.isEmpty(products)}">
+            <td colspan="6">데이터가 존재하지 않습니다</td>
+        </tr>
+        <tr th:each="product : ${products}" th:attr="data-id=${product.id}">
+            <td th:text="${product.id}">0</td>
+            <td>
+                <span class="display-text" th:text="${product.name}">Sample Name</span>
+                <input class="edit-input" type="text" th:value="${product.name}" />
+            </td>
+            <td>
+                <span class="display-text" th:text="${product.price}">0.0</span>
+                <input class="edit-input" type="text" th:value="${product.price}" />
+            </td>
+            <td>
+                <span class="display-text" th:text="${product.imageUrl}">Sample Url</span>
+                <input class="edit-input" type="text" th:value="${product.imageUrl}" />
+            </td>
+            <td>
+                <span class="display-text" th:text="${product.category.name}">Sample Category</span>
+                <select class="edit-input" style="display: none;"></select>
+            </td>
+            <td class="actions-column">
+                <div class="button-group">
+                    <button class="edit-btn">Edit</button>
+                    <button class="save-btn" style="display: none;">Save</button>
+                    <button class="delete-btn">Delete</button>
+                </div>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+<div class="pagination">
+    <span th:if="${currentPage > 0}">
+        <a th:href="@{/admin/products(page=${currentPage - 1}, size=${pageSize})}">Previous</a>
+    </span>
+    <span th:if="${currentPage < totalPages - 1}">
+        <a th:href="@{/admin/products(page=${currentPage + 1}, size=${pageSize})}">Next</a>
+    </span>
+</div>
+
+<!-- Add Product Modal -->
+<div id="addProductModal" title="Add New Product" style="display: none;">
+    <form id="addProductForm">
+        <div class="form-group">
+            <label for="name">Name:</label>
+            <input type="text" id="name" name="name" />
+        </div>
+        <div class="form-group">
+            <label for="price">Price:</label>
+            <input type="text" id="price" name="price" />
+        </div>
+        <div class="form-group">
+            <label for="imageUrl">ImageUrl:</label>
+            <input type="text" id="imageUrl" name="imageUrl" />
+        </div>
+        <div class="form-group">
+            <label for="category">Category:</label>
+            <select id="category" name="category"></select>
+        </div>
+    </form>
+</div>
+
+<script src="/js/product-management.js"></script>
+</body>
+</html>

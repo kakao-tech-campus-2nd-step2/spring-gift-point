@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Order Page</title>
+</head>
+<body>
+<h1>Place an Order</h1>
+<form id="orderForm">
+    <label for="optionId">Option ID:</label>
+    <input type="number" id="optionId" name="optionId" required>
+    <br>
+    <label for="quantity">Quantity:</label>
+    <input type="number" id="quantity" name="quantity" required>
+    <br>
+    <label for="message">Message:</label>
+    <textarea id="message" name="message" required></textarea>
+    <br>
+    <button type="submit">Place Order</button>
+</form>
+
+<script>
+    document.getElementById('orderForm').addEventListener('submit', function(event) {
+        event.preventDefault();
+        const optionId = document.getElementById('optionId').value;
+        const quantity = document.getElementById('quantity').value;
+        const message = document.getElementById('message').value;
+        const accessToken = sessionStorage.getItem('accessToken');
+
+        if (!accessToken) {
+            alert('Access token is missing. Please log in.');
+            return;
+        }
+
+        const order = {
+            optionId: optionId,
+            quantity: quantity,
+            message: message
+        };
+
+        fetch('/api/orders', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + accessToken
+            },
+            body: JSON.stringify(order)
+        })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert('Order placed successfully');
+                    // Send the message
+                    sendMessage(data.data.id, message, accessToken);
+                } else {
+                    alert('Failed to place order: ' + data.message);
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Failed to place order: ' + error.message);
+            });
+    });
+
+    function sendMessage(orderId, message, accessToken) {
+        fetch('/api/orders/sendMessage', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + accessToken
+            },
+            body: JSON.stringify({ message: `Order ID: ${orderId}, Message: ${message}` })
+        })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert('Message sent successfully');
+                } else {
+                    alert('Failed to send message: ' + data.message);
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Failed to send message: ' + error.message);
+            });
+    }
+</script>
+</body>
+</html>
