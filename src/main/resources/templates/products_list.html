@@ -8,10 +8,10 @@
   <body>
     <div class="container">
       <div>
-        <h1><a href="/products">상품 관리 시스템</a></h1>
+        <h1><a href="/admin/products">상품 관리 시스템</a></h1>
         <div class="container" id="div-search">
           <h3>상품 검색</h3>
-          <form action="/products/search" method="get">
+          <form action="/admin/products/search" method="get">
             <div class="form-group">
               <p><label for="name">상품 이름</label>
                 <input type="text" id="name" name="name" placeholder="상품 이름을 입력하세요">
@@ -20,7 +20,7 @@
             <button type="submit">상품 검색</button>
           </form>
         </div>
-        <a href="/products/new">상품 추가</a>
+        <a href="/admin/products/new">상품 추가</a>
         <br>
         <table border ="1" width="50%" height=200 bordercolor="black">
           <thead>
@@ -42,9 +42,9 @@
               <td th:text="${product.price}"></td>
               <td th:text="${product.imageUrl}"></td>
               <td th:text="${product.categoryId}"></td>
-              <td><a th:href="@{/products/update/{id}(id = ${product.id})}">상품 수정</a></td>
+              <td><a th:href="@{/admin/products/update/{id}(id = ${product.id})}">상품 수정</a></td>
               <td>
-                <form th:action="@{/products/{id}(id=${product.id})}" method="post">
+                <form th:action="@{/admin/products/{id}(id=${product.id})}" method="post">
                   <input type="hidden" name="_method" value="delete"/>
                   <button type="submit">상품 삭제</button>
                 </form>
@@ -57,13 +57,13 @@
           <nav>
             <ul class="pagination">
               <li th:class="${currentPage == 0} ? 'page-item disabled' : 'page-item'">
-                <a class="page-link" th:href="@{/products?page=${currentPage - 1}&size=${pageSize}}">이전</a>
+                <a class="page-link" th:href="@{/admin/products?page=${currentPage - 1}&size=${pageSize}}">이전</a>
               </li>
               <li th:each="pageNumber : ${#numbers.sequence(0, totalPages - 1)}" th:class="${pageNumber == currentPage} ? 'page-item active' : 'page-item'">
-                <a class="page-link" th:href="@{/products?page=${pageNumber}&size=${pageSize}}" th:text="${pageNumber + 1}"></a>
+                <a class="page-link" th:href="@{/admin/products?page=${pageNumber}&size=${pageSize}}" th:text="${pageNumber + 1}"></a>
               </li>
               <li th:class="${currentPage == totalPages - 1} ? 'page-item disabled' : 'page-item'">
-                <a class="page-link" th:href="@{/products?page=${currentPage + 1}&size=${pageSize}}">다음</a>
+                <a class="page-link" th:href="@{/admin/products?page=${currentPage + 1}&size=${pageSize}}">다음</a>
               </li>
             </ul>
           </nav>

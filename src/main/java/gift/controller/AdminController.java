@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.*;
 
 
 @Controller
-@RequestMapping("/products")
+@RequestMapping("/admin/products")
 @Tag(name = "Product", description = "상품 API")
 public class AdminController {
 

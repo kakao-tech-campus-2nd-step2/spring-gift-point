@@ -6,9 +6,9 @@
   </head>
   <body>
     <div class="container">
-      <h1><a href="/products">돌아 가기</a></h1>
+      <h1><a href="/admin/products">돌아 가기</a></h1>
       <div th:if="${product == null}">
-        <form action="/products" method="post">
+        <form action="/admin/products" method="post">
           <div class="form-group">
             <p><label for="new_name">이름</label>
               <input type="text" id="new_name" name="name" placeholder="이름을 입력하세요">
@@ -31,7 +31,7 @@
         </form>
       </div>
       <div th:if="${product != null}">
-        <form th:action="@{/products/{id}(id=${product.id})}" method="post">
+        <form th:action="@{/admin/products/{id}(id=${product.id})}" method="post">
           <input type="hidden" name="_method" value="put" />
           <div class="form-group">
             <p><label for="edit_name">이름</label>
