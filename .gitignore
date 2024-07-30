@@ -2,6 +2,8 @@ HELP.md
 .gradle
 build/
 !gradle/wrapper/gradle-wrapper.jar
+
+### Build directories ###
 !**/src/main/**/build/
 !**/src/test/**/build/
 
