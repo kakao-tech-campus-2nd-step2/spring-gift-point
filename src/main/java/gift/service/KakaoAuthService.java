@@ -3,6 +3,7 @@ package gift.service;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import gift.config.KakaoProperties;
+import gift.dto.OrderDTO;
 import gift.model.*;
 import gift.repository.MemberRepository;
 import gift.repository.OptionRepository;
@@ -17,7 +18,6 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.web.client.RestClient;
 
 import java.net.URI;
-import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 
@@ -76,21 +76,24 @@ public class KakaoAuthService {
         return response.getBody().getAccessToken();
     }
 
-    public void orderProduct(String token, Long productId, String optionName, int num) throws JsonProcessingException {
+    public void orderProduct(String token, OrderDTO orderDTO) throws JsonProcessingException {
+        Long productId = orderDTO.getProductId();
+        int quantity = orderDTO.getQuantity();
         //상품 찾음 productID
         Product product = productService.getProductById(productId);
-        //옵션 찾음 productID optionName
-        List<Option> optionList = optionRepository.findAllByProduct_Id(productId);
-        List<String> optionNameList = optionList.stream()
-                .map(Option::getName)
-                .toList();
-        if(!optionNameList.contains(optionName)){
-            throw new IllegalArgumentException("해당 옵션이 없습니다.");
-        }
-        //옵션 수량 만큼 감소(remove) num
-        Optional<Option> Optionaloption = optionRepository.findByNameAndProduct_Id(optionName, productId);
-        Optionaloption.ifPresent(option ->
-                optionService.removeOption(option, num));
+        //프론트에서 옵션 쓰지 않음.
+//        //옵션 찾음 productID optionName
+//        List<Option> optionList = optionRepository.findAllByProduct_Id(productId);
+//        List<String> optionNameList = optionList.stream()
+//                .map(Option::getName)
+//                .toList();
+//        if(!optionNameList.contains(optionName)){
+//            throw new IllegalArgumentException("해당 옵션이 없습니다.");
+//        }
+//        //옵션 수량 만큼 감소(remove) num
+//        Optional<Option> Optionaloption = optionRepository.findByNameAndProduct_Id(optionName, productId);
+//        Optionaloption.ifPresent(option ->
+//                optionService.removeOption(option, num));
         //멤버 ID찾음 token
         Member member = getDBMemberByToken(token);
         //위시리스트에 상품있으면 삭제 멤버iD, productID
@@ -98,7 +101,7 @@ public class KakaoAuthService {
         OptionalWish.ifPresent(wish ->
                 wishRepository.deleteById(wish.getId()));
         //카카오톡 메세지 보내기
-        sendKakaoMessage(token, product.getName(), optionName, num);
+        sendKakaoMessage(token, product.getName(), quantity);
     }
 
     public Member getDBMemberByToken(String token){
@@ -123,14 +126,14 @@ public class KakaoAuthService {
         return response.getBody().getId();
     }
 
-    public void sendKakaoMessage(String token, String productName, String optionName, int num) throws JsonProcessingException {
+    public void sendKakaoMessage(String token, String productName, int num) throws JsonProcessingException {
         logger.info("sendKakaoMessage");
         var url = "https://kapi.kakao.com/v2/api/talk/memo/default/send";
         var headers = new HttpHeaders();
         headers.setBearerAuth(token);
         headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
 
-        var body = createTemplateObject(productName, optionName, num);
+        var body = createTemplateObject(productName, num);
 
         var response = this.client.post()
                 .uri(url)
@@ -153,9 +156,9 @@ public class KakaoAuthService {
         return body;
     }
 
-    private @NotNull LinkedMultiValueMap<String, String> createTemplateObject(String productName, String optionName, int num) throws JsonProcessingException {
+    private @NotNull LinkedMultiValueMap<String, String> createTemplateObject(String productName, int num) throws JsonProcessingException {
         String objectType = "text";
-        String text = productName + "[" + optionName + "]" + " 상품이 "
+        String text = productName + " 상품이 "
                         + Integer.toString(num) + "개 주문되었습니다.";
         String webUrl = "http://localhost:8080/";
         String buttonTitle = "바로가기";

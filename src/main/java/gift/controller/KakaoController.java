@@ -41,12 +41,4 @@ public class KakaoController {
         logger.info("kakaoAuth return : {}", token);
         return "redirect:/products";
     }
-
-    @GetMapping("/KakaoOrder/{productId}/{optionName}/{num}")
-    @ResponseBody
-    public void orderProduct(HttpServletRequest request, @PathVariable Long productId,
-                             @PathVariable String optionName, @PathVariable int num) throws JsonProcessingException {
-        BearerToken token = (BearerToken) request.getAttribute("bearerToken");
-        kakaoAuthService.orderProduct(token.getToken(), productId, optionName, num);
-    }
 }
