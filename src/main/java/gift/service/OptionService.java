@@ -26,7 +26,7 @@ public class OptionService {
     public OptionResponse addOption(Long productId, @Valid OptionRequest optionRequest) {
         Product product = productRepository.findById(productId)
             .orElseThrow(() -> new IllegalArgumentException("상품을 찾을 수 없습니다."));
-        Option option = new Option(optionRequest.getName(), optionRequest.getQuantity(), product);
+        Option option = new Option(optionRequest.getName(), optionRequest.getStockQuantity(), product);
         Option savedOption = optionRepository.save(option);
         return OptionResponse.from(savedOption);
     }
@@ -35,7 +35,7 @@ public class OptionService {
         Option option = optionRepository.findByIdAndProductId(optionId, productId)
             .orElseThrow(() -> new IllegalArgumentException("옵션을 찾을 수 없습니다."));
 
-        option.updateOption(optionRequest.getName(), optionRequest.getQuantity());
+        option.updateOption(optionRequest.getName(), optionRequest.getStockQuantity());
         optionRepository.save(option);
 
         return OptionResponse.from(option);
@@ -64,7 +64,7 @@ public class OptionService {
         Option option = optionRepository.findByIdAndProductId(optionId, productId)
             .orElseThrow(() -> new IllegalArgumentException("옵션을 찾을 수 없습니다."));
 
-        if (option.getQuantity() < quantity) {
+        if (option.getStockQuantity() < quantity) {
             throw new IllegalArgumentException("재고가 부족합니다.");
         }
 

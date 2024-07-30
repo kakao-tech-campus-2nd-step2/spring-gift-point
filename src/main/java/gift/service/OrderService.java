@@ -49,7 +49,7 @@ public class OrderService {
         Option option = optionRepository.findWithId(orderRequest.getOptionId())
             .orElseThrow(() -> new IllegalArgumentException("옵션을 찾을 수 없습니다."));
 
-        if (option.getQuantity() < orderRequest.getQuantity()) {
+        if (option.getStockQuantity() < orderRequest.getQuantity()) {
             throw new IllegalArgumentException("재고가 부족합니다.");
         }
         option.subtractQuantity(orderRequest.getQuantity());

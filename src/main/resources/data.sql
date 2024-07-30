@@ -46,16 +46,16 @@ VALUES ('발렌티노 고-스프레이', 42000,
         'https://img1.kakaocdn.net/thumb/C320x320@2x.fwebp.q82/?fname=https%3A%2F%2Fst.kakaocdn.net%2Fproduct%2Fgift%2Fproduct%2F20240621150643_90a1cae8892444578b424749b6652221.jpg',
         3);
 
-INSERT INTO options (name, quantity, product_id)
+INSERT INTO options (name, stock_quantity, product_id)
 VALUES ('가든브리즈', 969, 1);
-INSERT INTO options (name, quantity, product_id)
+INSERT INTO options (name, stock_quantity, product_id)
 VALUES ('가든파티', 200, 1);
-INSERT INTO options (name, quantity, product_id)
+INSERT INTO options (name, stock_quantity, product_id)
 VALUES ('e카드 3만원 교환권', 500, 2);
-INSERT INTO options (name, quantity, product_id)
+INSERT INTO options (name, stock_quantity, product_id)
 VALUES ('본 인 로마 핑크 [BEST]', 300, 3);
-INSERT INTO options (name, quantity, product_id)
+INSERT INTO options (name, stock_quantity, product_id)
 VALUES ('본 인 로마 코랄', 300, 3);
-INSERT INTO options (name, quantity, product_id)
+INSERT INTO options (name, stock_quantity, product_id)
 VALUES ('보체 비바 [선물하기 단독]', 300, 3);
 

@@ -39,7 +39,7 @@ public class OrderMessageService {
             "주문 메세지: " + order.getMessage() + "\\n" +
             "주문 수량: " + order.getQuantity() + "\\n" +
             "주문 시각: " + formattedDateTime + "\\n" +
-            "남은 수량: " + option.getQuantity() + "\", " +
+            "남은 수량: " + option.getStockQuantity() + "\", " +
             "\"link\": { " +
             "\"web_url\": \"" + kakaoProperties.getRedirectUrl() + order.getId() + "\" " +
             "} " +
