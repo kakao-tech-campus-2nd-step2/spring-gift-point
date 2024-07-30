@@ -2,13 +2,11 @@ package gift.product.presentation;
 
 import gift.product.application.WishListService;
 import gift.product.domain.AddWishListRequest;
-import gift.product.domain.WishList;
+import gift.product.domain.WishListResponse;
 import gift.util.CommonResponse;
 import gift.util.annotation.JwtAuthenticated;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -16,6 +14,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @Tag(name = "WishListController", description = "위시리스트 관련 API")
 @RestController
@@ -44,14 +44,18 @@ public class WishListController {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         Long userId = (Long) authentication.getPrincipal();
 
-        Page<WishList> products = wishListService.getProductsInWishList(userId, pageable);
-        return ResponseEntity.ok(new CommonResponse<>(products, "위시리스트 조회 성공", true));
+        List<WishListResponse> products = wishListService.getWishListByUserId(userId, pageable);
+
+        return ResponseEntity.ok(products);
     }
 
     @JwtAuthenticated
     @Operation(summary = "위시리스트 생성", description = "새로운 위시리스트를 생성합니다.")
-    @PostMapping("/{userId}/create")
-    public ResponseEntity<?> createWishList(@PathVariable Long userId) {
+    @PostMapping("/wishes/create")
+    public ResponseEntity<?> createWishList() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        Long userId = (Long) authentication.getPrincipal();
+
         wishListService.createWishList(userId);
         return ResponseEntity.ok(new CommonResponse<>(null, "위시리스트 생성 성공", true));
     }

@@ -1,5 +1,6 @@
 package gift.product.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import gift.user.domain.User;
 import jakarta.persistence.*;
 
@@ -17,6 +18,7 @@ public class WishList {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
+    @JsonIgnore
     private User user;
 
     @OneToMany(mappedBy = "wishList")
