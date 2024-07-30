@@ -6,6 +6,8 @@ public interface ProductOptionService {
 
     void registerOptionToProduct(Long productId, ProductOption productOption);
 
+    void updateOption(Long productId, ProductOption productOption);
+
     List<ProductOption> getOptionsFromProduct(Long productId);
 
     void removeOptionFromProduct(Long productId, Long optionId);

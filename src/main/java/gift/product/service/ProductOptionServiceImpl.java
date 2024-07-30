@@ -42,22 +42,33 @@ public class ProductOptionServiceImpl implements ProductOptionService {
     @Override
     @Transactional
     public void registerOptionToProduct(Long productId, ProductOption productOption) {
+        validateOption(productId, productOption);
+        productOptionRepository.save(productId, productOption);
+    }
+
+    @Override
+    @Transactional
+    public void updateOption(Long productId, ProductOption productOption) {
+        validateOption(productId, productOption);
+        productOptionRepository.save(productOption.id(), productOption);
+    }
+
+    private void validateOption(Long productId, ProductOption productOption) {
         if (!productRepository.exists(productId)) {
             throw new ProductNotFoundException();
         }
-        if (productOptionRepository.hasOption(productOption.id())) {
-            throw new OptionAlreadExistsException();
+        if (!productOptionRepository.hasOption(productOption.id())) {
+            throw new OptionNotFoundException();
         }
         if (productOptionRepository.hasOption(productId, productOption.name())) {
             throw new OptionAlreadExistsException();
         }
-        if (productOptionRepository.countByProductId(productId) >= maxOptionLimit) {
-            throw new OptionLimitExceededException();
-        }
         if (productOption.quantity() <= 0) {
             throw new InvalidArgumentException(ErrorCode.NEGATIVE_QUANTITY);
         }
-        productOptionRepository.save(productId, productOption);
+        if (productOptionRepository.countByProductId(productId) >= maxOptionLimit) {
+            throw new OptionLimitExceededException();
+        }
     }
 
     @Override
