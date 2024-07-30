@@ -11,6 +11,7 @@ import java.io.IOException;
 
 @Tag(name = "로그인 API", description = "로그인과 관련된 API")
 @RestController
+@RequestMapping("/api/members")
 public class LoginRestController {
     private final UserService userService;
 
@@ -18,12 +19,12 @@ public class LoginRestController {
         this.userService = userService;
     }
 
-    @PostMapping("/members/register")
+    @PostMapping("/register")
     public ResponseEntity<?> register(@RequestBody MemberDTO memberDTO){
         return ResponseEntity.ok(userService.register(memberDTO));
     }
 
-    @PostMapping("/members/login")
+    @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody MemberDTO memberDTO){
         return ResponseEntity.ok(userService.login(memberDTO));
     }

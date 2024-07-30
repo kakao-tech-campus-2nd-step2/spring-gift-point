@@ -24,8 +24,11 @@ public class WishlistController {
     }
 
     @GetMapping
-    public String getAllWishlist(@RequestParam(value = "page", defaultValue = "0") int page, Model model){
-        Page<String> wishlists = wishService.getPage(email, page);
+    public String read(@RequestParam(value = "page", defaultValue = "0") int page,
+                                 @RequestParam(value = "size", defaultValue = "10") int size,
+                                 @RequestParam(value = "sort", defaultValue = "10") String sort,
+                                 Model model){
+        Page<String> wishlists = wishService.getPage(email, page, size, sort);
         model.addAttribute("wishlists", wishlists);
         return "wishlist";
     }

@@ -1,20 +1,16 @@
 package gift.Service;
 
-import gift.Exception.AuthorizedException;
+import gift.Exception.Login.AuthorizedException;
 import gift.Exception.Category.CategoryDuplicatedException;
 import gift.Exception.ProductNotFoundException;
 import gift.Model.DTO.ProductDTO;
 import gift.Model.Entity.CategoryEntity;
 import gift.Model.Entity.ProductEntity;
 import gift.Model.Entity.MemberEntity;
-import gift.Model.Role;
 import gift.Repository.CategoryRepository;
 import gift.Repository.ProductRepository;
 import gift.Repository.MemberRepository;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -104,9 +100,10 @@ public class ProductService {
         productRepository.deleteById(id);
     }
 
-    public Page<ProductDTO> getPage(String email, int page){
+    public Page<ProductDTO> getPage(String email, int page, int size, String sort){
         List<ProductDTO> dtoList = read(email);
-        Pageable pageable = PageRequest.of(page, 10);
+        Sort sortType = Sort.by(Sort.Direction.DESC, sort);
+        Pageable pageable = PageRequest.of(page, size, sortType);
 
         int start = (int) pageable.getOffset();
         int end = Math.min((start + pageable.getPageSize()), dtoList.size());

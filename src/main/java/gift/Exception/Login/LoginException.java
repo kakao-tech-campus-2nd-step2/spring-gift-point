@@ -1,4 +1,4 @@
-package gift.Exception;
+package gift.Exception.Login;
 
 public class LoginException extends RuntimeException {
 

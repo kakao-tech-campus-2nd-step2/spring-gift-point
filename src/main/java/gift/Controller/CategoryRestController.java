@@ -4,9 +4,8 @@ import gift.Model.DTO.CategoryDTO;
 import gift.Service.CategoryService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -24,5 +23,17 @@ public class CategoryRestController {
     @GetMapping
     public List<CategoryDTO> read(){
         return categoryService.read();
+    }
+
+    @PostMapping
+    public ResponseEntity<?> create(@RequestBody CategoryDTO categoryDTO){
+        categoryService.create(categoryDTO);
+        return ResponseEntity.ok("성공");
+    }
+
+    @PutMapping("/{categoryId}")
+    public ResponseEntity<?> update(@PathVariable Long categoryId, @RequestBody CategoryDTO categoryDTO){
+        categoryService.update(categoryId, categoryDTO);
+        return ResponseEntity.ok("성공");
     }
 }

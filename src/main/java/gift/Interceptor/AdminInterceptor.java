@@ -1,6 +1,6 @@
 package gift.Interceptor;
 
-import gift.Exception.AuthorizedException;
+import gift.Exception.Login.AuthorizedException;
 import gift.Model.Entity.MemberEntity;
 import gift.Model.Role;
 import gift.Repository.MemberRepository;
@@ -14,18 +14,18 @@ import org.springframework.web.servlet.ModelAndView;
 import java.util.Optional;
 
 @Component
-public class ProductInterceptor implements HandlerInterceptor {
+public class AdminInterceptor implements HandlerInterceptor {
     private final JwtTokenProvider jwtTokenProvider;
     private final MemberRepository memberRepository;
 
-    public ProductInterceptor(JwtTokenProvider jwtTokenProvider, MemberRepository memberRepository){
+    public AdminInterceptor(JwtTokenProvider jwtTokenProvider, MemberRepository memberRepository){
         this.jwtTokenProvider = jwtTokenProvider;
         this.memberRepository = memberRepository;
     }
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-        String token = request.getHeader("Bearer");
+        String token = request.getHeader("Authorization").substring(7);
         String email = jwtTokenProvider.getEmailFromToken(token);
 
         Optional<MemberEntity> memberOptional = memberRepository.findByEmail(email);

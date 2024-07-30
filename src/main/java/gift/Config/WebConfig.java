@@ -1,7 +1,7 @@
 package gift.Config;
 
-import gift.Interceptor.ProductInterceptor;
-import gift.Interceptor.WishInterceptor;
+import gift.Interceptor.AdminInterceptor;
+import gift.Interceptor.ConsumerInterceptor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.client.RestTemplate;
@@ -10,12 +10,12 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration
 public class WebConfig implements WebMvcConfigurer {
-    private final WishInterceptor wishInterceptor;
-    private final ProductInterceptor productInterceptor;
+    private final ConsumerInterceptor consumerInterceptor;
+    private final AdminInterceptor adminInterceptor;
 
-    public WebConfig(WishInterceptor wishInterceptor, ProductInterceptor productInterceptor){
-        this.wishInterceptor = wishInterceptor;
-        this.productInterceptor = productInterceptor;
+    public WebConfig(ConsumerInterceptor consumerInterceptor, AdminInterceptor adminInterceptor){
+        this.consumerInterceptor = consumerInterceptor;
+        this.adminInterceptor = adminInterceptor;
     }
 
     @Bean
@@ -25,7 +25,9 @@ public class WebConfig implements WebMvcConfigurer {
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(wishInterceptor).addPathPatterns("/api/v1/wishlist/**");
-        registry.addInterceptor(productInterceptor).addPathPatterns("/api/products/**");
+        registry.addInterceptor(consumerInterceptor).addPathPatterns("/api/categories");
+        registry.addInterceptor(consumerInterceptor).addPathPatterns("/api/options");
+        registry.addInterceptor(consumerInterceptor).addPathPatterns("/api/orders");
+        registry.addInterceptor(adminInterceptor).addPathPatterns("/api/products/**");
     }
 }

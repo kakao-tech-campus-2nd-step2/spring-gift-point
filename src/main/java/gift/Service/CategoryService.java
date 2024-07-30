@@ -41,14 +41,14 @@ public class CategoryService {
         return categoryDTOList;
     }
 
-    public void update(CategoryDTO categoryDTO){
-        Optional<CategoryEntity> categoryEntityOptional = categoryRepository.findByName(categoryDTO.name());
+    public void update(Long categoryId, CategoryDTO categoryDTO){
+        Optional<CategoryEntity> categoryEntityOptional = categoryRepository.findById(categoryId);
 
         if(categoryEntityOptional.isEmpty()){
             throw new CategoryNotFoundException("카테고리를 찾을 수 없습니다.");
         }
         CategoryEntity categoryEntity = new CategoryEntity(categoryDTO.name(), categoryDTO.color(), categoryDTO.imageUrl(), categoryDTO.description());
-        categoryEntity.setId(categoryEntityOptional.get().getId());
+        categoryEntity.setId(categoryId);
         categoryRepository.save(categoryEntity);
     }
 
