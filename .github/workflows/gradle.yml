@@ -49,9 +49,11 @@ jobs:
           chmod 400 key.pem
           scp -o StrictHostKeyChecking=no -i key.pem build/libs/*.jar $DEPLOY_USER@$DEPLOY_SERVER:~/spring-gift-point/build/libs/
           scp -o StrictHostKeyChecking=no -i key.pem ./src/main/resources/application.properties $DEPLOY_USER@$DEPLOY_SERVER:~/spring-gift-point/src/main/resources/application.properties
-          ssh -o StrictHostKeyChecking=no -i key.pem -o ServerAliveInterval=60 -o ServerAliveCountMax=5 $DEPLOY_USER@$DEPLOY_SERVER "
+          ssh -o StrictHostKeyChecking=no -i key.pem $DEPLOY_USER@$DEPLOY_SERVER "
             sudo lsof -t -i:8080 | xargs -r sudo kill -9
             nohup java -jar ~/spring-gift-point/build/libs/spring-gift-0.0.1-SNAPSHOT.jar &
+            disown
+            exit
             " && echo "스프링 프로젝트가 서버에서 정상적으로 돌아가고 있습니다."
 
   dependency-submission:
