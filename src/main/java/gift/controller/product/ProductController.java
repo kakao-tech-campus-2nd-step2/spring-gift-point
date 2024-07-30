@@ -45,19 +45,18 @@ public class ProductController {
     }
 
     @Operation(summary = "상품 조회", description = "상품 조회 api")
-    @GetMapping("/products/{id}")
-    public ResponseEntity<ProductResponse.Info> getProduct(
+    @GetMapping("/api/products/{id}")
+    public ResponseEntity<ProductResponse.ProductSummary> getProduct(
         @PathVariable("id") Long id
     ) {
         Info productModel = productService.getProduct(id);
-        List<OptionModel.Info> optionModels = optionService.getOptions(id);
-        ProductResponse.Info response = ProductResponse.Info.from(productModel, optionModels);
+        ProductResponse.ProductSummary response = ProductResponse.ProductSummary.from(productModel);
         return ResponseEntity.ok(response);
     }
 
     @Operation(summary = "상품 등록", description = "상품 등록 api")
     @Authorization(role = Role.ADMIN)
-    @PostMapping("/products")
+    @PostMapping("/api/products")
     public ResponseEntity<ProductResponse.Info> createProduct(
         @RequestBody @Valid ProductRequest.Register request
     ) {
@@ -71,7 +70,7 @@ public class ProductController {
 
     @Operation(summary = "상품 수정", description = "상품 수정 api")
     @Authorization(role = Role.ADMIN)
-    @PutMapping("/products/{id}")
+    @PutMapping("/api/products/{id}")
     public ResponseEntity<ProductResponse.Info> updateProduct(
         @PathVariable("id") Long id,
         @RequestBody @Valid ProductRequest.Update request
@@ -85,7 +84,7 @@ public class ProductController {
 
     @Operation(summary = "상품 삭제", description = "상품 삭제 api")
     @Authorization(role = Role.ADMIN)
-    @DeleteMapping("/products/{id}")
+    @DeleteMapping("/api/products/{id}")
     public ResponseEntity<String> deleteProduct(
         @PathVariable("id") Long id
     ) {
@@ -94,16 +93,18 @@ public class ProductController {
     }
 
     @Operation(summary = "상품 목록 조회", description = "상품 목록 조회 api")
-    @GetMapping("/products")
-    public ResponseEntity<PageResponse<ProductResponse.Summary>> getProductsPaging(
+    @GetMapping("/api/products")
+    public ResponseEntity<PageResponse<ProductResponse.ProductSummary>> getProductsPaging(
         @RequestParam(name = "SearchType", required = false, defaultValue = "ALL") SearchType searchType,
         @RequestParam(name = "SearchValue", required = false, defaultValue = "") String searchValue,
+        @RequestParam(name = "categoryId", required = false) Long categoryId,
         @PageableDefault(page = 0, size = 5, sort = "id", direction = Sort.Direction.DESC) Pageable pageable
     ) {
-        Page<ProductModel.InfoWithOption> page = productService.getProductsPaging(searchType,
+        Page<ProductModel.Info> page = productService.getProductsPaging(searchType,
             searchValue,
+            categoryId,
             pageable);
-        var response = PageResponse.from(page, ProductResponse.Summary::from);
+        var response = PageResponse.from(page, ProductResponse.ProductSummary::from);
         return ResponseEntity.ok(response);
     }
 
