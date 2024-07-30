@@ -2,6 +2,7 @@ package gift.controller;
 
 import gift.dto.OptionRequest;
 import gift.dto.OptionResponse;
+import gift.dto.WishResponse;
 import gift.service.OptionService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -9,7 +10,9 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -36,25 +39,28 @@ public class OptionController {
     @GetMapping
     @Operation(summary = "상품 옵션 목록 조회", description = "특정 상품에 대한 모든 옵션을 조회한다.")
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "성공",
-            content = {@Content(schema = @Schema(implementation = OptionResponse.class))})
+        @ApiResponse(responseCode = "200", description = "옵션 목록 조회 성공"),
+        @ApiResponse(responseCode = "-40401", description = "상품을 찾을 수 없음")
     })
-    public ResponseEntity<List<OptionResponse>> getOptions(@PathVariable Long productId) {
+    public ResponseEntity<Map<String, List<OptionResponse>>> getOptions(@PathVariable Long productId) {
         List<OptionResponse> options = optionService.getOptions(productId);
-        return ResponseEntity.ok(options);
+        return ResponseEntity.ok(Map.of("options", options));
     }
 
     @PostMapping
     @Operation(summary = "상품 옵션 추가", description = "상품에 옵션을 추가한다.")
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "201", description = "옵션 추가 성공",
-            content = {@Content(schema = @Schema(implementation = OptionResponse.class))}),
-        @ApiResponse(responseCode = "400", description = "요청 데이터가 유효하지 않음 (옵션 이름 또는 해당 상품을 찾을 수 없음)")
+        @ApiResponse(responseCode = "201", description = "옵션 추가 성공"),
+        @ApiResponse(responseCode = "-40001", description = "옵션 유효성 검사 실패"),
+        @ApiResponse(responseCode = "-40401", description = "해당 상품을 찾을 수 없음"),
+        @ApiResponse(responseCode = "-40904", description = "옵션 이름이 이미 존재함")
     })
-    public ResponseEntity<OptionResponse> addOption(@PathVariable Long productId,
+    public ResponseEntity<Map<String, OptionResponse>> addOption(@PathVariable Long productId,
         @Validated @RequestBody OptionRequest optionRequest) {
         OptionResponse optionResponse = optionService.addOption(productId, optionRequest);
-        return ResponseEntity.status(HttpStatus.CREATED).body(optionResponse);
+        Map<String, OptionResponse> response = new HashMap<>();
+        response.put("created_option", optionResponse);
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
     @PutMapping("/{optionId}")
@@ -62,24 +68,30 @@ public class OptionController {
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "옵션 수정 성공",
             content = {@Content(schema = @Schema(implementation = OptionResponse.class))}),
-        @ApiResponse(responseCode = "400", description = "요청 데이터가 유효하지 않음 (옵션 이름 또는 해당 상품을 찾을 수 없음)"),
-        @ApiResponse(responseCode = "404", description = "해당 옵션이 존재하지 않음")
+        @ApiResponse(responseCode = "-40001", description = "옵션 유효성 검사 실패"),
+        @ApiResponse(responseCode = "-40401", description = "해당 상품을 찾을 수 없음"),
+        @ApiResponse(responseCode = "-40404", description = "해당 옵션이 존재하지 않음"),
+        @ApiResponse(responseCode = "-40405", description = "해당 옵션이 존재하지만, 상품 옵션에 속하지 않음"),
+        @ApiResponse(responseCode = "-40904", description = "옵션 이름이 이미 존재함")
     })
-    public ResponseEntity<OptionResponse> updateOption(@PathVariable Long productId,
+    public ResponseEntity<Map<String, OptionResponse>> updateOption(@PathVariable Long productId,
         @PathVariable Long optionId, @Validated @RequestBody OptionRequest optionRequest) {
         OptionResponse optionResponse = optionService.updateOption(productId, optionId, optionRequest);
-        return ResponseEntity.ok(optionResponse);
+        Map<String, OptionResponse> response = new HashMap<>();
+        response.put("option", optionResponse);
+        return ResponseEntity.ok(response);
     }
 
     @DeleteMapping("/{optionId}")
     @Operation(summary = "상품 옵션 삭제", description = "기존 제품 옵션을 삭제한다.")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "204", description = "옵션 삭제 성공"),
-        @ApiResponse(responseCode = "400", description = "요청 데이터가 유효하지 않음 (옵션 이름 또는 해당 옵션을 찾을 수 없음)"),
-        @ApiResponse(responseCode = "404", description = "해당 옵션이 존재하지 않음")
+        @ApiResponse(responseCode = "-40401", description = "해당 상품을 찾을 수 없음"),
+        @ApiResponse(responseCode = "-40404", description = "해당 옵션이 존재하지 않음"),
+        @ApiResponse(responseCode = "-40405", description = "해당 옵션이 존재하지만, 상품 옵션에 속하지 않음")
     })
-    public void deleteOption(@PathVariable Long optionId, @PathVariable Long productId) {
-        optionService.deleteOption(optionId, productId);
+    public void deleteOption(@PathVariable Long productId, @PathVariable Long optionId) {
+        optionService.deleteOption(productId, optionId);
     }
 
 }
