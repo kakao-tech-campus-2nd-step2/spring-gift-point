@@ -92,13 +92,13 @@ public class AdminController {
         return "addCategory-form";
     }
 
-    @PostMapping("/categories/add")
-    public String addCategory(Model model, @Valid @ModelAttribute Category category, BindingResult bindingResult){
-        if(bindingResult.hasErrors()) {
-            return "addCategory-form";
-        }
-        categoryService.save(category);
-        return "redirect:/products";
-    }
+//    @PostMapping("/categories/add")
+//    public String addCategory(Model model, @Valid @ModelAttribute Category category, BindingResult bindingResult){
+//        if(bindingResult.hasErrors()) {
+//            return "addCategory-form";
+//        }
+//        categoryService.save(category);
+//        return "redirect:/products";
+//    }
 
 }

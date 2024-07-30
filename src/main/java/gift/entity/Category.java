@@ -1,5 +1,6 @@
 package gift.entity;
 
+import gift.dto.CategoryResponseDto;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -18,10 +19,26 @@ public class Category {
     @Column(unique = true, nullable = false)
     private String name;
 
-    public Category() {};
+    @Column(nullable = false)
+    private String color;
+
+    @Column(name = "image_url", nullable = true)
+    private String imageUrl;
+
+    @Column(nullable = false, length = 500)
+    private String description;
+
+    public Category() {}
 
     public Category(String name) {
         this.name = name;
+    }
+
+    public Category(String name, String color, String imageUrl, String description) {
+        this.name = name;
+        this.color = color;
+        this.imageUrl = imageUrl;
+        this.description = description;
     }
 
     public Long getId() {
@@ -38,5 +55,39 @@ public class Category {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getColor() {
+        return color;
+    }
+
+    public void setColor(String color) {
+        this.color = color;
+    }
+
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public CategoryResponseDto toResponseDto() {
+        return new CategoryResponseDto(
+            this.id,
+            this.name,
+            this.color,
+            this.imageUrl,
+            this.description
+        );
     }
 }

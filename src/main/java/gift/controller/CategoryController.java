@@ -47,14 +47,12 @@ public class CategoryController {
     public ResponseEntity<List<CategoryResponseDto>> getCategories() {
         List<Category> categories = categoryService.findAll();
         List<CategoryResponseDto> categoriesDto = categories.stream()
-            .map(cate -> new CategoryResponseDto(
-                cate.getId(),
-                cate.getName()
-            ))
+            .map(Category::toResponseDto)
             .collect(Collectors.toList());
         return new ResponseEntity<>(categoriesDto, HttpStatus.OK);
-
     }
+
+
     @Operation(summary = "카테고리 추가", description = "카테고리를 추가합니다.")
     @ApiResponses(
         value  = {
@@ -71,13 +69,11 @@ public class CategoryController {
     )
     @PostMapping
     public ResponseEntity<CategoryResponseDto> addCategory(@RequestBody CategoryRequestDto categoryRequestDto) {
-        if(categoryService.existsByName(categoryRequestDto.getName())) {
-            throw new CategoryException("이미 존재하는 카테고리입니다.");
+        if (categoryService.existsByName(categoryRequestDto.getName())) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
-        Category category = categoryRequestDto.toEntity();
-        categoryService.save(category);
-        return new ResponseEntity<>(new CategoryResponseDto(category.getId(), category.getName()), HttpStatus.CREATED);
-
+        Category category = categoryService.save(categoryRequestDto);
+        return new ResponseEntity<>(category.toResponseDto(), HttpStatus.CREATED);
     }
 
     @Operation(summary = "카테고리 수정", description = "카테고리를 수정합니다.")
@@ -95,15 +91,13 @@ public class CategoryController {
         }
     )
     @PutMapping("/{id}")
-    public ResponseEntity<CategoryResponseDto> updateCategory(@PathVariable Long id, @RequestBody CategoryRequestDto categoryRequestDto ){
-        Optional<Category> categoryOP = categoryService.findById(id);
-        if(categoryOP.isEmpty()){
-            throw new CategoryException("존재하지 않는 카테고리 입니다.");
+    public ResponseEntity<CategoryResponseDto> updateCategory(@PathVariable Long id, @RequestBody CategoryRequestDto categoryRequestDto) {
+        try {
+            Category category = categoryService.update(categoryRequestDto, id);
+            return new ResponseEntity<>(category.toResponseDto(), HttpStatus.OK);
+        } catch (CategoryException e) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
-        Category category = categoryOP.get();
-        category.setName(categoryRequestDto.getName());
-        categoryService.save(category);
-        return new ResponseEntity<>(new CategoryResponseDto(category.getId(), category.getName()), HttpStatus.OK);
     }
 
 }

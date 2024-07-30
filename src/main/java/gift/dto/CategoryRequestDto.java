@@ -3,22 +3,18 @@ package gift.dto;
 import gift.entity.Category;
 
 public class CategoryRequestDto {
-    private Long id;
     private String name;
+    private String color;
+    private String imageUrl;
+    private String description;
 
     public CategoryRequestDto() {}
 
-    public CategoryRequestDto(Long id, String name) {
-        this.id = id;
+    public CategoryRequestDto(String name, String color, String imageUrl, String description) {
         this.name = name;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
+        this.color = color;
+        this.imageUrl = imageUrl;
+        this.description = description;
     }
 
     public String getName() {
@@ -29,7 +25,31 @@ public class CategoryRequestDto {
         this.name = name;
     }
 
+    public String getColor() {
+        return color;
+    }
+
+    public void setColor(String color) {
+        this.color = color;
+    }
+
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
     public Category toEntity() {
-        return new Category(name);
+        return new Category(name, color, imageUrl, description);
     }
 }
