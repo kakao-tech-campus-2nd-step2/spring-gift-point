@@ -1,6 +1,6 @@
 package gift.wish.domain;
 
-import gift.product.domain.ProductDTO;
+import gift.product.dto.ProductDTO;
 
 public class WishDTO {
     private Long id;

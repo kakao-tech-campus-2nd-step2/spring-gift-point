@@ -3,7 +3,7 @@ package gift.wish.service;
 import gift.common.auth.JwtUtil;
 import gift.member.model.Member;
 import gift.product.domain.Product;
-import gift.product.domain.ProductDTO;
+import gift.product.dto.ProductDTO;
 import gift.wish.domain.Wish;
 import gift.wish.domain.WishDTO;
 import gift.member.repository.MemberRepository;

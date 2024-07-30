@@ -4,7 +4,7 @@ import gift.category.domain.Category;
 import gift.category.dto.CategoryListDTO;
 import gift.category.repository.CategoryRepository;
 import gift.product.domain.Product;
-import gift.product.domain.ProductDTO;
+import gift.product.dto.ProductDTO;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
