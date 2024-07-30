@@ -42,7 +42,7 @@ public class OrderService {
         Option option = optionRepository.findById(orderRequestDto.optionId())
             .orElseThrow(() -> new NotFoundOption("해당 옵션을 찾을 수 없습니다"));
 
-        optionService.substractQuantity(option.getId(), orderRequestDto.quantity());
+        option.substract(orderRequestDto.quantity());
 
         Order order = new Order(option, orderRequestDto.quantity(), orderRequestDto.message(), new Member(memberRequestDto.email(), memberRequestDto.password()));
 
