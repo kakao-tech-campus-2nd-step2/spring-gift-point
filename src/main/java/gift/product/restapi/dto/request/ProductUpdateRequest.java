@@ -1,8 +1,11 @@
 package gift.product.restapi.dto.request;
 
+import com.fasterxml.jackson.databind.PropertyNamingStrategies;
+import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import gift.product.restapi.validator.NotContainingKaKao;
 import jakarta.validation.constraints.*;
 
+@JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public record ProductUpdateRequest(
         @NotBlank
         @Size(min = 1, max = 15, message = "상품명은 1자 이상 15자 이하여야 합니다.")
