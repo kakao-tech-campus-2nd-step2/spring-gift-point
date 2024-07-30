@@ -15,8 +15,13 @@ import org.springframework.web.bind.annotation.*;
 import jakarta.servlet.http.HttpServletRequest;
 import java.util.List;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+
 @RestController
 @RequestMapping("/wishes")
+@Tag(name = "Wish Management System", description = "Operations related to wish management")
 public class WishController {
     private final WishService wishService;
     private final MemberRepository memberRepository;
@@ -32,7 +37,10 @@ public class WishController {
     }
 
     @PostMapping
-    public ResponseEntity<Wish> addWish(@RequestBody Wish wish, HttpServletRequest request) {
+    @Operation(summary = "Add a wish", description = "Adds a new wish for a product", tags = { "Wish Management System" })
+    public ResponseEntity<Wish> addWish(
+            @Parameter(description = "Wish object to be added", required = true)
+            @RequestBody Wish wish, HttpServletRequest request) {
         String email = jwtUtil.getEmailFromRequest(request);
         if(email == null) {
             throw new CustomException.InvalidCredentialsException("Invalid email");
@@ -49,6 +57,7 @@ public class WishController {
     }
 
     @GetMapping
+    @Operation(summary = "Get wishes", description = "Fetches all wishes of the logged-in member", tags = { "Wish Management System" })
     public ResponseEntity<List<Wish>> getWishes(HttpServletRequest request) {
         String email = jwtUtil.getEmailFromRequest(request);
         if (email == null) {
@@ -60,7 +69,10 @@ public class WishController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteWish(@PathVariable Long id, HttpServletRequest request) {
+    @Operation(summary = "Delete a wish", description = "Deletes a wish by its ID", tags = { "Wish Management System" })
+    public ResponseEntity<Void> deleteWish(
+            @Parameter(description = "ID of the wish to be deleted", required = true)
+            @PathVariable Long id, HttpServletRequest request) {
         String email = jwtUtil.getEmailFromRequest(request);
         if (email == null) {
             throw new CustomException.InvalidCredentialsException("Invalid email");

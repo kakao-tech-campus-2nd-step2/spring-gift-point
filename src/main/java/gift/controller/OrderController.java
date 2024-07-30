@@ -13,8 +13,13 @@ import org.springframework.web.bind.annotation.*;
 import java.time.Instant;
 import java.time.LocalDateTime;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+
 @RestController
 @RequestMapping("/api/orders")
+@Tag(name = "Order Management System", description = "Operations related to order management")
 public class OrderController {
     private final OrderService orderService;
     private final JwtUtil jwtUtil;
@@ -26,7 +31,12 @@ public class OrderController {
     }
 
     @PostMapping
-    public ResponseEntity<OrderResponse> placeOrder(@RequestBody OrderRequest orderRequest, @RequestHeader("Authorization") String authorizationHeader) {
+    @Operation(summary = "Place an order", description = "Places a new order in the system", tags = { "Order Management System" })
+    public ResponseEntity<OrderResponse> placeOrder(
+            @Parameter(description = "Order details", required = true)
+            @RequestBody OrderRequest orderRequest,
+            @Parameter(description = "Authorization token", required = true)
+            @RequestHeader("Authorization") String authorizationHeader) {
         logger.info("Received request to place order");
         logger.info("Server current time: {}", Instant.now().getEpochSecond());
 

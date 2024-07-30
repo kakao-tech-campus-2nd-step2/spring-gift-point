@@ -7,7 +7,12 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+
 @RestController
+@Tag(name = "Message Management System", description = "Operations related to message management")
 public class MessageController {
     private final MessageService messageService;
 
@@ -17,7 +22,10 @@ public class MessageController {
     }
 
     @PostMapping("/send-message")
-    public ResponseEntity<String> sendMessage(@RequestParam("receiver") String receiver) {
+    @Operation(summary = "Send a message", description = "Sends a message to a specified receiver", tags = { "Message Management System" })
+    public ResponseEntity<String> sendMessage(
+            @Parameter(description = "Receiver of the message", required = true)
+            @RequestParam("receiver") String receiver) {
         try {
             String response = messageService.sendMessage(receiver);
             return ResponseEntity.ok("Message sent successfully: " + response);
