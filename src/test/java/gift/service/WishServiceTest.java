@@ -85,7 +85,7 @@ public class WishServiceTest {
         Product product = productRepository.save(new Product(new ProductName("오둥이 입니다만"), 29800, "https://example.com/product1.jpg", categoryService.getCategoryEntityById(category)));
         wishRepository.save(new Wish(user, product));
 
-        WishPageResponseDto wishPage = wishService.getWishesByUserId(user.getId(), PageRequest.of(0, 10));
+        WishPageResponseDto wishPage = wishService.getWishesByUserId(user.getId(), 0,20);
 
         assertNotNull(wishPage);
         assertEquals(1, wishPage.getTotalItems());
@@ -106,7 +106,7 @@ public class WishServiceTest {
 
         wishService.deleteWish(wish.getId());
 
-        WishPageResponseDto wishPage = wishService.getWishesByUserId(user.getId(), PageRequest.of(0, 10));
+        WishPageResponseDto wishPage = wishService.getWishesByUserId(user.getId(),0,10);
         assertTrue(wishPage.getWishes().isEmpty());
     }
 
@@ -135,20 +135,20 @@ public class WishServiceTest {
 
         return Stream.of(
                 DynamicTest.dynamicTest("첫번째 페이지 조회", () -> {
-                    WishPageResponseDto wishPage = wishService.getWishesByUserId(user.getId(), PageRequest.of(0, 2));
+                    WishPageResponseDto wishPage = wishService.getWishesByUserId(user.getId(), 0,2);
                     assertNotNull(wishPage);
                     assertEquals(2, wishPage.getWishes().size());
                     assertEquals(5, wishPage.getTotalItems());
                     assertEquals(3, wishPage.getTotalPages());
                 }),
                 DynamicTest.dynamicTest("두번째 페이지 조회", () -> {
-                    WishPageResponseDto wishPage2 = wishService.getWishesByUserId(user.getId(), PageRequest.of(1, 2));
+                    WishPageResponseDto wishPage2 = wishService.getWishesByUserId(user.getId(), 1,2);
                     assertNotNull(wishPage2);
                     assertEquals(2, wishPage2.getWishes().size());
                     assertEquals(5, wishPage2.getTotalItems());
                 }),
                 DynamicTest.dynamicTest("세번째 페이지 조회", () -> {
-                    WishPageResponseDto wishPage3 = wishService.getWishesByUserId(user.getId(), PageRequest.of(2, 2));
+                    WishPageResponseDto wishPage3 = wishService.getWishesByUserId(user.getId(),2,2);
                     assertNotNull(wishPage3);
                     assertEquals(1, wishPage3.getWishes().size());
                     assertEquals(5, wishPage3.getTotalItems());

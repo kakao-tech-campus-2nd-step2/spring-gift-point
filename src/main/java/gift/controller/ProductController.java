@@ -6,7 +6,6 @@ import gift.dto.ProductResponseDto;
 import gift.service.ProductService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 @Tag(name = "Products", description = "상품 관련 API")
 public class ProductController {
     private final ProductService productService;
+    private static final int DEFAULT_SIZE = 20;
 
     public ProductController(ProductService productService) {
         this.productService = productService;
@@ -38,8 +38,8 @@ public class ProductController {
 
     @GetMapping
     @Operation(summary = "모든 상품 조회", description = "모든 상품을 조회합니다.")
-    public ResponseEntity<ProductPageResponseDto> getAllProducts(@RequestParam(defaultValue = "0") @Min(0) int page, @RequestParam(defaultValue = "10") @Min(1) @Max(100) int size) {
-        ProductPageResponseDto responseDto = productService.getAllProducts(page, size);
+    public ResponseEntity<ProductPageResponseDto> getAllProducts(@RequestParam(defaultValue = "0") @Min(0) int page) {
+        ProductPageResponseDto responseDto = productService.getAllProducts(page, DEFAULT_SIZE);
         return new ResponseEntity<>(responseDto, HttpStatus.OK);
     }
 
