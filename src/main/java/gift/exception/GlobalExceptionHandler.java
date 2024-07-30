@@ -23,7 +23,7 @@ public class GlobalExceptionHandler {
     private static final String DUPLICATED_NAME_MESSAGE = "이미 존재하는 이름입니다.";
     private static final String INVALID_LOGIN_INFO_MESSAGE = "로그인 정보가 유효하지 않습니다.";
     private static final String INVALID_PAGE_REQUEST_MESSAGE = "요청에 담긴 페이지 정보가 유효하지 않습니다.";
-    private static final String UNAUTHORIZED_ACCESS_MESSAGE = "인가되지 않은 요청입니다.";
+    private static final String UNAUTHORIZED_ACCESS_MESSAGE = "허용되지 않는 요청입니다.";
     private static final String EXPIRED_JWT_MESSAGE = "인증 정보가 만료되었습니다.";
     @Value("${kakao.redirect-token-uri}")
     private String redirectTokenUri;
