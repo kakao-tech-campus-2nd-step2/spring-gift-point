@@ -30,7 +30,7 @@ public class UserController {
     @PostMapping("/api/members/login")
     public ResponseEntity<Token> giveToken(@RequestBody UserRequest user) {
         if(!userService.login(user)){
-            throw new IllegalArgumentException("아이디나 비밀번호를 다시 확인해주세요!");
+            throw new IllegalArgumentException("이메일이나 비밀번호를 다시 확인해주세요!");
         }
 
         Token token = jwtTokenProvider.makeToken(user);
@@ -40,15 +40,13 @@ public class UserController {
      * 회원가입 ( 유저 추가 )
      */
     @PostMapping("/api/members/register")
-    public ResponseEntity<Void> register(@RequestBody UserRequest user){
-        if(userService.isUserIdDuplicate(user.getUserId()))
-            throw new AlreadyExistException("이미 존재하는 유저 아이디입니다!");
-
+    public ResponseEntity<Token> register(@RequestBody UserRequest user){
         if(userService.isEmailDuplicate(user.getEmail()))
             throw new AlreadyExistException("이미 존재하는 이메일입니다!");
 
         userService.save(user);
-        return new ResponseEntity<>(HttpStatus.CREATED);
+        Token token = jwtTokenProvider.makeToken(user);
+        return new ResponseEntity<>(token, HttpStatus.CREATED);
     }
     /*
      * 유저 조회
@@ -75,18 +73,17 @@ public class UserController {
             @PathVariable("id") Long id,
             @RequestBody UserRequest user,
             @AuthenticateMember UserResponse userRes
-    ) throws NoSuchFieldException {
-        if(!id.equals(userService.findByUserId(user.getUserId()).getId())) {
-            throw new LogicalException("리소스 접근 URI와 요청 데이터가 다릅니다!");
+    ){
+        if(!userService.isEmailDuplicate(user.getEmail())) {
+            throw new NoSuchFieldError("존재하지 않는 유저 정보는 수정할 수 없습니다!");
         }
 
-        if(!userService.isUserIdDuplicate(user.getUserId())) {
-            throw new NoSuchFieldException("존재하지 않는 유저 정보 접근입니다!");
+        if(!id.equals(userService.findByEmail(user.getEmail()).getId())) {
+            throw new LogicalException("리소스 접근 URI와 요청 데이터가 다릅니다!");
         }
 
         userService.update(user);
         return new ResponseEntity<>(HttpStatus.OK);
-
     }
     /*
      * 유저 삭제

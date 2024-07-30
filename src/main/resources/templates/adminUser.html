@@ -16,9 +16,6 @@
     <label for="id">Id:</label>
     <input type="text" id="id" name="id" disabled>
 
-    <label for="userId">UserId:</label>
-    <input type="text" id="userId" name="userId" required>
-
     <label for="email">Email:</label>
     <input type="text" id="email" name="email" required>
 
@@ -30,9 +27,6 @@
 <div class="form-inline">
     <label for="p_id">Id:</label>
     <input type="text" id="p_id" name="p_id" required>
-
-    <label for="p_userId">UserId:</label>
-    <input type="text" id="p_userId" name="p_userId" required>
 
     <label for="p_email">Email:</label>
     <input type="text" id="p_email" name="p_email" required>
@@ -46,7 +40,6 @@
     <thead>
     <tr>
         <th scope="col">Id</th>
-        <th scope="col">UserId</th>
         <th scope="col">Email</th>
         <th scope="col">Password</th>
         <th scope="col">Option</th>
@@ -97,7 +90,6 @@
                     var row = `
                         <tr>
                             <td>${user.id}</td>
-                            <td>${user.userId}</td>
                             <td>${user.email}</td>
                             <td>${user.password}</td>
                             <td>
@@ -151,7 +143,6 @@
 
     $("#post").click(function () {
         var user = {
-            userId : $("#userId").val(),
             email : $("#email").val(),
             password : $("#password").val()
         }
@@ -203,7 +194,6 @@
 
     $("#put").click(function(){
         var user ={
-            userId : $("#p_userId").val(),
             email: $("#p_email").val(),
             password : $("#p_password").val()
         }

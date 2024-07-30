@@ -47,10 +47,10 @@ public class UserService {
         return users.map(UserResponse::new);
     }
     /*
-     * userId를 기준으로 한 유저를 조회하는 로직
+     * email을 기준으로 한 유저를 조회하는 로직
      */
-    public UserResponse findByUserId(String userId){
-        User user = userRepository.findByUserId(userId);
+    public UserResponse findByEmail(String email){
+        User user = userRepository.findByEmail(email);
         return new UserResponse(user);
     }
     /*
@@ -66,7 +66,6 @@ public class UserService {
     @Transactional
     public UserResponse save(UserRequest userRequest){
         User savedUser = userRepository.save(new User(
-                userRequest.getUserId(),
                 userRequest.getEmail(),
                 userRequest.getPassword()
         ));
@@ -78,12 +77,12 @@ public class UserService {
      */
     @Transactional
     public UserResponse saveKakao(String kakaoId, String token){
-        if(userRepository.existsByUserId(kakaoId)) {
-            return new UserResponse(userRepository.findByUserId(kakaoId));
+        if(userRepository.existsByEmail(kakaoId + "@email.com")) {
+            return new UserResponse(userRepository.findByEmail(kakaoId + "@email.com"));
         }
+
         User savedKakaoUser = userRepository.save(new User(
-                kakaoId,
-                kakaoId + "email.com",
+                kakaoId + "@email.com",
                 UUID.randomUUID().toString()
         ));
         savedKakaoUser.insertToken(token);
@@ -95,14 +94,8 @@ public class UserService {
      */
     @Transactional
     public void update(UserRequest userRequest){
-        User byUserId = userRepository.findByUserId(userRequest.getUserId());
-        byUserId.updateEntity(userRequest.getEmail(), userRequest.getPassword());
-    }
-    /*
-     * userId의 중복 여부를 확인하는 로직
-     */
-    public boolean isUserIdDuplicate(String userId){
-        return userRepository.existsByUserId(userId);
+        User savedUser = userRepository.findByEmail(userRequest.getEmail());
+        savedUser.updateEntity(userRequest.getEmail(), userRequest.getPassword());
     }
     /*
      * Email의 중복 여부를 확인하는 로직
@@ -114,7 +107,7 @@ public class UserService {
      * 로그인을 위한 확인을 해주는 로직
      */
     public boolean login(UserRequest userRequest){
-        return userRepository.existsByUserIdAndPassword(userRequest.getUserId(), userRequest.getPassword());
+        return userRepository.existsByEmailAndPassword(userRequest.getEmail(), userRequest.getPassword());
     }
     /*
      * 유저 정보를 삭제하는 로직

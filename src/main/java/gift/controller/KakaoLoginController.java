@@ -33,7 +33,7 @@ public class KakaoLoginController {
     /*
      * 카카오 로그인 페이지로 연결
      */
-    @GetMapping("/kakaoLogin")
+    @GetMapping("/api/members/kakao")
     public String OauthLogin(){
         String url = kakaoService.makeLoginUrl();
         return "redirect:" + url;

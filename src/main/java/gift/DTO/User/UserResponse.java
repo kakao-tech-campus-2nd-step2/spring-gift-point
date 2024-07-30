@@ -4,7 +4,6 @@ import gift.domain.User;
 
 public class UserResponse {
     Long id;
-    String userId;
     String email;
     String password;
     String token;
@@ -15,7 +14,6 @@ public class UserResponse {
 
     public UserResponse(User user) {
         this.id = user.getId();
-        this.userId = user.getUserId();
         this.email = user.getEmail();
         this.password = user.getPassword();
         this.token = user.getToken();
@@ -23,10 +21,6 @@ public class UserResponse {
 
     public Long getId() {
         return id;
-    }
-
-    public String getUserId() {
-        return userId;
     }
 
     public String getEmail() {

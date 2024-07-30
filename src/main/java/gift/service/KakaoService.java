@@ -61,7 +61,7 @@ public class KakaoService {
         UserResponse kakaoUserResponse = userService.saveKakao(kakaoId, token);
 
         return jwtTokenProvider.makeToken(new UserRequest(
-                kakaoUserResponse.getUserId(), kakaoUserResponse.getEmail(), kakaoUserResponse.getPassword()
+                kakaoUserResponse.getEmail(), kakaoUserResponse.getPassword()
         ));
     }
     /*
