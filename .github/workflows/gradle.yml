@@ -51,7 +51,7 @@ jobs:
           scp -o StrictHostKeyChecking=no -i key.pem ./src/main/resources/application.properties $DEPLOY_USER@$DEPLOY_SERVER:~/spring-gift-point/src/main/resources/application.properties
           ssh -o StrictHostKeyChecking=no -i key.pem $DEPLOY_USER@$DEPLOY_SERVER "
             sudo lsof -t -i:8080 | xargs -r sudo kill -9
-            nohup java -jar ~/spring-gift-point/build/libs/spring-gift-0.0.1-SNAPSHOT.jar &
+            nohup java -jar ~/spring-gift-point/build/libs/spring-gift-0.0.1-SNAPSHOT.jar > /dev/null 2>&1 &
             exit  
           " && echo "스프링 프로젝트가 서버에서 정상적으로 돌아가고 있습니다."
 
