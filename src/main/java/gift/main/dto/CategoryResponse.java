@@ -10,7 +10,7 @@ public record CategoryResponse(long id,
                                String color,
                                String imageUrl,
                                String description
-                               ) {
+) {
     public CategoryResponse(Category category) {
         this(
                 category.getId(),

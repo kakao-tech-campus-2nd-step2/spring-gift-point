@@ -24,7 +24,7 @@ public class ProductController {
     @GetMapping()
     public ResponseEntity<?> getProductPage(@RequestParam(value = "page") int pageNum,
                                             @RequestParam(value = "category") int categoryId) {
-        Page<ProductResponse> productPage = productService.getProductPage(pageNum,categoryId);
+        Page<ProductResponse> productPage = productService.getProductPage(pageNum, categoryId);
         return ResponseEntity.ok(productPage);
     }
 

@@ -41,7 +41,7 @@ public class OptionService {
         Option option = validOption(optionId);
         List<Option> options = validOptions(option.getProduct().getId());
         if (options.size() <= 1) {
-            throw new CustomException(ErrorCode.CANNOT_DELETED_OPTION);
+            throw new CustomException(ErrorCode.CANNOT_DELETE_OPTION);
         }
         optionRepository.deleteById(optionId);
     }

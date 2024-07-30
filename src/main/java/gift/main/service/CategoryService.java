@@ -4,7 +4,6 @@ import gift.main.Exception.CustomException;
 import gift.main.Exception.ErrorCode;
 import gift.main.dto.CategoryRequest;
 import gift.main.dto.CategoryResponse;
-import gift.main.dto.OptionResponse;
 import gift.main.entity.Category;
 import gift.main.repository.CategoryRepository;
 import gift.main.repository.ProductRepository;

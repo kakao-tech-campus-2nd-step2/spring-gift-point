@@ -14,8 +14,9 @@ import java.util.Set;
 
 @Validated
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
-public record OptionListRequest(
-        @Size(min = 1) @Valid List<OptionRequest> options) {
+public record OptionListRequest(@Size(min = 1)
+                                @Valid
+                                List<OptionRequest> options) {
 
     public OptionListRequest {
 
