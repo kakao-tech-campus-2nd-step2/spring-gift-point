@@ -24,7 +24,6 @@ import org.springframework.stereotype.Service;
 public class ProductService {
 
     private final ProductRepository productRepository;
-    private final int PAGE_SIZE = 5;
 
     public ProductService(ProductRepository productRepository) {
         this.productRepository = productRepository;
@@ -63,10 +62,17 @@ public class ProductService {
     }
 
 
-    public Page<Product> getProductPage(int page) {
+    public Page<Product> getProductPage(int page, int size, String[] sort) {
         List<Sort.Order> sorts = new ArrayList<>();
-        sorts.add(Sort.Order.asc("id"));
-        Pageable pageable = PageRequest.of(page, PAGE_SIZE, Sort.by(sorts));
+
+        if (sort[1].equals("asc")) {
+            sorts.add(Sort.Order.asc(sort[0]));
+        }
+        if (sort[1].equals("desc")) {
+            sorts.add(Sort.Order.desc(sort[0]));
+        }
+
+        Pageable pageable = PageRequest.of(page, size, Sort.by(sorts));
         return productRepository.findAll(pageable);
     }
 

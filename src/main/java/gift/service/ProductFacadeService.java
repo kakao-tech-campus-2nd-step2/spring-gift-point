@@ -53,8 +53,8 @@ public class ProductFacadeService {
     }
 
 
-    public Page<Product> getProductPage(int page) {
-        return productService.getProductPage(page);
+    public Page<Product> getProductPage(int page,int size, String[] sort) {
+        return productService.getProductPage(page,size,sort);
     }
 
     public Category findCategoryById(Long id) {

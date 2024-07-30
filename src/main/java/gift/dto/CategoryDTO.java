@@ -13,6 +13,10 @@ public class CategoryDTO {
         this.name = name;
     }
 
+    public String getName() {
+        return name;
+    }
+
     public Category toEntity() {
         return new Category(name);
     }

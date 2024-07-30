@@ -45,14 +45,9 @@ public class WishlistService {
     }
 
 
-    public void deleteWishlist(Long id, String email) {
+    public void deleteWishlist(Long productId, String email) {
         Member authMember = memberService.findByEmail(email);
-        Wish deletingWish = findById(id);
-
-        //삭제하려는 Wish의 MemberId와 accessToken에서 받은 memberId가 같아야 삭제
-        if (authMember.getId().equals(deletingWish.getMember().getId())) {
-            wishRepository.deleteById(id);
-        }
+        wishRepository.deleteByMemberIdAndProductId(authMember.getId(), productId);
 
     }
 
@@ -62,10 +57,16 @@ public class WishlistService {
     }
 
     @Transactional
-    public Page<Wish> getWishPage(String email, int page) {
+    public Page<Wish> getWishPage(String email, int page, int size, String[] sort) {
         List<Sort.Order> sorts = new ArrayList<>();
-        sorts.add(Sort.Order.asc("id"));
-        Pageable pageable = PageRequest.of(page, PAGE_SIZE, Sort.by(sorts));
+        if (sort[1].equals("asc")) {
+            sorts.add(Sort.Order.asc(sort[0]));
+        }
+        if (sort[1].equals("desc")) {
+            sorts.add(Sort.Order.desc(sort[0]));
+        }
+
+        Pageable pageable = PageRequest.of(page, size, Sort.by(sorts));
         Member member = memberService.findByEmail(email);
         return wishRepository.findByMemberId(member.getId(), pageable);
 
