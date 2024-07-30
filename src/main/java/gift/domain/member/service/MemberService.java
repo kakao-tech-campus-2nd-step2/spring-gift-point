@@ -5,6 +5,7 @@ import gift.domain.member.dto.MemberResponse;
 import gift.domain.member.entity.Member;
 import gift.domain.member.exception.MemberNotFoundException;
 import gift.domain.member.repository.MemberRepository;
+import gift.global.exception.DuplicateException;
 import gift.util.JwtUtil;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -31,7 +32,9 @@ public class MemberService {
 
     @Transactional
     public String register(MemberRequest memberRequest) {
-
+        if(memberRepository.existsByEmail(memberRequest.getEmail())){
+           throw new DuplicateException("중복된 이메일 입니다.");
+        }
         Member member = memberRepository.save(dtoToEntity(memberRequest));
 
         return jwtUtil.generateToken(member);
