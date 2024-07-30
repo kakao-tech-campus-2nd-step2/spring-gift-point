@@ -26,7 +26,12 @@ public class ProductService {
         this.categoryRepository = categoryRepository;
     }
 
-    public List<ProductResponse> getProducts(Pageable pageable) {
+    public ProductResponse getProduct(Long id) {
+        return ProductResponse.of(productRepository.findById(id)
+            .orElseThrow(() -> new NoSuchEntityException("product")));
+    }
+
+    public List<ProductResponse> getAllProducts(Pageable pageable) {
         Page<Product> products = productRepository.findAll(pageable);
         if (products.hasContent()) {
             return products.getContent()

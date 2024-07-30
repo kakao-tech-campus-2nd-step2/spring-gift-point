@@ -30,10 +30,16 @@ public class ProductController {
         this.productService = productService;
     }
 
+    @GetMapping("/{id}")
+    @Operation(summary = "특정 상품 조회")
+    public ResponseEntity<ProductResponse> getProduct(@PathVariable("id") Long id) {
+        return ResponseEntity.ok().body(productService.getProduct(id));
+    }
+
     @GetMapping()
     @Operation(summary = "상품 조회", description = "전체 상품 페이지별 조회")
-    public ResponseEntity<List<ProductResponse>> getProducts(Pageable pageable) {
-        return ResponseEntity.ok().body(productService.getProducts(pageable));
+    public ResponseEntity<List<ProductResponse>> getAllProducts(Pageable pageable) {
+        return ResponseEntity.ok().body(productService.getAllProducts(pageable));
     }
 
     @PostMapping()
