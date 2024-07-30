@@ -22,7 +22,7 @@ import org.springframework.web.bind.annotation.*;
 
 @Tag(name = "Wishes", description = "장바구니 API")
 @RestController
-@RequestMapping("/api/v1/wishes")
+@RequestMapping("/api/wishes")
 public class WishesRestController {
     private final WishService wishService;
 
