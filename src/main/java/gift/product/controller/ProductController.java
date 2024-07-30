@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.*;
 @Controller
 @RequestMapping("/api/products")
 @Validated
-@Tag(name = "Product", description = "상품 API")
+@Tag(name = "상품 API", description = "상품 생성, 수정, 삭제, 조회 API")
 // crud를 진행하고 다시 api/products로 보내는 역할
 public class ProductController {
     private final ProductService productService;
