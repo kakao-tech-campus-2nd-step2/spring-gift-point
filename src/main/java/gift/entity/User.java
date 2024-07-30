@@ -77,12 +77,4 @@ public class User {
     public String getPassword() {
         return password;
     }
-
-    public KakaoUser getKakaoUser() {
-        return kakaoUser;
-    }
-
-    public void setKakaoUser(KakaoUser kakaoUser) {
-        this.kakaoUser = kakaoUser;
-    }
 }
