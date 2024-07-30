@@ -6,7 +6,7 @@ import jakarta.validation.constraints.*;
 
 import java.util.List;
 
-public class GiftRequest {
+public class ProductRequest {
 
     public record Create(
             @Size(max = 15)

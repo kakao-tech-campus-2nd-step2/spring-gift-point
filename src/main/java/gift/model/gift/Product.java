@@ -9,8 +9,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Table(name = "gift")
-public class Gift {
+@Table(name = "product")
+public class Product {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -32,13 +32,13 @@ public class Gift {
     private Category category;
 
 
-    @OneToMany(mappedBy = "gift", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
     private List<Option> options = new ArrayList<>();
 
-    protected Gift() {
+    protected Product() {
     }
 
-    public Gift(String name, int price, String imageUrl, Category category) {
+    public Product(String name, int price, String imageUrl, Category category) {
         if (!isValidName(name)) {
             throw new IllegalArgumentException("카카오 문구는 MD와 협의 후 사용가능합니다.");
         }
@@ -48,7 +48,7 @@ public class Gift {
         this.category = category;
     }
 
-    public Gift(String name, int price, String imageUrl, Category category, List<Option> options) {
+    public Product(String name, int price, String imageUrl, Category category, List<Option> options) {
         if (!isValidName(name)) {
             throw new IllegalArgumentException("카카오 문구는 MD와 협의 후 사용가능합니다.");
         }

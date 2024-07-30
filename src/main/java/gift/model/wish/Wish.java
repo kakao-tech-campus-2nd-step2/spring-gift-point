@@ -1,6 +1,6 @@
 package gift.model.wish;
 
-import gift.model.gift.Gift;
+import gift.model.gift.Product;
 import gift.model.user.User;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
@@ -22,9 +22,9 @@ public class Wish {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @OnDelete(action = OnDeleteAction.CASCADE)
-    @JoinColumn(name = "gift_id")
+    @JoinColumn(name = "product_id")
     @NotNull
-    private Gift gift;
+    private Product product;
 
     @NotNull
     private int quantity;
@@ -32,9 +32,9 @@ public class Wish {
     public Wish() {
     }
 
-    public Wish(User user, Gift gift, int quantity) {
+    public Wish(User user, Product product, int quantity) {
         this.user = user;
-        this.gift = gift;
+        this.product = product;
         this.quantity = quantity;
     }
 
@@ -46,8 +46,8 @@ public class Wish {
         return user;
     }
 
-    public Gift getGift() {
-        return gift;
+    public Product getGift() {
+        return product;
     }
 
     public int getQuantity() {

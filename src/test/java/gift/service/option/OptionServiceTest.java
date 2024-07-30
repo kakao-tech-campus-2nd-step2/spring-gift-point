@@ -2,9 +2,9 @@ package gift.service.option;
 
 import gift.dto.option.OptionRequest;
 import gift.model.category.Category;
-import gift.model.gift.Gift;
+import gift.model.gift.Product;
 import gift.model.option.Option;
-import gift.repository.gift.GiftRepository;
+import gift.repository.gift.ProductRepository;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -20,13 +20,13 @@ import static org.mockito.Mockito.when;
 class OptionServiceTest {
 
     @Mock
-    private GiftRepository giftRepository;
+    private ProductRepository productRepository;
 
     @InjectMocks
     private OptionService optionService;
 
 
-    private Gift gift;
+    private Product product;
 
     @BeforeEach
     void setUp() {
@@ -34,7 +34,7 @@ class OptionServiceTest {
         Option option1 = new Option("testOption", 10);
         List<Option> options = Arrays.asList(option1);
 
-        gift = new Gift("Test Gift", 100, "test.jpg", category, options);
+        product = new Product("Test Gift", 100, "test.jpg", category, options);
     }
 
     @Test
@@ -42,11 +42,11 @@ class OptionServiceTest {
     void testAddOptionWithDuplicateName() {
         // given
         OptionRequest.Create duplicateOptionRequest = new OptionRequest.Create("testOption", 10);
-        when(giftRepository.findById(gift.getId())).thenReturn(Optional.of(gift));
+        when(productRepository.findById(product.getId())).thenReturn(Optional.of(product));
 
         // when & then
         assertThrows(IllegalArgumentException.class, () -> {
-            optionService.addOptionToGift(gift.getId(), duplicateOptionRequest);
+            optionService.addOptionToGift(product.getId(), duplicateOptionRequest);
         });
     }
 

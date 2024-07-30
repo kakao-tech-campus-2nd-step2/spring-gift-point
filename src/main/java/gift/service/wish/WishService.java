@@ -2,10 +2,10 @@ package gift.service.wish;
 
 import gift.dto.paging.PagingResponse;
 import gift.exception.WishItemNotFoundException;
-import gift.model.gift.Gift;
+import gift.model.gift.Product;
 import gift.model.user.User;
 import gift.model.wish.Wish;
-import gift.repository.gift.GiftRepository;
+import gift.repository.gift.ProductRepository;
 import gift.repository.user.UserRepository;
 import gift.repository.wish.WishRepository;
 import jakarta.transaction.Transactional;
@@ -18,27 +18,27 @@ public class WishService {
 
     private final WishRepository wishRepository;
     private final UserRepository userRepository;
-    private final GiftRepository giftRepository;
+    private final ProductRepository productRepository;
 
     @Autowired
-    public WishService(WishRepository wishRepository, UserRepository userRepository, GiftRepository giftRepository) {
+    public WishService(WishRepository wishRepository, UserRepository userRepository, ProductRepository productRepository) {
         this.wishRepository = wishRepository;
         this.userRepository = userRepository;
-        this.giftRepository = giftRepository;
+        this.productRepository = productRepository;
     }
 
     public void addGiftToUser(Long userId, Long giftId, int quantity) {
         User user = userRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException("Invalid user ID"));
-        Gift gift = giftRepository.findById(giftId).orElseThrow(() -> new IllegalArgumentException("Invalid gift ID"));
+        Product product = productRepository.findById(giftId).orElseThrow(() -> new IllegalArgumentException("Invalid gift ID"));
 
-        wishRepository.findByUserAndGift(user, gift)
+        wishRepository.findByUserAndProduct(user, product)
                 .ifPresentOrElse(
                         existingWish -> {
                             existingWish.increaseQuantity();
                             wishRepository.save(existingWish);
                         },
                         () -> {
-                            Wish userGift = new Wish(user, gift, quantity);
+                            Wish userGift = new Wish(user, product, quantity);
                             wishRepository.save(userGift);
                         }
                 );
@@ -47,8 +47,8 @@ public class WishService {
     @Transactional
     public void removeGiftFromUser(Long userId, Long giftId) {
         User user = userRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException("Invalid user ID"));
-        Gift gift = giftRepository.findById(giftId).orElseThrow(() -> new IllegalArgumentException("Invalid gift ID"));
-        wishRepository.deleteByUserAndGift(user, gift);
+        Product product = productRepository.findById(giftId).orElseThrow(() -> new IllegalArgumentException("Invalid gift ID"));
+        wishRepository.deleteByUserAndProduct(user, product);
     }
 
     public PagingResponse<Wish> getGiftsForUser(Long userId, int page, int size) {
@@ -62,8 +62,8 @@ public class WishService {
     @Transactional
     public void updateWishQuantity(Long userId, Long giftId, int quantity) {
         User user = userRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException("Invalid user ID"));
-        Gift gift = giftRepository.findById(giftId).orElseThrow(() -> new IllegalArgumentException("Invalid gift ID"));
-        wishRepository.findByUserAndGift(user, gift)
+        Product product = productRepository.findById(giftId).orElseThrow(() -> new IllegalArgumentException("Invalid gift ID"));
+        wishRepository.findByUserAndProduct(user, product)
                 .ifPresentOrElse(
                         existingWish -> {
                             existingWish.modifyQuantity(quantity);

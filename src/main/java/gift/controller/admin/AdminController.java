@@ -2,13 +2,13 @@ package gift.controller.admin;
 
 
 import gift.dto.category.CategoryResponse;
-import gift.dto.gift.GiftRequest;
-import gift.dto.gift.GiftResponse;
+import gift.dto.gift.ProductRequest;
+import gift.dto.gift.ProductResponse;
 import gift.dto.option.OptionRequest;
 import gift.dto.paging.PagingRequest;
 import gift.dto.paging.PagingResponse;
 import gift.service.category.CategoryService;
-import gift.service.gift.GiftService;
+import gift.service.gift.ProductService;
 import gift.service.option.OptionService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,13 +21,13 @@ import java.util.List;
 @Controller
 public class AdminController {
 
-    private final GiftService giftService;
+    private final ProductService productService;
     private final CategoryService categoryService;
     private final OptionService optionService;
 
     @Autowired
-    public AdminController(GiftService giftService, CategoryService categoryService, OptionService optionService) {
-        this.giftService = giftService;
+    public AdminController(ProductService productService, CategoryService categoryService, OptionService optionService) {
+        this.productService = productService;
         this.categoryService = categoryService;
         this.optionService = optionService;
     }
@@ -39,7 +39,7 @@ public class AdminController {
 
     @GetMapping("/admin")
     public String adminHome(Model model, @ModelAttribute PagingRequest pagingRequest) {
-        PagingResponse<GiftResponse> giftlist = giftService.getAllGifts(pagingRequest.getPage(), pagingRequest.getSize());
+        PagingResponse<ProductResponse> giftlist = productService.getAllGifts(pagingRequest.getPage(), pagingRequest.getSize());
         model.addAttribute("giftlist", giftlist.getContent());
         return "admin";
     }
@@ -53,17 +53,17 @@ public class AdminController {
     }
 
     @PostMapping("/admin/gift/create")
-    public String giftCreate(@Valid @ModelAttribute GiftRequest.Create giftRequest) {
-        GiftResponse giftResponse = giftService.addGift(giftRequest);
+    public String giftCreate(@Valid @ModelAttribute ProductRequest.Create giftRequest) {
+        ProductResponse productResponse = productService.addGift(giftRequest);
         for (OptionRequest.Create optionRequest : giftRequest.options()) {
-            optionService.addOptionToGift(giftResponse.getId(), optionRequest);
+            optionService.addOptionToGift(productResponse.getId(), optionRequest);
         }
         return "redirect:/admin";
     }
 
     @GetMapping("/admin/gift/detail/{id}")
     public String detail(Model model, @PathVariable("id") Long id) {
-        GiftResponse gift = giftService.getGift(id);
+        ProductResponse gift = productService.getGift(id);
         model.addAttribute("gift", gift);
         return "gift_detail";
     }
@@ -73,20 +73,20 @@ public class AdminController {
         CategoryResponse.InfoList infoList = categoryService.getAllCategories();
         List<CategoryResponse.Info> categories = infoList.categories();
         model.addAttribute("categories", categories);
-        GiftResponse gift = giftService.getGift(id);
+        ProductResponse gift = productService.getGift(id);
         model.addAttribute("gift", gift);
         return "modify_form";
     }
 
     @PutMapping("/admin/gift/modify/{id}")
-    public String giftModify(@PathVariable("id") Long id, @ModelAttribute GiftRequest.Update giftRequest) {
-        giftService.updateGift(giftRequest, id);
+    public String giftModify(@PathVariable("id") Long id, @ModelAttribute ProductRequest.Update giftRequest) {
+        productService.updateGift(giftRequest, id);
         return "redirect:/admin";
     }
 
     @DeleteMapping("/admin/gift/delete/{id}")
     public String giftDelete(@PathVariable("id") Long id) {
-        giftService.deleteGift(id);
+        productService.deleteGift(id);
         return "redirect:/admin";
     }
 

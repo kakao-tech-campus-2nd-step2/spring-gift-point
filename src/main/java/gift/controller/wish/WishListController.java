@@ -1,12 +1,12 @@
 package gift.controller.wish;
 
-import gift.dto.gift.GiftResponse;
+import gift.dto.gift.ProductResponse;
 import gift.dto.paging.PagingRequest;
 import gift.dto.paging.PagingResponse;
 import gift.dto.wish.WishResponse;
 import gift.model.user.User;
 import gift.model.wish.Wish;
-import gift.service.gift.GiftService;
+import gift.service.gift.ProductService;
 import gift.service.wish.WishService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -21,17 +21,17 @@ import java.util.stream.Collectors;
 public class WishListController implements WishListSpecification {
 
     private final WishService wishService;
-    private final GiftService giftService;
+    private final ProductService productService;
 
     @Autowired
-    public WishListController(WishService wishService, GiftService giftService) {
+    public WishListController(WishService wishService, ProductService productService) {
         this.wishService = wishService;
-        this.giftService = giftService;
+        this.productService = productService;
     }
 
     @GetMapping
-    public ResponseEntity<PagingResponse<GiftResponse>> getGiftList(@ModelAttribute PagingRequest pagingRequest) {
-        PagingResponse<GiftResponse> gifts = giftService.getAllGifts(pagingRequest.getPage(), pagingRequest.getSize());
+    public ResponseEntity<PagingResponse<ProductResponse>> getGiftList(@ModelAttribute PagingRequest pagingRequest) {
+        PagingResponse<ProductResponse> gifts = productService.getAllGifts(pagingRequest.getPage(), pagingRequest.getSize());
         return ResponseEntity.ok(gifts);
     }
 

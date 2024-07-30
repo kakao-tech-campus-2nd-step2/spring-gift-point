@@ -1,6 +1,6 @@
 package gift.repository.wish;
 
-import gift.model.gift.Gift;
+import gift.model.gift.Product;
 import gift.model.user.User;
 import gift.model.wish.Wish;
 import org.springframework.data.domain.Page;
@@ -15,7 +15,7 @@ import java.util.Optional;
 public interface WishRepository extends JpaRepository<Wish, Long> {
     Page<Wish> findByUser(User user, Pageable pageable);
 
-    Optional<Wish> findByUserAndGift(User user, Gift gift);
+    Optional<Wish> findByUserAndProduct(User user, Product product);
 
-    void deleteByUserAndGift(User user, Gift gift);
+    void deleteByUserAndProduct(User user, Product product);
 }

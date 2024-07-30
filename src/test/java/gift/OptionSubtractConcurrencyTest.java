@@ -1,9 +1,9 @@
 package gift;
 
 import gift.model.category.Category;
-import gift.model.gift.Gift;
+import gift.model.gift.Product;
 import gift.model.option.Option;
-import gift.repository.gift.GiftRepository;
+import gift.repository.gift.ProductRepository;
 import gift.repository.option.OptionRepository;
 import gift.service.option.OptionService;
 import org.junit.jupiter.api.*;
@@ -23,26 +23,26 @@ public class OptionSubtractConcurrencyTest {
     private OptionService optionService;
 
     @Autowired
-    private GiftRepository giftRepository;
+    private ProductRepository productRepository;
 
     @Autowired
     private OptionRepository optionRepository;
 
-    private Gift gift;
+    private Product product;
     private Option option;
 
 
     @BeforeEach
     void setUp() {
         Category category = new Category(30L, "testCategory", "testCategory", "testCategory", "testCategory");
-        Gift gift = new Gift("Test Gift", 1000, "test.jpg", category);
+        Product product = new Product("Test Gift", 1000, "test.jpg", category);
         Option option = new Option("Test Option", 1);
-        gift.addOption(option);
+        product.addOption(option);
 
-        giftRepository.save(gift);
+        productRepository.save(product);
         optionRepository.save(option);
 
-        this.gift = gift;
+        this.product = product;
         this.option = option;
     }
 
@@ -61,7 +61,7 @@ public class OptionSubtractConcurrencyTest {
         for (int i = 0; i < threadCount; i++) {
             executorService.execute(() -> {
                 try {
-                    optionService.subtractOptionToGift(gift.getId(), option.getId(), subtractQuantity);
+                    optionService.subtractOptionToGift(product.getId(), option.getId(), subtractQuantity);
                     successCount.incrementAndGet();
                 } catch (OptimisticLockingFailureException e) {
                     System.out.println("낙관적 락 발생: " + e.getMessage());

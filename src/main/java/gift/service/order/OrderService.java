@@ -3,12 +3,12 @@ package gift.service.order;
 import gift.common.enums.LoginType;
 import gift.dto.order.OrderRequest;
 import gift.dto.order.OrderResponse;
-import gift.model.gift.Gift;
+import gift.model.gift.Product;
 import gift.model.option.Option;
 import gift.model.order.Order;
 import gift.model.token.OAuthToken;
 import gift.model.user.User;
-import gift.repository.gift.GiftRepository;
+import gift.repository.gift.ProductRepository;
 import gift.repository.option.OptionRepository;
 import gift.repository.order.OrderRepository;
 import gift.repository.token.OAuthTokenRepository;
@@ -32,7 +32,7 @@ public class OrderService {
 
     private final OptionRepository optionRepository;
 
-    private final GiftRepository giftRepository;
+    private final ProductRepository productRepository;
 
     private final WishRepository wishRepository;
 
@@ -47,14 +47,14 @@ public class OrderService {
 
     @Autowired
     public OrderService(OptionRepository optionRepository,
-                        GiftRepository giftRepository,
+                        ProductRepository productRepository,
                         WishRepository wishRepository,
                         UserRepository userRepository,
                         OrderRepository orderRepository,
                         OAuthTokenRepository OAuthTokenRepository,
                         KakaoApiCaller kakaoApiCaller) {
         this.optionRepository = optionRepository;
-        this.giftRepository = giftRepository;
+        this.productRepository = productRepository;
         this.wishRepository = wishRepository;
         this.userRepository = userRepository;
         this.orderRepository = orderRepository;
@@ -73,16 +73,16 @@ public class OrderService {
                 .orElseThrow(() -> new IllegalArgumentException("해당 유저를 찾을 수 없습니다."));
         user.checkLoginType(LoginType.KAKAO);
 
-        Gift gift = giftRepository.findById(giftId)
+        Product product = productRepository.findById(giftId)
                 .orElseThrow(() -> new NoSuchElementException("해당 상품을 찾을 수 없습니다 id :  " + giftId));
         Option option = optionRepository.findById(orderRequest.optionId())
                 .orElseThrow(() -> new NoSuchElementException("해당 옵션을 찾을 수 없습니다 id :  " + orderRequest.optionId()));
 
-        checkOptionInGift(gift, orderRequest.optionId());
+        checkOptionInGift(product, orderRequest.optionId());
         option.subtract(orderRequest.quantity());
         optionRepository.save(option);
 
-        wishRepository.findByUserAndGift(user, gift)
+        wishRepository.findByUserAndProduct(user, product)
                 .ifPresent(wish -> wishRepository.deleteById(wish.getId()));
 
         Order order = new Order(option, orderRequest.quantity(), orderRequest.message());
@@ -91,20 +91,20 @@ public class OrderService {
     }
 
     public void sendMessage(OrderRequest.Create orderRequest, User user, Long giftId) {
-        Gift gift = giftRepository.findById(giftId)
+        Product product = productRepository.findById(giftId)
                 .orElseThrow(() -> new NoSuchElementException("해당 상품을 찾을 수 없습니다 id :  " + giftId));
         Option option = optionRepository.findById(orderRequest.optionId())
                 .orElseThrow(() -> new NoSuchElementException("해당 옵션을 찾을 수 없습니다 id :  " + orderRequest.optionId()));
         OAuthToken OAuthToken = OAuthTokenRepository.findByUser(user).orElseThrow(() -> new NoSuchElementException("사용자가 카카오토큰을 가지고있지않습니다!"));
         OAuthToken = tokenUtil.checkExpiredToken(OAuthToken);
         String message = String.format("상품 : %s\\n옵션 : %s\\n수량 : %s\\n메시지 : %s\\n주문이 완료되었습니다!"
-                , gift.getName(), option.getName(), orderRequest.quantity(), orderRequest.message());
+                , product.getName(), option.getName(), orderRequest.quantity(), orderRequest.message());
         kakaoApiCaller.sendMessage(OAuthToken.getAccessToken(), message);
     }
 
-    public void checkOptionInGift(Gift gift, Long optionId) {
+    public void checkOptionInGift(Product product, Long optionId) {
 
-        if (!gift.hasOption(optionId)) {
+        if (!product.hasOption(optionId)) {
             throw new NoSuchElementException("해당 상품에 해당 옵션이 없습니다!");
         }
     }

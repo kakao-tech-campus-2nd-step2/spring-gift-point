@@ -1,6 +1,6 @@
 package gift.model.category;
 
-import gift.model.gift.Gift;
+import gift.model.gift.Product;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 
@@ -30,7 +30,7 @@ public class Category {
     private String description;
 
     @OneToMany(mappedBy = "category")
-    private final List<Gift> gifts = new ArrayList<>();
+    private final List<Product> products = new ArrayList<>();
 
     protected Category() {
     }
@@ -63,8 +63,8 @@ public class Category {
         return description;
     }
 
-    public List<Gift> getGifts() {
-        return gifts;
+    public List<Product> getGifts() {
+        return products;
     }
 
     public void modify(String name, String color, String imageUrl, String description) {

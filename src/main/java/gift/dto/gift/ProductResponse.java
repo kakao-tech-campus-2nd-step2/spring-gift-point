@@ -2,11 +2,11 @@ package gift.dto.gift;
 
 import gift.dto.category.CategoryResponse;
 import gift.dto.option.OptionResponse;
-import gift.model.gift.Gift;
+import gift.model.gift.Product;
 
 import java.util.List;
 
-public class GiftResponse {
+public class ProductResponse {
 
     private final Long id;
 
@@ -21,7 +21,7 @@ public class GiftResponse {
     private final List<OptionResponse> options;
 
 
-    public GiftResponse(Long id, String name, int price, String imageUrl, CategoryResponse.Info category, List<OptionResponse> options) {
+    public ProductResponse(Long id, String name, int price, String imageUrl, CategoryResponse.Info category, List<OptionResponse> options) {
         this.id = id;
         this.name = name;
         this.price = price;
@@ -30,13 +30,13 @@ public class GiftResponse {
         this.options = options;
     }
 
-    public static GiftResponse from(Gift gift) {
-        return new GiftResponse(gift.getId(),
-                gift.getName(),
-                gift.getPrice(),
-                gift.getImageUrl(),
-                CategoryResponse.Info.fromEntity(gift.getCategory()),
-                gift.getOptions().stream()
+    public static ProductResponse from(Product product) {
+        return new ProductResponse(product.getId(),
+                product.getName(),
+                product.getPrice(),
+                product.getImageUrl(),
+                CategoryResponse.Info.fromEntity(product.getCategory()),
+                product.getOptions().stream()
                         .map(OptionResponse::from)
                         .toList());
     }

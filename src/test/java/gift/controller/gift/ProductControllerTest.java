@@ -1,10 +1,10 @@
 package gift.controller.gift;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import gift.dto.gift.GiftRequest;
-import gift.dto.gift.GiftResponse;
+import gift.dto.gift.ProductRequest;
+import gift.dto.gift.ProductResponse;
 import gift.dto.option.OptionRequest;
-import gift.service.gift.GiftService;
+import gift.service.gift.ProductService;
 import gift.service.option.OptionService;
 import org.junit.jupiter.api.*;
 import org.mockito.Mockito;
@@ -25,27 +25,27 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest
 @AutoConfigureMockMvc
-class GiftControllerTest {
+class ProductControllerTest {
     @Autowired
     private MockMvc mockMvc;
 
     @MockBean
-    private GiftService giftService;
+    private ProductService productService;
 
     @MockBean
     private OptionService optionService;
 
-    private GiftRequest.Create giftRequest;
+    private ProductRequest.Create giftRequest;
 
-    private GiftResponse giftResponse;
+    private ProductResponse productResponse;
     private ObjectMapper objectMapper;
 
     @BeforeEach
     void setUp() {
         OptionRequest.Create option = new OptionRequest.Create("testOption", 1);
         List<OptionRequest.Create> optionList = Arrays.asList(option);
-        giftRequest = new GiftRequest.Create("Test Gift", 1000, "test.jpg", 1L, optionList);
-        giftResponse = new GiftResponse(1L, "Test Gift", 1000, "test.jpg", null, null);
+        giftRequest = new ProductRequest.Create("Test Gift", 1000, "test.jpg", 1L, optionList);
+        productResponse = new ProductResponse(1L, "Test Gift", 1000, "test.jpg", null, null);
         objectMapper = new ObjectMapper();
 
     }
@@ -53,7 +53,7 @@ class GiftControllerTest {
     @Test
     @DisplayName("상품을 잘 추가하는지 테스트")
     void testAddGift() throws Exception {
-        Mockito.when(giftService.addGift(any(GiftRequest.Create.class))).thenReturn(giftResponse);
+        Mockito.when(productService.addGift(any(ProductRequest.Create.class))).thenReturn(productResponse);
         String giftRequestJson = objectMapper.writeValueAsString(giftRequest);
         mockMvc.perform(post("/api/gifts")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -61,13 +61,13 @@ class GiftControllerTest {
                 .andExpect(status().isCreated())
                 .andExpect(content().string("Gift created"));
 
-        Mockito.verify(giftService).addGift(any(GiftRequest.Create.class));
+        Mockito.verify(productService).addGift(any(ProductRequest.Create.class));
     }
 
     @Test
     @DisplayName("옵션 없이 상품을 추가했을 때 오류 메시지가 잘 뜨는지 테스트")
     void testAddGiftNoOption() throws Exception {
-        GiftRequest.Create invalidGiftRequest = new GiftRequest.Create("Test Gift", 1000, "test.jpg", 1L, null);
+        ProductRequest.Create invalidGiftRequest = new ProductRequest.Create("Test Gift", 1000, "test.jpg", 1L, null);
         String giftRequestJson = objectMapper.writeValueAsString(invalidGiftRequest);
         mockMvc.perform(post("/api/gifts")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -78,7 +78,7 @@ class GiftControllerTest {
     @Test
     @DisplayName("상품 업데이트 메서드가 잘 동작하는지 테스트")
     void testupdateGift() throws Exception {
-        Mockito.doNothing().when(giftService).updateGift(any(), anyLong());
+        Mockito.doNothing().when(productService).updateGift(any(), anyLong());
 
         String giftRequestJson = objectMapper.writeValueAsString(giftRequest);
 
@@ -88,13 +88,13 @@ class GiftControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(content().string("상품 수정이 완료되었습니다."));
 
-        Mockito.verify(giftService).updateGift(any(GiftRequest.Update.class), anyLong());
+        Mockito.verify(productService).updateGift(any(ProductRequest.Update.class), anyLong());
     }
 
     @Test
     @DisplayName("상품을 삭제하는 메서드가 잘 동작하는지 테스트")
     void testDeleteOptionFromGift() throws Exception {
-        Mockito.doNothing().when(giftService).deleteGift(anyLong());
+        Mockito.doNothing().when(productService).deleteGift(anyLong());
 
         mockMvc.perform(delete("/api/gifts/{id}", 1L))
                 .andExpect(status().isNoContent());

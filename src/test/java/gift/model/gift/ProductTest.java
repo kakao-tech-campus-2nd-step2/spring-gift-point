@@ -9,7 +9,7 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-class GiftTest {
+class ProductTest {
 
     @Test
     void checkThrowExceptionContainsKakao() {
@@ -21,7 +21,7 @@ class GiftTest {
         Option option1 = new Option(10L, "testOption", 1);
         List<Option> option = Arrays.asList(option1);
 
-        assertThatThrownBy(() -> new Gift(invalidName, price, imageUrl, category, option))
+        assertThatThrownBy(() -> new Product(invalidName, price, imageUrl, category, option))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("카카오 문구는 MD와 협의 후 사용가능합니다.");
     }

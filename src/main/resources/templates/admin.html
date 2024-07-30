@@ -18,16 +18,16 @@
         </tr>
         </thead>
         <tbody>
-        <tr th:each="gift : ${giftlist}">
-            <td th:text="${gift.id}"></td>
-            <td><a th:href="@{|/admin/gift/detail/${gift.id}|}" th:text="${gift.name}"></a></td>
-            <td th:text="${gift.price}"></td>
-            <td th:text="${gift.imageUrl}"></td>
-            <td th:text="${gift.category.name}"></td>
+        <tr th:each="product : ${giftlist}">
+            <td th:text="${product.id}"></td>
+            <td><a th:href="@{|/admin/product/detail/${product.id}|}" th:text="${product.name}"></a></td>
+            <td th:text="${product.price}"></td>
+            <td th:text="${product.imageUrl}"></td>
+            <td th:text="${product.category.name}"></td>
         </tr>
         </tbody>
     </table>
-    <a class="btn btn-primary" th:href="@{/admin/gift/create}">상품 등록</a>
+    <a class="btn btn-primary" th:href="@{/admin/product/create}">상품 등록</a>
 </div>
 </body>
 </html>

@@ -1,6 +1,6 @@
 package gift.controller.wish;
 
-import gift.dto.gift.GiftResponse;
+import gift.dto.gift.ProductResponse;
 import gift.dto.paging.PagingRequest;
 import gift.dto.paging.PagingResponse;
 import gift.dto.wish.WishResponse;
@@ -27,7 +27,7 @@ public interface WishListSpecification {
                             )
                     )
             })
-    ResponseEntity<PagingResponse<GiftResponse>> getGiftList(@Parameter(description = "페이징 요청 정보") @ModelAttribute PagingRequest pagingRequest);
+    ResponseEntity<PagingResponse<ProductResponse>> getGiftList(@Parameter(description = "페이징 요청 정보") @ModelAttribute PagingRequest pagingRequest);
 
     @Operation(summary = "위시리스트에 상품 추가", description = "주어진 ID의 상품을 위시리스트에 추가합니다.",
             responses = {
