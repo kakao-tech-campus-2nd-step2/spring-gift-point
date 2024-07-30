@@ -1,6 +1,8 @@
 package gift.controller;
 
-import gift.dto.ProductDto;
+import gift.dto.ProductDetailDto;
+import gift.dto.ProductRequestDto;
+import gift.dto.ProductResponseDto;
 import gift.model.Product;
 import gift.service.CategoryService;
 import gift.service.ProductService;
@@ -32,7 +34,7 @@ public class ProductWebController {
     public String getAllProducts(Model model,
                                  @PageableDefault(size = 10, sort = {"id"},
                                          direction = Sort.Direction.ASC) Pageable pageable) {
-        Page<Product> productPage = productService.getProducts(pageable);
+        Page<ProductResponseDto> productPage = productService.getProducts(pageable);
         model.addAttribute("products", productPage.getContent());
         model.addAttribute("currentPage", productPage.getNumber());
         model.addAttribute("totalPages", productPage.getTotalPages());
@@ -51,14 +53,14 @@ public class ProductWebController {
     }
 
     @PostMapping("/add")
-    public String addProduct(@ModelAttribute @Valid ProductDto productDto) {
-        productService.addProduct(productDto);
+    public String addProduct(@ModelAttribute @Valid ProductRequestDto productRequestDto) {
+        productService.addProduct(productRequestDto);
         return "redirect:/web/products";
     }
 
     @GetMapping("/edit/{productId}")
     public String editProductForm(@PathVariable Long productId, Model model) {
-        Product product = productService.getProductById(productId);
+        ProductDetailDto product = productService.getProductById(productId);
         model.addAttribute("product", product);
         model.addAttribute("categories", categoryService.getAllCategories());
         return "editProduct";
@@ -66,8 +68,8 @@ public class ProductWebController {
 
     @PostMapping("/edit/{productId}")
     public String updateProduct(@PathVariable Long productId,
-                                @ModelAttribute @Valid ProductDto productDto) {
-        productService.updateProduct(productId, productDto);
+                                @ModelAttribute @Valid ProductRequestDto productRequestDto) {
+        productService.updateProduct(productId, productRequestDto);
         return "redirect:/web/products";
     }
 
