@@ -37,8 +37,8 @@ public class CategoryApiController {
     }
 
     @CheckRole("ROLE_ADMIN")
-    @GetMapping("/api/categories/{id}")
-    public ResponseEntity<CategoryResponse> getCategory(@PathVariable("id") Long id) {
+    @GetMapping("/api/categories/{categoryId}")
+    public ResponseEntity<CategoryResponse> getCategory(@PathVariable("categoryId") Long id) {
         return new ResponseEntity<>(categoryService.getCategory(id), HttpStatus.OK);
     }
 
@@ -55,14 +55,14 @@ public class CategoryApiController {
     }
 
     @CheckRole("ROLE_ADMIN")
-    @PutMapping("/api/categories")
-    public ResponseEntity<Void> updateCategory(@RequestBody @Valid CategoryUpdateRequest dto,
+    @PutMapping("/api/categories/{categoryId}")
+    public ResponseEntity<Void> updateCategory(@PathVariable("categoryId") Long id, @RequestBody @Valid CategoryUpdateRequest dto,
         BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             throw new InputException(bindingResult.getAllErrors());
         }
 
-        categoryService.updateCategory(dto.id(), dto.name());
+        categoryService.updateCategory(id, dto.name());
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 

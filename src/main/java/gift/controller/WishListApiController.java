@@ -17,6 +17,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -34,7 +35,7 @@ public class WishListApiController {
     }
 
     @CheckRole("ROLE_USER")
-    @GetMapping("/api/wishlist")
+    @GetMapping("/api/wishes")
     public ResponseEntity<List<ProductResponse>> getWishList(
         @RequestParam(defaultValue = "1", name = "page") int page,
         @RequestParam(defaultValue = "id", name = "sort") String sort,
@@ -46,7 +47,7 @@ public class WishListApiController {
     }
 
     @CheckRole("ROLE_USER")
-    @PostMapping("/api/wishlist")
+    @PostMapping("/api/wishes")
     public ResponseEntity<Void> addWishList(@LoginMember LoginMemberDto memberDto,
         @RequestBody @Valid WishListRequest dto, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
@@ -58,15 +59,10 @@ public class WishListApiController {
     }
 
     @CheckRole("ROLE_USER")
-    @DeleteMapping("/api/wishlist")
-    public ResponseEntity<Void> deleteWishList(@LoginMember LoginMemberDto memberDto,
-        @RequestBody @Valid WishListRequest dto, BindingResult bindingResult) {
+    @DeleteMapping("/api/wishes/{wishId}")
+    public ResponseEntity<Void> deleteWishList(@PathVariable("wishId") Long id) {
 
-        if (bindingResult.hasErrors()) {
-            throw new InputException(bindingResult.getAllErrors());
-        }
-
-        wishService.deleteMyWish(memberDto.id(), dto.productId());
+        wishService.deleteMyWish(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 

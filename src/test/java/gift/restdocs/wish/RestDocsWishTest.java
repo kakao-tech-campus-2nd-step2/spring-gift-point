@@ -5,6 +5,7 @@ import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.doNothing;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
+import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
 import static org.springframework.restdocs.request.RequestDocumentation.queryParameters;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -41,6 +42,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.data.jpa.mapping.JpaMetamodelMappingContext;
 import org.springframework.http.MediaType;
+import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders;
 
 @WebMvcTest(value = WishListApiController.class,
     excludeFilters = {@Filter(type = FilterType.ASSIGNABLE_TYPE, classes = LoginWebConfig.class)})
@@ -83,7 +85,7 @@ public class RestDocsWishTest extends AbstractRestDocsTest {
             .willReturn(response);
 
         //when //then
-        mockMvc.perform(get("/api/wishlist?page=" + page + "&sort=" + sort)
+        mockMvc.perform(get("/api/wishes?page=" + page + "&sort=" + sort)
                     .header("Authorization", "Bearer " + token))
             .andExpect(status().isOk())
             .andDo(document("rest-docs-wish-test/get-wish-list",
@@ -104,7 +106,7 @@ public class RestDocsWishTest extends AbstractRestDocsTest {
             addMyWish(any(Long.class), any(Long.class));
 
         //when //then
-        mockMvc.perform(post("/api/wishlist")
+        mockMvc.perform(post("/api/wishes")
                 .header("Authorization", "Bearer " + token)
                 .content(content)
                 .contentType(MediaType.APPLICATION_JSON))
@@ -115,20 +117,20 @@ public class RestDocsWishTest extends AbstractRestDocsTest {
     @Test
     void deleteWishList() throws Exception {
         //given
-        Long memberId = 1L;
-        Long productId = 1L;
-        WishListRequest wishListRequest = new WishListRequest(productId);
-        String content = objectMapper.writeValueAsString(wishListRequest);
+        Long wishId = 1L;
         doNothing().when(wishService).
-            deleteMyWish(any(Long.class), any(Long.class));
+            deleteMyWish(any(Long.class));
 
         //when //then
-        mockMvc.perform(delete("/api/wishlist")
+        mockMvc.perform(RestDocumentationRequestBuilders.delete("/api/wishes/{wishId}",wishId)
                 .header("Authorization", "Bearer " + token)
-                .content(content)
                 .contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isNoContent())
-            .andDo(print());
+            .andDo(document("rest-docs-wish-test/delete-wish-list",
+                pathParameters(
+                    parameterWithName("wishId").description("wish id")
+                ))
+            );
 
     }
 
@@ -137,10 +139,7 @@ public class RestDocsWishTest extends AbstractRestDocsTest {
             "교환권", "옵션A", 1);
     }
 
-    private ProductUpdateRequest demoUpdateRequest(Long id) {
-        return new ProductUpdateRequest(id, "수정된 상품명", 1500, "http://update.com",
-            "수정된 카테고리명");
-    }
+
 
     private Options demoOptions(Long id, Product product) {
         return new Options(id, "옵션" + id, 1, product);

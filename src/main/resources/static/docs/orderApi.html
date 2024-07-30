@@ -592,10 +592,58 @@ Content-Length: 136
 </div>
 </div>
 </div>
+<div class="sect1">
+<h2 id="_주문_조회">주문 조회</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_주문_조회_http_request">HTTP request</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight nowrap"><code data-lang="http">GET /api/orders?id=1 HTTP/1.1
+Authorization: Bearer {ACCESS_TOKEN}
+Host: localhost:8080</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_주문_조회_query_parameters">Query parameters</h3>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Parameter</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>id</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Order id</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect2">
+<h3 id="_주문_조회_http_response">HTTP response</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight nowrap"><code data-lang="http">HTTP/1.1 200 OK
+Content-Type: application/json;charset=UTF-8
+Content-Length: 110
+
+{&quot;quantity&quot;:1,&quot;message&quot;:&quot;주문 메시지&quot;,&quot;order_id&quot;:1,&quot;option_id&quot;:1,&quot;order_date_time&quot;:&quot;2024.01.01 00:00:00&quot;}</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2024-07-28 17:55:39 +0900
+Last updated 2024-07-28 18:01:58 +0900
 </div>
 </div>
 <script>

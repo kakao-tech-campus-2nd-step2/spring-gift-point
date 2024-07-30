@@ -162,21 +162,21 @@ class CategoryApiControllerTest {
         //given
         Long savedCategoryId = 1L;
         Category savedCategory = new Category(savedCategoryId, "카테고리");
-        CategoryUpdateRequest updateRequest = new CategoryUpdateRequest(savedCategoryId,
+        CategoryUpdateRequest updateRequest = new CategoryUpdateRequest(
             "새로운 카테고리");
         String content = objectMapper.writeValueAsString(updateRequest);
-        given(categoryService.updateCategory(updateRequest.id(), updateRequest.name()))
+        given(categoryService.updateCategory(savedCategoryId, updateRequest.name()))
             .willReturn(savedCategory);
 
         //when //then
         mockMvc.perform(
-                MockMvcRequestBuilders.put("/api/categories")
+                MockMvcRequestBuilders.put("/api/categories/{cateogryId}", savedCategoryId)
                     .header("Authorization", "Bearer " + token)
                     .content(content)
                     .contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isNoContent())
             .andDo(print());
-        then(categoryService).should().updateCategory(updateRequest.id(), updateRequest.name());
+        then(categoryService).should().updateCategory(savedCategoryId, updateRequest.name());
     }
 
     @DisplayName("존재하지 않는 카테고리 수정 요청 테스트")
@@ -184,15 +184,15 @@ class CategoryApiControllerTest {
     void failUpdate() throws Exception {
         //given
         Long notExistedCategoryId = 423L;
-        CategoryUpdateRequest updateRequest = new CategoryUpdateRequest(notExistedCategoryId,
+        CategoryUpdateRequest updateRequest = new CategoryUpdateRequest(
             "새로운 카테고리");
         String content = objectMapper.writeValueAsString(updateRequest);
-        given(categoryService.updateCategory(updateRequest.id(), updateRequest.name())).
+        given(categoryService.updateCategory(notExistedCategoryId, updateRequest.name())).
             willThrow(NotFoundCategoryException.class);
 
         //when //then
         mockMvc.perform(
-                MockMvcRequestBuilders.put("/api/categories")
+                MockMvcRequestBuilders.put("/api/categories/{categoryId}", notExistedCategoryId)
                     .header("Authorization", "Bearer " + token)
                     .content(content)
                     .contentType(MediaType.APPLICATION_JSON))

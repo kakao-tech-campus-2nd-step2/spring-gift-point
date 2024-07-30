@@ -27,7 +27,7 @@ public class LoginController {
         this.jwtService = jwtService;
     }
 
-    @PostMapping("/api/join")
+    @PostMapping("/api/members/join")
     public ResponseEntity<JoinResponse> join(@RequestBody @Valid JoinRequest joinRequest,
         BindingResult bindingResult, HttpServletResponse response) {
         if (bindingResult.hasErrors()) {
@@ -41,7 +41,7 @@ public class LoginController {
         return new ResponseEntity<>(joinResponse, HttpStatus.CREATED);
     }
 
-    @PostMapping("/api/login")
+    @PostMapping("/api/members/login")
     public ResponseEntity<Void> login(@RequestBody @Valid LoginRequest loginRequest,
         BindingResult bindingResult, HttpServletResponse response) {
 

@@ -101,34 +101,6 @@ public class RestDocsProductTest extends AbstractRestDocsTest {
     }
 
     @Test
-    void getProductWithAllOptions() throws Exception {
-        //given
-        Product product = demoProduct(1L);
-        Options option = demoOptions(1L, product);
-        Options option2 = demoOptions(2L, product);
-        List<OptionResponse> options = new ArrayList<>();
-        options.add(new OptionResponse(option.getId(), option.getName(), option.getQuantity()));
-        options.add(new OptionResponse(option2.getId(), option2.getName(), option2.getQuantity()));
-
-        ProductResponse productResponse = ProductResponse.createProductResponse(product);
-        ProductOptionsResponse response = new ProductOptionsResponse(productResponse, options);
-        given(productService.getProduct(any(Long.class)))
-            .willReturn(product);
-        given(optionsService.getAllProductOptions(any(Product.class)))
-            .willReturn(response);
-
-        //when //then
-        mockMvc.perform(
-                RestDocumentationRequestBuilders.get("/api/products/{id}/all", product.getId())
-                    .header("Authorization", "Bearer " + token))
-            .andExpect(status().isOk())
-            .andDo(document("rest-docs-product-test/get-product-with-all-options",
-                pathParameters(
-                    parameterWithName("id").description("Product id")
-                )));
-    }
-
-    @Test
     void getProductWithOption() throws Exception {
         //given
         Long optionId = 1L;
@@ -144,13 +116,13 @@ public class RestDocsProductTest extends AbstractRestDocsTest {
 
         //when //then
         mockMvc.perform(
-                RestDocumentationRequestBuilders.get("/api/products/{id}?option_id=" + optionId,
+                RestDocumentationRequestBuilders.get("/api/products/{productId}?option_id=" + optionId,
                         product.getId())
                     .header("Authorization", "Bearer " + token))
             .andExpect(status().isOk())
             .andDo(document("rest-docs-product-test/get-product-with-option",
                 pathParameters(
-                    parameterWithName("id").description("Product id")
+                    parameterWithName("productId").description("Product id")
                 ),
                 queryParameters(
                     parameterWithName("option_id").description("Option id")
@@ -185,10 +157,11 @@ public class RestDocsProductTest extends AbstractRestDocsTest {
     @Test
     void updateProduct() throws Exception {
         //given
-        ProductUpdateRequest updateRequest = demoUpdateRequest(1L);
+        Long productId = 1L;
+        ProductUpdateRequest updateRequest = demoUpdateRequest();
         Long optionId = 1L;
         Category updatedCategory = new Category(1L, updateRequest.categoryName());
-        Product updatedProduct = new Product(updateRequest.id(), updateRequest.name(),
+        Product updatedProduct = new Product(productId, updateRequest.name(),
             updateRequest.price(), updateRequest.imageUrl(), updatedCategory);
         String content = objectMapper.writeValueAsString(updateRequest);
 
@@ -198,12 +171,15 @@ public class RestDocsProductTest extends AbstractRestDocsTest {
 
         //when //then
         mockMvc.perform(
-                put("/api/products")
+                RestDocumentationRequestBuilders.put("/api/products/{productId}", productId)
                     .header("Authorization", "Bearer " + token)
                     .content(content)
                     .contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isNoContent())
-            .andDo(print());
+            .andDo(document("rest-docs-product-test/update-product",
+                pathParameters(
+                    parameterWithName("productId").description("Product id")
+                )));
     }
 
     @Test
@@ -214,13 +190,13 @@ public class RestDocsProductTest extends AbstractRestDocsTest {
         doNothing().when(optionsService).deleteAllOptions(productId);
 
         //when //then
-        mockMvc.perform(delete("/api/products?id=" + productId)
+        mockMvc.perform(RestDocumentationRequestBuilders.delete("/api/products/{productId}", productId)
                 .header("Authorization", "Bearer " + token)
                 .contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isNoContent())
             .andDo(document("rest-docs-product-test/delete-product",
-                queryParameters(
-                    parameterWithName("id").description("Product id")
+                pathParameters(
+                    parameterWithName("productId").description("Product id")
                 )));
 
         then(productService).should().deleteProduct(productId);
@@ -233,8 +209,8 @@ public class RestDocsProductTest extends AbstractRestDocsTest {
             "교환권", "옵션A", 1);
     }
 
-    private ProductUpdateRequest demoUpdateRequest(Long id) {
-        return new ProductUpdateRequest(id, "수정된 상품명", 1500, "http://update.com",
+    private ProductUpdateRequest demoUpdateRequest() {
+        return new ProductUpdateRequest( "수정된 상품명", 1500, "http://update.com",
             "수정된 카테고리명");
     }
 

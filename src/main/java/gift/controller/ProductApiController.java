@@ -50,21 +50,9 @@ public class ProductApiController {
     }
 
     @CheckRole("ROLE_ADMIN")
-    @GetMapping("/api/products/{id}/all")
-    public ResponseEntity<ProductOptionsResponse> getProductWithAllOptions(
-        @PathVariable("id") Long id) {
-        Product product = productService.getProduct(id);
-        if (product == null) {
-            return new ResponseEntity<>(HttpStatus.OK);
-        }
-        ProductOptionsResponse dto = optionsService.getAllProductOptions(product);
-        return new ResponseEntity<>(dto, HttpStatus.OK);
-    }
-
-    @CheckRole("ROLE_ADMIN")
-    @GetMapping("/api/products/{id}")
+    @GetMapping("/api/products/{productId}")
     public ResponseEntity<ProductOptionsResponse> getProductWithOption(
-        @PathVariable("id") Long id, @RequestParam("option_id") Long optionId) {
+        @PathVariable("productId") Long id, @RequestParam("option_id") Long optionId) {
         Product product = productService.getProduct(id);
         if (product == null) {
             return new ResponseEntity<>(HttpStatus.OK);
@@ -88,21 +76,21 @@ public class ProductApiController {
     }
 
     @CheckRole("ROLE_ADMIN")
-    @PutMapping("/api/products")
-    public ResponseEntity<Void> updateProduct(@RequestBody @Valid ProductUpdateRequest dto,
+    @PutMapping("/api/products/{productId}")
+    public ResponseEntity<Void> updateProduct(@PathVariable("productId") Long id, @RequestBody @Valid ProductUpdateRequest dto,
         BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             throw new InputException(bindingResult.getAllErrors());
         }
 
-        productService.updateProduct(dto.id(), dto.name(), dto.price(), dto.imageUrl(),
+        productService.updateProduct(id, dto.name(), dto.price(), dto.imageUrl(),
             dto.categoryName());
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
     @CheckRole("ROLE_ADMIN")
-    @DeleteMapping("/api/products")
-    public ResponseEntity<Void> deleteProduct(@RequestParam("id") Long id) {
+    @DeleteMapping("/api/products/{productId}")
+    public ResponseEntity<Void> deleteProduct(@PathVariable("productId") Long id) {
         optionsService.deleteAllOptions(id);
         productService.deleteProduct(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);

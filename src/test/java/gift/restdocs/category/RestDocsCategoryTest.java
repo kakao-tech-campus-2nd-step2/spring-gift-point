@@ -91,13 +91,13 @@ public class RestDocsCategoryTest extends AbstractRestDocsTest {
             .willReturn(categoryResponse);
 
         //when then
-        mockMvc.perform(RestDocumentationRequestBuilders.get("/api/categories/{id}", categoryId)
+        mockMvc.perform(RestDocumentationRequestBuilders.get("/api/categories/{categoryId}", categoryId)
                 .header("Authorization", "Bearer " + token))
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.id").value(equalTo(categoryId.intValue())))
             .andDo(document("rest-docs-category-test/get-category",
                 pathParameters(
-                    parameterWithName("id").description("Category id")
+                    parameterWithName("categoryId").description("Category id")
                 )));
     }
 
@@ -125,20 +125,23 @@ public class RestDocsCategoryTest extends AbstractRestDocsTest {
         //given
         Long savedCategoryId = 1L;
         Category savedCategory = new Category(savedCategoryId, "카테고리");
-        CategoryUpdateRequest updateRequest = new CategoryUpdateRequest(savedCategoryId,
+        CategoryUpdateRequest updateRequest = new CategoryUpdateRequest(
             "수정된 카테고리명");
         String content = objectMapper.writeValueAsString(updateRequest);
-        given(categoryService.updateCategory(updateRequest.id(), updateRequest.name()))
+        given(categoryService.updateCategory(savedCategoryId, updateRequest.name()))
             .willReturn(savedCategory);
 
         //when //then
-        mockMvc.perform(put("/api/categories")
+        mockMvc.perform(RestDocumentationRequestBuilders.put("/api/categories/{categoryId}", savedCategoryId)
                 .header("Authorization", "Bearer " + token)
                 .content(content)
                 .contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isNoContent())
-            .andDo(print());
-        then(categoryService).should().updateCategory(updateRequest.id(), updateRequest.name());
+            .andDo(document("rest-docs-category-test/update-category",
+                pathParameters(
+                    parameterWithName("categoryId").description("Category id")
+                )));
+        then(categoryService).should().updateCategory(savedCategoryId, updateRequest.name());
     }
 
     @Test

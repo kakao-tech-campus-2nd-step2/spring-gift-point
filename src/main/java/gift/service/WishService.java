@@ -65,10 +65,11 @@ public class WishService {
     }
 
     @Transactional
-    public void deleteMyWish(Long memberId, Long productId) {
-        wishRepository.findByMemberIdAndProductId(memberId, productId)
-            .ifPresentOrElse(wishRepository::delete
-                , () -> {
+    public void deleteMyWish(Long wishId) {
+        wishRepository.findById(wishId)
+            .ifPresentOrElse(
+                wishRepository::delete,
+                () -> {
                     throw new NotFoundWishException();
                 }
             );

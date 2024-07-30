@@ -77,7 +77,7 @@ public class ProductApiControllerTest {
 
         //when //then
         mockMvc.perform(
-                MockMvcRequestBuilders.get("/api/products/{id}/all", product.getId())
+                MockMvcRequestBuilders.get("/api/products/{id}/options", product.getId())
                     .header("Authorization", "Bearer " + token))
             .andExpect(status().isOk())
             .andDo(print());
@@ -161,8 +161,7 @@ public class ProductApiControllerTest {
 
         //when //then
         mockMvc.perform(
-                MockMvcRequestBuilders.delete("/api/products")
-                    .param("id", productId.toString())
+                MockMvcRequestBuilders.delete("/api/products/{productId}", productId)
                     .header("Authorization", "Bearer " + token)
                     .contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isNoContent())

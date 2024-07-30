@@ -33,6 +33,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.web.util.UriComponentsBuilder;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ActiveProfiles("test")
@@ -66,6 +67,7 @@ class WishListApiTest {
     String token;
     List<Product> savedProducts;
     Category category;
+    List<Wish> savedWishes;
 
     @BeforeEach
     void before() {
@@ -83,7 +85,7 @@ class WishListApiTest {
         List<Wish> wishes = products.stream()
             .map(product -> new Wish(member, product))
             .toList();
-        wishRepository.saveAll(wishes);
+        savedWishes = wishRepository.saveAll(wishes);
     }
 
     @AfterEach
@@ -98,7 +100,7 @@ class WishListApiTest {
     @DisplayName("위시 리스트 조회 테스트")
     void getWishList() {
         //given
-        String url = "http://localhost:" + port + "/api/wishlist";
+        String url = "http://localhost:" + port + "/api/wishes";
         HttpHeaders headers = new HttpHeaders();
         headers.setBearerAuth(token);
 
@@ -130,14 +132,14 @@ class WishListApiTest {
     @DisplayName("위시 리스트 추가 성공 테스트")
     void addMyWish() {
         Product saved = productRepository.save(new Product("product11", 1000, "https://a.com", category));
-        ResponseEntity<Void> response = addAndRemoveTest(saved.getId(), HttpMethod.POST);
+        ResponseEntity<Void> response = addTest(saved.getId(), HttpMethod.POST);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
     }
 
     @Test
     @DisplayName("위시 리스트 추가 실패 테스트")
     void failAddMyWish() {
-        ResponseEntity<Void> response = addAndRemoveTest(savedProducts.get(0).getId(),
+        ResponseEntity<Void> response = addTest(savedProducts.get(0).getId(),
             HttpMethod.POST);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
     }
@@ -146,7 +148,8 @@ class WishListApiTest {
     @Test
     @DisplayName("위시 리스트 삭제 성공 테스트")
     void removeMyWish() {
-        ResponseEntity<Void> response = addAndRemoveTest(savedProducts.get(0).getId(),
+        Long wishId = savedWishes.get(0).getId();
+        ResponseEntity<Void> response = removeTest(wishId,
             HttpMethod.DELETE);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
     }
@@ -154,15 +157,14 @@ class WishListApiTest {
     @Test
     @DisplayName("위시 리스트 삭제 실패 테스트")
     void failRemoveMyWish() {
-        Long nonExistingId = 1239L; //위시 리스트에 존재하지 않는 상품 id
-        ResponseEntity<Void> response = addAndRemoveTest(nonExistingId, HttpMethod.DELETE);
+        Long nonExistingId = 1239L;
+        ResponseEntity<Void> response = removeTest(nonExistingId, HttpMethod.DELETE);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
     }
 
-
-    private ResponseEntity<Void> addAndRemoveTest(Long productId, HttpMethod httpMethod) {
+    private ResponseEntity<Void> addTest(Long productId, HttpMethod httpMethod) {
         //given
-        String url = "http://localhost:" + port + "/api/wishlist";
+        String url = "http://localhost:" + port + "/api/wishes";
         HttpHeaders headers = new HttpHeaders();
         headers.setBearerAuth(token);
 
@@ -170,6 +172,26 @@ class WishListApiTest {
 
         RequestEntity<WishListRequest> request = new RequestEntity<>(
             wishListRequest, headers, httpMethod, URI.create(url));
+
+        //when
+        return restTemplate.exchange(request, Void.class);
+
+    }
+
+    private ResponseEntity<Void> removeTest(Long wishId, HttpMethod httpMethod) {
+        //given
+        URI uri = UriComponentsBuilder
+            .fromUriString("http://localhost:" + port)
+            .path("/api/wishes/{wishId}")
+            .encode()
+            .buildAndExpand(wishId)
+            .toUri();
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setBearerAuth(token);
+
+        RequestEntity<WishListRequest> request = new RequestEntity<>(
+            headers, httpMethod, uri);
 
         //when
         return restTemplate.exchange(request, Void.class);

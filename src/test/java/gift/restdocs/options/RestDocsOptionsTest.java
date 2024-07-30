@@ -18,8 +18,14 @@ import gift.model.Category;
 import gift.model.Options;
 import gift.model.Product;
 import gift.request.OptionsRequest;
+import gift.response.OptionResponse;
+import gift.response.ProductOptionsResponse;
+import gift.response.ProductResponse;
 import gift.restdocs.AbstractRestDocsTest;
 import gift.service.OptionsService;
+import gift.service.ProductService;
+import java.util.ArrayList;
+import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
@@ -45,8 +51,39 @@ public class RestDocsOptionsTest extends AbstractRestDocsTest {
     private JwtTokenProvider tokenProvider;
     @MockBean
     private OptionsService optionsService;
+    @MockBean
+    private ProductService productService;
 
     private String token = "{ACCESS_TOKEN}";
+
+    @Test
+    void getProductWithAllOptions() throws Exception {
+        //given
+        Product product = demoProduct(1L);
+        Options option = demoOptions(1L, product);
+        Options option2 = demoOptions(2L, product);
+        List<OptionResponse> options = new ArrayList<>();
+        options.add(new OptionResponse(option.getId(), option.getName(), option.getQuantity()));
+        options.add(new OptionResponse(option2.getId(), option2.getName(), option2.getQuantity()));
+
+        ProductResponse productResponse = ProductResponse.createProductResponse(product);
+        ProductOptionsResponse response = new ProductOptionsResponse(productResponse, options);
+        given(productService.getProduct(any(Long.class)))
+            .willReturn(product);
+        given(optionsService.getAllProductOptions(any(Product.class)))
+            .willReturn(response);
+
+        //when //then
+        mockMvc.perform(
+                RestDocumentationRequestBuilders.get("/api/products/{productId}/options",
+                        product.getId())
+                    .header("Authorization", "Bearer " + token))
+            .andExpect(status().isOk())
+            .andDo(document("rest-docs-options-test/get-product-with-all-options",
+                pathParameters(
+                    parameterWithName("productId").description("Product id")
+                )));
+    }
 
     @Test
     void addOptions() throws Exception {
@@ -62,14 +99,15 @@ public class RestDocsOptionsTest extends AbstractRestDocsTest {
 
         //when //then
         mockMvc.perform(
-                RestDocumentationRequestBuilders.post("/api/products/{id}/options", product.getId())
+                RestDocumentationRequestBuilders.post("/api/products/{productId}/options",
+                        product.getId())
                     .header("Authorization", "Bearer " + token)
                     .content(content)
                     .contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isCreated())
             .andDo(document("rest-docs-options-test/add-options",
                 pathParameters(
-                    parameterWithName("id").description("Product id")
+                    parameterWithName("productId").description("Product id")
                 )));
     }
 
@@ -87,19 +125,17 @@ public class RestDocsOptionsTest extends AbstractRestDocsTest {
 
         //when //then
         mockMvc.perform(
-                RestDocumentationRequestBuilders.put("/api/products/{id}/options?option_id=" + optionId,
-                        product.getId())
+                RestDocumentationRequestBuilders.put("/api/products/{productId}/options/{optionId}",
+                        product.getId(), options.getId())
                     .header("Authorization", "Bearer " + token)
                     .content(content)
                     .contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isNoContent())
             .andDo(document("rest-docs-options-test/update-options",
                 pathParameters(
-                    parameterWithName("id").description("Product id")),
-                queryParameters(
-                    parameterWithName("option_id").description("Option id")
-                )
-            ));
+                    parameterWithName("productId").description("Product id"),
+                    parameterWithName("optionId").description("Option id")
+                )));
     }
 
     @Test
@@ -111,14 +147,15 @@ public class RestDocsOptionsTest extends AbstractRestDocsTest {
 
         //when //then
         mockMvc.perform(
-                RestDocumentationRequestBuilders.delete("/api/products/{id}/options", product.getId())
-                    .param("option_id", String.valueOf(optionId))
+                RestDocumentationRequestBuilders.delete("/api/products/{productId}/options/{optionId}",
+                        product.getId(), optionId)
                     .header("Authorization", "Bearer " + token)
                     .contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isNoContent())
             .andDo(document("rest-docs-options-test/delete-options",
                 pathParameters(
-                    parameterWithName("id").description("Option id")
+                    parameterWithName("productId").description("Product id"),
+                    parameterWithName("optionId").description("Option id")
                 )));
     }
 

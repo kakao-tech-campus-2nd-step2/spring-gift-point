@@ -151,13 +151,13 @@ class ProductApiTest {
     @DisplayName("상품 변경 테스트")
     void updateProduct() {
         //given
-        String url = "http://localhost:" + port + "/api/products";
+        String url = "http://localhost:" + port + "/api/products/1";
         HttpHeaders headers = new HttpHeaders();
         headers.setBearerAuth(token);
 
         //기존 첫번째 상품을 변경한다.
         ProductUpdateRequest ProductUpdateRequest = new ProductUpdateRequest(
-            savedProducts.get(0).getId(), "product11", 1500, "https://b.com", "카테고리");
+             "product11", 1500, "https://b.com", "카테고리");
         RequestEntity<ProductUpdateRequest> request = new RequestEntity<>(
             ProductUpdateRequest, headers, HttpMethod.PUT, URI.create(url));
 
@@ -173,10 +173,9 @@ class ProductApiTest {
         //given
         URI uri = UriComponentsBuilder
             .fromUriString("http://localhost:" + port)
-            .path("/api/products")
-            .queryParam("id", savedProducts.get(0).getId())
+            .path("/api/products/{productId}")
             .encode()
-            .build()
+            .buildAndExpand(savedProducts.get(0).getId())
             .toUri();
 
         HttpHeaders headers = new HttpHeaders();
