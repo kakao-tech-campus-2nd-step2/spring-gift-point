@@ -12,9 +12,11 @@ public interface WishlistRepository {
 
     Long updateWishlist(Wishlist wishList);
 
-    void deleteWishlist(Long memberId, Long productId);
+    void deleteWishlist(Long wishId);
 
     void deleteAll();
 
     Page<Wishlist> getWishListByPage(Long memberId, Pageable pageRequest);
+
+    void deleteWishlistByMemberIdAndProductId(Long memberId, Long productId);
 }

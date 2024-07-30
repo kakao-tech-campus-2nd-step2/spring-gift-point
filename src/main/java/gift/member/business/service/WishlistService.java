@@ -47,8 +47,11 @@ public class WishlistService {
     }
 
     @Transactional
-    public void deleteWishList(Long memberId, Long productId) {
-        wishlistRepository.deleteWishlist(memberId, productId);
+    public void deleteWishList(Long wishId) {
+        wishlistRepository.deleteWishlist(wishId);
     }
 
+    public void deleteWishListByMemberAndProduct(Long memberId, Long productId) {
+        wishlistRepository.deleteWishlistByMemberIdAndProductId(memberId, productId);
+    }
 }

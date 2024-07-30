@@ -8,8 +8,7 @@ public record ResponseWishListDto(
     Long productId,
     String productName,
     Integer price,
-    String imageUrl,
-    Integer count
+    String imageUrl
 ) {
 
     public static ResponseWishListDto from(WishListDto wishListDto) {
@@ -18,8 +17,7 @@ public record ResponseWishListDto(
             wishListDto.productId(),
             wishListDto.productName(),
             wishListDto.price(),
-            wishListDto.imageUrl(),
-            wishListDto.count()
+            wishListDto.imageUrl()
         );
     }
 

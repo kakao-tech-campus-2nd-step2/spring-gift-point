@@ -40,7 +40,7 @@ public class OrderService {
         productService.subtractOption(optionInSubtract, orderInCreate.productId());
 
         try {
-            wishlistService.deleteWishList(orderInCreate.memberId(), orderInCreate.productId());
+            wishlistService.deleteWishListByMemberAndProduct(orderInCreate.memberId(), orderInCreate.productId());
         } catch (NotFoundException ignored) {
         }
 

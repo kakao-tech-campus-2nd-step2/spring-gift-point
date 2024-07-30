@@ -41,8 +41,6 @@ public interface MemberApiDocs {
         RequestWishlistDto requestWishlistDto);
 
     @Operation(summary = "위시리스트 삭제")
-    ResponseEntity<Void> deleteWishList(
-        @Parameter(hidden = true) Long memberId,
-        Long productId);
+    ResponseEntity<Void> deleteWishList(Long wishId);
 
 }

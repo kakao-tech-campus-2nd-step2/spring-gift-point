@@ -61,10 +61,10 @@ public class MemberController implements MemberApiDocs {
         return ResponseEntity.ok(accessToken);
     }
 
-    @GetMapping("/wishlists")
+    @GetMapping("/wishes")
     public ResponseEntity<ResponsePagingWishlistDto> getWishlistsByPage(
         @MemberId Long memberId,
-        @PageableDefault(size = 20, sort = "modifiedDate", direction = Sort.Direction.DESC) Pageable pageable,
+        @PageableDefault(size = 20, sort = "createdDate", direction = Sort.Direction.DESC) Pageable pageable,
         @RequestParam(name = "size", required = false) Integer size) {
         if (size != null) {
             if (size < 1 || size > 100) {
@@ -77,14 +77,14 @@ public class MemberController implements MemberApiDocs {
         return ResponseEntity.ok(responseWishlistPagingDto);
     }
 
-    @PostMapping("/wishlists/products/{productId}")
+    @PostMapping("/wishes/products/{productId}")
     public ResponseEntity<Long> addWishList(@MemberId Long memberId,
         @PathVariable("productId") Long productId) {
         var wishListId = wishlistService.addWishList(memberId, productId);
         return ResponseEntity.status(HttpStatus.CREATED).body(wishListId);
     }
 
-    @PutMapping("/wishlists/products/{productId}")
+    @PutMapping("/wishes/products/{productId}")
     public ResponseEntity<Long> updateWishList(@MemberId Long memberId,
         @PathVariable("productId") Long productId,
         @RequestBody @Valid RequestWishlistDto requestWishlistDto) {
@@ -93,10 +93,9 @@ public class MemberController implements MemberApiDocs {
         return ResponseEntity.ok(wishListId);
     }
 
-    @DeleteMapping("/wishlists/products/{productId}")
-    public ResponseEntity<Void> deleteWishList(@MemberId Long memberId,
-        @PathVariable("productId") Long productId) {
-        wishlistService.deleteWishList(memberId, productId);
+    @DeleteMapping("/wishes/{wishId}")
+    public ResponseEntity<Void> deleteWishList(@PathVariable("wishId") Long wishId) {
+        wishlistService.deleteWishList(wishId);
         return ResponseEntity.ok().build();
     }
 

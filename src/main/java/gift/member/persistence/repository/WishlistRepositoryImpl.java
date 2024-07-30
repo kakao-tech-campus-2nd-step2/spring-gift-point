@@ -38,7 +38,12 @@ public class WishlistRepositoryImpl implements WishlistRepository {
     }
 
     @Override
-    public void deleteWishlist(Long memberId, Long productId) {
+    public void deleteWishlist(Long wishId) {
+        wishlistJpaRepository.deleteById(wishId);
+    }
+
+    @Override
+    public void deleteWishlistByMemberIdAndProductId(Long memberId, Long productId) {
         try {
             wishlistJpaRepository.deleteByMemberIdAndProductId(memberId, productId);
         } catch (EmptyResultDataAccessException e) {
