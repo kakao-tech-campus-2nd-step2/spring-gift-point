@@ -14,7 +14,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
 
-import java.net.URI;
 import java.util.UUID;
 import java.util.logging.Logger;
 
@@ -74,10 +73,8 @@ public class KakaoService {
 
         String accessToken = user.getKakaoAccessToken();
 
-        String templateObject = "{ \"object_type\": \"text\", \"text\": \"" + message + "\", \"link\": { \"web_url\": \"http://localhost:8080\", \"mobile_web_url\": \"http://localhost:8080\" }}";
-
         try {
-            kakaoTokenProvider.sendMessage(accessToken, templateObject);
+            kakaoTokenProvider.sendMessage(accessToken, message);
         } catch (RuntimeException e) {
             if (e.getMessage().contains("this access token does not exist")) {
                 throw new RuntimeException("액세스 토큰이 유효하지 않습니다. 다시 로그인해 주세요.");
