@@ -39,7 +39,7 @@ public class CategoryService {
     public List<CategoryListDTO> getAllCategories() {
         List<Category> categoryList = categoryRepository.findAll();
         return categoryList.stream()
-                .map(category -> new CategoryListDTO(category.getId(), category.getName()))
+                .map(category -> new CategoryListDTO(category.getId(), category.getName(), category.getColor(), category.getImageUrl(), category.getDescription()))
                 .toList();
     }
     // 상품 전부 조회

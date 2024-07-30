@@ -26,7 +26,7 @@ public class CategoryController {
     @Operation(summary = "카테고리 생성", description = "새 카테고리를 등록한다.")
     @PostMapping
     public ResponseEntity<?> createCategory(@RequestBody CategoryRequest categoryRequest) {
-        Category category = new Category(categoryRequest.getName());
+        Category category = new Category(categoryRequest.getName(), categoryRequest.getColor(), categoryRequest.getImageUrl(), categoryRequest.getDescription());
         categoryService.createCategory(category);
 
         return ResponseEntity.ok(new CommonResponse<>(null, "카테고리 생성 성공", true));
@@ -36,7 +36,7 @@ public class CategoryController {
     @Operation(summary = "카테고리 수정", description = "기존 카테고리를 수정한다.")
     @PutMapping("/{categoryId}")
     public ResponseEntity<?> updateCategory(@PathVariable Long categoryId, @RequestBody CategoryRequest categoryRequest) {
-        Category category = new Category(categoryRequest.getName());
+        Category category = new Category(categoryRequest.getName(), categoryRequest.getColor(), categoryRequest.getImageUrl(), categoryRequest.getDescription());
         categoryService.updateCategory(categoryId, category);
 
         return ResponseEntity.ok(new CommonResponse<>(null, "카테고리 수정 성공", true));
