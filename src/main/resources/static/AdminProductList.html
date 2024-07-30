@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Product Management</title>
+  <link rel="stylesheet" href="AdminProduct.css">
+</head>
+<body>
+<h1>Product Management</h1>
+<div>
+  <h2>신규 데이터 입력</h2>
+  <input type="text" id="new-name" placeholder="Name">
+  <input type="text" id="new-price" placeholder="Price">
+  <input type="text" id="new-imageUrl" placeholder="ImageUrl">
+  <button id="add-button">Add</button>
+</div>
+<hr>
+<div id="table-container"></div>
+
+<!-- 모달 팝업 -->
+<div id="myModal" class="modal">
+  <div class="modal-content">
+    <span id="modal-close" class="close">&times;</span>
+    <h2>Update Product</h2>
+    <input type="hidden" id="modal-id">
+    <label for="modal-name">Name:</label>
+    <input type="text" id="modal-name" placeholder="Name">
+    <br>
+    <label for="modal-price">Price:</label>
+    <input type="text" id="modal-price" placeholder="Price">
+    <br>
+    <label for="modal-imageUrl">imageUrl:</label>
+    <input type="text" id="modal-imageUrl" placeholder="url">
+    <button id="modal-submit">Update</button>
+  </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="AdminProductList.js"></script>
+</body>
+</html>
