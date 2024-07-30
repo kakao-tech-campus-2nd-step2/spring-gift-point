@@ -36,11 +36,7 @@ public class WishListService {
         return wishListRepository.findByUserId(userId);
     }
 
-    public Page<WishList> getProductsInWishList(Long userId, int page, int size, String sortBy, String direction) {
-        Sort sort = direction.equalsIgnoreCase(Sort.Direction.ASC.name()) ? Sort.by(sortBy).ascending()
-                : Sort.by(sortBy).descending();
-        Pageable pageable = PageRequest.of(page, size, sort);
-
+    public Page<WishList> getProductsInWishList(Long userId, Pageable pageable) {
         if (wishListRepository.findByUserId(userId, pageable).isEmpty()) {
             throw new ProductException(ErrorCode.WISHLIST_NOT_FOUND);
         }
