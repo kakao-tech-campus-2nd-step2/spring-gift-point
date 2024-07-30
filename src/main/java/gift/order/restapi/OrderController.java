@@ -7,6 +7,7 @@ import gift.core.domain.order.Order;
 import gift.core.domain.order.OrderService;
 import gift.order.restapi.dto.OrderRequest;
 import gift.order.restapi.dto.OrderResponse;
+import gift.order.restapi.dto.PagedOrderResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
@@ -15,6 +16,9 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -63,5 +67,27 @@ public class OrderController {
     ) {
         Order order = orderService.orderProduct(request.toOrder(userId), gatewayAccessToken);
         return OrderResponse.of(order);
+    }
+
+    @GetMapping
+    @Operation(
+            summary = "주문 목록 조회",
+            description = "주문 목록을 조회합니다.",
+            parameters = {
+                    @Parameter(name = "page", description = "페이지 번호 (기본 값 : 0)"),
+                    @Parameter(name = "size", description = "페이지 크기 (기본 값 : 10)")
+            }
+    )
+    @ApiResponses(
+            value = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "주문 목록을 조회합니다.",
+                            content = @Content(mediaType = "application/json", schema = @Schema(contentSchema = PagedOrderResponse.class))
+                    )
+            }
+    )
+    public PagedOrderResponse getOrders(@PageableDefault Pageable pageable) {
+        return PagedOrderResponse.from(orderService.findAll(pageable));
     }
 }
