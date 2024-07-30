@@ -19,12 +19,12 @@ function loadWishlist(page) {
             wishes.content.forEach(wish => {
                 const row = document.createElement('tr');
                 row.innerHTML = `
-                <td>${wish.id}</td>
-                <td>${wish.name}</td>
-                <td>${wish.price}</td>
-                <td>${wish.imageUrl}</td>
+                <td>${wish.productId}</td>
+                <td>${wish.productName}</td>
+                <td>${wish.productPrice}</td>
+                <td>${wish.productImageUrl}</td>
                 <td>
-                    <button class="btn btn-danger" onclick="deleteWish(${wish.id})">삭제</button>
+                    <button class="btn btn-danger" onclick="deleteWish(${wish.wishId})">삭제</button>
                 </td>
             `;
                 wishlistTableBody.appendChild(row);
@@ -109,13 +109,12 @@ function createWish() {
 
 function deleteWish(id) {
     const token = getAuthToken();
-    fetch(`/api/wishes`, {
+    fetch(`/api/wishes/${id}`, {
         method: "DELETE",
         headers: {
             'Authorization': `Bearer ${token}`,
             'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({productId: id})
+        }
     }).then(response => {
         if (response.status == 204) {
             alert("위시리스트에서 삭제되었습니다.");
@@ -131,3 +130,4 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 window.createWish = createWish;
+window.deleteWish = deleteWish;
