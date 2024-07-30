@@ -2,14 +2,11 @@ package gift.entity;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 
-import gift.dto.product.ModifyProductDTO;
 import gift.dto.product.SaveProductDTO;
-import gift.dto.product.ShowProductDTO;
+import gift.dto.product.ResponseProductDTO;
 import gift.exception.exception.BadRequestException;
-import gift.exception.exception.UnAuthException;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 
@@ -99,6 +96,7 @@ public class Product {
 
     public void addOptions(Option option) {
         options.add(option);
+        option.setProduct(this);
     }
 
     public void deleteOption(Option option) {
@@ -110,13 +108,14 @@ public class Product {
         this.category = category;
     }
 
-    public void modifyProduct(ModifyProductDTO modifyProductDTO) {
+    public Product modifyProduct(SaveProductDTO modifyProductDTO) {
         this.name = modifyProductDTO.name();
         this.price = modifyProductDTO.price();
         this.imageUrl = modifyProductDTO.imageUrl();
+        return this;
     }
 
-    public ShowProductDTO toDTO() {
-        return new ShowProductDTO(id, name, price, imageUrl, getCategoryName());
+    public ResponseProductDTO toResponseDTO() {
+        return new ResponseProductDTO(id, name, price, imageUrl);
     }
 }

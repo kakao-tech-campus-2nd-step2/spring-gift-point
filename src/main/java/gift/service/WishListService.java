@@ -1,9 +1,9 @@
 package gift.service;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-
 import gift.Util.JWTUtil;
-import gift.dto.product.ShowProductDTO;
+import gift.dto.wish.WishPageDTO;
+import gift.dto.wish.ResponseWishDTO;
+import gift.dto.wish.SaveWishlistDTO;
 import gift.entity.Product;
 import gift.entity.User;
 
@@ -16,12 +16,11 @@ import gift.repository.ProductRepository;
 import gift.repository.UserRepository;
 import gift.repository.WishListRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
+import java.util.List;
 
 
 @Service
@@ -32,15 +31,15 @@ public class WishListService {
     private final JWTUtil jwtUtil;
     private final UserRepository userRepository;
 
-    public void saveWishList(String token, int productId) {
+    public ResponseWishDTO saveWishList(String token, SaveWishlistDTO saveWishlistDTO) {
         User user = getUserFromToken(token);
-        Product product = productRepository.findById(productId).orElseThrow(() -> new NotFoundException("해당 물건이없습니다."));
+        Product product = productRepository.findById(saveWishlistDTO.productId()).orElseThrow(() -> new NotFoundException("해당 물건이없습니다."));
         wishListRepository.findByUserAndProduct(user, product).ifPresent(c -> {
             throw new BadRequestException("이미 추가된 물품입니다.");
         });
 
         WishList wishList = new WishList(user, product);
-        wishListRepository.save(wishList);
+        return wishListRepository.save(wishList).toResponseDTO();
     }
 
     private User getUserFromToken(String token) {
@@ -50,19 +49,34 @@ public class WishListService {
         return userRepository.findById(tokenUserId).orElseThrow(() -> new UnAuthException("인증이 잘못되었습니다"));
     }
 
-    public Page<ShowProductDTO> getWishList(String token, Pageable pageable) {
+    public WishPageDTO getWishList(String token, Pageable pageable) {
         User user = getUserFromToken(token);
-        return wishListRepository.findByUserId(user.getId(), pageable);
+        Page<WishList> wishListPage =  wishListRepository.findAllByUserId(user.getId(), pageable);
+
+        List<ResponseWishDTO> responseWishDTOs = wishListPage.getContent().stream()
+                .map(wishList -> new ResponseWishDTO(
+                        wishList.getId(),
+                        wishList.getProduct().toResponseDTO()
+                ))
+                .toList();
+
+        return new WishPageDTO(
+                responseWishDTOs,
+                wishListPage.getNumber(),
+                (int) wishListPage.getTotalElements(),
+                wishListPage.getSize(),
+                wishListPage.isLast()
+        );
     }
 
-    public void deleteWishList(String token, int productId) {
+    public ResponseWishDTO deleteWishList(String token, int wishId) {
         User user = getUserFromToken(token);
-        Product product = productRepository.findById(productId).orElseThrow(() -> new NotFoundException("해당 물건이없습니다."));
-        WishList wishlist = wishListRepository.findByUserAndProduct(user, product).orElseThrow(() -> new BadRequestException("이미 추가된 물품입니다."));
+        WishList wishlist = wishListRepository.findById(wishId).orElseThrow(() -> new NotFoundException("존재하지 않는 위시리스트."));
+        if(wishlist.getUser().getId() != user.getId())throw new UnAuthException("해당 위시리스트를 삭제할 권한이 없습니다.");
 
-        product.deleteWishlist(wishlist);
         user.deleteWishlist(wishlist);
         wishListRepository.deleteById(wishlist.getId());
+        return wishlist.toResponseDTO();
     }
 
 }

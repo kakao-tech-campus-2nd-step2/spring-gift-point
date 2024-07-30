@@ -55,18 +55,19 @@ public class UserService {
     ObjectMapper objectMapper = new ObjectMapper();
     RestTemplate restTemplate = new RestTemplate();
 
-    public void signUp(SignUpDTO signUpDTO) {
+    public UserResponseDTO signUp(SignUpDTO signUpDTO) {
         User newUser = new User(signUpDTO);
         userRepository.findByEmail(newUser.getEmail()).ifPresent(c -> {
             throw new BadRequestException("이미 존재하는 계정");
         });
-        userRepository.save(newUser);
+        newUser = userRepository.save(newUser);
+        return new UserResponseDTO(newUser.getEmail(), jwtUtil.generateToken(newUser, null));
     }
 
-    public Token signIn(LoginDTO loginDTO) {
+    public UserResponseDTO signIn(LoginDTO loginDTO) {
         User user = userRepository.findByEmail(loginDTO.email()).orElseThrow(() -> new NotFoundException("존재하지 않는 계정"));
         if (!user.getPassword().equals(loginDTO.password())) throw new BadRequestException("비밀번호가 일치하지 않습니다.");
-        return new Token(jwtUtil.generateToken(user, null));
+        return new UserResponseDTO(user.getEmail(), jwtUtil.generateToken(user, null));
     }
 
     private String getKakaoToken() {
@@ -124,12 +125,12 @@ public class UserService {
         return headers;
     }
 
-    public Token kakaoLogin() {
+    public UserResponseDTO kakaoLogin() {
         String kakaoToken = getKakaoToken();
         Long kakaoUserId = getKakaoUserId(kakaoToken);
         User user = findUserByKakaoUserId(kakaoUserId);
         String token = jwtUtil.generateToken(user, kakaoToken);
-        return new Token(token);
+        return new UserResponseDTO(user.getEmail(), token);
     }
 
     private User findUserByKakaoUserId(Long kakaoUserId) {

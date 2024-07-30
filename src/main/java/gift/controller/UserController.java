@@ -1,16 +1,12 @@
 package gift.controller;
 
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 import gift.dto.user.LoginDTO;
 import gift.dto.user.SignUpDTO;
-import gift.dto.user.Token;
 
+import gift.dto.user.UserResponseDTO;
 import gift.service.UserService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -19,7 +15,6 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class UserController {
     private final UserService userService;
-    private final ObjectMapper objectMapper;
 
     @GetMapping("/signup")
     public String signUp() {
@@ -27,11 +22,10 @@ public class UserController {
     }
 
     @ResponseStatus(HttpStatus.CREATED)
-    @PostMapping("/api/signup")
+    @PostMapping("/api/members/register")
     @ResponseBody
-    public String SignUp(@RequestBody SignUpDTO signUpDTO) {
-        userService.signUp(signUpDTO);
-        return "회원가입 성공";
+    public UserResponseDTO SignUp(@RequestBody SignUpDTO signUpDTO) {
+        return userService.signUp(signUpDTO);
     }
 
     @GetMapping("/signin")
@@ -40,15 +34,15 @@ public class UserController {
     }
 
     @ResponseStatus(HttpStatus.CREATED)
-    @PostMapping("/api/signin")
+    @PostMapping("/api/members/login")
     @ResponseBody
-    public Token signIn(@RequestBody LoginDTO loginDTO) {
+    public UserResponseDTO signIn(@RequestBody LoginDTO loginDTO) {
         return userService.signIn(loginDTO);
     }
 
     @PostMapping("/api/kakao/login")
     @ResponseBody
-    public Token kakakLogin() {
+    public UserResponseDTO kakakLogin() {
         return userService.kakaoLogin();
     }
 
