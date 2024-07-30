@@ -11,7 +11,7 @@ import org.springframework.web.servlet.view.RedirectView;
 
 @Tag(name = "OAuth", description = "OAuth View")
 @Controller
-@RequestMapping("/api/v1/oauth")
+@RequestMapping("/api/oauth")
 public class OAuthController {
 
     private final KakaoProperties properties;

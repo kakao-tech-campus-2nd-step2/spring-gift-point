@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 
 @Tag(name = "OAuth", description = "OAuth Rest API")
 @RestController
-@RequestMapping("/api/v1/oauth")
+@RequestMapping("/api/oauth")
 public class OAuthRestController {
 
     private final OAuthService oAuthService;
