@@ -36,7 +36,7 @@ public class WishService {
         );
         UserInfo byEmail = userInfoRepository.findByEmail(email).orElseThrow(
             () -> new UserNotFoundException("User Not Found"));
-        Wish wish = new Wish(product, byEmail, wishRequest.getQuantity());
+        Wish wish = new Wish(product, byEmail, wishRequest.getCount());
 
         product.addWish(wish);
         byEmail.addWish(wish);
@@ -52,8 +52,7 @@ public class WishService {
             () -> new WishListNotFoundException("Wish Not Found")
         );
 
-
-        wishRepository.deleteByProductIdAndUserInfoId(productId, userInfo.getId());
+        wishRepository.deleteByProductIdAndUserInfoId(wish.getProduct().getId(), wish.getUserInfo().getId());
         return true;
 
     }
@@ -77,7 +76,7 @@ public class WishService {
             () -> new WishListNotFoundException("Wish Not Found")
         );
 
-        if (wishRequest.getQuantity() == 0) {
+        if (wishRequest.getCount() == 0) {
             if (existingWish != null) {
                 product.removeWish(existingWish);
                 userInfo.removeWish(existingWish);
@@ -88,7 +87,7 @@ public class WishService {
         if (existingWish == null) {
             throw new ProductNotFoundException("Product Not Found");
         }
-        existingWish.setQuantity(wishRequest.getQuantity());
+        existingWish.setCount(wishRequest.getCount());
         return true;
 
     }

@@ -7,7 +7,6 @@ import gift.domain.Category;
 import gift.domain.Product;
 import gift.domain.UserInfo;
 import gift.domain.Wish;
-import gift.utils.error.WishListNotFoundException;
 import java.util.Arrays;
 import java.util.Optional;
 import org.junit.jupiter.api.DisplayName;
@@ -53,7 +52,7 @@ public class WishRepositoryTest {
 
         assertThat(byUserId).isNotEmpty();
         assertThat(byUserId.getContent().get(0))
-            .extracting(Wish::getUserInfo, Wish::getProduct, Wish::getQuantity)
+            .extracting(Wish::getUserInfo, Wish::getProduct, Wish::getCount)
             .containsExactly(userInfo, product, 1L);
 
         assertThat(byUserId.getSize()).isEqualTo(pageSize);
@@ -73,12 +72,12 @@ public class WishRepositoryTest {
         Wish wish = new Wish(product, userInfo, 1L);
         Wish savedWish = wishRepository.save(wish);
 
-        savedWish.setQuantity(5L);
+        savedWish.setCount(5L);
         wishRepository.save(savedWish);
 
         Optional<Wish> updatedWishOptional = wishRepository.findByUserInfoIdAndProductId(userInfo.getId(), product.getId());
         assertThat(updatedWishOptional).isPresent();
-        assertThat(updatedWishOptional.get().getQuantity()).isEqualTo(5L);
+        assertThat(updatedWishOptional.get().getCount()).isEqualTo(5L);
     }
 
     @Test
@@ -114,11 +113,11 @@ public class WishRepositoryTest {
         Page<Wish> wishesForUser3 = wishRepository.findByUserInfoId(userInfo3.getId(), pageable);
 
         assertThat(wishesForUser1.getContent()).hasSize(1);
-        assertThat(wishesForUser1.getContent().get(0).getQuantity()).isEqualTo(1L);
+        assertThat(wishesForUser1.getContent().get(0).getCount()).isEqualTo(1L);
         assertThat(wishesForUser2.getContent()).hasSize(1);
-        assertThat(wishesForUser2.getContent().get(0).getQuantity()).isEqualTo(2L);
+        assertThat(wishesForUser2.getContent().get(0).getCount()).isEqualTo(2L);
         assertThat(wishesForUser3.getContent()).hasSize(1);
-        assertThat(wishesForUser3.getContent().get(0).getQuantity()).isEqualTo(3L);
+        assertThat(wishesForUser3.getContent().get(0).getCount()).isEqualTo(3L);
 
         assertThat(wishRepository.findAll()).hasSize(3);
     }
@@ -157,7 +156,7 @@ public class WishRepositoryTest {
 
         assertThat(foundWish).isPresent();
         assertThat(foundWish.get())
-            .extracting(Wish::getProduct, Wish::getUserInfo, Wish::getQuantity)
+            .extracting(Wish::getProduct, Wish::getUserInfo, Wish::getCount)
             .containsExactly(product, userInfo, 1L);
     }
 }

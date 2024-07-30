@@ -9,11 +9,11 @@ public class WishRequest {
     private Long productId;
     @Min(1)
     @NotNull
-    private Long quantity;
+    private int count;
 
-    public WishRequest(Long productId, Long quantity) {
+    public WishRequest(Long productId, int count) {
         this.productId = productId;
-        this.quantity = quantity;
+        this.count = count;
     }
 
     public Long getProductId() {
@@ -24,11 +24,11 @@ public class WishRequest {
         this.productId = productId;
     }
 
-    public Long getQuantity() {
-        return quantity;
+    public int getCount() {
+        return count;
     }
 
-    public void setQuantity(Long quantity) {
-        this.quantity = quantity;
+    public void setCount(int count) {
+        this.count = count;
     }
 }
