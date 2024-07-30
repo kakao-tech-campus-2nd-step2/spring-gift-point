@@ -80,6 +80,11 @@ public class ProductService {
         return productPage.map(ProductResponseDto::convertToDto);
     }
 
+    public Page<ProductResponseDto> getPagedProductsByCategory(Pageable pageable, Long categoryId) {
+        Page<Product> productPage = productRepository.findByCategoryId(pageable, categoryId);
+        return productPage.map(ProductResponseDto::convertToDto);
+    }
+
     @Transactional(readOnly=true)
     public List<OptionDto> getOptionsByProductId(Long productId) {
         Product product = productRepository.findById(productId)
