@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.io.IOException;
 
 @RestController
-@RequestMapping("/kakao/login")
+@RequestMapping("/api/auth/kakao")
 public class KakaoController {
 
     private final KakaoProperties kakaoProperties;
@@ -44,7 +44,7 @@ public class KakaoController {
 
     //1. 전달받은 코드로 엑세스 토큰 요청하기
     @GetMapping("/callback")
-    public ResponseEntity<?> LoginKakaoUser(@RequestParam(value = "code", required = false) String code,
+    public ResponseEntity<?> loginKakaoUser(@RequestParam(value = "code", required = false) String code,
                                             @RequestParam(value = "error", required = false) String error,
                                             @RequestParam(value = "error_description", required = false) String errorDescription) {
         if (error != null || errorDescription != null) {
