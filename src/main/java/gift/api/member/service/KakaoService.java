@@ -27,10 +27,10 @@ public class KakaoService {
     private final KakaoProperties properties;
     private final RestClient restClient;
 
-    public KakaoService(MemberRepository memberRepository, KakaoProperties properties) {
+    public KakaoService(MemberRepository memberRepository, KakaoProperties properties, RestClient restClient) {
         this.memberRepository = memberRepository;
         this.properties = properties;
-        restClient = RestClient.create();
+        this.restClient = restClient;
     }
 
     public ResponseEntity<TokenResponse> obtainToken(String code) {
