@@ -22,14 +22,16 @@ public class KakaoMessageService {
         this.restTemplate = restTemplate;
     }
 
-    public void sendOrderMessage(String message, String productName, Integer quantity,
+    public void sendOrderMessage(String message, String imageUrl, String productName,
+        Integer quantity,
         Integer totalPrice) {
         String url = "https://kapi.kakao.com/v2/api/talk/memo/default/send";
         HttpHeaders headers = new HttpHeaders();
         headers.add(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_FORM_URLENCODED_VALUE);
         headers.setBearerAuth(kakaoProperties.getAccessToken());
 
-        String templateObject = createTemplateObject(message, productName, quantity, totalPrice);
+        String templateObject = createTemplateObject(message, imageUrl, productName, quantity,
+            totalPrice);
         String encodedTemplateObject = URLEncoder.encode(templateObject, StandardCharsets.UTF_8);
 
         RequestEntity<String> request = new RequestEntity<>(
@@ -39,18 +41,22 @@ public class KakaoMessageService {
         restTemplate.exchange(request, String.class);
     }
 
-    private String createTemplateObject(String message, String productName, Integer quantity,
+    private String createTemplateObject(String message, String imageUrl, String productName,
+        Integer quantity,
         Integer totalPrice) {
         return """
                 {
                     "object_type": "feed",
                     "content": {
-                        "title": "주문해 주셔서 감사합니다.",
+                        "title": "카카오 선물하기",
                         "description": "%s",
-                        "image_url": "https://avatars.githubusercontent.com/u/161289673?v=4",
+                        "image_url": "%s",
                         "image_width": 640,
                         "image_height": 640,
-                        "link": {}
+                        "link": {
+                            "web_url": "https://gift.kakao.com/home",
+                            "mobile_web_url": "https://gift.kakao.com/home"
+                        }
                     },
                     "item_content": {
                         "items": [
@@ -58,8 +64,17 @@ public class KakaoMessageService {
                             {"item": "수량", "item_op": "%d개"},
                             {"item": "가격", "item_op": "%d원"}
                         ]
-                    }
+                    },
+                    "buttons": [
+                        {
+                            "title": "자세히 보기",
+                            "link": {
+                                "web_url": "https://gift.kakao.com/home",
+                                "mobile_web_url": "https://gift.kakao.com/home"
+                            }
+                        }
+                    ]
                 }
-            """.formatted(message, productName, quantity, totalPrice);
+            """.formatted(message, imageUrl, productName, quantity, totalPrice);
     }
 }

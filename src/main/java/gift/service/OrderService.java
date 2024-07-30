@@ -50,7 +50,8 @@ public class OrderService {
         user.subtractWishNumber(request.getQuantity(), product);
 
         if (kakaoProperties.isKakaoLoginCompleted()) { //kakaologin이 수행되지 않으면 accessToken이 지정되지 않아 메시지를 보내지 않음
-            kakaoMessageService.sendOrderMessage(request.getMessage(), product.getName(),
+            kakaoMessageService.sendOrderMessage(request.getMessage(), product.getImageUrl(),
+                product.getName(),
                 request.getQuantity(), request.getTotalPrice(product));
         }
 
