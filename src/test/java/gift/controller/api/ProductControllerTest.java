@@ -146,11 +146,11 @@ class ProductControllerTest {
     @DisplayName("상품 수정")
     void updateProduct() throws Exception {
         // Given
-        UpdateProductRequest updateProductRequest = new UpdateProductRequest(1L, "changeProduct1", 110, "img", 1L);
+        UpdateProductRequest updateProductRequest = new UpdateProductRequest("changeProduct1", 110, "img", 1L);
 
         // When
-        mockMvc.perform(MockMvcRequestBuilders
-                        .put(URL)
+        mockMvc.perform(RestDocumentationRequestBuilders
+                        .put("/api/products/{productId}",1L)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(updateProductRequest)))
                 //Then
@@ -159,8 +159,11 @@ class ProductControllerTest {
                                 Preprocessors.preprocessRequest(Preprocessors.prettyPrint()),
                                 Preprocessors.preprocessResponse(Preprocessors.prettyPrint()),
 
+                                pathParameters(
+                                        parameterWithName("productId").description("수정 하고 싶은 상품 ID")
+                                ),
+
                                 requestFields(
-                                        fieldWithPath("id").type(JsonFieldType.NUMBER).description("상품의 ID"),
                                         fieldWithPath("name").type(JsonFieldType.STRING).description("상품의 이름"),
                                         fieldWithPath("price").type(JsonFieldType.NUMBER).description("상품의 가격"),
                                         fieldWithPath("imageUrl").type(JsonFieldType.STRING).description("상품 이미지의 URL"),
@@ -260,6 +263,38 @@ class ProductControllerTest {
                                 ),
                                 responseFields(
                                         fieldWithPath("optionId").description("추가된 옵션 ID").type(JsonFieldType.NUMBER)
+                                )
+                        )
+                );
+    }
+
+    @Test
+    void getProductResponse() throws Exception {
+        //Given
+        ProductResponse productResponse = new ProductResponse(1L, "백화점 상품권", 50000, "상품 이미지 주소", 1L, "상품권");
+
+        when(productService.getProductResponse(any())).thenReturn(productResponse);
+
+        //When
+        mockMvc.perform(RestDocumentationRequestBuilders
+                        .get("/api/products/{productId}", 1L))
+                //Then
+                .andExpectAll(
+                        status().isOk(),
+                        jsonPath("name").value("백화점 상품권")
+                )
+                .andDo(document("product-soloGet",
+                                Preprocessors.preprocessResponse(Preprocessors.prettyPrint()),
+                                pathParameters(
+                                        parameterWithName("productId").description("조회 하고 싶은 상품 ID")
+                                ),
+                                responseFields(
+                                        fieldWithPath("id").type(JsonFieldType.NUMBER).description("상품의 ID"),
+                                        fieldWithPath("name").type(JsonFieldType.STRING).description("상품의 이름"),
+                                        fieldWithPath("price").type(JsonFieldType.NUMBER).description("상품의 가격"),
+                                        fieldWithPath("imageUrl").type(JsonFieldType.STRING).description("상품의 이미지 주소"),
+                                        fieldWithPath("categoryId").type(JsonFieldType.NUMBER).description("상품이 속한 카테고리 ID"),
+                                        fieldWithPath("categoryName").type(JsonFieldType.STRING).description("상품이 속한 카테고리 이름")
                                 )
                         )
                 );
