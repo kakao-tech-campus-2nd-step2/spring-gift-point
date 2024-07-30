@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>옵션 수정 페이지</title>
+</head>
+<body>
+<a th:action="@{/admin/product/{productId}/option(productId=${productId})}"><- 상품 옵션 관리 페이지로 돌아가기</a>
+<h2>상품 옵션 추가</h2>
+<form th:action="@{/admin/product/{productId}/option/{optionId}(productId=${productId}, optionId=${option.id})}" th:object="${option}" method="post">
+    <input type="hidden" name="_method" value="put" />
+    <table>
+        <tr>
+            <td>옵션 명: </td>
+            <td>
+                <label>
+                    <input type="text" name="name" th:field="*{name}" required />
+                </label>
+            </td>
+            <td th:if="${#fields.hasErrors('name')}" th:errors="*{name}">Name Error Message</td>
+        </tr>
+        <tr>
+            <td>수량: </td>
+            <td>
+                <label>
+                    <input type="number" name="quantity" th:field="*{quantity}" required />
+                </label>
+            </td>
+            <td th:if="${#fields.hasErrors('quantity')}" th:errors="*{quantity}">Quantity Error Message</td>
+        </tr>
+        <tr>
+            <td><button type="submit">옵션 등록</button></td>
+        </tr>
+    </table>
+</form>
+</body>
+</html>

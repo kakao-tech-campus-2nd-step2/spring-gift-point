@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>상품 관리 페이지</title>
+</head>
+<body>
+<a href="/admin/category">[ 카테고리 관리 ]</a>
+<h1>상품 관리 페이지</h1>
+
+<a href="/admin/product/register">새 상품 추가</a>
+
+<h2>상품 조회</h2>
+<form th:action="@{/admin/product/search}" method="get">
+    <div>
+        <span>조회하고자 하는 상품의 이름을 입력하세요:</span>
+        <input type="text" id="keyword" name="keyword" required>
+        <button type="submit">조회</button>
+    </div>
+</form>
+
+<h2>전체 상품 목록</h2>
+<table id="productList">
+    <thead>
+    <tr>
+        <th>Name</th>
+        <th>Price</th>
+        <th>ImageURL</th>
+        <th>Option</th>
+        <th>Action</th>
+    </tr>
+    </thead>
+    <tbody th:each="product : ${productList}">
+    <tr>
+        <td>
+            <span th:text="${product.name}"></span>
+        </td>
+        <td>
+            <span th:text="${product.price}"></span>
+        </td>
+        <td>
+            <span th:text="${product.imageUrl}"></span>
+        </td>
+        <td>
+            <a th:href="@{/admin/product/{id}/option(id=${product.id})}">[ 관리 ]</a>
+        </td>
+        <td>
+            <form th:action="@{/admin/product/{id}(id=${product.id})}" method="get">
+                <button type="submit">수정</button>
+            </form>
+            <form th:action="@{/admin/product/{id}(id=${product.id})}" method="post">
+                <input type="hidden" name="_method" value="delete" />
+                <button type="submit">삭제</button>
+            </form>
+        </td>
+    </tr>
+    </tbody>
+</table>
+</body>
+</html>

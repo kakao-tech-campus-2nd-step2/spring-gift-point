@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>상품 목록</title>
+</head>
+<body>
+<h1>상품 목록</h1>
+<a href="/shop/products">[ 나의 위시 리스트 ]</a>
+<h2>상품 조회</h2>
+<form th:action="@{/wishlist}" method="get">
+    <div>
+        <span>조회하고자 하는 상품의 이름을 입력하세요:</span>
+        <input type="text" id="keyword" name="keyword" required>
+        <button type="submit">조회</button>
+    </div>
+</form>
+
+<h2>전체 상품 목록</h2>
+<table id="productList">
+    <thead>
+    <tr>
+        <th>Name</th>
+        <th>Price</th>
+        <th>ImageURL</th>
+        <th>Option</th>
+    </tr>
+    </thead>
+    <tbody th:each="product : ${productList}">
+    <tr>
+        <td>
+            <span th:text="${product.name}"></span>
+        </td>
+        <td>
+            <span th:text="${product.price}"></span>
+        </td>
+        <td>
+            <span th:text="${product.imageUrl}"></span>
+        </td>
+        <td>
+            <a th:href="@{/shop/products/{id}/option(id=${product.id})}">[ 옵션 확인 ]</a>
+        </td>
+    </tr>
+    </tbody>
+</table>
+</body>
+</html>

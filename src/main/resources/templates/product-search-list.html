@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>상품 조회 리스트</title>
+</head>
+<body>
+<a href="/admin/product/list"><- 상품 관리 페이지로 돌아가기</a>
+<h1>조회된 상품 목록</h1>
+<div th:if="${#lists.isEmpty(searchResults)}">
+    "<span th:text="${keyword}"></span>"이(가) 상품명에 포함된 상품이 없습니다.
+</div>
+<div th:if="${not #lists.isEmpty(searchResults)}">
+    "<span th:text="${keyword}"></span>"이(가) 상품명에 포함된 상품 목록입니다.
+    <table id="searchResults">
+        <thead>
+        <tr>
+            <th>Id</th>
+            <th>Name</th>
+            <th>Price</th>
+            <th>Image URL</th>
+            <th>Category Id</th>
+            <th>Action</th>
+        </tr>
+        </thead>
+        <tbody th:each="product : ${searchResults}">
+        <tr>
+            <td>
+                <span th:text="${product.id}"></span>
+            </td>
+            <td>
+                <span th:text="${product.name}"></span>
+            </td>
+            <td>
+                <span th:text="${product.price}"></span>
+            </td>
+            <td>
+                <span th:text="${product.imageUrl}"></span>
+            </td>
+            <td>
+                <span th:text="${product.categoryId}"></span>
+            </td>
+            <td>
+                <form th:action="@{/admin/product/update/{id}(id=${product.id})}" method="get">
+                    <button type="submit">수정</button>
+                </form>
+                <form th:action="@{/admin/product/{id}(id=${product.id})}" method="post">
+                    <input type="hidden" name="_method" value="delete" />
+                    <button type="submit">삭제</button>
+                </form>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+</body>
+</html>
