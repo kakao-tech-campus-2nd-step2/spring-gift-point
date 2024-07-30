@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" href="/css/style.css"/>
+    <title>상품 수정</title>
+</head>
+<body>
+<h1>상품 수정</h1>
+<form th:action="@{/admin/product/{id}(id=${product.id})}" th:object="${product}" method="post">
+    <input type="hidden" name="_method" value="PUT" />
+    <div>
+        <label for="name_edit">상품명:</label>
+        <input type="text" id="name_edit" name="name" th:field="*{name}" required/>
+    </div>
+    <div>
+        <label for="price_edit">가격:</label>
+        <input type="number" id="price_edit" name="price" th:field="*{price}" required/>
+    </div>
+    <div>
+        <label for="imageUrl_edit">이미지주소:</label>
+        <input type="text" id="imageUrl_edit" name="imageUrl" th:field="*{imageUrl}" required/>
+    </div>
+    <label for="categoryName">카테고리:</label>
+    <select id="categoryName" name="categoryId" required>
+        <option th:each="category : ${categories}" th:value="${category.id}"
+                th:text="${category.name}" th:selected="${category.id == product.category.id}"></option>
+    </select>
+
+    <h2>옵션</h2>
+    <button><a th:href="@{/admin/product/option/new(id=${product.id})}">Add New Option</a></button>
+    <table class="table">
+        <thead>
+        <tr>
+            <th th:width="50">옵션_id</th>
+            <th th:width="200">옵션명</th>
+            <th th:width="50">옵션수량</th>
+            <th th:width="50">수정</th>
+            <th th:width="50">삭제</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="option : ${product.options}">
+            <td th:text="${option.id}"/>
+            <td th:text="${option.name}"/>
+            <td th:text="${option.quantity}"/>
+            <td><button><a th:href="@{'/admin/product/option/' + ${product.id} + '?option-id=' + ${option.id}}">수정</a></button></td>
+            <td>
+                <button type="button" class="delete-option" th:data-option-id="${option.id}" th:data-product-id="${product.id}">삭제</button>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+    <p><input type="submit" value="저장"/></p>
+</form>
+<a th:href="@{/admin/product}">뒤로가기</a>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        document.querySelectorAll('.delete-option').forEach(function(button) {
+            button.addEventListener('click', function(event) {
+                const optionId = event.target.getAttribute('data-option-id');
+                const productId = event.target.getAttribute('data-product-id');
+
+                fetch(`/admin/product/option/${productId}/${optionId}`, {
+                    method: 'DELETE',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                })
+                    .then(response => {
+                        if (response.ok) {
+                            location.reload();
+                        } else {
+                            alert('삭제에 실패했습니다.');
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        alert('삭제 중 오류가 발생했습니다.');
+                    });
+
+            });
+        });
+    });
+</script>
+</body>
+</html>

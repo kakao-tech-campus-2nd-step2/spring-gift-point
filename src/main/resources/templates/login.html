@@ -1,0 +1,23 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org" lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>login</title>
+  <link rel="stylesheet" type="text/css" href="./css/style.css"/>
+</head>
+<body>
+<h1>로그인</h1>
+<form th:action="@{/login}" method="post">
+  <div>
+    <label for="email">이메일:</label>
+    <input type="email" id="email" name="email"/>
+  </div>
+  <div>
+    <label for="password">비밀번호:</label>
+    <input type="password" id="password" name="password"/>
+  </div>
+  <button type="submit">로그인</button>
+</form>
+<a class="kakao-login-button" th:href="@{/kakao}"></a>
+</body>
+</html>

@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>새 상품 등록</title>
+</head>
+<body>
+<h1>새 상품 등록</h1>
+<form th:action="@{/admin/product}" method="post">
+    <div>
+        <label for="name">상품명:</label>
+        <input type="text" id="name" name="name" required/>
+    </div>
+    <div>
+        <label for="price">가격:</label>
+        <input type="number" id="price" name="price" required/>
+    </div>
+    <div>
+        <label for="imageUrl">이미지주소:</label>
+        <input type="text" id="imageUrl" name="imageUrl" required/>
+    </div>
+    <div>
+        <label for="categoryName">카테고리:</label>
+        <select id="categoryName" name="categoryId" required>
+            <option value="" disabled selected>카테고리를 선택하세요</option>
+            <option th:each="category : ${categories}" th:value="${category.id}" th:text="${category.name}"></option>
+        </select>
+    </div>
+
+    <h3>옵션(필수)</h3>
+    <div>
+        <label for="optionName">옵션명:</label>
+        <input type="text" id="optionName" name="optionName" required/>
+    </div>
+    <div>
+        <label for="optionQuantity">옵션수량:</label>
+        <input type="number" id="optionQuantity" name="optionQuantity" required/>
+    </div>
+    <p><input type="submit" value="저장"/></p>
+</form>
+<a th:href="@{/admin/product}">뒤로가기</a>
+</body>
+</html>

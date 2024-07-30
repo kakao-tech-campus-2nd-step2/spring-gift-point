@@ -1,0 +1,33 @@
+button a {
+    text-decoration: none;
+    color: inherit;
+}
+.container {
+    width: 90%;
+    margin: 0 auto;
+}
+
+.table {
+    width: 90%;
+    border-collapse: collapse;
+}
+
+.table th, .table td {
+    padding: 8px;
+    text-align: left;
+    border: 1px solid black;
+}
+
+.active {
+    background-color: darkgray;
+}
+
+.kakao-login-button {
+    display: inline-block;
+    background: url('../images/kakao_login_medium_narrow.png') no-repeat;
+    width: 200px;
+    height: 50px;
+    border: none;
+    cursor: pointer;
+    text-decoration: none;
+}
