@@ -41,8 +41,8 @@ public class User {
     private Long kakaoId;
 
     private LocalDateTime createdAt;
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<WishList> wishLists = new ArrayList<>();
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private WishList wishList;
 
     public User() {
     }
@@ -92,35 +92,12 @@ public class User {
         this.password = password;
     }
 
-    public List<WishList> getWishLists() {
-        return wishLists;
+    public WishList getWishLists() {
+        return wishList;
     }
 
     public Role getRole() {
         return role;
     }
 
-    public void setWishLists(List<WishList> wishLists) {
-        this.wishLists = wishLists;
-    }
-
-    public void setRole(Role role) {
-        this.role = role;
-    }
-
-    public void setProfileImageUrl(String profileImageUrl) {
-        this.profileImageUrl = profileImageUrl;
-    }
-
-    public void setKakaoId(Long kakaoId) {
-        this.kakaoId = kakaoId;
-    }
-
-    public void setCreatedAt(LocalDateTime createdAt) {
-        this.createdAt = createdAt;
-    }
-
-    public void setLoginType(LoginType loginType) {
-        this.loginType = loginType;
-    }
 }
