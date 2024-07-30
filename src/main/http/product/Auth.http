@@ -1,0 +1,17 @@
+### normal login
+POST http://localhost:8080/api/auth/login
+Content-Type: application/json
+
+{
+  "email": "email",
+  "password": "password"
+}
+
+### kakao redirect request
+GET http://localhost:8080/api/auth/kakao
+
+### kakao login
+GET http://localhost:8080/api/auth/kakao/login?code=O4lKKC37A6o2Vl_Tka9TsFGiPY79suHypqYFKOo2XXgtov9KC7NviAAAAAQKKcjaAAABkPhrlM_7Ewsnpgvovw
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJtZW1iZXJfaWQiOjQsIm1lbWJlcl90eXBlIjoiVVNFUiIsImlhdCI6MTcyMjE1NDY0OCwiZXhwIjo0NjA3MDYwMjc1fQ.73V4uhSlt5GvDUB33krYBDSoy49lyddOb0PScc82IGJDiEl89KxI3LtIGcmdD1WS9WuRLS5t4L3AJPMY-I7tRQ
+Content-Type: application/json
+
