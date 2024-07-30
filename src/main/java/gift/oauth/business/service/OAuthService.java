@@ -5,6 +5,7 @@ import gift.member.business.dto.MemberIn;
 import gift.member.business.service.MemberService;
 import gift.member.persistence.repository.MemberRepository;
 import gift.oauth.business.client.OAuthApiClient;
+import gift.oauth.business.dto.AuthOut;
 import gift.oauth.business.dto.OAuthParam;
 import gift.global.domain.OAuthProvider;
 import java.util.List;
@@ -30,7 +31,7 @@ public class OAuthService {
     }
 
     @Transactional
-    public JwtToken loginOrRegister(OAuthParam param) {
+    public AuthOut.Init loginOrRegister(OAuthParam param) {
         OAuthApiClient client = clients.get(param.oAuthProvider());
         var oAuthToken = client.getOAuthToken(param);
         var email = client.getEmail(oAuthToken.accessToken(), param);
@@ -38,10 +39,12 @@ public class OAuthService {
             var memberInVendorLogin = new MemberIn.VendorLogin(
                 email, param.oAuthProvider(),
                 oAuthToken.accessToken(), oAuthToken.refreshToken());
-            return memberService.loginVendorMember(memberInVendorLogin);
+            var accessToken = memberService.loginVendorMember(memberInVendorLogin);
+            return new AuthOut.Init(email, accessToken);
         }
         var memberInVendorRegister = new MemberIn.VendorRegister(email, param.oAuthProvider(),
             oAuthToken.accessToken(), oAuthToken.refreshToken());
-        return memberService.registerVendorMember(memberInVendorRegister);
+        var accessToken = memberService.registerVendorMember(memberInVendorRegister);
+        return new AuthOut.Init(email, accessToken);
     }
 }

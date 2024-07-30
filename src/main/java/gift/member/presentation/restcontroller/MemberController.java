@@ -2,7 +2,7 @@ package gift.member.presentation.restcontroller;
 
 import gift.docs.member.MemberApiDocs;
 import gift.global.authentication.annotation.MemberId;
-import gift.member.business.dto.JwtToken;
+import gift.global.authentication.dto.AuthResponse;
 import gift.member.business.service.MemberService;
 import gift.member.business.service.WishlistService;
 import gift.member.presentation.dto.RequestMemberDto;
@@ -39,17 +39,19 @@ public class MemberController implements MemberApiDocs {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<JwtToken> registerMember(
+    public ResponseEntity<AuthResponse> registerMember(
         @RequestBody @Valid RequestMemberDto requestMemberDto) {
-        var jwtToken = memberService.registerMember(requestMemberDto.toMemberRegisterDto());
-        return ResponseEntity.status(HttpStatus.CREATED).body(jwtToken);
+        var accessToken = memberService.registerMember(requestMemberDto.toMemberRegisterDto());
+        var authResponse = new AuthResponse(requestMemberDto.email(), accessToken);
+        return ResponseEntity.ok(authResponse);
     }
 
     @PostMapping("/login")
-    public ResponseEntity<JwtToken> loginMember(
+    public ResponseEntity<AuthResponse> loginMember(
         @RequestBody @Valid RequestMemberDto requestMemberDto) {
-        var jwtToken = memberService.loginMember(requestMemberDto.toMemberLoginDto());
-        return ResponseEntity.ok(jwtToken);
+        var accessToken = memberService.loginMember(requestMemberDto.toMemberLoginDto());
+        var authResponse = new AuthResponse(requestMemberDto.email(), accessToken);
+        return ResponseEntity.ok(authResponse);
     }
 
     @PostMapping("/reissue")

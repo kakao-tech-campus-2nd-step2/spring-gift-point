@@ -1,6 +1,6 @@
 package gift.docs.member;
 
-import gift.member.business.dto.JwtToken;
+import gift.global.authentication.dto.AuthResponse;
 import gift.member.presentation.dto.RequestMemberDto;
 import gift.member.presentation.dto.RequestWishlistDto;
 import gift.member.presentation.dto.ResponsePagingWishlistDto;
@@ -14,11 +14,11 @@ import org.springframework.http.ResponseEntity;
 public interface MemberApiDocs {
 
     @Operation(summary = "회원 가입", security = {})
-    ResponseEntity<JwtToken> registerMember(
+    ResponseEntity<AuthResponse> registerMember(
         RequestMemberDto requestMemberDto);
 
     @Operation(summary = "로그인", security = {})
-    ResponseEntity<JwtToken> loginMember(RequestMemberDto requestMemberDto);
+    ResponseEntity<AuthResponse> loginMember(RequestMemberDto requestMemberDto);
 
     @Operation(summary = "토큰 재발급", security = {})
     ResponseEntity<String> reissueRefreshToken(String refreshToken);
