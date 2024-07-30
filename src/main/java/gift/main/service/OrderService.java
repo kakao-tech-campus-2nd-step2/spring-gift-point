@@ -3,7 +3,7 @@ package gift.main.service;
 import gift.main.Exception.CustomException;
 import gift.main.Exception.ErrorCode;
 import gift.main.dto.OrderRequest;
-import gift.main.dto.OrderResponce;
+import gift.main.dto.OrderResponse;
 import gift.main.dto.UserVo;
 import gift.main.entity.Option;
 import gift.main.entity.Order;
@@ -11,7 +11,6 @@ import gift.main.entity.Product;
 import gift.main.entity.User;
 import gift.main.repository.OptionRepository;
 import gift.main.repository.OrderRepository;
-import gift.main.repository.ProductRepository;
 import gift.main.repository.UserRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,14 +19,14 @@ import org.springframework.transaction.annotation.Transactional;
 public class OrderService {
 
     private final OrderRepository orderRepository;
-    private final ProductRepository productRepository;
     private final UserRepository userRepository;
     private final OptionRepository optionRepository;
 
 
-    public OrderService(OrderRepository orderRepository, ProductRepository productRepository, UserRepository userRepository, OptionRepository optionRepository) {
+    public OrderService(OrderRepository orderRepository,
+                        UserRepository userRepository,
+                        OptionRepository optionRepository) {
         this.orderRepository = orderRepository;
-        this.productRepository = productRepository;
         this.userRepository = userRepository;
         this.optionRepository = optionRepository;
     }
@@ -37,17 +36,20 @@ public class OrderService {
      * 여기저기서 리파지토리를 엄청 접근하는데, 모두 서비스에서 에러처리를 하니까 무거워보여서요
      */
     @Transactional
-    public OrderResponce orderProduct(OrderRequest orderRequest, UserVo sessionUserVo, long productId) {
+    public OrderResponse orderProduct(OrderRequest orderRequest, UserVo sessionUserVo) {
+        //구매자 찾기
         User buyer = userRepository.findByEmail(sessionUserVo.getEmail()).get();
-        Product purchasedProduct = productRepository.findById(productId)
-                .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_PRODUCT));
+
+        //옵션찾기
         Option option = optionRepository.findById(orderRequest.optionId())
                 .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_OPTION));
 
-        Order order = new Order(orderRequest, buyer, option, purchasedProduct);
+        //상품 찾기
+        Product purchasedProduct = option.getProduct();
 
+        Order order = new Order(orderRequest, buyer, option, purchasedProduct);
         Order saveOrder = orderRepository.save(order);
 
-        return new OrderResponce(saveOrder);
+        return new OrderResponse(saveOrder);
     }
 }
