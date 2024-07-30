@@ -69,13 +69,7 @@ public class OptionService {
     }
 
     @Transactional
-    public void removeOptionQuantity(long optionId, OptionChangeQuantityRequest optionQuantityRequest) {
-        Option targetOption = validOption(optionId);
-        targetOption.sellOption(optionQuantityRequest);
-    }
-
-    @Transactional
-    public void removeOptionQuantity(long optionId, int quantity) {
+    public void removeOptionQuantityFromOrder(long optionId, int quantity) {
         Option targetOption = validOption(optionId);
         targetOption.sellOption(quantity);
     }
