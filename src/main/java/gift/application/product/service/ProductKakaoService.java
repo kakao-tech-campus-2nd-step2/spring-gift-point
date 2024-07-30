@@ -17,9 +17,9 @@ public class ProductKakaoService {
         this.tokenManager = tokenManager;
     }
 
-    public void sendPurchaseMessage(Long memberId, String optionName) {
+    public void sendPurchaseMessage(Long memberId, String message) {
         KakaoToken token = tokenManager.getToken(memberId);
-        productKakaoApiCaller.sendMessage(token.getAccessToken(), optionName);
+        productKakaoApiCaller.sendMessage(token.getAccessToken(), message);
     }
 
 }
