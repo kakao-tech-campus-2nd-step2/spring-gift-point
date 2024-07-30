@@ -4,41 +4,37 @@ VALUES ('USER', '테스트유저', 'test@test.com', 'test', NULL, NULL, 'NORMAL'
 
 -- 카테고리 데이터 삽입
 INSERT INTO category (name, description, image_url, color)
-VALUES ('Electronics', 'Electronic devices and gadgets', 'http://example.com/electronics.jpg', '#ff0000');
+VALUES ('도서', '다양한 책과 문학 작품', 'http://example.com/books.jpg', '#0000ff');
 
-INSERT INTO category (name, description, image_url, color)
-VALUES ('Books', 'Books and literature', 'http://example.com/books.jpg', '#0000ff');
 
 -- 상품 데이터 삽입
 INSERT INTO product (name, price, image_url, category_id)
-VALUES ('Smartphone', 699.99, 'http://example.com/smartphone.jpg',
-        (SELECT category_id FROM category WHERE name = 'Electronics'));
+VALUES ('참을 수 없는 존재의 가벼움', 15000, 'http://example.com/unbearable_lightness.jpg',
+        (SELECT category_id FROM category WHERE name = '도서'));
 
 INSERT INTO product (name, price, image_url, category_id)
-VALUES ('Laptop', 999.99, 'http://example.com/laptop.jpg',
-        (SELECT category_id FROM category WHERE name = 'Electronics'));
+VALUES ('육각형 개발자', 20000, 'http://example.com/hexagonal_developer.jpg',
+        (SELECT category_id FROM category WHERE name = '도서'));
 
 INSERT INTO product (name, price, image_url, category_id)
-VALUES ('Novel', 19.99, 'http://example.com/novel.jpg', (SELECT category_id FROM category WHERE name = 'Books'));
+VALUES ('드라이브', 18000, 'http://example.com/drive.jpg',
+        (SELECT category_id FROM category WHERE name = '도서'));
 
 -- 상품 옵션 데이터 삽입
 INSERT INTO product_option (name, product_id, quantity)
-VALUES ('64GB', (SELECT product_id FROM product WHERE name = 'Smartphone'), 100);
+VALUES ('하드커버', (SELECT product_id FROM product WHERE name = '참을 수 없는 존재의 가벼움'), 50);
 
 INSERT INTO product_option (name, product_id, quantity)
-VALUES ('128GB', (SELECT product_id FROM product WHERE name = 'Smartphone'), 50);
+VALUES ('페이퍼백', (SELECT product_id FROM product WHERE name = '참을 수 없는 존재의 가벼움'), 100);
 
 INSERT INTO product_option (name, product_id, quantity)
-VALUES ('256GB', (SELECT product_id FROM product WHERE name = 'Smartphone'), 25);
+VALUES ('양장본', (SELECT product_id FROM product WHERE name = '육각형 개발자'), 30);
 
 INSERT INTO product_option (name, product_id, quantity)
-VALUES ('16GB RAM', (SELECT product_id FROM product WHERE name = 'Laptop'), 30);
+VALUES ('소프트커버', (SELECT product_id FROM product WHERE name = '육각형 개발자'), 70);
 
 INSERT INTO product_option (name, product_id, quantity)
-VALUES ('32GB RAM', (SELECT product_id FROM product WHERE name = 'Laptop'), 15);
+VALUES ('일반판', (SELECT product_id FROM product WHERE name = '드라이브'), 60);
 
 INSERT INTO product_option (name, product_id, quantity)
-VALUES ('Hardcover', (SELECT product_id FROM product WHERE name = 'Novel'), 50);
-
-INSERT INTO product_option (name, product_id, quantity)
-VALUES ('Paperback', (SELECT product_id FROM product WHERE name = 'Novel'), 100);
+VALUES ('특별판', (SELECT product_id FROM product WHERE name = '드라이브'), 20);
