@@ -5,13 +5,14 @@ import gift.entity.Category;
 import gift.service.CategoryService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import java.util.List;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -38,6 +39,10 @@ public class CategoryController {
 
     @PostMapping
     @Operation(summary = "Category 추가", description = "새 카테고리를 추가합니다.")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "201", description = "카테고리 추가 성공"),
+        @ApiResponse(responseCode = "401", description = "입력 데이터 잘못됨."),
+        @ApiResponse(responseCode = "409", description = "카테고리 이름 중복 ")})
     public ResponseEntity<String> addCategory(@RequestBody CategoryDTO categoryDTO) {
         Category category = categoryDTO.toEntity();
         categoryService.save(category);

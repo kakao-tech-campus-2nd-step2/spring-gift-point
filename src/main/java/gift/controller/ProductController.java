@@ -65,7 +65,7 @@ public class ProductController {
         @Parameter(name = "sort", description = "정렬 기준", example = "id,desc")
         @RequestParam String[] sort
     ) {
-        Page<Product> products = productService.getProductPage(page,size,sort);
+        Page<Product> products = productService.getProductPage(page, size, sort);
         return new ResponseEntity<>(products, HttpStatus.OK);
     }
 
@@ -90,7 +90,7 @@ public class ProductController {
     @Operation(summary = "Product 수정", description = "id에 해당하는 Product를 새로운 정보로 수정합니다.")
     public ResponseEntity<String> editProduct(
         @Parameter(name = "productId", description = "Product Id", example = "1") @PathVariable("productId") Long productId,
-        @RequestBody ProductUpdateRequest productUpdateRequest) {
+        @Valid @RequestBody ProductUpdateRequest productUpdateRequest) {
         Category category = productService.findCategoryById(productUpdateRequest.getCategoryId());
         Product product = productUpdateRequest.toEntity(category);
         productService.updateProduct(product, productId);

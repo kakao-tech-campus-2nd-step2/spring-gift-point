@@ -2,6 +2,7 @@ package gift.service;
 
 import gift.entity.Category;
 import gift.entity.Product;
+import gift.exception.CustomException;
 import gift.exception.DataNotFoundException;
 import gift.repository.ProductRepository;
 
@@ -101,7 +102,7 @@ class ProductServiceTest {
         when(productRepository.findById((fakeProductId))).thenReturn(Optional.empty());
 
         //when & then
-        assertThrows(DataNotFoundException.class,
+        assertThrows(CustomException.class,
             () -> productService.getProductById(fakeProductId));
 
     }

@@ -7,6 +7,7 @@ import gift.exception.ErrorCode;
 import gift.repository.ProductRepository;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -22,7 +23,14 @@ public class ProductService {
         this.productRepository = productRepository;
     }
 
+    public Optional<Product> findByName(String name){
+        return productRepository.findByName(name);
+    }
+
     public void saveProduct(Product product) {
+        if(findByName(product.getName()).isPresent()){
+            throw new CustomException(ErrorCode.PRODUCT_NAME_DUPLICATED);
+        }
         productRepository.save(product);
     }
 
