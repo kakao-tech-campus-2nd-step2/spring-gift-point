@@ -43,7 +43,7 @@ class ProductRepositoryTest {
         Optional<Product> actual = productRepository.findById(First_Product_id);
 
         assertThat(actual).isPresent().hasValueSatisfying(
-            w -> assertThat(w.getName()).isEqualTo("Product 1"));
+            w -> assertThat(w.getName()).isEqualTo("이마트 모바일 금액권"));
     }
 
     @Test
@@ -68,7 +68,7 @@ class ProductRepositoryTest {
         assertThat(page.getTotalPages()).isEqualTo(2);
         assertThat(page.getContent()).hasSize(10);
 
-        assertThat(page.getContent().get(0).getName()).isEqualTo("Product 1");
+        assertThat(page.getContent().get(0).getName()).isEqualTo("이마트 모바일 금액권");
     }
 
     @Test
@@ -81,6 +81,6 @@ class ProductRepositoryTest {
         assertThat(page.getTotalPages()).isEqualTo(1);
         assertThat(page.getContent()).hasSize(2);
 
-        assertThat(page.getContent().get(0).getName()).isEqualTo("Product 1");
+        assertThat(page.getContent().get(0).getName()).isEqualTo("이마트 모바일 금액권");
     }
 }

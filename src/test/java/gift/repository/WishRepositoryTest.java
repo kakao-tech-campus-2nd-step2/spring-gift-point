@@ -32,7 +32,7 @@ class WishRepositoryTest {
         assertThat(page.getTotalPages()).isEqualTo(2);
         assertThat(page.getContent()).hasSize(10);
 
-        assertThat(page.getContent().get(0).getProduct().getName()).isEqualTo("Product 1");
+        assertThat(page.getContent().get(0).getProduct().getName()).isEqualTo("이마트 모바일 금액권");
     }
 
 
