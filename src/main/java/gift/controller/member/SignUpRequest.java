@@ -12,14 +12,10 @@ public class SignUpRequest {
     private String email;
     @Size(min = 8, max = 20, message = "비밀번호의 길이는 8자 이상, 20자 이하 이내입니다.")
     private String password;
-    @NotBlank(message = "닉네임은 필수 입력 항목입니다.")
-    @Size(max = 15, message = "닉네임은 최대 15자까지 가능합니다.")
-    private final String nickName;
 
-    public SignUpRequest(String email, String password, String nickName) {
+    public SignUpRequest(String email, String password) {
         this.email = email;
         this.password = password;
-        this.nickName = nickName;
     }
 
     public String getEmail() {
@@ -36,9 +32,5 @@ public class SignUpRequest {
 
     public void setPassword(String password) {
         this.password = password;
-    }
-
-    public String getNickName() {
-        return nickName;
     }
 }

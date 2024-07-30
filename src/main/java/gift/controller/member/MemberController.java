@@ -1,10 +1,15 @@
 package gift.controller.member;
 
-import gift.config.LoginAdmin;
 import gift.config.LoginUser;
 import gift.controller.auth.AuthController;
+import gift.controller.auth.LoginRequest;
 import gift.controller.auth.LoginResponse;
+import gift.controller.auth.Token;
+import gift.controller.response.ApiResponseBody;
+import gift.controller.response.ApiResponseBuilder;
+import gift.service.AuthService;
 import gift.service.MemberService;
+import gift.util.JwtUtil;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
@@ -30,47 +35,70 @@ import org.springframework.web.bind.annotation.RestController;
 public class MemberController {
 
     private final MemberService memberService;
+    private final AuthService authService;
 
-    public MemberController(MemberService memberService) {
+    public MemberController(MemberService memberService, AuthService authService) {
         this.memberService = memberService;
+        this.authService = authService;
     }
 
     @GetMapping
     @Operation(summary = "get All Members", description = "모든 멤버 불러오기(기본 개수 : 5개)")
-    public ResponseEntity<Page<MemberResponse>> getAllMembers(@LoginAdmin LoginResponse member,
+    public ResponseEntity<ApiResponseBody<Page<MemberResponse>>> getAllMembers(
         @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "5") int size) {
         Pageable pageable = PageRequest.of(page, size);
-        return ResponseEntity.status(HttpStatus.OK).body(memberService.findAll(pageable));
+        return new ApiResponseBuilder<Page<MemberResponse>>()
+            .httpStatus(HttpStatus.OK)
+            .data(memberService.findAll(pageable))
+            .messages("")
+            .build();
     }
 
     @GetMapping("/{memberId}")
     @Operation(summary = "get Member", description = "memberId를 통해 멤버 정보 불러오기")
-    public ResponseEntity<MemberResponse> getMember(@LoginUser LoginResponse member,
+    public ResponseEntity<ApiResponseBody<MemberResponse>> getMember(@LoginUser LoginResponse member,
         @PathVariable UUID memberId) {
         AuthController.validateUserOrAdmin(member, memberId);
-        return ResponseEntity.status(HttpStatus.OK).body(memberService.findById(memberId));
+        return new ApiResponseBuilder<MemberResponse>()
+            .httpStatus(HttpStatus.OK)
+            .data((memberService.findById(memberId)))
+            .messages("")
+            .build();
     }
 
     @PostMapping("/register")
     @Operation(summary = "create Member", description = "멤버 생성(회원가입)")
-    public ResponseEntity<MemberResponse> createMember(@Valid @RequestBody SignUpRequest member) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(memberService.save(member));
+    public ResponseEntity<ApiResponseBody<Token>> createMember(@Valid @RequestBody SignUpRequest member) {
+        MemberResponse target = memberService.save(member);
+        return new ApiResponseBuilder<Token>()
+            .httpStatus(HttpStatus.OK)
+            .data(new Token(JwtUtil.generateToken(target.id(), target.email())))
+            .messages("회원가입에 성공했습니다.")
+            .build();
     }
 
     @PutMapping("/{memberId}")
     @Operation(summary = "modify Member", description = "멤버 정보 수정")
-    public ResponseEntity<MemberResponse> updateMember(@LoginUser LoginResponse loginMember,
+    public ResponseEntity<ApiResponseBody<MemberResponse>> updateMember(@LoginUser LoginResponse loginMember,
         @PathVariable UUID memberId, @RequestBody MemberRequest member) {
         AuthController.validateUserOrAdmin(loginMember, memberId);
-        return ResponseEntity.status(HttpStatus.OK).body(memberService.update(memberId, member));
+        return new ApiResponseBuilder<MemberResponse>()
+            .httpStatus(HttpStatus.OK)
+            .data((memberService.update(memberId, member)))
+            .messages("")
+            .build();
     }
 
     @DeleteMapping("/{memberId}")
     @Operation(summary = "delete Member", description = "멤버 삭제")
-    public ResponseEntity<Void> deleteMember(@LoginUser LoginResponse loginMember,
+    public ResponseEntity<ApiResponseBody<Void>> deleteMember(@LoginUser LoginResponse loginMember,
         @PathVariable UUID memberId) {
         AuthController.validateUserOrAdmin(loginMember, memberId);
         memberService.delete(memberId);
-        return ResponseEntity.status(HttpStatus.NO_CONTENT).body(null);
+        return new ApiResponseBuilder<Void>()
+            .httpStatus(HttpStatus.OK)
+            .data(null)
+            .messages("")
+            .build();
     }
 }

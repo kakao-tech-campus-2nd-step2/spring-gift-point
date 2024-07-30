@@ -27,8 +27,10 @@ public class Member {
     private String email;
     @Column(nullable = false)
     private String password;
-    @Column(nullable = false)
+    @Column(nullable = true)
     private String nickName;
+    @Column(nullable = false)
+    private Long point;
     @Column
     @Enumerated(EnumType.STRING)
     private Grade grade;
@@ -36,16 +38,21 @@ public class Member {
     public Member() {
     }
 
-    public Member(String email, String password, String nickName) {
+    public Member(String email, String password) {
         this.email = email;
         this.password = password;
-        this.nickName = nickName;
     }
 
     @PrePersist
     public void prePersist() {
         if (grade == null) {
             grade = Grade.USER;
+        }
+        if (nickName == null) {
+            nickName = "default user";
+        }
+        if (point == null) {
+            point = 0L;
         }
     }
 

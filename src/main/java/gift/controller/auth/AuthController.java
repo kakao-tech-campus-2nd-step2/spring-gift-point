@@ -1,19 +1,21 @@
 package gift.controller.auth;
 
 import gift.controller.member.MemberResponse;
+import gift.controller.response.ApiResponseBody;
+import gift.controller.response.ApiResponseBuilder;
 import gift.exception.AuthorizationCodeException;
 import gift.exception.UnauthorizedException;
 import gift.service.AuthService;
 import gift.service.KakaoTokenService;
 import gift.service.MemberService;
 import gift.util.JwtUtil;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletResponse;
 import java.util.UUID;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -41,13 +43,18 @@ public class AuthController {
         }
     }
 
-    @PostMapping("/login")
+    @PostMapping("api/members/login")
     @Operation(summary = "login", description = "로그인 후 토큰 반환")
-    public ResponseEntity<Token> login(@RequestBody LoginRequest member) {
+    public ResponseEntity<ApiResponseBody<Token>> login(@RequestBody LoginRequest member) {
         Token token = authService.login(member);
         HttpHeaders headers = new HttpHeaders();
         headers.add("Authorization", "Bearer " + token.token());
-        return ResponseEntity.status(HttpStatus.OK).headers(headers).body(token);
+        return new ApiResponseBuilder<Token>()
+            .httpStatus(HttpStatus.OK)
+            .headers(headers)
+            .data(token)
+            .messages("로그인")
+            .build();
     }
 
     @GetMapping("/authorize")
@@ -60,16 +67,21 @@ public class AuthController {
         }
     }
 
-    @GetMapping("/kakaoLogin")
+    @GetMapping("/kakao/login")
     @Operation(summary = "kakaoLogin", description = "인가코드를 통해 토큰 발급 및 DB 저장, 카카오 계정의 이메일로 로그인(미 가입시 예외 발생)")
-    public ResponseEntity<Token> loginWithKakao(@RequestParam String code) {
+    public ResponseEntity<ApiResponseBody<Token>> loginWithKakao(@RequestParam String code) {
         KakaoTokenResponse kakaoToken = authService.getKakaoToken(code);
-        KakaoMemberInfoResponse memberInfo = authService.getMemberInfo(kakaoToken);
-        MemberResponse member = memberService.findByEmail(memberInfo.email());
+        MemberResponse member = memberService.findByEmail(
+            authService.getMemberInfo(kakaoToken).email());
         kakaoTokenService.save(member.id(), kakaoToken);
         Token token = new Token(JwtUtil.generateToken(member.id(), member.email()));
         HttpHeaders headers = new HttpHeaders();
         headers.add("Authorization", "Bearer " + token.token());
-        return ResponseEntity.status(HttpStatus.OK).headers(headers).body(token);
+        return new ApiResponseBuilder<Token>()
+            .httpStatus(HttpStatus.OK)
+            .headers(headers)
+            .data(token)
+            .messages("카카오 로그인")
+            .build();
     }
 }
