@@ -32,12 +32,12 @@ public class WishListController {
     @PostMapping("/save")
     public ResponseEntity<String> save(
             @RequestHeader("Authorization") String token,
-            @RequestParam("menuId") Long menuId
+            @RequestBody WishListRequest wishListRequest
     ) {
         String jwtId = jwtService.getMemberId();
         WishList wishList = new WishList(
                 memberService.findById(jwtId),
-                menuService.findById(menuId)
+                menuService.findById(wishListRequest.id())
         );
         wishListService.save(wishList);
         HttpHeaders headers = new HttpHeaders();

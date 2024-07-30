@@ -47,6 +47,13 @@ public class Member {
         return wishList;
     }
 
+    public boolean checkPassword(String password){
+        if(this.password.equals(password)){
+            return true;
+        }
+        return false;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
