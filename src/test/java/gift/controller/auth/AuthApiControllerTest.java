@@ -21,6 +21,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.Optional;
 
+import static gift.utils.FilterConstant.NO_AUTHORIZATION_REDIRECT_URL;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.http.MediaType.APPLICATION_FORM_URLENCODED;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
@@ -58,7 +59,7 @@ class AuthApiControllerTest {
         MemberRequestDto inValidMemberRequestDto = new MemberRequestDto("test", "p");
 
         //expected
-        mvc.perform(post("/members/register")
+        mvc.perform(post("/api/members/register")
                         .content(objectMapper.writeValueAsString(inValidMemberRequestDto))
                         .contentType(APPLICATION_JSON))
                 .andExpect(status().is4xxClientError())
@@ -76,7 +77,7 @@ class AuthApiControllerTest {
         MemberRequestDto memberRequestDto = new MemberRequestDto("test@pusan.ac.kr", "p");
 
         //expected
-        mvc.perform(post("/members/register")
+        mvc.perform(post("/api/members/register")
                         .content(objectMapper.writeValueAsString(memberRequestDto))
                         .contentType(APPLICATION_JSON))
                 .andExpect(status().isCreated())
@@ -94,7 +95,7 @@ class AuthApiControllerTest {
         given(authService.findOneByEmailAndPassword(memberRequestDto)).willReturn(memberResponseDto);
 
         //expected
-        mvc.perform(post("/members/login")
+        mvc.perform(post("/api/members/login")
                         .content(objectMapper.writeValueAsString(memberRequestDto))
                         .contentType(APPLICATION_JSON)
                 )
@@ -127,7 +128,7 @@ class AuthApiControllerTest {
         given(authService.kakaoMemberLogin(kakaoUserInformation, tokenInfo)).willReturn("myToken");
 
         //expected
-        mvc.perform(get("/members/login/oauth/kakao")
+        mvc.perform(get("/api/members/login/oauth/kakao")
                         .contentType(APPLICATION_FORM_URLENCODED)
                         .param("code",code)
                 )
@@ -146,11 +147,11 @@ class AuthApiControllerTest {
         given(tokenRepository.findAuthTokenByToken("테스트 인증 정보")).willReturn(Optional.of(authToken));
 
         //expected
-        mvc.perform(post("/members/login")
+        mvc.perform(post("/api/members/login")
                         .header("Authorization","Bearer 테스트 인증 정보")
                 )
                 .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl("/home"))
+                .andExpect(redirectedUrl(NO_AUTHORIZATION_REDIRECT_URL))
                 .andDo(print());
     }
 
@@ -163,11 +164,11 @@ class AuthApiControllerTest {
         given(tokenRepository.findAuthTokenByToken("테스트 인증 정보")).willReturn(Optional.of(authToken));
 
         //expected
-        mvc.perform(get("/members/login/oauth/kakao")
+        mvc.perform(get("/api/members/login/oauth/kakao")
                         .header("Authorization","Bearer 테스트 인증 정보")
                 )
                 .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl("/home"))
+                .andExpect(redirectedUrl(NO_AUTHORIZATION_REDIRECT_URL))
                 .andDo(print());
     }
 
