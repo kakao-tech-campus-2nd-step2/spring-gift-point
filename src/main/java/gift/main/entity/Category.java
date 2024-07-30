@@ -42,6 +42,25 @@ public class Category {
         this.name = categoryRequest.name();
     }
 
+    public long getId() {
+        return id;
+    }
+
+    public String getColor() {
+        return color;
+    }
+
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public String getName() {
+        return name;
+    }
 
     @Override
     public boolean equals(Object o) {

@@ -30,9 +30,6 @@ public class CategoryService {
         if (categoryRepository.existsByName(categoryRequest.name())) {
             throw new CustomException(ErrorCode.ALREADY_CATEGORY_NAME);
         }
-        if (categoryRepository.existsByUniNumber(categoryRequest.uniNumber())) {
-            throw new CustomException(ErrorCode.ALREADY_CATEGORY_UNI_NUMBER);
-        }
         Category category = new Category(categoryRequest);
 
         categoryRepository.save(category);
@@ -53,9 +50,6 @@ public class CategoryService {
     public void updateCategory(Long categoryid, CategoryRequest categoryRequest) {
         if (categoryRepository.existsByName(categoryRequest.name())) {
             throw new CustomException(ErrorCode.ALREADY_CATEGORY_NAME);
-        }
-        if (categoryRepository.existsByUniNumber(categoryRequest.uniNumber())) {
-            throw new CustomException(ErrorCode.ALREADY_CATEGORY_UNI_NUMBER);
         }
         Category category = categoryRepository.findById(categoryid)
                 .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_CATEGORY));
