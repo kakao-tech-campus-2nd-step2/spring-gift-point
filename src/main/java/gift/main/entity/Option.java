@@ -59,13 +59,13 @@ public class Option {
             return;
         }
 
-        if (this.optionName == optionRequest.name()) {
+        if (Objects.equals(this.optionName, optionRequest.name())) {
             throw new CustomException(ErrorCode.ALREADY_EXISTS_OPTION_NAME);
         }
     }
 
     public void isDuplicate(OptionRequest optionRequest) {
-        if (this.optionName == optionRequest.name()) {
+        if (Objects.equals(this.optionName, optionRequest.name())) {
             throw new CustomException(ErrorCode.ALREADY_EXISTS_OPTION_NAME);
         }
     }
