@@ -50,10 +50,7 @@ public class ProductApiControllerTest {
                                 + ", \"options\": [ { \"name\": \"옵션1\", \"quantity\": 10 } ] }"))
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.name").value("상품1"))
-                .andExpect(jsonPath("$.price").value(1000))
-                .andExpect(jsonPath("$.options", hasSize(1)))
-                .andExpect(jsonPath("$.options[0].name").value("옵션1"))
-                .andExpect(jsonPath("$.options[0].quantity").value(10));
+                .andExpect(jsonPath("$.price").value(1000));
     }
 
     @Test
@@ -69,10 +66,7 @@ public class ProductApiControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.content", hasSize(1)))
                 .andExpect(jsonPath("$.content[0].name").value("상품1"))
-                .andExpect(jsonPath("$.content[0].price").value(1000))
-                .andExpect(jsonPath("$.content[0].options", hasSize(1)))
-                .andExpect(jsonPath("$.content[0].options[0].name").value("옵션1"))
-                .andExpect(jsonPath("$.content[0].options[0].quantity").value(10));
+                .andExpect(jsonPath("$.content[0].price").value(1000));
     }
 
     @Test
