@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>카카오 로그인 성공</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f7f7f7;
+            text-align: center;
+            padding: 50px;
+        }
+        .container {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            display: inline-block;
+        }
+        .success-message {
+            font-size: 24px;
+            color: #4CAF50;
+            margin-bottom: 20px;
+        }
+        .token {
+            font-size: 16px;
+            color: #333;
+            word-break: break-all;
+        }
+        .btn {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 10px 20px;
+            background-color: #FFEB00;
+            color: #333;
+            text-decoration: none;
+            border-radius: 4px;
+            font-weight: bold;
+        }
+        .btn:hover {
+            background-color: #FFD700;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="success-message">카카오 로그인에 성공하였습니다!</div>
+    <div class="token">
+        <strong>JWT Token:</strong> <span id="jwtToken" th:text="${jwtToken}"></span>
+    </div>
+    <button class="btn" id="goToProductsBtn">상품 목록 보러가기</button>
+</div>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const jwtTokenElement = document.getElementById('jwtToken');
+        const jwtToken = jwtTokenElement.textContent || jwtTokenElement.innerText;
+        localStorage.setItem('jwtToken', jwtToken);
+    });
+
+    document.getElementById('goToProductsBtn').addEventListener('click', function() {
+        const jwtToken = localStorage.getItem('jwtToken');
+        if (jwtToken) {
+            fetch('/user-products', {
+                method: 'GET',
+                headers: {
+                    'Authorization': 'Bearer ' + jwtToken
+                }
+            })
+                .then(response => {
+                    if (response.ok) {
+                        window.location.href = "/user-products";
+                    } else {
+                        throw new Error('Failed to load products');
+                    }
+                })
+                .catch(error => {
+                    alert(error.message);
+                });
+        } else {
+            alert('JWT Token not found');
+        }
+    });
+</script>
+</body>
+</html>

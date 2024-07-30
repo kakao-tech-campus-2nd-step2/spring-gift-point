@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Product List</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <style>
+        body, html {
+            height: 100%;
+            margin: 0;
+        }
+        .container {
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+        .table-responsive {
+            flex-grow: 1;
+        }
+        .thead-dark th {
+            text-align: center;
+        }
+        .table td, .table th {
+            vertical-align: middle;
+            text-align: center;
+        }
+        .table td img {
+            max-width: 100%;
+            height: auto;
+        }
+        .break-word {
+            word-wrap: break-word;
+            word-break: break-all;
+            white-space: normal;
+        }
+        .font-weight-bold {
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1 class="mt-4">상품 목록</h1>
+    <div class="d-flex justify-content-end mb-3">
+        <a href="/user-wishes" class="btn btn-info ml-auto">위시리스트 보기</a>
+    </div>
+    <div class="table-responsive">
+        <table class="table table-bordered table-hover">
+            <thead class="thead-dark">
+            <tr>
+                <th style="width: 20%;">Name</th>
+                <th style="width: 15%;">Price</th>
+                <th style="width: 30%;">Image URL</th>
+                <th style="width: 25%;">Options</th>
+                <th style="width: 10%;">Actions</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="product : ${products.content}">
+                <td class="font-weight-bold" th:text="${product.name}"></td>
+                <td th:text="${product.price}"></td>
+                <td class="break-word">
+                    <img th:src="${product.imageurl}" alt="Product Image" style="max-width: 100px; height: auto;">
+                </td>
+                <td>
+                    <select class="form-control mb-2" th:id="'optionDropdown_' + ${product.id}">
+                        <option th:each="option : ${product.options}" th:value="${option.id}" th:text="${option.name}"></option>
+                    </select>
+                </td>
+                <td>
+                    <button class="btn btn-primary btn-sm" th:attr="onclick='addToWishList(' + ${product.id} + ')'">Add to Wish List</button>
+                    <a th:href="@{/order(optionId=${product.id})}" class="btn btn-success btn-sm mt-1">Order</a> <!-- 주문하기 버튼 추가 -->
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <nav aria-label="Page navigation">
+        <ul class="pagination">
+            <li class="page-item" th:classappend="${products.first} ? 'disabled'">
+                <a class="page-link" th:href="@{|/user-products?page=${products.number - 1}&size=5|}" aria-label="Previous">
+                    <span aria-hidden="true">&laquo;</span>
+                </a>
+            </li>
+            <li class="page-item" th:each="i : ${#numbers.sequence(1, products.totalPages)}"
+                th:classappend="${i == products.number + 1} ? 'active'">
+                <a class="page-link" th:href="@{|/user-products?page=${i - 1}&size=5|}" th:text="${i}">1</a>
+            </li>
+            <li class="page-item" th:classappend="${products.last} ? 'disabled'">
+                <a class="page-link" th:href="@{|/user-products?page=${products.number + 1}&size=5|}" aria-label="Next">
+                    <span aria-hidden="true">&raquo;</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</div>
+
+<script>
+    function addToWishList(productId) {
+        const token = localStorage.getItem('jwtToken');
+        const selectedOptionId = document.getElementById(`optionDropdown_${productId}`).value;
+
+        fetch('/wishes', {
+            method: 'POST',
+            headers: {
+                'Authorization': 'Bearer ' + token,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ productId: productId, optionId: selectedOptionId })
+        })
+            .then(response => {
+                if (response.ok) {
+                    alert('Product added to wish list!');
+                } else {
+                    response.text().then(text => {
+                        alert('Error: ' + text);
+                    });
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+    }
+</script>
+</body>
+</html>
