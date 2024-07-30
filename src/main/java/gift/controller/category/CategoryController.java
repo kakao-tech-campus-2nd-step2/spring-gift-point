@@ -21,14 +21,14 @@ public class CategoryController implements CategorySpecification {
     }
 
     @GetMapping
-    public ResponseEntity<List<CategoryResponse>> getAllCategories() {
-        List<CategoryResponse> categories = categoryService.getAllCategories();
+    public ResponseEntity<CategoryResponse.InfoList> getAllCategories() {
+        CategoryResponse.InfoList categories = categoryService.getAllCategories();
         return ResponseEntity.ok(categories);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<CategoryResponse> getCategory(@PathVariable(name = "id") Long categoryId) {
-        CategoryResponse category = categoryService.getCategory(categoryId);
+    public ResponseEntity<CategoryResponse.Info> getCategory(@PathVariable(name = "id") Long categoryId) {
+        CategoryResponse.Info category = categoryService.getCategory(categoryId);
         return ResponseEntity.ok(category);
     }
 

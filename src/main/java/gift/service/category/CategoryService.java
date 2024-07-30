@@ -26,18 +26,16 @@ public class CategoryService {
         categoryRepository.save(category);
     }
 
-    public CategoryResponse getCategory(Long categoryId) {
+    public CategoryResponse.Info getCategory(Long categoryId) {
         Category category = categoryRepository.findById(categoryId)
                 .orElseThrow(() -> new NoSuchElementException("해당 카테고리가 존재하지 않습니다. id :  " + categoryId));
-        return CategoryResponse.fromEntity(category);
+        return CategoryResponse.Info.fromEntity(category);
 
     }
 
-    public List<CategoryResponse> getAllCategories() {
+    public CategoryResponse.InfoList getAllCategories() {
         List<Category> categories = categoryRepository.findAll();
-        return categories.stream()
-                .map(CategoryResponse::fromEntity)
-                .toList();
+        return CategoryResponse.InfoList.fromEntity(categories);
     }
 
     @Transactional

@@ -25,7 +25,7 @@ public interface CategorySpecification {
                             )
                     )
             })
-    ResponseEntity<List<CategoryResponse>> getAllCategories();
+    ResponseEntity<CategoryResponse.InfoList> getAllCategories();
 
     @Operation(summary = "카테고리 조회", description = "주어진 ID에 해당하는 카테고리를 조회합니다.",
             responses = {
@@ -37,7 +37,7 @@ public interface CategorySpecification {
                     ),
                     @ApiResponse(responseCode = "404", description = "카테고리를 찾을 수 없음")
             })
-    ResponseEntity<CategoryResponse> getCategory(@Parameter(description = "조회할 카테고리의 ID") @PathVariable(name = "id") Long categoryId);
+    ResponseEntity<CategoryResponse.Info> getCategory(@Parameter(description = "조회할 카테고리의 ID") @PathVariable(name = "id") Long categoryId);
 
     @Operation(summary = "카테고리 추가", description = "새로운 카테고리를 추가합니다.",
             responses = {

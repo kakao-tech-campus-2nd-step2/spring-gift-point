@@ -16,12 +16,12 @@ public class GiftResponse {
 
     private final String imageUrl;
 
-    private final CategoryResponse category;
+    private final CategoryResponse.Info category;
 
     private final List<OptionResponse> options;
 
 
-    public GiftResponse(Long id, String name, int price, String imageUrl, CategoryResponse category, List<OptionResponse> options) {
+    public GiftResponse(Long id, String name, int price, String imageUrl, CategoryResponse.Info category, List<OptionResponse> options) {
         this.id = id;
         this.name = name;
         this.price = price;
@@ -35,7 +35,7 @@ public class GiftResponse {
                 gift.getName(),
                 gift.getPrice(),
                 gift.getImageUrl(),
-                CategoryResponse.fromEntity(gift.getCategory()),
+                CategoryResponse.Info.fromEntity(gift.getCategory()),
                 gift.getOptions().stream()
                         .map(OptionResponse::from)
                         .toList());
@@ -57,7 +57,7 @@ public class GiftResponse {
         return imageUrl;
     }
 
-    public CategoryResponse getCategory() {
+    public CategoryResponse.Info getCategory() {
         return category;
     }
 

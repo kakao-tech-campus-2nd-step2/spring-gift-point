@@ -46,7 +46,8 @@ public class AdminController {
 
     @GetMapping("/admin/gift/create")
     public String giftCreate(Model model) {
-        List<CategoryResponse> categories = categoryService.getAllCategories();
+        CategoryResponse.InfoList infoList = categoryService.getAllCategories();
+        List<CategoryResponse.Info> categories = infoList.categories();
         model.addAttribute("categories", categories);
         return "create_form";
     }
@@ -69,7 +70,8 @@ public class AdminController {
 
     @GetMapping("/admin/gift/modify/{id}")
     public String giftModify(Model model, @PathVariable("id") Long id) {
-        List<CategoryResponse> categories = categoryService.getAllCategories();
+        CategoryResponse.InfoList infoList = categoryService.getAllCategories();
+        List<CategoryResponse.Info> categories = infoList.categories();
         model.addAttribute("categories", categories);
         GiftResponse gift = giftService.getGift(id);
         model.addAttribute("gift", gift);
