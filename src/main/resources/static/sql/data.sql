@@ -1,6 +1,23 @@
 insert into category (name, created_at, last_modified_at, color, description, image_url)
-values ('wish', '2023-05-31 10:00:00',
-        '2023-05-31 12:00:00', 'red', 'asd', 'asd');
+values ('SPORT', '2023-05-31 10:00:00',
+        '2023-05-31 12:00:00', '#6c95d1', '스포츠 관련 상품',
+        'https://rapidapi.com/hub/_next/image?url=https%3A%2F%2Frapidapi-prod-collections.s3.amazonaws.com%2Fcollection%2FiStock-1355687112.jpg.jpg&w=750&q=75');
+insert into category (name, created_at, last_modified_at, color, description, image_url)
+values ('CLOTH', '2023-05-31 10:00:00',
+        '2023-05-31 12:00:00', '#39ed6f', '옷 관련 상품',
+        'https://collectiv-image-prod-bxh3gve5dvfragea.z03.azurefd.net/20240527/w1000q85_77RWKrxbBiyRvVEkrGVu2t.jpeg');
+insert into category (name, created_at, last_modified_at, color, description, image_url)
+values ('BEAUTY', '2023-05-31 10:00:00',
+        '2023-05-31 12:00:00', '#db9b97', '뷰티 관련 상품',
+        'https://www.chanel.com/images//t_one//w_0.38,h_0.38,c_crop/q_auto:good,f_autoplus,fl_lossy,dpr_1.1/w_1240/rouge-allure-luminous-intense-lip-colour-136-melodieuse-0-12oz--packshot-default-160136-8800038027294.jpg');
+insert into category (name, created_at, last_modified_at, color, description, image_url)
+values ('FOOD', '2023-05-31 10:00:00',
+        '2023-05-31 12:00:00', '#e2ed8c', '#음식 관련 상품',
+        'https://webudding.com/_next/image/?url=https%3A%2F%2Fd29hudvzbgrxww.cloudfront.net%2Fpublic%2Fproduct%2F20231129005319-8526fb19-f808-4080-88f6-b040f1621bbd.JPG&w=3840&q=80');
+insert into category (name, created_at, last_modified_at, color, description, image_url)
+values ('DRINK', '2023-05-31 10:00:00',
+        '2023-05-31 12:00:00', '#e3afc5', '음료 관련 상품',
+        'https://cdn.ownerclan.com/LKE9FjjoIK6hWHoRyV~2DOduqYcZb7tCavl9kOITUzc/marketize/640/as/v1.jpg');
 
 insert into product (name, price, image_url, created_at, last_modified_at, category_id)
 values ('Jarred', 4750, 'http://dummyimage.com/165x100.png/dddddd/000000', '2023-05-31 10:00:00',
