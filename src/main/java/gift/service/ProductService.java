@@ -1,5 +1,6 @@
 package gift.service;
 
+import gift.common.exception.conflict.ProductAlreadyExistsException;
 import gift.dto.ProductRequest;
 import gift.dto.ProductResponse;
 import gift.entity.Category;
@@ -15,6 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.validation.BeanPropertyBindingResult;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
+import gift.common.exception.notFound.CategoryNotFoundException;
 
 @Service
 @Validated
@@ -53,7 +55,11 @@ public class ProductService {
     public ProductResponse addProduct(@Valid ProductRequest productRequest) {
 
         Category category = categoryService.findById(productRequest.getCategoryId())
-            .orElseThrow(() -> new IllegalArgumentException("category ID를 찾을 수 없음"));
+            .orElseThrow(CategoryNotFoundException::new);
+
+        if (productRepository.findByName(productRequest.getName()).isPresent()) {
+            throw new ProductAlreadyExistsException();
+        }
 
         Product product = ProductRequest.toEntity(productRequest, category);
 

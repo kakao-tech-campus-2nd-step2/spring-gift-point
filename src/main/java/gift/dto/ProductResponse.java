@@ -1,27 +1,33 @@
 package gift.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import gift.entity.Product;
 import java.util.List;
 
+@JsonPropertyOrder({"id", "name", "price", "image_url", "category", "options"})
 public class ProductResponse {
 
     private Long id;
     private String name;
     private int price;
+
+    @JsonProperty("image_url")
     private String imgUrl;
-    private String categoryName;
+
+    private CategoryResponse category;
     private List<OptionResponse> options;
 
     public ProductResponse() {
     }
 
-    public ProductResponse(Long id, String name, int price, String imgUrl, String categoryName,
+    public ProductResponse(Long id, String name, int price, String imgUrl, CategoryResponse category,
         List<OptionResponse> options) {
         this.id = id;
         this.name = name;
         this.price = price;
         this.imgUrl = imgUrl;
-        this.categoryName = categoryName;
+        this.category = category;
         this.options = options;
     }
 
@@ -41,8 +47,8 @@ public class ProductResponse {
         return imgUrl;
     }
 
-    public String getCategoryName() {
-        return categoryName;
+    public CategoryResponse getCategory() {
+        return category;
     }
 
     public List<OptionResponse> getOptions() {
@@ -50,12 +56,12 @@ public class ProductResponse {
     }
 
     public static ProductResponse from(Product product) {
+        CategoryResponse categoryResponse = CategoryResponse.from(product.getCategory());
         List<OptionResponse> optionResponses = product.getOptions().stream()
-            .map(option -> new OptionResponse(option.getId(), option.getName(),
-                option.getQuantity()))
+            .map(OptionResponse::from)
             .toList();
 
         return new ProductResponse(product.getId(), product.getName(), product.getPrice(),
-            product.getImgUrl(), product.getCategory().getName(), optionResponses);
+            product.getImgUrl(), categoryResponse, optionResponses);
     }
 }

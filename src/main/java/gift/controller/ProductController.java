@@ -11,7 +11,8 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -55,7 +56,7 @@ public class ProductController {
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "성공",
             content = {@Content(schema = @Schema(implementation = ProductResponse.class))}),
-        @ApiResponse(responseCode = "204", description = "ID에 해당하는 상품이 존재하지 않습니다.")
+        @ApiResponse(responseCode = "404", description = "ID에 해당하는 상품이 존재하지 않습니다.")
     })
     public ResponseEntity<ProductResponse> getProduct(@PathVariable Long productId) {
         Optional<Product> product = productService.findById(productId);
@@ -71,12 +72,18 @@ public class ProductController {
     @ApiResponses(value = {
         @ApiResponse(responseCode = "201", description = "상품 추가 성공",
             content = {@Content(schema = @Schema(implementation = ProductResponse.class))}),
-        @ApiResponse(responseCode = "400", description = "유효성 검사 실패")
+        @ApiResponse(responseCode = "-40001", description = "유효성 검사 실패"),
+        @ApiResponse(responseCode = "-40002", description = "상품 등록 시 옵션이 하나 이상 주어지지 않음"),
+        @ApiResponse(responseCode = "-40402", description = "카테고리를 찾기 실패"),
+        @ApiResponse(responseCode = "-40903", description = "등록할 상품이 이미 존재함"),
+        @ApiResponse(responseCode = "-40904", description = "상품 옵션에 중복되는 이름의 옵션이 있음")
     })
-    public ResponseEntity<ProductResponse> addProduct(
+    public ResponseEntity<Map<String, ProductResponse>> addProduct(
         @Valid @RequestBody ProductRequest productRequest) {
         ProductResponse productResponse = productService.addProduct(productRequest);
-        return ResponseEntity.status(HttpStatus.CREATED).body(productResponse);
+        Map<String, ProductResponse> response = new HashMap<>();
+        response.put("created_product", productResponse);
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
     @PutMapping("/{productId}")

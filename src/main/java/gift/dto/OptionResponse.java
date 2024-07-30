@@ -1,12 +1,15 @@
 package gift.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import gift.entity.Option;
 
 public class OptionResponse {
 
     private Long id;
     private String name;
-    private int quantity;
+
+    @JsonProperty("stock_quantity")
+    private int stockQuantity;
 
     public OptionResponse() {
     }
@@ -14,7 +17,7 @@ public class OptionResponse {
     public OptionResponse(Long id, String name, int quantity) {
         this.id = id;
         this.name = name;
-        this.quantity = quantity;
+        this.stockQuantity = quantity;
     }
 
     public Long getId() {
@@ -25,12 +28,12 @@ public class OptionResponse {
         return name;
     }
 
-    public int getQuantity() {
-        return quantity;
+    public int getStockQuantity() {
+        return stockQuantity;
     }
 
     public static OptionResponse from(Option option) {
-        return new OptionResponse(option.getId(), option.getName(), option.getQuantity());
+        return new OptionResponse(option.getId(), option.getName(), option.getStockQuantity());
     }
 
 }
