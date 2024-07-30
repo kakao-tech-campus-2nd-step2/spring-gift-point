@@ -12,11 +12,23 @@ public class OrderRequest {
         Long optionId,
         @Min(1)
         Integer quantity,
+        Boolean hasCashReceipt,
+        String cashReceiptType,
+        String cashReceiptNumber,
         String message
     ) {
 
         public OrderIn.Create toOrderInCreate(Long memberId) {
-            return new OrderIn.Create(memberId, productId, optionId, quantity, message);
+            return new OrderIn.Create(
+                memberId,
+                productId,
+                optionId,
+                quantity,
+                hasCashReceipt,
+                cashReceiptType,
+                cashReceiptNumber,
+                message
+            );
         }
     }
 

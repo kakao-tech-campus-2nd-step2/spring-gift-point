@@ -8,7 +8,9 @@ import gift.product.business.dto.KakaoOrderMessage;
 import gift.product.business.client.KakaoMessageClient;
 import gift.product.business.dto.OptionIn;
 import gift.product.business.dto.OrderIn;
+import gift.product.business.dto.OrderOut;
 import gift.product.persistence.repository.OrderRepository;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -60,5 +62,11 @@ public class OrderService {
         }
 
         return orderId;
+    }
+
+    @Transactional(readOnly = true)
+    public OrderOut.Paging getOrdersByPage(Pageable pageable) {
+        var orderPage = orderRepository.getOrdersByPage(pageable);
+        return OrderOut.Paging.from(orderPage);
     }
 }

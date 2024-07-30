@@ -8,11 +8,16 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Index;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
 
 @Entity
+@Table(name = "order",
+    indexes = {@Index(name = "idx_created_date", columnList = "created_date")}
+)
 public class Order extends BaseTimeEntity {
 
     @Id
@@ -36,20 +41,41 @@ public class Order extends BaseTimeEntity {
     @NotNull
     private Integer quantity;
 
+    private Boolean hasCashReceipt;
+
+    private String cashReceiptType;
+
+    private String cashReceiptNumber;
+
     private String message;
 
     protected Order() {
     }
 
-    public Order(Product product, Member member, Long optionId, Integer quantity, String message) {
+    public Order(Product product, Member member, Long optionId, Integer quantity, Boolean hasCashReceipt, String cashReceiptType, String cashReceiptNumber, String message) {
         this.product = product;
         this.member = member;
         this.optionId = optionId;
         this.quantity = quantity;
+        this.hasCashReceipt = hasCashReceipt;
+        this.cashReceiptType = cashReceiptType;
+        this.cashReceiptNumber = cashReceiptNumber;
         this.message = message;
     }
 
     public Long getId() {
         return id;
+    }
+
+    public Product getProduct() {
+        return product;
+    }
+
+    public Integer getQuantity() {
+        return quantity;
+    }
+
+    public Long getOptionId() {
+        return optionId;
     }
 }
