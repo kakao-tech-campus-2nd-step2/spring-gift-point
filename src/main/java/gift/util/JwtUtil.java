@@ -48,6 +48,15 @@ public class JwtUtil {
         }
     }
 
+    public boolean isTokenExpired(String token) {
+        try {
+            Date expirationDate = extractAllClaims(token).getExpiration();
+            return expirationDate.before(new Date());
+        } catch (JwtException | IllegalArgumentException e) {
+            return true;
+        }
+    }
+
     private Claims extractAllClaims(String token) {
         return Jwts.parser()
             .setSigningKey(secret)

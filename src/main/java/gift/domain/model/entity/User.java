@@ -9,6 +9,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import jakarta.persistence.Column;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "users")
@@ -36,7 +37,7 @@ public class User {
     private String kakaoAccessToken;
 
     @Column
-    private String kakaoRefreshToken;
+    private LocalDateTime kakaoTokenExpireAt;
 
     protected User() {
     }
@@ -53,13 +54,12 @@ public class User {
         this.authProvider = AuthProvider.LOCAL;
     }
 
-    public User(String email, AuthProvider authProvider, String providerId, String kakaoAccessToken,
-        String kakaoRefreshToken) {
+    public User(String email, AuthProvider authProvider, String providerId, String kakaoAccessToken, LocalDateTime kakaoTokenExpireAt) {
         this.email = email;
         this.authProvider = authProvider;
         this.providerId = providerId;
         this.kakaoAccessToken = kakaoAccessToken;
-        this.kakaoRefreshToken = kakaoRefreshToken;
+        this.kakaoTokenExpireAt = kakaoTokenExpireAt;
     }
 
     public Long getId() {
@@ -86,8 +86,8 @@ public class User {
         return kakaoAccessToken;
     }
 
-    public String getKakaoRefreshToken() {
-        return kakaoRefreshToken;
+    public LocalDateTime getKakaoTokenExpireAt() {
+        return kakaoTokenExpireAt;
     }
 
     public void update(String email, String password) {
@@ -95,9 +95,9 @@ public class User {
         this.password = password;
     }
 
-    public void updateKakaoTokens(String newAccessToken, String newRefreshToken) {
+    public void updateKakaoToken(String newAccessToken, LocalDateTime expireAt) {
         this.kakaoAccessToken = newAccessToken;
-        this.kakaoRefreshToken = newRefreshToken;
+        this.kakaoTokenExpireAt = expireAt;
     }
 
     public enum AuthProvider {

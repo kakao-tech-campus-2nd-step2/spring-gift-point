@@ -16,25 +16,17 @@ public class KakaoTokenResponseDto {
     @JsonProperty("expires_in")
     private Integer expiresIn;
 
-    @JsonProperty("refresh_token")
-    private String refreshToken;
-
-    @JsonProperty("refresh_token_expires_in")
-    private Integer refreshTokenExpiresIn;
-
     private String scope;
 
     public KakaoTokenResponseDto() {
     }
 
     public KakaoTokenResponseDto(String tokenType, String accessToken, String idToken,
-        Integer expiresIn, String refreshToken, Integer refreshTokenExpiresIn, String scope) {
+        Integer expiresIn, String scope) {
         this.tokenType = tokenType;
         this.accessToken = accessToken;
         this.idToken = idToken;
         this.expiresIn = expiresIn;
-        this.refreshToken = refreshToken;
-        this.refreshTokenExpiresIn = refreshTokenExpiresIn;
         this.scope = scope;
     }
 
@@ -42,7 +34,7 @@ public class KakaoTokenResponseDto {
         return accessToken;
     }
 
-    public String getRefreshToken() {
-        return refreshToken;
+    public Integer getExpiresIn() {
+        return expiresIn;
     }
 }

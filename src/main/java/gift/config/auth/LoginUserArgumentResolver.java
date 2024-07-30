@@ -36,6 +36,10 @@ public class LoginUserArgumentResolver implements HandlerMethodArgumentResolver 
             throw new UnauthorizedException("No authentication token found");
         }
 
+        if (jwtUtil.isTokenExpired(token)) {
+            throw new UnauthorizedException("Token has expired");
+        }
+
         String userEmail = jwtUtil.extractUserEmail(token);
         return userService.getUserByEmail(userEmail);
     }
