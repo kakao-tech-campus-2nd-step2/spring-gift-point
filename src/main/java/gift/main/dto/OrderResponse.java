@@ -2,7 +2,10 @@ package gift.main.dto;
 
 import gift.main.entity.Order;
 
-public record OrderResponce(
+public record OrderResponse(
+        long buyerId,
+        long optionId,
+        long productId,
         String buyerName,
         String productName,
         String optionName,
@@ -10,8 +13,11 @@ public record OrderResponce(
         String message
 ) {
     //만드는 주체는 누가 가지는게 좋을까??
-    public OrderResponce(Order order) {
+    public OrderResponse(Order order) {
         this(
+                order.getBuyer().getId(),
+                order.getOption().getId(),
+                order.getProduct().getId(),
                 order.getBuyer().getName(),
                 order.getProduct().getName(),
                 order.getOption().getOptionName(),
@@ -22,7 +28,7 @@ public record OrderResponce(
 
     @Override
     public String toString() {
-        return "OrderResponce{" +
+        return "OrderResponse{" +
                 "productName='" + productName + '\'' +
                 ", optionName='" + optionName + '\'' +
                 ", quantity=" + quantity +

@@ -74,10 +74,10 @@ public class KakaoService {
 
     }
 
-    public void sendOrderMessage(OrderResponce orderResponce, UserVo userVo) {
+    public void sendOrderMessage(OrderResponse orderResponse, UserVo userVo) {
         //요청바디 객체를 만드는 부분
         MultiValueMap<Object, Object> map = new LinkedMultiValueMap<>();
-        String templateObjectJson = TextTemplateFactory.convertOrderResponseToTextTemplateJson(orderResponce);
+        String templateObjectJson = TextTemplateFactory.convertOrderResponseToTextTemplateJson(orderResponse);
         map.set(TEMPLATE_OBJECT, templateObjectJson);
 
         //요청을 위한 토큰을 가지고 오는 로직
