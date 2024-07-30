@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 
 @Tag(name = "OrderController", description = "주문 관련 API")
 @RestController
-@RequestMapping("/api/v1")
+@RequestMapping("/api")
 public class OrderController {
     private final OrderService orderService;
 
