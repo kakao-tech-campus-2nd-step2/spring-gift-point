@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="UTF-8">
+    <title>상품 관리</title>
+  </head>
+  <body>
+    <div class="container">
+      <h1><a href="/products">돌아 가기</a></h1>
+      <div th:if="${product == null}">
+        <form action="/products" method="post">
+          <div class="form-group">
+            <p><label for="new_name">이름</label>
+              <input type="text" id="new_name" name="name" placeholder="이름을 입력하세요">
+            </p>
+            <p><label for="new_price">가격</label>
+              <input type="text" id="new_price" name="price" placeholder="가격을 입력하세요">
+            </p>
+            <p><label for="new_imageUrl">이미지</label>
+              <input type="text" id="new_imageUrl" name="imageUrl" placeholder="이미지 URL을 입력하세요">
+            </p>
+            <p><label for="new_category">카테고리</label>
+              <select id="new_category" th:field="*{categoryId}">
+                <option value="" disabled selected>카테고리 선택</option>
+                <option th:each="category : ${categories}" th:value="${category.id}" th:text="${category.name}"></option>
+              </select>
+            </p>
+          </div>
+          <button type="submit">상품 추가</button>
+          <button type="reset">취소</button>
+        </form>
+      </div>
+      <div th:if="${product != null}">
+        <form th:action="@{/products/{id}(id=${product.id})}" method="post">
+          <input type="hidden" name="_method" value="put" />
+          <div class="form-group">
+            <p><label for="edit_name">이름</label>
+              <input type="text" id="edit_name" name="name" th:value="${product.name}" placeholder="이름을 입력하세요">
+            </p>
+            <p><label for="edit_price">가격</label>
+              <input type="text" id="edit_price" name="price" th:value="${product.price}" placeholder="가격을 입력하세요">
+            </p>
+            <p><label for="edit_imageUrl">이미지</label>
+              <input type="text" id="edit_imageUrl" name="imageUrl" th:value="${product.imageUrl}" placeholder="이미지 URL을 입력하세요">
+            </p>
+            <p><label for="edit_category">카테고리</label>
+              <select id="edit_category" th:field="*{categoryId}">
+                <option value="" disabled selected>카테고리 선택</option>
+                <option th:each="category : ${categories}" th:value="${category.id}" th:text="${category.name}"></option>
+              </select>
+            </p>
+          </div>
+          <button type="submit">상품 수정</button>
+          <button type="reset">취소</button>
+        </form>
+      </div>
+    </div> <!-- /container -->
+  </body>
+</html>
