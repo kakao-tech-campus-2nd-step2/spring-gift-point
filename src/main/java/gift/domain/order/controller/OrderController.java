@@ -10,8 +10,12 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springdoc.core.annotations.ParameterObject;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -26,6 +30,17 @@ public class OrderController {
 
     public OrderController(OrderService orderService) {
         this.orderService = orderService;
+    }
+
+    @GetMapping()
+    @Operation(summary = "주문 목록 조회", description = "주문 목록을 조회합니다.")
+    @ApiResponse(responseCode = "200", description = "요청에 성공하였습니다.", content = @Content(mediaType = "application/json"))
+    public ResponseEntity<Page<OrderResponse>> getAllOrders(
+        @Parameter(hidden = true) @LoginMember Member member,
+        @ParameterObject Pageable pageable
+    ){
+        Page<OrderResponse> responses = orderService.getAllOrders(pageable, member);
+        return ResponseEntity.ok(responses);
     }
 
     @PostMapping()
