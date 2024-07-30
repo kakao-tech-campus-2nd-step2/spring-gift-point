@@ -15,7 +15,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.MediaType;
 import org.springframework.http.client.ClientHttpRequestFactory;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.web.client.RestClient;
@@ -91,9 +90,8 @@ public class KakaoApiCaller {
                 }).body(String.class);
     }
 
-    @Async
     public void sendKakaoMessage(String accessToken, Orders orders) {
-        client.post()
+        String rs = client.post()
                 .uri(URI.create(properties.selfMessageUrl()))
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .header("Authorization", "Bearer " + accessToken)
@@ -103,6 +101,7 @@ public class KakaoApiCaller {
                     System.out.println("error");
                     throw new AuthenticationException("Message sending failed");
                 }).body(String.class);
+        System.out.println(rs);
     }
 
 

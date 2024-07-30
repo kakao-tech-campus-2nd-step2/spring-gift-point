@@ -3,9 +3,7 @@ package gift.controller.restcontroller;
 import gift.common.annotation.LoginMember;
 import gift.controller.dto.request.OrderRequest;
 import gift.controller.dto.response.OrderResponse;
-import gift.service.OrderService;
 import gift.service.RedisService;
-import gift.service.WishService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -23,14 +21,10 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/v1/order")
 public class OrderRestController {
 
-    private final OrderService orderService;
     private final RedisService redisService;
-    private final WishService wishService;
 
-    public OrderRestController(OrderService orderService, RedisService redisService, WishService wishService) {
-        this.orderService = orderService;
+    public OrderRestController(RedisService redisService) {
         this.redisService = redisService;
-        this.wishService = wishService;
     }
 
     @PostMapping("")
@@ -41,8 +35,6 @@ public class OrderRestController {
             @Parameter(hidden = true) @NotNull @LoginMember Long memberId
     ) {
         OrderResponse order = redisService.createOrderRedisLock(memberId, orderRequest);
-        wishService.deleteIfExists(orderRequest.productId(), memberId);
-        orderService.sendKakaoMessage(memberId, order.orderId());
         return ResponseEntity.ok().body(order);
     }
 }
