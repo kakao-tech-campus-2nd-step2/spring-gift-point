@@ -80,8 +80,21 @@ public class ProductService {
                         .map(product -> new ProductResponse(product.getId(), product.getName(), product.getPrice(), product.getImageUrl()))
                         .toList(),
                 all.getNumber(),
-                all.getTotalPages(),
-                all.getSize(),
+                all.getTotalElements(),
+                all.getNumberOfElements(),
+                all.isLast()
+        );
+    }
+
+    public ProductListResponse getProductByCategory(Long categoryId, Pageable pageable) {
+        Page<Product> all = productRepository.findByCategoryId(categoryId, pageable);
+        return new ProductListResponse(
+                all.getContent().stream()
+                        .map(product -> new ProductResponse(product.getId(), product.getName(), product.getPrice(), product.getImageUrl()))
+                        .toList(),
+                all.getNumber(),
+                all.getTotalElements(),
+                all.getNumberOfElements(),
                 all.isLast()
         );
     }
