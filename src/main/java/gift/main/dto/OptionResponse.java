@@ -8,7 +8,10 @@ public record OptionResponse(
         int quantity) {
 
     public OptionResponse(Option option) {
-        this(option.getId(), option.getOptionName(), option.getQuantity());
+        this(
+                option.getId(),
+                option.getOptionName(),
+                option.getQuantity());
     }
 
 }

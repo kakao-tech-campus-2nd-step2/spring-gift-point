@@ -1,7 +1,10 @@
 package gift.main.dto;
 
+import com.fasterxml.jackson.databind.PropertyNamingStrategies;
+import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import gift.main.entity.Order;
 
+@JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public record OrderResponse(
         long buyerId,
         long optionId,

@@ -1,12 +1,13 @@
 package gift.main.controller;
 
 import gift.main.dto.CategoryRequest;
-import gift.main.entity.Category;
+import gift.main.dto.CategoryResponse;
 import gift.main.service.CategoryService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/categories")
@@ -19,9 +20,10 @@ public class CategoryController {
     }
 
     @GetMapping
-    public ResponseEntity<?> getCategorylist() {
-        List<Category> categoryList = categoryService.getCategoryAll();
-        return ResponseEntity.ok(categoryList);
+    public ResponseEntity<?> getCategorise() {
+        List<CategoryResponse> categoryList = categoryService.getCategoryAll();
+        Map<String, List<CategoryResponse>> response = Map.of("categories", categoryList);
+        return ResponseEntity.ok(response);
     }
 
     @DeleteMapping("/{id}")

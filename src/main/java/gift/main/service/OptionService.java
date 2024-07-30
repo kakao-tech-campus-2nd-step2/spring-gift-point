@@ -31,7 +31,7 @@ public class OptionService {
 
     @Transactional
     public void registerOptionsFirstTime(Product product, OptionListRequest optionListRequest) {
-        optionListRequest.optionRequests().stream()
+        optionListRequest.options().stream()
                 .map(optionRequest -> new Option(optionRequest, product))
                 .forEach(option -> optionRepository.save(option));
     }

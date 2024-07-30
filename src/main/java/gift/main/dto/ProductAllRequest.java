@@ -1,13 +1,17 @@
 package gift.main.dto;
 
+import com.fasterxml.jackson.databind.PropertyNamingStrategies;
+import com.fasterxml.jackson.databind.annotation.JsonNaming;
+
 import java.util.List;
 
+@JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public record ProductAllRequest(
         String name,
         int price,
         String imageUrl,
         int categoryId,
-        List<OptionRequest> optionRequests) {
+        List<OptionRequest> options) {
 
     public ProductAllRequest(ProductRequest productRequest,
                              OptionListRequest optionListRequest) {
@@ -16,7 +20,7 @@ public record ProductAllRequest(
                 productRequest.price(),
                 productRequest.imageUrl(),
                 productRequest.categoryId(),
-                optionListRequest.optionRequests()
+                optionListRequest.options()
         );
     }
 

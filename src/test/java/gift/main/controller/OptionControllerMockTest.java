@@ -29,7 +29,7 @@ public class OptionControllerMockTest {
 
     private final ObjectMapper objectMapper = new ObjectMapper();
     private MockMvc mockMvc;
-    
+
     @Mock
     private OptionService optionService;
 

@@ -3,6 +3,8 @@ package gift.main.service;
 import gift.main.Exception.CustomException;
 import gift.main.Exception.ErrorCode;
 import gift.main.dto.CategoryRequest;
+import gift.main.dto.CategoryResponse;
+import gift.main.dto.OptionResponse;
 import gift.main.entity.Category;
 import gift.main.repository.CategoryRepository;
 import gift.main.repository.ProductRepository;
@@ -10,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class CategoryService {
@@ -21,8 +24,10 @@ public class CategoryService {
         this.productRepository = productRepository;
     }
 
-    public List<Category> getCategoryAll() {
-        return categoryRepository.findAll();
+    public List<CategoryResponse> getCategoryAll() {
+        return categoryRepository.findAll()
+                .stream().map(category -> new CategoryResponse(category))
+                .collect(Collectors.toList());
     }
 
     @Transactional
