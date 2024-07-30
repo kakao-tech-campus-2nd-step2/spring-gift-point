@@ -16,9 +16,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-@Tag(name = "Order", description = "Orde API")
+@Tag(name = "Order", description = "Order API")
 @RestController
-@RequestMapping("/api/v1/order")
+@RequestMapping("/api/orders")
 public class OrderRestController {
 
     private final RedisService redisService;
