@@ -1,90 +1,73 @@
 package gift.service;
 
 import gift.domain.Member;
-import gift.domain.Option;
+import gift.domain.Product;
 import gift.domain.Wish;
 import gift.dto.request.MemberRequest;
-import gift.dto.response.OptionResponse;
 import gift.dto.request.WishRequest;
+import gift.dto.response.ProductResponse;
+import gift.dto.response.WishAddResponse;
 import gift.dto.response.WishResponse;
-import gift.exception.customException.OptionAlreadyInWishlistException;
+import gift.exception.customException.ProductAlreadyInWishlistException;
 import gift.exception.customException.WishNotFoundException;
+import gift.repository.ProductRepository;
 import gift.repository.WishRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
+import java.time.LocalDateTime;
 
-import static gift.exception.errorMessage.Messages.NOT_FOUND_WISH;
-import static gift.exception.errorMessage.Messages.OPTION_ALREADY_IN_WISHLIST;
+import static gift.exception.errorMessage.Messages.*;
 
 @Service
 public class WishService {
     private final WishRepository wishRepository;
-    private final OptionService optionService;
+    private final ProductService productService;
 
-    public WishService(WishRepository wishRepository, OptionService optionService) {
+    public WishService(WishRepository wishRepository, ProductService productService) {
         this.wishRepository = wishRepository;
-        this.optionService = optionService;
+        this.productService = productService;
     }
 
     @Transactional
-    public void save(MemberRequest memberRequest, WishRequest wishRequest){
-        if(wishRepository.existsByOptionId(wishRequest.optionId())){
-            throw new OptionAlreadyInWishlistException(OPTION_ALREADY_IN_WISHLIST);
+    public WishAddResponse save(MemberRequest memberRequest, WishRequest wishRequest) {
+        if (wishRepository.existsByProductId(wishRequest.productId())) {
+            throw new ProductAlreadyInWishlistException(PRODUCT_ALREADY_IN_WISHLIST);
         }
 
-        OptionResponse optionResponse = optionService.findById(wishRequest.optionId());
-
-        Option option = optionResponse.toEntity();
+        ProductResponse productResponse = productService.findById(wishRequest.productId());
+        Product product = productService.toEntity(productResponse);
         Member member = memberRequest.toEntity();
 
-        Wish newWish = new Wish(member,option,wishRequest.quantity());
-
-        wishRepository.save(newWish);
+        LocalDateTime createdDate = LocalDateTime.now();
+        Wish newWish = wishRepository.save(new Wish(member, product, createdDate));
+        return new WishAddResponse(newWish.getId(), newWish.getProduct().getId());
     }
 
     @Transactional(readOnly = true)
-    public List<WishResponse> getMemberWishesByMemberId(Long memberId){
-        return wishRepository.findByMemberId(memberId)
-                .stream()
-                .map(WishResponse::from)
-                .toList();
-
-    }
-
-    @Transactional(readOnly = true)
-    public Page<WishResponse> getPagedMemberWishesByMemberId(Long memberId, Pageable pageable){
-        Page<Wish> wishPage = wishRepository.findByMemberId(memberId,pageable);
+    public Page<WishResponse> getPagedMemberWishesByMemberId(Long memberId, Pageable pageable) {
+        Page<Wish> wishPage = wishRepository.findByMemberId(memberId, pageable);
         return wishPage.map(WishResponse::from);
     }
 
     @Transactional
-    public void deleteWishByMemberIdAndId(Long memberId, Long id){
-        Wish foundWish = wishRepository.findByIdAndMemberId(id, memberId)
-                .orElseThrow(()-> new WishNotFoundException(NOT_FOUND_WISH));
+    public void deleteById(Long id) {
+        Wish foundWish = wishRepository.findById(id)
+                .orElseThrow(() -> new WishNotFoundException(NOT_FOUND_WISH));
 
         foundWish.remove();
         wishRepository.deleteById(id);
     }
 
-    @Transactional
-    public void updateQuantityByMemberIdAndId(Long memberId, Long id, WishRequest request){
-        Wish existingWish = wishRepository.findByIdAndMemberId(id, memberId)
-                .orElseThrow(()-> new WishNotFoundException(NOT_FOUND_WISH));
-
-        existingWish.updateQuantity(request.quantity());
-    }
-
     @Transactional(readOnly = true)
-    public boolean existsByOptionId(Long optionId){
-        return wishRepository.existsByOptionId(optionId);
+    public boolean existsByProductId(Long productId) {
+        return wishRepository.existsByProductId(productId);
     }
 
     @Transactional
-    public void deleteByOptionId(Long optionId){
-        wishRepository.deleteByOptionId(optionId);
+    public void deleteByProductId(Long optionId) {
+        wishRepository.deleteByProductId(optionId);
     }
 }
