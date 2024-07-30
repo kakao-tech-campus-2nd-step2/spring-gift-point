@@ -3,7 +3,7 @@
 이 문서는 Spring-Gift 플랫폼에서 제공하는 모든 API에 대한 상세한 설명과 지침을 제공합니다.    
 각 API 기능별로 세분화하여 표 형식의 개요와 함께 요청 객체 및 응답 객체의 상세 정보를 포함하고 있습니다.
 
-API 사용 중 궁금하거나 불명확한 부분이 있으시면 언제든지 문의해 주세요.‍🙇‍♀️🙇‍♀️ 
+API 사용 중 궁금하거나 불명확한 부분이 있으시면 언제든지 문의해 주세요.‍🙇‍♀️🙇‍♀️
 ****
 ### API 기능 개요
 이 API 문서는 다음과 같은 기능들을 제공합니다:
@@ -13,17 +13,17 @@ API 사용 중 궁금하거나 불명확한 부분이 있으시면 언제든지 
 - JWT 토큰 관리: JWT 토큰은 카카오 로그인 성공 시 응답 헤더를 통해 발급받을 수 있습니다.
 
 #### 상품 관련 기능:
-- 상품 등록: 각 상품은 하나 이상의 카테고리와 옵션을 포함합니다. 
+- 상품 등록: 각 상품은 하나 이상의 카테고리와 옵션을 포함합니다.
   - 필수 정보: 상품 등록 시, 옵션 리스트와 카테고리 정보가 요구됩니다. 상세한 형식은 요청 객체 섹션을 참조하세요.
-- JWT 토큰 : 발급받은 JWT 토큰은 위시리스트와 주문 API에서 사용됩니다. 
+- JWT 토큰 : 발급받은 JWT 토큰은 위시리스트와 주문 API에서 사용됩니다.
 
-### 참고사항 
-- 모든 api는 `/api`로 시작합니다. 
+### 참고사항
+- 모든 api는 `/api`로 시작합니다.
 
 ---
 
 ## 목차
-- [Kakao Authentication API](#kakao-authentication-api) 
+- [Kakao Authentication API](#kakao-authentication-api)
 - [Category API](#category-api)
 - [Product API](#product-api)
 - [Option API](#option-api)
@@ -85,7 +85,7 @@ Content-Type: application/json
 | 제목                 | 메서드    | URL                                 | 요청 컨텐트 타입 / 요청 객체                                       | 응답 객체                                | 설명                                  |
 |----------------------|--------|-------------------------------------|---------------------------------------------------------|--------------------------------------|---------------------------------------|
 | 카테고리 목록 조회    | `GET`  | `/api/categories `                    | `Content-Type: application/json`                          | `Status: 200 OK`<br>`Body: {categories}` | 모든 카테고리 정보를 반환합니다.       |
-| 특정 카테고리 조회   | `GET`  | `/api/categories/{id}`                | `Content-Type: application/json`                          | `Status: 200 OK`<br>`Body: {category}`           | ID에 해당하는 카테고리 정보를 반환합니다. |
+| 특정 카테고리 조회   | `GET`  | `/api/categories/{category_id}`                | `Content-Type: application/json`                          | `Status: 200 OK`<br>`Body: {category}`           | ID에 해당하는 카테고리 정보를 반환합니다. |
 | 새로운 카테고리 추가 | `POST` | `/api/categories`                     | `Content-Type: application/json`<br>`body : {category}` | `Status: 200 OK`                       | 새로운 카테고리를 추가합니다.           |
 | 카테고리 삭제       | `DELETE` | `/api/categories/{category_id}`       | `Content-Type: application/json`                          | `Status: 200 OK`                       | 지정된 ID의 카테고리를 삭제합니다.       |
 
@@ -136,7 +136,7 @@ Content-Type: application/json
 
 #### Request:
 ```http
-GET http://localhost:8080/api/categories/1
+GET http://localhost:8080/api/categories/{category_id}
 Content-Type: application/json
 ```
 
@@ -460,7 +460,7 @@ Content-Type: application/json
 body
 {
   "name": "name",       
-  "quanatity": 1000,       
+  "quantity": 1000,       
   "product_id": 1       
 }
 ```
