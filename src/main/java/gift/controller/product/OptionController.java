@@ -85,14 +85,14 @@ public class OptionController {
 
     @Operation(summary = "옵션 구매", description = "옵션 구매 api")
     @Authorization(role = Role.USER)
-    @PostMapping("/api/products/options/purchase")
+    @PostMapping("/api/orders")
     public ResponseEntity<String> purchaseOption(
         @RequestBody @Valid OptionRequest.Purchase request,
         @Authenticate LoginInfo loginInfo
     ) {
-        OptionModel.Info optionInfo = productFacade.purchase(loginInfo.memberId(),
+        OptionModel.PurchaseInfo purchaseInfo = productFacade.purchase(loginInfo.memberId(),
             request.toCommand());
-        wishService.deleteWishByOption(loginInfo.memberId(), optionInfo.id());
+        wishService.deleteWishByOption(loginInfo.memberId(), purchaseInfo.optionId());
         return ResponseEntity.ok("구매에 성공하셨습니다");
     }
 }
