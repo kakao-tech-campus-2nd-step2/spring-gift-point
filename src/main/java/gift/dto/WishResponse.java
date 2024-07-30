@@ -1,30 +1,27 @@
 package gift.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import gift.entity.Product;
 import gift.entity.Wish;
 
 public class WishResponse {
 
     private Long id;
-    private Long productId;
-    private String productName;
+
+    @JsonProperty("product")
+    private WishProductResponse wishProductResponse;
 
     public WishResponse(Long id, Product product) {
         this.id = id;
-        this.productId = product.getId();
-        this.productName = product.getName();
+        this.wishProductResponse = WishProductResponse.from(product);
     }
 
     public Long getId() {
         return id;
     }
 
-    public Long getProductId() {
-        return productId;
-    }
-
-    public String getProductName() {
-        return productName;
+    public WishProductResponse getWishProductResponse() {
+        return wishProductResponse;
     }
 
     public static WishResponse from(Wish wish) {
