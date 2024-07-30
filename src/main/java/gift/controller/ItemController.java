@@ -23,17 +23,25 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @Tag(name = "Product Api")
 @RestController
-@RequestMapping("/product")
+@RequestMapping("/api/products")
 public class ItemController {
 
     private final ItemService itemService;
 
     public ItemController(ItemService itemService) {
         this.itemService = itemService;
+    }
+
+    @Operation(summary = "단일 상품 조회")
+    @GetMapping("/{id}")
+    public ResponseEntity<ItemDTO> getItem(@PathVariable("id") Long id) {
+        ItemDTO itemDTO = itemService.getItemById(id);
+        return ResponseEntity.ok(itemDTO);
     }
 
     @Operation(summary = "상품 목록 조회")
@@ -45,9 +53,9 @@ public class ItemController {
     }
 
     @Operation(summary = "카테고리 별 상품 목록 조회", description = "카테고리 id에 해당되는 상품 목록을 반환합니다.")
-    @GetMapping("/category/{category_id}")
+    @GetMapping
     public ResponseEntity<Page<ItemDTO>> getItemListByCategory(
-        @Parameter(description = "조회할 카테고리 id") @PathVariable("category_id") Long categoryId,
+        @Parameter(description = "조회할 카테고리 id") @RequestParam("categoryId") Long categoryId,
         @PageableDefault(size = 5, sort = "id", direction = Direction.DESC) Pageable pageable) {
         Page<ItemDTO> list = itemService.getListByCategoryId(categoryId, pageable);
         return ResponseEntity.ok(list);

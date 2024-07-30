@@ -22,7 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @Tag(name = "Product Option Api")
 @RestController
-@RequestMapping("/option")
+@RequestMapping("/api/products")
 public class OptionController {
 
     private final ItemService itemService;
@@ -32,7 +32,7 @@ public class OptionController {
     }
 
     @Operation(summary = "상품 옵션 목록 조회", description = "상품 id를 통해 해당 상품의 옵션 목록을 조회합니다.")
-    @GetMapping("/{id}")
+    @GetMapping("/{id}/options")
     public ResponseEntity<List<OptionDTO>> getOptionList(
         @Parameter(description = "조회할 상품 id") @PathVariable("id") Long id) {
         List<OptionDTO> list = itemService.getOptionList(id);
@@ -40,7 +40,7 @@ public class OptionController {
     }
 
     @Operation(summary = "특정 상품 옵션 추가")
-    @PostMapping("/{id}")
+    @PostMapping("/{id}/options")
     public ResponseEntity<Long> createOption(
         @Valid @RequestBody OptionDTO optionDTO,
         @Parameter(description = "옵션을 추가할 상품의 id") @PathVariable("id") Long itemId,
@@ -53,7 +53,7 @@ public class OptionController {
     }
 
     @Operation(summary = "특정 옵션 수정")
-    @PutMapping("/{id}")
+    @PutMapping("/{id}/options/{optionId}")
     public ResponseEntity<Long> updateOption(@Valid @RequestBody OptionDTO optionDTO,
         @Parameter(description = "해당 옵션이 포함된 상품의 id(옵션의 id는 입력폼에서 전달)") @PathVariable("id") Long itemId,
         BindingResult result)
@@ -65,7 +65,7 @@ public class OptionController {
     }
 
     @Operation(summary = "특정 옵션 삭제")
-    @DeleteMapping("/{item_id}/{option_id}")
+    @DeleteMapping("/{item_id}/options/{optionId}")
     public ResponseEntity<Long> deleteOption(
         @Parameter(description = "상품 id") @PathVariable("item_id") Long itemId,
         @Parameter(description = "삭제될 옵션 id") @PathVariable("option_id") Long optionId) {

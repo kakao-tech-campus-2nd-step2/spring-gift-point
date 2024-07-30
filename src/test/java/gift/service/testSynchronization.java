@@ -49,7 +49,6 @@ public class testSynchronization {
         optionId = item.getOptions().get(0).getId();
     }
 
-    @Transactional
     @DisplayName("재고 감소 동시성 테스트")
     @Test
     void testSynchronousDecreasing() throws InterruptedException {

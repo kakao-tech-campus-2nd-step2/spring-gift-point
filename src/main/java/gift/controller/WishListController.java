@@ -15,10 +15,12 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestAttribute;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @Tag(name = "Wish List Api")
 @RestController
+@RequestMapping("/api/wishes")
 public class WishListController {
 
     private final WishListService wishListService;
@@ -28,14 +30,14 @@ public class WishListController {
     }
 
     @Operation(summary = "위시 리스트 조회")
-    @GetMapping("/wishes")
+    @GetMapping
     public Page<WishListResponse> getWishList(@RequestAttribute("userId") Long userId,
         @PageableDefault(size = 5, sort = "id", direction = Direction.DESC) Pageable pageable) {
         return wishListService.getWishList(userId, pageable);
     }
 
     @Operation(summary = "위시 상품 추가")
-    @PostMapping("/wishes/{id}")
+    @PostMapping("/{id}")
     public ResponseEntity<Long> addToWishList(
         @Parameter(description = "추가할 상품 id") @PathVariable("id") Long itemId,
         @RequestAttribute("userId") Long userId) {
@@ -44,7 +46,7 @@ public class WishListController {
     }
 
     @Operation(summary = "위시 상품 삭제")
-    @DeleteMapping("/wishes/{id}")
+    @DeleteMapping("/{id}")
     public ResponseEntity<Long> deleteFromWishList(
         @Parameter(description = "삭제할 상품 id") @PathVariable("id") Long id,
         @RequestAttribute("userId") Long userId) {

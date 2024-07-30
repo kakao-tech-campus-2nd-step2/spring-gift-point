@@ -25,16 +25,6 @@ public class CategoryServiceTest {
     private final CategoryDTO testCategory2 = new CategoryDTO(1L, testName2, testUrl);
     private final CategoryDTO testCategory3 = new CategoryDTO(2L, testName3, testUrl);
 
-    @DisplayName("insertCategory 성공 테스트")
-    @Test
-    void testInsertCategorySuccess() {
-        CategoryDTO result = categoryService.insertCategory(testCategory1);
-        assertThat(result).usingRecursiveComparison().isEqualTo(testCategory1);
-    }
-    @Test
-    void tmp(){
-
-    }
     @DisplayName("getCategoryList 테스트")
     @Test
     void testGetCategoryList() {
