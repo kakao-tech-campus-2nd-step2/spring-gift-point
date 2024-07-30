@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  <title>Document</title>
+</head>
+<body>
+<h2>상품 수정</h2>
+<hr>
+<form th:action="@{/api/products/update/{id}(id=${product.id})}" th:method="post"
+      th:product="${product}">
+  <table>
+
+    <tr>
+      <td>Name</td>
+      <td><input th:field="*{product.name}" type="text"/></td>
+    </tr>
+    <tr>
+      <td>Price</td>
+      <td><input th:field="*{product.price}" type="text"/></td>
+    </tr>
+    <tr>
+      <td>ImageUrl</td>
+      <td><input th:field="*{product.imageUrl}" type="text"/></td>
+    </tr>
+    <tr>
+      <td> Category</td>
+      <td>
+        <select name="category" th:field="*{product.category}">
+          <option th:each="category : ${category}" th:text="${category.name}"
+                  th:value="${category.id}"></option>
+        </select>
+      </td>
+    </tr>
+    <tr>
+      <td><input type="submit" value="입력"></td>
+    </tr>
+  </table>
+</form>
+</body>
+</html>

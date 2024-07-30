@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8"/>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+  <title>상품 추가</title>
+</head>
+<body>
+<h2>상품 추가</h2>
+<hr/>
+<form method="post" th:action="@{/api/products/add}">
+  <table>
+    <tr>
+      <td>Name</td>
+      <td><input name="name" th:field="*{product.name}" type="text"/></td>
+    </tr>
+    <tr>
+      <td>Price</td>
+      <td><input name="price" th:field="*{product.price}" type="number"/></td>
+    </tr>
+    <tr>
+      <td>ImageUrl</td>
+      <td><input name="imageUrl" th:field="*{product.imageUrl}" type="text"/></td>
+    </tr>
+    <tr>
+      <td> Category</td>
+      <td>
+        <select name="category" th:field="*{product.category}">
+          <option th:each="category : ${category}" th:text="${category.name}"
+                  th:value="${category.id}"></option>
+        </select>
+      </td>
+    </tr>
+    <input name="id" type="hidden"/>
+    <tr>
+      <td><input type="submit" value="입력"></td>
+    </tr>
+  </table>
+</form>
+</body>
+</html>
