@@ -97,7 +97,7 @@ public class ProductServiceTest {
         Page<Product> mockPage = new PageImpl<>(Collections.singletonList(mockProduct));
         when(productRepository.findAll(pageable)).thenReturn(mockPage);
 
-        Page<Product> products = productService.getProducts(pageable);
+        Page<Product> products = productService.getProducts(null,pageable);
 
         assertNotNull(products);
         assertEquals(1, products.getTotalElements());

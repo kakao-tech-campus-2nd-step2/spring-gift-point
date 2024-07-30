@@ -4,6 +4,8 @@ import gift.domain.Category;
 import gift.domain.Product;
 import gift.dto.request.OptionRequest;
 import gift.dto.request.ProductRequest;
+import gift.dto.response.ProductPageResponse;
+import gift.dto.response.ProductResponse;
 import gift.exception.CategoryNotFoundException;
 import gift.exception.InvalidProductDataException;
 import gift.exception.ProductNotFoundException;
@@ -15,6 +17,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 import static gift.exception.ErrorCode.*;
 
@@ -48,8 +53,15 @@ public class ProductService {
         }
     }
 
-    public Page<Product> getProducts(Pageable pageable) {
-        return productRepository.findAll(pageable);
+    public ProductPageResponse getProducts(Long categoryId, Pageable pageable) {
+        Page<Product> products;
+        if (categoryId != null) {
+            products = productRepository.findByCategoryId(categoryId, pageable);
+        } else {
+            products = productRepository.findAll(pageable);
+        }
+
+        return ProductPageResponse.fromProductPage(products);
     }
 
     public Product findOne(Long productId) {

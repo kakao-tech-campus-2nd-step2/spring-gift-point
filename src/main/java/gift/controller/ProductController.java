@@ -5,6 +5,7 @@ import gift.domain.Product;
 import gift.dto.request.OptionRequest;
 import gift.dto.request.ProductRequest;
 import gift.dto.response.OptionResponse;
+import gift.dto.response.ProductPageResponse;
 import gift.dto.response.ProductResponse;
 import gift.service.CategoryService;
 import gift.service.OptionService;
@@ -13,7 +14,9 @@ import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -59,11 +62,13 @@ public class ProductController {
     }
 
     @GetMapping
-    @Operation(summary = "상품 목록 조회 (페이지네이션 적용)", description = "모든 상품의 목록을 페이지 단위로 조회한다.")
-    public String getProducts(Model model, Pageable pageable) {
-        Page<Product> products = productService.getProducts(pageable);
-        model.addAttribute("products", products);
-        return "product-list";
+    @Operation(summary = "상품 목록 조회 (페이지네이션 적용)", description = "특정 카테고리의 상품 목록을 페이지 단위로 조회한다.")
+    public ProductPageResponse getProducts(@RequestParam(required = false) Long categoryId,
+                                              @RequestParam(defaultValue = "20") int size,
+                                              @RequestParam(defaultValue = "0") int page,
+                                              @RequestParam(defaultValue = "createdDate,desc") String sort) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Order.desc(sort)));
+        return productService.getProducts(categoryId, pageable);
     }
 
     @GetMapping("/{id}")
@@ -92,7 +97,7 @@ public class ProductController {
     @Operation(summary = "상품 수정 화면", description = "상품 수정 화면으로 이동한다.")
     public String editProductForm(@PathVariable long id, Model model) {
         Product product = productService.findOne(id);
-        ProductResponse productResponse = ProductResponse.EntityToResponse(product);
+        ProductResponse productResponse = ProductResponse.fromProduct(product);
         model.addAttribute("productResponse", productResponse);
         model.addAttribute("categories", categoryService.getCategories());
         return "product-edit-form";
