@@ -36,7 +36,7 @@ public class AdminCategoryController {
 
     @GetMapping("/category/{id}")
     public String updateCategory(@PathVariable("id") @NotNull @Min(1) Long id, Model model) {
-        CategoryResponse category = categoryService.findById(id);
+        CategoryResponse.Info category = categoryService.findById(id);
         model.addAttribute("category", category);
         return "category/editCategory";
     }

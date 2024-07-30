@@ -19,7 +19,7 @@ import java.util.List;
 
 @Tag(name = "Category", description = "카테고리 API")
 @RestController
-@RequestMapping("/api/v1")
+@RequestMapping("/api")
 public class CategoryRestController {
     private final CategoryService categoryService;
     private final ProductService productService;
@@ -40,8 +40,8 @@ public class CategoryRestController {
 
     @GetMapping("/categories")
     @Operation(summary = "전체 카테고리 조회", description = "전체 카테고리를 조회합니다.")
-    public ResponseEntity<List<CategoryResponse>> getCategories() {
-        List<CategoryResponse> responses = categoryService.getAllCategories();
+    public ResponseEntity<CategoryResponse.InfoList> getCategories() {
+        CategoryResponse.InfoList responses = categoryService.getAllCategories();
         return ResponseEntity.ok().body(responses);
     }
 

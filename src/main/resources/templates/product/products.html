@@ -36,7 +36,6 @@
             <td th:text="${product.price}"/>
             <td th:text="${product.imageUrl}"/>
             <td th:text="${product.createdAt}"/>
-            <td th:text="${product.category}"/>
             <td><button><a th:href="@{/admin/product/{id}(id=${product.id})}">수정</a></button></td>
             <td>
                 <form th:action="@{/admin/product/{id}(id=${product.id})}" method="post">

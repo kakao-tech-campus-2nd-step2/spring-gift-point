@@ -23,7 +23,7 @@
         <label for="categoryName">카테고리:</label>
         <select id="categoryName" name="categoryId" required>
             <option value="" disabled selected>카테고리를 선택하세요</option>
-            <option th:each="category : ${categories}" th:value="${category.id}" th:text="${category.name}"></option>
+            <option th:each="category : ${categories.categories}" th:value="${category.id}" th:text="${category.name}"></option>
         </select>
     </div>
 

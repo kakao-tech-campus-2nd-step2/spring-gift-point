@@ -27,7 +27,6 @@ public class ProductResponse {
     public record WithOption(
             Long id, String name, int price,
             String imageUrl,
-            CategoryResponse category,
             List<OptionResponse> options,
             LocalDateTime createdAt, LocalDateTime updatedAt
     ) {
@@ -35,7 +34,6 @@ public class ProductResponse {
             return new WithOption(
                     product.getId(), product.getName(), product.getPrice(),
                     product.getImageUrl(),
-                    CategoryResponse.from(product.getCategory()),
                     product.getOptions().stream().map(OptionResponse::from).toList(),
                     product.getCreatedAt(), product.getUpdatedAt());
         }

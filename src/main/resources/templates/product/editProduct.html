@@ -23,7 +23,7 @@
     </div>
     <label for="categoryName">카테고리:</label>
     <select id="categoryName" name="categoryId" required>
-        <option th:each="category : ${categories}" th:value="${category.id}"
+        <option th:each="category : ${categories.categories}" th:value="${category.id}"
                 th:text="${category.name}" th:selected="${category.id == product.category.id}"></option>
     </select>
 

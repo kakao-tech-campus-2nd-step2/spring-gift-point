@@ -15,8 +15,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
 @Controller
 @RequestMapping("/admin/product")
 public class AdminProductController {
@@ -39,7 +37,7 @@ public class AdminProductController {
 
     @GetMapping("/new")
     public String newProduct(Model model) {
-        List<CategoryResponse> categories = categoryService.getAllCategories();
+        CategoryResponse.InfoList categories = categoryService.getAllCategories();
         model.addAttribute("categories", categories);
         return "product/newProduct";
     }
@@ -47,7 +45,7 @@ public class AdminProductController {
     @GetMapping("/{id}")
     public String updateProduct(@PathVariable("id") @NotNull @Min(1) Long id, Model model) {
         ProductResponse.WithOption product = productService.findById(id);
-        List<CategoryResponse> categories = categoryService.getAllCategories();
+        CategoryResponse.InfoList categories = categoryService.getAllCategories();
         model.addAttribute("product", product);
         model.addAttribute("categories", categories);
         return "product/editProduct";

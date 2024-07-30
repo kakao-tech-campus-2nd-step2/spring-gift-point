@@ -12,8 +12,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
-
 @Service
 public class CategoryService {
     private final CategoryRepository categoryRepository;
@@ -30,15 +28,13 @@ public class CategoryService {
     }
 
     @Transactional(readOnly = true)
-    public List<CategoryResponse> getAllCategories() {
-        return categoryRepository.findAll().stream()
-                .map(CategoryResponse::from)
-                .toList();
+    public CategoryResponse.InfoList getAllCategories() {
+        return CategoryResponse.InfoList.from(categoryRepository.findAll());
     }
 
     @Transactional(readOnly = true)
-    public CategoryResponse findById(Long id) {
-        return CategoryResponse.from(categoryRepository.findById(id)
+    public CategoryResponse.Info findById(Long id) {
+        return CategoryResponse.Info.from(categoryRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Category with id " + id + " not found")));
     }
 
@@ -51,9 +47,9 @@ public class CategoryService {
     }
 
     @Transactional(readOnly = true)
-    public PagingResponse<CategoryResponse> findAllPaging(Pageable pageable) {
-        Page<CategoryResponse> pages = categoryRepository.findAll(pageable)
-                .map(CategoryResponse::from);
+    public PagingResponse<CategoryResponse.Info> findAllPaging(Pageable pageable) {
+        Page<CategoryResponse.Info> pages = categoryRepository.findAll(pageable)
+                .map(CategoryResponse.Info::from);
         return PagingResponse.from(pages);
     }
 
