@@ -4,6 +4,7 @@ import gift.dto.request.CategoryRequest;
 import gift.dto.response.CategoryResponse;
 import gift.service.CategoryService;
 import io.swagger.v3.oas.annotations.Operation;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -37,14 +38,14 @@ public class CategoryController {
 
     @PostMapping
     @Operation(summary = "카테고리 생성", description = "새 카테고리를 등록한다.")
-    public ResponseEntity<CategoryResponse> createCategory(@RequestBody CategoryRequest categoryRequest) {
+    public ResponseEntity<CategoryResponse> createCategory(@Valid @RequestBody CategoryRequest categoryRequest) {
         CategoryResponse responseBody = categoryService.createCategory(categoryRequest);
         return ResponseEntity.ok().body(responseBody);
     }
 
     @PutMapping("/{id}")
     @Operation(summary = "카테고리 수정", description = "기존 카테고리를 수정한다.")
-    public ResponseEntity<CategoryResponse> updateCategory(@PathVariable Long id, @RequestBody CategoryRequest categoryRequest) {
+    public ResponseEntity<CategoryResponse> updateCategory(@PathVariable Long id, @Valid @RequestBody CategoryRequest categoryRequest) {
         CategoryResponse responseBody = categoryService.updateCategory(id, categoryRequest);
         return ResponseEntity.ok().body(responseBody);
     }

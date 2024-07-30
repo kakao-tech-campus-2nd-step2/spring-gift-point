@@ -6,6 +6,7 @@ import gift.dto.request.OrderRequest;
 import gift.dto.response.OrderResponse;
 import gift.service.OrderService;
 import io.swagger.v3.oas.annotations.Operation;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,7 +25,7 @@ public class OrderController {
 
     @PostMapping
     @Operation(summary = "주문하기", description = "새 주문을 생성한다.")
-    public ResponseEntity<OrderResponse> createOrder(@LoginMember TokenAuth tokenAuth, @RequestBody OrderRequest orderRequest) {
+    public ResponseEntity<OrderResponse> createOrder(@LoginMember TokenAuth tokenAuth, @Valid @RequestBody OrderRequest orderRequest) {
         String token = tokenAuth.getToken();
         OrderResponse orderResponse = orderService.createOrder(token, orderRequest);
         return new ResponseEntity<>(orderResponse, HttpStatus.CREATED);
