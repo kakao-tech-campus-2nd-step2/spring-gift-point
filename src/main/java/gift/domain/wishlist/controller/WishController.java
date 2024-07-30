@@ -49,20 +49,19 @@ public class WishController {
     @PostMapping
     @Operation(summary = "위시리스트 생성", description = "위시 리스트를 생성합니다.")
     @ApiResponse(responseCode = "201", description = "요청에 성공하였습니다.", content = @Content(mediaType = "application/json"))
-    public ResponseEntity<WishResponse> createWish(@RequestBody ProductIdRequest productIdRequest,
+    public ResponseEntity<Void> createWish(@RequestBody ProductIdRequest productIdRequest,
         @Parameter(hidden = true) @LoginMember Member member) {
         WishRequest wishRequest = new WishRequest(member.getId(), productIdRequest.getProductId());
-        WishResponse response = wishService.createWish(wishRequest);
-        return ResponseEntity.status(HttpStatus.CREATED)
-            .body(response);
+        wishService.createWish(wishRequest);
+        return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/{productId}")
     @Operation(summary = "위시 리스트 삭제", description = "해당 위시 리스트를 삭제합니다.")
     @ApiResponse(responseCode = "204", description = "요청에 성공하였습니다.")
     @Parameter(name = "id", description = "삭제할 위시 리스트의 ID", example = "1")
-    public ResponseEntity<WishResponse> deleteWish(@PathVariable("id") Long id,
+    public ResponseEntity<WishResponse> deleteWish(@PathVariable("productId") Long id,
         @Parameter(hidden = true) @LoginMember Member member) {
         wishService.deleteWish(id, member);
 

@@ -66,20 +66,19 @@ public class ProductController {
     @ApiResponse(responseCode = "201", description = "요청에 성공하였습니다.", content = @Content(mediaType = "application/json"))
     public ResponseEntity<ProductCreateResponse> createProduct(
         @RequestBody @Valid ProductRequest productRequest) {
-        ProductCreateResponse response = productService.createProduct(productRequest);
-        return ResponseEntity.status(HttpStatus.CREATED)
-            .body(response);
+        productService.createProduct(productRequest);
+        return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
     @PutMapping("/{productId}")
     @Operation(summary = "상품 수정", description = "해당 상품을 수정합니다.")
     @ApiResponse(responseCode = "201", description = "요청에 성공하였습니다.", content = @Content(mediaType = "application/json"))
     @Parameter(name = "productId", description = "수정할 상품의 ID", example = "1")
-    public ResponseEntity<ProductResponse> updateProduct(@PathVariable("productId") Long id,
+    public ResponseEntity<ProductResponse> updateProduct(
+        @PathVariable("productId") Long id,
         @RequestBody @Valid ProductRequest productRequest) {
-        ProductResponse response = productService.updateProduct(id, productRequest);
-        return ResponseEntity.status(HttpStatus.CREATED)
-            .body(response);
+        productService.updateProduct(id, productRequest);
+        return ResponseEntity.status(HttpStatus.OK).build();
     }
 
     @DeleteMapping("/{productId}")
@@ -106,9 +105,8 @@ public class ProductController {
     public ResponseEntity<OptionResponse> addOptionToProduct(
         @PathVariable("productId") Long id,
         @Valid @RequestBody OptionRequest request) {
-        OptionResponse response = optionService.addOptionToProduct(id, request);
-        return ResponseEntity.status(HttpStatus.CREATED)
-            .body(response);
+        optionService.addOptionToProduct(id, request);
+        return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
     @PutMapping("{productId}/options/{optionId}")
@@ -121,9 +119,8 @@ public class ProductController {
         @PathVariable("optionId") Long optionId,
         @RequestBody OptionRequest request
     ){
-        OptionResponse response = optionService.updateProductOption(productId, optionId, request);
-        return ResponseEntity.status(HttpStatus.CREATED)
-            .body(response);
+        optionService.updateProductOption(productId, optionId, request);
+        return ResponseEntity.status(HttpStatus.OK).build();
     }
 
     @DeleteMapping("/{productId}/options/{optionId}")
