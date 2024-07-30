@@ -3,11 +3,12 @@
 <head>
     <title>회원 가입 페이지</title>
     <link rel="stylesheet" type="text/css" th:href="@{/css/styles.css}">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 <body>
 <div class="container">
     <h2>회원가입</h2>
-    <form th:action="@{/join}" method="post">
+    <form id="join-form">
         <div class="form-group">
             <label for="email">Email:</label>
             <input type="email" id="email" name="email" class="form-control" required>
@@ -19,5 +20,33 @@
         <button type="submit" class="btn btn-primary">제출</button>
     </form>
 </div>
+
+<script>
+    $(document).ready(function() {
+        $('#join-form').on('submit', function(event) {
+            event.preventDefault();
+
+            const formData = {
+                email: $('#email').val(),
+                password: $('#password').val()
+            };
+
+            $.ajax({
+                url: '/api/members/register',
+                type: 'POST',
+                contentType: 'application/json',
+                dataType: 'text',
+                data: JSON.stringify(formData),
+                success: function(response) {
+                    localStorage.setItem('token', response);
+                    window.location.href = '/';
+                },
+                error: function() {
+                    alert('회원가입 실패');
+                }
+            });
+        });
+    });
+</script>
 </body>
 </html>

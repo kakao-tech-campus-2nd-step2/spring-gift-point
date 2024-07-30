@@ -35,16 +35,16 @@ public class JwtHelper {
      * @param token JWT 토큰
      * @return Claims
      */
-    public Claims getClaims(String token) {
+    public Claims getClaims(Token token) {
         return Jwts.parser()
                 .verifyWith(KEY)
                 .build()
-                .parseSignedClaims(token)
+                .parseSignedClaims(token.token())
                 .getPayload();
     }
 
-    public boolean isJwtToken(String token) {
-        return token.split("\\.").length == 3;
+    public boolean isJwtToken(Token token) {
+        return token.token().split("\\.").length == 3;
     }
 
 }

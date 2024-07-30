@@ -25,7 +25,7 @@ public class JwtUtil {
         this.jwtHelper = jwtHelper;
     }
 
-    private Long getMemberIdFromToken(String token) {
+    private Long getMemberIdFromToken(Token token) {
         return jwtHelper.getClaims(token).get("userId", Long.class);
     }
 
@@ -34,27 +34,28 @@ public class JwtUtil {
      * @param authorizationHeader Authorization 헤더
      * @return Bearer 토큰 추출
      */
-    public String getBearerTokenFromAuthorizationHeader(String authorizationHeader) {
-        return authorizationHeader.replace("Bearer ", "");
+    public Token getBearerTokenFromAuthorizationHeader(String authorizationHeader) {
+        String bearerToken = authorizationHeader.replace("Bearer ", "");
+        return new Token(bearerToken);
     }
 
-    private Long getMemberIdFromKakao(String token) {
+    private Long getMemberIdFromKakao(Token token) {
         String memberEmail = kakaoApiService.getMemberEmailFromKakao(token);
         return memberService.getMemberByEmail(memberEmail).getId();
     }
 
     public Long getMemberIdFromAuthorizationHeader(String authorizationHeader) {
-        String token = getBearerTokenFromAuthorizationHeader(authorizationHeader);
+        Token fetchedToken = getBearerTokenFromAuthorizationHeader(authorizationHeader);
 
-        if (jwtHelper.isJwtToken(token)) {
-            return getMemberIdFromToken(token);
+        if (jwtHelper.isJwtToken(fetchedToken)) {
+            return getMemberIdFromToken(fetchedToken);
         } else {
-            return getMemberIdFromKakao(token);
+            return getMemberIdFromKakao(fetchedToken);
         }
     }
 
-    public boolean isNotJwtToken(String token) {
-        return token.split("\\.").length != 3;
+    public boolean isNotJwtToken(Token token) {
+        return token.token().split("\\.").length != 3;
     }
 
 }
