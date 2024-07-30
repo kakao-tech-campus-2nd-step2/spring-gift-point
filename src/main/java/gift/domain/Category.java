@@ -1,6 +1,7 @@
 package gift.domain;
 
 import gift.controller.dto.CategoryRequest;
+import gift.utils.TimeStamp;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -14,7 +15,7 @@ import java.util.List;
 
 @Entity
 @Table(name = "categorie")
-public class Category {
+public class Category extends TimeStamp {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;

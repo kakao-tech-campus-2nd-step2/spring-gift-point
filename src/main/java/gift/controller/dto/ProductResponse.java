@@ -20,19 +20,16 @@ public class ProductResponse {
 
     private Category category;
 
-    private List<Option> optionList;
 
     public ProductResponse() {
     }
 
-    public ProductResponse(Long id, String name, Double price, String imageUrl, Category category,
-        List<Option> optionList) {
+    public ProductResponse(Long id, String name, Double price, String imageUrl, Category category) {
         this.id = id;
         this.name = name;
         this.price = price;
         this.imageUrl = imageUrl;
         this.category = category;
-        this.optionList = optionList;
     }
 
     public String getName() {
@@ -75,11 +72,4 @@ public class ProductResponse {
         this.category = category;
     }
 
-    public List<Option> getOptionList() {
-        return optionList;
-    }
-
-    public void setOptionList(List<Option> optionList) {
-        this.optionList = optionList;
-    }
 }

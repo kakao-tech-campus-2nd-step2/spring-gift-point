@@ -3,15 +3,16 @@ package gift.controller.dto;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 
-public class WishRequest {
-
+public class WishResponse {
+    private Long id;
     @NotNull
     private Long productId;
     @Min(1)
     @NotNull
     private int count;
 
-    public WishRequest(Long productId, int count) {
+    public WishResponse(Long id, Long productId, int count) {
+        this.id = id;
         this.productId = productId;
         this.count = count;
     }

@@ -11,6 +11,8 @@ import jakarta.validation.Valid;
 import java.util.List;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -27,21 +29,19 @@ public class GiftController {
 
 
     @GetMapping
-    public ResponseEntity<Page<ProductResponse>> getAllProducts(@ModelAttribute PaginationDTO paginationDTO,
-        @RequestHeader("Authorization") String token) {
-        Pageable pageable = PaginationUtils.createPageable(paginationDTO, "product");
+    public ResponseEntity<Page<ProductResponse>> getAllProducts(@PageableDefault(size = 5, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable) {
         Page<ProductResponse> allProducts = giftService.getAllProduct(pageable);
         return ResponseEntity.ok(allProducts);
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<ProductResponse> getProductById(@PathVariable Long id) {
+    @GetMapping("/{productId}")
+    public ResponseEntity<ProductResponse> getProductById(@PathVariable("productId") Long id) {
         ProductResponse productResponse = giftService.getProduct(id);
         return ResponseEntity.ok(productResponse);
     }
 
     @GetMapping("/{id}/options")
-    public ResponseEntity<List<OptionResponse>> getProductOption(@PathVariable Long id){
+    public ResponseEntity<List<OptionResponse>> getProductOption(@PathVariable("id") Long id){
         List<OptionResponse> option = giftService.getOption(id);
         return ResponseEntity.ok(option);
     }

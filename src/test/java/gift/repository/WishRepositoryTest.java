@@ -1,15 +1,14 @@
 package gift.repository;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import gift.domain.Category;
 import gift.domain.Product;
 import gift.domain.UserInfo;
 import gift.domain.Wish;
-import gift.utils.error.WishListNotFoundException;
 import java.util.Arrays;
 import java.util.Optional;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,134 +29,97 @@ public class WishRepositoryTest {
     @Autowired
     private CategoryRepository categoryRepository;
 
-    private Category createAndSaveCategory() {
-        Category category = new Category("Test Category", "Test Description", "Test Color", "Test Image URL");
-        return categoryRepository.save(category);
+    private Category category;
+    private Product product1, product2;
+    private UserInfo userInfo1, userInfo2;
+    private Wish wish1, wish2;
+
+    @BeforeEach
+    void setup() {
+        category = categoryRepository.save(new Category("Test Category", "Test Description", "Test Color", "Test Image URL"));
+
+        product1 = productRepository.save(new Product("Product1", 1000, "img1", category));
+        product2 = productRepository.save(new Product("Product2", 2000, "img2", category));
+
+        userInfo1 = userInfoRepository.save(new UserInfo("user1@example.com", "password1"));
+        userInfo2 = userInfoRepository.save(new UserInfo("user2@example.com", "password2"));
+
+        wish1 = wishRepository.save(new Wish(product1, userInfo1, 1));
+        wish2 = wishRepository.save(new Wish(product2, userInfo2, 2));
     }
 
     @Test
-    @DisplayName("userId로 Wish 찾기 테스트")
-    void findByUserId() {
-        Category category = createAndSaveCategory();
-        Product product = new Product("original", 1000, "img", category);
-        UserInfo userInfo = new UserInfo("kakaocampus@gmail.com", "kakao2024");
-        productRepository.save(product);
-        userInfoRepository.save(userInfo);
-
-        Wish wish = new Wish(product, userInfo, 1L);
-        wishRepository.save(wish);
-        int pageSize = 10;
-        Pageable pageable = PageRequest.of(0, pageSize);
-
-        Page<Wish> byUserId = wishRepository.findByUserInfoId(userInfo.getId(), pageable);
-
-        assertThat(byUserId).isNotEmpty();
-        assertThat(byUserId.getContent().get(0))
-            .extracting(Wish::getUserInfo, Wish::getProduct, Wish::getQuantity)
-            .containsExactly(userInfo, product, 1L);
-
-        assertThat(byUserId.getSize()).isEqualTo(pageSize);
-        assertThat(byUserId.getTotalElements()).isEqualTo(1);
-        assertThat(byUserId.getTotalPages()).isEqualTo(1);
-        assertThat(byUserId.getNumber()).isZero();
+    @DisplayName("deleteByProductIdAndUserInfoId 테스트")
+    void deleteByProductIdAndUserInfoId() {
+        wishRepository.deleteByProductIdAndUserInfoId(product1.getId(), userInfo1.getId());
+        assertThat(wishRepository.findByUserInfoIdAndProductId(userInfo1.getId(), product1.getId())).isEmpty();
     }
 
     @Test
-    @DisplayName("위시 아이템 수량 업데이트")
-    void updateWishQuantity() {
-        Category category = createAndSaveCategory();
-        Product product = new Product("pak", 1000, "jpg", category);
-        UserInfo userInfo = new UserInfo("kakaocampus@gmail.com", "kakao2024");
-        productRepository.save(product);
-        userInfoRepository.save(userInfo);
-        Wish wish = new Wish(product, userInfo, 1L);
-        Wish savedWish = wishRepository.save(wish);
+    @DisplayName("findByUserInfoId 테스트")
+    void findByUserInfoId() {
+        Pageable pageable = PageRequest.of(0, 10);
+        Page<Wish> wishes = wishRepository.findByUserInfoId(userInfo1.getId(), pageable);
 
-        savedWish.setQuantity(5L);
-        wishRepository.save(savedWish);
-
-        Optional<Wish> updatedWishOptional = wishRepository.findByUserInfoIdAndProductId(userInfo.getId(), product.getId());
-        assertThat(updatedWishOptional).isPresent();
-        assertThat(updatedWishOptional.get().getQuantity()).isEqualTo(5L);
+        assertThat(wishes.getContent()).hasSize(1);
+        assertThat(wishes.getContent().get(0).getUserInfo()).isEqualTo(userInfo1);
     }
 
     @Test
-    @DisplayName("존재하지 않는 위시 아이템 조회")
+    @DisplayName("existsByUserInfoIdAndProductId 테스트")
+    void existsByUserInfoIdAndProductId() {
+        assertThat(wishRepository.existsByUserInfoIdAndProductId(userInfo1.getId(), product1.getId())).isTrue();
+        assertThat(wishRepository.existsByUserInfoIdAndProductId(userInfo1.getId(), product2.getId())).isFalse();
+    }
+
+    @Test
+    @DisplayName("findByUserInfoIdAndProductId 테스트")
+    void findByUserInfoIdAndProductId() {
+        Optional<Wish> foundWish = wishRepository.findByUserInfoIdAndProductId(userInfo1.getId(), product1.getId());
+        assertThat(foundWish).isPresent();
+        assertThat(foundWish.get().getUserInfo()).isEqualTo(userInfo1);
+        assertThat(foundWish.get().getProduct()).isEqualTo(product1);
+    }
+
+    @Test
+    @DisplayName("findWishByIdAndMemberEmail 테스트")
+    void findWishByIdAndMemberEmail() {
+        Optional<Wish> foundWish = wishRepository.findWishByIdAndMemberEmail(wish1.getId(), userInfo1.getEmail());
+        assertThat(foundWish).isPresent();
+        assertThat(foundWish.get()).isEqualTo(wish1);
+    }
+
+    @Test
+    @DisplayName("존재하지 않는 Wish 조회 테스트")
     void findNonExistentWish() {
         Optional<Wish> nonExistentWish = wishRepository.findByUserInfoIdAndProductId(999L, 999L);
         assertThat(nonExistentWish).isEmpty();
     }
 
     @Test
+    @DisplayName("위시 아이템 수량 업데이트 테스트")
+    void updateWishQuantity() {
+        wish1.setCount(5);
+        wishRepository.save(wish1);
+
+        Optional<Wish> updatedWishOptional = wishRepository.findByUserInfoIdAndProductId(userInfo1.getId(), product1.getId());
+        assertThat(updatedWishOptional).isPresent();
+        assertThat(updatedWishOptional.get().getCount()).isEqualTo(5L);
+    }
+
+    @Test
     @DisplayName("여러 사용자의 위시 리스트 테스트")
     void multipleUserWishLists() {
-        Category category = createAndSaveCategory();
-        Product product1 = new Product("pak", 1000, "jpg", category);
-        Product product2 = new Product("jeong", 2000, "png", category);
-        Product product3 = new Product("woo", 3000, "gif", category);
-        UserInfo userInfo1 = new UserInfo("kakaocampus@gmail.com", "kakao2024");
-        UserInfo userInfo2 = new UserInfo("kakao@gmail.com", "kakao");
-        UserInfo userInfo3 = new UserInfo("campus@gmail.com", "2024");
-
-        productRepository.saveAll(Arrays.asList(product1, product2, product3));
-        userInfoRepository.saveAll(Arrays.asList(userInfo1, userInfo2, userInfo3));
-        Wish wish1 = new Wish(product1, userInfo1, 1L);
-        Wish wish2 = new Wish(product2, userInfo2, 2L);
-        Wish wish3 = new Wish(product3, userInfo3, 3L);
-
-        wishRepository.saveAll(Arrays.asList(wish1, wish2, wish3));
-
         Pageable pageable = PageRequest.of(0, 10);
 
         Page<Wish> wishesForUser1 = wishRepository.findByUserInfoId(userInfo1.getId(), pageable);
         Page<Wish> wishesForUser2 = wishRepository.findByUserInfoId(userInfo2.getId(), pageable);
-        Page<Wish> wishesForUser3 = wishRepository.findByUserInfoId(userInfo3.getId(), pageable);
 
         assertThat(wishesForUser1.getContent()).hasSize(1);
-        assertThat(wishesForUser1.getContent().get(0).getQuantity()).isEqualTo(1L);
+        assertThat(wishesForUser1.getContent().get(0).getCount()).isEqualTo(1L);
         assertThat(wishesForUser2.getContent()).hasSize(1);
-        assertThat(wishesForUser2.getContent().get(0).getQuantity()).isEqualTo(2L);
-        assertThat(wishesForUser3.getContent()).hasSize(1);
-        assertThat(wishesForUser3.getContent().get(0).getQuantity()).isEqualTo(3L);
+        assertThat(wishesForUser2.getContent().get(0).getCount()).isEqualTo(2L);
 
-        assertThat(wishRepository.findAll()).hasSize(3);
-    }
-
-    @Test
-    @DisplayName("유저아이디와 제품아이디로 위시리스트 삭제하기,존재하는지 확인하기")
-    void deleteByProductIdAndUserInfoId() {
-        Category category = createAndSaveCategory();
-        Product product = new Product("original", 1000, "img", category);
-        UserInfo userInfo = new UserInfo("kakaocampus@gmail.com", "kakao2024");
-        productRepository.save(product);
-        userInfoRepository.save(userInfo);
-        Wish wish = new Wish(product, userInfo, 1L);
-        wishRepository.save(wish);
-
-        assertThat(wishRepository.existsByUserInfoIdAndProductId(userInfo.getId(), product.getId())).isTrue();
-
-        wishRepository.deleteByProductIdAndUserInfoId(product.getId(), userInfo.getId());
-
-        assertThat(wishRepository.existsByUserInfoIdAndProductId(userInfo.getId(), product.getId())).isFalse();
-        assertThat(wishRepository.findByUserInfoIdAndProductId(userInfo.getId(), product.getId())).isEmpty();
-    }
-
-    @Test
-    @DisplayName("유저아이디와 제품아이디로 위시리스트 찾기")
-    void findByUserInfoIdAndProductId() {
-        Category category = createAndSaveCategory();
-        Product product = new Product("original", 1000, "img", category);
-        UserInfo userInfo = new UserInfo("kakaocampus@gmail.com", "kakao2024");
-        productRepository.save(product);
-        userInfoRepository.save(userInfo);
-        Wish wish = new Wish(product, userInfo, 1L);
-        wishRepository.save(wish);
-
-        Optional<Wish> foundWish = wishRepository.findByUserInfoIdAndProductId(userInfo.getId(), product.getId());
-
-        assertThat(foundWish).isPresent();
-        assertThat(foundWish.get())
-            .extracting(Wish::getProduct, Wish::getUserInfo, Wish::getQuantity)
-            .containsExactly(product, userInfo, 1L);
+        assertThat(wishRepository.findAll()).hasSize(2);
     }
 }

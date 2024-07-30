@@ -23,15 +23,11 @@ public class OptionService {
         this.productRepository = productRepository;
     }
 
-    public OptionResponse addOption(OptionRequest optionRequest) {
-        Product product = productRepository.findById(optionRequest.getProductId()).orElseThrow(
+    public OptionResponse addOption(OptionRequest optionRequest,Long productId) {
+        Product product = productRepository.findById(productId).orElseThrow(
             () -> new ProductNotFoundException("Product Not Found")
         );
-        if (product.getOptions().stream()
-            .anyMatch(o -> o.getName().equals(optionRequest.getName()))) {
-            throw new DuplicateOptionException("Option name already exists for this product");
-        }
-        Option option = new Option(optionRequest.getName(), optionRequest.getQuantity());
+        Option option = new Option(optionRequest.getOptionName(), optionRequest.getOptionQuantity());
         option.setProduct(product);
         product.addOption(option);
         Option save = optionRepository.save(option);
@@ -40,12 +36,26 @@ public class OptionService {
     }
 
     @Transactional
-    public Long deleteOption(Long id) {
+    public Long deleteOption(Long id,String email) {
         optionRepository.findById(id).orElseThrow(
             () -> new OptionNotFoundException("Option Not Found")
         );
         optionRepository.deleteById(id);
         return id;
+    }
+
+    public OptionResponse changeOption(OptionRequest optionRequest,Long productId,Long optionId) {
+        Product product = productRepository.findById(productId).orElseThrow(
+            () -> new ProductNotFoundException("Product Not Found")
+        );
+        Option optionbyId = optionRepository.findById(optionId).orElseThrow(
+            () -> new OptionNotFoundException("Option Not Found")
+        );
+        optionbyId.setName(optionRequest.getOptionName());
+        optionbyId.setQuantity(optionRequest.getOptionQuantity());
+        Option save = optionRepository.save(optionbyId);
+
+        return new OptionResponse(save.getId(), save.getName(), save.getQuantity());
     }
 
 }

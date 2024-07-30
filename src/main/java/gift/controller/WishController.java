@@ -2,12 +2,15 @@ package gift.controller;
 
 import gift.controller.dto.PaginationDTO;
 import gift.controller.dto.WishRequest;
+import gift.controller.dto.WishResponse;
 import gift.domain.Wish;
 import gift.service.WishService;
 import gift.utils.JwtTokenProvider;
 import gift.utils.PaginationUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -33,41 +36,40 @@ public class WishController {
     }
 
     @PostMapping()
-    public ResponseEntity<String> addToWishlist(@RequestBody WishRequest wishRequest,
+    public ResponseEntity<WishResponse> addToWishlist(@RequestBody WishRequest wishRequest,
         @RequestHeader("Authorization") String token) {
         String email = jwtTokenProvider.getEmailFromToken(token.substring(7));
-        wishlistService.addToWishlist(email, wishRequest);
-        return ResponseEntity.ok("Product added to wishlist");
+        WishResponse wishResponse = wishlistService.addToWishlist(email, wishRequest);
+        return ResponseEntity.ok(wishResponse);
 
     }
 
-    @DeleteMapping("/{productId}")
-    public ResponseEntity<String> removeFromWishlist(@PathVariable Long productId,
+    @DeleteMapping("/{wishId}")
+    public ResponseEntity<WishResponse> removeFromWishlist(@PathVariable("wishId") Long wishId,
         @RequestHeader("Authorization") String token) {
         String email = jwtTokenProvider.getEmailFromToken(token.substring(7));
-        wishlistService.removeFromWishlist(email, productId);
-        return ResponseEntity.ok("Product removed from wishlist");
+        WishResponse wishResponse = wishlistService.removeFromWishlist(email, wishId);
+        return ResponseEntity.ok(wishResponse);
 
     }
 
     @GetMapping
-    public ResponseEntity<Page<Wish>> getWishlist(
+    public ResponseEntity<Page<WishResponse>> getWishlist(
         @RequestHeader("Authorization") String token,
-        @ModelAttribute PaginationDTO paginationDTO) {
+        @PageableDefault(size = 5, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable) {
 
-        Pageable pageable = PaginationUtils.createPageable(paginationDTO, "wishlist");
 
         String email = jwtTokenProvider.getEmailFromToken(token.substring(7));
-        Page<Wish> wishlistProducts = wishlistService.getWishlistProducts(email, pageable);
+        Page<WishResponse> wishlistProducts = wishlistService.getWishlistProducts(email, pageable);
         return ResponseEntity.ok(wishlistProducts);
     }
 
     @PutMapping()
-    public ResponseEntity<String> changeToWishlist(@RequestBody WishRequest wishRequest,
+    public ResponseEntity<WishResponse> changeToWishlist(@RequestBody WishRequest wishRequest,
         @RequestHeader("Authorization") String token) {
         String email = jwtTokenProvider.getEmailFromToken(token.substring(7));
-        wishlistService.changeToWishlist(email, wishRequest);
-        return ResponseEntity.ok("Product added to wishlist");
+        WishResponse wishResponse = wishlistService.changeToWishlist(email, wishRequest);
+        return ResponseEntity.ok(wishResponse);
 
     }
 

@@ -3,8 +3,8 @@ package gift.service;
 import static org.mockito.Mockito.*;
 import static org.junit.jupiter.api.Assertions.*;
 
+import gift.controller.dto.OptionRequest;
 import gift.controller.dto.OptionResponse;
-import gift.controller.dto.ProductOptionRequest;
 import gift.controller.dto.ProductRequest;
 import gift.controller.dto.ProductResponse;
 import gift.domain.Category;
@@ -12,6 +12,9 @@ import gift.domain.Option;
 import gift.domain.Product;
 import gift.repository.CategoryRepository;
 import gift.repository.ProductRepository;
+import gift.utils.error.CategoryNotFoundException;
+import gift.utils.error.NotpermitNameException;
+import gift.utils.error.ProductNotFoundException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -35,6 +38,8 @@ class GiftServiceTest {
     @Mock
     private CategoryRepository categoryRepository;
 
+    @Mock
+    private OptionService optionService;
 
     @InjectMocks
     private GiftService giftService;
@@ -49,11 +54,9 @@ class GiftServiceTest {
     void getProduct() {
         // Given
         Long productId = 1L;
-        Product product = new Product("Test Product", 100.0, "image.jpg");
         Category category = new Category(1L, "Test Category", "Red", "category.jpg", "Description");
-        Option option = new Option("Option 1", 10);
-        product.setCategory(category);
-        product.addOption(option);
+        Product product = new Product("Test Product", 100.0, "image.jpg", category);
+        product.setId(productId);
 
         when(productRepository.findByIdWithCategoryAndOption(productId)).thenReturn(Optional.of(product));
 
@@ -65,7 +68,6 @@ class GiftServiceTest {
         assertEquals("Test Product", response.getName());
         assertEquals(100.0, response.getPrice());
         assertEquals("Test Category", response.getCategory().getName());
-        assertEquals(1, response.getOptionList().size());
     }
 
     @Test
@@ -73,19 +75,10 @@ class GiftServiceTest {
     void getAllProduct() {
         // Given
         Pageable pageable = PageRequest.of(0, 10);
-
         Category category1 = new Category(1L, "Category 1", "Red", "cat1.jpg", "Description 1");
         Category category2 = new Category(2L, "Category 2", "Blue", "cat2.jpg", "Description 2");
-
-        Product product1 = new Product("Product 1", 100.0, "image1.jpg");
-        product1.setCategory(category1);
-        product1.addOption(new Option("Option 1 for Product 1", 10));
-        product1.addOption(new Option("Option 2 for Product 1", 20));
-
-        Product product2 = new Product("Product 2", 200.0, "image2.jpg");
-        product2.setCategory(category2);
-        product2.addOption(new Option("Option 1 for Product 2", 15));
-
+        Product product1 = new Product("Product 1", 100.0, "image1.jpg", category1);
+        Product product2 = new Product("Product 2", 200.0, "image2.jpg", category2);
         List<Product> products = Arrays.asList(product1, product2);
         Page<Product> productPage = new PageImpl<>(products, pageable, products.size());
 
@@ -97,68 +90,52 @@ class GiftServiceTest {
         // Then
         assertNotNull(responsePage);
         assertEquals(2, responsePage.getContent().size());
-
-        ProductResponse response1 = responsePage.getContent().get(0);
-        assertEquals("Product 1", response1.getName());
-        assertEquals("Category 1", response1.getCategory().getName());
-        assertEquals(2, response1.getOptionList().size());
-        assertTrue(response1.getOptionList().stream().anyMatch(opt -> opt.getName().equals("Option 1 for Product 1")));
-        assertTrue(response1.getOptionList().stream().anyMatch(opt -> opt.getName().equals("Option 2 for Product 1")));
-
-        ProductResponse response2 = responsePage.getContent().get(1);
-        assertEquals("Product 2", response2.getName());
-        assertEquals("Category 2", response2.getCategory().getName());
-        assertEquals(1, response2.getOptionList().size());
-        assertTrue(response2.getOptionList().stream().anyMatch(opt -> opt.getName().equals("Option 1 for Product 2")));
+        assertEquals("Product 1", responsePage.getContent().get(0).getName());
+        assertEquals("Product 2", responsePage.getContent().get(1).getName());
     }
 
     @Test
-    @DisplayName("PostProduct 메서드 확인")
+    @DisplayName("postProducts 메서드 확인")
     void postProducts() {
         // Given
-        ProductRequest request = new ProductRequest("New Product", 150.0, "new-image.jpg", 1L);
-        request.setOptions(Arrays.asList(new ProductOptionRequest("Option 1", 5)));
-
+        ProductRequest productRequest = new ProductRequest("New Product", 150.0, "new-image.jpg", 1L);
+        OptionRequest optionRequest = new OptionRequest("Option 1", 5);
         Category category = new Category(1L, "Test Category", "Blue", "category.jpg", "Description");
-        when(categoryRepository.findById(1L)).thenReturn(Optional.of(category));
+        Product savedProduct = new Product("New Product", 150.0, "new-image.jpg", category);
+        savedProduct.setId(1L);
 
-        Product savedProduct = new Product("New Product", 150.0, "new-image.jpg");
-        savedProduct.setCategory(category);
-        savedProduct.addOption(new Option("Option 1", 5));
+        when(categoryRepository.findById(1L)).thenReturn(Optional.of(category));
         when(productRepository.save(any(Product.class))).thenReturn(savedProduct);
 
         // When
-        ProductResponse response = giftService.postProducts(request);
+        ProductResponse response = giftService.postProducts(productRequest, optionRequest);
 
         // Then
         assertNotNull(response);
         assertEquals("New Product", response.getName());
         assertEquals(150.0, response.getPrice());
         assertEquals("Test Category", response.getCategory().getName());
-        assertEquals(1, response.getOptionList().size());
+        verify(optionService).addOption(eq(optionRequest), eq(1L));
     }
 
     @Test
-    @DisplayName("deleteProduct 메서드 확인")
+    @DisplayName("deleteProducts 메서드 확인")
     void deleteProducts() {
         // Given
         Long productId = 1L;
-        Product product = new Product("Test Product", 100.0, "test-image.jpg");
-        product.setId(productId);
-
         Category category = new Category(1L, "Test Category", "Red", "category-image.jpg", "Test Description");
-        product.setCategory(category);
-
-        Option option = new Option("Test Option", 10);
-        product.addOption(option);
+        Product product = new Product("Test Product", 100.0, "test-image.jpg", category);
+        product.setId(productId);
 
         when(productRepository.findById(productId)).thenReturn(Optional.of(product));
 
         // When
-        Long deletedId = giftService.deleteProducts(productId);
+        ProductResponse response = giftService.deleteProducts(productId);
 
         // Then
-        assertEquals(productId, deletedId);
+        assertNotNull(response);
+        assertEquals(productId, response.getId());
+        assertEquals("Test Product", response.getName());
         verify(productRepository).deleteById(productId);
     }
 
@@ -168,6 +145,7 @@ class GiftServiceTest {
         // Given
         Long productId = 1L;
         Product product = new Product("Test Product", 100.0, "image.jpg");
+        product.setId(productId);
         product.addOption(new Option("Option 1", 10));
         product.addOption(new Option("Option 2", 20));
 
@@ -181,5 +159,28 @@ class GiftServiceTest {
         assertEquals(2, responses.size());
         assertEquals("Option 1", responses.get(0).getName());
         assertEquals("Option 2", responses.get(1).getName());
+    }
+
+    @Test
+    @DisplayName("카카오가 포함된 상품명 예외 처리 확인")
+    void postProductWithInvalidName() {
+        // Given
+        ProductRequest request = new ProductRequest("카카오 상품", 100.0, "image.jpg", 1L);
+        OptionRequest optionRequest = new OptionRequest("Option", 5);
+
+        // When & Then
+        assertThrows(NotpermitNameException.class, () -> giftService.postProducts(request, optionRequest));
+    }
+
+    @Test
+    @DisplayName("존재하지 않는 카테고리로 상품 등록 시 예외 처리 확인")
+    void postProductWithNonExistentCategory() {
+        // Given
+        ProductRequest request = new ProductRequest("Valid Product", 100.0, "image.jpg", 999L);
+        OptionRequest optionRequest = new OptionRequest("Option", 5);
+        when(categoryRepository.findById(999L)).thenReturn(Optional.empty());
+
+        // When & Then
+        assertThrows(CategoryNotFoundException.class, () -> giftService.postProducts(request, optionRequest));
     }
 }

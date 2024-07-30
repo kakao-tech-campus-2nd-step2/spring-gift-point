@@ -16,7 +16,8 @@ public class PaginationUtils {
 
     private static final Map<String, List<String>> VALID_SORT_FIELDS = Map.of(
         "wishlist", Arrays.asList("id", "quantity"),
-        "product", Arrays.asList("id", "name", "price", "imageUrl")
+        "product", Arrays.asList("id", "name", "price", "imageUrl"),
+        "order",Arrays.asList("id","quantity","orderDateTime","message")
     );
 
     public static Pageable createPageable(PaginationDTO paginationDTO, String entityType) {

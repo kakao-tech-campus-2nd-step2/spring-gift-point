@@ -34,15 +34,15 @@ public class CategoryAdminController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Null> updateCategory(@RequestParam Long id, @Valid
+    public ResponseEntity<CategoryResponse> updateCategory(@RequestParam Long id, @Valid
     @RequestBody CategoryRequest categoryRequest){
-        categoryService.updateCategory(id, categoryRequest);
-        return ResponseEntity.ok(null);
+        CategoryResponse categoryResponse = categoryService.updateCategory(id, categoryRequest);
+        return ResponseEntity.ok(categoryResponse);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Long> deleteCategory(@RequestParam Long id){
-        categoryService.deleteCategory(id);
-        return ResponseEntity.ok(id);
+    public ResponseEntity<CategoryResponse> deleteCategory(@RequestParam Long id){
+        CategoryResponse categoryResponse = categoryService.deleteCategory(id);
+        return ResponseEntity.ok(categoryResponse);
     }
 }

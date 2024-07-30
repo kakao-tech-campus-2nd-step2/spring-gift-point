@@ -1,5 +1,6 @@
 package gift.service;
 
+import gift.controller.dto.OptionRequest;
 import gift.controller.dto.OptionResponse;
 import gift.controller.dto.ProductOptionRequest;
 import gift.controller.dto.ProductRequest;
@@ -26,10 +27,13 @@ public class GiftService {
 
     private final ProductRepository productRepository;
     private final CategoryRepository categoryRepository;
+    private final OptionService optionService;
 
-    public GiftService(ProductRepository productRepository, CategoryRepository categoryRepository) {
+    public GiftService(ProductRepository productRepository, CategoryRepository categoryRepository,
+        OptionService optionService) {
         this.productRepository = productRepository;
         this.categoryRepository = categoryRepository;
+        this.optionService = optionService;
     }
 
 
@@ -44,26 +48,21 @@ public class GiftService {
         return products.map(this::convertToProductResponse);
     }
 
-    public ProductResponse postProducts(ProductRequest productRequest) {
+    public ProductResponse postProducts(ProductRequest productRequest, OptionRequest optionRequest) {
         validateProductName(productRequest.getName());
 
         Category category = categoryRepository.findById(productRequest.getCategoryId())
             .orElseThrow(() -> new CategoryNotFoundException("Category NOT FOUND"));
 
-        List<ProductOptionRequest> options = productRequest.getOptions();
-        validateUniqueOptionNames(options);
 
         Product product = new Product(productRequest.getName(),
-            productRequest.getPrice(), productRequest.getImageUrl());
-
-        options.forEach( option -> {
-            Option saveoption = new Option(option.getName(), option.getQuantity());
-            product.addOption(saveoption);
-        });
+            productRequest.getPrice(), productRequest.getImageUrl(),category);
 
         product.setCategory(category);
 
         Product savedProduct = productRepository.save(product);
+
+        optionService.addOption(optionRequest,savedProduct.getId());
 
         return convertToProductResponse(savedProduct);
     }
@@ -95,11 +94,12 @@ public class GiftService {
     }
 
     @Transactional
-    public Long deleteProducts(Long id) {
-        productRepository.findById(id).orElseThrow(
+    public ProductResponse deleteProducts(Long id) {
+        Product product = productRepository.findById(id).orElseThrow(
             () -> new ProductNotFoundException("Product NOT FOUND"));
         productRepository.deleteById(id);
-        return id;
+        return new ProductResponse(product.getId(),product.getName(),product.getPrice(),product.getImageUrl(),
+            product.getCategory());
     }
 
     public List<OptionResponse> getOption(Long id){
@@ -127,8 +127,7 @@ public class GiftService {
             product.getImageUrl(),
             new Category(product.getCategory().getId(),product.getCategory().getName(),
                 product.getCategory().getColor(), product.getCategory().getImageUrl(),
-                product.getCategory().getDescription()),
-            product.getOptions().stream().toList()
+                product.getCategory().getDescription())
         );
     }
 

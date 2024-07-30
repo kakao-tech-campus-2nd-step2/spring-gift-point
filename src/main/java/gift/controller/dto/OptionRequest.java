@@ -6,44 +6,35 @@ import jakarta.validation.constraints.Size;
 import org.hibernate.validator.constraints.Range;
 
 public class OptionRequest {
-    @NotEmpty(message = "Product ID can not be empty")
-    private Long productId;
+
     @NotEmpty(message = "옵션 이름은 비어있을 수 없습니다.")
     @Size(max = 50, message = "옵션 이름은 최대 50자까지 입력할 수 있습니다.")
     @Pattern(regexp = "^[a-zA-Z0-9\\s()\\[\\]+\\-&/_]+$",
         message = "옵션 이름에는 영문자, 숫자, 공백 및 허용된 특수문자 ( ), [ ], +, -, &, /, _ 만 사용할 수 있습니다.")
-    private String name;
+    private String optionName;
 
     @Range(min = 1, max = 99999999, message = "옵션 수량은 1 이상 99,999,999 이하여야 합니다.")
-    private int quantity;
+    private int optionQuantity;
 
-    public OptionRequest(Long productId, String name, int quantity) {
-        this.productId = productId;
-        this.name = name;
-        this.quantity = quantity;
+    public OptionRequest(String optionName, int optionQuantity) {
+        this.optionName = optionName;
+        this.optionQuantity = optionQuantity;
     }
 
-    public Long getProductId() {
-        return productId;
+
+    public String getOptionName() {
+        return optionName;
     }
 
-    public void setProductId(Long productId) {
-        this.productId = productId;
+    public void setOptionName(String optionName) {
+        this.optionName = optionName;
     }
 
-    public String getName() {
-        return name;
+    public int getOptionQuantity() {
+        return optionQuantity;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public int getQuantity() {
-        return quantity;
-    }
-
-    public void setQuantity(int quantity) {
-        this.quantity = quantity;
+    public void setOptionQuantity(int optionQuantity) {
+        this.optionQuantity = optionQuantity;
     }
 }

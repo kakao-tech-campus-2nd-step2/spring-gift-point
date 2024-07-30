@@ -1,5 +1,6 @@
 package gift.domain;
 
+import gift.utils.TimeStamp;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -10,7 +11,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 
 @Entity
-public class Wish {
+public class Wish extends TimeStamp  {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -22,12 +23,12 @@ public class Wish {
     @JoinColumn(name = "user_id")
     private UserInfo userInfo;
     @Column(nullable = false)
-    private Long quantity;
+    private int count;
 
-    public Wish(Product product, UserInfo userInfo, Long quantity) {
+    public Wish(Product product, UserInfo userInfo, int count) {
         this.product = product;
         this.userInfo = userInfo;
-        this.quantity = quantity;
+        this.count = count;
     }
 
     public Wish() {
@@ -57,11 +58,11 @@ public class Wish {
         this.userInfo = userInfo;
     }
 
-    public Long getQuantity() {
-        return quantity;
+    public int getCount() {
+        return count;
     }
 
-    public void setQuantity(Long quantity) {
-        this.quantity = quantity;
+    public void setCount(int count) {
+        this.count = count;
     }
 }
