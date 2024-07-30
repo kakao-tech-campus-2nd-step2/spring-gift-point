@@ -1,7 +1,9 @@
 package gift.service;
 
 import gift.dto.OptionDto;
-import gift.dto.ProductDto;
+import gift.dto.ProductDetailDto;
+import gift.dto.ProductRequestDto;
+import gift.dto.ProductResponseDto;
 import gift.model.Category;
 import gift.model.Option;
 import gift.model.Product;
@@ -31,32 +33,50 @@ public class ProductService {
         this.wishlistRepository = wishlistRepository;
     }
 
-    public Page<Product> getProducts(Pageable pageable) {
-        return productRepository.findAll(pageable);
+    public Page<ProductResponseDto> getProducts(Pageable pageable) {
+        Page<Product> productPage = productRepository.findAll(pageable);
+        return productPage.map(product -> {
+            ProductResponseDto dto = new ProductResponseDto();
+            dto.setId(product.getId());
+            dto.setName(product.getName());
+            dto.setPrice(product.getPrice());
+            dto.setImageUrl(product.getImageUrl());
+            return dto;
+        });
     }
 
-    public Product addProduct(ProductDto productDto) {
-        Category category = getCategoryById(productDto.getCategoryId());
-        List<Option> options = convertOptions(productDto.getOptions());
+
+    public ProductResponseDto addProduct(ProductRequestDto productRequestDto) {
+        Category category = getCategoryById(productRequestDto.getCategoryId());
+        List<Option> options = convertOptions(productRequestDto.getOptions());
         Product product = new Product(
-                productDto.getName(),
-                productDto.getPrice(),
-                productDto.getImageUrl(),
+                productRequestDto.getName(),
+                productRequestDto.getPrice(),
+                productRequestDto.getImageUrl(),
                 category,
                 options
         );
-        productRepository.save(product);
-        return product;
+        Product savedProduct = productRepository.save(product);
+        return convertToResponseDto(savedProduct);
     }
 
-    public Product updateProduct(Long id, ProductDto productDto) {
-        Category category = getCategoryById(productDto.getCategoryId());
-        List<Option> options = convertOptions(productDto.getOptions());
+    private ProductResponseDto convertToResponseDto(Product product) {
+        ProductResponseDto dto = new ProductResponseDto();
+        dto.setId(product.getId());
+        dto.setName(product.getName());
+        dto.setPrice(product.getPrice());
+        dto.setImageUrl(product.getImageUrl());
+        return dto;
+    }
+
+    public Product updateProduct(Long id, ProductRequestDto productRequestDto) {
+        Category category = getCategoryById(productRequestDto.getCategoryId());
+        List<Option> options = convertOptions(productRequestDto.getOptions());
         Product updateProduct = new Product(
                 id,
-                productDto.getName(),
-                productDto.getPrice(),
-                productDto.getImageUrl(),
+                productRequestDto.getName(),
+                productRequestDto.getPrice(),
+                productRequestDto.getImageUrl(),
                 category,
                 options
         );
@@ -69,9 +89,18 @@ public class ProductService {
         productRepository.deleteById(id);
     }
 
-    public Product getProductById(Long id) {
-        return productRepository.findById(id)
+    public ProductDetailDto getProductById(Long id) {
+        Product product = productRepository.findById(id)
                 .orElseThrow(() -> new NoSuchElementException("존재하지 않는 상품입니다."));
+        return convertToDetailDto(product);
+    }
+
+    private ProductDetailDto convertToDetailDto(Product product) {
+        ProductDetailDto dto = new ProductDetailDto();
+        dto.setName(product.getName());
+        dto.setPrice(product.getPrice());
+        dto.setImageUrl(product.getImageUrl());
+        return dto;
     }
 
     private Category getCategoryById(Long categoryId) {
