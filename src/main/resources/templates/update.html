@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Update Page!</title>
+</head>
+<body>
+<h1>Update Page!</h1>
+
+<form th:action="@{/admin/put/submit}" method="post">
+
+    <p>업데이트하고자 하는 상품의 id를 입력하세요.</p>
+
+    <label for="productId">ID:</label>
+    <input type="text" id="productId" name="productId" required><br><br>
+
+    <p>업데이트하고자 하는 상품의 내용을 입력해주세요.</p>
+    <label for="name">Name:</label>
+    <input type="text" id="name" name="name" required><br><br>
+
+    <label for="name">price:</label>
+    <input type="text" id="price" name="price" required><br><br>
+
+    <label for="name">image URL:</label>
+    <input type="text" id="imageUrl" name="imageUrl" required><br><br>
+
+    <button type="submit">Submit</button>
+</form>
+</body>
+</html>

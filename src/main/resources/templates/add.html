@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>ADD Page!</title>
+</head>
+<body>
+<h1>ADD page!</h1>
+<p>등록하고자 하는 상품의 정보를 입력해주세요</p>
+
+
+<form th:action="@{/admin/post/submit}" method="post">
+
+    <label for="name">Name:</label>
+    <input type="text" id="name" name="name" required><br><br>
+
+    <label for="price">Price:</label>
+    <input type="text" id="price" name="price" required><br><br>
+
+    <label for="imageUrl">Image URL:</label>
+    <input type="text" id="imageUrl" name="imageUrl" required><br><br>
+
+
+
+
+    <button type="submit">Submit</button>
+
+</form>
+
+
+</body>
+</html>
