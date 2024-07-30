@@ -71,7 +71,7 @@ public class ProductCategoryController {
             }
     )
     public void createCategory(@RequestBody CategoryCreateRequest request) {
-        productCategoryService.createCategory(categoryOf(request));
+        productCategoryService.createCategory(request.toDomain());
     }
 
     @PutMapping("/{id}")
@@ -91,15 +91,7 @@ public class ProductCategoryController {
                     )
             }
     )
-    public void updateCategory(@PathVariable Long id, @RequestBody CategoryUpdateRequest request) {
-        productCategoryService.updateCategory(categoryOf(id, request));
-    }
-
-    private ProductCategory categoryOf(CategoryCreateRequest request) {
-        return ProductCategory.of(request.name());
-    }
-
-    private ProductCategory categoryOf(Long id, CategoryUpdateRequest request) {
-        return new ProductCategory(id, request.name());
+    public void updateCategory(@PathVariable("id") Long id, @RequestBody CategoryUpdateRequest request) {
+        productCategoryService.updateCategory(request.toDomainWithId(id));
     }
 }
