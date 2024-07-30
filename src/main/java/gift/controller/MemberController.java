@@ -12,9 +12,13 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 
 @RestController
 @RequestMapping("/member")
+@Tag(name = "Member Management System", description = "Operations related to member management")
 public class MemberController {
     private final MemberService memberService;
     private final JwtUtil jwtUtil;
@@ -26,7 +30,10 @@ public class MemberController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<Map<String, String>> register(@RequestBody Member member) {
+    @Operation(summary = "Register a new member", description = "Registers a new member to the system", tags = { "Member Management System" })
+    public ResponseEntity<Map<String, String>> register(
+            @Parameter(description = "Member object to be registered", required = true)
+            @RequestBody Member member) {
         memberService.save(member);
         Map<String, String> response = new HashMap<>();
         response.put("message", "success");
@@ -34,24 +41,28 @@ public class MemberController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<Map<String, String>> login(@RequestBody Member loginRequest) {
+    @Operation(summary = "Login a member", description = "Logs in an existing member", tags = { "Member Management System" })
+    public ResponseEntity<Map<String, String>> login(
+            @Parameter(description = "Login request containing email and password", required = true)
+            @RequestBody Member loginRequest) {
         Optional<Member> memberOpt = memberService.findByEmail(loginRequest.getEmail());
-        if(memberOpt.isPresent() && memberOpt.get().getPassword().equals(loginRequest.getPassword())) {
+        if (memberOpt.isPresent() && memberOpt.get().getPassword().equals(loginRequest.getPassword())) {
             String token = jwtUtil.generateToken(memberOpt.get().getEmail());
             Map<String, String> response = new HashMap<>();
             response.put("message", "success");
             response.put("token", token);
             return ResponseEntity.ok(response);
         }
-        return  ResponseEntity.status(401).body(null);
+        return ResponseEntity.status(401).body(null);
     }
 
     @GetMapping("/me")
+    @Operation(summary = "Get current logged-in member information", description = "Fetches information about the currently logged-in member", tags = { "Member Management System" })
     public ResponseEntity<Member> getCurrentMember(HttpServletRequest request) {
         String email = getEmailFromRequest(request);
-        if(email != null) {
+        if (email != null) {
             Optional<Member> memberOpt = memberService.findByEmail(email);
-            if(memberOpt.isPresent()) {
+            if (memberOpt.isPresent()) {
                 return ResponseEntity.ok(memberOpt.get());
             }
         }
