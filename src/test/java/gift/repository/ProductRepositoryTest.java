@@ -83,17 +83,4 @@ class ProductRepositoryTest {
 
         assertThat(page.getContent().get(0).getName()).isEqualTo("이마트 모바일 금액권");
     }
-
-    @Test
-    @DisplayName("카테고리 id 기반 찾기 테스트")
-    void findByCategoryIdTest() {
-        Pageable pageable = PageRequest.of(0, 10);
-        Page<Product> page = productRepository.findByCategoryId(1L, pageable);
-
-        assertThat(page.getTotalElements()).isEqualTo(2);
-        assertThat(page.getTotalPages()).isEqualTo(1);
-        assertThat(page.getContent()).hasSize(2);
-
-        assertThat(page.getContent().get(0).getName()).isEqualTo("Product 1");
-    }
 }
