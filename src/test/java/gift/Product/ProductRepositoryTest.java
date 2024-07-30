@@ -57,8 +57,8 @@ public class ProductRepositoryTest {
 
     @BeforeEach
     void setUp() {
-        ethiopia = categoryRepository.saveAndFlush(new Category("에티오피아산", "에티오피아 산 원두를 사용했습니다."));
-        jamaica = categoryRepository.saveAndFlush(new Category("자메이카산", "자메이카산 원두를 사용했습니다."));
+        ethiopia = categoryRepository.saveAndFlush(new Category("에티오피아산", "에티오피아 산 원두를 사용했습니다.","color code", "http://www.example.com/index.html"));
+        jamaica = categoryRepository.saveAndFlush(new Category("자메이카산", "자메이카산 원두를 사용했습니다.","color code", "http://www.example.com/index.html"));
 
         Product product1 = new Product("아이스 아메리카노 T", ethiopia, 4500,
             "https://example.com/image.jpg");

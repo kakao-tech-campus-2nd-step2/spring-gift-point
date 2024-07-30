@@ -49,8 +49,8 @@ public class WishRepositoryTest {
 
     @BeforeEach
     void setUp() {
-        ethiopia = categoryRepository.saveAndFlush(new Category("에티오피아산", "에티오피아 산 원두를 사용했습니다."));
-        jamaica = categoryRepository.saveAndFlush(new Category("자메이카산", "자메이카산 원두를 사용했습니다."));
+        ethiopia = categoryRepository.saveAndFlush(new Category("에티오피아산", "에티오피아 산 원두를 사용했습니다.","color code", "http://www.example.com/index.html"));
+        jamaica = categoryRepository.saveAndFlush(new Category("자메이카산", "자메이카산 원두를 사용했습니다.","color code", "http://www.example.com/index.html"));
         Member user = new Member("minji@example.com", "password1");
         Member savedMember = memberRepository.saveAndFlush(user);
         this.member = savedMember;

@@ -1,5 +1,6 @@
 package gift.domain.category;
 
+import gift.domain.category.dto.request.CategoryRequest;
 import gift.global.response.ResponseMaker;
 import gift.global.response.ResultResponseDto;
 import gift.global.response.SimpleResultResponseDto;
@@ -31,36 +32,36 @@ public class CategoryRestController {
     }
 
     @GetMapping
-    @Operation(summary = "모든 카테고리 조회")
-    public ResponseEntity<ResultResponseDto<List<Category>>> getCategories() {
+    @Operation(summary = "카테고리 목록 조회")
+    public ResponseEntity<List<Category>> getCategories() {
         List<Category> categories = categoryService.getCategories();
-        return ResponseMaker.createResponse(HttpStatus.OK, categories);
+        return ResponseEntity.ok(categories);
     }
 
     @PostMapping
-    @Operation(summary = "카테고리 추가")
-    public ResponseEntity<SimpleResultResponseDto> createCategory(
-        @Valid @RequestBody CategoryDTO categoryDTO) {
-        categoryService.createCategory(categoryDTO);
-        return ResponseMaker.createSimpleResponse(HttpStatus.OK);
+    @Operation(summary = "카테고리 생성")
+    public ResponseEntity createCategories(
+        @Valid @RequestBody List<CategoryRequest> categoryRequests) {
+        categoryService.createCategories(categoryRequests);
+        return ResponseEntity.ok().build();
     }
 
-    @DeleteMapping("{id}")
+    @DeleteMapping("{categoryId}")
     @Operation(summary = "카테고리 삭제")
-    public ResponseEntity<SimpleResultResponseDto> deleteCategory(
-        @Parameter(description = "카테고리 ID") @PathVariable("id") Long id
+    public ResponseEntity deleteCategory(
+        @Parameter(description = "카테고리 ID") @PathVariable("categoryId") Long id
     ) {
         categoryService.deleteCategory(id);
-        return ResponseMaker.createSimpleResponse(HttpStatus.OK);
+        return ResponseEntity.ok().build();
     }
 
-    @PutMapping("{id}")
+    @PutMapping("{categoryId}")
     @Operation(summary = "카테고리 수정")
-    public ResponseEntity<SimpleResultResponseDto> updateCategory(
-        @Parameter(description = "카테고리 ID") @PathVariable("id") Long id,
-        @Valid @RequestBody CategoryDTO categoryDTO
+    public ResponseEntity updateCategory(
+        @Parameter(description = "카테고리 ID") @PathVariable("categoryId") Long id,
+        @Valid @RequestBody CategoryRequest categoryRequest
     ) {
-        categoryService.updateCategory(id, categoryDTO);
-        return ResponseMaker.createSimpleResponse(HttpStatus.OK);
+        categoryService.updateCategory(id, categoryRequest);
+        return ResponseEntity.ok().build();
     }
 }

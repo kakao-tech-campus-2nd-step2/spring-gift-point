@@ -1,14 +1,14 @@
 package gift.global.dataLoader;
 
-import gift.domain.member.Member;
-import gift.domain.wish.JpaWishRepository;
 import gift.domain.category.Category;
 import gift.domain.category.JpaCategoryRepository;
+import gift.domain.member.JpaMemberRepository;
+import gift.domain.member.Member;
 import gift.domain.option.JpaOptionRepository;
 import gift.domain.option.Option;
 import gift.domain.product.JpaProductRepository;
 import gift.domain.product.Product;
-import gift.domain.member.JpaMemberRepository;
+import gift.domain.wish.JpaWishRepository;
 import gift.domain.wish.Wish;
 import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,9 +44,11 @@ public class DataLoader {
     public void init() {
         // Category
         Category ethiopia = jpaCategoryRepository.saveAndFlush(
-            new Category("에티오피아산", "에티오피아 산 원두를 사용했습니다."));
+            new Category("에티오피아산", "에티오피아 산 원두를 사용했습니다.", "color code",
+                "http://www.example.com/index.html"));
         Category jamaica = jpaCategoryRepository.saveAndFlush(
-            new Category("자메이카산", "자메이카산 원두를 사용했습니다."));
+            new Category("자메이카산", "자메이카산 원두를 사용했습니다.", "color code",
+                "http://www.example.com/index.html"));
 
         // Product
         Product americano = new Product("아이스 아메리카노 T", ethiopia, 4500,

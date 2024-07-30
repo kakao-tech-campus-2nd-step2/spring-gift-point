@@ -46,7 +46,7 @@ public class OptionServiceTest {
     @BeforeEach
     void setUp() {
         category = categoryRepository.saveAndFlush(
-            new Category("에티오피아산", "에티오피아 산 원두를 사용했습니다."));
+            new Category("에티오피아산", "에티오피아 산 원두를 사용했습니다.","color code", "http://www.example.com/index.html"));
 
         product = productRepository.saveAndFlush(new Product("아이스 아메리카노 T", category, 4500,
             "https://example.com/image.jpg"));

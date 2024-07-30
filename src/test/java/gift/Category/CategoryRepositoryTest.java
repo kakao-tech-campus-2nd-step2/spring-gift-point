@@ -6,6 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import gift.domain.category.Category;
 import gift.domain.category.CategoryDTO;
 import gift.domain.category.JpaCategoryRepository;
+import gift.domain.category.dto.request.CategoryRequest;
 import gift.domain.product.JpaProductRepository;
 import gift.domain.product.Product;
 import jakarta.persistence.EntityManager;
@@ -32,13 +33,13 @@ public class CategoryRepositoryTest {
     private JpaProductRepository productRepository;
     private Category category1;
     private Category category2;
-    private CategoryDTO categoryDTO;
+    private CategoryRequest categoryRequest;
 
     @BeforeEach
     void setUp() {
-        category1 = new Category("에티오피아산", "에티오피아산 원두를 사용했습니다.");
-        category2 = new Category("자메이카산", "자메이카산 원두를 사용했습니다.");
-        categoryDTO = new CategoryDTO("수정", "수정");
+        category1 = new Category("에티오피아산", "에티오피아산 원두를 사용했습니다.", "color code", "http://www.example.com/index.html");
+        category2 = new Category("자메이카산", "자메이카산 원두를 사용했습니다.","color code","http://www.example.com/index.html");
+        categoryRequest = new CategoryRequest("수정", "수정", "color code", "http://www.example.com/index.html");
     }
 
     @Test
@@ -57,15 +58,15 @@ public class CategoryRepositoryTest {
 
         // when
         Category findCategory = categoryRepository.findById(savedCategory.getId()).get();
-        findCategory.update(categoryDTO.name(), categoryDTO.description());
+        findCategory.update(categoryRequest.name(), categoryRequest.description(), categoryRequest.color(), categoryRequest.imageUrl());
         categoryRepository.saveAndFlush(findCategory);
         clear();
 
         // then
         Category modifiedCategory = categoryRepository.findById(findCategory.getId()).get();
 
-        assertThat(modifiedCategory.getName()).isEqualTo(categoryDTO.name());
-        assertThat(modifiedCategory.getDescription()).isEqualTo(categoryDTO.description());
+        assertThat(modifiedCategory.getName()).isEqualTo(categoryRequest.name());
+        assertThat(modifiedCategory.getDescription()).isEqualTo(categoryRequest.description());
     }
 
     @Test
@@ -107,7 +108,7 @@ public class CategoryRepositoryTest {
         Category savedCategory = categoryRepository.saveAndFlush(category1);
 
         // when
-        Category same_name_category = new Category("에티오피아산", "에티오피아산 원두를 사용했습니다222.");
+        Category same_name_category = new Category("에티오피아산", "에티오피아산 원두를 사용했습니다222.","color code", "http://www.example.com/index.html");
 
         // then
         assertThrows(DataIntegrityViolationException.class, // 일반적인 데이터 무결성 위반(더 넓은 범위)
