@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>Edit Product</title>
+</head>
+<body>
+<h1>Edit Product</h1>
+
+<form id="productForm" th:object="${product}" method="post">
+  <!-- Hidden field for product ID -->
+  <input type="hidden" id="productId" th:value="*{id}">
+
+  <!-- Product fields -->
+  <label for="name">Product Name:</label>
+  <input type="text" id="name" th:field="*{name}" /><br/>
+
+  <label for="price">Price:</label>
+  <input type="number" id="price" th:field="*{price}" /><br/>
+
+  <label for="imageUrl">Image URL:</label>
+  <input type="text" id="imageUrl" th:field="*{imageUrl}" /><br/>
+
+  <label for="category">Category:</label>
+  <select id="category" th:field="*{categoryId}">
+    <option th:each="category : ${categories}" th:value="${category.id}" th:text="${category.name}"></option>
+  </select><br/>
+
+  <!-- Error message -->
+  <div th:if="${errorMessage != null}" style="color: red;">
+    <p th:text="${errorMessage}"></p>
+  </div>
+
+  <!-- Options fields -->
+  <h2>Options</h2>
+  <div id="options">
+    <div th:each="option, iterStat : ${product.optionDTOList}">
+      <label th:for="'optionName' + ${iterStat.index}">Option Name:</label>
+      <input type="text" th:id="'optionName' + ${iterStat.index}" th:field="*{optionDTOList[__${iterStat.index}__].name}" /><br/>
+
+      <label th:for="'optionQuantity' + ${iterStat.index}">Quantity:</label>
+      <input type="number" th:id="'optionQuantity' + ${iterStat.index}" th:field="*{optionDTOList[__${iterStat.index}__].quantity}" /><br/>
+    </div>
+  </div>
+
+  <!-- Button to add more options -->
+  <button type="button" onclick="addOption()">Add Option</button><br/>
+
+  <button type="submit" onclick="submitForm()">Save Product</button>
+</form>
+
+<script>
+  function addOption() {
+    // Create a new option block
+    var optionsDiv = document.getElementById('options');
+    var newOptionDiv = document.createElement('div');
+
+    var index = optionsDiv.children.length;
+
+    // Option Name
+    var optionNameLabel = document.createElement('label');
+    optionNameLabel.innerHTML = 'Option Name:';
+    optionNameLabel.setAttribute('for', 'optionName' + index);
+    newOptionDiv.appendChild(optionNameLabel);
+
+    var optionNameInput = document.createElement('input');
+    optionNameInput.type = 'text';
+    optionNameInput.id = 'optionName' + index;
+    optionNameInput.name = 'optionDTOList[' + index + '].name';
+    newOptionDiv.appendChild(optionNameInput);
+    newOptionDiv.appendChild(document.createElement('br'));
+
+    // Option Quantity
+    var optionQuantityLabel = document.createElement('label');
+    optionQuantityLabel.innerHTML = 'Quantity:';
+    optionQuantityLabel.setAttribute('for', 'optionQuantity' + index);
+    newOptionDiv.appendChild(optionQuantityLabel);
+
+    var optionQuantityInput = document.createElement('input');
+    optionQuantityInput.type = 'number';
+    optionQuantityInput.id = 'optionQuantity' + index;
+    optionQuantityInput.name = 'optionDTOList[' + index + '].quantity';
+    newOptionDiv.appendChild(optionQuantityInput);
+    newOptionDiv.appendChild(document.createElement('br'));
+
+    // Append new option block
+    optionsDiv.appendChild(newOptionDiv);
+  }
+
+  function submitForm() {
+    var form = document.getElementById('productForm');
+    var productId = document.getElementById('productId').value;
+    form.action = '/admin/products/edit/' + productId;
+    form.submit();
+  }
+</script>
+</body>
+</html>
