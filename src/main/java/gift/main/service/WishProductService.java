@@ -2,6 +2,7 @@ package gift.main.service;
 
 import gift.main.Exception.CustomException;
 import gift.main.Exception.ErrorCode;
+import gift.main.dto.OrderResponse;
 import gift.main.dto.UserVo;
 import gift.main.dto.WishProductResponse;
 import gift.main.entity.Product;
@@ -52,6 +53,18 @@ public class WishProductService {
     @Transactional
     public void deleteWishProduct(Long wishId) {
         wishProductRepository.deleteById(wishId);
+    }
+
+    //주문으로 인한 위시 프로덕트 삭제 로직
+    @Transactional
+    public void deleteWishProductsFromOrders(OrderResponse orderResponse) {
+        //위시리스트를 삭제해야한다.. 위시리스트..
+        if (wishProductRepository.existsByProductIdAndUserId(orderResponse.productId(), orderResponse.buyerId())) {
+            return;
+        }
+        WishProduct wishProduct = wishProductRepository.findByProductIdAndUserId(orderResponse.productId(), orderResponse.buyerId()).get();
+        wishProductRepository.delete(wishProduct);
+
     }
 
     private Product validateProduct(Long productId) {
