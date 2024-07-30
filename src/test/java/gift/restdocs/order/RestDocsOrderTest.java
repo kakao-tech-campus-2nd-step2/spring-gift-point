@@ -1,6 +1,8 @@
 package gift.restdocs.order;
 
 import static org.mockito.BDDMockito.*;
+import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
+import static org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
 import static org.springframework.restdocs.request.RequestDocumentation.queryParameters;
@@ -10,6 +12,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import gift.auth.JwtTokenProvider;
+import gift.auth.OAuthService;
 import gift.config.LoginWebConfig;
 import gift.controller.OrderApiController;
 import gift.request.OrderRequest;
@@ -48,10 +51,12 @@ public class RestDocsOrderTest extends AbstractRestDocsTest {
     @MockBean
     private JwtTokenProvider tokenProvider;
     @MockBean
+    private OAuthService oAuthService;
+    @MockBean
     private OrderService orderService;
 
     private String token = "{ACCESS_TOKEN}";
-    private String oAuthToken = "OAUTH_TOKEN";
+    private String oAuthToken = "{X_OAUTH_TOKEN}";
 
 
     @Test
@@ -67,14 +72,15 @@ public class RestDocsOrderTest extends AbstractRestDocsTest {
             .willReturn(orderResponse);
 
         //when //then
-        mockMvc.perform(RestDocumentationRequestBuilders.post("/api/orders?access_token=" + oAuthToken)
+        mockMvc.perform(RestDocumentationRequestBuilders.post("/api/orders")
                 .header("Authorization", "Bearer " + token)
+                .header("X-OAuth-Token", "Bearer " + oAuthToken)
                 .content(content)
                 .contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk())
             .andDo(document("rest-docs-order-test/make-order",
-                queryParameters(
-                    parameterWithName("access_token").description("kakao access token")
+                requestHeaders(
+                    headerWithName("Authorization").description("service access token")
                 )));
     }
 
@@ -84,7 +90,7 @@ public class RestDocsOrderTest extends AbstractRestDocsTest {
         List<OrderResponse> orderResponseList = new ArrayList<>();
 
         LongStream.range(1, 6)
-            .forEach(i ->  orderResponseList.add(new OrderResponse(i, i,
+            .forEach(i -> orderResponseList.add(new OrderResponse(i, i,
                 1, "2024.01.01 00:00:00", "주문 메시지")));
 
         given(orderService.getOrder(any(Long.class)))

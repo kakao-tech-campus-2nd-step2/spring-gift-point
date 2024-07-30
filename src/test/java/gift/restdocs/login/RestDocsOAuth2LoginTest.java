@@ -15,6 +15,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.fasterxml.jackson.databind.ObjectMapper;
 import gift.auth.JwtService;
 import gift.auth.JwtTokenProvider;
+import gift.auth.OAuthService;
 import gift.config.LoginWebConfig;
 import gift.controller.login.OAuth2LoginController;
 import gift.model.Member;
@@ -51,6 +52,8 @@ public class RestDocsOAuth2LoginTest extends AbstractRestDocsTest {
     private OAuth2LoginService oAuth2LoginService;
     @MockBean
     private MemberService memberService;
+    @MockBean
+    private OAuthService oAuthService;
     @MockBean
     private JwtService jwtService;
     @MockBean

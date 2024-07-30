@@ -1395,13 +1395,19 @@ Host: localhost:8080</code></pre>
 <h3 id="_주문_생성_http_request">HTTP request</h3>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">POST /api/orders?access_token=oauthtoken HTTP/1.1
+<pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">POST /api/orders HTTP/1.1
 Content-Type: application/json;charset=UTF-8
 Authorization: Bearer {ACCESS_TOKEN}
-Content-Length: 72
+X-OAuth-Token: Bearer {X_OAUTH_TOKEN}
+Content-Length: 93
 Host: localhost:8080
 
-{"quantity":1,"message":"주문 메시지","product_id":1,"option_id":1}</code></pre>
+{
+  "quantity" : 1,
+  "message" : "주문 메시지",
+  "product_id" : 1,
+  "option_id" : 1
+}</code></pre>
 </div>
 </div>
 </div>
@@ -1411,9 +1417,15 @@ Host: localhost:8080
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">HTTP/1.1 200 OK
 Content-Type: application/json;charset=UTF-8
-Content-Length: 110
+Content-Length: 136
 
-{"quantity":1,"message":"주문 메시지","order_id":1,"option_id":1,"order_date_time":"2024.01.01 00:00:00"}</code></pre>
+{
+  "quantity" : 1,
+  "message" : "주문 메시지",
+  "order_id" : 1,
+  "option_id" : 1,
+  "order_date_time" : "2024.01.01 00:00:00"
+}</code></pre>
 </div>
 </div>
 </div>

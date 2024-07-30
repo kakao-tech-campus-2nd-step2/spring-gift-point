@@ -14,9 +14,11 @@ import org.springframework.web.servlet.ModelAndView;
 public class AuthApiInterceptor implements HandlerInterceptor {
 
     private final JwtTokenProvider tokenProvider;
+    private final OAuthService oAuthService;
 
-    public AuthApiInterceptor(JwtTokenProvider tokenProvider) {
+    public AuthApiInterceptor(JwtTokenProvider tokenProvider, OAuthService oAuthService) {
         this.tokenProvider = tokenProvider;
+        this.oAuthService = oAuthService;
     }
 
     @Override
@@ -52,6 +54,13 @@ public class AuthApiInterceptor implements HandlerInterceptor {
                 }
             }
 
+            // 주문 시 카카오톡 메시지 API 사용(oAuth 액세스 토큰 필요)
+            if ("POST".equalsIgnoreCase(request.getMethod())
+                && request.getRequestURI().startsWith("/api/orders")) {
+                if(!oAuthService.getOAuthToken(request)) {
+                    return false;
+                }
+            }
             request.setAttribute("member_id", claims.get("member_id"));
         }
 

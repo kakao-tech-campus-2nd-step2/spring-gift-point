@@ -3,6 +3,7 @@ package gift.controller;
 import gift.auth.CheckRole;
 import gift.auth.JwtService;
 import gift.auth.LoginMember;
+import gift.auth.XOAuthToken;
 import gift.exception.InputException;
 import gift.request.LoginMemberDto;
 import gift.request.OrderRequest;
@@ -33,14 +34,15 @@ public class OrderApiController {
 
     @CheckRole("ROLE_USER")
     @PostMapping("/api/orders")
-    public ResponseEntity<OrderResponse> makeOrder(HttpServletRequest request, @RequestParam("access_token") String accessToken,
+    public ResponseEntity<OrderResponse> makeOrder(HttpServletRequest request,
         @RequestBody @Valid OrderRequest orderRequest, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             throw new InputException(bindingResult.getAllErrors());
         }
-        //주문 생성 및 수량 차감 처리, 이후 카카오톡 메시지 API 호출
+
         Long memberId = Long.valueOf(request.getAttribute("member_id").toString());
-        OrderResponse dto = orderService.makeOrder(memberId, accessToken, orderRequest.productId(),
+        String xOAuthToken = request.getAttribute("X-OAuth-Token").toString();
+        OrderResponse dto = orderService.makeOrder(memberId, xOAuthToken, orderRequest.productId(),
             orderRequest.optionId(), orderRequest.quantity(), orderRequest.message());
 
         return new ResponseEntity<>(dto, HttpStatus.OK);

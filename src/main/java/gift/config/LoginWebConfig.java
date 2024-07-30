@@ -3,6 +3,7 @@ package gift.config;
 import gift.auth.AuthApiInterceptor;
 import gift.auth.AuthMvcInterceptor;
 import gift.auth.JwtTokenProvider;
+import gift.auth.OAuthService;
 import gift.resolver.LoginMemberArgumentResolver;
 import java.util.List;
 import org.springframework.context.annotation.Configuration;
@@ -14,14 +15,16 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 public class LoginWebConfig implements WebMvcConfigurer {
 
     private final JwtTokenProvider jwtTokenProvider;
+    private final OAuthService oAuthService;
 
-    public LoginWebConfig(JwtTokenProvider jwtTokenProvider) {
+    public LoginWebConfig(JwtTokenProvider jwtTokenProvider, OAuthService oAuthService) {
         this.jwtTokenProvider = jwtTokenProvider;
+        this.oAuthService = oAuthService;
     }
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(new AuthApiInterceptor(jwtTokenProvider))
+        registry.addInterceptor(new AuthApiInterceptor(jwtTokenProvider, oAuthService))
             .order(1)
             .addPathPatterns("/api/**")
             .excludePathPatterns("/api/members/**", "/api/oauth2/kakao",
