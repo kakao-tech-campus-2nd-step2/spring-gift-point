@@ -5,7 +5,6 @@ import gift.domain.option.dto.OptionResponse;
 import gift.domain.option.entity.Option;
 import gift.domain.option.exception.OptionNotFoundException;
 import gift.domain.option.repository.OptionRepository;
-import gift.domain.order.repository.OrderRepository;
 import gift.domain.product.entity.Product;
 import gift.domain.product.exception.ProductNotFoundException;
 import gift.domain.product.repository.ProductRepository;
@@ -55,12 +54,29 @@ public class OptionService {
     }
 
     @Transactional
-    public OptionResponse subtractQuantity(Long id, int quantity) {
+    public void subtractQuantity(Long id, int quantity) {
         Option option = optionRepository.findById(id)
             .orElseThrow(() -> new OptionNotFoundException("해당 옵션이 존재하지 않습니다."));
         option.subtractQuantity(quantity);
+    }
+    @Transactional
+    public OptionResponse updateProductOption(Long productId, Long optionId, OptionRequest request) {
+        Option savedOption = optionRepository.findById(optionId).orElseThrow(()-> new OptionNotFoundException("해당 옵션이 존재하지 않습니다."));
+        if(!savedOption.getProduct().getId().equals(productId)){
+            throw new OptionNotFoundException("해당 상품에 대한 옵션이 아닙니다.");
+        }
+        savedOption.updateNameAndQuantity(request.getName(), request.getQuantity());
+        return entityToDto(savedOption);
+    }
 
-        return entityToDto(option);
+    @Transactional
+    public void deleteProductOption(Long productId, Long optionId) {
+
+        Option option = optionRepository.findById(optionId).orElseThrow(()-> new OptionNotFoundException("해당 옵션이 존재하지 않습니다."));
+        if (!option.getProduct().getId().equals(productId)) {
+            throw new OptionNotFoundException("해당 상품에 존재하지 않는 옵션입니다.");
+        }
+        optionRepository.delete(option);
     }
 
     private OptionResponse entityToDto(Option option) {
@@ -70,5 +86,4 @@ public class OptionService {
     private Option dtoToEntity(OptionRequest request) {
         return new Option(request.getName(), request.getQuantity());
     }
-
 }
