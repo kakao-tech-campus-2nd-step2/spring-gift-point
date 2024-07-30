@@ -33,11 +33,12 @@ public class OAuthController {
         @RequestParam("code") String code
     ) {
         var response = memberFacade.socialLogin(new OAuthCommand.Login(code));
-        return ResponseEntity.status(HttpStatus.SEE_OTHER)
-            .header("Location", "https://react-product-login-ajin.vercel.app")
-            .header("Authorization", response)
-            .body(Login.from(response));
-        
+//        return ResponseEntity.status(HttpStatus.SEE_OTHER)
+//            .header("Location", "https://react-product-login-ajin.vercel.app")
+//            .header("Authorization", response)
+//            .body(Login.from(response));
+        return ResponseEntity.ok(Login.from(response));
+
     }
 
     @GetMapping("/oauth/kakao/login")
