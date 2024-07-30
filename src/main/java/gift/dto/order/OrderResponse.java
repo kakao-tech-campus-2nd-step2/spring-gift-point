@@ -41,6 +41,5 @@ public class OrderResponse {
                     order.getProduct().getPrice(),totalPrice,order.getQuantity(),order.getOrderDateTime());
         }
 
-
     }
 }

@@ -9,8 +9,8 @@ public class ProductResponse {
             int price,
             String imageUrl
     ) {
-        public static ProductResponse.Info fromEntity(Product product) {
-            return new ProductResponse.Info(product.getId(),
+        public static Info fromEntity(Product product) {
+            return new Info(product.getId(),
                     product.getName(),
                     product.getPrice(),
                     product.getImageUrl());

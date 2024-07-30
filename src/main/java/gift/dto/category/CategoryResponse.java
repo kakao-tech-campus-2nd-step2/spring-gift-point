@@ -12,16 +12,16 @@ public class CategoryResponse {
             String description,
             String color
     ) {
-        public static CategoryResponse.Info fromEntity(Category category) {
-            return new CategoryResponse.Info(category.getId(), category.getName(), category.getColor(), category.getImageUrl(), category.getDescription());
+        public static Info fromEntity(Category category) {
+            return new Info(category.getId(), category.getName(), category.getColor(), category.getImageUrl(), category.getDescription());
         }
     }
 
     public record InfoList(
-            List<CategoryResponse.Info> categories
+            List<Info> categories
     ) {
         public static InfoList fromEntity(List<Category> categories) {
-            return new InfoList(categories.stream().map(CategoryResponse.Info::fromEntity).toList());
+            return new InfoList(categories.stream().map(Info::fromEntity).toList());
         }
 
     }
