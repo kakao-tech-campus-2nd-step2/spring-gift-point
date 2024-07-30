@@ -10,6 +10,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "wish")
@@ -28,16 +29,16 @@ public class Wish {
     private Product product;
 
     @Column
-    private String createdDate;
+    private LocalDateTime createdDate;
 
     protected Wish() {
     }
 
-    public Wish(Member member, Product product, String createdDate) {
+    public Wish(Member member, Product product, LocalDateTime createdDate) {
         this(null, member, product, createdDate);
     }
 
-    public Wish(Long id, Member member, Product product, String createdDate) {
+    public Wish(Long id, Member member, Product product, LocalDateTime createdDate) {
         this.id = id;
         this.member = member;
         this.product = product;
@@ -58,7 +59,7 @@ public class Wish {
         return product;
     }
 
-    public String getCreatedDate() {
+    public LocalDateTime getCreatedDate() {
         return createdDate;
     }
 }
