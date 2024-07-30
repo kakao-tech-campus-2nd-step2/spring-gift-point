@@ -1,5 +1,6 @@
 package gift.product.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 @Entity(name = "product_option")
@@ -9,41 +10,43 @@ public class ProductOption {
     private Long id;
     private String name;
 
-    private Long quentity;
+    private Long quantity;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "product_id")
+    @JsonIgnore
     private Product product;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "wishlist_product_id")
-    private WishListProduct wishListProduct;
-
-    public ProductOption(String name, Long quentity, Product product) {
+    public ProductOption(String name, Long quantity, Product product) {
         this.name = name;
-        this.quentity = quentity;
+        this.quantity = quantity;
         product.addProductOption(this);
     }
 
     public ProductOption() {
     }
 
+    public Product getProduct() {
+        return product;
+    }
+
     public Long getId() {
         return id;
     }
 
-    public Long getQuentity() {
-        return quentity;
+    public Long getQuantity() {
+        return quantity;
     }
 
     public String getName() {
         return name;
     }
 
-    public void decreaseQuantity(Long quentity) {
-        if (this.quentity < quentity) {
+    public void decreaseQuantity(Long quantity) {
+        if (this.quantity < quantity) {
             throw new IllegalArgumentException("재고가 부족합니다.");
         }
-        this.quentity -= quentity;
+        this.quantity -= quantity;
     }
+
 }

@@ -80,6 +80,10 @@ public class Product {
     }
 
 
+    public List<ProductOption> getProductOptions() {
+        return productOptions;
+    }
+
     public void addProductOption(ProductOption productOption) {
         productOptions.add(productOption);
     }
