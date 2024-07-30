@@ -3,6 +3,7 @@ package gift.controller.wish;
 import gift.dto.product.ProductResponse;
 import gift.dto.paging.PagingRequest;
 import gift.dto.paging.PagingResponse;
+import gift.dto.wish.WishRequest;
 import gift.dto.wish.WishResponse;
 import gift.model.user.User;
 import io.swagger.v3.oas.annotations.Operation;
@@ -18,16 +19,6 @@ import org.springframework.web.bind.annotation.*;
 @SecurityRequirement(name = "bearerAuth")
 public interface WishListSpecification {
 
-    @Operation(summary = "모든 상품 조회", description = "모든 상품을 조회합니다.",
-            responses = {
-                    @ApiResponse(responseCode = "200", description = "상품 조회 성공",
-                            content = @Content(
-                                    mediaType = "application/json",
-                                    schema = @Schema(implementation = PagingResponse.class)
-                            )
-                    )
-            })
-    ResponseEntity<PagingResponse<ProductResponse.Info>> getGiftList(@Parameter(description = "페이징 요청 정보") @ModelAttribute PagingRequest pagingRequest);
 
     @Operation(summary = "위시리스트에 상품 추가", description = "주어진 ID의 상품을 위시리스트에 추가합니다.",
             responses = {
@@ -40,7 +31,7 @@ public interface WishListSpecification {
                     )
             })
     ResponseEntity<String> addGiftToCart(@Parameter(hidden = true) @RequestAttribute("user") User user,
-                                         @Parameter(description = "위시리스트에 추가할 상품의 ID") @PathVariable Long giftId,
+                                         @RequestBody WishRequest.Create wishRequest,
                                          @RequestParam(required = false, defaultValue = "1") int quantity);
 
     @Operation(summary = "위시리스트 상품 수량 수정", description = "위시리스트에 있는 주어진 ID의 상품 수량을 수정합니다.",
@@ -74,6 +65,6 @@ public interface WishListSpecification {
                             )
                     )
             })
-    ResponseEntity<PagingResponse<WishResponse>> getUserGifts(@Parameter(hidden = true) @RequestAttribute("user") User user,
+    ResponseEntity<PagingResponse<WishResponse.Info>> getUserGifts(@Parameter(hidden = true) @RequestAttribute("user") User user,
                                                               @Parameter(description = "페이징 요청 정보") @ModelAttribute PagingRequest pagingRequest);
 }

@@ -1,6 +1,7 @@
 package gift.service.wish;
 
 import gift.dto.paging.PagingResponse;
+import gift.dto.wish.WishResponse;
 import gift.exception.WishItemNotFoundException;
 import gift.model.product.Product;
 import gift.model.user.User;
@@ -12,6 +13,9 @@ import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class WishService {
@@ -51,12 +55,15 @@ public class WishService {
         wishRepository.deleteByUserAndProduct(user, product);
     }
 
-    public PagingResponse<Wish> getGiftsForUser(Long userId, int page, int size) {
-        PageRequest pageRequest = PageRequest.of(page - 1, size, Sort.by("id").ascending());
+    public PagingResponse<WishResponse.Info> getGiftsFromUser(Long userId, int page, int size) {
+        PageRequest pageRequest = PageRequest.of(page, size, Sort.by("id").ascending());
         User user = userRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException("Invalid user ID"));
         Page<Wish> wishes = wishRepository.findByUser(user, pageRequest);
-
-        return new PagingResponse<>(page, wishes.getContent(), size, wishes.getTotalElements(), wishes.getTotalPages());
+        List<WishResponse.Info> wishResponses = wishes.getContent()
+                .stream()
+                .map(wish -> new WishResponse.Info(wish.getId(),wish.getProduct().getId(), wish.getProduct().getName(), wish.getProduct().getPrice(), wish.getProduct().getImageUrl()))
+                .collect(Collectors.toList());
+        return new PagingResponse<>(page, wishResponses, size, wishes.getTotalElements(), wishes.getTotalPages());
     }
 
     @Transactional

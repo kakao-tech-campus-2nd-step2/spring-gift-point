@@ -1,19 +1,15 @@
 package gift.controller.wish;
 
-import gift.dto.product.ProductResponse;
 import gift.dto.paging.PagingRequest;
 import gift.dto.paging.PagingResponse;
+import gift.dto.wish.WishRequest;
 import gift.dto.wish.WishResponse;
 import gift.model.user.User;
-import gift.model.wish.Wish;
 import gift.service.product.ProductService;
 import gift.service.wish.WishService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
-import java.util.stream.Collectors;
 
 
 @RestController
@@ -29,17 +25,11 @@ public class WishListController implements WishListSpecification {
         this.productService = productService;
     }
 
-    @GetMapping
-    public ResponseEntity<PagingResponse<ProductResponse.Info>> getGiftList(@ModelAttribute PagingRequest pagingRequest) {
-        PagingResponse<ProductResponse.Info> gifts = productService.getAllGifts(pagingRequest.getPage(), pagingRequest.getSize());
-        return ResponseEntity.ok(gifts);
-    }
-
-    @PostMapping("/{giftId}")
+    @PostMapping()
     public ResponseEntity<String> addGiftToCart(@RequestAttribute("user") User user,
-                                                @PathVariable Long giftId,
+                                                @RequestBody WishRequest.Create wishRequest,
                                                 @RequestParam(required = false, defaultValue = "1") int quantity) {
-        wishService.addGiftToUser(user.getId(), giftId, quantity);
+        wishService.addGiftToUser(user.getId(), wishRequest.productId(), quantity);
         return ResponseEntity.ok("위시리스트에 상품이 추가되었습니다.");
     }
 
@@ -58,15 +48,10 @@ public class WishListController implements WishListSpecification {
         return ResponseEntity.noContent().build();
     }
 
-    @GetMapping("/mywish")
-    public ResponseEntity<PagingResponse<WishResponse>> getUserGifts(@RequestAttribute("user") User user,
+    @GetMapping
+    public ResponseEntity<PagingResponse<WishResponse.Info>> getUserGifts(@RequestAttribute("user") User user,
                                                                      @ModelAttribute PagingRequest pagingRequest) {
-        PagingResponse<Wish> userWishes = wishService.getGiftsForUser(user.getId(), pagingRequest.getPage(), pagingRequest.getSize());
-        List<WishResponse> wishResponses = userWishes.getContent()
-                .stream()
-                .map(wish -> new WishResponse(wish.getGift().getId(), wish.getGift().getName(), wish.getGift().getPrice(), wish.getQuantity()))
-                .collect(Collectors.toList());
-        PagingResponse<WishResponse> pagingResponse = new PagingResponse<>(pagingRequest.getPage(), wishResponses, pagingRequest.getSize(), userWishes.getTotalElements(), userWishes.getTotalPages());
-        return ResponseEntity.ok(pagingResponse);
+        PagingResponse<WishResponse.Info> userWishes = wishService.getGiftsFromUser(user.getId(), pagingRequest.getPage(), pagingRequest.getSize());
+        return ResponseEntity.ok(userWishes);
     }
 }

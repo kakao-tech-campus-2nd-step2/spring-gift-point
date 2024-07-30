@@ -46,7 +46,7 @@ public class Wish {
         return user;
     }
 
-    public Product getGift() {
+    public Product getProduct() {
         return product;
     }
 

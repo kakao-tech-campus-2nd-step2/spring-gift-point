@@ -22,14 +22,14 @@ public class OptionController implements OptionSpecification {
     }
 
     @GetMapping("/options")
-    public ResponseEntity<List<OptionResponse>> getAllOptions() {
-        List<OptionResponse> options = optionService.getAllOptions();
+    public ResponseEntity< OptionResponse.InfoList> getAllOptions() {
+        OptionResponse.InfoList options = optionService.getAllOptions();
         return ResponseEntity.ok(options);
     }
 
     @GetMapping("/{id}/options")
-    public ResponseEntity<List<OptionResponse>> getAllOptionsFromGift(@PathVariable Long id) {
-        List<OptionResponse> options = optionService.getOptionsByGiftId(id);
+    public ResponseEntity<List<OptionResponse.Info>> getAllOptionsFromGift(@PathVariable Long id) {
+        List<OptionResponse.Info> options = optionService.getOptionsByGiftId(id);
         return ResponseEntity.ok(options);
     }
 

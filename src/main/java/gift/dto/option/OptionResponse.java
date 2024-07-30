@@ -2,33 +2,24 @@ package gift.dto.option;
 
 import gift.model.option.Option;
 
+import java.util.List;
+
 public class OptionResponse {
-
-    private final Long id;
-
-    private final String name;
-
-    private final int quantity;
-
-    public OptionResponse(Long id, String name, int quantity) {
-        this.id = id;
-        this.name = name;
-        this.quantity = quantity;
+    public record Info(
+            Long id,
+            String name,
+            int quantity
+    ){
+        public static Info fromEntity(Option option) {
+            return new Info(option.getId(), option.getName(), option.getQuantity());
+        }
     }
-
-    public static OptionResponse from(Option option) {
-        return new OptionResponse(option.getId(), option.getName(), option.getQuantity());
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public int getQuantity() {
-        return quantity;
+    public record InfoList(
+            int optionCount,
+            List<Info> options
+    ){
+        public static InfoList fromEntity(List<Option> options){
+            return new InfoList(options.size(),options.stream().map(Info::fromEntity).toList());
+        }
     }
 }

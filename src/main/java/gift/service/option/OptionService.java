@@ -41,20 +41,17 @@ public class OptionService {
     }
 
     @Transactional(readOnly = true)
-    public List<OptionResponse> getAllOptions() {
-        List<OptionResponse> options = optionRepository.findAll().stream()
-                .map(OptionResponse::from)
-                .toList();
-        return options;
+    public OptionResponse.InfoList getAllOptions() {
+        return OptionResponse.InfoList.fromEntity(optionRepository.findAll());
     }
 
     @Transactional(readOnly = true)
-    public List<OptionResponse> getOptionsByGiftId(Long giftId) {
+    public List<OptionResponse.Info> getOptionsByGiftId(Long giftId) {
         Product product = productRepository.findById(giftId)
                 .orElseThrow(() -> new NoSuchElementException("해당 상품을 찾을 수 없습니다 id :  " + giftId));
 
         return product.getOptions().stream()
-                .map(OptionResponse::from)
+                .map(OptionResponse.Info::fromEntity)
                 .toList();
     }
 
