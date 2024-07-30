@@ -6,22 +6,19 @@ public record ProductAllRequest(
         String name,
         int price,
         String imageUrl,
-        int categoryUniNumber,
+        int categoryId,
         List<OptionRequest> optionRequests) {
 
-    public ProductAllRequest(ProductRequest productRequest, OptionListRequest optionListRequest) {
-        this(productRequest.name(), productRequest.price(), productRequest.imageUrl(), productRequest.categoryUniNumber(), optionListRequest.optionRequests());
+    public ProductAllRequest(ProductRequest productRequest,
+                             OptionListRequest optionListRequest) {
+        this(
+                productRequest.name(),
+                productRequest.price(),
+                productRequest.imageUrl(),
+                productRequest.categoryId(),
+                optionListRequest.optionRequests()
+        );
     }
 
-    @Override
-    public String toString() {
-        return "ProductAllRequest{" +
-                "name='" + name + '\'' +
-                ", price=" + price +
-                ", imageUrl='" + imageUrl + '\'' +
-                ", categoryUniNumber=" + categoryUniNumber +
-                ", optionRequests=" + optionRequests +
-                '}';
-    }
 
 }

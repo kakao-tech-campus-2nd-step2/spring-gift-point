@@ -23,4 +23,8 @@ public record OptionListRequest(
             }
         }
     }
+
+    public OptionListRequest(ProductAllRequest productAllRequest) {
+        this(productAllRequest.optionRequests());
+    }
 }

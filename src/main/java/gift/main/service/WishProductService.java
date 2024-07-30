@@ -29,9 +29,9 @@ public class WishProductService {
     }
 
     public Page<WishProductResponse> getWishProductPage(UserVo sessionUser, Pageable pageable) {
-        Page<WishProductResponse> wishProductResponcePage = wishProductRepository.findAllByUserId(sessionUser.getId(), pageable)
+        Page<WishProductResponse> wishProductResponsePage = wishProductRepository.findAllByUserId(sessionUser.getId(), pageable)
                 .map(wishProduct -> new WishProductResponse(wishProduct));
-        return wishProductResponcePage;
+        return wishProductResponsePage;
 
     }
 
