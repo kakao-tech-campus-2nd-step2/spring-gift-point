@@ -4,13 +4,14 @@ import gift.product.option.domain.Option;
 import gift.product.option.domain.OptionDTO;
 import gift.product.option.repository.OptionRepository;
 import gift.product.domain.Product;
-import gift.product.domain.ProductDTO;
 import gift.product.repository.ProductRepository;
-import gift.product.service.ProductService;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.ConstraintViolationException;
-import java.util.List;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class OptionService {
@@ -23,28 +24,32 @@ public class OptionService {
         this.productRepository = productRepository;
     }
 
-    public List<OptionDTO> findAll(){
+    public List<OptionDTO> findAll() {
         return optionRepository.findAll()
             .stream().map(this::convertToDTO)
-            .toList();
-    }
-    public Option findById(Long id){
-        return optionRepository.findById(id)
-            .orElseThrow(() -> new IllegalArgumentException("optionService: optionid가 없다."));
+            .collect(Collectors.toList());
     }
 
-    public List<OptionDTO> findAllByProductId(Long productId){
+    public Option findById(Long id) {
+        return optionRepository.findById(id)
+            .orElseThrow(() -> new IllegalArgumentException("Option with id " + id + " not found."));
+    }
+
+    public List<OptionDTO> findAllByProductId(Long productId) {
         return optionRepository.findAllByProductId(productId)
             .stream().map(this::convertToDTO)
-            .toList();
-    }
-    public List<Option> saveAll(List<OptionDTO> optionDTOList){
-        return optionRepository.saveAll(optionDTOList.stream()
-            .map(this::convertToEntity)
-            .toList());
+            .collect(Collectors.toList());
     }
 
-    public List<Option> saveAllwithProductId(List<OptionDTO> optionDTOList, Long productId){
+    @Transactional
+    public List<Option> saveAll(List<OptionDTO> optionDTOList) {
+        return optionRepository.saveAll(optionDTOList.stream()
+            .map(this::convertToEntity)
+            .collect(Collectors.toList()));
+    }
+
+    @Transactional
+    public List<Option> saveAllwithProductId(List<OptionDTO> optionDTOList, Long productId) {
         Product product = productRepository.findById(productId)
             .orElseThrow(() -> new EntityNotFoundException("Product with id " + productId + " not found"));
 
@@ -54,48 +59,59 @@ public class OptionService {
                 option.setProduct(product);
                 return option;
             })
-            .toList();
+            .collect(Collectors.toList());
 
         return optionRepository.saveAll(options);
     }
 
-    public Option save(OptionDTO optionDTO){
-        return optionRepository.save(convertToEntity(optionDTO));
+    @Transactional
+    public Option save(OptionDTO optionDTO) {
+        Option option = convertToEntity(optionDTO);
+        option.setProduct(productRepository.findById(optionDTO.getProductId())
+            .orElseThrow(() -> new IllegalArgumentException("Product with id " + optionDTO.getProductId() + " not found.")));
+        return optionRepository.save(option);
     }
 
+    @Transactional
     public Option subtract(OptionDTO optionDTO, Long orderedQuantity) {
         Option option = optionRepository.findByProductIdAndName(optionDTO.getProductId(), optionDTO.getName())
-            .orElseThrow(() -> new IllegalArgumentException("option이 존재하지 않습니다."));
-        try{
+            .orElseThrow(() -> new IllegalArgumentException("Option not found for productId " + optionDTO.getProductId() + " and name " + optionDTO.getName()));
+        try {
             option.subtract(orderedQuantity);
-        }catch(ConstraintViolationException e){
+        } catch (ConstraintViolationException e) {
             option.setQuantity(0L);
         }
         return optionRepository.save(option);
     }
-    public OptionDTO addOption(Long productId, OptionDTO optionDTO){
-        Product product = productRepository.findById(productId)
-            .orElseThrow(() -> new IllegalArgumentException("productId" + productId + "가 없습니다."));
-        product.getOptionList().add(convertToEntity(optionDTO));
-        productRepository.save(product);
 
-        return convertToDTO(save(optionDTO));
+    @Transactional
+    public OptionDTO addOption(Long productId, OptionDTO optionDTO) {
+        Product product = productRepository.findById(productId)
+            .orElseThrow(() -> new IllegalArgumentException("Product with id " + productId + " not found."));
+        Option option = convertToEntity(optionDTO);
+        option.setProduct(product);
+        optionRepository.save(option);
+
+        return convertToDTO(option);
     }
-    public OptionDTO updateOption(Long productId, Long optionId, OptionDTO optionDTO){
+
+    @Transactional
+    public OptionDTO updateOption(Long productId, Long optionId, OptionDTO optionDTO) {
         Option option = optionRepository.findById(optionId)
-            .orElseThrow(() -> new IllegalArgumentException("optionId " + optionId + "가 없습니다."));
+            .orElseThrow(() -> new IllegalArgumentException("Option with id " + optionId + " not found."));
         option.setQuantity(optionDTO.getQuantity());
         option.setName(optionDTO.getName());
         option.setProduct(productRepository.findById(productId)
-            .orElseThrow(() -> new IllegalArgumentException("productId " + productId + "가 없습니다.")));
+            .orElseThrow(() -> new IllegalArgumentException("Product with id " + productId + " not found.")));
         return convertToDTO(optionRepository.save(option));
     }
 
-    public void deleteOption(Long productId, Long optionId){
+    @Transactional
+    public void deleteOption(Long productId, Long optionId) {
         optionRepository.deleteById(optionId);
     }
 
-    public OptionDTO convertToDTO(Option option){
+    public OptionDTO convertToDTO(Option option) {
         return new OptionDTO(
             option.getId(),
             option.getName(),
@@ -104,10 +120,10 @@ public class OptionService {
         );
     }
 
-    public Option convertToEntity(OptionDTO optionDTO){
+    public Option convertToEntity(OptionDTO optionDTO) {
         Option option = new Option(optionDTO.getName(), optionDTO.getQuantity());
         option.setProduct(productRepository.findById(optionDTO.getProductId())
-            .orElseThrow(() -> new IllegalArgumentException("productId 없음.")));
+            .orElseThrow(() -> new IllegalArgumentException("Product with id " + optionDTO.getProductId() + " not found.")));
         return option;
     }
 }
