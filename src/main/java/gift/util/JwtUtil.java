@@ -48,9 +48,9 @@ public class JwtUtil {
                 now.plusMinutes(validityMinutes).atZone(ZoneId.systemDefault()).toInstant());
 
         Claims claims = Jwts.claims()
-                .subject(user.getId().toString())
+                .subject(user.getId().toString()) // ID를 subject로 설정
                 .add("id", user.getId())
-                .add("name", user.getName())
+                .add("email", user.getEmail())
                 .add("role", user.getRole())
                 .build();
 
@@ -64,11 +64,9 @@ public class JwtUtil {
                 .compact();
     }
 
-
     public SecretKey generateKey() {
         return Keys.hmacShaKeyFor(jwtSecretKey.getBytes());
     }
-
 
     public boolean validateToken(String token) {
         try {
@@ -80,29 +78,24 @@ public class JwtUtil {
     }
 
     public Optional<Long> getUserId(String token) {
-        if (token == null || token.isEmpty()) {
-            return Optional.empty();
-        }
-        Claims claims = Jwts.parser().setSigningKey(generateKey()).build().parseClaimsJws(token).getBody();
-        Object idObj = claims.get("id");
+        Claims claims = getClaims(token);
+        if (claims == null) return Optional.empty();
 
-        if (idObj instanceof Integer) {
-            return Optional.of(((Integer) idObj).longValue());
-        } else if (idObj instanceof Long) {
-            return Optional.of((Long) idObj);
-        } else {
+        try {
+            return Optional.of(Long.parseLong(claims.getSubject()));
+        } catch (NumberFormatException e) {
             return Optional.empty();
         }
     }
 
-
     public String getUsername(String token) {
-        return Jwts.parser().setSigningKey(generateKey()).build().parseClaimsJws(token).getBody().getSubject();
+        Claims claims = getClaims(token);
+        return claims != null ? claims.get("email", String.class) : null;
     }
 
     public String getRole(String token) {
-        Claims claims = Jwts.parser().setSigningKey(generateKey()).build().parseClaimsJws(token).getBody();
-        return (String) claims.get("role");
+        Claims claims = getClaims(token);
+        return claims != null ? claims.get("role", String.class) : null;
     }
 
     public String resolveToken(HttpServletRequest request) {
@@ -113,8 +106,11 @@ public class JwtUtil {
         return null;
     }
 
-    public String resolveToken(String token) {
-        return token.substring(7);
+    public Claims getClaims(String token) {
+        try {
+            return Jwts.parser().setSigningKey(generateKey()).build().parseClaimsJws(token).getBody();
+        } catch (Exception e) {
+            return null;
+        }
     }
-
 }

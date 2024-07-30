@@ -9,6 +9,9 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -16,7 +19,7 @@ import org.springframework.web.bind.annotation.*;
 
 @Tag(name = "WishListController", description = "위시리스트 관련 API")
 @RestController
-@RequestMapping("/api/v1/wishlist")
+@RequestMapping("/api")
 public class WishListController {
 
     private final WishListService wishListService;
@@ -25,16 +28,23 @@ public class WishListController {
         this.wishListService = wishListService;
     }
 
-    @JwtAuthenticated
+
     @Operation(summary = "위시리스트 조회", description = "사용자의 위시리스트를 조회합니다.")
-    @GetMapping("/{userId}")
+    @GetMapping("/wishes")
+    @JwtAuthenticated
     public ResponseEntity<?> getWishList(
-            @PathVariable Long userId,
             @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size,
-            @RequestParam(defaultValue = "id") String sortBy,
-            @RequestParam(defaultValue = "asc") String direction) {
-        Page<WishList> products = wishListService.getProductsInWishList(userId, page, size, sortBy, direction);
+            @RequestParam(defaultValue = "20") int size,
+            @RequestParam(defaultValue = "createdAt,desc") String sort
+    ) {
+        String[] sortParams = sort.split(",");
+        Sort sorting = Sort.by(Sort.Direction.fromString(sortParams[1]), sortParams[0]);
+        Pageable pageable = PageRequest.of(page, size, sorting);
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        Long userId = (Long) authentication.getPrincipal();
+
+        Page<WishList> products = wishListService.getProductsInWishList(userId, pageable);
         return ResponseEntity.ok(new CommonResponse<>(products, "위시리스트 조회 성공", true));
     }
 
