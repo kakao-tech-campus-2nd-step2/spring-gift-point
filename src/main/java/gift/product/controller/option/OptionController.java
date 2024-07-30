@@ -54,9 +54,9 @@ public class OptionController {
         @ApiResponse(responseCode = "200", description = "성공", content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = OptionResponse.class)))),
         @ApiResponse(responseCode = "404", description = "존재하지 않는 리소스", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProblemDetailResponse.class)))
     })
-    @GetMapping("/products/{id}/options")
+    @GetMapping("/products/{productId}/options")
     public ResponseEntity<List<OptionResponse>> getOptionAllByProductId(
-        @PathVariable(name = "id") Long productId) {
+        @PathVariable(name = "productId") Long productId) {
         return ResponseEntity.ok(optionService.getOptionAllByProductId(productId));
     }
 
@@ -65,20 +65,19 @@ public class OptionController {
         @ApiResponse(responseCode = "400", description = "잘못된 요청", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProblemDetailResponse.class))),
         @ApiResponse(responseCode = "404", description = "존재하지 않는 리소스", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProblemDetailResponse.class)))
     })
-    @PostMapping("/options/insert")
-    public ResponseEntity<Option> insertOption(@Valid @RequestBody OptionDto optionDto) {
+    @PostMapping("/products/{productId}/options")
+    public ResponseEntity<Option> insertOption(@PathVariable(name = "productId") Long productId, @Valid @RequestBody OptionDto optionDto) {
         return ResponseEntity.status(HttpStatus.CREATED)
-            .body(optionService.insertOption(optionDto));
+            .body(optionService.insertOption(optionDto, productId));
     }
 
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "성공", content = @Content(mediaType = "application/json", schema = @Schema(implementation = Option.class))),
         @ApiResponse(responseCode = "404", description = "존재하지 않는 리소스", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProblemDetailResponse.class)))
     })
-    @PutMapping("/options/update/{id}")
-    public ResponseEntity<Option> updateOption(@PathVariable(name = "id") Long id,
-        @Valid @RequestBody OptionDto optionDto) {
-        return ResponseEntity.ok(optionService.updateOption(id, optionDto));
+    @PutMapping("/products/{productId}/options/{optionId}")
+    public ResponseEntity<Option> updateOption(@PathVariable(name = "optionId") Long optionId, @PathVariable(name = "productId") Long productId, @Valid @RequestBody OptionDto optionDto) {
+        return ResponseEntity.ok(optionService.updateOption(optionId, optionDto, productId));
     }
 
     @ApiResponses(value = {
@@ -86,9 +85,9 @@ public class OptionController {
         @ApiResponse(responseCode = "400", description = "잘못된 요청", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProblemDetailResponse.class))),
         @ApiResponse(responseCode = "404", description = "존재하지 않는 리소스", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProblemDetailResponse.class)))
     })
-    @DeleteMapping("/options/delete/{id}")
-    public ResponseEntity<Void> deleteOption(@PathVariable(name = "id") Long id) {
-        optionService.deleteOption(id);
+    @DeleteMapping("/products/{productId}/options/{optionId}")
+    public ResponseEntity<Void> deleteOption(@PathVariable(name = "optionId") Long optionId, @PathVariable(name = "productId") Long productId) {
+        optionService.deleteOption(optionId, productId);
         return ResponseEntity.ok().build();
     }
 

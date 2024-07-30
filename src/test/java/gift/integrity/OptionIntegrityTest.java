@@ -73,17 +73,17 @@ class OptionIntegrityTest {
     @Test
     void 옵션_추가() {
         //given
-        String url = BASE_URL + port + "/api/options/insert";
         Category category = categoryRepository.save(new Category("테스트카테고리"));
         Product product = productRepository.save(new Product("테스트상품", 1500, "테스트주소", category));
-        OptionDto optionDto = new OptionDto("테스트옵션1", 1, product.getId());
+        String url = BASE_URL + port + "/api/products/" + product.getId() + "/options";
+        OptionDto optionDto = new OptionDto("테스트옵션1", 1);
 
         RequestEntity<OptionDto> requestEntity = new RequestEntity<>(optionDto, HttpMethod.POST,
             URI.create(url));
 
         //when
         var actual1 = testRestTemplate.exchange(requestEntity, String.class);
-        optionDto = new OptionDto("테스트옵션2", 1, product.getId());
+        optionDto = new OptionDto("테스트옵션2", 1);
         requestEntity = new RequestEntity<>(optionDto, HttpMethod.POST,
             URI.create(url));
         var actual2 = testRestTemplate.exchange(requestEntity, String.class);
@@ -144,8 +144,8 @@ class OptionIntegrityTest {
     @Test
     void 옵션_수정() {
         //given
-        String url = BASE_URL + port + "/api/options/update/1";
-        OptionDto updatedOptionDto = new OptionDto("테스트옵션수정", 1, 1L);
+        String url = BASE_URL + port + "/api/products/1/options/1";
+        OptionDto updatedOptionDto = new OptionDto("테스트옵션수정", 1);
         RequestEntity<OptionDto> requestEntity = new RequestEntity<>(updatedOptionDto,
             HttpMethod.PUT, URI.create(url));
 
@@ -160,7 +160,7 @@ class OptionIntegrityTest {
     @Test
     void 옵션_삭제() {
         //given
-        String url = BASE_URL + port + "/api/options/delete/1";
+        String url = BASE_URL + port + "/api/products/1/options/1";
         RequestEntity<OptionDto> requestEntity = new RequestEntity<>(HttpMethod.DELETE,
             URI.create(url));
 
@@ -179,8 +179,8 @@ class OptionIntegrityTest {
         int testQuantity,
         String errorMessage) throws JsonProcessingException {
         //given
-        String url = BASE_URL + port + "/api/options/insert";
-        OptionDto optionDto = new OptionDto(testOptionName, testQuantity, 1L);
+        String url = BASE_URL + port + "/api/products/1/options";
+        OptionDto optionDto = new OptionDto(testOptionName, testQuantity);
 
         RequestEntity<OptionDto> requestEntity = new RequestEntity<>(optionDto, HttpMethod.POST,
             URI.create(url));

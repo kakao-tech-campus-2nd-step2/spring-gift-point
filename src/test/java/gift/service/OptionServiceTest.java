@@ -40,9 +40,6 @@ class OptionServiceTest {
     @Mock
     ProductRepository productRepository;
 
-    @Mock
-    CategoryRepository categoryRepository;
-
     @Test
     void 옵션_추가() {
         //given
@@ -53,7 +50,7 @@ class OptionServiceTest {
             false);
 
         //when
-        optionService.insertOption(new OptionDto("테스트옵션", 1, product.getId()));
+        optionService.insertOption(new OptionDto("테스트옵션", 1), product.getId());
 
         //then
         then(optionRepository).should().save(any());
@@ -108,14 +105,14 @@ class OptionServiceTest {
             false);
         given(optionRepository.save(any())).willReturn(option);
         Long insertedOptionId = optionService.insertOption(
-            new OptionDto("테스트옵션", 1, product.getId())).getId();
+            new OptionDto("테스트옵션", 1), product.getId()).getId();
 
         given(optionRepository.findById(insertedOptionId)).willReturn(
             Optional.of(option));
         clearInvocations(optionRepository);
 
         //when
-        optionService.updateOption(insertedOptionId, new OptionDto("테스트옵션수정", 1, product.getId()));
+        optionService.updateOption(insertedOptionId, new OptionDto("테스트옵션수정", 1), product.getId());
 
         //then
         then(optionRepository).should().save(any());
@@ -127,6 +124,7 @@ class OptionServiceTest {
         Category category = new Category("테스트카테고리");
         Product product = new Product(1L, "테스트상품", 1500, "테스트주소", category);
         Option option = new Option(2L, "테스트옵션2", 1, product);
+        given(productRepository.findById(product.getId())).willReturn(Optional.of(product));
         given(optionRepository.findById(option.getId())).willReturn(Optional.of(option));
 
         OptionResponse optionResponse1 = new OptionResponse(1L, "테스트옵션1", 1);
@@ -135,10 +133,10 @@ class OptionServiceTest {
             List.of(optionResponse1, optionResponse2));
 
         //when
-        optionService.deleteOption(option.getId());
+        optionService.deleteOption(option.getId(), product.getId());
 
         //then
-        then(optionRepository).should().deleteById(option.getId());
+        then(optionRepository).should().deleteByIdAndProductId(option.getId(), product.getId());
     }
 
     @Test
@@ -149,7 +147,7 @@ class OptionServiceTest {
 
         //when, then
         assertThatThrownBy(
-            () -> optionService.insertOption(new OptionDto("테스트옵션", 1, -1L))).isInstanceOf(
+            () -> optionService.insertOption(new OptionDto("테스트옵션", 1), -1L)).isInstanceOf(
             NoSuchElementException.class);
     }
 
@@ -160,7 +158,7 @@ class OptionServiceTest {
 
         //when, then
         assertThatThrownBy(
-            () -> optionService.updateOption(1L, new OptionDto("테스트옵션수정", 1, 1L))).isInstanceOf(
+            () -> optionService.updateOption(1L, new OptionDto("테스트옵션수정", 1), 1L)).isInstanceOf(
             NoSuchElementException.class);
     }
 
@@ -182,7 +180,7 @@ class OptionServiceTest {
 
         //when, then
         assertThatThrownBy(
-            () -> optionService.insertOption(new OptionDto("테스트옵션중복명", 1, 1L))).isInstanceOf(
+            () -> optionService.insertOption(new OptionDto("테스트옵션중복명", 1), 1L)).isInstanceOf(
             IllegalArgumentException.class);
     }
 }
