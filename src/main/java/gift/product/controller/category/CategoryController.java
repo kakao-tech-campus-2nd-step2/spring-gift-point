@@ -53,7 +53,7 @@ public class CategoryController {
         @ApiResponse(responseCode = "200", description = "성공", content = @Content(mediaType = "application/json", schema = @Schema(implementation = Category.class))),
         @ApiResponse(responseCode = "400", description = "잘못된 요청", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProblemDetailResponse.class)))
     })
-    @PostMapping("/insert")
+    @PostMapping
     public ResponseEntity<Category> insertCategory(@RequestBody CategoryDto categoryDto) {
         Category category = categoryService.insertCategory(categoryDto);
         return ResponseEntity.status(HttpStatus.CREATED).body(category);
@@ -63,7 +63,7 @@ public class CategoryController {
         @ApiResponse(responseCode = "200", description = "성공", content = @Content(mediaType = "application/json", schema = @Schema(implementation = Category.class))),
         @ApiResponse(responseCode = "404", description = "존재하지 않는 리소스", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProblemDetailResponse.class)))
     })
-    @PutMapping("/update/{id}")
+    @PutMapping("/{id}")
     public ResponseEntity<Category> updateCategory(@PathVariable(name = "id") Long id,
         @RequestBody CategoryDto categoryDto) {
         Category category = categoryService.updateCategory(id, categoryDto);
@@ -74,7 +74,7 @@ public class CategoryController {
         @ApiResponse(responseCode = "200", description = "성공"),
         @ApiResponse(responseCode = "404", description = "존재하지 않는 리소스", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProblemDetailResponse.class)))
     })
-    @DeleteMapping("/delete/{id}")
+    @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteCategory(@PathVariable(name = "id") Long id) {
         categoryService.deleteCategory(id);
         return ResponseEntity.ok().build();

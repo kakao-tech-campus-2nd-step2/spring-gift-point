@@ -38,7 +38,7 @@ class CategoryIntegrityTest {
     @Test
     void 카테고리_추가() {
         //given
-        String url = BASE_URL + port + "/api/categories/insert";
+        String url = BASE_URL + port + "/api/categories";
         CategoryDto categoryDto = new CategoryDto("테스트카테고리1");
 
         RequestEntity<CategoryDto> requestEntity = new RequestEntity<>(categoryDto, HttpMethod.POST,
@@ -87,7 +87,7 @@ class CategoryIntegrityTest {
     @Test
     void 카테고리_수정() {
         //given
-        String url = BASE_URL + port + "/api/categories/update/1";
+        String url = BASE_URL + port + "/api/categories/1";
         CategoryDto categoryDto = new CategoryDto("테스트카테고리2");
 
         RequestEntity<CategoryDto> requestEntity = new RequestEntity<>(categoryDto, HttpMethod.PUT,
@@ -104,13 +104,13 @@ class CategoryIntegrityTest {
     @Test
     void 카테고리_삭제() {
         //given
-        String url = BASE_URL + port + "/api/categories/insert";
+        String url = BASE_URL + port + "/api/categories";
         CategoryDto categoryDto = new CategoryDto("테스트카테고리1");
         RequestEntity<CategoryDto> requestEntity = new RequestEntity<>(categoryDto, HttpMethod.POST,
             URI.create(url));
         testRestTemplate.exchange(requestEntity, String.class);
 
-        url = BASE_URL + port + "/api/categories/delete/1";
+        url = BASE_URL + port + "/api/categories/1";
         requestEntity = new RequestEntity<>(HttpMethod.DELETE,
             URI.create(url));
 
