@@ -53,6 +53,14 @@ public class OrderService {
             throw new IllegalArgumentException("Insufficient product quantity.");
         }
 
+        OrderRequest order = new OrderRequest(
+            orderDTO.getOptionId(),
+            orderDTO.getQuantity(),
+            orderDTO.getMessage()
+        );
+        orderRepository.save(order);
+        orderDTO.setOrderId(order.getOrderId());
+
         // 카카오톡 메시지 전송
         String token = authorization.replace("Bearer ", "");
         OrderResponse orderResponse = kakaoMessageService.sendKakaoMessage(token, orderDTO);
@@ -61,15 +69,10 @@ public class OrderService {
         // access token에서 이메일 추출
         String email = kakaoService.getUserEmail(token);
 
-        // DTO를 엔티티로 변환
-        OrderRequest orderRequest = OrderConverter.convertToEntity(orderDTO);
+        Long productId = optionService.getProductIdByOptionId(orderDTO.getOptionId());
 
-        // 저장
-        orderRepository.save(orderRequest);
-
-        if (wishListService.isProductInWishList(email, orderDTO.getOrderId())) {
-            // 위시리스트에서 주문한 제품 ID 삭제
-            wishListService.removeProductFromWishList(email, orderDTO.getOrderId());
+        if (wishListService.isProductInWishList(email, productId)){
+            wishListService.removeProductFromWishList(email, productId);
         }
 
         return orderResponse;

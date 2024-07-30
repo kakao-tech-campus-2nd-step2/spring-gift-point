@@ -101,4 +101,13 @@ public class OptionService {
             .orElseThrow(() -> new IllegalArgumentException("옵션을 찾을 수 없습니다."));
         return option.getName();
     }
+
+    public Long getProductIdByOptionId(Long optionId) {
+        Optional<Option> option = optionRepository.findById(optionId);
+        if (option.isPresent()) {
+            return option.get().getProduct().getId();
+        } else {
+            throw new IllegalArgumentException("Option not found with id: " + optionId);
+        }
+    }
 }

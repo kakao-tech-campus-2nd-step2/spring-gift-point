@@ -27,8 +27,7 @@ public class OrderRequest {
 
     public OrderRequest() {}
 
-    public OrderRequest(Long orderId, Long optionId, int quantity, String message) {
-        this.orderId = orderId;
+    public OrderRequest(Long optionId, int quantity, String message) {
         this.optionId = optionId;
         this.quantity = quantity;
         this.message = message;

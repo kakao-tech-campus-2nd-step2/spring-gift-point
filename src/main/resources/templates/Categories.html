@@ -14,6 +14,9 @@
   <tr>
     <th><a th:href="@{/admin/categories(sortBy='id', direction=${sortDirection == 'asc' ? 'desc' : 'asc'})}">ID</a></th>
     <th><a th:href="@{/admin/categories(sortBy='name', direction=${sortDirection == 'asc' ? 'desc' : 'asc'})}">이름</a></th>
+    <th><a th:href="@{/admin/categories(sortBy='color', direction=${sortDirection == 'asc' ? 'desc' : 'asc'})}">색상</a></th>
+    <th><a th:href="@{/admin/categories(sortBy='imageUrl', direction=${sortDirection == 'asc' ? 'desc' : 'asc'})}">이미지 URL</a></th>
+    <th><a th:href="@{/admin/categories(sortBy='description', direction=${sortDirection == 'asc' ? 'desc' : 'asc'})}">설명</a></th>
     <th>Actions</th>
   </tr>
   </thead>
@@ -21,6 +24,9 @@
   <tr th:each="category : ${categories}">
     <td th:text="${category.id}"></td>
     <td th:text="${category.name}"></td>
+    <td th:text="${category.color}"></td>
+    <td th:text="${category.imageUrl}"></td>
+    <td th:text="${category.description}"></td>
     <td>
       <a th:href="@{/admin/categories/edit/{id}(id=${category.id})}">수정</a> |
       <form th:action="@{/admin/categories/{id}(id=${category.id})}" method="post" style="display:inline;">

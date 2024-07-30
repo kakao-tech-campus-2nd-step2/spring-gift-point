@@ -37,7 +37,7 @@ public class KakaoMessageService {
     }
 
     public OrderResponse sendKakaoMessage(String accessToken, OrderDTO orderDTO) {
-        String productName = productService.getProductNameById(orderDTO.getOrderId());
+        String productName = productService.getProductNameById(optionService.getProductIdByOptionId(orderDTO.getOptionId()));
         String optionName = optionService.getOptionNameById(orderDTO.getOptionId());
         return kakaoWebClient.send(accessToken, orderDTO, productName, optionName);
     }

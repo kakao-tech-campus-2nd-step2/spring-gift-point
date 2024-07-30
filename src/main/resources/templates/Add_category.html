@@ -8,9 +8,24 @@
 <h1>카테고리 추가</h1>
 <form th:action="@{/admin/categories}" th:object="${category}" method="post">
   <div>
-    <label for="name">Name:</label>
+    <label for="name">이름:</label>
     <input type="text" id="name" th:field="*{name}" required />
     <div th:if="${#fields.hasErrors('name')}" th:errors="*{name}" class="error-message"></div>
+  </div>
+  <div>
+    <label for="color">색상:</label>
+    <input type="text" id="color" th:field="*{color}" />
+    <div th:if="${#fields.hasErrors('color')}" th:errors="*{color}" class="error-message"></div>
+  </div>
+  <div>
+    <label for="imageUrl">이미지 URL:</label>
+    <input type="text" id="imageUrl" th:field="*{imageUrl}" />
+    <div th:if="${#fields.hasErrors('imageUrl')}" th:errors="*{imageUrl}" class="error-message"></div>
+  </div>
+  <div>
+    <label for="description">설명:</label>
+    <textarea id="description" th:field="*{description}"></textarea>
+    <div th:if="${#fields.hasErrors('description')}" th:errors="*{description}" class="error-message"></div>
   </div>
   <div>
     <button type="submit">추가하기</button>

@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 @RestController
 @Tag(name = "Order Management", description = "APIs for managing orders")
@@ -29,10 +30,12 @@ public class OrderController {
         @ApiResponse(responseCode = "400", description = "Invalid product quantity."),
         @ApiResponse(responseCode = "500", description = "Order created but failed to send message.")
     })
-    public ResponseEntity<OrderResponse> createOrder(@RequestHeader("Authorization") String authorization, @RequestBody OrderDTO orderDTO) {
+    public ResponseEntity<OrderResponse> createOrder(
+        @RequestHeader("Authorization") String authorization,
+        @RequestBody OrderDTO orderDTO) {
+
 
         OrderResponse orderResponse = orderService.createOrder(authorization, orderDTO);
         return ResponseEntity.ok(orderResponse);
-
     }
 }

@@ -149,39 +149,6 @@ public class ProductController {
         return "redirect:/admin/products";
     }
 
-//    @GetMapping("/{id}/options")
-//    @Operation(summary = "Manage product options", description = "This API returns the form to manage options for a product.")
-//    @ApiResponses(value = {
-//        @ApiResponse(responseCode = "200", description = "Successfully retrieved product options."),
-//        @ApiResponse(responseCode = "404", description = "Product not found."),
-//        @ApiResponse(responseCode = "500", description = "Internal server error.")
-//    })
-//    public String manageProductOptions(@PathVariable Long id, Model model) {
-//        ProductDTO productDTO = productService.findProductById(id)
-//            .orElseThrow(() -> new IllegalArgumentException("Product not found"));
-//
-//        List<OptionDTO> productOptions = productDTO.getOptions();
-//        List<OptionDTO> allOptions = optionService.findAllOptions();
-//
-//        model.addAttribute("product", productDTO);
-//        model.addAttribute("options", allOptions.stream()
-//            .filter(option -> productOptions.stream().anyMatch(productOption -> productOption.getId().equals(option.getId())))
-//            .collect(Collectors.toList()));
-//
-//        return "Manage_product_options";
-//    }
-
-//    @PostMapping("/update/{id}/options")
-//    @Operation(summary = "Update product options", description = "This API updates the options for a product.")
-//    @ApiResponses(value = {
-//        @ApiResponse(responseCode = "200", description = "Successfully updated product options."),
-//        @ApiResponse(responseCode = "404", description = "Product not found."),
-//        @ApiResponse(responseCode = "500", description = "Internal server error.")
-//    })
-//    public String updateProductOptions(@PathVariable Long id, @RequestParam List<Long> optionIds) {
-//        productService.updateProductOptions(id, optionIds);
-//        return "redirect:/admin/products";
-//    }
 
     @GetMapping("/{productId}/options")
     @Operation(summary = "Get product options by product ID", description = "This API retrieves all options for a specific product.")

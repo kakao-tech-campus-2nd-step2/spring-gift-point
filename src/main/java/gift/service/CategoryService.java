@@ -47,12 +47,18 @@ public class CategoryService {
     }
 
     @Transactional
-    public void updateCategory(CategoryDTO categoryDTO) {
+    public CategoryDTO updateCategory(CategoryDTO categoryDTO) {
         Category existingCategory = categoryRepository.findById(categoryDTO.getId())
             .orElseThrow(() -> new IllegalArgumentException("Category not found"));
 
-        existingCategory.update(categoryDTO.getName());
+        existingCategory.update(
+            categoryDTO.getName(),
+            categoryDTO.getColor(),
+            categoryDTO.getImageUrl(),
+            categoryDTO.getDescription()
+        );
         categoryRepository.save(existingCategory);
+        return CategoryConverter.convertToDTO(existingCategory);
     }
 
     public void deleteCategory(Long id) {

@@ -16,7 +16,6 @@ public class OrderConverter {
 
     public static OrderRequest convertToEntity(OrderDTO orderDTO) {
         return new OrderRequest(
-            orderDTO.getOrderId(),
             orderDTO.getOptionId(),
             orderDTO.getQuantity(),
             orderDTO.getMessage()
