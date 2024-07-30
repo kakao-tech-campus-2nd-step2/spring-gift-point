@@ -8,13 +8,11 @@ public class WishRequest {
 
     public record Register(
         @NotNull
-        Long productId,
-        @Min(1)
-        Long count
+        Long productId
     ) {
 
         public WishCommand.Register toCommand() {
-            return new WishCommand.Register(productId, count);
+            return new WishCommand.Register(productId, 4L);
         }
     }
 

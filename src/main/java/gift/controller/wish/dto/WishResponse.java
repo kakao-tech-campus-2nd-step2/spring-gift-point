@@ -8,7 +8,8 @@ public class WishResponse {
         Long wishId,
         Long productId,
         String productName,
-        Long count
+        Integer price,
+        String imageUrl
     ) {
 
         public static Info from(WishModel.Info model) {
@@ -16,7 +17,8 @@ public class WishResponse {
                 model.wishId(),
                 model.productId(),
                 model.productName(),
-                model.count()
+                model.price(),
+                model.imageUrl()
             );
         }
     }
