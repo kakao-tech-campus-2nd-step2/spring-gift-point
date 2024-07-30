@@ -11,34 +11,20 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
-@Controller
+@RestController
 public class KakaoController {
     private static final Logger logger = LoggerFactory.getLogger(KakaoController.class);
 
     private final KakaoAuthService kakaoAuthService;
-    private final KakaoProperties kakaoProperties;
 
-    public KakaoController(KakaoAuthService kakaoAuthService, KakaoProperties kakaoProperties) {
+    public KakaoController(KakaoAuthService kakaoAuthService) {
         this.kakaoAuthService = kakaoAuthService;
-        this.kakaoProperties = kakaoProperties;
     }
 
-    @GetMapping(value="/kakao")
-    public String kakaoConnect() {
-        logger.info("redirect_uri={}", kakaoProperties.getRedirectUrl());
-        logger.info("client_id=" + kakaoProperties.getClientId());
-        String url = UriComponentsBuilder.fromHttpUrl(kakaoProperties.getLoginUrl())
-                .queryParam("redirect_uri", kakaoProperties.getRedirectUrl())
-                .queryParam("client_id", kakaoProperties.getClientId())
-                .build()
-                .toUriString();
-        return "redirect:" + url;
-    }
-
-    @GetMapping("/kakaoAuth")
+    @GetMapping("/oauth/kakao/callback")
     public String getKakaoAuthToken(@RequestParam String code){
         String token = kakaoAuthService.getKakaoToken(code);
         logger.info("kakaoAuth return : {}", token);
-        return "redirect:/products";
+        return token;
     }
 }
