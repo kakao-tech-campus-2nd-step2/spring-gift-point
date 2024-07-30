@@ -21,10 +21,17 @@ class ProductRepositoryTest {
 
     @Test
     void save() {
-        Category category = new Category(1L, "Food");
+
+        Category category = new Category();
+        category.setName("Food");
         Category savedCategory = categoryRepository.save(category);
 
-        Product product = new Product("열라면", 1600, "https://i.namu.wiki/i/fuvd7qkb8P6PA_sD5ufjgpKUhRgxxTrIWnkPIg5H_UAPMUaArn1U1DweD7T_f_8RVxTDjqaiFwKr-quURwc_eQ.webp", savedCategory);
+
+        Product product = new Product();
+        product.setName("열라면");
+        product.setPrice(1600);
+        product.setImageurl("https://i.namu.wiki/i/fuvd7qkb8P6PA_sD5ufjgpKUhRgxxTrIWnkPIg5H_UAPMUaArn1U1DweD7T_f_8RVxTDjqaiFwKr-quURwc_eQ.webp");
+        product.setCategory(savedCategory);
 
         Product savedProduct = productRepository.save(product);
 

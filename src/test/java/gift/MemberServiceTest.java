@@ -42,7 +42,10 @@ class MemberServiceTest {
 
         when(memberRepository.findByEmail(email)).thenReturn(null);
         when(passwordEncoder.encode(password)).thenReturn(encodedPassword);
-        when(memberRepository.save(any(Member.class))).thenAnswer(invocation -> invocation.getArgument(0));
+        when(memberRepository.save(any(Member.class))).thenAnswer(invocation -> {
+            Member member = invocation.getArgument(0);
+            return member;
+        });
 
         Member member = memberService.register(email, password);
 
@@ -69,7 +72,9 @@ class MemberServiceTest {
         String password = "password";
         String encodedPassword = "encodedPassword";
 
-        Member member = new Member(email, encodedPassword);
+        Member member = new Member();
+        member.setEmail(email);
+        member.setPassword(encodedPassword);
 
         when(memberRepository.findByEmail(email)).thenReturn(member);
         when(passwordEncoder.matches(password, encodedPassword)).thenReturn(true);
@@ -82,12 +87,14 @@ class MemberServiceTest {
 
     @Test
     void testAuthenticateReturnsNullWhenPasswordDoesNotMatch() {
-        // 비밀번호 일치하지 않을 때 로그인 실패
+        // 비밀번호 일치하지 않을 때 로그인 실패?
         String email = "test@example.com";
         String password = "password";
         String encodedPassword = "encodedPassword";
 
-        Member member = new Member(email, encodedPassword);
+        Member member = new Member();
+        member.setEmail(email);
+        member.setPassword(encodedPassword);
 
         when(memberRepository.findByEmail(email)).thenReturn(member);
         when(passwordEncoder.matches(password, encodedPassword)).thenReturn(false);
@@ -101,7 +108,9 @@ class MemberServiceTest {
     void testFindById() {
         // ID로 회원 조회
         Long id = 1L;
-        Member member = new Member("test@example.com", "password");
+        Member member = new Member();
+        member.setEmail("test@example.com");
+        member.setPassword("password");
 
         when(memberRepository.findById(id)).thenReturn(Optional.of(member));
 

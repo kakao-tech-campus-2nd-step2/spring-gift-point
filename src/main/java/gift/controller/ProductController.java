@@ -38,7 +38,7 @@ public class ProductController {
         if (bindingResult.hasErrors()) {
             return new ResponseEntity<>(bindingResult.getAllErrors(), HttpStatus.BAD_REQUEST);
         }
-        product.setCategory(categoryService.findById(product.getCategoryId()));
+        product.setCategory(categoryService.findById(product.getCategory().getId()));
         productService.save(product);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
@@ -58,13 +58,11 @@ public class ProductController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
 
-        existingProduct.updateProductDetails(
-                updatedProduct.getName(),
-                updatedProduct.getPrice(),
-                updatedProduct.getImageurl(),
-                categoryService.findById(updatedProduct.getCategoryId()),
-                updatedProduct.getOptions()
-        );
+        existingProduct.setCategory(categoryService.findById(updatedProduct.getCategory().getId()));
+        existingProduct.setName(updatedProduct.getName());
+        existingProduct.setPrice(updatedProduct.getPrice());
+        existingProduct.setImageurl(updatedProduct.getImageurl());
+        existingProduct.setOptions(updatedProduct.getOptions());
 
         productService.update(existingProduct);
         return new ResponseEntity<>(existingProduct, HttpStatus.OK);

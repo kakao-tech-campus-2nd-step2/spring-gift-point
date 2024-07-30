@@ -32,13 +32,25 @@ public class WishServiceTest {
 
     @BeforeEach
     public void setup() {
-        member = new Member("test@example.com", "password");
-        category = new Category(1L,"Food");
-        product = new Product("Product Name", 100, "https://cs.kakao.com/images/icon/img_kakaocs.png", category);
+        member = new Member();
+        member.setEmail("test@example.com");
+        member.setPassword("password");
+
+        category = new Category();
+        category.setName("Food");
+
+        product = new Product();
+        product.setName("Product Name");
+        product.setPrice(100);
+        product.setImageurl("https://cs.kakao.com/images/icon/img_kakaocs.png");
+        product.setCategory(category);
+
         wish = new Wish();
         wish.setMember(member);
         wish.setProduct(product);
     }
+
+
 
     @Test
     public void testAddWish() {

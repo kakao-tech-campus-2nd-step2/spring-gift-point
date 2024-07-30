@@ -32,7 +32,9 @@ public class CategoryServiceTest {
 
     @Test
     public void testGetAllCategories() {
-        Category category = new Category(1L, "Test Category");
+        Category category = new Category();
+        category.setId(1L);
+        category.setName("Test Category");
 
         when(categoryRepository.findAll()).thenReturn(Collections.singletonList(category));
 
@@ -45,7 +47,9 @@ public class CategoryServiceTest {
 
     @Test
     public void testFindById() {
-        Category category = new Category(1L, "Test Category");
+        Category category = new Category();
+        category.setId(1L);
+        category.setName("Test Category");
 
         when(categoryRepository.findById(anyLong())).thenReturn(Optional.of(category));
 
@@ -54,4 +58,6 @@ public class CategoryServiceTest {
 
         verify(categoryRepository, times(1)).findById(1L);
     }
+
+
 }

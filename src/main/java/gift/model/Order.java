@@ -1,7 +1,6 @@
 package gift.model;
 
 import jakarta.persistence.*;
-
 import java.time.LocalDateTime;
 
 @Entity
@@ -23,6 +22,7 @@ public class Order {
     private String message;
     private LocalDateTime orderDateTime;
 
+
     public Order() {
     }
 
@@ -34,27 +34,52 @@ public class Order {
         this.orderDateTime = orderDateTime;
     }
 
+
     public Long getId() {
         return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public ProductOption getProductOption() {
         return productOption;
     }
 
+    public void setProductOption(ProductOption productOption) {
+        this.productOption = productOption;
+    }
+
     public Member getMember() {
         return member;
+    }
+
+    public void setMember(Member member) {
+        this.member = member;
     }
 
     public int getQuantity() {
         return quantity;
     }
 
+    public void setQuantity(int quantity) {
+        this.quantity = quantity;
+    }
+
     public String getMessage() {
         return message;
     }
 
+    public void setMessage(String message) {
+        this.message = message;
+    }
+
     public LocalDateTime getOrderDateTime() {
         return orderDateTime;
+    }
+
+    public void setOrderDateTime(LocalDateTime orderDateTime) {
+        this.orderDateTime = orderDateTime;
     }
 }
