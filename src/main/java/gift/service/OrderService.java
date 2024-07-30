@@ -45,7 +45,7 @@ public class OrderService {
         }
         option.setQuantity(option.getQuantity() - orderRequestDto.getQuantity());
         optionRepository.save(option);
-        wishService.deleteWishlist(member.getId(), option.getId());
+        wishService.deleteWishlist(member.getId(), option.getProduct().getId());
         Order order = new Order(orderRequestDto.getQuantity(), LocalDateTime.now(),
             orderRequestDto.getMessage(), option, member);
         Order savedOrder = orderRepository.save(order);

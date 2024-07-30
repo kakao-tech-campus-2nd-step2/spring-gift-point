@@ -32,7 +32,7 @@ public class KakaoController {
     }
 
     @Operation(summary = "카카오 로그인 요청", description = "인가코드를 받은후 리다이렉션")
-    @GetMapping
+    @GetMapping("/login")
     public void redirectKaKaoLogin(HttpServletResponse response) throws IOException {
         String url = kakaoProperties.authUrl() +
             "?scope=talk_message&response_type=code&client_id=" + kakaoProperties.clientId() +
