@@ -3,7 +3,6 @@ package gift;
 import gift.common.enums.Role;
 import gift.config.RedissonConfig;
 import gift.controller.dto.request.OrderRequest;
-import gift.controller.dto.response.OrderResponse;
 import gift.model.Category;
 import gift.model.Member;
 import gift.model.Option;
@@ -68,7 +67,7 @@ public class RaceConditionTest {
         for (int i = 0; i < threadCount; i++) {
             executorService.submit(() -> {
                 try {
-                    OrderResponse response = redisService.createOrderRedisLock(member.getId(), request);
+                    redisService.createOrderRedisLock(member.getId(), request);
                 } catch (TransactionTimedOutException e) {
                     System.out.println("TimeOut");
                 }catch (Exception e) {

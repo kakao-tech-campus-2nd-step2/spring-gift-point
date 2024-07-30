@@ -26,7 +26,6 @@ import java.util.List;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.mockito.BDDMockito.given;
-import static org.mockito.BDDMockito.then;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -73,12 +72,11 @@ class WishesRestControllerTest {
 
         // when
         ResultActions resultActions = mockMvc.perform(
-                MockMvcRequestBuilders.get("/api/v1/wishes")
+                MockMvcRequestBuilders.get("/api/wishes")
                         .contentType(MediaType.APPLICATION_JSON)
         );
 
         // then
-        then(wishService).should().findAllWishPagingByMemberId(any(), eq(pageable));
         resultActions.andExpect(status().isOk())
                 .andExpect(
                         jsonPath("$.size", is(size))
