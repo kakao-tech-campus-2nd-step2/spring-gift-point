@@ -13,8 +13,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 
 import java.util.Collections;
 import java.util.List;
@@ -46,10 +44,9 @@ public class ProductServiceTest {
         Page<Product> productPage = new PageImpl<>(productList, PageRequest.of(0, 5), 1);
         Mockito.when(productRepository.findAll(Mockito.any(Pageable.class))).thenReturn(productPage);
 
-        <Page<Product>> response = productService.getAllProducts(PageRequest.of(0, 5));
+        Page<Product> response = productService.getAllProducts(PageRequest.of(0, 5));
 
-        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-        assertThat(response.getBody().getContent()).hasSize(1);
-        assertThat(response.getBody().getContent().get(0).getName()).isEqualTo(product.getName());
+        assertThat(response.getContent()).hasSize(1);
+        assertThat(response.getContent().get(0).getName()).isEqualTo(product.getName());
     }
 }
