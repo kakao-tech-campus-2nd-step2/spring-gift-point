@@ -58,7 +58,7 @@ public class OrderService {
                 member.getAccessToken(),
                 new KakaoMessageDto(
                     "text",
-                    textDetail(orderRequestDto, member.getEmail()),
+                    createTextDetail(orderRequestDto, member.getEmail()),
                     "https://gift.kakao.com",
                     "https://gift.kakao.com"
                 )
@@ -70,7 +70,7 @@ public class OrderService {
     }
 
     @Transactional(readOnly = true)
-    public String textDetail(OrderRequestDto orderRequestDto, String email) {
+    public String createTextDetail(OrderRequestDto orderRequestDto, String email) {
         Product product = productRepository.findById(orderRequestDto.productId())
             .orElseThrow(() -> new NoSuchElementException("해당 id의 상품 없음: " + orderRequestDto.productId()));
         Option option = product.getOptionById(orderRequestDto.optionId());
