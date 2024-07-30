@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @Tag(name = "SignUp", description = "회원가입 API")
 @RestController
-@RequestMapping("/api/v1")
+@RequestMapping("/api/members")
 public class SignUpRestController {
     private final MemberService memberService;
 
@@ -24,7 +24,7 @@ public class SignUpRestController {
         this.memberService = memberService;
     }
 
-    @PostMapping("/sign-up")
+    @PostMapping("/register")
     @Operation(summary = "회원가입", description = "회원가입을 시도합니다.")
     @ApiResponse(responseCode = "201")
     public ResponseEntity<Void> signUp(@Valid @RequestBody SignUpRequest request) {
