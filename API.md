@@ -256,7 +256,7 @@ Content-Type: application/json
 {
   "data": {
     "total_page": 3,
-    "products": [
+    "content": [
       {
         "id": 1,
         "name": "test1",
@@ -537,7 +537,7 @@ Content-Type: application/json
 {
   "data": {
     "total_page": 3,
-    "wishes": [
+    "content": [
       {
         "id": 21,
         "product_id": 21,
