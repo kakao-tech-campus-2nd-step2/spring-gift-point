@@ -23,7 +23,7 @@ import org.hibernate.annotations.BatchSize;
 
 @Entity
 @Table(name = "product",
-    indexes = {@Index(name = "idx_modified_date", columnList = "modified_date")}
+    indexes = {@Index(name = "idx_name", columnList = "name"), @Index(name = "idx_price", columnList = "price")}
 )
 public class Product extends BaseTimeEntity {
 

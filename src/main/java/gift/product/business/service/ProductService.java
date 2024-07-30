@@ -35,8 +35,8 @@ public class ProductService {
     }
 
     @Transactional(readOnly = true)
-    public ProductOut.Paging getProductsByPage(Pageable pageable) {
-        Page<Product> products = productRepository.getProductsByPage(pageable);
+    public ProductOut.Paging getProductsByPage(Pageable pageable, Long categoryId) {
+        Page<Product> products = productRepository.getProductsByPage(pageable, categoryId);
         return ProductOut.Paging.from(products);
     }
 

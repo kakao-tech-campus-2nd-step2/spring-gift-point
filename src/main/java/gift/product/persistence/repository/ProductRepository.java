@@ -23,5 +23,5 @@ public interface ProductRepository {
 
     Product getReferencedProduct(Long productId);
 
-    Page<Product> getProductsByPage(Pageable pageRequest);
+    Page<Product> getProductsByPage(Pageable pageRequest, Long categoryId);
 }

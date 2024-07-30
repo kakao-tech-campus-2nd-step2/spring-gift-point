@@ -11,6 +11,7 @@ import java.util.List;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Direction;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -35,15 +36,17 @@ public class ProductController implements ProductApiDocs {
 
     @GetMapping
     public ResponseEntity<ProductResponse.PagingInfo> getProductsByPage(
-        @PageableDefault(size = 20, sort = "modifiedDate", direction = Sort.Direction.DESC) Pageable pageable,
-        @RequestParam(name = "size", required = false) Integer size) {
+        @PageableDefault(size = 20, sort = "name", direction = Direction.ASC) Pageable pageable,
+        @RequestParam(name = "size", required = false) Integer size,
+        @RequestParam("categoryId") Long categoryId
+    ) {
         if (size != null) {
             if (size < 1 || size > 100) {
                 throw new IllegalArgumentException("size는 1~100 사이의 값이어야 합니다.");
             }
             pageable = PageRequest.of(pageable.getPageNumber(), size, pageable.getSort());
         }
-        var productOutPaging = productService.getProductsByPage(pageable);
+        var productOutPaging = productService.getProductsByPage(pageable, categoryId);
         var productResponsePagingInfo = ProductResponse.PagingInfo.from(productOutPaging);
         return ResponseEntity.ok(productResponsePagingInfo);
     }

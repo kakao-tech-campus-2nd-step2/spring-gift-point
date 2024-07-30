@@ -21,7 +21,9 @@ public interface ProductApiDocs {
     @Operation(summary = "상품 목록 페이지로 조회")
     public ResponseEntity<ProductResponse.PagingInfo> getProductsByPage(
         Pageable pageable,
-        @Parameter(hidden = true) Integer size);
+        @Parameter(hidden = true) Integer size,
+        Long categoryId
+    );
 
     @Operation(summary = "상품 생성")
     public ResponseEntity<Long> createProduct(
