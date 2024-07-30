@@ -85,7 +85,7 @@ class WishIntegrityTest {
     @Test
     void 위시리스트_추가() {
         //given
-        String url = BASE_URL + port + "/api/wishes/insert";
+        String url = BASE_URL + port + "/api/wishes";
         WishDto wishDto = new WishDto(1L);
         HttpHeaders headers = new HttpHeaders();
         headers.setBearerAuth(accessToken);
@@ -137,7 +137,7 @@ class WishIntegrityTest {
     @Test
     void 위시리스트_삭제() {
         //given
-        String url = BASE_URL + port + "/api/wishes/delete/1";
+        String url = BASE_URL + port + "/api/wishes/1";
         HttpHeaders headers = new HttpHeaders();
         headers.setBearerAuth(accessToken);
         RequestEntity<WishDto> requestEntity = new RequestEntity<>(headers, HttpMethod.DELETE,

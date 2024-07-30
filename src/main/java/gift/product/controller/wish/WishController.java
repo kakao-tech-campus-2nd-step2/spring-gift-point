@@ -40,21 +40,18 @@ public class WishController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Wish>> getWishAll(HttpServletRequest request) {
-        LoginMemberIdDto loginMemberIdDto = getLoginMember(request);
-        List<Wish> wishAll = wishService.getWishAll(loginMemberIdDto);
-        return ResponseEntity.ok(wishAll);
-    }
-
-    @GetMapping("/paged")
     public ResponseEntity<Page<Wish>> getWishAll(
         @RequestParam(name = "page", defaultValue = "0") int page,
         @RequestParam(name = "size", defaultValue = "5") int size,
-        @RequestParam(name = "sort", defaultValue = "id") String sort,
-        @RequestParam(name = "direction", defaultValue = "asc") String direction) {
+        @RequestParam(name = "sort", defaultValue = "id,asc") String sortParam) {
+
+        String[] sortParamSplited = sortParam.split(",");
+        String sort = sortParamSplited[0];
+        String direction = (sortParamSplited.length > 1) ? sortParamSplited[1] : "asc";
+
         Pageable pageable = PageRequest.of(page, size, Sort.Direction.fromString(direction), sort);
-        Page<Wish> wishes = wishService.getWishAll(pageable);
-        return ResponseEntity.ok(wishes);
+
+        return ResponseEntity.ok(wishService.getWishAll(pageable));
     }
 
     @ApiResponses(value = {
@@ -74,7 +71,7 @@ public class WishController {
         @ApiResponse(responseCode = "400", description = "잘못된 요청", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProblemDetailResponse.class))),
         @ApiResponse(responseCode = "404", description = "존재하지 않는 리소스", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProblemDetailResponse.class)))
     })
-    @PostMapping("/insert")
+    @PostMapping
     public ResponseEntity<Wish> insertWish(@Valid @RequestBody WishDto wishDto,
         HttpServletRequest request) {
         LoginMemberIdDto loginMemberIdDto = getLoginMember(request);
@@ -87,11 +84,11 @@ public class WishController {
         @ApiResponse(responseCode = "200", description = "성공"),
         @ApiResponse(responseCode = "404", description = "존재하지 않는 리소스", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProblemDetailResponse.class)))
     })
-    @DeleteMapping("/delete/{id}")
-    public ResponseEntity<Void> deleteWish(@PathVariable(name = "id") Long id,
+    @DeleteMapping("/{wishId}")
+    public ResponseEntity<Void> deleteWish(@PathVariable(name = "wishId") Long wishId,
         HttpServletRequest request) {
         LoginMemberIdDto loginMemberIdDto = getLoginMember(request);
-        wishService.deleteWish(id, loginMemberIdDto);
+        wishService.deleteWish(wishId, loginMemberIdDto);
 
         return ResponseEntity.ok().build();
     }

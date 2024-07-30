@@ -1,11 +1,14 @@
 package gift.product.model;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import java.time.LocalDateTime;
+import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
@@ -25,18 +28,23 @@ public class Wish {
     @OnDelete(action = OnDeleteAction.CASCADE)
     private final Product product;
 
-    protected Wish() {
-        this(null, null, null);
-    }
+    @Column(nullable = false)
+    @CreationTimestamp
+    private final LocalDateTime createdDate;
 
-    public Wish(Long id, Member member, Product product) {
-        this.id = id;
-        this.member = member;
-        this.product = product;
+    protected Wish() {
+        this(null, null, null, null);
     }
 
     public Wish(Member member, Product product) {
-        this(null, member, product);
+        this(null, member, product, null);
+    }
+
+    public Wish(Long id, Member member, Product product, LocalDateTime createdDate) {
+        this.id = id;
+        this.member = member;
+        this.product = product;
+        this.createdDate = createdDate;
     }
 
     public Long getId() {
@@ -49,5 +57,9 @@ public class Wish {
 
     public Product getProduct() {
         return product;
+    }
+
+    public LocalDateTime getCreatedDate() {
+        return createdDate;
     }
 }
