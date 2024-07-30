@@ -20,7 +20,7 @@ import java.util.List;
  * */
 
 @RestController
-@RequestMapping("/admin/product")
+@RequestMapping("/api/options")
 public class OptionController {
 
     private final OptionService optionService;
@@ -29,28 +29,31 @@ public class OptionController {
         this.optionService = optionService;
     }
 
-    // 옵션리스트 반환
-    @GetMapping("/{id}/options")
-    public ResponseEntity<?> findAllOption(@PathVariable(value = "id") long productId) {
+    //특정 제품의 옵션 목록 조회
+    @GetMapping("/{product_id}")
+    public ResponseEntity<?> findAllOption(@PathVariable(value = "product_id") long productId) {
         List<OptionResponse> options = optionService.findAllOption(productId);
         return ResponseEntity.ok(options);
     }
 
-    //특정 옵션 완전 삭제
-    @DeleteMapping("/{productId}/option/{optionId}")
-    public ResponseEntity<?> deleteOption(@PathVariable(value = "productId") long productId,
-                                          @PathVariable(value = "optionId") long optionId) {
-        optionService.deleteOption(productId, optionId);
-        return ResponseEntity.ok("Option deleted successfully");
-    }
-
-    @PostMapping("/{productId}/option")
-    public ResponseEntity<?> addOption(@PathVariable(value = "productId") long productId,
+    //새로운 옵션 추가
+    @PostMapping("/{product_id}")
+    public ResponseEntity<?> addOption(@PathVariable(value = "product_id") long productId,
                                        @Valid @RequestBody OptionRequest optionRequest) {
         optionService.addOption(productId, optionRequest);
         return ResponseEntity.ok("Option added successfully");
     }
 
+    //옵션 삭제
+    @DeleteMapping("/{optionId}")
+    public ResponseEntity<?> deleteOption(@PathVariable(value = "optionId") long optionId) {
+        optionService.deleteOption(optionId);
+        return ResponseEntity.ok("Option deleted successfully");
+    }
+
+
+
+    //옵션 업데이트
     @PutMapping("/{productId}/option/{optionId}")
     public ResponseEntity<?> updateOption(@PathVariable(value = "productId") long productId,
                                           @PathVariable(value = "optionId") long optionId,
@@ -59,12 +62,4 @@ public class OptionController {
         return ResponseEntity.ok("Option updated successfully");
     }
 
-    //옵션 수량 제거
-    @PutMapping("/{productId}/option/{optionId}/quantity")
-    public ResponseEntity<?> removeOptionQuantity(@PathVariable(value = "productId") long productId,
-                                                  @PathVariable(value = "optionId") long optionId,
-                                                  @Valid @RequestBody OptionChangeQuantityRequest optionChangeQuantityRequest) {
-        optionService.removeOptionQuantity(optionId, optionChangeQuantityRequest);
-        return ResponseEntity.ok("Option Quantity changed successfully");
-    }
 }
