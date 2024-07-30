@@ -18,8 +18,6 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional(readOnly = true)
 public class CategoryService {
 
-    private static final Long defaultId = 1L;
-
     private final CategoryRepository categoryRepository;
     private final ProductRepository productRepository;
 
@@ -35,26 +33,24 @@ public class CategoryService {
         return category.getId();
     }
 
-    public PageResponse<CategoryResponse> findAllCategory(Pageable pageable) {
-        Page<Category> categoryList = categoryRepository.findAll(pageable);
-        List<CategoryResponse> responses = categoryList.getContent().stream()
-            .map(CategoryResponse::from).toList();
-        return PageResponse.from(responses, categoryList);
+    public CategoryResponse.InfoList findAllCategory() {
+        List<Category> categoryList = categoryRepository.findAll();
+        return CategoryResponse.InfoList.from(categoryList);
     }
 
-    public CategoryResponse findCategory(Long id) {
+    public CategoryResponse.Info findCategory(Long id) {
         Category category = categoryRepository.findById(id)
             .orElseThrow(() -> new CategoryException(ErrorCode.CATEGORY_NOT_FOUND));
-        return CategoryResponse.from(category);
+        return CategoryResponse.Info.from(category);
     }
 
     @Transactional
-    public CategoryResponse updateCategory(Long id, CategoryRequest.Update request) {
+    public CategoryResponse.Info updateCategory(Long id, CategoryRequest.Update request) {
         Category category = categoryRepository.findById(id)
             .orElseThrow(() -> new CategoryException(ErrorCode.CATEGORY_NOT_FOUND));
         category.updateCategory(request.name(), request.color(), request.imageUrl(),
             request.description());
-        return CategoryResponse.from(category);
+        return CategoryResponse.Info.from(category);
     }
 
     @Transactional
