@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>상품 관리</title>
+    <link rel="stylesheet" th:href="@{/css/styles.css}"/>
+    <style>
+        .options-container {
+            max-height: 150px;
+            overflow-y: auto;
+            border: 1px solid #ccc;
+            padding: 5px;
+            margin: 10px 0;
+        }
+
+        .option-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 5px 0;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .option-details {
+            display: flex;
+            gap: 10px;
+            flex-grow: 1;
+        }
+
+        .edit-button {
+            background-color: #fff;
+            border: 2px solid #ccc;
+            border-radius: 50%;
+            width: 25px;
+            height: 25px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+        }
+
+        .edit-button:hover {
+            background-color: #f0f0f0;
+        }
+    </style>
+</head>
+<body>
+<h1>Product Management</h1>
+
+<!-- 위시리스트 보기 버튼 -->
+<div style="margin-bottom: 20px;">
+    <a th:href="@{/wishlist}" onclick="preventDefault(); getWishlist();" class="button">위시리스트 보기</a>
+</div>
+
+<table>
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>Name</th>
+        <th>Price</th>
+        <th>Image</th>
+        <th>Options</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="productDto : ${paging.content}">
+        <td th:text="${productDto.id}">1</td>
+        <td th:text="${productDto.name}">Name</td>
+        <td th:text="${productDto.price}">Price</td>
+        <td><img th:src="${productDto.imageUrl}" alt="Product Image" width="100"/></td>
+        <td>
+            <div class="options-container" id="options-container" th:attr="id='options-container-' + ${productDto.id}">
+            </div>
+        </td>
+        <td>
+            <div style="display:inline">
+                <input type="hidden" name="productId" th:value="${productDto.id}"/>
+                <input type="hidden" name="productName" th:value="${productDto.name}"/>
+                <input type="hidden" name="price" th:value="${productDto.price}"/>
+            </div>
+        </td>
+    </tr>
+    </tbody>
+</table>
+
+<div>
+    <a th:if="${currentPage} > 0" th:href="@{/products(page=${currentPage - 1}, size=${paging.size})}">Previous</a>
+    <span th:text="${currentPage + 1}"></span>
+    <a th:if="${currentPage + 1 < totalPages}" th:href="@{/products(page=${currentPage + 1}, size=${paging.size})}">Next</a>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // 제품 ID를 기반으로 옵션 데이터를 불러오는 함수 호출
+        document.querySelectorAll('.options-container').forEach(container => {
+            const productId = container.getAttribute('id').replace('options-container-', '');
+            fetchAndDisplayOptions(productId);
+        });
+    });
+
+    function fetchAndDisplayOptions(productId) {
+        fetch(`/api/products/options/${productId}`)
+            .then(response => response.json())
+            .then(options => {
+                const optionsContainer = document.querySelector(`#options-container-${productId}`);
+                optionsContainer.innerHTML = ''; // 기존 내용을 지우고 새로운 옵션 데이터로 채웁니다.
+                options.forEach(option => {
+                    const optionElement = document.createElement('div');
+                    optionElement.className = 'option-item';
+                    optionElement.innerHTML = `
+                        <div class="option-details">
+                            <span>Name: ${option.name}</span>
+                            <span>Price: ${option.price}</span>
+                            <span>Quantity: ${option.quantity}</span>
+                            <input type="hidden" name="optionId" value="${option.id}"/>
+                        </div>
+                        <div>
+                            <button type="button" onclick="changeQuantity(this, -1)">-</button>
+                            <input type="number" name="count" value="1" min="1" style="width: 50px; text-align: center;"/>
+                            <button type="button" onclick="changeQuantity(this, 1)">+</button>
+                            <button type="button" onclick="addToWishlistWithParams(this)">위시리스트에 담기</button>
+                        </div>
+                    `;
+                    optionsContainer.appendChild(optionElement);
+                });
+            })
+            .catch(error => console.error('Error fetching options:', error));
+    }
+
+    function changeQuantity(button, delta) {
+        var input = button.parentNode.querySelector('input[name="count"]');
+        var newValue = parseInt(input.value) + delta;
+        if (newValue > 0) {
+            input.value = newValue;
+        }
+    }
+
+    function addToWishlistWithParams(button) {
+        var optionElement = button.closest('.option-item');
+        var row = button.closest('tr');
+        var productId = row.querySelector('input[name="productId"]').value;
+        var productName = row.querySelector('input[name="productName"]').value;
+        var quantity = optionElement.querySelector('input[name="count"]').value;
+        var price = row.querySelector('input[name="price"]').value;
+        var optionId = optionElement.querySelector('input[name="optionId"]').value;
+        addToWishlist(productId, quantity, price, productName, optionId);
+    }
+
+    function addToWishlist(productId, quantity, price, productName, optionId) {
+        fetch('/wishlist/add', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                userId: 0,
+                productId: productId,
+                count: quantity,
+                quantity: 0,
+                productName: productName,
+                price: price,
+                optionId: optionId
+            }),
+            credentials: 'include'
+        })
+            .then(response => {
+                if (response.ok) {
+                    return response.json();
+                }
+                throw new Error('Network response was not ok.');
+            })
+            .then(data => console.log(data))
+            .catch(error => console.error('There has been a problem with your fetch operation:', error));
+    }
+</script>
+</body>
+</html>

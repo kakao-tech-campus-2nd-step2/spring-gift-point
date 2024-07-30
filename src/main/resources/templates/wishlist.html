@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>위시 리스트</title>
+    <link rel="stylesheet" th:href="@{/css/styles.css}"/>
+</head>
+<body>
+<h1>위시 리스트</h1>
+<form id="wishlistForm" onsubmit="purchaseWishlist(); return false;">
+    <table>
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>상품 이름</th>
+            <th>수량</th>
+            <th>가격</th>
+            <th>Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="item : ${paging.content}">
+            <td th:text="${item.productId}"></td>
+            <td th:text="${item.productName}"></td>
+            <td th:text="${item.count}"></td>
+            <td th:text="${item.price}"></td>
+            <td>
+                <form onsubmit="removeFromWishlist(this); return false;" style="display:inline">
+                    <input type="hidden" name="productId" th:value="${item.productId}"/>
+                    <input type="hidden" name="productName" th:value="${item.productName}"/>
+                    <input type="hidden" name="count" th:value="${item.count}"/>
+                    <input type="hidden" name="price" th:value="${item.price}"/>
+                    <input type="hidden" name="optionId" th:value="${item.optionId}"/>
+                    <input type="number" name="quantity" min="1" value="1" style="width: 50px;"/>
+                    <button type="button" onclick="removeFromWishlist(this.form)">Remove</button>
+                </form>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+    <button type="submit">구매하기</button>
+</form>
+
+<div>
+    <a th:if="${currentPage} > 0" th:href="@{/wishlist(page=${currentPage - 1}, size=${paging.size})}">Previous</a>
+    <span th:text="${currentPage + 1}"></span>
+    <a th:if="${currentPage + 1 < totalPages}" th:href="@{/wishlist(page=${currentPage + 1}, size=${paging.size})}">Next</a>
+</div>
+
+<script>
+    function removeFromWishlist(form) {
+        var productName = form.querySelector('input[name="productName"]').value;
+        var productId = form.querySelector('input[name="productId"]').value;
+        var count = form.querySelector('input[name="count"]').value;
+        var quantity = form.querySelector('input[name="quantity"]').value;
+        var price = form.querySelector('input[name="price"]').value;
+
+        fetch('/wishlist/remove', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                userId: 0,
+                productId: productId,
+                productName: productName,
+                count: parseInt(count, 10),
+                quantity: parseInt(quantity, 10),
+                price: price
+            }),
+            credentials: 'include'
+        })
+            .then(response => {
+                if (response.ok) {
+                    window.location.reload();
+                } else {
+                    alert('Error: ' + response.statusText);
+                }
+            })
+            .catch(error => console.error('Error:', error));
+    }
+
+    function purchaseWishlist() {
+        var form = document.getElementById('wishlistForm');
+        var formData = new FormData(form);
+        var items = [];
+
+        formData.forEach((value, key) => {
+            if (key === 'productId') {
+                items.push({
+                    productId: value,
+                    optionId: formData.get('optionId'),
+                    quantity: formData.get('count'),
+                    memberId: 0
+                });
+            }
+        });
+
+        fetch('/option/purchase', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(items),
+            credentials: 'include'
+        })
+            .then(response => {
+                if (response.ok) {
+                    return response.text();
+                } else {
+                    throw new Error('Error: ' + response.statusText);
+                }
+            })
+            .then(message => {
+                alert(message);
+                return fetch('/wishlist/clear', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    credentials: 'include'
+                });
+            })
+            .then(response => {
+                if (response.ok) {
+                    alert('Wishlist cleared successfully');
+                    window.location.reload();
+                } else {
+                    throw new Error('Error clearing wishlist: ' + response.statusText);
+                }
+            })
+            .catch(error => console.error('Error:', error));
+    }
+</script>
+
+</body>
+</html>

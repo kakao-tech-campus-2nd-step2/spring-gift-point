@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>로그인</title>
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
+</head>
+<body>
+<div class="container">
+    <h2>로그인</h2>
+    <form th:action="@{/login}" method="post">
+        <div class="form-group">
+            <label for="email">email:</label>
+            <input type="text" id="email" name="email" class="form-control" required>
+        </div>
+        <div class="form-group">
+            <label for="password">비밀번호:</label>
+            <input type="password" id="password" name="password" class="form-control" required>
+        </div>
+        <div class="form-group">
+            <button type="submit" class="btn btn-primary">로그인</button>
+            <a th:href="@{/register}" class="btn btn-link">회원가입</a> <!-- 회원가입 버튼 추가 -->
+        </div>
+        <br>
+        <a href="/oauth/authorize">
+            <img src="/kakao_login_medium_narrow.png" alt="카카오 로그인">
+        </a>
+
+        <div class="form-group">
+            <p th:if="${error}" style="color: red;">로그인 실패: 아이디 또는 비밀번호를 확인하세요.</p>
+        </div>
+    </form>
+</div>
+</body>
+</html>

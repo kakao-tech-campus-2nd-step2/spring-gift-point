@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>상품 관리</title>
+    <link rel="stylesheet" th:href="@{/css/styles.css}"/>
+    <style>
+        .options-container {
+            max-height: 150px;
+            overflow-y: auto;
+            border: 1px solid #ccc;
+            padding: 5px;
+            margin: 10px 0;
+        }
+
+        .option-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 5px 0;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .option-details {
+            display: flex;
+            gap: 10px;
+            flex-grow: 1;
+        }
+
+        .edit-button {
+            background-color: #fff;
+            border: 2px solid #ccc;
+            border-radius: 50%;
+            width: 25px;
+            height: 25px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+        }
+
+        .edit-button:hover {
+            background-color: #f0f0f0;
+        }
+    </style>
+</head>
+<body>
+<h1>Product Management</h1>
+<a href="#" th:href="@{/api/products/create}">Add New Product</a>
+<table>
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>Name</th>
+        <th>Price</th>
+        <th>Image</th>
+        <th>Options</th>
+        <th>Actions</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="productDto : ${paging.content}">
+        <td th:text="${productDto.id}">1</td>
+        <td th:text="${productDto.name}">Name</td>
+        <td th:text="${productDto.price}">Price</td>
+        <td><img th:src="${productDto.imageUrl}" alt="Product Image" width="100"/></td>
+        <td>
+            <!-- 스크롤할 수 있는 옵션들 -->
+            <div class="options-container" id="options-container" th:attr="id='options-container-' + ${productDto.id}">
+            </div>
+            <a href="#" th:href="@{|/api/products/options/add/${productDto.id}|}">Add Option</a>
+        </td>
+        <td>
+            <a th:href="@{|/api/products/update/${productDto.id}|}">Update</a>
+            <form th:action="@{|/api/products/delete/${productDto.id}|}" method="post" style="display:inline">
+                <input type="hidden" name="_method" value="delete"/>
+                <button type="submit">Delete</button>
+            </form>
+        </td>
+    </tr>
+    </tbody>
+</table>
+
+<div>
+    <a th:if="${currentPage} > 0" th:href="@{/api/products(page=${currentPage - 1}, size=${paging.size})}">Previous</a>
+    <span th:text="${currentPage + 1}"></span>
+    <a th:if="${currentPage + 1 < totalPages}" th:href="@{/api/products(page=${currentPage + 1}, size=${paging.size})}">Next</a>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // 제품 ID를 기반으로 옵션 데이터를 불러오는 함수 호출
+        document.querySelectorAll('.options-container').forEach(container => {
+            const productId = container.getAttribute('id').replace('options-container-', '');
+            fetchAndDisplayOptions(productId);
+        });
+    });
+
+    function fetchAndDisplayOptions(productId) {
+        fetch(`/api/products/options/${productId}`)
+            .then(response => response.json())
+            .then(options => {
+                const optionsContainer = document.querySelector(`#options-container-${productId}`);
+                optionsContainer.innerHTML = ''; // 기존 내용을 지우고 새로운 옵션 데이터로 채웁니다.
+                options.forEach(option => {
+                    const optionElement = document.createElement('div');
+                    optionElement.className = 'option-item';
+                    optionElement.innerHTML = `
+                        <div class="option-details">
+                            <span>Name: ${option.name}</span>
+                            <span>Price: ${option.price}</span>
+                            <span>Quantity: ${option.quantity}</span>
+                            <a href="/api/products/options/${productId}/${option.id}/update">Edit</a>
+                            <button onclick="deleteOption(${option.id})">Delete</button>
+                        </div>
+                    `;
+                    optionsContainer.appendChild(optionElement);
+                });
+            })
+            .catch(error => console.error('Error fetching options:', error));
+    }
+
+    function deleteOption(optionId) {
+        fetch(`/api/products/options/${optionId}/delete`, {
+            method: 'DELETE',
+        })
+            .then(response => {
+                if(response.ok) {
+                    alert('Option deleted successfully');
+                    // Optionally, remove the option element from the DOM or refresh the page
+                    location.reload(); // Refresh the page to reflect changes
+                } else {
+                    alert('Error deleting option');
+                }
+            })
+            .catch(error => console.error('Error:', error));
+    }
+
+
+</script>
+
+</body>
+</html>

@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="${optionDto.id} != 0 ? 'Update Option'  : 'Add Option'">Option Form</title>
+    <link rel="stylesheet" th:href="@{/css/styles.css}"/>
+</head>
+<body>
+<h1 th:text="${optionDto.id} != 0 ? 'Edit Option' : 'Add Option'"></h1>
+<form th:action="${optionDto.id} != 0 ? '/api/products/options/' + ${optionDto.productId} + '/' + ${optionDto.id} + '/update' : '/api/products/options/add?productId=' + ${optionDto.productId}"
+      method="post">
+    <input type="hidden" th:if="${optionDto.id}" th:value="${optionDto.id}" name="id"/>
+    <input type="hidden" th:value="${optionDto.id}" name="id"/>
+    <input type="hidden" th:value="${optionDto.productId}" name="productId"/>
+
+
+    <h2>Option Information</h2>
+    <label for="name">Name:</label>
+    <input type="text" id="name" name="name" th:value="${optionDto.name}" required/>
+    <br>
+    <label for="price">Price:</label>
+    <input type="number" id="price" name="price" th:value="${optionDto.price}" required/>
+    <br>
+    <label for="quantity">Quantity:</label>
+    <input type="number" id="quantity" name="quantity" th:value="${optionDto.quantity}" required/>
+    <br>
+
+    <div th:if="${error}" style="color: red;">
+        <p th:text="${error}"></p>
+    </div>
+
+    <button type="submit" th:text="${optionDto.id} != 0 ? 'Update' : 'Save'">Save</button>
+    <a href="#" th:href="@{/api/products}">Cancel</a>
+</form>
+</body>
+</html>
