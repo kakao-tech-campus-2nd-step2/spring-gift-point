@@ -1,0 +1,15 @@
+INSERT INTO category (name,color,imageUrl,description)
+VALUES('교환권','#6c95d1','https://gift-s.kakaocdn.net/dn/gift/images/m640/dimm_theme.png',''),
+('상품권','#6c95d1','https://gift-s.kakaocdn.net/dn/gift/images/m640/dimm_theme.png',''),
+('뷰티','#6c95d1','https://gift-s.kakaocdn.net/dn/gift/images/m640/dimm_theme.png',''),
+('패션','#6c95d1','https://gift-s.kakaocdn.net/dn/gift/images/m640/dimm_theme.png',''),
+('식품','#6c95d1','https://gift-s.kakaocdn.net/dn/gift/images/m640/dimm_theme.png',''),
+('리빙/도서','#6c95d1','https://gift-s.kakaocdn.net/dn/gift/images/m640/dimm_theme.png',''),
+('레저/스포츠','#6c95d1','https://gift-s.kakaocdn.net/dn/gift/images/m640/dimm_theme.png',''),
+('아티스트/캐릭터','#6c95d1','https://gift-s.kakaocdn.net/dn/gift/images/m640/dimm_theme.png',''),
+('유아동/반려','#6c95d1','https://gift-s.kakaocdn.net/dn/gift/images/m640/dimm_theme.png',''),
+('디지털/가전','#6c95d1','https://gift-s.kakaocdn.net/dn/gift/images/m640/dimm_theme.png',''),
+('카카오프렌즈','#6c95d1','https://gift-s.kakaocdn.net/dn/gift/images/m640/dimm_theme.png',''),
+('트렌드 선물','#6c95d1','https://gift-s.kakaocdn.net/dn/gift/images/m640/dimm_theme.png',''),
+('백화점','#6c95d1','https://gift-s.kakaocdn.net/dn/gift/images/m640/dimm_theme.png',''),
+('기타','#6c95d1','https://gift-s.kakaocdn.net/dn/gift/images/m640/dimm_theme.png','');
