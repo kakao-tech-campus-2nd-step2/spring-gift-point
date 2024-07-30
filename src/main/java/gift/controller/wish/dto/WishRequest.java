@@ -10,12 +10,11 @@ public class WishRequest {
 
     public record Create(
         @NotNull
-        Long productId,
-        @Min(value = 0)
-        int count) {
+        Long productId
+       ) {
 
-        public Wish toEntity(User user, Product product, int count) {
-            return new Wish(null, user, product, count);
+        public Wish toEntity(User user, Product product) {
+            return new Wish(user, product);
         }
     }
 
