@@ -17,6 +17,7 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.*;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.data.web.PagedModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -44,18 +45,8 @@ public class WishController {
     @GetMapping
     public ResponseEntity<Page<ProductResponse>> productList(@Parameter(hidden = true) @LoginMember Member member,
 
-                                                             @Parameter(description = "페이지 번호 (기본: 0)")
-                                                             @RequestParam(value = "page", defaultValue = "0") int page,
-
-                                                             @Parameter(description = "페이지 크기 (기본: 20)")
-                                                             @RequestParam(value = "size", defaultValue = "20") int size,
-
-                                                             @Parameter(description = "정렬 기준 (예: name,asc) (기본: id,desc)")
-                                                             @RequestParam(defaultValue = "id,desc", required = false) String sort) {
-        String[] sortParams = sort.split(",");
-        Sort.Direction direction = sortParams[1].equalsIgnoreCase("asc") ? Sort.Direction.ASC : Sort.Direction.DESC;
-        Pageable pageable = PageRequest.of(page, size, Sort.by(direction, sortParams[0]));
-
+                                                             @Parameter(description = "쿼리 파라미터: page, size, sort 지정")
+                                                             @PageableDefault(page = 0, size = 20, sort = "id", direction = Sort.Direction.DESC) Pageable pageable) {
         List<ProductDto> productDtoList = wishService.getProducts(member, pageable);
 
         List<ProductResponse> productResponseList = productDtoList.stream()

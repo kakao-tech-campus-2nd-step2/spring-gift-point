@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Transactional
 @Service
@@ -31,8 +32,11 @@ public class ProductService {
     }
 
     @Transactional(readOnly = true)
-    public List<ProductDto> getProducts(Pageable pageable) {
-        return productRepository.findAll(pageable).stream()
+    public List<ProductDto> getProducts(Long categoryId, Pageable pageable) {
+        return Optional.ofNullable(categoryId)
+                .map(id -> productRepository.findAllByCategoryId(id, pageable))
+                .orElseGet(() -> productRepository.findAll(pageable))
+                .stream()
                 .map(Product::toDto)
                 .toList();
     }

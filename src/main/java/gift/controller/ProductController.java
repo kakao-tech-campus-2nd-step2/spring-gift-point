@@ -19,6 +19,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.*;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.data.web.PagedModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -43,19 +44,12 @@ public class ProductController {
             @ApiResponse(responseCode = "400", description = "잘못된 요청", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
     })
     @GetMapping
-    public ResponseEntity<Page<ProductResponse>> productList(@Parameter(description = "페이지 번호 (기본: 0)")
-                                                             @RequestParam(value = "page", defaultValue = "0") int page,
+    public ResponseEntity<Page<ProductResponse>> productList(@Parameter(description = "쿼리 파라미터: page, size, sort 지정")
+                                                             @PageableDefault(page = 0, size = 20, sort = "id", direction = Sort.Direction.DESC) Pageable pageable,
 
-                                                             @Parameter(description = "페이지 크기 (기본: 20)")
-                                                             @RequestParam(value = "size", defaultValue = "20") int size,
-
-                                                             @Parameter(description = "정렬 기준 (예: name,asc) (기본: id,desc)")
-                                                             @RequestParam(defaultValue = "id,desc", required = false) String sort) {
-        String[] sortParams = sort.split(",");
-        Sort.Direction direction = sortParams[1].equalsIgnoreCase("asc") ? Sort.Direction.ASC : Sort.Direction.DESC;
-        Pageable pageable = PageRequest.of(page, size, Sort.by(direction, sortParams[0]));
-
-        List<ProductDto> productDtoList = productService.getProducts(pageable);
+                                                             @Parameter(description = "필터링 적용할 카테고리 ID (예: 1)")
+                                                             @RequestParam(required = false) Long categoryId) {
+        List<ProductDto> productDtoList = productService.getProducts(categoryId, pageable);
 
         List<ProductResponse> productResponseList = productDtoList.stream()
                 .map(ProductDto::toResponseDto)
