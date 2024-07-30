@@ -55,9 +55,4 @@ public class OptionAdminController {
         Long deleteId = optionService.deleteOption(id,emailFromToken);
         return ResponseEntity.ok(deleteId);
     }
-    @GetMapping("/{id}/options")
-    public ResponseEntity<List<OptionResponse>> getProductOption(@PathVariable Long id){
-        List<OptionResponse> option = giftService.getOption(id);
-        return ResponseEntity.ok(option);
-    }
 }
