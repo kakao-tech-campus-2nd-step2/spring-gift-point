@@ -6,25 +6,25 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@Tag(name = "kakao 로그인")
-public class KakaoLoginController {
+public class KakaoCallbackController {
 
     private final KakaoLoginService kakaoLoginService;
 
-    public KakaoLoginController(KakaoLoginService kakaoLoginService) {
+    public KakaoCallbackController(KakaoLoginService kakaoLoginService) {
         this.kakaoLoginService = kakaoLoginService;
     }
 
-    @GetMapping("")
-    @Operation(summary = "kakao 로그인, Oauth callback 처리")
+    @GetMapping
     public ResponseEntity<String> handleOAuthCallback(
         @RequestParam(value = "code") String code) {
         String jwtAccessToken = kakaoLoginService.getAccessToken(code);
         String kakaoEmail = kakaoLoginService.getUserInfo(jwtAccessToken);
         return new ResponseEntity<>(jwtAccessToken, HttpStatus.OK);
     }
+
 }
