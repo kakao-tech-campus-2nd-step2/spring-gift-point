@@ -11,9 +11,11 @@ import org.springframework.web.client.RestClient;
 public class OauthService {
 
     private final KakaoOAuthConfigProperties configProperties;
+    private final RestClient client;
 
-    public OauthService(KakaoOAuthConfigProperties configProperties) {
+    public OauthService(KakaoOAuthConfigProperties configProperties, RestClient client) {
         this.configProperties = configProperties;
+        this.client = client;
     }
 
     public LinkedMultiValueMap<String, String> getRequestBody(String code) {
@@ -27,7 +29,6 @@ public class OauthService {
     }
 
     public KakaoToken getKakaoToken(String code) {
-        RestClient client = RestClient.builder().build();
         String url = "https://kauth.kakao.com/oauth/token";
 
         var body = getRequestBody(code);
