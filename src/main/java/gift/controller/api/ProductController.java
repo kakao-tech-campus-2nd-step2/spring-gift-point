@@ -39,9 +39,15 @@ public class ProductController {
         return ResponseEntity.ok(productResponses);
     }
 
-    @PutMapping("api/products")
-    public ResponseEntity<Void> updateProduct(@Valid @RequestBody UpdateProductRequest request) {
-        productService.updateProduct(request);
+    @GetMapping("api/products/{id}")
+    public ResponseEntity<ProductResponse> getProductResponse(@PathVariable("id") Long productId) {
+        ProductResponse productResponse = productService.getProductResponse(productId);
+        return ResponseEntity.ok(productResponse);
+    }
+
+    @PutMapping("api/products/{id}")
+    public ResponseEntity<Void> updateProduct(@Valid @RequestBody UpdateProductRequest request, @PathVariable("id") Long productId) {
+        productService.updateProduct(request, productId);
         return ResponseEntity.ok().build();
     }
 
