@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>회원 수정</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f5f5f5;
+        }
+
+        .container {
+            width: 80%;
+            max-width: 500px;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+        }
+
+        label {
+            margin-bottom: 10px;
+            color: #555;
+        }
+
+        input[type="text"], input[type="password"] {
+            padding: 10px;
+            margin-bottom: 20px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+
+        button {
+            padding: 10px 20px;
+            border: none;
+            background-color: #007bff;
+            color: white;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #0069d9;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>회원 수정</h1>
+    <form onsubmit="event.preventDefault(); updateUser();">
+        <input type="hidden" id="userId" th:value="${user.id}">
+        <label>이메일: <input type="text" id="email" value=""></label><br>
+        <label>비밀번호: <input type="password" id="password" value=""></label><br>
+        <button type="submit">수정</button>
+    </form>
+</div>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const userId = document.getElementById('userId').value;
+
+        if (userId) {
+            fetch(`/api/users/${userId}`)
+                .then(response => response.json())
+                .then(user => {
+                    document.getElementById('email').value = user.email || '';
+                    document.getElementById('password').value = '';
+                })
+                .catch(error => {
+                    console.error('Error fetching user:', error);
+                });
+        }
+    });
+
+    function updateUser() {
+        const userId = document.getElementById('userId').value;
+        const email = document.getElementById('email').value;
+        const password = document.getElementById('password').value;
+
+        fetch(`/api/users/${userId}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({email: email, password: password})
+        })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok ' + response.statusText);
+                }
+                return response.json();
+            })
+            .then(data => {
+                alert('회원이 수정되었습니다.');
+                window.location.href = '/users';
+            })
+            .catch(error => {
+                console.error('Error updating user:', error);
+                alert('회원 수정 중 오류가 발생했습니다.');
+            });
+    }
+</script>
+</body>
+</html>

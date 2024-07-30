@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>상품 목록</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f5f5f5;
+        }
+
+        .container {
+            width: 80%;
+            max-width: 800px;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        h1 {
+            flex: 1;
+            text-align: center;
+            font-size: 24px;
+            color: #333;
+            margin: 0;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+
+        table, th, td {
+            border: 1px solid #ddd;
+        }
+
+        th, td {
+            padding: 12px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+
+        td img {
+            max-width: 100px;
+            height: auto;
+        }
+
+        .actions {
+            text-align: center;
+        }
+
+        .actions a, .actions button {
+            margin: 0 5px;
+            padding: 6px 12px;
+            border: none;
+            background-color: #007bff;
+            color: white;
+            text-decoration: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .actions button {
+            background-color: #dc3545;
+        }
+
+        .add-button a {
+            padding: 10px 20px;
+            background-color: #28a745;
+            color: white;
+            text-decoration: none;
+            border-radius: 4px;
+        }
+
+        .pagination {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .pagination a {
+            margin: 0 5px;
+            padding: 6px 12px;
+            text-decoration: none;
+            color: #007bff;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="header">
+        <h1>상품 목록</h1>
+        <div class="add-button">
+            <a href="/products/new">상품 추가</a>
+        </div>
+    </div>
+    <table>
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>이름</th>
+            <th>가격</th>
+            <th>이미지</th>
+            <th>카테고리</th>
+            <th>수정</th>
+            <th>삭제</th>
+            <th>옵션 조회</th>
+            <th>옵션 추가</th>
+        </tr>
+        </thead>
+        <tbody id="productTableBody">
+        <!-- 상품 목록이 여기에 동적으로 추가됩니다. -->
+        </tbody>
+    </table>
+    <div class="pagination" id="pagination">
+        <!-- 페이지네이션 링크가 여기에 동적으로 추가됩니다. -->
+    </div>
+</div>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        loadProducts(0, 10); // 초기 페이지는 0, 페이지 크기는 10으로 설정
+
+        function loadProducts(page, size) {
+            fetch(`/api/products?page=${page}&size=${size}`)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok ' + response.statusText);
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    console.log(data); // 응답 데이터를 콘솔에 출력하여 구조 확인
+                    const productTableBody = document.getElementById("productTableBody");
+                    productTableBody.innerHTML = "";
+
+                    if (data.products && Array.isArray(data.products)) {
+                        data.products.forEach(product => {
+                            productTableBody.innerHTML += `
+                                <tr>
+                                    <td>${product.id}</td>
+                                    <td>${product.name}</td>
+                                    <td>${product.price}</td>
+                                    <td><img src="${product.imageUrl}" alt="이미지"></td>
+                                    <td>${product.category ? product.category.name : 'N/A'}</td>
+                                    <td class="actions"><a href="/products/edit/${product.id}">수정</a></td>
+                                    <td class="actions">
+                                        <form onsubmit="event.preventDefault(); deleteProduct(${product.id});">
+                                            <button type="submit">삭제</button>
+                                        </form>
+                                    </td>
+                                    <td class="actions"><a href="/products/${product.id}/options">옵션 조회</a></td>
+                                    <td class="actions"><a href="/products/${product.id}/options/new">옵션 추가</a></td>
+                                </tr>`;
+                        });
+                    } else {
+                        console.error('Invalid data structure:', data);
+                        alert('상품 데이터를 로드하는 중 문제가 발생했습니다.');
+                    }
+                    setupPagination(data);
+                })
+                .catch(error => {
+                    console.error('Error loading products:', error);
+                    alert('상품 목록을 로드하는 중 문제가 발생했습니다.');
+                });
+        }
+
+        function setupPagination(data) {
+            const pagination = document.getElementById("pagination");
+            pagination.innerHTML = "";
+            if (data.totalPages && data.totalPages > 0) {
+                for (let i = 0; i < data.totalPages; i++) {
+                    pagination.innerHTML += `<a href="#" onclick="loadProducts(${i}, 10); return false;">${i + 1}</a>`;
+                }
+            } else {
+                console.error('Invalid pagination data:', data);
+            }
+        }
+
+        window.deleteProduct = function (id) {
+            fetch(`/api/products/${id}`, {method: 'DELETE'})
+                .then(response => {
+                    if (response.ok) {
+                        alert('상품이 삭제되었습니다.');
+                        loadProducts(0, 10); // 삭제 후 첫 페이지를 다시 로드
+                    } else {
+                        alert('상품 삭제에 실패했습니다.');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error deleting product:', error);
+                    alert('상품 삭제 중 문제가 발생했습니다.');
+                });
+        }
+    });
+</script>
+</body>
+</html>
