@@ -1,0 +1,44 @@
+#정상요청
+### Send POST memberRequestDto with json body
+POST http://localhost:8080/product/jdbc
+Content-Type: application/json
+
+{
+  "name": "사과",
+  "price": 10000,
+  "imageUrl": "url입니다"
+}
+
+###IllegalProductNameLengthException
+### Send POST memberRequestDto with json body
+POST http://localhost:8080/product/jdbc
+Content-Type: application/json
+
+{
+  "name": "카오마마마마마마카카카카카카카카카카카카카",
+  "price": 10000,
+  "imageUrl": "url"
+}
+
+### IllegalProductNameKeywordException
+### Send POST memberRequestDto with json body
+POST http://localhost:8080/product/jdbc
+Content-Type: application/json
+
+{
+  "name": "카카오",
+  "price": 10000,
+  "imageUrl": "url"
+}
+
+
+### IllegalProductNameCharacterException
+### Send POST memberRequestDto with json body
+POST http://localhost:8080/product/jdbc
+Content-Type: application/json
+
+{
+  "name": "카?",
+  "price": 10000,
+  "imageUrl": "url"
+}
