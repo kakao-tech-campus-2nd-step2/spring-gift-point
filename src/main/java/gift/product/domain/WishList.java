@@ -15,7 +15,7 @@ public class WishList {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
 
@@ -48,7 +48,6 @@ public class WishList {
 
     public void setUser(User user) {
         this.user = user;
-        user.getWishLists().add(this);
     }
 
     public List<WishListProduct> getWishListProducts() {
