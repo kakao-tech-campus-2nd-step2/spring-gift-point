@@ -1,11 +1,11 @@
 package gift.product.business.service;
 
 import gift.product.business.dto.CategoryDto;
-import gift.product.business.dto.CategoryRegisterDto;
-import gift.product.business.dto.CategoryUpdateDto;
+import gift.product.business.dto.CategoryIn;
 import gift.product.persistence.repository.CategoryRepository;
 import java.util.List;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class CategoryService {
@@ -21,14 +21,23 @@ public class CategoryService {
         return CategoryDto.of(categories);
     }
 
-    public Long createCategory(CategoryRegisterDto categoryRegisterDto) {
-        var category = categoryRegisterDto.toCategory();
-        return categoryRepository.saveCategory(category);
+    @Transactional
+    public void createCategory(List<CategoryIn.Create> categoryInCreates) {
+        var categories = categoryInCreates.stream()
+            .map(CategoryIn.Create::toCategory)
+            .toList();
+        categoryRepository.saveCategories(categories);
     }
 
-    public Long updateCategory(CategoryUpdateDto categoryRegisterDto) {
-        var category = categoryRepository.getCategory(categoryRegisterDto.id());
-        category.setName(categoryRegisterDto.name());
+    @Transactional
+    public Long updateCategory(CategoryIn.Update categoryInUpdate) {
+        var category = categoryRepository.getCategory(categoryInUpdate.id());
+        category.update(
+            categoryInUpdate.name(),
+            categoryInUpdate.description(),
+            categoryInUpdate.color(),
+            categoryInUpdate.imageUrl()
+        );
         return categoryRepository.saveCategory(category);
     }
 

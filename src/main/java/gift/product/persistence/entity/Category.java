@@ -19,11 +19,20 @@ public class Category {
     @Column(unique = true)
     private String name;
 
+    private String description;
+
+    private String color;
+
+    private String imageUrl;
+
     protected Category() {
     }
 
-    public Category(String name) {
+    public Category(String name, String description, String color, String imageUrl) {
         this.name = name;
+        this.description = description;
+        this.color = color;
+        this.imageUrl = imageUrl;
     }
 
     public Long getId() {
@@ -36,5 +45,12 @@ public class Category {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public void update(String name, String description, String color, String imageUrl) {
+        this.name = name;
+        this.description = description;
+        this.color = color;
+        this.imageUrl = imageUrl;
     }
 }

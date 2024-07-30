@@ -1,6 +1,6 @@
 package gift.docs.product;
 
-import gift.product.presentation.dto.RequestCategoryDto;
+import gift.product.presentation.dto.CategoryRequest;
 import gift.product.presentation.dto.ResponseCategoryDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -14,13 +14,13 @@ public interface CategoryApiDocs {
     public ResponseEntity<List<ResponseCategoryDto>> getCategories();
 
     @Operation(summary = "카테고리 생성")
-    public ResponseEntity<Long> createCategory(
-        RequestCategoryDto requestCategoryDto);
+    public ResponseEntity<Void> createCategory(
+        List<CategoryRequest.Create> requestCategoryDto);
 
     @Operation(summary = "카테고리 수정")
     public ResponseEntity<Long> updateCategory(
         Long id,
-        RequestCategoryDto requestCategoryDto);
+        CategoryRequest.Update requestCategoryDto);
 
     @Operation(summary = "카테고리 삭제")
     public ResponseEntity<Long> deleteCategory(
