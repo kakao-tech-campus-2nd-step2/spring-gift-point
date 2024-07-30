@@ -13,6 +13,7 @@ import gift.domain.product.exception.ProductNotFoundException;
 import gift.domain.product.repository.ProductRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -50,18 +51,16 @@ public class ProductService {
     }
 
     @Transactional
-    public ProductCreateResponse createProduct(ProductRequest productRequest) {
+    public void createProduct(ProductRequest productRequest) {
         Category savedCategory = categoryRepository.findById(productRequest.getCategoryId())
             .orElseThrow(() -> new CategoryNotFoundException("해당 카테고리가 존재하지 않습니다."));
         Product savedProduct = productRepository.save(dtoToEntity(productRequest, savedCategory));
-        OptionResponse optionResponse = optionService.addOptionToProduct(savedProduct.getId(),
-            productRequest.getOptionRequest());
+        optionService.addOptionToProduct(savedProduct.getId(), productRequest.getOptionRequest());
 
-        return new ProductCreateResponse(entityToDto(savedProduct), optionResponse);
     }
 
     @Transactional
-    public ProductResponse updateProduct(Long id, ProductRequest productRequest) {
+    public void updateProduct(Long id, ProductRequest productRequest) {
         Product savedProduct = productRepository
             .findById(id)
             .orElseThrow(() -> new ProductNotFoundException("찾는 상품이 존재하지 않습니다."));
@@ -71,9 +70,6 @@ public class ProductService {
 
         savedProduct.updateAll(productRequest.getName(), productRequest.getPrice(),
             productRequest.getImageUrl(), savedCategory);
-
-        return entityToDto(savedProduct);
-
     }
 
     @Transactional

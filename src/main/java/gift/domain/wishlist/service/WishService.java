@@ -13,7 +13,7 @@ import gift.domain.wishlist.exception.WishDuplicateException;
 import gift.domain.wishlist.exception.WishNotFoundException;
 import gift.domain.wishlist.repository.WishRepository;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
+import java.util.Optional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -42,7 +42,7 @@ public class WishService {
     }
 
     @Transactional
-    public WishResponse createWish(WishRequest wishRequest) {
+    public void createWish(WishRequest wishRequest) {
         Member member = memberRepository.findById(wishRequest.getMemberId())
             .orElseThrow(() -> new MemberNotFoundException("해당 유저가 존재하지 않습니다."));
         Product product = productRepository.findById(wishRequest.getProductId())
@@ -52,15 +52,15 @@ public class WishService {
             throw new WishDuplicateException("중복된 위시리스트 입니다.");
         }
 
-        Wish wish = new Wish(member, product, LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss")));
+        Wish wish = new Wish(member, product, LocalDateTime.now());
         wish.getMember().addWish(wish);
-        return entityToDto(wishRepository.save(wish));
     }
 
     @Transactional
     public void deleteWish(Long id, Member member) {
+        Product savedProduct = productRepository.findById(id).orElseThrow(()->new ProductNotFoundException("해당 상품이 존재하지 않습니다."));
         Wish wish = wishRepository
-            .findById(id)
+            .findByProduct(savedProduct)
             .orElseThrow(() -> new WishNotFoundException("해당 위시리스트가 존재하지 않습니다."));
 
         if (wish.getMember().getId().equals(member.getId())) {

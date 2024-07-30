@@ -28,9 +28,7 @@ public class OptionService {
         Product savedProduct = productRepository.findById(productId)
             .orElseThrow(() -> new OptionNotFoundException("[상품 옵션 조회] 찾는 상품이 없습니다."));
         List<Option> savedOptions = optionRepository.findAllByProduct(savedProduct);
-        return savedOptions.stream().map(
-                (option) -> new OptionResponse(option.getId(), option.getName(), option.getQuantity()))
-            .toList();
+        return savedOptions.stream().map(this::entityToDto).toList();
     }
 
     public Option getOption(Long id) {
@@ -39,18 +37,17 @@ public class OptionService {
     }
 
     @Transactional
-    public OptionResponse addOptionToProduct(Long id, OptionRequest request) {
+    public void addOptionToProduct(Long id, OptionRequest request) {
 
         Product savedProduct = productRepository.findById(id)
             .orElseThrow(() -> new ProductNotFoundException("해당 상품이 존재하지 않습니다."));
+
         List<Option> savedOptionList = optionRepository.findAllByProduct(savedProduct);
 
         Option newOption = dtoToEntity(request);
         newOption.checkDuplicateName(savedOptionList);
         newOption.addProduct(savedProduct);
-        Option savedOption = optionRepository.save(newOption);
-
-        return entityToDto(savedOption);
+        optionRepository.save(newOption);
     }
 
     @Transactional
@@ -60,13 +57,12 @@ public class OptionService {
         option.subtractQuantity(quantity);
     }
     @Transactional
-    public OptionResponse updateProductOption(Long productId, Long optionId, OptionRequest request) {
+    public void updateProductOption(Long productId, Long optionId, OptionRequest request) {
         Option savedOption = optionRepository.findById(optionId).orElseThrow(()-> new OptionNotFoundException("해당 옵션이 존재하지 않습니다."));
         if(!savedOption.getProduct().getId().equals(productId)){
             throw new OptionNotFoundException("해당 상품에 대한 옵션이 아닙니다.");
         }
         savedOption.updateNameAndQuantity(request.getName(), request.getQuantity());
-        return entityToDto(savedOption);
     }
 
     @Transactional
