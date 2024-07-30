@@ -24,6 +24,9 @@ public class ProductFacadeService {
     }
 
     public void addProduct(Product product, List<Option> options) {
+        if (options.isEmpty()) {
+            throw new IllegalArgumentException("최소 1개의 상품을 입력해야합니다.");
+        }
         productService.saveProduct(product);
         for (Option option : options) {
             optionService.addOption(option);
@@ -43,7 +46,6 @@ public class ProductFacadeService {
     }
 
 
-
     public void updateProduct(Product product, Long id) {
         productService.updateProduct(product, id);
     }
@@ -53,8 +55,8 @@ public class ProductFacadeService {
     }
 
 
-    public Page<Product> getProductPage(int page,int size, String[] sort) {
-        return productService.getProductPage(page,size,sort);
+    public Page<Product> getProductPage(int page, int size, String[] sort) {
+        return productService.getProductPage(page, size, sort);
     }
 
     public Category findCategoryById(Long id) {
