@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Admin Page</title>
+  <link rel="stylesheet" href="/styles.css">
+
+  <style>
+    /* 추가적인 스타일*/
+
+    .form-group {
+      margin-bottom: 15px;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 5px;
+      font-weight: bold;
+    }
+
+    .form-group input {
+      width: 100%;
+      padding: 8px;
+      box-sizing: border-box;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+
+    .form-group button {
+      padding: 10px 15px;
+      background-color: #007bff;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 16px;
+    }
+
+    .form-group button:hover {
+      background-color: #0056b3;
+    }
+  </style>
+
+</head>
+
+
+<body>
+<div class="container">
+  <div th:replace="~{/sidebar :: sidebarFragment}"></div>
+
+  <div class="content">
+    <h1>상품 추가 페이지</h1>
+
+    <div class="form-container">
+      <h1>상품 입력 폼</h1>
+      <form id="productForm">
+        <div class="form-group">
+          <label for="productName">상품 이름:</label>
+          <input type="text" id="productName" name="name" required>
+        </div>
+        <div class="form-group">
+          <label for="productPrice">상품 가격:</label>
+          <input type="number" id="productPrice" name="price" required>
+        </div>
+        <div class="form-group">
+          <label for="productImageUrl">상품 이미지 URL:</label>
+          <input type="url" id="productImageUrl" name="imageUrl" required>
+        </div>
+        <!-- 상품 카테고리-->
+        <div class="form-group">
+          <label for="productCategory">상품 카테고리:</label>
+          <select id="productCategory" name="categoryId" required>
+            <option value="" disabled selected>카테고리를 선택하세요</option>
+            <option th:each="category : ${categories}" th:value="${category.id}"
+                    th:text="${category.name}"></option>
+          </select>
+        </div>
+        <div class="form-group">
+          <button type="button" onclick="submitForm()">상품 등록</button>
+        </div>
+      </form>
+    </div>
+
+    <script>
+      function submitForm() {
+        const form = document.getElementById('productForm');
+        const formData = new FormData(form);
+        const jsonObject = {};
+
+        formData.forEach((value, key) => {
+          jsonObject[key] = value;
+        });
+
+        fetch('/product', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(jsonObject)
+        })
+        .then(response => {
+          if (response.ok) {
+            alert("상품이 추가되었습니다.");
+            window.location.href = "/admin/product-management";
+          } else {
+            return response.text().then(text => {
+              throw new Error(text)
+            });
+          }
+        }).catch(error => alert('Error: ' + error.message))
+
+      }
+    </script>
+
+  </div>
+</div>
+</body>
+</html>

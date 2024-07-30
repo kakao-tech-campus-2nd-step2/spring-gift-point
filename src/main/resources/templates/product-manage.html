@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Product Management Page</title>
+  <link rel="stylesheet" href="/styles.css">
+
+  <style>
+    .product {
+      border: 1px solid #ccc;
+      padding: 16px;
+      margin: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .product img {
+      max-width: 100px;
+      height: auto;
+    }
+
+    .product-info {
+      flex-grow: 1;
+      margin-left: 16px;
+      text-align: left;
+    }
+
+    .product-info h2 {
+      font-size: 1.5em;
+    }
+
+    .product-info p {
+      margin: 8px 0;
+    }
+
+    .product-actions {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .product-actions button {
+      margin: 4px 0;
+      padding: 8px;
+      border: none;
+      cursor: pointer;
+      background-color: #007bff;
+      color: white;
+      border-radius: 4px;
+    }
+
+    .product-actions button.delete {
+      background-color: #dc3545;
+    }
+
+    .edit-form{
+      display: none;
+      margin-top: 16px;
+      padding: 16px;
+      border: 1px solid #ccc;
+    }
+  </style>
+</head>
+
+
+<body>
+<div class="container">
+  <div th:replace="~{/sidebar :: sidebarFragment}"></div>
+
+  <div class="content"><h1>상품 관리 페이지</h1>
+    <h2>상품 목록</h2>
+
+    <div th:each="product : ${products}">
+
+      <div class="product">
+        <img th:src="${product.imageUrl}" alt="상품 이미지">
+        <div class="product-info">
+          <h2 th:text="${product.name}">상품 이름</h2>
+          <p>상품 ID: <span th:text="${product.id}">1</span></p>
+          <p>가격: <span th:text="${product.price}">10000</span>원</p>
+          <p>분류: <span th:text="${product.category.name}">카테고리</span></p>
+
+        </div>
+
+        <div class="product-actions">
+          <button class="edit"  th:onclick="'showEditForm(' + ${product.id} + ')'">수정</button>
+          <button class="delete" th:onclick="'deleteHandler(' + ${product.id} + ')'">삭제</button>
+        </div>
+      </div>
+
+      <!--Edit Form-->
+      <div th:id="'edit-form-' + ${product.id}" class="edit-form">
+        <form onsubmit="event.preventDefault();">
+          <p>상품 ID</p>
+          <input type="text" th:value="${product.id}" name="id" placeholder="상품 이름">
+          <p>상품 이름</p>
+          <input type="text" th:value="${product.name}" name="name" placeholder="가격">
+          <p>상품 가격</p>
+          <input type="number" th:value="${product.price}" name="price" placeholder="상품 가격">
+          <p>이미지 URL</p>
+          <input type="text" th:value="${product.imageUrl}" name="imageUrl" placeholder="이미지 URL">
+
+          <div class="form-group">
+            <label for="productCategory">상품 카테고리:</label>
+            <select id="productCategory" name="categoryId" required>
+              <option value="" disabled selected>카테고리를 선택하세요</option>
+              <option th:each="category : ${categories}" th:value="${category.id}"
+                      th:text="${category.name}"></option>
+            </select>
+          </div>
+          <div/>
+          <button type="submit" th:onclick="'editHandler(' + ${product.id} + ')'" >저장</button>
+          <button type="button" th:onclick="'hideEditForm(' + ${product.id} + ')'">취소</button>
+        </form>
+      </div>
+    </div>
+
+
+
+  </div>
+</div>
+
+<script>
+  function deleteHandler(id) {
+    fetch(`/product/${id}`, {
+      method: 'DELETE'
+    })
+    .then(response => {
+      if (response.status===204) {
+        alert("상품이 삭제되었습니다.");
+        window.location.reload();
+      } else {
+        return response.text().then(text => { throw new Error(text) });
+      }
+    })
+    .catch(error => alert('Error: ' + error.message));
+
+  }
+
+  function editHandler(productId) {
+    const form = document.getElementById(`edit-form-${productId}`);
+    const id = form.querySelector('input[name="id"]').value;
+    const name = form.querySelector('input[name="name"]').value;
+    const price = form.querySelector('input[name="price"]').value;
+    const imageUrl = form.querySelector('input[name="imageUrl"]').value;
+    const categoryId = form.querySelector('select[name="categoryId"]').value;
+
+    const product={
+      id:id,
+      name:name,
+      price:price,
+      imageUrl:imageUrl,
+      categoryId:categoryId
+    };
+
+    fetch(`/product/${productId}`, {
+      method: 'PATCH',
+      headers:{
+        'Content-Type':'application/json'
+      },
+      body: JSON.stringify(product)
+    })
+    .then(response => {
+      if (response.ok) {
+        alert("상품이 수정되었습니다.");
+        window.location.reload();
+      } else {
+        return response.text().then(text => { throw new Error(text) });
+      }
+    })
+    .catch(error => alert('Error: ' + error.message));
+
+  }
+
+  //editForm
+  function showEditForm(id) {
+    var editForm = document.getElementById('edit-form-' + id);
+    if (editForm) {
+      editForm.style.display = 'block';
+    }
+  }
+
+  function hideEditForm(id) {
+    var editForm = document.getElementById('edit-form-' + id);
+    if (editForm) {
+      editForm.style.display = 'none';
+    }
+  }
+
+</script>
+</body>
+</html>
