@@ -34,7 +34,7 @@ public class CategoryRestController {
     @Operation(summary = "모든 카테고리 조회")
     public ResponseEntity<ResultResponseDto<List<Category>>> getCategories() {
         List<Category> categories = categoryService.getCategories();
-        return ResponseMaker.createResponse(HttpStatus.OK, "전체 카테코리 목록 조회 성공", categories);
+        return ResponseMaker.createResponse(HttpStatus.OK, categories);
     }
 
     @PostMapping
@@ -42,7 +42,7 @@ public class CategoryRestController {
     public ResponseEntity<SimpleResultResponseDto> createCategory(
         @Valid @RequestBody CategoryDTO categoryDTO) {
         categoryService.createCategory(categoryDTO);
-        return ResponseMaker.createSimpleResponse(HttpStatus.OK, "카테고리 추가 성공");
+        return ResponseMaker.createSimpleResponse(HttpStatus.OK);
     }
 
     @DeleteMapping("{id}")
@@ -51,7 +51,7 @@ public class CategoryRestController {
         @Parameter(description = "카테고리 ID") @PathVariable("id") Long id
     ) {
         categoryService.deleteCategory(id);
-        return ResponseMaker.createSimpleResponse(HttpStatus.OK, "카테고리 삭제 성공");
+        return ResponseMaker.createSimpleResponse(HttpStatus.OK);
     }
 
     @PutMapping("{id}")
@@ -61,6 +61,6 @@ public class CategoryRestController {
         @Valid @RequestBody CategoryDTO categoryDTO
     ) {
         categoryService.updateCategory(id, categoryDTO);
-        return ResponseMaker.createSimpleResponse(HttpStatus.OK, "카테고리 수정 성공");
+        return ResponseMaker.createSimpleResponse(HttpStatus.OK);
     }
 }

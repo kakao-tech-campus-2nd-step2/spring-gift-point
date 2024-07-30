@@ -1,6 +1,7 @@
 package gift.domain.member;
 
-import gift.domain.member.dto.MemberDTO;
+import gift.domain.member.dto.request.MemberRequest;
+import gift.domain.member.dto.response.MemberResponse;
 import gift.global.exception.BusinessException;
 import gift.global.exception.ErrorCode;
 import gift.global.exception.user.UserDuplicateException;
@@ -19,26 +20,27 @@ public class MemberService {
     /**
      * 회원 가입
      */
-    public void join(MemberDTO memberDTO) {
-        if (memberRepository.existsByEmail(memberDTO.getEmail())) {
-            throw new UserDuplicateException(memberDTO.getEmail());
+    public MemberResponse join(MemberRequest memberRequest) {
+        if (memberRepository.existsByEmail(memberRequest.email())) {
+            throw new UserDuplicateException(memberRequest.email());
         }
 
-        Member member = memberDTO.toMember();
-        memberRepository.save(member);
+        Member member = memberRequest.toMember();
+        Member savedMember = memberRepository.save(member);
+        String jwt = JwtProvider.generateToken(savedMember);
+
+        return new MemberResponse(member.getEmail(), jwt);
     }
 
 
     /**
      * 로그인, 성공 시 JWT 반환
      */
-    public String login(MemberDTO memberDTO) {
-        Member member = memberRepository.findByEmailAndPassword(memberDTO.getEmail(), memberDTO.getPassword())
+    public MemberResponse login(MemberRequest memberRequest) {
+        Member member = memberRepository.findByEmailAndPassword(memberRequest.email(), memberRequest.password())
             .orElseThrow(() -> new BusinessException(ErrorCode.BAD_REQUEST, "입력 정보가 올바르지 않습니다."));
 
-        // jwt 토큰 생성
         String jwt = JwtProvider.generateToken(member);
-
-        return jwt;
+        return new MemberResponse(member.getEmail(), jwt);
     }
 }

@@ -38,7 +38,7 @@ public class OptionRestController {
     @Operation(summary = "모든 옵션 조회")
     public ResponseEntity<ResultResponseDto<List<Option>>> getOptions() {
         List<Option> options = optionService.getOptions();
-        return ResponseMaker.createResponse(HttpStatus.OK, "모든 옵션 조회 성공", options);
+        return ResponseMaker.createResponse(HttpStatus.OK, options);
     }
 
     /**
@@ -52,7 +52,7 @@ public class OptionRestController {
         List<Option> options = optionService.getOptionsByProductId(productId);
         OptionResponseDTO optionResponseDTO = new OptionResponseDTO(options);
 
-        return ResponseMaker.createResponse(HttpStatus.OK, "해당 상품의 옵션 조회 성공", optionResponseDTO);
+        return ResponseMaker.createResponse(HttpStatus.OK, optionResponseDTO);
     }
 
     /**
@@ -66,7 +66,7 @@ public class OptionRestController {
     ) {
         optionService.addOptionToExistsProduct(productId, optionRequestDTO);
 
-        return ResponseMaker.createSimpleResponse(HttpStatus.OK, "해당 상품에 옵션 추가 성공");
+        return ResponseMaker.createSimpleResponse(HttpStatus.OK);
     }
 
     /**
@@ -81,7 +81,7 @@ public class OptionRestController {
     ) {
         optionService.updateOption(productId, optionId, optionRequestDTO);
 
-        return ResponseMaker.createSimpleResponse(HttpStatus.OK, "해당 상품에 옵션 수정 성공");
+        return ResponseMaker.createSimpleResponse(HttpStatus.OK);
     }
 
 

@@ -43,7 +43,7 @@ public class ProductRestController {
     public ResponseEntity<SimpleResultResponseDto> createProduct(
         @Valid @RequestBody ProductDTO productDTO) {
         productService.createProduct(productDTO);
-        return ResponseMaker.createSimpleResponse(HttpStatus.CREATED, "상품이 추가되었습니다.");
+        return ResponseMaker.createSimpleResponse(HttpStatus.CREATED);
     }
 
     /**
@@ -54,7 +54,7 @@ public class ProductRestController {
     public ResponseEntity<ResultResponseDto<Product>> getProduct(@PathVariable("id") Long id) {
         Product product = productService.getProduct(id);
 
-        return ResponseMaker.createResponse(HttpStatus.OK, "해당 ID 의 상품을 조회했습니다.", product);
+        return ResponseMaker.createResponse(HttpStatus.OK, product);
     }
 
     /**
@@ -71,7 +71,7 @@ public class ProductRestController {
         Sort sortObj = getSortObject(sort);
         Page<Product> products = productService.getProductsByPage(page, size, sortObj, categoryId);
         // 성공 시
-        return ResponseMaker.createResponse(HttpStatus.OK, "전체 목록 상품을 조회했습니다.", products);
+        return ResponseMaker.createResponse(HttpStatus.OK, products);
     }
 
     /**
@@ -84,7 +84,7 @@ public class ProductRestController {
         @Valid @RequestBody ProductDTO productDTO
     ) {
         productService.updateProduct(id, productDTO);
-        return ResponseMaker.createSimpleResponse(HttpStatus.OK, "상품을 수정했습니다.");
+        return ResponseMaker.createSimpleResponse(HttpStatus.OK);
     }
 
     /**
@@ -96,7 +96,7 @@ public class ProductRestController {
         @Parameter(description = "상품 ID") @PathVariable("id") Long id
     ) {
         productService.deleteProduct(id);
-        return ResponseMaker.createSimpleResponse(HttpStatus.OK, "상품이 삭제되었습니다.");
+        return ResponseMaker.createSimpleResponse(HttpStatus.OK);
     }
 
     /**
@@ -107,7 +107,7 @@ public class ProductRestController {
     public ResponseEntity<SimpleResultResponseDto> deleteSelectedProducts(
         @RequestBody List<Long> productIds) {
         productService.deleteProductsByIds(productIds);
-        return ResponseMaker.createSimpleResponse(HttpStatus.OK, "선택된 상품들을 삭제했습니다.");
+        return ResponseMaker.createSimpleResponse(HttpStatus.OK);
     }
 
 

@@ -45,8 +45,7 @@ public class WishRestController {
     ) {
         int currentCount = wishService.addWish(loginInfo.getId(), productId);
 
-        return ResponseMaker.createResponse(HttpStatus.OK,
-            "상품이 장바구니에 추가되었습니다. 총 개수: " + currentCount, currentCount);
+        return ResponseMaker.createResponse(HttpStatus.OK, currentCount);
     }
 
     /**
@@ -69,7 +68,7 @@ public class WishRestController {
             sortObj
         );
 
-        return ResponseMaker.createResponse(HttpStatus.OK, "장바구니 조회에 성공했습니다.", wishDTOS);
+        return ResponseMaker.createResponse(HttpStatus.OK, wishDTOS);
     }
 
     /**
@@ -83,7 +82,7 @@ public class WishRestController {
     ) {
         wishService.deleteWish(wishId);
 
-        return ResponseMaker.createSimpleResponse(HttpStatus.OK, "장바구니에서 상품이 삭제되었습니다.");
+        return ResponseMaker.createSimpleResponse(HttpStatus.OK);
     }
 
     /**
@@ -100,8 +99,7 @@ public class WishRestController {
     ) {
         int modifiedCount = wishService.updateWish(wishId, count);
 
-        return ResponseMaker.createSimpleResponse(HttpStatus.OK,
-            "해당 상품의 수량이 변경되었습니다. 총 개수: " + modifiedCount + "개");
+        return ResponseMaker.createSimpleResponse(HttpStatus.OK);
     }
 
     // TODO 페이징 기준을 wish 에 맞춰서 수정해야함.. 간단한건 생성날짜? <- 추가 속성 필요

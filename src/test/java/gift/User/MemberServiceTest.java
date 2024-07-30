@@ -6,7 +6,8 @@ import gift.domain.member.JpaMemberRepository;
 import gift.domain.member.Member;
 import gift.domain.member.MemberService;
 import gift.domain.member.dto.LoginInfo;
-import gift.domain.member.dto.MemberDTO;
+import gift.domain.member.dto.request.MemberRequest;
+import gift.domain.member.dto.response.MemberResponse;
 import gift.global.jwt.JwtProvider;
 import jdk.jfr.Description;
 import org.junit.jupiter.api.BeforeEach;
@@ -30,24 +31,24 @@ public class MemberServiceTest {
     JwtProvider jwtProvider;
 
     private Member member;
-    private MemberDTO memberDTO;
+    private MemberRequest memberRequest;
 
     @BeforeEach
     void setUp() {
         member = new Member("minji@example.com", "password1");
-        memberDTO = new MemberDTO("minji@example.com", "password1");
+        memberRequest = new MemberRequest("minji@example.com", "password1");
     }
 
     @Test
     @Description("회원 가입")
     public void join() {
         // when
-        memberService.join(memberDTO);
-        Member findMember = memberRepository.findByEmail(memberDTO.getEmail());
+        memberService.join(memberRequest);
+        Member findMember = memberRepository.findByEmail(memberRequest.email());
 
         // then
-        assertThat(findMember.getEmail()).isEqualTo(memberDTO.getEmail());
-        assertThat(findMember.getPassword()).isEqualTo(memberDTO.getPassword());
+        assertThat(findMember.getEmail()).isEqualTo(memberRequest.email());
+        assertThat(findMember.getPassword()).isEqualTo(memberRequest.password());
     }
 
     @Test
@@ -56,10 +57,10 @@ public class MemberServiceTest {
         // given
         Member savedMember = memberRepository.saveAndFlush(member);
         // when
-        String token = memberService.login(memberDTO);
-        LoginInfo loginInfo = jwtProvider.getLoginInfo(token);
+        MemberResponse memberResponse = memberService.login(memberRequest);
+        LoginInfo loginInfo = jwtProvider.getLoginInfo(memberResponse.accessToken());
         // then
         assertThat(loginInfo.getId()).isEqualTo(savedMember.getId());
-        assertThat(loginInfo.getEmail()).isEqualTo(memberDTO.getEmail());
+        assertThat(loginInfo.getEmail()).isEqualTo(memberRequest.email());
     }
 }
