@@ -2,6 +2,7 @@ package gift.main.controller;
 
 import gift.main.Exception.CustomException;
 import gift.main.config.KakaoProperties;
+import gift.main.dto.KakaoProfileRequest;
 import gift.main.dto.KakaoToken;
 import gift.main.dto.UserJoinRequest;
 import gift.main.service.KakaoService;
@@ -52,8 +53,8 @@ public class KakaoController {
         }
 
         KakaoToken kakaoToken = kakaoService.requestKakaoToken(code);
-        UserJoinRequest userJoinRequest = kakaoService.getKakaoProfile(kakaoToken);
-        String jwtToken = userService.loginKakaoUser(userJoinRequest, kakaoToken);
+        KakaoProfileRequest kakaoProfileRequest = kakaoService.getKakaoProfile(kakaoToken);
+        String jwtToken = userService.loginKakaoUser(kakaoProfileRequest, kakaoToken);
 
         return ResponseEntity.status(HttpStatus.CREATED)
                 .header(HttpHeaders.AUTHORIZATION, jwtToken)

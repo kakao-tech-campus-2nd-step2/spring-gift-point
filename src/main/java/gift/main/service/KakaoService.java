@@ -60,18 +60,14 @@ public class KakaoService {
     }
 
     //카카오 엑세스 토큰을 이용한 유저정보 가져오기
-    public UserJoinRequest getKakaoProfile(KakaoToken tokenResponse) {
-        KakaoProfileRequest kakaoProfileRequest = restClient.post()
+    public KakaoProfileRequest getKakaoProfile(KakaoToken tokenResponse) {
+        return  restClient.post()
                 .uri(kakaoProperties.userRequestUri())
                 .contentType(FORM_URLENCODED)
                 .header(AUTHORIZATION, BEARER + tokenResponse.accessToken())
                 .retrieve()
                 .toEntity(KakaoProfileRequest.class)
                 .getBody();
-
-        System.out.println("kakaoProfileRequest = " + kakaoProfileRequest);
-        return new UserJoinRequest(kakaoProfileRequest);
-
     }
 
     public void sendOrderMessage(OrderResponse orderResponse, UserVo userVo) {
