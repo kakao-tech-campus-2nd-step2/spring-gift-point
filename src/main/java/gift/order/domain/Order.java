@@ -26,6 +26,9 @@ public class Order {
     @ManyToOne
     Option option;
 
+    public Order() {
+
+    }
     public Order(Long quantity, String orderDateTime, String message, Option option) {
         this.quantity = quantity;
         this.orderDateTime = orderDateTime;
@@ -40,6 +43,7 @@ public class Order {
         this.message = message;
         this.option = option;
     }
+
 
     public Long getId() {
         return id;
