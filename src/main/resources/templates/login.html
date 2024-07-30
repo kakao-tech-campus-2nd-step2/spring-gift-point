@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<html lang="kr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <link href="/css/main.css" rel="stylesheet" />
+</head>
+<body>
+    <a th:href="@{https://kauth.kakao.com/oauth/authorize(client_id=${kakaoClientId}, redirect_uri=${kakaoRedirectUri}, response_type='code')}">
+        <img src="/images/kakao_login_medium_narrow.png">
+    </a>
+</body>
+</html>

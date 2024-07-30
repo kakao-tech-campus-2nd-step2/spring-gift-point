@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<html lang="kr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Edit Product</title>
+  <script src="/js/main.js" defer></script>
+  <link href="/css/main.css" rel="stylesheet" />
+</head>
+<body>
+    <div class="header">
+        <span class="title">Edit Product</span>
+        <button class="btn primary-btn" onclick="history.back()">Back</button>
+    </div>
+    <div class="container">
+        <form id="product-edit-form">
+            <table class="product-info">
+                <tr>
+                    <th>Category</th>
+                    <td>
+                        <select id="categoryId" required>
+                            <option th:each="category: ${categories}" th:value="${category.id}" th:text="${category.name}" th:selected="${category.id == product.categoryId}"}></option>
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <th>Name</th>
+                    <td>
+                        <input id="name" type="text" th:value="${product.name}" required>
+                    </td>
+                </tr>
+                <tr>
+                    <th>Price</th>
+                    <td>
+                        <input id="price" type="text" th:value="${product.price}" required>
+                    </td>
+                </tr>
+                <tr>
+                    <th>Image URL</th>
+                    <td>
+                        <input id="imageUrl" type="text" th:value="${product.imageUrl}" required>
+                    </td>
+                </tr>
+                <tr>
+                    <th>Option</th>
+                    <td>
+                        <table>
+                            <tr th:each="option: ${product.optionDTOs}">
+                                <td>
+                                    <input class="editedOptionName" type="text" th:value="${option.name}" required>
+                                </td>
+                                <td>
+                                    <input class="editedOptionQuantity" type="text" th:value="${option.quantity}" required>
+                                </td>
+                                <td>
+                                    <button class="btn primary-btn" type="button" th:onclick="editOption([[${product.id}]], [[${option.id}]])">Edit</button>
+                                    <button class="btn danger-btn" th:data-product-id="${product.id}" th:data-option-id="${option.id}" type="button" onclick="deleteOption(this)">Delete</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <input id="optionName" type="text">
+                                </td>
+                                <td>
+                                    <input id="optionQuantity" type="text">
+                                </td>
+                                <td>
+                                    <button class="btn primary-btn" type="button" th:onclick="addOption([[${product.id}]])">Add</button>
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+            </table>
+            <div class="btn-container">
+                <button class="btn primary-btn" type="submit">Edit</button>
+            </div>
+        </form>
+    </div>
+</body>
+</html>
