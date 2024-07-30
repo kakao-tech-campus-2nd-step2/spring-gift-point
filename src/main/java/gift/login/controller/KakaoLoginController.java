@@ -1,4 +1,4 @@
-package gift.kakao.login.controller;
+package gift.login.controller;
 
 import gift.kakao.login.service.KakaoLoginService;
 import io.swagger.v3.oas.annotations.Operation;
