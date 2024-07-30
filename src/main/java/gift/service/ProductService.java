@@ -44,7 +44,7 @@ public class ProductService {
             .orElseThrow(() -> new CategoryNotFoundException("category id에 해당하는 카테고리가 없습니다."));
 
         Product product = productRepository.save(new Product(request.getName(), request.getPrice(),
-            request.getImg(), category));
+            request.getImageUrl(), category));
 
         request.getOptions().forEach(optionRequest -> {
             Option option = new Option(optionRequest.getName(), optionRequest.getQuantity(),
@@ -62,7 +62,8 @@ public class ProductService {
             .orElseThrow(() -> new CategoryNotFoundException("category id에 해당하는 카테고리가 없습니다."));
         Product product = productRepository.findById(id)
             .orElseThrow(() -> new ProductNotFoundException("해당 id를 가지고있는 Product 객체가 없습니다."));
-        product.updateProduct(request.getName(), request.getPrice(), request.getImg(), category);
+        product.updateProduct(request.getName(), request.getPrice(), request.getImageUrl(),
+            category);
         return product;
     }
 

@@ -21,7 +21,7 @@ public class ProductCreateRequest {
     @Schema(description = "Price of the product", example = "18000")
     private Integer price;
     @Schema(description = "Image URL of the product", example = "testimage.jpg")
-    private String img;
+    private String imageUrl;
     @NotNull(message = "상품에는 항상 하나의 카테고리가 있어야 합니다.")
     @Schema(description = "ID of the category", example = "7")
     private Long categoryId;
@@ -34,11 +34,11 @@ public class ProductCreateRequest {
     public ProductCreateRequest() {
     }
 
-    public ProductCreateRequest(String name, Integer price, String img, Long categoryId,
+    public ProductCreateRequest(String name, Integer price, String imageUrl, Long categoryId,
         List<OptionRequest> options) {
         this.name = name;
         this.price = price;
-        this.img = img;
+        this.imageUrl = imageUrl;
         this.categoryId = categoryId;
         this.options = options;
     }
@@ -67,12 +67,12 @@ public class ProductCreateRequest {
         this.price = price;
     }
 
-    public String getImg() {
-        return img;
+    public String getImageUrl() {
+        return imageUrl;
     }
 
-    public void setImg(String img) {
-        this.img = img;
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
     }
 
     public List<OptionRequest> getOptions() {

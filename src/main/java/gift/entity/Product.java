@@ -36,7 +36,7 @@ public class Product {
     @Schema(description = "Price of the product", example = "100")
     private Integer price;
     @Schema(description = "Image URL of the product", example = "image1.jpg")
-    private String img;
+    private String imageUrl;
     @OneToMany(mappedBy = "product", cascade = CascadeType.REMOVE)
     @Schema(description = "List of wishes associated with this product")
     private List<Wish> wishes = new ArrayList<>();
@@ -53,10 +53,10 @@ public class Product {
     protected Product() {
     }
 
-    public Product(String name, Integer price, String img, Category category) {
+    public Product(String name, Integer price, String imageUrl, Category category) {
         this.name = name;
         this.price = price;
-        this.img = img;
+        this.imageUrl = imageUrl;
         this.category = category;
     }
 
@@ -72,8 +72,8 @@ public class Product {
         return price;
     }
 
-    public String getImg() {
-        return img;
+    public String getImageUrl() {
+        return imageUrl;
     }
 
     public Category getCategory() {
@@ -84,10 +84,10 @@ public class Product {
         return options;
     }
 
-    public void updateProduct(String name, Integer price, String img, Category category) {
+    public void updateProduct(String name, Integer price, String imageUrl, Category category) {
         this.name = name;
         this.price = price;
-        this.img = img;
+        this.imageUrl = imageUrl;
         this.category = category;
     }
 

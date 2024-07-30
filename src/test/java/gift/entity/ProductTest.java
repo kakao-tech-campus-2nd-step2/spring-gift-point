@@ -27,7 +27,7 @@ class ProductTest {
         assertThat(newProduct).isNotNull();
         assertThat(newProduct.getName()).isEqualTo("전자제품");
         assertThat(newProduct.getPrice()).isEqualTo(20000);
-        assertThat(newProduct.getImg()).isEqualTo("testImg2.jpg");
+        assertThat(newProduct.getImageUrl()).isEqualTo("testImg2.jpg");
         assertThat(newProduct.getCategory()).isEqualTo(category);
     }
 
@@ -36,7 +36,7 @@ class ProductTest {
     void ProductGetterTest() {
         assertThat(product.getName()).isEqualTo("상품");
         assertThat(product.getPrice()).isEqualTo(10000);
-        assertThat(product.getImg()).isEqualTo("testImg.jpg");
+        assertThat(product.getImageUrl()).isEqualTo("testImg.jpg");
         assertThat(product.getCategory()).isEqualTo(category);
     }
 
@@ -47,7 +47,7 @@ class ProductTest {
 
         assertThat(product.getName()).isEqualTo("자동차");
         assertThat(product.getPrice()).isEqualTo(35000000);
-        assertThat(product.getImg()).isEqualTo("자동차 이미지");
+        assertThat(product.getImageUrl()).isEqualTo("자동차 이미지");
         assertThat(product.getCategory()).isEqualTo(category);
     }
 

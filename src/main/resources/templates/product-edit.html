@@ -14,8 +14,8 @@
   <div style="color: red;" th:errors="*{name}" th:if="${#fields.hasErrors('name')}"></div>
   <p>Price: <input th:field="*{price}" th:value="${product.price}" type="number"></p>
   <div style="color: red;" th:errors="*{price}" th:if="${#fields.hasErrors('price')}"></div>
-  <p>Image URL: <input th:field="*{img}" th:value="${product.img}" type="text"></p>
-  <div style="color: red;" th:errors="*{img}" th:if="${#fields.hasErrors('img')}"></div>
+  <p>Image URL: <input th:field="*{imageUrl}" th:value="${product.imageUrl}" type="text"></p>
+  <div style="color: red;" th:errors="*{imageUrl}" th:if="${#fields.hasErrors('imageUrl')}"></div>
   <p>Category:
     <select th:field="*{categoryId}">
       <option th:each="category : ${categories}" th:selected="${category.id == product.category.id}"

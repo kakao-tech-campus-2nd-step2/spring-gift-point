@@ -79,7 +79,8 @@ public class ProductAdminController {
     public String updateProductForm(@PathVariable("id") Long id, Model model) {
         Product product = productService.getProductById(id);
         ProductRequest productRequest = new ProductRequest(
-            product.getName(), product.getPrice(), product.getImg(), product.getCategory().getId());
+            product.getName(), product.getPrice(), product.getImageUrl(),
+            product.getCategory().getId());
         model.addAttribute("productRequest", productRequest);
         return getString(model, product);
     }

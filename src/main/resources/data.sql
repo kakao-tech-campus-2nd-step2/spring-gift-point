@@ -44,35 +44,35 @@ VALUES ('백화점', '#6c95dd', 'https://gift-s.kakaocdn.net/dn/gift/images/m640
         '백화점 카테고리입니다.');
 
 -- 제품 더미 데이터 추가 (카테고리와 연관)
-INSERT INTO products (name, price, img, category_id)
+INSERT INTO products (name, price, image_url, category_id)
 VALUES ('Product 1', 100, 'image1.jpg', 1);
-INSERT INTO products (name, price, img, category_id)
+INSERT INTO products (name, price, image_url, category_id)
 VALUES ('Product 2', 200, 'image2.jpg', 2);
-INSERT INTO products (name, price, img, category_id)
+INSERT INTO products (name, price, image_url, category_id)
 VALUES ('Product 3', 300, 'image3.jpg', 3);
-INSERT INTO products (name, price, img, category_id)
+INSERT INTO products (name, price, image_url, category_id)
 VALUES ('Product 4', 400, 'image4.jpg', 4);
-INSERT INTO products (name, price, img, category_id)
+INSERT INTO products (name, price, image_url, category_id)
 VALUES ('Product 5', 500, 'image5.jpg', 5);
-INSERT INTO products (name, price, img, category_id)
+INSERT INTO products (name, price, image_url, category_id)
 VALUES ('Product 6', 600, 'image6.jpg', 6);
-INSERT INTO products (name, price, img, category_id)
+INSERT INTO products (name, price, image_url, category_id)
 VALUES ('Product 7', 700, 'image7.jpg', 7);
-INSERT INTO products (name, price, img, category_id)
+INSERT INTO products (name, price, image_url, category_id)
 VALUES ('Product 8', 800, 'image8.jpg', 8);
-INSERT INTO products (name, price, img, category_id)
+INSERT INTO products (name, price, image_url, category_id)
 VALUES ('Product 9', 900, 'image9.jpg', 9);
-INSERT INTO products (name, price, img, category_id)
+INSERT INTO products (name, price, image_url, category_id)
 VALUES ('Product 10', 1000, 'image10.jpg', 10);
-INSERT INTO products (name, price, img, category_id)
+INSERT INTO products (name, price, image_url, category_id)
 VALUES ('Product 11', 1100, 'image11.jpg', 11);
-INSERT INTO products (name, price, img, category_id)
+INSERT INTO products (name, price, image_url, category_id)
 VALUES ('Product 12', 1200, 'image12.jpg', 12);
-INSERT INTO products (name, price, img, category_id)
+INSERT INTO products (name, price, image_url, category_id)
 VALUES ('Product 13', 1300, 'image13.jpg', 1);
-INSERT INTO products (name, price, img, category_id)
+INSERT INTO products (name, price, image_url, category_id)
 VALUES ('Product 14', 1400, 'image14.jpg', 2);
-INSERT INTO products (name, price, img, category_id)
+INSERT INTO products (name, price, image_url, category_id)
 VALUES ('Product 15', 1500, 'image15.jpg', 3);
 
 -- 옵션 더미 데이터 추가 (각 제품당 2개 옵션)
