@@ -56,11 +56,13 @@ public class OrderService {
                 order.getMessage()
         );
 
-        // JWT 토큰인지 카카오 엑세스 토큰인지 확인 후 메시지 전송
+        // JWT 토큰인지 카카오 엑세스 토큰인지 확인하기
         if (TokenService.isJwtToken(token)) {
             String email = TokenService.extractEmailFromToken(token);
-            kakaoMessageService.sendMessageWithEmail(orderResponse, email, token);
+            // JWT 토큰일 경우 메시지 응답 바디에 포함
+            logger.info("Order created for email: {}", email);
         } else {
+            // 카카오 엑세스 토큰일 경우 카카오 나에게 메시지 보내기
             kakaoMessageService.sendMessage(orderResponse, token);
         }
 

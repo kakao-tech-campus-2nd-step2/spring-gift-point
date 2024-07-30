@@ -27,7 +27,7 @@ public class OrderController {
             OrderResponse response = orderService.createOrder(request, token);
             return new ResponseEntity<>(response, HttpStatus.CREATED);
         } catch (Exception e) {
-            logger.error("Error processing order: {}", e.getMessage(), e);
+            logger.error("Error processing order: {}", e.getMessage());
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
