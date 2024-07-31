@@ -50,7 +50,7 @@ public class OrderController {
 
         OrderResponse response = orderService.addOrder(orderRequest, authToken);
         Map<String, OrderResponse> responseBody = new HashMap<>();
-        responseBody.put("created_order", response);
+        responseBody.put("order", response);
         return new ResponseEntity<>(responseBody, HttpStatus.CREATED);
     }
 
