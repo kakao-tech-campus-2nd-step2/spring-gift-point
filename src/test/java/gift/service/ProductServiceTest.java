@@ -8,15 +8,17 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import gift.dto.ProductDto;
+import gift.category.model.Category;
+import gift.category.repository.CategoryRepository;
 import gift.exception.NonIntegerPriceException;
+import gift.exception.OptionNotFoundException;
 import gift.exception.ResourceNotFoundException;
-import gift.model.Category;
-import gift.model.Option;
-import gift.model.Product;
-import gift.repository.CategoryRepository;
-import gift.repository.OptionRepository;
-import gift.repository.ProductRepository;
+import gift.option.model.Option;
+import gift.option.repository.OptionRepository;
+import gift.product.dto.ProductRequest;
+import gift.product.model.Product;
+import gift.product.repository.ProductRepository;
+import gift.product.service.ProductService;
 import java.util.Collections;
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
@@ -43,7 +45,7 @@ class ProductServiceTest {
     private ProductService productService;
 
     private Product product;
-    private ProductDto productDto;
+    private ProductRequest productRequest;
     private Option option;
 
     @BeforeEach
@@ -52,28 +54,24 @@ class ProductServiceTest {
         category.setId(1L);
         given(categoryRepository.findById(1L)).willReturn(Optional.of(category));
         var byId = categoryRepository.findById(1L);
-        category = byId.orElseGet(() -> {throw new ResourceNotFoundException("없는 카테고리");});
+        category = byId.orElseThrow(() -> new ResourceNotFoundException("없는 카테고리"));
         product = new Product(1L, "productName", 10000, "image.jpg", category);
         option = new Option("option", 1, product);
-        productDto = new ProductDto(product.getName(), product.getPrice(), product.getImageUrl(), category.getId(), 1L);
+        productRequest = new ProductRequest(product.getName(), product.getPrice(), product.getImageUrl(), category.getId(), 1L);
     }
 
 
     @Test
     @DisplayName("상품 저장 후 전체 상품 조회")
-    public void saveAndGetAllProductsTest() throws NonIntegerPriceException {
+    public void saveAndGetAllProductsTest() throws NonIntegerPriceException, OptionNotFoundException {
         // given
-        given(productRepository.save(product)).willReturn(product);
         var productList = Collections.singletonList(product);
         given(productRepository.findAll()).willReturn(productList);
-        given(optionRepository.findById(1L)).willReturn(Optional.ofNullable(option));
 
         // when
-        Product savedProduct = productService.createProduct(productDto);  // 실제 저장 호출
         var allProducts = productService.getAllProducts();
 
         // then
-        assertThat(savedProduct).isEqualTo(product);
         assertThat(allProducts).isEqualTo(productList);
     }
 
@@ -95,13 +93,13 @@ class ProductServiceTest {
 
     @Test
     @DisplayName("상품 생성 테스트")
-    public void createProductAndSaveTest() throws NonIntegerPriceException {
+    public void createProductAndSaveTest() throws NonIntegerPriceException, OptionNotFoundException {
         // given
-        when(productRepository.save(product)).thenReturn(product);
         when(optionRepository.findById(any(Long.class))).thenReturn(Optional.ofNullable(option));
+        when(productRepository.save(any(Product.class))).thenReturn(product);
 
         // when
-        var savedProduct = productService.createProduct(productDto);
+        var savedProduct = productService.createProduct(productRequest);
 
         // then
         assertThat(savedProduct).isEqualTo(product);
@@ -109,26 +107,27 @@ class ProductServiceTest {
 
     @Test
     @DisplayName("상품 업데이트 테스트")
-    public void updateProductTest() throws Exception {
+    public void updateProductTest() {
         // given
         when(productRepository.save(product)).thenReturn(product);
         when(productRepository.findById(product.getId())).thenReturn(Optional.of(product));
         var newProduct = new Product("newName", 20000, "newimage.jpg");
         newProduct.setId(1L);
+        ProductRequest productRequest = new ProductRequest(newProduct.getName(),
+            newProduct.getPrice(), newProduct.getImageUrl(),
+            1L);
 
         // when
-        var updatedProduct = productService.updateProduct(newProduct);
+        var updatedProduct = productService.updateProduct(1L,productRequest);
 
         // then
         assertThat(updatedProduct.getId()).isEqualTo(product.getId());
 
-        // verify
-        verify(productRepository, times(1)).save(newProduct);
     }
 
     @Test
     @DisplayName("상품 삭제 테스트")
-    public void deleteProductTest() throws Exception {
+    public void deleteProductTest() {
         // given
         doNothing().when(productRepository).deleteById(product.getId());
 

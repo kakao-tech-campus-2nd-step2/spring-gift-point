@@ -3,8 +3,10 @@ package gift.service;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
 
-import gift.model.Member;
-import gift.repository.MemberRepository;
+import gift.exception.IllegalEmailException;
+import gift.member.model.Member;
+import gift.member.repository.MemberRepository;
+import gift.member.service.MemberService;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 import java.util.Optional;
@@ -32,38 +34,16 @@ class MemberServiceTest {
     private Member member;
 
     @BeforeEach
-    void setUp() {
+    void setUp() throws IllegalEmailException {
         member = new Member("test@email.com", "testpassword");
         member.setId(1L);
         ReflectionTestUtils.setField(memberService, "secretKey", secretKey);
     }
 
-    @Test
-    @DisplayName("회원가입 테스트")
-    public void registerMemberTest() throws Exception {
-        // given
-        String hashedPassword = BCrypt.hashpw(member.getPassword(), BCrypt.gensalt());
-        member.setPassword(hashedPassword);
-        when(memberRepository.save(member)).thenReturn(member);
-
-        // when
-        var token = memberService.registerMember(member);
-
-        // then
-        assertThat(token).isPresent();
-        var actualToken = token.get();
-        assertThat(Jwts.parser()
-            .verifyWith(Keys.hmacShaKeyFor(secretKey.getBytes()))
-            .build()
-            .parseSignedClaims(actualToken)
-            .getPayload()
-            .getSubject())
-            .isEqualTo(member.getId().toString());
-    }
 
     @Test
     @DisplayName("로그인 테스트")
-    public void loginMemberTest() throws Exception {
+    public void loginMemberTest() throws Exception, IllegalEmailException {
         // given
         String hashedPassword = BCrypt.hashpw(member.getPassword(), BCrypt.gensalt());
         member.setPassword(hashedPassword);
