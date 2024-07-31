@@ -19,6 +19,9 @@ public class User {
     @NotNull
     private String password;
 
+    @NotNull
+    private String name;
+
     @Enumerated(EnumType.STRING)
     @NotNull
     private LoginType loginType;
@@ -27,12 +30,12 @@ public class User {
     public User() {
     }
 
-    public User(String email, String password, LoginType loginType) {
+    public User(String email, String password, String name, LoginType loginType) {
         this.email = email;
         this.password = password;
+        this.name = name;
         this.loginType = loginType;
     }
-
 
     public Long getId() {
         return id;
@@ -48,6 +51,10 @@ public class User {
 
     public LoginType getLoginType() {
         return loginType;
+    }
+
+    public String getName() {
+        return name;
     }
 
     public void checkLoginType(LoginType loginType) {

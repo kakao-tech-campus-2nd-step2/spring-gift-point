@@ -23,17 +23,24 @@ public class UserService {
 
     public void register(UserRequest.Create userRequest) {
         userRepository.findByEmail(userRequest.email()).ifPresent(existUser -> {
-            throw new UserAlreadyExistException(existUser.getEmail() + "은 이미 존재하는 이메일입니다.");
+            throw new UserAlreadyExistException("이미 가입된 회원입니다.");
         });
         User user = userRequest.toEntity();
         userRepository.save(user);
     }
 
     public String login(UserRequest.Check userRequest) {
-        User user = userRepository.findByEmailAndPassword(userRequest.email(), userRequest.password()).orElseThrow(() -> new InvalidUserException("이메일 혹은 패스워드가 유효하지 않습니다."));
+        User user = userRepository.findByEmailAndPassword(userRequest.email(), userRequest.password())
+                .orElseThrow(() -> new InvalidUserException("아이디 또는 비밀번호가 일치하지 않습니다."));
         user.isDefaultLogin();
         String token = jwtUtil.generateJWT(user);
         return token;
+    }
+
+    public String getName(String email){
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new InvalidUserException("존재하지 않는 사용자입니다."));
+        return user.getName();
     }
 
     public boolean validateToken(String token) {

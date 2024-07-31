@@ -38,7 +38,7 @@ public class KakaoAuthService {
         String email = kakaoApiCaller.extractUserEmail(tokenResponse.accessToken());
 
         User user = userRepository.findByEmail(email).orElseGet(
-                () -> userRepository.save(new User(email, "1234", LoginType.KAKAO))
+                () -> userRepository.save(new User(email, "1234", "testName", LoginType.KAKAO))
         );
 
         user.checkLoginType(LoginType.KAKAO);
