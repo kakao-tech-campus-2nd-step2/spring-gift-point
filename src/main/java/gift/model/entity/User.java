@@ -1,7 +1,5 @@
-package gift.model.user;
+package gift.model.entity;
 
-import gift.model.order.Order;
-import gift.model.wishList.WishItem;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

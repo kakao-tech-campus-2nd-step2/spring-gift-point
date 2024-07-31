@@ -2,9 +2,9 @@ package gift.service;
 
 import gift.exception.ErrorCode;
 import gift.exception.customException.CustomNotFoundException;
-import gift.model.user.User;
-import gift.model.user.UserDTO;
-import gift.model.user.UserForm;
+import gift.model.entity.User;
+import gift.model.dto.UserDTO;
+import gift.model.form.UserForm;
 import gift.oauth.response.KakaoTokenResponse;
 import gift.repository.UserRepository;
 import org.springframework.stereotype.Service;

@@ -1,5 +1,6 @@
-package gift.exception;
+package gift.model.response;
 
+import gift.exception.ErrorCode;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.util.Map;
 

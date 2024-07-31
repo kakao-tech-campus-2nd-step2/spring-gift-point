@@ -1,4 +1,4 @@
-package gift.model.user;
+package gift.model.entity;
 
 public enum Role {
     ROLE_ADMIN,

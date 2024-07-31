@@ -1,8 +1,7 @@
-package gift.model.wishList;
+package gift.model.entity;
 
-import gift.model.item.Item;
-import gift.model.item.ItemDTO;
-import gift.model.user.User;
+import gift.model.dto.ItemDTO;
+import gift.model.response.WishListResponse;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;

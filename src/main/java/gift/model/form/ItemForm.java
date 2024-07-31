@@ -1,7 +1,6 @@
-package gift.model.item;
+package gift.model.form;
 
-import gift.model.option.OptionDTO;
-import gift.model.option.OptionForm;
+import gift.model.dto.OptionDTO;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;

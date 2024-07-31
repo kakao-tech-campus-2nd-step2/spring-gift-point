@@ -2,7 +2,7 @@ package gift.interceptor;
 
 import gift.CustomAnnotation.RequestRole;
 import gift.exception.ErrorCode;
-import gift.model.user.Role;
+import gift.model.entity.Role;
 import gift.service.JwtProvider;
 import io.jsonwebtoken.JwtException;
 import jakarta.servlet.http.HttpServletRequest;

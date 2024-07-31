@@ -2,8 +2,8 @@ package gift.controller;
 
 import gift.exception.ErrorCode;
 import gift.exception.customException.CustomArgumentNotValidException;
-import gift.model.item.ItemDTO;
-import gift.model.item.ItemForm;
+import gift.model.dto.ItemDTO;
+import gift.model.form.ItemForm;
 import gift.service.ItemService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;

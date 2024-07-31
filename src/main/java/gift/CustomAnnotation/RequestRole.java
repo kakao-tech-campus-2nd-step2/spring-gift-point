@@ -1,6 +1,6 @@
 package gift.CustomAnnotation;
 
-import gift.model.user.Role;
+import gift.model.entity.Role;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;

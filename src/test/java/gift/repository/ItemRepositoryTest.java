@@ -2,8 +2,8 @@ package gift.repository;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import gift.model.categories.Category;
-import gift.model.item.Item;
+import gift.model.entity.Category;
+import gift.model.entity.Item;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

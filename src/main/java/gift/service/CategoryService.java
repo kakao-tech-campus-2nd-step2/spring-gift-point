@@ -2,8 +2,8 @@ package gift.service;
 
 import gift.exception.ErrorCode;
 import gift.exception.customException.CustomNotFoundException;
-import gift.model.categories.Category;
-import gift.model.categories.CategoryDTO;
+import gift.model.entity.Category;
+import gift.model.dto.CategoryDTO;
 import gift.repository.CategoryRepository;
 import java.util.List;
 import java.util.stream.Collectors;

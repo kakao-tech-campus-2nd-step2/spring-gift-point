@@ -1,4 +1,4 @@
-package gift.model.order;
+package gift.model.form;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 

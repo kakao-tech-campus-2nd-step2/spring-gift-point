@@ -3,6 +3,7 @@ package gift.exception;
 import gift.exception.customException.CustomArgumentNotValidException;
 import gift.exception.customException.CustomException;
 import gift.exception.customException.KakaoApiException;
+import gift.model.response.ErrorResponseDTO;
 import io.jsonwebtoken.JwtException;
 import java.util.Collections;
 import java.util.HashMap;

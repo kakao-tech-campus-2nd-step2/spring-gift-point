@@ -5,7 +5,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 import gift.exception.ErrorCode;
-import gift.model.user.User;
+import gift.model.entity.User;
 import gift.repository.UserRepository;
 import java.net.URI;
 import org.junit.jupiter.api.BeforeEach;

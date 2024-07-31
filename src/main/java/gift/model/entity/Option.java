@@ -1,8 +1,7 @@
-package gift.model.option;
+package gift.model.entity;
 
 import gift.exception.ErrorCode;
 import gift.exception.customException.CustomOutOfStockException;
-import gift.model.item.Item;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;

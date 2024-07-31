@@ -1,7 +1,7 @@
 package gift.service;
 
 import gift.exception.ErrorCode;
-import gift.model.user.UserDTO;
+import gift.model.dto.UserDTO;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;

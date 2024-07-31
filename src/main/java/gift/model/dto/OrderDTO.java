@@ -1,5 +1,7 @@
-package gift.model.order;
+package gift.model.dto;
 
+import gift.model.entity.Order;
+import gift.model.form.OrderForm;
 import java.time.LocalDateTime;
 
 public class OrderDTO {

@@ -1,4 +1,6 @@
-package gift.model.item;
+package gift.model.dto;
+
+import gift.model.entity.Item;
 
 public class ItemDTO {
 

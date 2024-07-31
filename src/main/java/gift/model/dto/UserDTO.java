@@ -1,5 +1,7 @@
-package gift.model.user;
+package gift.model.dto;
 
+import gift.model.entity.User;
+import gift.model.entity.Role;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 

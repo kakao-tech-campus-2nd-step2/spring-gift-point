@@ -1,6 +1,6 @@
 package gift.controller;
 
-import gift.model.wishList.WishListResponse;
+import gift.model.response.WishListResponse;
 import gift.service.WishListService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;

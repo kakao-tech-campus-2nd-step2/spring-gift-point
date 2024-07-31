@@ -1,6 +1,6 @@
-package gift.model.wishList;
+package gift.model.response;
 
-import gift.model.item.ItemDTO;
+import gift.model.dto.ItemDTO;
 
 public class WishListResponse {
 

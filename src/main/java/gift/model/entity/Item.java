@@ -1,11 +1,9 @@
-package gift.model.item;
+package gift.model.entity;
 
 import gift.exception.ErrorCode;
 import gift.exception.customException.CustomDuplicateException;
 import gift.exception.customException.CustomNotFoundException;
-import gift.model.categories.Category;
-import gift.model.option.Option;
-import gift.model.wishList.WishItem;
+import gift.model.dto.ItemDTO;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

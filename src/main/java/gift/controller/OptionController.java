@@ -2,7 +2,7 @@ package gift.controller;
 
 import gift.exception.ErrorCode;
 import gift.exception.customException.CustomArgumentNotValidException;
-import gift.model.option.OptionDTO;
+import gift.model.dto.OptionDTO;
 import gift.service.ItemService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;

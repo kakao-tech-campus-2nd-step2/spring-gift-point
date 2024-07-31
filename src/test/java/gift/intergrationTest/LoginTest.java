@@ -5,8 +5,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 import gift.exception.ErrorCode;
-import gift.exception.ErrorResponseDTO;
-import gift.model.user.User;
+import gift.model.response.ErrorResponseDTO;
+import gift.model.entity.User;
 import gift.repository.UserRepository;
 import gift.service.JwtProvider;
 import java.util.HashMap;

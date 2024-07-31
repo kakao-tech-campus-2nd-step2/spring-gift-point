@@ -4,7 +4,7 @@ import gift.exception.ErrorCode;
 import gift.exception.customException.CustomArgumentNotValidException;
 import gift.exception.customException.CustomDuplicateException;
 import gift.exception.customException.CustomException;
-import gift.model.categories.CategoryDTO;
+import gift.model.dto.CategoryDTO;
 import gift.service.CategoryService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;

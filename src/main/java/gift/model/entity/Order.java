@@ -1,6 +1,5 @@
-package gift.model.order;
+package gift.model.entity;
 
-import gift.model.user.User;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;

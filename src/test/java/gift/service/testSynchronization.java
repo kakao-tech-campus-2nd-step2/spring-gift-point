@@ -2,9 +2,9 @@ package gift.service;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
-import gift.model.categories.Category;
-import gift.model.item.Item;
-import gift.model.option.Option;
+import gift.model.entity.Category;
+import gift.model.entity.Item;
+import gift.model.entity.Option;
 import gift.repository.CategoryRepository;
 import gift.repository.ItemRepository;
 import java.util.concurrent.CountDownLatch;

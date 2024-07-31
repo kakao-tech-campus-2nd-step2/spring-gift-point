@@ -1,5 +1,6 @@
-package gift.model.categories;
+package gift.model.dto;
 
+import gift.model.entity.Category;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
