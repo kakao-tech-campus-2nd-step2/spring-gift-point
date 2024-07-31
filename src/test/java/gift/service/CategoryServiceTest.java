@@ -63,7 +63,7 @@ class CategoryServiceTest {
         Long categoryId = 1L;
         CategoryDto dto = new CategoryDto("교환권");
 
-        given(categoryRepository.findById(categoryId)).willReturn(Optional.of(new Category("상품권")));
+        given(categoryRepository.findById(categoryId)).willReturn(Optional.of(new Category("상품권", "test", "test", "test")));
         given(categoryRepository.existsByName(anyString())).willReturn(false);
 
         //when
@@ -80,13 +80,14 @@ class CategoryServiceTest {
         //given
         Long categoryId = 1L;
 
-        willDoNothing().given(categoryRepository).deleteById(categoryId);
+        given(categoryRepository.findById(anyLong())).willReturn(Optional.of(new Category("test", "test", "test", "test")));
+        willDoNothing().given(categoryRepository).delete(any(Category.class));
 
         //when
         categoryService.removeCategory(categoryId);
 
         //then
-        then(categoryRepository).should().deleteById(categoryId);
+        then(categoryRepository).should().delete(any(Category.class));
     }
 
 }

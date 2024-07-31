@@ -55,7 +55,7 @@ public class CategoryController {
     })
     @PostMapping
     public ResponseEntity<Void> categoryAdd(@RequestBody @Valid CategoryRequest request) {
-        CategoryDto categoryDto = new CategoryDto(request.getName());
+        CategoryDto categoryDto = request.toDto();
 
         categoryService.addCategory(categoryDto);
 
@@ -73,7 +73,7 @@ public class CategoryController {
     @PutMapping("/{categoryId}")
     public ResponseEntity<Void> categoryEdit(@Parameter(description = "수정할 카테고리의 ID", required = true) @PathVariable Long categoryId,
                                              @RequestBody @Valid CategoryRequest request) {
-        CategoryDto categoryDto = new CategoryDto(request.getName());
+        CategoryDto categoryDto = request.toDto();
         categoryService.editCategory(categoryId, categoryDto);
 
         return ResponseEntity.noContent()

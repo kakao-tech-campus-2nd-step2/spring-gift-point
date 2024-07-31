@@ -1,7 +1,7 @@
-INSERT INTO category (name)
-VALUES ('생일');
-INSERT INTO category (name)
-VALUES ('교환권');
+INSERT INTO category (name, color, image_url, description)
+VALUES ('생일', '#6c95d1', 'https://gift-s.kakaocdn.net/dn/gift/images/m640/dimm_theme.png', '생일 카테고리입니다!');
+INSERT INTO category (name, color, image_url, description)
+VALUES ('교환권', '#6c95d1', 'https://gift-s.kakaocdn.net/dn/gift/images/m640/dimm_theme.png', '교환권 카테고리입니다!');
 
 INSERT INTO product (name, price, image_url, category_id)
 VALUES ('외식 통합권 10만원권', 100000, 'image_url_1', 1),

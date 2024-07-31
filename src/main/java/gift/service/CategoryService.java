@@ -34,9 +34,7 @@ public class CategoryService {
             throw new GiftException(ErrorCode.CATEGORY_NAME_NOT_DUPLICATES);
         }
 
-        Category category = new Category(dto.getName());
-
-        categoryRepository.save(category);
+        categoryRepository.save(dto.toEntity());
     }
 
     public void editCategory(Long categoryId, CategoryDto dto) {
@@ -48,6 +46,9 @@ public class CategoryService {
         }
 
         category.changeName(dto.getName());
+        category.changeColor(dto.getColor());
+        category.changeImageUrl(dto.getImageUrl());
+        category.changeDescription(dto.getDescription());
     }
 
     public void removeCategory(Long categoryId) {

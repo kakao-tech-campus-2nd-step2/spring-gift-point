@@ -47,7 +47,7 @@ class ProductRepositoryTest {
     @Test
     void findById() throws Exception {
         //given
-        Category category = categoryRepository.save(new Category("TEST"));
+        Category category = categoryRepository.save(new Category("TEST", "test", "test", "test"));
         Product product = new Product("아이스 아메리카노", 3500, "https://examle.com", category);
         productRepository.save(product);
 
@@ -65,7 +65,7 @@ class ProductRepositoryTest {
     @Test
     void save() throws Exception {
         //given & when
-        Category category = categoryRepository.save(new Category("TEST"));
+        Category category = categoryRepository.save(new Category("TEST", "test", "test", "test"));
         Product product = new Product("아이스 아메리카노", 3500, "https://examle.com", category);
         productRepository.save(product);
 
@@ -77,7 +77,7 @@ class ProductRepositoryTest {
     @Test
     void edit() throws Exception {
         //given
-        Category category = categoryRepository.save(new Category("TEST"));
+        Category category = categoryRepository.save(new Category("TEST", "test", "test", "test"));
         Product product = new Product("아이스 아메리카노", 3500, "https://examle.com", category);
         Product savedProduct = productRepository.save(product);
         Long productId = savedProduct.getId();
@@ -101,7 +101,7 @@ class ProductRepositoryTest {
     @Test
     void deleteById() throws Exception {
         //given
-        Category category = categoryRepository.save(new Category("TEST"));
+        Category category = categoryRepository.save(new Category("TEST", "test", "test", "test"));
         Product product = new Product("아이스 아메리카노", 3500, "https://examle.com", category);
         productRepository.save(product);
 
