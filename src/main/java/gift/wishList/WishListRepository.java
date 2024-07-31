@@ -22,7 +22,7 @@ public interface WishListRepository extends JpaRepository<WishList, Long> {
 
 
     public Optional<WishList> findByUserAndOptionId(User user, Long optionID);
-    public Optional<WishList> findByKakaouserAndOptionId(KakaoUser kakaoUser, Long optionID);
+    public Optional<List<WishList>> findAllByKakaouserAndOptionId(KakaoUser kakaoUser, Long optionID);
 
     public boolean existsByUserAndOptionId(User user, Long optionID);
 }

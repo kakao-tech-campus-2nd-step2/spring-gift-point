@@ -1,46 +1,38 @@
 package gift.wishList;
-public class WishListResponse {
-    long productID;
-    long optionID;
 
-    long count;
+import gift.option.OptionDTO;
+import gift.option.OptionReadResponse;
+
+public class WishListResponse {
+    long id;
+    Object option;
 
     public WishListResponse() {
     }
 
-    public WishListResponse(long productID, long optionID, long count) {
-        this.productID = productID;
-        this.optionID = optionID;
-        this.count = count;
+    public WishListResponse(long id, Object option) {
+        this.id = id;
+        this.option = option;
     }
 
-    public WishListResponse(WishList wishList) {
-        this.productID = wishList.getProduct().getId();
-        this.optionID = wishList.getOption().getId();
-        this.count = wishList.getCount();
+    public WishListResponse(WishList wishList){
+        this.id = wishList.getId();
+        this.option = new OptionDTO(wishList.getOption().getId());
     }
 
-    public long getProductID() {
-        return productID;
+    public long getId() {
+        return id;
     }
 
-    public long getOptionID() {
-        return optionID;
+    public void setId(long id) {
+        this.id = id;
     }
 
-    public long getCount() {
-        return count;
+    public Object getOption() {
+        return option;
     }
 
-    public void setProductID(long productID) {
-        this.productID = productID;
-    }
-
-    public void setOptionID(long optionID) {
-        this.optionID = optionID;
-    }
-
-    public void setCount(long count) {
-        this.count = count;
+    public void setOption(OptionDTO option) {
+        this.option = option;
     }
 }

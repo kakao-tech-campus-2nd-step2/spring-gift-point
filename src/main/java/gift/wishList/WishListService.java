@@ -28,20 +28,10 @@ public class WishListService {
     }
 
     public WishListResponse addWish(WishListRequest wishListDTO, IntegratedUser user) {
-        Option option = optionRepository.findById(wishListDTO.getOptionID()).orElseThrow();
+        Option option = optionRepository.findById(wishListDTO.getOptionId()).orElseThrow();
         Product product = option.getProduct();
-        Optional<WishList> exist = Optional.empty();
-        if(user instanceof User){
-            exist = wishListRepository.findByUserAndOptionId((User) user, option.getId());
-        }
-        if(user instanceof KakaoUser){
-            exist = wishListRepository.findByKakaouserAndOptionId((KakaoUser) user, option.getId());
-        }
-        if(exist.isPresent()){
-            return updateCount(new CountDTO(wishListDTO.count + exist.get().getCount()), exist.get().getId());
-        }
 
-        WishList wishList = new WishList(wishListDTO.getCount());
+        WishList wishList = new WishList();
         user.addWishList(wishList);
         option.addWishList(wishList);
         product.addWishList(wishList);
@@ -69,14 +59,8 @@ public class WishListService {
         return wishListDTOS;
     }
 
-    public WishListResponse updateCount(CountDTO count, Long id) {
-        WishList wishList = wishListRepository.findById(id).orElseThrow();
-        wishList.setCount(count.getCount());
-        return new WishListResponse(wishList);
-    }
-
-    public Optional<WishList> findByKakaoUserAndOptionID(Long optionID, KakaoUser kakaoUser){
-        return wishListRepository.findByKakaouserAndOptionId(kakaoUser, optionID);
+    public Optional<List<WishList>> findByKakaoUserAndOptionID(Long optionID, KakaoUser kakaoUser){
+        return wishListRepository.findAllByKakaouserAndOptionId(kakaoUser, optionID);
     }
 
     public void deleteByID(Long id, IntegratedUser user) {
@@ -92,19 +76,24 @@ public class WishListService {
         wishListRepository.deleteById(id);
     }
 
-    public Page<WishListResponse> getWishListsPages(int pageNum, int size, IntegratedUser user, String sortBy, String sortDirection) {
+    public List<WishListResponse> getWishListsPages(int pageNum, int size, IntegratedUser user, List<String> sort) {
+        String sortBy = sort.get(0);
+        String sortDirection = sort.get(1);
+        if(sortBy.equals("createdDate")) sortBy = "id";
+
         Pageable pageable = PageRequest.of(pageNum, size, Sort.by(Sort.Order.asc(sortBy)));
         if (Objects.equals(sortDirection, "desc")) {
             pageable = PageRequest.of(pageNum, size, Sort.by(Sort.Order.desc(sortBy)));
         }
 
         if(user instanceof User) {
-            return wishListRepository.findByUser((User) user, pageable).map(WishListResponse::new);
+            return wishListRepository.findByUser((User) user, pageable).map(WishList::toWishListReadResponse).stream().toList();
         }
         if(user instanceof KakaoUser) {
-            return wishListRepository.findByKakaouser((KakaoUser) user, pageable).map(WishListResponse::new);
+            return wishListRepository.findByKakaouser((KakaoUser) user, pageable).map(WishList::toWishListReadResponse).stream().toList();
         }
         return null;
 
     }
+
 }

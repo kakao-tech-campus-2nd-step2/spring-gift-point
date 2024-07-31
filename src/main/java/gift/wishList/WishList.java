@@ -1,6 +1,7 @@
 package gift.wishList;
 
 import gift.option.Option;
+import gift.option.OptionReadResponse;
 import gift.product.Product;
 import gift.user.KakaoUser;
 import gift.user.User;
@@ -26,23 +27,24 @@ public class WishList {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "product_id")
     private Product product;
-    @Column(name = "count")
-    private long count;
-
-    public WishList(long count) {
-        this.count = count;
-    }
-
 
     public WishList() {
 
     }
 
-    public WishList(long id, User user, Option option, long count) {
+    public WishList(long id, User user, Option option) {
         this.id = id;
         this.user = user;
         this.option = option;
-        this.count = count;
+    }
+
+    public WishList(User user, Option option) {
+        this.user = user;
+        this.option = option;
+    }
+
+    public WishListResponse toWishListReadResponse(){
+        return new WishListResponse(id, new OptionReadResponse(option));
     }
 
     public long getId() {
@@ -61,9 +63,6 @@ public class WishList {
         return product;
     }
 
-    public long getCount() {
-        return count;
-    }
 
     public KakaoUser getKakaouser() {
         return kakaouser;
@@ -79,10 +78,6 @@ public class WishList {
 
     public void setProduct(Product product) {
         this.product = product;
-    }
-
-    public void setCount(long count) {
-        this.count = count;
     }
 
     public void setKakaouser(KakaoUser kakaouser) {
