@@ -7,7 +7,7 @@ public class ProductOptionMapper {
     public static ProductOptionResponseDto toProductOptionResponseDto(ProductOption productOption) {
         return new ProductOptionResponseDto(
                 productOption.getId(),
-                productOption.getProduct().getName().getValue(),
+                productOption.getProduct().getId(),
                 productOption.getOption().getName().getValue(),
                 productOption.getQuantity()
         );
