@@ -43,14 +43,16 @@ public class ProductService {
         return productRepository.findProductById(product.getId());
     }
 
-    public void updateProduct(ProductDTO productDTO){
+    public Product updateProduct(ProductDTO productDTO){
         Product product = new Product(productDTO.getId(), productDTO.getName(), productDTO.getPrice(), productDTO.getImageUrl(), productDTO.getCategory(), productDTO.getOptions());
-        productRepository.save(product);
+        return productRepository.save(product);
     }
 
-    public void deleteProduct(Long productId){
+    public Product deleteProduct(Long productId){
+        Product deleteProduct = productRepository.findProductById(productId);
         optionRepository.deleteByProductId(productId);
         productRepository.deleteById(productId);
+        return deleteProduct;
     }
 
     public List<Category> getAllCategory(){

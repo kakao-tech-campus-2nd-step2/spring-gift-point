@@ -13,7 +13,7 @@
 <body>
 <div class="container mt-5">
   <h1>입력</h1>
-  <form th:action="@{'/api/products/update/' + ${product.id}}" th:object="${product}" method="post">
+  <form th:action="@{'/admin/products/update/' + ${product.id}}" th:object="${product}" method="post">
     <div class="form-group">
       <label for="name">Name: </label>
       <input type="text" class="form-control" id="name" th:field="*{name}" required>
@@ -38,7 +38,7 @@
     <button type="submit" class="btn btn-primary">저장</button>
     <button class="btn btn-secondary"
             onclick="location.href='index.html'"
-            th:onclick="|location.href='@{/api/products}'|"
+            th:onclick="|location.href='@{/admin/products}'|"
             type="button">취소</button>
   </form>
 </div>
