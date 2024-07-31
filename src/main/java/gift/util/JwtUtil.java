@@ -7,17 +7,23 @@ import io.jsonwebtoken.security.Keys;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.util.Date;
 import gift.dto.MemberDto;
+import gift.entity.Member;
+import gift.service.MemberService;
 
 @Component
 public class JwtUtil {
 
     @Value("${jwt.secret}")
     private String secretKey;
+    
+    @Autowired
+    private MemberService memberService;
     
     private final long EXPIRATION_TIME = 1000 * 60 * 60 * 10; 
 
@@ -52,13 +58,15 @@ public class JwtUtil {
         return authorizationHeader.substring(7);
     }
 
-    public boolean validateToken(String authorizationHeader, MemberDto memberDto) {
+    public boolean validateToken(String authorizationHeader) {
 
         if (authorizationHeader == null || !authorizationHeader.startsWith("Bearer ")) {
             return false;
         }
         String token = authorizationHeader.substring(7);
         String email = extractAllClaims(token).getSubject();
+
+        MemberDto memberDto = memberService.findByEmail(email);
 
         return (email.equals(memberDto.getEmail()) && !isTokenExpired(token));
     }
