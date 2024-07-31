@@ -37,7 +37,7 @@ public class OrderController {
     @Operation(summary = "주문 등록", description = "주문을 등록합니다.")
     public ResponseEntity<Void> order(@LoginUser LoginInfo user, @RequestBody OrderRequest request) {
         OrderResponse.Info response = orderService.order(user.id(), request);
-        return ResponseEntity.created(URI.create("/api/orders/" + response.orderId())).build();
+        return ResponseEntity.ok().build();
     }
 
     @GetMapping("")
