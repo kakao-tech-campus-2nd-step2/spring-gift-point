@@ -34,7 +34,7 @@ public class OrderFacade {
         Member member = memberService.findMemberById(memberId);
         Option option = optionService.findOptionById(orderRequest.optionId());
         optionService.subtract(orderRequest.optionId(), orderRequest.quantity());
-        wishService.delete(memberId, option.getProductId());
+        wishService.deleteIfExists(memberId, option.getProductId());
         kakaoService.sendMessage(memberId, orderService.createBody(orderRequest));
         return OrderResponse.of(orderService.save(member, option, orderRequest));
     }

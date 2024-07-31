@@ -55,7 +55,8 @@ public class WishService {
     @Deprecated
     @Transactional
     public void update(Long memberId, WishRequest wishRequest) {
-        Wish wish = findWishByMemberIdAndProductId(memberId, wishRequest.productId());
+        Wish wish = wishRepository.findByMemberIdAndProductId(memberId, wishRequest.productId())
+            .orElseThrow(() -> new NoSuchEntityException("wish"));
         wish.updateQuantity(wishRequest.quantity());
     }
 
@@ -65,9 +66,9 @@ public class WishService {
     }
 
     @Transactional
-    public void delete(Long memberId, Long productId) {
-        Wish wish = findWishByMemberIdAndProductId(memberId, productId);
-        wishRepository.delete(wish);
+    public void deleteIfExists(Long memberId, Long productId) {
+        wishRepository.findByMemberIdAndProductId(memberId, productId)
+            .ifPresent(wishRepository::delete);
     }
 
     private Pageable createPageableWithProduct(Pageable pageable) {
@@ -76,10 +77,5 @@ public class WishService {
             .map(order -> order.withProperty("product." + order.getProperty()))
             .collect(Collectors.toList()));
         return PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), sort);
-    }
-
-    private Wish findWishByMemberIdAndProductId(Long memberId, Long productId) {
-        return wishRepository.findByMemberIdAndProductId(memberId, productId)
-            .orElseThrow(() -> new NoSuchEntityException("wish"));
     }
 }
