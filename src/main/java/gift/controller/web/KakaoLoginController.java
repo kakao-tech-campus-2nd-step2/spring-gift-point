@@ -86,7 +86,7 @@ public class KakaoLoginController {
                     userRepository.save(newUser);
                 }
 
-                return "redirect:/web/products/list";
+                return "redirect:/api/products/list";
             } else {
                 model.addAttribute("error", "Failed to retrieve user information. User Info: " + userInfo);
                 return "error";

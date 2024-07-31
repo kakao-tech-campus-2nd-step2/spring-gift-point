@@ -1,7 +1,7 @@
 package gift.controller.web;
 
 import gift.dto.OptionDTO;
-import gift.dto.ProductDTO;
+import gift.dto.Response.ProductResponseDto;
 import gift.service.OptionService;
 import gift.service.ProductService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -31,7 +31,7 @@ public class OptionWebController {
     @Operation(summary = "상품 ID로 웹 옵션 조회", description = "지정된 상품 ID에 해당하는 모든 옵션을 웹에서 조회합니다.")
     public String getOptionsByProductId(@PathVariable Long productId, Model model) {
         List<OptionDTO> options = optionService.getOptionsByProductId(productId);
-        ProductDTO product = productService.getProductById(productId);
+        ProductResponseDto product = productService.getProductById(productId);
         model.addAttribute("options", options);
         model.addAttribute("product", product);
         return "productOption";
