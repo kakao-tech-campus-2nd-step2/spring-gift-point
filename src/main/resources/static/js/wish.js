@@ -30,7 +30,7 @@ function loadWishlist(page) {
                 wishlistTableBody.appendChild(row);
             });
 
-            renderPagination(wishes.page.totalPages, page);
+            renderPagination(wishes.totalPages, page);
         });
 }
 

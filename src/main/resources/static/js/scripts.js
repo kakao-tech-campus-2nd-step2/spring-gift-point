@@ -61,7 +61,7 @@ function loadProducts(page) {
                 productsTableBody.appendChild(row);
             });
 
-            renderPagination(products.page.totalPages, page);
+            renderPagination(products.totalPages, page);
         });
 }
 
