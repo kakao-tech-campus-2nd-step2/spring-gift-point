@@ -62,6 +62,6 @@ public class OptionForm {
     }
 
     public OptionDTO toDTO() {
-        return new OptionDTO(id, name, quantity);
+        return new OptionDTO(id, null, name, quantity);
     }
 }

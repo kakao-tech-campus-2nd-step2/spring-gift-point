@@ -17,6 +17,9 @@ public class OptionDTO {
     @Schema(description = "옵션 ID(옵션 최초 추가 시 입력 불필요)", example = "1")
     private final Long id;
 
+    @Schema(description = "해당 옵션의 상품 ID(옵션 최초 추가 시 입력 불필요)", example = "1")
+    private final Long productId;
+
     @Schema(description = "옵션명", example = "색상: 블랙")
     @NotBlank(message = "옵션명은 필수 입력입니다.")
     @Length(min = 1, max = 50, message = "옵션의 길이는 1 ~ 50자 사이입니다.")
@@ -29,10 +32,13 @@ public class OptionDTO {
     @Max(value = 100_000_000, message = "수량은 1억 미만입니다.")
     private final Long quantity;
 
+
     @JsonCreator
-    public OptionDTO(@JsonProperty("id") Long id, @JsonProperty("name") String name,
+    public OptionDTO(@JsonProperty("id") Long id, @JsonProperty("productId") Long productId,
+        @JsonProperty("name") String name,
         @JsonProperty("quantity") Long quantity) {
         this.id = id;
+        this.productId = productId;
         this.name = name;
         this.quantity = quantity;
     }
@@ -41,14 +47,19 @@ public class OptionDTO {
         this.id = option.getId();
         this.name = option.getName();
         this.quantity = option.getQuantity();
+        this.productId = option.getItem().getId();
     }
 
     public OptionDTO(String name, Long quantity) {
-        this(null, name, quantity);
+        this(null, null, name, quantity);
     }
 
     public Long getId() {
         return id;
+    }
+
+    public Long getProductId() {
+        return productId;
     }
 
     public String getName() {
