@@ -1,5 +1,6 @@
 package gift.service;
 
+import gift.dto.CustomWishPageDTO;
 import gift.dto.PageRequestDTO;
 import gift.model.Member;
 import gift.model.Product;
@@ -23,13 +24,15 @@ public class WishService {
         this.wishRepository = wishRepository;
     }
 
-    public Page<WishDTO> getWishlist(long memberId, PageRequestDTO pageRequestDTO) throws AuthenticationException {
-        Pageable pageable = PageRequest.of(pageRequestDTO.getPage(),
-                pageRequestDTO.getSize(), pageRequestDTO.getSort());
+    public CustomWishPageDTO getWishlist(long memberId, PageRequestDTO pageRequestDTO) throws AuthenticationException {
+        Pageable pageable = PageRequest.of(pageRequestDTO.getPage(), pageRequestDTO.getSize(), pageRequestDTO.getSort());
 
-        Page<Wish> WishlistPage = wishRepository.findByMember_Id(memberId, pageable);
+        Page<Wish> wishlistPage = wishRepository.findByMember_Id(memberId, pageable);
 
-        return WishlistPage.map(WishDTO::getWishProductDTO);
+        List<WishDTO> wishDTOs = wishlistPage.stream()
+                .map(WishDTO::getWishProductDTO)
+                .collect(Collectors.toList());
+        return new CustomWishPageDTO(wishDTOs, wishlistPage.getNumber(), wishlistPage.getTotalPages(), wishlistPage.getTotalElements());
     }
 
     public void postWishlist(Long productId, Member member) throws AuthenticationException {

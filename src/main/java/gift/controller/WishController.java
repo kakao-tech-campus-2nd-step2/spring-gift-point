@@ -1,5 +1,6 @@
 package gift.controller;
 
+import gift.dto.CustomWishPageDTO;
 import gift.dto.PageRequestDTO;
 import gift.dto.WishDTO;
 import gift.model.BearerToken;
@@ -27,11 +28,11 @@ public class WishController {
 
     //멤버 id로 해당 멤버의 위시리스트 가져옴
     @GetMapping
-    public Page<WishDTO> getWishlistController(HttpServletRequest request, @RequestParam(defaultValue = "0") int page) throws AuthenticationException {
+    public CustomWishPageDTO getWishlistController(HttpServletRequest request, @RequestParam(defaultValue = "0") int page) throws AuthenticationException {
         BearerToken token = (BearerToken) request.getAttribute("bearerToken");
         long memberId = kakaoAuthService.getDBMemberByToken(token.getToken()).getId();
         PageRequestDTO pageRequestDTO = new PageRequestDTO(page, "id", "asc");
-        Page<WishDTO> wishlist = wishService.getWishlist(memberId, pageRequestDTO);
+        CustomWishPageDTO wishlist = wishService.getWishlist(memberId, pageRequestDTO);
 
         return wishlist;
     }
@@ -47,7 +48,7 @@ public class WishController {
 
     //위시리스크 상품 wishlist id 받아와 삭제
     @DeleteMapping("/{whishId}")
-    public void deleteProductController(@PathVariable Long id){
-        wishService.deleteProduct(id);
+    public void deleteProductController(@PathVariable Long whishId){
+        wishService.deleteProduct(whishId);
     }
 }
