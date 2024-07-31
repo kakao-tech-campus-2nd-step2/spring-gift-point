@@ -28,6 +28,8 @@ public class OptionService {
     @Transactional(readOnly = true)
     public List<OptionResponseDTO> getOneProductIdAllOptions(Long productId) {
         List<Option> optionList = optionRepository.findAllByProductId(productId);
+        if (optionList.isEmpty())
+            throw new BadRequestException("해당 상품은 존재하지 않습니다.");
         return optionList.stream().map(OptionResponseDTO::convertToDTO).toList();
     }
 

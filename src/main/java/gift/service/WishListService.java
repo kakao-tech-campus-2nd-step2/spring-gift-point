@@ -13,6 +13,7 @@ import gift.exception.InternalServerExceptions.InternalServerException;
 import gift.repository.MemberRepository;
 import gift.repository.ProductRepository;
 import gift.repository.WishRepository;
+import java.time.LocalDateTime;
 import java.util.Optional;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.domain.Page;
@@ -58,7 +59,7 @@ public class WishListService {
 
             Optional<Wish> optionalWish = wishRepository.findByMemberAndProduct(member, product);
             if (optionalWish.isEmpty()) {
-                Wish wish = new Wish(member, product, 1);
+                Wish wish = new Wish(member, product, LocalDateTime.now(),1);
                 wishRepository.save(wish);
                 return;
             }
