@@ -20,12 +20,10 @@ import java.util.Map;
 public class ProductController {
 
     private final ProductService productService;
-    private final CategoryService categoryService;
 
     @Autowired
-    public ProductController(ProductService productService, CategoryService categoryService) {
+    public ProductController(ProductService productService) {
         this.productService = productService;
-        this.categoryService = categoryService;
     }
 
     @GetMapping
@@ -51,21 +49,10 @@ public class ProductController {
         return ResponseEntity.ok(response);
     }
 
-    private Map<String, Object> convertToDto(ProductResponse product) {
-        Map<String, Object> productDto = new HashMap<>();
-        productDto.put("id", product.getId());
-        productDto.put("name", product.getName());
-        productDto.put("price", product.getPrice());
-        productDto.put("image_url", product.getImageUrl());
-        productDto.put("category_id", product.getCategoryId());
-        return productDto;
-    }
-
     @GetMapping("/{id}")
-    public ResponseEntity<Map<String, Object>> getProduct(@PathVariable long id) {
+    public ResponseEntity<ProductResponse> getProduct(@PathVariable long id) {
         ProductResponse product = productService.findById(id);
-        Map<String, Object> productDto = convertToDto(product);
-        return ResponseEntity.ok(productDto);
+        return ResponseEntity.ok(product);
     }
 
     @GetMapping("/new")

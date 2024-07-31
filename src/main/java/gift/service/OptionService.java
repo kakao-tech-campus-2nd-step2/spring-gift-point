@@ -37,6 +37,13 @@ public class OptionService {
         return convertToResponse(savedOption);
     }
 
+    public void delete(Long optionId) {
+        if (!optionRepository.existsById(optionId)) {
+            throw new IllegalArgumentException("Option not found.");
+        }
+        optionRepository.deleteById(optionId);
+    }
+
     private OptionResponse convertToResponse(Option option) {
         return new OptionResponse(option.getId(), option.getName(), option.getQuantity());
     }
