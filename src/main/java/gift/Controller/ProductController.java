@@ -42,10 +42,7 @@ public class ProductController {
         responseCode = "200",
         description = "모든 상품 가져오기 성공"
     )
-    @Parameters({
-        @Parameter(name = "model", description = "html파일로 보낼 객체를 담을 객체"),
-        @Parameter(name = "pageable", description = "List에 담긴 Product객체를 개수에 맞춰서 page로 리턴")
-    })
+    @Parameter(name = "pageable", description = "List에 담긴 Product객체를 개수에 맞춰서 page로 리턴")
     @GetMapping("/api/products")
     public ResponseEntity<Page<Product>> getProducts(Pageable pageable) {
         return ResponseEntity.ok().body(productService.findAll(pageable));
@@ -59,10 +56,7 @@ public class ProductController {
         responseCode = "200",
         description = "특정 상품 가져오기 성공"
     )
-    @Parameters({
-        @Parameter(name = "model", description = "html파일로 보낼 객체를 담을 객체"),
-        @Parameter(name = "pageable", description = "List에 담긴 Product객체를 개수에 맞춰서 page로 리턴")
-    })
+    @Parameter(name = "pageable", description = "List에 담긴 Product객체를 개수에 맞춰서 page로 리턴")
     @GetMapping("/api/products/{productId}")
     public ResponseEntity<Product> getProduct(@PathVariable(value = "productId") Long productId) {
         return ResponseEntity.ok().body(productService.getProductById(productId));
@@ -76,7 +70,7 @@ public class ProductController {
         responseCode = "200",
         description = "상품 더하기 성공"
     )
-    @Parameter(name = "product", description = "더할 상품 객체")
+    @Parameter(name = "productDTO", description = "더할 상품 객체")
     @PostMapping("/api/products")
     public ResponseEntity<Product> createProduct(@Valid @ModelAttribute ProductDTO productDTO) {
         return ResponseEntity.ok().body(productService.addProduct(productDTO));
@@ -92,7 +86,7 @@ public class ProductController {
     )
     @Parameters({
         @Parameter(name = "productId", description = "수정할 상품 Id"),
-        @Parameter(name = "product", description = "수정할 상품 객체")
+        @Parameter(name = "newProductDTO", description = "수정할 상품 객체")
     })
 
     @PutMapping("/api/products/{productId}")

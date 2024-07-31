@@ -10,6 +10,7 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.Parameters;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +23,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
+@Tag(name = "Admin", description = "관리자 화면")
 @Controller
 public class AdminController {
 
@@ -30,7 +32,18 @@ public class AdminController {
     public AdminController(AdminService adminService){
         this.adminService = adminService;
     }
-
+    @Operation(
+        summary = "모든 상품 가져오기",
+        description = "등록된 모든 상품을 가져와 index.html로 전달"
+    )
+    @ApiResponse(
+        responseCode = "200",
+        description = "모든 상품 페이지 연결 성공"
+    )
+    @Parameters({
+        @Parameter(name = "model", description = "html파일로 보낼 객체를 담을 객체"),
+        @Parameter(name = "pageable", description = "List에 담긴 Product객체를 개수에 맞춰서 page로 리턴")
+    })
     @GetMapping("/admin/products")
     public String getProducts(Model model, Pageable pageable) {
         Page<Product> productPage = adminService.findAll(pageable);
@@ -39,6 +52,15 @@ public class AdminController {
         return "index";
     }
 
+    @Operation(
+        summary = "상품 더하기 페이지",
+        description = "더할 상품의 정보를 입력을 받기 위해 post.html과 연결"
+    )
+    @ApiResponse(
+        responseCode = "200",
+        description = "상품 더하기 페이지 연결 성공"
+    )
+    @Parameter(name = "model", description = "html파일로 보낼 객체를 담을 객체")
     @GetMapping("/admin/products/add")
     public String newProductForm(Model model) {
         model.addAttribute("product", new ProductDTO(0L,"",0,"",new Category(0L,"","","","",null),null));
@@ -46,12 +68,33 @@ public class AdminController {
         return "post";
     }
 
+    @Operation(
+        summary = "상품 더하기",
+        description = "상품을 product테이블에 저장"
+    )
+    @ApiResponse(
+        responseCode = "200",
+        description = "상품 더하기 성공"
+    )
+    @Parameter(name = "productDTO", description = "더할 상품 객체")
     @PostMapping("/admin/products")
     public String createProduct(@Valid @ModelAttribute ProductDTO productDTO) {
         adminService.addProduct(productDTO);
         return "redirect:/admin/products";
     }
 
+    @Operation(
+        summary = "상품 수정하기",
+        description = "상품을 수정"
+    )
+    @ApiResponse(
+        responseCode = "200",
+        description = "상품 수정 페이지 연결 성공"
+    )
+    @Parameters({
+        @Parameter(name = "productId", description = "수정할 상품 객체의 ID"),
+        @Parameter(name = "model", description = "html파일로 보낼 객체를 담을 객체")
+    })
     @GetMapping("/admin/products/update/{productId}")
     public String editProductForm(@PathVariable(value = "productId") Long productId, Model model) {
         Product product = adminService.getProductById(productId);
@@ -60,12 +103,33 @@ public class AdminController {
         return "update";
     }
 
+    @Operation(
+        summary = "상품 수정하기",
+        description = "상품을 테이블에 업데이트"
+    )
+    @ApiResponse(
+        responseCode = "200",
+        description = "상품 업데이트 성공"
+    )
+    @Parameters({
+        @Parameter(name = "productId", description = "수정할 상품 Id"),
+        @Parameter(name = "newProductDTO", description = "수정할 상품 객체")
+    })
     @PostMapping("/admin/products/update/{productId}")
     public String updateProduct(@PathVariable(value = "productId") Long productId, @Valid @ModelAttribute ProductDTO newProductDTO) {
         adminService.updateProduct(newProductDTO);
         return "redirect:/admin/products";
     }
 
+    @Operation(
+        summary = "상품 삭제",
+        description = "상품을 product테이블에서 삭제"
+    )
+    @ApiResponse(
+        responseCode = "200",
+        description = "상품 삭제 성공"
+    )
+    @Parameter(name = "productId", description = "삭제할 상품 객체 Id")
     @PostMapping("/admin/products/delete/{productId}")
     public String deleteProduct(@PathVariable(value = "productId") Long productId) {
         adminService.deleteProduct(productId);
