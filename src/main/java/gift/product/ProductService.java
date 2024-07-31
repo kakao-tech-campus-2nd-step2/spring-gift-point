@@ -4,14 +4,17 @@ import gift.option.Option;
 import gift.option.OptionResponse;
 import java.util.List;
 import java.util.NoSuchElementException;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 
 @Service
 public class ProductService {
+
     private final ProductRepository productRepository;
 
-    public ProductService(ProductRepository productRepository){
+    public ProductService(ProductRepository productRepository) {
         this.productRepository = productRepository;
     }
 
@@ -19,9 +22,10 @@ public class ProductService {
         return productRepository.save(newProduct);
     }
 
-    public Product updateProduct(Product changeProduct) {
-        Product product = findById(changeProduct.getId());
-        product.update(changeProduct.getName(),changeProduct.getPrice(),changeProduct.getImageUrl(),
+    public Product updateProduct(Product changeProduct, Long productId) {
+        Product product = findById(productId);
+        product.update(changeProduct.getName(), changeProduct.getPrice(),
+            changeProduct.getImageUrl(),
             changeProduct.getCategoryId());
 
         return productRepository.save(product);
@@ -29,7 +33,7 @@ public class ProductService {
 
     public void deleteProduct(Long id) {
         Product product = findById(id);
-        for(Option option : product.getOptions()){
+        for (Option option : product.getOptions()) {
             deleteOption(product.getId(), option);
         }
         productRepository.deleteById(id);
@@ -39,20 +43,25 @@ public class ProductService {
         return productRepository.findById(productId).orElseThrow();
     }
 
-    public List<OptionResponse> addOption(Long productId, Option option){
+    public List<OptionResponse> addOption(Long productId, Option option) {
         Product product = findById(productId);
         product.getOptions().add(option);
 
         return product.getOptionResponses();
     }
 
-    public List<Option> deleteOption(Long productId, Option option){
+    public List<Option> deleteOption(Long productId, Option option) {
         Product product = findById(productId);
-        if(!product.getOptions().remove(option)){
+        if (!product.getOptions().remove(option)) {
             throw new NoSuchElementException("삭제하고자 하는 옵션이 Product에 없습니다.");
         }
 
         return product.getOptions();
+    }
+
+    public ProductPageResponse getProductPage(int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        return ProductPageResponse.from(productRepository.findAll(pageable));
     }
 
 }
