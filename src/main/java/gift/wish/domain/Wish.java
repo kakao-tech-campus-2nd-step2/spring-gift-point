@@ -4,6 +4,8 @@ import gift.member.model.Member;
 import gift.product.domain.Product;
 import jakarta.persistence.*;
 
+import java.time.LocalDateTime;
+
 @Entity
 @Table(name = "wish")
 public class Wish {
@@ -20,6 +22,8 @@ public class Wish {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "product_id", nullable = false)
     private Product product;
+
+    LocalDateTime createdDate;
 
     // 활용 메서드들
     @Override
@@ -66,5 +70,9 @@ public class Wish {
 
     public void setProduct(Product product) {
         this.product = product;
+    }
+
+    public LocalDateTime getCreatedDate() {
+        return createdDate;
     }
 }
