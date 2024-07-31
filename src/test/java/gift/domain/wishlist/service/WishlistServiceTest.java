@@ -69,8 +69,8 @@ class WishlistServiceTest {
         // then
         assertAll(
             () -> assertThat(savedWishItem).isNotNull(),
-            () -> assertThat(savedWishItem.member().id()).isEqualTo(wishItem.getMemberId()),
-            () -> assertThat(savedWishItem.product().id()).isEqualTo(wishItem.getMemberId())
+            () -> assertThat(savedWishItem.memberId()).isEqualTo(wishItem.getMemberId()),
+            () -> assertThat(savedWishItem.productId()).isEqualTo(wishItem.getMemberId())
         );
     }
 
