@@ -58,7 +58,7 @@ public class ProductService {
         return ProductResponseDTO.from(product);
     }
 
-    public Long addProduct(ProductCreateRequestDTO productCreateRequestDTO) {
+    public ProductResponseDTO addProduct(ProductCreateRequestDTO productCreateRequestDTO) {
         ProductRequestDTO productRequestDTO = productCreateRequestDTO.productRequestDTO();
         OptionCreateRequestDTO optionCreateRequestDTO = productCreateRequestDTO.optionCreateRequestDTO();
 
@@ -68,16 +68,18 @@ public class ProductService {
         Option option = optionCreateRequestDTO.toEntity(product);
 
         jpaOptionRepository.save(option);
-        return jpaProductRepository.save(product).getId();
+
+        return ProductResponseDTO.from(jpaProductRepository.save(product));
     }
 
-    public Long updateProduct(Long productId, ProductRequestDTO productRequestDTO) {
+    public ProductResponseDTO updateProduct(Long productId, ProductRequestDTO productRequestDTO) {
         Product product = getProduct(productId);
         Category category = getCategory(productRequestDTO);
 
         product.update(productRequestDTO.name(), productRequestDTO.price(),
             productRequestDTO.imageUrl(), category);
-        return product.getId();
+
+        return ProductResponseDTO.from(product);
     }
 
     public Long deleteProduct(Long productId) {

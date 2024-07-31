@@ -75,35 +75,35 @@ public class ProductController {
     @PostMapping("/product")
     @Operation(summary = "상품 추가 api", description = "상품 추가 api입니다")
     @ApiResponse(responseCode = "201", description = "상품 추가 성공")
-    public ResponseEntity<SuccessBody<Long>> addProduct(
+    public ResponseEntity<SuccessBody<ProductResponseDTO>> addProduct(
         @Valid @RequestBody ProductCreateRequestDTO productCreateRequestDTO,
         @LoginUser User user) {
         authService.authorizeAdminUser(user);
-        Long productId = productService.addProduct(productCreateRequestDTO);
+        ProductResponseDTO productResponseDTO = productService.addProduct(productCreateRequestDTO);
 
-        return ApiResponseGenerator.success(HttpStatus.CREATED, "상품이 등록되었습니다.", productId);
+        return ApiResponseGenerator.success(HttpStatus.CREATED, "상품이 등록되었습니다.", productResponseDTO);
     }
 
     @PutMapping("/product/{id}")
     @Operation(summary = "상품 수정 api", description = "상품 수정 api입니다")
     @ApiResponse(responseCode = "200", description = "상품 수정 성공")
-    public ResponseEntity<SuccessBody<Long>> updateProduct(
+    public ResponseEntity<SuccessBody<ProductResponseDTO>> updateProduct(
         @PathVariable("id") Long productId,
         @Valid @RequestBody ProductRequestDTO productRequestDTO,
         @LoginUser User user) {
         authService.authorizeAdminUser(user);
-        Long updatedProductId = productService.updateProduct(productId, productRequestDTO);
-        return ApiResponseGenerator.success(HttpStatus.OK, "상품이 수정되었습니다.", updatedProductId);
+        ProductResponseDTO productResponseDTO = productService.updateProduct(productId, productRequestDTO);
+        return ApiResponseGenerator.success(HttpStatus.OK, "상품이 수정되었습니다.", productResponseDTO);
     }
 
     @DeleteMapping("/product/{id}")
     @Operation(summary = "상품 삭제 api", description = "상품 삭제 api입니다")
     @ApiResponse(responseCode = "200", description = "상품 삭제 성공")
-    public ResponseEntity<SuccessBody<Long>> deleteProduct(
+    public ResponseEntity<SuccessBody<Void>> deleteProduct(
         @PathVariable("id") Long productId,
         @LoginUser User user) {
         authService.authorizeAdminUser(user);
-        Long deletedProductId = productService.deleteProduct(productId);
-        return ApiResponseGenerator.success(HttpStatus.OK, "상품이 삭제되었습니다.", deletedProductId);
+        productService.deleteProduct(productId);
+        return ApiResponseGenerator.success(HttpStatus.OK, "상품이 삭제되었습니다.", null);
     }
 }
