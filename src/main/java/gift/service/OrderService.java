@@ -3,7 +3,6 @@ package gift.service;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
-import gift.dto.MemberDto;
 import gift.dto.OrderDto;
 import gift.dto.request.MessageRequest;
 import gift.dto.request.OrderRequest;

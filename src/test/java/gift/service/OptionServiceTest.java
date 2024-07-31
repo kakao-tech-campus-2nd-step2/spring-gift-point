@@ -11,7 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
-import gift.dto.OptionDto;
+import gift.dto.request.OptionRequest;
 import gift.dto.response.GetOptionsResponse;
 import gift.entity.Category;
 import gift.entity.Option;
@@ -67,14 +67,14 @@ public class OptionServiceTest {
         String name = "option";
         Category category = new Category("category", "color", "url", ""); 
         Product product = new Product("product", 0, "imageUrl", category);
-        OptionDto optionDto = new OptionDto(1L, name, 1);
+        OptionRequest optionRequest = new OptionRequest(name, 1);
 
         when(productRepository.findById(productId))
             .thenReturn(Optional.of(product));
         when(optionRepository.findByName(null))
             .thenReturn(Optional.empty());
 
-        optionService.addOption(optionDto, productId);
+        optionService.addOption(optionRequest, productId);
 
         verify(optionRepository, times(1)).save(any(Option.class));
     }

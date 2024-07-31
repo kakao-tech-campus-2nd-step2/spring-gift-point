@@ -50,4 +50,8 @@ public class KakaoToken {
 
         return false;
     }
+
+    public int getExpiresIn(){
+        return expiresIn;
+    }
 }

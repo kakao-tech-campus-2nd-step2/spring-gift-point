@@ -62,18 +62,18 @@ public class KakaoApiService {
                 return objectMapper.readValue(jsonBody, KakaoTokenResponse.class);
 
             } else if(response.getStatusCode().is4xxClientError()){
-                throw new CustomException("Bad Request " + response.getBody(), HttpStatus.valueOf(response.getStatusCode().value()));
+                throw new CustomException("Bad Request " + response.getBody(), HttpStatus.valueOf(response.getStatusCode().value()), -400);
             } else if(response.getStatusCode().is5xxServerError()){
-                throw new CustomException("System error " + response.getBody(), HttpStatus.valueOf(response.getStatusCode().value()));
+                throw new CustomException("System error " + response.getBody(), HttpStatus.valueOf(response.getStatusCode().value()), -500);
             } else {
-                throw new CustomException("Unexpected response error " + response.getBody(), HttpStatus.INTERNAL_SERVER_ERROR);
+                throw new CustomException("Unexpected response error " + response.getBody(), HttpStatus.INTERNAL_SERVER_ERROR, -500);
             }
         } catch (CustomException e) {
-            throw new CustomException(e.getMessage(), e.getHttpStatus());
+            throw new CustomException(e.getMessage(), e.getHttpStatus(), e.getCode());
         } catch (JsonProcessingException e){
-            throw new CustomException("Error parsing token response", HttpStatus.INTERNAL_SERVER_ERROR);
+            throw new CustomException("Error parsing token response", HttpStatus.INTERNAL_SERVER_ERROR, -500);
         } catch (Exception e) {
-            throw new CustomException("Unexpected error", HttpStatus.INTERNAL_SERVER_ERROR);
+            throw new CustomException("Unexpected error", HttpStatus.INTERNAL_SERVER_ERROR, -500);
         }
     }
 
@@ -100,18 +100,18 @@ public class KakaoApiService {
                 return objectMapper.readValue(jsonBody, RefreshTokenResponse.class);
 
             } else if(response.getStatusCode().is4xxClientError()){
-                throw new CustomException("Bad Request " + response.getBody(), HttpStatus.valueOf(response.getStatusCode().value()));
+                throw new CustomException("Bad Request " + response.getBody(), HttpStatus.valueOf(response.getStatusCode().value()), -400);
             } else if(response.getStatusCode().is5xxServerError()){
-                throw new CustomException("System error " + response.getBody(), HttpStatus.valueOf(response.getStatusCode().value()));
+                throw new CustomException("System error " + response.getBody(), HttpStatus.valueOf(response.getStatusCode().value()), -500);
             } else {
-                throw new CustomException("Unexpected response error " + response.getBody(), HttpStatus.INTERNAL_SERVER_ERROR);
+                throw new CustomException("Unexpected response error " + response.getBody(), HttpStatus.INTERNAL_SERVER_ERROR, -500);
             }
         } catch (CustomException e) {
-            throw new CustomException(e.getMessage(), e.getHttpStatus());
+            throw new CustomException(e.getMessage(), e.getHttpStatus(), e.getCode());
         } catch (JsonProcessingException e){
-            throw new CustomException("Error parsing token response", HttpStatus.INTERNAL_SERVER_ERROR);
+            throw new CustomException("Error parsing token response", HttpStatus.INTERNAL_SERVER_ERROR, -500);
         } catch (Exception e) {
-            throw new CustomException("Unexpected error", HttpStatus.INTERNAL_SERVER_ERROR);
+            throw new CustomException("Unexpected error", HttpStatus.INTERNAL_SERVER_ERROR, -500);
         }
     }
 
@@ -131,18 +131,18 @@ public class KakaoApiService {
                 String jsonBody = response.getBody();
                 return objectMapper.readValue(jsonBody, KakaoUserInfoResponse.class);
             } else if(response.getStatusCode().is4xxClientError()){
-                throw new CustomException("Bad Request " + response.getBody(), HttpStatus.valueOf(response.getStatusCode().value()));
+                throw new CustomException("Bad Request " + response.getBody(), HttpStatus.valueOf(response.getStatusCode().value()), -400);
             } else if(response.getStatusCode().is5xxServerError()){
-                throw new CustomException("System error " + response.getBody(), HttpStatus.valueOf(response.getStatusCode().value()));
+                throw new CustomException("System error " + response.getBody(), HttpStatus.valueOf(response.getStatusCode().value()), -500);
             } else {
-                throw new CustomException("Unexpected response error " + response.getBody(), HttpStatus.INTERNAL_SERVER_ERROR);
+                throw new CustomException("Unexpected response error " + response.getBody(), HttpStatus.INTERNAL_SERVER_ERROR, -500);
             }
         } catch (CustomException e) {
-            throw new CustomException(e.getMessage(), e.getHttpStatus());
+            throw new CustomException(e.getMessage(), e.getHttpStatus(),e.getCode());
         } catch (JsonProcessingException e){
-            throw new CustomException("Error parsing token response", HttpStatus.INTERNAL_SERVER_ERROR);
+            throw new CustomException("Error parsing token response", HttpStatus.INTERNAL_SERVER_ERROR, -500);
         } catch (Exception e) {
-            throw new CustomException("Unexpected error", HttpStatus.INTERNAL_SERVER_ERROR);
+            throw new CustomException("Unexpected error", HttpStatus.INTERNAL_SERVER_ERROR, -500);
         }
 
     }
@@ -172,18 +172,18 @@ public class KakaoApiService {
                 String jsonBody = response.getBody();
                 return objectMapper.readValue(jsonBody, MessageResponse.class);
             } else if(response.getStatusCode().is4xxClientError()){
-                throw new CustomException("Bad Request " + response.getBody(), HttpStatus.valueOf(response.getStatusCode().value()));
+                throw new CustomException("Bad Request " + response.getBody(), HttpStatus.valueOf(response.getStatusCode().value()), -400);
             } else if(response.getStatusCode().is5xxServerError()){
-                throw new CustomException("System error " + response.getBody(), HttpStatus.valueOf(response.getStatusCode().value()));
+                throw new CustomException("System error " + response.getBody(), HttpStatus.valueOf(response.getStatusCode().value()), -500);
             } else {
-                throw new CustomException("Unexpected response error " + response.getBody(), HttpStatus.INTERNAL_SERVER_ERROR);
+                throw new CustomException("Unexpected response error " + response.getBody(), HttpStatus.INTERNAL_SERVER_ERROR, -500);
             }
         } catch (CustomException e) {
-            throw new CustomException(e.getMessage(), e.getHttpStatus());
+            throw new CustomException(e.getMessage(), e.getHttpStatus(), e.getCode());
         } catch (JsonProcessingException e){
-            throw new CustomException("Error parsing token response", HttpStatus.INTERNAL_SERVER_ERROR);
+            throw new CustomException("Error parsing token response", HttpStatus.INTERNAL_SERVER_ERROR, -500);
         } catch (Exception e) {
-            throw new CustomException("Unexpected error", HttpStatus.INTERNAL_SERVER_ERROR);
+            throw new CustomException("Unexpected error", HttpStatus.INTERNAL_SERVER_ERROR, -500);
         }
     }
 
