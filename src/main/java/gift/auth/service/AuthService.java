@@ -3,6 +3,7 @@ package gift.auth.service;
 import gift.auth.client.KakaoApiClient;
 import gift.auth.dto.KakaoUserInfo;
 import gift.auth.dto.LoginReqDto;
+import gift.auth.dto.LoginResDto;
 import gift.auth.exception.LoginFailedException;
 import gift.auth.token.AuthToken;
 import gift.auth.token.AuthTokenGenerator;
@@ -24,7 +25,7 @@ public class AuthService {
         this.kakaoApiClient = kakaoApiClient;
     }
 
-    public AuthToken login(LoginReqDto loginReqDto) {
+    public LoginResDto login(LoginReqDto loginReqDto) {
         // 회원 정보 조회
         Member member = memberService.findMemberByEmailOrThrow(loginReqDto.email());
         String password = member.getPassword();
@@ -33,7 +34,8 @@ public class AuthService {
             throw LoginFailedException.EXCEPTION;
         }
 
-        return authTokenGenerator.generateToken(new MemberResDto(member));
+        AuthToken authToken = authTokenGenerator.generateToken(new MemberResDto(member));
+        return new LoginResDto(member.getEmail(), authToken.accessToken());
     }
 
     public AuthToken login(String code) {

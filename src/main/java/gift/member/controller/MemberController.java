@@ -1,6 +1,7 @@
 package gift.member.controller;
 
 import gift.auth.dto.LoginReqDto;
+import gift.auth.dto.LoginResDto;
 import gift.auth.service.AuthService;
 import gift.auth.token.AuthToken;
 import gift.member.dto.MemberReqDto;
@@ -47,9 +48,9 @@ public class MemberController {
             responses = {
                     @ApiResponse(responseCode = "200", description = "로그인 성공"),
             })
-    public ResponseEntity<AuthToken> login(@RequestBody LoginReqDto loginReqDto) {
-        AuthToken token = authService.login(loginReqDto);
-        return ResponseEntity.ok(token);
+    public ResponseEntity<LoginResDto> login(@RequestBody LoginReqDto loginReqDto) {
+        LoginResDto response = authService.login(loginReqDto);
+        return ResponseEntity.ok(response);
     }
 
     @GetMapping
