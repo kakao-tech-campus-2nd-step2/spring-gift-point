@@ -7,6 +7,7 @@ import gift.utility.JwtUtil;
 import gift.wish.domain.WishlistRequest;
 import gift.wish.domain.WishlistResponse;
 import gift.wish.service.WishlistService;
+import io.jsonwebtoken.JwtException;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.data.domain.Page;
@@ -27,16 +28,14 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/api/wish")
+@RequestMapping("/api/wishes")
 @Tag(name = "위시 리스트 API")
 public class WishlistController {
 
     private final WishlistService wishlistService;
-    private final UserService userService;
 
-    public WishlistController(WishlistService wishlistService, UserService userService) {
+    public WishlistController(WishlistService wishlistService) {
         this.wishlistService = wishlistService;
-        this.userService = userService;
     }
 
     @GetMapping
@@ -46,10 +45,12 @@ public class WishlistController {
         @RequestParam(defaultValue = "10") int size,
         @RequestParam(defaultValue = "createdDate,desc") String sort,
         @RequestHeader(HttpHeaders.AUTHORIZATION) String authorizationHeader){
-        String email = JwtUtil.extractEmailAsBearer(authorizationHeader);
-        User user = userService.findByEmail(email)
-            .orElseThrow(()->new IllegalArgumentException("email " + email + "인 user가 없습니다."));
-        Long userId = user.getId();
+        Long userId;
+        try{
+            userId = wishlistService.getUserIdByAuthorizationHeader(authorizationHeader);
+        }catch(JwtException | IllegalArgumentException e){
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        }
 
         String[] sortParams = sort.split(",");
         Sort.Direction direction = Sort.Direction.fromString(sortParams[1]);
@@ -58,10 +59,18 @@ public class WishlistController {
         Page<WishlistResponse> wishlist = wishlistService.getWishlistResponseByUserId(userId, pageable);
         return new ResponseEntity<>(wishlist, HttpStatus.OK);
     }
-    @PostMapping
+    @PostMapping("/{productId}")
     @Operation(summary = "위시리스트 상품 추가")
-    public ResponseEntity<WishlistResponse> addWish(@RequestBody WishlistRequest wishlistRequest){
+    public ResponseEntity<WishlistResponse> addWish(@PathVariable("productId") Long productId,
+        @RequestHeader(HttpHeaders.AUTHORIZATION) String authorizationHeader){
+        Long userId;
         try{
+            userId = wishlistService.getUserIdByAuthorizationHeader(authorizationHeader);
+        }catch(JwtException | IllegalArgumentException e){
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        }
+        try{
+            WishlistRequest wishlistRequest = new WishlistRequest(userId, productId);
             return new ResponseEntity<>(wishlistService.addWish(wishlistRequest), HttpStatus.OK);
         }catch (IllegalArgumentException e){
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -70,7 +79,9 @@ public class WishlistController {
 
     @DeleteMapping("/{wishId}")
     @Operation(summary = "위시리스트 상품 삭제")
-    public ResponseEntity<Void> deleteWish(@PathVariable("wishId") Long wishId){
+    public ResponseEntity<Void> deleteWish(@PathVariable("wishId") Long wishId,
+        @RequestHeader(HttpHeaders.AUTHORIZATION) String authorizationHeader){
+
         wishlistService.deleteById(wishId);
         return new ResponseEntity<>(HttpStatus.OK);
     }
