@@ -8,26 +8,18 @@ public class ResponseWishDTO {
     @Schema(description = "상품 이름")
     private String name;
 
-    @Schema(description = "찜한 수량")
-    private int count;
-
     public ResponseWishDTO() {
     }
 
-    public ResponseWishDTO(String name, int count) {
+    public ResponseWishDTO(String name) {
         this.name = name;
-        this.count = count;
     }
 
     public String getName() {
         return name;
     }
 
-    public int getCount() {
-        return count;
-    }
-
     public static ResponseWishDTO of(Wish wish){
-        return new ResponseWishDTO(wish.getProduct().getName().getValue(), wish.getCount().getValue());
+        return new ResponseWishDTO(wish.getProduct().getName().getValue());
     }
 }

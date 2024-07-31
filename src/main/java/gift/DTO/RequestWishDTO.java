@@ -11,31 +11,19 @@ public class RequestWishDTO {
     @Schema(description = "상품 Id")
     private Long productId;
 
-    @Min(value = 1, message = "Wish의 count값은 최소 1이상이여야 합니다")
-    @Schema(description = "찜할 수량")
-    private int count;
-
     public RequestWishDTO() {
     }
 
     public RequestWishDTO(Long productId, int count) {
         this.productId = productId;
-        this.count = count;
     }
 
     public Long getProductId() {
         return productId;
     }
 
-    public int getCount() {
-        return count;
-    }
-
     public void setProductId(Long productId) {
         this.productId = productId;
     }
 
-    public void setCount(int count) {
-        this.count = count;
-    }
 }
