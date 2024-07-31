@@ -2,10 +2,15 @@ package gift.repository;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import gift.model.Category;
-import gift.model.Member;
-import gift.model.Product;
-import gift.model.Wish;
+import gift.category.model.Category;
+import gift.category.repository.CategoryRepository;
+import gift.exception.IllegalEmailException;
+import gift.member.model.Member;
+import gift.member.repository.MemberRepository;
+import gift.product.model.Product;
+import gift.wish.model.Wish;
+import gift.product.repository.ProductRepository;
+import gift.wish.repository.WishRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,7 +39,7 @@ class WishRepositoryTest {
     private Category category;
 
     @BeforeEach
-    public void setUp() {
+    public void setUp() throws IllegalEmailException {
         // 카테고리 생성
         category = categoryRepository.save(new Category("테스트 카테고리"));
 
