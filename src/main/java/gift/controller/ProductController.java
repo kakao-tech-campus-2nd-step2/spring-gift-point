@@ -3,7 +3,6 @@ package gift.controller;
 import gift.dto.ProductRequest;
 import gift.dto.ProductResponse;
 import gift.service.ProductService;
-import gift.service.CategoryService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -57,7 +56,7 @@ public class ProductController {
 
     @GetMapping("/new")
     public ResponseEntity<ProductRequest> addProductForm() {
-        return ResponseEntity.ok(new ProductRequest("", 0, "", 1L));
+        return ResponseEntity.ok(new ProductRequest("", 0, "", 1L, null));
     }
 
     @PostMapping
