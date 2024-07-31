@@ -53,13 +53,11 @@ public class ProductService {
     }
 
     public PageResponse<ProductResponse> findAllProduct(Long categoryId, Pageable pageable) {
-        Page<Product> productList;
-
-        if (categoryId != null) {
-            productList = productRepository.findByCategoryId(categoryId, pageable);
-        } else {
-            productList = productRepository.findAll(pageable);
+        if(!categoryRepository.existsById(categoryId)) {
+            throw new CategoryException(ErrorCode.CATEGORY_NOT_FOUND);
         }
+
+        Page<Product> productList = productRepository.findByCategoryId(categoryId, pageable);
 
         List<ProductResponse> productResponses = productList.getContent().stream()
             .map(ProductResponse::from)
