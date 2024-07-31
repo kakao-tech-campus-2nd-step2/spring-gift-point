@@ -13,7 +13,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-@Controller
+@RestController
 @RequestMapping("/api/categories")
 public class CategoryController {
 
@@ -50,7 +50,7 @@ public class CategoryController {
 
     @PostMapping
     public ResponseEntity<?> addCategory(@RequestBody CategoryRequest categoryRequest) {
-        CategoryResponse savedCategory = categoryService.save(categoryRequest);
+        categoryService.save(categoryRequest);
         return ResponseEntity.ok().build();
     }
 
