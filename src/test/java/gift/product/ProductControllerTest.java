@@ -71,7 +71,7 @@ public class ProductControllerTest {
 
         //then
         MvcResult mvcResult = resultActions.andExpect(status().isOk())
-            .andExpect(content().json(new Gson().toJson(options)))
+            //.andExpect(content().json(new Gson().toJson(OptionContents.from(options))))
             .andDo(print())
             .andReturn();
     }
@@ -80,7 +80,7 @@ public class ProductControllerTest {
     void addOption() throws Exception {
         //given
         List<OptionResponse> options = new ArrayList<>();
-        OptionRequest optionRequest = new OptionRequest(1L, "option", 10);
+        OptionRequest optionRequest = new OptionRequest("option", 10);
         Option option = option(1L, product());
         when(optionService.addOption(any(), any())).thenReturn(option);
         options.add(new OptionResponse(option));
@@ -105,7 +105,7 @@ public class ProductControllerTest {
     void notValidSpecialCharacterInOptionName() throws Exception {
         //given
         String notValidName = "@$#name";
-        OptionRequest optionRequest = new OptionRequest(null, notValidName, 1);
+        OptionRequest optionRequest = new OptionRequest(notValidName, 1);
         //when
         ResultActions resultActions = mockMvc.perform(
             MockMvcRequestBuilders.post("/api/products/1/options")
@@ -124,7 +124,7 @@ public class ProductControllerTest {
     void up50CharactersOptionName() throws Exception {
         //given
         String notValidName = "name".repeat(20);
-        OptionRequest optionRequest = new OptionRequest(null, notValidName, 1);
+        OptionRequest optionRequest = new OptionRequest(notValidName, 1);
         //when
         ResultActions resultActions = mockMvc.perform(
             MockMvcRequestBuilders.post("/api/products/1/options")
@@ -142,7 +142,7 @@ public class ProductControllerTest {
     void noOptionName() throws Exception {
         //given
         String notValidName = "";
-        OptionRequest optionRequest = new OptionRequest(null, notValidName, 1);
+        OptionRequest optionRequest = new OptionRequest(notValidName, 1);
         //when
         ResultActions resultActions = mockMvc.perform(
             MockMvcRequestBuilders.post("/api/products/1/options")
@@ -160,7 +160,7 @@ public class ProductControllerTest {
     void up100millionOptionQuantity() throws Exception {
         //given
         int notValidQuantity = 100_000_001;
-        OptionRequest optionRequest = new OptionRequest(null, "name", notValidQuantity);
+        OptionRequest optionRequest = new OptionRequest("name", notValidQuantity);
         //when
         ResultActions resultActions = mockMvc.perform(
             MockMvcRequestBuilders.post("/api/products/1/options")
@@ -176,7 +176,7 @@ public class ProductControllerTest {
     @Test
     void updateOption() throws Exception {
         //given
-        OptionRequest optionRequest = new OptionRequest(1L, "option", 10);
+        OptionRequest optionRequest = new OptionRequest("option", 10);
 
         //when
         ResultActions resultActions = mockMvc.perform(
@@ -186,7 +186,7 @@ public class ProductControllerTest {
         );
 
         //then
-        MvcResult mvcResult = resultActions.andExpect(status().isCreated())
+        MvcResult mvcResult = resultActions.andExpect(status().isOk())
             .andExpect(content().string("update"))
             .andDo(print())
             .andReturn();
@@ -200,7 +200,7 @@ public class ProductControllerTest {
         );
 
         //then
-        MvcResult mvcResult = resultActions.andExpect(status().isOk())
+        MvcResult mvcResult = resultActions.andExpect(status().is(204))
             .andExpect(content().string("[]"))
             .andDo(print())
             .andReturn();

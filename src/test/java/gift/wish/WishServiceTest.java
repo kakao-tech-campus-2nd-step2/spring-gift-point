@@ -40,7 +40,7 @@ public class WishServiceTest {
         Member newMember = memberRepository.save(member);
 
         for(int i = 0;i<100;i++){
-            Product product = new Product(null, "Product" + i, 1234, null, Long.valueOf(i));
+            Product product = new Product("Product" + i, 1234, null, Long.valueOf(i));
             Product newProduct = productRepository.save(product);
             wishService.createWish(newMember.getId(), newProduct.getId(), 1L);
         }
