@@ -34,7 +34,7 @@ public class OptionService {
 
     public OptionResponse save(OptionRequest optionRequest) {
         Product product = productRepository.findById(optionRequest.productId())
-                .orElseThrow(() -> new IllegalArgumentException("Invalid product ID"));
+                .orElseThrow(() -> new IllegalArgumentException("Product with id " + optionRequest.productId() + " not found"));
         Option option = new Option(optionRequest.name(), optionRequest.quantity(), product);
         Option savedOption = optionRepository.save(option);
         return convertToResponse(savedOption);
@@ -42,7 +42,7 @@ public class OptionService {
 
     public void delete(Long optionId) {
         if (!optionRepository.existsById(optionId)) {
-            throw new IllegalArgumentException("Option not found.");
+            throw new IllegalArgumentException("Option with id " + optionId + " not found");
         }
         optionRepository.deleteById(optionId);
     }
@@ -52,7 +52,8 @@ public class OptionService {
     }
 
     public void subtractQuantity(Long optionId, int quantity) {
-        Option option = optionRepository.findById(optionId).orElseThrow(() -> new IllegalArgumentException("Option not found"));
+        Option option = optionRepository.findById(optionId)
+                .orElseThrow(() -> new IllegalArgumentException("Option with id " + optionId + " not found"));
         option.subtractQuantity(quantity);
         optionRepository.save(option);
     }
