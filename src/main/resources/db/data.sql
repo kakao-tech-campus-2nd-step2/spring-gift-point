@@ -1,12 +1,12 @@
 -- category data for test
-INSERT INTO category VALUES (901, '교환권');
-INSERT INTO category VALUES (902, '상품권');
-INSERT INTO category VALUES (903, '뷰티');
-INSERT INTO category VALUES (904, '패션');
-INSERT INTO category VALUES (905, '식품');
-INSERT INTO category VALUES (906, '리빙/도서');
-INSERT INTO category VALUES (907, '레저/스포츠');
-INSERT INTO category VALUES (908, '아티스트/캐릭터');
+INSERT INTO category (id, name, description, color, image_url) VALUES (901, '교환권', 'description', '#FFFFFF', 'imageUrl');
+INSERT INTO category (id, name, description, color, image_url) VALUES (902, '상품권', 'description', '#FFFFFF', 'imageUrl');
+INSERT INTO category (id, name, description, color, image_url) VALUES (903, '뷰티', 'description', '#FFFFFF', 'imageUrl');
+INSERT INTO category (id, name, description, color, image_url) VALUES (904, '패션', 'description', '#FFFFFF', 'imageUrl');
+INSERT INTO category (id, name, description, color, image_url) VALUES (905, '식품', 'description', '#FFFFFF', 'imageUrl');
+INSERT INTO category (id, name, description, color, image_url) VALUES (906, '리빙/도서', 'description', '#FFFFFF', 'imageUrl');
+INSERT INTO category (id, name, description, color, image_url) VALUES (907, '레저/스포츠', 'description', '#FFFFFF', 'imageUrl');
+INSERT INTO category (id, name, description, color, image_url) VALUES (908, '아티스트/캐릭터', 'description', '#FFFFFF', 'imageUrl');
 
 -- product data for test
 INSERT INTO product (id, name, price, image_url, category_id) VALUES (1, '아이스 카페 아메리카노 T', 4500, 'https://st.kakaocdn.net/product/gift/product/20231010111814_9a667f9eccc943648797925498bdd8a3.jpg', 901);
