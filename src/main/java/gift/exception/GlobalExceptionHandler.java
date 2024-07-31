@@ -72,6 +72,13 @@ public class GlobalExceptionHandler {
         problemDetail.setDetail(ex.getMessage());
         return ResponseEntity.status(ex.getStatus()).body(problemDetail);
     }
+    @ExceptionHandler(OptionNotFoundException.class)
+    public ResponseEntity<ProblemDetail> handleOptionNotFoundException(OptionNotFoundException ex) {
+        ProblemDetail problemDetail = ProblemDetail.forStatus(ex.getStatus());
+        problemDetail.setDetail(ex.getMessage());
+        return ResponseEntity.status(ex.getStatus()).body(problemDetail);
+    }
+
     @ExceptionHandler(InvalidUserException.class)
     public ResponseEntity<ProblemDetail> handleInvalidUserException(InvalidUserException ex) {
         ProblemDetail problemDetail = ProblemDetail.forStatus(ex.getStatus());
@@ -86,6 +93,12 @@ public class GlobalExceptionHandler {
     }
     @ExceptionHandler(WishAlreadyExistException.class)
     public ResponseEntity<ProblemDetail> handleWishAlreadyExistException(WishAlreadyExistException ex) {
+        ProblemDetail problemDetail = ProblemDetail.forStatus(ex.getStatus());
+        problemDetail.setDetail(ex.getMessage());
+        return ResponseEntity.status(ex.getStatus()).body(problemDetail);
+    }
+    @ExceptionHandler(OutOfStockException.class)
+    public ResponseEntity<ProblemDetail> handleOutOfStockException(OutOfStockException ex) {
         ProblemDetail problemDetail = ProblemDetail.forStatus(ex.getStatus());
         problemDetail.setDetail(ex.getMessage());
         return ResponseEntity.status(ex.getStatus()).body(problemDetail);

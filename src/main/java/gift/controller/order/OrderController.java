@@ -1,5 +1,6 @@
 package gift.controller.order;
 
+import gift.common.enums.LoginType;
 import gift.dto.order.OrderRequest;
 import gift.dto.order.OrderResponse;
 import gift.dto.paging.PagingRequest;
@@ -26,7 +27,9 @@ public class OrderController implements OrderSpecification {
     public ResponseEntity<OrderResponse.Info> order(@RequestAttribute("user") User user,
                                                @Valid @RequestBody OrderRequest.Create orderRequest) {
         OrderResponse.Info orderResponse = orderService.order(user.getId(), orderRequest.productId(), orderRequest);
-        orderService.sendMessage(orderRequest, user, orderRequest.productId());
+        if(user.getLoginType() == LoginType.KAKAO){
+            orderService.sendMessage(orderRequest, user, orderRequest.productId());
+        }
         return ResponseEntity.ok(orderResponse);
     }
 

@@ -1,5 +1,6 @@
 package gift.model.option;
 
+import gift.exception.OutOfStockException;
 import gift.model.product.Product;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
@@ -77,7 +78,7 @@ public class Option {
 
     public void subtract(int quantity) {
         if (this.quantity < quantity) {
-            throw new IllegalArgumentException("차감할 수량이 현재 수량보다 많습니다.");
+            throw new OutOfStockException("재고가 부족합니다.");
         }
         this.quantity -= quantity;
     }

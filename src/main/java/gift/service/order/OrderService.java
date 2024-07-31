@@ -4,6 +4,8 @@ import gift.common.enums.LoginType;
 import gift.dto.order.OrderRequest;
 import gift.dto.order.OrderResponse;
 import gift.dto.paging.PagingResponse;
+import gift.exception.OptionNotFoundException;
+import gift.exception.ProductNotFoundException;
 import gift.model.option.Option;
 import gift.model.order.Order;
 import gift.model.product.Product;
@@ -74,12 +76,11 @@ public class OrderService {
     public OrderResponse.Info order(Long userId, Long giftId, OrderRequest.Create orderRequest) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("해당 유저를 찾을 수 없습니다."));
-        user.checkLoginType(LoginType.KAKAO);
 
         Product product = productRepository.findById(giftId)
-                .orElseThrow(() -> new NoSuchElementException("해당 상품을 찾을 수 없습니다 id :  " + giftId));
+                .orElseThrow(() -> new ProductNotFoundException("해당 상품이 존재하지 않습니다."));
         Option option = optionRepository.findById(orderRequest.optionId())
-                .orElseThrow(() -> new NoSuchElementException("해당 옵션을 찾을 수 없습니다 id :  " + orderRequest.optionId()));
+                .orElseThrow(() -> new OptionNotFoundException("해당 옵션이 존재하지 않습니다,"));
 
         checkOptionInProduct(product, orderRequest.optionId());
         option.subtract(orderRequest.quantity());
