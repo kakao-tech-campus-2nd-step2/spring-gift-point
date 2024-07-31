@@ -7,8 +7,8 @@ import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
 import static org.mockito.Mockito.mock;
 
-import gift.doamin.category.dto.CategoryForm;
-import gift.doamin.category.dto.CategoryParam;
+import gift.doamin.category.dto.CategoryRequest;
+import gift.doamin.category.dto.CategoryResponse;
 import gift.doamin.category.entity.Category;
 import gift.doamin.category.exception.CategoryNotFoundException;
 import gift.doamin.category.repository.JpaCategoryRepository;
@@ -29,7 +29,7 @@ class CategoryServiceTest {
 
     @Test
     void createCategory() {
-        categoryService.createCategory(new CategoryForm("test"));
+        categoryService.createCategory(new CategoryRequest("test"));
 
         then(categoryRepository).should().save(any());
     }
@@ -39,7 +39,7 @@ class CategoryServiceTest {
         given(categoryRepository.findAll())
             .willReturn(List.of(new Category("test1"), new Category("test2")));
 
-        List<CategoryParam> categories = categoryService.getAllCategories();
+        List<CategoryResponse> categories = categoryService.getAllCategories();
 
         assertThat(categories.size()).isEqualTo(2);
     }
@@ -49,7 +49,7 @@ class CategoryServiceTest {
         given(categoryRepository.findById(1L))
             .willReturn(Optional.of(new Category("test")));
 
-        CategoryParam category = categoryService.getCategory(1L);
+        CategoryResponse category = categoryService.getCategory(1L);
 
         assertThat(category.getName()).isEqualTo("test");
     }
@@ -67,10 +67,10 @@ class CategoryServiceTest {
     void updateCategory_existing() {
         given(categoryRepository.findById(1L))
             .willReturn(Optional.of(new Category("test")));
-        CategoryForm categoryForm = new CategoryForm("test2");
-        categoryForm.setId(1L);
+        CategoryRequest categoryRequest = new CategoryRequest("test2");
+        categoryRequest.setId(1L);
 
-        categoryService.updateCategory(categoryForm);
+        categoryService.updateCategory(categoryRequest);
 
         then(categoryRepository).should().save(any());
     }
@@ -79,10 +79,10 @@ class CategoryServiceTest {
     void updateCategory_nonExistent() {
         given(categoryRepository.findById(2L))
             .willReturn(Optional.empty());
-        CategoryForm categoryForm = new CategoryForm("test2");
-        categoryForm.setId(2L);
+        CategoryRequest categoryRequest = new CategoryRequest("test2");
+        categoryRequest.setId(2L);
 
-        assertThatThrownBy(() -> categoryService.updateCategory(categoryForm))
+        assertThatThrownBy(() -> categoryService.updateCategory(categoryRequest))
             .isInstanceOf(CategoryNotFoundException.class);
     }
 
