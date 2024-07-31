@@ -13,7 +13,6 @@ import gift.domain.wishlist.exception.WishDuplicateException;
 import gift.domain.wishlist.exception.WishNotFoundException;
 import gift.domain.wishlist.repository.WishRepository;
 import java.time.LocalDateTime;
-import java.util.Optional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -60,7 +59,7 @@ public class WishService {
     public void deleteWish(Long id, Member member) {
         Product savedProduct = productRepository.findById(id).orElseThrow(()->new ProductNotFoundException("해당 상품이 존재하지 않습니다."));
         Wish wish = wishRepository
-            .findByProduct(savedProduct)
+            .findByProductAndMember(savedProduct, member)
             .orElseThrow(() -> new WishNotFoundException("해당 위시리스트가 존재하지 않습니다."));
 
         if (wish.getMember().getId().equals(member.getId())) {
@@ -70,7 +69,8 @@ public class WishService {
     }
 
     private WishResponse entityToDto(Wish wish) {
-        return new WishResponse(wish.getId(), wish.getMember().getId(),
-            wish.getProduct().getId(), wish.getCreatedDate());
+        Product productInWish = productRepository.findById(wish.getId()).orElseThrow(()-> new ProductNotFoundException("상품이 존재하지 않습니다."));
+        return new WishResponse(productInWish.getId(), productInWish.getName(),
+            productInWish.getPrice(), productInWish.getImageUrl());
     }
 }
