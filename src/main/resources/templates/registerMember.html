@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Register</title>
+</head>
+<body>
+<h1>Register</h1>
+<form id="registerForm">
+    <label>Email:</label>
+    <input id="email" type="email" name="email" required><br><br>
+    <label>Password:</label>
+    <input id="password" type="password" name="password" required><br><br>
+    <label>Role:</label>
+    <input id="role" type="role" name="role" required><br><br>
+    <button type="submit">Register</button>
+</form>
+
+<script>
+        document.getElementById("registerForm").addEventListener("submit", function(event) {
+            event.preventDefault();
+
+            var member = {
+                email: document.getElementById("email").value,
+                password: document.getElementById("password").value,
+                role: document.getElementById("role").value
+            };
+
+            fetch('/members/register', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(member)
+            })
+            .then(response => {
+                if(response.ok){
+                    alert('Successfully!');
+                    window.location.href = "/api/products";
+                }
+                return response.text();
+            })
+            .then(data => {
+                throw new Error(data);
+            })
+            .catch(error => {
+                alert(`Error adding product: ${error.message}`);
+            });
+        });
+    </script>
+</body>
+</html>

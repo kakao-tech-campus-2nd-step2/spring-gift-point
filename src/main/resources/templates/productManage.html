@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Manage Products</title>
+    <style>
+        .product {
+            border: 1px solid #ccc;
+            padding: 10px;
+            margin-bottom: 10px;
+            width: 200px;
+            display: inline-block;
+            vertical-align: top;
+        }
+    </style>
+</head>
+<body>
+<div>
+    <h1>Manage Products</h1>
+    <input type="button" value="Add Product" onClick="location.href='/api/products/add'">
+    <input type="button" value="Register Member" onClick="location.href='/members/register'">
+    <input type="button" value="Login" onClick="location.href='/members/login'">
+    <input type="button" value="WishList" id="wishlistButton">
+</div>
+<div class="pagination">
+    <button th:if="${currentPage > 0}" th:attr="onclick='location.href=\'/api/products?page=' + (${currentPage} - 1) + '\''">Previous</button>
+    <button th:attr="onclick='location.href=\'/api/products?page=' + (${currentPage} + 1) + '\''">Next</button>
+</div>
+<div th:each="product : ${products}" class="product" th:attr="data-id=${product.id},, data-name=${product.name}">
+    <h3>Product ID: <span th:text="${product.id}"></span></h3>
+    <h3>Name:  <span th:text="${product.name.name}"></span></h3>
+    <h3>Price:  <span th:text="${product.price}"></span></h3>
+    <img th:src="${product.imageUrl}" th:alt="${product.name}" style="max-width: 200px;">
+    <br>
+    <button th:attr="data-id=${product.id}" class="edit-button">Edit</button>
+    <button class="delete-button">Delete</button>
+    <button th:attr="data-id=${product.id}" class="purchase-button">Purchase</button>
+    <button th:attr="data-id=${product.id}" class="add-wish-button">Add to WishList</button>
+</div>
+
+<script>
+    document.querySelectorAll('.edit-button').forEach(button => {
+        button.addEventListener('click', function() {
+            const productId = this.getAttribute('data-id');
+            if (productId) {
+                location.href = `/api/products/edit/${productId}`;
+            }
+        });
+    });
+
+    document.querySelectorAll('.purchase-button').forEach(button => {
+        button.addEventListener('click', function() {
+            var amount;
+            do {
+                amount = prompt("Enter the quantity to purchase:", "1");
+                if(amount.trim() === ""){
+                    return;
+                }
+                amount = parseInt(amount);
+                if (isNaN(amount) || amount <= 0) {
+                    alert("Invalid number. Please try again.");
+                } else {
+                    break;
+                }
+            } while(true);
+            const productId = this.getAttribute('data-id');
+
+            fetch(`/api/products/purchase/${productId}?amount=${amount}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Not enough stock.');
+                }
+                alert('Purchase successful!');
+                location.reload();
+            })
+            alert(`Error purchasing product: ${error.message}`);
+        });
+    });
+
+    document.querySelectorAll('.delete-button').forEach(button => {
+    button.addEventListener('click', function() {
+        const productElement = this.closest('.product');
+        const productId = productElement.dataset.id;
+
+        if (confirm('Delete this product?')) {
+            fetch(`/api/products/${productId}`, {
+                method: 'DELETE'
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network error');
+                }
+                productElement.remove();
+            })
+                .catch(error => console.error('Error deleting product:', error));
+            }
+        });
+    });
+
+    document.getElementById('wishlistButton').addEventListener('click', function() {
+        console.log("button click");
+        const token = getCookie('token');
+
+        console.log(token);
+        fetch('/wishlist', {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + token
+            },
+        })
+        .then(response => response.text())
+        .then(html => {
+            document.open();
+            document.write(html);
+            document.close();
+        })
+        .catch(error => {
+            alert(error.message);
+        });
+    });
+
+    function getCookie(name) {
+        const cookieString = document.cookie;
+        const cookies = cookieString.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            if (cookie.startsWith(name + '=')) {
+                return cookie.substring(name.length + 1);
+            }
+        }
+        return '';
+    }
+</script>
+</body>
+</html>

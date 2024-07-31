@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>상품 추가 페이지</title>
+</head>
+<body>
+<h1>Add Product</h1>
+<form id="productForm">
+    <label for="categoryName">Category Name:</label>
+    <input type="text" id="categoryName" name="categoryName" required><br><br>
+
+    <label for="productName">Product Name:</label>
+    <input type="text" id="productName" name="productName" required><br><br>
+
+    <label for="productPrice">Price:</label>
+    <input type="number" id="productPrice" name="productPrice" required><br><br>
+
+    <label for="productImage">Image URL:</label>
+    <input type="url" id="productImage" name="productImage" required><br><br>
+
+    <input type="submit" value="Add Product">
+</form>
+
+<script>
+        document.getElementById("productForm").addEventListener("submit", function(event) {
+            event.preventDefault();
+
+            var product = {
+                categoryName: document.getElementById("categoryName").value,
+                name: document.getElementById("productName").value,
+                price: document.getElementById("productPrice").value,
+                imageUrl: document.getElementById("productImage").value,
+            };
+
+            fetch('/api/products', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(product)
+            })
+            .then(response => {
+                return response.text();
+            })
+            .then(data => {
+                if (data) {
+                    throw new Error(data);
+                }
+                alert('Product Added Successfully!');
+                window.location.href = "/api/products";
+            })
+            .catch(error => {
+                alert(`Error adding product: ${error.message}`);
+            });
+        });
+    </script>
+</body>
+</html>

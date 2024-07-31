@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Login</title>
+</head>
+<body>
+<h1>Login</h1>
+<form id="loginFrom">
+    <label>Email:</label>
+    <input id="email" type="email" name="email" required><br><br>
+    <label>Password:</label>
+    <input id="password" type="password" name="password" required><br><br>
+    <button type="submit">Login</button>
+</form>
+
+<script>
+        document.getElementById("loginFrom").addEventListener("submit", function(event) {
+            event.preventDefault();
+
+            var member = {
+                email: document.getElementById("email").value,
+                password: document.getElementById("password").value
+            };
+
+            fetch('/members/login', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(member)
+            })
+            .then(response => {
+                if(response.ok){
+                    alert('Successfully logged in');
+                    return response.json();
+                }
+                throw new Error("login failed");
+            })
+            .then(data => {
+                document.cookie = `token=${data.token}; path=/`;
+                window.location.href = "/api/products";
+            })
+            .catch(error => {
+                alert(error.message);
+            });
+        });
+    </script>
+</body>
+</html>

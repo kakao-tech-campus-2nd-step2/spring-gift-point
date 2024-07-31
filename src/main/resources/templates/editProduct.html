@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Edit Product</title>
+</head>
+<body>
+<h1>Edit Product</h1>
+<form id="editForm">
+    <label for="categoryName">Category Name:</label>
+    <input type="text" id="categoryName" name="categoryName" th:value="${product.category}"><br><br>
+
+    <label for="id">ID:</label>
+    <input type="number" id="id" name="id" th:value="${product.id}" readonly><br><br>
+
+    <label for="name">Name:</label>
+    <input type="text" id="name" name="name" th:value="${product.name}"><br><br>
+
+    <label for="price">Price:</label>
+    <input type="number" id="price" name="price" th:value="${product.price}"><br><br>
+
+    <label for="amount">Amount:</label>
+    <input type="number" id="amount" name="amount" th:value="${product.amount}"><br><br>
+
+    <label for="url">Url:</label>
+    <input type="url" id="url" name="url" th:value="${product.imageUrl}"><br><br>
+
+    <input type="submit" value="Save">
+</form>
+<script>
+    document.getElementById("editForm").addEventListener("submit", function(event) {
+            event.preventDefault();
+            var pId = document.getElementById("id").value
+
+            var product = {
+                categoryName: document.getElementById("categoryName").value,
+                id: pId,
+                name: document.getElementById("name").value,
+                price: document.getElementById("price").value,
+                imageUrl: document.getElementById("url").value,
+                amount: document.getElementById("amount").value
+            };
+
+            fetch('/api/products/'+ pId, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(product)
+            })
+            .then(response => response.text().then(data => ({ ok: response.ok, data })))
+            .then(({ ok, data }) => {
+                if (!ok) {
+                    throw new Error(data);
+                }
+                    alert('Product Updated!');
+                    window.location.href = "/api/products";
+                })
+            .catch(error => {
+                alert(`Error updating product: ${error.message}`);
+            });
+        });
+</script>
+</body>
+</html>
