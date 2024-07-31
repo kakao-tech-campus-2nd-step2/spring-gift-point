@@ -1,6 +1,7 @@
 package gift.product.controller;
 
 import gift.product.domain.ProductRequest;
+import gift.product.domain.ProductResponse;
 import gift.product.option.domain.OptionDTO;
 import gift.product.option.service.OptionService;
 import gift.product.service.ProductService;
@@ -32,14 +33,14 @@ public class ProductController {
 
     @PostMapping("")
     @Operation(summary = "상품 생성", tags = {"상품 API"})
-    public ResponseEntity<ProductRequest> createProduct(@Valid @RequestBody ProductRequest productRequest) {
-        ProductRequest response = productService.createProduct(productRequest);
+    public ResponseEntity<ProductResponse> createProduct(@Valid @RequestBody ProductRequest productRequest) {
+        ProductResponse response = productService.createProduct(productRequest);
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
     @GetMapping("")
     @Operation(summary = "상품 목록 조회", tags = {"상품 API"})
-    public ResponseEntity<Page<ProductRequest>> getAllProductsWishCategoryId(
+    public ResponseEntity<Page<ProductResponse>> getAllProductsWishCategoryId(
         @RequestParam(defaultValue = "0") int page,
         @RequestParam(defaultValue = "10") int size,
         @RequestParam(defaultValue = "name,asc") String sort,
@@ -49,7 +50,7 @@ public class ProductController {
         Sort.Direction direction = Sort.Direction.fromString(sortParams[1]);
         Pageable pageable = PageRequest.of(page, size, Sort.by(direction, sortParams[0]));
 
-        Page<ProductRequest> products;
+        Page<ProductResponse> products;
         if (categoryId != null) {
             products = productService.getAllProductsByCategoryId(categoryId, pageable);
         } else {
@@ -60,17 +61,17 @@ public class ProductController {
 
     @GetMapping("/{productId}")
     @Operation(summary = "상품 조회", tags = {"상품 API"})
-    public ResponseEntity<ProductRequest> findById(@PathVariable("productId") Long id) {
-        Optional<ProductRequest> productDTO = productService.getProductDTOById(id);
-        return productDTO.map(value -> new ResponseEntity<>(value, HttpStatus.OK))
+    public ResponseEntity<ProductResponse> findById(@PathVariable("productId") Long id) {
+        Optional<ProductResponse> productResponse = productService.getProductResponseById(id);
+        return productResponse.map(value -> new ResponseEntity<>(value, HttpStatus.OK))
             .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
     @PutMapping("/{productId}")
     @Operation(summary = "상품 수정", tags = {"상품 API"})
-    public ResponseEntity<ProductRequest> updateProduct(@PathVariable("productId") Long id, @Valid @RequestBody ProductRequest productRequest) {
-        Optional<ProductRequest> existingProductDTO = productService.getProductDTOById(id);
-        if (existingProductDTO.isEmpty()) {
+    public ResponseEntity<ProductResponse> updateProduct(@PathVariable("productId") Long id, @Valid @RequestBody ProductRequest productRequest) {
+        Optional<ProductResponse> existingProductResponse = productService.getProductResponseById(id);
+        if (existingProductResponse.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
         try {
@@ -83,7 +84,7 @@ public class ProductController {
     @DeleteMapping("/{productId}")
     @Operation(summary = "상품 삭제", tags = {"상품 API"})
     public ResponseEntity<Void> deleteProduct(@PathVariable("productId") Long id) {
-        if (productService.getProductDTOById(id).isEmpty()) {
+        if (productService.getProductResponseById(id).isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
         productService.deleteProduct(id);
