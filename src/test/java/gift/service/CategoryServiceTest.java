@@ -11,6 +11,7 @@ import gift.category.CategoryService;
 import gift.category.model.Category;
 import gift.category.model.CategoryRequest;
 import gift.product.ProductRepository;
+import java.util.List;
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -41,12 +42,11 @@ public class CategoryServiceTest {
 
     @Test
     void getAllCategoriesTest() {
-        Pageable pageable = PageRequest.of(0, 10, Sort.by(Direction.ASC, "id"));
-        given(categoryRepository.findAll(pageable)).willReturn(Page.empty());
+        given(categoryRepository.findAll()).willReturn(List.of());
 
-        categoryService.getAllCategories(pageable);
+        categoryService.getAllCategories();
 
-        then(categoryRepository).should().findAll(pageable);
+        then(categoryRepository).should().findAll();
     }
 
     @Test

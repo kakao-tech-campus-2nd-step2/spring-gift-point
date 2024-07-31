@@ -23,10 +23,10 @@ public class CategoryService {
     }
 
     @Transactional(readOnly = true)
-    public List<CategoryResponse> getAllCategories(Pageable pageable) {
-        return categoryRepository.findAll(pageable)
+    public List<CategoryResponse> getAllCategories() {
+        return categoryRepository.findAll().stream()
             .map(CategoryResponse::from)
-            .getContent();
+            .toList();
     }
 
     @Transactional(readOnly = true)
