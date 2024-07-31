@@ -6,13 +6,13 @@ import io.swagger.v3.oas.annotations.media.Schema;
 public class TokenResponseDTO {
 
     @Schema(description = "액세스 토큰", example = "header.payload.signature")
-    String accessToken;
+    String token;
 
     public TokenResponseDTO(String accessToken) {
-        this.accessToken = accessToken;
+        this.token = accessToken;
     }
 
-    public String getAccessToken() {
-        return accessToken;
+    public String getToken() {
+        return token;
     }
 }
