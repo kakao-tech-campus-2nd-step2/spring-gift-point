@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Manage Products</title>
+    <script src="/js/manage-products.js" defer></script>
+</head>
+<body>
+<h1>Manage Product</h1>
+<table>
+    <thead>
+    <tr>
+        <th>Id</th>
+        <th>Name</th>
+        <th>Price</th>
+        <th>Image</th>
+        <th>Category</th>
+        <th>Actions</th>
+    </tr>
+    </thead>
+    <tbody id="product-list">
+    </tbody>
+</table>
+<a href="/page/manage/products/add">Add New Product</a>
+<button id="prevPage" disabled>Previous</button>
+<button id="nextPage">Next</button>
+</body>
+</html>

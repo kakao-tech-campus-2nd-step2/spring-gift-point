@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Add New Product</title>
+    <script src="/js/add-product.js" defer></script>
+</head>
+<body>
+<h1>Add New Product</h1>
+<form id="product-addition-form">
+    <div>
+        <label for="product-name">Name:</label>
+        <input type="text" id="product-name" name="name" required>
+    </div>
+    <div>
+        <label for="product-price">Price:</label>
+        <input type="number" id="product-price" name="price" required>
+    </div>
+    <div>
+        <label for="product-image">Image URL:</label>
+        <input type="text" id="product-image" name="imageUrl" required>
+    </div>
+    <div>
+        <label for="product-category">Category:</label>
+        <select id="product-category" name="category" required></select>
+    </div>
+    <button type="submit">저장</button>
+</form>
+</body>
+</html>
