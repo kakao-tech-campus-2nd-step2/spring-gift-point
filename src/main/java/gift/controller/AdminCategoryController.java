@@ -40,21 +40,21 @@ public class AdminCategoryController {
         @RequestBody CategoryRequest categoryRequest) {
         CategoryResponse categoryResponse = categoryService.addCategory(categoryRequest);
         Map<String, CategoryResponse> response = new HashMap<>();
-        response.put("created_category", categoryResponse);
+        response.put("category", categoryResponse);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
     @PutMapping("/{categoryId}")
     @Operation(summary = "카테고리 수정", description = "기존 카테고리를 수정한다.")
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "카테고리 수정 성공"),
+        @ApiResponse(responseCode = "204", description = "카테고리 수정 성공"),
         @ApiResponse(responseCode = "-40402", description = "해당 카테고리를 찾을 수 없음"),
         @ApiResponse(responseCode = "-40902", description = "카테고리 추가/수정 시 이름이 기존 카테고리와 중복되는 경우")
     })
-    public ResponseEntity<CategoryResponse> updateCategory(@PathVariable Long categoryId,
+    public ResponseEntity<Void> updateCategory(@PathVariable Long categoryId,
         @RequestBody CategoryRequest categoryRequest) {
-        CategoryResponse updatedCategory = categoryService.updateCategory(categoryId, categoryRequest);
-        return ResponseEntity.ok(updatedCategory);
+        categoryService.updateCategory(categoryId, categoryRequest);
+        return ResponseEntity.noContent().build();
     }
 
 }
