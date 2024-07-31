@@ -27,16 +27,16 @@ public class OptionController {
 
     @GetMapping("/{productId}/option")
     @Operation(summary = "옵션 조회", description = "상품의 모든 옵션을 조회합니다.")
-    @ApiResponse(responseCode = "200", description = "조회 성공")
-    @ApiResponse(responseCode = "400", description = "존재하지 않는 상품")
+    @ApiResponse(responseCode = "200", description = "정상")
+    @ApiResponse(responseCode = "400", description = "상품이 존재하지 않는 경우")
+    @ApiResponse(responseCode = "400", description = "요청 양식이 잘못된 경우")
+    @ApiResponse(responseCode = "500", description = "서버 에러")
     public List<OptionRequestDTO> getOption(@PathVariable("productId") long productId) {
         return optionService.getOptions(productId);
     }
 
+    @Deprecated
     @PostMapping("/{productId}/option")
-    @Operation(summary = "옵션 추가", description = "상품에 옵션을 추가합니다.")
-    @ApiResponse(responseCode = "200", description = "추가 성공")
-    @ApiResponse(responseCode = "400", description = "존재하지 않는 상품이거나, 잘못된 옵션 정보 입력입니다.")
     public void addOption(
         @PathVariable("productId") long productId,
         @RequestBody OptionRequestDTO optionDTO
@@ -44,10 +44,8 @@ public class OptionController {
         optionService.addOption(productId, optionDTO);
     }
 
+    @Deprecated
     @PatchMapping("/{productId}/option")
-    @Operation(summary = "옵션 수정", description = "상품의 옵션을 수정합니다.")
-    @ApiResponse(responseCode = "200", description = "수정 성공")
-    @ApiResponse(responseCode = "400", description = "존재하지 않는 상품이거나, 잘못된 옵션 정보 입력입니다.")
     public void updateOption(
         @PathVariable("productId") long productId,
         @RequestBody OptionRequestDTO optionDTO
@@ -55,10 +53,8 @@ public class OptionController {
         optionService.updateOption(productId, optionDTO);
     }
 
+    @Deprecated
     @DeleteMapping("/{productId}/option/{optionId}")
-    @Operation(summary = "옵션 삭제", description = "상품의 옵션을 삭제합니다.")
-    @ApiResponse(responseCode = "200", description = "삭제 성공")
-    @ApiResponse(responseCode = "400", description = "존재하지 않는 상품이거나, 존재하지 않는 옵션입니다.")
     public void deleteOption(
         @PathVariable("productId") long productId,
         @PathVariable("optionId") long optionId
