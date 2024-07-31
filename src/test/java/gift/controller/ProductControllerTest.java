@@ -9,7 +9,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import gift.dto.betweenClient.category.CategoryDTO;
 import gift.dto.betweenClient.member.MemberDTO;
 import gift.dto.betweenClient.product.OneProductResponseDTO;
-import gift.dto.betweenClient.product.ProductResponseDTO;
 import gift.service.MemberService;
 import gift.service.ProductService;
 import gift.util.JwtUtil;
