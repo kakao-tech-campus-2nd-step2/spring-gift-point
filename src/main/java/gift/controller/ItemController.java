@@ -4,6 +4,7 @@ import gift.exception.ErrorCode;
 import gift.exception.customException.CustomArgumentNotValidException;
 import gift.model.dto.ItemDTO;
 import gift.model.form.ItemForm;
+import gift.model.response.ItemResponse;
 import gift.service.ItemService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -21,6 +22,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestAttribute;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -39,25 +41,30 @@ public class ItemController {
 
     @Operation(summary = "단일 상품 조회")
     @GetMapping("/{id}")
-    public ResponseEntity<ItemDTO> getItem(@PathVariable("id") Long id) {
-        ItemDTO itemDTO = itemService.getItemById(id);
-        return ResponseEntity.ok(itemDTO);
+    public ResponseEntity<ItemResponse> getItem(@PathVariable("id") Long id,
+        @RequestAttribute("userId") Long userId) {
+
+        ItemResponse itemResponse = itemService.getItemById(id, userId);
+
+        return ResponseEntity.ok(itemResponse);
     }
 
     @Operation(summary = "상품 목록 조회")
     @GetMapping("/list")
-    public ResponseEntity<Page<ItemDTO>> getItemList(
-        @PageableDefault(size = 5, sort = "id", direction = Direction.DESC) Pageable pageable) {
-        Page<ItemDTO> list = itemService.getList(pageable);
+    public ResponseEntity<Page<ItemResponse>> getItemList(
+        @PageableDefault(size = 5, sort = "id", direction = Direction.DESC) Pageable pageable,
+        @RequestAttribute("userId") Long userId) {
+        Page<ItemResponse> list = itemService.getList(pageable, userId);
         return ResponseEntity.ok(list);
     }
 
     @Operation(summary = "카테고리 별 상품 목록 조회", description = "카테고리 id에 해당되는 상품 목록을 반환합니다.")
     @GetMapping
-    public ResponseEntity<Page<ItemDTO>> getItemListByCategory(
+    public ResponseEntity<Page<ItemResponse>> getItemListByCategory(
         @Parameter(description = "조회할 카테고리 id") @RequestParam("categoryId") Long categoryId,
-        @PageableDefault(size = 5, sort = "id", direction = Direction.DESC) Pageable pageable) {
-        Page<ItemDTO> list = itemService.getListByCategoryId(categoryId, pageable);
+        @PageableDefault(size = 5, sort = "id", direction = Direction.DESC) Pageable pageable,
+        @RequestAttribute("userId") Long userId) {
+        Page<ItemResponse> list = itemService.getListByCategoryId(categoryId, pageable, userId);
         return ResponseEntity.ok(list);
     }
 

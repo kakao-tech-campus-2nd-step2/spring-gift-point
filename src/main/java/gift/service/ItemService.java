@@ -4,11 +4,13 @@ import gift.exception.ErrorCode;
 import gift.exception.customException.CustomArgumentNotValidException;
 import gift.exception.customException.CustomDuplicateException;
 import gift.exception.customException.CustomNotFoundException;
+import gift.model.dto.ItemDTO;
+import gift.model.dto.OptionDTO;
 import gift.model.entity.Category;
 import gift.model.entity.Item;
-import gift.model.dto.ItemDTO;
 import gift.model.entity.Option;
-import gift.model.dto.OptionDTO;
+import gift.model.response.ItemResponse;
+import gift.model.response.WishListResponse;
 import gift.repository.CategoryRepository;
 import gift.repository.ItemRepository;
 import java.util.List;
@@ -22,17 +24,27 @@ public class ItemService {
 
     private final ItemRepository itemRepository;
     private final CategoryRepository categoryRepository;
+    private final UserService userService;
 
-    public ItemService(ItemRepository itemRepository, CategoryRepository categoryRepository) {
+    public ItemService(ItemRepository itemRepository, CategoryRepository categoryRepository,
+        UserService userService) {
         this.itemRepository = itemRepository;
         this.categoryRepository = categoryRepository;
+        this.userService = userService;
     }
 
     @Transactional(readOnly = true)
-    public ItemDTO getItemById(Long id) {
+    public ItemResponse getItemById(Long id, Long userId) {
         Item item = findItemById(id);
-        return new ItemDTO(item);
+        boolean isWish = false;
+        if (userId != null) {
+            List<WishListResponse> wishes = userService.getWishListFromUser(userId);
+            isWish = wishes.stream().anyMatch(o -> o.getProductId().equals(item.getId()));
+        }
+        return new ItemResponse(item.getId(), item.getName(), item.getPrice(), item.getImgUrl(),
+            isWish);
     }
+
 
     @Transactional
     public Long insertItem(ItemDTO itemDTO, List<OptionDTO> options)
@@ -63,18 +75,28 @@ public class ItemService {
     }
 
     @Transactional(readOnly = true)
-    public Page<ItemDTO> getList(Pageable pageable) {
+    public Page<ItemResponse> getList(Pageable pageable, Long userId) {
         Page<Item> list = itemRepository.findAll(pageable);
-        return list.map(ItemDTO::new);
+        return isIncludeWishItems(userId, list);
     }
 
     @Transactional(readOnly = true)
-    public Page<ItemDTO> getListByCategoryId(Long categoryId, Pageable pageable) {
+    public Page<ItemResponse> getListByCategoryId(Long categoryId, Pageable pageable, Long userId) {
         if (!categoryRepository.existsById(categoryId)) {
             throw new CustomNotFoundException(ErrorCode.CATEGORY_NOT_FOUND);
         }
         Page<Item> list = itemRepository.findAllByCategoryId(categoryId, pageable);
-        return list.map(ItemDTO::new);
+        return isIncludeWishItems(userId, list);
+    }
+
+    private Page<ItemResponse> isIncludeWishItems(Long userId, Page<Item> list) {
+        if (userId != null) {
+            List<WishListResponse> wishes = userService.getWishListFromUser(userId);
+            return list.map(
+                o -> new ItemResponse(o.getId(), o.getName(), o.getPrice(), o.getImgUrl(),
+                    wishes.stream().anyMatch(w -> w.getProductId().equals(o.getId()))));
+        }
+        return list.map(o -> new ItemResponse(o.getId(), o.getName(), o.getPrice(), o.getImgUrl()));
     }
 
     @Transactional
