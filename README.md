@@ -367,7 +367,6 @@
 - 인증 실패 : 403 Forbidden
 - 서버 에러 : 500 Internal Server Error
 
-# 사용하지 않는 API 및 로직
+# 사용하지 않는 API
 - 전부 Deprecated 처리
-- Deprecated 메서드는 AOP를 사용해서 실행시 DeprecatedException 발생
 - Test Code에 대해 Disable처리
