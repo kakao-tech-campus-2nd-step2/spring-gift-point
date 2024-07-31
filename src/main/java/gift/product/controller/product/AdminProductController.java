@@ -1,6 +1,8 @@
 package gift.product.controller.product;
 
-import gift.product.dto.product.AdminProductDto;
+import gift.product.dto.product.AdminProductRequest;
+import gift.product.dto.product.AdminProductUpdateRequest;
+import gift.product.dto.product.ProductResponse;
 import gift.product.model.Product;
 import gift.product.service.ProductService;
 import io.swagger.v3.oas.annotations.Hidden;
@@ -40,22 +42,22 @@ public class AdminProductController {
     }
 
     @PostMapping("/products/insert")
-    public String insertProduct(@Valid AdminProductDto adminProductDto) {
-        productService.insertProduct(adminProductDto);
+    public String insertProduct(@Valid AdminProductRequest adminProductRequest) {
+        productService.insertProduct(adminProductRequest);
         return REDIRECT_ADMIN_PRODUCTS;
     }
 
     @GetMapping("/products/update/{id}")
     public String updateForm(@PathVariable(name = "id") Long productId, Model model) {
-        Product product = productService.getProduct(productId);
-        model.addAttribute("product", product);
+        ProductResponse productResponse = productService.getProduct(productId);
+        model.addAttribute("product", productResponse);
         return "admin/updateForm";
     }
 
     @PutMapping("/products/update/{id}")
     public String updateProduct(@PathVariable(name = "id") Long productId,
-        @Valid AdminProductDto adminProductDto) {
-        productService.updateProduct(productId, adminProductDto);
+        @Valid AdminProductUpdateRequest adminProductUpdateRequest) {
+        productService.updateProduct(productId, adminProductUpdateRequest);
         return REDIRECT_ADMIN_PRODUCTS;
     }
 

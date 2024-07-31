@@ -1,12 +1,8 @@
 package gift.product.dto.product;
 
-public interface ProductDto {
-
+public interface ProductUpdateRequest {
     String name();
-
     int price();
-
     String imageUrl();
-
-    String categoryName();
+    Long categoryId();
 }

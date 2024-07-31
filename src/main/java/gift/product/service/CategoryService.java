@@ -1,5 +1,6 @@
 package gift.product.service;
 
+import com.sun.jdi.request.DuplicateRequestException;
 import gift.product.dto.category.CategoryDto;
 import gift.product.model.Category;
 import gift.product.repository.CategoryRepository;
@@ -59,7 +60,7 @@ public class CategoryService {
         Optional<Category> categoryOptional = categoryRepository.findByName(name);
 
         if (categoryOptional.isPresent()) {
-            throw new IllegalArgumentException("이미 존재하는 카테고리입니다.");
+            throw new DuplicateRequestException("이미 존재하는 카테고리입니다.");
         }
     }
 }

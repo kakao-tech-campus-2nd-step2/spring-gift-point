@@ -6,6 +6,7 @@ import static org.mockito.BDDMockito.clearInvocations;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
 
+import com.sun.jdi.request.DuplicateRequestException;
 import gift.product.dto.category.CategoryDto;
 import gift.product.model.Category;
 import gift.product.repository.CategoryRepository;
@@ -135,7 +136,7 @@ class CategoryServiceTest {
         //when, then
         assertThatThrownBy(
             () -> categoryService.insertCategory(categoryDto)).isInstanceOf(
-            IllegalArgumentException.class);
+            DuplicateRequestException.class);
     }
 
 }

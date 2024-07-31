@@ -5,14 +5,18 @@ import static org.assertj.core.api.Assertions.assertThat;
 import gift.product.dto.auth.AccountDto;
 import gift.product.dto.auth.MemberDto;
 import gift.product.dto.category.CategoryDto;
-import gift.product.dto.product.ClientProductDto;
-import gift.product.dto.product.ProductDto;
+import gift.product.dto.option.OptionDto;
+import gift.product.dto.product.ClientProductRequest;
+import gift.product.dto.product.ProductRequest;
+import gift.product.dto.product.ProductResponse;
 import gift.product.dto.wish.WishDto;
 import gift.product.service.AuthService;
 import gift.product.service.CategoryService;
 import gift.product.service.ProductService;
 import gift.product.service.WishService;
 import java.net.URI;
+import java.util.ArrayList;
+import java.util.List;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator;
@@ -69,13 +73,15 @@ class WishIntegrityTest {
         accessToken = authService.login(new AccountDto(memberDto.email(), memberDto.password())).accessToken();
 
         CategoryDto categoryDto = new CategoryDto("테스트카테고리", "테스트컬러", "테스트주소", "테스트설명");
-        categoryService.insertCategory(categoryDto);
+        Long categoryId = categoryService.insertCategory(categoryDto).getId();
 
         String url = BASE_URL + port + "/api/products";
-        ProductDto productDto = new ClientProductDto("테스트1", 1500, "테스트주소1", categoryDto.name());
+        List<OptionDto> options = new ArrayList<>();
+        options.add(new OptionDto("테스트옵션", 1));
+        ProductRequest productRequest = new ClientProductRequest("테스트1", 1500, "테스트주소1", categoryId, options);
         HttpHeaders headers = new HttpHeaders();
         headers.setBearerAuth(accessToken);
-        RequestEntity<ProductDto> requestEntity = new RequestEntity<>(productDto, headers,HttpMethod.POST,
+        RequestEntity<ProductRequest> requestEntity = new RequestEntity<>(productRequest, headers,HttpMethod.POST,
             URI.create(url));
 
         testRestTemplate.exchange(requestEntity, String.class);

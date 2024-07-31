@@ -150,6 +150,6 @@ class CategoryIntegrityTest {
         var actual = testRestTemplate.exchange(requestEntity, String.class);
 
         //then
-        assertThat(actual.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(actual.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
     }
 }
