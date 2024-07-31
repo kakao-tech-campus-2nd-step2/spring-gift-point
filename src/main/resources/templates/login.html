@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kakao Login</title>
+    <script src="https://developers.kakao.com/sdk/js/kakao.js"></script>
+    <script>
+        // Kakao 초기화
+        Kakao.init('31564f3826ea40870a9d8e4de532d4e1'); // 여기에 본인의 카카오 앱 키를 입력하세요
+
+        function loginWithKakao() {
+            Kakao.Auth.authorize({
+                redirectUri: 'http://localhost:8080/callback'
+            });
+        }
+    </script>
+</head>
+<body>
+<h1>Kakao Login</h1>
+<a href="javascript:void(0)" onclick="loginWithKakao()">카카오 로그인</a>
+</body>
+</html>
