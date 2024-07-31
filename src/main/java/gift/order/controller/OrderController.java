@@ -1,6 +1,7 @@
 package gift.order.controller;
 
 import gift.kakao.login.dto.KakaoUser;
+import gift.order.domain.OrderListDTO;
 import gift.product.option.service.OptionService;
 import gift.order.domain.OrderRequest;
 import gift.order.domain.OrderResponse;
@@ -47,12 +48,12 @@ public class OrderController {
     @Operation(summary = "주문하기")
     public ResponseEntity<OrderResponse> getOrder(
         @RequestBody OrderRequest orderRequest,
-        @RequestParam("userId") Long userId,
         @RequestHeader(HttpHeaders.AUTHORIZATION) String authorizationHeader){
         String jwtToken = authorizationHeader.replace("Bearer ", "");
         String email = JwtUtil.extractEmail(jwtToken);
         KakaoUser kakaoUser = (KakaoUser) userRepository.findByEmail(email)
             .orElseThrow(() -> new IllegalArgumentException("jwtToken or Email " + email + "이 없습니다."));
+        Long userId = kakaoUser.getId();
         // 1. 주문 저장
         OrderResponse orderResponse = orderService.createOrder(orderRequest);
         // 2. 옵션 수량 차감, wishlist에서 제거
@@ -67,7 +68,7 @@ public class OrderController {
 
     @GetMapping
     @Operation(summary = "주문목록 조회")
-    public ResponseEntity<Page<OrderResponse>> getWishlist(
+    public ResponseEntity<Page<OrderListDTO>> getWishlist(
         @RequestParam(defaultValue = "0") int page,
         @RequestParam(defaultValue = "10") int size,
         @RequestParam(defaultValue = "orderDateTime,desc") String sort) {
@@ -75,7 +76,7 @@ public class OrderController {
         Sort.Direction direction = Sort.Direction.fromString(sortParams[1]);
         Pageable pageable = PageRequest.of(page, size, Sort.by(direction, sortParams[0]));
 
-        Page<OrderResponse> orderPages = orderService.getOrderResponses(pageable);
+        Page<OrderListDTO> orderPages = orderService.getOrderListDTOs(pageable);
         return new ResponseEntity<>(orderPages, HttpStatus.OK);
     }
 }
