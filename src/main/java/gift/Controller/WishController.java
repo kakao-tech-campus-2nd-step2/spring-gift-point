@@ -4,6 +4,7 @@ import gift.DTO.RequestWishDTO;
 import gift.DTO.ResponseOrderDTO;
 import gift.DTO.ResponseWishDTO;
 import gift.Model.Entity.Member;
+import gift.Model.Entity.Product;
 import gift.Model.Entity.Wish;
 import gift.Service.WishService;
 import gift.annotation.ValidUser;
@@ -14,6 +15,10 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -49,19 +54,20 @@ public class WishController {
     @ApiResponse(responseCode = "400", description = "잘못된 요청입니다. 입력값을 확인해주세요")
     @ApiResponse(responseCode = "500", description = "서버 내부 에러 발생")
     @GetMapping("/wishes")
-    public ResponseEntity<List<ResponseWishDTO>> getWish(@ValidUser Member member) {
-        List<ResponseWishDTO> response = wishService.getWish(member);
-        return ResponseEntity.ok(response);
+    public ResponseEntity<Page<ResponseWishDTO>> getWish(@ValidUser Member member,
+                              @PageableDefault(size = 10, sort = "createdDate", direction = Sort.Direction.DESC) Pageable pageable) {
+        Page<ResponseWishDTO> wishList = wishService.getWishList(member, pageable);
+        return ResponseEntity.ok(wishList);
     }
 
     @Operation(summary = "찜 삭제", description = "찜을 삭제합니다")
     @ApiResponse(responseCode = "200", description = "삭제 완료")
     @ApiResponse(responseCode = "400", description = "잘못된 요청입니다. 입력값을 확인해주세요")
     @ApiResponse(responseCode = "500", description = "서버 내부 에러 발생")
-    @DeleteMapping("/wishes")
-    public ResponseEntity<String> deleteWish(@ValidUser Member member, @Valid @RequestBody RequestWishDTO requestWishDTO) {
-        wishService.deleteWish(member, requestWishDTO);
+    @DeleteMapping("/wishes/{product-id}")
+    public ResponseEntity<Void> deleteWish(@ValidUser Member member, @PathVariable("product-id") Long productId) {
+        wishService.deleteWish(member, productId);
 
-        return ResponseEntity.ok("찜이 정상적으로 삭제되었습니다");
+        return ResponseEntity.noContent().build();
     }
 }
