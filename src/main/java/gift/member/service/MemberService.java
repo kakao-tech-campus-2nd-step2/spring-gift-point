@@ -1,5 +1,6 @@
 package gift.member.service;
 
+import gift.auth.dto.RegisterResDto;
 import gift.auth.exception.LoginFailedException;
 import gift.auth.token.AuthToken;
 import gift.auth.token.AuthTokenGenerator;
@@ -41,7 +42,7 @@ public class MemberService {
     }
 
     @Transactional
-    public AuthToken register(MemberReqDto memberReqDto) {
+    public RegisterResDto register(MemberReqDto memberReqDto) {
         checkDuplicateEmail(memberReqDto.email());  // 중복되는 이메일이 있으면 예외 발생
 
         // 일반 사용자로 회원 가입
@@ -53,7 +54,8 @@ public class MemberService {
             throw MemberCreateException.EXCEPTION;
         }
 
-        return authTokenGenerator.generateToken(new MemberResDto(newMember));
+        AuthToken authToken = authTokenGenerator.generateToken(new MemberResDto(newMember));
+        return new RegisterResDto(newMember.getEmail(), authToken.accessToken());
     }
 
     @Transactional
