@@ -25,6 +25,9 @@ public class OptionService {
     }
 
     public List<OptionResponse> findByProductId(Long productId) {
+        if (!productRepository.existsById(productId)) {
+            throw new IllegalArgumentException("Product with id " + productId + " not found");
+        }
         List<Option> options = optionRepository.findByProductId(productId);
         return options.stream().map(this::convertToResponse).collect(Collectors.toList());
     }
