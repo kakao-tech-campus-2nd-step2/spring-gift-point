@@ -1,5 +1,9 @@
 package gift.model;
 
+import gift.category.model.Category;
+import gift.option.model.Option;
+import gift.product.model.Product;
+import gift.wish.model.Wish;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
