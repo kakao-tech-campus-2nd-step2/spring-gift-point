@@ -26,7 +26,7 @@ public class GlobalExceptionHandler {
     public ResponseEntity<Map<String, String>> handleIllegalArgumentException(IllegalArgumentException ex) {
         Map<String, String> error = new HashMap<>();
         error.put("error", ex.getMessage());
-        if (ex.getMessage().contains("Username or password incorrect")) {
+        if (ex.getMessage().contains("Invalid token") ||ex.getMessage().contains("Username or password incorrect")) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body(error); // 403 Forbidden
         }
         return ResponseEntity.badRequest().body(error); // 400 Bad Request

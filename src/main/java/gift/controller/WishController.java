@@ -9,6 +9,7 @@ import gift.util.LoginMember;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import java.net.URI;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.data.domain.Page;
@@ -20,6 +21,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 @Tag(name = "위시리스트 API", description = "위시리스트 관련된 API")
 @RestController
@@ -53,9 +55,17 @@ public class WishController {
     @Operation(summary = "위시리스트에 아이템 추가", description = "위시리스트에 새로운 아이템을 추가합니다.")
     @PostMapping
     public ResponseEntity<String> addWish(@RequestBody @Valid WishDTO wishDTO, @LoginMember Member member) {
+        if (member == null) {
+            throw new IllegalArgumentException("Unauthorized - Member must be logged in.");
+        }
         ProductDTO productDTO = productService.getProductById(wishDTO.getProductId());
         wishService.addWish(wishDTO.toEntity(member, productDTO.toEntity(null)));
-        return ResponseEntity.ok("Wish added successfully");
+        URI location = ServletUriComponentsBuilder
+            .fromCurrentRequest()
+            .path("/{id}")
+            .buildAndExpand(wishDTO.getProductId())
+            .toUri();
+        return ResponseEntity.created(location).body("Wish added successfully");
     }
 
     @Operation(summary = "위시리스트에서 아이템 제거", description = "위시리스트에서 특정 아이템을 제거합니다.")
