@@ -12,7 +12,6 @@ import gift.product.option.service.OptionService;
 import gift.user.entity.User;
 import gift.wish.repository.WishRepository;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 
 
@@ -39,7 +38,7 @@ public class OrderService {
         this.kakaoApiClient = kakaoApiClient;
     }
 
-    @Transactional(isolation = Isolation.READ_COMMITTED)
+    @Transactional
     public OrderResponse createOrder(User user, OrderRequest request) {
         var option = optionService.subtractOptionQuantity(request.optionId(), request.quantity());
 
