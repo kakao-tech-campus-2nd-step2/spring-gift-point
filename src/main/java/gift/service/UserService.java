@@ -31,13 +31,13 @@ public class UserService {
         return user.getId();
     }
 
-    public UserResponse login(UserRequest.Update userRequest) {
+    public UserDto login(UserRequest.Login userRequest) {
         User user = userRepository.findByEmailAndPassword(userRequest.email(),
                 userRequest.password())
             .orElseThrow(() -> new UserException(
                 ErrorCode.INVALID_USER));
         String token = jwtTokenProvider.createToken(user.getEmail());
 
-        return UserResponse.from(token);
+        return UserDto.from(token, user.getName());
     }
 }

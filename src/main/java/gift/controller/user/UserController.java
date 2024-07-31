@@ -2,6 +2,7 @@ package gift.controller.user;
 
 import gift.controller.user.dto.UserRequest;
 import gift.controller.user.dto.UserResponse;
+import gift.service.UserDto;
 import gift.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -33,8 +34,10 @@ public class UserController {
 
     @PostMapping("/login")
     @Operation(summary = "로그인", description = "로그인을 시도합니다.")
-    public ResponseEntity<UserResponse> login(@Valid @RequestBody UserRequest.Update request) {
-        UserResponse response = userService.login(request);
-        return ResponseEntity.ok().body(response);
+    public ResponseEntity<UserResponse> login(@Valid @RequestBody UserRequest.Login request) {
+        UserDto response = userService.login(request);
+        return ResponseEntity.ok()
+            .header("Authorization", response.accessToken())
+            .body(UserResponse.from(response.name()));
     }
 }
