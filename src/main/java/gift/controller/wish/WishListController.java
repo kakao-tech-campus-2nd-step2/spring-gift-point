@@ -41,10 +41,10 @@ public class WishListController implements WishListSpecification {
         return ResponseEntity.ok("위시리스트에서 상품 수량이 변경되었습니다.");
     }
 
-    @DeleteMapping("/{giftId}")
+    @DeleteMapping("/{wishId}")
     public ResponseEntity<String> removeGiftFromWishList(@RequestAttribute("user") User user,
-                                                     @PathVariable Long giftId) {
-        wishService.removeGiftFromUser(user.getId(), giftId);
+                                                         @PathVariable Long wishId) {
+        wishService.removeGiftFromUser(user.getId(), wishId);
         return ResponseEntity.noContent().build();
     }
 

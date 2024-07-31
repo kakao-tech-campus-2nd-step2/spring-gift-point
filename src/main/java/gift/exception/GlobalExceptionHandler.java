@@ -66,6 +66,12 @@ public class GlobalExceptionHandler {
         problemDetail.setDetail(ex.getMessage());
         return ResponseEntity.status(ex.getStatus()).body(problemDetail);
     }
+    @ExceptionHandler(WishNotFoundException.class)
+    public ResponseEntity<ProblemDetail> handleWishNotFoundException(WishNotFoundException ex) {
+        ProblemDetail problemDetail = ProblemDetail.forStatus(ex.getStatus());
+        problemDetail.setDetail(ex.getMessage());
+        return ResponseEntity.status(ex.getStatus()).body(problemDetail);
+    }
     @ExceptionHandler(InvalidUserException.class)
     public ResponseEntity<ProblemDetail> handleInvalidUserException(InvalidUserException ex) {
         ProblemDetail problemDetail = ProblemDetail.forStatus(ex.getStatus());

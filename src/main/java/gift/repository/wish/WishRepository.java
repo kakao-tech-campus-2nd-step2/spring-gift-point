@@ -17,5 +17,5 @@ public interface WishRepository extends JpaRepository<Wish, Long> {
 
     Optional<Wish> findByUserAndProduct(User user, Product product);
 
-    void deleteByUserAndProduct(User user, Product product);
+    void deleteByUserAndId(User user, Long wishId);
 }

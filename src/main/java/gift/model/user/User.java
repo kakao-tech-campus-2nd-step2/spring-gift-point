@@ -2,8 +2,13 @@ package gift.model.user;
 
 import gift.common.enums.LoginType;
 import gift.exception.InvalidUserException;
+import gift.model.option.Option;
+import gift.model.wish.Wish;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "users")
@@ -21,6 +26,9 @@ public class User {
 
     @NotNull
     private String name;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private List<Wish> wishes = new ArrayList<>();
 
     @Enumerated(EnumType.STRING)
     @NotNull

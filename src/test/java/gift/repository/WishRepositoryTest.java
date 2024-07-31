@@ -1,7 +1,7 @@
 package gift.repository;
 
 import gift.common.enums.LoginType;
-import gift.exception.WishItemNotFoundException;
+import gift.exception.WishNotFoundException;
 import gift.model.category.Category;
 import gift.model.option.Option;
 import gift.model.product.Product;
@@ -67,7 +67,7 @@ class WishRepositoryTest {
     @Test
     @DisplayName("유저정보와 상품정보를 통한 위시리스트 조회가 잘 되는지 테스트")
     void testFindByUserAndProduct() {
-        Wish wish = wishRepository.findByUserAndProduct(user, product).orElseThrow(() -> new WishItemNotFoundException("해당 위시리스트 아이템을 찾을 수 없습니다."));
+        Wish wish = wishRepository.findByUserAndProduct(user, product).orElseThrow(() -> new WishNotFoundException("해당 위시리스트 아이템을 찾을 수 없습니다."));
 
         assertThat(wish.getQuantity()).isEqualTo(1);
     }
@@ -75,7 +75,7 @@ class WishRepositoryTest {
     @Test
     @DisplayName("위시리스트 삭제가 잘 되는지 테스트")
     void testDeleteByUserAndProduct() {
-        Wish wish = wishRepository.findByUserAndProduct(user, product).orElseThrow(() -> new WishItemNotFoundException("해당 위시리스트 아이템을 찾을 수 없습니다."));
+        Wish wish = wishRepository.findByUserAndProduct(user, product).orElseThrow(() -> new WishNotFoundException("해당 위시리스트 아이템을 찾을 수 없습니다."));
 
         wishRepository.deleteByUserAndProduct(user, product);
 

@@ -3,7 +3,7 @@ package gift.service.wish;
 import gift.dto.paging.PagingResponse;
 import gift.dto.wish.WishResponse;
 import gift.exception.ProductNotFoundException;
-import gift.exception.WishItemNotFoundException;
+import gift.exception.WishNotFoundException;
 import gift.model.product.Product;
 import gift.model.user.User;
 import gift.model.wish.Wish;
@@ -52,12 +52,12 @@ public class WishService {
     }
 
     @Transactional
-    public void removeGiftFromUser(Long userId, Long giftId) {
+    public void removeGiftFromUser(Long userId, Long wishId) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 사용자입니다."));
-        Product product = productRepository.findById(giftId)
-                .orElseThrow(() -> new ProductNotFoundException("존재하지 않는 상품입니다."));
-        wishRepository.deleteByUserAndProduct(user, product);
+        Wish wish =  wishRepository.findById(wishId)
+                .orElseThrow(() -> new WishNotFoundException("존재하지 않는 위시리스트입니다."));
+        wishRepository.deleteByUserAndId(user, wishId);
     }
 
     public PagingResponse<WishResponse.Info> getGiftsFromUser(Long userId, int page, int size) {
@@ -85,7 +85,7 @@ public class WishService {
                             wishRepository.save(existingWish);
                         },
                         () -> {
-                            throw new WishItemNotFoundException("해당 위시리스트 아이템을 찾을 수 없습니다.");
+                            throw new WishNotFoundException("존재하지 않는 위시리스트입니다.");
                         }
                 );
     }
