@@ -25,7 +25,6 @@ public class WishlistService {
 
     private final WishRepository wishRepository;
     private final MemberService memberService;
-    private final int PAGE_SIZE = 5;
 
     public WishlistService(WishRepository wishRepository, MemberService memberService) {
         this.wishRepository = wishRepository;
@@ -35,6 +34,7 @@ public class WishlistService {
     public void addWishlist(Wish wish, String email) {
         Member wishMember = wish.getMember();
         Member authMember = memberService.findByEmail(email);
+
         if (wishMember.getId().equals(authMember.getId())) {
             wishRepository.save(wish);
         }
@@ -59,18 +59,9 @@ public class WishlistService {
     }
 
     @Transactional
-    public Page<Wish> getWishPage(String email, int page, int size, String[] sort) {
-        List<Sort.Order> sorts = new ArrayList<>();
-        if (sort[1].equals("asc")) {
-            sorts.add(Sort.Order.asc(sort[0]));
-        }
-        if (sort[1].equals("desc")) {
-            sorts.add(Sort.Order.desc(sort[0]));
-        }
-
-        Pageable pageable = PageRequest.of(page, size, Sort.by(sorts));
+    public Page<Wish> getWishPage(Pageable pageable, String email) {
         Member member = memberService.findByEmail(email);
-        return wishRepository.findByMemberId(member.getId(), pageable);
+        return wishRepository.findAllByMemberId(pageable, member.getId());
 
     }
 }

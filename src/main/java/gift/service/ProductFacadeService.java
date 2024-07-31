@@ -7,6 +7,7 @@ import gift.exception.CustomException;
 import gift.exception.ErrorCode;
 import java.util.List;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -57,8 +58,8 @@ public class ProductFacadeService {
     }
 
 
-    public Page<Product> getProductPage(int page, int size, String[] sort) {
-        return productService.getProductPage(page, size, sort);
+    public Page<Product> getProductPage(Pageable pageable, Long categoryId) {
+        return productService.getProductPage(pageable, categoryId);
     }
 
     public Category findCategoryById(Long id) {

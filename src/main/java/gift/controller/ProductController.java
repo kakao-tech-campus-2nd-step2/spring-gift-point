@@ -4,6 +4,7 @@ package gift.controller;
 import gift.dto.ErrorResponse;
 import gift.dto.OptionDTO;
 import gift.dto.ProductDTO;
+import gift.dto.ProductResponseDTO;
 import gift.dto.ProductUpdateRequest;
 import gift.entity.Category;
 import gift.entity.Option;
@@ -21,7 +22,11 @@ import jakarta.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
+import org.springframework.data.web.PagedModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -43,31 +48,30 @@ public class ProductController {
     @GetMapping("/{productId}")
     @Operation(summary = "ID로 Product 조회", description = "Product의 Id로 상품의 정보를 가져옵니다.")
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "상품 조회 성공"),
+        @ApiResponse(responseCode = "200", description = "상품 조회 성공", content = @Content(array = @ArraySchema(schema = @Schema(implementation = ProductResponseDTO.class)))),
         @ApiResponse(responseCode = "404", description = "존재하지 않는 상품.", content = @Content(array = @ArraySchema(schema = @Schema(implementation = ErrorResponse.class))))})
-    public ResponseEntity<Product> getProductById(
+    public ResponseEntity<ProductResponseDTO> getProductById(
         @Parameter(name = "productId", description = "조회할 상품의 id", example = "1")
         @PathVariable("productId") long productId) {
-        Product product = productService.getProductById(productId);
-        return new ResponseEntity<>(product, HttpStatus.OK);
+        ProductResponseDTO productResponse = new ProductResponseDTO(
+            productService.getProductById(productId));
+
+        return new ResponseEntity<>(productResponse, HttpStatus.OK);
     }
 
 
     //Product Pagination
     @GetMapping
-    @Operation(summary = "Product를 Page로 조회", description = "여러개의 Product를 페이지네이션 하여 가져옵니다. 페이지당 Product의 기본 설정 개수는 5개입니다.")
+    @Operation(summary = "Product를 Page로 조회", description = "여러개의 Product를 페이지네이션 하여 가져옵니다.")
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "Product 목록 조회 성공"),
+        @ApiResponse(responseCode = "200", description = "Product 목록 조회 성공", content = @Content(array = @ArraySchema(schema = @Schema(implementation = PagedModel.class)))),
         @ApiResponse(responseCode = "400", description = "입력 데이터 잘못됨.", content = @Content(array = @ArraySchema(schema = @Schema(implementation = ErrorResponse.class))))})
     public ResponseEntity<Page<Product>> getProductPage(
-        @Parameter(name = "page", description = "페이지 번호", example = "1")
-        @RequestParam int page,
-        @Parameter(name = "size", description = "페이지 크기", example = "20")
-        @RequestParam int size,
-        @Parameter(name = "sort", description = "정렬 기준", example = "id,desc")
-        @RequestParam String[] sort
+        @ParameterObject @PageableDefault(page=0, size=10, sort="id") Pageable pageable,
+        @Parameter(description = "필터링 적용할 카테고리 ID, 없을 시 전체 상품 조회")
+        @RequestParam(required = false) Long categoryId
     ) {
-        Page<Product> products = productService.getProductPage(page, size, sort);
+        Page<Product> products = productService.getProductPage(pageable,categoryId);
         return new ResponseEntity<>(products, HttpStatus.OK);
     }
 

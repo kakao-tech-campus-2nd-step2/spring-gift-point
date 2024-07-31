@@ -6,12 +6,13 @@ import gift.entity.Orders;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 
 public class OrderRequestDTO {
 
     @Valid
-    @NotEmpty(message = "Option Id는 필수값입니다.")
+    @NotNull(message = "Option Id는 필수값입니다.")
     private Long optionId;
 
     @Valid

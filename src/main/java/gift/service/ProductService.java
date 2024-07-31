@@ -1,6 +1,7 @@
 package gift.service;
 
 
+import gift.dto.ProductResponseDTO;
 import gift.entity.Product;
 import gift.exception.CustomException;
 import gift.exception.ErrorCode;
@@ -63,18 +64,11 @@ public class ProductService {
     }
 
 
-    public Page<Product> getProductPage(int page, int size, String[] sort) {
-        List<Sort.Order> sorts = new ArrayList<>();
-
-        if (sort[1].equals("asc")) {
-            sorts.add(Sort.Order.asc(sort[0]));
+    public Page<Product> getProductPage(Pageable pageable,Long categoryId) {
+        if (categoryId == null) {
+            return productRepository.findAll(pageable);
         }
-        if (sort[1].equals("desc")) {
-            sorts.add(Sort.Order.desc(sort[0]));
-        }
-
-        Pageable pageable = PageRequest.of(page, size, Sort.by(sorts));
-        return productRepository.findAll(pageable);
+        return productRepository.findAllByCategoryId(pageable,categoryId);
     }
 
 

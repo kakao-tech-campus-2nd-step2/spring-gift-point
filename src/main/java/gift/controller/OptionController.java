@@ -70,7 +70,6 @@ public class OptionController {
         @ApiResponse(responseCode = "400", description = "입력 데이터 잘못됨.",content = @Content(array = @ArraySchema(schema = @Schema(implementation = ErrorResponse.class)))),
         @ApiResponse(responseCode = "404", description = "수정하려는 옵션 조회 실패.",content = @Content(array = @ArraySchema(schema = @Schema(implementation = ErrorResponse.class)))),
         @ApiResponse(responseCode = "409", description = "옵션 이름 중복 ",content = @Content(array = @ArraySchema(schema = @Schema(implementation = ErrorResponse.class))))})
-
     public ResponseEntity<String> updateOption(@PathVariable("productId") Long productId,
         @PathVariable("optionId") Long optionId,
         @RequestBody OptionDTO optionDTO) {

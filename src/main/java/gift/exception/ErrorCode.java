@@ -36,7 +36,8 @@ public enum ErrorCode {
 
     //JWT Token
     TOKEN_INVALID("유효하지 않은 토큰입니다.",HttpStatus.UNAUTHORIZED),
-    TOKEN_NOT_EXISTS("토큰이 존재하지 않거나 올바르지 않은 형식입니다.",HttpStatus.UNAUTHORIZED);
+    TOKEN_NOT_EXISTS("토큰이 존재하지 않거나 올바르지 않은 형식입니다.",HttpStatus.UNAUTHORIZED),
+    TOKEN_EXPIRED("토큰의 유효기간이 만료되었습니다.",HttpStatus.UNAUTHORIZED);
 
     private final String message;
     private final HttpStatus status;

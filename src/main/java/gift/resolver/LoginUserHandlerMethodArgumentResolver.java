@@ -43,8 +43,8 @@ public class LoginUserHandlerMethodArgumentResolver implements HandlerMethodArgu
             throw new CustomException(ErrorCode.TOKEN_NOT_EXISTS);
         }
 
-        if (!jwtUtil.isTokenExpired(token)) {
-            throw new CustomException(ErrorCode.TOKEN_INVALID);
+        if (jwtUtil.isTokenExpired(token)) {
+            throw new CustomException(ErrorCode.TOKEN_EXPIRED);
         }
 
         String email = jwtUtil.getEmailFromToken(token);

@@ -51,19 +51,9 @@ public class OrderService {
         return optionService.getOptionById(optionId);
     }
 
-    public Page<Orders> getProductPage(String email, int page, int size, String[] sort) {
+    public Page<Orders> getProductPage(String email, Pageable pageable) {
         Member member = findMemberByEmail(email);
-        List<Order> sorts = new ArrayList<>();
-
-        if (sort[1].equals("asc")) {
-            sorts.add(Sort.Order.asc(sort[0]));
-        }
-        if (sort[1].equals("desc")) {
-            sorts.add(Sort.Order.desc(sort[0]));
-        }
-
-        Pageable pageable = PageRequest.of(page, size, Sort.by(sorts));
-        return orderRepository.findByMember(pageable, member);
+        return orderRepository.findAllByMember(pageable, member);
     }
 
 
