@@ -54,7 +54,7 @@ public class OrderController {
         return new ApiResponseBuilder<OrderResponse>()
             .httpStatus(HttpStatus.OK)
             .messages("주문 생성")
-            .data(orderService.save(member.id(), order))
+            .data(orderService.save(member.id(), member.id(), order))
             .build();
     }
 }
