@@ -1,9 +1,9 @@
-package gift.dto.order;
+package gift.dto.orderDetail;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 
 @Schema(description = "주문 요청 데이터")
-public record OrderRequest(
+public record OrderDetailRequest(
     @Schema(description = "옵션 ID", example = "1")
     Long optionId,
 

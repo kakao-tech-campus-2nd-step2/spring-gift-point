@@ -9,7 +9,7 @@ import jakarta.persistence.Table;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "kakaotoken")
+@Table(name = "kakao_token")
 public class KakaoToken {
 
     @Id

@@ -3,9 +3,9 @@ package gift.controller;
 import static gift.util.constants.OptionConstants.INSUFFICIENT_QUANTITY;
 import static gift.util.constants.OptionConstants.OPTION_NOT_FOUND;
 
-import gift.dto.order.OrderRequest;
-import gift.dto.order.OrderResponse;
-import gift.service.OrderService;
+import gift.dto.orderDetail.OrderDetailRequest;
+import gift.dto.orderDetail.OrderDetailResponse;
+import gift.service.OrderDetailService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.ExampleObject;
@@ -23,12 +23,12 @@ import org.springframework.web.bind.annotation.RestController;
 @Tag(name = "Order API", description = "주문 관리 API")
 @RestController
 @RequestMapping("/api/orders")
-public class OrderController {
+public class OrderDetailController {
 
-    private final OrderService orderService;
+    private final OrderDetailService orderDetailService;
 
-    public OrderController(OrderService orderService) {
-        this.orderService = orderService;
+    public OrderDetailController(OrderDetailService orderDetailService) {
+        this.orderDetailService = orderDetailService;
     }
 
     @Operation(summary = "주문 생성", description = "새로운 주문을 생성합니다.")
@@ -62,11 +62,11 @@ public class OrderController {
         }
     )
     @PostMapping
-    public ResponseEntity<OrderResponse> createOrder(
-        @RequestBody OrderRequest orderRequest,
+    public ResponseEntity<OrderDetailResponse> createOrder(
+        @RequestBody OrderDetailRequest orderDetailRequest,
         @RequestAttribute("memberId") Long memberId
     ) {
-        OrderResponse orderResponse = orderService.createOrder(orderRequest, memberId);
-        return ResponseEntity.status(HttpStatus.CREATED).body(orderResponse);
+        OrderDetailResponse orderDetailResponse = orderDetailService.createOrder(orderDetailRequest, memberId);
+        return ResponseEntity.status(HttpStatus.CREATED).body(orderDetailResponse);
     }
 }
