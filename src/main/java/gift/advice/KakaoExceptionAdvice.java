@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 public class KakaoExceptionAdvice {
 
     @ExceptionHandler(KakaoException.class)
-    public ResponseEntity<MessageResponseDTO> handleResponseError(KakaoException e) {
+    public ResponseEntity<MessageResponseDTO> handleKakaoResponseError(KakaoException e) {
         return ResponseEntity
                 .status(e.getStatusCode())
                 .body(new MessageResponseDTO(e.getMessage()));
