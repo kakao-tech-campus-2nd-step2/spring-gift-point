@@ -35,7 +35,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/wishes")
+@RequestMapping("/api/wishes")
 @Tag(name = "Wishlist(위시리스트)", description = "사용자의 Wishlist관련 API입니다.")
 
 public class WishlistController {

@@ -4,11 +4,11 @@ public class AuthResponse {
 
     private final String token;
 
-    public AuthResponse(String accessToken) {
-        token = accessToken;
+    public AuthResponse(String token) {
+        this.token = token;
     }
 
-    public String getAccessToken() {
+    public String getToken() {
         return token;
     }
 

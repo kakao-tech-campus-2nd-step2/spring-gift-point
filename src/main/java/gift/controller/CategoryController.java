@@ -69,7 +69,7 @@ public class CategoryController {
     }
 
     @DeleteMapping({"/{categoryId}"})
-    @Operation(summary = "Category 수정", description = "기존의 카테고리를 삭제합니다.")
+    @Operation(summary = "Category 삭제", description = "기존의 카테고리를 삭제합니다.")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "204", description = "카테고리 삭제 성공"),
         @ApiResponse(responseCode = "404", description = "삭제하려는 카테고리 조회 실패.", content = @Content(array = @ArraySchema(schema = @Schema(implementation = ErrorResponse.class))))})

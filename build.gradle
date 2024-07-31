@@ -39,3 +39,8 @@ dependencies {
 tasks.named('test') {
     useJUnitPlatform()
 }
+
+//빌드 시에 플레인 아카이브 생성x 설정
+jar{
+    enabled=false
+}
