@@ -3,7 +3,7 @@ package gift.common.exception;
 public enum ErrorCode {
     // 400 BAD REQUEST
     REQUEST_VALIDATION(-40001, "요청 시 만족해야하는 제약 조건을 위반함"),
-    NO_OPTION_PROVIDED(-40002, "상품 등록 시 옵션이 하나도 주어지지 않음"),
+    NO_OPTION_PROVIDED(-40002, "상품의 옵션이 하나 이상이 아님"),
     OVER_STOCK_QUANTITY(-40003, "주문 생성 시 재고보다 많은 수량을 입력함"),
 
     // 401 UNAUTHORIZED

@@ -1,5 +1,6 @@
 package gift.service;
 
+import gift.common.exception.badRequest.NoOptionProvidedException;
 import gift.common.exception.badRequest.OverStockQuantityException;
 import gift.common.exception.conflict.OptionNameConflictException;
 import gift.common.exception.notFound.InvalidProductOptionException;
@@ -90,7 +91,7 @@ public class OptionService {
 
         List<Option> options = optionRepository.findByProductId(option.getProduct().getId());
         if (options.stream().count() == 1) {
-            throw new IllegalArgumentException("상품 당 하나의 옵션은 있어야 합니다.");
+            throw new NoOptionProvidedException();
         }
 
         optionRepository.delete(option);
