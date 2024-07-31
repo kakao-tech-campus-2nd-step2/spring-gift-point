@@ -1,11 +1,11 @@
 package gift.entity;
 
-import gift.domain.WishList;
+import gift.domain.Wish;
 import jakarta.persistence.*;
 
 @Entity
-@Table(name = "wish_lists")
-public class WishListEntity {
+@Table(name = "wishes")
+public class WishEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -19,17 +19,16 @@ public class WishListEntity {
     @JoinColumn(name = "product_id")
     private ProductEntity productEntity;
 
-    public WishListEntity() {
+    public WishEntity() {
 
     }
 
-    public WishListEntity(MemberEntity memberEntity, ProductEntity productEntity) {
+    public WishEntity(MemberEntity memberEntity, ProductEntity productEntity) {
         this.memberEntity = memberEntity;
         this.productEntity = productEntity;
     }
 
-    public WishListEntity(Long id, MemberEntity memberEntity, ProductEntity productEntity) {
-        this.id = id;
+    public void updateWishEntity(MemberEntity memberEntity, ProductEntity productEntity) {
         this.memberEntity = memberEntity;
         this.productEntity = productEntity;
     }
@@ -42,24 +41,12 @@ public class WishListEntity {
         return memberEntity;
     }
 
-    public void setMemberId(MemberEntity memberEntity) {
-        this.memberEntity = memberEntity;
-    }
-
     public ProductEntity getProductEntity() {
         return productEntity;
     }
 
-    public void setProductId(ProductEntity productEntity) {
-        this.productEntity = productEntity;
-    }
-
     public boolean equalByProductEntity(ProductEntity productEntity) {
         return this.productEntity.equals(productEntity);
-    }
-
-    public static WishList toDto(WishListEntity wishListEntity) {
-        return new WishList(wishListEntity.getMemberEntity().getId(), wishListEntity.getProductEntity().getPrice());
     }
 
 }

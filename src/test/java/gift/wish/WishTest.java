@@ -1,9 +1,10 @@
-package gift.wishList;
+package gift.wish;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 import gift.domain.Member;
 import gift.domain.Product;
+import gift.domain.Wish.WishRequest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -21,7 +22,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.test.annotation.DirtiesContext;
 
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
-public class WishListTest {
+public class WishTest {
 
     @LocalServerPort
     private int port;
@@ -61,10 +62,10 @@ public class WishListTest {
     @DisplayName("위시리스트 추가")
     @DirtiesContext
     void addWishList() {
-        Product product = new Product(3L,"Sample3", 3000L, "http://image3.jpg", 1L,null);
+        WishRequest request = new WishRequest(3L);
 
-        HttpEntity<Product> requestEntity = new HttpEntity<>(product, getHttpHeaders());
-        ResponseEntity<String> responseEntity = restTemplate.exchange(url + "/wishlist", HttpMethod.POST,
+        HttpEntity<WishRequest> requestEntity = new HttpEntity<>(request, getHttpHeaders());
+        ResponseEntity<String> responseEntity = restTemplate.exchange(url + "/api/wish", HttpMethod.POST,
             requestEntity, String.class);
 
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.CREATED);
@@ -75,7 +76,7 @@ public class WishListTest {
     @DirtiesContext
     void getWishList() {
         HttpEntity<String> requestEntity = new HttpEntity<>(getHttpHeaders());
-        ResponseEntity<String> responseEntity = restTemplate.exchange(url + "/wishlist", HttpMethod.GET,
+        ResponseEntity<String> responseEntity = restTemplate.exchange(url + "/api/wish", HttpMethod.GET,
             requestEntity, String.class);
 
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
@@ -86,7 +87,7 @@ public class WishListTest {
     @DirtiesContext
     void deleteWishList() {
         HttpEntity<String> requestEntity = new HttpEntity<>(getHttpHeaders());
-        ResponseEntity<String> responseEntity = restTemplate.exchange(url + "/wishlist/4", HttpMethod.DELETE,
+        ResponseEntity<String> responseEntity = restTemplate.exchange(url + "/api/wish/4", HttpMethod.DELETE,
             requestEntity, String.class);
 
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
