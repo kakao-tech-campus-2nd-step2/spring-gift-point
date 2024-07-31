@@ -16,7 +16,6 @@ import reactor.core.publisher.Mono;
 public class KakaoUserClinet {
     private final WebClient webClient;
 
-    @Autowired
     public KakaoUserClinet(WebClient.Builder webClientBuilder, KakaoProperties kakaoProperties) {
         this.webClient = webClientBuilder
                 .baseUrl(kakaoProperties.getUserInfoUrl())

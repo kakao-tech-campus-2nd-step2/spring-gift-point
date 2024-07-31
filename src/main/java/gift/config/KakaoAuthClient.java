@@ -19,11 +19,10 @@ import java.sql.SQLOutput;
 public class KakaoAuthClient {
     private final WebClient webClient;
 
-    @Autowired
     private  KakaoProperties kakaoProperties;
 
-    @Autowired
     public KakaoAuthClient(WebClient.Builder webClientBuilder, KakaoProperties kakaoProperties) {
+        this.kakaoProperties = kakaoProperties;
         this.webClient = webClientBuilder
                 .baseUrl(kakaoProperties.getKakaoAuthUrl())
                 .build();
