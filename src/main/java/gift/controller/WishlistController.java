@@ -4,6 +4,8 @@ import gift.auth.JwtUtil;
 import gift.dto.WishResponseDto;
 import gift.dto.WishRequestDto;
 import gift.service.WishlistService;
+import gift.vo.LoginMember;
+import gift.vo.Member;
 import gift.vo.Wish;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -40,11 +42,10 @@ public class WishlistController {
             @Parameter(name = "pageable", description = "페이지 관련 정보", example = "page=0&size=10&sort=createdDate,desc"),
     })
     public ResponseEntity<Page<WishResponseDto>> getWishProductList(
-            @RequestHeader("Authorization") String authorizationHeader,
+            @LoginMember Member member,
             @PageableDefault(page = 0, size = 5) Pageable pageable) {
-        Long memberId = jwtUtil.getMemberIdFromAuthorizationHeader(authorizationHeader);
 
-        Page<Wish> allWishlistsPaged = service.getWishProductList(memberId, pageable);
+        Page<Wish> allWishlistsPaged = service.getWishProductList(member, pageable);
 
         return ResponseEntity.ok().body(allWishlistsPaged.map(WishResponseDto::toWishDto));
     }
@@ -58,10 +59,9 @@ public class WishlistController {
             @Parameter(name = "wishRequestDto", description = "위시리스트에 추가할 상품의 ID를 담은 DTO", required = true),
             @Parameter(name = "authorizationHeader", description = "회원 인증을 위한 Authorization 헤더", required = true)
     })
-    public ResponseEntity<Void> addToWishlist(@RequestBody @Valid WishRequestDto wishRequestDto, @RequestHeader("Authorization") String authorizationHeader) {
-        Long memberId = jwtUtil.getMemberIdFromAuthorizationHeader(authorizationHeader);
+    public ResponseEntity<Void> addToWishlist(@RequestBody @Valid WishRequestDto wishRequestDto, @LoginMember Member member) {
+        service.addWishProduct(member, wishRequestDto.productId());
 
-        service.addWishProduct(memberId, wishRequestDto.productId());
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
@@ -74,7 +74,7 @@ public class WishlistController {
             @Parameter(name = "wishId", description = "위시리스트에서 삭제할 상품의 ID", required = true),
             @Parameter(name = "authorizationHeader", description = "회원 인증을 위한 Authorization 헤더", required = true)
     })
-    public ResponseEntity<Void> deleteToWishlist(@PathVariable("wishId") Long wishId, @RequestHeader("Authorization") String authorizationHeader) {
+    public ResponseEntity<Void> deleteToWishlist(@PathVariable("wishId") Long wishId, @LoginMember Member member) {
         service.deleteWishProduct(wishId);
 
         return ResponseEntity.ok().build();

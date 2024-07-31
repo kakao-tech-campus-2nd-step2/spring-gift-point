@@ -2,6 +2,7 @@ package gift.auth;
 
 import gift.service.KakaoApiService;
 import gift.service.MemberService;
+import gift.vo.Member;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.stereotype.Component;
 
@@ -44,14 +45,18 @@ public class JwtUtil {
         return memberService.getMemberByEmail(memberEmail).getId();
     }
 
-    public Long getMemberIdFromAuthorizationHeader(String authorizationHeader) {
+    public Member getMemberFromAuthorizationHeader(String authorizationHeader) {
         Token fetchedToken = getBearerTokenFromAuthorizationHeader(authorizationHeader);
 
+        Long foundedMemberId;
+
         if (jwtHelper.isJwtToken(fetchedToken)) {
-            return getMemberIdFromToken(fetchedToken);
+            foundedMemberId = getMemberIdFromToken(fetchedToken);
         } else {
-            return getMemberIdFromKakao(fetchedToken);
+            foundedMemberId = getMemberIdFromKakao(fetchedToken);
         }
+
+        return memberService.getMemberById(foundedMemberId);
     }
 
     public boolean isNotJwtToken(Token token) {
