@@ -29,8 +29,12 @@ public class MemberController {
     @ApiResponse(responseCode = "201", description = "회원가입 완료",
             content = {@Content(mediaType = "application/json", schema = @Schema(implementation = String.class))
     })
-    @ApiResponse(responseCode = "400", description = "잘못된 요청입니다. 입력값을 확인하거나 중복된 이메일입니다")
-    @ApiResponse(responseCode = "500", description = "서버 내부 에러 발생")
+    @ApiResponse(responseCode = "400", description = "잘못된 요청입니다. 입력값을 확인하거나 중복된 이메일입니다",
+            content = {@Content(mediaType = "application/json", schema = @Schema(implementation = String.class))
+            })
+    @ApiResponse(responseCode = "500", description = "서버 내부 에러 발생",
+            content = {@Content(mediaType = "application/json", schema = @Schema(implementation = String.class))
+            })
     @PostMapping("/register")
     public ResponseEntity<String> registerUser(@Valid @RequestBody RequestMemberDTO requestMemberDTO){
         String token = memberService.signUpUser(requestMemberDTO);
@@ -41,9 +45,15 @@ public class MemberController {
     @ApiResponse(responseCode = "200", description = "로그인 완료",
             content = {@Content(mediaType = "application/json", schema = @Schema(implementation = String.class))
     })
-    @ApiResponse(responseCode = "400", description = "잘못된 요청입니다. 입력값을 확인해주세요")
-    @ApiResponse(responseCode = "403", description = "아이디 또는 비밀번호가 틀렸습니다")
-    @ApiResponse(responseCode = "500", description = "서버 내부 에러 발생")
+    @ApiResponse(responseCode = "400", description = "잘못된 요청입니다. 입력값을 확인해주세요",
+            content = {@Content(mediaType = "application/json", schema = @Schema(implementation = String.class))
+            })
+    @ApiResponse(responseCode = "403", description = "아이디 또는 비밀번호가 틀렸습니다",
+            content = {@Content(mediaType = "application/json", schema = @Schema(implementation = String.class))
+            })
+    @ApiResponse(responseCode = "500", description = "서버 내부 에러 발생",
+            content = {@Content(mediaType = "application/json", schema = @Schema(implementation = String.class))
+            })
     @PostMapping("/login")
     public ResponseEntity<String> loginUser(@Valid @RequestBody RequestMemberDTO member) {
         return ResponseEntity.ok(memberService.loginUser(member));

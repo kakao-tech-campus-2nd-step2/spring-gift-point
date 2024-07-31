@@ -59,8 +59,12 @@ public class ProductPageController {
     @ApiResponse(responseCode = "200", description = "조회 완료",
             content = {@Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = ResponseProductListOfCategoryDTO.class)))
             })
-    @ApiResponse(responseCode = "400", description = "잘못된 요청입니다. 입력값을 확인하거나 카테고리가 존재하지 않습니다")
-    @ApiResponse(responseCode = "500", description = "서버 내부 에러 발생")
+    @ApiResponse(responseCode = "400", description = "잘못된 요청입니다. 입력값을 확인하거나 카테고리가 존재하지 않습니다",
+            content = {@Content(mediaType = "application/json", schema = @Schema(implementation = String.class))
+            })
+    @ApiResponse(responseCode = "500", description = "서버 내부 에러 발생",
+            content = {@Content(mediaType = "application/json", schema = @Schema(implementation = String.class))
+            })
     @GetMapping("/products")
     public ResponseEntity<Page<ResponseProductListOfCategoryDTO>> getProducts(@PageableDefault(size = 10, sort = "name", direction = Sort.Direction.ASC) Pageable pageable,
                                                                               @RequestParam("categoryId") Long categoryId) {
@@ -72,8 +76,12 @@ public class ProductPageController {
     @ApiResponse(responseCode = "200", description = "조회 완료",
             content = {@Content(mediaType = "application/json", schema = @Schema(implementation = ResponseProductDTO.class))
             })
-    @ApiResponse(responseCode = "400", description = "잘못된 요청입니다. 입력값을 확인하거나 상품 id가 존재하지 않는 id입니다")
-    @ApiResponse(responseCode = "500", description = "서버 내부 에러 발생")
+    @ApiResponse(responseCode = "400", description = "잘못된 요청입니다. 입력값을 확인하거나 상품 id가 존재하지 않는 id입니다",
+            content = {@Content(mediaType = "application/json", schema = @Schema(implementation = String.class))
+            })
+    @ApiResponse(responseCode = "500", description = "서버 내부 에러 발생",
+            content = {@Content(mediaType = "application/json", schema = @Schema(implementation = String.class))
+            })
     @GetMapping("/products/{product-id}")
     public ResponseEntity<ResponseProductDTO> getProduct(@PathVariable("product-id") Long productId){
         ResponseProductDTO response = productService.getProduct(productId);

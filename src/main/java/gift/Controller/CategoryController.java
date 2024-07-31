@@ -29,9 +29,15 @@ public class CategoryController {
     }
 
     @Operation(summary="카테고리 추가", description = "카테고리를 추가합니다")
-    @ApiResponse(responseCode = "201", description = "추가 완료")
-    @ApiResponse(responseCode = "400", description = "잘못된 요청입니다. 입력값을 확인해주세요.")
-    @ApiResponse(responseCode = "500", description = "서버 내부 에러 발생")
+    @ApiResponse(responseCode = "201", description = "추가 완료",
+            content = {@Content(mediaType = "application/json", schema = @Schema(implementation = String.class))
+            })
+    @ApiResponse(responseCode = "400", description = "잘못된 요청입니다. 입력값을 확인해주세요.",
+            content = {@Content(mediaType = "application/json", schema = @Schema(implementation = String.class))
+            })
+    @ApiResponse(responseCode = "500", description = "서버 내부 에러 발생",
+            content = {@Content(mediaType = "application/json", schema = @Schema(implementation = String.class))
+            })
     @PostMapping
     public ResponseEntity<String> addCategory(@Valid @RequestBody RequestCategoryDTO requestCategoryDTO){
         Category category = categoryService.addCategory(requestCategoryDTO);
@@ -43,7 +49,9 @@ public class CategoryController {
     @ApiResponse(responseCode = "200", description = "조회 완료",
             content = {@Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = ResponseCategoryDTO.class)))
     })
-    @ApiResponse(responseCode = "500", description = "서버 내부 에러 발생")
+    @ApiResponse(responseCode = "500", description = "서버 내부 에러 발생",
+            content = {@Content(mediaType = "application/json", schema = @Schema(implementation = String.class))
+            })
     @GetMapping
     public ResponseEntity<List<ResponseCategoryDTO>> getCategories (){
         List<ResponseCategoryDTO> categoryList = categoryService.getCategories();
@@ -51,9 +59,15 @@ public class CategoryController {
     }
 
     @Operation(summary = "카테고리 수정", description = "카테고리를 수정합니다")
-    @ApiResponse(responseCode = "200", description = "수정 완료")
-    @ApiResponse(responseCode = "400", description = "잘못된 요청입니다. 입력값을 확인해주세요")
-    @ApiResponse(responseCode = "500", description = "서버 내부 에러 발생")
+    @ApiResponse(responseCode = "200", description = "수정 완료",
+            content = {@Content(mediaType = "application/json", schema = @Schema(implementation = String.class))
+            })
+    @ApiResponse(responseCode = "400", description = "잘못된 요청입니다. 입력값을 확인해주세요",
+            content = {@Content(mediaType = "application/json", schema = @Schema(implementation = String.class))
+            })
+    @ApiResponse(responseCode = "500", description = "서버 내부 에러 발생",
+            content = {@Content(mediaType = "application/json", schema = @Schema(implementation = String.class))
+            })
     @PutMapping
     public ResponseEntity <String> editCategory(@PathVariable("category-id") Long categoryId, @Valid @RequestBody RequestCategoryDTO requestCategoryDTO){
         categoryService.editCategory(requestCategoryDTO);
@@ -61,9 +75,15 @@ public class CategoryController {
     }
 
     @Operation(summary = "카테고리 삭제", description = "카테고리를 삭제합니다")
-    @ApiResponse(responseCode = "200", description = "삭제 완료")
-    @ApiResponse(responseCode = "400", description = "잘못된 요청입니다. 입력값을 확인해주세요")
-    @ApiResponse(responseCode = "500", description = "서버 내부 에러 발생")
+    @ApiResponse(responseCode = "200", description = "삭제 완료",
+            content = {@Content(mediaType = "application/json", schema = @Schema(implementation = String.class))
+            })
+    @ApiResponse(responseCode = "400", description = "잘못된 요청입니다. 입력값을 확인해주세요",
+            content = {@Content(mediaType = "application/json", schema = @Schema(implementation = String.class))
+            })
+    @ApiResponse(responseCode = "500", description = "서버 내부 에러 발생",
+            content = {@Content(mediaType = "application/json", schema = @Schema(implementation = String.class))
+            })
     @DeleteMapping("/{category-id}")
     public ResponseEntity<String> deleteCategory(@PathVariable ("category-id") Long categoryId ){
         categoryService.deleteCategory(categoryId);

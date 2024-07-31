@@ -39,9 +39,15 @@ public class WishController {
 
     @Operation(summary = "찜 추가", description = "찜을 추가합니다")
     @ApiResponse(responseCode = "201", description = "추가 완료")
-    @ApiResponse(responseCode = "400", description = "잘못된 요청입니다. 입력값을 확인하거나 상품이 존재하지 않습니다")
-    @ApiResponse(responseCode = "403", description = "유효하지 않은 토큰입니다")
-    @ApiResponse(responseCode = "500", description = "서버 내부 에러 발생")
+    @ApiResponse(responseCode = "400", description = "잘못된 요청입니다. 입력값을 확인하거나 상품이 존재하지 않습니다",
+            content = {@Content(mediaType = "application/json", schema = @Schema(implementation = String.class))
+            })
+    @ApiResponse(responseCode = "403", description = "유효하지 않은 토큰입니다",
+            content = {@Content(mediaType = "application/json", schema = @Schema(implementation = String.class))
+            })
+    @ApiResponse(responseCode = "500", description = "서버 내부 에러 발생",
+            content = {@Content(mediaType = "application/json", schema = @Schema(implementation = String.class))
+            })
     @PostMapping("/wishes")
     public ResponseEntity<Void> addWish(@ValidUser Member member, @Valid @RequestBody RequestWishDTO requestWishDTO) {
         Wish wish = wishService.addWish(member, requestWishDTO);
@@ -52,9 +58,15 @@ public class WishController {
     @ApiResponse(responseCode = "200", description = "조회 완료",
             content = {@Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation =ResponseWishDTO.class)))
             })
-    @ApiResponse(responseCode = "400", description = "잘못된 요청입니다. 입력값을 확인해주세요")
-    @ApiResponse(responseCode = "403", description = "유효하지 않은 토큰입니다")
-    @ApiResponse(responseCode = "500", description = "서버 내부 에러 발생")
+    @ApiResponse(responseCode = "400", description = "잘못된 요청입니다. 입력값을 확인해주세요",
+            content = {@Content(mediaType = "application/json", schema = @Schema(implementation = String.class))
+            })
+    @ApiResponse(responseCode = "403", description = "유효하지 않은 토큰입니다",
+            content = {@Content(mediaType = "application/json", schema = @Schema(implementation = String.class))
+            })
+    @ApiResponse(responseCode = "500", description = "서버 내부 에러 발생",
+            content = {@Content(mediaType = "application/json", schema = @Schema(implementation = String.class))
+            })
     @GetMapping("/wishes")
     public ResponseEntity<Page<ResponseWishDTO>> getWish(@ValidUser Member member,
                               @PageableDefault(size = 10, sort = "createdDate", direction = Sort.Direction.DESC) Pageable pageable) {
@@ -64,9 +76,15 @@ public class WishController {
 
     @Operation(summary = "찜 삭제", description = "찜을 삭제합니다")
     @ApiResponse(responseCode = "204", description = "삭제 완료")
-    @ApiResponse(responseCode = "400", description = "잘못된 요청입니다. 입력값을 확인하거나 상품이나 찜이 존재하지 않습니다")
-    @ApiResponse(responseCode = "403", description = "유효하지 않은 토큰입니다")
-    @ApiResponse(responseCode = "500", description = "서버 내부 에러 발생")
+    @ApiResponse(responseCode = "400", description = "잘못된 요청입니다. 입력값을 확인하거나 상품이나 찜이 존재하지 않습니다",
+            content = {@Content(mediaType = "application/json", schema = @Schema(implementation = String.class))
+            })
+    @ApiResponse(responseCode = "403", description = "유효하지 않은 토큰입니다",
+            content = {@Content(mediaType = "application/json", schema = @Schema(implementation = String.class))
+            })
+    @ApiResponse(responseCode = "500", description = "서버 내부 에러 발생",
+            content = {@Content(mediaType = "application/json", schema = @Schema(implementation = String.class))
+            })
     @DeleteMapping("/wishes/{product-id}")
     public ResponseEntity<Void> deleteWish(@ValidUser Member member, @PathVariable("product-id") Long productId) {
         wishService.deleteWish(member, productId);
