@@ -7,6 +7,7 @@
 :sectlinks:
 :operation-curl-request-title: Example request
 :operation-http-response-title: Example response
+:snippets: build/generated-snippets
 
 [[overview]]
 == Overview
@@ -15,7 +16,6 @@
 
 [[overview_http_verbs]]
 === HTTP verbs
-
 
 |===
 | Verb | Usage
@@ -35,7 +35,6 @@
 
 [[overview_http_status_codes]]
 === HTTP status codes
-
 
 |===
 | Status code | Usage
@@ -70,43 +69,62 @@
 
 [[resources_products_create]]
 ==== 상품 생성
+
 ===== Curl Request
+
 include::{snippets}/add-product-test/curl-request.adoc[]
+
 ===== Http Request
+
 include::{snippets}/add-product-test/http-request.adoc[]
+
 ===== Example Response
+
 include::{snippets}/add-product-test/http-response.adoc[]
 
 [[resources_products_list]]
-==== 상품 조회
-
+==== 상품 전체 페이지
 
 ===== Curl Request
-include::{snippets}/get-all-products-test/curl-request.adoc[]
+
+include::{snippets}/get-pagination-test/curl-request.adoc[]
+
 ===== Http Request
 
-include::{snippets}/get-all-products-test/http-request.adoc[]
+include::{snippets}/get-pagination-test/http-request.adoc[]
+
 ===== Example Response
-include::{snippets}/get-all-products-test/http-response.adoc[]
+
+include::{snippets}/get-pagination-test/http-response.adoc[]
 
 [[resources_products_update]]
 ==== 상품 수정
 
 ===== Curl Request
-include::{snippets}/update-product/curl-request.adoc[]
+
+include::{snippets}/update-product-test/curl-request.adoc[]
+
 ===== Http Request
-include::{snippets}/update-product/http-request.adoc[]
+
+include::{snippets}/update-product-test/http-request.adoc[]
 
 ===== Example Response
-include::{snippets}/update-product/http-response.adoc[]
+
+include::{snippets}/update-product-test/http-response.adoc[]
 
 [[resources_products_delete]]
 ==== 상품 삭제
+
 ===== Curl Request
+
 include::{snippets}/delete-product-test/curl-request.adoc[]
+
 ===== Http Request
+
 include::{snippets}/delete-product-test/http-request.adoc[]
+
 ===== Example Response
+
 include::{snippets}/delete-product-test/http-response.adoc[]
 
 [[resources_members]]
@@ -114,40 +132,60 @@ include::{snippets}/delete-product-test/http-response.adoc[]
 
 [[resources_member_register]]
 ==== 회원 등록 성공
+
 ===== Curl Request
 
 include::{snippets}/register-member-success/curl-request.adoc[]
+
 ===== Http Request
+
 include::{snippets}/register-member-success/http-request.adoc[]
+
 ===== Example Response
+
 include::{snippets}/register-member-success/http-response.adoc[]
 
 ==== 회원 등록 실패
+
 ===== Curl Request
+
 include::{snippets}/register-member-fail/curl-request.adoc[]
+
 ===== Http Request
+
 include::{snippets}/register-member-fail/http-request.adoc[]
+
 ===== Example Response
+
 include::{snippets}/register-member-fail/http-response.adoc[]
 
 [[resources_member_login]]
 ==== 회원 로그인 성공
+
 ===== Curl Request
 include::{snippets}/login-success/curl-request.adoc[]
+
 ===== Http Request
+
 include::{snippets}/login-success/http-request.adoc[]
+
 ===== Example Response
+
 include::{snippets}/login-success/http-response.adoc[]
 
 ==== 회원 로그인 실패
+
 ===== Curl Request
+
 include::{snippets}/login-fail/curl-request.adoc[]
+
 ===== Http Request
 
 include::{snippets}/login-fail/http-request.adoc[]
-===== Example Response
-include::{snippets}/login-fail/http-response.adoc[]
 
+===== Example Response
+
+include::{snippets}/login-fail/http-response.adoc[]
 
 [[resources_categories]]
 === Categories
@@ -156,62 +194,156 @@ include::{snippets}/login-fail/http-response.adoc[]
 ==== 카테고리 추가
 
 ===== Curl Request
+
 include::{snippets}/add-category-test/curl-request.adoc[]
+
 ===== Http Request
 
 include::{snippets}/add-category-test/http-request.adoc[]
+
 ===== Example Response
+
 include::{snippets}/add-category-test/http-response.adoc[]
 
 [[resources_categories_retrieve]]
 ==== 카테고리 조회
 
 ===== Curl Request
+
 include::{snippets}/get-all-categories-test/curl-request.adoc[]
+
 ===== Http Request
 
 include::{snippets}/get-all-categories-test/http-request.adoc[]
+
 ===== Example Response
+
 include::{snippets}/get-all-categories-test/http-response.adoc[]
 
 [[resources_category_update]]
 ==== 카테고리 수정
 
 ===== Curl Request
+
 include::{snippets}/update-category-test/curl-request.adoc[]
+
 ===== Http Request
 
 include::{snippets}/update-category-test/http-request.adoc[]
-===== Example Response
-include::{snippets}/update-category-test/http-response.adoc[]
 
+===== Example Response
+
+include::{snippets}/update-category-test/http-response.adoc[]
 
 [[resources_category_delete]]
 ==== 카테고리 삭제
 
 ===== Curl Request
+
 include::{snippets}/delete-category-test/curl-request.adoc[]
+
 ===== Http Request
 
 include::{snippets}/delete-category-test/http-request.adoc[]
-===== Example Response
-include::{snippets}/delete-category-test/http-response.adoc[]
 
+===== Example Response
+
+include::{snippets}/delete-category-test/http-response.adoc[]
 
 [[resources_wishes]]
 === Wishes
 
+[[resources_wishes_add]]
+==== 장바구니 추가
+
+===== Curl Request
+
+include::{snippets}/add-wish-test/curl-request.adoc[]
+
+===== Http Request
+
+include::{snippets}/add-wish-test/http-request.adoc[]
+
+===== Example Response
+
+include::{snippets}/add-wish-test/http-response.adoc[]
+
 [[resources_wishes_retrieve]]
 ==== 장바구니 조회
 
-
 ===== Curl Request
+
 include::{snippets}/get-wishes/curl-request.adoc[]
 
 ===== Http Request
-include::{snippets}/get-wishes/http-response.adoc[]
+
+include::{snippets}/get-wishes/http-request.adoc[]
 
 ===== Example Response
-include::{snippets}/get-wishes/response-body.adoc[]
+
+include::{snippets}/get-wishes/http-response.adoc[]
 
 
+[[resources_wishes_delete]]
+==== 장바구니 삭제
+
+===== Curl Request
+include::{snippets}/remove-wish/curl-request.adoc[]
+
+===== Http Request
+
+include::{snippets}/remove-wish/http-request.adoc[]
+
+===== Example Response
+
+include::{snippets}/remove-wish/http-response.adoc[]
+
+[[resources_orders]]
+=== Orders
+
+
+[[resources_orders_add]]
+==== 주문 추가
+
+===== Curl Request
+include::{snippets}/add-order/curl-request.adoc[]
+
+===== Http Request
+
+include::{snippets}/add-order/http-request.adoc[]
+
+===== Example Response
+
+include::{snippets}/add-order/http-response.adoc[]
+
+
+[[resources_orders_retreive]]
+==== 주문 조회
+
+===== Curl Request
+include::{snippets}/get-order-list-page/curl-request.adoc[]
+
+===== Http Request
+
+include::{snippets}/get-order-list-page/http-request.adoc[]
+
+===== Example Response
+
+include::{snippets}/get-order-list-page/http-response.adoc[]
+
+[[resources_options]]
+=== Options
+
+==== 옵션 조회
+
+===== Curl Request
+include::{snippets}/get-all-options-by-product-id/curl-request.adoc[]
+
+===== Http Request
+
+include::{snippets}/get-all-options-by-product-id/http-request.adoc[]
+
+===== Example Response
+
+include::{snippets}/get-all-options-by-product-id/http-response.adoc[]
+[[resources_options]]
