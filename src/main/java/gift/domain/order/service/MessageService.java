@@ -3,10 +3,10 @@ package gift.domain.order.service;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import gift.domain.order.dto.OrderResponse;
-import gift.domain.user.entity.AuthProvider;
-import gift.domain.user.entity.OauthToken;
-import gift.domain.user.entity.User;
-import gift.domain.user.service.OauthTokenService;
+import gift.domain.member.entity.AuthProvider;
+import gift.domain.member.entity.OauthToken;
+import gift.domain.member.entity.Member;
+import gift.domain.member.service.OauthTokenService;
 import gift.external.api.kakao.dto.FeedObjectRequest;
 import gift.external.api.kakao.dto.FeedObjectRequest.Button;
 import gift.external.api.kakao.dto.FeedObjectRequest.Content;
@@ -30,7 +30,7 @@ public class MessageService {
         this.objectMapper = objectMapper;
     }
 
-    public String sendMessageToMe(User user, OrderResponse orderResponse) {
+    public String sendMessageToMe(Member member, OrderResponse orderResponse) {
         String tempLinkUrl = "http://localhost:8080/api/products/" + orderResponse.orderItems().get(0).product().id();
         FeedObjectRequest templateObject = new FeedObjectRequest(
             "feed",
@@ -48,7 +48,7 @@ public class MessageService {
             }
         );
 
-        OauthToken oauthToken = oauthTokenService.getOauthToken(user, AuthProvider.KAKAO);
+        OauthToken oauthToken = oauthTokenService.getOauthToken(member, AuthProvider.KAKAO);
 
         try {
             String serialized = objectMapper.writeValueAsString(templateObject);

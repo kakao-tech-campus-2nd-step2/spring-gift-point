@@ -1,8 +1,8 @@
-package gift.domain.user.dto;
+package gift.domain.member.dto;
 
-import gift.domain.user.entity.AuthProvider;
-import gift.domain.user.entity.Role;
-import gift.domain.user.entity.User;
+import gift.domain.member.entity.AuthProvider;
+import gift.domain.member.entity.Member;
+import gift.domain.member.entity.Role;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -10,7 +10,7 @@ import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 
 @Schema(description = "회원 등록 정보")
-public record UserRequest(
+public record MemberRequest(
     @Schema(description = "회원 이름")
     String name,
 
@@ -24,7 +24,7 @@ public record UserRequest(
     @Schema(description = "회원 비밀번호")
     String password
 ) {
-    public User toUser() {
-        return new User(null, name, email, password, Role.USER, AuthProvider.LOCAL);
+    public Member toMember() {
+        return new Member(null, name, email, password, Role.USER, AuthProvider.LOCAL);
     }
 }

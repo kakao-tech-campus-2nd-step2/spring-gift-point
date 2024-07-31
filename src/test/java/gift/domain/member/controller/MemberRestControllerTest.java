@@ -1,4 +1,4 @@
-package gift.domain.user.controller;
+package gift.domain.member.controller;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
@@ -9,9 +9,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import gift.auth.jwt.JwtToken;
-import gift.domain.user.dto.UserRequest;
-import gift.domain.user.dto.UserLoginRequest;
-import gift.domain.user.service.UserService;
+import gift.domain.member.dto.MemberLoginRequest;
+import gift.domain.member.dto.MemberRequest;
+import gift.domain.member.service.MemberService;
 import gift.exception.InvalidUserInfoException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -23,25 +23,23 @@ import org.springframework.dao.DuplicateKeyException;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
-import org.springframework.transaction.annotation.Transactional;
 
 @AutoConfigureMockMvc
 @SpringBootTest
-@Transactional
-class UserRestControllerTest {
+class MemberRestControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
 
     @MockBean
-    private UserService userService;
+    private MemberService memberService;
 
     @Autowired
     private ObjectMapper objectMapper;
 
 
-    private static final String REGISTER_URL = "/api/users/register";
-    private static final String LOGIN_URL = "/api/users/login";
+    private static final String REGISTER_URL = "/api/members/register";
+    private static final String LOGIN_URL = "/api/members/login";
 
 
     private MockHttpServletRequestBuilder postRequest(String url, String content) {
@@ -55,12 +53,12 @@ class UserRestControllerTest {
     @DisplayName("회원 가입에 성공하는 경우")
     void create_success() throws Exception {
         // given
-        UserRequest userRequest = new UserRequest("testUser", "test@test.com", "test123");
-        String jsonContent = objectMapper.writeValueAsString(userRequest);
+        MemberRequest memberRequest = new MemberRequest("testUser", "test@test.com", "test123");
+        String jsonContent = objectMapper.writeValueAsString(memberRequest);
 
         JwtToken expectedJwtToken = new JwtToken("token");
 
-        given(userService.signUp(any(UserRequest.class))).willReturn(expectedJwtToken);
+        given(memberService.signUp(any(MemberRequest.class))).willReturn(expectedJwtToken);
 
         // when & then
         mockMvc.perform(postRequest(REGISTER_URL, jsonContent))
@@ -73,10 +71,10 @@ class UserRestControllerTest {
     @DisplayName("회원 가입에 실패하는 경우 - 이미 존재하는 이메일로 가입 시도")
     void create_fail() throws Exception {
         // given
-        UserRequest userRequest = new UserRequest("testUser", "test@test.com", "test123");
-        String jsonContent = objectMapper.writeValueAsString(userRequest);
+        MemberRequest memberRequest = new MemberRequest("testUser", "test@test.com", "test123");
+        String jsonContent = objectMapper.writeValueAsString(memberRequest);
 
-        given(userService.signUp(any(UserRequest.class))).willThrow(DuplicateKeyException.class);
+        given(memberService.signUp(any(MemberRequest.class))).willThrow(DuplicateKeyException.class);
 
         // when & then
         mockMvc.perform(postRequest(REGISTER_URL, jsonContent))
@@ -88,12 +86,12 @@ class UserRestControllerTest {
     @DisplayName("로그인에 성공하는 경우")
     void login_success() throws Exception {
         // given
-        UserLoginRequest userLoginRequest = new UserLoginRequest("test@test.com", "test123");
-        String jsonContent = objectMapper.writeValueAsString(userLoginRequest);
+        MemberLoginRequest memberLoginRequest = new MemberLoginRequest("test@test.com", "test123");
+        String jsonContent = objectMapper.writeValueAsString(memberLoginRequest);
 
         JwtToken expectedJwtToken = new JwtToken("token");
 
-        given(userService.login(any(UserLoginRequest.class))).willReturn(expectedJwtToken);
+        given(memberService.login(any(MemberLoginRequest.class))).willReturn(expectedJwtToken);
 
         // when & then
         mockMvc.perform(postRequest(LOGIN_URL, jsonContent))
@@ -106,10 +104,10 @@ class UserRestControllerTest {
     @DisplayName("로그인에 실패하는 경우 - 틀린 비밀번호로 로그인 시도")
     void login_fail() throws Exception {
         // given
-        UserLoginRequest userLoginRequest = new UserLoginRequest("test@test.com", "test123");
-        String jsonContent = objectMapper.writeValueAsString(userLoginRequest);
+        MemberLoginRequest memberLoginRequest = new MemberLoginRequest("test@test.com", "test123");
+        String jsonContent = objectMapper.writeValueAsString(memberLoginRequest);
 
-        given(userService.login(any(UserLoginRequest.class)))
+        given(memberService.login(any(MemberLoginRequest.class)))
             .willThrow(new InvalidUserInfoException("error.invalid.userinfo.password"));
 
         // when & then

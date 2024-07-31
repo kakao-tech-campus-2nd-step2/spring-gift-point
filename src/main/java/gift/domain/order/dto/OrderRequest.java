@@ -1,7 +1,7 @@
 package gift.domain.order.dto;
 
+import gift.domain.member.entity.Member;
 import gift.domain.order.entity.Order;
-import gift.domain.user.entity.User;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
@@ -24,7 +24,7 @@ public record OrderRequest(
     @Schema(description = "주문 총액")
     int totalPrice
 ) {
-    public Order toOrder(User user) {
-        return new Order(null, user, recipientMessage, totalPrice);
+    public Order toOrder(Member member) {
+        return new Order(null, member, recipientMessage, totalPrice);
     }
 }

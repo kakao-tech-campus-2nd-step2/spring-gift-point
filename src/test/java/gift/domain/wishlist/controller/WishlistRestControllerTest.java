@@ -10,13 +10,13 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import gift.domain.user.entity.AuthProvider;
+import gift.domain.member.entity.AuthProvider;
 import gift.auth.jwt.JwtProvider;
 import gift.domain.product.entity.Category;
 import gift.domain.product.entity.Product;
-import gift.domain.user.repository.UserJpaRepository;
-import gift.domain.user.entity.Role;
-import gift.domain.user.entity.User;
+import gift.domain.member.repository.MemberJpaRepository;
+import gift.domain.member.entity.Role;
+import gift.domain.member.entity.Member;
 import gift.domain.wishlist.dto.WishItemRequestDto;
 import gift.domain.wishlist.dto.WishItemResponseDto;
 import gift.domain.wishlist.entity.WishItem;
@@ -50,7 +50,7 @@ class WishlistRestControllerTest {
     private WishlistService wishlistService;
 
     @MockBean
-    private UserJpaRepository userJpaRepository;
+    private MemberJpaRepository memberJpaRepository;
 
     @MockBean
     private JwtProvider jwtProvider;
@@ -59,7 +59,7 @@ class WishlistRestControllerTest {
     private ObjectMapper objectMapper;
 
 
-    private static final User user = new User(1L, "testUser", "test@test.com", "test123", Role.USER, AuthProvider.LOCAL);
+    private static final Member MEMBER = new Member(1L, "testUser", "test@test.com", "test123", Role.USER, AuthProvider.LOCAL);
     private static final Category category = new Category(1L, "교환권", "#FFFFFF", "https://gift-s.kakaocdn.net/dn/gift/images/m640/dimm_theme.png", "test");
     private static final Product product = new Product(1L, category, "아이스 카페 아메리카노 T", 4500, "https://image.istarbucks.co.kr/upload/store/skuimg/2021/04/[110563]_20210426095937947.jpg");
 
@@ -68,11 +68,11 @@ class WishlistRestControllerTest {
 
     @BeforeEach
     void setUp() {
-        given(userJpaRepository.findById(any(Long.class))).willReturn(Optional.of(user));
+        given(memberJpaRepository.findById(any(Long.class))).willReturn(Optional.of(MEMBER));
 
         Claims claims = Mockito.mock(Claims.class);
         given(jwtProvider.getAuthentication(any(String.class))).willReturn(claims);
-        given(claims.getSubject()).willReturn(String.valueOf(user.getId()));
+        given(claims.getSubject()).willReturn(String.valueOf(MEMBER.getId()));
     }
 
     @Test
@@ -82,8 +82,8 @@ class WishlistRestControllerTest {
         WishItemRequestDto wishItemRequestDto = new WishItemRequestDto(1L);
         String jsonContent = objectMapper.writeValueAsString(wishItemRequestDto);
 
-        WishItem wishItem = wishItemRequestDto.toWishItem(user, product);
-        given(wishlistService.create(any(WishItemRequestDto.class), any(User.class))).willReturn(WishItemResponseDto.from(wishItem));
+        WishItem wishItem = wishItemRequestDto.toWishItem(MEMBER, product);
+        given(wishlistService.create(any(WishItemRequestDto.class), any(Member.class))).willReturn(WishItemResponseDto.from(wishItem));
 
         // when & then
         mockMvc.perform(post(DEFAULT_URL)
@@ -98,11 +98,11 @@ class WishlistRestControllerTest {
     @DisplayName("위시리스트 전체 조회")
     void readAll_success() throws Exception {
         // given
-        List<WishItem> wishItems = List.of(new WishItem(1L, user, product));
+        List<WishItem> wishItems = List.of(new WishItem(1L, MEMBER, product));
         Page<WishItemResponseDto> expectedPage = new PageImpl<>(wishItems, PageRequest.of(0, 5),wishItems.size())
                                                     .map(WishItemResponseDto::from);
 
-        given(wishlistService.readAll(any(Pageable.class), any(User.class))).willReturn(expectedPage);
+        given(wishlistService.readAll(any(Pageable.class), any(Member.class))).willReturn(expectedPage);
 
         // when & then
         mockMvc.perform(get(DEFAULT_URL)
@@ -128,7 +128,7 @@ class WishlistRestControllerTest {
     @DisplayName("위시리스트 사용자 ID로 삭제")
     void deleteAllByUserId_success() throws Exception {
         // given
-        willDoNothing().given(wishlistService).deleteAllByUserId(user);
+        willDoNothing().given(wishlistService).deleteAllByMemberId(MEMBER);
 
         // when & then
         mockMvc.perform(delete(DEFAULT_URL)

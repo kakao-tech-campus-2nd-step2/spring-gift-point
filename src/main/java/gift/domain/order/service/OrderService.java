@@ -1,11 +1,11 @@
 package gift.domain.order.service;
 
+import gift.domain.member.entity.Member;
 import gift.domain.order.dto.OrderRequest;
 import gift.domain.order.dto.OrderResponse;
 import gift.domain.order.entity.Order;
 import gift.domain.order.repository.OrderJpaRepository;
-import gift.domain.user.entity.AuthProvider;
-import gift.domain.user.entity.User;
+import gift.domain.member.entity.AuthProvider;
 import gift.exception.ExternalApiException;
 import gift.exception.InvalidOrderException;
 import org.springframework.stereotype.Service;
@@ -29,17 +29,17 @@ public class OrderService {
     }
 
     @Transactional
-    public OrderResponse createAndSendMessage(OrderRequest orderRequest, User user) {
-        Order order = orderRequest.toOrder(user);
+    public OrderResponse createAndSendMessage(OrderRequest orderRequest, Member member) {
+        Order order = orderRequest.toOrder(member);
 
-        orderItemService.create(user, order, orderRequest.orderItems());
+        orderItemService.create(member, order, orderRequest.orderItems());
         Order savedOrder = orderJpaRepository.save(order);
 
-        if (user.getAuthProvider() != AuthProvider.KAKAO) {
+        if (member.getAuthProvider() != AuthProvider.KAKAO) {
             throw new InvalidOrderException("error.invalid.userinfo.provider");
         }
 
-        if (!messageService.sendMessageToMe(user, OrderResponse.from(savedOrder)).equals("0")) {
+        if (!messageService.sendMessageToMe(member, OrderResponse.from(savedOrder)).equals("0")) {
             throw new ExternalApiException("error.kakao.talk.message.response");
         };
         return OrderResponse.from(savedOrder);

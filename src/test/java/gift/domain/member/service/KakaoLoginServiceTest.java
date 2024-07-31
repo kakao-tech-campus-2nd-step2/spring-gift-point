@@ -1,4 +1,4 @@
-package gift.domain.user.service;
+package gift.domain.member.service;
 
 import gift.external.api.kakao.KakaoApiProvider;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +17,7 @@ class KakaoLoginServiceTest {
     private KakaoApiProvider kakaoApiProvider;
 
     @MockBean
-    private UserService userService;
+    private MemberService memberService;
 
 
 //    @Test
@@ -25,7 +25,7 @@ class KakaoLoginServiceTest {
 //    void login_new_user() {
 //        // given
 //        JwtToken expected = new JwtToken("testToken");
-//        UserResponse userResponse = new UserResponse(null, "testUser", "test@test.com", "test123", null);
+//        MemberResponse userResponse = new MemberResponse(null, "testUser", "test@test.com", "test123", null);
 //        KakaoToken kakaoToken = new KakaoToken(null, "testAccessToken", null, null, null);
 //        KakaoUserInfo testUserInfo =
 //            new KakaoUserInfo(
@@ -66,7 +66,7 @@ class KakaoLoginServiceTest {
 //        given(kakaoApiProvider.getUserInfo(eq("testAccessToken"))).willReturn(testUserInfo);
 //
 //        given(userService.readByEmail(eq("test@test.com"))).willThrow(InvalidUserInfoException.class);
-//        given(userService.signUp(any(UserRequest.class))).willReturn(expected);
+//        given(userService.signUp(any(MemberRequest.class))).willReturn(expected);
 //
 //        // when
 //        JwtToken actual = kakaoLoginService.login("testCode");

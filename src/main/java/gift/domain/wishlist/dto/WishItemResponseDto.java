@@ -1,18 +1,18 @@
 package gift.domain.wishlist.dto;
 
+import gift.domain.member.dto.MemberResponse;
 import gift.domain.product.dto.ProductReadAllResponse;
-import gift.domain.user.dto.UserResponse;
 import gift.domain.wishlist.entity.WishItem;
 
 public record WishItemResponseDto(
     Long id,
-    UserResponse user,
+    MemberResponse member,
     ProductReadAllResponse product
 ) {
     public static WishItemResponseDto from(WishItem wishItem) {
         return new WishItemResponseDto(
             wishItem.getId(),
-            UserResponse.from(wishItem.getUser()),
+            MemberResponse.from(wishItem.getMember()),
             ProductReadAllResponse.from(wishItem.getProduct())
         );
     }

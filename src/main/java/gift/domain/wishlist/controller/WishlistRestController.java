@@ -1,7 +1,7 @@
 package gift.domain.wishlist.controller;
 
 import gift.config.LoginUser;
-import gift.domain.user.entity.User;
+import gift.domain.member.entity.Member;
 import gift.domain.wishlist.dto.WishItemRequestDto;
 import gift.domain.wishlist.dto.WishItemResponseDto;
 import gift.domain.wishlist.service.WishlistService;
@@ -38,9 +38,9 @@ public class WishlistRestController {
         @Parameter(description = "위시리시트 항목 요청 정보", required = true)
         @RequestBody WishItemRequestDto wishItemRequestDto,
         @Parameter(hidden = true)
-        @LoginUser User user
+        @LoginUser Member member
     ) {
-        WishItemResponseDto wishItemResponseDto = wishlistService.create(wishItemRequestDto, user);
+        WishItemResponseDto wishItemResponseDto = wishlistService.create(wishItemRequestDto, member);
         return ResponseEntity.status(HttpStatus.CREATED).body(wishItemResponseDto);
     }
 
@@ -50,9 +50,9 @@ public class WishlistRestController {
         @Parameter(description = "페이징 정보", in = ParameterIn.QUERY)
         Pageable pageable,
         @Parameter(hidden = true)
-        @LoginUser User user
+        @LoginUser Member member
     ) {
-        return ResponseEntity.status(HttpStatus.OK).body(wishlistService.readAll(pageable, user));
+        return ResponseEntity.status(HttpStatus.OK).body(wishlistService.readAll(pageable, member));
     }
 
     @DeleteMapping("/{wishItemId}")
@@ -61,7 +61,7 @@ public class WishlistRestController {
         @Parameter(description = "위시리스트 항목 ID", in = ParameterIn.PATH, required = true)
         @PathVariable("wishItemId") long wishItemId,
         @Parameter(hidden = true)
-        @LoginUser User user
+        @LoginUser Member member
     ) {
         wishlistService.delete(wishItemId);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
@@ -69,11 +69,11 @@ public class WishlistRestController {
 
     @DeleteMapping
     @Operation(summary = "위시리스트 전체 삭제", description = "회원의 위시리스트를 전부 비웁니다.")
-    public ResponseEntity<Void> deleteAllByUser(
+    public ResponseEntity<Void> deleteAllByMember(
         @Parameter(hidden = true)
-        @LoginUser User user
+        @LoginUser Member member
     ) {
-        wishlistService.deleteAllByUserId(user);
+        wishlistService.deleteAllByMemberId(member);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 }

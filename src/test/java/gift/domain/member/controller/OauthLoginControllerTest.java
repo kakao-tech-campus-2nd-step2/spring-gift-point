@@ -1,4 +1,4 @@
-package gift.domain.user.controller;
+package gift.domain.member.controller;
 
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.BDDMockito.given;
@@ -7,7 +7,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import gift.auth.jwt.JwtToken;
-import gift.domain.user.service.KakaoLoginService;
+import gift.domain.member.service.KakaoLoginService;
 import org.hamcrest.core.Is;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

@@ -8,6 +8,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import gift.auth.jwt.JwtProvider;
+import gift.domain.member.entity.Member;
 import gift.domain.order.dto.OrderItemRequest;
 import gift.domain.order.dto.OrderRequest;
 import gift.domain.order.dto.OrderResponse;
@@ -15,10 +16,9 @@ import gift.domain.order.service.OrderService;
 import gift.domain.product.entity.Category;
 import gift.domain.product.entity.Option;
 import gift.domain.product.entity.Product;
-import gift.domain.user.entity.AuthProvider;
-import gift.domain.user.entity.Role;
-import gift.domain.user.entity.User;
-import gift.domain.user.repository.UserJpaRepository;
+import gift.domain.member.entity.AuthProvider;
+import gift.domain.member.entity.Role;
+import gift.domain.member.repository.MemberJpaRepository;
 import io.jsonwebtoken.Claims;
 import java.util.List;
 import java.util.Optional;
@@ -44,7 +44,7 @@ class OrderRestControllerTest {
     private OrderService orderService;
 
     @MockBean
-    private UserJpaRepository userJpaRepository;
+    private MemberJpaRepository memberJpaRepository;
 
     @MockBean
     private JwtProvider jwtProvider;
@@ -52,7 +52,7 @@ class OrderRestControllerTest {
     @Autowired
     private ObjectMapper objectMapper;
 
-    private static final User user = new User(1L, "testUser", "test@test.com", "test123", Role.USER, AuthProvider.LOCAL);
+    private static final Member MEMBER = new Member(1L, "testUser", "test@test.com", "test123", Role.USER, AuthProvider.LOCAL);
     private static final Category category = new Category(1L, "교환권", "#FFFFFF", "https://gift-s.kakaocdn.net/dn/gift/images/m640/dimm_theme.png", "test");
     private static final Product product = new Product(1L, category, "아이스 카페 아메리카노 T", 4500, "https://image.istarbucks.co.kr/upload/store/skuimg/2021/04/[110563]_20210426095937947.jpg");
     private static final Option option1 = new Option(1L, product, "사과맛", 90);
@@ -61,11 +61,11 @@ class OrderRestControllerTest {
 
     @BeforeEach
     void setUp() {
-        given(userJpaRepository.findById(any(Long.class))).willReturn(Optional.of(user));
+        given(memberJpaRepository.findById(any(Long.class))).willReturn(Optional.of(MEMBER));
 
         Claims claims = Mockito.mock(Claims.class);
         given(jwtProvider.getAuthentication(any(String.class))).willReturn(claims);
-        given(claims.getSubject()).willReturn(String.valueOf(user.getId()));
+        given(claims.getSubject()).willReturn(String.valueOf(MEMBER.getId()));
     }
 
     @Test
@@ -80,9 +80,9 @@ class OrderRestControllerTest {
             new OrderItemRequest(1L, 2L, 30)
         );
         OrderRequest orderRequest = new OrderRequest(orderItemRequests, "Test Message", 180000);
-        OrderResponse orderResponse = OrderResponse.from(orderRequest.toOrder(user));
+        OrderResponse orderResponse = OrderResponse.from(orderRequest.toOrder(MEMBER));
 
-        given(orderService.createAndSendMessage(any(OrderRequest.class), any(User.class))).willReturn(orderResponse);
+        given(orderService.createAndSendMessage(any(OrderRequest.class), any(Member.class))).willReturn(orderResponse);
 
         // when & then
         mockMvc.perform(post("/api/orders")

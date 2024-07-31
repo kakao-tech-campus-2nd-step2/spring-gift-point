@@ -14,9 +14,9 @@ import gift.domain.product.entity.Option;
 import gift.domain.product.entity.Product;
 import gift.domain.product.repository.ProductJpaRepository;
 import gift.domain.product.service.OptionService;
-import gift.domain.user.entity.AuthProvider;
-import gift.domain.user.entity.Role;
-import gift.domain.user.entity.User;
+import gift.domain.member.entity.AuthProvider;
+import gift.domain.member.entity.Role;
+import gift.domain.member.entity.Member;
 import gift.domain.wishlist.repository.WishlistJpaRepository;
 import java.util.List;
 import java.util.Optional;
@@ -43,7 +43,7 @@ class OrderItemServiceTest {
     @MockBean
     private OptionService optionService;
 
-    private static final User user = new User(1L, "testUser", "test@test.com", "test123", Role.USER, AuthProvider.LOCAL);
+    private static final Member MEMBER = new Member(1L, "testUser", "test@test.com", "test123", Role.USER, AuthProvider.LOCAL);
     private static final Category category = new Category(1L, "교환권", "#FFFFFF", "https://gift-s.kakaocdn.net/dn/gift/images/m640/dimm_theme.png", "test");
     private static final Product product = new Product(1L, category, "아이스 카페 아메리카노 T", 4500, "https://image.istarbucks.co.kr/upload/store/skuimg/2021/04/[110563]_20210426095937947.jpg");
     private static final Option option1 = new Option(1L, product, "사과맛", 90);
@@ -57,7 +57,7 @@ class OrderItemServiceTest {
         product.addOption(option1);
         product.addOption(option2);
 
-        Order order = new Order(1L, user, "testMessage", 150000);
+        Order order = new Order(1L, MEMBER, "testMessage", 150000);
         List<OrderItemRequest> orderItemRequests = List.of(
             new OrderItemRequest(1L, 1L, 70),
             new OrderItemRequest(1L, 2L, 30)
@@ -66,10 +66,10 @@ class OrderItemServiceTest {
         given(productJpaRepository.findById(anyLong())).willReturn(Optional.of(product));
         given(optionService.subtractQuantity(eq(1L), eq(70))).willReturn(option1);
         given(optionService.subtractQuantity(eq(2L), eq(30))).willReturn(option2);
-        doNothing().when(wishlistJpaRepository).deleteByUserAndProduct(any(User.class), any(Product.class));
+        doNothing().when(wishlistJpaRepository).deleteByMemberAndProduct(any(Member.class), any(Product.class));
 
         // when
-        orderItemService.create(user, order, orderItemRequests);
+        orderItemService.create(MEMBER, order, orderItemRequests);
 
         // then
         assertThat(order.getOrderItems().size()).isEqualTo(2);

@@ -1,6 +1,6 @@
 package gift.domain.order.entity;
 
-import gift.domain.user.entity.User;
+import gift.domain.member.entity.Member;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -26,8 +26,8 @@ public class Order {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", nullable = false)
-    private User user;
+    @JoinColumn(name = "member_id", nullable = false)
+    private Member member;
 
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<OrderItem> orderItems = new ArrayList<>();;
@@ -45,9 +45,9 @@ public class Order {
     protected Order() {
     }
 
-    public Order(Long id, User user, String recipientMessage, int totalPrice) {
+    public Order(Long id, Member member, String recipientMessage, int totalPrice) {
         this.id = id;
-        this.user = user;
+        this.member = member;
         this.recipientMessage = recipientMessage;
         this.totalPrice = totalPrice;
     }
@@ -61,8 +61,8 @@ public class Order {
         return id;
     }
 
-    public User getUser() {
-        return user;
+    public Member getMember() {
+        return member;
     }
 
     public List<OrderItem> getOrderItems() {

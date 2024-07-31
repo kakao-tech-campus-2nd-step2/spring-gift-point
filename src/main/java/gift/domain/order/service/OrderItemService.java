@@ -1,5 +1,6 @@
 package gift.domain.order.service;
 
+import gift.domain.member.entity.Member;
 import gift.domain.order.dto.OrderItemRequest;
 import gift.domain.order.entity.Order;
 import gift.domain.order.entity.OrderItem;
@@ -7,7 +8,6 @@ import gift.domain.product.entity.Option;
 import gift.domain.product.entity.Product;
 import gift.domain.product.repository.ProductJpaRepository;
 import gift.domain.product.service.OptionService;
-import gift.domain.user.entity.User;
 import gift.domain.wishlist.repository.WishlistJpaRepository;
 import gift.exception.InvalidOptionInfoException;
 import gift.exception.InvalidProductInfoException;
@@ -35,7 +35,7 @@ public class OrderItemService {
     }
 
     @Transactional
-    public void create(User user, Order order, List<OrderItemRequest> orderItemRequests) {
+    public void create(Member member, Order order, List<OrderItemRequest> orderItemRequests) {
         for (OrderItemRequest orderItemRequest : orderItemRequests) {
             Entry<Product, Option> item = buy(
                 orderItemRequest.productId(), orderItemRequest.optionId(), orderItemRequest.quantity()
@@ -46,7 +46,7 @@ public class OrderItemService {
             OrderItem orderItem = orderItemRequest.toOrderItem(order, product, option);
             order.addOrderItem(orderItem);
 
-            wishlistJpaRepository.deleteByUserAndProduct(user, product);
+            wishlistJpaRepository.deleteByMemberAndProduct(member, product);
         }
     }
 

@@ -1,7 +1,7 @@
-package gift.domain.user.controller;
+package gift.domain.member.controller;
 
 import gift.auth.jwt.JwtToken;
-import gift.domain.user.service.KakaoLoginService;
+import gift.domain.member.service.KakaoLoginService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
