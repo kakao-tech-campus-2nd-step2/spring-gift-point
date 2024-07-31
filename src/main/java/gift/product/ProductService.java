@@ -24,27 +24,38 @@ public class ProductService {
         this.categoryRepository = categoryRepository;
     }
 
-    public Page<ProductResponse> getProductPages(int pageNum, int size, String sortBy, String sortDirection) {
+    public List<ProductReadResponse> getProductPages(int pageNum, int size, List<String> sort, Long categoryId) {
+        String sortBy = sort.get(0);
+        String sortDirection = sort.get(1);
+
+        System.out.println(sortBy);
+        System.out.println(sortDirection);
         Pageable pageable = PageRequest.of(pageNum, size, Sort.by(Sort.Order.asc(sortBy)));
         if (Objects.equals(sortDirection, "desc")) {
             pageable = PageRequest.of(pageNum, size, Sort.by(Sort.Order.desc(sortBy)));
         }
+        if(categoryId == 0){
+            return productRepository.findAll(pageable).map(ProductReadResponse::new).stream().toList();
+        }
 
-        return productRepository.findAll(pageable).map(ProductResponse::new);
+        return productRepository.findByCategoryId(pageable, categoryId).map(ProductReadResponse::new).stream().toList();
     }
 
     public Product findByID(Long id) {
         return productRepository.findById(id).orElseThrow();
     }
 
-    public Product insertNewProduct(ProductRequest newProduct, OptionRequest optionRequest) {
+    public Product insertNewProduct(ProductOptionRequest productOptionRequest) {
+        ProductRequest newProduct = new ProductRequest(productOptionRequest);
+        List<OptionRequest> optionRequest = productOptionRequest.options;
         Long categoryID = newProduct.getCategoryID();
         Category category = categoryRepository.findById(categoryID).orElseThrow();
 
         Product product = new Product(newProduct.getName(), newProduct.getPrice(), newProduct.getImageUrl(), category);
         category.addProduct(product);
-        Option option = new Option(optionRequest, product);
-        product.addOptions(option);
+        optionRequest.forEach(opt -> product.addOptions(new Option(opt, product)));
+        //Option option = new Option(optionRequest, product);
+        //product.addOptions(option);
 
         return productRepository.save(product);
     }
