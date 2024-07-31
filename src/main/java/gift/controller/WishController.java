@@ -51,7 +51,7 @@ public class WishController {
     @ApiResponse(responseCode = "200", description = "위시리스트 전체 페이지 조회 성공")
     public ResponseEntity<SuccessBody<WishListPageResponseDTO>> getAllWishPages(@LoginUser User user,
         @RequestParam(value = "page", defaultValue = "0") int page,
-        @RequestParam(value = "size", defaultValue = "0") int size,
+        @RequestParam(value = "size", defaultValue = "8") int size,
         @RequestParam(value = "criteria", defaultValue = "id") String criteria) {
         WishListPageResponseDTO wishListPageResponseDTO = wishService.getAllWishes(user.getId(), page, size, criteria);
         return ApiResponseGenerator.success(HttpStatus.OK, "위시리스트를 조회했습니다.", wishListPageResponseDTO);
