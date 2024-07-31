@@ -19,21 +19,21 @@ public abstract class BaseEntity {
     private Long id;
 
     @CreatedDate
-    private LocalDateTime createdDate;
+    private LocalDateTime createdAt;
 
     @LastModifiedDate
-    private LocalDateTime modifiedDate;
+    private LocalDateTime modifiedAt;
 
     public Long getId() {
         return id;
     }
 
-    public LocalDateTime getCreatedDate() {
-        return createdDate;
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
     }
 
-    public LocalDateTime getModifiedDate() {
-        return modifiedDate;
+    public LocalDateTime getModifiedAt() {
+        return modifiedAt;
     }
 
     protected void setId(Long id) {
