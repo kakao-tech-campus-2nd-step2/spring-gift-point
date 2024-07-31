@@ -20,10 +20,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -57,8 +54,6 @@ public class MemberController {
             @ApiResponse(responseCode = "201", description = "회원가입에 성공하였습니다.",
                     content = @Content(mediaType = "application/json", schema = @Schema(implementation = JwtDTO.class))),
             @ApiResponse(responseCode = "400", description = "잘못된 요청입니다. 보통 요청의 양식이 잘못된 경우입니다.",
-                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = ResponseDTO.class))),
-            @ApiResponse(responseCode = "409", description = "이미 존재하는 사용자입니다.",
                     content = @Content(mediaType = "application/json", schema = @Schema(implementation = ResponseDTO.class))),
             @ApiResponse(responseCode = "500", description = "서버에 의한 오류입니다.",
                     content = @Content(mediaType = "application/json", schema = @Schema(implementation = ResponseDTO.class)))})
