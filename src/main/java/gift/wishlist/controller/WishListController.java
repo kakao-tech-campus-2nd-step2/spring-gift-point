@@ -48,7 +48,7 @@ public class WishListController {
             })
     public ResponseEntity<String> addWishList(@LoginMember MemberResDto member, @RequestBody WishListReqDto wishListReqDto) {
         wishListService.addWishList(member.id(), wishListReqDto);
-        return ResponseEntity.created(URI.create("/api/wishlist")).body("상품을 장바구니에 담았습니다.");
+        return ResponseEntity.created(URI.create("/api/wishes")).body("상품을 장바구니에 담았습니다.");
     }
 
     @DeleteMapping("/{wishId}")

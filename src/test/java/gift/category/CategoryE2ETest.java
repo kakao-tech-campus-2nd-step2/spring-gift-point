@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatList;
 
 import gift.auth.dto.LoginReqDto;
+import gift.auth.dto.RegisterResDto;
 import gift.auth.token.AuthToken;
 import gift.category.dto.CategoryResDto;
 import gift.category.exception.CategoryErrorCode;
@@ -52,9 +53,9 @@ class CategoryE2ETest {
         var url = baseUrl + "/api/members/register";
         var reqBody = new LoginReqDto("categoryE2E@test.com", "1234");
         var requestEntity = new RequestEntity<>(reqBody, HttpMethod.POST, URI.create(url));
-        var actual = restTemplate.exchange(requestEntity, AuthToken.class);
+        var actual = restTemplate.exchange(requestEntity, RegisterResDto.class);
 
-        accessToken = actual.getBody().accessToken();
+        accessToken = actual.getBody().token();
     }
 
     @BeforeEach

@@ -3,6 +3,7 @@ package gift.wishlist;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import gift.auth.dto.LoginReqDto;
+import gift.auth.dto.RegisterResDto;
 import gift.auth.token.AuthToken;
 import gift.category.CategoryFixture;
 import gift.category.dto.CategoryResDto;
@@ -115,10 +116,10 @@ class WishListE2ETest {
         var url = baseUrl + "/api/members/register";
         var reqBody = new LoginReqDto(mail, "1234");
         var requestEntity = new RequestEntity<>(reqBody, HttpMethod.POST, URI.create(url));
-        var actual = restTemplate.exchange(requestEntity, AuthToken.class);
+        var actual = restTemplate.exchange(requestEntity, RegisterResDto.class);
 
         assert actual.getBody() != null;
-        return actual.getBody().accessToken();
+        return actual.getBody().token();
     }
 
     @BeforeEach
@@ -130,7 +131,7 @@ class WishListE2ETest {
         memberId = jwtTokenProvider.getMemberId(accessToken);
 
         // 위시 리스트 초기화
-        var wishListUrl = baseUrl + "/api/wish-list";
+        var wishListUrl = baseUrl + "/api/wishes";
         List.of(
                 WishListFixture.createWishListReqDto(productList.get(0).id()),
                 WishListFixture.createWishListReqDto(productList.get(1).id()),
@@ -170,7 +171,7 @@ class WishListE2ETest {
     }
 
     private List<WishListResDto> getWishList() {
-        var url = baseUrl + "/api/wish-list";
+        var url = baseUrl + "/api/wishes";
         var request = TestUtils.createRequestEntity(url, null, HttpMethod.GET, accessToken);
         var responseType = new ParameterizedTypeReference<RestPage<WishListResDto>>() {};
         var actual = restTemplate.exchange(request, responseType);
@@ -211,7 +212,7 @@ class WishListE2ETest {
         // given
         long productId = productList.get(3).id();
 
-        var url = baseUrl + "/api/wish-list";
+        var url = baseUrl + "/api/wishes";
         var reqBody = WishListFixture.createWishListReqDto(productId);
         var request = TestUtils.createRequestEntity(url, reqBody, HttpMethod.POST, accessToken);
 
@@ -222,7 +223,7 @@ class WishListE2ETest {
         assertThat(actual.getStatusCode()).isEqualTo(HttpStatus.CREATED);
         assertThat(actual.getBody()).isNotNull();
         assertThat(actual.getBody()).isEqualTo("상품을 장바구니에 담았습니다.");
-        assertThat(actual.getHeaders().getLocation()).isEqualTo(URI.create("/api/wish-list"));
+        assertThat(actual.getHeaders().getLocation()).isEqualTo(URI.create("/api/wishes"));
 
         // 위시 리스트 추가 후 조회
         var wishList = getWishList();
@@ -237,7 +238,7 @@ class WishListE2ETest {
     @DisplayName("위시 리스트 추가 실패 - 존재하지 않는 상품 ID")
     void 위시_리스트_추가_실패_존재하지_않는_상품() {
         // given
-        var url = baseUrl + "/api/wish-list";
+        var url = baseUrl + "/api/wishes";
         var reqBody = WishListFixture.createWishListReqDto(-1L);    // 존재하지 않는 상품 ID
         var request = TestUtils.createRequestEntity(url, reqBody, HttpMethod.POST, accessToken);
 
@@ -261,7 +262,7 @@ class WishListE2ETest {
     void 위시_리스트_추가_실패_이미_추가된_상품() {
         //given
         var productId = productList.getFirst().id();
-        var url = baseUrl + "/api/wish-list";
+        var url = baseUrl + "/api/wishes";
         var reqBody = WishListFixture.createWishListReqDto(productId);
         var request = TestUtils.createRequestEntity(url, reqBody, HttpMethod.POST, accessToken);
 
@@ -289,7 +290,7 @@ class WishListE2ETest {
 
         // when
         wishList.forEach(w -> {
-            var urlDelete = baseUrl + "/api/wish-list/" + w.id();
+            var urlDelete = baseUrl + "/api/wishes/" + w.id();
             var requestDelete = TestUtils.createRequestEntity(urlDelete, null, HttpMethod.DELETE, accessToken);
             restTemplate.exchange(requestDelete, String.class);
         });
@@ -306,7 +307,7 @@ class WishListE2ETest {
     void 위시_리스트_삭제_실패() {
         // given
         var wishListId = -1L;   // 존재하지 않는 위시 리스트 ID
-        var url = baseUrl + "/api/wish-list/" + wishListId;
+        var url = baseUrl + "/api/wishes/" + wishListId;
         var request = TestUtils.createRequestEntity(url, null, HttpMethod.DELETE, accessToken);
 
         // when

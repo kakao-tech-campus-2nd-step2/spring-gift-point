@@ -3,6 +3,7 @@ package gift.product;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import gift.auth.dto.LoginReqDto;
+import gift.auth.dto.RegisterResDto;
 import gift.auth.token.AuthToken;
 import gift.category.CategoryFixture;
 import gift.category.dto.CategoryResDto;
@@ -68,9 +69,9 @@ class ProductE2ETest {
         var url = baseUrl + "/api/members/register";
         var reqBody = new LoginReqDto("productE2E@test.com", "1234");
         var requestEntity = new RequestEntity<>(reqBody, HttpMethod.POST, URI.create(url));
-        var actual = restTemplate.exchange(requestEntity, AuthToken.class);
+        var actual = restTemplate.exchange(requestEntity, RegisterResDto.class);
 
-        accessToken = actual.getBody().accessToken();
+        accessToken = actual.getBody().token();
 
         // 카테고리 초기화
         var categoryUrl = baseUrl + "/api/categories";
