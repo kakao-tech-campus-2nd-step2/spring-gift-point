@@ -65,7 +65,7 @@ public class KakaoTokenService {
     }
 
     public void processOrder(OrderResponse orderResponse) throws JSONException {
-        Option option = optionService.getOption(orderResponse.getOptionId());
+        Option option = optionService.getOption(orderResponse.getOption_id());
         String messageTemplate = String.format(
                 "주문이 완료되었습니다! \n옵션: %s\n수량: %d\n주문 시간: %s\n메시지: %s",
                 option.getName(), orderResponse.getQuantity(), orderResponse.getOrderDateTime(), orderResponse.getMessage()

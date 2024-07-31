@@ -1,17 +1,16 @@
 package gift.dto;
 
 import gift.domain.Order;
-import jakarta.servlet.http.HttpSession;
 
 import java.time.LocalDate;
 
 public class OrderResponse {
-    private Long id;
-    private Long product_id;
-    private Long option_id;
-    private int quantity;
-    private LocalDate orderDateTime;
-    private String message;
+    private final Long id;
+    private final Long product_id;
+    private final Long option_id;
+    private final int quantity;
+    private final LocalDate orderDateTime;
+    private final String message;
 
     public OrderResponse(Order order) {
         this.id = order.getId();
@@ -22,7 +21,7 @@ public class OrderResponse {
         this.message = order.getMessage();
     }
 
-    public Long getOptionId() {
+    public Long getOption_id() {
         return option_id;
     }
 
@@ -36,5 +35,12 @@ public class OrderResponse {
 
     public String getMessage() {
         return message;
+    }
+
+    public Long getId() {
+        return id;
+    }
+    public Long getProduct_id() {
+        return product_id;
     }
 }

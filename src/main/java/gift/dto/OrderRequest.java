@@ -10,7 +10,7 @@ public class OrderRequest {
         return product_id;
     }
 
-    public Long getOptionId() {
+    public Long getOption_id() {
         return option_id;
     }
 

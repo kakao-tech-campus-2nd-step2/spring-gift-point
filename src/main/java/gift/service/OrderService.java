@@ -26,10 +26,10 @@ public class OrderService {
 
     public OrderResponse createOrder(OrderRequest orderDto, HttpSession session) {
         Member member = memberService.getMemberById(1L); // 임시!
-        Option option = optionService.getOption(orderDto.getOptionId());
+        Option option = optionService.getOption(orderDto.getOption_id());
         Product product = option.getProduct();
 
-        optionService.decreaseQuantity(orderDto.getOptionId(), orderDto.getQuantity());
+        optionService.decreaseQuantity(orderDto.getOption_id(), orderDto.getQuantity());
 
         wishService.deleteWish(member,product.getId());
 
