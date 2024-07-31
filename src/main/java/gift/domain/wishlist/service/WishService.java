@@ -69,7 +69,7 @@ public class WishService {
     }
 
     private WishResponse entityToDto(Wish wish) {
-        Product productInWish = productRepository.findById(wish.getId()).orElseThrow(()-> new ProductNotFoundException("상품이 존재하지 않습니다."));
+        Product productInWish = wish.getProduct();
         return new WishResponse(productInWish.getId(), productInWish.getName(),
             productInWish.getPrice(), productInWish.getImageUrl());
     }
