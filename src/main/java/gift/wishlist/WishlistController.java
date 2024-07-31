@@ -1,5 +1,6 @@
 package gift.wishlist;
 
+import gift.product.dto.ProductPaginationResponseDTO;
 import gift.product.dto.ProductResponseDTO;
 import gift.wishlist.dto.ProductIdRequestDTO;
 import io.swagger.v3.oas.annotations.Operation;
@@ -34,7 +35,7 @@ public class WishlistController {
     @ApiResponse(responseCode = "400", description = "입력 양식이 잘못된 경우")
     @ApiResponse(responseCode = "403", description = "인증 실패")
     @ApiResponse(responseCode = "500", description = "서버 에러")
-    public Page<ProductResponseDTO> getAllWishlists(
+    public Page<ProductPaginationResponseDTO> getAllWishlists(
         @RequestHeader("Authorization") String token,
         @ParameterObject Pageable pageable
     ) {

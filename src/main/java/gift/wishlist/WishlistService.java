@@ -9,6 +9,7 @@ import gift.category.dto.CategoryResponseDTO;
 import gift.member.MemberRepository;
 import gift.member.entity.Member;
 import gift.product.ProductRepository;
+import gift.product.dto.ProductPaginationResponseDTO;
 import gift.product.dto.ProductResponseDTO;
 import gift.product.entity.Product;
 import gift.token.JwtProvider;
@@ -44,22 +45,18 @@ public class WishlistService {
     }
 
     @Transactional(readOnly = true)
-    public Page<ProductResponseDTO> getAllWishlists(String token, Pageable pageable) {
+    public Page<ProductPaginationResponseDTO> getAllWishlists(String token, Pageable pageable) {
         Member member = getMemberFromToken(token);
 
-        List<ProductResponseDTO> wishlistProducts = wishlistRepository.findAllByMember(member)
+        List<ProductPaginationResponseDTO> wishlistProducts = wishlistRepository.findAllByMember(member)
             .stream()
             .map(wishlist -> {
                 Product product = wishlist.getProduct();
-                return new ProductResponseDTO(
+                return new ProductPaginationResponseDTO(
                     product.getId(),
                     product.getName(),
                     product.getPrice(),
-                    product.getImageUrl(),
-                    new CategoryResponseDTO(
-                        product.getCategory().getId(),
-                        product.getCategory().getName()
-                    )
+                    product.getImageUrl()
                 );
             }).toList();
 

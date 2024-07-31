@@ -22,6 +22,7 @@ import gift.option.OptionTestCase.OptionNameAllowedCharacterError;
 import gift.option.OptionTestCase.OptionNameLengthError;
 import gift.option.OptionTestCase.OptionQuantitySizeError;
 import gift.option.dto.OptionRequestDTO;
+import gift.option.dto.OptionResponseDTO;
 import gift.token.JwtProvider;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
@@ -58,10 +59,10 @@ public class OptionControllerTest {
         void success() throws Exception {
             //given
             long productId = 1L;
-            List<OptionRequestDTO> expect = List.of(
-                new OptionRequestDTO(1L, "option-1", 1),
-                new OptionRequestDTO(2L, "option-2", 2),
-                new OptionRequestDTO(3L, "option-3", 3)
+            List<OptionResponseDTO> expect = List.of(
+                new OptionResponseDTO(1L, "option-1", 1),
+                new OptionResponseDTO(2L, "option-2", 2),
+                new OptionResponseDTO(3L, "option-3", 3)
             );
 
             //when

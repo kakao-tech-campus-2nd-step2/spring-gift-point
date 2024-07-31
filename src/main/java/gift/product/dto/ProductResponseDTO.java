@@ -1,7 +1,8 @@
 package gift.product.dto;
 
-import gift.category.dto.CategoryResponseDTO;
+import gift.option.dto.OptionResponseDTO;
 import io.swagger.v3.oas.annotations.media.Schema;
+import java.util.List;
 import java.util.Objects;
 
 @Schema(description = "상품 응답 DTO")
@@ -19,21 +20,21 @@ public class ProductResponseDTO {
     @Schema(description = "상품 이미지 URL")
     private String imageUrl;
 
-    @Schema(description = "상품 카테고리")
-    private CategoryResponseDTO category;
+    @Schema(description = "상품 옵션 리스트")
+    private List<OptionResponseDTO> options;
 
     public ProductResponseDTO(
         Long id,
         String name,
         int price,
         String imageUrl,
-        CategoryResponseDTO category
+        List<OptionResponseDTO> options
     ) {
         this.id = id;
         this.name = name;
         this.price = price;
         this.imageUrl = imageUrl;
-        this.category = category;
+        this.options = options;
     }
 
     public Long getId() {
@@ -52,8 +53,8 @@ public class ProductResponseDTO {
         return imageUrl;
     }
 
-    public CategoryResponseDTO getCategory() {
-        return category;
+    public List<OptionResponseDTO> getOptions() {
+        return options;
     }
 
     @Override
@@ -63,13 +64,13 @@ public class ProductResponseDTO {
                    && Objects.equals(id, productResponseDTO.id)
                    && Objects.equals(name, productResponseDTO.name)
                    && Objects.equals(imageUrl, productResponseDTO.imageUrl)
-                   && Objects.equals(category, productResponseDTO.category);
+                   && Objects.equals(options, productResponseDTO.options);
         }
         return false;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, price, imageUrl, category);
+        return Objects.hash(id, name, price, imageUrl, options);
     }
 }

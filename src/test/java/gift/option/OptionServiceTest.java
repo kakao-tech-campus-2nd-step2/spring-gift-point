@@ -21,9 +21,10 @@ import gift.option.OptionTestCase.OptionNameAllowedCharacterError;
 import gift.option.OptionTestCase.OptionNameLengthError;
 import gift.option.OptionTestCase.OptionQuantitySizeError;
 import gift.option.dto.OptionRequestDTO;
+import gift.option.dto.OptionResponseDTO;
 import gift.option.entity.Option;
-import gift.product.entity.Product;
 import gift.product.ProductRepository;
+import gift.product.entity.Product;
 import java.util.List;
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
@@ -107,14 +108,14 @@ public class OptionServiceTest {
         @DisplayName("success")
         void success() {
             //given
-            List<OptionRequestDTO> expected = List.of(
-                new OptionRequestDTO(1L, "option-1", 1),
-                new OptionRequestDTO(2L, "option-2", 2),
-                new OptionRequestDTO(3L, "option-3", 3)
+            List<OptionResponseDTO> expected = List.of(
+                new OptionResponseDTO(1L, "option-1", 1),
+                new OptionResponseDTO(2L, "option-2", 2),
+                new OptionResponseDTO(3L, "option-3", 3)
             );
 
             //when
-            List<OptionRequestDTO> actual = optionService.getOptions(productId);
+            List<OptionResponseDTO> actual = optionService.getOptions(productId);
 
             //then
             assertEquals(actual, expected);

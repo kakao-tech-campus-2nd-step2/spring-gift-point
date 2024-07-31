@@ -1,6 +1,7 @@
 package gift.option;
 
 import gift.option.dto.OptionRequestDTO;
+import gift.option.dto.OptionResponseDTO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -31,7 +32,7 @@ public class OptionController {
     @ApiResponse(responseCode = "400", description = "상품이 존재하지 않는 경우")
     @ApiResponse(responseCode = "400", description = "요청 양식이 잘못된 경우")
     @ApiResponse(responseCode = "500", description = "서버 에러")
-    public List<OptionRequestDTO> getOption(@PathVariable("productId") long productId) {
+    public List<OptionResponseDTO> getOption(@PathVariable("productId") long productId) {
         return optionService.getOptions(productId);
     }
 

@@ -6,6 +6,10 @@ import static gift.exception.ErrorMessage.PRODUCT_NOT_FOUND;
 import gift.category.CategoryRepository;
 import gift.category.dto.CategoryResponseDTO;
 import gift.category.entity.Category;
+import gift.option.OptionService;
+import gift.option.dto.OptionResponseDTO;
+import gift.option.entity.Option;
+import gift.product.dto.ProductPaginationResponseDTO;
 import gift.product.dto.ProductRequestDTO;
 import gift.product.dto.ProductResponseDTO;
 import gift.product.entity.Product;
@@ -22,47 +26,47 @@ public class ProductService {
 
     private final ProductRepository productRepository;
     private final CategoryRepository categoryRepository;
+    private final OptionService optionService;
 
     public ProductService(
         ProductRepository productRepository,
-        CategoryRepository categoryRepository
+        CategoryRepository categoryRepository,
+        OptionService optionService
     ) {
         this.productRepository = productRepository;
         this.categoryRepository = categoryRepository;
+        this.optionService = optionService;
     }
 
     @Transactional(readOnly = true)
-    public Page<ProductResponseDTO> getAllProducts(Pageable pageable, long categoryId) {
-        List<ProductResponseDTO> productResponseDTOS = productRepository.findAll(pageable)
+    public Page<ProductPaginationResponseDTO> getAllProducts(Pageable pageable, long categoryId) {
+
+        List<ProductPaginationResponseDTO> productPaginationResponseDTO = productRepository.findAll(pageable)
             .stream()
             .filter(product -> product.getCategory().getId() == categoryId)
-            .map(product -> new ProductResponseDTO(
+            .map(product -> new ProductPaginationResponseDTO(
                 product.getId(),
                 product.getName(),
                 product.getPrice(),
-                product.getImageUrl(),
-                new CategoryResponseDTO(
-                    product.getCategory().getId(),
-                    product.getCategory().getName()
-                )
+                product.getImageUrl()
             )).toList();
 
-        return new PageImpl<>(productResponseDTOS, pageable, productResponseDTOS.size());
+        return new PageImpl<>(productPaginationResponseDTO, pageable, productPaginationResponseDTO.size());
     }
 
     @Transactional(readOnly = true)
-    public ProductResponseDTO getProductById(Long id) {
-        Product product = productRepository.findById(id)
+    public ProductResponseDTO getProductById(Long productId) {
+        Product product = productRepository.findById(productId)
             .orElseThrow(() -> new IllegalArgumentException(PRODUCT_NOT_FOUND));
+
+        List<OptionResponseDTO> options = optionService.getOptions(productId);
+
         return new ProductResponseDTO(
             product.getId(),
             product.getName(),
             product.getPrice(),
             product.getImageUrl(),
-            new CategoryResponseDTO(
-                product.getCategory().getId(),
-                product.getCategory().getName()
-            )
+            optionService.getOptions(productId)
         );
 
     }

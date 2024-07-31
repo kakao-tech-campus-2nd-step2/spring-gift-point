@@ -5,6 +5,7 @@ import static gift.exception.ErrorMessage.OPTION_NOT_FOUND;
 import static gift.exception.ErrorMessage.PRODUCT_NOT_FOUND;
 
 import gift.option.dto.OptionRequestDTO;
+import gift.option.dto.OptionResponseDTO;
 import gift.option.entity.Option;
 import gift.product.entity.Product;
 import gift.product.ProductRepository;
@@ -28,12 +29,12 @@ public class OptionService {
     }
 
     @Transactional(readOnly = true)
-    public List<OptionRequestDTO> getOptions(long productId) {
+    public List<OptionResponseDTO> getOptions(long productId) {
         validateProductExists(productId);
 
         return optionRepository.findAllByProductId(productId)
             .stream()
-            .map(option -> new OptionRequestDTO(
+            .map(option -> new OptionResponseDTO(
                 option.getId(),
                 option.getName(),
                 option.getQuantity()

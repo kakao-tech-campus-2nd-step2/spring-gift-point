@@ -17,6 +17,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.fasterxml.jackson.databind.ObjectMapper;
 import gift.category.dto.CategoryRequestDTO;
 import gift.category.dto.CategoryResponseDTO;
+import gift.product.dto.ProductPaginationResponseDTO;
 import gift.product.dto.ProductRequestDTO;
 import gift.product.dto.ProductResponseDTO;
 import java.util.List;
@@ -51,21 +52,19 @@ class ProductControllerTest {
     @DisplayName("[Unit] getAllProduct method test")
     void getAllProductsTest() throws Exception {
         // given
-        Page<ProductResponseDTO> expect = new PageImpl<>(
+        Page<ProductPaginationResponseDTO> expect = new PageImpl<>(
             List.of(
-                new ProductResponseDTO(
+                new ProductPaginationResponseDTO(
                     1L,
                     "product1",
                     100,
-                    "product1-imageUrl",
-                    new CategoryResponseDTO(1L, "category-1")
+                    "product1-imageUrl"
                 ),
-                new ProductResponseDTO(
+                new ProductPaginationResponseDTO(
                     2L,
                     "Product2",
                     200,
-                    "product2-image-url",
-                    new CategoryResponseDTO(2L, "category-2")
+                    "product2-image-url"
                 )
             )
         );

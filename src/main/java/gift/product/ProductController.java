@@ -1,5 +1,6 @@
 package gift.product;
 
+import gift.product.dto.ProductPaginationResponseDTO;
 import gift.product.dto.ProductRequestDTO;
 import gift.product.dto.ProductResponseDTO;
 import io.swagger.v3.oas.annotations.Operation;
@@ -46,7 +47,7 @@ public class ProductController {
     @ApiResponse(responseCode = "400", description = "카테고리가 존재하지 않는 경우")
     @ApiResponse(responseCode = "400", description = "요청 양식이 잘못된 경우")
     @ApiResponse(responseCode = "500", description = "서버 에러")
-    public Page<ProductResponseDTO> getProducts(
+    public Page<ProductPaginationResponseDTO> getProducts(
         @ParameterObject Pageable pageable,
         @RequestParam long categoryId
     ) {

@@ -2,6 +2,7 @@ package gift.admin;
 
 import gift.category.CategoryService;
 import gift.product.ProductService;
+import gift.product.dto.ProductPaginationResponseDTO;
 import gift.product.dto.ProductResponseDTO;
 import java.util.stream.IntStream;
 import org.springframework.data.domain.Page;
@@ -32,7 +33,7 @@ public class AdminPageController {
         Pageable pageable,
         @PathVariable long categoryId
     ) {
-        Page<ProductResponseDTO> products = productService.getAllProducts(pageable, categoryId);
+        Page<ProductPaginationResponseDTO> products = productService.getAllProducts(pageable, categoryId);
 
         model.addAttribute("products", products);
         model.addAttribute("page", pageable.getPageNumber() + 1);
