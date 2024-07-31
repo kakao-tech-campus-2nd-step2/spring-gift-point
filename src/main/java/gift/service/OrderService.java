@@ -9,10 +9,13 @@ import gift.domain.Product;
 import gift.dto.KakaoMessageDto;
 import gift.dto.OrderRequestDto;
 import gift.dto.OrderResponseDto;
+import gift.repository.MemberRepository;
 import gift.repository.OrderRepository;
 import gift.repository.ProductRepository;
 import java.util.NoSuchElementException;
 import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -42,7 +45,7 @@ public class OrderService {
         // 재고 처리
         productService.decreaseOptionQuantity(orderRequestDto.productId(), orderRequestDto.optionId(),orderRequestDto.quantity());
         // 주문 생성 및 저장
-        OrderResponseDto orderResponseDto = createOrder(orderRequestDto);
+        OrderResponseDto orderResponseDto = createOrder(member.getId(), orderRequestDto);
 
         // 위시리스트 삭제 & 주문 메시지 발송
         OrderEvent orderEvent = new OrderEvent(orderRequestDto, member);
@@ -52,8 +55,8 @@ public class OrderService {
     }
 
     @Transactional
-    public OrderResponseDto createOrder(OrderRequestDto orderRequestDto) {
-        Order order = new Order(orderRequestDto.productId(), orderRequestDto.optionId(), orderRequestDto.quantity(), orderRequestDto.message());
+    public OrderResponseDto createOrder(Long memberId, OrderRequestDto orderRequestDto) {
+        Order order = new Order(memberId, orderRequestDto.productId(), orderRequestDto.optionId(), orderRequestDto.quantity(), orderRequestDto.message());
         Order savedOrder = orderRepository.save(order);
         return OrderResponseDto.convertToDto(savedOrder);
     }
@@ -90,4 +93,12 @@ public class OrderService {
 
         return text;
     }
+
+    @Transactional(readOnly = true)
+    public Page<OrderResponseDto> findByMemberId(Long id, Pageable pageable) {
+
+        Page<Order> orderPage= orderRepository.findByMemberId(id, pageable);
+        return orderPage.map(OrderResponseDto::convertToDto);
+    }
+
 }
