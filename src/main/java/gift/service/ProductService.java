@@ -110,7 +110,7 @@ public class ProductService {
     }
 
     private Category getCategory(ProductRequestDTO productRequestDTO) {
-        return jpaCategoryRepository.findById(productRequestDTO.categoryId())
+        return jpaCategoryRepository.findByName(productRequestDTO.categoryName())
             .orElseThrow(() -> new NoSuchElementException("id가 잘못되었습니다."));
     }
 }
