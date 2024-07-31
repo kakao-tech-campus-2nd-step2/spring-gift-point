@@ -2,8 +2,6 @@ package gift.product.controller.auth;
 
 import gift.product.dto.auth.AccessTokenDto;
 import gift.product.dto.auth.AccountDto;
-import gift.product.dto.auth.JwtResponse;
-import gift.product.dto.auth.MemberDto;
 import gift.product.service.AuthService;
 import io.swagger.v3.oas.annotations.Hidden;
 import jakarta.servlet.http.Cookie;

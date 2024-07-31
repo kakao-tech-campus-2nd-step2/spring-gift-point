@@ -166,7 +166,10 @@ class AuthServiceTest {
         //given
         String testEmail = "test_email";
         given(authRepository.existsByEmail(testEmail)).willReturn(false);
-        given(authRepository.findByEmail(testEmail)).willReturn(new Member(1L, NAME, testEmail, "oauth"));
+        given(authRepository.findByEmail(testEmail)).willReturn(new Member(1L,
+            NAME,
+            testEmail,
+            "oauth"));
 
         String responseBody = "{\"kakao_account\":{\"email\":\"" + testEmail + "\"}}";
         mockWebServer.enqueue(new MockResponse().setBody(responseBody));

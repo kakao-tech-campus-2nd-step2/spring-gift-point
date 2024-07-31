@@ -1,6 +1,6 @@
 package gift.product.exception;
 
-public record ExceptionResponse (
+public record ExceptionResponse(
     String message
 ) {
 

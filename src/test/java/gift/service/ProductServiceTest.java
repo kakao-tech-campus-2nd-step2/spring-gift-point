@@ -60,7 +60,11 @@ class ProductServiceTest {
 
         //when
         productService.insertProduct(
-            new ClientProductRequest(product.getName(), product.getPrice(), product.getImageUrl(), product.getCategory().getId(), optionDtos));
+            new ClientProductRequest(product.getName(),
+                product.getPrice(),
+                product.getImageUrl(),
+                product.getCategory().getId(),
+                optionDtos));
 
         //then
         then(productRepository).should().save(any());
@@ -124,7 +128,8 @@ class ProductServiceTest {
         Category category = new Category(1L, "테스트카테고리", "테스트컬러", "테스트주소", "테스트설명");
         List<Product> products = new ArrayList<>();
         products.add(new Product(1L, "테스트상품", 1000, "테스트주소", category));
-        given(productRepository.findAllByCategoryId(pageable, category.getId())).willReturn(new PageImpl<>(products));
+        given(productRepository.findAllByCategoryId(pageable,
+            category.getId())).willReturn(new PageImpl<>(products));
         given(optionRepository.findAllByProductId(any())).willReturn(Collections.emptyList());
 
         //when
@@ -143,7 +148,11 @@ class ProductServiceTest {
         given(categoryRepository.findById(category.getId())).willReturn(Optional.of(category));
 
         //when
-        ClientProductUpdateRequest clientProductUpdateRequest = new ClientProductUpdateRequest("테스트상품수정", 2000, "테스트주소수정", category.getId());
+        ClientProductUpdateRequest clientProductUpdateRequest = new ClientProductUpdateRequest(
+            "테스트상품수정",
+            2000,
+            "테스트주소수정",
+            category.getId());
         productService.updateProduct(product.getId(), clientProductUpdateRequest);
 
         //then

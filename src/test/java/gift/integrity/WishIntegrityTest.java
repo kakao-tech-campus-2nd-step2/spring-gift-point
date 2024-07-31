@@ -8,7 +8,6 @@ import gift.product.dto.category.CategoryDto;
 import gift.product.dto.option.OptionDto;
 import gift.product.dto.product.ClientProductRequest;
 import gift.product.dto.product.ProductRequest;
-import gift.product.dto.product.ProductResponse;
 import gift.product.dto.wish.WishDto;
 import gift.product.service.AuthService;
 import gift.product.service.CategoryService;
@@ -70,7 +69,8 @@ class WishIntegrityTest {
     void 멤버_및_상품_셋팅() {
         MemberDto memberDto = new MemberDto("test_name", "test@test.com", "1234");
         authService.register(memberDto);
-        accessToken = authService.login(new AccountDto(memberDto.email(), memberDto.password())).accessToken();
+        accessToken = authService.login(new AccountDto(memberDto.email(), memberDto.password()))
+            .accessToken();
 
         CategoryDto categoryDto = new CategoryDto("테스트카테고리", "테스트컬러", "테스트주소", "테스트설명");
         Long categoryId = categoryService.insertCategory(categoryDto).getId();
@@ -78,10 +78,16 @@ class WishIntegrityTest {
         String url = BASE_URL + port + "/api/products";
         List<OptionDto> options = new ArrayList<>();
         options.add(new OptionDto("테스트옵션", 1));
-        ProductRequest productRequest = new ClientProductRequest("테스트1", 1500, "테스트주소1", categoryId, options);
+        ProductRequest productRequest = new ClientProductRequest("테스트1",
+            1500,
+            "테스트주소1",
+            categoryId,
+            options);
         HttpHeaders headers = new HttpHeaders();
         headers.setBearerAuth(accessToken);
-        RequestEntity<ProductRequest> requestEntity = new RequestEntity<>(productRequest, headers,HttpMethod.POST,
+        RequestEntity<ProductRequest> requestEntity = new RequestEntity<>(productRequest,
+            headers,
+            HttpMethod.POST,
             URI.create(url));
 
         testRestTemplate.exchange(requestEntity, String.class);

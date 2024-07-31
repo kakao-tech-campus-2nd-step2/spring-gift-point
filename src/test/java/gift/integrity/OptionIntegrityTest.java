@@ -88,21 +88,27 @@ class OptionIntegrityTest {
     void 로그인() {
         MemberDto memberDto = new MemberDto("test_name", "test@test.com", "1234");
         authService.register(memberDto);
-        accessToken = authService.login(new AccountDto(memberDto.email(), memberDto.password())).accessToken();
+        accessToken = authService.login(new AccountDto(memberDto.email(), memberDto.password()))
+            .accessToken();
     }
 
     @Order(1)
     @Test
     void 옵션_추가() {
         //given
-        Category category = categoryRepository.save(new Category("테스트카테고리", "테스트컬러", "테스트주소", "테스트설명"));
+        Category category = categoryRepository.save(new Category("테스트카테고리",
+            "테스트컬러",
+            "테스트주소",
+            "테스트설명"));
         Product product = productRepository.save(new Product("테스트상품", 1500, "테스트주소", category));
         String url = BASE_URL + port + "/api/products/" + product.getId() + "/options";
         OptionDto optionDto = new OptionDto("테스트옵션1", 1);
 
         HttpHeaders headers = new HttpHeaders();
         headers.setBearerAuth(accessToken);
-        RequestEntity<OptionDto> requestEntity = new RequestEntity<>(optionDto, headers, HttpMethod.POST,
+        RequestEntity<OptionDto> requestEntity = new RequestEntity<>(optionDto,
+            headers,
+            HttpMethod.POST,
             URI.create(url));
 
         //when
@@ -219,7 +225,9 @@ class OptionIntegrityTest {
 
         HttpHeaders headers = new HttpHeaders();
         headers.setBearerAuth(accessToken);
-        RequestEntity<OptionDto> requestEntity = new RequestEntity<>(optionDto, headers, HttpMethod.POST,
+        RequestEntity<OptionDto> requestEntity = new RequestEntity<>(optionDto,
+            headers,
+            HttpMethod.POST,
             URI.create(url));
 
         //when

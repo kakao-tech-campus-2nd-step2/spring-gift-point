@@ -2,14 +2,11 @@ package gift.product.controller.auth;
 
 import gift.product.dto.auth.AccessTokenDto;
 import gift.product.dto.auth.AccountDto;
-import gift.product.dto.auth.JwtResponse;
 import gift.product.dto.auth.LoginMemberIdDto;
 import gift.product.dto.auth.MemberDto;
 import gift.product.dto.auth.OAuthJwt;
-import gift.product.dto.auth.RegisterSuccessResponse;
 import gift.product.exception.ExceptionResponse;
 import gift.product.service.AuthService;
-import io.swagger.v3.oas.annotations.Hidden;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;

@@ -53,7 +53,8 @@ class CategoryIntegrityTest {
     void 로그인() {
         MemberDto memberDto = new MemberDto("test_name", "test@test.com", "1234");
         authService.register(memberDto);
-        accessToken = authService.login(new AccountDto(memberDto.email(), memberDto.password())).accessToken();
+        accessToken = authService.login(new AccountDto(memberDto.email(), memberDto.password()))
+            .accessToken();
     }
 
     @Order(1)
@@ -65,7 +66,9 @@ class CategoryIntegrityTest {
 
         HttpHeaders headers = new HttpHeaders();
         headers.setBearerAuth(accessToken);
-        RequestEntity<CategoryDto> requestEntity = new RequestEntity<>(categoryDto, headers, HttpMethod.POST,
+        RequestEntity<CategoryDto> requestEntity = new RequestEntity<>(categoryDto,
+            headers,
+            HttpMethod.POST,
             URI.create(url));
 
         //when
@@ -120,7 +123,9 @@ class CategoryIntegrityTest {
 
         HttpHeaders headers = new HttpHeaders();
         headers.setBearerAuth(accessToken);
-        RequestEntity<CategoryDto> requestEntity = new RequestEntity<>(categoryDto, headers, HttpMethod.PUT,
+        RequestEntity<CategoryDto> requestEntity = new RequestEntity<>(categoryDto,
+            headers,
+            HttpMethod.PUT,
             URI.create(url));
 
         //when
@@ -138,7 +143,9 @@ class CategoryIntegrityTest {
         CategoryDto categoryDto = new CategoryDto("테스트카테고리", "테스트컬러", "테스트주소", "테스트설명");
         HttpHeaders headers = new HttpHeaders();
         headers.setBearerAuth(accessToken);
-        RequestEntity<CategoryDto> requestEntity = new RequestEntity<>(categoryDto, headers, HttpMethod.POST,
+        RequestEntity<CategoryDto> requestEntity = new RequestEntity<>(categoryDto,
+            headers,
+            HttpMethod.POST,
             URI.create(url));
         testRestTemplate.exchange(requestEntity, String.class);
 

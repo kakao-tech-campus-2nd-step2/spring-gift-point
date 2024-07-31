@@ -1,7 +1,6 @@
 package gift.product.dto.product;
 
 import gift.product.dto.category.CategoryIdAndName;
-import gift.product.dto.option.OptionDto;
 import gift.product.dto.option.OptionResponse;
 import java.util.List;
 

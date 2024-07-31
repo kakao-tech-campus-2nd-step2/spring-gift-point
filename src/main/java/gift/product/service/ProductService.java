@@ -42,13 +42,15 @@ public class ProductService {
     }
 
     public List<ProductResponse> getProductAll(Pageable pageable, Long categoryId) {
-        return productRepository.findAllByCategoryId(pageable, categoryId).stream().map(this::getProductResponse).toList();
+        return productRepository.findAllByCategoryId(pageable, categoryId).stream()
+            .map(this::getProductResponse).toList();
     }
 
     public ProductResponse getProduct(Long id) {
         Product product = getValidatedProduct(id);
         List<OptionResponse> optionResponses = optionRepository.findAllByProductId(id);
-        CategoryIdAndName categoryIdAndName = new CategoryIdAndName(product.getCategory().getId(), product.getCategory().getName());
+        CategoryIdAndName categoryIdAndName = new CategoryIdAndName(product.getCategory().getId(),
+            product.getCategory().getName());
         return new ProductResponse(product.getId(), product.getName(),
             product.getPrice(), product.getImageUrl(), categoryIdAndName, optionResponses);
     }
@@ -56,7 +58,9 @@ public class ProductService {
     @Transactional
     public Product insertProduct(ProductRequest clientProductRequest) {
         Category category = getValidatedCategory(clientProductRequest.categoryId());
-        Product product = new Product(clientProductRequest.name(), clientProductRequest.price(), clientProductRequest.imageUrl(),
+        Product product = new Product(clientProductRequest.name(),
+            clientProductRequest.price(),
+            clientProductRequest.imageUrl(),
             category);
         Product savedProduct = productRepository.save(product);
 
@@ -95,7 +99,8 @@ public class ProductService {
     }
 
     private ProductResponse getProductResponse(Product product) {
-        CategoryIdAndName categoryIdAndName = new CategoryIdAndName(product.getCategory().getId(), product.getCategory().getName());
+        CategoryIdAndName categoryIdAndName = new CategoryIdAndName(product.getCategory().getId(),
+            product.getCategory().getName());
         List<OptionResponse> optionResponses = optionRepository.findAllByProductId(product.getId());
 
         return new ProductResponse(product.getId(),

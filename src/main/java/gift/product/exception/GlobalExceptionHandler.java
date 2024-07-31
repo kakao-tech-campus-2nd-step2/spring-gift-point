@@ -1,12 +1,9 @@
 package gift.product.exception;
 
 import com.sun.jdi.request.DuplicateRequestException;
-import gift.product.exception.CannotDeleteOnlyOneOptionException;
-import gift.product.exception.LoginFailedException;
 import java.util.NoSuchElementException;
 import org.apache.logging.log4j.util.InternalException;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ProblemDetail;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
@@ -20,7 +17,8 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 public class GlobalExceptionHandler {
 
     @ExceptionHandler(value = MethodArgumentNotValidException.class)
-    public ResponseEntity<ExceptionResponse> handleMethodArgumentNotValidException(MethodArgumentNotValidException e) {
+    public ResponseEntity<ExceptionResponse> handleMethodArgumentNotValidException(
+        MethodArgumentNotValidException e) {
         ExceptionResponse exceptionResponse = new ExceptionResponse(buildErrorMessage(e));
         return new ResponseEntity<>(exceptionResponse, HttpStatus.BAD_REQUEST);
     }
@@ -51,7 +49,8 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(value = DuplicateRequestException.class)
-    public ResponseEntity<ExceptionResponse> handleDuplicateRequestException(DuplicateRequestException e) {
+    public ResponseEntity<ExceptionResponse> handleDuplicateRequestException(
+        DuplicateRequestException e) {
         ExceptionResponse exceptionResponse = new ExceptionResponse(e.getMessage());
         return new ResponseEntity<>(exceptionResponse, HttpStatus.CONFLICT);
     }

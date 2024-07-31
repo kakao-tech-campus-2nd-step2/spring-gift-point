@@ -23,7 +23,9 @@ public class OptionService {
     }
 
     public List<OptionResponse> getOptionAll() {
-        return optionRepository.findAll().stream().map(option -> new OptionResponse(option.getId(), option.getName(), option.getQuantity())).toList();
+        return optionRepository.findAll().stream().map(option -> new OptionResponse(option.getId(),
+            option.getName(),
+            option.getQuantity())).toList();
     }
 
     public List<OptionResponse> getOptionAllByProductId(Long productId) {

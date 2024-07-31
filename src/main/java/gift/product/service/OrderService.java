@@ -9,14 +9,11 @@ import gift.product.dto.option.OptionInfoForOrderResponse;
 import gift.product.dto.order.OrderDto;
 import gift.product.dto.order.OrderResponse;
 import gift.product.dto.product.ProductInfoForOrderResponse;
-import gift.product.dto.product.ProductInfoForWishResponse;
-import gift.product.dto.wish.WishResponse;
 import gift.product.exception.LoginFailedException;
 import gift.product.model.KakaoToken;
 import gift.product.model.Option;
 import gift.product.model.Order;
 import gift.product.model.Product;
-import gift.product.model.Wish;
 import gift.product.repository.AuthRepository;
 import gift.product.repository.KakaoTokenRepository;
 import gift.product.repository.OptionRepository;
@@ -25,7 +22,6 @@ import gift.product.repository.WishRepository;
 import java.net.URI;
 import java.util.List;
 import java.util.NoSuchElementException;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.MediaType;
@@ -58,7 +54,8 @@ public class OrderService {
     }
 
     public List<OrderResponse> getOrderAll(Pageable pageable, LoginMemberIdDto loginMemberIdDto) {
-        return orderRepository.findAllByMemberId(pageable, loginMemberIdDto.id()).stream().map(this::getOrderResponse).toList();
+        return orderRepository.findAllByMemberId(pageable, loginMemberIdDto.id()).stream()
+            .map(this::getOrderResponse).toList();
     }
 
     public Order getOrder(Long id, LoginMemberIdDto loginMemberIdDto) {
@@ -164,8 +161,11 @@ public class OrderService {
     private OrderResponse getOrderResponse(Order order) {
         Option option = getValidatedOption(order.getOptionId());
         Product product = option.getProduct();
-        ProductInfoForOrderResponse productInfo = new ProductInfoForOrderResponse(product.getId(), product.getName(), product.getPrice());
-        OptionInfoForOrderResponse optionInfo = new OptionInfoForOrderResponse(option.getId(), order.getQuantity());
+        ProductInfoForOrderResponse productInfo = new ProductInfoForOrderResponse(product.getId(),
+            product.getName(),
+            product.getPrice());
+        OptionInfoForOrderResponse optionInfo = new OptionInfoForOrderResponse(option.getId(),
+            order.getQuantity());
         return new OrderResponse(order.getId(), productInfo, optionInfo, order.getOrderDateTime());
     }
 }

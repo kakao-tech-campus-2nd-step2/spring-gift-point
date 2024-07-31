@@ -1,7 +1,6 @@
 package gift.product.dto.product;
 
 import gift.product.dto.option.OptionDto;
-import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import java.util.List;

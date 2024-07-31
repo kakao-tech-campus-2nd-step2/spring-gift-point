@@ -80,7 +80,11 @@ public class WishService {
 
     private WishResponse getWishResponse(Wish wish) {
         Product product = wish.getProduct();
-        ProductInfoForWishResponse productInfoForWishResponse = new ProductInfoForWishResponse(product.getId(), product.getName(), product.getPrice(), product.getImageUrl());
+        ProductInfoForWishResponse productInfoForWishResponse = new ProductInfoForWishResponse(
+            product.getId(),
+            product.getName(),
+            product.getPrice(),
+            product.getImageUrl());
         return new WishResponse(wish.getId(), productInfoForWishResponse);
     }
 }

@@ -39,7 +39,10 @@ class WishRepositoryTest {
     @Test
     void 위시리스트_항목_추가() {
         //given
-        Category category = categoryRepository.save(new Category("테스트카테고리1", "테스트컬러", "테스트주소", "테스트설명"));
+        Category category = categoryRepository.save(new Category("테스트카테고리1",
+            "테스트컬러",
+            "테스트주소",
+            "테스트설명"));
         Member member = authRepository.save(new Member("test@test.com", "1234"));
         Product product = productRepository.save(new Product("테스트1", 1500, "테스트주소1", category));
         Wish wish = new Wish(member, product);
@@ -58,7 +61,10 @@ class WishRepositoryTest {
     @Test
     void 위시리스트_전체_조회() {
         //given
-        Category category = categoryRepository.save(new Category("테스트카테고리1", "테스트컬러", "테스트주소", "테스트설명"));
+        Category category = categoryRepository.save(new Category("테스트카테고리1",
+            "테스트컬러",
+            "테스트주소",
+            "테스트설명"));
         Member member = authRepository.save(new Member("test@test.com", "1234"));
         Product product1 = productRepository.save(new Product("테스트1", 1500, "테스트주소1", category));
         Product product2 = productRepository.save(new Product("테스트2", 3000, "테스트주소2", category));
@@ -76,7 +82,10 @@ class WishRepositoryTest {
     @Test
     void 위시리스트_조회() {
         //given
-        Category category = categoryRepository.save(new Category("테스트카테고리1", "테스트컬러", "테스트주소", "테스트설명"));
+        Category category = categoryRepository.save(new Category("테스트카테고리1",
+            "테스트컬러",
+            "테스트주소",
+            "테스트설명"));
         Member member = authRepository.save(new Member("test@test.com", "1234"));
         Product product = productRepository.save(new Product("테스트1", 1500, "테스트주소1", category));
         Wish wish = wishRepository.save(new Wish(member, product));
@@ -92,7 +101,10 @@ class WishRepositoryTest {
     @Test
     void 위시리스트_항목_삭제() {
         //given
-        Category category = categoryRepository.save(new Category("테스트카테고리1", "테스트컬러", "테스트주소", "테스트설명"));
+        Category category = categoryRepository.save(new Category("테스트카테고리1",
+            "테스트컬러",
+            "테스트주소",
+            "테스트설명"));
         Member member = authRepository.save(new Member("test@test.com", "1234"));
         Product product = productRepository.save(new Product("테스트1", 1500, "테스트주소1", category));
         Wish wish = wishRepository.save(new Wish(member, product));
