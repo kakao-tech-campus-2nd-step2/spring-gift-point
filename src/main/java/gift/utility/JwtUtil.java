@@ -30,6 +30,11 @@ public class JwtUtil {
         return claims.getSubject();
     }
 
+    public static String extractEmailAsBearer(String authorizationHeader) {
+        String jwtAccessToken = authorizationHeader.replace("Bearer ", "");
+        return extractEmail(jwtAccessToken);
+    }
+
     public static boolean isValidToken(String token) {
         try {
             String decodedToken = new String(Base64.getDecoder().decode(token));
