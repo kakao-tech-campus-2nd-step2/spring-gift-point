@@ -57,7 +57,7 @@ public class ProductPageController {
 
     @Operation(summary = "카테고리에 속하는 상품 목록 조회", description = "상품 목록을 조회합니다")
     @ApiResponse(responseCode = "200", description = "조회 완료",
-            content = {@Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = ResponseProductListOfCategoryDTO.class)))
+            content = {@Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = Page.class)))
             })
     @ApiResponse(responseCode = "400", description = "잘못된 요청입니다. 입력값을 확인하거나 카테고리가 존재하지 않습니다")
     @ApiResponse(responseCode = "500", description = "서버 내부 에러 발생")
