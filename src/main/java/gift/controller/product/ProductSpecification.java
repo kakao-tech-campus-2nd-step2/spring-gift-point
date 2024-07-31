@@ -49,7 +49,8 @@ public interface ProductSpecification {
                             )
                     )
             })
-    ResponseEntity<PagingResponse<ProductResponse.Info>> getAllGift(@Parameter(description = "페이징 요청 정보") @ModelAttribute PagingRequest pagingRequest);
+    ResponseEntity<PagingResponse<ProductResponse.Info>> getAllGiftByCategoryId(@RequestParam Long categoryId,
+                                                                    @Parameter(description = "페이징 요청 정보") @ModelAttribute PagingRequest pagingRequest);
 
     @Operation(summary = "상품 수정", description = "주어진 ID에 해당하는 상품을 수정합니다.",
             responses = {

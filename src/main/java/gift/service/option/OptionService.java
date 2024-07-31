@@ -2,6 +2,7 @@ package gift.service.option;
 
 import gift.dto.option.OptionRequest;
 import gift.dto.option.OptionResponse;
+import gift.exception.ProductNotFoundException;
 import gift.model.option.Option;
 import gift.model.product.Product;
 import gift.repository.option.OptionRepository;
@@ -31,7 +32,7 @@ public class OptionService {
     @Transactional
     public void addOptionToGift(Long giftId, OptionRequest.Create optionRequest) {
         Product product = productRepository.findById(giftId)
-                .orElseThrow(() -> new NoSuchElementException("해당 상품을 찾을 수 없습니다 id :  " + giftId));
+                .orElseThrow(() -> new ProductNotFoundException("존재하지 않는 상품입니다."));
         Option option = optionRequest.toEntity();
 
         checkDuplicateOptionName(product, option.getName());
@@ -48,7 +49,7 @@ public class OptionService {
     @Transactional(readOnly = true)
     public List<OptionResponse.Info> getOptionsByGiftId(Long giftId) {
         Product product = productRepository.findById(giftId)
-                .orElseThrow(() -> new NoSuchElementException("해당 상품을 찾을 수 없습니다 id :  " + giftId));
+                .orElseThrow(() -> new ProductNotFoundException("존재하지 않는 상품입니다."));
 
         return product.getOptions().stream()
                 .map(OptionResponse.Info::fromEntity)
@@ -58,7 +59,7 @@ public class OptionService {
     @Transactional
     public void updateOptionToGift(Long giftId, Long optionId, OptionRequest.Update optionRequest) {
         Product product = productRepository.findById(giftId)
-                .orElseThrow(() -> new NoSuchElementException("해당 상품을 찾을 수 없습니다 id :  " + giftId));
+                .orElseThrow(() -> new ProductNotFoundException("존재하지 않는 상품입니다."));
         Option option = optionRepository.findById(optionId)
                 .orElseThrow(() -> new NoSuchElementException("해당 옵션을 찾을 수 없습니다 id :  " + optionId));
 
@@ -80,7 +81,7 @@ public class OptionService {
     )
     public void subtractOptionToGift(Long giftId, Long optionId, int quantity) {
         Product product = productRepository.findById(giftId)
-                .orElseThrow(() -> new NoSuchElementException("해당 상품을 찾을 수 없습니다 id :  " + giftId));
+                .orElseThrow(() -> new ProductNotFoundException("존재하지 않는 상품입니다."));
         Option option = optionRepository.findById(optionId)
                 .orElseThrow(() -> new NoSuchElementException("해당 옵션을 찾을 수 없습니다 id :  " + optionId));
 
@@ -92,7 +93,7 @@ public class OptionService {
     @Transactional
     public void deleteOptionFromGift(Long giftId, Long optionId) {
         Product product = productRepository.findById(giftId)
-                .orElseThrow(() -> new NoSuchElementException("해당 상품을 찾을 수 없습니다 id :  " + giftId));
+                .orElseThrow(() -> new ProductNotFoundException("존재하지 않는 상품입니다."));
         Option option = optionRepository.findById(optionId)
                 .orElseThrow(() -> new NoSuchElementException("해당 옵션을 찾을 수 없습니다 id :  " + optionId));
 

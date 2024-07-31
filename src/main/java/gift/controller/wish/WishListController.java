@@ -26,7 +26,7 @@ public class WishListController implements WishListSpecification {
     }
 
     @PostMapping()
-    public ResponseEntity<String> addGiftToCart(@RequestAttribute("user") User user,
+    public ResponseEntity<String> addGiftToWishList(@RequestAttribute("user") User user,
                                                 @RequestBody WishRequest.Create wishRequest,
                                                 @RequestParam(required = false, defaultValue = "1") int quantity) {
         wishService.addGiftToUser(user.getId(), wishRequest.productId(), quantity);
@@ -42,7 +42,7 @@ public class WishListController implements WishListSpecification {
     }
 
     @DeleteMapping("/{giftId}")
-    public ResponseEntity<String> removeGiftFromCart(@RequestAttribute("user") User user,
+    public ResponseEntity<String> removeGiftFromWishList(@RequestAttribute("user") User user,
                                                      @PathVariable Long giftId) {
         wishService.removeGiftFromUser(user.getId(), giftId);
         return ResponseEntity.noContent().build();

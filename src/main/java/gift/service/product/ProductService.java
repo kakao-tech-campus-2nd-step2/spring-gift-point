@@ -5,6 +5,7 @@ import gift.dto.option.OptionRequest;
 import gift.dto.paging.PagingResponse;
 import gift.dto.product.ProductRequest;
 import gift.dto.product.ProductResponse;
+import gift.exception.CategoryNotFoundException;
 import gift.exception.ProductNotFoundException;
 import gift.model.category.Category;
 import gift.model.option.Option;
@@ -44,6 +45,19 @@ public class ProductService {
                 .collect(Collectors.toList());
         return new PagingResponse<>(page, productResponse, size, gifts.getTotalElements(), gifts.getTotalPages());
     }
+    @Transactional(readOnly = true)
+    public PagingResponse<ProductResponse.Info> getAllGiftsByCategoryId(Long categoryId,int page, int size) {
+        Category category = categoryRepository.findById(categoryId)
+                .orElseThrow(()-> new CategoryNotFoundException("존재하지 않는 카테고리입니다."));
+
+        PageRequest pageRequest = PageRequest.of(page, size, Sort.by("id").ascending());
+        Page<Product> gifts = productRepository.findAllByCategory(category,pageRequest);
+        List<ProductResponse.Info> productResponse = gifts.stream()
+                .map(ProductResponse.Info::fromEntity)
+                .collect(Collectors.toList());
+        return new PagingResponse<>(page, productResponse, size, gifts.getTotalElements(), gifts.getTotalPages());
+    }
+
 
     @Transactional(readOnly = true)
     public ProductResponse.Info getGift(Long id) {

@@ -1,5 +1,6 @@
 package gift.exception;
 
+import io.jsonwebtoken.JwtException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.*;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -44,9 +45,23 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(ex.getStatus()).body(problemDetail);
     }
 
-
     @ExceptionHandler(ProductNotFoundException.class)
     public ResponseEntity<ProblemDetail> handleProductNotFoundException(ProductNotFoundException ex) {
+        ProblemDetail problemDetail = ProblemDetail.forStatus(ex.getStatus());
+        problemDetail.setDetail(ex.getMessage());
+        return ResponseEntity.status(ex.getStatus()).body(problemDetail);
+    }
+
+    @ExceptionHandler(JwtException.class)
+    public ResponseEntity<ProblemDetail> handleJwtException(JwtException ex) {
+        ProblemDetail problemDetail = ProblemDetail.forStatus(HttpStatus.UNAUTHORIZED);
+        problemDetail.setDetail(ex.getMessage());
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(problemDetail);
+    }
+
+
+    @ExceptionHandler(CategoryNotFoundException.class)
+    public ResponseEntity<ProblemDetail> handleCategoryNotFoundException(CategoryNotFoundException ex) {
         ProblemDetail problemDetail = ProblemDetail.forStatus(ex.getStatus());
         problemDetail.setDetail(ex.getMessage());
         return ResponseEntity.status(ex.getStatus()).body(problemDetail);

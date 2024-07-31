@@ -35,8 +35,9 @@ public class ProductController implements ProductSpecification {
     }
 
     @GetMapping
-    public ResponseEntity<PagingResponse<ProductResponse.Info>> getAllGift(@ModelAttribute PagingRequest pagingRequest) {
-        PagingResponse<ProductResponse.Info> response = productService.getAllGifts(pagingRequest.getPage(), pagingRequest.getSize());
+    public ResponseEntity<PagingResponse<ProductResponse.Info>> getAllGiftByCategoryId(@RequestParam Long categoryId,
+                                                                           @ModelAttribute PagingRequest pagingRequest) {
+        PagingResponse<ProductResponse.Info> response = productService.getAllGiftsByCategoryId(categoryId,pagingRequest.getPage(), pagingRequest.getSize());
         return ResponseEntity.ok(response);
     }
 

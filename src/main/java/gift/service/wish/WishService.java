@@ -2,6 +2,7 @@ package gift.service.wish;
 
 import gift.dto.paging.PagingResponse;
 import gift.dto.wish.WishResponse;
+import gift.exception.ProductNotFoundException;
 import gift.exception.WishItemNotFoundException;
 import gift.model.product.Product;
 import gift.model.user.User;
@@ -32,8 +33,10 @@ public class WishService {
     }
 
     public void addGiftToUser(Long userId, Long giftId, int quantity) {
-        User user = userRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException("Invalid user ID"));
-        Product product = productRepository.findById(giftId).orElseThrow(() -> new IllegalArgumentException("Invalid gift ID"));
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 사용자입니다."));
+        Product product = productRepository.findById(giftId)
+                .orElseThrow(() -> new ProductNotFoundException("존재하지 않는 상품입니다."));
 
         wishRepository.findByUserAndProduct(user, product)
                 .ifPresentOrElse(
@@ -50,14 +53,17 @@ public class WishService {
 
     @Transactional
     public void removeGiftFromUser(Long userId, Long giftId) {
-        User user = userRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException("Invalid user ID"));
-        Product product = productRepository.findById(giftId).orElseThrow(() -> new IllegalArgumentException("Invalid gift ID"));
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 사용자입니다."));
+        Product product = productRepository.findById(giftId)
+                .orElseThrow(() -> new ProductNotFoundException("존재하지 않는 상품입니다."));
         wishRepository.deleteByUserAndProduct(user, product);
     }
 
     public PagingResponse<WishResponse.Info> getGiftsFromUser(Long userId, int page, int size) {
         PageRequest pageRequest = PageRequest.of(page, size, Sort.by("id").ascending());
-        User user = userRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException("Invalid user ID"));
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 사용자입니다."));
         Page<Wish> wishes = wishRepository.findByUser(user, pageRequest);
         List<WishResponse.Info> wishResponses = wishes.getContent()
                 .stream()
@@ -68,8 +74,10 @@ public class WishService {
 
     @Transactional
     public void updateWishQuantity(Long userId, Long giftId, int quantity) {
-        User user = userRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException("Invalid user ID"));
-        Product product = productRepository.findById(giftId).orElseThrow(() -> new IllegalArgumentException("Invalid gift ID"));
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 사용자입니다."));
+        Product product = productRepository.findById(giftId)
+                .orElseThrow(() -> new ProductNotFoundException("존재하지 않는 상품입니다."));
         wishRepository.findByUserAndProduct(user, product)
                 .ifPresentOrElse(
                         existingWish -> {
