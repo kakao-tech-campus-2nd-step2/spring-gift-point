@@ -35,7 +35,7 @@ public class AuthController {
     }
 
     @ResponseBody
-    @PostMapping("/api/auth/register")
+    @PostMapping("/api/members/register")
     @ApiResponse(responseCode = "200", description = "일반 회원가입 성공")
     public ResponseEntity<SuccessBody<UserTokenResponseDTO>> signUp(
         @Valid @RequestBody UserSignupRequestDTO userSignupRequestDTO) {
@@ -46,7 +46,7 @@ public class AuthController {
     }
 
     @ResponseBody
-    @PostMapping("/api/auth/login")
+    @PostMapping("/api/members/login")
     @ApiResponse(responseCode = "200", description = "일반 로그인 성공")
     public ResponseEntity<SuccessBody<UserTokenResponseDTO>> login(
         @Valid @RequestBody UserLoginRequestDTO userLoginRequestDTO) {

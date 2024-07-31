@@ -38,7 +38,7 @@ public class WishController {
         this.authService = authService;
     }
 
-    @GetMapping()
+    @GetMapping("/normal")
     @Operation(summary = "위시리스트 전체 조회 api", description = "위시리스트 전체 조회 api입니다")
     @ApiResponse(responseCode = "200", description = "위시리스트 전체 조회 성공")
     public ResponseEntity<SuccessBody<List<WishResponseDTO>>> getAllWishes(@LoginUser User user) {
@@ -46,7 +46,7 @@ public class WishController {
         return ApiResponseGenerator.success(HttpStatus.OK, "위시리스트를 조회했습니다.", wishListResponseDTO);
     }
 
-    @GetMapping("/page")
+    @GetMapping()
     @Operation(summary = "위시리스트 전체 페이지 조회 api", description = "위시리스트 전체 페이지 조회 api입니다")
     @ApiResponse(responseCode = "200", description = "위시리스트 전체 페이지 조회 성공")
     public ResponseEntity<SuccessBody<WishListPageResponseDTO>> getAllWishPages(@LoginUser User user,

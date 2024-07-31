@@ -31,7 +31,7 @@ import io.swagger.v3.oas.annotations.Parameter;
 
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/products")
 @Tag(name = "상품 api", description = "상품 api입니다")
 public class ProductController {
     private final ProductService productService;
@@ -42,7 +42,7 @@ public class ProductController {
         this.authService = authService;
     }
 
-    @GetMapping("/products")
+    @GetMapping("/normal")
     @Operation(summary = "상품 전체 조회 api", description = "상품 전체 조회 api입니다")
     @ApiResponse(responseCode = "200", description = "상품 전체 조회 성공")
     public ResponseEntity<SuccessBody<List<ProductResponseDTO>>> getAllProducts() {
@@ -51,7 +51,7 @@ public class ProductController {
             productResponseDTOList);
     }
 
-    @GetMapping("/products/page")
+    @GetMapping()
     @Operation(summary = "상품 조회 페이지 api", description = "상품 조회 페이지 api입니다")
     @ApiResponse(responseCode = "200", description = "상품 페이지 전체 조회 성공")
     public ResponseEntity<SuccessBody<ProductPageResponseDTO>> getAllProductPages(
@@ -63,7 +63,7 @@ public class ProductController {
             productPageResponseDTO);
     }
 
-    @GetMapping("/product/{id}")
+    @GetMapping("/{id}")
     @Operation(summary = "상품 단일 조회 api", description = "상품 단일 조회 api입니다")
     @ApiResponse(responseCode = "200", description = "상품 단일 조회 성공")
     public ResponseEntity<SuccessBody<ProductResponseDTO>> getOneProduct(
@@ -73,7 +73,7 @@ public class ProductController {
             productResponseDTO);
     }
 
-    @PostMapping("/product")
+    @PostMapping()
     @Operation(summary = "상품 추가 api", description = "상품 추가 api입니다")
     @ApiResponse(responseCode = "201", description = "상품 추가 성공")
     public ResponseEntity<SuccessBody<ProductResponseDTO>> addProduct(
@@ -86,7 +86,7 @@ public class ProductController {
         return ApiResponseGenerator.success(HttpStatus.CREATED, "상품이 등록되었습니다.", productResponseDTO);
     }
 
-    @PutMapping("/product/{id}")
+    @PutMapping("/{id}")
     @Operation(summary = "상품 수정 api", description = "상품 수정 api입니다")
     @ApiResponse(responseCode = "200", description = "상품 수정 성공")
     public ResponseEntity<SuccessBody<ProductResponseDTO>> updateProduct(
@@ -98,7 +98,7 @@ public class ProductController {
         return ApiResponseGenerator.success(HttpStatus.OK, "상품이 수정되었습니다.", productResponseDTO);
     }
 
-    @DeleteMapping("/product/{id}")
+    @DeleteMapping("/{id}")
     @Operation(summary = "상품 삭제 api", description = "상품 삭제 api입니다")
     @ApiResponse(responseCode = "200", description = "상품 삭제 성공")
     public ResponseEntity<SuccessBody<Void>> deleteProduct(

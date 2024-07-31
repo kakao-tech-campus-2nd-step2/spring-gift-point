@@ -54,10 +54,11 @@ public class OptionController {
         return ApiResponseGenerator.success(HttpStatus.CREATED, "옵션이 생성되었습니다.", optionResponseDTO);
     }
 
-    @PutMapping("/options/{optionId}")
+    @PutMapping("/products/{productId}/options/{optionId}")
     @Operation(summary = "옵션 수정 api", description = "옵션 수정 api입니다")
     @ApiResponse(responseCode = "200", description = "옵션 수정 성공")
     public ResponseEntity<SuccessBody<OptionResponseDTO>> updateOptionName(
+        @PathVariable(value = "productId") Long productId,
         @PathVariable(value = "optionId") Long optionId,
         @Valid @RequestBody OptionNameUpdateRequestDTO optionNameUpdateRequestDTO
     ) {
@@ -65,10 +66,11 @@ public class OptionController {
         return ApiResponseGenerator.success(HttpStatus.OK, "옵션이 수정되었습니다.", optionResponseDTO);
     }
 
-    @DeleteMapping("/options/{optionId}")
+    @DeleteMapping("/api/products/{productId}/options/{optionId}")
     @Operation(summary = "옵션 삭제 api", description = "옵션 삭제 api입니다")
     @ApiResponse(responseCode = "200", description = "옵션 삭제 성공")
     public ResponseEntity<SuccessBody<Void>> deleteOption(
+        @PathVariable(value = "productId") Long productId,
         @PathVariable(value = "optionId") Long optionId
     ) {
         optionService.deleteOption(optionId);
