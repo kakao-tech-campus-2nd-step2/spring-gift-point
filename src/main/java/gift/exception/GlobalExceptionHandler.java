@@ -46,7 +46,7 @@ public class GlobalExceptionHandler {
 
 
     @ExceptionHandler(ProductNotFoundException.class)
-    public ResponseEntity<ProblemDetail> handleProductNotFoundException(UserAlreadyExistException ex) {
+    public ResponseEntity<ProblemDetail> handleProductNotFoundException(ProductNotFoundException ex) {
         ProblemDetail problemDetail = ProblemDetail.forStatus(ex.getStatus());
         problemDetail.setDetail(ex.getMessage());
         return ResponseEntity.status(ex.getStatus()).body(problemDetail);
