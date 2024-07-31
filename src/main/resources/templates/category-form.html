@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>Category Form</title>
+  <!--  <link rel="stylesheet" href="product-form.css">-->
+</head>
+<body>
+<h1 th:text="${category.id == null} ? 'Add Category' : 'Edit Category'">Category Form</h1>
+<div class="form-container">
+  <form
+      method="post"
+      th:action="@{${category.id == null} ? '/admin/categories/add' : '/admin/categories/category/' + ${category.id}}"
+      th:object="${category}">
+
+    <div>
+      <label for="name">Name:</label>
+      <input id="name" name="name" th:field="*{name}" type="text"/>
+    </div>
+
+    <div>
+      <label for="color">Color:</label>
+      <input id="color" name="color" th:field="*{color}" type="text"/>
+    </div>
+
+    <div>
+      <label for="imageUrl">Image URL:</label>
+      <input id="imageUrl" name="imageUrl" th:field="*{imageUrl}" type="text"/>
+    </div>
+
+    <div>
+      <label for="description">description:</label>
+      <input id="description" name="description" th:field="*{description}" type="text"/>
+    </div>
+
+    <div>
+      <button type="submit">Save</button>
+    </div>
+  </form>
+  <a href="/admin/categories">Back to List</a>
+</div>
+</body>
+</html>

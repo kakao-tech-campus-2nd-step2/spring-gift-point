@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>Product Form</title>
+  <link href="product-form.css" rel="stylesheet">
+</head>
+<body>
+<h1 th:text="${product.id == null} ? 'Add Product' : 'Edit Product'">Product Form</h1>
+<div class="form-container">
+  <form
+      id="productForm"
+      method="post"
+      th:action="@{${product.id == null} ? '/admin/products/add' : '/admin/products/product/' + ${product.id}}"
+      th:object="${product}">
+
+    <div>
+      <label for="name">Name:</label>
+      <input id="name" name="name" th:field="*{name}" type="text"/>
+      <span class="error" th:errors="*{name}" th:if="${#fields.hasErrors('name')}"></span>
+    </div>
+
+    <div>
+      <label for="price">Price:</label>
+      <input id="price" name="price" th:field="*{price}" type="number"/>
+
+    </div>
+
+    <div>
+      <label for="imageUrl">Image URL:</label>
+      <input id="imageUrl" name="imageUrl" th:field="*{imageUrl}" type="text"/>
+    </div>
+
+    <div>
+      <label for="categoryId">Category:</label>
+      <select id="categoryId" name="categoryId">
+        <option th:each="category : ${categories}" th:text="${category.name}"
+                th:value="${category.getId()}"></option>
+      </select>
+    </div>
+
+    <div>
+      <button onclick="submitForm()" type="button">Save</button>
+
+    </div>
+  </form>
+  <a href="/admin/products">Back to List</a>
+</div>
+
+<script>
+  function submitForm() {
+    var categoryId = document.getElementById('categoryId').value;
+    console.log(categoryId);
+
+    fetch('/api/categories/' + categoryId)
+    .then(response => response.json())
+    .then(categoryDto => {
+      var product = {
+        name: document.getElementById('name').value,
+        price: document.getElementById('price').value,
+        imageUrl: document.getElementById('imageUrl').value,
+        categoryDto: categoryDto
+      };
+
+      return fetch(document.getElementById('productForm').action, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
+        },
+        body: JSON.stringify(product)
+      });
+    })
+    .then(response => response.json())
+    .then(data => {
+      console.log(data);
+      window.location.href = data.redirectUrl;
+    })
+    .catch(error => {
+      console.error('Error:', error);
+    });
+  }
+</script>
+</body>
+</html>
