@@ -47,7 +47,8 @@ public class KakaoController {
     @GetMapping("/callback")
     public ResponseEntity<?> loginKakaoUser(@RequestParam(value = "code", required = false) String code,
                                             @RequestParam(value = "error", required = false) String error,
-                                            @RequestParam(value = "error_description", required = false) String errorDescription) {
+                                            @RequestParam(value = "error_description", required = false) String errorDescription
+    ) {
         if (error != null || errorDescription != null) {
             throw new CustomException(HttpStatus.BAD_REQUEST, errorDescription);
         }

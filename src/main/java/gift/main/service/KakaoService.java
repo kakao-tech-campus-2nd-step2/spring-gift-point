@@ -55,7 +55,6 @@ public class KakaoService {
                     KakaoToken token = new KakaoToken(Objects.requireNonNull(response.bodyTo(TempToken.class)), LocalDateTime.now());
                     return token;
                 });
-        System.out.println("kakaoToken = " + kakaoToken);
         return kakaoToken;
     }
 
