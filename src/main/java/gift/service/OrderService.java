@@ -13,6 +13,8 @@ import gift.repository.MemberRepository;
 import gift.repository.OptionRepository;
 import gift.repository.OrderRepository;
 import java.time.LocalDateTime;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 
@@ -60,6 +62,10 @@ public class OrderService {
         return new OrderResponseDto(savedOrder.getId(), savedOrder.getOption().getId(),
             savedOrder.getQuantity(),
             savedOrder.getOrderDateTime(), savedOrder.getMessage());
+    }
+
+    public Page<Order> findByMemberId(Long memberId, Pageable pageable) {
+        return orderRepository.findByMemberId(memberId, pageable);
     }
 
 }

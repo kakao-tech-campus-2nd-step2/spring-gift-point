@@ -10,7 +10,7 @@ public class OrderResponseDto {
 
     private int quantity;
 
-    private LocalDateTime orderDate;
+    private LocalDateTime orderDateTime;
 
     private String message;
 
@@ -22,7 +22,7 @@ public class OrderResponseDto {
         this.id = id;
         this.optionId = optionId;
         this.quantity = quantity;
-        this.orderDate = orderDate;
+        this.orderDateTime = orderDate;
         this.message = message;
     }
 
@@ -50,12 +50,12 @@ public class OrderResponseDto {
         this.quantity = quantity;
     }
 
-    public LocalDateTime getOrderDate() {
-        return orderDate;
+    public LocalDateTime getOrderDateTime() {
+        return orderDateTime;
     }
 
     public void setOrderDate(LocalDateTime orderDate) {
-        this.orderDate = orderDate;
+        this.orderDateTime = orderDate;
     }
 
     public String getMessage() {
