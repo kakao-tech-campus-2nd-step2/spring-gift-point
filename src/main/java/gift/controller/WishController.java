@@ -4,7 +4,9 @@ import gift.annotation.LoginMember;
 import gift.dto.WishRequestDto;
 import gift.dto.WishResponseDto;
 import gift.service.WishService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -33,7 +35,7 @@ public class WishController {
 
     @GetMapping
     public ResponseEntity<Page<WishResponseDto>> getAllByMemberId(@LoginMember Long memberId,
-        @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size, @RequestParam(defaultValue = "id,asc") String[] sort) {
+        @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "20") int size, @RequestParam(defaultValue = "id,desc") String[] sort) {
         Sort.Direction direction = Sort.Direction.fromString(sort[1]);
         Pageable pageable = PageRequest.of(page, size, Sort.by(direction, sort[0]));
         Page<WishResponseDto> wishlist = wishService.getWishlist(memberId, pageable);
@@ -43,9 +45,8 @@ public class WishController {
 
     @PostMapping
     public ResponseEntity<String> addWishlist(@LoginMember Long memberId,
-        @RequestBody WishRequestDto wishlistRequestDto) {
-        wishService.addWishlist(memberId, wishlistRequestDto.getProductId(),
-            wishlistRequestDto.getQuantity());
+        @RequestBody @Valid WishRequestDto wishlistRequestDto) {
+        wishService.addWishlist(memberId, wishlistRequestDto.getProductId());
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 

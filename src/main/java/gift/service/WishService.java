@@ -5,12 +5,14 @@ import gift.entity.Member;
 import gift.entity.Product;
 import gift.entity.Wish;
 import gift.exception.BusinessException;
+import gift.exception.ServiceException;
 import gift.repository.ProductRepository;
 import gift.repository.WishRepository;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -29,30 +31,30 @@ public class WishService {
     }
 
     public Page<WishResponseDto> getWishlist(Long memberId, Pageable pageable) {
+        Member member = memberService.getMemberById(memberId);
         Page<Wish> wishes = wishRepository.findByMemberId(memberId, pageable);
         return wishes.map(WishResponseDto::new);
     }
 
-    public void addWishlist(Long memberId, Long productId, int quantity) {
-        Optional<Wish> wishlists = wishRepository.findByMemberIdAndProductId(memberId,
-            productId);
-        Member member = memberService.getMemberById(memberId);
-        Product product = productRepository.findById(productId).orElseThrow(() -> new BusinessException("해당 id에 대한 상품 정보가 없습니다."));
-        Wish wish = new Wish(member, product, quantity);
+    public void addWishlist(Long memberId, Long productId) {
+        Product product = productRepository.findById(productId).orElseThrow(() -> new ServiceException("존재하지 않는 상품입니다.", HttpStatus.NOT_FOUND));
 
-        if (wishlists.isPresent()) {
-            Wish existingWish = wishlists.get();
-            existingWish.setQuantity(quantity);
-            wishRepository.save(existingWish);
-            return;
+        if (wishRepository.existsByMemberIdAndProductId(memberId, productId)) {
+            throw new ServiceException("이미 위시리스트에 존재하는 상품입니다.", HttpStatus.CONFLICT);
         }
+
+        Member member = memberService.getMemberById(memberId);
+        Wish wish = new Wish(member, product);
 
         wishRepository.save(wish);
     }
 
     public void deleteById(Long memberId, Long productId) {
+        Product product = productRepository.findById(productId).orElseThrow(() -> new ServiceException("존재하지 않는 상품입니다.", HttpStatus.NOT_FOUND));
+
         Wish wish = wishRepository.findByMemberIdAndProductId(memberId, productId)
-            .orElseThrow(() -> new BusinessException("삭제할 아이템을 찾을 수 없습니다."));
+            .orElseThrow(() -> new ServiceException("위시리스트에 존재하지 않는 상품입니다.", HttpStatus.NOT_FOUND));
+
         wishRepository.delete(wish);
     }
 }

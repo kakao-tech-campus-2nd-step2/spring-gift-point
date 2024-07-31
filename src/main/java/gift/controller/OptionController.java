@@ -34,7 +34,7 @@ public class OptionController {
     }
 
     @PostMapping("/{productId}/options")
-    public ResponseEntity<String> addOptionToProduct(@PathVariable Long productId, @Valid @RequestBody OptionRequestDto optionRequestDto) {
+    public ResponseEntity<String> addOptionToProduct(@PathVariable Long productId, @RequestBody @Valid OptionRequestDto optionRequestDto) {
         optionService.addOptionToProduct(productId, optionRequestDto);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }

@@ -1,11 +1,12 @@
 package gift.resolver;
 
-import gift.exception.TokenException;
+import gift.exception.ServiceException;
 import gift.service.MemberService;
 import gift.util.JwtUtil;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.core.MethodParameter;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.support.WebDataBinderFactory;
 import org.springframework.web.context.request.NativeWebRequest;
@@ -32,8 +33,8 @@ public class LoginUserArgumentResolver implements HandlerMethodArgumentResolver 
         HttpServletRequest request = webRequest.getNativeRequest(HttpServletRequest.class);
         String authorizationHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
 
-        if (authorizationHeader == null | !authorizationHeader.startsWith("Bearer ")) {
-            throw new TokenException("잘못된 토큰이거나 형식이 잘못된 입니다.");
+        if (authorizationHeader == null || !authorizationHeader.startsWith("Bearer ")) {
+            throw new ServiceException("헤더에 토큰이 존재하지 않거나 잘못된 형식입니다.", HttpStatus.UNAUTHORIZED);
         }
 
         String token = authorizationHeader.substring(7);
