@@ -36,11 +36,12 @@ public class OrderRestController {
 
     @PostMapping
     @Operation(summary = "카카오 주문하기, 주문 정보 저장, 메시지 전송")
-    public void order(
+    public ResponseEntity order(
         @Valid @RequestBody OrderRequest orderRequest,
         @Parameter(description = "로그인 유저 정보") @Login LoginInfo loginInfo
     ) {
         orderService.order(orderRequest, loginInfo);
+        return ResponseEntity.ok().build();
     }
 
     @GetMapping
