@@ -9,6 +9,7 @@ import gift.domain.Wish;
 import gift.repository.ProductRepository;
 import gift.repository.UserInfoRepository;
 import gift.repository.WishRepository;
+import gift.utils.error.AuthorizationException;
 import gift.utils.error.ProductNotFoundException;
 import gift.utils.error.UserNotFoundException;
 import gift.utils.error.WishListNotFoundException;
@@ -59,7 +60,7 @@ public class WishService {
         );
 
         if (userInfo.getId().equals(wish.getProduct().getId())){
-            throw new ()
+            throw new AuthorizationException("Not Authorization");
         }
 
         wishRepository.deleteByProductIdAndUserInfoId(wish.getProduct().getId(), wish.getUserInfo().getId());
