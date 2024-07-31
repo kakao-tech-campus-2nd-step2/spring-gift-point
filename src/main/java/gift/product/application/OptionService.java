@@ -9,11 +9,10 @@ import gift.product.dto.OptionResponse;
 import gift.product.entity.Option;
 import gift.product.entity.Product;
 import gift.product.util.OptionMapper;
-import gift.product.util.ProductMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Set;
+import java.util.List;
 
 @Service
 public class OptionService {
@@ -27,11 +26,11 @@ public class OptionService {
     }
 
     @Transactional(readOnly = true)
-    public Set<OptionResponse> getProductOptionsByIdOrThrow(Long id) {
-        return productRepository.findById(id)
-                .map(ProductMapper::toResponseDto)
-                .orElseThrow(() -> new CustomException(ErrorCode.PRODUCT_NOT_FOUND))
-                .options();
+    public List<OptionResponse> getOptionsByProductId(Long id) {
+        return optionRepository.findByProduct_Id(id)
+                .stream()
+                .map(OptionMapper::toResponseDto)
+                .toList();
     }
 
     @Transactional
@@ -47,13 +46,13 @@ public class OptionService {
     }
 
     @Transactional
-    public void deleteOptionFromProduct(Long id, OptionRequest request) {
-        Product product = productRepository.findById(id)
+    public void deleteOptionFromProductById(Long productId, Long optionId) {
+        Product product = productRepository.findById(productId)
                 .orElseThrow(() -> new CustomException(ErrorCode.PRODUCT_NOT_FOUND));
         if (product.hasOnlyOneOption()) {
             throw new CustomException(ErrorCode.OPTION_REMOVE_FAILED);
         }
-        Option option = optionRepository.findByProduct_IdAndName(product.getId(), request.name())
+        Option option = optionRepository.findById(optionId)
                 .orElseThrow(() -> new CustomException(ErrorCode.OPTION_NOT_FOUND));
 
         product.deleteOption(option);
@@ -72,6 +71,14 @@ public class OptionService {
     public Option getOptionById(Long id) {
         return optionRepository.findById(id)
                 .orElseThrow(() -> new CustomException(ErrorCode.OPTION_NOT_FOUND));
+    }
+
+    @Transactional
+    public OptionResponse updateOptionById(Long id, OptionRequest request) {
+        Option option = getOptionById(id);
+        option.update(request);
+
+        return OptionMapper.toResponseDto(option);
     }
 
 }

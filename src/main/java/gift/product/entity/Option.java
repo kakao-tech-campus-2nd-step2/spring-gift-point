@@ -1,5 +1,6 @@
 package gift.product.entity;
 
+import gift.product.dto.OptionRequest;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -47,6 +48,10 @@ public class Option {
         return quantity;
     }
 
+    public Product getProduct() {
+        return product;
+    }
+
     public Long getProductId() {
         return product.getId();
     }
@@ -70,6 +75,11 @@ public class Option {
 
     public boolean isLessEqual(int quantity) {
         return this.quantity <= quantity;
+    }
+
+    public void update(OptionRequest request) {
+        this.name = request.name();
+        this.quantity = request.quantity();
     }
 
 }

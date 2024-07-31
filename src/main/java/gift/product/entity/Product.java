@@ -1,7 +1,6 @@
 package gift.product.entity;
 
 import gift.product.dto.ProductRequest;
-import gift.wishlist.entity.Wish;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -13,7 +12,6 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -30,9 +28,6 @@ public class Product {
     private int price;
     @Column(name = "image_url", nullable = false)
     private String imageUrl;
-
-    @OneToMany(mappedBy = "product", orphanRemoval = true)
-    private final List<Wish> wishList = new ArrayList<>();
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinColumn(name = "category_id", nullable = false)
@@ -103,6 +98,11 @@ public class Product {
     public boolean addOptionOrElseFalse(Option option) {
         return this.options
                    .add(option);
+    }
+
+    public void addOptions(List<Option> options) {
+        this.options
+                .addAll(options);
     }
 
     public void deleteOption(Option option) {

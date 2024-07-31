@@ -8,6 +8,8 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 
+import java.util.List;
+
 public record ProductRequest(
         @NotEmpty(message = "반드시 값이 존재해야 합니다.")
         @Pattern(regexp = "[\\w\\d\\s\\(\\)\\[\\]\\+\\-\\&\\/\\_\\uAC00-\\uD7A3]*", message = "특수 문자를 제외한 문자열을 입력해야 합니다.")
@@ -20,7 +22,7 @@ public record ProductRequest(
         @NotNull
         String imageUrl,
         @NotNull
-        String categoryName,
+        Long categoryId,
         @NotNull
         @Valid
-        OptionRequest option) { }
+        List<OptionRequest> options) { }

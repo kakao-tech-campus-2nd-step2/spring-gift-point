@@ -117,9 +117,9 @@ class CategoryServiceTest {
         given(categoryRepository.findById(any()))
                 .willReturn(Optional.of(category));
 
-        categoryService.updateCategory(category.getId(), request);
+        CategoryResponse categoryResponse = categoryService.updateCategory(category.getId(), request);
 
-        assertThat(category.getName()).isEqualTo(request.name());
+        assertThat(categoryResponse.name()).isEqualTo(request.name());
     }
 
     @Test

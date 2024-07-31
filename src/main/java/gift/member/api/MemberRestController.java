@@ -24,8 +24,10 @@ public class MemberRestController {
     }
 
     @PostMapping("/register")
-    public void signUp(@RequestBody @Valid MemberDto memberDto) {
-        memberService.registerMember(memberDto);
+    public AuthResponse signUp(@RequestBody @Valid MemberDto memberDto) {
+        return authService.authenticate(
+                memberService.registerMember(memberDto)
+        );
     }
 
     @PostMapping("/login")

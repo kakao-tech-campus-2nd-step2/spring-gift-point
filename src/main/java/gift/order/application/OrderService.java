@@ -10,6 +10,8 @@ import gift.order.util.OrderMapper;
 import gift.product.application.OptionService;
 import gift.product.entity.Option;
 import gift.wishlist.application.WishesService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -54,6 +56,11 @@ public class OrderService {
         return OrderMapper.toResponseDto(
                 orderRepository.save(OrderMapper.toEntity(request, option, member))
         );
+    }
+
+    public Page<OrderResponse> getPagedOrders(Pageable pageable) {
+        return orderRepository.findAll(pageable)
+                .map(OrderMapper::toResponseDto);
     }
 
 }

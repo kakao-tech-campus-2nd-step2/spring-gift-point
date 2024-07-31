@@ -3,7 +3,7 @@ package gift.admin.api;
 import gift.product.api.CategoryController;
 import gift.global.pagination.dto.PageResponse;
 import gift.product.api.ProductController;
-import gift.product.dto.ProductResponse;
+import gift.product.dto.GetProductResponse;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -34,7 +34,7 @@ public class AdminController {
                                          sort = "id",
                                          direction = Sort.Direction.DESC)
                                  Pageable pageable) {
-        Page<ProductResponse> pagedProducts = productController.getPagedProducts(pageable);
+        Page<GetProductResponse> pagedProducts = productController.getPagedProducts(pageable);
         PageResponse pageInfo = new PageResponse(pagedProducts);
 
         model.addAttribute("productList", pagedProducts.getContent());

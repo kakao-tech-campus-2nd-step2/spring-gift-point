@@ -1,15 +1,16 @@
 package gift.application;
 
+import gift.product.dao.OptionRepository;
 import gift.product.entity.Category;
 import gift.global.error.CustomException;
 import gift.global.error.ErrorCode;
 import gift.member.dao.MemberRepository;
 import gift.member.entity.Member;
-import gift.product.dao.ProductRepository;
-import gift.product.dto.ProductResponse;
+import gift.product.entity.Option;
 import gift.product.entity.Product;
 import gift.wishlist.application.WishesService;
 import gift.wishlist.dao.WishesRepository;
+import gift.wishlist.dto.WishResponse;
 import gift.wishlist.entity.Wish;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -46,51 +47,52 @@ class WishesServiceTest {
     private WishesRepository wishesRepository;
 
     @Mock
-    private ProductRepository productRepository;
+    private OptionRepository optionRepository;
 
     @Mock
     private MemberRepository memberRepository;
 
     private Long memberId;
-    private Long productId;
+    private Long optionId;
     private Member member;
-    private Product product;
+    private Option option;
 
     @BeforeEach
     void setUp() {
-        Category category = CategoryFixture.createCategory("상품권");
         memberId = 1L;
-        productId = 2L;
         member = MemberFixture.createMember("test@email.com");
-        product = ProductFixture.createProduct("product", category);
+        optionId = 2L;
+        Category category = CategoryFixture.createCategory("상품권");
+        Product product = ProductFixture.createProduct("product", category);
+        option = new Option("옵션", 1, product);
     }
 
     @Test
     @DisplayName("위시 리스트 상품 추가 서비스 테스트")
     void addProductToWishlist() {
-        given(wishesRepository.findByMember_IdAndProduct_Id(anyLong(), anyLong()))
+        given(wishesRepository.findByMember_IdAndOption_Id(anyLong(), anyLong()))
                 .willReturn(Optional.empty());
         given(memberRepository.findById(any()))
                 .willReturn(Optional.of(member));
-        given(productRepository.findById(any()))
-                .willReturn(Optional.of(product));
+        given(optionRepository.findById(any()))
+                .willReturn(Optional.of(option));
 
-        wishesService.addProductToWishlist(memberId, productId);
+        wishesService.addProductToWishlist(memberId, optionId);
 
-        verify(wishesRepository).findByMember_IdAndProduct_Id(memberId, productId);
+        verify(wishesRepository).findByMember_IdAndOption_Id(memberId, optionId);
         verify(memberRepository).findById(memberId);
-        verify(productRepository).findById(productId);
+        verify(optionRepository).findById(optionId);
         verify(wishesRepository).save(any());
     }
 
     @Test
     @DisplayName("위시 리스트 중복 상품 추가 테스트")
     void addDuplicatedProductToWishlist() {
-        Wish wish = new Wish(member, product);
-        given(wishesRepository.findByMember_IdAndProduct_Id(anyLong(), anyLong()))
+        Wish wish = new Wish(member, option);
+        given(wishesRepository.findByMember_IdAndOption_Id(anyLong(), anyLong()))
                 .willReturn(Optional.of(wish));
 
-        assertThatThrownBy(() -> wishesService.addProductToWishlist(memberId, productId))
+        assertThatThrownBy(() -> wishesService.addProductToWishlist(memberId, optionId))
                 .isInstanceOf(CustomException.class)
                 .hasMessage(ErrorCode.WISH_ALREADY_EXISTS
                                      .getMessage());
@@ -99,33 +101,33 @@ class WishesServiceTest {
     @Test
     @DisplayName("위시 리스트 상품 삭제 서비스 테스트")
     void removeProductIfPresent() {
-        Wish wish = new Wish(member, product);
-        given(wishesRepository.findByMember_IdAndProduct_Id(anyLong(), anyLong()))
+        Wish wish = new Wish(member, option);
+        given(wishesRepository.findByMember_IdAndOption_Id(anyLong(), anyLong()))
                 .willReturn(Optional.of(wish));
 
-        wishesService.removeWishIfPresent(memberId, productId);
+        wishesService.removeWishIfPresent(memberId, optionId);
 
-        verify(wishesRepository).findByMember_IdAndProduct_Id(memberId, productId);
+        verify(wishesRepository).findByMember_IdAndOption_Id(memberId, optionId);
         verify(wishesRepository).deleteById(any());
     }
 
     @Test
     @DisplayName("위시 리스트 조회 서비스 테스트")
     void getWishlistOfMember() {
-        List<Wish> products = new ArrayList<>();
-        Wish wish = new Wish(member, product);
-        products.add(wish);
-        products.add(wish);
-        Page<Wish> wishlist = new PageImpl<>(products);
+        List<Wish> wishes = new ArrayList<>();
+        Wish wish = new Wish(member, option);
+        wishes.add(wish);
+        wishes.add(wish);
+        Page<Wish> wishlist = new PageImpl<>(wishes);
         given(wishesRepository.findByMember_Id(anyLong(), any()))
                 .willReturn(wishlist);
 
-        Page<ProductResponse> foundWishlist = wishesService.getWishlistOfMember(
+        Page<WishResponse> foundWishlist = wishesService.getWishlistOfMember(
                 memberId,
                 PageRequest.of(0, 10)
         );
 
-        assertThat(foundWishlist.getTotalElements()).isEqualTo(products.size());
+        assertThat(foundWishlist.getTotalElements()).isEqualTo(wishes.size());
     }
 
 }

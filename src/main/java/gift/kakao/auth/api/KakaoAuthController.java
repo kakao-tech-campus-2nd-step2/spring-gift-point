@@ -1,15 +1,16 @@
 package gift.kakao.auth.api;
 
 import gift.auth.application.AuthService;
+import gift.auth.dto.AuthResponse;
+import gift.kakao.auth.dto.KakaoUrlResponse;
 import gift.kakao.vo.KakaoProperties;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.springframework.web.bind.annotation.RestController;
 
-@Controller
-@RequestMapping("/api/oauth")
+@RestController
+@RequestMapping("/api/oauth/kakao")
 public class KakaoAuthController {
 
     private final AuthService authService;
@@ -21,16 +22,14 @@ public class KakaoAuthController {
         this.kakaoProperties = kakaoProperties;
     }
 
-    @GetMapping
-    public String redirectKakaoLogin() {
-        return "redirect:" + kakaoProperties.getKakaoAuthUrl();
+    @GetMapping("/url")
+    public KakaoUrlResponse getRedirectKakaoLogin() {
+        return new KakaoUrlResponse(kakaoProperties.getKakaoAuthUrl());
     }
 
-    @GetMapping("/callback")
-    public String handleKakaoCallback(RedirectAttributes redirectAttributes,
-                                      @RequestParam("code") String code) {
-        redirectAttributes.addFlashAttribute("tokenResponse", authService.authenticate(code));
-        return "redirect:/members/order";
+    @GetMapping("/code")
+    public AuthResponse handleKakaoLoginRedirect(@RequestParam("code") String code) {
+        return authService.authenticate(code);
     }
 
 }

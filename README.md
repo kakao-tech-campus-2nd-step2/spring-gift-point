@@ -6,7 +6,7 @@
 
 ### [API 명세서 노션 링크](https://fuchsia-tabletop-6fc.notion.site/22-438e773c1c0d475da1e87b4ef4ef42d8)
 
-- [인증 API](#인증-api)
+- [인증 API](#카카오-인증-api)
 - [카테고리 API](#카테고리-api)
 - [회원 API](#회원-api)
 - [옵션 API](#옵션-api)

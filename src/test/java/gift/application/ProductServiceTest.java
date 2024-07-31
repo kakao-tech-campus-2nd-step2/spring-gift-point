@@ -5,6 +5,7 @@ import gift.global.error.ErrorCode;
 import gift.product.application.ProductService;
 import gift.product.dao.CategoryRepository;
 import gift.product.dao.ProductRepository;
+import gift.product.dto.GetProductResponse;
 import gift.product.dto.OptionRequest;
 import gift.product.dto.ProductRequest;
 import gift.product.dto.ProductResponse;
@@ -46,12 +47,14 @@ class ProductServiceTest {
     @Mock
     private CategoryRepository categoryRepository;
 
+    private Long categoryId;
     private Category category;
 
     private OptionRequest optionRequest;
 
     @BeforeEach
     void setUp() {
+        categoryId = 1L;
         category = CategoryFixture.createCategory("상품권");
         optionRequest = new OptionRequest("옵션", 10);
     }
@@ -68,7 +71,7 @@ class ProductServiceTest {
         given(productRepository.findAll(productPage.getPageable()))
                 .willReturn(productPage);
 
-        Page<ProductResponse> responsePage = productService.getPagedProducts(productPage.getPageable());
+        Page<GetProductResponse> responsePage = productService.getPagedProducts(productPage.getPageable());
 
         assertThat(responsePage.getTotalElements()).isEqualTo(2);
     }
@@ -80,7 +83,7 @@ class ProductServiceTest {
         given(productRepository.findById(any()))
                 .willReturn(Optional.of(product));
 
-        ProductResponse resultProduct = productService.getProductByIdOrThrow(1L);
+        GetProductResponse resultProduct = productService.getProductByIdOrThrow(1L);
 
         assertThat(resultProduct.name()).isEqualTo(product.getName());
     }
@@ -105,12 +108,12 @@ class ProductServiceTest {
                 "product1",
                 1000,
                 "https://testshop.com",
-                category.getName(),
-                optionRequest);
+                categoryId,
+                List.of(optionRequest));
         Product product = ProductMapper.toEntity(request, category);
         given(productRepository.save(any()))
                 .willReturn(product);
-        given(categoryRepository.findByName(any()))
+        given(categoryRepository.findById(anyLong()))
                 .willReturn(Optional.of(category));
 
         ProductResponse response = productService.createProduct(request);
@@ -144,11 +147,11 @@ class ProductServiceTest {
                 "product2",
                 product.getPrice(),
                 product.getImageUrl(),
-                category.getName(),
-                optionRequest);
+                categoryId,
+                List.of(optionRequest));
         given(productRepository.findById(any()))
                 .willReturn(Optional.of(product));
-        given(categoryRepository.findByName(any()))
+        given(categoryRepository.findById(anyLong()))
                 .willReturn(Optional.of(category));
 
         productService.updateProduct(product.getId(), request);
@@ -164,8 +167,8 @@ class ProductServiceTest {
                 "product",
                 3000,
                 "https://testshop.io",
-                category.getName(),
-                optionRequest);
+                categoryId,
+                List.of(optionRequest));
         given(productRepository.findById(anyLong()))
                 .willReturn(Optional.empty());
 

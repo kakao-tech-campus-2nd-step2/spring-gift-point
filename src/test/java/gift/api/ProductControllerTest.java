@@ -1,18 +1,15 @@
 package gift.api;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import gift.global.security.JwtFilter;
-import gift.global.security.JwtUtil;
-import gift.product.application.OptionService;
-import gift.product.dto.OptionRequest;
-import gift.product.dto.OptionResponse;
-import gift.product.entity.Category;
 import gift.global.error.CustomException;
 import gift.global.error.ErrorCode;
+import gift.global.security.JwtFilter;
+import gift.global.security.JwtUtil;
 import gift.product.api.ProductController;
+import gift.product.application.OptionService;
 import gift.product.application.ProductService;
-import gift.product.dto.ProductRequest;
-import gift.product.dto.ProductResponse;
+import gift.product.dto.*;
+import gift.product.entity.Category;
 import gift.product.util.ProductMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -32,16 +29,15 @@ import testFixtures.CategoryFixture;
 import testFixtures.ProductFixture;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(ProductController.class)
 @ExtendWith(MockitoExtension.class)
@@ -61,12 +57,14 @@ class ProductControllerTest {
     private OptionService optionService;
     private final String bearerToken = "Bearer token";
 
+    private Long categoryId;
     private Category category;
 
     private OptionRequest optionRequest;
 
     @BeforeEach
     void setUp() {
+        categoryId = 1L;
         category = CategoryFixture.createCategory("상품권");
         optionRequest = new OptionRequest("옵션", 10);
     }
@@ -74,17 +72,17 @@ class ProductControllerTest {
     @Test
     @DisplayName("상품 전체 조회 기능 테스트")
     void getAllProducts() throws Exception {
-        List<ProductResponse> products = new ArrayList<>();
-        ProductResponse productResponse1 = ProductMapper.toResponseDto(
+        List<GetProductResponse> products = new ArrayList<>();
+        GetProductResponse productResponse1 = ProductMapper.toGetResponseDto(
                 ProductFixture.createProduct("product1", category)
         );
-        ProductResponse productResponse2 = ProductMapper.toResponseDto(
+        GetProductResponse productResponse2 = ProductMapper.toGetResponseDto(
                 ProductFixture.createProduct("product2", category)
         );
         products.add(productResponse1);
         products.add(productResponse2);
 
-        Page<ProductResponse> response = new PageImpl<>(products);
+        Page<GetProductResponse> response = new PageImpl<>(products);
         String responseJson = objectMapper.writeValueAsString(response);
         given(productService.getPagedProducts(any()))
                 .willReturn(response);
@@ -100,7 +98,7 @@ class ProductControllerTest {
     @Test
     @DisplayName("상품 상세 조회 기능 테스트")
     void getProduct() throws Exception {
-        ProductResponse response = ProductMapper.toResponseDto(
+        GetProductResponse response = ProductMapper.toGetResponseDto(
                 ProductFixture.createProduct("product", category)
         );
         Long responseId = 1L;
@@ -139,8 +137,8 @@ class ProductControllerTest {
                 "product1",
                 1000,
                 "https://testshop.com",
-                category.getName(),
-                optionRequest);
+                categoryId,
+                List.of(optionRequest));
         ProductResponse response = ProductMapper.toResponseDto(
                 ProductMapper.toEntity(request, category)
         );
@@ -189,11 +187,11 @@ class ProductControllerTest {
                 "product2",
                 3000,
                 "https://testshop.com",
-                category.getName(),
-                optionRequest);
+                categoryId,
+                List.of(optionRequest));
         String requestJson = objectMapper.writeValueAsString(request);
 
-        mockMvc.perform(patch("/api/products/{id}", productId)
+        mockMvc.perform(put("/api/products/{id}", productId)
                         .header(HttpHeaders.AUTHORIZATION, bearerToken)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(requestJson))
@@ -206,11 +204,11 @@ class ProductControllerTest {
     @DisplayName("상품 옵션 조회 테스트")
     void getProductOptions() throws Exception {
         Long productId = 1L;
-        Set<OptionResponse> options = new HashSet<>();
+        List<OptionResponse> options = new ArrayList<>();
         options.add(new OptionResponse(1L, "옵션1", 10));
         options.add(new OptionResponse(2L, "옵션2", 20));
         String responseJson = objectMapper.writeValueAsString(options);
-        given(optionService.getProductOptionsByIdOrThrow(anyLong()))
+        given(optionService.getOptionsByProductId(anyLong()))
                 .willReturn(options);
 
         mockMvc.perform(get("/api/products/{id}/options", productId)
@@ -218,7 +216,7 @@ class ProductControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(content().json(responseJson));
 
-        verify(optionService).getProductOptionsByIdOrThrow(productId);
+        verify(optionService).getOptionsByProductId(productId);
     }
 
     @Test
@@ -245,15 +243,16 @@ class ProductControllerTest {
     @DisplayName("상품 옵션 삭제 테스트")
     void deleteOptionFromProduct() throws Exception {
         Long productId = 1L;
+        Long optionId = 2L;
         String requestJson = objectMapper.writeValueAsString(optionRequest);
 
-        mockMvc.perform(delete("/api/products/{id}/options", productId)
+        mockMvc.perform(delete("/api/products/{productId}/options/{optionId}", productId, optionId)
                         .header(HttpHeaders.AUTHORIZATION, bearerToken)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(requestJson))
                 .andExpect(status().isOk());
 
-        verify(optionService).deleteOptionFromProduct(productId, optionRequest);
+        verify(optionService).deleteOptionFromProductById(productId, optionId);
     }
 
 }
