@@ -11,17 +11,20 @@ public class UserDTO {
     private final String email;
     @NotBlank
     private final String password;
+    private final Role role;
 
-    public UserDTO(Long id, String email, String password) {
+    public UserDTO(Long id, String email, String password, Role role) {
         this.id = id;
         this.password = password;
         this.email = email;
+        this.role = role;
     }
 
     public UserDTO(User user) {
         this.id = user.getId();
         this.email = user.getEmail();
         this.password = user.getPassword();
+        this.role = user.getRole();
     }
 
     public Long getId() {
@@ -36,8 +39,7 @@ public class UserDTO {
         return email;
     }
 
-    public User toEntity() {
-        return new User(id, password, email);
+    public Role getRole() {
+        return role;
     }
-
 }
