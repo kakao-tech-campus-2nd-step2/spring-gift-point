@@ -96,7 +96,7 @@ class KaKaoServiceTest {
         String actualEmail = kaKaoService.getKakaoAccountEmail(accessToken);
 
         // then
-        Assertions.assertThat("trichat26@naver.com").isEqualTo(actualEmail);
+        Assertions.assertThat(actualEmail).isEqualTo("trichat26@naver.com");
     }
 
 }
