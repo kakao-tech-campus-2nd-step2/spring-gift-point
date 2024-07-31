@@ -45,12 +45,6 @@ public class OptionService {
                 .toList();
     }
 
-    @Transactional(readOnly = true)
-    public List<Option> getOptionForProductController(Long productId) {
-        Product product = productRepository.findById(productId).orElseThrow(() -> new ProductNotFoundException("매칭되는 product가 없습니다"));
-        return optionRepository.findByProduct(product);
-    }
-
     @Transactional
     public void editOption(Long productId, Long optionId, RequestOptionDTO requestOptionDTO) {
         Option option = optionRepository.findById(optionId).orElseThrow(()-> new OptionNotFoundException("매칭되는 옵션이 없습니다"));
