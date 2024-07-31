@@ -3,6 +3,7 @@ package gift.controller;
 
 import gift.dto.OptionDTO;
 
+import gift.dto.OptionResponseDTO;
 import gift.entity.Option;
 import gift.entity.Product;
 import gift.service.OptionFacadeService;
@@ -16,6 +17,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
+import java.util.stream.Collectors;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -37,14 +39,19 @@ public class OptionController {
     @GetMapping()
     @Operation(summary = "ID로 Product 옵션 조회", description = "Product의 Id로 상품의 옵션을 가져옵니다.")
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "201", description = "옵션 목록 조회 성공"),
+        @ApiResponse(responseCode = "200", description = "옵션 목록 조회 성공", content = @Content(array = @ArraySchema(schema = @Schema(implementation = OptionResponseDTO.class)))),
         @ApiResponse(responseCode = "404", description = "존재하지 않는 옵션", content = @Content(array = @ArraySchema(schema = @Schema(implementation = ErrorResponse.class))))
     })
 
-    public ResponseEntity<List<Option>> getProductByIdWithOption(
+    public ResponseEntity<List<OptionResponseDTO>> getProductByIdWithOption(
         @Parameter(name = "productId", description = "Product Id", example = "1") @PathVariable("productId") long productId) {
         List<Option> options = optionService.getAllProductOption(productId);
-        return new ResponseEntity<>(options, HttpStatus.OK);
+
+        List<OptionResponseDTO> response = options.stream()
+            .map(OptionResponseDTO::new)
+            .collect(Collectors.toList());
+
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @Operation(summary = "상품 Option 추가", description = "상품의 옵션을 추가합니다.")
@@ -67,9 +74,9 @@ public class OptionController {
     @Operation(summary = "상품 Option 수정", description = "id값에 해당하는 상품의 옵션을 수정합니다.")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "204", description = "옵션 수정 성공"),
-        @ApiResponse(responseCode = "400", description = "입력 데이터 잘못됨.",content = @Content(array = @ArraySchema(schema = @Schema(implementation = ErrorResponse.class)))),
-        @ApiResponse(responseCode = "404", description = "수정하려는 옵션 조회 실패.",content = @Content(array = @ArraySchema(schema = @Schema(implementation = ErrorResponse.class)))),
-        @ApiResponse(responseCode = "409", description = "옵션 이름 중복 ",content = @Content(array = @ArraySchema(schema = @Schema(implementation = ErrorResponse.class))))})
+        @ApiResponse(responseCode = "400", description = "입력 데이터 잘못됨.", content = @Content(array = @ArraySchema(schema = @Schema(implementation = ErrorResponse.class)))),
+        @ApiResponse(responseCode = "404", description = "수정하려는 옵션 조회 실패.", content = @Content(array = @ArraySchema(schema = @Schema(implementation = ErrorResponse.class)))),
+        @ApiResponse(responseCode = "409", description = "옵션 이름 중복 ", content = @Content(array = @ArraySchema(schema = @Schema(implementation = ErrorResponse.class))))})
     public ResponseEntity<String> updateOption(@PathVariable("productId") Long productId,
         @PathVariable("optionId") Long optionId,
         @RequestBody OptionDTO optionDTO) {

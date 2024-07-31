@@ -82,7 +82,7 @@ public class WishlistController {
 
     @Operation(summary = "Wishlist 의 상품 제거", description = "로그인한 사용자의 Wishlist에서 상품을 제거합니다.")
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "201", description = "위시리스트 상품 삭제 성공"),
+        @ApiResponse(responseCode = "204", description = "위시리스트 상품 삭제 성공"),
         @ApiResponse(responseCode = "400", description = "입력 데이터 잘못됨.", content = @Content(array = @ArraySchema(schema = @Schema(implementation = ErrorResponse.class)))),
         @ApiResponse(responseCode = "401", description = "유효한 토큰 필요", content = @Content(array = @ArraySchema(schema = @Schema(implementation = ErrorResponse.class)))),
         @ApiResponse(responseCode = "404", description = "이미 위시리스트에 존재하지 않는 상품", content = @Content(array = @ArraySchema(schema = @Schema(implementation = ErrorResponse.class))))})

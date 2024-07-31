@@ -37,6 +37,9 @@ public class CategoryController {
 
     @GetMapping
     @Operation(summary = "전체 Category 목록 조회", description = "저장된 모든 카테고리의 정보를 가져옵니다.")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "카테고리 조회 성공"),
+        @ApiResponse(responseCode = "500", description = "서버 오류.", content = @Content(array = @ArraySchema(schema = @Schema(implementation = ErrorResponse.class)))),})
     public ResponseEntity<List<Category>> getAllCategory() {
         return new ResponseEntity<>(categoryService.findAll(), HttpStatus.OK);
     }
@@ -56,7 +59,7 @@ public class CategoryController {
     @PutMapping({"/{categoryId}"})
     @Operation(summary = "Category 수정", description = "기존의 카테고리를 수정합니다.")
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "카테고리 수정 성공"),
+        @ApiResponse(responseCode = "204", description = "카테고리 수정 성공"),
         @ApiResponse(responseCode = "400", description = "입력 데이터 잘못됨.", content = @Content(array = @ArraySchema(schema = @Schema(implementation = ErrorResponse.class)))),
         @ApiResponse(responseCode = "404", description = "수정하려는 카테고리 조회 실패.", content = @Content(array = @ArraySchema(schema = @Schema(implementation = ErrorResponse.class)))),
         @ApiResponse(responseCode = "409", description = "카테고리 이름 중복 ", content = @Content(array = @ArraySchema(schema = @Schema(implementation = ErrorResponse.class))))})
@@ -65,7 +68,7 @@ public class CategoryController {
         @PathVariable("categoryId") Long categoryId) {
         Category category = categoryDTO.toEntity();
         categoryService.update(categoryId, category);
-        return new ResponseEntity<>("OK", HttpStatus.OK);
+        return new ResponseEntity<>("OK", HttpStatus.NO_CONTENT);
     }
 
     @DeleteMapping({"/{categoryId}"})

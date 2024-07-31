@@ -20,6 +20,8 @@ public class OptionDTO {
     public OptionDTO() {
     }
 
+
+
     public OptionDTO(String name, int quantity) {
         this.name = name;
         this.quantity = quantity;
@@ -32,6 +34,7 @@ public class OptionDTO {
     public int getQuantity() {
         return quantity;
     }
+
 
 
     public Option toEntity(Product product) {

@@ -48,7 +48,7 @@ public class MemberController {
     @PostMapping("/login")
     @Operation(summary = "로그인", description = "Id, Password가 일치하면 로그인 성공 후 accessToken을 반환합니다.")
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "로그인 성공", content = @Content(array = @ArraySchema(schema = @Schema(implementation = AuthResponse.class)))),
+        @ApiResponse(responseCode = "200", description = "로그인 성공", content = @Content(schema = @Schema(implementation = AuthResponse.class))),
         @ApiResponse(responseCode = "400", description = "입력 데이터 잘못됨.", content = @Content(array = @ArraySchema(schema = @Schema(implementation = ErrorResponse.class)))),
         @ApiResponse(responseCode = "403", description = "회원 정보 불일치.", content = @Content(array = @ArraySchema(schema = @Schema(implementation = ErrorResponse.class))))})
 

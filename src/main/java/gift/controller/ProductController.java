@@ -48,7 +48,7 @@ public class ProductController {
     @GetMapping("/{productId}")
     @Operation(summary = "ID로 Product 조회", description = "Product의 Id로 상품의 정보를 가져옵니다.")
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "상품 조회 성공", content = @Content(array = @ArraySchema(schema = @Schema(implementation = ProductResponseDTO.class)))),
+        @ApiResponse(responseCode = "200", description = "상품 조회 성공", content = @Content(schema = @Schema(implementation = ProductResponseDTO.class))),
         @ApiResponse(responseCode = "404", description = "존재하지 않는 상품.", content = @Content(array = @ArraySchema(schema = @Schema(implementation = ErrorResponse.class))))})
     public ResponseEntity<ProductResponseDTO> getProductById(
         @Parameter(name = "productId", description = "조회할 상품의 id", example = "1")
@@ -66,13 +66,14 @@ public class ProductController {
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "Product 목록 조회 성공", content = @Content(array = @ArraySchema(schema = @Schema(implementation = PagedModel.class)))),
         @ApiResponse(responseCode = "400", description = "입력 데이터 잘못됨.", content = @Content(array = @ArraySchema(schema = @Schema(implementation = ErrorResponse.class))))})
-    public ResponseEntity<Page<Product>> getProductPage(
+    public ResponseEntity<Page<ProductResponseDTO>> getProductPage(
         @ParameterObject @PageableDefault(page=0, size=10, sort="id") Pageable pageable,
         @Parameter(description = "필터링 적용할 카테고리 ID, 없을 시 전체 상품 조회")
         @RequestParam(required = false) Long categoryId
     ) {
         Page<Product> products = productService.getProductPage(pageable,categoryId);
-        return new ResponseEntity<>(products, HttpStatus.OK);
+        Page<ProductResponseDTO> response = products.map(ProductResponseDTO::new);
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     //product 추가
@@ -118,7 +119,7 @@ public class ProductController {
     @DeleteMapping("/{productId}")
     @Operation(summary = "Product 삭제", description = "id에 해당하는 Product를 삭제합니다.")
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "204", description = "회원가입 성공"),
+        @ApiResponse(responseCode = "204", description = "Product"),
         @ApiResponse(responseCode = "404", description = "삭제하려는 상품 조회 실패.", content = @Content(array = @ArraySchema(schema = @Schema(implementation = ErrorResponse.class)))),
     })
     public ResponseEntity<String> deleteProduct(
