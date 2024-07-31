@@ -15,8 +15,9 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import gift.dto.CategoryDto;
+import gift.dto.request.CategoryRequest;
 import gift.dto.response.CategoryResponse;
+import gift.dto.response.GetCategoriesResponse;
 
 @RestController
 @Tag(name = "category", description = "카테고리 API")
@@ -34,8 +35,8 @@ public class CategoryController {
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "카테고리 조회 성공")
     })
-    public ResponseEntity<CategoryResponse> getCategories(){
-        CategoryResponse categoryResponse = categoryService.findAll();
+    public ResponseEntity<GetCategoriesResponse> getCategories(){
+        GetCategoriesResponse categoryResponse = categoryService.findAll();
         return new ResponseEntity<>(categoryResponse, HttpStatus.OK);
     }
 
@@ -45,19 +46,17 @@ public class CategoryController {
         @ApiResponse(responseCode = "201", description = "카테고리 생성 성공"),
         @ApiResponse(responseCode = "409", description = "이미 존재하는 카테고리")
     })
-    public ResponseEntity<Void> addCategory(@RequestBody CategoryDto categoryDto){
-        categoryService.addCategory(categoryDto);
-        return new ResponseEntity<>(HttpStatus.CREATED);
+    public ResponseEntity<CategoryResponse> addCategory(@RequestBody CategoryRequest categoryRequest){
+        return new ResponseEntity<>(categoryService.addCategory(categoryRequest), HttpStatus.CREATED);
     }
 
     @PutMapping("/{categoryId}")
     @Operation(summary = "카테고리 수정", description = "카테고리를 수정합니다.")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "카테고리 수정 성공"),
-        @ApiResponse(responseCode = "400", description = "존재하지 않는 카테고리")
+        @ApiResponse(responseCode = "404", description = "존재하지 않는 카테고리")
     })
-    public ResponseEntity<Void> updateCategory(@PathVariable Long categoryId, @RequestBody CategoryDto categoryDto){
-        categoryService.updateCategory(categoryId, categoryDto);
-        return new ResponseEntity<>(HttpStatus.OK);
+    public ResponseEntity<CategoryResponse> updateCategory(@PathVariable Long categoryId, @RequestBody CategoryRequest categoryRequest){
+        return new ResponseEntity<>(categoryService.updateCategory(categoryId, categoryRequest), HttpStatus.OK);
     }
 }

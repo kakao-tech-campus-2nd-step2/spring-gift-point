@@ -1,6 +1,7 @@
 package gift.dto.response;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonCreator;
 
 public class ErrorResponse {
     
@@ -10,7 +11,13 @@ public class ErrorResponse {
     @JsonProperty("error_code")
     private int code;
 
-    public ErrorResponse(String message, int code){
+    @JsonCreator
+    public ErrorResponse(
+        @JsonProperty("message")
+        String message, 
+
+        @JsonProperty("error_code")
+        int code){
         this.message = message;
         this.code = code;
     }

@@ -12,6 +12,7 @@ import jakarta.persistence.Table;
 import java.util.List;
 
 import gift.dto.CategoryDto;
+import gift.dto.request.CategoryRequest;
 
 @Entity
 @Table(name = "category")
@@ -67,11 +68,12 @@ public class Category {
         return products;
     }
 
-    public void update(CategoryDto categoryDto){
-        this.name = categoryDto.getName();
-        this.color = categoryDto.getColor();
-        this.imageUrl = categoryDto.getImageUrl();
-        this.description = categoryDto.getDescription();
+    public CategoryDto update(CategoryRequest categoryRequest){
+        this.name = categoryRequest.getName();
+        this.color = categoryRequest.getColor();
+        this.imageUrl = categoryRequest.getImageUrl();
+        this.description = categoryRequest.getDescription();
+        return new CategoryDto(this.id, this.name, this.color, this.imageUrl, this.description);
     }
     
 }

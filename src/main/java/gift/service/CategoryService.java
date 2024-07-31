@@ -6,7 +6,9 @@ import org.springframework.stereotype.Service;
 import gift.repository.CategoryRepository;
 import jakarta.transaction.Transactional;
 import gift.dto.CategoryDto;
+import gift.dto.request.CategoryRequest;
 import gift.dto.response.CategoryResponse;
+import gift.dto.response.GetCategoriesResponse;
 import gift.entity.Category;
 import gift.exception.CustomException;
 
@@ -27,10 +29,10 @@ public class CategoryService {
         categoryRepository.save(testCategory2);
     }
 
-    public CategoryResponse findAll(){
+    public GetCategoriesResponse findAll(){
 
         List<Category> categories = categoryRepository.findAll();
-        CategoryResponse categoryResponse = new CategoryResponse(
+        GetCategoriesResponse categoryResponse = new GetCategoriesResponse(
             categories
             .stream()
             .map(CategoryDto::fromEntity)
@@ -40,22 +42,29 @@ public class CategoryService {
     }
 
     @Transactional
-    public void addCategory(CategoryDto categoryDto){
+    public CategoryResponse addCategory(CategoryRequest categoryRequest){
 
-        if(categoryRepository.findByName(categoryDto.getName()).isEmpty()){
-            Category category = toEntity(categoryDto);
-            categoryRepository.save(category);
+        if(categoryRepository.findByName(categoryRequest.getName()).isEmpty()){
+            Category category = new Category(categoryRequest.getName(), categoryRequest.getColor(), categoryRequest.getImageUrl(), categoryRequest.getDescription());
+            Category savedCategory = categoryRepository.save(category);
+            return new CategoryResponse(new CategoryDto(
+                savedCategory.getId(), 
+                savedCategory.getName(), 
+                savedCategory.getColor(), 
+                savedCategory.getImageUrl(), 
+                savedCategory.getDescription()));
         }else{
-            new CustomException("Category with name" + categoryDto.getName() + "exists" , HttpStatus.CONFLICT);
+            throw new CustomException("Category with name" + categoryRequest.getName() + "exists" , HttpStatus.CONFLICT, -40902);
         }
     }
+
     @Transactional
-    public void updateCategory(Long categoryId, CategoryDto categoryDto){
+    public CategoryResponse updateCategory(Long categoryId, CategoryRequest categoryRequest){
 
         Category category = categoryRepository.findById(categoryId)
-            .orElseThrow(() -> new CustomException("Category with id " + categoryId + " not exists", HttpStatus.NOT_FOUND));
-            
-        category.update(categoryDto);
+            .orElseThrow(() -> new CustomException("Category with id " + categoryId + " not exists", HttpStatus.NOT_FOUND, -40402));
+        
+        return new CategoryResponse(category.update(categoryRequest));
     }
 
     public Category toEntity(CategoryDto categoryDto){
