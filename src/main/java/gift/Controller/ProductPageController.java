@@ -2,6 +2,7 @@ package gift.Controller;
 
 import gift.DTO.RequestProductPostDTO;
 import gift.DTO.ResponseProductDTO;
+import gift.DTO.ResponseProductListOfCategoryDTO;
 import gift.Service.OptionService;
 import gift.Service.ProductService;
 import jakarta.validation.Valid;
@@ -15,8 +16,6 @@ import gift.Model.Entity.Product;
 import gift.DTO.RequestProductDTO;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @Controller
 @RequestMapping("/api")
@@ -54,10 +53,10 @@ public class ProductPageController {
 
 
     @GetMapping("/products")
-    public ResponseEntity<Page<Product>> getProducts(@PageableDefault(size = 10, sort = "name", direction = Sort.Direction.ASC) Pageable pageable,
-                              @RequestParam("categoryId") Long categoryId) {
-        Page<Product> productPage = productService.getAllProducts(pageable, categoryId);
-        return ResponseEntity.ok(productPage);
+    public ResponseEntity<Page<ResponseProductListOfCategoryDTO>> getProducts(@PageableDefault(size = 10, sort = "name", direction = Sort.Direction.ASC) Pageable pageable,
+                                                                              @RequestParam("categoryId") Long categoryId) {
+        Page<ResponseProductListOfCategoryDTO> page = productService.getAllProducts(pageable, categoryId);
+        return ResponseEntity.ok(page);
     }
 
 

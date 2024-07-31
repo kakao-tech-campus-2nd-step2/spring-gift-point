@@ -10,10 +10,12 @@ import gift.Model.Entity.Wish;
 import gift.Repository.ProductRepository;
 import gift.Repository.WishRepository;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.*;
 
 @Service
@@ -33,33 +35,21 @@ public class WishService {
     public Wish addWish(Member member, RequestWishDTO requestWishDTO) {
         Product product = productRepository.findById(requestWishDTO.getProductId())
                 .orElseThrow(()->new ProductNotFoundException("매칭되는 상품이 없습니다."));
-        Wish wish = new Wish(member, product);
+        Wish wish = new Wish(member, product, LocalDateTime.now());
         return wishRepository.save(wish);
     }
 
     @Transactional(readOnly = true)
-    public Page<Wish> getWishList(Member member, Pageable pageable) {
+    public Page<ResponseWishDTO> getWishList(Member member, Pageable pageable) {
         Page<Wish> wishListPage= wishRepository.findByMember(member,pageable);
-        return wishListPage;
-    }
-
-    @Transactional(readOnly = true)
-    public List<ResponseWishDTO> getWish(Member member) {
-        return  wishRepository.findWishListByMember(member)
-                .stream()
-                .map(ResponseWishDTO::of)
-                .toList();
-    }
-
-    @Transactional(readOnly = true)
-    public Wish findWishByMemberAndProduct(Member member, Product product){
-        Optional<Wish> wish= wishRepository.findByMemberAndProduct(member, product);
-        return wish.orElseThrow(()->new WishNotFoundException("매칭되는 wish가 없습니다"));
+        List<ResponseWishDTO> response = wishListPage.getContent().stream().map(ResponseWishDTO::of).toList();
+        Page<ResponseWishDTO> page = new PageImpl<>(response, pageable, wishListPage.getTotalElements());
+        return page;
     }
 
     @Transactional
-    public void deleteWish(Member member, RequestWishDTO requestWishDTO) {
-        Product product = productRepository.findById(requestWishDTO.getProductId())
+    public void deleteWish(Member member, Long productId) {
+        Product product = productRepository.findById(productId)
                 .orElseThrow(() -> new ProductNotFoundException("매칭되는 물건이 없습니다."));
         Wish wish = wishRepository.findByMemberAndProduct(member, product)
                 .orElseThrow(() -> new WishNotFoundException("매칭되는 wish가 없습니다"));
