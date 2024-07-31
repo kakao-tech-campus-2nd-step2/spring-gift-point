@@ -1,6 +1,7 @@
 package gift.service;
 
 import gift.domain.AppUser;
+import gift.domain.Role;
 import gift.dto.user.SignUpRequest;
 import gift.dto.user.UpdatePasswordRequest;
 import gift.exception.user.ForbiddenException;
@@ -19,13 +20,13 @@ public class UserService {
     }
 
     @Transactional
-    public void signUp(SignUpRequest signUpRequest) {
+    public AppUser signUp(SignUpRequest signUpRequest) {
         String salt = SHA256Util.getSalt();
         String hashedPassword = SHA256Util.encodePassword(signUpRequest.getPassword(), salt);
         signUpRequest.setPassword(hashedPassword);
-        AppUser appUser = new AppUser(signUpRequest.getEmail(), signUpRequest.getPassword(), signUpRequest.getRole(),
+        AppUser appUser = new AppUser(signUpRequest.getEmail(), signUpRequest.getPassword(), Role.USER,
                 salt);
-        userRepository.save(appUser);
+        return userRepository.save(appUser);
     }
 
     @Transactional

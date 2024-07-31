@@ -42,8 +42,8 @@ public class UserController {
     @Operation(summary = "회원가입", description = "회원가입 후 로그인 필요함")
     @PostMapping
     public ResponseEntity<?> signUp(@Valid @RequestBody SignUpRequest signUpRequest) {
-        userService.signUp(signUpRequest);
-        String token = jwtUserService.login(new LoginRequest(signUpRequest.getEmail(), signUpRequest.getPassword()));
+        AppUser user = userService.signUp(signUpRequest);
+        String token = jwtUserService.getToken(user.getId());
         SignUpResponse response = new SignUpResponse(signUpRequest.getEmail(), token);
         return ResponseEntity.status(HttpStatus.CREATED).header("Authorization", token)
                 .body(new CommonResponse<>(response, "회원가입이 완료되었습니다.", true));

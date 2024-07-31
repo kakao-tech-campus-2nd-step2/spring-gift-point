@@ -38,13 +38,13 @@ public class OptionController {
     @GetMapping("/{productId}/options")
     public ResponseEntity<?> findOptionsByProductId(@PathVariable Long productId) {
         List<OptionResponse> options = optionService.findOptionsByProductId(productId);
-        return ResponseEntity.ok(new CommonResponse<>(options, "카테고리 조회가 완료되었습니다.", true));
+        return ResponseEntity.ok(new CommonResponse<>(options, "옵션 조회가 완료되었습니다.", true));
     }
 
     @Operation(summary = "상품 id로 옵션 추가")
     @PostMapping("/{productId}/options")
     public ResponseEntity<?> addOption(@PathVariable Long productId,
-                                            @Valid @RequestBody CreateOptionRequest createOptionRequest) {
+                                       @Valid @RequestBody CreateOptionRequest createOptionRequest) {
         Product product = productService.findProduct(productId);
         optionService.addOption(product, createOptionRequest);
         return ResponseEntity.status(HttpStatus.CREATED).body(new CommonResponse<>(null, "상품 옵션 추가가 완료되었습니다.", true));
@@ -53,8 +53,8 @@ public class OptionController {
     @Operation(summary = "옵션 Id로 옵션 수정")
     @PutMapping("/{productId}/options/{optionId}")
     public ResponseEntity<?> updateOption(@PathVariable Long productId,
-                                               @PathVariable Long optionId,
-                                               @Valid @RequestBody UpdateOptionRequest updateOptionRequest) {
+                                          @PathVariable Long optionId,
+                                          @Valid @RequestBody UpdateOptionRequest updateOptionRequest) {
         Product product = productService.findProduct(productId);
         optionService.updateOption(product, optionId, updateOptionRequest);
         return ResponseEntity.ok(new CommonResponse<>(null, "상품 옵션 수정이 완료되었습니다.", true));
@@ -63,7 +63,7 @@ public class OptionController {
     @Operation(summary = "옵션 id로 옵션 삭제", description = "상품에 옵션이 하나 이상 남아있을 때 옵션 id로 옵션 삭제")
     @DeleteMapping("/{productId}/options/{optionId}")
     public ResponseEntity<?> deleteOption(@PathVariable Long productId,
-                                               @PathVariable Long optionId) {
+                                          @PathVariable Long optionId) {
         Product product = productService.findProduct(productId);
         optionService.deleteOption(product, optionId);
         return ResponseEntity.ok(new CommonResponse<>(null, "상품 옵션 삭제가 완료되었습니다.", true));

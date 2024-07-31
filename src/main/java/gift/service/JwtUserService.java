@@ -39,4 +39,9 @@ public class JwtUserService {
                 })
                 .orElse(null);
     }
+
+    @Transactional(readOnly = true)
+    public String getToken(Long userId) {
+        return jwtService.createToken(userId);
+    }
 }
