@@ -130,7 +130,7 @@ class OptionRepositoryTest {
     }
 
     private Product product() {
-        return new Product(1L, "product", 1, "image", 1L);
+        return new Product("product", 1, "image", 1L);
     }
 
 }

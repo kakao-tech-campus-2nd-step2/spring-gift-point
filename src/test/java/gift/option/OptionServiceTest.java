@@ -53,7 +53,7 @@ class OptionServiceTest {
         Product product = product();
         product.getOptions().add(option);
 
-        when(optionRepository.findAllByProductId(any(Long.class))).thenReturn(product.getOptions());
+        when(optionRepository.findAllByProductId(any())).thenReturn(product.getOptions());
 
         //when, then
         Exception exception = assertThrows(IllegalArgumentException.class, () -> optionService.addOption(optionRequest,product));
@@ -72,7 +72,7 @@ class OptionServiceTest {
             new NoSuchElementException());
 
         //when //then
-        assertThrows(NoSuchElementException.class, () -> optionService.updateOption(optionRequest, product().getId()));
+        assertThrows(NoSuchElementException.class, () -> optionService.updateOption(optionRequest, product().getId(), 1L));
     }
 
     @DisplayName("이미 있는 이름의 옵션으로 변경 하려는 경우")
@@ -86,11 +86,11 @@ class OptionServiceTest {
         Product product = product();
         product.getOptions().add(exist);
 
-        when(optionRepository.findById(any(Long.class))).thenReturn(Optional.of(option));
-        when(optionRepository.findAllByProductId(any(Long.class))).thenReturn(product.getOptions());
+        when(optionRepository.findById(any())).thenReturn(Optional.of(option));
+        when(optionRepository.findAllByProductId(any())).thenReturn(product.getOptions());
 
         //when, then
-        Exception exception = assertThrows(IllegalArgumentException.class, () -> optionService.updateOption(optionRequest, product.getId()));
+        Exception exception = assertThrows(IllegalArgumentException.class, () -> optionService.updateOption(optionRequest, product.getId(), exist.getId()));
 
         //then
         assertThat(exception.getMessage()).isEqualTo(" 동일한 상품 내의 옵션 이름은 중복될 수 없습니다. ");
@@ -119,11 +119,11 @@ class OptionServiceTest {
     }
 
     private OptionRequest optionRequestWithName(String name){
-        return new OptionRequest(1L, name, 1);
+        return new OptionRequest(name, 1);
     }
 
     private Product product(){
-        return new Product(1L, "product",1,"image", 1L);
+        return new Product("product",1,"image", 1L);
     }
 
 }
