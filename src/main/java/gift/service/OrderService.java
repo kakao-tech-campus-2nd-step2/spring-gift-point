@@ -8,6 +8,7 @@ import gift.repository.OptionsRepository;
 import gift.repository.OrderRepository;
 import gift.repository.WishRepository;
 import gift.response.OrderResponse;
+import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -28,15 +29,16 @@ public class OrderService {
         this.kakaoMessageService = kakaoMessageService;
     }
 
-    public OrderResponse getOrder(Long orderId) {
-        Order order = orderRepository.findById(orderId)
-            .orElseThrow(NotFoundOrderException::new);
-        return OrderResponse.createOrderResponse(order);
+    public List<OrderResponse> getOrder(Long memberId) {
+        return orderRepository.findByMemberId(memberId)
+            .stream()
+            .map(OrderResponse::createOrderResponse)
+            .toList();
     }
 
-    public OrderResponse makeOrder(Long memberId, Long productId, Long optionId, Integer quantity, String message) {
+    public OrderResponse makeOrder(Long memberId, String accessToken, Long productId, Long optionId, Integer quantity, String message) {
         OrderResponse response = addOrder(memberId, productId, optionId, quantity, message);
-        sendKakaoMessageToMe(memberId, message);
+        sendKakaoMessageToMe(accessToken, message);
         return response;
     }
 
@@ -52,8 +54,8 @@ public class OrderService {
         return OrderResponse.createOrderResponse(savedOrder);
     }
 
-    public void sendKakaoMessageToMe(Long memberId, String message) {
-        kakaoMessageService.sendMessageToMe(memberId, message);
+    public void sendKakaoMessageToMe(String accessToken, String message) {
+        kakaoMessageService.sendMessageToMe( accessToken, message);
     }
 
 }

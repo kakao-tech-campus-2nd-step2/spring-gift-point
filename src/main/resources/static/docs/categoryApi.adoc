@@ -1,10 +1,6 @@
 == 전체 카테고리 조회
-operation::rest-docs-category-test/get-all-categories[snippets="http-request,http-response"]
-== 단건 카테고리 조회
-operation::rest-docs-category-test/get-category[snippets="http-request,path-parameters,http-response"]
+operation::rest-docs-category-test/get-all-categories[snippets="http-request,request-headers,http-response"]
 == 카테고리 생성
-operation::rest-docs-category-test/add-category[snippets="http-request,http-response"]
+operation::rest-docs-category-test/add-category[snippets="http-request,request-headers,http-response"]
 == 카테고리 수정
-operation::rest-docs-category-test/update-category[snippets="http-request,http-response"]
-== 카테고리 삭제
-operation::rest-docs-category-test/delete-category[snippets="http-request,query-parameters,http-response"]
+operation::rest-docs-category-test/update-category[snippets="http-request,request-headers,path-parameters,http-response"]

@@ -9,8 +9,6 @@ import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.Range;
 
 public record ProductUpdateRequest(
-    @NotNull
-    Long id,
     @NotBlank(message = "상품명을 입력해주세요.")
     @Length(min=1, max=15, message = "1~15자 사이로 입력해주세요.")
     @Pattern(regexp = "^[a-zA-Zㄱ-ㅎㅏ-ㅣ가-힣0-9()+&/_ \\[\\]-]*$", message = "상품명에 특수 문자는 '(, ), [, ], +, -, &, /, -' 만 입력 가능합니다.")

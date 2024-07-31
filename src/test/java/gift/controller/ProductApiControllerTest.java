@@ -68,7 +68,7 @@ public class ProductApiControllerTest {
         Product product = demoProduct();
         List<OptionResponse> options = new ArrayList<>();
         ProductResponse productResponse = ProductResponse.createProductResponse(product);
-        ProductOptionsResponse response = new ProductOptionsResponse(productResponse, options);
+        ProductOptionsResponse response = new ProductOptionsResponse(options);
 
         given(productService.getProduct(any(Long.class)))
             .willReturn(product);
@@ -77,31 +77,7 @@ public class ProductApiControllerTest {
 
         //when //then
         mockMvc.perform(
-                MockMvcRequestBuilders.get("/api/products/{id}/all", product.getId())
-                    .header("Authorization", "Bearer " + token))
-            .andExpect(status().isOk())
-            .andDo(print());
-    }
-
-    @DisplayName("하나의 옵션과 함께 상품 조회 요청 테스트")
-    @Test
-    void getProductWithOption() throws Exception {
-        //given
-        Long optionId = 1L;
-        Product product = demoProduct();
-        List<OptionResponse> options = new ArrayList<>();
-        ProductResponse productResponse = ProductResponse.createProductResponse(product);
-        ProductOptionsResponse response = new ProductOptionsResponse(productResponse, options);
-
-        given(productService.getProduct(any(Long.class)))
-            .willReturn(product);
-        given(optionsService.getProductOption(any(Product.class), any(Long.class)))
-            .willReturn(response);
-
-        //when //then
-        mockMvc.perform(
-                MockMvcRequestBuilders.get("/api/products/{id}", product.getId())
-                    .param("option_id", String.valueOf(optionId))
+                MockMvcRequestBuilders.get("/api/products/{id}/options", product.getId())
                     .header("Authorization", "Bearer " + token))
             .andExpect(status().isOk())
             .andDo(print());
@@ -161,8 +137,7 @@ public class ProductApiControllerTest {
 
         //when //then
         mockMvc.perform(
-                MockMvcRequestBuilders.delete("/api/products")
-                    .param("id", productId.toString())
+                MockMvcRequestBuilders.delete("/api/products/{productId}", productId)
                     .header("Authorization", "Bearer " + token)
                     .contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isNoContent())

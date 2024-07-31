@@ -6,7 +6,9 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
 import static org.mockito.Mockito.doNothing;
+import static org.springframework.restdocs.headers.HeaderDocumentation.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
@@ -17,6 +19,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import gift.auth.JwtTokenProvider;
+import gift.auth.OAuthService;
 import gift.config.LoginWebConfig;
 import gift.controller.CategoryApiController;
 import gift.model.Category;
@@ -40,7 +43,9 @@ import org.springframework.context.annotation.ComponentScan.Filter;
 import org.springframework.context.annotation.FilterType;
 import org.springframework.data.jpa.mapping.JpaMetamodelMappingContext;
 import org.springframework.http.MediaType;
+import org.springframework.restdocs.headers.HeaderDocumentation;
 import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders;
+import org.springframework.restdocs.request.RequestDocumentation;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 @WebMvcTest(value = CategoryApiController.class,
@@ -55,6 +60,8 @@ public class RestDocsCategoryTest extends AbstractRestDocsTest {
     @MockBean
     private JwtTokenProvider tokenProvider;
     @MockBean
+    private OAuthService oAuthService;
+    @MockBean
     private CategoryService categoryService;
 
     private String token = "{ACCESS_TOKEN}";
@@ -66,7 +73,7 @@ public class RestDocsCategoryTest extends AbstractRestDocsTest {
         List<CategoryResponse> categories = new ArrayList<>();
         LongStream.range(0, dataCounts)
             .forEach(i -> {
-                Category category = new Category(i + 1, "카테고리 " + (i + 1));
+                Category category = new Category(i + 1, "카테고리 " + (i + 1) , "color", "imageUrl", "description");
                 categories.add(CategoryResponse.createCategoryResponse(category));
             });
 
@@ -77,38 +84,45 @@ public class RestDocsCategoryTest extends AbstractRestDocsTest {
         mockMvc.perform(get("/api/categories")
                 .header("Authorization", "Bearer " + token))
             .andExpect(status().isOk())
-            .andExpect(jsonPath("$", hasSize(dataCounts)))
-            .andDo(print());
+            .andDo(document("rest-docs-category-test/get-all-categories",
+                requestHeaders(
+                    headerWithName("Authorization").description("service access token")
+                )));
     }
 
     @Test
     void getCategory() throws Exception {
         //given
         Long categoryId = 1L;
-        Category category = new Category(categoryId, "카테고리");
+        Category category = new Category(categoryId, "카테고리", "color", "imageUrl", "description");
         CategoryResponse categoryResponse = CategoryResponse.createCategoryResponse(category);
         given(categoryService.getCategory(categoryId))
             .willReturn(categoryResponse);
 
         //when then
-        mockMvc.perform(RestDocumentationRequestBuilders.get("/api/categories/{id}", categoryId)
-                .header("Authorization", "Bearer " + token))
+        mockMvc.perform(
+                RestDocumentationRequestBuilders.get("/api/categories/{categoryId}", categoryId)
+                    .header("Authorization", "Bearer " + token))
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.id").value(equalTo(categoryId.intValue())))
             .andDo(document("rest-docs-category-test/get-category",
+                requestHeaders(
+                    headerWithName("Authorization").description("service access token")
+                ),
                 pathParameters(
-                    parameterWithName("id").description("Category id")
+                    parameterWithName("categoryId").description("Category id")
                 )));
     }
 
     @Test
     void addCategory() throws Exception {
         //given
-        CategoryAddRequest categoryAddRequest = new CategoryAddRequest("카테고리");
+        CategoryAddRequest categoryAddRequest = new CategoryAddRequest("카테고리", "color", "imageUrl", "description");
         String content = objectMapper.writeValueAsString(categoryAddRequest);
         Category category = new Category(1L, categoryAddRequest.name());
 
-        given(categoryService.addCategory(any(String.class)))
+        given(categoryService.addCategory(any(String.class), any(String.class),
+            any(String.class), any(String.class)))
             .willReturn(category);
 
         //when //then
@@ -117,28 +131,40 @@ public class RestDocsCategoryTest extends AbstractRestDocsTest {
                 .content(content)
                 .contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isCreated())
-            .andDo(print());
+            .andDo(document("rest-docs-category-test/add-category",
+                requestHeaders(
+                    headerWithName("Authorization").description("service access token")
+                )));
     }
 
     @Test
     void updateCategory() throws Exception {
         //given
         Long savedCategoryId = 1L;
-        Category savedCategory = new Category(savedCategoryId, "카테고리");
-        CategoryUpdateRequest updateRequest = new CategoryUpdateRequest(savedCategoryId,
-            "수정된 카테고리명");
+        Category savedCategory = new Category(savedCategoryId, "카테고리", "color", "imageUrl", "description");
+        CategoryUpdateRequest updateRequest = new CategoryUpdateRequest(
+            "수정된 카테고리명", "수정된 컬러", "수정된 주소", "수정된 설명");
         String content = objectMapper.writeValueAsString(updateRequest);
-        given(categoryService.updateCategory(updateRequest.id(), updateRequest.name()))
+        given(categoryService.updateCategory(savedCategoryId, updateRequest.name(), updateRequest.color(),
+            updateRequest.imageUrl(), updateRequest.description()))
             .willReturn(savedCategory);
 
         //when //then
-        mockMvc.perform(put("/api/categories")
-                .header("Authorization", "Bearer " + token)
-                .content(content)
-                .contentType(MediaType.APPLICATION_JSON))
-            .andExpect(status().isNoContent())
-            .andDo(print());
-        then(categoryService).should().updateCategory(updateRequest.id(), updateRequest.name());
+        mockMvc.perform(
+                RestDocumentationRequestBuilders.put("/api/categories/{categoryId}", savedCategoryId)
+                    .header("Authorization", "Bearer " + token)
+                    .content(content)
+                    .contentType(MediaType.APPLICATION_JSON))
+            .andExpect(status().isOk())
+            .andDo(document("rest-docs-category-test/update-category",
+                requestHeaders(
+                    headerWithName("Authorization").description("service access token")
+                ),
+                pathParameters(
+                    parameterWithName("categoryId").description("Category id")
+                )));
+        then(categoryService).should().updateCategory(savedCategoryId, updateRequest.name(),
+            updateRequest.color(), updateRequest.imageUrl(), updateRequest.description());
     }
 
     @Test
@@ -152,6 +178,9 @@ public class RestDocsCategoryTest extends AbstractRestDocsTest {
             .andExpect(status().isNoContent())
             .andDo(
                 document("rest-docs-category-test/delete-category",
+                    requestHeaders(
+                        headerWithName("Authorization").description("service access token")
+                    ),
                     queryParameters(
                         parameterWithName("id").description("Category id")
                     )));

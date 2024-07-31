@@ -1,13 +1,13 @@
-insert into CATEGORY (name) values ('교환권');
-insert into CATEGORY (name) values ('상품권');
-insert into CATEGORY (name) values ('뷰티');
-insert into CATEGORY (name) values ('패션');
-insert into CATEGORY (name) values ('식품');
-insert into CATEGORY (name) values ('리빙/도서');
-insert into CATEGORY (name) values ('레저/스포츠');
-insert into CATEGORY (name) values ('아티스트/캐릭터');
-insert into CATEGORY (name) values ('유아동/반려');
-insert into CATEGORY (name) values ('카카오프렌즈');
+insert into CATEGORY (name,color,image_url,description) values ('교환권', 'color', 'http://a.com', 'description');
+insert into CATEGORY (name,color,image_url,description) values ('상품권', 'color', 'http://a.com', 'description');
+insert into CATEGORY (name,color,image_url,description) values ('뷰티', 'color', 'http://a.com', 'description');
+insert into CATEGORY (name,color,image_url,description) values ('패션', 'color', 'http://a.com', 'description');
+insert into CATEGORY (name,color,image_url,description) values ('식품', 'color', 'http://a.com', 'description');
+insert into CATEGORY (name,color,image_url,description) values ('리빙/도서', 'color', 'http://a.com', 'description');
+insert into CATEGORY (name,color,image_url,description) values ('레저/스포츠', 'color', 'http://a.com', 'description');
+insert into CATEGORY (name,color,image_url,description) values ('아티스트/캐릭터', 'color', 'http://a.com', 'description');
+insert into CATEGORY (name,color,image_url,description) values ('유아동/반려', 'color', 'http://a.com', 'description');
+insert into CATEGORY (name,color,image_url,description) values ('카카오프렌즈', 'color', 'http://a.com', 'description');
 
 insert into PRODUCTS (name, price, image_url, category_id) values ('productA', 1000, 'http://a.com', 1L);
 insert into PRODUCTS (name, price, image_url, category_id) values ('productB', 5000, 'http://b.com', 2L);
@@ -28,11 +28,11 @@ INSERT INTO MEMBER(email,password,role) VALUES ('bbb123@b.com', '1234', 'ROLE_US
 INSERT INTO MEMBER(email,password,role) VALUES ('ccc123@c.com', '1234', 'ROLE_USER');
 INSERT INTO MEMBER(email,password,role) VALUES ('ddd123@d.com', '1234', 'ROLE_USER');
 
-INSERT INTO WISH(member_id, product_id) VALUES (1, 1);
-INSERT INTO WISH(member_id, product_id) VALUES (1, 2);
-INSERT INTO WISH(member_id, product_id) VALUES (1, 3);
-INSERT INTO WISH(member_id, product_id) VALUES (1, 4);
-INSERT INTO WISH(member_id, product_id) VALUES (1, 5);
+INSERT INTO WISH(member_id, product_id, quantity) VALUES (1, 1, 1);
+INSERT INTO WISH(member_id, product_id, quantity) VALUES (1, 2, 1);
+INSERT INTO WISH(member_id, product_id, quantity) VALUES (1, 3, 1);
+INSERT INTO WISH(member_id, product_id, quantity) VALUES (1, 4, 1);
+INSERT INTO WISH(member_id, product_id, quantity) VALUES (1, 5, 1);
 -- INSERT INTO WISH(member_id, product_id) VALUES (1, 6);
 -- INSERT INTO WISH(member_id, product_id) VALUES (1, 7);
 -- INSERT INTO WISH(member_id, product_id) VALUES (1, 8);

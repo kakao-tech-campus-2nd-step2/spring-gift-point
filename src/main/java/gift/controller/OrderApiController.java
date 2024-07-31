@@ -2,14 +2,19 @@ package gift.controller;
 
 import gift.auth.CheckRole;
 import gift.auth.JwtService;
+import gift.auth.LoginMember;
+import gift.auth.XOAuthToken;
 import gift.exception.InputException;
+import gift.request.LoginMemberDto;
 import gift.request.OrderRequest;
+import gift.response.OrderListResponse;
 import gift.response.OrderResponse;
 import gift.service.KakaoMessageService;
 import gift.service.OptionsService;
 import gift.service.OrderService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
+import java.util.List;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
@@ -35,19 +40,21 @@ public class OrderApiController {
         if (bindingResult.hasErrors()) {
             throw new InputException(bindingResult.getAllErrors());
         }
-        //주문 생성 및 수량 차감 처리, 이후 카카오톡 메시지 API 호출
+
         Long memberId = Long.valueOf(request.getAttribute("member_id").toString());
-        OrderResponse dto = orderService.makeOrder(memberId, orderRequest.productId(),
+        String xOAuthToken = request.getAttribute("X-GATEWAY-TOKEN").toString();
+        OrderResponse dto = orderService.makeOrder(memberId, xOAuthToken, orderRequest.productId(),
             orderRequest.optionId(), orderRequest.quantity(), orderRequest.message());
 
-        return new ResponseEntity<>(dto, HttpStatus.OK);
+        return new ResponseEntity<>(dto, HttpStatus.CREATED);
 
     }
 
     @CheckRole("ROLE_USER")
     @GetMapping("/api/orders")
-    public ResponseEntity<OrderResponse> getOrder(@RequestParam("id") Long id) {
-        return new ResponseEntity<>(orderService.getOrder(id), HttpStatus.OK);
+    public ResponseEntity<OrderListResponse> getOrder(@LoginMember LoginMemberDto dto) {
+        List<OrderResponse> orderResponses = orderService.getOrder(dto.id());
+        return new ResponseEntity<>(new OrderListResponse(orderResponses), HttpStatus.OK);
     }
 
 }

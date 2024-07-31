@@ -37,10 +37,14 @@ class CategoryServiceTest {
     void save() {
         //given
         String name = "카테고리";
+        String color = "색상";
+        String imageUrl = "이미지 주소";
+        String description = "설명";
+
         given(categoryRepository.save(any(Category.class)))
             .willReturn(new Category(1L, name));
         //when
-        categoryService.addCategory(name);
+        categoryService.addCategory(name, color, imageUrl, description);
         //then
         then(categoryRepository).should().save(any(Category.class));
     }
@@ -50,10 +54,13 @@ class CategoryServiceTest {
     void failSave() {
         //given
         String name = "이미 존재하는 카테고리";
+        String color = "색상";
+        String imageUrl = "이미지 주소";
+        String description = "설명";
         given(categoryRepository.findByName(name))
             .willThrow(DuplicateCategoryException.class);
         //when then
-        assertThatThrownBy(() -> categoryService.addCategory(name))
+        assertThatThrownBy(() -> categoryService.addCategory(name, color, imageUrl, description))
             .isInstanceOf(DuplicateCategoryException.class);
     }
 
@@ -102,13 +109,17 @@ class CategoryServiceTest {
         //given
         Category savedCategory = mock(Category.class);
         String newName = "변경된 카테고리";
+        String newColor = "색상";
+        String newImageUrl = "이미지 주소";
+        String newDescription = "설명";
+
         given(categoryRepository.findById(any(Long.class)))
             .willReturn(Optional.of(savedCategory));
         //when
-        categoryService.updateCategory(1L, newName);
+        categoryService.updateCategory(1L, newName, newColor, newImageUrl, newDescription);
         //then
         then(categoryRepository).should().findById(1L);
-        then(savedCategory).should().updateCategory(newName);
+        then(savedCategory).should().updateCategory(newName, newColor, newImageUrl, newDescription);
     }
 
     @Test
@@ -116,10 +127,14 @@ class CategoryServiceTest {
     void failUpdate() {
         //given
         String newName = "변경된 카테고리";
+        String newColor = "색상";
+        String newImageUrl = "이미지 주소";
+        String newDescription = "설명";
+
         given(categoryRepository.findById(any(Long.class)))
             .willReturn(Optional.empty());
         //when //then
-        assertThatThrownBy(() -> categoryService.updateCategory(1L, newName))
+        assertThatThrownBy(() -> categoryService.updateCategory(1L, newName, newColor, newImageUrl, newDescription))
             .isInstanceOf(NotFoundCategoryException.class);
     }
 

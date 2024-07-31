@@ -14,6 +14,7 @@ import gift.repository.OptionsRepository;
 import gift.repository.ProductRepository;
 import gift.request.ProductAddRequest;
 import gift.request.ProductUpdateRequest;
+import gift.response.ProductListResponse;
 import gift.response.ProductResponse;
 import gift.service.MemberService;
 import java.net.URI;
@@ -72,7 +73,7 @@ class ProductApiTest {
 
     @BeforeEach
     void before() {
-        category = categoryRepository.save(new Category("카테고리"));
+        category = categoryRepository.save(new Category("카테고리", "color", "imageUrl", "description"));
         savedProducts = new ArrayList<>();
         IntStream.range(0, 10)
             .forEach(i -> {
@@ -109,17 +110,16 @@ class ProductApiTest {
             headers, HttpMethod.GET, URI.create(url));
 
         //when
-        ResponseEntity<List<ProductResponse>> response
+        ResponseEntity<ProductListResponse> response
             = restTemplate.exchange(request,
             new ParameterizedTypeReference<>() {
             });
 
         //then
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-        assertThat(response.getBody()).hasSize(10);
-        IntStream.range(0, 10)
+        IntStream.range(0, response.getBody().contents().size())
             .forEach(i -> {
-                ProductResponse pr = response.getBody().get(i);
+                ProductResponse pr = response.getBody().contents().get(i);
                 assertThat(pr.id()).isEqualTo(savedProducts.get(i).getId());
                 assertThat(pr.name()).isEqualTo(savedProducts.get(i).getName());
                 assertThat(pr.price()).isEqualTo(savedProducts.get(i).getPrice());
@@ -151,20 +151,20 @@ class ProductApiTest {
     @DisplayName("상품 변경 테스트")
     void updateProduct() {
         //given
-        String url = "http://localhost:" + port + "/api/products";
+        String url = "http://localhost:" + port + "/api/products/1";
         HttpHeaders headers = new HttpHeaders();
         headers.setBearerAuth(token);
 
         //기존 첫번째 상품을 변경한다.
         ProductUpdateRequest ProductUpdateRequest = new ProductUpdateRequest(
-            savedProducts.get(0).getId(), "product11", 1500, "https://b.com", "카테고리");
+             "product11", 1500, "https://b.com", "카테고리");
         RequestEntity<ProductUpdateRequest> request = new RequestEntity<>(
             ProductUpdateRequest, headers, HttpMethod.PUT, URI.create(url));
 
         //when
         ResponseEntity<Void> response = restTemplate.exchange(request, Void.class);
         //then
-        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
     }
 
     @Test
@@ -173,10 +173,9 @@ class ProductApiTest {
         //given
         URI uri = UriComponentsBuilder
             .fromUriString("http://localhost:" + port)
-            .path("/api/products")
-            .queryParam("id", savedProducts.get(0).getId())
+            .path("/api/products/{productId}")
             .encode()
-            .build()
+            .buildAndExpand(savedProducts.get(0).getId())
             .toUri();
 
         HttpHeaders headers = new HttpHeaders();

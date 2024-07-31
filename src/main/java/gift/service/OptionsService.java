@@ -40,7 +40,7 @@ public class OptionsService {
             .map(OptionResponse::createOptionResponse)
             .toList();
         ProductResponse productResponse = ProductResponse.createProductResponse(product);
-        return new ProductOptionsResponse(productResponse, optionResponse);
+        return new ProductOptionsResponse(optionResponse);
     }
 
     public Options getOption(Long id) {
@@ -56,7 +56,7 @@ public class OptionsService {
             .map(OptionResponse::createOptionResponse)
             .toList();
         ProductResponse productResponse = ProductResponse.createProductResponse(product);
-        return new ProductOptionsResponse(productResponse, optionResponse);
+        return new ProductOptionsResponse( optionResponse);
     }
 
     @Transactional

@@ -33,7 +33,7 @@ public class OptionsRepositoryTest {
 
     @BeforeEach
     void setUp() {
-        Category category = new Category("카테고리");
+        Category category = new Category("카테고리", "color", "imageUrl", "description");
         savedCategory = categoryRepository.save(category);
         Product product = new Product("상품", 1000, "http://image.com", savedCategory);
         savedProduct = productRepository.save(product);

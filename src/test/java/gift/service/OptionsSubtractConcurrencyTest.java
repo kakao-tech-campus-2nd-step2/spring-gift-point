@@ -55,7 +55,7 @@ public class OptionsSubtractConcurrencyTest {
 
     @BeforeEach
     void setUp() {
-        Category category = new Category("카테고리");
+        Category category = new Category("카테고리", "color", "imageurl", "description");
         Category savedCategory = categoryRepository.save(category);
         Product product = new Product("상품", 1000, "http://a.com", savedCategory);
         savedProduct = productRepository.save(product);

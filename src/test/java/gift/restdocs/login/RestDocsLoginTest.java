@@ -14,6 +14,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.fasterxml.jackson.databind.ObjectMapper;
 import gift.auth.JwtService;
 import gift.auth.JwtTokenProvider;
+import gift.auth.OAuthService;
 import gift.config.LoginWebConfig;
 import gift.controller.login.LoginController;
 import gift.model.Member;
@@ -49,6 +50,8 @@ public class RestDocsLoginTest extends AbstractRestDocsTest {
     @MockBean
     private JwtService jwtService;
     @MockBean
+    private OAuthService oAuthService;
+    @MockBean
     private JwtTokenProvider jwtTokenProvider;
 
     private String token = "{ACCESS_TOKEN}";
@@ -72,10 +75,10 @@ public class RestDocsLoginTest extends AbstractRestDocsTest {
             .willReturn(token);
 
         //when //then
-        mockMvc.perform(post("/api/join")
+        mockMvc.perform(post("/api/members/register")
                 .content(content)
                 .contentType(MediaType.APPLICATION_JSON))
-            .andExpect(status().isCreated())
+            .andExpect(status().isOk())
             .andExpect(cookie().value("access_token", token))
             .andDo(print());
     }
@@ -99,7 +102,7 @@ public class RestDocsLoginTest extends AbstractRestDocsTest {
             .willReturn(token);
 
         //when //then
-        mockMvc.perform(post("/api/login")
+        mockMvc.perform(post("/api/members/login")
                 .content(content)
                 .contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk())

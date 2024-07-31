@@ -35,7 +35,7 @@ class ProductRepositoryTest {
 
     @BeforeEach
     void setUp() {
-        category = new Category("categoryA");
+        category = new Category("categoryA", "color", "imageurl", "description");
         Category savedCategory = categoryRepository.save(category);
         product = new Product("productA", 1000, "https://a.com", savedCategory);
     }
@@ -83,7 +83,7 @@ class ProductRepositoryTest {
         List<Product> products = new ArrayList<>();
         IntStream.range(0, 10)
             .forEach( i -> {
-                Category category = new Category("category" + i);
+                Category category = new Category("category" + i, "colr", "imageurl" + i, "description" + i);
                 categoryRepository.save(category);
                 products.add(new Product("product"+i, 1000, "https://a.com", category));
             });

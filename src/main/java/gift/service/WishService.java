@@ -40,16 +40,12 @@ public class WishService {
             .toList();
     }
 
-    public List<ProductResponse> getPagedWishList(Long memberId, Pageable pageable) {
-        return wishRepository.findPageBy(memberId, pageable)
-            .getContent()
-            .stream()
-            .map(ProductResponse::createProductResponse)
-            .toList();
+    public Page<Product> getPagedWishList(Long memberId, Pageable pageable) {
+        return wishRepository.findPageBy(memberId, pageable);
     }
 
     @Transactional
-    public void addMyWish(Long memberId, Long productId) {
+    public void addMyWish(Long memberId, Long productId, Integer quantity) {
 
         Member member = memberRepository.findById(memberId)
             .orElseThrow(NotFoundMemberException::new);
@@ -57,7 +53,7 @@ public class WishService {
             .orElseThrow(NotFoundProductException::new);
 
         try {
-            Wish wish = new Wish(member, product);
+            Wish wish = new Wish(member, product, quantity);
             wishRepository.save(wish);
         } catch (DataIntegrityViolationException e) {
             throw new DuplicateWishException();
@@ -65,10 +61,11 @@ public class WishService {
     }
 
     @Transactional
-    public void deleteMyWish(Long memberId, Long productId) {
-        wishRepository.findByMemberIdAndProductId(memberId, productId)
-            .ifPresentOrElse(wishRepository::delete
-                , () -> {
+    public void deleteMyWish(Long wishId) {
+        wishRepository.findById(wishId)
+            .ifPresentOrElse(
+                wishRepository::delete,
+                () -> {
                     throw new NotFoundWishException();
                 }
             );

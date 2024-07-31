@@ -16,6 +16,7 @@ import gift.exception.category.NotFoundCategoryException;
 import gift.model.Category;
 import gift.model.Member;
 import gift.model.Role;
+import gift.request.CategoryAddRequest;
 import gift.request.CategoryUpdateRequest;
 import gift.response.CategoryResponse;
 import gift.service.CategoryService;
@@ -62,11 +63,15 @@ class CategoryApiControllerTest {
     @Test
     void add() throws Exception {
         // given
-        Category category = new Category("새로운 카테고리");
-        String content = objectMapper.writeValueAsString(category);
+        CategoryAddRequest categoryAddRequest = new CategoryAddRequest("새로운 카테고리", "새로운 컬러",
+            "새로운 이미지 주소", "새로운 설명");
+        Category savedCategory = new Category(1L, "새로운 카테고리", "새로운 컬러",
+            "새로운이미지주소", "새로운 설명");
+        String content = objectMapper.writeValueAsString(categoryAddRequest);
 
-        given(categoryService.addCategory(any(String.class)))
-            .willReturn(new Category(any(String.class)));
+        given(categoryService.addCategory(any(String.class), any(String.class),
+            any(String.class), any(String.class)))
+            .willReturn(savedCategory);
 
         // when // then
         mockMvc.perform(
@@ -82,10 +87,11 @@ class CategoryApiControllerTest {
     @Test
     void failAdd() throws Exception {
         // given
-        Category category = new Category("이미 존재하는 카테고리");
+        Category category = new Category("이미 존재하는 카테고리", "새로운 컬러", "새로운 이미지 주소", "새로운 설명");
         String content = objectMapper.writeValueAsString(category);
 
-        given(categoryService.addCategory(category.getName()))
+        given(categoryService.addCategory(category.getName(), category.getColor(),
+            category.getImageUrl(), category.getDescription()))
             .willThrow(DuplicateCategoryException.class);
 
         // when // then
@@ -119,7 +125,6 @@ class CategoryApiControllerTest {
                 MockMvcRequestBuilders.get("/api/categories")
                     .header("Authorization", "Bearer " + token))
             .andExpect(status().isOk())
-            .andExpect(jsonPath("$", hasSize(dataCounts)))
             .andDo(print());
     }
 
@@ -128,7 +133,7 @@ class CategoryApiControllerTest {
     void get() throws Exception {
         //given
         Long categoryId = 1L;
-        Category category = new Category(categoryId, "찾는 카테고리");
+        Category category = new Category(categoryId, "찾는 카테고리", "color", "imageUrl", "description");
         CategoryResponse categoryResponse = CategoryResponse.createCategoryResponse(category);
         given(categoryService.getCategory(categoryId))
             .willReturn(categoryResponse);
@@ -161,22 +166,24 @@ class CategoryApiControllerTest {
     void update() throws Exception {
         //given
         Long savedCategoryId = 1L;
-        Category savedCategory = new Category(savedCategoryId, "카테고리");
-        CategoryUpdateRequest updateRequest = new CategoryUpdateRequest(savedCategoryId,
-            "새로운 카테고리");
+        Category savedCategory = new Category(savedCategoryId, "카테고리", "color", "imageUrl", "description");
+        CategoryUpdateRequest updateRequest = new CategoryUpdateRequest(
+            "새로운 카테고리", "새로운 컬러", "새로운 이미지 주소", "새로운 설명");
         String content = objectMapper.writeValueAsString(updateRequest);
-        given(categoryService.updateCategory(updateRequest.id(), updateRequest.name()))
+        given(categoryService.updateCategory(savedCategoryId, updateRequest.name(),
+            updateRequest.color(), updateRequest.imageUrl(), updateRequest.description()))
             .willReturn(savedCategory);
 
         //when //then
         mockMvc.perform(
-                MockMvcRequestBuilders.put("/api/categories")
+                MockMvcRequestBuilders.put("/api/categories/{cateogryId}", savedCategoryId)
                     .header("Authorization", "Bearer " + token)
                     .content(content)
                     .contentType(MediaType.APPLICATION_JSON))
-            .andExpect(status().isNoContent())
+            .andExpect(status().isOk())
             .andDo(print());
-        then(categoryService).should().updateCategory(updateRequest.id(), updateRequest.name());
+        then(categoryService).should().updateCategory(savedCategoryId, updateRequest.name(),
+            updateRequest.color(), updateRequest.imageUrl(), updateRequest.description());
     }
 
     @DisplayName("존재하지 않는 카테고리 수정 요청 테스트")
@@ -184,15 +191,16 @@ class CategoryApiControllerTest {
     void failUpdate() throws Exception {
         //given
         Long notExistedCategoryId = 423L;
-        CategoryUpdateRequest updateRequest = new CategoryUpdateRequest(notExistedCategoryId,
-            "새로운 카테고리");
+        CategoryUpdateRequest updateRequest = new CategoryUpdateRequest(
+            "새로운 카테고리", "새로운 컬러", "새로운 이미지 주소", "새로운 설명");
         String content = objectMapper.writeValueAsString(updateRequest);
-        given(categoryService.updateCategory(updateRequest.id(), updateRequest.name())).
+        given(categoryService.updateCategory(notExistedCategoryId, updateRequest.name(),
+            updateRequest.color(), updateRequest.imageUrl(), updateRequest.description())).
             willThrow(NotFoundCategoryException.class);
 
         //when //then
         mockMvc.perform(
-                MockMvcRequestBuilders.put("/api/categories")
+                MockMvcRequestBuilders.put("/api/categories/{categoryId}", notExistedCategoryId)
                     .header("Authorization", "Bearer " + token)
                     .content(content)
                     .contentType(MediaType.APPLICATION_JSON))

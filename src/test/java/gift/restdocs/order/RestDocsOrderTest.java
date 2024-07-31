@@ -1,6 +1,8 @@
 package gift.restdocs.order;
 
 import static org.mockito.BDDMockito.*;
+import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
+import static org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
 import static org.springframework.restdocs.request.RequestDocumentation.queryParameters;
@@ -10,12 +12,16 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import gift.auth.JwtTokenProvider;
+import gift.auth.OAuthService;
 import gift.config.LoginWebConfig;
 import gift.controller.OrderApiController;
 import gift.request.OrderRequest;
 import gift.response.OrderResponse;
 import gift.restdocs.AbstractRestDocsTest;
 import gift.service.OrderService;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.LongStream;
 import org.junit.jupiter.api.Test;
 import org.mockito.BDDMockito;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +33,7 @@ import org.springframework.context.annotation.FilterType;
 import org.springframework.data.jpa.mapping.JpaMetamodelMappingContext;
 import org.springframework.http.MediaType;
 import org.springframework.restdocs.mockmvc.MockMvcRestDocumentation;
+import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders;
 import org.springframework.restdocs.request.RequestDocumentation;
 import org.springframework.test.web.client.match.MockRestRequestMatchers;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -44,9 +51,12 @@ public class RestDocsOrderTest extends AbstractRestDocsTest {
     @MockBean
     private JwtTokenProvider tokenProvider;
     @MockBean
+    private OAuthService oAuthService;
+    @MockBean
     private OrderService orderService;
 
     private String token = "{ACCESS_TOKEN}";
+    private String oAuthToken = "{X-GATEWAY-TOKEN}";
 
 
     @Test
@@ -57,36 +67,43 @@ public class RestDocsOrderTest extends AbstractRestDocsTest {
         String content = objectMapper.writeValueAsString(orderRequest);
         OrderResponse orderResponse = new OrderResponse(memberId, orderRequest.optionId(),
             orderRequest.quantity(), "2024.01.01 00:00:00", orderRequest.message());
-        given(orderService.makeOrder(any(Long.class),
+        given(orderService.makeOrder(any(Long.class), any(String.class),
             any(Long.class), any(Long.class), any(Integer.class), any(String.class)))
             .willReturn(orderResponse);
 
         //when //then
-        mockMvc.perform(post("/api/orders")
+        mockMvc.perform(RestDocumentationRequestBuilders.post("/api/orders")
                 .header("Authorization", "Bearer " + token)
+                .header("X-GATEWAY-TOKEN",oAuthToken)
                 .content(content)
                 .contentType(MediaType.APPLICATION_JSON))
-            .andExpect(status().isOk())
-            .andDo(print());
+            .andExpect(status().isCreated())
+            .andDo(document("rest-docs-order-test/make-order",
+                requestHeaders(
+                    headerWithName("Authorization").description("Our service access token"),
+                    headerWithName("X-GATEWAY-TOKEN").description("OAuth2 access token")
+                )));
     }
 
     @Test
     void getOrder() throws Exception {
         //given
-        Long memberId = 1L;
-        Long optionId = 1L;
-        OrderResponse orderResponse = new OrderResponse(memberId, optionId,
-            1, "2024.01.01 00:00:00", "주문 메시지");
+        List<OrderResponse> orderResponseList = new ArrayList<>();
+
+        LongStream.range(1, 6)
+            .forEach(i -> orderResponseList.add(new OrderResponse(i, i,
+                1, "2024.01.01 00:00:00", "주문 메시지")));
+
         given(orderService.getOrder(any(Long.class)))
-            .willReturn(orderResponse);
+            .willReturn(orderResponseList);
 
         //when //then
-        mockMvc.perform(get("/api/orders?id=" + optionId)
+        mockMvc.perform(get("/api/orders")
                 .header("Authorization", "Bearer " + token))
             .andExpect(status().isOk())
             .andDo(document("rest-docs-order-test/get-order",
-                queryParameters(
-                    parameterWithName("id").description("Order id")
+                requestHeaders(
+                    headerWithName("Authorization").description("service access token")
                 )));
     }
 

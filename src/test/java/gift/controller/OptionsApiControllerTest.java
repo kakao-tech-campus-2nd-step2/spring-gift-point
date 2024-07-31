@@ -113,12 +113,11 @@ class OptionsApiControllerTest {
 
         //when //then
         mockMvc.perform(
-                MockMvcRequestBuilders.put("/api/products/{id}/options", product.getId())
-                    .param("option_id", String.valueOf(optionId))
+                MockMvcRequestBuilders.put("/api/products/{id}/options/{optionId}", product.getId(), optionId)
                     .header("Authorization", "Bearer " + token)
                     .content(content)
                     .contentType(MediaType.APPLICATION_JSON))
-            .andExpect(status().isNoContent())
+            .andExpect(status().isOk())
             .andDo(print());
     }
 
@@ -135,7 +134,7 @@ class OptionsApiControllerTest {
 
         //when //then
         mockMvc.perform(
-                MockMvcRequestBuilders.put("/api/products/{id}/options", product.getId())
+                MockMvcRequestBuilders.put("/api/products/{id}/options/{optionId}", product.getId(), optionId)
                     .param("option_id", String.valueOf(optionId))
                     .header("Authorization", "Bearer " + token)
                     .content(content)
@@ -154,8 +153,7 @@ class OptionsApiControllerTest {
 
         //when //then
         mockMvc.perform(
-                MockMvcRequestBuilders.delete("/api/products/{id}/options", product.getId())
-                    .param("option_id", String.valueOf(optionId))
+                MockMvcRequestBuilders.delete("/api/products/{id}/options/{optionId}", product.getId(), optionId)
                     .header("Authorization", "Bearer " + token)
                     .contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isNoContent())

@@ -12,6 +12,7 @@ import gift.repository.MemberRepository;
 import gift.repository.ProductRepository;
 import gift.repository.WishRepository;
 import gift.request.WishListRequest;
+import gift.response.ProductListResponse;
 import gift.response.ProductResponse;
 import gift.service.MemberService;
 import java.net.URI;
@@ -27,12 +28,17 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.web.util.UriComponentsBuilder;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ActiveProfiles("test")
@@ -66,10 +72,12 @@ class WishListApiTest {
     String token;
     List<Product> savedProducts;
     Category category;
+    List<Wish> savedWishes;
 
     @BeforeEach
     void before() {
-        category = categoryRepository.save(new Category("카테고리"));
+        category = categoryRepository.save(new Category("카테고리",
+            "color", "imageurl", "description"));
         List<Product> products = new ArrayList<>();
         IntStream.range(0, 10)
             .forEach(i -> {
@@ -81,9 +89,9 @@ class WishListApiTest {
         token = jwtTokenProvider.generateToken(member);
 
         List<Wish> wishes = products.stream()
-            .map(product -> new Wish(member, product))
+            .map(product -> new Wish(member, product, 1))
             .toList();
-        wishRepository.saveAll(wishes);
+        savedWishes = wishRepository.saveAll(wishes);
     }
 
     @AfterEach
@@ -98,7 +106,7 @@ class WishListApiTest {
     @DisplayName("위시 리스트 조회 테스트")
     void getWishList() {
         //given
-        String url = "http://localhost:" + port + "/api/wishlist";
+        String url = "http://localhost:" + port + "/api/wishes";
         HttpHeaders headers = new HttpHeaders();
         headers.setBearerAuth(token);
 
@@ -106,17 +114,16 @@ class WishListApiTest {
             headers, HttpMethod.GET, URI.create(url));
 
         //when
-        ResponseEntity<List<ProductResponse>> response
+        ResponseEntity<ProductListResponse> response
             = restTemplate.exchange(request,
             new ParameterizedTypeReference<>() {
             });
 
         //then
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-        assertThat(response.getBody()).hasSize(5);
-        IntStream.range(0, 5)
+        IntStream.range(0, response.getBody().contents().size())
             .forEach(i -> {
-                ProductResponse pr = response.getBody().get(i);
+                ProductResponse pr = response.getBody().contents().get(i);
                 assertThat(pr.id()).isEqualTo(savedProducts.get(i).getId());
                 assertThat(pr.name()).isEqualTo(savedProducts.get(i).getName());
                 assertThat(pr.price()).isEqualTo(savedProducts.get(i).getPrice());
@@ -130,14 +137,14 @@ class WishListApiTest {
     @DisplayName("위시 리스트 추가 성공 테스트")
     void addMyWish() {
         Product saved = productRepository.save(new Product("product11", 1000, "https://a.com", category));
-        ResponseEntity<Void> response = addAndRemoveTest(saved.getId(), HttpMethod.POST);
+        ResponseEntity<Void> response = addTest(saved.getId(), HttpMethod.POST);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
     }
 
     @Test
     @DisplayName("위시 리스트 추가 실패 테스트")
     void failAddMyWish() {
-        ResponseEntity<Void> response = addAndRemoveTest(savedProducts.get(0).getId(),
+        ResponseEntity<Void> response = addTest(savedProducts.get(0).getId(),
             HttpMethod.POST);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
     }
@@ -146,7 +153,8 @@ class WishListApiTest {
     @Test
     @DisplayName("위시 리스트 삭제 성공 테스트")
     void removeMyWish() {
-        ResponseEntity<Void> response = addAndRemoveTest(savedProducts.get(0).getId(),
+        Long wishId = savedWishes.get(0).getId();
+        ResponseEntity<Void> response = removeTest(wishId,
             HttpMethod.DELETE);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
     }
@@ -154,22 +162,41 @@ class WishListApiTest {
     @Test
     @DisplayName("위시 리스트 삭제 실패 테스트")
     void failRemoveMyWish() {
-        Long nonExistingId = 1239L; //위시 리스트에 존재하지 않는 상품 id
-        ResponseEntity<Void> response = addAndRemoveTest(nonExistingId, HttpMethod.DELETE);
+        Long nonExistingId = 1239L;
+        ResponseEntity<Void> response = removeTest(nonExistingId, HttpMethod.DELETE);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
     }
 
-
-    private ResponseEntity<Void> addAndRemoveTest(Long productId, HttpMethod httpMethod) {
+    private ResponseEntity<Void> addTest(Long productId, HttpMethod httpMethod) {
         //given
-        String url = "http://localhost:" + port + "/api/wishlist";
+        String url = "http://localhost:" + port + "/api/wishes";
         HttpHeaders headers = new HttpHeaders();
         headers.setBearerAuth(token);
 
-        WishListRequest wishListRequest = new WishListRequest(productId);
+        WishListRequest wishListRequest = new WishListRequest(productId, 1);
 
         RequestEntity<WishListRequest> request = new RequestEntity<>(
             wishListRequest, headers, httpMethod, URI.create(url));
+
+        //when
+        return restTemplate.exchange(request, Void.class);
+
+    }
+
+    private ResponseEntity<Void> removeTest(Long wishId, HttpMethod httpMethod) {
+        //given
+        URI uri = UriComponentsBuilder
+            .fromUriString("http://localhost:" + port)
+            .path("/api/wishes/{wishId}")
+            .encode()
+            .buildAndExpand(wishId)
+            .toUri();
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setBearerAuth(token);
+
+        RequestEntity<WishListRequest> request = new RequestEntity<>(
+            headers, httpMethod, uri);
 
         //when
         return restTemplate.exchange(request, Void.class);

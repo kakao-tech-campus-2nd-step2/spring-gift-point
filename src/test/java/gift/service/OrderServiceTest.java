@@ -70,24 +70,25 @@ class OrderServiceTest {
     @Test
     void order() {
         //given
+        String oAuthToken = "oAuthToken";
         Integer orderQuantity = 1;
         String message = "message";
         Order savedOrder = new Order(1L, 1L,
             option, orderQuantity, message, LocalDateTime.now(), LocalDateTime.now());
-        Wish wish = new Wish(member, product);
+        Wish wish = new Wish(member, product, 1);
 
         given(optionsService.getOption(any(Long.class)))
             .willReturn(option);
         doNothing().when(optionsService).subtractQuantity(any(Long.class),
             any(Integer.class), any(Long.class));
-        doNothing().when(kakaoMessageService).sendMessageToMe(any(Long.class),
+        doNothing().when(kakaoMessageService).sendMessageToMe(any(String.class),
             any(String.class));
         given(wishRepository.findByMemberIdAndProductId(any(Long.class), any(Long.class)))
             .willReturn(Optional.of(wish));
         given(orderRepository.save(any(Order.class))).willReturn(savedOrder);
 
         //when
-        orderService.makeOrder(member.getId(), product.getId(), option.getId(),
+        orderService.makeOrder(member.getId(), oAuthToken, product.getId(), option.getId(),
             orderQuantity, message);
 
         //then
@@ -96,7 +97,7 @@ class OrderServiceTest {
         then(optionsService).should().subtractQuantity(any(Long.class),
             any(Integer.class), any(Long.class));
         then(wishRepository).should().findByMemberIdAndProductId(any(Long.class), any(Long.class));
-        then(kakaoMessageService).should().sendMessageToMe(any(Long.class), any(String.class));
+        then(kakaoMessageService).should().sendMessageToMe(any(String.class), any(String.class));
     }
 
     @DisplayName("주문 실패 테스트 - 재고 부족")

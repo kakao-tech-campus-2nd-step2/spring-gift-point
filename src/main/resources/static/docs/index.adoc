@@ -5,10 +5,10 @@
 :toclevels: 2
 :seclinks:
 
-include::productApi.adoc[]
-include::categoryApi.adoc[]
-include::optionsApi.adoc[]
-include::orderApi.adoc[]
-include::wishApi.adoc[]
 include::loginApi.adoc[]
+include::categoryApi.adoc[]
+include::productApi.adoc[]
+include::optionsApi.adoc[]
+include::wishApi.adoc[]
+include::orderApi.adoc[]
 include::oAuth2LoginApi.adoc[]

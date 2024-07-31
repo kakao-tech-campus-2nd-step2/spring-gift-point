@@ -16,6 +16,7 @@ public class MockAuthApiInterceptor implements HandlerInterceptor {
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response,
         Object handler) throws Exception {
         request.setAttribute("member_id", "1");
+        request.setAttribute("X-GATEWAY-TOKEN", "oauth_token");
         return true;
     }
 
