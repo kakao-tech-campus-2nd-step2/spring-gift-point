@@ -8,8 +8,8 @@ public record MemberResponse(
     String email,
     String password,
     String role,
-    String authProvider)
-{
+    String authProvider
+) {
     public static MemberResponse from(Member member) {
         return new MemberResponse(
             member.getId(),

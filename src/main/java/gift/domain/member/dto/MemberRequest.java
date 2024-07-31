@@ -11,8 +11,6 @@ import jakarta.validation.constraints.Size;
 
 @Schema(description = "회원 등록 정보")
 public record MemberRequest(
-    @Schema(description = "회원 이름")
-    String name,
 
     @NotBlank(message = "이메일은 필수 입력 필드입니다.")
     @Email(message = "잘못된 이메일 형식입니다.")
@@ -25,6 +23,6 @@ public record MemberRequest(
     String password
 ) {
     public Member toMember() {
-        return new Member(null, name, email, password, Role.USER, AuthProvider.LOCAL);
+        return new Member(null, "name", email, password, Role.USER, AuthProvider.LOCAL);
     }
 }

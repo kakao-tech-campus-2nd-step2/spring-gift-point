@@ -41,7 +41,7 @@ class MemberServiceTest {
     @DisplayName("회원 가입 서비스 테스트")
     void signUp_success() {
         // given
-        MemberRequest memberRequest = new MemberRequest("testUser", "test@test.com", "test123");
+        MemberRequest memberRequest = new MemberRequest("test@test.com", "test123");
 
         Member member = memberRequest.toMember();
         given(memberJpaRepository.save(any(Member.class))).willReturn(member);

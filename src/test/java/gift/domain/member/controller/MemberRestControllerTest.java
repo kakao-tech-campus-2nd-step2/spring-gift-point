@@ -10,6 +10,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.fasterxml.jackson.databind.ObjectMapper;
 import gift.auth.jwt.JwtToken;
 import gift.domain.member.dto.MemberLoginRequest;
+import gift.domain.member.dto.MemberLoginResponse;
 import gift.domain.member.dto.MemberRequest;
 import gift.domain.member.service.MemberService;
 import gift.exception.InvalidUserInfoException;
@@ -53,17 +54,18 @@ class MemberRestControllerTest {
     @DisplayName("회원 가입에 성공하는 경우")
     void create_success() throws Exception {
         // given
-        MemberRequest memberRequest = new MemberRequest("testUser", "test@test.com", "test123");
+        MemberRequest memberRequest = new MemberRequest("test@test.com", "test123");
         String jsonContent = objectMapper.writeValueAsString(memberRequest);
 
         JwtToken expectedJwtToken = new JwtToken("token");
+        MemberLoginResponse expected = new MemberLoginResponse(memberRequest.email(), expectedJwtToken.token());
 
         given(memberService.signUp(any(MemberRequest.class))).willReturn(expectedJwtToken);
 
         // when & then
         mockMvc.perform(postRequest(REGISTER_URL, jsonContent))
             .andExpect(status().isCreated())
-            .andExpect(content().json(objectMapper.writeValueAsString(expectedJwtToken)))
+            .andExpect(content().json(objectMapper.writeValueAsString(expected)))
             .andDo(print());
     }
 
@@ -71,7 +73,7 @@ class MemberRestControllerTest {
     @DisplayName("회원 가입에 실패하는 경우 - 이미 존재하는 이메일로 가입 시도")
     void create_fail() throws Exception {
         // given
-        MemberRequest memberRequest = new MemberRequest("testUser", "test@test.com", "test123");
+        MemberRequest memberRequest = new MemberRequest("test@test.com", "test123");
         String jsonContent = objectMapper.writeValueAsString(memberRequest);
 
         given(memberService.signUp(any(MemberRequest.class))).willThrow(DuplicateKeyException.class);
@@ -90,13 +92,14 @@ class MemberRestControllerTest {
         String jsonContent = objectMapper.writeValueAsString(memberLoginRequest);
 
         JwtToken expectedJwtToken = new JwtToken("token");
+        MemberLoginResponse expected = new MemberLoginResponse(memberLoginRequest.email(), expectedJwtToken.token());
 
         given(memberService.login(any(MemberLoginRequest.class))).willReturn(expectedJwtToken);
 
         // when & then
         mockMvc.perform(postRequest(LOGIN_URL, jsonContent))
             .andExpect(status().isOk())
-            .andExpect(content().json(objectMapper.writeValueAsString(expectedJwtToken)))
+            .andExpect(content().json(objectMapper.writeValueAsString(expected)))
             .andDo(print());
     }
 

@@ -1,6 +1,7 @@
 package gift.domain.member.controller;
 
 import gift.auth.jwt.JwtToken;
+import gift.domain.member.dto.MemberLoginResponse;
 import gift.domain.member.dto.MemberRequest;
 import gift.domain.member.dto.MemberLoginRequest;
 import gift.domain.member.service.MemberService;
@@ -30,13 +31,14 @@ public class MemberRestController {
 
     @PostMapping("/register")
     @Operation(summary = "회원 가입", description = "회원 정보를 등록합니다.")
-    public ResponseEntity<JwtToken> create(
+    public ResponseEntity<MemberLoginResponse> create(
         @Parameter(description = "회원 등록 정보", required = true)
         @RequestBody @Valid MemberRequest memberRequest
     ) {
         try {
             JwtToken jwtToken = memberService.signUp(memberRequest);
-            return ResponseEntity.status(HttpStatus.CREATED).body(jwtToken);
+            MemberLoginResponse response = new MemberLoginResponse(memberRequest.email(), jwtToken.token());
+            return ResponseEntity.status(HttpStatus.CREATED).body(response);
         } catch (DuplicateKeyException e) {
             throw new DuplicateEmailException("error.duplicate.key.email");
         }
@@ -44,11 +46,12 @@ public class MemberRestController {
 
     @PostMapping("/login")
     @Operation(summary = "로그인", description = "회원 정보를 통해 로그인합니다.")
-    public ResponseEntity<JwtToken> login(
+    public ResponseEntity<MemberLoginResponse> login(
         @Parameter(description = "회원 로그인 정보", required = true)
         @RequestBody @Valid MemberLoginRequest memberLoginRequest
     ) {
         JwtToken jwtToken = memberService.login(memberLoginRequest);
-        return ResponseEntity.status(HttpStatus.OK).body(jwtToken);
+        MemberLoginResponse response = new MemberLoginResponse(memberLoginRequest.email(), jwtToken.token());
+        return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 }
