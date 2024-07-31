@@ -33,7 +33,7 @@ public class WishListService {
     @Transactional(readOnly = true)
     public Page<WishListResponse> getWishList(Long userId, Pageable pageable) {
         return wishListRepository.findAllByUserIdFetchJoin(userId, pageable)
-            .map(WishItem::toResponse);
+            .map(WishListResponse::new);
     }
 
     @Transactional

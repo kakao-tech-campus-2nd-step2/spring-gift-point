@@ -1,7 +1,5 @@
 package gift.model.entity;
 
-import gift.model.dto.ItemDTO;
-import gift.model.response.WishListResponse;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -52,7 +50,4 @@ public class WishItem {
     protected WishItem() {
     }
 
-    public WishListResponse toResponse() {
-        return new WishListResponse(id, new ItemDTO(item));
-    }
 }
