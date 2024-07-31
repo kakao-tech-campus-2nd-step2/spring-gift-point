@@ -1,7 +1,12 @@
 package gift.product.service;
 
 import gift.product.dto.auth.LoginMemberIdDto;
+import gift.product.dto.category.CategoryIdAndName;
+import gift.product.dto.option.OptionResponse;
+import gift.product.dto.product.ProductInfoResponse;
+import gift.product.dto.product.ProductResponse;
 import gift.product.dto.wish.WishDto;
+import gift.product.dto.wish.WishResponse;
 import gift.product.model.Member;
 import gift.product.model.Product;
 import gift.product.model.Wish;
@@ -32,8 +37,8 @@ public class WishService {
         return wishRepository.findAllByMemberId(loginMemberIdDto.id());
     }
 
-    public Page<Wish> getWishAll(Pageable pageable) {
-        return wishRepository.findAll(pageable);
+    public List<WishResponse> getWishAll(Pageable pageable) {
+        return wishRepository.findAll(pageable).stream().map(this::getWishResponse).toList();
     }
 
     public Wish getWish(Long id, LoginMemberIdDto loginMemberIdDto) {
@@ -75,5 +80,11 @@ public class WishService {
         if (wishRepository.existsByProductIdAndMemberId(productId, memberId)) {
             throw new IllegalArgumentException("해당 상품이 이미 위시 리스트에 존재합니다.");
         }
+    }
+
+    private WishResponse getWishResponse(Wish wish) {
+        Product product = wish.getProduct();
+        ProductInfoResponse productInfoResponse = new ProductInfoResponse(product.getId(), product.getName(), product.getPrice(), product.getImageUrl());
+        return new WishResponse(wish.getId(), productInfoResponse);
     }
 }

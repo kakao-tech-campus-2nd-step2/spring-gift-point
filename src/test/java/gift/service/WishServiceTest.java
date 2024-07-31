@@ -10,10 +10,13 @@ import gift.product.dto.wish.WishDto;
 import gift.product.model.Category;
 import gift.product.model.Member;
 import gift.product.model.Product;
+import gift.product.model.Wish;
 import gift.product.repository.AuthRepository;
 import gift.product.repository.ProductRepository;
 import gift.product.repository.WishRepository;
 import gift.product.service.WishService;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 import org.junit.jupiter.api.DisplayNameGeneration;
@@ -23,6 +26,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -72,6 +76,13 @@ class WishServiceTest {
         String SORT = "product.name";
         String DIRECTION = "desc";
         Pageable pageable = PageRequest.of(PAGE, SIZE, Sort.Direction.fromString(DIRECTION), SORT);
+        Member member = new Member(1L, "테스트멤버이름", "test@test.com", "test");
+        Category category = new Category(1L, "테스트카테고리", "테스트컬러", "테스트주소", "테스트설명");
+        Product product = new Product(1L, "테스트상품", 1000, "테스트주소", category);
+        List<Wish> wishes = new ArrayList<>();
+        wishes.add(new Wish(member, product));
+
+        given(wishRepository.findAll(pageable)).willReturn(new PageImpl<>(wishes));
 
         //when
         wishService.getWishAll(pageable);
