@@ -30,6 +30,10 @@ public class ProductController {
     }
 
     @GetMapping("/{productId}")
+    @Operation(summary = "상품 조회")
+    @ApiResponse(responseCode = "200", description = "정상 조회")
+    @ApiResponse(responseCode = "400", description = "상품 조회 실패")
+    @ApiResponse(responseCode = "500", description = "서버 오류")
     public ProductResponseDTO getProduct(
         @PathVariable(value = "productId") Long productId
     ) {
@@ -37,8 +41,11 @@ public class ProductController {
     }
 
     @GetMapping
-    @Operation(summary = "상품 조회", description = "모든 상품을 조회합니다.")
-    @ApiResponse(responseCode = "200", description = "상품 조회 성공")
+    @Operation(summary = "상품 목록 조회(페이지네이션 적용)", description = "카테고리별 모든 상품을 조회합니다.")
+    @ApiResponse(responseCode = "200", description = "정상")
+    @ApiResponse(responseCode = "400", description = "카테고리가 존재하지 않는 경우")
+    @ApiResponse(responseCode = "400", description = "요청 양식이 잘못된 경우")
+    @ApiResponse(responseCode = "500", description = "서버 에러")
     public Page<ProductResponseDTO> getProducts(
         @ParameterObject Pageable pageable,
         @RequestParam long categoryId
@@ -46,18 +53,14 @@ public class ProductController {
         return productService.getAllProducts(pageable, categoryId);
     }
 
+    @Deprecated
     @PostMapping
-    @Operation(summary = "상품 추가", description = "상품을 추가합니다.")
-    @ApiResponse(responseCode = "200", description = "상품 추가 성공")
-    @ApiResponse(responseCode = "400", description = "잘못된 입력 양식입니다.")
     public void addProduct(@RequestBody ProductRequestDTO productRequestDTO) {
         productService.addProduct(productRequestDTO);
     }
 
+    @Deprecated
     @PatchMapping("/{id}")
-    @Operation(summary = "상품 업데이트", description = "상품의 정보를 수정합니다.")
-    @ApiResponse(responseCode = "200", description = "상품 수정 성공")
-    @ApiResponse(responseCode = "400", description = "존재하지 않는 상품이거나, 입력 양식이 잘못되었습니다.")
     public void updateProduct(
         @PathVariable(value = "id") Long id,
         @RequestBody ProductRequestDTO productRequestDTO
@@ -65,10 +68,8 @@ public class ProductController {
         productService.updateProduct(id, productRequestDTO);
     }
 
+    @Deprecated
     @DeleteMapping("/{id}")
-    @Operation(summary = "상품 삭제", description = "상품을 삭제합니다.")
-    @ApiResponse(responseCode = "200", description = "상품 삭제 성공")
-    @ApiResponse(responseCode = "400", description = "존재하지 않는 상품입니다.")
     public void deleteProduct(@PathVariable(value = "id") Long id) {
         productService.deleteProduct(id);
     }

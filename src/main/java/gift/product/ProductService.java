@@ -67,6 +67,7 @@ public class ProductService {
 
     }
 
+    @Deprecated
     public void addProduct(ProductRequestDTO productDTO) {
         Category findCategory = categoryRepository.findByName(productDTO.getCategory().getName())
             .orElseThrow(() -> new IllegalArgumentException(CATEGORY_NOT_FOUND));
@@ -82,6 +83,7 @@ public class ProductService {
         );
     }
 
+    @Deprecated
     public void updateProduct(long id, ProductRequestDTO productDTO) {
         Category findCategory = categoryRepository.findByName(productDTO.getCategory().getName())
             .orElseThrow(() -> new IllegalArgumentException(CATEGORY_NOT_FOUND));
@@ -98,6 +100,7 @@ public class ProductService {
         productRepository.save(findProduct);
     }
 
+    @Deprecated
     public void deleteProduct(long id) {
         Product product = productRepository.findById(id)
             .orElseThrow(() -> new IllegalArgumentException(PRODUCT_NOT_FOUND));
