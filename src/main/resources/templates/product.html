@@ -71,6 +71,9 @@
         .pagination a:hover:not(.active) {
             background-color: #ddd;
         }
+        .option-form {
+            margin-top: 10px;
+        }
     </style>
 </head>
 <body>
@@ -127,12 +130,12 @@
                     <span th:text="${option.name}"></span>: <span th:text="${option.quantity}"></span>
                 </li>
             </ul>
-            <form class="option-form" th:data-product-id="${product.id}">
+            <form class="option-form" th:data-product-id="${product.id}" th:action="@{/api/products/{productId}/options(productId=${product.id})}" method="post">
                 <label for="optionName-${product.id}">Option Name:</label>
-                <input type="text" id="optionName-${product.id}" name="optionName" required>
+                <input type="text" id="optionName-${product.id}" name="name" required>
 
                 <label for="optionQuantity-${product.id}">Option Quantity:</label>
-                <input type="number" id="optionQuantity-${product.id}" name="optionQuantity" required>
+                <input type="number" id="optionQuantity-${product.id}" name="quantity" required>
 
                 <button type="submit">Add Option</button>
             </form>
@@ -177,39 +180,15 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        document.getElementById('addProductForm').addEventListener('submit', function(event) {
-            event.preventDefault();
-
-            let formData = new FormData(this);
-            fetch(this.action, {
-                method: 'POST',
-                body: formData
-            })
-                .then(response => {
-                    if (response.ok) {
-                        window.location.href = '/admin/products'; // 성공 시 상품 목록 페이지로 리다이렉트
-                    } else {
-                        return response.json().then(data => {
-                            // 에러 페이지로 리다이렉트 및 메시지 전달
-                            window.location.href = '/errorPage?message=' + encodeURIComponent(data.message);
-                        });
-                    }
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                    window.location.href = '/errorPage?message=' + encodeURIComponent(error.message);
-                });
-        });
-
         document.querySelectorAll('.option-form').forEach(function(form) {
             form.addEventListener('submit', function(event) {
                 event.preventDefault();
 
                 const productId = form.getAttribute('data-product-id');
-                const url = `/api/options/${productId}`;
+                const url = form.getAttribute('action');
 
-                const optionName = form.querySelector('input[name="optionName"]').value;
-                const optionQuantity = form.querySelector('input[name="optionQuantity"]').value;
+                const optionName = form.querySelector('input[name="name"]').value;
+                const optionQuantity = form.querySelector('input[name="quantity"]').value;
 
                 const data = {
                     name: optionName,
@@ -241,7 +220,6 @@
         });
     });
 </script>
-
 
 </body>
 </html>

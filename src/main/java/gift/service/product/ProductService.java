@@ -21,7 +21,12 @@ public class ProductService {
         this.categoryRepository = categoryRepository;
     }
 
-    public Page<Product> getAllProducts(Pageable pageable) {
+    public Page<Product> getAllProducts(Pageable pageable, Long categoryId) {
+        if (categoryId != null) {
+            Category category = categoryRepository.findById(categoryId)
+                    .orElseThrow(() -> new IllegalArgumentException("Category not found with id: " + categoryId));
+            return productRepository.findAllByCategory(category, pageable);
+        }
         return productRepository.findAll(pageable);
     }
 
