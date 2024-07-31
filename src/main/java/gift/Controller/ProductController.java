@@ -1,7 +1,9 @@
 package gift.Controller;
 
 
+import gift.DTO.PageResponseDTO;
 import gift.DTO.ProductDTO;
+import gift.DTO.ProductResponseDTO;
 import gift.Model.Product;
 import gift.Service.ProductService;
 
@@ -12,9 +14,13 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 
+import java.util.List;
+import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -22,6 +28,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @Tag(name = "Product", description = "Product 관련 API")
@@ -44,8 +51,10 @@ public class ProductController {
     )
     @Parameter(name = "pageable", description = "List에 담긴 Product객체를 개수에 맞춰서 page로 리턴")
     @GetMapping("/api/products")
-    public ResponseEntity<Page<Product>> getProducts(Pageable pageable) {
-        return ResponseEntity.ok().body(productService.findAll(pageable));
+    public ResponseEntity<PageResponseDTO<ProductResponseDTO>> getProducts(@RequestParam(name = "page", defaultValue = "0") int page, @RequestParam(name = "size", defaultValue = "10") int size, @RequestParam(name = "sort", defaultValue = "name,asc") String[] sort, @RequestParam(name = "categoryId") Long categoryId) {
+        Pageable pageable = PageRequest.of(page, size, productService.getSort(sort)); // 전달 받은 파라미터로 pageable 객체 생성
+        PageResponseDTO<ProductResponseDTO> response = productService.getResponse(pageable,categoryId);
+        return ResponseEntity.ok().body(response);
     }
 
     @Operation(
@@ -58,8 +67,8 @@ public class ProductController {
     )
     @Parameter(name = "pageable", description = "List에 담긴 Product객체를 개수에 맞춰서 page로 리턴")
     @GetMapping("/api/products/{productId}")
-    public ResponseEntity<Product> getProduct(@PathVariable(value = "productId") Long productId) {
-        return ResponseEntity.ok().body(productService.getProductById(productId));
+    public ResponseEntity<ProductResponseDTO> getProduct(@PathVariable(value = "productId") Long productId) {
+        return ResponseEntity.ok().body(productService.getProductResponseDTOById(productId));
     }
 
     @Operation(

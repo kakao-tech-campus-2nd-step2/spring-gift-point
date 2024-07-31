@@ -1,6 +1,8 @@
 package gift.Service;
 
+import gift.DTO.PageResponseDTO;
 import gift.DTO.ProductDTO;
+import gift.DTO.ProductResponseDTO;
 import gift.Model.Category;
 import gift.Model.Option;
 import gift.Model.Product;
@@ -12,6 +14,7 @@ import java.util.List;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -33,6 +36,10 @@ public class ProductService {
 
     public Product getProductById(Long productId){
         return productRepository.findProductById(productId);
+    }
+    public ProductResponseDTO getProductResponseDTOById(Long productId){
+        Product product = getProductById(productId);
+        return new ProductResponseDTO(product.getId(),product.getName(), product.getPrice(), product.getImageUrl(), product.getCategory().getId());
     }
 
     public Product addProduct(ProductDTO productDTO){
@@ -57,5 +64,28 @@ public class ProductService {
 
     public List<Category> getAllCategory(){
         return categoryRepository.findAll();
+    }
+
+    public Sort getSort(String[] sort){
+        Sort newSort = Sort.by(Sort.Order.asc(sort[0])); // 기본으로 asc인 sort[0]에 대해서 Sort 객체 생성
+        if (sort.length > 1 && "desc".equalsIgnoreCase(sort[1])) { // 올바른 요청이면 길이가 2이고 desc 요청이 들어오면
+            newSort = Sort.by(Sort.Order.desc(sort[0])); // desc로 객체 생성
+        }
+        return newSort;
+    }
+
+    public Page<Product> findAllByCategory(Pageable pageable, Long categoryId){
+        return productRepository.findByCategoryId(pageable, categoryId);
+    }
+
+    public PageResponseDTO<ProductResponseDTO> getResponse(Pageable pageable, Long categoryId){
+        Page<Product> productPage = findAllByCategory(pageable, categoryId);
+        List<ProductResponseDTO> products =  productPage.stream().map(product -> new ProductResponseDTO(product.getId(),
+            product.getName(),
+            product.getPrice(),
+            product.getImageUrl(),
+            product.getCategory().getId())).toList();
+
+        return new PageResponseDTO<>(products,productPage.getNumber(),productPage.getTotalElements(),productPage.getSize(),productPage.isLast());
     }
 }
