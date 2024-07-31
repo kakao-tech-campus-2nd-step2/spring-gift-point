@@ -30,11 +30,12 @@ public class testSynchronization {
 
     private final String TEST_NAME = "name";
     private final String TEST_URL = "imgUrl";
+    private final String TEST_DES = "설명";
     private final int NUM_REF = 50;
 
 
     private Long quantity = 100L;
-    private Category category = new Category(0L, TEST_NAME, TEST_URL);
+    private Category category = new Category(0L, TEST_NAME, TEST_URL,TEST_DES);
     private Long itemId;
     private Long optionId;
 

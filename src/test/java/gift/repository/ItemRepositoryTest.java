@@ -15,7 +15,7 @@ public class ItemRepositoryTest {
 
     @Autowired
     private ItemRepository itemRepository;
-    private final Category category = new Category("식품","img");
+    private final Category category = new Category("식품","img","설명");
     private final Item testItem = new Item("김치",2000L,"url",category);
 
     @BeforeEach

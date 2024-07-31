@@ -19,7 +19,8 @@ public class CategoryRepositoryTest {
 
     private final String testName1 = "향수";
     private final String testUrl = "imgUrl";
-    private final Category testCategory = new Category(testName1, testUrl);
+    private final String TEST_DES = "설명";
+    private final Category testCategory = new Category(testName1, testUrl,TEST_DES);
 
 
     @DisplayName("카테고리 추가 성공 테스트")
@@ -35,7 +36,7 @@ public class CategoryRepositoryTest {
     void testInsertDuplicateCategoryName() {
         categoryRepository.save(testCategory);
         assertThatExceptionOfType(DataIntegrityViolationException.class).isThrownBy(
-            () -> categoryRepository.save(new Category(testName1, testUrl)));
+            () -> categoryRepository.save(new Category(testName1, testUrl,TEST_DES)));
     }
 
     @DisplayName("카테고리 목록 조회 테스트")
@@ -44,8 +45,8 @@ public class CategoryRepositoryTest {
         String testName2 = "꽃";
         String testName3 = "김치";
         categoryRepository.save(testCategory);
-        categoryRepository.save(new Category(testName2, testUrl));
-        categoryRepository.save(new Category(testName3, testUrl));
+        categoryRepository.save(new Category(testName2, testUrl,TEST_DES));
+        categoryRepository.save(new Category(testName3, testUrl,TEST_DES));
         List<Category> result = categoryRepository.findAll();
         assertThat(result).extracting("name").contains(testName1, testName2, testName3);
     }
