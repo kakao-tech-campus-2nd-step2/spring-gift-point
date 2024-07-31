@@ -10,7 +10,6 @@ import gift.model.product.Product;
 import gift.model.wish.Wish;
 import gift.repository.OptionRepository;
 import gift.repository.WishRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 
