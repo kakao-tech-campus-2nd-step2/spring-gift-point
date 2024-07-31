@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>카테고리 수정</title>
+</head>
+<body>
+<h1>카테고리 수정</h1>
+<form th:action="@{/admin/category}" th:object="${category}" method="post">
+    <input type="hidden" name="_method" value="PUT" />
+    <div>
+        <label for="id">id:</label>
+        <input type="number" id="id" name="id" th:value="*{id}" readonly required/>
+    </div>
+    <div>
+        <label for="name">이름:</label>
+        <input type="text" id="name" name="name" th:field="*{name}" required/>
+    </div>
+    <div>
+        <label for="color">색상:</label>
+        <input type="text" id="color" name="color" th:field="*{color}" required/>
+    </div>
+    <div>
+        <label for="imageUrl">이미지URL:</label>
+        <input type="text" id="imageUrl" name="imageUrl" th:field="*{imageUrl}" required/>
+    </div>
+    <div>
+        <label for="description">설명:</label>
+        <input type="text" id="description" name="description" th:field="*{description}" />
+    </div>
+    <p><input type="submit" value="저장"/></p>
+</form>
+<a th:href="@{/admin/categories}">뒤로가기</a>
+</body>
+</html>

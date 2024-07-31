@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>사용자 수정</title>
+</head>
+<body>
+<h1>사용자 수정</h1>
+<form th:action="@{/admin/member/{id}(id=${member.id})}" th:object="${member}" method="post">
+    <input type="hidden" name="_method" value="PUT" />
+    <div>
+        <label for="email_edit">이메일:</label>
+        <input type="email" id="email_edit" name="email" th:field="*{email}" required/>
+    </div>
+    <div>
+        <label for="password_edit">비밀번호:</label>
+        <input type="text" id="password_edit" name="password" required/>
+    </div>
+    <div>
+        <label for="role_edit">권한:</label>
+        <select id="role_edit" name="role">
+            <option></option>
+            <option th:value="USER" th:selected="*{role.toString() == 'USER'}">USER</option>
+            <option th:value="ADMIN" th:selected="*{role.toString() == 'ADMIN'}">ADMIN</option>
+        </select>
+    </div>
+    <p><input type="submit" value="저장"/></p>
+</form>
+<a th:href="@{/admin/member}">뒤로가기</a>
+</body>
+</html>

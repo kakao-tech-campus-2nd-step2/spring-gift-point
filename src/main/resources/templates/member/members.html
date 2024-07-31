@@ -1,0 +1,75 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org" lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>member management</title>
+    <link rel="stylesheet" type="text/css" href="/css/style.css"/>
+</head>
+<body>
+<div class="container">
+    <div class="title">
+        <button><a th:href="@{/admin}">메인메뉴</a></button>
+        <h1>Manage Members</h1>
+        <button><a th:href="@{/admin/member/new}">Add New Member</a></button>
+    </div>
+
+    <table class="table">
+        <thead>
+        <tr>
+            <th th:width="50">번호</th>
+            <th th:width="100">이메일</th>
+            <th th:width="100">권한</th>
+            <th th:width="100">수정</th>
+            <th th:width="100">삭제</th>
+        </tr>
+        </thead>
+        <tbody id="table-body">
+        <tr th:if="${members.content()?.isEmpty()}">
+            <td colspan="5">No Products Available</td>
+        </tr>
+        <tr th:each="member : ${members.content()}">
+            <td th:text="${member.id()}"/>
+            <td th:text="${member.email()}"/>
+            <td th:text="${member.role()}"/>
+            <td><button><a th:href="@{/admin/member/{id}(id=${member.id()})}">수정</a></button></td>
+            <td>
+                <form th:action="@{/admin/member/{id}(id=${member.id()})}" method="post">
+                    <input type="hidden" name="_method" value="DELETE" />
+                    <button type="submit">삭제</button>
+                </form>
+
+            </td>
+        </tr>
+        </tbody>
+    </table>
+    <div class="pagination">
+        <div class="page-size-dropdown">
+            <form th:action="@{/admin/member}" method="get">
+                <label for="pageSize">페이지 크기:</label>
+                <select id="pageSize" name="size" onchange="this.form.submit()">
+                    <option value="10" th:selected="${members.size() == 10}">10</option>
+                    <option value="15" th:selected="${members.size() == 15}">15</option>
+                    <option value="20" th:selected="${members.size() == 20}">20</option>
+                </select>
+            </form>
+        </div>
+        <span>
+            <button th:disabled="${members.number() <= 0}">
+                <a th:href="@{/admin/member(page=${members.number() - 1}, size=${members.size()})}">&lt;</a>
+            </button>
+        </span>
+        <span th:each="i : ${#numbers.sequence(0, members.totalPages() - 1)}"
+              th:if="${i >= (members.number() / 5) * 5} and ${i < (members.number() / 5) * 5 + 5}">
+            <button th:class="${i == members.number()} ? 'active' : ''">
+                <a th:href="@{/admin/member(page=${i}, size=${members.size()})}"
+                   th:text="${i + 1}"/></button>
+        </span>
+        <span>
+            <button th:disabled="${members.number() >= members.totalPages() - 1}">
+                <a th:href="@{/admin/member(page=${members.number() + 1}, size=${members.size()})}">&gt;</a>
+            </button>
+        </span>
+    </div>
+</div>
+</body>
+</html>
