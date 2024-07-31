@@ -23,12 +23,11 @@ public class UserService {
                 new User(
                         userDTO.getEmail(),
                         userDTO.getPassword(),
-                        userDTO.getNickname(),
                         UserType.NORMAL_USER));
     }
 
     public KakaoUser registerKakaoUser(KakaoUserDTO kakaoUserDTO) {
-        User user = new User(null, null, null, UserType.KAKAO_USER);
+        User user = new User(null, null, UserType.KAKAO_USER);
         userRepository.save(user);
         KakaoUser kakaoUser = new KakaoUser(
                 kakaoUserDTO.getId(),

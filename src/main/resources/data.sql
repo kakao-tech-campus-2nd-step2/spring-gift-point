@@ -110,9 +110,8 @@ values (3,
         '이미지URL3.....');
 
 
-INSERT INTO USERS (email, nickname, password, user_type)
+INSERT INTO USERS (email, password, user_type)
 values ('yoonsu0325@gmail.com',
-        'yoonsu0325',
         'thisIsPassword1234',
         'normal_user');
 

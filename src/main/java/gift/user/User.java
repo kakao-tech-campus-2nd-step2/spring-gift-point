@@ -17,8 +17,6 @@ public class User implements IntegratedUser {
     private String email;
     @Column(name = "password")
     private String password;
-    @Column(name = "nickname")
-    private String nickname;
     @Enumerated(EnumType.STRING)
     @Column(name = "user_type", nullable = false)
     private UserType userType;
@@ -30,10 +28,9 @@ public class User implements IntegratedUser {
     public User() {
     }
 
-    public User(String email, String password, String nickname, UserType userType) {
+    public User(String email, String password, UserType userType) {
         this.email = email;
         this.password = password;
-        this.nickname = nickname;
         this.userType = userType;
     }
 
@@ -55,10 +52,6 @@ public class User implements IntegratedUser {
 
     public Long getId() {
         return id;
-    }
-
-    public String getNickname() {
-        return nickname;
     }
 
     public String getPassword() {

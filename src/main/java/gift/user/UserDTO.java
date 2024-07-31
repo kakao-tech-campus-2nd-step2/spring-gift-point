@@ -7,11 +7,8 @@ public class UserDTO {
     String email;
     @NotBlank(message = "비밀번호는 공백으로 둘 수 없습니다.")
     String password;
-    @NotBlank(message = "닉네임은 공백으로 둘 수 없습니다.")
-    String nickname;
 
-    public UserDTO(String email, String password, String nickName) {
-        this.nickname = nickName;
+    public UserDTO(String email, String password) {
         this.email = email;
         this.password = password;
     }
@@ -22,11 +19,6 @@ public class UserDTO {
     public UserDTO(User user) {
         this.email = user.getEmail();
         this.password = user.getPassword();
-        this.nickname = user.getNickname();
-    }
-
-    public String getNickname() {
-        return nickname;
     }
 
     public String getEmail() {
@@ -35,10 +27,6 @@ public class UserDTO {
 
     public String getPassword() {
         return password;
-    }
-
-    public void setNickname(String nickname) {
-        this.nickname = nickname;
     }
 
     public void setEmail(String email) {
