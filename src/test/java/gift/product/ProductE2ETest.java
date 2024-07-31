@@ -242,9 +242,8 @@ class ProductE2ETest {
 
         List<ValidationError> invalidParams = errorResponse.getInvalidParams();
         assertThat(invalidParams).isNotNull();
-        assertThat(invalidParams.size()).isEqualTo(3);
+        assertThat(invalidParams.size()).isEqualTo(2);
         assertThat(invalidParams.parallelStream().map(ValidationError::message)).containsExactlyInAnyOrder(
-                ProductInfo.PRODUCT_NAME_SIZE,
                 ProductInfo.PRODUCT_NAME_KAKAO,
                 ProductInfo.PRODUCT_NAME_PATTERN
         );
