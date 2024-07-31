@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin Page</title>
+</head>
+<body>
+    <h1>Admin Page</h1>
+
+    <h2>Add New Product</h2>
+    <a href="/admin/products/new">Add Product</a>
+
+    <h2>Product List</h2>
+    <table border="1">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Price</th>
+                <th>Image URL</th>
+                <th>작업</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="product : ${products}">
+                <td th:text="${product.id}"></td>
+                <td th:text="${product.name}"></td>
+                <td th:text="${product.price}"></td>
+                <td th:text="${product.imageUrl}"></td>
+                <td>
+                    <a th:href="@{/admin/products/edit/{id}(id=${product.id})}">수정</a> |
+                    <a th:href="@{/admin/products/delete/{id}(id=${product.id})}">삭제</a>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</body>
+</html>
