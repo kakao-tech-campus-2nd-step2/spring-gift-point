@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Product List</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+    }
+
+    h1 {
+      text-align: center;
+      color: #333;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+    }
+
+    th, td {
+      padding: 10px;
+      text-align: left;
+      border: 1px solid #ccc;
+    }
+
+    th {
+      background-color: #f0f0f0;
+    }
+
+    img {
+      max-width: 100px;
+      height: auto;
+    }
+
+    .btn {
+      padding: 10px 20px;
+      background-color: #ffc107; /* 기본 버튼 색상: 노란색 */
+      border: none;
+      color: white;
+      cursor: pointer;
+      font-size: 14px;
+      text-decoration: none;
+      text-align: center;
+      display: inline-block;
+      margin-top: 10px;
+    }
+
+    .btn:hover {
+      background-color: #ff9800; /* 기본 버튼의 호버 색상: 어두운 노란색 */
+    }
+
+    .btn-warning {
+      background-color: #f44336;  /* 경고 버튼 색상: 빨간색 */
+    }
+
+    .btn-warning:hover {
+      background-color: #d32f2f; /* 경고 버튼의 호버 색상: 어두운 빨간색 */
+    }
+  </style>
+</head>
+<body>
+<h1>상품 목록</h1>
+<table>
+  <thead>
+  <tr>
+    <th>ID</th>
+    <th>Name</th>
+    <th>Price</th>
+    <th>Image URL</th>
+    <th>Actions</th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr th:each="productDTO : ${products}">
+    <td th:text="${productDTO.id}">ID</td>
+    <td th:text="${productDTO.name}">Name</td>
+    <td th:text="${productDTO.price}">Price</td>
+    <td><img th:src="${productDTO.imageUrl}" alt="Product Image"></td>
+    <td>
+      <!-- 수정 링크 -->
+      <a th:href="@{/admin/products/update/{id}(id=${productDTO.id})}" class="btn">Edit</a>
+      <!-- 삭제 폼 -->
+      <form th:action="@{/admin/products/delete/{id}(id=${productDTO.id})}" method="post" style="display: inline;">
+        <input type="submit" value="Delete" class="btn btn-warning">
+      </form>
+    </td>
+  </tr>
+  </tbody>
+</table>
+<br>
+<button class="btn btn-warning" th:onclick="|location.href='/admin/products/add';|">상품 추가</button>
+</body>
+</html>
