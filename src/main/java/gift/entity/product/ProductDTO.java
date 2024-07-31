@@ -15,15 +15,15 @@ public class ProductDTO {
     private Integer price;
     @NotNull
     @Schema(description = "상품 이미지 url", nullable = false, example = "https://www.test.com")
-    private String imageurl;
+    private String imageUrl;
     @NotNull
     @Schema(description = "상품 카테고리", nullable = false, example = "1")
     private Long category_id;
 
-    public ProductDTO(String name, Integer price, String imageurl, Long category_id) {
+    public ProductDTO(String name, Integer price, String imageUrl, Long category_id) {
         this.name = name;
         this.price = price;
-        this.imageurl = imageurl;
+        this.imageUrl = imageUrl;
         this.category_id = category_id;
     }
 
@@ -46,19 +46,19 @@ public class ProductDTO {
         this.price = price;
     }
 
-    public String getImageurl() {
-        return imageurl;
+    public String getImageUrl() {
+        return imageUrl;
     }
 
-    public void setImageurl(String imageurl) {
-        this.imageurl = imageurl;
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
     }
 
-    public Long getCategoryid() {
+    public Long getCategory_id() {
         return category_id;
     }
 
-    public void setCategoryid(Long category_id) {
+    public void setCategory_id(Long category_id) {
         this.category_id = category_id;
     }
 }

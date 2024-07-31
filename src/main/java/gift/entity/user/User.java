@@ -16,8 +16,6 @@ public class User {
     private String email;
     @Schema(description = "유저 비밀번호", nullable = false, example = "pa_sSWo_R_d")
     private String password;
-    @Schema(description = "유저 role", nullable = false, example = "USER")
-    private String role;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Product> products;
@@ -34,13 +32,11 @@ public class User {
     public User(String email, String password) {
         this.email = email;
         this.password = password;
-        this.role = "USER";
     }
 
     public User(UserDTO user) {
         this.email = user.getEmail();
         this.password = user.getPassword();
-        this.role = "USER";
     }
 
     public String getEmail() {
@@ -61,13 +57,5 @@ public class User {
 
     public Long getId() {
         return id;
-    }
-
-    public String getRole() {
-        return role;
-    }
-
-    public void setRole(String role) {
-        this.role = role;
     }
 }

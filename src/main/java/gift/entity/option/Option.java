@@ -1,5 +1,7 @@
 package gift.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import gift.entity.user.User;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
 
@@ -21,9 +23,11 @@ public class Option {
 
     @ManyToOne
     @JoinColumn(name = "user_id")
+    @JsonIgnore
     private User user;
 
     @OneToMany(mappedBy = "option", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JsonIgnore
     private List<ProductOption> productOption = new ArrayList<>();
 
     public Option() {
@@ -32,22 +36,6 @@ public class Option {
     public Option(OptionDTO optionDTO) {
         this.name = optionDTO.getName();
         this.quantity = optionDTO.getQuantity();
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public int getQuantity() {
-        return quantity;
     }
 
     public void setOptionDTO(OptionDTO optionDTO) {
@@ -59,6 +47,30 @@ public class Option {
         this.quantity -= quantity;
     }
 
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public int getQuantity() {
+        return quantity;
+    }
+
+    public void setQuantity(int quantity) {
+        this.quantity = quantity;
+    }
+
     public User getUser() {
         return user;
     }
@@ -67,7 +79,11 @@ public class Option {
         this.user = user;
     }
 
-    public void setQuantity(int quantity) {
-        this.quantity = quantity;
+    public List<ProductOption> getProductOption() {
+        return productOption;
+    }
+
+    public void setProductOption(List<ProductOption> productOption) {
+        this.productOption = productOption;
     }
 }

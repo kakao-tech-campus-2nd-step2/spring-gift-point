@@ -1,5 +1,6 @@
 package gift.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
 
@@ -19,12 +20,13 @@ public class Product {
     @Schema(description = "상품 가격", nullable = false, example = "10000")
     private int price;
     @Schema(description = "상품 이미지 url", nullable = false, example = "https://www.test.com")
-    private String imageurl;
+    private String imageUrl;
     @Schema(description = "카테고리 id", nullable = false, example = "1")
     private Long category_id;
 
     @ManyToOne
     @JoinColumn(name = "user_id")
+    @JsonIgnore
     private User user;
 
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
@@ -39,30 +41,30 @@ public class Product {
     public Product(ProductDTO product) {
         this.name = product.getName();
         this.price = product.getPrice();
-        this.imageurl = product.getImageurl();
-        this.category_id = product.getCategoryid();
+        this.imageUrl = product.getImageUrl();
+        this.category_id = product.getCategory_id();
     }
 
     public Product(ProductDTO product, User user) {
         this.name = product.getName();
         this.price = product.getPrice();
-        this.imageurl = product.getImageurl();
-        this.category_id = product.getCategoryid();
+        this.imageUrl = product.getImageUrl();
+        this.category_id = product.getCategory_id();
         this.user = user;
     }
 
-    public Product(String name, int price, String imageurl, Long categoryid) {
+    public Product(String name, int price, String imageUrl, Long category_id) {
         this.name = name;
         this.price = price;
-        this.imageurl = imageurl;
-        this.category_id = categoryid;
+        this.imageUrl = imageUrl;
+        this.category_id = category_id;
     }
 
     public void updateProduct(ProductDTO product) {
         this.name = product.getName();
         this.price = product.getPrice();
-        this.imageurl = product.getImageurl();
-        this.category_id = product.getCategoryid();
+        this.imageUrl = product.getImageUrl();
+        this.category_id = product.getCategory_id();
     }
 
     public void setId(Long id) {
@@ -77,11 +79,11 @@ public class Product {
         return price;
     }
 
-    public String getImageurl() {
-        return imageurl;
+    public String getImageUrl() {
+        return imageUrl;
     }
 
-    public Long getCategoryid() {
+    public Long getCategory_id() {
         return category_id;
     }
 
@@ -97,12 +99,12 @@ public class Product {
         this.price = price;
     }
 
-    public void setImageurl(String imageurl) {
-        this.imageurl = imageurl;
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
     }
 
-    public void setCategoryid(Long categoryid) {
-        this.category_id = categoryid;
+    public void setCategory_id(Long category_id) {
+        this.category_id = category_id;
     }
 
     public void setUser(User user) {
