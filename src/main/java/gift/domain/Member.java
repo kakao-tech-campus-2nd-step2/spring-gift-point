@@ -49,4 +49,8 @@ public class Member {
     public String getAccessToken() {
         return accessToken;
     }
+
+    public void setAccessToken(String token) {
+        this.accessToken = token;
+    }
 }

@@ -38,6 +38,8 @@ public class MemberService {
                 .orElseThrow(() -> new RuntimeException(ErrorMessage.EMAIL_NOT_FOUND));
         if (member.getPassword().equals(loginRequest.getPassword())) {
             String token = jwtConfig.generateToken(loginRequest.getEmail());
+            member.setAccessToken(token);
+            memberRepository.save(member);
             return new LoginResponse(token);
         } else {
             throw new IllegalArgumentException(ErrorMessage.INVALID_LOGIN_CREDENTIALS);
@@ -51,5 +53,9 @@ public class MemberService {
 
     public Member getMemberById(Long memberId) {
         return memberRepository.findById(memberId).orElseThrow();
+    }
+
+    public Member getMemberbyEmail(String email) {
+        return memberRepository.findByEmail(email).orElseThrow();
     }
 }

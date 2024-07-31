@@ -1,5 +1,6 @@
 package gift.service;
 
+import gift.config.JwtConfig;
 import gift.domain.Member;
 import gift.domain.Option;
 import gift.domain.Order;
@@ -15,16 +16,19 @@ public class OrderService {
     private final MemberService memberService;
     private final OptionService optionService;
     private final WishService wishService;
+    private final JwtConfig jwtConfig;
 
-    public OrderService(OrderRepository orderRepository, MemberService memberService, OptionService optionService, WishService wishService) {
+    public OrderService(OrderRepository orderRepository, MemberService memberService, OptionService optionService, WishService wishService, JwtConfig jwtConfig) {
         this.orderRepository = orderRepository;
         this.memberService = memberService;
         this.optionService = optionService;
         this.wishService = wishService;
+        this.jwtConfig = jwtConfig;
     }
 
     public OrderResponse createOrder(OrderRequest orderDto, String access_token) {
-        Member member = memberService.getMember(access_token);
+        String email = jwtConfig.extractEmail(access_token);
+        Member member = memberService.getMemberbyEmail(email);
         Option option = optionService.getOption(orderDto.getOption_id());
         Product product = option.getProduct();
 
