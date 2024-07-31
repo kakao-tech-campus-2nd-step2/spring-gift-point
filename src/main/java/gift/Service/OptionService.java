@@ -42,11 +42,13 @@ public class OptionService {
     return optionDtos;
   }
 
-  public OptionDto getOptionById(Long id) {
-    Option option = optionRepository.findById(id)
+  public List<OptionDto> getOptionsById(Long productId) {
+    Product product = productRepository.findById(productId)
       .orElseThrow(() -> new EmptyResultDataAccessException("해당 데이터가 없습니다", 1));
 
-    return ConverterToDto.convertToOptionDto(option);
+    List<Option> options = product.getOptions();
+    List<OptionDto> optionDtos = options.stream().map(ConverterToDto::convertToOptionDto).toList();
+    return optionDtos;
   }
 
   public void deleteOption(Long id) {
