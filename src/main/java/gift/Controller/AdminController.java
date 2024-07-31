@@ -45,8 +45,8 @@ public class AdminController {
 
     @GetMapping("/add")
     public String addProductForm(Model model){
-        List<String> categories = productService.getCategoriesName();
-        model.addAttribute("product", new ProductDTO(0L, "" ,"a",0,"b"));
+        List<Long> categories = productService.getCategoriesId();
+        model.addAttribute("product", new ProductDTO(0L, "" ,0,"a",1L));
         model.addAttribute("categories", categories);
         return "add";
     }
@@ -63,7 +63,7 @@ public class AdminController {
     @GetMapping("/edit/{id}")
     public String updateProductForm(@PathVariable("id") Long id, Model model){
         ProductDTO productDTO = productService.getById(email, id);
-        List<String> categories = productService.getCategoriesName();
+        List<Long> categories = productService.getCategoriesId();
 
         model.addAttribute("product", productDTO);
         model.addAttribute("categories", categories);
