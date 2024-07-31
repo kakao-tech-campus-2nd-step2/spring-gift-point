@@ -3,6 +3,7 @@ package gift.product.service;
 import gift.category.domain.Category;
 import gift.category.repository.CategoryRepository;
 import gift.product.domain.ProductRequest;
+import gift.product.domain.ProductResponse;
 import gift.product.option.domain.Option;
 import gift.product.option.domain.OptionDTO;
 import gift.product.option.service.OptionService;
@@ -36,25 +37,30 @@ public class ProductService {
         this.optionService = optionService;
     }
 
-    public Page<ProductRequest> getAllProducts(Pageable pageable) {
+    public Page<ProductResponse> getAllProducts(Pageable pageable) {
         return productRepository.findAll(pageable)
-            .map(this::convertToDTO);
+            .map(this::convertToResponse);
     }
 
-    public Page<ProductRequest> getAllProductsByCategoryId(Long categoryId, Pageable pageable) {
+    public Page<ProductResponse> getAllProductsByCategoryId(Long categoryId, Pageable pageable) {
         return productRepository.getProductsByCategoryId(categoryId, pageable)
-            .map(this::convertToDTO);
+            .map(this::convertToResponse);
     }
 
-    public List<ProductRequest> getAllProducts() {
+    public List<ProductResponse> getAllProducts() {
         return productRepository.findAll().stream()
-            .map(this::convertToDTO)
+            .map(this::convertToResponse)
             .collect(Collectors.toList());
     }
 
-    public Optional<ProductRequest> getProductDTOById(Long id) {
+    public Optional<ProductResponse> getProductResponseById(Long id) {
         return productRepository.findById(id)
-            .map(this::convertToDTO);
+            .map(this::convertToResponse);
+    }
+
+    public Optional<ProductRequest> getProductRequestById(Long id) {
+        return productRepository.findById(id)
+            .map(this::convertToRequest);
     }
 
     public Optional<Product> getProductById(Long id) {
@@ -62,7 +68,7 @@ public class ProductService {
     }
 
     @Transactional
-    public ProductRequest createProduct(@Valid ProductRequest productRequest) {
+    public ProductResponse createProduct(@Valid ProductRequest productRequest) {
         Category category = categoryRepository.findById(productRequest.getCategoryId())
             .orElseThrow(() -> new EntityNotFoundException("Category id " + productRequest.getCategoryId() + "가 없습니다."));
 
@@ -90,11 +96,11 @@ public class ProductService {
 
         product = productRepository.save(finalProduct);
 
-        return convertToDTO(product);
+        return convertToResponse(product);
     }
 
     @Transactional
-    public ProductRequest updateProduct(Long id, @Valid ProductRequest productRequest) {
+    public ProductResponse updateProduct(Long id, @Valid ProductRequest productRequest) {
         Category category = categoryRepository.findById(productRequest.getCategoryId())
             .orElseThrow(() -> new EntityNotFoundException("Category id " + productRequest.getCategoryId() + "가 없습니다."));
 
@@ -113,7 +119,7 @@ public class ProductService {
 
         productRequest.getOptionDTOList().forEach(optionDTO -> {
             Option existingOption = existingOptions.stream()
-                .filter(option -> option.getName().equals(optionDTO.getName()))
+                .filter(option -> option.getId().equals(optionDTO.getId()))
                 .findFirst()
                 .orElse(null);
 
@@ -127,14 +133,14 @@ public class ProductService {
         });
 
         product = productRepository.save(product);
-        return convertToDTO(product);
+        return convertToResponse(product);
     }
 
     public void deleteProduct(Long id) {
         productRepository.deleteById(id);
     }
 
-    public ProductRequest convertToDTO(Product product) {
+    public ProductRequest convertToRequest(Product product){
         List<OptionDTO> optionDTOList = optionService.findAllByProductId(product.getId());
         return new ProductRequest(
             product.getId(),
@@ -144,6 +150,13 @@ public class ProductService {
             product.getCategory().getId(),
             optionDTOList
         );
+    }
+    public ProductResponse convertToResponse(Product product){
+        return new ProductResponse(
+            product.getId(),
+            product.getName(),
+            product.getPrice(),
+            product.getImageUrl());
     }
 
     private Product convertToEntity(ProductRequest productRequest) {
