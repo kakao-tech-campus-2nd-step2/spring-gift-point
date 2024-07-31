@@ -1,8 +1,7 @@
 package gift.util;
 
 import gift.common.properties.KakaoProperties;
-import gift.dto.OAuth.AuthTokenInfoResponse;
-import gift.dto.OAuth.AuthTokenResponse;
+import gift.dto.OAuth.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
@@ -64,7 +63,7 @@ public class KakaoApiCaller {
         return resp;
     }
 
-    public String extractUserEmail(String accessToken) {
+    public UserInfoResponse.Info extractUserInfo(String accessToken) {
         String url = kakaoProperties.userInfoUrl();
         Map resp = restClient.get()
                 .uri(URI.create(url))
@@ -72,7 +71,10 @@ public class KakaoApiCaller {
                 .retrieve()
                 .body(Map.class);
         Map<String, Object> accountMap = (Map<String, Object>) resp.get("kakao_account");
-        return (String) accountMap.get("email");
+        String email = (String) accountMap.get("email");
+        Map<String, Object> profileMap = (Map<String, Object>) accountMap.get("profile");
+        String nickname = (String) profileMap.get("nickname");
+        return new UserInfoResponse.Info(email,nickname);
     }
 
     public String sendMessage(String accessToken, String text) {

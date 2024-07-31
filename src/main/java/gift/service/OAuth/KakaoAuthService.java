@@ -2,7 +2,7 @@ package gift.service.OAuth;
 
 import gift.common.enums.LoginType;
 import gift.common.enums.TokenType;
-import gift.dto.OAuth.AuthTokenResponse;
+import gift.dto.OAuth.*;
 import gift.model.token.OAuthToken;
 import gift.model.user.User;
 import gift.repository.token.OAuthTokenRepository;
@@ -32,20 +32,20 @@ public class KakaoAuthService {
         return kakaoApiCaller.createGetCodeUrl();
     }
 
-    public String register(String authCode) {
+    public LoginInfoResponse.Info register(String authCode) {
 
         AuthTokenResponse tokenResponse = kakaoApiCaller.getAccessToken(authCode);
-        String email = kakaoApiCaller.extractUserEmail(tokenResponse.accessToken());
 
-        User user = userRepository.findByEmail(email).orElseGet(
-                () -> userRepository.save(new User(email, "1234", "testName", LoginType.KAKAO))
+        UserInfoResponse.Info userInfo = kakaoApiCaller.extractUserInfo(tokenResponse.accessToken());
+
+        User user = userRepository.findByEmail(userInfo.email()).orElseGet(
+                () -> userRepository.save(new User(userInfo.email(), "1234", "testName", LoginType.KAKAO))
         );
 
         user.checkLoginType(LoginType.KAKAO);
 
         saveKakaoAccessToken(tokenResponse.accessToken(), tokenResponse.refreshToken(), user);
-
-        return jwtUtil.generateJWT(user);
+        return new LoginInfoResponse.Info(userInfo.name(),jwtUtil.generateJWT(user));
     }
 
     private void saveKakaoAccessToken(String accessToken, String refreshToken, User user) {
