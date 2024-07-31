@@ -19,7 +19,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -65,8 +64,7 @@ public class MemberController {
     )
     @PostMapping("/register")
     public ResponseEntity<MemberAuthResponse> register(
-        @Valid @RequestBody MemberRegisterRequest memberRegisterRequest,
-        @RequestHeader("Content-Type") String contentType
+        @Valid @RequestBody MemberRegisterRequest memberRegisterRequest
     ) {
         MemberAuthResponse registeredMember = memberService.registerMember(memberRegisterRequest);
         return ResponseEntity.status(HttpStatus.CREATED).body(registeredMember);
@@ -103,8 +101,7 @@ public class MemberController {
     )
     @PostMapping("/login")
     public ResponseEntity<MemberAuthResponse> login(
-        @Valid @RequestBody MemberLoginRequest memberLoginRequest,
-        @RequestHeader("Content-Type") String contentType
+        @Valid @RequestBody MemberLoginRequest memberLoginRequest
     ) {
         MemberAuthResponse loggedInMember = memberService.loginMember(memberLoginRequest);
         return ResponseEntity.ok(loggedInMember);
