@@ -69,7 +69,7 @@ public class WishService {
             .orElseThrow(() -> new NoSuchElementException("id가 잘못되었습니다."));
         Product product = jpaProductRepository.findById(wishRequestDTO.productId())
             .orElseThrow(() -> new NoSuchElementException("id가 잘못되었습니다."));
-        Wish wish = new Wish(user, product, wishRequestDTO.count());
+        Wish wish = new Wish(user, product);
 
         jpaWishRepository.save(wish);
         return WishResponseDTO.from(wish);

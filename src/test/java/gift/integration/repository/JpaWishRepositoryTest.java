@@ -69,13 +69,13 @@ class JpaWishRepositoryTest {
         jpaProductRepository.saveAll(products);
 
         wishList = List.of(
-            new Wish(user1, products.get(0), 10),
-            new Wish(user1, products.get(1), 5),
-            new Wish(user1, products.get(2), 15),
-            new Wish(user1, products.get(3), 20),
+            new Wish(user1, products.get(0)),
+            new Wish(user1, products.get(1)),
+            new Wish(user1, products.get(2)),
+            new Wish(user1, products.get(3)),
 
-            new Wish(user2, products.get(0), 10),
-            new Wish(user2, products.get(1), 5)
+            new Wish(user2, products.get(0)),
+            new Wish(user2, products.get(1))
         );
     }
 
@@ -101,7 +101,6 @@ class JpaWishRepositoryTest {
         assertAll(
             () -> assertThat(findWish.getId()).isNotNull(),
             () -> assertThat(findWish.getId()).isEqualTo(insertWishId),
-            () -> assertThat(findWish.getCount()).isEqualTo(10),
 
             () -> assertThrows(NoSuchElementException.class,
                 () -> jpaWishRepository.findById(100L).get())
