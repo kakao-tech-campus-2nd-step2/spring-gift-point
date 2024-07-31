@@ -5,6 +5,7 @@ import gift.product.dto.category.CategoryDto;
 import gift.product.exception.ExceptionResponse;
 import gift.product.model.Category;
 import gift.product.service.CategoryService;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -33,7 +34,10 @@ public class CategoryController {
         this.categoryService = categoryService;
     }
 
-    @ApiResponse(responseCode = "401", description = "허용되지 않는 요청", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ExceptionResponse.class)))
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "성공", content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = Category.class)))),
+        @ApiResponse(responseCode = "401", description = "허용되지 않는 요청", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ExceptionResponse.class)))
+    })
     @GetMapping
     public ResponseEntity<List<Category>> getCategoryAll() {
         List<Category> categories = categoryService.getCategoryAll();
