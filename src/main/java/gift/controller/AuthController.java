@@ -21,13 +21,11 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @Tag(name = "Auth Api", description = "로그인 및 회원가입 관련 Api")
 @RestController
-@RequestMapping("/api/members")
 public class AuthController {
 
     private final UserService userService;
@@ -42,7 +40,7 @@ public class AuthController {
     }
 
     @Operation(summary = "카카오 소셜 로그인", responses = @ApiResponse(responseCode = "200", description = "로그인 성공시 토큰 반환"))
-    @GetMapping("/login/kakao")
+    @GetMapping("/api/members/login/kakao")
     public ResponseEntity<?> getKakaoLoginPage() {
         var uri = kakaoOAuthService.getKakaoLoginPage();
         return ResponseEntity.status(HttpStatus.PERMANENT_REDIRECT).location(uri).build();
@@ -59,7 +57,7 @@ public class AuthController {
     }
 
     @Operation(summary = "로그인", responses = @ApiResponse(responseCode = "200", description = "로그인 성공시 토큰 반환"))
-    @PostMapping("/login")
+    @PostMapping("/api/members/login")
     public ResponseEntity<?> handleLoginRequest(@Valid @RequestBody UserForm userForm,
         BindingResult result) throws MethodArgumentNotValidException {
         checkLoginUser(userForm, result);
@@ -68,7 +66,7 @@ public class AuthController {
     }
 
     @Operation(summary = "회원가입")
-    @PostMapping("/register")
+    @PostMapping("/api/members/register")
     public ResponseEntity<?> handleSignUpRequest(@Valid @RequestBody UserForm userForm,
         BindingResult result) throws CustomException, CustomArgumentNotValidException {
         if (result.hasErrors()) {
