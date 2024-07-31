@@ -1,8 +1,6 @@
 spring:
   application:
     name: spring-gift
-  config:
-    import: classpath:/application-secret.yml
   h2:
     console:
       enabled: true # H2 console 활성화 여부
@@ -32,3 +30,6 @@ springdoc:
   swagger-ui:
     path: /swagger-ui.html # Swagger UI 경로 설정
   use-fqn: true # 패키지 경로 표시 여부
+
+jwt:
+  secret: Yn2kjibddFAWtnPJ2AFlL8WXmohJMCvigQggaEypa5E=
