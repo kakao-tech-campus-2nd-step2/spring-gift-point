@@ -1,25 +1,26 @@
 package gift.dto;
 
+import java.util.HashMap;
 import java.util.Map;
-import org.springframework.http.HttpStatus;
 
 public class ErrorResponseDto {
 
     private String message;
-    private HttpStatus status;
+    private final int code;
     private Map<String, String> validation;
 
-    public ErrorResponseDto(String message, HttpStatus status) {
+    public ErrorResponseDto(String message, int code, Map<String, String> validation) {
         this.message = message;
-        this.status = status;
+        this.code = code;
+        this.validation = validation != null ? validation : new HashMap<>();
     }
 
     public String getMessage() {
         return message;
     }
 
-    public HttpStatus getStatus() {
-        return status;
+    public int getCode() {
+        return code;
     }
 
     public Map<String, String> getValidation() {
