@@ -33,14 +33,15 @@ public class MemberService {
     }
 
     @Transactional(readOnly = true)
-    public String login(MemberCommand.Login command) {
+    public MemberModel.InfoAndJwt login(MemberCommand.Login command) {
         Member member = memberRepository.findByEmail(command.email())
-            .orElseThrow(() -> new NotFoundException("User not found."));
+            .orElseThrow(() -> new InvalidAuthRequestException("아이디 또는 비밀번호가 일치하지 않습니다."));
 
         if (!member.verifyPassword(command.password())) {
-            throw new InvalidAuthRequestException("Password is incorrect.");
+            throw new InvalidAuthRequestException("아이디 또는 비밀번호가 일치하지 않습니다.");
         }
-        return jwtProvider.createToken(member.getId(), member.getRole());
+        String jwt = jwtProvider.createToken(member.getId(), member.getRole());
+        return new MemberModel.InfoAndJwt(MemberModel.Info.from(member), jwt);
     }
 
     @Transactional(readOnly = true)
