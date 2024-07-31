@@ -1,7 +1,7 @@
 package gift.common.resolver;
 
 import gift.common.annotation.LoginMember;
-import gift.entity.Member;
+import gift.common.exception.unauthorized.TokenNotFoundException;
 import gift.service.MemberService;
 import org.springframework.core.MethodParameter;
 import org.springframework.stereotype.Component;
@@ -29,7 +29,7 @@ public class LoginMemberArgumentResolver implements HandlerMethodArgumentResolve
         NativeWebRequest webRequest, WebDataBinderFactory binderFactory) throws Exception {
         String authorizationHeader = webRequest.getHeader("Authorization");
         if (authorizationHeader == null || !authorizationHeader.startsWith("Bearer ")) {
-            return null;
+            throw new TokenNotFoundException();
         }
 
         String token = authorizationHeader.substring(7);
