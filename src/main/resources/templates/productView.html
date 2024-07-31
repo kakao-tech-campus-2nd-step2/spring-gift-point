@@ -22,7 +22,7 @@
             <p th:text="${product.description}">상품 설명</p>
             <p>가격 : <span th:text="${product.price}">₩</span></p>
             <div class="d-flex justify-content-end">
-                <a th:href="@{/products/{id}/edit(id=${product.id})}" class="btn btn-primary mr-2">수정</a>
+                <a th:href="@{/products/{wish_id}/edit(wish_id=${product.wish_id})}" class="btn btn-primary mr-2">수정</a>
                 <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#deleteModal">삭제</button>
             </div>
         </div>
@@ -30,11 +30,11 @@
 </div>
 
 <!-- Delete Confirmation Modal -->
-<div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
+<div class="modal fade" wish_id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="deleteModalLabel">상품 삭제</h5>
+                <h5 class="modal-title" wish_id="deleteModalLabel">상품 삭제</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -44,7 +44,7 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">취소</button>
-                <a th:href="@{/products/{id}/delete(id=${product.id})}" class="btn btn-danger">삭제</a>
+                <a th:href="@{/products/{wish_id}/delete(wish_id=${product.wish_id})}" class="btn btn-danger">삭제</a>
             </div>
         </div>
     </div>

@@ -15,15 +15,15 @@ public class Member {
     private String email;
     @Column(nullable = false)
     private String password;
-    private String access_token;
+    private String accessToken;
 
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Wish> wishes =  new ArrayList<>();
 
-    public Member(String mail, String password, String access_token) {
+    public Member(String mail, String password, String accessToken) {
         this.email = mail;
         this.password = password;
-        this.access_token = access_token;
+        this.accessToken = accessToken;
     }
 
     public String getEmail() {
@@ -43,6 +43,6 @@ public class Member {
     }
 
     public String getAccessToken() {
-        return access_token;
+        return accessToken;
     }
 }

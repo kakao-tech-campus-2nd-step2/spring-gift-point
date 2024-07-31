@@ -84,7 +84,7 @@ public class ProductService {
 
     public Page<ProductListDto> getProductsByCategory(Long categoryId, Pageable pageable) {
         Category category = categoryService.findById(categoryId);
-        Page<Product> products = productRepository.findByCategory(category);
+        Page<Product> products = productRepository.findByCategory(category, pageable);
         return products.map(ProductListDto::new);
     }
 }

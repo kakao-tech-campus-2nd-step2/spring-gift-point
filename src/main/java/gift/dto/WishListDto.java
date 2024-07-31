@@ -10,7 +10,7 @@ public class WishListDto {
     private String imageUrl;
 
     public WishListDto(Wish wish){
-        this.id = wish.getId();
+        this.id = wish.getWishId();
         this.product_id = wish.getProduct().getId();
         this.name = wish.getProduct().getName();
         this.price = wish.getProduct().getPrice();

@@ -8,14 +8,14 @@ public class Wish {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Long wish_id;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
     private Member member;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id")
+    @JoinColumn(name = "product_id")
     private Product product;
 
     private boolean isDeleted = false;
@@ -25,8 +25,8 @@ public class Wish {
         this.product = product;
     }
 
-    public Long getId() {
-        return id;
+    public Long getWishId() {
+        return wish_id;
     }
 
     public Member getMember() {
@@ -41,8 +41,8 @@ public class Wish {
         return product;
     }
 
-    public void setId(long id) {
-        this.id = id;
+    public void setWishId(long wish_id) {
+        this.wish_id = wish_id;
     }
 
     public void setProduct(Product product) {

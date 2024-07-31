@@ -17,11 +17,12 @@ class MemberRepositoryTest {
 
     private static final String TEST_EMAIL = "test@gmail.com";
     private static final String TEST_PASSWORD = "password";
+    private static final String TEST_ACCESS_TOKEN = "ACCESS-TOKEN";
 
     @Test
     void save() {
         // given
-        Member member = new Member(TEST_EMAIL, TEST_PASSWORD, access_token);
+        Member member = new Member(TEST_EMAIL, TEST_PASSWORD, TEST_ACCESS_TOKEN);
 
         // when
         Member savedMember = memberRepository.save(member);
@@ -35,7 +36,7 @@ class MemberRepositoryTest {
     @Test
     void findByEmail() {
         // given
-        Member member = new Member(TEST_EMAIL, TEST_PASSWORD, access_token);
+        Member member = new Member(TEST_EMAIL, TEST_PASSWORD, TEST_ACCESS_TOKEN);
         memberRepository.save(member);
 
         // when

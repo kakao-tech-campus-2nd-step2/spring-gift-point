@@ -20,26 +20,26 @@
     </div>
     <div class="row">
         <div class="col-12">
-            <form th:action="@{/products/{id}(id=${product.id})}" th:object="${product}" method="post">
+            <form th:action="@{/products/{wish_id}(wish_id=${product.wish_id})}" th:object="${product}" method="post">
                 <div class="form-group">
                     <label for="name">상품명 :</label>
-                    <input type="text" class="form-control" id="name" th:field="*{name}" required>
+                    <input type="text" class="form-control" wish_id="name" th:field="*{name}" required>
                 </div>
                 <div class="form-group">
                     <label for="price">가격 :</label>
-                    <input type="number" class="form-control" id="price" th:field="*{price}" required>
+                    <input type="number" class="form-control" wish_id="price" th:field="*{price}" required>
                 </div>
                 <div class="form-group">
                     <label for="imageUrl">이미지 URL:</label>
-                    <input type="text" class="form-control" id="imageUrl" th:field="*{imageUrl}" required>
+                    <input type="text" class="form-control" wish_id="imageUrl" th:field="*{imageUrl}" required>
                 </div>
                 <div class="form-group">
                     <label for="description">설명:</label>
-                    <textarea class="form-control" id="description" th:field="*{description}" required></textarea>
+                    <textarea class="form-control" wish_id="description" th:field="*{description}" required></textarea>
                 </div>
                 <div class="d-flex justify-content-between">
                     <button type="submit" class="btn btn-primary">상품 수정</button>
-                    <a th:href="@{/products/{id}(id=${product.id})}" class="btn btn-secondary">취소</a>
+                    <a th:href="@{/products/{wish_id}(wish_id=${product.wish_id})}" class="btn btn-secondary">취소</a>
                 </div>
             </form>
         </div>

@@ -22,14 +22,14 @@
             <form th:action="@{/}" method="get" class="form-inline">
                 <div class="form-group mr-3">
                     <label for="sort">정렬 기준:</label>
-                    <select class="form-control" id="sort" name="sort">
+                    <select class="form-control" wish_id="sort" name="sort">
                         <option value="name">이름순</option>
                         <option value="price">가격순</option>
                     </select>
                 </div>
                 <div class="form-group mr-3">
                     <label for="direction">정렬 방향:</label>
-                    <select class="form-control" id="direction" name="direction">
+                    <select class="form-control" wish_id="direction" name="direction">
                         <option value="asc">오름차순</option>
                         <option value="desc">내림차순</option>
                     </select>
@@ -53,8 +53,8 @@
                     <td th:text="${product.name}"></td>
                     <td th:text="${product.price}"></td>
                     <td>
-                        <a th:href="@{/products/{id}/edit(id=${product.id})}" class="btn btn-primary">수정</a>
-                        <button type="button" class="btn btn-danger" data-toggle="modal" th:data-target="${'#deleteModal' + product.id}">삭제</button>
+                        <a th:href="@{/products/{wish_id}/edit(wish_id=${product.wish_id})}" class="btn btn-primary">수정</a>
+                        <button type="button" class="btn btn-danger" data-toggle="modal" th:data-target="${'#deleteModal' + product.wish_id}">삭제</button>
                     </td>
                 </tr>
                 </tbody>
@@ -72,11 +72,11 @@
             </nav>
         </div>
     </div>
-    <div th:each="product : ${products}" class="modal fade" th:id="${'deleteModal' + product.id}" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
+    <div th:each="product : ${products}" class="modal fade" th:wish_id="${'deleteModal' + product.wish_id}" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" th:id="${'deleteModalLabel' + product.id}">상품 삭제</h5>
+                    <h5 class="modal-title" th:wish_id="${'deleteModalLabel' + product.wish_id}">상품 삭제</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -86,7 +86,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">취소</button>
-                    <a th:href="@{/products/{id}/delete(id=${product.id})}" class="btn btn-danger">삭제</a>
+                    <a th:href="@{/products/{wish_id}/delete(wish_id=${product.wish_id})}" class="btn btn-danger">삭제</a>
                 </div>
             </div>
         </div>

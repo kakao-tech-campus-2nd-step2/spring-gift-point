@@ -12,7 +12,7 @@ import java.io.IOException;
 
 @RestController("api/kakao")
 public class KakaoAuthController {
-    @Value("${kakao.app.key}")
+    /*@Value("${kakao.app.key}")
     private String appKey;
 
     private final KakaoTokenService kakaoTokenService;
@@ -33,5 +33,5 @@ public class KakaoAuthController {
         String accessToken = kakaoTokenService.getAccessToken(authorizationCode);
         System.out.println("Access Token: " + accessToken);
         return accessToken;
-    }
+    }*/
 }

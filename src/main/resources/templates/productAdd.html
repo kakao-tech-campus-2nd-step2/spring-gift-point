@@ -22,26 +22,26 @@
       <form th:action="@{/products/add}" method="post" enctype="multipart/form-data">
         <div class="form-group">
           <label for="name">상품명</label>
-          <input type="text" id="name" name="name" required class="form-control">
+          <input type="text" wish_id="name" name="name" required class="form-control">
         </div>
         <div class="form-group">
           <label for="price">가격</label>
-          <input type="number" id="price" name="price" required class="form-control">
+          <input type="number" wish_id="price" name="price" required class="form-control">
         </div>
         <div class="form-group">
           <label for="imageUrl">이미지 URL</label>
-          <input type="text" id="imageUrl" name="imageUrl" required class="form-control">
+          <input type="text" wish_id="imageUrl" name="imageUrl" required class="form-control">
         </div>
         <div class="form-group">
           <label for="description">설명</label>
-          <textarea id="description" name="description" required class="form-control"></textarea>
+          <textarea wish_id="description" name="description" required class="form-control"></textarea>
         </div>
         <button type="submit" class="btn btn-primary">상품 추가</button>
       </form>
     </div>
   </div>
 </div>
-<div id="modal" class="modal">
+<div wish_id="modal" class="modal">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
@@ -51,7 +51,7 @@
         </button>
       </div>
       <div class="modal-body">
-        <a th:href="@{/products/{id}(id=${product.id})}" class="btn btn-primary">상품 상세보기</a>
+        <a th:href="@{/products/{wish_id}(wish_id=${product.wish_id})}" class="btn btn-primary">상품 상세보기</a>
       </div>
     </div>
   </div>

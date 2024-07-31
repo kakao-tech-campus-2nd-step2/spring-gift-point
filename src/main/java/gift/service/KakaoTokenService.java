@@ -22,7 +22,7 @@ import java.util.Map;
 @Service
 public class KakaoTokenService {
 
-    @Value("${kakao.app.key}")
+    /*@Value("${kakao.app.key}")
     private String appKey;
 
     private final String tokenUrl = "https://kauth.kakao.com/oauth/token";
@@ -105,6 +105,6 @@ public class KakaoTokenService {
         templateObject.put("link", linkObject);
 
         return templateObject.toString();
-    }
+    }*/
 }
 
