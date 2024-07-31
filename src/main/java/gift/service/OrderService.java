@@ -4,9 +4,15 @@ import gift.LoginType;
 import gift.domain.*;
 import gift.dto.LoginMember;
 import gift.dto.request.OrderRequest;
+import gift.dto.response.OrderListResponse;
 import gift.dto.response.OrderResponse;
 import gift.exception.CustomException;
-import gift.repository.*;
+import gift.repository.MemberRepository;
+import gift.repository.OptionRepository;
+import gift.repository.OrderRepository;
+import gift.repository.WishRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -44,12 +50,16 @@ public class OrderService {
         Order savedOrder = orderRepository.save(new Order(option, member, orderRequest));
 
         return new OrderResponse(savedOrder);
-      }
+    }
 
     private void deleteFromWishList(Long memberId, Product product) {
         Optional<Wish> wish = wishRepository.findWishByMember_IdAndProduct(memberId, product);
         wish.ifPresent(wishRepository::delete);
     }
 
-
+    public Page<OrderListResponse> getOrderList(LoginMember loginMember, Pageable pageable) {
+        Member member = memberRepository.findMemberById(loginMember.getId()).get();
+        Page<Order> orders = orderRepository.findAllByMember(member, pageable);
+        return orders.map(order -> new OrderListResponse(order, order.getOption().getProduct()));
+    }
 }
