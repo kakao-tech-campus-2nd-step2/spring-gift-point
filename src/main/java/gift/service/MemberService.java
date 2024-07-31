@@ -96,11 +96,7 @@ public class MemberService {
         try{
             Member member = memberRepository.findByEmail(email).orElseThrow(()
                     -> new BadRequestException(email + "을(를) 가지는 유저를 찾을 수 없습니다."));
-            String accessToken = member.getAccessToken();
-            if (accessToken.isBlank())
-                throw new BadRequestException("해당 사용자의 토큰이 없습니다.");
-
-            return accessToken;
+            return member.getAccessToken();
         } catch (BadRequestException e) {
             throw e;
         } catch (Exception e) {

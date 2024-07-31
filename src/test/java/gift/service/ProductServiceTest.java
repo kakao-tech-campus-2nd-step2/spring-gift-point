@@ -98,15 +98,15 @@ class ProductServiceTest {
     }
 
     @Test
-    void getProductList() {
+    void getProductWithOptionsList() {
         productService.addProduct(productPostRequestDTO);
 
         assertThat(productService.getProductListByCategoryId(2L, pageable).getContent().getFirst()).isNotNull();
     }
 
     @Test
-    void getProduct(){
-        assertThat(productService.getProduct(1L)).isNotNull();
+    void getProductWithOptions(){
+        assertThat(productService.getProductWithOptions(1L)).isNotNull();
     }
 
     @Test

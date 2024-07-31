@@ -1,6 +1,7 @@
 package gift.controller;
 
 import gift.constants.ResponseMsgConstants;
+import gift.dto.betweenClient.product.OneProductResponseDTO;
 import gift.dto.betweenClient.product.ProductPostRequestDTO;
 import gift.dto.betweenClient.product.ProductResponseDTO;
 import gift.dto.betweenClient.product.ProductRequestDTO;
@@ -63,8 +64,8 @@ public class ProductController {
                     content = @Content(mediaType = "application/json", schema = @Schema(implementation = ResponseDTO.class))),
             @ApiResponse(responseCode = "500", description = "서버에 의한 오류입니다.",
                     content = @Content(mediaType = "application/json", schema = @Schema(implementation = ResponseDTO.class)))})
-    public ResponseEntity<ProductResponseDTO> getOneProduct(@PathVariable @Min(1) @NotNull Long id) {
-        return new ResponseEntity<>(productService.getProduct(id), HttpStatus.OK);
+    public ResponseEntity<OneProductResponseDTO> getOneProduct(@PathVariable @Min(1) @NotNull Long id) {
+        return new ResponseEntity<>(productService.getProductWithOptions(id), HttpStatus.OK);
     }
 
     @PostMapping

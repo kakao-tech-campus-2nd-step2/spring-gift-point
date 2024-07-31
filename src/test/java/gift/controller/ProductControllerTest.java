@@ -8,10 +8,12 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import gift.dto.betweenClient.category.CategoryDTO;
 import gift.dto.betweenClient.member.MemberDTO;
+import gift.dto.betweenClient.product.OneProductResponseDTO;
 import gift.dto.betweenClient.product.ProductResponseDTO;
 import gift.service.MemberService;
 import gift.service.ProductService;
 import gift.util.JwtUtil;
+import java.util.ArrayList;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
@@ -50,7 +52,7 @@ class ProductControllerTest {
 
     @Test
     void getOneProduct() throws Exception {
-        given(productService.getProduct(any())).willReturn(new ProductResponseDTO(1L, "a", 123, "asdfasdf", categoryDTO));
+        given(productService.getProductWithOptions(any())).willReturn(new OneProductResponseDTO(1L, "a", 123, "asdfasdf", new ArrayList<>()));
 
         mockMvc.perform(MockMvcRequestBuilders.get("/api/products/1").contentType(
                         MediaType.APPLICATION_JSON)).andExpect(status().isOk())

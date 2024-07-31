@@ -1,6 +1,8 @@
 package gift.service;
 
 import gift.dto.betweenClient.option.OptionRequestDTO;
+import gift.dto.betweenClient.option.OptionResponseDTO;
+import gift.dto.betweenClient.product.OneProductResponseDTO;
 import gift.dto.betweenClient.product.ProductPostRequestDTO;
 import gift.dto.betweenClient.product.ProductResponseDTO;
 import gift.dto.betweenClient.product.ProductRequestDTO;
@@ -71,9 +73,10 @@ public class ProductService {
     }
 
     @Transactional(readOnly = true)
-    public ProductResponseDTO getProduct(Long id) throws RuntimeException {
+    public OneProductResponseDTO getProductWithOptions(Long id) throws RuntimeException {
         Product product = productRepository.findById(id).orElseThrow(() -> new NoSuchProductIdException("id가 %d인 상품은 존재하지 않습니다.".formatted(id)));
-        return ProductResponseDTO.convertToProductResponseDTO(product);
+        List<OptionResponseDTO> optionResponseDTOs = optionService.getOneProductIdAllOptions(id);
+        return OneProductResponseDTO.convertToDTO(product, optionResponseDTOs);
     }
 
     @Transactional
