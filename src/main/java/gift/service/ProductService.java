@@ -48,6 +48,16 @@ public class ProductService {
         return new PageImpl<>(productResponseDtoList, pageable, productPage.getTotalElements());
     }
 
+    public Page<ProductResponseDto> findAllByCategoryId(Long categoryId, Pageable pageable) {
+        Page<Product> productPage = productRepository.findAllByCategoryId(categoryId, pageable);
+
+        List<ProductResponseDto> productResponseDtoList = productPage.stream()
+            .map(ProductResponseDto::new)
+            .collect(Collectors.toList());
+
+        return new PageImpl<>(productResponseDtoList, pageable, productPage.getTotalElements());
+    }
+
     public ProductResponseDto findById(Long id) {
         Product product =  productRepository.findById(id)
             .orElseThrow(() -> new ServiceException("존재하지 않는 상품입니다.", HttpStatus.NOT_FOUND));

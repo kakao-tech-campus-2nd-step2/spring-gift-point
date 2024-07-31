@@ -34,12 +34,20 @@ public class ProductController {
     }
 
     @GetMapping
-    public ResponseEntity<Page<ProductResponseDto>> getAllProducts(@RequestParam(defaultValue = "0") int page,
-        @RequestParam(defaultValue = "20") int size, @RequestParam(defaultValue = "id,desc") String[] sort) {
+    public ResponseEntity<Page<ProductResponseDto>> getAllProducts(
+        @RequestParam(defaultValue = "0") int page,
+        @RequestParam(defaultValue = "20") int size,
+        @RequestParam(defaultValue = "id,desc") String[] sort,
+        @RequestParam(required = false) Long categoryId) {
         Sort.Direction direction = Sort.Direction.fromString(sort[1]);
         Pageable pageable = PageRequest.of(page, size, Sort.by(direction, sort[0]));
-        Page<ProductResponseDto> productList = productService.findAll(pageable);
 
+        if (categoryId != null) {
+            Page<ProductResponseDto> productList = productService.findAllByCategoryId(categoryId, pageable);
+            return new ResponseEntity<>(productList, HttpStatus.OK);
+        }
+
+        Page<ProductResponseDto> productList = productService.findAll(pageable);
         return new ResponseEntity<>(productList, HttpStatus.OK);
     }
 
@@ -49,7 +57,8 @@ public class ProductController {
     }
 
     @PostMapping
-    public ResponseEntity<String> createProduct(@RequestBody @Valid ProductWithOptionRequest productWithOptionRequest) {
+    public ResponseEntity<String> createProduct(
+        @RequestBody @Valid ProductWithOptionRequest productWithOptionRequest) {
         productService.save(productWithOptionRequest);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
