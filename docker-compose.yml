@@ -9,7 +9,6 @@ services:
       - redis
     environment:
       - SPRING_REDIS_HOST=redis
-      -
     ports:
       - "8080:8080"
 
