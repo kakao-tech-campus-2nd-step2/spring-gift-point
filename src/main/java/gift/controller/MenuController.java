@@ -53,7 +53,7 @@ public class MenuController {
 
     @GetMapping("/edit/{id}")
     public String edit(@PathVariable("id") Long id, Model model) {
-        Menu menu = menuService.findById(id);
+        MenuResponse menu = menuService.findById(id);
         model.addAttribute("menu", menu);
         return "update_menu";
     }

@@ -30,8 +30,8 @@ public class MenuService {
     }
 
     public MenuResponse save(MenuRequest request) {
-        Menu menu = MapMenuRequestToMenu(request);
-        return MapMenuToMenuResponse(menuRepository.save(menu));
+        Menu menu = mapMenuRequestToMenu(request);
+        return mapMenuToMenuResponse(menuRepository.save(menu));
     }
 
     public List<MenuResponse> findall(
@@ -39,14 +39,14 @@ public class MenuService {
     ) {
         Page<Menu> menus = menuRepository.findAll(pageable);
         return menus.stream()
-                .map(this::MapMenuToMenuResponse)
+                .map(this::mapMenuToMenuResponse)
                 .collect(Collectors.toList());
     }
 
-    public Menu findById(Long id) {
+    public MenuResponse findById(Long id) {
         Menu menu = menuRepository.findById(id)
                 .orElseThrow(() -> new NoSuchElementException("메뉴 정보가 없습니다."));
-        return menu;
+        return mapMenuToMenuResponse(menu);
     }
 
     public MenuResponse update(Long id, MenuRequest menuRequest) {
@@ -56,7 +56,7 @@ public class MenuService {
         menu.update(new Menu(id, menuRequest,
                 categoryRepository.findById(menuRequest.categoryId())
                         .orElseThrow(() -> new NoSuchElementException("해당하는 카테고리가 존재하지 않습니다."))));
-        return MapMenuToMenuResponse(menuRepository.save(menu));
+        return mapMenuToMenuResponse(menuRepository.save(menu));
     }
 
     public void delete(Long id) {
@@ -67,11 +67,11 @@ public class MenuService {
         return menuRepository.getOptionsByMenuId(id);
     }
 
-    public Menu MapMenuRequestToMenu(MenuRequest menuRequest) {
+    public Menu mapMenuRequestToMenu(MenuRequest menuRequest) {
         return new Menu(menuRequest.name(), menuRequest.price(), menuRequest.imageUrl(),categoryRepository.findById(menuRequest.categoryId()).get(),new HashSet<>());
     }
 
-    public MenuResponse MapMenuToMenuResponse(Menu menu) {
+    public MenuResponse mapMenuToMenuResponse(Menu menu) {
         return new MenuResponse(menu.getId(), menu.getName(), menu.getPrice(), menu.getImageUrl(), menu.getCategory(),menu.getOptions());
     }
 

@@ -28,8 +28,12 @@ public class WishListService {
                 .collect(Collectors.toList());
     }
 
-    public void delete(Long Id) {
-        wishListRepository.deleteById(Id);
+    public void delete(String jwtId, Long Id) throws IllegalAccessException {
+        List<WishList> wishLists = wishListRepository.findByMemberId(jwtId);
+        if(wishLists.contains(wishListRepository.findById(Id))) {
+            wishListRepository.deleteById(Id);
+        }
+        throw new IllegalAccessException("해당 위시에 대한 권한이 없습니다.");
     }
 
     public WishListResponse MapWishListToWishListResponse(WishList wishList) {

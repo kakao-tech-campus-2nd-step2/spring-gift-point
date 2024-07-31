@@ -3,6 +3,7 @@ package gift.controller;
 import gift.domain.Category;
 import gift.domain.CategoryRequest;
 import gift.service.CategoryService;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -23,7 +24,7 @@ public class CategoryController {
             @RequestBody CategoryRequest categoryRequest
     ) {
         categoryService.create(categoryRequest);
-        return ResponseEntity.ok().body("successfully created");
+        return ResponseEntity.status(HttpStatus.CREATED).body("successfully created");
     }
 
     @PutMapping("/{id}")
@@ -31,7 +32,7 @@ public class CategoryController {
             @RequestBody CategoryRequest categoryRequest
     ) {
         categoryService.update(categoryRequest);
-        return ResponseEntity.ok().body("successfully created");
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).body("successfully created");
     }
 
     @GetMapping
@@ -44,6 +45,6 @@ public class CategoryController {
             @PathVariable("id") Long id
     ){
         categoryService.deleteById(id);
-        return ResponseEntity.ok().body("successfully deleted");
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).body("successfully deleted");
     }
 }

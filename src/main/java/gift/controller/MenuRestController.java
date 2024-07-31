@@ -6,6 +6,7 @@ import gift.domain.Option;
 import gift.service.MenuService;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
@@ -14,7 +15,7 @@ import java.util.List;
 import java.util.Set;
 
 @RestController
-@RequestMapping("api/menus")
+@RequestMapping("api/products")
 public class MenuRestController {
 
     private final MenuService menuService;
@@ -25,15 +26,22 @@ public class MenuRestController {
 
     @PostMapping
     public ResponseEntity<Object> save(
-            @ModelAttribute @Valid MenuRequest request,
+            @RequestBody MenuRequest request,
             BindingResult result
     ) {
         if (result.hasErrors()) {
             return ResponseEntity.badRequest().body(result.getFieldError().getDefaultMessage());
         } else {
             MenuResponse menuResponse = menuService.save(request);
-            return ResponseEntity.ok().body(menuResponse);
+            return ResponseEntity.status(HttpStatus.CREATED).body(menuResponse);
         }
+    }
+
+    @GetMapping("/{productId}")
+    public ResponseEntity<MenuResponse> readMenu(
+            @PathVariable("productId") Long id
+    ){
+        return ResponseEntity.ok().body(menuService.findById(id));
     }
 
     @GetMapping
@@ -43,23 +51,23 @@ public class MenuRestController {
         return ResponseEntity.ok().body(menuService.findall(pageable));
     }
 
-    @PutMapping("{id}")
+    @PutMapping("{productId}")
     public ResponseEntity<MenuResponse> update(
-            @PathVariable("id") Long id,
-            @Valid @ModelAttribute MenuRequest request
+            @PathVariable("productId") Long id,
+            @RequestBody MenuRequest request
     ) {
-        return ResponseEntity.ok().body(menuService.update(id, request));
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).body(menuService.update(id, request));
     }
 
-    @DeleteMapping("{id}")
-    public ResponseEntity<String> delete(@PathVariable("id") Long id) {
+    @DeleteMapping("{productId}")
+    public ResponseEntity<String> delete(@PathVariable("productId") Long id) {
         menuService.delete(id);
-        return ResponseEntity.ok().body("successfully deleted");
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).body("successfully deleted");
     }
 
-    @GetMapping("/{id}/options")
+    @GetMapping("/{productId}/options")
     public ResponseEntity<Set<Option>> getOptions(
-            @PathVariable("id") Long id
+            @PathVariable("productId") Long id
     ){
         return ResponseEntity.ok().body(menuService.getOptions(id));
     }

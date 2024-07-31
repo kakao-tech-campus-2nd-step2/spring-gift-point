@@ -7,6 +7,7 @@ import gift.domain.*;
 import gift.repository.MemberRepository;
 import gift.repository.OptionRepository;
 import gift.repository.OrderRepository;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -15,6 +16,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
+
+
 
 import java.util.Date;
 import java.util.HashMap;
@@ -28,6 +31,7 @@ public class OrderService {
     private OptionRepository optionRepository;
     private MemberRepository memberRepository;
     private OrderRepository orderRepository;
+    private JwtService jwtService;
 
     public OrderService(KakaoService kakaoService,OptionRepository optionRepository,MemberRepository memberRepository,OrderRepository orderRepository){
         this.kakaoService = kakaoService;
@@ -98,5 +102,10 @@ public class OrderService {
         Order order = new Order(null,orderRequest.optionId(),orderRequest.quantity(),now,orderRequest.message());
         order = orderRepository.save(order);
         return order;
+    }
+
+    public List<Order> findAll(String memberId, Pageable pageable) {
+
+        orderRepository.findByMemberId(memberId,pageable);
     }
 }
