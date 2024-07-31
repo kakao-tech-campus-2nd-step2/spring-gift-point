@@ -1,9 +1,9 @@
 package gift.controller.rest;
 
-import gift.entity.MessageResponseDTO;
-import gift.entity.Order;
-import gift.entity.OrderDTO;
-import gift.entity.Product;
+import gift.entity.order.Order;
+import gift.entity.order.OrderDTO;
+import gift.entity.product.Product;
+import gift.entity.response.MessageResponseDTO;
 import gift.service.OrderService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
