@@ -18,12 +18,12 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class UserService {
 
-    private final ApiTokenRepository apiTokenRepository;
+    private final ApiTokenService apiTokenService;
     private final JwtUtil jwtUtil;
     private final UserRepository userRepository;
 
-    public UserService(ApiTokenRepository apiTokenRepository, JwtUtil jwtUtil, UserRepository userRepository) {
-        this.apiTokenRepository = apiTokenRepository;
+    public UserService(ApiTokenService apiTokenService, JwtUtil jwtUtil, UserRepository userRepository) {
+        this.apiTokenService = apiTokenService;
         this.jwtUtil = jwtUtil;
         this.userRepository = userRepository;
     }
@@ -51,8 +51,7 @@ public class UserService {
                 .orElseGet(() -> userRepository.save(new User(userJoinRequest)));
         String jwtToken = jwtUtil.createToken(savedUser);
 
-        ApiToken apiToken = new ApiToken(savedUser, kakaoToken);
-        apiTokenRepository.save(apiToken);
+        apiTokenService.saveToken(savedUser, kakaoToken);
 
         return jwtToken;
 
