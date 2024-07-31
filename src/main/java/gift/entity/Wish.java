@@ -1,5 +1,7 @@
 package gift.entity;
 
+import gift.dto.ProductInfoDto;
+import gift.dto.WishlistResponseDto;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -60,5 +62,15 @@ public class Wish {
 
     public void setProduct(Product product) {
         this.product = product;
+    }
+
+    public WishlistResponseDto toDto() {
+        ProductInfoDto productInfoDto = new ProductInfoDto(
+            this.product.getId(),
+            this.product.getName(),
+            this.product.getPrice(),
+            this.product.getImageUrl()
+        );
+        return new WishlistResponseDto(this.id, productInfoDto);
     }
 }
