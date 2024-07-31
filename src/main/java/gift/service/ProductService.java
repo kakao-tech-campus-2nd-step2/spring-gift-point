@@ -36,11 +36,7 @@ public class ProductService {
     public Page<ProductResponseDto> getProducts(Pageable pageable) {
         Page<Product> productPage = productRepository.findAll(pageable);
         return productPage.map(product -> {
-            ProductResponseDto dto = new ProductResponseDto();
-            dto.setId(product.getId());
-            dto.setName(product.getName());
-            dto.setPrice(product.getPrice());
-            dto.setImageUrl(product.getImageUrl());
+            ProductResponseDto dto = new ProductResponseDto(product.getId(), product.getName(), product.getPrice(), product.getImageUrl());
             return dto;
         });
     }

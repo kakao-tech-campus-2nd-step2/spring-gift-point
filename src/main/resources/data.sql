@@ -16,12 +16,12 @@ VALUES
     ('user1@example.com', 'password1', null),
     ('user2@example.com', 'password2', null);
 
-INSERT INTO wishlist (id, product_id, member_id)
+INSERT INTO wishlist (product_id, member_id)
 VALUES
-    (1, 3245119, 1),
-    (2, 2263833, 1);
+    (3245119, 1),
+    (2263833, 1);
 
-INSERT INTO option (id, name, quantity, product_id)
+INSERT INTO option (name, quantity, product_id)
 VALUES
-    (1, 'Option A', 10, 3245119),
-    (2, 'Option B', 20, 3245119);
+    ('Option A', 10, 3245119),
+    ('Option B', 20, 3245119);
