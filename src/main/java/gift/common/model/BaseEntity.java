@@ -34,7 +34,6 @@ public abstract class BaseEntity {
 
     public LocalDateTime getModifiedAt() {
         return modifiedAt;
-    }
 
     protected void setId(Long id) {
         this.id = id;
