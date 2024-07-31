@@ -1,16 +1,15 @@
 package gift.domain.category.controller;
 
+import gift.domain.category.dto.CategoriesResponse;
 import gift.domain.category.dto.CategoryRequest;
-import gift.domain.category.dto.CategoryResponse;
 import gift.domain.category.service.CategoryService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -32,41 +31,45 @@ public class CategoryController {
     public CategoryController(CategoryService categoryService) {
         this.categoryService = categoryService;
     }
-
-    @GetMapping()
     @Operation(summary = "카테고리 전체 조회", description = "카테고리 전체를 조회합니다.")
-    @ApiResponse(responseCode = "200", description = "요청에 성공하였습니다.", content = @Content(mediaType = "application/json"))
-    public ResponseEntity<Map<String, List<CategoryResponse>>> getAllCategories() {
-        List<CategoryResponse> categoryList = categoryService.getAllCategories();
-        Map<String, List<CategoryResponse>> response = new HashMap<>();
-        response.put("category", categoryList);
-        return ResponseEntity.ok(response);
+    @ApiResponses({
+        @ApiResponse(responseCode="200", description = "요청에 성공하였습니다.", content =  @Content(schema = @Schema(implementation = CategoriesResponse.class), mediaType = "application/json")),
+        @ApiResponse(responseCode="500", description = "서버 오류", content = @Content(mediaType = "application/json")),
+    })
+    @GetMapping()
+    public ResponseEntity<CategoriesResponse> getAllCategories() {
+        CategoriesResponse categories = new CategoriesResponse(categoryService.getAllCategories());
+        return ResponseEntity.ok(categories);
     }
 
-    @PostMapping()
+
     @Operation(summary = "카테고리 생성", description = "카테고리를 생성합니다.")
-    @ApiResponse(responseCode = "201", description = "요청에 성공하였습니다.", content = @Content(mediaType = "application/json"))
-    public ResponseEntity<CategoryResponse> createCategory(@RequestBody CategoryRequest request) {
+    @ApiResponses({
+        @ApiResponse(responseCode="201", description = "요청에 성공하였습니다.", content = @Content(mediaType = "application/json")),
+        @ApiResponse(responseCode="500", description = "서버 오류", content = @Content(mediaType = "application/json")),
+    })
+    @PostMapping()
+    public ResponseEntity<Void> createCategory(@RequestBody CategoryRequest request) {
         categoryService.createCategory(request);
 
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
-    @PutMapping("/{id}")
     @Operation(summary = "카테고리 수정", description = "해당 카테고리를 수정합니다.")
-    @ApiResponse(responseCode = "201", description = "요청에 성공하였습니다.", content = @Content(mediaType = "application/json"))
+    @ApiResponse(responseCode = "200", description = "요청에 성공하였습니다.", content = @Content(mediaType = "application/json"))
     @Parameter(name = "id", description = "수정할 카테고리 id", example = "1")
-    public ResponseEntity<CategoryResponse> updateCategory(
+    @PutMapping("/{id}")
+    public ResponseEntity<Void> updateCategory(
         @PathVariable("id") Long id,
         @RequestBody CategoryRequest request) {
         categoryService.updateCategory(id, request);
-        return ResponseEntity.status(HttpStatus.OK).build();
+        return ResponseEntity.ok().build();
     }
 
-    @DeleteMapping("/{id}")
     @Operation(summary = "카테고리 삭제", description = "해당 카테고리를 삭제합니다.")
     @ApiResponse(responseCode = "204", description = "요청에 성공하였습니다.", content = @Content(mediaType = "application/json"))
     @Parameter(name = "id", description = "삭제할 카테고리 id", example = "1")
+    @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteCategory(@PathVariable("id") Long id) {
         categoryService.deleteCategory(id);
         return ResponseEntity.noContent().build();
