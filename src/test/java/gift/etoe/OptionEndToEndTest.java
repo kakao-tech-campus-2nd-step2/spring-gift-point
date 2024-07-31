@@ -56,7 +56,7 @@ public class OptionEndToEndTest {
         var actual = restTemplate.exchange(requestEntity,
             new ParameterizedTypeReference<List<OptionResponse>>() {
             });
-        assertThat(actual.getBody()).isEqualTo(List.of(new OptionResponse(1L, "option", 1)));
+        assertThat(actual.getBody()).isEqualTo(List.of(new OptionResponse(1L, "option", 1, 1L)));
     }
 
     @Test
@@ -65,7 +65,7 @@ public class OptionEndToEndTest {
         var request = new OptionRequest.Create("option1", 2);
         var requestEntity = new RequestEntity<>(request, headers, HttpMethod.POST, URI.create(url));
         var actual = restTemplate.exchange(requestEntity, String.class);
-        System.out.println(actual);
+        assertThat(actual.getStatusCode()).isEqualTo(HttpStatus.CREATED);
     }
 
     @Test
