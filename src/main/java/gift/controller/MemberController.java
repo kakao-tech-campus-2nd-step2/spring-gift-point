@@ -5,7 +5,9 @@ import gift.dto.MemberLoginDto;
 import gift.dto.MemberRegisterDto;
 import gift.entity.TokenResponseEntity;
 import gift.service.MemberService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -26,7 +28,7 @@ public class MemberController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<String> signUp(@RequestBody MemberLoginDto memberLoginDto)
+    public ResponseEntity<String> signUp(@Valid @RequestBody MemberLoginDto memberLoginDto)
         throws Exception {
         String generatedToken = memberService.registerMember(memberLoginDto.email,
             memberLoginDto.password);
@@ -36,7 +38,7 @@ public class MemberController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<String> signIn(@RequestBody MemberRegisterDto memberRegisterDto)
+    public ResponseEntity<String> signIn(@Valid @RequestBody MemberRegisterDto memberRegisterDto)
         throws Exception {
         String generatedToken = memberService.authenticateMember(memberRegisterDto.email,
             memberRegisterDto.password);
