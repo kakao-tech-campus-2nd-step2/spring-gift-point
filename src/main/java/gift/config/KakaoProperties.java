@@ -15,7 +15,6 @@ public class KakaoProperties {
     private final int connectTimeoutMillis;
     private final int responseTimeoutSeconds;
 
-    @ConstructorBinding
     public KakaoProperties(String clientId, String redirectUri, String authUrl, String tokenUrl, String infoUrl, String messageUrl, int connectTimeoutMillis, int responseTimeoutSeconds) {
         this.clientId = clientId;
         this.redirectUri = redirectUri;
