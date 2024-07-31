@@ -5,7 +5,6 @@ import gift.common.model.BaseEntity;
 import gift.member.model.Member;
 import gift.product.model.Product;
 import gift.wish.WishErrorCode;
-import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;

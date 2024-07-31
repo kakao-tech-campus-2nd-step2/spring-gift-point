@@ -62,7 +62,8 @@ public class OrderServiceTest {
             Optional.of(option));
         given(wishRepository.existsByMemberIdAndProductId(any(), any())).willReturn(false);
         given(oauthTokenRepository.findByMemberId(any())).willReturn(
-            Optional.of(new OauthToken("kakao", "email", "acessToken", 50000, "refreshToken", null)));
+            Optional.of(
+                new OauthToken("kakao", "email", "acessToken", 50000, "refreshToken", null)));
 
         OrderResponse orderResponse = orderService.createOrder(new OrderRequest(1L, 1, "hello"),
             new LoginMemberDto(1L, "member", "email", "user"));

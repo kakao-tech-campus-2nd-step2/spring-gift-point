@@ -2,7 +2,6 @@ package gift.category;
 
 import gift.category.model.CategoryRequest;
 import gift.category.model.CategoryResponse;
-import gift.common.model.PageResponseDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;

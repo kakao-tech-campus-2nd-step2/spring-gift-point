@@ -56,7 +56,8 @@ public class OauthService {
         Member member = new Member(email, "", "nickname", "Member");
         memberRepository.save(member);
         OauthToken oauthToken = new OauthToken("kakao", email,
-            kakaoTokenReponse.accessToken(), kakaoTokenReponse.accessTokenExpiresIn(), kakaoTokenReponse.refreshToken(), member);
+            kakaoTokenReponse.accessToken(), kakaoTokenReponse.accessTokenExpiresIn(),
+            kakaoTokenReponse.refreshToken(), member);
         oauthTokenRepository.save(oauthToken);
         return member;
     }
@@ -65,7 +66,7 @@ public class OauthService {
     public void verifyToken(String accessToken) {
         OauthToken oauthToken = oauthTokenRepository.findByAccessToken(accessToken)
             .orElseThrow();
-        if(oauthToken.isNotValid()) {
+        if (oauthToken.isNotValid()) {
             KakaoTokenResponse kakaoTokenResponse = kakaoAuthClient.refreshAccessToken(
                 oauthToken.getRefreshToken());
             oauthToken.updateToken(kakaoTokenResponse.accessToken(),

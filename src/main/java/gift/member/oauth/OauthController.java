@@ -32,7 +32,8 @@ public class OauthController {
 
     @Hidden
     @GetMapping("/callback")
-    public ResponseEntity<MemberResponse> getKakaoToken(@RequestParam("code") String authorizationCode) {
+    public ResponseEntity<MemberResponse> getKakaoToken(
+        @RequestParam("code") String authorizationCode) {
         return ResponseEntity.ok(oauthService.loginByKakao(authorizationCode));
     }
 }

@@ -6,7 +6,6 @@ import gift.category.model.CategoryResponse;
 import gift.common.exception.CategoryException;
 import gift.product.ProductRepository;
 import java.util.List;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

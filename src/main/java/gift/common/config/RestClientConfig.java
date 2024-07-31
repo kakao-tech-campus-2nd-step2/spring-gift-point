@@ -1,6 +1,5 @@
 package gift.common.config;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
 import java.time.Duration;
 import org.springframework.boot.web.client.ClientHttpRequestFactories;
@@ -42,10 +41,10 @@ public class RestClientConfig {
 
         @Override
         public void handleError(ClientHttpResponse response) throws IOException {
-            if(response.getStatusCode().is4xxClientError()) {
+            if (response.getStatusCode().is4xxClientError()) {
                 throw new RuntimeException("4xx대 에러 발생");
             }
-            if(response.getStatusCode().is5xxServerError()) {
+            if (response.getStatusCode().is5xxServerError()) {
                 throw new RuntimeException("5xx대 에러 발생");
             }
         }
