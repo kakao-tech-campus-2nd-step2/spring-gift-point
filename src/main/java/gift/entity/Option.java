@@ -60,7 +60,7 @@ public class Option {
 
     public Option substract(int substractQuantity){
         if(this.stockQuantity <= substractQuantity){
-            throw new CustomException("substract quantity is too big", HttpStatus.BAD_REQUEST, -40001);
+            throw new CustomException("substract quantity is too big", HttpStatus.BAD_REQUEST, -40003);
         }else{
             return new Option(this.product, this.name, this.stockQuantity - substractQuantity);
         }
