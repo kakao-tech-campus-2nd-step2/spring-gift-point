@@ -22,4 +22,11 @@ public class MemberModel {
 
     }
 
+    public record InfoAndJwt(
+        Info info,
+        String jwt
+    ) {
+
+    }
+
 }
