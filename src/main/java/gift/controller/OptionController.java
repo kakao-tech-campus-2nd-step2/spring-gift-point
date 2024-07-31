@@ -7,7 +7,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/options")
@@ -24,7 +26,11 @@ public class OptionController {
     public ResponseEntity<?> getOptions(@PathVariable Long productId) {
         try {
             List<OptionResponse> options = optionService.findByProductId(productId);
-            return ResponseEntity.ok(options);
+
+            Map<String, Object> response = new HashMap<>();
+            response.put("options", options);
+
+            return ResponseEntity.ok(response);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(404).body(e.getMessage());
         }
@@ -32,8 +38,12 @@ public class OptionController {
 
     @PostMapping
     public ResponseEntity<?> addOption(@RequestBody OptionRequest optionRequest) {
-        OptionResponse savedOption = optionService.save(optionRequest);
-        return ResponseEntity.ok().build();
+        try {
+            optionService.save(optionRequest);
+            return ResponseEntity.ok().build();
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(404).body(e.getMessage());
+        }
     }
 
     @DeleteMapping("/{optionId}")
@@ -42,7 +52,7 @@ public class OptionController {
             optionService.delete(optionId);
             return ResponseEntity.ok().build();
         } catch (IllegalArgumentException e) {
-            return ResponseEntity.status(404).body("Option not found.");
+            return ResponseEntity.status(404).body(e.getMessage());
         }
     }
 }
