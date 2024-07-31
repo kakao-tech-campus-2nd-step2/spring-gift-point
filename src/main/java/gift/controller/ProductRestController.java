@@ -53,9 +53,17 @@ public class ProductRestController {
     // 특정 상품 조회
     @Operation(summary = "Id별 상품 조회", description = "Id를 받고 그에 맞는 상품을 찾는다.")
     @GetMapping("/{id}")
-    public ResponseEntity<ProductResponse> getProductById(@PathVariable Long id) {
+    public ResponseEntity<ProductResponse> getProductById(@PathVariable("id") Long id) {
         ProductResponse product = productService.getProductById(id);
         return new ResponseEntity<>(product, HttpStatus.OK);
+    }
+
+    @Operation(summary = "특정 카테고리별 상품 조회", description = "카테고리별로 상품들을 조회한다.")
+    @GetMapping("/categories/{category_id}")
+    public ResponseEntity<List<ProductResponse>> getProductByCategory(
+        @RequestParam Long category_id) {
+        List<ProductResponse> products = productService.getProductByCategoryId(category_id);
+        return ResponseEntity.ok(products);
     }
 
     // 상품 추가
@@ -88,8 +96,8 @@ public class ProductRestController {
 
     // 상품 옵션 조회, 추가, 수정, 삭제
     @Operation(summary = "상품 옵션 조회", description = "상품 옵션을 조회한다.")
-    @GetMapping("/{id}/options")
-    public ResponseEntity<List<OptionResponse>> getOptionsByProductId(@PathVariable("id") Long productId) {
+    @GetMapping("/{product_id}/options")
+    public ResponseEntity<List<OptionResponse>> getOptionsByProductId(@PathVariable("product_id") Long productId) {
         List<OptionResponse> options = optionService.getOptionByProductId(productId);
         return ResponseEntity.ok(options);
     }

@@ -1,5 +1,7 @@
 package gift.service;
 
+import gift.common.exception.ProductNotFoundException;
+import gift.common.exception.UserNotFoundException;
 import gift.common.exception.WishListNotFoundException;
 import gift.model.product.Product;
 import gift.model.user.User;
@@ -14,7 +16,9 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 @Service
 public class WishListService {
@@ -31,9 +35,15 @@ public class WishListService {
     }
 
     public Page<WishResponse> getWishListByUserId(Long userId, Pageable pageable) {
-        User user = userRepository.findById(userId).orElseThrow();
-        return wishListRepository.findAllByUser(user, pageable)
+        User user = userRepository.findById(userId).orElseThrow(
+            () -> new UserNotFoundException("해당 Id의 사용자는 존재하지 않습니다.")
+        );
+        Page<WishResponse> wish = wishListRepository.findAllByUser(user, pageable)
             .map(wishList -> WishResponse.from(wishList, wishList.getProduct()));
+        if (wish.isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.NO_CONTENT, "위시리스트가 비어있습니다.");
+        }
+        return wish;
     }
 
     public WishResponse addWishList(Long userId, WishRequest wishRequest) {
@@ -54,6 +64,16 @@ public class WishListService {
 
 
     public void removeWishList(Long userId, Long productId) {
+
+        User user = userRepository.findById(userId).orElseThrow(
+            () -> new UserNotFoundException("해당 Id의 사용자를 찾을 수 없습니다.")
+        );
+        Product product = productRepository.findById(productId).orElseThrow(
+            () -> new ProductNotFoundException("해당 Id의 상품을 찾을 수 없습니다.")
+        );
+        if(wishListRepository.existsByUserAndProduct(user, product)) {
+            throw new WishListNotFoundException("위시리스트가 존재하지 않습니다.");
+        }
         wishListRepository.deleteByUserIdAndAndProductId(userId, productId);
     }
 }

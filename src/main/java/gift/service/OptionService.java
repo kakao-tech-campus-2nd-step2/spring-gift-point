@@ -23,10 +23,10 @@ public class OptionService {
         this.productRepository = productRepository;
     }
 
-    public OptionResponse getOptionById(Long optionId) {
-        Option option = optionRepository.findById(optionId).orElseThrow();
-        return OptionResponse.from(option);
-    }
+//    public OptionResponse getOptionById(Long optionId) {
+//        Option option = optionRepository.findById(optionId).orElseThrow();
+//        return OptionResponse.from(option);
+//    }
     @Transactional
     public List<OptionResponse> getOptionByProductId(Long productId) {
         Product product = productRepository.findById(productId).orElseThrow(

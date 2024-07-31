@@ -69,9 +69,16 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(AlreadyExistName.class)
     public ResponseEntity<ProblemDetail> handleAlreadyExistName(CategoryNotFoundException ex) {
         ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.NOT_FOUND, ex.getMessage());;
-        problemDetail.setType(URI.create("/errors/option-not-found"));
-        URI.create("/errors/option-not-found");
+        problemDetail.setType(URI.create("/errors/already-exists-name"));
+        URI.create("/errors/already-exists-name");
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(problemDetail);
+    }
+    @ExceptionHandler(DuplicatedEmailException.class)
+    public ResponseEntity<ProblemDetail> handleDuplicatedEmailException(CategoryNotFoundException ex) {
+        ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.CONFLICT, ex.getMessage());;
+        problemDetail.setType(URI.create("/errors/duplicated-email"));
+        URI.create("/errors/duplicated-email");
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(problemDetail);
     }
     @ExceptionHandler(CustomClientErrorException.class)
     public ResponseEntity<String> handleCustomClientErrorException(CustomClientErrorException ex) {

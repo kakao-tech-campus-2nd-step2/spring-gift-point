@@ -43,11 +43,11 @@ public class WishListController {
     }
 
     @Operation(summary = "위시리스트 추가", description = "사용자의 위시리스트에 상품을 추가한다.")
-    @PostMapping
-    public ResponseEntity<WishResponse> addProductToWishList(@RequestBody WishRequest wishRequest, @LoginMember
-    LoginUserDTO member) {
-        WishResponse addedWish = wishListService.addWishList(member.getId(), wishRequest);
-        return ResponseEntity.ok(addedWish);
+    @PostMapping("/{product_id}")
+    public ResponseEntity<Void> addProductToWishList(@PathVariable("product_id") Long productId,
+        @RequestBody WishRequest wishRequest, @LoginMember LoginUserDTO member) {
+        wishListService.addWishList(member.getId(), wishRequest);
+        return ResponseEntity.ok().build();
     }
 
     @Operation(summary = "위시리스트 수정", description = "사용자의 위시리스트를 수정한다.")
@@ -59,9 +59,9 @@ public class WishListController {
 
     @Operation(summary = "위시리스트 삭제", description = "사용자의 위시리스트를 삭제한다.")
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> removeWishList(@PathVariable("id") Long userId, @PathVariable("product_id") Long productId, @LoginMember
-    LoginUserDTO member) {
-        wishListService.removeWishList(userId, productId);
-        return ResponseEntity.noContent().build();
+    public ResponseEntity<Void> removeWishList(@PathVariable("id") Long productId,
+        @LoginMember LoginUserDTO member) {
+        wishListService.removeWishList(member.getId(), productId);
+        return ResponseEntity.ok().build();
     }
 }

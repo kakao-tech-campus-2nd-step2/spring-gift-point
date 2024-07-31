@@ -1,14 +1,16 @@
 package gift.model.user;
 
-public class AuthenticationResponse {
-    private String accessToken;
-
-    public AuthenticationResponse(String accessToken) {
-        this.accessToken = accessToken;
-    }
-
-    // getters
-    public String getAccessToken() {
-        return accessToken;
-    }
+public record AuthenticationResponse(
+    String access_token
+) {
+//    private final String access_token;
+//
+//    public AuthenticationResponse(String accessToken) {
+//        this.access_token = accessToken;
+//    }
+//
+//    // getters
+//    public String getAccessToken() {
+//        return access_token;
+//    }
 }

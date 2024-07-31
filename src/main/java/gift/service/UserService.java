@@ -1,5 +1,6 @@
 package gift.service;
 
+import gift.common.exception.DuplicatedEmailException;
 import gift.model.user.User;
 import gift.repository.user.UserRepository;
 import org.springframework.http.HttpStatus;
@@ -14,6 +15,10 @@ public class UserService {
     }
 
     public User registerUser(String name, String email, String password) {
+        // 이메일 중복 검사
+        if(userRepository.existsByEmail(email)) {
+            throw new DuplicatedEmailException("이미 존재하는 이메일입니다.");
+        }
         User user = new User(name, email, password, "ROLE_USER");
         save(user);
         return user;

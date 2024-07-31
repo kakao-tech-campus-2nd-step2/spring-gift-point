@@ -1,5 +1,6 @@
 package gift.service;
 
+import gift.common.exception.CategoryNotFoundException;
 import gift.common.exception.ProductNotFoundException;
 import gift.model.category.Category;
 import gift.model.option.OptionRequest;
@@ -8,6 +9,8 @@ import gift.model.product.ProductRequest;
 import gift.model.product.ProductResponse;
 import gift.repository.category.CategoryRepository;
 import gift.repository.product.ProductRepository;
+import java.util.List;
+import java.util.stream.Collectors;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -27,6 +30,17 @@ public class ProductService {
             () -> new ProductNotFoundException("해당 Id의 상품은 존재하지 않습니다.")
         );
         return ProductResponse.from(product);
+    }
+
+    // 특정 카테고리별 상품 목록 조회
+    public List<ProductResponse> getProductByCategoryId(Long categoryId) {
+        List<Product> products = productRepository.findAllByCategoryId(categoryId);
+        if (products.isEmpty()) {
+            throw new CategoryNotFoundException("카테고리에 해당하는 제품을 찾을 수 없습니다.");
+        }
+        return products.stream()
+            .map(ProductResponse::from)
+            .collect(Collectors.toList());
     }
 
     public Page<ProductResponse> getAllProducts(Pageable pageable) {
