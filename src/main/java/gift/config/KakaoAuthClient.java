@@ -1,6 +1,7 @@
 package gift.config;
 
 import gift.dto.KakaoTokenResponseDto;
+import gift.exception.WebErrorHandler;
 import gift.model.member.KakaoProperties;
 import io.netty.handler.codec.http.HttpHeaderValues;
 import org.springframework.http.HttpHeaders;
@@ -13,9 +14,11 @@ import reactor.core.publisher.Mono;
 public class KakaoAuthClient {
     private final WebClient webClient;
     private final KakaoProperties kakaoProperties;
+    private final WebErrorHandler webErrorHandler;
 
-    public KakaoAuthClient(WebClient.Builder webClientBuilder, KakaoProperties kakaoProperties) {
+    public KakaoAuthClient(WebClient.Builder webClientBuilder, KakaoProperties kakaoProperties,WebErrorHandler webErrorHandler) {
         this.kakaoProperties = kakaoProperties;
+        this.webErrorHandler = webErrorHandler;
         this.webClient = webClientBuilder
                 .baseUrl(kakaoProperties.getKakaoAuthUrl())
                 .build();
@@ -32,7 +35,7 @@ public class KakaoAuthClient {
                         .build(true))
                 .header(HttpHeaders.CONTENT_TYPE, HttpHeaderValues.APPLICATION_X_WWW_FORM_URLENCODED.toString())
                 .retrieve()
-                .onStatus(HttpStatusCode::isError, clientResponse -> handleErrorResponse(clientResponse.statusCode()))
+                .onStatus(HttpStatusCode::isError, clientResponse -> webErrorHandler.handleErrorResponse(clientResponse.statusCode()))
                 .bodyToMono(KakaoTokenResponseDto.class);
     }
 
@@ -43,16 +46,6 @@ public class KakaoAuthClient {
                 .header(HttpHeaders.CONTENT_TYPE, "application/x-www-form-urlencoded")
                 .retrieve()
                 //TODO : Custom Exception
-                .onStatus(HttpStatusCode::isError, clientResponse -> handleErrorResponse(clientResponse.statusCode()));
-    }
-
-    private Mono<Throwable> handleErrorResponse(HttpStatusCode statusCode) {
-        if (statusCode.is4xxClientError()) {
-            return Mono.error(new RuntimeException("Invalid Parameter"));
-        }
-        if (statusCode.is5xxServerError()) {
-            return Mono.error(new RuntimeException("Internal Server Error"));
-        }
-        return Mono.error(new RuntimeException("Unexpected Error"));
+                .onStatus(HttpStatusCode::isError, clientResponse -> webErrorHandler.handleErrorResponse(clientResponse.statusCode()));
     }
 }

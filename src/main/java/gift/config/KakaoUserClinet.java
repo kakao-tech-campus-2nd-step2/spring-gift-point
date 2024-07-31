@@ -3,6 +3,7 @@ package gift.config;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import gift.dto.KakaoInfoDto;
+import gift.exception.WebErrorHandler;
 import gift.model.member.KakaoProperties;
 import io.netty.handler.codec.http.HttpHeaderValues;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,8 +16,11 @@ import reactor.core.publisher.Mono;
 @Component
 public class KakaoUserClinet {
     private final WebClient webClient;
+    private final WebErrorHandler webErrorHandler;
 
-    public KakaoUserClinet(WebClient.Builder webClientBuilder, KakaoProperties kakaoProperties) {
+
+    public KakaoUserClinet(WebClient.Builder webClientBuilder, KakaoProperties kakaoProperties,WebErrorHandler webErrorHandler) {
+        this.webErrorHandler = webErrorHandler;
         this.webClient = webClientBuilder
                 .baseUrl(kakaoProperties.getUserInfoUrl())
                 .build();
@@ -32,7 +36,7 @@ public class KakaoUserClinet {
                 .header(HttpHeaders.CONTENT_TYPE, HttpHeaderValues.APPLICATION_X_WWW_FORM_URLENCODED.toString())
                 .retrieve()
                 //TODO : Custom Exception
-                .onStatus(HttpStatusCode::isError, clientResponse -> handleErrorResponse(clientResponse.statusCode()))
+                .onStatus(HttpStatusCode::isError, clientResponse -> webErrorHandler.handleErrorResponse(clientResponse.statusCode()))
                 .bodyToMono(String.class)
                 .block();
 
@@ -50,17 +54,7 @@ public class KakaoUserClinet {
                 .header("Content-Type", "application/x-www-form-urlencoded")
                 .bodyValue("template_object=" + message)
                 .retrieve()
-                .onStatus(HttpStatusCode::isError, clientResponse -> handleErrorResponse(clientResponse.statusCode()))
+                .onStatus(HttpStatusCode::isError, clientResponse -> webErrorHandler.handleErrorResponse(clientResponse.statusCode()))
                 .bodyToMono(Integer.class);
-    }
-
-    private Mono<Throwable> handleErrorResponse(HttpStatusCode statusCode) {
-        if (statusCode.is4xxClientError()) {
-            return Mono.error(new RuntimeException("Invalid Parameter"));
-        }
-        if (statusCode.is5xxServerError()) {
-            return Mono.error(new RuntimeException("Internal Server Error"));
-        }
-        return Mono.error(new RuntimeException("Unexpected Error"));
     }
 }
