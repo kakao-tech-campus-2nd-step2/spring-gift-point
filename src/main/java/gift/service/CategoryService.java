@@ -24,7 +24,7 @@ public class CategoryService {
         if(existCategory.isPresent()){
             throw new IllegalArgumentException("이미 존재하는 카테고리 입니다.");
         }
-        Category category = new Category(categoryDTO.getName());
+        Category category = new Category(categoryDTO.getName(), categoryDTO.getColor(), categoryDTO.getImageUrl(), categoryDTO.getDescription());
         categoryRepository.save(category);
     }
 
