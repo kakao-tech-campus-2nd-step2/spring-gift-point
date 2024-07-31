@@ -5,6 +5,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import gift.domain.Member;
 import gift.domain.Product;
+import gift.domain.Product.ProductRequest;
+import gift.domain.Product.ProductResponse;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -66,13 +68,13 @@ public class ProductTest {
     @DisplayName("상품 생성")
     @DirtiesContext
     void createProduct() {
-        Product product = new Product("우유", 1000L, "https://milk.jpg", 1L,null);
+        ProductRequest request = new ProductRequest("우유", 1000L, "https://milk.jpg", 1L,null);
 
         //form data를 받기 때문에
         MultiValueMap<String, String> formData = new LinkedMultiValueMap<>();
-        formData.add("name", product.getName());
-        formData.add("price", String.valueOf(product.getPrice()));
-        formData.add("imageUrl", product.getImageUrl());
+        formData.add("name", request.name());
+        formData.add("price", String.valueOf(request.price()));
+        formData.add("imageUrl", request.imageUrl());
 
         HttpEntity<MultiValueMap> requestEntity = new HttpEntity<>(formData, getHttpHeaders(MediaType.APPLICATION_FORM_URLENCODED));
         ResponseEntity<String> responseEntity = restTemplate.exchange(url + "/products", HttpMethod.POST,
@@ -97,13 +99,13 @@ public class ProductTest {
     @DisplayName("상품 수정")
     @DirtiesContext
     void updateProduct() {
-        Product product = new Product("우유", 1000L, "https://example1.jpg", 1L,null);
+        ProductRequest request = new ProductRequest("우유", 1000L, "https://example1.jpg", 1L,null);
 
         //form data를 받기 때문에
         MultiValueMap<String, String> formData = new LinkedMultiValueMap<>();
-        formData.add("name", product.getName());
-        formData.add("price", String.valueOf(product.getPrice()));
-        formData.add("imageUrl", product.getImageUrl());
+        formData.add("name", request.name());
+        formData.add("price", String.valueOf(request.price()));
+        formData.add("imageUrl", request.imageUrl());
 
         HttpEntity<MultiValueMap> requestEntity = new HttpEntity<>(formData, getHttpHeaders(MediaType.APPLICATION_FORM_URLENCODED));
         ResponseEntity<String> responseEntity = restTemplate.exchange(url + "/products/1", HttpMethod.PUT,

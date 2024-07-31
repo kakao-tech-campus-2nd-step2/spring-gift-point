@@ -1,13 +1,17 @@
 package gift.service;
 
-import gift.domain.Product;
+import gift.domain.Product.ProductRequest;
+import gift.domain.Product.ProductResponse;
 import gift.entity.CategoryEntity;
+import gift.entity.OptionEntity;
 import gift.entity.ProductEntity;
 import gift.error.AlreadyExistsException;
 import gift.error.NotFoundException;
 import gift.repository.CategoryRepository;
+import gift.repository.OptionRepository;
 import gift.repository.ProductRepository;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -19,77 +23,92 @@ public class ProductService {
 
     private final ProductRepository productRepository;
     private final CategoryRepository categoryRepository;
+    private final OptionRepository optionRepository;
 
-    public ProductService(ProductRepository productRepository, CategoryRepository categoryRepository) {
+    public ProductService(
+        ProductRepository productRepository,
+        CategoryRepository categoryRepository,
+        OptionRepository optionRepository) {
         this.productRepository = productRepository;
         this.categoryRepository = categoryRepository;
+        this.optionRepository = optionRepository;
     }
 
     //전체 상품 조회 기능
     @Transactional(readOnly = true)
-    public Page<Product> getAllProducts(Pageable pageable) {
+    public Page<ProductResponse> getAllProducts(Pageable pageable) {
         Page<ProductEntity> productEntities = productRepository.findAll(pageable);
-        return productEntities.map(ProductEntity::toDto);
+        return productEntities.map(ProductResponse::from);
     }
 
     //단일 상품 조회 기능
     @Transactional(readOnly = true)
-    public Product getProductById(Long id) {
+    public ProductResponse getProductById(Long id) {
         ProductEntity productEntity = productRepository.findById(id)
             .orElseThrow(() -> new NotFoundException("Product not found"));
-        return ProductEntity.toDto(productEntity);
+        return ProductResponse.from(productEntity);
 
     }
 
     //이름을 통한 상품 검색 기능
     @Transactional(readOnly = true)
-    public List<Product> searchProduct(String name) {
+    public List<ProductResponse> searchProduct(String name) {
         List<ProductEntity> productEntities = productRepository.findByNameContaining(name);
         return productEntities.stream()
-            .map(ProductEntity::toDto)
+            .map(ProductResponse::from)
             .collect(Collectors.toList());
     }
 
     //상품 추가 기능
     @Transactional
-    public void addProduct(Product product) {
+    public Long addProduct(ProductRequest product) {
         validateProductUniqueness(product);
-        CategoryEntity categoryEntity = categoryRepository.findById(product.getCategoryId())
+        CategoryEntity categoryEntity = categoryRepository.findById(product.categoryId())
             .orElseThrow(() -> new NotFoundException("Category Not Found"));
-        ProductEntity productEntity = new ProductEntity();
-        productEntity.setName(product.getName());
-        productEntity.setPrice(product.getPrice());
-        productEntity.setImageUrl(product.getImageUrl());
-        productEntity.setCategoryEntity(categoryEntity);
-        productRepository.save(productEntity);
+        List<OptionEntity> optionEntities = product.optionIds().stream()
+            .map(optionRepository::findById)
+            .filter(Optional::isPresent)
+            .map(Optional::get)
+            .collect(Collectors.toList());
+        ProductEntity productEntity = new ProductEntity(
+            product.name(),
+            product.price(),
+            product.imageUrl(),
+            categoryEntity,
+            optionEntities
+        );
+        return productRepository.save(productEntity).getId();
+
     }
 
     //상품 수정 기능
     @Transactional
-    public void updateProduct(Long id, Product product) {
+    public void updateProduct(Long id, ProductRequest product) {
         validateProductUniqueness(product);
         ProductEntity productEntity = productRepository.findById(id)
             .orElseThrow(() -> new NotFoundException("Product not found"));
-        CategoryEntity categoryEntity = categoryRepository.findById(product.getCategoryId())
+        CategoryEntity categoryEntity = categoryRepository.findById(product.categoryId())
             .orElseThrow(() -> new NotFoundException("Category Not Found"));
-
-        productEntity.setName(product.getName());
-        productEntity.setPrice(product.getPrice());
-        productEntity.setImageUrl(product.getImageUrl());
-        productEntity.setCategoryEntity(categoryEntity);
+        productEntity.updateProductEntity(
+            product.name(),
+            product.price(),
+            product.imageUrl(),
+            categoryEntity
+        );
         productRepository.save(productEntity);
     }
 
     //상품 삭제 기능
     @Transactional
     public void deleteProduct(Long id) {
-        ProductEntity existingProduct = productRepository.findById(id)
+        ProductEntity productEntity = productRepository.findById(id)
             .orElseThrow(() -> new NotFoundException("Product not found"));
-        productRepository.delete(existingProduct);
+        productRepository.delete(productEntity);
     }
 
-    private void validateProductUniqueness(Product product) {
-        if(productRepository.existsByNameAndPriceAndImageUrl(product.getName(), product.getPrice(), product.getImageUrl())) {
+    private void validateProductUniqueness(ProductRequest product) {
+        if(productRepository.existsByNameAndPriceAndImageUrl(
+            product.name(), product.price(), product.imageUrl())) {
             throw new AlreadyExistsException("Already Exists Product");
         }
     }

@@ -1,10 +1,11 @@
 package gift.controller;
 
-import gift.domain.Product;
+import gift.domain.Product.ProductRequest;
+import gift.domain.Product.ProductResponse;
 import gift.service.CategoryService;
 import gift.service.ProductService;
 import jakarta.validation.Valid;
-import org.springframework.http.HttpStatus;
+import java.net.URI;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -29,16 +30,16 @@ public class ProductController {
 
     // 상품 추가 데이터 응답
     @PostMapping
-    public ResponseEntity<String> create(@Valid @RequestBody Product product) {
-        productService.addProduct(product);
-        return ResponseEntity.status(HttpStatus.CREATED).body("Product added");
+    public ResponseEntity<Long> create(@Valid @RequestBody ProductRequest request) {
+        Long id = productService.addProduct(request);
+        return ResponseEntity.created(URI.create("/api/products" + id)).body(id);
     }
 
     // 상품 단일 조회 기능
-    @GetMapping("/{productId}")
-    public ResponseEntity<Product> getProduct(@PathVariable("id") Long id) {
-        Product product = productService.getProductById(id);
-        return ResponseEntity.ok(product);
+    @GetMapping("/{id}")
+    public ResponseEntity<ProductResponse> getProduct(@PathVariable("id") Long id) {
+        ProductResponse response = productService.getProductById(id);
+        return ResponseEntity.ok().body(response);
     }
 
     // 상품 삭제 기능
@@ -50,9 +51,8 @@ public class ProductController {
 
     // 상품 수정 기능
     @PutMapping("/{id}")
-    public ResponseEntity<Product> updateProduct(@PathVariable("id") Long id,
-        @Valid @RequestBody Product product) {
-        productService.updateProduct(id, product);
+    public ResponseEntity<?> updateProduct(@PathVariable("id") Long id, @Valid @RequestBody ProductRequest request) {
+        productService.updateProduct(id, request);
         return ResponseEntity.ok().build();
     }
 }
