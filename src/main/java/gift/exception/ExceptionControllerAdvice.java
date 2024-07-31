@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import gift.dto.response.ErrorResponse;
+import org.springframework.data.mapping.PropertyReferenceException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
@@ -64,6 +65,19 @@ public class ExceptionControllerAdvice {
 
         return ResponseEntity.status(statusCode)
                 .body(kakaoErrorResponse);
+    }
+
+    @ExceptionHandler(PropertyReferenceException.class)
+    public ResponseEntity<ErrorResponse> sortPropertyNotExists(PropertyReferenceException e) {
+        HttpStatus status = HttpStatus.BAD_REQUEST;
+
+        ErrorResponse response = new ErrorResponse.ErrorResponseBuilder()
+                .code(status.value())
+                .message(e.getMessage())
+                .build();
+
+        return ResponseEntity.status(status)
+                .body(response);
     }
 
     private String extractResponseBody(String message) {

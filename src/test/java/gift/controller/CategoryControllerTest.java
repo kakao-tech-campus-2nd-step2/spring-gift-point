@@ -53,7 +53,7 @@ class CategoryControllerTest {
     @Test
     void categoryAdd() throws Exception {
         //given
-        CategoryDto request = new CategoryDto("교환권");
+        CategoryDto request = new CategoryDto("교환권", "test", "test", "test");
 
         willDoNothing().given(categoryService).addCategory(any(CategoryDto.class));
 
@@ -74,7 +74,7 @@ class CategoryControllerTest {
     void categoryEdit() throws Exception {
         //given
         Long categoryId = 1L;
-        CategoryDto request = new CategoryDto("교환권");
+        CategoryDto request = new CategoryDto("교환권", "test", "test", "test");
 
         willDoNothing().given(categoryService).editCategory(anyLong(), any(CategoryDto.class));
 
@@ -85,7 +85,7 @@ class CategoryControllerTest {
 
         //then
         result
-                .andExpect(status().isOk());
+                .andExpect(status().isNoContent());
 
         then(categoryService).should().editCategory(anyLong(), any(CategoryDto.class));
     }
@@ -102,7 +102,7 @@ class CategoryControllerTest {
 
         //then
         result
-                .andExpect(status().isOk());
+                .andExpect(status().isNoContent());
 
         then(categoryService).should().removeCategory(categoryId);
     }

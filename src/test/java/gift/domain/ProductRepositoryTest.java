@@ -1,8 +1,10 @@
 package gift.domain;
 
 import gift.repository.CategoryRepository;
+import gift.repository.OptionRepository;
 import gift.repository.ProductRepository;
 import gift.dto.request.ProductUpdateRequest;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +23,16 @@ class ProductRepositoryTest {
     @Autowired
     private CategoryRepository categoryRepository;
 
+    @Autowired
+    private OptionRepository optionRepository;
+
+    @BeforeEach
+    private void clear() {
+        optionRepository.deleteAll();
+        productRepository.deleteAll();
+        categoryRepository.deleteAll();
+    }
+
     @DisplayName("모든 상품 정보를 조회한다.")
     @Test
     void findAll() throws Exception {
@@ -35,7 +47,7 @@ class ProductRepositoryTest {
     @Test
     void findById() throws Exception {
         //given
-        Category category = categoryRepository.save(new Category("교환권"));
+        Category category = categoryRepository.save(new Category("TEST", "test", "test", "test"));
         Product product = new Product("아이스 아메리카노", 3500, "https://examle.com", category);
         productRepository.save(product);
 
@@ -53,7 +65,7 @@ class ProductRepositoryTest {
     @Test
     void save() throws Exception {
         //given & when
-        Category category = categoryRepository.save(new Category("교환권"));
+        Category category = categoryRepository.save(new Category("TEST", "test", "test", "test"));
         Product product = new Product("아이스 아메리카노", 3500, "https://examle.com", category);
         productRepository.save(product);
 
@@ -65,7 +77,7 @@ class ProductRepositoryTest {
     @Test
     void edit() throws Exception {
         //given
-        Category category = categoryRepository.save(new Category("교환권"));
+        Category category = categoryRepository.save(new Category("TEST", "test", "test", "test"));
         Product product = new Product("아이스 아메리카노", 3500, "https://examle.com", category);
         Product savedProduct = productRepository.save(product);
         Long productId = savedProduct.getId();
@@ -89,7 +101,7 @@ class ProductRepositoryTest {
     @Test
     void deleteById() throws Exception {
         //given
-        Category category = categoryRepository.save(new Category("교환권"));
+        Category category = categoryRepository.save(new Category("TEST", "test", "test", "test"));
         Product product = new Product("아이스 아메리카노", 3500, "https://examle.com", category);
         productRepository.save(product);
 

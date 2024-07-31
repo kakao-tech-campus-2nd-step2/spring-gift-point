@@ -45,7 +45,7 @@ class ProductServiceTest {
         given(productRepository.findAll(pageable)).willReturn(new PageImpl<>(List.of()));
 
         //when
-        productService.getProducts(pageable);
+        productService.getProducts(1L, pageable);
 
         //then
         then(productRepository).should().findAll(pageable);

@@ -86,8 +86,7 @@ class KakaoLoginServiceTest {
         TokenResponse tokenResponse = kakaoLoginService.processKakaoAuth("test-code");
 
         //then
-        assertThat(tokenResponse.getAccessToken()).isEqualTo(accessToken);
-        assertThat(tokenResponse.getJwt()).isEqualTo(jwt);
+        assertThat(tokenResponse.getToken()).isEqualTo(jwt);
 
         then(kakaoApiService).should().getTokenInfo(anyString());
         then(kakaoApiService).should().getUserInfo(anyString());

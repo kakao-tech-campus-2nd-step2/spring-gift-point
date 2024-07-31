@@ -18,15 +18,18 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
-import org.springframework.data.domain.*;
+import org.springdoc.core.annotations.ParameterObject;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.data.web.PagedModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-
-import static org.springframework.data.domain.Sort.Direction.DESC;
 
 @Tag(name = "Product API", description = "상품 관련 API")
 @RequestMapping("/api/products")
@@ -44,13 +47,11 @@ public class ProductController {
             @ApiResponse(responseCode = "200", description = "상품 목록 조회 성공", content = @Content(schema = @Schema(implementation = PagedModel.class)))
     })
     @GetMapping
-    public ResponseEntity<Page<ProductResponse>> productList(@Parameter(description = "페이지 번호 (기본: 0)")
-                                                             @RequestParam(value = "page", defaultValue = "0") int page,
+    public ResponseEntity<Page<ProductResponse>> productList(@ParameterObject @PageableDefault(page = 0, size = 20, sort = "id", direction = Sort.Direction.DESC) Pageable pageable,
 
-                                                             @Parameter(description = "페이지 크기 (기본: 20)")
-                                                             @RequestParam(value = "size", defaultValue = "20") int size) {
-        Pageable pageable = PageRequest.of(page, size, DESC, "id");
-        List<ProductDto> productDtoList = productService.getProducts(pageable);
+                                                             @Parameter(description = "필터링 적용할 카테고리 ID (예: 1)")
+                                                             @RequestParam(required = false) Long categoryId) {
+        List<ProductDto> productDtoList = productService.getProducts(categoryId, pageable);
 
         List<ProductResponse> productResponseList = productDtoList.stream()
                 .map(ProductDto::toResponseDto)
@@ -97,7 +98,7 @@ public class ProductController {
 
     @Operation(summary = "상품 수정", description = "기존 상품을 수정합니다.")
     @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "상품 수정 성공"),
+            @ApiResponse(responseCode = "204", description = "상품 수정 성공"),
             @ApiResponse(responseCode = "400", description = "잘못된 요청", content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
             @ApiResponse(responseCode = "404", description = "카테고리 또는 상품을 찾을 수 없음")
     })
@@ -108,19 +109,19 @@ public class ProductController {
 
         productService.editProduct(productId, productDto);
 
-        return ResponseEntity.ok().build();
+        return ResponseEntity.noContent().build();
     }
 
     @Operation(summary = "상품 삭제", description = "기존 상품을 삭제합니다.")
     @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "상품 삭제 성공"),
+            @ApiResponse(responseCode = "204", description = "상품 삭제 성공"),
             @ApiResponse(responseCode = "404", description = "상품을 찾을 수 없음", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
     })
     @DeleteMapping("/{productId}")
     public ResponseEntity<Void> productRemove(@Parameter(description = "삭제할 상품의 ID", required = true) @PathVariable Long productId) {
         productService.removeProduct(productId);
 
-        return ResponseEntity.ok().build();
+        return ResponseEntity.noContent().build();
     }
 
     @Operation(summary = "상품 옵션 목록 조회", description = "특정 상품의 모든 옵션을 조회합니다.")
@@ -159,7 +160,7 @@ public class ProductController {
 
     @Operation(summary = "상품 옵션 삭제", description = "특정 상품의 옵션을 삭제합니다.")
     @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "옵션 삭제 성공"),
+            @ApiResponse(responseCode = "204", description = "옵션 삭제 성공"),
             @ApiResponse(responseCode = "400", description = "상품의 옵션이 하나 남았을 때 삭제 시 실패", content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
             @ApiResponse(responseCode = "404", description = "상품 또는 옵션을 찾을 수 없음")
     })
@@ -168,21 +169,7 @@ public class ProductController {
                                              @Parameter(description = "옵션 ID", required = true) @PathVariable Long optionId) {
         productService.removeOption(productId, optionId);
 
-        return ResponseEntity.ok().build();
-    }
-
-    @Operation(summary = "상품 옵션 수량 감소", description = "특정 상품의 옵션 수량을 감소시킵니다.")
-    @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "옵션 수량이 성공적으로 감소됨"),
-            @ApiResponse(responseCode = "400", description = "잘못된 요청", content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
-            @ApiResponse(responseCode = "404", description = "상품 또는 옵션을 찾을 수 없음")
-    })
-    @PutMapping("/{productId}/options/{optionId}/subtract")
-    public ResponseEntity<Void> subtractOptionQuantity(@Parameter(description = "상품 ID", required = true) @PathVariable Long productId,
-                                                       @Parameter(description = "옵션 ID", required = true) @PathVariable Long optionId,
-                                                       @Parameter(description = "감소할 수량", required = true) @RequestParam Long quantity) {
-        productService.subtractOptionQuantity(productId, optionId, quantity);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.noContent().build();
     }
 
 }

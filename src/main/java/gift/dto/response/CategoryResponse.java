@@ -4,10 +4,16 @@ public class CategoryResponse {
 
     private Long id;
     private String name;
+    private String color;
+    private String imageUrl;
+    private String description;
 
-    public CategoryResponse(Long id, String name) {
+    public CategoryResponse(Long id, String name, String color, String imageUrl, String description) {
         this.id = id;
         this.name = name;
+        this.color = color;
+        this.imageUrl = imageUrl;
+        this.description = description;
     }
 
     public Long getId() {
@@ -16,6 +22,18 @@ public class CategoryResponse {
 
     public String getName() {
         return name;
+    }
+
+    public String getColor() {
+        return color;
+    }
+
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public String getDescription() {
+        return description;
     }
 
 }

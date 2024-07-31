@@ -13,9 +13,6 @@ public class Member {
     @Id
     private Long id;
 
-    @Column(nullable = false)
-    private String name;
-
     @Column(unique = true)
     private String email;
 
@@ -36,10 +33,6 @@ public class Member {
         return id;
     }
 
-    public String getName() {
-        return name;
-    }
-
     public MemberRole getRole() {
         return role;
     }
@@ -48,9 +41,8 @@ public class Member {
         return socialAccount;
     }
 
-    public Member(Long id, String name, String email, String password, MemberRole role, SocialAccount socialAccount) {
+    public Member(Long id, String email, String password, MemberRole role, SocialAccount socialAccount) {
         this.id = id;
-        this.name = name;
         this.email = email;
         this.password = password;
         this.role = role;
@@ -64,7 +56,6 @@ public class Member {
 
     public static class MemberBuilder {
         private Long id;
-        private String name;
         private String email;
         private String password;
         private MemberRole role;
@@ -72,11 +63,6 @@ public class Member {
 
         public MemberBuilder id(Long id) {
             this.id = id;
-            return this;
-        }
-
-        public MemberBuilder name(String name) {
-            this.name = name;
             return this;
         }
 
@@ -101,7 +87,7 @@ public class Member {
         }
 
         public Member build() {
-            return new Member(id, name, email, password, role, socialAccount);
+            return new Member(id, email, password, role, socialAccount);
         }
     }
 

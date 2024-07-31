@@ -39,7 +39,7 @@ public class MemberController {
     })
     @PostMapping("/register")
     public ResponseEntity<Void> register(@RequestBody @Valid RegisterRequest request) {
-        MemberDto memberDto = new MemberDto(request.getName(), request.getEmail(), request.getPassword());
+        MemberDto memberDto = new MemberDto(request.getEmail(), request.getPassword());
 
         memberService.addMember(memberDto);
 

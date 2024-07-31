@@ -11,9 +11,11 @@ import gift.repository.WishRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
+@Transactional
 @Service
 public class WishService {
 
@@ -25,6 +27,7 @@ public class WishService {
         this.productRepository = productRepository;
     }
 
+    @Transactional(readOnly = true)
     public List<ProductDto> getProducts(Member member, Pageable pageable) {
         Page<Wish> wishes = wishRepository.findByMember(member, pageable);
 

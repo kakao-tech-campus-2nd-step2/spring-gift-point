@@ -2,20 +2,14 @@ package gift.service.kakao;
 
 public class TokenResponse {
 
-    private String accessToken;
-    private String jwt;
+    private String token;
 
-    public TokenResponse(String accessToken, String jwt) {
-        this.accessToken = accessToken;
-        this.jwt = jwt;
+    public TokenResponse(String token) {
+        this.token = token;
     }
 
-    public String getAccessToken() {
-        return accessToken;
-    }
-
-    public String getJwt() {
-        return jwt;
+    public String getToken() {
+        return token;
     }
 
 }

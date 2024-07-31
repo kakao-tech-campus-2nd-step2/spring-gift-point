@@ -44,16 +44,16 @@ class ProductControllerTest {
     @Test
     void productList() throws Exception {
         //given
-        given(productService.getProducts(any(Pageable.class))).willReturn(List.of());
+        given(productService.getProducts(anyLong(), any(Pageable.class))).willReturn(List.of());
 
         //when
-        ResultActions result = mvc.perform(get("/api/products"));
+        ResultActions result = mvc.perform(get("/api/products?categoryId=1"));
 
         //then
         result
                 .andExpect(status().isOk());
 
-        then(productService).should().getProducts(any(Pageable.class));
+        then(productService).should().getProducts(anyLong(), any(Pageable.class));
     }
 
     @DisplayName("[GET] 하나의 상품 정보를 조회한다.")
@@ -201,7 +201,7 @@ class ProductControllerTest {
 
         //then
         result
-                .andExpect(status().isOk());
+                .andExpect(status().isNoContent());
 
         then(productService).should().editProduct(anyLong(), any(ProductDto.class));
     }
@@ -313,7 +313,7 @@ class ProductControllerTest {
 
         //then
         result
-                .andExpect(status().isOk());
+                .andExpect(status().isNoContent());
 
         then(productService).should().removeProduct(productId);
     }
@@ -371,7 +371,7 @@ class ProductControllerTest {
 
         //then
         result
-                .andExpect(status().isOk());
+                .andExpect(status().isNoContent());
 
         then(productService).should().removeOption(productId, optionId);
     }

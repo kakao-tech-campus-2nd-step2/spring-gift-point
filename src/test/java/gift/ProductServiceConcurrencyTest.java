@@ -75,7 +75,7 @@ public class ProductServiceConcurrencyTest {
     }
 
     private Product createProduct(String categoryName, String productName, int productPrice, String productUrl, String optionName, Long optionQuantity) {
-        Category category = categoryRepository.save(new Category(categoryName));
+        Category category = categoryRepository.save(new Category(categoryName, "test", "test"));
         Product product = new Product(productName, productPrice, productUrl, category);
         Option option = new Option(optionName, optionQuantity);
         product.addOption(option);
