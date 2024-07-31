@@ -37,7 +37,7 @@ public class MenuController {
 
     @PostMapping
     public void save(
-            @ModelAttribute @Valid MenuRequest request,
+            @ModelAttribute MenuRequest request,
             Model model,
             Pageable pageable
     ) {

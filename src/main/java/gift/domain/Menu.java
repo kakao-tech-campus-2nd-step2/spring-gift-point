@@ -13,7 +13,7 @@ public class Menu {
     private Long id;
 
     @Column(nullable = false)
-    private String name;
+    private MenuName name;
 
     @Column(nullable = false)
     private int price;
@@ -41,7 +41,7 @@ public class Menu {
 
     public Menu(Long id, String name, int price, String imageUrl, Category category, Set<Option> options) {
         this.id = id;
-        this.name = name;
+        this.name = new MenuName(name);
         this.price = price;
         this.imageUrl = imageUrl;
         this.category = category;
@@ -49,12 +49,7 @@ public class Menu {
     }
 
     public Menu(Long id, MenuRequest menuRequest,Category category) {
-        this.id = id;
-        this.name = menuRequest.name();
-        this.price = menuRequest.price();
-        this.imageUrl = menuRequest.imageUrl();
-        this.category = category;
-        this.options = new HashSet<Option>();
+        this(id, menuRequest.name(), menuRequest.price(), menuRequest.imageUrl(), category,new HashSet<Option>());
     }
 
     public Long getId() {
@@ -62,7 +57,7 @@ public class Menu {
     }
 
     public String getName() {
-        return name;
+        return name.getMenuName();
     }
 
     public int getPrice() {
