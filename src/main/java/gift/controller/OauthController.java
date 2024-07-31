@@ -44,7 +44,7 @@ public class OauthController {
 
         return ResponseEntity.ok()
                 .header("Authorization", jwt)
-                .body(new CommonResponse<>(null, "카카오 로그인이 완료되었습니다.", true));
+                .body(new CommonResponse<>(jwt, "카카오 로그인이 완료되었습니다.", true));
 
     }
 }
