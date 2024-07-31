@@ -32,10 +32,27 @@ public class ProductService {
         this.categoryService = categoryService;
     }
 
+    public Page<ProductDTO> getAllProducts(int page, int size, String sortBy, Direction direction, Long categoryId) {
+        Sort sort = Sort.by(direction, sortBy);
+        Pageable pageRequest = PageRequest.of(page, size, sort);
+        Page<Product> productPage;
+        if(categoryId == null){
+            productPage = productRepository.findAllByCategoryId(categoryId, pageRequest);
+        }
+        else {
+            productPage = productRepository.findAll(pageRequest);
+        }
+        List<ProductDTO> products = productPage.stream()
+            .map(ProductDTO::fromProduct)
+            .toList();
+        return new PageImpl<>(products, pageRequest, productPage.getTotalElements());
+    }
+
     public Page<ProductDTO> getAllProducts(int page, int size, String sortBy, Direction direction) {
         Sort sort = Sort.by(direction, sortBy);
         Pageable pageRequest = PageRequest.of(page, size, sort);
-        Page<Product> productPage = productRepository.findAll(pageRequest);
+
+        Page<Product> productPage = productPage = productRepository.findAll(pageRequest);
 
         List<ProductDTO> products = productPage.stream()
             .map(ProductDTO::fromProduct)
@@ -60,6 +77,10 @@ public class ProductService {
         if (existsByName(name)) {
             throw new IllegalArgumentException("존재하는 이름입니다.");
         }
+    }
+
+    public Product getNotDTOProductById(long productId){
+        return findByProductId(productId);
     }
 
     private Product findByProductId(long productId) {

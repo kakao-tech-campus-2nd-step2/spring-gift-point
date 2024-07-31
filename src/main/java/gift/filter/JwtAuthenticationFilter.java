@@ -41,19 +41,11 @@ public class JwtAuthenticationFilter implements Filter {
         }
 
         String token = authHeader.substring(7);
-        String tokenUserId = jwtUtil.extractUserId(token);
-        String place = "";
-        place = containgTextReplace(request, "wishlist", place);
-        place = containgTextReplace(request, "orders", place);
-
-        String path = request.getRequestURI().split(request.getContextPath() + "/api/" + place + "/")[1];
-        String[] pathParts = path.split("/");
-        String userId = pathParts[0];
-
-        if (!userId.equals(tokenUserId)) {
-            response.sendError(HttpStatus.FORBIDDEN.value(), "유저 아이디가 토큰과 일치하지 않습니다.");
-            return;
+        if (jwtUtil.isTokenExpired(token)) {
+            response.sendError(HttpStatus.UNAUTHORIZED.value(), "JWT 토큰이 만료되었습니다.");
         }
+        String tokenUserId = jwtUtil.extractUserId(token);
+        request.setAttribute("userId", Long.parseLong(tokenUserId));
 
         filterChain.doFilter(request, response);
     }
@@ -61,12 +53,5 @@ public class JwtAuthenticationFilter implements Filter {
     @Override
     public void destroy() {
         Filter.super.destroy();
-    }
-
-    private String containgTextReplace(HttpServletRequest request, String text, String place){
-        if(request.getRequestURI().contains(text)){
-            return text;
-        }
-        else return place;
     }
 }

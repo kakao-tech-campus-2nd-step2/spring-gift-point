@@ -33,11 +33,12 @@ public class ProductController {
     public String getAllProduct(Model model,
         @RequestParam(value = "page", required = false, defaultValue = "0") int page,
         @RequestParam(value = "size", required = false, defaultValue = "10") int size,
-        @RequestParam(value = "sortBy", required = false, defaultValue = "id") String sortBy,
-        @RequestParam(value = "sortDirection", required = false, defaultValue = "asc") String sortDirection) {
+        @RequestParam(value = "sort", required = false, defaultValue = "id,asc") String sort) {
         size = PageUtil.validateSize(size);
-        sortBy = PageUtil.validateSortBy(sortBy, Arrays.asList("id", "name"));
-        Direction direction = PageUtil.validateDirection(sortDirection);
+        String[] sortParams = PageUtil.validateSort(sort,
+            Arrays.asList("id", "productId", "num", "createdDate"));
+        String sortBy = sortParams[0];
+        Direction direction = PageUtil.validateDirection(sortParams[1]);
         Page<ProductDTO> paging = productService.getAllProducts(page, size, sortBy, direction);
         model.addAttribute("products", paging);
         model.addAttribute("currentPage", paging.getNumber());

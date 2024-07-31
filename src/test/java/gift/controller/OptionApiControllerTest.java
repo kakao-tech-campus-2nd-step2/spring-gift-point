@@ -1,7 +1,6 @@
 package gift.controller;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
-import static org.assertj.core.api.Assertions.assertThatIllegalArgumentException;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doThrow;
@@ -16,12 +15,17 @@ import gift.administrator.option.OptionApiController;
 import gift.administrator.option.OptionDTO;
 import gift.administrator.option.OptionService;
 import gift.administrator.product.Product;
+import gift.error.GlobalExceptionRestController;
+import gift.error.NotFoundIdException;
+import gift.response.ApiResponse;
+import gift.response.ApiResponse.HttpResult;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.http.HttpStatus;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -37,11 +41,11 @@ public class OptionApiControllerTest {
     private OptionDTO optionDTO1;
 
     @BeforeEach
-    void beforeEach(){
+    void beforeEach() {
         optionApiController = new OptionApiController(optionService);
         mvc = MockMvcBuilders.standaloneSetup(optionApiController)
-            .defaultResponseCharacterEncoding(UTF_8)
-            .build();
+            .setControllerAdvice(new GlobalExceptionRestController())
+            .defaultResponseCharacterEncoding(UTF_8).build();
         objectMapper = new ObjectMapper();
         Category category = new Category("상품권", null, null, null);
         Option option = new Option("L", 3, null);
@@ -53,66 +57,58 @@ public class OptionApiControllerTest {
     }
 
     @Test
-    @DisplayName("모든 옵션 가져오기")
-    void getAllOptions() throws Exception {
-        //given
-        given(optionService.getAllOptions()).willReturn(
-            Arrays.asList(optionDTO, optionDTO1));
-
-        //when
-        ResultActions resultActions = mvc.perform(
-            MockMvcRequestBuilders.get("/api/options")
-                .contentType("application/json"));
-
-        //then
-        resultActions.andExpect(status().isOk())
-            .andExpect(content().json(
-                objectMapper.writeValueAsString(Arrays.asList(optionDTO, optionDTO1))));
-    }
-
-    @Test
     @DisplayName("모든 옵션 상품 아이디로 가져오기")
     void getAllOptionsByProductId() throws Exception {
         //given
-        given(optionService.getAllOptionsByProductId(1L)).willReturn(
-            Arrays.asList(optionDTO, optionDTO1));
+        List<OptionDTO> options = Arrays.asList(optionDTO, optionDTO1);
+        given(optionService.getAllOptionsByProductId(1L)).willReturn(options);
+        ApiResponse<List<OptionDTO>> apiResponse = new ApiResponse<>(HttpResult.OK, "옵션 전체 조회 성공",
+            HttpStatus.OK, options);
 
         //when
         ResultActions resultActions = mvc.perform(
-            MockMvcRequestBuilders.get("/api/products/1/options")
-                .contentType("application/json"));
+            MockMvcRequestBuilders.get("/api/products/1/options").contentType("application/json"));
 
         //then
-        resultActions.andExpect(status().isOk())
-            .andExpect(content().json(
-                objectMapper.writeValueAsString(Arrays.asList(optionDTO, optionDTO1))));
+        resultActions.andExpect(status().isOk()).andExpect(
+            content().json(objectMapper.writeValueAsString(apiResponse)));
     }
 
     @Test
     @DisplayName("옵션 아이디로 옵션 삭제하기")
     void deleteOptionByOptionId() throws Exception {
         //given
+        given(optionService.countAllOptionsByProductId(1L)).willReturn(2);
         doNothing().when(optionService).deleteOptionByOptionId(1L);
+        ApiResponse<Void> apiResponse = new ApiResponse<>(HttpResult.OK, "옵션 삭제 성공", HttpStatus.OK,
+            null);
 
         //when
         ResultActions resultActions = mvc.perform(
-            MockMvcRequestBuilders.delete("/api/options/1")
+            MockMvcRequestBuilders.delete("/api/products/1/options/1")
                 .contentType("application/json"));
 
         //then
-        resultActions.andExpect(status().isOk());
+        resultActions.andExpect(status().isOk())
+            .andExpect(content().json(objectMapper.writeValueAsString(apiResponse)));
     }
 
     @Test
     @DisplayName("옵션 아이디로 옵션 삭제하기")
-    void deleteOptionByOptionIdOptionNotExistsError() {
+    void deleteOptionByOptionIdOptionNotExistsError() throws Exception {
         //given
-        doThrow(new IllegalArgumentException("없는 아이디입니다.")).when(optionService).deleteOptionByOptionId(1L);
+        doThrow(new NotFoundIdException("옵션 아이디를 찾을 수 없습니다.")).when(optionService)
+            .deleteOptionByOptionId(1L);
+        ApiResponse<String> expectedResponse = new ApiResponse<>(HttpResult.ERROR,
+            "아이디 에러", HttpStatus.NOT_FOUND, "옵션 아이디를 찾을 수 없습니다.");
 
         //when
+        ResultActions resultActions = mvc.perform(
+            MockMvcRequestBuilders.delete("/api/products/1/options/1").accept("application/json")
+                .contentType("application/json"));
 
         //then
-        assertThatIllegalArgumentException().isThrownBy(
-            () -> optionApiController.deleteOptionByOptionId(1L)).withMessage("없는 아이디입니다.");
+        resultActions.andExpect(status().isNotFound())
+            .andExpect(content().json(objectMapper.writeValueAsString(expectedResponse)));
     }
 }

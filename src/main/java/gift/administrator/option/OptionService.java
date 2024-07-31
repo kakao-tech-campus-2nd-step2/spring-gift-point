@@ -1,5 +1,6 @@
 package gift.administrator.option;
 
+import gift.administrator.product.ProductService;
 import gift.error.NotFoundIdException;
 import java.util.List;
 import org.springframework.stereotype.Service;
@@ -8,9 +9,11 @@ import org.springframework.stereotype.Service;
 public class OptionService {
 
     private final OptionRepository optionRepository;
+    private final ProductService productService;
 
-    public OptionService(OptionRepository optionRepository) {
+    public OptionService(OptionRepository optionRepository, ProductService productService) {
         this.optionRepository = optionRepository;
+        this.productService = productService;
     }
 
     public List<OptionDTO> getAllOptionsByProductId(long productId) {
@@ -36,8 +39,7 @@ public class OptionService {
         }
     }
 
-    public int countAllOptionsByProductIdFromOptionId(long optionId) {
-        Long productId = findOptionById(optionId).getProductId();
+    public int countAllOptionsByProductId(long productId) {
         return optionRepository.countAllByProductId(productId);
     }
 
@@ -54,6 +56,11 @@ public class OptionService {
     private Option findByOptionId(long optionId) {
         return optionRepository.findById(optionId)
             .orElseThrow(() -> new NotFoundIdException("옵션 아이디를 찾을 수 없습니다."));
+    }
+
+    public OptionDTO addOptionByProductId(long productId, OptionDTO optionDTO){
+        Option option = optionDTO.toOption(productService.getNotDTOProductById(productId));
+        return OptionDTO.fromOption(optionRepository.save(option));
     }
 
     public void subtractOptionQuantityErrorIfNotPossible(long optionId, int quantity){

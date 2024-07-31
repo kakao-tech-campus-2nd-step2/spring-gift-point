@@ -1,6 +1,8 @@
 package gift.administrator.product;
 
 import java.util.List;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
@@ -12,4 +14,6 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
 
     @Query("SELECT DISTINCT p.category.name FROM Product p WHERE p.category IS NOT NULL")
     List<String> findDistinctCategoryNamesWithProducts();
+
+    Page<Product> findAllByCategoryId(Long categoryId, Pageable pageable);
 }

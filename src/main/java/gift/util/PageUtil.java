@@ -6,14 +6,19 @@ import org.springframework.data.domain.Sort.Direction;
 public class PageUtil {
 
     private static final String DEFAULT_SORT_BY = "id";
+    private static final String DEFAULT_SORT_DIRECTION = "asc";
     private static final int MAX_SIZE = 15;
 
     public static int validateSize(int size) {
         return Math.min(size, MAX_SIZE);
     }
 
-    public static String validateSortBy(String sortBy, List<String> validSortBy) {
-        return (!validSortBy.contains(sortBy)) ? DEFAULT_SORT_BY : sortBy;
+    public static String[] validateSort(String sort, List<String> validSortBy) {
+        String[] sortParams = sort.split(",");
+        if (sortParams.length != 2 || !validSortBy.contains(sortParams[0])) {
+            return new String[]{DEFAULT_SORT_BY, DEFAULT_SORT_DIRECTION};
+        }
+        return sortParams;
     }
 
     public static Direction validateDirection(String sortDirection) {
