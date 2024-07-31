@@ -55,19 +55,19 @@ public class UserService {
         return userRepository.findAll();
     }
 
-    /*
-        @Transactional
-        public void registerUser(String email, String password) throws UserAlreadyExistsException {
-            if (userRepository.existsByEmail(email)) {
-                throw new UserAlreadyExistsException("User already exists");
-            }
-            String hashedPassword = BCrypt.hashpw(password, BCrypt.gensalt());
-            User newUser = new User(email, hashedPassword);
-            userRepository.save(newUser);
-
+/*
+    @Transactional
+    public void registerUser(String email, String password) throws UserAlreadyExistsException {
+        if (userRepository.existsByEmail(email)) {
+            throw new UserAlreadyExistsException("User already exists");
         }
+        String hashedPassword = BCrypt.hashpw(password, BCrypt.gensalt());
+        User newUser = new User(email, hashedPassword);
+        userRepository.save(newUser);
 
-     */
+    }
+
+ */
     @Transactional
     public Map<String, String> registerUser(String email, String password) throws UserAlreadyExistsException {
         if (userRepository.existsByEmail(email)) {

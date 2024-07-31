@@ -50,22 +50,22 @@ public class UserController {
         List<User> users = userService.findAllUsers();
         return ResponseEntity.ok(users);
     }
-    /*
-        @Operation(summary = "사용자 등록", description = "새로운 사용자를 등록합니다.")
-        @PostMapping("/register")
-        public ResponseEntity<String> registerUser(
-                @Parameter(description = "사용자 등록 요청 정보", required = true)
-                @RequestBody RegisterRequest registerRequest) {
-            try {
-                userService.registerUser(registerRequest.getEmail(), registerRequest.getPassword());
-                return ResponseEntity.ok("User registered successfully");
-            } catch (UserAlreadyExistsException e) {
-                return ResponseEntity.status(400).body(e.getMessage());
-            }
+/*
+    @Operation(summary = "사용자 등록", description = "새로운 사용자를 등록합니다.")
+    @PostMapping("/register")
+    public ResponseEntity<String> registerUser(
+            @Parameter(description = "사용자 등록 요청 정보", required = true)
+            @RequestBody RegisterRequest registerRequest) {
+        try {
+            userService.registerUser(registerRequest.getEmail(), registerRequest.getPassword());
+            return ResponseEntity.ok("User registered successfully");
+        } catch (UserAlreadyExistsException e) {
+            return ResponseEntity.status(400).body(e.getMessage());
         }
     }
+}
 
-     */
+ */
     @Operation(summary = "사용자 등록", description = "새로운 사용자를 등록합니다.")
     @PostMapping("/register")
     public ResponseEntity<?> registerUser(
