@@ -2,15 +2,18 @@ package gift.product.controller.order;
 
 import gift.product.dto.auth.LoginMemberIdDto;
 import gift.product.dto.order.OrderDto;
+import gift.product.dto.order.OrderResponse;
 import gift.product.exception.ExceptionResponse;
 import gift.product.model.Order;
 import gift.product.service.OrderService;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
+import java.util.List;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -38,8 +41,12 @@ public class OrderController {
         this.orderService = orderService;
     }
 
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "성공", content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = OrderResponse.class)))),
+        @ApiResponse(responseCode = "401", description = "허용되지 않는 요청", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ExceptionResponse.class)))
+    })
     @GetMapping
-    public ResponseEntity<Page<Order>> getOrderAll(
+    public ResponseEntity<List<OrderResponse>> getOrderAll(
         @RequestParam(name = "page", defaultValue = "0") int page,
         @RequestParam(name = "size", defaultValue = "5") int size,
         @RequestParam(name = "sort", defaultValue = "orderDateTime,asc") String sortParam,
@@ -56,6 +63,7 @@ public class OrderController {
 
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "성공", content = @Content(mediaType = "application/json", schema = @Schema(implementation = Order.class))),
+        @ApiResponse(responseCode = "401", description = "허용되지 않는 요청", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ExceptionResponse.class))),
         @ApiResponse(responseCode = "404", description = "존재하지 않는 리소스", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ExceptionResponse.class)))
     })
     @GetMapping("/{id}")
@@ -68,8 +76,8 @@ public class OrderController {
     }
 
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "성공", content = @Content(mediaType = "application/json", schema = @Schema(implementation = Order.class))),
-        @ApiResponse(responseCode = "403", description = "사용자 인증 도중 발생한 에러", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ExceptionResponse.class))),
+        @ApiResponse(responseCode = "201", description = "주문 생성 성공", content = @Content(mediaType = "application/json", schema = @Schema(implementation = Order.class))),
+        @ApiResponse(responseCode = "401", description = "허용되지 않는 요청", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ExceptionResponse.class))),
         @ApiResponse(responseCode = "404", description = "존재하지 않는 리소스", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ExceptionResponse.class)))
     })
     @PostMapping
@@ -82,7 +90,8 @@ public class OrderController {
     }
 
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "성공"),
+        @ApiResponse(responseCode = "204", description = "주문 내역 삭제 성공"),
+        @ApiResponse(responseCode = "401", description = "허용되지 않는 요청", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ExceptionResponse.class))),
         @ApiResponse(responseCode = "404", description = "존재하지 않는 리소스", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ExceptionResponse.class))),
     })
     @DeleteMapping("/{id}")
@@ -91,7 +100,7 @@ public class OrderController {
         LoginMemberIdDto loginMemberIdDto = getLoginMember(request);
         orderService.deleteOrder(id, loginMemberIdDto);
 
-        return ResponseEntity.ok().build();
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
     private LoginMemberIdDto getLoginMember(HttpServletRequest request) {

@@ -22,6 +22,8 @@ import gift.product.repository.OrderRepository;
 import gift.product.repository.WishRepository;
 import gift.product.service.OrderService;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 import okhttp3.mockwebserver.MockResponse;
@@ -35,6 +37,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -92,6 +95,15 @@ class OrderServiceTest {
         String DIRECTION = "desc";
         Pageable pageable = PageRequest.of(PAGE, SIZE, Sort.Direction.fromString(DIRECTION), SORT);
         LoginMemberIdDto loginMemberIdDto = new LoginMemberIdDto(1L);
+        Category category = new Category(1L, "테스트카테고리", "테스트컬러", "테스트주소", "테스트설명");
+        Product product = new Product(1L, "테스트상품", 1000, "테스트주소", category);
+        Option option = new Option(1L, "테스트옵션", 1000, product);
+        List<Order> orders = new ArrayList<>();
+        orders.add(new Order(option.getId(), loginMemberIdDto.id(), 1, "test_message"));
+
+        given(orderRepository.findAllByMemberId(pageable,
+            loginMemberIdDto.id())).willReturn(new PageImpl<>(orders));
+        given(optionRepository.findById(option.getId())).willReturn(Optional.of(option));
 
         //when
         orderService.getOrderAll(pageable, loginMemberIdDto);

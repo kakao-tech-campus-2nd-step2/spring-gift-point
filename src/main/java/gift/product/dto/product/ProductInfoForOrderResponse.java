@@ -1,10 +1,9 @@
 package gift.product.dto.product;
 
-public record ProductInfoResponse(
+public record ProductInfoForOrderResponse(
     Long id,
     String name,
-    int price,
-    String imageUrl
+    int price
 ) {
 
 }

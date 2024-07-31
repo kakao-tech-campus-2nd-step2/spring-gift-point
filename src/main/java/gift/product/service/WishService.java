@@ -1,10 +1,7 @@
 package gift.product.service;
 
 import gift.product.dto.auth.LoginMemberIdDto;
-import gift.product.dto.category.CategoryIdAndName;
-import gift.product.dto.option.OptionResponse;
-import gift.product.dto.product.ProductInfoResponse;
-import gift.product.dto.product.ProductResponse;
+import gift.product.dto.product.ProductInfoForWishResponse;
 import gift.product.dto.wish.WishDto;
 import gift.product.dto.wish.WishResponse;
 import gift.product.model.Member;
@@ -15,7 +12,6 @@ import gift.product.repository.ProductRepository;
 import gift.product.repository.WishRepository;
 import java.util.List;
 import java.util.NoSuchElementException;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -84,7 +80,7 @@ public class WishService {
 
     private WishResponse getWishResponse(Wish wish) {
         Product product = wish.getProduct();
-        ProductInfoResponse productInfoResponse = new ProductInfoResponse(product.getId(), product.getName(), product.getPrice(), product.getImageUrl());
-        return new WishResponse(wish.getId(), productInfoResponse);
+        ProductInfoForWishResponse productInfoForWishResponse = new ProductInfoForWishResponse(product.getId(), product.getName(), product.getPrice(), product.getImageUrl());
+        return new WishResponse(wish.getId(), productInfoForWishResponse);
     }
 }

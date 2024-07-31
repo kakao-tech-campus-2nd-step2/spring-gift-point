@@ -5,17 +5,25 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import gift.product.dto.auth.KakaoMessage;
 import gift.product.dto.auth.Link;
 import gift.product.dto.auth.LoginMemberIdDto;
+import gift.product.dto.option.OptionInfoForOrderResponse;
 import gift.product.dto.order.OrderDto;
+import gift.product.dto.order.OrderResponse;
+import gift.product.dto.product.ProductInfoForOrderResponse;
+import gift.product.dto.product.ProductInfoForWishResponse;
+import gift.product.dto.wish.WishResponse;
 import gift.product.exception.LoginFailedException;
 import gift.product.model.KakaoToken;
 import gift.product.model.Option;
 import gift.product.model.Order;
+import gift.product.model.Product;
+import gift.product.model.Wish;
 import gift.product.repository.AuthRepository;
 import gift.product.repository.KakaoTokenRepository;
 import gift.product.repository.OptionRepository;
 import gift.product.repository.OrderRepository;
 import gift.product.repository.WishRepository;
 import java.net.URI;
+import java.util.List;
 import java.util.NoSuchElementException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -49,8 +57,8 @@ public class OrderService {
         this.kakaoTokenRepository = kakaoTokenRepository;
     }
 
-    public Page<Order> getOrderAll(Pageable pageable, LoginMemberIdDto loginMemberIdDto) {
-        return orderRepository.findAllByMemberId(pageable, loginMemberIdDto.id());
+    public List<OrderResponse> getOrderAll(Pageable pageable, LoginMemberIdDto loginMemberIdDto) {
+        return orderRepository.findAllByMemberId(pageable, loginMemberIdDto.id()).stream().map(this::getOrderResponse).toList();
     }
 
     public Order getOrder(Long id, LoginMemberIdDto loginMemberIdDto) {
@@ -151,6 +159,14 @@ public class OrderService {
     private KakaoToken getKakaoToken(LoginMemberIdDto loginMemberIdDto) {
         return kakaoTokenRepository.findByMemberId(loginMemberIdDto.id())
             .orElseThrow(() -> new NoSuchElementException("카카오 계정 로그인을 수행한 후 다시 시도해주세요."));
+    }
+
+    private OrderResponse getOrderResponse(Order order) {
+        Option option = getValidatedOption(order.getOptionId());
+        Product product = option.getProduct();
+        ProductInfoForOrderResponse productInfo = new ProductInfoForOrderResponse(product.getId(), product.getName(), product.getPrice());
+        OptionInfoForOrderResponse optionInfo = new OptionInfoForOrderResponse(option.getId(), order.getQuantity());
+        return new OrderResponse(order.getId(), productInfo, optionInfo, order.getOrderDateTime());
     }
 }
 
