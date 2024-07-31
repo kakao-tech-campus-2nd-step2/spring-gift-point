@@ -1,6 +1,6 @@
 package gift.controller;
 
-import gift.domain.Category;
+import gift.domain.Category.CategoryRequest;
 import gift.service.CategoryService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -41,23 +41,23 @@ public class CategoryController {
 
     @PostMapping
     @Operation(summary = "카테고리 추가", description = "카테고리 추가")
-    public ResponseEntity<?> addCategory(@Valid @RequestBody Category category) {
-        categoryService.addCategory(category);
+    public ResponseEntity<?> addCategory(@Valid @RequestBody CategoryRequest request) {
+        categoryService.addCategory(request);
         return ResponseEntity.status(HttpStatus.CREATED).body("Category added");
     }
 
     @PutMapping("/{id}")
     @Operation(summary = "카테고리 수정", description = "아이디로 카테고리 수정")
-    public ResponseEntity<?> updateCategory(@PathVariable("id") Long id, @Valid @RequestBody Category category) {
-        categoryService.updateCategory(id, category);
-        return ResponseEntity.ok().build();
+    public ResponseEntity<?> updateCategory(@PathVariable("id") Long id, @Valid @RequestBody CategoryRequest request) {
+        categoryService.updateCategory(id, request);
+        return ResponseEntity.status(HttpStatus.OK).body("Category updated");
     }
 
     @DeleteMapping("/{id}")
     @Operation(summary = "카테고리 삭제", description = "아이디로 카테고리 삭제")
     public ResponseEntity<?> deleteCategory(@PathVariable("id") Long id) {
         categoryService.deleteCategory(id);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.status(HttpStatus.OK).body("Category deleted");
     }
 
 }

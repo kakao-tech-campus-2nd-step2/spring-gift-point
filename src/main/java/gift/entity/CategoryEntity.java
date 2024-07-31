@@ -32,9 +32,6 @@ public class CategoryEntity {
     @Column(name = "description", nullable = false)
     private String description;
 
-    @OneToMany(mappedBy = "categoryEntity", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<ProductEntity> products;
-
     public CategoryEntity() {
 
     }
@@ -46,8 +43,7 @@ public class CategoryEntity {
         this.description = description;
     }
 
-    public CategoryEntity(Long id, String name, String color, String imageUrl, String description) {
-        this.id = id;
+    public void updateCategoryEntity(String name, String color, String imageUrl, String description) {
         this.name = name;
         this.color = color;
         this.imageUrl = imageUrl;
@@ -62,41 +58,16 @@ public class CategoryEntity {
         return name;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
     public String getColor() {
         return color;
-    }
-
-    public void setColor(String color) {
-        this.color = color;
     }
 
     public String getImageUrl() {
         return imageUrl;
     }
 
-    public void setImageUrl(String imageUrl) {
-        this.imageUrl = imageUrl;
-    }
-
     public String getDescription() {
         return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public static Category toDto(CategoryEntity categoryEntity) {
-        return new Category(
-            categoryEntity.getId(),
-            categoryEntity.getName(),
-            categoryEntity.getColor(),
-            categoryEntity.getImageUrl(),
-            categoryEntity.getDescription());
     }
 
 }
