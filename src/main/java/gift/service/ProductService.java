@@ -10,6 +10,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.NoSuchElementException;
 
 @Service
@@ -31,6 +32,17 @@ public class ProductService {
                 pageRequestDTO.getSize(), pageRequestDTO.getSort());
         Page<Product> productPage = productRepository.findAll(pageable);
         return productPage.map(ProductDTO::getProductDTO);
+    }
+
+    //전체 조회
+    public CustomProductPageDTO getAllProductsByCustomPage(PageRequestDTO pageRequestDTO) {
+        Pageable pageable = PageRequest.of(pageRequestDTO.getPage(), pageRequestDTO.getSize(), pageRequestDTO.getSort());
+        Page<Product> productPage = productRepository.findAll(pageable);
+
+        List<ProductDTO> productDTOs = productPage.stream()
+                .map(ProductDTO::getProductDTO)
+                .toList();
+        return new CustomProductPageDTO(productDTOs, productPage.getNumber(), productPage.getTotalPages(), productPage.getTotalElements());
     }
 
     //하나 조회
