@@ -32,20 +32,20 @@ public class CategoryService {
     }
 
     @Transactional
-    public Category addCategory(String name) {
+    public Category addCategory(String name, String color, String imageUrl, String description) {
         categoryRepository.findByName(name)
             .ifPresent(category -> {
                 throw new DuplicateCategoryException();
             });
 
-        return categoryRepository.save(new Category(name));
+        return categoryRepository.save(new Category(name, color, imageUrl, description));
     }
 
     @Transactional
-    public Category updateCategory(Long id, String name) {
+    public Category updateCategory(Long id, String name, String color, String imageUrl, String description) {
         return categoryRepository.findById(id)
             .map(category -> {
-                category.updateCategory(name);
+                category.updateCategory(name, color, imageUrl, description);
                 return category;
             })
             .orElseThrow(NotFoundCategoryException::new);

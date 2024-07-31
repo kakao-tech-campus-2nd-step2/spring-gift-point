@@ -68,7 +68,7 @@ public class ProductApiControllerTest {
         Product product = demoProduct();
         List<OptionResponse> options = new ArrayList<>();
         ProductResponse productResponse = ProductResponse.createProductResponse(product);
-        ProductOptionsResponse response = new ProductOptionsResponse(productResponse, options);
+        ProductOptionsResponse response = new ProductOptionsResponse(options);
 
         given(productService.getProduct(any(Long.class)))
             .willReturn(product);

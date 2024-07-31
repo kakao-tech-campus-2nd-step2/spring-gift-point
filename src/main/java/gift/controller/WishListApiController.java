@@ -41,9 +41,8 @@ public class WishListApiController {
     public ResponseEntity<ProductListResponse> getWishList(
         @RequestParam(defaultValue = "1", name = "page") int page,
         @RequestParam(defaultValue = "10", name = "size") int size,
-        @RequestParam(defaultValue = "id", name = "sort") String sort,
         @LoginMember LoginMemberDto memberDto) {
-        PageRequest pageRequest = pagingService.makeWishPageRequest(page, size, sort);
+        PageRequest pageRequest = pagingService.makeWishPageRequest(page, size);
         Page<Product> pagedWishList = wishService.getPagedWishList(memberDto.id(),
             pageRequest);
         List<ProductResponse> productResponses = pagedWishList.getContent()
@@ -66,7 +65,7 @@ public class WishListApiController {
             throw new InputException(bindingResult.getAllErrors());
         }
 
-        wishService.addMyWish(memberDto.id(), dto.productId());
+        wishService.addMyWish(memberDto.id(), dto.productId(), dto.quantity());
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 

@@ -117,7 +117,7 @@ class OptionsApiControllerTest {
                     .header("Authorization", "Bearer " + token)
                     .content(content)
                     .contentType(MediaType.APPLICATION_JSON))
-            .andExpect(status().isNoContent())
+            .andExpect(status().isOk())
             .andDo(print());
     }
 

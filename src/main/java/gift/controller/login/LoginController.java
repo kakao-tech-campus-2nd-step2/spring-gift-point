@@ -38,7 +38,7 @@ public class LoginController {
         jwtService.addTokenInCookie(joinedMember, response);
         JoinResponse joinResponse = new JoinResponse(joinRequest.email(), "회원가입이 완료되었습니다.");
 
-        return new ResponseEntity<>(joinResponse, HttpStatus.CREATED);
+        return new ResponseEntity<>(joinResponse, HttpStatus.OK);
     }
 
     @PostMapping("/api/members/login")

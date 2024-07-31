@@ -38,9 +38,9 @@ class WishRepositoryTest {
     @BeforeEach
     void setUp() {
         member = memberRepository.save(new Member("aaa123@a.com", "1234"));
-        category = categoryRepository.save(new Category("카테고리"));
+        category = categoryRepository.save(new Category("카테고리", "color", "imageurl", "description"));
         product = productRepository.save(new Product("productA", 1000, "https://a.com", category));
-        wish = new Wish(member, product);
+        wish = new Wish(member, product,1);
     }
 
     @Test
@@ -77,7 +77,7 @@ class WishRepositoryTest {
         products.forEach(
             product -> {
                 Product saved = productRepository.save(product);
-                Wish wish = new Wish(member, product);
+                Wish wish = new Wish(member, product, 1);
                 wishRepository.save(wish);
             }
         );

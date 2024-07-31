@@ -78,7 +78,7 @@ public class RestDocsLoginTest extends AbstractRestDocsTest {
         mockMvc.perform(post("/api/members/register")
                 .content(content)
                 .contentType(MediaType.APPLICATION_JSON))
-            .andExpect(status().isCreated())
+            .andExpect(status().isOk())
             .andExpect(cookie().value("access_token", token))
             .andDo(print());
     }

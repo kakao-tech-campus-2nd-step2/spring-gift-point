@@ -75,7 +75,7 @@ class OrderServiceTest {
         String message = "message";
         Order savedOrder = new Order(1L, 1L,
             option, orderQuantity, message, LocalDateTime.now(), LocalDateTime.now());
-        Wish wish = new Wish(member, product);
+        Wish wish = new Wish(member, product, 1);
 
         given(optionsService.getOption(any(Long.class)))
             .willReturn(option);

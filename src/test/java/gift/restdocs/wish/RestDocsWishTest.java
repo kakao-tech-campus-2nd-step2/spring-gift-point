@@ -86,13 +86,13 @@ public class RestDocsWishTest extends AbstractRestDocsTest {
 
         Page<Product> pagedAllWishes = createPage(products, page, size);
 
-        given(pagingService.makeWishPageRequest(any(int.class), any(int.class), any(String.class)))
+        given(pagingService.makeWishPageRequest(any(int.class), any(int.class)))
             .willReturn(pageRequest);
         given(wishService.getPagedWishList(any(Long.class), any(PageRequest.class)))
             .willReturn(pagedAllWishes);
 
         //when //then
-        mockMvc.perform(get("/api/wishes?page=" + page + "&size=" + size +  "&sort=" + sort)
+        mockMvc.perform(get("/api/wishes?page=" + page + "&size=" + size)
                     .header("Authorization", "Bearer " + token))
             .andExpect(status().isOk())
             .andDo(document("rest-docs-wish-test/get-wish-list",
@@ -101,8 +101,7 @@ public class RestDocsWishTest extends AbstractRestDocsTest {
                 ),
                 queryParameters(
                     parameterWithName("page").description("page number"),
-                    parameterWithName("size").description("number of wishlist"),
-                    parameterWithName("sort").description("sort option ex) id, name, quantity")
+                    parameterWithName("size").description("number of wishlist")
                 )));
     }
 
@@ -111,10 +110,10 @@ public class RestDocsWishTest extends AbstractRestDocsTest {
         //given
         Long memberId = 1L;
         Long productId = 1L;
-        WishListRequest wishListRequest = new WishListRequest(productId);
+        WishListRequest wishListRequest = new WishListRequest(productId, 1);
         String content = objectMapper.writeValueAsString(wishListRequest);
         doNothing().when(wishService).
-            addMyWish(any(Long.class), any(Long.class));
+            addMyWish(any(Long.class), any(Long.class), any(Integer.class));
 
         //when //then
         mockMvc.perform(post("/api/wishes")

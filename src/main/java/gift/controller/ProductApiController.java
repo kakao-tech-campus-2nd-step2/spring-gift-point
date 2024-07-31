@@ -44,8 +44,8 @@ public class ProductApiController {
     @CheckRole("ROLE_ADMIN")
     @GetMapping("/api/products")
     public ResponseEntity<ProductListResponse> getAllProducts(@RequestParam(defaultValue = "1", name = "page") int page,
-        @RequestParam(defaultValue = "10", name = "size") int size, @RequestParam(defaultValue = "id", name = "sort") String sort) {
-        PageRequest pageRequest = pagingService.makeProductsPageRequest(page, size, sort);
+        @RequestParam(defaultValue = "10", name = "size") int size) {
+        PageRequest pageRequest = pagingService.makeProductsPageRequest(page, size);
         Page<Product> pagedAllProducts = productService.getPagedAllProducts(pageRequest);
         List<ProductResponse> productResponses = pagedAllProducts.getContent()
             .stream()
@@ -82,7 +82,7 @@ public class ProductApiController {
 
         productService.updateProduct(id, dto.name(), dto.price(), dto.imageUrl(),
             dto.categoryName());
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @CheckRole("ROLE_ADMIN")

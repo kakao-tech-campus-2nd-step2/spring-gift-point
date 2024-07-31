@@ -72,7 +72,7 @@ public class RestDocsOptionsTest extends AbstractRestDocsTest {
         options.add(new OptionResponse(option2.getId(), option2.getName(), option2.getQuantity()));
 
         ProductResponse productResponse = ProductResponse.createProductResponse(product);
-        ProductOptionsResponse response = new ProductOptionsResponse(productResponse, options);
+        ProductOptionsResponse response = new ProductOptionsResponse(options);
         given(productService.getProduct(any(Long.class)))
             .willReturn(product);
         given(optionsService.getAllProductOptions(any(Product.class)))
@@ -141,7 +141,7 @@ public class RestDocsOptionsTest extends AbstractRestDocsTest {
                     .header("Authorization", "Bearer " + token)
                     .content(content)
                     .contentType(MediaType.APPLICATION_JSON))
-            .andExpect(status().isNoContent())
+            .andExpect(status().isOk())
             .andDo(document("rest-docs-options-test/update-options",
                 requestHeaders(
                     headerWithName("Authorization").description("service access token")

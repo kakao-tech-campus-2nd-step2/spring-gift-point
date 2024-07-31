@@ -14,18 +14,12 @@ public class PagingService {
     public static final int WISH_PER_PAGE = 5;
     public static final int SHOWING_PAGE_COUNT = 10;
 
-    public PageRequest makeProductsPageRequest(int page, int size, String sortOption) {
-        return PageRequest.of(page - 1,
-            size, Sort.by(Direction.ASC, sortOption));
+    public PageRequest makeProductsPageRequest(int page, int size) {
+        return PageRequest.of(page - 1, size);
     }
 
-    public PageRequest makeWishPageRequest(int page, int size, String sortOption) {
-        if (sortOption.equals("id")) {
-            return PageRequest.of(page - 1,
-                size, Sort.by(Direction.ASC, sortOption));
-        }
-        return PageRequest.of(page - 1,
-            size, Sort.by(Direction.ASC, "product." + sortOption));
+    public PageRequest makeWishPageRequest(int page, int size) {
+        return PageRequest.of(page - 1, size);
     }
 
 }

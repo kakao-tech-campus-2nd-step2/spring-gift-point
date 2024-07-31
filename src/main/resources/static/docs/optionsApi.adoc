@@ -1,4 +1,4 @@
-== 상품 + 전체 옵션 조회
+== 상품 옵션 목록 조회
 operation::rest-docs-options-test/get-product-with-all-options[snippets="http-request,request-headers,path-parameters,http-response"]
 == 상품 옵션 생성
 operation::rest-docs-options-test/add-options[snippets="http-request,request-headers,path-parameters,http-response"]

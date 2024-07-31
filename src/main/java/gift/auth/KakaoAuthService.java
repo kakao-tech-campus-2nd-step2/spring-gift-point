@@ -8,11 +8,11 @@ public class KakaoAuthService implements OAuthService {
 
     @Override
     public boolean getOAuthToken(HttpServletRequest request) {
-        String token = request.getHeader("X-OAuth-Token");
+        String token = request.getHeader("X-GATEWAY-TOKEN");
         if (token == null) {
             return false;
         }
-        request.setAttribute("X-OAuth-Token", token);
+        request.setAttribute("X-GATEWAY-TOKEN", token);
         return true;
     }
 }

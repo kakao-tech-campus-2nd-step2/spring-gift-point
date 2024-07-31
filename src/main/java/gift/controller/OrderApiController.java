@@ -7,6 +7,7 @@ import gift.auth.XOAuthToken;
 import gift.exception.InputException;
 import gift.request.LoginMemberDto;
 import gift.request.OrderRequest;
+import gift.response.OrderListResponse;
 import gift.response.OrderResponse;
 import gift.service.KakaoMessageService;
 import gift.service.OptionsService;
@@ -41,18 +42,19 @@ public class OrderApiController {
         }
 
         Long memberId = Long.valueOf(request.getAttribute("member_id").toString());
-        String xOAuthToken = request.getAttribute("X-OAuth-Token").toString();
+        String xOAuthToken = request.getAttribute("X-GATEWAY-TOKEN").toString();
         OrderResponse dto = orderService.makeOrder(memberId, xOAuthToken, orderRequest.productId(),
             orderRequest.optionId(), orderRequest.quantity(), orderRequest.message());
 
-        return new ResponseEntity<>(dto, HttpStatus.OK);
+        return new ResponseEntity<>(dto, HttpStatus.CREATED);
 
     }
 
     @CheckRole("ROLE_USER")
     @GetMapping("/api/orders")
-    public ResponseEntity<List<OrderResponse>> getOrder(@LoginMember LoginMemberDto dto) {
-        return new ResponseEntity<>(orderService.getOrder(dto.id()), HttpStatus.OK);
+    public ResponseEntity<OrderListResponse> getOrder(@LoginMember LoginMemberDto dto) {
+        List<OrderResponse> orderResponses = orderService.getOrder(dto.id());
+        return new ResponseEntity<>(new OrderListResponse(orderResponses), HttpStatus.OK);
     }
 
 }

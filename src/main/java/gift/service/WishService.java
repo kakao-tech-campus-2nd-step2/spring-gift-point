@@ -45,7 +45,7 @@ public class WishService {
     }
 
     @Transactional
-    public void addMyWish(Long memberId, Long productId) {
+    public void addMyWish(Long memberId, Long productId, Integer quantity) {
 
         Member member = memberRepository.findById(memberId)
             .orElseThrow(NotFoundMemberException::new);
@@ -53,7 +53,7 @@ public class WishService {
             .orElseThrow(NotFoundProductException::new);
 
         try {
-            Wish wish = new Wish(member, product);
+            Wish wish = new Wish(member, product, quantity);
             wishRepository.save(wish);
         } catch (DataIntegrityViolationException e) {
             throw new DuplicateWishException();

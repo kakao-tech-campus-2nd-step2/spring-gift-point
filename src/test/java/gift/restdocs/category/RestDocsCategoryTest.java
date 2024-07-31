@@ -73,7 +73,7 @@ public class RestDocsCategoryTest extends AbstractRestDocsTest {
         List<CategoryResponse> categories = new ArrayList<>();
         LongStream.range(0, dataCounts)
             .forEach(i -> {
-                Category category = new Category(i + 1, "카테고리 " + (i + 1));
+                Category category = new Category(i + 1, "카테고리 " + (i + 1) , "color", "imageUrl", "description");
                 categories.add(CategoryResponse.createCategoryResponse(category));
             });
 
@@ -94,7 +94,7 @@ public class RestDocsCategoryTest extends AbstractRestDocsTest {
     void getCategory() throws Exception {
         //given
         Long categoryId = 1L;
-        Category category = new Category(categoryId, "카테고리");
+        Category category = new Category(categoryId, "카테고리", "color", "imageUrl", "description");
         CategoryResponse categoryResponse = CategoryResponse.createCategoryResponse(category);
         given(categoryService.getCategory(categoryId))
             .willReturn(categoryResponse);
@@ -117,11 +117,12 @@ public class RestDocsCategoryTest extends AbstractRestDocsTest {
     @Test
     void addCategory() throws Exception {
         //given
-        CategoryAddRequest categoryAddRequest = new CategoryAddRequest("카테고리");
+        CategoryAddRequest categoryAddRequest = new CategoryAddRequest("카테고리", "color", "imageUrl", "description");
         String content = objectMapper.writeValueAsString(categoryAddRequest);
         Category category = new Category(1L, categoryAddRequest.name());
 
-        given(categoryService.addCategory(any(String.class)))
+        given(categoryService.addCategory(any(String.class), any(String.class),
+            any(String.class), any(String.class)))
             .willReturn(category);
 
         //when //then
@@ -140,11 +141,12 @@ public class RestDocsCategoryTest extends AbstractRestDocsTest {
     void updateCategory() throws Exception {
         //given
         Long savedCategoryId = 1L;
-        Category savedCategory = new Category(savedCategoryId, "카테고리");
+        Category savedCategory = new Category(savedCategoryId, "카테고리", "color", "imageUrl", "description");
         CategoryUpdateRequest updateRequest = new CategoryUpdateRequest(
-            "수정된 카테고리명");
+            "수정된 카테고리명", "수정된 컬러", "수정된 주소", "수정된 설명");
         String content = objectMapper.writeValueAsString(updateRequest);
-        given(categoryService.updateCategory(savedCategoryId, updateRequest.name()))
+        given(categoryService.updateCategory(savedCategoryId, updateRequest.name(), updateRequest.color(),
+            updateRequest.imageUrl(), updateRequest.description()))
             .willReturn(savedCategory);
 
         //when //then
@@ -153,7 +155,7 @@ public class RestDocsCategoryTest extends AbstractRestDocsTest {
                     .header("Authorization", "Bearer " + token)
                     .content(content)
                     .contentType(MediaType.APPLICATION_JSON))
-            .andExpect(status().isNoContent())
+            .andExpect(status().isOk())
             .andDo(document("rest-docs-category-test/update-category",
                 requestHeaders(
                     headerWithName("Authorization").description("service access token")
@@ -161,7 +163,8 @@ public class RestDocsCategoryTest extends AbstractRestDocsTest {
                 pathParameters(
                     parameterWithName("categoryId").description("Category id")
                 )));
-        then(categoryService).should().updateCategory(savedCategoryId, updateRequest.name());
+        then(categoryService).should().updateCategory(savedCategoryId, updateRequest.name(),
+            updateRequest.color(), updateRequest.imageUrl(), updateRequest.description());
     }
 
     @Test

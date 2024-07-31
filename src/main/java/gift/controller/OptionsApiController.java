@@ -65,7 +65,7 @@ public class OptionsApiController {
         }
 
         optionsService.updateOption(optionId, dto.optionName(), dto.quantity(), productId);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @CheckRole("ROLE_ADMIN")

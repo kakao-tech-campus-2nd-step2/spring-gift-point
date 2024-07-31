@@ -90,14 +90,13 @@ public class RestDocsProductTest extends AbstractRestDocsTest {
             .forEach(i -> products.add(demoProduct(i)));
         Page<Product> pagedAllProducts = createPage(products, page, size);
 
-        given(pagingService.makeProductsPageRequest(any(int.class), any(int.class),
-            any(String.class)))
+        given(pagingService.makeProductsPageRequest(any(int.class), any(int.class)))
             .willReturn(pageRequest);
         given(productService.getPagedAllProducts(any(PageRequest.class)))
             .willReturn(pagedAllProducts);
 
         //when //then
-        mockMvc.perform(get("/api/products?page=" + page + "&size=" + size + "&sort=" + sort)
+        mockMvc.perform(get("/api/products?page=" + page + "&size=" + size)
                 .header("Authorization", "Bearer " + token))
             .andExpect(status().isOk())
             .andDo(document("rest-docs-product-test/get-all-products",
@@ -106,8 +105,7 @@ public class RestDocsProductTest extends AbstractRestDocsTest {
                 ),
                 queryParameters(
                     parameterWithName("page").description("page number"),
-                    parameterWithName("size").description("number of products"),
-                    parameterWithName("sort").description("sort option ex) id, name, quantity")
+                    parameterWithName("size").description("number of products")
                 )));
     }
 
@@ -159,7 +157,7 @@ public class RestDocsProductTest extends AbstractRestDocsTest {
                     .header("Authorization", "Bearer " + token)
                     .content(content)
                     .contentType(MediaType.APPLICATION_JSON))
-            .andExpect(status().isNoContent())
+            .andExpect(status().isOk())
             .andDo(document("rest-docs-product-test/update-product",
                 requestHeaders(
                     headerWithName("Authorization").description("service access token")

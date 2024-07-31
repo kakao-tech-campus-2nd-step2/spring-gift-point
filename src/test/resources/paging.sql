@@ -1,4 +1,4 @@
-insert into CATEGORY (name) values ('페이징 테스트용 카테고리');
+insert into CATEGORY (name, color, image_url, description) values ('페이징 테스트용 카테고리', 'color', 'http://a.com', 'description');
 
 insert into PRODUCTS (name, price, image_url, category_id) values ('Galantamine', 9317, 'http://dummyimage.com/167x100.png/5fa2dd/ffffff', 1L);
 insert into PRODUCTS (name, price, image_url, category_id) values ('Pollens - Weeds and Garden Plants, Ragweed, Mixed Ambrosia', 18431, 'http://dummyimage.com/165x100.png/ff4444/ffffff', 1L);

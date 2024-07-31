@@ -56,7 +56,7 @@ public class RestDocsOrderTest extends AbstractRestDocsTest {
     private OrderService orderService;
 
     private String token = "{ACCESS_TOKEN}";
-    private String oAuthToken = "{X_OAUTH_TOKEN}";
+    private String oAuthToken = "{X-GATEWAY-TOKEN}";
 
 
     @Test
@@ -74,14 +74,14 @@ public class RestDocsOrderTest extends AbstractRestDocsTest {
         //when //then
         mockMvc.perform(RestDocumentationRequestBuilders.post("/api/orders")
                 .header("Authorization", "Bearer " + token)
-                .header("X-OAuth-Token", "Bearer " + oAuthToken)
+                .header("X-GATEWAY-TOKEN",oAuthToken)
                 .content(content)
                 .contentType(MediaType.APPLICATION_JSON))
-            .andExpect(status().isOk())
+            .andExpect(status().isCreated())
             .andDo(document("rest-docs-order-test/make-order",
                 requestHeaders(
                     headerWithName("Authorization").description("Our service access token"),
-                    headerWithName("X-OAuth-Token").description("OAuth2 access token")
+                    headerWithName("X-GATEWAY-TOKEN").description("OAuth2 access token")
                 )));
     }
 

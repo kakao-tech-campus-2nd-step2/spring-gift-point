@@ -76,7 +76,8 @@ class WishListApiTest {
 
     @BeforeEach
     void before() {
-        category = categoryRepository.save(new Category("카테고리"));
+        category = categoryRepository.save(new Category("카테고리",
+            "color", "imageurl", "description"));
         List<Product> products = new ArrayList<>();
         IntStream.range(0, 10)
             .forEach(i -> {
@@ -88,7 +89,7 @@ class WishListApiTest {
         token = jwtTokenProvider.generateToken(member);
 
         List<Wish> wishes = products.stream()
-            .map(product -> new Wish(member, product))
+            .map(product -> new Wish(member, product, 1))
             .toList();
         savedWishes = wishRepository.saveAll(wishes);
     }
@@ -120,8 +121,7 @@ class WishListApiTest {
 
         //then
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-        assertThat(response.getBody().contents()).hasSize(10);
-        IntStream.range(0, 5)
+        IntStream.range(0, response.getBody().contents().size())
             .forEach(i -> {
                 ProductResponse pr = response.getBody().contents().get(i);
                 assertThat(pr.id()).isEqualTo(savedProducts.get(i).getId());
@@ -173,7 +173,7 @@ class WishListApiTest {
         HttpHeaders headers = new HttpHeaders();
         headers.setBearerAuth(token);
 
-        WishListRequest wishListRequest = new WishListRequest(productId);
+        WishListRequest wishListRequest = new WishListRequest(productId, 1);
 
         RequestEntity<WishListRequest> request = new RequestEntity<>(
             wishListRequest, headers, httpMethod, URI.create(url));

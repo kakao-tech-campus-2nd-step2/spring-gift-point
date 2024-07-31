@@ -52,7 +52,7 @@ public class CategoryApiController {
             throw new InputException(bindingResult.getAllErrors());
         }
 
-        categoryService.addCategory(dto.name());
+        categoryService.addCategory(dto.name(), dto.color(), dto.imageUrl(), dto.description());
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
@@ -64,8 +64,8 @@ public class CategoryApiController {
             throw new InputException(bindingResult.getAllErrors());
         }
 
-        categoryService.updateCategory(id, dto.name());
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        categoryService.updateCategory(id, dto.name(), dto.color(), dto.imageUrl(), dto.description());
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @CheckRole("ROLE_ADMIN")
