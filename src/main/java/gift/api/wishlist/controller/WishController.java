@@ -3,12 +3,12 @@ package gift.api.wishlist.controller;
 import gift.api.wishlist.dto.WishRequest;
 import gift.api.wishlist.dto.WishResponse;
 import gift.api.wishlist.service.WishService;
+import gift.global.PageResponse;
 import gift.global.resolver.LoginMember;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import java.net.URI;
-import java.util.List;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -33,7 +33,7 @@ public class WishController {
 
     @GetMapping
     @Operation(summary = "위시리스트 조회", description = "멤버의 위시리스트 페이지별 조회")
-    public ResponseEntity<List<WishResponse>> getItems(@LoginMember Long memberId, Pageable pageable) {
+    public ResponseEntity<PageResponse<WishResponse>> getItems(@LoginMember Long memberId, Pageable pageable) {
         return ResponseEntity.ok().body(wishService.getItems(memberId, pageable));
     }
 

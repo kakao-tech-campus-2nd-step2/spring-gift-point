@@ -3,9 +3,9 @@ package gift.api.option.controller;
 import gift.api.option.dto.OptionRequest;
 import gift.api.option.dto.OptionResponse;
 import gift.api.option.service.OptionService;
+import gift.global.ListResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import java.net.URI;
-import java.util.List;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -28,9 +28,9 @@ public class OptionController {
 
     @GetMapping
     @Operation(summary = "옵션 조회", description = "상품 옵션 조회")
-    public ResponseEntity<List<OptionResponse>> getOptions(
+    public ResponseEntity<ListResponse<OptionResponse>> getOptions(
         @PathVariable("productId") Long productId) {
-        return ResponseEntity.ok().body(optionService.getOptions(productId));
+        return ResponseEntity.ok().body(ListResponse.of(optionService.getOptions(productId)));
     }
 
     @PostMapping

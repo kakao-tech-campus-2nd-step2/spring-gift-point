@@ -3,10 +3,10 @@ package gift.api.category.controller;
 import gift.api.category.dto.CategoryRequest;
 import gift.api.category.dto.CategoryResponse;
 import gift.api.category.service.CategoryService;
+import gift.global.ListResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import java.net.URI;
-import java.util.List;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
@@ -31,9 +31,9 @@ public class CategoryController {
 
     @GetMapping()
     @Operation(summary = "카테고리 조회", description = "카테고리 페이지별 조회")
-    public ResponseEntity<List<CategoryResponse>> getCategories(
+    public ResponseEntity<ListResponse<CategoryResponse>> getCategories(
         @PageableDefault(size = Integer.MAX_VALUE) Pageable pageable) {
-        return ResponseEntity.ok().body(categoryService.getCategories(pageable));
+        return ResponseEntity.ok().body(ListResponse.of(categoryService.getCategories(pageable)));
     }
 
     @PostMapping

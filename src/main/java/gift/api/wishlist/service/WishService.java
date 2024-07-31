@@ -8,8 +8,8 @@ import gift.api.wishlist.domain.Wish;
 import gift.api.wishlist.dto.WishRequest;
 import gift.api.wishlist.dto.WishResponse;
 import gift.api.wishlist.repository.WishRepository;
+import gift.global.PageResponse;
 import gift.global.exception.NoSuchEntityException;
-import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.data.domain.Page;
@@ -33,15 +33,14 @@ public class WishService {
         this.wishRepository = wishRepository;
     }
 
-    public List<WishResponse> getItems(Long memberId, Pageable pageable) {
+    public PageResponse<WishResponse> getItems(Long memberId, Pageable pageable) {
         Page<Wish> wishes = wishRepository.findAllByMemberId(memberId, createPageableWithProduct(pageable));
-        if (wishes.hasContent()) {
-            return wishes.getContent()
-                    .stream()
-                    .map(WishResponse::of)
-                    .collect(Collectors.toList());
-        }
-        return Collections.emptyList();
+        List<WishResponse> contents = wishes.getContent()
+            .stream()
+            .map(WishResponse::of)
+            .toList();
+        return PageResponse.of(wishes.getPageable(), wishes.getTotalElements(),
+            wishes.getTotalPages(), contents);
     }
 
     @Transactional

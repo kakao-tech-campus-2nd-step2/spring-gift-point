@@ -3,11 +3,11 @@ package gift.api.product.controller;
 import gift.api.product.dto.ProductRequest;
 import gift.api.product.dto.ProductResponse;
 import gift.api.product.service.ProductService;
+import gift.global.PageResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import java.net.URI;
-import java.util.List;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -36,13 +36,13 @@ public class ProductController {
         return ResponseEntity.ok().body(productService.getProduct(id));
     }
 
-    @GetMapping()
+    @GetMapping
     @Operation(summary = "상품 조회", description = "전체 상품 페이지별 조회")
-    public ResponseEntity<List<ProductResponse>> getAllProducts(Pageable pageable) {
+    public ResponseEntity<PageResponse<ProductResponse>> getAllProducts(Pageable pageable) {
         return ResponseEntity.ok().body(productService.getAllProducts(pageable));
     }
 
-    @PostMapping()
+    @PostMapping
     @Operation(summary = "상품 추가")
     public ResponseEntity<Void> add(@Valid @RequestBody ProductRequest productRequest) {
         return ResponseEntity.created(
