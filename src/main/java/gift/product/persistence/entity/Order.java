@@ -15,8 +15,8 @@ import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
 
 @Entity
-@Table(name = "order",
-    indexes = {@Index(name = "idx_created_date", columnList = "created_date")}
+@Table(name = "orders",
+    indexes = {@Index(name = "idx_orders_created_date", columnList = "created_date")}
 )
 public class Order extends BaseTimeEntity {
 
