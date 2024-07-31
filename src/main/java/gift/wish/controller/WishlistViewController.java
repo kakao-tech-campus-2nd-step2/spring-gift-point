@@ -2,6 +2,7 @@ package gift.wish.controller;
 
 import gift.kakao.login.dto.KakaoUser;
 import gift.product.domain.ProductRequest;
+import gift.product.domain.ProductResponse;
 import gift.user.repository.UserRepository;
 import gift.wish.domain.WishlistRequest;
 import gift.product.service.ProductService;
@@ -47,7 +48,6 @@ public class WishlistViewController {
         model.addAttribute("id", userId);
         String token = ((KakaoUser) userRepository.findById(userId).get()).getToken();
         model.addAttribute("token", token);
-        System.out.println("token: " + token);
         return "wishlist";
     }
 
@@ -56,7 +56,7 @@ public class WishlistViewController {
                                 @RequestParam(defaultValue = "0") int page,
                                  @RequestParam(defaultValue = "10") int size) {
         Pageable pageable = PageRequest.of(page, size);
-        Page<ProductRequest> productPages = productService.getAllProducts(pageable);
+        Page<ProductResponse> productPages = productService.getAllProducts(pageable);
         model.addAttribute("products", productPages);
         model.addAttribute("userId", userId);
         return "add_wishlist";
