@@ -4,13 +4,13 @@ public class WishResponse {
     private Long id;
     private Long productId;
     private String productName;
-    private int productNumber;
+    private String imageUrl;
 
-    public WishResponse(Long id, Long productId, String productName, int productNumber) {
+    public WishResponse(Long id, Long productId, String productName, String imageUrl) {
         this.id = id;
         this.productId = productId;
         this.productName = productName;
-        this.productNumber = productNumber;
+        this.imageUrl = imageUrl;
     }
 
     public Long getId() {
@@ -25,7 +25,7 @@ public class WishResponse {
         return productName;
     }
 
-    public int getProductNumber() {
-        return productNumber;
+    public String getImageUrl() {
+        return imageUrl;
     }
 }
