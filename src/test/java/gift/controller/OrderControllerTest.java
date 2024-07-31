@@ -5,74 +5,85 @@ import gift.dto.OrderRequest;
 import gift.dto.OrderResponse;
 import gift.service.OrderService;
 import gift.service.TokenService;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 import org.springframework.http.MediaType;
-import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import java.time.LocalDateTime;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@WebMvcTest(controllers = OrderController.class)
-@ActiveProfiles("test")
-public class OrderControllerTest {
+class OrderControllerTest {
 
-    @Autowired
-    private MockMvc mockMvc;
-
-    @MockBean
+    @Mock
     private OrderService orderService;
 
-    @MockBean
+    @Mock
     private TokenService tokenService;
 
-    @Autowired
+    @InjectMocks
+    private OrderController orderController;
+
+    private MockMvc mockMvc;
     private ObjectMapper objectMapper;
 
-    @Test
-    @DisplayName("주문 생성 테스트")
-    void createOrder() throws Exception {
-        OrderRequest orderRequest = new OrderRequest(1L, 2, "Happy Birthday!");
-        OrderResponse orderResponse = new OrderResponse(1L, 1L, 2, LocalDateTime.now(), "Order created successfully.");
-
-        Mockito.when(orderService.createOrder(any(OrderRequest.class), eq("valid-token")))
-                .thenReturn(orderResponse);
-
-        mockMvc.perform(post("/api/orders")
-                        .header("Authorization", "Bearer valid-token")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(orderRequest)))
-                .andExpect(status().isCreated())
-                .andExpect(jsonPath("$.id").value(orderResponse.getId()))
-                .andExpect(jsonPath("$.message").value(orderResponse.getMessage()));
-
-        Mockito.verify(orderService).createOrder(any(OrderRequest.class), eq("valid-token"));
+    @BeforeEach
+    void setUp() {
+        MockitoAnnotations.initMocks(this);
+        this.mockMvc = MockMvcBuilders.standaloneSetup(orderController).build();
+        this.objectMapper = new ObjectMapper();
     }
 
     @Test
-    @DisplayName("주문 생성 실패 테스트")
-    void createOrderFailure() throws Exception {
-        String authorizationHeader = "Bearer test-token";
-        OrderRequest orderRequest = new OrderRequest(1L, 2, "Happy Birthday!");
+    @DisplayName("이메일 토큰으로 주문생성 테스트")
+    void testCreateOrderWithJwtToken() throws Exception {
+        OrderRequest orderRequest = new OrderRequest(1L, 2, "Test message");
 
-        Mockito.when(orderService.createOrder(any(OrderRequest.class), eq("test-token")))
-                .thenThrow(new RuntimeException("Order processing failed"));
+        OrderResponse orderResponse = new OrderResponse(1L, 1L, 2, LocalDateTime.now(), "Test message");
+
+        when(tokenService.isJwtToken(any(String.class))).thenReturn(true);
+        when(orderService.createOrder(any(OrderRequest.class), any(String.class), eq(false))).thenReturn(orderResponse);
 
         mockMvc.perform(post("/api/orders")
-                        .header("Authorization", authorizationHeader)
+                        .header("Authorization", "Bearer test.jwt.token")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(orderRequest)))
-                .andExpect(status().isInternalServerError());
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value(orderResponse.getId()))
+                .andExpect(jsonPath("$.optionId").value(orderResponse.getOptionId()))
+                .andExpect(jsonPath("$.quantity").value(orderResponse.getQuantity()))
+                .andExpect(jsonPath("$.message").value(orderResponse.getMessage()));
+    }
 
-        Mockito.verify(orderService).createOrder(any(OrderRequest.class), eq("test-token"));
+    @Test
+    @DisplayName("카카오 토큰으로 주문생성 테스트")
+    void testCreateOrderWithKakaoToken() throws Exception {
+        OrderRequest orderRequest = new OrderRequest(1L, 2, "Test message");
+
+        OrderResponse orderResponse = new OrderResponse(1L, 1L, 2, LocalDateTime.now(), "Test message");
+
+        when(tokenService.isJwtToken(any(String.class))).thenReturn(false);
+        when(orderService.createOrder(any(OrderRequest.class), any(String.class), eq(true))).thenReturn(orderResponse);
+
+        mockMvc.perform(post("/api/orders")
+                        .header("Authorization", "Bearer test.kakao.token")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(orderRequest)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value(orderResponse.getId()))
+                .andExpect(jsonPath("$.optionId").value(orderResponse.getOptionId()))
+                .andExpect(jsonPath("$.quantity").value(orderResponse.getQuantity()))
+                .andExpect(jsonPath("$.message").value(orderResponse.getMessage()));
     }
 }
