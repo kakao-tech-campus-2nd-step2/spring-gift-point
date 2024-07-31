@@ -43,9 +43,43 @@ class ProductServiceTest {
     void getAllProductsTest() {
         //given
         Page<Product> expectFromRepository = new PageImpl<>(List.of(
-            new Product(1L, "product-1", 1, "product-1-image", new Category(1, "category-1")),
-            new Product(2L, "product-2", 2, "product-2-image", new Category(1, "category-1")),
-            new Product(3L, "product-3", 3, "product-3-image", new Category(2, "category-2"))
+            new Product(
+                1L,
+                "product-1",
+                1,
+                "product-1-image",
+                new Category(
+                    1L,
+                    "category-1",
+                    "test-color",
+                    "test-image-url",
+                    "test-description"
+                )
+            ), new Product(
+                2L,
+                "product-2",
+                2,
+                "product-2-image",
+                new Category(
+                    1L,
+                    "category-1",
+                    "test-color",
+                    "test-image-url",
+                    "test-description"
+                )
+            ), new Product(
+                3L,
+                "product-3",
+                3,
+                "product-3-image",
+                new Category(
+                    2L,
+                    "category-2",
+                    "test-color-2",
+                    "test-image-url-2",
+                    "test-description-2"
+                )
+            )
         ));
 
         Page<ProductPaginationResponseDTO> expect = new PageImpl<>(List.of(
@@ -85,7 +119,13 @@ class ProductServiceTest {
 
             //when
             when(categoryRepository.findByName("category-1"))
-                .thenReturn(Optional.of(new Category(1, "category-1")));
+                .thenReturn(Optional.of(new Category(
+                    1L,
+                    "category-1",
+                    "test-color",
+                    "test-image-url",
+                    "test-description"
+                )));
 
             //then
             assertDoesNotThrow(
@@ -129,11 +169,30 @@ class ProductServiceTest {
 
             //when
             when(categoryRepository.findByName(productDTO.getCategory().getName()))
-                .thenReturn(Optional.of(new Category(1L, "category-1")));
+                .thenReturn(Optional.of(new Category(
+                    1L,
+                    "category-1",
+                    "test-color",
+                    "test-image-url",
+                    "test-description"
+                )));
 
             when(productRepository.findById(id))
-                .thenReturn(Optional.of(new Product(1L, "prev-product", 1, "prev-product-image",
-                    new Category(1, "category-1"))));
+                .thenReturn(Optional.of(
+                    new Product(
+                        1L,
+                        "prev-product",
+                        1,
+                        "prev-product-image",
+                        new Category(
+                            1L,
+                            "category-1",
+                            "test-color",
+                            "test-image-url",
+                            "test-description"
+                        )
+                    )
+                ));
 
             //then
             assertDoesNotThrow(
@@ -153,8 +212,19 @@ class ProductServiceTest {
             when(categoryRepository.findByName(productDTO.getCategory().getName()))
                 .thenReturn(Optional.empty());
             when(productRepository.findById(id))
-                .thenReturn(Optional.of(new Product(1L, "prev-product", 1, "prev-product-image",
-                    new Category(1L, "category-1"))));
+                .thenReturn(Optional.of(new Product(
+                    1L,
+                    "prev-product",
+                    1,
+                    "prev-product-image",
+                    new Category(
+                        1L,
+                        "category-1",
+                        "test-color",
+                        "test-image-url",
+                        "test-description"
+                    )
+                )));
 
             //then
             assertThatThrownBy(() -> productService.updateProduct(id, productDTO))
@@ -172,7 +242,13 @@ class ProductServiceTest {
 
             //when
             when(categoryRepository.findByName(productDTO.getCategory().getName()))
-                .thenReturn(Optional.of(new Category(1L, "category-1")));
+                .thenReturn(Optional.of(new Category(
+                    1L,
+                    "category-1",
+                    "test-color",
+                    "test-image-url",
+                    "test-description"
+                )));
             when(productRepository.findById(id))
                 .thenReturn(Optional.empty());
 
@@ -201,7 +277,13 @@ class ProductServiceTest {
                             "product",
                             1,
                             "product-image",
-                            new Category(1L, "category-1")
+                            new Category(
+                                1L,
+                                "category-1",
+                                "test-color",
+                                "test-image-url",
+                                "test-description"
+                            )
                         )
                     )
                 );

@@ -1,7 +1,10 @@
 CREATE TABLE category
 (
-    id   BIGINT AUTO_INCREMENT PRIMARY KEY,
-    name VARCHAR(255) UNIQUE NOT NULL
+    id          BIGINT AUTO_INCREMENT PRIMARY KEY,
+    name        VARCHAR(255) UNIQUE NOT NULL,
+    color       VARCHAR(255)        NOT NULL,
+    image_url   VARCHAR(255)        NOT NULL,
+    description VARCHAR(255)        NOT NULL
 );
 
 CREATE TABLE product

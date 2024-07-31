@@ -20,7 +20,10 @@ public class CategoryService {
             .stream()
             .map(category -> new CategoryResponseDTO(
                 category.getId(),
-                category.getName()
+                category.getName(),
+                category.getColor(),
+                category.getImageUrl(),
+                category.getDescription()
             ))
             .toList();
     }

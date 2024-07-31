@@ -3,12 +3,12 @@ package gift.wishlist;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
-import gift.category.entity.Category;
 import gift.category.CategoryRepository;
-import gift.member.entity.Member;
+import gift.category.entity.Category;
 import gift.member.MemberRepository;
-import gift.product.entity.Product;
+import gift.member.entity.Member;
 import gift.product.ProductRepository;
+import gift.product.entity.Product;
 import gift.wishlist.entity.Wishlist;
 import java.util.List;
 import java.util.Optional;
@@ -55,10 +55,29 @@ class WishlistRepositoryTest {
         memberRepository.save(new Member("bbb@email.com", "password"));
 
         for (int i = 1; i < 4; i++) {
-            categoryRepository.save(new Category(i, "category" + i));
+            categoryRepository.save(
+                new Category(
+                    i,
+                    "category" + i,
+                    "test-color" + i,
+                    "test-image" + i,
+                    "test-description" + i)
+            );
             productRepository.save(
-                new Product(i, "product-" + i, i * 100, "image-url-" + i,
-                    new Category(1L, "category-1")));
+                new Product(
+                    i,
+                    "product-" + i,
+                    i * 100,
+                    "image-url-" + i,
+                    new Category(
+                        1L,
+                        "category-1",
+                        "test-color",
+                        "test-image-url",
+                        "test-description"
+                    )
+                )
+            );
         }
     }
 
@@ -78,7 +97,19 @@ class WishlistRepositoryTest {
         wishlistRepository.saveAll(expect);
 
         Product product = productRepository.save(
-            new Product(4L, "product-4", 400, "product-4-image", new Category(1L, "category-1"))
+            new Product(
+                4L,
+                "product-4",
+                400,
+                "product-4-image",
+                new Category(
+                    1L,
+                    "category-1",
+                    "test-color",
+                    "test-image-url",
+                    "test-description"
+                )
+            )
         );
 
         wishlistRepository.save(

@@ -41,7 +41,13 @@ public class OptionEntityTest {
             "product",
             1,
             "imageUrl",
-            new Category(1L, "category")
+            new Category(
+                1L,
+                "category",
+                "test-color",
+                "test-image-url",
+                "test-description"
+            )
         );
         optionId = 1L;
         optionName = "optionName";
@@ -253,7 +259,10 @@ public class OptionEntityTest {
                         "imageUrl",
                         new Category(
                             1L,
-                            "category"
+                            "category",
+                            "test-color",
+                            "test-image-url",
+                            "test-description"
                         )
                     )
                 )),
@@ -268,7 +277,10 @@ public class OptionEntityTest {
                         "diffImageUrl",
                         new Category(
                             1000L,
-                            "diffCategory"
+                            "diffCategory",
+                            "diffColor",
+                            "diffImageUrl",
+                            "diffDescription"
                         )
                     )
                 ))
@@ -294,7 +306,13 @@ public class OptionEntityTest {
                             "product",
                             1,
                             "imageUrl",
-                            new Category(1L, "category")
+                            new Category(
+                                1L,
+                                "category",
+                                "test-color",
+                                "test-image-url",
+                                "test-description"
+                            )
                         )
                     )
                 ),

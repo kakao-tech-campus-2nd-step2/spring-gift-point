@@ -64,7 +64,13 @@ public class OptionServiceTest {
             "product",
             1,
             "imageUrl",
-            new Category(1L, "category")
+            new Category(
+                1L,
+                "category",
+                "test-color",
+                "test-image-url",
+                "test-description"
+            )
         );
 
         optionDTO = new OptionRequestDTO(
