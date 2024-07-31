@@ -24,8 +24,8 @@ public class OptionService {
         optionRepository.deleteById(option.getId());
     }
 
-    public void updateOption(OptionRequest optionRequest, Long productId){
-        Option option = optionRepository.findById(optionRequest.getOptionId()).orElseThrow();
+    public void updateOption(OptionRequest optionRequest, Long productId, Long optionId){
+        Option option = optionRepository.findById(optionId).orElseThrow();
         if(!optionRequest.getName().equals(option.getName())){
             isValidRequest(optionRequest, productId);
         }
@@ -61,7 +61,7 @@ public class OptionService {
     }
 
     private Option option(OptionRequest optionRequest, Product product){
-        return new Option(optionRequest.getOptionId(), optionRequest.getName(),optionRequest.getQuantity(),product);
+        return new Option(null, optionRequest.getName(),optionRequest.getQuantity(),product);
     }
 
 }

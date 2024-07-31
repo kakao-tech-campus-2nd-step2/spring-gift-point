@@ -16,18 +16,18 @@ public class CategoryService {
         return categoryRepository.save(categoryRequest.toEntity());
     }
 
-    public Category updateCategory(CategoryRequest categoryRequest) {
-        Category category = categoryRepository.findById(categoryRequest.getId()).orElseThrow();
+    public Category updateCategory(CategoryRequest categoryRequest, Long categoryId) {
+        Category category = categoryRepository.findById(categoryId).orElseThrow();
         category.update(categoryRequest.getName(), categoryRequest.getColor(),
             categoryRequest.getImageUrl(), categoryRequest.getDescription());
         return categoryRepository.save(category);
     }
 
-    public List<Category> getAllCategories(){
+    public List<Category> getAllCategories() {
         return categoryRepository.findAll();
     }
 
-    public void deleteCategory(Long id){
+    public void deleteCategory(Long id) {
         categoryRepository.deleteById(id);
     }
 }

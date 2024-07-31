@@ -18,6 +18,13 @@ public class JwtInterceptor implements HandlerInterceptor {
             response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Invalid JWT token");
             return false;
         }
+
+        String kakaotoken = request.getHeader("X-GATEWAY-TOKEN");
+        if (kakaotoken == null) {
+            response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Invalid kakao token");
+            return false;
+        }
+
         return true;
     }
 }
