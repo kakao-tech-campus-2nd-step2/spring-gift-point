@@ -6,6 +6,60 @@ body {
 }
 
 .container {
+  width: 50%;
+  margin: 50px auto;
+  background-color: white;
+  padding: 20px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+h2 {
+  text-align: center;
+  color: #333;
+}
+
+.form-group {
+  margin-bottom: 15px;
+}
+
+label {
+  display: block;
+  margin-bottom: 5px;
+  color: #333;
+}
+
+input[type="text"], input[type="number"], input[type="url"], input[type="hidden"] {
+  width: 100%;
+  padding: 8px;
+  box-sizing: border-box;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+button {
+  background-color: #28a745;
+  color: white;
+  padding: 10px 15px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  display: block;
+  width: 100%;
+  margin-bottom: 10px;
+}
+
+button:hover {
+  background-color: #218838;
+}
+
+.error-message {
+  text-align: center;
+  font-size: 22px;
+  color: red;
+  font-weight: bold;
+}
+
+.table-container {
   width: 80%;
   margin: 50px auto;
   background-color: white;
