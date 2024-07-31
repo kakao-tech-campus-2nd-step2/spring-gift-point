@@ -16,4 +16,7 @@ public interface CategoryRepository {
     List<Category> findAll();
 
     Optional<Category> findByName(String name);
+
+    boolean existsById(Long categoryId);
+
 }
