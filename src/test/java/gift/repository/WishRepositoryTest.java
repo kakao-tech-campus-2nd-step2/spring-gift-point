@@ -110,8 +110,7 @@ class WishRepositoryTest {
     }
 
     private Wish createWish(Member expectedMember, Product expectedProduct) {
-        return new Wish(
-            expectedMember, expectedProduct);
+        return new Wish(expectedMember, expectedProduct);
     }
 
     private void saveProduct() {
