@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import gift.dto.auth.LoginRequest;
 import gift.dto.product.ProductRequest;
 import gift.dto.product.ProductResponse;
+import gift.exception.ExceptionResponse;
 import gift.service.OptionService;
 import gift.service.ProductService;
 import gift.service.auth.AuthService;
@@ -16,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
@@ -26,7 +28,6 @@ import java.util.List;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
@@ -65,10 +66,11 @@ class ProductControllerTest {
                 .header("Authorization", "Bearer " + memberToken)
                 .content(objectMapper.writeValueAsString(new ProductRequest("상품1", -1000, "이미지 주소", 1L)));
         //when
-        var result = mockMvc.perform(postRequest);
+        var result = mockMvc.perform(postRequest).andReturn();
         //then
-        result.andExpect(status().isBadRequest())
-                .andExpect(content().string("금액은 0보다 크거나 같아야 합니다."));
+        var response = getResponseMessage(result);
+        Assertions.assertThat(response.status()).isEqualTo(HttpStatus.BAD_REQUEST.value());
+        Assertions.assertThat(response.message()).isEqualTo("금액은 0보다 크거나 같아야 합니다.");
     }
 
     @Test
@@ -80,10 +82,11 @@ class ProductControllerTest {
                 .header("Authorization", "Bearer " + memberToken)
                 .content(objectMapper.writeValueAsString(new ProductRequest("햄버거햄버거햄버거햄버거햄버거햄", 1000, "이미지 주소", 1L)));
         //when
-        var result = mockMvc.perform(postRequest);
+        var result = mockMvc.perform(postRequest).andReturn();
         //then
-        result.andExpect(status().isBadRequest())
-                .andExpect(content().string("이름의 길이는 15자를 초과할 수 없습니다."));
+        var response = getResponseMessage(result);
+        Assertions.assertThat(response.status()).isEqualTo(HttpStatus.BAD_REQUEST.value());
+        Assertions.assertThat(response.message()).isEqualTo("이름의 길이는 15자를 초과할 수 없습니다.");
     }
 
     @Test
@@ -95,10 +98,11 @@ class ProductControllerTest {
                 .header("Authorization", "Bearer " + memberToken)
                 .content(objectMapper.writeValueAsString(new ProductRequest("카카오456", 1000, "이미지 주소", 1L)));
         //when
-        var result = mockMvc.perform(postRequest);
+        var result = mockMvc.perform(postRequest).andReturn();
         //then
-        result.andExpect(status().isBadRequest())
-                .andExpect(content().string("카카오가 포함된 문구는 담당 MD와 협의한 경우에만 사용할 수 있습니다."));
+        var response = getResponseMessage(result);
+        Assertions.assertThat(response.status()).isEqualTo(HttpStatus.BAD_REQUEST.value());
+        Assertions.assertThat(response.message()).isEqualTo("카카오가 포함된 문구는 담당 MD와 협의한 경우에만 사용할 수 있습니다.");
     }
 
     @Test
@@ -110,10 +114,11 @@ class ProductControllerTest {
                 .header("Authorization", "Bearer " + memberToken)
                 .content(objectMapper.writeValueAsString(new ProductRequest("", 1000, "이미지 주소", 1L)));
         //when
-        var result = mockMvc.perform(postRequest);
+        var result = mockMvc.perform(postRequest).andReturn();
         //then
-        result.andExpect(status().isBadRequest())
-                .andExpect(content().string("이름의 길이는 최소 1자 이상이어야 합니다."));
+        var response = getResponseMessage(result);
+        Assertions.assertThat(response.status()).isEqualTo(HttpStatus.BAD_REQUEST.value());
+        Assertions.assertThat(response.message()).isEqualTo("이름의 길이는 최소 1자 이상이어야 합니다.");
     }
 
     @Test
@@ -157,10 +162,11 @@ class ProductControllerTest {
                 .header("Authorization", "Bearer " + memberToken)
                 .content(objectMapper.writeValueAsString(new ProductRequest("햄버거()[]+-&/_**", 1000, "이미지 주소", 1L)));
         //when
-        var result = mockMvc.perform(postRequest);
+        var result = mockMvc.perform(postRequest).andReturn();
         //then
-        result.andExpect(status().isBadRequest())
-                .andExpect(content().string("허용되지 않은 형식의 이름입니다."));
+        var response = getResponseMessage(result);
+        Assertions.assertThat(response.status()).isEqualTo(HttpStatus.BAD_REQUEST.value());
+        Assertions.assertThat(response.message()).isEqualTo("허용되지 않은 형식의 이름입니다.");
     }
 
     @Test
@@ -196,9 +202,10 @@ class ProductControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .header("Authorization", "Bearer " + memberToken);
         //when
-        var getResult = mockMvc.perform(getRequest);
+        var result = mockMvc.perform(getRequest).andReturn();
         //then
-        getResult.andExpect(status().isBadRequest());
+        var response = getResponseMessage(result);
+        Assertions.assertThat(response.status()).isEqualTo(HttpStatus.BAD_REQUEST.value());
     }
 
     @Test
@@ -233,5 +240,10 @@ class ProductControllerTest {
         var location = mvcResult.getResponse().getHeader("Location");
         var productId = location.replaceAll("/api/products/", "");
         productService.deleteProduct(Long.parseLong(productId));
+    }
+
+    private ExceptionResponse getResponseMessage(MvcResult result) throws Exception {
+        var resultString = result.getResponse().getContentAsString();
+        return objectMapper.readValue(resultString, ExceptionResponse.class);
     }
 }

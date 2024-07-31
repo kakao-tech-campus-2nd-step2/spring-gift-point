@@ -6,6 +6,7 @@ import gift.dto.auth.LoginRequest;
 import gift.dto.wishproduct.WishProductAddRequest;
 import gift.dto.wishproduct.WishProductResponse;
 import gift.dto.wishproduct.WishProductUpdateRequest;
+import gift.exception.ExceptionResponse;
 import gift.service.WishProductService;
 import gift.service.auth.AuthService;
 import org.assertj.core.api.Assertions;
@@ -16,8 +17,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
@@ -25,7 +28,6 @@ import java.util.List;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
@@ -63,10 +65,11 @@ class WishProductControllerTest {
                 .header("Authorization", "Bearer " + memberToken)
                 .content(objectMapper.writeValueAsString(new WishProductAddRequest(1L, 0)));
         //when
-        var result = mockMvc.perform(postRequest);
+        var result = mockMvc.perform(postRequest).andReturn();
         //then
-        result.andExpect(status().isBadRequest())
-                .andExpect(content().string("상품의 수량은 반드시 1개 이상이어야 합니다."));
+        var response = getResponseMessage(result);
+        Assertions.assertThat(response.status()).isEqualTo(HttpStatus.BAD_REQUEST.value());
+        Assertions.assertThat(response.message()).isEqualTo("상품의 수량은 반드시 1개 이상이어야 합니다.");
     }
 
     @Test
@@ -196,14 +199,20 @@ class WishProductControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .header("Authorization", "Bearer " + memberToken);
         //when
-        var getResult = mockMvc.perform(getRequest);
+        var result = mockMvc.perform(getRequest).andReturn();
         //then
-        getResult.andExpect(status().isBadRequest());
+        var response = getResponseMessage(result);
+        Assertions.assertThat(response.status()).isEqualTo(HttpStatus.BAD_REQUEST.value());
     }
 
     private void deleteWishProducts(List<WishProductResponse> wishProductResponses) {
         for (var wishProductResponse : wishProductResponses) {
             wishProductService.deleteWishProduct(wishProductResponse.id());
         }
+    }
+
+    private ExceptionResponse getResponseMessage(MvcResult result) throws Exception {
+        var resultString = result.getResponse().getContentAsString();
+        return objectMapper.readValue(resultString, ExceptionResponse.class);
     }
 }

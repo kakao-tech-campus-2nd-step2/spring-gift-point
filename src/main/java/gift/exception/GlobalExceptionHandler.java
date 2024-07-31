@@ -99,8 +99,6 @@ public class GlobalExceptionHandler {
 
     private ResponseEntity<ExceptionResponse> getExceptionResponse(String message, HttpStatus status) {
         var response = new ExceptionResponse(status.value(), message);
-        var responseEntity = ResponseEntity.status(status)
-                .body(response);
-        return responseEntity;
+        return ResponseEntity.status(status).body(response);
     }
 }

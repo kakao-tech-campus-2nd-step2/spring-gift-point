@@ -1,6 +1,6 @@
 package gift.controller;
 
-import gift.dto.auth.LoginRequest;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import gift.dto.auth.RegisterRequest;
 import gift.service.auth.AuthService;
 import org.junit.jupiter.api.DisplayName;
@@ -23,6 +23,8 @@ public class MemberControllerTest {
     @Autowired
     private MockMvc mockMvc;
     @Autowired
+    private ObjectMapper objectMapper;
+    @Autowired
     private AuthService authService;
 
     @Test
@@ -30,15 +32,13 @@ public class MemberControllerTest {
     void successDeleteMember() throws Exception {
         //given
         var registerRequest = new RegisterRequest("테스트", "test@naver.com", "testPassword");
-        authService.register(registerRequest);
-        var loginRequest = new LoginRequest("test@naver.com", "testPassword");
-        var loginResponse = authService.login(loginRequest);
+        var auth = authService.register(registerRequest);
         var deleteRequest = delete("/api/members")
                 .contentType(MediaType.APPLICATION_JSON)
-                .header("Authorization", "Bearer " + loginResponse.token());
+                .header("Authorization", "Bearer " + auth.token());
         //when
-        var deleted = mockMvc.perform(deleteRequest);
+        var result = mockMvc.perform(deleteRequest);
         //then
-        deleted.andExpect(status().isNoContent());
+        result.andExpect(status().isNoContent());
     }
 }

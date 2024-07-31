@@ -20,7 +20,6 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.transaction.annotation.Transactional;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
@@ -70,10 +69,11 @@ class CategoryControllerTest {
                 .header("Authorization", "Bearer " + memberToken)
                 .content(objectMapper.writeValueAsString(new CategoryRequest("상품카테고리", "상품설명", "#111111", "")));
         //when
-        var result = mockMvc.perform(postRequest);
+        var result = mockMvc.perform(postRequest).andReturn();
         //then
-        result.andExpect(status().isBadRequest())
-                .andExpect(content().string("카테고리 설명 이미지는 필수로 입력해야 합니다."));
+        var response = getResponseMessage(result);
+        Assertions.assertThat(response.status()).isEqualTo(HttpStatus.BAD_REQUEST.value());
+        Assertions.assertThat(response.message()).isEqualTo("카테고리 설명 이미지는 필수로 입력해야 합니다.");
     }
 
     @Test
@@ -85,10 +85,11 @@ class CategoryControllerTest {
                 .header("Authorization", "Bearer " + memberToken)
                 .content(objectMapper.writeValueAsString(new CategoryRequest("", "상품설명", "#111111", "이미지")));
         //when
-        var result = mockMvc.perform(postRequest);
+        var result = mockMvc.perform(postRequest).andReturn();
         //then
-        result.andExpect(status().isBadRequest())
-                .andExpect(content().string("이름의 길이는 최소 1자 이상이어야 합니다."));
+        var response = getResponseMessage(result);
+        Assertions.assertThat(response.status()).isEqualTo(HttpStatus.BAD_REQUEST.value());
+        Assertions.assertThat(response.message()).isEqualTo("이름의 길이는 최소 1자 이상이어야 합니다.");
     }
 
     @Test
@@ -100,10 +101,11 @@ class CategoryControllerTest {
                 .header("Authorization", "Bearer " + memberToken)
                 .content(objectMapper.writeValueAsString(new CategoryRequest("상품카테고리", "", "#111111", "이미지")));
         //when
-        var result = mockMvc.perform(postRequest);
+        var result = mockMvc.perform(postRequest).andReturn();
         //then
-        result.andExpect(status().isBadRequest())
-                .andExpect(content().string("카테고리 설명은 필수로 입력해야 합니다."));
+        var response = getResponseMessage(result);
+        Assertions.assertThat(response.status()).isEqualTo(HttpStatus.BAD_REQUEST.value());
+        Assertions.assertThat(response.message()).isEqualTo("카테고리 설명은 필수로 입력해야 합니다.");
     }
 
     @Test
@@ -118,10 +120,11 @@ class CategoryControllerTest {
                 .header("Authorization", "Bearer " + memberToken)
                 .content(objectMapper.writeValueAsString(productCategoryRequest));
         //when
-        var result = mockMvc.perform(postRequest);
+        var result = mockMvc.perform(postRequest).andReturn();
         //then
-        result.andExpect(status().isConflict())
-                .andExpect(content().string("이미 존재하는 이름입니다."));
+        var response = getResponseMessage(result);
+        Assertions.assertThat(response.status()).isEqualTo(HttpStatus.CONFLICT.value());
+        Assertions.assertThat(response.message()).isEqualTo("이미 존재하는 이름입니다.");
 
         categoryService.deleteCategory(productCategory.id());
     }
