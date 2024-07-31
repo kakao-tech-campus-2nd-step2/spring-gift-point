@@ -84,9 +84,9 @@ public class OptionService {
     @Transactional
     public OptionModel.PurchaseInfo purchaseOption(OptionCommand.Purchase command) {
         Option option = optionRepository.findById(command.optionId())
-            .orElseThrow(() -> new NotFoundException("Option not found"));
+            .orElseThrow(() -> new NotFoundException("해당 옵션이 존재하지 않습니다."));
         Product product = productRepository.findById(command.productId())
-            .orElseThrow(() -> new NotFoundException("Product not found"));
+            .orElseThrow(() -> new NotFoundException("해당 상품이 존재하지 않습니다."));
         option.purchase(command.quantity());
         return OptionModel.PurchaseInfo.from(option, product, command.quantity());
     }
