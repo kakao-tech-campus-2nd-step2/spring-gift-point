@@ -18,10 +18,21 @@ public class CategoryDTO {
     @Schema(description = "카테고리 이미지 URL", example = "https://example.com/images/electronics.jpg")
     private final String imgUrl;
 
-    public CategoryDTO(Long id, String name, String imgUrl) {
+    @Schema(description = "카테고리 설명", example = "전자기기 입니다.")
+    private final String description;
+
+    public CategoryDTO(Long id, String name, String imgUrl, String description) {
         this.id = id;
         this.name = name;
         this.imgUrl = imgUrl;
+        this.description = description;
+    }
+
+    public CategoryDTO(Category category) {
+        this.id = category.getId();
+        this.name = category.getName();
+        this.imgUrl = category.getImgUrl();
+        this.description = category.getDescription();
     }
 
     public Long getId() {
@@ -36,7 +47,12 @@ public class CategoryDTO {
         return imgUrl;
     }
 
+    public String getDescription() {
+        return description;
+    }
+
+
     public Category toEntity() {
-        return new Category(id, name, imgUrl);
+        return new Category(id, name, imgUrl, description);
     }
 }

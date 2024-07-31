@@ -21,24 +21,26 @@ public class CategoryService {
 
     @Transactional
     public CategoryDTO insertCategory(CategoryDTO categoryDTO) {
-        return categoryRepository.save(categoryDTO.toEntity()).toDTO();
+        return new CategoryDTO(categoryRepository.save(categoryDTO.toEntity()));
     }
 
     @Transactional(readOnly = true)
     public CategoryDTO findCategoryByName(String name) {
-        return categoryRepository.findByName(name).orElseThrow(() -> new CustomNotFoundException(
-            ErrorCode.CATEGORY_NOT_FOUND)).toDTO();
+        Category saved = categoryRepository.findByName(name)
+            .orElseThrow(() -> new CustomNotFoundException(
+                ErrorCode.CATEGORY_NOT_FOUND));
+        return new CategoryDTO(saved);
     }
 
     @Transactional(readOnly = true)
     public List<CategoryDTO> getCategoryList() {
-        return categoryRepository.findAll().stream().map(Category::toDTO)
+        return categoryRepository.findAll().stream().map(CategoryDTO::new)
             .collect(Collectors.toList());
     }
 
     @Transactional
     public CategoryDTO updateCategory(CategoryDTO categoryDTO) {
-        return categoryRepository.save(categoryDTO.toEntity()).toDTO();
+        return new CategoryDTO(categoryRepository.save(categoryDTO.toEntity()));
     }
 
     @Transactional(readOnly = true)

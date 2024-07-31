@@ -18,6 +18,8 @@ public class Category {
     private String name;
     @Column
     private String imgUrl;
+    @Column
+    private String description;
 
     protected Category() {
     }
@@ -34,17 +36,19 @@ public class Category {
         return imgUrl;
     }
 
-    public Category(Long id, String name, String imgUrl) {
+    public String getDescription() {
+        return description;
+    }
+
+    public Category(Long id, String name, String imgUrl, String description) {
         this.id = id;
         this.name = name;
         this.imgUrl = imgUrl;
+        this.description = description;
     }
 
-    public Category(String name, String imgUrl) {
-        this(null, name, imgUrl);
+    public Category(String name, String imgUrl, String description) {
+        this(null, name, imgUrl, description);
     }
 
-    public CategoryDTO toDTO() {
-        return new CategoryDTO(id, name, imgUrl);
-    }
 }

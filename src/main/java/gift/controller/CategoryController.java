@@ -67,7 +67,8 @@ public class CategoryController {
             throw new CustomDuplicateException(ErrorCode.DUPLICATE_NAME);
         }
         CategoryDTO updated = categoryService.updateCategory(
-            new CategoryDTO(id, categoryForm.getName(), categoryForm.getImgUrl()));
+            new CategoryDTO(id, categoryForm.getName(), categoryForm.getImgUrl(),
+                categoryForm.getDescription()));
         return ResponseEntity.ok(updated);
     }
 }
