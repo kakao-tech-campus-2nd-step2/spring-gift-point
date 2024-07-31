@@ -51,7 +51,7 @@ public class OptionController {
         @Valid @RequestBody OptionCreateRequestDTO optionCreateRequestDTO
     ) {
         OptionResponseDTO optionResponseDTO = optionService.addOption(productId, optionCreateRequestDTO);
-        return ApiResponseGenerator.success(HttpStatus.CREATED, "옵션이 생성되었습니다.", optionResponseDTO);
+        return ApiResponseGenerator.success(HttpStatus.OK, "옵션이 생성되었습니다.", optionResponseDTO);
     }
 
     @PutMapping("/products/{productId}/options/{optionId}")

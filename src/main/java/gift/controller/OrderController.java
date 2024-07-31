@@ -46,7 +46,7 @@ public class OrderController {
     ) {
         Option option = optionService.getOption(orderRequestDTO.optionId());
         OrderResponseDTO orderResponseDTO = orderService.order(orderRequestDTO, user, option);
-        return ApiResponseGenerator.success(HttpStatus.CREATED, "주문이 생성되었습니다.", orderResponseDTO);
+        return ApiResponseGenerator.success(HttpStatus.OK, "주문이 생성되었습니다.", orderResponseDTO);
     }
 
     @GetMapping()

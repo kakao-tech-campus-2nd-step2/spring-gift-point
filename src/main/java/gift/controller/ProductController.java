@@ -83,7 +83,7 @@ public class ProductController {
 //        ProductResponseDTO productResponseDTO = productService.addProduct(productCreateRequestDTO);
         ProductResponseDTO productResponseDTO = productService.addProduct(productRequestDTO);
 
-        return ApiResponseGenerator.success(HttpStatus.CREATED, "상품이 등록되었습니다.", productResponseDTO);
+        return ApiResponseGenerator.success(HttpStatus.OK, "상품이 등록되었습니다.", productResponseDTO);
     }
 
     @PutMapping("/{id}")

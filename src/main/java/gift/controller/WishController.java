@@ -64,7 +64,7 @@ public class WishController {
         @Valid @RequestBody WishRequestDTO wishRequestDTO) {
         authService.authorizeUser(user, wishRequestDTO.userId());
         WishResponseDTO wishResponseDTO = wishService.addWish(wishRequestDTO);
-        return ApiResponseGenerator.success(HttpStatus.CREATED, "위시리스트를 추가했습니다.", wishResponseDTO);
+        return ApiResponseGenerator.success(HttpStatus.OK, "위시리스트를 추가했습니다.", wishResponseDTO);
     }
 
     @DeleteMapping("/{wishId}")

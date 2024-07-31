@@ -47,7 +47,7 @@ public class CategoryController {
         @LoginUser User user) {
         authService.authorizeAdminUser(user);
         CategoryResponseDTO categoryResponseDTO = categoryService.addCategory(categoryRequestDTO);
-        return ApiResponseGenerator.success(HttpStatus.CREATED, "카테고리가 생성되었습니다.", categoryResponseDTO);
+        return ApiResponseGenerator.success(HttpStatus.OK, "카테고리가 생성되었습니다.", categoryResponseDTO);
     }
 
     @GetMapping("/{id}")

@@ -41,7 +41,7 @@ public class AuthController {
         @Valid @RequestBody UserSignupRequestDTO userSignupRequestDTO) {
         userService.join(userSignupRequestDTO);
         UserTokenResponseDTO userTokenResponseDTO = authService.register(userSignupRequestDTO);
-        return ApiResponseGenerator.success(HttpStatus.CREATED, "회원가입에 성공했습니다.",
+        return ApiResponseGenerator.success(HttpStatus.OK, "회원가입에 성공했습니다.",
             userTokenResponseDTO);
     }
 
