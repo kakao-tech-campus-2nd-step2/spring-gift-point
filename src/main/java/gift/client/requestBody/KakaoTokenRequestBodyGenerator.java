@@ -5,7 +5,9 @@ import org.springframework.util.MultiValueMap;
 
 public class KakaoTokenRequestBodyGenerator {
 
-    private static final String REDIRECT_URI = "http://localhost:8080";
+//    private static final String REDIRECT_URI = "http://localhost:8080";
+    private static final String REDIRECT_URI = "http://43.201.254.198:8080";
+
     private static final String GRANT_TYPE = "authorization_code";
 
     private String clientId;

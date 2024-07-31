@@ -45,9 +45,9 @@ public class CategoryService {
     }
 
     @Transactional
-    public void updateCategory(UpdateCategoryRequest request) {
-        Category updateTargetCategory = categoryRepository.findById(request.id())
-                .orElseThrow(() -> new CategoryNotFoundException(request.id()));
+    public void updateCategory(UpdateCategoryRequest request, Long categoryId) {
+        Category updateTargetCategory = categoryRepository.findById(categoryId)
+                .orElseThrow(() -> new CategoryNotFoundException(categoryId));
         updateTargetCategory.update(request.name(), request.color(), request.imageUrl(), request.description());
     }
 

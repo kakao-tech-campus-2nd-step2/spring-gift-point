@@ -33,14 +33,14 @@ public class CategoryController {
         return ResponseEntity.ok(allCategories);
     }
 
-    @PutMapping("/api/categories")
-    public ResponseEntity<Void> updateCategory(@Valid @RequestBody UpdateCategoryRequest request) {
-        categoryService.updateCategory(request);
+    @PutMapping("/api/categories/{categoryId}")
+    public ResponseEntity<Void> updateCategory(@Valid @RequestBody UpdateCategoryRequest request, @PathVariable("categoryId") Long categoryId) {
+        categoryService.updateCategory(request,categoryId);
         return ResponseEntity.ok().build();
     }
 
-    @DeleteMapping("/api/categories/{id}")
-    public ResponseEntity<Void> deleteCategory(@PathVariable("id") Long categoryId) {
+    @DeleteMapping("/api/categories/{categoryId}")
+    public ResponseEntity<Void> deleteCategory(@PathVariable("categoryId") Long categoryId) {
         categoryService.deleteCategory(categoryId);
         return ResponseEntity.ok().build();
     }

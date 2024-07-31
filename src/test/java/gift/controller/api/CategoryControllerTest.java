@@ -18,7 +18,6 @@ import org.springframework.data.jpa.mapping.JpaMetamodelMappingContext;
 import org.springframework.http.MediaType;
 import org.springframework.restdocs.RestDocumentationContextProvider;
 import org.springframework.restdocs.RestDocumentationExtension;
-import org.springframework.restdocs.constraints.ConstraintDescriptions;
 import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders;
 import org.springframework.restdocs.operation.preprocess.Preprocessors;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
@@ -134,15 +133,10 @@ class CategoryControllerTest {
     @Test
     void updateCategory() throws Exception {
         //Given
-        UpdateCategoryRequest updateCategoryRequest = new UpdateCategoryRequest(1L, "색종이", "노란색", "https://pixabay.com/photos/cars-super-cars-luxury-cars-8891625/", "노란색 종이");
-        ConstraintDescriptions constraintDescriptions = new ConstraintDescriptions(UpdateCategoryRequest.class);
-        List<String> id = constraintDescriptions.descriptionsForProperty("id");
-        List<String> name = constraintDescriptions.descriptionsForProperty("name");
-        List<String> color = constraintDescriptions.descriptionsForProperty("color");
-        List<String> imageUrl = constraintDescriptions.descriptionsForProperty("imageUrl");
+        UpdateCategoryRequest updateCategoryRequest = new UpdateCategoryRequest("색종이", "노란색", "https://pixabay.com/photos/cars-super-cars-luxury-cars-8891625/", "노란색 종이");
 
         //When Then
-        mockMvc.perform(MockMvcRequestBuilders.put(URL)
+        mockMvc.perform(RestDocumentationRequestBuilders.put("/api/categories/{categoryId}", 1L)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(updateCategoryRequest)))
                 .andExpectAll(
@@ -151,8 +145,11 @@ class CategoryControllerTest {
                 .andDo(document("category-update",
                         Preprocessors.preprocessRequest(Preprocessors.prettyPrint()),
 
+                        pathParameters(
+                                parameterWithName("categoryId").description("수정하고 싶은 카테고리 ID")
+                        ),
                         requestFields(
-                                fieldWithPath("id").description("카테고리 ID").type(NUMBER),
+
                                 fieldWithPath("name").description("카테고리 이름").type(STRING),
                                 fieldWithPath("color").description("카테고리 색").type(STRING),
                                 fieldWithPath("imageUrl").description("카테고리 이미지주소").type(STRING),
@@ -164,14 +161,14 @@ class CategoryControllerTest {
     @Test
     void deleteCategory() throws Exception {
         //When Then
-        mockMvc.perform(RestDocumentationRequestBuilders.delete("/api/categories/{id}", 1L)
+        mockMvc.perform(RestDocumentationRequestBuilders.delete("/api/categories/{categoryId}", 1L)
                 )
                 .andExpect(
                         status().isOk()
                 )
                 .andDo(document("category-delete",
                         pathParameters(
-                                parameterWithName("id").description("삭제하고 싶은 카테고리 ID")
+                                parameterWithName("categoryId").description("삭제하고 싶은 카테고리 ID")
                         )
                 ));
     }
