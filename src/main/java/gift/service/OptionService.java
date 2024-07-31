@@ -1,5 +1,6 @@
 package gift.service;
 
+import gift.common.exception.badRequest.OverStockQuantityException;
 import gift.common.exception.conflict.OptionNameConflictException;
 import gift.common.exception.notFound.InvalidProductOptionException;
 import gift.common.exception.notFound.ProductNotFoundException;
@@ -93,6 +94,18 @@ public class OptionService {
         }
 
         optionRepository.delete(option);
+    }
+
+    public void decreaseOptionQuantity(Long optionId, Long productId, int quantity) {
+        Option option = optionRepository.findByIdAndProductId(optionId, productId)
+            .orElseThrow(OptionNotFoundException::new);
+
+        if (option.getStockQuantity() < quantity) {
+            throw new OverStockQuantityException();
+        }
+
+        option.subtractQuantity(quantity);
+        optionRepository.save(option);
     }
 
 }
