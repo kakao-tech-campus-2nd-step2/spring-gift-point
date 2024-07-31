@@ -5,6 +5,7 @@ import gift.dto.option.OptionRequest;
 import gift.dto.paging.PagingResponse;
 import gift.dto.product.ProductRequest;
 import gift.dto.product.ProductResponse;
+import gift.exception.ProductNotFoundException;
 import gift.model.category.Category;
 import gift.model.option.Option;
 import gift.model.product.Product;
@@ -47,7 +48,7 @@ public class ProductService {
     @Transactional(readOnly = true)
     public ProductResponse.Info getGift(Long id) {
         Product product = productRepository.findById(id)
-                .orElseThrow(() -> new NoSuchElementException("해당 상품을 찾을 수 없습니다 id :  " + id));
+                .orElseThrow(() -> new ProductNotFoundException("존재하지 않는 상품입니다."));
         return ProductResponse.Info.fromEntity(product);
     }
 
