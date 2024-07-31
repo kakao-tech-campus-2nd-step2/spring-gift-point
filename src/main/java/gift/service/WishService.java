@@ -3,6 +3,7 @@ package gift.service;
 import gift.domain.Member;
 import gift.domain.Product;
 import gift.domain.Wish;
+import gift.dto.WishListDto;
 import gift.repository.WishRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -17,8 +18,9 @@ public class WishService{
         this.productService = productService;
     }
 
-    public Page<Wish> getWishPage(Member member, Pageable pageable) {
-        return wishRepository.findByMember(member, pageable);
+    public Page<WishListDto> getWishPage(Member member, Pageable pageable) {
+        Page<Wish> wishes = wishRepository.findByMember(member, pageable);
+        return wishes.map(WishListDto::new);
     }
 
     public void addWish(Member member, Long product_id) {

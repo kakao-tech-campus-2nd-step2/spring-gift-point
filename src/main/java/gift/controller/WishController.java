@@ -3,6 +3,7 @@ package gift.controller;
 import gift.domain.Member;
 import gift.domain.Product;
 import gift.domain.Wish;
+import gift.dto.WishListDto;
 import gift.security.LoginMember;
 import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.data.domain.Page;
@@ -25,10 +26,11 @@ public class WishController {
         this.wishService = wishService;
     }
 
+    @Operation(summary = "특정 회원의 위시리스트 조회")
     @GetMapping
-    public ResponseEntity<Page<Wish>> getWishList(@LoginMember Member member, Pageable pageable) {
-        Page<Wish> wishPage = wishService.getWishPage(member, pageable);
-        return ResponseEntity.ok(wishPage);
+    public ResponseEntity<List<WishListDto>> getWishList(@LoginMember Member member, Pageable pageable) {
+        Page<WishListDto> wishPage = wishService.getWishPage(member, pageable);
+        return ResponseEntity.ok(wishPage.getContent());
     }
 
     @Operation(summary = "위시리스트에 상품 추가")
