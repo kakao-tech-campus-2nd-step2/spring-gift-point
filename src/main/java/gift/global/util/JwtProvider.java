@@ -1,4 +1,4 @@
-package gift.global;
+package gift.global.util;
 
 import gift.doamin.user.entity.UserRole;
 import io.jsonwebtoken.Claims;
@@ -15,7 +15,14 @@ public class JwtProvider {
 
     private final SecretKey key = SIG.HS256.key().build();
 
-    public String generateToken(Long userId, UserRole role) {
+    public JwtDto generateToken(Long userId, UserRole role) {
+        String accessToken = generateAccessToken(userId, role);
+        String refreshToken = generateRefreshToken();
+
+        return new JwtDto(accessToken, refreshToken);
+    }
+
+    public String generateAccessToken(Long userId, UserRole role) {
 
         Date expiredDate = Date.from(Instant.now().plus(1, ChronoUnit.HOURS));
 

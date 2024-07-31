@@ -28,7 +28,6 @@ public class User extends AuditingEntity {
     @Column(nullable = false)
     private String password;
 
-    @Column(nullable = false)
     private String name;
 
     @Enumerated(EnumType.STRING)
@@ -61,10 +60,6 @@ public class User extends AuditingEntity {
 
     public String getPassword() {
         return password;
-    }
-
-    public String getName() {
-        return name;
     }
 
     public UserRole getRole() {
