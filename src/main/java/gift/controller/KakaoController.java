@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.io.IOException;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
 import io.swagger.v3.oas.annotations.Operation;
@@ -31,6 +33,12 @@ public class KakaoController {
     @Value("${kakao.redirect-uri}")
     private String redirectUri;
 
+    @Value("${kakao.auth-base-url}")
+    private String authBaseUrl;
+
+    @Value("${kakao.scope}")
+    private String scope;
+
     @Autowired
     public KakaoController(KakaoService kakaoService) {
         this.kakaoService = kakaoService;
@@ -39,12 +47,15 @@ public class KakaoController {
     @GetMapping("/login")
     @Operation(summary = "Redirect to Kakao login", description = "Redirects the user to Kakao login page", tags = { "Kakao Authentication System" })
     public void redirectKakaoLogin(HttpServletResponse response) throws IOException {
-        String scope = "profile_nickname,profile_image";
-        String kakaoLoginUrl = String.format(
-                "https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=%s&redirect_uri=%s&scope=%s",
-                clientId, redirectUri, scope
-        );
-        response.sendRedirect(kakaoLoginUrl);
+        String encodedRedirectUri = URLEncoder.encode(redirectUri, StandardCharsets.UTF_8.toString());
+        String encodedScope = URLEncoder.encode(scope, StandardCharsets.UTF_8.toString());
+        StringBuilder kakaoLoginUrl = new StringBuilder(authBaseUrl)
+                .append("?response_type=code")
+                .append("&client_id=").append(clientId)
+                .append("&redirect_uri=").append(encodedRedirectUri)
+                .append("&scope=").append(encodedScope);
+
+        response.sendRedirect(kakaoLoginUrl.toString());
     }
 
     @GetMapping("/callback")
