@@ -21,6 +21,7 @@ import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -45,7 +46,7 @@ public class ProductController {
     @ApiResponse(
             responseCode = "200",
             description = "상품 목록을 조회합니다.",
-            content = @Content(mediaType = "application/json", schema = @Schema(contentSchema = PagedProductResponse.class))
+            content = @Content(mediaType = "application/json", schema = @Schema(implementation = PagedProductResponse.class))
     )
     public PagedProductResponse getAllProducts(
             @PageableDefault(size = 10) Pageable pageable
@@ -81,11 +82,12 @@ public class ProductController {
     }
 
     @PostMapping("/api/products")
+    @ResponseStatus(HttpStatus.CREATED)
     @Operation(summary = "상품 등록", description = "상품을 등록합니다.")
     @ApiResponses(
             value = {
                     @ApiResponse(
-                            responseCode = "200",
+                            responseCode = "201",
                             description = "상품을 등록합니다."
                     ),
                     @ApiResponse(
@@ -98,8 +100,7 @@ public class ProductController {
     public void addProduct(
             @Valid @RequestBody ProductCreateRequest request
     ) {
-        Product product = productOf(request);
-        productService.createProductWithCategory(product);
+        productService.createProductWithCategory(request.categoryName(), request.toDomain());
     }
 
     @PutMapping("/api/products/{id}")
@@ -139,13 +140,13 @@ public class ProductController {
         Product updatedProduct = originalProduct.applyUpdate(
                 request.name(),
                 request.price(),
-                request.imageUrl(),
-                ProductCategory.of(request.category())
+                request.imageUrl()
         );
-        productService.updateProduct(updatedProduct);
+        productService.updateProduct(request.categoryName(), updatedProduct);
     }
 
     @DeleteMapping("/api/products/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     @Operation(
             summary = "상품 삭제",
             description = "상품을 삭제합니다.",
@@ -156,7 +157,7 @@ public class ProductController {
     @ApiResponses(
             value = {
                     @ApiResponse(
-                            responseCode = "200",
+                            responseCode = "204",
                             description = "상품을 삭제합니다."
                     ),
                     @ApiResponse(
@@ -168,15 +169,5 @@ public class ProductController {
     )
     public void deleteProduct(@PathVariable Long id) {
         productService.remove(id);
-    }
-
-    private Product productOf(ProductCreateRequest request) {
-        return new Product(
-            0L,
-                request.name(),
-                request.price(),
-                request.imageUrl(),
-                ProductCategory.of(request.category())
-        );
     }
 }

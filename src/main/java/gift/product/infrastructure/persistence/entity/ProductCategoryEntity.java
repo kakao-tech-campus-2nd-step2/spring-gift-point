@@ -10,6 +10,15 @@ public class ProductCategoryEntity extends BaseEntity {
     @Column(name = "name", nullable = false, unique = true)
     private String name;
 
+    @Column(name = "color", nullable = false)
+    private String color;
+
+    @Column(name = "image_url", nullable = false)
+    private String imageUrl;
+
+    @Column(name = "description", nullable = false)
+    private String description;
+
     protected ProductCategoryEntity() {
     }
 
@@ -31,6 +40,6 @@ public class ProductCategoryEntity extends BaseEntity {
     }
 
     public ProductCategory toDomain() {
-        return new ProductCategory(getId(), name);
+        return new ProductCategory(getId(), name, color, imageUrl, description);
     }
 }

@@ -12,9 +12,9 @@ public interface ProductService {
 
     boolean exists(Long id);
 
-    void createProductWithCategory(@Nonnull Product product);
+    void createProductWithCategory(@Nonnull String categoryName, @Nonnull Product product);
 
-    void updateProduct(@Nonnull Product product);
+    void updateProduct(@Nonnull String categoryName, @Nonnull Product product);
 
     List<Product> findAll();
 

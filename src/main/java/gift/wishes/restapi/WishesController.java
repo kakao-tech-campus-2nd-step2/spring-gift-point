@@ -7,6 +7,7 @@ import gift.core.domain.product.ProductService;
 import gift.core.domain.wishes.WishesService;
 import gift.wishes.restapi.dto.request.AddWishRequest;
 import gift.wishes.restapi.dto.response.PagedWishResponse;
+import gift.wishes.service.WishDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -16,6 +17,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import org.springframework.data.domain.Pageable;
@@ -53,16 +55,17 @@ public class WishesController {
             @LoggedInUser Long userId,
             @PageableDefault(size = 10) Pageable pageable
     ) {
-        PagedDto<Product> pagedWishes = wishesService.getWishlistOfUser(userId, pageable);
+        PagedDto<WishDto> pagedWishes = wishesService.getWishlistOfUser(userId, pageable);
         return PagedWishResponse.from(pagedWishes);
     }
 
     @PostMapping("/api/wishes")
+    @ResponseStatus(HttpStatus.CREATED)
     @Operation(summary = "위시리스트 추가", description = "위시리스트에 상품을 추가합니다.")
     @ApiResponses(
             value = {
                     @ApiResponse(
-                            responseCode = "200",
+                            responseCode = "201",
                             description = "위시리스트에 상품을 추가합니다."
                     ),
                     @ApiResponse(
@@ -81,6 +84,7 @@ public class WishesController {
     }
 
     @DeleteMapping("/api/wishes/{productId}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     @Operation(
             summary = "위시리스트 삭제",
             description = "위시리스트에서 상품을 삭제합니다.",
@@ -91,7 +95,7 @@ public class WishesController {
     @ApiResponses(
             value = {
                     @ApiResponse(
-                            responseCode = "200",
+                            responseCode = "204",
                             description = "위시리스트에서 상품을 삭제합니다."
                     ),
                     @ApiResponse(

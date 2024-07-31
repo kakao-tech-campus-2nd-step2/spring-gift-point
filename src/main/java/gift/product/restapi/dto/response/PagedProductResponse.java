@@ -1,10 +1,13 @@
 package gift.product.restapi.dto.response;
 
+import com.fasterxml.jackson.databind.PropertyNamingStrategies;
+import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import gift.core.PagedDto;
 import gift.core.domain.product.Product;
 
 import java.util.List;
 
+@JsonNaming(value = PropertyNamingStrategies.SnakeCaseStrategy.class)
 public record PagedProductResponse(
         Integer page,
         Integer size,

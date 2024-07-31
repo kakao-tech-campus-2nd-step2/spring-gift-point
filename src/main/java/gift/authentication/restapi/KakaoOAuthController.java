@@ -24,7 +24,7 @@ public class KakaoOAuthController {
         this.oAuthService = oAuthService;
     }
 
-    @GetMapping("/api/oauth/kakao")
+    @GetMapping("/api/oauth2/kakao")
     @Operation(summary = "카카오 로그인 API", description = "카카오 로그인을 수행합니다.")
     @ApiResponses(
             value = {

@@ -53,13 +53,13 @@ public class WishesServiceImpl implements WishesService {
     }
 
     @Override
-    public List<Product> getWishlistOfUser(Long userId) {
+    public List<WishDto> getWishlistOfUser(Long userId) {
         User user = userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
         return List.copyOf(wishesRepository.getWishlistOfUser(user));
     }
 
     @Override
-    public PagedDto<Product> getWishlistOfUser(Long userId, Pageable pageable) {
+    public PagedDto<WishDto> getWishlistOfUser(Long userId, Pageable pageable) {
         User user = userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
         return wishesRepository.getWishlistOfUser(user, pageable);
     }

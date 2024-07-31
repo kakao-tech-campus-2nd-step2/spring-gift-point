@@ -1,5 +1,6 @@
 package gift.order.service;
 
+import gift.core.PagedDto;
 import gift.core.domain.order.Order;
 import gift.core.domain.order.OrderRepository;
 import gift.core.domain.order.OrderService;
@@ -9,6 +10,7 @@ import gift.core.domain.product.exception.OptionNotFoundException;
 import gift.core.domain.user.UserRepository;
 import gift.core.domain.user.exception.UserNotFoundException;
 import jakarta.transaction.Transactional;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -46,5 +48,10 @@ public class OrderServiceImpl implements OrderService {
         Order orderResult = orderRepository.save(order);
         orderAlarmGateway.sendAlarm(gatewayAccessToken, orderResult.message());
         return orderResult;
+    }
+
+    @Override
+    public PagedDto<Order> getOrdersOfUser(Long userId, Pageable pageable) {
+        return orderRepository.findAllByUserId(userId, pageable);
     }
 }

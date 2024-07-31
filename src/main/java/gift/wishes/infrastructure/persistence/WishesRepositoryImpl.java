@@ -10,6 +10,7 @@ import gift.product.infrastructure.persistence.repository.JpaProductRepository;
 import gift.product.infrastructure.persistence.entity.ProductEntity;
 import gift.user.infrastructure.persistence.repository.JpaUserRepository;
 import gift.user.infrastructure.persistence.entity.UserEntity;
+import gift.wishes.service.WishDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -42,7 +43,7 @@ public class WishesRepositoryImpl implements WishesRepository {
                 .findById(productId)
                 .orElseThrow(ProductNotFoundException::new);
 
-        jpaWishRepository.save(new WishEntity(user, product));
+        jpaWishRepository.save(new WishEntity(user, product, 1L));
     }
 
     @Override
@@ -56,18 +57,18 @@ public class WishesRepositoryImpl implements WishesRepository {
     }
 
     @Override
-    public List<Product> getWishlistOfUser(User user) {
+    public List<WishDto> getWishlistOfUser(User user) {
         return jpaWishRepository.findAllByUser(UserEntity.fromDomain(user))
                 .stream()
-                .map((entity -> entity.getProduct().toDomain()))
+                .map(WishEntity::toDto)
                 .toList();
     }
 
     @Override
-    public PagedDto<Product> getWishlistOfUser(User user, Pageable pageable) {
-        Page<Product> pagedProducts = jpaWishRepository
+    public PagedDto<WishDto> getWishlistOfUser(User user, Pageable pageable) {
+        Page<WishDto> pagedProducts = jpaWishRepository
                 .findAllByUser(UserEntity.fromDomain(user), pageable)
-                .map((entity -> entity.getProduct().toDomain()));
+                .map((WishEntity::toDto));
         return new PagedDto<>(
                 pageable.getPageNumber(),
                 pageable.getPageSize(),
