@@ -7,6 +7,7 @@ import gift.auth.exception.LoginFailedException;
 import gift.auth.token.AuthToken;
 import gift.auth.token.AuthTokenGenerator;
 import gift.member.dto.MemberResDto;
+import gift.member.entity.Member;
 import gift.member.service.MemberService;
 import org.springframework.stereotype.Service;
 
@@ -23,20 +24,16 @@ public class AuthService {
         this.kakaoApiClient = kakaoApiClient;
     }
 
-    public AuthToken login(String header, LoginReqDto loginReqDto) {
-
-        Long memberId = authTokenGenerator.extractMemberId(header);
-
+    public AuthToken login(LoginReqDto loginReqDto) {
         // 회원 정보 조회
-        MemberResDto member = memberService.getMember(memberId);
-        String password = memberService.getMemberPassword(memberId);
+        Member member = memberService.findMemberByEmailOrThrow(loginReqDto.email());
+        String password = member.getPassword();
 
-        // 이메일과 비밀번호가 일치하지 않으면 예외 발생
-        if (!member.email().equals(loginReqDto.email()) || !password.equals(loginReqDto.password())) {
+        if (!password.equals(loginReqDto.password())) {
             throw LoginFailedException.EXCEPTION;
         }
 
-        return authTokenGenerator.generateToken(member);
+        return authTokenGenerator.generateToken(new MemberResDto(member));
     }
 
     public AuthToken login(String code) {

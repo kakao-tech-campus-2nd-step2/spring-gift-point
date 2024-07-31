@@ -1,5 +1,7 @@
 package gift.member.controller;
 
+import gift.auth.dto.LoginReqDto;
+import gift.auth.service.AuthService;
 import gift.auth.token.AuthToken;
 import gift.member.dto.MemberReqDto;
 import gift.member.dto.MemberResDto;
@@ -23,19 +25,12 @@ import org.springframework.web.bind.annotation.RestController;
 @Tag(name = "회원 API", description = "회원 정보 관리 API")
 public class MemberController {
 
+    private final AuthService authService;
     private final MemberService memberService;
 
-    public MemberController(MemberService memberService) {
+    public MemberController(AuthService authService, MemberService memberService) {
+        this.authService = authService;
         this.memberService = memberService;
-    }
-
-    @GetMapping
-    @Operation(summary = "회원 목록 조회", description = "모든 회원 목록을 조회합니다.",
-            responses = {
-                    @ApiResponse(responseCode = "200", description = "회원 목록 조회 성공"),
-            })
-    public ResponseEntity<List<MemberResDto>> getMembers() {
-        return ResponseEntity.ok(memberService.getMembers());
     }
 
     @PostMapping("/register")
@@ -45,6 +40,25 @@ public class MemberController {
             })
     public ResponseEntity<AuthToken> register(@RequestBody MemberReqDto memberReqDto) {
         return ResponseEntity.ok(memberService.register(memberReqDto));
+    }
+
+    @PostMapping("/login")
+    @Operation(summary = "로그인", description = "이메일과 비밀번호로 로그인하고 JWT 토큰을 발급합니다.",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "로그인 성공"),
+            })
+    public ResponseEntity<AuthToken> login(@RequestBody LoginReqDto loginReqDto) {
+        AuthToken token = authService.login(loginReqDto);
+        return ResponseEntity.ok(token);
+    }
+
+    @GetMapping
+    @Operation(summary = "회원 목록 조회", description = "모든 회원 목록을 조회합니다.",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "회원 목록 조회 성공"),
+            })
+    public ResponseEntity<List<MemberResDto>> getMembers() {
+        return ResponseEntity.ok(memberService.getMembers());
     }
 
     @GetMapping("/{id}")
