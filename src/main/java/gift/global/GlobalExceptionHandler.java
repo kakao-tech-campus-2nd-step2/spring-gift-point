@@ -5,6 +5,7 @@ import gift.domain.option.exception.OptionValidException;
 import gift.global.exception.DuplicateException;
 import gift.global.exception.NotFoundException;
 import gift.kakaoApi.exception.KakaoApiException;
+import jakarta.validation.ConstraintViolationException;
 import java.util.ArrayList;
 import java.util.List;
 import org.springframework.http.HttpStatus;
@@ -18,12 +19,17 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(value = MemberAuthorizationException.class)
     public ResponseEntity<String> handleMemberException(Exception e) {
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(e.getMessage());
+    }
+
+    @ExceptionHandler(value = ConstraintViolationException.class)
+    public ResponseEntity<String> handleBlankException(Exception e){
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
     }
 
     @ExceptionHandler(NotFoundException.class)
     public ResponseEntity<String> handleNotFoundException(NotFoundException e) {
-        return ResponseEntity.status(HttpStatus.NOT_FOUND)
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
             .body(e.getMessage());
     }
 
