@@ -97,7 +97,7 @@ public class ProductController {
     public ResponseEntity<PageResponse<ProductResponse.ProductSummary>> getProductsPaging(
         @RequestParam(name = "SearchType", required = false, defaultValue = "ALL") SearchType searchType,
         @RequestParam(name = "SearchValue", required = false, defaultValue = "") String searchValue,
-        @RequestParam(name = "categoryId", required = false) Long categoryId,
+        @RequestParam(name = "categoryId") Long categoryId,
         @PageableDefault(page = 0, size = 5, sort = "id", direction = Sort.Direction.DESC) Pageable pageable
     ) {
         Page<ProductModel.Info> page = productService.getProductsPaging(searchType,

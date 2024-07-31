@@ -30,7 +30,7 @@ public class OptionService {
     @Transactional
     public List<OptionModel.Info> createOption(Long productId, RegisterMany command) {
         Product product = productRepository.findById(productId)
-            .orElseThrow(() -> new NotFoundException("Product not found"));
+            .orElseThrow(() -> new NotFoundException("존재하지 않는 상품입니다."));
         Options options = command.toOptions(product);
         var originOptions = optionRepository.findAllByProductId(productId);
 
@@ -42,7 +42,7 @@ public class OptionService {
     @Transactional(readOnly = true)
     public List<OptionModel.Info> getOptions(Long productId) {
         if (!productRepository.existsById(productId)) {
-            throw new NotFoundException("Product not found");
+            throw new NotFoundException("존재하지 않는 상품입니다.");
         }
 
         Options options = optionRepository.findAllByProductId(productId);
