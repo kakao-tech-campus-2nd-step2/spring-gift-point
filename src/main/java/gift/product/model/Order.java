@@ -68,7 +68,7 @@ public class Order {
     public String getMessage() {
         return message;
     }
-
+  
     public Member getMember() {
         return member;
     }
