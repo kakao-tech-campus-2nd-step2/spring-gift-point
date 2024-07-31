@@ -1,6 +1,6 @@
 package gift.controller;
 
-import gift.common.exception.InvalidTokenException;
+import gift.common.exception.unauthorized.TokenNotFoundException;
 import gift.dto.KakaoAccessToken;
 import gift.dto.KakaoProperties;
 import gift.dto.KakaoUserInfo;
@@ -39,12 +39,12 @@ public class KakaoController {
     public String kakaoCallback(@RequestParam(required = false) String code, Model model,
         HttpSession session) {
         if (code == null) {
-            throw new InvalidTokenException("Authorization code가 없습니다.");
+            throw new TokenNotFoundException();
         }
 
         KakaoAccessToken tokenResponse = kakaoService.getAccessToken(code);
         if (tokenResponse == null || tokenResponse.getAccessToken() == null) {
-            throw new InvalidTokenException("잘못된 access token");
+            throw new TokenNotFoundException();
         }
         String accessToken = tokenResponse.getAccessToken();
 
