@@ -21,6 +21,7 @@ public class KakaoUserClinet {
                 .baseUrl(kakaoProperties.getUserInfoUrl())
                 .build();
     }
+
     public KakaoInfoDto getUserInfo(String accessToken) throws JsonProcessingException {
         String responseBody = webClient.get()
                 .uri(uriBuilder -> uriBuilder
@@ -31,11 +32,10 @@ public class KakaoUserClinet {
                 .header(HttpHeaders.CONTENT_TYPE, HttpHeaderValues.APPLICATION_X_WWW_FORM_URLENCODED.toString())
                 .retrieve()
                 //TODO : Custom Exception
-                .onStatus(HttpStatusCode::is4xxClientError, clientResponse -> Mono.error(new RuntimeException("Invalid Parameter")))
-                .onStatus(HttpStatusCode::is5xxServerError, clientResponse -> Mono.error(new RuntimeException("Internal Server Error")))
+                .onStatus(HttpStatusCode::isError, clientResponse -> handleErrorResponse(clientResponse.statusCode()))
                 .bodyToMono(String.class)
                 .block();
-        System.out.println("respnse" + responseBody);
+
         ObjectMapper objectMapper = new ObjectMapper();
         KakaoInfoDto kakaoInfoDto = objectMapper.readValue(responseBody, KakaoInfoDto.class);
         return kakaoInfoDto;
@@ -50,8 +50,17 @@ public class KakaoUserClinet {
                 .header("Content-Type", "application/x-www-form-urlencoded")
                 .bodyValue("template_object=" + message)
                 .retrieve()
-                .onStatus(HttpStatusCode::is4xxClientError, clientResponse -> Mono.error(new RuntimeException("Invalid Parameter")))
-                .onStatus(HttpStatusCode::is5xxServerError, clientResponse -> Mono.error(new RuntimeException("Internal Server Error")))
+                .onStatus(HttpStatusCode::isError, clientResponse -> handleErrorResponse(clientResponse.statusCode()))
                 .bodyToMono(Integer.class);
+    }
+
+    private Mono<Throwable> handleErrorResponse(HttpStatusCode statusCode) {
+        if (statusCode.is4xxClientError()) {
+            return Mono.error(new RuntimeException("Invalid Parameter"));
+        }
+        if (statusCode.is5xxServerError()) {
+            return Mono.error(new RuntimeException("Internal Server Error"));
+        }
+        return Mono.error(new RuntimeException("Unexpected Error"));
     }
 }
