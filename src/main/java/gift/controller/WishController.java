@@ -38,9 +38,10 @@ public class WishController {
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
-    @DeleteMapping
-    public ResponseEntity<Void> removeFromWishList(@LoginMember Member member, @RequestParam Product product) {
-        wishService.deleteWish(product);
+    @Operation(summary = "위시리스트에서 삭제")
+    @DeleteMapping("/{product_id}")
+    public ResponseEntity<Void> removeFromWishList(@LoginMember Member member, @PathVariable Long product_id) {
+        wishService.deleteWish(member, product_id);
         return ResponseEntity.noContent().build();
     }
 }

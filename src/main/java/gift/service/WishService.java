@@ -27,7 +27,8 @@ public class WishService{
         wishRepository.save(wish);
     }
 
-    public void deleteWish(Product product) {
+    public void deleteWish(Member member, Long product_id) {
+        Product product = productService.getProduct(product_id);
         Wish wish = wishRepository.findByProduct(product);
         if(wish != null) {
             wish.setDeleted(true);
