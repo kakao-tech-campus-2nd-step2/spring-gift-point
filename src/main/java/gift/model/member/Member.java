@@ -70,6 +70,10 @@ public class Member extends BaseTimeEntity {
         return role;
     }
 
+    public Provider getProvider() {
+        return provider;
+    }
+
     public void changeProvider(Provider provider) {
         this.provider = provider;
     }
@@ -90,6 +94,7 @@ public class Member extends BaseTimeEntity {
         return new Member(id, email, PasswordUtil.hashPasswordWithSalt(password), name, role,
             provider);
     }
+
 
 }
 
