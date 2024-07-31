@@ -12,8 +12,6 @@ import gift.entity.Wish;
 import gift.repository.WishRepository;
 import jakarta.transaction.Transactional;
 import java.util.List;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 
 @Service

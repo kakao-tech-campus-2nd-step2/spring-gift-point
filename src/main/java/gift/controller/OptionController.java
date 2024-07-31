@@ -2,7 +2,6 @@ package gift.controller;
 
 import gift.dto.OptionRequest;
 import gift.dto.OptionResponse;
-import gift.dto.WishResponse;
 import gift.service.OptionService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
