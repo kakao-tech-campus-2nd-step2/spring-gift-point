@@ -4,6 +4,7 @@ import gift.domain.Option;
 import gift.domain.Product;
 import gift.dto.CreateProductDto;
 import gift.dto.ProductListDto;
+import gift.dto.ProductOptionDto;
 import gift.dto.UpdateProductDto;
 import gift.service.OptionService;
 import gift.service.ProductService;
@@ -50,10 +51,11 @@ public class ProductController {
     }
 
     // 특정 상품 조회
-    @GetMapping("/{product_id}")
-    public ResponseEntity<Product> getProduct(@PathVariable Long product_id) {
-        Product product = productService.getProduct(product_id);
-        return ResponseEntity.ok(product);
+    @Operation(summary = "특정 상품의 옵션 조회")
+    @GetMapping("/{product_id}/options")
+    public ResponseEntity<List<ProductOptionDto>> getProduct(@PathVariable Long product_id) {
+        List<ProductOptionDto> productOptions = productService.getProduct(product_id);
+        return ResponseEntity.ok(productOptions);
     }
 
     // 상품 정보 update

@@ -4,6 +4,7 @@ import gift.domain.Option;
 import gift.domain.Product;
 import gift.dto.CreateProductDto;
 import gift.dto.ProductListDto;
+import gift.dto.ProductOptionDto;
 import gift.dto.UpdateProductDto;
 import gift.repository.ProductRepository;
 import jakarta.persistence.EntityNotFoundException;
@@ -39,9 +40,10 @@ public class ProductService {
         return products.map(ProductListDto::new);
     }
 
-    public Product getProduct(Long productId) {
+    public List<ProductOptionDto> getProduct(Long productId) {
         Product product = productRepository.findById(productId).orElseThrow();
-        return product;
+        List<Option> options = product.getOptions();
+        return options.stream().map(ProductOptionDto::new).collect(Collectors.toList());
     }
 
     public Product updateProduct(Long productId, UpdateProductDto productDto) {
