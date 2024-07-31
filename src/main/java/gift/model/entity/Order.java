@@ -20,10 +20,6 @@ public class Order {
     @JoinColumn(name = "user_id")
     private User user;
     @Column
-    private Long targetId;
-    @Column
-    private Long itemId;
-    @Column
     private Long optionId;
     @Column
     private Long quantity;
@@ -35,22 +31,21 @@ public class Order {
     public Order() {
     }
 
-    public Order(Long id, User user, Long targetId, Long itemId, Long optionId, Long quantity,
+    public Order(Long id, User user, Long optionId, Long quantity,
         String message, LocalDateTime orderDateTime) {
         this.id = id;
         this.user = user;
-        this.targetId = targetId;
-        this.itemId = itemId;
+
         this.optionId = optionId;
         this.quantity = quantity;
         this.message = message;
         this.orderDateTime = orderDateTime;
     }
 
-    public Order(User user, Long targetId, Long itemId, Long optionId, Long quantity,
+    public Order(User user, Long optionId, Long quantity,
         String message,
         LocalDateTime orderDateTime) {
-        this(null, user, targetId, itemId, optionId, quantity, message, orderDateTime);
+        this(null, user, optionId, quantity, message, orderDateTime);
     }
 
 
@@ -60,14 +55,6 @@ public class Order {
 
     public User getUser() {
         return user;
-    }
-
-    public Long getTargetId() {
-        return targetId;
-    }
-
-    public Long getItemId() {
-        return itemId;
     }
 
     public Long getOptionId() {

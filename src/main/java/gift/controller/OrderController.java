@@ -9,7 +9,6 @@ import gift.service.OrderService;
 import gift.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import java.io.UnsupportedEncodingException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestAttribute;
@@ -30,14 +29,16 @@ public class OrderController {
         this.userService = userService;
     }
 
-    @Operation(summary = "상품 주문", description = "특정 상품을 주문하고 카카오 메시지를 주문 대상에게 전송합니다.")
+    @Operation(summary = "상품 주문", description = "특정 상품을 주문합니다.")
     @PostMapping
-    public ResponseEntity<OrderDTO> handleOrder(@RequestBody OrderForm form,
+    public ResponseEntity<?> handleOrderToMe(@RequestBody OrderForm form,
         @RequestAttribute("userId") Long userId)
-        throws UnsupportedEncodingException, JsonProcessingException {
+        throws JsonProcessingException {
         if (!userService.isKakaoUser(userId)) {
             throw new AccessDeniedException(ErrorCode.KAKAO_ACCESS_DENIED);
         }
-        return ResponseEntity.ok(orderService.executeOrder(userId, new OrderDTO(form)));
+        OrderDTO orderDTO = new OrderDTO(form, userId);
+        orderService.executeOrder(userId, orderDTO);
+        return ResponseEntity.ok().build();
     }
 }
