@@ -7,6 +7,7 @@ import gift.dto.response.MessageResponse;
 import gift.dto.response.WishProductResponse;
 import gift.service.WishListService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -26,6 +27,7 @@ public class WishListController {
 
     @GetMapping
     @Operation(summary = "위시 리스트 조회 api")
+    @ApiResponse(responseCode = "200", description = "위시 리스트 조회 성공")
     public ResponseEntity<Page<WishProductResponse>> getWishList(@Login LoginMember member, Pageable pageable) {
         Page<WishProductResponse> wishes = wishListService.getWishList(member.getId(), pageable);
         return ResponseEntity.ok(wishes);
@@ -33,12 +35,14 @@ public class WishListController {
 
     @PostMapping("/{productId}")
     @Operation(summary = "위시 상품 추가 api")
+    @ApiResponse(responseCode = "201", description = "위시 리스트에 위시 상품 추가 성공")
     public ResponseEntity<MessageResponse> addWishProduct(@Login LoginMember member, @PathVariable("productId") Long productId) {
         return ResponseEntity.ok(wishListService.addWishProduct(new WishProduct(member.getId(), productId)));
     }
 
     @DeleteMapping("/{productId}")
     @Operation(summary = "위시 리스트의 상품 삭제 api")
+    @ApiResponse(responseCode = "204", description = "위시 리스트의 상품 위시 취소(리스트에서 삭제) 성공")
     public ResponseEntity<MessageResponse> deleteWishProduct(@Login LoginMember member, @PathVariable("productId") Long productId) {
         return ResponseEntity.ok(wishListService.deleteWishProduct(new WishProduct(member.getId(), productId)));
     }
