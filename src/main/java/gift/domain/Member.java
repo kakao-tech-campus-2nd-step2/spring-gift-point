@@ -26,6 +26,10 @@ public class Member {
         this.accessToken = accessToken;
     }
 
+    public Member() {
+
+    }
+
     public String getEmail() {
         return email;
     }
