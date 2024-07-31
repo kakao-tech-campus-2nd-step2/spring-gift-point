@@ -55,7 +55,7 @@ public class OptionService {
     }
 
     private boolean checkIfDuplicatedOption(Long productID, OptionRequest option){
-        return optionRepository.existsByNameAndProductId(option.getOptionName(), productID);
+        return optionRepository.existsByNameAndProductId(option.getName(), productID);
     }
 
     public OptionResponse findByOptionID(Long optionID) {
