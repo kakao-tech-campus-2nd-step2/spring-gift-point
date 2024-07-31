@@ -2,6 +2,7 @@ package gift.product.service;
 
 import gift.core.PagedDto;
 import gift.core.domain.product.*;
+import gift.core.domain.product.exception.CategoryNotFoundException;
 import gift.core.domain.product.exception.ProductAlreadyExistsException;
 import gift.core.domain.product.exception.ProductNotFoundException;
 import gift.core.exception.ErrorCode;
@@ -43,7 +44,7 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     @Transactional
-    public void createProductWithCategory(@Nonnull Product product) {
+    public void createProductWithCategory(@Nonnull String categoryName, @Nonnull Product product) {
         if (productRepository.exists(product.id())) {
             throw new ProductAlreadyExistsException();
         }
@@ -52,15 +53,13 @@ public class ProductServiceImpl implements ProductService {
         }
         ProductCategory category = productCategoryRepository
                 .findByName(product.categoryName())
-                .orElseGet(
-                        () -> productCategoryRepository.save(ProductCategory.of(product.categoryName()))
-                );
+                .orElseThrow(CategoryNotFoundException::new);
         productRepository.save(product.withCategory(category));
     }
 
     @Override
     @Transactional
-    public void updateProduct(@Nonnull Product product) {
+    public void updateProduct(@Nonnull String categoryName, @Nonnull Product product) {
         if (!productRepository.exists(product.id())) {
             throw new ProductNotFoundException();
         }
@@ -69,9 +68,7 @@ public class ProductServiceImpl implements ProductService {
         }
         ProductCategory category = productCategoryRepository
                 .findByName(product.categoryName())
-                .orElseGet(
-                        () -> productCategoryRepository.save(ProductCategory.of(product.categoryName()))
-                );
+                .orElseThrow(CategoryNotFoundException::new);
         productRepository.save(product.withCategory(category));
     }
 

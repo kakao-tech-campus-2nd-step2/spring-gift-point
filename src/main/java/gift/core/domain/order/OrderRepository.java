@@ -7,6 +7,6 @@ public interface OrderRepository {
 
     Order save(Order order);
 
-    PagedDto<Order> findAll(Pageable pageable);
+    PagedDto<Order> findAllByUserId(Long userId, Pageable pageable);
 
 }

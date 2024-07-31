@@ -14,6 +14,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -37,7 +38,7 @@ public class ProductOptionController {
     @ApiResponse(
             responseCode = "200",
             description = "상품 옵션 목록을 조회합니다.",
-            content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = ProductOptionResponse.class)))
+            content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = ListedProductOptionResponse.class)))
     )
     public ListedProductOptionResponse getOptions(
             @PathVariable("productId") Long productId
@@ -46,6 +47,7 @@ public class ProductOptionController {
     }
 
     @PostMapping("/{productId}/options")
+    @ResponseStatus(HttpStatus.CREATED)
     @Operation(
             summary = "상품 옵션 등록",
             description = "상품에 옵션을 등록합니다.",
@@ -56,7 +58,7 @@ public class ProductOptionController {
     @ApiResponses(
             value = {
                     @ApiResponse(
-                            responseCode = "200",
+                            responseCode = "201",
                             description = "상품에 옵션을 등록합니다.",
                             content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))
                     ),
@@ -122,6 +124,7 @@ public class ProductOptionController {
     }
 
     @DeleteMapping("/{productId}/options/{optionId}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     @Operation(
             summary = "상품 옵션 삭제",
             description = "상품에서 옵션을 삭제합니다.",
@@ -133,7 +136,7 @@ public class ProductOptionController {
     @ApiResponses(
             value = {
                     @ApiResponse(
-                            responseCode = "200",
+                            responseCode = "204",
                             description = "상품에서 옵션을 삭제합니다.",
                             content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))
                     ),
@@ -154,10 +157,6 @@ public class ProductOptionController {
 
                     )
             }
-    )
-    @ApiResponse(
-            responseCode = "200",
-            description = "상품에서 옵션을 삭제합니다."
     )
     public void deleteOption(
             @PathVariable Long productId,

@@ -10,7 +10,7 @@ public record ProductResponse(
         String name,
         Integer price,
         String imageUrl,
-        String category
+        String categoryName
 ) {
     public static ProductResponse from(Product product) {
         return new ProductResponse(

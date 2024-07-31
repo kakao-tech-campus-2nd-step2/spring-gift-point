@@ -40,13 +40,13 @@ public class ProductServiceTests {
                 "test",
                 100,
                 "test.jpg",
-                ProductCategory.of("test")
+                null
         );
 
         when(productRepository.exists(0L)).thenReturn(false);
-        when(productCategoryRepository.findByName("test")).thenReturn(Optional.of(ProductCategory.of("test")));
+        when(productCategoryRepository.findByName("test")).thenReturn(Optional.of(sampleCategory()));
 
-        productService.createProductWithCategory(product);
+        productService.createProductWithCategory(sampleCategory().name(), product);
         verify(productRepository).save(product);
     }
 
@@ -58,12 +58,14 @@ public class ProductServiceTests {
                 "test",
                 100,
                 "test.jpg",
-                ProductCategory.of("test")
+                null
         );
 
         when(productRepository.exists(0L)).thenReturn(true);
 
-        assertThrows(ProductAlreadyExistsException.class, () -> productService.createProductWithCategory(product));
+        assertThrows(ProductAlreadyExistsException.class,
+                () -> productService.createProductWithCategory(sampleCategory().name(), product)
+        );
     }
 
     @Test
@@ -74,7 +76,7 @@ public class ProductServiceTests {
                 "test",
                 100,
                 "test.jpg",
-                ProductCategory.of("test")
+                null
         );
 
         when(productRepository.exists(productId)).thenReturn(true);
@@ -100,13 +102,13 @@ public class ProductServiceTests {
                 "test",
                 100,
                 "test.jpg",
-                ProductCategory.of("test")
+                null
         );
 
         when(productRepository.exists(0L)).thenReturn(true);
-        when(productCategoryRepository.findByName("test")).thenReturn(Optional.of(ProductCategory.of("test")));
+        when(productCategoryRepository.findByName("test")).thenReturn(Optional.of(sampleCategory()));
 
-        productService.updateProduct(product);
+        productService.updateProduct(sampleCategory().name(), product);
         verify(productRepository).save(product);
     }
 
@@ -118,12 +120,14 @@ public class ProductServiceTests {
                 "test",
                 100, 
                 "test.jpg",
-                ProductCategory.of("test")
+                null
         );
 
         when(productRepository.exists(0L)).thenReturn(false);
 
-        assertThrows(ProductNotFoundException.class, () -> productService.updateProduct(product));
+        assertThrows(ProductNotFoundException.class,
+                () -> productService.updateProduct(sampleCategory().name(), product)
+        );
     }
 
     @Test
@@ -142,5 +146,9 @@ public class ProductServiceTests {
         when(productRepository.exists(productId)).thenReturn(false);
 
         assertThrows(ProductNotFoundException.class, () -> productService.remove(productId));
+    }
+
+    private ProductCategory sampleCategory() {
+        return ProductCategory.of("test", "#6c95d1", "test.jpg", "test");
     }
 }

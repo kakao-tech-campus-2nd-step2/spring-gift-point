@@ -50,15 +50,14 @@ public class Product {
     public Product applyUpdate(
             @Nullable String name,
             @Nullable Integer price,
-            @Nullable String imageUrl,
-            @Nullable ProductCategory category
+            @Nullable String imageUrl
     ){
         return new Product(
                 this.id(),
                 name != null ? name : this.name,
                 price != null ? price : this.price,
                 imageUrl != null ? imageUrl : this.imageUrl,
-                category != null ? category : this.category
+                this.category
         );
     }
 

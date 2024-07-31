@@ -7,6 +7,6 @@ public interface OrderService {
 
     Order orderProduct(Order order, String gatewayAccessToken);
 
-    PagedDto<Order> findAll(Pageable pageable);
+    PagedDto<Order> getOrdersOfUser(Long userId, Pageable pageable);
 
 }

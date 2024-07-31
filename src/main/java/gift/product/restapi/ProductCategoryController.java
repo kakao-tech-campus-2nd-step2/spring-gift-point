@@ -15,6 +15,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -41,7 +42,7 @@ public class ProductCategoryController {
                     @ApiResponse(
                             responseCode = "200",
                             description = "카테고리 목록을 조회합니다.",
-                            content = @Content(mediaType = "application/json", schema = @Schema(contentSchema = PagedCategoryResponse.class))
+                            content = @Content(mediaType = "application/json", schema = @Schema(implementation = PagedCategoryResponse.class))
                     )
             }
     )
@@ -54,6 +55,7 @@ public class ProductCategoryController {
     }
 
     @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
     @Operation(
             summary = "카테고리 등록",
             description = "카테고리를 등록합니다."
@@ -61,7 +63,7 @@ public class ProductCategoryController {
     @ApiResponses(
             value = {
                     @ApiResponse(
-                            responseCode = "200",
+                            responseCode = "201",
                             description = "카테고리를 등록합니다."
                     ),
                     @ApiResponse(

@@ -2,6 +2,7 @@ package gift.product.restapi.dto.request;
 
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
+import gift.core.domain.product.Product;
 import gift.product.restapi.validator.NotContainingKaKao;
 import jakarta.validation.constraints.*;
 
@@ -13,6 +14,9 @@ public record ProductCreateRequest(
         String name,
         @NotNull @Positive Integer price,
         @NotBlank String imageUrl,
-        @NotBlank String category
+        @NotBlank String categoryName
 ) {
+    public Product toDomain() {
+        return new Product(null, name, price, imageUrl, null);
+    }
 }

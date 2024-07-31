@@ -43,7 +43,7 @@ public class WishesServiceTests {
                 "test",
                 100,
                 "test.jpg",
-                ProductCategory.of("test")
+                sampleCategory()
         );
     }
 
@@ -86,5 +86,9 @@ public class WishesServiceTests {
         when(wishesRepository.exists(1L, 1L)).thenReturn(false);
 
         assertThrows(WishNotFoundException.class, () -> wishesService.removeProductFromWishes(userId, sampleProduct));
+    }
+
+    private static ProductCategory sampleCategory() {
+        return ProductCategory.of("test", "#6c95d1", "test.jpg", "test");
     }
 }

@@ -45,7 +45,7 @@ public class WishRepositoryTests {
                 UserEntity.fromDomain(new User("test", new UserAccount("test", "test")))
         );
         category = jpaProductCategoryRepository.save(
-                ProductCategoryEntity.fromDomain(new ProductCategory(0L, "test"))
+                ProductCategoryEntity.fromDomain(sampleCategory())
         );
         product = jpaProductRepository.save(ProductEntity.fromDomain(
                 new Product(0L, "test", 100, "test", category.toDomain()))
@@ -54,7 +54,7 @@ public class WishRepositoryTests {
 
     @Test
     public void saveWish() {
-        WishEntity wish = WishEntity.of(user, product);
+        WishEntity wish = WishEntity.of(user, product, 1L);
 
         wish = jpaWishRepository.save(wish);
 
@@ -64,7 +64,7 @@ public class WishRepositoryTests {
 
     @Test
     public void removeWish() {
-        WishEntity wish = WishEntity.of(user, product);
+        WishEntity wish = WishEntity.of(user, product, 1L);
 
         wish = jpaWishRepository.save(wish);
 
@@ -74,7 +74,7 @@ public class WishRepositoryTests {
 
     @Test
     public void existsByUserIdAndProductId() {
-        WishEntity wish = WishEntity.of(user, product);
+        WishEntity wish = WishEntity.of(user, product, 1L);
 
         wish = jpaWishRepository.save(wish);
 
@@ -83,10 +83,14 @@ public class WishRepositoryTests {
 
     @Test
     public void findAllByUserId() {
-        WishEntity wish = WishEntity.of(user, product);
+        WishEntity wish = WishEntity.of(user, product, 1L);
 
         jpaWishRepository.save(wish);
 
         assertThat(jpaWishRepository.findAllByUser(user).size()).isEqualTo(1);
+    }
+
+    private static ProductCategory sampleCategory() {
+        return ProductCategory.of("test", "#6c95d1", "test.jpg", "test");
     }
 }

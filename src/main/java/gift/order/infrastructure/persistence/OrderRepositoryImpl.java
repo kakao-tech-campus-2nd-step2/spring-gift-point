@@ -21,9 +21,9 @@ public class OrderRepositoryImpl implements OrderRepository {
     }
 
     @Override
-    public PagedDto<Order> findAll(Pageable pageable) {
+    public PagedDto<Order> findAllByUserId(Long userId, Pageable pageable) {
         Page<Order> orders = jpaOrderRepository
-                .findAll(pageable)
+                .findAllByUserId(userId, pageable)
                 .map(OrderEntity::toDomain);
         return new PagedDto<>(
                 pageable.getPageNumber(),

@@ -6,8 +6,6 @@ import gift.authentication.restapi.dto.request.SignUpRequest;
 import gift.authentication.restapi.dto.response.LoginResponse;
 import gift.core.domain.authentication.AuthenticationService;
 import gift.core.domain.authentication.Token;
-import gift.core.domain.user.User;
-import gift.core.domain.user.UserAccount;
 import gift.core.domain.user.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -72,17 +70,6 @@ public class AuthenticationController {
             }
     )
     public void signUp(@RequestBody SignUpRequest request) {
-        userService.registerUser(userOf(request));
-    }
-
-    private User userOf(SignUpRequest request) {
-        return new User(
-                0L,
-                request.name(),
-                new UserAccount(
-                        request.email(),
-                        request.password()
-                )
-        );
+        userService.registerUser(request.toDomain());
     }
 }

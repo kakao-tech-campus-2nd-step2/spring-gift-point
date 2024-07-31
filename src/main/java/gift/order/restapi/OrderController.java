@@ -18,6 +18,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -31,6 +32,7 @@ public class OrderController {
     }
 
     @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
     @Operation(
             summary = "상품 주문",
             description = "상품을 주문합니다.",
@@ -42,12 +44,15 @@ public class OrderController {
                             schema = @Schema(type = "string"),
                             description = "카카오톡 메시지를 보내기 위한 액세스 토큰입니다."
                     )
-            }
+            },
+            requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
+                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = OrderRequest.class))
+            )
     )
     @ApiResponses(
             value = {
                     @ApiResponse(
-                            responseCode = "200",
+                            responseCode = "201",
                             description = "상품을 주문합니다.",
                             content = @Content(mediaType = "application/json", schema = @Schema(implementation = OrderResponse.class))
                     ),
@@ -76,16 +81,12 @@ public class OrderController {
                     @Parameter(name = "size", description = "페이지 크기 (기본 값 : 10)")
             }
     )
-    @ApiResponses(
-            value = {
-                    @ApiResponse(
-                            responseCode = "200",
-                            description = "주문 목록을 조회합니다.",
-                            content = @Content(mediaType = "application/json", schema = @Schema(contentSchema = PagedOrderResponse.class))
-                    )
-            }
+    @ApiResponse(
+            responseCode = "200",
+            description = "주문 목록을 조회합니다.",
+            content = @Content(mediaType = "application/json", schema = @Schema(implementation = PagedOrderResponse.class))
     )
-    public PagedOrderResponse getOrders(@PageableDefault Pageable pageable) {
-        return PagedOrderResponse.from(orderService.findAll(pageable));
+    public PagedOrderResponse getOrders(@LoggedInUser Long userId, @PageableDefault Pageable pageable) {
+        return PagedOrderResponse.from(orderService.getOrdersOfUser(userId, pageable));
     }
 }

@@ -28,7 +28,7 @@ public class ProductRepositoryTests {
     @BeforeEach
     public void setUp() {
         category = jpaProductCategoryRepository.save(
-                ProductCategoryEntity.fromDomain(new ProductCategory(0L, "test"))
+                ProductCategoryEntity.fromDomain(sampleCategory())
         );
     }
 
@@ -58,5 +58,9 @@ public class ProductRepositoryTests {
 
     private Product sampleProduct() {
         return new Product(0L, "test", 100, "test", category.toDomain());
+    }
+
+    private ProductCategory sampleCategory() {
+        return ProductCategory.of("test", "#6c95d1", "test.jpg", "test");
     }
 }

@@ -4,9 +4,11 @@ import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import gift.core.PagedDto;
 import gift.core.domain.order.Order;
+import io.swagger.v3.oas.annotations.media.Schema;
 
 import java.util.List;
 
+@Schema(name = "PagedOrderResponse", description = "주문 목록")
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public record PagedOrderResponse(
         List<OrderResponse> contents

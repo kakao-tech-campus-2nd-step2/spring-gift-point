@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.annotation.JsonNaming;
 
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public record AddWishRequest(
-        Long productId
+        Long productId,
+        Long quantity
 ) {
 }

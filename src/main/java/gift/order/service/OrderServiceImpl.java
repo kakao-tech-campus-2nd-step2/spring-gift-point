@@ -13,8 +13,6 @@ import jakarta.transaction.Transactional;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-
 @Service
 public class OrderServiceImpl implements OrderService {
     private final OrderRepository orderRepository;
@@ -53,7 +51,7 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public PagedDto<Order> findAll(Pageable pageable) {
-        return orderRepository.findAll(pageable);
+    public PagedDto<Order> getOrdersOfUser(Long userId, Pageable pageable) {
+        return orderRepository.findAllByUserId(userId, pageable);
     }
 }
