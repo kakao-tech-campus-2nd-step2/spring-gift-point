@@ -12,6 +12,7 @@ import gift.domain.category.entity.Category;
 import gift.domain.member.entity.Member;
 import gift.domain.member.repository.MemberRepository;
 import gift.domain.product.entity.Product;
+import gift.domain.product.exception.ProductNotFoundException;
 import gift.domain.product.repository.ProductRepository;
 import gift.domain.wishlist.dto.WishRequest;
 import gift.domain.wishlist.dto.WishResponse;
@@ -74,10 +75,14 @@ class WishServiceTest {
         assertAll(
             () -> assertThat(actual).isNotNull(),
             () -> IntStream.range(0, actual.getContent().size()).forEach(i -> {
-                assertThat(actual.getContent().get(i).memberId())
-                    .isEqualTo(expected.getContent().get(i).memberId());
-                assertThat(actual.getContent().get(i).productId())
-                    .isEqualTo(expected.getContent().get(i).productId());
+                assertThat(actual.getContent().get(i).id())
+                    .isEqualTo(expected.getContent().get(i).id());
+                assertThat(actual.getContent().get(i).name())
+                    .isEqualTo(expected.getContent().get(i).name());
+                assertThat(actual.getContent().get(i).price())
+                    .isEqualTo(expected.getContent().get(i).price());
+                assertThat(actual.getContent().get(i).imageUrl())
+                    .isEqualTo(expected.getContent().get(i).imageUrl());
             })
         );
     }
@@ -91,13 +96,10 @@ class WishServiceTest {
         Member savedMember = createMember();
         Product savedProduct = createProduct();
 
-        Wish saveWish = new Wish(savedMember, savedProduct, LocalDateTime.now());
-
         doReturn(Optional.of(savedMember)).when(memberRepository)
             .findById(wishRequest.getMemberId());
         doReturn(Optional.of(savedProduct)).when(productRepository)
             .findById(wishRequest.getProductId());
-        doReturn(saveWish).when(wishRepository).save(any(Wish.class));
 
         // when
         // then
@@ -114,15 +116,16 @@ class WishServiceTest {
         Wish wish = new Wish(savedMember, savedProduct, LocalDateTime.now());
 
         doReturn(Optional.of(savedProduct)).when(productRepository).findById(savedProduct.getId());
-        doReturn(Optional.of(wish)).when(wishRepository).findByProduct(savedProduct);
+        doReturn(Optional.of(wish)).when(wishRepository).findByProductAndMember(savedProduct,savedMember);
 
         assertDoesNotThrow(()->wishService.deleteWish(id, savedMember));
         verify(wishRepository, times(1)).delete(any(Wish.class));
     }
 
     private WishResponse entityToDto(Wish wish) {
-        return new WishResponse(wish.getId(), wish.getMember().getId(),
-            wish.getProduct().getId(), wish.getCreatedDate());
+        Product productInWish = wish.getProduct();
+        return new WishResponse(productInWish.getId(), productInWish.getName(),
+            productInWish.getPrice(), productInWish.getImageUrl());
     }
 
     Member createMember() {

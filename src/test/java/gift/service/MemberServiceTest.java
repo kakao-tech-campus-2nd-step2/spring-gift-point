@@ -1,6 +1,7 @@
 package gift.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.times;
@@ -74,10 +75,8 @@ class MemberServiceTest {
         doReturn(Optional.of(savedMember)).when(memberRepository).findByEmail(any(String.class));
 
         // when
-        String responseToken = memberService.login(memberRequest);
-
         // then
-        assertThat(responseToken).isNull();
+        assertThatThrownBy(()->memberService.login(memberRequest));
     }
 
     @Test
