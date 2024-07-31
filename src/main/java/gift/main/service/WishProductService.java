@@ -58,8 +58,9 @@ public class WishProductService {
     //주문으로 인한 위시 프로덕트 삭제 로직
     @Transactional
     public void deleteWishProductsFromOrders(OrderResponse orderResponse) {
+
         //위시리스트를 삭제해야한다.. 위시리스트..
-        if (wishProductRepository.existsByProductIdAndUserId(orderResponse.productId(), orderResponse.buyerId())) {
+        if (!wishProductRepository.existsByProductIdAndUserId(orderResponse.productId(), orderResponse.buyerId())) {
             return;
         }
         WishProduct wishProduct = wishProductRepository.findByProductIdAndUserId(orderResponse.productId(), orderResponse.buyerId()).get();
