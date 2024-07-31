@@ -21,7 +21,7 @@ public class MemberService {
     public String register(@Valid MemberDto memberDto) {
         validateNewMember(memberDto);
         String token = JwtUtility.generateToken(memberDto.getEmail());
-        Member member = new Member(memberDto.getEmail(), memberDto.getPassword(), token);
+        Member member = new Member(memberDto.getEmail(), memberDto.getPassword(), null);
         memberRepository.save(member);
         return token;
     }
@@ -39,15 +39,7 @@ public class MemberService {
         if (!existingMember.getPassword().equals(memberDto.getPassword())) {
             throw new NoSuchElementException("존재하지 않는 이메일 또는 잘못된 비밀번호입니다.");
         }
-        String token = JwtUtility.generateToken(existingMember.getEmail());
-        Member updatedMember = new Member(existingMember, token);
-        memberRepository.save(updatedMember);
-        return token;
-    }
-
-    public Member findByActiveToken(String token) {
-        return memberRepository.findByActiveToken(token)
-                .orElseThrow(() -> new NoSuchElementException("유효하지 않은 토큰입니다."));
+        return JwtUtility.generateToken(existingMember.getEmail());
     }
 
     public Member getMemberByEmail(String email) {
