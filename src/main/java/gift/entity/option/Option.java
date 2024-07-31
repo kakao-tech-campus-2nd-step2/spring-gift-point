@@ -1,6 +1,7 @@
-package gift.entity;
+package gift.entity.option;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import gift.entity.middle.ProductOption;
 import gift.entity.user.User;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;

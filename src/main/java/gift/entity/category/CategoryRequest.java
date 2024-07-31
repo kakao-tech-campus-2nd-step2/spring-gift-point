@@ -1,4 +1,4 @@
-package gift.entity;
+package gift.entity.category;
 
 
 import io.swagger.v3.oas.annotations.media.Schema;

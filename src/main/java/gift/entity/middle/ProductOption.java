@@ -1,5 +1,6 @@
-package gift.entity;
+package gift.entity.middle;
 
+import gift.entity.option.Option;
 import gift.entity.product.Product;
 import jakarta.persistence.*;
 

@@ -1,24 +1,24 @@
-package gift.entity;
+package gift.entity.category;
 
 
 public class CategoryDTO {
-    Long category_id;
+    Long id;
     private String name;
 
     public CategoryDTO(Category category) {
-        this.category_id = category.getId();
+        this.id = category.getId();
         this.name = category.getName();
     }
 
     public CategoryDTO() {
     }
 
-    public Long getCategory_id() {
-        return category_id;
+    public Long getId() {
+        return id;
     }
 
-    public void setCategory_id(Long category_id) {
-        this.category_id = category_id;
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getName() {

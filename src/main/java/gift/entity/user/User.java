@@ -1,5 +1,8 @@
-package gift.entity;
+package gift.entity.user;
 
+import gift.entity.option.Option;
+import gift.entity.order.Order;
+import gift.entity.product.Product;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
 

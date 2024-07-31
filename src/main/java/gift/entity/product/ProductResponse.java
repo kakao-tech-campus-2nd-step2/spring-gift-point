@@ -1,4 +1,8 @@
-package gift.entity;
+package gift.entity.product;
+
+import gift.entity.category.Category;
+import gift.entity.category.CategoryDTO;
+import gift.entity.option.Option;
 
 import java.util.List;
 

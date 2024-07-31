@@ -1,4 +1,4 @@
-package gift.entity;
+package gift.entity.user;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 

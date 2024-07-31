@@ -1,4 +1,4 @@
-package gift.entity;
+package gift.entity.product;
 
 import gift.validation.constraint.NameConstraint;
 import io.swagger.v3.oas.annotations.media.Schema;
