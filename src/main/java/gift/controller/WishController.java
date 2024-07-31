@@ -8,7 +8,7 @@ import gift.entity.User;
 import gift.service.WishService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import org.springframework.data.domain.Pageable;
+import jakarta.validation.constraints.Min;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 @Tag(name = "Wishes", description = "위시리스트 관련 API")
 public class WishController {
     private final WishService wishService;
+    private static final int DEFAULT_SIZE = 20;
 
     public WishController(WishService wishService) {
         this.wishService = wishService;
@@ -32,8 +33,8 @@ public class WishController {
 
     @GetMapping
     @Operation(summary = "위시리스트 조회", description = "사용자의 모든 위시리스트 항목을 조회합니다.")
-    public ResponseEntity<WishPageResponseDto> getWishesByUserId(@LoginMember User loginUser, Pageable pageable) {
-        WishPageResponseDto wishList = wishService.getWishesByUserId(loginUser.getId(), pageable);
+    public ResponseEntity<WishPageResponseDto> getWishesByUserId(@LoginMember User loginUser, @RequestParam(defaultValue = "0") @Min(0) int page) {
+        WishPageResponseDto wishList = wishService.getWishesByUserId(loginUser.getId(), page, DEFAULT_SIZE);
         return new ResponseEntity<>(wishList, HttpStatus.OK);
     }
 

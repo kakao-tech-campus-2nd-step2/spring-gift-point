@@ -16,7 +16,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 @SpringBootTest
@@ -73,8 +73,8 @@ public class OrderServiceTest {
         ProductOption productOption = productOptionRepository.save(new ProductOption(product, option, 10));
         OrderRequestDto orderRequestDto = new OrderRequestDto(productOption.getId(), 2, "Test Message");
 
-        OrderService orderService = new OrderService(orderRepository, productOptionRepository, userRepository, wishRepository, kakaoApiClient, tokenService);
-        OrderResponseDto orderResponseDto = orderService.createOrder("Bearer jwtToken", "Bearer kakaoAccessToken", orderRequestDto);
+        OrderService orderService = new OrderService(orderRepository, productOptionRepository, userRepository, wishRepository, kakaoApiClient);
+        OrderResponseDto orderResponseDto = orderService.createOrder(testUser, "Bearer kakaoAccessToken", orderRequestDto);
 
         assertNotNull(orderResponseDto);
         assertEquals(productOption.getId(), orderResponseDto.getProductOptionId());
@@ -95,9 +95,9 @@ public class OrderServiceTest {
         ProductOption productOption = productOptionRepository.save(new ProductOption(product, option, 1));
         OrderRequestDto orderRequestDto = new OrderRequestDto(productOption.getId(), 2, "Test Message");
 
-        OrderService orderService = new OrderService(orderRepository, productOptionRepository, userRepository, wishRepository, kakaoApiClient, tokenService);
+        OrderService orderService = new OrderService(orderRepository, productOptionRepository, userRepository, wishRepository, kakaoApiClient);
 
-        assertThrows(BusinessException.class, () -> orderService.createOrder("Bearer jwtToken", "Bearer kakaoAccessToken", orderRequestDto));
+        assertThrows(BusinessException.class, () -> orderService.createOrder(testUser, "Bearer kakaoAccessToken", orderRequestDto));
     }
 
     @Test
@@ -113,8 +113,8 @@ public class OrderServiceTest {
         ProductOption productOption = productOptionRepository.save(new ProductOption(product, option, 10));
         OrderRequestDto orderRequestDto = new OrderRequestDto(productOption.getId(), 2, "Test Message");
 
-        OrderService orderService = new OrderService(orderRepository, productOptionRepository, userRepository, wishRepository, kakaoApiClient, tokenService);
-        orderService.createOrder("Bearer jwtToken", "Bearer kakaoAccessToken", orderRequestDto);
+        OrderService orderService = new OrderService(orderRepository, productOptionRepository, userRepository, wishRepository, kakaoApiClient);
+        orderService.createOrder(testUser, "Bearer kakaoAccessToken", orderRequestDto);
 
         verify(kakaoApiClient, times(1)).sendMessageToMe(anyString(), any(Order.class));
     }

@@ -51,13 +51,8 @@ public class LoginMemberArgumentResolver implements HandlerMethodArgumentResolve
         String userType = userInfo.get("userType");
         String id = userInfo.get("id");
 
-        Optional<User> user = findUserByIdAndType(id, userType);
-
-        if (user.isEmpty()) {
-            throw new BusinessException(ErrorCode.USER_NOT_FOUND);
-        }
-
-        return user.get();
+        return findUserByIdAndType(id, userType)
+                .orElseThrow(() -> new BusinessException(ErrorCode.USER_NOT_FOUND));
     }
 
     private Optional<User> findUserByIdAndType(String id, String userType) {

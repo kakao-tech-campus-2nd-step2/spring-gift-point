@@ -41,6 +41,12 @@ public class ProductOption {
         this.quantity = quantity;
     }
 
+    public void update(Option option, int quantity) {
+        validateQuantity(quantity);
+        this.option = option;
+        this.quantity = quantity;
+    }
+
     public void updateQuantity(int quantity) {
         validateQuantity(quantity);
         this.quantity = quantity;

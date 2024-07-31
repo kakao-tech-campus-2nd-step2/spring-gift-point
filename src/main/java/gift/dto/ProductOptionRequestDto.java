@@ -1,25 +1,21 @@
 package gift.dto;
 
+import gift.entity.OptionName;
+
 public class ProductOptionRequestDto {
-    private Long productId;
-    private Long optionId;
+    private OptionName optionName;
     private int quantity;
 
     public ProductOptionRequestDto() {
     }
 
-    public ProductOptionRequestDto(Long productId, Long optionId, int quantity) {
-        this.productId = productId;
-        this.optionId = optionId;
+    public ProductOptionRequestDto(OptionName optionName, int quantity) {
+        this.optionName = optionName;
         this.quantity = quantity;
     }
 
-    public Long getProductId() {
-        return productId;
-    }
-
-    public Long getOptionId() {
-        return optionId;
+    public OptionName getOptionName() {
+        return optionName;
     }
 
     public int getQuantity() {

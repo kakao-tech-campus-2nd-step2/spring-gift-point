@@ -108,7 +108,7 @@
 </div>
 <script>
     document.addEventListener("DOMContentLoaded", function () {
-        fetch('/api/users')
+        fetch('/api/members')
             .then(response => response.json())
             .then(data => {
                 const userTableBody = document.getElementById("userTableBody");
@@ -130,7 +130,7 @@
     });
 
     function deleteUser(id) {
-        fetch(`/api/users/${id}`, {method: 'DELETE'})
+        fetch(`/api/members/${id}`, {method: 'DELETE'})
             .then(response => {
                 if (response.ok) {
                     alert('회원이 삭제되었습니다.');

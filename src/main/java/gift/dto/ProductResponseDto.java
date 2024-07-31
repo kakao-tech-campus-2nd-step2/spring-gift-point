@@ -5,14 +5,14 @@ public class ProductResponseDto {
     private final String name;
     private final int price;
     private final String imageUrl;
-    private final CategoryResponseDto category;
+    private final Long categoryId;
 
-    public ProductResponseDto(Long id, String name, int price, String imageUrl, CategoryResponseDto category) {
+    public ProductResponseDto(Long id, String name, int price, String imageUrl, Long categoryId) {
         this.id = id;
         this.name = name;
         this.price = price;
         this.imageUrl = imageUrl;
-        this.category = category;
+        this.categoryId = categoryId;
     }
 
     public Long getId() {
@@ -31,7 +31,7 @@ public class ProductResponseDto {
         return imageUrl;
     }
 
-    public CategoryResponseDto getCategory() {
-        return category;
+    public Long getCategoryId() {
+        return categoryId;
     }
 }

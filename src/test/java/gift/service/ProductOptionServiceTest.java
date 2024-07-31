@@ -63,16 +63,11 @@ public class ProductOptionServiceTest {
         return productRepository.save(new Product(new ProductName(productRequestDto.getName()), productRequestDto.getPrice(), productRequestDto.getImageUrl(), categoryService.getCategoryEntityById(categoryId)));
     }
 
-    private Option createOption(String optionName) {
-        OptionRequestDto optionRequestDto = new OptionRequestDto(optionName);
-        return optionRepository.save(new Option(new OptionName(optionRequestDto.getName())));
-    }
-
-    private ProductOption createProductOption(String optionName, int quantity) {
-        Long categoryId = createCategory();
-        Product product = createProduct(categoryId);
-        Option option = createOption(optionName);
-
+    private ProductOption createProductOption(Long productId, String optionName, int quantity) {
+        Product product = productRepository.findById(productId)
+                .orElseThrow(() -> new BusinessException(ErrorCode.PRODUCT_NOT_FOUND, "ID: " + productId));
+        Option option = optionRepository.findByName(new OptionName(optionName))
+                .orElseGet(() -> optionRepository.save(new Option(new OptionName(optionName))));
         return productOptionRepository.save(new ProductOption(product, option, quantity));
     }
 
@@ -80,30 +75,29 @@ public class ProductOptionServiceTest {
     @Rollback
     public void 상품_옵션_추가_성공() {
         Long categoryId = createCategory();
-        Product product = createProduct(categoryId);
-        Option option = createOption("옵션1");
+        Long productId = createProduct(categoryId).getId();
+        String optionName = "옵션1";
+        int quantity = 10;
 
-        ProductOptionRequestDto productOptionRequestDto = new ProductOptionRequestDto(product.getId(), option.getId(), 10);
-        ProductOptionResponseDto createdProductOption = productOptionService.addProductOption(productOptionRequestDto);
+        ProductOptionRequestDto productOptionRequestDto = new ProductOptionRequestDto(new OptionName(optionName), quantity);
+        ProductOptionResponseDto createdProductOption = productOptionService.addProductOption(productId, productOptionRequestDto);
 
         assertNotNull(createdProductOption);
         assertEquals("상품1", createdProductOption.getProductName());
-        assertEquals("옵션1", createdProductOption.getOptionName());
-        assertEquals(10, createdProductOption.getQuantity());
+        assertEquals(optionName, createdProductOption.getOptionName());
+        assertEquals(quantity, createdProductOption.getQuantity());
     }
 
     @Test
     @Rollback
     public void 상품_옵션_조회_성공() {
         Long categoryId = createCategory();
-        Product product = createProduct(categoryId);
-        Option option1 = createOption("옵션1");
-        Option option2 = createOption("옵션2");
+        Long productId = createProduct(categoryId).getId();
 
-        productOptionRepository.save(new ProductOption(product, option1, 10));
-        productOptionRepository.save(new ProductOption(product, option2, 20));
+        createProductOption(productId, "옵션1", 10);
+        createProductOption(productId, "옵션2", 20);
 
-        List<ProductOptionResponseDto> productOptions = productOptionService.getProductOptions(product.getId());
+        List<ProductOptionResponseDto> productOptions = productOptionService.getProductOptions(productId);
 
         assertEquals(2, productOptions.size());
         assertEquals("옵션1", productOptions.get(0).getOptionName());
@@ -115,10 +109,12 @@ public class ProductOptionServiceTest {
     @Test
     @Rollback
     public void 상품_옵션_수정_성공() {
-        ProductOption productOption = createProductOption("옵션1", 10);
+        Long categoryId = createCategory();
+        Long productId = createProduct(categoryId).getId();
+        ProductOption productOption = createProductOption(productId, "옵션1", 10);
 
-        ProductOptionRequestDto updateRequestDto = new ProductOptionRequestDto(productOption.getProduct().getId(), productOption.getOption().getId(), 20);
-        ProductOptionResponseDto updatedProductOption = productOptionService.updateProductOption(productOption.getId(), updateRequestDto);
+        ProductOptionRequestDto updateRequestDto = new ProductOptionRequestDto(new OptionName("옵션1"), 20);
+        ProductOptionResponseDto updatedProductOption = productOptionService.updateProductOption(productId, productOption.getId(), updateRequestDto);
 
         assertNotNull(updatedProductOption);
         assertEquals(20, updatedProductOption.getQuantity());
@@ -127,9 +123,11 @@ public class ProductOptionServiceTest {
     @Test
     @Rollback
     public void 상품_옵션_삭제_성공() {
-        ProductOption productOption = createProductOption("옵션1", 10);
+        Long categoryId = createCategory();
+        Long productId = createProduct(categoryId).getId();
+        ProductOption productOption = createProductOption(productId, "옵션1", 10);
 
-        productOptionService.deleteProductOption(productOption.getId());
+        productOptionService.deleteProductOption(productId, productOption.getId());
 
         assertFalse(productOptionRepository.findById(productOption.getId()).isPresent());
     }
@@ -137,7 +135,9 @@ public class ProductOptionServiceTest {
     @Test
     @Rollback
     public void 상품_옵션_수량_감소_성공() {
-        ProductOption productOption = createProductOption("옵션1", 10);
+        Long categoryId = createCategory();
+        Long productId = createProduct(categoryId).getId();
+        ProductOption productOption = createProductOption(productId, "옵션1", 10);
 
         productOptionService.decreaseProductOptionQuantity(productOption.getId(), 5);
 
@@ -148,7 +148,9 @@ public class ProductOptionServiceTest {
     @Test
     @Rollback
     public void 상품_옵션_수량_감소_실패_수량부족() {
-        ProductOption productOption = createProductOption("옵션1", 10);
+        Long categoryId = createCategory();
+        Long productId = createProduct(categoryId).getId();
+        ProductOption productOption = createProductOption(productId, "옵션1", 10);
 
         BusinessException exception = assertThrows(BusinessException.class, () -> {
             productOptionService.decreaseProductOptionQuantity(productOption.getId(), 15);
@@ -160,7 +162,9 @@ public class ProductOptionServiceTest {
     @Test
     @Rollback
     public void 상품_옵션_수량_감소_실패_음수() {
-        ProductOption productOption = createProductOption("옵션1", 10);
+        Long categoryId = createCategory();
+        Long productId = createProduct(categoryId).getId();
+        ProductOption productOption = createProductOption(productId, "옵션1", 10);
 
         BusinessException exception = assertThrows(BusinessException.class, () -> {
             productOptionService.decreaseProductOptionQuantity(productOption.getId(), -1);
@@ -176,9 +180,9 @@ public class ProductOptionServiceTest {
         int decreaseAmount = 1;
         int threadCount = 5;
 
-        ProductOption productOption = createProductOption("옵션1", initialQuantity);
-
-        productOptionRepository.save(productOption);
+        Long categoryId = createCategory();
+        Long productId = createProduct(categoryId).getId();
+        ProductOption productOption = createProductOption(productId, "옵션1", initialQuantity);
 
         ExecutorService executorService = Executors.newFixedThreadPool(threadCount);
         CountDownLatch latch = new CountDownLatch(threadCount);

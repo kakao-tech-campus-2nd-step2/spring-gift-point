@@ -1,5 +1,7 @@
 package gift.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import java.time.LocalDateTime;
 
 public class OrderResponseDto {
@@ -9,7 +11,7 @@ public class OrderResponseDto {
     private LocalDateTime orderDateTime;
     private String message;
 
-    public OrderResponseDto(Long id, Long productOptionId, int quantity, LocalDateTime orderDateTime, String message) {
+    public OrderResponseDto(Long id, @JsonProperty("OptionId") Long productOptionId, int quantity, LocalDateTime orderDateTime, String message) {
         this.id = id;
         this.productOptionId = productOptionId;
         this.quantity = quantity;

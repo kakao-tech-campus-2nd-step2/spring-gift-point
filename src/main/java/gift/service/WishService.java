@@ -13,6 +13,7 @@ import gift.mapper.ProductMapper;
 import gift.mapper.WishMapper;
 import gift.repository.WishRepository;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -44,8 +45,9 @@ public class WishService {
     }
 
     @Transactional(readOnly = true)
-    public WishPageResponseDto getWishesByUserId(Long userId, Pageable pageable) {
+    public WishPageResponseDto getWishesByUserId(Long userId, int page, int size) {
         User user = userService.getUserEntityById(userId);
+        Pageable pageable = PageRequest.of(page, size);
         Page<Wish> wishes = wishRepository.findByUser(user, pageable);
         List<Long> productIds = wishes.stream()
                 .map(wish -> wish.getProduct().getId())

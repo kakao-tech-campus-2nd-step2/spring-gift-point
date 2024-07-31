@@ -49,7 +49,7 @@ public class UserControllerTest {
                 .contentType(ContentType.JSON)
                 .body(userRegisterDto)
                 .when()
-                .post("/api/users/register")
+                .post("/api/members/register")
                 .then()
                 .statusCode(HttpStatus.CREATED.value())
                 .body("email", equalTo("user@example.com"));
@@ -62,7 +62,7 @@ public class UserControllerTest {
 
         given()
                 .when()
-                .get("/api/users")
+                .get("/api/members")
                 .then()
                 .statusCode(HttpStatus.OK.value())
                 .body("[0].email", equalTo("user@example.com"));
@@ -76,7 +76,7 @@ public class UserControllerTest {
 
         given()
                 .when()
-                .delete("/api/users/{id}", userId)
+                .delete("/api/members/{id}", userId)
                 .then()
                 .statusCode(HttpStatus.NO_CONTENT.value());
     }

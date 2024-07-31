@@ -2,16 +2,16 @@ package gift.dto;
 
 public class ProductOptionResponseDto {
     private Long id;
-    private String productName;
+    private Long productId;
     private String optionName;
     private int quantity;
 
     public ProductOptionResponseDto() {
     }
 
-    public ProductOptionResponseDto(Long id, String productName, String optionName, int quantity) {
+    public ProductOptionResponseDto(Long id, Long productId, String optionName, int quantity) {
         this.id = id;
-        this.productName = productName;
+        this.productId = productId;
         this.optionName = optionName;
         this.quantity = quantity;
     }
@@ -20,8 +20,8 @@ public class ProductOptionResponseDto {
         return id;
     }
 
-    public String getProductName() {
-        return productName;
+    public Long getProductId() {
+        return productId;
     }
 
     public String getOptionName() {
