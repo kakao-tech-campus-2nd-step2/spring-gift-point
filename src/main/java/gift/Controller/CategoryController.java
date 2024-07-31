@@ -37,7 +37,7 @@ public class CategoryController {
         responseCode = "200",
         description = "모든 카테고리 가져오기 성공"
     )
-    @GetMapping("/api/category")
+    @GetMapping("/api/categories")
     public ResponseEntity<List<Category>> getCategory(){
         return ResponseEntity.ok().body(categoryService.getAllCategory());
     }
@@ -51,7 +51,7 @@ public class CategoryController {
         description = "해당 카테고리 가져오기 성공"
     )
     @Parameter(name = "categoryId", description = "해당하는 카테고리 ID")
-    @GetMapping("/api/category/{categoryId}")
+    @GetMapping("/api/categories/{categoryId}")
     public ResponseEntity<Category> getCategoryById(@PathVariable(value = "categoryId") Long categoryId){
         return ResponseEntity.ok().body(categoryService.getCategoryById(categoryId));
     }
@@ -65,7 +65,7 @@ public class CategoryController {
         description = "카테고리 추가 성공"
     )
     @Parameter(name = "category", description = "추가할 새로운 카테고리")
-    @PostMapping("/api/category")
+    @PostMapping("/api/categories")
     public ResponseEntity<Category> addCategory(@RequestBody CategoryDTO categoryDTO){
         return ResponseEntity.ok().body(categoryService.addCategory(categoryDTO));
     }
@@ -79,7 +79,7 @@ public class CategoryController {
         description = "카테고리 수정 성공"
     )
     @Parameter(name = "category", description = "해당하는 카테고리 ID")
-    @PutMapping("/api/category")
+    @PutMapping("/api/categories")
     public ResponseEntity<Category> updateCategory(@RequestBody CategoryDTO categoryDTO){
         return ResponseEntity.ok().body(categoryService.updateCategory(categoryDTO));
     }
@@ -93,7 +93,7 @@ public class CategoryController {
         description = "카테고리 삭제 성공"
     )
     @Parameter(name = "categoryId", description = "해당하는 카테고리 ID")
-    @DeleteMapping("/api/category/{categoryId}")
+    @DeleteMapping("/api/categories/{categoryId}")
     public ResponseEntity<Category> deleteCategory(@PathVariable(value = "categoryId") Long categoryId){
         return ResponseEntity.ok().body(categoryService.deleteCategory(categoryId));
     }
