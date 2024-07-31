@@ -12,6 +12,7 @@ import gift.product.ProductRepository;
 import gift.product.dto.ProductResponseDTO;
 import gift.product.entity.Product;
 import gift.token.JwtProvider;
+import gift.wishlist.dto.ProductIdRequestDTO;
 import gift.wishlist.entity.Wishlist;
 import java.util.List;
 import org.springframework.data.domain.Page;
@@ -65,8 +66,9 @@ public class WishlistService {
         return new PageImpl<>(wishlistProducts, pageable, wishlistProducts.size());
     }
 
-    public void addWishlist(String token, long productId) {
-        Pair<Product, Member> verified = verifyTokenAndProductId(token, productId);
+    public void addWishlist(String token, ProductIdRequestDTO productIdRequestDTO) {
+        Pair<Product, Member> verified = verifyTokenAndProductId(token,
+            productIdRequestDTO.getProductId());
 
         wishlistRepository.findByProductAndMember(verified.getFirst(), verified.getSecond())
             .ifPresent(e -> {
