@@ -49,14 +49,13 @@ public class ProductController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ProductResponse> getProduct(@PathVariable long id) {
-        ProductResponse product = productService.findById(id);
-        return ResponseEntity.ok(product);
-    }
-
-    @GetMapping("/new")
-    public ResponseEntity<ProductRequest> addProductForm() {
-        return ResponseEntity.ok(new ProductRequest("", 0, "", 1L, null));
+    public ResponseEntity<?> getProduct(@PathVariable long id) {
+        try {
+            ProductResponse product = productService.findById(id);
+            return ResponseEntity.ok(product);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(404).body(e.getMessage());
+        }
     }
 
     @PostMapping
@@ -75,19 +74,27 @@ public class ProductController {
             productService.update(id, productRequest);
             return ResponseEntity.ok().build();
         } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
+            return ResponseEntity.status(404).body(e.getMessage());
         }
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteProduct(@PathVariable Long id) {
-        productService.delete(id);
-        return ResponseEntity.ok().build();
+        try {
+            productService.delete(id);
+            return ResponseEntity.ok().build();
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(404).body(e.getMessage());
+        }
     }
 
     @PostMapping("/delete-batch")
     public ResponseEntity<?> deleteBatch(@RequestBody Map<String, List<Long>> request) {
-        productService.deleteBatch(request.get("ids"));
-        return ResponseEntity.ok("Success");
+        try {
+            productService.deleteBatch(request.get("ids"));
+            return ResponseEntity.ok("Success");
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(404).body(e.getMessage());
+        }
     }
 }
