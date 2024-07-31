@@ -4,8 +4,11 @@ import gift.DTO.MemberDto;
 import gift.DTO.WishListDto;
 import gift.LoginUser;
 import gift.Service.WishListService;
+import java.net.URI;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Direction;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -15,7 +18,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 @RestController
 @RequestMapping("/api/wishes")
@@ -29,31 +31,24 @@ public class WishController {
 
   @GetMapping
   public ResponseEntity<Page<WishListDto>> getWishList(
-    @PageableDefault(size = 5) Pageable pageable) {
+    @PageableDefault(size = 10, sort = "wishId", direction = Direction.DESC) Pageable pageable) {
     Page<WishListDto> wishList = wishListService.getWishList(pageable);
 
     return ResponseEntity.ok(wishList);
   }
 
   @PostMapping
-  public ResponseEntity<WishListDto> addProductToWishList(@RequestBody WishListDto wishListDto,
+  public ResponseEntity<WishListDto> addProductToWishList(@RequestBody Long productId,
     @LoginUser MemberDto memberDto) {
 
-    WishListDto addedWishProduct = wishListService.addProductToWishList(wishListDto);
-
-    // 생성된 리소스의 URI를 빌드
-    var location = ServletUriComponentsBuilder.fromCurrentRequest()
-      .path("/{id}")
-      .buildAndExpand(addedWishProduct.getId())
-      .toUri();
-
-    return ResponseEntity.created(location).body(addedWishProduct);
+    wishListService.addProductToWishList(productId);
+    return ResponseEntity.created(URI.create("/productId")).build();
   }
 
   @DeleteMapping("/{id}")
   public ResponseEntity<Void> deleteProductToWishList(@PathVariable Long id) {
     wishListService.deleteProductToWishList(id);
-    return ResponseEntity.noContent().build();
+    return ResponseEntity.ok().build();
 
   }
 

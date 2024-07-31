@@ -26,8 +26,7 @@ public class ConverterToDto {
 
   public static WishListDto convertToWishListDto(WishList wishList) {
     ProductDto productDto = convertToProductDto(wishList.getProduct());
-    MemberDto memberDto = convertToUserDto(wishList.getMember());
-    WishListDto wishListDto = new WishListDto(wishList.getId(), memberDto, productDto);
+    WishListDto wishListDto = new WishListDto(wishList.getWishId(), productDto);
     return wishListDto;
   }
 

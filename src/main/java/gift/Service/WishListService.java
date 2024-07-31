@@ -27,14 +27,12 @@ public class WishListService {
     this.productRepository = productRepository;
   }
 
-  public WishListDto addProductToWishList(WishListDto wishListDto) {
-    Long memberId = wishListDto.getMemberDto().getId();
-    Long productId = wishListDto.getProductDto().getId();
-    Member member = memberRepository.getById(memberId);
-    Product product = productRepository.getById(productId);
-    WishList wishList = new WishList(member, product);
+  public void addProductToWishList(Long productId) {
+    Product product = productRepository.findById(productId)
+      .orElseThrow(()->new EmptyResultDataAccessException("해당 데이터가 없습니다", 1));
+
+    WishList wishList = new WishList(product);
     wishListRepository.save(wishList);
-    return wishListDto;
   }
 
   public Page<WishListDto> getWishList(Pageable pageable) {

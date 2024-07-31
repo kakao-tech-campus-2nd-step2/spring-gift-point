@@ -43,7 +43,7 @@ public class OrderService {
       .orElseThrow(() -> new EmptyResultDataAccessException("해당 상품이 없습니다", 1));
     List<WishList> wishLists = product.getWishlists();
     for (WishList wishList : wishLists) {
-      wishListService.deleteProductToWishList(wishList.getId());
+      wishListService.deleteProductToWishList(wishList.getWishId());
     }
 
     KakaoJwtToken kakaoJwtToken = kakaoJwtTokenRepository.findById(1L)

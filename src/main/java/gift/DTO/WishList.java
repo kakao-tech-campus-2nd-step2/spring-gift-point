@@ -15,37 +15,27 @@ public class WishList {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private Long id;
+  private Long wishId;
 
   @ManyToOne(cascade = CascadeType.MERGE)
   @JoinColumn(name = "product_id")
   private Product product;
 
-  @ManyToOne
-  @JoinColumn(name = "member_id")
-  private Member member;
-
   protected WishList() {
   }
 
-  public WishList(Long id, Member member, Product product) {
-    this.id = id;
-    this.member = member;
+  public WishList(Long wishId, Product product) {
+    this.wishId = wishId;
     this.product = product;
   }
 
-  public WishList(Member member, Product product) {
-    this.member = member;
+  public WishList(Product product) {
     this.product = product;
   }
 
 
-  public Long getId() {
-    return this.id;
-  }
-
-  public Member getMember() {
-    return this.member;
+  public Long getWishId() {
+    return this.wishId;
   }
 
   public Product getProduct() {
