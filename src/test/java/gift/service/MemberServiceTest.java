@@ -13,9 +13,10 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import gift.dto.member.MemberEditRequest;
+import gift.dto.member.MemberEditResponse;
 import gift.dto.member.MemberLoginRequest;
 import gift.dto.member.MemberRegisterRequest;
-import gift.dto.member.MemberResponse;
+import gift.dto.member.MemberAuthResponse;
 import gift.exception.member.EmailAlreadyUsedException;
 import gift.exception.member.ForbiddenException;
 import gift.model.Member;
@@ -55,7 +56,7 @@ public class MemberServiceTest {
         when(memberRepository.save(any(Member.class))).thenReturn(savedMember);
         when(jwtUtil.generateToken(1L, "test@example.com")).thenReturn("mockedToken");
 
-        MemberResponse response = memberService.registerMember(memberRegisterRequest);
+        MemberAuthResponse response = memberService.registerMember(memberRegisterRequest);
         assertEquals("test@example.com", response.email());
         assertNotNull(response.token());
     }
@@ -88,7 +89,7 @@ public class MemberServiceTest {
         when(memberRepository.findByEmail("test@example.com")).thenReturn(Optional.of(member));
         when(jwtUtil.generateToken(1L, "test@example.com")).thenReturn("mockedToken");
 
-        MemberResponse response = memberService.loginMember(memberLoginRequest);
+        MemberAuthResponse response = memberService.loginMember(memberLoginRequest);
         assertEquals("test@example.com", response.email());
         assertNotNull(response.token());
     }
@@ -132,7 +133,7 @@ public class MemberServiceTest {
         Member member = new Member(1L, "test@example.com", "password", RegisterType.DEFAULT);
         when(memberRepository.findAll()).thenReturn(List.of(member));
 
-        List<MemberResponse> members = memberService.getAllMembers();
+        List<MemberEditResponse> members = memberService.getAllMembers();
         assertEquals(1, members.size());
         assertEquals("test@example.com", members.getFirst().email());
     }
@@ -143,7 +144,7 @@ public class MemberServiceTest {
         Member member = new Member(1L, "test@example.com", "password", RegisterType.DEFAULT);
         when(memberRepository.findById(1L)).thenReturn(Optional.of(member));
 
-        MemberResponse memberDTO = memberService.getMemberById(1L);
+        MemberAuthResponse memberDTO = memberService.getMemberById(1L);
         assertEquals("test@example.com", memberDTO.email());
     }
 
@@ -174,7 +175,7 @@ public class MemberServiceTest {
         when(memberRepository.save(any(Member.class))).thenReturn(
             new Member(1L, "new@example.com", "newpassword", RegisterType.DEFAULT));
 
-        MemberResponse response = memberService.updateMember(1L, memberEditRequest);
+        MemberAuthResponse response = memberService.updateMember(1L, memberEditRequest);
         assertEquals("new@example.com", response.email());
     }
 

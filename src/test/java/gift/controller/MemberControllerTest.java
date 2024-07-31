@@ -10,7 +10,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import gift.dto.member.MemberLoginRequest;
 import gift.dto.member.MemberRegisterRequest;
-import gift.dto.member.MemberResponse;
+import gift.dto.member.MemberAuthResponse;
 import gift.exception.member.EmailAlreadyUsedException;
 import gift.exception.member.ForbiddenException;
 import gift.model.RegisterType;
@@ -37,18 +37,18 @@ public class MemberControllerTest {
     @MockBean
     private TokenValidator tokenValidator;
 
-    private MemberResponse memberResponse;
+    private MemberAuthResponse memberAuthResponse;
 
     @BeforeEach
     public void setUp() {
-        memberResponse = new MemberResponse(1L, "test@example.com", "token", RegisterType.DEFAULT);
+        memberAuthResponse = new MemberAuthResponse(1L, "test@example.com", "token", RegisterType.DEFAULT);
     }
 
     @Test
     @DisplayName("회원가입 테스트")
     public void testRegister() throws Exception {
         when(memberService.registerMember(any(MemberRegisterRequest.class))).thenReturn(
-            memberResponse);
+            memberAuthResponse);
 
         mockMvc.perform(post("/api/members/register")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -73,7 +73,7 @@ public class MemberControllerTest {
     @Test
     @DisplayName("로그인 테스트")
     public void testLogin() throws Exception {
-        when(memberService.loginMember(any(MemberLoginRequest.class))).thenReturn(memberResponse);
+        when(memberService.loginMember(any(MemberLoginRequest.class))).thenReturn(memberAuthResponse);
 
         mockMvc.perform(post("/api/members/login")
                 .contentType(MediaType.APPLICATION_JSON)

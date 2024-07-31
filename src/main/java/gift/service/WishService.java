@@ -4,7 +4,8 @@ import static gift.util.constants.WishConstants.ALREADY_EXISTS;
 import static gift.util.constants.WishConstants.PERMISSION_DENIED;
 import static gift.util.constants.WishConstants.WISH_NOT_FOUND;
 
-import gift.dto.member.MemberResponse;
+import gift.dto.member.MemberAuthResponse;
+import gift.dto.member.MemberEditResponse;
 import gift.dto.product.ProductResponse;
 import gift.dto.wish.WishCreateRequest;
 import gift.dto.wish.WishResponse;
@@ -44,8 +45,8 @@ public class WishService {
     }
 
     public WishResponse addWish(WishCreateRequest wishCreateRequest, Long memberId) {
-        MemberResponse memberResponse = memberService.getMemberById(memberId);
-        Member member = memberService.convertToEntity(memberResponse);
+        MemberEditResponse memberEditResponse = memberService.getMemberById(memberId);
+        Member member = memberService.convertToEntity(memberEditResponse);
 
         ProductResponse productResponse = productService.getProductById(
             wishCreateRequest.productId()

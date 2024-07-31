@@ -1,9 +1,9 @@
 package gift.controller.admin;
 
 import gift.dto.member.MemberEditRequest;
+import gift.dto.member.MemberEditResponse;
 import gift.dto.member.MemberRegisterRequest;
-import gift.dto.member.MemberResponse;
-import gift.model.RegisterType;
+import gift.dto.member.MemberAuthResponse;
 import gift.service.MemberService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -40,7 +40,7 @@ public class MemberAdminController {
     @Operation(summary = "회원 추가 폼", description = "새로운 회원을 추가하는 폼을 보여줍니다.")
     @GetMapping("/new")
     public String showAddMemberForm(Model model) {
-        model.addAttribute("member", new MemberRegisterRequest("", "", RegisterType.DEFAULT));
+        model.addAttribute("member", new MemberRegisterRequest("", ""));
         return "member_form";
     }
 
@@ -60,10 +60,10 @@ public class MemberAdminController {
     @Operation(summary = "회원 수정 폼", description = "기존 회원 정보를 수정하는 폼을 보여줍니다.")
     @GetMapping("/{id}/edit")
     public String showEditMemberForm(@PathVariable("id") Long id, Model model) {
-        MemberResponse memberResponse = memberService.getMemberById(id);
+        MemberEditResponse memberEditResponse = memberService.getMemberById(id);
         model.addAttribute(
             "member",
-            new MemberEditRequest(memberResponse.id(), memberResponse.email(), null, memberResponse.registerType())
+            new MemberEditRequest(memberEditResponse.id(), memberEditResponse.email(), null, memberEditResponse.registerType())
         );
         return "member_edit";
     }

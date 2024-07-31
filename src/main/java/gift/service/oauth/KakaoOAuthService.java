@@ -3,15 +3,15 @@ package gift.service.oauth;
 import static gift.util.constants.auth.KakaoOAuthConstants.TOKEN_NOT_FOUND;
 
 import gift.client.KakaoApiClient;
+import gift.dto.member.MemberOAuthResponse;
 import gift.dto.member.MemberRegisterRequest;
-import gift.dto.member.MemberResponse;
+import gift.dto.member.MemberAuthResponse;
 import gift.dto.oauth.KakaoScopeResponse;
 import gift.dto.oauth.KakaoTokenResponse;
 import gift.dto.oauth.KakaoUnlinkResponse;
 import gift.dto.oauth.KakaoUserResponse;
 import gift.exception.member.EmailAlreadyUsedException;
 import gift.exception.oauth.KakaoTokenNotFoundException;
-import gift.model.RegisterType;
 import gift.model.oauth.KakaoToken;
 import gift.repository.TokenRepository;
 import gift.service.MemberService;
@@ -74,14 +74,13 @@ public class KakaoOAuthService {
     }
 
     @Transactional
-    public MemberResponse registerOrLoginKakaoUser(KakaoUserResponse userResponse) {
+    public MemberOAuthResponse registerOrLoginKakaoUser(KakaoUserResponse userResponse) {
         try {
             MemberRegisterRequest registerRequest = new MemberRegisterRequest(
                 userResponse.email(),
-                "KAKAO_LOGIN",
-                RegisterType.KAKAO
+                "KAKAO_LOGIN"
             );
-            return memberService.registerMember(registerRequest);
+            return memberService.registerKakaoMember(registerRequest);
         } catch (EmailAlreadyUsedException e) {
             return memberService.loginKakaoMember(userResponse.email());
         }

@@ -1,6 +1,7 @@
 package gift.service;
 
-import gift.dto.member.MemberResponse;
+import gift.dto.member.MemberAuthResponse;
+import gift.dto.member.MemberEditResponse;
 import gift.dto.option.OptionResponse;
 import gift.dto.order.OrderRequest;
 import gift.dto.order.OrderResponse;
@@ -49,8 +50,8 @@ public class OrderService {
         OrderDetail orderDetail = new OrderDetail(option, orderRequest.quantity(), orderRequest.message(), LocalDateTime.now());
         OrderDetail savedOrderDetail = orderRepository.save(orderDetail);
 
-        MemberResponse memberResponse = memberService.getMemberById(memberId);
-        if (memberResponse.registerType() == RegisterType.KAKAO) {
+        MemberEditResponse memberEditResponse = memberService.getMemberById(memberId);
+        if (memberEditResponse.registerType() == RegisterType.KAKAO) {
             sendKakaoMessage(savedOrderDetail, memberId);
         }
 

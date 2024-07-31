@@ -6,12 +6,15 @@ import static gift.util.constants.MemberConstants.INVALID_CREDENTIALS;
 import static gift.util.constants.MemberConstants.INVALID_REGISTER_TYPE;
 
 import gift.dto.member.MemberEditRequest;
+import gift.dto.member.MemberEditResponse;
 import gift.dto.member.MemberLoginRequest;
+import gift.dto.member.MemberOAuthResponse;
 import gift.dto.member.MemberRegisterRequest;
-import gift.dto.member.MemberResponse;
+import gift.dto.member.MemberAuthResponse;
 import gift.exception.member.EmailAlreadyUsedException;
 import gift.exception.member.ForbiddenException;
 import gift.model.Member;
+import gift.model.RegisterType;
 import gift.repository.MemberRepository;
 import gift.util.JWTUtil;
 import java.util.List;
@@ -31,7 +34,7 @@ public class MemberService {
         this.jwtUtil = jwtUtil;
     }
 
-    public MemberResponse registerMember(MemberRegisterRequest memberRegisterRequest) {
+    public MemberAuthResponse registerMember(MemberRegisterRequest memberRegisterRequest) {
         if (memberRepository.existsByEmail(memberRegisterRequest.email())) {
             throw new EmailAlreadyUsedException(EMAIL_ALREADY_USED);
         }
@@ -39,21 +42,31 @@ public class MemberService {
         Member member = new Member(
             memberRegisterRequest.email(),
             memberRegisterRequest.password(),
-            memberRegisterRequest.registerType()
+            RegisterType.DEFAULT
         );
         Member savedMember = memberRepository.save(member);
         String token = jwtUtil.generateToken(savedMember.getId(), member.getEmail());
 
-        if (!savedMember.isRegisterTypeDefault()) {
-            savedMember.update(
-                savedMember.getEmail(),
-                token
-            );
-        }
-        return new MemberResponse(savedMember.getId(), savedMember.getEmail(), token, savedMember.getRegisterType());
+        return new MemberAuthResponse(savedMember.getEmail(), token);
     }
 
-    public MemberResponse loginMember(MemberLoginRequest memberLoginRequest) {
+    public MemberOAuthResponse registerKakaoMember(MemberRegisterRequest memberRegisterRequest) {
+        if (memberRepository.existsByEmail(memberRegisterRequest.email())) {
+            throw new EmailAlreadyUsedException(EMAIL_ALREADY_USED);
+        }
+
+        Member member = new Member(
+            memberRegisterRequest.email(),
+            memberRegisterRequest.password(),
+            RegisterType.KAKAO
+        );
+        Member savedMember = memberRepository.save(member);
+        String token = jwtUtil.generateToken(savedMember.getId(), member.getEmail());
+
+        return new MemberOAuthResponse(savedMember.getId(), savedMember.getEmail(), token, savedMember.getRegisterType());
+    }
+
+    public MemberAuthResponse loginMember(MemberLoginRequest memberLoginRequest) {
         Member member = memberRepository.findByEmail(memberLoginRequest.email())
             .orElseThrow(() -> new ForbiddenException(INVALID_CREDENTIALS));
 
@@ -66,10 +79,10 @@ public class MemberService {
         }
 
         String token = jwtUtil.generateToken(member.getId(), member.getEmail());
-        return new MemberResponse(member.getId(), member.getEmail(), token, member.getRegisterType());
+        return new MemberAuthResponse(member.getEmail(), token);
     }
 
-    public MemberResponse loginKakaoMember(String email) {
+    public MemberOAuthResponse loginKakaoMember(String email) {
         Member member = memberRepository.findByEmail(email)
             .orElseThrow(() -> new ForbiddenException(INVALID_CREDENTIALS));
 
@@ -78,24 +91,24 @@ public class MemberService {
         }
 
         String token = jwtUtil.generateToken(member.getId(), member.getEmail());
-        return new MemberResponse(member.getId(), member.getEmail(), token, member.getRegisterType());
+        return new MemberOAuthResponse(member.getId(), member.getEmail(), token, member.getRegisterType());
     }
 
     @Transactional(readOnly = true)
-    public List<MemberResponse> getAllMembers() {
+    public List<MemberEditResponse> getAllMembers() {
         return memberRepository.findAll().stream()
             .map(this::convertToDTO)
             .collect(Collectors.toList());
     }
 
     @Transactional(readOnly = true)
-    public MemberResponse getMemberById(Long id) {
+    public MemberEditResponse getMemberById(Long id) {
         return memberRepository.findById(id)
             .map(this::convertToDTO)
             .orElseThrow(() -> new ForbiddenException(INVALID_CREDENTIALS));
     }
 
-    public MemberResponse updateMember(Long id, MemberEditRequest memberEditRequest) {
+    public MemberEditResponse updateMember(Long id, MemberEditRequest memberEditRequest) {
         Member member = memberRepository.findById(id)
             .orElseThrow(() -> new ForbiddenException(INVALID_CREDENTIALS));
 
@@ -124,11 +137,11 @@ public class MemberService {
     }
 
     // Mapper methods
-    public Member convertToEntity(MemberResponse memberResponse) {
-        return new Member(memberResponse.id(), memberResponse.email(), null, memberResponse.registerType());
+    public Member convertToEntity(MemberEditResponse memberEditResponse) {
+        return new Member(memberEditResponse.id(), memberEditResponse.email(), null, memberEditResponse.registerType());
     }
 
-    private MemberResponse convertToDTO(Member member) {
-        return new MemberResponse(member.getId(), member.getEmail(), null, member.getRegisterType());
+    private MemberEditResponse convertToDTO(Member member) {
+        return new MemberEditResponse(member.getId(), member.getEmail(), null, member.getRegisterType());
     }
 }

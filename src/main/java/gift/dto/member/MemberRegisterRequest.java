@@ -14,11 +14,7 @@ public record MemberRegisterRequest(
 
     @NotNull(message = REQUIRED_FIELD_MISSING)
     @Schema(description = "회원 비밀번호", example = "admin")
-    String password,
-
-    @NotNull(message = REQUIRED_FIELD_MISSING)
-    @Schema(description = "회원 등록 유형", example = "DEFAULT")
-    RegisterType registerType
+    String password
 ) {
 
 }
