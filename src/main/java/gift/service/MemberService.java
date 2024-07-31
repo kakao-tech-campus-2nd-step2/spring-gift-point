@@ -1,6 +1,7 @@
 package gift.service;
 
-
+import gift.dto.KakaoTokenResponseDTO;
+import gift.dto.KakaoUserDTO;
 import gift.dto.LoginResponseDTO;
 import gift.dto.MemberRequestDTO;
 import gift.dto.MemberResponseDTO;
@@ -8,7 +9,6 @@ import gift.exception.DuplicateException;
 import gift.model.Member;
 import gift.repository.MemberRepository;
 import gift.util.JwtUtil;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -20,14 +20,26 @@ public class MemberService {
     @Autowired
     private MemberRepository memberRepository;
 
+    @Autowired
+    private KakaoAuthService kakaoAuthService;
+
     // 회원 가입 메서드
-    public void register(MemberRequestDTO memberRequestDTO) {
+    public LoginResponseDTO register(MemberRequestDTO memberRequestDTO) {
         if (memberRepository.findByEmail(memberRequestDTO.getEmail()).isPresent()) {
             throw new DuplicateException("이미 존재하는 회원입니다.");
         }
-        Member member = memberRequestDTO.toEntity();
+
+        // 카카오 인증 코드로 토큰 발급 및 사용자 정보 조회
+        KakaoTokenResponseDTO tokenResponse = kakaoAuthService.getKakaoToken(memberRequestDTO.getCode());
+        KakaoUserDTO kakaoUserDTO = kakaoAuthService.getKakaoUser(tokenResponse.getAccessToken());
+
+        Member member = new Member(memberRequestDTO.getEmail(), memberRequestDTO.getPassword());
         memberRepository.save(member);
+
+        String token = JwtUtil.generateToken(member.getEmail());
+        return new LoginResponseDTO(token);
     }
+
 
     // 사용자 인증 메서드
     public LoginResponseDTO authenticate(MemberRequestDTO memberRequestDTO) {

@@ -9,20 +9,25 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/members")
 public class MemberController {
 
     @Autowired
     private MemberService memberService;
 
+    // 회원가입 및 로그인
     @PostMapping("/register")
-    public ResponseEntity<Void> register(@RequestBody MemberRequestDTO memberRequestDTO) {
-        memberService.register(memberRequestDTO);
-        return new ResponseEntity<>(HttpStatus.CREATED);
+    public ResponseEntity<LoginResponseDTO> register(@RequestBody MemberRequestDTO memberRequestDTO) {
+        try {
+            LoginResponseDTO loginResponse = memberService.register(memberRequestDTO);
+            return ResponseEntity.status(HttpStatus.CREATED).body(loginResponse);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+        }
     }
 
     // 사용자 로그인
-    @PostMapping("/login/token")
+    @PostMapping("/login")
     public ResponseEntity<LoginResponseDTO> login(@RequestBody MemberRequestDTO memberRequestDTO) {
         try {
             LoginResponseDTO response = memberService.authenticate(memberRequestDTO);
@@ -32,3 +37,4 @@ public class MemberController {
         }
     }
 }
+
