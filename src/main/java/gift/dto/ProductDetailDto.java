@@ -1,7 +1,5 @@
 package gift.dto;
 
-import gift.model.Product;
-
 public class ProductDetailDto {
     private String name;
     private int price;
