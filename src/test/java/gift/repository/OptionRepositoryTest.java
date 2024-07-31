@@ -2,9 +2,12 @@ package gift.repository;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import gift.model.Category;
-import gift.model.Option;
-import gift.model.Product;
+import gift.category.model.Category;
+import gift.category.repository.CategoryRepository;
+import gift.option.model.Option;
+import gift.product.model.Product;
+import gift.option.repository.OptionRepository;
+import gift.product.repository.ProductRepository;
 import java.util.List;
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
