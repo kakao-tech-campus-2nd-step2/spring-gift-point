@@ -35,9 +35,11 @@ public class AuthController {
         return new RedirectView(authService.getKakaoAuthUrl());
     }
 
-    @GetMapping("/kakao/login")
-    public ResponseEntity<SimpleResultResponseDto> kakaoLogin(@RequestParam("code") String code) throws JsonProcessingException {
+    @GetMapping("/kakao/callback")
+    public ResponseEntity<Void> kakaoLogin(@RequestParam("code") String code) throws JsonProcessingException {
         HttpHeaders headers = authService.kakaoLogin(code);
-        return ResponseHelper.createSimpleResponse(ResultCode.LOGIN_SUCCESS, headers);
+        return ResponseEntity.status(200)
+                .headers(headers)
+                .build();
     }
 }
