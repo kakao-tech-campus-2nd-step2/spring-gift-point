@@ -9,7 +9,9 @@ import gift.service.ProductService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
@@ -43,11 +45,20 @@ public class ProductController {
         return productService.findAllProducts();
     }
 
+    @Operation(summary = "특정 제품 조회", description = "특정 제품의 정보를 조회합니다.")
+    @GetMapping("/{productId}")
+    public ResponseEntity<ProductDTO> getProductById(@PathVariable Long productId) {
+        ProductDTO productDTO = productService.getProductById(productId);
+        return ResponseEntity.ok(productDTO);
+    }
+
     @Operation(summary = "제품 옵션 조회", description = "특정 제품의 옵션을 조회합니다.")
     @GetMapping("/{productId}/options")
-    public ResponseEntity<List<OptionDTO>> getOptions(@PathVariable Long productId) {
+    public ResponseEntity<Map<String, Object>> getOptions(@PathVariable Long productId) {
         List<OptionDTO> options = optionService.getOptionsByProductId(productId);
-        return ResponseEntity.ok(options);
+        Map<String, Object> response = new HashMap<>();
+        response.put("options", options);
+        return ResponseEntity.ok(response);
     }
 
     @Operation(summary = "제품 옵션 추가", description = "특정 제품에 새로운 옵션을 추가합니다.")
