@@ -1,11 +1,11 @@
 package gift.wish.model;
 
-public record WishResponse(Long productId, Integer count) {
+public record WishResponse(Long id, Long productId) {
 
     public static WishResponse from(Wish wish) {
         return new WishResponse(
-            wish.getProduct().getId(),
-            wish.getCount()
+            wish.getId(),
+            wish.getProduct().getId()
         );
     }
 }

@@ -9,7 +9,7 @@ import gift.product.model.Product;
 import gift.wish.model.Wish;
 import gift.wish.model.WishRequest;
 import gift.wish.model.WishResponse;
-import java.util.List;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,11 +26,9 @@ public class WishService {
     }
 
     @Transactional(readOnly = true)
-    public List<WishResponse> getWishList(LoginMemberDto loginMemberDto, Pageable pageable) {
-        return wishRepository.findAllByMemberId(loginMemberDto.getId(),
-                pageable)
-            .map(WishResponse::from)
-            .getContent();
+    public Page<WishResponse> getWishList(LoginMemberDto loginMemberDto, Pageable pageable) {
+        return wishRepository.findAllByMemberId(loginMemberDto.getId(), pageable)
+            .map(WishResponse::from);
     }
 
     @Transactional
@@ -38,7 +36,7 @@ public class WishService {
         throws ProductException {
         Product product = productRepository.findById(wishRequest.productId())
             .orElseThrow(() -> new ProductException(ProductErrorCode.NOT_FOUND));
-        Wish wish = new Wish(loginMemberDto.toEntity(), product, wishRequest.count());
+        Wish wish = new Wish(loginMemberDto.toEntity(), product);
         wishRepository.save(wish);
         return wish.getId();
     }
@@ -49,11 +47,7 @@ public class WishService {
         Wish wish = wishRepository.findById(wishId)
             .orElseThrow(() -> new WishException(WishErrorCode.NOT_FOUND));
         wish.validateMember(loginMemberDto.getId());
-        if (wishRequest.isCountZero()) {
-            wishRepository.deleteById(wishId);
-            return;
-        }
-        wish.changeCount(wishRequest.count());
+        //api 미사용
     }
 
     @Transactional
