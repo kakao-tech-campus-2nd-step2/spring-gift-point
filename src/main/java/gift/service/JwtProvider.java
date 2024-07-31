@@ -27,6 +27,7 @@ public class JwtProvider {
     public String generateToken(UserDTO userDTO) {
         return Jwts.builder()
             .subject(Long.toString(userDTO.getId()))
+            .claim("role", userDTO.getRole())
             .issuedAt(new Date())
             .expiration(new Date(System.currentTimeMillis() + expirationMs))
             .signWith(key)
@@ -52,4 +53,14 @@ public class JwtProvider {
             .getPayload()
             .getSubject();
     }
+
+    public String getRoleFromToken(String token) {
+        return Jwts.parser()
+            .verifyWith(key)
+            .build()
+            .parseSignedClaims(token)
+            .getPayload()
+            .get("role").toString();
+    }
+
 }
