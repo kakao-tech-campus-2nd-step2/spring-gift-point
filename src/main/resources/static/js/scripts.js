@@ -25,7 +25,7 @@ function createProducts() {
 }
 
 function loadProducts(page) {
-    fetch(`/api/products?page=${page}&size=${pageSize}`)
+    fetch(`/api/products/all?page=${page}&size=${pageSize}`)
         .then(response => response.json())
         .then(products => {
             const productsTableBody = document.querySelector("#productsTableBody");
