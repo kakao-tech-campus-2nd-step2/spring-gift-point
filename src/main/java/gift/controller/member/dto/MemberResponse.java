@@ -4,10 +4,13 @@ import gift.application.member.dto.MemberModel;
 
 public class MemberResponse {
 
-    public record Login(String token) {
+    public record Login(
+        String name
+    ) {
 
-        public static Login from(String token) {
-            return new Login(token);
+        public static Login from(MemberModel.InfoAndJwt model) {
+
+            return new Login(model.info().name());
         }
     }
 

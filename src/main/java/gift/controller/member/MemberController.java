@@ -43,7 +43,9 @@ public class MemberController {
         @RequestBody @Valid MemberRequest.Login request
     ) {
         var response = memberService.login(request.toCommand());
-        return ResponseEntity.ok(MemberResponse.Login.from(response));
+        return ResponseEntity.status(HttpStatus.OK)
+            .header("Authorization", response.jwt())
+            .body(MemberResponse.Login.from(response));
     }
 
     @Operation(summary = "유저 로그아웃", description = "유저 로그아웃 api")
