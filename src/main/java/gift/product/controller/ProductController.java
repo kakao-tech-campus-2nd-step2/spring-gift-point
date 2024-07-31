@@ -1,8 +1,8 @@
 package gift.product.controller;
 
+import gift.product.domain.ProductRequest;
 import gift.product.option.domain.OptionDTO;
 import gift.product.option.service.OptionService;
-import gift.product.domain.ProductDTO;
 import gift.product.service.ProductService;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.persistence.EntityNotFoundException;
@@ -32,14 +32,14 @@ public class ProductController {
 
     @PostMapping("")
     @Operation(summary = "상품 생성", tags = {"상품 API"})
-    public ResponseEntity<ProductDTO> createProduct(@Valid @RequestBody ProductDTO productDTO) {
-        ProductDTO response = productService.createProduct(productDTO);
+    public ResponseEntity<ProductRequest> createProduct(@Valid @RequestBody ProductRequest productRequest) {
+        ProductRequest response = productService.createProduct(productRequest);
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
     @GetMapping("")
     @Operation(summary = "상품 목록 조회", tags = {"상품 API"})
-    public ResponseEntity<Page<ProductDTO>> getAllProductsWishCategoryId(
+    public ResponseEntity<Page<ProductRequest>> getAllProductsWishCategoryId(
         @RequestParam(defaultValue = "0") int page,
         @RequestParam(defaultValue = "10") int size,
         @RequestParam(defaultValue = "name,asc") String sort,
@@ -49,7 +49,7 @@ public class ProductController {
         Sort.Direction direction = Sort.Direction.fromString(sortParams[1]);
         Pageable pageable = PageRequest.of(page, size, Sort.by(direction, sortParams[0]));
 
-        Page<ProductDTO> products;
+        Page<ProductRequest> products;
         if (categoryId != null) {
             products = productService.getAllProductsByCategoryId(categoryId, pageable);
         } else {
@@ -60,21 +60,21 @@ public class ProductController {
 
     @GetMapping("/{productId}")
     @Operation(summary = "상품 조회", tags = {"상품 API"})
-    public ResponseEntity<ProductDTO> findById(@PathVariable("productId") Long id) {
-        Optional<ProductDTO> productDTO = productService.getProductDTOById(id);
+    public ResponseEntity<ProductRequest> findById(@PathVariable("productId") Long id) {
+        Optional<ProductRequest> productDTO = productService.getProductDTOById(id);
         return productDTO.map(value -> new ResponseEntity<>(value, HttpStatus.OK))
             .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
     @PutMapping("/{productId}")
     @Operation(summary = "상품 수정", tags = {"상품 API"})
-    public ResponseEntity<ProductDTO> updateProduct(@PathVariable("productId") Long id, @Valid @RequestBody ProductDTO productDTO) {
-        Optional<ProductDTO> existingProductDTO = productService.getProductDTOById(id);
+    public ResponseEntity<ProductRequest> updateProduct(@PathVariable("productId") Long id, @Valid @RequestBody ProductRequest productRequest) {
+        Optional<ProductRequest> existingProductDTO = productService.getProductDTOById(id);
         if (existingProductDTO.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
         try {
-            return new ResponseEntity<>(productService.updateProduct(id, productDTO), HttpStatus.OK);
+            return new ResponseEntity<>(productService.updateProduct(id, productRequest), HttpStatus.OK);
         } catch (EntityNotFoundException e) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }

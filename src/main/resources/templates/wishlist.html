@@ -55,14 +55,14 @@
   <tbody>
   <tr th:each="wishlist, iterStat : ${wishlists.content}">
     <td th:id="'userId_' + ${iterStat.index}" th:text="${wishlist.userId}"></td>
-    <td th:text="${wishlist.productDTO().id}"></td>
-    <td th:text="${wishlist.productDTO().name}"></td>
-    <td th:text="${wishlist.productDTO().price}"></td>
-    <td th:text="${wishlist.productDTO().categoryId}"></td>
+    <td th:text="${wishlist.productRequest().id}"></td>
+    <td th:text="${wishlist.productRequest().name}"></td>
+    <td th:text="${wishlist.productRequest().price}"></td>
+    <td th:text="${wishlist.productRequest().categoryId}"></td>
     <td th:id="'amount_' + ${iterStat.index}" th:text="${wishlist.amount}"></td>
     <td>
       <select th:id="'optionSelect_' + ${iterStat.index}">
-        <option th:each="option : ${wishlist.productDTO().optionDTOList}"
+        <option th:each="option : ${wishlist.productRequest().optionDTOList}"
                 th:value="${option.getId()}"
                 th:text="${option.getName()}">
         </option>
