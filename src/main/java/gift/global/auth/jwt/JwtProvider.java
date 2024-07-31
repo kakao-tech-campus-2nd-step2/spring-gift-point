@@ -32,7 +32,7 @@ public class JwtProvider {
     public String createToken(Long memberId, Role role) {
         Date date = new Date();
         // 이 코드를 통해서 jwt 토큰을 생성할 수 있다.
-        String token = BEARER_PREFIX + Jwts.builder()
+        String token = Jwts.builder()
             .setSubject(String.valueOf(memberId))    // 사용자 식별값
             .claim("roles", role)        // 사용자 권한   앞에는 key, 뒤에는 value 권한값
             .setExpiration(new Date(date.getTime() + ACCESS_TOKEN_EXPIRE_TIME))    // 만료시간
