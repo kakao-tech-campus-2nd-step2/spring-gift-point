@@ -1,9 +1,9 @@
 package gift.controller.oauth;
 
-import gift.common.properties.KakaoProperties;
 import gift.common.util.KakaoUtil;
 import gift.controller.user.dto.UserResponse;
 import gift.service.OAuthService;
+import gift.service.UserDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.HttpHeaders;
@@ -41,7 +41,9 @@ public class OAuthController {
     @GetMapping("/callback")
     @Operation(summary = "카카오 로그인", description = "카카오 로그인을 시도합니다.")
     public ResponseEntity<UserResponse> registerUser(@RequestParam("code") String code) {
-        UserResponse response = OAuthService.register(code);
-        return ResponseEntity.ok().body(response);
+        UserDto response = OAuthService.register(code);
+        return ResponseEntity.ok()
+            .header("Authorization", response.accessToken())
+            .body(UserResponse.from(response.name()));
     }
 }

@@ -23,6 +23,6 @@ public class TokenInterceptor implements HandlerInterceptor {
             jwtTokenProvider.validateToken(token);
             return true;
         }
-        throw new JwtException("토큰이 없거나 Bearer 토큰이 아닙니다.");
+        throw new JwtException("유효하지 않은 토큰입니다.");
     }
 }
