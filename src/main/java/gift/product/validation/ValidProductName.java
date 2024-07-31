@@ -11,7 +11,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 @NotBlank(message = ProductInfo.PRODUCT_NAME_REQUIRED)
-@Size(min = 1, max = 15, message = ProductInfo.PRODUCT_NAME_SIZE)
+@Size(min = 1, max = 40, message = ProductInfo.PRODUCT_NAME_SIZE)
 @KakaoNamePattern
 @ValidNamePattern
 @Target(ElementType.FIELD)
