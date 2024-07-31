@@ -42,12 +42,12 @@ public class CategoryController {
     @PostMapping("/category")
     @Operation(summary = "카테고리 등록 api", description = "카테고리 등록 api입니다")
     @ApiResponse(responseCode = "200", description = "카테고리 등록 성공")
-    public ResponseEntity<SuccessBody<Long>> addCategory(
+    public ResponseEntity<SuccessBody<CategoryResponseDTO>> addCategory(
         @Valid @RequestBody CategoryRequestDTO categoryRequestDTO,
         @LoginUser User user) {
         authService.authorizeAdminUser(user);
-        Long categoryId = categoryService.addCategory(categoryRequestDTO);
-        return ApiResponseGenerator.success(HttpStatus.CREATED, "카테고리가 생성되었습니다.", categoryId);
+        CategoryResponseDTO categoryResponseDTO = categoryService.addCategory(categoryRequestDTO);
+        return ApiResponseGenerator.success(HttpStatus.CREATED, "카테고리가 생성되었습니다.", categoryResponseDTO);
     }
 
     @GetMapping("/category/{id}")

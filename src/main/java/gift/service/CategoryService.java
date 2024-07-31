@@ -18,9 +18,11 @@ public class CategoryService {
         this.jpaCategoryRepository = jpaCategoryRepository;
     }
 
-    public Long addCategory(CategoryRequestDTO categoryRequestDTO){
+    public CategoryResponseDTO addCategory(CategoryRequestDTO categoryRequestDTO){
         Category category = categoryRequestDTO.toEntity();
-        return jpaCategoryRepository.save(category).getId();
+        CategoryResponseDTO categoryResponseDTO = CategoryResponseDTO.from(category);
+        jpaCategoryRepository.save(category);
+        return categoryResponseDTO;
     }
 
     @Transactional(readOnly = true)
