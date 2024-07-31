@@ -1,9 +1,12 @@
 package gift.order.controller;
 
+import gift.kakao.login.dto.KakaoUser;
 import gift.product.option.service.OptionService;
 import gift.order.domain.OrderRequest;
 import gift.order.domain.OrderResponse;
 import gift.order.service.OrderService;
+import gift.user.repository.UserRepository;
+import gift.utility.JwtUtil;
 import gift.wish.domain.WishlistResponse;
 import gift.wish.service.WishlistService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -29,13 +32,14 @@ import org.springframework.web.bind.annotation.RestController;
 public class OrderController {
     private final OrderService orderService;
     private final OptionService optionService;
-
+    private final UserRepository userRepository;
     private final WishlistService wishlistService;
 
     public OrderController(OrderService orderService, OptionService optionService,
-        WishlistService wishlistService) {
+        UserRepository userRepository, WishlistService wishlistService) {
         this.orderService = orderService;
         this.optionService = optionService;
+        this.userRepository = userRepository;
         this.wishlistService = wishlistService;
     }
 
@@ -45,7 +49,10 @@ public class OrderController {
         @RequestBody OrderRequest orderRequest,
         @RequestParam("userId") Long userId,
         @RequestHeader(HttpHeaders.AUTHORIZATION) String authorizationHeader){
-        String jwtAccessToken = authorizationHeader.replace("Bearer ", "");
+        String jwtToken = authorizationHeader.replace("Bearer ", "");
+        String email = JwtUtil.extractEmail(jwtToken);
+        KakaoUser kakaoUser = (KakaoUser) userRepository.findByEmail(email)
+            .orElseThrow(() -> new IllegalArgumentException("jwtToken or Email " + email + "이 없습니다."));
         // 1. 주문 저장
         OrderResponse orderResponse = orderService.createOrder(orderRequest);
         // 2. 옵션 수량 차감, wishlist에서 제거
@@ -53,7 +60,7 @@ public class OrderController {
                                 orderResponse.quantity());
         wishlistService.deleteByUserIdProductId(userId, optionService.findById(orderResponse.optionId()).getProduct().getId());
         // 3. 카카오톡 메시지 api 전송
-        orderService.sendMessage(jwtAccessToken, orderRequest.message());
+        orderService.sendMessage(kakaoUser.getToken(), orderRequest.message());
         // 4. response 반환
         return ResponseEntity.ok(orderResponse);
     }
