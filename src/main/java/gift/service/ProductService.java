@@ -64,8 +64,10 @@ public class ProductService {
         return ProductPageResponse.fromProductPage(products);
     }
 
-    public Product findOne(Long productId) {
-        return productRepository.findById(productId).orElseThrow(() -> new ProductNotFoundException(PRODUCT_NOT_FOUND));
+    public ProductResponse findOne(Long productId) {
+        Product product = productRepository.findById(productId)
+                .orElseThrow(() -> new ProductNotFoundException(PRODUCT_NOT_FOUND));
+        return ProductResponse.fromProduct(product);
     }
 
     @Transactional

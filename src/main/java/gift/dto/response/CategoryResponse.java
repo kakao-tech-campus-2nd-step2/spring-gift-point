@@ -3,6 +3,7 @@ package gift.dto.response;
 import gift.domain.Category;
 
 public class CategoryResponse {
+
     private Long id;
     private String name;
     private String color;
@@ -29,5 +30,21 @@ public class CategoryResponse {
 
     public String getName() {
         return name;
+    }
+
+    public Long getId(){
+        return id;
+    }
+
+    public String getColor() {
+        return color;
+    }
+
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public  String getDescription() {
+        return description;
     }
 }

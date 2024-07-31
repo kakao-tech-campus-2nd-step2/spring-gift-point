@@ -1,7 +1,6 @@
 package gift.controller;
 
 import gift.domain.Option;
-import gift.domain.Product;
 import gift.dto.request.OptionRequest;
 import gift.dto.request.ProductOptionRequest;
 import gift.dto.request.ProductRequest;
@@ -19,13 +18,10 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/products")
@@ -83,9 +79,8 @@ public class ProductController {
 
     @GetMapping("/{id}")
     @Operation(summary = "상품 조회", description = "특정 상품의 정보를 조회한다.")
-    public String getProduct(@PathVariable Long id, Model model) {
-        model.addAttribute("products", productService.findOne(id));
-        return "product-list";
+    public ProductResponse getProduct(@PathVariable Long id) {
+        return productService.findOne(id);
     }
 
     @GetMapping("/new")
@@ -105,8 +100,7 @@ public class ProductController {
     @GetMapping("/edit/{id}")
     @Operation(summary = "상품 수정 화면", description = "상품 수정 화면으로 이동한다.")
     public String editProductForm(@PathVariable long id, Model model) {
-        Product product = productService.findOne(id);
-        ProductResponse productResponse = ProductResponse.fromProduct(product);
+        ProductResponse productResponse = productService.findOne(id);
         model.addAttribute("productResponse", productResponse);
         model.addAttribute("categories", categoryService.getCategories());
         return "product-edit-form";
