@@ -1,5 +1,6 @@
 package gift.Model.Entity;
 
+import gift.Model.DTO.CategoryDTO;
 import jakarta.persistence.*;
 
 @Entity
@@ -12,9 +13,6 @@ public class CategoryEntity {
     @Column(name="name")
     private String name;
 
-    @Column(name="color")
-    private String color;
-
     @Column(name="image_url")
     private String imageUrl;
 
@@ -23,11 +21,14 @@ public class CategoryEntity {
 
     public CategoryEntity(){}
 
-    public CategoryEntity(String name, String color, String imageUrl, String description){
+    public CategoryEntity(String name, String imageUrl, String description){
         this.name = name;
-        this.color = color;
         this.imageUrl = imageUrl;
         this.description = description;
+    }
+
+    public CategoryDTO mapToDTO(){
+        return new CategoryDTO(this.id, this.name, this.imageUrl,this.description);
     }
 
     public Long getId() {
@@ -44,14 +45,6 @@ public class CategoryEntity {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public String getColor() {
-        return color;
-    }
-
-    public void setColor(String color) {
-        this.color = color;
     }
 
     public String getImageUrl() {
