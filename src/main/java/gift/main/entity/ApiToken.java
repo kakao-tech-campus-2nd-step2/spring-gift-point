@@ -13,7 +13,7 @@ public class ApiToken {
     private long id;
 
     @ManyToOne
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "user_id",unique = true)
     private User user;
 
     @Column(nullable = false)
