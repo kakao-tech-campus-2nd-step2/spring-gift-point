@@ -51,7 +51,7 @@ public class WishListController {
     public ResponseEntity<Void> addWishProduct(@LoginUser LoginInfo user,
         @Valid @RequestBody WishRequest.Create request) {
         Long id = wishService.addWistList(user.id(), request);
-        return ResponseEntity.created(URI.create("/api/wishes/" + id)).build();
+        return ResponseEntity.ok().build();
     }
 
     @PatchMapping("/{wishId}")
