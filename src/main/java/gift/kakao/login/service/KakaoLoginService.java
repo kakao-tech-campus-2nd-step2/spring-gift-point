@@ -52,13 +52,12 @@ public class KakaoLoginService {
             .body(body)
             .retrieve()
             .toEntity(KakaoTokenResponseDTO.class);
-        String accessToken = response.getBody().getAccessToken();
-        return JwtUtil.generateToken(accessToken);
+        return response.getBody().getAccessToken();
     }
-    public String getUserInfo(String jwtAccessToken){
+    public Long getUserInfo(String accessToken){
         var uri = "https://kapi.kakao.com/v2/user/me";
         var headers = new HttpHeaders();
-        headers.setBearerAuth(JwtUtil.extractEmail(jwtAccessToken));
+        headers.setBearerAuth(accessToken);
         headers.add("property_keys", "[\"kakao_account.email\"]");
 
         var response = client.get()
@@ -66,20 +65,18 @@ public class KakaoLoginService {
             .headers(httpHeaders -> httpHeaders.addAll(headers))
             .retrieve()
             .toEntity(KakaoUserInfoResponse.class);
-        String email = response.getBody().getId();
+        String email = response.getBody().getId(); // 임시로 id를 email로 이용
         String password = "";
         if(userRepository.findByEmail(email).isEmpty()){
-            userRepository.save(new KakaoUser(email, password, jwtAccessToken));
-            return email;
+            return userRepository.save(new KakaoUser(email, password, accessToken)).getId();
         }
         KakaoUser kakaoUser = (KakaoUser) userRepository.findByEmail(email).get();
-        kakaoUser.setToken(jwtAccessToken);
+        kakaoUser.setToken(accessToken);
         userRepository.save(kakaoUser);
-        return email;
+        return kakaoUser.getId();
     }
 
-    public KakaoMessageSendResponse sendMessage(String jwtAccessToken, String message){
-        String accessToken = JwtUtil.extractEmail(jwtAccessToken);
+    public KakaoMessageSendResponse sendMessage(String accessToken, String message){
         var uri = "https://kapi.kakao.com/v2/api/talk/memo/default/send";
         var body = createSendMsgBody(message);
         var response = client.post()
