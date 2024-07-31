@@ -45,6 +45,11 @@ public class ProductMapRepository implements ProductRepository {
     }
 
     @Override
+    public boolean existsById(Long productId) {
+        return false;
+    }
+
+    @Override
     public Optional<Product> findById(Long id) {
         return Optional.ofNullable(database.get(id));
     }
