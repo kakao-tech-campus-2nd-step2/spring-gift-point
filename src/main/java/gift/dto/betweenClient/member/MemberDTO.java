@@ -1,6 +1,7 @@
 package gift.dto.betweenClient.member;
 
 import gift.entity.Member;
+import io.swagger.v3.oas.annotations.Hidden;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Null;
@@ -14,11 +15,14 @@ public class MemberDTO {
     @NotBlank(message = "비밀번호를 입력해주세요.")
     private String password;
 
+    @Hidden
     @Null(message = "계정 타입은 입력되지 말아야 합니다.")
     private String accountType;
 
+    @Hidden
     private String name;
 
+    @Hidden
     private String role;
 
     public MemberDTO() {

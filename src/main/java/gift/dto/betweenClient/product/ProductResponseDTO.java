@@ -6,10 +6,10 @@ import gift.entity.Product;
 import gift.exception.BadRequestExceptions.BadRequestException;
 
 public record ProductResponseDTO(
-        Long id, String name, Integer price, String imageUrl, CategoryDTO categoryDTO) {
+        Long id, String name, Integer price, String imageUrl, Long categoryId) {
 
     public static ProductResponseDTO convertToProductResponseDTO(Product product) throws BadRequestException {
         return new ProductResponseDTO(product.getId(), product.getName(), product.getPrice(),
-                product.getImageUrl(), CategoryDTO.convertToCategoryDTO(product.getCategory()));
+                product.getImageUrl(), CategoryDTO.convertToCategoryDTO(product.getCategory()).id());
     }
 }

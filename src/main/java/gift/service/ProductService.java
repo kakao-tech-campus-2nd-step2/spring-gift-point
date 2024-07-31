@@ -65,7 +65,7 @@ public class ProductService {
     public Page<ProductResponseDTO> getProductListByCategoryId(Long categoryId, Pageable pageable) throws RuntimeException {
         Page<Product> productPage = productRepository.findByCategoryId(categoryId, pageable);
         if(productPage.isEmpty())
-            throw new BadRequestException("해당 카테고리는 존재하지 않습니다.");
+            throw new BadRequestException("해당 카테고리를 가지는 상품이 존재하지 않습니다.");
         List<ProductResponseDTO> productResponseDTOList = productPage.getContent().stream()
                 .map(ProductResponseDTO::convertToProductResponseDTO).toList();
         return new PageImpl<>(productResponseDTOList, productPage.getPageable(),
