@@ -11,6 +11,7 @@ import gift.repository.ProductRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
 
@@ -43,14 +44,17 @@ public class OptionService {
 
         Product product = productRepository.findById(productID)
                 .orElseThrow(() -> new NoSuchElementException("해당 상품이 없습니다."));
+
+        List<Option> optionsToSave = new ArrayList<>();
         for(int i=0; i<optionList.size(); i++){
             Option addOption = new Option(
                     optionList.get(i),
                     Long.parseLong(optionQuantities.get(i)),
                     product
             );
-            optionRepository.save(addOption);
+            optionsToSave.add(addOption);
         }
+        optionRepository.saveAll(optionsToSave);
     }
 
     @Transactional
