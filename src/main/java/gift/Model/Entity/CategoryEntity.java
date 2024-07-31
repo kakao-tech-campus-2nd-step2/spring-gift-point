@@ -10,7 +10,7 @@ public class CategoryEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name="name")
+    @Column(name="optionName")
     private String name;
 
     @Column(name="image_url")

@@ -24,10 +24,10 @@ public class OrderRestController {
     @Parameter(name="token", description = "카카오의 인증 토큰으로, 유효한 토큰을 보내야 나에게 메시지가 보내진다.")
     @Parameter(name="orderRequest", description = "주문으로, 수량이 남아있을 경우 차감된다.")
     @PostMapping("/orders")
-    public ResponseEntity<OrderResponse> order(@RequestAttribute("Email") String email, @RequestBody OrderRequest orderRequest){
+    public ResponseEntity<?> order(@RequestAttribute("Email") String email, @RequestBody OrderRequest orderRequest){
         OrderResponse orderResponse = orderService.order(orderRequest);
         // orderService.sendKakaoTalkMessage(email, orderResponse);
-        return ResponseEntity.ok(orderResponse);
+        return ResponseEntity.ok("success");
     }
 
     @GetMapping("/orders")

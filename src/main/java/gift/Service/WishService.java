@@ -7,6 +7,8 @@ import gift.Model.*;
 import gift.Model.Entity.MemberEntity;
 import gift.Model.Entity.ProductEntity;
 import gift.Model.Entity.WishEntity;
+import gift.Model.request.WishRequest;
+import gift.Model.response.WishResponse;
 import gift.Repository.ProductRepository;
 import gift.Repository.MemberRepository;
 import gift.Repository.WishRepository;
@@ -29,9 +31,9 @@ public class WishService {
         this.productRepository = productRepository;
     }
 
-    public void create(String email, String name){
+    public void create(String email, WishRequest wishRequest){
         Optional<MemberEntity> memberOptional = memberRepository.findByEmail(email);
-        Optional<ProductEntity> productOptional = productRepository.findByName(name);
+        Optional<ProductEntity> productOptional = productRepository.findById(wishRequest.productId());
         if(memberOptional.isEmpty()) {
             throw new AuthorizedException("회원정보가 없습니다.");
         }
@@ -48,7 +50,7 @@ public class WishService {
         wishRepository.save(new WishEntity(memberEntity, productEntity));
     }
 
-    public List<String> read(String email){
+    public List<WishResponse> read(String email){
         Optional<MemberEntity> memberOptional = memberRepository.findByEmail(email);
 
         if(memberOptional.isEmpty()) {
@@ -61,10 +63,10 @@ public class WishService {
         }
 
         List<WishEntity> wishEntities = wishRepository.findByMemberId(memberEntity.getId());
-        List<String> productNames = new ArrayList<>();
+        List<WishResponse> productNames = new ArrayList<>();
 
         for(WishEntity w : wishEntities){
-            productNames.add(w.getProduct().getName());
+            productNames.add(w.mapToResponse());
         }
 
         return productNames;
@@ -90,15 +92,15 @@ public class WishService {
         wishRepository.deleteById(wishId);
     }
 
-    public Page<String> getPage(String email, int page, int size, String sort){
-        List<String> dtoList = read(email);
+    public Page<WishResponse> getPage(String email, int page, int size, String sort){
+        List<WishResponse> dtoList = read(email);
         Sort sortType = Sort.by(Sort.Direction.DESC, sort);
         Pageable pageable = PageRequest.of(page, size, sortType);
 
         int start = (int) pageable.getOffset();
         int end = Math.min((start + pageable.getPageSize()), dtoList.size());
 
-        List<String> subList = dtoList.subList(start, end);
+        List<WishResponse> subList = dtoList.subList(start, end);
 
         return new PageImpl<>(subList, pageable, dtoList.size());
     }

@@ -10,6 +10,7 @@ import gift.Model.Entity.MemberEntity;
 import gift.Repository.CategoryRepository;
 import gift.Repository.ProductRepository;
 import gift.Repository.MemberRepository;
+import gift.Repository.WishRepository;
 import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 
@@ -22,11 +23,13 @@ public class ProductService {
     private final ProductRepository productRepository;
     private final MemberRepository memberRepository;
     private final CategoryRepository categoryRepository;
+    private final WishRepository wishRepository;
 
-    public ProductService(ProductRepository productRepository, MemberRepository memberRepository, CategoryRepository categoryRepository){
+    public ProductService(ProductRepository productRepository, MemberRepository memberRepository, CategoryRepository categoryRepository, WishRepository wishRepository){
         this.productRepository = productRepository;
         this.memberRepository = memberRepository;
         this.categoryRepository = categoryRepository;
+        this.wishRepository = wishRepository;
     }
 
     public void create(String email, ProductDTO productDTO){
@@ -40,7 +43,7 @@ public class ProductService {
             throw new AuthorizedException("관리자가 아닙니다.");
         }
 
-        Optional<CategoryEntity> categoryEntityOptional = categoryRepository.findById(productDTO.id());
+        Optional<CategoryEntity> categoryEntityOptional = categoryRepository.findById(productDTO.categoryId());
         if(categoryEntityOptional.isEmpty()){
             throw new CategoryDuplicatedException("카테고리가 중복됩니다.");
         }
@@ -61,7 +64,11 @@ public class ProductService {
         List<ProductDTO> dtoList = new ArrayList<>();
 
         for(ProductEntity p: entityList){
-            dtoList.add(p.mapToDTO());
+            if(wishRepository.findByMemberIdAndProductId(memberEntity.getId(), p.getId()).isPresent()){
+                dtoList.add(p.mapToDTO(true));
+                continue;
+            }
+            dtoList.add(p.mapToDTO(false));
         }
 
         return dtoList;
@@ -75,7 +82,7 @@ public class ProductService {
         if(!memberEntity.isAdmin())
             throw new AuthorizedException("관리자가 아닙니다.");
 
-        Optional<CategoryEntity> categoryEntityOptional = categoryRepository.findById(productDTO.id());
+        Optional<CategoryEntity> categoryEntityOptional = categoryRepository.findById(productDTO.categoryId());
         if(categoryEntityOptional.isEmpty()){
             throw new CategoryDuplicatedException("중복된 카테고리가 이미 있습니다.");
         }
@@ -127,7 +134,10 @@ public class ProductService {
         }
         ProductEntity productEntity = productEntityOptional.get();
 
-        return new ProductDTO(productEntity.getId(), productEntity.getName(),productEntity.getPrice(), productEntity.getImageUrl(), productEntity.getCategory().getId());
+        if(wishRepository.findByMemberIdAndProductId(memberEntity.getId(), productEntity.getId()).isPresent()){
+            return productEntity.mapToDTO(true);
+        }
+        return productEntity.mapToDTO(false);
     }
 
     public List<Long> getCategoriesId(){

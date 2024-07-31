@@ -46,7 +46,7 @@ public class AdminController {
     @GetMapping("/add")
     public String addProductForm(Model model){
         List<Long> categories = productService.getCategoriesId();
-        model.addAttribute("product", new ProductDTO(0L, "" ,0,"a",1L));
+        model.addAttribute("product", new ProductDTO(0L, "" ,0,"a",1L, false));
         model.addAttribute("categories", categories);
         return "add";
     }
@@ -60,7 +60,7 @@ public class AdminController {
         return "redirect:/admin/products";
     }
 
-    @GetMapping("/edit/{id}")
+    @GetMapping("/edit/{productId}")
     public String updateProductForm(@PathVariable("id") Long id, Model model){
         ProductDTO productDTO = productService.getById(email, id);
         List<Long> categories = productService.getCategoriesId();
@@ -70,7 +70,7 @@ public class AdminController {
         return "edit";
     }
 
-    @PostMapping("edit/{id}")
+    @PostMapping("edit/{productId}")
     public String updateProduct(@PathVariable("id") Long id, @ModelAttribute("product") @Valid ProductDTO productDTO, BindingResult bindingResult){
         if(bindingResult.hasErrors()) {
             return "edit";
@@ -79,7 +79,7 @@ public class AdminController {
         return "redirect:/admin/products";
     }
 
-    @GetMapping("/delete/{id}")
+    @GetMapping("/delete/{productId}")
     public String deleteProduct(@PathVariable("id") Long id){
         productService.delete(email, id);
         return "redirect:/admin/products";

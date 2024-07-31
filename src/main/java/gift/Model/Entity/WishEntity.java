@@ -1,5 +1,6 @@
 package gift.Model.Entity;
 
+import gift.Model.response.WishResponse;
 import jakarta.persistence.*;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
@@ -26,6 +27,10 @@ public class WishEntity {
         public WishEntity(MemberEntity member, ProductEntity product){
                 this.member = member;
                 this.product = product;
+        }
+
+        public WishResponse mapToResponse(){
+                return new WishResponse(this.product.getId(), this.product.getName(), this.product.getPrice(), this.product.getImageUrl(), this.id);
         }
 
         public Long getId() {

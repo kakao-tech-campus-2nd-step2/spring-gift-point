@@ -61,7 +61,7 @@ public class WishEntityRepositoryTest {
         memberRepository.save(member);
         productRepository.save(product);
         wishRepository.save(new WishEntity(member, product));
-        MemberEntity actual = wishRepository.findByMemberIdAndProductId(member.getId(), product.getId()).getMember();
+        MemberEntity actual = wishRepository.findByMemberIdAndProductId(member.getId(), product.getId()).get().getMember();
         assertThat(actual).isEqualTo(member);
     }
 }

@@ -10,7 +10,7 @@ public class ProductEntity {
         @GeneratedValue(strategy = GenerationType.IDENTITY)
         private Long id;
 
-        @Column(name="name")
+        @Column(name="optionName")
         private String name;
 
         @Column(name="price")
@@ -32,8 +32,8 @@ public class ProductEntity {
                 this.imageUrl = imageUrl;
         }
 
-        public ProductDTO mapToDTO(){
-                return new ProductDTO(this.id, this.name, this.price, this.imageUrl, this.category.getId());
+        public ProductDTO mapToDTO(boolean state){
+                return new ProductDTO(this.id, this.name, this.price, this.imageUrl, this.category.getId(), state);
         }
 
         public Long getId() {
