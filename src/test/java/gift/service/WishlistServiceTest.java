@@ -1,9 +1,9 @@
 package gift.service;
 
-import gift.entity.Product;
-import gift.entity.ProductDTO;
-import gift.entity.UserDTO;
-import gift.entity.WishlistDTO;
+import gift.entity.product.Product;
+import gift.entity.product.ProductDTO;
+import gift.entity.user.UserDTO;
+import gift.entity.wishlist.WishlistDTO;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -45,8 +45,8 @@ public class WishlistServiceTest {
     @DisplayName("삭제를 원하는 product가 내 wishlist에서 삭제되어야 함")
     void wishlistDeleteCascadeProductTest() {
         // given
-        wishlistService.addWishlistProduct(testEmail, new WishlistDTO(product1.getId()));
-        wishlistService.addWishlistProduct(testEmail, new WishlistDTO(product2.getId()));
+        wishlistService.addWishlistProduct(testEmail, product1.getId());
+        wishlistService.addWishlistProduct(testEmail, product2.getId());
 
         // when
         wishlistService.deleteWishlist(testEmail, product1.getId());
@@ -65,11 +65,11 @@ public class WishlistServiceTest {
 
         // when
         // wishlist1
-        wishlistService.addWishlistProduct(testEmail1, new WishlistDTO(product1.getId()));
-        wishlistService.addWishlistProduct(testEmail1, new WishlistDTO(product2.getId()));
+        wishlistService.addWishlistProduct(testEmail1, product1.getId());
+        wishlistService.addWishlistProduct(testEmail1, product2.getId());
         // wishlist2
-        wishlistService.addWishlistProduct(testEmail2, new WishlistDTO(product2.getId()));
-        wishlistService.addWishlistProduct(testEmail2, new WishlistDTO(product3.getId()));
+        wishlistService.addWishlistProduct(testEmail2, product2.getId());
+        wishlistService.addWishlistProduct(testEmail2, product3.getId());
 
         List<Product> products1 = wishlistService.getWishlistProducts(testEmail1);
         List<Product> products2 = wishlistService.getWishlistProducts(testEmail2);

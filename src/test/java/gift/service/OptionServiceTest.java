@@ -1,6 +1,11 @@
 package gift.service;
 
-import gift.entity.*;
+import gift.entity.option.Option;
+import gift.entity.option.OptionDTO;
+import gift.entity.product.Product;
+import gift.entity.product.ProductDTO;
+import gift.entity.user.User;
+import gift.entity.user.UserDTO;
 import gift.exception.ResourceNotFoundException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -8,6 +13,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
@@ -123,13 +130,14 @@ public class OptionServiceTest {
     void 같은_이름의_option이_product에_있을_때() {
         // given
         Product product = productService.save(new ProductDTO("test", 123, "test.com", 1L), email);
-        Option sameNameOption = optionService.save(new OptionDTO("abc", 456), email);
+        OptionDTO optionDTO = new OptionDTO("abc", 456);
+        OptionDTO sameNameOption = new OptionDTO("abc", 456);
 
         // when
-        productService.addProductOption(product.getId(), option.getId(), email);
+        productService.addProductOption(product.getId(), List.of(optionDTO), email);
 
         // then
         assertThrows(DataIntegrityViolationException.class,
-                () -> productService.addProductOption(product.getId(), sameNameOption.getId(), email));
+                () -> productService.addProductOption(product.getId(), List.of(sameNameOption), email));
     }
 }

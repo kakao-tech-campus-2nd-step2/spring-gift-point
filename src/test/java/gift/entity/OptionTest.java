@@ -1,5 +1,7 @@
 package gift.entity;
 
+import gift.entity.option.Option;
+import gift.entity.option.OptionDTO;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;

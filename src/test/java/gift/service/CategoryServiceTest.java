@@ -1,7 +1,7 @@
 package gift.service;
 
-import gift.entity.Category;
-import gift.entity.CategoryDTO;
+import gift.entity.category.Category;
+import gift.entity.category.CategoryRequest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -23,7 +23,7 @@ public class CategoryServiceTest {
 
     @BeforeEach
     void setUp() {
-        category = categoryService.save(new CategoryDTO("test", "#test", "", ""));
+        category = categoryService.save(new CategoryRequest("test", "#test", "", ""));
     }
 
     @Test
@@ -40,14 +40,14 @@ public class CategoryServiceTest {
     void updateCategory() {
         // given
         // when
-        CategoryDTO update = new CategoryDTO("updated_category", "#updated_color", "updated_url", "updated_desc");
+        CategoryRequest update = new CategoryRequest("updated_category", "#updated_color", "updated_url", "updated_desc");
         Category expect = categoryService.update(category.getId(), update);
 
         // then
         assertAll(
                 () -> assertThat(expect.getName()).isEqualTo(update.getName()),
                 () -> assertThat(expect.getColor()).isEqualTo(update.getColor()),
-                () -> assertThat(expect.getImageurl()).isEqualTo(update.getImageurl()),
+                () -> assertThat(expect.getImage_url()).isEqualTo(update.getImage_url()),
                 () -> assertThat(expect.getDescription()).isEqualTo(update.getDescription())
         );
     }

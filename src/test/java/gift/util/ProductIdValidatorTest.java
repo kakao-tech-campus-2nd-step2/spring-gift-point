@@ -1,9 +1,9 @@
 package gift.util;
 
-import gift.entity.Product;
-import gift.entity.ProductDTO;
-import gift.entity.UserDTO;
-import gift.entity.WishlistDTO;
+import gift.entity.product.Product;
+import gift.entity.product.ProductDTO;
+import gift.entity.user.UserDTO;
+import gift.entity.wishlist.WishlistDTO;
 import gift.service.ProductService;
 import gift.service.UserService;
 import jakarta.validation.ConstraintViolation;

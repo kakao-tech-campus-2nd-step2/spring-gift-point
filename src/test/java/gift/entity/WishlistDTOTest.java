@@ -1,5 +1,7 @@
 package gift.entity;
 
+import gift.entity.product.Product;
+import gift.entity.wishlist.WishlistDTO;
 import gift.repository.ProductRepository;
 import jakarta.validation.Validator;
 import org.junit.jupiter.api.BeforeEach;
