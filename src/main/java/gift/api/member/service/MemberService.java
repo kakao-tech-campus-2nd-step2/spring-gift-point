@@ -59,6 +59,11 @@ public class MemberService {
         member.saveKakaoToken(accessToken);
     }
 
+    public Member findMemberById(Long id) {
+        return memberRepository.findById(id)
+            .orElseThrow(() -> new NoSuchEntityException("member"));
+    }
+
     public Member findMemberByEmail(String email) {
         return memberRepository.findByEmail(email)
             .orElseThrow(() -> new NoSuchEntityException("member"));

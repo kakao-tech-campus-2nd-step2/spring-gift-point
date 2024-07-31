@@ -1,5 +1,6 @@
 package gift.api.order.domain;
 
+import gift.api.member.domain.Member;
 import gift.api.option.domain.Option;
 import gift.global.BaseEntity;
 import jakarta.persistence.Column;
@@ -19,6 +20,9 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 public class Order extends BaseEntity {
 
     @ManyToOne
+    @JoinColumn(name = "member_id", nullable = false, foreignKey = @ForeignKey(name = "fk_order_member_id_ref_member_id"))
+    private Member member;
+    @ManyToOne
     @JoinColumn(name = "option_id", nullable = false, foreignKey = @ForeignKey(name = "fk_order_option_id_ref_option_id"))
     private Option option;
     @CreatedDate
@@ -29,7 +33,8 @@ public class Order extends BaseEntity {
     protected Order() {
     }
 
-    public Order(Option option, String message) {
+    public Order(Member member, Option option, String message) {
+        this.member = member;
         this.option = option;
         this.message = message;
     }
