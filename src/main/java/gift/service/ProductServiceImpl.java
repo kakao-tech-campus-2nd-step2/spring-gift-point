@@ -1,6 +1,9 @@
 package gift.service;
 
-import gift.dto.ProductDTO;
+import gift.dto.Request.ProductRequestDto;
+import gift.dto.Response.CategoryResponseDto;
+import gift.dto.Response.ProductResponseDto;
+import gift.model.Category;
 import gift.model.Product;
 import gift.repository.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,44 +15,81 @@ import org.springframework.stereotype.Service;
 public class ProductServiceImpl implements ProductService {
 
     private final ProductRepository productRepository;
-    private final CategoryService categoryService;
 
     @Autowired
-    public ProductServiceImpl(ProductRepository productRepository, CategoryService categoryService) {
+    public ProductServiceImpl(ProductRepository productRepository) {
         this.productRepository = productRepository;
-        this.categoryService = categoryService;
     }
 
     @Override
-    public Page<ProductDTO> getProducts(Pageable pageable) {
-        return productRepository.findAll(pageable).map(product -> ProductDTO.convertToDTO(product, categoryService));
+    public Page<ProductResponseDto> getProducts(Pageable pageable) {
+        return productRepository.findAll(pageable).map(this::convertToResponseDto);
     }
 
     @Override
-    public Page<ProductDTO> getProductsByCategoryId(Pageable pageable, int categoryId) {
-        return productRepository.findByCategory(pageable, categoryId).map(product -> ProductDTO.convertToDTO(product, categoryService));
+    public Page<ProductResponseDto> getProductsByCategoryId(Pageable pageable, int categoryId) {
+        return productRepository.findByCategory(pageable, categoryId).map(this::convertToResponseDto);
     }
 
     @Override
-    public ProductDTO getProductById(Long id) {
-        return productRepository.findById(id).map(product -> ProductDTO.convertToDTO(product, categoryService)).orElse(null);
+    public ProductResponseDto getProductById(Long id) {
+        return productRepository.findById(id).map(this::convertToResponseDto).orElse(null);
     }
 
     @Override
-    public void saveProduct(ProductDTO productDTO) {
-        Product product = new Product(productDTO);
+    public void saveProduct(ProductRequestDto productDTO) {
+        Product product = convertToEntity(productDTO);
         productRepository.save(product);
     }
 
     @Override
-    public void updateProduct(Long id, ProductDTO productDTO) {
+    public void updateProduct(Long id, ProductRequestDto productDTO) {
         Product product = productRepository.findById(id).orElseThrow();
-        product.updateFromDTO(productDTO);
+        updateEntityFromDto(product, productDTO);
         productRepository.save(product);
     }
 
     @Override
     public void deleteProduct(Long id) {
         productRepository.deleteById(id);
+    }
+
+    private ProductResponseDto convertToResponseDto(Product product) {
+        return new ProductResponseDto(
+            product.getId(),
+            product.getName(),
+            product.getPrice(),
+            product.getImageUrl(),
+            new CategoryResponseDto(
+                product.getCategory().getId(),
+                product.getCategory().getName(),
+                product.getCategory().getColor(),
+                product.getCategory().getImageUrl(),
+                product.getCategory().getDescription()
+            )
+        );
+    }
+
+    private Product convertToEntity(ProductRequestDto productDTO) {
+        Category category = new Category();
+        category.setId(productDTO.categoryId());
+
+        Product product = new Product();
+        product.setName(productDTO.name());
+        product.setPrice(productDTO.price());
+        product.setImageUrl(productDTO.imageUrl());
+        product.setCategory(category);
+
+        return product;
+    }
+
+    private void updateEntityFromDto(Product product, ProductRequestDto productDTO) {
+        Category category = new Category();
+        category.setId(productDTO.categoryId());
+
+        product.setName(productDTO.name());
+        product.setPrice(productDTO.price());
+        product.setImageUrl(productDTO.imageUrl());
+        product.setCategory(category);
     }
 }

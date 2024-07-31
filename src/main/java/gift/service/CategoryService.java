@@ -1,10 +1,14 @@
 package gift.service;
 
 
-import gift.dto.CategoryDTO;
+
+import gift.dto.Request.CategoryRequestDto;
+import gift.dto.Response.CategoryResponseDto;
 import java.util.List;
 
 public interface CategoryService {
-    List<CategoryDTO> getAllCategories();
-    CategoryDTO getCategoryById(int id);
+    List<CategoryResponseDto> getAllCategories();
+    CategoryResponseDto getCategoryById(Long id);
+    void saveCategory(CategoryRequestDto categoryRequestDto);
+    void updateCategory(Long id, CategoryRequestDto categoryRequestDto);
 }
