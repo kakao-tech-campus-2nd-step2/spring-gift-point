@@ -1,8 +1,14 @@
 -- 카테고리 삽입
 INSERT INTO CATEGORIES (NAME, DESCRIPTION, COLOR, IMAGE_URL) VALUES ('생일', '감동을 높여줄 생일 선물 리스트', '#5949a3', 'https://img1.daumcdn.net/thumb/S104x104/?fname=https%3A%2F%2Ft1.daumcdn.net%2Fgift%2Fhome%2Ftheme%2F292020231106_MXMUB.png');
 INSERT INTO CATEGORIES (NAME, DESCRIPTION, COLOR, IMAGE_URL) VALUES ('교환권', '놓치면 후회할 교환권 특가', '#9290C3', 'https://img1.daumcdn.net/thumb/S104x104/?fname=https%3A%2F%2Fst.kakaocdn.net%2Fproduct%2Fgift%2Fproduct%2F20240131153049_5a22b137a8d346e9beb020a7a7f4254a.jpg');
+INSERT INTO CATEGORIES (NAME, DESCRIPTION, COLOR, IMAGE_URL) VALUES ('명품선물', '품격있는 명품 선물 제안', '#515c7a', 'https://img1.daumcdn.net/thumb/S104x104/?fname=https%3A%2F%2Fst.kakaocdn.net%2Fproduct%2Fgift%2Fproduct%2F20240319155927_65c43814a8a242c7a6004800c2b22f13.jpg');
+INSERT INTO CATEGORIES (NAME, DESCRIPTION, COLOR, IMAGE_URL) VALUES ('팬심저격', '최애에 진심인 당신을 위한 팬심저격 굿즈 모음', '#000', 'https://img1.daumcdn.net/thumb/S104x104/?fname=https%3A%2F%2Ft1.daumcdn.net%2Fgift%2Fhome%2Ftheme%2F310220240729_KLIJR.jpg');
 
 -- 상품 삽입
+--- 생일
+--- 교환권
+--- 명품선물
+--- 팬심저격
 INSERT INTO PRODUCTS (NAME, PRICE, IMAGE_URL, CATEGORY_ID) VALUES ('피렌체 에디션 오드코롱', 145000, 'https://st.kakaocdn.net/product/gift/product/20240215083306_8e1db057580145829542463a84971ae3.png', (SELECT ID FROM CATEGORIES WHERE NAME = '생일'));
 INSERT INTO PRODUCTS (NAME, PRICE, IMAGE_URL, CATEGORY_ID) VALUES ('외식 통합권 10만원권', 100000, 'https://st.kakaocdn.net/product/gift/product/20200513102805_4867c1e4a7ae43b5825e9ae14e2830e3.png', (SELECT ID FROM CATEGORIES WHERE NAME = '생일'));
 INSERT INTO PRODUCTS (NAME, PRICE, IMAGE_URL, CATEGORY_ID) VALUES ('디켄터 리드 디퓨저', 108000, 'https://st.kakaocdn.net/product/gift/product/20240215112140_11f857e972bc4de6ac1d2f1af47ce182.jpg', (SELECT ID FROM CATEGORIES WHERE NAME = '생일'));

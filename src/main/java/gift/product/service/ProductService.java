@@ -137,4 +137,36 @@ public class ProductService {
                 new ProductResponse(product.getId(), product.getName(), product.getPrice(), product.getImageUrl(), product.getCategory().getId())
         );
     }
+
+    // 카테고리별 상품 조회
+    @Transactional(readOnly = true)
+    public List<ProductResponse> getProductsByCategory(Long categoryId) {
+        List<Product> products = productRepository.findAllByCategoryId(categoryId);
+
+        return products.stream()
+                .map(product -> new ProductResponse(product.getId(), product.getName(), product.getPrice(), product.getImageUrl(), product.getCategory().getId()))
+                .toList();
+    }
+
+    // 카테고리별 상품 조회 (페이지네이션 적용)
+    @Transactional(readOnly = true)
+    public Page<ProductResponse> getProductsByCategoryAndPage(int page, int size, String sortBy, String direction, Long categoryId) {
+        // validation
+        if (page < 0 || size <= 0) {
+            throw new IllegalArgumentException("Invalid page or size");
+        }
+
+        // sorting
+        Sort sort = direction.equalsIgnoreCase("asc") ? Sort.by(sortBy).ascending() : Sort.by(sortBy).descending();
+
+        // paging
+        Pageable pageable = PageRequest.of(page, size, sort);
+
+        Page<Product> productPage = productRepository.findAllByCategoryId(categoryId, pageable);
+
+        // Product 엔티티를 ProductResponse DTO로 변환
+        return productPage.map(product ->
+                new ProductResponse(product.getId(), product.getName(), product.getPrice(), product.getImageUrl(), product.getCategory().getId())
+        );
+    }
 }
