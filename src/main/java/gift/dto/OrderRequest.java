@@ -1,7 +1,10 @@
 package gift.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 public class OrderRequest {
 
+    @JsonProperty("option_id")
     private Long optionId;
     private int quantity;
     private String message;

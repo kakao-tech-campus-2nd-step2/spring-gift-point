@@ -1,12 +1,19 @@
 package gift.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import java.time.LocalDateTime;
 
+@JsonPropertyOrder({"id", "option_id", "quantity", "order_date_time", "message"})
 public class OrderResponse {
 
     private Long id;
+
+    @JsonProperty("option_id")
     private Long optionId;
     private int quantity;
+
+    @JsonProperty("order_date_time")
     private LocalDateTime orderDateTime;
     private String message;
 
