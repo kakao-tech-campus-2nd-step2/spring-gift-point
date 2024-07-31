@@ -56,4 +56,9 @@ public class AuthViewController {
         model.addAttribute("token", token);
         return "redirect:/wishlist/" + user.getId();
     }
+
+    @GetMapping("/kakao/login")
+    public String kakaoLogin(){
+        return "kakao_login";
+    }
 }
