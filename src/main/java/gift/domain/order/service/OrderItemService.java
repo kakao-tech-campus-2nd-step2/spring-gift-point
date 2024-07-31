@@ -50,6 +50,20 @@ public class OrderItemService {
         }
     }
 
+    @Transactional
+    public void createOne(Member member, Order order, OrderItemRequest orderItemRequest) {
+        Long optionId = orderItemRequest.optionId();
+        Product product = productJpaRepository.findByOptionId(optionId)
+            .orElseThrow(() -> new InvalidOptionInfoException("error.invalid.option.id"));
+
+        Entry<Product, Option> item = buy(product.getId(), optionId, orderItemRequest.quantity());
+
+        OrderItem orderItem = orderItemRequest.toOrderItem(order, item.getKey(), item.getValue());
+        order.addOrderItem(orderItem);
+
+        wishlistJpaRepository.deleteByMemberAndProduct(member, product);
+    }
+
     private Entry<Product, Option> buy(Long productId, Long optionId, int quantity) {
         Product product = productJpaRepository.findById(productId)
             .orElseThrow(() -> new InvalidProductInfoException("error.invalid.product.id"));

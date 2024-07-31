@@ -35,7 +35,7 @@ public class OrderRestController {
         @Parameter(hidden = true)
         @LoginUser Member member
     ) {
-        OrderResponse orderResponse = orderService.createAndSendMessage(orderRequest, member);
+        OrderResponse orderResponse = orderService.create(orderRequest, member);
         return ResponseEntity.status(HttpStatus.CREATED).body(orderResponse);
     }
 }

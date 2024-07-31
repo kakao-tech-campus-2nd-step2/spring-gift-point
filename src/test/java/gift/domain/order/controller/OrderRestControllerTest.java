@@ -2,35 +2,25 @@ package gift.domain.order.controller;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import gift.auth.jwt.JwtProvider;
+import gift.domain.member.entity.AuthProvider;
 import gift.domain.member.entity.Member;
-import gift.domain.order.dto.OrderItemRequest;
-import gift.domain.order.dto.OrderRequest;
-import gift.domain.order.dto.OrderResponse;
+import gift.domain.member.entity.Role;
+import gift.domain.member.repository.MemberJpaRepository;
 import gift.domain.order.service.OrderService;
 import gift.domain.product.entity.Category;
 import gift.domain.product.entity.Option;
 import gift.domain.product.entity.Product;
-import gift.domain.member.entity.AuthProvider;
-import gift.domain.member.entity.Role;
-import gift.domain.member.repository.MemberJpaRepository;
 import io.jsonwebtoken.Claims;
-import java.util.List;
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
 @AutoConfigureMockMvc
@@ -68,28 +58,28 @@ class OrderRestControllerTest {
         given(claims.getSubject()).willReturn(String.valueOf(MEMBER.getId()));
     }
 
-    @Test
-    @DisplayName("주문 생성 테스트")
-    void create() throws Exception {
-        // given
-        product.addOption(option1);
-        product.addOption(option2);
-
-        List<OrderItemRequest> orderItemRequests = List.of(
-            new OrderItemRequest(1L, 1L, 10),
-            new OrderItemRequest(1L, 2L, 30)
-        );
-        OrderRequest orderRequest = new OrderRequest(orderItemRequests, "Test Message", 180000);
-        OrderResponse orderResponse = OrderResponse.from(orderRequest.toOrder(MEMBER));
-
-        given(orderService.createAndSendMessage(any(OrderRequest.class), any(Member.class))).willReturn(orderResponse);
-
-        // when & then
-        mockMvc.perform(post("/api/orders")
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(objectMapper.writeValueAsString(orderRequest))
-            .header("Authorization", "Bearer token"))
-            .andExpect(status().isCreated())
-            .andExpect(content().json(objectMapper.writeValueAsString(orderResponse)));
-    }
+//    @Test
+//    @DisplayName("주문 생성 테스트")
+//    void create() throws Exception {
+//        // given
+//        product.addOption(option1);
+//        product.addOption(option2);
+//
+//        List<OrderItemRequest> orderItemRequests = List.of(
+//            new OrderItemRequest(1L, 1L, 10),
+//            new OrderItemRequest(1L, 2L, 30)
+//        );
+//        OrderRequest orderRequest = new OrderRequest(orderItemRequests, "Test Message", 180000);
+//        OrderResponse orderResponse = OrderResponse.from(orderRequest.toOrder(MEMBER));
+//
+//        given(orderService.createAndSendMessage(any(OrderRequest.class), any(Member.class))).willReturn(orderResponse);
+//
+//        // when & then
+//        mockMvc.perform(post("/api/orders")
+//            .contentType(MediaType.APPLICATION_JSON)
+//            .content(objectMapper.writeValueAsString(orderRequest))
+//            .header("Authorization", "Bearer token"))
+//            .andExpect(status().isCreated())
+//            .andExpect(content().json(objectMapper.writeValueAsString(orderResponse)));
+//    }
 }

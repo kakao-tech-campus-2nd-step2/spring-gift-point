@@ -16,4 +16,7 @@ public interface ProductJpaRepository extends JpaRepository<Product, Long> {
 
     @Query("select p from Product p join fetch p.category")
     List<Product> findAll();
+
+    @Query("select p from Product p join p.options o where o.id = :optionId")
+    Optional<Product> findByOptionId(@Param("optionId") Long optionId);
 }
