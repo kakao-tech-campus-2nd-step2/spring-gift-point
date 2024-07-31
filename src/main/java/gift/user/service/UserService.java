@@ -1,6 +1,8 @@
 package gift.user.service;
 
 import gift.user.domain.User;
+import gift.user.domain.dto.LoginRequest;
+import gift.user.domain.dto.LoginResponse;
 import gift.user.repository.UserRepository;
 import gift.utility.JwtUtil;
 import jakarta.validation.constraints.Email;
@@ -41,11 +43,17 @@ public class UserService {
         userRepository.deleteById(id);
     }
 
-    public Optional<User> authenticateUser(String email, String password) {
-        return userRepository.findByEmailAndPassword(email, password);
-    }
-
     public Optional<User> findByEmail(String email){
         return userRepository.findByEmail(email);
+    }
+    public LoginResponse save(LoginRequest loginRequest){
+        Long userId = userRepository.save(new User(loginRequest.email(), loginRequest.password())).getId();
+        return new LoginResponse(getJwtTokenByUserId(userId));
+    }
+
+    public String getJwtTokenByUserId(Long userId) {
+        User user = userRepository.findById(userId)
+            .orElseThrow(() -> new IllegalArgumentException("userId " + userId + "가 없습니다."));
+        return JwtUtil.generateToken(user.getEmail());
     }
 }
