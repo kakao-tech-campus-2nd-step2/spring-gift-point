@@ -40,4 +40,4 @@ out/
 .DS_Store
 
 ### Application Properties ###
-application.properties
+src/main/resources/application.properties
