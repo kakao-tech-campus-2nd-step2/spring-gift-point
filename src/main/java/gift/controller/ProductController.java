@@ -1,6 +1,7 @@
 package gift.controller;
 
 
+import gift.dto.ErrorResponse;
 import gift.dto.OptionDTO;
 import gift.dto.ProductDTO;
 import gift.dto.ProductUpdateRequest;
@@ -10,6 +11,9 @@ import gift.entity.Product;
 import gift.service.ProductFacadeService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -35,28 +39,26 @@ public class ProductController {
         this.productService = productService;
     }
 
-//    @Operation(summary = "전체 Product 목록 조회", description = "저장된 모든 상품의 정보를 가져옵니다.")
-//    @GetMapping
-//    public List<Product> getProduct() {
-//        return productService.getAllProducts();
-//    }
 
     @GetMapping("/{productId}")
     @Operation(summary = "ID로 Product 조회", description = "Product의 Id로 상품의 정보를 가져옵니다.")
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "400", description = "Bad Request!"),
-        @ApiResponse(responseCode = "403", description = "Forbidden! Already Exist"),
-    })
-    public Product getProductById(
+        @ApiResponse(responseCode = "200", description = "상품 조회 성공"),
+        @ApiResponse(responseCode = "404", description = "존재하지 않는 상품.", content = @Content(array = @ArraySchema(schema = @Schema(implementation = ErrorResponse.class))))})
+    public ResponseEntity<Product> getProductById(
         @Parameter(name = "productId", description = "조회할 상품의 id", example = "1")
         @PathVariable("productId") long productId) {
-        return productService.getProductById(productId);
+        Product product = productService.getProductById(productId);
+        return new ResponseEntity<>(product, HttpStatus.OK);
     }
 
 
     //Product Pagination
     @GetMapping
     @Operation(summary = "Product를 Page로 조회", description = "여러개의 Product를 페이지네이션 하여 가져옵니다. 페이지당 Product의 기본 설정 개수는 5개입니다.")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Product 목록 조회 성공"),
+        @ApiResponse(responseCode = "400", description = "입력 데이터 잘못됨.", content = @Content(array = @ArraySchema(schema = @Schema(implementation = ErrorResponse.class))))})
     public ResponseEntity<Page<Product>> getProductPage(
         @Parameter(name = "page", description = "페이지 번호", example = "1")
         @RequestParam int page,
@@ -72,6 +74,11 @@ public class ProductController {
     //product 추가
     @PostMapping
     @Operation(summary = "Product 추가", description = "새로운 Product를 추가합니다. Product는 최소 1개의 Option을 가지고 있어야 합니다.")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "201", description = "상품 추가 성공"),
+        @ApiResponse(responseCode = "400", description = "입력 데이터 잘못됨.", content = @Content(array = @ArraySchema(schema = @Schema(implementation = ErrorResponse.class)))),
+        @ApiResponse(responseCode = "404", description = "존재하지 않는 상품 카테고리", content = @Content(array = @ArraySchema(schema = @Schema(implementation = ErrorResponse.class)))),
+        @ApiResponse(responseCode = "409", description = "상품 이름 중복 ", content = @Content(array = @ArraySchema(schema = @Schema(implementation = ErrorResponse.class))))})
     public ResponseEntity<String> addProduct(@RequestBody @Valid ProductDTO productDTO) {
         Category category = productService.findCategoryById(productDTO.getCategoryId());
         Product product = productDTO.toEntity(category);
@@ -88,6 +95,10 @@ public class ProductController {
     //product 수정
     @PutMapping("/{productId}")
     @Operation(summary = "Product 수정", description = "id에 해당하는 Product를 새로운 정보로 수정합니다.")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "204", description = "상품 수정 성공"),
+        @ApiResponse(responseCode = "400", description = "입력 데이터 잘못됨.", content = @Content(array = @ArraySchema(schema = @Schema(implementation = ErrorResponse.class)))),
+        @ApiResponse(responseCode = "404", description = "수정하려는 상품 조회 실패.", content = @Content(array = @ArraySchema(schema = @Schema(implementation = ErrorResponse.class)))),})
     public ResponseEntity<String> editProduct(
         @Parameter(name = "productId", description = "Product Id", example = "1") @PathVariable("productId") Long productId,
         @Valid @RequestBody ProductUpdateRequest productUpdateRequest) {
@@ -95,13 +106,17 @@ public class ProductController {
         Product product = productUpdateRequest.toEntity(category);
         productService.updateProduct(product, productId);
 
-        return new ResponseEntity<>("상품 수정 성공", HttpStatus.OK);
+        return new ResponseEntity<>("상품 수정 성공", HttpStatus.NO_CONTENT);
 
     }
 
     //product 삭제
     @DeleteMapping("/{productId}")
     @Operation(summary = "Product 삭제", description = "id에 해당하는 Product를 삭제합니다.")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "204", description = "회원가입 성공"),
+        @ApiResponse(responseCode = "404", description = "삭제하려는 상품 조회 실패.", content = @Content(array = @ArraySchema(schema = @Schema(implementation = ErrorResponse.class)))),
+    })
     public ResponseEntity<String> deleteProduct(
         @Parameter(name = "productId", description = "Product Id", example = "1") @PathVariable("productId") Long productId) {
         productService.deleteProduct(productId);

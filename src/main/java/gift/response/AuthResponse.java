@@ -2,14 +2,14 @@ package gift.response;
 
 public class AuthResponse {
 
-    private final String accessToken;
+    private final String token;
 
     public AuthResponse(String accessToken) {
-        this.accessToken = accessToken;
+        token = accessToken;
     }
 
     public String getAccessToken() {
-        return accessToken;
+        return token;
     }
 
 }

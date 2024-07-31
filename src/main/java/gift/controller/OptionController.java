@@ -1,18 +1,21 @@
 package gift.controller;
 
-import gift.annotation.LoginUser;
+
 import gift.dto.OptionDTO;
-import gift.dto.OrderRequestDTO;
-import gift.dto.OrderResponseDTO;
+
 import gift.entity.Option;
 import gift.entity.Product;
 import gift.service.OptionFacadeService;
-import gift.service.OptionService;
+import gift.dto.ErrorResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.validation.Valid;
-import org.apache.coyote.Response;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -33,15 +36,26 @@ public class OptionController {
 
     @GetMapping()
     @Operation(summary = "ID로 Product 옵션 조회", description = "Product의 Id로 상품의 옵션을 가져옵니다.")
-    public List<Option> getProductByIdWithOption(
-            @Parameter(name = "productId", description = "Product Id", example = "1") @PathVariable("productId") long productId) {
-        return optionService.getAllProductOption(productId);
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "201", description = "옵션 목록 조회 성공"),
+        @ApiResponse(responseCode = "404", description = "존재하지 않는 옵션", content = @Content(array = @ArraySchema(schema = @Schema(implementation = ErrorResponse.class))))
+    })
+
+    public ResponseEntity<List<Option>> getProductByIdWithOption(
+        @Parameter(name = "productId", description = "Product Id", example = "1") @PathVariable("productId") long productId) {
+        List<Option> options = optionService.getAllProductOption(productId);
+        return new ResponseEntity<>(options, HttpStatus.OK);
     }
 
     @Operation(summary = "상품 Option 추가", description = "상품의 옵션을 추가합니다.")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "201", description = "옵션 추가 성공"),
+        @ApiResponse(responseCode = "400", description = "입력 데이터 잘못됨.", content = @Content(array = @ArraySchema(schema = @Schema(implementation = ErrorResponse.class)))),
+        @ApiResponse(responseCode = "404", description = "존재하지 않는 상품.", content = @Content(array = @ArraySchema(schema = @Schema(implementation = ErrorResponse.class)))),
+        @ApiResponse(responseCode = "409", description = "옵션명 중복", content = @Content(array = @ArraySchema(schema = @Schema(implementation = ErrorResponse.class))))})
     @PostMapping()
     public ResponseEntity<String> addOption(
-            @PathVariable("productId") Long productId, @RequestBody OptionDTO optionDTO) {
+        @PathVariable("productId") Long productId, @RequestBody OptionDTO optionDTO) {
         Product product = optionService.findProductById(productId);
         Option option = optionDTO.toEntity(product);
         optionService.addOption(option);
@@ -51,9 +65,15 @@ public class OptionController {
 
     @PutMapping("/{optionId}")
     @Operation(summary = "상품 Option 수정", description = "id값에 해당하는 상품의 옵션을 수정합니다.")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "204", description = "옵션 수정 성공"),
+        @ApiResponse(responseCode = "400", description = "입력 데이터 잘못됨.",content = @Content(array = @ArraySchema(schema = @Schema(implementation = ErrorResponse.class)))),
+        @ApiResponse(responseCode = "404", description = "수정하려는 옵션 조회 실패.",content = @Content(array = @ArraySchema(schema = @Schema(implementation = ErrorResponse.class)))),
+        @ApiResponse(responseCode = "409", description = "옵션 이름 중복 ",content = @Content(array = @ArraySchema(schema = @Schema(implementation = ErrorResponse.class))))})
+
     public ResponseEntity<String> updateOption(@PathVariable("productId") Long productId,
-                                               @PathVariable("optionId") Long optionId,
-                                               @RequestBody OptionDTO optionDTO) {
+        @PathVariable("optionId") Long optionId,
+        @RequestBody OptionDTO optionDTO) {
         Product product = optionService.findProductById(productId);
         Option option = optionDTO.toEntity(product);
         optionService.updateOption(option, optionId);
@@ -62,12 +82,16 @@ public class OptionController {
 
     @DeleteMapping("/{optionId}")
     @Operation(summary = "상품 Option 삭제", description = "id값에 해당하는 상품의 옵션을 삭제합니다.")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "204", description = "옵션 삭제 성공"),
+        @ApiResponse(responseCode = "400", description = "삭제시 상품의 옵션이 존재하지 않을때", content = @Content(array = @ArraySchema(schema = @Schema(implementation = ErrorResponse.class)))),
+        @ApiResponse(responseCode = "404", description = "삭제하려는 옵션 조회 실패.", content = @Content(array = @ArraySchema(schema = @Schema(implementation = ErrorResponse.class))))})
+
     public ResponseEntity<String> deleteOption(@PathVariable("productId") Long productId,
-                                               @PathVariable("optionId") Long optionId) {
+        @PathVariable("optionId") Long optionId) {
         optionService.deleteOption(optionId);
         return new ResponseEntity<>("Option 삭제 완료", HttpStatus.NO_CONTENT);
     }
-
 
 
 }

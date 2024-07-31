@@ -1,13 +1,17 @@
 package gift.controller;
 
 import gift.annotation.LoginUser;
+import gift.dto.ErrorResponse;
 import gift.dto.OrderRequestDTO;
-import gift.entity.Member;
-import gift.entity.Option;
 import gift.entity.Orders;
 import gift.service.OrderService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
@@ -28,7 +32,11 @@ public class OrderController {
     public OrderController(OrderService orderService) {
         this.orderService = orderService;
     }
+
     @Operation(summary = "주문 목록 조회", description = "로그인한 사용자의 주문 목록을 페이지별로 조회합니다.")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "주문 목록 조회 성공"),
+        @ApiResponse(responseCode = "401", description = "유효한 토큰 필요", content = @Content(array = @ArraySchema(schema = @Schema(implementation = ErrorResponse.class))))})
     @GetMapping
     public ResponseEntity<Page<Orders>> getOrderList(
         @LoginUser String email,
@@ -37,20 +45,23 @@ public class OrderController {
         @Parameter(name = "size", description = "페이지 크기", example = "20")
         @RequestParam int size,
         @Parameter(name = "sort", description = "정렬 기준", example = "id,desc")
-        @RequestParam String[] sort){
-        Page<Orders> order = orderService.getProductPage(email,page,size,sort);
+        @RequestParam String[] sort) {
+        Page<Orders> order = orderService.getProductPage(email, page, size, sort);
         return new ResponseEntity<>(order, HttpStatus.OK);
     }
 
     @Operation(summary = "상품 주문", description = "사용자가 상품을 주문합니다.")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "201", description = "상품 주문 성공"),
+        @ApiResponse(responseCode = "400", description = "입력 데이터 잘못됨.", content = @Content(array = @ArraySchema(schema = @Schema(implementation = ErrorResponse.class)))),
+        @ApiResponse(responseCode = "401", description = "유효한 토큰 필요.", content = @Content(array = @ArraySchema(schema = @Schema(implementation = ErrorResponse.class)))),
+        @ApiResponse(responseCode = "404", description = "존재하지 않는 상품, 옵션 ", content = @Content(array = @ArraySchema(schema = @Schema(implementation = ErrorResponse.class))))})
     @PostMapping
-    public ResponseEntity<String> addOrder(@Valid @RequestBody OrderRequestDTO orderRequest, @LoginUser String email){
-        Option option = orderService.findOptionById(orderRequest.getOptionId());
-        Member member = orderService.findMemberByEmail(email);
-        orderService.orderOption(orderRequest,email);
-        return new ResponseEntity<>("상품 추가 완료",HttpStatus.OK);
+    public ResponseEntity<String> addOrder(@Valid @RequestBody OrderRequestDTO orderRequest,
+        @LoginUser String email) {
+        orderService.orderOption(orderRequest, email);
+        return new ResponseEntity<>("상품 주문 완료", HttpStatus.CREATED);
     }
-
 
 
 }

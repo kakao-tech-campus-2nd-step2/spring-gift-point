@@ -19,14 +19,14 @@ public enum ErrorCode {
     MEMBER_EMAIL_NOT_ALLOWED("회원 ID 규칙에 맞지 않습니다.",HttpStatus.BAD_REQUEST),
     MEMBER_PASSWORD_NOT_ALLOWED("회원 비밀번호 규칙에 맞지 않습니다.",HttpStatus.BAD_REQUEST),
     MEMBER_EMAIL_DUPLICATED("중복된 EMAIL이 이미 존재합니다.",HttpStatus.CONFLICT),
-    MEMBER_LOGIN_NOT_ALLOWED("사용자 정보가 일치하지 않습니다.",HttpStatus.BAD_REQUEST),
+    MEMBER_LOGIN_NOT_ALLOWED("사용자 정보가 일치하지 않습니다.",HttpStatus.FORBIDDEN),
 
     //Wishlist
     WISHLIST_NOT_FOUND("존재하지 않는 위시리스트입니다.",HttpStatus.NOT_FOUND),
     WISHLIST_ALREADY_EXISTS("이미 위시리스트에 추가된 상품입니다.",HttpStatus.CONFLICT),
 
     //Category
-    CATEGORY_NOT_FOUND("존재하지 않는 상품 카테고리입니다.",HttpStatus.BAD_REQUEST),
+    CATEGORY_NOT_FOUND("존재하지 않는 상품 카테고리입니다.",HttpStatus.NOT_FOUND),
     CATEGORY_NAME_DUPLICATED("이미 존재하는 카테고리 이름입니다.",HttpStatus.CONFLICT),
 
     //Option

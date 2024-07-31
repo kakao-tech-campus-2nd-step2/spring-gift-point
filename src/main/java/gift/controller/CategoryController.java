@@ -1,10 +1,14 @@
 package gift.controller;
 
 import gift.dto.CategoryDTO;
+import gift.dto.ErrorResponse;
 import gift.entity.Category;
 import gift.service.CategoryService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -41,8 +45,8 @@ public class CategoryController {
     @Operation(summary = "Category 추가", description = "새 카테고리를 추가합니다.")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "201", description = "카테고리 추가 성공"),
-        @ApiResponse(responseCode = "401", description = "입력 데이터 잘못됨."),
-        @ApiResponse(responseCode = "409", description = "카테고리 이름 중복 ")})
+        @ApiResponse(responseCode = "400", description = "입력 데이터 잘못됨.", content = @Content(array = @ArraySchema(schema = @Schema(implementation = ErrorResponse.class)))),
+        @ApiResponse(responseCode = "409", description = "카테고리 이름 중복 ", content = @Content(array = @ArraySchema(schema = @Schema(implementation = ErrorResponse.class))))})
     public ResponseEntity<String> addCategory(@RequestBody CategoryDTO categoryDTO) {
         Category category = categoryDTO.toEntity();
         categoryService.save(category);
@@ -51,6 +55,11 @@ public class CategoryController {
 
     @PutMapping({"/{categoryId}"})
     @Operation(summary = "Category 수정", description = "기존의 카테고리를 수정합니다.")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "카테고리 수정 성공"),
+        @ApiResponse(responseCode = "400", description = "입력 데이터 잘못됨.", content = @Content(array = @ArraySchema(schema = @Schema(implementation = ErrorResponse.class)))),
+        @ApiResponse(responseCode = "404", description = "수정하려는 카테고리 조회 실패.", content = @Content(array = @ArraySchema(schema = @Schema(implementation = ErrorResponse.class)))),
+        @ApiResponse(responseCode = "409", description = "카테고리 이름 중복 ", content = @Content(array = @ArraySchema(schema = @Schema(implementation = ErrorResponse.class))))})
     public ResponseEntity<String> updateCategory(@RequestBody CategoryDTO categoryDTO,
         @Parameter(name = "categoryId", description = "수정할 카테고리 ID")
         @PathVariable("categoryId") Long categoryId) {
@@ -61,6 +70,9 @@ public class CategoryController {
 
     @DeleteMapping({"/{categoryId}"})
     @Operation(summary = "Category 수정", description = "기존의 카테고리를 수정합니다.")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "204", description = "카테고리 삭제 성공"),
+        @ApiResponse(responseCode = "404", description = "삭제하려는 카테고리 조회 실패.", content = @Content(array = @ArraySchema(schema = @Schema(implementation = ErrorResponse.class))))})
     public ResponseEntity<String> deleteCategory(@PathVariable("categoryId") Long categoryId) {
         categoryService.delete(categoryId);
         return new ResponseEntity<>("OK", HttpStatus.NO_CONTENT);

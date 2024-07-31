@@ -1,6 +1,7 @@
 package gift.controller;
 
 import gift.annotation.LoginUser;
+import gift.dto.ErrorResponse;
 import gift.dto.WishRequest;
 import gift.entity.Member;
 import gift.entity.Product;
@@ -10,6 +11,11 @@ import gift.service.ProductService;
 import gift.service.WishlistService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.data.domain.Page;
 
@@ -43,6 +49,10 @@ public class WishlistController {
 
     @GetMapping()
     @Operation(summary = "Wishlist 조회", description = "전달받은 email을 통해 사용자의 Wishlist를 가져옵니다")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "위시리스트 조회 성공"),
+        @ApiResponse(responseCode = "401", description = "유효한 토큰 필요", content = @Content(array = @ArraySchema(schema = @Schema(implementation = ErrorResponse.class))))})
+
     public ResponseEntity<Page<Wish>> getWishlist(@LoginUser String email,
         @Parameter(name = "page", description = "페이지 번호", example = "1")
         @RequestParam
@@ -53,11 +63,17 @@ public class WishlistController {
         @Parameter(name = "sort", description = "정렬 기준", example = "id,desc")
         @RequestParam
         String[] sort) {
-        Page<Wish> wishlist = wishlistService.getWishPage(email,page,size,sort);
+        Page<Wish> wishlist = wishlistService.getWishPage(email, page, size, sort);
         return new ResponseEntity<>(wishlist, HttpStatus.OK);
     }
 
     @Operation(summary = "Wishlist 에 상품 추가", description = "로그인한 사용자의 Wishlist에 상품을 추가합니다.")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "201", description = "위시리스트에 상품 추가 성공"),
+        @ApiResponse(responseCode = "400", description = "입력 데이터 잘못됨.", content = @Content(array = @ArraySchema(schema = @Schema(implementation = ErrorResponse.class)))),
+        @ApiResponse(responseCode = "401", description = "유효한 토큰 필요", content = @Content(array = @ArraySchema(schema = @Schema(implementation = ErrorResponse.class)))),
+        @ApiResponse(responseCode = "404", description = "존재하지 않는 상품.", content = @Content(array = @ArraySchema(schema = @Schema(implementation = ErrorResponse.class)))),
+        @ApiResponse(responseCode = "409", description = "이미 위시리스트에 존재하는 상품 ", content = @Content(array = @ArraySchema(schema = @Schema(implementation = ErrorResponse.class))))})
     @PostMapping
     public ResponseEntity<String> addWishlist(@RequestBody WishRequest wishRequest,
         @LoginUser String email) {
@@ -69,8 +85,14 @@ public class WishlistController {
     }
 
     @Operation(summary = "Wishlist 의 상품 제거", description = "로그인한 사용자의 Wishlist에서 상품을 제거합니다.")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "201", description = "위시리스트 상품 삭제 성공"),
+        @ApiResponse(responseCode = "400", description = "입력 데이터 잘못됨.",content = @Content(array = @ArraySchema(schema = @Schema(implementation = ErrorResponse.class)))),
+        @ApiResponse(responseCode = "401", description = "유효한 토큰 필요",content = @Content(array = @ArraySchema(schema = @Schema(implementation = ErrorResponse.class)))),
+        @ApiResponse(responseCode = "404", description = "이미 위시리스트에 존재하지 않는 상품",content = @Content(array = @ArraySchema(schema = @Schema(implementation = ErrorResponse.class))))})
     @DeleteMapping()
-    public ResponseEntity<String> deleteWishlist(@LoginUser String email, @RequestBody WishRequest wishRequest) {
+    public ResponseEntity<String> deleteWishlist(@LoginUser String email,
+        @RequestBody WishRequest wishRequest) {
         wishlistService.deleteWishlist(wishRequest.getProductId(), email);
         return new ResponseEntity<>("위시리스트 상품 삭제 완료", HttpStatus.NO_CONTENT);
     }
