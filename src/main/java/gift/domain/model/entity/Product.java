@@ -1,5 +1,6 @@
 package gift.domain.model.entity;
 
+import gift.util.TimeStamp;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -12,7 +13,7 @@ import jakarta.persistence.Column;
 
 @Entity
 @Table(name = "products")
-public class Product {
+public class Product extends TimeStamp {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

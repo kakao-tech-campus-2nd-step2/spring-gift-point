@@ -6,10 +6,10 @@ import gift.domain.model.dto.WishUpdateRequestDto;
 import gift.domain.model.entity.Product;
 import gift.domain.model.entity.User;
 import gift.domain.model.entity.Wish;
-import gift.domain.model.enums.WishSortBy;
 import gift.domain.repository.WishRepository;
 import gift.exception.DuplicateWishItemException;
 import gift.exception.NoSuchWishException;
+import gift.util.SortUtil;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -30,13 +30,17 @@ public class WishService {
     }
 
     @Transactional(readOnly = true)
-    public Page<WishResponseDto> getWishes(User user, int page, WishSortBy sortBy) {
-        Sort sort = sortBy.getSort();
-        Pageable pageable = PageRequest.of(page, PAGE_SIZE, sort);
+    public Page<WishResponseDto> getWishes(User user, int page, int size, String sort) {
+        Sort sortObj = SortUtil.createSort(sort);
+        Pageable pageable = PageRequest.of(page, size, sortObj);
 
-        Page<Wish> wishPage = wishRepository.findByUserEmail(user.getEmail(), pageable);
+        Page<Wish> wishes = wishRepository.findByUser(user, pageable);
 
-        return wishPage.map(this::convertToWishResponseDto);
+        return wishes.map(wish -> new WishResponseDto(
+            wish.getId(),
+            wish.getProduct().getId(),
+            wish.getCount()
+        ));
     }
 
     @Transactional

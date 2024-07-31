@@ -23,4 +23,6 @@ public interface WishRepository extends JpaRepository<Wish, Long> {
     void deleteByUserEmailAndProductId(String email, Long productId);
 
     void deleteByUserAndProduct(User user, Product product);
+
+    Page<Wish> findByUser(User user, Pageable pageable);
 }

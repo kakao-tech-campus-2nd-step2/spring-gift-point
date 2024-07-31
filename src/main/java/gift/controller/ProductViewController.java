@@ -1,7 +1,6 @@
 package gift.controller;
 
 import gift.domain.model.dto.ProductResponseDto;
-import gift.domain.model.enums.ProductSortBy;
 import gift.service.ProductService;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
@@ -19,7 +18,7 @@ public class ProductViewController {
 
     @GetMapping("/admin")
     public String home(Model model) {
-        Page<ProductResponseDto> productPage = productService.getAllProducts(0, ProductSortBy.ID_DESC);
+        Page<ProductResponseDto> productPage = productService.getAllProducts(0, 10, "name,asc", 1L);
         model.addAttribute("productPage", productPage);
         return "admin";
     }

@@ -3,12 +3,12 @@ package gift.controller;
 import gift.domain.model.dto.ProductAddRequestDto;
 import gift.domain.model.dto.ProductResponseDto;
 import gift.domain.model.dto.ProductUpdateRequestDto;
-import gift.domain.model.enums.ProductSortBy;
 import gift.service.ProductService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.Positive;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -45,8 +45,10 @@ public class ProductApiController {
     @GetMapping
     public ResponseEntity<Page<ProductResponseDto>> getAllProducts(
         @RequestParam(defaultValue = "0") @Min(value = 0, message = "페이지 번호는 0 이상이어야 합니다.") int page,
-        @RequestParam(defaultValue = "ID_DESC") ProductSortBy sortBy) {
-        return ResponseEntity.ok(productService.getAllProducts(page, sortBy));
+        @RequestParam(defaultValue = "10") @Positive int size,
+        @RequestParam(defaultValue = "name,asc") String sort,
+        @RequestParam Long categoryId) {
+        return ResponseEntity.ok(productService.getAllProducts(page, size, sort, categoryId));
     }
 
     @Operation(summary = "상품 추가", description = "새로운 상품을 추가합니다.")

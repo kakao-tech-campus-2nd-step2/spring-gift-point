@@ -5,12 +5,12 @@ import gift.domain.model.dto.WishAddRequestDto;
 import gift.domain.model.entity.User;
 import gift.domain.model.dto.WishResponseDto;
 import gift.domain.model.dto.WishUpdateRequestDto;
-import gift.domain.model.enums.WishSortBy;
 import gift.service.WishService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.Positive;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,7 +22,6 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -40,8 +39,9 @@ public class WishController {
     @GetMapping
     public ResponseEntity<Page<WishResponseDto>> getWishes(@LoginUser User user,
         @RequestParam(defaultValue = "0") @Min(value = 0, message = "페이지 번호는 0 이상이어야 합니다.") int page,
-        @RequestParam(defaultValue = "ID_DESC") WishSortBy sortBy) {
-        return ResponseEntity.ok(wishService.getWishes(user, page, sortBy));
+        @RequestParam(defaultValue = "10") @Positive int size,
+        @RequestParam(defaultValue = "createdDate,asc") String sort) {
+        return ResponseEntity.ok(wishService.getWishes(user, page, size, sort));
     }
 
     @Operation(summary = "위시리스트에 상품 추가", description = "위시리스트에 새로운 상품을 추가합니다.")
