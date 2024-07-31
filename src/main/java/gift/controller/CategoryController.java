@@ -3,7 +3,9 @@ package gift.controller;
 import gift.domain.Category;
 import gift.service.CategoryService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -24,7 +26,8 @@ public class CategoryController {
 
     @GetMapping
     @Operation(summary = "모든 카테고리 목록 조회 api")
+    @ApiResponse(responseCode = "200", description = "카테고리 목록 조회 성공")
     public ResponseEntity<List<Category>> getCategories() {
-        return ResponseEntity.ok(categoryService.getCategories());
+        return new ResponseEntity<>(categoryService.getCategories(), HttpStatus.OK);
     }
 }

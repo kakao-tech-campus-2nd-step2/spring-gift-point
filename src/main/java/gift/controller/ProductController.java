@@ -29,6 +29,7 @@ public class ProductController {
 
     @GetMapping
     @Operation(summary = "모든 상품 목록 조회 api")
+    @ApiResponse(responseCode = "200", description = "상품 목록 조회 성공")
     public ResponseEntity<Page<Product>> getAllProducts(Pageable pageable) {
         Page<Product> products = productService.getAllProducts(pageable);
         return ResponseEntity.ok(products);
@@ -36,6 +37,7 @@ public class ProductController {
 
     @GetMapping("/{productId}")
     @Operation(summary = "특정 제품 정보 조회 api")
+    @ApiResponse(responseCode = "200", description = "특정 상품 정보 조회 성공")
     public ResponseEntity<Product> getProduct(@PathVariable("productId") Long productId) {
         return ResponseEntity.ok(productService.getProduct(productId));
     }
@@ -47,25 +49,25 @@ public class ProductController {
     }
 
     @PutMapping("/{productId}")
-    @Operation(summary = "상품 정보 수정 api")
+    @Operation(summary = "[관리자] 상품 정보 수정 api")
     public ResponseEntity<MessageResponse> updateProduct(@PathVariable("productId") Long productId, @Valid @RequestBody UpdateProductRequest product) {
         return ResponseEntity.ok(productService.updateProduct(productId, product));
     }
 
     @DeleteMapping("/{productId}")
-    @Operation(summary = "상품 삭제 api")
+    @Operation(summary = "[관리자] 상품 삭제 api")
     public ResponseEntity<MessageResponse> deleteProduct(@PathVariable("productId") Long productId) {
         return ResponseEntity.ok(productService.deleteProduct(productId));
     }
 
     @GetMapping("/{productId}/options")
-    @Operation(summary = "특정 상품의 모든 옵션 조회 api")
+    @Operation(summary = "[관리자] 특정 상품의 모든 옵션 조회 api")
     public ResponseEntity<List<Option>> getOptions(@PathVariable("productId") Long productId) {
         return ResponseEntity.ok(productService.getOptions(productId));
     }
 
     @PostMapping("/{productId}/options")
-    @Operation(summary = "특정 상품의 옵션 추가 api")
+    @Operation(summary = "[관리자] 특정 상품의 옵션 추가 api")
     public ResponseEntity<MessageResponse> addOption(@PathVariable("productId") Long productId, @Valid @RequestBody AddOptionRequest addOptionRequest) {
         return ResponseEntity.ok(productService.addOption(productId, addOptionRequest));
     }
