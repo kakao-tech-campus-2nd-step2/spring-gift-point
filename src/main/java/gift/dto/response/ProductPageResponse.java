@@ -4,6 +4,7 @@ import gift.domain.Product;
 import org.springframework.data.domain.Page;
 
 import java.util.List;
+import java.util.SequencedCollection;
 import java.util.stream.Collectors;
 
 public class ProductPageResponse {
@@ -35,4 +36,11 @@ public class ProductPageResponse {
         );
     }
 
+    public long getTotalElements() {
+        return totalElements;
+    }
+
+    public List<ProductResponse> getContent() {
+        return content;
+    }
 }

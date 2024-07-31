@@ -5,6 +5,7 @@ import gift.domain.Option;
 import gift.domain.Product;
 import gift.dto.request.OptionRequest;
 import gift.dto.request.ProductRequest;
+import gift.dto.response.ProductPageResponse;
 import gift.exception.CategoryNotFoundException;
 import gift.exception.ProductNotFoundException;
 import gift.repository.category.CategorySpringDataJpaRepository;
@@ -97,7 +98,7 @@ public class ProductServiceTest {
         Page<Product> mockPage = new PageImpl<>(Collections.singletonList(mockProduct));
         when(productRepository.findAll(pageable)).thenReturn(mockPage);
 
-        Page<Product> products = productService.getProducts(null,pageable);
+        ProductPageResponse products = productService.getProducts(null,pageable);
 
         assertNotNull(products);
         assertEquals(1, products.getTotalElements());
