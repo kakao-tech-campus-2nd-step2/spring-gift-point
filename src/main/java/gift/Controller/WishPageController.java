@@ -5,6 +5,7 @@ import gift.Model.Entity.Member;
 import gift.Model.Entity.Product;
 import gift.Model.Entity.Wish;
 import gift.Service.ProductService;
+import jakarta.validation.Valid;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
@@ -67,7 +68,7 @@ public class WishPageController {
     }
 
     @PostMapping("/delete")
-    public String deleteWish(@ValidUser Member member, @RequestBody RequestWishDTO requestWishDTO){
+    public String deleteWish(@ValidUser Member member, @Valid @RequestBody RequestWishDTO requestWishDTO){
         wishService.deleteWish(member,requestWishDTO);
         return "redirect:/member/wishes";
     }
