@@ -20,9 +20,8 @@ public class CategoryService {
 
     public CategoryResponseDTO addCategory(CategoryRequestDTO categoryRequestDTO){
         Category category = categoryRequestDTO.toEntity();
-        CategoryResponseDTO categoryResponseDTO = CategoryResponseDTO.from(category);
         jpaCategoryRepository.save(category);
-        return categoryResponseDTO;
+        return CategoryResponseDTO.from(category);
     }
 
     @Transactional(readOnly = true)
