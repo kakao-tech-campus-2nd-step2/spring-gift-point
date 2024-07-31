@@ -76,16 +76,16 @@ public class AuthController {
     }
 
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "카카오 로그인 성공", content = @Content(mediaType = "application/json", schema = @Schema(implementation = JwtResponse.class))),
+        @ApiResponse(responseCode = "200", description = "카카오 로그인 성공", content = @Content(mediaType = "application/json", schema = @Schema(implementation = AccessTokenDto.class))),
         @ApiResponse(responseCode = "401", description = "사용자 인증 오류", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ExceptionResponse.class))),
         @ApiResponse(responseCode = "500", description = "내부 서버 오류", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ExceptionResponse.class)))
     })
     @GetMapping("/login/kakao/callback")
-    public ResponseEntity<JwtResponse> getKakaoJwt(@RequestParam(name = "code") String code) {
+    public ResponseEntity<AccessTokenDto> getKakaoJwt(@RequestParam(name = "code") String code) {
         OAuthJwt oAuthJwt = authService.getOAuthToken(code, KAKAO_AUTH_TOKEN_URL);
-        JwtResponse jwtResponse = authService.registerKakaoMember(oAuthJwt,
+        AccessTokenDto accessTokenDto = authService.registerKakaoMember(oAuthJwt,
             KAKAO_USER_INFO_URL);
-        return ResponseEntity.ok(jwtResponse);
+        return ResponseEntity.ok(accessTokenDto);
     }
 
     @ApiResponses(value = {

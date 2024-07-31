@@ -100,7 +100,7 @@ public class AuthService {
         }
     }
 
-    public JwtResponse registerKakaoMember(OAuthJwt oAuthJwt, String externalApiUrl) {
+    public AccessTokenDto registerKakaoMember(OAuthJwt oAuthJwt, String externalApiUrl) {
         ResponseEntity<String> response = restClient.post()
             .uri(URI.create(externalApiUrl))
             .contentType(MediaType.APPLICATION_FORM_URLENCODED)
@@ -120,7 +120,7 @@ public class AuthService {
                 authRepository.save(new Member(memberEmail, "oauth"));
             }
 
-            return getJwtResponse(oAuthJwt, memberEmail);
+            return getAccessTokenDto(oAuthJwt, memberEmail);
         } catch (Exception e) {
             throw new InternalException("소셜 로그인 진행 중 예기치 못한 오류가 발생하였습니다. 다시 시도해 주세요.");
         }
@@ -201,14 +201,14 @@ public class AuthService {
         return body;
     }
 
-    private JwtResponse getJwtResponse(OAuthJwt oAuthJwt, String memberEmail) {
+    private AccessTokenDto getAccessTokenDto(OAuthJwt oAuthJwt, String memberEmail) {
         Member member = authRepository.findByEmail(memberEmail);
 
         kakaoTokenRepository.save(new KakaoToken(member.getId(),
             oAuthJwt.accessToken(),
             oAuthJwt.refreshToken()));
 
-        return new JwtResponse(getAccessToken(member), getRefreshToken(member));
+        return new AccessTokenDto(getAccessToken(member));
     }
 
     private KakaoToken getKakaoToken(LoginMemberIdDto loginMemberIdDto) {
