@@ -3,7 +3,9 @@ package gift.controller;
 import gift.domain.AppUser;
 import gift.dto.common.CommonResponse;
 import gift.dto.user.LoginRequest;
+import gift.dto.user.LoginResponse;
 import gift.dto.user.SignUpRequest;
+import gift.dto.user.SignUpResponse;
 import gift.dto.user.UpdatePasswordRequest;
 import gift.exception.user.ForbiddenException;
 import gift.service.JwtUserService;
@@ -38,16 +40,20 @@ public class UserController {
     @PostMapping
     public ResponseEntity<?> signUp(@Valid @RequestBody SignUpRequest signUpRequest) {
         userService.signUp(signUpRequest);
-        return ResponseEntity.status(HttpStatus.CREATED).body(new CommonResponse<>(null, "회원가입이 완료되었습니다.", true));
+        String token = jwtUserService.login(new LoginRequest(signUpRequest.getEmail(), signUpRequest.getPassword()));
+        SignUpResponse response = new SignUpResponse(signUpRequest.getEmail(), token);
+        return ResponseEntity.status(HttpStatus.CREATED) .header("Authorization", token)
+                .body(new CommonResponse<>(response, "회원가입이 완료되었습니다.", true));
     }
 
     @Operation(summary = "로그인", description = "로그인 성공 후 jwt 토큰 발급")
     @PostMapping("/login")
     public ResponseEntity<?> login(@Valid @RequestBody LoginRequest loginRequest) {
         String token = jwtUserService.login(loginRequest);
+        LoginResponse response = new LoginResponse(loginRequest.email(), token);
         return ResponseEntity.ok()
                 .header("Authorization", token)
-                .body(new CommonResponse<>(null, "회원가입이 완료되었습니다.", true));
+                .body(new CommonResponse<>(response, "로그인이 완료되었습니다.", true));
     }
 
     @Operation(summary = "로그인 유저 비밀번호 수정")
