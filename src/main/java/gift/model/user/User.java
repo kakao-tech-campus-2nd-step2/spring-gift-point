@@ -40,20 +40,10 @@ public class User {
     private String accessToken;
     @Column
     private String refreshToken;
+    @Column
+    private Role role;
 
     protected User() {
-    }
-
-    public User(Long id, String email, String password) {
-        this.id = id;
-        this.password = password;
-        this.email = email;
-    }
-
-    public User(String email, String password, Long kakaoId) {
-        this.email = email;
-        this.password = password;
-        this.kakaoId = kakaoId;
     }
 
     public User(String email, String password, Long kakaoId, String accessToken,
@@ -63,14 +53,15 @@ public class User {
         this.kakaoId = kakaoId;
         this.accessToken = accessToken;
         this.refreshToken = refreshToken;
+        this.role = Role.ROLE_USER;
+    }
+
+    public User(String email, String password) {
+        this(email, password, null, null, null);
     }
 
     public Long getKakaoId() {
         return kakaoId;
-    }
-
-    public User(String email, String password) {
-        this(null, email, password);
     }
 
     public Long getId() {
@@ -95,6 +86,10 @@ public class User {
 
     public String getRefreshToken() {
         return refreshToken;
+    }
+
+    public Role getRole() {
+        return role;
     }
 
     public Order addOrder(Order order) {
