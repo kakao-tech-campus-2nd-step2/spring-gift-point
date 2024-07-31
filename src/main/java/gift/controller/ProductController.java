@@ -10,7 +10,9 @@ import gift.service.ProductService;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -39,7 +41,9 @@ public class ProductController {
     // 전체 상품 조회
     @Operation(summary = "모든 제품 조회하기")
     @GetMapping
-    public ResponseEntity<List<ProductListDto>> getAllProducts(Pageable pageable) {
+    public ResponseEntity<List<ProductListDto>> getAllProducts(@RequestParam(defaultValue = "0") int page,
+                                                               @RequestParam(defaultValue = "10") int size) {
+        Pageable pageable = PageRequest.of(page, size);
         Page<ProductListDto> allProducts = productService.getAllProducts(pageable);
         if (allProducts.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NO_CONTENT).body(null);
@@ -72,7 +76,9 @@ public class ProductController {
     // 특정 카테고리별 상품 목록 조회
     @Operation(summary = "특정 카테고리의 상품 목록 조회")
     @GetMapping("/{category_id}")
-    public ResponseEntity<List<ProductListDto>> getProductOptions(@PathVariable Long category_id, Pageable pageable) {
+    public ResponseEntity<List<ProductListDto>> getProductOptions(@PathVariable Long category_id, @RequestParam(defaultValue = "0") int page,
+                                                                  @RequestParam(defaultValue = "10") int size) {
+        Pageable pageable = PageRequest.of(page, size);
         Page<ProductListDto> products = productService.getProductsByCategory(category_id, pageable);
         return ResponseEntity.ok(products.getContent());
     }

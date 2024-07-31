@@ -29,7 +29,9 @@ public class WishController {
 
     @Operation(summary = "특정 회원의 위시리스트 조회")
     @GetMapping
-    public ResponseEntity<List<WishListDto>> getWishList(@RequestHeader(HttpHeaders.AUTHORIZATION) String accessToken, Pageable pageable) {
+    public ResponseEntity<List<WishListDto>> getWishList(@RequestHeader(HttpHeaders.AUTHORIZATION) String accessToken, @RequestParam(defaultValue = "0") int page,
+                                                         @RequestParam(defaultValue = "10") int size) {
+        Pageable pageable = PageRequest.of(page, size);
         Page<WishListDto> wishPage = wishService.getWishPage(accessToken, pageable);
         return ResponseEntity.ok(wishPage.getContent());
     }

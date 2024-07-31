@@ -7,6 +7,7 @@ import gift.service.CategoryService;
 import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -24,7 +25,9 @@ public class CategoryController {
 
     @Operation(summary = "모든 카테고리 조회")
     @GetMapping
-    public ResponseEntity<List<CategoryListDto>> getAllCategories(Pageable pageable) {
+    public ResponseEntity<List<CategoryListDto>> getAllCategories(@RequestParam(defaultValue = "0") int page,
+                                                                  @RequestParam(defaultValue = "10") int size) {
+        Pageable pageable = PageRequest.of(page, size);
         Page<CategoryListDto> categories = categoryService.findAll(pageable);
         return ResponseEntity.ok(categories.getContent());
     }
