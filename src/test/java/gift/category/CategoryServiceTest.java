@@ -39,7 +39,7 @@ public class CategoryServiceTest {
     @BeforeEach
     void setUp() {
         defaultCategory = new Category("기본", "기본 카테고리");
-        defaultRequest = new CategoryRequest("수정/추가 카테고리", "새 카테고리입니다");
+        defaultRequest = new CategoryRequest("수정/추가 카테고리", "새 카테고리입니다", "color", "imageUrl");
     }
 
     /* 테스트 네이밍 : 메소드명_기대결과_테스트상태 */

@@ -10,6 +10,9 @@ import gift.dto.product.UpdateProductRequest;
 import gift.service.ProductService;
 import gift.util.resolver.LoginUser;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.enums.ParameterIn;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
@@ -61,25 +64,54 @@ public class ProductController {
         return ResponseEntity.ok(new CommonResponse<>(response, "카테고리 별 상품 전체 조회가 완료되었습니다.", true));
     }
 
-    @Operation(summary = "상품 추가", description = "`카카오` 키워드 사용 제약")
+    @Operation(summary = "상품 추가", description = "`카카오` 키워드 사용 제약",
+            security = @SecurityRequirement(name = "JWT"),
+            parameters = {
+                    @Parameter(
+                            name = "Authorization",
+                            description = "JWT token",
+                            required = true,
+                            in = ParameterIn.HEADER
+                    )
+            })
     @PostMapping
-    public ResponseEntity<?> addProduct(@LoginUser AppUser loginAppUser,
-                                             @Valid @RequestBody CreateProductRequest createProductRequest) {
+    public ResponseEntity<?> addProduct(@Parameter(hidden = true) @LoginUser AppUser loginAppUser,
+                                        @Valid @RequestBody CreateProductRequest createProductRequest) {
         productService.addProduct(loginAppUser, createProductRequest);
         return ResponseEntity.status(HttpStatus.CREATED).body(new CommonResponse<>(null, "상품 추가가 완료되었습니다.", true));
     }
 
-    @Operation(summary = "상품 수정", description = "판매자만 접근 가능")
+    @Operation(summary = "상품 수정", description = "판매자만 접근 가능",
+            security = @SecurityRequirement(name = "JWT"),
+            parameters = {
+                    @Parameter(
+                            name = "Authorization",
+                            description = "JWT token",
+                            required = true,
+                            in = ParameterIn.HEADER
+                    )
+            })
     @PutMapping("/{id}")
-    public ResponseEntity<String> updateProduct(@LoginUser AppUser loginAppUser, @PathVariable Long id,
+    public ResponseEntity<String> updateProduct(@Parameter(hidden = true) @LoginUser AppUser loginAppUser,
+                                                @PathVariable Long id,
                                                 @Valid @RequestBody UpdateProductRequest updateProductRequest) {
         productService.updateProduct(loginAppUser, id, updateProductRequest);
         return ResponseEntity.ok().body("ok");
     }
 
-    @Operation(summary = "상품 삭제", description = "판매자만 접근 가능")
+    @Operation(summary = "상품 삭제", description = "판매자만 접근 가능",
+            security = @SecurityRequirement(name = "JWT"),
+            parameters = {
+                    @Parameter(
+                            name = "Authorization",
+                            description = "JWT token",
+                            required = true,
+                            in = ParameterIn.HEADER
+                    )
+            })
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> deleteProductById(@LoginUser AppUser loginAppUser, @PathVariable Long id) {
+    public ResponseEntity<String> deleteProductById(@Parameter(hidden = true) @LoginUser AppUser loginAppUser,
+                                                    @PathVariable Long id) {
         productService.deleteProduct(loginAppUser, id);
         return ResponseEntity.ok().body("ok");
     }

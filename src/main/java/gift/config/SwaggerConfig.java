@@ -15,25 +15,25 @@ public class SwaggerConfig {
     public OpenAPI openAPI() {
         String jwt = "JWT";
         SecurityRequirement securityRequirement = new SecurityRequirement().addList(jwt);
-        Components components = new Components().addSecuritySchemes(jwt, new SecurityScheme()
+        SecurityScheme securityScheme = new SecurityScheme()
                 .name(jwt)
                 .type(SecurityScheme.Type.HTTP)
                 .scheme("bearer")
-                .bearerFormat("JWT")
-        );
+                .bearerFormat("JWT");
+
+        Components components = new Components().addSecuritySchemes(jwt, securityScheme);
+
         return new OpenAPI()
-                .components(new Components())
+                .components(components)
                 .info(apiInfo())
-                .addSecurityItem(securityRequirement)
-                .components(components);
+                .addSecurityItem(securityRequirement);
     }
 
     private Info apiInfo() {
         return new Info()
-                .title("카카오톡 선물하기 API ")
-                .description("카카오톡 선물하기 API 명세서 - 부산대 BE 유경미 ")
+                .title("카카오톡 선물하기 API")
+                .description("카카오톡 선물하기 API 명세서 - 부산대 BE 유경미")
                 .contact(new Contact().name("유경미").email("yookm02@pusan.ac.kr"))
                 .version("1.0.0");
     }
-
 }

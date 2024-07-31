@@ -7,6 +7,9 @@ import gift.service.CategoryService;
 import gift.util.aspect.AdminController;
 import gift.util.resolver.LoginUser;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.enums.ParameterIn;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -30,25 +33,55 @@ public class CategoryAdminController {
         this.categoryService = categoryService;
     }
 
-    @Operation(summary = "관리자 권한으로 카테고리 추가")
+    @Operation(summary = "관리자 권한으로 카테고리 추가",
+            security = @SecurityRequirement(name = "JWT"),
+            parameters = {
+                    @Parameter(
+                            name = "Authorization",
+                            description = "JWT token",
+                            required = true,
+                            in = ParameterIn.HEADER
+                    )
+            })
     @PostMapping
-    public ResponseEntity<?> addCategoryForAdmin(@LoginUser AppUser loginAppUser,
-                                                      @Valid @RequestBody CategoryRequest categoryRequest) {
+    public ResponseEntity<?> addCategoryForAdmin(@Parameter(hidden = true) @LoginUser AppUser loginAppUser,
+                                                 @Valid @RequestBody CategoryRequest categoryRequest) {
         categoryService.addCategory(categoryRequest);
-        return ResponseEntity.status(HttpStatus.CREATED).body(new CommonResponse<>(null, "관리자 권한으로 카테고리 추가가 완료되었습니다.", true));
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(new CommonResponse<>(null, "관리자 권한으로 카테고리 추가가 완료되었습니다.", true));
     }
 
-    @Operation(summary = "관리자 권한으로 카테고리 수정")
+    @Operation(summary = "관리자 권한으로 카테고리 수정",
+            security = @SecurityRequirement(name = "JWT"),
+            parameters = {
+                    @Parameter(
+                            name = "Authorization",
+                            description = "JWT token",
+                            required = true,
+                            in = ParameterIn.HEADER
+                    )
+            })
     @PutMapping("/{id}")
-    public ResponseEntity<?> updateCategoryForAdmin(@LoginUser AppUser loginAppUser, @PathVariable Long id,
-                                                         @Valid @RequestBody CategoryRequest categoryRequest) {
+    public ResponseEntity<?> updateCategoryForAdmin(@Parameter(hidden = true) @LoginUser AppUser loginAppUser,
+                                                    @PathVariable Long id,
+                                                    @Valid @RequestBody CategoryRequest categoryRequest) {
         categoryService.updateCategory(id, categoryRequest);
         return ResponseEntity.ok(new CommonResponse<>(null, "관리자 권한으로 카테고리 수정이 완료되었습니다.", true));
     }
 
-    @Operation(summary = "관리자 권한으로 카테고리 삭제")
+    @Operation(summary = "관리자 권한으로 카테고리 삭제",
+            security = @SecurityRequirement(name = "JWT"),
+            parameters = {
+                    @Parameter(
+                            name = "Authorization",
+                            description = "JWT token",
+                            required = true,
+                            in = ParameterIn.HEADER
+                    )
+            })
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> deleteCategoryByIdForAdmin(@LoginUser AppUser loginAppUser, @PathVariable Long id) {
+    public ResponseEntity<?> deleteCategoryByIdForAdmin(@Parameter(hidden = true) @LoginUser AppUser loginAppUser,
+                                                        @PathVariable Long id) {
         categoryService.deleteCategory(id);
         return ResponseEntity.ok(new CommonResponse<>(null, "관리자 권한으로 카테고리 삭제가 완료되었습니다.", true));
     }

@@ -36,7 +36,8 @@ public class CategoryService {
 
     @Transactional
     public void addCategory(CategoryRequest categoryRequest) {
-        Category category = new Category(categoryRequest.name(), categoryRequest.description());
+        Category category = new Category(categoryRequest.name(), categoryRequest.description(), categoryRequest.color(),
+                categoryRequest.imageUrl());
         categoryRepository.save(category);
     }
 
@@ -44,7 +45,8 @@ public class CategoryService {
     public void updateCategory(Long id, CategoryRequest categoryRequest) {
         Optional<Category> categoryOptional = categoryRepository.findById(id);
         Category category = categoryOptional.orElseThrow(() -> new EntityNotFoundException("Category"));
-        category.updateCategory(categoryRequest.name(), categoryRequest.description());
+        category.updateCategory(categoryRequest.name(), categoryRequest.description(), categoryRequest.color(),
+                categoryRequest.imageUrl());
         categoryRepository.save(category);
     }
 

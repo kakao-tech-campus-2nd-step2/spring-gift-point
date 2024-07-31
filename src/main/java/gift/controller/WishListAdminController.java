@@ -8,6 +8,9 @@ import gift.service.WishListService;
 import gift.util.aspect.AdminController;
 import gift.util.resolver.LoginUser;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.enums.ParameterIn;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -36,40 +39,78 @@ public class WishListAdminController {
         this.wishListService = wishListService;
     }
 
-    @Operation(summary = "관리자 권한으로 유저 위시리스트 조회")
+    @Operation(summary = "관리자 권한으로 유저 위시리스트 조회",
+            security = @SecurityRequirement(name = "JWT"),
+            parameters = {
+                    @Parameter(
+                            name = "Authorization",
+                            description = "JWT token",
+                            required = true,
+                            in = ParameterIn.HEADER
+                    )
+            })
     @GetMapping("/{userId}")
-    public ResponseEntity<?> getWishListForAdmin(@LoginUser AppUser loginAppUser,
-                                                                      @PathVariable("userId") Long userId,
-                                                                      @PageableDefault(size = 10, sort = "id", direction = Sort.Direction.DESC)
-                                                                      Pageable pageable) {
+    public ResponseEntity<?> getWishListForAdmin(@Parameter(hidden = true) @LoginUser AppUser loginAppUser,
+                                                 @PathVariable("userId") Long userId,
+                                                 @PageableDefault(size = 10, sort = "id", direction = Sort.Direction.DESC)
+                                                 Pageable pageable) {
         Page<WishListResponse> responses = wishListService.getWishList(userId, pageable);
         return ResponseEntity.ok(new CommonResponse<>(responses, "관리자 권한으로 유저 위시리스트 조회가 완료되었습니다.", true));
     }
 
-    @Operation(summary = "관리자 권한으로 유저 위시리스트 추가")
+    @Operation(summary = "관리자 권한으로 유저 위시리스트 추가",
+            security = @SecurityRequirement(name = "JWT"),
+            parameters = {
+                    @Parameter(
+                            name = "Authorization",
+                            description = "JWT token",
+                            required = true,
+                            in = ParameterIn.HEADER
+                    )
+            })
     @PostMapping("/{userId}")
-    public ResponseEntity<?> addWishForAdmin(@LoginUser AppUser loginAppUser, @PathVariable("userId") Long userId,
-                                                  @RequestBody AddWishRequest addWishRequest) {
+    public ResponseEntity<?> addWishForAdmin(@Parameter(hidden = true) @LoginUser AppUser loginAppUser,
+                                             @PathVariable("userId") Long userId,
+                                             @RequestBody AddWishRequest addWishRequest) {
         wishListService.addWish(userId, addWishRequest);
-        return ResponseEntity.status(HttpStatus.CREATED).body(new CommonResponse<>(null, "관리자 권한으로 유저 위시리스트 추가가 완료되었습니다.", true));
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(new CommonResponse<>(null, "관리자 권한으로 유저 위시리스트 추가가 완료되었습니다.", true));
     }
 
-    @Operation(summary = "관리자 권한으로 유저 위시리스트 상품 수량 수정")
+    @Operation(summary = "관리자 권한으로 유저 위시리스트 상품 수량 수정",
+            security = @SecurityRequirement(name = "JWT"),
+            parameters = {
+                    @Parameter(
+                            name = "Authorization",
+                            description = "JWT token",
+                            required = true,
+                            in = ParameterIn.HEADER
+                    )
+            })
     @PatchMapping("/{userId}")
-    public ResponseEntity<?> updateWishQuantityForAdmin(@LoginUser AppUser loginAppUser,
-                                                             @PathVariable("userId") Long userId,
-                                                             @RequestParam Long wishId,
-                                                             @RequestParam int quantity) {
+    public ResponseEntity<?> updateWishQuantityForAdmin(@Parameter(hidden = true) @LoginUser AppUser loginAppUser,
+                                                        @PathVariable("userId") Long userId,
+                                                        @RequestParam Long wishId,
+                                                        @RequestParam int quantity) {
         wishListService.updateWishQuantity(userId, wishId, quantity);
         return ResponseEntity.ok(new CommonResponse<>(null, "관리자 권한으로 유저 위시리스트 상품 수량 수정이 완료되었습니다.", true));
     }
 
 
-    @Operation(summary = "관리자 권한으로 유저 위시리스트 삭제")
+    @Operation(summary = "관리자 권한으로 유저 위시리스트 삭제",
+            security = @SecurityRequirement(name = "JWT"),
+            parameters = {
+                    @Parameter(
+                            name = "Authorization",
+                            description = "JWT token",
+                            required = true,
+                            in = ParameterIn.HEADER
+                    )
+            })
     @DeleteMapping("/{userId}")
-    public ResponseEntity<?> deleteWishForAdmin(@LoginUser AppUser loginAppUser,
-                                                     @PathVariable("userId") Long userId,
-                                                     @RequestParam Long wishId) {
+    public ResponseEntity<?> deleteWishForAdmin(@Parameter(hidden = true) @LoginUser AppUser loginAppUser,
+                                                @PathVariable("userId") Long userId,
+                                                @RequestParam Long wishId) {
         wishListService.deleteWish(userId, wishId);
         return ResponseEntity.ok(new CommonResponse<>(null, "관리자 권한으로 유저 위시리스트 삭제가 완료되었습니다.", true));
     }

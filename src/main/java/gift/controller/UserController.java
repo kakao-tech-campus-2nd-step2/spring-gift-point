@@ -12,6 +12,9 @@ import gift.service.JwtUserService;
 import gift.service.UserService;
 import gift.util.resolver.LoginUser;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.enums.ParameterIn;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -42,7 +45,7 @@ public class UserController {
         userService.signUp(signUpRequest);
         String token = jwtUserService.login(new LoginRequest(signUpRequest.getEmail(), signUpRequest.getPassword()));
         SignUpResponse response = new SignUpResponse(signUpRequest.getEmail(), token);
-        return ResponseEntity.status(HttpStatus.CREATED) .header("Authorization", token)
+        return ResponseEntity.status(HttpStatus.CREATED).header("Authorization", token)
                 .body(new CommonResponse<>(response, "회원가입이 완료되었습니다.", true));
     }
 
@@ -56,18 +59,36 @@ public class UserController {
                 .body(new CommonResponse<>(response, "로그인이 완료되었습니다.", true));
     }
 
-    @Operation(summary = "로그인 유저 비밀번호 수정")
+    @Operation(summary = "로그인 유저 비밀번호 수정",
+            security = @SecurityRequirement(name = "JWT"),
+            parameters = {
+                    @Parameter(
+                            name = "Authorization",
+                            description = "JWT token",
+                            required = true,
+                            in = ParameterIn.HEADER
+                    )
+            })
     @PatchMapping("/password")
     public ResponseEntity<?> updatePassword(@Valid @RequestBody UpdatePasswordRequest updatePasswordRequest,
-                                                 @LoginUser AppUser loginAppUser) {
+                                            @Parameter(hidden = true) @LoginUser AppUser loginAppUser) {
         userService.updatePassword(updatePasswordRequest, loginAppUser);
         return ResponseEntity.ok(new CommonResponse<>(null, "비밀번호 수정이 완료되었습니다.", true));
     }
 
-    @Operation(summary = "로그인 유저 이메일 찾기")
+    @Operation(summary = "로그인 유저 이메일 찾기",
+            security = @SecurityRequirement(name = "JWT"),
+            parameters = {
+                    @Parameter(
+                            name = "Authorization",
+                            description = "JWT token",
+                            required = true,
+                            in = ParameterIn.HEADER
+                    )
+            })
     @GetMapping("/email")
     public ResponseEntity<String> findEmail(@Valid @RequestParam Long id,
-                                            @LoginUser AppUser loginAppUser) {
+                                            @Parameter(hidden = true) @LoginUser AppUser loginAppUser) {
         if (loginAppUser.getId().equals(id)) {
             String password = userService.findEmail(id);
             return ResponseEntity.ok().body(password);

@@ -8,6 +8,9 @@ import gift.service.KakaoService;
 import gift.service.OrderService;
 import gift.util.resolver.LoginUser;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.enums.ParameterIn;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -27,10 +30,19 @@ public class OrderController {
         this.kakaoService = kakaoService;
     }
 
-    @Operation(summary = "로그인한 사용자의 주문 생성")
+    @Operation(summary = "로그인한 사용자의 주문 생성",
+            security = @SecurityRequirement(name = "JWT"),
+            parameters = {
+                    @Parameter(
+                            name = "Authorization",
+                            description = "JWT token",
+                            required = true,
+                            in = ParameterIn.HEADER
+                    )
+            })
     @PostMapping
-    public ResponseEntity<?> createOrder(@LoginUser AppUser loginAppUser,
-                                                     @RequestBody OrderRequest orderRequest) {
+    public ResponseEntity<?> createOrder(@Parameter(hidden = true) @LoginUser AppUser loginAppUser,
+                                         @RequestBody OrderRequest orderRequest) {
         OrderResponse orderResponse = orderService.createOrder(loginAppUser, orderRequest);
         kakaoService.sendMessageToMe(loginAppUser, orderRequest.message());
         return ResponseEntity.ok(new CommonResponse<>(orderResponse, "사용자의 주문이 성공적으로 완료되었습니다.", true));
