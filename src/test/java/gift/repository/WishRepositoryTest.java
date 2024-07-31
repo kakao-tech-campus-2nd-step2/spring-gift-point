@@ -38,7 +38,7 @@ class WishRepositoryTest {
 
     @BeforeEach
     void setUp() {
-        user = new User("test@example.com", "password", LoginType.DEFAULT);
+        user = new User("test@example.com", "password", "testName", LoginType.DEFAULT);
 
         userRepository.save(user);
 
@@ -77,7 +77,7 @@ class WishRepositoryTest {
     void testDeleteByUserAndProduct() {
         Wish wish = wishRepository.findByUserAndProduct(user, product).orElseThrow(() -> new WishNotFoundException("해당 위시리스트 아이템을 찾을 수 없습니다."));
 
-        wishRepository.deleteByUserAndProduct(user, product);
+        wishRepository.deleteByUserAndId(user, wish.getId());
 
         Optional<Wish> deletedWish = wishRepository.findByUserAndProduct(user, product);
         assertFalse(deletedWish.isPresent());

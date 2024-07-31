@@ -34,7 +34,7 @@ class OrderRepositoryTest {
         Product product = new Product("test", 1000, "abc.jpg", category, option);
         productRepository.save(product);
 
-        Order order = new Order(product.getOptions().get(0), 5, "testMessage");
+        Order order = new Order(product,product.getOptions().get(0), 5, "testMessage");
 
         //when
         Order savedOrder = orderRepository.save(order);

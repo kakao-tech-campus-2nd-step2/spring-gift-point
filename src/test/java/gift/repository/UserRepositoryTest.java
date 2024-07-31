@@ -20,8 +20,8 @@ class UserRepositoryTest {
 
     @BeforeEach
     void setUp() {
-        User user1 = new User("test1@example.com", "password1", LoginType.DEFAULT);
-        User user2 = new User("test2@example.com", "password2", LoginType.DEFAULT);
+        User user1 = new User("test1@example.com", "password1", "testName1", LoginType.DEFAULT);
+        User user2 = new User("test2@example.com", "password2", "testName2", LoginType.DEFAULT);
         userRepository.save(user1);
         userRepository.save(user2);
     }
@@ -29,7 +29,7 @@ class UserRepositoryTest {
     @Test
     @DisplayName("유저 정보가 잘 저장되는지 테스트")
     void testSave() {
-        User user = new User("abc@email.com", "1234", LoginType.DEFAULT);
+        User user = new User("abc@email.com", "1234", "testName1", LoginType.DEFAULT);
         User actual = userRepository.save(user);
 
         assertAll(

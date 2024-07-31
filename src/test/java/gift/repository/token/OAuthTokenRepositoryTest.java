@@ -27,7 +27,7 @@ class OAuthTokenRepositoryTest {
     @DisplayName("OAuthToken이 잘 저장되고 조회되는지 테스트")
     public void testSaveAndFindByUser() {
         //given
-        User user = new User("testEmail", "testPassword", LoginType.KAKAO);
+        User user = new User("testEmail", "testPassword", "testName1", LoginType.KAKAO);
         userRepository.save(user);
 
         OAuthToken token = new OAuthToken(user, "testAccessToken", "testRefreshToken", TokenType.KAKAO);
