@@ -49,7 +49,10 @@ public class OrderService {
 
         Order savedOrder = orderRepository.save(new Order(member, option, orderReqDto.quantity(), orderReqDto.message()));
 
-        kakaoApiClient.messageToMe(member.getKakaoAccessToken(), orderReqDto.message(), "/orders/" + savedOrder.getId(), "주문 상세 보기");
+        String kakaoAccessToken = member.getKakaoAccessToken();
+        if (kakaoAccessToken != null) { // 카카오톡 알림 메시지 전송
+            kakaoApiClient.messageToMe(kakaoAccessToken, orderReqDto.message(), "/orders/" + savedOrder.getId(), "주문 상세 보기");
+        }
 
         return new OrderResDto(savedOrder);
     }
