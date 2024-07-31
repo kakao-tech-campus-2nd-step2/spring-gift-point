@@ -3,7 +3,6 @@ package gift.domain;
 import jakarta.persistence.*;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 @Entity
@@ -16,14 +15,15 @@ public class Member {
     private String email;
     @Column(nullable = false)
     private String password;
-    private String token;
+    private String access_token;
 
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Wish> wishes =  new ArrayList<>();
 
-    public Member(String mail, String password) {
+    public Member(String mail, String password, String access_token) {
         this.email = mail;
         this.password = password;
+        this.access_token = access_token;
     }
 
     public String getEmail() {
@@ -40,5 +40,9 @@ public class Member {
 
     public List<Wish> getWishes() {
         return this.wishes;
+    }
+
+    public String getAccessToken() {
+        return access_token;
     }
 }

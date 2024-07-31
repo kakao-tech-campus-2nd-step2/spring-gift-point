@@ -21,7 +21,7 @@ class MemberRepositoryTest {
     @Test
     void save() {
         // given
-        Member member = new Member(TEST_EMAIL, TEST_PASSWORD);
+        Member member = new Member(TEST_EMAIL, TEST_PASSWORD, access_token);
 
         // when
         Member savedMember = memberRepository.save(member);
@@ -35,7 +35,7 @@ class MemberRepositoryTest {
     @Test
     void findByEmail() {
         // given
-        Member member = new Member(TEST_EMAIL, TEST_PASSWORD);
+        Member member = new Member(TEST_EMAIL, TEST_PASSWORD, access_token);
         memberRepository.save(member);
 
         // when

@@ -8,7 +8,6 @@ import gift.dto.MemberRequest;
 import gift.dto.MemberResponse;
 import gift.exception.ErrorMessage;
 import gift.repository.MemberRepository;
-import org.apache.tomcat.util.net.openssl.ciphers.Authentication;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -27,12 +26,11 @@ public class MemberService {
         if (memberRepository.existsByEmail(requestDto.getEmail())) {
             throw new IllegalArgumentException(ErrorMessage.MEMBER_EMAIL_ALREADY_EXISTS);
         }
-
-        Member member = new Member(requestDto.getEmail(), requestDto.getPassword());
+        String access_token = jwtConfig.generateToken(requestDto.getEmail());
+        Member member = new Member(requestDto.getEmail(), requestDto.getPassword(), access_token);
         memberRepository.save(member);
 
-        String token = jwtConfig.generateToken(requestDto.getEmail());
-        return new MemberResponse(token);
+        return new MemberResponse(access_token);
     }
 
     public LoginResponse login(LoginRequest loginRequest) {

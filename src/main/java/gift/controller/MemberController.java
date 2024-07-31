@@ -6,6 +6,7 @@ import gift.dto.LoginResponse;
 import gift.dto.MemberRequest;
 import gift.dto.MemberResponse;
 import gift.service.MemberService;
+import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -25,6 +26,7 @@ public class MemberController {
         this.memberService = memberService;
     }
 
+    @Operation(summary = "일반 회원가입")
     @PostMapping("/register")
     public ResponseEntity<MemberResponse> registerMember(@RequestBody MemberRequest requestDto) {
         MemberResponse responseDto = memberService.registerMember(requestDto);
