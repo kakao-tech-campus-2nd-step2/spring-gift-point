@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>선물하기</title>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/styles.css}">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        .heart-button {
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 24px;
+            color: grey;
+            transition: color 0.3s, background-color 0.3s;
+        }
+
+        .heart-button:hover {
+            background-color: #f1f1f1;
+        }
+
+        .heart-button i {
+            transition: color 0.3s;
+        }
+
+        .heart-button:hover i {
+            color: red;
+        }
+    </style>
+</head>
+<body>
+<h1>🎁선물하기 상품 목록</h1>
+
+<div class = "href-link">
+    <a href="/join">회원가입</a> |
+    <a href="/login">로그인</a> |
+    <a href="/wish">위시리스트</a>
+</div>
+
+<table>
+    <thead>
+    <tr>
+        <th>상품명</th>
+        <th>가격</th>
+        <th>이미지</th>
+        <th>위시❤️</th>
+    </tr>
+    </thead>
+    <tbody id="product-list">
+    <!-- 상품 목록이 여기에 추가됩니다. -->
+    </tbody>
+</table>
+
+<div id="pagination" class="pagination">
+    <!-- 페이지네이션 버튼이 여기에 추가됩니다. -->
+</div>
+
+<br>
+
+<script>
+    let currentPage = 0;
+    const pageSize = 5;  // pageNation 페이지 size 설정 content 개수 설정
+    const buttonsPerPage = 5;
+
+    function fetchProducts(pageNumber = 1) {
+        $.get(`/api/products?pageNumber=${pageNumber}&pageSize=${pageSize}`, function(response) {
+            const products = response.content;
+            const totalPages = response.totalPages;
+
+            // 상품 목록을 갱신합니다.
+            const productList = $("#product-list");
+            productList.empty();
+            products.forEach(function(product) {
+                productList.append(`
+                    <tr>
+                        <td>${product.name}</td>
+                        <td>${product.price}</td>
+                        <td><img src="${product.imageUrl}" alt="상품 이미지" width="100"></td>
+                        <td><button class="heart-button" onclick="addToWishlist(${product.id})" onmouseover="fillHeart(this)" onmouseout="unfillHeart(this)"><i class="far fa-heart"></i></button></td> <!-- 하트 버튼 -->
+                   </tr>
+                `);
+            });
+
+            // 페이지네이션 갱신
+            updatePagination(totalPages, pageNumber);
+        });
+    }
+
+    function updatePagination(totalPages, page) {
+        currentPage = page;
+        const pagination = $("#pagination");
+        pagination.empty();
+
+        const currentGroup = Math.floor(currentPage / buttonsPerPage);
+        const startPage = currentGroup * buttonsPerPage + 1;
+        const endPage = Math.min(startPage + buttonsPerPage, totalPages);
+
+        if (currentGroup > 0) {
+            pagination.append(`<button onclick="fetchProducts(${startPage})"><</button>`);
+        }
+
+        for (let i = startPage; i <= endPage; i++) {
+            pagination.append(`<button onclick="fetchProducts(${i})" class="${i === currentPage ? 'active' : ''}">${i}</button>`);
+        }
+
+        if (endPage < totalPages) {
+            pagination.append(`<button onclick="fetchProducts(${endPage})">></button>`);
+        }
+    }
+
+    function addToWishlist(productId) {
+        const token = "Bearer " + localStorage.getItem('token'); // Authorization 토큰을 가져옴
+        $.ajax({
+            url: `/wishlist/${productId}`,
+            type: 'POST',
+            beforeSend: function (xhr) {
+                xhr.setRequestHeader('Authorization', token);
+            },
+            success: function () {
+                alert('위시리스트에 추가되었습니다.');
+            },
+            error: function () {
+                alert('위시리스트 추가에 실패했습니다.');
+            }
+        });
+    }
+
+    // 하트 아이콘
+    function fillHeart(button) {
+        const icon = button.querySelector('i');
+        icon.classList.remove('far');
+        icon.classList.add('fas');
+    }
+
+    function unfillHeart(button) {
+        const icon = button.querySelector('i');
+        icon.classList.remove('fas');
+        icon.classList.add('far');
+    }
+    $(document).ready(function() {
+        fetchProducts();
+    });
+</script>
+</body>
+</html>
