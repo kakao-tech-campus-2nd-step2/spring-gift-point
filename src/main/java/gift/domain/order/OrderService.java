@@ -3,6 +3,12 @@ package gift.domain.order;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
+import gift.domain.option.Option;
+import gift.domain.order.dto.request.OrderRequest;
+import gift.domain.order.dto.response.OrderPageResponse;
+import gift.domain.order.dto.response.OrderResponse;
+import gift.domain.product.JpaProductRepository;
+import gift.domain.product.Product;
 import gift.domain.wish.WishService;
 import gift.domain.member.Member;
 import gift.domain.member.dto.LoginInfo;
@@ -12,7 +18,13 @@ import gift.domain.option.OptionService;
 import gift.domain.member.JpaMemberRepository;
 import gift.global.exception.BusinessException;
 import gift.global.exception.ErrorCode;
+import gift.global.exception.option.OptionNotFoundException;
+import gift.global.exception.product.ProductNotFoundException;
+import gift.global.exception.user.MemberNotFoundException;
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -36,6 +48,8 @@ public class OrderService {
     private final ObjectMapper objectMapper;
     private final JpaMemberRepository memberRepository;
     private final WishService wishService;
+    private final JpaProductRepository productRepository;
+    private final JpaOrderRepository orderRepository;
 
     @Autowired
     public OrderService(
@@ -45,7 +59,9 @@ public class OrderService {
         RestTemplate restTemplate,
         ObjectMapper objectMapper,
         JpaMemberRepository memberRepository,
-        WishService wishService
+        WishService wishService,
+        JpaProductRepository productRepository,
+        JpaOrderRepository orderRepository
     ) {
         optionRepository = jpaOptionRepository;
         this.optionService = optionService;
@@ -54,28 +70,40 @@ public class OrderService {
         this.objectMapper = objectMapper;
         this.memberRepository = memberRepository;
         this.wishService = wishService;
+        this.productRepository = productRepository;
+        this.orderRepository = orderRepository;
     }
 
     /**
      * (나에게) 상품 선물하기
      */
-    public void order(OrderRequestDTO orderRequestDTO, LoginInfo loginInfo) {
-        orderProduct(orderRequestDTO, loginInfo);
-        sendMessage(orderRequestDTO, loginInfo);
+    public void order(OrderRequest orderRequest, LoginInfo loginInfo) {
+        orderProduct(orderRequest, loginInfo);
+        sendMessage(orderRequest, loginInfo);
     }
     @Transactional
-    public void orderProduct(OrderRequestDTO orderRequestDTO, LoginInfo loginInfo) {
+    public void orderProduct(OrderRequest orderRequest, LoginInfo loginInfo) {
         // 해당 상품의 옵션의 수량을 차감
-        optionService.decreaseOptionQuantity(orderRequestDTO.optionId(),
-            orderRequestDTO.quantity());
+        optionService.decreaseOptionQuantity(orderRequest.optionId(),
+            orderRequest.quantity());
 
         // 해당 상품이 (나의) 위시리스트에 있는 경우 위시 리스트에서 삭제
-        wishService.deleteWishIfExists(loginInfo.getId(), orderRequestDTO.optionId());
+        wishService.deleteWishIfExists(loginInfo.getId(), orderRequest.optionId());
+
+        // 주문 정보 저장
+        Product product = productRepository.findById(orderRequest.productId())
+            .orElseThrow(() -> new ProductNotFoundException(orderRequest.productId()));
+        Option option = optionRepository.findById(orderRequest.optionId())
+            .orElseThrow(() -> new OptionNotFoundException(orderRequest.optionId()));
+        Member member = memberRepository.findById(loginInfo.getId())
+            .orElseThrow(() -> new MemberNotFoundException(loginInfo.getId()));
+        Order order = orderRequest.toOrder(member, product, option);
+        orderRepository.save(order);
     }
-    private void sendMessage(OrderRequestDTO orderRequestDTO, LoginInfo loginInfo) {
+    private void sendMessage(OrderRequest orderRequest, LoginInfo loginInfo) {
         // 메세지 작성
         MultiValueMap<String, String> body = createTemplateObject(
-            orderRequestDTO);
+            orderRequest);
 
         // 헤더 설정
         HttpHeaders headers = new HttpHeaders();
@@ -96,8 +124,8 @@ public class OrderService {
 
     // 나에게 메시지 보내기 DOCS 에 나와 있는 데이터 형식
     private MultiValueMap<String, String> createTemplateObject(
-        OrderRequestDTO orderRequestDTO) {
-        TemplateObject templateObject = new TemplateObject(orderRequestDTO.message());
+        OrderRequest orderRequest) {
+        TemplateObject templateObject = new TemplateObject(orderRequest.message());
         String textTemplateJson;
         try {
             objectMapper.setPropertyNamingStrategy(PropertyNamingStrategy.SNAKE_CASE);
@@ -110,4 +138,11 @@ public class OrderService {
         return body;
     }
 
+    public OrderPageResponse getOrders(Long memberId, PageRequest pageRequest) {
+        Page<Order> orderPage = orderRepository.findAllByMemberId(memberId, pageRequest);
+        boolean hasNext = orderPage.hasNext();
+        List<OrderResponse> ordersResponse = orderPage.stream().map(order -> order.toOrderResponse())
+            .toList();
+        return new OrderPageResponse(hasNext, ordersResponse);
+    }
 }

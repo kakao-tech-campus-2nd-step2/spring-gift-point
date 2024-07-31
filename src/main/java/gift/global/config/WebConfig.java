@@ -3,8 +3,10 @@ package gift.global.config;
 import gift.global.Interceptor.JwtInterceptor;
 import gift.global.resolver.JwtAuthorizationArgumentResolver;
 import java.util.List;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
@@ -13,6 +15,20 @@ public class WebConfig implements WebMvcConfigurer {
 
     private final JwtAuthorizationArgumentResolver jwtAuthorizationArgumentResolver;
     private final JwtInterceptor jwtInterceptor;
+
+    @Bean
+    public WebMvcConfigurer corsConfigurer() {
+        return new WebMvcConfigurer() {
+            @Override
+            public void addCorsMappings(CorsRegistry registry) {
+                registry.addMapping("/**")
+                    .allowedOriginPatterns("*")
+                    .allowedMethods("GET", "POST", "PUT", "DELETE", "HEAD", "OPTIONS")
+                    .allowedHeaders("*")
+                    .allowCredentials(true);
+            }
+        };
+    }
 
     public WebConfig(
         JwtAuthorizationArgumentResolver jwtAuthorizationArgumentResolver,

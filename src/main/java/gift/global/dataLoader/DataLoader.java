@@ -43,19 +43,19 @@ public class DataLoader {
     @PostConstruct
     public void init() {
         // Category
-        Category ethiopia = jpaCategoryRepository.saveAndFlush(
-            new Category("에티오피아산", "에티오피아 산 원두를 사용했습니다.", "color code",
-                "http://www.example.com/index.html"));
-        Category jamaica = jpaCategoryRepository.saveAndFlush(
-            new Category("자메이카산", "자메이카산 원두를 사용했습니다.", "color code",
-                "http://www.example.com/index.html"));
+        Category birthday = jpaCategoryRepository.saveAndFlush(
+            new Category("생일", "감동을 높여줄 생일 선물 리스트", "#5949A3",
+                "https://img1.daumcdn.net/thumb/S104x104/?fname=https%3A%2F%2Ft1.daumcdn.net%2Fgift%2Fhome%2Ftheme%2F292020231106_MXMUB.png"));
+        Category coupon = jpaCategoryRepository.saveAndFlush(
+            new Category("교환권", "놓치면 후회할 교환권 특가", "#9290C3",
+                "'https://img1.daumcdn.net/thumb/S104x104/?fname=https%3A%2F%2Fst.kakaocdn.net%2Fproduct%2Fgift%2Fproduct%2F20240131153049_5a22b137a8d346e9beb020a7a7f4254a.jpg"));
 
         // Product
-        Product americano = new Product("아이스 아메리카노 T", ethiopia, 4500, "description",
+        Product americano = new Product("아이스 아메리카노 T", birthday, 4500, "description",
             "https://example.com/image.jpg");
-        Product cafuchino = new Product("아이스 카푸치노 M", jamaica, 4700,"description",
+        Product cafuchino = new Product("아이스 카푸치노 M", coupon, 4700,"description",
             "https://example.com/image.jpg");
-        Product malcha = new Product("핫 말차라떼 L", ethiopia, 6800,"description",
+        Product malcha = new Product("핫 말차라떼 L", birthday, 6800,"description",
             "https://example.com/image.jpg");
         jpaProductRepository.save(americano);
         jpaProductRepository.save(cafuchino);
@@ -65,7 +65,7 @@ public class DataLoader {
         for (int i = 0; i < 100; i++) {
             Product dummyProduct = new Product(
                 "더미 커피 " + (i + 1),
-                ethiopia,
+                birthday,
                 1000 + (i * 10),
                 "description",
                 "https://example.com/dummy" + (i + 1) + ".jpg"
