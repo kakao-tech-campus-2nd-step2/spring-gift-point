@@ -31,14 +31,14 @@ VALUES ('user1@example.com', 'password1'),
        ('user2@example.com', 'password2');
 
 -- user1
-INSERT INTO wish_list (id, product_id, member_id)
-VALUES (1, 3245119, 1),
-       (2, 2263833, 1);
+INSERT INTO wish_list (product_id, member_id)
+VALUES (3245119, 1),
+       (2263833, 1);
 
 -- 키보드 상품(PK 1)에 대한 옵션 데이터 입력
-INSERT INTO option (id, name, quantity, product_id)
-VALUES (1, 'Option A', 10, 3245119),
-       (2, 'Option B', 20, 3245119);
+INSERT INTO option (name, quantity, product_id)
+VALUES ('Option A', 10, 3245119),
+       ('Option B', 20, 3245119);
 
 
 
