@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="utf-8">
+  <title>상품 리스트</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reset-css@5.0.2/reset.min.css">
+  <link rel="stylesheet" type="text/css" href="/css/product_list.css">
+</head>
+<body>
+<header>
+  <a class="home-button" th:href="@{/}">메인 페이지로</a>
+  <h1>상품 리스트</h1>
+</header>
+<main>
+  <div class="actions">
+    <a class="button" th:href="@{/products/new}">새 상품 추가</a>
+  </div>
+  <table border="1">
+    <thead>
+    <tr>
+      <th>상품 ID</th>
+      <th>상품 이름</th>
+      <th>가격</th>
+      <th>image URL</th>
+      <th>카테고리</th>
+      <th>Actions</th>
+    </tr>
+    </thead>
+    <tbody th:remove="all-but-first">
+    <tr th:each="product : ${productPage}">
+      <td class="productId" th:text="${product.id}">1</td>
+      <td class="productName" th:text="${product.name}">테스트 상품 이름</td>
+      <td class="productPrice" th:text="${product.price}">12345</td>
+      <td class="productImageURL" th:text="${product.imageUrl}">imageURL example</td>
+      <td class="productCategory" th:text="${product.categoryName}">category name example</td>
+      <td>
+        <a th:href="@{/products/edit/{id}(id=${product.id})}">
+          <button type="button">Edit</button>
+        </a>
+        <button type="button" class="delete-button" th:data-id="${product.id}">Delete</button>
+      </td>
+    </tr>
+    <tr>
+      <td class="productId">1</td>
+      <td class="productName">테스트 상품 이름</td>
+      <td class="productPrice">12345</td>
+      <td class="productImageURL">imageURL example</td>
+      <td class="productCategory">category name example</td>
+
+      <td>
+        <button type="button">Edit</button>
+        <button type="button">Delete</button>
+      </td>
+    </tr>
+    <tr>
+      <td class="productId">2</td>
+      <td class="productName">테스트 상품 이름</td>
+      <td class="productPrice">12345</td>
+      <td class="productImageURL">imageURL example</td>
+      <td class="productCategory">category name example</td>
+      <td>
+        <button type="button">Edit</button>
+        <button type="button">Delete</button>
+
+      </td>
+    </tr>
+    </tbody>
+  </table>
+
+  <nav aria-label="Page navigation">
+    <ul class="pagination"
+        th:with="start=${(productPage.number/maxPage) * maxPage + 1}, end=(${(productPage.totalPages == 0) ? 1 : (start + (maxPage - 1) < productPage.totalPages ? start + (maxPage - 1) : productPage.totalPages)})">
+      <li th:if="${start > 1}">
+        <a th:href="@{/products(page=0)}" th:text="'<<'"></a>
+      </li>
+      <li th:if="${start > 1}">
+        <a th:href="@{/products(page=${start - maxPage})}" th:text="'<'"></a>
+      </li>
+
+      <li th:each="page: ${#numbers.sequence(start, end)}">
+        <a th:text="${page}" th:href="@{/products(page=${page - 1})}"></a>
+      </li>
+
+      <li th:if="${end < productPage.totalPages}">
+        <a th:href="@{/products(page=${start + maxPage})}" th:text="'>'"></a>
+      </li>
+      <li th:if="${end < productPage.totalPages}">
+        <a th:href="@{/products(page=${productPage.totalPages - 1})}" th:text="'>>'"></a>
+      </li>
+    </ul>
+  </nav>
+</main>
+
+<script>
+  document.querySelectorAll('.delete-button').forEach(button => {
+    button.addEventListener('click', async function (event) {
+      const productId = this.getAttribute('data-id');
+      if (confirm(`ID ${productId} 상품을 삭제하시겠습니까?`)) {
+        const response = await fetch(`/api/products/${productId}`, {
+          method: 'DELETE'
+        });
+
+        if (response.ok) {
+          alert('성공적으로 삭제되었습니다.');
+          window.location.reload();
+        } else {
+          const errorData = response.json();
+          alert(errorData.detail);
+        }
+      }
+    })
+  })
+</script>
+</body>
+</html>

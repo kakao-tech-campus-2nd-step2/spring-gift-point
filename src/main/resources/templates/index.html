@@ -1,0 +1,22 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>메인 페이지</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reset-css@5.0.2/reset.min.css"/>
+  <link rel="stylesheet" href="/css/index.css"/>
+  <script src="/js/authLink.js" defer></script>
+</head>
+<body>
+<header>
+  <h1>메인 페이지</h1>
+</header>
+<nav>
+  <ul id="auth-links">
+  </ul>
+  <ul>
+    <li><a th:href="@{/products}">상품관리</a></li>
+  </ul>
+</nav>
+</body>
+</html>

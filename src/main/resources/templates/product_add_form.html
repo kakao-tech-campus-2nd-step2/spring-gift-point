@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="utf-8">
+  <title>상품 추가</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reset-css@5.0.2/reset.min.css"/>
+  <link rel="stylesheet" href="/css/product_form.css"/>
+</head>
+<body>
+<form id="addProductForm">
+  <div>
+    <label>상품 이름: </label>
+    <input type="text" id="productName"/>
+  </div>
+  <div>
+    <label>상품 가격: </label>
+    <input type="text" id="productPrice"/>
+  </div>
+  <div>
+    <label>이미지 URL: </label>
+    <input type="text" id="productImageUrl"/>
+  </div>
+  <div>
+    <label>카테고리: </label>
+    <select id="categoryId" class="form-select">
+      <option value="">== 카테고리 선택 ==</option>
+      <option th:each="category : ${categories}" th:value="${category.id}"
+              th:text="${category.name}"></option>
+    </select>
+  </div>
+  <div>
+    <button type="submit">저장</button>
+  </div>
+</form>
+<a th:href="@{/products}">돌아가기</a>
+
+<script>
+  document.getElementById('addProductForm').addEventListener('submit', async function (event) {
+    event.preventDefault();
+    const product = {
+      name: document.getElementById('productName').value,
+      price: parseInt(document.getElementById('productPrice').value, 10),
+      imageUrl: document.getElementById('productImageUrl').value,
+      categoryId: parseInt(document.getElementById('categoryId').value, 10)
+    };
+
+    const response = await fetch(`/api/products`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(product)
+    });
+
+    if (response.ok) {
+      alert("상품이 정상적으로 추가되었습니다.");
+      window.location.href = '/products';
+    } else {
+      response.json().then((errorData) => {
+        alert(errorData.detail);
+      });
+      window.location.reload();
+    }
+  })
+</script>
+</body>
+</html>
