@@ -27,14 +27,13 @@ public class OptionService {
     public List<OptionResponse> findOptionsByProductId(Long productId) {
         List<Option> options = optionRepository.findAllByProductId(productId);
         return options.stream()
-                .map(o -> new OptionResponse(o.getId(), o.getName(), o.getQuantity(), o.getAdditionalCost()))
+                .map(o -> new OptionResponse(o.getId(), o.getName(), o.getQuantity()))
                 .collect(Collectors.toList());
     }
 
     @Transactional
     public void addOption(Product product, CreateOptionRequest createOptionRequest) {
-        Option option = new Option(createOptionRequest.name(), createOptionRequest.quantity(),
-                createOptionRequest.additionalCost(), product);
+        Option option = new Option(createOptionRequest.name(), createOptionRequest.quantity(), product);
         optionRepository.save(option);
     }
 
@@ -53,8 +52,7 @@ public class OptionService {
     public void updateOption(Product product, Long optionId, UpdateOptionRequest updateOptionRequest) {
         Option option = getOption(optionId);
         checkOptionOwner(product, option);
-        option.updateOption(updateOptionRequest.name(), updateOptionRequest.quantity(),
-                updateOptionRequest.additionalCost());
+        option.updateOption(updateOptionRequest.name(), updateOptionRequest.quantity());
         optionRepository.save(option);
     }
 

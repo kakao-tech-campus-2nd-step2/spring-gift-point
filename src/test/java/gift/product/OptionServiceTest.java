@@ -50,9 +50,9 @@ public class OptionServiceTest {
         AppUser defaultSeller = new AppUser("aabb@kakao.com", "1234", Role.USER, "aaaa");
         product = new Product("test", 100, "image", defaultSeller, defaultCategory);
         product.setId(5L);
-        option = new Option("option", 10, 300, product);
-        createRequest = new CreateOptionRequest("option", 10, 300);
-        updateRequest = new UpdateOptionRequest("option2", 10, 300);
+        option = new Option("option", 10, product);
+        createRequest = new CreateOptionRequest("option", 10);
+        updateRequest = new UpdateOptionRequest("option2", 10);
     }
 
     @Test

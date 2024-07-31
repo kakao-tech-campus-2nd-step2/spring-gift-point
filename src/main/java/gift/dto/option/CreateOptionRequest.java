@@ -18,10 +18,6 @@ public record CreateOptionRequest(
         @NotNull
         @Min(value = 1, message = "수량은 1 이상의 정수로 입력해주세요.")
         @Max(value = 100000000 - 1, message = "수량은 1억 이하의 정수로 입력해주세요.")
-        int quantity,
-
-        @Min(value = 0, message = "추가 금액은 0 이상의 정수로 입력해주세요.")
-        @NotNull
-        int additionalCost
+        int quantity
 ) {
 }
