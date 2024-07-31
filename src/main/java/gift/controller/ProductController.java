@@ -1,10 +1,10 @@
 package gift.controller;
 
-import gift.domain.Option;
 import gift.dto.request.AddOptionRequest;
 import gift.dto.request.AddProductRequest;
 import gift.dto.request.UpdateProductRequest;
 import gift.dto.response.MessageResponse;
+import gift.dto.response.ProductOptionResponse;
 import gift.dto.response.ProductResponse;
 import gift.service.ProductService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -66,7 +66,7 @@ public class ProductController {
     /*Option api*/
     @GetMapping("/{productId}/options")
     @Operation(summary = "특정 상품의 모든 옵션 조회 api")
-    public ResponseEntity<List<Option>> getOptions(@PathVariable("productId") Long productId) {
+    public ResponseEntity<List<ProductOptionResponse>> getOptions(@PathVariable("productId") Long productId) {
         return ResponseEntity.ok(productService.getOptions(productId));
     }
 

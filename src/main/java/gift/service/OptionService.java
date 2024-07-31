@@ -5,6 +5,7 @@ import gift.domain.Product;
 import gift.dto.request.AddOptionRequest;
 import gift.dto.request.OrderRequest;
 import gift.dto.response.MessageResponse;
+import gift.dto.response.ProductOptionResponse;
 import gift.exception.CustomException;
 import gift.repository.OptionRepository;
 import org.springframework.stereotype.Service;
@@ -24,8 +25,9 @@ public class OptionService {
     }
 
 
-    public List<Option> getOptions(Product product) {
-        return optionRepository.findAllByProduct(product);
+    public List<ProductOptionResponse> getOptions(Product product) {
+        List<Option> options = optionRepository.findAllByProduct(product);
+        return options.stream().map(ProductOptionResponse::new).toList();
     }
 
     public MessageResponse addOption(Product product, AddOptionRequest addOptionRequest) {
