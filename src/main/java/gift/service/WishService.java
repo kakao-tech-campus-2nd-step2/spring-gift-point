@@ -84,7 +84,7 @@ public class WishService {
             .orElseThrow(() -> new WishException(ErrorCode.WISH_NOT_FOUND));
 
         if (!wish.isOwner(userId)) {
-            throw new WishException(ErrorCode.WISH_NOT_FOUND);
+            throw new WishException(ErrorCode.INVALID_WISH_DELETE);
         }
 
         wishRepository.deleteById(wishId);

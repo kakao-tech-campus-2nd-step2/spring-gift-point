@@ -40,7 +40,7 @@ public class WishListController {
     @Operation(summary = "전체 위시리스트 조회", description = "전체 위시리스트를 조회합니다.")
     public ResponseEntity<PageResponse<WishResponse>> getAllWishList(
         @LoginUser LoginInfo user,
-        @PageableDefault(page = 0, size = 10, sort = "id", direction = Sort.Direction.DESC) Pageable pageable
+        @PageableDefault(page = 0, size = 10, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable
     ) {
         PageResponse<WishResponse> responses = wishService.findAllWish(user.id(), pageable);
         return ResponseEntity.ok().body(responses);
