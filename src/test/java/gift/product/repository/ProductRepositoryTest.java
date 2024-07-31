@@ -22,7 +22,7 @@ public class ProductRepositoryTest {
 
     @BeforeEach
     public void setUp() {
-        Category category = categoryRepository.save(new Category("교환권"));
+        Category category = categoryRepository.save(new Category(1L, "교환권", "#000000", "categoryImage", "교환권 설명입니다."));
         product = new Product(
                 "상품1",
                 1500,

@@ -43,7 +43,7 @@ public class ApiProductControllerTest {
         Mockito.when(productService.getAllProducts(pageable)).thenReturn(productPage);
 
         ResultActions result = mockMvc.perform(
-            MockMvcRequestBuilders.get("/api/product/list")
+            MockMvcRequestBuilders.get("/api/products")
                 .param("page", "0")
                 .param("size", "10")
                 .accept(MediaType.APPLICATION_JSON)
