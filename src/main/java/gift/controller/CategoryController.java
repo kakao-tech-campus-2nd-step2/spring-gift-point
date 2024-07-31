@@ -1,10 +1,12 @@
 package gift.controller;
 
+import gift.CustomAnnotation.RequestRole;
 import gift.exception.ErrorCode;
 import gift.exception.customException.CustomArgumentNotValidException;
 import gift.exception.customException.CustomDuplicateException;
 import gift.exception.customException.CustomException;
 import gift.model.dto.CategoryDTO;
+import gift.model.entity.Role;
 import gift.service.CategoryService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -32,6 +34,7 @@ public class CategoryController {
         this.categoryService = categoryService;
     }
 
+    @RequestRole(Role.ROLE_ADMIN)
     @Operation(summary = "카테고리 추가.")
     @PostMapping
     public ResponseEntity<CategoryDTO> createCategory(@Valid @RequestBody CategoryDTO categoryForm,
@@ -53,6 +56,8 @@ public class CategoryController {
         return ResponseEntity.ok(categoryService.getCategoryList());
     }
 
+
+    @RequestRole(Role.ROLE_ADMIN)
     @Operation(summary = "카테고리 수정")
     @PutMapping("/{id}")
     public ResponseEntity<CategoryDTO> updateCategory(

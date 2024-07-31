@@ -1,8 +1,10 @@
 package gift.controller;
 
+import gift.CustomAnnotation.RequestRole;
 import gift.exception.ErrorCode;
 import gift.exception.customException.CustomArgumentNotValidException;
 import gift.model.dto.OptionDTO;
+import gift.model.entity.Role;
 import gift.service.ItemService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -39,6 +41,7 @@ public class OptionController {
         return ResponseEntity.ok(list);
     }
 
+    @RequestRole(Role.ROLE_ADMIN)
     @Operation(summary = "특정 상품 옵션 추가")
     @PostMapping("/{id}/options")
     public ResponseEntity<Long> createOption(
@@ -52,6 +55,7 @@ public class OptionController {
         return ResponseEntity.ok(itemService.insertOption(itemId, optionDTO));
     }
 
+    @RequestRole(Role.ROLE_ADMIN)
     @Operation(summary = "특정 옵션 수정")
     @PutMapping("/{id}/options/{optionId}")
     public ResponseEntity<Long> updateOption(@Valid @RequestBody OptionDTO optionDTO,
@@ -64,6 +68,7 @@ public class OptionController {
         return ResponseEntity.ok(itemService.updateOption(itemId, optionDTO));
     }
 
+    @RequestRole(Role.ROLE_ADMIN)
     @Operation(summary = "특정 옵션 삭제")
     @DeleteMapping("/{item_id}/options/{optionId}")
     public ResponseEntity<Long> deleteOption(

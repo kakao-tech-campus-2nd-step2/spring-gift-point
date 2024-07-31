@@ -1,8 +1,10 @@
 package gift.controller;
 
+import gift.CustomAnnotation.RequestRole;
 import gift.exception.ErrorCode;
 import gift.exception.customException.CustomArgumentNotValidException;
 import gift.model.dto.ItemDTO;
+import gift.model.entity.Role;
 import gift.model.form.ItemForm;
 import gift.model.response.ItemResponse;
 import gift.service.ItemService;
@@ -68,6 +70,7 @@ public class ItemController {
         return ResponseEntity.ok(list);
     }
 
+    @RequestRole(Role.ROLE_ADMIN)
     @Operation(summary = "상품 추가")
     @PostMapping
     public ResponseEntity<Long> createItem(@Valid @RequestBody ItemForm form, BindingResult result)
@@ -81,6 +84,7 @@ public class ItemController {
     }
 
 
+    @RequestRole(Role.ROLE_ADMIN)
     @Operation(summary = "상품 수정")
     @PutMapping("/{id}")
     public ResponseEntity<Long> updateItem(
@@ -95,6 +99,7 @@ public class ItemController {
         return ResponseEntity.ok(itemService.updateItem(itemDTO));
     }
 
+    @RequestRole(Role.ROLE_ADMIN)
     @Operation(summary = "상품 삭제")
     @DeleteMapping("/{id}")
     public ResponseEntity<Long> deleteItem(
