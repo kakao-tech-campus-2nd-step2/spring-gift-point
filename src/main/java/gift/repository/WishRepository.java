@@ -18,4 +18,6 @@ public interface WishRepository extends JpaRepository<Wish, Long> {
     Wish save(Wish wish);
     void delete(Wish wish);
     Wish findByProduct(Product product);
+
+    Wish findByProductAndMember(Product product, Member member);
 }

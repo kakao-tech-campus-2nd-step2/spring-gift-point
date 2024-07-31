@@ -10,6 +10,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -28,22 +29,22 @@ public class WishController {
 
     @Operation(summary = "특정 회원의 위시리스트 조회")
     @GetMapping
-    public ResponseEntity<List<WishListDto>> getWishList(@LoginMember Member member, Pageable pageable) {
-        Page<WishListDto> wishPage = wishService.getWishPage(member, pageable);
+    public ResponseEntity<List<WishListDto>> getWishList(@RequestHeader(HttpHeaders.AUTHORIZATION) String accessToken, Pageable pageable) {
+        Page<WishListDto> wishPage = wishService.getWishPage(accessToken, pageable);
         return ResponseEntity.ok(wishPage.getContent());
     }
 
     @Operation(summary = "위시리스트에 상품 추가")
     @PostMapping("/{product_id}")
-    public ResponseEntity<Void> addToWishList(@LoginMember Member member, @PathVariable Long product_id) {
-        wishService.addWish(member, product_id);
+    public ResponseEntity<Void> addToWishList(@RequestHeader(HttpHeaders.AUTHORIZATION) String accessToken, @PathVariable Long product_id) {
+        wishService.addWish(accessToken, product_id);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
     @Operation(summary = "위시리스트에서 삭제")
     @DeleteMapping("/{product_id}")
-    public ResponseEntity<Void> removeFromWishList(@LoginMember Member member, @PathVariable Long product_id) {
-        wishService.deleteWish(member, product_id);
+    public ResponseEntity<Void> removeFromWishList(@RequestHeader(HttpHeaders.AUTHORIZATION) String accessToken, @PathVariable Long product_id) {
+        wishService.deleteWish(accessToken, product_id);
         return ResponseEntity.noContent().build();
     }
 }

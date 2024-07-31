@@ -13,27 +13,30 @@ import org.springframework.stereotype.Service;
 public class WishService{
     private final WishRepository wishRepository;
     private final ProductService productService;
-    public WishService(WishRepository wishRepository, ProductService productService) {
+    private final MemberService memberService;
+    public WishService(WishRepository wishRepository, ProductService productService, MemberService memberService) {
         this.wishRepository = wishRepository;
         this.productService = productService;
+        this.memberService = memberService;
     }
 
-    public Page<WishListDto> getWishPage(Member member, Pageable pageable) {
+    public Page<WishListDto> getWishPage(String access_token, Pageable pageable) {
+        Member member = memberService.getMember(access_token);
         Page<Wish> wishes = wishRepository.findByMember(member, pageable);
         return wishes.map(WishListDto::new);
     }
 
-    public void addWish(Member member, Long product_id) {
+    public void addWish(String access_token, Long product_id) {
+        Member member = memberService.getMember(access_token);
         Product product = productService.getProduct(product_id);
         Wish wish = new Wish(member, product);
         wishRepository.save(wish);
     }
 
-    public void deleteWish(Member member, Long product_id) {
+    public void deleteWish(String access_token, Long product_id) {
+        Member member = memberService.getMember(access_token);
         Product product = productService.getProduct(product_id);
-        Wish wish = wishRepository.findByProduct(product);
-        if(wish != null) {
-            wish.setDeleted(true);
-        }
+        Wish wish = wishRepository.findByProductAndMember(product, member);
+        wishRepository.delete(wish);
     }
 }
