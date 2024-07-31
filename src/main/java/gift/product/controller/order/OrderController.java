@@ -1,8 +1,8 @@
 package gift.product.controller.order;
 
-import gift.product.ProblemDetailResponse;
 import gift.product.dto.auth.LoginMemberIdDto;
 import gift.product.dto.order.OrderDto;
+import gift.product.exception.ExceptionResponse;
 import gift.product.model.Order;
 import gift.product.service.OrderService;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -56,7 +56,7 @@ public class OrderController {
 
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "성공", content = @Content(mediaType = "application/json", schema = @Schema(implementation = Order.class))),
-        @ApiResponse(responseCode = "404", description = "존재하지 않는 리소스", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProblemDetailResponse.class)))
+        @ApiResponse(responseCode = "404", description = "존재하지 않는 리소스", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ExceptionResponse.class)))
     })
     @GetMapping("/{id}")
     public ResponseEntity<Order> getOrder(@PathVariable(name = "id") Long id,
@@ -69,8 +69,8 @@ public class OrderController {
 
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "성공", content = @Content(mediaType = "application/json", schema = @Schema(implementation = Order.class))),
-        @ApiResponse(responseCode = "403", description = "사용자 인증 도중 발생한 에러", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProblemDetailResponse.class))),
-        @ApiResponse(responseCode = "404", description = "존재하지 않는 리소스", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProblemDetailResponse.class)))
+        @ApiResponse(responseCode = "403", description = "사용자 인증 도중 발생한 에러", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ExceptionResponse.class))),
+        @ApiResponse(responseCode = "404", description = "존재하지 않는 리소스", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ExceptionResponse.class)))
     })
     @PostMapping
     public ResponseEntity<Order> doOrder(@RequestBody OrderDto orderDto,
@@ -83,7 +83,7 @@ public class OrderController {
 
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "성공"),
-        @ApiResponse(responseCode = "404", description = "존재하지 않는 리소스", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProblemDetailResponse.class))),
+        @ApiResponse(responseCode = "404", description = "존재하지 않는 리소스", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ExceptionResponse.class))),
     })
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteOrder(@PathVariable(name = "id") Long id,

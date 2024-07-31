@@ -190,7 +190,7 @@ class OptionIntegrityTest {
         String responseMessage = testRestTemplate.exchange(requestEntity, String.class).getBody();
         Map<String, Object> responseMessageMap = mapper.readValue(responseMessage, Map.class);
 
-        String message = (String) responseMessageMap.get("detail");
+        String message = (String) responseMessageMap.get("message");
 
         //then
         assertThat(message).isEqualTo(errorMessage);

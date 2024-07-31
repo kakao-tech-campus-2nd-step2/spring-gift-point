@@ -1,5 +1,7 @@
 package gift.product.controller.auth;
 
+import gift.product.dto.auth.AccessTokenDto;
+import gift.product.dto.auth.AccountDto;
 import gift.product.dto.auth.JwtResponse;
 import gift.product.dto.auth.MemberDto;
 import gift.product.service.AuthService;
@@ -25,7 +27,6 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 public class AdminAuthController {
 
     public static final String ACCESS_TOKEN = "accessToken";
-    public static final String REFRESH_TOKEN = "refreshToken";
     private static final String REDIRECT_ADMIN_LOGIN_PROCESSING = "redirect:/admin/login/process";
     private final AuthService authService;
 
@@ -39,20 +40,17 @@ public class AdminAuthController {
     }
 
     @PostMapping("/login")
-    public String login(MemberDto memberDto, RedirectAttributes redirectAttributes) {
-        JwtResponse jwtResponse = authService.login(memberDto);
-        redirectAttributes.addAttribute(ACCESS_TOKEN, jwtResponse.accessToken());
-        redirectAttributes.addAttribute(REFRESH_TOKEN, jwtResponse.refreshToken());
+    public String login(AccountDto accountDto, RedirectAttributes redirectAttributes) {
+        AccessTokenDto accessTokenDto = authService.login(accountDto);
+        redirectAttributes.addAttribute(ACCESS_TOKEN, accessTokenDto.accessToken());
 
         return REDIRECT_ADMIN_LOGIN_PROCESSING;
     }
 
     @GetMapping("/login/process")
     public String loginProcess(@RequestParam(ACCESS_TOKEN) String accessToken,
-        @RequestParam(REFRESH_TOKEN) String refreshToken,
         Model model) {
         model.addAttribute(ACCESS_TOKEN, accessToken);
-        model.addAttribute(REFRESH_TOKEN, refreshToken);
 
         return "admin/loginProcess";
     }

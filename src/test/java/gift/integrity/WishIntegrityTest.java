@@ -2,6 +2,7 @@ package gift.integrity;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import gift.product.dto.auth.AccountDto;
 import gift.product.dto.auth.MemberDto;
 import gift.product.dto.category.CategoryDto;
 import gift.product.dto.product.ClientProductDto;
@@ -63,9 +64,9 @@ class WishIntegrityTest {
 
     @BeforeAll
     void 로그인() {
-        MemberDto memberDto = new MemberDto("test@test.com", "1234");
+        MemberDto memberDto = new MemberDto("test_name", "test@test.com", "1234");
         authService.register(memberDto);
-        accessToken = authService.login(memberDto).accessToken();
+        accessToken = authService.login(new AccountDto(memberDto.email(), memberDto.password())).accessToken();
     }
 
     @BeforeAll

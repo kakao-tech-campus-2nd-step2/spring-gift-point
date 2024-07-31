@@ -1,7 +1,6 @@
 package gift.product.dto.auth;
 
-public record MemberDto(
-    String name,
+public record AccountDto(
     String email,
     String password
 ) {

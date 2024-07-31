@@ -2,6 +2,9 @@ package gift.product.service;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.sun.jdi.request.DuplicateRequestException;
+import gift.product.dto.auth.AccessTokenDto;
+import gift.product.dto.auth.AccountDto;
 import gift.product.dto.auth.JwtResponse;
 import gift.product.dto.auth.LoginMemberIdDto;
 import gift.product.dto.auth.MemberDto;
@@ -49,22 +52,20 @@ public class AuthService {
     }
 
     @Transactional
-    public void register(MemberDto memberDto) {
+    public AccessTokenDto register(MemberDto memberDto) {
         validateMemberExist(memberDto);
 
-        Member member = new Member(memberDto.email(), memberDto.password());
+        Member member = new Member(memberDto.name(), memberDto.email(), memberDto.password());
         authRepository.save(member);
+
+        return new AccessTokenDto(getAccessToken(member));
     }
 
-    public JwtResponse login(MemberDto memberDto) {
-        validateMemberInfo(memberDto);
+    public AccessTokenDto login(AccountDto accountDto) {
+        validateMemberInfo(accountDto);
+        Member member = authRepository.findByEmail(accountDto.email());
 
-        Member member = authRepository.findByEmail(memberDto.email());
-
-        String accessToken = getAccessToken(member);
-        String refreshToken = getRefreshToken(member);
-
-        return new JwtResponse(accessToken, refreshToken);
+        return new AccessTokenDto(getAccessToken(member));
     }
 
     public String getKakaoAuthCodeUrl() {
@@ -170,20 +171,20 @@ public class AuthService {
         boolean isMemberExist = authRepository.existsByEmail(memberDto.email());
 
         if (isMemberExist) {
-            throw new IllegalArgumentException("이미 회원으로 등록된 이메일입니다.");
+            throw new DuplicateRequestException("이미 회원으로 등록된 이메일입니다.");
         }
     }
 
-    private void validateMemberInfo(MemberDto memberDto) {
-        boolean isMemberExist = authRepository.existsByEmail(memberDto.email());
+    private void validateMemberInfo(AccountDto accountDto) {
+        boolean isMemberExist = authRepository.existsByEmail(accountDto.email());
 
         if (!isMemberExist) {
             throw new LoginFailedException("회원 정보가 존재하지 않습니다.");
         }
 
-        Member member = authRepository.findByEmail(memberDto.email());
+        Member member = authRepository.findByEmail(accountDto.email());
 
-        if (!memberDto.password().equals(member.getPassword())) {
+        if (!accountDto.password().equals(member.getPassword())) {
             throw new LoginFailedException("비밀번호가 일치하지 않습니다.");
         }
     }

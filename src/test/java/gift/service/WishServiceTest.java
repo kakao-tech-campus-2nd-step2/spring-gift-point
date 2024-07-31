@@ -49,7 +49,7 @@ class WishServiceTest {
         //given
         Category category = new Category(1L, "테스트카테고리");
         Product product = new Product(1L, "테스트상품", 1500, "테스트주소", category);
-        Member member = new Member(1L, "test@test.com", "test");
+        Member member = new Member(1L, "테스트회원이름", "test@test.com", "test");
         given(productRepository.findById(product.getId())).willReturn(Optional.of(product));
         given(authRepository.findById(any())).willReturn(Optional.of(member));
         given(wishRepository.existsByProductIdAndMemberId(product.getId(),

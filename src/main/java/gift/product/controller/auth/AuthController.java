@@ -1,11 +1,13 @@
 package gift.product.controller.auth;
 
-import gift.product.ProblemDetailResponse;
+import gift.product.dto.auth.AccessTokenDto;
+import gift.product.dto.auth.AccountDto;
 import gift.product.dto.auth.JwtResponse;
 import gift.product.dto.auth.LoginMemberIdDto;
 import gift.product.dto.auth.MemberDto;
 import gift.product.dto.auth.OAuthJwt;
 import gift.product.dto.auth.RegisterSuccessResponse;
+import gift.product.exception.ExceptionResponse;
 import gift.product.service.AuthService;
 import io.swagger.v3.oas.annotations.Hidden;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -40,27 +42,26 @@ public class AuthController {
     }
 
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "성공", content = @Content(mediaType = "application/json", schema = @Schema(implementation = RegisterSuccessResponse.class))),
-        @ApiResponse(responseCode = "400", description = "잘못된 요청", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProblemDetailResponse.class)))
+        @ApiResponse(responseCode = "200", description = "회원 가입 성공", content = @Content(mediaType = "application/json", schema = @Schema(implementation = AccessTokenDto.class))),
+        @ApiResponse(responseCode = "409", description = "회원 가입 실패(이미 존재하는 이메일)", content = @Content(mediaType = "application/json", schema = @Schema(implementation = gift.product.exception.ExceptionResponse.class)))
     })
     @PostMapping("/register")
-    public ResponseEntity<RegisterSuccessResponse> registerMember(
+    public ResponseEntity<AccessTokenDto> registerMember(
         @RequestBody MemberDto memberDto) {
-        authService.register(memberDto);
+        AccessTokenDto accessTokenDto = authService.register(memberDto);
 
-        return ResponseEntity.status(HttpStatus.CREATED)
-            .body(new RegisterSuccessResponse("회원가입이 완료되었습니다."));
+        return ResponseEntity.ok(accessTokenDto);
     }
 
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "성공", content = @Content(mediaType = "application/json", schema = @Schema(implementation = JwtResponse.class))),
-        @ApiResponse(responseCode = "403", description = "로그인 실패", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProblemDetailResponse.class)))
+        @ApiResponse(responseCode = "200", description = "로그인 성공", content = @Content(mediaType = "application/json", schema = @Schema(implementation = AccessTokenDto.class))),
+        @ApiResponse(responseCode = "401", description = "로그인 실패", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ExceptionResponse.class)))
     })
     @PostMapping("/login")
-    public ResponseEntity<JwtResponse> loginMember(@RequestBody MemberDto memberDto) {
-        JwtResponse jwtResponse = authService.login(memberDto);
+    public ResponseEntity<AccessTokenDto> loginMember(@RequestBody AccountDto accountDto) {
+        AccessTokenDto accessTokenDto = authService.login(accountDto);
 
-        return ResponseEntity.ok(jwtResponse);
+        return ResponseEntity.ok(accessTokenDto);
     }
 
     @ApiResponse(responseCode = "303", description = "카카오 로그인 진행 후 특정 URL로 리다이렉트 되어 아래의 응답을 받음 (전달 형식은 임시)", content = @Content(mediaType = "application/json", schema = @Schema(implementation = JwtResponse.class)))
@@ -82,7 +83,7 @@ public class AuthController {
 
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "성공", content = @Content(mediaType = "application/json", schema = @Schema(implementation = Long.class))),
-        @ApiResponse(responseCode = "403", description = "로그인 실패", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProblemDetailResponse.class)))
+        @ApiResponse(responseCode = "403", description = "로그인 실패", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ExceptionResponse.class)))
     })
     @PostMapping("/login/kakao/unlink")
     public ResponseEntity<Long> unlinkKakaoAccount(HttpServletRequest request) {

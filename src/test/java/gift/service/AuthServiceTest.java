@@ -9,7 +9,9 @@ import static org.mockito.BDDMockito.then;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import gift.product.dto.auth.JwtResponse;
+import com.sun.jdi.request.DuplicateRequestException;
+import gift.product.dto.auth.AccessTokenDto;
+import gift.product.dto.auth.AccountDto;
 import gift.product.dto.auth.LoginMemberIdDto;
 import gift.product.dto.auth.MemberDto;
 import gift.product.dto.auth.OAuthJwt;
@@ -44,6 +46,7 @@ class AuthServiceTest {
     static final String TEST_OAUTH_ACCESS_TOKEN = "test_oauth_access_token";
     static final String TEST_OAUTH_REFRESH_TOKEN = "test_oauth_refresh_token";
     static final String TEST_AUTHORIZATION_CODE = "test_authorization_code";
+    static final String NAME = "test_name";
     static final String EMAIL = "test@test.com";
     static final String PASSWORD = "test";
 
@@ -101,44 +104,42 @@ class AuthServiceTest {
     @Test
     void 회원가입() {
         //given
-        MemberDto memberDto = new MemberDto(EMAIL, PASSWORD);
+        MemberDto memberDto = new MemberDto(NAME, EMAIL, PASSWORD);
         given(authRepository.existsByEmail(EMAIL)).willReturn(false);
 
         //when
-        authService.register(memberDto);
+        AccessTokenDto accessTokenDto = authService.register(memberDto);
 
         //then
         then(authRepository).should().save(any());
+        assertThat(accessTokenDto.accessToken()).isNotNull();
     }
 
     @Test
     void 로그인() {
         //given
-        MemberDto memberDto = new MemberDto(EMAIL, PASSWORD);
-        given(authRepository.findByEmail(EMAIL)).willReturn(new Member(1L, EMAIL, PASSWORD));
+        AccountDto accountDto = new AccountDto(EMAIL, PASSWORD);
+        given(authRepository.findByEmail(EMAIL)).willReturn(new Member(1L, NAME, EMAIL, PASSWORD));
         given(authRepository.existsByEmail(EMAIL)).willReturn(true);
 
         //when
-        JwtResponse jwtResponse = authService.login(memberDto);
+        AccessTokenDto accessTokenDto = authService.login(accountDto);
 
         //then
-        assertSoftly(softly -> {
-            assertThat(jwtResponse.accessToken()).isNotEmpty();
-            assertThat(jwtResponse.refreshToken()).isNotEmpty();
-        });
+        assertSoftly(softly -> assertThat(accessTokenDto.accessToken()).isNotEmpty());
     }
 
     @Test
     void 실패_회원가입_중복() {
         //given
-        MemberDto memberDto = new MemberDto(EMAIL, PASSWORD);
+        MemberDto memberDto = new MemberDto(NAME, EMAIL, PASSWORD);
         given(authRepository.existsByEmail(EMAIL)).willReturn(false);
         authService.register(memberDto);
         given(authRepository.existsByEmail(EMAIL)).willReturn(true);
 
         //when, then
         assertThatThrownBy(() -> authService.register(memberDto)).isInstanceOf(
-            IllegalArgumentException.class);
+            DuplicateRequestException.class);
     }
 
     @Test
@@ -165,7 +166,7 @@ class AuthServiceTest {
         //given
         String testEmail = "test_email";
         given(authRepository.existsByEmail(testEmail)).willReturn(false);
-        given(authRepository.findByEmail(testEmail)).willReturn(new Member(1L, testEmail, "oauth"));
+        given(authRepository.findByEmail(testEmail)).willReturn(new Member(1L, NAME, testEmail, "oauth"));
 
         String responseBody = "{\"kakao_account\":{\"email\":\"" + testEmail + "\"}}";
         mockWebServer.enqueue(new MockResponse().setBody(responseBody));
@@ -207,11 +208,11 @@ class AuthServiceTest {
     @Test
     void 실패_존재하지_않는_회원_로그인() {
         //given
-        MemberDto memberDto = new MemberDto(EMAIL, PASSWORD);
+        AccountDto accountDto = new AccountDto(EMAIL, PASSWORD);
         given(authRepository.existsByEmail(EMAIL)).willReturn(false);
 
         //when, then
-        assertThatThrownBy(() -> authService.login(memberDto)).isInstanceOf(
+        assertThatThrownBy(() -> authService.login(accountDto)).isInstanceOf(
             LoginFailedException.class);
     }
 
