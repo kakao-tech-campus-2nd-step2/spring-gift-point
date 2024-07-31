@@ -72,7 +72,7 @@ public class WishlistController {
         }
         try{
             wishlistService.addWish(new WishlistRequest(userId, productId));
-            return new ResponseEntity<>(new WishMessageDTO("위시리스트에 추가 되었습니다."), HttpStatus.OK);
+            return new ResponseEntity<>(new WishMessageDTO("위시리스트에 추가 되었습니다."), HttpStatus.CREATED);
         }catch (IllegalArgumentException e){
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
@@ -84,6 +84,6 @@ public class WishlistController {
         @RequestHeader(HttpHeaders.AUTHORIZATION) String authorizationHeader){
 
         wishlistService.deleteById(wishId);
-        return new ResponseEntity<>(HttpStatus.OK);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }
