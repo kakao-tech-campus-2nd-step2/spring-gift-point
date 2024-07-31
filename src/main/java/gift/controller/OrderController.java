@@ -4,6 +4,7 @@ import gift.dto.OrderRequest;
 import gift.dto.OrderResponse;
 import gift.service.KakaoTokenService;
 import gift.service.OrderService;
+import io.swagger.v3.oas.annotations.Operation;
 import jakarta.servlet.http.HttpSession;
 import org.json.JSONException;
 import org.springframework.http.HttpStatus;
@@ -21,12 +22,13 @@ public class OrderController {
         this.kakaoTokenService = kakaoTokenService;
     }
 
+    @Operation(summary = "주문 생성")
     @PostMapping
     public ResponseEntity<OrderResponse> createOrder(@RequestBody OrderRequest orderRequest, HttpSession session) throws JSONException {
         // 주문 처리 로직
         OrderResponse orderResponse = orderService.createOrder(orderRequest, session);
 
-        kakaoTokenService.processOrder(orderResponse);
+        //kakaoTokenService.processOrder(orderResponse);
 
         return new ResponseEntity<>(orderResponse, HttpStatus.CREATED);
     }

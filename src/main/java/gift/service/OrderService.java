@@ -31,11 +31,11 @@ public class OrderService {
 
         optionService.decreaseQuantity(orderDto.getOptionId(), orderDto.getQuantity());
 
-        wishService.deleteWish(product);
+        wishService.deleteWish(member,product.getId());
 
-        Order order = new Order(member, option, orderDto.getQuantity(), orderDto.getMessage());
+        Order order = new Order(member, option, orderDto.getQuantity(), orderDto.getMessage(), product);
         orderRepository.save(order);
 
-        return new OrderResponse(order.getId(), orderDto.getOptionId(), order.getQuantity(), order.getOrdered_at(), order.getMessage(), session);
+        return new OrderResponse(order);
     }
 }

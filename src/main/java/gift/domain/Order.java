@@ -17,6 +17,10 @@ public class Order {
     private Member member;
 
     @OneToOne
+    @JoinColumn(name = "product_id", nullable = false)
+    private Product product;
+
+    @OneToOne
     @JoinColumn(name = "option_id", nullable = false)
     private Option option;
 
@@ -26,11 +30,14 @@ public class Order {
 
     private LocalDate ordered_at;
 
-    public Order(Member member, Option option, Integer quantity, String message) {
+    public Order(Member member, Option option, Integer quantity, String message, Product product) {
         this.member = member;
         this.option = option;
         this.quantity = quantity;
         this.message = message;
+        this.ordered_at = LocalDate.now();
+        this.product = product;
+
     }
 
     @PrePersist
@@ -55,5 +62,8 @@ public class Order {
     }
     public LocalDate getOrdered_at() {
         return ordered_at;
+    }
+    public Product getProduct() {
+        return product;
     }
 }

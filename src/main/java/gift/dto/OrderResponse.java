@@ -1,28 +1,29 @@
 package gift.dto;
 
+import gift.domain.Order;
 import jakarta.servlet.http.HttpSession;
 
 import java.time.LocalDate;
 
 public class OrderResponse {
     private Long id;
-    private Long optionId;
+    private Long product_id;
+    private Long option_id;
     private int quantity;
     private LocalDate orderDateTime;
     private String message;
-    private HttpSession session;
 
-    public OrderResponse(Long id, Long optionId, int quantity, LocalDate orderDateTime, String message, HttpSession session) {
-        this.id = id;
-        this.optionId = optionId;
-        this.quantity = quantity;
-        this.orderDateTime = orderDateTime;
-        this.message = message;
-        this.session = session;
+    public OrderResponse(Order order) {
+        this.id = order.getId();
+        this.product_id = order.getProduct().getId();
+        this.option_id = order.getOption().getId();
+        this.quantity = order.getQuantity();
+        this.orderDateTime = order.getOrdered_at();
+        this.message = order.getMessage();
     }
 
     public Long getOptionId() {
-        return optionId;
+        return option_id;
     }
 
     public int getQuantity() {
@@ -35,9 +36,5 @@ public class OrderResponse {
 
     public String getMessage() {
         return message;
-    }
-
-    public HttpSession getSession() { // 세션 getter 추가
-        return session;
     }
 }
