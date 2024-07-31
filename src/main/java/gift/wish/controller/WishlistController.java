@@ -4,6 +4,7 @@ import gift.user.domain.User;
 import gift.user.repository.UserRepository;
 import gift.user.service.UserService;
 import gift.utility.JwtUtil;
+import gift.wish.domain.WishMessageDTO;
 import gift.wish.domain.WishlistRequest;
 import gift.wish.domain.WishlistResponse;
 import gift.wish.service.WishlistService;
@@ -61,7 +62,7 @@ public class WishlistController {
     }
     @PostMapping("/{productId}")
     @Operation(summary = "위시리스트 상품 추가")
-    public ResponseEntity<WishlistResponse> addWish(@PathVariable("productId") Long productId,
+    public ResponseEntity<WishMessageDTO> addWish(@PathVariable("productId") Long productId,
         @RequestHeader(HttpHeaders.AUTHORIZATION) String authorizationHeader){
         Long userId;
         try{
@@ -70,8 +71,8 @@ public class WishlistController {
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
         try{
-            WishlistRequest wishlistRequest = new WishlistRequest(userId, productId);
-            return new ResponseEntity<>(wishlistService.addWish(wishlistRequest), HttpStatus.OK);
+            wishlistService.addWish(new WishlistRequest(userId, productId));
+            return new ResponseEntity<>(new WishMessageDTO("위시리스트에 추가 되었습니다."), HttpStatus.OK);
         }catch (IllegalArgumentException e){
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
