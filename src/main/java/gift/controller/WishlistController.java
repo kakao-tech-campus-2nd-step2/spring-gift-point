@@ -5,6 +5,7 @@ import gift.domain.TokenAuth;
 import gift.dto.request.WishlistRequest;
 import gift.dto.response.WishlistPageResponse;
 import gift.service.WishlistService;
+import gift.util.SortUtils;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import jakarta.validation.Valid;
@@ -55,16 +56,8 @@ public class WishlistController {
                                                           @RequestParam(defaultValue = "id,desc") String sort,
                                                           @Parameter(hidden = true) @LoginMember TokenAuth tokenAuth) {
         Long memberId = tokenAuth.getMemberId();
-        Pageable pageable = PageRequest.of(page, size, Sort.by(parseSortParameter(sort)));
+        Pageable pageable = PageRequest.of(page, size, Sort.by(SortUtils.parseSortParameter(sort)));
         return wishlistService.getWishlistByMemberId(memberId, pageable);
-    }
-
-    private Sort.Order parseSortParameter(String sort) {
-        String[] sortParts = sort.split(",");
-        if (sortParts.length != 2) {
-            throw new IllegalArgumentException("잘못된 sort parameter");
-        }
-        return new Sort.Order(Sort.Direction.fromString(sortParts[1]), sortParts[0]);
     }
 
 }

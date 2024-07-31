@@ -10,6 +10,7 @@ import gift.dto.response.ProductResponse;
 import gift.service.CategoryService;
 import gift.service.OptionService;
 import gift.service.ProductService;
+import gift.util.SortUtils;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -65,16 +66,8 @@ public class ProductController {
                                            @RequestParam(defaultValue = "20") int size,
                                            @RequestParam(defaultValue = "0") int page,
                                            @RequestParam(defaultValue = "price,desc") String sort) {
-        Pageable pageable = PageRequest.of(page, size, Sort.by(parseSortParameter(sort)));
+        Pageable pageable = PageRequest.of(page, size, Sort.by(SortUtils.parseSortParameter(sort)));
         return productService.getProducts(categoryId, pageable);
-    }
-
-    private Sort.Order parseSortParameter(String sort) {
-        String[] sortParts = sort.split(",");
-        if (sortParts.length != 2) {
-            throw new IllegalArgumentException("잘못된 sort parameter");
-        }
-        return new Sort.Order(Sort.Direction.fromString(sortParts[1]), sortParts[0]);
     }
 
     @GetMapping("/{id}")
