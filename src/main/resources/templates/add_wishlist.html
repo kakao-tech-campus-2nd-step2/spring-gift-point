@@ -17,13 +17,13 @@
   </thead>
   <tbody>
   <tr th:each="product : ${products.content}">
-    <td th:text="${product.id}"></td>
-    <td th:text="${product.name}"></td>
-    <td th:text="${product.price}"></td>
-    <td th:text="${product.imageUrl}"></td>
+    <td th:text="${product.getId()}"></td>
+    <td th:text="${product.getName()}"></td>
+    <td th:text="${product.getPrice}"></td>
+    <td th:text="${product.getImageUrl}"></td>
     <td>
       <input type="number" class="amountInput" min="0" value="0"
-             th:data-product-id="${product.id}"
+             th:data-product-id="${product.getId()}"
              th:data-user-id="${userId}"/>
     </td>
   </tr>
