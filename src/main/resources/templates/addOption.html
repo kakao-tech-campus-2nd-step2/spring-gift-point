@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Add Option</title>
+</head>
+<body>
+<form action="/api/products/{productId}/options" method="post">
+    <label for="name">Option Name:</label>
+    <input type="text" id="name" name="name" maxlength="50" required><br>
+
+    <label for="quantity">Quantity:</label>
+    <input type="number" id="quantity" name="quantity" min="1" max="99999999" required><br>
+
+    <button type="submit">Add Option</button>
+</form>
+</body>
+</html>
