@@ -21,7 +21,7 @@ public class Product {
     int id;
 
     @NotBlank(message = "이름 공백 안됨")
-    @Size(max = 15, message = "15글자까지만 가능")
+    @Size(max = 50, message = "50글자까지만 가능")
     @Pattern(regexp = "^[a-zA-Z0-9()\\[\\]+\\-&/_]+$", message = "특수기호 안됨")
     @Pattern(regexp = "^(?!.*카카오).*", message = "카카오는 md와 상담")
     @Column(nullable = false)
