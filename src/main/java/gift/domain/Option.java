@@ -23,8 +23,6 @@ public class Option {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "product_id")
     private Product product;
-    @OneToMany(mappedBy = "option", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Wish> wishes = new ArrayList<>();
 
     protected Option() {
     }
@@ -54,26 +52,6 @@ public class Option {
         this.product = product;
         if (this.product != null) {
             this.product.addOption(this);
-        }
-    }
-
-    public void addWish(Wish wish) {
-        this.wishes.add(wish);
-        wish.setOption(this);
-    }
-
-    public void removeWish(Wish wish) {
-        wish.setOption(null);
-        this.wishes.remove(wish);
-    }
-
-    public void removeWishes() {
-        Iterator<Wish> iterator = wishes.iterator();
-
-        while(iterator.hasNext()) {
-            Wish wish = iterator.next();
-            wish.setOption(null);
-            iterator.remove();
         }
     }
 

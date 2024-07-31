@@ -2,6 +2,7 @@ package gift.domain;
 
 import jakarta.persistence.*;
 
+import java.time.LocalDateTime;
 import java.util.Objects;
 
 @Entity
@@ -15,38 +16,31 @@ public class Wish {
     private Member member;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "option_id")
-    private Option option;
+    @JoinColumn(name = "product_id")
+    private Product product;
 
-    @Column(name = "quantity", nullable = false)
-    private int quantity;
+    @Column(name="created_date", nullable = false)
+    private LocalDateTime createdDate;
 
     protected Wish () {
     }
 
-    private Wish(Builder builder) {
-        this.id = builder.id;
-        this.member = builder.member;
-        this.option = builder.option;
-        this.quantity = builder.quantity;
-    }
-
-    public Wish(Long id, Member member, Option option, int quantity) {
+    public Wish(Long id, Member member, Product product, LocalDateTime createdDate) {
         this.id = id;
         this.member = member;
-        this.option = option;
-        this.quantity = quantity;
+        this.product = product;
+        this.createdDate = createdDate;
     }
 
-    public Wish(Member member, Option option, int quantity) {
+    public Wish(Member member, Product product, LocalDateTime createdDate) {
         this.member = member;
-        this.option = option;
-        this.quantity = quantity;
+        this.product = product;
+        this.createdDate = createdDate;
         if(this.member != null){
             this.member.addWish(this);
         }
-        if(this.option != null){
-            this.option.addWish(this);
+        if(this.product != null){
+            this.product.addWish(this);
         }
     }
 
@@ -54,13 +48,9 @@ public class Wish {
         if(this.member != null){
             this.member.removeWish(this);
         }
-        if(this.option != null){
-            this.option.removeWish(this);
+        if(this.product != null){
+            this.product.removeWish(this);
         }
-    }
-
-    public void updateQuantity(int quantity){
-        this.quantity = quantity;
     }
 
     public Long getId() {
@@ -71,58 +61,16 @@ public class Wish {
         return member;
     }
 
-    public int getQuantity() {
-        return quantity;
-    }
-
     public void setMember(Member member) {
         this.member = member;
     }
 
-    public Option getOption() {
-        return option;
+    public Product getProduct() {
+        return product;
     }
 
-    public void setOption(Option option) {
-        this.option = option;
-    }
-
-    public static class Builder{
-        private Long id;
-        private Member member;
-        private Option option;
-        private int quantity;
-
-        public Builder id(Long id){
-            this.id = id;
-            return this;
-        }
-
-        public Builder member(Member member){
-            this.member = member;
-            return this;
-        }
-
-        public Builder option(Option option){
-            this.option = option;
-            return this;
-        }
-
-        public Builder qunatity(int quantity){
-            this.quantity = quantity;
-            return this;
-        }
-
-        public Wish build() {
-            Wish wish = new Wish(this);
-            if(wish.member != null && wish.id == null){
-                wish.member.addWish(wish);
-            }
-            if(wish.option != null && wish.id == null){
-                wish.option.addWish(wish);
-            }
-            return wish;
-        }
+    public void setProduct(Product product) {
+        this.product = product;
     }
 
     @Override

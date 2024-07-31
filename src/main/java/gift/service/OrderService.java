@@ -5,7 +5,10 @@ import gift.domain.Option;
 import gift.domain.Order;
 import gift.dto.request.MemberRequest;
 import gift.dto.request.OrderRequest;
+import gift.dto.response.OrderResponse;
 import gift.repository.OrderRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -27,27 +30,35 @@ public class OrderService {
     }
 
     @Transactional(propagation = Propagation.REQUIRES_NEW)
-    public void orderOption(OrderRequest orderRequest, MemberRequest memberRequest, String accessToken){
+    public OrderResponse orderOption(OrderRequest orderRequest, MemberRequest memberRequest, String accessToken){
         optionService.subtractQuantityById(orderRequest.optionId(), orderRequest.quantity());
 
-        save(memberRequest, orderRequest);
+        Order savedOrder = save(memberRequest, orderRequest);
 
-        if(wishService.existsByOptionId(orderRequest.optionId())){
-            wishService.deleteByOptionId(orderRequest.optionId());
+        Long productId = optionService.findById(orderRequest.optionId()).productId();
+        if(wishService.existsByProductId(productId)){
+            wishService.deleteByProductId(productId);
         }
 
-        String message = "옵션 id " + orderRequest.optionId() + " 상품이 주문되었습니다.";
-        kakaoService.sendKakaoMessage(accessToken,message);
+        //String message = "옵션 id " + orderRequest.optionId() + " 상품이 주문되었습니다.";
+        //kakaoService.sendKakaoMessage(accessToken,message);
+
+        return new OrderResponse(savedOrder.getId(), savedOrder.getOption().getId(), savedOrder.getQuantity(), savedOrder.getOrderDateTime(), savedOrder.getMessage());
     }
 
-
     @Transactional
-    public void save(MemberRequest memberRequest, OrderRequest orderRequest){
+    public Order save(MemberRequest memberRequest, OrderRequest orderRequest){
         LocalDateTime orderDateTime = LocalDateTime.now();
         Member member = memberRequest.toEntity();
-        Option option = optionService.findById(orderRequest.optionId()).toEntity();
+        Option option = optionService.toEntity(optionService.findById(orderRequest.optionId()));
 
         Order order =  orderRequest.toEntity(orderDateTime, member, option);
-        orderRepository.save(order);
+        return orderRepository.save(order);
+    }
+
+    @Transactional(readOnly = true)
+    public Page<OrderResponse> getPagedOrders(MemberRequest memberRequest, Pageable pageable){
+        Page<Order> pagedOrders= orderRepository.findByMemberId(memberRequest.id(), pageable);
+        return pagedOrders.map(OrderResponse::from);
     }
 }

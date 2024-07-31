@@ -1,6 +1,7 @@
 package gift.service;
 
 import gift.domain.Option;
+import gift.domain.Product;
 import gift.dto.request.OptionRequest;
 import gift.dto.response.OptionResponse;
 import gift.dto.response.ProductResponse;
@@ -31,7 +32,7 @@ public class OptionService {
             throw new DuplicateOptionNameException(OPTION_NAME_ALREADY_EXISTS);
         }
         ProductResponse foundProduct = productService.findById(productId);
-        optionRepository.save(new Option(optionRequest.name(), optionRequest.quantity(), foundProduct.toEntity()));
+        optionRepository.save(new Option(optionRequest.name(), optionRequest.quantity(), productService.toEntity(foundProduct)));
     }
 
     @Transactional(readOnly = true)
@@ -79,4 +80,11 @@ public class OptionService {
                 .orElseThrow(()->new OptionNotFoundException(NOT_FOUND_OPTION));
         foundOption.subtract(quantity);
     }
+
+    public Option toEntity(OptionResponse optionResponse){
+        Product product = productService.toEntity(productService.findById(optionResponse.productId()));
+        return new Option(optionResponse.id(), optionResponse.name(), optionResponse.quantity(), product);
+    }
+
+
 }

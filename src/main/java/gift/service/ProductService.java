@@ -45,8 +45,8 @@ public class ProductService {
     }
 
     @Transactional(readOnly = true)
-    public Page<ProductResponse> getPagedProducts(Pageable pageable){
-        Page<Product> pagedProduct = productRepository.findAll(pageable);
+    public Page<ProductResponse> getPagedProducts(Pageable pageable, Long categoryId){
+        Page<Product> pagedProduct = productRepository.findByCategoryId(categoryId, pageable);
         return pagedProduct.map(ProductResponse::from);
     }
 
@@ -83,5 +83,10 @@ public class ProductService {
     private Product findProductByIdOrThrow(Long id) {
         return productRepository.findById(id)
                 .orElseThrow(() -> new ProductNotFoundException(NOT_FOUND_PRODUCT_BY_ID));
+    }
+
+    public Product toEntity(ProductResponse productResponse){
+        Category category = categoryService.findById(productResponse.categoryId()).toEntity();
+        return new Product(productResponse.id(), productResponse.name(), productResponse.price(), productResponse.imageUrl(), category);
     }
 }

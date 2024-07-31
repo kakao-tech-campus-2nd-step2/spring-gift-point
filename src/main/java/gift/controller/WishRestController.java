@@ -3,13 +3,13 @@ package gift.controller;
 import gift.annotation.LoginMember;
 import gift.dto.request.MemberRequest;
 import gift.dto.request.WishRequest;
-import gift.dto.response.WishResponse;
+import gift.dto.response.CommonResponse;
+import gift.dto.response.WishAddResponse;
 import gift.service.WishService;
 import io.swagger.v3.oas.annotations.Operation;
-import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -25,29 +25,32 @@ public class WishRestController {
 
     @Operation(summary = "새로운 위시를 추가합니다")
     @PostMapping
-    public ResponseEntity<Void> addWish(@LoginMember MemberRequest memberRequest, @RequestBody WishRequest wishRequest){
-        wishService.save(memberRequest, wishRequest);
-        return ResponseEntity.status(HttpStatus.CREATED).build();
-    }
-
-    @Operation(summary = "회원의 모든 위시 목록을 조회합니다")
-    @GetMapping
-    public ResponseEntity<Page<WishResponse>> getMemberWishes(@LoginMember MemberRequest memberRequest, @PageableDefault(size = 5, sort = "id", direction = Sort.Direction.DESC) Pageable pageable){
-        return ResponseEntity.status(HttpStatus.OK)
-                .body(wishService.getPagedMemberWishesByMemberId(memberRequest.id(),pageable));
+    public ResponseEntity<CommonResponse> addWish(@LoginMember MemberRequest memberRequest, @RequestBody WishRequest wishRequest){
+        WishAddResponse wishAddResponse = wishService.save(memberRequest, wishRequest);
+        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(wishAddResponse,"위시 생성 성공", true));
     }
 
     @Operation(summary = "특정 위시를 삭제합니다")
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> removeWish(@LoginMember MemberRequest memberRequest, @PathVariable Long id){
-        wishService.deleteWishByMemberIdAndId(memberRequest.id(), id);
-        return ResponseEntity.status(HttpStatus.OK).build();
+    public ResponseEntity<CommonResponse> removeWish(@LoginMember MemberRequest memberRequest, @PathVariable Long id){
+        wishService.deleteById(id);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).body(new CommonResponse<>(null, "위시 삭제 성공", true));
     }
 
-    @Operation(summary = "특정 위시의 수량을 업데이트합니다")
-    @PatchMapping("/{id}")
-    public ResponseEntity<Void> updateQuantity(@LoginMember MemberRequest memberRequest, @PathVariable Long id, @RequestBody WishRequest wishRequest){
-        wishService.updateQuantityByMemberIdAndId(memberRequest.id(), id, wishRequest);
-        return ResponseEntity.status(HttpStatus.OK).build();
+    @Operation(summary = "회원의 모든 위시 목록을 조회합니다")
+    @GetMapping
+    public ResponseEntity<CommonResponse> getMemberWishes(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "createdDate,desc") String sort,
+            @LoginMember MemberRequest memberRequest){
+
+        String[] sortParams = sort.split(",");
+        String sortBy = sortParams[0];
+        Sort.Direction sortDirection = Sort.Direction.fromString(sortParams[1]);
+        Pageable pageable = PageRequest.of(page, size, Sort.by(sortDirection, sortBy));
+
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(new CommonResponse(wishService.getPagedMemberWishesByMemberId(memberRequest.id(),pageable),"회원 위시 목록 조회 성공",true));
     }
 }

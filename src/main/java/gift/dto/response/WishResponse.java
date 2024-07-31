@@ -2,8 +2,13 @@ package gift.dto.response;
 
 import gift.domain.Wish;
 
-public record WishResponse(Long id, OptionResponse optionResponse, int quantity) {
+public record WishResponse(Long id, WishProductResponse product) {
     public static WishResponse from(final Wish wish){
-        return new WishResponse(wish.getId(), OptionResponse.from(wish.getOption()), wish.getQuantity());
+        WishProductResponse product = new WishProductResponse(
+                wish.getProduct().getId(),
+                wish.getProduct().getName(),
+                wish.getProduct().getPrice(),
+                wish.getProduct().getImageUrl());
+        return new WishResponse(wish.getId(), product);
     }
 }

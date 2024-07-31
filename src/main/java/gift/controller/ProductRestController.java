@@ -3,16 +3,15 @@ package gift.controller;
 import gift.dto.request.OptionRequest;
 import gift.dto.request.ProductOptionRequest;
 import gift.dto.request.ProductRequest;
-import gift.dto.response.OptionResponse;
+import gift.dto.response.CommonResponse;
 import gift.dto.response.ProductResponse;
 import gift.service.OptionService;
 import gift.service.ProductService;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
-import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -30,52 +29,77 @@ public class ProductRestController {
         this.optionService = optionService;
     }
 
-    @Operation(summary = "새로운 제품과 옵션을 추가합니다")
+    @Operation(summary = "새로운 상품과 옵션을 생성합니다")
     @PostMapping
-    public ResponseEntity<Void> add(@Valid @RequestBody ProductOptionRequest productOptionRequest) {
+    public ResponseEntity<Void> addProduct(@Valid @RequestBody ProductOptionRequest productOptionRequest) {
         productService.save(productOptionRequest.getProductRequest(), productOptionRequest.getOptionRequest());
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
-    @Operation(summary = "ID로 제품을 조회합니다")
-    @GetMapping("/{id}")
-    public ResponseEntity<ProductResponse> getById(@PathVariable Long id) {
-        ProductResponse product = productService.findById(id);
-        return ResponseEntity.status(HttpStatus.OK).body(product);
+    @Operation(summary = "상품 ID로 상품을 조회합니다")
+    @GetMapping("/{productId}")
+    public ResponseEntity<CommonResponse> getById(@PathVariable Long productId) {
+        ProductResponse product = productService.findById(productId);
+        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse<>(product, "상품 ID로 상품 조회 성공", true));
     }
 
-    @Operation(summary = "페이징된 제품 목록을 조회합니다")
+    @Operation(summary = "상품 ID로 상품 정보를 수정합니다")
+    @PutMapping("/{productId}")
+    public ResponseEntity<Void> updateProduct(@PathVariable Long productId, @Valid @RequestBody ProductRequest request) {
+        productService.updateById(productId, request);
+        return ResponseEntity.status(HttpStatus.OK).build();
+    }
+
+    @Operation(summary = "상품 ID로 상품을 삭제합니다")
+    @DeleteMapping("/{productId}")
+    public ResponseEntity<Void> deleteProduct(@PathVariable Long productId) {
+        productService.deleteById(productId);
+        return ResponseEntity.status(HttpStatus.OK).build();
+    }
+
+    @Operation(summary = "페이징된 상품 목록을 조회합니다")
     @GetMapping
-    public ResponseEntity<Page<ProductResponse>> getPagedProducts(@PageableDefault(size = 5, sort = "id", direction = Sort.Direction.DESC) Pageable pageable){
+    public ResponseEntity<CommonResponse> getPagedProducts(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "name,asc") String sort,
+            @RequestParam(defaultValue = "1") Long categoryId) {
+
+        String[] sortParams = sort.split(",");
+        String sortBy = sortParams[0];
+        Sort.Direction sortDirection = Sort.Direction.fromString(sortParams[1]);
+        Pageable pageable = PageRequest.of(page, size, Sort.by(sortDirection, sortBy));
+
+        System.out.println(categoryId);
         return ResponseEntity.status(HttpStatus.OK)
-                .body(productService.getPagedProducts(pageable));
+                .body(new CommonResponse(productService.getPagedProducts(pageable, categoryId),"페이징된 상품 목록 조회 성공",true));
     }
 
-    @Operation(summary = "ID로 제품을 삭제합니다")
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> delete(@PathVariable Long id) {
-        productService.deleteById(id);
-        return ResponseEntity.status(HttpStatus.OK).build();
-    }
-
-    @Operation(summary = "ID로 제품 정보를 업데이트합니다")
-    @PutMapping("/{id}")
-    public ResponseEntity<Void> update(@PathVariable Long id, @Valid @RequestBody ProductRequest request) {
-        productService.updateById(id, request);
-        return ResponseEntity.status(HttpStatus.OK).build();
-    }
-
-    @Operation(summary = "ID로 제품의 옵션 목록을 조회합니다")
-    @GetMapping("/{id}/options")
-    public ResponseEntity<List<OptionResponse>> getProductOptions(@PathVariable Long id) {
-        productService.findById(id);
-        return ResponseEntity.ok().body(optionService.findByProductId(id));
-    }
-
-    @Operation(summary = "ID로 제품에 옵션을 추가합니다")
-    @PostMapping("/{id}/options")
-    public ResponseEntity<Void> addProductOption(@PathVariable Long id, @Valid @RequestBody OptionRequest optionRequest){
-        optionService.save(id, optionRequest);
+    @Operation(summary = "상품 ID로 상품에 옵션을 추가합니다")
+    @PostMapping("/{productId}/options")
+    public ResponseEntity<Void> addProductOption(@PathVariable Long productId, @Valid @RequestBody OptionRequest optionRequest){
+        optionService.save(productId, optionRequest);
         return ResponseEntity.status(HttpStatus.CREATED).build();
+    }
+
+    @Operation(summary = "옵션 ID로 옵션을 수정합니다")
+    @PutMapping("/{productId}/options/{optionId}")
+    public ResponseEntity<Void> updateProductOption(@PathVariable Long optionId, @Valid @RequestBody OptionRequest optionRequest){
+        optionService.updateById(optionId, optionRequest);
+        return ResponseEntity.status(HttpStatus.OK).build();
+    }
+
+    @Operation(summary = "옵션 ID로 옵션을 삭제합니다")
+    @DeleteMapping("/{productId}/options/{optionId}")
+    public ResponseEntity<Void> deleteProductOption(@PathVariable Long optionId){
+        optionService.deleteById(optionId);
+        return ResponseEntity.status(HttpStatus.OK).build();
+    }
+
+    @Operation(summary = "상품 ID로 상품의 옵션 목록을 조회합니다")
+    @GetMapping("/{productId}/options")
+    public ResponseEntity<CommonResponse> getProductOptions(@PathVariable Long productId) {
+        productService.findById(productId);
+        return ResponseEntity.ok().body(new CommonResponse(optionService.findByProductId(productId),"상품의 옵션 목록 조회 성공", true));
     }
 }
