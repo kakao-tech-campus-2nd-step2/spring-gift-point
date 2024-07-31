@@ -5,11 +5,13 @@ import gift.dto.OptionResponseDto;
 import gift.entity.Option;
 import gift.entity.Product;
 import gift.exception.BusinessException;
+import gift.exception.ServiceException;
 import gift.repository.OptionRepository;
 import gift.repository.ProductRepository;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -34,15 +36,9 @@ public class OptionService {
             .collect(Collectors.toList());
     }
 
-    public OptionResponseDto getOptionById(Long optionId) {
-        Option option = optionRepository.findById(optionId)
-            .orElseThrow(() -> new BusinessException("해당 id에 대한 옵션이 없습니다."));
-        return new OptionResponseDto(option);
-    }
-
     public List<OptionResponseDto> getOptionsByProductId(Long productId) {
         Product product = productRepository.findById(productId)
-            .orElseThrow(() -> new BusinessException("해당 id의 상품이 존재하지 않습니다."));
+            .orElseThrow(() -> new ServiceException("존재하지 않은 상품입니다.", HttpStatus.NOT_FOUND));
 
         return product.getOptions().stream().map(OptionResponseDto::new)
             .collect(Collectors.toList());
@@ -50,10 +46,10 @@ public class OptionService {
 
     public void addOptionToProduct(Long productId, OptionRequestDto request) {
         Product product = productRepository.findById(productId)
-            .orElseThrow(() -> new BusinessException("해당 id의 상품이 존재하지 않습니다."));
+            .orElseThrow(() -> new ServiceException("존재하지 않은 상품입니다.", HttpStatus.NOT_FOUND));
 
         if (optionRepository.existsByNameAndProductId(request.getName(), productId)) {
-            throw new BusinessException("동일한 상품 내의 옵션 이름은 중복될 수 없습니다.");
+            throw new ServiceException("동일한 상품 내의 옵션 이름은 중복될 수 없습니다.", HttpStatus.CONFLICT);
         }
 
         var option = new Option(request.getName(), request.getQuantity(), product);
@@ -74,7 +70,20 @@ public class OptionService {
     }
 
     public void deleteOption(Long productId, Long optionId) {
-        Option option = optionRepository.findById(optionId).orElseThrow(() -> new BusinessException("해당 id에 대한 옵션이 없습니다."));
+        if (!optionRepository.existsByIdAndProductId(optionId, productId)) {
+            throw new ServiceException("존재하지 않는 상품 또는 옵션입니다.", HttpStatus.NOT_FOUND);
+        }
+
+        Option option = optionRepository.findById(optionId).orElseThrow(() -> new ServiceException("존재하지 않는 옵션입니다.", HttpStatus.NOT_FOUND));
+
+        Product product = productRepository.findById(productId)
+            .orElseThrow(() -> new ServiceException("존재하지 않은 상품입니다.", HttpStatus.NOT_FOUND));
+
+        List<Option> options = optionRepository.findByProductId(productId);
+        if (options.size() <= 1) {
+            throw new ServiceException("상품에는 최소 하나 이상의 옵션이 있어야 합니다.", HttpStatus.BAD_REQUEST);
+        }
+
         optionRepository.delete(option);
     }
 }
