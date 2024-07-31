@@ -61,7 +61,7 @@ public class ProductService {
 
     //상품 추가 기능
     @Transactional
-    public Long addProduct(ProductRequest product) {
+    public void addProduct(ProductRequest product) {
         validateProductUniqueness(product);
         CategoryEntity categoryEntity = categoryRepository.findById(product.categoryId())
             .orElseThrow(() -> new NotFoundException("Category Not Found"));
@@ -77,8 +77,7 @@ public class ProductService {
             categoryEntity,
             optionEntities
         );
-        return productRepository.save(productEntity).getId();
-
+        productRepository.save(productEntity);
     }
 
     //상품 수정 기능
