@@ -8,6 +8,7 @@ import gift.dto.requestdto.OptionNameUpdateRequestDTO;
 import gift.dto.responsedto.OptionResponseDTO;
 import gift.repository.JpaOptionRepository;
 import gift.repository.JpaProductRepository;
+import java.nio.file.OpenOption;
 import java.util.List;
 import java.util.NoSuchElementException;
 import org.springframework.stereotype.Service;
@@ -37,19 +38,22 @@ public class OptionService {
             .toList();
     }
 
-    public Long addOption(Long productId, OptionCreateRequestDTO optionCreateRequestDTO) {
+    public OptionResponseDTO addOption(Long productId, OptionCreateRequestDTO optionCreateRequestDTO) {
         Product product = getProduct(productId);
         Options optionList = new Options(jpaOptionRepository.findAllByProduct(product));
         optionList.validDuplicateName(optionCreateRequestDTO.name());
         Option option = optionCreateRequestDTO.toEntity(product);
-        return jpaOptionRepository.save(option).getId();
+
+        jpaOptionRepository.save(option);
+        return OptionResponseDTO.from(option);
+
     }
 
-    public Long updateOptionName(Long optionId,
+    public OptionResponseDTO updateOptionName(Long optionId,
         OptionNameUpdateRequestDTO optionNameUpdateRequestDTO) {
         Option option = getOption(optionId);
         option.updateName(optionNameUpdateRequestDTO.name());
-        return option.getId();
+        return OptionResponseDTO.from(option);
     }
 
     public Long deleteOption(Long optionId) {

@@ -46,32 +46,32 @@ public class OptionController {
     @PostMapping("/products/{productId}/options")
     @Operation(summary = "옵션 추가 api", description = "옵션 추가 api입니다")
     @ApiResponse(responseCode = "201", description = "옵션 추가 성공")
-    public ResponseEntity<SuccessBody<Long>> addOption(
+    public ResponseEntity<SuccessBody<OptionResponseDTO>> addOption(
         @PathVariable(value = "productId") Long productId,
         @Valid @RequestBody OptionCreateRequestDTO optionCreateRequestDTO
     ) {
-        Long optionId = optionService.addOption(productId, optionCreateRequestDTO);
-        return ApiResponseGenerator.success(HttpStatus.CREATED, "옵션이 생성되었습니다.", optionId);
+        OptionResponseDTO optionResponseDTO = optionService.addOption(productId, optionCreateRequestDTO);
+        return ApiResponseGenerator.success(HttpStatus.CREATED, "옵션이 생성되었습니다.", optionResponseDTO);
     }
 
     @PutMapping("/options/{optionId}")
     @Operation(summary = "옵션 수정 api", description = "옵션 수정 api입니다")
     @ApiResponse(responseCode = "200", description = "옵션 수정 성공")
-    public ResponseEntity<SuccessBody<Long>> updateOptionName(
+    public ResponseEntity<SuccessBody<OptionResponseDTO>> updateOptionName(
         @PathVariable(value = "optionId") Long optionId,
         @Valid @RequestBody OptionNameUpdateRequestDTO optionNameUpdateRequestDTO
     ) {
-        Long updatedOptionId = optionService.updateOptionName(optionId, optionNameUpdateRequestDTO);
-        return ApiResponseGenerator.success(HttpStatus.OK, "옵션이 수정되었습니다.", updatedOptionId);
+        OptionResponseDTO optionResponseDTO = optionService.updateOptionName(optionId, optionNameUpdateRequestDTO);
+        return ApiResponseGenerator.success(HttpStatus.OK, "옵션이 수정되었습니다.", optionResponseDTO);
     }
 
     @DeleteMapping("/options/{optionId}")
     @Operation(summary = "옵션 삭제 api", description = "옵션 삭제 api입니다")
     @ApiResponse(responseCode = "200", description = "옵션 삭제 성공")
-    public ResponseEntity<SuccessBody<Long>> deleteOption(
+    public ResponseEntity<SuccessBody<Void>> deleteOption(
         @PathVariable(value = "optionId") Long optionId
     ) {
-        Long deletedOptionId = optionService.deleteOption(optionId);
-        return ApiResponseGenerator.success(HttpStatus.OK, "옵션이 삭제되었습니다.", deletedOptionId);
+        optionService.deleteOption(optionId);
+        return ApiResponseGenerator.success(HttpStatus.OK, "옵션이 삭제되었습니다.", null);
     }
 }
