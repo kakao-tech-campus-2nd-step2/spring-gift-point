@@ -33,14 +33,14 @@ public class OptionController {
         return optionService.findOption(productId);
     }
 
-    @PutMapping("/options/{optionId}")
-    public OptionResponseDto putOption(@PathVariable Long optionId, @RequestBody OptionRequestDto optionRequestDto)
+    @PutMapping("/{productId}/options/{optionId}")
+    public OptionResponseDto putOption(@PathVariable Long productId, @PathVariable Long optionId, @RequestBody OptionRequestDto optionRequestDto)
         throws NotFoundOption {
         return optionService.updateOption(optionId, optionRequestDto);
     }
 
-    @DeleteMapping("/options/{optionId}")
-    public HttpEntity<String> deleteOptionById(@PathVariable Long optionId) throws NotFoundOption {
+    @DeleteMapping("/{productId}/options/{optionId}")
+    public HttpEntity<String> deleteOptionById(@PathVariable Long productId, @PathVariable Long optionId) throws NotFoundOption {
         optionService.deleteOptionById(optionId);
         return ResponseEntity.ok("성공적으로 삭제되었습니다");
     }
