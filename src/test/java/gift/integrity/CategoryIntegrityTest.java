@@ -61,7 +61,7 @@ class CategoryIntegrityTest {
     void 카테고리_추가() {
         //given
         String url = BASE_URL + port + "/api/categories";
-        CategoryDto categoryDto = new CategoryDto("테스트카테고리1");
+        CategoryDto categoryDto = new CategoryDto("테스트카테고리", "테스트컬러", "테스트주소", "테스트설명");
 
         HttpHeaders headers = new HttpHeaders();
         headers.setBearerAuth(accessToken);
@@ -116,7 +116,7 @@ class CategoryIntegrityTest {
     void 카테고리_수정() {
         //given
         String url = BASE_URL + port + "/api/categories/1";
-        CategoryDto categoryDto = new CategoryDto("테스트카테고리2");
+        CategoryDto categoryDto = new CategoryDto("테스트카테고리", "테스트컬러", "테스트주소", "테스트설명");
 
         HttpHeaders headers = new HttpHeaders();
         headers.setBearerAuth(accessToken);
@@ -135,7 +135,7 @@ class CategoryIntegrityTest {
     void 카테고리_삭제() {
         //given
         String url = BASE_URL + port + "/api/categories";
-        CategoryDto categoryDto = new CategoryDto("테스트카테고리1");
+        CategoryDto categoryDto = new CategoryDto("테스트카테고리", "테스트컬러", "테스트주소", "테스트설명");
         HttpHeaders headers = new HttpHeaders();
         headers.setBearerAuth(accessToken);
         RequestEntity<CategoryDto> requestEntity = new RequestEntity<>(categoryDto, headers, HttpMethod.POST,

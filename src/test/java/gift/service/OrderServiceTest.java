@@ -125,7 +125,7 @@ class OrderServiceTest {
             loginMemberIdDto.id(),
             2,
             orderDto.message());
-        Category category = new Category(1L, "테스트카테고리");
+        Category category = new Category(1L, "테스트카테고리", "테스트컬러", "테스트주소", "테스트설명");
         Product product = new Product(1L, "테스트상품", 1500, "테스트주소", category);
         Option option = new Option(1L, "테스트옵션", 5, product);
         KakaoToken kakaoToken = new KakaoToken(1L,
@@ -167,7 +167,7 @@ class OrderServiceTest {
     @Test
     void 실패_옵션_수량보다_더_많이_차감() {
         //given
-        Category category = new Category("테스트카테고리");
+        Category category = new Category("테스트카테고리", "테스트컬러", "테스트주소", "테스트설명");
         Product product = new Product(1L, "테스트상품", 1500, "테스트주소", category);
         Option option = new Option(1L, "테스트옵션", 1, product);
         OrderDto orderDto = new OrderDto(option.getId(), 999, "test_message");
@@ -198,7 +198,7 @@ class OrderServiceTest {
         //given
         LoginMemberIdDto loginMemberIdDto = new LoginMemberIdDto(1L);
         OrderDto orderDto = new OrderDto(1L, 2, "test_message");
-        Category category = new Category(1L, "테스트카테고리");
+        Category category = new Category(1L, "테스트카테고리", "테스트컬러", "테스트주소", "테스트설명");
         Product product = new Product(1L, "테스트상품", 1000, "테스트주소", category);
         Option option = new Option(1L, "테스트옵션", 5, product);
         Order order = new Order(1L,
@@ -247,7 +247,7 @@ class OrderServiceTest {
         //given
         LoginMemberIdDto loginMemberIdDto = new LoginMemberIdDto(1L);
         OrderDto orderDto = new OrderDto(1L, 2, "test_message");
-        Category category = new Category(1L, "테스트카테고리");
+        Category category = new Category(1L, "테스트카테고리", "테스트컬러", "테스트주소", "테스트설명");
         Product product = new Product(1L, "테스트상품", 1000, "테스트주소", category);
         Option option = new Option(1L, "테스트옵션", 5, product);
 
@@ -266,7 +266,7 @@ class OrderServiceTest {
         //given
         LoginMemberIdDto loginMemberIdDto = new LoginMemberIdDto(1L);
         OrderDto orderDto = new OrderDto(1L, 2, "test_message");
-        Category category = new Category(1L, "테스트카테고리");
+        Category category = new Category(1L, "테스트카테고리", "테스트컬러", "테스트주소", "테스트설명");
         Product product = new Product(1L, "테스트상품", 1000, "테스트주소", category);
         Option option = new Option(1L, "테스트옵션", 5, product);
 
@@ -286,7 +286,7 @@ class OrderServiceTest {
         //given
         LoginMemberIdDto loginMemberIdDto = new LoginMemberIdDto(1L);
         OrderDto orderDto = new OrderDto(1L, 2, "test_message");
-        Category category = new Category(1L, "테스트카테고리");
+        Category category = new Category(1L, "테스트카테고리", "테스트컬러", "테스트주소", "테스트설명");
         Product product = new Product(1L, "테스트상품", 1000, "테스트주소", category);
         Option option = new Option(1L, "테스트옵션", 5, product);
         Order order = new Order(1L,

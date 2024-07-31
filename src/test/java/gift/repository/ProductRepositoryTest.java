@@ -28,7 +28,7 @@ class ProductRepositoryTest {
     @Test
     void 상품_추가() {
         //given
-        Category category = categoryRepository.save(new Category("테스트카테고리1"));
+        Category category = categoryRepository.save(new Category("테스트카테고리1", "테스트컬러", "테스트주소", "테스트설명"));
 
         //when
         Product insertedProduct = productRepository.save(
@@ -47,7 +47,7 @@ class ProductRepositoryTest {
     @Test
     void 상품_전체_조회() {
         //given
-        Category category = categoryRepository.save(new Category("테스트카테고리1"));
+        Category category = categoryRepository.save(new Category("테스트카테고리1", "테스트컬러", "테스트주소", "테스트설명"));
         productRepository.save(new Product("테스트1", 1500, "테스트주소1", category));
         productRepository.save(new Product("테스트2", 3000, "테스트주소2", category));
 
@@ -61,7 +61,7 @@ class ProductRepositoryTest {
     @Test
     void 상품_조회() {
         //given
-        Category category = categoryRepository.save(new Category("테스트카테고리1"));
+        Category category = categoryRepository.save(new Category("테스트카테고리1", "테스트컬러", "테스트주소", "테스트설명"));
         Product product = productRepository.save(new Product("테스트1", 1500, "테스트주소1", category));
 
         //when
@@ -74,7 +74,7 @@ class ProductRepositoryTest {
     @Test
     void 상품_수정() {
         //given
-        Category category = categoryRepository.save(new Category("테스트카테고리1"));
+        Category category = categoryRepository.save(new Category("테스트카테고리1", "테스트컬러", "테스트주소", "테스트설명"));
         Product product = productRepository.save(new Product("테스트1", 1500, "테스트주소1", category));
 
         //when
@@ -89,7 +89,7 @@ class ProductRepositoryTest {
     @Test
     void 상품_삭제() {
         //given
-        Category category = categoryRepository.save(new Category("테스트카테고리1"));
+        Category category = categoryRepository.save(new Category("테스트카테고리1", "테스트컬러", "테스트주소", "테스트설명"));
         Product product = productRepository.save(new Product("테스트1", 1500, "테스트주소1", category));
 
         //when

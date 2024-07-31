@@ -47,7 +47,7 @@ class WishServiceTest {
     @Test
     void 위시리스트_항목_추가() {
         //given
-        Category category = new Category(1L, "테스트카테고리");
+        Category category = new Category(1L, "테스트카테고리", "테스트컬러", "테스트주소", "테스트설명");
         Product product = new Product(1L, "테스트상품", 1500, "테스트주소", category);
         Member member = new Member(1L, "테스트회원이름", "test@test.com", "test");
         given(productRepository.findById(product.getId())).willReturn(Optional.of(product));
@@ -105,7 +105,7 @@ class WishServiceTest {
     @Test
     void 실패_존재하지_않는_회원_정보로_위시리스트_추가_시도() {
         //given
-        Category category = new Category(1L, "테스트카테고리");
+        Category category = new Category(1L, "테스트카테고리", "테스트컬러", "테스트주소", "테스트설명");
         Product product = new Product(1L, "테스트상품", 1500, "테스트주소", category);
         given(productRepository.findById(product.getId())).willReturn(Optional.of(product));
         given(authRepository.findById(any())).willReturn(Optional.empty());
@@ -122,7 +122,7 @@ class WishServiceTest {
     @Test
     void 실패_위시_리스트에_상품_중복_추가() {
         //given
-        Category category = new Category(1L, "테스트카테고리");
+        Category category = new Category(1L, "테스트카테고리", "테스트컬러", "테스트주소", "테스트설명");
         Product product = new Product(1L, "테스트상품", 1500, "테스트주소", category);
         WishDto wishDto = new WishDto(product.getId());
         LoginMemberIdDto loginMemberIdDto = new LoginMemberIdDto(1L);

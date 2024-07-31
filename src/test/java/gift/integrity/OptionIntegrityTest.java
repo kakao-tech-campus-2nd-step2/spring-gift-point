@@ -95,7 +95,7 @@ class OptionIntegrityTest {
     @Test
     void 옵션_추가() {
         //given
-        Category category = categoryRepository.save(new Category("테스트카테고리"));
+        Category category = categoryRepository.save(new Category("테스트카테고리", "테스트컬러", "테스트주소", "테스트설명"));
         Product product = productRepository.save(new Product("테스트상품", 1500, "테스트주소", category));
         String url = BASE_URL + port + "/api/products/" + product.getId() + "/options";
         OptionDto optionDto = new OptionDto("테스트옵션1", 1);

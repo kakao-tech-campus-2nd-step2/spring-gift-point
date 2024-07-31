@@ -29,7 +29,8 @@ public class CategoryService {
     public Category insertCategory(CategoryDto categoryDto) {
         ValidateRedundancyCategory(categoryDto.name());
 
-        Category category = new Category(categoryDto.name());
+        Category category = new Category(categoryDto.name(), categoryDto.color(),
+            categoryDto.imageUrl(), categoryDto.description());
         return categoryRepository.save(category);
     }
 
@@ -37,7 +38,8 @@ public class CategoryService {
     public Category updateCategory(Long id, CategoryDto categoryDto) {
         getExistenceValidatedCategory(id);
 
-        Category category = new Category(id, categoryDto.name());
+        Category category = new Category(id, categoryDto.name(), categoryDto.color(),
+            categoryDto.imageUrl(), categoryDto.description());
         return categoryRepository.save(category);
     }
 

@@ -68,7 +68,7 @@ class WishIntegrityTest {
         authService.register(memberDto);
         accessToken = authService.login(new AccountDto(memberDto.email(), memberDto.password())).accessToken();
 
-        CategoryDto categoryDto = new CategoryDto("테스트카테고리1");
+        CategoryDto categoryDto = new CategoryDto("테스트카테고리", "테스트컬러", "테스트주소", "테스트설명");
         categoryService.insertCategory(categoryDto);
 
         String url = BASE_URL + port + "/api/products";

@@ -47,7 +47,7 @@ class ProductServiceTest {
     @Test
     void 상품_추가() {
         //given
-        Category category = new Category(1L, "테스트카테고리");
+        Category category = new Category(1L, "테스트카테고리", "테스트컬러", "테스트주소", "테스트설명");
         Product product = new Product(1L, "테스트상품", 1500, "테스트주소", category);
         given(categoryRepository.findByName("테스트카테고리")).willReturn(Optional.of(category));
 
@@ -64,7 +64,7 @@ class ProductServiceTest {
     @Test
     void 상품_조회() {
         //given
-        Category category = new Category(1L, "테스트카테고리");
+        Category category = new Category(1L, "테스트카테고리", "테스트컬러", "테스트주소", "테스트설명");
         Product product = new Product(1L, "테스트상품", 1500, "테스트주소", category);
         given(productRepository.findById(product.getId())).willReturn(Optional.of(product));
 
@@ -118,7 +118,7 @@ class ProductServiceTest {
     @Test
     void 상품_수정() {
         //given
-        Category category = new Category(1L, "테스트카테고리");
+        Category category = new Category(1L, "테스트카테고리", "테스트컬러", "테스트주소", "테스트설명");
         Product product = new Product(1L, "테스트상품", 1500, "테스트주소", category);
         given(productRepository.findById(product.getId())).willReturn(Optional.of(product));
         given(categoryRepository.findByName("테스트카테고리")).willReturn(Optional.of(category));
@@ -134,7 +134,7 @@ class ProductServiceTest {
     @Test
     void 상품_삭제() {
         //given
-        Category category = new Category(1L, "테스트카테고리");
+        Category category = new Category(1L, "테스트카테고리", "테스트컬러", "테스트주소", "테스트설명");
         Product product = new Product(1L, "테스트상품", 1500, "테스트주소", category);
         given(productRepository.findById(product.getId())).willReturn(Optional.of(product));
 

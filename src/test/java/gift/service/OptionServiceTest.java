@@ -42,7 +42,7 @@ class OptionServiceTest {
     @Test
     void 옵션_추가() {
         //given
-        Category category = new Category("테스트카테고리");
+        Category category = new Category("테스트카테고리", "테스트컬러", "테스트주소", "테스트설명");
         Product product = new Product(1L, "테스트상품", 1500, "테스트주소", category);
         given(productRepository.findById(product.getId())).willReturn(Optional.of(product));
         given(optionRepository.existsByNameAndProductId("테스트옵션", product.getId())).willReturn(
@@ -67,7 +67,7 @@ class OptionServiceTest {
     @Test
     void 특정_상품의_옵션_전체_조회() {
         //given
-        Category category = new Category("테스트카테고리");
+        Category category = new Category("테스트카테고리", "테스트컬러", "테스트주소", "테스트설명");
         Product product = new Product(1L, "테스트상품", 1500, "테스트주소", category);
         given(productRepository.findById(product.getId())).willReturn(Optional.of(product));
 
@@ -81,7 +81,7 @@ class OptionServiceTest {
     @Test
     void 옵션_조회() {
         //given
-        Category category = new Category("테스트카테고리");
+        Category category = new Category("테스트카테고리", "테스트컬러", "테스트주소", "테스트설명");
         Product product = new Product(1L, "테스트상품", 1500, "테스트주소", category);
         Option option = new Option(1L, "테스트옵션", 1, product);
         given(optionRepository.findById(option.getId())).willReturn(Optional.of(option));
@@ -96,7 +96,7 @@ class OptionServiceTest {
     @Test
     void 옵션_수정() {
         //given
-        Category category = new Category("테스트카테고리");
+        Category category = new Category("테스트카테고리", "테스트컬러", "테스트주소", "테스트설명");
         Product product = new Product(1L, "테스트상품", 1500, "테스트주소", category);
         Option option = new Option(1L, "테스트옵션", 1, product);
         given(productRepository.findById(product.getId())).willReturn(Optional.of(product));
@@ -120,7 +120,7 @@ class OptionServiceTest {
     @Test
     void 옵션_삭제() {
         //given
-        Category category = new Category("테스트카테고리");
+        Category category = new Category("테스트카테고리", "테스트컬러", "테스트주소", "테스트설명");
         Product product = new Product(1L, "테스트상품", 1500, "테스트주소", category);
         Option option = new Option(2L, "테스트옵션2", 1, product);
         given(productRepository.findById(product.getId())).willReturn(Optional.of(product));
