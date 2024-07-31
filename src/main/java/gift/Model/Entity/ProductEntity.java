@@ -10,7 +10,7 @@ public class ProductEntity {
         @GeneratedValue(strategy = GenerationType.IDENTITY)
         private Long id;
 
-        @Column(name="optionName")
+        @Column(name="name")
         private String name;
 
         @Column(name="price")

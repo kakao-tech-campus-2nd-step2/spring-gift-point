@@ -25,9 +25,6 @@ public class WebConfig implements WebMvcConfigurer {
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(consumerInterceptor).addPathPatterns("/api/categories");
-        registry.addInterceptor(consumerInterceptor).addPathPatterns("/api/options");
-        registry.addInterceptor(consumerInterceptor).addPathPatterns("/api/orders");
-        registry.addInterceptor(adminInterceptor).addPathPatterns("/api/products/**");
+        registry.addInterceptor(consumerInterceptor).addPathPatterns("/api/**");
     }
 }

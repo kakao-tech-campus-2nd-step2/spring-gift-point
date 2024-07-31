@@ -16,7 +16,7 @@ public class OptionEntity {
     @JoinColumn(name="product_id")
     private ProductEntity product;
 
-    @Column(name="optionName")
+    @Column(name="name")
     private String name;
 
     @Column(name="quantity")
