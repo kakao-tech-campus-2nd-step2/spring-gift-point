@@ -41,6 +41,10 @@ public class Order {
 
     }
 
+    public Order() {
+
+    }
+
     @PrePersist
     public void prePersist() {
         this.ordered_at = LocalDate.now(); // 현재 날짜를 설정

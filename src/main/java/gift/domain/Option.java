@@ -29,6 +29,10 @@ public class Option {
         this.product = product;
     }
 
+    public Option() {
+
+    }
+
     public void subtract(Integer amount) {
         if (amount <= 0) {
             throw new IllegalArgumentException("감소할 수량은 0보다 커야 합니다.");

@@ -38,6 +38,10 @@ public class Product {
         this.category = category;
     }
 
+    public Product() {
+
+    }
+
     public void setName(String name) {
         this.name = name;
     }
