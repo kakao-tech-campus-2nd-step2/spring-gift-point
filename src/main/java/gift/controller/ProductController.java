@@ -1,6 +1,5 @@
 package gift.controller;
 
-import static gift.util.constants.MemberConstants.EMAIL_ALREADY_USED;
 import static gift.util.constants.ProductConstants.PRODUCT_NOT_FOUND;
 
 import gift.dto.product.ProductCreateRequest;

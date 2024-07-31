@@ -1,6 +1,5 @@
 package gift.controller;
 
-import static gift.util.constants.MemberConstants.EMAIL_ALREADY_USED;
 import static gift.util.constants.OptionConstants.INSUFFICIENT_QUANTITY;
 import static gift.util.constants.OptionConstants.OPTION_NOT_FOUND;
 
