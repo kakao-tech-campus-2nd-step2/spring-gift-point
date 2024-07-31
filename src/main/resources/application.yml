@@ -33,3 +33,11 @@ springdoc:
 
 jwt:
   secret: Yn2kjibddFAWtnPJ2AFlL8WXmohJMCvigQggaEypa5E=
+
+kakao:
+  login:
+    get-auth-code-uri: "https://kauth.kakao.com/oauth/authorize"
+    redirect_uri: "http://localhost:8080/api/kakao/login/callback" # 리다이렉트 URI
+    client_id: 3d31f6bce5e0cff4c999293f5a6a0020 # REST API 키
+    grant_type: authorization_code # 인증 타입
+    get-message-to-me-uri: "https://kapi.kakao.com/v2/api/talk/memo/default/send"
