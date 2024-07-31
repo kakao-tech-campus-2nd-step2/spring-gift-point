@@ -19,6 +19,9 @@ public class Member extends BasicEntity {
     @Column(nullable = false)
     private String password;
 
+    @Column(nullable = false)
+    private String name;
+
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private Role role;
@@ -37,16 +40,18 @@ public class Member extends BasicEntity {
         this.loginType = SocialLoginType.DEFAULT;
     }
 
-    public Member(String email, String password, Role role) {
+    public Member(String email, String password, String name, Role role) {
         this.email = email;
         this.password = password;
         this.role = role;
+        this.name = name;
         this.loginType = SocialLoginType.DEFAULT;
     }
 
-    public Member(String email, String password, Role role, SocialLoginType loginType) {
+    public Member(String email, String password, String name, Role role, SocialLoginType loginType) {
         this.email = email;
         this.password = password;
+        this.name = name;
         this.role = role;
         this.loginType = loginType;
     }
@@ -59,7 +64,7 @@ public class Member extends BasicEntity {
 
     public void checkLoginType(SocialLoginType loginType) {
         if (this.loginType != loginType) {
-            throw new AuthorizationException("Invalid login type");
+            throw new AuthorizationException("잘못된 접근입니다.");
         }
     }
 
@@ -73,6 +78,10 @@ public class Member extends BasicEntity {
 
     public Role getRole() {
         return role;
+    }
+
+    public String getName() {
+        return name;
     }
 
     public SocialLoginType getLoginType() {

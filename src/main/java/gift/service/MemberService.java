@@ -22,11 +22,11 @@ public class MemberService {
     }
 
     @Transactional
-    public void signUp(String email, String password, Role role) {
+    public void signUp(String email, String password, String name, Role role) {
         if (memberRepository.existsByEmail(email)) {
-            throw new DuplicateDataException("Email already exists", "Duplicate Email");
+            throw new DuplicateDataException("이미 가입된 회원입니다.", "Duplicate Email");
         }
-        Member member = new Member(email, password, role);
+        Member member = new Member(email, password, name, role);
         memberRepository.save(member);
     }
 

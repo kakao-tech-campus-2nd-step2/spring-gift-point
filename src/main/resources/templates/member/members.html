@@ -19,6 +19,7 @@
             <th th:width="50">번호</th>
             <th th:width="100">이메일</th>
             <th th:width="100">권한</th>
+            <th th:width="100">이름</th>
             <th th:width="100">수정</th>
             <th th:width="100">삭제</th>
         </tr>
@@ -30,6 +31,7 @@
         <tr th:each="member : ${members.content()}">
             <td th:text="${member.id()}"/>
             <td th:text="${member.email()}"/>
+            <td th:text="${member.name()}"/>
             <td th:text="${member.role()}"/>
             <td><button><a th:href="@{/admin/member/{id}(id=${member.id()})}">수정</a></button></td>
             <td>
