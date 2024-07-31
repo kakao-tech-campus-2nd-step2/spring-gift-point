@@ -41,7 +41,7 @@ public class WishController {
     @Operation(summary = "위시 리스트 조회", description = "로그인한 사용자의 위시 리스트를 페이지별로 조회합니다.")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "위시 리스트 조회 성공", content = @Content(schema = @Schema(implementation = PagedModel.class))),
-            @ApiResponse(responseCode = "400", description = "잘못된 요청", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
+            @ApiResponse(responseCode = "401", description = "인증 필요")
     })
     @GetMapping
     public ResponseEntity<Page<ProductResponse>> productList(@Parameter(hidden = true) @LoginMember Member member,
@@ -62,6 +62,7 @@ public class WishController {
     @ApiResponses({
             @ApiResponse(responseCode = "201", description = "상품이 성공적으로 추가됨"),
             @ApiResponse(responseCode = "400", description = "잘못된 요청", content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
+            @ApiResponse(responseCode = "401", description = "인증 필요"),
             @ApiResponse(responseCode = "404", description = "상품을 찾을 수 없음"),
             @ApiResponse(responseCode = "409", description = "이미 위시 리스트에 존재하는 상품")
     })
@@ -78,6 +79,7 @@ public class WishController {
     @ApiResponses({
             @ApiResponse(responseCode = "204", description = "상품이 성공적으로 제거됨"),
             @ApiResponse(responseCode = "400", description = "잘못된 요청", content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
+            @ApiResponse(responseCode = "401", description = "인증 필요"),
             @ApiResponse(responseCode = "404", description = "상품을 찾을 수 없거나 이미 위시리스트에 존재하지 않는 상품"),
     })
     @DeleteMapping

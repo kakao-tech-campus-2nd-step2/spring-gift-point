@@ -33,8 +33,7 @@ public class CategoryController {
 
     @Operation(summary = "카테고리 목록 조회", description = "모든 카테고리의 목록을 조회합니다.")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "카테고리 목록 조회 성공", content = @Content(array = @ArraySchema(schema = @Schema(implementation = CategoryResponse.class)))),
-            @ApiResponse(responseCode = "500", description = "서버 오류", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
+            @ApiResponse(responseCode = "200", description = "카테고리 목록 조회 성공", content = @Content(array = @ArraySchema(schema = @Schema(implementation = CategoryResponse.class))))
     })
     @GetMapping
     public ResponseEntity<List<CategoryResponse>> categoryList() {
@@ -82,7 +81,8 @@ public class CategoryController {
 
     @Operation(summary = "카테고리 삭제", description = "카테고리 ID를 사용하여 카테고리를 삭제합니다.")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "204", description = "카테고리 삭제 성공")
+            @ApiResponse(responseCode = "204", description = "카테고리 삭제 성공"),
+            @ApiResponse(responseCode = "404", description = "존재하지 않는 카테고리", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
     })
     @DeleteMapping("/{categoryId}")
     public ResponseEntity<Void> categoryRemove(@Parameter(description = "삭제할 카테고리의 ID", required = true) @PathVariable Long categoryId) {

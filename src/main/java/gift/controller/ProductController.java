@@ -44,8 +44,7 @@ public class ProductController {
 
     @Operation(summary = "상품 목록 조회", description = "모든 상품의 목록을 페이지별로 조회합니다.")
     @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "상품 목록 조회 성공", content = @Content(schema = @Schema(implementation = PagedModel.class))),
-            @ApiResponse(responseCode = "400", description = "잘못된 요청", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
+            @ApiResponse(responseCode = "200", description = "상품 목록 조회 성공", content = @Content(schema = @Schema(implementation = PagedModel.class)))
     })
     @GetMapping
     public ResponseEntity<Page<ProductResponse>> productList(@ParameterObject @PageableDefault(page = 0, size = 20, sort = "id", direction = Sort.Direction.DESC) Pageable pageable,
