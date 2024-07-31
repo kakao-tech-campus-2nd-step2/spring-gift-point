@@ -12,6 +12,8 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,6 +22,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @Tag(name = "ProductController", description = "Product 관리 Controller")
@@ -32,7 +35,6 @@ public class ProductController {
   public ProductController(ProductService productService) {
     this.productService = productService;
   }
-
 
   @Operation(summary = "모든 상품 가져오기", description = "데이터 베이스에 저장되어 있는 모든 상품을 가져온다.")
   @ApiResponse(responseCode = "200", description = "모든 상품 정보 가져오기 성공",
@@ -93,10 +95,19 @@ public class ProductController {
     ))
   @ApiResponse(responseCode = "404", description = "존재하지 않는 리소스 접근",
     content = @Content(schema = @Schema(implementation = ResponseResourceErrorDto.class)))
-  @GetMapping
+  @GetMapping("/all")
   public ResponseEntity<Page<ProductDto>> getAllProducts(Pageable pageable) {
 
     return ResponseEntity.ok(productService.getAllProducts(pageable));
+  }
+
+
+  @GetMapping()
+  public ResponseEntity<Page<ProductDto>> getAllProductsByCategory(
+    @PageableDefault(size = 10, sort = "name", direction = Sort.Direction.ASC) Pageable pageable,
+    @RequestParam Long categoryId) {
+
+    return ResponseEntity.ok(productService.getAllProductsByCategory(pageable,categoryId));
   }
 
   @Operation(summary = "특정 상품 가져오기", description = "데이터 베이스에 저장되어 있는 특정 상품을 가져온다.")

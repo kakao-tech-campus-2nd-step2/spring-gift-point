@@ -77,4 +77,6 @@ public class Category {
     return this.description;
   }
 
+  public List<Product> getProducts() {return this.products;}
+
 }
