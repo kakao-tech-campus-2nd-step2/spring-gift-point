@@ -55,15 +55,31 @@ public class UserService {
         return userRepository.findAll();
     }
 
+    /*
+        @Transactional
+        public void registerUser(String email, String password) throws UserAlreadyExistsException {
+            if (userRepository.existsByEmail(email)) {
+                throw new UserAlreadyExistsException("User already exists");
+            }
+            String hashedPassword = BCrypt.hashpw(password, BCrypt.gensalt());
+            User newUser = new User(email, hashedPassword);
+            userRepository.save(newUser);
 
-    @Transactional
-    public void registerUser(String email, String password) throws UserAlreadyExistsException {
-        if (userRepository.existsByEmail(email)) {
-            throw new UserAlreadyExistsException("User already exists");
         }
+
+     */
+    @Transactional
+    public Map<String, String> registerUser(String email, String password) throws UserAlreadyExistsException {
+        if (userRepository.existsByEmail(email)) {
+            throw new UserAlreadyExistsException("User already exists with email: " + email);
+        }
+
         String hashedPassword = BCrypt.hashpw(password, BCrypt.gensalt());
         User newUser = new User(email, hashedPassword);
         userRepository.save(newUser);
+
+        // 토큰 생성
+        return generateJwtToken(newUser);
     }
 
     //카카오 로그인

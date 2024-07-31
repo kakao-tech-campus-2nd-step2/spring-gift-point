@@ -6,17 +6,19 @@ import gift.exception.user.UserAlreadyExistsException;
 import gift.exception.user.UserNotFoundException;
 import gift.service.user.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 
 @RestController
-@RequestMapping("/api/users")
+@RequestMapping("/api/members")
 public class UserController {
     private final UserService userService;
 
@@ -48,21 +50,35 @@ public class UserController {
         List<User> users = userService.findAllUsers();
         return ResponseEntity.ok(users);
     }
+    /*
+        @Operation(summary = "사용자 등록", description = "새로운 사용자를 등록합니다.")
+        @PostMapping("/register")
+        public ResponseEntity<String> registerUser(
+                @Parameter(description = "사용자 등록 요청 정보", required = true)
+                @RequestBody RegisterRequest registerRequest) {
+            try {
+                userService.registerUser(registerRequest.getEmail(), registerRequest.getPassword());
+                return ResponseEntity.ok("User registered successfully");
+            } catch (UserAlreadyExistsException e) {
+                return ResponseEntity.status(400).body(e.getMessage());
+            }
+        }
+    }
 
+     */
     @Operation(summary = "사용자 등록", description = "새로운 사용자를 등록합니다.")
     @PostMapping("/register")
-    public ResponseEntity<String> registerUser(
+    public ResponseEntity<?> registerUser(
             @Parameter(description = "사용자 등록 요청 정보", required = true)
             @RequestBody RegisterRequest registerRequest) {
         try {
-            userService.registerUser(registerRequest.getEmail(), registerRequest.getPassword());
-            return ResponseEntity.ok("User registered successfully");
+            Map<String, String> tokens = userService.registerUser(registerRequest.getEmail(), registerRequest.getPassword());
+            return ResponseEntity.ok(tokens);
         } catch (UserAlreadyExistsException e) {
-            return ResponseEntity.status(400).body(e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
     }
 }
-
 
 class LoginRequest {
     private String email;
