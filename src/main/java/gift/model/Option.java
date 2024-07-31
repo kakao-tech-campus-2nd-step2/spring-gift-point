@@ -3,85 +3,68 @@ package gift.model;
 import jakarta.persistence.*;
 
 @Entity
-@Table(name = "options")
 public class Option {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false, length = 50)
+    @Column(nullable = false)
     private String name;
 
     @Column(nullable = false)
     private int quantity;
 
-    @Column(nullable = false)
-    private int price;
-
-    @Column(nullable = false) // 최대 옵션 수량을 저장하는 필드 추가
-    private int maxQuantity;
-
-    @ManyToOne
-    @JoinColumn(name = "product_id", nullable = false)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "PRODUCT_ID")
     private Product product;
 
-    public Option() {
-    }
+    public Option() {}
 
-    public Option(String name, int quantity, int price, Product product, int maxQuantity) {
+    public Option(String name, int quantity, Product product) {
         this.name = name;
         this.quantity = quantity;
-        this.price = price;
         this.product = product;
-        this.maxQuantity = maxQuantity; // 최대 옵션 수량 초기화
     }
 
+
+    public Option(Long id, String name, int quantity, Product product) {
+        this.id = id;
+        this.name = name;
+        this.quantity = quantity;
+        this.product = product;
+    }
+
+    // Getters and Setters
     public Long getId() {
         return id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public int getQuantity() {
-        return quantity;
-    }
-
-    public int getPrice() {
-        return price;
-    }
-
-    public Product getProduct() {
-        return product;
-    }
-
-    public int getMaxQuantity() {
-        return maxQuantity;
     }
 
     public void setId(Long id) {
         this.id = id;
     }
 
+    public String getName() {
+        return name;
+    }
+
     public void setName(String name) {
         this.name = name;
+    }
+
+    public int getQuantity() {
+        return quantity;
     }
 
     public void setQuantity(int quantity) {
         this.quantity = quantity;
     }
 
-    public void setPrice(int price) {
-        this.price = price;
+    public Product getProduct() {
+        return product;
     }
 
     public void setProduct(Product product) {
         this.product = product;
-    }
-
-    public void setMaxQuantity(int maxQuantity) {
-        this.maxQuantity = maxQuantity;
     }
 }
