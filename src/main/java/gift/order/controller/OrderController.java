@@ -63,7 +63,7 @@ public class OrderController {
         // 3. 카카오톡 메시지 api 전송
         orderService.sendMessage(kakaoUser.getToken(), orderRequest.message());
         // 4. response 반환
-        return ResponseEntity.ok(orderResponse);
+        return new ResponseEntity<>(orderResponse, HttpStatus.CREATED);
     }
 
     @GetMapping
