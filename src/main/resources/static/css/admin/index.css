@@ -1,0 +1,80 @@
+html, body {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  padding: 0 2.5%;
+}
+
+header, footer {
+  height: 10%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.table_wrapper {
+  height: 80%;
+}
+
+table {
+  width: 100%;
+  text-align: center;
+}
+
+table, th, td {
+  border: 1px solid black;
+  border-collapse: collapse;
+}
+
+img {
+  width: 100px;
+  height: 100px;
+}
+
+
+.modal {
+  display: none;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
+  overflow: hidden;
+  background: rgba(0, 0, 0, 0.5);
+}
+
+.modal .modal_popup {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  padding: 20px;
+  background: #ffffff;
+  border-radius: 20px;
+}
+
+.modal_btn_container {
+  display: flex;
+  justify-content: space-between;
+}
+
+.modal .modal_popup .modal_btn {
+  display: block;
+  padding: 10px 20px;
+  background-color: rgb(116, 0, 0);
+  border: none;
+  border-radius: 5px;
+  color: #fff;
+  cursor: pointer;
+  transition: box-shadow 0.2s;
+}
+
+.new_product.on {
+  display: block;
+}
+
+.update_product.on {
+  display: block;
+}

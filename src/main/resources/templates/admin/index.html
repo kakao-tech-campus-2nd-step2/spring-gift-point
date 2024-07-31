@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <link th:href="@{/css/admin/index.css}" rel="stylesheet"/>
+  <script defer th:src="@{/js/admin/index.js}"></script>
+  <title>상품 관리자 화면</title>
+</head>
+<body>
+<div class="new_product modal">
+  <div class="modal_popup">
+    <h3>새로운 상품 등록</h3>
+    <form action="/api/products" method="post" id="new_product_form">
+      <div>
+        <label for="name">상품명</label>
+        <input type="text" id="name" name="name">
+      </div>
+      <div>
+        <label for="price">가격</label>
+        <input type="text" id="price" name="price">
+      </div>
+      <div>
+        <label for="imageUrl">이미지 URL</label>
+        <input type="text" id="imageUrl" name="imageUrl">
+      </div>
+      <div class="modal_btn_container">
+        <button type="submit" class="modal_btn" th:onclick="">제출</button>
+        <button type="reset" class="modal_btn close_btn">닫기</button>
+      </div>
+    </form>
+  </div>
+</div>
+<div class="update_product modal">
+  <div class="modal_popup">
+    <h3>상품 정보 수정</h3>
+    <form action="/api/products" method="post" id="update_product_form">
+      <input type="hidden" id="id" name="id">
+      <div>
+        <label for="new_name">상품명</label>
+        <input type="text" id="new_name" name="name">
+      </div>
+      <div>
+        <label for="new_price">가격</label>
+        <input type="text" id="new_price" name="price">
+      </div>
+      <div>
+        <label for="new_imageUrl">이미지 URL</label>
+        <input type="text" id="new_imageUrl" name="imageUrl">
+      </div>
+      <div class="modal_btn_container">
+        <button type="submit" class="modal_btn" th:onclick="">제출</button>
+        <button type="reset" class="modal_btn close_btn">닫기</button>
+      </div>
+    </form>
+  </div>
+</div>
+<header>
+  <h2>Manage Products</h2>
+  <a href="/oauth2/authorization/kakao">카카오 로그인</a>
+  <div>
+    <button class="delete_selected_products_bnt">선택한 상품 삭제</button>
+    <button class="new_product_modal_btn">상품 추가</button>
+  </div>
+</header>
+<div class="table_wrapper">
+  <table>
+    <thead>
+    <tr>
+      <th><input type="checkbox" class="master_checkbox"></th>
+      <th>Id</th>
+      <th>Name</th>
+      <th>Price</th>
+      <th>Image</th>
+      <th>Actions</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="product : ${products}">
+      <td><input type="checkbox" class="product_checkbox" th:id="${product.id}"></td>
+      <td th:text="${product.id}"></td>
+      <td th:text="${product.name}"></td>
+      <td th:text="${product.price}"></td>
+      <td><img th:src="@{${product.imageUrl}}" alt="상품이미지"></td>
+      <td>
+        <button class="update_product_button">수정</button>
+        <button class="delete_product_button">삭제</button>
+      </td>
+    </tr>
+    </tbody>
+  </table>
+</div>
+<footer>
+  <div th:text="'Showing ' + ${products.size()} + ' out of ' + ${productsCnt} + ' entries'"></div>
+  <div>
+    <a th:if="${page>1}" th:href="@{/admin(page=${page - 1})}">Previous</a>
+    <span th:if="${page<=1}">Previous</span>
+    <th:block th:each="num : ${#numbers.sequence(startPage, lastPage)}">
+      <a th:if="${page != num}" th:href="@{/admin(page=${num})}" th:text="${num}"></a>
+      <strong th:if="${page == num}" th:text="${num}"></strong>
+    </th:block>
+    <a th:if="${page<lastPage}" th:href="@{/admin(page=${page + 1})}">Next</a>
+    <span th:if="${page>=lastPage}">Next</span>
+  </div>
+</footer>
+</body>
+</html>
