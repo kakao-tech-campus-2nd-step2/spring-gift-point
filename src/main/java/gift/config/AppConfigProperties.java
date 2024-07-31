@@ -1,12 +1,11 @@
 package gift.config;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.stereotype.Component;
+import org.springframework.context.annotation.Configuration;
 
-@Component
+@Configuration
 @ConfigurationProperties(prefix = "app")
 public class AppConfigProperties {
-
     private int devConnectTimeout;
     private int devReadTimeout;
     private int prodConnectTimeout;
@@ -14,10 +13,6 @@ public class AppConfigProperties {
 
     public int getDevConnectTimeout() {
         return devConnectTimeout;
-    }
-
-    public void setDevConnectTimeout(int devConnectTimeout) {
-        this.devConnectTimeout = devConnectTimeout;
     }
 
     public int getDevReadTimeout() {

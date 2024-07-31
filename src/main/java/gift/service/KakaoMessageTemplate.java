@@ -1,20 +1,23 @@
 package gift.service;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import java.util.Map;
 
 public class KakaoMessageTemplate {
-    private String object_type;
-    private String text;
-    private Map<String, String> link;
+    @JsonProperty("object_type")
+    private final String objectType;
+    private final String text;
+    private final Map<String, String> link;
 
-    public KakaoMessageTemplate(String object_type, String text, Map<String, String> link) {
-        this.object_type = object_type;
+    public KakaoMessageTemplate(String objectType, String text, Map<String, String> link) {
+        this.objectType = objectType;
         this.text = text;
         this.link = link;
     }
 
-    public String getObject_type() {
-        return object_type;
+    public String getObjectType() {
+        return objectType;
     }
 
     public String getText() {
