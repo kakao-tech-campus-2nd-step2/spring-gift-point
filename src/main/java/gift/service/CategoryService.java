@@ -21,9 +21,9 @@ public class CategoryService {
 
     public void saveCategory(CategoryDTO categoryDTO){
         Optional<Category> existCategory = categoryRepository.findByName(categoryDTO.getName());
-        if(existCategory.isPresent()){
+        existCategory.ifPresent(category -> {
             throw new IllegalArgumentException("이미 존재하는 카테고리 입니다.");
-        }
+        });
         Category category = new Category(categoryDTO.getName(), categoryDTO.getColor(), categoryDTO.getImageUrl(), categoryDTO.getDescription());
         categoryRepository.save(category);
     }
