@@ -29,12 +29,12 @@ public class ProductController {
         this.optionService = optionService;
     }
 
-    // 상품 추가
+/*    // 상품 추가
     @PostMapping
     public ResponseEntity<Product> createProduct(@Valid @RequestBody CreateProductDto productDto) {
         Product product = productService.createProduct(productDto);
         return ResponseEntity.ok(product);
-    }
+    }*/
 
     // 전체 상품 조회
     @Operation(summary = "모든 제품 조회하기")
@@ -55,7 +55,7 @@ public class ProductController {
         return ResponseEntity.ok(productOptions);
     }
 
-    // 상품 정보 update
+/*    // 상품 정보 update
     @PutMapping("/{product_id}")
     public ResponseEntity<Product> updateProduct(@PathVariable Long product_id, @Valid @RequestBody UpdateProductDto productDto) {
         Product updatedProduct = productService.updateProduct(product_id, productDto);
@@ -67,7 +67,7 @@ public class ProductController {
     public ResponseEntity<Product> deleteProduct(@PathVariable Long product_id) {
         productService.deleteProduct(product_id);
         return ResponseEntity.ok().build();
-    }
+    }*/
 
     // 특정 카테고리별 상품 목록 조회
     @Operation(summary = "특정 카테고리의 상품 목록 조회")
