@@ -40,14 +40,14 @@ public class ProductService {
             throw new AuthorizedException("관리자가 아닙니다.");
         }
 
-        Optional<CategoryEntity> categoryEntityOptional = categoryRepository.findByName(productDTO.categoryName());
+        Optional<CategoryEntity> categoryEntityOptional = categoryRepository.findById(productDTO.id());
         if(categoryEntityOptional.isEmpty()){
             throw new CategoryDuplicatedException("카테고리가 중복됩니다.");
         }
 
         CategoryEntity categoryEntity = categoryEntityOptional.get();
 
-        productRepository.save(new ProductEntity(categoryEntity, productDTO.name(), productDTO.price(), productDTO.imageUrl()));
+        productRepository.save(new ProductEntity(productDTO.name(), productDTO.price(), productDTO.imageUrl(), categoryEntity));
     }
 
     public List<ProductDTO> read(String email){
@@ -61,8 +61,7 @@ public class ProductService {
         List<ProductDTO> dtoList = new ArrayList<>();
 
         for(ProductEntity p: entityList){
-            CategoryEntity category = p.getCategory();
-            dtoList.add(new ProductDTO(p.getId(), category.getName(), p.getName() ,p.getPrice(), p.getImageUrl()));
+            dtoList.add(p.mapToDTO());
         }
 
         return dtoList;
@@ -76,14 +75,14 @@ public class ProductService {
         if(!memberEntity.isAdmin())
             throw new AuthorizedException("관리자가 아닙니다.");
 
-        Optional<CategoryEntity> categoryEntityOptional = categoryRepository.findByName(productDTO.categoryName());
+        Optional<CategoryEntity> categoryEntityOptional = categoryRepository.findById(productDTO.id());
         if(categoryEntityOptional.isEmpty()){
             throw new CategoryDuplicatedException("중복된 카테고리가 이미 있습니다.");
         }
 
         CategoryEntity categoryEntity = categoryEntityOptional.get();
 
-        ProductEntity productEntity = new ProductEntity(categoryEntity, productDTO.name(), productDTO.price(), productDTO.imageUrl());
+        ProductEntity productEntity = new ProductEntity(productDTO.name(), productDTO.price(), productDTO.imageUrl(), categoryEntity);
         productEntity.setId(id);
 
         productRepository.save(productEntity);
@@ -128,18 +127,18 @@ public class ProductService {
         }
         ProductEntity productEntity = productEntityOptional.get();
 
-        return new ProductDTO(productEntity.getId(), productEntity.getCategory().getName(), productEntity.getName(),productEntity.getPrice(), productEntity.getImageUrl());
+        return new ProductDTO(productEntity.getId(), productEntity.getName(),productEntity.getPrice(), productEntity.getImageUrl(), productEntity.getCategory().getId());
     }
 
-    public List<String> getCategoriesName(){
+    public List<Long> getCategoriesId(){
         List<CategoryEntity> categoryEntityList = categoryRepository.findAll();
-        List<String> categoriesName = new ArrayList<>();
+        List<Long> categoriesId = new ArrayList<>();
 
         for(CategoryEntity c: categoryEntityList){
-            categoriesName.add(c.getName());
+            categoriesId.add(c.getId());
         }
 
-        return categoriesName;
+        return categoriesId;
     }
 
 
