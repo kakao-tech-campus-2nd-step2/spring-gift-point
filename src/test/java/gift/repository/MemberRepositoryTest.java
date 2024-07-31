@@ -3,7 +3,9 @@ package gift.repository;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
-import gift.model.Member;
+import gift.exception.IllegalEmailException;
+import gift.member.model.Member;
+import gift.member.repository.MemberRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,9 +26,10 @@ public class MemberRepositoryTest {
     }
 
     @Test
-    void save() {
+    void save() throws IllegalEmailException {
         // Given
         var member = new Member(email, password);
+
 
         // When
         memberRepository.save(member);
@@ -41,7 +44,7 @@ public class MemberRepositoryTest {
     }
 
     @Test
-    void findByEmail() {
+    void findByEmail() throws IllegalEmailException {
         // Given
         var member = new Member(email, password);
         memberRepository.save(member);
@@ -58,7 +61,7 @@ public class MemberRepositoryTest {
     }
 
     @Test
-    void deleteTest() {
+    void deleteTest() throws IllegalEmailException {
         // Given
         var member = new Member(email, password);
         memberRepository.save(member);
