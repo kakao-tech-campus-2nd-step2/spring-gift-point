@@ -4,6 +4,7 @@ import gift.dto.ProductRequestDto;
 import gift.dto.ProductResponseDto;
 import gift.dto.ProductWithOptionRequest;
 import gift.service.ProductService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -34,7 +35,7 @@ public class ProductController {
 
     @GetMapping
     public ResponseEntity<Page<ProductResponseDto>> getAllProducts(@RequestParam(defaultValue = "0") int page,
-        @RequestParam(defaultValue = "20") int size, @RequestParam(defaultValue = "id,asc") String[] sort) {
+        @RequestParam(defaultValue = "20") int size, @RequestParam(defaultValue = "id,desc") String[] sort) {
         Sort.Direction direction = Sort.Direction.fromString(sort[1]);
         Pageable pageable = PageRequest.of(page, size, Sort.by(direction, sort[0]));
         Page<ProductResponseDto> productList = productService.findAll(pageable);
@@ -48,14 +49,14 @@ public class ProductController {
     }
 
     @PostMapping
-    public ResponseEntity<String> createProduct(@RequestBody ProductWithOptionRequest productWithOptionRequest) {
+    public ResponseEntity<String> createProduct(@RequestBody @Valid ProductWithOptionRequest productWithOptionRequest) {
         productService.save(productWithOptionRequest);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<String> updateProduct(@PathVariable Long id,
-        @RequestBody ProductRequestDto productRequestDto) {
+        @RequestBody @Valid ProductRequestDto productRequestDto) {
         productService.update(id, productRequestDto);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }

@@ -1,8 +1,8 @@
 package gift.dto;
 
-import gift.entity.Category;
 import gift.exception.NoKakao;
 import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.Size;
@@ -21,16 +21,16 @@ public class ProductRequestDto {
     @NotEmpty(message = "상품 url은 필수 입력 값입니다.")
     private String imageUrl;
 
-    @NotEmpty(message = "카테고리는 하나 이상 지정되어야 합니다.")
-    private Category category;
+    @NotNull(message = "카테고리는 하나 이상 지정되어야 합니다.")
+    private Long categoryId;
 
     public ProductRequestDto() {}
 
-    public ProductRequestDto(String name, double price, String imageUrl, Category category) {
+    public ProductRequestDto(String name, double price, String imageUrl, Long categoryId) {
         this.name = name;
         this.price = price;
         this.imageUrl = imageUrl;
-        this.category = category;
+        this.categoryId = categoryId;
     }
 
     public String getName() {
@@ -45,7 +45,7 @@ public class ProductRequestDto {
         return imageUrl;
     }
 
-    public Category getCategory() {
-        return category;
+    public Long getCategoryId() {
+        return categoryId;
     }
 }

@@ -1,9 +1,9 @@
 package gift.dto;
 
-import gift.entity.Category;
 import gift.exception.NoKakao;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.Size;
@@ -23,14 +23,18 @@ public class ProductWithOptionRequest {
     @NotEmpty(message = "상품 url은 필수 입력 값입니다.")
     private String imageUrl;
 
-    @NotEmpty(message = "카테고리는 하나 이상 지정되어야 합니다.")
+    @NotNull(message = "카테고리는 하나 이상 지정되어야 합니다.")
     private Long categoryId;
 
-    private List<@Valid OptionRequestDto> options;
+    @NotNull(message = "옵션은 최소 하나 이상 입력되어야 합니다.")
+    @Size(min = 1, message = "옵션은 최소 하나 이상 입력되어야 합니다.")
+    @Valid
+    private List<OptionRequestDto> options;
 
     public ProductWithOptionRequest() {}
 
-    public ProductWithOptionRequest(String name, double price, String imageUrl, Long categoryId, @Valid List<OptionRequestDto> options) {
+    public ProductWithOptionRequest(String name, double price, String imageUrl, Long categoryId,
+        List<OptionRequestDto> options) {
         this.name = name;
         this.price = price;
         this.imageUrl = imageUrl;
