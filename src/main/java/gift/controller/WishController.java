@@ -76,7 +76,7 @@ public class WishController {
 
     @Operation(summary = "위시 리스트에서 상품 제거", description = "로그인한 사용자의 위시 리스트에서 상품을 제거합니다.")
     @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "상품이 성공적으로 제거됨"),
+            @ApiResponse(responseCode = "204", description = "상품이 성공적으로 제거됨"),
             @ApiResponse(responseCode = "400", description = "잘못된 요청", content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
             @ApiResponse(responseCode = "404", description = "상품을 찾을 수 없거나 이미 위시리스트에 존재하지 않는 상품"),
     })
@@ -85,7 +85,7 @@ public class WishController {
                                               @Parameter(description = "위시 리스트에서 제거할 상품의 정보", required = true) @RequestBody @Valid WishCreateRequest request) {
         wishService.removeProduct(member, request.getProductId());
 
-        return ResponseEntity.ok()
+        return ResponseEntity.noContent()
                 .build();
     }
 

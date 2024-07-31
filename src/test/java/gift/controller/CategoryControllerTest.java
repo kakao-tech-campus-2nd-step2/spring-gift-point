@@ -85,7 +85,7 @@ class CategoryControllerTest {
 
         //then
         result
-                .andExpect(status().isOk());
+                .andExpect(status().isNoContent());
 
         then(categoryService).should().editCategory(anyLong(), any(CategoryDto.class));
     }
@@ -102,7 +102,7 @@ class CategoryControllerTest {
 
         //then
         result
-                .andExpect(status().isOk());
+                .andExpect(status().isNoContent());
 
         then(categoryService).should().removeCategory(categoryId);
     }

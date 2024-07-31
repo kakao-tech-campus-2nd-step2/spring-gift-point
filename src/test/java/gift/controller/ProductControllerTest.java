@@ -201,7 +201,7 @@ class ProductControllerTest {
 
         //then
         result
-                .andExpect(status().isOk());
+                .andExpect(status().isNoContent());
 
         then(productService).should().editProduct(anyLong(), any(ProductDto.class));
     }
@@ -313,7 +313,7 @@ class ProductControllerTest {
 
         //then
         result
-                .andExpect(status().isOk());
+                .andExpect(status().isNoContent());
 
         then(productService).should().removeProduct(productId);
     }
@@ -371,7 +371,7 @@ class ProductControllerTest {
 
         //then
         result
-                .andExpect(status().isOk());
+                .andExpect(status().isNoContent());
 
         then(productService).should().removeOption(productId, optionId);
     }

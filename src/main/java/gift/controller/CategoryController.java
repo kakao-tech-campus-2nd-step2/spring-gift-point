@@ -65,7 +65,7 @@ public class CategoryController {
 
     @Operation(summary = "기존 카테고리 수정", description = "카테고리 ID를 사용하여 기존 카테고리 정보를 수정합니다.")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "카테고리 수정 성공"),
+            @ApiResponse(responseCode = "204", description = "카테고리 수정 성공"),
             @ApiResponse(responseCode = "400", description = "잘못된 입력 데이터", content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
             @ApiResponse(responseCode = "404", description = "카테고리를 찾을 수 없음"),
             @ApiResponse(responseCode = "409", description = "중복된 카테고리 이름으로 인한 수정 실패"),
@@ -76,19 +76,19 @@ public class CategoryController {
         CategoryDto categoryDto = new CategoryDto(request.getName());
         categoryService.editCategory(categoryId, categoryDto);
 
-        return ResponseEntity.ok()
+        return ResponseEntity.noContent()
                 .build();
     }
 
     @Operation(summary = "카테고리 삭제", description = "카테고리 ID를 사용하여 카테고리를 삭제합니다.")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "카테고리 삭제 성공")
+            @ApiResponse(responseCode = "204", description = "카테고리 삭제 성공")
     })
     @DeleteMapping("/{categoryId}")
     public ResponseEntity<Void> categoryRemove(@Parameter(description = "삭제할 카테고리의 ID", required = true) @PathVariable Long categoryId) {
         categoryService.removeCategory(categoryId);
 
-        return ResponseEntity.ok()
+        return ResponseEntity.noContent()
                 .build();
     }
 

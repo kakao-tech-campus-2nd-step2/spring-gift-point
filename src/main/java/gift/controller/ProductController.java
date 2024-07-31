@@ -99,7 +99,7 @@ public class ProductController {
 
     @Operation(summary = "상품 수정", description = "기존 상품을 수정합니다.")
     @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "상품 수정 성공"),
+            @ApiResponse(responseCode = "204", description = "상품 수정 성공"),
             @ApiResponse(responseCode = "400", description = "잘못된 요청", content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
             @ApiResponse(responseCode = "404", description = "카테고리 또는 상품을 찾을 수 없음")
     })
@@ -110,19 +110,19 @@ public class ProductController {
 
         productService.editProduct(productId, productDto);
 
-        return ResponseEntity.ok().build();
+        return ResponseEntity.noContent().build();
     }
 
     @Operation(summary = "상품 삭제", description = "기존 상품을 삭제합니다.")
     @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "상품 삭제 성공"),
+            @ApiResponse(responseCode = "204", description = "상품 삭제 성공"),
             @ApiResponse(responseCode = "404", description = "상품을 찾을 수 없음", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
     })
     @DeleteMapping("/{productId}")
     public ResponseEntity<Void> productRemove(@Parameter(description = "삭제할 상품의 ID", required = true) @PathVariable Long productId) {
         productService.removeProduct(productId);
 
-        return ResponseEntity.ok().build();
+        return ResponseEntity.noContent().build();
     }
 
     @Operation(summary = "상품 옵션 목록 조회", description = "특정 상품의 모든 옵션을 조회합니다.")
@@ -161,7 +161,7 @@ public class ProductController {
 
     @Operation(summary = "상품 옵션 삭제", description = "특정 상품의 옵션을 삭제합니다.")
     @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "옵션 삭제 성공"),
+            @ApiResponse(responseCode = "204", description = "옵션 삭제 성공"),
             @ApiResponse(responseCode = "400", description = "상품의 옵션이 하나 남았을 때 삭제 시 실패", content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
             @ApiResponse(responseCode = "404", description = "상품 또는 옵션을 찾을 수 없음")
     })
@@ -170,7 +170,7 @@ public class ProductController {
                                              @Parameter(description = "옵션 ID", required = true) @PathVariable Long optionId) {
         productService.removeOption(productId, optionId);
 
-        return ResponseEntity.ok().build();
+        return ResponseEntity.noContent().build();
     }
 
 }

@@ -129,7 +129,7 @@ class WishControllerTest {
 
         //then
         result
-                .andExpect(status().isOk());
+                .andExpect(status().isNoContent());
 
         then(jwtProvider).should().getClaims(anyString());
         then(jwtProvider).should().isVerified(anyString());
