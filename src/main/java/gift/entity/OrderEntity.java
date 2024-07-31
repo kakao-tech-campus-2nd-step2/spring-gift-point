@@ -1,6 +1,5 @@
 package gift.entity;
 
-import gift.domain.Order;
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
 
@@ -32,15 +31,6 @@ public class OrderEntity{
         this.orderDateTime = orderDateTime;
     }
 
-    public OrderEntity(Long id, OptionEntity optionEntity, Long quantity, String message,
-        LocalDateTime orderDateTime) {
-        this.id = id;
-        this.optionEntity = optionEntity;
-        this.quantity = quantity;
-        this.message = message;
-        this.orderDateTime = orderDateTime;
-    }
-
     public Long getId() {
         return id;
     }
@@ -61,13 +51,4 @@ public class OrderEntity{
         return orderDateTime;
     }
 
-    public static Order toDto(OrderEntity orderEntity) {
-        return new Order(
-            orderEntity.getId(),
-            orderEntity.getOptionEntity().getId(),
-            orderEntity.getQuantity(),
-            orderEntity.getMessage(),
-            orderEntity.getOrderDateTime()
-        );
-    }
 }

@@ -1,7 +1,8 @@
 package gift.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import gift.domain.Order;
+import gift.domain.Order.OrderRequest;
+import gift.domain.Order.OrderResponse;
 import gift.service.KakaoService;
 import gift.service.OrderService;
 import gift.util.JwtUtil;
@@ -36,11 +37,11 @@ public class OrderController {
     @Operation(summary = "주문 추가", description = "해당 회원이 해당 상품에 대한 주문 추가")
     public ResponseEntity<?> addOrder(
         HttpServletRequest request,
-        @Valid @RequestBody Order order,
+        @Valid @RequestBody OrderRequest orderRequest,
         @RequestParam("optionId") Long optionId) throws JsonProcessingException {
         Long memberId = jwtUtil.extractMemberId(request);
-        Order addedOrder = orderService.addOrder(memberId, order, optionId);
-        kakaoService.sendOrderMessage(memberId, order);
+        OrderResponse addedOrder = orderService.addOrder(memberId, orderRequest, optionId);
+        kakaoService.sendOrderMessage(memberId, addedOrder);
         return ResponseEntity.status(HttpStatus.CREATED).body(addedOrder);
     }
 
