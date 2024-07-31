@@ -48,7 +48,7 @@ public class WishController {
         @LoginMember Member member) {
         WishResponse wishResponse = wishService.addWish(member, request);
         Map<String, WishResponse> response = new HashMap<>();
-        response.put("created_wish", wishResponse);
+        response.put("wish", wishResponse);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
