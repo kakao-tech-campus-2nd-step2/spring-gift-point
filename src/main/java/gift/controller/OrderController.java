@@ -6,6 +6,7 @@ import gift.dto.request.OrderRequest;
 import gift.dto.response.OrderResponse;
 import gift.service.OrderService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -28,6 +29,7 @@ public class OrderController {
 
     @PostMapping
     @Operation(summary = "주문 요청 api")
+    @ApiResponse(responseCode = "201", description = "주문 성공")
     public ResponseEntity<OrderResponse> order(@Login LoginMember member, @Valid @RequestBody OrderRequest orderRequest) {
         return new ResponseEntity<>(orderService.order(member, orderRequest), HttpStatus.CREATED);
     }
