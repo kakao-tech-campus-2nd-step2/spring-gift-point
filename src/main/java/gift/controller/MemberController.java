@@ -56,10 +56,10 @@ public class MemberController {
 
     private Member getValidMember(Member member) {
         Member foundMember = memberService.getMemberByEmail(member.getEmail())
-            .orElseThrow(() -> new IllegalArgumentException("Invalid email or password"));
+            .orElseThrow(() -> new IllegalArgumentException("Username or password incorrect"));
 
         if (!isPasswordValid(foundMember, member.getPassword())) {
-            throw new IllegalArgumentException("Invalid email or password");
+            throw new IllegalArgumentException("Username or password incorrect");
         }
 
         return foundMember;
