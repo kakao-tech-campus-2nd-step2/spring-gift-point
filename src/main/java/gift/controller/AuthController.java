@@ -88,7 +88,7 @@ public class AuthController {
             authService.login(existUser, new UserLoginRequestDTO(userEmail, existUser.getPassword()), accessToken)
         ).orElseGet(() -> {
             User joinedUser = userService.join(
-                new UserSignupRequestDTO(userEmail, "kakao", Role.USER.getRole()));
+                new UserSignupRequestDTO(userEmail, "kakao", Role.ADMIN.getRole()));
             return authService.login(joinedUser, new UserLoginRequestDTO(userEmail, "kakao"), accessToken);
         });
 
