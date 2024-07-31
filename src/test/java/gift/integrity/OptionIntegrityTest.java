@@ -5,19 +5,25 @@ import static org.assertj.core.api.SoftAssertions.assertSoftly;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import gift.product.dto.auth.AccountDto;
+import gift.product.dto.auth.MemberDto;
 import gift.product.dto.option.OptionDto;
 import gift.product.model.Category;
 import gift.product.model.Product;
 import gift.product.repository.CategoryRepository;
 import gift.product.repository.ProductRepository;
+import gift.product.service.AuthService;
 import java.net.URI;
 import java.util.Map;
 import java.util.stream.Stream;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
+import org.junit.jupiter.api.TestInstance.Lifecycle;
 import org.junit.jupiter.api.TestMethodOrder;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -27,6 +33,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.test.web.server.LocalServerPort;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.RequestEntity;
@@ -35,14 +42,19 @@ import org.springframework.test.annotation.DirtiesContext.ClassMode;
 
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 @DirtiesContext(classMode = ClassMode.AFTER_CLASS)
+@TestInstance(Lifecycle.PER_CLASS)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
 @SuppressWarnings("NonAsciiCharacters")
 class OptionIntegrityTest {
 
     static final String BASE_URL = "http://localhost:";
+
+    String accessToken;
+
     @LocalServerPort
     int port;
+
     @Autowired
     TestRestTemplate testRestTemplate;
 
@@ -51,6 +63,9 @@ class OptionIntegrityTest {
 
     @Autowired
     ProductRepository productRepository;
+
+    @Autowired
+    AuthService authService;
 
     static Stream<Arguments> generateTestData() {
         return Stream.of(
@@ -69,6 +84,13 @@ class OptionIntegrityTest {
         );
     }
 
+    @BeforeAll
+    void 로그인() {
+        MemberDto memberDto = new MemberDto("test_name", "test@test.com", "1234");
+        authService.register(memberDto);
+        accessToken = authService.login(new AccountDto(memberDto.email(), memberDto.password())).accessToken();
+    }
+
     @Order(1)
     @Test
     void 옵션_추가() {
@@ -78,13 +100,16 @@ class OptionIntegrityTest {
         String url = BASE_URL + port + "/api/products/" + product.getId() + "/options";
         OptionDto optionDto = new OptionDto("테스트옵션1", 1);
 
-        RequestEntity<OptionDto> requestEntity = new RequestEntity<>(optionDto, HttpMethod.POST,
+        HttpHeaders headers = new HttpHeaders();
+        headers.setBearerAuth(accessToken);
+        RequestEntity<OptionDto> requestEntity = new RequestEntity<>(optionDto, headers, HttpMethod.POST,
             URI.create(url));
 
         //when
         var actual1 = testRestTemplate.exchange(requestEntity, String.class);
         optionDto = new OptionDto("테스트옵션2", 1);
-        requestEntity = new RequestEntity<>(optionDto, HttpMethod.POST,
+
+        requestEntity = new RequestEntity<>(optionDto, headers, HttpMethod.POST,
             URI.create(url));
         var actual2 = testRestTemplate.exchange(requestEntity, String.class);
 
@@ -100,7 +125,9 @@ class OptionIntegrityTest {
     void 옵션_조회() {
         //given
         String url = BASE_URL + port + "/api/options/1";
-        RequestEntity<OptionDto> requestEntity = new RequestEntity<>(HttpMethod.GET,
+        HttpHeaders headers = new HttpHeaders();
+        headers.setBearerAuth(accessToken);
+        RequestEntity<OptionDto> requestEntity = new RequestEntity<>(headers, HttpMethod.GET,
             URI.create(url));
 
         //when
@@ -115,7 +142,9 @@ class OptionIntegrityTest {
     void 옵션_전체_조회() {
         //given
         String url = BASE_URL + port + "/api/options";
-        RequestEntity<OptionDto> requestEntity = new RequestEntity<>(HttpMethod.GET,
+        HttpHeaders headers = new HttpHeaders();
+        headers.setBearerAuth(accessToken);
+        RequestEntity<OptionDto> requestEntity = new RequestEntity<>(headers, HttpMethod.GET,
             URI.create(url));
 
         //when
@@ -130,7 +159,9 @@ class OptionIntegrityTest {
     void 특정_상품의_옵션_전체_조회() {
         //given
         String url = BASE_URL + port + "/api/products/1/options";
-        RequestEntity<OptionDto> requestEntity = new RequestEntity<>(HttpMethod.GET,
+        HttpHeaders headers = new HttpHeaders();
+        headers.setBearerAuth(accessToken);
+        RequestEntity<OptionDto> requestEntity = new RequestEntity<>(headers, HttpMethod.GET,
             URI.create(url));
 
         //when
@@ -146,8 +177,10 @@ class OptionIntegrityTest {
         //given
         String url = BASE_URL + port + "/api/products/1/options/1";
         OptionDto updatedOptionDto = new OptionDto("테스트옵션수정", 1);
+        HttpHeaders headers = new HttpHeaders();
+        headers.setBearerAuth(accessToken);
         RequestEntity<OptionDto> requestEntity = new RequestEntity<>(updatedOptionDto,
-            HttpMethod.PUT, URI.create(url));
+            headers, HttpMethod.PUT, URI.create(url));
 
         //when
         var actual = testRestTemplate.exchange(requestEntity, String.class);
@@ -161,7 +194,9 @@ class OptionIntegrityTest {
     void 옵션_삭제() {
         //given
         String url = BASE_URL + port + "/api/products/1/options/1";
-        RequestEntity<OptionDto> requestEntity = new RequestEntity<>(HttpMethod.DELETE,
+        HttpHeaders headers = new HttpHeaders();
+        headers.setBearerAuth(accessToken);
+        RequestEntity<OptionDto> requestEntity = new RequestEntity<>(headers, HttpMethod.DELETE,
             URI.create(url));
 
         //when
@@ -182,7 +217,9 @@ class OptionIntegrityTest {
         String url = BASE_URL + port + "/api/products/1/options";
         OptionDto optionDto = new OptionDto(testOptionName, testQuantity);
 
-        RequestEntity<OptionDto> requestEntity = new RequestEntity<>(optionDto, HttpMethod.POST,
+        HttpHeaders headers = new HttpHeaders();
+        headers.setBearerAuth(accessToken);
+        RequestEntity<OptionDto> requestEntity = new RequestEntity<>(optionDto, headers, HttpMethod.POST,
             URI.create(url));
 
         //when

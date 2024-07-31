@@ -63,20 +63,19 @@ class WishIntegrityTest {
     String accessToken;
 
     @BeforeAll
-    void 로그인() {
+    void 멤버_및_상품_셋팅() {
         MemberDto memberDto = new MemberDto("test_name", "test@test.com", "1234");
         authService.register(memberDto);
         accessToken = authService.login(new AccountDto(memberDto.email(), memberDto.password())).accessToken();
-    }
 
-    @BeforeAll
-    void 상품_추가() {
         CategoryDto categoryDto = new CategoryDto("테스트카테고리1");
         categoryService.insertCategory(categoryDto);
 
         String url = BASE_URL + port + "/api/products";
         ProductDto productDto = new ClientProductDto("테스트1", 1500, "테스트주소1", categoryDto.name());
-        RequestEntity<ProductDto> requestEntity = new RequestEntity<>(productDto, HttpMethod.POST,
+        HttpHeaders headers = new HttpHeaders();
+        headers.setBearerAuth(accessToken);
+        RequestEntity<ProductDto> requestEntity = new RequestEntity<>(productDto, headers,HttpMethod.POST,
             URI.create(url));
 
         testRestTemplate.exchange(requestEntity, String.class);
