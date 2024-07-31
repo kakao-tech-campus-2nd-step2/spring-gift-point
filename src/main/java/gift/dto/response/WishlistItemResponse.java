@@ -15,4 +15,12 @@ public class WishlistItemResponse {
         return new WishlistItemResponse(wishlistItem.getId(), ProductResponse.fromProduct(wishlistItem.getProduct()));
     }
 
+    public Long getId() {
+        return id;
+    }
+
+    public ProductResponse getProduct() {
+        return product;
+    }
+
 }

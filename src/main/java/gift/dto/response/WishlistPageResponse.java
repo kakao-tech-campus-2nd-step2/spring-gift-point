@@ -34,4 +34,24 @@ public class WishlistPageResponse {
         );
     }
 
+    public List<WishlistItemResponse> getContent() {
+        return content;
+    }
+
+    public int getNumber() {
+        return number;
+    }
+
+    public long getTotalElements() {
+        return totalElements;
+    }
+
+    public int getSize() {
+        return size;
+    }
+
+    public boolean isLast() {
+        return last;
+    }
+
 }

@@ -6,6 +6,7 @@ import gift.dto.request.WishlistRequest;
 import gift.dto.response.WishlistPageResponse;
 import gift.service.WishlistService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
@@ -27,7 +28,7 @@ public class WishlistController {
 
     @GetMapping("/new")
     @Operation(summary = "위시리스트 추가 화면", description = "위시리스트 추가 화면으로 이동한다.")
-    public String newWishlistItemForm(Model model, @LoginMember TokenAuth tokenAuth) {
+    public String newWishlistItemForm(Model model, @Parameter(hidden = true) @LoginMember TokenAuth tokenAuth) {
         model.addAttribute("wishlistItem", new WishlistRequest());
         model.addAttribute("token", tokenAuth.getToken());
         return "wishlist-add-form";
@@ -35,14 +36,14 @@ public class WishlistController {
 
     @PostMapping
     @Operation(summary = "위시 리스트 상품 추가", description = "회원의 위시 리스트에 상품을 추가한다.")
-    public void addToWishlist(@Valid @RequestBody WishlistRequest request, @LoginMember TokenAuth tokenAuth) {
+    public void addToWishlist(@Valid @RequestBody WishlistRequest request, @Parameter(hidden = true) @LoginMember TokenAuth tokenAuth) {
         Long memberId = tokenAuth.getMemberId();
         wishlistService.addItemToWishlist(request, memberId);
     }
 
     @DeleteMapping("/{productId}")
     @Operation(summary = "위시 리스트 상품 삭제", description = "회원의 위시 리스트에서 상품을 삭제한다.")
-    public void deleteItemFromWishlist(@PathVariable Long productId, @LoginMember TokenAuth tokenAuth) {
+    public void deleteItemFromWishlist(@PathVariable Long productId, @Parameter(hidden = true) @LoginMember TokenAuth tokenAuth) {
         Long memberId = tokenAuth.getMemberId();
         wishlistService.deleteItemFromWishlist(productId, memberId);
     }
@@ -51,11 +52,19 @@ public class WishlistController {
     @Operation(summary = "위시 리스트 상품 조회 (페이지네이션 적용)", description = "회원의 위시 리스트에 있는 상품을 페이지 단위로 조회한다.")
     public WishlistPageResponse getWishlistForCurrentUser(@RequestParam(defaultValue = "20") int size,
                                                           @RequestParam(defaultValue = "0") int page,
-                                                          @RequestParam(defaultValue = "createdDate,desc") String sort,
-                                                          @LoginMember TokenAuth tokenAuth) {
-        Long memberId = tokenAuth.getMember().getId();
-        Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Order.desc(sort)));
+                                                          @RequestParam(defaultValue = "id,desc") String sort,
+                                                          @Parameter(hidden = true) @LoginMember TokenAuth tokenAuth) {
+        Long memberId = tokenAuth.getMemberId();
+        Pageable pageable = PageRequest.of(page, size, Sort.by(parseSortParameter(sort)));
         return wishlistService.getWishlistByMemberId(memberId, pageable);
+    }
+
+    private Sort.Order parseSortParameter(String sort) {
+        String[] sortParts = sort.split(",");
+        if (sortParts.length != 2) {
+            throw new IllegalArgumentException("잘못된 sort parameter");
+        }
+        return new Sort.Order(Sort.Direction.fromString(sortParts[1]), sortParts[0]);
     }
 
 }
