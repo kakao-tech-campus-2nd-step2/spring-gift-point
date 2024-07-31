@@ -11,9 +11,7 @@ import gift.service.ProductService;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -72,10 +70,11 @@ public class ProductController {
         return ResponseEntity.ok().build();
     }
 
-    // 특정 상품의 옵션 가져오기
-    @GetMapping("/{product_id}/options")
-    public ResponseEntity<List<Option>> getProductOptions(@PathVariable Long product_id) {
-        List<Option> options = optionService.getProductOptions(product_id);
-        return ResponseEntity.ok(options);
+    // 특정 카테고리별 상품 목록 조회
+    @Operation(summary = "특정 카테고리의 상품 목록 조회")
+    @GetMapping("/{category_id}")
+    public ResponseEntity<List<ProductListDto>> getProductOptions(@PathVariable Long category_id, Pageable pageable) {
+        Page<ProductListDto> products = productService.getProductsByCategory(category_id, pageable);
+        return ResponseEntity.ok(products.getContent());
     }
 }

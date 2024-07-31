@@ -1,5 +1,6 @@
 package gift.service;
 
+import gift.domain.Category;
 import gift.domain.Option;
 import gift.domain.Product;
 import gift.dto.CreateProductDto;
@@ -22,11 +23,11 @@ import java.util.stream.Collectors;
 @Service
 public class ProductService {
     private final ProductRepository productRepository;
-    private final OptionService optionService;
+    private final CategoryService categoryService;
 
-    public ProductService(ProductRepository productRepository, OptionService optionService) {
+    public ProductService(ProductRepository productRepository, CategoryService categoryService) {
         this.productRepository = productRepository;
-        this.optionService = optionService;
+        this.categoryService = categoryService;
     }
 
     public Product createProduct(CreateProductDto productDto) {
@@ -75,5 +76,11 @@ public class ProductService {
 
     public void deleteProduct(Long productId) {
         productRepository.deleteById(productId);
+    }
+
+    public Page<ProductListDto> getProductsByCategory(Long categoryId, Pageable pageable) {
+        Category category = categoryService.findById(categoryId);
+        Page<Product> products = productRepository.findByCategory(category);
+        return products.map(ProductListDto::new);
     }
 }

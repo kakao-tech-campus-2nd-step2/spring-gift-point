@@ -1,5 +1,6 @@
 package gift.repository;
 
+import gift.domain.Category;
 import gift.domain.Product;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -15,4 +16,6 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     Product save(Product product);
     void delete(Product product);
     void deleteById(Long id);
+
+    Page<Product> findByCategory(Category category);
 }
