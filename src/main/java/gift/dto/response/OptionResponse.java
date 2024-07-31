@@ -1,18 +1,21 @@
 package gift.dto.response;
 
-import java.util.List;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import gift.dto.OptionDto;
 
 public class OptionResponse {
     
-    private List<OptionDto> options;
+    private OptionDto optionDto;
 
-    public OptionResponse(List<OptionDto> options){
-        this.options = options;
+    public OptionResponse(
+        @JsonProperty("option")
+        OptionDto optionDto
+    ){
+        this.optionDto = optionDto;
     }
 
-    public List<OptionDto> getOptions(){
-        return options;
+    public OptionDto getOptionDto(){
+        return optionDto;
     }
 }

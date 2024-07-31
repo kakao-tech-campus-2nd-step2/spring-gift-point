@@ -12,7 +12,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
 import gift.dto.OptionDto;
-import gift.dto.response.OptionResponse;
+import gift.dto.response.GetOptionsResponse;
 import gift.entity.Category;
 import gift.entity.Option;
 import gift.entity.Product;
@@ -50,7 +50,7 @@ public class OptionServiceTest {
         when(optionRepository.findByProductId(productId))
             .thenReturn(List.of(option));
 
-        OptionResponse optionResponse = optionService.findByProductId(1L);
+        GetOptionsResponse optionResponse = optionService.findByProductId(1L);
 
         assertAll(
             () -> assertNotNull(optionResponse),
@@ -101,6 +101,6 @@ public class OptionServiceTest {
         verify(optionRepository, times(1)).save(optionCaptor.capture());
         Option savedOption = optionCaptor.getValue();
 
-        assertEquals(50, savedOption.getQuantity());
+        assertEquals(50, savedOption.getStockQuantity());
     }
 }

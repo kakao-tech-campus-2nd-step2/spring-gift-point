@@ -13,19 +13,19 @@ public class OptionRequest {
 
     @Min(value = 1, message = "quantity must be more than 1")
     @Max(value = 99999999, message = "quantity must be less than 100,000,000")
-    private int quantity;
+    private int stockQuantity;
 
-    public OptionRequest(String optionName, int quantity){
+    public OptionRequest(String optionName, int stockQuantity){
         this.optionName = optionName;
-        this.quantity = quantity;
+        this.stockQuantity = stockQuantity;
     }
 
     public String getOptionName(){
         return optionName;
     }
 
-    public int getQuantity(){
-        return quantity;
+    public int getStockQuantity(){
+        return stockQuantity;
     }
 
 }

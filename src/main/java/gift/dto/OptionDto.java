@@ -16,20 +16,20 @@ public class OptionDto {
 
     @Min(value = 1, message = "quantity must be more than 1")
     @Max(value = 99999999, message = "quantity must be less than 100,000,000")
-    private int quantity;
+    private int stockQuantity;
 
-    public OptionDto(Long id, String name, int quantity) {
+    public OptionDto(Long id, String name, int stockQuantity) {
         this.id = id;
         this.name = name;
-        this.quantity = quantity;
+        this.stockQuantity = stockQuantity;
     }
 
     public Long getId() {
         return id;
     }
 
-    public int getQuantity() {
-        return quantity;
+    public int getStockQuantity() {
+        return stockQuantity;
     }
 
     public String getName() {
@@ -37,6 +37,6 @@ public class OptionDto {
     }
 
     public static OptionDto fromEntity(Option option){
-        return new OptionDto(option.getId(), option.getName(), option.getQuantity());
+        return new OptionDto(option.getId(), option.getName(), option.getStockQuantity());
     }
 }
