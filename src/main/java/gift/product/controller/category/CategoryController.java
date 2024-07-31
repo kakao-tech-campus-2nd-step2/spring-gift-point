@@ -33,6 +33,7 @@ public class CategoryController {
         this.categoryService = categoryService;
     }
 
+    @ApiResponse(responseCode = "401", description = "허용되지 않는 요청", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ExceptionResponse.class)))
     @GetMapping
     public ResponseEntity<List<Category>> getCategoryAll() {
         List<Category> categories = categoryService.getCategoryAll();
@@ -41,6 +42,7 @@ public class CategoryController {
 
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "성공", content = @Content(mediaType = "application/json", schema = @Schema(implementation = Category.class))),
+        @ApiResponse(responseCode = "401", description = "허용되지 않는 요청", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ExceptionResponse.class))),
         @ApiResponse(responseCode = "404", description = "존재하지 않는 리소스", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ExceptionResponse.class)))
     })
     @GetMapping("/{id}")
@@ -50,28 +52,31 @@ public class CategoryController {
     }
 
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "성공", content = @Content(mediaType = "application/json", schema = @Schema(implementation = Category.class))),
-        @ApiResponse(responseCode = "400", description = "잘못된 요청", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ExceptionResponse.class)))
+        @ApiResponse(responseCode = "201", description = "카테고리 생성 성공"),
+        @ApiResponse(responseCode = "400", description = "잘못된 요청", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ExceptionResponse.class))),
+        @ApiResponse(responseCode = "401", description = "허용되지 않는 요청", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ExceptionResponse.class)))
     })
     @PostMapping
-    public ResponseEntity<Category> insertCategory(@RequestBody CategoryDto categoryDto) {
-        Category category = categoryService.insertCategory(categoryDto);
-        return ResponseEntity.status(HttpStatus.CREATED).body(category);
+    public ResponseEntity<Void> insertCategory(@RequestBody CategoryDto categoryDto) {
+        categoryService.insertCategory(categoryDto);
+        return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "성공", content = @Content(mediaType = "application/json", schema = @Schema(implementation = Category.class))),
+        @ApiResponse(responseCode = "204", description = "카테고리 수정 성공"),
+        @ApiResponse(responseCode = "401", description = "허용되지 않는 요청", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ExceptionResponse.class))),
         @ApiResponse(responseCode = "404", description = "존재하지 않는 리소스", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ExceptionResponse.class)))
     })
     @PutMapping("/{id}")
-    public ResponseEntity<Category> updateCategory(@PathVariable(name = "id") Long id,
+    public ResponseEntity<Void> updateCategory(@PathVariable(name = "id") Long id,
         @RequestBody CategoryDto categoryDto) {
-        Category category = categoryService.updateCategory(id, categoryDto);
-        return ResponseEntity.ok(category);
+        categoryService.updateCategory(id, categoryDto);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "성공"),
+        @ApiResponse(responseCode = "401", description = "허용되지 않는 요청", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ExceptionResponse.class))),
         @ApiResponse(responseCode = "404", description = "존재하지 않는 리소스", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ExceptionResponse.class)))
     })
     @DeleteMapping("/{id}")
