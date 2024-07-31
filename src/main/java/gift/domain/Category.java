@@ -19,7 +19,7 @@ public class Category {
     @Column(nullable = false)
     private String color;
 
-    @Column(nullable = false)
+    @Column(name = "image_url", nullable = false)
     private String imageUrl;
 
     public Category() {
