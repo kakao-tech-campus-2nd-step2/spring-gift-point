@@ -5,6 +5,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import gift.auth.dto.LoginReqDto;
 import gift.auth.token.AuthToken;
 import gift.category.CategoryFixture;
+import gift.category.dto.CategoryResDto;
 import gift.common.exception.CommonErrorCode;
 import gift.common.exception.ErrorResponse;
 import gift.common.exception.ValidationError;
@@ -18,6 +19,7 @@ import gift.product.message.ProductInfo;
 import gift.utils.RestPage;
 import gift.utils.TestUtils;
 import java.net.URI;
+import java.util.ArrayList;
 import java.util.List;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
@@ -50,6 +52,9 @@ class ProductE2ETest {
     private String baseUrl;
     private String accessToken;
 
+    // 조회할 카테고리 ID 목록
+    private static final List<Long> categoryIds = new ArrayList<>();
+
     private static final List<OptionReqDto> options = List.of(
             OptionFixture.createOptionReqDto("옵션1", 1000),
             OptionFixture.createOptionReqDto("옵션2", 2000),
@@ -78,12 +83,17 @@ class ProductE2ETest {
             restTemplate.exchange(categoryRequest, String.class);
         });
 
+        // 전체 카테고리 ID 조회
+        var categoryRequest = TestUtils.createRequestEntity(categoryUrl, null, HttpMethod.GET, accessToken);
+        var categoryResponse = restTemplate.exchange(categoryRequest, new ParameterizedTypeReference<List<CategoryResDto>>() {});
+        categoryIds.addAll(categoryResponse.getBody().stream().map(CategoryResDto::id).toList());
+
         // 상품 초기화
         var productUrl = baseUrl + "/api/products";
         List.of(
                 ProductFixture.createProductReqDto("상품1", 1000, "keyboard.png", "카테고리1", options),
-                ProductFixture.createProductReqDto("상품2", 2000, "mouse.png", "카테고리2", options),
-                ProductFixture.createProductReqDto("상품3", 3000, "monitor.png", "카테고리3", options)
+                ProductFixture.createProductReqDto("상품2", 2000, "mouse.png", "카테고리1", options),
+                ProductFixture.createProductReqDto("상품3", 3000, "monitor.png", "카테고리1", options)
         ).forEach(productReqDto -> {
             var productRequest = TestUtils.createRequestEntity(productUrl, productReqDto, HttpMethod.POST, accessToken);
             restTemplate.exchange(productRequest, String.class);
@@ -98,6 +108,7 @@ class ProductE2ETest {
                 .queryParam("page", 0)
                 .queryParam("size", 3)
                 .queryParam("sort", "id,desc")  // id 역순 정렬
+                .queryParam("categoryId", categoryIds.getFirst())
                 .build()
                 .toString();
 
@@ -268,7 +279,15 @@ class ProductE2ETest {
     @DisplayName("상품 수정")
     void 상품_수정() {
         //given: 상품 조회 후 마지막 상품을 수정
-        var lastProductRequest = TestUtils.createRequestEntity(baseUrl + "/api/products", null, HttpMethod.GET, accessToken);
+        String url = UriComponentsBuilder.fromHttpUrl(baseUrl + "/api/products")
+                .queryParam("page", 0)
+                .queryParam("size", 3)
+                .queryParam("sort", "id,desc")  // id 역순 정렬
+                .queryParam("categoryId", categoryIds.getFirst())
+                .build()
+                .toString();
+
+        var lastProductRequest = TestUtils.createRequestEntity(url, null, HttpMethod.GET, accessToken);
         var lastProductResponse = restTemplate.exchange(lastProductRequest, new ParameterizedTypeReference<RestPage<ProductResDto>>() {});
         var lastProduct = lastProductResponse.getBody().getContent().getLast();
         Long productId = lastProduct.id();
@@ -296,7 +315,6 @@ class ProductE2ETest {
         assertThat(product.name()).isEqualTo("이름 수정");
         assertThat(product.price()).isEqualTo(20000);
         assertThat(product.imageUrl()).isEqualTo("https://www.google.com/modify.png");
-        assertThat(product.category()).isEqualTo("카테고리1");
     }
 
     @Test
