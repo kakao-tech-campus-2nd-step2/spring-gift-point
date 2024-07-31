@@ -28,8 +28,8 @@ public class OAuthController {
     }
 
     @Operation(summary = "소셜 로그인", description = "소셜 로그인 api")
-    @GetMapping("/oauth/kakao/login/callback")
-    public ResponseEntity<MemberResponse.Login> login(
+    @GetMapping("/api/oauth/kakao/login/callback")
+    public ResponseEntity<String> login(
         @RequestParam("code") String code
     ) {
         var response = memberFacade.socialLogin(new OAuthCommand.Login(code));
@@ -37,11 +37,11 @@ public class OAuthController {
 //            .header("Location", "https://react-product-login-ajin.vercel.app")
 //            .header("Authorization", response)
 //            .body(Login.from(response));
-        return ResponseEntity.ok(Login.from(response));
+        return ResponseEntity.ok(response);
 
     }
 
-    @GetMapping("/oauth/kakao/login")
+    @GetMapping("/api/oauth/kakao/login")
     public ResponseEntity<Void> getOauthURL() {
         var kakaoLoginUrl = kakaoProperties.getKakaoLoginUrl();
         return ResponseEntity.status(HttpStatus.SEE_OTHER)
