@@ -14,6 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
+@RequestMapping("/api/wishes")
 @Tag(name = "위시리스트 관리", description = "위시리스트 조회, 추가, 삭제와 관련된 API들을 제공합니다.")
 public class WishlistController {
 
@@ -25,28 +26,28 @@ public class WishlistController {
         this.jwtUtil = jwtUtil;
     }
 
-    @GetMapping("/wishlist")
+    @GetMapping()
     @Operation(
             summary = "위시리스트 조회",
             description = "회원의 위시리스트를 페이징하여 조회하는 API입니다."
     )
     @Parameters({
             @Parameter(name = "authorizationHeader", description = "회원 인증을 위한 Authorization 헤더", required = true),
-            @Parameter(name = "pageNumber", description = "페이지 번호", example = "1"),
-            @Parameter(name = "pageSize", description = "페이지 사이즈", example = "5")
+            @Parameter(name = "page", description = "페이지 번호", example = "1"),
+            @Parameter(name = "size", description = "페이지 사이즈", example = "5")
     })
     public ResponseEntity<Page<WishDto>> getWishProductList(
             @RequestHeader("Authorization") String authorizationHeader,
-            @RequestParam(defaultValue = "1") int pageNumber,
-            @RequestParam(defaultValue = "5") int pageSize) {
+            @RequestParam(defaultValue = "1") int page,
+            @RequestParam(defaultValue = "5") int size) {
         Long memberId = jwtUtil.getMemberIdFromAuthorizationHeader(authorizationHeader);
 
-        Page<Wish> allWishlistsPaged = service.getWishProductList(memberId, pageNumber-1, pageSize);
+        Page<Wish> allWishlistsPaged = service.getWishProductList(memberId, page -1, size);
 
         return ResponseEntity.ok().body(allWishlistsPaged.map(WishDto::toWishDto));
     }
 
-    @PostMapping("/wishlist/{productId}")
+    @PostMapping("/{productId}")
     @Operation(
             summary = "위시리스트에 상품 추가",
             description = "주어진 ID에 해당하는 특정 상품을 회원의 위시리스트에 추가하는 API입니다."
@@ -62,17 +63,17 @@ public class WishlistController {
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
-    @DeleteMapping("/wishlist/{wishProductId}")
+    @DeleteMapping("/{wishId}")
     @Operation(
             summary = "위시리스트에서 상품 삭제",
             description = "위시리스트에서 주어진 ID에 해당하는 특정 상품을 삭제하는 API입니다."
     )
     @Parameters({
-            @Parameter(name = "wishProductId", description = "위시리스트에서 삭제할 상품의 ID", required = true),
+            @Parameter(name = "wishId", description = "위시리스트에서 삭제할 상품의 ID", required = true),
             @Parameter(name = "authorizationHeader", description = "회원 인증을 위한 Authorization 헤더", required = true)
     })
-    public ResponseEntity<Void> deleteToWishlist(@PathVariable("wishProductId") Long wishProductId, @RequestHeader("Authorization") String authorizationHeader) {
-        service.deleteWishProduct(wishProductId);
+    public ResponseEntity<Void> deleteToWishlist(@PathVariable("wishId") Long wishId, @RequestHeader("Authorization") String authorizationHeader) {
+        service.deleteWishProduct(wishId);
 
         return ResponseEntity.ok().build();
     }
