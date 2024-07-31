@@ -1,16 +1,16 @@
 package gift.api;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import gift.global.error.CustomException;
+import gift.global.error.ErrorCode;
+import gift.global.security.JwtFilter;
+import gift.global.security.JwtUtil;
 import gift.product.api.CategoryController;
 import gift.product.application.CategoryService;
 import gift.product.dto.CategoryRequest;
 import gift.product.dto.CategoryResponse;
 import gift.product.entity.Category;
 import gift.product.util.CategoryMapper;
-import gift.global.error.CustomException;
-import gift.global.error.ErrorCode;
-import gift.global.security.JwtFilter;
-import gift.global.security.JwtUtil;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -31,9 +31,8 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(CategoryController.class)
 @ExtendWith(MockitoExtension.class)
@@ -158,7 +157,7 @@ class CategoryControllerTest {
         );
         String requestJson = objectMapper.writeValueAsString(request);
 
-        mockMvc.perform(patch("/api/categories/{id}", categoryId)
+        mockMvc.perform(put("/api/categories/{id}", categoryId)
                         .header(HttpHeaders.AUTHORIZATION, bearerToken)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(requestJson))

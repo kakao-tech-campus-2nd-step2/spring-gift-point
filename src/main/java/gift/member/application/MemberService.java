@@ -24,14 +24,16 @@ public class MemberService {
         this.kakaoClient = kakaoClient;
     }
 
-    public void registerMember(MemberDto memberDto) {
+    public MemberDto registerMember(MemberDto memberDto) {
         // 사용자 계정 중복 검증
         memberRepository.findByEmail(memberDto.email())
                         .ifPresent(member -> {
                             throw new CustomException(ErrorCode.MEMBER_ALREADY_EXISTS);
                         });
 
-        memberRepository.save(MemberMapper.toEntity(memberDto));
+        return MemberMapper.toDto(
+                memberRepository.save(MemberMapper.toEntity(memberDto))
+        );
     }
 
     public Member getMemberByIdOrThrow(Long id) {

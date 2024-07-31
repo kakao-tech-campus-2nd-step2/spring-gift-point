@@ -2,8 +2,8 @@ package gift.wishlist.api;
 
 import gift.member.validator.LoginMember;
 import gift.global.pagination.dto.PageResponse;
-import gift.product.dto.ProductResponse;
 import gift.wishlist.application.WishesService;
+import gift.wishlist.dto.WishResponse;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -30,7 +30,7 @@ public class WishesViewController {
                                           sort = "id",
                                           direction = Sort.Direction.DESC)
                                   Pageable pageable) {
-        Page<ProductResponse> wishes = wishesService.getWishlistOfMember(memberId, pageable);
+        Page<WishResponse> wishes = wishesService.getWishlistOfMember(memberId, pageable);
 
         model.addAttribute("wishlist", wishes.getContent());
         model.addAttribute("wishlistPageInfo", new PageResponse(wishes));

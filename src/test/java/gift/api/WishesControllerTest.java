@@ -1,15 +1,17 @@
 package gift.api;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import gift.product.entity.Category;
 import gift.global.security.JwtFilter;
 import gift.global.security.JwtUtil;
 import gift.member.validator.LoginMember;
 import gift.member.validator.LoginMemberArgumentResolver;
-import gift.product.dto.ProductResponse;
-import gift.product.util.ProductMapper;
+import gift.product.entity.Category;
+import gift.product.entity.Option;
+import gift.product.entity.Product;
+import gift.product.util.OptionMapper;
 import gift.wishlist.api.WishesController;
 import gift.wishlist.application.WishesService;
+import gift.wishlist.dto.WishResponse;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -23,17 +25,16 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import testFixtures.CategoryFixture;
+import testFixtures.OptionFixture;
 import testFixtures.ProductFixture;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.ArgumentMatchers.argThat;
-import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -60,26 +61,27 @@ class WishesControllerTest {
     private final static String bearerToken = "Bearer token";
     private Long memberId;
     private Category category;
+    private Product product;
+    private Option option;
 
     @BeforeEach
     void setUp() {
         memberId = 1L;
         category = CategoryFixture.createCategory("상품권");
+        product = ProductFixture.createProduct("product", category);
+        option = OptionFixture.createOption("옵션", product);
     }
 
     @Test
     @DisplayName("위시 리스트 조회 기능 테스트")
     void getPagedWishes() throws Exception {
-        List<ProductResponse> products = new ArrayList<>();
-        ProductResponse productResponse1 = ProductMapper.toResponseDto(
-                ProductFixture.createProduct("product1", category)
-        );
-        ProductResponse productResponse2 = ProductMapper.toResponseDto(
-                ProductFixture.createProduct("product2", category)
-        );
-        products.add(productResponse1);
-        products.add(productResponse2);
-        Page<ProductResponse> response = new PageImpl<>(products);
+        List<WishResponse> wishes = new ArrayList<>();
+        WishResponse wishResponse1 = new WishResponse(1L, OptionMapper.toWishResponseDto(option));
+        WishResponse wishResponse2 = new WishResponse(2L, OptionMapper.toWishResponseDto(option));
+        
+        wishes.add(wishResponse1);
+        wishes.add(wishResponse2);
+        Page<WishResponse> response = new PageImpl<>(wishes);
         String responseJson = objectMapper.writeValueAsString(response);
 
         given(wishesService.getWishlistOfMember(anyLong(), any()))
@@ -100,35 +102,38 @@ class WishesControllerTest {
     @Test
     @DisplayName("위시 리스트 상품 추가 기능 테스트")
     void addWish() throws Exception {
-        Long productId = 1L;
+        Long optionId = 1L;
+        String requestJson = objectMapper.writeValueAsString(optionId);
 
         given(loginMemberArgumentResolver.supportsParameter(argThat(parameter ->
                 parameter.hasParameterAnnotation(LoginMember.class)))).willReturn(true);
         given(loginMemberArgumentResolver.resolveArgument(any(), any(), any(), any()))
                 .willReturn(memberId);
 
-        mockMvc.perform(post("/api/wishes/{productId}", productId)
-                        .header(HttpHeaders.AUTHORIZATION, bearerToken))
+        mockMvc.perform(post("/api/wishes")
+                        .header(HttpHeaders.AUTHORIZATION, bearerToken)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(requestJson))
                 .andExpect(status().isOk());
 
-        verify(wishesService).addProductToWishlist(memberId, productId);
+        verify(wishesService).addProductToWishlist(memberId, optionId);
     }
 
     @Test
     @DisplayName("위시 리스트 상품 삭제 기능 테스트")
     void removeWish() throws Exception {
-        Long productId = 1L;
+        Long optionId = 1L;
 
         given(loginMemberArgumentResolver.supportsParameter(argThat(parameter ->
                 parameter.hasParameterAnnotation(LoginMember.class)))).willReturn(true);
         given(loginMemberArgumentResolver.resolveArgument(any(), any(), any(), any()))
                 .willReturn(memberId);
 
-        mockMvc.perform(delete("/api/wishes/{productId}", productId)
+        mockMvc.perform(delete("/api/wishes/{optionId}", optionId)
                         .header(HttpHeaders.AUTHORIZATION, bearerToken))
                 .andExpect(status().isOk());
 
-        verify(wishesService).removeWishIfPresent(memberId, productId);
+        verify(wishesService).removeWishById(optionId);
     }
 
 }

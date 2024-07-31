@@ -4,6 +4,7 @@ import gift.global.error.CustomException;
 import gift.global.error.ErrorCode;
 import gift.product.dao.CategoryRepository;
 import gift.product.dao.ProductRepository;
+import gift.product.dto.GetProductResponse;
 import gift.product.dto.ProductRequest;
 import gift.product.dto.ProductResponse;
 import gift.product.entity.Category;
@@ -28,24 +29,29 @@ public class ProductService {
     }
 
     @Transactional(readOnly = true)
-    public Page<ProductResponse> getPagedProducts(Pageable pageable) {
+    public Page<GetProductResponse> getPagedProducts(Pageable pageable) {
         return productRepository.findAll(pageable)
-                .map(ProductMapper::toResponseDto);
+                .map(ProductMapper::toGetResponseDto);
     }
 
     @Transactional(readOnly = true)
-    public ProductResponse getProductByIdOrThrow(Long id) {
+    public GetProductResponse getProductByIdOrThrow(Long id) {
         return productRepository.findById(id)
-                .map(ProductMapper::toResponseDto)
+                .map(ProductMapper::toGetResponseDto)
                 .orElseThrow(() -> new CustomException(ErrorCode.PRODUCT_NOT_FOUND));
     }
 
     @Transactional
     public ProductResponse createProduct(ProductRequest request) {
-        Category category = categoryRepository.findByName(request.categoryName())
+        Category category = categoryRepository.findById(request.categoryId())
                 .orElseThrow(() -> new CustomException(ErrorCode.CATEGORY_NOT_FOUND));
         Product product = productRepository.save(ProductMapper.toEntity(request, category));
-        product.addOptionOrElseFalse(OptionMapper.toEntity(request.option(), product));
+        product.addOptions(
+                request.options()
+                        .stream()
+                        .map(option -> OptionMapper.toEntity(option, product))
+                        .toList()
+        );
 
         return ProductMapper.toResponseDto(product);
     }
@@ -62,7 +68,7 @@ public class ProductService {
     public void updateProduct(Long id, ProductRequest request) {
         Product product = productRepository.findById(id)
                 .orElseThrow(() -> new CustomException(ErrorCode.PRODUCT_NOT_FOUND));
-        Category category = categoryRepository.findByName(request.categoryName())
+        Category category = categoryRepository.findById(request.categoryId())
                 .orElseThrow(() -> new CustomException(ErrorCode.CATEGORY_NOT_FOUND));
 
         product.update(request, category);

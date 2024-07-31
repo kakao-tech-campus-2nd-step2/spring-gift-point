@@ -22,8 +22,9 @@ import testFixtures.CategoryFixture;
 import testFixtures.OptionFixture;
 import testFixtures.ProductFixture;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -57,14 +58,16 @@ class OptionServiceTest {
     @Test
     @DisplayName("상품 옵션 조회 기능 테스트")
     void getProductOptionsByIdOrThrow() {
+        List<Option> options = new ArrayList<>();
+
         Option option1 = OptionFixture.createOption("옵션1", product);
         Option option2 = OptionFixture.createOption("옵션2", product);
-        product.addOptionOrElseFalse(option1);
-        product.addOptionOrElseFalse(option2);
-        given(productRepository.findById(anyLong()))
-                .willReturn(Optional.of(product));
+        options.add(option1);
+        options.add(option2);
+        given(optionRepository.findByProduct_Id(anyLong()))
+                .willReturn(options);
 
-        Set<OptionResponse> responses = optionService.getProductOptionsByIdOrThrow(productId);
+        List<OptionResponse> responses = optionService.getOptionsByProductId(productId);
 
         assertThat(responses).contains(
                 OptionMapper.toResponseDto(option1),
@@ -102,31 +105,32 @@ class OptionServiceTest {
     @Test
     @DisplayName("상품 옵션 삭제 기능 테스트")
     void deleteOptionFromProduct() {
-        OptionRequest request = new OptionRequest("옵션1", 10);
-        Option option1 = OptionMapper.toEntity(request, product);
+        Long optionId = 1L;
+        Option option1 = OptionFixture.createOption("옵션1", product);
         Option option2 = OptionFixture.createOption("옵션2", product);
         product.addOptionOrElseFalse(option1);
         product.addOptionOrElseFalse(option2);
         given(productRepository.findById(anyLong()))
                 .willReturn(Optional.of(product));
-        given(optionRepository.findByProduct_IdAndName(any(), anyString()))
+        given(optionRepository.findById(anyLong()))
                 .willReturn(Optional.of(option1));
 
-        optionService.deleteOptionFromProduct(productId, request);
+        optionService.deleteOptionFromProductById(productId, optionId);
 
-        verify(productRepository).findById(anyLong());
-        verify(optionRepository).findByProduct_IdAndName(any(), anyString());
+
+        verify(productRepository).findById(productId);
+        verify(optionRepository).findById(optionId);
     }
 
     @Test
     @DisplayName("상품 옵션 삭제 실패 테스트")
     void deleteOptionFromProductFailed() {
-        OptionRequest request = new OptionRequest("옵션1", 10);
-        product.addOptionOrElseFalse(OptionMapper.toEntity(request, product));
+        Long optionId = 1L;
+        product.addOptionOrElseFalse(OptionFixture.createOption("옵션", product));
         given(productRepository.findById(anyLong()))
                 .willReturn(Optional.of(product));
 
-        assertThatThrownBy(() -> optionService.deleteOptionFromProduct(productId, request))
+        assertThatThrownBy(() -> optionService.deleteOptionFromProductById(productId, optionId))
                 .isInstanceOf(CustomException.class)
                 .hasMessage(ErrorCode.OPTION_REMOVE_FAILED
                                      .getMessage());

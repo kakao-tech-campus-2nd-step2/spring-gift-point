@@ -12,6 +12,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+import java.util.List;
 import java.util.Set;
 
 public class ProductRequestValidationTest {
@@ -19,7 +20,8 @@ public class ProductRequestValidationTest {
     private static ValidatorFactory validatorFactory;
     private static Validator validator;
 
-    private final OptionRequest option = new OptionRequest("옵션", 10);
+    private final Long categoryId = 1L;
+    private final List<OptionRequest> options = List.of(new OptionRequest("옵션", 10));
 
     @BeforeEach
     public void createValidator() {
@@ -39,8 +41,8 @@ public class ProductRequestValidationTest {
                 "product",
                 1000,
                 "https://shop.com",
-                "상품권",
-                option);
+                categoryId,
+                options);
 
         Set<ConstraintViolation<ProductRequest>> violations = validator.validate(request);
 
@@ -54,8 +56,8 @@ public class ProductRequestValidationTest {
                 "productproductproduct",
                 1000,
                 "https://shop.com",
-                "상품권",
-                option);
+                categoryId,
+                options);
 
         Set<ConstraintViolation<ProductRequest>> violations = validator.validate(request);
 
@@ -69,8 +71,8 @@ public class ProductRequestValidationTest {
                 "pr@duct",
                 1000,
                 "https://shop.com",
-                "상품권",
-                option);
+                categoryId,
+                options);
 
         Set<ConstraintViolation<ProductRequest>> violations = validator.validate(request);
 
@@ -84,8 +86,8 @@ public class ProductRequestValidationTest {
                 "[(+-_&/)]",
                 1000,
                 "https://shop.com",
-                "상품권",
-                option);
+                categoryId,
+                options);
 
         Set<ConstraintViolation<ProductRequest>> violations = validator.validate(request);
 
@@ -99,8 +101,8 @@ public class ProductRequestValidationTest {
                 "카카오 product",
                 1000,
                 "https://shop.com",
-                "상품권",
-                option);
+                categoryId,
+                options);
 
         Set<ConstraintViolation<ProductRequest>> violations = validator.validate(request);
 
@@ -114,8 +116,8 @@ public class ProductRequestValidationTest {
                 "product",
                 -1000,
                 "https://shop.com",
-                "상품권",
-                option);
+                categoryId,
+                options);
 
         Set<ConstraintViolation<ProductRequest>> violations = validator.validate(request);
 

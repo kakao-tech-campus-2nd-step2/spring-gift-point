@@ -1,11 +1,10 @@
 package gift.product.util;
 
-import gift.product.entity.Category;
-import gift.product.entity.Product;
+import gift.product.dto.GetProductResponse;
 import gift.product.dto.ProductRequest;
 import gift.product.dto.ProductResponse;
-
-import java.util.stream.Collectors;
+import gift.product.entity.Category;
+import gift.product.entity.Product;
 
 public class ProductMapper {
 
@@ -16,11 +15,17 @@ public class ProductMapper {
                 product.getPrice(),
                 product.getImageUrl(),
                 product.getCategory()
-                       .getName(),
-                product.getOptions()
-                       .stream()
-                       .map(OptionMapper::toResponseDto)
-                       .collect(Collectors.toUnmodifiableSet())
+                       .getId()
+        );
+    }
+
+    public static GetProductResponse toGetResponseDto(Product product) {
+        return new GetProductResponse(
+                product.getId(),
+                product.getName(),
+                product.getPrice(),
+                product.getImageUrl(),
+                CategoryMapper.toResponseDto(product.getCategory())
         );
     }
 

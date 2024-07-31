@@ -2,23 +2,22 @@ package gift.product.api;
 
 import gift.product.application.OptionService;
 import gift.product.application.ProductService;
-import gift.product.dto.OptionRequest;
-import gift.product.dto.OptionResponse;
-import gift.product.dto.ProductRequest;
-import gift.product.dto.ProductResponse;
+import gift.product.dto.*;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.Set;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/products")
@@ -35,13 +34,17 @@ public class ProductController {
 
     // 상품 전체 조회
     @GetMapping
-    public Page<ProductResponse> getPagedProducts(Pageable pageable) {
+    public Page<GetProductResponse> getPagedProducts(
+            @PageableDefault(
+                    sort = "id",
+                    direction = Sort.Direction.DESC
+            ) Pageable pageable) {
         return productService.getPagedProducts(pageable);
     }
 
     // 상품 상세 조회
     @GetMapping("/{id}")
-    public ProductResponse getProduct(@PathVariable("id") Long id) {
+    public GetProductResponse getProduct(@PathVariable("id") Long id) {
         return productService.getProductByIdOrThrow(id);
     }
 
@@ -64,7 +67,7 @@ public class ProductController {
     }
 
     // 상품 수정
-    @PatchMapping("/{id}")
+    @PutMapping("/{id}")
     public void updateProduct(@PathVariable("id") Long id,
                               @RequestBody @Valid ProductRequest request) {
         productService.updateProduct(id, request);
@@ -72,8 +75,8 @@ public class ProductController {
 
     // 상품 옵션 조회
     @GetMapping("/{id}/options")
-    public Set<OptionResponse> getProductOptions(@PathVariable("id") Long id) {
-        return optionService.getProductOptionsByIdOrThrow(id);
+    public List<OptionResponse> getProductOptions(@PathVariable("id") Long id) {
+        return optionService.getOptionsByProductId(id);
     }
 
     // 상품 옵션 추가
@@ -84,10 +87,17 @@ public class ProductController {
     }
 
     // 상품 옵션 삭제
-    @DeleteMapping("/{id}/options")
-    public void deleteOptionFromProduct(@PathVariable("id") Long id,
-                                        @RequestBody @Valid OptionRequest request) {
-        optionService.deleteOptionFromProduct(id, request);
+    @DeleteMapping("/{productId}/options/{optionId}")
+    public void deleteOptionFromProduct(@PathVariable("productId") Long productId,
+                                        @PathVariable("optionId") Long optionId) {
+        optionService.deleteOptionFromProductById(productId, optionId);
     }
 
+    // 상품 옵션 수정
+    @PutMapping("/{productId}/options/{optionId}")
+    public OptionResponse updateOption(@PathVariable("productId") Long productId,
+                                       @PathVariable("optionId") Long optionId,
+                                       @RequestBody @Valid OptionRequest request) {
+        return optionService.updateOptionById(optionId, request);
+    }
 }

@@ -4,12 +4,12 @@ import gift.global.error.CustomException;
 import gift.global.error.ErrorCode;
 import gift.member.dao.MemberRepository;
 import gift.member.entity.Member;
-import gift.product.dao.ProductRepository;
-import gift.product.dto.ProductResponse;
-import gift.product.entity.Product;
-import gift.product.util.ProductMapper;
+import gift.product.dao.OptionRepository;
+import gift.product.entity.Option;
 import gift.wishlist.dao.WishesRepository;
+import gift.wishlist.dto.WishResponse;
 import gift.wishlist.entity.Wish;
+import gift.wishlist.util.WishMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -19,18 +19,18 @@ public class WishesService {
 
     private final WishesRepository wishesRepository;
     private final MemberRepository memberRepository;
-    private final ProductRepository productRepository;
+    private final OptionRepository optionRepository;
 
     public WishesService(WishesRepository wishesRepository,
                          MemberRepository memberRepository,
-                         ProductRepository productRepository) {
+                         OptionRepository optionRepository) {
         this.wishesRepository = wishesRepository;
         this.memberRepository = memberRepository;
-        this.productRepository = productRepository;
+        this.optionRepository = optionRepository;
     }
 
     public void addProductToWishlist(Long memberId, Long productId) {
-        wishesRepository.findByMember_IdAndProduct_Id(memberId, productId)
+        wishesRepository.findByMember_IdAndOption_Id(memberId, productId)
                 .ifPresent(wish -> {
                     throw new CustomException(ErrorCode.WISH_ALREADY_EXISTS);
                 });
@@ -39,25 +39,28 @@ public class WishesService {
     }
 
     public void removeWishIfPresent(Long memberId, Long productId) {
-        wishesRepository.findByMember_IdAndProduct_Id(memberId, productId)
+        wishesRepository.findByMember_IdAndOption_Id(memberId, productId)
                 .ifPresent(wish -> {
                     wishesRepository.deleteById(wish.getId());
                 });
     }
 
-    public Page<ProductResponse> getWishlistOfMember(Long memberId, Pageable pageable) {
-        return wishesRepository.findByMember_Id(memberId, pageable)
-                .map(Wish::getProduct)
-                .map(ProductMapper::toResponseDto);
+    public void removeWishById(Long id) {
+        wishesRepository.deleteById(id);
     }
 
-    private Wish createWish(Long memberId, Long productId) {
+    public Page<WishResponse> getWishlistOfMember(Long memberId, Pageable pageable) {
+        return wishesRepository.findByMember_Id(memberId, pageable)
+                .map(WishMapper::toResponseDto);
+    }
+
+    private Wish createWish(Long memberId, Long optionId) {
         Member member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new CustomException(ErrorCode.MEMBER_NOT_FOUND));
-        Product product = productRepository.findById(productId)
-                .orElseThrow(() -> new CustomException(ErrorCode.PRODUCT_NOT_FOUND));
+        Option option = optionRepository.findById(optionId)
+                .orElseThrow(() -> new CustomException(ErrorCode.OPTION_NOT_FOUND));
 
-        return new Wish(member, product);
+        return new Wish(member, option);
     }
 
 }

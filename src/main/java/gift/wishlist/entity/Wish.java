@@ -1,7 +1,7 @@
 package gift.wishlist.entity;
 
 import gift.member.entity.Member;
-import gift.product.entity.Product;
+import gift.product.entity.Option;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -22,15 +22,15 @@ public class Wish {
     private Member member;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "product_id", nullable = false)
-    private Product product;
+    @JoinColumn(name = "option_id", nullable = false)
+    private Option option;
 
     protected Wish() {
     }
 
-    public Wish(Member member, Product product) {
+    public Wish(Member member, Option option) {
         this.member = member;
-        this.product = product;
+        this.option = option;
     }
 
     public Long getId() {
@@ -41,8 +41,8 @@ public class Wish {
         return member;
     }
 
-    public Product getProduct() {
-        return product;
+    public Option getOption() {
+        return option;
     }
 
 }

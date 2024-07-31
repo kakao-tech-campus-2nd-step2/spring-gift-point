@@ -1,9 +1,11 @@
 package gift.dao;
 
+import gift.product.dao.OptionRepository;
+import gift.product.dao.ProductRepository;
 import gift.product.entity.Category;
 import gift.member.dao.MemberRepository;
 import gift.member.entity.Member;
-import gift.product.dao.ProductRepository;
+import gift.product.entity.Option;
 import gift.product.entity.Product;
 import gift.wishlist.dao.WishesRepository;
 import gift.wishlist.entity.Wish;
@@ -17,6 +19,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.test.context.ActiveProfiles;
 import testFixtures.CategoryFixture;
 import testFixtures.MemberFixture;
+import testFixtures.OptionFixture;
 import testFixtures.ProductFixture;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -32,13 +35,18 @@ class WishesRepositoryTest {
     private MemberRepository memberRepository;
 
     @Autowired
+    private OptionRepository optionRepository;
+
+    @Autowired
     private ProductRepository productRepository;
 
-    private Category category;
+    private Product product;
 
     @BeforeEach
     void setUp() {
-        category = CategoryFixture.createCategory("상품권");
+        Category category = CategoryFixture.createCategory("상품권");
+        product = ProductFixture.createProduct("product", category);
+        product = productRepository.save(product);
     }
 
     @Test
@@ -47,10 +55,10 @@ class WishesRepositoryTest {
         Member member = MemberFixture.createMember("test@email.com");
         member = memberRepository.save(member);
 
-        Product product = ProductFixture.createProduct("test", category);
-        Product savedProduct = productRepository.save(product);
+        Option option = OptionFixture.createOption("옵션", product);
+        Option savedOption = optionRepository.save(option);
 
-        Wish wish = new Wish(member, savedProduct);
+        Wish wish = new Wish(member, savedOption);
         Wish savedWish = wishesRepository.save(wish);
 
         Wish foundWish = wishesRepository.findById(savedWish.getId())
@@ -58,7 +66,7 @@ class WishesRepositoryTest {
 
         assertThat(foundWish).isNotNull();
         assertThat(foundWish.getMember()).isEqualTo(savedWish.getMember());
-        assertThat(foundWish.getProduct()).isEqualTo(savedWish.getProduct());
+        assertThat(foundWish.getOption()).isEqualTo(savedWish.getOption());
     }
 
     @Test
@@ -67,10 +75,10 @@ class WishesRepositoryTest {
         Member member = MemberFixture.createMember("test@email.com");
         Member savedMember = memberRepository.save(member);
 
-        Product product = ProductFixture.createProduct("test", category);
-        Product savedProduct = productRepository.save(product);
+        Option option = OptionFixture.createOption("옵션", product);
+        Option savedOption = optionRepository.save(option);
 
-        Wish wish = new Wish(savedMember, savedProduct);
+        Wish wish = new Wish(savedMember, savedOption);
         wishesRepository.save(wish);
 
         Wish foundWish = wishesRepository.findById(123456789L)
@@ -87,14 +95,14 @@ class WishesRepositoryTest {
         Member member2 = MemberFixture.createMember("test2@email.com");
         member2 = memberRepository.save(member2);
 
-        Product product1 = ProductFixture.createProduct("product1", category);
-        product1 = productRepository.save(product1);
-        Product product2 = ProductFixture.createProduct("product2", category);
-        product2 = productRepository.save(product2);
+        Option option1 = OptionFixture.createOption("옵션1", product);
+        option1 = optionRepository.save(option1);
+        Option option2 = OptionFixture.createOption("옵션2", product);
+        option2 = optionRepository.save(option2);
 
-        Wish wish1 = new Wish(member1, product1);
-        Wish wish2 = new Wish(member2, product2);
-        Wish wish3 = new Wish(member1, product2);
+        Wish wish1 = new Wish(member1, option1);
+        Wish wish2 = new Wish(member2, option2);
+        Wish wish3 = new Wish(member1, option2);
         wishesRepository.save(wish1);
         wishesRepository.save(wish2);
         wishesRepository.save(wish3);
@@ -112,14 +120,14 @@ class WishesRepositoryTest {
         Member member2 = MemberFixture.createMember("test2@email.com");
         member2 = memberRepository.save(member2);
 
-        Product product1 = ProductFixture.createProduct("product1", category);
-        product1 = productRepository.save(product1);
-        Product product2 = ProductFixture.createProduct("product2", category);
-        product2 = productRepository.save(product2);
+        Option option1 = OptionFixture.createOption("옵션1", product);
+        option1 = optionRepository.save(option1);
+        Option option2 = OptionFixture.createOption("옵션2", product);
+        option2 = optionRepository.save(option2);;
 
-        Wish wish1 = new Wish(member1, product1);
-        Wish wish2 = new Wish(member2, product2);
-        Wish wish3 = new Wish(member1, product2);
+        Wish wish1 = new Wish(member1, option1);
+        Wish wish2 = new Wish(member2, option2);
+        Wish wish3 = new Wish(member1, option2);
         wishesRepository.save(wish1);
         wishesRepository.save(wish2);
         wishesRepository.save(wish3);
@@ -135,10 +143,10 @@ class WishesRepositoryTest {
         Member member = MemberFixture.createMember("test@email.com");;
         member = memberRepository.save(member);
 
-        Product product = ProductFixture.createProduct("test", category);
-        product = productRepository.save(product);
+        Option option = OptionFixture.createOption("옵션", product);
+        option = optionRepository.save(option);
 
-        Wish wish = new Wish(member, product);
+        Wish wish = new Wish(member, option);
         Wish savedWish = wishesRepository.save(wish);
 
         wishesRepository.deleteById(savedWish.getId());
@@ -153,20 +161,20 @@ class WishesRepositoryTest {
         Member member = MemberFixture.createMember("test@email.com");;
         member = memberRepository.save(member);
 
-        Product product = ProductFixture.createProduct("test", category);
-        product = productRepository.save(product);
+        Option option = OptionFixture.createOption("옵션", product);
+        option = optionRepository.save(option);
 
-        Wish wish = new Wish(member, product);
+        Wish wish = new Wish(member, option);
         wishesRepository.save(wish);
 
-        Wish foundWish = wishesRepository.findByMember_IdAndProduct_Id(member.getId(), product.getId())
+        Wish foundWish = wishesRepository.findByMember_IdAndOption_Id(member.getId(), product.getId())
                 .orElse(null);
 
         assertThat(foundWish).isNotNull();
         assertThat(foundWish.getMember()
                 .getEmail()).isEqualTo(member.getEmail());
-        assertThat(foundWish.getProduct()
-                .getName()).isEqualTo(product.getName());
+        assertThat(foundWish.getOption()
+                .getName()).isEqualTo(option.getName());
     }
 
     @Test
@@ -175,13 +183,13 @@ class WishesRepositoryTest {
         Member member = MemberFixture.createMember("test@email.com");;
         member = memberRepository.save(member);
 
-        Product product = ProductFixture.createProduct("test", category);
-        product = productRepository.save(product);
+        Option option = OptionFixture.createOption("옵션", product);
+        option = optionRepository.save(option);
 
-        Wish wish = new Wish(member, product);
+        Wish wish = new Wish(member, option);
         wishesRepository.save(wish);
 
-        Wish foundWish = wishesRepository.findByMember_IdAndProduct_Id(12345L, 67890L)
+        Wish foundWish = wishesRepository.findByMember_IdAndOption_Id(12345L, 67890L)
                 .orElse(null);
 
         assertThat(foundWish).isNull();

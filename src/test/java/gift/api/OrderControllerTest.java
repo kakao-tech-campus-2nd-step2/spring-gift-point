@@ -17,15 +17,20 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -83,6 +88,28 @@ class OrderControllerTest {
                 .andExpect(content().json(responseJson));
 
         verify(orderService).order(memberId, request);
+    }
+
+    @Test
+    @DisplayName("상품 전체 조회 기능 테스트")
+    void getOrders() throws Exception {
+        List<OrderResponse> orders = new ArrayList<>();
+        OrderResponse orderResponse1 = new OrderResponse(1L, 2L, 3, LocalDateTime.now(), "message1");
+        OrderResponse orderResponse2 = new OrderResponse(2L, 3L, 1, LocalDateTime.now(), "message2");
+        orders.add(orderResponse1);
+        orders.add(orderResponse2);
+
+        Page<OrderResponse> response = new PageImpl<>(orders);
+        String responseJson = objectMapper.writeValueAsString(response);
+        given(orderService.getPagedOrders(any()))
+                .willReturn(response);
+
+        mockMvc.perform(get("/api/orders")
+                        .header(HttpHeaders.AUTHORIZATION, bearerToken))
+                .andExpect(status().isOk())
+                .andExpect(content().json(responseJson));
+
+        verify(orderService).getPagedOrders(any());
     }
 
 }

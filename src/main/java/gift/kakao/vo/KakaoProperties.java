@@ -32,7 +32,7 @@ public record KakaoProperties(
     }
 
     public String getKakaoAuthUrl() {
-        return "https://kauth.kakao.com/oauth/authorize?scope=talk_message&response_type=code" +
+        return "https://kauth.kakao.com/oauth/authorize?response_type=code" +
                 "&redirect_uri=" + this.redirectUri +
                 "&client_id="    + this.clientId;
     }

@@ -26,10 +26,12 @@ class ProductRepositoryTest {
     @Autowired
     private ProductRepository productRepository;
 
+    private Long categoryId;
     private Category category;
 
     @BeforeEach
     void setUp() {
+        categoryId = 1L;
         category = CategoryFixture.createCategory("상품권");
     }
 
@@ -90,8 +92,8 @@ class ProductRepositoryTest {
                 "updateproduct",
                 12345,
                 "updateproduct.jpg",
-                category.getName(),
-                new OptionRequest("옵션", 10)
+                categoryId,
+                List.of(new OptionRequest("옵션", 10))
         );
         Product savedProduct = productRepository.save(product);
         savedProduct.update(request, category);

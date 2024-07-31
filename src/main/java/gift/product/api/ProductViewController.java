@@ -2,7 +2,7 @@ package gift.product.api;
 
 import gift.global.pagination.dto.PageResponse;
 import gift.product.application.ProductService;
-import gift.product.dto.ProductResponse;
+import gift.product.dto.GetProductResponse;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -28,7 +28,7 @@ public class ProductViewController {
                                              sort = "id",
                                              direction = Sort.Direction.DESC)
                                      Pageable pageable) {
-        Page<ProductResponse> products = productService.getPagedProducts(pageable);
+        Page<GetProductResponse> products = productService.getPagedProducts(pageable);
 
         model.addAttribute("productList", products.getContent());
         model.addAttribute("productPageInfo", new PageResponse(products));
