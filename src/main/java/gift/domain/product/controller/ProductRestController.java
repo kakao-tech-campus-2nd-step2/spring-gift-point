@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -44,12 +45,14 @@ public class ProductRestController {
     }
 
     @GetMapping
-    @Operation(summary = "상품 전체 조회", description = "상품 목록을 조회합니다.")
+    @Operation(summary = "카테고리별 상품 전체 조회", description = "상품 목록을 조회합니다.")
     public ResponseEntity<Page<ProductReadAllResponse>> readAll(
+        @Parameter(description = "카테고리 ID", in = ParameterIn.QUERY, required = true)
+        @RequestParam("categoryId") long categoryId,
         @Parameter(description = "페이징 정보", in = ParameterIn.QUERY)
         Pageable pageable
     ) {
-        Page<ProductReadAllResponse> productResponses = productService.readAll(pageable);
+        Page<ProductReadAllResponse> productResponses = productService.readAll(categoryId, pageable);
         return ResponseEntity.status(HttpStatus.OK).body(productResponses);
     }
 

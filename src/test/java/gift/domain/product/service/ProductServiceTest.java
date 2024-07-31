@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.willDoNothing;
 import static org.mockito.Mockito.doNothing;
@@ -117,11 +118,12 @@ class ProductServiceTest {
             new Product(37L, category, "운동화", 120000, "https://example.com/sneakers.jpg")
         );
         List<String> expectedNames = products.stream().map(Product::getName).toList();
-        given(productJpaRepository.findAll(any(Pageable.class))).willReturn(
+        given(categoryJpaRepository.findById(eq(1L))).willReturn(Optional.of(category));
+        given(productJpaRepository.findAllByCategory(any(Category.class), any(Pageable.class))).willReturn(
             new PageImpl<>(products, PageRequest.of(0, 5), products.size()));
 
         // when
-        Page<ProductReadAllResponse> actual = productService.readAll(PageRequest.of(0, 5));
+        Page<ProductReadAllResponse> actual = productService.readAll(1L, PageRequest.of(0, 5));
         List<String> actualNames = actual.getContent().stream().map(ProductReadAllResponse::name).toList();
 
         // then
@@ -180,11 +182,13 @@ class ProductServiceTest {
         willDoNothing().given(wishlistJpaRepository).deleteAllByProductId(anyLong());
         willDoNothing().given(productJpaRepository).delete(any(Product.class));
 
+        given(categoryJpaRepository.findById(eq(1L))).willReturn(Optional.of(category));
+
         // when
         productService.delete(1L);
 
         // then
-        Page<ProductReadAllResponse> productList = productService.readAll(PageRequest.of(0, 10));
+        Page<ProductReadAllResponse> productList = productService.readAll(1L, PageRequest.of(0, 10));
         assertThat(productList).isEmpty();
     }
 }

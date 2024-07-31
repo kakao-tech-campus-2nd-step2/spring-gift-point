@@ -46,8 +46,10 @@ public class ProductService {
         return ProductResponse.from(savedProduct);
     }
 
-    public Page<ProductReadAllResponse> readAll(Pageable pageable) {
-        Page<Product> foundProducts = productJpaRepository.findAll(pageable);
+    public Page<ProductReadAllResponse> readAll(long categoryId, Pageable pageable) {
+        Category category = categoryJpaRepository.findById(categoryId)
+            .orElseThrow(() -> new InvalidCategoryInfoException("error.invalid.category.id"));
+        Page<Product> foundProducts = productJpaRepository.findAllByCategory(category, pageable);
 
         if (foundProducts == null) {
             return Page.empty(pageable);

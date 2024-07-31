@@ -1,5 +1,6 @@
 package gift.domain.product.controller;
 
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.willThrow;
 import static org.mockito.Mockito.any;
@@ -230,13 +231,13 @@ class ProductRestControllerTest {
         );
         Page<Product> expectedPage = new PageImpl<>(productList, PageRequest.of(0, 5), productList.size());
 
-        given(productService.readAll(any(Pageable.class))).willReturn(expectedPage.map(
+        given(productService.readAll(eq(1L), any(Pageable.class))).willReturn(expectedPage.map(
             ProductReadAllResponse::from));
         String expectedResult = objectMapper.writeValueAsString(expectedPage.map(
             ProductReadAllResponse::from));
 
         // when & then
-        mockMvc.perform(get(DEFAULT_URL)
+        mockMvc.perform(get(DEFAULT_URL + "?categoryId=" + category.getId())
             .contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk())
             .andExpect(content().json(expectedResult))

@@ -63,7 +63,7 @@ class WishlistRestControllerTest {
     private static final Category category = new Category(1L, "교환권", "#FFFFFF", "https://gift-s.kakaocdn.net/dn/gift/images/m640/dimm_theme.png", "test");
     private static final Product product = new Product(1L, category, "아이스 카페 아메리카노 T", 4500, "https://image.istarbucks.co.kr/upload/store/skuimg/2021/04/[110563]_20210426095937947.jpg");
 
-    private static final String DEFAULT_URL = "/api/wishlist";
+    private static final String DEFAULT_URL = "/api/wishes";
 
 
     @BeforeEach
