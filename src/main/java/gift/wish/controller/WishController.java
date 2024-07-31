@@ -1,14 +1,14 @@
 package gift.wish.controller;
 
 import gift.common.auth.JwtUtil;
-import gift.common.auth.LoginMember;
 import gift.common.util.CommonResponse;
-import gift.member.model.Member;
 import gift.wish.domain.WishDTO;
 import gift.wish.dto.WishCreateRequest;
 import gift.wish.dto.WishCreateResponse;
 import gift.wish.service.WishService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
@@ -32,22 +32,23 @@ public class WishController {
 
 
     // 1. 사용자 위시리스트에 상품 추가
-    @Operation(summary = "위시리스트 상품 추가", description = "회원의 위시 리스트에 상품을 추가한다.")
+    @Operation(summary = "위시리스트 상품 추가", description = "회원의 위시 리스트에 상품을 추가한다.",
+            security = @SecurityRequirement(name = "bearerAuth"))
     @PostMapping
     public ResponseEntity<?> createWish(
-            @RequestHeader("Authorization") String authorizationHeader, @RequestBody WishCreateRequest wishRequest
-        ) {
-        // 토큰 추출
+            @Parameter(hidden = true) @RequestHeader("Authorization") String authorizationHeader,
+            @RequestBody WishCreateRequest wishRequest
+    ) {
+        System.out.println("authorizationHeader = " + authorizationHeader);
         String token = authorizationHeader.startsWith("Bearer ") ? authorizationHeader.substring(7) : null;
 
         if (token == null || !jwtUtil.isTokenValid(token)) {
-            // 401 Unauthorized
             return ResponseEntity.status(401).body(new CommonResponse<>(null, "Invalid or missing token", false));
         }
 
         WishCreateResponse wishCreateResponse = wishService.createWish(token, wishRequest.getProductId());
 
-        return ResponseEntity.ok(new CommonResponse<>(wishCreateResponse, "위시리스트에 상품이 추가되었습니다.", true));
+        return ResponseEntity.status(201).body(new CommonResponse<>(wishCreateResponse, "위시리스트에 상품이 추가되었습니다.", true));
     }
 
     // 2. 사용자의 위시리스트 삭제

@@ -17,12 +17,12 @@ public class SwaggerConfig {
                         .title("Spring Gift API")
                         .version("1.0")
                         .description("API documentation for Spring Gift application"))
-                .addSecurityItem(new SecurityRequirement().addList("Authorization"))
                 .components(new io.swagger.v3.oas.models.Components()
-                        .addSecuritySchemes("Authorization",
+                        .addSecuritySchemes("bearerAuth",
                                 new SecurityScheme()
-                                        .type(SecurityScheme.Type.APIKEY)
-                                        .in(SecurityScheme.In.HEADER)
-                                        .name("Authorization")));
+                                        .type(SecurityScheme.Type.HTTP)
+                                        .scheme("bearer")
+                                        .bearerFormat("JWT")))
+                .addSecurityItem(new SecurityRequirement().addList("bearerAuth"));
     }
 }

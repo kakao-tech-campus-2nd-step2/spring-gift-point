@@ -6,6 +6,10 @@ INSERT INTO category (id, name, color, image_url, description) VALUES (4, 'donut
 
 -- 상품 삽입
 -- Coffee Category
+INSERT INTO product (id, name, price, image_url, category_id) VALUES (1, 'Espresso', 3000, 'http://example.com/product-espresso.jpg', 1);
+INSERT INTO product (id, name, price, image_url, category_id) VALUES (2, 'Fried Chicken', 15000, 'http://example.com/product-fried-chicken.jpg', 2);
+INSERT INTO product (id, name, price, image_url, category_id) VALUES (3, 'Cheesecake', 5000, 'http://example.com/product-cheesecake.jpg', 3);
+INSERT INTO product (id, name, price, image_url, category_id) VALUES (4, 'Chocolate Donut', 2000, 'http://example.com/product-chocolate-donut.jpg', 4);
 INSERT INTO product (id, name, price, image_url, category_id) VALUES (5, 'Americano', 3500, 'http://example.com/product-americano.jpg', 1);
 INSERT INTO product (id, name, price, image_url, category_id) VALUES (6, 'Latte', 4000, 'http://example.com/product-latte.jpg', 1);
 INSERT INTO product (id, name, price, image_url, category_id) VALUES (7, 'Cappuccino', 3800, 'http://example.com/product-cappuccino.jpg', 1);
@@ -32,6 +36,10 @@ INSERT INTO product (id, name, price, image_url, category_id) VALUES (24, 'Maple
 
 -- 옵션 삽입
 -- Espresso Options
+INSERT INTO option (id, name, quantity, product_id) VALUES (1, 'Extra Shot', 10, 1);
+INSERT INTO option (id, name, quantity, product_id) VALUES (2, 'Gravy Sauce', 20, 2);
+INSERT INTO option (id, name, quantity, product_id) VALUES (3, 'Berry Topping', 15, 3);
+INSERT INTO option (id, name, quantity, product_id) VALUES (4, 'Chocolate Glaze', 25, 4);
 INSERT INTO option (id, name, quantity, product_id) VALUES (5, 'Soy Milk', 30, 1);
 INSERT INTO option (id, name, quantity, product_id) VALUES (6, 'Caramel Syrup', 15, 1);
 INSERT INTO option (id, name, quantity, product_id) VALUES (7, 'Vanilla Syrup', 20, 1);
