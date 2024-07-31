@@ -21,9 +21,13 @@ public class OptionController {
     }
 
     @GetMapping("/{productId}")
-    public ResponseEntity<List<OptionResponse>> getOptions(@PathVariable Long productId) {
-        List<OptionResponse> options = optionService.findByProductId(productId);
-        return ResponseEntity.ok(options);
+    public ResponseEntity<?> getOptions(@PathVariable Long productId) {
+        try {
+            List<OptionResponse> options = optionService.findByProductId(productId);
+            return ResponseEntity.ok(options);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(404).body(e.getMessage());
+        }
     }
 
     @PostMapping
