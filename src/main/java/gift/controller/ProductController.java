@@ -1,7 +1,9 @@
 package gift.controller;
 
+import gift.dto.CategoryResponse;
 import gift.dto.ProductRequest;
 import gift.dto.ProductResponse;
+import gift.dto.ProductResponseWithoutCategoryId;
 import gift.dto.ProductUpdateRequest;
 import gift.dto.ProductUpdateResponse;
 import gift.service.ProductService;
@@ -11,6 +13,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -33,19 +36,22 @@ public class ProductController {
     }
 
     @GetMapping
-    @Operation(summary = "상품 목록 조회 (페이지네이션 적용)", description = "모든 상품의 목록을 페이지 단위로 조회한다.")
+    @Operation(summary = "상품 목록 조회 (카테고리 별)", description = "특정 카테고리에 속한 모든 상품을 조회한다.")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "성공")
     })
-    public ResponseEntity<Slice<ProductResponse>> getPagedProducts(
-        @RequestParam(defaultValue = "0") int page,
-        @RequestParam(defaultValue = "10") int size,
-        @RequestParam(defaultValue = "name,asc") String[] sort,
-        @RequestParam(required = false) Long categoryId) {
-        Sort sorting = Sort.by(Sort.Order.by(sort[0]).with(Sort.Direction.fromString(sort[1])));
-        Pageable pageable = PageRequest.of(page, size, sorting);
-        Slice<ProductResponse> productsPage = productService.findAll(pageable, categoryId);
-        return ResponseEntity.ok(productsPage);
+    public ResponseEntity<Map<String, Object>> getProductsByCategory(
+        @RequestParam(required = false) Long categoryId,
+        @RequestParam(defaultValue = "name,asc") String[] sort) {
+
+        CategoryResponse categoryResponse = productService.getCategoryById(categoryId);
+        List<ProductResponseWithoutCategoryId> products = productService.getProductsByCategory(categoryId, sort);
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("category", categoryResponse);
+        response.put("products", products);
+
+        return ResponseEntity.ok(response);
     }
 
     @GetMapping("/{productId}")
@@ -75,23 +81,23 @@ public class ProductController {
         @Valid @RequestBody ProductRequest productRequest) {
         ProductResponse productResponse = productService.addProduct(productRequest);
         Map<String, ProductResponse> response = new HashMap<>();
-        response.put("created_product", productResponse);
+        response.put("product", productResponse);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
     @PutMapping("/{productId}")
     @Operation(summary = "상품 수정", description = "기존 상품의 정보를 수정한다.")
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "성공"),
+        @ApiResponse(responseCode = "204", description = "상품 수정 성공"),
         @ApiResponse(responseCode = "-40001", description = "유효성 검사 실패"),
         @ApiResponse(responseCode = "-40401", description = "ID에 해당하는 상품이 존재하지 않음"),
         @ApiResponse(responseCode = "-40402", description = "카테고리를 찾기 실패"),
         @ApiResponse(responseCode = "-40903", description = "등록할 상품이 이미 존재함")
     })
-    public ResponseEntity<ProductUpdateResponse> updateProduct(@PathVariable Long productId,
+    public ResponseEntity<Void> updateProduct(@PathVariable Long productId,
         @Valid @RequestBody ProductUpdateRequest updatedProductRequest) {
-        ProductUpdateResponse productResponse = productService.updateProduct(productId, updatedProductRequest);
-        return ResponseEntity.ok(productResponse);
+        productService.updateProduct(productId, updatedProductRequest);
+        return ResponseEntity.noContent().build();
     }
 
     @DeleteMapping("/{productId}")

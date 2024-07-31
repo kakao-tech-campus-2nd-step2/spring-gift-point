@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import gift.entity.Product;
 import java.util.List;
 
-@JsonPropertyOrder({"id", "name", "price", "image_url", "category", "options"})
+@JsonPropertyOrder({"id", "name", "price", "image_url", "category_id", "options"})
 public class ProductResponse {
 
     private Long id;
@@ -15,19 +15,21 @@ public class ProductResponse {
     @JsonProperty("image_url")
     private String imgUrl;
 
-    private CategoryResponse category;
+    @JsonProperty("category_id")
+    private Long categoryId;
+
     private List<OptionResponse> options;
 
     public ProductResponse() {
     }
 
-    public ProductResponse(Long id, String name, int price, String imgUrl, CategoryResponse category,
+    public ProductResponse(Long id, String name, int price, String imgUrl, Long categoryId,
         List<OptionResponse> options) {
         this.id = id;
         this.name = name;
         this.price = price;
         this.imgUrl = imgUrl;
-        this.category = category;
+        this.categoryId = categoryId;
         this.options = options;
     }
 
@@ -47,8 +49,8 @@ public class ProductResponse {
         return imgUrl;
     }
 
-    public CategoryResponse getCategory() {
-        return category;
+    public Long getCategoryId() {
+        return categoryId;
     }
 
     public List<OptionResponse> getOptions() {
@@ -56,12 +58,12 @@ public class ProductResponse {
     }
 
     public static ProductResponse from(Product product) {
-        CategoryResponse categoryResponse = CategoryResponse.from(product.getCategory());
+        Long categoryId = product.getCategory().getId();
         List<OptionResponse> optionResponses = product.getOptions().stream()
             .map(OptionResponse::from)
-            .toList();
+            .toList();;
 
         return new ProductResponse(product.getId(), product.getName(), product.getPrice(),
-            product.getImgUrl(), categoryResponse, optionResponses);
+            product.getImgUrl(), categoryId, optionResponses);
     }
 }

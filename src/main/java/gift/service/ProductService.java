@@ -3,19 +3,22 @@ package gift.service;
 import gift.common.exception.badRequest.RequestValidationException;
 import gift.common.exception.conflict.ProductAlreadyExistsException;
 import gift.common.exception.notFound.ProductNotFoundException;
+import gift.dto.CategoryResponse;
+import gift.dto.OptionRequest;
 import gift.dto.ProductRequest;
 import gift.dto.ProductResponse;
+import gift.dto.ProductResponseWithoutCategoryId;
 import gift.dto.ProductUpdateRequest;
 import gift.dto.ProductUpdateResponse;
 import gift.entity.Category;
+import gift.entity.Option;
 import gift.entity.Product;
 import gift.repository.ProductRepository;
 import gift.validator.ProductNameValidator;
 import jakarta.validation.Valid;
 import java.util.List;
 import java.util.Optional;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Slice;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.BeanPropertyBindingResult;
 import org.springframework.validation.BindingResult;
@@ -42,14 +45,21 @@ public class ProductService {
         return productRepository.findAll();
     }
 
-    public Slice<ProductResponse> findAll(Pageable pageable, Long categoryId) {
-        Slice<Product> products;
+    public List<ProductResponseWithoutCategoryId> getProductsByCategory(Long categoryId, String[] sort) {
+        Sort sorting = Sort.by(Sort.Order.by(sort[0]).with(Sort.Direction.fromString(sort[1])));
+        List<Product> products;
         if (categoryId != null) {
-            products = productRepository.findByCategoryId(categoryId, pageable);
+            products = productRepository.findByCategoryId(categoryId, sorting);
         } else {
-            products = productRepository.findAll(pageable);
+            products = productRepository.findAll(sorting);
         }
-        return products.map(ProductResponse::from);
+        return products.stream().map(ProductResponseWithoutCategoryId::from).toList();
+    }
+
+    public CategoryResponse getCategoryById(Long categoryId) {
+        Category category = categoryService.findById(categoryId)
+            .orElseThrow(CategoryNotFoundException::new);
+        return CategoryResponse.from(category);
     }
 
     public Product findById(Long id) {
@@ -67,6 +77,11 @@ public class ProductService {
         }
 
         Product product = ProductRequest.toEntity(productRequest, category);
+
+        for (OptionRequest optionRequest : productRequest.getOptions()) {
+            Option option = new Option(optionRequest.getName(), optionRequest.getStockQuantity(), product);
+            product.addOption(option);
+        }
 
         Product savedProduct = productRepository.save(product);
         return ProductResponse.from(savedProduct);
