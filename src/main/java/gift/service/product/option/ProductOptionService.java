@@ -46,4 +46,33 @@ public class ProductOptionService {
         option.subtract(quantity);
         productOptionRepository.save(option);
     }
+
+    @Transactional
+    public ProductOption updateProductOption(Long productId, Long optionId, String name, Long quantity) {
+        Product product = productRepository.findById(productId)
+                .orElseThrow(() -> new IllegalArgumentException("Product not found"));
+
+        ProductOption option = productOptionRepository.findById(optionId)
+                .orElseThrow(() -> new IllegalArgumentException("Option not found"));
+
+        if (!option.getProduct().getId().equals(productId)) {
+            throw new IllegalArgumentException("Option does not belong to the specified product");
+        }
+
+        option = option.withUpdatedNameAndQuantity(name, quantity);
+        return productOptionRepository.save(option);
+    }
+
+    @Transactional
+    public void deleteProductOption(Long productId, Long optionId) {
+        ProductOption option = productOptionRepository.findById(optionId)
+                .orElseThrow(() -> new IllegalArgumentException("Option not found"));
+
+        if (!option.getProduct().getId().equals(productId)) {
+            throw new IllegalArgumentException("Option does not belong to the specified product");
+        }
+
+        productOptionRepository.delete(option);
+    }
+
 }

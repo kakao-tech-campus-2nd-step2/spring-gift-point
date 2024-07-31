@@ -73,4 +73,16 @@ public class ProductOption {
         }
         this.quantity -= quantity;
     }
+
+    public ProductOption withUpdatedNameAndQuantity(String name, Long quantity) {
+        if (!isValidName(name)) {
+            throw new IllegalArgumentException("Invalid option name");
+        }
+        if (quantity < 1 || quantity >= 100000000) {
+            throw new IllegalArgumentException("Quantity must be between 1 and 100,000,000");
+        }
+        this.name = name;
+        this.quantity = quantity;
+        return this;
+    }
 }
