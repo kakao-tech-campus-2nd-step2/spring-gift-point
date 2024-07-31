@@ -45,7 +45,7 @@ public class OptionController {
     @ApiResponse(responseCode = "200", description = "조회 완료",
             content= {@Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = ResponseOptionDTO.class)))
     })
-    @ApiResponse(responseCode = "400", description = "잘못된 요청입니다. 입력값을 확인해주세요")
+    @ApiResponse(responseCode = "400", description = "잘못된 요청입니다. 입력값을 확인하거나 상품이 존재하지 않습니다")
     @ApiResponse(responseCode = "500", description = "서버 내부 에러 발생")
     @GetMapping
     public ResponseEntity<List<ResponseOptionDTO>> getOptions (@PathVariable("product-id") Long productId){
