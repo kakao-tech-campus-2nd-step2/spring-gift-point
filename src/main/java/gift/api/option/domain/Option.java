@@ -30,6 +30,11 @@ public class Option extends BaseEntity {
         this.quantity = quantity;
     }
 
+    public void update(String name, Integer quantity) {
+        this.name = name;
+        this.quantity = quantity;
+    }
+
     public void subtract(Integer quantity) {
         if (this.quantity < quantity) {
             throw new InvalidSubtractionException();
