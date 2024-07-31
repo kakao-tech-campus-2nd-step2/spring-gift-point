@@ -35,7 +35,7 @@ public class CategoryController implements CategoryApiDocs {
 
     @PostMapping
     public ResponseEntity<Void> createCategory(
-        @Valid @RequestBody List<CategoryRequest.Create> categoryRequestCreates) {
+        @RequestBody List<CategoryRequest.Create> categoryRequestCreates) {
         var categoryInCreates = categoryRequestCreates.stream()
             .map(CategoryRequest.Create::toCategoryInCreate)
             .toList();

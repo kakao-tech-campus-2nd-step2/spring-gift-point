@@ -53,4 +53,16 @@ public class Category {
         this.color = color;
         this.imageUrl = imageUrl;
     }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public String getColor() {
+        return color;
+    }
+
+    public String getImageUrl() {
+        return imageUrl;
+    }
 }
