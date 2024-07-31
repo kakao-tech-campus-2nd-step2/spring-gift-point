@@ -30,8 +30,7 @@ public class WishlistService {
         return productService.getProductById(productId);
     }
 
-    public Page<Wish> getWishProductList(Long memberId, int pageNumber, int pageSize) {
-        Pageable pageable = PageRequest.of(pageNumber, pageSize);
+    public Page<Wish> getWishProductList(Long memberId, Pageable pageable) {
         return wishlistRepository.findByMemberId(memberId, pageable);
     }
 

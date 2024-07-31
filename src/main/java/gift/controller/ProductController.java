@@ -11,7 +11,8 @@ import io.swagger.v3.oas.annotations.Parameters;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
-import org.springframework.http.HttpStatus;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -22,46 +23,73 @@ public class ProductController {
 
     private final ProductService service;
 
-    public ProductController(ProductService service) {
+    private final ProductService productService;
+
+    public ProductController(ProductService service, ProductService productService) {
         this.service = service;
+        this.productService = productService;
     }
 
     /**
-     * 상품 조회 -전체 (페이징)
-     * 페이지 번호와 페이지 크기를 사용하여 페이징된 상품 목록을 조회한다.
-     * @param pageNumber 요청 시 페이지 번호 지정, 기본값 0
-     * @param pageSize 요청 시 페이지 크기 지정, 기본값 10
-     * @return 페이징된 상품 목록, 관련 메타데이터 포함한 응답 객체 반환
+     *
+     * @param pageable Pageable
+     *                 page 요청 시 페이지 번호 지정, 기본값 0
+     *                 size 요청 시 페이지 크기 지정, 기본값 10
+     * @return 페이징된 상품 목록 객체 반환
      */
-    @GetMapping()
+    @GetMapping("/all")
     @Operation(
             summary = "전체 상품 조회 (페이징)",
             description = "페이지 번호와 페이지 크기를 사용하여 페이징된 상품 전체 목록을 조회하는 API입니다."
     )
-    @Parameters({
-            @Parameter(name = "pageNumber", description = "요청 시 페이지 번호 지정, 기본값 0", example = "1"),
-            @Parameter(name = "pageSize", description = "요청 시 한 페이지 당 크기 지정, 기본값 10", example = "5")
-    })
+    @Parameter(name = "pageable", description = "페이지 관련 정보", example = "page=0&size=10&sort=name,asc&categoryId=1")
     public ResponseEntity<Page<ProductResponseDto>> getAllProducts(
-            @RequestParam(defaultValue = "1") int pageNumber,
-            @RequestParam(defaultValue = "5") int pageSize) {
-        Page<Product> allProductsPaged = service.getAllProducts(pageNumber-1, pageSize);
+            @PageableDefault(page = 0, size = 5) Pageable pageable) {
+        Page<Product> allProductsPaged = service.getAllProducts(pageable);
+
         return ResponseEntity.ok().body(allProductsPaged.map(ProductResponseDto::toProductResponseDto));
     }
 
     /**
+     *
+     * @param categoryId 조회할 카테고리 ID
+     * @param pageable Pageable
+     *                 - page: 요청 시 페이지 번호 지정, 기본값 0
+     *                 - size 요청 시 페이지 크기 지정, 기본값 10
+     *                 - sort 정렬 기준 지정 (ex: name,asc)
+     * @return 카테고리별로 페이징된 상품 목록 반환. 정렬도 포함
+     */
+    @GetMapping()
+    @Operation(
+            summary = "카테고리별 상품 조회(페이징)(정렬)",
+            description = "페이지 번호와 페이지 크기를 사용하여 카테고리별로 조회된 상품 전체 목록을 조회하는 API입니다. 정렬 역시 적용 가능합니다. "
+    )
+    @Parameters({
+            @Parameter(name = "pageable", description = "페이지 관련 정보", example = "page=0&size=10&sort=name,asc"),
+            @Parameter(name = "categoryId", description = "카테고리 ID", example = "1")
+    })
+    public ResponseEntity<Page<ProductResponseDto>> getAllProductsByCategory(
+            @PageableDefault(page = 0, size = 5) Pageable pageable,
+            @RequestParam("categoryId") Long categoryId
+        ) {
+        Page<Product> allProductsByCategoryPaged = productService.getProductsByCategory(categoryId, pageable);
+
+        return ResponseEntity.ok().body(allProductsByCategoryPaged.map(ProductResponseDto::toProductResponseDto));
+    }
+
+    /**
      * 상품 조회 - 한 개
-     * @param id 조회할 상품의 ID
+     * @param productId 조회할 상품의 ID
      * @return 조회한 product
      */
-    @GetMapping("/{id}")
+    @GetMapping("/{productId}")
     @Operation(
             summary = "상품 조회(개별)",
             description = "주어진 ID에 해당하는 상품 하나를 조회하는 API입니다."
     )
-    @Parameter(name = "id", description = "조회할 상품의 ID", required = true, example = "1")
-    public ResponseEntity<ProductResponseDto> getProduct(@PathVariable(value = "id") Long id) {
-        Product product = service.getProductById(id);
+    @Parameter(name = "productId", description = "조회할 상품의 ID", required = true, example = "1")
+    public ResponseEntity<ProductResponseDto> getProduct(@PathVariable(value = "productId") Long productId) {
+        Product product = service.getProductById(productId);
         ProductResponseDto productResponseDto = ProductResponseDto.toProductResponseDto(product);
 
         return ResponseEntity.ok().body(productResponseDto);
@@ -102,17 +130,18 @@ public class ProductController {
 
     /**
      * 상품 삭제
-     * @param id 삭제할 상품의 ID
+     * @param productId 삭제할 상품의 ID
      * @return HTTP State - No Content
      */
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/{productId}")
     @Operation(
             summary = "상품 삭제",
             description = "주어진 ID에 해당하는 상품을 삭제하는 API입니다."
     )
-    @Parameter(name = "id", description = "삭제할 상품의 ID", example = "1")
-    public ResponseEntity<Void> deleteProduct(@PathVariable(value = "id") Long id) {
-        service.deleteProduct(id);
+    @Parameter(name = "productId", description = "삭제할 상품의 ID", example = "1")
+    public ResponseEntity<Void> deleteProduct(@PathVariable(value = "productId") Long productId) {
+        System.out.println("productId " + productId);
+        service.deleteProduct(productId);
         return ResponseEntity.noContent().build();
     }
 
