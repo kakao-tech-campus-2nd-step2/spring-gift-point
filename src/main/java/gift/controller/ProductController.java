@@ -66,6 +66,7 @@ public class ProductController {
     /*Option api*/
     @GetMapping("/{productId}/options")
     @Operation(summary = "특정 상품의 모든 옵션 조회 api")
+    @ApiResponse(responseCode = "200", description = "특정 상품의 옵션 조회 성공")
     public ResponseEntity<List<ProductOptionResponse>> getOptions(@PathVariable("productId") Long productId) {
         return ResponseEntity.ok(productService.getOptions(productId));
     }
