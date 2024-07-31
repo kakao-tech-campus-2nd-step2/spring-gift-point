@@ -1,1 +1,1 @@
-# spring-gift-point
+# spring-gift-jpa
