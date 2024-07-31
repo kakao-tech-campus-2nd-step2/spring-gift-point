@@ -1,6 +1,6 @@
 # spring-gift-point
 
-http://localhost:8080/swagger-ui/index.html 으로 아래와 같은 문서를 볼 수 있게 구현하였습니다.
+http://localhost:8080/swagger-ui/index.html 으로 아래보다 더 자세한 명세서로 구현하였습니다.
 
 # Spring Gift API
 카카오 선물하기 클론 코딩 프로젝트
