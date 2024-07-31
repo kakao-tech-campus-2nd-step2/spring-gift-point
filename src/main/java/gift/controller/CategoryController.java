@@ -1,9 +1,12 @@
 package gift.controller;
 
+import gift.domain.Category;
 import gift.domain.CategoryRequest;
 import gift.service.CategoryService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/categories")
@@ -23,12 +26,17 @@ public class CategoryController {
         return ResponseEntity.ok().body("successfully created");
     }
 
-    @PutMapping
+    @PutMapping("/{id}")
     public ResponseEntity<String> update(
             @RequestBody CategoryRequest categoryRequest
     ) {
         categoryService.update(categoryRequest);
         return ResponseEntity.ok().body("successfully created");
+    }
+
+    @GetMapping
+    public ResponseEntity<List<Category>> getCategoryList(){
+        return ResponseEntity.ok().body(categoryService.getCategotyList());
     }
 
     @DeleteMapping("/{id}")
