@@ -2,6 +2,7 @@ package gift.Controller;
 
 import gift.DTO.RequestOrderDTO;
 import gift.DTO.ResponseOrderDTO;
+import gift.DTO.ResponseProductDTO;
 import gift.Model.Entity.Member;
 import gift.Service.OrderService;
 import gift.annotation.ValidUser;
@@ -43,8 +44,11 @@ public class OrderController {
     }
 
     @Operation(summary = "주문 추가", description = "주문을 추가합니다")
-    @ApiResponse(responseCode = "201", description = "추가 완료")
-    @ApiResponse(responseCode = "400", description = "잘못된 요청입니다. 입력값을 확인해주세요")
+    @ApiResponse(responseCode = "201", description = "추가 완료",
+            content = {@Content(mediaType = "application/json", schema = @Schema(implementation = ResponseOrderDTO.class))
+            })
+    @ApiResponse(responseCode = "400", description = "잘못된 요청입니다. 입력값을 확인하거나 옵션이나 재고가 없습니다")
+    @ApiResponse(responseCode = "403", description = "유효하지 않은 토큰입니다")
     @ApiResponse(responseCode = "500", description = "서버 내부 에러 발생")
     @PostMapping
     public ResponseEntity<ResponseOrderDTO> createOrder(@ValidUser Member member, @Valid @RequestBody RequestOrderDTO requestOrderDTO){
