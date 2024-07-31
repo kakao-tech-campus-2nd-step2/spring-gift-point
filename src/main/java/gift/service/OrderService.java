@@ -23,7 +23,6 @@ public class OrderService {
     private final WishRepository wishRepository;
     private final KakaoUserClinet kakaoUserClinet;
 
-    @Autowired
     public OrderService(KakaoUserClinet kakaoUserClinet,OptionRepository optionRepository,WishRepository wishRepository) {
         this.optionRepository = optionRepository;
         this.wishRepository = wishRepository;
@@ -34,9 +33,7 @@ public class OrderService {
     public OrderResponseDto requestOrder(OrderRequestDto orderRequestDto, String accessToken) {
         Option option = optionRepository.findById(orderRequestDto.optionId()).
                 orElseThrow(() -> new ValueNotFoundException("Option not exists in Database"));
-        if (option.isProductNotEnough(orderRequestDto.quantity())) {
-            throw new RuntimeException("Not enough product available");
-        }
+
         option.updateAmount(orderRequestDto.quantity());
         optionRepository.save(option);
 

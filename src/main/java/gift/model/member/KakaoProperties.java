@@ -10,7 +10,6 @@ public class KakaoProperties {
     private final String kakaoAuthUrl;
     private final String userInfoUrl;
 
-    @ConstructorBinding
     public KakaoProperties(String clientId, String redirectUri, String kakaoAuthUrl,String userInfoUrl) {
         this.clientId = clientId;
         this.redirectUri = redirectUri;

@@ -20,7 +20,6 @@ public class WebClientConfig {
     private final int readTimeoutSeconds;
     private final int writeTimeoutSeconds;
 
-    @ConstructorBinding
     public WebClientConfig(int connectTimeoutMillis, int responseTimeoutSeconds, int readTimeoutSeconds, int writeTimeoutSeconds) {
         this.connectTimeoutMillis = connectTimeoutMillis;
         this.responseTimeoutSeconds = responseTimeoutSeconds;
