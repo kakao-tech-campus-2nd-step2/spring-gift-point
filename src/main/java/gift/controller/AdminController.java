@@ -130,7 +130,7 @@ public class AdminController {
             return "addCategory-form";
         }
         CategoryRequestDto categoryRequestDto = new CategoryRequestDto(category.getName(),category.getColor(),category.getImageUrl(),category.getDescription());
-        categoryService.save(category);
+        categoryService.save(categoryRequestDto);
         return "redirect:/products";
     }
 
