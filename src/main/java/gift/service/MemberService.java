@@ -36,7 +36,7 @@ public class MemberService {
     public LoginResponse login(LoginRequest loginRequest) {
         Member member = memberRepository.findByEmail(loginRequest.getEmail())
                 .orElseThrow(() -> new RuntimeException(ErrorMessage.EMAIL_NOT_FOUND));
-        if (member != null && member.getPassword().equals(loginRequest.getPassword())) {
+        if (member.getPassword().equals(loginRequest.getPassword())) {
             String token = jwtConfig.generateToken(loginRequest.getEmail());
             return new LoginResponse(token);
         } else {

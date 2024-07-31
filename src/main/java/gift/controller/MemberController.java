@@ -14,8 +14,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.sql.Connection;
-
 @RestController
 @RequestMapping("api/members")
 public class MemberController {
@@ -33,10 +31,11 @@ public class MemberController {
         return ResponseEntity.status(HttpStatus.CREATED).body(responseDto);
     }
 
+    @Operation(summary = "일반 로그인")
     @PostMapping("/login")
     public ResponseEntity<LoginResponse> login(@RequestBody LoginRequest loginRequest) {
         LoginResponse loginResponse = memberService.login(loginRequest);
-        return ResponseEntity.status(loginResponse.getToken() != null ? HttpStatus.OK : HttpStatus.UNAUTHORIZED)
+        return ResponseEntity.status(loginResponse.getAccess_token() != null ? HttpStatus.OK : HttpStatus.UNAUTHORIZED)
                 .header(Constants.AUTHENTICATE_HEADER, Constants.BEARER)
                 .body(loginResponse);
     }
