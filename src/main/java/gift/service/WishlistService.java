@@ -1,6 +1,8 @@
 package gift.service;
 
+import gift.dto.WishRequest;
 import gift.dto.WishResponse;
+import gift.entity.Member;
 import gift.entity.Product;
 import gift.entity.Wish;
 import gift.repository.ProductRepository;
@@ -10,9 +12,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 public class WishlistService {
@@ -25,40 +25,31 @@ public class WishlistService {
         this.productRepository = productRepository;
     }
 
-    public Wish addProduct(Wish wish) {
-        if (wish.getProduct() == null || wish.getProduct().getId() == 0) {
-            throw new IllegalArgumentException("Product must not be null");
+    public void addProduct(Long memberId, WishRequest wishRequest) {
+        Product product = productRepository.findById(wishRequest.productId())
+                .orElseThrow(() -> new IllegalArgumentException("Product with id " + wishRequest.productId() + " not found"));
+
+        Optional<Wish> existingWish = wishlistRepository.findByMemberIdAndProductId(memberId, product.getId());
+        if (existingWish.isPresent()) {
+            return;
         }
 
-        Optional<Wish> existingWish = wishlistRepository.findByMemberIdAndProductId(wish.getMember().getId(), wish.getProduct().getId());
-        if (existingWish.isPresent()) {
-            Wish foundWish = existingWish.get();
-            foundWish.setProductNumber(foundWish.getProductNumber() + wish.getProductNumber());
-            return wishlistRepository.save(foundWish);
-        } else {
-            return wishlistRepository.save(wish);
-        }
+        Member member = new Member();
+        member.setId(memberId);
+
+        Wish wish = new Wish(member, product);
+        wishlistRepository.save(wish);
     }
 
     public Page<WishResponse> getWishesByMemberId(Long memberId, PageRequest pageRequest) {
-        Page<Wish> wishes = wishlistRepository.findByMemberId(memberId, pageRequest);
-        return wishes.map(wish -> new WishResponse(wish.getId(), wish.getProduct().getId(), wish.getProduct().getName(), wish.getProductNumber()));
+        return wishlistRepository.findByMemberId(memberId, pageRequest)
+                .map(wish -> new WishResponse(wish.getId(), wish.getProduct().getId(), wish.getProduct().getName(), wish.getProduct().getImageUrl()));
     }
 
     public void deleteItem(Long wishId) {
         if (!wishlistRepository.existsById(wishId)) {
-            throw new IllegalArgumentException("해당 상품이 존재하지 않습니다.");
+            throw new IllegalArgumentException("Wish with id " + wishId + " not found");
         }
         wishlistRepository.deleteById(wishId);
-    }
-
-    public Product getProductById(Long productId) {
-        return productRepository.findById(productId).orElseThrow(() -> new IllegalArgumentException("Product not found"));
-    }
-
-    public void updateProductNumber(Long id, int productNumber) {
-        Wish wish = wishlistRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("해당 상품이 존재하지 않습니다."));
-        wish.setProductNumber(productNumber);
-        wishlistRepository.save(wish);
     }
 }
