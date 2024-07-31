@@ -36,19 +36,20 @@ public class OrderController {
 
     @GetMapping
     public ResponseEntity<Page<OrderResponseDto>> getOrders(
+        @LoginMember Long memberId,
         @RequestParam(defaultValue = "0") int page,
         @RequestParam(defaultValue = "20") int size,
-        @RequestParam(defaultValue = "id,asc") String[] sort) {
+        @RequestParam(defaultValue = "id,desc") String[] sort) {
         Sort.Direction direction = Sort.Direction.fromString(sort[1]);
         Pageable pageable = PageRequest.of(page, size, Sort.by(direction, sort[0]));
-        Page<OrderResponseDto> orderList = orderService.findAll(pageable);
+        Page<OrderResponseDto> orderList = orderService.findAll(memberId, pageable);
 
         return new ResponseEntity<>(orderList, HttpStatus.OK);
     }
 
     @PostMapping
     public ResponseEntity<OrderResponseDto> createOrder(@LoginMember Long memberId,
-        @Valid @RequestBody OrderRequestDto request) throws JsonProcessingException {
+        @RequestBody @Valid OrderRequestDto request) throws JsonProcessingException {
         OrderResponseDto response = orderService.createOrder(memberId, request);
         kakaoService.sendKakaoMessage(memberId, response);
         return new ResponseEntity<>(response, HttpStatus.CREATED);

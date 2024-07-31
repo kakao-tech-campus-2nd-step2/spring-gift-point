@@ -11,6 +11,7 @@ public class OrderRequestDto {
 
     @Min(value = 1, message = "구매 수량은 최소 1개 이상이어야 합니다.")
     @Max(value = 999999999, message = "구매 수량은 1억 미만이어야 합니다.")
+    @NotNull
     private Long quantity;
 
     private String message;
