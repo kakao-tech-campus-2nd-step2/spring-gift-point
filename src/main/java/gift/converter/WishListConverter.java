@@ -8,11 +8,13 @@ public class WishListConverter {
         return new WishListDTO(
             wishList.getId(),
             UserConverter.convertToDTO(wishList.getUser()),
-            ProductConverter.convertToDTO(wishList.getProduct())
+            ProductConverter.convertToDTO(wishList.getProduct()),
+            wishList.getCreatedDate()
         );
     }
 
     public static WishList convertToEntity(WishListDTO wishListDTO) {
+        // createdDate는 엔티티 생성자에서 자동으로 설정됨
         return new WishList(
             wishListDTO.getId(),
             UserConverter.convertToEntity(wishListDTO.getUser()),

@@ -1,18 +1,22 @@
 package gift.dto;
 
 
+import java.time.LocalDateTime;
+
 public class WishListDTO {
 
     private Long id;
     private UserDTO user;
     private ProductDTO product;
+    private LocalDateTime createdDate;
 
     public WishListDTO() {}
 
-    public WishListDTO(Long id, UserDTO user, ProductDTO product) {
+    public WishListDTO(Long id, UserDTO user, ProductDTO product, LocalDateTime createdDate) {
         this.id = id;
         this.user = user;
         this.product = product;
+        this.createdDate = createdDate;
     }
 
     public Long getId() {
@@ -37,5 +41,13 @@ public class WishListDTO {
 
     public void setProduct(ProductDTO product) {
         this.product = product;
+    }
+
+    public LocalDateTime getCreatedDate() {
+        return createdDate;
+    }
+
+    public void setCreatedDate(LocalDateTime createdDate) {
+        this.createdDate = createdDate;
     }
 }

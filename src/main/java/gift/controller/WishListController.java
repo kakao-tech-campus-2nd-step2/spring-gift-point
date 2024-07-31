@@ -13,6 +13,8 @@ import jakarta.validation.constraints.Min;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -32,6 +34,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 @Validated
 @Tag(name = "WishList Management", description = "APIs for managing wishlists")
 public class WishListController {
+    private static final Logger logger = LoggerFactory.getLogger(WishListController.class);
 
     private final WishListService wishListService;
 
@@ -47,24 +50,29 @@ public class WishListController {
         @ApiResponse(responseCode = "401", description = "User not logged in."),
         @ApiResponse(responseCode = "500", description = "Internal server error.")
     })
-    public ResponseEntity<List<WishListDTO>> viewWishList(
+    public ResponseEntity<?> viewWishList(
         @RequestParam(defaultValue = "0") int page,
         @RequestParam(defaultValue = "10") @Min(1) @Max(30) int size,
         @RequestParam(defaultValue = "createdDate,desc") String[] sort,
         HttpServletRequest request) {
 
-        String email = (String) request.getAttribute("email");
-        if (email == null) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        try {
+            String email = (String) request.getAttribute("email");
+            if (email == null) {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+            }
+
+            String sortBy = sort[0];
+            String direction = sort[1];
+
+            PageRequestDTO pageRequestDTO = new PageRequestDTO(page, size, sortBy, direction);
+            Page<WishListDTO> wishListPage = wishListService.getWishListByUser(email, pageRequestDTO);
+
+            return ResponseEntity.ok(wishListPage.getContent());
+        } catch (Exception e) {
+            logger.error("Error retrieving wishlist", e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
-
-        String sortBy = sort[0];
-        String direction = sort[1];
-
-        PageRequestDTO pageRequestDTO = new PageRequestDTO(page, size, sortBy, direction);
-        Page<WishListDTO> wishListPage = wishListService.getWishListByUser(email, pageRequestDTO);
-
-        return ResponseEntity.ok(wishListPage.getContent());
     }
 
     @GetMapping("/add")
@@ -85,6 +93,7 @@ public class WishListController {
     public ResponseEntity<Map<String, Long>> addProductToWishList(@RequestBody Map<String, Long> payload, HttpServletRequest request) {
         String email = (String) request.getAttribute("email");
         if (email == null) {
+            logger.info("asdf"+email);
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
 
