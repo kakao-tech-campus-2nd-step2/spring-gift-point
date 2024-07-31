@@ -4,6 +4,7 @@ import gift.dto.product.ProductBasicInformation;
 import gift.dto.wishproduct.WishProductAddRequest;
 import gift.dto.wishproduct.WishProductResponse;
 import gift.dto.wishproduct.WishProductUpdateRequest;
+import gift.exception.BadRequestException;
 import gift.exception.NotFoundElementException;
 import gift.model.Member;
 import gift.model.Product;
@@ -50,6 +51,15 @@ public class WishProductService {
             return;
         }
         updateWishProductWithQuantity(wishProduct, wishProductUpdateRequest.quantity());
+    }
+
+    @Transactional(readOnly = true)
+    public WishProductResponse getWishProduct(Long memberId, Long id) {
+        var wishProduct = findWishProductById(id);
+        if (!wishProduct.getMember().getId().equals(memberId)) {
+            throw new BadRequestException("다른 사람의 위시 리스트는 접근할 수 없습니다.");
+        }
+        return getWishProductResponseFromWishProduct(wishProduct);
     }
 
     @Transactional(readOnly = true)

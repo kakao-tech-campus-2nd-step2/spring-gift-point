@@ -2,7 +2,6 @@ package gift.repository;
 
 import gift.model.Option;
 import jakarta.persistence.LockModeType;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Lock;
 import org.springframework.data.jpa.repository.Query;
@@ -13,7 +12,7 @@ import java.util.Optional;
 
 @Repository
 public interface OptionRepository extends JpaRepository<Option, Long> {
-    List<Option> findAllByProductId(Long productId, Pageable pageable);
+    List<Option> findAllByProductId(Long productId);
 
     boolean existsOptionByProductIdAndName(Long productId, String name);
 

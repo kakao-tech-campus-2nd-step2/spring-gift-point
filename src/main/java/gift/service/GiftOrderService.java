@@ -2,7 +2,8 @@ package gift.service;
 
 import gift.dto.giftorder.GiftOrderRequest;
 import gift.dto.giftorder.GiftOrderResponse;
-import gift.dto.option.OptionInformation;
+import gift.dto.option.OptionResponse;
+import gift.dto.product.ProductBasicInformation;
 import gift.exception.NotFoundElementException;
 import gift.model.GiftOrder;
 import gift.model.Option;
@@ -69,7 +70,9 @@ public class GiftOrderService {
     }
 
     private GiftOrderResponse getGiftOrderResponseFromGiftOrder(GiftOrder giftOrder) {
-        var optionInformation = OptionInformation.of(giftOrder.getId(), giftOrder.getOption().getProduct().getName(), giftOrder.getOption().getProduct().getPrice(), giftOrder.getOption().getName());
-        return GiftOrderResponse.of(giftOrder.getId(), optionInformation, giftOrder.getQuantity(), giftOrder.getCreatedDate(), giftOrder.getMessage());
+        var product = giftOrder.getOption().getProduct();
+        var productBasicInformation = ProductBasicInformation.of(product.getId(), product.getName(), product.getPrice());
+        var optionResponse = OptionResponse.of(giftOrder.getId(), giftOrder.getOption().getProduct().getName(), giftOrder.getQuantity());
+        return GiftOrderResponse.of(giftOrder.getId(), productBasicInformation, optionResponse, giftOrder.getQuantity(), giftOrder.getCreatedDate(), giftOrder.getMessage());
     }
 }

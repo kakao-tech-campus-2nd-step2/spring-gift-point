@@ -45,6 +45,12 @@ public class WishProductController implements WishProductApi {
         return ResponseEntity.noContent().build();
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<WishProductResponse> getWishProduct(@RequestAttribute("memberId") Long memberId, @PathVariable Long id) {
+        var wishProduct = wishProductService.getWishProduct(memberId, id);
+        return ResponseEntity.ok(wishProduct);
+    }
+
     @GetMapping
     public ResponseEntity<List<WishProductResponse>> getWishProducts(@RequestAttribute("memberId") Long memberId, @PageableDefault(sort = "id", direction = Sort.Direction.DESC) Pageable pageable) {
         var wishProducts = wishProductService.getWishProducts(memberId, pageable);

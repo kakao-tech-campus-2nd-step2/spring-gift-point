@@ -7,6 +7,7 @@ import gift.dto.kakao.KakaoAuthInformation;
 import gift.dto.kakao.KakaoTokenResponse;
 import gift.exception.InvalidKakaoTokenException;
 import gift.exception.NotFoundElementException;
+import gift.exception.UnauthorizedAccessException;
 import gift.model.Member;
 import gift.model.OauthToken;
 import gift.model.OauthType;
@@ -59,7 +60,7 @@ public class KakaoService {
 
     public void sendOrderResponseWithKakaoMessage(Long memberId, GiftOrderResponse giftOrderResponse) {
         var kakaoToken = oauthTokenRepository.findByMemberIdAndOauthType(memberId, OauthType.KAKAO)
-                .orElseThrow(() -> new InvalidKakaoTokenException(memberId + "를 가진 이용자의 카카오 토큰 정보가 존재하지 않습니다."));
+                .orElseThrow(() -> new NotFoundElementException(memberId + "를 가진 이용자의 카카오 토큰 정보가 존재하지 않습니다."));
         var validatedKakaoToken = tokenValidation(kakaoToken);
         kakaoApiClient.sendSelfMessageOrder(validatedKakaoToken.getAccessToken(), giftOrderResponse);
     }
@@ -71,7 +72,7 @@ public class KakaoService {
 
     private OauthToken tokenValidation(OauthToken oauthToken) {
         if (!oauthToken.canUseRefreshToken()) {
-            throw new InvalidKakaoTokenException("유효하지 않은 토큰입니다. 갱신이 필요합니다.");
+            throw new UnauthorizedAccessException("유효하지 않은 카카오 토큰입니다. 갱신이 필요합니다.");
         }
         if (!oauthToken.canUseAccessToken()) {
             var kakaoTokenResponse = kakaoApiClient.getRefreshedTokenResponse(oauthToken.getRefreshToken());

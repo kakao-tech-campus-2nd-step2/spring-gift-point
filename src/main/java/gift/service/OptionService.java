@@ -2,16 +2,15 @@ package gift.service;
 
 import gift.dto.giftorder.GiftOrderRequest;
 import gift.dto.giftorder.GiftOrderResponse;
-import gift.dto.option.OptionAddRequest;
+import gift.dto.option.OptionRequest;
 import gift.dto.option.OptionResponse;
-import gift.dto.option.OptionUpdateRequest;
+import gift.exception.BadRequestException;
 import gift.exception.DuplicatedNameException;
 import gift.exception.NotFoundElementException;
 import gift.model.Option;
 import gift.model.Product;
 import gift.repository.OptionRepository;
 import gift.repository.ProductRepository;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -31,27 +30,37 @@ public class OptionService {
         this.giftOrderService = giftOrderService;
     }
 
-    public OptionResponse addOption(OptionAddRequest optionAddRequest) {
-        optionNameValidation(optionAddRequest.productId(), optionAddRequest.name());
-        var option = saveOptionWithOptionRequest(optionAddRequest);
+    public OptionResponse addOption(Long productId, OptionRequest optionRequest) {
+        optionNameValidation(productId, optionRequest.name());
+        var option = saveOptionWithOptionRequest(productId, optionRequest);
         return getOptionResponseFromOption(option);
     }
 
-    public void updateOption(Long id, OptionUpdateRequest optionUpdateRequest) {
+    public void updateOption(Long productId, Long id, OptionRequest optionRequest) {
         var option = findOptionById(id);
-        option.updateOptionInfo(optionUpdateRequest.name(), optionUpdateRequest.quantity());
+        optionProductValidation(productId, option);
+        option.updateOptionInfo(optionRequest.name(), optionRequest.quantity());
         optionRepository.save(option);
     }
 
     @Transactional(readOnly = true)
-    public List<OptionResponse> getOptions(Long productId, Pageable pageable) {
-        return optionRepository.findAllByProductId(productId, pageable)
+    public OptionResponse getOption(Long productId, Long id) {
+        var option = findOptionById(id);
+        optionProductValidation(productId, option);
+        return getOptionResponseFromOption(option);
+    }
+
+    @Transactional(readOnly = true)
+    public List<OptionResponse> getOptions(Long productId) {
+        return optionRepository.findAllByProductId(productId)
                 .stream()
                 .map(this::getOptionResponseFromOption)
                 .toList();
     }
 
-    public void deleteOption(Long optionId) {
+    public void deleteOption(Long productId, Long optionId) {
+        var option = findOptionById(optionId);
+        optionProductValidation(productId, option);
         if (!optionRepository.existsById(optionId)) {
             throw new NotFoundElementException("존재하지 않는 상품 옵션의 ID 입니다.");
         }
@@ -61,11 +70,6 @@ public class OptionService {
 
     public void deleteAllByProductId(Long productId) {
         optionRepository.deleteAllByProductId(productId);
-    }
-
-    public void makeDefaultOption(Product product) {
-        var option = new Option(product, "기본", 1000);
-        optionRepository.save(option);
     }
 
     public GiftOrderResponse orderOption(Long memberId, GiftOrderRequest giftOrderRequest) {
@@ -80,9 +84,9 @@ public class OptionService {
         return optionRepository.save(option);
     }
 
-    private Option saveOptionWithOptionRequest(OptionAddRequest optionAddRequest) {
-        var product = findProductById(optionAddRequest.productId());
-        var option = new Option(product, optionAddRequest.name(), optionAddRequest.quantity());
+    private Option saveOptionWithOptionRequest(Long productId, OptionRequest optionRequest) {
+        var product = findProductById(productId);
+        var option = new Option(product, optionRequest.name(), optionRequest.quantity());
         return optionRepository.save(option);
     }
 
@@ -103,6 +107,12 @@ public class OptionService {
     private void optionNameValidation(Long productId, String name) {
         if (optionRepository.existsOptionByProductIdAndName(productId, name)) {
             throw new DuplicatedNameException("이미 존재하는 상품의 상품 옵션입니다.");
+        }
+    }
+
+    private void optionProductValidation(Long productId, Option option) {
+        if (!option.getProduct().getId().equals(productId)) {
+            throw new BadRequestException("잘못된 접근입니다.");
         }
     }
 }

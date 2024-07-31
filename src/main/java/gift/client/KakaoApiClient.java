@@ -11,7 +11,7 @@ import gift.dto.kakao.template.KakaoTemplateCommerce;
 import gift.dto.kakao.template.KakaoTemplateContent;
 import gift.dto.kakao.template.KakaoTemplateLink;
 import gift.exception.BadRequestException;
-import gift.exception.InvalidKakaoTokenException;
+import gift.exception.UnauthorizedAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
@@ -63,10 +63,7 @@ public class KakaoApiClient {
                 .body(body)
                 .retrieve()
                 .onStatus(statusCode -> statusCode.equals(HttpStatus.UNAUTHORIZED), (req, res) -> {
-                    throw new InvalidKakaoTokenException(INVALID_TOKEN_MESSAGE);
-                })
-                .onStatus(statusCode -> statusCode.equals(HttpStatus.BAD_REQUEST), (req, res) -> {
-                    throw new InvalidKakaoTokenException(INVALID_TOKEN_MESSAGE);
+                    throw new UnauthorizedAccessException("유효하지 않은 카카오 리프레시 토큰입니다.");
                 })
                 .body(String.class);
 
@@ -102,7 +99,7 @@ public class KakaoApiClient {
                     .body(body)
                     .retrieve()
                     .onStatus(statusCode -> statusCode.equals(HttpStatus.UNAUTHORIZED), (req, res) -> {
-                        throw new InvalidKakaoTokenException(INVALID_TOKEN_MESSAGE);
+                        throw new UnauthorizedAccessException(INVALID_TOKEN_MESSAGE);
                     })
                     .body(String.class);
         } catch (JsonProcessingException exception) {
@@ -122,7 +119,7 @@ public class KakaoApiClient {
         var objectType = "commerce";
         var link = new KakaoTemplateLink("https://gift.kakao.com/product/2370524");
         var content = new KakaoTemplateContent(giftOrderResponse.message(), "https://img1.kakaocdn.net/thumb/C320x320@2x.fwebp.q82/?fname=https%3A%2F%2Fst.kakaocdn.net%2Fproduct%2Fgift%2Fproduct%2F20240417111629_616eccb9d4cd464fa06d3430947dce15.jpg", giftOrderResponse.message(), link);
-        var commerce = new KakaoTemplateCommerce(giftOrderResponse.optionInformation().productName() + "[" + giftOrderResponse.optionInformation().name() + "]", giftOrderResponse.optionInformation().price() * giftOrderResponse.quantity());
+        var commerce = new KakaoTemplateCommerce(giftOrderResponse.productBasicInformation().name() + "[" + giftOrderResponse.optionResponse().name() + "]", giftOrderResponse.productBasicInformation().price() * giftOrderResponse.quantity());
         return new KakaoTemplate(objectType, content, commerce);
     }
 }

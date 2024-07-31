@@ -6,7 +6,7 @@ import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.PositiveOrZero;
 import org.hibernate.validator.constraints.Length;
 
-public record ProductRequest(
+public record ProductUpdateRequest(
         @Pattern(regexp = "^[\s\\-\\&\\(\\)\\[\\]\\+\\/\\_a-zA-z0-9ㄱ-ㅎ가-힣]*$", message = "허용되지 않은 형식의 이름입니다.")
         @Length(max = 15, message = "이름의 길이는 15자를 초과할 수 없습니다.")
         @NotBlank(message = "이름의 길이는 최소 1자 이상이어야 합니다.")

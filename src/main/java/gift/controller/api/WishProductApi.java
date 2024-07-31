@@ -1,5 +1,6 @@
 package gift.controller.api;
 
+import gift.dto.option.OptionResponse;
 import gift.dto.wishproduct.WishProductAddRequest;
 import gift.dto.wishproduct.WishProductResponse;
 import gift.dto.wishproduct.WishProductUpdateRequest;
@@ -33,6 +34,15 @@ public interface WishProductApi {
             @ApiResponse(responseCode = "500", description = "내부 서버의 오류")
     })
     ResponseEntity<Void> updateWishProduct(Long id, WishProductUpdateRequest wishProductUpdateRequest);
+
+    @Operation(summary = "회원의 특정 위시 리스트를 조회한다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "특정 위시 리스트 조회 성공", content = @Content(schema = @Schema(implementation = OptionResponse.class))),
+            @ApiResponse(responseCode = "400", description = "특정 위시 리스트 조회 실패(사유 : 다른 사람의 위시 리스트는 접근할 수 없습니다.)", content = @Content(schema = @Schema(hidden = true))),
+            @ApiResponse(responseCode = "401", description = "허용되지 않는 요청", content = @Content(schema = @Schema(hidden = true))),
+            @ApiResponse(responseCode = "500", description = "내부 서버의 오류", content = @Content(schema = @Schema(hidden = true)))
+    })
+    ResponseEntity<WishProductResponse> getWishProduct(Long memberId, Long id);
 
     @Operation(summary = "회원의 위시 리스트에 있는 상품을 페이지 단위로 조회한다.")
     @ApiResponses(value = {

@@ -9,7 +9,6 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 
 import java.util.List;
@@ -20,6 +19,7 @@ public interface CategoryApi {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "카테고리 생성 성공"),
             @ApiResponse(responseCode = "401", description = "허용되지 않는 요청"),
+            @ApiResponse(responseCode = "409", description = "카테고리 생성 실패(사유 : 이미 존재하는 이름입니다. )"),
             @ApiResponse(responseCode = "500", description = "내부 서버의 오류")
     })
     ResponseEntity<Void> addCategory(CategoryRequest categoryRequest);
@@ -28,6 +28,7 @@ public interface CategoryApi {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "204", description = "카테고리 수정 성공"),
             @ApiResponse(responseCode = "401", description = "허용되지 않는 요청"),
+            @ApiResponse(responseCode = "409", description = "카테고리 수정 실패(사유 : 이미 존재하는 이름입니다. )"),
             @ApiResponse(responseCode = "500", description = "내부 서버의 오류")
     })
     ResponseEntity<Void> updateCategory(Long id, CategoryRequest categoryRequest);
@@ -46,7 +47,7 @@ public interface CategoryApi {
             @ApiResponse(responseCode = "401", description = "허용되지 않는 요청", content = @Content(schema = @Schema(hidden = true))),
             @ApiResponse(responseCode = "500", description = "내부 서버의 오류", content = @Content(schema = @Schema(hidden = true)))
     })
-    ResponseEntity<List<CategoryResponse>> getCategories(Pageable pageable);
+    ResponseEntity<List<CategoryResponse>> getCategories();
 
     @Operation(summary = "특정 카테고리를 삭제한다.")
     @ApiResponses(value = {

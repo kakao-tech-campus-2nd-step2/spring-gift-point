@@ -5,9 +5,6 @@ import gift.dto.category.CategoryRequest;
 import gift.dto.category.CategoryResponse;
 import gift.service.CategoryService;
 import jakarta.validation.Valid;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -50,9 +47,8 @@ public class CategoryController implements CategoryApi {
     }
 
     @GetMapping
-    public ResponseEntity<List<CategoryResponse>> getCategories(
-            @PageableDefault(sort = "id", direction = Sort.Direction.DESC) Pageable pageable) {
-        var categories = categoryService.getCategories(pageable);
+    public ResponseEntity<List<CategoryResponse>> getCategories() {
+        var categories = categoryService.getCategories();
         return ResponseEntity.ok(categories);
     }
 
