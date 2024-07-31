@@ -1,13 +1,6 @@
 package gift.model;
 
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
@@ -40,18 +33,9 @@ public class Product {
     private Category category;
 
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<WishList> wishLists = new HashSet<>();
+    private Set<Option> options = new HashSet<>();
 
-    protected Product(){
-
-    }
-
-    public Product(Long id, String name, int price, String imageUrl, Category category) {
-        this.id = id;
-        this.name = name;
-        this.price = price;
-        this.imageUrl = imageUrl;
-        this.category = category;
+    protected Product() {
     }
 
     public Product(String name, int price, String imageUrl, Category category) {
@@ -60,6 +44,7 @@ public class Product {
         this.imageUrl = imageUrl;
         this.category = category;
     }
+
     public Long getId() {
         return id;
     }
@@ -76,6 +61,14 @@ public class Product {
         return imageUrl;
     }
 
+    public Category getCategory() {
+        return category;
+    }
+
+    public Set<Option> getOptions() {
+        return options;
+    }
+
     public void setName(String name) {
         this.name = name;
     }
@@ -86,14 +79,6 @@ public class Product {
 
     public void setImageUrl(String imageUrl) {
         this.imageUrl = imageUrl;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public Category getCategory() {
-        return category;
     }
 
     public void setCategory(Category category) {

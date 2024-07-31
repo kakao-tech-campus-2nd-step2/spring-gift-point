@@ -17,8 +17,19 @@ public class ProductRequestDTO {
     @Min(value = 1, message = "가격은 1 미만이 될 수 없습니다.")
     private Integer price;
 
+    @NotNull(message = "카테고리 ID를 입력해주세요.")
     @Min(value = 1, message = "카테고리 ID는 1 이상이어야 합니다.")
     private Long categoryId;
+
+    public ProductRequestDTO() {
+    }
+
+    public ProductRequestDTO(String name, String imageUrl, Integer price, Long categoryId) {
+        this.name = name;
+        this.imageUrl = imageUrl;
+        this.price = price;
+        this.categoryId = categoryId;
+    }
 
     public String getName() {
         return name;
