@@ -34,8 +34,8 @@ public class ProductController {
     }
 
     @GetMapping
-    public Page<ProductResponseDto> getAllProducts(Pageable pageable) {
-        return productService.getAllProducts(pageable);
+    public Page<ProductResponseDto> getAllProducts(@RequestParam Long categoryId, Pageable pageable) {
+        return productService.getAllProducts(categoryId, pageable);
     }
 
     @GetMapping("/{id}")
@@ -64,12 +64,7 @@ public class ProductController {
     public ProductResponseDto changeCategory(@PathVariable(name="id") Long productID, @RequestParam Long categoryId) {
         return productService.putCategory(productID, categoryId);
     }
-
-    @GetMapping("/products/{id}")
-    public List<Long> getProducts(@PathVariable Long id) {
-        return productService.getProductsInCategory(id);
-    }
-
+    
     @GetMapping("/options/{optionId}")
     public Long getProductOfOption(@PathVariable Long optionId) throws NotFoundOption {
         return productService.findPrdouctOfOption(optionId);

@@ -29,8 +29,8 @@ public class ProductService {
         this.optionRepository = optionRepository;
     }
 
-    public Page<ProductResponseDto> getAllProducts(Pageable pageable) {
-        Page<Product> productPage = productRepository.findAll(pageable);
+    public Page<ProductResponseDto> getAllProducts(Long categoryId, Pageable pageable) {
+        Page<Product> productPage = productRepository.findAllByCategoryId(categoryId, pageable);
 
         return productPage.map(product -> new ProductResponseDto(
             product.getId(),
@@ -104,14 +104,6 @@ public class ProductService {
         Product product = productRepository.findById(id)
             .orElseThrow(() -> new InvalidProduct("유효하지 않은 상품입니다"));
         productRepository.deleteById(id);
-    }
-
-    public List<Long> getProductsInCategory(Long id) {
-        List<Product> products = productRepository.findAllByCategory_Id(id);
-
-        return products.stream()
-            .map(Product::getId)
-            .collect(Collectors.toList());
     }
 
     public Long findPrdouctOfOption(Long optionId) throws NotFoundOption {
