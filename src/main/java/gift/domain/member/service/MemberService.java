@@ -3,6 +3,7 @@ package gift.domain.member.service;
 import gift.domain.member.dto.MemberRequest;
 import gift.domain.member.dto.MemberResponse;
 import gift.domain.member.entity.Member;
+import gift.domain.member.exception.MemberAuthorizationException;
 import gift.domain.member.exception.MemberNotFoundException;
 import gift.domain.member.repository.MemberRepository;
 import gift.global.exception.DuplicateException;
@@ -48,7 +49,7 @@ public class MemberService {
         if (member.getPassword().equals(memberRequest.getPassword())) {
             return jwtUtil.generateToken(member);
         }
-        return null;
+        throw new MemberAuthorizationException("로그인에 실패하셨습니다.");
     }
 
     @Transactional
@@ -62,13 +63,9 @@ public class MemberService {
     public Member getMemberFromToken(String token) {
         String email = jwtUtil.getEmailFromToken(token);
 
-        if (email != null) {
-            return memberRepository
-                .findByEmail(email)
-                .orElseThrow(() -> new MemberNotFoundException("유저가 존재하지 않습니다.")
-                );
-        }
-        return null;
+        return memberRepository
+            .findByEmail(email)
+            .orElseThrow(() -> new MemberNotFoundException("유저가 존재하지 않습니다."));
     }
 
     private MemberResponse entityToDto(Member member) {
