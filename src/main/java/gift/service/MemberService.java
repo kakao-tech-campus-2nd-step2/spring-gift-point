@@ -20,26 +20,17 @@ public class MemberService {
     @Autowired
     private MemberRepository memberRepository;
 
-    @Autowired
-    private KakaoAuthService kakaoAuthService;
-
     // 회원 가입 메서드
     public LoginResponseDTO register(MemberRequestDTO memberRequestDTO) {
         if (memberRepository.findByEmail(memberRequestDTO.getEmail()).isPresent()) {
             throw new DuplicateException("이미 존재하는 회원입니다.");
         }
-
-        // 카카오 인증 코드로 토큰 발급 및 사용자 정보 조회
-        KakaoTokenResponseDTO tokenResponse = kakaoAuthService.getKakaoToken(memberRequestDTO.getCode());
-        KakaoUserDTO kakaoUserDTO = kakaoAuthService.getKakaoUser(tokenResponse.getAccessToken());
-
-        Member member = new Member(memberRequestDTO.getEmail(), memberRequestDTO.getPassword());
+        Member member = memberRequestDTO.toEntity();
         memberRepository.save(member);
 
         String token = JwtUtil.generateToken(member.getEmail());
-        return new LoginResponseDTO(token);
+        return new LoginResponseDTO(token, member.getEmail());
     }
-
 
     // 사용자 인증 메서드
     public LoginResponseDTO authenticate(MemberRequestDTO memberRequestDTO) {
@@ -48,7 +39,7 @@ public class MemberService {
             throw new IllegalArgumentException("유효하지 않은 이메일 or 비밀번호입니다.");
         }
         String token = JwtUtil.generateToken(memberRequestDTO.getEmail());
-        return new LoginResponseDTO(token);
+        return new LoginResponseDTO(token, memberRequestDTO.getEmail());
     }
 
     // 토큰 이용하여 사용자 조회하는 메서드

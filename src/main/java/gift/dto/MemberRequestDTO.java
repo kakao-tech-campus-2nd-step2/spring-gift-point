@@ -5,29 +5,19 @@ import gift.model.Member;
 public class MemberRequestDTO {
     private String email;
     private String password;
-    private String code; // 카카오 인증 코드 추가
     private String token;
 
 
-    public MemberRequestDTO(String email, String password, String code) {
+
+    public MemberRequestDTO(String email, String password) {
         this.email = email;
         this.password = password;
-        this.code = code;
     }
 
-    public MemberRequestDTO(String email, String password, String code, String token) {
+    public MemberRequestDTO(String email, String password, String token) {
         this.email = email;
         this.password = password;
-        this.code = code;
         this.token = token;
-    }
-
-    public String getCode() {
-        return code;
-    }
-
-    public void setCode(String code) {
-        this.code = code;
     }
 
     public MemberRequestDTO() {

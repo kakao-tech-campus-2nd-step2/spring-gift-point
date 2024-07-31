@@ -15,7 +15,6 @@ public class MemberController {
     @Autowired
     private MemberService memberService;
 
-    // 회원가입 및 로그인
     @PostMapping("/register")
     public ResponseEntity<LoginResponseDTO> register(@RequestBody MemberRequestDTO memberRequestDTO) {
         try {

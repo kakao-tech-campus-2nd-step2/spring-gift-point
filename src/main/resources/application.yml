@@ -20,6 +20,16 @@ spring:
       ddl-auto: update
     show-sql: true
 
+    properties:
+      hibernate:
+        format_sql: true
+
+    defer-datasource-initialization: true
+    generate-ddl: true
+
+  sql:
+    init:
+      mode: always
 kakao:
-  client-id: 05d29fec3006db509ddaf8c372d2faab
+  client-id: 05d29fec3006db509ddaf8c372d2faab # NOCOMMIT
   redirect-uri: http://localhost:8080/oauth/kakao/callback
