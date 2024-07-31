@@ -12,11 +12,11 @@ public class Order {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
-    @JoinColumn(name = "option_id")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "option_id", nullable = false)
     private Option option;
 
-    @Column(name = "quantity")
+    @Column(name = "quantity", nullable = false)
     private int quantity;
 
     @Column(name = "order_date_time", nullable = false)
@@ -29,6 +29,14 @@ public class Order {
     }
 
     public Order(Option option, int quantity, LocalDateTime orderDateTime, String message) {
+        this.option = option;
+        this.quantity = quantity;
+        this.orderDateTime = orderDateTime;
+        this.message = message;
+    }
+
+    public Order(Long id, Option option, int quantity, LocalDateTime orderDateTime, String message) {
+        this.id = id;
         this.option = option;
         this.quantity = quantity;
         this.orderDateTime = orderDateTime;

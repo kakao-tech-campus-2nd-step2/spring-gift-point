@@ -46,7 +46,7 @@ class OrderControllerTest {
     }
 
     @Test
-    @DisplayName("이메일 토큰으로 주문생성 테스트")
+    @DisplayName("주문 생성 테스트 - 카카오 토큰")
     void testCreateOrderWithJwtToken() throws Exception {
         OrderRequest orderRequest = new OrderRequest(1L, 2, "Test message");
 
