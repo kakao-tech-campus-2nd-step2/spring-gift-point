@@ -5,7 +5,7 @@ import gift.domain.Member;
 import gift.dto.LoginRequest;
 import gift.dto.LoginResponse;
 import gift.dto.MemberRequest;
-import gift.dto.MemberResponse;
+import gift.dto.JoinResponse;
 import gift.exception.ErrorMessage;
 import gift.repository.MemberRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,7 +22,7 @@ public class MemberService {
         this.jwtConfig = jwtConfig;
     }
 
-    public MemberResponse registerMember(MemberRequest requestDto) {
+    public JoinResponse registerMember(MemberRequest requestDto) {
         if (memberRepository.existsByEmail(requestDto.getEmail())) {
             throw new IllegalArgumentException(ErrorMessage.MEMBER_EMAIL_ALREADY_EXISTS);
         }
@@ -30,7 +30,7 @@ public class MemberService {
         Member member = new Member(requestDto.getEmail(), requestDto.getPassword(), access_token);
         memberRepository.save(member);
 
-        return new MemberResponse(access_token);
+        return new JoinResponse(access_token);
     }
 
     public LoginResponse login(LoginRequest loginRequest) {

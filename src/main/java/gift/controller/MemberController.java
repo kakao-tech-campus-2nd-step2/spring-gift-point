@@ -4,7 +4,7 @@ import gift.constant.Constants;
 import gift.dto.LoginRequest;
 import gift.dto.LoginResponse;
 import gift.dto.MemberRequest;
-import gift.dto.MemberResponse;
+import gift.dto.JoinResponse;
 import gift.service.MemberService;
 import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.http.HttpStatus;
@@ -26,8 +26,8 @@ public class MemberController {
 
     @Operation(summary = "일반 회원가입")
     @PostMapping("/register")
-    public ResponseEntity<MemberResponse> registerMember(@RequestBody MemberRequest requestDto) {
-        MemberResponse responseDto = memberService.registerMember(requestDto);
+    public ResponseEntity<JoinResponse> registerMember(@RequestBody MemberRequest requestDto) {
+        JoinResponse responseDto = memberService.registerMember(requestDto);
         return ResponseEntity.status(HttpStatus.CREATED).body(responseDto);
     }
 
