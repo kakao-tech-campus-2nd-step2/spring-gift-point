@@ -1,5 +1,6 @@
 package gift.Model.Entity;
 
+import gift.Model.DTO.ProductDTO;
 import jakarta.persistence.*;
 
 @Entity
@@ -8,10 +9,6 @@ public class ProductEntity {
         @Id
         @GeneratedValue(strategy = GenerationType.IDENTITY)
         private Long id;
-
-        @ManyToOne
-        @JoinColumn(name="category_id")
-        private CategoryEntity category;
 
         @Column(name="name")
         private String name;
@@ -22,13 +19,21 @@ public class ProductEntity {
         @Column(name = "image_url")
         private String imageUrl;
 
+        @ManyToOne
+        @JoinColumn(name="category_id")
+        private CategoryEntity category;
+
         public ProductEntity(){}
 
-        public ProductEntity(CategoryEntity category, String name, int price, String imageUrl){
+        public ProductEntity(String name, int price, String imageUrl, CategoryEntity category){
                 this.category = category;
                 this.name = name;
                 this.price = price;
                 this.imageUrl = imageUrl;
+        }
+
+        public ProductDTO mapToDTO(boolean state){
+                return new ProductDTO(this.id, this.name, this.price, this.imageUrl, this.category.getId(), state);
         }
 
         public Long getId() {

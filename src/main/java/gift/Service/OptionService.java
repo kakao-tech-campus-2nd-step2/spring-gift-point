@@ -25,7 +25,7 @@ public class OptionService {
     }
 
     public void create(Long productId, OptionDTO optionDTO){
-        Optional<OptionEntity> optionEntityOptional = optionRepository.findByName(optionDTO.name());
+        Optional<OptionEntity> optionEntityOptional = optionRepository.findByName(optionDTO.optionName());
         Optional<ProductEntity> productEntityOptional = productRepository.findById(productId);
 
         if(optionEntityOptional.isPresent()){
@@ -36,7 +36,7 @@ public class OptionService {
             throw new ProductNotFoundException("상품을 찾을 수 없습니다.");
         }
 
-        optionRepository.save(new OptionEntity(productEntityOptional.get(), optionDTO.name(), optionDTO.quantity()));
+        optionRepository.save(new OptionEntity(productEntityOptional.get(), optionDTO.optionName(), optionDTO.quantity()));
     }
 
     public List<OptionDTO> read(Long productId){
@@ -56,8 +56,8 @@ public class OptionService {
         return optionDTOList;
     }
 
-    public void update(Long productId, OptionDTO optionDTO){
-        Optional<OptionEntity> optionEntityOptional = optionRepository.findByName(optionDTO.name());
+    public void update(Long productId, Long optionId, OptionDTO optionDTO){
+        Optional<OptionEntity> optionEntityOptional = optionRepository.findById(optionId);
         Optional<ProductEntity> productEntityOptional = productRepository.findById(productId);
 
         if(optionEntityOptional.isEmpty()){
@@ -69,19 +69,19 @@ public class OptionService {
         }
 
         OptionEntity optionEntity = optionEntityOptional.get();
-        optionEntity.setName(optionDTO.name());
+        optionEntity.setName(optionDTO.optionName());
         optionEntity.setQuantity(optionDTO.quantity());
 
         optionRepository.save(optionEntity);
     }
 
-    public void delete(Long id){
-        Optional<OptionEntity> optionEntityOptional = optionRepository.findById(id);
+    public void delete(Long productId, Long optionId){
+        Optional<OptionEntity> optionEntityOptional = optionRepository.findById(optionId);
 
         if(optionEntityOptional.isEmpty()){
             throw new OptionNotFoundException("상품의 옵션을 찾을 수 없습니다.");
         }
 
-        optionRepository.deleteById(id);
+        optionRepository.deleteById(optionId);
     }
 }

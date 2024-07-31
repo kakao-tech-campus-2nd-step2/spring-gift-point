@@ -1,6 +1,6 @@
 package gift.Service;
 
-import gift.Exception.LoginException;
+import gift.Exception.Login.LoginException;
 import gift.Model.Role;
 import gift.Model.DTO.MemberDTO;
 import gift.Model.Entity.MemberEntity;

@@ -35,16 +35,18 @@ public class AdminController {
     }
 
     @GetMapping
-    public String getAllProducts(@RequestParam(value = "page", defaultValue = "0") int page, Model model){
-        Page<ProductDTO> products = productService.getPage(email, page);
+    public String getAllProducts(@RequestParam(value = "page", defaultValue = "0") int page,
+                                 @RequestParam(value = "size", defaultValue = "10") int size,
+                                 @RequestParam(value = "sort", defaultValue = "10") String sort, Model model){
+        Page<ProductDTO> products = productService.getPage(email, page, size, sort);
         model.addAttribute("products", products);
         return "products";
     }
 
     @GetMapping("/add")
     public String addProductForm(Model model){
-        List<String> categories = productService.getCategoriesName();
-        model.addAttribute("product", new ProductDTO(0L, "" ,"a",0,"b"));
+        List<Long> categories = productService.getCategoriesId();
+        model.addAttribute("product", new ProductDTO(0L, "" ,0,"a",1L, false));
         model.addAttribute("categories", categories);
         return "add";
     }
@@ -58,17 +60,17 @@ public class AdminController {
         return "redirect:/admin/products";
     }
 
-    @GetMapping("/edit/{id}")
+    @GetMapping("/edit/{productId}")
     public String updateProductForm(@PathVariable("id") Long id, Model model){
         ProductDTO productDTO = productService.getById(email, id);
-        List<String> categories = productService.getCategoriesName();
+        List<Long> categories = productService.getCategoriesId();
 
         model.addAttribute("product", productDTO);
         model.addAttribute("categories", categories);
         return "edit";
     }
 
-    @PostMapping("edit/{id}")
+    @PostMapping("edit/{productId}")
     public String updateProduct(@PathVariable("id") Long id, @ModelAttribute("product") @Valid ProductDTO productDTO, BindingResult bindingResult){
         if(bindingResult.hasErrors()) {
             return "edit";
@@ -77,7 +79,7 @@ public class AdminController {
         return "redirect:/admin/products";
     }
 
-    @GetMapping("/delete/{id}")
+    @GetMapping("/delete/{productId}")
     public String deleteProduct(@PathVariable("id") Long id){
         productService.delete(email, id);
         return "redirect:/admin/products";

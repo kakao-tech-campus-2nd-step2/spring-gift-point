@@ -14,20 +14,20 @@
     <thead>
     <tr>
         <th>ID</th>
-        <th>CategoryName</th>
         <th>Name</th>
         <th>Price</th>
         <th>Image</th>
+        <th>CategoryId</th>
         <th>Actions</th>
     </tr>
     </thead>
     <tbody>
     <tr th:each="product : ${products}">
         <td th:text="${product.id}"></td>
-        <td th:text="${product.categoryName}"></td>
         <td th:text="${product.name}"></td>
         <td th:text="${product.price}"></td>
         <td><img th:src="${product.imageUrl}" alt="Product Image" style="width:100px; height:auto;"></td>
+        <td th:text="${product.categoryId}"></td>
         <td class="actions">
             <form th:action="@{/admin/products/delete/{id}(id=${product.id})}" method="get" style="display:inline;">
                 <input type="hidden" name="_method" value="delete" />

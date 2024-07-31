@@ -17,7 +17,7 @@ public class NameValidator implements Validator {
     public void validate(Object target, Errors errors) {
         ProductDTO productDTO = (ProductDTO) target;
         if (productDTO.name().contains("카카오")) {
-            errors.rejectValue("name", "name.invalid", "이름에 '카카오'가 포함될 수 없습니다.");
+            errors.rejectValue("optionName", "optionName.invalid", "이름에 '카카오'가 포함될 수 없습니다.");
         }
     }
 }

@@ -26,7 +26,7 @@ public class CategoryService {
             throw new CategoryDuplicatedException("중복된 카테고리가 이미 있습니다.");
         }
 
-        categoryRepository.save(new CategoryEntity(categoryDTO.name(), categoryDTO.color(), categoryDTO.imageUrl(), categoryDTO.description()));
+        categoryRepository.save(new CategoryEntity(categoryDTO.name(), categoryDTO.imageUrl(), categoryDTO.description()));
     }
 
     public List<CategoryDTO> read(){
@@ -35,20 +35,20 @@ public class CategoryService {
         List<CategoryDTO> categoryDTOList = new ArrayList<>();
 
         for(CategoryEntity c: categoryEntityList){
-            categoryDTOList.add(new CategoryDTO(c.getId(), c.getName(), c.getColor(), c.getImageUrl(), c.getDescription()));
+            categoryDTOList.add(c.mapToDTO());
         }
 
         return categoryDTOList;
     }
 
-    public void update(CategoryDTO categoryDTO){
-        Optional<CategoryEntity> categoryEntityOptional = categoryRepository.findByName(categoryDTO.name());
+    public void update(Long categoryId, CategoryDTO categoryDTO){
+        Optional<CategoryEntity> categoryEntityOptional = categoryRepository.findById(categoryId);
 
         if(categoryEntityOptional.isEmpty()){
             throw new CategoryNotFoundException("카테고리를 찾을 수 없습니다.");
         }
-        CategoryEntity categoryEntity = new CategoryEntity(categoryDTO.name(), categoryDTO.color(), categoryDTO.imageUrl(), categoryDTO.description());
-        categoryEntity.setId(categoryEntityOptional.get().getId());
+        CategoryEntity categoryEntity = new CategoryEntity(categoryDTO.name(), categoryDTO.imageUrl(), categoryDTO.description());
+        categoryEntity.setId(categoryId);
         categoryRepository.save(categoryEntity);
     }
 

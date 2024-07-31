@@ -9,9 +9,9 @@
 <h1>제품 수정</h1>
 <form th:action="@{/admin/products/edit/{id}(id = ${product.id})}" th:object="${product}" method="post">
     <input type="hidden" name="_method" value="put" />
-    <label for="name">CategoryName:</label>
-    <select id="categoryName" th:field="*{categoryName}" th:value="${product.categoryName}" required>
-        <option th:each="categoryName : ${categories}" th:value="${categoryName}" th:text="${categoryName}"></option>
+    <label for="name">CategoryId:</label>
+    <select id="categoryId" th:field="*{categoryId}" th:value="${product.categoryId}" required>
+        <option th:each="categoryId : ${categories}" th:value="${categoryId}" th:text="${categoryId}"></option>
     </select>
     <label for="name">Name:</label>
     <input type="text" id="name" name="name" th:value="${product.name}" required><br>

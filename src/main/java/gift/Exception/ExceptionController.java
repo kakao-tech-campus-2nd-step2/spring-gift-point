@@ -2,8 +2,11 @@ package gift.Exception;
 
 import gift.Exception.Category.CategoryDuplicatedException;
 import gift.Exception.Category.CategoryNotFoundException;
+import gift.Exception.Login.AuthorizedException;
+import gift.Exception.Login.LoginException;
 import gift.Exception.Option.OptionDuplicatedException;
 import gift.Exception.Option.OptionNotFoundException;
+import gift.Exception.wish.WishNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -49,5 +52,10 @@ public class ExceptionController {
     @ExceptionHandler(IllegalArgumentException.class)
     public  ResponseEntity<?> handleIllegalArgumentException(IllegalArgumentException e){
         return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(WishNotFoundException.class)
+    public  ResponseEntity<?> handleWishNotFoundException(WishNotFoundException e){
+        return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
     }
 }
