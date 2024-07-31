@@ -2,6 +2,7 @@ package gift.controller;
 
 import gift.service.KakaoLoginService;
 import gift.service.kakao.TokenResponse;
+import io.swagger.v3.oas.annotations.Hidden;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -17,7 +18,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @Tag(name = "Kakao Login API", description = "카카오톡 로그인 API")
-@RequestMapping("/kakao")
+@RequestMapping("/api/kakao")
 @RestController
 public class KakaoController {
 
@@ -27,10 +28,7 @@ public class KakaoController {
         this.loginService = loginService;
     }
 
-    @Operation(summary = "카카오 로그인 페이지로 리다이렉트", description = "카카오 로그인 페이지로 사용자를 리다이렉트합니다.")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "302", description = "로그인 성공"),
-    })
+    @Hidden
     @GetMapping("/login")
     public ResponseEntity<Void> redirectLoginForm() {
         HttpHeaders redirectHeaders = loginService.getRedirectHeaders();
@@ -40,11 +38,11 @@ public class KakaoController {
                 .build();
     }
 
-    @Operation(summary = "카카오톡 리다이렉트 처리", description = "카카오 로그인 성공 시 발생한 리다이렉트를 처리하고 JWT 및 AccessToken을 응답합니다.")
+    @Operation(summary = "카카오톡 인증 처리", description = "인가 코드를 받아 인증 처리 후 JWT를 응답합니다.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "성공", content = @Content(schema = @Schema(implementation = TokenResponse.class))),
     })
-    @GetMapping("/oauth")
+    @GetMapping("/auth")
     public ResponseEntity<TokenResponse> login(@RequestParam String code) {
         TokenResponse tokenResponse = loginService.processKakaoAuth(code);
 
