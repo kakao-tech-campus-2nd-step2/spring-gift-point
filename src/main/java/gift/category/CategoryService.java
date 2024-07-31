@@ -14,7 +14,7 @@ public class CategoryService {
     }
 
     public CategoryResponse insertNewCategory(CategoryRequest newCategory) {
-        Category category = new Category(newCategory.name(), newCategory.color(), newCategory.imageUrl(), newCategory.description());
+        Category category = new Category(newCategory.getName(), newCategory.getColor(), newCategory.getImageUrl(), newCategory.getDescription());
         return new CategoryResponse(categoryRepository.save(category));
     }
 
