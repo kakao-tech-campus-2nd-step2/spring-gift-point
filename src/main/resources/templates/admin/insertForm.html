@@ -25,11 +25,31 @@
                type="text">
       </div>
       <div class="mb-3">
-        <label class="mb-2" for="categoryName">카테고리</label>
-        <input class="form-control" id="categoryName" name="categoryName" placeholder="카테고리를 입력하세요."
+        <label class="mb-2" for="categoryId">카테고리 ID</label>
+        <input class="form-control" id="categoryId" name="categoryId" placeholder="카테고리 ID를 입력하세요."
                type="text">
       </div>
-      <div class="row mt-5">
+      <div class="mb-3">
+        <label class="mb-2">옵션명1</label>
+        <input class="form-control" name="options[0].name" placeholder="옵션명1을 입력하세요."
+               type="text">
+      </div>
+      <div class="mb-3">
+        <label class="mb-2">옵션 수량1</label>
+        <input class="form-control" name="options[0].quantity" placeholder="옵션 수량1을 입력하세요."
+               type="text">
+      </div>
+      <div class="mb-3">
+        <label class="mb-2">옵션명2</label>
+        <input class="form-control" name="options[1].name" placeholder="옵션명2를 입력하세요."
+               type="text">
+      </div>
+      <div class="mb-3">
+        <label class="mb-2">옵션 수량2</label>
+        <input class="form-control" name="options[1].quantity" placeholder="옵션 수량2를 입력하세요."
+               type="text">
+      </div>
+      <div class="row mt-5 mb-5">
         <div class="col">
           <button class="btn btn-primary w-100" type="submit">추가</button>
         </div>

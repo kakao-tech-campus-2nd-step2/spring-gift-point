@@ -16,6 +16,21 @@
         <input class="form-control" id="name" name="name" placeholder="카테고리 이름을 입력하세요." th:value="${category.name}"
                type="text">
       </div>
+      <div class="mb-3">
+        <label class="mb-2" for="color">색상</label>
+        <input class="form-control" id="color" name="color" placeholder="색상을 입력하세요." th:value="${category.color}"
+               type="text">
+      </div>
+      <div class="mb-3">
+        <label class="mb-2" for="imageUrl">이미지 주소</label>
+        <input class="form-control" id="imageUrl" name="imageUrl" placeholder="이미지 주소를 입력하세요." th:value="${category.imageUrl}"
+               type="text">
+      </div>
+      <div class="mb-3">
+        <label class="mb-2" for="description">설명</label>
+        <input class="form-control" id="description" name="description" placeholder="설명을 입력하세요." th:value="${category.description}"
+               type="text">
+      </div>
       <div class="row mt-5">
         <div class="col">
           <button class="btn btn-primary w-100" type="submit">적용</button>
