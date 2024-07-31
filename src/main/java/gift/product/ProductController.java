@@ -28,6 +28,13 @@ public class ProductController {
         this.productService = productService;
     }
 
+    @GetMapping("/{productId}")
+    public ProductResponseDTO getProduct(
+        @PathVariable(value = "productId") Long productId
+    ) {
+        return productService.getProductById(productId);
+    }
+
     @GetMapping
     @Operation(summary = "상품 조회", description = "모든 상품을 조회합니다.")
     @ApiResponse(responseCode = "200", description = "상품 조회 성공")

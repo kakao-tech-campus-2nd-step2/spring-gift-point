@@ -49,6 +49,23 @@ public class ProductService {
         return new PageImpl<>(productResponseDTOS, pageable, productResponseDTOS.size());
     }
 
+    @Transactional(readOnly = true)
+    public ProductResponseDTO getProductById(Long id) {
+        Product product = productRepository.findById(id)
+            .orElseThrow(() -> new IllegalArgumentException(PRODUCT_NOT_FOUND));
+        return new ProductResponseDTO(
+            product.getId(),
+            product.getName(),
+            product.getPrice(),
+            product.getImageUrl(),
+            new CategoryResponseDTO(
+                product.getCategory().getId(),
+                product.getCategory().getName()
+            )
+        );
+
+    }
+
     public void addProduct(ProductRequestDTO productDTO) {
         Category findCategory = categoryRepository.findByName(productDTO.getCategory().getName())
             .orElseThrow(() -> new IllegalArgumentException(CATEGORY_NOT_FOUND));
