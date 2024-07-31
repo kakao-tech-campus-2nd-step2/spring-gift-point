@@ -1,6 +1,7 @@
 package gift.model.item;
 
 import gift.model.option.OptionDTO;
+import gift.model.option.OptionForm;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
@@ -8,7 +9,9 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.Size;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Schema(description = "상품 입력 폼")
 public class ItemForm {
@@ -36,15 +39,14 @@ public class ItemForm {
     @Schema(description = "상품 옵션 목록")
     @Valid
     @NotNull(message = "옵션은 필수 항목입니다.")
-    private final List<OptionDTO> options;
+    private final List<OptionForm> options;
 
-    public ItemForm(String name, Long price, String imgUrl, Long categoryId,
-        List<OptionDTO> options) {
+    public ItemForm(String name, Long price, String imgUrl, Long categoryId) {
         this.name = name;
         this.price = price;
         this.imgUrl = imgUrl;
         this.categoryId = categoryId;
-        this.options = options;
+        this.options = new ArrayList<>();
     }
 
     public String getName() {
@@ -63,7 +65,11 @@ public class ItemForm {
         return categoryId;
     }
 
-    public List<OptionDTO> getOptions() {
+    public List<OptionForm> getOptions() {
         return options;
+    }
+
+    public List<OptionDTO> getOptionDTOList() {
+        return options.stream().map(OptionForm::toDTO).collect(Collectors.toList());
     }
 }

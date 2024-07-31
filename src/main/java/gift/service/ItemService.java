@@ -28,6 +28,12 @@ public class ItemService {
         this.categoryRepository = categoryRepository;
     }
 
+    @Transactional(readOnly = true)
+    public ItemDTO getItemById(Long id) {
+        Item item = findItemById(id);
+        return new ItemDTO(item);
+    }
+
     @Transactional
     public Long insertItem(ItemDTO itemDTO, List<OptionDTO> options)
         throws CustomDuplicateException {
@@ -59,7 +65,7 @@ public class ItemService {
     @Transactional(readOnly = true)
     public Page<ItemDTO> getList(Pageable pageable) {
         Page<Item> list = itemRepository.findAll(pageable);
-        return list.map(o -> new ItemDTO(o));
+        return list.map(ItemDTO::new);
     }
 
     @Transactional(readOnly = true)
@@ -68,7 +74,7 @@ public class ItemService {
             throw new CustomNotFoundException(ErrorCode.CATEGORY_NOT_FOUND);
         }
         Page<Item> list = itemRepository.findAllByCategoryId(categoryId, pageable);
-        return list.map(o -> new ItemDTO(o));
+        return list.map(ItemDTO::new);
     }
 
     @Transactional
@@ -92,7 +98,7 @@ public class ItemService {
     @Transactional(readOnly = true)
     public List<OptionDTO> getOptionList(Long itemId) {
         Item item = findItemById(itemId);
-        return item.getOptions().stream().map(o -> new OptionDTO(o)).toList();
+        return item.getOptions().stream().map(OptionDTO::new).toList();
     }
 
     @Transactional(readOnly = true)
