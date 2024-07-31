@@ -1,6 +1,7 @@
 package gift.util;
 
 import gift.domain.Member;
+import gift.domain.Member.MemberResponse;
 import gift.error.UnauthorizedException;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
@@ -29,10 +30,10 @@ public class JwtUtil {
         this.key = Keys.hmacShaKeyFor(secret.getBytes());
     }
 
-    public String generateToken(Member member) {
+    public String generateToken(MemberResponse member) {
         Claims claims = Jwts.claims();
-        claims.put("id", member.getId());
-        claims.put("email", member.getEmail());
+        claims.put("id", member.id());
+        claims.put("email", member.email());
 
         return Jwts.builder()
             .setClaims(claims)
