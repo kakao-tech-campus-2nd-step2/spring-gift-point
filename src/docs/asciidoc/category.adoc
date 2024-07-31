@@ -1,0 +1,19 @@
+== 카테고리 API
+
+=== 카테고리 생성
+operation::category-api-controller-test/create-category[]
+
+=== 카테고리 수정
+operation::category-api-controller-test/update-category[]
+
+=== 카테고리 삭제
+operation::category-api-controller-test/delete-category[]
+
+=== 단일 카테고리 조회
+operation::category-api-controller-test/read-category[]
+
+=== 전체 카테고리 조회
+operation::category-api-controller-test/read-all-categories[]
+
+
+
