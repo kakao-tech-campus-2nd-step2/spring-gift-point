@@ -1,6 +1,7 @@
 package gift.controller;
 
 import gift.dto.category.CategoryResponse;
+import gift.dto.common.CommonResponse;
 import gift.service.CategoryService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -24,17 +25,17 @@ public class CategoryController {
 
     @Operation(summary = "Id로 카테고리 조회")
     @GetMapping("/{id}")
-    public ResponseEntity<CategoryResponse> findCategoryById(
+    public ResponseEntity<?> findCategoryById(
             @Parameter(description = "ID of the category to be searched", required = true)
             @PathVariable Long id) {
         CategoryResponse response = categoryService.findCategoryById(id);
-        return ResponseEntity.ok().body(response);
+        return ResponseEntity.ok(new CommonResponse<>(response, "카테고리 조회가 완료되었습니다.", true));
     }
 
     @Operation(summary = "카테고리 전체 조회")
     @GetMapping
-    public ResponseEntity<List<CategoryResponse>> findAllCategories() {
+    public ResponseEntity<?> findAllCategories() {
         List<CategoryResponse> response = categoryService.findAllCategories();
-        return ResponseEntity.ok().body(response);
+        return ResponseEntity.ok(new CommonResponse<>(response, "카테고리 전체 조회가 완료되었습니다.", true));
     }
 }

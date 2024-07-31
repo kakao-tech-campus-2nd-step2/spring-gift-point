@@ -1,6 +1,7 @@
 package gift.controller;
 
 import gift.domain.AppUser;
+import gift.dto.common.CommonResponse;
 import gift.dto.product.CreateProductAdminRequest;
 import gift.dto.product.UpdateProductRequest;
 import gift.service.ProductAdminService;
@@ -37,34 +38,34 @@ public class ProductAdminController {
 
     @Operation(summary = "관리자 권한으로 상품 추가", description = "키워드 제약 없이 상품 추가 가능")
     @PostMapping
-    public ResponseEntity<String> addProductForAdmin(@LoginUser AppUser loginAppUser,
+    public ResponseEntity<?> addProductForAdmin(@LoginUser AppUser loginAppUser,
                                                      @Valid @RequestBody CreateProductAdminRequest createProductAdminRequest) {
         productAdminService.addProduct(createProductAdminRequest);
-        return ResponseEntity.status(HttpStatus.CREATED).body("ok");
+        return ResponseEntity.status(HttpStatus.CREATED).body(new CommonResponse<>(null, "관리자 권한으로 상품 추가가 완료되었습니다.", true));
     }
 
     @Operation(summary = "관리자 권한으로 상품 수정", description = "판매자가 아니더라도 상품 수정 가능")
     @PutMapping("/{id}")
-    public ResponseEntity<String> updateProductForAdmin(@LoginUser AppUser loginAppUser, @PathVariable Long id,
+    public ResponseEntity<?> updateProductForAdmin(@LoginUser AppUser loginAppUser, @PathVariable Long id,
                                                         @Valid @RequestBody UpdateProductRequest updateProductRequest) {
         productService.updateProduct(loginAppUser, id, updateProductRequest);
-        return ResponseEntity.ok().body("ok");
+        return ResponseEntity.ok(new CommonResponse<>(null, "관리자 권한으로 상품 수정이 완료되었습니다.", true));
     }
 
     @Operation(summary = "관리자 권한으로 상품 삭제", description = "판매자가 아니더라도 상품 삭제 가능")
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> deleteProductByIdForAdmin(@LoginUser AppUser loginAppUser, @PathVariable Long id) {
+    public ResponseEntity<?> deleteProductByIdForAdmin(@LoginUser AppUser loginAppUser, @PathVariable Long id) {
         productService.deleteProduct(loginAppUser, id);
-        return ResponseEntity.ok().body("ok");
+        return ResponseEntity.ok(new CommonResponse<>(null, "관리자 권한으로 상품 삭제가 완료되었습니다.", true));
     }
 
     @Operation(summary = "관리자 권한으로 상품 카테고리 수정", description = "관리자만 상품 카테고리 수정 가능")
     @PutMapping("/{productId}/category")
-    public ResponseEntity<String> updateCategoryForProduct(@LoginUser AppUser loginAppUser,
+    public ResponseEntity<?> updateCategoryForProduct(@LoginUser AppUser loginAppUser,
                                                            @PathVariable Long productId,
                                                            @RequestParam Long categoryId) {
         productAdminService.updateCategory(productId, categoryId);
-        return ResponseEntity.ok().body("ok");
+        return ResponseEntity.ok(new CommonResponse<>(null, "관리자 권한으로 상품 카테고리 수정이 완료되었습니다.", true));
     }
 }
 

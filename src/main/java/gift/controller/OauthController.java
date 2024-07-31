@@ -1,5 +1,6 @@
 package gift.controller;
 
+import gift.dto.common.CommonResponse;
 import gift.dto.oauth.KakaoTokenResponse;
 import gift.service.JwtUserService;
 import gift.service.KakaoLoginService;
@@ -32,18 +33,19 @@ public class OauthController {
 
     @Operation(summary = "카카오 로그인 리다이렉트", description = "카카오 로그인 후 jwt 토큰 발급")
     @GetMapping("/kakao")
-    public ResponseEntity<String> kakaoCallback(@RequestParam String code) {
+    public ResponseEntity<?> kakaoCallback(@RequestParam String code) {
         KakaoTokenResponse token = kakaoLoginService.getAccessToken(code);
         String email = kakaoLoginService.getUserInfo(token.accessToken());
         String jwt = jwtUserService.loginOauth(email, token.accessToken());
 
         if (jwt == null) {
-            return ResponseEntity.badRequest().body("회원가입이 필요합니다.");
+            return ResponseEntity.badRequest().body(new CommonResponse<>(null, "회원가입이 필요합니다.", false));
         }
 
         return ResponseEntity.ok()
                 .header("Authorization", jwt)
-                .body("로그인 성공");
+                .body(new CommonResponse<>(null, "카카오 로그인이 완료되었습니다.", true));
+
     }
 }
 

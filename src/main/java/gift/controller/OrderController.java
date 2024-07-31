@@ -1,6 +1,7 @@
 package gift.controller;
 
 import gift.domain.AppUser;
+import gift.dto.common.CommonResponse;
 import gift.dto.order.OrderRequest;
 import gift.dto.order.OrderResponse;
 import gift.service.KakaoService;
@@ -28,10 +29,10 @@ public class OrderController {
 
     @Operation(summary = "로그인한 사용자의 주문 생성")
     @PostMapping
-    public ResponseEntity<OrderResponse> createOrder(@LoginUser AppUser loginAppUser,
+    public ResponseEntity<?> createOrder(@LoginUser AppUser loginAppUser,
                                                      @RequestBody OrderRequest orderRequest) {
         OrderResponse orderResponse = orderService.createOrder(loginAppUser, orderRequest);
         kakaoService.sendMessageToMe(loginAppUser, orderRequest.message());
-        return ResponseEntity.ok().body(orderResponse);
+        return ResponseEntity.ok(new CommonResponse<>(orderResponse, "사용자의 주문이 성공적으로 완료되었습니다.", true));
     }
 }

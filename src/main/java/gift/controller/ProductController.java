@@ -3,6 +3,7 @@ package gift.controller;
 import static gift.util.Utils.DEFAULT_PAGE_SIZE;
 
 import gift.domain.AppUser;
+import gift.dto.common.CommonResponse;
 import gift.dto.product.CreateProductRequest;
 import gift.dto.product.ProductResponse;
 import gift.dto.product.UpdateProductRequest;
@@ -38,34 +39,34 @@ public class ProductController {
 
     @Operation(summary = "상품 Id로 상품 상세 조회")
     @GetMapping("/{id}")
-    public ResponseEntity<ProductResponse> findProductById(@PathVariable Long id) {
+    public ResponseEntity<?> findProductById(@PathVariable Long id) {
         final ProductResponse response = productService.findProductWithWishCount(id);
-        return ResponseEntity.ok().body(response);
+        return ResponseEntity.ok(new CommonResponse<>(response, "상품 상세 조회가 완료되었습니다.", true));
     }
 
     @Operation(summary = "상품 전체 조회", description = "상품 전체 조회 정보를 Page로 반환")
     @GetMapping
-    public ResponseEntity<Page<ProductResponse>> findAllProductPage(
+    public ResponseEntity<?> findAllProductPage(
             @PageableDefault(size = DEFAULT_PAGE_SIZE, sort = "wishCount", direction = Sort.Direction.DESC) Pageable pageable) {
         Page<ProductResponse> response = productService.findAllProductWithWishCountPageable(pageable);
-        return ResponseEntity.ok().body(response);
+        return ResponseEntity.ok(new CommonResponse<>(response, "상품 전체 조회가 완료되었습니다.", true));
     }
 
     @Operation(summary = "카테고리 별 상품 전체 조회", description = "상품 전체 조회 정보를 Page로 반환")
     @GetMapping("/category/{categoryId}")
-    public ResponseEntity<Page<ProductResponse>> findActiveProductsByCategoryWithWishCount(
+    public ResponseEntity<?> findActiveProductsByCategoryWithWishCount(
             @PathVariable Long categoryId,
             @PageableDefault(size = DEFAULT_PAGE_SIZE, sort = "wishCount", direction = Sort.Direction.DESC) Pageable pageable) {
         Page<ProductResponse> response = productService.findActiveProductsByCategoryWithWishCount(categoryId, pageable);
-        return ResponseEntity.ok().body(response);
+        return ResponseEntity.ok(new CommonResponse<>(response, "카테고리 별 상품 전체 조회가 완료되었습니다.", true));
     }
 
     @Operation(summary = "상품 추가", description = "`카카오` 키워드 사용 제약")
     @PostMapping
-    public ResponseEntity<String> addProduct(@LoginUser AppUser loginAppUser,
+    public ResponseEntity<?> addProduct(@LoginUser AppUser loginAppUser,
                                              @Valid @RequestBody CreateProductRequest createProductRequest) {
         productService.addProduct(loginAppUser, createProductRequest);
-        return ResponseEntity.status(HttpStatus.CREATED).body("ok");
+        return ResponseEntity.status(HttpStatus.CREATED).body(new CommonResponse<>(null, "상품 추가가 완료되었습니다.", true));
     }
 
     @Operation(summary = "상품 수정", description = "판매자만 접근 가능")

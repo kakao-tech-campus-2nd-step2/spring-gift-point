@@ -1,6 +1,7 @@
 package gift.controller;
 
 import gift.domain.AppUser;
+import gift.dto.common.CommonResponse;
 import gift.dto.wish.AddWishRequest;
 import gift.dto.wish.WishListResponse;
 import gift.service.WishListService;
@@ -37,39 +38,39 @@ public class WishListAdminController {
 
     @Operation(summary = "관리자 권한으로 유저 위시리스트 조회")
     @GetMapping("/{userId}")
-    public ResponseEntity<Page<WishListResponse>> getWishListForAdmin(@LoginUser AppUser loginAppUser,
+    public ResponseEntity<?> getWishListForAdmin(@LoginUser AppUser loginAppUser,
                                                                       @PathVariable("userId") Long userId,
                                                                       @PageableDefault(size = 10, sort = "id", direction = Sort.Direction.DESC)
                                                                       Pageable pageable) {
         Page<WishListResponse> responses = wishListService.getWishList(userId, pageable);
-        return ResponseEntity.ok().body(responses);
+        return ResponseEntity.ok(new CommonResponse<>(responses, "관리자 권한으로 유저 위시리스트 조회가 완료되었습니다.", true));
     }
 
     @Operation(summary = "관리자 권한으로 유저 위시리스트 추가")
     @PostMapping("/{userId}")
-    public ResponseEntity<String> addWishForAdmin(@LoginUser AppUser loginAppUser, @PathVariable("userId") Long userId,
+    public ResponseEntity<?> addWishForAdmin(@LoginUser AppUser loginAppUser, @PathVariable("userId") Long userId,
                                                   @RequestBody AddWishRequest addWishRequest) {
         wishListService.addWish(userId, addWishRequest);
-        return ResponseEntity.status(HttpStatus.CREATED).body("ok");
+        return ResponseEntity.status(HttpStatus.CREATED).body(new CommonResponse<>(null, "관리자 권한으로 유저 위시리스트 추가가 완료되었습니다.", true));
     }
 
     @Operation(summary = "관리자 권한으로 유저 위시리스트 상품 수량 수정")
     @PatchMapping("/{userId}")
-    public ResponseEntity<String> updateWishQuantityForAdmin(@LoginUser AppUser loginAppUser,
+    public ResponseEntity<?> updateWishQuantityForAdmin(@LoginUser AppUser loginAppUser,
                                                              @PathVariable("userId") Long userId,
                                                              @RequestParam Long wishId,
                                                              @RequestParam int quantity) {
         wishListService.updateWishQuantity(userId, wishId, quantity);
-        return ResponseEntity.ok().body("ok");
+        return ResponseEntity.ok(new CommonResponse<>(null, "관리자 권한으로 유저 위시리스트 상품 수량 수정이 완료되었습니다.", true));
     }
 
 
     @Operation(summary = "관리자 권한으로 유저 위시리스트 삭제")
     @DeleteMapping("/{userId}")
-    public ResponseEntity<String> deleteWishForAdmin(@LoginUser AppUser loginAppUser,
+    public ResponseEntity<?> deleteWishForAdmin(@LoginUser AppUser loginAppUser,
                                                      @PathVariable("userId") Long userId,
                                                      @RequestParam Long wishId) {
         wishListService.deleteWish(userId, wishId);
-        return ResponseEntity.ok().body("ok");
+        return ResponseEntity.ok(new CommonResponse<>(null, "관리자 권한으로 유저 위시리스트 삭제가 완료되었습니다.", true));
     }
 }
