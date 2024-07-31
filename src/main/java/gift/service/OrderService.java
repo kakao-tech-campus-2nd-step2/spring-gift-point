@@ -8,10 +8,13 @@ import gift.entity.Option;
 import gift.entity.Order;
 import gift.exception.LoginException;
 import gift.exception.OptionException;
+import gift.exception.WishException;
 import gift.repository.MemberRepository;
 import gift.repository.OptionRepository;
 import gift.repository.OrderRepository;
 import java.time.LocalDateTime;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 
@@ -34,7 +37,8 @@ public class OrderService {
         this.kakaoService = kakaoService;
     }
 
-    public OrderResponseDto addOrder(String email, OrderRequestDto orderRequestDto) {
+    public OrderResponseDto addOrder(String email, OrderRequestDto orderRequestDto)
+        throws WishException {
         Member member = memberRepository.findByEmail(email)
             .orElseThrow(() -> new LoginException("올바르지 않은 사용자 입니다."));
         Option option = optionRepository.findById(orderRequestDto.getOptionId())
@@ -45,7 +49,7 @@ public class OrderService {
         }
         option.setQuantity(option.getQuantity() - orderRequestDto.getQuantity());
         optionRepository.save(option);
-        wishService.deleteWishlist(member.getId(), option.getId());
+        wishService.deleteWishlist(member.getId(), option.getProduct().getId());
         Order order = new Order(orderRequestDto.getQuantity(), LocalDateTime.now(),
             orderRequestDto.getMessage(), option, member);
         Order savedOrder = orderRepository.save(order);
@@ -58,6 +62,10 @@ public class OrderService {
         return new OrderResponseDto(savedOrder.getId(), savedOrder.getOption().getId(),
             savedOrder.getQuantity(),
             savedOrder.getOrderDateTime(), savedOrder.getMessage());
+    }
+
+    public Page<Order> findByMemberId(Long memberId, Pageable pageable) {
+        return orderRepository.findByMemberId(memberId, pageable);
     }
 
 }

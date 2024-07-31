@@ -2,6 +2,7 @@ package gift.controller;
 
 import gift.dto.ProductRequestDto;
 import gift.dto.ProductResponseDto;
+import gift.dto.ProductUpdateRequestDto;
 import gift.entity.Category;
 import gift.entity.Product;
 import gift.exception.CategoryException;
@@ -21,6 +22,7 @@ import java.util.stream.Collectors;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
@@ -62,22 +64,49 @@ public class ProductController {
     @GetMapping
     public ResponseEntity<List<ProductResponseDto>> getProducts(
         @RequestParam(defaultValue = "0") int page,
-        @RequestParam(defaultValue = "10") int size
+        @RequestParam(defaultValue = "10") int size,
+        @RequestParam(defaultValue = "name,asc") String sort,
+        @RequestParam(required = false) Long categoryId
     ) {
-        Pageable pageable = PageRequest.of(page, size);
+        String[] sortParams = sort.split(",");
+        Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.fromString(sortParams[1]), sortParams[0]));
         Page<Product> productPage = productService.findAll(pageable);
+        if (categoryId != null) {
+            productPage = productService.findAllByCategoryId(categoryId, pageable);
+        }
         List<ProductResponseDto> productList = productPage.stream()
             .map(product -> new ProductResponseDto(
                 product.getId(),
                 product.getName(),
                 product.getPrice(),
                 product.getImageUrl(),
-                product.getCategory().getName()
+                product.getCategory().getId()
             ))
             .collect(Collectors.toList());
         return new ResponseEntity<>(productList,HttpStatus.OK);
     }
 
+    @Operation(summary = "상품 조회", description = "특정 상품의 정보를 조회합니다.")
+    @ApiResponses(
+        value = {
+            @ApiResponse(
+                responseCode = "200",
+                description = "상품을 조회합니다."
+            ),
+            @ApiResponse(
+                responseCode = "404",
+                description = "상품을 찾을 수 없습니다."
+            )
+        })
+    @GetMapping("/{productId}")
+    public ResponseEntity<ProductResponseDto> getProductById(@PathVariable Long productId) {
+        try {
+            ProductResponseDto productResponseDto = productService.getProductResponseDtoById(productId);
+            return new ResponseEntity<>(productResponseDto, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
 
     @Operation(summary = "상품 추가", description = "상품을 추가합니다.")
     @ApiResponses(
@@ -98,17 +127,9 @@ public class ProductController {
         }
     )
     @PostMapping
-    public ResponseEntity<String> addProducts(@Valid @RequestBody ProductRequestDto productRequestDto, BindingResult bindingResult) {
-        if (bindingResult.hasErrors()) {
-            return new ResponseEntity<>(bindingResult.getAllErrors().get(0).getDefaultMessage(), HttpStatus.BAD_REQUEST);
-        }
-        Category category = categoryService.findById(productRequestDto.getCategoryId())
-            .orElseThrow(() -> new CategoryException("올바르지 않은 카테고리"));
-        Product product = productRequestDto.toEntity(category);
-        if (productService.addProduct(product)!=-1L) {
-            return new ResponseEntity<>("상품 추가 완료", HttpStatus.CREATED);
-        }
-        return new ResponseEntity<>("이미존재하는 상품 id", HttpStatus.BAD_REQUEST);
+    public ResponseEntity<ProductResponseDto> addProduct(@RequestBody ProductRequestDto productRequestDto) {
+        Product product = productService.addProduct(productRequestDto);
+        return new ResponseEntity<>(product.toResponseDto(), HttpStatus.CREATED);
     }
 
     @Operation(summary = "상품 수정", description = "상품을 수정합니다.")
@@ -129,19 +150,10 @@ public class ProductController {
             )
         }
     )
-    @PutMapping("/{id}")
-    public ResponseEntity<String> modifyProducts(@PathVariable("id") long id, @Valid @RequestBody  ProductRequestDto productRequestDto, BindingResult bindingResult) {
-        if (bindingResult.hasErrors()) {
-            return new ResponseEntity<>(bindingResult.getAllErrors().get(0).getDefaultMessage(), HttpStatus.BAD_REQUEST);
-        }
-        Category category = categoryService.findById(productRequestDto.getCategoryId())
-            .orElseThrow(() -> new CategoryException("올바르지 않은 카테고리"));
-        Product product = productRequestDto.toEntity(category);
-        product.setId(id);
-        if (productService.updateProduct(product)!=-1L) {
-            return new ResponseEntity<>("상품 수정 완료", HttpStatus.OK);
-        }
-        return new ResponseEntity<>("존재하지 않는 상품 id", HttpStatus.BAD_REQUEST);
+    @PutMapping("/{productId}")
+    public ResponseEntity<ProductResponseDto> updateProduct(@PathVariable Long productId, @RequestBody ProductUpdateRequestDto productUpdateRequestDto) {
+        Product updatedProduct = productService.updateProduct(productId, productUpdateRequestDto);
+        return new ResponseEntity<>(updatedProduct.toResponseDto(), HttpStatus.OK);
     }
 
     @Operation(summary = "상품 추가", description = "상품을 추가합니다.")

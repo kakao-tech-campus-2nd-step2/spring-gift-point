@@ -39,6 +39,13 @@ public class OptionService {
         return optionRepository.save(option);
     }
 
+    public Option update(Option option) {
+        if (optionRepository.existsByNameAndProductId(option.getName(), option.getProduct().getId()) && !option.getId().equals(option.getId())) {
+            throw new OptionException("동일한 상품 내에 중복된 옵션이 있습니다.");
+        }
+        return optionRepository.save(option);
+    }
+
     public List<Option> findByIds(List<Long> ids) {
         return optionRepository.findAllById(ids);
     }
@@ -56,6 +63,10 @@ public class OptionService {
 
         option.setQuantity(option.getQuantity() - quantity);
         optionRepository.save(option);
+    }
+
+    public boolean existsByNameAndProductId(String name, Long productId) {
+        return optionRepository.existsByNameAndProductId(name, productId);
     }
 
 

@@ -1,31 +1,34 @@
 package gift.dto;
 
+import gift.entity.Product;
+
 public class WishlistResponseDto {
 
-    private Long memberId;
-    private Long productId;
+    private Long id;
+    private ProductInfoDto product;
 
-
-    public WishlistResponseDto(Long memberId, Long productId) {
-        this.memberId = memberId;
-        this.productId = productId;
+    public WishlistResponseDto() {
     }
 
-    public Long getMemberId() {
-        return memberId;
+    public WishlistResponseDto(Long id, ProductInfoDto product) {
+        this.id = id;
+        this.product = product;
     }
 
-    public void setMemberId(Long memberId) {
-        this.memberId = memberId;
+    public Long getId() {
+        return id;
     }
 
-    public Long getProductId() {
-        return productId;
+    public void setId(Long id) {
+        this.id = id;
     }
 
-    public void setProductId(Long productId) {
-        this.productId = productId;
+    public ProductInfoDto getProduct() {
+        return product;
     }
 
+    public void setProduct(ProductInfoDto product) {
+        this.product = product;
+    }
 
 }

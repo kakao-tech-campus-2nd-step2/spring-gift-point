@@ -17,7 +17,7 @@ public class Option {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(unique = true,nullable = false, length = 50)
+    @Column(nullable = false, length = 50)
     private String name;
 
     @Column(nullable = false)

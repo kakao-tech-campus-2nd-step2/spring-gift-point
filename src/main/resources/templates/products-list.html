@@ -25,10 +25,11 @@
       <td th:text="${product.name}"></td>
       <td th:text="${product.price}"></td>
       <td th:text="${product.imageUrl}"></td>
-      <td th:text="${product.categoryName}"></td>
+<!--      <td th:text="${product.category.name}"></td>-->
       <td>
         <a th:href="@{/products/update/{id}(id=${product.id})}" class="btn btn-warning btn-sm">수정</a>
         <a th:href="@{/products/delete/{id}(id=${product.id})}" class="btn btn-danger btn-sm">삭제</a>
+        <a th:href="@{/products/{productId}/options/add(productId=${product.id})}" class="btn btn-primary btn-sm">옵션 추가</a>
       </td>
     </tr>
     </tbody>

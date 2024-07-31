@@ -1,26 +1,21 @@
 package gift.dto;
 
-public class ProductResponseDto {
-    
+import gift.entity.Product;
+
+public class ProductInfoDto {
     private Long id;
-
     private String name;
-
     private int price;
-
     private String imageUrl;
 
-    private Long categoryId;
-
-    public ProductResponseDto() {
+    public ProductInfoDto() {
     }
 
-    public ProductResponseDto(Long id, String name, int price, String imageUrl, Long categoryId) {
+    public ProductInfoDto(Long id, String name, int price, String imageUrl) {
         this.id = id;
         this.name = name;
         this.price = price;
         this.imageUrl = imageUrl;
-        this.categoryId = categoryId;
     }
 
     public Long getId() {
@@ -53,13 +48,5 @@ public class ProductResponseDto {
 
     public void setImageUrl(String imageUrl) {
         this.imageUrl = imageUrl;
-    }
-
-    public Long getCategoryId() {
-        return categoryId;
-    }
-
-    public void setCategoryId(Long categoryId) {
-        this.categoryId = categoryId;
     }
 }

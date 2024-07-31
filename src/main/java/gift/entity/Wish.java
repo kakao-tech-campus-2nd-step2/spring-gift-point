@@ -1,5 +1,7 @@
 package gift.entity;
 
+import gift.dto.ProductInfoDto;
+import gift.dto.WishlistResponseDto;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -8,6 +10,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "wish")
@@ -24,11 +27,17 @@ public class Wish {
     @JoinColumn(name = "product_id", nullable = false)
     private Product product;
 
-    public Wish() {}
+    private LocalDateTime createdDate;
+
+
+    public Wish() {
+        this.createdDate = LocalDateTime.now();
+    }
 
     public Wish(Member member, Product product) {
         this.member = member;
         this.product = product;
+        this.createdDate = LocalDateTime.now();
     }
 
     public Long getId() {
@@ -53,5 +62,15 @@ public class Wish {
 
     public void setProduct(Product product) {
         this.product = product;
+    }
+
+    public WishlistResponseDto toDto() {
+        ProductInfoDto productInfoDto = new ProductInfoDto(
+            this.product.getId(),
+            this.product.getName(),
+            this.product.getPrice(),
+            this.product.getImageUrl()
+        );
+        return new WishlistResponseDto(this.id, productInfoDto);
     }
 }

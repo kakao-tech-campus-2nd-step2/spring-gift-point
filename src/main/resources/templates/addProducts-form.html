@@ -33,6 +33,21 @@
         <option th:each="category : ${categories}" th:value="${category.id}" th:text="${category.name}"></option>
       </select>
     </div>
+
+<!--    <h3>옵션</h3>-->
+<!--    <div th:each="option, iterStat : ${product.options}">-->
+<!--      <div th:if="${#fields.hasErrors('options[' + iterStat.index + '].name')}" class="alert alert-danger" th:errors="*{options[__${iterStat.index}__].name}"></div>-->
+<!--      <div class="form-group">-->
+<!--        <label for="option-name">옵션 이름:</label>-->
+<!--        <input type="text" class="form-control" id="option-name" th:field="*{options[__${iterStat.index}__].name}" />-->
+<!--      </div>-->
+<!--      <div th:if="${#fields.hasErrors('options[' + iterStat.index + '].quantity')}" class="alert alert-danger" th:errors="*{options[__${iterStat.index}__].quantity}"></div>-->
+<!--      <div class="form-group">-->
+<!--        <label for="option-quantity">옵션 수량:</label>-->
+<!--        <input type="text" class="form-control" id="option-quantity" th:field="*{options[__${iterStat.index}__].quantity}" />-->
+<!--      </div>-->
+<!--    </div>-->
+
     <button type="submit" class="btn btn-primary">상품 추가</button>
   </form>
   <a href="/products" class="btn btn-secondary mt-3">상품 목록</a>

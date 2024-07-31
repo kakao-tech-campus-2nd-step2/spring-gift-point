@@ -1,34 +1,19 @@
 package gift.dto;
 
-public class ProductResponseDto {
-    
-    private Long id;
-
+public class ProductUpdateRequestDto {
     private String name;
-
     private int price;
-
     private String imageUrl;
-
     private Long categoryId;
 
-    public ProductResponseDto() {
+    public ProductUpdateRequestDto() {
     }
 
-    public ProductResponseDto(Long id, String name, int price, String imageUrl, Long categoryId) {
-        this.id = id;
+    public ProductUpdateRequestDto(String name, int price, String imageUrl, Long categoryId) {
         this.name = name;
         this.price = price;
         this.imageUrl = imageUrl;
         this.categoryId = categoryId;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 
     public String getName() {

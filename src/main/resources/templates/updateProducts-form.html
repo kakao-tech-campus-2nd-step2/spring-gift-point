@@ -8,7 +8,7 @@
 <body>
 <div class="container">
   <h1 class="mt-5">상품 수정</h1>
-  <form th:action="@{/products/update/{id}(id=${product.getId()})}" th:object="${product}" method="post" class="mt-3">
+  <form th:action="@{/products/update/{id}(id=${product.id})}" th:object="${product}" method="post" class="mt-3">
     <input type="hidden" name="_method" value="PUT" />
     <div th:if="${error}" class="alert alert-danger" th:text="${error}"></div>
     <div th:if="${#fields.hasErrors('id')}" class="alert alert-danger" th:errors="*{id}"></div>

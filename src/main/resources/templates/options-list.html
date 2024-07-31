@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>옵션 목록</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+<div class="container">
+  <h1 class="mt-5">옵션 목록</h1>
+  <table class="table table-striped mt-3">
+    <thead class="thead-dark">
+    <tr>
+      <th>ID</th>
+      <th>이름</th>
+      <th>수량</th>
+      <th></th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="option : ${options}">
+      <td th:text="${option.id}"></td>
+      <td th:text="${option.name}"></td>
+      <td th:text="${option.quantity}"></td>
+      <td>
+        <a th:href="@{/products/{productId}/options/update/{optionId}(productId=${productId}, optionId=${option.id})}" class="btn btn-warning btn-sm">수정</a>
+      </td>
+    </tr>
+    </tbody>
+  </table>
+  <a th:href="@{/products/{productId}/options/add(productId=${productId})}" class="btn btn-primary mt-3">새 옵션 추가</a>
+  <a th:href="@{/products}" class="btn btn-secondary mt-3">상품 목록</a>
+</div>
+</body>
+</html>
