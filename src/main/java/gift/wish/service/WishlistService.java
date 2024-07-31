@@ -5,30 +5,34 @@ import gift.product.repository.ProductRepository;
 import gift.product.service.ProductService;
 import gift.user.domain.User;
 import gift.user.repository.UserRepository;
+import gift.utility.JwtUtil;
 import gift.wish.domain.WishlistRequest;
 import gift.wish.domain.WishlistItem;
 import gift.wish.domain.WishlistResponse;
 import gift.wish.repository.WishlistRepository;
+import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.JwtException;
 import java.util.ArrayList;
 import java.util.List;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 @Service
 public class WishlistService {
 
     private final WishlistRepository wishlistRepository;
-    private final ProductService productService;
 
     private final UserRepository userRepository;
     private final ProductRepository productRepository;
 
-    public WishlistService(WishlistRepository wishlistRepository, ProductService productService,
-        UserRepository userRepository, ProductRepository productRepository) {
+    public WishlistService(WishlistRepository wishlistRepository,
+        UserRepository userRepository,
+        ProductRepository productRepository) {
         this.wishlistRepository = wishlistRepository;
-        this.productService = productService;
         this.userRepository = userRepository;
         this.productRepository = productRepository;
     }
@@ -66,12 +70,21 @@ public class WishlistService {
         Product product = productRepository.findById(wishlistRequest.getProductId())
             .orElseThrow(() -> new IllegalArgumentException(
                 "productId " + wishlistRequest.getProductId() + "가 없습니다."));
-        WishlistItem wishlistItem = wishlistRepository.save(new WishlistItem(user, product, wishlistRequest.getAmount()));
+        WishlistItem wishlistItem = wishlistRepository.save(new WishlistItem(user, product));
         return convertEntityToResponse(wishlistItem);
     }
     public void addWishes(List<WishlistRequest> wishlistRequests){
         List<WishlistItem> wishlistItems = convertRequestsToEntities(wishlistRequests);
         wishlistRepository.saveAll(wishlistItems);
+    }
+
+    public Long getUserIdByAuthorizationHeader(String authorizationHeader){
+        String jwtAccessToken = authorizationHeader.replace("Bearer ", "");
+        String email = JwtUtil.extractEmail(jwtAccessToken);
+
+        User user = userRepository.findByEmail(email)
+            .orElseThrow(()->new IllegalArgumentException("email " + email + "인 user가 없습니다."));
+        return user.getId();
     }
 
     private List<WishlistItem> convertRequestsToEntities(List<WishlistRequest> wishlistRequests) {
@@ -85,15 +98,15 @@ public class WishlistService {
             wishlistItem.setProduct(productRepository.findById(productId)
                 .orElseThrow(() -> new IllegalArgumentException("productId " + productId + "가 없습니다.")));
 
-            wishlistItem.setAmount(wishlistRequest.getAmount());
             wishlistItemList.add(wishlistItem);
         }
         return wishlistItemList;
     }
 
     private WishlistResponse convertEntityToResponse(WishlistItem wishlistItem) {
-        return new WishlistResponse(wishlistItem.getId(), wishlistItem.getUser().getId(),
-            productService.convertToDTO(wishlistItem.getProduct()), wishlistItem.getAmount(), wishlistItem.getCreatedDate());
+        Product product = wishlistItem.getProduct();
+        return new WishlistResponse(wishlistItem.getId(), product.getName(),
+            product.getPrice(),  product.getImageUrl());
     }
 
 }
