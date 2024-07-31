@@ -3,7 +3,7 @@ insert into category(id,name,color,description,image_url) values(2930, '교환�
 
 insert into product(id, name, price, category_id, image_url) values (3245119, '[단독각인] 피렌체 1221 에디션 오드코롱 50ml (13종 택1)',145000, 2920, 'https://st.kakaocdn.net/product/gift/product/20240215083306_8e1db057580145829542463a84971ae3.png');
 insert into product(id, name, price, category_id, image_url) values (2263833, '외식 통합권 10만원권',100000, 2930, 'https://st.kakaocdn.net/product/gift/product/20200513102805_4867c1e4a7ae43b5825e9ae14e2830e3.png');
-insert into product(id, name, price, category_id, image_url) values (6502823, '[선물포장/미니퍼퓸증정] 디켄터 리드 디퓨저 300ml + 메세지카드',108000, 2920,  'https://st.kakaocdn.net/product/gift/product/20240215112140_11f857e972bc4de6ac1d2f1af47ce182.jpg');
+insert into product(id, name, price, category_id, image_url) values (6502823, '[선물포장/미니퍼퓸증정] 디켄터 리드 디퓨저 300ml + 메세지카드',108000, 2920, 'https://st.kakaocdn.net/product/gift/product/20240215112140_11f857e972bc4de6ac1d2f1af47ce182.jpg');
 insert into product(id, name, price, category_id, image_url) values (1181831, '[선물포장] 소바쥬 오 드 뚜왈렛 60ML', 122000, 2920, 'https://st.kakaocdn.net/product/gift/product/20240214150740_ad25267defa64912a7c030a7b57dc090.jpg');
 insert into product(id, name, price, category_id, image_url) values (1379982, '[정관장] 홍삼정 에브리타임 리미티드 (10ml x 30포)', 133000, 2920, 'https://st.kakaocdn.net/product/gift/product/20240118135914_a6e1a7442ea04aa49add5e02ed62b4c3.jpg');
 
@@ -15,6 +15,6 @@ insert into option(id,name,quantity,product_id) values(5,'Option D',15,1181831);
 insert into option(id,name,quantity,product_id) values(6,'Option E',12,1379982);
 insert into option(id,name,quantity,product_id) values(7,'Option E',12,1379982);
 
-insert into user_tb(email,password) values(test,test);
+insert into user_tb(email,password) values('test','test');
 
 
