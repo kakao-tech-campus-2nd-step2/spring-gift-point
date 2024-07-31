@@ -3,9 +3,8 @@ package gift.domain.product.service;
 import gift.domain.category.entity.Category;
 import gift.domain.category.exception.CategoryNotFoundException;
 import gift.domain.category.repository.CategoryRepository;
-import gift.domain.option.dto.OptionResponse;
 import gift.domain.option.service.OptionService;
-import gift.domain.product.dto.ProductCreateResponse;
+import gift.domain.product.dto.ProductDetailResponse;
 import gift.domain.product.dto.ProductRequest;
 import gift.domain.product.dto.ProductResponse;
 import gift.domain.product.entity.Product;
@@ -13,7 +12,6 @@ import gift.domain.product.exception.ProductNotFoundException;
 import gift.domain.product.repository.ProductRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -34,11 +32,16 @@ public class ProductService {
         this.optionService = optionService;
     }
 
-    public ProductResponse getProduct(Long id) {
+    public ProductDetailResponse getProduct(Long id) {
         Product product = productRepository
             .findById(id)
             .orElseThrow(() -> new ProductNotFoundException("찾는 상품이 존재하지 않습니다."));
-        return entityToDto(product);
+
+        return new ProductDetailResponse(product.getId(),
+            product.getName(),
+            product.getPrice(),
+            product.getImageUrl(),
+            optionService.getProductOptions(id));
     }
 
     public Page<ProductResponse> getAllProducts(Pageable pageable, Long categoryId) {
