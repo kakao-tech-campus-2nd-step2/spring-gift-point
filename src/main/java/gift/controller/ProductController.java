@@ -1,6 +1,5 @@
 package gift.controller;
 
-import gift.domain.Option;
 import gift.domain.Product;
 import gift.dto.CreateProductDto;
 import gift.dto.ProductListDto;
@@ -52,7 +51,7 @@ public class ProductController {
     @Operation(summary = "특정 상품의 옵션 조회")
     @GetMapping("/{product_id}/options")
     public ResponseEntity<List<ProductOptionDto>> getProduct(@PathVariable Long product_id) {
-        List<ProductOptionDto> productOptions = productService.getProduct(product_id);
+        List<ProductOptionDto> productOptions = productService.getProductOptions(product_id);
         return ResponseEntity.ok(productOptions);
     }
 

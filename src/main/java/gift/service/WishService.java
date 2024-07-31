@@ -11,18 +11,19 @@ import org.springframework.stereotype.Service;
 @Service
 public class WishService{
     private final WishRepository wishRepository;
-    public WishService(WishRepository wishRepository) {
+    private final ProductService productService;
+    public WishService(WishRepository wishRepository, ProductService productService) {
         this.wishRepository = wishRepository;
+        this.productService = productService;
     }
 
     public Page<Wish> getWishPage(Member member, Pageable pageable) {
         return wishRepository.findByMember(member, pageable);
     }
 
-    public void addWish(Member member, Product product) {
-        Wish wish = new Wish();
-        wish.setMember(member);
-        wish.setProduct(product);
+    public void addWish(Member member, Long product_id) {
+        Product product = productService.getProduct(product_id);
+        Wish wish = new Wish(member, product);
         wishRepository.save(wish);
     }
 

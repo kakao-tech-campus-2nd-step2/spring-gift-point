@@ -4,6 +4,7 @@ import gift.domain.Member;
 import gift.domain.Product;
 import gift.domain.Wish;
 import gift.security.LoginMember;
+import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -30,9 +31,10 @@ public class WishController {
         return ResponseEntity.ok(wishPage);
     }
 
-    @PostMapping
-    public ResponseEntity<Void> addToWishList(@LoginMember Member member, @RequestParam Product product) {
-        wishService.addWish(member, product);
+    @Operation(summary = "위시리스트에 상품 추가")
+    @PostMapping("/{product_id}")
+    public ResponseEntity<Void> addToWishList(@LoginMember Member member, @PathVariable Long product_id) {
+        wishService.addWish(member, product_id);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 

@@ -41,10 +41,14 @@ public class ProductService {
         return products.map(ProductListDto::new);
     }
 
-    public List<ProductOptionDto> getProduct(Long productId) {
+    public List<ProductOptionDto> getProductOptions(Long productId) {
         Product product = productRepository.findById(productId).orElseThrow();
         List<Option> options = product.getOptions();
         return options.stream().map(ProductOptionDto::new).collect(Collectors.toList());
+    }
+
+    public Product getProduct(Long productId) {
+        return productRepository.findById(productId).orElseThrow();
     }
 
     public Product updateProduct(Long productId, UpdateProductDto productDto) {

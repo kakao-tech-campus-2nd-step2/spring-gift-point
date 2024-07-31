@@ -20,6 +20,11 @@ public class Wish {
 
     private boolean isDeleted = false;
 
+    public Wish(Member member, Product product) {
+        this.member = member;
+        this.product = product;
+    }
+
     public Member getMember() {
         return member;
     }
