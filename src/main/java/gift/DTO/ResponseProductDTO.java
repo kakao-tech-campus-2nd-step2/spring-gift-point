@@ -1,15 +1,25 @@
 package gift.DTO;
 
-import gift.Model.Entity.Option;
 import gift.Model.Entity.Product;
+import io.swagger.v3.oas.annotations.media.Schema;
 
 import java.util.List;
 
+@Schema(description = "단일 상품 조회 응답 DTO")
 public class ResponseProductDTO {
+    @Schema(description = "상품 Id")
     private Long id;
+
+    @Schema(description = "상품 이름")
     private String name;
+
+    @Schema(description = "상품 가격")
     private int price;
+
+    @Schema(description = "상품 이미지url")
     private String imageUrl;
+
+    @Schema(description = "상품 옵션")
     private List<ResponseOptionDTO> options;
 
     public ResponseProductDTO(Long id, String name, int price, String imageUrl, List<ResponseOptionDTO> options) {
