@@ -5,7 +5,6 @@ import gift.dto.OrderResponseDto;
 import gift.model.CurrentMember;
 import gift.model.Member;
 import gift.model.Order;
-import gift.service.MemberService;
 import gift.service.OrderService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -26,11 +25,9 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/orders")
 public class OrderController {
     private final OrderService orderService;
-    private final MemberService memberService;
 
-    public OrderController(OrderService orderService, MemberService memberService) {
+    public OrderController(OrderService orderService) {
         this.orderService = orderService;
-        this.memberService = memberService;
 
     }
 
