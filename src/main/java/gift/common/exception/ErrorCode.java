@@ -7,7 +7,7 @@ public enum ErrorCode {
     PRODUCT_NOT_FOUND(HttpStatus.NOT_FOUND, "존재하지 않는 상품입니다."),
 
     USER_NOT_FOUND(HttpStatus.NOT_FOUND, "존재하지 않는 유저입니다."),
-    INVALID_USER(HttpStatus.UNAUTHORIZED, "이메일 혹은 비밀번호가 유효하지 않습니다."),
+    INVALID_USER(HttpStatus.UNAUTHORIZED, "아이디 또는 비밀번호가 일치하지 않습니다."),
     EXIST_USER(HttpStatus.BAD_REQUEST, "이미 가입된 회원입니다."),
 
     WISH_NOT_FOUND(HttpStatus.NOT_FOUND, "위시리스트에 존재하지 않는 상품입니다."),

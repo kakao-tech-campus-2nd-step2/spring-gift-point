@@ -23,6 +23,9 @@ public class User extends BaseEntity{
     @Column(unique = true)
     private String email;
 
+    @NotNull
+    private String name;
+
     @Enumerated(EnumType.STRING)
     @NotNull
     private SocialType socialType;
@@ -30,9 +33,10 @@ public class User extends BaseEntity{
     protected User() {
     }
 
-    public User(String password, String email, SocialType socialType) {
+    public User(String password, String email, String name, SocialType socialType) {
         this.password = password;
         this.email = email;
+        this.name = name;
         this.socialType = socialType;
     }
 
@@ -48,6 +52,10 @@ public class User extends BaseEntity{
 
     public SocialType getSocialType() {
         return socialType;
+    }
+
+    public String getName() {
+        return name;
     }
 
     public boolean checkSocialType(SocialType socialType) {
