@@ -1,8 +1,8 @@
 package gift.member;
 
 public class UserDTO {
-    private Long userId;
-    private String username;
+    private final Long userId;
+    private final String username;
 
     public UserDTO(Long userId, String username){
         this.userId = userId;

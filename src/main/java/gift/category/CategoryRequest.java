@@ -1,7 +1,10 @@
 package gift.category;
 
+import com.fasterxml.jackson.databind.PropertyNamingStrategies;
+import com.fasterxml.jackson.databind.annotation.JsonNaming;
+
+@JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class CategoryRequest {
-    private Long id;
 
     private String name;
 
@@ -11,7 +14,7 @@ public class CategoryRequest {
 
     private String description;
 
-    protected CategoryRequest(){
+    protected CategoryRequest() {
     }
 
     public CategoryRequest(String name, String color, String imageUrl, String description) {
@@ -19,10 +22,6 @@ public class CategoryRequest {
         this.color = color;
         this.imageUrl = imageUrl;
         this.description = description;
-    }
-
-    public Long getId(){
-        return id;
     }
 
     public String getName() {
@@ -45,7 +44,7 @@ public class CategoryRequest {
         return description;
     }
 
-    public Category toEntity(){
+    public Category toEntity() {
         return new Category(this.name, this.color, this.imageUrl, this.description);
     }
 }
