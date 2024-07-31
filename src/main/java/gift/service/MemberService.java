@@ -1,6 +1,6 @@
 package gift.service;
 
-import gift.dto.MemberDto;
+import gift.dto.MemberRequestDto;
 import gift.dto.MemberResponseDto;
 import gift.model.Member;
 import gift.repository.MemberRepository;
@@ -19,25 +19,25 @@ public class MemberService {
         this.memberRepository = memberRepository;
     }
 
-    public MemberResponseDto register(@Valid MemberDto memberDto) {
-        validateNewMember(memberDto);
-        String token = JwtUtility.generateToken(memberDto.getEmail());
-        Member member = new Member(memberDto.getEmail(), memberDto.getPassword(), null);
+    public MemberResponseDto register(@Valid MemberRequestDto memberRequestDto) {
+        validateNewMember(memberRequestDto);
+        String token = JwtUtility.generateToken(memberRequestDto.getEmail());
+        Member member = new Member(memberRequestDto.getEmail(), memberRequestDto.getPassword(), null);
         memberRepository.save(member);
         return new MemberResponseDto(member.getEmail(), token);
     }
 
-    private void validateNewMember(MemberDto memberDto) {
-        memberRepository.findByEmail(memberDto.getEmail())
+    private void validateNewMember(MemberRequestDto memberRequestDto) {
+        memberRepository.findByEmail(memberRequestDto.getEmail())
                 .ifPresent(existingMember -> {
                     throw new DuplicateKeyException("이미 존재하는 이메일입니다.");
                 });
     }
 
-    public MemberResponseDto login(MemberDto memberDto) {
-        Member existingMember = memberRepository.findByEmail(memberDto.getEmail())
+    public MemberResponseDto login(MemberRequestDto memberRequestDto) {
+        Member existingMember = memberRepository.findByEmail(memberRequestDto.getEmail())
                 .orElseThrow(() -> new NoSuchElementException("존재하지 않는 이메일 또는 잘못된 비밀번호입니다."));
-        if (!existingMember.getPassword().equals(memberDto.getPassword())) {
+        if (!existingMember.getPassword().equals(memberRequestDto.getPassword())) {
             throw new NoSuchElementException("존재하지 않는 이메일 또는 잘못된 비밀번호입니다.");
         }
         String token = JwtUtility.generateToken(existingMember.getEmail());
