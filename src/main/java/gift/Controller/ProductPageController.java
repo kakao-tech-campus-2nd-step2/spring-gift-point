@@ -1,31 +1,39 @@
 package gift.Controller;
 
 import gift.DTO.RequestProductPostDTO;
+import gift.DTO.ResponseOptionDTO;
+import gift.DTO.ResponseProductDTO;
+import gift.Model.Entity.Option;
+import gift.Service.OptionService;
 import gift.Service.ProductService;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.http.ResponseEntity;
 import org.springframework.ui.Model;
 import gift.Model.Entity.Product;
 import gift.DTO.RequestProductDTO;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @Controller
 @RequestMapping("/api")
 public class ProductPageController {
 
     private final ProductService productService;
+    private final OptionService optionService;
 
-
-    public ProductPageController(ProductService productService) {
+    public ProductPageController(ProductService productService, OptionService optionService) {
         this.productService = productService;
+        this.optionService = optionService;
     }
 
     @GetMapping("/products")
-    public String getProduct(@PageableDefault(size = 3, sort = "id", direction = Sort.Direction.ASC) Pageable pageable,
+    public String getProducts(@PageableDefault(size = 10, sort = "name", direction = Sort.Direction.ASC) Pageable pageable,
                              Model model) {
         Page<Product> productPage = productService.getAllProducts(pageable);
         String sortField = pageable.getSort().iterator().next().getProperty();
@@ -40,6 +48,14 @@ public class ProductPageController {
         model.addAttribute("sortDir", sortDir);
         model.addAttribute("reverseSortDir", reverseSortDir);
         return "products";
+    }
+
+    @GetMapping("/products/{product-id}")
+    public ResponseEntity<ResponseProductDTO> getProduct(@PathVariable("product-id") Long productId){
+        Product product = productService.getProduct(productId);
+        List<Option> options = optionService.getOptionForProductController(productId);
+        ResponseProductDTO response = ResponseProductDTO.of(product, options);
+        return ResponseEntity.ok(response);
     }
 
     @GetMapping("/products/new")

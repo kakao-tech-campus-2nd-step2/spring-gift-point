@@ -35,6 +35,12 @@ public class ProductService {
         return productPage;
     }
 
+    @Transactional(readOnly = true)
+    public Product getProduct(Long productId) {
+        Product product = productRepository.findById(productId).orElseThrow(()-> new ProductNotFoundException("매칭되는 product가 없습니다"));
+        return product;
+    }
+
     @Transactional
     public void addProduct(RequestProductPostDTO requestProductPostDTO) {
         Category category = categoryRepository.findById(requestProductPostDTO.categoryId())
