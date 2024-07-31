@@ -22,6 +22,7 @@ public enum ErrorCode {
     NOT_ENOUGH_QUANTITY(HttpStatus.BAD_REQUEST, "재고가 부족합니다."),
 
     INVALID_SOCIAL_TYPE(HttpStatus.BAD_REQUEST, "유효하지 않은 로그인 타입입니다."),
+    NETWORK_ERROR(HttpStatus.UNAUTHORIZED, "네트워크 환경이 불안정합니다."),
     TOKEN_NOT_FOUND(HttpStatus.NOT_FOUND, "토큰이 존재하지 않습니다.");
 
     private final HttpStatus httpStatus;

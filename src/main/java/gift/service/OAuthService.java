@@ -29,7 +29,7 @@ public class OAuthService {
         this.kakaoUtil = kakaoUtil;
     }
 
-    public UserResponse register(String code) {
+    public UserDto register(String code) {
         TokenInfoResponse response = kakaoUtil.getToken(code);
         String accessToken = response.access_token();
         String refreshToken = response.refresh_token();
@@ -37,7 +37,7 @@ public class OAuthService {
         String email = kakaoUtil.extractEmail(accessToken);
 
         User user = userRepository.findByEmail(email)
-            .orElseGet(() -> userRepository.save(new User("", email, SocialType.KAKAO)));
+            .orElseGet(() -> userRepository.save(new User("", email, "kakaoUser123", SocialType.KAKAO)));
 
         if (!user.checkSocialType(SocialType.KAKAO)) {
             throw new OAuthException(ErrorCode.INVALID_SOCIAL_TYPE);
@@ -47,6 +47,6 @@ public class OAuthService {
 
         String token = jwtTokenProvider.createToken(user.getEmail());
 
-        return UserResponse.from(token);
+        return UserDto.from(token, user.getName());
     }
 }
