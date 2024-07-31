@@ -34,9 +34,9 @@ public class WishProductController implements WishProductApi {
     }
 
     @PostMapping
-    public ResponseEntity<Void> addWishProduct(@Valid @RequestBody WishProductAddRequest wishProductAddRequest, @RequestAttribute("memberId") Long memberId) {
+    public ResponseEntity<WishProductResponse> addWishProduct(@Valid @RequestBody WishProductAddRequest wishProductAddRequest, @RequestAttribute("memberId") Long memberId) {
         var wishProduct = wishProductService.addWishProduct(wishProductAddRequest, memberId);
-        return ResponseEntity.created(URI.create("/api/wishes/" + wishProduct.id())).build();
+        return ResponseEntity.created(URI.create("/api/wishes/" + wishProduct.id())).body(wishProduct);
     }
 
     @PutMapping("/{id}")

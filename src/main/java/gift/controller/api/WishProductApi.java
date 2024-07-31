@@ -21,11 +21,11 @@ public interface WishProductApi {
 
     @Operation(summary = "회원의 위시 리스트에 상품을 추가한다.")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "201", description = "위시 리스트 추가 성공"),
-            @ApiResponse(responseCode = "401", description = "허용되지 않는 요청"),
-            @ApiResponse(responseCode = "500", description = "내부 서버의 오류")
+            @ApiResponse(responseCode = "201", description = "위시 리스트 추가 성공", content = @Content(schema = @Schema(implementation = OptionResponse.class))),
+            @ApiResponse(responseCode = "401", description = "허용되지 않는 요청", content = @Content(schema = @Schema(hidden = true))),
+            @ApiResponse(responseCode = "500", description = "내부 서버의 오류", content = @Content(schema = @Schema(hidden = true)))
     })
-    ResponseEntity<Void> addWishProduct(WishProductAddRequest wishProductAddRequest, Long memberId);
+    ResponseEntity<WishProductResponse> addWishProduct(WishProductAddRequest wishProductAddRequest, Long memberId);
 
     @Operation(summary = "회원의 특정 위시 리스트를 수정한다.")
     @ApiResponses(value = {

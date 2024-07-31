@@ -20,12 +20,12 @@ public interface ProductApi {
 
     @Operation(summary = "새 상품을 등록한다.")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "201", description = "상품 등록 성공"),
-            @ApiResponse(responseCode = "400", description = "상품 등록 실패(사유 : 카카오가 포함된 이름입니다.)"),
-            @ApiResponse(responseCode = "401", description = "허용되지 않는 요청"),
-            @ApiResponse(responseCode = "500", description = "내부 서버의 오류")
+            @ApiResponse(responseCode = "201", description = "상품 등록 성공", content = @Content(schema = @Schema(implementation = ProductResponse.class))),
+            @ApiResponse(responseCode = "400", description = "상품 등록 실패(사유 : 카카오가 포함된 이름입니다.)", content = @Content(schema = @Schema(hidden = true))),
+            @ApiResponse(responseCode = "401", description = "허용되지 않는 요청", content = @Content(schema = @Schema(hidden = true))),
+            @ApiResponse(responseCode = "500", description = "내부 서버의 오류", content = @Content(schema = @Schema(hidden = true)))
     })
-    ResponseEntity<Void> addProduct(ProductAddRequest productAddRequest);
+    ResponseEntity<ProductResponse> addProduct(ProductAddRequest productAddRequest);
 
     @Operation(summary = "기존 상품을 수정한다.")
     @ApiResponses(value = {

@@ -18,12 +18,12 @@ public interface OptionApi {
 
     @Operation(summary = "상품에 옵션을 추가한다.")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "201", description = "옵션 추가 성공"),
-            @ApiResponse(responseCode = "401", description = "허용되지 않는 요청"),
-            @ApiResponse(responseCode = "409", description = "옵션 추가 실패(사유 : 이미 존재하는 이름입니다. )"),
-            @ApiResponse(responseCode = "500", description = "내부 서버의 오류")
+            @ApiResponse(responseCode = "201", description = "옵션 추가 성공", content = @Content(schema = @Schema(implementation = OptionResponse.class))),
+            @ApiResponse(responseCode = "401", description = "허용되지 않는 요청", content = @Content(schema = @Schema(hidden = true))),
+            @ApiResponse(responseCode = "409", description = "옵션 추가 실패(사유 : 이미 존재하는 이름입니다. )", content = @Content(schema = @Schema(hidden = true))),
+            @ApiResponse(responseCode = "500", description = "내부 서버의 오류", content = @Content(schema = @Schema(hidden = true)))
     })
-    ResponseEntity<Void> addOption(Long productId, OptionRequest optionRequest);
+    ResponseEntity<OptionResponse> addOption(Long productId, OptionRequest optionRequest);
 
     @Operation(summary = "기존 옵션을 수정한다.")
     @ApiResponses(value = {
@@ -38,7 +38,7 @@ public interface OptionApi {
     @Operation(summary = "특정 옵션을 조회한다.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "특정 옵션 조회 성공", content = @Content(schema = @Schema(implementation = OptionResponse.class))),
-            @ApiResponse(responseCode = "400", description = "특정 옵션 조회 실패(사유 : 옵션과 연결된 상품 ID 가 아닙니다.)"),
+            @ApiResponse(responseCode = "400", description = "특정 옵션 조회 실패(사유 : 옵션과 연결된 상품 ID 가 아닙니다.)", content = @Content(schema = @Schema(hidden = true))),
             @ApiResponse(responseCode = "401", description = "허용되지 않는 요청", content = @Content(schema = @Schema(hidden = true))),
             @ApiResponse(responseCode = "500", description = "내부 서버의 오류", content = @Content(schema = @Schema(hidden = true)))
     })

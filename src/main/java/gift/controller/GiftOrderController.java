@@ -38,10 +38,10 @@ public class GiftOrderController implements GiftOrderApi {
     }
 
     @PostMapping
-    public ResponseEntity<Void> orderOption(@RequestAttribute("memberId") Long memberId, @Valid @RequestBody GiftOrderRequest giftOrderRequest) {
+    public ResponseEntity<GiftOrderResponse> orderOption(@RequestAttribute("memberId") Long memberId, @Valid @RequestBody GiftOrderRequest giftOrderRequest) {
         var order = optionService.orderOption(memberId, giftOrderRequest);
         kakaoService.sendOrderResponseWithKakaoMessage(memberId, order);
-        return ResponseEntity.created(URI.create("/api/orders/" + order.id())).build();
+        return ResponseEntity.created(URI.create("/api/orders/" + order.id())).body(order);
     }
 
     @GetMapping("/{id}")

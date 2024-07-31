@@ -34,9 +34,9 @@ public class ProductController implements ProductApi {
     }
 
     @PostMapping
-    public ResponseEntity<Void> addProduct(@Valid @RequestBody ProductAddRequest productAddRequest) {
+    public ResponseEntity<ProductResponse> addProduct(@Valid @RequestBody ProductAddRequest productAddRequest) {
         var product = productService.addProduct(productAddRequest);
-        return ResponseEntity.created(URI.create("/api/products/" + product.id())).build();
+        return ResponseEntity.created(URI.create("/api/products/" + product.id())).body(product);
     }
 
     @PutMapping("/{id}")

@@ -29,9 +29,9 @@ public class OptionController implements OptionApi {
     }
 
     @PostMapping
-    public ResponseEntity<Void> addOption(@PathVariable Long productId, @Valid @RequestBody OptionRequest optionRequest) {
+    public ResponseEntity<OptionResponse> addOption(@PathVariable Long productId, @Valid @RequestBody OptionRequest optionRequest) {
         var option = optionService.addOption(productId, optionRequest);
-        return ResponseEntity.created(URI.create("/api/products/" + productId + "/options/" + option.id())).build();
+        return ResponseEntity.created(URI.create("/api/products/" + productId + "/options/" + option.id())).body(option);
     }
 
     @PutMapping("/{id}")

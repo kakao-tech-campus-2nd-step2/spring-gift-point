@@ -17,12 +17,12 @@ import java.util.List;
 public interface CategoryApi {
     @Operation(summary = "새 카테고리를 생성한다.")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "201", description = "카테고리 생성 성공"),
-            @ApiResponse(responseCode = "401", description = "허용되지 않는 요청"),
-            @ApiResponse(responseCode = "409", description = "카테고리 생성 실패(사유 : 이미 존재하는 이름입니다. )"),
-            @ApiResponse(responseCode = "500", description = "내부 서버의 오류")
+            @ApiResponse(responseCode = "201", description = "카테고리 생성 성공", content = @Content(schema = @Schema(implementation = CategoryResponse.class))),
+            @ApiResponse(responseCode = "401", description = "허용되지 않는 요청", content = @Content(schema = @Schema(hidden = true))),
+            @ApiResponse(responseCode = "409", description = "카테고리 생성 실패(사유 : 이미 존재하는 이름입니다. )", content = @Content(schema = @Schema(hidden = true))),
+            @ApiResponse(responseCode = "500", description = "내부 서버의 오류", content = @Content(schema = @Schema(hidden = true)))
     })
-    ResponseEntity<Void> addCategory(CategoryRequest categoryRequest);
+    ResponseEntity<CategoryResponse> addCategory(CategoryRequest categoryRequest);
 
     @Operation(summary = "기존 카테고리를 수정한다.")
     @ApiResponses(value = {

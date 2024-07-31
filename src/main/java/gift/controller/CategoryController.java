@@ -29,9 +29,9 @@ public class CategoryController implements CategoryApi {
     }
 
     @PostMapping
-    public ResponseEntity<Void> addCategory(@Valid @RequestBody CategoryRequest categoryRequest) {
+    public ResponseEntity<CategoryResponse> addCategory(@Valid @RequestBody CategoryRequest categoryRequest) {
         var category = categoryService.addCategory(categoryRequest);
-        return ResponseEntity.created(URI.create("/api/categories/" + category.id())).build();
+        return ResponseEntity.created(URI.create("/api/categories/" + category.id())).body(category);
     }
 
     @PutMapping("/{id}")
