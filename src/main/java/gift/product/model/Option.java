@@ -53,6 +53,10 @@ public class Option {
         return product;
     }
 
+    public int getQuantity() {
+        return quantity;
+    }
+
     public Option subtract(int amount) {
         int amountResult = this.quantity - amount;
 
