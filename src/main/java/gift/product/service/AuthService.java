@@ -24,7 +24,9 @@ import java.nio.charset.StandardCharsets;
 import java.util.Date;
 import java.util.NoSuchElementException;
 import javax.crypto.SecretKey;
+import org.apache.logging.log4j.util.InternalException;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.expression.spel.InternalParseException;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -94,7 +96,7 @@ public class AuthService {
 
             return new OAuthJwt(accessToken, refreshToken);
         } catch (Exception e) {
-            throw new LoginFailedException("소셜 로그인 진행 중 예기치 못한 오류가 발생하였습니다. 다시 시도해 주세요.");
+            throw new InternalException("소셜 로그인 진행 중 예기치 못한 오류가 발생하였습니다. 다시 시도해 주세요.");
         }
     }
 
@@ -120,7 +122,7 @@ public class AuthService {
 
             return getJwtResponse(oAuthJwt, memberEmail);
         } catch (Exception e) {
-            throw new LoginFailedException("소셜 로그인 진행 중 예기치 못한 오류가 발생하였습니다. 다시 시도해 주세요.");
+            throw new InternalException("소셜 로그인 진행 중 예기치 못한 오류가 발생하였습니다. 다시 시도해 주세요.");
         }
     }
 
@@ -139,7 +141,7 @@ public class AuthService {
             JsonNode rootNode = objectMapper.readTree(response.getBody());
             return Long.parseLong(rootNode.path("id").asText());
         } catch (Exception e) {
-            throw new LoginFailedException("소셜 로그인 진행 중 예기치 못한 오류가 발생하였습니다. 다시 시도해 주세요.");
+            throw new InternalException("소셜 로그인 진행 중 예기치 못한 오류가 발생하였습니다. 다시 시도해 주세요.");
         }
     }
 

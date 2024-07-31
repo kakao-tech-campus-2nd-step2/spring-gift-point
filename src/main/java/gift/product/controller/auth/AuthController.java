@@ -64,15 +64,22 @@ public class AuthController {
         return ResponseEntity.ok(accessTokenDto);
     }
 
-    @ApiResponse(responseCode = "303", description = "카카오 로그인 진행 후 특정 URL로 리다이렉트 되어 아래의 응답을 받음 (전달 형식은 임시)", content = @Content(mediaType = "application/json", schema = @Schema(implementation = JwtResponse.class)))
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "302", description = "리디렉션 성공"),
+        @ApiResponse(responseCode = "500", description = "내부 서버 오류", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ExceptionResponse.class)))
+    })
     @GetMapping("/login/kakao")
     public ResponseEntity<Void> loginKakao() {
         HttpHeaders headers = new HttpHeaders();
         headers.setLocation(URI.create(authService.getKakaoAuthCodeUrl()));
-        return new ResponseEntity<>(headers, HttpStatus.SEE_OTHER);
+        return new ResponseEntity<>(headers, HttpStatus.FOUND);
     }
 
-    @Hidden
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "카카오 로그인 성공", content = @Content(mediaType = "application/json", schema = @Schema(implementation = JwtResponse.class))),
+        @ApiResponse(responseCode = "401", description = "사용자 인증 오류", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ExceptionResponse.class))),
+        @ApiResponse(responseCode = "500", description = "내부 서버 오류", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ExceptionResponse.class)))
+    })
     @GetMapping("/login/kakao/callback")
     public ResponseEntity<JwtResponse> getKakaoJwt(@RequestParam(name = "code") String code) {
         OAuthJwt oAuthJwt = authService.getOAuthToken(code, KAKAO_AUTH_TOKEN_URL);
@@ -82,8 +89,9 @@ public class AuthController {
     }
 
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "성공", content = @Content(mediaType = "application/json", schema = @Schema(implementation = Long.class))),
-        @ApiResponse(responseCode = "403", description = "로그인 실패", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ExceptionResponse.class)))
+        @ApiResponse(responseCode = "200", description = "카카오 로그인 성공", content = @Content(mediaType = "application/json", schema = @Schema(implementation = Long.class))),
+        @ApiResponse(responseCode = "401", description = "카카오 로그인 실패", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ExceptionResponse.class))),
+        @ApiResponse(responseCode = "500", description = "내부 서버 오류", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ExceptionResponse.class)))
     })
     @PostMapping("/login/kakao/unlink")
     public ResponseEntity<Long> unlinkKakaoAccount(HttpServletRequest request) {

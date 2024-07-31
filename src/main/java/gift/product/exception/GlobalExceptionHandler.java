@@ -4,6 +4,7 @@ import com.sun.jdi.request.DuplicateRequestException;
 import gift.product.exception.CannotDeleteOnlyOneOptionException;
 import gift.product.exception.LoginFailedException;
 import java.util.NoSuchElementException;
+import org.apache.logging.log4j.util.InternalException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ProblemDetail;
 import org.springframework.http.ResponseEntity;
@@ -53,6 +54,12 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ExceptionResponse> handleDuplicateRequestException(DuplicateRequestException e) {
         ExceptionResponse exceptionResponse = new ExceptionResponse(e.getMessage());
         return new ResponseEntity<>(exceptionResponse, HttpStatus.CONFLICT);
+    }
+
+    @ExceptionHandler(value = InternalException.class)
+    public ResponseEntity<ExceptionResponse> handleInternalException(InternalException e) {
+        ExceptionResponse exceptionResponse = new ExceptionResponse(e.getMessage());
+        return new ResponseEntity<>(exceptionResponse, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
     private String buildErrorMessage(MethodArgumentNotValidException e) {
