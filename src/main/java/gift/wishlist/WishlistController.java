@@ -1,7 +1,6 @@
 package gift.wishlist;
 
 import gift.product.dto.ProductPaginationResponseDTO;
-import gift.product.dto.ProductResponseDTO;
 import gift.wishlist.dto.ProductIdRequestDTO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
