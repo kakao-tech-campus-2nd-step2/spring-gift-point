@@ -3,15 +3,18 @@ package gift.service;
 import gift.domain.Category;
 import gift.domain.Option;
 import gift.domain.Product;
+import gift.dto.common.PageInfo;
 import gift.dto.requestdto.OptionCreateRequestDTO;
 import gift.dto.requestdto.ProductCreateRequestDTO;
 import gift.dto.requestdto.ProductRequestDTO;
+import gift.dto.responsedto.ProductPageResponseDTO;
 import gift.dto.responsedto.ProductResponseDTO;
 import gift.repository.JpaCategoryRepository;
 import gift.repository.JpaOptionRepository;
 import gift.repository.JpaProductRepository;
 import java.util.List;
 import java.util.NoSuchElementException;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -43,13 +46,19 @@ public class ProductService {
     }
 
     @Transactional(readOnly = true)
-    public List<ProductResponseDTO> getAllProducts(int page, int size, String criteria) {
+    public ProductPageResponseDTO getAllProducts(int page, int size, String criteria) {
         Pageable pageable = PageRequest.of(page, size, Sort.by(criteria));
 
-        return jpaProductRepository.findAll(pageable)
+        Page<Product> productPage = jpaProductRepository.findAll(pageable);
+
+        List<ProductResponseDTO> productResponseDTOList = productPage
             .stream()
             .map(ProductResponseDTO::from)
             .toList();
+
+        PageInfo pageInfo = new PageInfo(page, productPage.getTotalElements(), productPage.getTotalPages());
+
+        return new ProductPageResponseDTO(pageInfo, productResponseDTOList);
     }
 
     @Transactional(readOnly = true)
@@ -69,6 +78,13 @@ public class ProductService {
 
         jpaOptionRepository.save(option);
 
+        return ProductResponseDTO.from(jpaProductRepository.save(product));
+    }
+
+    public ProductResponseDTO addProduct(ProductRequestDTO productRequestDTO) {
+        Category category = getCategory(productRequestDTO);
+
+        Product product = productRequestDTO.toEntity(category);
         return ProductResponseDTO.from(jpaProductRepository.save(product));
     }
 

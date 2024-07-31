@@ -6,6 +6,7 @@ import gift.dto.common.apiResponse.ApiResponseBody.SuccessBody;
 import gift.dto.common.apiResponse.ApiResponseGenerator;
 import gift.dto.requestdto.ProductCreateRequestDTO;
 import gift.dto.requestdto.ProductRequestDTO;
+import gift.dto.responsedto.ProductPageResponseDTO;
 import gift.dto.responsedto.ProductResponseDTO;
 import gift.service.AuthService;
 import gift.service.OptionService;
@@ -53,13 +54,13 @@ public class ProductController {
     @GetMapping("/products/page")
     @Operation(summary = "상품 조회 페이지 api", description = "상품 조회 페이지 api입니다")
     @ApiResponse(responseCode = "200", description = "상품 페이지 전체 조회 성공")
-    public ResponseEntity<SuccessBody<List<ProductResponseDTO>>> getAllProductPages(
+    public ResponseEntity<SuccessBody<ProductPageResponseDTO>> getAllProductPages(
         @RequestParam(value = "page", defaultValue = "0") int page,
         @RequestParam(value = "size", defaultValue = "8") int size,
         @RequestParam(value = "criteria", defaultValue = "id") String criteria) {
-        List<ProductResponseDTO> productResponseDTOList = productService.getAllProducts(page, size, criteria);
+        ProductPageResponseDTO productPageResponseDTO = productService.getAllProducts(page, size, criteria);
         return ApiResponseGenerator.success(HttpStatus.OK, "모든 상품을 조회했습니다.",
-            productResponseDTOList);
+            productPageResponseDTO);
     }
 
     @GetMapping("/product/{id}")
@@ -76,10 +77,11 @@ public class ProductController {
     @Operation(summary = "상품 추가 api", description = "상품 추가 api입니다")
     @ApiResponse(responseCode = "201", description = "상품 추가 성공")
     public ResponseEntity<SuccessBody<ProductResponseDTO>> addProduct(
-        @Valid @RequestBody ProductCreateRequestDTO productCreateRequestDTO,
+        @Valid @RequestBody ProductRequestDTO productRequestDTO,
         @LoginUser User user) {
         authService.authorizeAdminUser(user);
-        ProductResponseDTO productResponseDTO = productService.addProduct(productCreateRequestDTO);
+//        ProductResponseDTO productResponseDTO = productService.addProduct(productCreateRequestDTO);
+        ProductResponseDTO productResponseDTO = productService.addProduct(productRequestDTO);
 
         return ApiResponseGenerator.success(HttpStatus.CREATED, "상품이 등록되었습니다.", productResponseDTO);
     }
