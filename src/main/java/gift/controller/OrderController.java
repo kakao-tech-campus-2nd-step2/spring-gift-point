@@ -7,6 +7,7 @@ import gift.service.OrderService;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.servlet.http.HttpSession;
 import org.json.JSONException;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -24,9 +25,9 @@ public class OrderController {
 
     @Operation(summary = "주문 생성")
     @PostMapping
-    public ResponseEntity<OrderResponse> createOrder(@RequestBody OrderRequest orderRequest, HttpSession session) throws JSONException {
+    public ResponseEntity<OrderResponse> createOrder(@RequestBody OrderRequest orderRequest, @RequestHeader(HttpHeaders.AUTHORIZATION) String accessToken) throws JSONException {
         // 주문 처리 로직
-        OrderResponse orderResponse = orderService.createOrder(orderRequest, session);
+        OrderResponse orderResponse = orderService.createOrder(orderRequest, accessToken);
 
         //kakaoTokenService.processOrder(orderResponse);
 
