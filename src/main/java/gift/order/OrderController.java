@@ -28,7 +28,11 @@ public class OrderController {
     @ResponseStatus(value = HttpStatus.CREATED)
     @Operation(summary = "옵션 주문", description = "옵션을 주문하고, 메시지를 보냅니다.")
     @ApiResponse(responseCode = "201", description = "주문 성공")
-    @ApiResponse(responseCode = "400", description = "존재하지 않는 옵션이거나, 주문한 수량이 남아있는 수량보다 작습니다.")
+    @ApiResponse(responseCode = "400", description = "옵션이 존재하지 않는 경우")
+    @ApiResponse(responseCode = "400", description = "재고가 소진된 경우")
+    @ApiResponse(responseCode = "400", description = "요청 양식이 잘못된 경우")
+    @ApiResponse(responseCode = "403", description = "인증 실패")
+    @ApiResponse(responseCode = "500", description = "서버 에러")
     public CreateOrderResponseDTO createOrder(
         @RequestBody CreateOrderRequestDTO createOrderRequestDTO,
         @RequestHeader("Authorization") String accessToken
