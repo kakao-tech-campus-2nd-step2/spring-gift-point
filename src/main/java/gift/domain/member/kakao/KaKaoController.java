@@ -1,6 +1,7 @@
 package gift.domain.member.kakao;
 
 import gift.domain.member.Member;
+import gift.domain.member.dto.response.MemberResponse;
 import gift.global.jwt.JwtProvider;
 import gift.global.response.ResponseMaker;
 import gift.global.response.SimpleResultResponseDto;
@@ -40,13 +41,14 @@ public class KaKaoController {
      */
     @GetMapping("/kakao")
     @Operation(summary = "카카오 로그인 인가코드로 JWT 발급")
-    public ResponseEntity<SimpleResultResponseDto> JwtToken(
+    public ResponseEntity<MemberResponse> JwtToken(
         @Parameter(description = "카카오 로그인 인가코드") @RequestParam(value = "code") String authorizedCode
     ) {
         KaKaoToken kaKaoToken = kaKaoService.getKaKaoToken(authorizedCode);
         Member findMember = kaKaoService.loginOrRegister(kaKaoToken);
 
         String jwt = JwtProvider.generateToken(findMember);
-        return ResponseMaker.createSimpleResponseWithJwtOnHeader(HttpStatus.OK, "카카오 로그인 성공", jwt);
+        MemberResponse memberResponse = new MemberResponse(findMember.getEmail(), jwt);
+        return ResponseEntity.ok(memberResponse);
     }
 }
