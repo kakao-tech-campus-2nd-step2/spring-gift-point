@@ -30,7 +30,7 @@ public class WishEntityRepositoryTest {
     @Test
     void save(){
         MemberEntity member = new MemberEntity("testEmail","testPassword", Role.CONSUMER);
-        ProductEntity product = new ProductEntity(categoryRepository.findById(1L).get(),"testName",1,"testImageUrl");
+        ProductEntity product = new ProductEntity("testName",1,"testImageUrl", categoryRepository.findById(1L).get());
         memberRepository.save(member);
         productRepository.save(product);
         WishEntity expected = new WishEntity(member, product);
@@ -44,7 +44,7 @@ public class WishEntityRepositoryTest {
     @Test
     void findByName() {
         MemberEntity member = new MemberEntity("testEmail","testPassword", Role.CONSUMER);
-        ProductEntity product = new ProductEntity(categoryRepository.findById(1L).get(),"testName",1,"testImageUrl");
+        ProductEntity product = new ProductEntity("testName",1,"testImageUrl", categoryRepository.findById(1L).get());
         memberRepository.save(member);
         productRepository.save(product);
 
@@ -57,7 +57,7 @@ public class WishEntityRepositoryTest {
     @Test
     void deleteByProductIDAndMemberId(){
         MemberEntity member = new MemberEntity("testEmail","testPassword", Role.CONSUMER);
-        ProductEntity product = new ProductEntity(categoryRepository.findById(1L).get(),"testName",1,"testImageUrl");
+        ProductEntity product = new ProductEntity("testName",1,"testImageUrl", categoryRepository.findById(1L).get());
         memberRepository.save(member);
         productRepository.save(product);
         wishRepository.save(new WishEntity(member, product));

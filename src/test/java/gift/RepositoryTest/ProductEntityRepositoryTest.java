@@ -21,12 +21,12 @@ public class ProductEntityRepositoryTest {
 
     @BeforeTestClass
     public void setup(){
-        categoryRepository.save(new CategoryEntity("test1","test2","test3","test4"));
+        categoryRepository.save(new CategoryEntity("test1","test3","test4"));
     }
 
     @Test
     void save(){
-        ProductEntity expected = new ProductEntity(categoryRepository.findById(1L).get(),"a", 1000, "b");
+        ProductEntity expected = new ProductEntity("a", 1000, "b", categoryRepository.findById(1L).get());
         ProductEntity actual = productRepository.save(expected);
         assertAll(
                 () -> assertThat(actual.getId()).isNotNull(),
@@ -39,7 +39,7 @@ public class ProductEntityRepositoryTest {
         String expectedName = "a";
         int expectedPrice = 1000;
         String expectedImageUrl = "b";
-        productRepository.save(new ProductEntity(categoryRepository.findById(1L).get(), expectedName, expectedPrice, expectedImageUrl));
+        productRepository.save(new ProductEntity("a", 1000, "b", categoryRepository.findById(1L).get()));
         String actual = productRepository.findByName(expectedName).get().getName();
         assertThat(actual).isEqualTo(expectedName);
     }

@@ -16,7 +16,7 @@ public class CategoryEntityRepositoryTest {
 
     @Test
     void save(){
-        CategoryEntity expected = new CategoryEntity("testName", "testColor", "testUrl", "testDescription");
+        CategoryEntity expected = new CategoryEntity("testName", "testUrl", "testDescription");
         CategoryEntity actual = categoryRepository.save(expected);
         assertAll(
                 () -> assertThat(actual.getId()).isNotNull(),
@@ -27,10 +27,9 @@ public class CategoryEntityRepositoryTest {
     @Test
     void findByName() {
         String expectedName = "testName";
-        String expectedColor = "testColor";
         String expectedImageUrl = "testImageUrl";
         String expectedDescription = "testDescription";
-        categoryRepository.save(new CategoryEntity(expectedName, expectedColor, expectedImageUrl, expectedDescription));
+        categoryRepository.save(new CategoryEntity(expectedName, expectedImageUrl, expectedDescription));
         String actual = categoryRepository.findByName(expectedName).get().getName();
         assertThat(actual).isEqualTo(expectedName);
     }
