@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Kakao</title>
+    <link rel="stylesheet" href="https://unpkg.com/mvp.css">
+</head>
+<body>
+<h1>Kakao</h1>
+<script>
+    const kakaoBackUrl = "http://localhost:8080/api/users/kakao";
+    const redirectUrl = "http://localhost:8080/me";
+
+    const url = new URL(window.location.href);
+    const params = url.searchParams;
+    const code = params.get("code");
+
+    fetch(kakaoBackUrl, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({code: code})
+    })
+        .then(() => window.location.href = redirectUrl);
+
+</script>
+</body>
+</html>

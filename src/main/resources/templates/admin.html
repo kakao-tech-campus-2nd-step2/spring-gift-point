@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <title>admin</title>
+    <link rel="stylesheet" href="https://unpkg.com/mvp.css">
+</head>
+<body>
+<div>
+    <button type="button" onclick="gotoAdd()">add</button>
+</div>
+<table>
+    <tr>
+        <th scope="col">id</th>
+        <th scope="col">name</th>
+        <th scope="col">price</th>
+        <th scope="col">imageUrl</th>
+    </tr>
+    <tr th:id="${product.id}" th:each="product : ${products}">
+        <td th:text="${product.id}"></td>
+        <td th:text="${product.name}"></td>
+        <td th:text="${product.price}"></td>
+        <td th:text="${product.imageUrl}"></td>
+        <td>
+            <a th:href="@{/admin/{id}(id=${product.id})}">detail</a>
+        </td>
+    </tr>
+</table>
+<script th:src="@{/js/gotoPage.js}"></script>
+</body>
+</html>
