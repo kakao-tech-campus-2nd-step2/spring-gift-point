@@ -1,12 +1,7 @@
 package gift.dto;
 
-public class WishlsitRequestDto {
-    private int id;
+public class WishlistRequestDto {
     private long productId;
-
-    public int getId() {
-        return id;
-    }
 
     public long getProductId() {
         return productId;
