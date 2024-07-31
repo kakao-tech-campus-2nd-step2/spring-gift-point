@@ -4,18 +4,18 @@ import gift.model.Product;
 import gift.model.ProductName;
 
 public class ProductDTO {
-    private long id;
+    private Long id;
     private String name;
     private Integer price;
     private String imageUrl;
-    private String category;
+    private Long categoryId;
 
-    public ProductDTO(long id, String name, int price, String imageUrl, String category) {
+    public ProductDTO(Long id, String name, int price, String imageUrl, Long categoryId) {
         this.id = id;
         this.setName(name);
         this.price = price;
         this.imageUrl = imageUrl;
-        this.category = category;
+        this.categoryId = categoryId;
     }
 
     public void setName(String name) {
@@ -24,10 +24,10 @@ public class ProductDTO {
     }
 
     public static ProductDTO getProductDTO(Product product){
-        return new ProductDTO(product.getId(), product.getName(), product.getPrice(), product.getImageUrl(), product.getCategory().getName());
+        return new ProductDTO(product.getId(), product.getName(), product.getPrice(), product.getImageUrl(), product.getCategory().getId());
     }
 
-    public long getId() {
+    public Long getId() {
         return id;
     }
 
@@ -43,9 +43,13 @@ public class ProductDTO {
         return imageUrl;
     }
 
-    public String getCategory() {
-        return category;
+    public Long getCategoryId() {
+        return categoryId;
     }
+
+//    public Long getCategory() {
+//        return categoryId;
+//    }
 
     @Override
     public String toString() {
@@ -54,7 +58,7 @@ public class ProductDTO {
                 ", name='" + name + '\'' +
                 ", price=" + price +
                 ", imageUrl='" + imageUrl + '\'' +
-                ", category='" + category + '\'' +
+                ", categoryId=" + categoryId +
                 '}';
     }
 }

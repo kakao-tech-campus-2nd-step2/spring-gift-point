@@ -42,7 +42,7 @@ public class ProductService {
                 product.getName(),
                 product.getPrice(),
                 product.getImageUrl(),
-                product.getCategory().getName());
+                product.getCategory().getId());
         return productDTO;
     }
 

@@ -31,7 +31,7 @@ public class ProductApiController {
 
     @GetMapping("/{productId}")
     @ResponseBody
-    public ProductDTO getProductById(@PathVariable Long id) {
-        return productService.getProductDTOById(id);
+    public ProductDTO getProductById(@PathVariable Long productId) {
+        return productService.getProductDTOById(productId);
     }
 }
