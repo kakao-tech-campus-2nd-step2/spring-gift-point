@@ -46,7 +46,7 @@ public class ProductService {
 
     public void save(ProductRequest productRequest) {
         Category category = categoryRepository.findById(productRequest.categoryId())
-                .orElseThrow(() -> new IllegalArgumentException("Invalid category ID"));
+                .orElseThrow(() -> new IllegalArgumentException("Category with id " + productRequest.categoryId() + " not found"));
 
         Product product = new Product(productRequest.name(), productRequest.price(), productRequest.imageUrl(), category);
         productRepository.save(product);
