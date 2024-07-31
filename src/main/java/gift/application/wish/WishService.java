@@ -41,11 +41,11 @@ public class WishService {
             .orElseThrow(() -> new NotFoundException("Member not found"));
 
         Product product = productRepository.findById(command.productId())
-            .orElseThrow(() -> new NotFoundException("Product not found"));
+            .orElseThrow(() -> new NotFoundException("존재하지 않는 상품입니다."));
 
         wishRepository.findByMemberAndProduct(member, product)
             .ifPresent(wish -> {
-                throw new IllegalArgumentException("Wish already exists");
+                throw new IllegalArgumentException("이미 위시 리스트에 추가된 상품입니다.");
             });
 
         var wish = wishRepository.save(command.toEntity(member, product));
