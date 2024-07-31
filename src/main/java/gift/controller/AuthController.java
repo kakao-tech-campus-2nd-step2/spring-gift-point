@@ -41,7 +41,6 @@ public class AuthController {
         this.kakaoOAuthService = kakaoOAuthService;
     }
 
-
     @Operation(summary = "카카오 소셜 로그인", responses = @ApiResponse(responseCode = "200", description = "로그인 성공시 토큰 반환"))
     @GetMapping("/login/kakao")
     public ResponseEntity<?> getKakaoLoginPage() {
@@ -59,23 +58,11 @@ public class AuthController {
         return ResponseEntity.ok(newToken);
     }
 
-    @Operation(summary = "로그인", responses = @ApiResponse(responseCode = "200", description = "로그인 성공시 토큰 반환")
-    )
+    @Operation(summary = "로그인", responses = @ApiResponse(responseCode = "200", description = "로그인 성공시 토큰 반환"))
     @PostMapping("/login")
     public ResponseEntity<?> handleLoginRequest(@Valid @RequestBody UserForm userForm,
-        BindingResult result)
-        throws MethodArgumentNotValidException {
-        if (result.hasErrors()) {
-            throw new CustomArgumentNotValidException(result, ErrorCode.BAD_REQUEST);
-        }
-        if (!userService.existsEmail(userForm.getEmail())) {
-            result.rejectValue("email", "", ErrorCode.EMAIL_NOT_FOUND.getMessage());
-            throw new CustomArgumentNotValidException(result, ErrorCode.EMAIL_NOT_FOUND);
-        }
-        if (!userService.isPasswordMatch(userForm)) {
-            result.rejectValue("password", "", ErrorCode.PASSWORD_MISMATCH.getMessage());
-            throw new PassWordMissMatchException(result, ErrorCode.PASSWORD_MISMATCH);
-        }
+        BindingResult result) throws MethodArgumentNotValidException {
+        checkLoginUser(userForm, result);
         return ResponseEntity.ok(
             jwtProvider.generateToken(userService.findByEmail(userForm.getEmail())));
     }
@@ -93,6 +80,22 @@ public class AuthController {
         }
         Long id = userService.insertUser(userForm);
         return ResponseEntity.ok(id);
+    }
+
+    @Operation(hidden = true)
+    public void checkLoginUser(UserForm userForm, BindingResult result)
+        throws MethodArgumentNotValidException {
+        if (result.hasErrors()) {
+            throw new CustomArgumentNotValidException(result, ErrorCode.BAD_REQUEST);
+        }
+        if (!userService.existsEmail(userForm.getEmail())) {
+            result.rejectValue("email", "", ErrorCode.EMAIL_NOT_FOUND.getMessage());
+            throw new CustomArgumentNotValidException(result, ErrorCode.EMAIL_NOT_FOUND);
+        }
+        if (!userService.isPasswordMatch(userForm)) {
+            result.rejectValue("password", "", ErrorCode.PASSWORD_MISMATCH.getMessage());
+            throw new PassWordMissMatchException(result, ErrorCode.PASSWORD_MISMATCH);
+        }
     }
 
 }
