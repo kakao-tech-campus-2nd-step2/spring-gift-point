@@ -13,6 +13,15 @@ public class Category {
     @Column(unique = true, nullable = false)
     private String name;
 
+    @Column(nullable = false)
+    private String description;
+
+    @Column(nullable = false)
+    private String color;
+
+    @Column(nullable = false)
+    private String imageUrl;
+
     public Category() {
     }
 
