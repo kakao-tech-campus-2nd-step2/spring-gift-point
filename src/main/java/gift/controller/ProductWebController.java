@@ -1,8 +1,6 @@
 package gift.controller;
 
-import gift.dto.ProductDetailDto;
 import gift.dto.ProductRequestDto;
-import gift.dto.ProductResponseDto;
 import gift.model.Product;
 import gift.service.CategoryService;
 import gift.service.ProductService;
@@ -34,7 +32,7 @@ public class ProductWebController {
     public String getAllProducts(Model model,
                                  @PageableDefault(size = 10, sort = {"id"},
                                          direction = Sort.Direction.ASC) Pageable pageable) {
-        Page<ProductResponseDto> productPage = productService.getProducts(pageable);
+        Page<Product> productPage = productService.getWebProducts(pageable);
         model.addAttribute("products", productPage.getContent());
         model.addAttribute("currentPage", productPage.getNumber());
         model.addAttribute("totalPages", productPage.getTotalPages());
@@ -60,7 +58,7 @@ public class ProductWebController {
 
     @GetMapping("/edit/{productId}")
     public String editProductForm(@PathVariable Long productId, Model model) {
-        ProductDetailDto product = productService.getProductById(productId);
+        Product product = productService.getWebProductById(productId);
         model.addAttribute("product", product);
         model.addAttribute("categories", categoryService.getAllCategories());
         return "editProduct";

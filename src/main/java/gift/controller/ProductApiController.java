@@ -39,14 +39,14 @@ public class ProductApiController {
     @Operation(summary = "모든 상품 조회", description = "모든 상품을 조회합니다.")
     public ResponseEntity<Page<ProductResponseDto>> getAllProducts(
             @PageableDefault(sort = "id", direction = Sort.Direction.ASC) Pageable pageable) {
-        Page<ProductResponseDto> productPage = productService.getProducts(pageable);
+        Page<ProductResponseDto> productPage = productService.getApiProducts(pageable);
         return ResponseEntity.ok(productPage);
     }
 
     @GetMapping("/{productId}")
     @Operation(summary = "상품 id로 상품 조회", description = "상품 id로 상품을 조회합니다.")
     public ResponseEntity<ProductDetailDto> getProductById(@PathVariable Long productId) {
-        ProductDetailDto product = productService.getProductById(productId);
+        ProductDetailDto product = productService.getApiProductById(productId);
         return ResponseEntity.ok(product);
     }
 

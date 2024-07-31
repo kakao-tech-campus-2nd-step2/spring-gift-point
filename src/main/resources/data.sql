@@ -24,4 +24,12 @@ VALUES
 INSERT INTO option (name, quantity, product_id)
 VALUES
     ('Option A', 10, 3245119),
-    ('Option B', 20, 3245119);
+    ('Option B', 20, 3245119),
+    ('Option A', 10, 2263833),
+    ('Option B', 20, 2263833),
+    ('Option A', 10, 6502823),
+    ('Option B', 20, 6502823),
+    ('Option A', 10, 1181831),
+    ('Option B', 20, 1181831),
+    ('Option A', 10, 1379982),
+    ('Option B', 20, 1379982);

@@ -33,7 +33,7 @@ public class ProductService {
         this.wishlistRepository = wishlistRepository;
     }
 
-    public Page<ProductResponseDto> getProducts(Pageable pageable) {
+    public Page<ProductResponseDto> getApiProducts(Pageable pageable) {
         Page<Product> productPage = productRepository.findAll(pageable);
         return productPage.map(product -> {
             ProductResponseDto dto = new ProductResponseDto(product.getId(), product.getName(), product.getPrice(), product.getImageUrl());
@@ -41,6 +41,13 @@ public class ProductService {
         });
     }
 
+    public Page<Product> getWebProducts(Pageable pageable) {
+        Page<Product> productPage = productRepository.findAll(pageable);
+        return productPage.map(product -> {
+            Product dto = new Product(product.getId(), product.getName(), product.getPrice(), product.getImageUrl(), product.getCategory(), product.getOptions());
+            return dto;
+        });
+    }
 
     public ProductResponseDto addProduct(ProductRequestDto productRequestDto) {
         Category category = getCategoryById(productRequestDto.getCategoryId());
@@ -76,23 +83,32 @@ public class ProductService {
         productRepository.deleteById(id);
     }
 
-    public ProductDetailDto getProductById(Long id) {
+    public ProductDetailDto getApiProductById(Long id) {
         Product product = productRepository.findById(id)
                 .orElseThrow(() -> new NoSuchElementException("존재하지 않는 상품입니다."));
         return convertToDetailDto(product);
     }
 
+    public Product getWebProductById(Long id) {
+        Product product = productRepository.findById(id)
+                .orElseThrow(() -> new NoSuchElementException("존재하지 않는 상품입니다."));
+        return product;
+    }
+
     private ProductDetailDto convertToDetailDto(Product product) {
-        ProductDetailDto dto = new ProductDetailDto(product.getName(), product.getPrice(), product.getImageUrl());
+        ProductDetailDto dto = new ProductDetailDto(
+                product.getName(),
+                product.getPrice(),
+                product.getImageUrl());
         return dto;
     }
 
     private ProductResponseDto convertToResponseDto(Product product) {
-        ProductResponseDto dto = new ProductResponseDto();
-        dto.setId(product.getId());
-        dto.setName(product.getName());
-        dto.setPrice(product.getPrice());
-        dto.setImageUrl(product.getImageUrl());
+        ProductResponseDto dto = new ProductResponseDto(
+                product.getId(),
+                product.getName(),
+                product.getPrice(),
+                product.getImageUrl());
         return dto;
     }
 
