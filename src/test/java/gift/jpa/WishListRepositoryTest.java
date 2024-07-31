@@ -39,21 +39,19 @@ public class WishListRepositoryTest {
     void save() {
         User user = new User("email@kakao.com",
                 "passwordForTest",
-                "myNickName",
                 UserType.NORMAL_USER);
         userRepository.save(user);
         Product product = productRepository.findById(1L).orElseThrow();
         Option option = optionRepository.save(new Option("option1", 100L, product));
 
-        WishList expected = new WishList(10);
+        WishList expected = new WishList();
         user.addWishList(expected);
         option.addWishList(expected);
         WishList actual = wishListRepository.save(expected);
         assertAll(
                 () -> assertThat(actual.getId()).isNotNull(),
                 () -> assertThat(actual.getUser()).isEqualTo(expected.getUser()),
-                () -> assertThat(actual.getOption()).isEqualTo(expected.getOption()),
-                () -> assertThat(actual.getCount()).isEqualTo(expected.getCount())
+                () -> assertThat(actual.getOption()).isEqualTo(expected.getOption())
         );
 
     }
@@ -63,7 +61,6 @@ public class WishListRepositoryTest {
     void findByUserID() {
         User user = new User("email@kakao.com",
                 "passwordForTest",
-                "myNickName",
                 UserType.NORMAL_USER);
         userRepository.save(user);
         Product product = productRepository.findById(1L).orElseThrow();
@@ -71,18 +68,17 @@ public class WishListRepositoryTest {
 
         User user2 = new User("email2@kakao.com",
                 "passwordForTest2",
-                "myNickName2",
                 UserType.NORMAL_USER);
         userRepository.save(user2);
         Product product2 = productRepository.findById(2L).orElseThrow();
         Option option2 = optionRepository.save(new Option("option2", 200L, product2));
 
 
-        WishList expected = wishListRepository.save(new WishList(10));
+        WishList expected = wishListRepository.save(new WishList());
         user.addWishList(expected);
         option.addWishList(expected);
 
-        WishList saved = wishListRepository.save(new WishList(5));
+        WishList saved = wishListRepository.save(new WishList());
         user2.addWishList(saved);
         option2.addWishList(saved);
 
@@ -92,27 +88,8 @@ public class WishListRepositoryTest {
         assertAll(
                 () -> assertThat(actualWish.getId()).isNotNull(),
                 () -> assertThat(actualWish.getUser()).isEqualTo(expected.getUser()),
-                () -> assertThat(actualWish.getOption()).isEqualTo(expected.getOption()),
-                () -> assertThat(actualWish.getCount()).isEqualTo(expected.getCount())
+                () -> assertThat(actualWish.getOption()).isEqualTo(expected.getOption())
         );
-    }
-
-    @Test
-    @DisplayName("위시리스트의 상품 수량 변경 테스트")
-    void updateCount() {
-        User user = new User("email@kakao.com",
-                "passwordForTest",
-                "myNickName",
-                UserType.NORMAL_USER);
-        userRepository.save(user);
-        Product product = productRepository.findById(1L).orElseThrow();
-        Option option = optionRepository.save(new Option("option1", 100L, product));
-        WishList wish = wishListRepository.save(new WishList(10));
-        user.addWishList(wish);
-        option.addWishList(wish);
-        wish.setCount(100);
-        WishList actual = wishListRepository.findById(wish.getId()).orElseThrow();
-        assertThat(actual.getCount()).isEqualTo(100);
     }
 
     @Test
@@ -120,12 +97,11 @@ public class WishListRepositoryTest {
     void deleteByID() {
         User user = new User("email@kakao.com",
                 "passwordForTest",
-                "myNickName",
                 UserType.NORMAL_USER);
         userRepository.save(user);
         Product product = productRepository.findById(1L).orElseThrow();
         Option option = optionRepository.save(new Option("option1", 100L, product));
-        WishList wish = wishListRepository.save(new WishList(10));
+        WishList wish = wishListRepository.save(new WishList());
         
         user.addWishList(wish);
         option.addWishList(wish);

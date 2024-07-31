@@ -36,7 +36,7 @@ public class OptionTest {
     public void setting(){
         CategoryResponse categoryResponse = categoryService.insertNewCategory(new CategoryRequest("카테고리1", "색1", "이미지URL", "설명"));
         OptionRequest option = new OptionRequest("기본 옵션", 200L);
-        productService.insertNewProduct(new ProductRequest("상품1", 1000L, "이미지URL2", categoryResponse.id()), option);
+        //productService.insertNewProduct(new ProductRequest("상품1", 1000L, "이미지URL2", categoryResponse.id()), option);
     }
 
     @Test
