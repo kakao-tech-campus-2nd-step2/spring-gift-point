@@ -7,6 +7,8 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -29,8 +31,8 @@ public class MemberController {
     @ApiResponse(responseCode = "500", description = "서버 내부 에러 발생")
     @PostMapping("/register")
     public ResponseEntity<String> registerUser(@Valid @RequestBody RequestMemberDTO requestMemberDTO){
-        Member member = memberService.signUpUser(requestMemberDTO);
-        return ResponseEntity.created(URI.create("/members/register/" + member.getId())).body("회원가입이 정상적으로 되었습니다");
+        String token = memberService.signUpUser(requestMemberDTO);
+        return new ResponseEntity<>(token, HttpStatus.CREATED);
     }
 
     @Operation(summary = "로그인", description = "존재하는 사용자인지 확인 후 토큰을 발급합니다" )

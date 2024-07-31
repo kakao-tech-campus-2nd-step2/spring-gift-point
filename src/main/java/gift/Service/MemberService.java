@@ -1,5 +1,6 @@
 package gift.Service;
 
+import gift.Exception.EmailAlreadyExistsException;
 import gift.Exception.ForbiddenException;
 import gift.Exception.MemberNotFoundException;
 import gift.Model.Entity.Member;
@@ -9,6 +10,8 @@ import gift.Repository.MemberRepository;
 import gift.Util.JwtUtil;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Optional;
 
 @Service
 public class MemberService {
@@ -22,8 +25,12 @@ public class MemberService {
     }
 
     @Transactional
-    public Member signUpUser(RequestMemberDTO requestMemberDTO){
-        return memberRepository.save(new Member(requestMemberDTO.email(), requestMemberDTO.password()));
+    public String signUpUser(RequestMemberDTO requestMemberDTO){
+        Optional<Member> optionalMember = memberRepository.findByEmail(new Email(requestMemberDTO.email()));
+        if(optionalMember.isPresent())
+            throw new EmailAlreadyExistsException("이미 존재하는 이메일입니다");
+        Member member =  memberRepository.save(new Member(requestMemberDTO.email(), requestMemberDTO.password()));
+        return jwtUtil.generateToken(member);
     }
 
     @Transactional(readOnly = true)
