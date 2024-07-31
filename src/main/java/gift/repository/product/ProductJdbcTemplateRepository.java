@@ -80,4 +80,9 @@ public class ProductJdbcTemplateRepository implements ProductRepository {
         return null;
     }
 
+    @Override
+    public boolean existsById(Long productId) {
+        return false;
+    }
+
 }
