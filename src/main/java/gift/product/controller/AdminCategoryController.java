@@ -1,7 +1,6 @@
 package gift.product.controller;
 
 import gift.product.dto.CategoryDTO;
-import gift.product.model.Category;
 import gift.product.service.CategoryService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -66,7 +65,7 @@ public class AdminCategoryController {
         if(bindingResult.hasErrors()) {
             model.addAttribute("categoryDTO", categoryDTO);
         }
-        categoryService.updateCategory(new Category(id, categoryDTO.getName()));
+        categoryService.updateCategory(categoryDTO.convertToDomain(id));
         return "redirect:/admin/category";
     }
 
