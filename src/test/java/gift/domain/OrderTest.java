@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Test;
 
 import java.time.LocalDateTime;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 public class OrderTest {
@@ -31,36 +32,36 @@ public class OrderTest {
     }
 
     @Test
-    void testSetMember() {
+    void testWithMember() {
         Member newMember = new Member("new@example.com", "newpassword");
-        order.setMember(newMember);
-        assertEquals(newMember, order.getMember());
+        Orders newOrder = order.withMember(newMember);
+        assertEquals(newMember, newOrder.getMember());
     }
 
     @Test
-    void testSetOption() {
+    void testWithOption() {
         Option newOption = new Option("New Option", 5, null);
-        order.setOption(newOption);
-        assertEquals(newOption, order.getOption());
+        Orders newOrder = order.withOption(newOption);
+        assertEquals(newOption, newOrder.getOption());
     }
 
     @Test
-    void testSetQuantity() {
-        order.setQuantity(5);
-        assertEquals(5, order.getQuantity());
+    void testWithQuantity() {
+        Orders newOrder = order.withQuantity(5);
+        assertEquals(5, newOrder.getQuantity());
     }
 
     @Test
-    void testSetOrderDateTime() {
+    void testWithOrderDateTime() {
         LocalDateTime newDateTime = LocalDateTime.of(2024, 7, 26, 0, 0);
-        order.setOrderDateTime(newDateTime);
-        assertEquals(newDateTime, order.getOrderDateTime());
+        Orders newOrder = order.withOrderDateTime(newDateTime);
+        assertEquals(newDateTime, newOrder.getOrderDateTime());
     }
 
     @Test
-    void testSetMessage() {
+    void testWithMessage() {
         String newMessage = "Handle with extra care.";
-        order.setMessage(newMessage);
-        assertEquals(newMessage, order.getMessage());
+        Orders newOrder = order.withMessage(newMessage);
+        assertEquals(newMessage, newOrder.getMessage());
     }
 }

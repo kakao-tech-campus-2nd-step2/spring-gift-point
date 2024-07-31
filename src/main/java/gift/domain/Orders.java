@@ -39,39 +39,39 @@ public class Orders extends BaseEntity {
         return member;
     }
 
-    public void setMember(Member member) {
-        this.member = member;
-    }
-
     public Option getOption() {
         return option;
-    }
-
-    public void setOption(Option option) {
-        this.option = option;
     }
 
     public int getQuantity() {
         return quantity;
     }
 
-    public void setQuantity(int quantity) {
-        this.quantity = quantity;
-    }
-
     public LocalDateTime getOrderDateTime() {
         return orderDateTime;
-    }
-
-    public void setOrderDateTime(LocalDateTime orderDateTime) {
-        this.orderDateTime = orderDateTime;
     }
 
     public String getMessage() {
         return message;
     }
 
-    public void setMessage(String message) {
-        this.message = message;
+    public Orders withMember(Member member) {
+        return new Orders(member, this.option, this.quantity, this.orderDateTime, this.message);
+    }
+
+    public Orders withOption(Option option) {
+        return new Orders(this.member, option, this.quantity, this.orderDateTime, this.message);
+    }
+
+    public Orders withQuantity(int quantity) {
+        return new Orders(this.member, this.option, quantity, this.orderDateTime, this.message);
+    }
+
+    public Orders withOrderDateTime(LocalDateTime orderDateTime) {
+        return new Orders(this.member, this.option, this.quantity, orderDateTime, this.message);
+    }
+
+    public Orders withMessage(String message) {
+        return new Orders(this.member, this.option, this.quantity, this.orderDateTime, message);
     }
 }
