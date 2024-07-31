@@ -36,8 +36,8 @@ public class OrderService {
         return orderRepository.save(order);
     }
 
-    public KakaoMessageSendResponse sendMessage(String jwtAccessToken, String message){
-        return kakaoLoginService.sendMessage(jwtAccessToken, message);
+    public KakaoMessageSendResponse sendMessage(String accessToken, String message){
+        return kakaoLoginService.sendMessage(accessToken, message);
     }
     public Page<OrderResponse> getOrderResponses(Pageable pageable) {
         return orderRepository.findAll(pageable)
