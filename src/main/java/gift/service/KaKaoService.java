@@ -2,16 +2,10 @@ package gift.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import gift.LoginType;
-import gift.domain.KakaoToken;
-import gift.domain.Member;
 import gift.dto.KakaoTokenInfo;
 import gift.dto.KakaoUserInfo;
-import gift.dto.response.AuthResponse;
+import gift.dto.TemplateObject;
 import gift.exception.CustomException;
-import gift.repository.KakaoTokenRepository;
-import gift.repository.MemberRepository;
-import gift.util.JwtUtil;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -21,14 +15,12 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.web.client.RestClient;
 
 import java.net.URI;
-import java.util.Optional;
-import java.util.Random;
 
-import static gift.exception.ErrorCode.ALREADY_REGISTERED_ERROR;
 import static gift.exception.ErrorCode.KAKAO_LOGIN_FAILED_ERROR;
+import static gift.exception.ErrorCode.SEND_MSG_FAILED_ERROR;
 
 @Service
-public class KaKaoLoginService {
+public class KaKaoService {
 
     @Value("${kakao.clientId}")
     private String clientId;
@@ -45,26 +37,20 @@ public class KaKaoLoginService {
     @Value("${kakao.get-uerInfo.url}")
     private String getUserInfoUrl;
 
-    private final MemberRepository memberRepository;
-    private final KakaoTokenRepository kakaoTokenRepository;
-    private final JwtUtil jwtUtil;
+    @Value("${kakao.send-message.url}")
+    private String sendMessageUrl;
 
-    public KaKaoLoginService(MemberRepository memberRepository, KakaoTokenRepository kakaoTokenRepository, JwtUtil jwtUtil) {
-        this.memberRepository = memberRepository;
-        this.kakaoTokenRepository = kakaoTokenRepository;
-        this.jwtUtil = jwtUtil;
-    }
+    @Value("${service.home.web_url}")
+    private String homeUrl;
 
-    public AuthResponse kakaoLogin(String code) {
-        RestClient client = RestClient.builder().build();
+    private final RestClient client = RestClient.create();
+
+    public String getKakaoAccountEmail(String accessToken) {
         ObjectMapper objectMapper = new ObjectMapper();
-        KakaoTokenInfo kakaoTokenInfo = getAccessToken(code);
-        String accessToken = kakaoTokenInfo.access_token();
-        String email;
 
-        ResponseEntity<String> response = client.get()
+        ResponseEntity<String> response = clientWithAuthHeader(accessToken)
+                .get()
                 .uri(URI.create(getUserInfoUrl))
-                .header("Authorization", setAuthorizationHeader(accessToken))
                 .retrieve()
                 .toEntity(String.class);
 
@@ -73,15 +59,13 @@ public class KaKaoLoginService {
         }
 
         try {
-            email = objectMapper.readValue(response.getBody(), KakaoUserInfo.class).kakao_account().email;
-            return new AuthResponse(SaveMemberAndReturnJWT(email, kakaoTokenInfo));
+            return objectMapper.readValue(response.getBody(), KakaoUserInfo.class).kakao_account().email;
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
         }
     }
 
-    private KakaoTokenInfo getAccessToken(String code) {
-        RestClient client = RestClient.builder().build();
+    public KakaoTokenInfo getKakaoTokenInfo(String code) {
         ObjectMapper objectMapper = new ObjectMapper();
 
         LinkedMultiValueMap<String, String> body = createGetTokenBody(code);
@@ -113,24 +97,54 @@ public class KaKaoLoginService {
         return body;
     }
 
-    private String SaveMemberAndReturnJWT(String email, KakaoTokenInfo kakaoTokenInfo) {
-        Optional<Member> existMember = memberRepository.findMemberByEmail(email);
-        if (existMember.isPresent()) {
-            throw new CustomException(ALREADY_REGISTERED_ERROR);
+
+    public ResponseEntity<String> sendMessage(String message, String accessToken) {
+        LinkedMultiValueMap<String, String> body = createSendMsgBody(message);
+
+        ResponseEntity<String> response = clientWithAuthHeader(accessToken)
+                .post()
+                .uri(URI.create(sendMessageUrl))
+                .body(body)
+                .retrieve()
+                .toEntity(String.class);
+
+        if (response.getStatusCode() != HttpStatus.OK) {
+            throw new CustomException(SEND_MSG_FAILED_ERROR);
         }
-        Member savedMember = memberRepository.save(new Member(email, generateRandomPassword(), LoginType.KAKAO));
-        kakaoTokenRepository.save(new KakaoToken(savedMember, kakaoTokenInfo.access_token(), kakaoTokenInfo.refresh_token()));
 
-        return jwtUtil.createJWT(savedMember.getId(), savedMember.getLoginType());
+        return response;
     }
 
-    private String generateRandomPassword() {
-        Random random = new Random();
-        return String.valueOf(1000 + random.nextInt(9000));
+    private LinkedMultiValueMap<String, String> createSendMsgBody(String message) {
+        LinkedMultiValueMap<String, String> templateObject = new LinkedMultiValueMap<>();
+        ObjectMapper objectMapper = new ObjectMapper();
+
+        TemplateObject template = new TemplateObject("text", message, new TemplateObject.Link(homeUrl));
+
+        try {
+            String jsonTemplateObject = objectMapper.writeValueAsString(template);
+            templateObject.add("template_object", jsonTemplateObject);
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+        }
+
+        return templateObject;
     }
 
-    private String setAuthorizationHeader(String token) {
-        return "Bearer " + token;
+    private RestClient clientWithAuthHeader(String accessToken) {
+        return RestClient.builder().defaultHeader("Authorization", "Bearer " + accessToken).build();
+    }
+
+    public void setSendMessageUrl(String sendMessageUrl) {
+        this.sendMessageUrl = sendMessageUrl;
+    }
+
+    public void setGetTokenUrl(String getTokenUrl) {
+        this.getTokenUrl = getTokenUrl;
+    }
+
+    public void setGetUserInfoUrl(String getUserInfoUrl) {
+        this.getUserInfoUrl = getUserInfoUrl;
     }
 
 }

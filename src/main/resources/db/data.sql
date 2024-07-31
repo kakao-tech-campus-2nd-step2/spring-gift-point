@@ -14,4 +14,4 @@ INSERT INTO product (id, name, price, image_url, category_id) VALUES (2, '아이
 
 -- option data for test
 INSERT INTO option (id, name, quantity, product_id) VALUES (1, 'option1', 100, 1);
-INSERT INTO option (id, name, quantity, product_id) VALUES (2, 'option1', 100, 2);
+INSERT INTO option (id, name, quantity, product_id) VALUES (2, 'option2', 100, 2);
