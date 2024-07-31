@@ -78,6 +78,18 @@ public class GlobalExceptionHandler {
         problemDetail.setDetail(ex.getMessage());
         return ResponseEntity.status(ex.getStatus()).body(problemDetail);
     }
+    @ExceptionHandler(WishInvalidAuthException.class)
+    public ResponseEntity<ProblemDetail> handleWishInvalidAuthException(WishInvalidAuthException ex) {
+        ProblemDetail problemDetail = ProblemDetail.forStatus(ex.getStatus());
+        problemDetail.setDetail(ex.getMessage());
+        return ResponseEntity.status(ex.getStatus()).body(problemDetail);
+    }
+    @ExceptionHandler(WishAlreadyExistException.class)
+    public ResponseEntity<ProblemDetail> handleWishAlreadyExistException(WishAlreadyExistException ex) {
+        ProblemDetail problemDetail = ProblemDetail.forStatus(ex.getStatus());
+        problemDetail.setDetail(ex.getMessage());
+        return ResponseEntity.status(ex.getStatus()).body(problemDetail);
+    }
 
     @ExceptionHandler(HttpClientErrorException.class)
     public ResponseEntity<Map<String, String>> handleHttpClientErrorException(HttpClientErrorException ex) {
