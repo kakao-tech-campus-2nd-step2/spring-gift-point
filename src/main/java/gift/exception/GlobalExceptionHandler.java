@@ -37,6 +37,14 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(ex.getStatus()).body(problemDetail);
     }
 
+    @ExceptionHandler(InvalidAuthCodeException.class)
+    public ResponseEntity<ProblemDetail> handleInvalidAuthCodeException(InvalidAuthCodeException ex) {
+        ProblemDetail problemDetail = ProblemDetail.forStatus(ex.getStatus());
+        problemDetail.setDetail(ex.getMessage());
+        return ResponseEntity.status(ex.getStatus()).body(problemDetail);
+    }
+
+
     @ExceptionHandler(ProductNotFoundException.class)
     public ResponseEntity<ProblemDetail> handleProductNotFoundException(UserAlreadyExistException ex) {
         ProblemDetail problemDetail = ProblemDetail.forStatus(ex.getStatus());

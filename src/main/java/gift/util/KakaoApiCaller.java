@@ -2,11 +2,13 @@ package gift.util;
 
 import gift.common.properties.KakaoProperties;
 import gift.dto.OAuth.*;
+import gift.exception.InvalidAuthCodeException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestClient;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -40,14 +42,19 @@ public class KakaoApiCaller {
     public AuthTokenResponse getAccessToken(String authCode) {
         String url = kakaoProperties.tokenUrl();
         MultiValueMap<String, String> params = createParamsForAccessToken(authCode);
-        AuthTokenResponse resp = restClient.post()
-                .uri(URI.create(url))
-                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                .body(params)
-                .retrieve()
-                .body(AuthTokenResponse.class);
+        try{
+            AuthTokenResponse resp = restClient.post()
+                    .uri(URI.create(url))
+                    .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                    .body(params)
+                    .retrieve()
+                    .body(AuthTokenResponse.class);
 
-        return resp;
+            return resp;
+        }catch (HttpClientErrorException e) {
+            throw new InvalidAuthCodeException("유효하지 않은 인가코드입니다.");
+        }
+
     }
 
     public AuthTokenResponse refreshAccessToken(String refreshToken) {
