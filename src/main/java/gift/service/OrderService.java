@@ -45,7 +45,7 @@ public class OrderService {
     @Transactional
     public void createOrder(Long memberId, OrderRequest orderRequest) {
         Product product = productRepository.findProductAndOptionByIdFetchJoin(orderRequest.productId())
-                .orElseThrow(() -> new EntityNotFoundException("Product with productId " + orderRequest.productId() + " not found"));
+                .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 상품입니다."));
         Option option = product.findOptionByOptionId(orderRequest.optionId());
         Orders orders = orderRepository.save(new Orders(product.getId(), option.getId(), memberId,
                 product.getName(), product.getImageUrl(), option.getName(), product.getPrice(), orderRequest.quantity(), orderRequest.message()));
@@ -56,13 +56,13 @@ public class OrderService {
 
     public void sendKakaoMessage(Long memberId, Long orderId) {
         Member member = memberRepository.findById(memberId)
-                .orElseThrow(() -> new EntityNotFoundException("Member Not Exists."));
+                .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 멤버입니다."));
         if(member.getLoginType() != SocialLoginType.KAKAO) {
             return;
         }
 
         Orders orders = orderRepository.findById(orderId)
-                .orElseThrow(() -> new EntityNotFoundException("Order Not Exists."));
+                .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 주문입니다."));
         String accessToken = kakaoTokenService.refreshIfAccessTokenExpired(memberId);
         kakaoApiCaller.sendKakaoMessage(accessToken, orders);
     }

@@ -35,13 +35,13 @@ public class Wish extends BasicEntity{
 
     public void checkWishByMemberId(Long memberId) {
         if (!isOwner(memberId)) {
-            throw new EntityNotFoundException("Product does not exist in " + memberId +"'s wish");
+            throw new EntityNotFoundException("본인의 위시리스트만 삭제 가능합니다.");
         }
     }
 
     public void checkWishByProductId(Long productId) {
         if (!containsProduct(productId)) {
-            throw new EntityNotFoundException("Product with productId " + productId + " does not exist");
+            throw new EntityNotFoundException("위시리스트의 상품과 일치하지 않습니다.");
         }
     }
 

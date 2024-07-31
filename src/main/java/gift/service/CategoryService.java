@@ -35,14 +35,14 @@ public class CategoryService {
     @Transactional(readOnly = true)
     public CategoryResponse.Info findById(Long id) {
         return CategoryResponse.Info.from(categoryRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Category with productId " + id + " not found")));
+                .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 카테고리입니다.")));
     }
 
     @Transactional
     public void updateById(CategoryRequest.UpdateCategory request) {
         Category category = categoryRepository.findById(request.id())
                 .orElseThrow(() ->
-                        new EntityNotFoundException("Category with productId " + request.id() + " not found"));
+                        new EntityNotFoundException("존재하지 않는 카테고리입니다."));
         category.updateCategory(request.name(), request.color(), request.imageUrl(), request.description());
     }
 
@@ -60,7 +60,7 @@ public class CategoryService {
 
     private void checkDuplicateCategory(CategoryRequest.CreateCategory request) {
         if (categoryRepository.existsByName(request.name())) {
-            throw new DuplicateDataException("Category with name " + request.name() + " already exists", "Duplicate Category");
+            throw new DuplicateDataException("이미 존재하는 카테고리명입니다.", "Duplicate Category");
         }
     }
 }

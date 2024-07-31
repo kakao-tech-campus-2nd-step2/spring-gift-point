@@ -67,22 +67,22 @@ public class Product extends BasicEntity{
         options.remove(entity);
     }
 
-    public int subtractOptionQuantity(Long optionId, int amount) {
+    public void subtractOptionQuantity(Long optionId, int amount) {
         Option option = findOptionByOptionId(optionId);
-        return option.subtractQuantity(amount);
+        option.subtractQuantity(amount);
     }
 
     public Option findOptionByOptionId(Long optionId) {
         return options.stream()
                 .filter(option -> option.getId().equals(optionId))
                 .findFirst()
-                .orElseThrow(() -> new EntityNotFoundException("Option with productId " + optionId + " not found"));
+                .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 옵션입니다."));
     }
 
     public void checkDuplicateOptionName(Long theirId, String theirName) {
         for (Option option : options) {
             if(option.isSameName(theirName) && option.isNotSameId(theirId)) {
-                throw new DuplicateDataException("Option with name " + theirName + " already exists");
+                throw new DuplicateDataException("이미 존재하는 옵션명입니다.");
             }
         }
     }

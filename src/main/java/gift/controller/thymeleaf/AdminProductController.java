@@ -1,4 +1,4 @@
-package gift.controller.admin;
+package gift.controller.thymeleaf;
 
 import gift.controller.dto.request.ProductRequest;
 import gift.controller.dto.response.CategoryResponse;

@@ -1,8 +1,9 @@
 package gift.controller.restcontroller;
 
 import gift.controller.dto.request.SignInRequest;
-import gift.controller.dto.response.TokenResponse;
+import gift.controller.dto.response.LoginResponse;
 import gift.service.AuthService;
+import gift.service.dto.LoginDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
@@ -24,8 +25,10 @@ public class AuthRestController {
 
     @PostMapping("/login")
     @Operation(summary = "로그인", description = "로그인을 시도합니다.")
-    public ResponseEntity<TokenResponse> login(@Valid @RequestBody SignInRequest request) {
-        TokenResponse response = authService.signIn(request);
-        return ResponseEntity.ok().body(response);
+    public ResponseEntity<LoginResponse> login(@Valid @RequestBody SignInRequest request) {
+        LoginDto response = authService.signIn(request);
+        return ResponseEntity.ok()
+                .header("Authorization", response.accessToken())
+                .body(LoginResponse.of(response.name()));
     }
 }

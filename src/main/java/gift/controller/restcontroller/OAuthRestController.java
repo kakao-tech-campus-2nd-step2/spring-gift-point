@@ -1,8 +1,9 @@
 package gift.controller.restcontroller;
 
 import gift.common.annotation.LoginMember;
-import gift.controller.dto.response.TokenResponse;
+import gift.controller.dto.response.LoginResponse;
 import gift.service.OAuthService;
+import gift.service.dto.LoginDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -24,9 +25,11 @@ public class OAuthRestController {
 
     @GetMapping("/kakao/login/callback")
     @Operation(summary = "카카오 로그인 리다이렉션", description = "카카오 액세스 토큰을 발급받습니다.")
-    public ResponseEntity<TokenResponse> kakaoToken(@RequestParam("code") @NotNull String code) {
-        TokenResponse response = oAuthService.signIn(code);
-        return ResponseEntity.ok().body(response);
+    public ResponseEntity<LoginResponse> kakaoToken(@RequestParam("code") @NotNull String code) {
+        LoginDto response = oAuthService.signIn(code);
+        return ResponseEntity.ok()
+                .header("Authorization", response.accessToken())
+                .body(LoginResponse.of(response.name()));
     }
 
     @PostMapping("/kakao/logout")

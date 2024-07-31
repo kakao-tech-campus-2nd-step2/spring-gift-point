@@ -1,4 +1,4 @@
-package gift.controller.admin;
+package gift.controller.thymeleaf;
 
 import gift.controller.dto.request.OptionRequest;
 import gift.controller.dto.response.OptionResponse;

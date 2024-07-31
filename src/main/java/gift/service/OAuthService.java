@@ -3,11 +3,12 @@ package gift.service;
 import gift.common.enums.Role;
 import gift.common.enums.SocialLoginType;
 import gift.common.properties.KakaoProperties;
-import gift.controller.dto.response.TokenResponse;
 import gift.model.Member;
 import gift.repository.MemberRepository;
 import gift.security.JwtProvider;
+import gift.service.dto.KakaoInfoDto;
 import gift.service.dto.KakaoTokenDto;
+import gift.service.dto.LoginDto;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -29,22 +30,21 @@ public class OAuthService {
     }
 
     @Transactional
-    public TokenResponse signIn(String code) {
+    public LoginDto signIn(String code) {
         return signIn(code, properties.redirectUrl());
     }
 
     @Transactional
-    public TokenResponse signIn(String code, String redirectUrl) {
+    public LoginDto signIn(String code, String redirectUrl) {
         KakaoTokenDto kakaoTokenDto = kakaoApiCaller.getKakaoAccessToken(code, redirectUrl);
-        String email = kakaoApiCaller.getKakaoMemberInfo(kakaoTokenDto.accessToken());
-
-        Member member = memberRepository.findByEmail(email)
-                .orElseGet(() -> memberRepository.save(new Member(email, "", Role.USER, SocialLoginType.KAKAO)));
+        KakaoInfoDto infoDto = kakaoApiCaller.getKakaoMemberInfo(kakaoTokenDto.accessToken());
+        Member member = memberRepository.findByEmail(infoDto.email())
+                .orElseGet(() -> memberRepository.save(new Member(infoDto.email(), "", infoDto.name(), Role.USER, SocialLoginType.KAKAO)));
         member.checkLoginType(SocialLoginType.KAKAO);
 
         kakaoTokenService.saveToken(member.getId(), kakaoTokenDto);
         String token = jwtProvider.generateToken(member.getId(), member.getEmail(), member.getRole());
-        return TokenResponse.from(token);
+        return LoginDto.of(token, member.getName());
     }
 
     public void signOut(Long memberId) {

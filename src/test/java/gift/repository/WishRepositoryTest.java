@@ -43,7 +43,7 @@ class WishRepositoryTest {
         String email = "test@gmail.com";
         String password = "password";
         Role role = Role.USER;
-        Member member = memberRepository.save(new Member(email, password, role));
+        Member member = memberRepository.save(new Member(email, password, "", role));
         String[] names = {"test1", "test2"};
         int[] prices = {10, 20};
         String[] imageUrls = {"test1", "test2"};
@@ -83,7 +83,7 @@ class WishRepositoryTest {
         String email = "test@gmail.com";
         String password = "password";
         Role role = Role.USER;
-        Member member = memberRepository.save(new Member(email, password, role));
+        Member member = memberRepository.save(new Member(email, password, "", role));
         String name = "product1";
         int price = 1000;
         String imageUrl = "imageUrl";
@@ -122,7 +122,7 @@ class WishRepositoryTest {
         String email = "test@gmail.com";
         String password = "password";
         Role role = Role.USER;
-        Member member = memberRepository.save(new Member(email, password, role));
+        Member member = memberRepository.save(new Member(email, password, "", role));
         String name = "product1";
         int price = 1000;
         String imageUrl = "imageUrl";
@@ -147,7 +147,7 @@ class WishRepositoryTest {
         String email = "test@gmail.com";
         String password = "password";
         Role role = Role.USER;
-        Member member = memberRepository.save(new Member(email, password, role));
+        Member member = memberRepository.save(new Member(email, password, "", role));
         String name = "product1";
         Category category = categoryRepository.save(new Category("가전", "#123", "url", ""));
         int price = 1000;
@@ -169,7 +169,7 @@ class WishRepositoryTest {
     void update() {
         // given
         Category category = categoryRepository.save(new Category("cname", "color", "imageUrl", "description"));
-        Member member = memberRepository.save(new Member("mname", "mage", Role.USER));
+        Member member = memberRepository.save(new Member("mname", "mage", "name", Role.USER));
         List<Option> options = List.of(new Option("oName", 123));
         Product product = productRepository.save(new Product("pname", 1_000, "pimage", category, options));
         Wish wish = wishRepository.save(new Wish(member, 1, product));

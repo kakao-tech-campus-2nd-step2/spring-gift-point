@@ -1,10 +1,10 @@
-package gift.controller.admin;
+package gift.controller.thymeleaf;
 
 import gift.common.properties.KakaoProperties;
 import gift.controller.dto.request.SignInRequest;
-import gift.controller.dto.response.TokenResponse;
 import gift.service.AuthService;
 import gift.service.OAuthService;
+import gift.service.dto.LoginDto;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseCookie;
@@ -39,7 +39,7 @@ public class AdminLoginController {
 
     @PostMapping("/login")
     public String login(@Valid @ModelAttribute SignInRequest request, HttpServletResponse response) {
-        TokenResponse tokenResponse = authService.signIn(request);
+        LoginDto tokenResponse = authService.signIn(request);
         String token = tokenResponse.accessToken();
         ResponseCookie cookie = ResponseCookie.from("Authorization", token)
                 .httpOnly(true)
@@ -54,7 +54,7 @@ public class AdminLoginController {
 
     @GetMapping("kakao/login/callback")
     public String kakaoLogin(@RequestParam("code") String code, HttpServletResponse response) {
-        TokenResponse tokenResponse = oAuthService.signIn(code, properties.adminRedirectUrl());
+        LoginDto tokenResponse = oAuthService.signIn(code, properties.adminRedirectUrl());
         String token = tokenResponse.accessToken();
         ResponseCookie cookie = ResponseCookie.from("Authorization", token)
                 .httpOnly(true)

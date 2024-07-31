@@ -41,13 +41,13 @@ public class JwtProvider {
                     .parseClaimsJws(token)
                     .getBody();
         }catch (SecurityException | MalformedJwtException e) {
-            throw new JwtException("Invalid JWT Token");
+            throw new JwtException("정상적인 요청이 아닙니다.");
         } catch (ExpiredJwtException e) {
-            throw new JwtException("Expired JWT Token");
+            throw new JwtException("로그인이 만료되었습니다.");
         } catch (UnsupportedJwtException e) {
-            throw new JwtException("Unsupported JWT Token");
+            throw new JwtException("지원하지 않는 형식입니다.");
         } catch (IllegalArgumentException e) {
-            throw new JwtException("JWT claims string is empty.");
+            throw new JwtException("로그인 후 이용가능합니다.");
         }
     }
 

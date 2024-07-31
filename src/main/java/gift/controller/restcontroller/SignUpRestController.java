@@ -28,7 +28,7 @@ public class SignUpRestController {
     @Operation(summary = "회원가입", description = "회원가입을 시도합니다.")
     @ApiResponse(responseCode = "201")
     public ResponseEntity<Void> signUp(@Valid @RequestBody SignUpRequest request) {
-        memberService.signUp(request.email(), request.password(), Role.USER);
+        memberService.signUp(request.email(), request.password(), request.name(), Role.USER);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 }

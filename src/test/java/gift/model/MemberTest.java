@@ -16,7 +16,7 @@ class MemberTest {
         // given
         String email = "test@gmail.com";
         String password = "password";
-        Member member = new Member(email, password, Role.USER, SocialLoginType.KAKAO);
+        Member member = new Member(email, password, "name", Role.USER, SocialLoginType.KAKAO);
 
         // when
         // then
