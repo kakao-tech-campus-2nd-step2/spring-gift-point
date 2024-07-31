@@ -10,8 +10,12 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import org.springframework.data.domain.Page;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -26,12 +30,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
-@RequestMapping("/admin/categories")
+@RequestMapping("/api/categories")
 @Validated
 @Tag(name = "Category Management", description = "APIs for managing categories")
 public class CategoryController {
 
     private final CategoryService categoryService;
+
 
     public CategoryController(CategoryService categoryService) {
         this.categoryService = categoryService;
@@ -44,7 +49,7 @@ public class CategoryController {
         @ApiResponse(responseCode = "400", description = "Invalid request parameters."),
         @ApiResponse(responseCode = "500", description = "Internal server error.")
     })
-    public String allCategories(
+    public ResponseEntity<List<CategoryDTO>> allCategories(
         @RequestParam(defaultValue = "0") int page,
         @RequestParam(defaultValue = "10") @Min(1) @Max(30) int size,
         @RequestParam(defaultValue = "id") String sortBy,
@@ -54,13 +59,17 @@ public class CategoryController {
         PageRequestDTO pageRequestDTO = new PageRequestDTO(page, size, sortBy, direction);
         Page<CategoryDTO> categoryPage = categoryService.findAllCategories(pageRequestDTO);
 
-        model.addAttribute("categories", categoryPage.getContent());
-        model.addAttribute("currentPage", page);
-        model.addAttribute("totalPages", categoryPage.getTotalPages());
-        model.addAttribute("sortBy", sortBy);
-        model.addAttribute("direction", direction);
+        List<CategoryDTO> categoriesDto = categoryPage.getContent().stream()
+            .map(cate -> new CategoryDTO(
+                cate.getId(),
+                cate.getName(),
+                cate.getColor(),
+                cate.getImageUrl(),
+                cate.getDescription()
+            ))
+            .collect(Collectors.toList());
 
-        return "Categories";
+        return new ResponseEntity<>(categoriesDto, HttpStatus.OK);
     }
 
     @GetMapping("/add")
@@ -82,7 +91,7 @@ public class CategoryController {
             return "Add_category";
         }
         categoryService.addCategory(categoryDTO);
-        return "redirect:/admin/categories";
+        return "redirect:/api/categories";
     }
 
     @GetMapping("/edit/{id}")
@@ -109,7 +118,7 @@ public class CategoryController {
             return "Edit_category";
         }
         categoryService.updateCategory(categoryDTO);
-        return "redirect:/admin/categories";
+        return "redirect:/api/categories";
     }
 
     @DeleteMapping("/{id}")
@@ -121,6 +130,6 @@ public class CategoryController {
     })
     public String deleteCategory(@PathVariable Long id) {
         categoryService.deleteCategory(id);
-        return "redirect:/admin/categories";
+        return "redirect:/api/categories";
     }
 }

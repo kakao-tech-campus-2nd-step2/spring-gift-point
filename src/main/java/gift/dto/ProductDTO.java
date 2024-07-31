@@ -1,6 +1,5 @@
 package gift.dto;
 
-import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.List;
@@ -9,9 +8,8 @@ public class ProductDTO {
 
     private Long id;
 
-    @Valid
     @NotNull(message = "이름을 입력해주세요.")
-    private NameDTO name;
+    private String name;
 
     @NotNull(message = "가격을 입력해주세요.")
     private Integer price;
@@ -26,7 +24,7 @@ public class ProductDTO {
 
     public ProductDTO() {}
 
-    public ProductDTO(Long id, NameDTO name, Integer price, String imageUrl, Long categoryId, List<OptionDTO> options) {
+    public ProductDTO(Long id, String name, Integer price, String imageUrl, Long categoryId, List<OptionDTO> options) {
         this.id = id;
         this.name = name;
         this.price = price;
@@ -44,11 +42,11 @@ public class ProductDTO {
         this.id = id;
     }
 
-    public NameDTO getName() {
+    public String getName() {
         return name;
     }
 
-    public void setName(NameDTO name) {
+    public void setName(String name) {
         this.name = name;
     }
 

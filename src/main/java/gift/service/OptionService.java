@@ -4,8 +4,6 @@ import gift.converter.OptionConverter;
 import gift.dto.OptionDTO;
 import gift.dto.PageRequestDTO;
 import gift.model.Option;
-import gift.model.OptionName;
-import gift.model.OptionQuantity;
 import gift.model.Product;
 import gift.repository.OptionRepository;
 import gift.repository.ProductRepository;
@@ -28,7 +26,6 @@ public class OptionService {
         this.productRepository = productRepository;
     }
 
-
     public Page<OptionDTO> findAllOptions(PageRequestDTO pageRequestDTO) {
         Pageable pageable = pageRequestDTO.toPageRequest();
         Page<Option> options = optionRepository.findAll(pageable);
@@ -49,8 +46,8 @@ public class OptionService {
 
         Option option = new Option(
             null,
-            new OptionName(optionDTO.getName().getName()),
-            new OptionQuantity(optionDTO.getQuantity().getQuantity()),
+            optionDTO.getName(),
+            optionDTO.getQuantity(),
             product
         );
 
@@ -68,7 +65,7 @@ public class OptionService {
         Option existingOption = optionRepository.findById(optionDTO.getId())
             .orElseThrow(() -> new IllegalArgumentException("옵션을 찾을 수 없습니다."));
 
-        existingOption.update(new OptionName(optionDTO.getName().getName()), new OptionQuantity(optionDTO.getQuantity().getQuantity()));
+        existingOption.update(optionDTO.getName(), optionDTO.getQuantity());
         optionRepository.save(existingOption);
     }
 
@@ -88,19 +85,27 @@ public class OptionService {
         Option option = optionRepository.findById(optionId)
             .orElseThrow(() -> new IllegalArgumentException("옵션을 찾을 수 없습니다."));
 
-        if (option.getQuantity().getQuantity() < amount) {
+        try {
+            option.decreaseQuantity(amount);
+            optionRepository.save(option);
+            return true;
+        } catch (IllegalArgumentException e) {
             return false;
         }
-
-        option.decreaseQuantity(amount);
-        optionRepository.save(option);
-        return true;
     }
 
     public String getOptionNameById(Long optionId) {
         Option option = optionRepository.findById(optionId)
             .orElseThrow(() -> new IllegalArgumentException("옵션을 찾을 수 없습니다."));
-        return option.getName().getName();
+        return option.getName();
     }
 
+    public Long getProductIdByOptionId(Long optionId) {
+        Optional<Option> option = optionRepository.findById(optionId);
+        if (option.isPresent()) {
+            return option.get().getProduct().getId();
+        } else {
+            throw new IllegalArgumentException("Option not found with id: " + optionId);
+        }
+    }
 }

@@ -1,33 +1,19 @@
 package gift.service;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import gift.KakaoProperties;
 import gift.api.OrderRequest;
+import gift.api.OrderResponse;
 import gift.converter.OrderConverter;
 import gift.dto.OrderDTO;
-import gift.model.User;
+import gift.dto.PageRequestDTO;
 import gift.repository.OrderRepository;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.HashMap;
-import java.util.Map;
-import org.json.JSONObject;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
-import org.springframework.web.reactive.function.BodyInserters;
-import org.springframework.web.reactive.function.client.WebClient;
-import reactor.core.publisher.Mono;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 @Service
 public class OrderService {
 
-    private static final Logger logger = LoggerFactory.getLogger(OrderService.class);
     private final OptionService optionService;
     private final UserService userService;
     private final WishListService wishListService;
@@ -45,7 +31,7 @@ public class OrderService {
         this.orderRepository = orderRepository;
     }
 
-    public String createOrder(String authorization, OrderDTO orderDTO) {
+    public OrderResponse createOrder(String authorization, OrderDTO orderDTO) {
         // Option 수량 차감
         boolean updated = optionService.decreaseOptionQuantity(orderDTO.getOptionId(), orderDTO.getQuantity());
 
@@ -53,31 +39,36 @@ public class OrderService {
             throw new IllegalArgumentException("Insufficient product quantity.");
         }
 
+        LocalDateTime now = LocalDateTime.now();
+        OrderRequest order = new OrderRequest(
+            orderDTO.getOptionId(),
+            orderDTO.getQuantity(),
+            orderDTO.getMessage(),
+            now
+        );
+        orderRepository.save(order);
+        orderDTO.setOrderId(order.getOrderId());
+        orderDTO.setOrderDateTime(now);
+
         // 카카오톡 메시지 전송
         String token = authorization.replace("Bearer ", "");
-        boolean messageSent = kakaoMessageService.sendKakaoMessage(token, orderDTO);
+        OrderResponse orderResponse = kakaoMessageService.sendKakaoMessage(token, orderDTO);
 
-        if (!messageSent) {
-            throw new RuntimeException("Order created but failed to send message.");
-        }
 
         // access token에서 이메일 추출
         String email = kakaoService.getUserEmail(token);
 
-        // 이메일로 사용자 조회
-        User user = userService.findByEmail(email);
+        Long productId = optionService.getProductIdByOptionId(orderDTO.getOptionId());
 
-        // DTO를 엔티티로 변환
-        OrderRequest orderRequest = OrderConverter.convertToEntity(orderDTO);
-
-        // 저장
-        orderRepository.save(orderRequest);
-
-        if (wishListService.isProductInWishList(email, orderDTO.getOrderId())) {
-            // 위시리스트에서 주문한 제품 ID 삭제
-            wishListService.removeProductFromWishList(email, orderDTO.getOrderId());
+        if (wishListService.isProductInWishList(email, productId)){
+            wishListService.removeProductFromWishList(email, productId);
         }
 
-        return "Order created and message sent.";
+        return orderResponse;
+    }
+    public Page<OrderDTO> getOrderList(PageRequestDTO pageRequestDTO) {
+        Pageable pageable = pageRequestDTO.toPageRequest();
+        Page<OrderRequest> orders = orderRepository.findAll(pageable);
+        return orders.map(OrderConverter::convertToDTO);
     }
 }

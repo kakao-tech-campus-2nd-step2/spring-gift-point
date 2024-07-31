@@ -6,6 +6,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "orders")
@@ -25,13 +26,16 @@ public class OrderRequest {
     @Column(name = "message", columnDefinition = "VARCHAR(255) COMMENT '메시지'")
     private String message;
 
+    @Column(name = "order_date_time", columnDefinition = "TIMESTAMP COMMENT '주문 일시'")
+    private LocalDateTime orderDateTime;
+
     public OrderRequest() {}
 
-    public OrderRequest(Long orderId, Long optionId, int quantity, String message) {
-        this.orderId = orderId;
+    public OrderRequest(Long optionId, int quantity, String message, LocalDateTime orderDateTime) {
         this.optionId = optionId;
         this.quantity = quantity;
         this.message = message;
+        this.orderDateTime = orderDateTime;
     }
 
     // Getters only
@@ -49,5 +53,9 @@ public class OrderRequest {
 
     public String getMessage() {
         return message;
+    }
+
+    public LocalDateTime getOrderDateTime() {
+        return orderDateTime;
     }
 }

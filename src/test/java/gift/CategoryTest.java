@@ -17,7 +17,7 @@ class CategoryTest {
         Category category = new Category(1L, "Original Name");
 
         // when
-        category.update("Updated Name");
+        category.update("Updated Name", "red", "www.","asdf");
 
         // then
         assertAll(

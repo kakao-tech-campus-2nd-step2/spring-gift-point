@@ -21,10 +21,10 @@ class ProductTest {
         Name originalName = new Name("Original Name");
         Name updatedName = new Name("Updated Name");
         List<Option> options = new ArrayList<>();
-        Product product = new Product(1L, originalName, 100, "http://original.image.url", 1L, options);
+        Product product = new Product(1L, "originalName", 100, "http://original.image.url", 1L, options);
 
         // when
-        product.update(updatedName, 200, "http://updated.image.url", 2L);
+        product.update("updatedName", 200, "http://updated.image.url", 2L);
 
         // then
         assertAll(

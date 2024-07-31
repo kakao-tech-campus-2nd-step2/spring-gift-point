@@ -1,33 +1,34 @@
-package gift.dto;
-
+package gift.api;
 
 import java.time.LocalDateTime;
 
-public class OrderDTO {
-    private Long orderId;
+public class OrderResponse {
+
+    private Long id;
     private Long optionId;
     private int quantity;
-    private String message;
     private LocalDateTime orderDateTime;
+    private String message;
 
-    public OrderDTO() {}
+    // 기본 생성자
+    public OrderResponse() {}
 
-
-    public OrderDTO(Long orderId, Long optionId, int quantity, String message, LocalDateTime orderDateTime) {
-        this.orderId = orderId;
+    // 모든 필드를 포함하는 생성자
+    public OrderResponse(Long id, Long optionId, int quantity, LocalDateTime orderDateTime, String message) {
+        this.id = id;
         this.optionId = optionId;
         this.quantity = quantity;
-        this.message = message;
         this.orderDateTime = orderDateTime;
+        this.message = message;
     }
 
-    // Getters and setters
-    public Long getOrderId() {
-        return orderId;
+    // Getters와 Setters
+    public Long getId() {
+        return id;
     }
 
-    public void setOrderId(Long orderId) {
-        this.orderId = orderId;
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public Long getOptionId() {
@@ -46,19 +47,19 @@ public class OrderDTO {
         this.quantity = quantity;
     }
 
-    public String getMessage() {
-        return message;
-    }
-
-    public void setMessage(String message) {
-        this.message = message;
-    }
-
     public LocalDateTime getOrderDateTime() {
         return orderDateTime;
     }
 
     public void setOrderDateTime(LocalDateTime orderDateTime) {
         this.orderDateTime = orderDateTime;
+    }
+
+    public String getMessage() {
+        return message;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
     }
 }

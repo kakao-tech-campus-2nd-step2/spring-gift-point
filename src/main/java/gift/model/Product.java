@@ -10,8 +10,11 @@ import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
 import java.util.ArrayList;
 import java.util.List;
+import org.hibernate.validator.constraints.Length;
 
 
 @Entity
@@ -23,9 +26,11 @@ public class Product {
     @Column(columnDefinition = "BIGINT COMMENT '상품 ID'")
     private Long id;
 
-    @Embedded
-    @Valid
-    private Name name;
+    @NotNull(message = "이름을 입력해주세요.")
+    @Length(min = 1, max = 15, message = "1자 ~ 15자까지 가능합니다.")
+    @Pattern(regexp = "^(?!.*카카오).*$", message = "카카오가 포함된 문구는 현재 사용 할 수 없습니다.")
+    @Pattern(regexp = "^[a-zA-Z0-9가-힣\\(\\)\\[\\]\\+\\-\\&\\/\\_ ]*$", message = "사용불가한 특수 문자가 포함되어 있습니다.")
+    private String name;
 
     @Column(nullable = false, columnDefinition = "INTEGER COMMENT '상품 가격'")
     private int price;
@@ -41,7 +46,7 @@ public class Product {
 
     protected Product() {}
 
-    public Product(Long id, Name name, int price, String imageUrl, Long categoryId, List<Option> options) {
+    public Product(Long id, String name, int price, String imageUrl, Long categoryId, List<Option> options) {
         this.id = id;
         this.name = name;
         this.price = price;
@@ -52,13 +57,32 @@ public class Product {
             option.assignProduct(this);
         }
     }
+    // Option management methods
+    public void addOption(Option option) {
+        options.add(option);
+        option.assignProduct(this);
+    }
+
+    public void clearOptions() {
+        for (Option option : options) {
+            option.removeProduct();
+        }
+        options.clear();
+    }
+
+    public void update(String name, int price, String imageUrl, Long categoryId) {
+        this.name = name;
+        this.price = price;
+        this.imageUrl = imageUrl;
+        this.categoryId = categoryId;
+    }
 
     // Getters
     public Long getId() {
         return id;
     }
 
-    public Name getName() {
+    public String getName() {
         return name;
     }
 
@@ -78,24 +102,5 @@ public class Product {
         return options;
     }
 
-    // Option management methods
-    public void addOption(Option option) {
-        options.add(option);
-        option.assignProduct(this);
-    }
-
-    public void clearOptions() {
-        for (Option option : options) {
-            option.removeProduct();
-        }
-        options.clear();
-    }
-
-    public void update(Name name, int price, String imageUrl, Long categoryId) {
-        this.name = name;
-        this.price = price;
-        this.imageUrl = imageUrl;
-        this.categoryId = categoryId;
-    }
 
 }

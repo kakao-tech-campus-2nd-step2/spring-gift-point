@@ -13,11 +13,10 @@ public class ProductConverter {
         List<OptionDTO> optionDTOs = product.getOptions().stream()
             .map(OptionConverter::convertToDTO)
             .collect(Collectors.toList());
-        return new ProductDTO(product.getId(), NameConverter.convertToDTO(product.getName()), product.getPrice(), product.getImageUrl(), product.getCategoryId(), optionDTOs);
+        return new ProductDTO(product.getId(), product.getName(), product.getPrice(), product.getImageUrl(), product.getCategoryId(), optionDTOs);
     }
 
     public static Product convertToEntity(ProductDTO productDTO) {
-        // Convert options first
         List<Option> options = productDTO.getOptions().stream()
             .map(optionDTO -> {
                 Option option = OptionConverter.convertToEntity(optionDTO);
@@ -27,7 +26,7 @@ public class ProductConverter {
 
         Product product = new Product(
             productDTO.getId(),
-            NameConverter.convertToEntity(productDTO.getName()),
+            productDTO.getName(),
             productDTO.getPrice(),
             productDTO.getImageUrl(),
             productDTO.getCategoryId(),

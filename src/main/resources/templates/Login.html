@@ -16,26 +16,7 @@
           if (data.token) {
             localStorage.setItem('jwtToken', data.token);
             alert('토큰이 저장되었습니다.');
-
-
-            fetch('/wishlist', {
-              method: 'GET',
-              headers: {
-                'Authorization': 'Bearer ' + data.token,
-                'Content-Type': 'application/json'
-              }
-            }).then(response => {
-              if (response.status === 401) {
-                alert('인증 실패: 토큰이 유효하지 않거나 만료되었습니다.');
-                window.location.href = '/users/login';
-              } else {
-                return response.text();
-              }
-            }).then(html => {
-              document.open();
-              document.write(html);
-              document.close();
-            }).catch(error => console.error('Error:', error));
+            window.location.href = '/wishlist.html';
           } else {
             alert('로그인 실패: ' + data.error);
           }
@@ -64,4 +45,3 @@
 </form>
 <p>계정이 없으신가요? <a th:href="@{/users/register}">회원 가입</a></p>
 </body>
-</html>

@@ -14,8 +14,8 @@
   <tr>
     <th><a th:href="@{/admin/options(sortBy='id', direction=${sortDirection == 'asc' ? 'desc' : 'asc'})}">ID</a></th>
     <th><a th:href="@{/admin/options(sortBy='productId', direction=${sortDirection == 'asc' ? 'desc' : 'asc'})}">상품 ID</a></th>
-    <th><a th:href="@{/admin/options(sortBy='name.name', direction=${sortDirection == 'asc' ? 'desc' : 'asc'})}">이름</a></th>
-    <th><a th:href="@{/admin/options(sortBy='quantity.quantity', direction=${sortDirection == 'asc' ? 'desc' : 'asc'})}">수량</a></th>
+    <th><a th:href="@{/admin/options(sortBy='name', direction=${sortDirection == 'asc' ? 'desc' : 'asc'})}">이름</a></th>
+    <th><a th:href="@{/admin/options(sortBy='quantity', direction=${sortDirection == 'asc' ? 'desc' : 'asc'})}">수량</a></th>
     <th>Actions</th>
   </tr>
   </thead>
@@ -23,8 +23,8 @@
   <tr th:each="option : ${options}">
     <td th:text="${option.id}"></td>
     <td th:text="${option.productId}"></td>
-    <td th:text="${option.name.name}"></td>
-    <td th:text="${option.quantity.quantity}"></td>
+    <td th:text="${option.name}"></td>
+    <td th:text="${option.quantity}"></td>
     <td>
       <a th:href="@{/admin/options/edit/{id}(id=${option.id})}">수정</a> |
       <form th:action="@{/admin/options/{id}(id=${option.id})}" method="post" style="display:inline;">

@@ -6,11 +6,11 @@
 </head>
 <body>
 <h1>상품 추가</h1>
-<form th:action="@{/admin/products}" th:object="${product}" method="post">
+<form th:action="@{/api/products}" th:object="${product}" method="post">
   <div>
     <label for="name">Name:</label>
-    <input type="text" id="name" th:field="*{name.name}" required />
-    <div th:if="${#fields.hasErrors('name.name')}" th:errors="*{name.name}" class="error-message"></div>
+    <input type="text" id="name" th:field="*{name}" required />
+    <div th:if="${#fields.hasErrors('name')}" th:errors="*{name}" class="error-message"></div>
   </div>
   <div>
     <label for="price">Price:</label>

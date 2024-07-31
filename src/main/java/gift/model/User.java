@@ -29,6 +29,9 @@ public class User {
         this.email = email;
         this.password = password;
     }
+    public boolean matchesPassword(String rawPassword) {
+        return PasswordEncoder.encode(rawPassword).equals(this.password);
+    }
 
     public Long getId() {
         return id;
@@ -42,8 +45,5 @@ public class User {
         return password;
     }
 
-    public boolean matchesPassword(String rawPassword) {
-        return PasswordEncoder.encode(rawPassword).equals(this.password);
-    }
 
 }

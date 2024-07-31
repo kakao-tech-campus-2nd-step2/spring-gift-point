@@ -61,12 +61,8 @@ public class PageRequestDTO {
     }
 
     public Pageable toPageRequest() {
-        Sort sort = Sort.by(sortBy);
-        if (direction.equalsIgnoreCase(Sort.Direction.DESC.name())) {
-            sort = sort.descending();
-        } else {
-            sort = sort.ascending();
-        }
+        Sort sort = Sort.by(direction.equalsIgnoreCase("asc") ? Sort.Direction.ASC : Sort.Direction.DESC, sortBy);
         return PageRequest.of(page, size, sort);
     }
+
 }

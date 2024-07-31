@@ -10,16 +10,17 @@ public class OrderConverter {
             orderRequest.getOrderId(),
             orderRequest.getOptionId(),
             orderRequest.getQuantity(),
-            orderRequest.getMessage()
+            orderRequest.getMessage(),
+            orderRequest.getOrderDateTime()
         );
     }
 
     public static OrderRequest convertToEntity(OrderDTO orderDTO) {
         return new OrderRequest(
-            orderDTO.getOrderId(),
             orderDTO.getOptionId(),
             orderDTO.getQuantity(),
-            orderDTO.getMessage()
+            orderDTO.getMessage(),
+            orderDTO.getOrderDateTime()
         );
     }
 }

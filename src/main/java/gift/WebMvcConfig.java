@@ -18,6 +18,6 @@ public class WebMvcConfig implements WebMvcConfigurer {
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(jwtInterceptor)
-            .addPathPatterns("/wishlist/**"); // /wishlist 경로에 인터셉터 적용
+            .addPathPatterns("/api/wishes/**"); // /wishlist 경로에 인터셉터 적용
     }
 }
