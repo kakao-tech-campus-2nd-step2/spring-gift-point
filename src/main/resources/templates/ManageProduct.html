@@ -32,7 +32,7 @@
             <tbody>
             <tr th:each="product : ${products}">
                 <td><a href="ProductInfo.html" th:href="@{/manager/products/{id}(id=${product.id()})}" th:text="${product.id}">회원id</a></td>
-                <td th:text="${categories.get(product.categoryID()).name()}">카테고리</a></td>
+                <td th:text="${categories.get(product.categoryId()).name()}">카테고리</a></td>
                 <td th:text="${product.name()}">상품명</a></td>
                 <td th:text="${product.price()}">10000</td>
                 <td th:text="${product.imageUrl()}">10</td>

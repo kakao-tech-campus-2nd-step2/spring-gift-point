@@ -21,13 +21,13 @@
         <div>
             <div>
                 <label for="name">카테고리</label>
-                <select id="category" th:field="*{categoryID}" class="form-control">
+                <select id="category" th:field="*{categoryId}" class="form-control">
                     <option value="">==카테고리 선택==</option>
-                    <option th:each="category : ${categories}" th:selected="${category.id() == product.categoryID}" th:value="${category.id()}"
+                    <option th:each="category : ${categories}" th:selected="${category.id() == product.categoryId}" th:value="${category.id()}"
                             th:text="${category.name}"></option>
                 </select>
-                <div th:if="${#fields.hasErrors('categoryID')}">
-                    <p class="field-error" th:each="err : ${#fields.errors('categoryID')}"
+                <div th:if="${#fields.hasErrors('categoryId')}">
+                    <p class="field-error" th:each="err : ${#fields.errors('categoryId')}"
                        th:text="${err}"></p>
 
                 </div>

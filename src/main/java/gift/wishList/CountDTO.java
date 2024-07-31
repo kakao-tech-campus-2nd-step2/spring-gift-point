@@ -1,3 +1,4 @@
+/*
 package gift.wishList;
 
 public class CountDTO {
@@ -18,3 +19,4 @@ public class CountDTO {
         this.count = count;
     }
 }
+*/

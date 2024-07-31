@@ -1,9 +1,9 @@
-/*
 package gift.product;
 
 import gift.category.CategoryResponse;
 import gift.category.CategoryService;
 import gift.option.OptionRequest;
+import gift.option.OptionViewRequest;
 import jakarta.validation.Valid;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
@@ -12,6 +12,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Controller
@@ -38,12 +39,14 @@ public class ProductViewController {
     }
 
     @PostMapping("/products/add")
-    public String addProduct(@Valid @ModelAttribute("newProduct") ProductRequest newProduct, BindingResult bindingResult1, @Valid @ModelAttribute("option") OptionRequest option, BindingResult bindingResult2, RedirectAttributes redirectAttributes) {
+    public String addProduct(@Valid @ModelAttribute("newProduct") ProductRequest newProduct, BindingResult bindingResult1, @Valid @ModelAttribute("option") OptionViewRequest option, BindingResult bindingResult2, RedirectAttributes redirectAttributes) {
         if (bindingResult1.hasErrors() || bindingResult2.hasErrors()) {
             return "AddProduct";
         }
+        List<OptionRequest> options = new ArrayList<>();
+        options.add(new OptionRequest(option.getOptionName(), option.getQuantity()));
 
-        Product product = productService.insertNewProduct(newProduct, option);
+        Product product = productService.insertNewProduct(new ProductOptionRequest(newProduct.getName(), newProduct.getPrice(), newProduct.getImageUrl(), newProduct.getCategoryId(),options));
         redirectAttributes.addAttribute("id", product.getId());
 
         return "redirect:/manager/products/{id}";
@@ -70,7 +73,7 @@ public class ProductViewController {
     @GetMapping("/products/add")
     public String addProductView(Model model) {
         model.addAttribute("newProduct", new ProductResponse());
-        model.addAttribute("option", new OptionRequest());
+        model.addAttribute("option", new OptionViewRequest());
         return "AddProduct";
     }
 
@@ -86,4 +89,4 @@ public class ProductViewController {
         return "ProductInfo";
     }
 }
-*/
+

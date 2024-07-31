@@ -4,7 +4,6 @@ import gift.category.Category;
 import gift.category.CategoryRepository;
 import gift.option.Option;
 import gift.option.OptionRequest;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -48,7 +47,7 @@ public class ProductService {
     public Product insertNewProduct(ProductOptionRequest productOptionRequest) {
         ProductRequest newProduct = new ProductRequest(productOptionRequest);
         List<OptionRequest> optionRequest = productOptionRequest.options;
-        Long categoryID = newProduct.getCategoryID();
+        Long categoryID = newProduct.getCategoryId();
         Category category = categoryRepository.findById(categoryID).orElseThrow();
 
         Product product = new Product(newProduct.getName(), newProduct.getPrice(), newProduct.getImageUrl(), category);
@@ -68,7 +67,7 @@ public class ProductService {
         product.setImageUrl(updateProduct.getImageUrl());
 
         product.getCategory().removeProduct(product);
-        Category category = categoryRepository.findById(updateProduct.getCategoryID()).orElseThrow();
+        Category category = categoryRepository.findById(updateProduct.getCategoryId()).orElseThrow();
         product.setCategory(category);
         category.addProduct(product);
 

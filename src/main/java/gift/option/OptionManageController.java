@@ -19,11 +19,6 @@ public class OptionManageController {
         return optionService.findAllProductOptions(productID);
     }
 
-    /*@PostMapping("/{productID}/options")
-    public List<OptionResponse> addProductOptions(@PathVariable Long productID, @Valid @RequestBody List<OptionRequest> optionRequests){
-        return optionService.insertProductNewOptions(productID, optionRequests);
-    }*/
-
     @PostMapping("/{productID}/options")
     public OptionResponse addProductOption(@PathVariable Long productID, @Valid @RequestBody OptionRequest optionRequests){
         return optionService.insertProductNewOption(productID, optionRequests);

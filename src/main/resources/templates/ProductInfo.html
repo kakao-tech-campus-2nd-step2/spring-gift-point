@@ -20,7 +20,7 @@
           <div>
             <select id="category" class="form-control" disabled>
               <option value="">==카테고리 선택==</option>
-              <option th:each="category : ${categories}" th:selected="${category.id() == product.categoryID()}" th:value="${category.id()}"
+              <option th:each="category : ${categories}" th:selected="${category.id() == product.categoryId()}" th:value="${category.id()}"
                       th:text="${category.name}"></option>
             </select>
           </div>
