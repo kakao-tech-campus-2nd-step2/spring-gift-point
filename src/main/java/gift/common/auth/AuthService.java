@@ -27,7 +27,7 @@ public class AuthService {
         if (!member.matchPassword(memberRequest.password())) {
             throw new MemberException(MemberErrorCode.FAILURE_LOGIN);
         }
-        return new MemberResponse(tokenProvider.generateToken(member));
+        return new MemberResponse("Bearer", tokenProvider.generateToken(member));
     }
 
     public boolean validateAuthorization(String authorizationHeader) {

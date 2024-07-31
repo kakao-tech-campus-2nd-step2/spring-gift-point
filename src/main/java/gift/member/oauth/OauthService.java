@@ -5,6 +5,7 @@ import gift.api.kakaoAuth.KakaoTokenResponse;
 import gift.common.utils.TokenProvider;
 import gift.member.MemberRepository;
 import gift.member.model.Member;
+import gift.member.model.MemberResponse;
 import gift.member.oauth.model.OauthToken;
 import java.net.URI;
 import org.springframework.stereotype.Service;
@@ -35,12 +36,12 @@ public class OauthService {
     }
 
     @Transactional
-    public String loginByKakao(String authorizationCode) {
+    public MemberResponse loginByKakao(String authorizationCode) {
         KakaoTokenResponse kakaoTokenReponse = kakaoAuthClient.getKakaoTokenResponse(
             authorizationCode);
         String email = kakaoAuthClient.getEmail(kakaoTokenReponse.accessToken());
         Member member = saveToken(email, kakaoTokenReponse);
-        return tokenProvider.generateToken(member);
+        return new MemberResponse("Bearer", tokenProvider.generateToken(member));
     }
 
     private Member saveToken(String email, KakaoTokenResponse kakaoTokenReponse) {
