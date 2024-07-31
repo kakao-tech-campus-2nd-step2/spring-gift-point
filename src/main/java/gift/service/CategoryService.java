@@ -10,6 +10,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
+import static gift.exception.ErrorCode.CATEGORY_NOT_FOUND;
+
 @Transactional
 @Service
 public class CategoryService {
@@ -39,7 +41,7 @@ public class CategoryService {
 
     public void editCategory(Long categoryId, CategoryDto dto) {
         Category category = categoryRepository.findById(categoryId)
-                .orElseThrow(() -> new GiftException(ErrorCode.CATEGORY_NOT_FOUND));
+                .orElseThrow(() -> new GiftException(CATEGORY_NOT_FOUND));
 
         if (!category.getName().equals(dto.getName()) && categoryRepository.existsByName(dto.getName())) {
             throw new GiftException(ErrorCode.CATEGORY_NAME_NOT_DUPLICATES);
@@ -49,7 +51,9 @@ public class CategoryService {
     }
 
     public void removeCategory(Long categoryId) {
-        categoryRepository.deleteById(categoryId);
+        Category category = categoryRepository.findById(categoryId).orElseThrow(() -> new GiftException(CATEGORY_NOT_FOUND));
+
+        categoryRepository.delete(category);
     }
 
 }
