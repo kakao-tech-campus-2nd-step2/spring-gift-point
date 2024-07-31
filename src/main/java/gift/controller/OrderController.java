@@ -29,6 +29,6 @@ public class OrderController {
     @PostMapping
     @Operation(summary = "주문 요청 api")
     public ResponseEntity<OrderResponse> order(@Login LoginMember member, @Valid @RequestBody OrderRequest orderRequest) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(orderService.order(member, orderRequest));
+        return new ResponseEntity<>(orderService.order(member, orderRequest), HttpStatus.CREATED);
     }
 }
