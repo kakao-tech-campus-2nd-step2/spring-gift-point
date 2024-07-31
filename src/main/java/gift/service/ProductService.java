@@ -7,7 +7,6 @@ import gift.vo.Category;
 import gift.vo.Product;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
@@ -34,9 +33,12 @@ public class ProductService {
      * 페이지네이션 적용된 모든 상품 가져오는 메소드
      * @return Page<Product></Product>
      */
-    public Page<Product> getAllProducts(int pageNumber, int pageSize) {
-        Pageable pageable = PageRequest.of(pageNumber, pageSize);
+    public Page<Product> getAllProducts(Pageable pageable) {
         return productRepository.findAll(pageable);
+    }
+
+    public Page<Product> getProductsByCategory(Long categoryId, Pageable pageable) {
+        return productRepository.findByCategoryId(categoryId, pageable);
     }
 
     public Product getProductById(Long id) {

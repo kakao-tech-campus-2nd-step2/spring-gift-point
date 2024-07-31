@@ -52,13 +52,13 @@ INSERT INTO Product (name, price, image_url, category_id) VALUES
 ('비타민', 30000, 'https://example.com/vitamin.jpg', 93),
 ('운동화', 120000, 'https://example.com/sneakers.jpg', 93);
 
-INSERT INTO WISH (MEMBER_ID, PRODUCT_ID)
-VALUES (1, 1),
-       (1, 2),
-       (1, 3),
-       (1, 4),
-       (1, 5),
-       (1, 6);
+INSERT INTO WISH (MEMBER_ID, PRODUCT_ID, CREATED_DATE)
+VALUES (1, 1, CURRENT_TIMESTAMP),
+       (1, 2, CURRENT_TIMESTAMP),
+       (1, 3, CURRENT_TIMESTAMP),
+       (1, 4, CURRENT_TIMESTAMP),
+       (1, 5, CURRENT_TIMESTAMP),
+       (1, 6, CURRENT_TIMESTAMP);
 
 INSERT INTO OPTION (PRODUCT_ID, NAME, QUANTITY)
 VALUES (6, 'Java의 정석', 500),

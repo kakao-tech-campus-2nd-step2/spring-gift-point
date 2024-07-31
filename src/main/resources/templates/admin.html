@@ -52,7 +52,7 @@
     <h3>옵션</h3>
     <div id="options">
         <div class="option">
-            <label for="option-name-0">옵션명:</label>
+            <label for="option- name-0">옵션명:</label>
             <input type="text" id="option-name-0" name="option-name">
             <label for="option-quantity-0">수량:</label>
             <input type="text" id="option-quantity-0" name="option-quantity">
@@ -83,11 +83,11 @@
 
 <script>
     let currentPage = 0;
-    const pageSize = 5; // pageNation 페이지 size 설정 content 개수 설정
+    const size = 5; // pageNation 페이지 size 설정 content 개수 설정
     const buttonsPerPage = 5;
 
-    function fetchProducts(pageNumber = 1) {
-        $.get(`/api/products?pageNumber=${pageNumber}&pageSize=${pageSize}`, function(response) {
+    function fetchProducts(page = 0) {
+        $.get(`/api/products/all?page=${page}&size=${size}`, function(response) {
             const products = response.content;
             const totalPages = response.totalPages;
 
@@ -109,7 +109,7 @@
             });
 
             // 페이지네이션 갱신
-            updatePagination(totalPages, pageNumber);
+            updatePagination(totalPages, page);
         });
     }
 
@@ -119,7 +119,7 @@
         pagination.empty();
 
         const currentGroup = Math.floor(currentPage / buttonsPerPage);
-        const startPage = currentGroup * buttonsPerPage + 1;
+        const startPage = currentGroup * buttonsPerPage;
         const endPage = Math.min(startPage + buttonsPerPage, totalPages);
 
         if (currentGroup > 0) {
@@ -127,7 +127,7 @@
         }
 
         for (let i = startPage; i <= endPage; i++) {
-            pagination.append(`<button onclick="fetchProducts(${i})" class="${i === currentPage ? 'active' : ''}">${i}</button>`);
+            pagination.append(`<button onclick="fetchProducts(${i})" class="${i === currentPage ? 'active' : ''}">${i + 1}</button>`);
         }
 
         if (endPage < totalPages) {
@@ -173,8 +173,8 @@
         });
     }
 
-    function editProduct(id) {
-        $.get(`/api/products/${id}`, function(product) {
+    function editProduct(productId) {
+        $.get(`/api/products/${productId}`, function(product) {
             $("#edit-id").val(product.id);
             $("#edit-category").val(product.categoryId);
             $("#edit-name").val(product.name);
@@ -218,9 +218,9 @@
         });
     }
 
-    function deleteProduct(id) {
+    function deleteProduct(productId) {
         $.ajax({
-            url: `/api/products/${id}`,
+            url: `/api/products/${productId}`,
             type: "DELETE",
             success: function() {
                 fetchProducts();

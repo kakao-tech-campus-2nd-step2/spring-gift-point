@@ -28,17 +28,17 @@ public class OptionController {
 
     /**
      *
-     * @param id ProductId
+     * @param productId ProductId
      * @return List<Option>
      */
-    @GetMapping("/{id}/options")
+    @GetMapping("/{productId}/options")
     @Operation(
             summary = "상품 옵션 조회",
             description = "주어진 상품 ID에 해당하는 모든 옵션을 조회하는 API입니다."
     )
-    @Parameter(name = "id", description = "옵션 조회할 상품의 ID", required = true, example = "1")
-    public ResponseEntity<List<OptionResponseDto>> getOption(@PathVariable Long id) {
-        List<Option> allOptions = optionService.getOptionsPerProduct(id);
+    @Parameter(name = "productId", description = "옵션 조회할 상품의 ID", required = true, example = "1")
+    public ResponseEntity<List<OptionResponseDto>> getOption(@PathVariable Long productId) {
+        List<Option> allOptions = optionService.getOptionsPerProduct(productId);
 
         List<OptionResponseDto> allOptionsDtos = allOptions.stream()
                 .map(OptionResponseDto::toOptionResponseDto)
