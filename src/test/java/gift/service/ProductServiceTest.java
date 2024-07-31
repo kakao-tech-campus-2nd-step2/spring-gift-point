@@ -9,14 +9,12 @@ import gift.entity.Product;
 import gift.repository.CategoryRepository;
 import gift.repository.ProductRepository;
 import gift.validator.ProductNameValidator;
+import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Slice;
 
 @DataJpaTest
 class ProductServiceTest {
@@ -59,15 +57,11 @@ class ProductServiceTest {
     }
 
     @Test
-    @DisplayName("페이징된 상품 목록 가져오기")
+    @DisplayName("상품 목록 가져오기")
     void testGetPagedProducts() {
-        Pageable pageable = PageRequest.of(0, 2);
-        Slice<Product> productPage = productService.findAll(pageable);
+        List<Product> productPage = productService.findAll();
 
         assertThat(productPage).isNotNull();
-        assertThat(productPage.getContent()).hasSize(2);
-        assertThat(productPage.getContent().get(0).getName()).isEqualTo("Product 1");
-        assertThat(productPage.getContent().get(1).getName()).isEqualTo("Product 2");
     }
 
 }

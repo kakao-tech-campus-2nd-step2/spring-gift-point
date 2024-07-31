@@ -20,16 +20,16 @@ class MemberRepositoryTest {
 
     @BeforeEach
     void setUp() {
-        member = new Member("user@example.com", "password");
+        member = new Member("test@example.com", "password");
         memberRepository.save(member);
     }
 
     @Test
     @DisplayName("이메일로 회원 찾기")
     void testFindByEmail() {
-        Optional<Member> foundMember = memberRepository.findByEmail("user@example.com");
+        Optional<Member> foundMember = memberRepository.findByEmail("test@example.com");
         assertThat(foundMember).isPresent();
-        assertThat(foundMember.get().getEmail()).isEqualTo("user@example.com");
+        assertThat(foundMember.get().getEmail()).isEqualTo("test@example.com");
     }
 
     @Test
