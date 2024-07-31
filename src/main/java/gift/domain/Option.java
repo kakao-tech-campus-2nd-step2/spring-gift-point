@@ -19,8 +19,8 @@ import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.SQLRestriction;
 
 @Entity
-@Table(name = "option", uniqueConstraints = {@UniqueConstraint(columnNames = {"product_id", "name"})})
-@SQLDelete(sql = "UPDATE option SET deletion_date = CURRENT_TIMESTAMP WHERE id = ?")
+@Table(name = "options", uniqueConstraints = {@UniqueConstraint(columnNames = {"product_id", "name"})})
+@SQLDelete(sql = "UPDATE options SET deletion_date = CURRENT_TIMESTAMP WHERE id = ?")
 @SQLRestriction("deletion_date IS NULL")
 public class Option extends BaseTimeEntity {
 

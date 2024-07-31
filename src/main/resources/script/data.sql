@@ -21,7 +21,7 @@ VALUES (1, 1, 2, NOW(), NOW()),
        (2, 1, 1, NOW(), NOW()),
        (3, 1, 1, NOW(), NOW());
 
-INSERT INTO option (name, quantity, additional_cost, product_id, registration_date, modification_date)
+INSERT INTO options (name, quantity, additional_cost, product_id, registration_date, modification_date)
 VALUES ('옵션 1', 10, 0, 1, NOW(), NOW()),
        ('옵션 2', 20, 2000, 1, NOW(), NOW()),
        ('옵션 3', 30, 3000, 1, NOW(), NOW());

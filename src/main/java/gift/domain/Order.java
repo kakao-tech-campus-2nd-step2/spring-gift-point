@@ -14,8 +14,8 @@ import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.SQLRestriction;
 
 @Entity
-@Table(name = "`order`")
-@SQLDelete(sql = "UPDATE `order` SET deletion_date = CURRENT_TIMESTAMP WHERE id = ?")
+@Table(name = "orders")
+@SQLDelete(sql = "UPDATE orders SET deletion_date = CURRENT_TIMESTAMP WHERE id = ?")
 @SQLRestriction("deletion_date IS NULL")
 public class Order extends BaseTimeEntity {
 

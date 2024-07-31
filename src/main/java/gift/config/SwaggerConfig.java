@@ -35,4 +35,5 @@ public class SwaggerConfig {
                 .contact(new Contact().name("유경미").email("yookm02@pusan.ac.kr"))
                 .version("1.0.0");
     }
+
 }

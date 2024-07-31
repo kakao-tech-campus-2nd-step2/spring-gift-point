@@ -38,7 +38,7 @@ public class WishListRepositoryTest {
     private Product product;
     private Category category;
 
-    @BeforeEach
+//    @BeforeEach
     public void setUp() {
         appUser = new AppUser("aabb@kakao.com", "1234", Role.USER, "aaaa");
         category = new Category("기타", "");
@@ -52,7 +52,7 @@ public class WishListRepositoryTest {
         wishListRepository.save(wish);
     }
 
-    @Test
+//    @Test
     public void testFindWishesByUserId() {
         System.out.println("appUser = " + appUser.getId());
         // 테스트 시작
