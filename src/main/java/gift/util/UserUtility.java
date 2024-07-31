@@ -1,6 +1,6 @@
 package gift.util;
 
-import gift.entity.User;
+import gift.entity.user.User;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.JwtException;
@@ -12,8 +12,6 @@ import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
-import java.util.HashMap;
-import java.util.Map;
 
 @Component
 public class UserUtility {
@@ -31,7 +29,6 @@ public class UserUtility {
     public String makeAccessToken(User user) {
         String accessToken = Jwts.builder()
                 .claim("email", user.getEmail())
-                .claim("role", user.getRole())
                 .signWith(getSecretKey())
                 .compact();
         return accessToken;

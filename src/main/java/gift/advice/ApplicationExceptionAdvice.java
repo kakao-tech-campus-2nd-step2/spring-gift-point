@@ -1,6 +1,6 @@
-package gift.exception.advice;
+package gift.advice;
 
-import gift.entity.MessageResponseDTO;
+import gift.entity.response.MessageResponseDTO;
 import gift.exception.ResourceNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

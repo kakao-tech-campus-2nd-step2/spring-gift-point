@@ -1,6 +1,6 @@
 package gift.repository;
 
-import gift.entity.ProductWishlist;
+import gift.entity.middle.ProductWishlist;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -19,6 +19,8 @@ public interface ProductWishlistRepository extends JpaRepository<ProductWishlist
     List<ProductWishlist> findByProductId(Long id);
 
     List<ProductWishlist> findByProductIdAndWishlistId(Long productId, Long wishlistId);
+
+    void deleteByWishlistId(Long wishlistId);
 
     @Modifying
     @Transactional
