@@ -10,51 +10,7 @@
 
     <details>
       <summary>확정된 팀 내 API 명세</summary>
-    프론트엔드에서 필요로 하는 API에 대해 요청/응답 통일
-    
-    ### 회원 API
-    
-    |  | Route | Require Data | Response Data | Method | etc | http status |
-      | --- | --- | --- | --- | --- | --- | --- |
-    | 회원 가입 | /api/members/register | { "email": "string", "password": "W-^hCQiccwY" } | { "email": "string", "token": "string" } | POST |  | 201 (CREATED) |
-    | 로그인 | /api/members/login | { "email": "string", "password": "W-^hCQiccwY" } | { "email": "string", "token": "string" } | POST |  | 200 (OK) |
-    
-    ### 카테고리 API
-    
-    |  | Route | Require Data | Response Data | Method | etc | http status |
-      | --- | --- | --- | --- | --- | --- | --- |
-    | 카테고리 목록 조회 | /api/categories | {} | [ { "id": 0, "name": "string", "color": "string", "imageUrl": "string", "description": "string" } ] | GET |  | 200 (OK) |
-    
-    ### 상품 API
-    
-    |  | Route | Require Data | Response Data | Method | etc | http status |
-      | --- | --- | --- | --- | --- | --- | --- |
-    | 상품 목록 가져오기(페이지네이션) | /api/products?page=0&size=10&sort=name,asc | { "page": 0, "size": 1, "sort": [ "string" ] } | { "totalElements": 0, "totalPages": 0, "size": 0, "content": [ { "id": 1, "name": "Product1", "price": 1000, "imageUrl": "https://via.placeholder.com/150?text=product1", "categoryId": 1, "categoryName": "교환권" } ], "number": 0, "sort": [ { "direction": "string", "nullHandling": "string", "ascending": true, "property": "string", "ignoreCase": true } ], "first": true, "last": true, "numberOfElements": 0, "pageable": { "offset": 0, "sort": [ { "direction": "string", "nullHandling": "string", "ascending": true, "property": "string", "ignoreCase": true } ], "paged": true, "pageSize": 0, "pageNumber": 0, "unpaged": true }, "empty": true } | GET |  | 200 (OK) |
-    | 상품 생성 | /api/products |  |  | POST |  |  |
-    | 상품 상세 조회 | /api/products/{productId} |  | { "id": 1, "name": "Product1", "price": 1000, "imageUrl": "https://via.placeholder.com/150?text=product1", "categoryId": 1, "categoryName": "교환권" } | GET |  | 200 (OK) |
-    
-    ### 주문 API
-    
-    |  | Route | Require Data | Response Data | Method | etc | http status |
-      | --- | --- | --- | --- | --- | --- | --- |
-    | 주문하기 | /api/orders | { "optionId": 0, "quantity": 0, "message": "string" } | { "id": 0, "optionId": 0, "quantity": 0, "orderDateTime": "2024-07-30T06:42:17.486Z", "message": "string" } | POST |  | 201 (CREATED) |
-    
-    ### 위시리스트 API
-    
-    |  | Route | Require Data | Response Data | Method | etc | http status |
-      | --- | --- | --- | --- | --- | --- | --- |
-    | 위시리스트에 추가하기 | /api/wishes | { "productId": 1 } | { "id": 1, "memberId": 1, "productId": 1 } | POST |  | 201 (CREATED) |
-    | 위시리스트 상품 삭제 | /api/wishes/{wishId} | {} | {} | DELETE |  | 200 (OK) |
-    | 위시리스트 상품 조회 (페이지네이션) | /api/wishes?page=0&size=10&sort=productId,desc | { "page": 0, "size": 1, "sort": [ "string" ] } | { "totalPages": 0, "totalElements": 0, "first": true, "last": true, "size": 0, "content": [ { "id": 1, "memberId": 1, "productId": 1 } ], "number": 0, "sort": { "empty": true, "sorted": true, "unsorted": true }, "numberOfElements": 0, "pageable": { "offset": 0, "sort": { "empty": true, "sorted": true, "unsorted": true }, "paged": true, "pageNumber": 0, "pageSize": 0, "unpaged": true }, "empty": true } | GET |  | 200 (OK) |
-    
-    ### 상품 옵션 API
-    
-    |  | Route | Require Data | Response Data | Method | etc | http status |
-      | --- | --- | --- | --- | --- | --- | --- |
-    | 상품 옵션 추가 | /api/products/{productId}/options |  |  | POST |  |  |
-    | 상품 옵션 목록 조회 | /api/products/{productId}/options |  |  | GET |  |  |
-    | 상품 옵션 수정 | /api/products/{productId}/options/{optionId} |  |  | PUT |  |  |
-    | 상품 옵션 삭제 | /api/products/{productId}/options/{optionId} |  |  | DELETE |  |  |
+    [프론트엔드에서 필요로 하는 API에 대해 요청/응답 통일](https://quickest-asterisk-75d.notion.site/TIL-BE-6a5c862a0b09410d943531f74281b231?p=8e8a604db8254cdb8c99ad3e6fc4ac5e&pm=c#:~:text=%EB%82%B4%EC%9A%A9%20(%ED%95%84%EC%88%98)-,6%EC%A3%BC%EC%B0%A8%20%EA%B3%BC%EC%A0%9C%20Step1%20%EB%AF%B8%EC%85%98%20%EC%A7%84%ED%96%89,-%ED%94%84%EB%A1%A0%ED%8A%B8%EC%97%94%EB%93%9C%EC%97%90%EC%84%9C%20%ED%95%84%EC%9A%94%EB%A1%9C%20%ED%95%98%EB%8A%94)
     
     통일할 API:
     - 회원 API - 회원 가입, 로그인
@@ -66,11 +22,11 @@
 </details>
 
 - [ ] API 수정하여 형식 통일
-    - [ ] 회원 API 통일
-        - [ ] 회원가입: URL, 메소드 통일
-        - [ ] 회원가입: 요청, 응답 통일
-        - [ ] 로그인: URL, 메소드 통일
-        - [ ] 로그인: 요청, 응답 통일
+    - [X] 회원 API 통일
+        - [X] 회원가입: URL, 메소드 통일
+        - [X] 회원가입: 요청, 응답 통일
+        - [X] 로그인: URL, 메소드 통일
+        - [X] 로그인: 요청, 응답 통일
 
     - [ ] 카테고리 API
         - [ ] 카테고리 목록 조회: URL, 메소드 통일
