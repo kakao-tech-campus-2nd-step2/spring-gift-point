@@ -3,9 +3,7 @@ package gift.controller;
 import gift.dto.OrderRequest;
 import gift.dto.OrderResponse;
 import gift.service.OrderService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.http.HttpStatus;
+import gift.service.TokenService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -13,22 +11,24 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/orders")
 public class OrderController {
 
-    private static final Logger logger = LoggerFactory.getLogger(OrderController.class);
     private final OrderService orderService;
+    private final TokenService tokenService;
 
-    public OrderController(OrderService orderService) {
+    public OrderController(OrderService orderService, TokenService tokenService) {
         this.orderService = orderService;
+        this.tokenService = tokenService;
     }
 
     @PostMapping
-    public ResponseEntity<OrderResponse> createOrder(@RequestHeader("Authorization") String authorizationHeader, @RequestBody OrderRequest request) {
-        try {
-            String token = authorizationHeader.replace("Bearer ", "");
-            OrderResponse response = orderService.createOrder(request, token);
-            return new ResponseEntity<>(response, HttpStatus.CREATED);
-        } catch (Exception e) {
-            logger.error("Error processing order: {}", e.getMessage());
-            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+    public ResponseEntity<OrderResponse> createOrder(@RequestBody OrderRequest request, @RequestHeader("Authorization") String token) {
+        OrderResponse response;
+        if (tokenService.isJwtToken(token)) {
+            // JWT 토큰인 경우 응답 바디만 생성
+            response = orderService.createOrder(request, token, false);
+        } else {
+            // 카카오 액세스 토큰인 경우 응답 바디 생성 후 메시지 전송
+            response = orderService.createOrder(request, token, true);
         }
+        return ResponseEntity.ok(response);
     }
 }
