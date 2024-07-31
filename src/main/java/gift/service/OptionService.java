@@ -1,6 +1,8 @@
 package gift.service;
 
 import gift.domain.Option;
+import gift.domain.Option.OptionRequest;
+import gift.domain.Option.OptionResponse;
 import gift.entity.OptionEntity;
 import gift.entity.ProductEntity;
 import gift.error.AlreadyExistsException;
@@ -24,59 +26,63 @@ public class OptionService {
 
     //해당 상품의 옵션들 조회
     @Transactional(readOnly = true)
-    public List<Option> getAllOptionByProductId(Long productId) {
+    public List<OptionResponse> getAllOptionByProductId(Long productId) {
         ProductEntity productEntity = productRepository.findById(productId)
             .orElseThrow(() -> new NotFoundException("Product not found"));
         return productEntity.getOptionEntities().stream()
-            .map(OptionEntity::toDto).toList();
+            .map(OptionResponse::from).toList();
     }
 
     //해당 상품 내의 단일 옵션 조회
     @Transactional(readOnly = true)
-    public Option getOptionByProductIdAndId(Long productId, Long id) {
+    public OptionResponse getOptionByProductIdAndId(Long productId, Long id) {
         ProductEntity productEntity = productRepository.findById(productId)
             .orElseThrow(() -> new NotFoundException("Product not found"));
         return productEntity.getOptionEntities().stream()
             .filter(o -> o.getId().equals(id))
             .findAny()
-            .map(OptionEntity::toDto)
+            .map(OptionResponse::from)
             .orElseThrow(() -> new NotFoundException("Option not found"));
 
     }
 
     //해당 상품 내의 옵션을 이름으로 조회
     @Transactional(readOnly = true)
-    public Option getOptionByProductIdAndName(Long productId, String name) {
+    public OptionResponse getOptionByProductIdAndName(Long productId, String name) {
         ProductEntity productEntity = productRepository.findById(productId)
             .orElseThrow(() -> new NotFoundException("Product not found"));
         return productEntity.getOptionEntities().stream()
             .filter(o -> o.getName().equals(name))
             .findAny()
-            .map(OptionEntity::toDto)
+            .map(OptionResponse::from)
             .orElseThrow(() -> new NotFoundException("Option not found"));
     }
 
     //옵션 추가 기능
     @Transactional
-    public void addOption(Long productId, Option option) {
-        validateOptionUniqueness(option, null);
-        OptionEntity optionEntity = new OptionEntity();
+    public void addOption(Long productId, OptionRequest request) {
+        validateOptionUniqueness(request, null);
         ProductEntity productEntity = productRepository.findById(productId)
             .orElseThrow(() -> new NotFoundException("Product not found"));
+        OptionEntity optionEntity = new OptionEntity(
+            request.name(),
+            request.quantity(),
+            productEntity
+        );
         productEntity.getOptionEntities().add(optionEntity);
-        optionEntity.setName(option.getName());
-        optionEntity.setQuantity(option.getQuantity());
         optionRepository.save(optionEntity);
     }
 
     //옵션 수정 기능
     @Transactional
-    public void updateOption(Long optionId, Option option) {
-        validateOptionUniqueness(option, optionId);
+    public void updateOption(Long optionId, OptionRequest request) {
+        validateOptionUniqueness(request, optionId);
         OptionEntity optionEntity = optionRepository.findById(optionId)
             .orElseThrow(() -> new NotFoundException("Option not found"));
-        optionEntity.setName(option.getName());
-        optionEntity.setQuantity(option.getQuantity());
+        optionEntity.updateOptionEntity(
+            request.name(),
+            request.quantity()
+        );
         optionRepository.save(optionEntity);
     }
 
@@ -98,8 +104,8 @@ public class OptionService {
         optionRepository.deleteById(id);
     }
 
-    private void validateOptionUniqueness(Option option, Long id) {
-        if(optionRepository.existsByNameAndIdNot(option.getName(), id)) {
+    private void validateOptionUniqueness(OptionRequest request, Long id) {
+        if(optionRepository.existsByNameAndIdNot(request.name(), id)) {
             throw new AlreadyExistsException("Already Exists Option");
         }
     }
