@@ -59,19 +59,33 @@ public class ProductService {
     }
 
     public void update(Long id, ProductRequest productRequest) {
+        Product product = productRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Product with id " + id + " not found"));
+
         Category category = categoryRepository.findById(productRequest.categoryId())
                 .orElseThrow(() -> new IllegalArgumentException("Invalid category ID"));
 
-        Product product = new Product(id, productRequest.name(), productRequest.price(), productRequest.imageUrl(), category);
+        product.setName(productRequest.name());
+        product.setPrice(productRequest.price());
+        product.setImageUrl(productRequest.imageUrl());
+        product.setCategory(category);
+
         productRepository.save(product);
     }
 
     public void delete(Long id) {
-        productRepository.deleteById(id);
+        Product product = productRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Product with id " + id + " not found"));
+
+        productRepository.delete(product);
     }
 
     public void deleteBatch(List<Long> ids) {
-        productRepository.deleteAllById(ids);
+        for (Long id : ids) {
+            Product product = productRepository.findById(id)
+                    .orElseThrow(() -> new IllegalArgumentException("Product with id " + id + " not found"));
+            productRepository.delete(product);
+        }
     }
 
     private ProductResponse convertToResponse(Product product) {
