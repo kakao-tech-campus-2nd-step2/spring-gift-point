@@ -83,13 +83,13 @@ public class CategoryController {
     }
 
     @DeleteMapping("/category/{id}")
-    @Operation(summary = "카테고리 삭제 api", description = "카테고리 삭제ㄴ api입니다")
+    @Operation(summary = "카테고리 삭제 api", description = "카테고리 삭제 api입니다")
     @ApiResponse(responseCode = "200", description = "카테고리 삭제 성공")
-    public ResponseEntity<SuccessBody<Long>> deleteCategory(
+    public ResponseEntity<SuccessBody<Void>> deleteCategory(
         @PathVariable("id") Long categoryId,
         @LoginUser User user){
         authService.authorizeAdminUser(user);
-        Long deletedCategoryId = categoryService.deleteCategory(categoryId);
-        return ApiResponseGenerator.success(HttpStatus.OK, "카테고리가 삭제되었습니다.", deletedCategoryId);
+        categoryService.deleteCategory(categoryId);
+        return ApiResponseGenerator.success(HttpStatus.OK, "카테고리가 삭제되었습니다.", null);
     }
 }
