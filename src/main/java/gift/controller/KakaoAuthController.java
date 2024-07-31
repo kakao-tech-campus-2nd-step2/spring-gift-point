@@ -22,7 +22,6 @@ import org.springframework.web.bind.annotation.RestController;
 public class KakaoAuthController {
     private final KakaoAuthService kakaoAuthService;
     private final JwtUtil jwtUtil;
-    private final Logger logger = LoggerFactory.getLogger(KakaoAuthController.class);
 
     @Autowired
     KakaoAuthController(KakaoAuthService kakaoAuthService, JwtUtil jwtUtil) {
@@ -39,7 +38,7 @@ public class KakaoAuthController {
                     content = @Content(mediaType = "application/json", schema = @Schema(implementation = ResponseDTO.class))),
             @ApiResponse(responseCode = "500", description = "서버에 의한 오류입니다.",
                     content = @Content(mediaType = "application/json", schema = @Schema(implementation = ResponseDTO.class)))})
-    public String loginOrRegister(@RequestParam String code, Model model) {
+    public String loginOrRegister(@RequestParam String code) {
         return jwtUtil.generateToken(kakaoAuthService.loginOrRegister(code));
     }
 }
