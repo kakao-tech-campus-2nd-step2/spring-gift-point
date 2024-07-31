@@ -33,7 +33,7 @@ public class WishService {
     public Wish addWish(Member member, RequestWishDTO requestWishDTO) {
         Product product = productRepository.findById(requestWishDTO.getProductId())
                 .orElseThrow(()->new ProductNotFoundException("매칭되는 상품이 없습니다."));
-        Wish wish = new Wish(member, product, requestWishDTO.getCount());
+        Wish wish = new Wish(member, product);
         return wishRepository.save(wish);
     }
 
@@ -55,15 +55,6 @@ public class WishService {
     public Wish findWishByMemberAndProduct(Member member, Product product){
         Optional<Wish> wish= wishRepository.findByMemberAndProduct(member, product);
         return wish.orElseThrow(()->new WishNotFoundException("매칭되는 wish가 없습니다"));
-    }
-
-    @Transactional
-    public void editWish(Member member, RequestWishDTO requestWishDTO) {
-        Product product = productRepository.findById(requestWishDTO.getProductId())
-                .orElseThrow(() -> new ProductNotFoundException("매칭되는 물건이 없습니다."));
-        Wish wish = wishRepository.findByMemberAndProduct(member, product)
-                .orElseThrow(() -> new WishNotFoundException("매칭되는 wish가 없습니다"));
-        wish.update(requestWishDTO.getCount());
     }
 
     @Transactional

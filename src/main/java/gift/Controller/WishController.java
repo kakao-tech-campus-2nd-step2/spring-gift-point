@@ -39,7 +39,7 @@ public class WishController {
     @PostMapping("/wishes")
     public ResponseEntity<String> addWish(@ValidUser Member member, @Valid @RequestBody RequestWishDTO requestWishDTO) {
         Wish wish = wishService.addWish(member, requestWishDTO);
-        return ResponseEntity.created(URI.create("api/wishes/" + wish.getId())).body("찜이 정상적으로 추가되었습니다");
+        return ResponseEntity.created(URI.create("api/wishes/" + wish.getId())).build();
     }
 
     @Operation(summary = "찜 조회", description = "찜 목록을 조회합니다")
@@ -52,16 +52,6 @@ public class WishController {
     public ResponseEntity<List<ResponseWishDTO>> getWish(@ValidUser Member member) {
         List<ResponseWishDTO> response = wishService.getWish(member);
         return ResponseEntity.ok(response);
-    }
-
-    @Operation(summary = "찜 수정", description = "찜을 수정합니다")
-    @ApiResponse(responseCode = "200", description = "수정 완료")
-    @ApiResponse(responseCode = "400", description = "잘못된 요청입니다. 입력값을 확인해주세요")
-    @ApiResponse(responseCode = "500", description = "서버 내부 에러 발생")
-    @PutMapping("/wishes")
-    public ResponseEntity<String> editWish(@ValidUser Member member, @Valid @RequestBody RequestWishDTO requestWishDTO) {
-        wishService.editWish(member, requestWishDTO);
-        return ResponseEntity.ok("찜이 정상적으로 수정되었습니다.");
     }
 
     @Operation(summary = "찜 삭제", description = "찜을 삭제합니다")
