@@ -61,16 +61,15 @@ public class JwtUtil {
             .getBody();
     }
 
-    public String extractToken(HttpServletRequest request) {
-        String authHeader = request.getHeader("Authorization");
-        if (authHeader != null && authHeader.startsWith("Bearer ")) {
-            return authHeader.substring(7);
+    public String extractToken(String header) {
+        if (header != null && header.startsWith("Bearer ")) {
+            return header.substring(7);
         }
         throw new UnauthorizedException("Invalid token");
     }
 
-    public Long extractMemberId(HttpServletRequest request) {
-        Claims claims = extractAllClaims(extractToken(request));
+    public Long extractMemberId(String header) {
+        Claims claims = extractAllClaims(extractToken(header));
         Number memberId = (Number) claims.get("id");
         return memberId.longValue();
     }

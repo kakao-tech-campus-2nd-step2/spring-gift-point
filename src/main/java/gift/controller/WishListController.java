@@ -29,20 +29,21 @@ public class WishListController {
     @GetMapping("")
     @Operation(summary = "전체 위시리스트 출력", description = "해당 멤버의 전체 위시리스트를 페이지네이션 방식으로 출력")
     public ResponseEntity<Page<WishResponse>> getWishListItems(
-        HttpServletRequest request,
+        @RequestHeader("Authorization") String header,
         @RequestParam(name = "page", required = false, defaultValue = "0") Integer page,
         @RequestParam(name = "size", required = false, defaultValue = "10") Integer size) {
 
-        Long memberId = jwtUtil.extractMemberId(request);
+        Long memberId = jwtUtil.extractMemberId(header);
         Page<WishResponse> pages = wishService.getWishListItems(memberId, page, size);
         return ResponseEntity.ok().body(pages);
     }
 
     @PostMapping
     @Operation(summary = "위시리스트 추가", description = "해당 멤버의 위시리스트 추가")
-    public ResponseEntity<?> addWishListItem(HttpServletRequest request,
+    public ResponseEntity<?> addWishListItem(
+        @RequestHeader("Authorization") String header,
         @Valid @RequestBody WishRequest wishRequest) {
-        Long memberId = jwtUtil.extractMemberId(request);
+        Long memberId = jwtUtil.extractMemberId(header);
         wishService.addWishListItem(memberId, wishRequest.productId());
         return ResponseEntity.status(HttpStatus.CREATED).body("Wish added");
     }
