@@ -40,7 +40,7 @@ public class DataInitializer {
             // 카테고리 생성
             List<Category> categories = new ArrayList<>();
             for (int i = 1; i <= 5; i++) {
-                Category category = new Category("Category " + i);
+                Category category = new Category("Category " + i, "random color", "https://img1.kakaocdn.net/thumb/C50x50@2x.fwebp.q82/?fname=https%3A%2F%2Fst.kakaocdn.net%2Fproduct%2Fgift%2Fgift_brand%2F20200331035648_4f7fd5bab2564f88ae561161dce7966d", "starbucks");
                 categories.add(category);
             }
             categories = categoryRepository.saveAll(categories);

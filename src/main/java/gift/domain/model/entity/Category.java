@@ -18,6 +18,14 @@ public class Category {
     @Column(nullable = false, unique = true)
     private String name;
 
+    @Column(nullable = false)
+    private String color;
+
+    @Column(nullable = false)
+    String imageUrl;
+
+    String description;
+
     protected Category() {
     }
 
@@ -25,9 +33,11 @@ public class Category {
         this.name = name;
     }
 
-    public Category(Long id, String name) {
-        this.id = id;
+    public Category(String name, String color, String imageUrl, String description) {
         this.name = name;
+        this.color = color;
+        this.imageUrl = imageUrl;
+        this.description = description;
     }
 
     public Long getId() {
@@ -38,8 +48,23 @@ public class Category {
         return name;
     }
 
-    public void update(Long id, String name) {
+    public String getColor() {
+        return color;
+    }
+
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void update(Long id, String name, String color, String imageUrl, String description) {
         this.id = id;
         this.name = name;
+        this.color = color;
+        this.imageUrl = imageUrl;
+        this.description = description;
     }
 }

@@ -6,6 +6,7 @@ import gift.domain.model.dto.CategoryUpdateRequestDto;
 import gift.domain.model.entity.Category;
 import gift.domain.repository.CategoryRepository;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 
@@ -24,6 +25,12 @@ public class CategoryService {
             .collect(Collectors.toList());
     }
 
+    public CategoryResponseDto getCategory(Long categoryId) {
+        return categoryRepository.findById(categoryId)
+            .map(CategoryResponseDto::toDto)
+            .orElseThrow(() -> new NoSuchElementException("해당 카테고리가 존재하지 않습니다."));
+    }
+
     public CategoryResponseDto addCategory(CategoryAddRequestDto categoryAddRequestDto) {
         validateCategoryName(categoryAddRequestDto.getName());
 
@@ -33,12 +40,14 @@ public class CategoryService {
         return CategoryResponseDto.toDto(savedCategory);
     }
 
-    public CategoryResponseDto updateCategory(Long id, CategoryUpdateRequestDto categoryUpdateRequestDto) {
+    public CategoryResponseDto updateCategory(Long id,
+        CategoryUpdateRequestDto categoryUpdateRequestDto) {
         validateCategoryId(id);
         validateCategoryName(categoryUpdateRequestDto.getName());
 
         Category category = categoryUpdateRequestDto.toEntity();
-        category.update(id, categoryUpdateRequestDto.getName());
+        category.update(id, categoryUpdateRequestDto.getName(), categoryUpdateRequestDto.getColor(),
+            categoryUpdateRequestDto.getImageUrl(), categoryUpdateRequestDto.getDescription());
         Category savedCategory = categoryRepository.save(category);
 
         return CategoryResponseDto.toDto(savedCategory);

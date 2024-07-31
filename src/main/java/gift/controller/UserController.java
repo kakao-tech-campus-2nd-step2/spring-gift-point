@@ -29,9 +29,7 @@ public class UserController {
     @PostMapping("register")
     public ResponseEntity<UserResponseDto> joinUser(@Valid @RequestBody UserRequestDto userRequestDto) {
         UserResponseDto response = userService.joinUser(userRequestDto);
-        return ResponseEntity.status(HttpStatus.CREATED)
-            .header("Authorization", "Bearer " + response.getToken())
-            .body(response);
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
     @Operation(summary = "사용자 로그인", description = "사용자 로그인을 처리합니다.")
