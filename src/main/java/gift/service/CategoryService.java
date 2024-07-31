@@ -1,12 +1,12 @@
 package gift.service;
 
 import gift.domain.Category;
+import gift.dto.CategoryListDto;
 import gift.dto.UpdateCategoryDto;
 import gift.repository.CategoryRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
-import java.util.Optional;
 
 @Service
 public class CategoryService {
@@ -16,8 +16,9 @@ public class CategoryService {
         this.categoryRepository = categoryRepository;
     }
 
-    public List<Category> findAll() {
-        return categoryRepository.findAll();
+    public Page<CategoryListDto> findAll(Pageable pageable) {
+        Page<Category> categories = categoryRepository.findAll(pageable);
+        return categories.map(CategoryListDto::new);
     }
 
     public Category findById(Long id) {
