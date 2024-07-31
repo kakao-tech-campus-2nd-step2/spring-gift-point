@@ -1,6 +1,7 @@
 package gift.controller;
 
 import gift.config.auth.LoginUser;
+import gift.domain.model.dto.WishAddRequestDto;
 import gift.domain.model.entity.User;
 import gift.domain.model.dto.WishResponseDto;
 import gift.domain.model.dto.WishUpdateRequestDto;
@@ -44,10 +45,10 @@ public class WishController {
     }
 
     @Operation(summary = "위시리스트에 상품 추가", description = "위시리스트에 새로운 상품을 추가합니다.")
-    @PostMapping("/{productId}")
-    public ResponseEntity<WishResponseDto> addWish(@PathVariable Long productId,
+    @PostMapping
+    public ResponseEntity<WishResponseDto> addWish(@Valid @RequestBody WishAddRequestDto wishAddRequestDto,
         @LoginUser User user) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(wishService.addWish(user, productId));
+        return ResponseEntity.status(HttpStatus.CREATED).body(wishService.addWish(user, wishAddRequestDto));
     }
 
     @Operation(summary = "위시리스트 상품 수정", description = "위시리스트에 있는 상품의 정보를 수정합니다.")

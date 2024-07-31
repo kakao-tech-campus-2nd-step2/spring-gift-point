@@ -65,7 +65,7 @@ public class DataInitializer {
             // 위시리스트에 모든 상품 추가
             List<Wish> wishes = new ArrayList<>();
             for (Product product : products) {
-                Wish wish = new Wish(savedUser, product);
+                Wish wish = new Wish(savedUser, product, 1);
                 wishes.add(wish);
             }
 

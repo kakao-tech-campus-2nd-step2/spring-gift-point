@@ -39,9 +39,10 @@ public class Wish {
     protected Wish() {
     }
 
-    public Wish(User user, Product product) {
+    public Wish(User user, Product product, Integer count) {
         this.user = user;
         this.product = product;
+        this.count = count;
     }
 
     public Long getId() {
@@ -60,7 +61,9 @@ public class Wish {
         return count;
     }
 
-    public void setCount(Integer count) {
+    public void updateWish(User user, Product product, Integer count) {
+        this.user = user;
+        this.product = product;
         this.count = count;
     }
 }
