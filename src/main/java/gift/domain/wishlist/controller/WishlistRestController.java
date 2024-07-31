@@ -9,6 +9,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -48,7 +49,7 @@ public class WishlistRestController {
     @Operation(summary = "위시리스트 조회", description = "회원의 위시리스트를 조회합니다.")
     public ResponseEntity<Page<WishItemResponseDto>> readAll(
         @Parameter(description = "페이징 정보", in = ParameterIn.QUERY)
-        Pageable pageable,
+        @ParameterObject Pageable pageable,
         @Parameter(hidden = true)
         @LoginUser Member member
     ) {
