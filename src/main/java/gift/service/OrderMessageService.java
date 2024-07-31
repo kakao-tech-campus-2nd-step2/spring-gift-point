@@ -14,7 +14,8 @@ public class OrderMessageService {
     private final KakaoApiClient kakaoApiClient;
     private final OptionRepository optionRepository;
 
-    public OrderMessageService(KakaoProperties kakaoProperties, KakaoApiClient kakaoApiClient, OptionRepository optionRepository) {
+    public OrderMessageService(KakaoProperties kakaoProperties, KakaoApiClient kakaoApiClient,
+        OptionRepository optionRepository) {
         this.kakaoProperties = kakaoProperties;
         this.kakaoApiClient = kakaoApiClient;
         this.optionRepository = optionRepository;

@@ -45,7 +45,8 @@ public class ProductService {
         return productRepository.findAll();
     }
 
-    public List<ProductResponseWithoutCategoryId> getProductsByCategory(Long categoryId, String[] sort) {
+    public List<ProductResponseWithoutCategoryId> getProductsByCategory(Long categoryId,
+        String[] sort) {
         Sort sorting = Sort.by(Sort.Order.by(sort[0]).with(Sort.Direction.fromString(sort[1])));
         List<Product> products;
         if (categoryId != null) {
@@ -79,7 +80,8 @@ public class ProductService {
         Product product = ProductRequest.toEntity(productRequest, category);
 
         for (OptionRequest optionRequest : productRequest.getOptions()) {
-            Option option = new Option(optionRequest.getName(), optionRequest.getStockQuantity(), product);
+            Option option = new Option(optionRequest.getName(), optionRequest.getStockQuantity(),
+                product);
             product.addOption(option);
         }
 
@@ -87,13 +89,15 @@ public class ProductService {
         return ProductResponse.from(savedProduct);
     }
 
-    public ProductUpdateResponse updateProduct(Long id, @Valid ProductUpdateRequest updatedProductRequest) {
+    public ProductUpdateResponse updateProduct(Long id,
+        @Valid ProductUpdateRequest updatedProductRequest) {
         Product product = findById(id);
 
         Category category = categoryService.findById(updatedProductRequest.getCategoryId())
             .orElseThrow(CategoryNotFoundException::new);
 
-        Optional<Product> existingProduct = productRepository.findByName(updatedProductRequest.getName());
+        Optional<Product> existingProduct = productRepository.findByName(
+            updatedProductRequest.getName());
         if (existingProduct.isPresent() && !existingProduct.get().getId().equals(id)) {
             throw new ProductAlreadyExistsException();
         }

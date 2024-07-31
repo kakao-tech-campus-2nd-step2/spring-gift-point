@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 @JsonPropertyOrder({"error_code", "message"})
 public class ErrorResponse {
+
     @JsonProperty("error_code")
     private int errorCode;
     private String message;

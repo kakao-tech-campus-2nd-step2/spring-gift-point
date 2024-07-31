@@ -46,7 +46,8 @@ public class KakaoService {
 
         HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(body, headers);
         try {
-            ResponseEntity<KakaoAccessToken> response = restTemplate.exchange(URI.create(url), HttpMethod.POST,
+            ResponseEntity<KakaoAccessToken> response = restTemplate.exchange(URI.create(url),
+                HttpMethod.POST,
                 request, KakaoAccessToken.class);
 
             System.out.println("Response: " + response);
@@ -79,7 +80,8 @@ public class KakaoService {
 
     private KakaoAccessToken extractAccessToken(ResponseEntity<KakaoAccessToken> response) {
         if (response.getStatusCode() != HttpStatus.OK) {
-            throw new IllegalArgumentException("access token 발급 실패 : HTTP status " + response.getStatusCode());
+            throw new IllegalArgumentException(
+                "access token 발급 실패 : HTTP status " + response.getStatusCode());
         }
 
         KakaoAccessToken responseBody = response.getBody();

@@ -31,7 +31,8 @@ public class WishService {
     public WishResponse addWish(Member member, WishRequest request) {
         Product product = validateProductExist(request.getProductId());
 
-        if (wishRepository.findByMemberIdAndProductId(member.getId(), product.getId()).isPresent()) {
+        if (wishRepository.findByMemberIdAndProductId(member.getId(), product.getId())
+            .isPresent()) {
             throw new WishAlreadyExistsException();
         }
 

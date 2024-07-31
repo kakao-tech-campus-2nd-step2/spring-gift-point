@@ -31,11 +31,11 @@ public class CategoryService {
     }
 
     public CategoryResponse addCategory(CategoryRequest categoryRequest) {
-        if(categoryRequest.getName() == null || categoryRequest.getName().isEmpty()) {
+        if (categoryRequest.getName() == null || categoryRequest.getName().isEmpty()) {
             throw new RequestValidationException();
         }
 
-        if(categoryRepository.existsByName(categoryRequest.getName())) {
+        if (categoryRepository.existsByName(categoryRequest.getName())) {
             throw new CategoryNameConflictException();
         }
 
@@ -48,7 +48,7 @@ public class CategoryService {
         Category category = categoryRepository.findById(id)
             .orElseThrow(CategoryNotFoundException::new);
 
-        if(categoryRepository.existsByName(categoryRequest.getName())) {
+        if (categoryRepository.existsByName(categoryRequest.getName())) {
             throw new CategoryNameConflictException();
         }
 

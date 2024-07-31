@@ -7,7 +7,8 @@ public class KakaoUserInfo {
     private String profileImageUrl;
     private String email;
 
-    public KakaoUserInfo() {}
+    public KakaoUserInfo() {
+    }
 
     public KakaoUserInfo(Long id, String nickName, String profileImageUrl, String email) {
         this.id = id;

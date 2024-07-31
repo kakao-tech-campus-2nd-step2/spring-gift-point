@@ -34,29 +34,33 @@ public class OptionService {
         Product product = productRepository.findById(productId)
             .orElseThrow(ProductNotFoundException::new);
 
-        Optional<Option> existingOption = optionRepository.findByNameAndProductId(optionRequest.getName(), productId);
+        Optional<Option> existingOption = optionRepository.findByNameAndProductId(
+            optionRequest.getName(), productId);
         if (existingOption.isPresent()) {
             throw new OptionNameConflictException();
         }
 
-        Option option = new Option(optionRequest.getName(), optionRequest.getStockQuantity(), product);
+        Option option = new Option(optionRequest.getName(), optionRequest.getStockQuantity(),
+            product);
         Option savedOption = optionRepository.save(option);
         return OptionResponse.from(savedOption);
     }
 
-    public OptionResponse updateOption(Long productId, Long optionId, @Valid OptionRequest optionRequest) {
-        if(!productRepository.existsById(productId)) {
+    public OptionResponse updateOption(Long productId, Long optionId,
+        @Valid OptionRequest optionRequest) {
+        if (!productRepository.existsById(productId)) {
             throw new ProductNotFoundException();
         }
 
         Option option = optionRepository.findById(optionId)
             .orElseThrow(OptionNotFoundException::new);
 
-        if(!option.getProduct().getId().equals(productId)) {
+        if (!option.getProduct().getId().equals(productId)) {
             throw new InvalidProductOptionException();
         }
 
-        if (optionRepository.findByNameAndProductId(optionRequest.getName(), productId).isPresent()) {
+        if (optionRepository.findByNameAndProductId(optionRequest.getName(), productId)
+            .isPresent()) {
             throw new OptionNameConflictException();
         }
 

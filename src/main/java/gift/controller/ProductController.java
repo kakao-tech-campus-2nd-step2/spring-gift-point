@@ -45,7 +45,8 @@ public class ProductController {
         @RequestParam(defaultValue = "name,asc") String[] sort) {
 
         CategoryResponse categoryResponse = productService.getCategoryById(categoryId);
-        List<ProductResponseWithoutCategoryId> products = productService.getProductsByCategory(categoryId, sort);
+        List<ProductResponseWithoutCategoryId> products = productService.getProductsByCategory(
+            categoryId, sort);
 
         Map<String, Object> response = new HashMap<>();
         response.put("category", categoryResponse);

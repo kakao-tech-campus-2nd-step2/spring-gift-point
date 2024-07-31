@@ -40,7 +40,8 @@ public class KakaoApiController {
         @ApiResponse(responseCode = "200", description = "성공"),
         @ApiResponse(responseCode = "401", description = "인증 실패")
     })
-    public ResponseEntity<KakaoUserInfo> kakaoCallback(@RequestParam(required = false) String code) {
+    public ResponseEntity<KakaoUserInfo> kakaoCallback(
+        @RequestParam(required = false) String code) {
         if (code == null) {
             throw new TokenNotFoundException();
         }
@@ -63,7 +64,8 @@ public class KakaoApiController {
         @ApiResponse(responseCode = "200", description = "성공"),
         @ApiResponse(responseCode = "404", description = "사용자가 존재하지 않음")
     })
-    public ResponseEntity<KakaoUserInfo> getUserInfo(@RequestHeader("Authorization") String authHeader) {
+    public ResponseEntity<KakaoUserInfo> getUserInfo(
+        @RequestHeader("Authorization") String authHeader) {
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }

@@ -36,7 +36,8 @@ public class WishProductResponse {
     }
 
     public static WishProductResponse from(Product product) {
-        return new WishProductResponse(product.getId(), product.getName(), product.getPrice(), product.getImgUrl());
+        return new WishProductResponse(product.getId(), product.getName(), product.getPrice(),
+            product.getImgUrl());
     }
 
 }

@@ -42,7 +42,8 @@ public class OptionController {
         @ApiResponse(responseCode = "200", description = "옵션 목록 조회 성공"),
         @ApiResponse(responseCode = "-40401", description = "상품을 찾을 수 없음")
     })
-    public ResponseEntity<Map<String, List<OptionResponse>>> getOptions(@PathVariable Long productId) {
+    public ResponseEntity<Map<String, List<OptionResponse>>> getOptions(
+        @PathVariable Long productId) {
         List<OptionResponse> options = optionService.getOptions(productId);
         return ResponseEntity.ok(Map.of("options", options));
     }
@@ -89,7 +90,8 @@ public class OptionController {
         @ApiResponse(responseCode = "-40404", description = "해당 옵션이 존재하지 않음"),
         @ApiResponse(responseCode = "-40405", description = "해당 옵션이 존재하지만, 상품 옵션에 속하지 않음")
     })
-    public ResponseEntity<Void> deleteOption(@PathVariable Long productId, @PathVariable Long optionId) {
+    public ResponseEntity<Void> deleteOption(@PathVariable Long productId,
+        @PathVariable Long optionId) {
         optionService.deleteOption(productId, optionId);
         return ResponseEntity.noContent().build();
     }

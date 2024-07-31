@@ -17,7 +17,8 @@ public class ProductUpdateResponse {
     @JsonProperty("category_id")
     private Long categoryId;
 
-    public ProductUpdateResponse() {}
+    public ProductUpdateResponse() {
+    }
 
     public ProductUpdateResponse(Long id, String name, int price, String imgUrl, Long categoryId) {
         this.id = id;

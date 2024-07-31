@@ -61,7 +61,8 @@ public class ProductResponse {
         Long categoryId = product.getCategory().getId();
         List<OptionResponse> optionResponses = product.getOptions().stream()
             .map(OptionResponse::from)
-            .toList();;
+            .toList();
+        ;
 
         return new ProductResponse(product.getId(), product.getName(), product.getPrice(),
             product.getImgUrl(), categoryId, optionResponses);
