@@ -1,6 +1,5 @@
 package gift.util;
 
-
 import gift.entity.user.UserDTO;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validator;
