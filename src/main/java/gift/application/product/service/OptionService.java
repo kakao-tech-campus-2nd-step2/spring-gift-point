@@ -41,6 +41,10 @@ public class OptionService {
 
     @Transactional(readOnly = true)
     public List<OptionModel.Info> getOptions(Long productId) {
+        if (!productRepository.existsById(productId)) {
+            throw new NotFoundException("Product not found");
+        }
+
         Options options = optionRepository.findAllByProductId(productId);
         return options.getOptions().stream().map(OptionModel.Info::from).toList();
     }
