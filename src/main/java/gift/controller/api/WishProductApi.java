@@ -21,21 +21,24 @@ public interface WishProductApi {
     @Operation(summary = "회원의 위시 리스트에 상품을 추가한다.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "위시 리스트 추가 성공"),
-            @ApiResponse(responseCode = "401", description = "허용되지 않는 요청")
+            @ApiResponse(responseCode = "401", description = "허용되지 않는 요청"),
+            @ApiResponse(responseCode = "500", description = "내부 서버의 오류")
     })
     ResponseEntity<Void> addWishProduct(WishProductAddRequest wishProductAddRequest, Long memberId);
 
     @Operation(summary = "회원의 특정 위시 리스트를 수정한다.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "204", description = "위시 리스트 수정 성공"),
-            @ApiResponse(responseCode = "401", description = "허용되지 않는 요청")
+            @ApiResponse(responseCode = "401", description = "허용되지 않는 요청"),
+            @ApiResponse(responseCode = "500", description = "내부 서버의 오류")
     })
     ResponseEntity<Void> updateWishProduct(Long id, WishProductUpdateRequest wishProductUpdateRequest);
 
     @Operation(summary = "회원의 위시 리스트에 있는 상품을 페이지 단위로 조회한다.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "모든 위시 리스트 조회 성공", content = @Content(array = @ArraySchema(schema = @Schema(implementation = WishProductResponse.class)))),
-            @ApiResponse(responseCode = "401", description = "허용되지 않는 요청")
+            @ApiResponse(responseCode = "401", description = "허용되지 않는 요청", content = @Content(schema = @Schema(hidden = true))),
+            @ApiResponse(responseCode = "500", description = "내부 서버의 오류", content = @Content(schema = @Schema(hidden = true)))
     })
     ResponseEntity<List<WishProductResponse>> getWishProducts(Long memberId, Pageable pageable);
 
@@ -43,7 +46,8 @@ public interface WishProductApi {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "204", description = "위시 리스트 삭제 성공"),
             @ApiResponse(responseCode = "401", description = "허용되지 않는 요청"),
-            @ApiResponse(responseCode = "404", description = "위시 리스트 삭제 실패(사유 : 존재하지 않는 ID 입니다.)")
+            @ApiResponse(responseCode = "404", description = "위시 리스트 삭제 실패(사유 : 존재하지 않는 ID 입니다.)"),
+            @ApiResponse(responseCode = "500", description = "내부 서버의 오류")
     })
     ResponseEntity<Void> deleteWishProduct(Long id);
 }

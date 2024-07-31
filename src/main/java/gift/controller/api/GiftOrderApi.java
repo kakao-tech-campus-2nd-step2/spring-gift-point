@@ -20,21 +20,24 @@ public interface GiftOrderApi {
     @Operation(summary = "회원의 새 주문을 생성한다.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "주문 생성 성공"),
-            @ApiResponse(responseCode = "401", description = "허용되지 않는 요청")
+            @ApiResponse(responseCode = "401", description = "허용되지 않는 요청"),
+            @ApiResponse(responseCode = "500", description = "내부 서버의 오류")
     })
     ResponseEntity<Void> orderOption(Long memberId, GiftOrderRequest giftOrderRequest);
 
     @Operation(summary = "회원의 특정 주문을 조회한다.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "특정 주문 조회 성공", content = @Content(schema = @Schema(implementation = GiftOrderResponse.class))),
-            @ApiResponse(responseCode = "401", description = "허용되지 않는 요청")
+            @ApiResponse(responseCode = "401", description = "허용되지 않는 요청", content = @Content(schema = @Schema(hidden = true))),
+            @ApiResponse(responseCode = "500", description = "내부 서버의 오류", content = @Content(schema = @Schema(hidden = true)))
     })
     ResponseEntity<GiftOrderResponse> getOrder(Long id);
 
     @Operation(summary = "회원의 모든 주문을 페이지 단위로 조회한다.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "모든 주문 조회 성공", content = @Content(array = @ArraySchema(schema = @Schema(implementation = GiftOrderResponse.class)))),
-            @ApiResponse(responseCode = "401", description = "허용되지 않는 요청")
+            @ApiResponse(responseCode = "401", description = "허용되지 않는 요청", content = @Content(schema = @Schema(hidden = true))),
+            @ApiResponse(responseCode = "500", description = "내부 서버의 오류", content = @Content(schema = @Schema(hidden = true)))
     })
     ResponseEntity<List<GiftOrderResponse>> getOrders(Long memberId, Pageable pageable);
 
@@ -42,7 +45,8 @@ public interface GiftOrderApi {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "204", description = "주문 삭제 성공"),
             @ApiResponse(responseCode = "401", description = "허용되지 않는 요청"),
-            @ApiResponse(responseCode = "404", description = "주문 삭제 실패(사유 : 존재하지 않는 ID 입니다.)")
+            @ApiResponse(responseCode = "404", description = "주문 삭제 실패(사유 : 존재하지 않는 ID 입니다.)"),
+            @ApiResponse(responseCode = "500", description = "내부 서버의 오류")
     })
     ResponseEntity<Void> deleteOrder(Long id);
 }

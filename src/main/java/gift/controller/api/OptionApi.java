@@ -21,21 +21,24 @@ public interface OptionApi {
     @Operation(summary = "상품에 옵션을 추가한다.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "옵션 추가 성공"),
-            @ApiResponse(responseCode = "401", description = "허용되지 않는 요청")
+            @ApiResponse(responseCode = "401", description = "허용되지 않는 요청"),
+            @ApiResponse(responseCode = "500", description = "내부 서버의 오류")
     })
     ResponseEntity<Void> addOption(OptionAddRequest optionAddRequest);
 
     @Operation(summary = "기존 옵션을 수정한다.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "204", description = "옵션 수정 성공"),
-            @ApiResponse(responseCode = "401", description = "허용되지 않는 요청")
+            @ApiResponse(responseCode = "401", description = "허용되지 않는 요청"),
+            @ApiResponse(responseCode = "500", description = "내부 서버의 오류")
     })
     ResponseEntity<Void> updateOption(Long id, OptionUpdateRequest optionUpdateRequest);
 
     @Operation(summary = "모든 옵션을 페이지 단위로 조회한다.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "모든 옵션 조회 성공", content = @Content(array = @ArraySchema(schema = @Schema(implementation = OptionResponse.class)))),
-            @ApiResponse(responseCode = "401", description = "허용되지 않는 요청")
+            @ApiResponse(responseCode = "401", description = "허용되지 않는 요청", content = @Content(schema = @Schema(hidden = true))),
+            @ApiResponse(responseCode = "500", description = "내부 서버의 오류", content = @Content(schema = @Schema(hidden = true)))
     })
     ResponseEntity<List<OptionResponse>> getOptions(Long productId, Pageable pageable);
 
@@ -43,7 +46,8 @@ public interface OptionApi {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "204", description = "옵션 삭제 성공"),
             @ApiResponse(responseCode = "401", description = "허용되지 않는 요청"),
-            @ApiResponse(responseCode = "404", description = "옵션 삭제 실패(사유 : 존재하지 않는 ID 입니다.)")
+            @ApiResponse(responseCode = "404", description = "옵션 삭제 실패(사유 : 존재하지 않는 ID 입니다.)"),
+            @ApiResponse(responseCode = "500", description = "내부 서버의 오류")
     })
     ResponseEntity<Void> deleteOption(Long id);
 }
