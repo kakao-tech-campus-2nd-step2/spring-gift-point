@@ -1,6 +1,7 @@
 package gift.main.controller;
 
 import gift.main.annotation.SessionUser;
+import gift.main.dto.PageResponse;
 import gift.main.dto.ProductId;
 import gift.main.dto.UserVo;
 import gift.main.dto.WishProductResponse;
@@ -23,7 +24,7 @@ public class WishlistController {
     @GetMapping()
     public ResponseEntity<?> getWishProductPage(@RequestParam(value = "page") int pageNum, @SessionUser UserVo sessionUserVo) {
         Page<WishProductResponse> wishProductPage = wishProductService.getWishProductPage(sessionUserVo, pageNum);
-        return ResponseEntity.ok(wishProductPage);
+        return ResponseEntity.ok(new PageResponse(wishProductPage));
     }
 
     //새로운 위시 추가
@@ -39,5 +40,4 @@ public class WishlistController {
         wishProductService.deleteWishProduct(wishId);
         return ResponseEntity.ok("successfully deleted the item to your wishlist");
     }
-
 }

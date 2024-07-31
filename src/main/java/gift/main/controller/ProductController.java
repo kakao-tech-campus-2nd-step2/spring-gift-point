@@ -1,5 +1,6 @@
 package gift.main.controller;
 
+import gift.main.dto.PageResponse;
 import gift.main.dto.ProductAllRequest;
 import gift.main.dto.ProductRequest;
 import gift.main.dto.ProductResponse;
@@ -25,7 +26,7 @@ public class ProductController {
     public ResponseEntity<?> getProductPage(@RequestParam(value = "page") int pageNum,
                                             @RequestParam(value = "category") int categoryId) {
         Page<ProductResponse> productPage = productService.getProductPage(pageNum, categoryId);
-        return ResponseEntity.ok(productPage);
+        return ResponseEntity.ok(new PageResponse(productPage));
     }
 
     //특정 제품 조회
