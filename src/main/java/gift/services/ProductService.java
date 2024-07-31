@@ -62,16 +62,7 @@ public class ProductService {
 
     // 제품 추가
     public ProductDto addProduct(@Valid RequestProductDto requestProductDto) {
-        if (requestProductDto.getOptionDtos().isEmpty()) {
-            throw new ProductException("One or more options are required to add a product.");
-        }
         Product product = toProductEntity(requestProductDto);
-
-        for (RequestOptionDto requestOptionDto : requestProductDto.getOptionDtos()) {
-            optionService.addOption(product.getId(), requestOptionDto);
-        }
-        List<Option> options = optionRepository.findAllByProductId(product.getId());
-        product.setOptions(options);
 
         productRepository.save(product);
 

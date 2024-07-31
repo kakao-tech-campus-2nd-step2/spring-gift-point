@@ -1,8 +1,5 @@
 package gift.dto;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class ProductDto {
 
     private final Long id;
@@ -10,16 +7,14 @@ public class ProductDto {
     private final double price;
     private final String imageUrl;
     private final CategoryDto categoryDto;
-    private List<OptionDto> optionDtos = new ArrayList<>();
 
-    public ProductDto(Long id, String name, double price, String imageUrl, CategoryDto categoryDto,
-        List<OptionDto> optionDtos) {
+    public ProductDto(Long id, String name, double price, String imageUrl,
+        CategoryDto categoryDto) {
         this.id = id;
         this.name = name;
         this.price = price;
         this.imageUrl = imageUrl;
         this.categoryDto = categoryDto;
-        this.optionDtos = optionDtos;
     }
 
     public String getName() {

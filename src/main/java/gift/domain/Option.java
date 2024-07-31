@@ -48,9 +48,13 @@ public class Option {
         return amount;
     }
 
+    public Product getProduct() {
+        return product;
+    }
+
     public ProductDto getProductDto() {
         return new ProductDto(product.getId(), product.getName(), product.getPrice(),
-            product.getImageUrl(), product.getCategoryDto(), product.getOptionDtos());
+            product.getImageUrl(), product.getCategoryDto());
     }
 
     public void update(String name, int amount) {

@@ -61,8 +61,7 @@ class ProductServiceTest {
     void testAddProduct() {
         RequestProductDto requestProductDto = new RequestProductDto(1L,
             "Test Product", 300, "imageUrl",
-            new CategoryDto(1L, "Test Category", "Blue", "CategoryImageUrl", "Test"),
-            List.of(new RequestOptionDto("Test Option", 23))
+            new CategoryDto(1L, "Test Category", "Blue", "CategoryImageUrl", "Test")
         );
 
         when(productRepository.save(any(Product.class))).thenReturn(product);
@@ -75,20 +74,6 @@ class ProductServiceTest {
         verify(productRepository).save(any(Product.class));
     }
 
-    @Test
-    @DisplayName("옵션 없을 경우 예외 발생 테스트")
-    void testAddProduct_NoOptions() {
-        RequestProductDto requestProductDto = new RequestProductDto(1L,
-            "Test Product", 300, "imageUrl",
-            new CategoryDto(1L, "Test Category", "Blue", "CategoryImageUrl", "Test"),
-            new ArrayList<>()); // No options
-
-        Exception exception = assertThrows(ProductException.class, () -> {
-            productService.addProduct(requestProductDto);
-        });
-
-        assertEquals("One or more options are required to add a product.", exception.getMessage());
-    }
 
     @Test
     @DisplayName("제품 수정 테스트")
@@ -97,8 +82,7 @@ class ProductServiceTest {
 
         RequestProductDto requestProductDto = new RequestProductDto(1L, "Updated Test Product", 700,
             "Updated ImageUrl",
-            new CategoryDto(1L, "Test Category", "Blue", "CategoryImageUrl", "Test"),
-            List.of(new RequestOptionDto("RAM", 32)));
+            new CategoryDto(1L, "Test Category", "Blue", "CategoryImageUrl", "Test"));
 
         when(categoryRepository.findById(anyLong())).thenReturn(
             Optional.of(new Category("Electronics", "Blue", "url", "description")));
@@ -117,8 +101,7 @@ class ProductServiceTest {
     void testUpdateProduct_ProductNotFound() {
         RequestProductDto requestProductDto = new RequestProductDto(1L,
             "Test Product", 300, "imageUrl",
-            new CategoryDto(1L, "Test Category", "Blue", "CategoryImageUrl", "Test"),
-            List.of(new RequestOptionDto("Test Option", 23))
+            new CategoryDto(1L, "Test Category", "Blue", "CategoryImageUrl", "Test")
         );
 
         when(productRepository.findById(anyLong())).thenReturn(Optional.empty());

@@ -20,16 +20,13 @@ public class RequestProductDto {
 
     private final CategoryDto categoryDto;
 
-    private List<RequestOptionDto> optionDtos = new ArrayList<>();
-
     public RequestProductDto(Long id, String name, double price, String imageUrl,
-        CategoryDto categoryDto, List<RequestOptionDto> optionDtos) {
+        CategoryDto categoryDto) {
         this.id = id;
         this.name = name;
         this.price = price;
         this.imageUrl = imageUrl;
         this.categoryDto = categoryDto;
-        this.optionDtos = optionDtos;
     }
 
     public Long getId() {
@@ -52,7 +49,4 @@ public class RequestProductDto {
         return categoryDto;
     }
 
-    public List<RequestOptionDto> getOptionDtos() {
-        return optionDtos;
-    }
 }
