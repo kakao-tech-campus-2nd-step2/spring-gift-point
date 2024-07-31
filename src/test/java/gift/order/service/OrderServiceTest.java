@@ -127,7 +127,7 @@ class OrderServiceTest {
         product.getOptions().add(option);
 
         Member member = MemberFixture.createMember();
-        member.getWishLists().add(WishListFixture.createWishList(member, product, 5));
+        member.getWishLists().add(WishListFixture.createWishList(member, product));
 
         given(optionService.findByIdOrThrow(any())).willReturn(option);
 

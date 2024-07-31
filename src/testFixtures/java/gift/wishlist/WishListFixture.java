@@ -7,11 +7,11 @@ import gift.wishlist.entity.WishList;
 
 public class WishListFixture {
 
-    public static WishList createWishList(Member member, Product product, Integer quantity) {
-        return new WishList(member, product, quantity);
+    public static WishList createWishList(Member member, Product product) {
+        return new WishList(member, product);
     }
 
-    public static WishListReqDto createWishListReqDto(Long productId, Integer quantity) {
-        return new WishListReqDto(productId, quantity);
+    public static WishListReqDto createWishListReqDto(Long productId) {
+        return new WishListReqDto(productId);
     }
 }

@@ -7,10 +7,10 @@ import gift.product.repository.ProductRepository;
 import gift.wishlist.dto.WishListReqDto;
 import gift.wishlist.dto.WishListResDto;
 import gift.wishlist.entity.WishList;
+import gift.wishlist.exception.WishListAlreadyExistsException;
 import gift.wishlist.exception.WishListCreateException;
 import gift.wishlist.exception.WishListDeleteException;
 import gift.wishlist.exception.WishListNotFoundException;
-import gift.wishlist.exception.WishListUpdateException;
 import gift.wishlist.repository.WishListRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -38,11 +38,6 @@ public class WishListService {
 
     @Transactional
     public void addWishList(Long memberId, WishListReqDto wishListReqDto) {
-        // 이미 위시 리스트에 있는 상품이면 수량을 더한다.
-        if (wishListRepository.existsByMemberIdAndProductId(memberId, wishListReqDto.productId())) {
-            addQuantity(memberId, wishListReqDto.productId(), wishListReqDto.quantity());
-            return;
-        }
 
         Product product = productRepository.findById(wishListReqDto.productId()).orElseThrow(
                 () -> WishListNotFoundException.EXCEPTION
@@ -53,38 +48,10 @@ public class WishListService {
         );
 
         try {
-            WishList wishList = new WishList(member, product, wishListReqDto.quantity());
+            WishList wishList = new WishList(member, product);
             wishListRepository.save(wishList);
         } catch (Exception e) {
             throw WishListCreateException.EXCEPTION;
-        }
-    }
-
-    private void addQuantity(Long memberId, Long productId, Integer quantity) {
-        try {
-            WishList findWishList = wishListRepository.findByMemberIdAndProductId(memberId, productId).orElseThrow(
-                    () -> WishListNotFoundException.EXCEPTION
-            );
-            findWishList.addQuantity(quantity);
-        } catch (Exception e) {
-            throw WishListUpdateException.EXCEPTION;
-        }
-    }
-
-    @Transactional
-    public void updateWishListById(Long memberId, Long wishListId, WishListReqDto wishListReqDto) {
-        // 수량이 0이면 삭제
-        Integer quantity = wishListReqDto.quantity();
-        if (quantity == 0) {
-            deleteWishListById(memberId, wishListId);
-            return;
-        }
-
-        WishList findWishList = findByIdAndMemberIdOrThrow(memberId, wishListId);
-        try {
-            findWishList.changeQuantity(quantity);
-        } catch (Exception e) {
-            throw WishListUpdateException.EXCEPTION;
         }
     }
 
