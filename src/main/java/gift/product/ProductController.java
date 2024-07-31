@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @Tag(name = "Product", description = "Product API")
@@ -38,8 +39,11 @@ public class ProductController {
     @GetMapping
     @Operation(summary = "상품 조회", description = "모든 상품을 조회합니다.")
     @ApiResponse(responseCode = "200", description = "상품 조회 성공")
-    public Page<ProductResponseDTO> getProducts(@ParameterObject Pageable pageable) {
-        return productService.getAllProducts(pageable);
+    public Page<ProductResponseDTO> getProducts(
+        @ParameterObject Pageable pageable,
+        @RequestParam long categoryId
+    ) {
+        return productService.getAllProducts(pageable, categoryId);
     }
 
     @PostMapping

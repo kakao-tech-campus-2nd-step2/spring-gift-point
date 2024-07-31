@@ -32,9 +32,10 @@ public class ProductService {
     }
 
     @Transactional(readOnly = true)
-    public Page<ProductResponseDTO> getAllProducts(Pageable pageable) {
+    public Page<ProductResponseDTO> getAllProducts(Pageable pageable, long categoryId) {
         List<ProductResponseDTO> productResponseDTOS = productRepository.findAll(pageable)
             .stream()
+            .filter(product -> product.getCategory().getId() == categoryId)
             .map(product -> new ProductResponseDTO(
                 product.getId(),
                 product.getName(),
