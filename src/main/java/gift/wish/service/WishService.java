@@ -66,7 +66,7 @@ public class WishService {
     protected void updateWish(UpdateWishRequest request) {
         Wish wish = getWish(request.id());
         wish.changeQuantity(request);
-        if (wish.isQuantityZero()) {
+        if (wish.isQuantityUnderZero()) {
             wishRepository.delete(wish);
         }
     }

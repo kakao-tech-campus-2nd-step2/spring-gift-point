@@ -75,7 +75,7 @@ public class Wish {
         this.quantity = request.quantity();
     }
 
-    public boolean isQuantityZero() {
+    public boolean isQuantityUnderZero() {
         return quantity <= 0;
     }
 
