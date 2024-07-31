@@ -30,12 +30,12 @@ public class OptionService {
     }
 
     public OptionResponseDto addOption(Long productId, OptionAddRequestDto optionAddRequestDto) {
-        validateOptionName(optionAddRequestDto.getName());
+        validateOptionName(optionAddRequestDto.getOptionName());
 
         Product product = productRepository.findById(productId)
             .orElseThrow(() -> new NoSuchElementException("해당 상품이 존재하지 않습니다."));
-        Option option = new Option(product, optionAddRequestDto.getName(),
-            optionAddRequestDto.getQuantity());
+        Option option = new Option(product, optionAddRequestDto.getOptionName(),
+            optionAddRequestDto.getOptionQuantity());
 
         Option savedOption = optionRepository.save(option);
         return OptionResponseDto.toDto(savedOption);
@@ -46,7 +46,8 @@ public class OptionService {
         Option option = optionRepository.findById(id)
             .orElseThrow(() -> new NoSuchElementException("해당 상품 옵션이 존재하지 않습니다."));
 
-        option.update(id, optionUpdateRequestDto.getName(), optionUpdateRequestDto.getQuantity());
+        option.update(id, optionUpdateRequestDto.getOptionName(),
+            optionUpdateRequestDto.getOptionQuantity());
         Option savedOption = optionRepository.save(option);
 
         return OptionResponseDto.toDto(savedOption);
