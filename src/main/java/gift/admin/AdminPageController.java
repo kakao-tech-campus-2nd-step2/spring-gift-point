@@ -9,6 +9,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 
 @Controller
 public class AdminPageController {
@@ -24,9 +25,14 @@ public class AdminPageController {
         this.categoryService = categoryService;
     }
 
-    @GetMapping(path = "/admin")
-    public String adminPage(Model model, Pageable pageable) {
-        Page<ProductResponseDTO> products = productService.getAllProducts(pageable);
+    @Deprecated
+    @GetMapping(path = "/admin/{categoryId}")
+    public String adminPage(
+        Model model,
+        Pageable pageable,
+        @PathVariable long categoryId
+    ) {
+        Page<ProductResponseDTO> products = productService.getAllProducts(pageable, categoryId);
 
         model.addAttribute("products", products);
         model.addAttribute("page", pageable.getPageNumber() + 1);

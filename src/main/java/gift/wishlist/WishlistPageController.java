@@ -12,6 +12,7 @@ import org.springframework.data.domain.Sort.Order;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestHeader;
 
 @Controller
@@ -28,21 +29,25 @@ public class WishlistPageController {
         this.productService = productService;
     }
 
+    @Deprecated
     @GetMapping("/wishlist")
     public String wishlist() {
         return "/wishlist/emptyWishlistPage";
     }
 
-    @GetMapping("/wishlistPage")
+    @Deprecated
+    @GetMapping("/wishlistPage/{categoryId}")
     public String wishlistPage(
         @RequestHeader("Authorization") String token,
         Model model,
-        Pageable pageable
+        Pageable pageable,
+        @PathVariable long categoryId
     ) {
         pageable = changePageable(pageable);
         Page<ProductResponseDTO> wishProducts = wishlistService.getAllWishlists(token, pageable);
         Page<ProductResponseDTO> allProducts = productService.getAllProducts(
-            PageRequest.of(0, Integer.MAX_VALUE)
+            PageRequest.of(0, Integer.MAX_VALUE),
+            categoryId
         );
         wishProducts.getSort().getOrderFor("product.id");
 

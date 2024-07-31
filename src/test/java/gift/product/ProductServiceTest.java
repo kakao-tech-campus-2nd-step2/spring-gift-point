@@ -53,9 +53,7 @@ class ProductServiceTest {
             new ProductResponseDTO(1L, "product-1", 1, "product-1-image",
                 new CategoryResponseDTO(1L, "category-1")),
             new ProductResponseDTO(2L, "product-2", 2, "product-2-image",
-                new CategoryResponseDTO(1L, "category-1")),
-            new ProductResponseDTO(3L, "product-3", 3, "product-3-image",
-                new CategoryResponseDTO(2L, "category-2"))
+                new CategoryResponseDTO(1L, "category-1"))
         ));
 
         PageRequest pageable = PageRequest.of(0, Integer.MAX_VALUE);
@@ -63,7 +61,7 @@ class ProductServiceTest {
         //when
         when(productRepository.findAll(pageable))
             .thenReturn(expectFromRepository);
-        Page<ProductResponseDTO> actual = productService.getAllProducts(pageable);
+        Page<ProductResponseDTO> actual = productService.getAllProducts(pageable, 1L);
 
         //then
         assertAll(
