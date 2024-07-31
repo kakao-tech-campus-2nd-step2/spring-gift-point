@@ -3,7 +3,12 @@ spring:
     console:
       enabled: true
   # 7 서버 실행시에 data.sql 실행
-#  sql:
-#    init:
-#      #schema-locations: classpath:db/schema.sql
-#      data-locations: classpath:db/data.sql
+  jpa:
+    hibernate:
+      ddl-auto: create
+    defer-datasource-initialization: true
+
+  sql:
+    init:
+      mode: always
+      data-locations: classpath:db/data.sql
