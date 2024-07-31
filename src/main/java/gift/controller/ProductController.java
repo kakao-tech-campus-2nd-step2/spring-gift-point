@@ -29,6 +29,7 @@ public class ProductController {
         this.productService = productService;
     }
 
+    /*Product api*/
     @GetMapping
     @Operation(summary = "모든 상품 목록 조회 api")
     @ApiResponse(responseCode = "200", description = "상품 목록 조회 성공")
@@ -61,8 +62,10 @@ public class ProductController {
         return ResponseEntity.ok(productService.deleteProduct(productId));
     }
 
+
+    /*Option api*/
     @GetMapping("/{productId}/options")
-    @Operation(summary = "[관리자] 특정 상품의 모든 옵션 조회 api")
+    @Operation(summary = "특정 상품의 모든 옵션 조회 api")
     public ResponseEntity<List<Option>> getOptions(@PathVariable("productId") Long productId) {
         return ResponseEntity.ok(productService.getOptions(productId));
     }
