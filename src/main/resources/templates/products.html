@@ -18,13 +18,13 @@
   </thead>
   <tbody>
   <tr th:each="product : ${products.content}">
-    <td th:text="${product.getId()}"></td>
-    <td th:text="${product.getName()}"></td>
-    <td th:text="${product.getPrice()}"></td>
-    <td th:text="${product.getImageUrl()}"></td>
+    <td th:text="${product.id()}"></td>
+    <td th:text="${product.name()}"></td>
+    <td th:text="${product.price()}"></td>
+    <td th:text="${product.imageUrl()}"></td>
     <td>
-      <a th:href="@{/admin/products/edit/{id}(id=${product.getId()})}">Edit</a>
-      <form th:action="@{/admin/products/delete/{id}(id=${product.getId()})}" method="post" style="display:inline;">
+      <a th:href="@{/admin/products/edit/{id}(id=${product.id()})}">Edit</a>
+      <form th:action="@{/admin/products/delete/{id}(id=${product.id()})}" method="post" style="display:inline;">
         <button type="submit">Delete</button>
       </form>
     </td>
