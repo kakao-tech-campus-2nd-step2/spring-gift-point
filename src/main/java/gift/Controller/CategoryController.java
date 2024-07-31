@@ -11,7 +11,7 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import org.springframework.http.HttpStatus;
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -33,7 +33,7 @@ public class CategoryController {
     @ApiResponse(responseCode = "400", description = "잘못된 요청입니다. 입력값을 확인해주세요.")
     @ApiResponse(responseCode = "500", description = "서버 내부 에러 발생")
     @PostMapping
-    public ResponseEntity<String> addCategory(@RequestBody RequestCategoryDTO requestCategoryDTO){
+    public ResponseEntity<String> addCategory(@Valid @RequestBody RequestCategoryDTO requestCategoryDTO){
         Category category = categoryService.addCategory(requestCategoryDTO);
         return ResponseEntity.created(URI.create("api/categories/"+ category.getId())).body("카테고리가 정상적으로 추가되었습니다");
     }
@@ -56,7 +56,7 @@ public class CategoryController {
     @ApiResponse(responseCode = "400", description = "잘못된 요청입니다. 입력값을 확인해주세요")
     @ApiResponse(responseCode = "500", description = "서버 내부 에러 발생")
     @PutMapping
-    public ResponseEntity <String> editCategory(@RequestBody RequestCategoryDTO requestCategoryDTO){
+    public ResponseEntity <String> editCategory(@PathVariable("category-id") Long categoryId, @Valid @RequestBody RequestCategoryDTO requestCategoryDTO){
         categoryService.editCategory(requestCategoryDTO);
         return ResponseEntity.ok("카테고리를 정상적으로 수정하였습니다");
     }
