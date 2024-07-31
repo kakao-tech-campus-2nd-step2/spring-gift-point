@@ -92,8 +92,7 @@ public class OrderService {
         LinkObject link = new LinkObject(webUrl);
         TemplateObject templateObject = new TemplateObject(objectType, message, link, buttonTitle);
 
-        ObjectMapper mapper = new ObjectMapper();
-        String jsonString = mapper.writeValueAsString(templateObject);
+        String jsonString = new ObjectMapper().writeValueAsString(templateObject);
 
         LinkedMultiValueMap<String, String> body = new LinkedMultiValueMap<>();
         body.add("template_object", jsonString);

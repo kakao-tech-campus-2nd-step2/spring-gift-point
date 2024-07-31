@@ -37,21 +37,6 @@ public class Option {
         this.product = product;
     }
 
-    public long getId() {
-        return id;
-    }
-
-    public long getQuantity() {
-        return quantity;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public Long getProductID() {
-        return product.getId();
-    }
 
     public void updateName(String name){
         OptionName optionName = new OptionName(name);
@@ -69,6 +54,22 @@ public class Option {
     public Option quantityUpdate(int num){
         this.updateQuantity(this.quantity + num);
         return this;
+    }
+
+    public long getId() {
+        return id;
+    }
+
+    public long getQuantity() {
+        return quantity;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public Long getProductID() {
+        return product.getId();
     }
 
     @Override
