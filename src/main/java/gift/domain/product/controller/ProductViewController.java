@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 @Controller
@@ -31,10 +30,9 @@ public class ProductViewController {
     @GetMapping("/")
     public String index(
         Model model,
-        @ParameterObject Pageable pageable,
-        @RequestParam Long categoryId
+        @ParameterObject Pageable pageable
     ) {
-        model.addAttribute("products", productService.getAllProducts(pageable, categoryId));
+        model.addAttribute("products", productService.getAllProducts(pageable, null));
         return "index";
     }
 
