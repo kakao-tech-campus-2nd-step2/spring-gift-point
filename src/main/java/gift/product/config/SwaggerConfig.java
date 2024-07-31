@@ -22,9 +22,12 @@ public class SwaggerConfig {
 
     @Bean
     public OpenApiCustomizer customAuthParameter() {
-        Set<String> targetPaths = Set.of("/admin/wishes",
+        Set<String> targetPaths = Set.of(
             "/api/wishes",
             "/api/orders",
+            "/api/categories",
+            "/api/options",
+            "/api/products",
             "/members/login/kakao/unlink");
 
         return openApi -> openApi
