@@ -6,7 +6,12 @@ import gift.option.Option;
 import gift.option.OptionRepository;
 import gift.option.OptionResponse;
 import gift.product.Product;
+import gift.product.ProductResponse;
 import gift.user.KakaoUser;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -14,18 +19,23 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.web.client.RestClient;
 
 import java.net.URI;
+import java.time.LocalDateTime;
 import java.util.Date;
+import java.util.List;
+import java.util.Objects;
 
 @Service
 public class OrderService {
 
     private final RestClient kakaoRestClient;
     private final OptionRepository optionRepository;
+    private final OrderRepository orderRepository;
     ObjectMapper mapper = new ObjectMapper();
 
-    public OrderService(RestClient kakaoRestClient, OptionRepository optionRepository) {
+    public OrderService(RestClient kakaoRestClient, OptionRepository optionRepository, OrderRepository orderRepository) {
         this.kakaoRestClient = kakaoRestClient;
         this.optionRepository = optionRepository;
+        this.orderRepository = orderRepository;
     }
 
     public OrderResponse sendMessage(KakaoUser user, OrderRequest request, OptionResponse optionResponse) {
@@ -42,7 +52,9 @@ public class OrderService {
                 .retrieve()
                 .toEntity(String.class);
 
-        return new OrderResponse(1L, request.optionId, request.quantity, new Date().toString(), request.getMessage());
+        Order order = orderRepository.save(new Order(request, LocalDateTime.now(), user.getId()));
+
+        return new OrderResponse(order);
     }
 
     private LinkedMultiValueMap<String, Object> createBody(OrderRequest request, OptionResponse optionResponse) {
@@ -62,5 +74,18 @@ public class OrderService {
         }
 
         return body;
+    }
+
+    public List<OrderResponse> getOrderPages(int page, int size, List<String> sort) {
+
+        String sortBy = sort.get(0);
+        String sortDirection = sort.get(1);
+
+        Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Order.asc(sortBy)));
+        if (Objects.equals(sortDirection, "desc")) {
+            pageable = PageRequest.of(page, size, Sort.by(Sort.Order.desc(sortBy)));
+        }
+
+        return orderRepository.findAll(pageable).map(OrderResponse::new).stream().toList();
     }
 }
