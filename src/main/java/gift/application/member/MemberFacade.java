@@ -24,15 +24,15 @@ public class MemberFacade {
         this.tokenManager = tokenManager;
     }
 
-    public String socialLogin(OAuthCommand.Login command) {
+    public MemberModel.InfoAndJwt socialLogin(OAuthCommand.Login command) {
         KakaoToken token = tokenManager.getTokenByAuthorizationCode(
             command.authorizationCode());
         OAuthCommand.MemberInfo memberInfo = memberKakaoService.getMemberInfo(
             token.getAccessToken());
         MemberCommand.Create create = memberInfo.toCreateCommand();
-        MemberModel.IdAndJwt memberIdAndJwt = memberService.socialLogin(create);
-        tokenManager.saveToken(memberIdAndJwt.memberId(), token);
-        return memberIdAndJwt.jwt();
+        MemberModel.InfoAndJwt infoAndJwt = memberService.socialLogin(create);
+        tokenManager.saveToken(infoAndJwt.info().id(), token);
+        return infoAndJwt;
     }
 
 }
