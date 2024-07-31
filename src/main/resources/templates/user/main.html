@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>로그인 후 메인 페이지</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+
+<header id="header">
+    헤더 삽입부
+    <hr>
+</header>
+
+<footer>
+    <hr>
+    footer 템플릿 삽입부
+</footer>
+
+<script>
+    // home 이동 스크립트
+    $(document).ready(function () {
+
+        function getToken() {
+            return localStorage.getItem('token');
+        }
+
+        $('#home').on('click', function (event) {
+            event.preventDefault();
+            const url = '/main';
+            const token = getToken();
+            console.log('token:', token);
+
+            if (token) {
+                $.ajax({
+                    url: url,
+                    type: 'GET',
+                    headers: {
+                        'Authorization': 'Bearer ' + token
+                    },
+                    success: function (data) {
+                        if (typeof data === 'string') {
+                            $('body').html(data);
+                        } else {
+                            console.error('Unexpected response type:', typeof data);
+                        }
+                    },
+                    error: function (xhr, status, error) {
+                        console.error('Error:', error);
+                    }
+                });
+            } else {
+                console.warn('No token found, redirecting to', url);
+                window.location.href = url;
+            }
+        });
+    });
+</script>
+
+</body>
+</html>

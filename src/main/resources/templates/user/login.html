@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Signup</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+<h2>Signup Form</h2>
+<form id="signupForm">
+    <label for="email">이메일:</label>
+    <input type="email" id="email" name="email" required><br><br>
+    <label for="password">비밀번호:</label>
+    <input type="password" id="password" name="password" required><br><br>
+    <button type="submit">회원가입 하기</button>
+</form>
+
+<form id="loginForm">
+    <label for="email">이메일:</label>
+    <input type="email" id="loginEmail" name="email" required><br><br>
+    <label for="password">비밀번호:</label>
+    <input type="password" id="loginPassword" name="password" required><br><br>
+    <button type="submit">로그인 하기</button>
+</form>
+
+<script>
+    $(document).ready(function() {
+        $('#signupForm').on('submit', function(event) {
+            event.preventDefault(); // 폼의 기본 제출 동작을 막습니다.
+
+            const email = $('#email').val();
+            const password = $('#password').val();
+
+            const signupRequest = {
+                email: email,
+                password: password
+            };
+
+            $.ajax({
+                url: '/api/v1/user/signup',
+                type: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify(signupRequest),
+                success: function(response) {
+                    alert('Signup success!');
+                    window.location.href = '/main'; // /main 페이지로 이동
+                },
+                error: function(error) {
+                    console.error('Error:', error);
+                    alert('Signup failed!');
+                }
+            });
+        });
+
+        $('#loginForm').on('submit', function(event) {
+            event.preventDefault(); // 폼의 기본 제출 동작을 막습니다.
+
+            const email = $('#loginEmail').val();
+            const password = $('#loginPassword').val();
+
+            const loginRequest = {
+                email: email,
+                password: password
+            };
+
+            $.ajax({
+                url: '/api/v1/user/login',
+                type: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify(loginRequest),
+                success: function(token) {
+                    // 토큰을 localStorage에 저장
+                    localStorage.setItem('token', token);
+                    // 토큰을 포함한 요청 보내기
+                    $.ajax({
+                        url: '/main',
+                        type: 'GET',
+                        headers: {
+                            'Authorization': 'Bearer ' + token
+                        },
+                        success: function(response) {
+                            $('body').html(response); // 페이지 내용을 업데이트
+                        },
+                        error: function(error) {
+                            console.error('Error:', error);
+                            alert('Failed to load main page!');
+                        }
+                    });
+                },
+                error: function(error) {
+                    console.error('Error:', error);
+                    alert('Login failed!');
+                }
+            });
+        });
+    });
+</script>
+</body>
+</html>
