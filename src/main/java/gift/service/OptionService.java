@@ -1,21 +1,18 @@
 package gift.service;
 
-import gift.dto.AddOptionDTO;
-import gift.dto.AllOptionDto;
-import gift.dto.GetOptionDTO;
-import gift.dto.ProductDTO;
-import gift.model.Option;
-import gift.model.OptionList;
-import gift.model.Product;
+import gift.dto.optionsDTOs.AddOptionDTO;
+import gift.dto.optionsDTOs.AllOptionDto;
+import gift.dto.optionsDTOs.GetOptionDTO;
+import gift.model.entity.Option;
+import gift.model.valueObject.OptionList;
+import gift.model.entity.Product;
 import gift.repository.OptionRepository;
 import gift.repository.ProductRepository;
-import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.NoSuchElementException;
-import java.util.stream.Collectors;
 
 @Service
 public class OptionService {
@@ -95,7 +92,7 @@ public class OptionService {
         optionRepository.save(updateOption);
     }
 
-    public GetOptionDTO getOptions(Long productId){
+    public GetOptionDTO getOptionsForHtml(Long productId){
         List<Option> optionList = optionRepository.findAllByProduct_Id(productId);
         List<String> optionNameList = optionList.stream()
                 .map(Option::getName)

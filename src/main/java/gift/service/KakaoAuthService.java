@@ -1,13 +1,11 @@
 package gift.service;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import gift.config.KakaoProperties;
-import gift.dto.OrderDTO;
-import gift.model.*;
+import gift.model.entity.Member;
+import gift.model.kakao.KakaoAuth;
+import gift.model.kakao.KakaoMember;
 import gift.repository.MemberRepository;
-import gift.repository.OptionRepository;
-import gift.repository.WishRepository;
+import gift.service.intercptor.ClientInterceptor;
 import jakarta.validation.constraints.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,7 +17,6 @@ import org.springframework.web.client.RestClient;
 
 import java.net.URI;
 import java.util.NoSuchElementException;
-import java.util.Optional;
 
 @Service
 public class KakaoAuthService {

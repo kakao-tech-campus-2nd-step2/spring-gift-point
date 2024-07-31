@@ -2,7 +2,7 @@ package gift.controller;
 
 import gift.config.KakaoProperties;
 import gift.dto.CategoryDTO;
-import gift.dto.ProductDTO;
+import gift.dto.productDTOs.ProductDTO;
 import gift.service.CategoryService;
 import gift.service.KakaoAuthService;
 import gift.service.ProductService;

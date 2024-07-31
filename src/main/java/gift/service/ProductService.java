@@ -1,8 +1,12 @@
 package gift.service;
 
-import gift.dto.*;
-import gift.model.Category;
-import gift.model.Product;
+import gift.dto.productDTOs.CustomProductPageDTO;
+import gift.dto.PageRequestDTO;
+import gift.dto.productDTOs.InputProductDTO;
+import gift.dto.productDTOs.ProductDTO;
+import gift.dto.productDTOs.UpdateProductDTO;
+import gift.model.entity.Category;
+import gift.model.entity.Product;
 import gift.repository.CategoryRepository;
 import gift.repository.ProductRepository;
 import org.springframework.data.domain.Page;

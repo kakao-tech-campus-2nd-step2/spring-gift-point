@@ -1,7 +1,7 @@
 package gift.controller;
 
-import gift.dto.AddOptionDTO;
-import gift.dto.GetOptionDTO;
+import gift.dto.optionsDTOs.AddOptionDTO;
+import gift.dto.optionsDTOs.GetOptionDTO;
 import gift.service.OptionService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -18,7 +18,7 @@ public class OptionController {
 
     @PostMapping("/{productId}")
     public String option(@PathVariable Long productId, Model model){
-        GetOptionDTO options = optionService.getOptions(productId);
+        GetOptionDTO options = optionService.getOptionsForHtml(productId);
         model.addAttribute("options", options.GetOptionList());
         model.addAttribute("productId", productId);
         return "option";
@@ -27,7 +27,7 @@ public class OptionController {
     @PostMapping("/add/{productId}")
     public String addOption(@PathVariable Long productId, @ModelAttribute AddOptionDTO addOptionDTO, Model model) {
         optionService.addOption(addOptionDTO, productId);
-        GetOptionDTO options = optionService.getOptions(productId);
+        GetOptionDTO options = optionService.getOptionsForHtml(productId);
         model.addAttribute("options", options.GetOptionList());
         model.addAttribute("productId", productId);
         return "option";
@@ -36,7 +36,7 @@ public class OptionController {
     @PostMapping("/update/{productId}/{oldName}")
     public String updateOption(@PathVariable Long productId, @PathVariable String oldName, @RequestParam("newName") String newName, Model model) {
         optionService.updateOption(oldName, newName, productId);
-        GetOptionDTO options = optionService.getOptions(productId);
+        GetOptionDTO options = optionService.getOptionsForHtml(productId);
         model.addAttribute("options", options.GetOptionList());
         model.addAttribute("productId", productId);
         return "option";
@@ -45,7 +45,7 @@ public class OptionController {
     @GetMapping("/delete/{productId}/{optionName}")
     public String deleteOption(@PathVariable Long productId, @PathVariable String optionName, Model model) {
         optionService.deleteOption(optionName, productId);
-        GetOptionDTO options = optionService.getOptions(productId);
+        GetOptionDTO options = optionService.getOptionsForHtml(productId);
         model.addAttribute("options", options.GetOptionList());
         model.addAttribute("productId", productId);
         return "option";

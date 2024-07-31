@@ -1,14 +1,11 @@
 package gift.controller;
 
-import gift.dto.CustomProductPageDTO;
-import gift.dto.InputProductDTO;
+import gift.dto.productDTOs.CustomProductPageDTO;
 import gift.dto.PageRequestDTO;
-import gift.dto.ProductDTO;
+import gift.dto.productDTOs.ProductDTO;
 import gift.service.ProductService;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
-import org.springframework.data.domain.Page;
-import org.springframework.ui.Model;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 

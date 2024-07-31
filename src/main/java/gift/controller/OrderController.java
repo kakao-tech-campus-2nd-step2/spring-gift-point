@@ -1,11 +1,8 @@
 package gift.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import gift.config.KakaoProperties;
-import gift.dto.InputProductDTO;
 import gift.dto.OrderDTO;
-import gift.model.BearerToken;
-import gift.service.KakaoAuthService;
+import gift.model.valueObject.BearerToken;
 import gift.service.OrderService;
 import jakarta.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;

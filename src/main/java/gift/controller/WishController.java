@@ -1,18 +1,15 @@
 package gift.controller;
 
-import gift.dto.CustomWishPageDTO;
+import gift.dto.wishDTOs.CustomWishPageDTO;
 import gift.dto.PageRequestDTO;
-import gift.dto.WishDTO;
-import gift.model.BearerToken;
-import gift.model.Member;
+import gift.model.valueObject.BearerToken;
+import gift.model.entity.Member;
 import gift.service.KakaoAuthService;
 import gift.service.WishService;
 import jakarta.servlet.http.HttpServletRequest;
-import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
 
 import javax.naming.AuthenticationException;
-import java.util.List;
 import java.util.Map;
 
 @RestController

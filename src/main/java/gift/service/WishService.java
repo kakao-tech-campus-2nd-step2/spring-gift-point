@@ -1,11 +1,11 @@
 package gift.service;
 
-import gift.dto.CustomWishPageDTO;
+import gift.dto.wishDTOs.CustomWishPageDTO;
 import gift.dto.PageRequestDTO;
-import gift.model.Member;
-import gift.model.Product;
-import gift.model.Wish;
-import gift.dto.WishDTO;
+import gift.model.entity.Member;
+import gift.model.entity.Product;
+import gift.model.entity.Wish;
+import gift.dto.wishDTOs.WishDTO;
 import gift.repository.WishRepository;
 import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
@@ -35,7 +35,7 @@ public class WishService {
         return new CustomWishPageDTO(wishDTOs, wishlistPage.getNumber(), wishlistPage.getTotalPages(), wishlistPage.getTotalElements());
     }
 
-    public void postWishlist(Long productId, Member member) throws AuthenticationException {
+    public void postWishlist(Long productId, Member member){
         Product product = productService.getProductById(productId);
         Wish wish = new Wish(member, product);
         wishRepository.save(wish);

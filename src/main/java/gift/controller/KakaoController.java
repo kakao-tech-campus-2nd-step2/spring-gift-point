@@ -1,15 +1,9 @@
 package gift.controller;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import gift.config.KakaoProperties;
-import gift.model.BearerToken;
 import gift.service.KakaoAuthService;
-import jakarta.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.util.UriComponentsBuilder;
 
 @RestController
 public class KakaoController {

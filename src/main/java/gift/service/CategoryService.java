@@ -1,7 +1,7 @@
 package gift.service;
 
 import gift.dto.CategoryDTO;
-import gift.model.Category;
+import gift.model.entity.Category;
 import gift.repository.CategoryRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

@@ -1,10 +1,9 @@
 package gift.controller;
 
-import gift.dto.AllOptionDto;
+import gift.dto.optionsDTOs.AllOptionDto;
 import gift.service.OptionService;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;

@@ -1,6 +1,6 @@
 package gift.dto;
 
-import gift.model.Category;
+import gift.model.entity.Category;
 
 public class CategoryDTO {
     private Long id;
