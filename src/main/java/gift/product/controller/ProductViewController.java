@@ -2,6 +2,7 @@ package gift.product.controller;
 
 import gift.category.service.CategoryService;
 import gift.product.domain.ProductRequest;
+import gift.product.domain.ProductResponse;
 import gift.product.option.service.OptionService;
 import gift.product.service.ProductService;
 import org.springframework.data.domain.Page;
@@ -35,7 +36,7 @@ public class ProductViewController
     public String getAllProducts(Model model, @RequestParam(defaultValue = "0") int page,
                                             @RequestParam(defaultValue = "10") int size) {
         Pageable pageable = PageRequest.of(page, size);
-        Page<ProductRequest> productPages = productService.getAllProducts(pageable);
+        Page<ProductResponse> productPages = productService.getAllProducts(pageable);
         model.addAttribute("products", productPages);
         return "products";
     }
@@ -53,9 +54,10 @@ public class ProductViewController
         return "redirect:/admin/products";
     }
 
-    @GetMapping("/edit/{id}")
-    public String showEditForm(@PathVariable Long id, Model model) {
-        ProductRequest productRequest = productService.getProductDTOById(id).get();
+    @GetMapping("/edit/{productId}")
+    public String showEditForm(@PathVariable("productId") Long productId, Model model) {
+        ProductRequest productRequest = productService.getProductRequestById(productId)
+            .orElseThrow(() -> new IllegalArgumentException("productId " + productId + "가 없습니다."));
         model.addAttribute("product", productRequest);
         model.addAttribute("categories", categoryService.findAll());
         return "edit_product";
