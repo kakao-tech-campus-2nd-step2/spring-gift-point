@@ -63,12 +63,6 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(new ResponseDTO(true, "가격이나 개수는 숫자로 입력해야 합니다."), HttpStatus.BAD_REQUEST);
     }
 
-    @ExceptionHandler(EmailAlreadyHereException.class)
-    @ResponseStatus(HttpStatus.CONFLICT)
-    public ResponseEntity<ResponseDTO> handleValidationExceptions(EmailAlreadyHereException ex) {
-        return new ResponseEntity<>(new ResponseDTO(true, ex.getMessage()), HttpStatus.CONFLICT);
-    }
-
     @ExceptionHandler(EmptyResultDataAccessException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ResponseEntity<ResponseDTO> handleValidationExceptions(EmptyResultDataAccessException ex) {
