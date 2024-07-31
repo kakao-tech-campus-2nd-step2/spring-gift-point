@@ -8,10 +8,12 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import gift.dto.ProductDto;
-import gift.dto.request.ProductCreateRequest;
+import gift.dto.request.ProductRequest;
+import gift.dto.response.FindAllProductResponse;
+import gift.dto.response.ProductResponse;
 import gift.service.ProductService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
@@ -21,8 +23,6 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 
 import org.springframework.validation.BindingResult;
-
-import java.util.List;
 
 @RestController
 @Tag(name = "product", description = "Product API")
@@ -36,13 +36,22 @@ public class ProductController {
     }
 
     @GetMapping
-    @Operation(summary = "상품 조회", description = "파라미터로 받은 상품 페이지를 조회합니다." )
+    @Operation(summary = "상품 목록 조회", description = "전체 상품 목록을 조회합니다." )
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "상품 조회 성공")
     })
-    public ResponseEntity<List<ProductDto>> getProducts() {
-        List<ProductDto> products = productService.findAll();
-        return new ResponseEntity<>(products, HttpStatus.OK);
+    public ResponseEntity<FindAllProductResponse> getProducts(@RequestParam("categoryId") Long categoryId, @RequestParam("sort") String sort) {
+        return new ResponseEntity<>(productService.findAll(categoryId, sort), HttpStatus.OK);
+    }
+
+    @GetMapping("/{productId}")
+    @Operation(summary = "상품 조회", description = "상품에 대한 상세 정보를 조회합니다.")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "상품 조회 성공"),
+        @ApiResponse(responseCode = "404", description = "존재하지 않는 상품")
+    })
+    public ResponseEntity<ProductResponse> findProduct(@PathVariable Long productId){
+        return new ResponseEntity<>(productService.findById(productId), HttpStatus.OK);
     }
 
     @PostMapping("/new")
@@ -52,21 +61,19 @@ public class ProductController {
         @ApiResponse(responseCode = "404", description = "존재하지 않는 카테고리"),
         @ApiResponse(responseCode = "409", description = "이미 존재하는 상품")
     })
-    public ResponseEntity<Void> addProduct(@Valid @RequestBody ProductCreateRequest productCreateRequest, BindingResult bindingResult) {
-        productService.addProduct(productCreateRequest);
-        return new ResponseEntity<>(HttpStatus.CREATED);
+    public ResponseEntity<ProductResponse> addProduct(@Valid @RequestBody ProductRequest productRequest, BindingResult bindingResult) {
+        return new ResponseEntity<>(productService.addProduct(productRequest), HttpStatus.CREATED);
     }
 
-    @PutMapping("/edit/{id}")
+    @PutMapping("/edit/{productId}")
     @Operation(summary = "상품 수정", description = "파라미터로 받은 상품을 수정합니다." )
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "상품 수정 성공"),
+        @ApiResponse(responseCode = "204", description = "상품 수정 성공"),
         @ApiResponse(responseCode = "404", description = "존재하지 않는 상품 혹은 카테고리")
     })
-    public ResponseEntity<Void> updateProduct(@PathVariable Long id, @Valid @RequestBody ProductDto productDto, BindingResult bindingResult) {
-
-        productService.updateProduct(productDto);
-        return new ResponseEntity<>(HttpStatus.OK);
+    public ResponseEntity<Void> updateProduct(@PathVariable Long productId, @Valid @RequestBody ProductRequest productRequest, BindingResult bindingResult) {
+        productService.updateProduct(productId, productRequest);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
     @DeleteMapping("/delete/{id}")

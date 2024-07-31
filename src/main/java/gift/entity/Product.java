@@ -12,6 +12,8 @@ import jakarta.persistence.Table;
 
 import java.util.List;
 
+import gift.dto.request.ProductRequest;
+
 @Entity
 @Table(name = "product")
 public class Product{
@@ -72,6 +74,13 @@ public class Product{
 
     public List<Option> getOptions(){
         return options;
+    }
+
+    public void update(ProductRequest productRequest, Category category){
+        this.name = productRequest.getProductName();
+        this.price = productRequest.getPrice();
+        this.imageUrl = productRequest.getImageUrl();
+        this.category = category;
     }
 
 }

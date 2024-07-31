@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import gift.dto.ProductDto;
-import gift.dto.request.ProductCreateRequest;
+import gift.dto.request.ProductRequest;
 import gift.dto.response.ProductPageResponse;
 import gift.service.CategoryService;
 import gift.service.ProductService;
@@ -52,7 +52,7 @@ public class ProductViewController {
         @ApiResponse(responseCode = "200", description = "상품 추가 화면 이동 성공")
     })
     public String showProductForm(Model model){
-        model.addAttribute("product", new ProductCreateRequest("", 0, "", "", "", 0));
+        model.addAttribute("product", new ProductDto(0, "", 0, "", null, null));
         model.addAttribute("categories", categoryService.findAll().getCategories());
         return "product_form";
     }
@@ -64,7 +64,7 @@ public class ProductViewController {
         @ApiResponse(responseCode = "404", description = "존재하지 않는 카테고리"),
         @ApiResponse(responseCode = "409", description = "이미 존재하는 상품")
     })
-    public String addProduct(@Valid @ModelAttribute ProductCreateRequest productCreateRequest, BindingResult bindingResult, Model model) {
+    public String addProduct(@Valid @ModelAttribute ProductRequest productCreateRequest, BindingResult bindingResult, Model model) {
 
         if(bindingResult.hasErrors()){
             model.addAttribute("product", productCreateRequest);
@@ -93,15 +93,15 @@ public class ProductViewController {
         @ApiResponse(responseCode = "200", description = "상품 수정 성공"),
         @ApiResponse(responseCode = "404", description = "존재하지 않는 상품 혹은 카테고리")
     })
-    public String updateProduct(@PathVariable Long id,@Valid @ModelAttribute ProductDto productDto, BindingResult bindingResult, Model model) {
+    public String updateProduct(@PathVariable Long id,@Valid @ModelAttribute ProductRequest productRequest, BindingResult bindingResult, Model model) {
         
         if(bindingResult.hasErrors()){
-            model.addAttribute("product", productDto);
+            model.addAttribute("product", productRequest);
             model.addAttribute("categories", categoryService.findAll().getCategories());
             return "product_form";
         }
 
-        productService.updateProduct(productDto);
+        productService.updateProduct(id, productRequest);
         return "redirect:/api/products";
     }
 

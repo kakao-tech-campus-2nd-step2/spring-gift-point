@@ -41,6 +41,12 @@ public class CategoryService {
         return categoryResponse;
     }
 
+    public CategoryDto findById(Long categoryId){
+        Category category = categoryRepository.findById(categoryId)
+            .orElseThrow(() -> new CustomException("Category with id " + categoryId + " not exists", HttpStatus.NOT_FOUND, -40402));
+        return new CategoryDto(categoryId, category.getName(), category.getColor(), category.getImageUrl(), category.getDescription());
+    }
+
     @Transactional
     public CategoryResponse addCategory(CategoryRequest categoryRequest){
 
