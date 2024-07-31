@@ -3,9 +3,11 @@ package gift.controller;
 import gift.domain.Option;
 import gift.domain.Product;
 import gift.dto.CreateProductDto;
+import gift.dto.ProductListDto;
 import gift.dto.UpdateProductDto;
 import gift.service.OptionService;
 import gift.service.ProductService;
+import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -37,13 +39,14 @@ public class ProductController {
     }
 
     // 전체 상품 조회
+    @Operation(summary = "모든 제품 조회하기")
     @GetMapping
-    public ResponseEntity<Page<Product>> getAllProducts(Pageable pageable) {
-        Page<Product> allProducts = productService.getAllProducts(pageable);
+    public ResponseEntity<List<ProductListDto>> getAllProducts(Pageable pageable) {
+        Page<ProductListDto> allProducts = productService.getAllProducts(pageable);
         if (allProducts.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NO_CONTENT).body(null);
         }
-        return ResponseEntity.ok(allProducts);
+        return ResponseEntity.ok(allProducts.getContent()); // List<ProductListDto> 반환
     }
 
     // 특정 상품 조회

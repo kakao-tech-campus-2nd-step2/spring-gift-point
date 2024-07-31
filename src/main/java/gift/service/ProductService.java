@@ -3,6 +3,7 @@ package gift.service;
 import gift.domain.Option;
 import gift.domain.Product;
 import gift.dto.CreateProductDto;
+import gift.dto.ProductListDto;
 import gift.dto.UpdateProductDto;
 import gift.repository.ProductRepository;
 import jakarta.persistence.EntityNotFoundException;
@@ -33,8 +34,9 @@ public class ProductService {
         return product;
     }
 
-    public Page<Product> getAllProducts(Pageable pageable) {
-        return productRepository.findAll(pageable);
+    public Page<ProductListDto> getAllProducts(Pageable pageable) {
+        Page<Product> products = productRepository.findAll(pageable);
+        return products.map(ProductListDto::new);
     }
 
     public Product getProduct(Long productId) {
