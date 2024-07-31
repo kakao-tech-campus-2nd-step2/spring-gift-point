@@ -20,11 +20,15 @@ public class MemberService {
     this.jwtService = jwtService;
   }
 
-  public MemberDto SignUp(MemberDto memberDtoInfo) {
+  public JwtToken SignUp(MemberDto memberDtoInfo) {
     Member member = new Member(memberDtoInfo.getId(), memberDtoInfo.getEmail(),
       memberDtoInfo.getPassword());
     memberRepository.save(member);
-    return memberDtoInfo;
+    JwtToken jwtToken = jwtService.createAccessToken(memberDtoInfo);
+    if (jwtService.isValidToken(jwtToken)) { //토큰이 만료되었다면
+      throw new UnauthorizedException("토큰이 유효하지 않습니다.");
+    }
+    return jwtToken;
   }
 
   public JwtToken Login(MemberDto memberDtoInfo) {
