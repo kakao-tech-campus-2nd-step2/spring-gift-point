@@ -50,7 +50,7 @@ public class MemberController {
         return new ApiResponseBuilder<Page<MemberResponse>>()
             .httpStatus(HttpStatus.OK)
             .data(memberService.findAll(pageable))
-            .messages("")
+            .messages("모든 멤버 조회")
             .build();
     }
 
@@ -62,7 +62,7 @@ public class MemberController {
         return new ApiResponseBuilder<MemberResponse>()
             .httpStatus(HttpStatus.OK)
             .data((memberService.findById(memberId)))
-            .messages("")
+            .messages("멤버 조회")
             .build();
     }
 
@@ -73,7 +73,7 @@ public class MemberController {
         return new ApiResponseBuilder<Token>()
             .httpStatus(HttpStatus.OK)
             .data(new Token(JwtUtil.generateToken(target.id(), target.email())))
-            .messages("회원가입에 성공했습니다.")
+            .messages("회원가입")
             .build();
     }
 
@@ -85,7 +85,19 @@ public class MemberController {
         return new ApiResponseBuilder<MemberResponse>()
             .httpStatus(HttpStatus.OK)
             .data((memberService.update(memberId, member)))
-            .messages("")
+            .messages("멤버 수정")
+            .build();
+    }
+
+    @PutMapping("/point")
+    @Operation(summary = "modify Member", description = "포인트 충전")
+    public ResponseEntity<ApiResponseBody<String>> chargePoint(@LoginUser LoginResponse loginMember,
+        @PathVariable UUID memberId, @RequestBody Long point) {
+        AuthController.validateUserOrAdmin(loginMember, memberId);
+        return new ApiResponseBuilder<String>()
+            .httpStatus(HttpStatus.OK)
+            .data("충전 후 잔액 : " + (memberService.chargePoint(memberId, point)))
+            .messages("포인트 충전")
             .build();
     }
 
@@ -98,7 +110,7 @@ public class MemberController {
         return new ApiResponseBuilder<Void>()
             .httpStatus(HttpStatus.OK)
             .data(null)
-            .messages("")
+            .messages("회원 탈퇴")
             .build();
     }
 }

@@ -76,6 +76,14 @@ public class Member {
         return grade;
     }
 
+    public Long getPoint() {
+        return point;
+    }
+
+    public void setPoint(Long point) {
+        this.point = point;
+    }
+
     public void setMember(MemberRequest member) {
         this.email = member.email();
         this.password = member.password();
