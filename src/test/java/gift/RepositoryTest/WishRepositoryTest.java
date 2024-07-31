@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -42,6 +43,8 @@ public class WishRepositoryTest {
     private Product product1;
     private Product product2;
     private Category category;
+    private LocalDateTime createdDate1;
+    private LocalDateTime createdDate2;
 
     @BeforeEach
     void beforeEach(){
@@ -49,13 +52,15 @@ public class WishRepositoryTest {
         product1 = productRepository.save(new Product("아메리카노", 4000, "아메리카노url", category));
         product2 = productRepository.save(new Product("카푸치노", 4500, "카푸치노url", category));
         member = memberRepository.save(new Member("woo6388@naver.com", "12345678"));
+        createdDate1 = LocalDateTime.now();
+        createdDate2 = LocalDateTime.now();
         testEntityManager.flush();
         testEntityManager.clear();
     }
 
     @Test
     void saveTest() {
-        Wish wish = new Wish(member, product1, 5);
+        Wish wish = new Wish(member, product1, createdDate1);
         assertThat(wish.getId()).isNull();
         var actual = wishRepository.save(wish);
         assertThat(actual.getId()).isNotNull();
@@ -63,43 +68,32 @@ public class WishRepositoryTest {
 
     @Test
     void findByMemberTest() {
-        Wish wish1 = wishRepository.save(new Wish(member, product1, 1));
-        Wish wish2 = wishRepository.save(new Wish(member, product2, 2));
+        Wish wish1 = wishRepository.save(new Wish(member, product1, createdDate1));
+        Wish wish2 = wishRepository.save(new Wish(member, product2, createdDate2));
         List<Wish> actual = wishRepository.findWishListByMember(member);
         assertAll(
                 ()->assertThat(actual.get(0).getProduct().getName().getValue()).isEqualTo("아메리카노"),
-                ()->assertThat(actual.get(0).getCount().getValue()).isEqualTo(1),
+                () -> assertThat(actual.get(0).getCreatedDate()).isEqualTo(createdDate1),
                 ()->assertThat(actual.get(1).getProduct().getName().getValue()).isEqualTo("카푸치노"),
-                ()->assertThat(actual.get(1).getCount().getValue()).isEqualTo(2)
+                () -> assertThat(actual.get(1).getCreatedDate()).isEqualTo(createdDate2)
         );
     }
 
     @Test
     void findByMemberAndProductTest() {
-        Wish wish1 = wishRepository.save(new Wish(member, product1, 1));
-        Wish wish2 = wishRepository.save(new Wish(member, product2, 2));
+        Wish wish1 = wishRepository.save(new Wish(member, product1, createdDate1));
+        Wish wish2 = wishRepository.save(new Wish(member, product2, createdDate2));
         Optional<Wish> actual = wishRepository.findByMemberAndProduct(member, product1);
         assertAll(
                 ()->assertThat(actual).isPresent(),
-                ()->assertThat(actual.get().getCount().getValue()).isEqualTo(1),
+                ()->assertThat(actual.get().getCreatedDate()).isEqualTo(createdDate1),
                 ()->assertThat(actual.get().getId()).isEqualTo(wish1.getId())
         );
     }
 
     @Test
-    void updateTest() {
-        Wish wish1 = wishRepository.save(new Wish(member, product1, 1));
-        Optional<Wish> optionalWish = wishRepository.findById(wish1.getId());
-        Wish wish = optionalWish.get();
-        wish.update(5);
-
-        var actual = wishRepository.findById(wish.getId());
-        assertThat(actual.get().getCount().getValue()).isEqualTo(5);
-    }
-
-    @Test
     void deleteTest() {
-        Wish wish1 = wishRepository.save(new Wish(member, product1, 1));
+        Wish wish1 = wishRepository.save(new Wish(member, product1, createdDate1));
         Optional<Wish> optionalWish = wishRepository.findById(wish1.getId());
         wishRepository.deleteById(optionalWish.get().getId());
         Optional<Wish> actual = wishRepository.findById(optionalWish.get().getId());
