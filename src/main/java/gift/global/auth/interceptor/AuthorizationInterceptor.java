@@ -2,9 +2,12 @@ package gift.global.auth.interceptor;
 
 import gift.global.auth.Authorization;
 import gift.global.auth.jwt.JwtProvider;
+import gift.global.validate.AuthorizationException;
 import gift.model.member.Role;
+import io.jsonwebtoken.JwtException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import javax.naming.AuthenticationException;
 import org.springframework.stereotype.Component;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
@@ -54,7 +57,7 @@ public class AuthorizationInterceptor implements HandlerInterceptor {
         try {
             memberRole = Role.valueOf(request.getAttribute("roles").toString());
         } catch (Exception e) {
-            sendForbiddenError(response, "Forbidden");
+            sendForbiddenError(response, "로그인이 필요한 서비스입니다.");
             return false;
         }
 
@@ -73,6 +76,6 @@ public class AuthorizationInterceptor implements HandlerInterceptor {
     }
 
     private void sendForbiddenError(HttpServletResponse response, String message) throws Exception {
-        response.sendError(HttpServletResponse.SC_FORBIDDEN, message);
+        throw new AuthorizationException(message);
     }
 }
