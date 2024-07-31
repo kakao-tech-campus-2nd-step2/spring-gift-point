@@ -74,7 +74,8 @@ public class OptionService {
             throw new ServiceException("존재하지 않는 상품 또는 옵션입니다.", HttpStatus.NOT_FOUND);
         }
 
-        Option option = optionRepository.findById(optionId).orElseThrow(() -> new ServiceException("존재하지 않는 옵션입니다.", HttpStatus.NOT_FOUND));
+        Option option = optionRepository.findById(optionId)
+            .orElseThrow(() -> new ServiceException("존재하지 않는 옵션입니다.", HttpStatus.NOT_FOUND));
 
         Product product = productRepository.findById(productId)
             .orElseThrow(() -> new ServiceException("존재하지 않은 상품입니다.", HttpStatus.NOT_FOUND));

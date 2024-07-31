@@ -24,7 +24,8 @@ public class ProductRequestDto {
     @NotNull(message = "카테고리는 하나 이상 지정되어야 합니다.")
     private Long categoryId;
 
-    public ProductRequestDto() {}
+    public ProductRequestDto() {
+    }
 
     public ProductRequestDto(String name, double price, String imageUrl, Long categoryId) {
         this.name = name;

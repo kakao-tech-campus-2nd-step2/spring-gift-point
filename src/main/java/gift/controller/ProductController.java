@@ -43,7 +43,8 @@ public class ProductController {
         Pageable pageable = PageRequest.of(page, size, Sort.by(direction, sort[0]));
 
         if (categoryId != null) {
-            Page<ProductResponseDto> productList = productService.findAllByCategoryId(categoryId, pageable);
+            Page<ProductResponseDto> productList = productService.findAllByCategoryId(categoryId,
+                pageable);
             return new ResponseEntity<>(productList, HttpStatus.OK);
         }
 

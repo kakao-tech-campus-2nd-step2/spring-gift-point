@@ -5,9 +5,9 @@ import java.util.Map;
 
 public class ErrorResponseDto {
 
-    private String message;
     private final int code;
-    private Map<String, String> validation;
+    private final String message;
+    private final Map<String, String> validation;
 
     public ErrorResponseDto(String message, int code, Map<String, String> validation) {
         this.message = message;

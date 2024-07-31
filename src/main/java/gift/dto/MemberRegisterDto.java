@@ -13,6 +13,7 @@ public class MemberRegisterDto {
 
     @NotEmpty(message = "비밀번호는 필수 입력사항입니다.")
     public final String password;
+
     public MemberRegisterDto(String email, String password) {
         this.email = email;
         this.password = password;

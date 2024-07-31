@@ -54,7 +54,8 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<ErrorResponseDto> handleValidException(MethodArgumentNotValidException ex) {
+    public ResponseEntity<ErrorResponseDto> handleValidException(
+        MethodArgumentNotValidException ex) {
         Map<String, String> validationErrors = new HashMap<>();
 
         // 오류가 있을 경우 필드 오류 정보 수집
@@ -68,7 +69,7 @@ public class GlobalExceptionHandler {
 
         // 오류가 없을 경우 빈 맵을 전달
         final ErrorResponseDto response = new ErrorResponseDto(
-            "입력 데이터의 유효성을 검사하던 중 문제가 발생했습니다.",  HttpStatus.BAD_REQUEST.value(),
+            "입력 데이터의 유효성을 검사하던 중 문제가 발생했습니다.", HttpStatus.BAD_REQUEST.value(),
             validationErrors // 오류가 없으면 빈 맵
         );
 

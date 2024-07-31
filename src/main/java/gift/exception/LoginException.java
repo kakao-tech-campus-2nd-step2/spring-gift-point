@@ -14,7 +14,8 @@ public class LoginException extends RuntimeException {
         this.validationErrors = null;
     }
 
-    public LoginException(String message, HttpStatus httpStatus, Map<String, String> validationErrors) {
+    public LoginException(String message, HttpStatus httpStatus,
+        Map<String, String> validationErrors) {
         super(message);
         this.httpStatus = httpStatus;
         this.validationErrors = validationErrors;

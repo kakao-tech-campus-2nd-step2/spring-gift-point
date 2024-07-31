@@ -5,11 +5,11 @@ import java.time.LocalDateTime;
 
 public class OrderResponseDto {
 
-    private Long id;
-    private Long optionId;
-    private Long quantity;
-    private LocalDateTime orderDateTime;
-    private String message;
+    private final Long id;
+    private final Long optionId;
+    private final Long quantity;
+    private final LocalDateTime orderDateTime;
+    private final String message;
 
     public OrderResponseDto(Long id, Long optionId, Long quantity, LocalDateTime orderDateTime,
         String message) {

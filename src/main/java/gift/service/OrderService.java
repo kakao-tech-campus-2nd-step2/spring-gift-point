@@ -7,7 +7,6 @@ import gift.entity.Option;
 import gift.entity.Order;
 import gift.entity.Product;
 import gift.entity.Wish;
-import gift.exception.BusinessException;
 import gift.exception.ServiceException;
 import gift.repository.MemberRepository;
 import gift.repository.OptionRepository;
@@ -29,6 +28,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 @Service
 public class OrderService {
+
     private final OrderRepository orderRepository;
     private final OptionRepository optionRepository;
     private final MemberRepository memberRepository;
@@ -36,7 +36,9 @@ public class OrderService {
     private final ProductRepository productRepository;
 
     @Autowired
-    public OrderService(OrderRepository orderRepository, OptionRepository optionRepository, MemberRepository memberRepository, WishRepository wishRepository, ProductRepository productRepository) {
+    public OrderService(OrderRepository orderRepository, OptionRepository optionRepository,
+        MemberRepository memberRepository, WishRepository wishRepository,
+        ProductRepository productRepository) {
         this.orderRepository = orderRepository;
         this.optionRepository = optionRepository;
         this.memberRepository = memberRepository;
@@ -54,9 +56,12 @@ public class OrderService {
     }
 
     public OrderResponseDto createOrder(Long memberId, OrderRequestDto request) {
-        Option option = optionRepository.findById(request.getOptionId()).orElseThrow(() -> new ServiceException("옵션을 찾을 수 없습니다.", HttpStatus.NOT_FOUND));
-        Product product = productRepository.findById(option.getProduct().getId()).orElseThrow(() -> new ServiceException("상품을 찾을 수 없습니다.", HttpStatus.NOT_FOUND));
-        Member member = memberRepository.findById(memberId).orElseThrow(() -> new ServiceException("유저 정보를 찾을 수 없습니다.", HttpStatus.NOT_FOUND));
+        Option option = optionRepository.findById(request.getOptionId())
+            .orElseThrow(() -> new ServiceException("옵션을 찾을 수 없습니다.", HttpStatus.NOT_FOUND));
+        Product product = productRepository.findById(option.getProduct().getId())
+            .orElseThrow(() -> new ServiceException("상품을 찾을 수 없습니다.", HttpStatus.NOT_FOUND));
+        Member member = memberRepository.findById(memberId)
+            .orElseThrow(() -> new ServiceException("유저 정보를 찾을 수 없습니다.", HttpStatus.NOT_FOUND));
 
         if (request.getQuantity() < 1) {
             throw new ServiceException("유효하지 않은 수량입니다.", HttpStatus.BAD_REQUEST);
@@ -68,12 +73,14 @@ public class OrderService {
 
         option.subtract(request.getQuantity());
 
-        Optional<Wish> wish = wishRepository.findByMemberIdAndProductId(memberId, option.getProduct().getId());
+        Optional<Wish> wish = wishRepository.findByMemberIdAndProductId(memberId,
+            option.getProduct().getId());
         if (wish.isPresent()) {
             wishRepository.delete(wish.get());
         }
 
-        Order order = new Order(request.getQuantity(), request.getMessage(), LocalDateTime.now(), option, member);
+        Order order = new Order(request.getQuantity(), request.getMessage(), LocalDateTime.now(),
+            option, member);
         return new OrderResponseDto(orderRepository.save(order));
     }
 }

@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/products")
 public class OptionController {
 
-    private OptionService optionService;
+    private final OptionService optionService;
 
     @Autowired
     public OptionController(OptionService optionService) {
@@ -28,19 +28,22 @@ public class OptionController {
     }
 
     @GetMapping("/{productId}/options")
-    public ResponseEntity<List<OptionResponseDto>> getOptionsByProductId(@PathVariable Long productId) {
+    public ResponseEntity<List<OptionResponseDto>> getOptionsByProductId(
+        @PathVariable Long productId) {
         List<OptionResponseDto> optionList = optionService.getOptionsByProductId(productId);
         return new ResponseEntity<>(optionList, HttpStatus.OK);
     }
 
     @PostMapping("/{productId}/options")
-    public ResponseEntity<String> addOptionToProduct(@PathVariable Long productId, @RequestBody @Valid OptionRequestDto optionRequestDto) {
+    public ResponseEntity<String> addOptionToProduct(@PathVariable Long productId,
+        @RequestBody @Valid OptionRequestDto optionRequestDto) {
         optionService.addOptionToProduct(productId, optionRequestDto);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
     @DeleteMapping("/{productId}/options/{optionId}")
-    public ResponseEntity<String> deleteOption(@PathVariable Long productId, @PathVariable Long optionId) {
+    public ResponseEntity<String> deleteOption(@PathVariable Long productId,
+        @PathVariable Long optionId) {
         optionService.deleteOption(productId, optionId);
         return new ResponseEntity<>(HttpStatus.OK);
     }

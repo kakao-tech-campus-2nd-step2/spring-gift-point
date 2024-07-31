@@ -27,7 +27,8 @@ public class Category {
     @Column(nullable = false)
     private String description;
 
-    protected Category() {}
+    protected Category() {
+    }
 
     public Category(String name, String imageUrl, String color, String description) {
         this.name = name;

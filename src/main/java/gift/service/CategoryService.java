@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class CategoryService {
+
     private final CategoryRepository categoryRepository;
 
     @Autowired
@@ -30,7 +31,8 @@ public class CategoryService {
 
     public CategoryResponseDto getCategoryById(Long id) {
         Category category = categoryRepository.findById(id)
-            .orElseThrow(() -> new IllegalArgumentException("아이디 " + id + "에 해당 하는 상품을 찾을 수 없습니다."));
+            .orElseThrow(
+                () -> new IllegalArgumentException("아이디 " + id + "에 해당 하는 상품을 찾을 수 없습니다."));
 
         return new CategoryResponseDto(category);
     }
@@ -39,7 +41,8 @@ public class CategoryService {
         if (categoryRepository.existsByName(request.getName())) {
             throw new ServiceException("중복된 카테고리 이름입니다.", HttpStatus.CONFLICT);
         }
-        Category category = new Category(request.getName(), request.getImageUrl(), request.getColor(), request.getDescription());
+        Category category = new Category(request.getName(), request.getImageUrl(),
+            request.getColor(), request.getDescription());
         categoryRepository.save(category);
     }
 
@@ -48,7 +51,8 @@ public class CategoryService {
             .orElseThrow(() -> new ServiceException("존재하지 않는 카테고리입니다.", HttpStatus.NOT_FOUND));
 
         // 변경하려는 카테고리 이름이 달라지고, 요청에 대한 카테고리명이 이미 존재한다면 에러 발생
-        if (!existingCategory.getName().equals(request.getName()) && categoryRepository.existsByName(request.getName())) {
+        if (!existingCategory.getName().equals(request.getName())
+            && categoryRepository.existsByName(request.getName())) {
             throw new ServiceException("중복된 카테고리 이름입니다.", HttpStatus.CONFLICT);
         }
 

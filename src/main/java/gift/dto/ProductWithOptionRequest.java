@@ -31,7 +31,8 @@ public class ProductWithOptionRequest {
     @Valid
     private List<OptionRequestDto> options;
 
-    public ProductWithOptionRequest() {}
+    public ProductWithOptionRequest() {
+    }
 
     public ProductWithOptionRequest(String name, double price, String imageUrl, Long categoryId,
         List<OptionRequestDto> options) {

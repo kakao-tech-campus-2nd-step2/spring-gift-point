@@ -4,10 +4,10 @@ import gift.entity.Wish;
 
 public class WishResponseDto {
 
-    private Long id;
-    private String name;
-    private double price;
-    private String imageUrl;
+    private final Long id;
+    private final String name;
+    private final double price;
+    private final String imageUrl;
 
     public WishResponseDto(Wish wish) {
         this.id = wish.getId();

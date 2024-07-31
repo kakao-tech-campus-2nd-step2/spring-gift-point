@@ -7,18 +7,15 @@ import gift.dto.ProductWithOptionRequest;
 import gift.entity.Category;
 import gift.entity.Option;
 import gift.entity.Product;
-import gift.exception.BusinessException;
 import gift.exception.ServiceException;
 import gift.repository.CategoryRepository;
 import gift.repository.OptionRepository;
 import gift.repository.ProductRepository;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -59,30 +56,35 @@ public class ProductService {
     }
 
     public ProductResponseDto findById(Long id) {
-        Product product =  productRepository.findById(id)
+        Product product = productRepository.findById(id)
             .orElseThrow(() -> new ServiceException("존재하지 않는 상품입니다.", HttpStatus.NOT_FOUND));
         return new ProductResponseDto(product);
     }
 
     public void save(ProductWithOptionRequest request) {
-        Category category = categoryRepository.findById(request.getCategoryId()).orElseThrow(() -> new ServiceException("카테고리 정보가 없습니다.", HttpStatus.NOT_FOUND));
+        Category category = categoryRepository.findById(request.getCategoryId())
+            .orElseThrow(() -> new ServiceException("카테고리 정보가 없습니다.", HttpStatus.NOT_FOUND));
 
-        Product product = new Product(request.getName(), request.getPrice(), request.getImageUrl(), category);
+        Product product = new Product(request.getName(), request.getPrice(), request.getImageUrl(),
+            category);
 
         Product createdProduct = productRepository.save(product);
 
-        List<OptionRequestDto> optionList= request.getOptions();
+        List<OptionRequestDto> optionList = request.getOptions();
         optionList.forEach(option ->
-            optionRepository.save(new Option(option.getName(), option.getQuantity(), createdProduct)));
+            optionRepository.save(
+                new Option(option.getName(), option.getQuantity(), createdProduct)));
     }
 
     public void update(Long id, ProductRequestDto request) {
         productRepository.findById(id)
             .orElseThrow(() -> new ServiceException("존재하지 않는 상품입니다.", HttpStatus.NOT_FOUND));
 
-        Category category = categoryRepository.findById(request.getCategoryId()).orElseThrow(() -> new ServiceException("존재하지 않는 카테고리입니다.", HttpStatus.NOT_FOUND));
+        Category category = categoryRepository.findById(request.getCategoryId())
+            .orElseThrow(() -> new ServiceException("존재하지 않는 카테고리입니다.", HttpStatus.NOT_FOUND));
 
-        Product product = new Product(id, request.getName(), request.getPrice(), request.getImageUrl(),
+        Product product = new Product(id, request.getName(), request.getPrice(),
+            request.getImageUrl(),
             category);
 
         productRepository.save(product);

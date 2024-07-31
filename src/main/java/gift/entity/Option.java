@@ -8,7 +8,6 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
-import jakarta.persistence.UniqueConstraint;
 
 @Entity
 @Table(name = "option")
@@ -28,7 +27,8 @@ public class Option {
     @JoinColumn(name = "product_id", nullable = false)
     private Product product;
 
-    protected Option() {}
+    protected Option() {
+    }
 
     public Option(String name, Long quantity, Product product) {
         this.name = name;
