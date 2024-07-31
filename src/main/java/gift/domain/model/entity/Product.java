@@ -22,7 +22,7 @@ public class Product {
     private String name;
 
     @Column(nullable = false)
-    private Long price;
+    private int price;
 
     @Column(nullable = false, length = 2083)
     private String imageUrl;
@@ -34,20 +34,20 @@ public class Product {
     protected Product() {
     }
 
-    public Product(String name, Long price, String imageUrl) {
+    public Product(String name, int price, String imageUrl) {
         this.name = name;
         this.price = price;
         this.imageUrl = imageUrl;
     }
 
-    public Product(Long id, String name, Long price, String imageUrl) {
+    public Product(Long id, String name, int price, String imageUrl) {
         this.id = id;
         this.name = name;
         this.price = price;
         this.imageUrl = imageUrl;
     }
 
-    public Product(String name, Long price, String imageUrl, Category category) {
+    public Product(String name, int price, String imageUrl, Category category) {
         this.name = name;
         this.price = price;
         this.imageUrl = imageUrl;
@@ -62,7 +62,7 @@ public class Product {
         return name;
     }
 
-    public Long getPrice() {
+    public int getPrice() {
         return price;
     }
 
@@ -74,7 +74,7 @@ public class Product {
         return category;
     }
 
-    public void update(String name, Long price, String imageUrl, Category category) {
+    public void update(String name, int price, String imageUrl, Category category) {
         this.name = name;
         this.price = price;
         this.imageUrl = imageUrl;

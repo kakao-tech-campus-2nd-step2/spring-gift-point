@@ -6,7 +6,7 @@ public class WishResponseDto {
     private Integer count;
     private Long productId;
     private String productName;
-    private Long productPrice;
+    private int productPrice;
     private String productImageUrl;
 
     public Long getId() {
@@ -25,7 +25,7 @@ public class WishResponseDto {
         return productName;
     }
 
-    public Long getProductPrice() {
+    public int getProductPrice() {
         return productPrice;
     }
 
@@ -38,7 +38,7 @@ public class WishResponseDto {
     }
 
     public WishResponseDto(Long id, Integer count, Long productId, String productName,
-        Long productPrice,
+        int productPrice,
         String productImageUrl) {
         this.id = id;
         this.count = count;

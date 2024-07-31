@@ -53,7 +53,7 @@ public class ProductService {
         validateProductName(productAddRequestDto.getName());
         validateDuplicateProduct(productAddRequestDto.getName());
 
-        Category category = categoryRepository.findByName(productAddRequestDto.getCategoryName())
+        Category category = categoryRepository.findById(productAddRequestDto.getCategoryId())
             .orElseThrow(() -> new NoSuchElementException("존재하지 않는 카테고리입니다."));
 
         Product product = convertAddRequestToEntity(productAddRequestDto, category);
@@ -78,7 +78,7 @@ public class ProductService {
         Product product = productRepository.findById(id)
             .orElseThrow(() -> new NoSuchElementException("존재하지 않는 상품입니다."));
 
-        Category category = categoryRepository.findByName(productAddRequestDto.getCategoryName())
+        Category category = categoryRepository.findById(productAddRequestDto.getCategoryId())
             .orElseThrow(() -> new NoSuchElementException("존재하지 않는 카테고리입니다."));
 
         if (productRepository.existsByName(productAddRequestDto.getName())) {
@@ -117,7 +117,7 @@ public class ProductService {
             product.getName(),
             product.getPrice(),
             product.getImageUrl(),
-            product.getCategory().getName()
+            product.getCategory().getId()
         );
     }
 

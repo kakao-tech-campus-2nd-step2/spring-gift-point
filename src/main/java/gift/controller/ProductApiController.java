@@ -36,9 +36,9 @@ public class ProductApiController {
     }
 
     @Operation(summary = "상품 조회", description = "지정된 ID의 상품을 조회합니다.")
-    @GetMapping("/{id}")
-    public ResponseEntity<ProductResponseDto> getProduct(@PathVariable Long id) {
-        return ResponseEntity.ok(productService.getProduct(id));
+    @GetMapping("/{productId}")
+    public ResponseEntity<ProductResponseDto> getProduct(@PathVariable Long productId) {
+        return ResponseEntity.ok(productService.getProduct(productId));
     }
 
     @Operation(summary = "모든 상품 조회", description = "모든 상품을 페이지네이션하여 조회합니다.")
@@ -57,17 +57,17 @@ public class ProductApiController {
     }
 
     @Operation(summary = "상품 수정", description = "지정된 ID의 상품을 수정합니다.")
-    @PutMapping("/{id}")
+    @PutMapping("/{productId}")
     public ResponseEntity<ProductResponseDto> updateProduct(
-        @PathVariable Long id,
+        @PathVariable Long productId,
         @Valid @RequestBody ProductUpdateRequestDto productUpdateRequestDto) {
-        return ResponseEntity.ok(productService.updateProduct(id, productUpdateRequestDto));
+        return ResponseEntity.ok(productService.updateProduct(productId, productUpdateRequestDto));
     }
 
     @Operation(summary = "상품 삭제", description = "지정된 ID의 상품을 삭제합니다.")
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteProduct(@PathVariable Long id) {
-        productService.deleteProduct(id);
+    @DeleteMapping("/{productId}")
+    public ResponseEntity<Void> deleteProduct(@PathVariable Long productId) {
+        productService.deleteProduct(productId);
         return ResponseEntity.noContent().build();
     }
 }
