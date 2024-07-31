@@ -51,12 +51,29 @@ public class ProductUpdateRequest {
     }
 
     public static ProductUpdateRequest from(Product product) {
-        return new ProductUpdateRequest(product.getName(), product.getPrice(),
-            product.getImgUrl(), product.getCategory().getId());
+        return new ProductUpdateRequest(
+            product.getName(),
+            product.getPrice(),
+            product.getImgUrl(),
+            product.getCategory().getId()
+        );
+    }
+
+    public static ProductUpdateRequest from(ProductRequest productRequest) {
+        return new ProductUpdateRequest(
+            productRequest.getName(),
+            productRequest.getPrice(),
+            productRequest.getImgUrl(),
+            productRequest.getCategoryId()
+        );
     }
 
     public static Product toEntity(ProductUpdateRequest request, Category category) {
-        return new Product(request.getName(), request.getPrice(), request.getImgUrl(), category);
+        return new Product(
+            request.getName(),
+            request.getPrice(),
+            request.getImgUrl(),
+            category);
     }
 
 }
