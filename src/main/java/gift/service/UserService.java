@@ -2,10 +2,10 @@ package gift.service;
 
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import gift.entity.KakaoErrorCode;
-import gift.entity.KakaoProperties;
-import gift.entity.User;
-import gift.entity.UserDTO;
+import gift.entity.kakao.KakaoErrorCode;
+import gift.entity.kakao.KakaoProperties;
+import gift.entity.user.User;
+import gift.entity.user.UserDTO;
 import gift.exception.KakaoException;
 import gift.exception.ResourceNotFoundException;
 import gift.repository.UserRepository;
@@ -64,19 +64,9 @@ public class UserService {
     }
 
     public String login(UserDTO userDTO) {
-        // admin용 로그인
-        String adminEmail = "admin@naver.com";
-        if (userDTO.getEmail().equals(adminEmail)) {
-            User admin = findOne(adminEmail);
-            if (!userDTO.getPassword().equals(admin.getPassword())) {
-                throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Incorrect password");
-            }
-            return userUtility.makeAccessToken(admin);
-        }
-
         // 존재하지 않는 이메일
         User user = userRepository.findByEmail(userDTO.getEmail())
-                .orElseThrow(() -> new ResourceNotFoundException("Email does not exist"));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Email does not exist"));
 
         // pw 틀린 경우
         if (!BCrypt.checkpw(userDTO.getPassword(), user.getPassword())) {
