@@ -31,7 +31,7 @@ public class KakaoUserController {
         this.kakaoProperties = kakaoProperties;
     }
 
-    @GetMapping("/kakao/auth")
+    @GetMapping("/oauth/kakao/redirect")
     @Operation(summary = "카카오 인증 리다이렉트", description = "카카오 인증 페이지로 리다이렉트합니다.\n이 엔드포인트는 Swagger UI에서 직접 호출할 수 없습니다. 브라우저를 통해 직접 접근해야 합니다.",
         responses = @ApiResponse(responseCode = "302", description = "카카오 인증 리다이렉트 성공"))
     public RedirectView redirectToAuthorization() {
@@ -39,7 +39,7 @@ public class KakaoUserController {
         return new RedirectView(url);
     }
 
-    @GetMapping("/kakao/login")
+    @GetMapping("/oauth/kakao")
     @Operation(summary = "카카오 로그인 콜백", description = "카카오 로그인 콜백을 처리합니다.",
         responses = @ApiResponse(responseCode = "200", description = "카카오 로그인 성공", content = @Content(mediaType = "application/json", schema = @Schema(implementation = KakaoTokenResponse.class))))
     public ResponseEntity<KakaoTokenResponse> kakaoCallback(@RequestParam String code) {

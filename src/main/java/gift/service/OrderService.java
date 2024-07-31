@@ -12,11 +12,10 @@ import gift.exception.OptionNotFoundException;
 import gift.exception.ProductNotFoundException;
 import gift.repository.OptionRepository;
 import gift.repository.OrderRepository;
-import gift.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import java.time.LocalDateTime;
-import java.util.List;
-import java.util.stream.Collectors;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -24,16 +23,14 @@ public class OrderService {
 
     private final OrderRepository orderRepository;
     private final OptionRepository optionRepository;
-    private final UserRepository userRepository;
     private final KakaoMessageService kakaoMessageService;
     private final KakaoProperties kakaoProperties;
 
     public OrderService(OrderRepository orderRepository, OptionRepository optionRepository,
-        UserRepository userRepository, KakaoMessageService kakaoMessageService,
+        KakaoMessageService kakaoMessageService,
         KakaoProperties kakaoProperties) {
         this.orderRepository = orderRepository;
         this.optionRepository = optionRepository;
-        this.userRepository = userRepository;
         this.kakaoMessageService = kakaoMessageService;
         this.kakaoProperties = kakaoProperties;
     }
@@ -53,7 +50,8 @@ public class OrderService {
         user.subtractWishNumber(request.getQuantity(), product);
 
         if (kakaoProperties.isKakaoLoginCompleted()) { //kakaologin이 수행되지 않으면 accessToken이 지정되지 않아 메시지를 보내지 않음
-            kakaoMessageService.sendOrderMessage(request.getMessage(), product.getName(),
+            kakaoMessageService.sendOrderMessage(request.getMessage(), product.getImageUrl(),
+                product.getName(),
                 request.getQuantity(), request.getTotalPrice(product));
         }
 
@@ -62,12 +60,15 @@ public class OrderService {
             request.getMessage());
     }
 
-    public List<OrderDetailResponse> getAllOrders(Long userId) {
-        List<Order> orders = orderRepository.findAllByUserId(userId);
-        return orders.stream()
-            .map(order -> new OrderDetailResponse(order.getId(), order.getOption(), order.getUser(),
-                order.getQuantity(), order.getLocalDateTime(), order.getMessage()))
-            .collect(Collectors.toList());
-
+    public Page<OrderDetailResponse> getAllOrders(Long userId, Pageable pageable) {
+        Page<Order> orders = orderRepository.findAllByUserId(userId, pageable);
+        return orders.map(order -> new OrderDetailResponse(
+            order.getId(),
+            order.getOption(),
+            order.getUser(),
+            order.getQuantity(),
+            order.getOrderDateTime(),
+            order.getMessage()
+        ));
     }
 }

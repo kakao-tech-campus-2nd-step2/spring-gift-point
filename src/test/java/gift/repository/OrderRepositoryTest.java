@@ -8,12 +8,14 @@ import gift.entity.Order;
 import gift.entity.Product;
 import gift.entity.User;
 import java.time.LocalDateTime;
-import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 
 @DataJpaTest
 class OrderRepositoryTest {
@@ -57,11 +59,13 @@ class OrderRepositoryTest {
     @Test
     @DisplayName("findAllByUserId 테스트")
     void findAllByUserIdTest() {
+        Pageable pageable = PageRequest.of(0, 10);
+
         Order expected = orderRepository.save(
             new Order(option, user, 30, LocalDateTime.now(), "test"));
 
-        List<Order> orders = orderRepository.findAllByUserId(user.getId());
-        Order actual = orders.getFirst();
+        Page<Order> orders = orderRepository.findAllByUserId(user.getId(), pageable);
+        Order actual = orders.getContent().get(0);
 
         assertThat(actual.getId()).isEqualTo(expected.getId());
         assertThat(actual.getMessage()).isEqualTo("test");

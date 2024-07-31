@@ -29,14 +29,14 @@ public class Order {
     @NotNull
     private Integer quantity;
     @NotNull
-    private LocalDateTime localDateTime;
+    private LocalDateTime orderDateTime;
 
-    public Order(Option option, User user, Integer quantity, LocalDateTime localDateTime,
+    public Order(Option option, User user, Integer quantity, LocalDateTime orderDateTime,
         String message) {
         this.option = option;
         this.user = user;
         this.quantity = quantity;
-        this.localDateTime = localDateTime;
+        this.orderDateTime = orderDateTime;
         this.message = message;
     }
 
@@ -60,8 +60,8 @@ public class Order {
         return quantity;
     }
 
-    public LocalDateTime getLocalDateTime() {
-        return localDateTime;
+    public LocalDateTime getOrderDateTime() {
+        return orderDateTime;
     }
 
     public String getMessage() {

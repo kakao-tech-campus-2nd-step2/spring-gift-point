@@ -13,7 +13,7 @@ public record OrderResponse(
     Integer quantity,
     @Schema(description = "Order date and time", example = "2024-07-28T17:04:18.834374")
     LocalDateTime localDateTime,
-    @Schema(description = "Order message", example = "Please deliver between 9 AM to 5 PM")
+    @Schema(description = "Order message", example = "선물이 도착했습니다.")
     String message) {
 
 }

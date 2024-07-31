@@ -25,6 +25,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -42,8 +43,9 @@ public class ProductController {
     @Operation(summary = "모든 상품 조회", description = "모든 상품을 조회합니다.",
         responses = @ApiResponse(responseCode = "200", description = "상품 조회 성공", content = @Content(mediaType = "application/json", schema = @Schema(implementation = Page.class))))
     public Page<Product> getProduct(
-        @ParameterObject @PageableDefault(sort = "id", direction = Sort.Direction.ASC) Pageable pageable) {
-        return productService.getAllProducts(pageable);
+        @RequestParam(value = "categoryId", required = false) Long categoryId,
+        @ParameterObject @PageableDefault(sort = "name", direction = Sort.Direction.ASC) Pageable pageable) {
+        return productService.getAllProducts(categoryId, pageable);
     }
 
     @GetMapping("/{productId}")

@@ -53,7 +53,7 @@ public class User {
 
     public void subtractWishNumber(Integer number, Product product) {
         wishes.removeIf(wish -> {
-            if(wish.sameProduct(product)) {
+            if (wish.sameProduct(product)) {
                 wish.subtractNumber(number);
             }
             return wish.checkLeftWishNumber();

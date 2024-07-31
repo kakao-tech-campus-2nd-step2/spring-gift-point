@@ -23,7 +23,7 @@
     <td th:text="${product.id}">ID</td>
     <td th:text="${product.name}">Name</td>
     <td th:text="${product.price}">Price</td>
-    <td><img alt="Product Image" th:src="@{${product.img}}"/></td>
+    <td><img alt="Product Image" th:src="@{${product.imageUrl}}"/></td>
     <td th:text="${product.category.name}">Category</td>
     <td>
       <a th:href="@{'/admin/products/edit/' + ${product.id}}">수정</a>

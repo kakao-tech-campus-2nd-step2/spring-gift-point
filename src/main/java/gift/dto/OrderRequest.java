@@ -14,7 +14,7 @@ public class OrderRequest {
     @Schema(description = "Quantity of the option", example = "2")
     private Integer quantity;
 
-    @Schema(description = "Message for the order", example = "Please deliver between 9 AM to 5 PM")
+    @Schema(description = "Message for the order", example = "선물이 도착했습니다.")
     private String message;
 
     public Long getOptionId() {

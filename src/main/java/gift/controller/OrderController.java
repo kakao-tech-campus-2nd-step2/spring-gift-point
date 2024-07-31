@@ -13,7 +13,11 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
-import java.util.List;
+import org.springdoc.core.annotations.ParameterObject;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -45,8 +49,9 @@ public class OrderController {
     @GetMapping
     @Operation(summary = "사용자 모든 주문 조회", description = "사용자의 모든 주문을 조회합니다.",
         responses = @ApiResponse(responseCode = "200", description = "주문 조회 성공", content = @Content(mediaType = "application/json", schema = @Schema(implementation = OrderDetailResponse.class))))
-    public ResponseEntity<List<OrderDetailResponse>> getAllOrders(
-        @Parameter(hidden = true) @LoginUser User user) {
-        return ResponseEntity.ok().body(orderService.getAllOrders(user.getId()));
+    public Page<OrderDetailResponse> getAllOrders(
+        @Parameter(hidden = true) @LoginUser User user,
+        @ParameterObject @PageableDefault(sort = "orderDateTime", direction = Sort.Direction.DESC) Pageable pageable) {
+        return orderService.getAllOrders(user.getId(), pageable);
     }
 }

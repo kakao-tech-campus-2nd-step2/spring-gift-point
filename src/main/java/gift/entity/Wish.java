@@ -9,6 +9,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
+import java.time.LocalDateTime;
 
 @Schema(description = "Wish entity representing a user's wish for a product")
 @Entity
@@ -33,13 +34,18 @@ public class Wish {
     @Schema(description = "Number of products wished for", example = "3")
     private Integer number;
 
+    @Schema(description = "Date and time when the wish was created", example = "2024-07-28T17:04:18.834374")
+    private LocalDateTime createdDate;
+
     protected Wish() {
+        this.createdDate = LocalDateTime.now();
     }
 
     public Wish(User user, Product product, int number) {
         this.user = user;
         this.product = product;
         this.number = number;
+        this.createdDate = LocalDateTime.now();
     }
 
     public Long getId() {
@@ -60,6 +66,10 @@ public class Wish {
 
     public int getNumber() {
         return number;
+    }
+
+    public LocalDateTime getCreatedDate() {
+        return this.createdDate;
     }
 
     public void subtractNumber(Integer number) {
