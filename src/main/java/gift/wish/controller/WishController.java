@@ -54,7 +54,10 @@ public class WishController {
     // 2. 사용자의 위시리스트 삭제
     @Operation(summary = "위시리스트 상품 삭제", description = "회원의 위시 리스트에서 상품을 삭제한다.")
     @DeleteMapping("/{wishId}")
-    public ResponseEntity<?> deleteWish(@RequestHeader("Authorization") String authorizationHeader, @PathVariable Long wishId) {
+    public ResponseEntity<?> deleteWish(
+            @Parameter(hidden = true) @RequestHeader("Authorization") String authorizationHeader,
+            @PathVariable Long wishId
+    ) {
         // 토큰 추출
         String token = authorizationHeader.startsWith("Bearer ") ? authorizationHeader.substring(7) : null;
 
@@ -72,10 +75,11 @@ public class WishController {
     @Operation(summary = "위시리스트 상품 조회 (페이지네이션 적용)", description = "회원의 위시 리스트에 있는 상품을 페이지 단위로 조회한다.")
     @GetMapping()
     public ResponseEntity<?> getWishlistByPagination(
-                                      @RequestHeader("Authorization") String authorizationHeader,
+                                      @Parameter(hidden = true) @RequestHeader("Authorization") String authorizationHeader,
                                       @RequestParam int page,
                                       @RequestParam int size,
-                                      @RequestParam(defaultValue = "price,desc") String sort) {
+                                      @RequestParam(defaultValue = "price,desc") String sort
+    ) {
         // 토큰 추출
         String token = authorizationHeader.startsWith("Bearer ") ? authorizationHeader.substring(7) : null;
 

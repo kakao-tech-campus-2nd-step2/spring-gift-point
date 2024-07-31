@@ -7,6 +7,7 @@ import gift.order.dto.OrderRequest;
 import gift.order.service.KakaoService;
 import gift.order.service.OrderService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
@@ -31,7 +32,7 @@ public class OrderController {
     @Operation(summary = "주문하기", description = "새 주문을 생성한다.")
     public ResponseEntity<?> requestOrder(
             @Valid @RequestBody OrderRequest orderRequest,
-            @RequestHeader("Authorization") String authorizationHeader
+            @Parameter(hidden = true) @RequestHeader("Authorization") String authorizationHeader
     ) 
     {
         // 토큰 추출
@@ -48,14 +49,14 @@ public class OrderController {
         // 2. 주문 내역 카카오톡 메시지를 통해 나에게 보내기
         //kakaoService.sendKakaoMessage(orderResponse, accessToken);
 
-        return ResponseEntity.ok(new CommonResponse<>(orderResponse, "주문이 완료되었습니다.", true));
+        return ResponseEntity.status(201).body(new CommonResponse<>(orderResponse, "주문이 완료되었습니다.", true));
     }
 
     // 2. 주문 목록 조회 (페이지네이션 적용)
     @GetMapping()
     @Operation(summary = "주문 목록 조회 (페이지네이션 적용)", description = "회원의 주문 목록을 페이지 단위로 조회한다.")
     public ResponseEntity<?> getOrderByPagination(
-            @RequestHeader("Authorization") String authorizationHeader,
+            @Parameter(hidden = true) @RequestHeader("Authorization") String authorizationHeader,
             @RequestParam int page,
             @RequestParam int size,
             @RequestParam(defaultValue = "price,desc") String sort) {

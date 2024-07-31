@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -52,7 +53,7 @@ public class WishServiceImpl implements WishService {
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Product not found"));
 
         // Wish에서 Member와 Product를 추가해 연관관계 설정
-        Wish wish = new Wish(member, product);
+        Wish wish = new Wish(member, product, LocalDateTime.now());
 
         // 양방향 연관 관계 유지 : Wish 엔티티를 Member 엔티티와 Product 엔티티에도 추가해준다.
         member.addWish(wish);

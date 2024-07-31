@@ -42,9 +42,10 @@ public class Wish {
     // Constructors, Getters, and Setters
     public Wish() {}
 
-    public Wish(Member member, Product product) {
+    public Wish(Member member, Product product, LocalDateTime createdDate) {
         this.member = member;
         this.product = product;
+        this.createdDate = createdDate;
     }
 
     // Getters and setters
