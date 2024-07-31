@@ -29,25 +29,15 @@ public class WishlistItem {
     @JoinColumn(name = "product_id", nullable = false)
     private Product product;
     @NotNull
-    private long amount;
-    @NotNull
     @CreatedDate
     private LocalDateTime createdDate;
 
     public WishlistItem() {
     }
 
-    public WishlistItem(User user, Product product, long amount) {
+    public WishlistItem(User user, Product product) {
         this.user = user;
         this.product = product;
-        this.amount = amount;
-    }
-
-    public WishlistItem(long id, User user, Product product, long amount) {
-        this.id = id;
-        this.user = user;
-        this.product = product;
-        this.amount = amount;
     }
 
     public long getId() {
@@ -74,14 +64,6 @@ public class WishlistItem {
         this.product = product;
     }
 
-    public long getAmount() {
-        return amount;
-    }
-
-    public void setAmount(long amount) {
-        this.amount = amount;
-    }
-
     public LocalDateTime getCreatedDate() {
         return createdDate;
     }
@@ -94,7 +76,6 @@ public class WishlistItem {
     public String toString(){
         return "id: " + id
             + "\nuserId: " + user.getId()
-            + "\nproductId: " + product.getId()
-            + "\namount: " + amount;
+            + "\nproductId: " + product.getId();
     }
 }
