@@ -8,12 +8,11 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import gift.dto.member.MemberAuthResponse;
 import gift.dto.member.MemberLoginRequest;
 import gift.dto.member.MemberRegisterRequest;
-import gift.dto.member.MemberAuthResponse;
 import gift.exception.member.EmailAlreadyUsedException;
 import gift.exception.member.ForbiddenException;
-import gift.model.RegisterType;
 import gift.service.MemberService;
 import gift.util.TokenValidator;
 import org.junit.jupiter.api.BeforeEach;
@@ -41,7 +40,7 @@ public class MemberControllerTest {
 
     @BeforeEach
     public void setUp() {
-        memberAuthResponse = new MemberAuthResponse(1L, "test@example.com", "token", RegisterType.DEFAULT);
+        memberAuthResponse = new MemberAuthResponse("test@example.com", "token");
     }
 
     @Test

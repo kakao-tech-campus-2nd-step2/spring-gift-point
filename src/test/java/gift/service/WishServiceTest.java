@@ -10,7 +10,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
-import gift.dto.member.MemberAuthResponse;
+import gift.dto.member.MemberEditResponse;
 import gift.dto.product.ProductResponse;
 import gift.dto.wish.WishCreateRequest;
 import gift.dto.wish.WishResponse;
@@ -61,7 +61,12 @@ public class WishServiceTest {
     public void testAddWishSuccess() {
         Category category = new Category("Category", "#000000", "imageUrl", "description");
         Member member = new Member(1L, "test@example.com", "password", RegisterType.DEFAULT);
-        MemberAuthResponse memberAuthResponse = new MemberAuthResponse(1L, "test@example.com", null, RegisterType.DEFAULT);
+        MemberEditResponse memberEditResponse = new MemberEditResponse(
+            1L,
+            "test@example.com",
+            null,
+            RegisterType.DEFAULT
+        );
         ProductResponse productResponse = new ProductResponse(
             1L,
             "Product",
@@ -78,9 +83,9 @@ public class WishServiceTest {
             category
         );
 
-        when(memberService.getMemberById(1L)).thenReturn(memberAuthResponse);
+        when(memberService.getMemberById(1L)).thenReturn(memberEditResponse);
         when(productService.getProductById(1L)).thenReturn(productResponse);
-        when(memberService.convertToEntity(any(MemberAuthResponse.class))).thenReturn(member);
+        when(memberService.convertToEntity(any(MemberEditResponse.class))).thenReturn(member);
         when(productService.convertToEntity(any(ProductResponse.class))).thenReturn(product);
         when(wishRepository.existsByMember_IdAndProduct_Id(1L, 1L)).thenReturn(false);
         when(wishRepository.save(any(Wish.class))).thenReturn(new Wish(1L, member, product));
@@ -113,7 +118,12 @@ public class WishServiceTest {
     public void testAddWishDuplicate() {
         Category category = new Category("Category", "#000000", "imageUrl", "description");
         Member member = new Member(1L, "test@example.com", "password", RegisterType.DEFAULT);
-        MemberAuthResponse memberAuthResponse = new MemberAuthResponse(1L, "test@example.com", null, RegisterType.DEFAULT);
+        MemberEditResponse memberEditResponse = new MemberEditResponse(
+            1L,
+            "test@example.com",
+            null,
+            RegisterType.DEFAULT
+        );
         Product product = new Product(1L, "Product", 100, "imageUrl", category);
         ProductResponse productResponse = new ProductResponse(
             1L,
@@ -124,9 +134,9 @@ public class WishServiceTest {
             "categoryName"
         );
 
-        when(memberService.getMemberById(1L)).thenReturn(memberAuthResponse);
+        when(memberService.getMemberById(1L)).thenReturn(memberEditResponse);
         when(productService.getProductById(1L)).thenReturn(productResponse);
-        when(memberService.convertToEntity(any(MemberAuthResponse.class))).thenReturn(member);
+        when(memberService.convertToEntity(any(MemberEditResponse.class))).thenReturn(member);
         when(productService.convertToEntity(any(ProductResponse.class))).thenReturn(product);
         when(wishRepository.existsByMember_IdAndProduct_Id(1L, 1L)).thenReturn(true);
 

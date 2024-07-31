@@ -12,11 +12,11 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import gift.dto.member.MemberAuthResponse;
 import gift.dto.member.MemberEditRequest;
 import gift.dto.member.MemberEditResponse;
 import gift.dto.member.MemberLoginRequest;
 import gift.dto.member.MemberRegisterRequest;
-import gift.dto.member.MemberAuthResponse;
 import gift.exception.member.EmailAlreadyUsedException;
 import gift.exception.member.ForbiddenException;
 import gift.model.Member;
@@ -48,8 +48,7 @@ public class MemberServiceTest {
     public void testRegisterMember() {
         MemberRegisterRequest memberRegisterRequest = new MemberRegisterRequest(
             "test@example.com",
-            "password",
-            RegisterType.DEFAULT
+            "password"
         );
         Member savedMember = new Member(1L, "test@example.com", "password", RegisterType.DEFAULT);
         when(memberRepository.existsByEmail("test@example.com")).thenReturn(false);
@@ -66,8 +65,7 @@ public class MemberServiceTest {
     public void testRegisterMemberEmailAlreadyUsed() {
         MemberRegisterRequest memberRegisterRequest = new MemberRegisterRequest(
             "test@example.com",
-            "password",
-            RegisterType.DEFAULT
+            "password"
         );
         when(memberRepository.existsByEmail("test@example.com")).thenReturn(true);
 
@@ -144,8 +142,8 @@ public class MemberServiceTest {
         Member member = new Member(1L, "test@example.com", "password", RegisterType.DEFAULT);
         when(memberRepository.findById(1L)).thenReturn(Optional.of(member));
 
-        MemberAuthResponse memberDTO = memberService.getMemberById(1L);
-        assertEquals("test@example.com", memberDTO.email());
+        MemberEditResponse memberEditResponse = memberService.getMemberById(1L);
+        assertEquals("test@example.com", memberEditResponse.email());
     }
 
     @Test
@@ -175,8 +173,8 @@ public class MemberServiceTest {
         when(memberRepository.save(any(Member.class))).thenReturn(
             new Member(1L, "new@example.com", "newpassword", RegisterType.DEFAULT));
 
-        MemberAuthResponse response = memberService.updateMember(1L, memberEditRequest);
-        assertEquals("new@example.com", response.email());
+        MemberEditResponse memberEditResponse = memberService.updateMember(1L, memberEditRequest);
+        assertEquals("new@example.com", memberEditResponse.email());
     }
 
     @Test

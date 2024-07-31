@@ -28,8 +28,7 @@ public class MemberRegisterRequestTest {
     public void testRegisterMemberValid() {
         MemberRegisterRequest memberRegisterRequest = new MemberRegisterRequest(
             "valid@example.com",
-            "validpassword",
-            RegisterType.DEFAULT
+            "validpassword"
         );
 
         Set<ConstraintViolation<MemberRegisterRequest>> violations = validator.validate(
@@ -43,8 +42,7 @@ public class MemberRegisterRequestTest {
     public void testRegisterMemberNullEmail() {
         MemberRegisterRequest memberRegisterRequest = new MemberRegisterRequest(
             null,
-            "validpassword",
-            RegisterType.DEFAULT
+            "validpassword"
         );
 
         Set<ConstraintViolation<MemberRegisterRequest>> violations = validator.validate(
@@ -62,8 +60,7 @@ public class MemberRegisterRequestTest {
     public void testRegisterMemberNullPassword() {
         MemberRegisterRequest memberRegisterRequest = new MemberRegisterRequest(
             "valid@example.com",
-            null,
-            RegisterType.DEFAULT
+            null
         );
 
         Set<ConstraintViolation<MemberRegisterRequest>> violations = validator.validate(
