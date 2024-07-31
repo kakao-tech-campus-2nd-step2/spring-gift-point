@@ -1,14 +1,13 @@
 package gift.api.wishlist.dto;
 
-import gift.api.product.domain.Product;
 import gift.api.wishlist.domain.Wish;
 
 public record WishResponse(
-    Product product,
+    Long id,
     Integer quantity
 ) {
     public static WishResponse of(Wish wish) {
-        return new WishResponse(wish.getProduct(),
+        return new WishResponse(wish.getId(),
                                 wish.getQuantity());
     }
 }

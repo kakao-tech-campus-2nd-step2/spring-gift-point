@@ -6,7 +6,7 @@ import gift.api.wishlist.domain.Wish;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 
-public record WishAddUpdateRequest(
+public record WishRequest(
     @NotNull(message = "Product id is mandatory")
     @Positive(message = "Product id must be greater than zero")
     Long productId,

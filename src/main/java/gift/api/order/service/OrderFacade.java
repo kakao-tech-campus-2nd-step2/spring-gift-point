@@ -5,7 +5,6 @@ import gift.api.option.service.OptionService;
 import gift.api.order.domain.Order;
 import gift.api.order.dto.OrderRequest;
 import gift.api.order.dto.OrderResponse;
-import gift.api.wishlist.dto.WishDeleteRequest;
 import gift.api.wishlist.service.WishService;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -29,8 +28,8 @@ public class OrderFacade {
     @Transactional
     public OrderResponse order(Long memberId, OrderRequest orderRequest) {
         optionService.subtract(orderRequest.optionId(), orderRequest.quantity());
-        wishService.delete(memberId, WishDeleteRequest.of(
-            optionService.findOptionById(orderRequest.optionId()).getProductId()));
+        wishService.delete(memberId,
+            optionService.findOptionById(orderRequest.optionId()).getProductId());
         Order order = orderService.saveOrder(
             orderRequest.toEntity(optionService.findOptionById(orderRequest.optionId())));
         kakaoService.sendMessage(memberId, orderService.createBody(orderRequest));
