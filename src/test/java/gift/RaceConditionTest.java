@@ -18,6 +18,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.annotation.Import;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.TransactionTimedOutException;
 
@@ -33,6 +34,7 @@ import static org.mockito.Mockito.doNothing;
 @SpringBootTest
 @ActiveProfiles("dev")
 @Import(RedissonConfig.class)
+@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 public class RaceConditionTest {
     @Autowired
     private ProductRepository productRepository;
@@ -62,7 +64,7 @@ public class RaceConditionTest {
 
 
         int threadCount = 100; // 스레드 개수
-        ExecutorService executorService = Executors.newFixedThreadPool(32); // 스레드 풀 크기
+        ExecutorService executorService = Executors.newFixedThreadPool(100); // 스레드 풀 크기
         CountDownLatch latch = new CountDownLatch(threadCount);
         for (int i = 0; i < threadCount; i++) {
             executorService.submit(() -> {
