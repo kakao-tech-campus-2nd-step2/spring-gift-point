@@ -56,7 +56,6 @@ public class KakaoLoginService {
 
         JsonNode jsonNode = kakaoApiService.parseJson(response.getBody());
         Long kakaoId = jsonNode.get("id").asLong();
-        String nickname = jsonNode.get("properties").get("nickname").asText();
 
         return memberRepository.findBySocialAccount_SocialIdAndSocialAccount_SocialType(kakaoId, SocialType.KAKAO)
                 .map(member -> {
@@ -65,12 +64,11 @@ public class KakaoLoginService {
                     socialAccount.changeRefreshToken(refreshToken);
                     return member;
                 })
-                .orElseGet(() -> createAndSaveMember(kakaoId, nickname, accessToken, refreshToken));
+                .orElseGet(() -> createAndSaveMember(kakaoId, accessToken, refreshToken));
     }
 
-    private Member createAndSaveMember(Long kakaoId, String nickname, String accessToken, String refreshToken) {
+    private Member createAndSaveMember(Long kakaoId, String accessToken, String refreshToken) {
         Member member = new Member.MemberBuilder()
-                .name(nickname)
                 .build();
 
         SocialAccount socialAccount = new SocialAccount(SocialType.KAKAO, kakaoId, accessToken, refreshToken);
