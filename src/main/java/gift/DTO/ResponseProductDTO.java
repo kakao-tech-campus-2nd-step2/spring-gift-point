@@ -10,9 +10,9 @@ public class ResponseProductDTO {
     private String name;
     private int price;
     private String imageUrl;
-    private List<Option> options;
+    private List<ResponseOptionDTO> options;
 
-    public ResponseProductDTO(Long id, String name, int price, String imageUrl, List<Option> options) {
+    public ResponseProductDTO(Long id, String name, int price, String imageUrl, List<ResponseOptionDTO> options) {
         this.id = id;
         this.name = name;
         this.price = price;
@@ -36,11 +36,11 @@ public class ResponseProductDTO {
         return imageUrl;
     }
 
-    public List<Option> getOptions() {
+    public List<ResponseOptionDTO> getOptions() {
         return options;
     }
 
-    public static ResponseProductDTO of(Product product, List<Option> options) {
+    public static ResponseProductDTO of(Product product, List<ResponseOptionDTO> options) {
         return new ResponseProductDTO(product.getId(), product.getName().getValue(), product.getPrice().getValue(), product.getImageUrl().getValue(), options);
     }
 }

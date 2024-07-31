@@ -2,6 +2,8 @@ package gift.Service;
 
 import gift.DTO.RequestProductDTO;
 import gift.DTO.RequestProductPostDTO;
+import gift.DTO.ResponseOptionDTO;
+import gift.DTO.ResponseProductDTO;
 import gift.Exception.CategoryNotFoundException;
 import gift.Exception.ProductNotFoundException;
 import gift.Model.Entity.Category;
@@ -14,6 +16,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Service
 public class ProductService {
@@ -36,9 +40,20 @@ public class ProductService {
     }
 
     @Transactional(readOnly = true)
-    public Product getProduct(Long productId) {
+    public Page<Product> getAllProducts(Pageable pageable, Long categoryId) {
+        Category category = categoryRepository.findById(categoryId).orElseThrow(() -> new CategoryNotFoundException("매칭되는 category가 없습니다"));
+        Page<Product> productPage = productRepository.findByCategory(category, pageable);
+        return productPage;
+    }
+
+    @Transactional(readOnly = true)
+    public ResponseProductDTO getProduct(Long productId) {
         Product product = productRepository.findById(productId).orElseThrow(()-> new ProductNotFoundException("매칭되는 product가 없습니다"));
-        return product;
+        List<ResponseOptionDTO> options = optionRepository.findByProduct(product)
+                .stream()
+                .map(ResponseOptionDTO :: of)
+                .toList();
+        return ResponseProductDTO.of(product, options);
     }
 
     @Transactional

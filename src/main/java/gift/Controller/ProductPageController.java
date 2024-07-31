@@ -1,9 +1,7 @@
 package gift.Controller;
 
 import gift.DTO.RequestProductPostDTO;
-import gift.DTO.ResponseOptionDTO;
 import gift.DTO.ResponseProductDTO;
-import gift.Model.Entity.Option;
 import gift.Service.OptionService;
 import gift.Service.ProductService;
 import jakarta.validation.Valid;
@@ -32,6 +30,9 @@ public class ProductPageController {
         this.optionService = optionService;
     }
 
+    /*
+    //서버사이드 렌더링 코드 (6주차 과제에서는 사용을 하지 않아 지우긴 아까워 주석처리)
+
     @GetMapping("/products")
     public String getProducts(@PageableDefault(size = 10, sort = "name", direction = Sort.Direction.ASC) Pageable pageable,
                              Model model) {
@@ -49,12 +50,21 @@ public class ProductPageController {
         model.addAttribute("reverseSortDir", reverseSortDir);
         return "products";
     }
+    */
+
+
+    @GetMapping("/products")
+    public ResponseEntity<Page<Product>> getProducts(@PageableDefault(size = 10, sort = "name", direction = Sort.Direction.ASC) Pageable pageable,
+                              @RequestParam("categoryId") Long categoryId) {
+        Page<Product> productPage = productService.getAllProducts(pageable, categoryId);
+        return ResponseEntity.ok(productPage);
+    }
+
+
 
     @GetMapping("/products/{product-id}")
     public ResponseEntity<ResponseProductDTO> getProduct(@PathVariable("product-id") Long productId){
-        Product product = productService.getProduct(productId);
-        List<Option> options = optionService.getOptionForProductController(productId);
-        ResponseProductDTO response = ResponseProductDTO.of(product, options);
+        ResponseProductDTO response = productService.getProduct(productId);
         return ResponseEntity.ok(response);
     }
 
