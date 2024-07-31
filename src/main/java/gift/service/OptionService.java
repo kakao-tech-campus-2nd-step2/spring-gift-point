@@ -1,17 +1,21 @@
 package gift.service;
 
 import gift.dto.AddOptionDTO;
+import gift.dto.AllOptionDto;
 import gift.dto.GetOptionDTO;
+import gift.dto.ProductDTO;
 import gift.model.Option;
 import gift.model.OptionList;
 import gift.model.Product;
 import gift.repository.OptionRepository;
 import gift.repository.ProductRepository;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.stream.Collectors;
 
 @Service
 public class OptionService {
@@ -101,6 +105,14 @@ public class OptionService {
                 optionNameList
         );
         return getOptionDTO;
+    }
+
+    public List<AllOptionDto> getAllOptions(Long productId){
+        List<Option> optionListT = optionRepository.findAllByProduct_Id(productId);
+        List<AllOptionDto> optionList = optionListT.stream()
+                .map(AllOptionDto::getAllOptionDto)
+                .toList();
+        return optionList;
     }
 
     public Option getOption(Long id){
