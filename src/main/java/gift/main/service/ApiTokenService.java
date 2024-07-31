@@ -41,7 +41,7 @@ public class ApiTokenService {
     //토큰저장
     @Transactional
     public void saveToken(User user, KakaoToken kakaoToken) {
-        if(apiTokenRepository.existsByUserId(user.getId())){
+        if (apiTokenRepository.existsByUserId(user.getId())) {
             ApiToken apiToken = apiTokenRepository.findByUserId(user.getId()).get();
             apiToken.updete(kakaoToken);
         }

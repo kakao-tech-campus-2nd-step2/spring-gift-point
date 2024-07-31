@@ -60,7 +60,7 @@ public class KakaoService {
 
     //카카오 엑세스 토큰을 이용한 유저정보 가져오기
     public KakaoProfileRequest getKakaoProfile(KakaoToken tokenResponse) {
-        return  restClient.post()
+        return restClient.post()
                 .uri(kakaoProperties.userRequestUri())
                 .contentType(FORM_URLENCODED)
                 .header(AUTHORIZATION, BEARER + tokenResponse.accessToken())

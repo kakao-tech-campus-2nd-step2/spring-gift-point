@@ -15,7 +15,7 @@ public record PageResponse(CustomPage date) {
 
     @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
     record CustomPage(int totalPage,
-                List<?> content) {
+                      List<?> content) {
 
         CustomPage(Page<?> page) {
             this(page.getTotalPages(), page.getContent());

@@ -2,7 +2,6 @@ package gift.main.entity;
 
 import gift.main.Exception.CustomException;
 import gift.main.Exception.ErrorCode;
-import gift.main.dto.OptionChangeQuantityRequest;
 import gift.main.dto.OptionRequest;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Max;

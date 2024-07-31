@@ -1,9 +1,7 @@
 package gift.main.controller;
 
-import gift.main.annotation.SessionUser;
 import gift.main.dto.ProductAllRequest;
 import gift.main.dto.ProductRequest;
-import gift.main.dto.UserVo;
 import gift.main.service.ProductService;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;

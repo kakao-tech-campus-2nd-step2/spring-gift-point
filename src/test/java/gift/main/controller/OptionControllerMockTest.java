@@ -27,13 +27,13 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @ExtendWith(MockitoExtension.class)
 public class OptionControllerMockTest {
 
-<<<<<<< HEAD
+<<<<<<<HEAD
     private final ObjectMapper objectMapper = new ObjectMapper();
-    private MockMvc mockMvc;
+    private final ObjectMapper objectMapper = new ObjectMapper();
 =======
     private MockMvc mockMvc;
-    private final ObjectMapper objectMapper = new ObjectMapper();
->>>>>>> upstream/jinseohyun1228
+    private MockMvc mockMvc;
+>>>>>>>upstream/jinseohyun1228
 
     @Mock
     private OptionService optionService;
