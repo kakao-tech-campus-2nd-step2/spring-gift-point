@@ -16,9 +16,9 @@ public class PageRequestDto {
     protected int size = 10;
 
     // product, wish 분리하기
-    @Pattern(regexp = "^(id|name|price|product_price),(asc|desc)$",
-        message = "형식은 '(id|name|price|product_price),(asc|desc)' 만 가능합니다.")
-    private String sort = "name,asc";
+    @Pattern(regexp = "^(id|name|price|product_price|createdDate|orderDateTime),(asc|desc)$",
+        message = "형식은 '(id|name|price|product_price|createdDate|orderDateTime),(asc|desc)' 만 가능합니다.")
+    private String sort = "id,asc";
 
 
     public Pageable toPageable() {
@@ -39,5 +39,17 @@ public class PageRequestDto {
 
     public String getSort() {
         return sort;
+    }
+
+    public void setPage(int page) {
+        this.page = page;
+    }
+
+    public void setSize(int size) {
+        this.size = size;
+    }
+
+    public void setSort(String sort) {
+        this.sort = sort;
     }
 }
