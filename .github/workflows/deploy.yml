@@ -3,7 +3,7 @@ name: 카테캠 Step2 프로젝트 자동 재배포
 on:
   push:
     branches:
-      - step1
+      - step3
 
 jobs:
   deploy:
