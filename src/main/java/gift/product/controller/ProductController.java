@@ -1,5 +1,6 @@
 package gift.product.controller;
 
+import gift.common.annotation.AllowAnonymous;
 import gift.option.dto.OptionResDto;
 import gift.product.dto.ProductReqDto;
 import gift.product.dto.ProductResDto;
@@ -40,6 +41,7 @@ public class ProductController {
             responses = {
                     @ApiResponse(responseCode = "200", description = "상품 목록 조회 성공"),
             })
+    @AllowAnonymous
     public ResponseEntity<Page<ProductResDto>> getProducts(
             @RequestParam(value = "categoryId") Long categoryId,
             Pageable pageable
@@ -54,6 +56,7 @@ public class ProductController {
             responses = {
                     @ApiResponse(responseCode = "200", description = "상품 조회 성공"),
             })
+    @AllowAnonymous
     public ResponseEntity<ProductResDto> getProduct(@PathVariable("productId") Long productId) {
         ProductResDto productResDto = productService.getProduct(productId);
 
@@ -65,6 +68,7 @@ public class ProductController {
             responses = {
                     @ApiResponse(responseCode = "200", description = "상품 옵션 목록 조회 성공"),
             })
+    @AllowAnonymous
     public ResponseEntity<List<OptionResDto>> getProductOptions(@PathVariable("productId") Long productId) {
         List<OptionResDto> optionResDtos = productService.getProductOptions(productId);
 

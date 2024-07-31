@@ -3,6 +3,7 @@ package gift.category.controller;
 import gift.category.dto.CategoryReqDto;
 import gift.category.dto.CategoryResDto;
 import gift.category.service.CategoryService;
+import gift.common.annotation.AllowAnonymous;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -35,6 +36,7 @@ public class CategoryController {
             responses = {
                     @ApiResponse(responseCode = "200", description = "카테고리 목록 조회 성공"),
             })
+    @AllowAnonymous
     public ResponseEntity<List<CategoryResDto>> getCategories() {
         List<CategoryResDto> categories = categoryService.getCategories();
         return ResponseEntity.ok(categories);
