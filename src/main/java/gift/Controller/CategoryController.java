@@ -43,7 +43,6 @@ public class CategoryController {
     @ApiResponse(responseCode = "200", description = "조회 완료",
             content = {@Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = ResponseCategoryDTO.class)))
     })
-    @ApiResponse(responseCode = "400", description = "잘못된 요청입니다. 입력값을 확인해주세요")
     @ApiResponse(responseCode = "500", description = "서버 내부 에러 발생")
     @GetMapping
     public ResponseEntity<List<ResponseCategoryDTO>> getCategories (){
