@@ -64,7 +64,7 @@ public class ProductController {
             productService.save(productRequest);
             return ResponseEntity.ok().build();
         } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
+            return ResponseEntity.status(404).body(e.getMessage());
         }
     }
 
