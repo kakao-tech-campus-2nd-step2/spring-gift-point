@@ -5,14 +5,15 @@ import gift.domain.Wish;
 
 public record WishResponseDTO(
     Long id,
-    Long userId,
+    @JsonProperty("memeberDto")
+    UserResponseDTO userResponseDTO,
     @JsonProperty("productDto")
     ProductResponseDTO productResponseDTO
 ) {
     public static WishResponseDTO from(Wish wish) {
         return new WishResponseDTO(
             wish.getId(),
-            wish.getUser().getId(),
+            UserResponseDTO.from(wish.getUser()),
             ProductResponseDTO.from(wish.getProduct()));
     }
 }

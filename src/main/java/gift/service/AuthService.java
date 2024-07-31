@@ -3,12 +3,11 @@ package gift.service;
 import gift.auth.JwtUtil;
 import gift.auth.KakaoClient;
 import gift.auth.dto.KakaoProperties;
-import gift.auth.dto.KakaoUserInfo;
 import gift.domain.Role;
 import gift.domain.User;
 import gift.dto.requestdto.UserLoginRequestDTO;
 import gift.dto.requestdto.UserSignupRequestDTO;
-import gift.dto.responsedto.UserResponseDTO;
+import gift.dto.responsedto.UserTokenResponseDTO;
 import jakarta.transaction.Transactional;
 import java.util.NoSuchElementException;
 import org.springframework.stereotype.Service;
@@ -24,19 +23,19 @@ public class AuthService {
         this.kakaoClient = kakaoClient;
     }
 
-    public UserResponseDTO register(UserSignupRequestDTO userSignupRequestDTO) {
+    public UserTokenResponseDTO register(UserSignupRequestDTO userSignupRequestDTO) {
         String token = jwtUtil.createToken(userSignupRequestDTO.email(),
             userSignupRequestDTO.role());
-        return new UserResponseDTO(token);
+        return new UserTokenResponseDTO(token);
     }
 
-    public UserResponseDTO login(User user, UserLoginRequestDTO userLoginRequestDTO, String accessToken) {
+    public UserTokenResponseDTO login(User user, UserLoginRequestDTO userLoginRequestDTO, String accessToken) {
         if (!user.getPassword().equals(userLoginRequestDTO.password())) {
             throw new NoSuchElementException("회원의 정보가 일치하지 않습니다.");
         }
         String token = jwtUtil.createToken(user.getEmail(), user.getRole());
         user.updateAccessToken(accessToken);
-        return new UserResponseDTO(token);
+        return new UserTokenResponseDTO(token);
     }
 
     public String getUserEmail(String accessToken){

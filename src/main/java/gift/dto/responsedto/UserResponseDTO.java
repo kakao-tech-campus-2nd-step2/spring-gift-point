@@ -1,4 +1,9 @@
 package gift.dto.responsedto;
 
-public record UserResponseDTO(String token) {
+import gift.domain.User;
+
+public record UserResponseDTO (Long id, String email){
+    public static UserResponseDTO from(User user) {
+        return new UserResponseDTO(user.getId(), user.getEmail());
+    }
 }

@@ -73,7 +73,7 @@ public class WishController {
     public ResponseEntity<SuccessBody<Void>> deleteWishes(@LoginUser User user,
         @PathVariable Long wishId) {
         WishResponseDTO wishResponseDTO = wishService.getOneWish(wishId);
-        authService.authorizeUser(user, wishResponseDTO.userId());
+        authService.authorizeUser(user, wishResponseDTO.userResponseDTO().id());
 
         wishService.deleteWish(wishId);
         return ApiResponseGenerator.success(HttpStatus.OK, "위시리스트를 삭제했습니다.", null);
