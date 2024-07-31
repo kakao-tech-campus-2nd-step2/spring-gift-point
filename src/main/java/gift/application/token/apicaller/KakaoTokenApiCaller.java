@@ -41,6 +41,7 @@ public class KakaoTokenApiCaller {
         } catch (ResourceAccessException e) {
             throw new TimeOutException("네트워크 연결이 불안정 합니다.", e);
         } catch (HttpClientErrorException e) {
+            System.out.println("e = " + e.getResponseBodyAsString());
             throw new IllegalArgumentException("카카오 인가 코드가 유효하지 않습니다.", e);
         }
     }
@@ -85,6 +86,7 @@ public class KakaoTokenApiCaller {
         body.add("client_id", kakaoProperties.clientId());
         body.add("redirect_uri", kakaoProperties.redirectUri());
         body.add("code", authorizationCode);
+        System.out.println("for token redirectUri = " + kakaoProperties.redirectUri());
         return body;
     }
 

@@ -29,15 +29,13 @@ public class OAuthController {
 
     @Operation(summary = "소셜 로그인", description = "소셜 로그인 api")
     @GetMapping("/api/oauth/kakao/login/callback")
-    public ResponseEntity<String> login(
+    public ResponseEntity<MemberResponse.Login> login(
         @RequestParam("code") String code
     ) {
         var response = memberFacade.socialLogin(new OAuthCommand.Login(code));
-//        return ResponseEntity.status(HttpStatus.SEE_OTHER)
-//            .header("Location", "https://react-product-login-ajin.vercel.app")
-//            .header("Authorization", response)
-//            .body(Login.from(response));
-        return ResponseEntity.ok(response);
+        return ResponseEntity.status(HttpStatus.OK)
+            .header("Authorization", response.jwt())
+            .body(Login.from(response));
 
     }
 
