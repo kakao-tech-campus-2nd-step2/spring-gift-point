@@ -10,7 +10,7 @@ import java.io.IOException;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/kakao")
+@RequestMapping("/api/oauth/kakao")
 public class KakaoAuthController implements KakaoAuthSpecification {
 
     private final KakaoAuthService kakaoAuthService;
@@ -26,7 +26,7 @@ public class KakaoAuthController implements KakaoAuthSpecification {
         response.sendRedirect(url);
     }
 
-    @GetMapping("/auth")
+    @GetMapping("/callback")
     public ResponseEntity<Map<String, String>> getAccessToken(@RequestParam String code) {
         String token = kakaoAuthService.register(code);
         return ResponseEntity.ok(Map.of("access_token", token));
