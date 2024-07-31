@@ -1,33 +1,27 @@
 package gift.api.member.controller;
 
-import gift.api.member.enums.Scope;
-import gift.global.config.KakaoProperties;
-import org.springframework.stereotype.Controller;
+import gift.api.member.service.MemberFacade;
+import io.swagger.v3.oas.annotations.Operation;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.servlet.view.RedirectView;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
-@Controller
-@RequestMapping("/api/oauth")
+@RestController
+@RequestMapping("/api/oauth2")
 public class OauthController {
 
-    private final KakaoProperties kakaoProperties;
+    private final MemberFacade memberFacade;
 
-    public OauthController(KakaoProperties kakaoProperties) {
-        this.kakaoProperties = kakaoProperties;
-    }
-
-    @GetMapping
-    public String requestLogin() {
-        return "oauth";
+    public OauthController(MemberFacade memberFacade) {
+        this.memberFacade = memberFacade;
     }
 
     @GetMapping("/kakao")
-    public RedirectView requestAuthorizationCode() {
-        return new RedirectView(
-            String.format(kakaoProperties.url().requestFormat(),
-                String.join(",", Scope.EMAIL.id(), Scope.MESSAGE.id()),
-                kakaoProperties.url().redirect(),
-                kakaoProperties.clientId()));
+    @Operation(summary = "카카오 로그인")
+    public ResponseEntity<Void> loginKakao(@RequestParam("code") String code) {
+        memberFacade.loginKakao(code);
+        return ResponseEntity.ok().build();
     }
 }
