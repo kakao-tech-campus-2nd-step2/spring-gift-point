@@ -47,6 +47,11 @@ public class WishListService {
                 () -> WishListNotFoundException.EXCEPTION
         );
 
+        // 이미 위시리스트에 추가된 상품인지 확인
+        if (wishListRepository.existsByMemberIdAndProductId(memberId, wishListReqDto.productId())) {
+            throw WishListAlreadyExistsException.EXCEPTION;
+        }
+
         try {
             WishList wishList = new WishList(member, product);
             wishListRepository.save(wishList);

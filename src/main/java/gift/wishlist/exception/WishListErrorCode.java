@@ -10,7 +10,8 @@ public enum WishListErrorCode implements ErrorCode {
     WISH_LIST_DELETE_FAILED("W003", HttpStatus.INTERNAL_SERVER_ERROR, "위시 리스트 삭제에 실패했습니다."),
 
     // 위시 리스트 조회
-    WISH_LIST_NOT_FOUND("W004", HttpStatus.NOT_FOUND, "위시 리스트를 찾을 수 없습니다.")
+    WISH_LIST_NOT_FOUND("W004", HttpStatus.NOT_FOUND, "위시 리스트를 찾을 수 없습니다."),
+    WISH_LIST_ALREADY_EXISTS("W005", HttpStatus.BAD_REQUEST, "이미 위시 리스트에 추가된 상품입니다.")
     ;
 
     private final String code;
