@@ -57,9 +57,9 @@ public class AuthFilter implements Filter {
     }
 
     private boolean isUnauthenticatedPath(String path) {
-        return path.equals("/home") || path.startsWith("api/login")
-                || path.startsWith("api/register") || path.startsWith("/h2-console")
-                || path.startsWith("/api/products") || path.startsWith("api/kakao")
+        return path.equals("/home") || path.startsWith("/api/login")
+                || path.startsWith("/api/register") || path.startsWith("/h2-console")
+                || path.startsWith("/api/products") || path.startsWith("/api/kakao")
                 || path.startsWith("/api/categories") || path.startsWith("/swagger-ui")
                 || path.startsWith("/api-docs");
     }

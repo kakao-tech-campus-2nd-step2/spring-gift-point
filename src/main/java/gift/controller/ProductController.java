@@ -3,6 +3,7 @@ package gift.controller;
 import gift.domain.Option;
 import gift.domain.Product;
 import gift.dto.request.OptionRequest;
+import gift.dto.request.ProductOptionRequest;
 import gift.dto.request.ProductRequest;
 import gift.dto.response.OptionResponse;
 import gift.dto.response.ProductPageResponse;
@@ -22,9 +23,11 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
-@Controller
+@RestController
 @RequestMapping("/api/products")
 public class ProductController {
 
@@ -63,11 +66,19 @@ public class ProductController {
     @GetMapping
     @Operation(summary = "상품 목록 조회 (페이지네이션 적용)", description = "특정 카테고리의 상품 목록을 페이지 단위로 조회한다.")
     public ProductPageResponse getProducts(@RequestParam(required = false) Long categoryId,
-                                              @RequestParam(defaultValue = "20") int size,
-                                              @RequestParam(defaultValue = "0") int page,
-                                              @RequestParam(defaultValue = "createdDate,desc") String sort) {
-        Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Order.desc(sort)));
+                                           @RequestParam(defaultValue = "20") int size,
+                                           @RequestParam(defaultValue = "0") int page,
+                                           @RequestParam(defaultValue = "price,desc") String sort) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by(parseSortParameter(sort)));
         return productService.getProducts(categoryId, pageable);
+    }
+
+    private Sort.Order parseSortParameter(String sort) {
+        String[] sortParts = sort.split(",");
+        if (sortParts.length != 2) {
+            throw new IllegalArgumentException("잘못된 sort parameter");
+        }
+        return new Sort.Order(Sort.Direction.fromString(sortParts[1]), sortParts[0]);
     }
 
     @GetMapping("/{id}")
@@ -87,9 +98,8 @@ public class ProductController {
 
     @PostMapping
     @Operation(summary = "상품 생성", description = "새 상품을 등록한다.")
-    public String addProduct(@Valid @ModelAttribute ProductRequest productRequest, @Valid @ModelAttribute OptionRequest optionRequest) {
-        productService.register(productRequest, optionRequest);
-        return "redirect:/api/products";
+    public ProductResponse addProduct(@Valid @RequestBody ProductOptionRequest request) {
+        return productService.register(request.getProductRequest(), request.getOptionRequest());
     }
 
     @GetMapping("/edit/{id}")

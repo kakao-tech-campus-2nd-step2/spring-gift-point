@@ -38,7 +38,7 @@ public class ProductService {
     }
 
     @Transactional
-    public Product register(ProductRequest productRequest, OptionRequest optionRequest) {
+    public ProductResponse register(ProductRequest productRequest, OptionRequest optionRequest) {
         Category category = categoryRepository.findByName(productRequest.getCategoryName()).
                 orElseThrow(() -> new CategoryNotFoundException(CATEGORY_NOT_FOUND));
 
@@ -47,7 +47,7 @@ public class ProductService {
         try {
             Product savedProduct = productRepository.save(product);
             optionService.addOptionToProduct(savedProduct.getId(), optionRequest);
-            return savedProduct;
+            return ProductResponse.fromProduct(savedProduct);
         } catch (DataIntegrityViolationException e) {
             throw new InvalidProductDataException("상품 데이터가 유효하지 않습니다: " + e.getMessage(), e);
         }
