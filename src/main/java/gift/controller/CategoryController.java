@@ -73,13 +73,13 @@ public class CategoryController {
     @PutMapping("/category/{id}")
     @Operation(summary = "카테고리 수정 api", description = "카테고리 수정 api입니다")
     @ApiResponse(responseCode = "200", description = "카테고리 수정 성공")
-    public ResponseEntity<SuccessBody<Long>> updateCategory(
+    public ResponseEntity<SuccessBody<CategoryResponseDTO>> updateCategory(
         @PathVariable("id") Long categoryId,
         @Valid @RequestBody CategoryRequestDTO categoryRequestDTO,
         @LoginUser User user) {
         authService.authorizeAdminUser(user);
-        Long updatedCategoryId = categoryService.updateCategory(categoryId, categoryRequestDTO);
-        return ApiResponseGenerator.success(HttpStatus.OK, "카테고리가 수정되었습니다.", updatedCategoryId);
+        CategoryResponseDTO categoryResponseDTO = categoryService.updateCategory(categoryId, categoryRequestDTO);
+        return ApiResponseGenerator.success(HttpStatus.OK, "카테고리가 수정되었습니다.", categoryResponseDTO);
     }
 
     @DeleteMapping("/category/{id}")
