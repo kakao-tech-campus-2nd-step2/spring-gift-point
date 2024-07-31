@@ -65,7 +65,7 @@ public class WishService {
     @Transactional
     public void deleteWish(Long memberId, Long wishId) {
         Wish wish = wishRepository.findById(wishId)
-            .orElseThrow(() -> new NotFoundException("Wish not found"));
+            .orElseThrow(() -> new NotFoundException("존재하지 않는 위시리스트입니다."));
 
         if (wish.isOwner(memberId)) {
             wishRepository.deleteById(wishId);
