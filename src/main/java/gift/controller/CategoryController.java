@@ -3,6 +3,7 @@ package gift.controller;
 import gift.dto.CategoryRequestDto;
 import gift.dto.CategoryResponseDto;
 import gift.service.CategoryService;
+import jakarta.validation.Valid;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -39,14 +40,15 @@ public class CategoryController {
     }
 
     @PostMapping
-    public ResponseEntity<String> addCategory(@RequestBody CategoryRequestDto categoryRequestDto) {
+    public ResponseEntity<String> addCategory(
+        @RequestBody @Valid CategoryRequestDto categoryRequestDto) {
         categoryService.addCategory(categoryRequestDto);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<String> updateCategory(@PathVariable Long id,
-        @RequestBody CategoryRequestDto categoryRequestDto) {
+        @RequestBody @Valid CategoryRequestDto categoryRequestDto) {
         categoryService.updateCategory(id, categoryRequestDto);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }

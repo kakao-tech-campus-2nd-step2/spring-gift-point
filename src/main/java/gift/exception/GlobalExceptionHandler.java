@@ -34,6 +34,25 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(response, ex.getHttpStatus()); // 상태 코드와 함께 응답 반환
     }
 
+    @ExceptionHandler(ServiceException.class)
+    public ResponseEntity<ErrorResponseDto> handleServiceException(ServiceException ex) {
+        Map<String, String> validationErrors = new HashMap<>();
+
+        if (ex.getValidationErrors() != null && !ex.getValidationErrors().isEmpty()) {
+            ex.getValidationErrors().forEach((fieldName, errorMessage) -> {
+                validationErrors.put(fieldName, errorMessage); // 필드 이름과 오류 메시지를 맵에 추가
+            });
+        }
+
+        final ErrorResponseDto response = new ErrorResponseDto(
+            ex.getMessage(), // 예외 메시지
+            ex.getHttpStatus().value(), // HTTP 상태 코드
+            validationErrors // validation 오류 메시지
+        );
+
+        return new ResponseEntity<>(response, ex.getHttpStatus()); // 상태 코드와 함께 응답 반환
+    }
+
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ErrorResponseDto> handleValidException(MethodArgumentNotValidException ex) {
         Map<String, String> validationErrors = new HashMap<>();
