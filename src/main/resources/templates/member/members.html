@@ -19,6 +19,7 @@
             <th th:width="50">번호</th>
             <th th:width="100">이메일</th>
             <th th:width="100">권한</th>
+            <th th:width="100">이름</th>
             <th th:width="100">수정</th>
             <th th:width="100">삭제</th>
         </tr>
@@ -30,6 +31,7 @@
         <tr th:each="member : ${members.content()}">
             <td th:text="${member.id()}"/>
             <td th:text="${member.email()}"/>
+            <td th:text="${member.name()}"/>
             <td th:text="${member.role()}"/>
             <td><button><a th:href="@{/admin/member/{id}(id=${member.id()})}">수정</a></button></td>
             <td>
@@ -54,19 +56,19 @@
             </form>
         </div>
         <span>
-            <button th:disabled="${members.number() <= 0}">
-                <a th:href="@{/admin/member(page=${members.number() - 1}, size=${members.size()})}">&lt;</a>
+            <button th:disabled="${members.page() <= 0}">
+                <a th:href="@{/admin/member(page=${members.page() - 1}, size=${members.size()})}">&lt;</a>
             </button>
         </span>
         <span th:each="i : ${#numbers.sequence(0, members.totalPages() - 1)}"
-              th:if="${i >= (members.number() / 5) * 5} and ${i < (members.number() / 5) * 5 + 5}">
-            <button th:class="${i == members.number()} ? 'active' : ''">
+              th:if="${i >= (members.page() / 5) * 5} and ${i < (members.page() / 5) * 5 + 5}">
+            <button th:class="${i == members.page()} ? 'active' : ''">
                 <a th:href="@{/admin/member(page=${i}, size=${members.size()})}"
                    th:text="${i + 1}"/></button>
         </span>
         <span>
-            <button th:disabled="${members.number() >= members.totalPages() - 1}">
-                <a th:href="@{/admin/member(page=${members.number() + 1}, size=${members.size()})}">&gt;</a>
+            <button th:disabled="${members.page() >= members.totalPages() - 1}">
+                <a th:href="@{/admin/member(page=${members.page() + 1}, size=${members.size()})}">&gt;</a>
             </button>
         </span>
     </div>

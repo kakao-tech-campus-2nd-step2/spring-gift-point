@@ -27,7 +27,7 @@ class MemberRepositoryTest {
         String email = "test@gmail.com";
         String password = "password";
         Role role = Role.USER;
-        memberRepository.save(new Member(email, password, Role.USER));
+        memberRepository.save(new Member(email, password, "", Role.USER));
 
         // when
         Member actual = memberRepository.findByEmailAndPassword(email, password).orElse(null);
@@ -45,7 +45,7 @@ class MemberRepositoryTest {
         // given
         String email = "test@gmail.com";
         String password = "password";
-        memberRepository.save(new Member(email, password, Role.USER));
+        memberRepository.save(new Member(email, password, "", Role.USER));
 
         // when
         boolean actual = memberRepository.existsByEmail(email);
@@ -62,7 +62,7 @@ class MemberRepositoryTest {
 
         // when
         Member member = memberRepository.findByEmail(email)
-                .orElse(memberRepository.save(new Member(email, "", Role.USER)));
+                .orElse(memberRepository.save(new Member(email, "", "", Role.USER)));
 
         // then
         assertThat(member).isNotNull();
@@ -77,11 +77,11 @@ class MemberRepositoryTest {
         // given
         String email = "test@gmail.com";
         String password = "password";
-        memberRepository.save(new Member(email, password, Role.USER));
+        memberRepository.save(new Member(email, password, "", Role.USER));
 
         // when
         Member member = memberRepository.findByEmail(email)
-                .orElseGet(() -> memberRepository.save(new Member(email, "456", Role.USER)));
+                .orElseGet(() -> memberRepository.save(new Member(email, "456", "", Role.USER)));
 
         // then
         assertThat(member).isNotNull();

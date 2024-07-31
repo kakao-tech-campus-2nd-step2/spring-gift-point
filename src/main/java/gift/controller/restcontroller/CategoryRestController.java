@@ -2,9 +2,7 @@ package gift.controller.restcontroller;
 
 import gift.controller.dto.request.CategoryRequest;
 import gift.controller.dto.response.CategoryResponse;
-import gift.controller.dto.response.ProductResponse;
 import gift.service.CategoryService;
-import gift.service.ProductService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -15,18 +13,14 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
 @Tag(name = "Category", description = "카테고리 API")
 @RestController
 @RequestMapping("/api")
 public class CategoryRestController {
     private final CategoryService categoryService;
-    private final ProductService productService;
 
-    public CategoryRestController(CategoryService categoryService, ProductService productService) {
+    public CategoryRestController(CategoryService categoryService) {
         this.categoryService = categoryService;
-        this.productService = productService;
     }
     @PostMapping("/category")
     @Operation(summary = "카테고리 저장", description = "카테고리를 저장합니다.")
@@ -61,14 +55,5 @@ public class CategoryRestController {
     ) {
         categoryService.deleteById(id);
         return ResponseEntity.ok().build();
-    }
-
-    @GetMapping("/category/{id}/products")
-    @Operation(summary = "카테고리에 해당하는 상품 조회", description = "카테고리에 해당하는 상품을 조회합니다.")
-    public ResponseEntity<List<ProductResponse.Info>> getProductsByCategoryId(
-        @PathVariable("id") @NotNull @Min(1) Long id
-    ) {
-        List<ProductResponse.Info> responses = productService.findProductsByCategoryId(id);
-        return ResponseEntity.ok().body(responses);
     }
 }

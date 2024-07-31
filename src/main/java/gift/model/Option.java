@@ -42,7 +42,7 @@ public class Option extends BasicEntity{
 
     public int subtractQuantity(int amount) {
         if (amount > quantity) {
-            throw new IllegalArgumentException("Subtraction amount exceeds quantity");
+            throw new IllegalArgumentException("재고가 부족합니다.");
         }
         quantity -= amount;
         return quantity;

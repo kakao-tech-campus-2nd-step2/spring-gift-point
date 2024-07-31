@@ -36,7 +36,7 @@ class CategoryRestControllerTest {
     @Test
     void createCategory() {
         // given
-        var url = "http://localhost:" + port + "/api/v1/category";
+        var url = "http://localhost:" + port + "/api/category";
         var request = new CategoryRequest.CreateCategory("category1", "#1", "image1", "");
         var requestEntity = new RequestEntity<>(request, HttpMethod.POST, URI.create(url));
 

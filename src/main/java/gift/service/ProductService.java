@@ -30,17 +30,34 @@ public class ProductService {
     }
 
     @Transactional(readOnly = true)
-    public PagingResponse<ProductResponse.WithOption> findAllProductPaging(Pageable pageable) {
-        Page<ProductResponse.WithOption> pages = productRepository.findProductAndCategoryFetchJoin(pageable)
-                .map(ProductResponse.WithOption::from);
+    public PagingResponse<ProductResponse.Info> findAllProductPaging(Pageable pageable) {
+        Page<ProductResponse.Info> pages = productRepository.findProductAndCategoryFetchJoin(pageable)
+                .map(ProductResponse.Info::from);
+        return PagingResponse.from(pages);
+    }
+
+
+    @Transactional(readOnly = true)
+    public PagingResponse<ProductResponse.Info> findAllProductPagingByCategoryId(Pageable pageable, Long categoryId) {
+        if(!categoryRepository.existsById(categoryId)) {
+            throw new EntityNotFoundException("존재하지 않는 카테고리입니다.");
+        }
+        Page<ProductResponse.Info> pages = productRepository.findByCategoryIdFetchJoin(pageable, categoryId)
+                .map(ProductResponse.Info::from);
         return PagingResponse.from(pages);
     }
 
     @Transactional(readOnly = true)
-    public ProductResponse.WithOption findById(Long id) {
+    public ProductResponse.Info findById(Long id) {
+        Product product = productRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 상품입니다."));
+        return ProductResponse.Info.from(product);
+    }
+
+    @Transactional(readOnly = true)
+    public ProductResponse.WithOption findWIthOptionById(Long id) {
         Product product = productRepository.findAllByIdFetchJoin(id)
-                .orElseThrow(() ->
-                        new EntityNotFoundException("Product with id " + id + " not found"));
+                .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 상품입니다."));
         return ProductResponse.WithOption.from(product);
     }
 
@@ -50,7 +67,7 @@ public class ProductService {
                 optionRq -> new Option(optionRq.name(), optionRq.quantity())
         ).toList();
         Category category = categoryRepository.findById(request.categoryId())
-                .orElseThrow(() -> new EntityNotFoundException("Category with id " + request.categoryId() + " not found"));
+                .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 상품입니다."));
         Product product = productRepository.save(new Product(request.name(), request.price(), request.imageUrl(), category, options));
         return product.getId();
     }
@@ -58,9 +75,9 @@ public class ProductService {
     @Transactional
     public void updateProduct(UpdateProductDto request) {
         Product product = productRepository.findById(request.id())
-                .orElseThrow(() -> new EntityNotFoundException("Product with id " + request.id() + " not found"));
+                .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 상품입니다."));
         Category category = categoryRepository.findById(request.categoryId())
-                .orElseThrow(() -> new EntityNotFoundException("Category with name " + request.categoryId() + " not found"));
+                .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 카테고리입니다."));
         product.updateProduct(request.name(), request.price(), request.imageUrl(), category);
     }
 
@@ -69,29 +86,19 @@ public class ProductService {
         productRepository.deleteById(id);
     }
 
-    @Transactional(readOnly = true)
-    public List<ProductResponse.Info> findProductsByCategoryId(Long categoryId) {
-        List<Product> products = productRepository.findByCategoryId(categoryId);
-        return products.stream()
-                .map(ProductResponse.Info::from)
-                .toList();
-    }
-
     @Transactional
     public void deleteByIdAndOptionId(Long id, Long optionId) {
         Product product = productRepository.findProductAndOptionByIdFetchJoin(id)
-                .orElseThrow(() -> new EntityNotFoundException("Product with id " + id + " not found"));
+                .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 상품입니다."));
         Option option = product.findOptionByOptionId(optionId);
         product.subOption(option);
     }
 
     @Transactional(readOnly = true)
-    public List<OptionResponse> getAllOptions(Long productId) {
+    public OptionResponse.InfoList getAllOptions(Long productId) {
         Product product = productRepository.findProductAndOptionByIdFetchJoin(productId)
-                .orElseThrow(() -> new EntityNotFoundException("Product with id " + productId + " not found"));
-        return product.getOptions().stream()
-                .map(OptionResponse::from)
-                .toList();
+                .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 상품입니다."));
+        return OptionResponse.InfoList.from(product.getOptions());
     }
 
     @Transactional
@@ -105,30 +112,30 @@ public class ProductService {
     @Transactional
     public void updateOption(OptionRequest.UpdateOption request) {
         Product product = productRepository.findProductAndOptionByIdFetchJoin(request.productId())
-                .orElseThrow(() -> new EntityNotFoundException("Product with id " + request.productId() + " not found"));
+                .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 상품입니다."));
         Option option = product.findOptionByOptionId(request.id());
         product.checkDuplicateOptionName(request.id(), request.name());
         option.updateOption(request.name(), request.quantity());
     }
 
     @Transactional(readOnly = true)
-    public OptionResponse findOptionById(Long id, Long optionId) {
+    public OptionResponse.Info findOptionById(Long id, Long optionId) {
         Product product = productRepository.findProductAndOptionByIdFetchJoin(id)
-                .orElseThrow(() -> new EntityNotFoundException("Product with id " + id + " not found"));
+                .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 상품입니다."));
         Option option = product.findOptionByOptionId(optionId);
-        return OptionResponse.from(option);
+        return OptionResponse.Info.from(option);
     }
 
     @Transactional
     public void subtractQuantity(Long productId, Long optionId, int amount) {
         Product product = productRepository.findProductAndOptionByIdFetchJoin(productId)
-                .orElseThrow(() -> new EntityNotFoundException("Product with id " + productId + " not found"));
+                .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 상품입니다."));
         product.subtractOptionQuantity(optionId, amount);
     }
 
     private void checkProductExist(Long id) {
         if(!productRepository.existsById(id)) {
-            throw new EntityNotFoundException("Product with id " + id + " not found");
+            throw new EntityNotFoundException("존재하지 않는 상품입니다.");
         }
     }
 }
