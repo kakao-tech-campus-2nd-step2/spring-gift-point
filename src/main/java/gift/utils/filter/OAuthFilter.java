@@ -57,7 +57,7 @@ public class OAuthFilter implements Filter {
             String authHeader = httpRequest.getHeader("Authorization");
 
             if (authHeader == null || authHeader.isEmpty()) {
-                httpResponse.sendRedirect("/api/oauth/token");
+                httpResponse.sendRedirect("http://server.cla6sha.de/login");
                 return;
             }
 

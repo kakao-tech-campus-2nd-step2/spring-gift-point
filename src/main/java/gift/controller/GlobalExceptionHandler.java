@@ -1,20 +1,6 @@
 package gift.controller;
 
-import gift.utils.error.CategoryNotFoundException;
-import gift.utils.error.DuplicateOptionException;
-import gift.utils.error.KakaoLoginException;
-import gift.utils.error.NotpermitNameException;
-import gift.utils.error.OptionNameDuplicationException;
-import gift.utils.error.OptionNotFoundException;
-import gift.utils.error.ProductAlreadyExistException;
-import gift.utils.error.ProductNotFoundException;
-import gift.utils.error.TokenAuthException;
-import gift.utils.error.UserAlreadyExistsException;
-import gift.utils.error.UserNotFoundException;
-import gift.utils.error.UserPasswordNotFoundException;
-import gift.utils.error.WishListAddFailedException;
-import gift.utils.error.WishListChangeFailedException;
-import gift.utils.error.WishListNotFoundException;
+import gift.utils.error.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -25,92 +11,114 @@ import org.springframework.web.context.request.WebRequest;
 public class GlobalExceptionHandler {
 
     @ExceptionHandler(ProductNotFoundException.class)
-    public ResponseEntity<?> handleProductNotFoundException(ProductNotFoundException ex,
+    public ResponseEntity<ErrorResponse> handleProductNotFoundException(ProductNotFoundException ex,
         WebRequest request) {
-        return new ResponseEntity<>(ex.getMessage(), HttpStatus.NOT_FOUND);
+        ErrorResponse errorResponse = new ErrorResponse(404, ex.getMessage());
+        return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler(ProductAlreadyExistException.class)
-    public ResponseEntity<?> handleProductExistException(ProductAlreadyExistException ex,
+    public ResponseEntity<ErrorResponse> handleProductExistException(ProductAlreadyExistException ex,
         WebRequest request) {
-        return new ResponseEntity<>(ex.getMessage(), HttpStatus.CONFLICT);
+        ErrorResponse errorResponse = new ErrorResponse(400, ex.getMessage());
+        return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(NotpermitNameException.class)
-    public ResponseEntity<?> handleNotpermitNameExceptionException(NotpermitNameException ex,
+    public ResponseEntity<ErrorResponse> handleNotpermitNameExceptionException(NotpermitNameException ex,
         WebRequest request) {
-        return new ResponseEntity<>(ex.getMessage(), HttpStatus.FORBIDDEN);
+        ErrorResponse errorResponse = new ErrorResponse(403, ex.getMessage());
+        return new ResponseEntity<>(errorResponse, HttpStatus.FORBIDDEN);
     }
 
     @ExceptionHandler(UserAlreadyExistsException.class)
-    public ResponseEntity<?> handleUserAlreadyExistsException(UserAlreadyExistsException ex,
+    public ResponseEntity<ErrorResponse> handleUserAlreadyExistsException(UserAlreadyExistsException ex,
         WebRequest request) {
-        return new ResponseEntity<>(ex.getMessage(), HttpStatus.CONFLICT);
+        ErrorResponse errorResponse = new ErrorResponse(400, ex.getMessage());
+        return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(UserNotFoundException.class)
-    public ResponseEntity<?> handleUserNotFoundException(UserNotFoundException ex,
+    public ResponseEntity<ErrorResponse> handleUserNotFoundException(UserNotFoundException ex,
         WebRequest request) {
-        return new ResponseEntity<>(ex.getMessage(), HttpStatus.UNAUTHORIZED);
+        ErrorResponse errorResponse = new ErrorResponse(404, ex.getMessage());
+        return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler(TokenAuthException.class)
-    public ResponseEntity<?> handleTokenAuthException(TokenAuthException ex,
+    public ResponseEntity<ErrorResponse> handleTokenAuthException(TokenAuthException ex,
         WebRequest request) {
-        return new ResponseEntity<>(ex.getMessage(), HttpStatus.UNAUTHORIZED);
+        ErrorResponse errorResponse = new ErrorResponse(401, ex.getMessage());
+        return new ResponseEntity<>(errorResponse, HttpStatus.UNAUTHORIZED);
     }
 
     @ExceptionHandler(UserPasswordNotFoundException.class)
-    public ResponseEntity<?> handleUserPasswordNotFoundException(UserPasswordNotFoundException ex,
+    public ResponseEntity<ErrorResponse> handleUserPasswordNotFoundException(UserPasswordNotFoundException ex,
         WebRequest request) {
-        return new ResponseEntity<>(ex.getMessage(), HttpStatus.UNAUTHORIZED);
+        ErrorResponse errorResponse = new ErrorResponse(401, ex.getMessage());
+        return new ResponseEntity<>(errorResponse, HttpStatus.UNAUTHORIZED);
     }
 
     @ExceptionHandler(WishListAddFailedException.class)
-    public ResponseEntity<?> handleWishListAddFailedException(WishListAddFailedException ex,
+    public ResponseEntity<ErrorResponse> handleWishListAddFailedException(WishListAddFailedException ex,
         WebRequest request) {
-        return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
+        ErrorResponse errorResponse = new ErrorResponse(400, ex.getMessage());
+        return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(WishListNotFoundException.class)
-    public ResponseEntity<?> handleWishListNotFoundException(WishListNotFoundException ex,
+    public ResponseEntity<ErrorResponse> handleWishListNotFoundException(WishListNotFoundException ex,
         WebRequest request) {
-        return new ResponseEntity<>(ex.getMessage(), HttpStatus.NOT_FOUND);
+        ErrorResponse errorResponse = new ErrorResponse(404, ex.getMessage());
+        return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler(WishListChangeFailedException.class)
-    public ResponseEntity<?> handleWishListChangeFailedException(WishListChangeFailedException ex,
+    public ResponseEntity<ErrorResponse> handleWishListChangeFailedException(WishListChangeFailedException ex,
         WebRequest request) {
-        return new ResponseEntity<>(ex.getMessage(), HttpStatus.NOT_FOUND);
+        ErrorResponse errorResponse = new ErrorResponse(400, ex.getMessage());
+        return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(CategoryNotFoundException.class)
-    public ResponseEntity<?> handleCategoryNotFoundException(CategoryNotFoundException ex,
-        WebRequest request){
-        return new ResponseEntity<>(ex.getMessage(), HttpStatus.NOT_FOUND);
+    public ResponseEntity<ErrorResponse> handleCategoryNotFoundException(CategoryNotFoundException ex,
+        WebRequest request) {
+        ErrorResponse errorResponse = new ErrorResponse(404, ex.getMessage());
+        return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler(DuplicateOptionException.class)
-    public ResponseEntity<?> handleDuplicateOptionException(DuplicateOptionException ex,
-        WebRequest request){
-        return new ResponseEntity<>(ex.getMessage(), HttpStatus.CONFLICT);
+    public ResponseEntity<ErrorResponse> handleDuplicateOptionException(DuplicateOptionException ex,
+        WebRequest request) {
+        ErrorResponse errorResponse = new ErrorResponse(400, ex.getMessage());
+        return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(OptionNameDuplicationException.class)
-    public ResponseEntity<?> handleOptionNameDuplicationException(OptionNameDuplicationException ex,
-        WebRequest request){
-        return new ResponseEntity<>(ex.getMessage(),HttpStatus.CONFLICT);
+    public ResponseEntity<ErrorResponse> handleOptionNameDuplicationException(OptionNameDuplicationException ex,
+        WebRequest request) {
+        ErrorResponse errorResponse = new ErrorResponse(400, ex.getMessage());
+        return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(OptionNotFoundException.class)
-    public ResponseEntity<?> handleOptionNotFoundException(OptionNotFoundException ex,
-        WebRequest request){
-        return new ResponseEntity<>(ex.getMessage(),HttpStatus.NOT_FOUND);
+    public ResponseEntity<ErrorResponse> handleOptionNotFoundException(OptionNotFoundException ex,
+        WebRequest request) {
+        ErrorResponse errorResponse = new ErrorResponse(404, ex.getMessage());
+        return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler(KakaoLoginException.class)
-    public ResponseEntity<?> handleKakaoLoginException(KakaoLoginException ex,
-        WebRequest request){
-        return new ResponseEntity<>(ex.getMessage(),HttpStatus.BAD_REQUEST);
+    public ResponseEntity<ErrorResponse> handleKakaoLoginException(KakaoLoginException ex,
+        WebRequest request) {
+        ErrorResponse errorResponse = new ErrorResponse(400, ex.getMessage());
+        return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(AuthorizationException.class)
+    public ResponseEntity<ErrorResponse> handleAuthorizationException(AuthorizationException ex,
+        WebRequest request) {
+        ErrorResponse errorResponse = new ErrorResponse(401, ex.getMessage());
+        return new ResponseEntity<>(errorResponse, HttpStatus.UNAUTHORIZED);
     }
 }

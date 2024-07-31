@@ -50,9 +50,17 @@ public class WishService {
     @Transactional
     public WishResponse removeFromWishlist(String email, Long wishId) {
 
+        UserInfo userInfo = userInfoRepository.findByEmail(email).orElseThrow(
+            () -> new UserNotFoundException("User Not Found")
+        );
+
         Wish wish = wishRepository.findById(wishId).orElseThrow(
             () -> new WishListNotFoundException("Wish Not Found")
         );
+
+        if (userInfo.getId().equals(wish.getProduct().getId())){
+            throw new ()
+        }
 
         wishRepository.deleteByProductIdAndUserInfoId(wish.getProduct().getId(), wish.getUserInfo().getId());
         return new WishResponse(wish.getId(),wish.getProduct().getId(),wish.getCount());

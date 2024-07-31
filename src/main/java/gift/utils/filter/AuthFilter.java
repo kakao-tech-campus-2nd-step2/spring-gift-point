@@ -53,7 +53,7 @@ public class AuthFilter implements Filter {
         String authHeader = httpRequest.getHeader("Authorization");
 
         if (authHeader == null || authHeader.isEmpty()) {
-            httpResponse.sendRedirect("/user/login");
+            httpResponse.sendRedirect("http://server.cla6sha.de/login");
             return;
         }
 
