@@ -20,7 +20,7 @@
   <button class="btn btn-primary" data-target="#addProductModal" data-toggle="modal">Add Product
   </button>
   <button class="btn btn-danger ml-2" onclick="showDeleteSelectedModal()">Delete Selected</button>
-  <button class="btn btn-success ml-2" id="loginButton" onclick="location.href='/users/login'"
+  <button class="btn btn-success ml-2" id="loginButton" onclick="location.href='/members/login'"
           type="button">Login
   </button>
   <button class="btn btn-success ml-2" id="logoutButton" onclick="logout()" style="display: none;"
@@ -33,19 +33,19 @@
         <th>Select</th>
         <th>ID</th>
         <th>Name</th>
-        <th>category</th>
+<!--        <th>category</th>-->
         <th>Price</th>
         <th>Image URL</th>
       </tr>
       </thead>
       <tbody>
-      <tr th:each="product : ${products.content}">
+      <tr th:each="product : ${products}">
         <td>
           <input th:id="${product.id}" th:value="${product.id}" type="checkbox">
         </td>
         <td th:text="${product.id}"></td>
         <td th:text="${product.name}"></td>
-        <td th:text="${product.category.name}"></td>
+<!--        <td th:text="${product.category.name}"></td>-->
         <td th:text="${product.price}"></td>
         <td th:text="${product.imageUrl}"></td>
         <td>
@@ -367,7 +367,7 @@
   function addToCart(productId) {
     const jwt = getCookie("jwt");
     console.log(jwt);
-    axios.post('/api/users/cart/' + productId, {}, {
+    axios.post('/api/wishes/' + productId, {}, {
       headers: {
         'Authorization': `${jwt}`
       }
@@ -377,7 +377,7 @@
     })
     .catch(function (error) {
       alert("로그인이 필요합니다.");
-      window.location.href = "/users/login";
+      window.location.href = "/members/login";
     });
   }
 
