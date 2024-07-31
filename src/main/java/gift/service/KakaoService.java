@@ -26,9 +26,11 @@ public class KakaoService {
     private String client_id;
 
     private MemberRepository memberRepository;
+    private JwtService jwtService;
 
-    public KakaoService(MemberRepository memberRepository){
+    public KakaoService(MemberRepository memberRepository,JwtService jwtService){
         this.memberRepository = memberRepository;
+        this.jwtService = jwtService;
     }
 
     public URI makeUri() {
@@ -43,7 +45,7 @@ public class KakaoService {
         return uri;
     }
 
-    public Member getToken(String code) throws JsonProcessingException {
+    public String getToken(String code) throws JsonProcessingException {
         var url = "https://kauth.kakao.com/oauth/token";
 
         var headers = new HttpHeaders();
@@ -64,7 +66,8 @@ public class KakaoService {
 
         headers = new HttpHeaders();
         headers.add("Authorization",response.getBody().access_token());
-        return getUserInformation(response.getBody().access_token());
+        Member member = getUserInformation(response.getBody().access_token());
+        return jwtService.createJWT(member.getId());
     }
 
     public Member getUserInformation(String token){

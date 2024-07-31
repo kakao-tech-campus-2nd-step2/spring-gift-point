@@ -2,6 +2,7 @@ package gift.GiftTest;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import gift.controller.KakaoController;
+import gift.controller.MemberController;
 import gift.domain.*;
 import gift.repository.*;
 import gift.service.KakaoService;
@@ -29,12 +30,6 @@ public class KakaoTest {
     @Autowired
     private TestRestTemplate restTemplate;
     @Autowired
-    private KakaoService kakaoService;
-    @Autowired
-    private KakaoController kakaoController;
-    @Autowired
-    private MockMvc mockMvc;
-    @Autowired
     private MenuRepository menuRepository;
     @Autowired
     private OptionRepository optionRepository;
@@ -44,6 +39,8 @@ public class KakaoTest {
     private WishListRepository wishListRepository;
     @Autowired
     private MemberRepository memberRepository;
+    @Autowired
+    private MemberController memberController;
 
     private Category category1;
     private Category category2;
@@ -81,7 +78,7 @@ public class KakaoTest {
     @DisplayName("code로 Member 정보 가져오기")
     void test1() throws Exception {
         RestTemplate restTemplate = new RestTemplate();
-        String string = kakaoController.getUserAgree().getUrl();
+        String string = memberController.getUserAgree().getUrl();
         URI uri = new URI(string);
         ResponseEntity<Object> object = restTemplate.getForEntity(uri,Object.class);
     }

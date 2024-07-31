@@ -21,18 +21,6 @@ public class KakaoController {
         this.kakaoService = kakaoService;
     }
 
-    @GetMapping("/getcode")
-    public RedirectView getUserAgree(){
-        URI uri = kakaoService.makeUri();
-        return new RedirectView(uri.toString());
-    }
 
-    @GetMapping("/code")
-    public ResponseEntity<Member> getUserInfomation(
-            @RequestParam("code") String code
-    ) throws JsonProcessingException {
-        Member member = kakaoService.getToken(code);
-        return ResponseEntity.ok().body(member);
-    }
 
 }
