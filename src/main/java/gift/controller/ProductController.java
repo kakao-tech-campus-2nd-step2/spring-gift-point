@@ -35,7 +35,7 @@ public class ProductController {
     }
 
     @GetMapping
-    @Operation(summary = "전체 상품 조회", description = "전체 상품을 조회합니다.")
+    @Operation(summary = "상품 목록 조회 (페이지네이션 적용)", description = "모든 상품의 목록을 페이지 단위로 조회한다.")
     public ResponseEntity<Page<ProductResponseDto>> getPagedProducts(
         @Valid @ModelAttribute PageRequestDto pageRequestDto,
         @RequestParam(value = "categoryId", required = false) Long categoryId) {
