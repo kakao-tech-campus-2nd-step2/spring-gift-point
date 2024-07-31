@@ -5,7 +5,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import gift.dto.auth.LoginRequest;
 import gift.dto.product.ProductRequest;
 import gift.dto.product.ProductResponse;
-import gift.model.MemberRole;
 import gift.service.OptionService;
 import gift.service.ProductService;
 import gift.service.auth.AuthService;
@@ -103,22 +102,6 @@ class ProductControllerTest {
     }
 
     @Test
-    @DisplayName("카카오를 포함한 이름을 가진 상품 매니저로 생성하기")
-    void successAddProductWithNameKakao() throws Exception {
-        //given
-        var postRequest = post("/api/products")
-                .contentType(MediaType.APPLICATION_JSON)
-                .header("Authorization", "Bearer " + managerToken)
-                .content(objectMapper.writeValueAsString(new ProductRequest("카카오456", 1000, "이미지 주소", 1L)));
-        //when
-        var result = mockMvc.perform(postRequest);
-        //then
-        var createdResult = result.andExpect(status().isCreated()).andReturn();
-
-        deleteProductWithCreatedHeader(createdResult);
-    }
-
-    @Test
     @DisplayName("빈 이름을 가진 오류 상품 생성하기")
     void failAddProductWithEmptyName() throws Exception {
         //given
@@ -187,7 +170,7 @@ class ProductControllerTest {
         //given
         var productRequest = new ProductRequest("햄버거()[]+-&/_**", 1000, "이미지 주소", 1L);
         for (int i = 0; i < 11; i++) {
-            var product = productService.addProduct(productRequest, MemberRole.MEMBER);
+            var product = productService.addProduct(productRequest);
             productResponseList.add(product);
         }
         var getRequest = get("/api/products?page=1")

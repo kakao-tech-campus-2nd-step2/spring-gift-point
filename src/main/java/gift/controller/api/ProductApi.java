@@ -22,7 +22,7 @@ public interface ProductApi {
             @ApiResponse(responseCode = "201", description = "상품 등록 성공"),
             @ApiResponse(responseCode = "401", description = "허용되지 않는 요청")
     })
-    ResponseEntity<Void> addProduct(ProductRequest productRequest, String memberRole);
+    ResponseEntity<Void> addProduct(ProductRequest productRequest);
 
     @Operation(summary = "기존 상품을 수정한다.")
     @ApiResponses(value = {

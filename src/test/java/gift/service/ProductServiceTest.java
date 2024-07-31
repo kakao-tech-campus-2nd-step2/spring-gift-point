@@ -2,7 +2,6 @@ package gift.service;
 
 import gift.dto.product.ProductRequest;
 import gift.exception.InvalidProductNameWithKAKAOException;
-import gift.model.MemberRole;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -23,7 +22,7 @@ class ProductServiceTest {
         //given
         var productRequest = new ProductRequest("상품1", 10000, "이미지 주소", 1L);
         //when
-        var savedProduct = productService.addProduct(productRequest, MemberRole.MEMBER);
+        var savedProduct = productService.addProduct(productRequest);
         //then
         Assertions.assertThat(savedProduct.name()).isEqualTo("상품1");
 
@@ -36,21 +35,8 @@ class ProductServiceTest {
         //given
         var productRequest = new ProductRequest("카카오상품", 10000, "이미지 주소", 1L);
         //when, then
-        Assertions.assertThatThrownBy(() -> productService.addProduct(productRequest, MemberRole.MEMBER))
+        Assertions.assertThatThrownBy(() -> productService.addProduct(productRequest))
                 .isInstanceOf(InvalidProductNameWithKAKAOException.class);
-    }
-
-    @Test
-    @DisplayName("관리자로 카카오가 포함된 상품 추가하기")
-    void successAddProductWithNameKakao() {
-        //given
-        var productRequest = new ProductRequest("카카오상품", 10000, "이미지 주소", 1L);
-        //when
-        var savedProduct = productService.addProduct(productRequest, MemberRole.ADMIN);
-        //then
-        Assertions.assertThat(savedProduct.name()).isEqualTo("카카오상품");
-
-        productService.deleteProduct(savedProduct.id());
     }
 
     @Test
@@ -58,7 +44,7 @@ class ProductServiceTest {
     void successUpdateProduct() {
         //given
         var productRequest = new ProductRequest("상품1", 10000, "이미지 주소", 1L);
-        var savedProduct = productService.addProduct(productRequest, MemberRole.MEMBER);
+        var savedProduct = productService.addProduct(productRequest);
         var id = savedProduct.id();
         var updateDto = new ProductRequest("상품1", 7000, "이미지 주소2", 1L);
         //when

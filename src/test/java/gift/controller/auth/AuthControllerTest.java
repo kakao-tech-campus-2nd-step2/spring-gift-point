@@ -41,7 +41,7 @@ class AuthControllerTest {
         //given
         var postRequest = post("/api/members/register")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(new RegisterRequest("", "test@naver.com", "testPassword", "MEMBER")));
+                .content(objectMapper.writeValueAsString(new RegisterRequest("", "test@naver.com", "testPassword")));
         //when
         var result = mockMvc.perform(postRequest);
         //then
@@ -55,7 +55,7 @@ class AuthControllerTest {
         //given
         var postRequest = post("/api/members/register")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(new RegisterRequest("이름이8글자초과예요", "test@naver.com", "testPassword", "MEMBER")));
+                .content(objectMapper.writeValueAsString(new RegisterRequest("이름이8글자초과예요", "test@naver.com", "testPassword")));
         //when
         var result = mockMvc.perform(postRequest);
         //then
@@ -69,7 +69,7 @@ class AuthControllerTest {
         //given
         var postRequest = post("/api/members/register")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(new RegisterRequest("테스트", "test@hello", "testPassword", "MEMBER")));
+                .content(objectMapper.writeValueAsString(new RegisterRequest("테스트", "test@hello", "testPassword")));
         //when
         var result = mockMvc.perform(postRequest);
         //then
@@ -83,26 +83,12 @@ class AuthControllerTest {
         //given
         var postRequest = post("/api/members/register")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(new RegisterRequest("테스트", "test@naver.com", "잘못된패스워드", "MEMBER")));
+                .content(objectMapper.writeValueAsString(new RegisterRequest("테스트", "test@naver.com", "잘못된패스워드")));
         //when
         var result = mockMvc.perform(postRequest);
         //then
         result.andExpect(status().isBadRequest())
                 .andExpect(content().string("허용되지 않은 형식의 패스워드입니다."));
-    }
-
-    @Test
-    @DisplayName("허용되지 않는 형식의 회원타입으로 회원가입 요청하기")
-    void failRegisterWithWrongMemberRole() throws Exception {
-        //given
-        var postRequest = post("/api/members/register")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(new RegisterRequest("테스트", "test@naver.com", "testPassword", "MEMBERS")));
-        //when
-        var result = mockMvc.perform(postRequest);
-        //then
-        result.andExpect(status().isBadRequest())
-                .andExpect(content().string("존재하지 않는 회원 타입입니다."));
     }
 
     @Test
@@ -137,7 +123,7 @@ class AuthControllerTest {
     @DisplayName("정상적으로 회원가입 후 잘못된 패스워드로 로그인 요청하기")
     void failLoginWithWrongPassword() throws Exception {
         //given
-        var auth = authService.register(new RegisterRequest("테스트", "test@naver.com", "testPassword", "MEMBER"));
+        var auth = authService.register(new RegisterRequest("테스트", "test@naver.com", "testPassword"));
         var postRequest = post("/api/members/login")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(new LoginRequest("test@naver.com", "testPasswordWrong")));
@@ -153,7 +139,7 @@ class AuthControllerTest {
     @DisplayName("정상적으로 회원가입 후 로그인 요청하기")
     void successLogin() throws Exception {
         //given
-        var auth = authService.register(new RegisterRequest("테스트", "test@naver.com", "testPassword", "MEMBER"));
+        var auth = authService.register(new RegisterRequest("테스트", "test@naver.com", "testPassword"));
         var postRequest = post("/api/members/login")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(new LoginRequest("test@naver.com", "testPassword")));

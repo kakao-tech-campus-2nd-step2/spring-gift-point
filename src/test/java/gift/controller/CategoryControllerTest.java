@@ -3,16 +3,20 @@ package gift.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import gift.dto.auth.LoginRequest;
 import gift.dto.category.CategoryRequest;
+import gift.exception.ExceptionResponse;
 import gift.service.CategoryService;
 import gift.service.auth.AuthService;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.transaction.annotation.Transactional;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -50,10 +54,11 @@ class CategoryControllerTest {
                 .header("Authorization", "Bearer " + memberToken)
                 .content(objectMapper.writeValueAsString(new CategoryRequest("상품카테고리", "상품설명", "#11111", "image")));
         //when
-        var result = mockMvc.perform(postRequest);
+        var result = mockMvc.perform(postRequest).andReturn();
         //then
-        result.andExpect(status().isBadRequest())
-                .andExpect(content().string("허용되지 않은 형식의 색상코드입니다."));
+        var response = getResponseMessage(result);
+        Assertions.assertThat(response.status()).isEqualTo(HttpStatus.BAD_REQUEST.value());
+        Assertions.assertThat(response.message()).isEqualTo("허용되지 않은 형식의 색상코드입니다.");
     }
 
     @Test
@@ -138,5 +143,10 @@ class CategoryControllerTest {
         var categoryId = location.replaceAll("/api/categories/", "");
 
         categoryService.deleteCategory(Long.parseLong(categoryId));
+    }
+
+    private ExceptionResponse getResponseMessage(MvcResult result) throws Exception {
+        var resultString = result.getResponse().getContentAsString();
+        return objectMapper.readValue(resultString, ExceptionResponse.class);
     }
 }

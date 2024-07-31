@@ -6,7 +6,6 @@ import gift.dto.product.ProductResponse;
 import gift.exception.InvalidProductNameWithKAKAOException;
 import gift.exception.NotFoundElementException;
 import gift.model.Category;
-import gift.model.MemberRole;
 import gift.model.Product;
 import gift.repository.CategoryRepository;
 import gift.repository.OptionRepository;
@@ -33,8 +32,8 @@ public class ProductService {
         this.optionService = optionService;
     }
 
-    public ProductResponse addProduct(ProductRequest productRequest, MemberRole memberRole) {
-        productNameValidation(productRequest, memberRole);
+    public ProductResponse addProduct(ProductRequest productRequest) {
+        productNameValidation(productRequest);
         var product = saveProductWithProductRequest(productRequest);
         optionService.makeDefaultOption(product);
         return getProductResponseFromProduct(product);
@@ -87,9 +86,8 @@ public class ProductService {
         productRepository.save(product);
     }
 
-    private void productNameValidation(ProductRequest productRequest, MemberRole memberRole) {
+    private void productNameValidation(ProductRequest productRequest) {
         if (!productRequest.name().contains("카카오")) return;
-        if (memberRole.equals(MemberRole.ADMIN)) return;
         throw new InvalidProductNameWithKAKAOException("카카오가 포함된 문구는 담당 MD와 협의한 경우에만 사용할 수 있습니다.");
     }
 

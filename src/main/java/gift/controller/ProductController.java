@@ -3,7 +3,6 @@ package gift.controller;
 import gift.controller.api.ProductApi;
 import gift.dto.product.ProductRequest;
 import gift.dto.product.ProductResponse;
-import gift.model.MemberRole;
 import gift.service.ProductService;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Pageable;
@@ -15,7 +14,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestAttribute;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -34,8 +32,8 @@ public class ProductController implements ProductApi {
     }
 
     @PostMapping
-    public ResponseEntity<Void> addProduct(@Valid @RequestBody ProductRequest productRequest, @RequestAttribute("memberRole") String memberRole) {
-        var product = productService.addProduct(productRequest, MemberRole.valueOf(memberRole));
+    public ResponseEntity<Void> addProduct(@Valid @RequestBody ProductRequest productRequest) {
+        var product = productService.addProduct(productRequest);
         return ResponseEntity.created(URI.create("/api/products/" + product.id())).build();
     }
 

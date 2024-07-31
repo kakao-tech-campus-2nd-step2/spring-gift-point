@@ -27,7 +27,7 @@ public class MemberServiceTest {
     @DisplayName("회원 탈퇴하기 - 성공")
     void successDeleteMember() {
         //given
-        var registerRequest = new RegisterRequest("테스트", "test@naver.com", "testPassword", "MEMBER");
+        var registerRequest = new RegisterRequest("테스트", "test@naver.com", "testPassword");
         var loginRequest = new LoginRequest("test@naver.com", "testPassword");
         authService.register(registerRequest);
         var loginAuth = authService.login(loginRequest);

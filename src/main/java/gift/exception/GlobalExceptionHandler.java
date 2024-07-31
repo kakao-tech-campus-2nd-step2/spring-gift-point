@@ -23,44 +23,43 @@ public class GlobalExceptionHandler {
     private static final String DUPLICATED_NAME_MESSAGE = "이미 존재하는 이름입니다.";
     private static final String INVALID_LOGIN_INFO_MESSAGE = "로그인 정보가 유효하지 않습니다.";
     private static final String INVALID_PAGE_REQUEST_MESSAGE = "요청에 담긴 페이지 정보가 유효하지 않습니다.";
-    private static final String UNAUTHORIZED_ACCESS_MESSAGE = "허용되지 않는 요청입니다.";
     private static final String EXPIRED_JWT_MESSAGE = "인증 정보가 만료되었습니다.";
     @Value("${kakao.redirect-token-uri}")
     private String redirectTokenUri;
 
     @ExceptionHandler(value = NotFoundElementException.class)
-    public ResponseEntity<String> notFoundElementExceptionHandling() {
-        return new ResponseEntity<>(NOT_FOUND_MESSAGE, HttpStatus.NOT_FOUND);
+    public ResponseEntity<ExceptionResponse> notFoundElementExceptionHandling() {
+        return getExceptionResponse(NOT_FOUND_MESSAGE, HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler(value = InvalidProductNameWithKAKAOException.class)
-    public ResponseEntity<String> invalidProductNameWithKAKAOExceptionHandling() {
-        return new ResponseEntity<>(INVALID_PRODUCT_NAME_WITH_KAKAO_MESSAGE, HttpStatus.BAD_REQUEST);
+    public ResponseEntity<ExceptionResponse> invalidProductNameWithKAKAOExceptionHandling() {
+        return getExceptionResponse(INVALID_PRODUCT_NAME_WITH_KAKAO_MESSAGE, HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(value = DuplicatedEmailException.class)
-    public ResponseEntity<String> duplicatedEmailExceptionHandling() {
-        return new ResponseEntity<>(DUPLICATED_EMAIL_MESSAGE, HttpStatus.CONFLICT);
+    public ResponseEntity<ExceptionResponse> duplicatedEmailExceptionHandling() {
+        return getExceptionResponse(DUPLICATED_EMAIL_MESSAGE, HttpStatus.CONFLICT);
     }
 
     @ExceptionHandler(value = DuplicatedNameException.class)
-    public ResponseEntity<String> duplicatedNameExceptionHandling() {
-        return new ResponseEntity<>(DUPLICATED_NAME_MESSAGE, HttpStatus.CONFLICT);
+    public ResponseEntity<ExceptionResponse> duplicatedNameExceptionHandling() {
+        return getExceptionResponse(DUPLICATED_NAME_MESSAGE, HttpStatus.CONFLICT);
     }
 
     @ExceptionHandler(value = InvalidLoginInfoException.class)
-    public ResponseEntity<String> invalidLoginInfoExceptionHandling() {
-        return new ResponseEntity<>(INVALID_LOGIN_INFO_MESSAGE, HttpStatus.UNAUTHORIZED);
+    public ResponseEntity<ExceptionResponse> invalidLoginInfoExceptionHandling() {
+        return getExceptionResponse(INVALID_LOGIN_INFO_MESSAGE, HttpStatus.UNAUTHORIZED);
     }
 
     @ExceptionHandler(value = UnauthorizedAccessException.class)
-    public ResponseEntity<String> unauthorizedAccessExceptionHandling() {
-        return new ResponseEntity<>(UNAUTHORIZED_ACCESS_MESSAGE, HttpStatus.UNAUTHORIZED);
+    public ResponseEntity<ExceptionResponse> unauthorizedAccessExceptionHandling(UnauthorizedAccessException exception) {
+        return getExceptionResponse(exception.getMessage(), HttpStatus.UNAUTHORIZED);
     }
 
     @ExceptionHandler(value = ExpiredJwtException.class)
-    public ResponseEntity<String> expiredJwtExceptionHandling() {
-        return new ResponseEntity<>(EXPIRED_JWT_MESSAGE, HttpStatus.UNAUTHORIZED);
+    public ResponseEntity<ExceptionResponse> expiredJwtExceptionHandling() {
+        return getExceptionResponse(EXPIRED_JWT_MESSAGE, HttpStatus.UNAUTHORIZED);
     }
 
     @ExceptionHandler(value = InvalidKakaoTokenException.class)
@@ -72,12 +71,12 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(value = BadRequestException.class)
-    public ResponseEntity<String> badRequestExceptionHandling(BadRequestException exception) {
-        return new ResponseEntity<>(exception.getMessage(), HttpStatus.BAD_REQUEST);
+    public ResponseEntity<ExceptionResponse> badRequestExceptionHandling(BadRequestException exception) {
+        return getExceptionResponse(exception.getMessage(), HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(value = MethodArgumentNotValidException.class)
-    public ResponseEntity<String> methodArgumentNotValidExceptionHandling(MethodArgumentNotValidException exception) {
+    public ResponseEntity<ExceptionResponse> methodArgumentNotValidExceptionHandling(MethodArgumentNotValidException exception) {
         BindingResult bindingResult = exception.getBindingResult();
 
         StringBuilder builder = new StringBuilder();
@@ -85,16 +84,23 @@ public class GlobalExceptionHandler {
             builder.append(fieldError.getDefaultMessage());
         }
 
-        return ResponseEntity.badRequest().body(builder.toString());
+        return getExceptionResponse(builder.toString(), HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(value = PropertyReferenceException.class)
-    public ResponseEntity<String> propertyReferenceExceptionHandling() {
-        return new ResponseEntity<>(INVALID_PAGE_REQUEST_MESSAGE, HttpStatus.BAD_REQUEST);
+    public ResponseEntity<ExceptionResponse> propertyReferenceExceptionHandling() {
+        return getExceptionResponse(INVALID_PAGE_REQUEST_MESSAGE, HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(value = Exception.class)
-    public ResponseEntity<String> internalServerExceptionHandling(Exception exception) {
-        return new ResponseEntity<>(exception.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+    public ResponseEntity<ExceptionResponse> internalServerExceptionHandling(Exception exception) {
+        return getExceptionResponse(exception.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    private ResponseEntity<ExceptionResponse> getExceptionResponse(String message, HttpStatus status) {
+        var response = new ExceptionResponse(status.value(), message);
+        var responseEntity = ResponseEntity.status(status)
+                .body(response);
+        return responseEntity;
     }
 }

@@ -3,8 +3,6 @@ package gift.model;
 import gift.exception.InvalidLoginInfoException;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
 import org.hibernate.annotations.SQLDelete;
@@ -25,28 +23,22 @@ public class Member extends BaseEntity {
     @Column(name = "password")
     private String password;
     @NotNull
-    @Enumerated(value = EnumType.STRING)
-    @Column(name = "role")
-    private MemberRole role;
-    @NotNull
     @Column(name = "deleted")
     private Boolean deleted = Boolean.FALSE;
 
     protected Member() {
     }
 
-    public Member(String name, String email, MemberRole role, OauthType oauthType) {
+    public Member(String name, String email, OauthType oauthType) {
         this.name = name;
         this.email = email;
         this.password = oauthType.name();
-        this.role = role;
     }
 
-    public Member(String name, String email, String password, MemberRole role) {
+    public Member(String name, String email, String password) {
         this.name = name;
         this.email = email;
         this.password = password;
-        this.role = role;
     }
 
     public String getName() {
@@ -55,10 +47,6 @@ public class Member extends BaseEntity {
 
     public String getPassword() {
         return password;
-    }
-
-    public MemberRole getRole() {
-        return role;
     }
 
     public void passwordCheck(String inputPassword) {
