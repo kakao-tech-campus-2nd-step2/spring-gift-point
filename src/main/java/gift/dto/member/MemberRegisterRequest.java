@@ -2,7 +2,6 @@ package gift.dto.member;
 
 import static gift.util.constants.GeneralConstants.REQUIRED_FIELD_MISSING;
 
-import gift.model.RegisterType;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
 

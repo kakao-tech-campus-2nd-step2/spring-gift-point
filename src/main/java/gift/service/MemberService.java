@@ -5,12 +5,12 @@ import static gift.util.constants.MemberConstants.ID_NOT_FOUND;
 import static gift.util.constants.MemberConstants.INVALID_CREDENTIALS;
 import static gift.util.constants.MemberConstants.INVALID_REGISTER_TYPE;
 
+import gift.dto.member.MemberAuthResponse;
 import gift.dto.member.MemberEditRequest;
 import gift.dto.member.MemberEditResponse;
 import gift.dto.member.MemberLoginRequest;
 import gift.dto.member.MemberOAuthResponse;
 import gift.dto.member.MemberRegisterRequest;
-import gift.dto.member.MemberAuthResponse;
 import gift.exception.member.EmailAlreadyUsedException;
 import gift.exception.member.ForbiddenException;
 import gift.model.Member;
@@ -63,7 +63,12 @@ public class MemberService {
         Member savedMember = memberRepository.save(member);
         String token = jwtUtil.generateToken(savedMember.getId(), member.getEmail());
 
-        return new MemberOAuthResponse(savedMember.getId(), savedMember.getEmail(), token, savedMember.getRegisterType());
+        return new MemberOAuthResponse(
+            savedMember.getId(),
+            savedMember.getEmail(),
+            token,
+            savedMember.getRegisterType()
+        );
     }
 
     public MemberAuthResponse loginMember(MemberLoginRequest memberLoginRequest) {

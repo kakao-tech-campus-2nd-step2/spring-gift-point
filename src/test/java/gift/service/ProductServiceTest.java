@@ -59,9 +59,9 @@ public class ProductServiceTest {
         when(productRepository.findAll(pageable))
             .thenReturn(new PageImpl<>(List.of(product), pageable, 1));
 
-        Page<ProductResponse> products = productService.getAllProducts(pageable);
+        Page<ProductResponse> products = productService.getAllProducts(pageable, null);
         assertEquals(1, products.getTotalElements());
-        assertEquals("Test Product", products.getContent().get(0).name());
+        assertEquals("Test Product", products.getContent().getFirst().name());
     }
 
     @Test

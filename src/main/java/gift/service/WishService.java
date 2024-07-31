@@ -4,7 +4,6 @@ import static gift.util.constants.WishConstants.ALREADY_EXISTS;
 import static gift.util.constants.WishConstants.PERMISSION_DENIED;
 import static gift.util.constants.WishConstants.WISH_NOT_FOUND;
 
-import gift.dto.member.MemberAuthResponse;
 import gift.dto.member.MemberEditResponse;
 import gift.dto.product.ProductResponse;
 import gift.dto.wish.WishCreateRequest;

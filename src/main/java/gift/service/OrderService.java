@@ -1,6 +1,5 @@
 package gift.service;
 
-import gift.dto.member.MemberAuthResponse;
 import gift.dto.member.MemberEditResponse;
 import gift.dto.option.OptionResponse;
 import gift.dto.order.OrderRequest;
@@ -47,7 +46,12 @@ public class OrderService {
         optionService.subtractOptionQuantity(optionResponse.productId(), optionResponse.id(), orderRequest.quantity());
         Option option = optionService.convertToEntity(optionResponse);
 
-        OrderDetail orderDetail = new OrderDetail(option, orderRequest.quantity(), orderRequest.message(), LocalDateTime.now());
+        OrderDetail orderDetail = new OrderDetail(
+            option,
+            orderRequest.quantity(),
+            orderRequest.message(),
+            LocalDateTime.now()
+        );
         OrderDetail savedOrderDetail = orderRepository.save(orderDetail);
 
         MemberEditResponse memberEditResponse = memberService.getMemberById(memberId);

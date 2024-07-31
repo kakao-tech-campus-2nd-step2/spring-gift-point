@@ -3,7 +3,6 @@ package gift.controller.oauth;
 import static gift.util.constants.auth.KakaoOAuthConstants.KAKAO_AUTH_URL;
 
 import gift.config.KakaoProperties;
-import gift.dto.member.MemberAuthResponse;
 import gift.dto.member.MemberOAuthResponse;
 import gift.dto.oauth.KakaoScopeResponse;
 import gift.dto.oauth.KakaoTokenResponse;

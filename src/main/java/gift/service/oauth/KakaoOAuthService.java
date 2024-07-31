@@ -5,7 +5,6 @@ import static gift.util.constants.auth.KakaoOAuthConstants.TOKEN_NOT_FOUND;
 import gift.client.KakaoApiClient;
 import gift.dto.member.MemberOAuthResponse;
 import gift.dto.member.MemberRegisterRequest;
-import gift.dto.member.MemberAuthResponse;
 import gift.dto.oauth.KakaoScopeResponse;
 import gift.dto.oauth.KakaoTokenResponse;
 import gift.dto.oauth.KakaoUnlinkResponse;

@@ -39,8 +39,11 @@ public class ProductService {
     }
 
     @Transactional(readOnly = true)
-    public Page<ProductResponse> getAllProducts(Pageable pageable) {
-        return productRepository.findAll(pageable).map(this::convertToDTO);
+    public Page<ProductResponse> getAllProducts(Pageable pageable, Long categoryId) {
+        if (categoryId == null) {
+            return productRepository.findAll(pageable).map(this::convertToDTO);
+        }
+        return productRepository.findByCategory_Id(categoryId, pageable).map(this::convertToDTO);
     }
 
     @Transactional(readOnly = true)

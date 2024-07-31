@@ -3,7 +3,6 @@ package gift.controller.admin;
 import gift.dto.member.MemberEditRequest;
 import gift.dto.member.MemberEditResponse;
 import gift.dto.member.MemberRegisterRequest;
-import gift.dto.member.MemberAuthResponse;
 import gift.service.MemberService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -63,7 +62,12 @@ public class MemberAdminController {
         MemberEditResponse memberEditResponse = memberService.getMemberById(id);
         model.addAttribute(
             "member",
-            new MemberEditRequest(memberEditResponse.id(), memberEditResponse.email(), null, memberEditResponse.registerType())
+            new MemberEditRequest(
+                memberEditResponse.id(),
+                memberEditResponse.email(),
+                null,
+                memberEditResponse.registerType()
+            )
         );
         return "member_edit";
     }

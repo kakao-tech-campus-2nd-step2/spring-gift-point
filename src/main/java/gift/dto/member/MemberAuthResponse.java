@@ -1,6 +1,5 @@
 package gift.dto.member;
 
-import gift.model.RegisterType;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 @Schema(description = "회원 로그인/회원가입 응답 데이터")
