@@ -34,6 +34,10 @@ dependencies {
     //implementation group: 'io.springfox', name: 'springfox-swagger2', version: '2.9.2'
     implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.2.0'
 
+    // https://mvnrepository.com/artifact/org.apache.httpcomponents.client5/httpclient5
+    implementation 'org.apache.httpcomponents.client5:httpclient5'
+
+
     ext {
         JJWT_VERSION = "0.12.3"
     }
