@@ -1,8 +1,8 @@
 package gift.product.controller;
 
 import gift.category.service.CategoryService;
+import gift.product.domain.ProductRequest;
 import gift.product.option.service.OptionService;
-import gift.product.domain.ProductDTO;
 import gift.product.service.ProductService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -35,35 +35,35 @@ public class ProductViewController
     public String getAllProducts(Model model, @RequestParam(defaultValue = "0") int page,
                                             @RequestParam(defaultValue = "10") int size) {
         Pageable pageable = PageRequest.of(page, size);
-        Page<ProductDTO> productPages = productService.getAllProducts(pageable);
+        Page<ProductRequest> productPages = productService.getAllProducts(pageable);
         model.addAttribute("products", productPages);
         return "products";
     }
 
     @GetMapping("/new")
     public String showCreateForm(Model model) {
-        model.addAttribute("product", new ProductDTO());
+        model.addAttribute("product", new ProductRequest());
         model.addAttribute("categories", categoryService.findAll());
         return "add_product";
     }
 
     @PostMapping("")
-    public String createProduct(@ModelAttribute ProductDTO productDTO) {
-        productService.createProduct(productDTO);
+    public String createProduct(@ModelAttribute ProductRequest productRequest) {
+        productService.createProduct(productRequest);
         return "redirect:/admin/products";
     }
 
     @GetMapping("/edit/{id}")
     public String showEditForm(@PathVariable Long id, Model model) {
-        ProductDTO productDTO = productService.getProductDTOById(id).get();
-        model.addAttribute("product", productDTO);
+        ProductRequest productRequest = productService.getProductDTOById(id).get();
+        model.addAttribute("product", productRequest);
         model.addAttribute("categories", categoryService.findAll());
         return "edit_product";
     }
 
     @PostMapping("/edit/{id}")
-    public String updateProduct(@PathVariable Long id, @ModelAttribute ProductDTO productDTO) {
-        productService.updateProduct(id, productDTO);
+    public String updateProduct(@PathVariable Long id, @ModelAttribute ProductRequest productRequest) {
+        productService.updateProduct(id, productRequest);
         return "redirect:/admin/products";
     }
 

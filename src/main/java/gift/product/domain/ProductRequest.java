@@ -4,7 +4,7 @@ import gift.product.option.domain.OptionDTO;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ProductDTO {
+public class ProductRequest {
 
     private Long id = 0L;
     private String name;
@@ -14,17 +14,17 @@ public class ProductDTO {
 
     private List<OptionDTO> optionDTOList = new ArrayList<>();
 
-    public ProductDTO() {
+    public ProductRequest() {
     }
 
-    public ProductDTO(String name, Long price, String imageUrl, Long categoryId) {
+    public ProductRequest(String name, Long price, String imageUrl, Long categoryId) {
         this.name = name;
         this.price = price;
         this.imageUrl = imageUrl;
         this.categoryId = categoryId;
     }
 
-    public ProductDTO(Long id, String name, Long price, String imageUrl, Long categoryId,
+    public ProductRequest(Long id, String name, Long price, String imageUrl, Long categoryId,
         List<OptionDTO> optionDTOList) {
         this.id = id;
         this.name = name;
