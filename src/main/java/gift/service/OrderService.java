@@ -10,7 +10,14 @@ import gift.domain.repository.OrderRepository;
 import gift.domain.repository.WishRepository;
 import gift.exception.InsufficientQuantityException;
 import gift.exception.NoSuchOptionException;
+import gift.util.SortUtil;
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.stream.Collectors;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -65,5 +72,20 @@ public class OrderService {
             savedOrder.getOrderDateTime(),
             savedOrder.getMessage()
         );
+    }
+
+    public Page<OrderResponseDto> getOrders(int page, int size, String sort, User user) {
+        Sort sortObj = SortUtil.createSort(sort);
+        Pageable pageable = PageRequest.of(page, size, sortObj);
+
+        Page<Order> orders = orderRepository.findByUser(user, pageable);
+
+        return orders.map(order -> new OrderResponseDto(
+            order.getId(),
+            order.getOption().getId(),
+            order.getQuantity(),
+            order.getOrderDateTime(),
+            order.getMessage()
+        ));
     }
 }
