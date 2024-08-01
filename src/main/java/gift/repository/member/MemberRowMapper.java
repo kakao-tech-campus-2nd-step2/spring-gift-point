@@ -17,7 +17,8 @@ public class MemberRowMapper implements RowMapper<Member> {
             resultSet.getString("password"),
             resultSet.getString("name"),
             Role.valueOf(resultSet.getString("role")),
-            Provider.valueOf(resultSet.getString("provider"))
+            Provider.valueOf(resultSet.getString("provider")),
+            resultSet.getInt("point")
         );
     }
 

@@ -21,7 +21,8 @@ public class MemberCommand {
                 password,
                 name,
                 role,
-                provider
+                provider,
+                0
             );
         }
     }

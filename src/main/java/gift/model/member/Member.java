@@ -37,17 +37,21 @@ public class Member extends BaseTimeEntity {
     @Enumerated(EnumType.STRING)
     private Provider provider;
 
+    @NotNull
+    private Integer point;
+
     protected Member() {
     }
 
     public Member(Long id, String email, String password, String name, Role role,
-        Provider provider) {
+        Provider provider, Integer point) {
         this.id = id;
         this.email = email;
         this.password = password;
         this.name = name;
         this.role = role;
         this.provider = provider;
+        this.point = point;
     }
 
     public Long getId() {
@@ -74,6 +78,10 @@ public class Member extends BaseTimeEntity {
         return provider;
     }
 
+    public Integer getPoint() {
+        return point;
+    }
+
     public void changeProvider(Provider provider) {
         this.provider = provider;
     }
@@ -84,15 +92,16 @@ public class Member extends BaseTimeEntity {
         return hashedPassword.equals(this.password);
     }
 
-    public static Member create(Long id, String email, String password, String name, Role role) {
+    public static Member create(Long id, String email, String password, String name, Role role,
+        Integer point) {
         return new Member(id, email, PasswordUtil.hashPasswordWithSalt(password), name, role,
-            Provider.ORIGIN);
+            Provider.ORIGIN, point);
     }
 
     public static Member create(Long id, String email, String password, String name, Role role,
-        Provider provider) {
+        Provider provider, Integer point) {
         return new Member(id, email, PasswordUtil.hashPasswordWithSalt(password), name, role,
-            provider);
+            provider, point);
     }
 
 
