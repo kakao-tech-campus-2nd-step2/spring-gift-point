@@ -53,7 +53,8 @@ public class AuthFilter implements Filter {
 
         // Filter 를 통과하지 않아도 되는 url
         if (path.equals("/api/members/login") || path.equals("/api/members/register") || path.startsWith("/api/members")
-            || path.startsWith("/h2-console") || path.equals("/api/oauth/authorize")
+            || path.startsWith("/h2-console") || path.equals("/api/oauth/authorize") || path.startsWith("/api/categories")
+            || path.startsWith("/api/products")
             || path.equals("/api/oauth/token")
             || path.equals("/swagger-ui.html")
             || path.startsWith("/swagger-ui")
