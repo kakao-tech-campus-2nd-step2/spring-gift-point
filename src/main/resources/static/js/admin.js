@@ -8,10 +8,20 @@ function closeAddModal() {
     modal.style.display = "none";
 }
 
-function openUpdateModal(id) {
-    console.log(id);
+function openUpdateModal(button) {
     var modal = document.getElementById("updateModal");
-    document.getElementById("updateId").value = parseInt(id);
+    var id = button.getAttribute('data-id');
+    var name = button.getAttribute('data-name');
+    var price = button.getAttribute('data-price');
+    var imageUrl = button.getAttribute('data-image-url');
+    var categoryId = button.getAttribute('data-category-id');
+
+    document.getElementById("updateId").value = id;
+    document.getElementById("updateName").value = name;
+    document.getElementById("updatePrice").value = price;
+    document.getElementById("updateImageUrl").value = imageUrl;
+    document.getElementById("updateCategoryId").value = categoryId;
+
     modal.style.display = "block";
 }
 
@@ -84,9 +94,11 @@ function submitUpdateForm() {
         jsonObject[key] = value;
     });
 
+    var productId = jsonObject.id;
+
     console.log('Sending request with data:', jsonObject);
 
-    fetch('/api/products', {
+    fetch('/api/products/' + productId, {
         method: 'PUT',
         headers: {
             'Content-Type': 'application/json'
