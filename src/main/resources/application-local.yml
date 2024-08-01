@@ -16,3 +16,7 @@ jwt:
 logging:
   level:
     gift.authentication: debug
+
+cors:
+  exposed-headers: "Set-Cookie,Authorization,Content-Type,X-Requested-With,Accept,Origin,Access-Control-Request-Method,Access-Control-Request-Headers,Access-Control-Allow-Origin,Access-Control-Allow-Credentials"
+  allowed-method-names: "GET,HEAD,POST,PUT,DELETE,TRACE,OPTIONS,PATCH"
