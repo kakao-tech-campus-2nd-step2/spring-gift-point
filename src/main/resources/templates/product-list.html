@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Product List</title>
+  <link href="product-list.css" rel="stylesheet">
+</head>
+<body>
+<h1>Product List</h1>
+<table>
+  <thead>
+  <tr>
+    <th>ID</th>
+    <th>Name</th>
+    <th>Price</th>
+    <th>Image</th>
+    <th>Category</th>
+    <th>Actions</th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr th:each="product : ${products}">
+    <td th:text="${product.id}">ID</td>
+    <td th:text="${product.name}">Name</td>
+    <td th:text="${product.price}">Price</td>
+    <td><img alt="Product Image" th:src="${product.imageUrl}"/></td>
+    <td th:text="${product.categoryDto}">Category</td>
+    <td class="actions">
+      <a th:href="@{|/admin/products/product/${product.id}|}">Edit</a>
+      <form method="post" style="display:inline;" th:action="@{|/admin/products/${product.id}|}">
+        <input name="_method" type="hidden" value="delete"/>
+        <button type="submit">Delete</button>
+      </form>
+    </td>
+  </tr>
+  </tbody>
+</table>
+<a href="/admin/products/new"
+   style="display:block; margin-top: 20px; padding: 10px 20px; background-color: #4CAF50; color: white; text-decoration: none; border-radius: 4px;">Add
+  New Product</a>
+</body>
+</html>
