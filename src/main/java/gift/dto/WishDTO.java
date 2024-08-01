@@ -70,7 +70,7 @@ public class WishDTO {
         return new Wish.WishBuilder()
             .member(member)
             .product(product)
-            .createdDate(LocalDateTime.now())  // 현재 시간을 설정합니다.
+            .createdDate(LocalDateTime.now())
             .build();
     }
 }

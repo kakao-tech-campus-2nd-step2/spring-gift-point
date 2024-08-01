@@ -25,7 +25,7 @@ CREATE TABLE IF NOT EXISTS product (
 
 CREATE TABLE IF NOT EXISTS option (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
-    name VARCHAR(50) NOT NULL,
+    name VARCHAR(255) NOT NULL,
     quantity INT NOT NULL,
     product_id BIGINT NOT NULL,
     FOREIGN KEY (product_id) REFERENCES product(id),
