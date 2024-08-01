@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.within;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
 
 import java.time.LocalDateTime;
@@ -20,7 +21,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.ResponseEntity;
 import org.springframework.retry.RetryCallback;
 import org.springframework.retry.support.RetryTemplate;
 import org.springframework.validation.BindingResult;
@@ -81,6 +81,9 @@ public class OrderServiceTest {
     void setUp() {
         MockitoAnnotations.openMocks(this);
         
+        user = new User("test@test.com", "pw");
+        user.setId(1L);
+        
         category = new Category("교환권", "#6c95d1", "https://example.com/image.jpg", "");
         product = new Product("아이스 아메리카노 T", 4500, "https://example.com/image.jpg", category);
         product.setId(1L);
@@ -88,7 +91,7 @@ public class OrderServiceTest {
         option = new Option("01 [Best] 시어버터 핸드 & 시어 스틱 립 밤", 969, product);
         option.setId(1L);
 
-        order = new Order(option, 2, "Please handle this order with care.");
+        order = new Order(option, user, 2, "Please handle this order with care.");
         order.setOrderDateTime(now);
 
         user = new User("test@test.com", "pw");
@@ -100,11 +103,14 @@ public class OrderServiceTest {
     	Pageable pageable = PageRequest.of(0, 10);
     	Page<Order> page = new PageImpl<>(Collections.singletonList(order), pageable, 1);
     	
-    	when(orderRepository.findAll(pageable)).thenReturn(page);
+    	when(userService.getUserFromToken(anyString())).thenReturn(user);
+        when(orderRepository.findByUserId(anyLong(), any(Pageable.class))).thenReturn(page);
 		
-		Page<OrderResponse> response = orderService.getOrders(pageable);
+		Page<OrderResponse> response = orderService.getOrders("token", pageable);
+		
+		verify(userService).getUserFromToken(anyString());
+        verify(orderRepository).findByUserId(anyLong(), any(Pageable.class));
     	
-		verify(orderRepository).findAll(pageable);
 	    assertThat(response.getContent()).hasSize(1);
 
 	    OrderResponse actualOrderResponse = response.getContent().get(0);

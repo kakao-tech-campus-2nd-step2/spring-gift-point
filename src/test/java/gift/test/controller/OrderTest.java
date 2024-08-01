@@ -23,10 +23,6 @@ import org.springframework.validation.BindingResult;
 import gift.controller.OrderController;
 import gift.dto.OrderRequest;
 import gift.dto.OrderResponse;
-import gift.entity.Category;
-import gift.entity.Option;
-import gift.entity.Order;
-import gift.entity.Product;
 import gift.service.OrderService;
 
 public class OrderTest {
@@ -57,9 +53,9 @@ public class OrderTest {
 		Pageable pageable = PageRequest.of(0, 10);
 		Page<OrderResponse> orderPage = new PageImpl<>(Collections.singletonList(orderResponse), pageable, 1);
         
-		when(orderService.getOrders(any(Pageable.class))).thenReturn(orderPage);
+		when(orderService.getOrders(any(String.class), any(Pageable.class))).thenReturn(orderPage);
 		
-		ResponseEntity<Page<OrderResponse>> response = orderController.getOrders(pageable);
+		ResponseEntity<Page<OrderResponse>> response = orderController.getOrders("Bearer token", pageable);
 
         assertThat(response.getStatusCodeValue()).isEqualTo(200);
         assertThat(response.getBody().getTotalElements()).isEqualTo(1);
