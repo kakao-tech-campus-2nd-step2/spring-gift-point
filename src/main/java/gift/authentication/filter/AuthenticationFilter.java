@@ -49,6 +49,18 @@ public class AuthenticationFilter extends OncePerRequestFilter {
 
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
-        return ignorePaths.contains(request.getRequestURI());
+        List<String> ignorePathsOnlyMethodGet = List.of(
+            "/api/categories",
+            "/api/products");
+
+        if (ignorePaths.contains(request.getRequestURI())) {
+            return true;
+        }
+
+        if (ignorePathsOnlyMethodGet.contains(request.getRequestURI()) && request.getMethod().equals("GET")) {
+            return true;
+        }
+
+        return false;
     }
 }
