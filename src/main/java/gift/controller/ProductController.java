@@ -4,6 +4,7 @@ import gift.domain.Option;
 import gift.domain.Product;
 import gift.dto.ProductDTO;
 import gift.service.CategoryService;
+import gift.service.OptionService;
 import gift.service.ProductService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -31,10 +32,12 @@ public class ProductController {
 
     private final ProductService productService;
     private final CategoryService categoryService;
+    private final OptionService optionService;
 
-    public ProductController(ProductService productService, CategoryService categoryService) {
+    public ProductController(ProductService productService, CategoryService categoryService, OptionService optionService) {
         this.productService = productService;
         this.categoryService = categoryService;
+        this.optionService = optionService;
     }
 
     @GetMapping
@@ -85,7 +88,7 @@ public class ProductController {
             Option option = new Option();
             option.setName(optionNames.get(i));
             option.setQuantity(optionQuantities.get(i));
-            productService.addOptionToProduct(product.getId(), option);
+            optionService.addOptionToProduct(product.getId(), option);
 
         }
 
@@ -135,38 +138,5 @@ public class ProductController {
 
         return ResponseEntity.ok("상품 삭제 성공!");
     }
-
-    @GetMapping("/{productsId}/options")
-    @Operation(summary = "상품 옵션 목록 조회", description = "특정 상품의 옵션을 조회합니다.")
-    public ResponseEntity<List<Option>> getOptions(@PathVariable("productsId") Long id) {
-        Product product = productService.getProductById(id);
-        if (product == null) {
-            return ResponseEntity.notFound().build();
-        }
-        List<Option> options = product.getOptions();
-        return ResponseEntity.ok(options);
-    }
-
-    @PostMapping("/{productsId}/options")
-    @Operation(summary = "상품 옵션 추가", description = "특정 상품에 옵션을 추가합니다.")
-    public ResponseEntity<String> addOptionToProduct(@PathVariable("productsId") Long id, @RequestBody @Valid Option option) {
-        try {
-            productService.addOptionToProduct(id, option);
-            return ResponseEntity.status(HttpStatus.CREATED).body("옵션 추가 완료!");
-        } catch (DataIntegrityViolationException ex) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("동일한 상품 내에 동일한 옵션 이름이 존재합니다.");
-        } catch (IllegalArgumentException ex) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
-        }
-    }
-
-//    @PostMapping("/{productsId}/options/{optionId}")
-//    @Operation(summary = "상품 옵션 수정", description = "특정 상품의 기존 옵션 정보를 수정합니다.")
-//
-
-
-//    @DeleteMapping("/{productsId}/options/{optionId}")
-//    @Operation(summary = "상품 옵션 삭제", description = "특정 상품의 옵션을 삭제합니다.")
-//
     
 }
