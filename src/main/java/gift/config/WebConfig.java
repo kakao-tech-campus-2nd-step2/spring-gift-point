@@ -13,15 +13,6 @@ import java.util.List;
 @Configuration
 public class WebConfig implements WebMvcConfigurer {
 
-    @Value("${server.local-url}")
-    private String serverLocal;
-
-    @Value("${server.deploy-url}")
-    private String serverDeploy;
-
-    @Value("${client.local-url}")
-    private String clientLocal;
-
     private final JwtUtil jwtUtil;
 
     public WebConfig(JwtUtil jwtUtil) {
@@ -37,7 +28,7 @@ public class WebConfig implements WebMvcConfigurer {
     public void addCorsMappings(CorsRegistry registry) {
 
         registry.addMapping("/**")
-                .allowedOrigins(serverLocal,serverDeploy,clientLocal)
+                .allowedOrigins("*")
                 .allowedMethods("*")
                 .allowedHeaders("*")
                 .allowCredentials(true)
