@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @Tag(name = "로그인 API", description = "로그인 관련 API")
 @RestController
-@RequestMapping("/members")
+@RequestMapping("api/members")
 public class AuthController {
     private final UserService userService;
     private JwtUtil jwtUtil;
