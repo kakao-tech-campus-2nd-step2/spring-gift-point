@@ -1,5 +1,6 @@
 package gift.Service;
 
+import gift.Exception.UnauthorizedException;
 import jakarta.servlet.http.HttpServletRequest;
 import java.util.Enumeration;
 
@@ -18,6 +19,6 @@ public class AuthorizationExtractor { // 토큰 추출
                 return value.substring(ACCESS_TOKEN_TYPE.length()).trim();
             }
         }
-        throw new IllegalArgumentException("토큰 추출 실패");
+        throw new UnauthorizedException("401 Unauthorized : Invalid or missing token");
     }
 }

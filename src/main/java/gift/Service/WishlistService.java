@@ -1,5 +1,6 @@
 package gift.Service;
 
+import gift.Exception.UnauthorizedException;
 import gift.Model.Member;
 import gift.Model.Product;
 import gift.Repository.MemberRepository;
@@ -55,10 +56,9 @@ public class WishlistService {
     }
 
     public void checkUserByMemberEmail(String email){
-        try {
-            memberRepository.findByEmail(email);
-        }catch (EmptyResultDataAccessException e){
-            throw new IllegalArgumentException("이메일 다름");
+        Member checkMember = memberRepository.findByEmail(email);
+        if (checkMember == null){
+            throw new UnauthorizedException("401 Unauthorized : Invalid or missing token");
         }
     }
 

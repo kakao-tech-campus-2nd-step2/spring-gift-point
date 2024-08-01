@@ -37,7 +37,7 @@ public class WishListController {
 
     @Operation(
         summary = "모든 위시리스트 가져오기",
-        description = "등록된 모든 상품을 가져오기 /api/wishlist?page=(요구하려는 페이지의 숫자, 0부터 시작)&size=(페이지에 표시할 상품 수)를 이용해 페이지 적용 가능"
+        description = "등록된 모든 상품을 가져오기 /api/wishes?page=(요구하려는 페이지의 숫자, 0부터 시작)&size=(페이지에 표시할 상품 수)를 이용해 페이지 적용 가능"
     )
     @ApiResponse(
         responseCode = "200",
@@ -47,7 +47,7 @@ public class WishListController {
         @Parameter(name = "request", description = "메소드 실행 전 토큰을 전달 받기 위한 객체"),
         @Parameter(name = "pageable", description = "List에 담긴 Product객체를 개수에 맞춰서 page로 리턴")
     })
-    @GetMapping("/api/wishlist")
+    @GetMapping("/api/wishes")
     public ResponseEntity<Page<Product>> getWish(HttpServletRequest request,@RequestParam(name = "page", defaultValue = "0") int page, @RequestParam(name = "size", defaultValue = "10") int size, @RequestParam(name = "sort", defaultValue = "name,asc") String[] sort) {
         Pageable pageable = PageRequest.of(page, size, wishlistService.getSort(sort)); // 전달 받은 파라미터로 pageable 객체 생성
         String email = (String) request.getAttribute("email");
@@ -68,8 +68,10 @@ public class WishListController {
         @Parameter(name = "productId", description = "위시리스트에 더할 상품 Id"),
         @Parameter(name = "request", description = "메소드 실행 전 토큰을 전달 받기 위한 객체"),
     })
-    @PostMapping("/api/wishlist/add/{productId}")
+    @PostMapping("/api/wishes/{productId}")
     public ResponseEntity<String> editWishForm(@PathVariable(value = "productId") Long productId, HttpServletRequest request) {
+        //400 Bad Request: Invalid input
+        //404 Not Found: Member or Product not found
         String email = (String) request.getAttribute("email");
         wishlistService.checkUserByMemberEmail(email);
         Member member = wishlistService.getMemberByEmail(email);
@@ -90,12 +92,13 @@ public class WishListController {
         @Parameter(name = "productId", description = "위시리스트에 삭제 할 상품 Id"),
         @Parameter(name = "request", description = "메소드 실행 전 토큰을 전달 받기 위한 객체"),
     })
-    @DeleteMapping("/api/wishlist/{productId}")
+    @DeleteMapping("/api/wishes/{productId}")
     public ResponseEntity<String> deleteWish(@PathVariable(value = "productId") Long productId, HttpServletRequest request) {
         String email = (String) request.getAttribute("email");
         wishlistService.checkUserByMemberEmail(email);
         Long wishlistId = wishlistService.getWishlistId(email,productId);
         Product deleteProduct = wishlistService.deleteWishlist(email, productId, wishlistId);
+        //404 Not Found: Wish not found
         return ResponseEntity.noContent().build();
     }
 }
