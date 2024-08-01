@@ -3,12 +3,19 @@ package gift.wish.service.dto;
 import gift.wish.domain.Wish;
 import java.util.List;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 public record WishPageInfo(
         List<WishInfo> wishes,
-        long totalElements,
-        int totalPages,
-        int currentPage
+        Pageable pageable,
+        Integer totalPages,
+        Long totalElements,
+        Boolean last,
+        Integer number,
+        Integer size,
+        Integer numberOfElements,
+        Boolean first,
+        Boolean empty
 ) {
     public static WishPageInfo from(Page<Wish> wishPage) {
         List<WishInfo> wishes = wishPage.getContent().stream()
@@ -17,9 +24,15 @@ public record WishPageInfo(
 
         return new WishPageInfo(
                 wishes,
-                wishPage.getTotalElements(),
+                wishPage.getPageable(),
                 wishPage.getTotalPages(),
-                wishPage.getNumber()
+                wishPage.getTotalElements(),
+                wishPage.isLast(),
+                wishPage.getNumber(),
+                wishPage.getSize(),
+                wishPage.getNumberOfElements(),
+                wishPage.isFirst(),
+                wishPage.isEmpty()
         );
     }
 }
