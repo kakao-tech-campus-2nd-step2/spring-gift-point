@@ -9,11 +9,20 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import java.util.List;
 
 @Configuration
-public class SecurityConfig implements WebMvcConfigurer {
+public class WebConfig implements WebMvcConfigurer {
+
+    @Value("${server.local-url}")
+    private String serverLocal;
+
+    @Value("${server.deploy-url}")
+    private String serverDeploy;
+
+    @Value("${client.local-url}")
+    private String clientLocal;
 
     private final JwtUtil jwtUtil;
 
-    public SecurityConfig(JwtUtil jwtUtil) {
+    public WebConfig(JwtUtil jwtUtil) {
         this.jwtUtil = jwtUtil;
     }
 
