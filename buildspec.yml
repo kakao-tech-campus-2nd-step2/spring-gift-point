@@ -1,5 +1,12 @@
 version: 0.2
 
+env:
+  variables:
+    IMAGE_REPO_NAME: "ez23re-repo"  # ECR 리포지토리 이름
+    IMAGE_TAG: "latest"  # Docker 이미지 태그
+    AWS_ACCOUNT_ID: "010928188508"  # AWS 계정 ID
+    AWS_DEFAULT_REGION: "ap-northeast-2"  # 서울 리전
+
 phases:
   install:
     runtime-versions:

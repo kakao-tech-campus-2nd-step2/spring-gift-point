@@ -1,8 +1,8 @@
 # Start with a base image containing Java runtime
-FROM openjdk:11-jre-slim
+FROM openjdk:21-jre-slim
 
 # Add Maintainer Info
-LABEL maintainer="your-email@example.com"
+LABEL maintainer="ez23rel@google.com"  # image(jdk?) manager email
 
 # Add a volume pointing to /tmp
 VOLUME /tmp
