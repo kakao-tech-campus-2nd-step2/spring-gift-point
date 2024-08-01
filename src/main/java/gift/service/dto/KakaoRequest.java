@@ -11,6 +11,7 @@ public class KakaoRequest {
     private static final String DEFAULT_TITLE = "주문해주셔서 감사합니다.";
     private static final String DEFAULT_ITEM_TEXT = "가격";
     private static final String DEFAULT_ITEM_COUNT_TEXT = "개수";
+    private static final String DEFAULT_POINT_TEXT = "사용 포인트";
 
     @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
     public record Feed (
@@ -38,6 +39,10 @@ public class KakaoRequest {
                                     new Item(
                                             DEFAULT_ITEM_COUNT_TEXT,
                                             orders.getQuantity() + "개"
+                                    ),
+                                    new Item(
+                                            DEFAULT_POINT_TEXT,
+                                            orders.getPoint() + "포인트"
                                     ),
                             },
                             DEFAULT_SUM_TEXT,

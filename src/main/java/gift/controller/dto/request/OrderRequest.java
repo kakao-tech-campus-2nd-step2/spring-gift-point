@@ -9,6 +9,8 @@ public record OrderRequest(
         Long optionId,
         @Min(1)
         int quantity,
+        @Min(0)
+        int point,
         String message
 ) {
 }

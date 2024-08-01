@@ -30,10 +30,10 @@ class OrderRepositoryTest {
         Long memberId = 1L;
         Orders order1 = new Orders(1L, 1L, memberId,
                 "pName1", "pUrl", "oName",
-                1000, 10, "message");
+                1000, 10, "message", 0);
         Orders order2 = new Orders(2L, 2L, memberId,
                 "pName1", "pUrl", "oName",
-                1000, 10, "message");
+                1000, 10, "message", 0);
         orderRepository.save(order1);
         orderRepository.save(order2);
         Pageable pageable = PageRequest.of(0, 10);
