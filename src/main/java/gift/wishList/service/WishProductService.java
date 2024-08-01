@@ -43,10 +43,15 @@ public class WishProductService {
 	}
 
 	@Transactional
-	public WishProduct save(Long productId, Long userId) {
+	public Long save(Long userId, Long productId) {
 		User user = userJpaRepository.findById(userId).orElseThrow();
 		Product product = productJpaRepository.findById(productId).orElseThrow();
 		WishProduct wishProduct = WishProduct.of(user, product);
-		return wishProductJpaRepository.save(wishProduct);
+		return wishProduct.getId();
+	}
+
+	@Transactional
+	public void deleteWishProduct(Long wishId) {
+		wishProductJpaRepository.deleteById(wishId);
 	}
 }
