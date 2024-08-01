@@ -13,6 +13,7 @@ import gift.Repository.ProductRepository;
 import java.util.List;
 
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
@@ -78,14 +79,13 @@ public class ProductService {
         return productRepository.findByCategoryId(pageable, categoryId);
     }
 
-    public PageResponseDTO<ProductResponseDTO> getResponse(Pageable pageable, Long categoryId){
+    public Page<ProductResponseDTO> getResponse(Pageable pageable, Long categoryId){
         Page<Product> productPage = findAllByCategory(pageable, categoryId);
         List<ProductResponseDTO> products =  productPage.stream().map(product -> new ProductResponseDTO(product.getId(),
             product.getName(),
             product.getPrice(),
             product.getImageUrl(),
             product.getCategory().getId())).toList();
-
-        return new PageResponseDTO<>(products,productPage.getNumber(),productPage.getTotalElements(),productPage.getSize(),productPage.isLast());
+        return new PageImpl<>(products, pageable, productPage.getTotalElements());
     }
 }

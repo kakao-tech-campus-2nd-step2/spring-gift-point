@@ -30,10 +30,7 @@ public class MemberController {
 
     @PostMapping("/api/members/login")
     public ResponseEntity<String> loginMember(@Valid @RequestBody MemberDTO memberDTO){
-        // 실패시 403
-        if(!memberService.checkMember(memberDTO)){
-            throw new IllegalArgumentException("회원 아님");
-        }
+        memberService.checkMember(memberDTO);
         String token = memberAccessTokenProvider.createJwt(memberDTO.getEmail());
         return ResponseEntity.ok(token);
     }
