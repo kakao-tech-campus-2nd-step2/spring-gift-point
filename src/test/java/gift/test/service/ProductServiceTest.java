@@ -3,7 +3,6 @@ package gift.test.service;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
 
 import java.util.Collections;
@@ -55,12 +54,13 @@ public class ProductServiceTest {
         MockitoAnnotations.openMocks(this);
 
         category = new Category("교환권", "#6c95d1", "https://example.com/image.jpg", "");
+        category.setId(1L);
         product = new Product("아이스 아메리카노 T", 4500, "https://example.com/image.jpg", category);
         product.setId(1L);
 
-        productRequest = new ProductRequest("아이스 아메리카노 T", 4500, "https://example.com/image.jpg", "교환권");
+        productRequest = new ProductRequest("아이스 아메리카노 T", 4500, "https://example.com/image.jpg", 1L);
         productUpdateRequest = new ProductUpdateRequest("아이스 아메리카노 T", 5000, "https://example.com/image.jpg");
-        categoryUpdateRequest = new CategoryUpdateRequest("상품권");
+        categoryUpdateRequest = new CategoryUpdateRequest(1L);
     }
 
     @Test
@@ -68,11 +68,14 @@ public class ProductServiceTest {
     	Pageable pageable = PageRequest.of(0, 10);
         Page<Product> page = new PageImpl<>(Collections.singletonList(product), pageable, 1);
 
-        when(productRepository.findAll(pageable)).thenReturn(page);
+        when(categoryRepository.findById(anyLong())).thenReturn(Optional.of(category));
+        when(productRepository.findByCategoryId(anyLong(), any(Pageable.class))).thenReturn(page);
 
-        Page<ProductResponse> response = productService.getProducts(pageable);
+        Page<ProductResponse> response = productService.getProducts(1L, pageable);
 
-        verify(productRepository).findAll(pageable);
+        verify(categoryRepository).findById(anyLong());
+        verify(productRepository).findByCategoryId(anyLong(), any(Pageable.class));
+        assertThat(response).isNotNull();
         assertThat(response.getContent()).hasSize(1);
         assertThat(response.getContent().get(0).getName()).isEqualTo(product.getName());
     }
@@ -80,11 +83,11 @@ public class ProductServiceTest {
     @Test
     public void testCreateProduct() {
         Category category = new Category("교환권", "#6c95d1", "https://example.com/image.jpg", "");
-        when(categoryRepository.findByName(anyString())).thenReturn(Optional.of(category));
+        when(categoryRepository.findById(anyLong())).thenReturn(Optional.of(category));
         when(productRepository.save(any(Product.class))).thenReturn(product);
         productService.createProduct(productRequest, bindingResult);
         
-        verify(categoryRepository).findByName(anyString());
+        verify(categoryRepository).findById(anyLong());
         verify(productRepository).save(any(Product.class));
     }
 
@@ -102,12 +105,12 @@ public class ProductServiceTest {
     public void testUpdateProductCategory() {
         Category newCategory = new Category("상품권", "#6c95d1", "https://example.com/new_image.jpg", "");
         when(productRepository.findById(anyLong())).thenReturn(Optional.of(product));
-        when(categoryRepository.findByName(anyString())).thenReturn(Optional.of(newCategory));
+        when(categoryRepository.findById(anyLong())).thenReturn(Optional.of(newCategory));
         when(productRepository.save(any(Product.class))).thenReturn(product);
         productService.updateProductCategory(1L, categoryUpdateRequest, bindingResult);
         
         verify(productRepository).findById(anyLong());
-        verify(categoryRepository).findByName(anyString());
+        verify(categoryRepository).findById(anyLong());
         verify(productRepository).save(any(Product.class));
     }
 

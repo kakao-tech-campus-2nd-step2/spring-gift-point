@@ -82,7 +82,7 @@ public class WishlistServiceTest {
         verify(wishlistRepository).findByUserId(anyLong(), any(Pageable.class));
         assertThat(response).isNotNull();
         assertThat(response.getContent()).hasSize(1);
-        assertThat(response.getContent().get(0).getProductName()).isEqualTo(product.getName());
+        assertThat(response.getContent().get(0).getId()).isEqualTo(product.getId());
     }
 
     @Test
@@ -91,7 +91,7 @@ public class WishlistServiceTest {
         when(productRepository.findById(anyLong())).thenReturn(Optional.of(product));
         when(wishlistRepository.save(any(Wishlist.class))).thenReturn(wishlist);
 
-        WishlistRequest request = new WishlistRequest(product.getId(), 1);
+        WishlistRequest request = new WishlistRequest(product.getId());
         wishlistService.addWishlist("token", request, bindingResult);
         
         verify(userService).getUserFromToken(anyString());
@@ -105,25 +105,11 @@ public class WishlistServiceTest {
         when(wishlistRepository.findById(anyLong())).thenReturn(Optional.of(wishlist));
         doNothing().when(wishlistRepository).delete(any(Wishlist.class));
 
-        WishlistRequest request = new WishlistRequest(product.getId(), 1);
+        WishlistRequest request = new WishlistRequest(product.getId());
         wishlistService.removeWishlist("token", request, bindingResult);
         
         verify(userService).getUserFromToken(anyString());
         verify(wishlistRepository).findById(anyLong());
         verify(wishlistRepository).delete(any(Wishlist.class));
-    }
-
-    @Test
-    public void testUpdateWishlistQuantity() {
-        when(userService.getUserFromToken(anyString())).thenReturn(user);
-        when(wishlistRepository.findById(anyLong())).thenReturn(Optional.of(wishlist));
-        when(wishlistRepository.save(any(Wishlist.class))).thenReturn(wishlist);
-
-        WishlistRequest request = new WishlistRequest(product.getId(), 2);
-        wishlistService.updateWishlistQuantity("token", request, bindingResult);
-        
-        verify(userService).getUserFromToken(anyString());
-        verify(wishlistRepository).findById(anyLong());
-        verify(wishlistRepository).save(any(Wishlist.class));
     }
 }

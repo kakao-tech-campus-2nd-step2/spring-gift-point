@@ -56,14 +56,13 @@ public class WishlistTest {
         wishlist = new Wishlist(user, product);
         wishlist.setQuantity(1);
         
-        wishlistRequest = new WishlistRequest(product.getId(), wishlist.getQuantity());
-        wishlistResponse = new WishlistResponse(wishlist.getId(), product.getId(), product.getName(), wishlist.getQuantity());
+        wishlistRequest = new WishlistRequest(product.getId());
+        wishlistResponse = new WishlistResponse(wishlist.getId(), product);
         
         when(wishlistService.getWishlist(any(String.class), any(Pageable.class)))
         		.thenReturn(new PageImpl<>(List.of(wishlistResponse), PageRequest.of(0, 10), 1));
         doNothing().when(wishlistService).addWishlist(any(String.class), any(WishlistRequest.class), any(BindingResult.class));
         doNothing().when(wishlistService).removeWishlist(any(String.class), any(WishlistRequest.class), any(BindingResult.class));
-        doNothing().when(wishlistService).updateWishlistQuantity(any(String.class), any(WishlistRequest.class), any(BindingResult.class));
     }
 
     @Test
@@ -73,7 +72,7 @@ public class WishlistTest {
 
         assertThat(response.getStatusCodeValue()).isEqualTo(200);
         assertThat(response.getBody().getTotalElements()).isEqualTo(1);
-        assertThat(response.getBody().getContent().get(0).getProductName()).isEqualTo(product.getName());
+        assertThat(response.getBody().getContent().get(0).getId()).isEqualTo(product.getId());
     }
 
     @Test
@@ -86,14 +85,6 @@ public class WishlistTest {
     @Test
     public void testRemoveWishlist() {
         ResponseEntity<Void> response = wishlistController.removeWishlist("Bearer token", wishlistRequest, bindingResult);
-
-        assertThat(response.getStatusCodeValue()).isEqualTo(200);
-    }
-
-    @Test
-    public void testUpdateWishlist() {
-        wishlist.setQuantity(10);
-        ResponseEntity<Void> response = wishlistController.updateWishlist("Bearer token", wishlistRequest, bindingResult);
 
         assertThat(response.getStatusCodeValue()).isEqualTo(200);
     }
