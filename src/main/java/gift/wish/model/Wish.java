@@ -1,6 +1,8 @@
-package gift.model;
+package gift.wish.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import gift.member.model.Member;
+import gift.product.model.Product;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -10,9 +12,13 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
 import java.util.Objects;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 @Entity
 @Table(name = "wish")
+@ToString(exclude = {"product", "member"})
+@EqualsAndHashCode
 public class Wish {
 
     @Id
