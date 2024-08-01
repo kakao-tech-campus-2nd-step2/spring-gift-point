@@ -21,16 +21,16 @@ public class Wishlist {
     private Member member;
 
     @ManyToOne
-    @JoinColumn(name = "product_id", nullable = false)
-    private Product product;
+    @JoinColumn(name = "option_id", nullable = false)
+    private Option option;
 
     protected Wishlist() {
     }
 
-    public Wishlist(Long id, Member member, Product product) {
+    public Wishlist(Long id, Member member, Option option) {
         this.id = id;
         this.member = member;
-        this.product = product;
+        this.option = option;
     }
 
     public Long getId() {
@@ -41,7 +41,7 @@ public class Wishlist {
         return member;
     }
 
-    public Product getProduct() {
-        return product;
+    public Option getOption() {
+        return option;
     }
 }

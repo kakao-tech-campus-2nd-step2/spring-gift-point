@@ -1,7 +1,10 @@
 CREATE TABLE category
 (
     id   BIGINT AUTO_INCREMENT PRIMARY KEY,
-    name VARCHAR(255) NOT NULL UNIQUE
+    name VARCHAR(255) NOT NULL UNIQUE,
+    color VARCHAR(7) NOT NULL ,
+    image_url VARCHAR(255) NOT NULL ,
+    description VARCHAR(255)
 );
 
 CREATE TABLE product
@@ -17,19 +20,9 @@ CREATE TABLE product
 CREATE TABLE member
 (
     id       BIGINT AUTO_INCREMENT PRIMARY KEY,
-    name     VARCHAR(255) NOT NULL,
     email    VARCHAR(255) NOT NULL UNIQUE,
     password VARCHAR(255) NOT NULL,
     role     VARCHAR(50)  NOT NULL
-);
-
-CREATE TABLE wishlist
-(
-    id         BIGINT AUTO_INCREMENT PRIMARY KEY,
-    member_id  BIGINT NOT NULL,
-    product_id BIGINT NOT NULL,
-    FOREIGN KEY (member_id) REFERENCES member (id),
-    FOREIGN KEY (product_id) REFERENCES product (id)
 );
 
 CREATE TABLE options
@@ -41,6 +34,16 @@ CREATE TABLE options
     FOREIGN KEY (product_id) REFERENCES product (id),
     UNIQUE (product_id, name)
 );
+
+CREATE TABLE wishlist
+(
+    id         BIGINT AUTO_INCREMENT PRIMARY KEY,
+    member_id  BIGINT NOT NULL,
+    option_id BIGINT NOT NULL,
+    FOREIGN KEY (member_id) REFERENCES member (id),
+    FOREIGN KEY (option_id) REFERENCES options (id)
+);
+
 
 CREATE TABLE orders
 (

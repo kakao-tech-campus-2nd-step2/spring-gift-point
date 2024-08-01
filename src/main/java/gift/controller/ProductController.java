@@ -1,15 +1,22 @@
 package gift.controller;
 
-import gift.dto.ProductDTO;
-import gift.model.Product;
+import gift.dto.PageRequestDTO;
+import gift.dto.ProductAddRequestDTO;
+import gift.dto.ProductAddResponseDTO;
+import gift.dto.ProductGetResponseDTO;
+import gift.dto.ProductPageResponseDTO;
+import gift.dto.ProductUpdateRequestDTO;
+import gift.dto.ProductUpdateResponseDTO;
 
 import gift.service.CategoryService;
 import gift.service.ProductService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import org.springframework.data.domain.Page;
+import jakarta.validation.Valid;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.web.PageableDefault;
+import org.springframework.data.domain.Sort;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -32,37 +39,39 @@ public class ProductController {
         this.categoryService = categoryService;
     }
 
+    @GetMapping
+    @Operation(summary = "상품 목록 조회", description = "모든 상품을 조회합니다.")
+    public ResponseEntity<ProductPageResponseDTO> getAllProduct(@Valid PageRequestDTO pageRequestDTO) {
+        Pageable pageable = PageRequest.of(pageRequestDTO.page(), pageRequestDTO.size(), Sort.by(pageRequestDTO.sort()));
+        ProductPageResponseDTO productPageResponseDTO = productService.findAllProducts(pageable);
+        return ResponseEntity.ok(productPageResponseDTO);
+    }
+    @GetMapping("/{productId}")
+    @Operation(summary = "상품 조회", description = "ID로 상품을 조회합니다.")
+    public ResponseEntity<ProductGetResponseDTO> getProduct(@PathVariable Long productId) {
+        ProductGetResponseDTO productGetResponseDTO = productService.findProductById(productId);
+        return ResponseEntity.ok(productGetResponseDTO);
+    }
+
     @PostMapping
     @Operation(summary = "상품 추가", description = "상품을 추가합니다.")
-    public Product addProduct(@RequestBody ProductDTO newProductDTO) {
-        productService.saveProduct(newProductDTO);
-        return ProductService.toEntity(newProductDTO, null,
-            categoryService.findCategoryById(newProductDTO.categoryId()));
+    public ResponseEntity<ProductAddResponseDTO> addProduct(@RequestBody @Valid ProductAddRequestDTO productAddRequestDTO) {
+        ProductAddResponseDTO productAddResponseDTO = productService.saveProduct(productAddRequestDTO);
+        return ResponseEntity.status(201).body(productAddResponseDTO);
     }
 
-    @GetMapping("/{id}")
-    @Operation(summary = "상품 얻기", description = "ID로 상품을 조회합니다.")
-    public Product getProduct(@PathVariable(value = "id") long id) {
-        return productService.findProductsById(id);
-    }
-
-    @GetMapping
-    @Operation(summary = "모든 상품 얻기", description = "모든 상품을 조회합니다.")
-    public Page<Product> getAllProduct(@PageableDefault(size = 5) Pageable pageable) {
-        return productService.findAllProducts(pageable);
-    }
-
-    @DeleteMapping("/{id}")
-    @Operation(summary = "상품 삭제", description = "상품을 삭제합니다.")
-    public void deleteProduct(@PathVariable(value = "id") long id) {
-        productService.deleteProductAndWishlistAndOptions(id);
-    }
-
-    @PutMapping("/{id}")
+    @PutMapping("/{productId}")
     @Operation(summary = "상품 수정", description = "상품을 수정합니다.")
-    public Product updateProduct(@PathVariable("id") long id,
-        @RequestBody ProductDTO updatedProductDTO) {
-        productService.updateProduct(updatedProductDTO, id);
-        return productService.findProductsById(id);
+    public ResponseEntity<ProductUpdateResponseDTO> updateProduct(@PathVariable Long productId, @RequestBody @Valid ProductUpdateRequestDTO productUpdateRequestDTO) {
+        ProductUpdateResponseDTO productUpdateResponseDTO = productService.updateProduct(productUpdateRequestDTO, productId);
+        return ResponseEntity.ok(productUpdateResponseDTO);
     }
+
+    @DeleteMapping("/{productId}")
+    @Operation(summary = "상품 삭제", description = "상품을 삭제합니다.")
+    public ResponseEntity<Void> deleteProduct(@PathVariable Long productId) {
+        productService.deleteProductAndWishlistAndOptions(productId);
+        return ResponseEntity.noContent().build();
+    }
+
 }

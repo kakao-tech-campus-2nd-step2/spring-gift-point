@@ -1,9 +1,16 @@
 package gift.service;
 
+import gift.dto.CategoryResponseDTO;
+import gift.dto.OptionResponseDTO;
+import gift.dto.ProductAddRequestDTO;
+import gift.dto.ProductAddResponseDTO;
+import gift.dto.ProductGetResponseDTO;
+import gift.dto.ProductUpdateRequestDTO;
+import gift.dto.ProductUpdateResponseDTO;
+import gift.dto.ProductPageResponseDTO;
 import gift.model.Category;
 import gift.model.Option;
 import gift.model.Product;
-import gift.dto.ProductDTO;
 import gift.repository.OptionRepository;
 import gift.repository.ProductRepository;
 import gift.repository.WishlistRepository;
@@ -31,51 +38,68 @@ public class ProductService {
         this.categoryService = categoryService;
     }
 
-    public Page<Product> findAllProducts(Pageable pageable) {
-        return productRepository.findAll(pageable);
+    public ProductPageResponseDTO findAllProducts(Pageable pageable) {
+        Page<Product> products = productRepository.findAll(pageable);
+        return new ProductPageResponseDTO(products);
     }
 
-    public Product findProductsById(Long id) {
-        return productRepository.findById(id).orElse(null);
+    public ProductGetResponseDTO findProductById(Long id) {
+        Product product = productRepository.findById(id).orElse(null);
+        return toGetResponseDTO(product);
     }
 
     @Transactional
-    public void saveProduct(ProductDTO productDTO) {
-        Category category = categoryService.findCategoryById(productDTO.categoryId());
-        Product product = toEntity(productDTO, null, category);
+    public ProductAddResponseDTO saveProduct(ProductAddRequestDTO productAddRequestDTO) {
+        CategoryResponseDTO categoryResponseDTO = categoryService.findCategoryById(productAddRequestDTO.categoryId());
+        Category category = categoryService.responseToEntity(categoryResponseDTO);
+        Product product = new Product(null, productAddRequestDTO.name(), productAddRequestDTO.price(),
+            category, productAddRequestDTO.imageUrl());
         productRepository.save(product);
-        Option temporaryOption = new Option(null, "임시옵션", 1L, product);
-        optionRepository.save(temporaryOption);
+        List<Option> options = productAddRequestDTO.options().stream()
+            .map(optionRequestDTO -> new Option(null, optionRequestDTO.name(), optionRequestDTO.quantity(), product))
+            .toList();
+        optionRepository.saveAll(options);
+        return toAddResponseDTO(product, options);
     }
 
     @Transactional
-    public void updateProduct(ProductDTO productDTO, Long id) {
+    public ProductUpdateResponseDTO updateProduct(ProductUpdateRequestDTO productUpdateRequestDTO, Long id) {
         Product existingProduct = productRepository.findById(id).orElse(null);
-        if (existingProduct != null) {
-            Category category = categoryService.findCategoryById(productDTO.categoryId());
-            existingProduct.updateProduct(productDTO.name(), productDTO.price(), category,
-                productDTO.imageUrl());
-            productRepository.save(existingProduct);
-        }
+        CategoryResponseDTO categoryResponseDTO = categoryService.findCategoryById(productUpdateRequestDTO.categoryId());
+        Category category = categoryService.responseToEntity(categoryResponseDTO);
+        existingProduct.updateProduct(productUpdateRequestDTO.name(), productUpdateRequestDTO.price(), category, productUpdateRequestDTO.imageUrl());
+        productRepository.save(existingProduct);
+        return toUpdateResponseDTO(existingProduct);
     }
 
     @Transactional
     public void deleteProductAndWishlistAndOptions(Long id) {
         Product product = productRepository.findById(id).orElse(null);
-        wishlistRepository.deleteByProduct(product);
         List<Option> options = optionRepository.findAllByProductId(id);
+        wishlistRepository.deleteByOptionIn(options);
         optionRepository.deleteAll(options);
         productRepository.delete(product);
     }
 
-    public static ProductDTO toDTO(Product product) {
-        return new ProductDTO(product.getName(), String.valueOf(product.getPrice()),
-            product.getCategory().getId(), product.getImageUrl());
+    private ProductAddResponseDTO toAddResponseDTO(Product product, List<Option> options) {
+        List<OptionResponseDTO> optionResponseDTOS = options.stream()
+            .map(option -> new OptionResponseDTO(option.getId(), option.getName(), option.getQuantity()))
+            .toList();
+        return new ProductAddResponseDTO(product.getId(), product.getName(), product.getPrice(),
+            product.getImageUrl(), product.getCategory().getId(), optionResponseDTOS);
     }
 
-    public static Product toEntity(ProductDTO productDTO, Long id, Category category) {
-        Product product = new Product(id, productDTO.name(), productDTO.price(),
-            category, productDTO.imageUrl());
-        return product;
+    private ProductGetResponseDTO toGetResponseDTO(Product product) {
+        List<OptionResponseDTO> optionResponseDTOS = optionRepository.findAllByProductId(product.getId()).stream()
+            .map(option -> new OptionResponseDTO(option.getId(), option.getName(), option.getQuantity()))
+            .toList();
+        return new ProductGetResponseDTO(product.getId(), product.getName(), product.getPrice(),
+            product.getImageUrl(), product.getCategory().getId(), optionResponseDTOS);
     }
+
+    private ProductUpdateResponseDTO toUpdateResponseDTO(Product product) {
+        return new ProductUpdateResponseDTO(product.getId(), product.getName(), product.getPrice(),
+            product.getImageUrl(), product.getCategory().getId());
+    }
+
 }
