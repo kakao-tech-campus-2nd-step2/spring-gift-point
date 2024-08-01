@@ -11,6 +11,8 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Objects;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
@@ -37,6 +39,8 @@ public class Wish {
     @JoinColumn(name = "member_id")
     private Member member;
 
+    private LocalDateTime createdDate;
+
     public Wish() {
     }
 
@@ -44,6 +48,7 @@ public class Wish {
         this.productName = product.getName();
         this.product = product;
         this.member = member;
+        this.createdDate = LocalDateTime.now();
     }
 
     public Long getId() {
