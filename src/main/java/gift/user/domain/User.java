@@ -30,6 +30,8 @@ public class User {
 	@Column(nullable = false)
 	private Set<Role> roles = new LinkedHashSet<>();
 
+	private Long point;
+
 	public User() {
 	}
 
@@ -57,5 +59,25 @@ public class User {
 
 	public Set<Role> getRole() {
 		return roles;
+	}
+
+	public Long getPoint() {
+		return point;
+	}
+
+	public boolean chargePoint(Long point) {
+		if (point < 0) {
+			return false;
+		}
+		this.point += point;
+		return true;
+	}
+
+	public boolean addPoint(Long point) {
+		if (point < 0) {
+			return false;
+		}
+		this.point += point;
+		return true;
 	}
 }
