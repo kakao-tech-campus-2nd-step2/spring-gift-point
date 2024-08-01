@@ -51,10 +51,10 @@ public class WebMvcConfig implements WebMvcConfigurer {
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(jwtInterceptor())
                 .excludePathPatterns(
-                        "/api/v1/oauth/**",
-                        "/api/v1/members/**");
+                        "/api/oauth/**",
+                        "/api/members/**");
         registry.addInterceptor(authorizationInterceptor())
-                .addPathPatterns("/api/v1/admin/**");
+                .addPathPatterns("/api/admin/**");
         registry.addInterceptor(adminInterceptor())
                 .addPathPatterns("/admin/**");
         WebMvcConfigurer.super.addInterceptors(registry);

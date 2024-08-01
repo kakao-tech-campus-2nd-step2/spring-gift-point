@@ -4,6 +4,7 @@ import gift.common.enums.Role;
 import gift.common.exception.DuplicateDataException;
 import gift.common.exception.EntityNotFoundException;
 import gift.controller.dto.request.MemberRequest;
+import gift.controller.dto.request.PointUpdateRequest;
 import gift.controller.dto.response.MemberResponse;
 import gift.controller.dto.response.PagingResponse;
 import gift.controller.dto.response.PointResponse;
@@ -58,6 +59,14 @@ public class MemberService {
     public PointResponse findPointById(Long id) {
         Member member = memberRepository.findById(id)
                 .orElseThrow(()-> new EntityNotFoundException("존재하지 않는 멤버입니다."));
+        return PointResponse.of(member.getPoint());
+    }
+
+    @Transactional
+    public PointResponse updatePointById(Long id, PointUpdateRequest request) {
+        Member member = memberRepository.findById(id)
+                .orElseThrow(()-> new EntityNotFoundException("존재하지 않는 멤버입니다."));
+        member.addPoint(request.depositPoint());
         return PointResponse.of(member.getPoint());
     }
 

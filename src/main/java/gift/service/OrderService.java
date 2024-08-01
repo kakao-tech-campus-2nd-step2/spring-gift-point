@@ -51,7 +51,7 @@ public class OrderService {
         Member member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 멤버입니다."));
         member.usePoint(orderRequest.point());
-        int price = product.validPoint(orderRequest.point());
+        int price = product.usePoint(orderRequest.point());
 
         Orders orders = orderRepository.save(new Orders(product.getId(), option.getId(), memberId, product.getName(),
                 product.getImageUrl(), option.getName(), price, orderRequest.quantity(), orderRequest.message(), orderRequest.point()));

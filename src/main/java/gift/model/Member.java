@@ -75,9 +75,8 @@ public class Member extends BasicEntity {
         }
     }
 
-    public int addPoint(int deposit) {
+    public void addPoint(int deposit) {
         point += deposit;
-        return point;
     }
 
     public void usePoint(int amount) {
