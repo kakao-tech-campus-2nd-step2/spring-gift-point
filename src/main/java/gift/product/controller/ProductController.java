@@ -124,6 +124,6 @@ public class ProductController {
     @Operation(summary = "상품 옵션 삭제", tags = {"상품 옵션 API"})
     public ResponseEntity<Void> deleteOption(@PathVariable Long productId, @PathVariable Long optionId) {
         optionService.deleteOption(productId, optionId);
-        return new ResponseEntity<>(HttpStatus.OK);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }
