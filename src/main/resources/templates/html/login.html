@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="https://www.thymeleaf.org">
+<head>
+  <meta http-equiv="Content-Type" , content="text/html; charset=UTF-8"/>
+  <link th:href="@{/css/login.css}" rel="stylesheet"/>
+  <script th:src="@{/js/main.js}" type="text/javascript"></script>
+  <title>Login Page</title>
+</head>
+<header>
+  <span class="title y-middle x-start">Login Page</span>
+  <div id="buttons" class="x-end y-middle">
+    <button
+        type="button"
+        class="normal-buttons"
+        onclick="loadRegistrationPage()"
+    >
+      회원 가입
+    </button>
+  </div>
+</header>
+<body>
+<form id="loginform" class="xy-middle">
+  <table id="logintable">
+    <tr>
+      <td>
+        <label for="email">이메일</label>
+      </td>
+      <td>
+        <input type="email" name="email" id="email" required/>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <label for="password">비밀번호</label>
+      </td>
+      <td>
+        <input type="password" name="password" id="password" required/>
+      </td>
+    </tr>
+  </table>
+  <br/>
+  <button
+      type="button"
+      class="normal-buttons y-end x-middle"
+      onclick="login()"
+  >
+    로그인
+  </button>
+</form>
+
+<script th:inline="javascript">
+  async function login() {
+    const targetUrl = '/api/login';
+    const email = document.getElementById('email').value;
+    const password = document.getElementById('password').value;
+    const headers = {'Content-Type': 'application/json'};
+    const body = JSON.stringify({
+      email: email,
+      password: password,
+    });
+
+    const result = await requestApi(targetUrl, headers, body, 'post');
+
+    if (result.response) {
+      alert(result.response);
+    } else if (result.token && result.userId) {
+      loadWishListPage(result.token, result.userId);
+    } else {
+      alert('알 수 없는 에러가 발생했습니다.');
+    }
+  }
+
+  function loadRegistrationPage() {
+    const targetUrl = '/registration';
+    const headers = {};
+
+    requestView(targetUrl, headers);
+  }
+
+  function loadWishListPage(token, userId) {
+    const targetUrl = `/users/${userId}/main?page-no=0&&sorting-state=0`;
+    const headers = {Authorization: `Bearer ${token}`};
+
+    requestView(targetUrl, headers);
+  }
+</script>
+</body>
+</html>

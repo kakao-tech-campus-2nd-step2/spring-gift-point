@@ -1,0 +1,29 @@
+spring:
+  application:
+    name: spring-gift
+  h2:
+    console:
+      enabled: true
+  datasource:
+    username: sa
+    url: jdbc:h2:mem:test
+  sql:
+    init:
+      mode: always
+      data-locations: classpath:static/sql/data.sql
+  jpa:
+    properties:
+      hibernate:
+        format_sql: true
+    show-sql: true
+    ddl-auto: create
+    defer-datasource-initialization: true
+
+auth:
+  kakao:
+    client-id: ${CLIENT_ID}
+    redirect-uri: ${REDIRECT_URL}
+    response-type: "code"
+    grant-type: "authorization_code"
+  admin:
+    kakao-admin-id: ${ADMIN_ID}
