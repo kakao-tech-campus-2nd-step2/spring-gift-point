@@ -61,8 +61,8 @@ public class ProductRestController {
     @Operation(summary = "특정 카테고리별 상품 조회", description = "카테고리별로 상품들을 조회한다.")
     @GetMapping("/categories/{category_id}")
     public ResponseEntity<List<ProductResponse>> getProductByCategory(
-        @RequestParam("category_id") Long categoryId) {
-        List<ProductResponse> products = productService.getProductByCategoryId(categoryId);
+        @RequestParam Long category_id) {
+        List<ProductResponse> products = productService.getProductByCategoryId(category_id);
         return ResponseEntity.ok(products);
     }
 
