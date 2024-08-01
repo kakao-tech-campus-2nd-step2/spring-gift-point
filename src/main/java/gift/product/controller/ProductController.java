@@ -50,8 +50,8 @@ public class ProductController {
             size = PageConfig.PAGE_PER_COUNT,
             sort = PageConfig.SORT_STANDARD,
             direction = Direction.ASC
-        ) Pageable pageable) {
-        Page<ProductResponse> products = productService.getAllProducts(pageable);
+        ) Pageable pageable, @RequestParam(required = false) Long categoryId) {
+        Page<ProductResponse> products = productService.getAllProducts(pageable, categoryId);
         return ResponseEntity.ok(products);
     }
 

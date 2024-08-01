@@ -12,6 +12,7 @@ import gift.product.entity.Product;
 import gift.product.option.dto.request.CreateOptionRequest;
 import gift.product.option.service.OptionService;
 import gift.product.repository.ProductJpaRepository;
+import java.util.Optional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -32,9 +33,11 @@ public class ProductService {
     }
 
     @Transactional(readOnly = true)
-    public Page<ProductResponse> getAllProducts(Pageable pageable) {
-        Page<Product> products = productRepository.findAll(pageable);
-        return products.map(ProductResponse::from);
+    public Page<ProductResponse> getAllProducts(Pageable pageable, Long categoryId) {
+        return Optional.ofNullable(categoryId)
+            .map(id -> productRepository.findAllByCategoryId(id, pageable))
+            .orElseGet(() -> productRepository.findAll(pageable))
+            .map(ProductResponse::from);
     }
 
     @Transactional(readOnly = true)
