@@ -1,5 +1,6 @@
 package gift.DTO;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -15,7 +16,7 @@ import java.util.List;
 @Table
 public class Category {
 
-  @OneToMany(mappedBy = "category")
+  @OneToMany(mappedBy = "category",cascade = CascadeType.REMOVE)
   private final List<Product> products = new ArrayList<>();
 
   @Id

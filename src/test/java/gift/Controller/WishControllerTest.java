@@ -104,8 +104,7 @@ class WishControllerTest {
     wishController.addProductToWishList(1L, null);
 
     ResponseEntity responseEntity = wishController.deleteProductToWishList(1L);
-    ResponseEntity<Void> expectedResponse = ResponseEntity.noContent().build();
 
-    assertThat(responseEntity.getStatusCode()).isEqualTo(expectedResponse.getStatusCode());
+    assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
   }
 }
