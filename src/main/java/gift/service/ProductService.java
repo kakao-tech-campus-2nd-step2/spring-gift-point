@@ -107,7 +107,7 @@ public class ProductService {
         // 새로 저장된 Option을 찾기
         Option addedOption = addedOptionProduct.getOptionByName(optionDto.name());
 
-        return new OptionDto(addedOption.getId(), addedOption.getName(), addedOption.getQuantity());
+        return new OptionDto(addedOption.getId(), addedOption.getName(), addedOption.getQuantity(), addedOptionProduct.getId());
     }
 
     @Transactional
@@ -119,7 +119,7 @@ public class ProductService {
 
         productRepository.save(product);
 
-        return new OptionDto(updatedOption.getId(), updatedOption.getName(), updatedOption.getQuantity());
+        return new OptionDto(updatedOption.getId(), updatedOption.getName(), updatedOption.getQuantity(), updatedOption.getId());
     }
 
     @Transactional
