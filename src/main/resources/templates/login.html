@@ -8,7 +8,7 @@
 <body>
 <div class="container">
     <h2>로그인</h2>
-    <form th:action="@{/login}" method="post">
+    <form id="loginForm">
         <div class="form-group">
             <label for="email">email:</label>
             <input type="text" id="email" name="email" class="form-control" required>
@@ -27,9 +27,34 @@
         </a>
 
         <div class="form-group">
-            <p th:if="${error}" style="color: red;">로그인 실패: 아이디 또는 비밀번호를 확인하세요.</p>
+            <p id="error" style="color: red;"></p>
         </div>
     </form>
 </div>
+
+<script>
+    document.getElementById('loginForm').addEventListener('submit', async function(event) {
+        event.preventDefault();
+
+        const email = document.getElementById('email').value;
+        const password = document.getElementById('password').value;
+
+        const response = await fetch('/login', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ email, password })
+        });
+
+        const result = await response.text();
+
+        if (response.ok) {
+            window.location.href = result;
+        } else {
+            document.getElementById('error').textContent = '로그인 실패: 아이디 또는 비밀번호를 확인하세요.';
+        }
+    });
+</script>
 </body>
 </html>
