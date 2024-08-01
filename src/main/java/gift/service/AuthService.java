@@ -1,9 +1,13 @@
 package gift.service;
 
-import gift.dto.UserDTO;
+import gift.dto.TokenDTO;
+import gift.dto.user.UserDTO;
 import gift.exceptions.CustomException;
 import gift.model.User;
 import gift.repository.UserRepository;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -12,6 +16,13 @@ public class AuthService {
 
     public AuthService(UserRepository userRepository) {
         this.userRepository = userRepository;
+    }
+
+    public ResponseEntity<Void> createResponse(TokenDTO tokenDTO) {
+        var headers = new HttpHeaders();
+        headers.add("Authorization", "Bearer " + tokenDTO.token());
+
+        return new ResponseEntity<>(headers, HttpStatus.OK);
     }
 
     public void redundantUser(String state, UserDTO userDTO) {
