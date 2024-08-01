@@ -1,9 +1,9 @@
 package gift.controller;
 
 import gift.dto.PageRequestDTO;
-import gift.dto.InputProductDTO;
-import gift.dto.ProductDTO;
-import gift.dto.UpdateProductDTO;
+import gift.dto.productDTOs.InputProductDTO;
+import gift.dto.productDTOs.ProductDTO;
+import gift.dto.productDTOs.UpdateProductDTO;
 import gift.service.ProductService;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;

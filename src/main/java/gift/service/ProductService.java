@@ -1,8 +1,12 @@
 package gift.service;
 
-import gift.dto.*;
-import gift.model.Category;
-import gift.model.Product;
+import gift.dto.productDTOs.CustomProductPageDTO;
+import gift.dto.PageRequestDTO;
+import gift.dto.productDTOs.InputProductDTO;
+import gift.dto.productDTOs.ProductDTO;
+import gift.dto.productDTOs.UpdateProductDTO;
+import gift.model.entity.Category;
+import gift.model.entity.Product;
 import gift.repository.CategoryRepository;
 import gift.repository.ProductRepository;
 import org.springframework.data.domain.Page;
@@ -10,6 +14,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.NoSuchElementException;
 
 @Service
@@ -33,6 +38,17 @@ public class ProductService {
         return productPage.map(ProductDTO::getProductDTO);
     }
 
+    //전체 조회
+    public CustomProductPageDTO getAllProductsByCustomPage(PageRequestDTO pageRequestDTO) {
+        Pageable pageable = PageRequest.of(pageRequestDTO.getPage(), pageRequestDTO.getSize(), pageRequestDTO.getSort());
+        Page<Product> productPage = productRepository.findAll(pageable);
+
+        List<ProductDTO> productDTOs = productPage.stream()
+                .map(ProductDTO::getProductDTO)
+                .toList();
+        return new CustomProductPageDTO(productDTOs, productPage.getNumber(), productPage.getTotalPages(), productPage.getTotalElements());
+    }
+
     //하나 조회
     public ProductDTO getProductDTOById(Long id) {
         Product product = productRepository.findById(id)
@@ -42,7 +58,7 @@ public class ProductService {
                 product.getName(),
                 product.getPrice(),
                 product.getImageUrl(),
-                product.getCategory().getName());
+                product.getCategory().getId());
         return productDTO;
     }
 

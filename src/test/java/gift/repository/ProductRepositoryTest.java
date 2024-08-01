@@ -1,7 +1,7 @@
 package gift.repository;
 
-import gift.model.Category;
-import gift.model.Product;
+import gift.model.entity.Category;
+import gift.model.entity.Product;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

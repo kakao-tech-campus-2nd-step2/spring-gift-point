@@ -1,8 +1,8 @@
 package gift.service;
 
-import gift.dto.AddOptionDTO;
-import gift.model.Option;
-import gift.model.Product;
+import gift.dto.optionsDTOs.AddOptionDTO;
+import gift.model.entity.Option;
+import gift.model.entity.Product;
 import gift.repository.OptionRepository;
 import gift.repository.ProductRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -15,7 +15,6 @@ import org.mockito.MockitoAnnotations;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
-import java.util.concurrent.atomic.AtomicLong;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.mockito.ArgumentMatchers.any;

@@ -1,7 +1,10 @@
 package gift.repository;
 
 import gift.dto.PageRequestDTO;
-import gift.model.*;
+import gift.model.entity.Category;
+import gift.model.entity.Member;
+import gift.model.entity.Product;
+import gift.model.entity.Wish;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

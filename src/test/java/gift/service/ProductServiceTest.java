@@ -1,9 +1,9 @@
 package gift.service;
 
-import gift.dto.InputProductDTO;
-import gift.dto.UpdateProductDTO;
-import gift.model.Category;
-import gift.model.Product;
+import gift.dto.productDTOs.InputProductDTO;
+import gift.dto.productDTOs.UpdateProductDTO;
+import gift.model.entity.Category;
+import gift.model.entity.Product;
 import gift.repository.CategoryRepository;
 import gift.repository.ProductRepository;
 import org.junit.jupiter.api.BeforeEach;

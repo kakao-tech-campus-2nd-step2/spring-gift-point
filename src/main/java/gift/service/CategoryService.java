@@ -1,7 +1,7 @@
 package gift.service;
 
 import gift.dto.CategoryDTO;
-import gift.model.Category;
+import gift.model.entity.Category;
 import gift.repository.CategoryRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,10 +21,10 @@ public class CategoryService {
 
     public void saveCategory(CategoryDTO categoryDTO){
         Optional<Category> existCategory = categoryRepository.findByName(categoryDTO.getName());
-        if(existCategory.isPresent()){
+        existCategory.ifPresent(category -> {
             throw new IllegalArgumentException("이미 존재하는 카테고리 입니다.");
-        }
-        Category category = new Category(categoryDTO.getName());
+        });
+        Category category = new Category(categoryDTO.getName(), categoryDTO.getColor(), categoryDTO.getImageUrl(), categoryDTO.getDescription());
         categoryRepository.save(category);
     }
 

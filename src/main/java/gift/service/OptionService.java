@@ -1,15 +1,17 @@
 package gift.service;
 
-import gift.dto.AddOptionDTO;
-import gift.dto.GetOptionDTO;
-import gift.model.Option;
-import gift.model.OptionList;
-import gift.model.Product;
+import gift.dto.optionsDTOs.AddOptionDTO;
+import gift.dto.optionsDTOs.AllOptionDto;
+import gift.dto.optionsDTOs.GetOptionDTO;
+import gift.model.entity.Option;
+import gift.model.valueObject.OptionList;
+import gift.model.entity.Product;
 import gift.repository.OptionRepository;
 import gift.repository.ProductRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
 
@@ -42,14 +44,17 @@ public class OptionService {
 
         Product product = productRepository.findById(productID)
                 .orElseThrow(() -> new NoSuchElementException("해당 상품이 없습니다."));
+
+        List<Option> optionsToSave = new ArrayList<>();
         for(int i=0; i<optionList.size(); i++){
             Option addOption = new Option(
                     optionList.get(i),
                     Long.parseLong(optionQuantities.get(i)),
                     product
             );
-            optionRepository.save(addOption);
+            optionsToSave.add(addOption);
         }
+        optionRepository.saveAll(optionsToSave);
     }
 
     @Transactional
@@ -91,7 +96,7 @@ public class OptionService {
         optionRepository.save(updateOption);
     }
 
-    public GetOptionDTO getOptions(Long productId){
+    public GetOptionDTO getOptionsForHtml(Long productId){
         List<Option> optionList = optionRepository.findAllByProduct_Id(productId);
         List<String> optionNameList = optionList.stream()
                 .map(Option::getName)
@@ -101,5 +106,18 @@ public class OptionService {
                 optionNameList
         );
         return getOptionDTO;
+    }
+
+    public List<AllOptionDto> getAllOptions(Long productId){
+        List<Option> optionListT = optionRepository.findAllByProduct_Id(productId);
+        List<AllOptionDto> optionList = optionListT.stream()
+                .map(AllOptionDto::getAllOptionDto)
+                .toList();
+        return optionList;
+    }
+
+    public Option getOption(Long id){
+        return optionRepository.findById(id)
+                .orElseThrow(() -> new NoSuchElementException("해당 옵션이 없습니다."));
     }
 }

@@ -1,10 +1,11 @@
 package gift.service;
 
+import gift.dto.wishDTOs.CustomWishPageDTO;
 import gift.dto.PageRequestDTO;
-import gift.model.Member;
-import gift.model.Product;
-import gift.model.Wish;
-import gift.dto.WishDTO;
+import gift.model.entity.Member;
+import gift.model.entity.Product;
+import gift.model.entity.Wish;
+import gift.dto.wishDTOs.WishDTO;
 import gift.repository.WishRepository;
 import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
@@ -23,21 +24,18 @@ public class WishService {
         this.wishRepository = wishRepository;
     }
 
-    public List<WishDTO> getWishlist(long memberId, PageRequestDTO pageRequestDTO) throws AuthenticationException {
-        Pageable pageable = PageRequest.of(pageRequestDTO.getPage(),
-                pageRequestDTO.getSize(), pageRequestDTO.getSort());
+    public CustomWishPageDTO getWishlist(long memberId, PageRequestDTO pageRequestDTO) throws AuthenticationException {
+        Pageable pageable = PageRequest.of(pageRequestDTO.getPage(), pageRequestDTO.getSize(), pageRequestDTO.getSort());
 
-        Page<Wish> pageWishlist = wishRepository.findByMember_Id(memberId, pageable);
-        List<Wish> wishlist = pageWishlist.getContent();
+        Page<Wish> wishlistPage = wishRepository.findByMember_Id(memberId, pageable);
 
-        List<WishDTO> list = wishlist.stream()
-                .map(WishDTO::getWishDTO)
+        List<WishDTO> wishDTOs = wishlistPage.stream()
+                .map(WishDTO::getWishProductDTO)
                 .collect(Collectors.toList());
-
-        return list;
+        return new CustomWishPageDTO(wishDTOs, wishlistPage.getNumber(), wishlistPage.getTotalPages(), wishlistPage.getTotalElements());
     }
 
-    public void postWishlist(Long productId, Member member) throws AuthenticationException {
+    public void postWishlist(Long productId, Member member){
         Product product = productService.getProductById(productId);
         Wish wish = new Wish(member, product);
         wishRepository.save(wish);

@@ -43,7 +43,7 @@
     Admin
 </h1>
 <div>
-    <form th:action="@{/kakao}" method="Get" style="display: inline;">
+    <form th:action="@{/oauth/kakao}" method="Get" style="display: inline;">
         <button type="submit">KakaoLogin</button>
     </form><br>
     <form th:action="@{/postform}" method="Get" style="display: inline;">
@@ -86,7 +86,7 @@
             <td th:text="${product.name}"></td>
             <td th:text="${product.price}"></td>
             <td th:text="${product.imageUrl}"></td>
-            <td th:text="${product.category}"></td>
+            <td th:text="${product.categoryId}"></td>
             <td>
                 <form th:action="@{/options/{id}(id=${product.id})}" method="Post" style="display: inline;">
                     <button type="submit">Option</button>
