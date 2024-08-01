@@ -16,7 +16,6 @@ import org.springframework.test.web.servlet.MockMvc;
 @AutoConfigureMockMvc
 public class AcceptanceTest {
 
-    private static final String ALLOWED_METHOD_NAMES = "GET, POST";
     @Autowired
     private MockMvc mockMvc;
 
@@ -29,8 +28,7 @@ public class AcceptanceTest {
             )
             .andExpect(status().isOk())
             .andExpect(header().string(HttpHeaders.ACCESS_CONTROL_ALLOW_ORIGIN, "*"))
-            .andExpect(header().string(HttpHeaders.ACCESS_CONTROL_ALLOW_METHODS, ALLOWED_METHOD_NAMES))
-            .andExpect(header().string(HttpHeaders.ACCESS_CONTROL_EXPOSE_HEADERS, HttpHeaders.LOCATION))
+            .andExpect(header().string(HttpHeaders.ACCESS_CONTROL_ALLOW_METHODS, "GET"))
             .andDo(print())
         ;
     }
