@@ -1,5 +1,6 @@
 package gift.service;
 
+import gift.DTO.product.ProductPageResponse;
 import gift.DTO.product.ProductRequest;
 import gift.DTO.product.ProductResponse;
 import gift.domain.Category;
@@ -34,7 +35,7 @@ public class ProductService {
     }
 
     @Transactional(readOnly = true)
-    public List<ProductResponse> findPagedProductsByCategoryId(Pageable pageable, Long categoryId) {
+    public Page<ProductResponse> findPagedProductsByCategoryId(Pageable pageable, Long categoryId) {
         Page<Product> productPage;
         if (categoryId == null) {
             productPage = productRepository.findAll(pageable);
@@ -42,11 +43,8 @@ public class ProductService {
             Category category = categoryService.getCategoryById(categoryId);
             productPage = productRepository.findByCategory(category, pageable);
         }
- 
-        List<ProductResponse> responses = productPage.stream()
-                                        .map(ProductResponse::fromEntity)
-                                        .toList();
-        return responses;
+
+        return productPage.map(ProductResponse::fromEntity);
     }
 
     @Transactional(readOnly = true)

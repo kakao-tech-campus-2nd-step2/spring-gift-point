@@ -7,6 +7,7 @@ import gift.service.MemberService;
 import gift.service.ProductService;
 import jakarta.validation.Valid;
 import java.util.List;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
@@ -41,13 +42,13 @@ public class AdminController {
      * @return 모든 상품 목록
      */
     @GetMapping("/products")
-    public ResponseEntity<List<ProductResponse>> getProducts(
+    public ResponseEntity<Page<ProductResponse>> getProducts(
         @PageableDefault(page = 0, size = 10)
         @SortDefault(sort = "name", direction = Sort.Direction.ASC) Pageable pageable,
         @RequestParam(required = false) Long categoryId
     ) {
-        List<ProductResponse> products = productService.findPagedProductsByCategoryId(pageable, categoryId);
-        return new ResponseEntity<>(products, HttpStatus.OK);
+        Page<ProductResponse> products = productService.findPagedProductsByCategoryId(pageable, categoryId);
+        return ResponseEntity.status(HttpStatus.OK).body(products);
     }
 
     /**

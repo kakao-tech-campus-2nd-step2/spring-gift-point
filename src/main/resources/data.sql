@@ -17,11 +17,11 @@ INSERT INTO product (name, price, image_url, category_id)
     VALUES ('Product 3', 3000, 'http://example.com/product3.jpg', 3);
 
 -- Insert Options
-INSERT INTO option (name, quantity, product_id)
+INSERT INTO `option` (name, quantity, product_id)
     VALUES ('Option 1 for Product 1', 10, 1);
-INSERT INTO option (name, quantity, product_id)
+INSERT INTO `option` (name, quantity, product_id)
     VALUES ('Option 1 for Product 2', 20, 2);
-INSERT INTO option (name, quantity, product_id)
+INSERT INTO `option` (name, quantity, product_id)
     VALUES ('Option 1 for Product 3', 30, 3);
 
 -- Insert wishlist items
