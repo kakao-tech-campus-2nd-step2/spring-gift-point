@@ -47,4 +47,16 @@ public class Category {
     public void setName(String name) {
         this.name = name;
     }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public String getColor() {
+        return color;
+    }
 }

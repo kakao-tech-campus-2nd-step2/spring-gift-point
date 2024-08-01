@@ -18,6 +18,7 @@ public enum ErrorCode {
     LOGIN_FAILED("로그인에 실패하였습니다.", HttpStatus.UNAUTHORIZED),
 
     USER_NOT_FOUND("유저를 찾을 수 없습니다.", HttpStatus.UNAUTHORIZED),
+    INVALID_PASSWORD("비밀번호가 일치하지 않습니다.", HttpStatus.BAD_REQUEST),
 
 
     // Wishlist ErrorMessage
@@ -27,6 +28,7 @@ public enum ErrorCode {
     PRODUCT_OPTION_NOT_FOUND("해당 상품 옵션을 찾을 수 없습니다.", HttpStatus.BAD_REQUEST),
     NOT_USER_OWNED("해당 유저의 소유가 아닙니다.", HttpStatus.BAD_REQUEST),
     INVALID_USER_TYPE("유효하지 않은 사용자 타입입니다.", HttpStatus.BAD_REQUEST),
+
     ;
 
     private final String message;

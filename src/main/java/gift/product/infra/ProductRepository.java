@@ -1,9 +1,12 @@
 package gift.product.infra;
 
+import gift.product.domain.CreateProductOptionRequestDTO;
 import gift.product.domain.Product;
 import gift.product.domain.ProductOption;
 import gift.product.exception.ProductException;
 import gift.util.ErrorCode;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -32,20 +35,26 @@ public class ProductRepository {
         productJpaRepository.deleteById(id);
     }
 
-    public List<Product> findAll() {
-        return productJpaRepository.findAll();
+    public Page<Product> findAll(Pageable pageable) {
+        return productJpaRepository.findAll(pageable);
     }
+
 
     public List<ProductOption> findProductOptionsByProductId(Long productId) {
         return productOptionJpaRepository.findByProductId(productId);
     }
 
-    public ProductOption saveProductOption(ProductOption productOption) {
-        return productOptionJpaRepository.save(productOption);
-    }
-
     public ProductOption getProductWithOption(Long productId, Long optionId) {
         return productOptionJpaRepository.findByProductIdAndId(productId, optionId)
                 .orElseThrow(() -> new ProductException(ErrorCode.PRODUCT_OPTION_NOT_FOUND));
+    }
+
+    public Product updateProductOption(Product product, CreateProductOptionRequestDTO createProductOptionRequestDTO) {
+        productOptionJpaRepository.save(new ProductOption(createProductOptionRequestDTO.getName(), createProductOptionRequestDTO.getQuantity(), product));
+        return productJpaRepository.save(product);
+    }
+
+    public Page<Product> findByCategoryId(Long categoryId, Pageable pageable) {
+        return productJpaRepository.findByCategoryId(categoryId, pageable);
     }
 }

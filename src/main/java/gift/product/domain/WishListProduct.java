@@ -1,5 +1,6 @@
 package gift.product.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 @Entity(name = "wishlist_product")
@@ -10,27 +11,22 @@ public class WishListProduct {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "wishlist_id")
+    @JsonIgnore
     private WishList wishList;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "product_id")
     private Product product;
-
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "product_option_id")
-    private ProductOption productOption;
-
     private Long quantity;
 
     public WishListProduct() {
     }
 
-    public WishListProduct(WishList wishList, Product product, ProductOption productOption, Long quantity) {
+    public WishListProduct(WishList wishList, Product product, Long quantity) {
         this.wishList = wishList;
         this.product = product;
-        this.productOption = productOption;
         this.quantity = quantity;
     }
 
@@ -58,12 +54,12 @@ public class WishListProduct {
         this.product = product;
     }
 
-
-    public ProductOption getProductOption() {
-        return productOption;
-    }
-
     public Long getQuantity() {
         return quantity;
     }
+
+    public void setQuantity(Long quantity) {
+        this.quantity = quantity;
+    }
+
 }

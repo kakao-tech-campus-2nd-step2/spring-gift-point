@@ -2,6 +2,7 @@ package gift.product.domain;
 
 import jakarta.persistence.*;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,8 +15,10 @@ public class Product {
     private Long id;
 
     private String name;
-    private Double price;
+    private Long price;
     private String imageUrl;
+
+    private LocalDateTime createdAt = LocalDateTime.now();
 
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<WishListProduct> wishListProducts = new ArrayList<>();
@@ -26,7 +29,7 @@ public class Product {
 
     @OneToMany
     @JoinColumn(name = "product_id")
-    private List<ProductOption> productOptions = new ArrayList<>();
+    private List<ProductOption> productOptions;
 
 
     public Product() {
@@ -55,11 +58,11 @@ public class Product {
         this.name = name;
     }
 
-    public Double getPrice() {
+    public Long getPrice() {
         return price;
     }
 
-    public void setPrice(Double price) {
+    public void setPrice(Long price) {
         this.price = price;
     }
 
@@ -71,11 +74,10 @@ public class Product {
         this.imageUrl = imageUrl;
     }
 
-    public void addProductOption(CreateProductOptionRequestDTO createProductOptionRequestDTO) {
-        ProductOption productOption = new ProductOption(createProductOptionRequestDTO.getName(), createProductOptionRequestDTO.getQuantity(), this);
-        productOptions.add(productOption);
-    }
 
+    public List<ProductOption> getProductOptions() {
+        return productOptions;
+    }
 
     public void addProductOption(ProductOption productOption) {
         productOptions.add(productOption);

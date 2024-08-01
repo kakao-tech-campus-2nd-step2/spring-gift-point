@@ -1,8 +1,7 @@
 package gift.user.presentation;
 
 import gift.user.application.UserService;
-import gift.user.domain.User;
-import gift.user.domain.UserRegisterRequest;
+import gift.user.domain.*;
 import gift.util.CommonResponse;
 import gift.util.JwtUtil;
 import io.swagger.v3.oas.annotations.Operation;
@@ -12,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 
 @Tag(name = "UserController", description = "유저 관련 API")
 @RestController
-@RequestMapping("/api/v1")
+@RequestMapping("/api")
 public class UserController {
 
     private final UserService userService;
@@ -23,30 +22,30 @@ public class UserController {
         this.jwtUtil = jwtUtil;
     }
 
-    @Operation(summary = "유저 등록", description = "새로운 유저를 등록합니다.")
+    @Operation(summary = "일반 유저 등록", description = "새로운 유저를 등록합니다.")
     @PostMapping("/register")
-    public ResponseEntity<?> registerUser(@RequestBody UserRegisterRequest user) {
-        User registeredUser = userService.registerUser(user);
-        return ResponseEntity.ok(new CommonResponse<>(null, "유저 등록이 정상적으로 완료되었습니다", true));
-    }
-
-    @Operation(summary = "유저 로그인", description = "유저 로그인을 처리합니다.")
-    @PostMapping("/login")
-    public ResponseEntity<?> createAuthenticationToken(@RequestBody User user) {
+    public ResponseEntity<?> registerUser(@RequestBody NormalUserRegisterRequest request) {
+        User user = userService.registerUser(request);
         String tokenResponse = jwtUtil.generateToken(user, 60L);
-        return ResponseEntity.ok(new CommonResponse<>(tokenResponse, "로그인이 정상적으로 완료되었습니다", true));
+        return ResponseEntity.ok(new AuthenticationResponse(tokenResponse, user.getEmail()));
     }
 
-    public static class AuthenticationResponse {
-
-        private final String jwt;
-
-        public AuthenticationResponse(String jwt) {
-            this.jwt = jwt;
-        }
-
-        public String getJwt() {
-            return jwt;
-        }
+    @Operation(summary = "일반 유저 로그인", description = "유저 로그인을 처리합니다.")
+    @PostMapping("/login")
+    public ResponseEntity<?> createAuthenticationToken(@RequestBody NormalLoginRequest request) {
+        User user = userService.login(request.getEmail(), request.getPassword());
+        String tokenResponse = jwtUtil.generateToken(user, 60L);
+        return ResponseEntity.ok(new AuthenticationResponse(tokenResponse, user.getEmail()));
     }
+
+    @Operation(summary = "유저 정보 조회", description = "유저 정보를 조회합니다.")
+    @GetMapping("/user")
+    public ResponseEntity<?> getUserInfo() {
+        return ResponseEntity.ok(new CommonResponse<>(
+                userService.getUsers(),
+                "유저 정보 조회 성공",
+                true
+        ));
+    }
+
 }

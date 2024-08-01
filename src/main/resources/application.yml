@@ -18,6 +18,7 @@ spring:
     init:
       mode: always
       schema-locations: classpath:/db/schema.sql
+      data-locations: classpath:/db/data.sql
 
   jpa:
     properties:
@@ -25,7 +26,7 @@ spring:
         format_sql: true
     show_sql: true
     hibernate:
-      ddl-auto: create
+      ddl-auto: validate
 
 logging:
   level:
@@ -51,6 +52,5 @@ springdoc:
   writer-with-default-pretty-printer: true
   model-and-view-allowed: true
   paths-to-match:
-    - /api/v1/**
-    - /login/**
+    - /api/**
 

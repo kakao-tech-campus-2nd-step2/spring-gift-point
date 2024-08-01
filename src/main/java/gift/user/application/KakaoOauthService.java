@@ -1,9 +1,6 @@
 package gift.user.application;
 
-import gift.user.domain.KakaoLoginResponseDTO;
-import gift.user.domain.KakaoProfile;
-import gift.user.domain.User;
-import gift.user.domain.UserRegisterRequest;
+import gift.user.domain.*;
 import gift.util.JwtUtil;
 import gift.util.TokenResponse;
 import org.springframework.beans.factory.annotation.Value;
@@ -113,7 +110,7 @@ public class KakaoOauthService {
         KakaoProfile profile = getKakaoUserProfile(accessToken);
 
         // 3. 사용자 정보 저장
-        UserRegisterRequest registerRequest = new UserRegisterRequest(profile.getNickname(), profile.getProfileImage(), profile.getId());
+        UserRegisterRequest registerRequest = new KakaoUserRegisterRequest(profile.getNickname(), profile.getProfileImage(), profile.getId());
         User user = userManageService.registerUser(registerRequest);
 
         // 4. JWT 액세스 토큰 및 리프레시 토큰 생성

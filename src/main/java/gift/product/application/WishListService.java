@@ -8,15 +8,14 @@ import gift.user.application.UserService;
 import gift.user.domain.User;
 import gift.util.ErrorCode;
 import jakarta.transaction.Transactional;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
-
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
-import org.springframework.stereotype.Service;
 
 @Service
 public class WishListService {
@@ -32,34 +31,22 @@ public class WishListService {
         this.userService = userService;
     }
 
-    public WishList getWishListByUserId(Long userId) {
-        return wishListRepository.findByUserId(userId);
-    }
 
-    public Page<WishList> getProductsInWishList(Long userId, int page, int size, String sortBy, String direction) {
-        Sort sort = direction.equalsIgnoreCase(Sort.Direction.ASC.name()) ? Sort.by(sortBy).ascending()
-                : Sort.by(sortBy).descending();
-        Pageable pageable = PageRequest.of(page, size, sort);
-
+    public List<WishListResponse> getWishListByUserId(Long userId, Pageable pageable) {
         if (wishListRepository.findByUserId(userId, pageable).isEmpty()) {
-            throw new ProductException(ErrorCode.WISHLIST_NOT_FOUND);
+            return new ArrayList<>();
         }
-        return wishListRepository.findByUserId(userId, pageable);
+        Page<WishList> wishLists = wishListRepository.findByUserId(userId, pageable);
+        return wishLists.map(wishList -> {
+            return new WishListResponse(wishList.getId(), wishList.getWishListProduct());
+        }).getContent();
     }
 
     @Transactional
     public void addProductToWishList(AddWishListRequest request) {
-        WishList wishList = findById(request.getWishlistId());
-        if (!Objects.equals(wishList.getUser().getId(), request.getUserId())) {
-            throw new ProductException(ErrorCode.NOT_USER_OWNED);
-        }
-
+        WishList wishList = new WishList(userService.getUser(request.getUserId()), LocalDateTime.now());
         Product product = productRepository.findById(request.getProductId());
-        ProductOption productOption = productRepository.getProductWithOption(request.getProductId(), request.getOptionId());
-
-        wishList.addWishListProduct(new WishListProduct(wishList, product, productOption, request.getQuantity()));
-
-
+        wishList.addWishListProduct(new WishListProduct(wishList, product, 1L));
         wishListRepository.save(wishList);
     }
 
@@ -68,14 +55,18 @@ public class WishListService {
     }
 
     @Transactional
-    public void deleteProductFromWishList(Long userId, Long optionId) {
-        WishList wishList = wishListRepository.findByUserId(userId);
-        if (wishList != null) {
-            wishList.deleteProduct(optionId);
-            wishListRepository.save(wishList);
-        } else {
+    public void deleteProductFromWishList(Long userId, Long wishListId) {
+        List<WishList> wishList = wishListRepository.findByUserId(userId);
+        if (wishList.isEmpty()) {
             throw new ProductException(ErrorCode.WISHLIST_NOT_FOUND);
         }
+
+        WishList targetWishList = wishList.stream()
+                .filter(w -> Objects.equals(w.getId(), wishListId))
+                .findFirst()
+                .orElseThrow(() -> new ProductException(ErrorCode.WISHLIST_NOT_FOUND));
+
+        wishListRepository.delete(targetWishList);
     }
 
     public void createWishList(Long userId) {

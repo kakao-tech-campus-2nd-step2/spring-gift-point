@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @Tag(name = "CategoryController", description = "카테고리 관리 관련 API")
 @RestController
-@RequestMapping("/api/v1/category")
+@RequestMapping("/api")
 public class CategoryController {
 
     private final CategoryService categoryService;
@@ -26,16 +26,12 @@ public class CategoryController {
     }
 
     @Operation(summary = "카테고리 조회", description = "모든 카테고리를 조회합니다.")
-    @GetMapping
+    @GetMapping("/categories")
     public ResponseEntity<?> getCategory() {
-        return ResponseEntity.ok(new CommonResponse<>(
-                categoryService.getCategory(),
-                "카테고리 조회 성공",
-                true
-        ));
+        return ResponseEntity.ok(categoryService.getCategory());
     }
 
-    @AdminAuthenticated
+    //    @AdminAuthenticated
     @Operation(summary = "카테고리 추가", description = "새로운 카테고리를 추가합니다.")
     @PostMapping("/create")
     public ResponseEntity<?> addCategory(@RequestBody @Validated CreateCategoryRequest request) {

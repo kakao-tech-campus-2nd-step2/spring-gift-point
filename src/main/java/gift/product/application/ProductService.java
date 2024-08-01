@@ -4,6 +4,8 @@ import gift.product.domain.*;
 import gift.product.exception.ProductException;
 import gift.product.infra.ProductRepository;
 import gift.util.ErrorCode;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -34,24 +36,14 @@ public class ProductService {
     }
 
     @Transactional
-    public void addProductOption(Long id, CreateProductOptionRequestDTO createProductOptionRequestDTO) {
+    public Product addProductOption(Long id, CreateProductOptionRequestDTO createProductOptionRequestDTO) {
         Product product = productRepository.findById(id);
-
-        product.addProductOption(createProductOptionRequestDTO);
-
-        productRepository.save(product);
+//        product.addProductOption(createProductOptionRequestDTO);
+        return productRepository.updateProductOption(product, createProductOptionRequestDTO);
     }
 
     public void deleteProduct(Long id) {
         productRepository.deleteById(id);
-    }
-
-    public void updateProduct(Long id, String name, Double price, String imageUrl) {
-        Product product = productRepository.findById(id);
-        product.setName(name);
-        product.setPrice(price);
-        product.setImageUrl(imageUrl);
-        productRepository.save(product);
     }
 
     private void validateProduct(Product product) {
@@ -72,7 +64,7 @@ public class ProductService {
         }
     }
 
-    private void validatePrice(Double price) {
+    private void validatePrice(Long price) {
         if (price == null) {
             throw new ProductException(ErrorCode.INVALID_PRICE);
         }
@@ -81,8 +73,73 @@ public class ProductService {
         }
     }
 
-    public List<Product> getProduct() {
-        return productRepository.findAll();
+    public ProductListResponse getProduct(Pageable pageable) {
+        Page<Product> all = productRepository.findAll(pageable);
+        return new ProductListResponse(
+                all.getContent().stream()
+                        .map(product -> new ProductResponse(product.getId(), product.getName(), product.getPrice(), product.getImageUrl()))
+                        .toList(),
+                all.getNumber(),
+                all.getTotalElements(),
+                all.getNumberOfElements(),
+                all.isLast()
+        );
+    }
+
+    public ProductListResponse getProductByCategory(Long categoryId, Pageable pageable) {
+        Page<Product> all = productRepository.findByCategoryId(categoryId, pageable);
+        return new ProductListResponse(
+                all.getContent().stream()
+                        .map(product -> new ProductResponse(product.getId(), product.getName(), product.getPrice(), product.getImageUrl()))
+                        .toList(),
+                all.getNumber(),
+                all.getTotalElements(),
+                all.getNumberOfElements(),
+                all.isLast()
+        );
+    }
+
+    public ProductResponse getProductById(Long id) {
+        Product product = productRepository.findById(id);
+        return new ProductResponse(product.getId(), product.getName(), product.getPrice(), product.getImageUrl());
+    }
+
+    public List<ProductOptionData> getProductOptions(Long id) {
+        List<ProductOption> productOptions = productRepository.findProductOptionsByProductId(id);
+        return productOptions.stream()
+                .map(productOption -> new ProductOptionData(productOption.getId(), productOption.getName(), productOption.getQuantity(), productOption.getProduct().getId()))
+                .toList();
+    }
+
+
+    public class ProductOptionData {
+        private Long id;
+        private String name;
+        private Long quantity;
+        private Long productId;
+
+        public ProductOptionData(Long id, String name, Long quantity, Long productId) {
+            this.id = id;
+            this.name = name;
+            this.quantity = quantity;
+            this.productId = productId;
+        }
+
+        public Long getId() {
+            return id;
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public Long getQuantity() {
+            return quantity;
+        }
+
+        public Long getProductId() {
+            return productId;
+        }
     }
 
 }

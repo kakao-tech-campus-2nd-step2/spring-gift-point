@@ -5,7 +5,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
-import java.util.Optional;
+import java.util.List;
 
 @Repository
 public class WishListRepository {
@@ -15,7 +15,7 @@ public class WishListRepository {
         this.wishListJpaRepository = wishListJpaRepository;
     }
 
-    public WishList findByUserId(Long userId) {
+    public List<WishList> findByUserId(Long userId) {
         return wishListJpaRepository.findByUserId(userId)
                 .orElseThrow(() -> new IllegalArgumentException("해당 ID의 위시리스트가 존재하지 않습니다."));
     }

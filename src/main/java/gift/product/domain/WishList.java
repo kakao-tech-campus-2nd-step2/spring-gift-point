@@ -1,10 +1,10 @@
 package gift.product.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import gift.user.domain.User;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 
 @Entity(name = "wishlist")
@@ -15,24 +15,23 @@ public class WishList {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
+    @JsonIgnore
     private User user;
 
-    @OneToMany(mappedBy = "wishList")
-    private List<WishListProduct> wishListProducts = new ArrayList<>();
+    @OneToOne(mappedBy = "wishList", cascade = CascadeType.ALL, orphanRemoval = true)
+    private WishListProduct wishListProduct;
 
     private LocalDateTime createdAt;
 
     public WishList() {
     }
 
-
-    public <E> WishList(User user, LocalDateTime now) {
+    public WishList(User user, LocalDateTime now) {
         this.user = user;
         this.createdAt = now;
     }
-
 
     public Long getId() {
         return id;
@@ -48,20 +47,14 @@ public class WishList {
 
     public void setUser(User user) {
         this.user = user;
-        user.getWishLists().add(this);
     }
 
-    public List<WishListProduct> getWishListProducts() {
-        return wishListProducts;
+    public WishListProduct getWishListProduct() {
+        return wishListProduct;
     }
 
-    public void addWishListProduct(WishListProduct wishListProduct) {
-        wishListProducts.add(wishListProduct);
-        wishListProduct.setWishList(this);
-    }
-
-    public void removeWishListProduct(Long wishListProductId) {
-        wishListProducts.removeIf(wishListProduct -> wishListProduct.getId().equals(wishListProductId));
+    public void setWishListProduct(WishListProduct wishListProduct) {
+        this.wishListProduct = wishListProduct;
     }
 
     public LocalDateTime getCreatedAt() {
@@ -73,10 +66,20 @@ public class WishList {
     }
 
     public void clearProducts() {
-        wishListProducts.clear();
+        if (wishListProduct != null) {
+            wishListProduct.setWishList(null);
+            wishListProduct = null;
+        }
     }
 
-    public void deleteProduct(Long optionId) {
-        wishListProducts.removeIf(wishListProduct -> wishListProduct.getProductOption().getId().equals(optionId));
+    public void deleteProduct() {
+        if (wishListProduct != null) {
+            wishListProduct.setWishList(null);
+            wishListProduct = null;
+        }
+    }
+
+    public void addWishListProduct(WishListProduct wishListProduct) {
+        this.wishListProduct = wishListProduct;
     }
 }
