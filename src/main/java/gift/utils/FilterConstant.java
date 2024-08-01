@@ -14,6 +14,6 @@ public class FilterConstant {
     public final static String API_DOCS = "/api-docs";
     public final static String V3_API_DOCS = "/v3/api-docs";
     public final static String SWAGGER_RESOURCES = "/swagger-resources";
-    public final static String CATEGORY_URL = "/api/category";
+    public final static String CATEGORY_URL = "/api/categories";
     public final static String PRODUCT_URL = "/api/products";
 }
