@@ -13,6 +13,7 @@ CREATE TABLE members
     id           BIGINT AUTO_INCREMENT NOT NULL,
     member_type  VARCHAR(255)          NULL,
     access_token VARCHAR(255)          NULL,
+    point        BIGINT                NULL,
     email        VARCHAR(255)          NULL,
     password     VARCHAR(255)          NULL,
     nickname     VARCHAR(255)          NULL,

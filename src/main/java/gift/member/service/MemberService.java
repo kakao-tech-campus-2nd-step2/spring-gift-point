@@ -44,6 +44,11 @@ public class MemberService {
         memberRepository.deleteById(id);
     }
 
+    public Long getPoint(Long memberId) {
+        return memberRepository.findById(memberId)
+                .orElseThrow(MemberNotFoundException::new).getPoint();
+    }
+
     private void validateMemberExists(Long id) {
         if (!memberRepository.existsById(id)) {
             throw new MemberNotFoundException();
@@ -59,4 +64,5 @@ public class MemberService {
             throw new DuplicateNicknameException();
         }
     }
+
 }
