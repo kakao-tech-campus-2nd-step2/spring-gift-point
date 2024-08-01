@@ -34,7 +34,7 @@ class MemberTest {
 
         //When
         mockMvc.perform(MockMvcRequestBuilders
-                        .post("/members/register")
+                        .post("/api/members/register")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(requestJson))
                 //Then
@@ -55,7 +55,7 @@ class MemberTest {
 
         //When
         mockMvc.perform(MockMvcRequestBuilders
-                        .post("/members/login")
+                        .post("/api/members/login")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(requestJson))
                 //Then
@@ -76,7 +76,7 @@ class MemberTest {
 
         //When
         mockMvc.perform(MockMvcRequestBuilders
-                        .post("/members/login")
+                        .post("/api/members/login")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(requestJson))
                 //Then
@@ -96,7 +96,7 @@ class MemberTest {
 
         //When
         mockMvc.perform(MockMvcRequestBuilders
-                        .post("/members/login")
+                        .post("/api/members/login")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(requestJson))
                 //Then
@@ -117,7 +117,7 @@ class MemberTest {
 
         //When
         mockMvc.perform(MockMvcRequestBuilders
-                        .post("/members/register")
+                        .post("/api/members/register")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(requestJson))
                 //Then

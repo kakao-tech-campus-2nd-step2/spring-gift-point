@@ -9,6 +9,7 @@ import gift.exception.KakaoApiHasProblemException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.autoconfigure.web.client.RestClientTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.jpa.mapping.JpaMetamodelMappingContext;
@@ -25,6 +26,7 @@ import static org.mockito.Mockito.mock;
 import static org.springframework.test.web.client.match.MockRestRequestMatchers.*;
 import static org.springframework.test.web.client.response.MockRestResponseCreators.withSuccess;
 
+@SuppressWarnings("ALL")
 @RestClientTest(KakaoApiClient.class)
 @DisplayName("카카오 RestClient Test")
 class KakaoApiClientTest {
@@ -37,7 +39,12 @@ class KakaoApiClientTest {
     private ObjectMapper objectMapper;
     @Autowired
     private MockRestServiceServer server;
-
+    @Value("${kakao.token.request.uri}")
+    private String kakaoTokenRequestUri;
+    @Value("${kakao.userInfo.request.uri}")
+    private String kakaoUserInfoRequestUri;
+    @Value("${kakao.messageSend.request.uri}")
+    private String kakaoMessageSendRequestUri;
 
     @Test
     @DisplayName("카카오 액세스 토큰 받기 - 성공")
@@ -48,7 +55,7 @@ class KakaoApiClientTest {
 
         KakaoTokenResponse response = new KakaoTokenResponse("type", "scope", "access", 100L, "refresh", 1000L);
 
-        server.expect(requestTo("https://kauth.kakao.com/oauth/token"))
+        server.expect(requestTo(kakaoTokenRequestUri))
                 .andRespond(withSuccess(objectMapper.writeValueAsString(response), MediaType.APPLICATION_JSON));
 
         //When
@@ -66,13 +73,13 @@ class KakaoApiClientTest {
         MultiValueMap<String, String> bodyParams = mock(MultiValueMap.class);
 
 
-        server.expect(requestTo("https://kauth.kakao.com/oauth/token"))
+        server.expect(requestTo(kakaoTokenRequestUri))
                 .andRespond(MockRestResponseCreators.withGatewayTimeout());
-        server.expect(requestTo("https://kauth.kakao.com/oauth/token"))
+        server.expect(requestTo(kakaoTokenRequestUri))
                 .andRespond(MockRestResponseCreators.withGatewayTimeout());
-        server.expect(requestTo("https://kauth.kakao.com/oauth/token"))
+        server.expect(requestTo(kakaoTokenRequestUri))
                 .andRespond(MockRestResponseCreators.withGatewayTimeout());
-        server.expect(requestTo("https://kauth.kakao.com/oauth/token"))
+        server.expect(requestTo(kakaoTokenRequestUri))
                 .andRespond(MockRestResponseCreators.withGatewayTimeout());
 
         //When Then
@@ -87,7 +94,7 @@ class KakaoApiClientTest {
         String token = "accessToken";
         KakaoUserInfoResponse kakaoUserInfoResponse = new KakaoUserInfoResponse(1L, new KakaoUserInfoResponse.KakaoAccount("email"));
 
-        server.expect(requestTo("https://kapi.kakao.com/v2/user/me"))
+        server.expect(requestTo(kakaoUserInfoRequestUri))
                 .andRespond(withSuccess(objectMapper.writeValueAsString(kakaoUserInfoResponse), MediaType.APPLICATION_JSON));
         //When
         String memberEmail = kakaoApiClient.getMemberEmail(token);
@@ -101,9 +108,9 @@ class KakaoApiClientTest {
     void sendMessageToMe() {
         //Given
         String accessToken = "accessToken";
-        KakaoMessageRequestBodyGenerator generator = new KakaoMessageRequestBodyGenerator("message",objectMapper);
+        KakaoMessageRequestBodyGenerator generator = new KakaoMessageRequestBodyGenerator("message", objectMapper);
 
-        server.expect(requestTo("https://kapi.kakao.com/v2/api/talk/memo/default/send"))
+        server.expect(requestTo(kakaoMessageSendRequestUri))
                 .andExpect(method(HttpMethod.POST))
                 .andExpect(header("Authorization", "Bearer accessToken"))
                 .andRespond(withSuccess());

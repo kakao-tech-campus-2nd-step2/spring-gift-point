@@ -11,11 +11,11 @@ import org.springframework.stereotype.Service;
 @Service
 public class OrderService {
 
+    private static final org.slf4j.Logger log = LoggerFactory.getLogger(OrderService.class);
     private final OrderRepository orderRepository;
     private final OptionService optionService;
     private final WishService wishService;
     private final KakaoApiService kakaoApiService;
-    private static final org.slf4j.Logger log = LoggerFactory.getLogger(OrderService.class);
 
     public OrderService(OrderRepository orderRepository, OptionService optionService, WishService wishService, KakaoApiService kakaoApiService) {
         this.orderRepository = orderRepository;

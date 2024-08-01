@@ -65,10 +65,10 @@ public class ProductTest {
     @DisplayName("상품 수정")
     void update() throws Exception {
         //Given
-        UpdateProductRequest request = new UpdateProductRequest(savedProductId, "UPDATENAME", 100, "url", categoryId);
+        UpdateProductRequest request = new UpdateProductRequest("UPDATENAME", 100, "url", categoryId);
 
         //When
-        mockMvc.perform(MockMvcRequestBuilders.put(URL)
+        mockMvc.perform(MockMvcRequestBuilders.put(URL + "/" + savedProductId)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request)))
                 //Then

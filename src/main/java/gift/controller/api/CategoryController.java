@@ -6,11 +6,11 @@ import gift.dto.response.CategoryIdResponse;
 import gift.dto.response.CategoryResponse;
 import gift.service.CategoryService;
 import jakarta.validation.Valid;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 public class CategoryController {
@@ -28,19 +28,19 @@ public class CategoryController {
     }
 
     @GetMapping("/api/categories")
-    public ResponseEntity<List<CategoryResponse>> getCategories() {
-        List<CategoryResponse> allCategories = categoryService.getAllCategoryResponses();
+    public ResponseEntity<Page<CategoryResponse>> getCategories(Pageable pageable) {
+        Page<CategoryResponse> allCategories = categoryService.getAllCategoryResponsesByPageable(pageable);
         return ResponseEntity.ok(allCategories);
     }
 
-    @PutMapping("/api/categories")
-    public ResponseEntity<Void> updateCategory(@Valid @RequestBody UpdateCategoryRequest request) {
-        categoryService.updateCategory(request);
+    @PutMapping("/api/categories/{categoryId}")
+    public ResponseEntity<Void> updateCategory(@Valid @RequestBody UpdateCategoryRequest request, @PathVariable("categoryId") Long categoryId) {
+        categoryService.updateCategory(request, categoryId);
         return ResponseEntity.ok().build();
     }
 
-    @DeleteMapping("/api/categories/{id}")
-    public ResponseEntity<Void> deleteCategory(@PathVariable("id") Long categoryId) {
+    @DeleteMapping("/api/categories/{categoryId}")
+    public ResponseEntity<Void> deleteCategory(@PathVariable("categoryId") Long categoryId) {
         categoryService.deleteCategory(categoryId);
         return ResponseEntity.ok().build();
     }

@@ -58,11 +58,8 @@ public class WishService {
     }
 
     @Transactional
-    public void findAndDeleteProductInWish(Long memberId, Long productId) {
-        Member member = memberService.getMember(memberId);
-        Product product = productService.getProduct(productId);
-
-        Wish wish = wishRepository.findByMemberAndProduct(member, product)
+    public void findAndDeleteProductInWish(Long memberId, Long wishId) {
+        Wish wish = wishRepository.findByIdAndMemberId(wishId, memberId)
                 .orElseThrow(WishNotFoundException::new);
 
         wishRepository.delete(wish);

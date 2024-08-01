@@ -18,7 +18,7 @@ public class Wish {
     @JoinColumn(name = "member_id", nullable = false, foreignKey = @ForeignKey(name = "fk_wish_member_id_ref_member_id"))
     private Member member;
 
-    @Column(nullable = false)
+    @Column(nullable = true)
     private Integer quantity;
 
     @ManyToOne

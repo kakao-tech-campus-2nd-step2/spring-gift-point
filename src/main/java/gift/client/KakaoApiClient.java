@@ -3,6 +3,7 @@ package gift.client;
 import gift.dto.response.KakaoTokenResponse;
 import gift.dto.response.KakaoUserInfoResponse;
 import gift.exception.KakaoApiHasProblemException;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestClient;
@@ -14,11 +15,13 @@ import java.util.Objects;
 @Component
 public class KakaoApiClient {
 
-    private static final String TOKEN_REQUEST_URI = "https://kauth.kakao.com/oauth/token";
-    private static final String USER_INFO_REQUEST_URI = "https://kapi.kakao.com/v2/user/me";
-    private static final String MESSAGE_SEND_REQUEST_URI = "https://kapi.kakao.com/v2/api/talk/memo/default/send";
-
     private final RestClient restClient;
+    @Value("${kakao.token.request.uri}")
+    private String kakaoTokenRequestUri;
+    @Value("${kakao.userInfo.request.uri}")
+    private String kakaoUserInfoRequestUri;
+    @Value("${kakao.messageSend.request.uri}")
+    private String kakaoMessageSendRequestUri;
 
     public KakaoApiClient(RestClient.Builder builder) {
         this.restClient = builder.build();
@@ -33,7 +36,7 @@ public class KakaoApiClient {
             try {
                 return restClient
                         .post()
-                        .uri(TOKEN_REQUEST_URI)
+                        .uri(kakaoTokenRequestUri)
                         .body(bodyParams)
                         .retrieve()
                         .onStatus(new RestClientResponseErrorHandler())
@@ -55,7 +58,7 @@ public class KakaoApiClient {
             try {
                 return Objects.requireNonNull(restClient
                                 .get()
-                                .uri(USER_INFO_REQUEST_URI)
+                                .uri(kakaoUserInfoRequestUri)
                                 .header("Authorization", String.format("Bearer %s", token))
                                 .retrieve()
                                 .onStatus(new RestClientResponseErrorHandler())
@@ -79,7 +82,7 @@ public class KakaoApiClient {
         while (retryCount < maxRetries) {
             try {
                 restClient.post()
-                        .uri(MESSAGE_SEND_REQUEST_URI)
+                        .uri(kakaoMessageSendRequestUri)
                         .body(bodyParams)
                         .header("Authorization", String.format("Bearer %s", accessToken))
                         .retrieve()

@@ -85,7 +85,9 @@ public class InitialData implements CommandLineRunner {
     }
 
     private void initialMember() {
+
         memberRepository.save(new Member("tjdgns5506@gmail.com", "1234"));
+        memberRepository.save(new Member("jeungmin0724@naver.com", "1234"));
     }
 
 

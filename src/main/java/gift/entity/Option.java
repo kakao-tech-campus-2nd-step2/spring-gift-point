@@ -40,6 +40,10 @@ public class Option {
         return quantity;
     }
 
+    public Long getProductId() {
+        return product.getId();
+    }
+
     public void associateWithProduct(Product product) {
         this.product = product;
     }

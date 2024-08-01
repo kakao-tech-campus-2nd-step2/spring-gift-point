@@ -41,7 +41,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @DisplayName("위시 컨트롤러 단위테스트")
 class WishControllerTest {
 
-    private static final String URL = "/api/wishlist";
+    private static final String URL = "/api/wishes";
     @MockBean
     private TokenService tokenService;
     @MockBean
@@ -60,7 +60,7 @@ class WishControllerTest {
     void addProductToWishList() throws Exception {
         //Given
         when(authInterceptor.preHandle(any(), any(), any())).thenReturn(true);
-        WishRequest request = new WishRequest(1L, 100);
+        WishRequest request = new WishRequest(1L, null);
 
         //When
         mockMvc.perform(MockMvcRequestBuilders.post(URL)
@@ -80,11 +80,12 @@ class WishControllerTest {
                                 ),
                                 requestFields(
                                         fieldWithPath("productId").type(JsonFieldType.NUMBER).description("위시에 추가할 상품 ID"),
-                                        fieldWithPath("quantity").type(JsonFieldType.NUMBER).description("위시에 추가할 상품의 수량")
+                                        fieldWithPath("quantity").type(JsonFieldType.NULL).description("이거 무시하시면 됩니다").optional()
 
                                 )
                         )
                 );
+
     }
 
     @Test
@@ -93,8 +94,8 @@ class WishControllerTest {
         //Given
         when(authInterceptor.preHandle(any(), any(), any())).thenReturn(true);
         Page<WishProductResponse> page = new PageImpl<>(List.of(
-                new WishProductResponse(1L, "product1", 100, "img", 1000),
-                new WishProductResponse(2L, "product2", 400, "img", 2000)
+                new WishProductResponse(1L, 1L, "product1", 100, "img"),
+                new WishProductResponse(2L, 2L, "product2", 400, "img")
         ));
         when(wishService.getWishProductResponses(any(), any())).thenReturn(page);
 
@@ -132,6 +133,8 @@ class WishControllerTest {
                                         fieldWithPath("content").type(JsonFieldType.ARRAY)
                                                 .description("상품 목록"),
 
+                                        fieldWithPath("content[].wishId").type(JsonFieldType.NUMBER)
+                                                .description("위시의 ID"),
                                         fieldWithPath("content[].productId").type(JsonFieldType.NUMBER)
                                                 .description("상품의 ID"),
 
@@ -144,8 +147,6 @@ class WishControllerTest {
                                         fieldWithPath("content[].productImageUrl").type(JsonFieldType.STRING)
                                                 .description("상품 이미지의 URL"),
 
-                                        fieldWithPath("content[].productAmount").type(JsonFieldType.NUMBER)
-                                                .description("상품의 수량"),
 
                                         fieldWithPath("number").type(JsonFieldType.NUMBER)
                                                 .description("현재 페이지 번호"),
@@ -213,7 +214,7 @@ class WishControllerTest {
 
         //When
         mockMvc.perform(RestDocumentationRequestBuilders
-                        .delete(URL + "/{id}", 1))
+                        .delete(URL + "/{wishId}", 1))
                 //Then
                 .andExpect(
                         status().isOk()
@@ -224,7 +225,7 @@ class WishControllerTest {
                                         headerWithName("Authorization").description("Authorization: Bearer ${ACCESS_TOKEN} +\n인증방식, 액세스 토큰으로 인증요청").optional()
                                 ),
                                 pathParameters(
-                                        parameterWithName("id").description("삭제하고 싶은 위시 ID")
+                                        parameterWithName("wishId").description("삭제하고 싶은 위시 ID")
                                 )
                         )
                 );

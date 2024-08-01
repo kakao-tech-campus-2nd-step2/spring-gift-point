@@ -8,6 +8,8 @@ import gift.entity.Category;
 import gift.exception.CategoryNameDuplicateException;
 import gift.exception.CategoryNotFoundException;
 import gift.repository.CategoryRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -29,6 +31,11 @@ public class CategoryService {
                 .toList();
     }
 
+    public Page<CategoryResponse> getAllCategoryResponsesByPageable(Pageable pageable) {
+        return categoryRepository.findAll(pageable)
+                .map(CategoryResponse::fromCategory);
+    }
+
     public CategoryIdResponse addCategory(AddCategoryRequest request) {
         if (categoryRepository.existsByName(request.name())) {
             throw new CategoryNameDuplicateException(request.name());
@@ -45,9 +52,9 @@ public class CategoryService {
     }
 
     @Transactional
-    public void updateCategory(UpdateCategoryRequest request) {
-        Category updateTargetCategory = categoryRepository.findById(request.id())
-                .orElseThrow(() -> new CategoryNotFoundException(request.id()));
+    public void updateCategory(UpdateCategoryRequest request, Long categoryId) {
+        Category updateTargetCategory = categoryRepository.findById(categoryId)
+                .orElseThrow(() -> new CategoryNotFoundException(categoryId));
         updateTargetCategory.update(request.name(), request.color(), request.imageUrl(), request.description());
     }
 

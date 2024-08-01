@@ -138,11 +138,11 @@ class CategoryServiceTest {
             //Given
             Category existingCategory = new Category("기존", "기존", "기존", "기존");
 
-            UpdateCategoryRequest request = new UpdateCategoryRequest(1L, "새로움", "새로움", "뉴이미지", "설명");
+            UpdateCategoryRequest request = new UpdateCategoryRequest("새로움", "새로움", "뉴이미지", "설명");
             when(categoryRepository.findById(1L)).thenReturn(Optional.of(existingCategory));
 
             //When
-            categoryService.updateCategory(request);
+            categoryService.updateCategory(request, 1L);
 
             //Then
             assertThat(existingCategory.getName()).isEqualTo("새로움");
@@ -154,10 +154,10 @@ class CategoryServiceTest {
             //Given
             when(categoryRepository.findById(1L)).thenReturn(Optional.empty());
 
-            UpdateCategoryRequest request = new UpdateCategoryRequest(1L, "새로움", "새로움", "뉴이미지", "설명");
+            UpdateCategoryRequest request = new UpdateCategoryRequest("새로움", "새로움", "뉴이미지", "설명");
 
             //When Then
-            assertThatThrownBy(() -> categoryService.updateCategory(request))
+            assertThatThrownBy(() -> categoryService.updateCategory(request, 1L))
                     .isInstanceOf(CategoryNotFoundException.class);
         }
     }
