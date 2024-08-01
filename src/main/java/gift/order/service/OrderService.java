@@ -31,6 +31,9 @@ public class OrderService {
     // 주문하기 로직
     @Transactional
     public OrderResponse requestOrder(@Valid OrderRequest orderRequest) {
+        // 포인트 있는지 확인
+
+
         // 주문할 때 상품 옵션과 수량을 받아온다.
         Long request_optionId = orderRequest.getOptionId();
         Long request_quantity = orderRequest.getQuantity();
@@ -53,6 +56,9 @@ public class OrderService {
         // 주문 내역 저장
         orderJPARepository.save(new Order(orderRequest.getOptionId(), orderRequest.getQuantity(), LocalDateTime.now(), request_message));
         Long orderId = orderJPARepository.findByOptionId(request_optionId).getId();
+
+        // 사용자 포인트를 저장
+
 
         return new OrderResponse(orderId, request_optionId, request_quantity, LocalDateTime.now(), request_message);
     }
