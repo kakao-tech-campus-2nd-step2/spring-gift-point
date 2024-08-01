@@ -11,7 +11,7 @@ public interface JpaWishListRepository extends JpaRepository<Wish, Long> {
 
     boolean existsByUserIdAndOptionId(Long userId, Long optionId);
 
-    @EntityGraph(attributePaths = {"user", "product"})
+    @EntityGraph(attributePaths = {"user", "option"})
     Page<Wish> findAllByUserId(Long userId, Pageable pageable);
 
     Optional<Wish> findByUserIdAndOptionId(Long userId, Long optionId);

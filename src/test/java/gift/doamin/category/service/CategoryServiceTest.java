@@ -29,15 +29,19 @@ class CategoryServiceTest {
 
     @Test
     void createCategory() {
-        categoryService.createCategory(new CategoryRequest("test"));
+        given(categoryRepository.existsByName(any())).willReturn(false);
+        given(categoryRepository.save(any())).willReturn(
+            new Category("test", "#000000", "", "테스트 카테고리"));
+        categoryService.createCategory(new CategoryRequest("test", "#000000", "", "테스트 카테고리"));
 
         then(categoryRepository).should().save(any());
     }
 
     @Test
     void getAllCategories() {
-        given(categoryRepository.findAll())
-            .willReturn(List.of(new Category("test1"), new Category("test2")));
+        given(categoryRepository.findAll()).willReturn(
+            List.of(new Category("test1", "#000000", "", "테스트 카테고리"),
+                new Category("test2", "#000000", "", "테스트 카테고리")));
 
         List<CategoryResponse> categories = categoryService.getAllCategories();
 
@@ -46,8 +50,8 @@ class CategoryServiceTest {
 
     @Test
     void getCategory_existing() {
-        given(categoryRepository.findById(1L))
-            .willReturn(Optional.of(new Category("test")));
+        given(categoryRepository.findById(1L)).willReturn(
+            Optional.of(new Category("test", "#000000", "", "테스트 카테고리")));
 
         CategoryResponse category = categoryService.getCategory(1L);
 
@@ -56,34 +60,30 @@ class CategoryServiceTest {
 
     @Test
     void getCategory_nonExistent() {
-        given(categoryRepository.findById(2L))
-            .willReturn(Optional.empty());
+        given(categoryRepository.findById(2L)).willReturn(Optional.empty());
 
-        assertThatThrownBy(() -> categoryService.getCategory(2L))
-            .isInstanceOf(CategoryNotFoundException.class);
+        assertThatThrownBy(() -> categoryService.getCategory(2L)).isInstanceOf(
+            CategoryNotFoundException.class);
     }
 
     @Test
     void updateCategory_existing() {
-        given(categoryRepository.findById(1L))
-            .willReturn(Optional.of(new Category("test")));
-        CategoryRequest categoryRequest = new CategoryRequest("test2");
-        categoryRequest.setId(1L);
+        given(categoryRepository.findById(1L)).willReturn(
+            Optional.of(new Category("test", "#000000", "", "테스트 카테고리")));
+        CategoryRequest categoryRequest = new CategoryRequest("test2", "#000000", "", "테스트 카테고리");
 
-        categoryService.updateCategory(categoryRequest);
+        var categoryResponse = categoryService.updateCategory(1L, categoryRequest);
 
-        then(categoryRepository).should().save(any());
+        assertThat(categoryResponse.getName()).isEqualTo("test2");
     }
 
     @Test
     void updateCategory_nonExistent() {
-        given(categoryRepository.findById(2L))
-            .willReturn(Optional.empty());
-        CategoryRequest categoryRequest = new CategoryRequest("test2");
-        categoryRequest.setId(2L);
+        given(categoryRepository.findById(2L)).willReturn(Optional.empty());
+        CategoryRequest categoryRequest = new CategoryRequest("test2", "#000000", "", "테스트 카테고리");
 
-        assertThatThrownBy(() -> categoryService.updateCategory(categoryRequest))
-            .isInstanceOf(CategoryNotFoundException.class);
+        assertThatThrownBy(() -> categoryService.updateCategory(2L, categoryRequest)).isInstanceOf(
+            CategoryNotFoundException.class);
     }
 
     @Test

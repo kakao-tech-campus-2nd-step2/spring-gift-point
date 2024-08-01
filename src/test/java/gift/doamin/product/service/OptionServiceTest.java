@@ -9,6 +9,7 @@ import static org.mockito.Mockito.mock;
 
 import gift.doamin.category.entity.Category;
 import gift.doamin.product.dto.OptionRequest;
+import gift.doamin.product.dto.OptionResponse;
 import gift.doamin.product.entity.Option;
 import gift.doamin.product.entity.Product;
 import gift.doamin.product.exception.ProductNotFoundException;
@@ -53,10 +54,13 @@ class OptionServiceTest {
     void 저장_성공() {
         given(productRepository.findById(any())).willReturn(Optional.of(createProduct()));
         given(optionRepository.existsByProductIdAndName(any(), any())).willReturn(false);
+        Option option = createOption();
+        option.update(createOptionFrom());
+        given(optionRepository.save(any())).willReturn(option);
 
-        optionService.create(1L, createOptionFrom());
+        var optionResponse = optionService.create(1L, createOptionFrom());
 
-        then(optionRepository).should().save(any(Option.class));
+        assertThat(optionResponse.getQuantity()).isEqualTo(2);
     }
 
     @Test
@@ -92,9 +96,9 @@ class OptionServiceTest {
         given(optionRepository.findById(any())).willReturn(Optional.of(createOption()));
         given(optionRepository.existsByProductIdAndName(any(), any())).willReturn(false);
 
-        optionService.update(1L, 1L, createOptionFrom());
+        var optionResponse = optionService.update(1L, 1L, createOptionFrom());
 
-        then(optionRepository).should().save(any(Option.class));
+        assertThat(optionResponse.getQuantity()).isEqualTo(2);
     }
 
     @Test
@@ -136,7 +140,7 @@ class OptionServiceTest {
 
     Product createProduct() {
         User user = new User("user@google.com", "pw", "user", UserRole.SELLER);
-        Category category = new Category("category");
+        Category category = new Category("category", "#000000", "", "테스트 카테고리");
 
         return new Product(user, category, "product", 1000, "image");
     }
@@ -150,6 +154,6 @@ class OptionServiceTest {
     }
 
     OptionRequest createOptionFrom() {
-        return new OptionRequest("option", 1);
+        return new OptionRequest("option", 2);
     }
 }
