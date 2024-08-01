@@ -1,5 +1,5 @@
 #!/bin/bash
-BUILD_PATH=$(ls /repository/spring-gift-point/build/libs/*.jar)
+BUILD_PATH=$(ls /home/ubuntu/repository/spring-gift-point/build/libs/*.jar)
 JAR_NAME=$(basename $BUILD_PATH)
 
 CURRENT_PID=$(pgrep -f $JAR_NAME)
