@@ -12,7 +12,7 @@ public record OrderResponse(Long id,
         return new OrderResponse(order.getId(),
             order.getOptionId(),
             order.getQuantity(),
-            order.getCreatedAt(),
+            order.getCreatedDate(),
             order.getMessage()
         );
     }
