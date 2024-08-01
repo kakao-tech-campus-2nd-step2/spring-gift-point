@@ -74,8 +74,14 @@ public class MemberController {
         return ResponseEntity.ok().body(new PointResponse(member.getPoint()));
     }
 
+    @Operation(summary = "포인트 충전", description = "회원 아이디를 받아, 해당 회원의 포인트를 충전합니다.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "204", description = "포인트 조회 성공"),
+            @ApiResponse(responseCode = "400", description = "잘못된 입력 데이터", content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
+            @ApiResponse(responseCode = "404", description = "존재하지 않는 회원")
+    })
     @PostMapping("/{memberId}/points")
-    public ResponseEntity<Void> addPoint(@PathVariable Long memberId, @RequestBody @Valid PointChargeRequest request) {
+    public ResponseEntity<Void> addPoint(@Parameter(description = "회원ID", required = true) @PathVariable Long memberId, @RequestBody @Valid PointChargeRequest request) {
         memberService.chargePoint(memberId, request.getPoint());
 
         return ResponseEntity.noContent().build();
