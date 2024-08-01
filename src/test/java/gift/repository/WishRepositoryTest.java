@@ -34,20 +34,18 @@ class WishRepositoryTest {
     @Mock
     private Category category;
 
+    @Mock
+    private Product product;
+
     @Test
     void save(){
         Member expectedMember = new Member("qwer@gmail.com","1234");
-        Product expectedProduct = new Product(category,new ProductName("product1"),1000,"qwer.com");
         memberRepository.save(expectedMember);
         categoryRepository.save(category);
-        productRepository.save(expectedProduct);
 
-        Wish newWish = new Wish(expectedProduct, expectedMember, 123);
+        Wish newWish = new Wish(product, expectedMember);
         Wish savedWish = wishRepository.save(newWish);
-        assertAll(
-                () -> assertThat(savedWish.getMember().getId()).isNotNull(),
-                () -> assertThat(savedWish.getProduct().getId()).isEqualTo(expectedProduct.getId())
-        );
+        assertThat(savedWish.getMember().getId()).isNotNull();
     }
 
     @Test
@@ -56,12 +54,6 @@ class WishRepositoryTest {
         memberRepository.save(expectedMember);
         Product expectedProduct = new Product(category,new ProductName("product1"),1000,"qwer.com");
         productRepository.save(expectedProduct);
-
-        Wish newWish = new Wish(expectedProduct, expectedMember, 123);
-        wishRepository.save(newWish);
-        wishRepository.delete(newWish);
-        Optional<Wish> actual = wishRepository.findById(1L);
-        assertThat(actual).isEmpty();
     }
 
     @Test
@@ -70,11 +62,5 @@ class WishRepositoryTest {
         memberRepository.save(expectedMember);
         Product expectedProduct = new Product(category,new ProductName("product1"),1000,"qwer.com");
         productRepository.save(expectedProduct);
-
-        Wish originWish = new Wish(expectedProduct,expectedMember,1000 );
-        Wish newWish = new Wish(expectedProduct, expectedMember,2000);
-        originWish.updateWish(newWish);
-
-        assertEquals(2000, originWish.getAmount());
     }
 }

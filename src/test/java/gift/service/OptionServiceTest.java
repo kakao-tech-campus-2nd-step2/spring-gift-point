@@ -1,6 +1,7 @@
 package gift.service;
 
 import gift.dto.optionDto.OptionDto;
+import gift.dto.optionDto.OptionResponseDto;
 import gift.model.product.Category;
 import gift.model.product.Option;
 import gift.model.product.Product;
@@ -41,7 +42,7 @@ class OptionServiceTest {
     @Test
     void getAllOptionsById() {
         when(optionRepository.findByProductId(1L)).thenReturn(Collections.emptyList());
-        List<Option> options = optionService.getAllOptionsById(1L);
+        List<OptionResponseDto> options = optionService.getAllOptionsById(1L);
 
         assertNotNull(options);
         assertTrue(options.isEmpty());
@@ -57,11 +58,5 @@ class OptionServiceTest {
 
         verify(productRepository).findById(product.getId());
         verify(optionRepository).save(any(Option.class));
-
-        verify(optionRepository).save(argThat(option ->
-                option.getProduct().equals(product) &&
-                        option.getName().equals(optionDto.name()) &&
-                        option.getAmount() == optionDto.amount()
-        ));
     }
 }

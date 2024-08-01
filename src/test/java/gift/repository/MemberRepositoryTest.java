@@ -18,7 +18,7 @@ class MemberRepositoryTest {
 
     @Test
     void save(){
-        Member expected = new Member("qwer@gmail.com","1234","root");
+        Member expected = new Member("qwer@gmail.com","1234");
         Member actual = memberRepository.save(expected);
         assertAll(
                 () -> assertThat(actual.getId()).isNotNull(),
@@ -28,7 +28,7 @@ class MemberRepositoryTest {
 
     @Test
     void findByEmail() {
-        Member expected = new Member("qwer@gmail.com","1234","root");
+        Member expected = new Member("qwer@gmail.com","1234");
         memberRepository.save(expected);
         Member actual = memberRepository.findByEmail(expected.getEmail()).get();
         assertThat(actual).isEqualTo(expected);
@@ -36,7 +36,7 @@ class MemberRepositoryTest {
 
     @Test
     void delete(){
-        Member expected = new Member("qwer@gmail.com","1234","root");
+        Member expected = new Member("qwer@gmail.com","1234");
         memberRepository.save(expected);
         memberRepository.delete(expected);
         Optional<Member> actual = memberRepository.findByEmail("qwer@gmail.com");
