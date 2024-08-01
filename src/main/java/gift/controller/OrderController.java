@@ -6,6 +6,8 @@ import gift.service.OrderService;
 import gift.util.JwtUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -28,6 +30,34 @@ public class OrderController {
     public OrderController(OrderService orderService, JwtUtil jwtUtil) {
         this.orderService = orderService;
         this.jwtUtil = jwtUtil;
+    }
+    @GetMapping
+    @Operation(summary = "Get all orders for the logged-in user", description = "Fetches all orders made by the logged-in user", tags = {"Order Management System"})
+    public ResponseEntity<Page<OrderResponse>> getOrders(
+            @Parameter(description = "Authorization token", required = true) @RequestHeader("Authorization") String authorizationHeader,
+            Pageable pageable) {
+        logger.info("Received request to fetch orders");
+
+        if (authorizationHeader == null || !authorizationHeader.startsWith("Bearer ")) {
+            logger.warn("Authorization header is missing or invalid");
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+
+        String token = authorizationHeader.substring("Bearer ".length());
+        if (!jwtUtil.validateToken(token) || jwtUtil.isTokenExpired(token)) {
+            logger.warn("Invalid or expired token");
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+
+        String email = jwtUtil.extractEmail(token);
+        if (email == null) {
+            logger.warn("Failed to extract email from token");
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+
+        Page<OrderResponse> orderResponses = orderService.getOrdersByEmail(email, pageable);
+
+        return ResponseEntity.ok(orderResponses);
     }
 
     @PostMapping

@@ -1,8 +1,10 @@
 package gift.controller;
 
+import gift.dto.OptionResponse;
 import gift.dto.ProductRequest;
 import gift.dto.ProductResponse;
 import gift.entity.Category;
+import gift.entity.Option;
 import gift.entity.Product;
 import gift.service.ProductService;
 import gift.util.ProductValidator;
@@ -17,6 +19,9 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @RestController
 @RequestMapping("/api/products")
 @Tag(name = "Product Management System", description = "Operations related to product management")
@@ -29,16 +34,24 @@ public class ProductController {
     }
 
     @GetMapping
-    @Operation(summary = "Get all products", description = "Fetches all available products", tags = { "Product Management System" })
-    public ResponseEntity<Page<ProductResponse>> getAllProducts(Pageable pageable) {
-        Page<Product> products = productService.findAll(pageable);
-        Page<ProductResponse> response = products.map(product -> new ProductResponse(
-                product.getId(),
-                product.getName(),
-                product.getPrice(),
-                product.getImageUrl(),
-                product.getCategory().getName()
-        ));
+    @Operation(summary="Get products by CategoryId", description = "Fetches a product by Category ID", tags = {"Product Management System"})
+    public ResponseEntity<Page<ProductResponse>> getProductsByCategoryId(
+            @Parameter(description = "ID of the category to be fetched", required = true)
+            @RequestParam Long categoryId, Pageable pageable) {
+        Page<Product> products = productService.findByCategoryId(categoryId, pageable);
+        Page<ProductResponse> response = products.map(product -> {
+            List<OptionResponse> options = product.getOptions().stream()
+                    .map(option -> new OptionResponse(option.getId(), option.getName(), option.getQuantity()))
+                    .collect(Collectors.toList());
+            return new ProductResponse(
+                    product.getId(),
+                    product.getCategory().getId(),
+                    product.getName(),
+                    product.getPrice(),
+                    product.getImageUrl(),
+                    options
+            );
+        });
         return ResponseEntity.ok(response);
     }
 
@@ -48,13 +61,7 @@ public class ProductController {
             @Parameter(description = "ID of the product to be fetched", required = true)
             @PathVariable Long id) {
         Product product = productService.findById(id);
-        ProductResponse response = new ProductResponse(
-                product.getId(),
-                product.getName(),
-                product.getPrice(),
-                product.getImageUrl(),
-                product.getCategory().getName()
-        );
+        ProductResponse response = mapProductToResponse(product);
         return ResponseEntity.ok(response);
     }
 
@@ -66,21 +73,25 @@ public class ProductController {
         ProductValidator.validateProductRequest(productRequest);
 
         Category category = productService.getCategoryById(productRequest.getCategoryId());
-        Product product = new Product(
-                productRequest.getName(),
-                productRequest.getPrice(),
-                productRequest.getImageUrl(),
-                category);
+        Product product = new Product.Builder()
+                .name(productRequest.getName())
+                .price(productRequest.getPrice())
+                .imageUrl(productRequest.getImageUrl())
+                .category(category)
+                .build();
 
-        Product savedProduct = productService.save(product);
+        List<Option> options = productRequest.getOptions().stream()
+                .map(optionRequest -> new Option.Builder()
+                        .name(optionRequest.getName())
+                        .quantity(optionRequest.getQuantity())
+                        .product(product)
+                        .build())
+                .collect(Collectors.toList());
 
-        return ResponseEntity.status(201).body(new ProductResponse(
-                savedProduct.getId(),
-                savedProduct.getName(),
-                savedProduct.getPrice(),
-                savedProduct.getImageUrl(),
-                savedProduct.getCategory().getName()
-        ));
+        Product savedProduct = productService.saveProductWithOptions(product, options);
+        ProductResponse response = mapProductToResponse(savedProduct);
+
+        return ResponseEntity.status(201).body(response);
     }
 
     @PutMapping("/{id}")
@@ -90,24 +101,10 @@ public class ProductController {
             @PathVariable Long id,
             @Parameter(description = "Updated product details", required = true)
             @Valid @RequestBody ProductRequest productRequest) {
-        ProductValidator.validateProductRequest(productRequest);
-        Product existingProduct = productService.findById(id);
 
-        Category category = productService.getCategoryById(productRequest.getCategoryId());
-        existingProduct.update(
-                productRequest.getPrice(),
-                productRequest.getName(),
-                productRequest.getImageUrl(),
-                category
-        );
-        Product updatedProduct = productService.save(existingProduct);
-        return ResponseEntity.ok(new ProductResponse(
-                updatedProduct.getId(),
-                updatedProduct.getName(),
-                updatedProduct.getPrice(),
-                updatedProduct.getImageUrl(),
-                updatedProduct.getCategory().getName()
-        ));
+        Product updatedProduct = productService.updateProduct(id, productRequest.getName(), productRequest.getPrice(), productRequest.getImageUrl());
+        ProductResponse response = mapProductToResponse(updatedProduct);
+        return ResponseEntity.ok(response);
     }
 
     @DeleteMapping("/{id}")
@@ -117,5 +114,21 @@ public class ProductController {
             @PathVariable Long id) {
         productService.deleteById(id);
         return ResponseEntity.noContent().build();
+    }
+
+    // Helper method to map Product to ProductResponse
+    private ProductResponse mapProductToResponse(Product product) {
+        List<OptionResponse> optionResponses = product.getOptions().stream()
+                .map(option -> new OptionResponse(option.getId(), option.getName(), option.getQuantity()))
+                .collect(Collectors.toList());
+
+        return new ProductResponse(
+                product.getId(),
+                product.getCategory().getId(),
+                product.getName(),
+                product.getPrice(),
+                product.getImageUrl(),
+                optionResponses
+        );
     }
 }

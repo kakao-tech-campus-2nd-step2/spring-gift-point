@@ -16,6 +16,8 @@ public class Wish {
     @JoinColumn(name = "product_id", nullable = false)
     private Product product;
 
+    private int quantity;
+
     private Wish(Builder builder) {
         this.member = builder.member;
         this.product = builder.product;
@@ -36,12 +38,16 @@ public class Wish {
         return product;
     }
 
-    public Long getMemberId() {
-        return member != null ? member.getId() : null;
-    }
-
     public Long getProductId() {
         return product != null ? product.getId() : null;
+    }
+
+    public int getQuantity() {
+        return quantity;
+    }
+
+    public void update(int quantity){
+        this.quantity = quantity;
     }
 
     public static class Builder {

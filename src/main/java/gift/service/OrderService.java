@@ -6,6 +6,8 @@ import gift.entity.Order;
 import gift.repository.OrderRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -36,12 +38,24 @@ public class OrderService {
 
         wishService.deleteByProductId(orderRequest.getProductId());
 
-        return new OrderResponse.Builder()
-                .id(order.getId())
-                .optionId(order.getOptionId())
-                .quantity(order.getQuantity())
-                .orderTime(order.getOrderTime())
-                .message(order.getMessage())
-                .build();
+        return new OrderResponse(
+                order.getId(),
+                order.getOptionId(),
+                order.getQuantity(),
+                order.getOrderTime(),
+                order.getMessage()
+        );
+    }
+
+    public Page<OrderResponse> getOrdersByEmail(String email, Pageable pageable) {
+        Page<Order> orders = orderRepository.findByEmail(email, pageable);
+
+        return orders.map(order -> new OrderResponse(
+                order.getId(),
+                order.getOptionId(),
+                order.getQuantity(),
+                order.getOrderTime(),
+                order.getMessage()
+        ));
     }
 }

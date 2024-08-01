@@ -1,14 +1,17 @@
-package gift.entity;
+    package gift.entity;
 
-import jakarta.persistence.*;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Positive;
-import jakarta.validation.constraints.Size;
+    import jakarta.persistence.*;
+    import jakarta.validation.constraints.NotBlank;
+    import jakarta.validation.constraints.Positive;
+    import jakarta.validation.constraints.Size;
+    import lombok.Getter;
 
-import java.util.List;
+    import java.util.ArrayList;
+    import java.util.List;
 
-@Entity
-public class Product {
+    @Getter
+    @Entity
+    public class Product {
     @Positive(message = "price must be positive")
     @Column(nullable = false)
     private int price;
@@ -27,21 +30,22 @@ public class Product {
     private String imageUrl;
 
     @ManyToOne
+    @JoinColumn(name = "category_id", nullable = false)
     private Category category;
 
-   @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
-   private List<Option> options;
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Option> options = new ArrayList<>();
 
-   private Product(Builder builder) {
-       this.id = builder.id;
-       this.name = builder.name;
-       this.price = builder.price;
-       this.imageUrl = builder.imageUrl;
-       this.category = builder.category;
-   }
+    private Product(Builder builder) {
+        this.id = builder.id;
+        this.name = builder.name;
+        this.price = builder.price;
+        this.imageUrl = builder.imageUrl;
+        this.category = builder.category;
+    }
 
-   public Product() {
-   }
+    public Product() {
+    }
 
     public Product(Long id, String name, int price, String imageUrl, Category category) {
         this.id = id;
@@ -58,28 +62,6 @@ public class Product {
         this.category = category;
     }
 
-    public int getPrice() {
-        return price;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public String getImageUrl() {
-        return imageUrl;
-    }
-
-    public Category getCategory() {
-        return category;
-    }
-
-    public List<Option> getOptions() {return options;}
-
     public void update(int price, String name, String imageUrl, Category category) {
         this.price = price;
         this.name = name;
@@ -92,7 +74,7 @@ public class Product {
     }
 
     public Long getCategoryId() {
-       return category.getId();
+        return category != null ? category.getId() : null;
     }
 
     public static class Builder {

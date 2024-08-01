@@ -1,13 +1,19 @@
 package gift.controller;
 
+import gift.dto.LoginResponse;
+import gift.dto.MemberRequest;
+import gift.dto.MemberResponse;
 import gift.entity.Member;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import gift.service.MemberService;
 import gift.util.JwtUtil;
 
 import jakarta.servlet.http.HttpServletRequest;
+
+import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -29,30 +35,36 @@ public class MemberController {
         this.jwtUtil = util;
     }
 
-    @PostMapping("/register")
+    @PostMapping(value ="/register", produces = "application/json")
     @Operation(summary = "Register a new member", description = "Registers a new member to the system", tags = { "Member Management System" })
-    public ResponseEntity<Map<String, String>> register(
+    public ResponseEntity<MemberResponse> register(
             @Parameter(description = "Member object to be registered", required = true)
-            @RequestBody Member member) {
-        memberService.save(member);
-        Map<String, String> response = new HashMap<>();
-        response.put("message", "success");
-        return ResponseEntity.ok(response);
+            @RequestBody MemberRequest memberRequest) {
+        Member member = new Member.Builder()
+                .email(memberRequest.getEmail())
+                .password(memberRequest.getPassword())
+                .name(memberRequest.getName())
+                .build();
+        member = memberService.save(member);
+        String token = jwtUtil.generateToken(member.getEmail());
+        MemberResponse memberResponse = new MemberResponse(member.getId(), member.getEmail(), member.getName(), token);
+
+        return ResponseEntity.created(URI.create("/api/members/" + member.getId())).body(memberResponse);
     }
 
     @PostMapping("/login")
     @Operation(summary = "Login a member", description = "Logs in an existing member", tags = { "Member Management System" })
-    public ResponseEntity<Map<String, String>> login(
+    public ResponseEntity<LoginResponse> login(
             @Parameter(description = "Login request containing email and password", required = true)
-            @RequestBody Member loginRequest) {
+            @RequestBody MemberRequest loginRequest) {
         Optional<Member> memberOpt = memberService.findByEmail(loginRequest.getEmail());
         if (memberOpt.isPresent() && memberOpt.get().getPassword().equals(loginRequest.getPassword())) {
             String token = jwtUtil.generateToken(memberOpt.get().getEmail());
-            Map<String, String> response = new HashMap<>();
-            response.put("token", token);
+            LoginResponse response = new LoginResponse(token);
+
             return ResponseEntity.ok(response);
         }
-        return ResponseEntity.status(401).body(null);
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
     }
 
     @GetMapping("/me")

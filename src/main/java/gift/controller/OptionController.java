@@ -9,11 +9,13 @@ import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.net.URI;
 import java.util.List;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import org.springframework.web.util.UriComponentsBuilder;
 
 @RestController
 @RequestMapping("/api/products/{productId}/options")
@@ -36,13 +38,16 @@ public class OptionController {
 
     @PostMapping
     @Operation(summary = "Add an option to a product", description = "Adds a new option to a specified product", tags = { "Product Option Management System" })
-    public ResponseEntity<Option> addOptionToProduct(
+    public ResponseEntity<OptionResponse> addOptionToProduct(
             @Parameter(description = "ID of the product", required = true)
             @PathVariable Long productId,
             @Parameter(description = "Option details", required = true)
-            @Valid @RequestBody OptionRequest optionDTO) {
-        Option option = optionService.addOptionToProduct(productId, optionDTO);
-        return ResponseEntity.ok(option);
+            @Valid @RequestBody OptionRequest optionRequest,
+            UriComponentsBuilder uriBuilder) {
+        Option option = optionService.addOptionToProduct(productId, optionRequest);
+        OptionResponse response = new OptionResponse(option.getId(), option.getName(), option.getQuantity());
+        URI location = uriBuilder.path("/api/products/{productId}/options/{optionId}").buildAndExpand(productId, option.getId()).toUri();
+        return ResponseEntity.created(location).body(response);
     }
 
     @PutMapping("/{optionId}")

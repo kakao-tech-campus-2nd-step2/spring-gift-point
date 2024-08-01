@@ -10,8 +10,8 @@ INSERT INTO product (name, price, image_url, category_id) VALUES ('Product1', 10
 INSERT INTO product (name, price, image_url, category_id) VALUES ('Product2', 2000, 'https://example.com/image2.jpg', 2);
 
 -- option
-INSERT INTO option (name, quantity, product_id) VALUES ('Option1', 100, 1);
-INSERT INTO option (name, quantity, product_id) VALUES ('Option2', 200, 1);
+INSERT INTO options (name, quantity, product_id) VALUES ('Option1', 100, 1);
+INSERT INTO options (name, quantity, product_id) VALUES ('Option2', 200, 1);
 
 -- wish
 INSERT INTO wishlist (member_id, product_id) VALUES (1, 1);

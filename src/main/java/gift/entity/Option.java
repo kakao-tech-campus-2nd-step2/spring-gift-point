@@ -1,14 +1,11 @@
 package gift.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Column;
-import jakarta.persistence.JoinColumn;
+import jakarta.persistence.*;
+import lombok.Getter;
 
+@Getter
 @Entity
+@Table(name = "options")
 public class Option {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -36,22 +33,6 @@ public class Option {
     public void update(String name, Long quantity) {
         this.name = name;
         this.quantity = quantity;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public Long getQuantity() {
-        return quantity;
-    }
-
-    public Product getProduct() {
-        return product;
     }
 
     public static class Builder {

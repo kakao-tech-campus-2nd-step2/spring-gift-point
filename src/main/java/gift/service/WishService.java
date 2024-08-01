@@ -1,10 +1,13 @@
 package gift.service;
 
 import gift.entity.Member;
+import gift.entity.Product;
 import gift.entity.Wish;
 import gift.exception.CustomException;
 import gift.repository.WishRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -23,8 +26,8 @@ public class WishService {
         return wishRepository.save(wish);
     }
 
-    public List<Wish> findByMember(Member member) {
-        return wishRepository.findByMember(member);
+    public Page<Wish> findByMember(Member member, Pageable pageable) {
+        return wishRepository.findByMember(member, pageable);
     }
 
     public Optional<Wish> findById(Long id) {
@@ -41,6 +44,20 @@ public class WishService {
 
     public Wish updateWish(Long wishId) {
         Wish wish = wishRepository.findById(wishId).orElseThrow(() -> new CustomException.EntityNotFoundException("Wish not found"));
+        return wishRepository.save(wish);
+    }
+
+    public Wish modifyWish(Member member, Product product, int quantity) {
+        Optional<Wish> existingWish = wishRepository.findByMemberAndProduct(member, product);
+        
+        Wish wish = null;
+        if(existingWish.isPresent()) {
+            wish = existingWish.get();
+            wish.update(quantity);
+        } else {
+            throw new CustomException.EntityNotFoundException("Wish not found");
+        }
+
         return wishRepository.save(wish);
     }
 }
