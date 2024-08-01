@@ -24,9 +24,9 @@ public record ProductRequest(
         String imgUrl,
 
         @NotBlank(message = ValidateErrorMessage.INVALID_CATEGORY_NAME_NULL)
-        String categoryName
+        Long categoryId
 ) {
     public ProductCommand toProductCommand() {
-        return new ProductCommand(name(), price(), imgUrl(), categoryName());
+        return new ProductCommand(name(), price(), imgUrl(), categoryId());
     }
 }

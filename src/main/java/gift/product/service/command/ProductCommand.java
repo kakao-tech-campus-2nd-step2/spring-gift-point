@@ -7,7 +7,7 @@ public record ProductCommand(
         String name,
         Integer price,
         String imgUrl,
-        String categoryName
+        Long categoryId
 ) {
     public Product toEntity(Category category) {
         return new Product(name, price, imgUrl, category);
