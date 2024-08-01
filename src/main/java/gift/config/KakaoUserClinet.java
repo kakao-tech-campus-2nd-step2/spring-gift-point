@@ -2,11 +2,10 @@ package gift.config;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import gift.dto.KakaoInfoDto;
+import gift.dto.kakaoDto.KakaoInfoDto;
 import gift.exception.WebErrorHandler;
 import gift.model.member.KakaoProperties;
 import io.netty.handler.codec.http.HttpHeaderValues;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.stereotype.Component;

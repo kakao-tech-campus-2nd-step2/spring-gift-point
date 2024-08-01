@@ -1,7 +1,7 @@
 package gift.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import gift.dto.KakaoInfoDto;
+import gift.dto.kakaoDto.KakaoInfoDto;
 import gift.model.member.KakaoProperties;
 import gift.model.member.Member;
 import gift.service.KakaoService;

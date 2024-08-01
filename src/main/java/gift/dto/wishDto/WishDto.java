@@ -1,4 +1,4 @@
-package gift.dto;
+package gift.dto.wishDto;
 
 import gift.model.member.Member;
 import gift.model.product.Product;

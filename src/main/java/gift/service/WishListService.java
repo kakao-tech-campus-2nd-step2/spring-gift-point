@@ -1,7 +1,7 @@
 package gift.service;
 
-import gift.dto.MemberDto;
-import gift.dto.WishDto;
+import gift.dto.memberDto.MemberDto;
+import gift.dto.wishDto.WishDto;
 import gift.exception.ValueNotFoundException;
 import gift.model.member.Member;
 import gift.model.wish.Wish;

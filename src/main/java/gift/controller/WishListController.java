@@ -1,7 +1,7 @@
 package gift.controller;
 
-import gift.dto.MemberDto;
-import gift.dto.WishDto;
+import gift.dto.memberDto.MemberDto;
+import gift.dto.wishDto.WishDto;
 import gift.model.member.LoginMember;
 import gift.model.wish.Wish;
 import gift.service.WishListService;

@@ -1,6 +1,6 @@
 package gift.service;
 
-import gift.dto.MemberDto;
+import gift.dto.memberDto.MemberDto;
 import gift.exception.AuthenticationException;
 import gift.exception.ValueAlreadyExistsException;
 import gift.jwt.JwtTokenProvider;

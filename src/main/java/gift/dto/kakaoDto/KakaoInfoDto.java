@@ -1,4 +1,4 @@
-package gift.dto;
+package gift.dto.kakaoDto;
 
 public class KakaoInfoDto {
     private Long id;

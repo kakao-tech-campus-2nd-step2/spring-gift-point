@@ -1,9 +1,9 @@
 package gift.service;
 
 import gift.config.KakaoUserClinet;
-import gift.dto.OrderRequestDto;
-import gift.dto.OrderResponseDto;
-import gift.dto.OrderResponseDtoBuilder;
+import gift.dto.orderDto.OrderRequestDto;
+import gift.dto.orderDto.OrderResponseDto;
+import gift.dto.orderDto.OrderResponseDtoBuilder;
 import gift.exception.ValueNotFoundException;
 import gift.model.product.Option;
 import gift.model.product.Product;

@@ -1,7 +1,7 @@
 package gift.controller;
 
-import gift.dto.OrderRequestDto;
-import gift.dto.OrderResponseDto;
+import gift.dto.orderDto.OrderRequestDto;
+import gift.dto.orderDto.OrderResponseDto;
 import gift.service.OrderService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;

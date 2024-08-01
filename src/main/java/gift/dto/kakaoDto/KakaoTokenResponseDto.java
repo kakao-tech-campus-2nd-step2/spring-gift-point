@@ -1,4 +1,4 @@
-package gift.dto;
+package gift.dto.kakaoDto;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;

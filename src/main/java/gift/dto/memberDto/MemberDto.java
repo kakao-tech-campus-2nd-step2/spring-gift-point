@@ -1,4 +1,4 @@
-package gift.dto;
+package gift.dto.memberDto;
 
 public record MemberDto(String email, String password, String role) { }
 

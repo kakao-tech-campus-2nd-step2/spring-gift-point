@@ -1,7 +1,7 @@
 package gift.controller;
 
 
-import gift.dto.MemberDto;
+import gift.dto.memberDto.MemberDto;
 import gift.service.MemberService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;

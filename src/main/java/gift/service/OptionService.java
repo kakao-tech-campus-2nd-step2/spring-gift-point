@@ -1,6 +1,6 @@
 package gift.service;
 
-import gift.dto.OptionDto;
+import gift.dto.optionDto.OptionDto;
 import gift.exception.ValueNotFoundException;
 import gift.model.product.Option;
 import gift.model.product.Product;

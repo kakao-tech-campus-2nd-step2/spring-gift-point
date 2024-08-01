@@ -1,6 +1,6 @@
 package gift.controller;
 
-import gift.dto.OptionDto;
+import gift.dto.optionDto.OptionDto;
 import gift.model.product.Option;
 import gift.service.OptionService;
 import io.swagger.v3.oas.annotations.Operation;

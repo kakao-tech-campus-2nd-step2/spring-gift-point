@@ -1,4 +1,4 @@
-package gift.dto;
+package gift.dto.optionDto;
 
 import jakarta.validation.constraints.NotEmpty;
 

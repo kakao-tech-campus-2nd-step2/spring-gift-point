@@ -1,6 +1,6 @@
 package gift.config;
 
-import gift.dto.MemberDto;
+import gift.dto.memberDto.MemberDto;
 import gift.jwt.JwtTokenProvider;
 import gift.model.member.LoginMember;
 import gift.model.member.Member;

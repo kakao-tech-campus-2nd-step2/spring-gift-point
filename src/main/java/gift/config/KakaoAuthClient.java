@@ -1,6 +1,6 @@
 package gift.config;
 
-import gift.dto.KakaoTokenResponseDto;
+import gift.dto.kakaoDto.KakaoTokenResponseDto;
 import gift.exception.WebErrorHandler;
 import gift.model.member.KakaoProperties;
 import io.netty.handler.codec.http.HttpHeaderValues;
