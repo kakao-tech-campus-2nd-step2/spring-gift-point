@@ -48,7 +48,6 @@ class WishServiceTest {
         Long memberId = 1L;
         Member member = new Member("test@email.com", "password");
         Product product = new Product("name", 1000, "imageUrl", null, List.of(new Option("option1", 100)));
-        //Wish wish = new Wish(member, 1, product);
         Wish wish = mock(Wish.class);
 
         PageRequest pageable = PageRequest.of(0, 10);
@@ -65,8 +64,8 @@ class WishServiceTest {
         //Then
         assertThat(responsePage.getContent()).hasSize(1);
         assertThat(responsePage.getContent().get(0))
-                .extracting("productName","wishId")
-                .containsExactly("name",1L);
+                .extracting("productName", "wishId")
+                .containsExactly("name", 1L);
     }
 
     @Nested
@@ -140,8 +139,6 @@ class WishServiceTest {
             //Given
             Long wishId = 1L;
             Long memberId = 1L;
-            Member member = new Member("test@email.com", "password");
-            Product product = new Product("name", 1000, "imageUrl", null, List.of(new Option("option1", 100)));
 
             when(wishRepository.findByIdAndMemberId(any(), any())).thenReturn(Optional.empty());
 

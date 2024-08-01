@@ -16,17 +16,15 @@ public class KakaoApiService {
     private final KakaoApiClient kakaoApiClient;
     private final KakaoAccessTokenRepository kakaoAccessTokenRepository;
     private final ObjectMapper objectMapper;
-
+    @Value("${clientId}")
+    private String clientId;
+    @Value("${redirect.uri}")
+    private String redirectUri;
     public KakaoApiService(KakaoApiClient kakaoApiClient, KakaoAccessTokenRepository kakaoAccessTokenRepository, ObjectMapper objectMapper) {
         this.kakaoApiClient = kakaoApiClient;
         this.kakaoAccessTokenRepository = kakaoAccessTokenRepository;
         this.objectMapper = objectMapper;
     }
-
-    @Value("${clientId}")
-    private String clientId;
-    @Value("${redirect.uri}")
-    private String redirectUri;
 
     public KakaoTokenResponse getKakaoToken(String code) {
         KakaoTokenRequestBodyGenerator generator = new KakaoTokenRequestBodyGenerator(clientId, redirectUri, code);

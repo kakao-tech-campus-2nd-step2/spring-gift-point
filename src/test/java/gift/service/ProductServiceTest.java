@@ -154,7 +154,7 @@ class ProductServiceTest {
         @DisplayName("성공")
         void success() {
             //Given
-            UpdateProductRequest request = new UpdateProductRequest( "updateName", 10, "img", 1L);
+            UpdateProductRequest request = new UpdateProductRequest("updateName", 10, "img", 1L);
 
             Category category = new Category("CategoryName", "color", "description", "imageUrl");
             List<Option> options = List.of(new Option("option", 1010));
@@ -164,7 +164,7 @@ class ProductServiceTest {
             when(categoryService.getCategory(request.categoryId())).thenReturn(category);
 
             //When
-            productService.updateProduct(request,1L);
+            productService.updateProduct(request, 1L);
 
             //Then
             assertThat(product.getName()).isEqualTo("updateName");
@@ -174,12 +174,12 @@ class ProductServiceTest {
         @DisplayName("실패 - 존재하지 않는 상품")
         void fail() {
             //Given
-            UpdateProductRequest request = new UpdateProductRequest( "updateName", 10, "img", 1L);
+            UpdateProductRequest request = new UpdateProductRequest("updateName", 10, "img", 1L);
 
             when(productRepository.findById(1L)).thenReturn(Optional.empty());
 
             //When Then
-            assertThatThrownBy(() -> productService.updateProduct(request,1L))
+            assertThatThrownBy(() -> productService.updateProduct(request, 1L))
                     .isInstanceOf(ProductNotFoundException.class);
         }
     }

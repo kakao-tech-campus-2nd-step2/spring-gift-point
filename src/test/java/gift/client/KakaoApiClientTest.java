@@ -26,6 +26,7 @@ import static org.mockito.Mockito.mock;
 import static org.springframework.test.web.client.match.MockRestRequestMatchers.*;
 import static org.springframework.test.web.client.response.MockRestResponseCreators.withSuccess;
 
+@SuppressWarnings("ALL")
 @RestClientTest(KakaoApiClient.class)
 @DisplayName("카카오 RestClient Test")
 class KakaoApiClientTest {
@@ -107,7 +108,7 @@ class KakaoApiClientTest {
     void sendMessageToMe() {
         //Given
         String accessToken = "accessToken";
-        KakaoMessageRequestBodyGenerator generator = new KakaoMessageRequestBodyGenerator("message",objectMapper);
+        KakaoMessageRequestBodyGenerator generator = new KakaoMessageRequestBodyGenerator("message", objectMapper);
 
         server.expect(requestTo(kakaoMessageSendRequestUri))
                 .andExpect(method(HttpMethod.POST))

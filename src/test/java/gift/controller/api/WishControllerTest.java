@@ -60,7 +60,7 @@ class WishControllerTest {
     void addProductToWishList() throws Exception {
         //Given
         when(authInterceptor.preHandle(any(), any(), any())).thenReturn(true);
-        WishRequest request = new WishRequest(1L,null);
+        WishRequest request = new WishRequest(1L, null);
 
         //When
         mockMvc.perform(MockMvcRequestBuilders.post(URL)
@@ -94,8 +94,8 @@ class WishControllerTest {
         //Given
         when(authInterceptor.preHandle(any(), any(), any())).thenReturn(true);
         Page<WishProductResponse> page = new PageImpl<>(List.of(
-                new WishProductResponse(1L, 1L,"product1", 100, "img"),
-                new WishProductResponse(2L, 2L,"product2", 400, "img")
+                new WishProductResponse(1L, 1L, "product1", 100, "img"),
+                new WishProductResponse(2L, 2L, "product2", 400, "img")
         ));
         when(wishService.getWishProductResponses(any(), any())).thenReturn(page);
 

@@ -76,17 +76,16 @@ public class ProductAdminController {
     @GetMapping("/edit/{id}")
     public String getEditForm(@PathVariable("id") long id, Model model) {
         Product existingProduct = productService.getProduct(id);
-        model.addAttribute("updateProductRequest", new UpdateProductRequest( existingProduct.getName(), existingProduct.getPrice(), existingProduct.getImageUrl(), existingProduct.getId()));
+        model.addAttribute("updateProductRequest", new UpdateProductRequest(existingProduct.getName(), existingProduct.getPrice(), existingProduct.getImageUrl(), existingProduct.getId()));
         model.addAttribute("categories", categoryService.getAllCategoryResponses());
         model.addAttribute("productId", id);
         return "version-SSR/edit-form";
     }
 
     @PostMapping("/edit/{id}")
-    public String editProduct(@Valid UpdateProductRequest request,@PathVariable("id") Long productId) {
-        System.out.println("??????");
+    public String editProduct(@Valid UpdateProductRequest request, @PathVariable("id") Long productId) {
         try {
-            productService.updateProduct(request,productId);
+            productService.updateProduct(request, productId);
             return "redirect:/product";
         } catch (Exception e) {
             return "version-SSR/edit-error";
