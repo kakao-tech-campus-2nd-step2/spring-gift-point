@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>카테고리 관리</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+<div class="container">
+    <h1>카테고리 관리</h1>
+    <div class="d-flex justify-content-end mb-3">
+        <a href="/" class="btn btn-secondary mr-2">홈으로</a>
+        <a href="/categories/new" class="btn btn-success">카테고리 추가</a>
+    </div>
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <th>Name</th>
+            <th>Color</th>
+            <th>Image URL</th>
+            <th>Description</th>
+            <th>Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="category : ${categories}">
+            <td th:text="${category.name}"></td>
+            <td th:text="${category.color}"></td>
+            <td><img th:src="${category.imageUrl}" width="100"></td>
+            <td th:text="${category.description}"></td>
+            <td>
+                <a th:href="@{/categories/update/{id}(id=${category.id})}" class="btn btn-primary">Edit</a>
+                <a th:href="@{/categories/delete/{id}(id=${category.id})}" class="btn btn-danger">Delete</a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+</body>
+</html>

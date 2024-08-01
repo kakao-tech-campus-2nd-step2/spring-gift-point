@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Register</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<h1>회원가입</h1>
+<form th:action="@{/members/register}" method="post">
+    <label>Email:</label>
+    <input type="email" name="email" required>
+    <label>Password:</label>
+    <input type="password" name="password" required>
+    <button type="submit">Register</button>
+</form>
+</body>
+</html>

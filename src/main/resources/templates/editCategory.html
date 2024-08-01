@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>카테고리 수정</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<h1>카테고리 수정</h1>
+<form th:action="@{/categories/update/{id}(id=${category.id})}" th:object="${category}" method="post">
+    <input type="hidden" th:field="*{id}">
+
+    <label>Name:</label>
+    <input type="text" th:field="*{name}" required>
+    <div th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></div>
+
+    <label>Color:</label>
+    <input type="text" th:field="*{color}" required>
+    <div th:if="${#fields.hasErrors('color')}" th:errors="*{color}"></div>
+
+    <label>Image URL:</label>
+    <input type="text" th:field="*{imageUrl}" required>
+    <div th:if="${#fields.hasErrors('imageUrl')}" th:errors="*{imageUrl}"></div>
+
+    <label>Description:</label>
+    <input type="text" th:field="*{description}">
+    <div th:if="${#fields.hasErrors('description')}" th:errors="*{description}"></div>
+
+    <button type="submit">Save</button>
+</form>
+</body>
+</html>

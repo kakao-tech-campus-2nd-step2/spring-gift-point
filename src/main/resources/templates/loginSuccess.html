@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Login Success</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<div class="container">
+    <h1>Login Success</h1>
+    <p th:text="'Access Token: ' + ${accessToken}"></p>
+    <p th:text="'JWT Token: ' + ${jwtToken}"></p>
+</div>
+</body>
+</html>
