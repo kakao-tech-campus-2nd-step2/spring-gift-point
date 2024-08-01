@@ -16,7 +16,7 @@ class WishTest {
         // given
         Long memberId = 1L;
         Long memberId2 = 2L;
-        Member member = new Member(memberId, null, null, null, null, null);
+        Member member = new Member(memberId, null, null, null, null, null, null);
         List<Option> options = List.of(new Option("oName", 123));
         Product product = new Product(null, 0, null, null, options);
         Wish wish = new Wish(member, 0, product);

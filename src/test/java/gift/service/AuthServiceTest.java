@@ -43,7 +43,7 @@ class AuthServiceTest {
         String password = "password";
         String token = "tokentoken";
         var request = new SignInRequest(email, password);
-        Member member = new Member(id, email, password, Role.USER, null, null);
+        Member member = new Member(id, email, password, "nmae", Role.USER, null, null);
         given(memberRepository.findByEmailAndPassword(eq(email), eq(password)))
                 .willReturn(Optional.of(member));
         given(jwtProvider.generateToken(eq(id), eq(member.getEmail()), eq(member.getRole())))

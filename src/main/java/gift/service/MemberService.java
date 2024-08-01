@@ -6,6 +6,7 @@ import gift.common.exception.EntityNotFoundException;
 import gift.controller.dto.request.MemberRequest;
 import gift.controller.dto.response.MemberResponse;
 import gift.controller.dto.response.PagingResponse;
+import gift.controller.dto.response.PointResponse;
 import gift.model.Member;
 import gift.repository.MemberRepository;
 import org.springframework.data.domain.Page;
@@ -51,6 +52,13 @@ public class MemberService {
                 .orElseThrow(()->
                         new EntityNotFoundException("Member with productId " + id + " not found"));
         member.updateMember(request.email(), request.password(), request.role());
+    }
+
+    @Transactional(readOnly = true)
+    public PointResponse findPointById(Long id) {
+        Member member = memberRepository.findById(id)
+                .orElseThrow(()-> new EntityNotFoundException("존재하지 않는 멤버입니다."));
+        return PointResponse.of(member.getPoint());
     }
 
     @Transactional

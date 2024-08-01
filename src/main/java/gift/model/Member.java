@@ -30,14 +30,19 @@ public class Member extends BasicEntity {
     @Column(nullable = false)
     private SocialLoginType loginType;
 
+    @Column(nullable = false)
+    private int point;
+
     protected Member() {}
 
-    public Member(Long id, String email, String password, Role role, LocalDateTime createdAt, LocalDateTime updatedAt) {
+    public Member(Long id, String email, String password, String name, Role role, LocalDateTime createdAt, LocalDateTime updatedAt) {
         super(id, createdAt, updatedAt);
         this.email = email;
         this.password = password;
+        this.name = name;
         this.role = role;
         this.loginType = SocialLoginType.DEFAULT;
+        this.point = 0;
     }
 
     public Member(String email, String password, String name, Role role) {
@@ -46,6 +51,7 @@ public class Member extends BasicEntity {
         this.role = role;
         this.name = name;
         this.loginType = SocialLoginType.DEFAULT;
+        this.point = 0;
     }
 
     public Member(String email, String password, String name, Role role, SocialLoginType loginType) {
@@ -54,6 +60,7 @@ public class Member extends BasicEntity {
         this.name = name;
         this.role = role;
         this.loginType = loginType;
+        this.point = 0;
     }
 
     public void updateMember(String email, String password, Role role) {
@@ -66,6 +73,18 @@ public class Member extends BasicEntity {
         if (this.loginType != loginType) {
             throw new AuthorizationException("잘못된 접근입니다.");
         }
+    }
+
+    public int addPoint(int deposit) {
+        point += deposit;
+        return point;
+    }
+
+    public void usePoint(int amount) {
+        if (point < amount) {
+            throw new IllegalArgumentException("포인트가 부족합니다.");
+        }
+        point -= amount;
     }
 
     public String getPassword() {
@@ -86,5 +105,9 @@ public class Member extends BasicEntity {
 
     public SocialLoginType getLoginType() {
         return loginType;
+    }
+
+    public int getPoint() {
+        return point;
     }
 }
