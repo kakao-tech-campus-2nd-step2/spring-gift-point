@@ -1,17 +1,20 @@
 package gift.repository;
 
-import gift.model.Member;
-import gift.model.Product;
-import gift.model.Wish;
+import gift.model.*;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.test.context.ActiveProfiles;
 
-import java.util.List;
+import java.util.Collections;
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 @DataJpaTest
+@ActiveProfiles("test") // 테스트 프로파일 사용
 public class WishRepositoryTest {
 
     @Autowired
@@ -23,35 +26,66 @@ public class WishRepositoryTest {
     @Autowired
     private ProductRepository productRepository;
 
-    @Test
-    public void testSaveAndFindWish() {
-        Member member = new Member("test@example.com", "password123");
-        memberRepository.save(member);
+    private Wish testWish;
+    private Member testMember;
+    private Product testProduct;
+    private Option testOption;
+    private Category testCategory;
 
-        Product product = new Product("Test Product", 1000, "http://example.com/image.jpg");
-        productRepository.save(product);
+    @BeforeEach
+    public void setUp() {
+        testCategory = new Category();
+        testCategory.setId(1L);
+        testCategory.setName("Test Category");
+        testCategory.setColor("#FFFFFF");
+        testCategory.setImageUrl("http://example.com/image.jpg");
 
-        Wish wish = new Wish(member, product);
-        Wish savedWish = wishRepository.save(wish);
+        // 멤버 생성
+        testMember = new Member();
+        testMember.setEmail("test@example.com");
+        testMember.setPassword("password");
+        memberRepository.save(testMember);
 
-        List<Wish> wishes = wishRepository.findByMemberId(member.getId());
-        assertThat(wishes).isNotEmpty();
-        assertThat(wishes.get(0).getProduct().getName()).isEqualTo("Test Product");
+        // 제품 생성
+        testProduct = new Product();
+        testProduct.setName("Test Product");
+        testProduct.setPrice(1000);
+        testProduct.setImageUrl("http://example.com/image.jpg");
+        testProduct.setCategory(testCategory);
+
+        // 옵션 생성
+        testOption = new Option();
+        testOption.setName("Test Option");
+        testOption.setQuantity(10);
+        testOption.setProduct(testProduct);
+
+        // 제품에 옵션 설정
+        testProduct.setOptions(Collections.singletonList(testOption));
+        productRepository.save(testProduct);
+
+        // 위시 생성
+        testWish = new Wish();
+        testWish.setMember(testMember);
+        testWish.setProduct(testProduct);
+        wishRepository.save(testWish);
     }
 
     @Test
-    public void testDeleteWish() {
-        Member member = new Member("test@example.com", "password123");
-        memberRepository.save(member);
+    public void testFindAllByMemberId_Success() {
+        assertThat(wishRepository.findAllByMemberId(testMember.getId(), Pageable.unpaged()).getContent()).hasSize(1);
+    }
 
-        Product product = new Product("Test Product", 1000, "http://example.com/image.jpg");
-        productRepository.save(product);
+    @Test
+    public void testFindByIdAndMemberId_Success() {
+        Optional<Wish> foundWish = wishRepository.findByIdAndMemberId(testWish.getId(), testMember.getId());
+        assertThat(foundWish).isPresent();
+        assertThat(foundWish.get().getProduct().getName()).isEqualTo(testProduct.getName());
+    }
 
-        Wish wish = new Wish(member, product);
-        wishRepository.save(wish);
-
-        wishRepository.deleteByIdAndMemberId(wish.getId(), member.getId());
-        List<Wish> wishes = wishRepository.findByMemberId(member.getId());
-        assertThat(wishes).isEmpty();
+    @Test
+    public void testDeleteByMemberAndProduct_Success() {
+        wishRepository.deleteByMemberAndProduct(testMember, testProduct);
+        Optional<Wish> deletedWish = wishRepository.findById(testWish.getId());
+        assertThat(deletedWish).isNotPresent();
     }
 }
