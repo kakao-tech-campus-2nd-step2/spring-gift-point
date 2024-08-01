@@ -56,11 +56,15 @@ public class OAuthFilter implements Filter {
         String path = httpRequest.getRequestURI();
 
         // Filter 를 통과하지 않아도 되는 url
-        if (path.equals("/api/user/login") || path.equals("/api/user/register") || path.startsWith("/user")
-            || path.startsWith("/h2-console") || path.equals("/api/oauth/authorize")
+        if (path.equals("/api/members/login") || path.equals("/api/members/register") || path.startsWith("/api/members")
+            || path.startsWith("/h2-console") || path.equals("/api/oauth/authorize") || path.startsWith("/api/categories")
+            || path.startsWith("/api/products")
             || path.equals("/api/oauth/token")
-            || path.startsWith("/swagger-ui") || path.startsWith("/v3/api-docs")
-            || path.startsWith("/swagger-resources") || path.equals("/swagger-ui.html")) {
+            || path.equals("/swagger-ui.html")
+            || path.startsWith("/swagger-ui")
+            || path.startsWith("/api-docs")
+            || path.startsWith("/v3/api-docs")
+            || path.startsWith("/swagger-resources")) {
             filterChain.doFilter(request, response);
             return;
         }
