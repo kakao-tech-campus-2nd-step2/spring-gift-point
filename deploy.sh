@@ -12,7 +12,7 @@ else
   sleep 5
 fi
 
-DEPLOY_PATH=/home/ubuntu/deploy
+DEPLOY_PATH=/home/ubuntu/deploy/
 cp $BUILD_PATH $DEPLOY_PATH
 cd $DEPLOY_PATH
 
