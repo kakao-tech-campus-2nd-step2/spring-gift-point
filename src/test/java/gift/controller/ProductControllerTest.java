@@ -68,7 +68,7 @@ public class ProductControllerTest {
         Pageable pageable = PageRequest.of(0, 10);
         Page<ProductResponse> page = new PageImpl<>(List.of(productResponse), pageable, 1);
 
-        when(productService.getAllProducts(any(Pageable.class))).thenReturn(page);
+        when(productService.getAllProducts(any(Pageable.class), eq(null))).thenReturn(page);
 
         mockMvc.perform(get("/api/products")
                 .param("page", "0")

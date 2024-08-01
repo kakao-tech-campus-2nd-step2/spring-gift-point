@@ -3,7 +3,7 @@ package gift.controller.oauth;
 import static gift.util.constants.auth.KakaoOAuthConstants.KAKAO_AUTH_URL;
 
 import gift.config.KakaoProperties;
-import gift.dto.member.MemberResponse;
+import gift.dto.member.MemberOAuthResponse;
 import gift.dto.oauth.KakaoScopeResponse;
 import gift.dto.oauth.KakaoTokenResponse;
 import gift.dto.oauth.KakaoUnlinkResponse;
@@ -60,11 +60,11 @@ public class KakaoOAuthController {
     public ResponseEntity<Map<String, String>> kakaoCallback(@RequestParam("code") String code) {
         KakaoTokenResponse tokenResponse = kakaoOAuthService.getAccessToken(code);
         KakaoUserResponse userResponse = kakaoOAuthService.getUserInfo(tokenResponse.accessToken());
-        MemberResponse memberResponse = kakaoOAuthService.registerOrLoginKakaoUser(userResponse);
+        MemberOAuthResponse memberOAuthResponse = kakaoOAuthService.registerOrLoginKakaoUser(userResponse);
 
-        kakaoOAuthService.saveToken(tokenResponse, memberResponse.id());
+        kakaoOAuthService.saveToken(tokenResponse, memberOAuthResponse.id());
 
-        String jwt = kakaoOAuthService.generateJwt(memberResponse.id(), memberResponse.email());
+        String jwt = kakaoOAuthService.generateJwt(memberOAuthResponse.id(), memberOAuthResponse.email());
 
         Map<String, String> response = new HashMap<>();
         response.put("token", jwt);

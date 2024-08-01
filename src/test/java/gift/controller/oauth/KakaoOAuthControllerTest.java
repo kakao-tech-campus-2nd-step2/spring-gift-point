@@ -14,7 +14,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import gift.config.KakaoProperties;
-import gift.dto.member.MemberResponse;
+import gift.dto.member.MemberAuthResponse;
+import gift.dto.member.MemberOAuthResponse;
 import gift.dto.oauth.KakaoScopeResponse;
 import gift.dto.oauth.KakaoScopeResponse.Scope;
 import gift.dto.oauth.KakaoTokenResponse;
@@ -55,7 +56,8 @@ class KakaoOAuthControllerTest {
     private KakaoUnlinkResponse unlinkResponse;
     private KakaoScopeResponse scopeResponse;
     private KakaoUserResponse userResponse;
-    private MemberResponse memberResponse;
+    private MemberAuthResponse memberAuthResponse;
+    private MemberOAuthResponse memberOAuthResponse;
 
     @BeforeEach
     void setUp() {
@@ -66,7 +68,8 @@ class KakaoOAuthControllerTest {
             new Scope("email", "Email Information", false)
         ));
         userResponse = new KakaoUserResponse(12345L, "nickname", "test@example.com");
-        memberResponse = new MemberResponse(1L, "test@example.com", "token", RegisterType.DEFAULT);
+        memberAuthResponse = new MemberAuthResponse("test@example.com", "token");
+        memberOAuthResponse = new MemberOAuthResponse(1L, "test@example.com", "token", RegisterType.DEFAULT);
     }
 
     @Test
@@ -81,7 +84,7 @@ class KakaoOAuthControllerTest {
     void testKakaoCallbackSuccess() throws Exception {
         when(kakaoOAuthService.getAccessToken(anyString())).thenReturn(tokenResponse);
         when(kakaoOAuthService.getUserInfo(anyString())).thenReturn(userResponse);
-        when(kakaoOAuthService.registerOrLoginKakaoUser(any(KakaoUserResponse.class))).thenReturn(memberResponse);
+        when(kakaoOAuthService.registerOrLoginKakaoUser(any(KakaoUserResponse.class))).thenReturn(memberOAuthResponse);
         when(kakaoOAuthService.generateJwt(anyLong(), anyString())).thenReturn("token");
 
         mockMvc.perform(get("/oauth/kakao/callback")

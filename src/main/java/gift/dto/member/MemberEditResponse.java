@@ -3,8 +3,8 @@ package gift.dto.member;
 import gift.model.RegisterType;
 import io.swagger.v3.oas.annotations.media.Schema;
 
-@Schema(description = "회원 응답 데이터")
-public record MemberResponse(
+@Schema(description = "회원 수정 응답 데이터")
+public record MemberEditResponse(
     @Schema(description = "회원 ID", example = "1")
     Long id,
 

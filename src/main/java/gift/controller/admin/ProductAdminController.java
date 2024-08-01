@@ -54,7 +54,7 @@ public class ProductAdminController {
         Model model,
         @PageableDefault(size = 10, sort = "id", direction = Sort.Direction.ASC) Pageable pageable
     ) {
-        Page<ProductResponse> productPage = productService.getAllProducts(pageable);
+        Page<ProductResponse> productPage = productService.getAllProducts(pageable, null);
         model.addAttribute("products", productPage.getContent());
         model.addAttribute("currentPage", pageable.getPageNumber());
         model.addAttribute("totalPages", productPage.getTotalPages());

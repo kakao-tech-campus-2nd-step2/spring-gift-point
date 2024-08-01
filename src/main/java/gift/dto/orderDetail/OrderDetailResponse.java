@@ -1,10 +1,10 @@
-package gift.dto.order;
+package gift.dto.orderDetail;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.time.LocalDateTime;
 
 @Schema(description = "주문 응답 데이터")
-public record OrderResponse(
+public record OrderDetailResponse(
     @Schema(description = "주문 ID", example = "1")
     Long id,
 

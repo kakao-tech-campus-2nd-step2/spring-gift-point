@@ -1,14 +1,14 @@
 package gift.service;
 
-import gift.dto.member.MemberResponse;
+import gift.dto.member.MemberEditResponse;
 import gift.dto.option.OptionResponse;
-import gift.dto.order.OrderRequest;
-import gift.dto.order.OrderResponse;
+import gift.dto.orderDetail.OrderDetailRequest;
+import gift.dto.orderDetail.OrderDetailResponse;
 import gift.model.Option;
 import gift.model.OrderDetail;
 import gift.model.Product;
 import gift.model.RegisterType;
-import gift.repository.OrderRepository;
+import gift.repository.OrderDetailRepository;
 import gift.service.oauth.KakaoOAuthService;
 import java.text.NumberFormat;
 import java.time.LocalDateTime;
@@ -17,22 +17,22 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
-public class OrderService {
+public class OrderDetailService {
 
-    private final OrderRepository orderRepository;
+    private final OrderDetailRepository orderDetailRepository;
     private final OptionService optionService;
     private final KakaoOAuthService kakaoOAuthService;
     private final WishService wishService;
     private final MemberService memberService;
 
-    public OrderService(
-        OrderRepository orderRepository,
+    public OrderDetailService(
+        OrderDetailRepository orderDetailRepository,
         OptionService optionService,
         KakaoOAuthService kakaoOAuthService,
         WishService wishService,
         MemberService memberService
     ) {
-        this.orderRepository = orderRepository;
+        this.orderDetailRepository = orderDetailRepository;
         this.optionService = optionService;
         this.kakaoOAuthService = kakaoOAuthService;
         this.wishService = wishService;
@@ -40,23 +40,32 @@ public class OrderService {
     }
 
     @Transactional
-    public OrderResponse createOrder(OrderRequest orderRequest, Long memberId) {
-        OptionResponse optionResponse = optionService.getOptionById(orderRequest.optionId());
+    public OrderDetailResponse createOrder(OrderDetailRequest orderDetailRequest, Long memberId) {
+        OptionResponse optionResponse = optionService.getOptionById(orderDetailRequest.optionId());
 
-        optionService.subtractOptionQuantity(optionResponse.productId(), optionResponse.id(), orderRequest.quantity());
+        optionService.subtractOptionQuantity(
+            optionResponse.productId(),
+            optionResponse.id(),
+            orderDetailRequest.quantity()
+        );
         Option option = optionService.convertToEntity(optionResponse);
 
-        OrderDetail orderDetail = new OrderDetail(option, orderRequest.quantity(), orderRequest.message(), LocalDateTime.now());
-        OrderDetail savedOrderDetail = orderRepository.save(orderDetail);
+        OrderDetail orderDetail = new OrderDetail(
+            option,
+            orderDetailRequest.quantity(),
+            orderDetailRequest.message(),
+            LocalDateTime.now()
+        );
+        OrderDetail savedOrderDetail = orderDetailRepository.save(orderDetail);
 
-        MemberResponse memberResponse = memberService.getMemberById(memberId);
-        if (memberResponse.registerType() == RegisterType.KAKAO) {
+        MemberEditResponse memberEditResponse = memberService.getMemberById(memberId);
+        if (memberEditResponse.registerType() == RegisterType.KAKAO) {
             sendKakaoMessage(savedOrderDetail, memberId);
         }
 
         wishService.deleteWishByProductIdAndMemberId(option.getProduct().getId(), memberId);
 
-        return new OrderResponse(
+        return new OrderDetailResponse(
             savedOrderDetail.getId(),
             option.getId(),
             orderDetail.getQuantity(),
