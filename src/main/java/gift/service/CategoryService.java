@@ -6,7 +6,6 @@ import gift.exception.DuplicatedNameException;
 import gift.exception.NotFoundElementException;
 import gift.model.Category;
 import gift.repository.CategoryRepository;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -44,8 +43,8 @@ public class CategoryService {
     }
 
     @Transactional(readOnly = true)
-    public List<CategoryResponse> getCategories(Pageable pageable) {
-        return categoryRepository.findAll(pageable)
+    public List<CategoryResponse> getCategories() {
+        return categoryRepository.findAll()
                 .stream()
                 .map(this::getCategoryResponseFromCategory)
                 .toList();

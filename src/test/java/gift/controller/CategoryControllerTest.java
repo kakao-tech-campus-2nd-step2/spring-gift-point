@@ -3,20 +3,23 @@ package gift.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import gift.dto.auth.LoginRequest;
 import gift.dto.category.CategoryRequest;
+import gift.exception.ExceptionResponse;
 import gift.service.CategoryService;
 import gift.service.auth.AuthService;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.transaction.annotation.Transactional;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
@@ -45,60 +48,64 @@ class CategoryControllerTest {
     @DisplayName("잘못된 색상코드로 된 카테고리 생성하기")
     void failAddCategoryWithWrongColorPattern() throws Exception {
         //given
-        var postRequest = post("/api/categories/add")
+        var postRequest = post("/api/categories")
                 .contentType(MediaType.APPLICATION_JSON)
                 .header("Authorization", "Bearer " + memberToken)
                 .content(objectMapper.writeValueAsString(new CategoryRequest("상품카테고리", "상품설명", "#11111", "image")));
         //when
-        var result = mockMvc.perform(postRequest);
+        var result = mockMvc.perform(postRequest).andReturn();
         //then
-        result.andExpect(status().isBadRequest())
-                .andExpect(content().string("허용되지 않은 형식의 색상코드입니다."));
+        var response = getResponseMessage(result);
+        Assertions.assertThat(response.status()).isEqualTo(HttpStatus.BAD_REQUEST.value());
+        Assertions.assertThat(response.message()).isEqualTo("허용되지 않은 형식의 색상코드입니다.");
     }
 
     @Test
     @DisplayName("카테고리 이미지는 공백이 입력되면 안된다")
     void failAddCategoryWithBlankCategoryImage() throws Exception {
         //given
-        var postRequest = post("/api/categories/add")
+        var postRequest = post("/api/categories")
                 .contentType(MediaType.APPLICATION_JSON)
                 .header("Authorization", "Bearer " + memberToken)
                 .content(objectMapper.writeValueAsString(new CategoryRequest("상품카테고리", "상품설명", "#111111", "")));
         //when
-        var result = mockMvc.perform(postRequest);
+        var result = mockMvc.perform(postRequest).andReturn();
         //then
-        result.andExpect(status().isBadRequest())
-                .andExpect(content().string("카테고리 설명 이미지는 필수로 입력해야 합니다."));
+        var response = getResponseMessage(result);
+        Assertions.assertThat(response.status()).isEqualTo(HttpStatus.BAD_REQUEST.value());
+        Assertions.assertThat(response.message()).isEqualTo("카테고리 설명 이미지는 필수로 입력해야 합니다.");
     }
 
     @Test
     @DisplayName("카테고리 이름은 공백이 입력되면 안된다")
     void failAddCategoryWithBlankCategoryName() throws Exception {
         //given
-        var postRequest = post("/api/categories/add")
+        var postRequest = post("/api/categories")
                 .contentType(MediaType.APPLICATION_JSON)
                 .header("Authorization", "Bearer " + memberToken)
                 .content(objectMapper.writeValueAsString(new CategoryRequest("", "상품설명", "#111111", "이미지")));
         //when
-        var result = mockMvc.perform(postRequest);
+        var result = mockMvc.perform(postRequest).andReturn();
         //then
-        result.andExpect(status().isBadRequest())
-                .andExpect(content().string("이름의 길이는 최소 1자 이상이어야 합니다."));
+        var response = getResponseMessage(result);
+        Assertions.assertThat(response.status()).isEqualTo(HttpStatus.BAD_REQUEST.value());
+        Assertions.assertThat(response.message()).isEqualTo("이름의 길이는 최소 1자 이상이어야 합니다.");
     }
 
     @Test
     @DisplayName("카테고리 설명은 공백이 입력되면 안된다")
     void failAddCategoryWithBlankCategoryDescription() throws Exception {
         //given
-        var postRequest = post("/api/categories/add")
+        var postRequest = post("/api/categories")
                 .contentType(MediaType.APPLICATION_JSON)
                 .header("Authorization", "Bearer " + memberToken)
                 .content(objectMapper.writeValueAsString(new CategoryRequest("상품카테고리", "", "#111111", "이미지")));
         //when
-        var result = mockMvc.perform(postRequest);
+        var result = mockMvc.perform(postRequest).andReturn();
         //then
-        result.andExpect(status().isBadRequest())
-                .andExpect(content().string("카테고리 설명은 필수로 입력해야 합니다."));
+        var response = getResponseMessage(result);
+        Assertions.assertThat(response.status()).isEqualTo(HttpStatus.BAD_REQUEST.value());
+        Assertions.assertThat(response.message()).isEqualTo("카테고리 설명은 필수로 입력해야 합니다.");
     }
 
     @Test
@@ -108,15 +115,16 @@ class CategoryControllerTest {
         var productCategoryRequest = new CategoryRequest("상품카테고리", "상품설명", "#111111", "이미지");
         var productCategory = categoryService.addCategory(productCategoryRequest);
 
-        var postRequest = post("/api/categories/add")
+        var postRequest = post("/api/categories")
                 .contentType(MediaType.APPLICATION_JSON)
                 .header("Authorization", "Bearer " + memberToken)
                 .content(objectMapper.writeValueAsString(productCategoryRequest));
         //when
-        var result = mockMvc.perform(postRequest);
+        var result = mockMvc.perform(postRequest).andReturn();
         //then
-        result.andExpect(status().isConflict())
-                .andExpect(content().string("이미 존재하는 이름입니다."));
+        var response = getResponseMessage(result);
+        Assertions.assertThat(response.status()).isEqualTo(HttpStatus.CONFLICT.value());
+        Assertions.assertThat(response.message()).isEqualTo("이미 존재하는 이름입니다.");
 
         categoryService.deleteCategory(productCategory.id());
     }
@@ -125,7 +133,7 @@ class CategoryControllerTest {
     @DisplayName("정상 상품 카테고리 생성")
     void successAddCategory() throws Exception {
         //given
-        var postRequest = post("/api/categories/add")
+        var postRequest = post("/api/categories")
                 .contentType(MediaType.APPLICATION_JSON)
                 .header("Authorization", "Bearer " + memberToken)
                 .content(objectMapper.writeValueAsString(new CategoryRequest("상품카테고리", "상품설명", "#111111", "이미지")));
@@ -138,5 +146,10 @@ class CategoryControllerTest {
         var categoryId = location.replaceAll("/api/categories/", "");
 
         categoryService.deleteCategory(Long.parseLong(categoryId));
+    }
+
+    private ExceptionResponse getResponseMessage(MvcResult result) throws Exception {
+        var resultString = result.getResponse().getContentAsString();
+        return objectMapper.readValue(resultString, ExceptionResponse.class);
     }
 }

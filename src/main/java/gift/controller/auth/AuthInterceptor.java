@@ -2,7 +2,6 @@ package gift.controller.auth;
 
 import gift.config.properties.JwtProperties;
 import gift.exception.UnauthorizedAccessException;
-import gift.model.MemberRole;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
@@ -41,9 +40,7 @@ public class AuthInterceptor implements HandlerInterceptor {
 
     private void setMemberInformationWithClaims(HttpServletRequest request, Claims claims) {
         var memberId = Long.parseLong(claims.getSubject());
-        var memberRole = MemberRole.valueOf(claims.get("role").toString());
         request.setAttribute("memberId", memberId);
-        request.setAttribute("memberRole", memberRole);
     }
 
     private String getTokenWithAuthorizationHeader(String authorizationHeader) {
@@ -54,7 +51,7 @@ public class AuthInterceptor implements HandlerInterceptor {
 
     private String getHeader(HttpServletRequest request) {
         var header = request.getHeader("Authorization");
-        if (header == null) throw new UnauthorizedAccessException("인가되지 않은 요청입니다.");
+        if (header == null) throw new UnauthorizedAccessException("허용되지 않는 요청입니다.");
         return header;
     }
 

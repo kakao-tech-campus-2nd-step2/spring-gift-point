@@ -27,6 +27,13 @@
 
 - [X] 주문하기 코드를 옮겨온다.
 
+#### 1단계
+
+- [X] URL 주소를 일치시킨다.
+- [X] DTO 를 일치시킨다.
+- [X] 반환하는 응답을 일정하게 상태코드를 통일시킨다.
+- [X] 예외에 해당하는 응답을 Exception Handler 에서는 ExceptionResponse 으로 감싸서 반환하도록 한다.
+
 ### 나만의 HTTP RULE
 
 | HTTP Method | 사용상황                           | 반환(상태코드) |

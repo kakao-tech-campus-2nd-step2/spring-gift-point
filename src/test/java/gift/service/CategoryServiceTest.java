@@ -59,7 +59,7 @@ class CategoryServiceTest {
     @DisplayName("전체 카테고리 조회하기")
     void successGatCategories() {
         //given, when
-        var categories = categoryService.getCategories(pageable);
+        var categories = categoryService.getCategories();
         //then
         Assertions.assertThat(categories.size()).isEqualTo(4);
     }

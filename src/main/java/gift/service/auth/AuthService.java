@@ -9,7 +9,6 @@ import gift.exception.DuplicatedEmailException;
 import gift.exception.InvalidLoginInfoException;
 import gift.exception.NotFoundElementException;
 import gift.model.Member;
-import gift.model.MemberRole;
 import gift.model.OauthType;
 import gift.repository.MemberRepository;
 import gift.service.KakaoService;
@@ -58,8 +57,6 @@ public class AuthService {
     private AuthResponse createAuthResponseWithMember(Member member) {
         var token = Jwts.builder()
                 .subject(member.getId().toString())
-                .claim("name", member.getName())
-                .claim("role", member.getRole())
                 .issuedAt(new Date())
                 .expiration(new Date(System.currentTimeMillis() + jwtProperties.expiredTime()))
                 .signWith(Keys.hmacShaKeyFor(jwtProperties.secretKey().getBytes()))
@@ -75,12 +72,12 @@ public class AuthService {
 
     private Member saveMemberWithMemberRequest(RegisterRequest registerRequest) {
         emailValidation(registerRequest.email());
-        var member = new Member(registerRequest.name(), registerRequest.email(), registerRequest.password(), MemberRole.valueOf(registerRequest.role()));
+        var member = new Member(registerRequest.email(), registerRequest.password());
         return memberRepository.save(member);
     }
 
     private Member saveMemberWithKakaoAuth(KakaoAuthInformation kakaoAuthInformation) {
-        var member = new Member(kakaoAuthInformation.name(), kakaoAuthInformation.email(), MemberRole.MEMBER, OauthType.KAKAO);
+        var member = new Member(kakaoAuthInformation.email(), OauthType.KAKAO);
         return memberRepository.save(member);
     }
 

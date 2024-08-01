@@ -1,8 +1,10 @@
 package gift.service;
 
+import gift.dto.giftorder.GiftOrderPageResponse;
 import gift.dto.giftorder.GiftOrderRequest;
 import gift.dto.giftorder.GiftOrderResponse;
-import gift.dto.option.OptionInformation;
+import gift.dto.option.OptionResponse;
+import gift.dto.product.ProductBasicInformation;
 import gift.exception.NotFoundElementException;
 import gift.model.GiftOrder;
 import gift.model.Option;
@@ -11,8 +13,6 @@ import gift.repository.MemberRepository;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
 
 @Service
 @Transactional
@@ -42,11 +42,15 @@ public class GiftOrderService {
     }
 
     @Transactional(readOnly = true)
-    public List<GiftOrderResponse> getGiftOrders(Long memberId, Pageable pageable) {
-        return giftOrderRepository.findAllByMemberId(memberId, pageable)
+    public GiftOrderPageResponse getGiftOrders(Long memberId, Pageable pageable) {
+        var pageResult = giftOrderRepository.findAllByMemberId(memberId, pageable);
+        var orders = pageResult
+                .getContent()
                 .stream()
                 .map(this::getGiftOrderResponseFromGiftOrder)
                 .toList();
+
+        return new GiftOrderPageResponse(pageResult.getNumber(), pageResult.getSize(), pageResult.getTotalElements(), pageResult.getTotalPages(), orders);
     }
 
     public void deleteOrder(Long id) {
@@ -69,7 +73,9 @@ public class GiftOrderService {
     }
 
     private GiftOrderResponse getGiftOrderResponseFromGiftOrder(GiftOrder giftOrder) {
-        var optionInformation = OptionInformation.of(giftOrder.getId(), giftOrder.getOption().getProduct().getName(), giftOrder.getOption().getProduct().getPrice(), giftOrder.getOption().getName());
-        return GiftOrderResponse.of(giftOrder.getId(), optionInformation, giftOrder.getQuantity(), giftOrder.getCreatedDate(), giftOrder.getMessage());
+        var product = giftOrder.getOption().getProduct();
+        var productBasicInformation = ProductBasicInformation.of(product.getId(), product.getName(), product.getPrice());
+        var optionResponse = OptionResponse.of(giftOrder.getId(), giftOrder.getOption().getProduct().getName(), giftOrder.getQuantity());
+        return GiftOrderResponse.of(giftOrder.getId(), productBasicInformation, optionResponse, giftOrder.getQuantity(), giftOrder.getCreatedDate(), giftOrder.getMessage());
     }
 }
