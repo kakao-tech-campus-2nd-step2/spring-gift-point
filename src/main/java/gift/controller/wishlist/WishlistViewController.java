@@ -1,11 +1,17 @@
 package gift.controller.wishlist;
 
 import gift.DTO.product.ProductResponse;
+import gift.DTO.wishlist.WishResponse;
 import gift.domain.Product;
 import gift.service.TokenService;
 import gift.service.WishlistService;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort.Direction;
+import org.springframework.data.web.PageableDefault;
+import org.springframework.data.web.SortDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -33,8 +39,8 @@ public class WishlistViewController {
     public String showWishlist(
         Model model,
         @RequestHeader(value = "Authorization", required = false) String authHeader,
-        @RequestParam(defaultValue = "0") Integer page,
-        @RequestParam(defaultValue = "2") Integer size
+        @PageableDefault(page = 0, size = 10)
+        @SortDefault(sort = "createdDate", direction = Direction.DESC) Pageable pageable
     ) {
         if (authHeader == null) {
             return "login";
@@ -52,8 +58,8 @@ public class WishlistViewController {
         }
 
         String email = tokenService.extractEmailFromToken(token);
-        List<ProductResponse> wishlist = wishlistService.getWishlistByEmail(email, page, size);
-        model.addAttribute("wishlist", wishlist);
+        Page<WishResponse> pageWishResponse = wishlistService.getWishlistByEmail(email, pageable);
+        model.addAttribute("wishlist", pageWishResponse);
         return "wishlist";
     }
 }

@@ -1,6 +1,7 @@
 package gift.service;
 
 import gift.DTO.product.ProductResponse;
+import gift.DTO.wishlist.WishResponse;
 import gift.domain.Member;
 import gift.domain.Product;
 import gift.domain.Wishlist;
@@ -37,13 +38,9 @@ public class WishlistService {
     }
 
     @Transactional(readOnly = true)
-    public List<ProductResponse> getWishlistByEmail(String email, Integer pageNumber, Integer pageSize) {
-        Pageable pageable = PageRequest.of(pageNumber, pageSize);
+    public Page<WishResponse> getWishlistByEmail(String email, Pageable pageable) {
         Page<Wishlist> wishes = wishlistRepository.findByMemberEmail(email, pageable);
-        return wishes.stream()
-                    .map(Wishlist::getProduct)
-                    .map(ProductResponse::fromEntity)
-                    .toList();
+        return wishes.map(WishResponse::fromEntity);
     }
 
     @Transactional

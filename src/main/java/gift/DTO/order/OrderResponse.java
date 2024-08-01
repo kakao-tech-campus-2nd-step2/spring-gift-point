@@ -10,7 +10,8 @@ public record OrderResponse(
     Long quantity,
     String message,
     LocalDateTime orderDateTime
-    ) {
+) {
+
     public static OrderResponse fromEntity(Order orderEntity) {
         return new OrderResponse(
             orderEntity.getId(),
