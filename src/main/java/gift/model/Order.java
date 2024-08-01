@@ -4,41 +4,37 @@ import jakarta.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "orders") // 테이블 이름을 "orders"로 변경하여 예약어 문제 해결
 public class Order {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
-  private String message;
-  private Long optionId;
-  private Integer quantity;
+  @ManyToOne
+  @JoinColumn(name = "product_option_id", nullable = false)
+  private ProductOption productOption;
+
+  private int quantity;
   private LocalDateTime orderDateTime;
+  private String message;
 
-  public Order(Long optionId, Integer quantity, String message) {
-    this.optionId = optionId;
+  public Order() {}
+
+  public Order(ProductOption productOption, int quantity, String message) {
+    this.productOption = productOption;
     this.quantity = quantity;
-    this.message = message;
     this.orderDateTime = LocalDateTime.now();
-  }
-
-  public Order() {
-
+    this.message = message;
   }
 
   public Long getId() {
     return id;
   }
 
-  public String getMessage() {
-    return message;
+  public ProductOption getProductOption() {
+    return productOption;
   }
 
-  public Long getOptionId() {
-    return optionId;
-  }
-
-  public Integer getQuantity() {
+  public int getQuantity() {
     return quantity;
   }
 
@@ -46,7 +42,7 @@ public class Order {
     return orderDateTime;
   }
 
-  public void updateMessage(String message) {
-    this.message = message;
+  public String getMessage() {
+    return message;
   }
 }

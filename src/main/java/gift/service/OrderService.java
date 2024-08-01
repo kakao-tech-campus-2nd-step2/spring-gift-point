@@ -1,51 +1,38 @@
 package gift.service;
 
-import gift.dto.OrderRequest;
-import gift.dto.OrderResponse;
+import gift.dto.OrderDto;
+import gift.exception.CustomNotFoundException;
 import gift.model.Order;
+import gift.model.ProductOption;
 import gift.repository.OrderRepository;
-import gift.repository.WishlistRepository;
+import gift.repository.ProductOptionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.server.ResponseStatusException;
-import org.springframework.http.HttpStatus;
 
 @Service
 public class OrderService {
 
   private final OrderRepository orderRepository;
-  private final WishlistRepository wishlistRepository;
-  private final KakaoService kakaoService;
+  private final ProductOptionRepository productOptionRepository;
 
   @Autowired
-  public OrderService(OrderRepository orderRepository, WishlistRepository wishlistRepository, KakaoService kakaoService) {
+  public OrderService(OrderRepository orderRepository, ProductOptionRepository productOptionRepository) {
     this.orderRepository = orderRepository;
-    this.wishlistRepository = wishlistRepository;
-    this.kakaoService = kakaoService;
+    this.productOptionRepository = productOptionRepository;
   }
 
-  @Transactional
-  public OrderResponse placeOrder(OrderRequest orderRequest, String accessToken) {
-    Order order = new Order(orderRequest.getOptionId(), orderRequest.getQuantity(), orderRequest.getMessage());
-    orderRepository.save(order);
-
-    wishlistRepository.deleteByOptionId(orderRequest.getOptionId());
-
-    try {
-      kakaoService.sendMessage(orderRequest.getMessage(), accessToken);
-    } catch (ResponseStatusException e) {
-      handleException(e);
-    }
-
-    return new OrderResponse(order.getId(), order.getOptionId(), order.getQuantity(), order.getOrderDateTime(), order.getMessage());
+  public OrderDto createOrder(OrderDto orderDto) {
+    ProductOption productOption = productOptionRepository.findById(orderDto.getOptionId())
+            .orElseThrow(() -> new CustomNotFoundException("Option not found"));
+    Order order = new Order(productOption, orderDto.getQuantity(), orderDto.getMessage());
+    Order savedOrder = orderRepository.save(order);
+    return new OrderDto(savedOrder.getId(), savedOrder.getProductOption().getId(), savedOrder.getQuantity(), savedOrder.getOrderDateTime(), savedOrder.getMessage());
   }
 
-  private void handleException(ResponseStatusException e) {
-    if (e.getStatusCode() == HttpStatus.UNAUTHORIZED) {
-      throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Unauthorized: Invalid or expired access token");
-    } else {
-      throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Failed to send message", e);
-    }
+  public Page<OrderDto> getOrders(PageRequest pageRequest) {
+    return orderRepository.findAll(pageRequest).map(order ->
+            new OrderDto(order.getId(), order.getProductOption().getId(), order.getQuantity(), order.getOrderDateTime(), order.getMessage()));
   }
 }
