@@ -8,8 +8,8 @@ import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.PositiveOrZero;
 import java.util.List;
 
-@Schema(description = "상품 등록, 수정 요청")
-public class ProductRequest {
+@Schema(description = "상품 등록 요청")
+public class ProductCreateRequest {
 
     @Schema(description = "상품의 카테고리 id")
     @NotNull
@@ -33,17 +33,13 @@ public class ProductRequest {
     @Valid
     private List<OptionForm> options;
 
-    public ProductRequest(Long category_id, String name, Integer price, String imageUrl,
+    public ProductCreateRequest(Long category_id, String name, Integer price, String imageUrl,
         List<OptionForm> options) {
         this.category_id = category_id;
         this.name = name;
         this.price = price;
         this.imageUrl = imageUrl;
         this.options = options;
-    }
-
-    public Long getUserId() {
-        return userId;
     }
 
     public Long getCategory_id() {
@@ -64,9 +60,5 @@ public class ProductRequest {
 
     public List<OptionForm> getOptions() {
         return options;
-    }
-
-    public void setUserId(Long userId) {
-        this.userId = userId;
     }
 }

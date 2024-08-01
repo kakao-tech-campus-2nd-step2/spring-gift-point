@@ -36,7 +36,7 @@ public class SecurityConfig {
             .cors(c -> corsConfigurationSource())
             .anonymous(AbstractHttpConfigurer::disable)
             .authorizeHttpRequests((authorize) -> authorize
-                .requestMatchers("/api/auth/**").permitAll()
+                .requestMatchers("/api/members/**").permitAll()
                 .requestMatchers(HttpMethod.POST, "/api/products").hasAnyRole("SELLER", "ADMIN")
                 .requestMatchers(HttpMethod.GET, "/api/products/**").permitAll()
                 .requestMatchers(HttpMethod.PUT, "/api/products/").hasAnyRole("SELLER", "ADMIN")

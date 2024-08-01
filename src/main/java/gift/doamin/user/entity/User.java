@@ -62,6 +62,10 @@ public class User extends AuditingEntity {
         return password;
     }
 
+    public String getName() {
+        return name;
+    }
+
     public UserRole getRole() {
         return role;
     }

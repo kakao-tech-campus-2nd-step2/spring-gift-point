@@ -1,7 +1,8 @@
 package gift.doamin.product.entity;
 
 import gift.doamin.category.entity.Category;
-import gift.doamin.product.dto.ProductRequest;
+import gift.doamin.product.dto.ProductCreateRequest;
+import gift.doamin.product.dto.ProductUpdateRequest;
 import gift.doamin.user.entity.User;
 import gift.global.AuditingEntity;
 import jakarta.persistence.CascadeType;
@@ -80,11 +81,11 @@ public class Product extends AuditingEntity {
         return options;
     }
 
-    public void updateAll(ProductRequest productRequest, Category category) {
+    public void updateAll(ProductUpdateRequest updateRequest, Category category) {
         this.category = category;
-        this.name = productRequest.getName();
-        this.price = productRequest.getPrice();
-        this.imageUrl = productRequest.getImageUrl();
+        this.name = updateRequest.getName();
+        this.price = updateRequest.getPrice();
+        this.imageUrl = updateRequest.getImageUrl();
     }
 
     public void addOption(Option option) {

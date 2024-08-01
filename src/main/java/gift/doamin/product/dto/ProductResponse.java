@@ -5,13 +5,13 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import java.util.List;
 
 @Schema(description = "상품 정보")
-public class ProductParam {
+public class ProductResponse {
 
     @Schema(description = "상품 id")
     private Long id;
 
-    @Schema(description = "등록한 사용자 id")
-    private Long userId;
+//    @Schema(description = "등록한 사용자 id")
+//    private Long userId;
 
     @Schema(description = "상품의 카테고리 id")
     private Long categoryId;
@@ -26,17 +26,17 @@ public class ProductParam {
     private String imageUrl;
 
     @Schema(description = "상품의 옵션 목록")
-    private List<OptionParam> options;
+    private List<OptionResponse> options;
 
-    public ProductParam(Product product) {
+    public ProductResponse(Product product) {
         this.id = product.getId();
-        this.userId = product.getUser().getId();
+//        this.userId = product.getUser().getId();
         this.categoryId = product.getCategory().getId();
         this.name = product.getName();
         this.price = product.getPrice();
         this.imageUrl = product.getImageUrl();
         this.options = product.getOptions().stream()
-            .map(option -> new OptionParam(option.getId(), option.getName(), option.getQuantity()))
+            .map(option -> new OptionResponse(option.getId(), option.getName(), option.getQuantity()))
             .toList();
     }
 
@@ -44,9 +44,9 @@ public class ProductParam {
         return id;
     }
 
-    public Long getUserId() {
-        return userId;
-    }
+//    public Long getUserId() {
+//        return userId;
+//    }
 
     public Long getCategoryId() {
         return categoryId;
@@ -64,7 +64,7 @@ public class ProductParam {
         return imageUrl;
     }
 
-    public List<OptionParam> getOptions() {
+    public List<OptionResponse> getOptions() {
         return options;
     }
 }

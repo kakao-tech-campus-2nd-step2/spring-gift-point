@@ -1,6 +1,6 @@
 package gift.doamin.admin.controller;
 
-import gift.doamin.product.dto.ProductParam;
+import gift.doamin.product.dto.ProductResponse;
 import gift.doamin.product.service.ProductService;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
@@ -20,7 +20,7 @@ public class AdminController {
     @GetMapping("/admin")
     public ModelAndView showAdminPage(
         @RequestParam(defaultValue = "1", name = "page") int pageNum) {
-        Page<ProductParam> page = productService.getPage(pageNum - 1);
+        Page<ProductResponse> page = productService.getPage(pageNum - 1);
         int lastPage = Math.max(1, page.getTotalPages());
 
         ModelAndView modelAndView = new ModelAndView();
