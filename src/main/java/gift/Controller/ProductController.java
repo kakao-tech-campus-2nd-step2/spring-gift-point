@@ -101,7 +101,6 @@ public class ProductController {
     return ResponseEntity.ok(productService.getAllProducts(pageable));
   }
 
-
   @GetMapping()
   public ResponseEntity<Page<ProductDto>> getAllProductsByCategory(
     @PageableDefault(size = 10, sort = "name", direction = Sort.Direction.ASC) Pageable pageable,

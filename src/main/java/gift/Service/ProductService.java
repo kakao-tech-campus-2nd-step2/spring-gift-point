@@ -33,7 +33,6 @@ public class ProductService {
     return productDtos;
   }
 
-
   public ProductDto getProductById(Long id) {
     Product product = (productRepository.findById(id)
       .orElseThrow(() -> new EmptyResultDataAccessException("해당 상품이 없습니다.", 1)));

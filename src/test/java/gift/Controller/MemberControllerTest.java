@@ -32,7 +32,6 @@ class MemberControllerTest {
   void memberSignUpTest() {
     MemberDto memberDto = new MemberDto(1L, "a@naver.com", "abcde");
     assertThat(memberController.SignUp(memberDto).getStatusCode()).isEqualTo(HttpStatus.CREATED);
-
   }
 
   @Test
