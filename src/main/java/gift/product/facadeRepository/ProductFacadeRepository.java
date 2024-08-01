@@ -83,4 +83,8 @@ public class ProductFacadeRepository {
     public List<Page<Product>> findPageList(Pageable pageable) {
         return null;
     }
+
+    public List<Product> findByCategoryId(Long categoryId, Pageable pageable) {
+        return jpaProductRepository.findByCategoryId(categoryId, pageable);
+    }
 }

@@ -11,6 +11,7 @@ import jakarta.transaction.Transactional;
 import java.util.List;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -33,32 +34,38 @@ public class ProductService {
         return new ProductResponse(product);
     }
 
-    public void create(ProductRequest productRequest) {
+    public ProductResponse create(ProductRequest productRequest) {
 
         checkKakao(productRequest.getName());
 
-        Product product = new Product(null, productRequest.getName(), productRequest.getPrice(),
+        final Product product = new Product(null, productRequest.getName(), productRequest.getPrice(),
             productRequest.getImageUrl());
 
-        GiftOption giftOption = new GiftOption(null, productRequest.getGiftOptionName(),
-            productRequest.getGiftOptionQuantity());
-        product.addGiftOption(giftOption);
+        productRequest.getGiftOptions().forEach(giftOptionRequest -> {
+            GiftOption giftOption = new GiftOption(null, giftOptionRequest.getName(), giftOptionRequest.getQuantity());
+            product.addGiftOption(giftOption);
+            });
 
         Category category = new Category(productRequest.getCategoryId());
+
         product.updateCategory(category);
 
-        productFacadeRepository.saveProduct(product);
+        return new ProductResponse(productFacadeRepository.saveProduct(product));
+
     }
 
 
-    public void update(long id, ProductRequest productRequest) {
+    public ProductResponse update(long id, ProductRequest productRequest) {
 
         Product product = productFacadeRepository.getProduct(id);
 
         product.update(productRequest.getName(), productRequest.getPrice(), productRequest.getImageUrl());
 
         checkKakao(product.getName());
-        productFacadeRepository.saveProduct(product);
+
+        product = productFacadeRepository.saveProduct(product);
+
+        return new ProductResponse(product);
     }
 
     public void delete(long id) {
@@ -71,11 +78,14 @@ public class ProductService {
         }
     }
 
-    public List<ProductResponse> readProduct(int pageNumber, int pageSize) {
-        Pageable pageable = PageRequest.of(pageNumber, pageSize);
-        return null;
-        //return productFacadeRepository.findPageList(pageable).stream()
-        //    .map(ProductResponse::new)
-        //    .toList();
+    public List<ProductResponse> readProduct(int pageNumber, int pageSize,List<String> sortedBy, Long categoryId) {
+        String sortedName = sortedBy.get(0);
+        String sortedOrder = sortedBy.get(1);
+
+        Pageable pageable = PageRequest.of(pageNumber, pageSize, Sort.by(Sort.Direction.fromString(sortedOrder), sortedName));
+
+        List<Product> productList = productFacadeRepository.findByCategoryId(categoryId, pageable);
+
+        return productList.stream().map(ProductResponse::new).toList();
     }
 }
