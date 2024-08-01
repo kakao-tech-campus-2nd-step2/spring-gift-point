@@ -26,9 +26,7 @@ public class MemberController {
 
     @PutMapping
     public ResponseEntity<Void> register(@RequestBody @Valid MemberRequest memberRequest) {
-        if (memberRequest.getRole() == null) {
-            memberRequest.setRole(MemberRole.COMMON_MEMBER);
-        }
+
         memberService.register(memberRequest);
         return ResponseEntity.ok().build();
     }
@@ -36,6 +34,6 @@ public class MemberController {
     @GetMapping("/login")
     public ResponseEntity<LoginMemberToken> login(@RequestParam("email") @NotBlank String email,
         @RequestParam("password") @NotBlank String password) {
-        return ResponseEntity.ok(memberService.login(new MemberRequest(email, password, null)));
+        return ResponseEntity.ok(memberService.login(new MemberRequest(email, password)));
     }
 }
