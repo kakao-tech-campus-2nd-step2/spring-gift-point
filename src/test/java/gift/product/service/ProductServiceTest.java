@@ -11,7 +11,6 @@ import gift.product.domain.Category;
 import gift.product.domain.Product;
 import gift.product.exception.product.ProductNotFoundException;
 import gift.product.persistence.CategoryRepository;
-import gift.product.persistence.ProductOptionRepository;
 import gift.product.persistence.ProductRepository;
 import gift.product.service.command.ProductCommand;
 import java.util.List;
@@ -32,8 +31,6 @@ class ProductServiceTest {
     private ProductRepository productRepository;
     @Mock
     private CategoryRepository categoryRepository;
-    @Mock
-    private ProductOptionRepository productOptionRepository;
     @InjectMocks
     private ProductService productService;
 
@@ -54,7 +51,6 @@ class ProductServiceTest {
 
         //then
         verify(productRepository).save(any(Product.class));
-        verify(productOptionRepository).saveAll(any());
 
         assertThat(savedProductId).isEqualTo(1L);
     }

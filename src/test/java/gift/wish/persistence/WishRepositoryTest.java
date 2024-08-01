@@ -15,6 +15,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.jdbc.Sql.ExecutionPhase;
 
+@Deprecated
 @DataJpaTest
 @Sql(scripts = "classpath:/static/TestData.sql", executionPhase = ExecutionPhase.BEFORE_TEST_CLASS)
 @AutoConfigureTestDatabase(replace = Replace.NONE)

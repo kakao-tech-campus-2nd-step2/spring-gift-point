@@ -31,6 +31,7 @@ class ProductOptionServiceTest {
     @Mock
     private ProductOptionRepository productOptionRepository;
 
+
     @InjectMocks
     private ProductOptionService productOptionService;
 
@@ -67,7 +68,8 @@ class ProductOptionServiceTest {
         Product product = new Product("productName", 1000, "이미지", category);
         ProductOption productOption = new ProductOption(1L, "optionName", 10, product);
 
-        given(productOptionRepository.findByProductIdAndId(any(), any())).willReturn(Optional.of(productOption));
+        given(productOptionRepository.findByProductIdAndIdForUpdate(any(), any())).willReturn(
+                Optional.of(productOption));
 
         //when
         productOptionService.modifyProductOption(productId, optionId, productOptionCommand);
