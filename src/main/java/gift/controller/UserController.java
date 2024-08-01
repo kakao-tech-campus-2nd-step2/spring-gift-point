@@ -45,7 +45,7 @@ public class UserController {
     }
 
     @Operation(summary = "유저 생성")
-    @PostMapping
+    @PostMapping("/register")
     public SingleResult<Long> createUser(@Valid @RequestBody User.CreateUser create) {
         return new SingleResult<>(userService.createUser(create));
     }
