@@ -1,0 +1,13 @@
+## 옵션
+### 1.옵션등록
+POST http://localhost:8080/api/products/1/options
+Content-Type: application/json
+
+{
+  "name" : "파란색",
+  "quantity": 100,
+  "productId" : 1
+}
+
+### 2.옵션조회
+GET http://localhost:8080/api/products/1/options

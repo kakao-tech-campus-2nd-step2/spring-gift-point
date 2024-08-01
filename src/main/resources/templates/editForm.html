@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ko">
+<head>
+    <meta charset="utf-8">
+    <link th:href="@{/css/bootstrap.min.css}"
+          href="../css/bootstrap.min.css" rel="stylesheet">
+    <title>상품 수정 화면</title>
+</head>
+<style>
+    .fieldError {
+        border-color:red;
+    }
+    .errorMessage {
+        color: red;
+    }
+</style>
+<body>
+<form method="post" th:object="${requestDto}" th:action="@{'/products/edit/' + ${id}}">
+    <input type="hidden" name="_method" value="put">
+    <div>
+        <label for="id">상품 ID</label>
+        <input type="text" id="id" class="form-control" value="1"
+               readonly>
+    </div>
+    <div>
+        <label for="name">상품명</label>
+        <input type="text" id="name" th:field="*{name}" class="form-control" value="이름" th:class="${#fields.hasErrors('name')} ? 'form-control fieldError' : 'form-control'">
+        <p th:if = "${#fields.hasErrors('name')}" class="errorMessage" th:errors="*{name}">Incorrect data</p>
+    </div>
+    <div>
+        <label for="price">가격</label>
+        <input type="text" id="price" th:field="*{price}" class="form-control"
+               value="10000" th:class="${#fields.hasErrors('price')} ? 'form-control fieldError' : 'form-control'" th:value="${price == null ? '' : price}" >
+        <p th:if = "${#fields.hasErrors('price')}" class="errorMessage" th:errors="*{price}">Incorrect data</p>
+    </div>
+    <div>
+        <label for="imgUrl">사진 링크</label>
+        <input type="text" id="imgUrl" th:field="*{imgUrl}" class="form-control" value="10" th:class="${#fields.hasErrors('imgUrl')} ? 'form-control fieldError' : 'form-control'">
+        <p th:if = "${#fields.hasErrors('imgUrl')}" class="errorMessage" th:errors="*{imgUrl}">Incorrect data</p>
+    </div>
+    <hr class="my-4">
+    <div class="row">
+        <div class="col">
+            <button class="w-100 btn btn-primary btn-lg" type="submit">저장</button>
+        </div>
+        <div class="col">
+            <button class="w-100 btn btn-secondary btn-lg"
+                    onclick="location.href='item.html'"
+                    th:onclick="|location.href='@{/items'|"
+                    type="button">취소</button> </div>
+    </div>
+</form>
+</body>
+</html>

@@ -1,0 +1,36 @@
+## 상품 관련
+### 1. 상품조회
+GET http://localhost:8080/api/products
+
+### 2. 상품등록
+POST http://localhost:8080/api/products
+Content-Type: application/json
+
+{
+  "name" : "coffeee",
+  "imgUrl" : "test.jpg",
+  "price" : 10000,
+  "category": 1,
+  "options" : [
+    {
+      "name" : "파란색",
+      "quantity" : "10"
+    },
+    {
+      "name" : "빨간색",
+      "quantity" : "10"
+    }
+  ]
+}
+
+### 3.상품 수정
+PUT http://localhost:8080/api/products/1
+Content-Type: application/json
+
+{
+  "name" : "coffeeeeeee",
+  "imgUrl" : "test.jpg",
+  "price" : 100,
+  "category": 1
+}
+
