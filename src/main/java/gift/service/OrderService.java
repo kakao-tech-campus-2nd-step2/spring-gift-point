@@ -3,6 +3,7 @@ package gift.service;
 import gift.dto.request.LoginMemberDTO;
 import gift.dto.request.OrderRequestDTO;
 import gift.dto.response.OrderResponseDTO;
+import gift.dto.response.PagingOrderResponseDTO;
 import gift.entity.*;
 import gift.exception.memberException.MemberNotFoundException;
 import gift.exception.optionException.OptionNotFoundException;
@@ -11,6 +12,8 @@ import gift.repository.OptionRepository;
 import gift.repository.OrderRepository;
 import gift.repository.WishRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -45,7 +48,24 @@ public class OrderService {
                 .collect(Collectors.toList());
     }
 
+    public PagingOrderResponseDTO getOrders(LoginMemberDTO loginMemberDTO, Pageable pageable){
+        Long memberId = loginMemberDTO.memberId();
 
+        Page<Order> orderPage = orderRepository.findBymemberId(memberId, pageable);
+
+        List<OrderResponseDTO> orderResponseDTOs = orderPage.getContent()
+                .stream()
+                .map(this::toDto)
+                .collect(Collectors.toList());
+
+        return new PagingOrderResponseDTO(
+                orderResponseDTOs,
+                orderPage.getNumber(),
+                (int) orderPage.getTotalElements(),
+                orderPage.getSize(),
+                orderPage.isLast()
+        );
+    }
     //주문하기
     /*
     * 1. member - wish에 있다면 삭제해야 함.
@@ -57,7 +77,7 @@ public class OrderService {
     * 2. 존재하구나 -> 장바구니에 있나?
     * 3. 장바구니에 있네 -> 지우기. 없네? -> 그냥
     * */
-    public void addOrder(LoginMemberDTO loginMemberDTO, OrderRequestDTO orderRequestDTO){
+    public OrderResponseDTO addOrder(LoginMemberDTO loginMemberDTO, OrderRequestDTO orderRequestDTO){
 
         Long optionId = orderRequestDTO.optionId();
         Integer quantity = orderRequestDTO.quantity();
@@ -69,12 +89,11 @@ public class OrderService {
                 .orElseThrow(() -> new MemberNotFoundException("멤버를 찾을 수 없습니다"));
 
         Option option = optionRepository.findById(optionId)
-                .orElseThrow(() -> new OptionNotFoundException("옵션을 찾을 수 없습니다"));
+                .orElseThrow(() -> new OptionNotFoundException("옵션 : " + optionId + "번 옵션을 찾을 수 없습니다."));
 
         Product product = option.getProduct();
-        int price = product.getPrice();
-
-        Optional<Wish> wish = wishRepository.findByMemberIdAndOptionId(memberId, optionId);
+        Long productId = product.getId();
+        Optional<Wish> wish = wishRepository.findByMemberIdAndProductId(memberId, productId);
 
         if(wish.isPresent()){
             wishRepository.delete(wish.get());
@@ -84,8 +103,8 @@ public class OrderService {
 
         Order order = new Order(member, option, quantity, message, LocalDateTime.now());
         orderRepository.save(order);
+        return toDto(order);
     }
-
 
 
     private OrderResponseDTO toDto(Order order) {
@@ -94,7 +113,7 @@ public class OrderService {
                 order.getOption()
                         .getId(),
                 order.getOrderQuantity(),
-                order.getOrderDate(),
+                order.getOrderDateTime(),
                 order.getMessage()
         );
     }
