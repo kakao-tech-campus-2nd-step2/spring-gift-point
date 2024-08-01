@@ -10,6 +10,7 @@ import gift.dto.response.JwtResponse;
 import gift.dto.response.PointResponse;
 import gift.service.MemberService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -62,8 +63,13 @@ public class MemberController {
                 .body(new JwtResponse(jwt));
     }
 
+    @Operation(summary = "포인트 조회", description = "로그인한 사용자의 보유 포인트를 조회합니다.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "포인트 조회 성공", content = @Content(schema = @Schema(implementation = PointResponse.class))),
+            @ApiResponse(responseCode = "401", description = "인증 필요")
+    })
     @GetMapping("/point")
-    public ResponseEntity<PointResponse> point(@LoginMember Member member) {
+    public ResponseEntity<PointResponse> point(@Parameter(hidden = true) @LoginMember Member member) {
         return ResponseEntity.ok().body(new PointResponse(member.getPoint()));
     }
 
