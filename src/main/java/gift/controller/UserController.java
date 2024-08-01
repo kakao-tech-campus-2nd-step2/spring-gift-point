@@ -63,4 +63,12 @@ public class UserController {
         return ResponseEntity.ok().body(userPointResponse);
     }
 
+    @PostMapping("/points/{point}")
+    @Operation(summary = "사용자 포인트 추가", description = "사용자의 포인트를 추가합니다",
+        responses = @ApiResponse(responseCode = "200", description = "추가 성공", content = @Content(mediaType = "application/json")))
+    public ResponseEntity<Void> addUserPoint(@LoginUser User user, @PathVariable Integer point) {
+        userService.addPoint(user, point);
+        return ResponseEntity.ok().build();
+    }
+
 }

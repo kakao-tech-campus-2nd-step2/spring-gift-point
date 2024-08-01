@@ -20,12 +20,14 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -49,6 +51,8 @@ public class WishController {
     }
 
     @GetMapping
+    @CrossOrigin(origins = "http://localhost:3000", methods = {RequestMethod.OPTIONS,
+        RequestMethod.GET})
     @Operation(summary = "사용자 모든 위시 조회", description = "사용자의 모든 위시를 조회합니다.",
         responses = @ApiResponse(responseCode = "200", description = "위시 조회 성공", content = @Content(mediaType = "application/json", schema = @Schema(implementation = Page.class))))
     public Page<WishResponseForPage> getWishes(@Parameter(hidden = true) @LoginUser User user,
