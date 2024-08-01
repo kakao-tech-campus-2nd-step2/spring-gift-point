@@ -1,11 +1,12 @@
-package gift.controller;
+package gift.member.kakaomember.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import gift.dto.ApiResponse;
+import gift.exception.IllegalEmailException;
+import gift.member.service.MemberService;
 import gift.model.HttpResult;
-import gift.service.MemberService;
 import jakarta.servlet.http.HttpSession;
 import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
@@ -90,7 +91,7 @@ public class KakaoLoginController {
                     new ApiResponse(HttpResult.ERROR, "카카오 로그인 실패", HttpStatus.UNAUTHORIZED),
                     HttpStatus.UNAUTHORIZED);
             }
-        } catch (Exception e) {
+        } catch (Exception | IllegalEmailException e) {
             return new ResponseEntity<>(
                 new ApiResponse(HttpResult.ERROR, "카카오 로그인 처리 중 오류 발생", HttpStatus.INTERNAL_SERVER_ERROR),
                 HttpStatus.INTERNAL_SERVER_ERROR);
