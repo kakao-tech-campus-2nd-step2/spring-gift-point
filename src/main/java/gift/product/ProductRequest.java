@@ -16,7 +16,7 @@ public class ProductRequest {
     String imageUrl;
 
     @NotNull(message = "카테고리는 공백으로 둘 수 없습니다.")
-    Long categoryID;
+    Long categoryId;
 
     @AssertTrue(message = "\"카카오\"가 포함된 문구는 담당 MD와 협의한 경우에만 사용할 수 있습니다.")
     public boolean isNameNotContainingKakao() {
@@ -26,11 +26,18 @@ public class ProductRequest {
     public ProductRequest() {
     }
 
-    public ProductRequest(String name, Long price, String imageUrl, Long categoryID) {
+    public ProductRequest(ProductOptionRequest request) {
+        this.name = request.name;
+        this.price = request.price;
+        this.imageUrl = request.imageUrl;
+        this.categoryId = request.categoryId;
+    }
+
+    public ProductRequest(String name, Long price, String imageUrl, Long categoryId) {
         this.name = name;
         this.price = price;
         this.imageUrl = imageUrl;
-        this.categoryID = categoryID;
+        this.categoryId = categoryId;
     }
 
     public ProductRequest(Product product) {
@@ -38,15 +45,15 @@ public class ProductRequest {
         this.name = product.getName();
         this.price = product.getPrice();
         this.imageUrl = product.getImageUrl();
-        this.categoryID = product.getCategory().getId();
+        this.categoryId = product.getCategory().getId();
     }
 
-    public Long getCategoryID() {
-        return categoryID;
+    public Long getCategoryId() {
+        return categoryId;
     }
 
-    public void setCategoryID(Long categoryID) {
-        this.categoryID = categoryID;
+    public void setCategoryId(Long categoryId) {
+        this.categoryId = categoryId;
     }
 
     public Long getId() {

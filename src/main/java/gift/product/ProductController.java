@@ -21,7 +21,7 @@ public class ProductController {
 
     @PostMapping("/products")
     public ProductResponse addProduct(@Valid @RequestBody ProductOptionRequest productOptionRequest) {
-        return new ProductResponse(productService.insertNewProduct(productOptionRequest.getProductRequest(), productOptionRequest.getOptionRequest()));
+        return new ProductResponse(productService.insertNewProduct(productOptionRequest));
     }
 
     @PutMapping("/products/{id}")
@@ -37,25 +37,19 @@ public class ProductController {
         return ResponseEntity.ok(null);
     }
 
-    @GetMapping("/products/pages")
-    public ResponseEntity<Page<ProductResponse>> getProductsPage(@RequestParam(required = false, defaultValue = "0", value = "page") int page,
-                                                         @RequestParam(required = false, defaultValue = "10", value = "size") @Min(1) @Max(20) int size,
-                                                         @RequestParam(required = false, defaultValue = "id", value = "sortBy") String sortBy,
-                                                         @RequestParam(required = false, defaultValue = "asc", value = "sortDirection") String sortDirection) {
-
-        return ResponseEntity.ok(productService.getProductPages(page, size, sortBy, sortDirection));
-
-    }
-
     @GetMapping("/products")
-    public List<ProductResponse> getProducts() {
-        return productService.findAllProducts();
-    }
+    public ResponseEntity<List<ProductReadResponse>> getProductsPage(@RequestParam(required = false, defaultValue = "0", value = "page") int page,
+                                                                 @RequestParam(required = false, defaultValue = "10", value = "size") @Min(1) @Max(20) int size,
+                                                                 @RequestParam(required = false, defaultValue = "id", value = "sort") List<String> sort,
+                                                                 @RequestParam(defaultValue = "0", value = "categoryId") Long categoryId) {
 
+        return ResponseEntity.ok(productService.getProductPages(page, size, sort, categoryId));
+
+    }
 
     @GetMapping("/products/{id}")
-    public ProductResponse getProduct(@PathVariable long id) {
-        return new ProductResponse(productService.findByID(id));
+    public ProductReadResponse getProduct(@PathVariable long id) {
+        return new ProductReadResponse(productService.findByID(id));
 
     }
 }

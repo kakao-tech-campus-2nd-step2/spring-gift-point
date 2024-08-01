@@ -31,7 +31,7 @@ public class UserController {
         return new Token(accessToken);
     }
 
-    @PostMapping("/signup")
+    @PostMapping("/register")
     public Token signupUser(@RequestBody @Valid UserDTO userDTO) {
         User user = userService.registerUser(userDTO);
         String accessToken = jwtService.generateAccessToken(user);

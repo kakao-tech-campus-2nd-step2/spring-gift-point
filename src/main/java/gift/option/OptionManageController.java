@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/products")
+@RequestMapping("/api/products")
 public class OptionManageController {
     private final OptionService optionService;
 
@@ -20,8 +20,8 @@ public class OptionManageController {
     }
 
     @PostMapping("/{productID}/options")
-    public List<OptionResponse> addProductOptions(@PathVariable Long productID, @Valid @RequestBody List<OptionRequest> optionRequests){
-        return optionService.insertProductNewOptions(productID, optionRequests);
+    public OptionResponse addProductOption(@PathVariable Long productID, @Valid @RequestBody OptionRequest optionRequests){
+        return optionService.insertProductNewOption(productID, optionRequests);
     }
 
     @PutMapping("/{productID}/options/{optionId}")

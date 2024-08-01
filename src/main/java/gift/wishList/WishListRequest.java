@@ -1,36 +1,28 @@
 package gift.wishList;
 
-public class WishListRequest {
-    long optionID;
+import jakarta.validation.constraints.Min;
 
-    long count;
+public class WishListRequest {
+    @Min(value = 0)
+    long optionId;
 
     public WishListRequest() {
     }
 
-    public WishListRequest(long optionID, long count) {
-        this.optionID = optionID;
-        this.count = count;
+    public WishListRequest(long optionId) {
+        this.optionId = optionId;
     }
 
     public WishListRequest(WishList wishList) {
-        this.optionID = wishList.getOption().getId();
-        this.count = wishList.getCount();
+        this.optionId = wishList.getOption().getId();
     }
 
-    public long getOptionID() {
-        return optionID;
+    public long getOptionId() {
+        return optionId;
     }
 
-    public long getCount() {
-        return count;
+    public void setOptionId(long optionId) {
+        this.optionId = optionId;
     }
 
-    public void setOptionID(long optionID) {
-        this.optionID = optionID;
-    }
-
-    public void setCount(long count) {
-        this.count = count;
-    }
 }

@@ -20,7 +20,7 @@
     <form action="ProductInfo.html" th:action method="post">
         <div>
             <label for="category">카테고리</label>
-            <select id="category" th:field="*{newProduct.categoryID}" class="form-control">
+            <select id="category" th:field="*{newProduct.categoryId}" class="form-control">
                 <option value="">==카테고리 선택==</option>
                 <option th:each="category : ${categories}" th:value="${category.id()}"
                         th:text="${category.name}"></option>
@@ -31,9 +31,6 @@
             <input type="text" id="name" th:field="*{newProduct.name}" class="form-control" placeholder="이름을 입력하세요">
 
             <div class="field-error" th:errors="*{newProduct.name}">
-                상품명 오류
-            </div>
-            <div class="field-error" th:errors="*{newProduct.nameNotContainingKakao}">
                 상품명 오류
             </div>
 

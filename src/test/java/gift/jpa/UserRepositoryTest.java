@@ -26,7 +26,6 @@ public class UserRepositoryTest {
     void save() {
         User expected = new User("email@kakao.com",
                 "passwordForTest",
-                "myNickName",
                 UserType.NORMAL_USER);
 
         User actual = userRepository.save(expected);
@@ -34,8 +33,7 @@ public class UserRepositoryTest {
         assertAll(
                 () -> assertThat(actual.getId()).isNotNull(),
                 () -> assertThat(actual.getEmail()).isEqualTo(expected.getEmail()),
-                () -> assertThat(actual.getPassword()).isEqualTo(expected.getPassword()),
-                () -> assertThat(actual.getNickname()).isEqualTo(expected.getNickname())
+                () -> assertThat(actual.getPassword()).isEqualTo(expected.getPassword())
         );
     }
 
@@ -44,15 +42,13 @@ public class UserRepositoryTest {
     void findByEmail() {
         User expected = new User("email@kakao.com",
                 "passwordForTest",
-                "myNickName",
                 UserType.NORMAL_USER);
         userRepository.save(expected);
         User actual = userRepository.findByEmail(expected.getEmail()).orElseThrow();
         assertAll(
                 () -> assertThat(actual.getId()).isNotNull(),
                 () -> assertThat(actual.getEmail()).isEqualTo(expected.getEmail()),
-                () -> assertThat(actual.getPassword()).isEqualTo(expected.getPassword()),
-                () -> assertThat(actual.getNickname()).isEqualTo(expected.getNickname())
+                () -> assertThat(actual.getPassword()).isEqualTo(expected.getPassword())
         );
     }
 
@@ -61,11 +57,9 @@ public class UserRepositoryTest {
     void saveDuplicatedEmail() {
         User user1 = new User("email@kakao.com",
                 "passwordForTest",
-                "myNickName",
                 UserType.NORMAL_USER);
         User user2 = new User("email@kakao.com",
                 "passwordForTest2",
-                "myNickName2",
                 UserType.NORMAL_USER);
 
         userRepository.save(user1);

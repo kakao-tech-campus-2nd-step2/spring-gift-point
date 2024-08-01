@@ -1,7 +1,11 @@
 package gift.order;
 
+import jakarta.validation.constraints.NotNull;
+
 public class OrderRequest {
+    @NotNull
     long optionId;
+    @NotNull
     long quantity;
     String message;
 

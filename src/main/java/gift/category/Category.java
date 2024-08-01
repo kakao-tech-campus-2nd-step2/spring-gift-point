@@ -38,10 +38,10 @@ public class Category {
     }
 
     public void updateWithRequest(CategoryRequest updateParam){
-        this.name = updateParam.name();
-        this.color = updateParam.color();
-        this.imageUrl = updateParam.imageUrl();
-        this.description = updateParam.description();
+        this.name = updateParam.getName();
+        this.color = updateParam.getColor();
+        this.imageUrl = updateParam.getImageUrl();
+        this.description = updateParam.getDescription();
     }
 
     public void removeProducts(){
