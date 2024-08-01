@@ -2,7 +2,6 @@ package gift.controller;
 
 import gift.LoginMember;
 import gift.classes.RequestState.CategoryRequestStateDTO;
-import gift.classes.RequestState.RequestStateDTO;
 import gift.dto.CategoryDto;
 import gift.dto.MemberDto;
 import gift.dto.RequestCategoryDto;
@@ -62,7 +61,7 @@ public class CategoryController {
     public ResponseEntity<CategoryRequestStateDTO> addCategory(@LoginMember MemberDto memberDto,
         @RequestBody RequestCategoryDto requestCategoryDto) {
 
-        CategoryDto categoryDto= categoryService.addCategory(requestCategoryDto);
+        CategoryDto categoryDto = categoryService.addCategory(requestCategoryDto);
         return ResponseEntity.ok().body(new CategoryRequestStateDTO(
             HttpStatus.OK,
             "카테고리가 등록되었습니다.",
@@ -97,7 +96,8 @@ public class CategoryController {
         @ApiResponse(responseCode = "404", description = "카테고리 없음 - 해당 ID로 카테고리를 찾을 수 없음"),
         @ApiResponse(responseCode = "500", description = "서버 내부 오류 발생")
     })
-    public ResponseEntity<CategoryRequestStateDTO> deleteCategory(@LoginMember MemberDto memberDto, @PathVariable Long id) {
+    public ResponseEntity<CategoryRequestStateDTO> deleteCategory(@LoginMember MemberDto memberDto,
+        @PathVariable Long id) {
         categoryService.deleteCategory(id);
         return ResponseEntity.ok().body(new CategoryRequestStateDTO(
             HttpStatus.OK,

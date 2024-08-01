@@ -40,7 +40,7 @@ public class CategoryService {
         return categoryRepository.save(category).toCategoryDto();
     }
 
-    public CategoryDto updateCategory(Long id, RequestCategoryDto requestCategoryDto){
+    public CategoryDto updateCategory(Long id, RequestCategoryDto requestCategoryDto) {
         Category category = categoryRepository.findById(id)
             .orElseThrow(() -> new NoSuchElementException("Category not found with id" + id));
         category.update(requestCategoryDto);

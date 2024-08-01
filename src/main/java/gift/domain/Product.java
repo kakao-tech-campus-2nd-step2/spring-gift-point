@@ -1,9 +1,7 @@
 package gift.domain;
 
 import gift.dto.CategoryDto;
-import gift.dto.OptionDto;
 import gift.dto.ProductDto;
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -11,10 +9,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
-import java.util.ArrayList;
-import java.util.List;
 
 @Entity
 @Table(name = "product")
@@ -89,7 +84,6 @@ public class Product {
     }
 
     public ProductDto toProductDto() {
-        return new ProductDto(this.getId(), this.getName(), this.getPrice(), this.getImageUrl(),
-            this.getCategoryDto());
+        return new ProductDto(this.getId(), this.getName(), this.getPrice(), this.getImageUrl());
     }
 }
