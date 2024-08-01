@@ -41,7 +41,7 @@ public class ProductService {
     private Category findCategoryById(int categoryId) {
         return categoryRepository.findById(categoryId).orElseThrow(() -> new NotFoundException("해당 카테고리가 없음"));
     }
-
+  
     private ProductPageDTO pageToResponse(Page<ResponseProductDTO> page) {
         return new ProductPageDTO(
                 page.getContent(),
@@ -96,7 +96,6 @@ public class ProductService {
     private Product findProductById(int id) {
         return productRepository.findById(id).orElseThrow(() -> new NotFoundException("존재하지 않는 id입니다."));
     }
-
 
     public ResponseProductDTO getProductByID(int id) {
         return productRepository.findById(id).orElseThrow(() -> new NotFoundException("해당 물건이 없습니다.")).toResponseDTO();
