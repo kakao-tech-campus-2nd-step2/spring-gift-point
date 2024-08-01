@@ -28,8 +28,8 @@ public class OptionController implements OptionSpecification {
     }
 
     @GetMapping("/{id}/options")
-    public ResponseEntity<List<OptionResponse.Info>> getAllOptionsFromGift(@PathVariable Long id) {
-        List<OptionResponse.Info> options = optionService.getOptionsByGiftId(id);
+    public ResponseEntity<OptionResponse.InfoList> getAllOptionsFromGift(@PathVariable Long id) {
+        OptionResponse.InfoList options = optionService.getOptionsByGiftId(id);
         return ResponseEntity.ok(options);
     }
 

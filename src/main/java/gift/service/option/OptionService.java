@@ -47,13 +47,11 @@ public class OptionService {
     }
 
     @Transactional(readOnly = true)
-    public List<OptionResponse.Info> getOptionsByGiftId(Long giftId) {
+    public OptionResponse.InfoList getOptionsByGiftId(Long giftId) {
         Product product = productRepository.findById(giftId)
                 .orElseThrow(() -> new ProductNotFoundException("존재하지 않는 상품입니다."));
 
-        return product.getOptions().stream()
-                .map(OptionResponse.Info::fromEntity)
-                .toList();
+        return OptionResponse.InfoList.fromEntity(product.getOptions());
     }
 
     @Transactional
