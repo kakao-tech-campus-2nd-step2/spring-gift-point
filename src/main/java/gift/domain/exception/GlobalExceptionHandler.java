@@ -1,5 +1,6 @@
 package gift.domain.exception;
 
+import com.google.common.base.CaseFormat;
 import gift.domain.exception.badRequest.BadRequestException;
 import gift.domain.exception.badRequest.OauthVendorIllegalException;
 import gift.domain.exception.badRequest.OptionQuantityOutOfRangeException;
@@ -45,7 +46,7 @@ public class GlobalExceptionHandler {
         FieldError error = e.getBindingResult().getFieldError();
         assert error != null;
         return ErrorApiResponse.of(
-            error.getField() + ": " + error.getDefaultMessage(),
+            CaseFormat.LOWER_CAMEL.to(CaseFormat.LOWER_UNDERSCORE, error.getField()) + ": " + error.getDefaultMessage(),
             ErrorCode.FIELD_VALIDATION_FAIL.getErrorIdentifier(),
             ErrorCode.FIELD_VALIDATION_FAIL.getErrorCode(),
             HttpStatus.BAD_REQUEST);
