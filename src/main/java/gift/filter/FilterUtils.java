@@ -20,6 +20,7 @@ public class FilterUtils {
 
         response.setStatus(statusCode);
         response.setContentType("application/json");
+        response.setCharacterEncoding("UTF-8");
 
         Map<String, String> errorResponse = new HashMap<>();
         errorResponse.put("code", CODE);
