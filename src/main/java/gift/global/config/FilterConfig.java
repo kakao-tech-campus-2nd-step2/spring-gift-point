@@ -20,7 +20,8 @@ public class FilterConfig {
         registrationBean.setFilter(jwtFilter);
 
         registrationBean.addUrlPatterns("/members/wishlist");
-        registrationBean.addUrlPatterns("/api/*");
+        registrationBean.addUrlPatterns("/api/wishes");
+        registrationBean.addUrlPatterns("/api/orders");
         registrationBean.addUrlPatterns("/wishes/*");
         registrationBean.addUrlPatterns("/products/*");
 
