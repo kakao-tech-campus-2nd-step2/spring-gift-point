@@ -31,11 +31,6 @@ public class ProductController {
         this.productService = productService;
     }
 
-    @GetMapping("/products")
-    public ResponseEntity<List<ProductResponse>> getList() {
-        return ResponseEntity.ok(productService.readAll());
-    }
-
     @GetMapping("/products/{id}")
     public ResponseEntity<ProductResponse> get(@PathVariable Long id) {
         return ResponseEntity.ok(productService.read(id));

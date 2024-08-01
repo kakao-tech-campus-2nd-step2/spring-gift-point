@@ -26,11 +26,6 @@ public class WishListController {
         this.wishListService = wishListService;
     }
 
-    @GetMapping
-    public ResponseEntity<WishListResponse> getWishList(@LoginMember MemberRequest memberRequest) {
-        return ResponseEntity.ok(wishListService.getWishList(memberRequest.getId()));
-    }
-
     //상품 추가
     @PostMapping
     public ResponseEntity<WishListResponse> addWishList(@LoginMember MemberRequest memberRequest,

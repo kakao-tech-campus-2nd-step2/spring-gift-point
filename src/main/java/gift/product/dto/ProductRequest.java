@@ -24,12 +24,7 @@ public class ProductRequest {
 
     private List<GiftOptionRequest> giftOptions;
 
-    public ProductRequest(String name, Integer price, String imageUrl, Long categoryId) {
-        this.name = name;
-        this.price = price;
-        this.imageUrl = imageUrl;
-        this.categoryId = categoryId;
-    }
+
 
     public ProductRequest(String name, Integer price, String imageUrl, Long categoryId, List<GiftOptionRequest> giftOptions) {
         this.name = name;

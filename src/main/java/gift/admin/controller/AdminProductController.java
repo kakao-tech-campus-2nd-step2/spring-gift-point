@@ -70,9 +70,8 @@ public class AdminProductController {
     }
 
     private ProductRequest toRestRequest(LeafProductDTO leafProductDTO) {
-        return new ProductRequest(leafProductDTO.getId(), leafProductDTO.getName(),
-            leafProductDTO.getPrice(), leafProductDTO.getImageUrl(), leafProductDTO.getCategoryId(),
-            leafProductDTO.getGiftOptionName(), leafProductDTO.getGiftOptionQuantity());
+        return new ProductRequest(leafProductDTO.getName(), leafProductDTO.getPrice(),
+            leafProductDTO.getImageUrl(), leafProductDTO.getCategoryId(),null);//TODO
     }
 
 }
