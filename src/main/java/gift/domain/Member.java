@@ -1,7 +1,6 @@
 package gift.domain;
 
 import jakarta.persistence.*;
-
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -15,9 +14,8 @@ public class Member {
     private Long id;
     @Column(name = "email", nullable = false, unique = true)
     private String email;
-    @Column(name = "password", nullable = true)
+    @Column(name = "password")
     private String password;
-
     @OneToMany(mappedBy = "member", cascade = {CascadeType.PERSIST, CascadeType.MERGE}, orphanRemoval = false)
     private List<Wish> wishes = new ArrayList<>();
 
