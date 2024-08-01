@@ -2,12 +2,8 @@ package gift.dto.betweenClient.product;
 
 import gift.entity.Category;
 import gift.entity.Product;
-import jakarta.validation.constraints.Max;
-import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Pattern;
-import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.URL;
 
 public record ProductPostRequestDTO(

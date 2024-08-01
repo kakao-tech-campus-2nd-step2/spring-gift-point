@@ -2,8 +2,6 @@ package gift.dto.betweenClient.category;
 
 import gift.entity.Category;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Pattern;
-import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.URL;
 
 public record CategoryDTO(
