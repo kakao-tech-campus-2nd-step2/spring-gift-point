@@ -6,7 +6,10 @@ import gift.entity.Member;
 import gift.entity.Option;
 import gift.entity.Orders;
 
+import gift.entity.Product;
 import gift.entity.Wish;
+import gift.exception.CustomException;
+import gift.exception.ErrorCode;
 import gift.repository.OrderRepository;
 import gift.util.KakaoApiUtil;
 import java.time.LocalDateTime;
@@ -30,17 +33,19 @@ public class OrderService {
     WishlistService wishlistService;
     SnsMemberService snsMemberService;
     KakaoApiUtil kakaoApiUtil;
+    ProductService productService;
 
     public OrderService(OrderRepository orderRepository, MemberService memberService,
         OptionService optionService, WishlistService wishlistService,
         SnsMemberService snsMemberService,
-        KakaoApiUtil kakaoApiUtil) {
+        KakaoApiUtil kakaoApiUtil, ProductService productService) {
         this.orderRepository = orderRepository;
         this.memberService = memberService;
         this.optionService = optionService;
         this.wishlistService = wishlistService;
         this.snsMemberService = snsMemberService;
         this.kakaoApiUtil = kakaoApiUtil;
+        this.productService = productService;
     }
 
     public Member findMemberByEmail(String email) {
@@ -60,9 +65,15 @@ public class OrderService {
     public OrderResponseDTO orderOption(OrderRequestDTO orderRequestDTO, String email) {
         Option option = optionService.getOptionById(orderRequestDTO.getOptionId());
         Member member = memberService.findByEmail(email);
+        Product product = option.getProduct();
         int quantity = orderRequestDTO.getQuantity();
         int subPoint = orderRequestDTO.getPoint();
+        int totalPrice = orderRequestDTO.getQuantity() * product.getPrice();
         String message = orderRequestDTO.getMessage();
+
+        if (totalPrice<subPoint){
+            throw new CustomException(ErrorCode.POINT_MORE_THAN_PRICE);
+        }
 
         Orders order = new Orders(option, quantity, message, member, LocalDateTime.now(), subPoint);
         //상품이 wishlist에 있을 시 위시리스트에서 삭제
