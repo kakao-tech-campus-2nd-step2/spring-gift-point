@@ -27,44 +27,44 @@ public class ProductController {
         this.productService = productService;
     }
 
-    @PostMapping("api/products")
+    @PostMapping("/api/products")
     public ResponseEntity<AddedProductIdResponse> addProduct(@Valid @RequestBody AddProductRequest request) {
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(productService.addProduct(request));
     }
 
-    @GetMapping("api/products")
+    @GetMapping("/api/products")
     public ResponseEntity<Page<ProductResponse>> getProducts(@PageableDefault(sort = "id") Pageable pageable) {
         Page<ProductResponse> productResponses = productService.getProductResponses(pageable);
         return ResponseEntity.ok(productResponses);
     }
 
-    @GetMapping("api/products/{id}")
+    @GetMapping("/api/products/{id}")
     public ResponseEntity<ProductResponse> getProductResponse(@PathVariable("id") Long productId) {
         ProductResponse productResponse = productService.getProductResponse(productId);
         return ResponseEntity.ok(productResponse);
     }
 
-    @PutMapping("api/products/{id}")
+    @PutMapping("/api/products/{id}")
     public ResponseEntity<Void> updateProduct(@Valid @RequestBody UpdateProductRequest request, @PathVariable("id") Long productId) {
         productService.updateProduct(request, productId);
         return ResponseEntity.ok().build();
     }
 
-    @DeleteMapping("api/products/{id}")
+    @DeleteMapping("/api/products/{id}")
     public ResponseEntity<Void> deleteProduct(@PathVariable("id") Long id) {
         productService.deleteProduct(id);
         return ResponseEntity.ok().build();
     }
 
-    @PostMapping("api/products/{id}/options")
+    @PostMapping("/api/products/{id}/options")
     public ResponseEntity<AddedOptionIdResponse> addOptionToProduct(@PathVariable("id") Long productId,
                                                                     @Valid @RequestBody OptionRequest optionRequest) {
         AddedOptionIdResponse addedOptionId = productService.addOptionToProduct(productId, optionRequest);
         return ResponseEntity.status(HttpStatus.CREATED).body(addedOptionId);
     }
 
-    @GetMapping("api/products/{id}/options")
+    @GetMapping("/api/products/{id}/options")
     public ResponseEntity<List<OptionResponse>> getOptionResponses(@PathVariable("id") Long productId) {
         return ResponseEntity.ok(productService.getOptionResponses(productId));
     }
