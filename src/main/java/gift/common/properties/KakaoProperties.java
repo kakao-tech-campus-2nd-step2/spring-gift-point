@@ -5,7 +5,6 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 @ConfigurationProperties(prefix = "kakao")
 public record KakaoProperties(
         String clientId,
-        String redirectUrl,
         String adminRedirectUrl,
         String tokenUrl,
         String memberInfoUrl,
@@ -14,4 +13,8 @@ public record KakaoProperties(
         String logoutUrl,
         String refreshUrl,
         String selfMessageUrl
-) {}
+) {
+    public String getKakaoLoginUrl(String redirectUrl) {
+        return loginUrl + redirectUrl + "&client_id=" + clientId;
+    }
+}
