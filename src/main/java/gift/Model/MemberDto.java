@@ -3,7 +3,6 @@ package gift.Model;
 public class MemberDto {
     private long id;
     private String email;
-    private String name;
     private String password;
     private boolean isAdmin;
     private long kakaoId;
@@ -12,11 +11,10 @@ public class MemberDto {
 
     }
 
-    public MemberDto(long id, String email, String password, String name, boolean isAdmin) {
+    public MemberDto(long id, String email, String password, boolean isAdmin) {
         this.id = id;
         this.email = email;
         this.password = password;
-        this.name = name;
         this.isAdmin = isAdmin;
     }
 
@@ -34,14 +32,6 @@ public class MemberDto {
 
     public void setPassword(String password) {
         this.password = password;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
     }
 
     public long getId() {

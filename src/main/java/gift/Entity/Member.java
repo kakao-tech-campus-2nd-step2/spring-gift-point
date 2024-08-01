@@ -7,9 +7,8 @@ public class Member {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long memberId;
+    private long id;
     private String email;
-    private String name;
     private String password;
     private boolean isAdmin;
     private long kakaoId;
@@ -17,29 +16,20 @@ public class Member {
     protected Member() {
     }
 
-    public Member(long memberId, String email, String name, String password, boolean isAdmin) {
-        this.memberId = memberId;
+    public Member(long id, String email, String password, boolean isAdmin) {
+        this.id = id;
         this.email = email;
-        this.name = name;
         this.password = password;
         this.isAdmin = isAdmin;
     }
 
     // Getters and setters
     public long getId() {
-        return memberId;
+        return id;
     }
 
     public void setId(Long memberId) {
-        this.memberId = memberId;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
+        this.id = memberId;
     }
 
     public String getEmail() {

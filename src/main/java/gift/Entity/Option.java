@@ -9,21 +9,19 @@ public class Option {
     private long id;
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.REFRESH)
-    @JoinColumn(name = "productId", referencedColumnName = "productId")
+    @JoinColumn(name = "productId", referencedColumnName = "id")
     private Product product;
     private String name;
-    private int price;
     private int quantity;
 
     protected Option() {
 
     }
 
-    public Option(long id, Product product, String name, int price, int quantity) {
+    public Option(long id, Product product, String name, int quantity) {
         this.id = id;
         this.product = product;
         this.name = name;
-        this.price = price;
         this.quantity = quantity;
     }
 
@@ -41,14 +39,6 @@ public class Option {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public int getPrice() {
-        return price;
-    }
-
-    public void setPrice(int price) {
-        this.price = price;
     }
 
     public int getQuantity() {
