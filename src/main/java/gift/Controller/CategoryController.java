@@ -1,6 +1,7 @@
 package gift.Controller;
 
 
+import gift.DTO.ResponseCategoryListDTO;
 import gift.Model.Entity.Category;
 import gift.DTO.RequestCategoryDTO;
 import gift.DTO.ResponseCategoryDTO;
@@ -53,9 +54,9 @@ public class CategoryController {
             content = {@Content(mediaType = "application/json", schema = @Schema(implementation = String.class))
             })
     @GetMapping
-    public ResponseEntity<List<ResponseCategoryDTO>> getCategories (){
+    public ResponseEntity<ResponseCategoryListDTO> getCategories (){
         List<ResponseCategoryDTO> categoryList = categoryService.getCategories();
-        return ResponseEntity.ok(categoryList);
+        return ResponseEntity.ok(new ResponseCategoryListDTO(categoryList));
     }
 
     @Operation(summary = "카테고리 수정", description = "카테고리를 수정합니다")
