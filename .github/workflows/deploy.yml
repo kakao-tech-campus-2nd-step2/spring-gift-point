@@ -27,5 +27,5 @@ jobs:
 
       # 빌드
       - name: Build with Gradle
-        run: ./gradlew clean bootjar -x test
+        run: sudo ./gradlew clean bootjar -x test
 
