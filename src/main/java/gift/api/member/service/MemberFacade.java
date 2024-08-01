@@ -16,11 +16,12 @@ public class MemberFacade {
         this.kakaoService = kakaoService;
     }
 
-    public void loginKakao(String code) {
+    public TokenResponse loginKakao(String code) {
         ResponseEntity<TokenResponse> tokenResponse = kakaoService.obtainToken(code);
         ResponseEntity<UserInfoResponse> userInfoResponse = kakaoService.obtainUserInfo(tokenResponse);
         memberService.verifyEmail(userInfoResponse.getBody().kakaoAccount());
         memberService.saveKakaoToken(userInfoResponse.getBody().kakaoAccount().email(),
             tokenResponse.getBody().accessToken());
+        return tokenResponse.getBody();
     }
 }

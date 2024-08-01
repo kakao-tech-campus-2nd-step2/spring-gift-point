@@ -1,5 +1,6 @@
 package gift.api.member.controller;
 
+import gift.api.member.dto.TokenResponse;
 import gift.api.member.service.MemberFacade;
 import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.http.ResponseEntity;
@@ -20,8 +21,7 @@ public class OauthController {
 
     @GetMapping("/kakao")
     @Operation(summary = "카카오 로그인")
-    public ResponseEntity<Void> loginKakao(@RequestParam("code") String code) {
-        memberFacade.loginKakao(code);
-        return ResponseEntity.ok().build();
+    public ResponseEntity<TokenResponse> loginKakao(@RequestParam("code") String code) {
+        return ResponseEntity.ok().body(memberFacade.loginKakao(code));
     }
 }

@@ -54,9 +54,10 @@ public class MemberService {
     }
 
     @Transactional
-    public void saveKakaoToken(String email, String accessToken) {
+    public String saveKakaoToken(String email, String accessToken) {
         Member member = findMemberByEmail(email);
         member.saveKakaoToken(accessToken);
+        return accessToken;
     }
 
     public Member findMemberById(Long id) {
