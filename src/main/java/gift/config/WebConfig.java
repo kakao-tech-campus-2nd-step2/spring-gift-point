@@ -28,6 +28,8 @@ public class WebConfig implements WebMvcConfigurer {
                 .allowedOrigins("*")  // 모든 출처 허용
                 .allowedMethods("*")  // 모든 HTTP 메서드 허용
                 .allowedHeaders("*")  // 모든 헤더 허용
+                .exposedHeaders("Location")  // Location 헤더 노출
                 .maxAge(3600);  // pre-flight 요청 캐시 시간
     }
+
 }

@@ -11,7 +11,6 @@ import gift.service.ProductService;
 import gift.util.resolver.LoginUser;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
@@ -65,15 +64,7 @@ public class ProductController {
     }
 
     @Operation(summary = "상품 추가", description = "`카카오` 키워드 사용 제약",
-            security = @SecurityRequirement(name = "JWT"),
-            parameters = {
-                    @Parameter(
-                            name = "Authorization",
-                            description = "JWT token",
-                            required = true,
-                            in = ParameterIn.HEADER
-                    )
-            })
+            security = @SecurityRequirement(name = "JWT"))
     @PostMapping
     public ResponseEntity<?> addProduct(@Parameter(hidden = true) @LoginUser AppUser loginAppUser,
                                         @Valid @RequestBody CreateProductRequest createProductRequest) {
@@ -82,15 +73,7 @@ public class ProductController {
     }
 
     @Operation(summary = "상품 수정", description = "판매자만 접근 가능",
-            security = @SecurityRequirement(name = "JWT"),
-            parameters = {
-                    @Parameter(
-                            name = "Authorization",
-                            description = "JWT token",
-                            required = true,
-                            in = ParameterIn.HEADER
-                    )
-            })
+            security = @SecurityRequirement(name = "JWT"))
     @PutMapping("/{id}")
     public ResponseEntity<String> updateProduct(@Parameter(hidden = true) @LoginUser AppUser loginAppUser,
                                                 @PathVariable Long id,
@@ -100,15 +83,7 @@ public class ProductController {
     }
 
     @Operation(summary = "상품 삭제", description = "판매자만 접근 가능",
-            security = @SecurityRequirement(name = "JWT"),
-            parameters = {
-                    @Parameter(
-                            name = "Authorization",
-                            description = "JWT token",
-                            required = true,
-                            in = ParameterIn.HEADER
-                    )
-            })
+            security = @SecurityRequirement(name = "JWT"))
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteProductById(@Parameter(hidden = true) @LoginUser AppUser loginAppUser,
                                                     @PathVariable Long id) {

@@ -10,7 +10,6 @@ import gift.util.aspect.AdminController;
 import gift.util.resolver.LoginUser;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
@@ -40,15 +39,7 @@ public class ProductAdminController {
     }
 
     @Operation(summary = "관리자 권한으로 상품 추가", description = "키워드 제약 없이 상품 추가 가능",
-            security = @SecurityRequirement(name = "JWT"),
-            parameters = {
-                    @Parameter(
-                            name = "Authorization",
-                            description = "JWT token",
-                            required = true,
-                            in = ParameterIn.HEADER
-                    )
-            })
+            security = @SecurityRequirement(name = "JWT"))
     @PostMapping
     public ResponseEntity<?> addProductForAdmin(@Parameter(hidden = true) @LoginUser AppUser loginAppUser,
                                                 @Valid @RequestBody CreateProductAdminRequest createProductAdminRequest) {
@@ -58,15 +49,7 @@ public class ProductAdminController {
     }
 
     @Operation(summary = "관리자 권한으로 상품 수정", description = "판매자가 아니더라도 상품 수정 가능",
-            security = @SecurityRequirement(name = "JWT"),
-            parameters = {
-                    @Parameter(
-                            name = "Authorization",
-                            description = "JWT token",
-                            required = true,
-                            in = ParameterIn.HEADER
-                    )
-            })
+            security = @SecurityRequirement(name = "JWT"))
     @PutMapping("/{id}")
     public ResponseEntity<?> updateProductForAdmin(@Parameter(hidden = true) @LoginUser AppUser loginAppUser,
                                                    @PathVariable Long id,
@@ -76,15 +59,7 @@ public class ProductAdminController {
     }
 
     @Operation(summary = "관리자 권한으로 상품 삭제", description = "판매자가 아니더라도 상품 삭제 가능",
-            security = @SecurityRequirement(name = "JWT"),
-            parameters = {
-                    @Parameter(
-                            name = "Authorization",
-                            description = "JWT token",
-                            required = true,
-                            in = ParameterIn.HEADER
-                    )
-            })
+            security = @SecurityRequirement(name = "JWT"))
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteProductByIdForAdmin(@Parameter(hidden = true) @LoginUser AppUser loginAppUser,
                                                        @PathVariable Long id) {
@@ -93,15 +68,7 @@ public class ProductAdminController {
     }
 
     @Operation(summary = "관리자 권한으로 상품 카테고리 수정", description = "관리자만 상품 카테고리 수정 가능",
-            security = @SecurityRequirement(name = "JWT"),
-            parameters = {
-                    @Parameter(
-                            name = "Authorization",
-                            description = "JWT token",
-                            required = true,
-                            in = ParameterIn.HEADER
-                    )
-            })
+            security = @SecurityRequirement(name = "JWT"))
     @PutMapping("/{productId}/category")
     public ResponseEntity<?> updateCategoryForProduct(@Parameter(hidden = true) @LoginUser AppUser loginAppUser,
                                                       @PathVariable Long productId,

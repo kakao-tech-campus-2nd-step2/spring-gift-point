@@ -9,7 +9,6 @@ import gift.util.aspect.AdminController;
 import gift.util.resolver.LoginUser;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.data.domain.Page;
@@ -40,15 +39,7 @@ public class WishListAdminController {
     }
 
     @Operation(summary = "관리자 권한으로 유저 위시리스트 조회",
-            security = @SecurityRequirement(name = "JWT"),
-            parameters = {
-                    @Parameter(
-                            name = "Authorization",
-                            description = "JWT token",
-                            required = true,
-                            in = ParameterIn.HEADER
-                    )
-            })
+            security = @SecurityRequirement(name = "JWT"))
     @GetMapping("/{userId}")
     public ResponseEntity<?> getWishListForAdmin(@Parameter(hidden = true) @LoginUser AppUser loginAppUser,
                                                  @PathVariable("userId") Long userId,
@@ -59,15 +50,7 @@ public class WishListAdminController {
     }
 
     @Operation(summary = "관리자 권한으로 유저 위시리스트 추가",
-            security = @SecurityRequirement(name = "JWT"),
-            parameters = {
-                    @Parameter(
-                            name = "Authorization",
-                            description = "JWT token",
-                            required = true,
-                            in = ParameterIn.HEADER
-                    )
-            })
+            security = @SecurityRequirement(name = "JWT"))
     @PostMapping("/{userId}")
     public ResponseEntity<?> addWishForAdmin(@Parameter(hidden = true) @LoginUser AppUser loginAppUser,
                                              @PathVariable("userId") Long userId,
@@ -78,15 +61,7 @@ public class WishListAdminController {
     }
 
     @Operation(summary = "관리자 권한으로 유저 위시리스트 상품 수량 수정",
-            security = @SecurityRequirement(name = "JWT"),
-            parameters = {
-                    @Parameter(
-                            name = "Authorization",
-                            description = "JWT token",
-                            required = true,
-                            in = ParameterIn.HEADER
-                    )
-            })
+            security = @SecurityRequirement(name = "JWT"))
     @PatchMapping("/{userId}")
     public ResponseEntity<?> updateWishQuantityForAdmin(@Parameter(hidden = true) @LoginUser AppUser loginAppUser,
                                                         @PathVariable("userId") Long userId,
@@ -98,15 +73,7 @@ public class WishListAdminController {
 
 
     @Operation(summary = "관리자 권한으로 유저 위시리스트 삭제",
-            security = @SecurityRequirement(name = "JWT"),
-            parameters = {
-                    @Parameter(
-                            name = "Authorization",
-                            description = "JWT token",
-                            required = true,
-                            in = ParameterIn.HEADER
-                    )
-            })
+            security = @SecurityRequirement(name = "JWT"))
     @DeleteMapping("/{userId}")
     public ResponseEntity<?> deleteWishForAdmin(@Parameter(hidden = true) @LoginUser AppUser loginAppUser,
                                                 @PathVariable("userId") Long userId,

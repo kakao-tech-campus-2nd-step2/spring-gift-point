@@ -8,7 +8,6 @@ import gift.util.aspect.AdminController;
 import gift.util.resolver.LoginUser;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
@@ -34,15 +33,7 @@ public class CategoryAdminController {
     }
 
     @Operation(summary = "관리자 권한으로 카테고리 추가",
-            security = @SecurityRequirement(name = "JWT"),
-            parameters = {
-                    @Parameter(
-                            name = "Authorization",
-                            description = "JWT token",
-                            required = true,
-                            in = ParameterIn.HEADER
-                    )
-            })
+            security = @SecurityRequirement(name = "JWT"))
     @PostMapping
     public ResponseEntity<?> addCategoryForAdmin(@Parameter(hidden = true) @LoginUser AppUser loginAppUser,
                                                  @Valid @RequestBody CategoryRequest categoryRequest) {
@@ -52,15 +43,7 @@ public class CategoryAdminController {
     }
 
     @Operation(summary = "관리자 권한으로 카테고리 수정",
-            security = @SecurityRequirement(name = "JWT"),
-            parameters = {
-                    @Parameter(
-                            name = "Authorization",
-                            description = "JWT token",
-                            required = true,
-                            in = ParameterIn.HEADER
-                    )
-            })
+            security = @SecurityRequirement(name = "JWT"))
     @PutMapping("/{id}")
     public ResponseEntity<?> updateCategoryForAdmin(@Parameter(hidden = true) @LoginUser AppUser loginAppUser,
                                                     @PathVariable Long id,
@@ -70,15 +53,7 @@ public class CategoryAdminController {
     }
 
     @Operation(summary = "관리자 권한으로 카테고리 삭제",
-            security = @SecurityRequirement(name = "JWT"),
-            parameters = {
-                    @Parameter(
-                            name = "Authorization",
-                            description = "JWT token",
-                            required = true,
-                            in = ParameterIn.HEADER
-                    )
-            })
+            security = @SecurityRequirement(name = "JWT"))
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteCategoryByIdForAdmin(@Parameter(hidden = true) @LoginUser AppUser loginAppUser,
                                                         @PathVariable Long id) {

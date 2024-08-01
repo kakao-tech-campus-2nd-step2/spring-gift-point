@@ -13,7 +13,6 @@ import gift.service.UserService;
 import gift.util.resolver.LoginUser;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
@@ -60,15 +59,7 @@ public class UserController {
     }
 
     @Operation(summary = "로그인 유저 비밀번호 수정",
-            security = @SecurityRequirement(name = "JWT"),
-            parameters = {
-                    @Parameter(
-                            name = "Authorization",
-                            description = "JWT token",
-                            required = true,
-                            in = ParameterIn.HEADER
-                    )
-            })
+            security = @SecurityRequirement(name = "JWT"))
     @PatchMapping("/password")
     public ResponseEntity<?> updatePassword(@Valid @RequestBody UpdatePasswordRequest updatePasswordRequest,
                                             @Parameter(hidden = true) @LoginUser AppUser loginAppUser) {
@@ -77,15 +68,7 @@ public class UserController {
     }
 
     @Operation(summary = "로그인 유저 이메일 찾기",
-            security = @SecurityRequirement(name = "JWT"),
-            parameters = {
-                    @Parameter(
-                            name = "Authorization",
-                            description = "JWT token",
-                            required = true,
-                            in = ParameterIn.HEADER
-                    )
-            })
+            security = @SecurityRequirement(name = "JWT"))
     @GetMapping("/email")
     public ResponseEntity<String> findEmail(@Valid @RequestParam Long id,
                                             @Parameter(hidden = true) @LoginUser AppUser loginAppUser) {

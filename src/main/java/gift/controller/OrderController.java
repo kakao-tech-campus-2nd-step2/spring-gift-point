@@ -9,7 +9,6 @@ import gift.service.OrderService;
 import gift.util.resolver.LoginUser;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
@@ -31,15 +30,7 @@ public class OrderController {
     }
 
     @Operation(summary = "로그인한 사용자의 주문 생성",
-            security = @SecurityRequirement(name = "JWT"),
-            parameters = {
-                    @Parameter(
-                            name = "Authorization",
-                            description = "JWT token",
-                            required = true,
-                            in = ParameterIn.HEADER
-                    )
-            })
+            security = @SecurityRequirement(name = "JWT"))
     @PostMapping
     public ResponseEntity<?> createOrder(@Parameter(hidden = true) @LoginUser AppUser loginAppUser,
                                          @RequestBody OrderRequest orderRequest) {

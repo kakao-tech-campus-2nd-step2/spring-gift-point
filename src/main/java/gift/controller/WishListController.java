@@ -10,7 +10,6 @@ import gift.service.WishListService;
 import gift.util.resolver.LoginUser;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.data.domain.Page;
@@ -39,15 +38,7 @@ public class WishListController {
     }
 
     @Operation(summary = "로그인 유저 위시리스트 전체 조회", description = "위시리스트를 page로 반환",
-            security = @SecurityRequirement(name = "JWT"),
-            parameters = {
-                    @Parameter(
-                            name = "Authorization",
-                            description = "JWT token",
-                            required = true,
-                            in = ParameterIn.HEADER
-                    )
-            })
+            security = @SecurityRequirement(name = "JWT"))
     @GetMapping
     public ResponseEntity<?> getWishListForUser(@Parameter(hidden = true) @LoginUser AppUser loginAppUser,
                                                 @PageableDefault(size = DEFAULT_PAGE_SIZE, sort = "id", direction = Sort.Direction.DESC)
@@ -57,15 +48,7 @@ public class WishListController {
     }
 
     @Operation(summary = "위시리스트 상품 추가",
-            security = @SecurityRequirement(name = "JWT"),
-            parameters = {
-                    @Parameter(
-                            name = "Authorization",
-                            description = "JWT token",
-                            required = true,
-                            in = ParameterIn.HEADER
-                    )
-            })
+            security = @SecurityRequirement(name = "JWT"))
     @PostMapping
     public ResponseEntity<?> addWish(@Parameter(hidden = true) @LoginUser AppUser loginAppUser,
                                      @RequestBody AddWishRequest addWishRequest) {
@@ -75,15 +58,7 @@ public class WishListController {
     }
 
     @Operation(summary = "위시리스트 상품 수량 수정",
-            security = @SecurityRequirement(name = "JWT"),
-            parameters = {
-                    @Parameter(
-                            name = "Authorization",
-                            description = "JWT token",
-                            required = true,
-                            in = ParameterIn.HEADER
-                    )
-            })
+            security = @SecurityRequirement(name = "JWT"))
     @PatchMapping
     public ResponseEntity<?> updateWishQuantity(@Parameter(hidden = true) @LoginUser AppUser loginAppUser,
                                                 @RequestParam Long wishId,
@@ -93,15 +68,7 @@ public class WishListController {
     }
 
     @Operation(summary = "위시리스트 상품 삭제",
-            security = @SecurityRequirement(name = "JWT"),
-            parameters = {
-                    @Parameter(
-                            name = "Authorization",
-                            description = "JWT token",
-                            required = true,
-                            in = ParameterIn.HEADER
-                    )
-            })
+            security = @SecurityRequirement(name = "JWT"))
     @DeleteMapping
     public ResponseEntity<?> deleteWish(@Parameter(hidden = true) @LoginUser AppUser loginAppUser,
                                         @RequestParam Long wishId) {
