@@ -1,5 +1,5 @@
 #!/bin/bash
-BUILD_PATH=$(ls /home/ubuntu/build/ *.jar)
+BUILD_PATH=$(ls /home/ubuntu/spring-gift-point/build/libs/*.jar)
 JAR_NAME=$(basename $BUILD_PATH)
 
 CURRENT_PID=$(pgrep -f $JAR_NAME)
@@ -12,7 +12,7 @@ else
   sleep 5
 fi
 
-DEPLOY_PATH=/home/ubuntu/
+DEPLOY_PATH=/home/ubuntu/spring-gift-point/
 cp $BUILD_PATH $DEPLOY_PATH
 cd $DEPLOY_PATH
 
