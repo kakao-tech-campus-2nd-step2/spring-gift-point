@@ -27,13 +27,12 @@ public class CategoryService {
         return convertToDTO(categoryRepository.save(category));
     }
 
-    public CategoryPageDTO findCategoryPage(Pageable pageable) {
-        List<CategoryDTO> categories = categoryRepository.findAll(pageable)
-            .map(this::convertToDTO)
+    public List<CategoryDTO> findCategory() {
+        List<CategoryDTO> categories = categoryRepository.findAll()
             .stream()
+            .map(this::convertToDTO)
             .toList();
-        return new CategoryPageDTO(pageable.getPageNumber(), pageable.getPageSize(),
-            categories.size(), categories);
+        return categories;
     }
 
     public CategoryDTO findCategoryById(long categoryId) {
