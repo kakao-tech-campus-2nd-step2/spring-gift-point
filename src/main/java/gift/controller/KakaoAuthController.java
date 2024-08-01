@@ -27,7 +27,7 @@ public class KakaoAuthController {
 	
 	@Operation(summary = "카카오 인증 리다이렉트", description = "카카오 인증 후 리다이렉트 URL을 처리합니다.")
     @ApiResponse(responseCode = "200", description = "카카오 인증 성공")
-	@GetMapping("/redirect")
+	@GetMapping("/login")
 	public ResponseEntity<Map<String, String>> kakaoRedirect(@RequestParam("code") String authorizationCode) {
 		Map<String, String> accessToken = kakaoAuthService.getAccessToken(authorizationCode);
 		return ResponseEntity.status(HttpStatus.OK).body(accessToken);

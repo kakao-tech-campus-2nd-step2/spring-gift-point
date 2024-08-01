@@ -2,6 +2,8 @@ package gift.service;
 
 import java.time.LocalDateTime;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.retry.support.RetryTemplate;
 import org.springframework.stereotype.Service;
@@ -44,6 +46,10 @@ public class OrderService {
         this.wishlistService = wishlistService;
         this.retryTemplate = retryTemplate;
         this.userService = userService;
+    }
+    
+    public Page<OrderResponse> getOrders(Pageable pageable){
+    	return orderRepository.findAll(pageable).map(Order::toDto);
     }
     
     @Transactional
@@ -98,7 +104,7 @@ public class OrderService {
     private void removeWishlistOnOrder(User user, Long productId, String token, BindingResult bindingResult) {
         Wishlist wishlist = wishlistRepository.findByUserIdAndProductId(user.getId(), productId);
         if (wishlist != null) {
-        	WishlistRequest request = new WishlistRequest(productId, wishlist.getQuantity());
+        	WishlistRequest request = new WishlistRequest(productId);
             wishlistService.removeWishlist(token, request, bindingResult);
         }
     }

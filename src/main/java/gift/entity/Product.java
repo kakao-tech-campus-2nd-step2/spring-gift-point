@@ -88,6 +88,6 @@ public class Product {
 	}
 	
 	public ProductResponse toDto() {
-		return new ProductResponse(this.id, this.name, this.price, this.imageUrl, this.category.getName());
+		return new ProductResponse(this.id, this.name, this.price, this.imageUrl, this.category.getId());
 	}
 }

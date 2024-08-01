@@ -52,19 +52,6 @@ public class WishlistService {
         wishlistRepository.delete(deleteWishlist);
 	}
 	
-	public void updateWishlistQuantity(String token, WishlistRequest request, BindingResult bindingResult) {
-		validateBindingResult(bindingResult);
-		User user = userService.getUserFromToken(token);
-        Wishlist updateWishlist = findWishlistById(request.getProductId());
-        updateWishlist.validateUserPermission(user);
-        if (request.getQuantity() == 0) {
-        	wishlistRepository.delete(updateWishlist);
-        	return;
-        }
-        updateWishlist.setQuantity(request.getQuantity());
-        wishlistRepository.save(updateWishlist);
-	}
-	
 	private void validateBindingResult(BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
         	String errorMessage = bindingResult

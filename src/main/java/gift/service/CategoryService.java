@@ -26,7 +26,7 @@ public class CategoryService {
 	
 	public void createCategory(Category category, BindingResult bindingResult) {
 		validateBindingResult(bindingResult);
-		validateDuplicateCategoryName(category.getName());
+		validateDuplicateCategoryId(category.getId());
 		categoryRepository.save(category);
 	}
 	
@@ -42,19 +42,19 @@ public class CategoryService {
 			String errorMessage = bindingResult
 					.getFieldError()
 					.getDefaultMessage();
-			throw new InvalidCategoryException(errorMessage, HttpStatus.BAD_REQUEST);
+			throw new InvalidCategoryException(errorMessage);
 		}
 	}
 	
 	private void validateCategoryId(Long categoryId) {
 		if (!categoryRepository.existsById(categoryId)) {
-			throw new InvalidCategoryException("Category not foudn.", HttpStatus.NOT_FOUND);
+			throw new InvalidCategoryException("Category not foudn.");
 		}
 	}
 	
-	private void validateDuplicateCategoryName(String categoryName) {
-		if (categoryRepository.existsByName(categoryName)) {
-			throw new DuplicateCategoryNameException("This is the extracted name.");
+	private void validateDuplicateCategoryId(Long categoryId) {
+		if (categoryRepository.existsById(categoryId)) {
+			throw new DuplicateCategoryNameException("This is the extracted id.");
 		}
 	}
 }
