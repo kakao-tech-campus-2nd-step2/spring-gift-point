@@ -16,7 +16,7 @@ public record OptionAddRequest(
     String name,
     @NotNull
     @Range(min = Domain.Option.QUANTITY_RANGE_MIN, max = Domain.Option.QUANTITY_RANGE_MAX, message = Domain.Option.QUANTITY_INVALID_MSG)
-    Integer quantity
+    Integer stockQuantity
 ) {
 
     public static OptionAddRequest of(Option option) {
@@ -30,6 +30,6 @@ public record OptionAddRequest(
     }
 
     public Option toEntity(Product product) {
-        return new Option(product, name, quantity);
+        return new Option(product, name, stockQuantity);
     }
 }

@@ -1,8 +1,11 @@
 package gift.domain.repository;
 
 import gift.domain.dto.request.ProductAddRequest;
+import gift.domain.entity.Category;
 import gift.domain.entity.Product;
+import java.util.List;
 import java.util.Optional;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -16,4 +19,6 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
         + "    AND p.price = :#{#request.price()} "
         + "    AND p.imageUrl = :#{#request.imageUrl()}")
     Optional<Product> findByContents(ProductAddRequest request);
+
+    List<Product> findAllByCategory(Category category, Sort sort);
 }

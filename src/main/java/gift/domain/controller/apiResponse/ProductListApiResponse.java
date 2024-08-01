@@ -2,31 +2,31 @@ package gift.domain.controller.apiResponse;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import gift.domain.dto.response.CategoryResponse;
-import gift.domain.dto.response.ProductWithCategoryIdResponse;
+import gift.domain.dto.response.ProductCoreInfoResponse;
 import gift.global.apiResponse.BasicApiResponse;
 import java.util.List;
 import org.springframework.http.HttpStatusCode;
 
 public class ProductListApiResponse extends BasicApiResponse {
 
-    private final List<CategoryResponse> categories;
-    private final List<ProductWithCategoryIdResponse> products;
+    private final CategoryResponse category;
+    private final List<ProductCoreInfoResponse> products;
 
     public ProductListApiResponse(
         @JsonProperty(value = "status", required = true) HttpStatusCode status,
-        @JsonProperty(value = "categories", required = true) List<CategoryResponse> categories,
-        @JsonProperty(value = "products", required = true) List<ProductWithCategoryIdResponse> products
+        @JsonProperty(value = "category", required = true) CategoryResponse category,
+        @JsonProperty(value = "products", required = true) List<ProductCoreInfoResponse> products
     ) {
         super(status);
-        this.categories = categories;
+        this.category = category;
         this.products = products;
     }
 
-    public List<CategoryResponse> getCategories() {
-        return categories;
+    public CategoryResponse getCategory() {
+        return category;
     }
 
-    public List<ProductWithCategoryIdResponse> getProducts() {
+    public List<ProductCoreInfoResponse> getProducts() {
         return products;
     }
 }

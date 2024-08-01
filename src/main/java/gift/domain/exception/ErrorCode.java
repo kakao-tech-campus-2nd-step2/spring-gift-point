@@ -7,12 +7,14 @@ public enum ErrorCode {
     //Bad Requests
     FIELD_VALIDATION_FAIL("EBR_VF001", -40001, ""),
     OPTION_QUANTITY_OUT_OF_RANGE("EBR_OP001", -40002,
-        "The option quantity must be greater than or equal to "
+        "The option stock quantity must be greater than or equal to "
         + Option.QUANTITY_RANGE_MIN
         + " and less than "
         + Option.QUANTITY_RANGE_MAX
         + "."),
     PRODUCT_OPTIONS_EMPTY("EBR_OP003", -40003, "A product must have at least one option."),
+    SORT_TYPE_ILLEGAL("EBR_VF002", -40004, "The sort option was illegal."),
+    FIELD_NAME_ILLEGAL("EBR_VF003", -40001, "The field name was illegal."),
 
     //Unauthorized
     TOKEN_NOT_FOUND("EUA_MB001", -40101, "토큰이 존재하지 않습니다. 발급이 필요합니다."),
