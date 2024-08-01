@@ -2,8 +2,8 @@ package gift.service;
 
 import gift.exception.ErrorCode;
 import gift.exception.customException.CustomNotFoundException;
-import gift.model.entity.Category;
 import gift.model.dto.CategoryDTO;
+import gift.model.entity.Category;
 import gift.repository.CategoryRepository;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -24,9 +24,10 @@ public class CategoryService {
         return new CategoryDTO(categoryRepository.save(categoryDTO.toEntity()));
     }
 
+
     @Transactional(readOnly = true)
-    public CategoryDTO findCategoryByName(String name) {
-        Category saved = categoryRepository.findByName(name)
+    public CategoryDTO getCategoryById(Long id) {
+        Category saved = categoryRepository.findById(id)
             .orElseThrow(() -> new CustomNotFoundException(
                 ErrorCode.CATEGORY_NOT_FOUND));
         return new CategoryDTO(saved);
