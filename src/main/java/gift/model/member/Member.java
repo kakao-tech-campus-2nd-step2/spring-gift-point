@@ -109,6 +109,13 @@ public class Member extends BaseTimeEntity {
         this.point += point;
         return this.point;
     }
+
+    public void usePoint(Integer point) {
+        if (this.point < point) {
+            throw new IllegalArgumentException("포인트가 부족합니다.");
+        }
+        this.point -= point;
+    }
 }
 
 class PasswordUtil {
