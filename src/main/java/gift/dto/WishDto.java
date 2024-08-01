@@ -2,24 +2,25 @@ package gift.dto;
 
 public class WishDto {
 
-    private final Long memberId;
-    private final Long productId;
+    private final Long id;
+    private final MemberDto memberDto;
+    private final ProductDto productDto;
 
-    public WishDto(Long memberId, Long productId) {
-        this.memberId = memberId;
-        this.productId = productId;
+    public WishDto(Long id, MemberDto memberDto, ProductDto productDto) {
+        this.id = id;
+        this.memberDto = memberDto;
+        this.productDto = productDto;
     }
 
-    public WishDto(Long productId) {
-        this.memberId = null;
-        this.productId = productId;
+    public Long getId() {
+        return id;
     }
 
-    public Long getMemberId() {
-        return memberId;
+    public MemberDto getMemberDto() {
+        return memberDto;
     }
 
-    public Long getProductId() {
-        return productId;
+    public ProductDto getProductDto() {
+        return productDto;
     }
 }
