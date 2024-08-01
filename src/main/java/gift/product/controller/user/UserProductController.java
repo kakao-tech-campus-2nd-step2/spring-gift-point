@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import gift.dto.request.OrderRequest;
+import gift.dto.response.OptionResponse;
 import gift.dto.response.ProductResponse;
 import gift.product.domain.Category;
 import gift.product.domain.CategoryService;
@@ -27,7 +28,10 @@ import gift.product.service.OptionService;
 import gift.product.service.ProductService;
 import gift.dto.request.UserDetails;
 import gift.user.service.UserService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 
+@Tag(name = "user-product", description = "유저 상품 관련 API")
 @RestController
 public class UserProductController {
 
@@ -44,8 +48,8 @@ public class UserProductController {
 		this.categoryService = categoryService;
 	}
 
-	// 상품 단일 조회 메서드
-	@GetMapping("/product/{id}")
+	@Operation(summary = "상품 조회", description = "상품 단일 조회")
+	@GetMapping("api/products/{id}")
 	@ResponseBody
 	public ResponseEntity<ProductResponse> getProduct(@PathVariable Long id) {
 		Product product = productService.getProductById(id);
@@ -53,32 +57,45 @@ public class UserProductController {
 	}
 
 	// 모든 상품을 페이징해서 조회
-	@GetMapping("/product")
+	@Operation(summary = "상품 목록 조회", description = "상품 전체 조회")
+	@GetMapping("/api/products")
 	@ResponseBody
 	public ResponseEntity<Page<ProductResponse>> getProductsWithPaging(
-		@RequestParam(required = false) SearchType searchType,
-		@RequestParam(required = false) String searchValue,
+		// @RequestParam(required = false) SearchType searchType,
+		// @RequestParam(required = false) String searchValue,
 		@PageableDefault(size = 10, sort = "id", direction = Sort.Direction.DESC) Pageable pageable
 	) {
-		return ResponseEntity.ok(productService.getProductsWithPaging(pageable, searchType, searchValue));
+		return ResponseEntity.ok(productService.getProductsWithPaging(pageable));
 	}
 
 	// 상품 주문
-	@PostMapping("/product/{productId}/order")
+	@Operation(summary = "상품 주문", description = "상품 주문")
+	@PostMapping("api/orders")
 	@ResponseBody
 	public ResponseEntity<?> orderProduct(
-		@PathVariable Long productId,
 		@RequestBody OrderRequest orderRequest,
 		@RequestAttribute("userDetails") UserDetails userDetails
 	) {
+		// TODO: 3개의 서비스를 파서드 계층으로 분리하기
+		userService.usePoints(orderRequest, userDetails.userId());
 		optionService.reduceStock(orderRequest);
-		userService.sendKakaoMessage(orderRequest.message(), userDetails.userId());
-		return ResponseEntity.ok().build();
+		userService.sendKakaoMessage(orderRequest, userDetails.userId());
+		return ResponseEntity.status(201).build();
 	}
 
 	//카테고리 목록 조회
+	@Operation(summary = "카테고리 목록 조회", description = "카테고리 전체 조회")
 	@GetMapping("/api/categories")
 	public ResponseEntity<List<Category>> getCategories() {
 		return ResponseEntity.ok(categoryService.getAllCategories());
+	}
+
+	//특정 상품에 대한 모든 옵션을 조회한다.
+	@Operation(summary = "상품 옵션 조회", description = "상품 옵션 전체 조회")
+	@GetMapping("api/products/{productId}/options")
+	public ResponseEntity<Page<OptionResponse>> getOptions(
+		@PathVariable Long productId,
+		@PageableDefault(size = 10, sort = "id", direction = Sort.Direction.DESC) Pageable pageable ){
+		return ResponseEntity.ok(optionService.getOptions(productId, pageable));
 	}
 }
