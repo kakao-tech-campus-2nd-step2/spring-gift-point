@@ -1,0 +1,72 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 20px;
+    background-color: #000000; /* 배경 색상: 검정색 */
+    color: #ffffff; /* 글자 색상: 흰색 */
+}
+
+h1 {
+    color: #ffffff; /* 글자 색상: 흰색 */
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+table, th, td {
+    border: 1px solid #ddd;
+}
+
+th, td {
+    padding: 8px;
+    text-align: left;
+}
+
+th {
+    background-color: #333333; /* 배경 색상: 어두운 회색 */
+    color: #ffffff; /* 글자 색상: 흰색 */
+}
+
+a {
+    color: #66ccff; /* 링크 색상: 밝은 파란색 */
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+button {
+    background-color: #4CAF50;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #45a049;
+}
+
+form div {
+    margin-bottom: 15px;
+}
+
+label {
+    display: inline-block;
+    width: 100px;
+    font-weight: bold;
+    color: #ffffff;
+}
+
+input[type="text"], input[type="number"] {
+    width: 300px;
+    padding: 8px;
+    margin: 4px 0;
+    box-sizing: border-box;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    background-color: #333333;
+    color: #ffffff;
+}
