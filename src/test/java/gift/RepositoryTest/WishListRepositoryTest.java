@@ -13,10 +13,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -43,7 +40,7 @@ class WishListRepositoryTest {
     private Category category;
     private Option option1;
     private Option option2;
-    private Set<Option> options;
+    private List<Option> options;
     private Menu menu;
 
     @BeforeEach
@@ -59,7 +56,7 @@ class WishListRepositoryTest {
         member = new Member("member1", "password1", "김민지", new LinkedList<WishList>());
         member = memberRepository.save(member);
 
-        category = new Category(null, "양식", new LinkedList<Menu>());
+        Category category = new Category(null, "중식","dis","빨강","image.com", new LinkedList<Menu>());
         category = categoryRepository.save(category);
 
         option1 = new Option(null, "알리오올리오", 3L,menu);
@@ -67,7 +64,7 @@ class WishListRepositoryTest {
         option1 = optionRepository.save(option1);
         option2 = optionRepository.save(option2);
 
-        options = new HashSet<>();
+        options = new LinkedList<>();
         options.add(option1);
         options.add(option2);
 
@@ -78,7 +75,7 @@ class WishListRepositoryTest {
     @Test
     @DisplayName("위시리스트 저장 테스트")
     void testSaveWishList() {
-        WishList wishList = new WishList(member, menu);
+        WishList wishList = new WishList(member, menu,new Date());
         wishList = wishListRepository.save(wishList);
 
         assertThat(wishList.getId()).isNotNull();
@@ -87,7 +84,7 @@ class WishListRepositoryTest {
     @Test
     @DisplayName("위시리스트 FindById 테스트")
     void testFindWishListById() {
-        WishList wishList = new WishList(member, menu);
+        WishList wishList = new WishList(member, menu,new Date());
         wishList = wishListRepository.save(wishList);
 
         Optional<WishList> foundWishList = wishListRepository.findById(wishList.getId());
@@ -98,7 +95,7 @@ class WishListRepositoryTest {
     @Test
     @DisplayName("위시리스트 삭제 테스트")
     void testDeleteWishList() {
-        WishList wishList = new WishList(member, menu);
+        WishList wishList = new WishList(member, menu,new Date());
         wishList = wishListRepository.save(wishList);
 
         wishListRepository.deleteById(wishList.getId());

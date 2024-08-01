@@ -4,6 +4,8 @@ import gift.domain.Menu.Menu;
 
 public record WishListResponse(
         Long Id,
-        Menu menu
+        String name,
+        int price,
+        String imageUrl
 ) {
 }

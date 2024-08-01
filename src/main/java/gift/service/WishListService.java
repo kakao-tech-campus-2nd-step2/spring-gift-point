@@ -17,14 +17,14 @@ public class WishListService {
         this.wishListRepository = wishListRepository;
     }
 
-    public void save(WishList wishList) {
-        wishListRepository.save(wishList);
+    public WishListResponse save(WishList wishList) {
+        return mapWishListToWishListResponse(wishListRepository.save(wishList));
     }
 
     public List<WishListResponse> findById(String jwtId, Pageable pageable) {
         List<WishList> wishLists = wishListRepository.findByMemberId(jwtId, pageable);
         return wishLists.stream()
-                .map(this::MapWishListToWishListResponse)
+                .map(this::mapWishListToWishListResponse)
                 .collect(Collectors.toList());
     }
 
@@ -36,8 +36,8 @@ public class WishListService {
         throw new IllegalAccessException("해당 위시에 대한 권한이 없습니다.");
     }
 
-    public WishListResponse MapWishListToWishListResponse(WishList wishList) {
-        return new WishListResponse(wishList.getId(), wishList.getMenu());
+    public WishListResponse mapWishListToWishListResponse(WishList wishList) {
+        return new WishListResponse(wishList.getId(), wishList.getMenu().getName(),wishList.getMenu().getPrice(),wishList.getMenu().getImageUrl());
     }
 }
 
