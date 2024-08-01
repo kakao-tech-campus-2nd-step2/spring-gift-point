@@ -1,6 +1,6 @@
 package gift.doamin.product.controller;
 
-import gift.doamin.product.dto.ProductForm;
+import gift.doamin.product.dto.ProductRequest;
 import gift.doamin.product.dto.ProductParam;
 import gift.doamin.product.service.ProductService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -34,11 +34,11 @@ public class ProductsController {
     @Operation(summary = "상품 추가", description = "새로운 상품을 등록합니다.")
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public ProductParam addNewProduct(@Valid @RequestBody ProductForm productForm,
+    public ProductParam addNewProduct(@Valid @RequestBody ProductRequest productRequest,
         Principal principal) {
         Long userId = Long.valueOf(principal.getName());
-        productForm.setUserId(userId);
-        return productService.create(productForm);
+        productRequest.setUserId(userId);
+        return productService.create(productRequest);
     }
 
     @Operation(summary = "상품 목록 조회", description = "상품 목록을 조회합니다. 한 번에 5개씩 페이지별로 조회할 수 있습니다.")
@@ -57,9 +57,9 @@ public class ProductsController {
     @Operation(summary = "상품 정보 수정", description = "선택한 상품의 정보를 수정합니다.")
     @PutMapping("/{id}")
     public ProductParam updateProduct(@PathVariable Long id,
-        @Valid @RequestBody ProductForm productForm) {
+        @Valid @RequestBody ProductRequest productRequest) {
 
-        return productService.update(id, productForm);
+        return productService.update(id, productRequest);
     }
 
     @Operation(summary = "상품 삭제", description = "선택한 상품을 삭제합니다")

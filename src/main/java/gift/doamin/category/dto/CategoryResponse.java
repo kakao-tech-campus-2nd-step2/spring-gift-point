@@ -2,7 +2,6 @@ package gift.doamin.category.dto;
 
 import gift.doamin.category.entity.Category;
 import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.validation.constraints.NotBlank;
 
 @Schema(description = "카테고리 정보")
 public class CategoryResponse {

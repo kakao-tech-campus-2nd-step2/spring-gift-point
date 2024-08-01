@@ -9,10 +9,7 @@ import jakarta.validation.constraints.PositiveOrZero;
 import java.util.List;
 
 @Schema(description = "상품 등록, 수정 요청")
-public class ProductForm {
-
-    @Schema(description = "등록한 사용자 id")
-    private Long userId;
+public class ProductRequest {
 
     @Schema(description = "상품의 카테고리 id")
     @NotNull
@@ -36,7 +33,7 @@ public class ProductForm {
     @Valid
     private List<OptionForm> options;
 
-    public ProductForm(Long category_id, String name, Integer price, String imageUrl,
+    public ProductRequest(Long category_id, String name, Integer price, String imageUrl,
         List<OptionForm> options) {
         this.category_id = category_id;
         this.name = name;

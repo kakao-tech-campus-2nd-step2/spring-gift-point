@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @Tag(name = "회원", description = "로그인, 회원가입, 토큰 갱신 API")
 @RestController
-@RequestMapping("/api/auth")
+@RequestMapping("/api/members")
 public class AuthController {
 
     private final AuthService authService;
@@ -32,10 +32,9 @@ public class AuthController {
 
     @Operation(summary = "회원가입", description = "이메일과 비밀번호를 입력하여 새로운 회원으로 등록합니다.")
     @ResponseStatus(HttpStatus.CREATED)
-    @PostMapping("/signup")
+    @PostMapping("/register")
     public ResponseEntity<Void> signUp(@Valid @RequestBody SignUpRequest signUpRequest) {
         JwtDto tokens = authService.signUp(signUpRequest);
-
 
         return ResponseEntity.status(HttpStatus.CREATED)
             .header(HttpHeaders.AUTHORIZATION, tokens.getAccessToken())
@@ -67,7 +66,7 @@ public class AuthController {
         return ResponseCookie.from("refreshToken", refreshToken)
             .httpOnly(true)
             .maxAge(12 * 60 * 60)
-            .path("/api/auth/accessToken")
+            .path("/api/members/accessToken")
             .build()
             .toString();
     }

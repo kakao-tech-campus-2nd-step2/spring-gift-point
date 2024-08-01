@@ -4,7 +4,7 @@ import gift.doamin.category.entity.Category;
 import gift.doamin.category.exception.CategoryNotFoundException;
 import gift.doamin.category.repository.JpaCategoryRepository;
 import gift.doamin.product.dto.OptionForm;
-import gift.doamin.product.dto.ProductForm;
+import gift.doamin.product.dto.ProductRequest;
 import gift.doamin.product.dto.ProductParam;
 import gift.doamin.product.entity.Options;
 import gift.doamin.product.entity.Product;
@@ -35,21 +35,21 @@ public class ProductService {
         this.categoryRepository = categoryRepository;
     }
 
-    public ProductParam create(ProductForm productForm) {
-        if (productForm.getName().contains("카카오")) {
+    public ProductParam create(ProductRequest productRequest) {
+        if (productRequest.getName().contains("카카오")) {
             throw new NotEnoughAutorityException("'카카오'가 포함된 문구는 담당 MD와 협의한 경우에만 사용할 수 있습니다.");
         }
 
-        User user = userRepository.findById(productForm.getUserId())
+        User user = userRepository.findById(productRequest.getUserId())
             .orElseThrow(UserNotFoundException::new);
 
-        Category category = categoryRepository.findById(productForm.getCategory_id())
+        Category category = categoryRepository.findById(productRequest.getCategory_id())
             .orElseThrow(CategoryNotFoundException::new);
 
-        Product product = new Product(user, category, productForm.getName(), productForm.getPrice(),
-            productForm.getImageUrl());
+        Product product = new Product(user, category, productRequest.getName(), productRequest.getPrice(),
+            productRequest.getImageUrl());
 
-        Options options = new Options(productForm.getOptions().stream()
+        Options options = new Options(productRequest.getOptions().stream()
             .map(OptionForm::toEntity)
             .toList());
         options.toList().forEach(product::addOption);
@@ -73,18 +73,18 @@ public class ProductService {
     }
 
     @PreAuthorize("hasRole('ROLE_ADMIN') or @productService.isOwner(authentication.name, #id)")
-    public ProductParam update(Long id, ProductForm productForm) {
+    public ProductParam update(Long id, ProductRequest productRequest) {
 
         Optional<Product> target = productRepository.findById(id);
         if (target.isEmpty()) {
-            return create(productForm);
+            return create(productRequest);
         }
 
         Product product = target.get();
 
-        Category category = categoryRepository.findById(productForm.getCategory_id())
+        Category category = categoryRepository.findById(productRequest.getCategory_id())
             .orElseThrow(CategoryNotFoundException::new);
-        product.updateAll(productForm, category);
+        product.updateAll(productRequest, category);
         return new ProductParam(productRepository.save(product));
     }
 

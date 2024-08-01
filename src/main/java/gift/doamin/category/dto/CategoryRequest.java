@@ -1,6 +1,5 @@
 package gift.doamin.category.dto;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
 import gift.doamin.category.entity.Category;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
