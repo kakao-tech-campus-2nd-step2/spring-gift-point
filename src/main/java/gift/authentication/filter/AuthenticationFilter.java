@@ -12,6 +12,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.List;
 import java.util.Objects;
+import java.util.regex.Pattern;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 public class AuthenticationFilter extends OncePerRequestFilter {
@@ -20,6 +21,11 @@ public class AuthenticationFilter extends OncePerRequestFilter {
         "/api/members/login",
         "/api/members/register",
         "/api/login/oauth2/kakao");
+
+    private final List<String> ignorePathsOnlyMethodGet = List.of(
+        "/api/categories",
+        "/api/products",
+        "/api/products/\\d+/options");
     private final String AUTHORIZATION_HEADER = "Authorization";
     private final String BEARER = "Bearer ";
     private final JwtResolver jwtResolver;
@@ -49,18 +55,20 @@ public class AuthenticationFilter extends OncePerRequestFilter {
 
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
-        List<String> ignorePathsOnlyMethodGet = List.of(
-            "/api/categories",
-            "/api/products");
+        String requestURI = request.getRequestURI();
+        return ignorePaths.contains(requestURI) || isOptionalIgnorePathsWithGetMethod(request, requestURI);
+    }
 
-        if (ignorePaths.contains(request.getRequestURI())) {
-            return true;
-        }
-
-        if (ignorePathsOnlyMethodGet.contains(request.getRequestURI()) && request.getMethod().equals("GET")) {
-            return true;
-        }
-
-        return false;
+    /**
+     * ignorePathsOnlyMethodGet에 포함된 경로 중 GET 메서드일 때만 필터링을 하지 않는다.
+     * @param request
+     * @param requestURI
+     * @return ignorePathsOnlyMethodGet에 포함된 경로 중 GET 메서드인 경우 true 를 반환 그 외, false
+     */
+    private boolean isOptionalIgnorePathsWithGetMethod(HttpServletRequest request, String requestURI) {
+        return ignorePathsOnlyMethodGet
+            .stream()
+            .anyMatch(regex -> Pattern.compile(regex).matcher(requestURI).matches()
+                && request.getMethod().equals("GET"));
     }
 }
