@@ -27,6 +27,9 @@ public class Member {
     @Column(nullable = false)
     private Role role;
 
+    @Column(name = "refresh_token")
+    private String refreshToken;
+
     public Member() {
     }
 
@@ -61,4 +64,13 @@ public class Member {
     public Role getRole() {
         return role;
     }
+
+    public String getRefreshToken() {
+        return refreshToken;
+    }
+
+    public void setRefreshToken(String refreshToken) {
+        this.refreshToken = refreshToken;
+    }
+
 }

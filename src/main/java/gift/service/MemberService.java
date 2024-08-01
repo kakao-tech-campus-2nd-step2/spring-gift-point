@@ -51,4 +51,14 @@ public class MemberService {
         }
     }
 
+    // 신규 회원 등록
+    public void registerNewMember(Member member) {
+        memberRepository.save(member);
+    }
+
+    // 이메일로 멤버 찾기
+    public Optional<Member> findByEmail(String email) {
+        return memberRepository.findByEmail(email);
+    }
+
 }

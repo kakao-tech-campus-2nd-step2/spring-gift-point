@@ -5,6 +5,7 @@ import gift.common.exception.notFound.OptionNotFoundException;
 import gift.common.exception.unauthorized.TokenErrorException;
 import gift.common.exception.unauthorized.TokenNotFoundException;
 import gift.common.util.JwtUtil;
+import gift.dto.KakaoAccessToken;
 import gift.dto.OrderRequest;
 import gift.dto.OrderResponse;
 import gift.entity.Member;
@@ -28,16 +29,18 @@ public class OrderService {
     private final OrderMessageService orderMessageService;
     private final JwtUtil jwtUtil;
     private final MemberRepository memberRepository;
+    private final KakaoService kakaoService;
 
     public OrderService(OrderRepository orderRepository, OptionRepository optionRepository,
         WishRepository wishRepository, OrderMessageService orderMessageService, JwtUtil jwtUtil,
-        MemberRepository memberRepository) {
+        MemberRepository memberRepository, KakaoService kakaoService) {
         this.orderRepository = orderRepository;
         this.optionRepository = optionRepository;
         this.wishRepository = wishRepository;
         this.orderMessageService = orderMessageService;
         this.jwtUtil = jwtUtil;
         this.memberRepository = memberRepository;
+        this.kakaoService = kakaoService;
     }
 
     @Transactional
@@ -49,7 +52,13 @@ public class OrderService {
         Option option = validateAndUpdateOption(orderRequest);
         Order order = createOrder(orderRequest, option);
         wishRepository.deleteByOptionId(orderRequest.getOptionId());
-        //orderMessageService.sendOrderMessage(order, token);
+
+        // 새로운 Access Token 발급
+        KakaoAccessToken newAccessToken = kakaoService.refreshAccessToken(member.getRefreshToken());
+        member.setRefreshToken(newAccessToken.getRefreshToken());
+        memberRepository.save(member);
+
+        orderMessageService.sendOrderMessage(order, newAccessToken.getAccessToken());
 
         return getOrderResponse(order);
     }
