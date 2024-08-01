@@ -1,10 +1,11 @@
 package gift.util;
 
-import gift.exception.TokenException;
+import gift.exception.ServiceException;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import java.util.Date;
 import javax.crypto.SecretKey;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -30,7 +31,7 @@ public class JwtUtil {
         try {
             Jwts.parser().verifyWith(SECRET_KEY).build().parseSignedClaims(token);
         } catch (Exception e) {
-            throw new TokenException("잘못된 로그인 정보입니다.");
+            throw new ServiceException("헤더에 토큰이 존재하지 않거나 잘못된 형식입니다.", HttpStatus.UNAUTHORIZED);
         }
     }
 
