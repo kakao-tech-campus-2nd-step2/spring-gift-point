@@ -10,7 +10,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 @Controller
-@RequestMapping("/kakao")
+@RequestMapping("/api/members/kakao")
 @Tag(name = "Kakao API", description = "카카오 인증 관련 API")
 public class KakaoApiController {
     private final KakaoApiService kakaoApiService;
