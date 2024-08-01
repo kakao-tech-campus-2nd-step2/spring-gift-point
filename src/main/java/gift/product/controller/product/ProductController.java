@@ -2,6 +2,7 @@ package gift.product.controller.product;
 
 import gift.product.dto.product.ClientProductRequest;
 import gift.product.dto.product.ClientProductUpdateRequest;
+import gift.product.dto.product.PageProductResponse;
 import gift.product.dto.product.ProductResponse;
 import gift.product.exception.ExceptionResponse;
 import gift.product.model.Product;
@@ -14,6 +15,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import java.util.List;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -41,11 +43,11 @@ public class ProductController {
     }
 
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "성공", content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = ProductResponse.class)))),
+        @ApiResponse(responseCode = "200", description = "성공", content = @Content(mediaType = "application/json", schema = @Schema(implementation = PageProductResponse.class))),
         @ApiResponse(responseCode = "401", description = "허용되지 않는 요청", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ExceptionResponse.class)))
     })
     @GetMapping
-    public ResponseEntity<List<ProductResponse>> getProductAll(
+    public ResponseEntity<Page<ProductResponse>> getProductAll(
         @RequestParam(name = "page", defaultValue = "0") int page,
         @RequestParam(name = "size", defaultValue = "5") int size,
         @RequestParam(name = "sort", defaultValue = "name,asc") String sortParam,

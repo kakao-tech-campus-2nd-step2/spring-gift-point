@@ -82,10 +82,7 @@ class ProductServiceTest {
         productService.getProduct(product.getId());
 
         //then
-        SoftAssertions.assertSoftly(softly -> {
-            then(productRepository).should().findById(product.getId());
-            then(optionRepository).should().findAllByProductId(product.getId());
-        });
+        then(productRepository).should().findById(product.getId());
     }
 
     @Test
@@ -110,7 +107,6 @@ class ProductServiceTest {
         List<Product> products = new ArrayList<>();
         products.add(new Product(1L, "테스트상품", 1000, "테스트주소", category));
         given(productRepository.findAll(pageable)).willReturn(new PageImpl<>(products));
-        given(optionRepository.findAllByProductId(any())).willReturn(Collections.emptyList());
 
         //when
         productService.getProductAll(pageable);
@@ -130,7 +126,6 @@ class ProductServiceTest {
         products.add(new Product(1L, "테스트상품", 1000, "테스트주소", category));
         given(productRepository.findAllByCategoryId(pageable,
             category.getId())).willReturn(new PageImpl<>(products));
-        given(optionRepository.findAllByProductId(any())).willReturn(Collections.emptyList());
 
         //when
         productService.getProductAll(pageable, category.getId());

@@ -9,8 +9,7 @@ public record ProductResponse(
     String name,
     int price,
     String imageUrl,
-    CategoryIdAndName category,
-    List<OptionResponse> options
+    Long categoryId
 ) {
 
 }
