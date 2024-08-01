@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>상품 추가 </title>
+</head>
+<body>
+<h2>제품 추가</h2>
+<form th:action="@{/admin/products/add}" method="post">
+    <label for="price">가격:</label>
+    <input type="number" id="price" name="price" required><br>
+    <label for="price">카테고리 ID:</label>
+    <input type="number" id="category_id" name="category_id" required><br>
+    <label for="name">이름:</label>
+    <input type="text" id="name" name="name" required><br>
+    <label for="imgURL">이미지 주소:</label>
+    <input type="text" id="imgURL" name="imgURL" required><br>
+
+    <input type="submit" value="추가">
+</form>
+</body>
+</html>
