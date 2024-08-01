@@ -1,0 +1,14 @@
+INSERT INTO category (name, description, color, image_url) VALUES
+                                                               ('교환권', '원하실 때 교환할 수 있는 교환권', '#FF5733', 'https://blog.kakaocdn.net/dn/wpPsR/btrrirkJqTT/hi8KCWizXepL2YgJKaAsM0/img.jpg'),
+                                                               ('상품권', '다양한 금액대로 선물 가능', '#33FF57', 'https://media.bunjang.co.kr/product/203001762_1_1672990211_w360.jpg'),
+                                                               ('뷰티', '원하시는 화장품을 찾아보세요', '#3357FF', 'https://img2.daumcdn.net/thumb/R658x0.q70/?fname=https://t1.daumcdn.net/news/202401/02/cosmopolitan/20240102154722602xrhr.jpg'),
+                                                               ('패션', '원하시는 옷을 골라보세요', '#F333FF', 'https://play-lh.googleusercontent.com/fCHk_aTCmAcIRUdGDdVLEH4VlqZ4BjBB0icroaP9b9OQwM8Y8lZ--FNkhc4pw0BQE7k'),
+                                                               ('식품', '건강 챙기세요', '#FF33A1', 'https://media.bunjang.co.kr/product/254683639_1_1708927608_w360.jpg'),
+                                                               ('리빙/도서', '마음의 양식을 쌓으세요', '#A1FF33', 'https://www.taragrp.co.kr/wp-content/uploads/2022/07/%EB%8F%84%EC%84%9C-%EC%A0%9C%EB%B3%B8_01-2.png'),
+                                                               ('레저/스포츠', '가끔은 액티비티를 즐겨요', '#33FFA1', 'https://lh6.googleusercontent.com/proxy/K7QkiFr4jtSoQI8QDCb3tXlsfmzvjZ6G_giOPQPFI1uUTWd8jMWd_t2TXesju5hgnSN6N6AZYXtKiioRtZmzYSNBIqz0uHD2If5Ecq6pv1U'),
+                                                               ('아티스트/캐릭터', '원하는 캐릭터와 아티스트를 골라보세요', '#A133FF', 'https://img.freepik.com/premium-vector/cute-kawaii-shiba-inu-dog-cartoon-style-character-mascot-corgi-dog_945253-162.jpg'),
+                                                               ('유아동/반려', '이런 육아템도 있어요', '#FF5733', 'https://www.meconomynews.com/news/photo/202110/59280_71834_1950.jpg'),
+                                                               ('디지털/가전', '가전 특가!', '#57FF33', 'https://m.koreabtob.com/web/product/medium/202210/d35a75804f59185befc1359bb61cd387.jpg'),
+                                                               ('카카오프렌즈', '라이언만 있는게 아니에요', '#33A1FF', 'https://t1.kakaocdn.net/thumb/R1920x0.fwebp.q100/?fname=https%3A%2F%2Ft1.kakaocdn.net%2Fkakaocorp%2Fkakaocorp%2Fadmin%2Fservice%2Fa85d0594017900001.jpg'),
+                                                               ('트렌드 선물', '트렌드 선물있는 선물을 해보세요', '#A1A1FF', 'https://img.etoday.co.kr/pto_db/2022/01/600/20220124154816_1711758_1200_636.jpg'),
+                                                               ('백화점', '고급진 선물을 골라보세요', '#FFA133', 'https://dimg.donga.com/wps/NEWS/IMAGE/2021/01/11/104874627.1.jpg');

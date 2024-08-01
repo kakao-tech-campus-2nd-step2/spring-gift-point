@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Your Wishlist</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+</head>
+<body>
+<div class="container mt-5">
+    <h1>Your Wishlist</h1>
+    <ul id="wishlist" class="list-group">
+        <li class="list-group-item" th:each="wish : ${wishes}">
+            Product ID: <span th:text="${wish.productId}">1</span>
+            <button class="btn btn-danger btn-sm float-right" th:onclick="'removeWish(' + ${wish.productId} + ', ' + ${wish.memberId} + ')'">Remove</button>
+        </li>
+    </ul>
+</div>
+
+<script>
+    function removeWish(productId, memberId) {
+        fetch('/wishes/remove', {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ memberId: memberId, productId: productId }),
+        }).then(response => {
+            if (response.ok) {
+                location.reload();
+            } else {
+                alert('Failed to remove item from wishlist.');
+            }
+        });
+    }
+</script>
+</body>
+</html>
