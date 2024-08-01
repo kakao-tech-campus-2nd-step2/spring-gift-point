@@ -77,7 +77,8 @@ public class AuthController {
             throw new CustomDuplicateException(ErrorCode.DUPLICATE_EMAIL);
         }
         Long id = userService.insertUser(userForm);
-        return ResponseEntity.ok(id);
+        return ResponseEntity.ok(
+            jwtProvider.generateToken(userService.findByEmail(userForm.getEmail())));
     }
 
     @Operation(hidden = true)
