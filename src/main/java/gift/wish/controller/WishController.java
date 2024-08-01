@@ -54,9 +54,10 @@ public class WishController {
     }
 
     @PostMapping("")
-    public ResponseEntity<SimpleResultResponseDto> createWish(@Login AuthInfo authInfo, @RequestBody WishRequestDto wishRequestDto) {
+    public ResponseEntity<Void> createWish(@Login AuthInfo authInfo, @RequestBody WishRequestDto wishRequestDto) {
         wishService.createWish(wishRequestDto.toWishServiceDto(authInfo.memberId()));
-        return ResponseHelper.createSimpleResponse(ResultCode.CREATE_WISH_SUCCESS);
+        return ResponseEntity.status(200)
+                .build();
     }
 
     @PutMapping("/{id}")

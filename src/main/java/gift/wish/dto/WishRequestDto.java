@@ -1,12 +1,13 @@
 package gift.wish.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import gift.wish.domain.ProductCount;
 
 import java.util.Objects;
 
-public record WishRequestDto(Long productId) {
+public record WishRequestDto(@JsonProperty("product_id") Long productId) {
     public WishRequestDto {
-        Objects.requireNonNull(productId);;
+        Objects.requireNonNull(productId);
     }
 
     public WishServiceDto toWishServiceDto(Long memberId) {

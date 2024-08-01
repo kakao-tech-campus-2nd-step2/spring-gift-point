@@ -20,7 +20,7 @@ Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJtZW1iZXJfaWQiOjEsIm1lbWJlcl90eXBlI
 Content-Type: application/json
 
 {
-  "productId": 2
+  "product_id": 2
 }
 
 ### update wish
