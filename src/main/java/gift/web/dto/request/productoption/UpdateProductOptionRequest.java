@@ -14,17 +14,17 @@ public class UpdateProductOptionRequest {
     private String name;
 
     @Range(min = 1, max = 100_000_000)
-    private Integer stock;
+    private Integer quantity;
 
-    public UpdateProductOptionRequest(String name, Integer stock) {
+    public UpdateProductOptionRequest(String name, Integer quantity) {
         this.name = name;
-        this.stock = stock;
+        this.quantity = quantity;
     }
 
     public ProductOption toEntity() {
         return new ProductOption.Builder()
             .name(name)
-            .stock(stock)
+            .stock(quantity)
             .build();
     }
 
@@ -32,8 +32,8 @@ public class UpdateProductOptionRequest {
         return name;
     }
 
-    public Integer getStock() {
-        return stock;
+    public Integer getQuantity() {
+        return quantity;
     }
 
 }
