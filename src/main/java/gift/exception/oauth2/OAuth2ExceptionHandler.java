@@ -16,7 +16,7 @@ public class OAuth2ExceptionHandler {
         return new ErrorResult("인가코드 에러", e.getMessage());
     }
 
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
     @ExceptionHandler(OAuth2TokenException.class)
     public ErrorResult tokenExHandle(OAuth2TokenException e) {
         return new ErrorResult("토큰 에러", e.getMessage());

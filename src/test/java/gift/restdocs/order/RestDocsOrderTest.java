@@ -67,8 +67,8 @@ public class RestDocsOrderTest extends AbstractRestDocsTest {
         String content = objectMapper.writeValueAsString(orderRequest);
         OrderResponse orderResponse = new OrderResponse(memberId, orderRequest.optionId(),
             orderRequest.quantity(), "2024.01.01 00:00:00", orderRequest.message());
-        given(orderService.makeOrder(any(Long.class), any(String.class),
-            any(Long.class), any(Long.class), any(Integer.class), any(String.class)))
+        given(orderService.makeOrder(any(Long.class),
+                any(String.class), any(OrderRequest.class)))
             .willReturn(orderResponse);
 
         //when //then
@@ -80,7 +80,7 @@ public class RestDocsOrderTest extends AbstractRestDocsTest {
             .andExpect(status().isCreated())
             .andDo(document("rest-docs-order-test/make-order",
                 requestHeaders(
-                    headerWithName("Authorization").description("Our service access token"),
+                    headerWithName("Authorization").description("service access token"),
                     headerWithName("X-GATEWAY-TOKEN").description("OAuth2 access token")
                 )));
     }

@@ -31,19 +31,15 @@ public class OptionsApiController {
         this.productService = productService;
     }
 
-    @CheckRole("ROLE_ADMIN")
+    @CheckRole("ROLE_USER")
     @GetMapping("/api/products/{productId}/options")
     public ResponseEntity<ProductOptionsResponse> getProductWithAllOptions(
         @PathVariable("productId") Long id) {
-        Product product = productService.getProduct(id);
-        if (product == null) {
-            return new ResponseEntity<>(HttpStatus.OK);
-        }
-        ProductOptionsResponse dto = optionsService.getAllProductOptions(product);
+        ProductOptionsResponse dto = optionsService.getAllProductOptions(id);
         return new ResponseEntity<>(dto, HttpStatus.OK);
     }
 
-    @CheckRole("ROLE_ADMIN")
+    @CheckRole("ROLE_USER")
     @PostMapping("/api/products/{productId}/options")
     public ResponseEntity<Void> addOptions(@PathVariable("productId") Long id, @RequestBody @Valid
     OptionsRequest dto, BindingResult bindingResult) {
@@ -55,7 +51,7 @@ public class OptionsApiController {
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
-    @CheckRole("ROLE_ADMIN")
+    @CheckRole("ROLE_USER")
     @PutMapping("/api/products/{productId}/options/{optionId}")
     public ResponseEntity<Void> updateOptions(@PathVariable("productId") Long productId,
         @PathVariable("optionId") Long optionId,
@@ -68,7 +64,7 @@ public class OptionsApiController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @CheckRole("ROLE_ADMIN")
+    @CheckRole("ROLE_USER")
     @DeleteMapping("/api/products/{productId}/options/{optionId}")
     public ResponseEntity<Void> deleteOptions(@PathVariable("productId") Long productId,
         @PathVariable("optionId") Long optionId) {

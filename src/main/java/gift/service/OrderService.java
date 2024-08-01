@@ -7,6 +7,7 @@ import gift.model.Order;
 import gift.repository.OptionsRepository;
 import gift.repository.OrderRepository;
 import gift.repository.WishRepository;
+import gift.request.OrderRequest;
 import gift.response.OrderResponse;
 import java.util.List;
 import org.springframework.stereotype.Service;
@@ -36,9 +37,10 @@ public class OrderService {
             .toList();
     }
 
-    public OrderResponse makeOrder(Long memberId, String accessToken, Long productId, Long optionId, Integer quantity, String message) {
-        OrderResponse response = addOrder(memberId, productId, optionId, quantity, message);
-        sendKakaoMessageToMe(accessToken, message);
+    public OrderResponse makeOrder(Long memberId, String accessToken, OrderRequest orderRequest) {
+        OrderResponse response = addOrder(memberId, orderRequest.productId(),
+            orderRequest.optionId(), orderRequest.quantity(), orderRequest.message());
+        sendKakaoMessageToMe(accessToken, orderRequest.message());
         return response;
     }
 

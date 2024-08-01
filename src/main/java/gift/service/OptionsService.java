@@ -34,12 +34,13 @@ public class OptionsService {
         this.optionsRepository = optionsRepository;
     }
 
-    public ProductOptionsResponse getAllProductOptions(Product product) {
-        List<Options> options = optionsRepository.findAllByProductId(product.getId());
+    public ProductOptionsResponse getAllProductOptions(Long productId) {
+        productRepository.findById(productId)
+            .orElseThrow(NotFoundProductException::new);
+        List<Options> options = optionsRepository.findAllByProductId(productId);
         List<OptionResponse> optionResponse = options.stream()
             .map(OptionResponse::createOptionResponse)
             .toList();
-        ProductResponse productResponse = ProductResponse.createProductResponse(product);
         return new ProductOptionsResponse(optionResponse);
     }
 

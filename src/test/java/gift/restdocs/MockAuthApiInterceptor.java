@@ -1,6 +1,8 @@
 package gift.restdocs;
 
 
+import static gift.auth.KakaoAuthService.X_GATEWAY_TOKEN;
+
 import gift.auth.CheckRole;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -16,7 +18,7 @@ public class MockAuthApiInterceptor implements HandlerInterceptor {
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response,
         Object handler) throws Exception {
         request.setAttribute("member_id", "1");
-        request.setAttribute("X-GATEWAY-TOKEN", "oauth_token");
+        request.setAttribute(X_GATEWAY_TOKEN, "oauth_token");
         return true;
     }
 

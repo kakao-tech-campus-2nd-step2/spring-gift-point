@@ -1,6 +1,8 @@
 == 전체 상품 조회
 operation::rest-docs-product-test/get-all-products[snippets="http-request,request-headers,query-parameters,http-response"]
 
+== 상품 조회
+operation::rest-docs-product-test/get-product[snippets="http-request,request-headers,path-parameters,http-response"]
 == 상품 생성
 operation::rest-docs-product-test/add-product[snippets="http-request,request-headers,http-response"]
 

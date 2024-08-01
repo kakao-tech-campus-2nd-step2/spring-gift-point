@@ -41,7 +41,7 @@ public class ProductApiController {
         this.pagingService = pagingService;
     }
 
-    @CheckRole("ROLE_ADMIN")
+    @CheckRole("ROLE_USER")
     @GetMapping("/api/products")
     public ResponseEntity<ProductListResponse> getAllProducts(@RequestParam(defaultValue = "1", name = "page") int page,
         @RequestParam(defaultValue = "10", name = "size") int size) {
@@ -58,7 +58,16 @@ public class ProductApiController {
         return new ResponseEntity<>(dto, HttpStatus.OK);
     }
 
-    @CheckRole("ROLE_ADMIN")
+    @CheckRole("ROLE_USER")
+    @GetMapping("/api/products/{productId}")
+    public ResponseEntity<ProductResponse> getProduct(@PathVariable("productId") Long productId) {
+        Product product = productService.getProduct(productId);
+        ProductResponse dto = new ProductResponse(product.getId(), product.getName(),
+            product.getPrice(), product.getImageUrl(), product.getCategoryName());
+        return new ResponseEntity<>(dto, HttpStatus.OK);
+    }
+
+    @CheckRole("ROLE_USER")
     @PostMapping("/api/products")
     public ResponseEntity<Void> addProduct(@RequestBody @Valid ProductAddRequest dto,
         BindingResult bindingResult) {
@@ -72,7 +81,7 @@ public class ProductApiController {
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
-    @CheckRole("ROLE_ADMIN")
+    @CheckRole("ROLE_USER")
     @PutMapping("/api/products/{productId}")
     public ResponseEntity<Void> updateProduct(@PathVariable("productId") Long id, @RequestBody @Valid ProductUpdateRequest dto,
         BindingResult bindingResult) {
@@ -85,7 +94,7 @@ public class ProductApiController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @CheckRole("ROLE_ADMIN")
+    @CheckRole("ROLE_USER")
     @DeleteMapping("/api/products/{productId}")
     public ResponseEntity<Void> deleteProduct(@PathVariable("productId") Long id) {
         optionsService.deleteAllOptions(id);

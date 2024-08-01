@@ -20,6 +20,7 @@ import gift.model.Wish;
 import gift.repository.OptionsRepository;
 import gift.repository.OrderRepository;
 import gift.repository.WishRepository;
+import gift.request.OrderRequest;
 import java.time.LocalDateTime;
 import java.util.Optional;
 import org.assertj.core.api.Assertions;
@@ -76,6 +77,7 @@ class OrderServiceTest {
         Order savedOrder = new Order(1L, 1L,
             option, orderQuantity, message, LocalDateTime.now(), LocalDateTime.now());
         Wish wish = new Wish(member, product, 1);
+        OrderRequest orderRequest = new OrderRequest(1L, 1L, 1, message);
 
         given(optionsService.getOption(any(Long.class)))
             .willReturn(option);
@@ -88,8 +90,7 @@ class OrderServiceTest {
         given(orderRepository.save(any(Order.class))).willReturn(savedOrder);
 
         //when
-        orderService.makeOrder(member.getId(), oAuthToken, product.getId(), option.getId(),
-            orderQuantity, message);
+        orderService.makeOrder(member.getId(), oAuthToken, orderRequest);
 
         //then
         then(optionsService).should().getOption(any(Long.class));

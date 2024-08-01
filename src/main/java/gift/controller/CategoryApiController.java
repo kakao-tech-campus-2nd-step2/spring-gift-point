@@ -31,20 +31,20 @@ public class CategoryApiController {
         this.categoryService = categoryService;
     }
 
-    @CheckRole("ROLE_ADMIN")
+    @CheckRole("ROLE_USER")
     @GetMapping("/api/categories")
     public ResponseEntity<CategoryListResponse> getAllCategories() {
         List<CategoryResponse> dto = categoryService.getAllCategories();
         return new ResponseEntity<>(new CategoryListResponse(dto), HttpStatus.OK);
     }
 
-    @CheckRole("ROLE_ADMIN")
+    @CheckRole("ROLE_USER")
     @GetMapping("/api/categories/{categoryId}")
     public ResponseEntity<CategoryResponse> getCategory(@PathVariable("categoryId") Long id) {
         return new ResponseEntity<>(categoryService.getCategory(id), HttpStatus.OK);
     }
 
-    @CheckRole("ROLE_ADMIN")
+    @CheckRole("ROLE_USER")
     @PostMapping("/api/categories")
     public ResponseEntity<Void> addCategory(@RequestBody @Valid CategoryAddRequest dto,
         BindingResult bindingResult) {
@@ -56,7 +56,7 @@ public class CategoryApiController {
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
-    @CheckRole("ROLE_ADMIN")
+    @CheckRole("ROLE_USER")
     @PutMapping("/api/categories/{categoryId}")
     public ResponseEntity<Void> updateCategory(@PathVariable("categoryId") Long id, @RequestBody @Valid CategoryUpdateRequest dto,
         BindingResult bindingResult) {
@@ -68,7 +68,7 @@ public class CategoryApiController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @CheckRole("ROLE_ADMIN")
+    @CheckRole("ROLE_USER")
     @DeleteMapping("/api/categories")
     public ResponseEntity<Void> deleteCategory(@RequestParam("id") Long id) {
         categoryService.deleteCategory(id);
