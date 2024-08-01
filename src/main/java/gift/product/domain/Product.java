@@ -1,5 +1,6 @@
 package gift.product.domain;
 
+import gift.common.domain.BaseEntity;
 import gift.product.exception.product.ProductNoConferredException;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -14,7 +15,7 @@ import org.hibernate.annotations.SoftDelete;
 
 @Entity
 @SoftDelete
-public class Product {
+public class Product extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

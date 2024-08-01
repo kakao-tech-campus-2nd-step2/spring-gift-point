@@ -1,5 +1,6 @@
 package gift.wish.domain;
 
+import gift.common.domain.BaseEntity;
 import gift.member.domain.Member;
 import gift.product.domain.Product;
 import gift.wish.exception.WishCanNotModifyException;
@@ -15,7 +16,7 @@ import org.hibernate.annotations.SoftDelete;
 
 @Entity
 @SoftDelete
-public class Wish {
+public class Wish extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

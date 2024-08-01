@@ -1,5 +1,6 @@
 package gift.member.domain;
 
+import gift.common.domain.BaseEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -10,7 +11,7 @@ import jakarta.persistence.Id;
 import jakarta.validation.constraints.NotNull;
 
 @Entity
-public class Member {
+public class Member extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
