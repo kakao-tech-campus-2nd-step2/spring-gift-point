@@ -9,11 +9,11 @@ import gift.model.GiftOrder;
 import gift.model.Option;
 import gift.repository.GiftOrderRepository;
 import gift.repository.MemberRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
 
 @Service
 @Transactional
@@ -43,11 +43,15 @@ public class GiftOrderService {
     }
 
     @Transactional(readOnly = true)
-    public List<GiftOrderResponse> getGiftOrders(Long memberId, Pageable pageable) {
-        return giftOrderRepository.findAllByMemberId(memberId, pageable)
+    public Page<GiftOrderResponse> getGiftOrders(Long memberId, Pageable pageable) {
+        var pageResult = giftOrderRepository.findAllByMemberId(memberId, pageable);
+        var orders = pageResult
+                .getContent()
                 .stream()
                 .map(this::getGiftOrderResponseFromGiftOrder)
                 .toList();
+
+        return new PageImpl<>(orders, pageable, pageResult.getTotalElements());
     }
 
     public void deleteOrder(Long id) {

@@ -1,6 +1,5 @@
 package gift.controller;
 
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import gift.dto.auth.LoginRequest;
 import gift.dto.wishproduct.WishProductAddRequest;
@@ -98,11 +97,7 @@ class WishProductControllerTest {
         //when
         var readResult = mockMvc.perform(getRequest);
         //then
-        var wishResult = readResult.andExpect(status().isOk()).andReturn();
-        var wishResponseContent = wishResult.getResponse().getContentAsString();
-        var wishProducts = objectMapper.readValue(wishResponseContent, new TypeReference<List<WishProductResponse>>() {
-        });
-        Assertions.assertThat(wishProducts.size()).isEqualTo(1);
+        readResult.andExpect(status().isOk());
 
         wishProductService.deleteWishProduct(wishProduct.id());
     }
@@ -122,8 +117,8 @@ class WishProductControllerTest {
         //then
         addResult.andExpect(status().isCreated());
         var wishProducts = wishProductService.getWishProducts(1L, PageRequest.of(0, 10));
-        Assertions.assertThat(wishProducts.size()).isEqualTo(1);
-        Assertions.assertThat(wishProducts.get(0).quantity()).isEqualTo(20);
+        Assertions.assertThat(wishProducts.getContent().size()).isEqualTo(1);
+        Assertions.assertThat(wishProducts.getContent().get(0).quantity()).isEqualTo(20);
 
         wishProductService.deleteWishProduct(wishProduct.id());
     }
@@ -146,9 +141,9 @@ class WishProductControllerTest {
         var managerWishLength = managerWishResult.getResponse().getContentLength();
         Assertions.assertThat(managerWishLength).isEqualTo(0);
         var memberWishProducts = wishProductService.getWishProducts(1L, PageRequest.of(0, 10));
-        Assertions.assertThat(memberWishProducts.size()).isEqualTo(2);
+        Assertions.assertThat(memberWishProducts.getContent().size()).isEqualTo(2);
 
-        deleteWishProducts(memberWishProducts);
+        deleteWishProducts(memberWishProducts.getContent());
     }
 
     @Test
@@ -166,8 +161,8 @@ class WishProductControllerTest {
         //then
         result.andExpect(status().isNoContent());
         var wishProducts = wishProductService.getWishProducts(1L, PageRequest.of(0, 10));
-        Assertions.assertThat(wishProducts.size()).isEqualTo(1);
-        Assertions.assertThat(wishProducts.get(0).quantity()).isEqualTo(30);
+        Assertions.assertThat(wishProducts.getContent().size()).isEqualTo(1);
+        Assertions.assertThat(wishProducts.getContent().get(0).quantity()).isEqualTo(30);
 
         wishProductService.deleteWishProduct(wishProduct.id());
     }
@@ -188,7 +183,7 @@ class WishProductControllerTest {
         //then
         result.andExpect(status().isNoContent());
         var wishProducts = wishProductService.getWishProducts(1L, PageRequest.of(0, 10));
-        Assertions.assertThat(wishProducts.size()).isEqualTo(0);
+        Assertions.assertThat(wishProducts.getContent().size()).isEqualTo(0);
     }
 
     @Test

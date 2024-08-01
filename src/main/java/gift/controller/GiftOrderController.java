@@ -7,6 +7,7 @@ import gift.service.GiftOrderService;
 import gift.service.KakaoService;
 import gift.service.OptionService;
 import jakarta.validation.Valid;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
@@ -21,7 +22,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.net.URI;
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/orders")
@@ -51,7 +51,7 @@ public class GiftOrderController implements GiftOrderApi {
     }
 
     @GetMapping
-    public ResponseEntity<List<GiftOrderResponse>> getOrders(@RequestAttribute("memberId") Long memberId, @PageableDefault(sort = "id", direction = Sort.Direction.DESC) Pageable pageable) {
+    public ResponseEntity<Page<GiftOrderResponse>> getOrders(@RequestAttribute("memberId") Long memberId, @PageableDefault(sort = "id", direction = Sort.Direction.DESC) Pageable pageable) {
         var orders = giftOrderService.getGiftOrders(memberId, pageable);
         return ResponseEntity.ok(orders);
     }

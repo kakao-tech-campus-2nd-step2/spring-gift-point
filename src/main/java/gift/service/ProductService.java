@@ -1,6 +1,6 @@
 package gift.service;
 
-import gift.dto.category.CategoryInformation;
+import gift.dto.category.CategoryResponse;
 import gift.dto.option.OptionRequest;
 import gift.dto.product.ProductAddRequest;
 import gift.dto.product.ProductResponse;
@@ -11,6 +11,8 @@ import gift.model.Category;
 import gift.model.Product;
 import gift.repository.CategoryRepository;
 import gift.repository.ProductRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -53,19 +55,27 @@ public class ProductService {
     }
 
     @Transactional(readOnly = true)
-    public List<ProductResponse> getProducts(Pageable pageable) {
-        return productRepository.findAll(pageable)
+    public Page<ProductResponse> getProducts(Pageable pageable) {
+        var pageResult = productRepository.findAll(pageable);
+        var products = pageResult
+                .getContent()
                 .stream()
                 .map(this::getProductResponseFromProduct)
                 .toList();
+
+        return new PageImpl<>(products, pageable, pageResult.getTotalElements());
     }
 
     @Transactional(readOnly = true)
-    public List<ProductResponse> getProducts(Long categoryId, Pageable pageable) {
-        return productRepository.findAllByCategoryId(categoryId, pageable)
+    public Page<ProductResponse> getProducts(Long categoryId, Pageable pageable) {
+        var pageResult = productRepository.findAllByCategoryId(categoryId, pageable);
+        var products = pageResult
+                .getContent()
                 .stream()
                 .map(this::getProductResponseFromProduct)
                 .toList();
+
+        return new PageImpl<>(products, pageable, pageResult.getTotalElements());
     }
 
     public void deleteProduct(Long productId) {
@@ -108,9 +118,9 @@ public class ProductService {
     }
 
     private ProductResponse getProductResponseFromProduct(Product product) {
-        var categoryInformation = getCategoryInformationFromCategory(product.getCategory());
+        var categoryResponse = getCategoryResponseFromCategory(product.getCategory());
         var options = optionService.getOptions(product.getId());
-        return ProductResponse.of(product.getId(), product.getName(), product.getPrice(), product.getImageUrl(), categoryInformation, options);
+        return ProductResponse.of(product.getId(), product.getName(), product.getPrice(), product.getImageUrl(), categoryResponse, options);
     }
 
     private Product findProductById(Long id) {
@@ -118,7 +128,7 @@ public class ProductService {
                 .orElseThrow(() -> new NotFoundElementException(id + "를 가진 상품옵션이 존재하지 않습니다."));
     }
 
-    private CategoryInformation getCategoryInformationFromCategory(Category category) {
-        return CategoryInformation.of(category.getId(), category.getName());
+    private CategoryResponse getCategoryResponseFromCategory(Category category) {
+        return CategoryResponse.of(category.getId(), category.getName(), category.getDescription(), category.getColor(), category.getImageUrl());
     }
 }

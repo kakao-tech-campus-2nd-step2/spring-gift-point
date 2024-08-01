@@ -6,6 +6,7 @@ import gift.dto.wishproduct.WishProductResponse;
 import gift.dto.wishproduct.WishProductUpdateRequest;
 import gift.service.WishProductService;
 import jakarta.validation.Valid;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
@@ -21,7 +22,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.net.URI;
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/wishes")
@@ -52,7 +52,7 @@ public class WishProductController implements WishProductApi {
     }
 
     @GetMapping
-    public ResponseEntity<List<WishProductResponse>> getWishProducts(@RequestAttribute("memberId") Long memberId, @PageableDefault(sort = "id", direction = Sort.Direction.DESC) Pageable pageable) {
+    public ResponseEntity<Page<WishProductResponse>> getWishProducts(@RequestAttribute("memberId") Long memberId, @PageableDefault(sort = "id", direction = Sort.Direction.DESC) Pageable pageable) {
         var wishProducts = wishProductService.getWishProducts(memberId, pageable);
         return ResponseEntity.ok(wishProducts);
     }

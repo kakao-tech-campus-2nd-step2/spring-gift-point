@@ -23,11 +23,11 @@ class WishProductServiceTest {
     void successAddWishProduct() {
         //given
         var wishProductAddRequest = new WishProductAddRequest(1L, 5);
-        Assertions.assertThat(wishProductService.getWishProducts(1L, PageRequest.of(0, 10)).size()).isEqualTo(0);
+        Assertions.assertThat(wishProductService.getWishProducts(1L, PageRequest.of(0, 10)).getContent().size()).isEqualTo(0);
         //when
         var wishProduct = wishProductService.addWishProduct(wishProductAddRequest, 1L);
         //then
-        Assertions.assertThat(wishProductService.getWishProducts(1L, PageRequest.of(0, 10)).size()).isEqualTo(1);
+        Assertions.assertThat(wishProductService.getWishProducts(1L, PageRequest.of(0, 10)).getContent().size()).isEqualTo(1);
 
         wishProductService.deleteWishProduct(wishProduct.id());
     }
@@ -38,11 +38,11 @@ class WishProductServiceTest {
         //given
         var wishProductAddRequest = new WishProductAddRequest(1L, 5);
         var wishProduct = wishProductService.addWishProduct(wishProductAddRequest, 1L);
-        Assertions.assertThat(wishProductService.getWishProducts(1L, PageRequest.of(0, 10)).size()).isEqualTo(1);
+        Assertions.assertThat(wishProductService.getWishProducts(1L, PageRequest.of(0, 10)).getContent().size()).isEqualTo(1);
         //when
         wishProductService.deleteWishProduct(wishProduct.id());
         //then
-        Assertions.assertThat(wishProductService.getWishProducts(1L, PageRequest.of(0, 10)).size()).isEqualTo(0);
+        Assertions.assertThat(wishProductService.getWishProducts(1L, PageRequest.of(0, 10)).getContent().size()).isEqualTo(0);
     }
 
     @Test
@@ -51,12 +51,12 @@ class WishProductServiceTest {
         //given
         var wishProductAddRequest = new WishProductAddRequest(1L, 5);
         var wishProduct = wishProductService.addWishProduct(wishProductAddRequest, 1L);
-        Assertions.assertThat(wishProductService.getWishProducts(1L, PageRequest.of(0, 10)).size()).isEqualTo(1);
+        Assertions.assertThat(wishProductService.getWishProducts(1L, PageRequest.of(0, 10)).getContent().size()).isEqualTo(1);
         var wishProductUpdateRequest = new WishProductUpdateRequest(0);
         //when
         wishProductService.updateWishProduct(wishProduct.id(), wishProductUpdateRequest);
         //then
-        Assertions.assertThat(wishProductService.getWishProducts(1L, PageRequest.of(0, 10)).size()).isEqualTo(0);
+        Assertions.assertThat(wishProductService.getWishProducts(1L, PageRequest.of(0, 10)).getContent().size()).isEqualTo(0);
     }
 
     @Test
@@ -70,7 +70,7 @@ class WishProductServiceTest {
         //when
         var memberWishProducts = wishProductService.getWishProducts(2L, PageRequest.of(0, 10));
         //then
-        Assertions.assertThat(memberWishProducts.size()).isEqualTo(0);
+        Assertions.assertThat(memberWishProducts.getContent().size()).isEqualTo(0);
 
         wishProductService.deleteWishProduct(managerWishProduct1.id());
         wishProductService.deleteWishProduct(managerWishProduct2.id());
@@ -96,8 +96,8 @@ class WishProductServiceTest {
         var wishProduct = wishProductService.addWishProduct(wishProduct1AddRequest, 1L);
         //then
         var wishProducts = wishProductService.getWishProducts(1L, PageRequest.of(0, 10));
-        Assertions.assertThat(wishProducts.size()).isEqualTo(1);
-        Assertions.assertThat(wishProducts.get(0).quantity()).isEqualTo(10);
+        Assertions.assertThat(wishProducts.getContent().size()).isEqualTo(1);
+        Assertions.assertThat(wishProducts.getContent().get(0).quantity()).isEqualTo(10);
 
         wishProductService.deleteWishProduct(wishProduct.id());
     }
@@ -113,7 +113,7 @@ class WishProductServiceTest {
         //when
         var wishProducts = wishProductService.getWishProducts(1L, PageRequest.of(0, 1));
         //then
-        Assertions.assertThat(wishProducts.size()).isEqualTo(1);
+        Assertions.assertThat(wishProducts.getContent().size()).isEqualTo(1);
 
         wishProductService.deleteWishProduct(wishProduct1.id());
         wishProductService.deleteWishProduct(wishProduct2.id());

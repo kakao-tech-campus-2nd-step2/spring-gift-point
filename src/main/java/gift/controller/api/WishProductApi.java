@@ -11,10 +11,9 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
-
-import java.util.List;
 
 @Tag(name = "위시리스트 API")
 public interface WishProductApi {
@@ -50,7 +49,7 @@ public interface WishProductApi {
             @ApiResponse(responseCode = "401", description = "허용되지 않는 요청", content = @Content(schema = @Schema(hidden = true))),
             @ApiResponse(responseCode = "500", description = "내부 서버의 오류", content = @Content(schema = @Schema(hidden = true)))
     })
-    ResponseEntity<List<WishProductResponse>> getWishProducts(Long memberId, Pageable pageable);
+    ResponseEntity<Page<WishProductResponse>> getWishProducts(Long memberId, Pageable pageable);
 
     @Operation(summary = "회원의 위시 리스트에서 상품을 삭제한다.")
     @ApiResponses(value = {

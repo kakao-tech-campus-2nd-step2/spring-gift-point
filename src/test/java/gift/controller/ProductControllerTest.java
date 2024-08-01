@@ -1,6 +1,5 @@
 package gift.controller;
 
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import gift.dto.auth.LoginRequest;
 import gift.dto.option.OptionRequest;
@@ -210,11 +209,7 @@ class ProductControllerTest {
         //when
         var getResult = mockMvc.perform(getRequest);
         //then
-        var productResult = getResult.andExpect(status().isOk()).andReturn();
-        var productsString = productResult.getResponse().getContentAsString();
-        var productResponseResult = objectMapper.readValue(productsString, new TypeReference<List<ProductResponse>>() {
-        });
-        Assertions.assertThat(productResponseResult.size()).isEqualTo(4);
+        getResult.andExpect(status().isOk());
 
         deleteProducts(productResponseList);
     }

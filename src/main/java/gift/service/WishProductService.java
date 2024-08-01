@@ -12,11 +12,11 @@ import gift.model.WishProduct;
 import gift.repository.MemberRepository;
 import gift.repository.ProductRepository;
 import gift.repository.WishProductRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
 
 @Service
 @Transactional
@@ -63,11 +63,15 @@ public class WishProductService {
     }
 
     @Transactional(readOnly = true)
-    public List<WishProductResponse> getWishProducts(Long memberId, Pageable pageable) {
-        return wishProductRepository.findAllByMemberId(memberId, pageable)
+    public Page<WishProductResponse> getWishProducts(Long memberId, Pageable pageable) {
+        var pageResult = wishProductRepository.findAllByMemberId(memberId, pageable);
+        var wishProducts = pageResult
+                .getContent()
                 .stream()
                 .map(this::getWishProductResponseFromWishProduct)
                 .toList();
+
+        return new PageImpl<>(wishProducts, pageable, pageResult.getTotalElements());
     }
 
     public void deleteWishProduct(Long wishProductId) {
