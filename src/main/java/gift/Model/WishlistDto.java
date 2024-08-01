@@ -1,10 +1,10 @@
 package gift.Model;
 
 public class WishlistDto {
-    private long userId;
+    private long wishlistId;
+    private long memberId;
     private long productId;
-    private int count; // 담은 개수
-    private int quantity;//뺄 개수
+    private int quantity;
     private String productName;
     private int price;
     private long optionId;
@@ -12,22 +12,30 @@ public class WishlistDto {
     public WishlistDto() {
     }
 
-    public WishlistDto(long userId, long productId, int count, int quantity, String productName, int price, long optionId) {
-        this.userId = userId;
+    public WishlistDto(long wishlistId, long memberId, long productId, int quantity, String productName, int price, long optionId) {
+        this.wishlistId = wishlistId;
+        this.memberId = memberId;
         this.productId = productId;
-        this.count = count;
         this.quantity = quantity;
         this.productName = productName;
         this.price = price;
         this.optionId = optionId;
     }
 
-    public long getUserId() {
-        return userId;
+    public long getWishlistId() {
+        return wishlistId;
     }
 
-    public void setUserId(long userId) {
-        this.userId = userId;
+    public void setWishlistId(long wishlistId) {
+        this.wishlistId = wishlistId;
+    }
+
+    public long getMemberId() {
+        return memberId;
+    }
+
+    public void setMemberId(long memberId) {
+        this.memberId = memberId;
     }
 
     public long getProductId() {
@@ -36,14 +44,6 @@ public class WishlistDto {
 
     public void setProductId(long productId) {
         this.productId = productId;
-    }
-
-    public int getCount() {
-        return count;
-    }
-
-    public void setCount(int count) {
-        this.count = count;
     }
 
     public String getProductName() {

@@ -26,7 +26,7 @@ public class ProductService {
     }
 
     public List<ProductDto> getAllProducts() {
-        List<Product> products = productJpaRepository.findByisDeletedFalse();
+        List<Product> products = productJpaRepository.findAll();
         List<ProductDto> productsToDto = products.stream()
                 .map(mapper::productToDto)
                 .collect(Collectors.toList());
@@ -34,7 +34,7 @@ public class ProductService {
     }
 
     public Page<ProductDto> getAllProductsByPage(Pageable pageable) {
-        Page<Product> products = productJpaRepository.findByisDeletedFalse(pageable);
+        Page<Product> products = productJpaRepository.findAll(pageable);
         return products.map(mapper::productToDto);
 
     }
@@ -51,22 +51,12 @@ public class ProductService {
 
     }
 
-    public void updateProduct(ProductDto productDtoDetails) {
+    public Product updateProduct(ProductDto productDtoDetails) {
         Product product = mapper.productDtoToEntity(productDtoDetails);
-        productJpaRepository.save(product);
+        return productJpaRepository.save(product);
     }
 
     public void deleteProduct(Long id) {
-        // 제품 ID로 제품을 찾습니다.
-        Optional<Product> productOptional = productJpaRepository.findById(id);
-        if (productOptional.isPresent()) {
-            // 제품이 존재하면, isDeleted를 true로 설정합니다.
-            Product product = productOptional.get();
-            product.setDeleted(true);
-            // 변경된 상태를 저장합니다.
-            productJpaRepository.save(product);
-        }
-
+        productJpaRepository.deleteById(id);
     }
-
 }

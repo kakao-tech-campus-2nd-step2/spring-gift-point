@@ -53,8 +53,8 @@ public class KakaoTalkService {
 
         long totalPrice = orderRequestDtoList.stream()
                 .mapToLong(orderRequestDto -> {
-                    Option option = optionJpaRepository.findById(orderRequestDto.getOptionId()).orElseThrow();
-                    int price = option.getPrice();
+                    Product product = productJpaRepository.findById(orderRequestDto.getProductId()).orElseThrow();
+                    int price = product.getPrice();
                     int quantity = orderRequestDto.getQuantity();
 
                     return (long) price * quantity;

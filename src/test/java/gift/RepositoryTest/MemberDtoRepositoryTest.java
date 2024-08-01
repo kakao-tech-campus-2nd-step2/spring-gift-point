@@ -1,3 +1,4 @@
+
 package gift.RepositoryTest;
 
 import gift.Entity.Member;
@@ -40,8 +41,8 @@ public class MemberDtoRepositoryTest {
 
     @Test
     public void testGetAllUsers() {
-        MemberDto memberDto1 = new MemberDto(1L, "1234@naver.com", "1234", "1234", false);
-        MemberDto memberDto2 = new MemberDto(2L, "5678@naver.com", "5678", "5678", false);
+        MemberDto memberDto1 = new MemberDto(1L, "1234@naver.com", "1234", false);
+        MemberDto memberDto2 = new MemberDto(2L, "5678@naver.com", "5678",false);
 
         Member member1 = mapper.memberDtoToEntity(memberDto1);
         Member member2 = mapper.memberDtoToEntity(memberDto2);
@@ -54,7 +55,7 @@ public class MemberDtoRepositoryTest {
 
     @Test
     public void testGetUserById() {
-        MemberDto memberDto1 = new MemberDto(1L, "1234@naver.com", "1234", "1234", false);
+        MemberDto memberDto1 = new MemberDto(1L, "1234@naver.com", "1234",false);
         Member member1 = mapper.memberDtoToEntity(memberDto1);
         memberJpaRepository.save(member1);
 
@@ -70,7 +71,7 @@ public class MemberDtoRepositoryTest {
 
     @Test
     public void testSaveUser() {
-        MemberDto memberDto1 = new MemberDto(1L, "1234@naver.com", "1234", "1234", false);
+        MemberDto memberDto1 = new MemberDto(1L, "1234@naver.com", "1234", false);
         Member member1 = mapper.memberDtoToEntity(memberDto1);
         Member savedMember = Optional.of(memberJpaRepository.save(member1)).get();
         assertThat(savedMember.getEmail()).isEqualTo(member1.getEmail());
@@ -80,7 +81,7 @@ public class MemberDtoRepositoryTest {
 
     @Test
     public void testDeleteUser() {
-        MemberDto memberDto1 = new MemberDto(1L, "1234@naver.com", "1234", "1234", false);
+        MemberDto memberDto1 = new MemberDto(1L, "1234@naver.com", "1234", false);
         Member member1 = mapper.memberDtoToEntity(memberDto1);
         memberJpaRepository.save(member1);
 
@@ -91,7 +92,7 @@ public class MemberDtoRepositoryTest {
 
     @Test
     public void testUpdateUser() {
-        MemberDto memberDto1 = new MemberDto(1L, "1234@naver.com", "1234", "1234", false);
+        MemberDto memberDto1 = new MemberDto(1L, "1234@naver.com", "1234", false);
         Member member1 = mapper.memberDtoToEntity(memberDto1);
         memberJpaRepository.save(member1);
     }

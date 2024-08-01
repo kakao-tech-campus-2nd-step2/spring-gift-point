@@ -25,7 +25,6 @@ public class JwtUtil {
         Map<String, Object> claims = new HashMap<>();
         claims.put("userId", memberDto.getId());
         claims.put("email", memberDto.getEmail());
-        claims.put("name", memberDto.getName());
         claims.put("password", memberDto.getPassword());
         claims.put("isAdmin", isAdmin);
 

@@ -27,8 +27,8 @@ public class MemberServiceTest {
     @Test
     public void testRegister() {
         // given
-        MemberDto memberDto = new MemberDto(1, "1234@naver.com", "1234", "1234", false);
-        Member member = new Member(1, "1234@naver.com", "1234", "1234", false);
+        MemberDto memberDto = new MemberDto(1L, "1234@naver.com", "1234", false);
+        Member member = new Member(1, "1234@naver.com", "1234", false);
         given(mapper.memberDtoToEntity(memberDto)).willReturn(member);
 
         // when
@@ -42,8 +42,8 @@ public class MemberServiceTest {
     @Test
     public void testFindByUserId() {
         // given
-        MemberDto memberDto = new MemberDto(1, "1234@naver.com", "1234", "1234", false);
-        Member member = new Member(1, "1234@naver.com", "1234", "1234", false);
+        MemberDto memberDto = new MemberDto(1L, "1234@naver.com", "1234", false);
+        Member member = new Member(1, "1234@naver.com", "1234", false);
         given(mapper.memberDtoToEntity(memberDto)).willReturn(member);
 
         //when
@@ -55,8 +55,8 @@ public class MemberServiceTest {
 
     @Test
     public void testFindByEmail() {
-        MemberDto memberDto = new MemberDto(1, "1234@naver.com", "1234", "1234", false);
-        Member member = new Member(1, "1234@naver.com", "1234", "1234", false);
+        MemberDto memberDto = new MemberDto(1L, "1234@naver.com", "1234", false);
+        Member member = new Member(1, "1234@naver.com", "1234", false);
         given(mapper.memberToDto(member)).willReturn(memberDto);
         given(memberJpaRepository.findByEmail(memberDto.getEmail())).willReturn(Optional.of(member));
 
@@ -68,8 +68,8 @@ public class MemberServiceTest {
 
     @Test
     public void testIsAdmin() {
-        MemberDto memberDto = new MemberDto(1, "1234@naver.com", "1234", "1234", true);
-        Member member = new Member(1, "1234@naver.com", "1234", "1234", true);
+        MemberDto memberDto = new MemberDto(1L, "1234@naver.com", "1234", true);
+        Member member = new Member(1, "1234@naver.com", "1234", true);
         given(mapper.memberDtoToEntity(memberDto)).willReturn(member);
         given(memberJpaRepository.findByEmail(memberDto.getEmail())).willReturn(Optional.of(member));
 
@@ -80,8 +80,8 @@ public class MemberServiceTest {
 
     @Test
     public void testAuthenticate() {
-        MemberDto memberDto = new MemberDto(1, "1234@naver.com", "1234", "1234", true);
-        Member member = new Member(1, "1234@naver.com", "1234", "1234", true);
+        MemberDto memberDto = new MemberDto(1L, "1234@naver.com", "1234", true);
+        Member member = new Member(1, "1234@naver.com", "1234", true);
         given(mapper.memberDtoToEntity(memberDto)).willReturn(member);
         given(memberJpaRepository.findByEmailAndPassword(member.getEmail(), member.getPassword())).willReturn(Optional.of(member));
 

@@ -54,18 +54,18 @@ public class WishlistRepositoryTest {
 
     @Test
     public void testGetWishlist() {
-        MemberDto member1 = new MemberDto(1L, "1234@naver.com", "1234", "1234", false);
+        MemberDto member1 = new MemberDto(1L, "1234@naver.com", "1234", false);
         Member member = mapper.memberDtoToEntity(member1);
         memberJpaRepository.save(member);
 
-        Category category = new Category(1L, "category1");
+        Category category = new Category(1L, "category1", "식품", "###", "http://localhost:8080/image1.jpg");
         categoryJpaRepository.save(category);
 
-        ProductDto productDto1 = new ProductDto(1L, "productDto1", 1L, 1000, "http://localhost:8080/image1.jpg", false);
+        ProductDto productDto1 = new ProductDto(1L, "productDto1", 1L, 1000, "http://localhost:8080/image1.jpg");
         Product product = mapper.productDtoToEntity(productDto1);
         productJpaRepository.save(product);
 
-        OptionDto optionDto = new OptionDto(1L, 1L, "option1", 1000, 1);
+        OptionDto optionDto = new OptionDto(1L, 1L, "option1", 1000);
         Option option = mapper.optionDtoToEntity(optionDto);
         optionJpaRepository.save(option);
 
@@ -73,8 +73,8 @@ public class WishlistRepositoryTest {
         Wishlist wishlist = mapper.wishlistDtoToEntity(wishlistDto);
         Wishlist savedwishlist = wishlistJpaRepository.save(wishlist);
 
-        assertThat(savedwishlist.getMemberId()).isEqualTo(wishlist.getMemberId());
-        assertThat(savedwishlist.getProductId()).isEqualTo(wishlist.getProductId());
+        assertThat(savedwishlist.getMember().getId()).isEqualTo(wishlist.getMember().getId());
+        assertThat(savedwishlist.getProduct().getId()).isEqualTo(wishlist.getProduct().getId());
         assertThat(savedwishlist.getCount()).isEqualTo(wishlist.getCount());
         assertThat(savedwishlist.getPrice()).isEqualTo(wishlist.getPrice());
         assertThat(savedwishlist.getProductName()).isEqualTo(wishlist.getProductName());
@@ -82,14 +82,14 @@ public class WishlistRepositoryTest {
 
     @Test
     public void testAddWishlist() {
-        MemberDto member1 = new MemberDto(1L, "1234@naver.com", "1234", "1234", false);
+        MemberDto member1 = new MemberDto(1L, "1234@naver.com", "1234", false);
         Member member = mapper.memberDtoToEntity(member1);
         memberJpaRepository.save(member);
 
-        Category category = new Category(1L, "category1");
+        Category category = new Category(1L, "category1", "식품", "###", "http://localhost:8080/image1.jpg");
         categoryJpaRepository.save(category);
 
-        ProductDto productDto1 = new ProductDto(1L, "productDto1", 1L, 1000, "http://localhost:8080/image1.jpg", false);
+        ProductDto productDto1 = new ProductDto(1L, "productDto1", 1L, 1000, "http://localhost:8080/image1.jpg");
         Product product = mapper.productDtoToEntity(productDto1);
         productJpaRepository.save(product);
 
@@ -97,8 +97,8 @@ public class WishlistRepositoryTest {
         Wishlist wishlist = mapper.wishlistDtoToEntity(wishlistDto);
         Wishlist savedwishlist = wishlistJpaRepository.save(wishlist);
 
-        assertThat(savedwishlist.getMemberId()).isEqualTo(wishlist.getMemberId());
-        assertThat(savedwishlist.getProductId()).isEqualTo(wishlist.getProductId());
+        assertThat(savedwishlist.getMember().getId()).isEqualTo(wishlist.getMember().getId());
+        assertThat(savedwishlist.getProduct().getId()).isEqualTo(wishlist.getProduct().getId());
         assertThat(savedwishlist.getCount()).isEqualTo(wishlist.getCount());
         assertThat(savedwishlist.getPrice()).isEqualTo(wishlist.getPrice());
         assertThat(savedwishlist.getProductName()).isEqualTo(wishlist.getProductName());
@@ -107,20 +107,16 @@ public class WishlistRepositoryTest {
     @Test
     @DisplayName("delete가 정상적으로 이루어지는지")
     public void testRemoveWishlist() {
-        MemberDto member1 = new MemberDto(1L, "1234@naver.com", "1234", "1234", false);
+        MemberDto member1 = new MemberDto(1L, "1234@naver.com", "1234", false);
         Member member = mapper.memberDtoToEntity(member1);
         memberJpaRepository.save(member);
 
-        Category category = new Category(1L, "category1");
+        Category category = new Category(1L, "category1", "식품", "###", "http://localhost:8080/image1.jpg");
         categoryJpaRepository.save(category);
 
-        ProductDto productDto1 = new ProductDto(1L, "productDto1", 1L, 1000, "http://localhost:8080/image1.jpg", false);
+        ProductDto productDto1 = new ProductDto(1L, "productDto1", 1L, 1000, "http://localhost:8080/image1.jpg");
         Product product = mapper.productDtoToEntity(productDto1);
         productJpaRepository.save(product);
-
-        OptionDto optionDto = new OptionDto(1L, 1L, "option1", 1000, 1);
-        Option option = mapper.optionDtoToEntity(optionDto);
-        optionJpaRepository.save(option);
 
         WishlistDto wishlistDto = new WishlistDto(1L, 1L, 5, 0, "productDto1", 1000, 1L);
         Wishlist wishlist = mapper.wishlistDtoToEntity(wishlistDto);
@@ -128,7 +124,7 @@ public class WishlistRepositoryTest {
 
         wishlistJpaRepository.delete(savedwishlist);
 
-        Optional<Wishlist> foundWishlist = wishlistJpaRepository.findByWishlistId(savedwishlist.getMemberId(), savedwishlist.getProductId());
+        Optional<Wishlist> foundWishlist = wishlistJpaRepository.findById(savedwishlist.getId());
 
         assertThat(foundWishlist).isEmpty();
 
@@ -137,24 +133,16 @@ public class WishlistRepositoryTest {
     @Test
     @DisplayName("Update가 정상적으로 이루어지는지")
     public void testUpdateWishlistItem() {
-        MemberDto member1 = new MemberDto(1L, "1234@naver.com", "1234", "1234", false);
+        MemberDto member1 = new MemberDto(1L, "1234@naver.com", "1234", false);
         Member member = mapper.memberDtoToEntity(member1);
         memberJpaRepository.save(member);
 
-        Category category = new Category(1L, "category1");
+        Category category = new Category(1L, "category1", "식품", "###", "http://localhost:8080/image1.jpg");
         categoryJpaRepository.save(category);
 
-        ProductDto productDto1 = new ProductDto(1L, "productDto1", 1L, 1000, "http://localhost:8080/image1.jpg", false);
+        ProductDto productDto1 = new ProductDto(1L, "productDto1", 1L, 1000, "http://localhost:8080/image1.jpg");
         Product product = mapper.productDtoToEntity(productDto1);
         productJpaRepository.save(product);
-
-        OptionDto optionDto = new OptionDto(1L, 1L, "option1", 1000, 1);
-        Option option = mapper.optionDtoToEntity(optionDto);
-        optionJpaRepository.save(option);
-
-        WishlistDto wishlistDto = new WishlistDto(1L, 1L, 5, 0, "productDto1", 5000, 1L);
-        Wishlist wishlist = mapper.wishlistDtoToEntity(wishlistDto);
-        wishlistJpaRepository.save(wishlist);
 
         //수량을 5개에서 3개로 변경
         WishlistDto updateDto = new WishlistDto(1L, 1L, 3, 0, "test", 3000, 1L);
@@ -162,10 +150,10 @@ public class WishlistRepositoryTest {
 
         wishlistJpaRepository.save(updateWishlist);
 
-        Optional<Wishlist> foundWishlistOptional = wishlistJpaRepository.findByWishlistId(updateWishlist.getMemberId(), updateWishlist.getProductId());
+        Optional<Wishlist> foundWishlistOptional = wishlistJpaRepository.findById(updateWishlist.getId());
         Wishlist foundWishlist = foundWishlistOptional.get();
-        assertThat(foundWishlist.getMemberId()).isEqualTo(updateWishlist.getMemberId());
-        assertThat(foundWishlist.getProductId()).isEqualTo(updateWishlist.getProductId());
+        assertThat(foundWishlist.getMember().getId()).isEqualTo(updateWishlist.getMember().getId());
+        assertThat(foundWishlist.getProduct().getId()).isEqualTo(updateWishlist.getProduct().getId());
         assertThat(foundWishlist.getCount()).isEqualTo(updateWishlist.getCount());
         assertThat(foundWishlist.getProductName()).isEqualTo(updateWishlist.getProductName());
         assertThat(foundWishlist.getPrice()).isEqualTo(updateWishlist.getPrice());

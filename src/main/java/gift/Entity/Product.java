@@ -6,34 +6,32 @@ import jakarta.persistence.*;
 public class Product {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long productId;
+    private long id;
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.REFRESH)
-    @JoinColumn(name = "categoryId", referencedColumnName = "categoryId")
+    @JoinColumn(name = "categoryId", referencedColumnName = "id")
     private Category category;
     private String name;
     private int price;
     private String imageUrl;
-    private boolean isDeleted;
 
     protected Product() {
     }
 
-    public Product(long productId, String name, Category category, int price, String imageUrl, boolean isDeleted) {
-        this.productId = productId;
+    public Product(long id, String name, Category category, int price, String imageUrl) {
+        this.id = id;
         this.name = name;
         this.category = category;
         this.price = price;
         this.imageUrl = imageUrl;
-        this.isDeleted = isDeleted;
     }
 
     public long getId() {
-        return productId;
+        return id;
     }
 
     public void setId(Long productId) {
-        this.productId = productId;
+        this.id = productId;
     }
 
     public String getName() {
@@ -58,14 +56,6 @@ public class Product {
 
     public void setImageUrl(String imageUrl) {
         this.imageUrl = imageUrl;
-    }
-
-    public boolean isDeleted() {
-        return isDeleted;
-    }
-
-    public void setDeleted(boolean deleted) {
-        isDeleted = deleted;
     }
 
     public Category getCategory() {

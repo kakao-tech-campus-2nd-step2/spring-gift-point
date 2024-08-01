@@ -15,19 +15,17 @@ public class ProductDto {
     private long categoryId;
     private int price;
     private String imageUrl;
-    private boolean isDeleted;
 
     public ProductDto() {
 
     }
 
-    public ProductDto(long id, String name, long categoryId, int price, String imageUrl, boolean isDeleted) {
+    public ProductDto(long id, String name, long categoryId, int price, String imageUrl) {
         this.id = id;
         this.name = name;
         this.categoryId = categoryId;
         this.price = price;
         this.imageUrl = imageUrl;
-        this.isDeleted = isDeleted;
     }
 
     public String getName() {
@@ -43,14 +41,6 @@ public class ProductDto {
     public String getImageUrl() {
 
         return imageUrl;
-    }
-
-    public boolean isDeleted() {
-        return isDeleted;
-    }
-
-    public void setDeleted(boolean deleted) {
-        isDeleted = deleted;
     }
 
     public void setImageUrl(String imageUrl) {

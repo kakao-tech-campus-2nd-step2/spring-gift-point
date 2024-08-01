@@ -32,4 +32,15 @@ public class CategoryService {
         return categoryJpaRepository.findById(id);
     }
 
+    public CategoryDto addCategory(CategoryDto categoryDto) {
+        Category category = mapper.categoryDtoToEntity(categoryDto);
+        Category addedCategory = categoryJpaRepository.save(category);
+        return mapper.categoryToDto(addedCategory);
+    }
+
+    public void updateCategory(CategoryDto categoryDto) {
+        Category category = mapper.categoryDtoToEntity(categoryDto);
+        categoryJpaRepository.save(category);
+    }
+
 }

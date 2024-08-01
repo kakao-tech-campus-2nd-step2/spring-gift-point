@@ -35,7 +35,7 @@ public class ProductDtoRepositoryTest {
 
     @BeforeEach
     void setUp() {
-        Category category = new Category(1L, "category1");
+        Category category = new Category(1L, "category1", "식품", "###", "http://localhost:8080/image1.jpg");
         categoryJpaRepository.save(category);
     }
 
@@ -43,34 +43,32 @@ public class ProductDtoRepositoryTest {
     public void testGetAllProducts() {
         //given
         Category category1 = categoryJpaRepository.findById(1L).get();
-        Product product1 = new Product(1L, "product1", category1, 1000, "http://localhost:8080/image1.jpg", false);
+        Product product1 = new Product(1L, "product1", category1, 1000, "http://localhost:8080/image1.jpg");
         productJpaRepository.save(product1);
 
-        Product product2 = new Product(2L, "product2", category1, 2000, "http://localhost:8080/image2.jpg", false);
+        Product product2 = new Product(2L, "product2", category1, 2000, "http://localhost:8080/image2.jpg");
         productJpaRepository.save(product2);
 
-        List<Product> productslist = productJpaRepository.findByisDeletedFalse();
+        List<Product> productslist = productJpaRepository.findAll();
 
         assertThat(productslist.get(0).getId()).isEqualTo(product1.getId());
         assertThat(productslist.get(0).getName()).isEqualTo(product1.getName());
-        assertThat(productslist.get(0).getCategory().getCategoryId()).isEqualTo(category1.getCategoryId());
+        assertThat(productslist.get(0).getCategory().getId()).isEqualTo(category1.getId());
         assertThat(productslist.get(0).getPrice()).isEqualTo(product1.getPrice());
         assertThat(productslist.get(0).getImageUrl()).isEqualTo(product1.getImageUrl());
-        assertThat(productslist.get(0).isDeleted()).isEqualTo(product1.isDeleted());
 
         assertThat(productslist.get(1).getId()).isEqualTo(product2.getId());
         assertThat(productslist.get(1).getName()).isEqualTo(product2.getName());
-        assertThat(productslist.get(1).getCategory().getCategoryId()).isEqualTo(category1.getCategoryId());
+        assertThat(productslist.get(1).getCategory().getId()).isEqualTo(category1.getId());
         assertThat(productslist.get(1).getPrice()).isEqualTo(product2.getPrice());
         assertThat(productslist.get(1).getImageUrl()).isEqualTo(product2.getImageUrl());
-        assertThat(productslist.get(1).isDeleted()).isEqualTo(product2.isDeleted());
 
     }
 
     @Test
     public void testGetProductById() {
         Category category = categoryJpaRepository.findById(1L).get();
-        Product product = new Product(1L, "product1", category, 1000, "http://localhost:8080/image1.jpg", false);
+        Product product = new Product(1L, "product1", category, 1000, "http://localhost:8080/image1.jpg");
 
         Product savedProduct = productJpaRepository.save(product);
 
@@ -78,14 +76,13 @@ public class ProductDtoRepositoryTest {
         assertThat(savedProduct.getName()).isEqualTo(product.getName());
         assertThat(savedProduct.getPrice()).isEqualTo(product.getPrice());
         assertThat(savedProduct.getImageUrl()).isEqualTo(product.getImageUrl());
-        assertThat(savedProduct.isDeleted()).isEqualTo(product.isDeleted());
 
     }
 
     @Test
     public void testSaveProduct() {
         Category category = categoryJpaRepository.findById(1L).get();
-        Product product = new Product(1L, "product1", category, 1000, "http://localhost:8080/image1.jpg", false);
+        Product product = new Product(1L, "product1", category, 1000, "http://localhost:8080/image1.jpg");
 
         Product savedProduct = productJpaRepository.save(product);
 
@@ -97,7 +94,7 @@ public class ProductDtoRepositoryTest {
     @Test
     public void testUpdateProduct() {
         Category category = categoryJpaRepository.findById(1L).get();
-        Product product1 = new Product(1L, "product1", category, 1000, "http://localhost:8080/image1.jpg", false);
+        Product product1 = new Product(1L, "product1", category, 1000, "http://localhost:8080/image1.jpg");
 
         productJpaRepository.save(product1);
 
@@ -117,7 +114,7 @@ public class ProductDtoRepositoryTest {
     @Test
     public void testDeleteProduct() {
         Category category = categoryJpaRepository.findById(1L).get();
-        Product product = new Product(1L, "product1", category, 1000, "http://localhost:8080/image1.jpg", false);
+        Product product = new Product(1L, "product1", category, 1000, "http://localhost:8080/image1.jpg");
 
         productJpaRepository.save(product);
 

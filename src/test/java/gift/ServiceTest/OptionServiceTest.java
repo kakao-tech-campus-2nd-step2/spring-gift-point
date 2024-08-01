@@ -50,8 +50,8 @@ public class OptionServiceTest {
     @Test
     public void testAddOption() {
         // given
-        OptionDto optionDto = new OptionDto(1L, 1L, "Option1", 1000, 1);
-        Option option = new Option(1L, null, "Option1", 1000, 1);
+        OptionDto optionDto = new OptionDto(1L, 1L, "Option1", 1);
+        Option option = new Option(1L, null, "Option1", 1);
         when(mapper.optionDtoToEntity(any(OptionDto.class))).thenReturn(option);
         when(optionJpaRepository.save(any(Option.class))).thenReturn(option);
 
@@ -65,8 +65,8 @@ public class OptionServiceTest {
     @Test
     public void testUpdateOption() {
         // given
-        OptionDto optionDto = new OptionDto(1L, 1L, "Option1", 1000, 1);
-        Option option = new Option(1L, null, "Option1", 1000, 1);
+        OptionDto optionDto = new OptionDto(1L, 1L, "Option1", 1);
+        Option option = new Option(1L, null, "Option1", 1);
         when(mapper.optionDtoToEntity(any(OptionDto.class))).thenReturn(option);
         when(optionJpaRepository.save(any(Option.class))).thenReturn(option);
 
@@ -92,8 +92,8 @@ public class OptionServiceTest {
     @Test
     public void testSubtractOption() {
         //given
-        OptionDto optionDto = new OptionDto(1L, 1L, "Option1", 1000, 5);
-        Option option = new Option(1L, null, "Option1", 1000, 10);
+        OptionDto optionDto = new OptionDto(1L, 1L, "Option1", 5);
+        Option option = new Option(1L, null, "Option1", 10);
 
         OrderRequestDto orderRequestDto = new OrderRequestDto(1L, 1L, 5, 1L);
         when(optionJpaRepository.findById(orderRequestDto.getOptionId())).thenReturn(java.util.Optional.of(option));
