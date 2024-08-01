@@ -5,7 +5,7 @@ import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 
 @Entity
-@Table(name = "option", uniqueConstraints = @UniqueConstraint(columnNames = {"id", "name"}))
+@Table(name = "product_option", uniqueConstraints = @UniqueConstraint(columnNames = {"id", "name"}))
 public class Option {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -21,7 +21,7 @@ public class Option {
     private Integer quantity;
 
     @ManyToOne
-    @JoinColumn(name = "id", nullable = false)
+    @JoinColumn(name = "product_id", nullable = false)
     private Product product;
 
     public Option(String name, Product product) {
