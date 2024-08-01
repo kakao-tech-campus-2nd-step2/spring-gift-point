@@ -20,6 +20,7 @@ public class Wish {
 
 
     protected Wish() {
+        this.createdDate = LocalDateTime.now();
     }
 
     public Wish(Long id, Member member, Product product, LocalDateTime createdDate) {
