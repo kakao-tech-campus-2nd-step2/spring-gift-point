@@ -15,6 +15,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -60,5 +61,10 @@ public class UserController {
         @Parameter(hidden = true) @LoginUser User user) {
         UserPointResponse userPointResponse = new UserPointResponse(userService.getUserPoint(user));
         return ResponseEntity.ok().body(userPointResponse);
+    }
+
+    @PostMapping("/point/{point}")
+    public void add(@LoginUser User user, @PathVariable Integer point) {
+        userService.addPoint(user, point);
     }
 }

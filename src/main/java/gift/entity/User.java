@@ -1,5 +1,6 @@
 package gift.entity;
 
+import gift.exception.MinimumOptionException;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -86,5 +87,16 @@ public class User {
 
     public boolean isKakaoLoginCompleted() {
         return !this.accessToken.equals("demoToken");
+    }
+
+    public void subtractPoint(Integer pointAmount) {
+        if ((this.point - pointAmount) < 0) {
+            throw new MinimumOptionException("잔여 포인트가 0보다 작을수 없습니다.");
+        }
+        this.point -= pointAmount;
+    }
+
+    public void addPoint(Integer pointAmount) {
+        this.point += pointAmount;
     }
 }

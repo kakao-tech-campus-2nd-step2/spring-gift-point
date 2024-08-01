@@ -7,6 +7,7 @@ import gift.entity.Option;
 import gift.entity.Order;
 import gift.entity.Product;
 import gift.entity.User;
+import gift.exception.MinimumOptionException;
 import gift.exception.OptionNotFoundException;
 import gift.exception.ProductNotFoundException;
 import gift.repository.OptionRepository;
@@ -23,6 +24,7 @@ public class OrderService {
     private final OrderRepository orderRepository;
     private final OptionRepository optionRepository;
     private final KakaoMessageService kakaoMessageService;
+    private final Double discountPercent = 0.05;
 
     public OrderService(OrderRepository orderRepository, OptionRepository optionRepository,
         KakaoMessageService kakaoMessageService) {
@@ -38,6 +40,9 @@ public class OrderService {
         Product product = optionRepository.findProductByOptionId(request.getOptionId())
             .orElseThrow(() -> new ProductNotFoundException("해당 옵션을 가진 상품이 존재하지 않습니다."));
 
+        int discountPrice = (int) (request.getTotalPrice(product) * (1 - discountPercent));
+        subtractPoint(user, discountPrice);
+
         Order order = orderRepository.save(
             new Order(option, user, request.getQuantity(), LocalDateTime.now(),
                 request.getMessage()));
@@ -47,8 +52,8 @@ public class OrderService {
 
         if (user.isKakaoLoginCompleted()) { //kakaologin이 수행되지 않으면 accessToken이 지정되지 않아 메시지를 보내지 않음
             kakaoMessageService.sendOrderMessage(request.getMessage(), product.getImageUrl(),
-                product.getName(), request.getQuantity(), request.getTotalPrice(product),
-                user.getAccessToken());
+                product.getName(), option.getName(), request.getQuantity(),
+                request.getTotalPrice(product), discountPrice, user.getAccessToken());
         }
 
         return new OrderResponse(order.getId(), option.getId(), request.getQuantity(),
@@ -66,5 +71,13 @@ public class OrderService {
             order.getOrderDateTime(),
             order.getMessage()
         ));
+    }
+
+    private void subtractPoint(User user, Integer discountPrice) {
+        if (discountPrice > user.getPoint()) {
+            throw new MinimumOptionException("포인트 잔액이 부족합니다.");
+        }
+
+        user.subtractPoint(discountPrice);
     }
 }

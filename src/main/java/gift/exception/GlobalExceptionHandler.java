@@ -132,7 +132,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(OptionNotFoundException.class)
     public ResponseEntity<ProblemDetail> handleOptionNotFoundException(
         OptionNotFoundException ex) {
-        ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST,
+        ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.NOT_FOUND,
             ex.getMessage());
         problemDetail.setType(URI.create("/errors/option-not-found"));
         problemDetail.setTitle("Option Not Found");
@@ -159,10 +159,20 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(problemDetail);
     }
 
+    @ExceptionHandler(MinimumPointException.class)
+    public ResponseEntity<ProblemDetail> handleMinimumPointException(
+        MinimumPointException ex) {
+        ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST,
+            ex.getMessage());
+        problemDetail.setType(URI.create("/errors/minimum-point"));
+        problemDetail.setTitle("Minimum Point");
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(problemDetail);
+    }
+
     @ExceptionHandler(KakaoNotFoundException.class)
     public ResponseEntity<ProblemDetail> handleKakaoApiException(
         KakaoNotFoundException ex) {
-        ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST,
+        ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.NOT_FOUND,
             ex.getMessage());
         problemDetail.setType(URI.create("/errors/kakao-not-found"));
         problemDetail.setTitle("Kakao Not Found");

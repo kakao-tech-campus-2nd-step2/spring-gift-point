@@ -20,14 +20,15 @@ public class KakaoMessageService {
     }
 
     public void sendOrderMessage(String message, String imageUrl, String productName,
-        Integer quantity, Integer totalPrice, String accessToken) {
+        String optionName, Integer quantity, Integer totalPrice, Integer discountPrice,
+        String accessToken) {
         String url = "https://kapi.kakao.com/v2/api/talk/memo/default/send";
         HttpHeaders headers = new HttpHeaders();
         headers.add(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_FORM_URLENCODED_VALUE);
         headers.setBearerAuth(accessToken);
 
-        String templateObject = createTemplateObject(message, imageUrl, productName, quantity,
-            totalPrice);
+        String templateObject = createTemplateObject(message, imageUrl, productName, optionName,
+            quantity, totalPrice, discountPrice);
         String encodedTemplateObject = URLEncoder.encode(templateObject, StandardCharsets.UTF_8);
 
         RequestEntity<String> request = new RequestEntity<>(
@@ -38,8 +39,7 @@ public class KakaoMessageService {
     }
 
     private String createTemplateObject(String message, String imageUrl, String productName,
-        Integer quantity,
-        Integer totalPrice) {
+        String optionName, Integer quantity, Integer totalPrice, Integer discountPrice) {
         return """
                 {
                     "object_type": "feed",
@@ -57,8 +57,10 @@ public class KakaoMessageService {
                     "item_content": {
                         "items": [
                             {"item": "상품명", "item_op": "%s"},
+                            {"item": "옵션", "item_op": "%s"},
                             {"item": "수량", "item_op": "%d개"},
-                            {"item": "가격", "item_op": "%d원"}
+                            {"item": "정가", "item_op": "%d원"},
+                            {"item": "할인 구매가", "item_op": "%d원"}
                         ]
                     },
                     "buttons": [
@@ -71,6 +73,7 @@ public class KakaoMessageService {
                         }
                     ]
                 }
-            """.formatted(message, imageUrl, productName, quantity, totalPrice);
+            """.formatted(message, imageUrl, productName, optionName, quantity, totalPrice,
+            discountPrice);
     }
 }
