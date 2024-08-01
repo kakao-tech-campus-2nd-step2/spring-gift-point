@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>delete product</title>
+
+</head>
+<body>
+<!-- Form to delete an existing product (DELETE request) -->
+<h2>Delete Product</h2>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Delete Product</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            $('#deleteProductForm').submit(function(event) {
+                event.preventDefault();
+
+                // 제품 ID 가져오기
+                var productId = $('#id').val();
+
+                // AJAX를 사용하여 DELETE 요청 보내기
+                $.ajax({
+                    type: "DELETE",
+                    url: "/api/products/" + productId,
+                    success: function(response) {
+                        console.log('제품 삭제 성공:', response);
+                        // 성공적으로 삭제되었을 때 처리
+                    },
+                    error: function(xhr, status, error) {
+                        var errorMessage = xhr.responseText;
+                        if (status !== "parsererror")
+                            alert('Error: ' + errorMessage); // 오류 시 alert으로 HTTP 오류 메시지 출력
+                        // 오류 발생 시 처리
+                    }
+                });
+            });
+        });
+    </script>
+</head>
+<body>
+<form id="deleteProductForm">
+    <input type="hidden" name="_method" value="delete">
+    <label for="id">Product ID:</label>
+    <input type="text" id="id" name="id" required>
+    <br>
+    <button type="submit">Delete Product</button>
+</form>
+
+
+</body>
+</html>
+
+</body>
+</html>
