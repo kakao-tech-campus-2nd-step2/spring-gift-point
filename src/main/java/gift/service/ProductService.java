@@ -36,7 +36,7 @@ public class ProductService {
     public ProductResponseDto getProductById(long id) {
         Product product = productRepository.findById(id)
             .orElseThrow(() -> new NoSuchElementException("해당 id의 상품 없음: " + id));;
-        return new ProductResponseDto(product.getId(), product.getName(), product.getPrice(), product.getImageUrl(), product.getCategory().getName());
+        return new ProductResponseDto(product.getId(), product.getName(), product.getPrice(), product.getImageUrl());
     }
 
     @Transactional
