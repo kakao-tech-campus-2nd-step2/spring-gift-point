@@ -5,6 +5,7 @@ import static gift.util.Utils.DEFAULT_PAGE_SIZE;
 import gift.domain.AppUser;
 import gift.dto.common.CommonResponse;
 import gift.dto.product.CreateProductRequest;
+import gift.dto.product.ProductByCategoryResponse;
 import gift.dto.product.ProductResponse;
 import gift.dto.product.UpdateProductRequest;
 import gift.service.ProductService;
@@ -59,7 +60,8 @@ public class ProductController {
     public ResponseEntity<?> findActiveProductsByCategoryWithWishCount(
             @PathVariable Long categoryId,
             @PageableDefault(size = DEFAULT_PAGE_SIZE, sort = "wishCount", direction = Sort.Direction.DESC) Pageable pageable) {
-        Page<ProductResponse> response = productService.findActiveProductsByCategoryWithWishCount(categoryId, pageable);
+        Page<ProductByCategoryResponse> response = productService.findActiveProductsByCategoryWithWishCount(categoryId,
+                pageable);
         return ResponseEntity.ok(new CommonResponse<>(response, "카테고리 별 상품 전체 조회가 완료되었습니다.", true));
     }
 

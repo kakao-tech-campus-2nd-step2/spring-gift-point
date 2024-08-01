@@ -27,7 +27,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/api/users")
+@RequestMapping("/api/members")
 @Tag(name = "User", description = "User API")
 public class UserController {
     private final UserService userService;
@@ -39,7 +39,7 @@ public class UserController {
     }
 
     @Operation(summary = "회원가입", description = "회원가입 후 로그인 필요함")
-    @PostMapping
+    @PostMapping("/register")
     public ResponseEntity<?> signUp(@Valid @RequestBody SignUpRequest signUpRequest) {
         AppUser user = userService.signUp(signUpRequest);
         String token = jwtUserService.getToken(user.getId());

@@ -38,11 +38,11 @@ public class WishListService {
     }
 
     @Transactional
-    public void addWish(Long userId, AddWishRequest addWishRequest) {
+    public Wish addWish(Long userId, AddWishRequest addWishRequest) {
         AppUser appUser = userService.findUser(userId);
         Product product = productService.findProduct(addWishRequest.productId());
         Wish wish = new Wish(appUser, product, addWishRequest.quantity());
-        wishListRepository.save(wish);
+        return wishListRepository.save(wish);
     }
 
     @Transactional

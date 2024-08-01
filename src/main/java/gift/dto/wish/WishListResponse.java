@@ -1,44 +1,32 @@
 package gift.dto.wish;
 
 public class WishListResponse {
-    private Long wishId;
-    private Long productId;
-    private String productName;
-    private int productPrice;
-    private String productImageUrl;
+    ProductByWish product;
+    private Long id;
     private int quantity;
 
     public WishListResponse(Long wishId, Long productId, String productName, int productPrice, String productImageUrl,
                             int quantity) {
-        this.wishId = wishId;
-        this.productId = productId;
-        this.productName = productName;
-        this.productPrice = productPrice;
-        this.productImageUrl = productImageUrl;
+        this.id = wishId;
+        this.product = new ProductByWish(productId, productName, productPrice, productImageUrl);
         this.quantity = quantity;
     }
 
     public Long getWishId() {
-        return wishId;
+        return id;
     }
 
-    public Long getProductId() {
-        return productId;
-    }
-
-    public String getProductName() {
-        return productName;
-    }
-
-    public int getProductPrice() {
-        return productPrice;
-    }
-
-    public String getProductImageUrl() {
-        return productImageUrl;
+    public ProductByWish getProduct() {
+        return product;
     }
 
     public int getQuantity() {
         return quantity;
+    }
+
+    public record ProductByWish(Long id,
+                                String name,
+                                int price,
+                                String imageUrl) {
     }
 }

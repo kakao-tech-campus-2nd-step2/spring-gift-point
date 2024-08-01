@@ -9,6 +9,7 @@ import gift.domain.Category;
 import gift.domain.Product;
 import gift.dto.option.OptionResponse;
 import gift.dto.product.CreateProductRequest;
+import gift.dto.product.ProductByCategoryResponse;
 import gift.dto.product.ProductResponse;
 import gift.dto.product.UpdateProductRequest;
 import gift.exception.user.ForbiddenException;
@@ -55,9 +56,10 @@ public class ProductService {
     }
 
     @Transactional(readOnly = true)
-    public Page<ProductResponse> findActiveProductsByCategoryWithWishCount(Long categoryId, Pageable pageable) {
-        Page<Tuple> results = productRepository.findActiveProductsByCategoryWithWishCount(categoryId, pageable);
-        return results.map(this::mapTupleToProductResponse);
+    public Page<ProductByCategoryResponse> findActiveProductsByCategoryWithWishCount(Long categoryId,
+                                                                                     Pageable pageable) {
+        Page<Product> results = productRepository.findByCategoryId(categoryId, pageable);
+        return results.map(ProductByCategoryResponse::new);
     }
 
     @Transactional
