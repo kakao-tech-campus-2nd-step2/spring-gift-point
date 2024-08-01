@@ -6,7 +6,7 @@ REPO_URL="https://github.com/humpose/spring-gift-point.git"
 DEPLOY_DIR="/home/ubuntu/${APP_NAME}"
 JAR_FILE="${DEPLOY_DIR}/build/libs/spring-gift-0.0.1-SNAPSHOT.jar"
 BACKUP_DIR="/home/ubuntu/backup"
-BRANCH="step1" # 배포할 브랜치
+BRANCH="step3" # 배포할 브랜치
 
 # 현재 디렉토리 저장
 CURRENT_DIR=$(pwd)
