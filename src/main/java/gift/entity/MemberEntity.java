@@ -20,7 +20,7 @@ public class MemberEntity {
     private String password;
 
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
+    @Column(name = "type")
     private LoginType loginType;
 
     private String kakaoToken;

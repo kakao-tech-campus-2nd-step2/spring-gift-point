@@ -43,7 +43,8 @@ public class MemberService {
     public Token login(MemberRequest request) {
         MemberEntity memberEntity = memberRepository.findByEmail(request.email())
             .orElseThrow(() -> new ForbiddenException("Invalid email or Not Exists Member"));
-        if (PasswordUtil.matches(request.password(), memberEntity.getPassword())) {
+        if (PasswordUtil.matches(request.password(), memberEntity.getPassword())
+        && memberEntity.getLoginType().equals(LoginType.DEFAULT)) {
             return new Token(jwtUtil.generateToken(MemberResponse.from(memberEntity)));
         }
         throw new ForbiddenException("Invalid password");
