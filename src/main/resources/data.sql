@@ -31,65 +31,66 @@ VALUES ('교환권', '#FF5733', 'https://via.placeholder.com/150', '설명1'),
        ('가전제품', '#A533FF', 'https://via.placeholder.com/150', '설명30');
 
 INSERT INTO product (name, price, imageUrl, category_id)
-VALUES ('coffee', 1500, 'image1', 15);
+VALUES ('coffee', 1500, 'https://via.placeholder.com/150', 15);
 INSERT INTO product (name, price, imageUrl, category_id)
-VALUES ('meat', 15500, 'image2', 5);
+VALUES ('meat', 15500, 'https://via.placeholder.com/150', 5);
 INSERT INTO product (name, price, imageUrl, category_id)
-VALUES ('egg', 3000, 'image3', 5);
+VALUES ('egg', 3000, 'https://via.placeholder.com/150', 5);
 INSERT INTO product (name, price, imageUrl, category_id)
-VALUES ('soup', 40000, 'image4', 5);
+VALUES ('soup', 40000, 'https://via.placeholder.com/150', 5);
 INSERT INTO product (name, price, imageUrl, category_id)
-VALUES ('bread', 2500, 'image5', 5);
+VALUES ('bread', 2500, 'https://via.placeholder.com/150', 5);
 INSERT INTO product (name, price, imageUrl, category_id)
-VALUES ('milk', 1000, 'image6', 5);
+VALUES ('milk', 1000, 'https://via.placeholder.com/150', 5);
 INSERT INTO product (name, price, imageUrl, category_id)
-VALUES ('cheese', 7000, 'image7', 5);
+VALUES ('cheese', 7000, 'https://via.placeholder.com/150', 5);
 INSERT INTO product (name, price, imageUrl, category_id)
-VALUES ('chocolate', 3500, 'image8', 15);
+VALUES ('chocolate', 3500, 'https://via.placeholder.com/150', 15);
 INSERT INTO product (name, price, imageUrl, category_id)
-VALUES ('wine', 45000, 'image9', 15);
+VALUES ('wine', 45000, 'https://via.placeholder.com/150', 15);
 INSERT INTO product (name, price, imageUrl, category_id)
-VALUES ('beer', 2000, 'image10', 15);
+VALUES ('beer', 2000, 'https://via.placeholder.com/150', 15);
 INSERT INTO product (name, price, imageUrl, category_id)
-VALUES ('juice', 1200, 'image11', 15);
+VALUES ('juice', 1200, 'https://via.placeholder.com/150', 15);
 INSERT INTO product (name, price, imageUrl, category_id)
-VALUES ('water', 500, 'image12', 15);
+VALUES ('water', 500, 'https://via.placeholder.com/150', 15);
 INSERT INTO product (name, price, imageUrl, category_id)
-VALUES ('soda', 800, 'image13', 15);
+VALUES ('soda', 800, 'https://via.placeholder.com/150', 15);
 INSERT INTO product (name, price, imageUrl, category_id)
-VALUES ('apple', 300, 'image14', 5);
+VALUES ('apple', 300, 'https://via.placeholder.com/150', 5);
 INSERT INTO product (name, price, imageUrl, category_id)
-VALUES ('banana', 600, 'image15', 5);
+VALUES ('banana', 600, 'https://via.placeholder.com/150', 5);
 INSERT INTO product (name, price, imageUrl, category_id)
-VALUES ('grape', 2500, 'image16', 5);
+VALUES ('grape', 2500, 'https://via.placeholder.com/150', 5);
 INSERT INTO product (name, price, imageUrl, category_id)
-VALUES ('peach', 1500, 'image17', 5);
+VALUES ('peach', 1500, 'https://via.placeholder.com/150', 5);
 INSERT INTO product (name, price, imageUrl, category_id)
-VALUES ('pineapple', 3500, 'image18', 5);
+VALUES ('pineapple', 3500, 'https://via.placeholder.com/150', 5);
 INSERT INTO product (name, price, imageUrl, category_id)
-VALUES ('mango', 4000, 'image19', 5);
+VALUES ('mango', 4000, 'https://via.placeholder.com/150', 5);
 INSERT INTO product (name, price, imageUrl, category_id)
-VALUES ('strawberry', 3000, 'image20', 5);
+VALUES ('strawberry', 3000, 'https://via.placeholder.com/150', 5);
 INSERT INTO product (name, price, imageUrl, category_id)
-VALUES ('blueberry', 5000, 'image21', 5);
+VALUES ('blueberry', 5000, 'https://via.placeholder.com/150', 5);
 INSERT INTO product (name, price, imageUrl, category_id)
-VALUES ('raspberry', 6000, 'image22', 5);
+VALUES ('raspberry', 6000, 'https://via.placeholder.com/150', 5);
 INSERT INTO product (name, price, imageUrl, category_id)
-VALUES ('blackberry', 5500, 'image23', 5);
+VALUES ('blackberry', 5500, 'https://via.placeholder.com/150', 5);
 INSERT INTO product (name, price, imageUrl, category_id)
-VALUES ('orange', 2000, 'image24', 5);
+VALUES ('orange', 2000, 'https://via.placeholder.com/150', 5);
 INSERT INTO product (name, price, imageUrl, category_id)
-VALUES ('lemon', 1000, 'image25', 5);
+VALUES ('lemon', 1000, 'https://via.placeholder.com/150', 5);
 INSERT INTO product (name, price, imageUrl, category_id)
-VALUES ('lime', 1100, 'image26', 5);
+VALUES ('lime', 1100, 'https://via.placeholder.com/150', 5);
 INSERT INTO product (name, price, imageUrl, category_id)
-VALUES ('avocado', 7000, 'image27', 5);
+VALUES ('avocado', 7000, 'https://via.placeholder.com/150', 5);
 INSERT INTO product (name, price, imageUrl, category_id)
-VALUES ('broccoli', 2000, 'image28', 5);
+VALUES ('broccoli', 2000, 'https://via.placeholder.com/150', 5);
 INSERT INTO product (name, price, imageUrl, category_id)
-VALUES ('carrot', 1000, 'image29', 5);
+VALUES ('carrot', 1000, 'https://via.placeholder.com/150', 5);
 INSERT INTO product (name, price, imageUrl, category_id)
-VALUES ('tomato', 1500, 'image30', 5);
+VALUES ('tomato', 1500, 'https://via.placeholder.com/150', 5);
+
 
 INSERT INTO product_option (name, quantity, product_id)
 VALUES ('Americano', 10, 1),
