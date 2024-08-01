@@ -1,6 +1,8 @@
 package gift.domain.member;
 
 import gift.domain.Wish;
+import gift.exception.ErrorCode;
+import gift.exception.GiftException;
 import jakarta.persistence.*;
 
 import java.util.ArrayList;
@@ -56,17 +58,33 @@ public class Member {
         return point;
     }
 
-    public Member(Long id, String email, String password, MemberRole role, SocialAccount socialAccount) {
+    public Member(Long id, String email, String password, MemberRole role, SocialAccount socialAccount, Integer point) {
         this.id = id;
         this.email = email;
         this.password = password;
         this.role = role;
         this.socialAccount = socialAccount;
+        this.point = point;
     }
 
     public void setSocialAccount(SocialAccount socialAccount) {
         socialAccount.setMember(this);
         this.socialAccount = socialAccount;
+    }
+
+    public void subtractPoint(Integer point) {
+        if (point == null || point < 0) {
+            throw new GiftException(ErrorCode.INVALID_POINT);
+        }
+        if (this.point < point) {
+            throw new GiftException(ErrorCode.INSUFFICIENT_POINT);
+        }
+        this.point -= point;
+    }
+
+    public void earnPoint(int price, Long quantity) {
+        Long totalOrderPrice = price * quantity;
+        this.point += (int) Math.round(totalOrderPrice * 0.1);
     }
 
     public static class MemberBuilder {
@@ -75,6 +93,7 @@ public class Member {
         private String password;
         private MemberRole role;
         private SocialAccount socialAccount;
+        private Integer point;
 
         public MemberBuilder id(Long id) {
             this.id = id;
@@ -101,8 +120,13 @@ public class Member {
             return this;
         }
 
+        public MemberBuilder point(Integer point) {
+            this.point = point;
+            return this;
+        }
+
         public Member build() {
-            return new Member(id, email, password, role, socialAccount);
+            return new Member(id, email, password, role, socialAccount, point);
         }
     }
 

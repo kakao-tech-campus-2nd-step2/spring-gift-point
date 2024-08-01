@@ -16,6 +16,8 @@ public enum ErrorCode {
 
     /* Member */
     MEMBER_NOT_FOUND("존재하지 않는 회원입니다.", HttpStatus.NOT_FOUND),
+    INVALID_POINT("유효하지 않은 포인트입니다.", HttpStatus.BAD_REQUEST),
+    INSUFFICIENT_POINT("사용 가능한 포인트보다 큰 포인트를 사용할 수 없습니다.", HttpStatus.BAD_REQUEST),
 
     /* JWT */
     INVALID_TOKEN("유효하지 않거나 만료된 토큰입니다.", HttpStatus.UNAUTHORIZED),

@@ -78,10 +78,16 @@ public class OrderService {
         Long quantity = dto.getQuantity();
         Member member = dto.getMember();
         String message = dto.getMessage();
+        Integer point = dto.getPoint();
 
         Option option = getOptionById(optionId);
-        subtractOptionQuantity(option, quantity);
-        removeMemberWish(member, option.getProduct());
+        Product product = option.getProduct();
+        int price = product.getPrice();
+
+        option.subtract(quantity);
+        member.subtractPoint(point);
+        member.earnPoint(price, quantity);
+        removeMemberWish(member, product);
 
         if (accessToken != null) {
             kakaoApiService.sendKakaoMessage(accessToken, message);
@@ -94,10 +100,6 @@ public class OrderService {
     private Option getOptionById(Long optionId) {
         return optionRepository.findById(optionId)
                 .orElseThrow(() -> new GiftException(OPTION_NOT_FOUND));
-    }
-
-    private void subtractOptionQuantity(Option option, Long quantity) {
-        option.subtract(quantity);
     }
 
     private void removeMemberWish(Member member, Product product) {

@@ -52,13 +52,13 @@ public class OrderServiceTest {
     void processOrder() throws Exception {
         //given
         SocialAccount socialAccount = new SocialAccount(SocialType.KAKAO, 123L, "test-access-token", "test-refresh-token");
-        Member member = new Member.MemberBuilder().socialAccount(socialAccount).build();
+        Member member = new Member.MemberBuilder().socialAccount(socialAccount).point(5000).build();
 
         Long originalQuantity = 10L;
         Long orderQuantity = 5L;
         String message = "Test Message";
 
-        OrderDto orderDto = new OrderDto(1L, 2L, orderQuantity, member, message);
+        OrderDto orderDto = new OrderDto(1L, 2L, orderQuantity, member, message, 3000);
 
         Option option = new Option();
         option.setProduct(new Product());
@@ -92,13 +92,13 @@ public class OrderServiceTest {
     void processOrderWithExpiredAccessToken() throws Exception {
         //given
         SocialAccount socialAccount = new SocialAccount(SocialType.KAKAO, 123L, "test-access-token", "test-refresh-token");
-        Member member = new Member.MemberBuilder().socialAccount(socialAccount).build();
+        Member member = new Member.MemberBuilder().socialAccount(socialAccount).point(5000).build();
 
         Long originalQuantity = 10L;
         Long orderQuantity = 5L;
         String message = "Test Message";
 
-        OrderDto orderDto = new OrderDto(1L, 2L, orderQuantity, member, message);
+        OrderDto orderDto = new OrderDto(1L, 2L, orderQuantity, member, message, 3000);
 
         Option option = new Option();
         option.setProduct(new Product());
