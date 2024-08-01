@@ -1,6 +1,6 @@
 package gift.controller;
 
-import gift.entity.Category;
+import gift.dto.CategoryDto;
 import gift.service.CategoryService;
 import gift.service.TokenService;
 import org.junit.jupiter.api.BeforeEach;
@@ -13,7 +13,6 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 
-import java.lang.reflect.Field;
 import java.util.Arrays;
 
 import static org.hamcrest.Matchers.hasSize;
@@ -34,25 +33,13 @@ public class CategoryControllerTest {
     @MockBean
     private TokenService tokenService;
 
-    private Category category1;
-    private Category category2;
+    private CategoryDto category1;
+    private CategoryDto category2;
 
     @BeforeEach
     void setUp() {
-        category1 = new Category("Category 1", "Red", "img1.jpg", "Description 1");
-        category2 = new Category("Category 2", "Blue", "img2.jpg", "Description 2");
-        setId(category1, 1L);
-        setId(category2, 2L);
-    }
-
-    private void setId(Category category, Long id) {
-        try {
-            Field field = Category.class.getDeclaredField("id");
-            field.setAccessible(true);
-            field.set(category, id);
-        } catch (NoSuchFieldException | IllegalAccessException e) {
-            throw new RuntimeException(e);
-        }
+        category1 = new CategoryDto(1L, "Category 1", "Red", "img1.jpg", "Description 1");
+        category2 = new CategoryDto(2L, "Category 2", "Blue", "img2.jpg", "Description 2");
     }
 
     @Test

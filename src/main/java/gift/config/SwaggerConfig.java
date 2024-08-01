@@ -13,12 +13,11 @@ public class SwaggerConfig {
     @Bean
     public OpenAPI customOpenAPI() {
         return new OpenAPI()
-                .info(new Info().title("Gift Order API")
-                        .description("API documentation for the Gift Order application")
+                .info(new Info().title("강원대 BE_이세진 API")
+                        .description("Spring-gift api 문서입니다.")
                         .version("v1.0.0")
                         .license(new License().name("Apache 2.0").url("http://springdoc.org")))
                 .externalDocs(new ExternalDocumentation()
-                        .description("Gift Order Wiki Documentation")
                         .url("https://gift-order.wiki.github.org/docs"));
     }
 }

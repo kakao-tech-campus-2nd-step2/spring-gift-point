@@ -19,7 +19,6 @@ public class Wish {
     private Product product;
 
     @ManyToOne
-    @JoinColumn(name = "option_id", nullable = false)
     private Option option;
 
     protected Wish() {
