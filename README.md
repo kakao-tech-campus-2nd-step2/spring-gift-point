@@ -5,7 +5,7 @@
 - 조원과 협의 후 통일한 api 엔드포인트 수정
 - 조원과 협의 후 로직(ex.로그인) 수정
 - api 명세서 최대한 상세하게 작성
-- codepipeline을 활용해서 배포 자동화
+- codepipeline을 활용해서 배포 자동화 -> codebuild 단계에서 트러블 해결중
 
 ## api 명세서
 http://localhost:8080/swagger-ui.html
