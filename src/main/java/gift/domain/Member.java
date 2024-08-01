@@ -45,11 +45,6 @@ public class Member {
     protected Member() {
     }
 
-    private Member(Builder builder) {
-        this.email = builder.email;
-        this.password = builder.password;
-    }
-
     public Member(Long id, String email, String password) {
         this.id = id;
         this.email = email;
