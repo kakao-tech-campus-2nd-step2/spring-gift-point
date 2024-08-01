@@ -1,6 +1,6 @@
 package gift.user.service;
 
-import gift.client.kakao.KakaoApiClient;
+import gift.common.client.kakao.KakaoApiClient;
 import gift.user.dto.request.UserLoginRequest;
 import gift.user.dto.request.UserRegisterRequest;
 import gift.user.dto.response.UserResponse;

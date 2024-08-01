@@ -32,7 +32,7 @@ public class KakaoUserTest {
     @DisplayName("kakao login")
     void kakaoLogin() {
         // given
-        var url = "http://localhost:" + port + "/users/kakao/login";
+        var url = "http://localhost:" + port + "/oauth/kakao/login";
         var request = new RequestEntity<>(HttpMethod.GET, URI.create(url));
 
         // when

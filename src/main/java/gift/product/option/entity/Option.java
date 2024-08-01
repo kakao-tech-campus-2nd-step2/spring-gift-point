@@ -68,6 +68,10 @@ public class Option {
         return product;
     }
 
+    public Long getProductId() {
+        return product.getId();
+    }
+
     public void initProduct(Product product) {
         Assert.notNull(product, "product is null");
         this.product = product;

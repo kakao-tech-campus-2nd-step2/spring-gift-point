@@ -67,7 +67,7 @@ public class ProductTest {
         assertThat(actualResponse.getBody().price()).isEqualTo(1000);
         assertThat(actualResponse.getBody().imageUrl()).isEqualTo(
             "http://example.com/images/product_a.jpg");
-        assertThat(actualResponse.getBody().categoryName()).isEqualTo("Category 1");
+        assertThat(actualResponse.getBody().categoryId()).isEqualTo(1L);
     }
 
     @Test

@@ -5,7 +5,8 @@ import gift.config.PageConfig;
 import gift.user.entity.User;
 import gift.wish.dto.request.CreateWishRequest;
 import gift.wish.dto.request.UpdateWishRequest;
-import gift.wish.dto.response.WishResponse;
+import gift.wish.dto.response.CreatedWishResponse;
+import gift.wish.dto.response.GetWishResponse;
 import gift.wish.service.WishService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -52,12 +53,12 @@ public class WishController {
             content = @Content(schema = @Schema(implementation = Page.class))),
         @ApiResponse(responseCode = "404", description = "위시리스트가 존재하지 않음")
     })
-    public ResponseEntity<Page<WishResponse>> getWishes(
+    public ResponseEntity<Page<GetWishResponse>> getWishes(
         @LoginUser User user,
         @PageableDefault(
             size = PageConfig.PAGE_PER_COUNT,
             sort = PageConfig.SORT_STANDARD,
-            direction = Direction.DESC
+            direction = Direction.ASC
         ) Pageable pageable
     ) {
         return ResponseEntity.ok(wishService.getWishes(user.getId(), pageable));
@@ -71,10 +72,10 @@ public class WishController {
             headers = {@Header(name = "location", description = "위시가 생성된 위치 엔드포인트")}),
         @ApiResponse(responseCode = "400", description = "잘못된 요청으로 인한 오류 발생")
     })
-    public ResponseEntity<WishResponse> addWish(
+    public ResponseEntity<CreatedWishResponse> addWish(
         @LoginUser User user, @RequestBody @Valid CreateWishRequest request
     ) {
-        WishResponse response = wishService.createWish(user.getId(), request);
+        CreatedWishResponse response = wishService.createWish(user, request);
         URI location = UriComponentsBuilder.fromPath("/api/wishes/{id}")
             .buildAndExpand(response.id())
             .toUri();

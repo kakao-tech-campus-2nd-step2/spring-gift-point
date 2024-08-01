@@ -1,5 +1,6 @@
 package gift.wish.entity;
 
+import gift.common.entity.BaseEntity;
 import gift.exception.CustomException;
 import gift.exception.ErrorCode;
 import gift.product.entity.Product;
@@ -19,7 +20,7 @@ import jakarta.validation.constraints.Positive;
 
 @Entity
 @Table(name = "wishes")
-public class Wish {
+public class Wish extends BaseEntity {
 
     private static final int DEFAULT_QUANTITY = 1;
 
@@ -41,7 +42,11 @@ public class Wish {
         foreignKey = @ForeignKey(name = "fk_wishes_product_id_ref_products_id"))
     private Product product;
 
-    public Wish(User user, Product product, int quantity) {
+    public Wish(User user, Product product) {
+        this(user, product, DEFAULT_QUANTITY);
+    }
+
+    public Wish(User user, Product product, Integer quantity) {
         validateQuantity(quantity);
         this.user = user;
         this.product = product;
@@ -65,6 +70,10 @@ public class Wish {
 
     public Product getProduct() {
         return product;
+    }
+
+    public Long getProductId() {
+        return product.getId();
     }
 
     public boolean existsProduct(Option option) {

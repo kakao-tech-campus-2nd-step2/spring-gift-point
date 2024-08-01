@@ -124,10 +124,15 @@ public class OptionServiceTest {
 
     @Test
     @DisplayName("getProductOptionTest")
-    void getProductOptionTest() {
+    void getProductOptionTest() throws Exception {
         // given
         Option newOption = new Option("a", 1, null);
         Product product = createProductWithOptions(newOption);
+
+        Field productField = Option.class.getDeclaredField("product");
+        productField.setAccessible(true);
+        productField.set(newOption, product);
+
         given(productRepository.findById(any())).willReturn(Optional.of(product));
 
         // when

@@ -16,6 +16,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
 @RequestMapping("/products")
@@ -36,9 +37,10 @@ public class ProductViewController {
             sort = PageConfig.SORT_STANDARD,
             direction = Direction.DESC
         ) Pageable pageable,
+        @RequestParam(required = false) Long categoryId,
         Model model
     ) {
-        Page<ProductResponse> products = productService.getAllProducts(pageable);
+        Page<ProductResponse> products = productService.getAllProducts(pageable, categoryId);
 
         model.addAttribute("productPage", products);
         model.addAttribute("maxPage", 10);

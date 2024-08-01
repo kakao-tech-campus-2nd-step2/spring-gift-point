@@ -1,7 +1,7 @@
 package gift.order.service;
 
-import gift.client.kakao.KakaoApiClient;
-import gift.client.kakao.KakaoProperties;
+import gift.common.client.kakao.KakaoApiClient;
+import gift.common.client.kakao.KakaoProperties;
 import gift.order.dto.KakaoMessageRequestBody;
 import gift.order.dto.TemplateArgs;
 import gift.order.dto.request.OrderRequest;

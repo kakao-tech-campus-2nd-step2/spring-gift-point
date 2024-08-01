@@ -120,8 +120,8 @@ public class Product {
         return imageUrl;
     }
 
-    public String getCategoryName() {
-        return category.getName();
+    public Long getCategoryId() {
+        return category.getId();
     }
 
     public Options getOptions() {
