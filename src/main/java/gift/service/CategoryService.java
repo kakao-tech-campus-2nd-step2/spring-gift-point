@@ -7,8 +7,6 @@ import gift.repository.CategoryJpaDao;
 import jakarta.transaction.Transactional;
 import java.util.List;
 import java.util.NoSuchElementException;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -18,16 +16,6 @@ public class CategoryService {
 
     public CategoryService(CategoryJpaDao categoryJpaDao) {
         this.categoryJpaDao = categoryJpaDao;
-    }
-
-    /**
-     * Pageable 객체를 통해 해당 페이지 객체를 반환.
-     *
-     * @param pageable
-     * @return Page
-     */
-    public Page<CategoryDto> getCategoryPage(Pageable pageable) {
-        return categoryJpaDao.findAll(pageable).map(CategoryDto::new);
     }
 
     /**
