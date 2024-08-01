@@ -1,10 +1,9 @@
 package gift.controller;
 
-import gift.domain.MenuRequest;
-import gift.domain.MenuResponse;
-import gift.domain.Option;
+import gift.domain.Menu.MenuRequest;
+import gift.domain.Menu.MenuResponse;
+import gift.domain.Option.Option;
 import gift.service.MenuService;
-import jakarta.validation.Valid;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

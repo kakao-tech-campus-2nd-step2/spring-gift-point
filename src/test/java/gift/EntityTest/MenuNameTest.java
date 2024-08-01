@@ -1,10 +1,9 @@
 package gift.EntityTest;
 
-import gift.domain.MenuName;
+import gift.domain.Menu.MenuName;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.springframework.test.util.AssertionErrors.assertTrue;
 
 
 public class MenuNameTest {

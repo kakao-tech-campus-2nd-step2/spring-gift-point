@@ -1,11 +1,15 @@
 package gift.GiftTest;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import gift.controller.KakaoController;
 import gift.controller.MemberController;
-import gift.domain.*;
+import gift.domain.Category.Category;
+import gift.domain.Member.Member;
+import gift.domain.Menu.Menu;
+import gift.domain.Option.Option;
+import gift.domain.Order.Order;
+import gift.domain.Order.OrderRequest;
+import gift.domain.WishList.WishList;
 import gift.repository.*;
-import gift.service.KakaoService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -14,7 +18,6 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.http.*;
-import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.web.client.RestTemplate;
 import com.fasterxml.jackson.databind.ObjectMapper;
 

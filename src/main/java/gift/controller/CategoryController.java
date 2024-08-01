@@ -1,7 +1,7 @@
 package gift.controller;
 
-import gift.domain.Category;
-import gift.domain.CategoryRequest;
+import gift.domain.Category.Category;
+import gift.domain.Category.CategoryRequest;
 import gift.service.CategoryService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

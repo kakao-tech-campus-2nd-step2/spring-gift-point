@@ -1,11 +1,13 @@
 package gift.ServiceTest;
 
-import gift.domain.Member;
-import gift.domain.MemberRequest;
-import gift.domain.WishList;
+import gift.domain.Auth.LoginRequest;
+import gift.domain.Member.Member;
+import gift.domain.Member.MemberRequest;
+import gift.domain.WishList.WishList;
 import gift.repository.MemberRepository;
 import gift.service.JwtService;
 import gift.service.MemberService;
+import org.apache.coyote.BadRequestException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -40,7 +42,7 @@ public class MemberServiceTest {
 
     @Test
     @DisplayName("회원가입 테스트")
-    public void joinTest() {
+    public void joinTest() throws BadRequestException {
         MemberRequest memberRequest = new MemberRequest("testId", "testPassword","김민지");
         Member member = new Member("testId","testPassword","김민지",new LinkedList<WishList>());
 
@@ -70,7 +72,7 @@ public class MemberServiceTest {
         Mockito.when(memberRepository.findById(memberRequest.id())).thenReturn(Optional.of(member));
         Mockito.when(jwtService.createJWT(memberRequest.id())).thenReturn("token");
 
-        String jwt = memberService.login(memberRequest);
+        String jwt = memberService.login(new LoginRequest(memberRequest.id(),memberRequest.password()));
 
         assertThat(jwt).isEqualTo("token");
     }
@@ -83,7 +85,7 @@ public class MemberServiceTest {
 
         Mockito.when(memberRepository.findById(memberRequest.id())).thenReturn(Optional.of(member));
 
-        assertThatThrownBy(() -> memberService.login(memberRequest))
+        assertThatThrownBy(() -> memberService.login(new LoginRequest(memberRequest.id(),memberRequest.password())))
                 .isInstanceOf(NoSuchElementException.class)
                 .hasMessageContaining("로그인에 실패하였습니다. 다시 시도해주세요");
     }
@@ -95,7 +97,7 @@ public class MemberServiceTest {
 
         Mockito.when(memberRepository.findById(memberRequest.id())).thenReturn(Optional.empty());
 
-        assertThatThrownBy(() -> memberService.login(memberRequest))
+        assertThatThrownBy(() -> memberService.login(new LoginRequest(memberRequest.id(),memberRequest.password())))
                 .isInstanceOf(NoSuchElementException.class)
                 .hasMessageContaining("로그인에 실패했습니다 다시 시도해주세요");
     }

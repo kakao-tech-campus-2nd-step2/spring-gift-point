@@ -1,12 +1,11 @@
 package gift.controller;
 
-import gift.domain.Option;
-import gift.domain.OptionRequest;
-import gift.domain.OptionResponse;
+import gift.domain.Option.Option;
+import gift.domain.Option.OptionRequest;
+import gift.domain.Option.OptionResponse;
 import gift.repository.MenuRepository;
 import gift.service.OptionService;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 

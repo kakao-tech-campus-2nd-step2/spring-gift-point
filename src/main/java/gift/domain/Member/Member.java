@@ -1,5 +1,6 @@
-package gift.domain;
+package gift.domain.Member;
 
+import gift.domain.WishList.WishList;
 import jakarta.persistence.*;
 
 import java.util.List;

@@ -1,12 +1,11 @@
 package gift.controller;
 
-import gift.domain.WishList;
-import gift.domain.WishListRequest;
-import gift.domain.WishListResponse;
+import gift.domain.WishList.WishList;
+import gift.domain.WishList.WishListRequest;
+import gift.domain.WishList.WishListResponse;
 import gift.repository.MenuRepository;
 import gift.service.JwtService;
 import gift.service.MemberService;
-import gift.service.MenuService;
 import gift.service.WishListService;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;

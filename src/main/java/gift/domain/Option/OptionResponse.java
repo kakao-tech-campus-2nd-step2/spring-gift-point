@@ -1,4 +1,6 @@
-package gift.domain;
+package gift.domain.Option;
+
+import gift.domain.Menu.Menu;
 
 public record OptionResponse(
         Long id,

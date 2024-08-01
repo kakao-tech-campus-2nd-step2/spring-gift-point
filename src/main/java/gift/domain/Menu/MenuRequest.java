@@ -1,4 +1,4 @@
-package gift.domain;
+package gift.domain.Menu;
 
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;

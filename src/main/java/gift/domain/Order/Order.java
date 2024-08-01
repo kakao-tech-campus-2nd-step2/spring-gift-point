@@ -1,4 +1,4 @@
-package gift.domain;
+package gift.domain.Order;
 
 import jakarta.persistence.*;
 

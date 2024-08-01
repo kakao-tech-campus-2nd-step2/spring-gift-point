@@ -1,9 +1,11 @@
 package gift.service;
 
-import gift.domain.Member;
-import gift.domain.MemberRequest;
-import gift.domain.WishList;
+import gift.domain.Auth.LoginRequest;
+import gift.domain.Member.Member;
+import gift.domain.Member.MemberRequest;
+import gift.domain.WishList.WishList;
 import gift.repository.MemberRepository;
+import org.apache.coyote.BadRequestException;
 import org.springframework.stereotype.Service;
 
 import java.util.LinkedList;
@@ -20,21 +22,21 @@ public class MemberService {
         this.jwtService = jwtService;
     }
 
-    public void join(MemberRequest memberRequest) {
+    public void join(MemberRequest memberRequest) throws BadRequestException {
         if (!memberRepository.existsById(memberRequest.id())) {
             memberRepository.save(new Member(memberRequest.id(), memberRequest.password(), memberRequest.name(),new LinkedList<WishList>()));
             return;
         }
-        throw new NoSuchElementException("이미 존재하는 회원입니다.");
+        throw new BadRequestException("이미 존재하는 회원입니다.");
     }
 
-    public String login(MemberRequest memberRequest) {
-        Member dbMember = memberRepository.findById(memberRequest.id())
+    public String login(LoginRequest loginRequest) {
+        Member dbMember = memberRepository.findById(loginRequest.email())
                 .orElseThrow(() -> new NoSuchElementException("로그인에 실패했습니다 다시 시도해주세요"));
-        if (!dbMember.checkPassword(memberRequest.password())){
+        if (!dbMember.checkPassword(loginRequest.password())){
             throw new NoSuchElementException("로그인에 실패하였습니다. 다시 시도해주세요");
         } else {
-            String jwt = jwtService.createJWT(memberRequest.id());
+            String jwt = jwtService.createJWT(loginRequest.email());
             return jwt;
         }
     }

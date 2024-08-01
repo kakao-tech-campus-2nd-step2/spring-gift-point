@@ -1,7 +1,7 @@
 package gift.RepositoryTest;
 
-import gift.domain.Member;
-import gift.domain.WishList;
+import gift.domain.Member.Member;
+import gift.domain.WishList.WishList;
 import gift.repository.MemberRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;

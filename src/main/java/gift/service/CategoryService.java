@@ -1,8 +1,8 @@
 package gift.service;
 
-import gift.domain.Category;
-import gift.domain.CategoryRequest;
-import gift.domain.Menu;
+import gift.domain.Category.Category;
+import gift.domain.Category.CategoryRequest;
+import gift.domain.Menu.Menu;
 import gift.repository.CategoryRepository;
 import org.springframework.stereotype.Service;
 
@@ -20,15 +20,11 @@ public class CategoryService {
     }
 
     public void create(CategoryRequest categoryRequest) {
-        categoryRepository.save(MapCategoryRequsetToCategory(categoryRequest));
+        categoryRepository.save(mapCategoryRequsetToCategory(categoryRequest));
     }
 
     public void update(CategoryRequest categoryRequest) {
-        categoryRepository.save(MapCategoryRequsetToCategory(categoryRequest));
-    }
-
-    public Category MapCategoryRequsetToCategory(CategoryRequest categoryRequest) {
-        return new Category(null, categoryRequest.name(), new LinkedList<Menu>());
+        categoryRepository.save(mapCategoryRequsetToCategory(categoryRequest));
     }
 
     public void deleteById(Long id) {
@@ -46,5 +42,8 @@ public class CategoryService {
 
     public List<Category> getCategotyList() {
         return categoryRepository.findAll();
+    }
+    public Category mapCategoryRequsetToCategory(CategoryRequest categoryRequest) {
+        return new Category(null, categoryRequest.name(), new LinkedList<Menu>());
     }
 }

@@ -3,7 +3,13 @@ package gift.service;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import gift.domain.*;
+import gift.domain.Member.Member;
+import gift.domain.Menu.Menu;
+import gift.domain.Option.Option;
+import gift.domain.Order.Order;
+import gift.domain.Order.OrderBodyDto;
+import gift.domain.Order.OrderRequest;
+import gift.domain.WishList.WishList;
 import gift.repository.MemberRepository;
 import gift.repository.OptionRepository;
 import gift.repository.OrderRepository;
@@ -18,7 +24,7 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
 
-
+import javax.naming.AuthenticationException;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -42,13 +48,13 @@ public class OrderService {
 
 
 
-    public Order order(String token, OrderRequest orderRequest) throws IllegalAccessException, JsonProcessingException {
+    public Order order(String token, OrderRequest orderRequest) throws IllegalAccessException, JsonProcessingException, AuthenticationException {
         Order order = storeData(token, orderRequest);
         sandOrderMessage(token, orderRequest);
         return order;
     }
 
-    private void sandOrderMessage(String token, OrderRequest orderRequest) throws JsonProcessingException {
+    private void sandOrderMessage(String token, OrderRequest orderRequest) throws JsonProcessingException, AuthenticationException {
         var url = "https://kapi.kakao.com/v2/api/talk/memo/default/send";
         var headers = new HttpHeaders();
         headers.add(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_FORM_URLENCODED_VALUE);
@@ -85,7 +91,7 @@ public class OrderService {
         restTemplate.exchange(url, HttpMethod.POST, requestEntity, String.class);
     }
 
-    private Order storeData(String token, OrderRequest orderRequest) throws IllegalAccessException {
+    private Order storeData(String token, OrderRequest orderRequest) throws IllegalAccessException, AuthenticationException {
         Option option = optionRepository.getById(orderRequest.optionId());
         option.subtract(orderRequest.quantity());
         optionRepository.save(option);
@@ -105,7 +111,6 @@ public class OrderService {
     }
 
     public List<Order> findAll(String memberId, Pageable pageable) {
-
-        orderRepository.findByMemberId(memberId,pageable);
+       return orderRepository.findByMemberId(memberId,pageable);
     }
 }

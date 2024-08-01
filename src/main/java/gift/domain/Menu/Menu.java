@@ -1,5 +1,7 @@
-package gift.domain;
+package gift.domain.Menu;
 
+import gift.domain.Category.Category;
+import gift.domain.Option.Option;
 import jakarta.persistence.*;
 
 import java.util.HashSet;

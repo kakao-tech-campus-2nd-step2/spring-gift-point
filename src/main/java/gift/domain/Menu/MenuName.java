@@ -1,4 +1,4 @@
-package gift.domain;
+package gift.domain.Menu;
 
 import jakarta.persistence.Embeddable;
 import org.apache.coyote.BadRequestException;
