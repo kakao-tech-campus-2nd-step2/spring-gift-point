@@ -5,6 +5,7 @@ import gift.JWTUtil;
 import gift.classes.Exceptions.EmailAlreadyExistsException;
 import gift.domain.Member;
 import gift.dto.MemberDto;
+import gift.dto.RequestMemberDto;
 import gift.dto.TokenDto;
 import gift.repositories.MemberRepository;
 import java.util.NoSuchElementException;
@@ -24,13 +25,13 @@ public class MemberService {
         this.jwtUtil = jwtUtil;
     }
 
-    public void register(MemberDto memberDto) throws EmailAlreadyExistsException {
+    public void register(RequestMemberDto requestMemberDto) throws EmailAlreadyExistsException {
 
         Member member = new Member(
             null,
-            memberDto.getEmail(),
-            memberDto.getPassword(),
-            memberDto.getRole()
+            requestMemberDto.getEmail(),
+            requestMemberDto.getPassword(),
+            requestMemberDto.getRole()
         );
         // 이메일로 기존 회원 조회
         Member existingMember = memberRepository.findByEmail(member.getEmail());
@@ -43,22 +44,22 @@ public class MemberService {
         // 새로운 회원 생성 및 저장
         Member newmember = new Member(
             null,
-            memberDto.getEmail(),
-            memberDto.getPassword(),
-            memberDto.getRole()
+            requestMemberDto.getEmail(),
+            requestMemberDto.getPassword(),
+            requestMemberDto.getRole()
         );
 
         memberRepository.save(newmember);
     }
 
-    public TokenDto login(MemberDto memberDto) {
+    public TokenDto login(RequestMemberDto requestMemberDto) {
 
         // 이메일로 회원 조회
-        Member existingMember = memberRepository.findByEmail(memberDto.getEmail());
+        Member existingMember = memberRepository.findByEmail(requestMemberDto.getEmail());
 
         // 회원이 존재하지 않거나 비밀번호가 일치하지 않을 경우 예외 발생
         if (existingMember == null || !existingMember.getPassword()
-            .equals(memberDto.getPassword())) {
+            .equals(requestMemberDto.getPassword())) {
             throw new NoSuchElementException("이메일이 존재하지 않거나 비밀번호가 일치하지 않습니다.");
         }
 

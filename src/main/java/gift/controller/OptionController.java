@@ -76,7 +76,7 @@ public class OptionController {
         @ApiResponse(responseCode = "500", description = "서버 내부 오류 발생")
     })
     public ResponseEntity<RequestStateDTO> updateOption(@LoginMember MemberDto memberDto,
-        @PathVariable Long optionId,
+        @PathVariable(value = "optionId") Long optionId,
         @Valid @RequestBody RequestOptionDto requestOptionDto) {
         OptionDto optionDto = optionService.updateOption(optionId, requestOptionDto);
         return ResponseEntity.ok().body(new OptionRequestStateDTO(
@@ -95,7 +95,8 @@ public class OptionController {
         @ApiResponse(responseCode = "404", description = "옵션을 찾을 수 없음"),
         @ApiResponse(responseCode = "500", description = "서버 내부 오류 발생")
     })
-    public ResponseEntity<RequestStateDTO> deleteOption(@PathVariable Long optionId) {
+    public ResponseEntity<RequestStateDTO> deleteOption(
+        @PathVariable(value = "optionId") Long optionId) {
         optionService.deleteOption(optionId);
         return ResponseEntity.ok().body(new OptionRequestStateDTO(
             HttpStatus.OK,

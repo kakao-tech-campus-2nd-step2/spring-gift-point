@@ -1,7 +1,7 @@
 package gift.controller;
 
 import gift.classes.RequestState.SecureRequestStateDTO;
-import gift.dto.MemberDto;
+import gift.dto.RequestMemberDto;
 import gift.dto.TokenDto;
 import gift.services.MemberService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -33,9 +33,9 @@ public class MemberController {
         @ApiResponse(responseCode = "400", description = "회원 가입 실패(이메일 중복)"),
         @ApiResponse(responseCode = "500", description = "서버 내부 오류 발생")
     })
-    public ResponseEntity<?> register(@RequestBody MemberDto memberDto) {
-        memberService.register(memberDto);
-        TokenDto tokenDto = memberService.login(memberDto);
+    public ResponseEntity<?> register(@RequestBody RequestMemberDto requestMemberDto) {
+        memberService.register(requestMemberDto);
+        TokenDto tokenDto = memberService.login(requestMemberDto);
 
         return ResponseEntity.ok().body(new SecureRequestStateDTO(
             HttpStatus.OK,
@@ -52,8 +52,8 @@ public class MemberController {
         @ApiResponse(responseCode = "404", description = "해당 아이디가 존재하지 않음"),
         @ApiResponse(responseCode = "500", description = "서버 내부 오류 발생")
     })
-    public ResponseEntity<?> login(@RequestBody MemberDto memberDto) {
-        TokenDto tokenDto = memberService.login(memberDto);
+    public ResponseEntity<?> login(@RequestBody RequestMemberDto requestMemberDto) {
+        TokenDto tokenDto = memberService.login(requestMemberDto);
 
         return ResponseEntity.ok().body(new SecureRequestStateDTO(
             HttpStatus.OK,

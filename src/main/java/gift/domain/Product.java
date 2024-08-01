@@ -84,6 +84,7 @@ public class Product {
     }
 
     public ProductDto toProductDto() {
-        return new ProductDto(this.getId(), this.getName(), this.getPrice(), this.getImageUrl());
+        return new ProductDto(this.getId(), this.getName(), this.getPrice(), this.getImageUrl(),
+            this.getCategoryDto().getName());
     }
 }
