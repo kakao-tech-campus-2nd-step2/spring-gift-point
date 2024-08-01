@@ -28,7 +28,7 @@ public class OptionService {
     @Transactional
     public OptionResponse save(Long productId, OptionRequest optionRequest){
         Product product = productRepository.findById(productId).orElseThrow(NoSuchFieldError::new);
-        Option option = new Option(optionRequest.getName(), optionRequest.getQuantity());
+        Option option = new Option(optionRequest.getName(), optionRequest.getQuantity(), product);
         product.getOptions().add(option);
 
         Option savedOption = optionRepository.save(option);

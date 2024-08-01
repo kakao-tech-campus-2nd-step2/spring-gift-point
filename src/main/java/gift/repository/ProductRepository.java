@@ -12,8 +12,6 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
 
     Optional<Product> findById(Long id);
 
-    Product findByOption(Long optionId);
-
     Product save(Product product);
 
     boolean existsById(Long id);

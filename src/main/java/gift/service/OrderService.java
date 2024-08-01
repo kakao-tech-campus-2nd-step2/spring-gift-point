@@ -96,8 +96,8 @@ public class OrderService {
         List<Order> orders = orderRepository.findAll();
         for (Order order : orders) {
             OrderResponse orderResponse = new OrderResponse(order);
-            ProductResponse productResponse = new ProductResponse(productRepository.findByOption(order.getOptionId()));
-
+            Option option = optionRepository.findById(order.getOptionId()).orElseThrow(NoSuchFieldError::new);
+            ProductResponse productResponse = new ProductResponse(option.getProduct());
             orderLogs.add(new OrderLogResponse(productResponse, orderResponse));
         }
 
@@ -119,8 +119,8 @@ public class OrderService {
         List<Order> orders = orderRepository.findAll();
         for (Order order : orders) {
             OrderResponse orderResponse = new OrderResponse(order);
-            ProductResponse productResponse = new ProductResponse(productRepository.findByOption(order.getOptionId()));
-
+            Option option = optionRepository.findById(order.getOptionId()).orElseThrow(NoSuchFieldError::new);
+            ProductResponse productResponse = new ProductResponse(option.getProduct());
             orderLogs.add(new OrderLogResponse(productResponse, orderResponse));
         }
 
