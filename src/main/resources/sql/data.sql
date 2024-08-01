@@ -1,15 +1,1 @@
-INSERT INTO categories (name, id)
-VALUES
-    ('교환권', default),
-    ('상품권', default),
-    ('뷰티', default),
-    ('패션', default),
-    ('식품', default),
-    ('리빙/도서', default),
-    ('레저/스포츠', default),
-    ('아티스트/캐릭터', default),
-    ('유아동/반려', default),
-    ('디지털/가전', default),
-    ('카카오프렌즈', default),
-    ('트렌드 선물', default),
-    ('백화점', default);
+INSERT INTO categories (id, name, description, color, image_url) VALUES (2920, '생일', '감동을 높여줄 생일 선물 리스트', '#5949a3', 'https://img1.daumcdn.net/thumb/S104x104/?fname=https%3A%2F%2Ft1.daumcdn.net%2Fgift%2Fhome%2Ftheme%2F292020231106_MXMUB.png'), (2930, '교환권', '놓치면 후회할 교환권 특가', '#9290C3', 'https://img1.daumcdn.net/thumb/S104x104/?fname=https%3A%2F%2Fst.kakaocdn.net%2Fproduct%2Fgift%2Fproduct%2F20240131153049_5a22b137a8d346e9beb020a7a7f4254a.jpg');
