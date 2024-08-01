@@ -33,9 +33,9 @@ public class WishController {
 
     @GetMapping
     public ResponseEntity<WishResponse> getWishes(
-        @RequestParam(value = "page", defaultValue = "0") int page,
+        @RequestParam(value = "page", defaultValue = "1") int page,
         @RequestParam(value = "size", defaultValue = "10") int size,
-        @RequestParam(value = "sort", defaultValue = "orderDateTime,DESC") String sort,
+        @RequestParam(value = "sort", defaultValue = "createdDate,DESC") String sort,
         @LoginMember Member member) {
         String[] sortParams = sort.split(",");
         String property = sortParams[0];
