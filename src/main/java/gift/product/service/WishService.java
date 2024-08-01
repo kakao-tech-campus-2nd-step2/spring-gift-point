@@ -1,7 +1,6 @@
 package gift.product.service;
 
 import gift.product.dto.auth.LoginMemberIdDto;
-import gift.product.dto.product.ProductInfoForWishResponse;
 import gift.product.dto.wish.WishDto;
 import gift.product.dto.wish.WishResponse;
 import gift.product.model.Member;
@@ -12,6 +11,7 @@ import gift.product.repository.ProductRepository;
 import gift.product.repository.WishRepository;
 import java.util.List;
 import java.util.NoSuchElementException;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -33,8 +33,8 @@ public class WishService {
         return wishRepository.findAllByMemberId(loginMemberIdDto.id());
     }
 
-    public List<WishResponse> getWishAll(Pageable pageable) {
-        return wishRepository.findAll(pageable).stream().map(this::getWishResponse).toList();
+    public Page<WishResponse> getWishAll(Pageable pageable) {
+        return wishRepository.findAll(pageable).map(WishService::getWishResponse);
     }
 
     public Wish getWish(Long id, LoginMemberIdDto loginMemberIdDto) {
@@ -78,13 +78,10 @@ public class WishService {
         }
     }
 
-    private WishResponse getWishResponse(Wish wish) {
-        Product product = wish.getProduct();
-        ProductInfoForWishResponse productInfoForWishResponse = new ProductInfoForWishResponse(
-            product.getId(),
-            product.getName(),
-            product.getPrice(),
-            product.getImageUrl());
-        return new WishResponse(wish.getId(), productInfoForWishResponse);
+    private static WishResponse getWishResponse(Wish wish) {
+        return new WishResponse(wish.getProduct().getId(),
+            wish.getProduct().getName(),
+            wish.getProduct().getPrice(),
+            wish.getProduct().getImageUrl());
     }
 }

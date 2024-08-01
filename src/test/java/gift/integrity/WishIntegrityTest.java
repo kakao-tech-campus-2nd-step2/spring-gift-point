@@ -97,11 +97,10 @@ class WishIntegrityTest {
     @Test
     void 위시리스트_추가() {
         //given
-        String url = BASE_URL + port + "/api/wishes";
-        WishDto wishDto = new WishDto(1L);
+        String url = BASE_URL + port + "/api/wishes/1";
         HttpHeaders headers = new HttpHeaders();
         headers.setBearerAuth(accessToken);
-        RequestEntity<WishDto> requestEntity = new RequestEntity<>(wishDto, headers,
+        RequestEntity<WishDto> requestEntity = new RequestEntity<>(headers,
             HttpMethod.POST, URI.create(url));
 
         //when

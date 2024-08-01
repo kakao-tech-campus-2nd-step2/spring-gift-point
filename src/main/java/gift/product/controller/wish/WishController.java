@@ -1,6 +1,7 @@
 package gift.product.controller.wish;
 
 import gift.product.dto.auth.LoginMemberIdDto;
+import gift.product.dto.wish.PageWishResponse;
 import gift.product.dto.wish.WishDto;
 import gift.product.dto.wish.WishResponse;
 import gift.product.exception.ExceptionResponse;
@@ -15,6 +16,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import java.util.List;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -41,11 +43,11 @@ public class WishController {
     }
 
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "성공", content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = WishResponse.class)))),
+        @ApiResponse(responseCode = "200", description = "성공", content = @Content(mediaType = "application/json", schema = @Schema(implementation = PageWishResponse.class))),
         @ApiResponse(responseCode = "401", description = "허용되지 않는 요청", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ExceptionResponse.class)))
     })
     @GetMapping
-    public ResponseEntity<List<WishResponse>> getWishAll(
+    public ResponseEntity<Page<WishResponse>> getWishAll(
         @RequestParam(name = "page", defaultValue = "0") int page,
         @RequestParam(name = "size", defaultValue = "5") int size,
         @RequestParam(name = "sort", defaultValue = "createdDate,asc") String sortParam) {
@@ -78,11 +80,11 @@ public class WishController {
         @ApiResponse(responseCode = "401", description = "허용되지 않는 요청", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ExceptionResponse.class))),
         @ApiResponse(responseCode = "404", description = "존재하지 않는 리소스", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ExceptionResponse.class)))
     })
-    @PostMapping
-    public ResponseEntity<Void> insertWish(@Valid @RequestBody WishDto wishDto,
+    @PostMapping("{productId}")
+    public ResponseEntity<Void> insertWish(@PathVariable(name = "productId") Long productId,
         HttpServletRequest request) {
         LoginMemberIdDto loginMemberIdDto = getLoginMember(request);
-        wishService.insertWish(wishDto, loginMemberIdDto);
+        wishService.insertWish(new WishDto(productId), loginMemberIdDto);
 
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
@@ -92,8 +94,8 @@ public class WishController {
         @ApiResponse(responseCode = "401", description = "허용되지 않는 요청", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ExceptionResponse.class))),
         @ApiResponse(responseCode = "404", description = "존재하지 않는 리소스", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ExceptionResponse.class)))
     })
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteWish(@PathVariable(name = "id") Long wishId,
+    @DeleteMapping("/{wishId}")
+    public ResponseEntity<Void> deleteWish(@PathVariable(name = "wishId") Long wishId,
         HttpServletRequest request) {
         LoginMemberIdDto loginMemberIdDto = getLoginMember(request);
         wishService.deleteWish(wishId, loginMemberIdDto);

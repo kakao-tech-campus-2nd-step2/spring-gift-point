@@ -1,10 +1,12 @@
 package gift.product.dto.wish;
 
-import gift.product.dto.product.ProductInfoForWishResponse;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 public record WishResponse(
-    Long id,
-    ProductInfoForWishResponse product
+    @JsonProperty("id") Long productId,
+    String name,
+    int price,
+    String imageUrl
 ) {
 
 }

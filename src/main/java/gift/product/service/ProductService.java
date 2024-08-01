@@ -39,7 +39,7 @@ public class ProductService {
     }
 
     public Page<ProductResponse> getProductAll(Pageable pageable) {
-        return productRepository.findAll(pageable).map(product -> new ProductResponse(product.getId(), product.getName(), product.getPrice(), product.getImageUrl(), product.getCategory().getId()));
+        return productRepository.findAll(pageable).map(this::getProductResponse);
     }
 
     public Page<ProductResponse> getProductAll(Pageable pageable, Long categoryId) {
@@ -93,5 +93,13 @@ public class ProductService {
     private Category getValidatedCategory(Long categoryId) {
         return categoryRepository.findById(categoryId)
             .orElseThrow(() -> new NoSuchElementException("해당 카테고리가 존재하지 않습니다."));
+    }
+
+    private ProductResponse getProductResponse(Product product) {
+        return new ProductResponse(product.getId(),
+            product.getName(),
+            product.getPrice(),
+            product.getImageUrl(),
+            product.getCategory().getId());
     }
 }
