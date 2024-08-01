@@ -4,15 +4,19 @@ import gift.domain.order.OrderRequest;
 import gift.domain.user.User;
 import gift.domain.user.UserInfoDto;
 import gift.validation.LoginMember;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import gift.service.kakao.KakaoService;
 
+import java.net.URI;
 import java.util.Map;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import org.springframework.web.util.UriComponentsBuilder;
 
 @RestController
 @RequestMapping("/api/kakao")
@@ -20,8 +24,12 @@ public class KakaoController {
 
     private final KakaoService kakaoService;
 
-    public KakaoController(KakaoService kakaoService) {
+    private final KakaoProperties kakaoProperties;
+
+    @Autowired
+    public KakaoController(KakaoService kakaoService, KakaoProperties kakaoProperties) {
         this.kakaoService = kakaoService;
+        this.kakaoProperties = kakaoProperties;
     }
 
     @Operation(summary = "카카오 로그인", description = "카카오 로그인 코드로 사용자를 인증합니다.")
@@ -44,6 +52,22 @@ public class KakaoController {
             @RequestBody OrderRequest orderRequest) {
         Map<String, Object> response = kakaoService.createOrder(loginUser, accessToken, orderRequest);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
+    }
+
+    @GetMapping("/code")
+    public ResponseEntity<Void> signInKakaoRedirectUrl() {
+        String redirectUrl = UriComponentsBuilder.fromUriString(kakaoProperties.codeUrl())
+                .queryParam("scope", "talk_message")
+                .queryParam("response_type", "code")
+                .queryParam("redirect_uri", kakaoProperties.redirectUri())
+                .queryParam("client_id", kakaoProperties.clientId())
+                .toUriString();
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setLocation(URI.create(redirectUrl));
+        //System.out.println(redirectUrl);
+
+        return new ResponseEntity<>(headers, HttpStatus.FOUND);
     }
 }
 

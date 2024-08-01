@@ -8,6 +8,7 @@ public record KakaoProperties(
         String clientId,
         String redirectUri,
         String userInfoUrl,
-        String messageUrl
+        String messageUrl,
+        String codeUrl
 ) {
 }
