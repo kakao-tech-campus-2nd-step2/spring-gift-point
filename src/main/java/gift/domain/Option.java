@@ -32,13 +32,6 @@ public class Option {
         this.quantity = quantity;
     }
 
-    public Option(Builder builder) {
-        this.id = builder.id;
-        this.name = builder.name;
-        this.quantity = builder.quantity;
-        this.product = builder.product;
-    }
-
     public Option(Long id, String name, int quantity, Product product) {
         this.id = id;
         this.name = name;
@@ -100,41 +93,6 @@ public class Option {
             throw new InsufficientQuantityException(Messages.INSUFFICIENT_QUANTITY);
         }
         this.quantity = this.quantity - subtractQuantity;
-    }
-
-    public static class Builder {
-        private Long id;
-        private String name;
-        private int quantity;
-        private Product product;
-
-        public Builder id(Long id) {
-            this.id = id;
-            return this;
-        }
-
-        public Builder name(String name) {
-            this.name = name;
-            return this;
-        }
-
-        public Builder quantity(int quantity) {
-            this.quantity = quantity;
-            return this;
-        }
-
-        public Builder product(Product product) {
-            this.product = product;
-            return this;
-        }
-
-        public Option build() {
-            Option option = new Option(this);
-            if (option.product != null && option.id == null) {
-                this.product.addOption(option);
-            }
-            return option;
-        }
     }
 
     @Override

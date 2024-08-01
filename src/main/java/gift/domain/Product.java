@@ -72,14 +72,6 @@ public class Product {
     protected Product () {
     }
 
-    private Product(Builder builder) {
-        this.id = builder.id;
-        this.name = builder.name;
-        this.price = builder.price;
-        this.imageUrl = builder.imageUrl;
-        this.category = builder.category;
-    }
-
     public Product(Long id, String name, int price, String imageUrl, Category category) {
         this.id = id;
         this.name = name;
@@ -145,47 +137,6 @@ public class Product {
     private void isOptionPresent() {
         if (this.options.isEmpty()) {
             throw new ProductOptionRequiredException(Messages.PRODUCT_OPTION_REQUIRED);
-        }
-    }
-
-    public static class Builder {
-        private Long id;
-        private String name;
-        private int price;
-        private String imageUrl;
-        private Category category;
-
-        public Builder id(Long id) {
-            this.id = id;
-            return this;
-        }
-
-        public Builder name(String name) {
-            this.name = name;
-            return this;
-        }
-
-        public Builder price(int price) {
-            this.price = price;
-            return this;
-        }
-
-        public Builder imageUrl(String imageUrl) {
-            this.imageUrl = imageUrl;
-            return this;
-        }
-
-        public Builder category(Category category) {
-            this.category = category;
-            return this;
-        }
-
-        public Product build() {
-            Product product = new Product(this);
-            if(product.category != null && product.id == null){
-                product.category.addProduct(product);
-            }
-            return product;
         }
     }
 

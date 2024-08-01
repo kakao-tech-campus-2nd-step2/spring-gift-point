@@ -77,25 +77,6 @@ public class Member {
         return wishes;
     }
 
-    public static class Builder{
-        private String email;
-        private String password;
-
-        public Builder email(String email) {
-            this.email = email;
-            return this;
-        }
-
-        public Builder password(String password) {
-            this.password = password;
-            return this;
-        }
-
-        public Member build() {
-            return new Member(this);
-        }
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
