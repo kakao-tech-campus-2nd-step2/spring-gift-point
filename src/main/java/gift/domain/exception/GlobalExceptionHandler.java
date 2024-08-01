@@ -14,8 +14,8 @@ import gift.domain.exception.conflict.ProductAlreadyExistsException;
 import gift.domain.exception.forbidden.ForbiddenException;
 import gift.domain.exception.forbidden.MemberIncorrectLoginInfoException;
 import gift.domain.exception.forbidden.MemberNotAdminException;
-import gift.domain.exception.forbidden.TokenExpiredException;
-import gift.domain.exception.forbidden.TokenStringInvalidException;
+import gift.domain.exception.badRequest.TokenExpiredException;
+import gift.domain.exception.badRequest.TokenStringInvalidException;
 import gift.domain.exception.notFound.CategoryNotFoundException;
 import gift.domain.exception.notFound.MemberNotFoundException;
 import gift.domain.exception.notFound.NotFoundException;
@@ -44,7 +44,39 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ErrorApiResponse> handleMethodArgumentNotValidException(MethodArgumentNotValidException e) {
         FieldError error = e.getBindingResult().getFieldError();
         assert error != null;
-        return ErrorApiResponse.of(error.getField() + ": " + error.getDefaultMessage(), ErrorCode.FIELD_VALIDATION_FAIL.getCode(), HttpStatus.BAD_REQUEST);
+        return ErrorApiResponse.of(
+            error.getField() + ": " + error.getDefaultMessage(),
+            ErrorCode.FIELD_VALIDATION_FAIL.getErrorIdentifier(),
+            ErrorCode.FIELD_VALIDATION_FAIL.getErrorCode(),
+            HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler({
+        TokenExpiredException.class,
+        TokenStringInvalidException.class,
+        ProductOptionsEmptyException.class,
+        OptionQuantityOutOfRangeException.class,
+        OptionUpdateActionInvalidException.class,
+        OauthVendorIllegalException.class
+    })
+    public ResponseEntity<ErrorApiResponse> handleBadRequestException(BadRequestException e) {
+        return ErrorApiResponse.of(e, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler({
+        TokenNotFoundException.class,
+        TokenUnexpectedErrorException.class
+    })
+    public ResponseEntity<ErrorApiResponse> handleUnauthorizedException(UnauthorizedException e) {
+        return ErrorApiResponse.unauthorized(e);
+    }
+
+    @ExceptionHandler({
+        MemberIncorrectLoginInfoException.class,
+        MemberNotAdminException.class
+    })
+    public ResponseEntity<ErrorApiResponse> handleForbiddenException(ForbiddenException e) {
+        return ErrorApiResponse.forbidden(e);
     }
 
     @ExceptionHandler({
@@ -68,33 +100,5 @@ public class GlobalExceptionHandler {
     })
     public ResponseEntity<ErrorApiResponse> handleConflictException(ConflictException e) {
         return ErrorApiResponse.conflict(e);
-    }
-
-    @ExceptionHandler({
-        MemberIncorrectLoginInfoException.class,
-        MemberNotAdminException.class,
-        TokenExpiredException.class,
-        TokenStringInvalidException.class
-    })
-    public ResponseEntity<ErrorApiResponse> handleForbiddenException(ForbiddenException e) {
-        return ErrorApiResponse.forbidden(e);
-    }
-
-    @ExceptionHandler({
-        TokenNotFoundException.class,
-        TokenUnexpectedErrorException.class
-    })
-    public ResponseEntity<ErrorApiResponse> handleUnauthorizedException(UnauthorizedException e) {
-        return ErrorApiResponse.unauthorized(e);
-    }
-
-    @ExceptionHandler({
-        ProductOptionsEmptyException.class,
-        OptionQuantityOutOfRangeException.class,
-        OptionUpdateActionInvalidException.class,
-        OauthVendorIllegalException.class
-    })
-    public ResponseEntity<ErrorApiResponse> handleBadRequestException(BadRequestException e) {
-        return ErrorApiResponse.of(e, HttpStatus.BAD_REQUEST);
     }
 }
