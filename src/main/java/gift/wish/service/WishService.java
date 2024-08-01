@@ -7,7 +7,8 @@ import gift.product.repository.ProductJpaRepository;
 import gift.user.entity.User;
 import gift.wish.dto.request.CreateWishRequest;
 import gift.wish.dto.request.UpdateWishRequest;
-import gift.wish.dto.response.WishResponse;
+import gift.wish.dto.response.CreatedWishResponse;
+import gift.wish.dto.response.GetWishResponse;
 import gift.wish.entity.Wish;
 import gift.wish.repository.WishRepository;
 import java.util.List;
@@ -28,20 +29,20 @@ public class WishService {
     }
 
     @Transactional(readOnly = true)
-    public Page<WishResponse> getWishes(Long userId, Pageable pageable) {
+    public Page<GetWishResponse> getWishes(Long userId, Pageable pageable) {
         Page<Wish> wishes = wishRepository.findByUserId(userId, pageable);
         validateWishPage(wishes);
-        return wishes.map(WishResponse::from);
+        return wishes.map(GetWishResponse::from);
     }
 
     @Transactional
-    public WishResponse createWish(User user, CreateWishRequest request) {
+    public CreatedWishResponse createWish(User user, CreateWishRequest request) {
         Product product = productRepository.findById(request.productId())
             .orElseThrow(() -> new CustomException(ErrorCode.PRODUCT_NOT_FOUND));
 
         Wish wish = new Wish(user, product);
 
-        return WishResponse.from(wishRepository.save(wish));
+        return CreatedWishResponse.from(wishRepository.save(wish));
     }
 
     @Transactional
