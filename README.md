@@ -144,7 +144,7 @@ class AcceptanceTest {
 
 ### 기능 목록
 
-- [ ] CORS 문제 해결
+- [x] CORS 문제 해결
 - [ ] 배포 스크립트 작성
 
 
