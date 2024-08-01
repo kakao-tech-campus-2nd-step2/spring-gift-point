@@ -5,18 +5,18 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PositiveOrZero;
 
 @Schema(description = "위시리스트 등록, 수정, 삭제 요청")
-public class WishForm {
+public class WishRequest {
 
-    @Schema(description = "희망 상품 id")
+    @Schema(description = "희망 상품 옵션 id")
     @NotNull
-    private Long productId;
+    private Long optionId;
 
     @Schema(description = "희망 수량")
     @PositiveOrZero
     private Integer quantity;
 
-    public Long getProductId() {
-        return productId;
+    public Long getOptionId() {
+        return optionId;
     }
 
     public Integer getQuantity() {

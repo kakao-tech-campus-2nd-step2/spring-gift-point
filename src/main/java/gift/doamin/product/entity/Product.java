@@ -1,7 +1,6 @@
 package gift.doamin.product.entity;
 
 import gift.doamin.category.entity.Category;
-import gift.doamin.product.dto.ProductCreateRequest;
 import gift.doamin.product.dto.ProductUpdateRequest;
 import gift.doamin.user.entity.User;
 import gift.global.AuditingEntity;

@@ -1,6 +1,5 @@
 package gift.doamin.product.repository;
 
-import gift.doamin.product.dto.ProductResponse;
 import gift.doamin.product.entity.Product;
 import java.util.List;
 import org.springframework.data.domain.Page;

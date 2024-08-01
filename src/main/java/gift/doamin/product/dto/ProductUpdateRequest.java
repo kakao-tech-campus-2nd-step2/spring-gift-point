@@ -1,12 +1,9 @@
 package gift.doamin.product.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.PositiveOrZero;
-import java.util.List;
 
 @Schema(description = "상품 수정 요청")
 public class ProductUpdateRequest {

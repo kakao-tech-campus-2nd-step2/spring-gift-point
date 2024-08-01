@@ -62,10 +62,11 @@ public class ProductService {
     }
 
     public Page<ProductResponse> getPage(Pageable pageable, Long categoryId) {
-        if(categoryId.equals(-1L)) {
+        if (categoryId.equals(-1L)) {
             return productRepository.findAll(pageable).map(ProductResponse::new);
         }
-        return productRepository.findAllByCategoryId(categoryId, pageable).map(ProductResponse::new);
+        return productRepository.findAllByCategoryId(categoryId, pageable)
+            .map(ProductResponse::new);
     }
 
     public Page<ProductResponse> getPage(int pageNum) {
