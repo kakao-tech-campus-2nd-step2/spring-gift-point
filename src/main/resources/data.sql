@@ -1,6 +1,6 @@
 -- 유저 추가
-INSERT INTO users (email, password)
-VALUES ('testuser@example.com', 'password');
+INSERT INTO users (email, password, point)
+VALUES ('testuser@example.com', 'password', 10000);
 
 -- 카테고리 더미 데이터 추가
 INSERT INTO categories (name, color, image_url, description)

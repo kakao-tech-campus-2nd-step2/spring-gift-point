@@ -51,4 +51,8 @@ public class UserService {
             userRepository.save(newUser);
         }
     }
+
+    public Integer getUserPoint(User user) {
+        return user.getPoint();
+    }
 }

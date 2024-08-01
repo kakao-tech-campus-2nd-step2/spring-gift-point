@@ -26,13 +26,17 @@ public class User {
     private String password;
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Wish> wishes = new ArrayList<>();
+    @NotNull
+    private Integer point;
 
     public User() {
+        this.point = 0;
     }
 
     public User(String email, String password) {
         this.email = email;
         this.password = password;
+        this.point = 0;
     }
 
     public Long getId() {
@@ -62,5 +66,9 @@ public class User {
 
     public void deleteWish(Product product) {
         this.wishes.removeIf(wish -> wish.sameProduct(product));
+    }
+
+    public Integer getPoint() {
+        return point;
     }
 }
