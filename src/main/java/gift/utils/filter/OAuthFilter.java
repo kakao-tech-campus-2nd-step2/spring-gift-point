@@ -88,7 +88,10 @@ public class OAuthFilter implements Filter {
             }
 
             if (accessexpirationTime.isBefore(LocalDateTime.now()) && refreshexpirationTime.isBefore(LocalDateTime.now())){
-                httpResponse.sendRedirect("http://server.cla6sha.de/login");
+                httpResponse.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                httpResponse.setContentType("application/json");
+                httpResponse.setCharacterEncoding("UTF-8");
+                httpResponse.getWriter().write("{\"error\": \"Unauthorized\", \"message\": \"No authentication token provided\", \"redirect\": \"http://server.cla6sha.de/login\"}");
                 return;
             }
 

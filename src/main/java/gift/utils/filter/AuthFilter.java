@@ -1,5 +1,6 @@
 package gift.utils.filter;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import gift.repository.TokenRepository;
 import gift.utils.JwtTokenProvider;
 import gift.utils.error.AuthorizationException;
@@ -13,6 +14,8 @@ import jakarta.servlet.ServletResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 public class AuthFilter implements Filter {
 
@@ -65,7 +68,10 @@ public class AuthFilter implements Filter {
         String authHeader = httpRequest.getHeader("Authorization");
 
         if (authHeader == null || authHeader.isEmpty()) {
-            httpResponse.sendRedirect("http://server.cla6sha.de/login");
+            httpResponse.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            httpResponse.setContentType("application/json");
+            httpResponse.setCharacterEncoding("UTF-8");
+            httpResponse.getWriter().write("{\"error\": \"Unauthorized\", \"message\": \"No authentication token provided\", \"redirect\": \"http://server.cla6sha.de/login\"}");
             return;
         }
 
@@ -73,7 +79,11 @@ public class AuthFilter implements Filter {
         String token = authHeader.substring(7);
         if (!jwtTokenProvider.validateToken(token)) {
             System.out.println(token);
-            throw new TokenAuthException("Token not exist");
+            httpResponse.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            httpResponse.setContentType("application/json");
+            httpResponse.setCharacterEncoding("UTF-8");
+            httpResponse.getWriter().write("{\"error\": \"Unauthorized\", \"message\": \"No authentication token provided\", \"redirect\": \"http://server.cla6sha.de/login\"}");
+            return;
         }
 
         filterChain.doFilter(request, response);
@@ -83,4 +93,6 @@ public class AuthFilter implements Filter {
     public void destroy() {
         Filter.super.destroy();
     }
+
+
 }
