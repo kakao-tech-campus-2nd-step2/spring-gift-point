@@ -27,9 +27,6 @@ class ProductServiceTest {
     @Mock
     private OptionRepository optionRepository;
 
-//    @InjectMocks
-//    private ProductService productService;
-
     @InjectMocks
     private OptionService optionService;
 
