@@ -1,10 +1,7 @@
 package gift.Service;
 
 import gift.DTO.Option;
-import gift.DTO.OptionDto;
 import gift.DTO.Orders;
-import gift.KakaoApi;
-import gift.Repository.KakaoJwtTokenRepository;
 import gift.Repository.OptionRepository;
 import gift.Repository.OrderRepository;
 import gift.Repository.ProductRepository;
@@ -20,23 +17,18 @@ public class OrderService {
   private final String URL = "https://kapi.kakao.com/v2/api/talk/memo/default/send";
   private final OptionService optionService;
   private final WishListService wishListService;
-  private final KakaoJwtTokenRepository kakaoJwtTokenRepository;
   private final ProductRepository productRepository;
   private final OptionRepository optionRepository;
   private final OrderRepository orderRepository;
-  private final KakaoApi kakaoApi;
 
   public OrderService(OptionService optionService, ProductRepository productRepository,
-    WishListService wishListService, KakaoJwtTokenRepository kakaoJwtTokenRepository,
-    OptionRepository optionRepository, OrderRepository orderRepository,
-    KakaoApi kakaoApi) {
+    WishListService wishListService,
+    OptionRepository optionRepository, OrderRepository orderRepository) {
     this.optionService = optionService;
     this.productRepository = productRepository;
     this.wishListService = wishListService;
-    this.kakaoJwtTokenRepository = kakaoJwtTokenRepository;
     this.optionRepository = optionRepository;
     this.orderRepository = orderRepository;
-    this.kakaoApi = kakaoApi;
   }
 
   @Transactional
@@ -45,7 +37,7 @@ public class OrderService {
     Option option = optionRepository.findById(requestOrderDto.getOptionId())
       .orElseThrow(() -> new EmptyResultDataAccessException("해당 상품이 없습니다", 1));
 
-    optionService.optionQuantitySubtract(option.getId(),requestOrderDto.getQuantity());
+    optionService.optionQuantitySubtract(option.getId(), requestOrderDto.getQuantity());
 
     Orders order = new Orders(option, requestOrderDto.getQuantity(), requestOrderDto.getMessage());
     Orders savedOrder = orderRepository.save(order);
