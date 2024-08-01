@@ -26,7 +26,7 @@ public class MemberController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<TokenResponseDto> registerMember(@RequestBody Member member) throws AlreadyExistMember {
+    public RegisterResponseDto registerMember(@RequestBody Member member) throws AlreadyExistMember {
         return memberService.register(member);
     }
 

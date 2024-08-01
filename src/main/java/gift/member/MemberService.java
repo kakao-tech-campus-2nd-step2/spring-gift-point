@@ -23,12 +23,14 @@ public class MemberService {
         return memberRepository.findByEmail(userEmail).get();
     }
 
-    public ResponseEntity<TokenResponseDto> register(Member member) throws AlreadyExistMember {
-        Optional<Member> existMember = memberRepository.findByEmailAndPassword(member.getEmail(),member.getPassword());
+    public RegisterResponseDto register(Member member) throws AlreadyExistMember {
+        Optional<Member> existMember = memberRepository.findByEmail(member.getEmail());
+
+
         if (!existMember.isPresent()) {
             memberRepository.saveAndFlush(member);
             String token = JwtTokenUtil.generateToken(member.getEmail());
-            return ResponseEntity.ok((new TokenResponseDto(token)));
+            return new RegisterResponseDto(member.getId(), member.getEmail(), member.getName(), token);
         } else {
             throw new AlreadyExistMember("이미 회원정보가 존재합니다");
         }

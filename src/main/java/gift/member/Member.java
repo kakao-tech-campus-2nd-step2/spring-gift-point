@@ -15,13 +15,19 @@ public class Member {
 
     @Column(name = "email", nullable = false, unique = true)
     private String email;
+
+    @Column(name = "password", nullable = false)
     private String password;
+
+    @Column(name = "name", nullable = false)
+    private String name;
 
     protected Member() {}
 
-    public Member(String email, String password) {
+    public Member(String email, String password, String name) {
         this.email = email;
         this.password = password;
+        this.name = name;
     }
 
     public Long getId() {
@@ -35,5 +41,10 @@ public class Member {
     public String getPassword() {
         return password;
     }
+
+    public String getName() {
+        return name;
+    }
+
 }
 
