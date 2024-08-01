@@ -63,8 +63,4 @@ public class UserController {
         return ResponseEntity.ok().body(userPointResponse);
     }
 
-    @PostMapping("/point/{point}")
-    public void add(@LoginUser User user, @PathVariable Integer point) {
-        userService.addPoint(user, point);
-    }
 }
