@@ -8,8 +8,10 @@ import gift.repository.MenuRepository;
 import gift.repository.OptionRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 public class OptionService {
@@ -35,17 +37,21 @@ public class OptionService {
         optionRepository.deleteById(optionId);
     }
 
+    public List<OptionResponse> readAll(Long productId) {
+        Menu menu = menuRepository.findById(productId)
+                .orElseThrow(() -> new NoSuchElementException("메뉴 정보가 없습니다."));
+        List<Option> options = menu.getOptions();
+        return options.stream()
+                .map(this::mapOptionToOptionResponse)
+                .collect(Collectors.toList());
+    }
+
     public Option mapOptionRequestToOption(OptionRequest optionRequest,Menu menu){
         return new Option(optionRequest.id(),optionRequest.name(), optionRequest.quantity(),menu);
     }
 
     public OptionResponse mapOptionToOptionResponse(Option option){
-        return new OptionResponse(option.getId(),option.getName(),option.getQuantity(),option.getMenu());
+        return new OptionResponse(option.getId(),option.getName(),option.getQuantity());
     }
 
-    public Set<Option> readAll(Long productId) {
-        Menu menu = menuRepository.findById(productId)
-                .orElseThrow(() -> new NoSuchElementException("메뉴 정보가 없습니다."));
-        return menu.getOptions();
-    }
 }

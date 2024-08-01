@@ -9,6 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Set;
 
 @RestController
@@ -48,7 +49,7 @@ public class OptionController {
     }
 
     @GetMapping
-    public ResponseEntity<Set<Option>> readOptions(
+    public ResponseEntity<List<OptionResponse>> readOptions(
             @PathVariable("productId") Long productId
     ){
         return ResponseEntity.ok().body(optionService.readAll(productId));
