@@ -39,7 +39,7 @@ public class WishlistService {
     }
 
     private WishPageDto convertToWishlistDto(Wishlist wishlist) {
-        ProductResponseDto productDto = new ProductResponseDto(
+        ProductDto productDto = new ProductDto(
             wishlist.getProduct().getId(),
             wishlist.getProduct().getName(),
             wishlist.getProduct().getPrice(),
