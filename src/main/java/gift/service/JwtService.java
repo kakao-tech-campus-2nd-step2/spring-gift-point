@@ -61,4 +61,21 @@ public class JwtService {
         return jws.getPayload()
                 .get("id", String.class);
     }
+
+    public void validateJWT(String token) {
+        try {
+            Jws<Claims> jws = Jwts.parser()
+                    .setSigningKey(key)
+                    .build()
+                    .parseClaimsJws(token);
+
+            Date expiration = jws.getBody().getExpiration();
+            if (expiration.before(new Date())) {
+                throw new JwtException("해당 요청에 대한 권한이 없습니다.");
+            }
+            return;
+        } catch (Exception e) {
+            throw new JwtException("해당 요청에 대한 권한이 없습니다.");
+        }
+    }
 }

@@ -25,6 +25,15 @@ public class Category {
     @OneToMany(mappedBy = "category")
     private List<Menu> menus;
 
+    public Category(Long id, String name, String description, String color, String imageUrl, List<Menu> menus) {
+        this.id = id;
+        this.name = name;
+        this.description = description;
+        this.color = color;
+        this.imageUrl = imageUrl;
+        this.menus = menus;
+    }
+
     public List<Menu> getMenus(){
         return this.menus;
     }
@@ -49,6 +58,22 @@ public class Category {
     }
 
     public Category() {
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public String getColor() {
+        return color;
+    }
+
+    public String getImageUrl() {
+        return imageUrl;
     }
 
     @Override
