@@ -1,47 +1,62 @@
 package gift.main.controller;
 
-import gift.main.dto.OptionResponse;
-import gift.main.dto.ProductAllResponse;
-import gift.main.dto.ProductResponce;
-import gift.main.service.OptionService;
+import gift.main.dto.PageResponse;
+import gift.main.dto.ProductAllRequest;
+import gift.main.dto.ProductRequest;
+import gift.main.dto.ProductResponse;
 import gift.main.service.ProductService;
+import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 
 @RestController
+@RequestMapping("/api/products")
 public class ProductController {
     private final ProductService productService;
-    private final OptionService optionService;
 
-    public ProductController(ProductService productService, OptionService optionService) {
+    public ProductController(ProductService productService) {
         this.productService = productService;
-        this.optionService = optionService;
 
     }
 
-    @GetMapping("/products")
-    public ResponseEntity<?> getProductPage(Pageable pageable) {
-        Page<ProductResponce> productPage = productService.getProductPage(pageable);
-        return ResponseEntity.ok(productPage);
+    //카테고리 별 제품 페이지 조회
+    @GetMapping()
+    public ResponseEntity<?> getProductPage(@RequestParam(value = "page") int pageNum,
+                                            @RequestParam(value = "category") int categoryId) {
+        Page<ProductResponse> productPage = productService.getProductPage(pageNum, categoryId);
+        return ResponseEntity.ok(new PageResponse(productPage));
     }
 
-    @GetMapping("/product/{id}")
+    //특정 제품 조회
+    @GetMapping("{id}")
     public ResponseEntity<?> findProduct(@PathVariable(name = "id") Long id) {
-        ProductResponce product = productService.getProduct(id);
+        ProductResponse product = productService.getProduct(id);
         return ResponseEntity.ok(product);
     }
 
-    @GetMapping("/product/{id}/options")
-    public ResponseEntity<?> findAllOption(@PathVariable(value = "id") long productId) {
-        ProductResponce product = productService.getProduct(productId);
-        List<OptionResponse> options = optionService.findAllOption(productId);
-        ProductAllResponse productAllResponse = new ProductAllResponse(product, options);
-        return ResponseEntity.ok(productAllResponse);
+    //새로운 제품 추가
+    @PostMapping
+    public ResponseEntity<String> registerProduct(@RequestBody ProductAllRequest productAllRequest) {
+        productService.registerProduct(productAllRequest);
+        return ResponseEntity.ok("Product added successfully");
+    }
+
+    //제품 정보 업데이트
+    @PutMapping("/{id}")
+    public ResponseEntity<?> updateProduct(
+            @PathVariable(value = "id") long id,
+            @Valid @RequestBody ProductRequest productRequest) {
+        productService.updateProduct(id, productRequest);
+        return ResponseEntity.ok("Product updated successfully");
+
+    }
+
+    //제품 삭제
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> deleteProduct(@PathVariable(name = "id") Long id) {
+        productService.deleteProduct(id);
+        return ResponseEntity.ok("Product deleted successfully");
     }
 }

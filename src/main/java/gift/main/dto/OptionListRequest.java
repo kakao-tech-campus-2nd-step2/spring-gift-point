@@ -1,5 +1,7 @@
 package gift.main.dto;
 
+import com.fasterxml.jackson.databind.PropertyNamingStrategies;
+import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import gift.main.Exception.CustomException;
 import gift.main.Exception.ErrorCode;
 import jakarta.validation.Valid;
@@ -11,16 +13,22 @@ import java.util.List;
 import java.util.Set;
 
 @Validated
-public record OptionListRequest(
-        @Size(min = 1) @Valid List<OptionRequest> optionRequests) {
+@JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
+public record OptionListRequest(@Size(min = 1)
+                                @Valid
+                                List<OptionRequest> options) {
 
     public OptionListRequest {
 
         Set<OptionRequest> uniqueOptions = new HashSet<>();
-        for (OptionRequest optionRequest : optionRequests) {
+        for (OptionRequest optionRequest : options) {
             if (!uniqueOptions.add(optionRequest)) {
                 throw new CustomException(ErrorCode.DUPLICATE_OPTION);
             }
         }
+    }
+
+    public OptionListRequest(ProductAllRequest productAllRequest) {
+        this(productAllRequest.options());
     }
 }

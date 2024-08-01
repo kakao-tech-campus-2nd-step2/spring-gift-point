@@ -13,7 +13,7 @@ public class ApiToken {
     private long id;
 
     @ManyToOne
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "user_id", unique = true)
     private User user;
 
     @Column(nullable = false)
@@ -22,13 +22,13 @@ public class ApiToken {
     @Column(nullable = false)
     private String refreshToken;
 
-    private LocalDateTime expirationDate;
+    private LocalDateTime accessTokenExpirationDate;
 
     public ApiToken(User user, KakaoToken kakaoToken) {
         this.user = user;
         this.accessToken = kakaoToken.accessToken();
         this.refreshToken = kakaoToken.refreshToken();
-        this.expirationDate = kakaoToken.expirationDate();
+        this.accessTokenExpirationDate = kakaoToken.accessTokenExpirationDate();
     }
 
     public ApiToken() {
@@ -40,7 +40,7 @@ public class ApiToken {
         if (renewToken.refreshToken() != null && !renewToken.refreshToken().isBlank() && !renewToken.refreshToken().equals("null")) {
             this.refreshToken = renewToken.refreshToken();
         }
-        this.expirationDate = renewToken.expirationDate();
+        this.accessTokenExpirationDate = renewToken.accessTokenExpirationDate();
     }
 
     public long getId() {
@@ -59,7 +59,7 @@ public class ApiToken {
         return refreshToken;
     }
 
-    public LocalDateTime getExpirationDate() {
-        return expirationDate;
+    public LocalDateTime getAccessTokenExpirationDate() {
+        return accessTokenExpirationDate;
     }
 }

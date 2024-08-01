@@ -2,7 +2,6 @@ package gift.main.entity;
 
 import gift.main.Exception.CustomException;
 import gift.main.Exception.ErrorCode;
-import gift.main.dto.OptionChangeQuantityRequest;
 import gift.main.dto.OptionRequest;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Max;
@@ -60,13 +59,13 @@ public class Option {
             return;
         }
 
-        if (this.optionName == optionRequest.name()) {
+        if (Objects.equals(this.optionName, optionRequest.name())) {
             throw new CustomException(ErrorCode.ALREADY_EXISTS_OPTION_NAME);
         }
     }
 
     public void isDuplicate(OptionRequest optionRequest) {
-        if (this.optionName == optionRequest.name()) {
+        if (Objects.equals(this.optionName, optionRequest.name())) {
             throw new CustomException(ErrorCode.ALREADY_EXISTS_OPTION_NAME);
         }
     }
@@ -91,13 +90,6 @@ public class Option {
 
     public int getQuantity() {
         return this.quantity;
-    }
-
-    public void sellOption(OptionChangeQuantityRequest quantityRequest) {
-        if (this.quantity - quantityRequest.quantity() < 0) {
-            throw new CustomException(ErrorCode.INVALID_OPTION_QUANTITY);
-        }
-        this.quantity -= quantityRequest.quantity();
     }
 
     public void sellOption(int quantity) {

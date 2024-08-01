@@ -7,7 +7,6 @@ public record ProductResponce(
         String name,
         int price,
         String imageUrl,
-        String seller,
         String categoryName) {
 
     public ProductResponce(Product product) {
@@ -16,7 +15,6 @@ public record ProductResponce(
                 product.getName(),
                 product.getPrice(),
                 product.getImageUrl(),
-                product.getSellerName(),
                 product.getCategoryName());
 
     }

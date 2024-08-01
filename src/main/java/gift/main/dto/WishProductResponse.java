@@ -1,16 +1,22 @@
 package gift.main.dto;
 
+import com.fasterxml.jackson.databind.PropertyNamingStrategies;
+import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import gift.main.entity.WishProduct;
 
-public record WishProductResponse(Long id, String name, int price, String imageUrl, String seller) {
+@JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
+public record WishProductResponse(Long id,
+                                  long product_id,
+                                  String productName,
+                                  String imageUrl) {
 
     public WishProductResponse(WishProduct wishProduct) {
         this(
-                wishProduct.product.getId(),
+                wishProduct.getId(),
+                wishProduct.getProduct().getId(),
                 wishProduct.product.getName(),
-                wishProduct.product.getPrice(),
-                wishProduct.product.getImageUrl(),
-                wishProduct.product.getSellerName());
+                wishProduct.getProduct().getImageUrl()
+        );
 
     }
 

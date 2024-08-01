@@ -1,9 +1,7 @@
 package gift.main.controller;
 
-import gift.main.annotation.SessionUser;
 import gift.main.dto.ProductAllRequest;
 import gift.main.dto.ProductRequest;
-import gift.main.dto.UserVo;
 import gift.main.service.ProductService;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
@@ -20,9 +18,8 @@ public class AdminProductController {
     }
 
     @PostMapping
-    public ResponseEntity<String> registerProduct(@RequestBody ProductAllRequest productAllRequest,
-                                                  @SessionUser UserVo sessionUserVo) {
-        productService.registerProduct(productAllRequest, sessionUserVo);
+    public ResponseEntity<String> registerProduct(@RequestBody ProductAllRequest productAllRequest) {
+        productService.registerProduct(productAllRequest);
         System.out.println("productAllInformation = " + productAllRequest);
         return ResponseEntity.ok("Product added successfully");
     }
@@ -30,8 +27,7 @@ public class AdminProductController {
     @PutMapping("/{id}")
     public ResponseEntity<?> updateProduct(
             @PathVariable(value = "id") long id,
-            @Valid @RequestBody ProductRequest productRequest,
-            @SessionUser UserVo sessionUserVo) {
+            @Valid @RequestBody ProductRequest productRequest) {
         productService.updateProduct(id, productRequest);
         return ResponseEntity.ok("Product updated successfully");
 

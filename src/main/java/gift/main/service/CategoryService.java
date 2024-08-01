@@ -3,6 +3,7 @@ package gift.main.service;
 import gift.main.Exception.CustomException;
 import gift.main.Exception.ErrorCode;
 import gift.main.dto.CategoryRequest;
+import gift.main.dto.CategoryResponse;
 import gift.main.entity.Category;
 import gift.main.repository.CategoryRepository;
 import gift.main.repository.ProductRepository;
@@ -10,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class CategoryService {
@@ -21,17 +23,16 @@ public class CategoryService {
         this.productRepository = productRepository;
     }
 
-    public List<Category> getCategoryAll() {
-        return categoryRepository.findAll();
+    public List<CategoryResponse> getCategoryAll() {
+        return categoryRepository.findAll()
+                .stream().map(category -> new CategoryResponse(category))
+                .collect(Collectors.toList());
     }
 
     @Transactional
     public void addCategory(CategoryRequest categoryRequest) {
         if (categoryRepository.existsByName(categoryRequest.name())) {
             throw new CustomException(ErrorCode.ALREADY_CATEGORY_NAME);
-        }
-        if (categoryRepository.existsByUniNumber(categoryRequest.uniNumber())) {
-            throw new CustomException(ErrorCode.ALREADY_CATEGORY_UNI_NUMBER);
         }
         Category category = new Category(categoryRequest);
 
@@ -53,9 +54,6 @@ public class CategoryService {
     public void updateCategory(Long categoryid, CategoryRequest categoryRequest) {
         if (categoryRepository.existsByName(categoryRequest.name())) {
             throw new CustomException(ErrorCode.ALREADY_CATEGORY_NAME);
-        }
-        if (categoryRepository.existsByUniNumber(categoryRequest.uniNumber())) {
-            throw new CustomException(ErrorCode.ALREADY_CATEGORY_UNI_NUMBER);
         }
         Category category = categoryRepository.findById(categoryid)
                 .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_CATEGORY));

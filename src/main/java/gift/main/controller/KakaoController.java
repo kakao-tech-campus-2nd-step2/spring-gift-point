@@ -2,8 +2,8 @@ package gift.main.controller;
 
 import gift.main.Exception.CustomException;
 import gift.main.config.KakaoProperties;
+import gift.main.dto.KakaoProfileRequest;
 import gift.main.dto.KakaoToken;
-import gift.main.dto.UserJoinRequest;
 import gift.main.service.KakaoService;
 import gift.main.service.UserService;
 import jakarta.servlet.http.HttpServletResponse;
@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.io.IOException;
 
 @RestController
-@RequestMapping("/kakao/login")
+@RequestMapping("/api/auth/kakao")
 public class KakaoController {
 
     private final KakaoProperties kakaoProperties;
@@ -44,16 +44,17 @@ public class KakaoController {
 
     //1. 전달받은 코드로 엑세스 토큰 요청하기
     @GetMapping("/callback")
-    public ResponseEntity<?> LoginKakaoUser(@RequestParam(value = "code", required = false) String code,
+    public ResponseEntity<?> loginKakaoUser(@RequestParam(value = "code", required = false) String code,
                                             @RequestParam(value = "error", required = false) String error,
-                                            @RequestParam(value = "error_description", required = false) String errorDescription) {
+                                            @RequestParam(value = "error_description", required = false) String errorDescription
+    ) {
         if (error != null || errorDescription != null) {
             throw new CustomException(HttpStatus.BAD_REQUEST, errorDescription);
         }
 
         KakaoToken kakaoToken = kakaoService.requestKakaoToken(code);
-        UserJoinRequest userJoinRequest = kakaoService.getKakaoProfile(kakaoToken);
-        String jwtToken = userService.loginKakaoUser(userJoinRequest, kakaoToken);
+        KakaoProfileRequest kakaoProfileRequest = kakaoService.getKakaoProfile(kakaoToken);
+        String jwtToken = userService.loginKakaoUser(kakaoProfileRequest, kakaoToken);
 
         return ResponseEntity.status(HttpStatus.CREATED)
                 .header(HttpHeaders.AUTHORIZATION, jwtToken)

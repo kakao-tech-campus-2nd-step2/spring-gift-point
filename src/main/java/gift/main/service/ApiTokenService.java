@@ -11,6 +11,7 @@ import gift.main.repository.ApiTokenRepository;
 import gift.main.repository.UserRepository;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestClient;
@@ -38,9 +39,16 @@ public class ApiTokenService {
     }
 
     //토큰저장
+    @Transactional
     public void saveToken(User user, KakaoToken kakaoToken) {
+        if (apiTokenRepository.existsByUserId(user.getId())) {
+            ApiToken apiToken = apiTokenRepository.findByUserId(user.getId()).get();
+            apiToken.updete(kakaoToken);
+        }
+
         ApiToken apiToken = new ApiToken(user, kakaoToken);
         apiTokenRepository.save(apiToken);
+
     }
 
     //토큰갱신
@@ -48,7 +56,7 @@ public class ApiTokenService {
         ApiToken apiToken = apiTokenRepository.findByUserId(userVo.getId())
                 .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_TOKEN));
 
-        if (apiToken.getExpirationDate().isAfter(LocalDateTime.now())) {
+        if (apiToken.getAccessTokenExpirationDate().isAfter(LocalDateTime.now())) {
             return apiToken;
         }
 

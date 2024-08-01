@@ -2,12 +2,11 @@ package gift.main.service;
 
 import gift.main.Exception.CustomException;
 import gift.main.Exception.ErrorCode;
+import gift.main.dto.KakaoProfileRequest;
 import gift.main.dto.KakaoToken;
 import gift.main.dto.UserJoinRequest;
 import gift.main.dto.UserLoginRequest;
-import gift.main.entity.ApiToken;
 import gift.main.entity.User;
-import gift.main.repository.ApiTokenRepository;
 import gift.main.repository.UserRepository;
 import gift.main.util.JwtUtil;
 import org.springframework.stereotype.Service;
@@ -17,12 +16,12 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class UserService {
 
-    private final ApiTokenRepository apiTokenRepository;
+    private final ApiTokenService apiTokenService;
     private final JwtUtil jwtUtil;
     private final UserRepository userRepository;
 
-    public UserService(ApiTokenRepository apiTokenRepository, JwtUtil jwtUtil, UserRepository userRepository) {
-        this.apiTokenRepository = apiTokenRepository;
+    public UserService(ApiTokenService apiTokenService, JwtUtil jwtUtil, UserRepository userRepository) {
+        this.apiTokenService = apiTokenService;
         this.jwtUtil = jwtUtil;
         this.userRepository = userRepository;
     }
@@ -44,13 +43,13 @@ public class UserService {
     }
 
     @Transactional
-    public String loginKakaoUser(UserJoinRequest userJoinRequest, KakaoToken kakaoToken) {
+    public String loginKakaoUser(KakaoProfileRequest kakaoProfileRequest, KakaoToken kakaoToken) {
+        UserJoinRequest userJoinRequest = new UserJoinRequest(kakaoProfileRequest);
         User savedUser = userRepository.findByEmail(userJoinRequest.email())
                 .orElseGet(() -> userRepository.save(new User(userJoinRequest)));
         String jwtToken = jwtUtil.createToken(savedUser);
 
-        ApiToken apiToken = new ApiToken(savedUser, kakaoToken);
-        apiTokenRepository.save(apiToken);
+        apiTokenService.saveToken(savedUser, kakaoToken);
 
         return jwtToken;
 

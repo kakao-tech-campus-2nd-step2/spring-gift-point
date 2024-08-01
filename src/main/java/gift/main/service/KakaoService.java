@@ -45,39 +45,34 @@ public class KakaoService {
         map.add("redirect_uri", kakaoProperties.redirectUri());
         map.add("code", code);
 
-        KakaoToken kakaoToken= restClient.post()
+        KakaoToken kakaoToken = restClient.post()
                 .uri(kakaoProperties.tokenRequestUri())
                 .contentType(FORM_URLENCODED)
                 .body(map)
-        .exchange((request, response) -> {
-            System.out.println("response.getClass() = " + response.getClass());
-            System.out.println("response = " + response);
-            KakaoToken token = new KakaoToken(Objects.requireNonNull(response.bodyTo(TempToken.class)),LocalDateTime.now());
-                return token;
-        });
-        System.out.println("kakaoToken = " + kakaoToken);
+                .exchange((request, response) -> {
+                    System.out.println("response.getClass() = " + response.getClass());
+                    System.out.println("response = " + response);
+                    KakaoToken token = new KakaoToken(Objects.requireNonNull(response.bodyTo(TempToken.class)), LocalDateTime.now());
+                    return token;
+                });
         return kakaoToken;
     }
 
     //카카오 엑세스 토큰을 이용한 유저정보 가져오기
-    public UserJoinRequest getKakaoProfile(KakaoToken tokenResponse) {
-        KakaoProfileRequest kakaoProfileRequest = restClient.post()
+    public KakaoProfileRequest getKakaoProfile(KakaoToken tokenResponse) {
+        return restClient.post()
                 .uri(kakaoProperties.userRequestUri())
                 .contentType(FORM_URLENCODED)
                 .header(AUTHORIZATION, BEARER + tokenResponse.accessToken())
                 .retrieve()
                 .toEntity(KakaoProfileRequest.class)
                 .getBody();
-
-        System.out.println("kakaoProfileRequest = " + kakaoProfileRequest);
-        return new UserJoinRequest(kakaoProfileRequest);
-
     }
 
-    public void sendOrderMessage(OrderResponce orderResponce, UserVo userVo) {
+    public void sendOrderMessage(OrderResponse orderResponse, UserVo userVo) {
         //요청바디 객체를 만드는 부분
         MultiValueMap<Object, Object> map = new LinkedMultiValueMap<>();
-        String templateObjectJson = TextTemplateFactory.convertOrderResponseToTextTemplateJson(orderResponce);
+        String templateObjectJson = TextTemplateFactory.convertOrderResponseToTextTemplateJson(orderResponse);
         map.set(TEMPLATE_OBJECT, templateObjectJson);
 
         //요청을 위한 토큰을 가지고 오는 로직
