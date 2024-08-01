@@ -6,6 +6,7 @@ import gift.dto.ProductResponse;
 import gift.dto.ProductUpdateRequest;
 import gift.entity.Category;
 import gift.entity.Product;
+import gift.exception.InvalidCategoryException;
 import gift.exception.InvalidProductException;
 import gift.exception.InvalidUserException;
 import gift.repository.CategoryRepository;
@@ -27,8 +28,10 @@ public class ProductService {
 		this.categoryRepository = categoryRepository;
 	}
 	
-    public Page<ProductResponse> getProducts(Pageable pageable) {
-        return productRepository.findAll(pageable).map(Product::toDto);
+    public Page<ProductResponse> getProducts(Long categoryId, Pageable pageable) {
+    	findCategoryById(categoryId);
+        return productRepository.findByCategoryId(categoryId, pageable)
+        		.map(Product::toDto);
     }
 
     public ProductResponse getProduct(Long productId) {
@@ -37,7 +40,7 @@ public class ProductService {
 
     public void createProduct(ProductRequest request, BindingResult bindingResult) {
     	validateBindingResult(bindingResult);
-    	Category category = validateCategory(request.getCategoryName());
+    	Category category = findCategoryById(request.getCategoryId());
     	Product product = request.toEntity(category);
         productRepository.save(product);
     }
@@ -53,7 +56,7 @@ public class ProductService {
     		BindingResult bindingResult) {
     	validateBindingResult(bindingResult);
     	Product updateProduct = findProductById(productId);
-    	Category category = validateCategory(request.getCategoryName());
+    	Category category = findCategoryById(request.getCategoryId());
     	updateProduct.setCategory(category);
     	productRepository.save(updateProduct);
     }
@@ -83,8 +86,8 @@ public class ProductService {
 	    		.orElseThrow(() -> new InvalidProductException("Product not found"));
     }
     
-    public Category validateCategory(String categoryName) {
-    	return categoryRepository.findByName(categoryName)
-    			.orElseThrow(() -> new InvalidProductException("Category not found"));
+    public Category findCategoryById(Long categoryId) {
+        return categoryRepository.findById(categoryId)
+        		.orElseThrow(() -> new InvalidCategoryException("Catetory not found"));
     }
 }

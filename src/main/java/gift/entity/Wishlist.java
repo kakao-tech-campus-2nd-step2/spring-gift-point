@@ -72,8 +72,7 @@ public class Wishlist {
 	}
 	
 	public WishlistResponse toDto() {
-        WishlistResponse dto = new WishlistResponse(this.id, this.product.getId(),
-        		this.product.getName(), this.quantity);
+        WishlistResponse dto = new WishlistResponse(this.id, this.product);
         return dto;
     }
 }

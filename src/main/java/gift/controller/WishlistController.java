@@ -9,7 +9,6 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -60,15 +59,6 @@ public class WishlistController {
 	public ResponseEntity<Void> removeWishlist(@RequestHeader("Authorization") String token,
 			@RequestBody WishlistRequest request, BindingResult bindingResult) {
 		wishlistService.removeWishlist(token, request, bindingResult);
-		return ResponseEntity.status(HttpStatus.OK).build();
-	}
-
-	@Operation(summary = "위시리스트 업데이트", description = "위시리스트의 상품 수량을 업데이트합니다.")
-	@ApiResponse(responseCode = "200", description = "위시리스트 업데이트 성공")
-	@PutMapping
-	public ResponseEntity<Void> updateWishlist(@RequestHeader("Authorization") String token,
-			@RequestBody WishlistRequest request, BindingResult bindingResult) {
-		wishlistService.updateWishlistQuantity(token, request, bindingResult);
 		return ResponseEntity.status(HttpStatus.OK).build();
 	}
 }

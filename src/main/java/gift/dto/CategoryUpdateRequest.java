@@ -1,21 +1,21 @@
 package gift.dto;
 
-import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 
 public class CategoryUpdateRequest {
 
-	@NotBlank(message = "선택할 수 있는 카테고리 이름을 입력해야 합니다.")
-	private String categoryName;
+	@NotNull(message = "선택할 수 있는 카테고리 번호를 입력해야 합니다.")
+	private Long categoryId;
 	
-	public String getCategoryName() {
-		return categoryName;
+	public Long getCategoryId() {
+		return categoryId;
 	}
 	
-	public void setCategoryName(String categoryName) {
-		this.categoryName = categoryName;
+	public void setCategoryId(Long categoryId) {
+		this.categoryId = categoryId;
 	}
 	
-	public CategoryUpdateRequest(String categoryName) {
-		this.categoryName = categoryName;
+	public CategoryUpdateRequest(Long categoryId) {
+		this.categoryId = categoryId;
 	}
 }

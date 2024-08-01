@@ -5,6 +5,7 @@ import gift.entity.Product;
 import gift.exception.InvalidProductException;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 
@@ -21,8 +22,8 @@ public class ProductRequest {
 	@Size(max = 255, message = "url의 길이는 최대 255자까지 입니다.")
 	private String imageUrl;
 	
-	@NotBlank(message = "선택할 수 있는 카테고리 이름을 입력해야 합니다.")
-	private String categoryName;
+	@NotNull(message = "선택할 수 있는 카테고리 번호를 입력해야 합니다.")
+	private Long categoryId;
 
 	public String getName() {
 		return name;
@@ -51,21 +52,21 @@ public class ProductRequest {
 		this.imageUrl = imageUrl;
 	}
 	
-	public String getCategoryName() {
-		return categoryName;
+	public Long getCategoryId() {
+		return categoryId;
 	}
 	
-	public void setCategoryName(String categoryName) {
-		this.categoryName = categoryName;
+	public void setCategoryId(Long categoryId) {
+		this.categoryId = categoryId;
 	}
 	
 	public ProductRequest() {}
 	
-	public ProductRequest(String name, int price, String imageUrl, String categoryName) {
+	public ProductRequest(String name, int price, String imageUrl, Long categoryId) {
 		this.setName(name);
 		this.price = price;
 		this.imageUrl = imageUrl;
-		this.categoryName = categoryName;
+		this.categoryId = categoryId;
 	}
 	
 	public Product toEntity(Category category) {

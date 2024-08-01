@@ -43,8 +43,9 @@ public class ProductRepositoryTest {
 
     @Test
     void findById() {
+    	Product savedProduct = productRepository.save(product);
     	productRepository.save(product);
-        Product actual = productRepository.findById(product.getId()).orElse(null);
+        Product actual = productRepository.findById(savedProduct.getId()).orElse(null);
         assertThat(actual).isNotNull();
         assertThat(actual.getName()).isEqualTo(product.getName());
     }

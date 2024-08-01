@@ -24,6 +24,10 @@ public class Order {
 	@JoinColumn(name = "option_id", nullable = false)
 	private Option option;
 	
+	@ManyToOne
+	@JoinColumn(name = "user_id", nullable = false)
+	private User user;
+	
 	@Column(nullable = false)
 	private int quantity;
 	
@@ -33,8 +37,9 @@ public class Order {
 	@Column(nullable = false)
 	private String message;
 	
-	public Order(Option option, int quantity, String message) {
+	public Order(Option option, User user, int quantity, String message) {
 		this.option = option;
+		this.user = user;
 		this.quantity = quantity;
 		this.message = message;
 		this.orderDateTime = LocalDateTime.now();

@@ -2,6 +2,7 @@ package gift.dto;
 
 import gift.entity.Option;
 import gift.entity.Order;
+import gift.entity.User;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
@@ -39,7 +40,7 @@ public class OrderRequest {
 		this.message = message;
 	}
 	
-	public Order toEntity(Option option) {
-		return new Order(option, this.quantity, this.message);
+	public Order toEntity(User user, Option option) {
+		return new Order(option, user, this.quantity, this.message);
 	}
 }

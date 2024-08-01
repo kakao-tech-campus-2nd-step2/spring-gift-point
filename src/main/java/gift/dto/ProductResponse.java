@@ -6,14 +6,14 @@ public class ProductResponse {
 	private String name;
 	private int price;
 	private String imageUrl;
-	private String categoryName;
+	private Long categoryId;
 	
-	public ProductResponse(Long id, String name, int price, String imageUrl, String categoryName) {
+	public ProductResponse(Long id, String name, int price, String imageUrl, Long categoryId) {
 		this.id = id;
 		this.name = name;
 		this.price = price;
 		this.imageUrl = imageUrl;
-		this.categoryName = categoryName;
+		this.categoryId = categoryId;
 	}
 	
 	public Long getId() {
@@ -32,7 +32,7 @@ public class ProductResponse {
 		return imageUrl;
 	}
 
-	public String getCategoryName() {
-		return categoryName;
+	public Long getCategoryId() {
+		return categoryId;
 	}
 }

@@ -29,16 +29,16 @@ public class AdminController {
     }
 
     @GetMapping
-    public String adminPage(Model model,
+    public String adminPage(Model model, @RequestParam(value = "categoryId", required = true) Long categoryId,
     		@PageableDefault(sort="name") Pageable pageable) {
-        Page<ProductResponse> productList = productService.getProducts(pageable);
+        Page<ProductResponse> productList = productService.getProducts(categoryId, pageable);
         model.addAttribute("products", productList);
         return "admin";
     }
 
     @GetMapping("/new")
     public String addProductForm(Model model) {
-        model.addAttribute("productRequest", new ProductRequest("아이스 아메리카노 T", 4500, "https://example.com/image.jpg", "교환권"));
+        model.addAttribute("productRequest", new ProductRequest("아이스 아메리카노 T", 4500, "https://example.com/image.jpg", 1L));
         model.addAttribute("categories", categoryService.getAllCategories());
         return "product-form";
     }

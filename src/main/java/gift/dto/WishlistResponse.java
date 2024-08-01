@@ -1,32 +1,22 @@
 package gift.dto;
 
+import gift.entity.Product;
+
 public class WishlistResponse {
 
     private Long id;
-    private Long productId;
-    private String productName;
-    private int quantity;
+    private Product product;
     
-    public WishlistResponse(Long id, Long productId, String productName, int quantity) {
+    public WishlistResponse(Long id, Product product) {
     	this.id = id;
-    	this.productId = productId;
-    	this.productName = productName;
-    	this.quantity = quantity;
+    	this.product = product;
     }
 
     public Long getId() {
         return id;
     }
 
-    public Long getProductId() {
-        return productId;
-    }
-
-    public String getProductName() {
-        return productName;
-    }
-
-    public int getQuantity() {
-        return quantity;
+    public Product getProduct() {
+        return product;
     }
 }
