@@ -7,7 +7,6 @@ import gift.dto.response.CommonResponse;
 import gift.dto.response.OrderResponse;
 import gift.service.OrderService;
 import io.swagger.v3.oas.annotations.Operation;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -33,11 +32,10 @@ public class OrderRestController {
     @Operation(summary = "주문 목록을 페이지 단위로 조회합니다")
     @GetMapping
     public ResponseEntity<CommonResponse> getPagedOrders(@LoginMember MemberRequest memberRequest,
-                                                              @RequestParam(defaultValue = "0") int page,
-                                                             @RequestParam(defaultValue = "10") int size,
-                                                             @RequestParam(defaultValue = "id,desc") String sort,
-                                                             Pageable pageable){
+                                                         @RequestParam(defaultValue = "0") int page,
+                                                         @RequestParam(defaultValue = "10") int size,
+                                                         @RequestParam(defaultValue = "orderDateTime,desc") String sort){
         return ResponseEntity.status(HttpStatus.OK)
-                .body(new CommonResponse(orderService.getPagedOrders(memberRequest,pageable),"페이징 된 주문 목록 조회 성공",true));
+                .body(new CommonResponse(orderService.getPagedOrders(memberRequest, page, size, sort), "페이징 된 주문 목록 조회 성공", true));
     }
 }
