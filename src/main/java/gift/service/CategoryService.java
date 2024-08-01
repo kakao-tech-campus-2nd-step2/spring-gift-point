@@ -43,7 +43,7 @@ public class CategoryService {
             throw new BaseHandler(HttpStatus.FORBIDDEN, "해당 이름의 카테고리가 이미 존재합니다.");
         }
 
-        CategoryEntity category = categoryMapper.toEntity(create.getName());
+        CategoryEntity category = categoryMapper.toEntity(create);
         categoryRepository.save(category);
         return category.getId();
     }
@@ -57,7 +57,7 @@ public class CategoryService {
         CategoryEntity category = categoryRepository.findById(id)
             .orElseThrow(() -> new BaseHandler(HttpStatus.NOT_FOUND, "해당 카테고리가 존재하지 않습니다."));
 
-        categoryMapper.toUpdate(update.getName(), category);
+        categoryMapper.toUpdate(update, category);
         return category.getId();
     }
 

@@ -77,7 +77,11 @@ class CategoryTest {
     @Test
     @DisplayName("이름이 중복되는 카테고리 생성")
     public void CreateDuplicateCategoryName() {
-        CreateCategory body = new CreateCategory("duplicate");
+        CreateCategory body = new CreateCategory("Test1",
+            "https://img1.daumcdn.net/thumb/S104x104/?fname=https%3A%2F%2Ft1.daumcdn.net%2Fgift%2Fhome%2Ftheme%2F20240214_EWQEQ.png",
+            "축하 리스트",
+            "Test222",
+            "#B67352");
 
         HttpEntity<Long> requestEntity = new HttpEntity(body, headers);
 
@@ -95,7 +99,11 @@ class CategoryTest {
     @Test
     @DisplayName("수정될 이름이 기존 카테고리 이름과 중복됨")
     public void UpdateDuplicateCategoryName() {
-        UpdateCategory body = new UpdateCategory("Test1");
+        UpdateCategory body = new UpdateCategory("aaa",
+            "https://img1.daumcdn.net/thumb/S104x104/?fname=https%3A%2F%2Ft1.daumcdn.net%2Fgift%2Fhome%2Ftheme%2F20240214_EWQEQ.png",
+            "수정될 카테고리가 존재하지 않음",
+            "aaa",
+            "#B67352");
 
         HttpEntity<Long> requestEntity = new HttpEntity(body, headers);
 
@@ -109,7 +117,11 @@ class CategoryTest {
     @Test
     @DisplayName("수정될 카테고리가 존재하지 않음")
     public void UpdateNotFoundCategory() {
-        UpdateCategory body = new UpdateCategory("aaa");
+        UpdateCategory body = new UpdateCategory("aaa",
+            "https://img1.daumcdn.net/thumb/S104x104/?fname=https%3A%2F%2Ft1.daumcdn.net%2Fgift%2Fhome%2Ftheme%2F20240214_EWQEQ.png",
+            "수정될 카테고리가 존재하지 않음",
+            "aaa",
+            "#B67352");
 
         HttpEntity<Long> requestEntity = new HttpEntity(body, headers);
 
