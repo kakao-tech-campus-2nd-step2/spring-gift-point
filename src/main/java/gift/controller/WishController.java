@@ -28,7 +28,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 @Tag(name = "위시리스트 API", description = "위시리스트 관련된 API")
 @RestController
-@RequestMapping("api/wishes")
+@RequestMapping("/api/wishes")
 public class WishController {
     private final WishService wishService;
     private final ProductService productService;
@@ -39,7 +39,7 @@ public class WishController {
     }
 
     @Operation(summary = "위시리스트 조회", description = "회원의 위시리스트를 조회합니다.")
-    @GetMapping
+    @GetMapping("/all")
     public ResponseEntity<List<WishDTO>> getWishes(@LoginMember Member member) {
         List<WishDTO> wishes = wishService.getWishesByMemberId(member.getId()).stream()
             .map(WishDTO::from)
@@ -48,7 +48,7 @@ public class WishController {
     }
 
     @Operation(summary = "페이지 단위 위시리스트 조회", description = "페이지 단위로 회원의 위시리스트를 조회합니다.")
-    @GetMapping("/paged")
+    @GetMapping
     public ResponseEntity<Page<WishDTO>> getPagedWishes(@LoginMember Member member, Pageable pageable) {
         Page<WishDTO> wishes = wishService.getWishesByMemberId(member.getId(), pageable)
             .map(WishDTO::from);

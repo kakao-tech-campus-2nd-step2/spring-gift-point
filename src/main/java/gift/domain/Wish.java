@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "wish")
@@ -26,6 +27,10 @@ public class Wish {
     @JoinColumn(name = "product_id", nullable = false)
     private Product product;
 
+    @NotNull
+    @Column(name = "created_date", updatable = false)
+    private LocalDateTime createdDate;
+
     protected Wish() {
     }
 
@@ -33,6 +38,12 @@ public class Wish {
         this.id = builder.id;
         this.member = builder.member;
         this.product = builder.product;
+        this.createdDate = builder.createdDate;
+    }
+
+    @PrePersist
+    protected void onCreate() {
+        this.createdDate = LocalDateTime.now();
     }
 
     public Long getId() {
@@ -47,10 +58,15 @@ public class Wish {
         return product;
     }
 
+    public LocalDateTime getCreatedDate() {
+        return createdDate;
+    }
+
     public static class WishBuilder {
         private Long id;
         private Member member;
         private Product product;
+        private LocalDateTime createdDate;
 
         public WishBuilder id(Long id) {
             this.id = id;
@@ -64,6 +80,11 @@ public class Wish {
 
         public WishBuilder product(Product product) {
             this.product = product;
+            return this;
+        }
+
+        public WishBuilder createdDate(LocalDateTime createdDate) {
+            this.createdDate = createdDate;
             return this;
         }
 
