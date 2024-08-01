@@ -20,9 +20,9 @@ public interface WishRepository extends JpaRepository<Wish, Long> {
     @Transactional
     void deleteByUserIdAndId(Long userId, Long wishId);
 
-    @Modifying
-    @Transactional
-    @Query("UPDATE Wish w SET w.number = :number WHERE w.user.id = :userId AND w.id = :wishId")
-    void updateWishNumber(Long userId, Long wishId, int number);
+//    @Modifying
+//    @Transactional
+//    @Query("UPDATE Wish w SET w.number = :number WHERE w.user.id = :userId AND w.id = :wishId")
+//    void updateWishNumber(Long userId, Long wishId, int number);
 
 }

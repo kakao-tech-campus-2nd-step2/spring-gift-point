@@ -211,33 +211,33 @@ INSERT INTO options (name, quantity, product_id)
 VALUES ('[Top] 라벤더 핸드 & 스틱 립 밤', 500, 15);
 
 
-INSERT INTO wishes (user_id, product_id, number, created_date)
-VALUES (1, 1, 2, CURRENT_TIMESTAMP);
-INSERT INTO wishes (user_id, product_id, number, created_date)
-VALUES (1, 2, 4, CURRENT_TIMESTAMP);
-INSERT INTO wishes (user_id, product_id, number, created_date)
-VALUES (1, 3, 6, CURRENT_TIMESTAMP);
-INSERT INTO wishes (user_id, product_id, number, created_date)
-VALUES (1, 4, 8, CURRENT_TIMESTAMP);
-INSERT INTO wishes (user_id, product_id, number, created_date)
-VALUES (1, 5, 10, CURRENT_TIMESTAMP);
-INSERT INTO wishes (user_id, product_id, number, created_date)
-VALUES (1, 6, 12, CURRENT_TIMESTAMP);
-INSERT INTO wishes (user_id, product_id, number, created_date)
-VALUES (1, 7, 14, CURRENT_TIMESTAMP);
-INSERT INTO wishes (user_id, product_id, number, created_date)
-VALUES (1, 8, 16, CURRENT_TIMESTAMP);
-INSERT INTO wishes (user_id, product_id, number, created_date)
-VALUES (1, 9, 18, CURRENT_TIMESTAMP);
-INSERT INTO wishes (user_id, product_id, number, created_date)
-VALUES (1, 10, 20, CURRENT_TIMESTAMP);
-INSERT INTO wishes (user_id, product_id, number, created_date)
-VALUES (1, 11, 22, CURRENT_TIMESTAMP);
-INSERT INTO wishes (user_id, product_id, number, created_date)
-VALUES (1, 12, 24, CURRENT_TIMESTAMP);
-INSERT INTO wishes (user_id, product_id, number, created_date)
-VALUES (1, 13, 26, CURRENT_TIMESTAMP);
-INSERT INTO wishes (user_id, product_id, number, created_date)
-VALUES (1, 14, 28, CURRENT_TIMESTAMP);
-INSERT INTO wishes (user_id, product_id, number, created_date)
-VALUES (1, 15, 30, CURRENT_TIMESTAMP);
+INSERT INTO wishes (user_id, product_id, created_date)
+VALUES (1, 1, CURRENT_TIMESTAMP);
+INSERT INTO wishes (user_id, product_id, created_date)
+VALUES (1, 2, CURRENT_TIMESTAMP);
+INSERT INTO wishes (user_id, product_id, created_date)
+VALUES (1, 3, CURRENT_TIMESTAMP);
+INSERT INTO wishes (user_id, product_id, created_date)
+VALUES (1, 4, CURRENT_TIMESTAMP);
+INSERT INTO wishes (user_id, product_id, created_date)
+VALUES (1, 5, CURRENT_TIMESTAMP);
+INSERT INTO wishes (user_id, product_id, created_date)
+VALUES (1, 6, CURRENT_TIMESTAMP);
+INSERT INTO wishes (user_id, product_id, created_date)
+VALUES (1, 7, CURRENT_TIMESTAMP);
+INSERT INTO wishes (user_id, product_id, created_date)
+VALUES (1, 8, CURRENT_TIMESTAMP);
+INSERT INTO wishes (user_id, product_id, created_date)
+VALUES (1, 9, CURRENT_TIMESTAMP);
+INSERT INTO wishes (user_id, product_id, created_date)
+VALUES (1, 10, CURRENT_TIMESTAMP);
+INSERT INTO wishes (user_id, product_id, created_date)
+VALUES (1, 11, CURRENT_TIMESTAMP);
+INSERT INTO wishes (user_id, product_id, created_date)
+VALUES (1, 12, CURRENT_TIMESTAMP);
+INSERT INTO wishes (user_id, product_id, created_date)
+VALUES (1, 13, CURRENT_TIMESTAMP);
+INSERT INTO wishes (user_id, product_id, created_date)
+VALUES (1, 14, CURRENT_TIMESTAMP);
+INSERT INTO wishes (user_id, product_id, created_date)
+VALUES (1, 15, CURRENT_TIMESTAMP);

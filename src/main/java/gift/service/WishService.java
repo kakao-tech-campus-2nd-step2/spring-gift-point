@@ -37,7 +37,7 @@ public class WishService {
         User user = userRepository.findById(userId)
             .orElseThrow(() -> new UserAuthException("ID에 해당하는 유저가 없습니다."));
 
-        Wish wish = new Wish(user, product, request.getNumber());
+        Wish wish = new Wish(user, product);
         wishRepository.save(wish);
         return wish;
     }
@@ -60,13 +60,13 @@ public class WishService {
         );
     }
 
-    public void updateNumber(Long userId, Long wishId, int number) {
-        wishRepository.findByUserIdAndId(userId, wishId).ifPresentOrElse(
-            wish -> wishRepository.updateWishNumber(userId, wishId, number),
-            () -> {
-                throw new WishNotFoundException("위시 리스트가 없습니다.");
-            }
-        );
-    }
+//    public void updateNumber(Long userId, Long wishId, int number) {
+//        wishRepository.findByUserIdAndId(userId, wishId).ifPresentOrElse(
+//            wish -> wishRepository.updateWishNumber(userId, wishId, number),
+//            () -> {
+//                throw new WishNotFoundException("위시 리스트가 없습니다.");
+//            }
+//        );
+//    }
 
 }

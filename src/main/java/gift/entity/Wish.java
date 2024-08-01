@@ -34,9 +34,9 @@ public class Wish {
     @JoinColumn(name = "product_id")
     @Schema(description = "Product that is wished for")
     private Product product;
-    @NotNull
-    @Schema(description = "Number of products wished for", example = "3")
-    private Integer number;
+//    @NotNull
+//    @Schema(description = "Number of products wished for", example = "3")
+//    private Integer number;
 
     @Schema(description = "Date and time when the wish was created", example = "2024-07-28T17:04:18.834374")
     @CreatedDate
@@ -46,10 +46,9 @@ public class Wish {
 
     }
 
-    public Wish(User user, Product product, int number) {
+    public Wish(User user, Product product) {
         this.user = user;
         this.product = product;
-        this.number = number;
     }
 
     public Long getId() {
@@ -68,23 +67,23 @@ public class Wish {
         return user;
     }
 
-    public int getNumber() {
-        return number;
-    }
+//    public int getNumber() {
+//        return number;
+//    }
 
     public LocalDateTime getCreatedDate() {
         return this.createdDate;
     }
 
-    public void subtractNumber(Integer number) {
-        this.number -= number;
-    }
+//    public void subtractNumber(Integer number) {
+//        this.number -= number;
+//    }
 
     public boolean sameProduct(Product product) {
         return this.product == product;
     }
 
-    public boolean checkLeftWishNumber() {
-        return this.number <= 0;
-    }
+//    public boolean checkLeftWishNumber() {
+//        return this.number <= 0;
+//    }
 }

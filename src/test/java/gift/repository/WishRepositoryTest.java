@@ -50,18 +50,18 @@ class WishRepositoryTest {
                 actualWish.get().getProduct().getName()));
     }
 
-    @Test
-    @DisplayName("updateWishNumber JPQL 테스트")
-    void updateWishNumber() {
-        Optional<Wish> wish = wishRepository.findById(1L);
-        assertThat(wish).isPresent();
-        wishRepository.updateWishNumber(1L, wish.get().getId(), 30);
-        entityManager.flush();
-        entityManager.clear();
-
-        Optional<Wish> updatedWish = wishRepository.findByUserIdAndId(1L, wish.get().getId());
-
-        assertThat(updatedWish).isPresent().hasValueSatisfying(
-            w -> assertThat(w.getNumber()).isEqualTo(30));
-    }
+//    @Test
+//    @DisplayName("updateWishNumber JPQL 테스트")
+//    void updateWishNumber() {
+//        Optional<Wish> wish = wishRepository.findById(1L);
+//        assertThat(wish).isPresent();
+//        wishRepository.updateWishNumber(1L, wish.get().getId(), 30);
+//        entityManager.flush();
+//        entityManager.clear();
+//
+//        Optional<Wish> updatedWish = wishRepository.findByUserIdAndId(1L, wish.get().getId());
+//
+//        assertThat(updatedWish).isPresent().hasValueSatisfying(
+//            w -> assertThat(w.getNumber()).isEqualTo(30));
+//    }
 }
