@@ -58,17 +58,12 @@ public class WishService {
     }
 
     @Transactional
-    public void deleteWish(Long memberId, Long productId) {
-        checkMemberValidation(memberId);
-        checkProductValidation(productId);
-        wishRepository.deleteByMemberIdAndProductId(memberId, productId);
+    public void deleteWish(Long wishId) {
+        Wish wish = wishRepository.findById(wishId)
+                .orElseThrow(() -> new CustomException(ErrorCode.INVALID_WISH));
+        wishRepository.delete(wish);
     }
 
-    private void checkProductValidation(Long productId) {
-        if (!productRepository.existsById(productId)) {
-            throw new CustomException(ErrorCode.INVALID_PRODUCT, productId);
-        }
-    }
 
     private void checkMemberValidation(Long memberId) {
         if (!memberRepository.existsById(memberId)) {

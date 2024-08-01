@@ -37,7 +37,7 @@ public class WishController {
     public ResponseEntity<SuccessResponse> addNewWish(@LoginMember UserDetails userDetails,
                                                       @RequestBody WishAddRequestDto request) {
         wishService.addWish(userDetails.id(), request);
-        return ResponseEntity.ok(new SuccessResponse(HttpStatus.OK, "위시 리스트 등록에 성공하였습니다."));
+        return ResponseEntity.ok(new SuccessResponse(HttpStatus.CREATED, "위시 리스트 등록에 성공하였습니다."));
     }
 
     @Operation(summary = "위시 조회 API")
@@ -68,11 +68,11 @@ public class WishController {
     @Operation(summary = "위시 삭제 API")
     @ApiResponse(responseCode = "204", description = "위시 삭제 성공")
     @ApiResponse(responseCode = "400", description = "잘못된 요청")
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/{wishId}")
     public ResponseEntity<SuccessResponse> deleteWish(
             @LoginMember UserDetails userDetails,
-            @PathVariable("id") Long productId) {
-        wishService.deleteWish(userDetails.id(), productId);
+            @PathVariable("wishId") Long wishId) {
+        wishService.deleteWish(wishId);
         return ResponseEntity.ok(new SuccessResponse(HttpStatus.NO_CONTENT, "성공적으로 삭제되었습니다."));
     }
 }
