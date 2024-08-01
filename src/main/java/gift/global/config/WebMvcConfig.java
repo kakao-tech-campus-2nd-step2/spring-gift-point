@@ -13,6 +13,7 @@ import java.util.List;
 public class WebMvcConfig implements WebMvcConfigurer {
 
     private final LoginMemberArgumentResolver loginMemberArgumentResolver;
+    private static final String ORIGIN_URL = "https://kakao-gift-api.shop";
 
     public WebMvcConfig(LoginMemberArgumentResolver loginMemberArgumentResolver) {
         this.loginMemberArgumentResolver = loginMemberArgumentResolver;
@@ -26,7 +27,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**")
-                .allowedOriginPatterns("*")
+                .allowedOrigins(ORIGIN_URL)
                 .allowedMethods("GET", "POST", "PUT", "DELETE")
                 .allowedHeaders(HttpHeaders.AUTHORIZATION, HttpHeaders.CONTENT_TYPE)
                 .allowCredentials(true)
