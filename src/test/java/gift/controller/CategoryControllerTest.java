@@ -196,7 +196,7 @@ class CategoryControllerTest {
             category);
 
         // when & then
-        mockMvc.perform(put("/api/categories").param("id", String.valueOf(categoryDto.getId()))
+        mockMvc.perform(put("/api/categories/1").param("id", String.valueOf(categoryDto.getId()))
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(categoryDto)))
             .andDo(print())

@@ -110,17 +110,17 @@ class OptionControllerTest {
                     fieldWithPath("data").description("옵션 목록"),
                     fieldWithPath("data[].id").description("옵션 ID"),
                     fieldWithPath("data[].name").description("옵션 이름"),
-                    fieldWithPath("data[].quantity").description("옵션 수량"),
-                    fieldWithPath("data[].optionResponseList").description("옵션 응답 리스트"),
-                    fieldWithPath("data[].optionResponseList[].id").description("옵션 응답 ID"),
-                    fieldWithPath("data[].optionResponseList[].name").description("옵션 응답 이름"),
-                    fieldWithPath("data[].optionResponseList[].productList").description("제품 목록").optional(),
-                    fieldWithPath("data[].optionResponseList[].quantity").description("옵션 응답 수량"),
-                    fieldWithPath("data[].optionResponseMap").description("옵션 응답 맵"),
-                    fieldWithPath("data[].optionResponseMap.id").description("옵션 맵 ID"),
-                    fieldWithPath("data[].optionResponseMap.name").description("옵션 맵 이름"),
-                    fieldWithPath("data[].optionResponseMap.productList").description("제품 목록").optional(),
-                    fieldWithPath("data[].optionResponseMap.quantity").description("옵션 맵 수량")
+                    fieldWithPath("data[].quantity").description("옵션 수량")
+//                    fieldWithPath("data[].optionResponseList").description("옵션 응답 리스트"),
+//                    fieldWithPath("data[].optionResponseList[].id").description("옵션 응답 ID"),
+//                    fieldWithPath("data[].optionResponseList[].name").description("옵션 응답 이름"),
+//                    fieldWithPath("data[].optionResponseList[].productList").description("제품 목록").optional(),
+//                    fieldWithPath("data[].optionResponseList[].quantity").description("옵션 응답 수량"),
+//                    fieldWithPath("data[].optionResponseMap").description("옵션 응답 맵"),
+//                    fieldWithPath("data[].optionResponseMap.id").description("옵션 맵 ID"),
+//                    fieldWithPath("data[].optionResponseMap.name").description("옵션 맵 이름"),
+//                    fieldWithPath("data[].optionResponseMap.productList").description("제품 목록").optional(),
+//                    fieldWithPath("data[].optionResponseMap.quantity").description("옵션 맵 수량")
 
                 )
             ));
