@@ -1,5 +1,6 @@
 package gift.controller.api;
 
+import gift.dto.page.PageResponse;
 import gift.dto.product.ProductAddRequest;
 import gift.dto.product.ProductResponse;
 import gift.dto.product.ProductUpdateRequest;
@@ -10,7 +11,6 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 
@@ -49,7 +49,7 @@ public interface ProductApi {
             @ApiResponse(responseCode = "401", description = "허용되지 않는 요청", content = @Content(schema = @Schema(hidden = true))),
             @ApiResponse(responseCode = "500", description = "내부 서버의 오류", content = @Content(schema = @Schema(hidden = true)))
     })
-    ResponseEntity<Page<ProductResponse>> getProducts(Long categoryId, Pageable pageable);
+    ResponseEntity<PageResponse<ProductResponse>> getProducts(Long categoryId, Pageable pageable);
 
     @Operation(summary = "특정 상품을 삭제한다.")
     @ApiResponses(value = {

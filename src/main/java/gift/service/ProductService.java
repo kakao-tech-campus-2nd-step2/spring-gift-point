@@ -2,6 +2,7 @@ package gift.service;
 
 import gift.dto.category.CategoryResponse;
 import gift.dto.option.OptionRequest;
+import gift.dto.page.PageResponse;
 import gift.dto.product.ProductAddRequest;
 import gift.dto.product.ProductResponse;
 import gift.dto.product.ProductUpdateRequest;
@@ -11,8 +12,6 @@ import gift.model.Category;
 import gift.model.Product;
 import gift.repository.CategoryRepository;
 import gift.repository.ProductRepository;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -55,19 +54,18 @@ public class ProductService {
     }
 
     @Transactional(readOnly = true)
-    public Page<ProductResponse> getProducts(Pageable pageable) {
+    public PageResponse<ProductResponse> getProducts(Pageable pageable) {
         var pageResult = productRepository.findAll(pageable);
         var products = pageResult
                 .getContent()
                 .stream()
                 .map(this::getProductResponseFromProduct)
                 .toList();
-
-        return new PageImpl<>(products, pageable, pageResult.getTotalElements());
+        return new PageResponse<>(pageResult.getNumber(), pageResult.getSize(), pageResult.getTotalElements(), pageResult.getTotalPages(), products);
     }
 
     @Transactional(readOnly = true)
-    public Page<ProductResponse> getProducts(Long categoryId, Pageable pageable) {
+    public PageResponse<ProductResponse> getProducts(Long categoryId, Pageable pageable) {
         var pageResult = productRepository.findAllByCategoryId(categoryId, pageable);
         var products = pageResult
                 .getContent()
@@ -75,7 +73,7 @@ public class ProductService {
                 .map(this::getProductResponseFromProduct)
                 .toList();
 
-        return new PageImpl<>(products, pageable, pageResult.getTotalElements());
+        return new PageResponse<>(pageResult.getNumber(), pageResult.getSize(), pageResult.getTotalElements(), pageResult.getTotalPages(), products);
     }
 
     public void deleteProduct(Long productId) {

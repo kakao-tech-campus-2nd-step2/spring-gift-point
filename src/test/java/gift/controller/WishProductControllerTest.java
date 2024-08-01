@@ -117,8 +117,8 @@ class WishProductControllerTest {
         //then
         addResult.andExpect(status().isCreated());
         var wishProducts = wishProductService.getWishProducts(1L, PageRequest.of(0, 10));
-        Assertions.assertThat(wishProducts.getContent().size()).isEqualTo(1);
-        Assertions.assertThat(wishProducts.getContent().get(0).quantity()).isEqualTo(20);
+        Assertions.assertThat(wishProducts.content().size()).isEqualTo(1);
+        Assertions.assertThat(wishProducts.content().get(0).quantity()).isEqualTo(20);
 
         wishProductService.deleteWishProduct(wishProduct.id());
     }
@@ -141,9 +141,9 @@ class WishProductControllerTest {
         var managerWishLength = managerWishResult.getResponse().getContentLength();
         Assertions.assertThat(managerWishLength).isEqualTo(0);
         var memberWishProducts = wishProductService.getWishProducts(1L, PageRequest.of(0, 10));
-        Assertions.assertThat(memberWishProducts.getContent().size()).isEqualTo(2);
+        Assertions.assertThat(memberWishProducts.content().size()).isEqualTo(2);
 
-        deleteWishProducts(memberWishProducts.getContent());
+        deleteWishProducts(memberWishProducts.content());
     }
 
     @Test
@@ -161,8 +161,8 @@ class WishProductControllerTest {
         //then
         result.andExpect(status().isNoContent());
         var wishProducts = wishProductService.getWishProducts(1L, PageRequest.of(0, 10));
-        Assertions.assertThat(wishProducts.getContent().size()).isEqualTo(1);
-        Assertions.assertThat(wishProducts.getContent().get(0).quantity()).isEqualTo(30);
+        Assertions.assertThat(wishProducts.content().size()).isEqualTo(1);
+        Assertions.assertThat(wishProducts.content().get(0).quantity()).isEqualTo(30);
 
         wishProductService.deleteWishProduct(wishProduct.id());
     }
@@ -183,7 +183,7 @@ class WishProductControllerTest {
         //then
         result.andExpect(status().isNoContent());
         var wishProducts = wishProductService.getWishProducts(1L, PageRequest.of(0, 10));
-        Assertions.assertThat(wishProducts.getContent().size()).isEqualTo(0);
+        Assertions.assertThat(wishProducts.content().size()).isEqualTo(0);
     }
 
     @Test
