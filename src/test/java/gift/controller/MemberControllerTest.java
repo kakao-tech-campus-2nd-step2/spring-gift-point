@@ -31,7 +31,7 @@ public class MemberControllerTest {
     @DisplayName("정상적으로 가입 후 탈퇴 요청하기")
     void successDeleteMember() throws Exception {
         //given
-        var registerRequest = new RegisterRequest("테스트", "test@naver.com", "testPassword");
+        var registerRequest = new RegisterRequest("test@naver.com", "testPassword");
         var auth = authService.register(registerRequest);
         var deleteRequest = delete("/api/members")
                 .contentType(MediaType.APPLICATION_JSON)

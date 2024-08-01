@@ -6,10 +6,9 @@ import gift.dto.product.ProductBasicInformation;
 public record WishProductResponse(
         Long id,
         @JsonProperty("product")
-        ProductBasicInformation productBasicInformation,
-        Integer quantity
+        ProductBasicInformation productBasicInformation
 ) {
-    public static WishProductResponse of(Long id, ProductBasicInformation productBasicInformation, Integer quantity) {
-        return new WishProductResponse(id, productBasicInformation, quantity);
+    public static WishProductResponse of(Long id, ProductBasicInformation productBasicInformation) {
+        return new WishProductResponse(id, productBasicInformation);
     }
 }

@@ -117,8 +117,7 @@ public class ProductService {
 
     private ProductResponse getProductResponseFromProduct(Product product) {
         var categoryResponse = getCategoryResponseFromCategory(product.getCategory());
-        var options = optionService.getOptions(product.getId());
-        return ProductResponse.of(product.getId(), product.getName(), product.getPrice(), product.getImageUrl(), categoryResponse, options);
+        return ProductResponse.of(product.getId(), product.getName(), product.getPrice(), product.getImageUrl(), categoryResponse);
     }
 
     private Product findProductById(Long id) {

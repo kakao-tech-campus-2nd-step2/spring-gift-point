@@ -14,9 +14,6 @@ import org.hibernate.annotations.SQLRestriction;
 @SQLRestriction("deleted is false")
 public class Member extends BaseEntity {
     @NotNull
-    @Column(name = "name")
-    private String name;
-    @NotNull
     @Column(name = "email", unique = true)
     private String email;
     @NotNull
@@ -29,20 +26,14 @@ public class Member extends BaseEntity {
     protected Member() {
     }
 
-    public Member(String name, String email, OauthType oauthType) {
-        this.name = name;
+    public Member(String email, OauthType oauthType) {
         this.email = email;
         this.password = oauthType.name();
     }
 
-    public Member(String name, String email, String password) {
-        this.name = name;
+    public Member(String email, String password) {
         this.email = email;
         this.password = password;
-    }
-
-    public String getName() {
-        return name;
     }
 
     public String getPassword() {

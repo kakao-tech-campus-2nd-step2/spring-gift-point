@@ -51,6 +51,11 @@ public class GlobalExceptionHandler {
         return getExceptionResponse(exception.getMessage(), HttpStatus.UNAUTHORIZED);
     }
 
+    @ExceptionHandler(value = AlreadyExistsException.class)
+    public ResponseEntity<ExceptionResponse> alreadyExistsExceptionHandling(AlreadyExistsException exception) {
+        return getExceptionResponse(exception.getMessage(), HttpStatus.CONFLICT);
+    }
+
     @ExceptionHandler(value = ExpiredJwtException.class)
     public ResponseEntity<ExceptionResponse> expiredJwtExceptionHandling() {
         return getExceptionResponse(EXPIRED_JWT_MESSAGE, HttpStatus.UNAUTHORIZED);

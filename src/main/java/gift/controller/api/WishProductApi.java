@@ -1,9 +1,8 @@
 package gift.controller.api;
 
-import gift.dto.wishproduct.WishProductAddRequest;
 import gift.dto.wishproduct.WishProductPageResponse;
+import gift.dto.wishproduct.WishProductRequest;
 import gift.dto.wishproduct.WishProductResponse;
-import gift.dto.wishproduct.WishProductUpdateRequest;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -22,15 +21,7 @@ public interface WishProductApi {
             @ApiResponse(responseCode = "401", description = "허용되지 않는 요청", content = @Content(schema = @Schema(hidden = true))),
             @ApiResponse(responseCode = "500", description = "내부 서버의 오류", content = @Content(schema = @Schema(hidden = true)))
     })
-    ResponseEntity<WishProductResponse> addWishProduct(WishProductAddRequest wishProductAddRequest, Long memberId);
-
-    @Operation(summary = "회원의 특정 위시 리스트를 수정한다.")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "204", description = "위시 리스트 수정 성공"),
-            @ApiResponse(responseCode = "401", description = "허용되지 않는 요청"),
-            @ApiResponse(responseCode = "500", description = "내부 서버의 오류")
-    })
-    ResponseEntity<Void> updateWishProduct(Long id, WishProductUpdateRequest wishProductUpdateRequest);
+    ResponseEntity<WishProductResponse> addWishProduct(WishProductRequest wishProductRequest, Long memberId);
 
     @Operation(summary = "회원의 특정 위시 리스트를 조회한다.")
     @ApiResponses(value = {
