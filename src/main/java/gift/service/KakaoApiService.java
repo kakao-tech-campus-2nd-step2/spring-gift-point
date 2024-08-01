@@ -3,7 +3,8 @@ package gift.service;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import gift.config.KakaoProperties;
-import gift.dto.OrderRequestDTO;
+import gift.dto.order.OrderRequestDTO;
+import gift.dto.order.OrderResponseDTO;
 import gift.exceptions.CustomException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.web.client.RestTemplateBuilder;
@@ -13,6 +14,7 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
 import java.net.URI;
+import java.time.LocalDateTime;
 
 @Service
 public class KakaoApiService {
@@ -84,6 +86,13 @@ public class KakaoApiService {
             HttpStatus httpStatus = HttpStatus.resolve(response.getStatusCode().value());
             throw CustomException.invalidAPIException(httpStatus);
         }
+    }
+
+    public OrderResponseDTO getOrderResponseDTO(OrderRequestDTO orderRequestDTO) {
+        return new OrderResponseDTO(orderRequestDTO.optionId(),
+                                    orderRequestDTO.quantity(),
+                                    orderRequestDTO.message(),
+                                    LocalDateTime.now().toString());
     }
 
     private String extractAccessToken(String responseBody) {

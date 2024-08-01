@@ -1,8 +1,9 @@
 package gift.service;
 
-import gift.dto.WishPageResponseDTO;
-import gift.dto.WishRequestDTO;
+import gift.dto.wish.WishPageResponseDTO;
+import gift.dto.wish.WishRequestDTO;
 
+import gift.dto.wish.WishResponseDTO;
 import gift.exceptions.CustomException;
 import gift.model.Option;
 import gift.model.User;
@@ -30,22 +31,22 @@ public class WishService {
         this.optionRepository = optionRepository;
     }
 
-    public void addWishOption(Long userId, WishRequestDTO wishRequestDTO) {
+    public WishPageResponseDTO getWishlist(Long userId, Pageable pageable) {
+        User user = userRepository.findById(userId).orElseThrow(CustomException::userNotFoundException);
+        Page<Wish> wishes = wishRepository.findAllByUser(user, pageable);
+
+        return new WishPageResponseDTO(wishes);
+    }
+
+    public WishResponseDTO addWishOption(Long userId, WishRequestDTO wishRequestDTO) {
         User user = userRepository.findById(userId).orElseThrow(CustomException::userNotFoundException);
         Option option = optionRepository.findById(wishRequestDTO.optionId()).orElseThrow(CustomException::optionNotFoundException);
         Wish wish = new Wish(user, option);
 
-        wishRepository.save(wish);
-    }
+        Wish savedWish = wishRepository.save(wish);
+        WishResponseDTO wishResponseDTO = new WishResponseDTO(savedWish.getId(), savedWish.getOption().getProduct().getId());
 
-
-    public WishPageResponseDTO getWishlist(Long userId, Pageable pageable) {
-        User user = userRepository.findById(userId).orElseThrow(CustomException::userNotFoundException);
-        Page<Wish> pages = wishRepository.findAllByUser(user, pageable);
-
-        return new WishPageResponseDTO(pages.getContent(),
-                pages.getNumber(),
-                pages.getTotalPages());
+        return  wishResponseDTO;
     }
 
     @Transactional
