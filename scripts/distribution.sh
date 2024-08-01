@@ -1,5 +1,5 @@
 #!/bin/bash
-BUILD_PATH=$(ls /home/ubuntu/build/*.jar)
+BUILD_PATH=$(ls /home/ubuntu/build/ *.jar)
 JAR_NAME=$(basename $BUILD_PATH)
 
 CURRENT_PID=$(pgrep -f $JAR_NAME)
