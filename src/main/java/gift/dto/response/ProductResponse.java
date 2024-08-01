@@ -11,4 +11,13 @@ public record ProductResponse(Long id, String name, Integer price, String imageU
     public String getName() {
         return name;
     }
+
+    public Integer getPrice() {
+        return price;
+    }
+
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
 }
