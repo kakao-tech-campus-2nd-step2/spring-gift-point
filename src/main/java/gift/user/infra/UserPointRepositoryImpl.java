@@ -28,4 +28,10 @@ public class UserPointRepositoryImpl implements UserPointRepository {
         userPointJpaRepository.save(userPoint);
         return userPoint;
     }
+
+    public UserPoint findByUserId(Long userId) {
+        return userPointJpaRepository.findByUserId(userId).orElseThrow(
+                () -> new IllegalArgumentException("UserPoint not found")
+        );
+    }
 }

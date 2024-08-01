@@ -8,4 +8,6 @@ public interface UserPointRepository {
     UserPoint findById(Long id);
 
     UserPoint addPoint(Long id, Long point);
+
+    UserPoint findByUserId(Long userId);
 }

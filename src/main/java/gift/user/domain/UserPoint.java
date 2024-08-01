@@ -14,7 +14,7 @@ public class UserPoint {
     @GeneratedValue(strategy = jakarta.persistence.GenerationType.IDENTITY)
     private Long id;
     private Long userId;
-    private Long point = 0L;
+    private Long point;
 
     private LocalDateTime createdAt = LocalDateTime.now();
 

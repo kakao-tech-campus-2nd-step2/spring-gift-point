@@ -72,3 +72,7 @@ VALUES ('까리한 블랙', (SELECT product_id FROM product WHERE name = 'Apple 
 
 INSERT INTO product_option (name, product_id, quantity)
 VALUES ('세련된 실버', (SELECT product_id FROM product WHERE name = 'Apple 2023 맥북 프로 14 M3'), 20);
+
+
+INSERT INTO user_points (user_id, point)
+VALUES (1, 1000);
