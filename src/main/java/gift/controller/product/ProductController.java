@@ -28,9 +28,9 @@ public class ProductController implements ProductSpecification {
         return ResponseEntity.status(HttpStatus.CREATED).body("상품이 생성되었습니다.");
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<ProductResponse.Info> getGift(@PathVariable Long id) {
-        ProductResponse.Info gift = productService.getGift(id);
+    @GetMapping("/{productId}")
+    public ResponseEntity<ProductResponse.Info> getGift(@PathVariable("productId") Long productId) {
+        ProductResponse.Info gift = productService.getGift(productId);
         return ResponseEntity.ok(gift);
     }
 
