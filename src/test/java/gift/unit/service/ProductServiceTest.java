@@ -56,7 +56,7 @@ class ProductServiceTest {
         given(productRepository.findAll(pageable)).willReturn(Page.empty());
 
         // when
-        Page<ProductResponse> products = productService.getAllProducts(pageable);
+        Page<ProductResponse> products = productService.getAllProducts(pageable, null);
 
         // then
         assertThat(products).isEmpty();
@@ -80,7 +80,7 @@ class ProductServiceTest {
         given(productRepository.findAll(pageable)).willReturn(productPage);
 
         // when
-        List<ProductResponse> products = productService.getAllProducts(pageable).toList();
+        List<ProductResponse> products = productService.getAllProducts(pageable, null).toList();
 
         // then
         assertThat(products).isNotNull();
@@ -134,7 +134,7 @@ class ProductServiceTest {
         given(productRepository.save(any(Product.class))).willReturn(savedProduct);
         given(categoryRepository.findById(any(Long.class))).willReturn(Optional.of(category));
         given(optionService.createOption(any(), any())).willReturn(
-            new OptionResponse(1L, "option 1", 100));
+            new OptionResponse(1L, "option 1", 100, 1L));
 
         // when
         productService.createProduct(request);
