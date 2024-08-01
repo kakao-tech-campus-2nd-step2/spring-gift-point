@@ -30,9 +30,8 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-@Controller
-@RequestMapping("/products")
-@Api(tags = "Product Management")
+@RestController
+@RequestMapping("/api/products")
 public class ProductController {
 
     @Autowired
@@ -64,58 +63,25 @@ public class ProductController {
         return "product-list";
     }
 
-    @PostMapping("/add")
-    @ApiOperation(value = "Add a new product", notes = "Creates a new product with the given details")
-    public String addProduct(@ApiParam(value = "Product name", required = true) @RequestParam String name,
-        @ApiParam(value = "Product price", required = true) @RequestParam int price,
-        @ApiParam(value = "Product image URL", required = true) @RequestParam String imageUrl,
-        @ApiParam(value = "Category ID", required = true) @RequestParam Long categoryId,
-        @ApiParam(value = "Option names", required = true) @RequestParam List<String> optionNames,
-        @ApiParam(value = "Option quantities", required = true) @RequestParam List<Long> optionQuantities,
-        RedirectAttributes redirectAttributes) {
-        Category category = categoryService.getCategoryById(categoryId);
-        Product product = new Product(name, price, imageUrl, category);
-        productService.addProduct(product);
+    @PostMapping
+    @ResponseBody
+    public String addProduct(@RequestBody ProductRequest productRequest) {
+        Product product = productService.addProduct(productRequest);
+        optionService.addOption(productRequest.dtoToOptionEntity(product));
 
-        List<Option> options = new ArrayList<>();
-        for (int i = 0; i < optionNames.size(); i++) {
-            String optionName = optionNames.get(i);
-            Long optionQuantity = optionQuantities.get(i);
-            Option option = new Option(optionName, optionQuantity, product);
-            options.add(option);
-        }
-        optionService.addOption(options);
-
-        redirectAttributes.addFlashAttribute("message", "Product added successfully!");
-        return "redirect:/products";
+        return "redirect:/api/products";
     }
 
-    @PostMapping("/update")
-    @ApiOperation(value = "Update an existing product", notes = "Updates the details of an existing product")
-    public String updateProduct(@ApiParam(value = "Product name", required = true) @RequestParam String name,
-        @ApiParam(value = "Product price", required = true) @RequestParam int price,
-        @ApiParam(value = "Product image URL", required = true) @RequestParam String imageUrl,
-        @ApiParam(value = "Category ID", required = true) @RequestParam Long categoryId,
-        @ModelAttribute Product product,
-        @ModelAttribute Option option,
-        @ApiParam(value = "Option names", required = true) @RequestParam("optionNames") List<String> optionNames,
-        @ApiParam(value = "Option quantities", required = true) @RequestParam("optionQuantities") List<Long> optionQuantities,
-                                RedirectAttributes redirectAttributes) {
+    @PutMapping("/{product_id}")
+    @ResponseBody
+    public String updateProduct(@PathVariable("product_id") Long id,@RequestBody ProductRequest productRequest,
+        RedirectAttributes redirectAttributes) {
 
-        List<Option> options = new ArrayList<>();
-        Category category = categoryService.getCategoryById(categoryId);
-        Product product1 = new Product(name, price, imageUrl, category);
-        for (int i = 0; i < optionNames.size(); i++) {
-            Option newOption = new Option(optionNames.get(i), optionQuantities.get(i), product1);
-            options.add(newOption);
-        }
-
-        options.stream().forEach(eachOptions -> optionService.updateOption(option.getId(),eachOptions));
-
-
-
-        product1.setOptions(options);
-        productService.updateProduct(product.getId(), product1);
+        Product oldProduct = productService.getProductById(id).get();
+        Category category = categoryService.getCategoryById(productRequest.getCategoryId());
+        Product product1 = new Product(category, productRequest);
+        product1.setOptions(oldProduct.getOptions());
+        productService.updateProduct(id, product1);
 
         redirectAttributes.addFlashAttribute("message", "Product updated successfully!");
         return "redirect:/products";
@@ -129,7 +95,7 @@ public class ProductController {
         redirectAttributes.addFlashAttribute("message", "Product deleted successfully!");
         return "redirect:/products";
     }
-
+/*
     @GetMapping("/view/{id}")
     @ApiOperation(value = "Get product details", notes = "Retrieve the details of a specific product by ID")
     public String getProductDetails(@ApiParam(value = "Product ID", required = true) @PathVariable("id") Long id, Model model,
@@ -145,11 +111,10 @@ public class ProductController {
             return "redirect:/products";
         }
     }
-
-    @GetMapping("/{id}")
-    @ApiOperation(value = "Get a product by ID", notes = "Retrieve a specific product by its ID")
-    public ResponseEntity<Product> getProductById(@ApiParam(value = "Product ID", required = true) @PathVariable Long id) {
+*/
+    @GetMapping("/{product_id}")
+    public ResponseEntity<?> getProductById(@PathVariable("product_id") Long id) {
         Optional<Product> product = productService.getProductById(id);
-        return product.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+        return ResponseEntity.status(HttpStatus.OK).body(product);
     }
 }
