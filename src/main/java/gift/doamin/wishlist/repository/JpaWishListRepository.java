@@ -9,15 +9,10 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface JpaWishListRepository extends JpaRepository<Wish, Long> {
 
-    boolean existsByUserIdAndProductId(Long userId, Long productId);
-
     boolean existsByUserIdAndOptionId(Long userId, Long optionId);
 
     @EntityGraph(attributePaths = {"user", "product"})
     Page<Wish> findAllByUserId(Long userId, Pageable pageable);
-
-    @EntityGraph(attributePaths = {"user", "product"})
-    Optional<Wish> findByUserIdAndProductId(Long userId, Long productId);
 
     Optional<Wish> findByUserIdAndOptionId(Long userId, Long optionId);
 }

@@ -10,6 +10,9 @@ public class OrderResponse {
     @Schema(description = "주문 id")
     Long id;
 
+    @Schema(description = "주문한 상품 id")
+    Long productId;
+
     @Schema(description = "주문한 상품 옵션 id")
     Long optionId;
 
@@ -24,6 +27,7 @@ public class OrderResponse {
 
     public OrderResponse(Order order) {
         this.id = order.getId();
+        this.productId = order.getOption().getProduct().getId();
         this.optionId = order.getOption().getId();
         this.quantity = order.getQuantity();
         this.orderDateTime = order.getOrderDateTime();
@@ -32,6 +36,10 @@ public class OrderResponse {
 
     public Long getId() {
         return id;
+    }
+
+    public Long getProductId() {
+        return productId;
     }
 
     public Long getOptionId() {

@@ -16,6 +16,11 @@ import gift.doamin.user.entity.User;
 import gift.doamin.user.repository.KakaoOAuthTokenRepository;
 import gift.doamin.user.service.OAuthService;
 import gift.doamin.wishlist.repository.JpaWishListRepository;
+import java.util.NoSuchElementException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.LinkedMultiValueMap;
@@ -25,6 +30,7 @@ import org.springframework.web.client.RestClient;
 @Service
 public class OrderService {
 
+    private static final Logger log = LoggerFactory.getLogger(OrderService.class);
     private final OptionRepository optionRepository;
     private final OrderRepository orderRepository;
     private final JpaWishListRepository jpaWishListRepository;
@@ -45,7 +51,7 @@ public class OrderService {
     @Transactional
     public OrderResponse makeOrder(User user, OrderRequest orderRequest) {
         Option option = optionRepository.findById(orderRequest.getOptionId()).orElseThrow(() ->
-            new IllegalArgumentException("해당 옵션이 존재하지 않습니다."));
+            new NoSuchElementException("해당 옵션이 존재하지 않습니다."));
         Order order = new Order(user, user, option, orderRequest.getQuantity(),
             orderRequest.getMessage());
         order = orderRepository.save(order);
@@ -54,14 +60,18 @@ public class OrderService {
 
         subtractWishList(user, option, orderRequest.getQuantity());
 
-        sendKakaoTalkMessage(order);
+        try {
+            sendKakaoTalkMessage(order);
+        } catch (Exception e) {
+            log.warn(e.getMessage());
+        }
 
         return new OrderResponse(order);
     }
 
     @Transactional
     public void subtractWishList(User user, Option option, Integer quantity) {
-        jpaWishListRepository.findByUserIdAndProductId(user.getId(), option.getProduct().getId())
+        jpaWishListRepository.findByUserIdAndOptionId(user.getId(), option.getId())
             .ifPresent(wish -> {
                 try {
                     wish.subtract(quantity);
@@ -71,6 +81,7 @@ public class OrderService {
             });
     }
 
+    @Transactional
     public void sendKakaoTalkMessage(Order order) {
         String url = "https://kapi.kakao.com/v2/api/talk/memo/default/send";
 
@@ -108,4 +119,7 @@ public class OrderService {
         return body;
     }
 
+    public Page<OrderResponse> getPage(Long userId, Pageable pageable) {
+        return orderRepository.findAllBySenderId(userId, pageable).map(OrderResponse::new);
+    }
 }
