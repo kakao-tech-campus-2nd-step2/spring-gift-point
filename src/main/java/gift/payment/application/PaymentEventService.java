@@ -8,7 +8,7 @@ public class PaymentEventService {
     private static final double DISCOUNT_RATE = 0.1;
 
     public Long 일정금액_이상이면_할인이벤트(Long price) {
-        if (price >= 50000L) {
+        if (price >= DISCOUNT_PRICE) {
             return (long) (price * (1 - DISCOUNT_RATE));
         }
         return price;
