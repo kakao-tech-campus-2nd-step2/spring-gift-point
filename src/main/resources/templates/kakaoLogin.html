@@ -1,0 +1,11 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>카카오톡 로그인</title>
+</head>
+<body>
+<!-- Kakao 인증 URL을 동적으로 생성 -->
+<a th:href="'https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=' + ${client_id} + '&redirect_uri=' + ${redirect_uri}">카카오톡 로그인</a>
+</body>
+</html>
