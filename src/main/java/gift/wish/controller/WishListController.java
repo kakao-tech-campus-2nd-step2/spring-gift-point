@@ -5,6 +5,7 @@ import gift.member.dto.MemberRequest;
 import gift.wish.dto.WishListRequest;
 import gift.wish.dto.WishListResponse;
 import gift.wish.service.WishListService;
+import java.util.List;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -32,10 +33,10 @@ public class WishListController {
 
     //상품 추가
     @PostMapping
-    public ResponseEntity<Void> addWishList(@LoginMember MemberRequest memberRequest,
+    public ResponseEntity<WishListResponse> addWishList(@LoginMember MemberRequest memberRequest,
         @RequestBody WishListRequest wishListRequest) {
-        wishListService.addProduct(memberRequest.getId(), wishListRequest.getProductId());
-        return ResponseEntity.ok().build();
+        var body = wishListService.addProduct(memberRequest.getId(), wishListRequest.getProductId());
+        return ResponseEntity.ok(body);
     }
 
     //상품 삭제
@@ -48,17 +49,17 @@ public class WishListController {
 
     //상품 수정
     @PutMapping
-    public ResponseEntity<Void> updateWishList(@LoginMember MemberRequest memberRequest,
+    public ResponseEntity<WishListResponse> updateWishList(@LoginMember MemberRequest memberRequest,
         @RequestBody WishListRequest wishListRequest) {
-        wishListService.updateProduct(memberRequest.getId(), wishListRequest.getProductId(),
+        var body = wishListService.updateProduct(memberRequest.getId(), wishListRequest.getProductId(),
             wishListRequest.getProductCount());
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok(body);
     }
 
-    @GetMapping("/{page}")
+    @GetMapping
     public ResponseEntity<WishListResponse> getWishListPage(@LoginMember MemberRequest memberRequest,
-        @PathVariable int page) {
-        return ResponseEntity.ok(wishListService.getWishListPage(memberRequest.getId(), page, 10));
+        @PathVariable Integer page, @PathVariable Integer size, @PathVariable List<String> sort) {
+        return ResponseEntity.ok(wishListService.getWishListPage(memberRequest.getId(), page, size, sort));
     }
 
 

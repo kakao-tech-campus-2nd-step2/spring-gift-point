@@ -5,6 +5,7 @@ import jakarta.validation.constraints.NotBlank;
 
 public class MemberRequest {
 
+    private long id;
     @NotBlank(message = "이메일을 입력해주세요")
     private String email;
     @NotBlank(message = "비밀번호를 입력해주세요")
@@ -23,4 +24,7 @@ public class MemberRequest {
         return password;
     }
 
+    public long getId() {
+        return id;
+    }
 }
