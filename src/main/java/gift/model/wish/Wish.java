@@ -19,22 +19,17 @@ public class Wish {
     @JoinColumn(name = "members_id", nullable = false)
     private Member member;
 
-    @Column(nullable = false, columnDefinition = "integer COMMENT '장바구니에 담은 상품 개수'")
-    private int amount;
-
     protected Wish(){
     }
 
-    public Wish(Product product, Member member, int amount){
+    public Wish(Product product, Member member){
         this.product = product;
         this.member = member;
-        this.amount = amount;
     }
 
     public void updateWish(Wish wish){
         this.product = wish.getProduct();
         this.member = wish.getMember();
-        this.amount = wish.getAmount();
     }
   
     public Long getId(){
@@ -47,9 +42,5 @@ public class Wish {
 
     public Member getMember(){
         return member;
-    }
-
-    public int getAmount(){
-        return amount;
     }
 }

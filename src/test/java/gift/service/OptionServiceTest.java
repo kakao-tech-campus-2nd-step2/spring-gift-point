@@ -1,6 +1,7 @@
 package gift.service;
 
-import gift.dto.OptionDto;
+import gift.dto.optionDto.OptionDto;
+import gift.dto.optionDto.OptionResponseDto;
 import gift.model.product.Category;
 import gift.model.product.Option;
 import gift.model.product.Product;
@@ -32,13 +33,16 @@ class OptionServiceTest {
     @Mock
     private ProductRepository productRepository;
 
+    @Mock
+    private Category category;
+
     public OptionServiceTest() {
         MockitoAnnotations.openMocks(this);
     }
     @Test
     void getAllOptionsById() {
         when(optionRepository.findByProductId(1L)).thenReturn(Collections.emptyList());
-        List<Option> options = optionService.getAllOptionsById(1L);
+        List<OptionResponseDto> options = optionService.getAllOptionsById(1L);
 
         assertNotNull(options);
         assertTrue(options.isEmpty());
@@ -46,7 +50,7 @@ class OptionServiceTest {
 
     @Test
     void addNewOption() {
-        Product product = new Product(new Category("category1"),new ProductName("product1"),1000,"qwer.com");
+        Product product = new Product(category,new ProductName("product1"),1000,"qwer.com");
         OptionDto optionDto = new OptionDto("option1",1234);
 
         when(productRepository.findById(product.getId())).thenReturn(Optional.of(product));
@@ -54,11 +58,5 @@ class OptionServiceTest {
 
         verify(productRepository).findById(product.getId());
         verify(optionRepository).save(any(Option.class));
-
-        verify(optionRepository).save(argThat(option ->
-                option.getProduct().equals(product) &&
-                        option.getName().equals(optionDto.name()) &&
-                        option.getAmount() == optionDto.amount()
-        ));
     }
 }

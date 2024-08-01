@@ -3,11 +3,13 @@ package gift.service;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import gift.config.KakaoAuthClient;
 import gift.config.KakaoUserClinet;
-import gift.dto.KakaoInfoDto;
-import gift.dto.KakaoTokenResponseDto;
+import gift.dto.kakaoDto.KakaoInfoDto;
+import gift.dto.kakaoDto.KakaoTokenResponseDto;
+import gift.dto.memberDto.MemberDto;
 import gift.model.member.Member;
 import gift.repository.MemberRepository;
 import org.springframework.stereotype.Service;
+
 
 import java.security.SecureRandom;
 import java.util.Optional;
@@ -37,14 +39,18 @@ public class KakaoService {
         return kakaoInfoDto;
     }
 
-    public Member registerOrGetKakaoMember(String email){
+    public MemberDto registerOrGetKakaoMember(KakaoInfoDto kakaoInfoDto){
+        String email = kakaoInfoDto.getId() + "kakao@naver.com";
         Optional<Member> kakaoMember = memberRepository.findByEmail(email);
-        if(kakaoMember.isEmpty()){
-            String tempPassword = new SecureRandom().toString();
-            Member newKakaoMember = new Member(email,tempPassword,"member");
-            memberRepository.save(newKakaoMember);
+
+        if (kakaoMember.isPresent()) {
+            Member existingMember = kakaoMember.get();
+            return new MemberDto(existingMember.getEmail(), existingMember.getPassword());
         }
-        return memberRepository.findByEmail(email).get();
+        String tempPassword = new SecureRandom().toString();
+        Member newKakaoMember = new Member(email, tempPassword);
+        memberRepository.save(newKakaoMember);
+        return new MemberDto(newKakaoMember.getEmail(), newKakaoMember.getPassword());
     }
 
     public void kakaoDisconnect(String accessToken){

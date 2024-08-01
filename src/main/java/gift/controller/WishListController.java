@@ -1,14 +1,13 @@
 package gift.controller;
 
-import gift.dto.MemberDto;
-import gift.dto.WishDto;
+import gift.dto.memberDto.MemberDto;
+import gift.dto.productDto.ProductResponseDto;
+import gift.dto.wishDto.WishDto;
 import gift.model.member.LoginMember;
 import gift.model.wish.Wish;
-import gift.service.MemberService;
 import gift.service.WishListService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
@@ -17,7 +16,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 @Controller
-@RequestMapping("/wishlist")
+@RequestMapping("/api/wishes")
 @Tag(name = "Wish Management", description = "Wish Management API")
 public class WishListController {
 
@@ -39,22 +38,22 @@ public class WishListController {
 
     @PostMapping
     @Operation(summary = "장바구니에 물건 추가", description = "회원이 물건을 장바구니에 추가할 때 사용하는 API")
-    public ResponseEntity<Void> insertWish(@LoginMember MemberDto memberDto, @RequestBody WishDto wishDto) {
-        wishListService.insertWish(wishDto);
-        return ResponseEntity.ok().build();
+    public ResponseEntity<ProductResponseDto> insertWish(@LoginMember MemberDto memberDto, @RequestBody WishDto wishDto) {
+        ProductResponseDto productResponseDto = wishListService.insertWish(wishDto,memberDto);
+        return ResponseEntity.ok().body(productResponseDto);
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/{wishId}")
     @Operation(summary = "장바구니의 물건 삭제", description = "장바구니에 담긴 물건 삭제할 때 사용하는 API")
-    public ResponseEntity<Void> removeWish(@LoginMember MemberDto memberDto, @PathVariable Long id) {
-        wishListService.deleteWish(id);
+    public ResponseEntity<Void> removeWish(@LoginMember MemberDto memberDto, @PathVariable Long wishId) {
+        wishListService.deleteWish(wishId);
         return ResponseEntity.ok().build();
     }
 
-    @PutMapping("/{id}")
+    /*@PutMapping("/{wishId}")
     @Operation(summary = "장바구니에 담긴 상품 업데이트", description = "장바구니 상품을 수정할 때 사용하는 API")
-    public ResponseEntity<Void> updateWish(@LoginMember MemberDto memberDto, @PathVariable Long id, @RequestBody WishDto wishDto) {
-        wishListService.updateWish(id,wishDto);
+    public ResponseEntity<Void> updateWish(@LoginMember MemberDto memberDto, @PathVariable Long wishId, @RequestBody WishDto wishDto) {
+        wishListService.updateWish(wishId,wishDto);
         return ResponseEntity.ok().build();
-    }
+    }*/
 }

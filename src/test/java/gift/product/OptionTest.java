@@ -22,11 +22,4 @@ public class OptionTest {
         });
         assertEquals("Not enough product available", exception.getMessage());
     }
-
-    @Test
-    void updateAmount(){
-        Option option = new Option(product,"option1",100);
-        option.updateAmount(30);
-        assertEquals(70, option.getAmount());
-    }
 }

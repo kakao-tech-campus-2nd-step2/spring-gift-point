@@ -1,6 +1,7 @@
 package gift.service;
 
-import gift.dto.MemberDto;
+import gift.dto.memberDto.MemberDto;
+import gift.dto.memberDto.MemberResponseDto;
 import gift.exception.AuthenticationException;
 import gift.exception.ValueAlreadyExistsException;
 import gift.jwt.JwtTokenProvider;
@@ -22,22 +23,22 @@ public class MemberService {
         this.memberRepository = memberRepository;
     }
 
-    public void registerNewMember(MemberDto memberDto) {
-        Member member = new Member(memberDto.email(),memberDto.password(), memberDto.role());
+    public MemberResponseDto registerNewMember(MemberDto memberDto) {
+        Member member = new Member(memberDto.email(),memberDto.password());
         memberRepository.findByEmail(member.getEmail()).ifPresent(existingMember -> {
             throw new ValueAlreadyExistsException("Email already exists in Database");
         });
-
-        memberRepository.save(member);
+        Member savedMemner = memberRepository.save(member);
+        return new MemberResponseDto(savedMemner.getId(), savedMemner.getEmail());
     }
 
     public String returnToken(MemberDto memberDto){
-        Member member = new Member(memberDto.email(),memberDto.password(), memberDto.role());
+        Member member = new Member(memberDto.email(),memberDto.password());
         return jwtTokenProvider.generateToken(member);
     }
 
     public String loginMember(MemberDto memberDto) {
-        Member member = new Member(memberDto.email(),memberDto.password(), memberDto.role());
+        Member member = new Member(memberDto.email(),memberDto.password());
         Member registeredMember = memberRepository.findByEmail(member.getEmail())
                 .orElseThrow(() -> new AuthenticationException("Member not exists in Database"));
 

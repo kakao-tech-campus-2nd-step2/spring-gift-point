@@ -1,10 +1,10 @@
 package gift.repository;
 
 import gift.model.product.Category;
-import gift.model.product.Option;
 import gift.model.product.Product;
 import gift.model.product.ProductName;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
@@ -21,9 +21,11 @@ class ProductRepositoryTest {
     @Autowired
     private CategoryRepository categoryRepository;
 
+    @Mock
+    private Category category;
+
     @Test
     void save(){
-        Category category = new Category("category1");
         categoryRepository.save(category);
         Product expectedProduct = new Product(category, new ProductName("product1"),1000,"qwer.com");
 
@@ -37,7 +39,6 @@ class ProductRepositoryTest {
 
     @Test
     void delete(){
-        Category category = new Category("category1");
         categoryRepository.save(category);
 
         Product expectedProduct = new Product(category,new ProductName("product1"),1000,"qwer.com");
@@ -49,7 +50,6 @@ class ProductRepositoryTest {
 
     @Test
     void update(){
-        Category category = new Category("category1");
         categoryRepository.save(category);
 
         Product expectedProduct = new Product(category,new ProductName("product1"),1000,"qwer.com");
@@ -65,7 +65,6 @@ class ProductRepositoryTest {
 
     @Test
     void existsByName() {
-        Category category = new Category("category1");
         categoryRepository.save(category);
         Product expectedProduct = new Product(category,new ProductName("product1"),1000,"qwer.com");
 

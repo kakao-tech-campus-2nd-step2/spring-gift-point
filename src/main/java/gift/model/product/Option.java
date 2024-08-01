@@ -1,5 +1,6 @@
 package gift.model.product;
 
+import gift.dto.optionDto.OptionDto;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
@@ -25,7 +26,7 @@ public class Option {
     @Column(nullable = false, columnDefinition = "integer COMMENT '상품 수량'")
     @Min(value = 1)
     @Max(value = 100000000 - 1)
-    private  int amount;
+    private  int quantity;
 
     @Version
     private Long version;
@@ -33,31 +34,29 @@ public class Option {
     protected Option(){
     }
 
-    public Option(Product product, String name, int amount){
+    public Option(Product product, String name, int quantity){
         this.product = product;
         this.name = name;
-        this.amount = amount;
+        this.quantity = quantity;
+    }
+
+    public void updateOption(OptionDto optionDto){
+        this.name = optionDto.optionName();
+        this.quantity = optionDto.quantity();
     }
 
     public boolean isProductEnough(int purchaseAmount){
-        if(amount >= purchaseAmount){
+        if(quantity >= purchaseAmount){
             return true;
         }
         throw new RuntimeException("Not enough product available");
     }
 
-    public boolean isProductNotEnough(int purchaseAmount){
-        if(purchaseAmount >= amount){
-            return true;
-        }
-        return false;
-    }
-
     public void updateAmount(int purchaseAmount){
-        if(purchaseAmount >= amount){
+        if(purchaseAmount >= quantity){
             throw new RuntimeException("Not enough product available");
         }
-        this.amount = amount - purchaseAmount;
+        this.quantity = quantity - purchaseAmount;
     }
 
     public Long getId() {
@@ -72,7 +71,7 @@ public class Option {
         return name;
     }
 
-    public int getAmount() {
-        return amount;
+    public int getQuantity() {
+        return quantity;
     }
 }
