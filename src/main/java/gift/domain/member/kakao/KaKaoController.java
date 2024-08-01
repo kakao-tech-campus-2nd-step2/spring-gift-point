@@ -8,7 +8,6 @@ import gift.global.response.SimpleResultResponseDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -17,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.view.RedirectView;
 
 @RestController
-@RequestMapping("/api/members/oauth")
+@RequestMapping
 @Tag(name = "KaKao", description = "KaKao API")
 public class KaKaoController {
 
@@ -30,7 +29,7 @@ public class KaKaoController {
     /**
      * 카카오 로그인 페이지로 이동
      */
-    @GetMapping("/kakao/login")
+    @GetMapping("/api/oauth/kakao")
     @Operation(summary = "카카오 로그인 페이지로 이동")
     public RedirectView LoginPage() {
         return new RedirectView(kaKaoService.buildLoginPageUrl());
@@ -39,9 +38,9 @@ public class KaKaoController {
     /**
      * 카카오 로그인 인가코드로 JWT 발급
      */
-    @GetMapping("/kakao")
+    @GetMapping
     @Operation(summary = "카카오 로그인 인가코드로 JWT 발급")
-    public ResponseEntity<MemberResponse> JwtToken(
+    public ResponseEntity<MemberResponse> getAuth(
         @Parameter(description = "카카오 로그인 인가코드") @RequestParam(value = "code") String authorizedCode
     ) {
         KaKaoToken kaKaoToken = kaKaoService.getKaKaoToken(authorizedCode);
