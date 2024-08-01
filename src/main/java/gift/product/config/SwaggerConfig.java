@@ -8,7 +8,6 @@ import io.swagger.v3.oas.models.Operation;
 import io.swagger.v3.oas.models.media.StringSchema;
 import io.swagger.v3.oas.models.parameters.HeaderParameter;
 import io.swagger.v3.oas.models.parameters.Parameter;
-import io.swagger.v3.oas.models.responses.ApiResponse;
 import io.swagger.v3.oas.models.security.SecurityRequirement;
 import io.swagger.v3.oas.models.security.SecurityScheme;
 import java.util.Set;
@@ -62,16 +61,14 @@ public class SwaggerConfig {
 
                 if (isTargetPath) {
                     pathItem.readOperations().forEach(
-                        this::addErrorResponse
+                        this::addAuthParam
                     );
                 }
             });
     }
 
-    private void addErrorResponse(Operation operation) {
-        ApiResponse apiResponse = new ApiResponse().description("사용자 인증 오류");
+    private void addAuthParam(Operation operation) {
         operation.addParametersItem(authHeader());
-        operation.getResponses().addApiResponse("401", apiResponse);
     }
 
     private Parameter authHeader() {
