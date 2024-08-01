@@ -10,6 +10,7 @@ CURRENT_PID=$(pgrep -f $JAR_NAME)
 if [ -z $CURRENT_PID ]
 then
   echo "[1] 현재 배포된 서버가 없습니다."
+  echo "[2] 종료시킬 애플리케이션이 없습니다."
 else
   echo "[1] 현재 배포된 서버를 중단시킵니다. 현재 배포된 서버의 PID: $CURRENT_PID"
   kill -15 $CURRENT_PID
