@@ -4,6 +4,7 @@ import gift.domain.Category;
 import gift.dto.CategoryRequestDto;
 import gift.dto.CommonResponse;
 import gift.service.CategoryService;
+import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -21,7 +22,6 @@ public class CategoryController {
     public CategoryController(CategoryService categoryService) {
         this.categoryService = categoryService;
     }
-
     @PostMapping
     public ResponseEntity<Void> addCategory(@RequestBody CategoryRequestDto categoryRequestDto){
         Category category = new Category(categoryRequestDto.getName(),categoryRequestDto.getColor(),categoryRequestDto.getDescription(),categoryRequestDto.getImageUrl());
@@ -29,6 +29,7 @@ public class CategoryController {
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
+    @Operation(summary = "모든 카테고리를 조회합니다")
     @GetMapping
     public ResponseEntity<CommonResponse> findAll(){
         return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(categoryService.findAll(), "모든 카테고리 조회 성공", true));

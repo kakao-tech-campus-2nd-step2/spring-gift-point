@@ -12,7 +12,9 @@ import gift.repository.OptionRepository;
 import gift.repository.ProductRepository;
 import java.util.List;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -83,5 +85,30 @@ public class ProductService {
     public Page<ProductResponse> getPagedProducts(Pageable pageable, Long categoryId){
         Page<Product> pagedProduct = productRepository.findByCategoryId(categoryId, pageable);
         return pagedProduct.map(ProductResponse::from);
+    }
+
+    @Transactional(readOnly = true)
+    public Page<ProductResponse> getPagedProducts(int page, int size, String sort){
+        String[] sortParams = sort.split(",");
+        Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Order.by(sortParams[0]).with(Sort.Direction.fromString(sortParams[1]))));
+        Page<Product> pagedProduct = productRepository.findAll(pageable);
+        return pagedProduct.map(ProductResponse::from);
+    }
+
+
+    @Transactional(readOnly = true)
+    public Page<ProductResponse> getPagedProductsByCategoryId(int page, int size, String sort, Long categoryId){
+        String[] sortParams = sort.split(",");
+        Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Order.by(sortParams[0]).with(Sort.Direction.fromString(sortParams[1]))));
+        Page<Product> pagedProduct = productRepository.findByCategoryId(categoryId, pageable);
+        return pagedProduct.map(ProductResponse::from);
+    }
+
+    @Transactional(readOnly = true)
+    public List<ProductResponse> findByCategoryId(Long categoryId){
+        return productRepository.findByCategoryId(categoryId)
+            .stream()
+            .map(ProductResponse::from)
+            .toList();
     }
 }

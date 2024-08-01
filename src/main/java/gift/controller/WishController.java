@@ -9,15 +9,22 @@ import gift.dto.WishResponseDto;
 import gift.service.JwtProvider;
 import gift.service.MemberService;
 import gift.service.WishService;
-import java.util.List;
-import org.springframework.data.domain.Page;
+import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("api/wishes")
@@ -33,6 +40,7 @@ public class WishController {
         this.memberService = memberService;
     }
 
+    @Operation(summary = "새로운 위시를 추가합니다")
     @PostMapping
     public ResponseEntity<CommonResponse> addWish(@RequestHeader("Authorization") String fullToken,
         @RequestBody WishRequestDto wishRequestDto) {
@@ -58,6 +66,7 @@ public class WishController {
 //        return ResponseEntity.status(HttpStatus.OK).build();
 //    }
 
+    @Operation(summary = "회원의 모든 위시 목록을 조회합니다")
     @GetMapping
     public ResponseEntity<CommonResponse> getMemberWishes(
         @RequestParam(defaultValue = "0") int page,
@@ -80,6 +89,7 @@ public class WishController {
     }
 
 
+    @Operation(summary = "특정 위시를 삭제합니다")
     @DeleteMapping("/{wishId}")
     public ResponseEntity<CommonResponse> deleteWishById(
         @RequestHeader("Authorization") String fullToken, @PathVariable Long wishId) {

@@ -14,6 +14,7 @@ import gift.exception.OrderNotFoundException;
 import gift.repository.OrderRepository;
 import jakarta.transaction.Transactional;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -42,8 +43,11 @@ public class OrderService {
         optionService.subtractQuantity(orderRequestDto.getOptionId(),
             orderRequestDto.getQuantity());
         Long productId = optionService.findById(orderRequestDto.getOptionId()).getProduct().getId();
-        Wish wish = wishService.findByEmailAndProductId(memberEmail, productId);
-        wishService.deleteById(wish.getId());
+        Optional<Wish> wishOptional = wishService.findByEmailAndProductId(memberEmail, productId);
+        if (wishOptional.isPresent()) {
+            Wish wish = wishOptional.get();
+            wishService.deleteById(wish.getId());
+        }
 
         Order order = new Order(orderRequestDto.getOptionId(),member.getId() ,orderRequestDto.getQuantity(),orderRequestDto.getMessage());
         orderRepository.save(order);

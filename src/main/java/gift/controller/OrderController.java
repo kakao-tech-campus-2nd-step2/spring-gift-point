@@ -10,6 +10,7 @@ import gift.dto.OrderResponseDto;
 import gift.service.JwtProvider;
 import gift.service.MemberService;
 import gift.service.OrderService;
+import io.swagger.v3.oas.annotations.Operation;
 import java.util.List;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpEntity;
@@ -45,6 +46,7 @@ public class OrderController {
     }
 
     // 로그인 후 상품 주문 , 헤더에 Authorization: Bearer {JWT token} : 기능 요구 사항 (1)+(2)+(3)
+    @Operation(summary = "새로운 주문을 생성합니다")
     @PostMapping
     public ResponseEntity<CommonResponse> order(@RequestHeader("Authorization") String fullToken,@RequestBody OrderRequestDto orderRequestDto){
         String memberEmail = jwtProvider.getMemberEmail(fullToken.substring(7));
@@ -83,6 +85,7 @@ public class OrderController {
         return response;
     }
 
+    @Operation(summary = "주문 목록을 페이지 단위로 조회합니다")
     @GetMapping
     public ResponseEntity<CommonResponse> getPagedOrders(@RequestHeader("Authorization") String fullToken,
         @RequestParam(defaultValue = "0") int page,

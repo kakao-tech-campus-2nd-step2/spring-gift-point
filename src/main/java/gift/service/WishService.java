@@ -94,13 +94,12 @@ public class WishService {
         );
     }
 
-    public Wish findByEmailAndProductId(String memberEmail, Long productId) {
+    public Optional<Wish> findByEmailAndProductId(String memberEmail, Long productId) {
         Member member = memberRepository.findByEmail(memberEmail)
             .orElseThrow(
                 () -> new MemberNotFoundException(Messages.NOT_FOUND_MEMBER_BY_EMAIL_MESSAGE));
 
-        return wishRepository.findByMemberIdAndProductId(member.getId(), productId)
-            .orElseThrow(() -> new WishNotFoundException(Messages.NOT_FOUND_WISH_MESSAGE));
+        return wishRepository.findByMemberIdAndProductId(member.getId(), productId);
 
     }
 
