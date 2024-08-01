@@ -44,7 +44,6 @@ public class KakaoUserService {
 
         ResponseEntity<KakaoTokenResponse> response = restTemplate.exchange(request,
             KakaoTokenResponse.class);
-        //BLUMTTgnxlIioJcG6RrjICULu6ONYbVPMUj6aQE08XcSDivCyyqwvAAAAAQKPXPrAAABkQ4B899yxKx5jTsi9A
 
         return response.getBody();
     }
