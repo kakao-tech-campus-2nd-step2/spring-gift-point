@@ -24,9 +24,9 @@ public class MemberFacade {
         this.tokenManager = tokenManager;
     }
 
-    public MemberModel.InfoAndJwt socialLogin(OAuthCommand.Login command) {
+    public MemberModel.InfoAndJwt socialLogin(OAuthCommand.Login command, String redirectUrl) {
         KakaoToken token = tokenManager.getTokenByAuthorizationCode(
-            command.authorizationCode());
+            command.authorizationCode(), redirectUrl);
         OAuthCommand.MemberInfo memberInfo = memberKakaoService.getMemberInfo(
             token.getAccessToken());
         MemberCommand.Create create = memberInfo.toCreateCommand();

@@ -30,9 +30,10 @@ public class OAuthController {
     @Operation(summary = "소셜 로그인", description = "소셜 로그인 api")
     @GetMapping("/api/oauth/kakao/login/callback")
     public ResponseEntity<MemberResponse.Login> login(
-        @RequestParam("code") String code
+        @RequestParam("code") String code,
+        @RequestParam("redirect-url") String redirectUrl
     ) {
-        var response = memberFacade.socialLogin(new OAuthCommand.Login(code));
+        var response = memberFacade.socialLogin(new OAuthCommand.Login(code), redirectUrl);
         return ResponseEntity.status(HttpStatus.OK)
             .header("Authorization", response.jwt())
             .body(Login.from(response));
@@ -40,8 +41,10 @@ public class OAuthController {
     }
 
     @GetMapping("/api/oauth/kakao/login")
-    public ResponseEntity<Void> getOauthURL() {
-        var kakaoLoginUrl = kakaoProperties.getKakaoLoginUrl();
+    public ResponseEntity<Void> getOauthURL(
+        @RequestParam("redirect-url") String redirectUrl
+    ) {
+        var kakaoLoginUrl = kakaoProperties.getKakaoLoginUrl(redirectUrl);
         return ResponseEntity.status(HttpStatus.SEE_OTHER)
             .header("location", kakaoLoginUrl)
             .build();

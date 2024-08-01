@@ -19,9 +19,9 @@ public class TokenManager {
     /**
      * 인가 코드를 사용해서 토큰 가져오기
      */
-    public KakaoToken getTokenByAuthorizationCode(String authorizationCode) {
+    public KakaoToken getTokenByAuthorizationCode(String authorizationCode, String redirectUrl) {
         System.out.println("authorizationCode = " + authorizationCode);
-        KakaoToken token = kakaoTokenApiCaller.getToken(authorizationCode);
+        KakaoToken token = kakaoTokenApiCaller.getToken(authorizationCode, redirectUrl);
         System.out.println("token = " + token.getAccessToken());
         return token;
     }
