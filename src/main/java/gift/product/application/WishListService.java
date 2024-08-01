@@ -58,7 +58,7 @@ public class WishListService {
     public void deleteProductFromWishList(Long userId, Long wishListId) {
         List<WishList> wishList = wishListRepository.findByUserId(userId);
         if (wishList.isEmpty()) {
-            throw new ProductException(ErrorCode.WISHLIST_NOT_FOUND);
+            return;
         }
 
         WishList targetWishList = wishList.stream()

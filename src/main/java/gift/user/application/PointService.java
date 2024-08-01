@@ -14,4 +14,14 @@ public class PointService {
     public Long getPoint(Long userId) {
         return userPointRepository.findByUserId(userId).getPoint();
     }
+
+    public Long userPoint(Long userId, Long point) {
+        Long currentPoint = userPointRepository.findByUserId(userId).getPoint();
+        Long newPoint = currentPoint - point;
+        if (newPoint < 0) {
+            throw new IllegalArgumentException("포인트가 부족합니다.");
+        }
+        userPointRepository.updatePoint(userId, newPoint);
+        return newPoint;
+    }
 }

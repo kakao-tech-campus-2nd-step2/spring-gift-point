@@ -34,4 +34,10 @@ public class UserPointRepositoryImpl implements UserPointRepository {
                 () -> new IllegalArgumentException("UserPoint not found")
         );
     }
+
+    public void updatePoint(Long userId, Long newPoint) {
+        UserPoint userPoint = findByUserId(userId);
+        userPoint.updatePoint(newPoint);
+        userPointJpaRepository.save(userPoint);
+    }
 }

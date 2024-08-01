@@ -45,4 +45,8 @@ public class UserPoint {
     public LocalDateTime getCreatedAt() {
         return createdAt;
     }
+
+    public void updatePoint(Long newPoint) {
+        this.point = newPoint;
+    }
 }

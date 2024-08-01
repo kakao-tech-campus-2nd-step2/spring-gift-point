@@ -3,6 +3,8 @@ package gift.payment.controller;
 import gift.payment.application.PaymentService;
 import gift.payment.domain.CalcPaymentRequest;
 import gift.payment.domain.CalcPaymentResponse;
+import gift.payment.domain.PaymentRequest;
+import gift.payment.domain.PaymentResponse;
 import gift.util.CommonResponse;
 import gift.util.annotation.JwtAuthenticated;
 import io.swagger.v3.oas.annotations.Operation;
@@ -22,19 +24,16 @@ public class PaymentController {
         this.paymentService = paymentService;
     }
 
-    @Operation(summary = "결제 처리", description = "사용자의 위시리스트 아이템을 결제 처리합니다.")
     @PostMapping("/orders")
     @JwtAuthenticated
     public ResponseEntity<?> processPayment(
-            @Parameter(description = "위시리스트 ID") @PathVariable Long wishListId
+            @RequestBody PaymentRequest request
     ) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         Long userId = Long.valueOf(authentication.getName());
 
-        paymentService.processPayment(userId, wishListId);
-        return ResponseEntity.ok(new CommonResponse<>(
-                null, "결제 완료", true
-        ));
+        PaymentResponse paymentResponse = paymentService.processPayment(userId, request);
+        return ResponseEntity.ok(paymentResponse);
     }
 
 

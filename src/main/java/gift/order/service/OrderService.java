@@ -4,6 +4,8 @@ import gift.order.domain.CreateOrderRequest;
 import gift.order.domain.Order;
 import gift.order.domain.OrderCreateResponse;
 import gift.order.repository.OrderRepository;
+import gift.payment.domain.PaymentRequest;
+import gift.payment.domain.PaymentResponse;
 import gift.product.application.WishListService;
 import gift.user.application.KakaoOauthService;
 import org.springframework.stereotype.Service;
@@ -23,13 +25,12 @@ public class OrderService {
         this.kakaoOauthService = kakaoOauthService;
     }
 
-    public OrderCreateResponse createOrder(CreateOrderRequest request, String accessToken) {
-        Long userId = kakaoOauthService.getKakaoUserProfile(accessToken).getId();
+    public PaymentResponse createOrder(Long userId, PaymentRequest request) {
+        // 위시리스트에 있는 상품을 주문할 경우 위시리스트에서 삭제
         wishListService.deleteProductFromWishList(userId, request.getOptionId());
 
+        // 주문 생성
         Order order = orderRepository.save(new Order(userId, request));
-        allimService.sendAllim(accessToken, order.toString());
-
         return order.toOrderCreateResponse();
     }
 }

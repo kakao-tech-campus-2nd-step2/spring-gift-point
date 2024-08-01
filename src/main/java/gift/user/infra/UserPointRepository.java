@@ -10,4 +10,6 @@ public interface UserPointRepository {
     UserPoint addPoint(Long id, Long point);
 
     UserPoint findByUserId(Long userId);
+
+    void updatePoint(Long userId, Long newPoint);
 }
