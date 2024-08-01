@@ -30,5 +30,6 @@ DEPLOY_PATH=/home/ubuntu/
 cp $BUILD_PATH $DEPLOY_PATH
 cd $DEPLOY_PATH
 
+echo "> api실행"
 DEPLOY_JAR=$DEPLOY_PATH$JAR_NAME
 nohup java -jar $DEPLOY_JAR > /dev/null 2> /dev/null < /dev/null &
