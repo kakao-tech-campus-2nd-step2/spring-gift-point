@@ -4,10 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-import gift.model.Name;
 import gift.model.Option;
-import gift.model.OptionName;
-import gift.model.OptionQuantity;
 import gift.model.Product;
 import gift.repository.OptionRepository;
 import gift.repository.ProductRepository;
@@ -28,7 +25,6 @@ class ProductIntegrationTest {
 
     @Test
     void whenProductIsCreated_thenProductSavedCorrectly() {
-        Name name = new Name("TestProduct");
         List<Option> options = new ArrayList<>();
         Product product = new Product(null, "TestProduct", 100, "http://example.com/image.png", 1L, options);
         Product savedProduct = productRepository.save(product);
@@ -44,7 +40,6 @@ class ProductIntegrationTest {
 
     @Test
     void whenAddOption_thenOptionAdded() {
-        Name name = new Name("TestProduct");
         List<Option> options = new ArrayList<>();
         Product product = new Product(null, "TestProduct", 100, "http://example.com/image.png", 1L, options);
         productRepository.save(product);
@@ -60,13 +55,12 @@ class ProductIntegrationTest {
 
     @Test
     void whenClearOptions_thenOptionsCleared() {
-        Name name = new Name("TestProduct");
         List<Option> options = new ArrayList<>();
         Product product = new Product(null, "TestProduct", 100, "http://example.com/image.png", 1L, options);
         productRepository.save(product);
 
-        Option option1 = new Option(null, "TestOption1",10, product);
-        Option option2 = new Option(null, "TestOption2",20, product);
+        Option option1 = new Option(null, "TestOption1", 10, product);
+        Option option2 = new Option(null, "TestOption2", 20, product);
         product.addOption(option1);
         product.addOption(option2);
         optionRepository.saveAll(List.of(option1, option2));

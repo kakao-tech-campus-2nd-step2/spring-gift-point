@@ -52,23 +52,6 @@ public class Option {
         this.quantity = quantity;
     }
 
-    // Getters
-    public Long getId() {
-        return id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public int getQuantity() {
-        return quantity;
-    }
-
-    public Product getProduct() {
-        return product;
-    }
-
     // Option management methods
     public void assignProduct(Product product) {
         if (this.product != null) {
@@ -97,4 +80,23 @@ public class Option {
         }
         this.quantity -= amount;
     }
+
+    // Getters
+    public Long getId() {
+        return id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public int getQuantity() {
+        return quantity;
+    }
+
+    public Product getProduct() {
+        return product;
+    }
+
+
 }
