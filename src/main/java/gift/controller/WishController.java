@@ -31,10 +31,8 @@ public class WishController {
     }
 
     @Operation(summary = "위시 등록 API")
-    @ApiResponses({
-            @ApiResponse(responseCode = "201", description = "위시 등록 성공"),
-            @ApiResponse(responseCode = "400", description = "잘못된 요청")
-    })
+    @ApiResponse(responseCode = "201", description = "위시 등록 성공")
+    @ApiResponse(responseCode = "400", description = "잘못된 요청")
     @PostMapping
     public ResponseEntity<SuccessResponse> addNewWish(@LoginMember UserDetails userDetails,
                                                       @RequestBody WishAddRequestDto request) {
@@ -43,10 +41,8 @@ public class WishController {
     }
 
     @Operation(summary = "위시 조회 API")
-    @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "위시 조회 성공"),
-            @ApiResponse(responseCode = "400", description = "잘못된 요청")
-    })
+    @ApiResponse(responseCode = "200", description = "위시 조회 성공")
+    @ApiResponse(responseCode = "400", description = "잘못된 요청")
     @GetMapping
     public ResponseEntity<List<WishResponseDto>> getMemberWishList(
             @LoginMember UserDetails userDetails,
@@ -58,10 +54,8 @@ public class WishController {
     }
 
     @Operation(summary = "위시 수량 수정 API(사용하지 않는 API 삭제 예정)")
-    @ApiResponses({
-            @ApiResponse(responseCode = "201", description = "위시 수정 성공"),
-            @ApiResponse(responseCode = "400", description = "잘못된 요청")
-    })
+    @ApiResponse(responseCode = "201", description = "위시 수정 성공")
+    @ApiResponse(responseCode = "400", description = "잘못된 요청")
     @PutMapping("/{id}")
     public ResponseEntity<SuccessResponse> updateWish(
             @LoginMember UserDetails userDetails,
@@ -72,10 +66,8 @@ public class WishController {
     }
 
     @Operation(summary = "위시 삭제 API")
-    @ApiResponses({
-            @ApiResponse(responseCode = "204", description = "위시 삭제 성공"),
-            @ApiResponse(responseCode = "400", description = "잘못된 요청")
-    })
+    @ApiResponse(responseCode = "204", description = "위시 삭제 성공")
+    @ApiResponse(responseCode = "400", description = "잘못된 요청")
     @DeleteMapping("/{id}")
     public ResponseEntity<SuccessResponse> deleteWish(
             @LoginMember UserDetails userDetails,

@@ -60,9 +60,7 @@ public class OrderService {
     }
 
     private void sendMessage(String accessToken) {
-        TemplateObject templateObject = new TemplateObject("text", "상품 주문",
-                new TemplateObject.Link("https://gift.kakao.com/home", "https://gift.kakao.com/home"));
-        String templateObjectJson = JsonUtil.toJson(templateObject);
+        String templateObjectJson = createJsonMessage();
         var body = new LinkedMultiValueMap<String, String>();
         body.add("template_object", templateObjectJson);
         var response = restClient.post()
@@ -74,8 +72,13 @@ public class OrderService {
                 .onStatus(HttpStatusCode::isError, (req, res) -> {
                     log.error("{}: msg : {}", res.getStatusCode(),res.getHeaders());
                     throw new RuntimeException("주문 처리 중 에러가 발생하였습니다.");
-                })
-                .toEntity(String.class);
+                });
         log.info(response.toString());
+    }
+
+    private String createJsonMessage() {
+        TemplateObject templateObject = new TemplateObject("text", "상품 주문",
+                new TemplateObject.Link("https://gift.kakao.com/home", "https://gift.kakao.com/home"));
+        return JsonUtil.toJson(templateObject);
     }
 }

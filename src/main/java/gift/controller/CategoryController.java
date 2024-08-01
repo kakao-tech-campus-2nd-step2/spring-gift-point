@@ -25,9 +25,7 @@ public class CategoryController {
     }
 
     @Operation(summary = "카테고리 생성 API")
-    @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "카테고리 등록 성공"),
-    })
+    @ApiResponse(responseCode = "200", description = "카테고리 등록 성공")
     @PostMapping
     public ResponseEntity<SuccessResponse> saveCategory(@RequestBody CategoryRequestDto request) {
         categoryService.saveCategory(request);
@@ -35,9 +33,7 @@ public class CategoryController {
     }
 
     @Operation(summary = "카테고리 조회 API")
-    @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "카테고리 조회 성공"),
-    })
+    @ApiResponse(responseCode = "200", description = "카테고리 조회 성공")
     @GetMapping
     public ResponseEntity<List<CategoryResponseDto>> getAll() {
         List<CategoryResponseDto> result = categoryService.getAll();
@@ -45,9 +41,7 @@ public class CategoryController {
     }
 
     @Operation(summary = "카테고리 개별 조회 API")
-    @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "카테고리 조회 성공"),
-    })
+    @ApiResponse(responseCode = "200", description = "카테고리 조회 성공")
     @GetMapping("/{id}")
     public ResponseEntity<CategoryResponseDto> getCategory(@PathVariable("id") Long id) {
         CategoryResponseDto result = categoryService.getSingleCategory(id);
@@ -55,9 +49,7 @@ public class CategoryController {
     }
 
     @Operation(summary = "카테고리 수정 API")
-    @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "카테고리 수정 성공"),
-    })
+    @ApiResponse(responseCode = "200", description = "카테고리 수정 성공")
     @PutMapping("/{id}")
     public ResponseEntity<CategoryResponseDto> editCategory(@PathVariable("id") Long id,
                                                             @RequestBody CategoryRequestDto request) {
@@ -66,9 +58,7 @@ public class CategoryController {
     }
 
     @Operation(summary = "카테고리 삭제 API")
-    @ApiResponses({
-            @ApiResponse(responseCode = "20", description = "카테고리 삭제 성공"),
-    })
+    @ApiResponse(responseCode = "20", description = "카테고리 삭제 성공")
     @DeleteMapping("/{id}")
     public ResponseEntity<SuccessResponse> deleteCategory(@PathVariable("id") Long id) {
         categoryService.deleteCategory(id);

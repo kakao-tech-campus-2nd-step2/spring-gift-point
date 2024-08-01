@@ -35,18 +35,6 @@ public class WebController {
         return "items";
     }
 
-//    @PostMapping("products/add")
-//    public String add(@Valid @ModelAttribute("requestDto") ViewProductDto requestDto, BindingResult result, Model model) {
-//        if (result.hasErrors()) {
-//            List<CategoryResponseDto> list = categoryService.getAll();
-//            model.addAttribute("list", list);
-//            return "addForm";
-//        }
-//        ProductRequestDto request = new ProductRequestDto(requestDto.getName(), requestDto.getImgUrl(), requestDto.getPrice(), requestDto.getCategory());
-//        productService.addProduct(request);
-//        return "redirect:/";
-//    }
-
     @GetMapping("products/add")
     public String getAddForm(Model model) {
         List<CategoryResponseDto> list = categoryService.getAll();

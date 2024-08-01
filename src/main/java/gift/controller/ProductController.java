@@ -32,10 +32,8 @@ public class ProductController {
     }
 
     @Operation(summary = "상품 등록 API")
-    @ApiResponses({
-            @ApiResponse(responseCode = "201", description = "상품 등록 성공"),
-            @ApiResponse(responseCode = "400", description = "잘못된 요청")
-    })
+    @ApiResponse(responseCode = "201", description = "상품 등록 성공")
+    @ApiResponse(responseCode = "400", description = "잘못된 요청")
     @PostMapping
     public ResponseEntity<SuccessResponse> saveProduct(@Valid @RequestBody ProductRequestDto requestDto) {
         productService.addProduct(requestDto);
@@ -43,10 +41,8 @@ public class ProductController {
     }
 
     @Operation(summary = "상품 전체 조회 API")
-    @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "상품 조회 성공"),
-            @ApiResponse(responseCode = "400", description = "잘못된 요청")
-    })
+    @ApiResponse(responseCode = "200", description = "상품 조회 성공")
+    @ApiResponse(responseCode = "400", description = "잘못된 요청")
     @GetMapping
     public ResponseEntity<List<ProductResponseDto>> getAll(
             @RequestParam(required = false, defaultValue = "0", value = "page") int pageNum,
@@ -59,10 +55,8 @@ public class ProductController {
     }
 
     @Operation(summary = "상품 개별 조회 API")
-    @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "상품 조회 성공"),
-            @ApiResponse(responseCode = "400", description = "잘못된 요청")
-    })
+    @ApiResponse(responseCode = "200", description = "상품 조회 성공")
+    @ApiResponse(responseCode = "400", description = "잘못된 요청")
     @GetMapping("/{id}")
     public ResponseEntity<ProductResponseDto> getProduct(@PathVariable("id") Long id) {
         ProductResponseDto response = productService.findProduct(id);
@@ -70,10 +64,8 @@ public class ProductController {
     }
 
     @Operation(summary = "상품 수정 API")
-    @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "상품 수정 성공"),
-            @ApiResponse(responseCode = "400", description = "잘못된 요청")
-    })
+    @ApiResponse(responseCode = "200", description = "상품 수정 성공")
+    @ApiResponse(responseCode = "400", description = "잘못된 요청")
     @PutMapping("/{id}")
     public ResponseEntity<ProductResponseDto> editProduct(
             @PathVariable("id") Long id,
@@ -83,10 +75,8 @@ public class ProductController {
     }
 
     @Operation(summary = "상품 삭제 API")
-    @ApiResponses({
-            @ApiResponse(responseCode = "204", description = "상품 삭제 성공"),
-            @ApiResponse(responseCode = "400", description = "잘못된 요청")
-    })
+    @ApiResponse(responseCode = "204", description = "상품 삭제 성공")
+    @ApiResponse(responseCode = "400", description = "잘못된 요청")
     @DeleteMapping("/{id}")
     public ResponseEntity<HttpStatus> deleteProduct(@PathVariable("id") Long id) {
         productService.deleteProduct(id);
@@ -94,10 +84,8 @@ public class ProductController {
     }
 
     @Operation(summary = "상품 옵션 조회 API")
-    @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "상품 옵션 조회 성공"),
-            @ApiResponse(responseCode = "400", description = "잘못된 요청")
-    })
+    @ApiResponse(responseCode = "200", description = "상품 옵션 조회 성공")
+    @ApiResponse(responseCode = "400", description = "잘못된 요청")
     @GetMapping("/{productId}/options")
     public ResponseEntity<List<OptionResponseDto>> getOptions(@PathVariable("productId") Long productId) {
         var result = optionService.getOptions(productId);

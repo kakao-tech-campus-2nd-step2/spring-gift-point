@@ -28,10 +28,8 @@ public class OrderController {
     }
 
     @Operation(summary = "주문 등록 API")
-    @ApiResponses({
-            @ApiResponse(responseCode = "201", description = "주문 성공"),
-            @ApiResponse(responseCode = "400", description = "잘못된 요청")
-    })
+    @ApiResponse(responseCode = "201", description = "주문 성공")
+    @ApiResponse(responseCode = "400", description = "잘못된 요청")
     @PostMapping
     public ResponseEntity<SuccessResponse> makeOrder(@LoginMember UserDetails userDetails, @Valid @RequestBody OrderRequestDto request) {
         orderService.handleOrder(userDetails.id(), request);
