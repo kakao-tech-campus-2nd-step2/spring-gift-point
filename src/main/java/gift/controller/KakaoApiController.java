@@ -54,7 +54,7 @@ public class KakaoApiController {
     public ResponseEntity<KakaoApiDTO.KakaoOrderResponse> kakaoOrder(@RequestHeader("Authorization") String token,
         @RequestBody KakaoApiDTO.KakaoOrderRequest kakaoOrderRequest){
         String jwttoken = token.substring(7);
-        KakaoOrderResponse kakaoOrderResponse = kakaoApiService.kakaoOrder(kakaoOrderRequest,jwttoken);
+        KakaoOrderResponse kakaoOrderResponse = kakaoApiService.Order(kakaoOrderRequest,jwttoken);
         return ResponseEntity.ok(kakaoOrderResponse);
     }
 
