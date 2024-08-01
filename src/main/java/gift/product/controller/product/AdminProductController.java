@@ -1,5 +1,6 @@
 package gift.product.controller.product;
 
+import gift.product.dto.option.OptionDto;
 import gift.product.dto.product.AdminProductRequest;
 import gift.product.dto.product.AdminProductUpdateRequest;
 import gift.product.dto.product.ProductResponse;
@@ -7,6 +8,7 @@ import gift.product.model.Product;
 import gift.product.service.ProductService;
 import io.swagger.v3.oas.annotations.Hidden;
 import jakarta.validation.Valid;
+import java.util.ArrayList;
 import java.util.List;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -43,7 +45,13 @@ public class AdminProductController {
 
     @PostMapping("/products/insert")
     public String insertProduct(@Valid AdminProductRequest adminProductRequest) {
-        productService.insertProduct(adminProductRequest);
+        if (adminProductRequest.options() != null) {
+            productService.insertProduct(adminProductRequest);
+            return REDIRECT_ADMIN_PRODUCTS;
+        }
+
+        productService.insertProduct(getAdminProductRequestWithoutOptions(
+            adminProductRequest));
         return REDIRECT_ADMIN_PRODUCTS;
     }
 
@@ -65,5 +73,12 @@ public class AdminProductController {
     public String deleteProduct(@PathVariable(name = "id") Long productId) {
         productService.deleteProduct(productId);
         return REDIRECT_ADMIN_PRODUCTS;
+    }
+
+    private AdminProductRequest getAdminProductRequestWithoutOptions(AdminProductRequest adminProductRequest) {
+        List<OptionDto> optionDtos = new ArrayList<>();
+        optionDtos.add(new OptionDto("기본", 1));
+        return new AdminProductRequest(
+            adminProductRequest.name(), adminProductRequest.price(), adminProductRequest.imageUrl(), adminProductRequest.categoryId(), optionDtos);
     }
 }
