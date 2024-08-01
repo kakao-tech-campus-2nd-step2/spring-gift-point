@@ -2,6 +2,7 @@ package gift.service;
 
 import gift.domain.Category;
 import gift.domain.Product;
+import gift.dto.OneProductResponceDTO;
 import gift.dto.ProductRequestDTO;
 import gift.dto.ProductResponseDTO;
 import gift.repository.CategoryRepository;
@@ -11,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -35,10 +37,21 @@ public class ProductService {
         return new PageImpl<>(productResponseDTOList, pageable, productPage.getTotalElements());
     }
 
-    public ProductResponseDTO getProductById(Long id) {
-        Product product = productRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Invalid product id: " + id));
-        return convertToResponseDTO(product);
+//    public ProductResponseDTO getProductById(Long id) {
+//        Product product = productRepository.findById(id)
+//                .orElseThrow(() -> new IllegalArgumentException("Invalid product id: " + id));
+//        return convertToResponseDTO(product);
+//    }
+
+    @Transactional(readOnly = true)
+    public OneProductResponceDTO getProductById(Long id) {
+        Optional<Product> productOptional = productRepository.findById(id);
+        if (productOptional.isPresent()) {
+            Product product = productOptional.get();
+            return new OneProductResponceDTO(product.getId(), product.getName(), product.getPrice(), product.getImageUrl(), product.getCategory().getId());
+        } else {
+            throw new IllegalArgumentException("Product not found");
+        }
     }
 
     public void createProduct(ProductRequestDTO productRequestDTO) {

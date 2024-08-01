@@ -1,5 +1,6 @@
 package gift.controller;
 
+import gift.dto.OneProductResponceDTO;
 import gift.dto.ProductRequestDTO;
 import gift.dto.ProductResponseDTO;
 import gift.service.CategoryService;
@@ -7,6 +8,7 @@ import gift.service.ProductService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -35,6 +37,13 @@ public class ProductController {
         model.addAttribute("currentPage", page);
         model.addAttribute("pageSize", size);
         return "products";
+    }
+
+    @Operation(summary = "상품 조회", description = "특정 상품의 정보를 조회합니다.")
+    @GetMapping("/{productId}")
+    public ResponseEntity<OneProductResponceDTO> getProductById(@PathVariable Long productId) {
+        OneProductResponceDTO product = productService.getProductById(productId);
+        return ResponseEntity.ok(product);
     }
 
     @Operation(summary = "새 상품 폼 조회", description = "새로운 상품을 추가하는 폼을 조회합니다.")
@@ -66,7 +75,7 @@ public class ProductController {
     @Operation(summary = "상품 수정 폼 조회", description = "기존 상품을 수정하는 폼을 조회합니다.")
     @GetMapping("/edit/{id}")
     public String editProductForm(@PathVariable Long id, Model model) {
-        ProductResponseDTO productResponseDTO = productService.getProductById(id);
+        OneProductResponceDTO productResponseDTO = productService.getProductById(id);
         model.addAttribute("productFormDTO", productResponseDTO);
         model.addAttribute("categories", categoryService.getAllCategories());
         return "productForm";
