@@ -63,7 +63,7 @@ public class CategoryController {
     @ExceptionHandler(JwtException.class)
     public ResponseEntity<Map<String, String>> handleException(JwtException ex) {
         Map<String, String> errors = new HashMap<>();
-        errors.put("categoryError", "허용되지 않는 요청입니다.");
+        errors.put("TokenError", "허용되지 않는 요청입니다.");
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(errors);
     }
 }

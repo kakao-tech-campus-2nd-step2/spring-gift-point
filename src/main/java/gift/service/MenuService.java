@@ -3,6 +3,7 @@ package gift.service;
 import gift.domain.Menu.Menu;
 import gift.domain.Menu.MenuRequest;
 import gift.domain.Menu.MenuResponse;
+import gift.domain.Menu.MenuUpdateRequest;
 import gift.domain.Option.Option;
 import gift.repository.CategoryRepository;
 import gift.repository.MenuRepository;
@@ -49,12 +50,12 @@ public class MenuService {
         return mapMenuToMenuResponse(menu);
     }
 
-    public MenuResponse update(Long id, MenuRequest menuRequest) {
+    public MenuResponse update(Long id, MenuUpdateRequest menuUpdateRequest) {
         Menu menu = menuRepository.findById(id)
                 .orElseThrow(() -> new NoSuchElementException("메뉴 정보가 없습니다."));
 
-        menu.update(new Menu(id, menuRequest,
-                categoryRepository.findById(menuRequest.categoryId())
+        menu.update(new Menu(id, menuUpdateRequest,
+                categoryRepository.findById(menuUpdateRequest.categoryId())
                         .orElseThrow(() -> new NoSuchElementException("해당하는 카테고리가 존재하지 않습니다."))));
         return mapMenuToMenuResponse(menuRepository.save(menu));
     }
@@ -65,6 +66,13 @@ public class MenuService {
 
     public Set<Option> getOptions(Long id) {
         return menuRepository.getOptionsByMenuId(id);
+    }
+
+    public List<MenuResponse> findByCategoryId(Long categoryId) {
+        List<Menu> menus = menuRepository.findByCategoryId(categoryId);
+        return menus.stream()
+                .map(this::mapMenuToMenuResponse)
+                .collect(Collectors.toList());
     }
 
     public Menu mapMenuRequestToMenu(MenuRequest menuRequest) {

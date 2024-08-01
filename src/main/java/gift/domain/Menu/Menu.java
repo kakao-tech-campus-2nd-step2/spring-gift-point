@@ -54,6 +54,10 @@ public class Menu {
         this(id, menuRequest.name(), menuRequest.price(), menuRequest.imageUrl(), category,new HashSet<Option>());
     }
 
+    public Menu(Long id, MenuUpdateRequest menuUpdateRequest,Category category) {
+        this(id, menuUpdateRequest.name(), menuUpdateRequest.price(), menuUpdateRequest.imageUrl(), category,new HashSet<Option>());
+    }
+
     public Long getId() {
         return id;
     }

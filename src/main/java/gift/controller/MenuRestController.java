@@ -2,16 +2,17 @@ package gift.controller;
 
 import gift.domain.Menu.MenuRequest;
 import gift.domain.Menu.MenuResponse;
+import gift.domain.Menu.MenuUpdateRequest;
 import gift.domain.Option.Option;
 import gift.service.MenuService;
+import io.jsonwebtoken.JwtException;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @RestController
 @RequestMapping("api/products")
@@ -25,15 +26,10 @@ public class MenuRestController {
 
     @PostMapping
     public ResponseEntity<Object> save(
-            @RequestBody MenuRequest request,
-            BindingResult result
+            @RequestBody MenuRequest request
     ) {
-        if (result.hasErrors()) {
-            return ResponseEntity.badRequest().body(result.getFieldError().getDefaultMessage());
-        } else {
-            MenuResponse menuResponse = menuService.save(request);
-            return ResponseEntity.status(HttpStatus.CREATED).body(menuResponse);
-        }
+        MenuResponse menuResponse = menuService.save(request);
+        return ResponseEntity.status(HttpStatus.CREATED).body(menuResponse);
     }
 
     @GetMapping("/{productId}")
@@ -44,18 +40,22 @@ public class MenuRestController {
     }
 
     @GetMapping
-    public ResponseEntity<List<MenuResponse>> read(
-            Pageable pageable
+    public ResponseEntity<List<MenuResponse>> readAll(
+            Pageable pageable,
+             @RequestParam(required = false) Long categoryId
     ) {
-        return ResponseEntity.ok().body(menuService.findall(pageable));
+        if(categoryId == null){
+            return ResponseEntity.ok().body(menuService.findall(pageable));
+        }
+        return ResponseEntity.ok().body(menuService.findByCategoryId(categoryId));
     }
 
     @PutMapping("{productId}")
     public ResponseEntity<MenuResponse> update(
             @PathVariable("productId") Long id,
-            @RequestBody MenuRequest request
-    ) {
-        return ResponseEntity.status(HttpStatus.NO_CONTENT).body(menuService.update(id, request));
+            @RequestBody MenuUpdateRequest menuUpdateRequest
+            ) {
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).body(menuService.update(id, menuUpdateRequest));
     }
 
     @DeleteMapping("{productId}")
@@ -69,6 +69,20 @@ public class MenuRestController {
             @PathVariable("productId") Long id
     ){
         return ResponseEntity.ok().body(menuService.getOptions(id));
+    }
+
+    @ExceptionHandler(JwtException.class)
+    public ResponseEntity<Map<String, String>> handleException(JwtException ex) {
+        Map<String, String> errors = new HashMap<>();
+        errors.put("TokenError", "허용되지 않는 요청입니다.");
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(errors);
+    }
+
+    @ExceptionHandler(NoSuchElementException.class)
+    public ResponseEntity<Map<String, String>> handleException(NoSuchElementException ex) {
+        Map<String, String> errors = new HashMap<>();
+        errors.put("NoSuchElementError", "허용되지 않는 요청입니다.");
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errors);
     }
 
 }
