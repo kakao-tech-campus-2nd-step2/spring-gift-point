@@ -15,12 +15,6 @@ operation::product-api-controller-test/update-product[]
 === 상품 삭제
 operation::product-api-controller-test/delete-product[]
 
-=== 상품 주문
-operation::product-api-controller-test/order-product[]
-
-=== 위시 상품 추가
-operation::product-api-controller-test/create-wish-product[]
-
 === 상품 옵션 생성
 operation::product-api-controller-test/create-option[]
 
