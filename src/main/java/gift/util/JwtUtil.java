@@ -26,9 +26,7 @@ public class JwtUtil {
 
     public static String extractEmail(String token) {
         try {
-            String email = getClaims(token).getSubject();
-            logger.debug("토큰에서 추출된 이메일: {}", email);
-            return email;
+            return getClaims(token).getSubject();
         } catch (Exception e) {
             logger.error("토큰에서 이메일 추출 오류", e);
             return null;
@@ -38,9 +36,7 @@ public class JwtUtil {
     public static boolean validateToken(String token, String email) {
         try {
             String extractedEmail = extractEmail(token);
-            boolean isValid = extractedEmail != null && extractedEmail.equals(email) && !isTokenExpired(token);
-            logger.debug("토큰 검증 결과: {}", isValid);
-            return isValid;
+            return extractedEmail != null && extractedEmail.equals(email) && !isTokenExpired(token);
         } catch (Exception e) {
             logger.error("토큰 검증 오류", e);
             return false;
@@ -57,5 +53,12 @@ public class JwtUtil {
 
     private static boolean isTokenExpired(String token) {
         return getClaims(token).getExpiration().before(new Date());
+    }
+
+    public static String getBearerToken(String token) {
+        if (token != null && token.startsWith("Bearer ")) {
+            return token.substring(7);
+        }
+        return null;
     }
 }

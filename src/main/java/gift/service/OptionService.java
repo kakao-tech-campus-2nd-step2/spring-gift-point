@@ -21,14 +21,15 @@ public class OptionService {
     private ProductService productService;
 
     public List<OptionResponseDTO> getOptionsByProductId(Long productId) {
-        Product product = productService.findProductEntityById(productId);
+        Product product = productService.findProductEntityById(productId); // 명세에 따른 수정: productService를 통한 product 조회
         List<Option> options = optionRepository.findByProduct(product);
         return options.stream().map(OptionResponseDTO::fromEntity).collect(Collectors.toList());
     }
 
     public OptionResponseDTO createOption(OptionRequestDTO optionRequestDTO) {
-        Product product = productService.findProductEntityById(optionRequestDTO.getProductId());
-        Option option = optionRepository.save(optionRequestDTO.toEntity(product));
+        Product product = productService.findProductEntityById(optionRequestDTO.getProductId()); // 명세에 따른 수정: productService를 통한 product 조회
+        Option option = optionRequestDTO.toEntity(product);
+        option = optionRepository.save(option); // 수정: 저장된 엔티티 반환 후 OptionResponseDTO 변환
         return OptionResponseDTO.fromEntity(option);
     }
 

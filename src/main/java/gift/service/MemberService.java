@@ -22,12 +22,15 @@ public class MemberService {
 
     // 회원 가입 메서드
     public LoginResponseDTO register(MemberRequestDTO memberRequestDTO) {
+        // 이미 존재하는 회원인지 확인
         if (memberRepository.findByEmail(memberRequestDTO.getEmail()).isPresent()) {
             throw new DuplicateException("이미 존재하는 회원입니다.");
         }
-        Member member = memberRequestDTO.toEntity();
+        // 새로운 회원 생성 및 저장
+        Member member = new Member(memberRequestDTO.getEmail(), memberRequestDTO.getPassword());
         memberRepository.save(member);
 
+        // 토큰 생성 및 반환
         String token = JwtUtil.generateToken(member.getEmail());
         return new LoginResponseDTO(token, member.getEmail());
     }
@@ -66,8 +69,24 @@ public class MemberService {
             .orElseThrow(() -> new IllegalArgumentException("사용자를 찾을 수 없습니다."));
     }
 
+    // ID 이용하여 사용자 엔티티 조회 메서드 추가
+    public Member findMemberEntityById(Long id) {
+        return memberRepository.findById(id)
+            .orElseThrow(() -> new IllegalArgumentException("사용자를 찾을 수 없습니다."));
+    }
+
     // 토큰에서 이메일 추출
     public String extractEmailFromToken(String token) {
         return JwtUtil.extractEmail(token);
     }
+
+    // 토큰 검증 메서드
+    public void validateToken(String token, Long memberId) {
+        String email = JwtUtil.extractEmail(token);
+        Member member = findMemberEntityById(memberId);
+        if (!JwtUtil.validateToken(token, email) || !member.getEmail().equals(email)) {
+            throw new IllegalArgumentException("유효하지 않은 토큰입니다.");
+        }
+    }
 }
+

@@ -1,5 +1,7 @@
 package gift.dto;
 
+import gift.model.Order;
+
 import java.time.LocalDateTime;
 
 public class OrderResponseDTO {
@@ -35,5 +37,15 @@ public class OrderResponseDTO {
 
     public String getMessage() {
         return message;
+    }
+
+    public static OrderResponseDTO fromEntity(Order order) {
+        return new OrderResponseDTO(
+            order.getId(),
+            order.getOption().getId(),
+            order.getQuantity(),
+            order.getOrderDateTime(),
+            order.getMessage()
+        );
     }
 }

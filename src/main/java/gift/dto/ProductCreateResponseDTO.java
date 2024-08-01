@@ -2,17 +2,19 @@ package gift.dto;
 
 import gift.model.Product;
 
-public class ProductResponseDTO {
+public class ProductCreateResponseDTO {
     private Long id;
     private String name;
     private int price;
     private String imageUrl;
+    private String category;
 
-    public ProductResponseDTO(Long id, String name, int price, String imageUrl) {
+    public ProductCreateResponseDTO(Long id, String name, int price, String imageUrl, String category) {
         this.id = id;
         this.name = name;
         this.price = price;
         this.imageUrl = imageUrl;
+        this.category = category;
     }
 
     public Long getId() {
@@ -31,12 +33,17 @@ public class ProductResponseDTO {
         return imageUrl;
     }
 
-    public static ProductResponseDTO fromEntity(Product product) {
-        return new ProductResponseDTO(
+    public String getCategory() {
+        return category;
+    }
+
+    public static ProductCreateResponseDTO fromEntity(Product product) {
+        return new ProductCreateResponseDTO(
             product.getId(),
             product.getName(),
             product.getPrice(),
-            product.getImageUrl()
+            product.getImageUrl(),
+            product.getCategory().getName()
         );
     }
 }

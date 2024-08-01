@@ -6,8 +6,7 @@ import jakarta.validation.constraints.*;
 
 public class ProductRequestDTO {
     @NotBlank(message = "이름을 입력해주세요.")
-    @Pattern(regexp = "^[a-zA-Z0-9ㄱ-ㅎㅏ-ㅣ가-힣 ()\\[\\]\\+\\-\\&/_]*$", message = "이름에 허용되지 않은 특수문자가 포함되어 있습니다.(가능한 특수문자: ( ), [ ], +, -, &, /, _)")
-    @Pattern(regexp = "^(?!.*카카오).*$", message = "'카카오'라는 문구를 사용하시려면 담당 MD에게 문의 부탁드립니다.")
+    @Size(max = 15, message = "이름은 15자를 넘길 수 없습니다.")
     private String name;
 
     @NotBlank(message = "Image URL을 입력해주세요.")

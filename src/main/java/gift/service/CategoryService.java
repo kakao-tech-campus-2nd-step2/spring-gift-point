@@ -58,4 +58,9 @@ public class CategoryService {
         return categoryRepository.findById(id)
             .orElseThrow(() -> new IllegalArgumentException("해당 카테고리를 찾을 수 없습니다."));
     }
+
+    public Category findCategoryEntityByName(String name) {
+        return categoryRepository.findByName(name)
+            .orElseThrow(() -> new IllegalArgumentException("카테고리를 찾을 수 없습니다."));
+    }
 }

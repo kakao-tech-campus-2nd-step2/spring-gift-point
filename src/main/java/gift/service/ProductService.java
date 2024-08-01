@@ -1,17 +1,20 @@
 package gift.service;
 
+import gift.dto.OptionSimpleRequestDTO;
+import gift.dto.ProductCreateRequestDTO;
+import gift.dto.ProductCreateResponseDTO;
 import gift.dto.ProductRequestDTO;
 import gift.dto.ProductResponseDTO;
 import gift.model.Category;
+import gift.model.Option;
 import gift.model.Product;
+import gift.repository.OptionRepository;
 import gift.repository.ProductRepository;
-import java.util.ArrayList;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -21,10 +24,12 @@ public class ProductService {
     private ProductRepository productRepository;
     @Autowired
     private CategoryService categoryService;
+    @Autowired
+    private OptionRepository optionRepository;
 
     // 모든 상품 조회
-    public Page<ProductResponseDTO> getAllProducts(int page, int size) {
-        Page<Product> products = productRepository.findAll(PageRequest.of(page, size));
+    public Page<ProductResponseDTO> getAllProducts(Long categoryId, Pageable pageable) { // 명세에 따른 수정: categoryId 추가
+        Page<Product> products = productRepository.findByCategoryId(categoryId, pageable); // 명세에 따른 수정: findByCategoryId 추가
         return products.map(ProductResponseDTO::fromEntity);
     }
 
@@ -35,17 +40,24 @@ public class ProductService {
     }
 
     // 상품 엔티티 조회
-    public Product findProductEntityById(Long id) {
+    public Product findProductEntityById(Long id) { // 명세에 따른 추가: findProductEntityById 메서드 추가
         return productRepository.findById(id)
             .orElseThrow(() -> new IllegalArgumentException("상품 정보를 찾을 수 없습니다."));
     }
 
     // 상품 생성
-    public Page<ProductResponseDTO> createProduct(ProductRequestDTO productRequestDTO, int page, int size) {
-        Category category = categoryService.findCategoryEntityById(productRequestDTO.getCategoryId());
-        Product product = productRequestDTO.toEntity(category);
-        productRepository.save(product);
-        return getAllProducts(page, size);
+    public ProductCreateResponseDTO createProduct(ProductCreateRequestDTO productRequestDTO) {
+        Category category = categoryService.findCategoryEntityByName(productRequestDTO.getCategory());
+        Product product = new Product(productRequestDTO.getName(), productRequestDTO.getPrice(), productRequestDTO.getImageUrl(), category);
+        product = productRepository.save(product);
+
+        for (OptionSimpleRequestDTO optionDTO : productRequestDTO.getOptions()) {
+            Option option = new Option(optionDTO.getName(), optionDTO.getQuantity(), product);
+            optionRepository.save(option);
+        }
+
+        return new ProductCreateResponseDTO(product.getId(), product.getName(), product.getPrice(), product.getImageUrl(), category.getName());
+
     }
 
     // 상품 업데이트

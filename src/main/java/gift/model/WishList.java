@@ -1,14 +1,7 @@
 package gift.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.ForeignKey;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "wish_list")
@@ -26,9 +19,12 @@ public class WishList {
     @JoinColumn(name = "product_id")
     private Product product;
 
+    private LocalDateTime createdDate;
+
     public WishList(Member member, Product product) {
         this.member = member;
         this.product = product;
+        this.createdDate = LocalDateTime.now(); // 현재 시간을 생성 날짜로 설정
     }
 
     protected WishList() {
@@ -38,13 +34,16 @@ public class WishList {
         return id;
     }
 
-
     public Product getProduct() {
         return product;
     }
 
     public Member getMember() {
         return member;
+    }
+
+    public LocalDateTime getCreatedDate() {
+        return createdDate;
     }
 
     public void setId(Long id) {
@@ -57,5 +56,9 @@ public class WishList {
 
     public void setProduct(Product product) {
         this.product = product;
+    }
+
+    public void setCreatedDate(LocalDateTime createdDate) {
+        this.createdDate = createdDate;
     }
 }
