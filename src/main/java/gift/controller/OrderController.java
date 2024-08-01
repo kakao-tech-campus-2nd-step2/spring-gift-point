@@ -2,12 +2,16 @@ package gift.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import gift.domain.Member;
+import gift.dto.CommonResponse;
 import gift.dto.MessageRequestDto;
 import gift.dto.OrderRequestDto;
 import gift.dto.OrderResponseDto;
 import gift.service.JwtProvider;
+import gift.service.MemberService;
 import gift.service.OrderService;
 import java.util.List;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -20,26 +24,32 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 
 @RestController
-@RequestMapping("/api/order")
+@RequestMapping("/api/orders")
 public class OrderController {
 
     private final OrderService orderService;
     private final JwtProvider jwtProvider;
+    private final RestTemplate restTemplate;
+    private final MemberService memberService;
 
-    public OrderController(JwtProvider jwtProvider,OrderService orderService) {
+    public OrderController(JwtProvider jwtProvider,OrderService orderService,RestTemplate restTemplate, MemberService memberService) {
         this.jwtProvider = jwtProvider;
         this.orderService = orderService;
+        this.restTemplate = restTemplate;
+        this.memberService = memberService;
     }
 
     // 로그인 후 상품 주문 , 헤더에 Authorization: Bearer {JWT token} : 기능 요구 사항 (1)+(2)+(3)
     @PostMapping
-    public ResponseEntity<OrderResponseDto> order(@RequestHeader("Authorization") String fullToken,@RequestBody OrderRequestDto orderRequestDto){
+    public ResponseEntity<CommonResponse> order(@RequestHeader("Authorization") String fullToken,@RequestBody OrderRequestDto orderRequestDto){
         String memberEmail = jwtProvider.getMemberEmail(fullToken.substring(7));
-        return ResponseEntity.status(HttpStatus.OK).body(orderService.order(orderRequestDto,memberEmail));
+        OrderResponseDto orderResponseDto = orderService.order(orderRequestDto,memberEmail);
+        return ResponseEntity.status(HttpStatus.CREATED).body(new CommonResponse(orderResponseDto, "주문 생성 성공", true));
     }
     // 상품 주문 시 나에게 카카오톡 메시지 전송 : 기능 요구 사항 (4)
     @GetMapping("/message/list")
@@ -49,7 +59,6 @@ public class OrderController {
         MessageRequestDto messageRequestDto = new MessageRequestDto();
         messageRequestDto.setText(orders);
 
-        RestTemplate rt = new RestTemplate();
         //Header
         HttpHeaders headers = new HttpHeaders();
         headers.add("Authorization","Bearer "+orderService.getOauthToken(memberEmail));
@@ -65,12 +74,26 @@ public class OrderController {
         // header + body
         HttpEntity<MultiValueMap<String,Object>> orderListRequest = new HttpEntity<>(params,headers);
         // post로 http 요청을 보내고 응답을 받는다.
-        ResponseEntity<String> response = rt.exchange(
+        ResponseEntity<String> response = restTemplate.exchange(
             "https://kapi.kakao.com/v2/api/talk/memo/default/send",
             HttpMethod.POST,
             orderListRequest,
             String.class
         );
         return response;
+    }
+
+    @GetMapping
+    public ResponseEntity<CommonResponse> getPagedOrders(@RequestHeader("Authorization") String fullToken,
+        @RequestParam(defaultValue = "0") int page,
+        @RequestParam(defaultValue = "10") int size,
+        @RequestParam(defaultValue = "id,desc") String sort,
+        Pageable pageable){
+
+        String userEmail = jwtProvider.getMemberEmail(fullToken.substring(7));
+        Member member = memberService.findByEmail(userEmail);
+
+        return ResponseEntity.status(HttpStatus.OK)
+            .body(new CommonResponse(orderService.getPagedOrders(member,pageable),"페이징 된 주문 목록 조회 성공",true));
     }
 }

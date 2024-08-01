@@ -5,6 +5,7 @@ import gift.domain.Member;
 import gift.domain.Product;
 import gift.domain.Wish;
 import gift.dto.WishRequestDto;
+import gift.dto.WishResponse;
 import gift.dto.WishResponseDto;
 import gift.exception.MemberNotFoundException;
 import gift.exception.WishNotFoundException;
@@ -33,10 +34,11 @@ public class WishService {
         this.productRepository = productRepository;
     }
 
-    public void save(String memberEmail, WishRequestDto wishRequestDto) {
+    public WishResponseDto save(String memberEmail, WishRequestDto wishRequestDto) {
         Member member = memberRepository.findByEmail(memberEmail).get();
         Product product = productRepository.findById(wishRequestDto.getProductId()).get();
-        wishRepository.save(new Wish(member, product, wishRequestDto.getQuantity()));
+        Wish newWish = wishRepository.save(new Wish(member, product));
+        return new WishResponseDto(newWish.getId(),newWish.getProduct().getId());
     }
 
     // 모든 wish 반환
@@ -58,8 +60,15 @@ public class WishService {
         Member member = memberRepository.findByEmail(memberEmail)
             .orElseThrow(
                 () -> new MemberNotFoundException(Messages.NOT_FOUND_MEMBER_BY_EMAIL_MESSAGE));
-        return wishRepository.findAllByMemberIdOrderByCreatedAt(member.getId(), pageable)
+        return wishRepository.findAllByMemberIdOrderByCreatedDate(member.getId(), pageable)
             .map(this::convertToWishDto);
+    }
+
+    // api 통일
+    @Transactional(readOnly = true)
+    public Page<WishResponse> getPagedMemberWishesByMemberId(Long memberId, Pageable pageable) {
+        Page<Wish> wishPage = wishRepository.findByMemberId(memberId, pageable);
+        return wishPage.map(WishResponse::from);
     }
 
     @Transactional

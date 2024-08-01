@@ -2,9 +2,8 @@ package gift.controller;
 
 import gift.domain.Category;
 import gift.dto.CategoryRequestDto;
-import gift.dto.CategoryResponseDto;
+import gift.dto.CommonResponse;
 import gift.service.CategoryService;
-import java.util.List;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -31,7 +30,7 @@ public class CategoryController {
     }
 
     @GetMapping
-    public ResponseEntity<List<CategoryResponseDto>> findAll(){
-        return ResponseEntity.status(HttpStatus.OK).body(categoryService.findAll());
+    public ResponseEntity<CommonResponse> findAll(){
+        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(categoryService.findAll(), "모든 카테고리 조회 성공", true));
     }
 }

@@ -1,17 +1,19 @@
 package gift.dto;
 
 public class MemberResponseDto {
-    private String message;
+    private String email;
+    private String token;
 
-    public MemberResponseDto(String message) {
-        this.message = message;
+    public MemberResponseDto(String email, String token) {
+        this.email = email;
+        this.token = token;
     }
 
-    public String getMessage() {
-        return message;
+    public String getEmail() {
+        return email;
     }
 
-    public void setMessage(String message) {
-        this.message = message;
+    public String getToken() {
+        return token;
     }
 }

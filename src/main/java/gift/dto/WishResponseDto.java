@@ -17,6 +17,11 @@ public class WishResponseDto {
         this.quantity = quantity;
     }
 
+    public WishResponseDto(Long id, Long productId) {
+        this.id = id;
+        this.productId = productId;
+    }
+
     public Long getId() {
         return id;
     }

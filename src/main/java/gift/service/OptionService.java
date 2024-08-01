@@ -5,6 +5,7 @@ import gift.domain.Option;
 import gift.domain.Product;
 import gift.dto.OptionQuantityRequestDto;
 import gift.dto.OptionRequestDto;
+import gift.dto.OptionResponse;
 import gift.dto.OptionResponseDto;
 import gift.exception.OptionNotFoundException;
 import gift.exception.ProductNotFoundException;
@@ -88,5 +89,13 @@ public class OptionService {
     public Option findById(Long optionId) {
         return optionRepository.findById(optionId)
             .orElseThrow(() -> new OptionNotFoundException(Messages.NOT_FOUND_OPTION_MESSAGE));
+    }
+
+    @Transactional(readOnly = true)
+    public List<OptionResponse> findByProductId(Long productId){
+        return optionRepository.findByProductId(productId)
+            .stream()
+            .map(OptionResponse::from)
+            .toList();
     }
 }

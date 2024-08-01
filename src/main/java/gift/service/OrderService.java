@@ -8,11 +8,15 @@ import gift.domain.Order;
 import gift.domain.Wish;
 import gift.dto.MessageRequestDto;
 import gift.dto.OrderRequestDto;
+import gift.dto.OrderResponse;
 import gift.dto.OrderResponseDto;
 import gift.exception.OrderNotFoundException;
 import gift.repository.OrderRepository;
+import jakarta.transaction.Transactional;
 import java.util.List;
 import java.util.stream.Collectors;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -67,5 +71,11 @@ public class OrderService {
             order.getOrderDateTime(),
             order.getMessage()
         );
+    }
+
+    @Transactional
+    public Page<OrderResponse> getPagedOrders(Member member, Pageable pageable){
+        Page<Order> pagedOrders= orderRepository.findByMemberId(member.getId(), pageable);
+        return pagedOrders.map(OrderResponse::from);
     }
 }

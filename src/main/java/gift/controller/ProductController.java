@@ -25,7 +25,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
-@RequestMapping("/products")
+@RequestMapping("/administer")
 public class ProductController {
 
     private final ProductService productService;
@@ -48,26 +48,26 @@ public class ProductController {
     }
 
     // id 클릭 시 상품 상세보기
-    @GetMapping("/{id}")
-    public String findProductById(@PathVariable Long id,Model model){
-        Product product = productService.findById(id);
-        model.addAttribute("productDto",new ProductRequestDto(product.getId(),product.getName(),
-            product.getPrice(), product.getImageUrl(),product.getCategory().getId()));
-        Category category = categoryService.findById(product.getCategory().getId());
-        model.addAttribute("category",category);
-        return "product";
-    }
-
-    // 수정
-    @GetMapping("/{id}/edit")
-    public String editForm(@PathVariable Long id, Model model) {
-        Product product = productService.findById(id);
-        model.addAttribute("productDto",new ProductRequestDto(product.getId(),product.getName(),
-            product.getPrice(), product.getImageUrl(),product.getCategory().getId()));
-        List<CategoryResponseDto> categories = categoryService.findAll();
-        model.addAttribute("categories",categories);
-        return "editForm";
-    }
+//    @GetMapping("/{id}")
+//    public String findProductById(@PathVariable Long id,Model model){
+//        Product product = productService.findById(id);
+//        model.addAttribute("productDto",new ProductRequestDto(product.getId(),product.getName(),
+//            product.getPrice(), product.getImageUrl(),product.getCategory().getId()));
+//        Category category = categoryService.findById(product.getCategory().getId());
+//        model.addAttribute("category",category);
+//        return "product";
+//    }
+//
+//    // 수정
+//    @GetMapping("/{id}/edit")
+//    public String editForm(@PathVariable Long id, Model model) {
+//        Product product = productService.findById(id);
+//        model.addAttribute("productDto",new ProductRequestDto(product.getId(),product.getName(),
+//            product.getPrice(), product.getImageUrl(),product.getCategory().getId()));
+//        List<CategoryResponseDto> categories = categoryService.findAll();
+//        model.addAttribute("categories",categories);
+//        return "editForm";
+//    }
 
     @PostMapping("/{id}/edit")
     public String edit(@PathVariable Long id,@Valid @ModelAttribute ProductRequestDto productRequestDto)

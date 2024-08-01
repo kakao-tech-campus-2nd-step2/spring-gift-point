@@ -9,6 +9,7 @@ import org.springframework.data.domain.Pageable;
 
 public interface WishRepository extends JpaRepository<Wish,Long> {
     Optional<List<Wish>> findByMemberId(Long memberId);
+    Page<Wish> findByMemberId(Long memberId, Pageable pageable);
     Optional<Wish> findByMemberIdAndProductId(Long memberId, Long productId);
-    Page<Wish> findAllByMemberIdOrderByCreatedAt(Long memberId, Pageable pageable);
+    Page<Wish> findAllByMemberIdOrderByCreatedDate(Long memberId, Pageable pageable);
 }

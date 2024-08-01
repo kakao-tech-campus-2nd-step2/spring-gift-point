@@ -6,10 +6,13 @@ import gift.domain.Option;
 import gift.domain.Product;
 import gift.dto.OptionRequestDto;
 import gift.dto.ProductRequestDto;
+import gift.dto.ProductResponse;
 import gift.exception.ProductNotFoundException;
 import gift.repository.OptionRepository;
 import gift.repository.ProductRepository;
 import java.util.List;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -51,8 +54,10 @@ public class ProductService {
     }
 
     @Transactional(readOnly = true)
-    public Product findById(Long id) throws ProductNotFoundException {
-        return productRepository.findById(id).get();
+    public ProductResponse findById(Long id){
+        Product product = productRepository.findById(id)
+            .orElseThrow(() -> new ProductNotFoundException(Messages.NOT_FOUND_PRODUCT_MESSAGE));
+        return ProductResponse.from(product);
     }
 
     @Transactional
@@ -72,5 +77,11 @@ public class ProductService {
         productRepository.findById(id).orElseThrow(() -> new ProductNotFoundException(
             Messages.NOT_FOUND_PRODUCT_MESSAGE));
         productRepository.deleteById(id);
+    }
+
+    @Transactional(readOnly = true)
+    public Page<ProductResponse> getPagedProducts(Pageable pageable, Long categoryId){
+        Page<Product> pagedProduct = productRepository.findByCategoryId(categoryId, pageable);
+        return pagedProduct.map(ProductResponse::from);
     }
 }

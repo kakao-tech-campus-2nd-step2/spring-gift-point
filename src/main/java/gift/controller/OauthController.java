@@ -33,9 +33,11 @@ public class OauthController {
     private String restApiKey;
 
     private final MemberService memberService;
+    private final RestTemplate restTemplate;
 
-    public OauthController(MemberService memberService) {
+    public OauthController(MemberService memberService, RestTemplate restTemplate) {
         this.memberService = memberService;
+        this.restTemplate = restTemplate;
     }
 
     @GetMapping("/oauth/kakao")
@@ -47,7 +49,6 @@ public class OauthController {
     @GetMapping
     public ResponseEntity<String> kakaoCallback(@RequestParam String code) {
 
-        RestTemplate rt = new RestTemplate();
         // header
         HttpHeaders headers = new HttpHeaders();
         headers.add("Content-Type", "application/x-www-form-urlencoded;charset=utf-8");
@@ -61,7 +62,7 @@ public class OauthController {
         HttpEntity<MultiValueMap<String, String>> kakaoTokenRequest = new HttpEntity<>(params, headers);
 
         // POST 방식으로 Http 요청, 응답 저장
-        ResponseEntity<String> response = rt.exchange(
+        ResponseEntity<String> response = restTemplate.exchange(
             "https://kauth.kakao.com/oauth/token",
             HttpMethod.POST,
             kakaoTokenRequest,
@@ -87,7 +88,6 @@ public class OauthController {
         String accessToken = oAuthTokenDto.getAccessToken();
         String password = oAuthTokenDto.getPassword();
 
-        RestTemplate rt = new RestTemplate();
         // Header
         HttpHeaders header = new HttpHeaders();
         header.add("Authorization","Bearer "+accessToken);
@@ -100,7 +100,7 @@ public class OauthController {
         HttpEntity<MultiValueMap<String,Object>> kakaoProfileRequest = new HttpEntity<>(params,header);
 
         // post로 http 요청을 보내고 응답을 받는다.
-        ResponseEntity<String> response = rt.exchange(
+        ResponseEntity<String> response = restTemplate.exchange(
             "https://kapi.kakao.com/v2/user/me",
             HttpMethod.POST,
             kakaoProfileRequest,

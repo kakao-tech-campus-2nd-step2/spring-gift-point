@@ -30,7 +30,7 @@ public class Wish {
 
     @CreatedDate
     @Column(nullable = false, updatable = false)
-    private LocalDateTime createdAt;
+    private LocalDateTime createdDate;
 
     protected Wish () {
     }
@@ -39,7 +39,13 @@ public class Wish {
         this.member = member;
         this.product = product;
         this.quantity = quantity;
-        this.createdAt = LocalDateTime.now();
+        this.createdDate = LocalDateTime.now();
+    }
+
+    public Wish(Member member, Product product) {
+        this.member = member;
+        this.product = product;
+        this.createdDate = LocalDateTime.now();
     }
 
     public Long getId() {
