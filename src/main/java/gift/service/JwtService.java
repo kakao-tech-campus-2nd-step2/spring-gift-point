@@ -55,7 +55,7 @@ public class JwtService {
                     .build()
                     .parseSignedClaims(accessToken);
         } catch (JwtException e) {
-            throw new RuntimeException(e);
+            throw new JwtException("토큰이 유효하지 않습니다.");
         }
 
         return jws.getPayload()

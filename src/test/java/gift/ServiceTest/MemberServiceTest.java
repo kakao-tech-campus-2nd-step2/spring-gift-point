@@ -43,7 +43,7 @@ public class MemberServiceTest {
     @Test
     @DisplayName("회원가입 테스트")
     public void joinTest() throws BadRequestException {
-        MemberRequest memberRequest = new MemberRequest("testId", "testPassword","김민지");
+        MemberRequest memberRequest = new MemberRequest("testId", "testPassword");
         Member member = new Member("testId","testPassword","김민지",new LinkedList<WishList>());
 
         Mockito.when(memberRepository.save(any(Member.class))).thenReturn(member);
@@ -55,24 +55,23 @@ public class MemberServiceTest {
     @Test
     @DisplayName("이미 존재하는 회원 추가 테스트")
     public void testJoin_ThrowsException() {
-        MemberRequest memberRequest = new MemberRequest("testId", "testPassword","김민지");
+        MemberRequest memberRequest = new MemberRequest("testId", "testPassword");
         Mockito.when(memberRepository.existsById("testId")).thenReturn(true);
 
         assertThatThrownBy(() -> memberService.join(memberRequest))
-                .isInstanceOf(NoSuchElementException.class)
-                .hasMessageContaining("이미 존재하는 회원입니다.");
+                .isInstanceOf(BadRequestException.class);
     }
 
     @Test
     @DisplayName("로그인 성공 테스트")
     public void testLogin_Success() {
-        MemberRequest memberRequest = new MemberRequest("testId", "testPassword","김민지");
-        Member member = new Member("testId", "김민지","testPassword", new LinkedList<WishList>());
+        MemberRequest memberRequest = new MemberRequest("testId", "testPassword");
+        Member member = new Member("testId", "testPassword", new LinkedList<WishList>());
 
-        Mockito.when(memberRepository.findById(memberRequest.id())).thenReturn(Optional.of(member));
-        Mockito.when(jwtService.createJWT(memberRequest.id())).thenReturn("token");
+        Mockito.when(memberRepository.findById(memberRequest.email())).thenReturn(Optional.of(member));
+        Mockito.when(jwtService.createJWT(memberRequest.email())).thenReturn("token");
 
-        String jwt = memberService.login(new LoginRequest(memberRequest.id(),memberRequest.password()));
+        String jwt = memberService.login(new LoginRequest(memberRequest.email(),memberRequest.password()));
 
         assertThat(jwt).isEqualTo("token");
     }
@@ -80,12 +79,12 @@ public class MemberServiceTest {
     @Test
     @DisplayName("잘못된 비빌번호 테스트")
     public void testLogin_wrongPassword() {
-        MemberRequest memberRequest = new MemberRequest("testId", "wrongPassword","김민지");
+        MemberRequest memberRequest = new MemberRequest("testId", "wrongPassword");
         Member member = new Member("testId", "testPassword", "김민지",new LinkedList<WishList>());
 
-        Mockito.when(memberRepository.findById(memberRequest.id())).thenReturn(Optional.of(member));
+        Mockito.when(memberRepository.findById(memberRequest.email())).thenReturn(Optional.of(member));
 
-        assertThatThrownBy(() -> memberService.login(new LoginRequest(memberRequest.id(),memberRequest.password())))
+        assertThatThrownBy(() -> memberService.login(new LoginRequest(memberRequest.email(),memberRequest.password())))
                 .isInstanceOf(NoSuchElementException.class)
                 .hasMessageContaining("로그인에 실패하였습니다. 다시 시도해주세요");
     }
@@ -93,11 +92,11 @@ public class MemberServiceTest {
     @Test
     @DisplayName("존재하지 않는 멤버 테스트")
     public void testLogin_NonExistingMember() {
-        MemberRequest memberRequest = new MemberRequest("TestId", "testPassword","김민지");
+        MemberRequest memberRequest = new MemberRequest("TestId", "testPassword");
 
-        Mockito.when(memberRepository.findById(memberRequest.id())).thenReturn(Optional.empty());
+        Mockito.when(memberRepository.findById(memberRequest.email())).thenReturn(Optional.empty());
 
-        assertThatThrownBy(() -> memberService.login(new LoginRequest(memberRequest.id(),memberRequest.password())))
+        assertThatThrownBy(() -> memberService.login(new LoginRequest(memberRequest.email(),memberRequest.password())))
                 .isInstanceOf(NoSuchElementException.class)
                 .hasMessageContaining("로그인에 실패했습니다 다시 시도해주세요");
     }

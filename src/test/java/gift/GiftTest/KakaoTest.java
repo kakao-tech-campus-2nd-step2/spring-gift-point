@@ -22,6 +22,7 @@ import org.springframework.web.client.RestTemplate;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.net.URI;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.LinkedList;
 
@@ -54,10 +55,10 @@ public class KakaoTest {
 
     @BeforeEach
     void setUp() {
-        category1 = new Category(null, "양식", new LinkedList<Menu>());
-        category2 = new Category(null, "한식", new LinkedList<Menu>());
+        category1 = new Category(null, "중식","dis","빨강","image.com", new LinkedList<Menu>());
+        category2 = new Category(null, "일식","dis","빨강","image.com", new LinkedList<Menu>());
         categoryRepository.save(category2);
-        Menu menu = new Menu("파스타", 3000, "naver.com", category1,new HashSet<>());
+        Menu menu = new Menu("파스타", 3000, "naver.com", category1,new LinkedList<>());
         menuRepository.save(menu);
 
         option1 = new Option(null, "알리오올리오", 3L,menu);
@@ -73,7 +74,7 @@ public class KakaoTest {
         Member member = new Member("member1", "password1","김민지",new LinkedList<WishList>());
         memberRepository.save(member);
 
-        WishList wishList = new WishList(member, menu);
+        WishList wishList = new WishList(member, menu,new Date());
         wishListRepository.save(wishList);
     }
 

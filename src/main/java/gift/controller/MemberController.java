@@ -35,7 +35,7 @@ public class MemberController {
             @RequestBody MemberRequest memberRequest
     ) throws BadRequestException {
         memberService.join(memberRequest);
-        return ResponseEntity.ok().body(new TokenResponse(memberRequest.email(),memberRequest.password()));
+        return ResponseEntity.status(HttpStatus.CREATED).body(new TokenResponse(memberRequest.email(),memberRequest.password()));
     }
 
     @PostMapping("/login")
