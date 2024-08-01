@@ -3,7 +3,6 @@ package gift.controller;
 import gift.dto.request.LoginMemberDTO;
 import gift.dto.request.LoginRequestDTO;
 import gift.dto.request.RegisterRequestDTO;
-import gift.dto.request.NormalMemberRequestDTO;
 import gift.dto.response.LoginResponseDTO;
 import gift.dto.response.RegisterResponseDTO;
 import gift.entity.Member;

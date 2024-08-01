@@ -52,7 +52,6 @@ public class KakaoLoginService {
     }
 
 
-    //RequestEntity<LinkedMultiValueMap<String, String>>
     public String getKakaoAuthorizationToken(String code){
         var url = "https://kauth.kakao.com/oauth/token";
         var headers = new HttpHeaders();

@@ -34,12 +34,12 @@ public class KakaoLoginController {
     @GetMapping("/callback")
     public ResponseEntity<String> getKakaoToken(@RequestParam(name = "code") String code) {
         String accessToken = kakaoLoginService.getKakaoAuthorizationToken(code);
-        return ResponseEntity.status(HttpStatus.OK).body(accessToken);
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(accessToken);
     }
 
     @GetMapping("/{token}")
     public ResponseEntity<String> valdidateKakaoToken(@PathVariable("token") String token) {
-        System.out.println(token);
         kakaoLoginService.validationKaKaoToken(token);
         return ResponseEntity.status(HttpStatus.OK)
                 .body(token);
@@ -51,7 +51,6 @@ public class KakaoLoginController {
         String email = kakaoLoginService.getKakaoEmailByToken(token);
         String jwtToken = kakaoLoginService.checkEmail(email);
         return ResponseEntity.status(HttpStatus.OK).body("jwt token " + jwtToken);
-
     }
 
 
