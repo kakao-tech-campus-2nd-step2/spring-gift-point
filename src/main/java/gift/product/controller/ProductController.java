@@ -24,6 +24,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -48,7 +49,7 @@ public class ProductController {
         @PageableDefault(
             size = PageConfig.PAGE_PER_COUNT,
             sort = PageConfig.SORT_STANDARD,
-            direction = Direction.DESC
+            direction = Direction.ASC
         ) Pageable pageable) {
         Page<ProductResponse> products = productService.getAllProducts(pageable);
         return ResponseEntity.ok(products);

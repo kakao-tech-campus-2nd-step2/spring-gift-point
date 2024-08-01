@@ -57,7 +57,7 @@ public class WishController {
         @PageableDefault(
             size = PageConfig.PAGE_PER_COUNT,
             sort = PageConfig.SORT_STANDARD,
-            direction = Direction.DESC
+            direction = Direction.ASC
         ) Pageable pageable
     ) {
         return ResponseEntity.ok(wishService.getWishes(user.getId(), pageable));
