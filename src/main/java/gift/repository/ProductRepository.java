@@ -11,4 +11,6 @@ import gift.entity.Product;
 public interface ProductRepository extends JpaRepository<Product, Long>{
 	
 	Page<Product> findAll(Pageable pageable);
+	
+	Page<Product> findByCategoryId(Long categoryId, Pageable pageable);
 }
