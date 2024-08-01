@@ -19,7 +19,6 @@ public class CategoryController {
         this.categoryService = categoryService;
     }
 
-    // 프론트 요청 : response(카테고리 정보 리스트 리턴해주세요)
     @Operation(summary = "카테고리 목록 조회")
     @GetMapping
     public List<Category> getCategories() {

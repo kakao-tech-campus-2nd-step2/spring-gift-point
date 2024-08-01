@@ -4,10 +4,13 @@ import gift.dto.OrderRequest;
 import gift.dto.OrderResponse;
 import gift.service.OrderService;
 import gift.service.TokenService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
+@Tag(name="주문하기 API")
 @RequestMapping("/api/orders")
 public class OrderController {
 
@@ -19,6 +22,7 @@ public class OrderController {
         this.tokenService = tokenService;
     }
 
+    @Operation(summary = "회원id로 주문 생성")
     @PostMapping
     public ResponseEntity<OrderResponse> createOrder(@RequestBody OrderRequest request, @RequestHeader("Authorization") String token) {
         OrderResponse response;
