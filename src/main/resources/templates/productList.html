@@ -113,7 +113,7 @@
 <div class="header-container">
   <a href="/web/products/add" class="btn">상품 추가</a>
   <!-- 카테고리로 이동 버튼 추가 -->
-  <a href="/web/categories/web" class="btn">카테고리로 이동</a>
+  <a href="/web/categories" class="btn">카테고리로 이동</a>
   <div class="sort-buttons">
     <a th:href="@{/web/products/list(sort='id', direction=${direction == 'asc' ? 'desc' : 'asc'}, page=${currentPage}, size=${pageSize}, categoryId=${categoryId})}" class="sort-btn">
       ID<span th:text="${sort == 'id' ? (direction == 'asc' ? '↑' : '↓') : ''}"></span>
@@ -143,7 +143,7 @@
     <td th:text="${product.id}">1</td>
     <td th:text="${product.name}">Name</td>
     <td th:text="${product.price}">Price</td>
-    <td th:text="${product.categoryName}">Category</td>
+    <td th:text="${product.category.name}">Category</td>
     <td><img th:src="${product.imageUrl}" alt="product image" width="100"/></td>
     <td class="btn-group">
       <a th:href="@{/web/products/detail/{id}(id=${product.id})}" class="btn">상세보기</a>

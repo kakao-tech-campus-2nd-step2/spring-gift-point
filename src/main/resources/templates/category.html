@@ -61,10 +61,9 @@
     <img th:src="${category.imageUrl}" alt="Category Image" class="category-image">
     <h2 th:text="${category.name}"></h2>
     <p th:text="${category.description}"></p>
-    <a th:href="@{'/web/products/list?categoryId=' + ${category.id}}">상품 보기</a>
+    <a th:href="@{'/api/products/list?categoryId=' + ${category.id}}">상품 보기</a>
   </div>
 </div>
-<a href="/web/products/list" class="all-products-button">모든 상품 보기</a>
-
+<a href="/api/products/list" class="all-products-button">모든 상품 보기</a>
 </body>
 </html>

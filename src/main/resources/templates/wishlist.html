@@ -84,13 +84,13 @@
 <body>
 <div class="container">
   <h1>My Wishlist
-    <a href="/web/products/list" class="btn btn-home">홈</a>
+    <a href="/api/products/list" class="btn btn-home">홈</a>
   </h1>
   <div class="sort-buttons">
-    <a th:href="@{'/web/wishlist'(sort='productName', direction=${direction == 'asc' ? 'desc' : 'asc'}, page=${currentPage}, size=${pageSize})}" class="sort-btn">
+    <a th:href="@{'/api/wishes'(sort='productName', direction=${direction == 'asc' ? 'desc' : 'asc'}, page=${currentPage}, size=${pageSize})}" class="sort-btn">
       Name<span th:text="${sort == 'productName' ? (direction == 'asc' ? '↑' : '↓') : ''}"></span>
     </a>
-    <a th:href="@{'/web/wishlist'(sort='price', direction=${direction == 'asc' ? 'desc' : 'asc'}, page=${currentPage}, size=${pageSize})}" class="sort-btn">
+    <a th:href="@{'/api/wishes'(sort='price', direction=${direction == 'asc' ? 'desc' : 'asc'}, page=${currentPage}, size=${pageSize})}" class="sort-btn">
       Price<span th:text="${sort == 'price' ? (direction == 'asc' ? '↑' : '↓') : ''}"></span>
     </a>
   </div>
@@ -105,25 +105,25 @@
     </tr>
     </thead>
     <tbody>
-    <tr th:each="wishlist : ${wishlistPage.content}">
-      <td th:text="${wishlist.productName}"></td>
-      <td><img th:src="${wishlist.imageUrl}" alt="product image" width="100"/></td>
+    <tr th:each="wish : ${wishlistPage.content}" th:data-wish-id="${wish.id}">
+      <td th:text="${wish.productResponseDto.name}"></td>
+      <td><img th:src="${wish.productResponseDto.imageUrl}" alt="product image" width="100"/></td>
       <td>
         <ul>
-          <li th:each="option : ${wishlist.options}">
+          <li th:each="option : ${wish.options}">
             <span th:text="'→ ' + ${option.name} + ' x '"></span>
-            <select class="option-quantity" th:data-wishlist-id="${wishlist.id}">
+            <select class="option-quantity" th:data-wish-id="${wish.id}">
               <option th:each="i : ${#numbers.sequence(1, 10)}" th:value="${i}" th:text="${i}" th:selected="${i == option.quantity}"></option>
             </select>
-            <span th:text="' x ' + ${option.price} + ' = ' + ${option.price * option.quantity} + '원'"></span>
+            <span th:text="' x ' + ${option.quantity}"></span>
           </li>
         </ul>
       </td>
-      <td id="total-price-${wishlist.id}" th:text="${wishlist.totalPrice} + '원'"></td>
+      <td id="total-price-${wish.id}" th:text="${wish.count * wish.productResponseDto.price} + '원'"></td>
       <td>
-        <button class="btn btn-secondary delete-wishlist" th:data-wishlist-id="${wishlist.id}">삭제</button>
-        <button class="btn update-quantity" th:data-wishlist-id="${wishlist.id}">수량 변동</button>
-        <button class="btn order-wishlist" th:data-wishlist-id="${wishlist.id}">주문하기</button>
+        <button class="btn btn-secondary delete-wish" th:data-wish-id="${wish.id}">삭제</button>
+        <button class="btn update-quantity" th:data-wish-id="${wish.id}">수량 변동</button>
+        <button class="btn order-wish" th:data-wish-id="${wish.id}">주문하기</button>
       </td>
     </tr>
     </tbody>
@@ -131,18 +131,18 @@
 
   <div class="pagination">
     <a th:if="${wishlistPage.hasPrevious()}"
-       th:href="@{'/web/wishlist'(page=${currentPage - 1}, size=${pageSize}, sort=${sort}, direction=${direction})}"
+       th:href="@{'/api/wishes'(page=${currentPage - 1}, size=${pageSize}, sort=${sort}, direction=${direction})}"
        class="page-btn">Prev</a>
 
     <span th:each="i : ${#numbers.sequence(0, wishlistPage.totalPages - 1)}">
-      <a th:href="@{'/web/wishlist'(page=${i}, size=${pageSize}, sort=${sort}, direction=${direction})}"
+      <a th:href="@{'/api/wishes'(page=${i}, size=${pageSize}, sort=${sort}, direction=${direction})}"
          th:text="${i + 1}"
          th:classappend="${i == currentPage} ? 'current-page' : ''"
          class="page-btn"></a>
     </span>
 
     <a th:if="${wishlistPage.hasNext()}"
-       th:href="@{'/web/wishlist'(page=${currentPage + 1}, size=${pageSize}, sort=${sort}, direction=${direction})}"
+       th:href="@{'/api/wishes'(page=${currentPage + 1}, size=${pageSize}, sort=${sort}, direction=${direction})}"
        class="page-btn">Next</a>
   </div>
 </div>

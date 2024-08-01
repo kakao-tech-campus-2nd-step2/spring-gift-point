@@ -16,16 +16,20 @@ public class OrderDTO {
     @Schema(description = "주문 수량", example = "2")
     private int quantity;
 
+    @Schema(description = "주문 메시지", example = "빠른 배송 부탁드립니다.")
+    private String message;
+
     @Schema(description = "주문 시간", example = "2024-07-26T12:34:56")
     private LocalDateTime orderDateTime;
 
     public OrderDTO() {
     }
 
-    public OrderDTO(Long id, Long optionId, int quantity, LocalDateTime orderDateTime) {
+    public OrderDTO(Long id, Long optionId, int quantity, String message, LocalDateTime orderDateTime) {
         this.id = id;
         this.optionId = optionId;
         this.quantity = quantity;
+        this.message = message;
         this.orderDateTime = orderDateTime;
     }
 
@@ -34,6 +38,7 @@ public class OrderDTO {
             order.getId(),
             order.getOption().getId(),
             order.getQuantity(),
+            order.getMessage(),
             order.getOrderDateTime()
         );
     }
@@ -48,6 +53,10 @@ public class OrderDTO {
 
     public int getQuantity() {
         return quantity;
+    }
+
+    public String getMessage() {
+        return message;
     }
 
     public LocalDateTime getOrderDateTime() {

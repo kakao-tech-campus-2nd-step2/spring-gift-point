@@ -5,22 +5,25 @@ import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "orders")
-public class Order {
+public class Order extends TimeStamp {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "user_id", nullable = false)
+    @JoinColumn(name = "MEMBER_ID", nullable = false)
     private SiteUser user;
 
     @ManyToOne
-    @JoinColumn(name = "option_id", nullable = false)
+    @JoinColumn(name = "OPTION_ID", nullable = false)
     private Option option;
 
     @Column(nullable = false)
     private int quantity;
+
+    @Column
+    private String message;
 
     @Column(nullable = false)
     private LocalDateTime orderDateTime;
@@ -28,10 +31,11 @@ public class Order {
     public Order() {
     }
 
-    public Order(SiteUser user, Option option, int quantity, LocalDateTime orderDateTime) {
+    public Order(SiteUser user, Option option, int quantity, String message, LocalDateTime orderDateTime) {
         this.user = user;
         this.option = option;
         this.quantity = quantity;
+        this.message = message;
         this.orderDateTime = orderDateTime;
     }
 
@@ -49,6 +53,10 @@ public class Order {
 
     public int getQuantity() {
         return quantity;
+    }
+
+    public String getMessage() {
+        return message;
     }
 
     public LocalDateTime getOrderDateTime() {
@@ -69,6 +77,10 @@ public class Order {
 
     public void setQuantity(int quantity) {
         this.quantity = quantity;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
     }
 
     public void setOrderDateTime(LocalDateTime orderDateTime) {

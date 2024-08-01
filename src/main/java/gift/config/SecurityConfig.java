@@ -53,14 +53,14 @@ public class SecurityConfig {
 				.requestMatchers(new AntPathRequestMatcher("/user/signup")).permitAll()
 				.requestMatchers(new AntPathRequestMatcher("/user/login")).permitAll()
 				.requestMatchers(new AntPathRequestMatcher("/api/categories/web")).permitAll() // 추가
-				.requestMatchers(new AntPathRequestMatcher("/web/products/list")).permitAll()
+				.requestMatchers(new AntPathRequestMatcher("/api/products/list")).permitAll()
 				.anyRequest().authenticated())
 			.csrf((csrf) -> csrf.disable()) // CSRF 비활성화
 			.headers((headers) -> headers.addHeaderWriter(
 				new XFrameOptionsHeaderWriter(XFrameOptionsHeaderWriter.XFrameOptionsMode.SAMEORIGIN)))
-			.formLogin((formLogin) -> formLogin.loginPage("/user/login").defaultSuccessUrl("/web/products/list"))
+			.formLogin((formLogin) -> formLogin.loginPage("/user/login").defaultSuccessUrl("/api/products/list"))
 			.logout((logout) -> logout.logoutRequestMatcher(new AntPathRequestMatcher("/user/logout"))
-				.logoutSuccessUrl("/web/products/list").invalidateHttpSession(true))
+				.logoutSuccessUrl("/api/products/list").invalidateHttpSession(true))
 			.addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
 		return http.build();
 	}

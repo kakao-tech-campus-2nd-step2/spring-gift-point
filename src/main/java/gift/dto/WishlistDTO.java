@@ -136,10 +136,10 @@ public class WishlistDTO {
         return new WishlistDTO(
             wishlist.getId(),
             wishlist.getProduct().getId(),
-            wishlist.getUser().getUsername(),
-            wishlist.getQuantity(),
+            wishlist.getSiteUser().getUsername(),
+            wishlist.getCount(),
             wishlist.getProduct().getName(),
-            wishlist.getPrice(),
+            wishlist.getProduct().getPrice(),
             wishlist.getProduct().getImageUrl(),
             optionDTOs
         );
@@ -196,7 +196,7 @@ public class WishlistDTO {
             optionDTO.setId(option.getId());
             optionDTO.setName(option.getName());
             optionDTO.setQuantity(option.getQuantity());
-            optionDTO.setPrice(option.getPrice());
+            optionDTO.setPrice(option.getProduct().getPrice());
             return optionDTO;
         }
     }
