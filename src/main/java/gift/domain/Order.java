@@ -8,8 +8,10 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.Table;
+import java.time.LocalDateTime;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.DynamicInsert;
+import org.springframework.data.annotation.CreatedDate;
 
 @Entity
 @DynamicInsert
@@ -36,6 +38,10 @@ public class Order extends BaseEntity {
     @Enumerated(EnumType.STRING)
     @ColumnDefault("'ORDERED'")
     private OrderStatus orderStatus;
+
+    @CreatedDate
+    @Column(nullable = false, updatable = false)
+    private LocalDateTime orderDateTime; // 주문 생성 시간
 
     protected Order() {}
 
@@ -96,6 +102,16 @@ public class Order extends BaseEntity {
         this.message = builder.message;
     }
 
+    public Order complete() {
+        this.orderStatus = OrderStatus.COMPLETED;
+        return this;
+    }
+
+    public Order cancel() {
+        this.orderStatus = OrderStatus.CANCELED;
+        return this;
+    }
+
     public Long getMemberId() {
         return memberId;
     }
@@ -120,13 +136,7 @@ public class Order extends BaseEntity {
         return orderStatus;
     }
 
-    public Order complete() {
-        this.orderStatus = OrderStatus.COMPLETED;
-        return this;
-    }
-
-    public Order cancel() {
-        this.orderStatus = OrderStatus.CANCELED;
-        return this;
+    public LocalDateTime getOrderDateTime() {
+        return orderDateTime;
     }
 }
