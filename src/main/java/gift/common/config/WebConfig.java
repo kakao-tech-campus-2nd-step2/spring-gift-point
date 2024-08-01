@@ -24,7 +24,7 @@ public class WebConfig implements WebMvcConfigurer {
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(tokenInterceptor)
-            .addPathPatterns("/api/wishes/**", "/api/orders/**");
+            .addPathPatterns("/api/wishes/**", "/api/orders/**", "/api/admin/**", "/api/members/point");
     }
 
     @Override
@@ -36,9 +36,10 @@ public class WebConfig implements WebMvcConfigurer {
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**")
             .allowedOriginPatterns("*")
-            .allowedMethods("GET", "POST", "PUT", "DELETE")
+            .allowedMethods("GET", "POST", "PUT", "DELETE", "PATCH")
             .allowedHeaders("Authorization", "Content-Type")
             .allowCredentials(true)
+            .exposedHeaders("Authorization")
             .maxAge(3600);
     }
 }
