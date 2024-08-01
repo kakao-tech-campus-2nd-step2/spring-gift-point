@@ -1,8 +1,10 @@
 package gift.wishlist.api;
 
 import gift.member.validator.LoginMember;
+import gift.product.dto.WishOptionRequest;
 import gift.wishlist.application.WishesService;
 import gift.wishlist.dto.WishResponse;
+import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -36,8 +38,8 @@ public class WishesController {
 
     @PostMapping
     public void addWish(@LoginMember Long memberId,
-                        @RequestBody Long optionId) {
-        wishesService.addProductToWishlist(memberId, optionId);
+                        @RequestBody @Valid WishOptionRequest request) {
+        wishesService.addProductToWishlist(memberId, request.optionId());
     }
 
     @DeleteMapping("/{wishId}")
