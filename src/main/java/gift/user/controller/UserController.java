@@ -62,7 +62,7 @@ public class UserController {
     public ResponseEntity<Void> kakaoLogin(@RequestParam("code") String code,
         HttpServletResponse response) throws IOException {
         var kakaoResponse = kakaoUserService.loginKakaoUser(code);
-        String redirectUrl = "/users/kakaoLoginSuccess?token=" + kakaoResponse.token();
+        String redirectUrl = "/oauth/kakaoLoginSuccess?token=" + kakaoResponse.token();
         response.sendRedirect(redirectUrl);
         return ResponseEntity.ok().build();
     }
