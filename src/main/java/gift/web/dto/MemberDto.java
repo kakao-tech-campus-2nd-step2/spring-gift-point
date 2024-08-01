@@ -1,4 +1,9 @@
 package gift.web.dto;
 
-public record MemberDto(String email,
-                        String password) { }
+import jakarta.validation.constraints.NotNull;
+
+public record MemberDto(
+    @NotNull
+    String email,
+    @NotNull
+    String password) { }

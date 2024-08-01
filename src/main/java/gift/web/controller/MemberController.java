@@ -4,6 +4,7 @@ import gift.service.member.MemberService;
 import gift.web.dto.MemberDto;
 import gift.web.dto.Token;
 import gift.web.jwt.JwtUtils;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -15,7 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/members")
+@RequestMapping("api/members")
 public class MemberController {
     private final MemberService memberService;
     private final JwtUtils jwtUtils;
@@ -26,15 +27,15 @@ public class MemberController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<?> registerMember(@RequestBody MemberDto memberDto) {
+    public ResponseEntity<?> registerMember(@Valid @RequestBody MemberDto memberDto) {
         memberService.createMember(memberDto);
-        return ResponseEntity.ok().body(new Token(jwtUtils.createJWT(memberDto)));
+        return new ResponseEntity<>(new Token(jwtUtils.createJWT(memberDto)).makeTokenHeader(), HttpStatus.CREATED);
     }
 
     @PostMapping("/login")
-    public ResponseEntity<?> loginMember(@RequestBody MemberDto memberDto) {
-        memberService.getMemberByEmail(memberDto.email());
-        return ResponseEntity.ok().body(new Token(jwtUtils.createJWT(memberDto)));
+    public ResponseEntity<?> loginMember(@Valid @RequestBody MemberDto memberDto) {
+        memberService.loginValidate(memberDto);
+        return new ResponseEntity<>(new Token(jwtUtils.createJWT(memberDto)).makeTokenHeader(), HttpStatus.OK);
     }
 
     @PutMapping("/{email}")
