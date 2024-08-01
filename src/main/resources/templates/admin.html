@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>관리자 화면</title>
+  <link rel="stylesheet" th:href="@{/css/modal.css}"/>
+  <link rel="stylesheet" th:href="@{/css/styles.css}"/>
+  <script th:src="@{/js/index.js}"></script>
+</head>
+<body>
+<h1>Product List</h1>
+<table>
+  <thead>
+  <tr>
+    <th>ID</th>
+    <th>Name</th>
+    <th>Price</th>
+    <th>Image</th>
+    <th>Category</th>
+    <th>Actions</th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr th:each="product : ${productPage.content}">
+    <td th:text="${product.id}"></td>
+    <td th:text="${product.name}"></td>
+    <td th:text="${#numbers.formatCurrency(product.price)}"></td>
+    <td><img th:src="${product.imageUrl}" alt="Product Image"></td>
+    <td th:text="${product.categoryName}"></td>
+    <td>
+      <button th:onclick="|openUpdateModal(${product.id})|">Update</button>
+      <button class="delete" th:onclick="|deleteProduct(${product.id})|">Delete</button>
+    </td>
+  </tr>
+  </tbody>
+</table>
+<button onclick="openAddModal()">Add Product</button>
+
+<!-- Modal -->
+<div id="addModal" class="modal">
+  <div class="modal-content">
+    <span class="close" onclick="closeAddModal()">&times;</span>
+    <h2>Add Product Form</h2>
+    <form id="addProductForm">
+      <label for="name">Name:</label>
+      <input type="text" id="name" name="name" required><br><br>
+      <label for="price">Price:</label>
+      <input type="text" id="price" name="price" required><br><br>
+      <label for="imageUrl">Image URL:</label>
+      <input type="text" id="imageUrl" name="imageUrl" required><br><br>
+      <label for="categoryName">Category Name:</label>
+      <input type="text" id="categoryName" name="categoryName" required><br><br>
+      <button type="button" onclick="submitAddForm()">Add</button>
+    </form>
+  </div>
+</div>
+
+<!-- Update Modal -->
+<div id="updateModal" class="modal">
+  <div class="modal-content">
+    <span class="close" onclick="closeUpdateModal()">&times;</span>
+    <h2>Update Product Form</h2>
+    <form id="updateProductForm">
+      <input type="hidden" id="updateId" name="id">
+      <label for="updateName">Name:</label>
+      <input type="text" id="updateName" name="name" required><br><br>
+      <label for="updatePrice">Price:</label>
+      <input type="text" id="updatePrice" name="price" required><br><br>
+      <label for="updateImageUrl">Image URL:</label>
+      <input type="text" id="updateImageUrl" name="imageUrl" required><br><br>
+      <label for="updateCategoryName">Category Name:</label>
+      <input type="text" id="updateCategoryName" name="categoryName" required><br><br>
+      <button type="button" onclick="submitUpdateForm()">Update</button>
+    </form>
+  </div>
+</div>
+</body>
+</html>
