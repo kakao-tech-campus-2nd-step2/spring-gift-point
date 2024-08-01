@@ -3,6 +3,8 @@ package gift.entity;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 
+import java.time.LocalDateTime;
+
 @Entity
 @Table(name = "wish")
 public class Wish {
@@ -16,18 +18,27 @@ public class Wish {
     @JoinColumn(name = "member_id", nullable = false)
     private Member member;
 
+    private LocalDateTime createdDate;
+
     @JsonBackReference
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "option_id", nullable = false)
-    private Option option;
+    @JoinColumn(name = "product_id", nullable = false)
+    private Product product;
 
     public Wish() {
     }
 
-    public Wish(Member member, Option option) {
+    public Wish(Member member, Product product) {
         this.member = member;
-        this.option = option;
+        this.product = product;
     }
+
+    public Wish(Member member, Product product, LocalDateTime localDateTime) {
+        this.member = member;
+        this.product = product;
+        this.createdDate = localDateTime;
+    }
+
 
     public Long getId() {
         return id;
@@ -37,9 +48,11 @@ public class Wish {
         return member;
     }
 
-    public Option getOption() {
-        return option;
+    public Product getProduct() {
+        return product;
     }
 
-
+    public LocalDateTime getCreatedDate() {
+        return createdDate;
+    }
 }
