@@ -12,6 +12,7 @@
 
 </div>
 <h1 th:text="'Administrator Product ' + ${product_id} + '\'s Option Manage Page'"></h1>
+<data th:value="${product_id}" id="productId"></data>
 <div class="form-inline">
     <label for="id">Id:</label>
     <input type="text" id="id" name="id" disabled>
@@ -53,15 +54,14 @@
 <script>
     function getOptions(){
         $.ajax({
-            url: '/api/products/' + product_id + '/options',
+            url: '/api/products/' + $('#productId').val() + '/options',
             method: 'GET',
             success: function(data) {
-                var contents = data.content;
                 var tbody = $('#option-tbody');
                 tbody.empty(); // 초기화
 
                 // 데이터에 따라 테이블 행을 생성
-                contents.forEach(function(option) {
+                data.forEach(function(option) {
                     // 한 행의 내용
                     var row = `
                         <tr>
@@ -74,8 +74,6 @@
                         </tr>
                     `;
                     tbody.append(row);
-
-                    currentPage = data.number;
                 });
             },
             error: function(err) {

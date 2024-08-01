@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Stream;
 
 @Service
 public class OptionService {
@@ -29,9 +30,8 @@ public class OptionService {
     public OptionResponse save(Long productId, OptionRequest optionRequest){
         Product product = productRepository.findById(productId).orElseThrow(NoSuchFieldError::new);
         Option option = new Option(optionRequest.getName(), optionRequest.getQuantity(), product);
-        product.getOptions().add(option);
-
         Option savedOption = optionRepository.save(option);
+        product.getOptions().add(option);
         return new OptionResponse(savedOption, productId);
     }
     /*

@@ -9,7 +9,7 @@ public class Option extends BaseEntity {
     private String name;
     @Column(name="quantity", nullable = false)
     private int quantity;
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(
             name = "product_id",
             foreignKey = @ForeignKey(name = "fk_option_product_id_ref_product_id"),
