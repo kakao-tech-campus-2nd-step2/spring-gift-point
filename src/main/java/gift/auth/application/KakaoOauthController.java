@@ -21,7 +21,7 @@ public class KakaoOauthController {
         this.kakaoOAuthService = kakaoOAuthService;
     }
 
-    @GetMapping
+    @GetMapping("/login")
     public ResponseEntity<Void> getOauthURL() {
         var kakaoLoginUrl = kakaoOAuthService.getKakaoLoginUrl();
         return ResponseEntity.status(HttpStatus.SEE_OTHER)
