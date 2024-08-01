@@ -2,7 +2,7 @@ package gift.wish.controller;
 
 import gift.common.auth.JwtUtil;
 import gift.common.util.CommonResponse;
-import gift.wish.domain.WishDTO;
+import gift.wish.dto.WishDTO;
 import gift.wish.dto.WishCreateRequest;
 import gift.wish.dto.WishCreateResponse;
 import gift.wish.service.WishService;
@@ -14,8 +14,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/wishes")

@@ -2,7 +2,7 @@ package gift.wish.service;
 
 import gift.member.model.Member;
 import gift.wish.domain.Wish;
-import gift.wish.domain.WishDTO;
+import gift.wish.dto.WishDTO;
 import gift.wish.dto.WishCreateResponse;
 import org.springframework.data.domain.Page;
 

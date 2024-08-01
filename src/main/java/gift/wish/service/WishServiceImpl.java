@@ -5,7 +5,7 @@ import gift.member.model.Member;
 import gift.product.domain.Product;
 import gift.product.dto.ProductDTO;
 import gift.wish.domain.Wish;
-import gift.wish.domain.WishDTO;
+import gift.wish.dto.WishDTO;
 import gift.member.repository.MemberRepository;
 import gift.product.repository.ProductRepository;
 import gift.wish.dto.WishCreateResponse;
