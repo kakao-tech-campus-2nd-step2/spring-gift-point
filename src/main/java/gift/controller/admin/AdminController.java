@@ -3,11 +3,14 @@ package gift.controller.admin;
 import gift.DTO.member.MemberResponse;
 import gift.DTO.product.ProductRequest;
 import gift.DTO.product.ProductResponse;
-import gift.domain.Member;
 import gift.service.MemberService;
 import gift.service.ProductService;
 import jakarta.validation.Valid;
 import java.util.List;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
+import org.springframework.data.web.SortDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -21,7 +24,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/api/admin")
+@RequestMapping("/api")
 public class AdminController {
 
     private final ProductService productService;
@@ -39,10 +42,11 @@ public class AdminController {
      */
     @GetMapping("/products")
     public ResponseEntity<List<ProductResponse>> getProducts(
-        @RequestParam(defaultValue = "0") Integer page,
-        @RequestParam(defaultValue = "2") Integer size
+        @PageableDefault(page = 0, size = 10)
+        @SortDefault(sort = "name", direction = Sort.Direction.ASC) Pageable pageable,
+        @RequestParam(required = false) Long categoryId
     ) {
-        List<ProductResponse> products = productService.getProductsByPage(page, size);
+        List<ProductResponse> products = productService.findPagedProductsByCategoryId(pageable, categoryId);
         return new ResponseEntity<>(products, HttpStatus.OK);
     }
 

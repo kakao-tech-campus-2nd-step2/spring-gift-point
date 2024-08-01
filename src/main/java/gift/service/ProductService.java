@@ -8,7 +8,6 @@ import gift.repository.ProductRepository;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -35,9 +34,15 @@ public class ProductService {
     }
 
     @Transactional(readOnly = true)
-    public List<ProductResponse> getProductsByPage(Integer pageNumber, Integer pageSize) {
-        Pageable pageable = PageRequest.of(pageNumber, pageSize);
-        Page<Product> productPage = productRepository.findAll(pageable);
+    public List<ProductResponse> findPagedProductsByCategoryId(Pageable pageable, Long categoryId) {
+        Page<Product> productPage;
+        if (categoryId == null) {
+            productPage = productRepository.findAll(pageable);
+        } else {
+            Category category = categoryService.getCategoryById(categoryId);
+            productPage = productRepository.findByCategory(category, pageable);
+        }
+ 
         List<ProductResponse> responses = productPage.stream()
                                         .map(ProductResponse::fromEntity)
                                         .toList();
