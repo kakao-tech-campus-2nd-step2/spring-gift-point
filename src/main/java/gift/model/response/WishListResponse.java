@@ -8,15 +8,15 @@ public class WishListResponse {
     private final Long productId;
     private final String name;
     private final Long price;
-    private final String imgUrl;
+    private final String imageUrl;
 
 
-    public WishListResponse(Long id, Long productId, String name, Long price, String imgUrl) {
+    public WishListResponse(Long id, Long productId, String name, Long price, String imageUrl) {
         this.wishId = id;
         this.productId = productId;
         this.name = name;
         this.price = price;
-        this.imgUrl = imgUrl;
+        this.imageUrl = imageUrl;
     }
 
     public WishListResponse(WishItem wishItem) {
@@ -24,10 +24,10 @@ public class WishListResponse {
         this.productId = wishItem.getItem().getId();
         this.name = wishItem.getItem().getName();
         this.price = wishItem.getItem().getPrice();
-        this.imgUrl = wishItem.getItem().getImgUrl();
+        this.imageUrl = wishItem.getItem().getImgUrl();
     }
 
-    public Long getId() {
+    public Long getWishId() {
         return wishId;
     }
 
@@ -43,7 +43,7 @@ public class WishListResponse {
         return price;
     }
 
-    public String getImgUrl() {
-        return imgUrl;
+    public String getImageUrl() {
+        return imageUrl;
     }
 }

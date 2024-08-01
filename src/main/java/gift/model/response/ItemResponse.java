@@ -40,7 +40,7 @@ public class ItemResponse {
         return imageUrl;
     }
 
-    public boolean isWish() {
+    public boolean getIsWish() {
         return isWish;
     }
 }

@@ -20,17 +20,17 @@
     </thead>
     <tbody>
     <tr th:each="category : ${categories}">
-      <td th:text="${category.id}">ID</td>
+      <td th:text="${category.categoryId}">ID</td>
       <td th:text="${category.name}">이름</td>
       <td th:text="${category.description}">설명</td>
       <td>
-        <img th:if="${category.imgUrl}" th:src="${category.imgUrl}" alt="카테고리 이미지"
+        <img th:if="${category.imageUrl}" th:src="${category.imageUrl}" alt="카테고리 이미지"
              class="category-image">
-        <span th:unless="${category.imgUrl}">이미지 없음</span>
+        <span th:unless="${category.imageUrl}">이미지 없음</span>
       </td>
       <td>
         <a class="button"
-           th:href="@{/admin/categories/update/{categoryId}(categoryId=${category.id})}">수정
+           th:href="@{/admin/categories/update/{categoryId}(categoryId=${category.categoryId})}">수정
         </a>
       </td>
       <form></form>

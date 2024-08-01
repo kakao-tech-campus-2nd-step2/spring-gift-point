@@ -39,9 +39,9 @@
   <select id="categoryId" th:field="*{categoryId}" required th:class="${#fields.hasErrors('categoryId')}? 'field-error'">
     <option value="">Select a category</option>
     <option th:each="category : ${categories}"
-            th:value="${category.id}"
+            th:value="${category.categoryId}"
             th:text="${category.name}"
-            th:selected="${category.id == itemForm.categoryId}"></option>
+            th:selected="${category.categoryId == itemForm.categoryId}"></option>
   </select>
   <span class="error" th:if="${#fields.hasErrors('categoryId')}" th:errors="*{categoryId}"></span>
 

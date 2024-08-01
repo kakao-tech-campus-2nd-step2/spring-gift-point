@@ -41,7 +41,7 @@ public class CategoryServiceTest {
     @Test
     void testUpdateCategory() {
         CategoryDTO category = categoryService.insertCategory(testCategory1);
-        CategoryDTO updated = new CategoryDTO(category.getId(), testName2, testUrl,testDescription);
+        CategoryDTO updated = new CategoryDTO(category.getCategoryId(), testName2, testUrl,testDescription);
         CategoryDTO result = categoryService.updateCategory(updated);
         assertThat(result).usingRecursiveComparison().isEqualTo(updated);
     }

@@ -9,7 +9,7 @@ import jakarta.validation.constraints.Pattern;
 public class CategoryDTO {
 
     @Schema(description = "카테고리 ID(카테고리 추가 시 입력 불필요)", example = "1")
-    private final Long id;
+    private final Long categoryId;
 
     @Schema(description = "카테고리 이름", example = "전자기기")
     @NotBlank(message = "이름은 공백일 수 없습니다.")
@@ -17,41 +17,41 @@ public class CategoryDTO {
     private final String name;
 
     @Schema(description = "카테고리 이미지 URL", example = "https://example.com/images/electronics.jpg")
-    private final String imgUrl;
+    private final String imageUrl;
 
     @Schema(description = "카테고리 설명", example = "전자기기 입니다.")
     private final String description;
 
-    public CategoryDTO(Long id, String name, String imgUrl, String description) {
-        this.id = id;
+    public CategoryDTO(Long categoryId, String name, String imageUrl, String description) {
+        this.categoryId = categoryId;
         this.name = name;
-        this.imgUrl = imgUrl;
+        this.imageUrl = imageUrl;
         this.description = description;
     }
 
     public CategoryDTO(Category category) {
-        this.id = category.getId();
+        this.categoryId = category.getId();
         this.name = category.getName();
-        this.imgUrl = category.getImgUrl();
+        this.imageUrl = category.getImgUrl();
         this.description = category.getDescription();
     }
 
-    public CategoryDTO(String name, String imgUrl, String description) {
-        this.id = null;
+    public CategoryDTO(String name, String imageUrl, String description) {
+        this.categoryId = null;
         this.name = name;
-        this.imgUrl = imgUrl;
+        this.imageUrl = imageUrl;
         this.description = description;
     }
-    public Long getId() {
-        return id;
+    public Long getCategoryId() {
+        return categoryId;
     }
 
     public String getName() {
         return name;
     }
 
-    public String getImgUrl() {
-        return imgUrl;
+    public String getImageUrl() {
+        return imageUrl;
     }
 
     public String getDescription() {
@@ -60,6 +60,6 @@ public class CategoryDTO {
 
 
     public Category toEntity() {
-        return new Category(id, name, imgUrl, description);
+        return new Category(categoryId, name, imageUrl, description);
     }
 }

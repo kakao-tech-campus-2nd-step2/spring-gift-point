@@ -48,8 +48,8 @@ public class AdminCategoriesController {
     @GetMapping("/categories/update/{categoryId}")
     public String getCategoryUpdateForm(Model model, @PathVariable("categoryId") Long id) {
         CategoryDTO categoryDTO = categoryService.getCategoryById(id);
-        CategoryForm categoryForm = new CategoryForm(categoryDTO.getId(), categoryDTO.getName(),
-            categoryDTO.getImgUrl(), categoryDTO.getDescription());
+        CategoryForm categoryForm = new CategoryForm(categoryDTO.getCategoryId(), categoryDTO.getName(),
+            categoryDTO.getImageUrl(), categoryDTO.getDescription());
         model.addAttribute("category", categoryForm);
         return "category-update";
     }

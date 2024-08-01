@@ -82,7 +82,7 @@ public class AdminItemController {
         List<OptionForm> optionForms = options.stream().map(OptionForm::new)
             .collect(Collectors.toList());
         ItemForm itemForm = new ItemForm(itemDTO.getId(), itemDTO.getName(), itemDTO.getPrice(),
-            itemDTO.getImgUrl(), itemDTO.getCategoryId(), optionForms);
+            itemDTO.getImageUrl(), itemDTO.getCategoryId(), optionForms);
         model.addAttribute("itemForm", itemForm);
         model.addAttribute("categories", categories);
         return "item-update";

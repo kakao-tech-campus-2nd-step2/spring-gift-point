@@ -89,7 +89,7 @@ public class Item {
     public void update(ItemDTO itemDTO, Category category) {
         this.name = itemDTO.getName();
         this.price = itemDTO.getPrice();
-        this.imgUrl = itemDTO.getImgUrl();
+        this.imgUrl = itemDTO.getImageUrl();
         this.category = category;
     }
 

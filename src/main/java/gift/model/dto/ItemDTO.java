@@ -7,14 +7,14 @@ public class ItemDTO {
     private final Long id;
     private final String name;
     private final Long price;
-    private final String imgUrl;
+    private final String imageUrl;
     private final Long categoryId;
 
-    public ItemDTO(Long id, String name, Long price, String imgUrl, Long categoryId) {
+    public ItemDTO(Long id, String name, Long price, String imageUrl, Long categoryId) {
         this.id = id;
         this.name = name;
         this.price = price;
-        this.imgUrl = imgUrl;
+        this.imageUrl = imageUrl;
         this.categoryId = categoryId;
     }
 
@@ -22,12 +22,12 @@ public class ItemDTO {
         this.id = item.getId();
         this.name = item.getName();
         this.price = item.getPrice();
-        this.imgUrl = item.getImgUrl();
+        this.imageUrl = item.getImgUrl();
         this.categoryId = item.getCategory().getId();
     }
 
-    public ItemDTO(String name, Long price, String imgUrl, Long categoryId) {
-        this(null, name, price, imgUrl, categoryId);
+    public ItemDTO(String name, Long price, String imageUrl, Long categoryId) {
+        this(null, name, price, imageUrl, categoryId);
     }
 
     public Long getId() {
@@ -42,8 +42,8 @@ public class ItemDTO {
         return price;
     }
 
-    public String getImgUrl() {
-        return imgUrl;
+    public String getImageUrl() {
+        return imageUrl;
     }
 
     public Long getCategoryId() {

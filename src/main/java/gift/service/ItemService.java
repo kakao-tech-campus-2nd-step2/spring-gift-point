@@ -56,7 +56,7 @@ public class ItemService {
         throws CustomDuplicateException {
         Category category = categoryRepository.findById(itemDTO.getCategoryId())
             .orElseThrow(() -> new CustomNotFoundException(ErrorCode.CATEGORY_NOT_FOUND));
-        Item item = new Item(itemDTO.getName(), itemDTO.getPrice(), itemDTO.getImgUrl(), category);
+        Item item = new Item(itemDTO.getName(), itemDTO.getPrice(), itemDTO.getImageUrl(), category);
 
         if (validateOptions(options)) {
             throw new CustomDuplicateException(ErrorCode.DUPLICATE_NAME);
