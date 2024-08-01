@@ -1,6 +1,7 @@
 package gift.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import gift.config.KakaoAuthProperties;
 import gift.domain.KakaoInfo;
 import gift.dto.MemberDto;
 import gift.response.JwtResponse;
@@ -11,22 +12,41 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.view.RedirectView;
+import org.springframework.web.util.UriComponentsBuilder;
 
 @RestController
 @Tag(name = "카카오 OAuth", description = "카카오 OAuth API")
 public class KakaoLoginController {
     private final KakaoService kakaoService;
     private final MemberService memberService;
+    private final KakaoAuthProperties kakaoAuthProperties;
 
-    public KakaoLoginController(KakaoService kakaoService, MemberService memberService) {
+    public KakaoLoginController(KakaoService kakaoService, MemberService memberService,
+        KakaoAuthProperties kakaoAuthProperties) {
         this.kakaoService = kakaoService;
         this.memberService = memberService;
+        this.kakaoAuthProperties = kakaoAuthProperties;
+    }
+
+    @PostMapping("/api/members/kakao")
+    @Operation(summary = "카카오 로그인 페이지 리다이렉트", description = "카카오 로그인 페이지로 리다이렉트한다.")
+    public RedirectView redirectLoginPage() {
+        String location = UriComponentsBuilder.fromHttpUrl("https://kauth.kakao.com/oauth/authorize")
+            .queryParam("response_type", "code")
+            .queryParam("client_id", kakaoAuthProperties.getClientId())
+            .queryParam("redirect_uri", kakaoAuthProperties.getRedirectUri())
+            .toUriString();
+
+        return new RedirectView(location);
     }
 
     @GetMapping("/kakao")
-    @Operation(summary = "카카오 로그인", description = "카카오 계정으로 로그인합니다.")
+    @Operation(summary = "카카오 로그인", description = "카카오 계정으로 로그인한다.")
     public ResponseEntity<JwtResponse> loginByKakao(@RequestParam("code") String code) {
         // 1. 인가 코드 받기 (code)
 
