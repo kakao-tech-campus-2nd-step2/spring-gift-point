@@ -33,19 +33,25 @@ public class WishlistService {
         this.memberRepository = memberRepository;
     }
 
-//    public Page<Product> checkWishlist(Pageable pageable) {
-//        Page<Wishlist> wishlistPage = wishlistRepository.findAll(pageable);
-//        return wishlistPage.map(Wishlist::getProduct);
-//    }
+    public Page<WishPageDto> checkWishlist(Pageable pageable) {
+        Page<Wishlist> wishlistPage = wishlistRepository.findAll(pageable);
+        return wishlistPage.map(this::convertToWishlistDto);
+    }
 
-    public Page<Wishlist> checkWishlist(Pageable pageable) {
-        return wishlistRepository.findAll(pageable);
+    private WishPageDto convertToWishlistDto(Wishlist wishlist) {
+        ProductResponseDto productDto = new ProductResponseDto(
+            wishlist.getProduct().getId(),
+            wishlist.getProduct().getName(),
+            wishlist.getProduct().getPrice(),
+            wishlist.getProduct().getImageUrl(),
+            wishlist.getProduct().getCategory().getId()
+        );
+
+        return new WishPageDto(wishlist.getId(), productDto);
     }
 
     @Transactional
     public WishResponseDto addWishlist(WishRequestDto request, Member member) {
-        //Optional<Product> product = productRepository.findById(request.productId());
-
         Product product = productRepository.findById(request.productId())
                 .orElseThrow(() -> new InvalidProduct("유효하지 않은 상품입니다"));
 

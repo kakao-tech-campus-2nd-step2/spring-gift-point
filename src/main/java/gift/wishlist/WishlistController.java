@@ -44,7 +44,7 @@ public class WishlistController {
     }
 
     @GetMapping
-    public Page<Wishlist> getWishlist(Pageable pageable) {
+    public Page<WishPageDto> getWishlist(Pageable pageable) {
         return wishlistService.checkWishlist(pageable);
     }
 
