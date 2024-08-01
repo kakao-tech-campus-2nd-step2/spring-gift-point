@@ -10,17 +10,18 @@ public class CategoryResponseDto {
     private final String name;
     @Schema(description = "색상", defaultValue = "색상1")
     private final String color;
-    @Schema(description = "카테고리 상세 설명")
-    private final String description;
     @Schema(description = "카테고리 이미지 url")
     private final String imageUrl;
+    @Schema(description = "카테고리 상세 설명")
+    private final String description;
+
 
     public CategoryResponseDto(Long id, String name, String color, String description, String imageUrl) {
         this.id = id;
         this.name = name;
         this.color = color;
-        this.description = description;
         this.imageUrl = imageUrl;
+        this.description = description;
     }
 
     public Long getId() {

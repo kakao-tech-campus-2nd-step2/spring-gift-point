@@ -8,17 +8,17 @@ public class WishResponseDto {
     private final Long id;
     @Schema(description = "위시리스트에 추가된 상품의 id")
     private final Long productId;
-    @Schema(description = "해당 위시 요청하는 사람의 token 값")
-    private final String tokenValue;
+    @Schema(description = "해당 위시 요청하는 사람의 id 값")
+    private Long memberId;
 
-    public WishResponseDto(Long id, Long productId, String tokenValue) {
+    public WishResponseDto(Long id, Long productId,Long memberId) {
         this.id = id;
         this.productId = productId;
-        this.tokenValue = tokenValue;
+        this.memberId = memberId;
     }
 
-    public WishResponseDto(Long productId, String tokenValue) {
-        this(null, productId, tokenValue);
+    public WishResponseDto(Long productId, Long memberId) {
+        this(null, productId,memberId);
     }
 
     public Long getId() {
@@ -29,8 +29,7 @@ public class WishResponseDto {
         return productId;
     }
 
-    public String getTokenValue() {
-        return tokenValue;
+    public Long getMemberId() {
+        return memberId;
     }
-
 }
