@@ -4,12 +4,12 @@ insert into category(name, color, image_url, description) values('명품선물',
 insert into category(name, color, image_url, description) values('가벼운선물', '#4B4D50', 'https://img1.kakaocdn.net/thumb/C305x305@2x.fwebp.q82/?fname=https%3A%2F%2Fst.kakaocdn.net%2Fproduct%2Fgift%2Fproduct%2F20240213103359_7a873afe090d4643b96774da928b5c8b.jpg', '예산은 가볍게, 감동은 무겁게')
 insert into category(name, color, image_url, description) values('시원한선물', '#6C95D1', 'https://img1.kakaocdn.net/thumb/C305x305@2x.fwebp.q82/?fname=https%3A%2F%2Fst.kakaocdn.net%2Fproduct%2Fgift%2Fproduct%2F20240528154243_ce80237207fc44e19a40c024d0229bc8.jpg', '어느새 찾아온 무더운 여름')
 insert into category(name, color, image_url, description) values('결혼/집들이', '#95785D', 'https://img1.kakaocdn.net/thumb/C305x305@2x.fwebp.q82/?fname=https%3A%2F%2Fst.kakaocdn.net%2Fproduct%2Fgift%2Fproduct%2F20240530084619_cbd8d48dfa244611821cefad235f5977.jpg', '들려오는 지인들의 좋은 소식')
-insert into category(name, color, image_url, description) values('19금', '#212121', 'https://cdn.imweb.me/thumbnail/20220719/46c95dfc2dae3.jpg', '낚였으면 개추')
 insert into category(name, color, image_url, description) values('응원/시험', '#465F4D', 'https://img1.kakaocdn.net/thumb/C305x305@2x.fwebp.q82/?fname=https%3A%2F%2Fst.kakaocdn.net%2Fproduct%2Fgift%2Fproduct%2F20230504094125_3a3a2367362c4bdb8dee7c3a7e8b3806.jpg', '잘했고, 잘하고 있고, 잘할 거야')
 insert into category(name, color, image_url, description) values('교환권', '#B2DFFF', 'https://img1.kakaocdn.net/thumb/C414x414@2x.fwebp.q82/?fname=https%3A%2F%2Fst.kakaocdn.net%2Fproduct%2Fgift%2Fproduct%2F20240723165144_28b6bf71f7754fa6967766f3c9799ce1.jpg', '놓치면 후회할 교환권 특가')
 insert into category(name, color, image_url, description) values('건강/비타민', '#FC8197', 'https://img1.kakaocdn.net/thumb/C305x305@2x.fwebp.q82/?fname=https%3A%2F%2Fst.kakaocdn.net%2Fproduct%2Fgift%2Fproduct%2F20240531150628_2af8065733ab449bb81d9d5b55a68c28.jpg', '건강한 기원하는 마음 담아 선물하세요')
 insert into category(name, color, image_url, description) values('과일/한우', '#ED6D59', 'https://img1.kakaocdn.net/thumb/C305x305@2x.fwebp.q82/?fname=https%3A%2F%2Fst.kakaocdn.net%2Fproduct%2Fgift%2Fproduct%2F20240129103642_a5ca62d182ec419285ba708b51cb72c2.jpg', '정성 가득한 선물로 감사한 마음을 전해보세요')
 insert into category(name, color, image_url, description) values('출산/키즈', '#FC8197', 'https://img1.kakaocdn.net/thumb/C414x414@2x.fwebp.q82/?fname=https%3A%2F%2Fst.kakaocdn.net%2Fproduct%2Fgift%2Fproduct%2F20240723154022_4293c778400d4257bd1961c3538899d9.jpg', '엄마와 아이를 위한 세심한 선물')
+insert into category(name, color, image_url, description) values('19금', '#212121', 'https://cdn.imweb.me/thumbnail/20220719/46c95dfc2dae3.jpg', '낚였으면 개추')
 
 insert into product(name, price, image_url, category_id, created_at) values ('하겐다즈(케이크)', 29900, 'https://img1.kakaocdn.net/thumb/C414x414@2x.fwebp.q82/?fname=https%3A%2F%2Fst.kakaocdn.net%2Fproduct%2Fgift%2Fproduct%2F20240417111629_616eccb9d4cd464fa06d3430947dce15.jpg', 1, NOW())
 insert into product(name, price, image_url, category_id, created_at) values ('스타벅스 더블 초콜릿 케이크', 33000, 'https://img1.kakaocdn.net/thumb/C305x305@2x.fwebp.q82/?fname=https%3A%2F%2Fst.kakaocdn.net%2Fproduct%2Fgift%2Fproduct%2F20240517113350_31cb48285fa148c2a08d2f8715a6f94d.jpg', 1, NOW())
@@ -19,7 +19,7 @@ insert into product(name, price, image_url, category_id, created_at) values ('NE
 insert into product(name, price, image_url, category_id, created_at) values ('헤라 센슈얼 누드 밤', 36000, 'https://img1.kakaocdn.net/thumb/C305x305@2x.fwebp.q82/?fname=https%3A%2F%2Fst.kakaocdn.net%2Fproduct%2Fgift%2Fproduct%2F20240722070553_82d2b070f7624e869d7d00cca721844d.jpg', 2, NOW())
 insert into product(name, price, image_url, category_id, created_at) values ('헤어미스트 30ML', 101000, 'https://img1.kakaocdn.net/thumb/C305x305@2x.fwebp.q82/?fname=https%3A%2F%2Fst.kakaocdn.net%2Fproduct%2Fgift%2Fproduct%2F20220105144937_83576e248faa4aad8955f8151ba8f6a1.jpg', 2, NOW())
 insert into product(name, price, image_url, category_id, created_at) values ('핸드 크림 30ML', 33000, 'https://img1.kakaocdn.net/thumb/C305x305@2x.fwebp.q82/?fname=https%3A%2F%2Fst.kakaocdn.net%2Fproduct%2Fgift%2Fproduct%2F20240627200459_ae223bd9d0f14314a9deffd8a6dbfdfd.jpg', 2, NOW())
-insert into product(name, price, image_url, category_id, created_at) values ('20토', 33000, 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ_-5JivD7zoE1Gllz2nMgdilR0lPVHi5tFUA&s', 7, NOW())
+insert into product(name, price, image_url, category_id, created_at) values ('20토', 33000, 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ_-5JivD7zoE1Gllz2nMgdilR0lPVHi5tFUA&s', 12, NOW())
 
 
 
