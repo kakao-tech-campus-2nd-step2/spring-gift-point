@@ -1,5 +1,7 @@
 package gift.controller;
 
+import gift.dto.DomainResponse;
+import gift.model.HttpResult;
 import gift.model.Product;
 import gift.service.CategoryService;
 import gift.service.ProductService;
@@ -15,8 +17,11 @@ import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("/api/products")
@@ -32,64 +37,81 @@ public class ProductController {
         this.categoryService = categoryService;
     }
 
-    @Operation(summary = "상품 추가", description = "새로운 상품을 등록한다.")
+    @Operation(summary = "상품 생성", description = "새 상품을 등록한다.")
     @PostMapping
-    public ResponseEntity<Object> addProduct(@Valid @RequestBody Product product, BindingResult bindingResult) {
+    public ResponseEntity<DomainResponse> addProduct(@Valid @RequestBody Product product, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
-            return new ResponseEntity<>(bindingResult.getAllErrors(), HttpStatus.BAD_REQUEST);
+            HttpResult httpResult = new HttpResult(HttpStatus.BAD_REQUEST.value(), "Validation errors");
+            return new ResponseEntity<>(new DomainResponse(httpResult, List.of(Map.of("errors", bindingResult.getAllErrors())), HttpStatus.BAD_REQUEST), HttpStatus.BAD_REQUEST);
         }
-        product.setCategory(categoryService.findById(product.getCategoryId()));
+        product.setCategory(categoryService.findById(product.getCategory().getId()));
         productService.save(product);
-        return new ResponseEntity<>(HttpStatus.CREATED);
+        HttpResult httpResult = new HttpResult(HttpStatus.CREATED.value(), "Product created successfully");
+        return new ResponseEntity<>(new DomainResponse(httpResult, null, HttpStatus.CREATED), HttpStatus.CREATED);
     }
 
-    @PutMapping(value = "/{id}", consumes = "application/x-www-form-urlencoded", produces = "application/json")
-    public ResponseEntity<Object> updateProduct(@PathVariable Long id, @Valid @ModelAttribute Product updatedProduct, BindingResult bindingResult) {
+    @Operation(summary = "상품 수정", description = "기존 상품의 정보를 수정한다.")
+    @PutMapping("/{id}")
+    public ResponseEntity<DomainResponse> updateProduct(@PathVariable Long id, @Valid @RequestBody Product updatedProduct, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
-            Map<String, String> errors = new HashMap<>();
+            Map<String, Object> errors = new HashMap<>();
             bindingResult.getFieldErrors().forEach(error ->
                     errors.put(error.getField(), error.getDefaultMessage())
             );
-            return new ResponseEntity<>(errors, HttpStatus.BAD_REQUEST);
+            HttpResult httpResult = new HttpResult(HttpStatus.BAD_REQUEST.value(), "Validation errors");
+            return new ResponseEntity<>(new DomainResponse(httpResult, List.of(errors), HttpStatus.BAD_REQUEST), HttpStatus.BAD_REQUEST);
         }
 
         Product existingProduct = productService.findById(id);
         if (existingProduct == null) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            HttpResult httpResult = new HttpResult(HttpStatus.NOT_FOUND.value(), "Product not found");
+            return new ResponseEntity<>(new DomainResponse(httpResult, null, HttpStatus.NOT_FOUND), HttpStatus.NOT_FOUND);
         }
 
-        existingProduct.updateProductDetails(
-                updatedProduct.getName(),
-                updatedProduct.getPrice(),
-                updatedProduct.getImageurl(),
-                categoryService.findById(updatedProduct.getCategoryId()),
-                updatedProduct.getOptions()
-        );
+        existingProduct.setCategory(categoryService.findById(updatedProduct.getCategory().getId()));
+        existingProduct.setName(updatedProduct.getName());
+        existingProduct.setPrice(updatedProduct.getPrice());
+        existingProduct.setImageurl(updatedProduct.getImageurl());
+        existingProduct.setOptions(updatedProduct.getOptions());
 
         productService.update(existingProduct);
-        return new ResponseEntity<>(existingProduct, HttpStatus.OK);
+        HttpResult httpResult = new HttpResult(HttpStatus.OK.value(), "Product updated successfully");
+        return new ResponseEntity<>(new DomainResponse(httpResult, null, HttpStatus.OK), HttpStatus.OK);
     }
 
-    @Operation(summary = "상품 목록 조회", description = "상품 목록을 페이징하여 조회한다.")
+    @Operation(summary = "상품 목록 조회 (페이지네이션 적용)", description = "모든 상품의 목록을 페이지 단위로 조회한다.")
     @GetMapping
-    public ResponseEntity<Page<Product>> getAllProducts(Pageable pageable) {
-        return productService.getAllProducts(pageable);
+    public ResponseEntity<DomainResponse> getAllProducts(Pageable pageable) {
+        Page<Product> products = productService.getAllProducts(pageable);
+        List<Map<String, Object>> productList = new ArrayList<>();
+        productList.add(Map.of("products", products));
+        HttpResult httpResult = new HttpResult(HttpStatus.OK.value(), "Products retrieved successfully");
+        return ResponseEntity.ok(new DomainResponse(httpResult, productList, HttpStatus.OK));
     }
 
-    @Operation(summary = "상품 조회", description = "ID로 상품을 조회한다.")
+    @Operation(summary = "상품 조회", description = "특정 상품의 정보를 조회한다.")
     @GetMapping("/{id}")
-    public ResponseEntity<Product> getProductById(@PathVariable Long id) {
+    public ResponseEntity<DomainResponse> getProductById(@PathVariable Long id) {
         Product product = productService.findById(id);
         if (product == null) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            HttpResult httpResult = new HttpResult(HttpStatus.NOT_FOUND.value(), "Product not found");
+            return new ResponseEntity<>(new DomainResponse(httpResult, null, HttpStatus.NOT_FOUND), HttpStatus.NOT_FOUND);
         }
-        return new ResponseEntity<>(product, HttpStatus.OK);
+        Map<String, Object> productMap = new HashMap<>();
+        productMap.put("id", product.getId());
+        productMap.put("name", product.getName());
+        productMap.put("price", product.getPrice());
+        productMap.put("imageurl", product.getImageurl());
+        productMap.put("category", product.getCategory().getName());
+        HttpResult httpResult = new HttpResult(HttpStatus.OK.value(), "Product retrieved successfully");
+        return new ResponseEntity<>(new DomainResponse(httpResult, List.of(productMap), HttpStatus.OK), HttpStatus.OK);
     }
 
-    @Operation(summary = "상품 삭제", description = "ID로 상품을 삭제한다.")
+    @Operation(summary = "상품 삭제", description = "특정 상품을 삭제한다.")
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteProduct(@PathVariable Long id) {
+    public ResponseEntity<DomainResponse> deleteProduct(@PathVariable Long id) {
         productService.delete(id);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        HttpResult httpResult = new HttpResult(HttpStatus.NO_CONTENT.value(), "Product deleted successfully");
+        return new ResponseEntity<>(new DomainResponse(httpResult, null, HttpStatus.NO_CONTENT), HttpStatus.NO_CONTENT);
     }
 }

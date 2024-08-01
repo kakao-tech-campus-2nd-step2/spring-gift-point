@@ -8,13 +8,18 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
+import org.springframework.web.client.HttpStatusCodeException;
 import org.springframework.web.client.RestTemplate;
 
 import java.net.URI;
+import java.util.Map;
+import java.util.HashMap;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 @SpringBootTest
@@ -39,13 +44,18 @@ public class KakaoAuthServiceTest {
 
     @Test
     void testKakaoLoginRedirect() {
+
         var url = "https://kauth.kakao.com/oauth/authorize?scope=talk_message,account_email&response_type=code&client_id=" + clientId + "&redirect_uri=" + redirectUri;
+
 
         ResponseEntity<String> mockResponse = new ResponseEntity<>(HttpStatus.FOUND);
         when(restTemplate.getForEntity(URI.create(url), String.class)).thenReturn(mockResponse);
 
+
         ResponseEntity<String> response = restTemplate.getForEntity(URI.create(url), String.class);
+
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.FOUND);
     }
+
 }

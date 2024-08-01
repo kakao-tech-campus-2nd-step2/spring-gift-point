@@ -27,11 +27,8 @@ public class Product {
     private String imageurl;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "category_id", nullable = false, insertable = false, updatable = false)
+    @JoinColumn(name = "category_id", nullable = false)
     private Category category;
-
-    @Column(name = "category_id")
-    private Long categoryId;
 
     @OneToMany(mappedBy = "product")
     private List<Wish> wishes;
@@ -42,13 +39,6 @@ public class Product {
     public Product() {
     }
 
-    public Product(String name, Integer price, String imageurl, Category category) {
-        this.name = name;
-        this.price = price;
-        this.imageurl = imageurl;
-        setCategory(category);
-    }
-
     public Long getId() {
         return id;
     }
@@ -57,44 +47,47 @@ public class Product {
         return name;
     }
 
+    public void setName(String name) {
+        this.name = name;
+    }
+
     public Integer getPrice() {
         return price;
+    }
+
+    public void setPrice(Integer price) {
+        this.price = price;
     }
 
     public String getImageurl() {
         return imageurl;
     }
 
-    public Category getCategory() {
-        return category;
-    }
-
-    public Long getCategoryId() {
-        return categoryId;
+    public void setImageurl(String imageurl) {
+        this.imageurl = imageurl;
     }
 
     public List<Wish> getWishes() {
         return wishes;
     }
 
-    public List<ProductOption> getOptions() {
-        return options;
+
+    public void setWishes(List<Wish> wishes) {
+        this.wishes = wishes;
+    }
+
+    public Category getCategory() {
+        return category;
     }
 
     public void setCategory(Category category) {
         this.category = category;
-        this.categoryId = category != null ? category.getId() : null;
+    }
+    public List<ProductOption> getOptions() {
+        return options;
     }
 
-    public void updateProductDetails(String name, Integer price, String imageurl, Category category, List<ProductOption> options) {
-        this.name = name;
-        this.price = price;
-        this.imageurl = imageurl;
-        setCategory(category);
-        setOptions(options);
-    }
-
-    private void setOptions(List<ProductOption> options) {
+    public void setOptions(List<ProductOption> options) {
         this.options = options;
         if (options != null) {
             for (ProductOption option : options) {

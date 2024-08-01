@@ -15,6 +15,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
+
+
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
@@ -39,11 +41,17 @@ class OrderServiceTest {
     private HttpSession session;
 
     private Member createTestMember() {
-        return new Member("test@example.com", "password");
+        Member member = new Member();
+
+        return member;
     }
 
     private ProductOption createTestProductOption() {
-        return new ProductOption(1L, "Option 1", 10);
+        ProductOption productOption = new ProductOption();
+        productOption.setId(1L);
+        productOption.setName("Option 1");
+        productOption.setQuantity(10);
+        return productOption;
     }
 
     @BeforeEach
@@ -53,6 +61,7 @@ class OrderServiceTest {
 
     @Test
     void createOrder_success() {
+
         Member member = createTestMember();
         ProductOption productOption = createTestProductOption();
 
@@ -60,7 +69,9 @@ class OrderServiceTest {
         when(orderRepository.save(any(Order.class))).thenAnswer(invocation -> invocation.getArgument(0));
         when(session.getAttribute("accessToken")).thenReturn("mockAccessToken");
 
+
         Order order = orderService.createOrder(1L, 2, "Please handle with care", member);
+
 
         assertNotNull(order);
         assertEquals(1L, order.getProductOption().getId());
@@ -77,9 +88,11 @@ class OrderServiceTest {
 
     @Test
     void createOrder_invalidProductOption() {
+
         Member member = createTestMember();
 
         when(productOptionService.findProductOptionById(1L)).thenReturn(null);
+
 
         IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
             orderService.createOrder(1L, 2, "Please handle with care", member);
@@ -94,6 +107,7 @@ class OrderServiceTest {
 
     @Test
     void createOrder_noAccessToken() {
+
         Member member = createTestMember();
         ProductOption productOption = createTestProductOption();
 
@@ -101,7 +115,9 @@ class OrderServiceTest {
         when(orderRepository.save(any(Order.class))).thenAnswer(invocation -> invocation.getArgument(0));
         when(session.getAttribute("accessToken")).thenReturn(null);
 
+
         Order order = orderService.createOrder(1L, 2, "Please handle with care", member);
+
 
         assertNotNull(order);
         assertEquals(1L, order.getProductOption().getId());

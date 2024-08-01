@@ -28,9 +28,15 @@ public class ProductService {
 
     public void save(Product product) {
         validateProductOptions(product);
-        productRepository.save(product);
+        Product savedProduct = productRepository.save(product);  // 상품을 먼저 저장
         List<ProductOption> options = product.getOptions().stream()
-                .map(option -> new ProductOption(option.getName(), option.getQuantity(), product))
+                .map(option -> {
+                    ProductOption newOption = new ProductOption();
+                    newOption.setName(option.getName());
+                    newOption.setQuantity(option.getQuantity());
+                    newOption.setProduct(savedProduct);  // 연관된 상품 설정
+                    return newOption;
+                })
                 .collect(Collectors.toList());
         try {
             productOptionService.saveProductOptions(options);
@@ -39,16 +45,22 @@ public class ProductService {
         }
     }
 
-    public ResponseEntity<Page<Product>> getAllProducts(Pageable pageable) {
-        Page<Product> products = productRepository.findAll(pageable);
-        return new ResponseEntity<>(products, HttpStatus.OK);
+    public Page<Product> getAllProducts(Pageable pageable) {
+        return productRepository.findAll(pageable);
     }
+
 
     public void update(Product updatedProduct) {
         validateProductOptions(updatedProduct);
         productOptionService.deleteProductOptionsByProductId(updatedProduct.getId());
         List<ProductOption> options = updatedProduct.getOptions().stream()
-                .map(option -> new ProductOption(option.getName(), option.getQuantity(), updatedProduct))
+                .map(option -> {
+                    ProductOption newOption = new ProductOption();
+                    newOption.setName(option.getName());
+                    newOption.setQuantity(option.getQuantity());
+                    newOption.setProduct(updatedProduct);
+                    return newOption;
+                })
                 .collect(Collectors.toList());
         try {
             productOptionService.saveProductOptions(options);

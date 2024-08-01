@@ -1,11 +1,14 @@
 package gift.service;
 
+import gift.dto.OrderResponse;
 import gift.model.Member;
 import gift.model.Order;
 import gift.model.ProductOption;
 import gift.repository.OrderRepository;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -30,6 +33,11 @@ public class OrderService {
 
     @Autowired
     private HttpSession session;
+
+    public Page<OrderResponse> getAllOrders(Pageable pageable) {
+        Page<Order> orders = orderRepository.findAll(pageable);
+        return orders.map(OrderResponse::new);
+    }
 
     @Transactional
     public Order createOrder(Long optionId, int quantity, String message, Member member) {
