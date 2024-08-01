@@ -71,8 +71,7 @@ public class Option {
         return new OptionResponse(
                 this.id,
                 this.name,
-                this.quantity,
-                this.product.getId()
+                this.quantity
         );
     }
 }

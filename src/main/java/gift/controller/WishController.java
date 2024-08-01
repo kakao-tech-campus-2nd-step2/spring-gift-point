@@ -1,6 +1,8 @@
 package gift.controller;
 
+import gift.dto.ProductResponse;
 import gift.dto.WishRequest;
+import gift.dto.WishResponse;
 import gift.model.LoginMember;
 import gift.model.Member;
 import gift.model.Product;
@@ -29,14 +31,14 @@ public class WishController {
     }
 
     @GetMapping("/wishes")
-    public ResponseEntity<Page<Product>> getAllWishProductsByMember(@LoginMember Member member, @PageableDefault(page = 0, size = 5) Pageable pageable) {
-        Page<Product> allProducts = wishService.getAllWishProductsByMember(member, pageable);
-        return ResponseEntity.ok().body(allProducts);
+    public ResponseEntity<Page<WishResponse>> getAllWishProductsByMember(@LoginMember Member member, @PageableDefault(page = 0, size = 5) Pageable pageable) {
+        Page<WishResponse> wishesByMember = wishService.getWishesByMember(member, pageable);
+        return ResponseEntity.ok().body(wishesByMember);
     }
 
-    @DeleteMapping("/wishes")
-    public ResponseEntity deleteWishProduct(@RequestBody @Valid WishRequest request, @LoginMember Member member) {
-        wishService.deleteWish(request.productId(), member);
+    @DeleteMapping("/wishes/{id}")
+    public ResponseEntity deleteWishProduct(@PathVariable("id") Long id, @LoginMember Member member) {
+        wishService.deleteWish(id, member);
         return ResponseEntity.noContent().build();
     }
 }

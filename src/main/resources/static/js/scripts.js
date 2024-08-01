@@ -25,7 +25,7 @@ function createProducts() {
 }
 
 function loadProducts(page) {
-    fetch(`/api/products?page=${page}&size=${pageSize}`)
+    fetch(`/api/products/all?page=${page}&size=${pageSize}`)
         .then(response => response.json())
         .then(products => {
             const productsTableBody = document.querySelector("#productsTableBody");
@@ -37,20 +37,20 @@ function loadProducts(page) {
                         <td><span>${product.name}</span><input type="text" value="${product.name}" style="display:none"></td>
                         <td><span>${product.price}</span><input type="text" value="${product.price}" style="display:none"></td>
                         <td><span>${product.imageUrl}</span><input type="text" value="${product.imageUrl}" style="display:none"></td>
-                        <td><span>${product.categoryName}</span><select style="display:none">
-                                    <option value="1" ${product.categoryId === 1 ? 'selected' : ''}>교환권</option>
-                                    <option value="2" ${product.categoryId === 2 ? 'selected' : ''}>상품권</option>
-                                    <option value="3" ${product.categoryId === 3 ? 'selected' : ''}>뷰티</option>
-                                    <option value="4" ${product.categoryId === 4 ? 'selected' : ''}>패션</option>
-                                    <option value="5" ${product.categoryId === 5 ? 'selected' : ''}>식품</option>
-                                    <option value="6" ${product.categoryId === 6 ? 'selected' : ''}>리빙/도서</option>
-                                    <option value="7" ${product.categoryId === 7 ? 'selected' : ''}>레저/스포츠</option>
-                                    <option value="8" ${product.categoryId === 8 ? 'selected' : ''}>아티스트/캐릭터</option>
-                                    <option value="9" ${product.categoryId === 9 ? 'selected' : ''}>유아동/반려</option>
-                                    <option value="10" ${product.categoryId === 10 ? 'selected' : ''}>디지털/가전</option>
-                                    <option value="11" ${product.categoryId === 11 ? 'selected' : ''}>카카오프렌즈</option>
-                                    <option value="12" ${product.categoryId === 12 ? 'selected' : ''}>트렌드 선물</option>
-                                    <option value="13" ${product.categoryId === 13 ? 'selected' : ''}>백화점</option>
+                        <td><span>${product.category.name}</span><select style="display:none">
+                                    <option value="1" ${product.category.id === 1 ? 'selected' : ''}>교환권</option>
+                                    <option value="2" ${product.category.id === 2 ? 'selected' : ''}>상품권</option>
+                                    <option value="3" ${product.category.id === 3 ? 'selected' : ''}>뷰티</option>
+                                    <option value="4" ${product.category.id === 4 ? 'selected' : ''}>패션</option>
+                                    <option value="5" ${product.category.id === 5 ? 'selected' : ''}>식품</option>
+                                    <option value="6" ${product.category.id === 6 ? 'selected' : ''}>리빙/도서</option>
+                                    <option value="7" ${product.category.id === 7 ? 'selected' : ''}>레저/스포츠</option>
+                                    <option value="8" ${product.category.id === 8 ? 'selected' : ''}>아티스트/캐릭터</option>
+                                    <option value="9" ${product.category.id === 9 ? 'selected' : ''}>유아동/반려</option>
+                                    <option value="10" ${product.category.id === 10 ? 'selected' : ''}>디지털/가전</option>
+                                    <option value="11" ${product.category.id === 11 ? 'selected' : ''}>카카오프렌즈</option>
+                                    <option value="12" ${product.category.id === 12 ? 'selected' : ''}>트렌드 선물</option>
+                                    <option value="13" ${product.category.id === 13 ? 'selected' : ''}>백화점</option>
                                 </select></td>
                         <td>
                             <button class="btn btn-warning" onclick="editProduct(${product.id}, this)">수정 버튼</button>
@@ -61,7 +61,7 @@ function loadProducts(page) {
                 productsTableBody.appendChild(row);
             });
 
-            renderPagination(products.page.totalPages, page);
+            renderPagination(products.totalPages, page);
         });
 }
 
@@ -150,7 +150,7 @@ function saveProduct(id, button) {
         },
         body: JSON.stringify(product)
     }).then(response => {
-        if (response.status === 201) {
+        if (response.status === 200) {
             alert('성공적으로 수정되었습니다');
             loadProducts(currentPage);
         } else {
