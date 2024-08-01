@@ -1,14 +1,11 @@
 package gift.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 @Entity
 @Table(name = "product")
-@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Product {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -26,15 +23,10 @@ public class Product {
 
     @ManyToOne
     @JoinColumn(name = "category_id", nullable = false)
-    @JsonIgnoreProperties("products")
     private Category category;
 
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Option> options = new HashSet<>();
-
-    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
-    @JsonIgnoreProperties("product")
-    private List<Wish> wishes;
 
     protected Product() {}
 
