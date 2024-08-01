@@ -1,7 +1,7 @@
 package gift.security;
 
 import gift.annotation.LoginMember;
-import gift.service.MemberService;
+import gift.member.service.MemberService;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import jakarta.servlet.http.HttpServletRequest;
