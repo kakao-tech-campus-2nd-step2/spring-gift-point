@@ -1,5 +1,6 @@
 package gift.controller;
 
+import gift.dto.CategoryDto;
 import gift.entity.Category;
 import gift.service.CategoryService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -11,6 +12,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @Tag(name="카테고리 API")
@@ -29,14 +31,21 @@ public class CategoryController {
             description = "성공적으로 카테고리 목록을 조회했습니다.",
             content = @Content(
                     mediaType = "application/json",
-                    schema = @Schema(implementation = Category.class),
+                    schema = @Schema(implementation = CategoryDto.class),
                     examples = @ExampleObject(
                             value = "[{\"id\": 1, \"name\": \"Electronics\", \"color\": \"#0000FF\", \"imgUrl\": \"http://example.com/image1.jpg\", \"description\": \"Various electronic products\"}, {\"id\": 2, \"name\": \"Books\", \"color\": \"#FF0000\", \"imgUrl\": \"http://example.com/image2.jpg\", \"description\": \"All kinds of books\"}]"
                     )
             )
     )
     @GetMapping
-    public List<Category> getCategories() {
-        return categoryService.findAll();
+    public List<CategoryDto> getCategories() {
+        return categoryService.findAll().stream()
+                .map(category -> new CategoryDto(
+                        category.getId(),
+                        category.getName(),
+                        category.getColor(),
+                        category.getImgUrl(),
+                        category.getDescription()))
+                .collect(Collectors.toList());
     }
 }

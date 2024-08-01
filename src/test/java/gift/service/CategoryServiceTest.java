@@ -1,8 +1,10 @@
 package gift.service;
 
+import gift.dto.CategoryDto;
 import gift.entity.Category;
 import gift.repository.CategoryRepository;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -28,6 +30,7 @@ public class CategoryServiceTest {
     }
 
     @Test
+    @DisplayName("카테고리 조회 테스트")
     public void testFindAll() {
         // Given
         Category category1 = new Category("Electronics", "Blue", "http://example.com/image1.jpg", "Description 1");
@@ -37,7 +40,7 @@ public class CategoryServiceTest {
         when(categoryRepository.findAll()).thenReturn(mockCategories);
 
         // When
-        List<Category> categories = categoryService.findAll();
+        List<CategoryDto> categories = categoryService.findAll();
 
         // Then
         assertEquals(2, categories.size());
