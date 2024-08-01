@@ -1,20 +1,22 @@
-package gift.controller;
+package gift.product.controller;
 
+import gift.category.service.CategoryService;
 import gift.dto.ApiResponse;
-import gift.dto.ProductDto;
 import gift.exception.NonIntegerPriceException;
-import gift.exception.ProductNotFoundException;
+import gift.exception.OptionNotFoundException;
 import gift.model.HttpResult;
-import gift.model.Product;
-import gift.service.CategoryService;
-import gift.service.OptionService;
-import gift.service.ProductService;
+import gift.option.service.OptionService;
+import gift.product.dto.ProductRequest;
+import gift.product.dto.ProductResponse;
+import gift.product.model.Product;
+import gift.product.service.ProductService;
 import jakarta.validation.Valid;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Sort.Direction;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -25,35 +27,44 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
+@RequestMapping("/api/products")
 public class ProductController {
 
-    private final ProductService productService;
-    private final CategoryService categoryService;
-    private final OptionService optionService;
+    private ProductService productService;
+    private CategoryService categoryService;
+    private OptionService optionService;
 
-    public ProductController(ProductService productService,
-        CategoryService categoryService, OptionService optionService) {
+    public ProductController(ProductService productService, CategoryService categoryService,
+        OptionService optionService) {
         this.productService = productService;
         this.categoryService = categoryService;
         this.optionService = optionService;
     }
 
+    @GetMapping
+    public ResponseEntity<ProductResponse> getPagination(
+        @RequestParam(value = "page", defaultValue = "0") int page,
+        @RequestParam(value = "size", defaultValue = "10") int size,
+        @RequestParam(value = "sort", defaultValue = "orderDateTime,DESC") String sort,
+        @RequestParam(value = "categoryId", defaultValue = "1") Long categoryId, Model model) {
+        String[] sortParams = sort.split(",");
+        String property = sortParams[0];
+        Direction direction = sortParams.length > 1 ? Direction.valueOf(sortParams[1]) : Direction.DESC;
 
-    @GetMapping("/products")
-    public String getProductList(@RequestParam(value = "page", defaultValue = "0") int page,
-        Model model) {
-        int pageSize = 10; // 한 페이지에 표시할 상품 개수
-        Page<Product> productPage = productService.getProductList(page, pageSize);
+        Page<Product> productList = productService.getProductList(page, size, property, direction);
+        model.addAttribute("productList", productList.getContent());
+        model.addAttribute("totalPages", productList.getTotalPages());
 
-        model.addAttribute("productList", productPage.getContent());
-        model.addAttribute("totalPages", productPage.getTotalPages());  // 총 페이지 수를 모델에 추가
-
-        return "getproducts";
+        return ResponseEntity.ok(
+            new ProductResponse(HttpResult.OK, "상품 조회 성공", HttpStatus.OK, productList));
     }
+
 
     @GetMapping("/{pageNumber}")
     public String getMyProductsPage(@PathVariable("pageNumber") int pageNumber, Model model) {
@@ -72,39 +83,29 @@ public class ProductController {
         return new ResponseEntity<>(productsRetreiveSucess, productsRetreiveSucess.getHttpStatus());
     }
 
-    @GetMapping("/product/{id}")
-    public String getProductById(@PathVariable(name = "id") Long id, Model model) {
-        Map<String, Object> response = new HashMap<>();
-        try {
-            Product product = productService.getProductById(id);
-            model.addAttribute("productDto", product);
-            return "getproducts";
-        } catch (ProductNotFoundException ex) {
-            response.put("message", ex.getMessage());
-            model.addAttribute("errorMessage", response.get("message"));
-            return "getproducts";
-        }
+    @GetMapping("/{productId}")
+    public ResponseEntity<ProductResponse> getProductById(@PathVariable(name = "productId") Long id,
+        Model model) {
+        Product product = productService.getProductById(id);
+        model.addAttribute("productDto", product);
+        return ResponseEntity.ok(
+            new ProductResponse(HttpResult.OK, "상품 조회 성공", HttpStatus.OK, product));
     }
 
     @GetMapping("/product/add")
     public String showAddProductForm(Model model) {
-        model.addAttribute("productDto", new ProductDto());
+        model.addAttribute("productDto", new ProductRequest());
         model.addAttribute("categories", categoryService.getAllCategories());
         return "addproductform";
     }
 
-    @PostMapping("/product/add")
-    public String createProduct(@Valid @ModelAttribute(name = "product") ProductDto productDto,
-        Model model)
-        throws NonIntegerPriceException {
-        try {
-            productService.createProduct(productDto);
-            return "redirect:/";
-        } catch (NonIntegerPriceException e) {
-            model.addAttribute("errorMessage", e.getMessage());
-            model.addAttribute("product", productDto);  // 입력된 데이터 유지
-            return "addproductform";  // 같은 페이지로 돌아감
-        }
+    @PostMapping
+    public ResponseEntity<ProductResponse> addProduct(
+        @Valid @RequestBody ProductRequest productRequest)
+        throws NonIntegerPriceException, OptionNotFoundException {
+        Product product = productService.createProduct(productRequest);
+        return ResponseEntity.ok(
+            new ProductResponse(HttpResult.OK, "상품 추가 성공", HttpStatus.OK, product));
     }
 
     @GetMapping(value = "/product/update/{id}")
@@ -114,10 +115,11 @@ public class ProductController {
         return "updateproductform";
     }
 
-    @PostMapping(value = "/product/update")
+    @PutMapping(value = "/product/update")
     public String updateProduct(@Valid @ModelAttribute(name = "product") Product product) {
-        var updatedProduct = productService.updateProduct(product);
-        return "redirect:/";
+//        var updatedProduct = productService.updateProduct(product);
+//        return "redirect:/";
+        return null;
     }
 
     @PatchMapping("/{id}")
@@ -166,15 +168,28 @@ public class ProductController {
         return "redirect:/";
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Map<String, Object>> deleteProduct(@PathVariable Long id) {
-        boolean success = productService.deleteProduct(id);
-        Map<String, Object> response = new HashMap<>();
-        if (success) {
-            response.put("message", "Product deleted successfully.");
-            return ResponseEntity.noContent().build();
-        }
-        response.put("message", "Failed to delete product.");
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+    @DeleteMapping("/{productId}")
+    public ResponseEntity<ProductResponse> deleteProduct(
+        @PathVariable(value = "productId") Long id) {
+        productService.deleteProduct(id);
+        return ResponseEntity.ok(new ProductResponse(HttpResult.OK, "상품 삭제 성공", HttpStatus.OK,
+            null));
+//        if (success) {
+//            return ResponseEntity.ok(new ProductResponse(HttpResult.OK, "상품 삭제 성공", HttpStatus.OK,
+//                null));
+//        }
+//        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
+//            new ProductResponse(HttpResult.ERROR, "상품 삭제 실패", HttpStatus.NOT_FOUND,
+//                null));
     }
+
+    @PutMapping("/{productId}")
+    public ResponseEntity<ProductResponse> updateProduct(
+        @PathVariable(value = "productId") Long productId,
+        @RequestBody ProductRequest productRequest) {
+        var updatedProduct = productService.updateProduct(productId, productRequest);
+        return ResponseEntity.ok(new ProductResponse(HttpResult.OK, "상품 수정 성공", HttpStatus.OK,
+            updatedProduct));
+    }
+
 }
