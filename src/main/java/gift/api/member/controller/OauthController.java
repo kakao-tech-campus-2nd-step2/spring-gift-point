@@ -1,6 +1,6 @@
 package gift.api.member.controller;
 
-import gift.api.member.dto.TokenResponse;
+import gift.api.member.dto.KakaoLoginResponse;
 import gift.api.member.service.MemberFacade;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -30,7 +30,7 @@ public class OauthController {
         @ApiResponse(responseCode = "200", description = "OK"),
         @ApiResponse(responseCode = "400", description = "이메일 제공 동의 필요")
     })
-    public ResponseEntity<TokenResponse> loginKakao(
+    public ResponseEntity<KakaoLoginResponse> loginKakao(
         @Parameter(required = true, description = "카카오 인가 코드")
         @RequestParam("code") String code) {
 

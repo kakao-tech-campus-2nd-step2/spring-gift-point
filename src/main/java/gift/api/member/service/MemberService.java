@@ -44,6 +44,11 @@ public class MemberService {
         throw new ForbiddenMemberException();
     }
 
+    public String issueAccessToken(String email) {
+        Member member = findMemberByEmail(email);
+        return JwtUtil.generateAccessToken(member.getId(), email, Role.USER);
+    }
+
     public String issueAccessToken(Long id, String email, Role role) {
         return JwtUtil.generateAccessToken(id, email, role);
     }
