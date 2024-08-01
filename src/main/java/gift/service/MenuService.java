@@ -12,10 +12,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.NoSuchElementException;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -76,7 +73,7 @@ public class MenuService {
     }
 
     public Menu mapMenuRequestToMenu(MenuRequest menuRequest) {
-        return new Menu(menuRequest.name(), menuRequest.price(), menuRequest.imageUrl(),categoryRepository.findById(menuRequest.categoryId()).get(),new HashSet<>());
+        return new Menu(menuRequest.name(), menuRequest.price(), menuRequest.imageUrl(),categoryRepository.findById(menuRequest.categoryId()).get(),new LinkedList<Option>());
     }
 
     public MenuResponse mapMenuToMenuResponse(Menu menu) {
