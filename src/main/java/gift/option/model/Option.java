@@ -90,22 +90,4 @@ public class Option {
         return this;
     }
 
-    public List<Map<String, Object>> getOptionResponseList() {
-        Map<String, Object> optionResponse = new LinkedHashMap<>();
-        optionResponse.put("id", this.getId());
-        optionResponse.put("name", this.getName());
-        optionResponse.put("productList", this.getProduct());
-        optionResponse.put("quantity", this.getQuantity());
-        return Collections.singletonList(optionResponse);
-    }
-
-    public Map<String, Object> getOptionResponseMap() {
-        Map<String, Object> optionResponse = new LinkedHashMap<>();
-        optionResponse.put("id", this.getId());
-        optionResponse.put("name", this.getName());
-        optionResponse.put("productList", this.getProduct());
-        optionResponse.put("quantity", this.getQuantity());
-        return optionResponse;
-    }
-
 }
