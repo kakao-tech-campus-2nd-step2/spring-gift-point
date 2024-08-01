@@ -8,14 +8,13 @@ public record KakaoProperties(
     String messageRequestUri,
     String tokenRequestUri,
     String userRequestUri,
-    String redirectUri,
     String clientId,
     String refreshGrantType
 ) {
 
-    public String getKakaoLoginUrl() {
+    public String getKakaoLoginUrl(String redirectUrl) {
         var responseType = "code";
         return "https://kauth.kakao.com/oauth/authorize?client_id=" + clientId + "&response_type="
-            + responseType + "&redirect_uri=" + redirectUri;
+            + responseType + "&redirect_uri=" + redirectUrl;
     }
 }
