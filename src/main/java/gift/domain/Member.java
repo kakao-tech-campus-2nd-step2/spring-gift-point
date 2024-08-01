@@ -1,10 +1,14 @@
 package gift.domain;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Min;
+
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
+
+import static gift.exception.errorMessage.Messages.POINTS_CANNOT_BE_NEGATIVE;
 
 @Entity
 @Table(name="members")
@@ -16,6 +20,10 @@ public class Member {
     private String email;
     @Column(name = "password")
     private String password;
+    @Column(name = "points")
+    @Min(value = 0, message = POINTS_CANNOT_BE_NEGATIVE)
+    private int points;
+
     @OneToMany(mappedBy = "member", cascade = {CascadeType.PERSIST, CascadeType.MERGE}, orphanRemoval = false)
     private List<Wish> wishes = new ArrayList<>();
 
@@ -43,15 +51,17 @@ public class Member {
     protected Member() {
     }
 
-    public Member(Long id, String email, String password) {
+    public Member(Long id, String email, String password, int points) {
         this.id = id;
         this.email = email;
         this.password = password;
+        this.points = points;
     }
 
-    public Member(String email, String password) {
+    public Member(String email, String password, int points) {
         this.email = email;
         this.password = password;
+        this.points = points;
     }
 
     public Long getId() {
@@ -68,6 +78,10 @@ public class Member {
 
     public List<Wish> getWishes() {
         return wishes;
+    }
+
+    public int getPoints() {
+        return points;
     }
 
     @Override
