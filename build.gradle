@@ -28,9 +28,9 @@ dependencies {
 
     implementation 'com.google.code.gson:gson:2.8.9'
 
-    implementation 'io.jsonwebtoken:jjwt-api:0.12.3'
-    implementation 'io.jsonwebtoken:jjwt-impl:0.12.3'
-    implementation 'io.jsonwebtoken:jjwt-jackson:0.12.3'
+    implementation 'io.jsonwebtoken:jjwt-api:0.12.5'
+    runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.12.5'
+    runtimeOnly 'io.jsonwebtoken:jjwt-jackson:0.12.5'
     implementation 'org.springframework.security:spring-security-crypto:5.7.1'
 
     implementation 'org.thymeleaf:thymeleaf:3.1.2.RELEASE'
