@@ -12,7 +12,8 @@ import gift.service.wish.WishService;
 import gift.web.dto.category.CategoryResponseDto;
 import gift.web.dto.MemberDto;
 import gift.web.dto.OrderDto;
-import gift.web.dto.ProductDto;
+import gift.web.dto.product.ProductRequestDto;
+import gift.web.dto.product.ProductResponseDto;
 import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
@@ -59,33 +60,33 @@ public class OrderService {
     @Transactional
     public OrderDto createOrder(MemberDto memberDto, OrderDto orderDto) {
 
-        ProductDto productDto = optionService.getProduct(orderDto.optionId());
-        CategoryResponseDto categoryResponseDto = categoryService.getCategory(productDto.categoryId());
+        ProductResponseDto productResponseDto = optionService.getProduct(orderDto.optionId());
+        CategoryResponseDto categoryResponseDto = categoryService.getCategory(productResponseDto.categoryId());
 
-        if (wishService.existsByMemberEmailAndProductId(memberDto.email(), productDto.id())) {
-            wishService.deleteWish(memberDto.email(), productDto.id());
+        if (wishService.existsByMemberEmailAndProductId(memberDto.email(), productResponseDto.id())) {
+            wishService.deleteWish(memberDto.email(), productResponseDto.id());
         }
 
-        optionService.subtractOptionQuantity(orderDto.optionId(), productDto.id(), orderDto.quantity());
+        optionService.subtractOptionQuantity(orderDto.optionId(), productResponseDto.id(), orderDto.quantity());
 
         Order order = orderRepository.save(orderMapper.toEntity(orderDto, optionService.getOptionEntityByOptionId(orderDto.optionId())));
 
 
         oAuthTokenRepository.findByMemberEmail(memberDto.email())
             .ifPresent(token -> {
-                sendOrderKakaoMessage(productDto, categoryResponseDto, order, token.getToken());
+                sendOrderKakaoMessage(productResponseDto, categoryResponseDto, order, token.getToken());
             });
 
         return orderMapper.toDto(order);
     }
 
     @Transactional(propagation = Propagation.REQUIRES_NEW)
-    public void sendOrderKakaoMessage(ProductDto productDto, CategoryResponseDto categoryResponseDto, Order order, String token) {
+    public void sendOrderKakaoMessage(ProductResponseDto productResponseDto, CategoryResponseDto categoryResponseDto, Order order, String token) {
 
         Map<String, String> templateArgs = new HashMap<>();
-        templateArgs.put("product_name", productDto.name());
+        templateArgs.put("product_name", productResponseDto.name());
         templateArgs.put("category_name", categoryResponseDto.name());
-        templateArgs.put("price", productDto.price().toString());
+        templateArgs.put("price", productResponseDto.price().toString());
         templateArgs.put("quantity", order.getQuantity().toString());
 
         ObjectMapper objectMapper = new ObjectMapper();

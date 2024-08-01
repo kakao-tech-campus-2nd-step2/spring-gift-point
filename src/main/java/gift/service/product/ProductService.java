@@ -9,7 +9,9 @@ import gift.domain.product.ProductRepository;
 import gift.mapper.OptionMappper;
 import gift.mapper.ProductMapper;
 import gift.web.dto.OptionDto;
-import gift.web.dto.ProductDto;
+import gift.web.dto.product.ProductPutRequestDto;
+import gift.web.dto.product.ProductRequestDto;
+import gift.web.dto.product.ProductResponseDto;
 import gift.web.exception.notfound.CategoryNotFoundException;
 import gift.web.exception.notfound.ProductNotFoundException;
 import org.springframework.data.domain.Page;
@@ -36,47 +38,50 @@ public class ProductService {
         this.optionMappper = optionMappper;
     }
 
-    public Page<ProductDto> getProducts(Pageable pageable) {
-        return productRepository.findAll(pageable)
+    public Page<ProductResponseDto> getProducts(Long categoryId, Pageable pageable) {
+
+        if (categoryId != null) {
+            return productRepository.findAll(pageable).map(productMapper::toDto);
+        }
+
+        return productRepository.findAllByCategoryId(categoryId, pageable)
             .map(productMapper::toDto);
     }
 
-    public ProductDto getProductById(Long id) {
+    public ProductResponseDto getProductById(Long id) {
         return productRepository.findById(id)
             .map(productMapper::toDto)
             .orElseThrow(() -> new ProductNotFoundException());
     }
 
     @Transactional
-    public ProductDto createProduct(ProductDto productDto) {
-        Category category = categoryRepository.findById(productDto.categoryId())
+    public ProductResponseDto createProduct(ProductRequestDto productRequestDto) {
+        Category category = categoryRepository.findById(productRequestDto.categoryId())
             .orElseThrow(() -> new CategoryNotFoundException());
 
-        Product product = productMapper.toEntity(productDto, category);
+        Product product = productMapper.toEntity(productRequestDto, category);
 
         product = productRepository.save(product);
 
-        for (OptionDto optionDto : productDto.optionDtoList()) {
-            Option option = optionMappper.toEntity(optionDto, product);
-            optionRepository.save(option);
-            product.addOption(option);
-        }
+        Option option = optionMappper.toEntity(productRequestDto.option(), product);
+        optionRepository.save(option);
+        product.addOption(option);
 
         return productMapper.toDto(product);
     }
 
     @Transactional
-    public ProductDto updateProduct(Long id, ProductDto productDto) {
-        Category category = categoryRepository.findById(productDto.categoryId())
+    public ProductResponseDto updateProduct(Long id, ProductPutRequestDto productPutRequestDto) {
+        Category category = categoryRepository.findById(productPutRequestDto.categoryId())
             .orElseThrow(() -> new CategoryNotFoundException());
 
         Product product = productRepository.findById(id)
             .orElseThrow(() -> new ProductNotFoundException());
 
         product.updateProduct(
-            productDto.name(),
-            productDto.price(),
-            productDto.imageUrl(),
+            productPutRequestDto.name(),
+            productPutRequestDto.price(),
+            productPutRequestDto.imageUrl(),
             category
         );
 

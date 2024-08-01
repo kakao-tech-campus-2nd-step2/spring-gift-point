@@ -8,7 +8,8 @@ import gift.domain.product.ProductRepository;
 import gift.mapper.OptionMappper;
 import gift.mapper.ProductMapper;
 import gift.web.dto.OptionDto;
-import gift.web.dto.ProductDto;
+import gift.web.dto.product.ProductRequestDto;
+import gift.web.dto.product.ProductResponseDto;
 import gift.web.exception.notfound.OptionNotFoundException;
 import gift.web.exception.notfound.ProductNotFoundException;
 import java.util.List;
@@ -52,7 +53,7 @@ public class OptionService {
         return option;
     }
 
-    public ProductDto getProduct(Long optionId) {
+    public ProductResponseDto getProduct(Long optionId) {
         Option option = optionRepository.findById(optionId)
             .orElseThrow(() -> new OptionNotFoundException());
 
