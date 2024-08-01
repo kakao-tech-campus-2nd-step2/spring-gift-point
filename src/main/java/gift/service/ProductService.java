@@ -36,7 +36,7 @@ public class ProductService {
             throw new ValueAlreadyExistsException("ProductName already exists in Database");
         }
         Category category = findCategory(productDto.categoryId());
-        Product product = new Product(category,new ProductName(productDto.name()),productDto.price(),productDto.imageUrl());
+        Product product = new Product(category, new ProductName(productDto.name()),productDto.price(),productDto.imageUrl());
         Product savedProduct = productRepository.save(product);
 
         return productMapper.toProductResponseDto(savedProduct);

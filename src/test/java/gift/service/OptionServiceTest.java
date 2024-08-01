@@ -32,6 +32,9 @@ class OptionServiceTest {
     @Mock
     private ProductRepository productRepository;
 
+    @Mock
+    private Category category;
+
     public OptionServiceTest() {
         MockitoAnnotations.openMocks(this);
     }
@@ -46,7 +49,7 @@ class OptionServiceTest {
 
     @Test
     void addNewOption() {
-        Product product = new Product(new Category("category1"),new ProductName("product1"),1000,"qwer.com");
+        Product product = new Product(category,new ProductName("product1"),1000,"qwer.com");
         OptionDto optionDto = new OptionDto("option1",1234);
 
         when(productRepository.findById(product.getId())).thenReturn(Optional.of(product));

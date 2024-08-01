@@ -6,6 +6,7 @@ import gift.model.product.Product;
 import gift.model.product.ProductName;
 import gift.model.wish.Wish;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
@@ -30,10 +31,12 @@ class WishRepositoryTest {
     @Autowired
     private CategoryRepository categoryRepository;
 
+    @Mock
+    private Category category;
+
     @Test
     void save(){
-        Member expectedMember = new Member("qwer@gmail.com","1234","root");
-        Category category = new Category("category1");
+        Member expectedMember = new Member("qwer@gmail.com","1234");
         Product expectedProduct = new Product(category,new ProductName("product1"),1000,"qwer.com");
         memberRepository.save(expectedMember);
         categoryRepository.save(category);
@@ -49,12 +52,8 @@ class WishRepositoryTest {
 
     @Test
     void delete(){
-        Member expectedMember = new Member("qwer@gmail.com","1234","root");
+        Member expectedMember = new Member("qwer@gmail.com","1234");
         memberRepository.save(expectedMember);
-
-        Category category = new Category("category1");
-        categoryRepository.save(category);
-
         Product expectedProduct = new Product(category,new ProductName("product1"),1000,"qwer.com");
         productRepository.save(expectedProduct);
 
@@ -67,12 +66,8 @@ class WishRepositoryTest {
 
     @Test
     public void updateWishTest(){
-        Member expectedMember = new Member("qwer@gmail.com","1234","root");
+        Member expectedMember = new Member("qwer@gmail.com","1234");
         memberRepository.save(expectedMember);
-
-        Category category = new Category("category1");
-        categoryRepository.save(category);
-
         Product expectedProduct = new Product(category,new ProductName("product1"),1000,"qwer.com");
         productRepository.save(expectedProduct);
 

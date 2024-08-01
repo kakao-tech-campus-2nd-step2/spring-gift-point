@@ -34,14 +34,14 @@ public class ProductController {
         return ResponseEntity.ok().body(productResponseDto);
     }
 
-    @PutMapping("/{id}")
+    @PutMapping("/{productId}")
     @Operation(summary = "상품을 업데이트", description = "등록된 상품을 업데이트 할 때 사용하는 API")
     public ResponseEntity<ProductResponseDto> updateProduct(@PathVariable Long id, @Valid @RequestBody ProductDto productDto) {
         ProductResponseDto productResponseDto = productService.updateProduct(id, productDto);
         return ResponseEntity.ok().body(productResponseDto);
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/{productId}")
     @Operation(summary = "특정 상품 조회", description = "특정 상품을 조회할 때 사용하는 API")
     public ResponseEntity<ProductResponseDto> getProductById(@Valid @PathVariable Long id) {
         ProductResponseDto productResponseDto = productService.getProductById(id);
@@ -58,14 +58,14 @@ public class ProductController {
         return "productManage";
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/{productId}")
     @Operation(summary = "등록된 상품을 삭제", description = "등록된 상품을 삭제할 때 사용하는 API")
     public String DeleteProduct(@PathVariable Long id){
         productService.DeleteProduct(id);
         return "productManage";
     }
 
-    @GetMapping("/edit/{id}")
+    @GetMapping("/edit/{productId}")
     @Operation(summary = "상품 수정 페이지로 이동", description = "상품 수정 페이지로 이동할 때 사용하는 API")
     public String moveToEditProduct(@PathVariable Long id, Model model) {
         Product product = productService.selectProduct(id);
