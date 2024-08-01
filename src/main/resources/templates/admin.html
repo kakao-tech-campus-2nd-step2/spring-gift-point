@@ -26,7 +26,7 @@
     <td th:text="${product.name}"></td>
     <td th:text="${#numbers.formatCurrency(product.price)}"></td>
     <td><img th:src="${product.imageUrl}" alt="Product Image"></td>
-    <td th:text="${product.categoryName}"></td>
+    <td th:text="${product.categoryId}"></td>
     <td>
       <button th:onclick="|openUpdateModal(${product.id})|">Update</button>
       <button class="delete" th:onclick="|deleteProduct(${product.id})|">Delete</button>
@@ -48,8 +48,8 @@
       <input type="text" id="price" name="price" required><br><br>
       <label for="imageUrl">Image URL:</label>
       <input type="text" id="imageUrl" name="imageUrl" required><br><br>
-      <label for="categoryName">Category Name:</label>
-      <input type="text" id="categoryName" name="categoryName" required><br><br>
+      <label for="categoryId">Category Id:</label>
+      <input type="text" id="categoryId" name="categoryId" required><br><br>
       <button type="button" onclick="submitAddForm()">Add</button>
     </form>
   </div>
@@ -68,8 +68,8 @@
       <input type="text" id="updatePrice" name="price" required><br><br>
       <label for="updateImageUrl">Image URL:</label>
       <input type="text" id="updateImageUrl" name="imageUrl" required><br><br>
-      <label for="updateCategoryName">Category Name:</label>
-      <input type="text" id="updateCategoryName" name="categoryName" required><br><br>
+      <label for="updateCategoryId">Category Id:</label>
+      <input type="text" id="updateCategoryId" name="categoryId" required><br><br>
       <button type="button" onclick="submitUpdateForm()">Update</button>
     </form>
   </div>
