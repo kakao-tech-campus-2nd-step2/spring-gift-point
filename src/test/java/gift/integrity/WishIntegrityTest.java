@@ -67,7 +67,7 @@ class WishIntegrityTest {
 
     @BeforeAll
     void 멤버_및_상품_셋팅() {
-        MemberDto memberDto = new MemberDto("test_name", "test@test.com", "1234");
+        MemberDto memberDto = new MemberDto("test@test.com", "1234");
         authService.register(memberDto);
         accessToken = authService.login(new AccountDto(memberDto.email(), memberDto.password()))
             .accessToken();

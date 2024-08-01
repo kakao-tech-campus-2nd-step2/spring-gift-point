@@ -55,7 +55,7 @@ public class AuthService {
     public AccessTokenDto register(MemberDto memberDto) {
         validateMemberExist(memberDto);
 
-        Member member = new Member(memberDto.name(), memberDto.email(), memberDto.password());
+        Member member = new Member(memberDto.email(), memberDto.password());
         authRepository.save(member);
 
         return new AccessTokenDto(getAccessToken(member));

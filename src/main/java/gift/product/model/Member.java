@@ -34,6 +34,10 @@ public class Member {
         this(null, name, email, password);
     }
 
+    public Member(Long id, String email, String password) {
+        this(id, null, email, password);
+    }
+
     public Member(Long memberId, String name, String email, String password) {
         this.id = memberId;
         this.name = name;

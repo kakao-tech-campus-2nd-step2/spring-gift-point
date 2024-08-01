@@ -46,7 +46,6 @@ class AuthServiceTest {
     static final String TEST_OAUTH_ACCESS_TOKEN = "test_oauth_access_token";
     static final String TEST_OAUTH_REFRESH_TOKEN = "test_oauth_refresh_token";
     static final String TEST_AUTHORIZATION_CODE = "test_authorization_code";
-    static final String NAME = "test_name";
     static final String EMAIL = "test@test.com";
     static final String PASSWORD = "test";
 
@@ -104,7 +103,7 @@ class AuthServiceTest {
     @Test
     void 회원가입() {
         //given
-        MemberDto memberDto = new MemberDto(NAME, EMAIL, PASSWORD);
+        MemberDto memberDto = new MemberDto(EMAIL, PASSWORD);
         given(authRepository.existsByEmail(EMAIL)).willReturn(false);
 
         //when
@@ -119,7 +118,7 @@ class AuthServiceTest {
     void 로그인() {
         //given
         AccountDto accountDto = new AccountDto(EMAIL, PASSWORD);
-        given(authRepository.findByEmail(EMAIL)).willReturn(new Member(1L, NAME, EMAIL, PASSWORD));
+        given(authRepository.findByEmail(EMAIL)).willReturn(new Member(1L, EMAIL, PASSWORD));
         given(authRepository.existsByEmail(EMAIL)).willReturn(true);
 
         //when
@@ -132,7 +131,7 @@ class AuthServiceTest {
     @Test
     void 실패_회원가입_중복() {
         //given
-        MemberDto memberDto = new MemberDto(NAME, EMAIL, PASSWORD);
+        MemberDto memberDto = new MemberDto(EMAIL, PASSWORD);
         given(authRepository.existsByEmail(EMAIL)).willReturn(false);
         authService.register(memberDto);
         given(authRepository.existsByEmail(EMAIL)).willReturn(true);
@@ -167,7 +166,6 @@ class AuthServiceTest {
         String testEmail = "test_email";
         given(authRepository.existsByEmail(testEmail)).willReturn(false);
         given(authRepository.findByEmail(testEmail)).willReturn(new Member(1L,
-            NAME,
             testEmail,
             "oauth"));
 
