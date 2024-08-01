@@ -10,11 +10,10 @@ import gift.dto.WishAddRequestDto;
 import gift.dto.WishResponseDto;
 import gift.exception.CustomException;
 import gift.exception.ErrorCode;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
 
 @Service
 public class WishService {
@@ -37,13 +36,14 @@ public class WishService {
                         () -> {
                             Wish newWish = new Wish(member, getProduct(request.getProductId()), request.getQuantity());
                             wishRepository.save(newWish);
+                            System.out.println(newWish.getCreatedDate());
                         }
                 );
     }
 
-    public List<WishResponseDto> getAllWishes(Long id, Pageable pageable) {
-        List<Wish> wishList = wishRepository.findAllByMemberId(id, pageable);
-        return wishList.stream().map(WishResponseDto::new).toList();
+    public Page<WishResponseDto> getAllWishes(Long id, Pageable pageable) {
+        Page<Wish> wishList = wishRepository.findAllByMemberId(id, pageable);
+        return wishList.map(WishResponseDto::new);
     }
 
     public void updateWish(Long memberId, Long wishId, int quantity) {
