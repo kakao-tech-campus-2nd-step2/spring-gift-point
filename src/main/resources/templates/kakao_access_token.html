@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>카카오 로그인 성공</title>
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      const accessTokenElement = document.getElementById("accessToken");
+      const emailElement = document.getElementById("email");
+      const jwtTokenElement = document.getElementById("jwtToken");
+      let accessToken = null;
+      let email = null;
+      let jwtToken = null;
+      if (accessTokenElement) {
+        accessToken = accessTokenElement.textContent;
+      }
+      if (emailElement) {
+        email = emailElement.textContent;
+      }
+
+      if (jwtTokenElement) {
+        jwtToken = jwtTokenElement.textContent;
+      }
+
+      if (accessToken) {
+        localStorage.setItem('accessToken', accessToken);
+      }
+      if (email) {
+        localStorage.setItem('userEmail', email);
+      }
+
+      if (jwtToken) {
+        localStorage.setItem('jwtToken', jwtToken);
+      }
+
+      const storedToken = localStorage.getItem('accessToken');
+      const storedEmail = localStorage.getItem('userEmail');
+      const storedJwtToken = localStorage.getItem('jwtToken');
+    });
+  </script>
+</head>
+<body>
+<h1>카카오 로그인 성공</h1>
+<p> 카카오 로그인 성공</p>
+<p id="accessToken" th:text="${accessToken}" style="display: none"></p>
+<p id="email" th:text="${email}" style="display: none"></p>
+<p id="jwtToken" th:text="${jwtToken}" style="display: none"></p>
+<a href="/admin/products">상품 목록으로 이동</a>
+</body>
+</html>

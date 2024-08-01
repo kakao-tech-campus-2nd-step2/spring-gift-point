@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>카테고리 수정</title>
+</head>
+<body>
+<h1>카테고리 수정</h1>
+<form th:action="@{/admin/categories/{id}(id=${categoryId})}" th:object="${categoryDTO}"
+      method="post">
+  <input type="hidden" name="_method" value="put"/>
+  <div>
+    <label for="name">카테고리 이름:</label>
+    <input type="text" id="name" th:field="*{name}"/>
+    <div th:if="${#fields.hasErrors('name')}" th:errors="*{name}" style="color:red;"></div>
+    <div th:if="${categoryError}" th:text="${categoryError}" style="color:red;"></div>
+  </div>
+  <div>
+    <button type="submit">수정</button>
+  </div>
+</form>
+</body>
+</html>
