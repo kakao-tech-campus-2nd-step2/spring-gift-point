@@ -122,26 +122,30 @@ values ('option3', 5, 18, '2023-05-31 10:00:00', '2023-05-31 12:00:00', 1);
 insert into option (name, quantity, product_id, created_at, last_modified_at, version)
 values ('option3', 5, 19, '2023-05-31 10:00:00', '2023-05-31 12:00:00', 1);
 
-insert into member (name, email, password, role, created_at, last_modified_at, provider)
+insert into member (name, email, password, role, created_at, last_modified_at, provider, point)
+values ('Jarred', 'admin@test.com',
+        '390d4757bf1b75e305984c99cdedfb1e7c201a2d143a53cfbc35075fa5f9a56f', 'USER',
+        '2023-05-31 10:00:00', '2023-05-31 12:00:00', 'KAKAO', 0);
+insert into member (name, email, password, role, created_at, last_modified_at, provider, point)
 values ('Jarred', 'test@test.com',
         'f9aac0519f30824bb09b2dbae6eb62633255d765c2272e8392d737332554926c', 'USER',
-        '2023-05-31 10:00:00', '2023-05-31 12:00:00', 'ORIGIN');
-insert into member (name, email, password, role, created_at, last_modified_at, provider)
+        '2023-05-31 10:00:00', '2023-05-31 12:00:00', 'ORIGIN', 0);
+insert into member (name, email, password, role, created_at, last_modified_at, provider, point)
 values ('Jarred1', 'test1@test.com',
         'f9aac0519f30824bb09b2dbae6eb62633255d765c2272e8392d737332554926c', 'ADMIN',
-        '2023-05-31 10:00:00', '2023-05-31 12:00:00', 'ORIGIN');
-insert into member (name, email, password, role, created_at, last_modified_at, provider)
+        '2023-05-31 10:00:00', '2023-05-31 12:00:00', 'ORIGIN', 0);
+insert into member (name, email, password, role, created_at, last_modified_at, provider, point)
 values ('Jarred2', 'test2@test.com',
         'f9aac0519f30824bb09b2dbae6eb62633255d765c2272e8392d737332554926c', 'USER',
-        '2023-05-31 10:00:00', '2023-05-31 12:00:00', 'ORIGIN');
-insert into member (name, email, password, role, created_at, last_modified_at, provider)
+        '2023-05-31 10:00:00', '2023-05-31 12:00:00', 'KAKAO', 0);
+insert into member (name, email, password, role, created_at, last_modified_at, provider, point)
 values ('Jarred3', 'test3@test.com',
         'f9aac0519f30824bb09b2dbae6eb62633255d765c2272e8392d737332554926c', 'ADMIN',
-        '2023-05-31 10:00:00', '2023-05-31 12:00:00', 'ORIGIN');
-insert into member (name, email, password, role, created_at, last_modified_at, provider)
+        '2023-05-31 10:00:00', '2023-05-31 12:00:00', 'ORIGIN', 0);
+insert into member (name, email, password, role, created_at, last_modified_at, provider, point)
 values ('down', 'test123@test.com',
         'f9aac0519f30824bb09b2dbae6eb62633255d765c2272e8392d737332554926c', 'ADMIN',
-        '2023-05-31 10:00:00', '2023-05-31 12:00:00', 'ORIGIN');
+        '2023-05-31 10:00:00', '2023-05-31 12:00:00', 'KAKAO', 0);
 
 insert into wish (member_id, product_id, count, created_at, last_modified_at)
 values (1, 2, 5, '2023-05-31 10:00:00', '2023-05-31 12:00:00');
