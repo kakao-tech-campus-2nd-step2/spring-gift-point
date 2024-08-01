@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ko">
+<head>
+    <title>선물하기 관리자 페이지</title>
+    <meta charset="UTF-8">
+    <style>
+        table, th, td {
+            border: 1px solid black;
+            border-collapse: collapse;
+            padding: 5px;
+        }
+    </style>
+</head>
+<body>
+<h1>제품 관리</h1>
+
+<h2>제품 목록</h2>
+<a href = "/admin/products/add">제품 추가</a>
+<table>
+    <tr>
+        <th>ID</th>
+        <th>카테고리</th>
+        <th>이름</th>
+        <th>가격</th>
+        <th>이미지 URL</th>
+    </tr>
+    <tr th:each="product : ${products}">
+        <td th:text="${product.getId()}"></td>
+        <td th:text="${product.getCategoryId()}"></td>
+        <td th:text="${product.getName()}"></td>
+        <td th:text="${product.getPrice()}"></td>
+        <td th:text="${product.getImageURL()}"></td>
+        <td>
+            <a th:action="@{'/admin/products/'+${product.getId()}}" th:method="DELETE">
+                <input type="submit" value="삭제">
+            </a>
+            <form th:action="@{'/admin/products/edit/'+${product.getId()}}" method="GET">
+                <input type="submit" value="수정">
+            </form>
+        </td>
+    </tr>
+</table>
+
+<h2>페이지 설정</h2>
+<form th:action="@{/admin/products/page}" method="get">
+    <label for="page">페이지 번호:</label>
+    <input type="number" id="page" name="page" th:value="${currentPage}" min="0">
+
+    <label for="size">페이지 크기:</label>
+    <input type="number" id="size" name="size" th:value="${pageSize}" min="1">
+
+    <button type="submit">적용</button>
+</form>
+</body>
+</html>
