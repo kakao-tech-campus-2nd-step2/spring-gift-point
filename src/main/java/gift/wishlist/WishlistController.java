@@ -49,12 +49,11 @@ public class WishlistController {
     }
 
     @DeleteMapping("/{id}")
-    public HttpEntity<String> deleteWish(@PathVariable(name="id") Long wishId, @LoginMember Member member, @RequestHeader("Authorization") String authHeader)
+    public void deleteWish(@PathVariable(name="id") Long wishId, @LoginMember Member member, @RequestHeader("Authorization") String authHeader)
         throws UnAuthorizationException {
         String token = authHeader.replace("Bearer ", "");
         tokenValidator.validateToken(token);
         wishlistService.deleteWishlist(wishId, member.getId());
-        return ResponseEntity.ok("장바구니에서 제거되었습니다");
     }
 
 }

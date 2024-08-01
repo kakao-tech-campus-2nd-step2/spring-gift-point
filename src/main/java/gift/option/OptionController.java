@@ -40,9 +40,8 @@ public class OptionController {
     }
 
     @DeleteMapping("/{productId}/options/{optionId}")
-    public HttpEntity<String> deleteOptionById(@PathVariable Long productId, @PathVariable Long optionId) throws NotFoundOption {
+    public void deleteOptionById(@PathVariable Long productId, @PathVariable Long optionId) throws NotFoundOption {
         optionService.deleteOptionById(optionId);
-        return ResponseEntity.ok("성공적으로 삭제되었습니다");
     }
 
 }
