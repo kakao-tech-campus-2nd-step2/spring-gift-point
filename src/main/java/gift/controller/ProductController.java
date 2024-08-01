@@ -1,5 +1,6 @@
 package gift.controller;
 
+import gift.dto.ProductPage;
 import gift.dto.ProductRequest;
 import gift.exception.InvalidProductException;
 import gift.exception.ProductNotFoundException;
@@ -11,12 +12,12 @@ import gift.repository.ProductRepository;
 import gift.service.CategoryService;
 import gift.service.OptionService;
 import gift.service.ProductService;
-import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
-import jakarta.validation.Valid;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -26,7 +27,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -51,16 +51,18 @@ public class ProductController {
     }
 
     @GetMapping
-    @ApiOperation(value = "Get all products", notes = "Retrieve all products with pagination")
-    public String getProducts(@ApiParam(value = "Page number", required = false, defaultValue = "0") @RequestParam(defaultValue = "0") int page,
-        @ApiParam(value = "Page size", required = false, defaultValue = "5") @RequestParam(defaultValue = "5") int size, Model model) {
-        Pageable pageable = PageRequest.of(page, size);
-        Page<Product> productPage = productService.getAllProducts(pageable);
-        List<Category> categories = categoryService.getAllCategories();
-        model.addAttribute("productPage", productPage);
-        model.addAttribute("product", new Product());
-        model.addAttribute("categories", categories);
-        return "product-list";
+    public ResponseEntity<?> getProducts(@RequestParam(defaultValue = "0") int page,
+        @RequestParam Long category_id, Model model) {
+        Pageable pageable = PageRequest.of(page, 20);
+        Page<Product> productPage = productService.getProductsByCategoryId(pageable, category_id);
+        ProductPage productPage1 = new ProductPage();
+        productPage1.setContent(productPage.getContent());
+        productPage1.setTotalPage(productPage.getTotalPages());
+
+        Map<String, Object> dataWrapper = new HashMap<>();
+
+        dataWrapper.put("data", productPage1);
+        return ResponseEntity.status(HttpStatus.OK).body(dataWrapper);
     }
 
     @PostMapping

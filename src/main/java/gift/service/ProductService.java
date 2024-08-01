@@ -39,6 +39,14 @@ public class ProductService  {
         }
     }
 
+    public Page<Product> getProductsByCategoryId(Pageable pageable,Long category_id) {
+        try {
+            return productRepository.findAllByCategoryId(pageable,category_id);
+        } catch (Exception e) {
+            throw new IllegalArgumentException("Product not found: " + e.getMessage());
+        }
+    }
+
 
     public Product addProduct(ProductRequest productRequest) {
         Category category = categoryRepository.findById(productRequest.getCategoryId())
