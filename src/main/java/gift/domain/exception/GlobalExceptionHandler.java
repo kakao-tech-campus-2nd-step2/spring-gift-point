@@ -14,8 +14,8 @@ import gift.domain.exception.conflict.ProductAlreadyExistsException;
 import gift.domain.exception.forbidden.ForbiddenException;
 import gift.domain.exception.forbidden.MemberIncorrectLoginInfoException;
 import gift.domain.exception.forbidden.MemberNotAdminException;
-import gift.domain.exception.badRequest.TokenExpiredException;
-import gift.domain.exception.badRequest.TokenStringInvalidException;
+import gift.domain.exception.unauthorized.TokenExpiredException;
+import gift.domain.exception.unauthorized.TokenStringInvalidException;
 import gift.domain.exception.notFound.CategoryNotFoundException;
 import gift.domain.exception.notFound.MemberNotFoundException;
 import gift.domain.exception.notFound.NotFoundException;
@@ -52,8 +52,6 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler({
-        TokenExpiredException.class,
-        TokenStringInvalidException.class,
         ProductOptionsEmptyException.class,
         OptionQuantityOutOfRangeException.class,
         OptionUpdateActionInvalidException.class,
@@ -65,6 +63,8 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler({
         TokenNotFoundException.class,
+        TokenExpiredException.class,
+        TokenStringInvalidException.class,
         TokenUnexpectedErrorException.class
     })
     public ResponseEntity<ErrorApiResponse> handleUnauthorizedException(UnauthorizedException e) {

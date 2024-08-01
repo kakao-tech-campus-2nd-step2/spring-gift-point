@@ -5,6 +5,6 @@ import gift.domain.exception.ErrorCode;
 public class CategoryNotFoundException extends NotFoundException {
 
     public CategoryNotFoundException() {
-        super("category", ErrorCode.CATEGORY_NOT_FOUND);
+        super(ErrorCode.CATEGORY_NOT_FOUND);
     }
 }

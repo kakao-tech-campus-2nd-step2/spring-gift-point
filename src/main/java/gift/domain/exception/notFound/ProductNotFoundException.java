@@ -8,6 +8,6 @@ import gift.domain.exception.ErrorCode;
 public class ProductNotFoundException extends NotFoundException {
 
     public ProductNotFoundException() {
-        super("product", ErrorCode.PRODUCT_NOT_FOUND);
+        super(ErrorCode.PRODUCT_NOT_FOUND);
     }
 }

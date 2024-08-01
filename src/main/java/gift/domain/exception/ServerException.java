@@ -4,8 +4,8 @@ public abstract class ServerException extends RuntimeException {
 
     private final ErrorCode errorCode;
 
-    public ServerException(String message, ErrorCode errorCode) {
-        super(message);
+    public ServerException(ErrorCode errorCode) {
+        super(errorCode.getErrorMessage());
         this.errorCode = errorCode;
     }
 
