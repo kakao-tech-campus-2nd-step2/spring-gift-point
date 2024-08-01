@@ -51,7 +51,7 @@ public class ProductController {
     public ResponseEntity<ProductResponse> getPagination(
         @RequestParam(value = "page", defaultValue = "0") int page,
         @RequestParam(value = "size", defaultValue = "10") int size,
-        @RequestParam(value = "sort", defaultValue = "orderDateTime,DESC") String sort,
+        @RequestParam(value = "sort", defaultValue = "name,ASC") String sort,
         @RequestParam(value = "categoryId", defaultValue = "1") Long categoryId, Model model) {
         String[] sortParams = sort.split(",");
         String property = sortParams[0];
@@ -66,7 +66,7 @@ public class ProductController {
     }
 
 
-    @GetMapping("/{pageNumber}")
+    @GetMapping("/page/{pageNumber}")
     public String getMyProductsPage(@PathVariable("pageNumber") int pageNumber, Model model) {
         var productList = productService.getProductPages(pageNumber);
         model.addAttribute("productList", productList.getContent());
