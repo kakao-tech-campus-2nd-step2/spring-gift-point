@@ -10,15 +10,15 @@ public class OptionRequest {
     @Pattern(regexp = "^[가-힣a-zA-Z0-9\\s\\(\\)\\[\\]\\+\\-\\&\\/\\_]+$",
             message = "특수문자는 ( ), [ ], +, -, &, /, _ 만 허용되며, 한글, 영어, 숫자만 입력 가능합니다.")
     String name;
-    @Min(1L)
-    @Max(99999999L)
-    Long quantity;
+    @Min(1)
+    @Max(99999999)
+    int quantity;
 
     public OptionRequest(){
 
     }
 
-    public OptionRequest(String name, Long quantity) {
+    public OptionRequest(String name, int quantity) {
         this.name = name;
         this.quantity = quantity;
     }
@@ -31,11 +31,11 @@ public class OptionRequest {
         this.name = name;
     }
 
-    public Long getQuantity() {
+    public int getQuantity() {
         return quantity;
     }
 
-    public void setQuantity(Long quantity) {
+    public void setQuantity(int quantity) {
         this.quantity = quantity;
     }
 }

@@ -26,24 +26,24 @@ public class OptionService {
      * 한 상품에 대한 새로운 옵션을 저장하는 로직
      */
     @Transactional
-    public OptionResponse save(Long product_id, OptionRequest optionRequest){
-        Product product = productRepository.findById(product_id).orElseThrow(NoSuchFieldError::new);
+    public OptionResponse save(Long productId, OptionRequest optionRequest){
+        Product product = productRepository.findById(productId).orElseThrow(NoSuchFieldError::new);
         Option option = new Option(optionRequest.getName(), optionRequest.getQuantity());
         product.getOptions().add(option);
 
         Option savedOption = optionRepository.save(option);
-        return new OptionResponse(savedOption);
+        return new OptionResponse(savedOption, productId);
     }
     /*
      * 한 상품의 옵션을 가져오는 로직
      */
-    public List<OptionResponse> findOptions(Long product_id){
+    public List<OptionResponse> findOptions(Long productId){
         List<OptionResponse> answer = new ArrayList<>();
 
-        Product product = productRepository.findById(product_id).orElseThrow(NoSuchFieldError::new);
+        Product product = productRepository.findById(productId).orElseThrow(NoSuchFieldError::new);
         List<Option> options = product.getOptions();
         for (Option option : options) {
-            answer.add(new OptionResponse(option));
+            answer.add(new OptionResponse(option, productId));
         }
 
         return answer;

@@ -8,13 +8,13 @@ public class Option extends BaseEntity {
     @Column(name="name", nullable = false)
     private String name;
     @Column(name="quantity", nullable = false)
-    private Long quantity;
+    private int quantity;
   
     protected Option() {
         super();
     }
 
-    public Option(String name, Long quantity) {
+    public Option(String name, int quantity) {
         this.name = name;
         this.quantity = quantity;
     }
@@ -23,17 +23,17 @@ public class Option extends BaseEntity {
         return name;
     }
 
-    public Long getQuantity() {
+    public int getQuantity() {
         return quantity;
     }
 
-    public void update(String name, Long quantity){
+    public void update(String name, int quantity){
         this.name = name;
         this.quantity = quantity;
     }
 
-    public void subtract(Long minus){
-        if(this.quantity - minus < 0L) {
+    public void subtract(int minus){
+        if(this.quantity - minus < 0) {
             return;
         }
         this.quantity -= minus;
