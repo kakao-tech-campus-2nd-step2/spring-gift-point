@@ -3,12 +3,14 @@ package gift.service;
 import gift.domain.Member;
 import gift.domain.Product;
 import gift.domain.Wish;
+import gift.dto.WishDTO;
 import gift.repository.MemberRepository;
 import gift.repository.ProductRepository;
 import gift.repository.WishRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class WishService {
@@ -23,16 +25,25 @@ public class WishService {
         this.productRepository = productRepository;
     }
 
-    public Page<Wish> getWishes(Long memberId, Pageable pageable) {
-        Member member = memberRepository.findById(memberId)
+    @Transactional(readOnly = true)
+    public Page<WishDTO> getWishes(String email, Pageable pageable) {
+        Member member = memberRepository.findByEmail(email)
                 .orElseThrow(() -> new IllegalArgumentException("Member not found"));
-        return wishRepository.findByMember(member, pageable);
+        Page<Wish> wishes = wishRepository.findByMember(member, pageable);
+
+        return wishes.map(wish -> new WishDTO(
+                wish.getId(),
+                wish.getProduct().getId(),
+                wish.getProduct().getName(),
+                wish.getCreatedDate()
+        ));
     }
 
-    public void addWish(Long memberId, String productName) {
-        Member member = memberRepository.findById(memberId)
+    @Transactional
+    public void addWish(String email, Long productId) {
+        Member member = memberRepository.findByEmail(email)
                 .orElseThrow(() -> new IllegalArgumentException("Member not found"));
-        Product product = productRepository.findByName(productName)
+        Product product = productRepository.findById(productId)
                 .orElseThrow(() -> new IllegalArgumentException("Product not found"));
 
         if (!wishRepository.existsByMemberAndProduct(member, product)) {
@@ -41,11 +52,21 @@ public class WishService {
         }
     }
 
-    public void removeWish(Long memberId, String productName) {
-        Member member = memberRepository.findById(memberId)
+    @Transactional
+    public void removeWish(String email, Long productId) {
+        Member member = memberRepository.findByEmail(email)
                 .orElseThrow(() -> new IllegalArgumentException("Member not found"));
-        Product product = productRepository.findByName(productName)
+        Product product = productRepository.findById(productId)
                 .orElseThrow(() -> new IllegalArgumentException("Product not found"));
         wishRepository.deleteByMemberAndProduct(member, product);
+    }
+
+    public WishDTO convertToDTO(Wish wish) {
+        return new WishDTO(
+                wish.getId(),
+                wish.getProduct().getId(),
+                wish.getProduct().getName(),
+                wish.getCreatedDate()
+        );
     }
 }

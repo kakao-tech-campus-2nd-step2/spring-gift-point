@@ -2,6 +2,8 @@ package gift.domain;
 
 import jakarta.persistence.*;
 
+import java.time.LocalDateTime;
+
 
 @Entity
 @Table(name = "wishes")
@@ -14,6 +16,15 @@ public class Wish extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "product_id", nullable = false)
     private Product product;
+
+    @Column(nullable = false, updatable = false)
+    private LocalDateTime createdDate;
+
+    @PrePersist
+    protected void onCreate() {
+        createdDate = LocalDateTime.now();
+    }
+
 
     public Wish() {
     }
@@ -30,6 +41,10 @@ public class Wish extends BaseEntity {
 
     public Product getProduct() {
         return product;
+    }
+
+    public LocalDateTime getCreatedDate() {
+        return createdDate;
     }
 
     public static class Builder {

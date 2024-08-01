@@ -33,8 +33,8 @@ dependencies {
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.7.1'
     implementation 'org.springframework.boot:spring-boot-starter-webflux'
     implementation 'org.json:json:20210307'
-    implementation 'org.springdoc:springdoc-openapi-ui:1.5.10'
-    implementation 'org.springdoc:springdoc-openapi-webmvc-core:1.5.10'
+    implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.1.0'
+
 
     // 추가된 의존성
     implementation 'org.webjars:webjars-locator-core:0.48' // 최신 호환 버전으로 수정

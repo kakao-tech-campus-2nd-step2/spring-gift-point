@@ -43,7 +43,7 @@ public class OrderService {
         Orders order = new Orders(member, option, orderRequest.getQuantity(), LocalDateTime.now(), orderRequest.getMessage());
         orderRepository.save(order);
 
-        wishService.removeWish(member.getId(), option.getProduct().getName());
+        wishService.removeWish(member.getEmail(), option.getProduct().getId());
 
         if (member.getEmail() != null) {
             String kakaoAccessToken = kakaoTokenService.getTokenByEmail(member.getEmail());
