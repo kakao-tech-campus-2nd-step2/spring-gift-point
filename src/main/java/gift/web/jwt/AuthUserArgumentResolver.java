@@ -2,7 +2,7 @@ package gift.web.jwt;
 
 import gift.service.member.MemberService;
 import gift.web.dto.Token;
-import gift.web.exception.UnauthorizedException;
+import gift.web.exception.unauthorized.UnauthorizedException;
 import io.jsonwebtoken.Claims;
 import org.springframework.core.MethodParameter;
 import org.springframework.web.bind.support.WebDataBinderFactory;

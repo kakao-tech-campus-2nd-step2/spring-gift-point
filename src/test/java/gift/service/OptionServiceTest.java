@@ -5,14 +5,13 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 
 import gift.domain.category.Category;
-import gift.domain.category.CategoryRepository;
 import gift.domain.option.Option;
 import gift.domain.option.OptionRepository;
 import gift.domain.product.Product;
 import gift.domain.product.ProductRepository;
 import gift.service.option.OptionService;
 import gift.web.dto.OptionDto;
-import gift.web.exception.ProductNotFoundException;
+import gift.web.exception.notfound.ProductNotFoundException;
 import java.util.List;
 import java.util.Optional;
 import org.assertj.core.api.Assertions;

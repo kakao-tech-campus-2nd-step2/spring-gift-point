@@ -4,7 +4,7 @@ import gift.domain.category.Category;
 import gift.domain.category.CategoryRepository;
 import gift.mapper.CategoryMapper;
 import gift.web.dto.CategoryDto;
-import gift.web.exception.CategoryNotFoundException;
+import gift.web.exception.notfound.CategoryNotFoundException;
 import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -39,7 +39,7 @@ public class CategoryService {
     @Transactional
     public CategoryDto updateCategory(Long id, CategoryDto categoryDto) {
         Category category = categoryRepository.findById(id)
-            .orElseThrow(() -> new CategoryNotFoundException("카테고리가 없슴다."));
+            .orElseThrow(() -> new CategoryNotFoundException());
 
         category.updateCategory(
             categoryDto.name(),
@@ -53,7 +53,7 @@ public class CategoryService {
 
     public void deleteCategory(Long id) {
         Category category = categoryRepository.findById(id)
-            .orElseThrow(() -> new CategoryNotFoundException("카테고리가 없슴다."));
+            .orElseThrow(() -> new CategoryNotFoundException());
 
         categoryRepository.delete(category);
     }

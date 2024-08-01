@@ -10,9 +10,8 @@ import gift.mapper.OptionMappper;
 import gift.mapper.ProductMapper;
 import gift.web.dto.OptionDto;
 import gift.web.dto.ProductDto;
-import gift.web.exception.CategoryNotFoundException;
-import gift.web.exception.ProductNotFoundException;
-import java.util.List;
+import gift.web.exception.notfound.CategoryNotFoundException;
+import gift.web.exception.notfound.ProductNotFoundException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -45,13 +44,13 @@ public class ProductService {
     public ProductDto getProductById(Long id) {
         return productRepository.findById(id)
             .map(productMapper::toDto)
-            .orElseThrow(() -> new ProductNotFoundException("제품이 없슴다."));
+            .orElseThrow(() -> new ProductNotFoundException());
     }
 
     @Transactional
     public ProductDto createProduct(ProductDto productDto) {
         Category category = categoryRepository.findById(productDto.categoryId())
-            .orElseThrow(() -> new CategoryNotFoundException("카테고리가 없슴다"));
+            .orElseThrow(() -> new CategoryNotFoundException());
 
         Product product = productMapper.toEntity(productDto, category);
 
@@ -69,10 +68,10 @@ public class ProductService {
     @Transactional
     public ProductDto updateProduct(Long id, ProductDto productDto) {
         Category category = categoryRepository.findById(productDto.categoryId())
-            .orElseThrow(() -> new CategoryNotFoundException("카테코리가 없슴다"));
+            .orElseThrow(() -> new CategoryNotFoundException());
 
         Product product = productRepository.findById(id)
-            .orElseThrow(() -> new ProductNotFoundException("제품이 없슴다."));
+            .orElseThrow(() -> new ProductNotFoundException());
 
         product.updateProduct(
             productDto.name(),
@@ -86,7 +85,7 @@ public class ProductService {
 
     public void deleteProduct(Long id) {
         Product product = productRepository.findById(id)
-            .orElseThrow(() -> new ProductNotFoundException("제품이 없슴다."));
+            .orElseThrow(() -> new ProductNotFoundException());
         productRepository.delete(product);
     }
 }

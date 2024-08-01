@@ -8,9 +8,9 @@ import gift.domain.wish.Wish;
 import gift.domain.wish.WishRepository;
 import gift.mapper.WishMapper;
 import gift.web.dto.WishDto;
-import gift.web.exception.MemberNotFoundException;
-import gift.web.exception.ProductNotFoundException;
-import gift.web.exception.WishProductNotFoundException;
+import gift.web.exception.forbidden.MemberNotFoundException;
+import gift.web.exception.notfound.ProductNotFoundException;
+import gift.web.exception.notfound.WishProductNotFoundException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -43,7 +43,7 @@ public class WishService {
 
     public Page<WishDto> getWishesByEmail(String email, Pageable pageable) {
         Member member = memberRepository.findByEmail(email)
-            .orElseThrow(() -> new MemberNotFoundException("멤버가 엄슴다"));
+            .orElseThrow(() -> new MemberNotFoundException());
 
         return wishRepository.findAllByMemberId(member.getId(), pageable)
             .map(wishMapper::toDto);
@@ -52,10 +52,10 @@ public class WishService {
     @Transactional
     public WishDto createWish(String email, WishDto wishDto) {
         Member member = memberRepository.findByEmail(email)
-            .orElseThrow(() -> new MemberNotFoundException("멤버가 엄슴다"));
+            .orElseThrow(() -> new MemberNotFoundException());
 
         Product product = productRepository.findById(wishDto.productId())
-            .orElseThrow(() -> new ProductNotFoundException("제품이 없슴다."));
+            .orElseThrow(() -> new ProductNotFoundException());
 
         Wish wish = wishRepository.save(wishMapper.toEntity(wishDto, member, product));
         return wishMapper.toDto(wish);
@@ -64,13 +64,13 @@ public class WishService {
     @Transactional
     public WishDto updateWish(String email, WishDto wishDto) {
         Member member = memberRepository.findByEmail(email)
-            .orElseThrow(() -> new MemberNotFoundException("멤버가 엄슴다"));
+            .orElseThrow(() -> new MemberNotFoundException());
 
         Product product = productRepository.findById(wishDto.productId())
-            .orElseThrow(() -> new ProductNotFoundException("제품이 없슴다."));
+            .orElseThrow(() -> new ProductNotFoundException());
 
         Wish wish = wishRepository.findByMemberIdAndProductId(member.getId(), wishDto.productId())
-                .orElseThrow(() -> new WishProductNotFoundException("위시 제품이 없슴다."));
+                .orElseThrow(() -> new WishProductNotFoundException());
 
         wish.updateWish(wishDto.count());
 
@@ -79,13 +79,13 @@ public class WishService {
 
     public void deleteWish(String email, Long productId) {
         Member member = memberRepository.findByEmail(email)
-            .orElseThrow(() -> new MemberNotFoundException("멤버가 엄슴다"));
+            .orElseThrow(() -> new MemberNotFoundException());
 
         Product product = productRepository.findById(productId)
-            .orElseThrow(() -> new ProductNotFoundException("제품이 없슴다."));
+            .orElseThrow(() -> new ProductNotFoundException());
 
         Wish wish = wishRepository.findByMemberIdAndProductId(member.getId(), productId)
-            .orElseThrow(() -> new WishProductNotFoundException("위시 제품이 없슴다."));
+            .orElseThrow(() -> new WishProductNotFoundException());
 
         wishRepository.delete(wish);
     }

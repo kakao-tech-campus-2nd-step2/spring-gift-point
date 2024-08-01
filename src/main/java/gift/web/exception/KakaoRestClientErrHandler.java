@@ -1,5 +1,7 @@
 package gift.web.exception;
 
+import gift.web.exception.kakaoapi.KakaoClientException;
+import gift.web.exception.kakaoapi.KakaoServerException;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
