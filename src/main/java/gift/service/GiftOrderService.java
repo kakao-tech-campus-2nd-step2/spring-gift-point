@@ -1,9 +1,9 @@
 package gift.service;
 
+import gift.dto.giftorder.GiftOrderPageResponse;
 import gift.dto.giftorder.GiftOrderRequest;
 import gift.dto.giftorder.GiftOrderResponse;
 import gift.dto.option.OptionResponse;
-import gift.dto.page.PageResponse;
 import gift.dto.product.ProductBasicInformation;
 import gift.exception.NotFoundElementException;
 import gift.model.GiftOrder;
@@ -42,7 +42,7 @@ public class GiftOrderService {
     }
 
     @Transactional(readOnly = true)
-    public PageResponse<GiftOrderResponse> getGiftOrders(Long memberId, Pageable pageable) {
+    public GiftOrderPageResponse getGiftOrders(Long memberId, Pageable pageable) {
         var pageResult = giftOrderRepository.findAllByMemberId(memberId, pageable);
         var orders = pageResult
                 .getContent()
@@ -50,7 +50,7 @@ public class GiftOrderService {
                 .map(this::getGiftOrderResponseFromGiftOrder)
                 .toList();
 
-        return new PageResponse<>(pageResult.getNumber(), pageResult.getSize(), pageResult.getTotalElements(), pageResult.getTotalPages(), orders);
+        return new GiftOrderPageResponse(pageResult.getNumber(), pageResult.getSize(), pageResult.getTotalElements(), pageResult.getTotalPages(), orders);
     }
 
     public void deleteOrder(Long id) {

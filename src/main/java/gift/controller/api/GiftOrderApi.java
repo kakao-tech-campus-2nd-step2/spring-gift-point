@@ -1,10 +1,9 @@
 package gift.controller.api;
 
+import gift.dto.giftorder.GiftOrderPageResponse;
 import gift.dto.giftorder.GiftOrderRequest;
 import gift.dto.giftorder.GiftOrderResponse;
-import gift.dto.page.PageResponse;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -34,11 +33,11 @@ public interface GiftOrderApi {
 
     @Operation(summary = "회원의 모든 주문을 페이지 단위로 조회한다.")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "모든 주문 조회 성공", content = @Content(array = @ArraySchema(schema = @Schema(implementation = GiftOrderResponse.class)))),
+            @ApiResponse(responseCode = "200", description = "모든 주문 조회 성공", content = @Content(schema = @Schema(implementation = GiftOrderPageResponse.class))),
             @ApiResponse(responseCode = "401", description = "허용되지 않는 요청", content = @Content(schema = @Schema(hidden = true))),
             @ApiResponse(responseCode = "500", description = "내부 서버의 오류", content = @Content(schema = @Schema(hidden = true)))
     })
-    ResponseEntity<PageResponse<GiftOrderResponse>> getOrders(Long memberId, Pageable pageable);
+    ResponseEntity<GiftOrderPageResponse> getOrders(Long memberId, Pageable pageable);
 
     @Operation(summary = "특정 주문을 삭제한다.")
     @ApiResponses(value = {

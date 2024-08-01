@@ -1,9 +1,9 @@
 package gift.controller;
 
 import gift.controller.api.GiftOrderApi;
+import gift.dto.giftorder.GiftOrderPageResponse;
 import gift.dto.giftorder.GiftOrderRequest;
 import gift.dto.giftorder.GiftOrderResponse;
-import gift.dto.page.PageResponse;
 import gift.service.GiftOrderService;
 import gift.service.KakaoService;
 import gift.service.OptionService;
@@ -51,7 +51,7 @@ public class GiftOrderController implements GiftOrderApi {
     }
 
     @GetMapping
-    public ResponseEntity<PageResponse<GiftOrderResponse>> getOrders(@RequestAttribute("memberId") Long memberId, @PageableDefault(sort = "id", direction = Sort.Direction.DESC) Pageable pageable) {
+    public ResponseEntity<GiftOrderPageResponse> getOrders(@RequestAttribute("memberId") Long memberId, @PageableDefault(sort = "id", direction = Sort.Direction.DESC) Pageable pageable) {
         var orders = giftOrderService.getGiftOrders(memberId, pageable);
         return ResponseEntity.ok(orders);
     }

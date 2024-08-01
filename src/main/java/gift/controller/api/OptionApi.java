@@ -44,7 +44,7 @@ public interface OptionApi {
     })
     ResponseEntity<OptionResponse> getOption(Long productId, Long id);
 
-    @Operation(summary = "모든 옵션을 페이지 단위로 조회한다.")
+    @Operation(summary = "모든 옵션을 조회한다.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "모든 옵션 조회 성공", content = @Content(array = @ArraySchema(schema = @Schema(implementation = OptionResponse.class)))),
             @ApiResponse(responseCode = "401", description = "허용되지 않는 요청", content = @Content(schema = @Schema(hidden = true))),

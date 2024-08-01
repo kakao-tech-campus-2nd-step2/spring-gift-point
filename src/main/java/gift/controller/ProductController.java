@@ -1,8 +1,8 @@
 package gift.controller;
 
 import gift.controller.api.ProductApi;
-import gift.dto.page.PageResponse;
 import gift.dto.product.ProductAddRequest;
+import gift.dto.product.ProductPageResponse;
 import gift.dto.product.ProductResponse;
 import gift.dto.product.ProductUpdateRequest;
 import gift.service.ProductService;
@@ -52,7 +52,7 @@ public class ProductController implements ProductApi {
     }
 
     @GetMapping
-    public ResponseEntity<PageResponse<ProductResponse>> getProducts(@RequestParam(required = false) Long categoryId, @PageableDefault(sort = "id", direction = Sort.Direction.DESC) Pageable pageable) {
+    public ResponseEntity<ProductPageResponse> getProducts(@RequestParam(required = false) Long categoryId, @PageableDefault(sort = "id", direction = Sort.Direction.DESC) Pageable pageable) {
         if (categoryId == null) {
             var products = productService.getProducts(pageable);
             return ResponseEntity.ok(products);

@@ -1,8 +1,8 @@
 package gift.service;
 
-import gift.dto.page.PageResponse;
 import gift.dto.product.ProductBasicInformation;
 import gift.dto.wishproduct.WishProductAddRequest;
+import gift.dto.wishproduct.WishProductPageResponse;
 import gift.dto.wishproduct.WishProductResponse;
 import gift.dto.wishproduct.WishProductUpdateRequest;
 import gift.exception.BadRequestException;
@@ -62,7 +62,7 @@ public class WishProductService {
     }
 
     @Transactional(readOnly = true)
-    public PageResponse<WishProductResponse> getWishProducts(Long memberId, Pageable pageable) {
+    public WishProductPageResponse getWishProducts(Long memberId, Pageable pageable) {
         var pageResult = wishProductRepository.findAllByMemberId(memberId, pageable);
         var wishProducts = pageResult
                 .getContent()
@@ -70,7 +70,7 @@ public class WishProductService {
                 .map(this::getWishProductResponseFromWishProduct)
                 .toList();
 
-        return new PageResponse<>(pageResult.getNumber(), pageResult.getSize(), pageResult.getTotalElements(), pageResult.getTotalPages(), wishProducts);
+        return new WishProductPageResponse(pageResult.getNumber(), pageResult.getSize(), pageResult.getTotalElements(), pageResult.getTotalPages(), wishProducts);
     }
 
     public void deleteWishProduct(Long wishProductId) {

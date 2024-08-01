@@ -2,8 +2,8 @@ package gift.service;
 
 import gift.dto.category.CategoryResponse;
 import gift.dto.option.OptionRequest;
-import gift.dto.page.PageResponse;
 import gift.dto.product.ProductAddRequest;
+import gift.dto.product.ProductPageResponse;
 import gift.dto.product.ProductResponse;
 import gift.dto.product.ProductUpdateRequest;
 import gift.exception.InvalidProductNameWithKAKAOException;
@@ -54,18 +54,18 @@ public class ProductService {
     }
 
     @Transactional(readOnly = true)
-    public PageResponse<ProductResponse> getProducts(Pageable pageable) {
+    public ProductPageResponse getProducts(Pageable pageable) {
         var pageResult = productRepository.findAll(pageable);
         var products = pageResult
                 .getContent()
                 .stream()
                 .map(this::getProductResponseFromProduct)
                 .toList();
-        return new PageResponse<>(pageResult.getNumber(), pageResult.getSize(), pageResult.getTotalElements(), pageResult.getTotalPages(), products);
+        return new ProductPageResponse(pageResult.getNumber(), pageResult.getSize(), pageResult.getTotalElements(), pageResult.getTotalPages(), products);
     }
 
     @Transactional(readOnly = true)
-    public PageResponse<ProductResponse> getProducts(Long categoryId, Pageable pageable) {
+    public ProductPageResponse getProducts(Long categoryId, Pageable pageable) {
         var pageResult = productRepository.findAllByCategoryId(categoryId, pageable);
         var products = pageResult
                 .getContent()
@@ -73,7 +73,7 @@ public class ProductService {
                 .map(this::getProductResponseFromProduct)
                 .toList();
 
-        return new PageResponse<>(pageResult.getNumber(), pageResult.getSize(), pageResult.getTotalElements(), pageResult.getTotalPages(), products);
+        return new ProductPageResponse(pageResult.getNumber(), pageResult.getSize(), pageResult.getTotalElements(), pageResult.getTotalPages(), products);
     }
 
     public void deleteProduct(Long productId) {

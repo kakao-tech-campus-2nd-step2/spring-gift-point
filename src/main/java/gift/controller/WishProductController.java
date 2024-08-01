@@ -1,8 +1,8 @@
 package gift.controller;
 
 import gift.controller.api.WishProductApi;
-import gift.dto.page.PageResponse;
 import gift.dto.wishproduct.WishProductAddRequest;
+import gift.dto.wishproduct.WishProductPageResponse;
 import gift.dto.wishproduct.WishProductResponse;
 import gift.dto.wishproduct.WishProductUpdateRequest;
 import gift.service.WishProductService;
@@ -52,7 +52,7 @@ public class WishProductController implements WishProductApi {
     }
 
     @GetMapping
-    public ResponseEntity<PageResponse<WishProductResponse>> getWishProducts(@RequestAttribute("memberId") Long memberId, @PageableDefault(sort = "id", direction = Sort.Direction.DESC) Pageable pageable) {
+    public ResponseEntity<WishProductPageResponse> getWishProducts(@RequestAttribute("memberId") Long memberId, @PageableDefault(sort = "id", direction = Sort.Direction.DESC) Pageable pageable) {
         var wishProducts = wishProductService.getWishProducts(memberId, pageable);
         return ResponseEntity.ok(wishProducts);
     }
