@@ -1,8 +1,6 @@
 package gift.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import gift.exception.ErrorCode;
-import gift.exception.customException.AccessDeniedException;
 import gift.model.dto.OrderDTO;
 import gift.model.form.OrderForm;
 import gift.service.OrderService;
@@ -34,9 +32,6 @@ public class OrderController {
     public ResponseEntity<?> handleOrderToMe(@RequestBody OrderForm form,
         @RequestAttribute("userId") Long userId)
         throws JsonProcessingException {
-        if (!userService.isKakaoUser(userId)) {
-            throw new AccessDeniedException(ErrorCode.KAKAO_ACCESS_DENIED);
-        }
         OrderDTO orderDTO = new OrderDTO(form, userId);
         orderService.executeOrder(userId, orderDTO);
         return ResponseEntity.ok().build();
