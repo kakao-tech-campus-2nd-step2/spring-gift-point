@@ -30,8 +30,6 @@ dependencies {
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
-//    implementation 'org.slf4j:slf4j-api:1.7.32'
-//    implementation 'ch.qos.logback:logback-classic:1.2.10'
 }
 
 tasks.named('test') {
