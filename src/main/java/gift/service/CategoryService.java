@@ -44,7 +44,7 @@ public class CategoryService {
                     throw new NameDuplicationException();
                 });
 
-        Category category = new Category(categoryRequestDto.name(), categoryRequestDto.color());
+        Category category = new Category(categoryRequestDto.name(), categoryRequestDto.color(), categoryRequestDto.imageUrl(), categoryRequestDto.description());
 
         categoryRepository.save(category);
 

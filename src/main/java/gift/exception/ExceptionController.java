@@ -29,8 +29,8 @@ public class ExceptionController {
     @ResponseBody
     @ExceptionHandler(EntityNotFoundException.class)
     public ResponseEntity<ErrorResult> entityNotFoundExceptionHandler(EntityNotFoundException e){
-        ErrorResult errorResult = new ErrorResult("400", e.getMessage());
-        return new ResponseEntity<>(errorResult, HttpStatus.BAD_REQUEST);
+        ErrorResult errorResult = new ErrorResult("404", e.getMessage());
+        return new ResponseEntity<>(errorResult, HttpStatus.NOT_FOUND);
     }
 
     @ResponseBody

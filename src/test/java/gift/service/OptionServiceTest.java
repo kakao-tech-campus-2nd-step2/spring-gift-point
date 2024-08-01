@@ -63,7 +63,7 @@ class OptionServiceTest {
         //given
         Long validProductId = 1L;
 
-        Category category = new Category("상품권", "#0000");
+        Category category = new Category("상품권", "#0000", "abc.png");
 
         Product product = new Product.Builder()
                 .name("테스트 상품")
@@ -92,7 +92,7 @@ class OptionServiceTest {
         //given
         Long validProductId = 1L;
 
-        Category category = new Category("상품권", "#0000");
+        Category category = new Category("상품권", "#0000", "abc.png");
 
         Product product = new Product.Builder()
                 .name("테스트 상품")

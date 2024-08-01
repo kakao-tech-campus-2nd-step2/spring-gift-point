@@ -27,6 +27,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import static gift.utils.FilterConstant.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.given;
@@ -71,7 +72,7 @@ class ProductControllerTest {
 
         //expected
         mockMvc.perform(get("/products"))
-                .andExpect(redirectedUrl("/home"))
+                .andExpect(redirectedUrl(NO_AUTHORIZATION_REDIRECT_URL))
                 .andExpect(status().is3xxRedirection())
                 .andDo(print());
     }
@@ -115,12 +116,12 @@ class ProductControllerTest {
     @DisplayName("상품 조회 페이징 API 테스트")
     void 상품_전체_조회_API_TEST() throws Exception {
         //given
-        CategoryResponseDto categoryResponseDto = new CategoryResponseDto(1L, "상품권","#00000");
-        ProductResponseDto productDto1 = ProductResponseDto.of(1L,"test1", 1000, "abc.png", categoryResponseDto);
-        ProductResponseDto productDto2 = ProductResponseDto.of(2L,"test2", 1000, "abc.png", categoryResponseDto);
-        ProductResponseDto productDto3 = ProductResponseDto.of(3L,"test3", 1000, "abc.png", categoryResponseDto);
-        ProductResponseDto productDto4 = ProductResponseDto.of(4L,"test4", 1000, "abc.png", categoryResponseDto);
-        ProductResponseDto productDto5 = ProductResponseDto.of(5L,"test5", 1000, "abc.png", categoryResponseDto);
+        CategoryResponseDto categoryResponseDto = new CategoryResponseDto(1L, "상품권","#00000", "abc.png", "");
+        ProductResponseDto productDto1 = ProductResponseDto.of(1L,"test1", 1000, "abc.png", categoryResponseDto.id());
+        ProductResponseDto productDto2 = ProductResponseDto.of(2L,"test2", 1000, "abc.png", categoryResponseDto.id());
+        ProductResponseDto productDto3 = ProductResponseDto.of(3L,"test3", 1000, "abc.png", categoryResponseDto.id());
+        ProductResponseDto productDto4 = ProductResponseDto.of(4L,"test4", 1000, "abc.png", categoryResponseDto.id());
+        ProductResponseDto productDto5 = ProductResponseDto.of(5L,"test5", 1000, "abc.png", categoryResponseDto.id());
 
         List<ProductResponseDto> productDtos = new ArrayList<>(Arrays.asList(productDto1, productDto2, productDto3, productDto4, productDto5));
 
@@ -140,9 +141,9 @@ class ProductControllerTest {
     @DisplayName("상품 저장 GET API 테스트")
     void 상품_저장_GET_API_TEST() throws Exception {
         //given
-        CategoryResponseDto categoryResponseDto1 = new CategoryResponseDto(1L, "상품권", "#0000");
-        CategoryResponseDto categoryResponseDto2 = new CategoryResponseDto(2L, "고기", "#0000");
-        CategoryResponseDto categoryResponseDto3 = new CategoryResponseDto(3L, "생선", "#0000");
+        CategoryResponseDto categoryResponseDto1 = new CategoryResponseDto(1L, "상품권", "#0000", "abc.png" ,"");
+        CategoryResponseDto categoryResponseDto2 = new CategoryResponseDto(2L, "고기", "#0000", "abc.png" ,"");
+        CategoryResponseDto categoryResponseDto3 = new CategoryResponseDto(3L, "생선", "#0000", "abc.png" ,"");
         List<CategoryResponseDto> categoryResponseDtos = Arrays.asList(categoryResponseDto1, categoryResponseDto2, categoryResponseDto3);
 
         given(categoryService.findAllCategories()).willReturn(categoryResponseDtos);
@@ -179,12 +180,12 @@ class ProductControllerTest {
     @DisplayName("상품 수정 GET API 테스트")
     void 상품_수정_GET_API_TEST() throws Exception {
         //given
-        CategoryResponseDto categoryResponseDto1 = new CategoryResponseDto(1L, "상품권", "#0000");
-        CategoryResponseDto categoryResponseDto2 = new CategoryResponseDto(2L, "고기", "#0000");
-        CategoryResponseDto categoryResponseDto3 = new CategoryResponseDto(3L, "생선", "#0000");
+        CategoryResponseDto categoryResponseDto1 = new CategoryResponseDto(1L, "상품권", "#0000", "abc.png" ,"");
+        CategoryResponseDto categoryResponseDto2 = new CategoryResponseDto(2L, "고기", "#0000", "abc.png" ,"");
+        CategoryResponseDto categoryResponseDto3 = new CategoryResponseDto(3L, "생선", "#0000", "abc.png" ,"");
         List<CategoryResponseDto> categoryResponseDtos = Arrays.asList(categoryResponseDto1, categoryResponseDto2, categoryResponseDto3);
 
-        ProductResponseDto productResponseDto = ProductResponseDto.of(1L, "test", 1000, "abc.png", categoryResponseDto1);
+        ProductResponseDto productResponseDto = ProductResponseDto.of(1L, "test", 1000, "abc.png", 1L);
 
         given(productService.findProductById(1L)).willReturn(productResponseDto);
         given(categoryService.findAllCategories()).willReturn(categoryResponseDtos);

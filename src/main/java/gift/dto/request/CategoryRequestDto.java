@@ -7,5 +7,10 @@ public record CategoryRequestDto(
         String name,
 
         @NotBlank(message = "카테고리 색상을 입력해 주세요")
-        String color
+        String color,
+
+        @NotBlank(message = "카테고리 이미지를 입력해 주세요")
+        String imageUrl,
+
+        String description
 ) { }
