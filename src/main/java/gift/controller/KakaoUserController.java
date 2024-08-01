@@ -60,7 +60,8 @@ public class KakaoUserController {
 
         String jwtToken = tokenService.generateToken(userResponse.kakaoAccount().email());
         HttpHeaders headers = new HttpHeaders();
-        headers.setLocation(URI.create(kakaoProperties.getFrontRedirectUri()+"?token="+jwtToken));
+        headers.setLocation(
+            URI.create(kakaoProperties.getFrontRedirectUri() + "?token=" + jwtToken));
 
         return new ResponseEntity<>(headers, HttpStatus.FOUND);
     }

@@ -2,6 +2,7 @@ package gift.entity;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EntityListeners;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -10,10 +11,13 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
 import java.time.LocalDateTime;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 @Schema(description = "Wish entity representing a user's wish for a product")
 @Entity
 @Table(name = "wishes")
+@EntityListeners(AuditingEntityListener.class)
 public class Wish {
 
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -35,17 +39,17 @@ public class Wish {
     private Integer number;
 
     @Schema(description = "Date and time when the wish was created", example = "2024-07-28T17:04:18.834374")
+    @CreatedDate
     private LocalDateTime createdDate;
 
     protected Wish() {
-        this.createdDate = LocalDateTime.now();
+
     }
 
     public Wish(User user, Product product, int number) {
         this.user = user;
         this.product = product;
         this.number = number;
-        this.createdDate = LocalDateTime.now();
     }
 
     public Long getId() {
