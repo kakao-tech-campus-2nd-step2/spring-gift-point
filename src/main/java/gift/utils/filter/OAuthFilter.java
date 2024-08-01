@@ -4,7 +4,6 @@ import gift.domain.Token;
 import gift.repository.TokenRepository;
 import gift.utils.ExternalApiService;
 import gift.utils.JwtTokenProvider;
-import gift.utils.error.AuthorizationException;
 import gift.utils.error.TokenAuthException;
 import jakarta.servlet.Filter;
 import jakarta.servlet.FilterChain;
@@ -30,7 +29,6 @@ public class OAuthFilter implements Filter {
         this.externalApiService = externalApiService;
     }
 
-
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
         Filter.super.init(filterConfig);
@@ -41,6 +39,19 @@ public class OAuthFilter implements Filter {
         throws IOException, ServletException {
         HttpServletRequest httpRequest = (HttpServletRequest) request;
         HttpServletResponse httpResponse = (HttpServletResponse) response;
+
+        // CORS 헤더 설정
+        httpResponse.setHeader("Access-Control-Allow-Origin", "http://server.cla6sha.de");
+        httpResponse.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
+        httpResponse.setHeader("Access-Control-Allow-Headers", "Authorization, Content-Type");
+        httpResponse.setHeader("Access-Control-Allow-Credentials", "true");
+        httpResponse.setHeader("Access-Control-Max-Age", "3600");
+
+        // OPTIONS 요청(프리플라이트) 처리
+        if ("OPTIONS".equalsIgnoreCase(httpRequest.getMethod())) {
+            httpResponse.setStatus(HttpServletResponse.SC_OK);
+            return;
+        }
 
         String path = httpRequest.getRequestURI();
 
@@ -58,7 +69,8 @@ public class OAuthFilter implements Filter {
             String authHeader = httpRequest.getHeader("Authorization");
 
             if (authHeader == null || authHeader.isEmpty()) {
-                throw new AuthorizationException("UnAuthorization");
+                httpResponse.sendRedirect("http://server.cla6sha.de/login");
+                return;
             }
 
             // JWT 토큰의 유효성 검사
@@ -76,13 +88,13 @@ public class OAuthFilter implements Filter {
             }
 
             if (accessexpirationTime.isBefore(LocalDateTime.now()) && refreshexpirationTime.isBefore(LocalDateTime.now())){
-                throw new AuthorizationException("UnAuthorization");
+                httpResponse.sendRedirect("http://server.cla6sha.de/login");
+                return;
             }
 
             filterChain.doFilter(request, response);
             return;
         }
-
 
         filterChain.doFilter(request, response);
     }
@@ -91,5 +103,4 @@ public class OAuthFilter implements Filter {
     public void destroy() {
         Filter.super.destroy();
     }
-
 }

@@ -22,7 +22,6 @@ public class AuthFilter implements Filter {
         this.jwtTokenProvider = jwtTokenProvider;
     }
 
-
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
         Filter.super.init(filterConfig);
@@ -34,28 +33,40 @@ public class AuthFilter implements Filter {
         HttpServletRequest httpRequest = (HttpServletRequest) request;
         HttpServletResponse httpResponse = (HttpServletResponse) response;
 
+        // CORS 헤더 설정
+        httpResponse.setHeader("Access-Control-Allow-Origin", "http://server.cla6sha.de");
+        httpResponse.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
+        httpResponse.setHeader("Access-Control-Allow-Headers", "Authorization, Content-Type");
+        httpResponse.setHeader("Access-Control-Allow-Credentials", "true");
+        httpResponse.setHeader("Access-Control-Max-Age", "3600");
+
+        // OPTIONS 요청(프리플라이트) 처리
+        if ("OPTIONS".equalsIgnoreCase(httpRequest.getMethod())) {
+            httpResponse.setStatus(HttpServletResponse.SC_OK);
+            return;
+        }
+
         String path = httpRequest.getRequestURI();
 
         // Filter 를 통과하지 않아도 되는 url
         if (path.equals("/api/members/login") || path.equals("/api/members/register") || path.startsWith("/api/members")
             || path.startsWith("/h2-console") || path.equals("/api/oauth/authorize")
             || path.equals("/api/oauth/token")
-            || path.equals("/swagger-ui.html") // 변경
+            || path.equals("/swagger-ui.html")
             || path.startsWith("/swagger-ui")
-            || path.startsWith("/api-docs") // 추가
+            || path.startsWith("/api-docs")
             || path.startsWith("/v3/api-docs")
             || path.startsWith("/swagger-resources")) {
             filterChain.doFilter(request, response);
             return;
         }
 
-
         // Authorization header 존재하는지 확인
         String authHeader = httpRequest.getHeader("Authorization");
 
         if (authHeader == null || authHeader.isEmpty()) {
-            throw new AuthorizationException("UnAuthorization");
-//            httpResponse.sendRedirect("http://server.cla6sha.de/login");
+            httpResponse.sendRedirect("http://server.cla6sha.de/login");
+            return;
         }
 
         // JWT 토큰의 유효성 검사
@@ -72,5 +83,4 @@ public class AuthFilter implements Filter {
     public void destroy() {
         Filter.super.destroy();
     }
-
 }
