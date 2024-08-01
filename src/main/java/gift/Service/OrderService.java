@@ -1,6 +1,7 @@
 package gift.Service;
 
 import gift.DTO.Option;
+import gift.DTO.OptionDto;
 import gift.DTO.Orders;
 import gift.KakaoApi;
 import gift.Repository.KakaoJwtTokenRepository;
@@ -44,6 +45,8 @@ public class OrderService {
     Option option = optionRepository.findById(requestOrderDto.getOptionId())
       .orElseThrow(() -> new EmptyResultDataAccessException("해당 상품이 없습니다", 1));
 
+    optionService.optionQuantitySubtract(option.getId(),requestOrderDto.getQuantity());
+
     Orders order = new Orders(option, requestOrderDto.getQuantity(), requestOrderDto.getMessage());
     Orders savedOrder = orderRepository.save(order);
     ResponseOrderDto responseOrderDto = new ResponseOrderDto(savedOrder.getId(),
@@ -51,24 +54,4 @@ public class OrderService {
       savedOrder.getOrderDateTime(), requestOrderDto.getMessage());
     return responseOrderDto;
   }
-
-//  @Transactional
-//  public OrderDto kakaoOrderOption(OrderDto orderDto) {
-//    OptionDto optionDto = orderDto.getOptionDto();
-//    optionService.optionQuantitySubtract(optionDto, orderDto.getQuantity());
-//    ProductDto productDto = optionDto.getProductDto();
-//    Product product = productRepository.findById(productDto.getId())
-//      .orElseThrow(() -> new EmptyResultDataAccessException("해당 상품이 없습니다", 1));
-//    List<WishList> wishLists = product.getWishlists();
-//    for (WishList wishList : wishLists) {
-//      wishListService.deleteProductToWishList(wishList.getWishId());
-//    }
-//
-//    KakaoJwtToken kakaoJwtToken = kakaoJwtTokenRepository.findById(1L)
-//      .orElseThrow(() -> new EmptyResultDataAccessException("해당 데이터가 없습니다", 1));
-//    kakaoApi.kakaoSendMe(orderDto, kakaoJwtToken, URL);
-//
-//    return orderDto;
-//  }
-
 }
