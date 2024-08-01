@@ -23,7 +23,7 @@ public class UserController {
     }
 
     @Operation(summary = "일반 유저 등록", description = "새로운 유저를 등록합니다.")
-    @PostMapping("/register")
+    @PostMapping("/members/register")
     public ResponseEntity<?> registerUser(@RequestBody NormalUserRegisterRequest request) {
         User user = userService.registerUser(request);
         String tokenResponse = jwtUtil.generateToken(user, 60L);
@@ -31,7 +31,7 @@ public class UserController {
     }
 
     @Operation(summary = "일반 유저 로그인", description = "유저 로그인을 처리합니다.")
-    @PostMapping("/login")
+    @PostMapping("/members/login")
     public ResponseEntity<?> createAuthenticationToken(@RequestBody NormalLoginRequest request) {
         User user = userService.login(request.getEmail(), request.getPassword());
         String tokenResponse = jwtUtil.generateToken(user, 60L);
@@ -39,7 +39,7 @@ public class UserController {
     }
 
     @Operation(summary = "유저 정보 조회", description = "유저 정보를 조회합니다.")
-    @GetMapping("/user")
+    @GetMapping("/members/user")
     public ResponseEntity<?> getUserInfo() {
         return ResponseEntity.ok(new CommonResponse<>(
                 userService.getUsers(),
