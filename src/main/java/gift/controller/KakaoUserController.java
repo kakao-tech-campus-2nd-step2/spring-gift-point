@@ -52,7 +52,6 @@ public class KakaoUserController {
         KakaoTokenResponse response = kakaoUserService.getAccessToken(code);
 
         kakaoProperties.setAccessToken(response.accessToken());
-        System.out.println(response.accessToken());
 
         KakaoUserResponse userResponse = kakaoUserService.getUserInfo(
             kakaoProperties.getAccessToken());
