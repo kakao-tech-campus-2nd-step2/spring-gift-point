@@ -6,7 +6,7 @@
 </head>
 <body>
 <h2>Login</h2>
-<form th:action="@{/login}" method="post" th:object="${userDTO}">
+<form th:action="@{/api/login-form}" method="post" th:object="${LoginRequestDTO}">
     <div>
         <label for="email">Username:</label>
         <input type="text" id="email" name="email" />
@@ -18,7 +18,7 @@
 
     <div>
         <button type="submit">Login</button>
-        <a th:href="@{/signup}"><button type="button">Sign Up</button></a>
+        <a th:href="@{/api/register-page}"><button type="button">register</button></a>
     </div>
     <a href = /kakao-login> <img src="/kakao_login_medium_narrow.png" alt="Kakao Login"/></a>
 </form>
