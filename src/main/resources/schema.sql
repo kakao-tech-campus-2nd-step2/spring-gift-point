@@ -24,17 +24,18 @@ CREATE TABLE options
     id         BIGINT AUTO_INCREMENT NOT NULL,
     product_id BIGINT                NULL,
     name       VARCHAR(255)          NULL,
-    count      BIGINT                NULL,
+    quantity   BIGINT                NULL,
     CONSTRAINT pk_options PRIMARY KEY (id)
 );
 
 CREATE TABLE orders
 (
-    id        BIGINT AUTO_INCREMENT NOT NULL,
-    member_id BIGINT                NULL,
-    option_id BIGINT                NULL,
-    count     BIGINT                NULL,
-    message   VARCHAR(255)          NULL,
+    id          BIGINT AUTO_INCREMENT NOT NULL,
+    member_id   BIGINT                NULL,
+    option_id   BIGINT                NULL,
+    quantity    BIGINT                NULL,
+    message     VARCHAR(255)          NULL,
+    total_price BIGINT                NULL,
     CONSTRAINT pk_orders PRIMARY KEY (id)
 );
 

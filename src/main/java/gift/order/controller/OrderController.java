@@ -37,9 +37,10 @@ public class OrderController {
     }
 
     @PostMapping("")
-    public ResponseEntity<SimpleResultResponseDto> createOrder(@Login AuthInfo authInfo, @RequestBody OrderRequestDto orderRequestDto) {
+    public ResponseEntity<Void> createOrder(@Login AuthInfo authInfo, @RequestBody OrderRequestDto orderRequestDto) {
         orderService.createOrder(orderRequestDto.toOrderServiceDto(authInfo.memberId()));
-        return ResponseHelper.createSimpleResponse(ResultCode.CREATE_OPTION_SUCCESS);
+        return ResponseEntity.status(200)
+                .build();
     }
 
     @PutMapping("/{id}")

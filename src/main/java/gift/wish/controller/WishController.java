@@ -10,6 +10,7 @@ import gift.global.response.SimpleResultResponseDto;
 import gift.global.security.Login;
 import gift.global.utils.ResponseHelper;
 import gift.member.service.MemberService;
+import gift.product.dto.DataDto;
 import gift.wish.domain.Wish;
 import gift.wish.dto.WishRequestDto;
 import gift.wish.dto.WishResponseDto;
@@ -39,10 +40,11 @@ public class WishController {
     }
 
     @GetMapping("")
-    public ResponseEntity<WishResponseListDto> getWishesByPage(@RequestParam(name = "page") int page, @Login AuthInfo authInfo) {
+    public ResponseEntity<DataDto<WishResponseListDto>> getWishesByPage(@RequestParam(name = "page") int page, @Login AuthInfo authInfo) {
         WishResponseListDto wishResponseDtos = wishService.getWishesByMemberAndPage(memberService.getMemberById(authInfo.memberId()), page);
+        DataDto<WishResponseListDto> dataDto = new DataDto<>(wishResponseDtos);
         return ResponseEntity.status(200)
-                .body(wishResponseDtos);
+                .body(dataDto);
     }
 
     @GetMapping("/{id}")

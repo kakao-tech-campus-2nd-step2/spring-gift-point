@@ -7,6 +7,7 @@ import gift.global.response.ResultResponseDto;
 import gift.global.response.SimpleResultResponseDto;
 import gift.global.utils.ResponseHelper;
 import gift.product.domain.Product;
+import gift.product.dto.DataDto;
 import gift.product.dto.ProductRequestDto;
 import gift.product.dto.ProductResponseDto;
 import gift.product.dto.ProductResponseListDto;
@@ -35,10 +36,11 @@ public class ProductController {
     }
 
     @GetMapping("")
-    public ResponseEntity<ProductResponseListDto> getProductsByPage(@RequestParam(name = "page") int page) {
+    public ResponseEntity<DataDto<ProductResponseListDto>> getProductsByPage(@RequestParam(name = "page") int page) {
         ProductResponseListDto products = productService.getProductsByPage(page);
+        DataDto<ProductResponseListDto> dataDto = new DataDto<>(products);
         return ResponseEntity.status(200)
-                .body(products);
+                .body(dataDto);
     }
 
     @GetMapping("/{id}")

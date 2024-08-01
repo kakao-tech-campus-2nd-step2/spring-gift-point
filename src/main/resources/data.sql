@@ -32,11 +32,11 @@ INSERT INTO products (name, price, image_url, category_id) VALUES ('test22', 200
 INSERT INTO products (name, price, image_url, category_id) VALUES ('test23', 20000, 'http://', 1);
 
 -- options
-INSERT INTO options (name, count, product_id) VALUES ('name1', 20000, 1);
-INSERT INTO options (name, count, product_id) VALUES ('name2', 20000, 1);
-INSERT INTO options (name, count, product_id) VALUES ('name3', 20000, 2);
-INSERT INTO options (name, count, product_id) VALUES ('name4', 20000, 2);
-INSERT INTO options (name, count, product_id) VALUES ('name5', 20000, 3);
+INSERT INTO options (name, quantity, product_id) VALUES ('name1', 20000, 1);
+INSERT INTO options (name, quantity, product_id) VALUES ('name2', 20000, 1);
+INSERT INTO options (name, quantity, product_id) VALUES ('name3', 20000, 2);
+INSERT INTO options (name, quantity, product_id) VALUES ('name4', 20000, 2);
+INSERT INTO options (name, quantity, product_id) VALUES ('name5', 20000, 3);
 
 
 -- members

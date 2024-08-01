@@ -8,13 +8,13 @@ Content-Type: application/json
 
 ### create order
 POST http://localhost:8080/api/orders
-Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJtZW1iZXJfaWQiOjQsIm1lbWJlcl90eXBlIjoiVVNFUiIsImlhdCI6MTcyMjA5MDE0OCwiZXhwIjo0NjA2OTk1Nzc1fQ.tLN2ZPKGNm2mnnN3fBlhm405cagpGIA029xZbBzb7Yz-u6fPrmerExyirvdg0hPyi_Sgn4G1dMAyXU9kkuBZQA
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJtZW1iZXJfaWQiOjQsIm1lbWJlcl90eXBlIjoiVVNFUiIsImlhdCI6MTcyMjQ4MTIxMywiZXhwIjo0NjA3Mzg2ODQwfQ.Z-EU8vyC4wqLecQMDrAO2jqg1TS12CwG5bPepKOk4FcoQOrGRj5sq7OrHIHlycYYnUhejFXUKhQ8T4oh-FFd6Q
 Content-Type: application/json
 
 {
-  "count": 12,
+  "quantity": 12,
   "message": "message",
-  "optionId": 2
+  "option_id": 2
 }
 
 ### update order

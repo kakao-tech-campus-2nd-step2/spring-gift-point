@@ -8,6 +8,7 @@ import gift.member.repository.MemberRepository;
 import gift.member.service.MemberService;
 import gift.option.domain.Option;
 import gift.option.service.OptionService;
+import gift.order.domain.OrderTotalPrice;
 import gift.order.dto.OrderListResponseDto;
 import gift.order.dto.OrderResponseDto;
 import gift.order.dto.OrderServiceDto;
@@ -61,9 +62,10 @@ public class OrderService {
     public Order createOrder(OrderServiceDto orderServiceDto) {
         Member member = memberService.getMemberById(orderServiceDto.memberId());
         Option option = optionService.getOptionById(orderServiceDto.optionId());
-        option.subtract(orderServiceDto.count().getOrderCountValue());
+        option.subtract(orderServiceDto.quantity().getOrderCountValue());
         sendMessage(orderServiceDto.memberId(), orderServiceDto.message().getOrderMessageValue());
-        return orderRepository.save(orderServiceDto.toOrder(member, option));
+        Long totalPrice = option.getProduct().getPrice().getProductPriceValue() * orderServiceDto.quantity().getOrderCountValue();
+        return orderRepository.save(orderServiceDto.toOrder(member, option, new OrderTotalPrice(totalPrice)));
     }
 
     public Order updateOrder(OrderServiceDto orderServiceDto) {

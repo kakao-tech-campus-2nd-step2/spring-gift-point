@@ -17,6 +17,8 @@ public class Order {
     private OrderQuantity quantity;
     @Embedded
     private OrderMessage message;
+    @Embedded
+    private OrderTotalPrice totalPrice;
 
     @ManyToOne(fetch = FetchType.LAZY)
     private Member member;
@@ -28,12 +30,13 @@ public class Order {
     public Order() {
     }
 
-    public Order(Long id, OrderQuantity quantity, OrderMessage message, Member member, Option option) {
+    public Order(Long id, OrderQuantity quantity, OrderMessage message, Member member, Option option, OrderTotalPrice orderTotalPrice) {
         this.id = id;
         this.quantity = quantity;
         this.message = message;
         this.member = member;
         this.option = option;
+        this.totalPrice = totalPrice;
     }
 
 
