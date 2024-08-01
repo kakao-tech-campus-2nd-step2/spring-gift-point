@@ -8,6 +8,7 @@ import static org.mockito.Mockito.*;
 
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
+import java.util.Collections;
 import java.util.Optional;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -15,6 +16,11 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.http.ResponseEntity;
 import org.springframework.retry.RetryCallback;
 import org.springframework.retry.support.RetryTemplate;
 import org.springframework.validation.BindingResult;
@@ -69,6 +75,7 @@ public class OrderServiceTest {
     private User user;
     private Product product;
     private Category category;
+    private LocalDateTime now = LocalDateTime.now();
 
     @BeforeEach
     void setUp() {
@@ -82,14 +89,34 @@ public class OrderServiceTest {
         option.setId(1L);
 
         order = new Order(option, 2, "Please handle this order with care.");
-        order.setOrderDateTime(LocalDateTime.now());
+        order.setOrderDateTime(now);
 
         user = new User("test@test.com", "pw");
         user.setId(1L);
     }
+    
+    @Test
+    public void testGetOrders() {
+    	Pageable pageable = PageRequest.of(0, 10);
+    	Page<Order> page = new PageImpl<>(Collections.singletonList(order), pageable, 1);
+    	
+    	when(orderRepository.findAll(pageable)).thenReturn(page);
+		
+		Page<OrderResponse> response = orderService.getOrders(pageable);
+    	
+		verify(orderRepository).findAll(pageable);
+	    assertThat(response.getContent()).hasSize(1);
+
+	    OrderResponse actualOrderResponse = response.getContent().get(0);
+	    assertThat(actualOrderResponse.getId()).isEqualTo(order.getId());
+	    assertThat(actualOrderResponse.getOptionId()).isEqualTo(order.getOption().getId());
+	    assertThat(actualOrderResponse.getQuantity()).isEqualTo(order.getQuantity());
+	    assertThat(actualOrderResponse.getOrderDateTime()).isEqualTo(now);
+	    assertThat(actualOrderResponse.getMessage()).isEqualTo(order.getMessage());
+    }
 
     @Test
-    void testCreateOrder() throws Throwable {
+    public void testCreateOrder() throws Throwable {
         String token = "Bearer validToken";
         
         LocalDateTime requestTime = LocalDateTime.now();
