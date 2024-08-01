@@ -1,4 +1,4 @@
-package gift.dto;
+package gift.wish.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
