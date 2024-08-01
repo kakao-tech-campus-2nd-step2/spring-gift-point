@@ -1,6 +1,6 @@
-package gift.repository;
+package gift.member.repository;
 
-import gift.model.Member;
+import gift.member.model.Member;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
