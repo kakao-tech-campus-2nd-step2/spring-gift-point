@@ -87,6 +87,10 @@ public class Member {
         return id == null;
     }
 
+    public void accumulatePoints(Long point) {
+        this.point = this.point + point;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -100,4 +104,5 @@ public class Member {
     public int hashCode() {
         return Objects.hash(id);
     }
+
 }

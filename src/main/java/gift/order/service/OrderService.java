@@ -22,9 +22,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
+import java.math.BigDecimal;
 import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 @Service
 public class OrderService {
@@ -35,6 +37,7 @@ public class OrderService {
     private final RestTemplate restTemplate;
     private final ObjectMapper objectMapper;
 
+    public static final BigDecimal POINT_ACCUMULATION_RATE = new BigDecimal("0.005"); // 0.5%
     public static final String BEARER_TYPE = "Bearer ";
     private static final String MESSAGE_URL = "https://kapi.kakao.com/v2/api/talk/memo/default/send";
     private static final String WEB_URL = "https://developers.kakao.com";
@@ -62,10 +65,27 @@ public class OrderService {
     public Order createOrder(OrderServiceDto orderServiceDto) {
         Member member = memberService.getMemberById(orderServiceDto.memberId());
         Option option = optionService.getOptionById(orderServiceDto.optionId());
+
         option.subtract(orderServiceDto.quantity().getOrderCountValue());
-        sendMessage(orderServiceDto.memberId(), orderServiceDto.message().getOrderMessageValue());
-        Long totalPrice = option.getProduct().getPrice().getProductPriceValue() * orderServiceDto.quantity().getOrderCountValue();
-        return orderRepository.save(orderServiceDto.toOrder(member, option, new OrderTotalPrice(totalPrice)));
+        Long totalPrice = getTotalPrice(option, orderServiceDto);
+        accumulatePoints(member, totalPrice);
+
+        Order order = orderRepository.save(orderServiceDto.toOrder(member, option, new OrderTotalPrice(totalPrice)));
+
+        if (!Objects.isNull(member.getAccessToken())) {
+            sendMessage(orderServiceDto.memberId(), orderServiceDto.message().getOrderMessageValue());
+        }
+
+        return order;
+    }
+
+    private void accumulatePoints(Member member, Long totalPrice) {
+        Long accumulatePoints = BigDecimal.valueOf(totalPrice).multiply(POINT_ACCUMULATION_RATE).longValue();
+        member.accumulatePoints(accumulatePoints);
+    }
+
+    private Long getTotalPrice(Option option, OrderServiceDto orderServiceDto) {
+        return option.getProduct().getPrice().getProductPriceValue() * orderServiceDto.quantity().getOrderCountValue();
     }
 
     public Order updateOrder(OrderServiceDto orderServiceDto) {

@@ -111,7 +111,7 @@ INSERT INTO products (id, name, price, image_url, category_id) VALUES
 
 
 -- options
-INSERT INTO options (name, quantity, product_id) VALUES ('추가 샷', 1, 1);
+INSERT INTO options (name, quantity, product_id) VALUES ('추가 샷', 10, 1);
 INSERT INTO options (name, quantity, product_id) VALUES ('초코 케이크', 1, 2);
 INSERT INTO options (name, quantity, product_id) VALUES ('초콜릿', 1, 3);
 INSERT INTO options (name, quantity, product_id) VALUES ('스낵 교환', 1, 4);

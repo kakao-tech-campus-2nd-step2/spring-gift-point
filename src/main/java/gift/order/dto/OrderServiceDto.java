@@ -7,7 +7,8 @@ import gift.order.domain.OrderQuantity;
 import gift.order.domain.OrderMessage;
 import gift.order.domain.OrderTotalPrice;
 
-public record OrderServiceDto(Long id, OrderQuantity quantity, OrderMessage message, Long memberId, Long optionId) {
+public record OrderServiceDto(Long id, OrderQuantity quantity, OrderMessage message,
+                              Long memberId, Long optionId, Long usingPoint) {
     public Order toOrder(Member member, Option option) {
         return new Order(id, quantity, message, member, option, null);
     }
