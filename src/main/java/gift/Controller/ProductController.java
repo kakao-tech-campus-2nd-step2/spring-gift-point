@@ -45,7 +45,12 @@ public class ProductController {
         responseCode = "200",
         description = "모든 상품 가져오기 성공"
     )
-    @Parameter(name = "pageable", description = "List에 담긴 Product객체를 개수에 맞춰서 page로 리턴")
+    @Parameters({
+        @Parameter(name = "page", description = "표시할 페이지(0부터 시작)"),
+        @Parameter(name = "size", description = "한페이지에 표시할 상품 개수"),
+        @Parameter(name = "sort", description = "정렬할 기준 ex) name,asc => name 으로 오름차순 정렬"),
+        @Parameter(name = "categoryId", description = "표시할 상품의 카테고리 ID")
+    })
     @GetMapping("/api/products")
     public ResponseEntity<Page<ProductResponseDTO>> getProducts(@RequestParam(name = "page", defaultValue = "0") int page, @RequestParam(name = "size", defaultValue = "10") int size, @RequestParam(name = "sort", defaultValue = "name,asc") String[] sort, @RequestParam(name = "categoryId") Long categoryId) {
         Pageable pageable = PageRequest.of(page, size, productService.getSort(sort)); // 전달 받은 파라미터로 pageable 객체 생성
@@ -61,7 +66,7 @@ public class ProductController {
         responseCode = "200",
         description = "특정 상품 가져오기 성공"
     )
-    @Parameter(name = "pageable", description = "List에 담긴 Product객체를 개수에 맞춰서 page로 리턴")
+    @Parameter(name = "productId", description = "가져올 상품의 ID")
     @GetMapping("/api/products/{productId}")
     public ResponseEntity<ProductResponseDTO> getProduct(@PathVariable(value = "productId") Long productId) {
         return ResponseEntity.ok().body(productService.getProductResponseDTOById(productId));

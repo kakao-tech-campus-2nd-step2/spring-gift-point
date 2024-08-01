@@ -46,11 +46,12 @@ public class WishListController {
         description = "위시리스트 가져오기 성공"
     )
     @Parameters({
-        @Parameter(name = "request", description = "메소드 실행 전 토큰을 전달 받기 위한 객체"),
-        @Parameter(name = "pageable", description = "List에 담긴 Product객체를 개수에 맞춰서 page로 리턴")
+        @Parameter(name = "page", description = "표시할 페이지(0부터 시작)"),
+        @Parameter(name = "size", description = "한페이지에 표시할 상품 개수"),
+        @Parameter(name = "sort", description = "정렬할 기준 ex) createdDate,asc => createdDate 으로 내림차순 정렬"),
     })
     @GetMapping("/api/wishes")
-    public ResponseEntity<Page<Product>> getWish(HttpServletRequest request,@RequestParam(name = "page", defaultValue = "0") int page, @RequestParam(name = "size", defaultValue = "10") int size, @RequestParam(name = "sort", defaultValue = "name,asc") String[] sort) {
+    public ResponseEntity<Page<Product>> getWish(HttpServletRequest request,@RequestParam(name = "page", defaultValue = "0") int page, @RequestParam(name = "size", defaultValue = "10") int size, @RequestParam(name = "sort", defaultValue = "createdDate,desc") String[] sort) {
         Pageable pageable = PageRequest.of(page, size, wishlistService.getSort(sort)); // 전달 받은 파라미터로 pageable 객체 생성
         String email = (String) request.getAttribute("email");
         wishlistService.checkUserByMemberEmail(email);

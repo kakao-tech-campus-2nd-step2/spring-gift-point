@@ -53,12 +53,12 @@ public class AdminController {
     }
 
     @Operation(
-        summary = "상품 더하기 페이지",
+        summary = "관리자 상품 더하기 페이지",
         description = "더할 상품의 정보를 입력을 받기 위해 post.html과 연결"
     )
     @ApiResponse(
         responseCode = "200",
-        description = "상품 더하기 페이지 연결 성공"
+        description = "관리자 상품 더하기 페이지 연결 성공"
     )
     @Parameter(name = "model", description = "html파일로 보낼 객체를 담을 객체")
     @GetMapping("/admin/products/add")
@@ -89,7 +89,7 @@ public class AdminController {
     )
     @ApiResponse(
         responseCode = "200",
-        description = "상품 수정 페이지 연결 성공"
+        description = "관리자 상품 수정 페이지 연결 성공"
     )
     @Parameters({
         @Parameter(name = "productId", description = "수정할 상품 객체의 ID"),

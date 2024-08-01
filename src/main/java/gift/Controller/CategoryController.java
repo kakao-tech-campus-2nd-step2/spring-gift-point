@@ -64,7 +64,7 @@ public class CategoryController {
         responseCode = "200",
         description = "카테고리 추가 성공"
     )
-    @Parameter(name = "category", description = "추가할 새로운 카테고리")
+    @Parameter(name = "categoryDTO", description = "추가할 새로운 카테고리")
     @PostMapping("/api/categories")
     public ResponseEntity<Category> addCategory(@RequestBody CategoryDTO categoryDTO){
         return ResponseEntity.ok().body(categoryService.addCategory(categoryDTO));
@@ -78,7 +78,7 @@ public class CategoryController {
         responseCode = "200",
         description = "카테고리 수정 성공"
     )
-    @Parameter(name = "category", description = "해당하는 카테고리 ID")
+    @Parameter(name = "categoryDTO", description = "해당하는 카테고리 객체")
     @PutMapping("/api/categories")
     public ResponseEntity<Category> updateCategory(@RequestBody CategoryDTO categoryDTO){
         return ResponseEntity.ok().body(categoryService.updateCategory(categoryDTO));
