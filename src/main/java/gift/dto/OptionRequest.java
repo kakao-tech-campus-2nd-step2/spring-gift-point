@@ -1,6 +1,5 @@
 package gift.dto;
 
-
 import jakarta.validation.constraints.*;
 
 public class OptionRequest {

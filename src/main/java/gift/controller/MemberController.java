@@ -49,7 +49,6 @@ public class MemberController {
         if (memberOpt.isPresent() && memberOpt.get().getPassword().equals(loginRequest.getPassword())) {
             String token = jwtUtil.generateToken(memberOpt.get().getEmail());
             Map<String, String> response = new HashMap<>();
-            response.put("message", "success");
             response.put("token", token);
             return ResponseEntity.ok(response);
         }

@@ -91,6 +91,10 @@ public class Product {
         this.id = id;
     }
 
+    public Long getCategoryId() {
+       return category.getId();
+    }
+
     public static class Builder {
        private Long id;
        private String name;

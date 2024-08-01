@@ -1,6 +1,8 @@
 package gift.controller;
 
+import gift.dto.DeleteOptionRequest;
 import gift.dto.OptionRequest;
+import gift.dto.OptionResponse;
 import gift.entity.Option;
 import gift.service.OptionService;
 import jakarta.validation.Valid;
@@ -25,10 +27,10 @@ public class OptionController {
 
     @GetMapping
     @Operation(summary = "Get options for a product", description = "Fetches all options for a specified product", tags = { "Product Option Management System" })
-    public ResponseEntity<List<Option>> getOptions(
+    public ResponseEntity<List<OptionResponse>> getOptions(
             @Parameter(description = "ID of the product", required = true)
             @PathVariable Long productId) {
-        List<Option> options = optionService.getOptionsByProductId(productId);
+        List<OptionResponse> options = optionService.getOptionsByProductId(productId);
         return ResponseEntity.ok(options);
     }
 
@@ -45,15 +47,15 @@ public class OptionController {
 
     @PutMapping("/{optionId}")
     @Operation(summary = "Update an option for a product", description = "Updates an existing option of a specified product", tags = { "Product Option Management System" })
-    public ResponseEntity<Option> updateOption(
+    public ResponseEntity<OptionResponse> updateOption(
             @Parameter(description = "ID of the option to be updated", required = true)
             @PathVariable Long optionId,
             @Parameter(description = "Updated option details", required = true)
             @RequestBody OptionRequest optionRequest,
             @Parameter(description = "ID of the product", required = true)
             @PathVariable String productId) {
-        Option updatedOption = optionService.updateOption(optionId, optionRequest.getName(), optionRequest.getQuantity());
-        return ResponseEntity.ok(updatedOption);
+        OptionResponse updatedOption = optionService.updateOption(optionId, optionRequest.getName(), optionRequest.getQuantity());
+        return ResponseEntity.noContent().build();
     }
 
     @DeleteMapping("/{optionId}")
@@ -63,7 +65,7 @@ public class OptionController {
             @PathVariable Long optionId,
             @Parameter(description = "ID of the product", required = true)
             @PathVariable String productId) {
-        optionService.deleteOption(optionId);
+        optionService.deleteOption(optionId, DeleteOptionRequest.getEmail(), DeleteOptionRequest.getPassword());
         return ResponseEntity.noContent().build();
     }
 }

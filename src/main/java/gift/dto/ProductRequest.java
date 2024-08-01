@@ -45,18 +45,9 @@ public class ProductRequest {
         return imageUrl;
     }
 
-    public void setImageUrl(String imageUrl) {
-        this.imageUrl = imageUrl;
-    }
-
     public Long getCategoryId() {return categoryId;}
-
-    public void setCategoryId(Long categoryId) {this.categoryId = categoryId;}
 
     public List<OptionRequest> getOptions() {
         return options;
-    }
-    public void setOptions(List<OptionRequest> options) {
-        this.options = options;
     }
 }

@@ -1,18 +1,22 @@
 package gift.dto;
 
+import java.util.List;
+
 public class ProductResponse {
     private Long id;
     private String name;
     private Integer price;
     private String imageUrl;
-    private String categoryName;
+    private Long categoryId;
+    private List<OptionResponse> options;
 
-    public ProductResponse(Long id, String name, Integer price, String imageUrl, String categoryName) {
+    public ProductResponse(Long id, Long categoryId, String name, Integer price, String imageUrl , List<OptionResponse> options) {
         this.id = id;
         this.name = name;
         this.price = price;
         this.imageUrl = imageUrl;
-        this.categoryName = categoryName;
+        this.categoryId = categoryId;
+        this.options = options;
     }
 
     public Long getId() {
@@ -47,7 +51,15 @@ public class ProductResponse {
         this.imageUrl = imageUrl;
     }
 
-    public String getCategoryName() {return categoryName;}
+    public Long getCategoryId() {
+        return categoryId;
+    }
 
-    public void setCategoryName(String categoryName) {this.categoryName = categoryName;}
+    public void setCategoryId(Long categoryId) {
+        this.categoryId = categoryId;
+    }
+
+    public List<OptionResponse> getOptions() {
+        return options;
+    }
 }
