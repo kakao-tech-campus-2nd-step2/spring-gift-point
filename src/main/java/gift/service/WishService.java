@@ -52,7 +52,7 @@ public class WishService {
     public void deleteWish(Long id, Member member) {
         Wish wish = wishRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("해당 id의 wish가 없습니다."));
-        if (wish.getMember().getId() == member.getId()) {
+        if (wish.isOwnedBy(member)) {
             wishRepository.delete(wish);
             return;
         }

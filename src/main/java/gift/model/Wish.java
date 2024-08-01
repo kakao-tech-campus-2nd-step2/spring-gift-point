@@ -42,4 +42,8 @@ public class Wish {
     public Member getMember() {
         return member;
     }
+
+    public boolean isOwnedBy(Member member) {
+        return this.member.getId().equals(member.getId());
+    }
 }
