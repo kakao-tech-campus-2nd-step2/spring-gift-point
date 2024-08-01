@@ -2,10 +2,10 @@ version: 0.2
 
 env:
   variables:
-    IMAGE_REPO_NAME: "ez23re-repo"  # ECR 리포지토리 이름
-    IMAGE_TAG: "latest"  # Docker 이미지 태그
-    AWS_ACCOUNT_ID: "010928188508"  # AWS 계정 ID
-    AWS_DEFAULT_REGION: "ap-northeast-2"  # 서울 리전
+    IMAGE_REPO_NAME: "ez23re-repo"
+    IMAGE_TAG: "latest"
+    AWS_ACCOUNT_ID: "010928188508"
+    AWS_DEFAULT_REGION: "ap-northeast-2"
 
 phases:
   install:
@@ -17,18 +17,17 @@ phases:
   pre_build:
     commands:
       - echo Logging in to Amazon ECR...
-      - echo "IMAGE_REPO_NAME - $IMAGE_REPO_NAME"
-      - echo "IMAGE_TAG - $IMAGE_TAG"
-      - echo "AWS_ACCOUNT_ID - $AWS_ACCOUNT_ID"
-      - echo "AWS_DEFAULT_REGION - $AWS_DEFAULT_REGION"
+      - echo "IMAGE_REPO_NAME: $IMAGE_REPO_NAME"
+      - echo "IMAGE_TAG: $IMAGE_TAG"
+      - echo "AWS_ACCOUNT_ID: $AWS_ACCOUNT_ID"
+      - echo "AWS_DEFAULT_REGION: $AWS_DEFAULT_REGION"
       - aws ecr get-login-password --region $AWS_DEFAULT_REGION | docker login --username AWS --password-stdin $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com
   build:
     commands:
       - echo Build started on `date`
       - ./gradlew build
-      - echo Building the Docker image...
-      - docker build -t $IMAGE_REPO_NAME:$IMAGE_TAG .
-      - docker tag $IMAGE_REPO_NAME:$IMAGE_TAG $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$IMAGE_REPO_NAME:$IMAGE_TAG
+      - echo "Building the Docker image..."
+      - docker build -t $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$IMAGE_REPO_NAME:$IMAGE_TAG .
   post_build:
     commands:
       - echo Build completed on `date`
