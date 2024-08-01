@@ -1,9 +1,11 @@
 package gift.application.product.service;
 
 import gift.global.validate.NotFoundException;
+import gift.model.member.Member;
 import gift.model.product.Option;
 import gift.model.product.Options;
 import gift.model.product.Product;
+import gift.repository.member.MemberRepository;
 import gift.repository.product.OptionRepository;
 import gift.repository.product.ProductRepository;
 import gift.application.product.dto.OptionCommand;
@@ -21,10 +23,13 @@ public class OptionService {
 
     private final OptionRepository optionRepository;
     private final ProductRepository productRepository;
+    private final MemberRepository memberRepository;
 
-    public OptionService(OptionRepository optionRepository, ProductRepository productRepository) {
+    public OptionService(OptionRepository optionRepository, ProductRepository productRepository,
+        MemberRepository memberRepository) {
         this.productRepository = productRepository;
         this.optionRepository = optionRepository;
+        this.memberRepository = memberRepository;
     }
 
     @Transactional
@@ -82,11 +87,15 @@ public class OptionService {
         backoff = @Backoff(delay = 200)
     )
     @Transactional
-    public OptionModel.PurchaseInfo purchaseOption(OptionCommand.Purchase command) {
+    public OptionModel.PurchaseInfo purchaseOption(Long memberId, OptionCommand.Purchase command) {
         Option option = optionRepository.findById(command.optionId())
             .orElseThrow(() -> new NotFoundException("해당 옵션이 존재하지 않습니다."));
         Product product = productRepository.findById(command.productId())
             .orElseThrow(() -> new NotFoundException("해당 상품이 존재하지 않습니다."));
+        Member member = memberRepository.findById(memberId)
+            .orElseThrow(() -> new NotFoundException("해당 회원이 존재하지 않습니다."));
+
+        member.usePoint(command.point());
         option.purchase(command.quantity());
         return OptionModel.PurchaseInfo.from(option, product, command.quantity());
     }

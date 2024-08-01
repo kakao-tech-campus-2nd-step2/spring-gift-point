@@ -51,13 +51,17 @@ public class OptionRequest {
         @NotNull
         Long optionId,
         @Min(1)
+        @NotNull
         Integer quantity,
         @NotBlank
-        String message
+        String message,
+        @Min(0)
+        @NotNull
+        Integer point
     ) {
 
         public OptionCommand.Purchase toCommand() {
-            return new OptionCommand.Purchase(productId, optionId, quantity, message);
+            return new OptionCommand.Purchase(productId, optionId, quantity, message, point);
         }
     }
 
