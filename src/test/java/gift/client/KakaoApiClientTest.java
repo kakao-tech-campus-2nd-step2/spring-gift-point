@@ -38,11 +38,11 @@ class KakaoApiClientTest {
     private ObjectMapper objectMapper;
     @Autowired
     private MockRestServiceServer server;
-    @Value("kakao.token.request.uri")
+    @Value("${kakao.token.request.uri}")
     private String kakaoTokenRequestUri;
-    @Value("kakao.userInfo.request.uri")
+    @Value("${kakao.userInfo.request.uri}")
     private String kakaoUserInfoRequestUri;
-    @Value("kakao.messageSend.request.uri")
+    @Value("${kakao.messageSend.request.uri}")
     private String kakaoMessageSendRequestUri;
 
     @Test

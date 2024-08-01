@@ -21,9 +21,9 @@ public class KakaoLoginController {
     private final MemberService memberService;
     private final TokenService tokenService;
     private final KakaoApiService kakaoApiService;
-    @Value("authorizationCode.request.uri")
+    @Value("${kakao.authorizationCode.request.uri}")
     private String authorizationCodeRequestUri;
-    @Value("frontend.jwt.delivery.uri")
+    @Value("${frontend.jwt.delivery.uri}")
     private String jwtDeliveryUri;
 
     public KakaoLoginController(MemberService memberService, TokenService tokenService, KakaoApiService kakaoApiService) {

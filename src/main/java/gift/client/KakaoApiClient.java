@@ -16,11 +16,11 @@ import java.util.Objects;
 public class KakaoApiClient {
 
     private final RestClient restClient;
-    @Value("kakao.token.request.uri")
+    @Value("${kakao.token.request.uri}")
     private String kakaoTokenRequestUri;
-    @Value("kakao.userInfo.request.uri")
+    @Value("${kakao.userInfo.request.uri}")
     private String kakaoUserInfoRequestUri;
-    @Value("kakao.messageSend.request.uri")
+    @Value("${kakao.messageSend.request.uri}")
     private String kakaoMessageSendRequestUri;
 
     public KakaoApiClient(RestClient.Builder builder) {
