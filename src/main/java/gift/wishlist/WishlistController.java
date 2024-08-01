@@ -22,7 +22,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/api/wishlist")
+@RequestMapping("/api/wishes")
 public class WishlistController {
 
     private final WishlistService wishlistService;
@@ -36,15 +36,15 @@ public class WishlistController {
     }
 
     @PostMapping
-    public void create(@RequestBody WishRequestDto request, @LoginMember Member member, @RequestHeader("Authorization") String authHeader)
+    public WishResponseDto create(@RequestBody WishRequestDto request, @LoginMember Member member, @RequestHeader("Authorization") String authHeader)
         throws UnAuthorizationException {
         String token = authHeader.replace("Bearer ", "");
         tokenValidator.validateToken(token);
-        wishlistService.addWishlist(request, member);
+        return wishlistService.addWishlist(request, member);
     }
 
     @GetMapping
-    public Page<Product> getWishlist(Pageable pageable) {
+    public Page<Wishlist> getWishlist(Pageable pageable) {
         return wishlistService.checkWishlist(pageable);
     }
 

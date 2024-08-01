@@ -8,6 +8,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import java.time.LocalDateTime;
 
 @Entity
 public class Wishlist {
@@ -24,12 +25,18 @@ public class Wishlist {
     @ManyToOne
     private Product product;
 
+    private LocalDateTime createdDate;
+
+    private int quantity;
+
     public Wishlist() {
     }
 
-    public Wishlist(Member member, Product product) {
+    public Wishlist(Member member, Product product, int quantity) {
         this.member = member;
         this.product = product;
+        this.createdDate = LocalDateTime.now();
+        this.quantity = quantity;
     }
 
     public Long getId() {
@@ -42,5 +49,13 @@ public class Wishlist {
 
     public Product getProduct() {
         return product;
+    }
+
+    public LocalDateTime getCreatedDate() {
+        return createdDate;
+    }
+
+    public int getQuantity() {
+        return quantity;
     }
 }
