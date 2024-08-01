@@ -12,13 +12,12 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@Controller
+@RestController
+@RequestMapping("/api/products/{productId}/options")
 @Tag(name = "Option", description = "옵션 관련 api")
 public class OptionController {
 
@@ -31,8 +30,8 @@ public class OptionController {
         this.kakaoTalkService = kakaoTalkService;
     }
 
-    @GetMapping("/api/products/options/{productId}")
-    @Operation(summary = "옵션 표출", description = "상품에 대한 옵션을 보여줍니다.")
+    @GetMapping("/")
+    @Operation(summary = "상품 옵션 목록 조회", description = "상품에 대한 옵션을 보여줍니다.")
     public ResponseEntity<List<OptionDto>> getAllOptionsByProductId(@PathVariable Long productId) {
         List<OptionDto> options = optionService.getAllOptionsByProductId(productId);
         if (options.isEmpty()) {
@@ -41,37 +40,33 @@ public class OptionController {
         return ResponseEntity.ok(options);
     }
 
-    @GetMapping("/api/products/options/add/{productId}")
-    @Operation(summary = "옵션 추가 화면", description = "옵션 추가 화면을 보여줍니다.")
-    public String addOption(Model model, @PathVariable("productId") long productId) {
-        OptionDto optionDto = new OptionDto();
-        optionDto.setProductId(productId);
-        model.addAttribute("optionDto", optionDto);
-        return "option_form";
-    }
-
-    @PostMapping("/api/products/options/add")
-    @Operation(summary = "옵션 추가", description = "상품에 대한 옵션을 추가합니다.")
-    public String addOption(@ModelAttribute OptionDto optionDto, Model model, @RequestParam("productId") long productId) {
-        model.addAttribute("optionDto", optionDto);
-        optionDto.setProductId(productId);
+    @PostMapping("/")
+    @Operation(summary = "상품 옵션 추가", description = "상품에 대한 옵션을 추가합니다.")
+    public ResponseEntity<?> addOption(@RequestBody OptionDto optionDto) {
         optionService.addOption(optionDto);
-        return "redirect:/api/products";
+        return new ResponseEntity<>(HttpStatus.OK);
     }
-
-    @GetMapping("/api/products/options/{productId}/{optionId}/update")
+/*
+    //이건 필요한가?
+    @GetMapping("/{optionId}")
     @Operation(summary = "옵션 수정 화면", description = "옵션 수정 화면을 보여줍니다.")
-    public String updateOption(Model model, @PathVariable long productId, @PathVariable long optionId) {
-        OptionDto optionDto = optionService.getOptionById(optionId);
-        model.addAttribute("optionDto", optionDto);
-        return "option_form";
+    public ResponseEntity<?> updateOption(@PathVariable long productId, @PathVariable long optionId) {
+        try {
+            optionService.getOptionById(optionId);
+            ClassPathResource resource = new ClassPathResource("templates/option_form.html");
+            String htmlContent = StreamUtils.copyToString(resource.getInputStream(), StandardCharsets.UTF_8);
+            return new ResponseEntity<>(htmlContent, HttpStatus.OK);
+        } catch (IOException e) {
+            return new ResponseEntity<>("Error loading login page", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
-    @PostMapping("/api/products/options/{productId}/{optionId}/update")
-    @Operation(summary = "옵션 수정", description = "상품에 대한 옵션을 수정합니다.")
-    public ResponseEntity<?> updateOption(@PathVariable long productId, @PathVariable long optionId, @ModelAttribute OptionDto optionDto, Model model) {
+ */
+
+    @PutMapping("/{optionId}")
+    @Operation(summary = "상품 옵션 수정", description = "상품에 대한 옵션을 수정합니다.")
+    public ResponseEntity<?> updateOption(@PathVariable long productId, @PathVariable long optionId, @RequestBody OptionDto optionDto) {
         try {
-            model.addAttribute("optionDto", optionDto);
             optionDto.setProductId(productId);
             optionDto.setId(optionId);
             optionService.updateOption(optionDto);
@@ -83,48 +78,17 @@ public class OptionController {
         }
     }
 
-    @DeleteMapping("/api/products/options/{optionId}/delete")
-    @Operation(summary = "옵션 삭제", description = "상품에 대한 옵션을 삭제합니다.")
+    @DeleteMapping("/{optionId}")
+    @Operation(summary = "상품 옵션 삭제", description = "상품에 대한 옵션을 삭제합니다.")
     public ResponseEntity<?> deleteOption(@PathVariable long optionId) {
         try {
             optionService.deleteOption(optionId);
             HttpHeaders headers = new HttpHeaders();
-            headers.add("Location", "/api/products");
-            return new ResponseEntity<>("Option updated successfully", headers, HttpStatus.SEE_OTHER);
+            return new ResponseEntity<>("Option updated successfully", headers, HttpStatus.OK);
         } catch (Exception e) {
             return ResponseEntity.badRequest().body("Error deleting option");
         }
     }
 
-    @PostMapping("/option/purchase")
-    @Operation(summary = "위시리스트 구매", description = "위시리스트에 있는 상품을 구매합니다.")
-    public ResponseEntity<String> purchaseWishlist(@LoginMemberResolver MemberDto memberDto, @RequestBody List<OrderRequestDto> orderRequestDtoList, HttpServletRequest request) {
-        for (OrderRequestDto orderRequestDto : orderRequestDtoList) {
-            orderRequestDto.setMemberId(memberDto.getId());
-        }
-        optionService.subtractOption(orderRequestDtoList);
 
-        //카카오 토큰 가져오기
-        String token = null;
-        Cookie[] cookies = request.getCookies();
-        if (cookies != null) {
-            for (Cookie cookie : cookies) {
-                if ("accessToken".equals(cookie.getName())) {
-                    token = cookie.getValue();
-                    break;
-                }
-            }
-        }
-
-        //토큰으로 메시지 보내기
-        if (token != null) { //
-            try {
-                kakaoTalkService.sendMessageToMe(token, orderRequestDtoList);
-            } catch (Exception e) {
-                return ResponseEntity.badRequest().body("Error sending message");
-            }
-        }
-
-        return ResponseEntity.ok("Purchase successful");
-    }
 }

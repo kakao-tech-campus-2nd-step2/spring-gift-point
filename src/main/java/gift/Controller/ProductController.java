@@ -1,24 +1,28 @@
 package gift.Controller;
 
+import gift.Annotation.LoginMemberResolver;
+import gift.Entity.Product;
 import gift.Model.ProductDto;
 import gift.Service.CategoryService;
 import gift.Service.ProductService;
 
+import java.net.URI;
 import java.util.Optional;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.stereotype.Controller;
+import org.springframework.http.ResponseEntity;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-@Controller
+@RestController
+@RequestMapping("/api/products")
 @Tag(name = "Product", description = "상품 관련 api")
 public class ProductController {
 
@@ -31,69 +35,48 @@ public class ProductController {
         this.categoryService = categoryService;
     }
 
-    @GetMapping("/api/products")
+    @GetMapping("/")
     @Operation(summary = "모든 상품 조회", description = "모든 상품을 조회합니다.")
-    public String getAllProductsByRoot(Model model,
-                                       @RequestParam(value = "page", defaultValue = "0") int page,
-                                       @RequestParam(value = "size", defaultValue = "10") int size) {
+    public ResponseEntity<Page<ProductDto>> getAllProductsByRoot(
+            @RequestParam(value = "page", defaultValue = "0") int page,
+            @RequestParam(value = "size", defaultValue = "10") int size) {
         Pageable pageable = PageRequest.of(page, size);
         Page<ProductDto> paging = productService.getAllProductsByPage(pageable);
-        model.addAttribute("paging", paging);
-        model.addAttribute("currentPage", page);
-        model.addAttribute("totalPages", paging.getTotalPages());
-        return "products";
+        return ResponseEntity.ok(paging);
     }
 
-    @GetMapping("/products")
-    @Operation(summary = "모든 상품 조회", description = "모든 상품을 조회합니다.")
-    public String getAllProductsByUser(Model model,
-                                       @RequestParam(value = "page", defaultValue = "0") int page,
-                                       @RequestParam(value = "size", defaultValue = "10") int size) {
-        Pageable pageable = PageRequest.of(page, size);
-        Page<ProductDto> paging = productService.getAllProductsByPage(pageable);
-        model.addAttribute("paging", paging);
-        model.addAttribute("currentPage", page);
-        model.addAttribute("totalPages", paging.getTotalPages());
-        return "user_products";
+    @GetMapping("/{productId}")
+    @Operation(summary = "상품 세부 정보 조회", description = "상품 세부 정보를 조회합니다.")
+    public ResponseEntity<?> getProduct(@PathVariable Long productId) {
+        Optional<ProductDto> optionalProduct = productService.getProductById(productId);
+        return optionalProduct.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
-    @RequestMapping(value = "/api/products/create", method = {RequestMethod.GET, RequestMethod.POST})
-    @Operation(summary = "상품 추가", description = "상품 추가 화면을 보여주고 상품을 추가합니다.")
-    public String createProduct(@Valid @ModelAttribute ProductDto productDto, HttpServletRequest request, Model model) {
-        if ("GET".equalsIgnoreCase(request.getMethod())) {
-            model.addAttribute("product", new ProductDto());
-            model.addAttribute("categories", categoryService.getAllCategories());
-            return "product_form";
-        } else if ("POST".equalsIgnoreCase(request.getMethod())) {
-            model.addAttribute("product", productDto);
-            productService.saveProduct(productDto);
-            return "redirect:/api/products";
-        }
-        return "error";
+    @PostMapping("/")
+    @Operation(summary = "상품 생성", description = "상품을 생성합니다.")
+    public ResponseEntity<?> createProduct(@Valid @RequestBody ProductDto productDto) {
+        productService.saveProduct(productDto);
+        URI location = ServletUriComponentsBuilder.fromCurrentRequest()
+                .path("/")
+                .buildAndExpand(productDto.getId())
+                .toUri();
+        return ResponseEntity.created(location).body("Product added successfully");
     }
 
-    @RequestMapping(value = "/api/products/update/{id}", method = {RequestMethod.GET, RequestMethod.POST})
-    @Operation(summary = "상품 수정", description = "상품 수정 화면을 보여주고 상품을 수정합니다.")
-    public String updateProductById(@PathVariable Long id, @Valid @ModelAttribute ProductDto productDtoDetails, HttpServletRequest request, Model model) {
-        if ("GET".equalsIgnoreCase(request.getMethod())) {
-            Optional<ProductDto> optionalProduct = productService.getProductById(id);
-            model.addAttribute("product", optionalProduct.get());
-            model.addAttribute("categories", categoryService.getAllCategories());
-            return "product_form";
-        } else if ("POST".equalsIgnoreCase(request.getMethod())) {
-            productService.updateProduct(productDtoDetails);
-            return "redirect:/api/products";
-        }
-        return "error";
+    @PutMapping("/{productId}")
+    @Operation(summary = "상품 수정", description = "상품에 대한 정보를 수정합니다.")
+    public ResponseEntity<?> updateProductById(@PathVariable Long productId, @Valid @ModelAttribute ProductDto productDtoDetails) {
+        Product product = productService.updateProduct(productDtoDetails);
+        return ResponseEntity.ok(product);
     }
 
-    @PostMapping("/api/products/delete/{id}")
+    @DeleteMapping("/{productId}")
     @Operation(summary = "상품 삭제", description = "상품을 삭제합니다.")
-    public String deleteProduct(@PathVariable Long id, Model model) {
-        Optional<ProductDto> optionalProduct = productService.getProductById(id);
+    public ResponseEntity<?> deleteProduct(@PathVariable Long productId, Model model) {
+        Optional<ProductDto> optionalProduct = productService.getProductById(productId);
         model.addAttribute("product", optionalProduct.get());
-        productService.deleteProduct(id);
-        return "redirect:/api/products";  // 제품 목록 페이지로 리디렉션
+        productService.deleteProduct(productId);
+        return ResponseEntity.ok(null);
     }
 
 }
