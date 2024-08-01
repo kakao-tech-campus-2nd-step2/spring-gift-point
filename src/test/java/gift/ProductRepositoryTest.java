@@ -4,7 +4,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import gift.model.Name;
 import gift.model.Product;
 import gift.repository.ProductRepository;
 import java.util.ArrayList;

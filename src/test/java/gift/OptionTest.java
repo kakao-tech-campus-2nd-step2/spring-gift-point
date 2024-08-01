@@ -6,10 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import gift.model.Name;
 import gift.model.Option;
-import gift.model.OptionName;
-import gift.model.OptionQuantity;
 import gift.model.Product;
 import gift.repository.OptionRepository;
 import gift.repository.ProductRepository;
@@ -63,18 +60,15 @@ class OptionTest {
 
     @Test
     void whenRemoveProduct_thenProductEmpty() {
-        // given
         Product product = new Product(null, "TestProduct", 100, "http://example.com/image.png", 1L, new ArrayList<>());
         productRepository.save(product);
 
-        Option option = new Option(null,"TestOption",10, product);
+        Option option = new Option(null, "TestOption", 10, product);
         optionRepository.save(option);
 
-        // when
         option.removeProduct();
         optionRepository.save(option);
 
-        // then
         Option updatedOption = optionRepository.findById(option.getId()).orElseThrow();
         assertNotNull(updatedOption.getProduct());
         assertAll(
@@ -95,9 +89,7 @@ class OptionTest {
         Option option = new Option(null, "TestOption", 10, product);
         optionRepository.save(option);
 
-        OptionName updatedName = new OptionName("UpdatedOption");
-        OptionQuantity updatedQuantity = new OptionQuantity(20);
-        option.update("updatedName", 20);
+        option.update("UpdatedOption", 20);
         optionRepository.save(option);
 
         Option updatedOption = optionRepository.findById(option.getId()).orElseThrow();
@@ -121,6 +113,4 @@ class OptionTest {
         Option updatedOption = optionRepository.findById(option.getId()).orElseThrow();
         assertEquals(5, updatedOption.getQuantity());
     }
-
-
 }
