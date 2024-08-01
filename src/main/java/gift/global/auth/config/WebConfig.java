@@ -2,7 +2,6 @@ package gift.global.auth.config;
 
 import gift.global.auth.resolver.LoginMemberArgumentResolver;
 import gift.user.service.UserService;
-import gift.utility.JwtUtil;
 import java.util.List;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

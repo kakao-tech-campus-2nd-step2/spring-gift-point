@@ -1,4 +1,4 @@
-package gift.config;
+package gift.global.config;
 
 import io.swagger.v3.oas.models.OpenAPI;
 import org.springdoc.core.models.GroupedOpenApi;
