@@ -40,4 +40,11 @@ public class GlobalExceptionHandler {
     ) {
         return ResponseEntity.status(e.getStatusCode()).body(e.getMessage());
     }
+
+    @ExceptionHandler(CustomException.class)
+    protected ResponseEntity<String> HandleCustomExceptions(
+        CustomException e
+    ) {
+        return ResponseEntity.status(e.getStatus()).body(e.getMessage());
+    }
 }

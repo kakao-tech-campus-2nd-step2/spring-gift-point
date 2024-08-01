@@ -1,6 +1,7 @@
 package gift.service;
 
 import gift.domain.Member;
+import gift.exception.token.InvalidOrMissingTokenException;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
@@ -39,10 +40,10 @@ public class TokenService {
     public boolean validateToken(String token) {
         try {
             Jwts.parser().setSigningKey(key).build().parseClaimsJws(token);
-            return true;
         } catch (Exception e) {
-            return false;
+            throw new InvalidOrMissingTokenException();
         }
+        return true;
     }
 
     public String extractEmailFromToken(String token) {

@@ -5,6 +5,7 @@ import gift.DTO.wishlist.WishResponse;
 import gift.domain.Member;
 import gift.domain.Product;
 import gift.domain.Wishlist;
+import gift.exception.product.ProductNotFoundException;
 import gift.repository.ProductRepository;
 import gift.repository.WishlistRepository;
 import java.util.List;
@@ -44,13 +45,14 @@ public class WishlistService {
     }
 
     @Transactional
-    public void addWishlist(String email, Long productId) {
+    public WishResponse addWishlist(String email, Long productId) {
         Product product= productRepository.findById(productId)
-                                        .orElseThrow(() -> new RuntimeException());
+                                        .orElseThrow(() -> new ProductNotFoundException());
         Member member = memberService.getMemberByEmail(email);
 
         Wishlist wish = new Wishlist(member, product);
-        wishlistRepository.save(wish);
+        Wishlist savedWish = wishlistRepository.save(wish);
+        return WishResponse.fromEntity(savedWish);
     }
 
     @Transactional

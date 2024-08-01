@@ -58,18 +58,15 @@ public class WishlistController {
     }
 
     @PostMapping("/{productId}")
-    public ResponseEntity<String> addToWishlist(
+    public ResponseEntity<WishResponse> addToWishlist(
         @RequestHeader("Authorization") String authorizationHeader,
         @PathVariable Long productId
     ) {
         String token = tokenService.getBearerTokenFromHeader(authorizationHeader);
-        if (!tokenService.validateToken(token)) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid token");
-        }
+        tokenService.validateToken(token);
         String email = tokenService.extractEmailFromToken(token);
-
-        wishlistService.addWishlist(email, productId);
-        return ResponseEntity.ok("Product added to wishlist");
+        WishResponse wish = wishlistService.addWishlist(email, productId);
+        return ResponseEntity.status(HttpStatus.CREATED).body(wish);
     }
 
     @DeleteMapping("/{productId}")

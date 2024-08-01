@@ -9,7 +9,9 @@ import gift.DTO.member.SignupResponse;
 import gift.domain.Member;
 import gift.exception.member.DuplicatedEmailException;
 import gift.exception.member.InvalidAccountException;
+import gift.exception.member.MemberNotFoundException;
 import gift.exception.member.PasswordMismatchException;
+import gift.exception.product.ProductNotFoundException;
 import gift.repository.MemberRepository;
 import java.util.List;
 import java.util.Optional;
@@ -63,9 +65,9 @@ public class MemberService {
     }
 
     @Transactional(readOnly = true)
-    public Member getMemberByEmail(String email) {
+    protected Member getMemberByEmail(String email) {
         Member member = memberRepository.findByEmail(email)
-                                .orElseThrow(() -> new InvalidAccountException());
+                                .orElseThrow(() -> new MemberNotFoundException());
         return member;
     }
 
