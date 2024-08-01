@@ -12,9 +12,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
-import java.io.IOException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -59,12 +57,9 @@ public class UserController {
 
     @RequestMapping("auth/kakao/code")
     @Hidden
-    public ResponseEntity<Void> kakaoLogin(@RequestParam("code") String code,
-        HttpServletResponse response) throws IOException {
+    public ResponseEntity<UserResponse> kakaoLogin(@RequestParam("code") String code) {
         var kakaoResponse = kakaoUserService.loginKakaoUser(code);
-        String redirectUrl = "/oauth/kakaoLoginSuccess?token=" + kakaoResponse.token();
-        response.sendRedirect(redirectUrl);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok(UserResponse.from(kakaoResponse.token()));
     }
 
 }
