@@ -9,11 +9,13 @@ import gift.repository.WishProductRepository;
 import gift.web.dto.request.product.CreateProductRequest;
 import gift.web.dto.request.product.UpdateProductRequest;
 import gift.web.dto.response.product.CreateProductResponse;
+import gift.web.dto.response.product.ProductResponseByPromise;
 import gift.web.dto.response.product.ReadAllProductsResponse;
 import gift.web.dto.response.product.ReadProductResponse;
 import gift.web.dto.response.product.UpdateProductResponse;
 import java.util.List;
 import java.util.NoSuchElementException;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -44,15 +46,20 @@ public class ProductService {
         Product product = request.toEntity(category);
         Product savedProduct = productRepository.save(product);
 
-        productOptionService.createInitialOptions(savedProduct.getId(), request.getProductOptions());
+        productOptionService.createInitialOptions(savedProduct.getId(), request.getOptions());
 
         return CreateProductResponse.fromEntity(savedProduct);
     }
-
     public ReadProductResponse readProductById(Long id) {
         Product product = productRepository.findById(id)
             .orElseThrow(NoSuchElementException::new);
         return ReadProductResponse.fromEntity(product);
+    }
+
+    public ProductResponseByPromise readProductByIdByPromise(Long id) {
+        Product product = productRepository.findById(id)
+            .orElseThrow(NoSuchElementException::new);
+        return ProductResponseByPromise.fromEntity(product);
     }
 
     public ReadAllProductsResponse readProductsByCategoryId(Long categoryId, Pageable pageable) {
@@ -61,6 +68,11 @@ public class ProductService {
             .map(ReadProductResponse::fromEntity)
             .toList();
         return ReadAllProductsResponse.from(products);
+    }
+
+    public Page<ProductResponseByPromise> readProductsByCategoryIdByPromise(Long categoryId, Pageable pageable) {
+        return productRepository.findByCategoryId(categoryId, pageable)
+            .map(ProductResponseByPromise::fromEntity);
     }
 
     public ReadAllProductsResponse readAllProducts() {
