@@ -13,7 +13,7 @@ public class CategoryResponse {
             String color
     ) {
         public static Info fromEntity(Category category) {
-            return new Info(category.getId(), category.getName(), category.getColor(), category.getImageUrl(), category.getDescription());
+            return new Info(category.getId(), category.getName(), category.getImageUrl(), category.getDescription(), category.getColor());
         }
     }
 
