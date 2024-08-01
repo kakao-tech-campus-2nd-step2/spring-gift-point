@@ -61,6 +61,11 @@ public class ProductEntity {
         cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ProductOptionEntity> options;
 
+    @JsonIgnore
+    @OneToMany(mappedBy = "target", fetch = FetchType.LAZY,
+        cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<DiscountPolicyEntity> discountPolicy;
+
     public ProductEntity() {
     }
 
