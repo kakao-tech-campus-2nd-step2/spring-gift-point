@@ -4,7 +4,9 @@ import gift.domain.Category.Category;
 import gift.domain.Option.Option;
 import jakarta.persistence.*;
 
-import java.util.*;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Objects;
 
 @Entity
 public class Menu {

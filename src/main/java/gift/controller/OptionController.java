@@ -1,6 +1,5 @@
 package gift.controller;
 
-import gift.domain.Option.Option;
 import gift.domain.Option.OptionRequest;
 import gift.domain.Option.OptionResponse;
 import gift.repository.MenuRepository;
@@ -8,9 +7,6 @@ import gift.service.OptionService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
-import java.util.Set;
 
 @RestController
 @RequestMapping("api/products/{productId}/options")

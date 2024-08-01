@@ -7,7 +7,6 @@ import gift.domain.Member.MemberRequest;
 import gift.service.KakaoService;
 import gift.service.MemberService;
 import org.apache.coyote.BadRequestException;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

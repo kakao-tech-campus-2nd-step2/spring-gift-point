@@ -1,6 +1,5 @@
 package gift.controller;
 
-import gift.domain.Category.Category;
 import gift.domain.Category.CategoryRequest;
 import gift.domain.Category.CategoryResponse;
 import gift.service.CategoryService;

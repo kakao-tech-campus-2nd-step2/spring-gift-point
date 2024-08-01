@@ -1,6 +1,5 @@
 package gift.repository;
 
-import gift.domain.Option.Option;
 import gift.domain.Order.Order;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;

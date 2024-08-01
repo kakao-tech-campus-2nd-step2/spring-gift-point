@@ -1,7 +1,6 @@
 package gift.domain.Menu;
 
 import jakarta.persistence.Embeddable;
-import org.apache.coyote.BadRequestException;
 
 @Embeddable
 public class MenuName {

@@ -2,7 +2,6 @@ package gift.domain.Option;
 
 import gift.domain.Menu.Menu;
 import jakarta.persistence.*;
-import gift.domain.Option.OptionName;
 
 import java.util.Objects;
 

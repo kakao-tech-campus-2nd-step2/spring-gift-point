@@ -23,7 +23,6 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
-
 import javax.naming.AuthenticationException;
 import java.util.Date;
 import java.util.HashMap;
