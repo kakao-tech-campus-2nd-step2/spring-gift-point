@@ -43,14 +43,14 @@ public class WishlistServiceTest {
         wishlistService.getWishlist(memberId);
 
         // then
-        verify(wishlistJpaRepository, times(1)).findByIdMemberId(memberId);
+        verify(wishlistJpaRepository, times(1)).findByMemberId(memberId);
     }
 
     @Test
     public void testGetWishlistByPage() {
         // given
-        MemberDto memberDto = new MemberDto(1L, "1234@naver.com", "1234", "1234", false);
-        Member member = new Member(1L, "1234@naver.com", "1234", "1234", false);
+        MemberDto memberDto = new MemberDto(1L, "1234@naver.com", "1234", false);
+        Member member = new Member(1L, "1234@naver.com", "1234", false);
         Pageable pageable = PageRequest.of(0, 10);
         Page<Wishlist> expectedPage = new PageImpl<>(Collections.emptyList());
 
@@ -67,12 +67,11 @@ public class WishlistServiceTest {
     @Test
     public void testAddWishlistItem() {
         // given
-        Member member = new Member(1, "1234@naver.com", "1234", "1234", false);
-        Product product = new Product(1L, "product1", null, 1000, "http://localhost:8080/image1.jpg", false);
-        Option option = new Option(1L, product, "option1", 10, 1);
+        Member member = new Member(1, "1234@naver.com", "1234", false);
+        Product product = new Product(1L, "product1", null, 1000, "http://localhost:8080/image1.jpg");
+        Option option = new Option(1L, product, "option1", 1);
         WishlistDto wishlistDto = new WishlistDto(1L, 1L, 5, 3, "product1", 0, 1L);
-        WishlistId wishlistId = new WishlistId(1L, 1L);
-        Wishlist wishlist = new Wishlist(wishlistId, member, product, "product1", 2, 5000, option);
+        Wishlist wishlist = new Wishlist(1L, member, product, "product1", 2, 5000, option);
 
         given(mapper.wishlistDtoToEntity(wishlistDto)).willReturn(wishlist);
         given(wishlistJpaRepository.save(wishlist)).willReturn(wishlist);
@@ -88,16 +87,15 @@ public class WishlistServiceTest {
     @DisplayName("남은 수량이 더 클 때")
     public void testDescendWishlistItem() {
         // given
-        Member member = new Member(1, "1234@naver.com", "1234", "1234", false);
-        Product product = new Product(1L, "product1", null, 1000, "http://localhost:8080/image1.jpg", false);
-        Option option = new Option(1L, product, "option1", 10, 1);
+        Member member = new Member(1, "1234@naver.com", "1234", false);
+        Product product = new Product(1L, "product1", null, 1000, "http://localhost:8080/image1.jpg");
+        Option option = new Option(1L, product, "option1", 1);
         WishlistDto wishlistDto = new WishlistDto(1L, 1L, 5, 3, "product1", 0, 1L);
-        WishlistId wishlistId = new WishlistId(1L, 1L);
-        Wishlist wishlist = new Wishlist(wishlistId, member, product, "product1", 2, 5000, option);
+        Wishlist wishlist = new Wishlist(1L, member, product, "product1", 2, 5000, option);
         given(wishlistJpaRepository.save(wishlist)).willReturn(wishlist);
 
         // when
-        wishlistService.removeWishlistItem(wishlistDto, wishlist);
+        wishlistService.removeWishlistItem(1L);
 
         // then
         verify(wishlistJpaRepository, times(1)).save(wishlist);
@@ -108,16 +106,15 @@ public class WishlistServiceTest {
     @DisplayName("뺄 수량이 더 클 때")
     public void testRemoveWishlistItem() {
         // given
-        Member member = new Member(1, "1234@naver.com", "1234", "1234", false);
-        Product product = new Product(1L, "product1", null, 1000, "http://localhost:8080/image1.jpg", false);
-        Option option = new Option(1L, product, "option1", 10, 1);
+        Member member = new Member(1, "1234@naver.com", "1234",  false);
+        Product product = new Product(1L, "product1", null, 1000, "http://localhost:8080/image1.jpg");
+        Option option = new Option(1L, product, "option1", 1);
         WishlistDto wishlistDto = new WishlistDto(1L, 1L, 0, 6, "product1", 0, 1L);
-        WishlistId wishlistId = new WishlistId(1L, 1L);
-        Wishlist wishlist = new Wishlist(wishlistId, member, product, "product1", 5, 5000, option);
+        Wishlist wishlist = new Wishlist(1L, member, product, "product1", 5, 5000, option);
         given(wishlistJpaRepository.save(wishlist)).willReturn(wishlist);
 
         // when
-        wishlistService.removeWishlistItem(wishlistDto, wishlist);
+        wishlistService.removeWishlistItem(1L);
 
         // then
         verify(wishlistJpaRepository, times(0)).save(wishlist);

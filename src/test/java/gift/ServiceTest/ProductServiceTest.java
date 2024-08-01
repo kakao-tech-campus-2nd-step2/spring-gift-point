@@ -47,7 +47,7 @@ public class ProductServiceTest {
         productService.getAllProducts();
 
         //then
-        verify(productJpaRepository, times(1)).findByisDeletedFalse();
+        verify(productJpaRepository, times(1)).findAll();
 
     }
 
@@ -55,13 +55,13 @@ public class ProductServiceTest {
     public void testGetAllProductsByPage() {
         Pageable pageable = PageRequest.of(0, 10);
         Page<Product> page = new PageImpl<>(Collections.emptyList());
-        given(productJpaRepository.findByisDeletedFalse(pageable)).willReturn(page);
+        given(productJpaRepository.findAll(pageable)).willReturn(page);
 
         // When
         productService.getAllProductsByPage(pageable);
 
         // Then
-        verify(productJpaRepository, times(1)).findByisDeletedFalse(pageable);
+        verify(productJpaRepository, times(1)).findAll(pageable);
     }
 
     @Test
@@ -75,8 +75,8 @@ public class ProductServiceTest {
     @Test
     public void testSaveProduct() {
         // Given
-        ProductDto productDto = new ProductDto(1L, "product1", 1L, 1000, "http://localhost:8080/image1.jpg", false);
-        Product product = new Product(1L, "product1", null, 1000, "http://localhost:8080/image1.jpg", false);
+        ProductDto productDto = new ProductDto(1L, "product1", 1L, 1000, "http://localhost:8080/image1.jpg");
+        Product product = new Product(1L, "product1", null, 1000, "http://localhost:8080/image1.jpg");
         given(mapper.productDtoToEntity(productDto)).willReturn(product);
 
         // When
@@ -89,8 +89,8 @@ public class ProductServiceTest {
     @Test
     public void testUpdateProduct() {
         // Given
-        ProductDto productDto = new ProductDto(1L, "product1", 1L, 1000, "http://localhost:8080/image1.jpg", false);
-        Product product = new Product(1L, "product1", null, 1000, "http://localhost:8080/image1.jpg", false);
+        ProductDto productDto = new ProductDto(1L, "product1", 1L, 1000, "http://localhost:8080/image1.jpg");
+        Product product = new Product(1L, "product1", null, 1000, "http://localhost:8080/image1.jpg");
         given(mapper.productDtoToEntity(productDto)).willReturn(product);
 
         // When
@@ -104,7 +104,7 @@ public class ProductServiceTest {
     @Test
     public void testDeleteProduct() {
         // Given
-        Product product = new Product(1L, "product1", null, 1000, "http://localhost:8080/image1.jpg", false);
+        Product product = new Product(1L, "product1", null, 1000, "http://localhost:8080/image1.jpg");
         given(productJpaRepository.findById(1L)).willReturn(Optional.of(product));
 
         // When
