@@ -125,7 +125,7 @@ values ('option3', 5, 19, '2023-05-31 10:00:00', '2023-05-31 12:00:00', 1);
 insert into member (name, email, password, role, created_at, last_modified_at, provider, point)
 values ('Jarred', 'admin@test.com',
         '390d4757bf1b75e305984c99cdedfb1e7c201a2d143a53cfbc35075fa5f9a56f', 'ADMIN',
-        '2023-05-31 10:00:00', '2023-05-31 12:00:00', 'KAKAO', 0);
+        '2023-05-31 10:00:00', '2023-05-31 12:00:00', 'ORIGIN', 0);
 insert into member (name, email, password, role, created_at, last_modified_at, provider, point)
 values ('Jarred', 'test@test.com',
         'f9aac0519f30824bb09b2dbae6eb62633255d765c2272e8392d737332554926c', 'USER',
