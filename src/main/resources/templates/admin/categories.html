@@ -62,7 +62,8 @@
         </td>
         <td class="text-center">
           <form method="post"
-                th:action="@{/admin/categories/delete/{categoryId}(categoryId=${category.id})}" th:method="delete">
+                th:action="@{/admin/categories/delete/{categoryId}(categoryId=${category.id})}"
+                th:method="delete">
             <button class="btn btn-danger" type="submit">삭제</button>
           </form>
         </td>

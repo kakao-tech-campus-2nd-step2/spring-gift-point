@@ -18,6 +18,7 @@ import gift.product.service.ProductService;
 import gift.product.service.WishService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
@@ -106,5 +107,16 @@ public class WebConfig implements WebMvcConfigurer {
             .order(1)
             .addPathPatterns("/admin/**")
             .excludePathPatterns("/admin/login/**");
+    }
+
+    @Override
+    public void addCorsMappings(CorsRegistry registry) {
+        registry.addMapping("/api/**")
+            .allowedOrigins("http://localhost:8080")
+            .allowedMethods("GET", "POST", "PUT", "DELETE")
+            .allowedHeaders("*")
+            .exposedHeaders("Location")
+            .allowCredentials(true)
+            .maxAge(1800);
     }
 }
