@@ -41,7 +41,7 @@ public class OrderService {
         User user = findUserByUserId(userId);
         Option option = findOptionByOptionId(orderDTO.getOptionId());
         option.decreaseQuantity(orderDTO.getQuantity());
-        kakaoApiService.sendMessageToMe(user.getAccessToken(), orderDTO.getMessage());
+        //kakaoApiService.sendMessageToMe(user.getAccessToken(), orderDTO.getMessage());
         Order order = user.addOrder(new Order(user, orderDTO.getOptionId(),
             orderDTO.getQuantity(), orderDTO.getMessage(), orderDTO.getOrderDateTime()));
         return new OrderDTO(orderRepository.save(order));

@@ -28,12 +28,20 @@ public class AuthInterceptor implements HandlerInterceptor {
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response,
         Object handler) {
         HandlerMethod handlerMethod = (HandlerMethod) handler;
-        String token = extractToken(request);
-        jwtProvider.validateToken(token);
-        checkRole(handlerMethod, token);
-        Long userId = Long.parseLong(jwtProvider.getUserIdFromToken(token));
-        request.setAttribute("userId", userId);
-        return true;
+        try {
+            String token = extractToken(request);
+            jwtProvider.validateToken(token);
+            checkRole(handlerMethod, token);
+            Long userId = Long.parseLong(jwtProvider.getUserIdFromToken(token));
+            request.setAttribute("userId", userId);
+            return true;
+        } catch (JwtException e) {
+            if (handlerMethod.getMethodAnnotation(RequestRole.class) == null) {
+                request.setAttribute("userId", 0);
+                return true;
+            }
+            throw e;
+        }
     }
 
     public String extractToken(HttpServletRequest request) {
