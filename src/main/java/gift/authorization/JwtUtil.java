@@ -77,13 +77,10 @@ public class JwtUtil {
                     .setSigningKey(secretKey.getBytes())
                     .parseClaimsJws(jwt)
                     .getBody();
-            System.out.println("check claim");
             return true;
         }catch(ExpiredJwtException e) {   //Token이 만료된 경우 Exception이 발생한다.
-            System.out.println("expired token");
             return false;
         }catch(JwtException e) {        //Token이 변조된 경우 Exception이 발생한다.
-            System.out.println("jwt null");
             return false;
         }
     }

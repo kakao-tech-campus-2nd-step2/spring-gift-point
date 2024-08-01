@@ -2,14 +2,17 @@ package gift.exception;
 
 import gift.dto.response.ErrorResponse;
 import gift.exception.categoryException.CategoryNotFoundException;
-import gift.exception.optionException.OptionException;
+import gift.exception.memberException.DuplicatedEmailException;
+import gift.exception.memberException.EmailConstraintViolationException;
+import gift.exception.memberException.InvalidLoginException;
+import gift.exception.memberException.NormalMemberSignUpException;
+import gift.exception.optionException.DuplicatedOptionException;
+import gift.exception.optionException.OptionQuantityException;
 import gift.exception.productException.ProductNotFoundException;
+import gift.exception.wishException.DuplicatedWishException;
 import io.jsonwebtoken.JwtException;
 import jakarta.persistence.PersistenceException;
-import jakarta.validation.ConstraintViolationException;
 import jdk.jfr.Description;
-import org.springframework.dao.DataAccessException;
-import org.springframework.dao.DuplicateKeyException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,8 +26,50 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+
+/*
+    * @Description("제약 조건 위반 오류가 발생했습니다.")
+    @ExceptionHandler(value = NormalMemberSignUpException.class)
+    public ResponseEntity<ErrorResponse> handleNormalMemberSignUpException(NormalMemberSignUpException e) {
+        ErrorResponse errorResponse = new ErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR
+                .value(), e.getMessage());
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body(errorResponse);
+    }
+    *
+    * */
+
+
 @ControllerAdvice
 public class GlobalExceptionHandler {
+
+
+    // member exception
+    @Description("이메일이 중복된 경우")
+    @ExceptionHandler(value = DuplicatedEmailException.class)
+    public ResponseEntity<ErrorResponse> handleDuplicatedEmailException(DuplicatedEmailException e) {
+        ErrorResponse errorResponse = new ErrorResponse(HttpStatus.CONFLICT.value(), e.getMessage());
+        return ResponseEntity.status(HttpStatus.CONFLICT)
+                .body(errorResponse);
+    }
+
+
+    @Description("이메일 제약 조건을 위반한 경우")
+    @ExceptionHandler(value = EmailConstraintViolationException.class)
+    public ResponseEntity<ErrorResponse> handleEmailConstraintViolationException(EmailConstraintViolationException e) {
+        ErrorResponse errorResponse = new ErrorResponse(HttpStatus.BAD_REQUEST.value(), e.getMessage());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .body(errorResponse);
+    }
+
+    @Description("멤버가 존재하지 않는 경우")
+    @ExceptionHandler(value = InvalidLoginException.class)
+    public ResponseEntity<ErrorResponse> handleInvalidLoginException(InvalidLoginException e) {
+        ErrorResponse errorResponse = new ErrorResponse(HttpStatus.UNAUTHORIZED.value(), e.getMessage());
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                .body(errorResponse);
+    }
+
 
     @Description("카카오 로그인 token 오류")
     @ExceptionHandler(value = KakaoLoginException.class)
@@ -35,33 +80,17 @@ public class GlobalExceptionHandler {
                 .body(errorResponse);
     }
 
-    @Description("데이터베이스 접근 오류가 발생했습니다.")
-    @ExceptionHandler(value = DataAccessException.class)
-    public ResponseEntity<ErrorResponse> handleDataAccessException(DataAccessException e) {
-        ErrorResponse errorResponse = new ErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR
-                .value(), "데이터베이스 접근 오류가 발생했습니다.");
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .body(errorResponse);
-    }
-
-    @Description("영속성 오류가 발생했습니다.")
-    @ExceptionHandler(value = PersistenceException.class)
-    public ResponseEntity<ErrorResponse> handlePersistenceException(PersistenceException e) {
-        ErrorResponse errorResponse = new ErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR
-                .value(), "영속성 오류가 발생했습니다.");
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .body(errorResponse);
-    }
-
 
     @Description("제약 조건 위반 오류가 발생했습니다.")
-    @ExceptionHandler(value = ConstraintViolationException.class)
-    public ResponseEntity<ErrorResponse> handleConstraintViolationException(ConstraintViolationException e) {
+    @ExceptionHandler(value = NormalMemberSignUpException.class)
+    public ResponseEntity<ErrorResponse> handleNormalMemberSignUpException(NormalMemberSignUpException e) {
         ErrorResponse errorResponse = new ErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR
                 .value(), e.getMessage());
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                 .body(errorResponse);
     }
+
+    // category exception
 
 
     @Description("카테고리 서비스 exception")
@@ -73,14 +102,9 @@ public class GlobalExceptionHandler {
                 .body(errorResponse);
     }
 
-    @Description("옵션 서비스 exception")
-    @ExceptionHandler(value = OptionException.class)
-    public ResponseEntity<ErrorResponse> handleOptionException(OptionException e) {
-        ErrorResponse errorResponse = new ErrorResponse(HttpStatus.NOT_FOUND
-                .value(), e.getMessage());
-        return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                .body(errorResponse);
-    }
+
+
+    // product exception
 
     @Description("상품을 찾을 수 없을 때 exception")
     @ExceptionHandler(value = ProductNotFoundException.class)
@@ -103,12 +127,39 @@ public class GlobalExceptionHandler {
 
 
 
-    @Description("api 서비스 exception")
-    @ExceptionHandler(value = ApiException.class)
-    public ResponseEntity<String> handleApiException(ApiException e) {
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                .body(e.getMessage());
+
+    // option exception
+
+    @Description("중복된 옵션 이름")
+    @ExceptionHandler(value = DuplicatedOptionException.class)
+    public ResponseEntity<ErrorResponse> handleDuplicatedOptionException(DuplicatedOptionException e) {
+        ErrorResponse errorResponse = new ErrorResponse(HttpStatus.CONFLICT
+                .value(), e.getMessage());
+        return ResponseEntity.status(HttpStatus.CONFLICT)
+                .body(errorResponse);
     }
+
+    @Description("옵션 서비스 exception")
+    @ExceptionHandler(value = OptionQuantityException.class)
+    public ResponseEntity<ErrorResponse> handleOptionException(OptionQuantityException e) {
+        ErrorResponse errorResponse = new ErrorResponse(HttpStatus.NOT_FOUND
+                .value(), e.getMessage());
+        return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                .body(errorResponse);
+    }
+
+
+
+    // wish exception
+
+    @ExceptionHandler(value = DuplicatedWishException.class)
+    public ResponseEntity<ErrorResponse> handleDuplicatedWishException(DuplicatedWishException e) {
+        ErrorResponse errorResponse = new ErrorResponse(HttpStatus.CONFLICT.value(), e.getMessage());
+        return ResponseEntity.status(HttpStatus.CONFLICT)
+                .body(errorResponse);
+    }
+
+
 
     @ExceptionHandler(value = WishException.class)
     public ResponseEntity<ErrorResponse> handleWishException(ProductException e) {
@@ -118,25 +169,11 @@ public class GlobalExceptionHandler {
     }
 
 
-    @Description("customer - database access exception")
-    @ExceptionHandler(value = DatabaseAccessException.class)
-    public ResponseEntity<String> handleDatabaseAccessException(DatabaseAccessException e) {
-        return ResponseEntity.status(HttpStatus.CONFLICT)
-                .body(e.getMessage());
-    }
+
+    // order exception
 
 
-    @ExceptionHandler(value = EmptyResultDataAccessException.class)
-    public ResponseEntity<String> handleEmptyResultDataAccessException(EmptyResultDataAccessException e) {
-        return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
-    }
-
-
-    @ExceptionHandler(DuplicateKeyException.class)
-    public ResponseEntity<String> handleDuplicateKeyException(DuplicateKeyException ex) {
-        return ResponseEntity.status(HttpStatus.CONFLICT)
-                .body("id 중복이 되었습니다!");
-    }
+    // jwt exception
 
     @ExceptionHandler(value = JwtException.class)
     public ResponseEntity<Map<String, String>> handleJwtException(JwtException e) {
@@ -145,11 +182,30 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(errors, HttpStatus.UNAUTHORIZED);
     }
 
-    @Description("customer exception")
-    @ExceptionHandler(value = DuplicateValueException.class)
-    public ResponseEntity<String> handleDuplicateValueException(DuplicateValueException ex) {
-        return ResponseEntity.badRequest().body(ex.getMessage());
+
+
+
+
+    // 기타 exception
+
+    @Description("영속성 오류가 발생했습니다.")
+    @ExceptionHandler(value = PersistenceException.class)
+    public ResponseEntity<ErrorResponse> handlePersistenceException(PersistenceException e) {
+        ErrorResponse errorResponse = new ErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR
+                .value(), "영속성 오류가 발생했습니다.");
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body(errorResponse);
     }
+
+
+
+    @ExceptionHandler(value = EmptyResultDataAccessException.class)
+    public ResponseEntity<String> handleEmptyResultDataAccessException(EmptyResultDataAccessException e) {
+        return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+    }
+
+
+
 
     @ExceptionHandler(value = MethodArgumentNotValidException.class)
     public ResponseEntity<Map<String, List<String>>> handleValidationExceptions(
@@ -164,13 +220,5 @@ public class GlobalExceptionHandler {
     }
 
 
-    @Description("알 수 없는 오류가 발생했습니다.")
-    @ExceptionHandler(value = Exception.class)
-    public ResponseEntity<ErrorResponse> handleJpaDatabaseException(Exception e) {
-        ErrorResponse errorResponse = new ErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR
-                .value(), "데이터베이스 접근 오류가 발생했습니다.");
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .body(errorResponse);
-    }
 
 }
