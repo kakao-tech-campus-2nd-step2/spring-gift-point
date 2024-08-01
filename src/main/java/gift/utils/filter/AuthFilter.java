@@ -2,6 +2,7 @@ package gift.utils.filter;
 
 import gift.repository.TokenRepository;
 import gift.utils.JwtTokenProvider;
+import gift.utils.error.AuthorizationException;
 import gift.utils.error.TokenAuthException;
 import jakarta.servlet.Filter;
 import jakarta.servlet.FilterChain;
@@ -53,8 +54,8 @@ public class AuthFilter implements Filter {
         String authHeader = httpRequest.getHeader("Authorization");
 
         if (authHeader == null || authHeader.isEmpty()) {
-            httpResponse.sendRedirect("http://server.cla6sha.de/login");
-            return;
+            throw new AuthorizationException("UnAuthorization");
+//            httpResponse.sendRedirect("http://server.cla6sha.de/login");
         }
 
         // JWT 토큰의 유효성 검사

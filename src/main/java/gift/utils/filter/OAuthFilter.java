@@ -4,6 +4,7 @@ import gift.domain.Token;
 import gift.repository.TokenRepository;
 import gift.utils.ExternalApiService;
 import gift.utils.JwtTokenProvider;
+import gift.utils.error.AuthorizationException;
 import gift.utils.error.TokenAuthException;
 import jakarta.servlet.Filter;
 import jakarta.servlet.FilterChain;
@@ -57,8 +58,7 @@ public class OAuthFilter implements Filter {
             String authHeader = httpRequest.getHeader("Authorization");
 
             if (authHeader == null || authHeader.isEmpty()) {
-                httpResponse.sendRedirect("http://server.cla6sha.de/login");
-                return;
+                throw new AuthorizationException("UnAuthorization");
             }
 
             // JWT 토큰의 유효성 검사
@@ -76,8 +76,7 @@ public class OAuthFilter implements Filter {
             }
 
             if (accessexpirationTime.isBefore(LocalDateTime.now()) && refreshexpirationTime.isBefore(LocalDateTime.now())){
-                httpResponse.sendRedirect("/user/login");
-                return;
+                throw new AuthorizationException("UnAuthorization");
             }
 
             filterChain.doFilter(request, response);
