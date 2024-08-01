@@ -6,6 +6,7 @@ import gift.domain.Member;
 import gift.domain.Product;
 import gift.domain.Wishlist;
 import gift.exception.product.ProductNotFoundException;
+import gift.exception.wish.WishNotFoundException;
 import gift.repository.ProductRepository;
 import gift.repository.WishlistRepository;
 import java.util.List;
@@ -58,7 +59,14 @@ public class WishlistService {
     @Transactional
     public void removeWishlist(String email, Long productId) {
         Wishlist wish = wishlistRepository.findByMemberEmailAndProductId(email, productId)
-            .orElseThrow(() -> new RuntimeException("Wish Not Found"));
+            .orElseThrow(() -> new WishNotFoundException());
+        wishlistRepository.delete(wish);
+    }
+
+    @Transactional
+    public void deleteWish(String email, Long wishId) {
+        Wishlist wish = wishlistRepository.findById(wishId)
+            .orElseThrow(() -> new WishNotFoundException());
         wishlistRepository.delete(wish);
     }
 }

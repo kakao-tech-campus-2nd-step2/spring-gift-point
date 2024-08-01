@@ -48,9 +48,7 @@ public class WishlistController {
         @SortDefault(sort = "createdDate", direction = Direction.DESC) Pageable pageable
     ) {
         String token = tokenService.getBearerTokenFromHeader(authorizationHeader);
-        if (!tokenService.validateToken(token)) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-        }
+        tokenService.validateToken(token);
 
         String email = tokenService.extractEmailFromToken(token);
         Page<WishResponse> pageWishResponse = wishlistService.getWishlistByEmail(email, pageable);
@@ -65,6 +63,7 @@ public class WishlistController {
         String token = tokenService.getBearerTokenFromHeader(authorizationHeader);
         tokenService.validateToken(token);
         String email = tokenService.extractEmailFromToken(token);
+
         WishResponse wish = wishlistService.addWishlist(email, productId);
         return ResponseEntity.status(HttpStatus.CREATED).body(wish);
     }
@@ -75,12 +74,10 @@ public class WishlistController {
         @PathVariable Long productId
     ) {
         String token = tokenService.getBearerTokenFromHeader(authorizationHeader);
-        if (!tokenService.validateToken(token)) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid token");
-        }
+        tokenService.validateToken(token);
         String email = tokenService.extractEmailFromToken(token);
 
         wishlistService.removeWishlist(email, productId);
-        return ResponseEntity.ok("Product removed from wishlist");
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 }
