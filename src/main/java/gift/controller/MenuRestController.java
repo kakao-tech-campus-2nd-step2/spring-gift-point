@@ -47,7 +47,7 @@ public class MenuRestController {
         if(categoryId == null){
             return ResponseEntity.ok().body(menuService.findall(pageable));
         }
-        return ResponseEntity.ok().body(menuService.findByCategoryId(categoryId));
+        return ResponseEntity.ok().body(menuService.findByCategoryId(categoryId,pageable));
     }
 
     @PutMapping("{productId}")

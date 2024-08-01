@@ -20,5 +20,5 @@ public interface MenuRepository extends JpaRepository<Menu, Long> {
     @Query("SELECT m.options FROM Menu m WHERE m.id = :id")
     Set<Option> getOptionsByMenuId(Long id);
 
-    List<Menu> findByCategoryId(Long categoryId);
+    Page<Menu> findByCategoryId(Long categoryId,Pageable pageable);
 }

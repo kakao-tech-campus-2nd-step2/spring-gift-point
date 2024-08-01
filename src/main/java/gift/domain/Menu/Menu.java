@@ -4,9 +4,7 @@ import gift.domain.Category.Category;
 import gift.domain.Option.Option;
 import jakarta.persistence.*;
 
-import java.util.HashSet;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 
 @Entity
 public class Menu {
@@ -28,7 +26,7 @@ public class Menu {
     private Category category;
 
     @OneToMany(cascade = CascadeType.ALL)
-    private Set<Option> options;
+    private List<Option> options;
 
     public void setCategory(Category category) {
         this.category = category;
@@ -37,11 +35,11 @@ public class Menu {
     public Menu() {
     }
 
-    public Menu(String name, int price, String imageUrl,Category category,Set<Option> options) {
+    public Menu(String name, int price, String imageUrl,Category category,List<Option> options) {
         this(null, name, price, imageUrl, category, options);
     }
 
-    public Menu(Long id, String name, int price, String imageUrl, Category category, Set<Option> options) {
+    public Menu(Long id, String name, int price, String imageUrl, Category category, List<Option> options) {
         this.id = id;
         this.name = new MenuName(name);
         this.price = price;
@@ -51,11 +49,11 @@ public class Menu {
     }
 
     public Menu(Long id, MenuRequest menuRequest,Category category) {
-        this(id, menuRequest.name(), menuRequest.price(), menuRequest.imageUrl(), category,new HashSet<Option>());
+        this(id, menuRequest.name(), menuRequest.price(), menuRequest.imageUrl(), category,new LinkedList<Option>());
     }
 
     public Menu(Long id, MenuUpdateRequest menuUpdateRequest,Category category) {
-        this(id, menuUpdateRequest.name(), menuUpdateRequest.price(), menuUpdateRequest.imageUrl(), category,new HashSet<Option>());
+        this(id, menuUpdateRequest.name(), menuUpdateRequest.price(), menuUpdateRequest.imageUrl(), category,new LinkedList<>());
     }
 
     public Long getId() {
@@ -74,7 +72,7 @@ public class Menu {
         return imageUrl;
     }
 
-    public Set<Option> getOptions() {return options;}
+    public List<Option> getOptions() {return options;}
 
     public void update(Menu menu) {
         this.id = menu.id;

@@ -10,8 +10,7 @@ public record MenuResponse(
         String name,
         int price,
         String imageUrl,
-        Category category,
-        Set<Option> options
+        Long categoryId
 ) {
 
 }

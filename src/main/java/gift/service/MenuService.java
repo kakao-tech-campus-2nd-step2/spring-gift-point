@@ -68,8 +68,8 @@ public class MenuService {
         return menuRepository.getOptionsByMenuId(id);
     }
 
-    public List<MenuResponse> findByCategoryId(Long categoryId) {
-        List<Menu> menus = menuRepository.findByCategoryId(categoryId);
+    public List<MenuResponse> findByCategoryId(Long categoryId,Pageable pageable) {
+        Page<Menu> menus = menuRepository.findByCategoryId(categoryId,pageable);
         return menus.stream()
                 .map(this::mapMenuToMenuResponse)
                 .collect(Collectors.toList());
@@ -80,7 +80,7 @@ public class MenuService {
     }
 
     public MenuResponse mapMenuToMenuResponse(Menu menu) {
-        return new MenuResponse(menu.getId(), menu.getName(), menu.getPrice(), menu.getImageUrl(), menu.getCategory(),menu.getOptions());
+        return new MenuResponse(menu.getId(), menu.getName(), menu.getPrice(), menu.getImageUrl(), menu.getCategory().getId());
     }
 
 }
