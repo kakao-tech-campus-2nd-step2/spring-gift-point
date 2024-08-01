@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>상품 관리자 페이지</title>
+  <style>
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 20px;
+    }
+    header h1 nav {
+      display: flex;
+      justify-content: center;
+    }
+    header li {
+      display: flex;
+      padding: 10px;
+      float: left;
+    }
+    header a {
+      border:2px solid black;
+      border-collapse: collapse;
+      background-color: lightskyblue;
+      padding: 3px;
+      color: black;
+      text-decoration-line: none;
+      display: flex;
+      justify-content: space-between;
+      text-align: center;
+    }
+    table,th,td {
+      border: 2px solid black;
+      border-collapse: collapse;
+      text-align: center;
+      width: fit-content;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <nav>
+      <h1>gift 관리자 페이지</h1>
+      <ul>
+        <li><a href="">상품 조회</a></li>
+        <li><a href="">상품 추가</a></li>
+        <li><a href="">카테고리 조회</a></li>
+        <li><a href="">카테고리 추가</a></li>
+      </ul>
+    </nav>
+
+
+  </header>
+
+
+
+  <table class="product">
+    <thead>
+      <tr>
+        <th>Id</th>
+        <th>상품명</th>
+        <th>가격</th>
+        <th>이미지</th>
+        <th>카테고리</th>
+      </tr>
+    </thead>
+    <tbody>
+
+      <tr th:each="product : ${products}">
+        <td> <span th:text="|id : ${product.id}|"></span></td>
+        <td> <span th:text="|name : ${product.name}|"></span></td>
+        <td> <span th:text="|price : ${product.price}|"></span></td>
+        <td> <span th:text="|imageUrl : ${product.imageUrl}|"></span></td>
+        <td> <span th:text="|categoryId : ${product.categoryId}|"></span></td>
+        <td> <button th:onclick="|location.href='@{admin/updateProduct.html}">수정하기</button></td>
+        <td>
+          <form th:action="@{/admin/{id}(id=${product.id})}" method="#" th:method="delete">
+            <button type="submit">삭제하기</button>
+          </form>
+        </td>
+      </tr>
+    </tbody>
+
+  </table>
+
+</body>
+</html>

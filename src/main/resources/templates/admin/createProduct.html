@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>새 상품 추가</title>
+
+</head>
+<body>
+  <form action="/admin" th:action th:object="${product}" method="post">
+
+      <div>
+        <label for="productName">상품명</label>
+        <input type="text" id="productName" th:field="*{name}">
+      </div>
+      <div>
+        <label for="productPrice">가격</label>
+        <input type="text" id="productPrice" th:field="*{price}">
+      </div>
+      <div>
+        <label for="productImgUrl">이미지주소</label>
+        <input type="text" id="productImgUrl" th:field="*{imageUrl}">
+      </div>
+      <div>
+        <label for="productCategoryId">카테고리Id</label>
+        <input type="text" id="productCategoryId" th:field="*{categoryId}">
+      </div>
+      <button type="submit">상품 추가하기</button>
+    </form>
+</body>
+</html>
