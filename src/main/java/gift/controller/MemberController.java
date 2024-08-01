@@ -1,8 +1,6 @@
 package gift.controller;
 
-import gift.model.Member;
 import gift.model.MemberDTO;
-import gift.security.JwtUtil;
 import gift.service.MemberService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -19,14 +17,12 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api/members")
-public class AuthController {
+public class MemberController {
 
     private final MemberService memberService;
-    private final JwtUtil jwtUtil;
 
-    public AuthController(MemberService memberService, JwtUtil jwtUtil) {
+    public MemberController(MemberService memberService) {
         this.memberService = memberService;
-        this.jwtUtil = jwtUtil;
     }
 
     @PostMapping
@@ -95,7 +91,7 @@ public class AuthController {
         @RequestBody MemberDTO memberDTO) {
         MemberDTO member = memberService.findMemberByCredentials(memberDTO.email(),
             memberDTO.password());
-        String token = jwtUtil.generateToken(member.id());
+        String token = memberService.generateToken(member.id());
         return ResponseEntity.ok("Bearer " + token);
     }
 }

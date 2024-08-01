@@ -1,5 +1,6 @@
 package gift.service;
 
+import gift.model.JwtTokenDTO;
 import gift.model.KakaoTokenDTO;
 import gift.model.MemberDTO;
 import java.net.URI;
@@ -57,16 +58,12 @@ public class KakaoApiService {
         return responseBody.access_token();
     }
 
-    public Map<String, String> createKakaoMember(String code) {
+    public JwtTokenDTO createKakaoMember(String code) {
         String accessToken = getAccessToken(code);
-        String nickName = getKakaoProfileNickname(accessToken);
-        Map<String, String> credential = new HashMap<>();
-        MemberDTO createdMember = memberService.createMember(
-            new MemberDTO(null, nickName, accessToken));
-        credential.put("Member ID", createdMember.id().toString());
-        credential.put("Access Token", accessToken);
-
-        return credential;
+        String email = getKakaoProfileNickname(accessToken) + "@kakao.com";
+        MemberDTO createdMember = memberService.createMember(new MemberDTO(null, email, accessToken));
+        String jwtToken = memberService.generateToken(createdMember.id());
+        return new JwtTokenDTO("Bearer", jwtToken);
     }
 
     public String getKakaoProfileNickname(String accessToken) {

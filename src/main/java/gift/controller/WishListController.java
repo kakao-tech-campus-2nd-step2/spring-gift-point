@@ -1,9 +1,9 @@
 package gift.controller;
 
 import gift.model.AuthInfo;
-import gift.model.OrderDTO;
 import gift.model.WishListDTO;
-import gift.model.WishListPageDTO;
+import gift.model.WishListRequest;
+import gift.model.WishListResponse;
 import gift.service.WishListService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -13,9 +13,10 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -26,7 +27,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/api/wishlist")
+@RequestMapping("/api/wishes")
 public class WishListController {
 
     private final WishListService wishListService;
@@ -55,16 +56,16 @@ public class WishListController {
             responseCode = "200",
             description = "성공",
             content = @Content(mediaType = "application/json",
-            schema = @Schema(implementation = WishListPageDTO.class))
+                schema = @Schema(implementation = WishListResponse.class))
         ),
         @ApiResponse(responseCode = "400", description = "입력값이 유효하지 않습니다.", content = @Content),
         @ApiResponse(responseCode = "500", description = "내부 서버 에러입니다.", content = @Content)}
     )
-    public ResponseEntity<?> getWishList(@RequestParam Pageable pageable, AuthInfo authInfo) {
+    public ResponseEntity<?> getWishList(
+        @PageableDefault(page = 0, size = 20, sort = "createdDate", direction = Sort.Direction.ASC)
+        Pageable pageable, AuthInfo authInfo) {
         long memberId = authInfo.id();
-        WishListPageDTO wishListsPage = wishListService.getWishListByMemberId(memberId,
-            pageable.getPageNumber(), pageable.getPageSize());
-        return ResponseEntity.ok().body(wishListsPage.wishlists());
+        return ResponseEntity.ok().body(wishListService.getWishList(memberId, pageable));
     }
 
     @PostMapping
@@ -87,7 +88,7 @@ public class WishListController {
         @ApiResponse(responseCode = "201", description = "성공",
             content = @Content(
                 mediaType = "application/json",
-                schema = @Schema(implementation = WishListDTO.class)
+                schema = @Schema(implementation = WishListResponse.class)
             )
         ),
         @ApiResponse(responseCode = "400", description = "입력값이 유효하지 않습니다.", content = @Content),
@@ -95,13 +96,12 @@ public class WishListController {
     })
     public ResponseEntity<?> createWishList(
         @Parameter(description = "추가할 위시 리스트 정보", required = true)
-        @RequestBody WishListDTO wishListDTO,
+        @RequestBody WishListRequest wishListRequest,
         AuthInfo authInfo) {
         long memberId = authInfo.id();
-        wishListDTO = wishListDTO.withMemberId(memberId);
-
-        WishListDTO createdWishList = wishListService.createWishList(wishListDTO);
-        return ResponseEntity.status(HttpStatus.CREATED).body(createdWishList);
+        WishListResponse response = wishListService.createWishList(
+            new WishListDTO(memberId, wishListRequest.productId()));
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
     @PutMapping
@@ -135,8 +135,8 @@ public class WishListController {
         @RequestBody WishListDTO wishListDTO,
         AuthInfo authInfo) {
         long memberId = authInfo.id();
-        wishListDTO = wishListDTO.withMemberId(memberId);
-        WishListDTO updatedWishList = wishListService.updateWishListQuantity(wishListDTO);
+        WishListDTO updatedWishList = wishListService.updateWishListQuantity(
+            new WishListDTO(memberId, wishListDTO.productId()));
         return ResponseEntity.status(HttpStatus.OK).body(updatedWishList);
     }
 

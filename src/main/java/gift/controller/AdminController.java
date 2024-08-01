@@ -1,7 +1,7 @@
 package gift.controller;
 
-import gift.model.Option;
 import gift.model.OptionDTO;
+import gift.model.OptionResponse;
 import gift.model.ProductDTO;
 import gift.service.OptionService;
 import gift.service.ProductService;
@@ -45,7 +45,7 @@ public class AdminController {
     @GetMapping("{productId}/option/list")
     public String optionList(Model model,
         @PathVariable long productId, Pageable pageable) {
-        List<OptionDTO> options = productService.getOptionsByProductId(productId, pageable);
+        List<OptionResponse> options = productService.getOptionsByProductId(productId, pageable);
         model.addAttribute("productId", productId);
         model.addAttribute("options", options);
         return "option-list";

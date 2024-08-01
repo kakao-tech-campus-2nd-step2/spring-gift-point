@@ -1,5 +1,6 @@
 package gift.controller;
 
+import gift.model.AuthInfo;
 import gift.model.CategoryDTO;
 import gift.model.CategoryPageDTO;
 import gift.model.ProductDTO;
@@ -25,7 +26,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/api/category")
+@RequestMapping("/api/categories")
 public class CategoryController {
 
     private final CategoryService categoryService;
@@ -35,14 +36,14 @@ public class CategoryController {
     }
 
     @GetMapping
-    @Operation(summary = "카테고리 페이지 조회", description = "쿼리 스트링으로 오프셋 페이지네이션을 지원합니다.")
+    @Operation(summary = "카테고리 페이지 조회", description = "전체 카테고리를 조회합니다.")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "성공", content = @Content(schema = @Schema(implementation = CategoryPageDTO.class))),
         @ApiResponse(responseCode = "400", description = "잘못된 요청 파라미터입니다.")
     })
-    public ResponseEntity<?> getCategoryPage(Pageable pageable) {
-        CategoryPageDTO categoryPage = categoryService.findCategoryPage(pageable);
-        return ResponseEntity.ok(categoryPage.categories());
+    public ResponseEntity<?> getCategoryPage(AuthInfo authInfo) {
+        List<CategoryDTO> categories = categoryService.findCategory();
+        return ResponseEntity.ok(categories);
     }
 
     @GetMapping("/{categoryId}")

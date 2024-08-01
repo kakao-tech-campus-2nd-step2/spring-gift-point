@@ -3,10 +3,11 @@ package gift.model;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 
-public record OrderDTO(
-    long id,
+public record OrderRequest(
     @NotNull long optionId,
     @NotNull long quantity,
-    String orderDate,
-    @NotEmpty String message) {
+    @NotEmpty String message,
+    @NotNull boolean usePoint,
+    @NotNull long point
+) {
 }

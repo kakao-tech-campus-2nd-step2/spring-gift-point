@@ -1,8 +1,9 @@
 package gift.controller;
 
+import gift.model.AuthInfo;
 import gift.model.OptionDTO;
+import gift.model.OptionResponse;
 import gift.model.ProductDTO;
-import gift.model.ProductPageDTO;
 import gift.service.OptionService;
 import gift.service.ProductService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -14,7 +15,8 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
 import java.util.List;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.repository.query.Param;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -24,7 +26,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -42,25 +43,25 @@ public class ProductController {
     @GetMapping
     @Operation(summary = "모든 상품을 조회합니다.", description = "쿼리 스트링으로 오프셋 페이지네이션을 지원합니다.")
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "성공", content = @Content(schema = @Schema(implementation = ProductPageDTO.class))),
+        @ApiResponse(responseCode = "200", description = "성공", content = @Content(schema = @Schema(implementation = ProductDTO.class))),
         @ApiResponse(responseCode = "400", description = "유효하지 않은 페이지 넘버나 사이즈를 입력했습니다.")
     })
     public ResponseEntity<?> getAllProduct(
-        @Parameter(description = "페이지 번호 (0부터 시작)", example = "0") @RequestParam(defaultValue = "0") int page,
-        @Parameter(description = "페이지 크기", example = "10") @RequestParam(defaultValue = "10") int size) {
-        ProductPageDTO productsPage = productService.getAllProduct(page, size);
-        return ResponseEntity.ok().body(productsPage.products());
+        @PageableDefault(page = 0, size = 20, sort = "name", direction = Sort.Direction.ASC)
+        Pageable pageable, AuthInfo authInfo) {
+        return ResponseEntity.ok().body(productService.getAllProduct(pageable));
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/{productId}")
     @Operation(summary = "특정 상품을 조회합니다.", description = "상품 ID로 특정 상품을 조회합니다.")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "성공", content = @Content(schema = @Schema(implementation = ProductDTO.class))),
         @ApiResponse(responseCode = "404", description = "잘못된 상품 ID를 입력했습니다.")
     })
     public ResponseEntity<ProductDTO> getProductById(
-        @Parameter(description = "상품 ID", example = "1", required = true) @PathVariable Long id) {
-        return ResponseEntity.ok(productService.getProductById(id));
+        @Parameter(description = "상품 ID", example = "1", required = true) @PathVariable Long productId,
+        AuthInfo authInfo) {
+        return ResponseEntity.ok(productService.getProductById(productId));
     }
 
     @GetMapping("/{productId}/options")
@@ -71,9 +72,11 @@ public class ProductController {
     })
     public ResponseEntity<?> getAllOptions(
         @Parameter(description = "상품 ID", example = "1", required = true)
-        @PathVariable long productId, Pageable pageable) {
-        List<OptionDTO> optionDTOList = productService.getOptionsByProductId(productId, pageable);
-        return ResponseEntity.ok(optionDTOList);
+        @PathVariable long productId,
+        @PageableDefault(page = 0, size = 20, sort = "name", direction = Sort.Direction.ASC)
+        Pageable pageable, AuthInfo authInfo) {
+        List<OptionResponse> options = productService.getOptionsByProductId(productId, pageable);
+        return ResponseEntity.ok(options);
     }
 
     @PostMapping
