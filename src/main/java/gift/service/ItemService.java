@@ -1,7 +1,6 @@
 package gift.service;
 
 import gift.exception.ErrorCode;
-import gift.exception.customException.CustomArgumentNotValidException;
 import gift.exception.customException.CustomDuplicateException;
 import gift.exception.customException.CustomNotFoundException;
 import gift.model.dto.ItemDTO;
@@ -17,6 +16,7 @@ import java.util.List;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
@@ -45,6 +45,11 @@ public class ItemService {
             isWish);
     }
 
+    @Transactional(readOnly = true)
+    public ItemDTO getItemDTO(Long id) {
+        Item item = findItemById(id);
+        return new ItemDTO(item);
+    }
 
     @Transactional
     public Long insertItem(ItemDTO itemDTO, List<OptionDTO> options)
@@ -62,16 +67,6 @@ public class ItemService {
         item.addOptionList(optionList);
 
         return itemRepository.save(item).getId();
-    }
-
-    @Transactional
-    public Long insertOption(Long itemId, OptionDTO optionDTO)
-        throws CustomDuplicateException {
-        Item item = findItemById(itemId);
-        item.checkDuplicateOptionName(optionDTO.getName());
-        Option option = new Option(optionDTO.getName(), optionDTO.getQuantity(), item);
-        item.addOption(option);
-        return itemId;
     }
 
     @Transactional(readOnly = true)
@@ -100,21 +95,34 @@ public class ItemService {
     }
 
     @Transactional
-    public Long updateItem(ItemDTO itemDTO) {
+    public Long updateItem(ItemDTO itemDTO, List<OptionDTO> options) {
         Category category = categoryRepository.findById(itemDTO.getCategoryId())
             .orElseThrow(() -> new CustomNotFoundException(ErrorCode.CATEGORY_NOT_FOUND));
         Item item = findItemById(itemDTO.getId());
         item.update(itemDTO, category);
+        for (OptionDTO optionDTO : options) {
+            updateOption(item, optionDTO);
+        }
         return item.getId();
     }
 
-    @Transactional
-    public Long updateOption(Long itemId, OptionDTO optionDTO)
-        throws CustomArgumentNotValidException {
-        Item item = findItemById(itemId);
+    @Transactional(propagation = Propagation.REQUIRED)
+    public void insertOption(Item item, OptionDTO optionDTO)
+        throws CustomDuplicateException {
+        item.checkDuplicateOptionName(optionDTO.getName());
+        Option option = new Option(0L, optionDTO.getName(), optionDTO.getQuantity(), item);
+        item.addOption(option);
+        itemRepository.save(item);
+    }
+
+    @Transactional(propagation = Propagation.REQUIRED)
+    public void updateOption(Item item, OptionDTO optionDTO) {
+        if (optionDTO.getId() == null) {
+            insertOption(item, optionDTO);
+            return;
+        }
         Option option = item.getOptionByOptionId(optionDTO.getId());
         option.update(optionDTO.getName(), optionDTO.getQuantity());
-        return itemId;
     }
 
     @Transactional(readOnly = true)
@@ -134,11 +142,11 @@ public class ItemService {
         itemRepository.deleteById(id);
     }
 
-    @Transactional
-    public void deleteOption(Long itemId, Long optionId) {
-        Item item = findItemById(itemId);
+    @Transactional(propagation = Propagation.REQUIRED)
+    public void deleteOption(Item item, Long optionId) {
         Option option = item.getOptionByOptionId(optionId);
         item.getOptions().remove(option);
+        itemRepository.save(item);
     }
 
     @Transactional
