@@ -13,6 +13,7 @@ import gift.model.Product;
 import gift.repository.MemberRepository;
 import gift.repository.OrderRepository;
 import gift.repository.ProductRepository;
+import gift.service.dto.OrderDto;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -57,20 +58,17 @@ public class OrderService {
                 product.getImageUrl(), option.getName(), price, orderRequest.quantity(), orderRequest.message(), orderRequest.point()));
         productService.subtractQuantity(orders.getProductId(), orders.getOptionId(), orders.getQuantity());
 
-        eventPublisher.publishEvent(new OrderEventDto(product.getId(), memberId, orders.getId()));
+        eventPublisher.publishEvent(OrderEventDto.toDto(orders));
     }
 
-    public void sendKakaoMessage(Long memberId, Long orderId) {
-        Member member = memberRepository.findById(memberId)
+    public void sendKakaoMessage(OrderDto orderDto) {
+        Member member = memberRepository.findById(orderDto.memberId())
                 .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 멤버입니다."));
         if(member.getLoginType() != SocialLoginType.KAKAO) {
             return;
         }
-
-        Orders orders = orderRepository.findById(orderId)
-                .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 주문입니다."));
-        String accessToken = kakaoTokenService.refreshIfAccessTokenExpired(memberId);
-        kakaoApiCaller.sendKakaoMessage(accessToken, orders);
+        String accessToken = kakaoTokenService.refreshIfAccessTokenExpired(orderDto.memberId());
+        kakaoApiCaller.sendKakaoMessage(accessToken, orderDto);
     }
 
     public PagingResponse<OrderResponse> findOrdersByMemberId(Long memberId, Pageable pageable) {

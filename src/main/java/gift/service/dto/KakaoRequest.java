@@ -2,7 +2,6 @@ package gift.service.dto;
 
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
-import gift.model.Orders;
 
 public class KakaoRequest {
     private static final String DEFAULT_OBJECT_TYPE = "feed";
@@ -19,34 +18,34 @@ public class KakaoRequest {
             Content content,
             ItemContent itemContent
     ){
-        public static Feed from(Orders orders) {
+        public static Feed from(OrderDto orders) {
             return new Feed(
                     DEFAULT_OBJECT_TYPE,
                     new Content(
                             DEFAULT_TITLE,
-                            orders.getDescription(),
+                            orders.description(),
                             null
                     ),
                     new ItemContent(
                             DEFAULT_PROFILE_TEXT,
-                            orders.getProductName(),
-                            orders.getOptionName(),
+                            orders.productName(),
+                            orders.productName(),
                             new Item[]{
                                     new Item(
                                             DEFAULT_ITEM_TEXT,
-                                            orders.getPrice() + "원"
+                                            orders.price() + "원"
                                     ),
                                     new Item(
                                             DEFAULT_ITEM_COUNT_TEXT,
-                                            orders.getQuantity() + "개"
+                                            orders.quantity() + "개"
                                     ),
                                     new Item(
                                             DEFAULT_POINT_TEXT,
-                                            orders.getPoint() + "포인트"
+                                            orders.point() + "포인트"
                                     ),
                             },
                             DEFAULT_SUM_TEXT,
-                            orders.getTotalPrice() + "원"
+                            (orders.price() * orders.quantity()) + "원"
                     )
             );
         }

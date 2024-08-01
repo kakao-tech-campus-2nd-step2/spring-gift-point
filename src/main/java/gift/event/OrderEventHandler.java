@@ -2,6 +2,7 @@ package gift.event;
 
 import gift.service.OrderService;
 import gift.service.WishService;
+import gift.service.dto.OrderDto;
 import org.springframework.context.event.EventListener;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
@@ -25,6 +26,6 @@ public class OrderEventHandler {
     @Async
     @EventListener
     public void sendKakaoMessageListener(OrderEventDto orderEventDto) {
-        orderService.sendKakaoMessage(orderEventDto.memberId(), orderEventDto.orderId());
+        orderService.sendKakaoMessage(OrderDto.from(orderEventDto));
     }
 }

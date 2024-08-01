@@ -8,6 +8,7 @@ import gift.model.Orders;
 import gift.service.dto.KakaoInfoDto;
 import gift.service.dto.KakaoRequest;
 import gift.service.dto.KakaoTokenDto;
+import gift.service.dto.OrderDto;
 import jakarta.validation.constraints.NotNull;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
@@ -99,7 +100,7 @@ public class KakaoApiCaller {
         }
     }
 
-    public void sendKakaoMessage(String accessToken, Orders orders) {
+    public void sendKakaoMessage(String accessToken, OrderDto orders) {
         try {
             client.post()
                     .uri(URI.create(properties.selfMessageUrl()))
@@ -133,7 +134,7 @@ public class KakaoApiCaller {
         return body;
     }
 
-    private @NotNull LinkedMultiValueMap<String, Object> createBodyForMessage(Orders orders) {
+    private @NotNull LinkedMultiValueMap<String, Object> createBodyForMessage(OrderDto orders) {
         try {
             String template = objectMapper.writeValueAsString(KakaoRequest.Feed.from(orders));
             var body = new LinkedMultiValueMap<String, Object>();
