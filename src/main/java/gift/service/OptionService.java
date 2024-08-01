@@ -28,10 +28,12 @@ public class OptionService {
      */
     @Transactional
     public OptionResponse save(Long productId, OptionRequest optionRequest){
+        System.out.println("1 = " + 1);
         Product product = productRepository.findById(productId).orElseThrow(NoSuchFieldError::new);
         Option option = new Option(optionRequest.getName(), optionRequest.getQuantity(), product);
+        product.addOption(option);
+
         Option savedOption = optionRepository.save(option);
-        product.getOptions().add(option);
         return new OptionResponse(savedOption, productId);
     }
     /*

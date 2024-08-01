@@ -109,7 +109,7 @@
 
         $.ajax({
             type : "POST",
-            url : "api/products/" + product_id + "/options",
+            url : "api/products/" + $('#productId').val() + "/options",
             contentType: "application/json",
             datatype : "json",
             data : JSON.stringify(option),
@@ -117,7 +117,7 @@
                 Authorization: 'Bearer ' + localStorage.getItem("token"),
             },
             success : function(res){
-                location.reload();
+                getOptions();
             },
             error : function(err){
                 var text = err.responseJSON;
@@ -141,7 +141,10 @@
     function deleteFunction(id){
         $.ajax({
             type: "DELETE",
-            url: "api/products/" + product_id + "/options/" +id,
+            url: "api/products/" + $('#productId').val() + "/options/" +id,
+            headers : {
+                Authorization: 'Bearer ' + localStorage.getItem("token"),
+            },
             success : function(res){
                 $('#option-table').find('tr[data-id="' + id + '"]').remove();
                 alert("옵션 ID : " + id + "가 삭제되었습니다.");
@@ -167,10 +170,13 @@
 
         $.ajax({
             type : "PUT",
-            url : "api/products/" + product_id + "/options/" + $("#p_id").val(),
+            url : "api/products/" + $('#productId').val() + "/options/" + $("#p_id").val(),
             contentType: "application/json",
             datatype : "json",
             data : JSON.stringify(option),
+            headers : {
+                Authorization: 'Bearer ' + localStorage.getItem("token"),
+            },
             success : function(res){
                 location.reload();
             },
