@@ -24,5 +24,5 @@ public record ProductRequest(
         @NotNull
         Long categoryId,
         @NotNull
-        @Valid
-        List<OptionRequest> options) { }
+        List<@Valid OptionRequest> options
+) { }

@@ -5,6 +5,7 @@ import gift.global.security.JwtFilter;
 import gift.global.security.JwtUtil;
 import gift.member.validator.LoginMember;
 import gift.member.validator.LoginMemberArgumentResolver;
+import gift.product.dto.WishOptionRequest;
 import gift.product.entity.Category;
 import gift.product.entity.Option;
 import gift.product.entity.Product;
@@ -102,8 +103,8 @@ class WishesControllerTest {
     @Test
     @DisplayName("위시 리스트 상품 추가 기능 테스트")
     void addWish() throws Exception {
-        Long optionId = 1L;
-        String requestJson = objectMapper.writeValueAsString(optionId);
+        WishOptionRequest request = new WishOptionRequest(1L);
+        String requestJson = objectMapper.writeValueAsString(request);
 
         given(loginMemberArgumentResolver.supportsParameter(argThat(parameter ->
                 parameter.hasParameterAnnotation(LoginMember.class)))).willReturn(true);
@@ -116,7 +117,7 @@ class WishesControllerTest {
                         .content(requestJson))
                 .andExpect(status().isOk());
 
-        verify(wishesService).addProductToWishlist(memberId, optionId);
+        verify(wishesService).addProductToWishlist(memberId, request.optionId());
     }
 
     @Test

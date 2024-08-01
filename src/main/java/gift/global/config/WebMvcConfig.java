@@ -2,6 +2,7 @@ package gift.global.config;
 
 import gift.member.validator.LoginMemberArgumentResolver;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
@@ -13,7 +14,7 @@ import java.util.List;
 public class WebMvcConfig implements WebMvcConfigurer {
 
     private final LoginMemberArgumentResolver loginMemberArgumentResolver;
-    private final static String originAddress = "http://localhost:8080";
+    private static final String ORIGIN_URL = "https://kakao-gift-api.shop";
 
     public WebMvcConfig(LoginMemberArgumentResolver loginMemberArgumentResolver) {
         this.loginMemberArgumentResolver = loginMemberArgumentResolver;
@@ -27,17 +28,16 @@ public class WebMvcConfig implements WebMvcConfigurer {
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**")
-                .allowedOrigins(originAddress)
+                .allowedOrigins(ORIGIN_URL)
                 .allowedMethods(
-                        HttpMethod.GET
-                                  .name(),
-                        HttpMethod.POST
-                                  .name(),
-                        HttpMethod.PATCH
-                                  .name(),
-                        HttpMethod.DELETE
-                                  .name()
-                );
+                        HttpMethod.GET.name(),
+                        HttpMethod.POST.name(),
+                        HttpMethod.PUT.name(),
+                        HttpMethod.DELETE.name()
+                )
+                .allowedHeaders(HttpHeaders.AUTHORIZATION, HttpHeaders.CONTENT_TYPE)
+                .allowCredentials(true)
+                .maxAge(3600);
     }
 
 }
