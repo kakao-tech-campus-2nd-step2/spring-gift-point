@@ -39,4 +39,4 @@ out/
 ### Mac OS ###
 .DS_Store
 
-application-private.properties
+/src/main/resources/application-private.properties
