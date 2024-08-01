@@ -47,11 +47,11 @@ public class KakaoLoginController {
         String email = kakaoApiService.getMemberEmail(kakaoToken.accessToken());
         Long memberId = memberService.findMemberIdByEmail(email);
 
-        JwtResponse JwtResponse = tokenService.generateJwt(memberId);
+        JwtResponse jwtResponse = tokenService.generateJwt(memberId);
         tokenService.saveKakaoAccessToken(memberId, kakaoToken);
 
         HttpHeaders headers = new HttpHeaders();
-        headers.setLocation(URI.create(jwtDeliveryUri + JwtResponse.token()));
+        headers.setLocation(URI.create(jwtDeliveryUri + jwtResponse.token()));
 
         return new ResponseEntity<>(headers, HttpStatus.FOUND);
     }
