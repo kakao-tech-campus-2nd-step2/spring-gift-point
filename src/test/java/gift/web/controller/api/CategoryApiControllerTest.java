@@ -223,6 +223,7 @@ class CategoryApiControllerTest {
     }
 
     @Test
+    @DisplayName("카테고리 삭제")
     void deleteCategory() throws Exception {
         mockMvc
             .perform(
