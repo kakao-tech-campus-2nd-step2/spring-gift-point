@@ -46,6 +46,7 @@ public class Member {
         this.loginType = loginType;
         this.kakaoAccessToken = kakaoAccessToken;
         this.kakaoRefreshToken = kakaoRefreshToken;
+        this.point = 0;
     }
 
     public Member(String email, String password, LoginType loginType) {
@@ -109,5 +110,13 @@ public class Member {
 
     public void setKakaoRefreshToken(String kakaoRefreshToken) {
         this.kakaoRefreshToken = kakaoRefreshToken;
+    }
+
+    public void setPoint(Integer point) {
+        this.point = point;
+    }
+
+    public void deductPoint(Integer point) {
+        this.point -= point;
     }
 }

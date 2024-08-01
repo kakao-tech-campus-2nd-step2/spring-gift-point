@@ -16,5 +16,7 @@ public record OrderRequest(
         Integer quantity,
 
         @NotBlank(message = REQUIRED_FIELD_MSG)
-        String message) {
+        String message,
+
+        Integer point) {
 }

@@ -48,6 +48,7 @@ public class OrderService {
             kaKaoService.sendMessage(orderRequest.message(), member.getKakaoAccessToken());
         }
 
+        member.deductPoint(orderRequest.point());
         Order savedOrder = orderRepository.save(new Order(option, member, orderRequest));
 
         return new OrderResponse(savedOrder);

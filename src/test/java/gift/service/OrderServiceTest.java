@@ -47,7 +47,7 @@ class OrderServiceTest {
         product.setCategory(category1);
         product.setOption(option);
 
-        OrderRequest orderRequest = new OrderRequest(1L, 9, "Please handle this order with care.");
+        OrderRequest orderRequest = new OrderRequest(1L, 9, "Please handle this order with care.", 0);
         Member member = new Member(1L, "MemberName", "password", LoginType.EMAIL);
         LoginMember loginMember = new LoginMember(member.getId());
 
@@ -61,6 +61,35 @@ class OrderServiceTest {
         // then
         Assertions.assertThat(option.getQuantity())
                 .isEqualTo(initQuantity - orderRequest.quantity());
+    }
+
+    @Test
+    void order_deductPoint() {
+        // given
+        Product product = new Product(1L, "name", 500, "image.image");
+        Category category1 = new Category(1L, "상품권");
+        Option option = new Option("optionName", 100, product);
+        product.setCategory(category1);
+        product.setOption(option);
+
+        OrderRequest orderRequest = new OrderRequest(1L, 9, "Please handle this order with care.", 5);
+        Member member = new Member(1L, "MemberName", "password", LoginType.EMAIL);
+        member.setPoint(100);
+
+        Integer originalPoint = member.getPoint();
+
+        LoginMember loginMember = new LoginMember(member.getId());
+
+        given(optionRepository.findById(any())).willReturn(Optional.of(option));
+        given(memberRepository.findMemberById(any())).willReturn(Optional.of(member));
+        given(orderRepository.save(any())).willReturn(new Order(option, member, orderRequest));
+
+        // when
+        orderService.order(loginMember, orderRequest);
+
+        // then
+        Assertions.assertThat(member.getPoint()).isEqualTo(originalPoint - orderRequest.point());
+
     }
 
 }
