@@ -41,6 +41,6 @@ public class LoginUserArgumentResolver implements HandlerMethodArgumentResolver 
         }
 
         MemberResponse memberDto = memberService.findByEmail(userEmail);
-        return new MemberRequest(memberDto.id(),memberDto.email(),memberDto.password());
+        return new MemberRequest(memberDto.id(),memberDto.email(),memberDto.password(), memberDto.points());
     }
 }
