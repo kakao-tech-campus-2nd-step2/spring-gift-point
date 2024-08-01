@@ -48,8 +48,10 @@ public class OrderService {
         this.userService = userService;
     }
     
-    public Page<OrderResponse> getOrders(Pageable pageable){
-    	return orderRepository.findAll(pageable).map(Order::toDto);
+    public Page<OrderResponse> getOrders(String token, Pageable pageable){
+    	User user = userService.getUserFromToken(token);
+    	Page<Order> OrderPage = orderRepository.findByUserId(user.getId(), pageable);
+    	return OrderPage.map(Order::toDto);
     }
     
     @Transactional
@@ -57,8 +59,8 @@ public class OrderService {
 	    return retryTemplate.execute(context -> {
     		validateBindingResult(bindingResult);
 	        Option option = updateOptionQuantity(request);
-	        Order order = saveOrder(request, option);
 	        User user = userService.getUserFromToken(token);
+	        Order order = saveOrder(user, request, option);
 	        orderTasks(token, user, option, request, bindingResult);
 	        return order.toDto();
 	    });
@@ -77,8 +79,8 @@ public class OrderService {
     	return option;
     }
     
-    private Order saveOrder(OrderRequest request, Option option) {
-    	Order order = request.toEntity(option);
+    private Order saveOrder(User user, OrderRequest request, Option option) {
+    	Order order = request.toEntity(user, option);
     	order.setOrderDateTime(LocalDateTime.now());
     	orderRepository.save(order);
     	return order;
