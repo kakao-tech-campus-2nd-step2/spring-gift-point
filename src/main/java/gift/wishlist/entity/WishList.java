@@ -4,7 +4,6 @@ import static jakarta.persistence.GenerationType.IDENTITY;
 
 import gift.member.entity.Member;
 import gift.product.entity.Product;
-import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -27,16 +26,12 @@ public class WishList {
     @JoinColumn(name = "product_id", nullable = false)
     private Product product;
 
-    @Column(nullable = false)
-    private Integer quantity;
-
     protected WishList() {
     }
 
-    public WishList(Member member, Product product, Integer quantity) {
+    public WishList(Member member, Product product) {
         this.member = member;
         this.product = product;
-        this.quantity = quantity;
     }
 
     public Long getId() {
@@ -51,25 +46,12 @@ public class WishList {
         return product;
     }
 
-    public Integer getQuantity() {
-        return quantity;
-    }
-
-    public void changeQuantity(Integer quantity) {
-        this.quantity = quantity;
-    }
-
-    public void addQuantity(Integer quantity) {
-        this.quantity += quantity;
-    }
-
     @Override
     public String toString() {
         return "WishList{" +
                 "id=" + id +
                 ", member=" + member +
                 ", product=" + product +
-                ", quantity=" + quantity +
                 '}';
     }
 }

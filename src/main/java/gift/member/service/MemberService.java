@@ -1,5 +1,7 @@
 package gift.member.service;
 
+import gift.auth.dto.RegisterResDto;
+import gift.auth.exception.LoginFailedException;
 import gift.auth.token.AuthToken;
 import gift.auth.token.AuthTokenGenerator;
 import gift.member.dto.MemberReqDto;
@@ -39,14 +41,8 @@ public class MemberService {
         return new MemberResDto(findMember);
     }
 
-    @Transactional(readOnly = true)
-    public String getMemberPassword(Long memberId) {
-        Member findMember = findMemberByIdOrThrow(memberId);
-        return findMember.getPassword();
-    }
-
     @Transactional
-    public AuthToken register(MemberReqDto memberReqDto) {
+    public RegisterResDto register(MemberReqDto memberReqDto) {
         checkDuplicateEmail(memberReqDto.email());  // 중복되는 이메일이 있으면 예외 발생
 
         // 일반 사용자로 회원 가입
@@ -58,7 +54,8 @@ public class MemberService {
             throw MemberCreateException.EXCEPTION;
         }
 
-        return authTokenGenerator.generateToken(new MemberResDto(newMember));
+        AuthToken authToken = authTokenGenerator.generateToken(new MemberResDto(newMember));
+        return new RegisterResDto(newMember.getEmail(), authToken.accessToken());
     }
 
     @Transactional
@@ -84,6 +81,12 @@ public class MemberService {
     private Member findMemberByIdOrThrow(Long memberId) {
         return memberRepository.findById(memberId).orElseThrow(
                 () -> MemberNotFoundByIdException.EXCEPTION
+        );
+    }
+
+    public Member findMemberByEmailOrThrow(String email) {
+        return memberRepository.findByEmail(email).orElseThrow(
+                () -> LoginFailedException.EXCEPTION    // 로그인 실패 시 이메일 존재 여부를 알리지 않기 위해 EmailNotFoundException 대신 LoginFailedException 사용
         );
     }
 

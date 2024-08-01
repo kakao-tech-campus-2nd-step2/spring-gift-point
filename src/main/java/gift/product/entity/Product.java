@@ -25,7 +25,7 @@ public class Product {
     @GeneratedValue(strategy = IDENTITY)
     private  Long id;
 
-    @Column(nullable = false, length = 15)
+    @Column(nullable = false, length = 40)
     private String name;
 
     @Column(nullable = false)

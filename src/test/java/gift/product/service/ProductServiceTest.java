@@ -57,19 +57,21 @@ class ProductServiceTest {
 
     @Test
     @DisplayName("전체 상품 조회")
-    void getProducts() {
+    void getProductsByCategoryId() {
         //given
+        Category category = CategoryFixture.createCategory("카테고리");
+
         List<Product> products = List.of(
-                ProductFixture.createProduct("상품1", 1000, "product1.png"),
-                ProductFixture.createProduct("상품2", 2000, "product2.png")
+                ProductFixture.createProduct("상품1", 1000, "product1.png", category),
+                ProductFixture.createProduct("상품2", 2000, "product2.png", category)
         );
 
-        given(productRepository.findAll(any(Pageable.class))).willReturn(
+        given(productRepository.findAllByCategoryId(anyLong(), any(Pageable.class))).willReturn(
                 new PageImpl<>(products, Pageable.ofSize(2), 2)
         );
 
         //when
-        Page<ProductResDto> productPage = productService.getProducts(Pageable.ofSize(2));
+        Page<ProductResDto> productPage = productService.getProductsByCategoryId(1L, Pageable.ofSize(2));
         List<ProductResDto> productResDtos = productPage.getContent();
 
         //then
@@ -84,7 +86,7 @@ class ProductServiceTest {
         assertThatList(productResDtos).extracting(ProductResDto::imageUrl)
                 .containsExactly("product1.png", "product2.png");
 
-        verify(productRepository).findAll(Pageable.ofSize(2));
+        verify(productRepository).findAllByCategoryId(anyLong(), any());
     }
 
     @Test
@@ -176,7 +178,6 @@ class ProductServiceTest {
         assertThat(product.name()).isEqualTo("테스트 상품");
         assertThat(product.price()).isEqualTo(1000);
         assertThat(product.imageUrl()).isEqualTo("test_product.png");
-        assertThat(product.category()).isEqualTo("테스트 카테고리");
 
         verify(categoryRepository).findByName("테스트 카테고리");
         verify(productRepository).save(any(Product.class));

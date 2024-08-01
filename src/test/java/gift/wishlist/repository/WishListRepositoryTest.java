@@ -50,9 +50,9 @@ class WishListRepositoryTest {
 
         // 임의의 위시리스트 3개
         List<WishList> wishLists = List.of(
-                WishListFixture.createWishList(member, products.get(0), 4),
-                WishListFixture.createWishList(member, products.get(1), 1),
-                WishListFixture.createWishList(member, products.get(2), 3)
+                WishListFixture.createWishList(member, products.get(0)),
+                WishListFixture.createWishList(member, products.get(1)),
+                WishListFixture.createWishList(member, products.get(2))
         );
         wishListRepository.saveAll(wishLists);
     }
@@ -63,7 +63,7 @@ class WishListRepositoryTest {
         //given
         Member member = memberRepository.findAll().getFirst();      // 기존 회원
         Product product = productRepository.findAll().getLast();    // 아직 위시리스트에 없는 상품
-        WishList wishList = WishListFixture.createWishList(member, product, 2);
+        WishList wishList = WishListFixture.createWishList(member, product);
 
         //when
         WishList savedWishList = wishListRepository.save(wishList);
@@ -72,8 +72,7 @@ class WishListRepositoryTest {
         assertAll(
                 () -> assertNotNull(savedWishList.getId()),
                 () -> assertEquals(wishList.getMember().getId(), savedWishList.getMember().getId()),
-                () -> assertEquals(wishList.getProduct().getId(), savedWishList.getProduct().getId()),
-                () -> assertEquals(wishList.getQuantity(), savedWishList.getQuantity())
+                () -> assertEquals(wishList.getProduct().getId(), savedWishList.getProduct().getId())
         );
     }
 
@@ -90,8 +89,7 @@ class WishListRepositoryTest {
                 wishList -> assertAll(
                         () -> assertNotNull(wishList.getId()),
                         () -> assertNotNull(wishList.getMember()),
-                        () -> assertNotNull(wishList.getProduct()),
-                        () -> assertNotNull(wishList.getQuantity())
+                        () -> assertNotNull(wishList.getProduct())
                 )
         );
 
@@ -104,19 +102,11 @@ class WishListRepositoryTest {
     void updateWishList() {
         //given
         WishList wishList = wishListRepository.findAll().getLast();
-        int quantityToAdded = 3;
-
-        // 기존 수량 저장
-        int beforeQuantity = wishList.getQuantity();
-
-        //when
-        wishList.addQuantity(quantityToAdded);
 
         //then
         WishList updatedWishList = wishListRepository.findById(wishList.getId()).get();
 
         assertAll(
-                () -> assertEquals(beforeQuantity + quantityToAdded, updatedWishList.getQuantity()),
                 () -> assertEquals(wishList.getMember().getId(), updatedWishList.getMember().getId()),
                 () -> assertEquals(wishList.getProduct().getId(), updatedWishList.getProduct().getId()),
                 () -> assertEquals(wishList.getId(), updatedWishList.getId())

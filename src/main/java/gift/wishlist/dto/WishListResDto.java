@@ -1,14 +1,14 @@
 package gift.wishlist.dto;
 
+import gift.product.dto.ProductResDto;
 import gift.wishlist.entity.WishList;
 
 public record WishListResDto(
         Long id,
-        Long productId,
-        Integer quantity
+        ProductResDto product
 ) {
 
     public WishListResDto(WishList wishList) {
-        this(wishList.getId(), wishList.getProduct().getId(), wishList.getQuantity());
+        this(wishList.getId(), new ProductResDto(wishList.getProduct()));
     }
 }

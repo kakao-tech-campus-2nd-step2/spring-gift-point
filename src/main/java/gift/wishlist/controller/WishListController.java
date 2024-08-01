@@ -16,13 +16,12 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/api/wish-list")
+@RequestMapping("/api/wishes")
 @Tag(name = "장바구니 API", description = "장바구니 관리 API")
 public class WishListController {
 
@@ -49,31 +48,17 @@ public class WishListController {
             })
     public ResponseEntity<String> addWishList(@LoginMember MemberResDto member, @RequestBody WishListReqDto wishListReqDto) {
         wishListService.addWishList(member.id(), wishListReqDto);
-        return ResponseEntity.created(URI.create("/api/wish-list")).body("상품을 장바구니에 담았습니다.");
+        return ResponseEntity.created(URI.create("/api/wishes")).body("상품을 장바구니에 담았습니다.");
     }
 
-    @PutMapping("/{wish-list-id}")
-    @Operation(summary = "장바구니 수정", description = "장바구니에 담긴 상품의 수량을 변경합니다.",
-            responses = {
-                    @ApiResponse(responseCode = "200", description = "장바구니 수정 성공"),
-            })
-    public ResponseEntity<String> updateWishList(
-            @LoginMember MemberResDto member,
-            @PathVariable("wish-list-id") Long wishListId,
-            @RequestBody WishListReqDto wishListReqDto
-    ) {
-        wishListService.updateWishListById(member.id(), wishListId, wishListReqDto);
-        return ResponseEntity.ok("담긴 상품의 수량을 변경했습니다.");
-    }
-
-    @DeleteMapping("/{wish-list-id}")
+    @DeleteMapping("/{wishId}")
     @Operation(summary = "장바구니 삭제", description = "장바구니에 담긴 상품을 삭제합니다.",
             responses = {
                     @ApiResponse(responseCode = "200", description = "장바구니 삭제 성공"),
             })
     public ResponseEntity<String> deleteWishList(
             @LoginMember MemberResDto member,
-            @PathVariable("wish-list-id") Long wishListId
+            @PathVariable("wishId") Long wishListId
     ) {
         wishListService.deleteWishListById(member.id(), wishListId);
         return ResponseEntity.ok("상품을 장바구니에서 삭제했습니다.");

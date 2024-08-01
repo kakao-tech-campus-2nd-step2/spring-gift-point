@@ -1,5 +1,6 @@
 package gift.product.controller;
 
+import gift.common.annotation.AllowAnonymous;
 import gift.option.dto.OptionResDto;
 import gift.product.dto.ProductReqDto;
 import gift.product.dto.ProductResDto;
@@ -21,6 +22,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -39,8 +41,12 @@ public class ProductController {
             responses = {
                     @ApiResponse(responseCode = "200", description = "상품 목록 조회 성공"),
             })
-    public ResponseEntity<Page<ProductResDto>> getProducts(Pageable pageable) {
-        Page<ProductResDto> productResDtos = productService.getProducts(pageable);
+    @AllowAnonymous
+    public ResponseEntity<Page<ProductResDto>> getProducts(
+            @RequestParam(value = "categoryId") Long categoryId,
+            Pageable pageable
+    ) {
+        Page<ProductResDto> productResDtos = productService.getProductsByCategoryId(categoryId, pageable);
 
         return ResponseEntity.ok(productResDtos);
     }
@@ -50,6 +56,7 @@ public class ProductController {
             responses = {
                     @ApiResponse(responseCode = "200", description = "상품 조회 성공"),
             })
+    @AllowAnonymous
     public ResponseEntity<ProductResDto> getProduct(@PathVariable("productId") Long productId) {
         ProductResDto productResDto = productService.getProduct(productId);
 
@@ -61,6 +68,7 @@ public class ProductController {
             responses = {
                     @ApiResponse(responseCode = "200", description = "상품 옵션 목록 조회 성공"),
             })
+    @AllowAnonymous
     public ResponseEntity<List<OptionResDto>> getProductOptions(@PathVariable("productId") Long productId) {
         List<OptionResDto> optionResDtos = productService.getProductOptions(productId);
 
