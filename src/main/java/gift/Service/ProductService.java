@@ -1,6 +1,5 @@
 package gift.Service;
 
-import gift.DTO.PageResponseDTO;
 import gift.DTO.ProductDTO;
 import gift.DTO.ProductResponseDTO;
 import gift.Model.Category;
