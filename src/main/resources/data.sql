@@ -19,7 +19,7 @@ VALUES ('교환권', '#FF5733', 'https://cdn.pixabay.com/photo/2015/08/11/08/21/
        ('자동차/공구', '#FFA533', 'https://cdn.pixabay.com/photo/2024/05/10/23/34/car-8753811_640.png', '설명19');
 
 INSERT INTO product (name, price, imageUrl, category_id)
-VALUES ('coffee', 1500, 'https://via.placeholder.com/150', 15);
+VALUES ('coffee', 1500, 'https://via.placeholder.com/150', 14);
 INSERT INTO product (name, price, imageUrl, category_id)
 VALUES ('meat', 15500, 'https://via.placeholder.com/150', 5);
 INSERT INTO product (name, price, imageUrl, category_id)
@@ -33,17 +33,17 @@ VALUES ('milk', 1000, 'https://via.placeholder.com/150', 5);
 INSERT INTO product (name, price, imageUrl, category_id)
 VALUES ('cheese', 7000, 'https://via.placeholder.com/150', 5);
 INSERT INTO product (name, price, imageUrl, category_id)
-VALUES ('chocolate', 3500, 'https://via.placeholder.com/150', 15);
+VALUES ('chocolate', 3500, 'https://via.placeholder.com/150', 14);
 INSERT INTO product (name, price, imageUrl, category_id)
-VALUES ('wine', 45000, 'https://via.placeholder.com/150', 15);
+VALUES ('wine', 45000, 'https://via.placeholder.com/150', 14);
 INSERT INTO product (name, price, imageUrl, category_id)
-VALUES ('beer', 2000, 'https://via.placeholder.com/150', 15);
+VALUES ('beer', 2000, 'https://via.placeholder.com/150', 14);
 INSERT INTO product (name, price, imageUrl, category_id)
-VALUES ('juice', 1200, 'https://via.placeholder.com/150', 15);
+VALUES ('juice', 1200, 'https://via.placeholder.com/150', 14);
 INSERT INTO product (name, price, imageUrl, category_id)
-VALUES ('water', 500, 'https://via.placeholder.com/150', 15);
+VALUES ('water', 500, 'https://via.placeholder.com/150', 14);
 INSERT INTO product (name, price, imageUrl, category_id)
-VALUES ('soda', 800, 'https://via.placeholder.com/150', 15);
+VALUES ('soda', 800, 'https://via.placeholder.com/150', 14);
 INSERT INTO product (name, price, imageUrl, category_id)
 VALUES ('apple', 300, 'https://via.placeholder.com/150', 5);
 INSERT INTO product (name, price, imageUrl, category_id)
