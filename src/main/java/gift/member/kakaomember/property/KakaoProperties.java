@@ -1,4 +1,4 @@
-package gift.dto;
+package gift.member.kakaomember.property;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
