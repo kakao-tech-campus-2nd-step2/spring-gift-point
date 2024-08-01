@@ -46,13 +46,13 @@ public class ProductRepositoryTest {
         Category category = new Category(CATEGORY_NAME);
         category.setId(1L);
 
-        when(categoryRepository.findByCategoryName(CATEGORY_NAME)).thenReturn(Optional.of(category));
+        when(categoryRepository.findByName(CATEGORY_NAME)).thenReturn(Optional.of(category));
         when(categoryRepository.save(any(Category.class))).thenReturn(category);
     }
 
     @Test
     void testFindById() {
-        Category category = categoryRepository.findByCategoryName(CATEGORY_NAME).orElseThrow();
+        Category category = categoryRepository.findByName(CATEGORY_NAME).orElseThrow();
         Product expected = new Product(PRODUCT_NAME, PRODUCT_PRICE, PRODUCT_URL, category);
         expected.setId(1L);
 
@@ -68,7 +68,7 @@ public class ProductRepositoryTest {
 
     @Test
     void testSaveProduct() {
-        Category category = categoryRepository.findByCategoryName(CATEGORY_NAME).orElseThrow();
+        Category category = categoryRepository.findByName(CATEGORY_NAME).orElseThrow();
         Product expected = new Product(PRODUCT_NAME_2, PRODUCT_PRICE_2, PRODUCT_URL_2, category);
         expected.setId(2L);
 
@@ -81,7 +81,7 @@ public class ProductRepositoryTest {
 
     @Test
     void testDeleteProduct() {
-        Category category = categoryRepository.findByCategoryName(CATEGORY_NAME).orElseThrow();
+        Category category = categoryRepository.findByName(CATEGORY_NAME).orElseThrow();
         Product expected = new Product(PRODUCT_NAME_3, PRODUCT_PRICE_2, PRODUCT_URL_3, category);
         expected.setId(3L);
 
