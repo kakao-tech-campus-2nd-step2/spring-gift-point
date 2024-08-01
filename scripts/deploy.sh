@@ -1,9 +1,18 @@
 #!/bin/bash
 PROJECT_NAME="spring-gift-point"
+REPOSITORY_URL="https://github.com/hjinshin/spring-gift-point.git"
 DEPLOY_PATH="/home/ubuntu/repository/$PROJECT_NAME/"
 DEPLOY_LOG_PATH="/home/ubuntu/repository/$PROJECT_NAME/deploy.log"
 
 sudo echo "===== 배포 시작 : $(date +%c) =====" >> "$DEPLOY_LOG_PATH"
+
+# 작업 디렉토리 확인 및 Git 클론
+if [ ! -d "$DEPLOY_PATH" ]; then
+    sudo echo "디렉토리가 존재 X. git clone..." >> "$DEPLOY_LOG_PATH"
+    sudo git clone $REPOSITORY_URL $DEPLOY_PATH >> "$DEPLOY_LOG_PATH" 2>&1
+else
+    sudo echo "디렉토리가 존재 O." >> "$DEPLOY_LOG_PATH"
+fi
 
 cd $DEPLOY_PATH
 
