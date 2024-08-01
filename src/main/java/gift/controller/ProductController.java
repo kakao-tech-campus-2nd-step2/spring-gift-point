@@ -41,7 +41,7 @@ public class ProductController {
         this.productService = productService;
     }
 
-    @Operation(summary = "모든 상품 조회", description = "모든 상품을 페이징하여 조회합니다.")
+    @Operation(summary = "(명세 통일) 모든 상품 조회", description = "모든 상품을 페이징하여 조회합니다.")
     @ApiResponses(
         value = {
             @ApiResponse(responseCode = "200", description = "조회 성공"),
@@ -64,7 +64,7 @@ public class ProductController {
         return ResponseEntity.ok(products);
     }
 
-    @Operation(summary = "상품 조회", description = "ID를 사용하여 특정 상품을 조회합니다.")
+    @Operation(summary = "(명세 통일) 상품 조회", description = "ID를 사용하여 특정 상품을 조회합니다.")
     @ApiResponses(
         value = {
             @ApiResponse(responseCode = "200", description = "조회 성공"),

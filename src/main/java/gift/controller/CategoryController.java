@@ -33,7 +33,7 @@ public class CategoryController {
         this.categoryService = categoryService;
     }
 
-    @Operation(summary = "모든 카테고리 조회", description = "모든 카테고리를 조회합니다.")
+    @Operation(summary = "(명세 통일) 모든 카테고리 조회", description = "모든 카테고리를 조회합니다.")
     @ApiResponses(
         value = {
             @ApiResponse(responseCode = "200", description = "조회 성공"),

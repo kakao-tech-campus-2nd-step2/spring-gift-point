@@ -47,7 +47,7 @@ public class WishController {
         this.wishService = wishService;
     }
 
-    @Operation(summary = "위시리스트 조회", description = "회원의 위시리스트를 조회합니다.")
+    @Operation(summary = "(명세 통일) 위시리스트 조회", description = "회원의 위시리스트를 조회합니다.")
     @ApiResponses(
         {
             @ApiResponse(responseCode = "200", description = "조회 성공"),
@@ -93,7 +93,7 @@ public class WishController {
         return ResponseEntity.ok(wishlist);
     }
 
-    @Operation(summary = "위시리스트 추가", description = "회원의 위시리스트에 새로운 항목을 추가합니다.")
+    @Operation(summary = "(명세 통일) 위시리스트 추가", description = "회원의 위시리스트에 새로운 항목을 추가합니다.")
     @ApiResponses(
         {
             @ApiResponse(responseCode = "201", description = "위시 추가 성공"),
@@ -155,7 +155,7 @@ public class WishController {
         return ResponseEntity.status(HttpStatus.CREATED).body(createdWish);
     }
 
-    @Operation(summary = "위시리스트 항목 삭제", description = "회원의 위시리스트에서 특정 항목을 삭제합니다.")
+    @Operation(summary = "(명세 통일) 위시리스트 항목 삭제", description = "회원의 위시리스트에서 특정 항목을 삭제합니다.")
     @ApiResponses(
         {
             @ApiResponse(responseCode = "204", description = "위시리스트 항목 삭제 성공"),

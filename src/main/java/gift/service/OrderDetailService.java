@@ -43,7 +43,11 @@ public class OrderDetailService {
     public OrderDetailResponse createOrder(OrderDetailRequest orderDetailRequest, Long memberId) {
         OptionResponse optionResponse = optionService.getOptionById(orderDetailRequest.optionId());
 
-        optionService.subtractOptionQuantity(optionResponse.productId(), optionResponse.id(), orderDetailRequest.quantity());
+        optionService.subtractOptionQuantity(
+            optionResponse.productId(),
+            optionResponse.id(),
+            orderDetailRequest.quantity()
+        );
         Option option = optionService.convertToEntity(optionResponse);
 
         OrderDetail orderDetail = new OrderDetail(

@@ -32,7 +32,7 @@ public class MemberController {
         this.memberService = memberService;
     }
 
-    @Operation(summary = "회원 가입", description = "새로운 회원을 등록합니다.")
+    @Operation(summary = "(명세 통일) 회원 가입", description = "새로운 회원을 등록합니다.")
     @ApiResponses(
         value = {
             @ApiResponse(responseCode = "201", description = "회원가입 성공"),
@@ -62,7 +62,7 @@ public class MemberController {
         return ResponseEntity.status(HttpStatus.CREATED).body(registeredMember);
     }
 
-    @Operation(summary = "회원 로그인", description = "회원 로그인을 처리합니다.")
+    @Operation(summary = "(명세 통일) 회원 로그인", description = "회원 로그인을 처리합니다.")
     @ApiResponses(
         value = {
             @ApiResponse(responseCode = "201", description = "로그인 성공"),
