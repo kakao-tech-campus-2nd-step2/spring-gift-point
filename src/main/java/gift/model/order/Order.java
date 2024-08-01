@@ -1,5 +1,6 @@
 package gift.model.order;
 
+import gift.model.member.Member;
 import gift.model.product.Option;
 import jakarta.persistence.*;
 
@@ -16,19 +17,20 @@ public class Order {
     @JoinColumn(nullable = false, name = "option_id")
     private Option option;
 
+    @ManyToOne
+    @JoinColumn(nullable = false,name = "member_id")
+    private Member member;
+
     @Column(nullable = false, columnDefinition = "integer COMMENT '주문 수량'")
     private int quantity;
-
-    @Column(name = "order_date_time", nullable = false)
-    private LocalDateTime orderDateTime;
 
     @Column(columnDefinition = "VARCHAR(255) COMMENT '상품 주문 관련 메시지'")
     private String message;
 
-    protected Order(Option option, int quantity, LocalDateTime orderDateTime,String message){
+    public Order(Option option,Member member,int quantity,String message){
         this.option = option;
+        this.member = member;
         this.quantity = quantity;
-        this.orderDateTime = orderDateTime;
         this.message = message;
     }
 
@@ -44,10 +46,6 @@ public class Order {
 
     public int getQuantity() {
         return quantity;
-    }
-
-    public LocalDateTime getOrderDateTime() {
-        return orderDateTime;
     }
 
     public String getMessage() {

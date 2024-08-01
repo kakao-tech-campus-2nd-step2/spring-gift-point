@@ -15,7 +15,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 @Controller
-@RequestMapping("/wishlist")
+@RequestMapping("/api/wishes")
 @Tag(name = "Wish Management", description = "Wish Management API")
 public class WishListController {
 
@@ -42,17 +42,17 @@ public class WishListController {
         return ResponseEntity.ok().build();
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/{wishId}")
     @Operation(summary = "장바구니의 물건 삭제", description = "장바구니에 담긴 물건 삭제할 때 사용하는 API")
-    public ResponseEntity<Void> removeWish(@LoginMember MemberDto memberDto, @PathVariable Long id) {
-        wishListService.deleteWish(id);
+    public ResponseEntity<Void> removeWish(@LoginMember MemberDto memberDto, @PathVariable Long wishId) {
+        wishListService.deleteWish(wishId);
         return ResponseEntity.ok().build();
     }
 
-    @PutMapping("/{id}")
+    @PutMapping("/{wishId}")
     @Operation(summary = "장바구니에 담긴 상품 업데이트", description = "장바구니 상품을 수정할 때 사용하는 API")
-    public ResponseEntity<Void> updateWish(@LoginMember MemberDto memberDto, @PathVariable Long id, @RequestBody WishDto wishDto) {
-        wishListService.updateWish(id,wishDto);
+    public ResponseEntity<Void> updateWish(@LoginMember MemberDto memberDto, @PathVariable Long wishId, @RequestBody WishDto wishDto) {
+        wishListService.updateWish(wishId,wishDto);
         return ResponseEntity.ok().build();
     }
 }
