@@ -26,7 +26,7 @@ phases:
     commands:
       - echo Build started on `date`
       - ./gradlew build
-      - echo "Building the Docker image..."
+      - echo Building the Docker image...
       - docker build -t $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$IMAGE_REPO_NAME:$IMAGE_TAG .
   post_build:
     commands:
