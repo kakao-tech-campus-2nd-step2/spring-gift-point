@@ -8,7 +8,7 @@
 - codepipeline을 활용해서 배포 자동화
 
 ## api 명세서
-(추가 예정)
+http://localhost:8080/swagger-ui.html
 
 ## 현재 코드 구조
 ```plaintext

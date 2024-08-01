@@ -24,6 +24,7 @@ public class ProductController {
         this.productService = productService;
     }
 
+    @Operation(summary = "상품 목록 페이지네이션")
     @GetMapping
     public Page<ProductDto> getProducts(Pageable pageable) {
         return productService.getProducts(pageable).map(product -> new ProductDto(
@@ -38,8 +39,8 @@ public class ProductController {
         ));
     }
 
-    @Operation(summary = "상품 리스트 리턴")
-    @GetMapping
+    @Operation(summary = "전체 상품 조회",  description = "프론트 연결 때는 쓰이지 않음")
+    @GetMapping("/all")
     public List<ProductDto> findAll() {
         return productService.findAll();
     }
