@@ -16,7 +16,9 @@ public record OrderRequest(
     @Min(0)
     int quantity,
     @NotBlank
-    String message
+    String message,
+    @Min(0)
+    int point
     ) {
 
     public Order toEntity(Option option, Product product, Long userId) {

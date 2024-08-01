@@ -2,6 +2,8 @@ package gift.model;
 
 import gift.common.enums.Role;
 import gift.common.enums.SocialType;
+import gift.common.exception.ErrorCode;
+import gift.common.exception.UserException;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -81,5 +83,12 @@ public class User extends BaseEntity {
 
     public boolean checkSocialType(SocialType socialType) {
         return this.socialType == socialType;
+    }
+
+    public void subtractPoint(int point) {
+        if (this.point < point) {
+            throw new UserException(ErrorCode.LACK_POINT);
+        }
+        this.point -= point;
     }
 }
