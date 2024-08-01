@@ -5,9 +5,9 @@ import gift.service.OptionService;
 import gift.service.ProductService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -44,21 +44,22 @@ public class ProductController {
     @ApiResponse(responseCode = "200", description = "상품 조회 성공")
     @ApiResponse(responseCode = "400", description = "잘못된 요청")
     @GetMapping
-    public ResponseEntity<List<ProductResponseDto>> getAll(
+    public ResponseEntity<Page<ProductResponseDto>> getAll(
             @RequestParam(required = false, defaultValue = "0", value = "page") int pageNum,
             @RequestParam(required = false, defaultValue = "10", value = "size") int size,
-            @RequestParam(required = false, defaultValue = "id", value = "criteria") String criteria
+            @RequestParam(required = false, defaultValue = "name,asc", value = "sort") String[] sort,
+            @RequestParam(required = false, defaultValue = "1", value = "categoryId") Long categoryId
     ) {
-        Pageable pageable = PageRequest.of(pageNum, size, Sort.by(Sort.Direction.ASC, criteria));
-        List<ProductResponseDto> responses = productService.findAll(pageable);
+        Pageable pageable = PageRequest.of(pageNum, size, Sort.by(sort[1], sort[0]));
+        Page<ProductResponseDto> responses = productService.findAll(pageable,categoryId);
         return ResponseEntity.ok(responses);
     }
 
     @Operation(summary = "상품 개별 조회 API")
     @ApiResponse(responseCode = "200", description = "상품 조회 성공")
     @ApiResponse(responseCode = "400", description = "잘못된 요청")
-    @GetMapping("/{id}")
-    public ResponseEntity<ProductResponseDto> getProduct(@PathVariable("id") Long id) {
+    @GetMapping("/{productId}")
+    public ResponseEntity<ProductResponseDto> getProduct(@PathVariable("productId") Long id) {
         ProductResponseDto response = productService.findProduct(id);
         return ResponseEntity.ok(response);
     }
