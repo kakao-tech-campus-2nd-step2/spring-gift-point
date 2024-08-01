@@ -9,14 +9,9 @@ import gift.service.OptionService;
 import gift.service.ProductService;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/products")
@@ -57,22 +52,31 @@ public class ProductRestController {
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 
+    @Operation(summary = "카테고리별 모든 상품 정보를 조회합니다")
+    @GetMapping("/categories")
+    public ResponseEntity<CommonResponse> getProductByCategoryId(@RequestParam(defaultValue = "1") Long categoryId){
+        return ResponseEntity.ok().body(new CommonResponse(productService.findByCategoryId(categoryId),"카테고리별 상품 조회 성공", true));
+    }
+
+    @Operation(summary = "페이징된 카테고리별 상품 목록을 조회합니다")
+    @GetMapping("/categories/{categoryId}")
+    public ResponseEntity<CommonResponse> getPagedProductsByCategoryId(
+            @PathVariable Long categoryId,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "2") int size,
+            @RequestParam(defaultValue = "price,asc") String sort) {
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(new CommonResponse(productService.getPagedProductsByCategoryId(page,size,sort,categoryId),"페이징 된 카테고리별 상품 목록 조회 성공",true));
+    }
+
     @Operation(summary = "페이징된 상품 목록을 조회합니다")
     @GetMapping
     public ResponseEntity<CommonResponse> getPagedProducts(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size,
-            @RequestParam(defaultValue = "name,asc") String sort,
-            @RequestParam(defaultValue = "1") Long categoryId) {
-
-        String[] sortParams = sort.split(",");
-        String sortBy = sortParams[0];
-        Sort.Direction sortDirection = Sort.Direction.fromString(sortParams[1]);
-        Pageable pageable = PageRequest.of(page, size, Sort.by(sortDirection, sortBy));
-
-        System.out.println(categoryId);
+            @RequestParam(defaultValue = "name,asc") String sort) {
         return ResponseEntity.status(HttpStatus.OK)
-                .body(new CommonResponse(productService.getPagedProducts(pageable, categoryId),"페이징된 상품 목록 조회 성공",true));
+                .body(new CommonResponse(productService.getPagedProducts(page,size,sort),"페이징 된 상품 목록 조회 성공",true));
     }
 
     @Operation(summary = "상품 ID로 상품에 옵션을 추가합니다")
