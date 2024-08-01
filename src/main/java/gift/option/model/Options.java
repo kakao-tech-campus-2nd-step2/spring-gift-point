@@ -1,4 +1,4 @@
-package gift.model;
+package gift.option.model;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.OneToMany;
