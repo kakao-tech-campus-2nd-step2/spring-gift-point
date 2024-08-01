@@ -33,11 +33,19 @@ public class CategoryService {
             .collect(Collectors.toList());
     }
 
-    public void addCategory(RequestCategoryDto requestCategoryDto) {
+    public CategoryDto addCategory(RequestCategoryDto requestCategoryDto) {
         Category category = new Category(requestCategoryDto.getName(),
             requestCategoryDto.getColor(), requestCategoryDto.getImageUrl(),
             requestCategoryDto.getDescription());
-        categoryRepository.save(category);
+        return categoryRepository.save(category).toCategoryDto();
+    }
+
+    public CategoryDto updateCategory(Long id, RequestCategoryDto requestCategoryDto){
+        Category category = categoryRepository.findById(id)
+            .orElseThrow(() -> new NoSuchElementException("Category not found with id" + id));
+        category.update(requestCategoryDto);
+
+        return category.toCategoryDto();
     }
 
     public void deleteCategory(Long id) {

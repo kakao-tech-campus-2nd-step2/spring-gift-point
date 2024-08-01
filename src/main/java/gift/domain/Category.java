@@ -1,5 +1,8 @@
 package gift.domain;
 
+import gift.classes.RequestState.CategoryRequestStateDTO;
+import gift.dto.CategoryDto;
+import gift.dto.RequestCategoryDto;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -66,5 +69,16 @@ public class Category {
 
     public String getDescription() {
         return description;
+    }
+
+    public CategoryDto toCategoryDto(){
+        return new CategoryDto(this.id, this.name, this.color, this.imageUrl, this.description);
+    }
+
+    public void update(RequestCategoryDto requestCategoryDto){
+        this.name = requestCategoryDto.getName();
+        this.color = requestCategoryDto.getColor();
+        this.imageUrl = requestCategoryDto.getImageUrl();
+        this.description = requestCategoryDto.getDescription();
     }
 }
