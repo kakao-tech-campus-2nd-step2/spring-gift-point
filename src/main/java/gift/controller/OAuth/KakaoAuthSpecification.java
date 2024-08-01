@@ -21,7 +21,7 @@ public interface KakaoAuthSpecification {
                     @ApiResponse(responseCode = "302", description = "리다이렉트 성공"),
                     @ApiResponse(responseCode = "500", description = "서버 오류")
             })
-    void getAuthCode(HttpServletResponse response) throws IOException;
+    ResponseEntity<Void> getAuthCode(HttpServletResponse response) throws IOException;
 
     @Operation(summary = "카카오 인증 코드로 액세스 토큰 가져오기", description = "카카오 인증 코드를 사용하여 액세스 토큰을 가져옵니다.",
             responses = {

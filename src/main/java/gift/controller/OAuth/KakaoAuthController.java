@@ -5,6 +5,7 @@ import gift.service.OAuth.KakaoAuthService;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -23,9 +24,12 @@ public class KakaoAuthController implements KakaoAuthSpecification {
     }
 
     @GetMapping("/login")
-    public void getAuthCode(HttpServletResponse response) throws IOException {
+    public ResponseEntity<Void> getAuthCode(HttpServletResponse response) throws IOException {
         String url = kakaoAuthService.createCodeUrl();
-        response.sendRedirect(url);
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Location", url);
+
+        return new ResponseEntity<>(headers, HttpStatus.FOUND);
     }
 
     @GetMapping("/callback")
