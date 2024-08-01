@@ -74,7 +74,7 @@ public class WishController {
     public ResponseEntity<WishResponse> addWish(
         @LoginUser User user, @RequestBody @Valid CreateWishRequest request
     ) {
-        WishResponse response = wishService.createWish(user.getId(), request);
+        WishResponse response = wishService.createWish(user, request);
         URI location = UriComponentsBuilder.fromPath("/api/wishes/{id}")
             .buildAndExpand(response.id())
             .toUri();

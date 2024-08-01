@@ -42,7 +42,11 @@ public class Wish extends BaseEntity {
         foreignKey = @ForeignKey(name = "fk_wishes_product_id_ref_products_id"))
     private Product product;
 
-    public Wish(User user, Product product, int quantity) {
+    public Wish(User user, Product product) {
+        this(user, product, DEFAULT_QUANTITY);
+    }
+
+    public Wish(User user, Product product, Integer quantity) {
         validateQuantity(quantity);
         this.user = user;
         this.product = product;
@@ -66,6 +70,10 @@ public class Wish extends BaseEntity {
 
     public Product getProduct() {
         return product;
+    }
+
+    public Long getProductId() {
+        return product.getId();
     }
 
     public boolean existsProduct(Option option) {

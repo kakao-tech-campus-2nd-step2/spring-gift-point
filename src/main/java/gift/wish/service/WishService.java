@@ -5,7 +5,6 @@ import gift.exception.ErrorCode;
 import gift.product.entity.Product;
 import gift.product.repository.ProductJpaRepository;
 import gift.user.entity.User;
-import gift.user.repository.UserJpaRepository;
 import gift.wish.dto.request.CreateWishRequest;
 import gift.wish.dto.request.UpdateWishRequest;
 import gift.wish.dto.response.WishResponse;
@@ -22,13 +21,10 @@ public class WishService {
 
     private final WishRepository wishRepository;
     private final ProductJpaRepository productRepository;
-    private final UserJpaRepository userRepository;
 
-    public WishService(WishRepository wishRepository, ProductJpaRepository productRepository,
-        UserJpaRepository userRepository) {
+    public WishService(WishRepository wishRepository, ProductJpaRepository productRepository) {
         this.wishRepository = wishRepository;
         this.productRepository = productRepository;
-        this.userRepository = userRepository;
     }
 
     @Transactional(readOnly = true)
@@ -39,13 +35,11 @@ public class WishService {
     }
 
     @Transactional
-    public WishResponse createWish(Long userId, CreateWishRequest request) {
+    public WishResponse createWish(User user, CreateWishRequest request) {
         Product product = productRepository.findById(request.productId())
             .orElseThrow(() -> new CustomException(ErrorCode.PRODUCT_NOT_FOUND));
-        User user = userRepository.findById(userId)
-            .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
 
-        Wish wish = new Wish(user, product, request.quantity());
+        Wish wish = new Wish(user, product);
 
         return WishResponse.from(wishRepository.save(wish));
     }
