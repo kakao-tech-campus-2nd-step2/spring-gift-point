@@ -150,7 +150,7 @@ class ProductControllerTest {
 
         // When
         mockMvc.perform(RestDocumentationRequestBuilders
-                        .put("/api/products/{productId}",1L)
+                        .put("/api/products/{productId}", 1L)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(updateProductRequest)))
                 //Then
@@ -199,8 +199,8 @@ class ProductControllerTest {
         //Given
         Long productId = 1L;
         List<OptionResponse> optionResponses = List.of(
-                new OptionResponse(1L, "옵션1", 100),
-                new OptionResponse(2L, "옵션1", 100)
+                new OptionResponse(1L, "옵션1", 100, 1L),
+                new OptionResponse(2L, "옵션1", 100, 1L)
         );
 
         when(productService.getOptionResponses(productId)).thenReturn(optionResponses);
@@ -225,7 +225,8 @@ class ProductControllerTest {
                                         fieldWithPath("[]").type(JsonFieldType.ARRAY).description("OptionResponse 객체의 배열"),
                                         fieldWithPath("[].id").type(JsonFieldType.NUMBER).description("옵션의 ID"),
                                         fieldWithPath("[].name").type(JsonFieldType.STRING).description("옵션의 이름"),
-                                        fieldWithPath("[].quantity").type(JsonFieldType.NUMBER).description("옵션의 수량")
+                                        fieldWithPath("[].quantity").type(JsonFieldType.NUMBER).description("옵션의 수량"),
+                                        fieldWithPath("[].productId").type(JsonFieldType.NUMBER).description("옵션이 속한 상품의 ID")
                                 )
                         )
                 );
