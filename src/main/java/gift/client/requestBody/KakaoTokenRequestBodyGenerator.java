@@ -5,23 +5,22 @@ import org.springframework.util.MultiValueMap;
 
 public class KakaoTokenRequestBodyGenerator {
 
-//    private static final String REDIRECT_URI = "http://localhost:8080";
-    private static final String REDIRECT_URI = "http://43.201.254.198:8080";
-
     private static final String GRANT_TYPE = "authorization_code";
 
-    private String clientId;
-    private String code;
+    private final String clientId;
+    private final String code;
+    private final String redirectUri;
 
-    public KakaoTokenRequestBodyGenerator(String clientId, String code) {
+    public KakaoTokenRequestBodyGenerator(String clientId, String redirectUri, String code) {
         this.clientId = clientId;
         this.code = code;
+        this.redirectUri = redirectUri;
     }
 
     public MultiValueMap<String, String> toMultiValueMap() {
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
         params.add("grant_type", GRANT_TYPE);
-        params.add("redirect_uri", REDIRECT_URI);
+        params.add("redirect_uri", redirectUri);
         params.add("code", code);
         params.add("client_id", clientId);
 

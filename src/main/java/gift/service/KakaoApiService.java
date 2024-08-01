@@ -25,9 +25,11 @@ public class KakaoApiService {
 
     @Value("${clientId}")
     private String clientId;
+    @Value("${redirect.uri}")
+    private String redirectUri;
 
     public KakaoTokenResponse getKakaoToken(String code) {
-        KakaoTokenRequestBodyGenerator generator = new KakaoTokenRequestBodyGenerator(clientId, code);
+        KakaoTokenRequestBodyGenerator generator = new KakaoTokenRequestBodyGenerator(clientId, redirectUri, code);
 
         return kakaoApiClient.getKakaoToken(generator.toMultiValueMap());
     }
