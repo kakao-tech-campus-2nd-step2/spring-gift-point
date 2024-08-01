@@ -5,7 +5,6 @@ import gift.dto.paging.PagingResponse;
 import gift.dto.wish.WishRequest;
 import gift.dto.wish.WishResponse;
 import gift.model.user.User;
-import gift.service.product.ProductService;
 import gift.service.wish.WishService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
