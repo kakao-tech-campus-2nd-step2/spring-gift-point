@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Update Item</title>
+  <style>
+    body { font-family: Arial, sans-serif; line-height: 1.6; padding: 20px; }
+    h1, h2 { color: #333; }
+    form { max-width: 500px; margin: 0 auto; }
+    label { display: block; margin-top: 10px; }
+    input, select { width: 100%; padding: 8px; margin-top: 5px; }
+    button { background-color: #4CAF50; color: white; padding: 10px 15px; border: none; cursor: pointer; margin-top: 20px; }
+    button:hover { background-color: #45a049; }
+    .option { border: 1px solid #ddd; padding: 10px; margin-top: 10px; }
+    .remove-option { background-color: #f44336; }
+    .error { color: red; font-size: 0.9em; margin-top: 5px; }
+    .field-error { border: 1px solid red; }
+  </style>
+</head>
+<body>
+<h1>Update Item</h1>
+<form th:action="@{/admin/items/update/{productId}(productId=${itemForm.id})}"
+      th:object="${itemForm}" method="POST" id="updateForm">
+  <input type="hidden" id="id" th:field="*{id}"/>
+
+  <label for="name">Name:</label>
+  <input type="text" id="name" th:field="*{name}" required maxlength="15" th:class="${#fields.hasErrors('name')}? 'field-error'"/>
+  <span class="error" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></span>
+
+  <label for="price">Price:</label>
+  <input type="number" id="price" th:field="*{price}" required min="1" th:class="${#fields.hasErrors('price')}? 'field-error'"/>
+  <span class="error" th:if="${#fields.hasErrors('price')}" th:errors="*{price}"></span>
+
+  <label for="imgUrl">Image URL:</label>
+  <input type="text" id="imgUrl" th:field="*{imgUrl}" th:class="${#fields.hasErrors('imgUrl')}? 'field-error'"/>
+  <span class="error" th:if="${#fields.hasErrors('imgUrl')}" th:errors="*{imgUrl}"></span>
+
+  <label for="categoryId">Category:</label>
+  <select id="categoryId" th:field="*{categoryId}" required th:class="${#fields.hasErrors('categoryId')}? 'field-error'">
+    <option value="">Select a category</option>
+    <option th:each="category : ${categories}"
+            th:value="${category.id}"
+            th:text="${category.name}"
+            th:selected="${category.id == itemForm.categoryId}"></option>
+  </select>
+  <span class="error" th:if="${#fields.hasErrors('categoryId')}" th:errors="*{categoryId}"></span>
+
+  <h2>Options</h2>
+  <div id="optionsContainer">
+    <div th:each="option, optionStat : *{options}" class="option">
+      <input type="hidden" th:field="*{options[__${optionStat.index}__].id}"/>
+
+      <label th:for="${'optionName' + optionStat.index}">Option Name:</label>
+      <input type="text" th:id="${'optionName' + optionStat.index}"
+             th:field="*{options[__${optionStat.index}__].name}" required
+             th:class="${#fields.hasErrors('options[' + optionStat.index + '].name')}? 'field-error'"/>
+      <span class="error" th:if="${#fields.hasErrors('options[' + optionStat.index + '].name')}"
+            th:errors="*{options[__${optionStat.index}__].name}"></span>
+
+      <label th:for="${'optionQuantity' + optionStat.index}">Quantity:</label>
+      <input type="number" th:id="${'optionQuantity' + optionStat.index}"
+             th:field="*{options[__${optionStat.index}__].quantity}" required min="1" max="100000000"
+             th:class="${#fields.hasErrors('options[' + optionStat.index + '].quantity')}? 'field-error'"/>
+      <span class="error" th:if="${#fields.hasErrors('options[' + optionStat.index + '].quantity')}"
+            th:errors="*{options[__${optionStat.index}__].quantity}"></span>
+
+      <button type="button" class="remove-option" onclick="removeOption(this)">Remove Option</button>
+    </div>
+  </div>
+
+  <button type="button" onclick="addOption()">Add Option</button>
+  <input type="hidden" name="_method" value="PUT">
+  <button type="submit">Update Item</button>
+</form>
+
+<script th:inline="javascript">
+  let optionIndex = /*[[${itemForm.options.size()}]]*/ 0;
+
+  function addOption() {
+    const container = document.getElementById('optionsContainer');
+    const newOption = document.createElement('div');
+    newOption.className = 'option';
+    newOption.innerHTML = `
+                <input type="hidden" name="options[${optionIndex}].id" />
+
+                <label for="options${optionIndex}.name">Option Name:</label>
+                <input type="text" id="options${optionIndex}.name" name="options[${optionIndex}].name" required />
+
+                <label for="options${optionIndex}.quantity">Quantity:</label>
+                <input type="number" id="options${optionIndex}.quantity" name="options[${optionIndex}].quantity" required min="1" max="100000000" />
+
+                <button type="button" class="remove-option" onclick="removeOption(this)">Remove Option</button>
+            `;
+    container.appendChild(newOption);
+    optionIndex++;
+  }
+
+  function removeOption(button) {
+    button.parentElement.remove();
+  }
+</script>
+</body>
+</html>
