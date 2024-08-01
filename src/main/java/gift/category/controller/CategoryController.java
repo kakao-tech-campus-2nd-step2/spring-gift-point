@@ -30,17 +30,15 @@ public class CategoryController {
     }
 
     @PostMapping
-    public ResponseEntity<Void> add(@RequestBody CategoryRequest categoryRequest) {
-        categoryService.create(categoryRequest);
-
-        return ResponseEntity.ok().build();
+    public ResponseEntity<CategoryResponse> add(@RequestBody CategoryRequest categoryRequest) {
+        return ResponseEntity.ok(categoryService.create(categoryRequest));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Void> update(@PathVariable Integer id, @RequestBody CategoryRequest categoryRequest) {
-        categoryService.update(id, categoryRequest);
+    public ResponseEntity<CategoryResponse> update(@PathVariable Integer id, @RequestBody CategoryRequest categoryRequest) {
+        var body = categoryService.update(id, categoryRequest);
 
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok(body);
     }
 
     @DeleteMapping("/{id}")

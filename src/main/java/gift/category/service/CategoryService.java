@@ -24,16 +24,20 @@ public class CategoryService {
 
     }
 
-    public void create(CategoryRequest categoryRequest) {
+    public CategoryResponse create(CategoryRequest categoryRequest) {
         Category category = getCategory(null, categoryRequest);
 
-        jpaCategoryRepository.save(category);
+        category = jpaCategoryRepository.save(category);
+
+        return new CategoryResponse(category);
     }
 
 
-    public void update(long id, CategoryRequest categoryRequest) {
+    public CategoryResponse update(long id, CategoryRequest categoryRequest) {
         Category category = getCategory(id, categoryRequest);
-        jpaCategoryRepository.save(category);
+        category = jpaCategoryRepository.save(category);
+
+        return new CategoryResponse(category);
     }
 
     public void delete(long id) {
