@@ -1,7 +1,9 @@
 package gift.mapper;
 
+import gift.domain.Category.CreateCategory;
 import gift.domain.Category.DetailCategory;
 import gift.domain.Category.SimpleCategory;
+import gift.domain.Category.UpdateCategory;
 import gift.entity.CategoryEntity;
 import gift.entity.ProductEntity;
 import java.util.List;
@@ -17,7 +19,11 @@ public class CategoryMapper {
         List<SimpleCategory> simpleList = all.stream()
             .map(entity -> new SimpleCategory(
                 entity.getId(),
-                entity.getName()
+                entity.getName(),
+                entity.getImageURL(),
+                entity.getTitle(),
+                entity.getDescription(),
+                entity.getBackgroundColor()
             ))
             .collect(Collectors.toList());
 
@@ -33,16 +39,25 @@ public class CategoryMapper {
                     Collectors.toList()),
             entity.getId(),
             entity.getName(),
+            entity.getImageURL(),
+            entity.getTitle(),
+            entity.getDescription(),
+            entity.getBackgroundColor(),
             entity.getCreatedAt(),
             entity.getUpdatedAt());
     }
 
-    public CategoryEntity toEntity(String name) {
-        return new CategoryEntity(name);
+    public CategoryEntity toEntity(CreateCategory create) {
+        return new CategoryEntity(create.getName(), create.getImageURL(), create.getTitle(),
+            create.getDescription(), create.getBackgroundColor());
     }
 
-    public CategoryEntity toUpdate(String name, CategoryEntity entity) {
-        entity.setName(name);
+    public CategoryEntity toUpdate(UpdateCategory update, CategoryEntity entity) {
+        entity.setName(update.getName());
+        entity.setImageURL(update.getImageURL());
+        entity.setTitle(update.getTitle());
+        entity.setDescription(update.getDescription());
+        entity.setBackgroundColor(update.getBackgroundColor());
         return entity;
     }
 

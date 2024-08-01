@@ -26,6 +26,18 @@ public class CategoryEntity {
     @Column
     private String name;
 
+    @Column
+    private String imageURL;
+
+    @Column
+    private String title;
+
+    @Column
+    private String description;
+
+    @Column
+    private String backgroundColor;
+
     @CreatedDate
     private LocalDateTime createdAt;
 
@@ -39,8 +51,13 @@ public class CategoryEntity {
     public CategoryEntity() {
     }
 
-    public CategoryEntity(String name) {
+    public CategoryEntity(String name, String imageURL, String title, String description,
+        String backgroundColor) {
         this.name = name;
+        this.imageURL = imageURL;
+        this.title = title;
+        this.description = description;
+        this.backgroundColor = backgroundColor;
     }
 
     public Long getId() {
@@ -63,7 +80,39 @@ public class CategoryEntity {
         return productEntities;
     }
 
+    public String getImageURL() {
+        return imageURL;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public String getBackgroundColor() {
+        return backgroundColor;
+    }
+
     public void setName(String name) {
         this.name = name;
+    }
+
+    public void setImageURL(String imageURL) {
+        this.imageURL = imageURL;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public void setBackgroundColor(String backgroundColor) {
+        this.backgroundColor = backgroundColor;
     }
 }
