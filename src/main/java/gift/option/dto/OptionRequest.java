@@ -1,4 +1,4 @@
-package gift.dto;
+package gift.option.dto;
 
 public class OptionRequest {
 

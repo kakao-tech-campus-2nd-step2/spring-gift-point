@@ -1,6 +1,9 @@
-package gift.dto;
+package gift.product.dto;
 
-public class ProductDto {
+import lombok.ToString;
+
+@ToString
+public class ProductRequest {
 
     private String name;
     private Integer price;
@@ -9,22 +12,22 @@ public class ProductDto {
     private Long optionId;
     private String optionName;
 
-    public ProductDto() {
+    public ProductRequest() {
     }
 
-    public ProductDto(String name, Integer price, String imageUrl, Long categoryId) {
+    public ProductRequest(String name, Integer price, String imageUrl, Long categoryId) {
         this(name, price, imageUrl, categoryId, null, null);
     }
 
-    public ProductDto(String name, Integer price, String imageUrl, Long categoryId, String optionName) {
+    public ProductRequest(String name, Integer price, String imageUrl, Long categoryId, String optionName) {
         this(name, price, imageUrl, categoryId, null, optionName);
     }
 
-    public ProductDto(String name, Integer price, String imageUrl, Long categoryId, Long optionId) {
+    public ProductRequest(String name, Integer price, String imageUrl, Long categoryId, Long optionId) {
         this(name, price, imageUrl, categoryId, optionId, null);
     }
 
-    public ProductDto(String name, Integer price, String imageUrl, Long categoryId, Long optionId,
+    public ProductRequest(String name, Integer price, String imageUrl, Long categoryId, Long optionId,
         String optionName) {
         this.name = name;
         this.price = price;
@@ -38,7 +41,7 @@ public class ProductDto {
         return name;
     }
 
-    public ProductDto setName(String name) {
+    public ProductRequest setName(String name) {
         this.name = name;
         return this;
     }
@@ -47,7 +50,7 @@ public class ProductDto {
         return price;
     }
 
-    public ProductDto setPrice(Integer price) {
+    public ProductRequest setPrice(Integer price) {
         this.price = price;
         return this;
     }
@@ -56,7 +59,7 @@ public class ProductDto {
         return imageUrl;
     }
 
-    public ProductDto setImageUrl(String imageUrl) {
+    public ProductRequest setImageUrl(String imageUrl) {
         this.imageUrl = imageUrl;
         return this;
     }
@@ -65,7 +68,7 @@ public class ProductDto {
         return categoryId;
     }
 
-    public ProductDto setCategoryId(Long categoryId) {
+    public ProductRequest setCategoryId(Long categoryId) {
         this.categoryId = categoryId;
         return this;
     }
@@ -74,7 +77,7 @@ public class ProductDto {
         return optionId;
     }
 
-    public ProductDto setOptionId(Long optionId) {
+    public ProductRequest setOptionId(Long optionId) {
         this.optionId = optionId;
         return this;
     }
