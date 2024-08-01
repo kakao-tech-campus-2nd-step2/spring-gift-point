@@ -16,9 +16,14 @@ public class Member {
     @Column(unique = true)
     private String email;
 
+    @Column(nullable = false)
     private String password;
 
+    @Enumerated(EnumType.STRING)
     private MemberRole role;
+
+    @Column(nullable = false)
+    private Integer point;
 
     @OneToOne(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
     private SocialAccount socialAccount;
@@ -27,6 +32,12 @@ public class Member {
     private List<Wish> wishes = new ArrayList<>();
 
     public Member() {
+    }
+
+    @PrePersist
+    private void prePersist() {
+        this.point = this.point == null ? 0 : this.point;
+        this.role = this.role == null ? MemberRole.MEMBER : this.role;
     }
 
     public Long getId() {
