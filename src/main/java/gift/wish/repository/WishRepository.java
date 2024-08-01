@@ -1,8 +1,11 @@
-package gift.repository;
+package gift.wish.repository;
 
-import gift.model.Member;
-import gift.model.Wish;
+import gift.member.model.Member;
+import gift.product.model.Product;
+import gift.wish.model.Wish;
 import java.util.List;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -14,4 +17,6 @@ public interface WishRepository extends JpaRepository<Wish, Long> {
     List<Wish> findByProductId(Long productId);
 
     int deleteByIdAndMember(Long wishId, Member member);
+
+    Page<Wish> findAllByMember(Pageable pageable,Member member);
 }
