@@ -1,48 +1,72 @@
 package gift.service;
 
-import gift.dto.OptionRequestDTO;
-import gift.dto.OptionsPageResponseDTO;
+import gift.dto.option.OptionRequestDTO;
+import gift.dto.option.OptionResponseDTO;
+import gift.dto.option.OptionsResponseDTO;
+
 import gift.exceptions.CustomException;
+
 import gift.model.Option;
 import gift.model.Product;
+
 import gift.repository.OptionRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
+import gift.repository.ProductRepository;
+
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Service
 public class OptionService {
     private final OptionRepository optionRepository;
-    private final ProductService productService;
+    private final ProductRepository productRepository;
 
-    public OptionService(OptionRepository optionRepository, ProductService productService) {
+    public OptionService(OptionRepository optionRepository, ProductRepository productRepository) {
         this.optionRepository = optionRepository;
-        this.productService = productService;
+        this.productRepository = productRepository;
     }
 
-    public OptionsPageResponseDTO getAllOptions(Pageable pageable) {
-        Page<Option> optionPage = optionRepository.findAll(pageable);
+    public OptionsResponseDTO getProductOptions(Long productId) {
+        List<Option> optionList = optionRepository.findAllByProductId(productId);
 
-        return new OptionsPageResponseDTO(optionPage.getContent(),
-                optionPage.getNumber(),
-                optionPage.getTotalPages());
+        return new OptionsResponseDTO(optionList);
     }
 
-    public OptionsPageResponseDTO getProductOptions(Long productId, Pageable pageable) {
-        Page<Option> optionPage = optionRepository.findAllByProductId(productId, pageable);
-
-        return new OptionsPageResponseDTO(optionPage.getContent(),
-                optionPage.getNumber(),
-                optionPage.getTotalPages());
-    }
-
-    public void createOption(Long productId, OptionRequestDTO optionRequestDTO) {
-        Product product = productService.getProduct(productId);
+    public OptionResponseDTO createOption(Long productId, OptionRequestDTO optionRequestDTO) {
+        Product product = productRepository.findById(productId).orElseThrow(CustomException::productNotFoundException);
         Option option = new Option(optionRequestDTO.name(), optionRequestDTO.quantity(), product);
+        Option savedOption = optionRepository.save(option);
 
-        optionRepository.save(option);
+        return new OptionResponseDTO(savedOption.getId(), savedOption.getName(), savedOption.getQuantity());
+    }
+
+    public OptionResponseDTO modifyOption(Long productId, Long optionId, OptionRequestDTO optionRequestDTO) {
+        Product product = productRepository.findById(productId).orElseThrow(CustomException::productNotFoundException);
+        Option option = optionRepository.findById(optionId).orElseThrow(CustomException::optionNotFoundException);
+
+        if (!option.getProduct().getId().equals(productId)) {
+            throw CustomException.optionNotBelongProductException();
+        }
+
+        option.setName(optionRequestDTO.name());
+        option.setQuantity(optionRequestDTO.quantity());
+        Option updatedOption = optionRepository.save(option);
+
+        return new OptionResponseDTO(updatedOption.getId(), updatedOption.getName(), updatedOption.getQuantity());
+    }
+
+    @Transactional
+    public void deleteOption(Long productId, Long optionId) {
+        Product product = productRepository.findById(productId).orElseThrow(CustomException::productNotFoundException);
+        Option option = optionRepository.findById(optionId).orElseThrow(CustomException::optionNotFoundException);
+
+        if (!option.getProduct().getId().equals(productId)) {
+            throw CustomException.optionNotBelongProductException();
+        }
+
+        optionRepository.deleteById(optionId);
     }
 
     @Transactional

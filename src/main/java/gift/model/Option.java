@@ -1,18 +1,13 @@
 package gift.model;
 
 import gift.exceptions.CustomException;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Table;
-import jakarta.persistence.Column;
-import jakarta.persistence.Id;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.JoinColumn;
+import jakarta.persistence.*;
 
 
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
+
+import java.util.List;
 
 @Entity
 @Table(name = "options")
@@ -32,6 +27,9 @@ public class Option {
     @ManyToOne
     @JoinColumn(name = "product_id")
     private Product product;
+
+    @OneToMany(mappedBy = "option", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Wish> wishes;
 
     protected Option() { }
 
@@ -54,6 +52,14 @@ public class Option {
 
     public String getName() {
         return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setQuantity(Long quantity) {
+        this.quantity = quantity;
     }
 
     public Long getQuantity() {
