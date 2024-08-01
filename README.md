@@ -23,6 +23,9 @@ https://impossible-repair-22e.notion.site/57ec013f9424421eb2317b11a2b9a29c?v=f3f
 # 2단계
 
 ## 구현할 기능 목록
+- [ ] API 오류 확인
+  - [ ] wish 
+  - [x] product 카테고리별 상품 불러오는 api endpoint 경로 오류 수정
 - [ ] 배포 자동화
   - [ ] 배포 스크립트 작성
     - [ ] 웹을 서버에 배포하기 위한 셀 스크립트 작성

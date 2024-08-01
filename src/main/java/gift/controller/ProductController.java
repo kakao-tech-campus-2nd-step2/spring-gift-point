@@ -75,7 +75,7 @@ public class ProductController {
 
     // 특정 카테고리별 상품 목록 조회
     @Operation(summary = "특정 카테고리의 상품 목록 조회")
-    @GetMapping("/{category_id}")
+    @GetMapping("/categories/{category_id}")
     public ResponseEntity<List<ProductListDto>> getProductOptions(@PathVariable Long category_id, @RequestParam(defaultValue = "0") int page,
                                                                   @RequestParam(defaultValue = "10") int size) {
         Pageable pageable = PageRequest.of(page, size);
