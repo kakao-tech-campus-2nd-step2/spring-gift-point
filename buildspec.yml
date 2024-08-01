@@ -12,11 +12,11 @@ phases:
     runtime-versions:
       java: corretto21
     commands:
-      - echo Installing dependencies...
+      - echo "Installing dependencies..."
       - ./gradlew clean
   pre_build:
     commands:
-      - echo Logging in to Amazon ECR...
+      - echo "Logging in to Amazon ECR..."
       - echo "IMAGE_REPO_NAME: $IMAGE_REPO_NAME"
       - echo "IMAGE_TAG: $IMAGE_TAG"
       - echo "AWS_ACCOUNT_ID: $AWS_ACCOUNT_ID"
@@ -24,14 +24,14 @@ phases:
       - aws ecr get-login-password --region $AWS_DEFAULT_REGION | docker login --username AWS --password-stdin $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com
   build:
     commands:
-      - echo Build started on `date`
+      - echo "Build started on `date`"
       - ./gradlew build
-      - echo Building the Docker image...
+      - echo "Building the Docker image..."
       - docker build -t $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$IMAGE_REPO_NAME:$IMAGE_TAG .
   post_build:
     commands:
-      - echo Build completed on `date`
-      - echo Pushing the Docker image...
+      - echo "Build completed on `date`"
+      - echo "Pushing the Docker image..."
       - docker push $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$IMAGE_REPO_NAME:$IMAGE_TAG
       - echo "updated line for codebuild ci"
 
