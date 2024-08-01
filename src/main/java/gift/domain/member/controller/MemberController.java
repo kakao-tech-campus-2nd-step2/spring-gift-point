@@ -8,8 +8,11 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.Parameters;
 import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -35,7 +38,11 @@ public class MemberController {
 
     @GetMapping()
     @Operation(summary = "전체 유저 조회", description = "전체 유저를 조회합니다.")
-    @ApiResponse(responseCode = "200", description = "요청에 성공하였습니다.", content = @Content(mediaType = "application/json"))
+    @ApiResponses({
+        @ApiResponse(responseCode="200", description = "요청에 성공하였습니다.", content = @Content(schema = @Schema(implementation = MemberResponse.class), mediaType = "application/json")),
+        @ApiResponse(responseCode="400", description = "잘못된 요청", content = @Content(mediaType = "application/json")),
+        @ApiResponse(responseCode="500", description = "서버 오류", content = @Content(mediaType = "application/json"))
+    })
     @Parameters({
         @Parameter(name = "pageNo", description = "페이지 번호 (0부터 시작)", example = "0"),
         @Parameter(name = "pageSize", description = "페이지 크기", example = "10")
@@ -50,8 +57,12 @@ public class MemberController {
 
     @PostMapping("/register")
     @Operation(summary = "회원 가입", description = "회원 가입을 요청합니다.")
-    @ApiResponse(responseCode = "201", description = "요청에 성공하였습니다.", content = @Content(mediaType = "application/json"))
-    public ResponseEntity<JwtResponse> register(@RequestBody MemberRequest memberRequest) {
+    @ApiResponses({
+        @ApiResponse(responseCode="200", description = "요청에 성공하였습니다.", content = @Content(schema = @Schema(implementation = JwtResponse.class), mediaType = "application/json")),
+        @ApiResponse(responseCode="400", description = "잘못된 요청", content = @Content(mediaType = "application/json")),
+        @ApiResponse(responseCode="500", description = "서버 오류", content = @Content(mediaType = "application/json"))
+    })
+    public ResponseEntity<JwtResponse> register(@RequestBody @Valid MemberRequest memberRequest) {
         String token = memberService.register(memberRequest);
 
         return ResponseEntity.status(HttpStatus.CREATED)
@@ -60,15 +71,16 @@ public class MemberController {
 
     @PostMapping("/login")
     @Operation(summary = "로그인", description = "로그인을 진행합니다.")
-    @ApiResponse(responseCode = "200", description = "요청에 성공하였습니다.", content = @Content(mediaType = "application/json"))
-    public ResponseEntity<JwtResponse> login(@RequestBody MemberRequest memberRequest) {
+    @ApiResponses({
+        @ApiResponse(responseCode="200", description = "요청에 성공하였습니다.", content = @Content(schema = @Schema(implementation = JwtResponse.class), mediaType = "application/json")),
+        @ApiResponse(responseCode="400", description = "잘못된 요청", content = @Content(mediaType = "text/plain;charset=UTF-8\n")),
+        @ApiResponse(responseCode="500", description = "서버 오류", content = @Content(mediaType = "text/plain;charset=UTF-8\n"))
+    })
+    public ResponseEntity<JwtResponse> login(@RequestBody @Valid MemberRequest memberRequest) {
 
         String token = memberService.login(memberRequest);
+        return ResponseEntity.ok(new JwtResponse(token));
 
-        if (token != null) {
-            return ResponseEntity.ok(new JwtResponse(token));
-        }
-        return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
     }
 
     @DeleteMapping("/{id}")

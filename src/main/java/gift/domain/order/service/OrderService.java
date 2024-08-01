@@ -14,6 +14,8 @@ import gift.oauth.service.OAuthService;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Optional;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -34,6 +36,10 @@ public class OrderService {
         this.kakaoApiService = kakaoApiService;
         this.optionService = optionService;
         this.oauthService = oauthService;
+    }
+
+    public Page<OrderResponse> getAllOrders(Pageable pageable, Member member) {
+        return orderRepository.findAllByMember(pageable, member).map(this::entityToDto);
     }
 
     @Transactional

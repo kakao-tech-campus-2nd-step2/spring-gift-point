@@ -12,6 +12,7 @@ import gift.domain.product.entity.Product;
 import gift.domain.product.repository.ProductRepository;
 import gift.domain.wishlist.entity.Wish;
 import gift.domain.wishlist.repository.WishRepository;
+import java.time.LocalDateTime;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,8 +50,8 @@ class WishRepositoryTest {
         Product savedProduct1 = productRepository.save(createProduct(savedCategory));
         Product savedProduct2 = productRepository.save(createProduct(savedCategory));
 
-        Wish expected1 = wishRepository.save(new Wish(savedMember, savedProduct1));
-        Wish expected2 = wishRepository.save(new Wish(savedMember, savedProduct2));
+        Wish expected1 = wishRepository.save(new Wish(savedMember, savedProduct1, LocalDateTime.now()));
+        Wish expected2 = wishRepository.save(new Wish(savedMember, savedProduct2, LocalDateTime.now()));
 
         Pageable pageable = PageRequest.of(0, 10);
 
@@ -72,7 +73,7 @@ class WishRepositoryTest {
         Category savedCategory = categoryRepository.save(createCategory());
         Product savedProduct = productRepository.save(createProduct(savedCategory));
 
-        Wish expected = wishRepository.save(new Wish(savedMember, savedProduct));
+        Wish expected = wishRepository.save(new Wish(savedMember, savedProduct,LocalDateTime.now()));
 
         // when
         Wish actual = wishRepository.findById(expected.getId()).orElseThrow();
@@ -90,7 +91,7 @@ class WishRepositoryTest {
         Category savedCategory = categoryRepository.save(createCategory());
         Product savedProduct = productRepository.save(createProduct(savedCategory));
 
-        Wish expected = new Wish(savedMember, savedProduct);
+        Wish expected = new Wish(savedMember, savedProduct, LocalDateTime.now());
 
         // when
         Wish actual = wishRepository.save(expected);
@@ -112,7 +113,7 @@ class WishRepositoryTest {
         Category savedCategory = categoryRepository.save(createCategory());
         Product savedProduct = productRepository.save(createProduct(savedCategory));
 
-        Wish savedWish = wishRepository.save(new Wish(savedMember, savedProduct));
+        Wish savedWish = wishRepository.save(new Wish(savedMember, savedProduct,LocalDateTime.now()));
 
         // when
         wishRepository.delete(savedWish);

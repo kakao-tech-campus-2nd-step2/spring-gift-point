@@ -2,6 +2,7 @@ package gift.domain.wishlist.entity;
 
 import gift.domain.member.entity.Member;
 import gift.domain.product.entity.Product;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -9,6 +10,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "wish")
@@ -26,17 +28,21 @@ public class Wish {
     @JoinColumn(name = "product_id")
     private Product product;
 
+    @Column
+    private LocalDateTime createdDate;
+
     protected Wish() {
     }
 
-    public Wish(Member member, Product product) {
-        this(null, member, product);
+    public Wish(Member member, Product product, LocalDateTime createdDate) {
+        this(null, member, product, createdDate);
     }
 
-    public Wish(Long id, Member member, Product product) {
+    public Wish(Long id, Member member, Product product, LocalDateTime createdDate) {
         this.id = id;
         this.member = member;
         this.product = product;
+        this.createdDate = createdDate;
 
         member.getWishList().add(this);
     }
@@ -51,5 +57,9 @@ public class Wish {
 
     public Product getProduct() {
         return product;
+    }
+
+    public LocalDateTime getCreatedDate() {
+        return createdDate;
     }
 }

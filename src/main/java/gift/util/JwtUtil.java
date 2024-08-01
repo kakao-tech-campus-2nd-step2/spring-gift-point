@@ -38,15 +38,12 @@ public class JwtUtil {
                 .parseSignedClaims(token)
                 .getPayload();
         } catch (JwtException e) {
-            throw new MemberAuthorizationException("토큰 Authorization 실패.");
+            throw new MemberAuthorizationException("토큰 검증 실패");
         }
     }
 
     public String getEmailFromToken(String token) {
         Claims claims = getClaims(token);
-        if (claims != null) {
-            return claims.get("email", String.class);
-        }
-        return null;
+        return claims.get("email", String.class);
     }
 }

@@ -9,9 +9,6 @@ import gift.domain.option.repository.OptionRepository;
 import gift.domain.product.entity.Product;
 import gift.domain.product.repository.ProductRepository;
 import java.util.List;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -31,25 +28,21 @@ public class CategoryService {
         this.optionRepository = optionRepository;
     }
 
-    public Page<CategoryResponse> getAllCategories(int pageNo, int pageSize) {
-        Pageable pageable = PageRequest.of(pageNo, pageSize);
+    public List<CategoryResponse> getAllCategories() {
 
-        return categoryRepository.findAll(pageable).map(this::entityToDto);
+        return categoryRepository.findAll().stream().map(this::entityToDto).toList();
     }
 
     @Transactional
-    public CategoryResponse createCategory(CategoryRequest request) {
-        Category savedCategory = categoryRepository.save(dtoToEntity(request));
-        return entityToDto(savedCategory);
+    public void createCategory(CategoryRequest request) {
+        categoryRepository.save(dtoToEntity(request));
     }
 
     @Transactional
-    public CategoryResponse updateCategory(Long id, CategoryRequest request) {
+    public void updateCategory(Long id, CategoryRequest request) {
         Category savedCategory = categoryRepository.findById(id).orElseThrow();
         savedCategory.updateAll(request.getName(), request.getColor(), request.getImageUrl(),
             request.getDescription());
-
-        return entityToDto(savedCategory);
     }
 
     @Transactional

@@ -8,11 +8,14 @@ import gift.domain.wishlist.dto.WishResponse;
 import gift.domain.wishlist.service.WishService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.Parameters;
 import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -21,7 +24,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -37,37 +39,47 @@ public class WishController {
 
     @GetMapping
     @Operation(summary = "전체 위시리스트 조회", description = "전체 위시리스트 조회합니다.")
-    @ApiResponse(responseCode = "200", description = "요청에 성공하였습니다.", content = @Content(mediaType = "application/json"))
-    @Parameters({
-        @Parameter(name = "pageNo", description = "페이지 번호 (0부터 시작)", example = "0"),
-        @Parameter(name = "pageSize", description = "페이지 크기", example = "10")
+    @ApiResponses({
+        @ApiResponse(responseCode="200", description = "요청에 성공하였습니다.(Page 내부 값은 WishResponse 입니다.)", content = @Content(schema = @Schema(implementation = Page.class))),
+        @ApiResponse(responseCode="400", description = "잘못된 요청", content = @Content(mediaType = "text/plain;charset=UTF-8\n")),
+        @ApiResponse(responseCode="403", description = "인가 실패", content = @Content(mediaType = "text/plain;charset=UTF-8\n")),
+        @ApiResponse(responseCode="500", description = "서버 오류", content = @Content(mediaType = "text/plain;charset=UTF-8\n"))
     })
     public ResponseEntity<Page<WishResponse>> getWishes(
         @Parameter(hidden = true) @LoginMember Member member,
-        @RequestParam(defaultValue = "0") int pageNo,
-        @RequestParam(defaultValue = "10") int pageSize
+        @ParameterObject Pageable pageable
     ) {
-        Page<WishResponse> response = wishService.getWishesByMember(member, pageNo, pageSize);
+        Page<WishResponse> response = wishService.getWishesByMember(member, pageable);
         return ResponseEntity.ok(response);
     }
 
     @PostMapping
     @Operation(summary = "위시리스트 생성", description = "위시 리스트를 생성합니다.")
-    @ApiResponse(responseCode = "201", description = "요청에 성공하였습니다.", content = @Content(mediaType = "application/json"))
-    public ResponseEntity<WishResponse> createWish(@RequestBody ProductIdRequest productIdRequest,
+    @ApiResponses({
+        @ApiResponse(responseCode="201", description = "요청에 성공하였습니다."),
+        @ApiResponse(responseCode="400", description = "잘못된 요청", content = @Content(mediaType = "text/plain;charset=UTF-8\n")),
+        @ApiResponse(responseCode="403", description = "인가 실패", content = @Content(mediaType = "text/plain;charset=UTF-8\n")),
+        @ApiResponse(responseCode="500", description = "서버 오류", content = @Content(mediaType = "text/plain;charset=UTF-8\n"))
+    })
+    public ResponseEntity<Void> createWish(@RequestBody ProductIdRequest productIdRequest,
         @Parameter(hidden = true) @LoginMember Member member) {
         WishRequest wishRequest = new WishRequest(member.getId(), productIdRequest.getProductId());
-        WishResponse response = wishService.createWish(wishRequest);
-        return ResponseEntity.status(HttpStatus.CREATED)
-            .body(response);
+        wishService.createWish(wishRequest);
+        return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
 
-    @DeleteMapping("/{id}")
+
+    @DeleteMapping("/{productId}")
     @Operation(summary = "위시 리스트 삭제", description = "해당 위시 리스트를 삭제합니다.")
-    @ApiResponse(responseCode = "204", description = "요청에 성공하였습니다.")
+    @ApiResponses({
+        @ApiResponse(responseCode="204", description = "요청에 성공하였습니다."),
+        @ApiResponse(responseCode="400", description = "잘못된 요청", content = @Content(mediaType = "text/plain;charset=UTF-8\n")),
+        @ApiResponse(responseCode="403", description = "인가 실패", content = @Content(mediaType = "text/plain;charset=UTF-8\n")),
+        @ApiResponse(responseCode="500", description = "서버 오류", content = @Content(mediaType = "text/plain;charset=UTF-8\n"))
+    })
     @Parameter(name = "id", description = "삭제할 위시 리스트의 ID", example = "1")
-    public ResponseEntity<WishResponse> deleteWish(@PathVariable("id") Long id,
+    public ResponseEntity<Void> deleteWish(@PathVariable("productId") Long id,
         @Parameter(hidden = true) @LoginMember Member member) {
         wishService.deleteWish(id, member);
 

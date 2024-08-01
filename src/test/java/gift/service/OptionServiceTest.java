@@ -2,6 +2,7 @@ package gift.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doReturn;
 
@@ -73,16 +74,11 @@ public class OptionServiceTest {
         doReturn(optionList).when(optionRepository).findAllByProduct(any(Product.class));
         doReturn(newOption).when(optionRepository).save(any(Option.class));
 
-        OptionResponse expected = entityToDto(newOption);
-
         // when
-        OptionResponse actual = optionService.addOptionToProduct(savedProduct.getId(),
-            new OptionRequest("newOption", 1000));
+        // then
+        assertDoesNotThrow(() -> optionService.addOptionToProduct(savedProduct.getId(),
+            new OptionRequest("newOption", 1000)));
 
-        assertAll(
-            () -> assertThat(actual.name()).isEqualTo(expected.name()),
-            () -> assertThat(actual.quantity()).isEqualTo(expected.quantity())
-        );
     }
 
     private OptionResponse entityToDto(Option option) {

@@ -5,6 +5,8 @@ import gift.domain.product.service.ProductService;
 import jakarta.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
+import org.springdoc.core.annotations.ParameterObject;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -14,7 +16,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 @Controller
@@ -29,10 +30,9 @@ public class ProductViewController {
     @GetMapping("/")
     public String index(
         Model model,
-        @RequestParam(defaultValue = "0") int pageNo,
-        @RequestParam(defaultValue = "10") int pageSize
+        @ParameterObject Pageable pageable
     ) {
-        model.addAttribute("products", productService.getAllProducts(pageNo, pageSize));
+        model.addAttribute("products", productService.getAllProducts(pageable, null));
         return "index";
     }
 

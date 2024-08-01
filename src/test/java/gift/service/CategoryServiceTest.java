@@ -2,6 +2,7 @@ package gift.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doReturn;
@@ -27,10 +28,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 
 @ExtendWith(MockitoExtension.class)
 class CategoryServiceTest {
@@ -49,30 +46,26 @@ class CategoryServiceTest {
     void getAllCategoriesTest() {
         List<Category> categoryList = Arrays.asList(createCategory(), createCategory(2L));
 
-        int pageNo = 0;
-        int pageSize = 10;
-        Pageable pageable = PageRequest.of(pageNo, pageSize);
-        Page<Category> categoryPage = new PageImpl<>(categoryList, pageable, categoryList.size());
 
-        doReturn(categoryPage).when(categoryRepository).findAll(pageable);
+        doReturn(categoryList).when(categoryRepository).findAll();
 
-        Page<CategoryResponse> expected = categoryPage.map(this::entityToDto);
+        List<CategoryResponse> expected = categoryList.stream().map(this::entityToDto).toList();
 
         // when
-        Page<CategoryResponse> actual = categoryService.getAllCategories(pageNo, pageSize);
+        List<CategoryResponse> actual = categoryService.getAllCategories();
 
         // then
         assertAll(
             () -> assertThat(actual).isNotNull(),
-            () -> IntStream.range(0, actual.getContent().size()).forEach(i -> {
-                assertThat(actual.getContent().get(i).name())
-                    .isEqualTo(expected.getContent().get(i).name());
-                assertThat(actual.getContent().get(i).color())
-                    .isEqualTo(expected.getContent().get(i).color());
-                assertThat(actual.getContent().get(i).imageUrl())
-                    .isEqualTo(expected.getContent().get(i).imageUrl());
-                assertThat(actual.getContent().get(i).description())
-                    .isEqualTo(expected.getContent().get(i).description());
+            () -> IntStream.range(0, actual.size()).forEach(i -> {
+                assertThat(actual.get(i).name())
+                    .isEqualTo(expected.get(i).name());
+                assertThat(actual.get(i).color())
+                    .isEqualTo(expected.get(i).color());
+                assertThat(actual.get(i).imageUrl())
+                    .isEqualTo(expected.get(i).imageUrl());
+                assertThat(actual.get(i).description())
+                    .isEqualTo(expected.get(i).description());
             })
         );
     }
@@ -86,18 +79,10 @@ class CategoryServiceTest {
 
         doReturn(newCategory).when(categoryRepository).save(any());
 
-        CategoryResponse expected = entityToDto(newCategory);
-
         // when
-        CategoryResponse actual = categoryService.createCategory(request);
-
         // then
-        assertAll(
-            () -> assertThat(actual.id()).isEqualTo(expected.id()),
-            () -> assertThat(actual.name()).isEqualTo(expected.name()),
-            () -> assertThat(actual.color()).isEqualTo(expected.color()),
-            () -> assertThat(actual.imageUrl()).isEqualTo(expected.imageUrl()),
-            () -> assertThat(actual.description()).isEqualTo(expected.description())
+        assertDoesNotThrow(
+            () -> categoryService.createCategory(request)
         );
     }
 
@@ -115,19 +100,9 @@ class CategoryServiceTest {
             .updateAll(request.getName(), request.getColor(), request.getImageUrl(),
                 request.getDescription());
 
-        CategoryResponse expected = entityToDto(updatedCategory);
-
         // when
-        CategoryResponse actual = categoryService.updateCategory(id, request);
-
         // then
-        assertAll(
-            () -> assertThat(actual.id()).isEqualTo(expected.id()),
-            () -> assertThat(actual.name()).isEqualTo(expected.name()),
-            () -> assertThat(actual.color()).isEqualTo(expected.color()),
-            () -> assertThat(actual.imageUrl()).isEqualTo(expected.imageUrl()),
-            () -> assertThat(actual.description()).isEqualTo(expected.description())
-        );
+        assertDoesNotThrow(() -> categoryService.updateCategory(id, request));
     }
 
     @Test

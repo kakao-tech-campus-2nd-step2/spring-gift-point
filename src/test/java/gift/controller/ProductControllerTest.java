@@ -101,7 +101,7 @@ class ProductControllerTest {
         var requestEntity = new RequestEntity<>(request, HttpMethod.PUT, URI.create(url));
 
         var actual = restTemplate.exchange(requestEntity, String.class);
-        assertThat(actual.getStatusCode()).isEqualTo(HttpStatus.CREATED);
+        assertThat(actual.getStatusCode()).isEqualTo(HttpStatus.OK);
     }
 
     @Test
