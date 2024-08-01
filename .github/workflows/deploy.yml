@@ -23,7 +23,7 @@ jobs:
         uses: actions/setup-java@v2
         with:
           java-version: '21'
-          distribution: 'adoptopenjdk'
+          distribution: 'adopt'
 
       # 빌드
       - name: Build with Gradle
