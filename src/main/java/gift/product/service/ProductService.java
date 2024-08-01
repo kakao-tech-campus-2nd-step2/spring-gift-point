@@ -13,6 +13,8 @@ import gift.product.option.dto.request.CreateOptionRequest;
 import gift.product.option.service.OptionService;
 import gift.product.repository.ProductJpaRepository;
 import java.util.Optional;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -20,6 +22,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class ProductService {
+
+    public static final Logger log = LoggerFactory.getLogger(ProductService.class);
 
     private final ProductJpaRepository productRepository;
     private final CategoryJpaRepository categoryRepository;
@@ -34,8 +38,9 @@ public class ProductService {
 
     @Transactional(readOnly = true)
     public Page<ProductResponse> getAllProducts(Pageable pageable, Long categoryId) {
+        log.info("categoryId: {}", categoryId);
         return Optional.ofNullable(categoryId)
-            .map(id -> productRepository.findAllByCategoryId(id, pageable))
+            .map(id -> productRepository.findAllByCategory_Id(id, pageable))
             .orElseGet(() -> productRepository.findAll(pageable))
             .map(ProductResponse::from);
     }
