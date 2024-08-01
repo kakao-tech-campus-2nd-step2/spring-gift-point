@@ -10,7 +10,7 @@ public record ProductResponse(
     String name,
     Integer price,
     String imageUrl,
-    String categoryName
+    Long categoryId
 ) {
 
     public static ProductResponse from(Product product) {
@@ -19,7 +19,7 @@ public record ProductResponse(
             product.getName(),
             product.getPrice(),
             product.getImageUrl(),
-            product.getCategoryName()
+            product.getCategoryId()
         );
     }
 
