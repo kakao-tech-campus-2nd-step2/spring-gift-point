@@ -23,7 +23,6 @@
         <th>Price</th>
         <th>Image</th>
         <th>Category</th>
-        <th>Option</th>
         <th>Actions</th>
       </tr>
       </thead>
@@ -33,18 +32,7 @@
         <td th:text="${product.name}"></td>
         <td th:text="${product.price}"></td>
         <td><img th:src="${product.imageUrl}" alt="img" width="100px"></td>
-        <td th:text="${product.categoryName}"></td>
-        <td>
-          <select th:id="'option'+${product.id}">
-            <option th:each="option : ${product.options}"
-                    th:text="|${option.name} : ${option.quantity}|"
-                    th:value="${option}"></option>
-          </select>
-          <form>
-            <button type="button" th:onclick="|location.href='@{/admin/options/add/{id}(id=${product.id})}'|">+</button>
-            <button type="button" th:onclick="|deleteProductOption(${product.id})|">-</button>
-          </form>
-        </td>
+        <td th:text="${product.category.name}"></td>
         <td>
           <form>
             <button type="button" th:onclick="|location.href='@{/admin/edit/{id}(id=${product.id})}'|">Edit</button>
