@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="">
+<head>
+  <title>Product Form</title>
+</head>
+<body>
+<h1 th:text="${product.id != null} ? '상품 수정' : '상품 추가'"></h1>
+<form th:action="@{/admin/save}" th:object="${product}" method="post">
+  <input type="hidden" th:field="*{id}" />
+  <div>
+    <label for="name">Name:</label>
+    <input type="text" th:field="*{name}" id="name" />
+    <div th:if="${#fields.hasErrors('name')}" th:errors="*{name}">Name Error</div>
+  </div>
+  <div>
+    <label for="price">Price:</label>
+    <input type="number" th:field="*{price}" id="price" step="10" />
+    <div th:if="${#fields.hasErrors('price')}" th:errors="*{price}">Price Error</div>
+  </div>
+  <div>
+    <label for="imageUrl">Image URL:</label>
+    <input type="text" th:field="*{imageUrl}" id="imageUrl" />
+    <div th:if="${#fields.hasErrors('imageUrl')}" th:errors="*{imageUrl}">Image URL Error</div>
+  </div>
+  <div>
+    <label for="category">Category:</label>
+    <input type="text" th:field="*{category.name}" id="category" />
+    <div th:if="${#fields.hasErrors('category.name')}" th:errors="*{category.name}">Category Error</div>
+  </div>
+  <div>
+    <button type="submit">Save</button>
+  </div>
+</form>
+</body>
+</html>
