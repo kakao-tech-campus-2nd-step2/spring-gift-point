@@ -36,7 +36,6 @@ import java.util.Map;
 public class OrderService {
     private final OrderRepository orderRepository;
     private final OptionRepository optionRepository;
-    private final JWTUtil jwtUtil;
     private final UserRepository userRepository;
     private final WishListRepository wishListRepository;
     RestTemplate restTemplate = new RestTemplate();
@@ -47,11 +46,11 @@ public class OrderService {
 
     @Transactional
     public OrderResponseDTO order(OrderRequestDTO orderRequestDTO, String token) {
-        Option option = optionRepository.findById(orderRequestDTO.optionId()).orElseThrow(() -> new NotFoundException("해당 옵션이 없음"));
+        Option option = findOptionById(orderRequestDTO.optionId());
+        User user = findUserByIdFromToken(token);
         option.subQuantity(orderRequestDTO.quantity());
 
-        User user = userRepository.findById(jwtUtil.getUserIdFromToken(token)).orElseThrow(() -> new NotFoundException("유저 없음"));
-        String kakaoToken = jwtUtil.getKakaoTokenFromToken(token);
+        String kakaoToken = JWTUtil.getKakaoTokenFromToken(token);
 
         Order order = new Order(orderRequestDTO, option, user);
         user.addOrder(order);
@@ -104,15 +103,20 @@ public class OrderService {
     }
 
     public OrderPageDTO getOrders(String token, Pageable pageable) {
-        int userId = jwtUtil.getUserIdFromToken(token);
-        userRepository.findById(userId).orElseThrow(() -> new NotFoundException("유저 없음"));
+        int userId = JWTUtil.getUserIdFromToken(token);
+        findUserByIdFromToken(token);
         Page<OrderResponseDTO> orders = orderRepository.findAllWithPage(userId, pageable);
-        return new OrderPageDTO(
-                orders.getContent(),
-                orders.getNumber(),
-                (int) orders.getTotalElements(),
-                orders.getSize(),
-                orders.isLast()
-        );
+        return new OrderPageDTO(orders);
+    }
+
+    private Option findOptionById(int optionId) {
+        return optionRepository.findById(optionId)
+                .orElseThrow(() -> new NotFoundException("해당 옵션이 없음"));
+    }
+
+    private User findUserByIdFromToken(String token) {
+        int userId = JWTUtil.getUserIdFromToken(token);
+        return userRepository.findById(userId)
+                .orElseThrow(() -> new NotFoundException("유저 없음"));
     }
 }
