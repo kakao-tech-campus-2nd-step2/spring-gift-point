@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Edit Product</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+    }
+
+    h1 {
+      text-align: center;
+    }
+
+    .error {
+      color: red;
+      font-size: 12px;
+    }
+
+    form {
+      width: 400px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+
+    input[type="text"],
+    input[type="number"] {
+      width: calc(100% - 10px);
+      margin-bottom: 10px;
+      padding: 8px;
+      font-size: 14px;
+    }
+
+    input[type="submit"] {
+      padding: 10px 20px;
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+
+    input[type="submit"]:hover {
+      background-color: #45a049;
+    }
+  </style>
+</head>
+<body>
+<h1>상품 수정</h1>
+<form th:action="@{/admin/products/update/{id}(id=${productDTO.id})}" th:object="${productDTO}" method="post">
+  Name: <input type="text" th:field="*{name}" th:classappend="${#fields.hasErrors('name')} ? 'error' : ''"><br>
+  <div th:if="${#fields.hasErrors('name')}" th:errors="*{name}" class="error"></div>
+
+  Price: <input type="number" th:field="*{price}" th:classappend="${#fields.hasErrors('price')} ? 'error' : ''"><br>
+  <div th:if="${#fields.hasErrors('price')}" th:errors="*{price}" class="error"></div>
+
+  Image URL: <input type="text" th:field="*{imageUrl}"><br>
+
+  <div th:if="${error}" class="error" th:text="${error}"></div>
+  <input type="submit" value="Update Product">
+</form>
+</body>
+</html>
