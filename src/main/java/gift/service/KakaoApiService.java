@@ -20,6 +20,7 @@ public class KakaoApiService {
     private String clientId;
     @Value("${redirect.uri}")
     private String redirectUri;
+
     public KakaoApiService(KakaoApiClient kakaoApiClient, KakaoAccessTokenRepository kakaoAccessTokenRepository, ObjectMapper objectMapper) {
         this.kakaoApiClient = kakaoApiClient;
         this.kakaoAccessTokenRepository = kakaoAccessTokenRepository;
