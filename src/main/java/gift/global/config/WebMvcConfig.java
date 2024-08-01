@@ -1,7 +1,9 @@
 package gift.global.config;
 
 import gift.member.validator.LoginMemberArgumentResolver;
+import jakarta.validation.Valid;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
@@ -27,17 +29,11 @@ public class WebMvcConfig implements WebMvcConfigurer {
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**")
-                .allowedOrigins(originAddress)
-                .allowedMethods(
-                        HttpMethod.GET
-                                  .name(),
-                        HttpMethod.POST
-                                  .name(),
-                        HttpMethod.PATCH
-                                  .name(),
-                        HttpMethod.DELETE
-                                  .name()
-                );
+                .allowedOriginPatterns("*")
+                .allowedMethods("GET", "POST", "PUT", "DELETE")
+                .allowedHeaders(HttpHeaders.AUTHORIZATION, HttpHeaders.CONTENT_TYPE)
+                .allowCredentials(true)
+                .maxAge(3600);
     }
 
 }
