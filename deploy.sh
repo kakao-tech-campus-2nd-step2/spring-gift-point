@@ -17,4 +17,4 @@ DEPLOY_PATH=/home/ubuntu/
 cp $BUILD_PATH $DEPLOY_PATH
 cd $DEPLOY_PATH
 
-java -jar $JAR_NAME &
+nohup java -jar build/libs/$JAR_NAME &
