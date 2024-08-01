@@ -12,6 +12,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
 import java.time.LocalDateTime;
 import java.util.List;
 import org.springframework.data.annotation.CreatedDate;
@@ -36,16 +37,20 @@ public class ProductOptionEntity {
     @JoinColumn(name = "product_id")
     private ProductEntity product;
 
-    @JsonIgnore
-    @OneToMany(mappedBy = "options", fetch = FetchType.LAZY,
-        cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<ProductOrderEntity> orders;
-
     @CreatedDate
     private LocalDateTime createdAt;
 
     @LastModifiedDate
     private LocalDateTime updatedAt;
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "options", fetch = FetchType.LAZY,
+        cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<ProductOrderEntity> orders;
+
+   @OneToOne(mappedBy = "productOption", fetch = FetchType.LAZY)
+   @JoinColumn(name = "PointPayment_id")
+   private PointPaymentEntity pointPayment;
 
     public ProductOptionEntity() {
     }

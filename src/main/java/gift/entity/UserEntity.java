@@ -38,6 +38,9 @@ public class UserEntity {
     @Column
     private Integer isDelete;
 
+    @Column
+    private Integer point;
+
     @CreatedDate
     private LocalDateTime createdAt;
 
@@ -59,6 +62,16 @@ public class UserEntity {
         cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ProductOrderEntity> orders;
 
+    @JsonIgnore
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY,
+        cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<PointChargeEntity> pointCharge;
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY,
+        cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<PointPaymentEntity> pointPayment;
+
     public UserEntity() {
     }
 
@@ -66,6 +79,7 @@ public class UserEntity {
         this.email = email;
         this.password = password;
         this.isDelete = 0;
+        this.point=0;
     }
 
     public Long getId() {
@@ -110,5 +124,17 @@ public class UserEntity {
 
     public List<WishEntity> getWish() {
         return wish;
+    }
+
+    public Integer getPoint() {
+        return point;
+    }
+
+    public List<SocialEntity> getSocials() {
+        return socials;
+    }
+
+    public List<ProductOrderEntity> getOrders() {
+        return orders;
     }
 }
