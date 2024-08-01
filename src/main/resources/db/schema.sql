@@ -72,3 +72,13 @@ CREATE TABLE orders
     FOREIGN KEY (user_id) REFERENCES users (user_id),
     FOREIGN KEY (option_id) REFERENCES product_option (id)
 );
+
+
+CREATE TABLE user_points
+(
+    id         BIGINT AUTO_INCREMENT PRIMARY KEY,
+    user_id    BIGINT NOT NULL,
+    point      BIGINT NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users (user_id)
+);
