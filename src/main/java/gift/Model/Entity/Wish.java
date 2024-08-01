@@ -1,7 +1,8 @@
 package gift.Model.Entity;
 
-import gift.Model.Value.Count;
 import jakarta.persistence.*;
+
+import java.time.LocalDateTime;
 
 @Entity
 public class Wish {
@@ -17,25 +18,24 @@ public class Wish {
     @JoinColumn(nullable = false)
     private Product product;
 
-    @Embedded
-    @AttributeOverride(name = "value", column = @Column(name = "count"))
-    private Count count;
+    @Column(nullable = false)
+    private LocalDateTime createdDate;
 
     protected Wish(){}
 
-    public Wish(Member member, Product product, Count count) {
-        this.member = member;
-        this.product = product;
-        this.count = count;
-    }
-
-    public Wish(Member member, Product product, int count) {
-        Count countObj = new Count(count);
+    public Wish(Member member, Product product, LocalDateTime createdDate) {
+        validateCreatedDate(createdDate);
 
         this.member = member;
         this.product = product;
-        this.count = countObj;
+        this.createdDate = createdDate;
     }
+
+    private void validateCreatedDate(LocalDateTime createdDate) {
+        if (createdDate== null)
+            throw new IllegalArgumentException("찜에서 createTime이 null일 수는 없습니다");
+    }
+
 
     public Long getId() {
         return id;
@@ -49,15 +49,7 @@ public class Wish {
         return product;
     }
 
-    public Count getCount() {
-        return count;
-    }
-
-    public void update(Count count){
-        this.count = count;
-    }
-
-    public void update(int count){
-        this.count = new Count(count);
+    public LocalDateTime getCreatedDate() {
+        return createdDate;
     }
 }

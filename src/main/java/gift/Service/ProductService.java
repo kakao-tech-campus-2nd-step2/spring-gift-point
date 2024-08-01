@@ -1,7 +1,6 @@
 package gift.Service;
 
-import gift.DTO.RequestProductDTO;
-import gift.DTO.RequestProductPostDTO;
+import gift.DTO.*;
 import gift.Exception.CategoryNotFoundException;
 import gift.Exception.ProductNotFoundException;
 import gift.Model.Entity.Category;
@@ -11,9 +10,12 @@ import gift.Repository.CategoryRepository;
 import gift.Repository.OptionRepository;
 import gift.Repository.ProductRepository;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Service
 public class ProductService {
@@ -33,6 +35,28 @@ public class ProductService {
     public Page<Product> getAllProducts(Pageable pageable) {
         Page<Product> productPage = productRepository.findAll(pageable);
         return productPage;
+    }
+
+    @Transactional(readOnly = true)
+    public Page<ResponseProductListOfCategoryDTO> getAllProducts(Pageable pageable, Long categoryId) {
+        Category category = categoryRepository.findById(categoryId).orElseThrow(() -> new CategoryNotFoundException("매칭되는 category가 없습니다"));
+        Page<Product> productPage = productRepository.findByCategory(category, pageable);
+        List<ResponseProductListOfCategoryDTO> response = productPage.getContent()
+                .stream()
+                .map(ResponseProductListOfCategoryDTO:: of)
+                .toList();
+        Page<ResponseProductListOfCategoryDTO> page = new PageImpl<>(response, pageable, productPage.getTotalElements());
+        return page;
+    }
+
+    @Transactional(readOnly = true)
+    public ResponseProductDTO getProduct(Long productId) {
+        Product product = productRepository.findById(productId).orElseThrow(()-> new ProductNotFoundException("매칭되는 product가 없습니다"));
+        List<ResponseOptionDTO> options = optionRepository.findByProduct(product)
+                .stream()
+                .map(ResponseOptionDTO :: of)
+                .toList();
+        return ResponseProductDTO.of(product, options);
     }
 
     @Transactional

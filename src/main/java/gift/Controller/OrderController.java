@@ -2,6 +2,7 @@ package gift.Controller;
 
 import gift.DTO.RequestOrderDTO;
 import gift.DTO.ResponseOrderDTO;
+import gift.DTO.ResponseProductDTO;
 import gift.Model.Entity.Member;
 import gift.Service.OrderService;
 import gift.annotation.ValidUser;
@@ -34,8 +35,12 @@ public class OrderController {
     @ApiResponse(responseCode = "200", description = "조회 완료",
             content = {@Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = ResponseOrderDTO.class)))
     })
-    @ApiResponse(responseCode = "400", description = "잘못된 요청입니다. 입력값을 확인해주세요")
-    @ApiResponse(responseCode = "500", description = "서버 내부 에러 발생")
+    @ApiResponse(responseCode = "400", description = "잘못된 요청입니다. 입력값을 확인해주세요",
+            content = {@Content(mediaType = "application/json", schema = @Schema(implementation = String.class))
+            })
+    @ApiResponse(responseCode = "500", description = "서버 내부 에러 발생",
+            content = {@Content(mediaType = "application/json", schema = @Schema(implementation = String.class))
+            })
     @GetMapping
     public ResponseEntity<List<ResponseOrderDTO>> getOrders(@ValidUser Member member){
         List<ResponseOrderDTO> orders = orderService.getOrders(member);
@@ -43,9 +48,18 @@ public class OrderController {
     }
 
     @Operation(summary = "주문 추가", description = "주문을 추가합니다")
-    @ApiResponse(responseCode = "201", description = "추가 완료")
-    @ApiResponse(responseCode = "400", description = "잘못된 요청입니다. 입력값을 확인해주세요")
-    @ApiResponse(responseCode = "500", description = "서버 내부 에러 발생")
+    @ApiResponse(responseCode = "201", description = "추가 완료",
+            content = {@Content(mediaType = "application/json", schema = @Schema(implementation = ResponseOrderDTO.class))
+            })
+    @ApiResponse(responseCode = "400", description = "잘못된 요청입니다. 입력값을 확인하거나 옵션이나 재고가 없습니다",
+            content = {@Content(mediaType = "application/json", schema = @Schema(implementation = String.class))
+            })
+    @ApiResponse(responseCode = "403", description = "유효하지 않은 토큰입니다",
+            content = {@Content(mediaType = "application/json", schema = @Schema(implementation = String.class))
+            })
+    @ApiResponse(responseCode = "500", description = "서버 내부 에러 발생",
+            content = {@Content(mediaType = "application/json", schema = @Schema(implementation = String.class))
+            })
     @PostMapping
     public ResponseEntity<ResponseOrderDTO> createOrder(@ValidUser Member member, @Valid @RequestBody RequestOrderDTO requestOrderDTO){
         ResponseOrderDTO response =orderService.createOrder(member, requestOrderDTO);
@@ -53,9 +67,12 @@ public class OrderController {
     }
 
     @Operation(summary = "주문 수정", description = "주문을 수정합니다")
-    @ApiResponse(responseCode = "200", description = "수정 완료")
-    @ApiResponse(responseCode = "400", description = "잘못된 요청입니다. 입력값을 확인해주세요")
-    @ApiResponse(responseCode = "500", description = "서버 내부 에러 발생")
+    @ApiResponse(responseCode = "200", description = "수정 완료",
+            content = {@Content(mediaType = "application/json")})
+    @ApiResponse(responseCode = "400", description = "잘못된 요청입니다. 입력값을 확인해주세요",
+            content = {@Content(mediaType = "application/json")})
+    @ApiResponse(responseCode = "500", description = "서버 내부 에러 발생",
+            content = {@Content(mediaType = "application/json")})
     @PutMapping()
     public ResponseEntity<String> editOrder(@ValidUser Member member,
                                             @RequestParam("order-id") Long orderId,
@@ -66,9 +83,15 @@ public class OrderController {
     }
 
     @Operation(summary = "주문 삭제", description = "주문을 삭제합니다")
-    @ApiResponse(responseCode = "200", description = "삭제 완료")
-    @ApiResponse(responseCode = "400", description = "잘못된 요청입니다. 입력값을 확인해주세요")
-    @ApiResponse(responseCode = "500", description = "서버 내부 에러 발생")
+    @ApiResponse(responseCode = "200", description = "삭제 완료",
+            content = {@Content(mediaType = "application/json", schema = @Schema(implementation = String.class))
+            })
+    @ApiResponse(responseCode = "400", description = "잘못된 요청입니다. 입력값을 확인해주세요",
+            content = {@Content(mediaType = "application/json", schema = @Schema(implementation = String.class))
+            })
+    @ApiResponse(responseCode = "500", description = "서버 내부 에러 발생",
+            content = {@Content(mediaType = "application/json", schema = @Schema(implementation = String.class))
+            })
     @DeleteMapping()
     public ResponseEntity<String > deleteOrder(@ValidUser Member member, @RequestParam("order-id") Long orderId){
         orderService.deleteOrder(member, orderId);

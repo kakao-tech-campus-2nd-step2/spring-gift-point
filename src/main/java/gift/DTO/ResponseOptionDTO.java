@@ -1,5 +1,6 @@
 package gift.DTO;
 
+import gift.Model.Entity.Option;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 @Schema(description = "옵션 응답 DTO")
@@ -29,5 +30,9 @@ public class ResponseOptionDTO {
 
     public int getQuantity() {
         return quantity;
+    }
+
+    public static ResponseOptionDTO of(Option option) {
+        return new ResponseOptionDTO(option.getId(), option.getName().getValue(), option.getQuantity().getValue());
     }
 }

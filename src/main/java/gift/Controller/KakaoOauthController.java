@@ -2,6 +2,8 @@ package gift.Controller;
 
 import gift.Service.KakaoLoginService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
@@ -27,7 +29,9 @@ public class KakaoOauthController {
 
     @Operation(summary = "카카오 소셜 로그인", description = "카카오 소셜 로그인을 요청합니다")
     @ApiResponse(responseCode = "302", description = "소셜 로그인 요청 완료")
-    @ApiResponse(responseCode = "500", description = "서버 내부 에러 발생")
+    @ApiResponse(responseCode = "500", description = "서버 내부 에러 발생",
+            content = {@Content(mediaType = "application/json", schema = @Schema(implementation = String.class))
+            })
     @GetMapping("/kakao-login")
     public RedirectView requestLogin(){
         URI redirectURI = kakaoLoginService.requestLogin();
@@ -35,9 +39,15 @@ public class KakaoOauthController {
     }
 
     @Operation(summary = "액세스 토큰 발급", description = "액세스 토큰을 발급합니다")
-    @ApiResponse(responseCode = "200", description = "발급 완료")
-    @ApiResponse(responseCode = "400", description = "잘못된 요청입니다. 입력값을 확인해주세요")
-    @ApiResponse(responseCode = "500", description = "서버 내부 에러 발생")
+    @ApiResponse(responseCode = "200", description = "발급 완료",
+            content = {@Content(mediaType = "application/json", schema = @Schema(implementation = String.class))
+            })
+    @ApiResponse(responseCode = "400", description = "잘못된 요청입니다. 입력값을 확인해주세요",
+            content = {@Content(mediaType = "application/json", schema = @Schema(implementation = String.class))
+            })
+    @ApiResponse(responseCode = "500", description = "서버 내부 에러 발생",
+            content = {@Content(mediaType = "application/json", schema = @Schema(implementation = String.class))
+            })
     @GetMapping("/login")
     public ResponseEntity<String> loginOrRegisterUser(@RequestParam ("code") String oauthCode) {
         String token = kakaoLoginService.loginOrRegisterUser(oauthCode);
