@@ -12,8 +12,6 @@ public class ProductResponse {
     String name;
     int price;
     String imageUrl;
-    CategoryResponse category;
-    List<OptionResponse> options;
 
     public ProductResponse(){
 
@@ -24,10 +22,6 @@ public class ProductResponse {
         this.name = product.getName();
         this.price = product.getPrice();
         this.imageUrl = product.getImageUrl();
-        this.category = new CategoryResponse(product.getCategory());
-        this.options = product.getOptions().stream()
-                .map(OptionResponse::new)
-                .collect(Collectors.toList());
     }
 
     public Long getId() {
@@ -44,13 +38,5 @@ public class ProductResponse {
   
     public String getImageUrl() {
         return imageUrl;
-    }
-  
-    public CategoryResponse getCategory(){
-        return category;
-    }
-
-    public List<OptionResponse> getOptions(){
-        return options;
     }
 }

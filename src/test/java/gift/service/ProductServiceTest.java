@@ -61,8 +61,6 @@ public class ProductServiceTest {
         Assertions.assertThat(savedProduct.getName()).isEqualTo("product");
         Assertions.assertThat(savedProduct.getPrice()).isEqualTo(4500);
         Assertions.assertThat(savedProduct.getImageUrl()).isEqualTo("url");
-        Assertions.assertThat(savedProduct.getCategory().getName()).isEqualTo("신규");
-        Assertions.assertThat(savedProduct.getOptions().getFirst().getName()).isEqualTo("[0] 기본");
     }
 
     @Test
@@ -74,7 +72,7 @@ public class ProductServiceTest {
             Category category = new Category("물품");
             TestUtil.setId(category, 1L);
             Product product = new Product("product" + i, 4500, "url" + i, category);
-            Option option = new Option("[0] 기본", 100L);
+            Option option = new Option("[0] 기본", 100);
             product.addOption(option);
             products.add(product);
         }
@@ -109,7 +107,7 @@ public class ProductServiceTest {
             Category category = new Category("물품");
             TestUtil.setId(category, 1L);
             Product product = new Product("product" + i, 4500, "url" + i, category);
-            Option option = new Option("[0] 기본", 100L);
+            Option option = new Option("[0] 기본", 100);
             product.addOption(option);
             products.add(product);
         }
@@ -144,7 +142,7 @@ public class ProductServiceTest {
         );
 
         Category category = new Category("물품");
-        Option option = new Option("[0] 기본", 1L);
+        Option option = new Option("[0] 기본", 1);
         Optional<Product> product = Optional.of(
                 new Product("product", 4500, "none", category));
         product.get().addOption(option);
