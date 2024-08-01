@@ -87,12 +87,10 @@ public class ProductController {
         return "redirect:/products";
     }
 
-    @PostMapping("/delete/{id}")
-    @ApiOperation(value = "Delete a product", notes = "Deletes the product with the given ID")
-    public String deleteProduct(@ApiParam(value = "Product ID", required = true) @PathVariable("id") Long id,
-        RedirectAttributes redirectAttributes) {
+    @DeleteMapping("/{product_id}")
+    @ResponseBody
+    public String deleteProduct(@PathVariable("product_id") Long id) {
         productService.deleteProduct(id);
-        redirectAttributes.addFlashAttribute("message", "Product deleted successfully!");
         return "redirect:/products";
     }
 /*

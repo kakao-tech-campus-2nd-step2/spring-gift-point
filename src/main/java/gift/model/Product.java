@@ -45,7 +45,7 @@ public class Product {
     private Category category;
 
     @JsonIgnore
-    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true,fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
     private List<Option> options = new ArrayList<>();
 
     // 기본 생성자
