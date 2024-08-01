@@ -16,6 +16,7 @@ public class UpdateProductRequest {
     @SpecialCharacter(allowed = "(, ), [, ], +, -, &, /, _")
     @RequiredKakaoApproval
     private final String name;
+
     @Range(min = 1000, max = 10000000)
     private final Integer price;
 

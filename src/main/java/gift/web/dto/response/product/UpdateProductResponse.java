@@ -9,20 +9,19 @@ public class UpdateProductResponse {
     private final String name;
     private final Integer price;
     private final String imageUrl;
-    private final ReadCategoryResponse category;
+    private final Long categoryId;
 
-    private UpdateProductResponse(Long id, String name, Integer price, String imageUrl,
-        ReadCategoryResponse category) {
+    private UpdateProductResponse(Long id, String name, Integer price, String imageUrl, Long categoryId) {
         this.id = id;
         this.name = name;
         this.price = price;
         this.imageUrl = imageUrl;
-        this.category = category;
+        this.categoryId = categoryId;
     }
 
     public static UpdateProductResponse from(Product product) {
         return new UpdateProductResponse(product.getId(), product.getName(), product.getPrice(),
-            product.getImageUrl().toString(), ReadCategoryResponse.fromEntity(product.getCategory()));
+            product.getImageUrl().toString(), product.getCategory().getId());
     }
 
     public Long getId() {
@@ -41,7 +40,7 @@ public class UpdateProductResponse {
         return imageUrl;
     }
 
-    public ReadCategoryResponse getCategory() {
-        return category;
+    public Long getCategoryId() {
+        return categoryId;
     }
 }
