@@ -14,9 +14,6 @@ import java.util.regex.Pattern;
 
 @Entity
 public class Option {
-    private static final Pattern NAME_PATTERN = Pattern.compile(
-            "[a-zA-Z0-9ㄱ-ㅎ가-힣()\\[\\]+\\-&/_ ]+"
-    );
 
     @Id
     @Column(name = "option_id")
@@ -51,12 +48,6 @@ public class Option {
     private void validateName(String name){
         if(name == null || name.isBlank())
             throw new BlankContentException("옵션 이름을 입력해주세요.");
-
-        if(name.length() > 50)
-            throw new BadRequestException("옵션 이름 길이는 1~50자만 가능합니다.");
-
-        if(!NAME_PATTERN.matcher(name).matches())
-            throw new BadRequestException("( ), [ ], +, -, &, /, _을 제외한 특수문자는 입력할 수 없습니다.");
     }
 
     private void validateQuantity(Integer quantity){

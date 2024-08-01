@@ -10,10 +10,8 @@ public record CategoryDTO(
         Long id,
 
         @NotBlank(message = "카테고리 이름을 입력해주세요.")
-        @Length(min = 1, max = 15, message = "카테고리명 길이는 1~15자만 가능합니다.")
         String name,
 
-        @Pattern(regexp = "^#[0-9a-fA-F]{6}$", message = "색상코드가 아닙니다.")
         String color,
 
         @URL
