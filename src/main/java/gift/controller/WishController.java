@@ -1,6 +1,7 @@
 package gift.controller;
 
 import gift.dto.WishRequest;
+import gift.dto.WishResponse;
 import gift.entity.Wish;
 import gift.service.WishService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -33,16 +34,24 @@ public class WishController {
             description = "성공적으로 위시리스트를 조회했습니다.",
             content = @Content(
                     mediaType = "application/json",
-                    schema = @Schema(implementation = Wish.class),
+                    schema = @Schema(implementation = WishResponse.class),
                     examples = @ExampleObject(
-                            value = "{\"content\":[{\"id\":1,\"productId\":1,\"userId\":1,\"createdDate\":\"2024-08-01T06:29:15Z\"}],\"pageable\":\"INSTANCE\",\"last\":false,\"totalPages\":1,\"totalElements\":1,\"size\":20,\"number\":0,\"sort\":{\"sorted\":false,\"unsorted\":true,\"empty\":true},\"first\":true,\"numberOfElements\":1,\"empty\":false}"
+                            value = "{\"totalPages\":1,\"totalElements\":1,\"size\":1,\"content\":[{\"id\":1,\"productId\":1,\"productName\":\"Sample Product\",\"productImgUrl\":\"https://product.png\",\"memberId\":1,\"email\":\"test@example.com\"}]}"
                     )
             )
     )
     @GetMapping
-    public ResponseEntity<Page<Wish>> getWishes(Pageable pageable) {
+    public ResponseEntity<Page<WishResponse>> getWishes(Pageable pageable) {
         Page<Wish> wishes = wishService.getWishes(pageable);
-        return ResponseEntity.ok(wishes);
+        Page<WishResponse> wishDtos = wishes.map(wish -> new WishResponse(
+                wish.getId(),
+                wish.getProduct().getId(),
+                wish.getProduct().getName(),
+                wish.getProduct().getImgUrl(),
+                wish.getMember().getId(),
+                wish.getMember().getEmail()
+        ));
+        return ResponseEntity.ok(wishDtos);
     }
 
     @Operation(summary = "위시리스트 추가")
@@ -51,9 +60,9 @@ public class WishController {
             description = "성공적으로 위시리스트에 추가했습니다.",
             content = @Content(
                     mediaType = "application/json",
-                    schema = @Schema(implementation = Wish.class),
+                    schema = @Schema(implementation = WishResponse.class),
                     examples = @ExampleObject(
-                            value = "{\"id\":1,\"productId\":1,\"userId\":1,\"createdDate\":\"2024-08-01T06:29:15Z\"}"
+                            value = "{\"id\":1,\"productId\":1,\"productName\":\"Sample Product\",\"productImgUrl\":\"https://product.png\",\"memberId\":1,\"email\":\"test@example.com\"}"
                     )
             )
     )
@@ -70,9 +79,17 @@ public class WishController {
             example = "Bearer token"
     )
     @PostMapping
-    public ResponseEntity<Wish> addWish(@RequestBody WishRequest wishRequest, @RequestHeader(value = HttpHeaders.AUTHORIZATION, required = false) String token) {
+    public ResponseEntity<WishResponse> addWish(@RequestBody WishRequest wishRequest, @RequestHeader(value = HttpHeaders.AUTHORIZATION, required = false) String token) {
         Wish wish = wishService.addWish(token, wishRequest);
-        return ResponseEntity.ok(wish);
+        WishResponse dto = new WishResponse(
+                wish.getId(),
+                wish.getProduct().getId(),
+                wish.getProduct().getName(),
+                wish.getProduct().getImgUrl(),
+                wish.getMember().getId(),
+                wish.getMember().getEmail()
+        );
+        return ResponseEntity.ok(dto);
     }
 
     @Operation(summary = "위시리스트 삭제")
@@ -99,8 +116,8 @@ public class WishController {
             example = "1"
     )
     @DeleteMapping("/{wishId}")
-    public ResponseEntity<Void> removeWish(@RequestBody WishRequest wishRequest, @RequestHeader(value = HttpHeaders.AUTHORIZATION, required = false) String token) {
-        wishService.removeWish(token, wishRequest.getProductId());
+    public ResponseEntity<Void> removeWish(@PathVariable Long wishId, @RequestHeader(value = HttpHeaders.AUTHORIZATION, required = false) String token) {
+        wishService.removeWish(token, wishId);
         return ResponseEntity.ok().build();
     }
 }
