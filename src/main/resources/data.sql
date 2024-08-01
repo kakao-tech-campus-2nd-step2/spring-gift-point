@@ -16,7 +16,7 @@ VALUES ('교환권', '#FF5733', 'https://cdn.pixabay.com/photo/2015/08/11/08/21/
        ('도서/음반', '#3357FF', 'https://cdn.pixabay.com/photo/2016/11/29/01/22/album-1866523_640.jpg', '설명16'),
        ('여행/숙박', '#FF33A5', 'https://cdn.pixabay.com/photo/2020/02/27/20/48/aircraft-4885805_640.jpg', '설명17'),
        ('건강/뷰티', '#33FFA5', 'https://cdn.pixabay.com/photo/2023/08/30/09/44/woman-8222956_640.jpg', '설명18'),
-       ('자동차/공구', '#FFA533', 'https://cdn.pixabay.com/photo/2024/05/10/23/34/car-8753811_640.png', '설명19'),
+       ('자동차/공구', '#FFA533', 'https://cdn.pixabay.com/photo/2024/05/10/23/34/car-8753811_640.png', '설명19');
 
 INSERT INTO product (name, price, imageUrl, category_id)
 VALUES ('coffee', 1500, 'https://via.placeholder.com/150', 15);
