@@ -23,10 +23,10 @@ public class ProductTest {
     @Test
     public void saveProductTest() {
         // given
-        Category category = new Category("Category 1");
+        Category category = new Category("Category 1", "Test Color", "https://img1.kakaocdn.net/thumb/C320x320@2x.fwebp.q82/?fname=https%3A%2F%2Fst.kakaocdn.net%2Fproduct%2Fgift%2Fproduct%2F20240508101036_6c7f02cb957848a69a25018a664a3c89.jpg", "Test Description");
         category = categoryRepository.save(category);
 
-        Product product = new Product("Test Product", 1000L, "http://example.com/image.jpg", category);
+        Product product = new Product("Test Product", 1000, "http://example.com/image.jpg", category);
 
         // when
         Product savedProduct = productRepository.save(product);
@@ -42,10 +42,10 @@ public class ProductTest {
     @Test
     public void findByIdTest() {
         // given
-        Category category = new Category("Category 1");
+        Category category = new Category("Category 1", "Test Color", "https://img1.kakaocdn.net/thumb/C320x320@2x.fwebp.q82/?fname=https%3A%2F%2Fst.kakaocdn.net%2Fproduct%2Fgift%2Fproduct%2F20240508101036_6c7f02cb957848a69a25018a664a3c89.jpg", "Test Description");
         category = categoryRepository.save(category);
 
-        Product product = new Product("Test Product", 1000L, "http://example.com/image.jpg", category);
+        Product product = new Product("Test Product", 1000, "http://example.com/image.jpg", category);
         productRepository.save(product);
 
         // when
@@ -61,16 +61,16 @@ public class ProductTest {
     @Test
     public void updateProductTest() {
         // given
-        Category category = new Category("Category 1");
+        Category category = new Category("Category 1", "Test Color", "https://img1.kakaocdn.net/thumb/C320x320@2x.fwebp.q82/?fname=https%3A%2F%2Fst.kakaocdn.net%2Fproduct%2Fgift%2Fproduct%2F20240508101036_6c7f02cb957848a69a25018a664a3c89.jpg", "Test Description");
         category = categoryRepository.save(category);
 
-        Product product = new Product("Test Product", 1000L, "http://example.com/image.jpg", category);
+        Product product = new Product("Test Product", 1000, "http://example.com/image.jpg", category);
         productRepository.save(product);
 
         // when
         Product savedProduct = productRepository.findById(product.getId()).orElse(null);
         assertThat(savedProduct).isNotNull();
-        savedProduct.update("Updated Product", 2000L, "http://example.com/updated.jpg", category);
+        savedProduct.update("Updated Product", 2000, "http://example.com/updated.jpg", category);
         productRepository.save(savedProduct);
 
         // then
@@ -84,11 +84,11 @@ public class ProductTest {
     @Test
     public void existsByNameTest() {
         // given
-        Category category = new Category("Category 1");
+        Category category = new Category("Category 1", "Test Color", "https://img1.kakaocdn.net/thumb/C320x320@2x.fwebp.q82/?fname=https%3A%2F%2Fst.kakaocdn.net%2Fproduct%2Fgift%2Fproduct%2F20240508101036_6c7f02cb957848a69a25018a664a3c89.jpg", "Test Description");
         category = categoryRepository.save(category);
 
         String productName = "Test Product";
-        Product product = new Product("Test Product", 1000L, "http://example.com/image.jpg", category);
+        Product product = new Product("Test Product", 1000, "http://example.com/image.jpg", category);
         productRepository.save(product);
 
         // when
@@ -103,11 +103,11 @@ public class ProductTest {
     @Test
     public void findByNameTest() {
         // given
-        Category category = new Category("Category 1");
+        Category category = new Category("Category 1", "Test Color", "https://img1.kakaocdn.net/thumb/C320x320@2x.fwebp.q82/?fname=https%3A%2F%2Fst.kakaocdn.net%2Fproduct%2Fgift%2Fproduct%2F20240508101036_6c7f02cb957848a69a25018a664a3c89.jpg", "Test Description");
         category = categoryRepository.save(category);
 
         String productName = "Test Product";
-        Product product = new Product("Test Product", 1000L, "http://example.com/image.jpg", category);
+        Product product = new Product("Test Product", 1000, "http://example.com/image.jpg", category);
         productRepository.save(product);
 
         // when
