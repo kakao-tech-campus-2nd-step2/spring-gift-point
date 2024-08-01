@@ -6,6 +6,11 @@ BUILD_OUTPUT_DIR="$BUILD_DIR/build/libs" # 빌드 출력 디렉토리
 DEPLOY_DIR="/home/ubuntu"
 JAR_NAME="app.jar" # 빌드된 JAR 파일명
 BUILD_CMD="./gradlew clean build" # 빌드 명령어
+LOG_DIR="/home/ubuntu/logs" # 로그 파일을 저장할 디렉토리
+LOG_FILE="$LOG_DIR/application.log"
+
+# 로그 디렉토리가 존재하지 않으면 생성
+mkdir -p $LOG_DIR
 
 # 현재 실행 중인 프로세스 ID 확인
 CURRENT_PID=$(pgrep -f $JAR_NAME)
@@ -37,6 +42,6 @@ cp $BUILD_PATH $DEPLOY_DIR
 # 배포된 JAR 파일 실행
 DEPLOY_JAR="$DEPLOY_DIR/$JAR_NAME"
 echo "> 배포된 JAR 파일 실행: $DEPLOY_JAR"
-nohup java -jar $DEPLOY_JAR > /dev/null 2> /dev/null < /dev/null &
+nohup java -jar $DEPLOY_JAR &> $LOG_FILE &
 
 echo "> 배포 완료"
