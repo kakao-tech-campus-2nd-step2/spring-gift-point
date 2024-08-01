@@ -30,19 +30,19 @@ public class WebConfig implements WebMvcConfigurer {
 
     @Override
     public void addCorsMappings(CorsRegistry registry) {
-        registry.addMapping("/api/**")
-                .allowedOrigins("http://localhost:3000") // 나중에 지정 예정
-                .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
+        registry.addMapping("/**")
+                .allowedOrigins("*")
+                .allowedMethods("*")
                 .allowedHeaders("*")
-                .allowCredentials(true)
-                .exposedHeaders(HttpHeaders.LOCATION);
+                .exposedHeaders("Location")
+                .maxAge(3600);
     }
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(tokenInterceptor)
-                .addPathPatterns("/api/**")
-                .excludePathPatterns("/api/members/register", "/api/members/login","/products/**");
+                .addPathPatterns("/api/wishes/**","/api/orders/**")
+                .excludePathPatterns("/api/members/**","/products/**","/api/categories/**","/api/products/**");
     }
 
     @Override

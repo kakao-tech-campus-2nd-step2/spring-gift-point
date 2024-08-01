@@ -7,9 +7,6 @@ import gift.dto.response.CommonResponse;
 import gift.dto.response.WishAddResponse;
 import gift.service.WishService;
 import io.swagger.v3.oas.annotations.Operation;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -27,7 +24,7 @@ public class WishRestController {
     @PostMapping
     public ResponseEntity<CommonResponse> addWish(@LoginMember MemberRequest memberRequest, @RequestBody WishRequest wishRequest){
         WishAddResponse wishAddResponse = wishService.save(memberRequest, wishRequest);
-        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse(wishAddResponse,"위시 생성 성공", true));
+        return ResponseEntity.status(HttpStatus.CREATED).body(new CommonResponse(wishAddResponse,"위시 생성 성공", true));
     }
 
     @Operation(summary = "특정 위시를 삭제합니다")
@@ -45,12 +42,7 @@ public class WishRestController {
             @RequestParam(defaultValue = "createdDate,desc") String sort,
             @LoginMember MemberRequest memberRequest){
 
-        String[] sortParams = sort.split(",");
-        String sortBy = sortParams[0];
-        Sort.Direction sortDirection = Sort.Direction.fromString(sortParams[1]);
-        Pageable pageable = PageRequest.of(page, size, Sort.by(sortDirection, sortBy));
-
         return ResponseEntity.status(HttpStatus.OK)
-                .body(new CommonResponse(wishService.getPagedMemberWishesByMemberId(memberRequest.id(),pageable),"회원 위시 목록 조회 성공",true));
+                .body(new CommonResponse(wishService.getPagedMemberWishesByMemberId(memberRequest.id(),page,size,sort),"회원 위시 목록 조회 성공",true));
     }
 }

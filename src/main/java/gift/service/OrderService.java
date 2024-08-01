@@ -8,7 +8,9 @@ import gift.dto.request.OrderRequest;
 import gift.dto.response.OrderResponse;
 import gift.repository.OrderRepository;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -57,8 +59,10 @@ public class OrderService {
     }
 
     @Transactional(readOnly = true)
-    public Page<OrderResponse> getPagedOrders(MemberRequest memberRequest, Pageable pageable){
-        Page<Order> pagedOrders= orderRepository.findByMemberId(memberRequest.id(), pageable);
+    public Page<OrderResponse> getPagedOrders(MemberRequest memberRequest, int page, int size, String sort) {
+        String[] sortParams = sort.split(",");
+        Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Order.by(sortParams[0]).with(Sort.Direction.fromString(sortParams[1]))));
+        Page<Order> pagedOrders = orderRepository.findByMemberId(memberRequest.id(), pageable);
         return pagedOrders.map(OrderResponse::from);
     }
 }

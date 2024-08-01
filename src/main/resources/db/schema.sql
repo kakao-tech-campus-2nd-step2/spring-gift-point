@@ -22,7 +22,7 @@ CREATE TABLE MEMBERS (
 
 CREATE TABLE PRODUCTS (
                           ID BIGINT AUTO_INCREMENT PRIMARY KEY,
-                          NAME VARCHAR(15) NOT NULL,
+                          NAME VARCHAR(255) NOT NULL,
                           PRICE INT NOT NULL,
                           IMAGE_URL VARCHAR(255) NOT NULL,
                           CATEGORY_ID BIGINT,
@@ -31,7 +31,7 @@ CREATE TABLE PRODUCTS (
 
 CREATE TABLE OPTIONS (
                          ID BIGINT AUTO_INCREMENT PRIMARY KEY,
-                         NAME VARCHAR(255) NOT NULL UNIQUE,
+                         NAME VARCHAR(255) NOT NULL,
                          QUANTITY INT,
                          PRODUCT_ID BIGINT,
                          FOREIGN KEY (PRODUCT_ID) REFERENCES PRODUCTS(ID)
