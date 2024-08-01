@@ -96,7 +96,7 @@ class UserTest {
         CreateUser body = new CreateUser("kakao10@kakao.com", "1234");
 
         HttpEntity<Long> requestEntity = new HttpEntity(body, headers);
-        ResponseEntity<String> responseEntity = restTemplate.exchange(url + port + commonPath,
+        ResponseEntity<String> responseEntity = restTemplate.exchange(url + port + commonPath + "/register",
             POST, requestEntity, String.class);
 
         System.out.println(responseEntity);
@@ -110,7 +110,7 @@ class UserTest {
         CreateUser body = new CreateUser("kakao1@kakao.com", "1234");
 
         HttpEntity<Long> requestEntity = new HttpEntity(body, headers);
-        ResponseEntity<String> responseEntity = restTemplate.exchange(url + port + commonPath,
+        ResponseEntity<String> responseEntity = restTemplate.exchange(url + port + commonPath + "/register",
             POST,
             requestEntity, String.class);
 
