@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Product Manager</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+<div class="container mt-5">
+    <div class="row">
+        <div class="col">
+            <h1 class="mb-4">Product Manager</h1>
+        </div>
+        <div class="col text-right align-self-center">
+            <form th:action="@{/api/products/new}" method="get" class="d-inline">
+                <button type="submit" class="btn btn-primary">Add Product</button>
+            </form>
+            <button id="delete-selected" class="btn btn-danger d-inline">Delete Selected</button>
+        </div>
+    </div>
+
+    <table class="table table-bordered">
+        <thead class="thead-light">
+        <tr>
+            <th><input type="checkbox" id="select-all"></th>
+            <th>
+                <a th:href="@{/api/products(page=0, size=${productPage.size}, sortBy='name', direction=${direction == 'asc' ? 'desc' : 'asc'})}">Name</a>
+            </th>
+            <th>
+                <a th:href="@{/api/products(page=0, size=${productPage.size}, sortBy='price', direction=${direction == 'asc' ? 'desc' : 'asc'})}">Price</a>
+            </th>
+            <th>Image</th>
+            <th>Category</th>
+            <th>Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="product : ${productPage.content}">
+            <td><input type="checkbox" class="product-checkbox" th:value="${product.id}"></td>
+            <td th:text="${product.name}"></td>
+            <td th:text="${product.price}"></td>
+            <td><img th:src="${product.imageUrl}" alt="Product Image" class="img-thumbnail" style="max-width: 100px; max-height: 100px;"></td>
+            <td th:text="${product.category.name}"></td>
+            <td>
+                <form th:action="@{/api/products/{id}/edit(id=${product.id})}" method="get" class="d-inline">
+                    <button type="submit" class="btn btn-warning btn-sm">Edit</button>
+                </form>
+                <form th:action="@{/api/products/{id}/delete(id=${product.id})}" method="post" class="d-inline">
+                    <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                </form>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+
+    <nav>
+        <ul class="pagination">
+            <li class="page-item" th:classappend="${productPage.first} ? 'disabled'">
+                <a class="page-link" th:href="@{/api/products(page=${productPage.number - 1}, size=${productPage.size}, sortBy=${sortBy}, direction=${direction})}" aria-label="Previous">
+                    <span aria-hidden="true">&laquo;</span>
+                </a>
+            </li>
+            <li class="page-item" th:each="i : ${#numbers.sequence(1, productPage.totalPages)}" th:classappend="${i == productPage.number + 1} ? 'active'">
+                <a class="page-link" th:href="@{/api/products(page=${i - 1}, size=${productPage.size}, sortBy=${sortBy}, direction=${direction})}" th:text="${i}">1</a>
+            </li>
+            <li class="page-item" th:classappend="${productPage.last} ? 'disabled'">
+                <a class="page-link" th:href="@{/api/products(page=${productPage.number + 1}, size=${productPage.size}, sortBy=${sortBy}, direction=${direction})}" aria-label="Next">
+                    <span aria-hidden="true">&raquo;</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+<script>
+    document.getElementById('select-all').onclick = function() {
+        var checkboxes = document.getElementsByClassName('product-checkbox');
+        for (var checkbox of checkboxes) {
+            checkbox.checked = this.checked;
+        }
+    }
+
+    document.getElementById('delete-selected').onclick = function() {
+        var selected = [];
+        var checkboxes = document.getElementsByClassName('product-checkbox');
+        for (var checkbox of checkboxes) {
+            if (checkbox.checked) {
+                selected.push(checkbox.value);
+            }
+        }
+
+        if (selected.length > 0) {
+            fetch('/api/products/delete-batch', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ids: selected}),
+            }).then(response => {
+                if (response.ok) {
+                    window.location.reload();
+                } else {
+                    alert('Failed to delete products');
+                }
+            });
+        } else {
+            alert('No products selected');
+        }
+    }
+</script>
+</body>
+</html>

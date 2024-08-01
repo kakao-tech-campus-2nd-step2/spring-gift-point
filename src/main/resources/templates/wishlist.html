@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Wishlist</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+<div class="container mt-5">
+    <h1>Wishlist</h1>
+    <table class="table table-bordered">
+        <thead class="thead-light">
+        <tr>
+            <th>
+                <a th:href="@{/wishes/items(page=0, size=${wishPage.size}, sortBy='productName', direction=${direction == 'asc' ? 'desc' : 'asc'})}">Name</a>
+            </th>
+            <th>
+                <a th:href="@{/wishes/items(page=0, size=${wishPage.size}, sortBy='productNumber', direction=${direction == 'asc' ? 'desc' : 'asc'})}">Quantity</a>
+            </th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="wish : ${wishPage.content}">
+            <td th:text="${wish.productName}"></td>
+            <td th:text="${wish.productNumber}"></td>
+        </tr>
+        </tbody>
+    </table>
+    <nav>
+        <ul class="pagination">
+            <li class="page-item" th:classappend="${wishPage.first} ? 'disabled'">
+                <a class="page-link" th:href="@{/wishes/items(page=${wishPage.number - 1}, size=${wishPage.size}, sortBy=${sortBy}, direction=${direction})}" aria-label="Previous">
+                    <span aria-hidden="true">&laquo;</span>
+                </a>
+            </li>
+            <li class="page-item" th:each="i : ${#numbers.sequence(1, wishPage.totalPages)}" th:classappend="${i == wishPage.number + 1} ? 'active'">
+                <a class="page-link" th:href="@{/wishes/items(page=${i - 1}, size=${wishPage.size}, sortBy=${sortBy}, direction=${direction})}" th:text="${i}">1</a>
+            </li>
+            <li class="page-item" th:classappend="${wishPage.last} ? 'disabled'">
+                <a class="page-link" th:href="@{/wishes/items(page=${wishPage.number + 1}, size=${wishPage.size}, sortBy=${sortBy}, direction=${direction})}" aria-label="Next">
+                    <span aria-hidden="true">&raquo;</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</div>
+</body>
+</html>
