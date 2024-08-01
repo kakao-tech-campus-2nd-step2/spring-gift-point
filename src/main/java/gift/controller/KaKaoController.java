@@ -1,13 +1,14 @@
 package gift.controller;
 
-import gift.classes.RequestState.RequestStatus;
 import gift.classes.RequestState.SecureRequestStateDTO;
+import gift.dto.TokenDto;
 import gift.services.KaKaoService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -53,9 +54,9 @@ public class KaKaoController {
         String token = kaKaoService.getKaKaoToken(request.getParameter("code"));
 
         return ResponseEntity.ok().body(new SecureRequestStateDTO(
-            RequestStatus.success,
+            HttpStatus.OK,
             null,
-            token
+            new TokenDto(token)
         ));
     }
 
