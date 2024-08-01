@@ -34,13 +34,12 @@ public class MemberService {
         memberRepository.findByEmail(signupRequest.getEmail()).ifPresent(p -> {
             throw new DuplicatedEmailException();
         });
+        // confirmPassword(signupRequest.getPassword(), signupRequest.getConfirmPassword());
         Member member = new Member(signupRequest.getEmail(),
                                     signupRequest.getPassword(),
                                     signupRequest.getKakaoId());
+
         memberRepository.save(member);
-
-        confirmPassword(signupRequest.getPassword(), signupRequest.getConfirmPassword());
-
         return new SignupResponse(member.getEmail());
     }
 

@@ -24,15 +24,11 @@ public class LoginController {
     }
 
     @PostMapping
-    public ResponseEntity<LoginResponse> login(
+    public ResponseEntity<String> login(
             @RequestBody
             @Valid LoginRequest loginRequest
     ) {
-        try {
-            LoginResponse loginResponse = memberService.loginMember(loginRequest);
-            return new ResponseEntity<>(loginResponse, HttpStatus.OK);
-        } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
-        }
+        LoginResponse loginResponse = memberService.loginMember(loginRequest);
+        return ResponseEntity.status(HttpStatus.OK).body(loginResponse.getToken());
     }
 }

@@ -11,7 +11,6 @@ public class SignupRequest {
     @NotBlank
     private String password;
 
-    @NotBlank
     private String confirmPassword;
 
     private Long kakaoId;
