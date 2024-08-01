@@ -3,10 +3,10 @@
 # 설정 변수
 BUILD_DIR="/home/ubuntu/spring-gift-point" # 프로젝트의 backend 폴더
 BUILD_OUTPUT_DIR="$BUILD_DIR/build/libs" # 빌드 출력 디렉토리
-DEPLOY_DIR="/home/ubuntu"
+DEPLOY_DIR="/home/ubuntu/spring-gift-point"
 JAR_NAME="app.jar" # 빌드된 JAR 파일명
 BUILD_CMD="./gradlew clean build" # 빌드 명령어
-LOG_DIR="/home/ubuntu/logs" # 로그 파일을 저장할 디렉토리
+LOG_DIR="/home/ubuntu/spring-gift-point/logs" # 로그 파일을 저장할 디렉토리
 LOG_FILE="$LOG_DIR/application.log"
 
 # 로그 디렉토리가 존재하지 않으면 생성
