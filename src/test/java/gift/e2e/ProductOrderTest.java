@@ -33,7 +33,7 @@ class ProductOrderTest {
 
     private HttpHeaders headers = new HttpHeaders();
 
-    private String commonPath = "/api/product/1/order";
+    private String commonPath = "/api/product/order";
 
     @Autowired
     public ProductOrderTest(TestRestTemplate restTemplate) {
