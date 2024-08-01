@@ -1,5 +1,8 @@
-package gift.model;
+package gift.member.model;
 
+import gift.exception.IllegalEmailException;
+import gift.order.model.Order;
+import gift.wish.model.Wish;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -12,16 +15,20 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.ToString;
 
 @Entity
 @Table(name = "member")
+@Getter
+@ToString
+@EqualsAndHashCode
 public class Member {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
 
     @Column(name = "email", nullable = false, unique = true)
     private String email;
@@ -32,8 +39,11 @@ public class Member {
     @Column(name = "kakao_id", unique = true)
     private String kakaoId;
 
+    @OneToMany(mappedBy = "member")
+    private List<Order> orders;
+
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Wish> wishList = new ArrayList<>();
+    private final List<Wish> wishList = new ArrayList<>();
 
     public Member() {
     }
@@ -42,25 +52,18 @@ public class Member {
         this.kakaoId = kakaoId;
     }
 
-    public Member(String email, String password) {
-        this.email = email;
-        this.password = password;
+    public Member(String email, String password) throws IllegalEmailException {
+        this(email, password, null);
     }
 
-    public Member(String email, String password, String kakaoId) {
+    public Member(String email, String password, String kakaoId) throws IllegalEmailException {
+        if (!email.contains("@"))
+            throw new IllegalEmailException("올바른 이메일 형식이 아닙니다.");
         this.email = email;
         this.password = password;
         this.kakaoId = kakaoId;
     }
 
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
 
     public @Email @NotBlank String getEmail() {
         return email;
@@ -78,42 +81,11 @@ public class Member {
         this.password = password;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
-        Member member = (Member) o;
-        return Objects.equals(getEmail(), member.getEmail()) && Objects.equals(
-            getPassword(), member.getPassword()) && Objects.equals(wishList, member.wishList);
+    public void setId(Long memberId) {
+        this.id = memberId;
     }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(getEmail(), getPassword(), wishList);
-    }
-
-    @Override
-    public String toString() {
-        return "Member{" +
-            "email='" + email + '\'' +
-            ", password='" + password + '\'' +
-            ", wishList=" + wishList +
-            '}';
-    }
-
-    public String getKakaoId() {
-        return kakaoId;
-    }
-
-    public void setKakaoId(String kakaoId) {
-        this.kakaoId = kakaoId;
-    }
-
-    public List<Wish> getWishList() {
-        return wishList;
+    public void setKakaoId(String hashedKakaoId) {
+        this.kakaoId = hashedKakaoId;
     }
 }
