@@ -1,7 +1,9 @@
 package gift.controller;
 
+import gift.annotation.LoginMember;
 import gift.dto.response.CommonResponse;
 import gift.dto.response.LoginResponse;
+import gift.dto.response.PointsResponse;
 import gift.dto.response.RegisterResponse;
 import gift.dto.request.MemberRequest;
 import gift.service.JwtUtil;
@@ -45,5 +47,12 @@ public class MemberRestController {
         headers.set("Authorization", "Bearer " + token);
 
         return ResponseEntity.status(HttpStatus.OK).headers(headers).body(new CommonResponse<>(new LoginResponse(request.email(), token), "로그인 성공", true));
+    }
+
+    @Operation(summary = "회원 포인트를 조회합니다.")
+    @GetMapping("/points")
+    public ResponseEntity<CommonResponse> getMemberPoints(@LoginMember MemberRequest memberRequest){
+        PointsResponse pointsResponse = new PointsResponse(memberService.getMemberPoints(memberRequest));
+        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse<>(pointsResponse,"회원 포인트 조회 성공", true));
     }
 }
