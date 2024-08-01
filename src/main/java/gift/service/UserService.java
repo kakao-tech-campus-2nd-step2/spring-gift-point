@@ -58,4 +58,14 @@ public class UserService {
         List<Info> responses = userList.getContent().stream().map(Info::from).toList();
         return PageResponse.from(responses, userList);
     }
+
+    @Transactional
+    public UserResponse.Point addPoint(Long userId, UserRequest.Point request) {
+        User user = userRepository.findById(userId)
+            .orElseThrow(() -> new UserException(ErrorCode.USER_NOT_FOUND));
+
+        user.addPoint(request.depositPoint());
+
+        return UserResponse.Point.from(user.getPoint());
+    }
 }

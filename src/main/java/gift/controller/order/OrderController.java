@@ -9,6 +9,7 @@ import gift.service.OrderService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import java.net.URI;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -35,7 +36,10 @@ public class OrderController {
 
     @PostMapping("")
     @Operation(summary = "주문 등록", description = "주문을 등록합니다.")
-    public ResponseEntity<Void> order(@LoginUser LoginInfo user, @RequestBody OrderRequest request) {
+    public ResponseEntity<Void> order(
+        @LoginUser LoginInfo user,
+        @Valid @RequestBody OrderRequest request
+    ) {
         OrderResponse.Info response = orderService.order(user.id(), request);
         return ResponseEntity.ok().build();
     }

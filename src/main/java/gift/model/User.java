@@ -91,4 +91,8 @@ public class User extends BaseEntity {
         }
         this.point -= point;
     }
+
+    public void addPoint(int depositPoint) {
+        this.point += depositPoint;
+    }
 }
