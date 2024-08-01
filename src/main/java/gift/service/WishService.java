@@ -10,10 +10,11 @@ import gift.dto.response.WishAddResponse;
 import gift.dto.response.WishResponse;
 import gift.exception.customException.ProductAlreadyInWishlistException;
 import gift.exception.customException.WishNotFoundException;
-import gift.repository.ProductRepository;
 import gift.repository.WishRepository;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -47,7 +48,9 @@ public class WishService {
     }
 
     @Transactional(readOnly = true)
-    public Page<WishResponse> getPagedMemberWishesByMemberId(Long memberId, Pageable pageable) {
+    public Page<WishResponse> getPagedMemberWishesByMemberId(Long memberId,int page, int size, String sort) {
+        String[] sortParams = sort.split(",");
+        Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Order.by(sortParams[0]).with(Sort.Direction.fromString(sortParams[1]))));
         Page<Wish> wishPage = wishRepository.findByMemberId(memberId, pageable);
         return wishPage.map(WishResponse::from);
     }
