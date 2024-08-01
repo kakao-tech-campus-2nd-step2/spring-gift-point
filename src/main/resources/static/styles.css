@@ -1,70 +1,10 @@
 body {
   font-family: Arial, sans-serif;
-  background-color: #f4f4f4;
-  margin: 0;
-  padding: 0;
 }
 
 .container {
-  width: 50%;
-  margin: 50px auto;
-  background-color: white;
-  padding: 20px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-}
-
-h2 {
-  text-align: center;
-  color: #333;
-}
-
-.form-group {
-  margin-bottom: 15px;
-}
-
-label {
-  display: block;
-  margin-bottom: 5px;
-  color: #333;
-}
-
-input[type="text"], input[type="number"], input[type="url"], input[type="hidden"] {
-  width: 100%;
-  padding: 8px;
-  box-sizing: border-box;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-}
-
-button {
-  background-color: #28a745;
-  color: white;
-  padding: 10px 15px;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  display: block;
-  width: 100%;
-  margin-bottom: 10px;
-}
-
-button:hover {
-  background-color: #218838;
-}
-
-.error-message {
-  text-align: center;
-  font-size: 22px;
-  color: red;
-  font-weight: bold;
-}
-
-.table-container {
   width: 80%;
-  margin: 50px auto;
-  background-color: white;
-  padding: 20px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  margin: auto;
 }
 
 .header {
@@ -72,9 +12,6 @@ button:hover {
   justify-content: space-between;
   align-items: center;
   margin-bottom: 20px;
-  background-color: #47516b;
-  color: white;
-  padding: 10px;
 }
 
 .header h2 {
@@ -83,58 +20,57 @@ button:hover {
 
 .button-group {
   display: flex;
-  gap: 10px;
-}
-
-.header .btn {
-  padding: 10px 20px;
-  margin-left: 10px;
 }
 
 .btn {
-  border: none;
-  padding: 10px 20px;
-  cursor: pointer;
-  text-decoration: none;
+  background-color: #4CAF50;
   color: white;
-  border-radius: 4px;
-  display: inline-block;
+  padding: 10px 20px;
+  text-decoration: none;
+  border-radius: 5px;
 }
 
-.btn-add {
-  background-color: #28a745;
-}
-
-.btn-delete {
-  background-color: #dc3545;
+.btn:hover {
+  background-color: #45a049;
 }
 
 table {
   width: 100%;
   border-collapse: collapse;
-  margin-bottom: 20px;
+  table-layout: fixed;  /* Add this line */
 }
 
 table th, table td {
-  padding: 10px;
-  text-align: left;
-  border-bottom: 1px solid #ddd;
+  border: 1px solid #ddd;
+  padding: 8px;
+  text-align: center;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 table th {
-  background-color: #f8f8f8;
+  background-color: #f2f2f2;
 }
 
-.pagination {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+table th, table td {
+  width: 150px;  /* Set a fixed width for each column */
 }
 
-.pagination .btn {
-  margin: 0 2px;
+.btn-edit, .btn-delete-row {
+  background: none;
+  border: none;
+  cursor: pointer;
 }
 
-.pagination .btn.active {
-  background-color: #007bff;
+.btn-edit {
+  color: orange;
+}
+
+.btn-delete-row {
+  color: red;
+}
+
+table td input[type="checkbox"] {
+  width: auto;
 }

@@ -20,23 +20,23 @@
       <th><input type="checkbox"></th>
       <th>Id</th>
       <th>Name</th>
-      <th>price</th>
-      <th>imageUrl</th>
+      <th>Price</th>
+      <th>Image URL</th>
       <th>Actions</th>
     </tr>
     </thead>
     <tbody>
-      <tr th:each="product: ${products}">
-        <td><input type="checkbox"></td>
-        <td th:text="${product.id}" />
-        <td th:text="${product.name}" />
-        <td th:text="${product.price}" />
-        <td th:text="${product.imageUrl}" />
-        <td>
-          <a th:href="@{/update-product/{id}(id=${product.id})}" ><button class="btn btn-edit">✏️</button></a>
-          <a th:href="@{/delete-product/{id}(id=${product.id})}" ><button class="btn btn-delete-row">🗑️</button></a>
-        </td>
-      </tr>
+    <tr th:each="product: ${products}">
+      <td><input type="checkbox"></td>
+      <td th:text="${product.id}"></td>
+      <td th:text="${product.name}"></td>
+      <td th:text="${product.price}"></td>
+      <td th:text="${product.imageUrl}"></td>
+      <td>
+        <a th:href="@{/update-product/{id}(id=${product.id})}"><button class="btn btn-edit">✏️</button></a>
+        <a th:href="@{/delete-product/{id}(id=${product.id})}"><button class="btn btn-delete-row">🗑️</button></a>
+      </td>
+    </tr>
     </tbody>
   </table>
 </div>
