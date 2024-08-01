@@ -41,7 +41,7 @@ public class KakaoService {
         Optional<Member> kakaoMember = memberRepository.findByEmail(email);
         if(kakaoMember.isEmpty()){
             String tempPassword = new SecureRandom().toString();
-            Member newKakaoMember = new Member(email,tempPassword,"member");
+            Member newKakaoMember = new Member(email,tempPassword);
             memberRepository.save(newKakaoMember);
         }
         return memberRepository.findByEmail(email).get();

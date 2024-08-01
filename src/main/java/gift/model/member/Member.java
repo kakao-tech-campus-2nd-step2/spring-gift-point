@@ -15,16 +15,12 @@ public class Member {
     @Column(nullable = false, columnDefinition = "VARCHAR(255) COMMENT '고객 비밀번호'")
     private String password;
 
-    @Column(nullable = false, columnDefinition = "VARCHAR(255) COMMENT '권한'")
-    private String role;
-
     protected Member() {
     }
   
-    public Member(String email, String password,String role) {
+    public Member(String email, String password) {
         this.email = email;
         this.password = password;
-        this.role = role;
     }
 
     public boolean isPasswordEqual(String inputPassword) {
@@ -48,9 +44,5 @@ public class Member {
 
     public String getPassword() {
         return password;
-    }
-
-    public String getRole() {
-        return role;
     }
 }

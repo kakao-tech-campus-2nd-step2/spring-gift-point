@@ -43,7 +43,7 @@ public class LoginMemberArgumentResolver implements HandlerMethodArgumentResolve
         AuthorizationHeader authHeader = new AuthorizationHeader(request.getHeader("Authorization"));
         Member authMember =  getAuthenticatedMember(authHeader);
 
-        return new MemberDto(authMember.getEmail(),authMember.getPassword(), authMember.getRole());
+        return new MemberDto(authMember.getEmail(),authMember.getPassword());
     }
 
     private Member getAuthenticatedMember(AuthorizationHeader authHeader) {

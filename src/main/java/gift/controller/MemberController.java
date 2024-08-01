@@ -2,6 +2,7 @@ package gift.controller;
 
 
 import gift.dto.memberDto.MemberDto;
+import gift.dto.memberDto.MemberResponseDto;
 import gift.service.MemberService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -23,10 +24,9 @@ public class MemberController {
 
     @PostMapping("/register")
     @Operation(summary = "새로운 멤버 회원가입", description = "회원가입 할 때 사용하는 API")
-    public ResponseEntity<?> registerNewMember(@RequestBody MemberDto memberDto) {
-        memberService.registerNewMember(memberDto);
-        String token = memberService.returnToken(memberDto);
-        return ResponseEntity.ok().body(Collections.singletonMap("token", token));
+    public ResponseEntity<MemberResponseDto> registerNewMember(@RequestBody MemberDto memberDto) {
+        MemberResponseDto memberResponseDto = memberService.registerNewMember(memberDto);
+        return ResponseEntity.ok().body(memberResponseDto);
     }
 
     @PostMapping("/login")
