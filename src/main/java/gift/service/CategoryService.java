@@ -36,7 +36,7 @@ public class CategoryService {
         if (!categoryRepository.existsById(id)) {
             throw new ProductNotFoundException("Category not found");
         }
-        Category category = new Category(categoryRepository.findById(id).get().getCategoryName());
+        Category category = new Category(categoryRepository.findById(id).get().getName(),categoryRepository.findById(id).get().getColor(),categoryRepository.findById(id).get().getImage_url(),categoryRepository.findById(id).get().getDescription());
         category.setId(id);
         return category;
     }
@@ -50,6 +50,10 @@ public class CategoryService {
     }
 
     public boolean existsCategory(String categoryName) {
-        return categoryRepository.existsByCategoryName(categoryName);
+        return categoryRepository.existsByName(categoryName);
+    }
+
+    public boolean existsCategoryById(Long id) {
+        return categoryRepository.existsById(id);
     }
 }
