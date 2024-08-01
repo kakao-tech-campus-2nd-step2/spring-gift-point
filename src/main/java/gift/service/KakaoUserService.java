@@ -26,8 +26,7 @@ public class KakaoUserService {
 
     public String getAuthorizationUrl() {
         return "https://kauth.kakao.com/oauth/authorize?response_type=code&client_id="
-            + kakaoProperties.getClientId() + "&redirect_uri=" + kakaoProperties.getRedirectUri()
-            + "&scope=talk_message,friends" + "&prompt=consent";
+            + kakaoProperties.getClientId() + "&redirect_uri=" + kakaoProperties.getRedirectUri();
     }
 
     public KakaoTokenResponse getAccessToken(String authorizationCode) {
@@ -45,6 +44,7 @@ public class KakaoUserService {
 
         ResponseEntity<KakaoTokenResponse> response = restTemplate.exchange(request,
             KakaoTokenResponse.class);
+        //BLUMTTgnxlIioJcG6RrjICULu6ONYbVPMUj6aQE08XcSDivCyyqwvAAAAAQKPXPrAAABkQ4B899yxKx5jTsi9A
 
         return response.getBody();
     }
