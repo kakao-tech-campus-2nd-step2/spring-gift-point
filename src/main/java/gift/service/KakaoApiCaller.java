@@ -4,7 +4,6 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import gift.common.exception.AuthenticationException;
 import gift.common.properties.KakaoProperties;
-import gift.model.Orders;
 import gift.service.dto.KakaoInfoDto;
 import gift.service.dto.KakaoRequest;
 import gift.service.dto.KakaoTokenDto;
