@@ -7,11 +7,10 @@ public record ProductResponse(
         String name,
         Integer price,
         String imgUrl,
-        CategoryResponse category
+        String categoryName
 ) {
     public static ProductResponse from(ProductInfo productInfo) {
-        var category = CategoryResponse.from(productInfo.category());
         return new ProductResponse(productInfo.id(), productInfo.name(), productInfo.price(), productInfo.imgUrl(),
-                category);
+                productInfo.category().name());
     }
 }
