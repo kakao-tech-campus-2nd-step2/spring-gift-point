@@ -5,6 +5,7 @@ import static org.springframework.http.HttpMethod.POST;
 import static org.springframework.http.HttpStatus.OK;
 
 import gift.domain.Member;
+import gift.domain.Member.MemberRequest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -38,10 +39,10 @@ public class MemberTest {
 
         url = "http://localhost:" + port;
 
-        Member member = new Member("admin@example.com", "1234");
+        MemberRequest member = new MemberRequest("admin@example.com", "1234");
 
-        HttpEntity<Member> requestEntity = new HttpEntity<>(member);
-        ResponseEntity<String> responseEntity = restTemplate.postForEntity(url + "/members/register", member, String.class);
+        HttpEntity<MemberRequest> requestEntity = new HttpEntity<>(member);
+        ResponseEntity<String> responseEntity = restTemplate.postForEntity(url + "/api/user/register", member, String.class);
 
         int startIndex = responseEntity.getBody().indexOf("\"token\":\"") + "\"token\":\"".length();
         int endIndex = responseEntity.getBody().indexOf("\"", startIndex);
@@ -60,10 +61,10 @@ public class MemberTest {
     @DisplayName("로그인 확인")
     @DirtiesContext
     void login() {
-        Member member = new Member("admin@example.com", "1234");
+        MemberRequest member = new MemberRequest("admin@example.com", "1234");
 
-        HttpEntity<Member> requestEntity = new HttpEntity<>(member, getHttpHeaders());
-        ResponseEntity<String> loginResponse = restTemplate.exchange(url + "/members/login", POST, requestEntity, String.class);
+        HttpEntity<MemberRequest> requestEntity = new HttpEntity<>(member, getHttpHeaders());
+        ResponseEntity<String> loginResponse = restTemplate.exchange(url + "/api/user/login", POST, requestEntity, String.class);
 
         assertThat(loginResponse.getStatusCode()).isEqualTo(OK);
     }

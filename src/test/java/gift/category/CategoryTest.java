@@ -3,7 +3,9 @@ package gift.category;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import gift.domain.Category;
+import gift.domain.Category.CategoryRequest;
 import gift.domain.Member;
+import gift.domain.Member.MemberRequest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -38,12 +40,12 @@ public class CategoryTest {
 
         url = "http://localhost:" + port;
 
-        Member member = new Member(2L,"admin2@kakao.com", "2222");
+        MemberRequest member = new MemberRequest("admin2@kakao.com", "2222");
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
-        HttpEntity<Member> requestEntity = new HttpEntity<>(member, headers);
-        ResponseEntity<String> responseEntity = restTemplate.postForEntity(url + "/members/login", member, String.class);
+        HttpEntity<MemberRequest> requestEntity = new HttpEntity<>(member, headers);
+        ResponseEntity<String> responseEntity = restTemplate.postForEntity(url + "/api/user/login", member, String.class);
 
         int startIndex = responseEntity.getBody().indexOf("\"token\":\"") + "\"token\":\"".length();
         int endIndex = responseEntity.getBody().indexOf("\"", startIndex);
@@ -61,10 +63,10 @@ public class CategoryTest {
     @DisplayName("카테고리 추가")
     @DirtiesContext
     void addCategory() {
-        Category category = new Category("상품권","#ffffff","http://gift.jpg","상품권 카테고리");
+        CategoryRequest category = new CategoryRequest("상품권","#ffffff","http://gift.jpg","상품권 카테고리");
 
-        HttpEntity<Category> requestEntity = new HttpEntity<>(category, getHttpHeaders());
-        ResponseEntity<String> responseEntity = restTemplate.exchange(url + "/api/categories", HttpMethod.POST,
+        HttpEntity<CategoryRequest> requestEntity = new HttpEntity<>(category, getHttpHeaders());
+        ResponseEntity<String> responseEntity = restTemplate.exchange(url + "/api/category", HttpMethod.POST,
             requestEntity, String.class);
 
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.CREATED);
@@ -75,7 +77,7 @@ public class CategoryTest {
     @DirtiesContext
     void getAllCategory() {
         HttpEntity<String> requestEntity = new HttpEntity<>(getHttpHeaders());
-        ResponseEntity<String> responseEntity = restTemplate.exchange(url + "/api/categories", HttpMethod.GET,
+        ResponseEntity<String> responseEntity = restTemplate.exchange(url + "/api/category", HttpMethod.GET,
             requestEntity, String.class);
 
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
@@ -86,7 +88,7 @@ public class CategoryTest {
     @DirtiesContext
     void getCategoryById() {
         HttpEntity<String> requestEntity = new HttpEntity<>(getHttpHeaders());
-        ResponseEntity<String> responseEntity = restTemplate.exchange(url + "/api/categories/1", HttpMethod.GET,
+        ResponseEntity<String> responseEntity = restTemplate.exchange(url + "/api/category/1", HttpMethod.GET,
             requestEntity, String.class);
 
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
@@ -96,10 +98,10 @@ public class CategoryTest {
     @DisplayName("카테고리 수정")
     @DirtiesContext
     void updateCategory() {
-        Category category = new Category("상품권","#f1f1f1","http://gift2.jpg","상품권 카테고리");
+        CategoryRequest category = new CategoryRequest("상품권","#f1f1f1","http://gift2.jpg","상품권 카테고리");
 
-        HttpEntity<Category> requestEntity = new HttpEntity<>(category, getHttpHeaders());
-        ResponseEntity<String> responseEntity = restTemplate.exchange(url + "/api/categories/1", HttpMethod.PUT,
+        HttpEntity<CategoryRequest> requestEntity = new HttpEntity<>(category, getHttpHeaders());
+        ResponseEntity<String> responseEntity = restTemplate.exchange(url + "/api/category/1", HttpMethod.PUT,
             requestEntity, String.class);
 
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
@@ -110,7 +112,7 @@ public class CategoryTest {
     @DirtiesContext
     void deleteCategory() {
         HttpEntity<String> requestEntity = new HttpEntity<>(getHttpHeaders());
-        ResponseEntity<String> responseEntity = restTemplate.exchange(url + "/api/categories/1", HttpMethod.DELETE,
+        ResponseEntity<String> responseEntity = restTemplate.exchange(url + "/api/category/1", HttpMethod.DELETE,
             requestEntity, String.class);
 
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);

@@ -1,6 +1,6 @@
 package gift.service;
 
-import gift.domain.Member;
+import gift.domain.KakaoToken;
 import gift.domain.Member.MemberRequest;
 import gift.domain.Member.MemberResponse;
 import gift.domain.Token;
@@ -50,14 +50,15 @@ public class MemberService {
     }
 
     @Transactional
-    public Token kakaoLogin(Long kakaoId) {
+    public Token kakaoLogin(Long kakaoId, KakaoToken kakaoToken) {
         String email = kakaoId + "@kakao.com";
         MemberEntity memberEntity = memberRepository.findByEmail(email)
             .orElseGet(() -> memberRepository.save(
                 new MemberEntity(
                     email,
                     PasswordUtil.encodePassword("1111"),
-                    LoginType.KAKAO)
+                    LoginType.KAKAO,
+                    kakaoToken)
             ));
         return new Token(jwtUtil.generateToken(MemberResponse.from(memberEntity)));
     }

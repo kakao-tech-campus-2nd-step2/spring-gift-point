@@ -1,6 +1,7 @@
 package gift.controller;
 
 import gift.domain.Category;
+import gift.domain.Category.CategoryResponse;
 import gift.domain.Product.ProductRequest;
 import gift.domain.Product.ProductResponse;
 import gift.service.CategoryService;
@@ -57,8 +58,8 @@ public class AdminController {
     @GetMapping("/new")
     @Operation(summary = "상품 추가 폼", description = "상품 추가 폼 화면을 띄웁니다.")
     public String createProductForm(Model model) {
-        List<Category> categories = categoryService.getAllCategories();
-        model.addAttribute("categories", categories);
+        List<CategoryResponse> responses = categoryService.getAllCategories();
+        model.addAttribute("categories", responses);
         return "form";
     }
 
@@ -104,8 +105,8 @@ public class AdminController {
         ProductResponse response = productService.getProductById(id);
         model.addAttribute("product", response);
 
-        List<Category> categories = categoryService.getAllCategories();
-        model.addAttribute("categories", categories);
+        List<CategoryResponse> responses = categoryService.getAllCategories();
+        model.addAttribute("categories", responses);
         return "form";
     }
 

@@ -3,7 +3,7 @@ package gift.wish;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import gift.domain.Member;
-import gift.domain.Product;
+import gift.domain.Member.MemberRequest;
 import gift.domain.Wish.WishRequest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -39,11 +39,11 @@ public class WishTest {
 
         url = "http://localhost:" + port;
 
-        Member member = new Member(2L,"admin2@kakao.com", "2222");
+        MemberRequest member = new MemberRequest("admin2@kakao.com", "2222");
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
-        HttpEntity<Member> requestEntity = new HttpEntity<>(member, headers);
+        HttpEntity<MemberRequest> requestEntity = new HttpEntity<>(member, headers);
         ResponseEntity<String> responseEntity = restTemplate.postForEntity(url + "/members/login", member, String.class);
 
         int startIndex = responseEntity.getBody().indexOf("\"token\":\"") + "\"token\":\"".length();

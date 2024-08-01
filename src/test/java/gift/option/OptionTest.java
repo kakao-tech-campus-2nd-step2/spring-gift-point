@@ -4,7 +4,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import gift.domain.Category;
 import gift.domain.Member;
+import gift.domain.Member.MemberRequest;
 import gift.domain.Option;
+import gift.domain.Option.OptionRequest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -39,12 +41,12 @@ public class OptionTest {
 
         url = "http://localhost:" + port;
 
-        Member member = new Member(2L,"admin2@kakao.com", "2222");
+        MemberRequest member = new MemberRequest("admin2@kakao.com", "2222");
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
-        HttpEntity<Member> requestEntity = new HttpEntity<>(member, headers);
-        ResponseEntity<String> responseEntity = restTemplate.postForEntity(url + "/members/login", member, String.class);
+        HttpEntity<MemberRequest> requestEntity = new HttpEntity<>(member, headers);
+        ResponseEntity<String> responseEntity = restTemplate.postForEntity(url + "/api/user/login", member, String.class);
 
         int startIndex = responseEntity.getBody().indexOf("\"token\":\"") + "\"token\":\"".length();
         int endIndex = responseEntity.getBody().indexOf("\"", startIndex);
@@ -62,9 +64,9 @@ public class OptionTest {
     @DisplayName("옵션 추가")
     @DirtiesContext
     void addOption() {
-        Option option = new Option("새옵션",4444L);
+        OptionRequest option = new OptionRequest("새옵션",4444L);
 
-        HttpEntity<Option> requestEntity = new HttpEntity<>(option, getHttpHeaders());
+        HttpEntity<OptionRequest> requestEntity = new HttpEntity<>(option, getHttpHeaders());
         ResponseEntity<String> responseEntity = restTemplate.exchange(url + "/api/products/1/options", HttpMethod.POST,
             requestEntity, String.class);
 
@@ -97,9 +99,9 @@ public class OptionTest {
     @DisplayName("옵션 수정")
     @DirtiesContext
     void updateOption() {
-        Option option = new Option("Option4",5555L);
+        OptionRequest option = new OptionRequest("Option4",5555L);
 
-        HttpEntity<Option> requestEntity = new HttpEntity<>(option, getHttpHeaders());
+        HttpEntity<OptionRequest> requestEntity = new HttpEntity<>(option, getHttpHeaders());
         ResponseEntity<String> responseEntity = restTemplate.exchange(url + "/api/products/1/options/3", HttpMethod.PUT,
             requestEntity, String.class);
 

@@ -4,9 +4,11 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 
 import gift.domain.Member;
+import gift.domain.Member.MemberRequest;
 import gift.domain.Product;
 import gift.domain.Product.ProductRequest;
 import gift.domain.Product.ProductResponse;
+import gift.util.LoginType;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -43,14 +45,14 @@ public class ProductTest {
 
         url = "http://localhost:" + port;
 
-        Member member = new Member("admin@example.com", "1234");
+        MemberRequest member = new MemberRequest("admin@example.com", "1234");
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
 
-        HttpEntity<Member> requestEntity = new HttpEntity<>(member, headers);
+        HttpEntity<MemberRequest> requestEntity = new HttpEntity<>(member, headers);
         ResponseEntity<String> responseEntity = restTemplate.postForEntity(
-            url + "/members/register", requestEntity, String.class);
+            url + "/api/user/register", requestEntity, String.class);
 
         int startIndex = responseEntity.getBody().indexOf("\"token\":\"") + "\"token\":\"".length();
         int endIndex = responseEntity.getBody().indexOf("\"", startIndex);
@@ -77,7 +79,7 @@ public class ProductTest {
         formData.add("imageUrl", request.imageUrl());
 
         HttpEntity<MultiValueMap> requestEntity = new HttpEntity<>(formData, getHttpHeaders(MediaType.APPLICATION_FORM_URLENCODED));
-        ResponseEntity<String> responseEntity = restTemplate.exchange(url + "/products", HttpMethod.POST,
+        ResponseEntity<String> responseEntity = restTemplate.exchange(url + "/api/products", HttpMethod.POST,
             requestEntity, String.class);
 
         //rediretion으로 인해
@@ -89,7 +91,7 @@ public class ProductTest {
     @DirtiesContext
     void showProductList() {
         HttpEntity<String> requestEntity = new HttpEntity<>(getHttpHeaders(MediaType.APPLICATION_JSON));
-        ResponseEntity<String> responseEntity = restTemplate.exchange(url + "/products", HttpMethod.GET,
+        ResponseEntity<String> responseEntity = restTemplate.exchange(url + "/api/products", HttpMethod.GET,
             requestEntity, String.class);
 
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
@@ -108,7 +110,7 @@ public class ProductTest {
         formData.add("imageUrl", request.imageUrl());
 
         HttpEntity<MultiValueMap> requestEntity = new HttpEntity<>(formData, getHttpHeaders(MediaType.APPLICATION_FORM_URLENCODED));
-        ResponseEntity<String> responseEntity = restTemplate.exchange(url + "/products/1", HttpMethod.PUT,
+        ResponseEntity<String> responseEntity = restTemplate.exchange(url + "/api/products/1", HttpMethod.PUT,
             requestEntity, String.class);
 
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.FOUND);
@@ -119,7 +121,7 @@ public class ProductTest {
     @DirtiesContext
     void deleteProduct() {
         HttpEntity<String> requestEntity = new HttpEntity<>(getHttpHeaders(MediaType.APPLICATION_JSON));
-        ResponseEntity<String> responseEntity = restTemplate.exchange(url + "/products/1", HttpMethod.DELETE,
+        ResponseEntity<String> responseEntity = restTemplate.exchange(url + "/api/products/1", HttpMethod.DELETE,
             requestEntity, String.class);
 
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.FOUND);

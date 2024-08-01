@@ -5,7 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import gift.config.KakaoProperties;
 import gift.domain.KakaoProfile;
 import gift.domain.KakaoToken;
-import gift.domain.Order;
+import gift.domain.Order.OrderResponse;
 import gift.domain.Token;
 import gift.entity.MemberEntity;
 import gift.entity.OptionEntity;
@@ -80,15 +80,15 @@ public class KakaoService {
     public Token login(String code) {
         KakaoToken kakaoToken = getToken(code);
         KakaoProfile profile = getUserProfile(kakaoToken.access_token());
-        return memberService.kakaoLogin(profile.id(), kakaoToken.access_token());
+        return memberService.kakaoLogin(profile.id(), kakaoToken);
     }
 
-    public void sendOrderMessage(Long memberId, Order order) throws JsonProcessingException {
+    public void sendOrderMessage(Long memberId, OrderResponse response) throws JsonProcessingException {
         MemberEntity memberEntity = memberService.getMemberEntityById(memberId)
             .orElseThrow(() -> new NotFoundException("Not found member"));
 
         MultiValueMap<String, String> body = new LinkedMultiValueMap<>();
-        body.add("template_object", createTemplate(order));
+        body.add("template_object", createTemplate(response));
 
         restClient.post()
             .uri(KAKAO_SEND_MESSAGE_TO_ME)
@@ -101,9 +101,9 @@ public class KakaoService {
 
     }
 
-    private String createTemplate(Order order) throws JsonProcessingException {
+    private String createTemplate(OrderResponse response) throws JsonProcessingException {
 
-        OptionEntity optionEntity = optionRepository.findById(order.getOptionId())
+        OptionEntity optionEntity = optionRepository.findById(response.optionId())
             .orElseThrow(() -> new NotFoundException("Not found option"));
         ProductEntity productEntity = optionEntity.getProductEntity();
         ObjectMapper objectMapper = new ObjectMapper();

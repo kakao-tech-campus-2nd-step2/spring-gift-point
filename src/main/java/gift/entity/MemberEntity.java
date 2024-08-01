@@ -1,9 +1,9 @@
 package gift.entity;
 
-import gift.domain.Member;
+import gift.domain.KakaoToken;
 import gift.util.LoginType;
 import jakarta.persistence.*;
-import java.util.List;
+
 
 @Entity
 @Table(name = "members")
@@ -23,6 +23,8 @@ public class MemberEntity {
     @Column(nullable = false)
     private LoginType loginType;
 
+    private KakaoToken kakaoToken;
+
     public MemberEntity() {
 
     }
@@ -31,6 +33,13 @@ public class MemberEntity {
         this.email = email;
         this.password = password;
         this.loginType = loginType;
+    }
+
+    public MemberEntity(String email, String password, LoginType loginType, KakaoToken kakaoToken) {
+        this.email = email;
+        this.password = password;
+        this.loginType = loginType;
+        this.kakaoToken = kakaoToken;
     }
 
     public Long getId() {
@@ -47,6 +56,10 @@ public class MemberEntity {
 
     public LoginType getLoginType() {
         return loginType;
+    }
+
+    public KakaoToken getKakaoToken() {
+        return kakaoToken;
     }
 
 }
