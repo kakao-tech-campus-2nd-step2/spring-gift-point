@@ -1,4 +1,4 @@
-package gift.client.kakao;
+package gift.common.client.kakao;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;

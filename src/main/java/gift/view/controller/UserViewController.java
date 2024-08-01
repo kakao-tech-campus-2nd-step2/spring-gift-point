@@ -1,6 +1,6 @@
 package gift.view.controller;
 
-import gift.client.kakao.KakaoProperties;
+import gift.common.client.kakao.KakaoProperties;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;

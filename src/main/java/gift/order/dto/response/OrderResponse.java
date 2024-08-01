@@ -16,7 +16,7 @@ public record OrderResponse(
             order.getId(),
             order.getOptionId(),
             order.getQuantity(),
-            order.getOrderDateTime(),
+            order.getCreatedDate(),
             order.getMessage()
         );
     }
