@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+  <title>Product Create</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</head>
+<body>
+<h1>상품 생성</h1>
+<form th:action="@{/admin/products/create}" th:object="${product}" method="post">
+  <div>
+    <tr>
+      <td><label for="name">상품명:</label></td>
+      <td><input type="text" th:field="*{name}" id="name"></input></td>
+      <td th:if="${#fields.hasErrors('name')}" th:errors="*{name}">Name Error</td>
+    </tr>
+  </div>
+  <div>
+    <tr>
+      <td><label for="price">가격:</label></td>
+      <td><input type="text" th:field="*{price}" id="price"></input></td>
+      <td th:if="${#fields.hasErrors('price')}" th:errors="*{price}">Price Error</td>
+    </tr>
+  </div>
+  <div>
+    <label for="imageUrl">사진주소:</label>
+    <input type="text" th:field="*{imageUrl}" id="imageUrl"></input>
+  </div>
+  <div>
+    <label for="categoryId">카테고리:</label>
+    <select th:field="*{categoryId}">
+      <option value="">====카테고리 선택====</option>
+      <option th:each="category : ${categories}" th:value="${category.id}" th:text="${category.name}"></option>
+    </select>
+  </div>
+  <div>
+    <button type="submit">Create</button>
+  </div>
+</form>
+</body>
+</html>

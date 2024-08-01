@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+  <title>REGISTER</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+  <style>
+    body {
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .register_wrapper {
+      width: 500px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      height: 50vh;
+      justify-content: space-evenly;
+      border-radius: 12px;
+      background-color: #F8F8FC;
+    }
+    .input_design {
+      border-radius: 3px;
+      background-color: #ffffff;
+      border: none;
+      width: 340px;
+      padding: 10px;
+      display: flex;
+      align-items: center;
+      font-weight: 600;
+      justify-content: center;
+    }
+    .kakao_input {
+      background-color: #ffe500;
+      color: #989898;
+    }
+  </style>
+</head>
+<body>
+<form th:action="@{/register-social}" method="post">
+  <div class="main_content">
+    <div class="register_wrapper">
+      <label for="email">email:</label>
+      <input class="kakao_input input_design" type="email" th:field="*{kakaoInfo.email}" readonly>
+      <label for="password">비밀번호:</label>
+      <input class="input_design" type="password" id="password" name="password">
+      <button type="submit">회원가입</button>
+    </div>
+  </div>
+</form>
+</body>
+</html>
