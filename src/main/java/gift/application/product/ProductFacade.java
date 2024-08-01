@@ -1,5 +1,6 @@
 package gift.application.product;
 
+import gift.application.member.service.MemberService;
 import gift.application.product.dto.OptionCommand;
 import gift.application.product.dto.OptionCommand.Purchase;
 import gift.application.product.dto.OptionModel;
@@ -59,7 +60,7 @@ public class ProductFacade {
 
 
     public PurchaseInfo purchase(Long memberId, Purchase command) {
-        PurchaseInfo purchaseInfo = optionService.purchaseOption(command);
+        PurchaseInfo purchaseInfo = optionService.purchaseOption(memberId, command);
         ordersService.saveOrders(memberId, purchaseInfo);
         productKakaoService.sendPurchaseMessage(memberId, command.message());
         return purchaseInfo;

@@ -42,7 +42,8 @@ public class OptionCommand {
         Long productId,
         Long optionId,
         Integer quantity,
-        String message
+        String message,
+        Integer point
     ) {
 
     }
