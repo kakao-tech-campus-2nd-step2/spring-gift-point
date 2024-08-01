@@ -13,6 +13,7 @@ import gift.Repository.ProductRepository;
 import gift.Repository.WishlistRepository;
 
 import gift.Service.ProductService;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -40,9 +41,10 @@ public class WishlistRepositoryTest {
         Member member = memberRepository.save(new Member(1L, "1234@google.com","1234","token"));
         Product expected1 = productService.addProduct(new ProductDTO(1L,"A",1000,"A",new Category(1L, "A","B","C","D",new ArrayList<>()),new ArrayList<>()));
         Product expected2 = productService.addProduct(new ProductDTO(2L,"B",2000,"B",new Category(1L, "A","B","C","D",new ArrayList<>()),new ArrayList<>()));
+        LocalDateTime createdDate = LocalDateTime.now();
 
-        wishlistRepository.addProductInWishlist(member.getId(),expected1.getId());
-        wishlistRepository.addProductInWishlist(member.getId(),expected2.getId());
+        wishlistRepository.addProductInWishlist(member.getId(),expected1.getId(),createdDate);
+        wishlistRepository.addProductInWishlist(member.getId(),expected2.getId(),createdDate);
         List<Product> products = wishlistRepository.findAllProductInWishlistByEmail(member.getEmail());
         Product actual1 = products.get(0);
         Product actual2 = products.get(1);
@@ -65,8 +67,9 @@ public class WishlistRepositoryTest {
     void addProductInWishlist(){
         Member expectedMember = memberRepository.save(new Member(1L, "1234@google.com","1234","token"));
         Product expectedProduct = productService.addProduct(new ProductDTO(1L,"A",1000,"A",new Category(1L, "A","B","C","D",new ArrayList<>()),new ArrayList<>()));
+        LocalDateTime createdDate = LocalDateTime.now();
 
-        wishlistRepository.addProductInWishlist(expectedMember.getId(), expectedMember.getId());
+        wishlistRepository.addProductInWishlist(expectedMember.getId(), expectedMember.getId(),createdDate);
         Wishlist actual = wishlistRepository.findWishlistById(wishlistRepository.getWishlistIdByMemberEmailAndProductId(expectedMember.getEmail(),expectedProduct.getId()));
         assertAll(
             () -> assertThat(actual.getId()).isNotNull(),
@@ -85,8 +88,9 @@ public class WishlistRepositoryTest {
     void getWishlistId(){
         Member expectedMember = memberRepository.save(new Member(1L, "1234@google.com","1234","token"));
         Product expectedProduct = productService.addProduct(new ProductDTO(1L,"A",1000,"A",new Category(1L, "A","B","C","D",new ArrayList<>()),new ArrayList<>()));
+        LocalDateTime createdDate = LocalDateTime.now();
 
-        wishlistRepository.addProductInWishlist(expectedMember.getId(), expectedMember.getId());
+        wishlistRepository.addProductInWishlist(expectedMember.getId(), expectedMember.getId(),createdDate);
         Long actualId = wishlistRepository.getWishlistIdByMemberEmailAndProductId(expectedMember.getEmail(),expectedProduct.getId());
 
         assertThat(actualId).isEqualTo(1L);// 1개 만 저장했으므로 1L
@@ -97,8 +101,9 @@ public class WishlistRepositoryTest {
     void changeProductMemberNull(){
         Member expectedMember = memberRepository.save(new Member(1L, "1234@google.com","1234","token"));
         Product expectedProduct = productService.addProduct(new ProductDTO(1L,"A",1000,"A",new Category(1L, "A","B","C","D",new ArrayList<>()),new ArrayList<>()));
+        LocalDateTime createdDate = LocalDateTime.now();
 
-        wishlistRepository.addProductInWishlist(expectedMember.getId(), expectedMember.getId());
+        wishlistRepository.addProductInWishlist(expectedMember.getId(), expectedMember.getId(),createdDate);
         Long actualId = wishlistRepository.getWishlistIdByMemberEmailAndProductId(expectedMember.getEmail(),expectedProduct.getId());
         wishlistRepository.changeProductMemberNull(expectedMember.getEmail(), expectedProduct.getId());
         Wishlist actual = wishlistRepository.findWishlistById(actualId);
@@ -113,8 +118,9 @@ public class WishlistRepositoryTest {
     void deleteByWishlistId(){
         Member expectedMember = memberRepository.save(new Member(1L, "1234@google.com","1234","token"));
         Product expectedProduct = productService.addProduct(new ProductDTO(1L,"A",1000,"A",new Category(1L, "A","B","C","D",new ArrayList<>()),new ArrayList<>()));
+        LocalDateTime createdDate = LocalDateTime.now();
 
-        wishlistRepository.addProductInWishlist(expectedMember.getId(), expectedMember.getId());
+        wishlistRepository.addProductInWishlist(expectedMember.getId(), expectedMember.getId(),createdDate);
         Long actualId = wishlistRepository.getWishlistIdByMemberEmailAndProductId(expectedMember.getEmail(),expectedProduct.getId());
         wishlistRepository.changeProductMemberNull(expectedMember.getEmail(), expectedProduct.getId());
         wishlistRepository.deleteById(actualId);

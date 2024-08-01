@@ -17,14 +17,14 @@ public class MemberService {
     }
     public void signupMember(MemberDTO memberDTO){
         Member member = new Member(memberDTO.getId(), memberDTO.getEmail(), memberDTO.getPassword(),memberDTO.getAccessToken());
-        checkMember(member.getEmail());
-        memberRepository.save(member);
-    }
-    public void checkMember(String email){
-        Member checkMember = getMemberByEmail(email);
-        if (checkMember == null){
+        if(checkMember(member.getEmail())){
             throw new IllegalArgumentException("중복");
         }
+        memberRepository.save(member);
+    }
+    public boolean checkMember(String email){
+        Member checkMember = getMemberByEmail(email);
+        return checkMember != null;
     }
 
 }

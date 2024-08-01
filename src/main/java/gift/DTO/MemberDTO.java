@@ -20,8 +20,6 @@ public class MemberDTO {
     @NotBlank(message = "입력은 공백일 수 없습니다.")
     @Schema(description = "멤버의 비밀번호", defaultValue = "비밀번호")
     private String password;
-
-    @NotBlank
     @Schema(description = "멤버의 accessToken", defaultValue = "해당되는 accessToken")
     private String accessToken;
 

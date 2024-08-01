@@ -7,9 +7,11 @@ import gift.Repository.ProductRepository;
 import gift.Repository.WishlistRepository;
 
 
+import java.time.LocalDateTime;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -37,7 +39,8 @@ public class WishlistService {
         return productRepository.findAll(pageable);
     }
     public void addWishlist(Long memberId, Long productId){
-        wishlistRepository.addProductInWishlist(memberId, productId);
+        LocalDateTime createdDate = LocalDateTime.now();
+        wishlistRepository.addProductInWishlist(memberId, productId, createdDate);
     }
 
     public Long getWishlistId(String email, Long productId){
@@ -61,5 +64,12 @@ public class WishlistService {
 
     public Member getMemberByEmail(String email){
         return memberRepository.findByEmail(email);
+    }
+    public Sort getSort(String[] sort){
+        Sort newSort = Sort.by(Sort.Order.asc(sort[0])); // 기본으로 asc인 sort[0]에 대해서 Sort 객체 생성
+        if (sort.length > 1 && "desc".equalsIgnoreCase(sort[1])) { // 올바른 요청이면 길이가 2이고 desc 요청이 들어오면
+            newSort = Sort.by(Sort.Order.desc(sort[0])); // desc로 객체 생성
+        }
+        return newSort;
     }
 }

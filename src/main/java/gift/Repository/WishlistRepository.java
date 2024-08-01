@@ -3,6 +3,7 @@ package gift.Repository;
 import gift.Model.Product;
 import gift.Model.Wishlist;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -22,8 +23,8 @@ public interface WishlistRepository extends JpaRepository<Wishlist,Long> {
 
     @Transactional
     @Modifying
-    @Query(value = "INSERT INTO Wishlist (member_id, product_id) VALUES (:memberId, :productId)", nativeQuery = true)
-    void addProductInWishlist(@Param("memberId") Long memberId, @Param("productId") Long productId);
+    @Query(value = "INSERT INTO Wishlist (member_id, product_id, createdDate) VALUES (:memberId, :productId, :createdDate)", nativeQuery = true)
+    void addProductInWishlist(@Param("memberId") Long memberId, @Param("productId") Long productId, @Param("createdDate") LocalDateTime createdDate);
 
     @Transactional
     @Modifying

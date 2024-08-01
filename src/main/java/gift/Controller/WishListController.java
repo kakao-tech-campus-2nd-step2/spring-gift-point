@@ -14,11 +14,11 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
+import org.springframework.http.ResponseEntity.BodyBuilder;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -48,11 +48,12 @@ public class WishListController {
         @Parameter(name = "pageable", description = "List에 담긴 Product객체를 개수에 맞춰서 page로 리턴")
     })
     @GetMapping("/api/wishlist")
-    public ResponseEntity<Page<Product>> getWish(HttpServletRequest request, Pageable pageable) {
+    public ResponseEntity<Page<Product>> getWish(HttpServletRequest request,@RequestParam(name = "page", defaultValue = "0") int page, @RequestParam(name = "size", defaultValue = "10") int size, @RequestParam(name = "sort", defaultValue = "name,asc") String[] sort) {
+        Pageable pageable = PageRequest.of(page, size, wishlistService.getSort(sort)); // 전달 받은 파라미터로 pageable 객체 생성
         String email = (String) request.getAttribute("email");
         wishlistService.checkUserByMemberEmail(email);
-        Page<Product> page = wishlistService.getAllWishlist(email, pageable);
-        return ResponseEntity.ok().body(page);
+        Page<Product> wishlistpage = wishlistService.getAllWishlist(email, pageable);
+        return ResponseEntity.ok().body(wishlistpage);
     }
 
     @Operation(
@@ -68,13 +69,13 @@ public class WishListController {
         @Parameter(name = "request", description = "메소드 실행 전 토큰을 전달 받기 위한 객체"),
     })
     @PostMapping("/api/wishlist/add/{productId}")
-    public ResponseEntity<Product> editWishForm(@PathVariable(value = "productId") Long productId, HttpServletRequest request) {
+    public ResponseEntity<String> editWishForm(@PathVariable(value = "productId") Long productId, HttpServletRequest request) {
         String email = (String) request.getAttribute("email");
         wishlistService.checkUserByMemberEmail(email);
         Member member = wishlistService.getMemberByEmail(email);
         Product product = wishlistService.getProductById(productId);
         wishlistService.addWishlist(member.getId(), product.getId());
-        return ResponseEntity.ok().body(product);
+        return ResponseEntity.ok().build();
     }
 
     @Operation(
@@ -90,11 +91,11 @@ public class WishListController {
         @Parameter(name = "request", description = "메소드 실행 전 토큰을 전달 받기 위한 객체"),
     })
     @DeleteMapping("/api/wishlist/{productId}")
-    public ResponseEntity<Product> deleteWish(@PathVariable(value = "productId") Long productId, HttpServletRequest request) {
+    public ResponseEntity<String> deleteWish(@PathVariable(value = "productId") Long productId, HttpServletRequest request) {
         String email = (String) request.getAttribute("email");
         wishlistService.checkUserByMemberEmail(email);
         Long wishlistId = wishlistService.getWishlistId(email,productId);
         Product deleteProduct = wishlistService.deleteWishlist(email, productId, wishlistId);
-        return ResponseEntity.ok().body(deleteProduct);
+        return ResponseEntity.noContent().build();
     }
 }

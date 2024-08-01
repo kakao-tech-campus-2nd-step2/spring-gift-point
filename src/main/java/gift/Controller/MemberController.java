@@ -27,7 +27,9 @@ public class MemberController {
 
     @PostMapping("/api/members/login")
     public ResponseEntity<String> loginMember(@RequestBody MemberDTO memberDTO){
-        memberService.checkMember(memberDTO.getEmail());
+        if(!memberService.checkMember(memberDTO.getEmail())){
+            throw new IllegalArgumentException("회원 아님");
+        }
         String token = memberAccessTokenProvider.createJwt(memberDTO.getEmail());
         return ResponseEntity.ok(token);
     }

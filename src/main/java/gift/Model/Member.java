@@ -17,21 +17,11 @@ import java.beans.ConstructorProperties;
 public class Member {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Schema(description = "멤버 ID(자동으로 설정)", defaultValue = "1")
     private Long id;
-
-    @NotBlank(message = "입력은 공백일 수 없습니다.")
-    @Email(message = "이메일 형식이어야 합니다.")
     @Column(name = "email", nullable = false, unique = true)
-    @Schema(description = "멤버 이메일", defaultValue = "이메일")
     private String email;
-    @NotBlank(message = "입력은 공백일 수 없습니다.")
     @Column(name = "password", nullable = false)
-    @Schema(description = "멤버의 비밀번호", defaultValue = "비밀번호")
     private String password;
-
-    @NotBlank
-    @Column(name = "accessToken", nullable = false)
     @Schema(description = "멤버의 accessToken", defaultValue = "해당되는 accessToken")
     private String accessToken;
 
