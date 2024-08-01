@@ -30,7 +30,7 @@ public class GlobalExceptionHandler {
     
     @ExceptionHandler(InvalidCategoryException.class)
     public ResponseEntity<String> handleInvalideCategoryException(InvalidCategoryException e){
-    	return new ResponseEntity<>(e.getMessage(), e.getStatus());
+    	return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
     }
     
     @ExceptionHandler(DuplicateOptionException.class)
