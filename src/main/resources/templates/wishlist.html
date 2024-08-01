@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<table class="table">
+    <thead>
+    <tr>
+        <th>Product ID</th>
+        <th>Name</th>
+        <th>Price</th>
+        <th>Image</th>
+        <th>Category</th>
+        <th>Action</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="product:${wishlist.content}" class="align-middle">
+        <td th:text="${product.id}">상품 일련번호</td>
+        <td th:text="${product.name}">상품 이름</td>
+        <td th:text="${product.price}">상품 가격</td>
+        <td>
+            <a th:href="${product.imageUrl}">
+                <img th:src="${product.imageUrl}" alt="Not found image"
+                     style="width: 40px; height:40px;"/>
+            </a>
+        </td>
+        <td th:text="${product.categoryName}">상품 카테고리</td>
+        <td>
+            <button type="button" class="btn btn-danger"
+                    th:onclick="deleteWishlist([[${product.id}]])">
+                삭제
+            </button>
+        </td>
+    </tr>
+    </tbody>
+</table>
+<nav aria-label="Page navigation example" th:if="${wishlist.totalPages > 0}">
+    <ul class="pagination justify-content-center">
+        <li class="page-item" th:each="pageNumber : ${pageNumbers}">
+            <a class="page-link"
+               th:onclick="getWishlist([[${pageNumber}]])"
+               th:text="${pageNumber}"
+               th:classappend="${pageNumber == wishlist.number + 1} ? active"></a>
+        </li>
+    </ul>
+</nav>
+</html>
