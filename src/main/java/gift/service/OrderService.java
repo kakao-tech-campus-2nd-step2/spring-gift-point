@@ -41,7 +41,6 @@ public class OrderService {
 
         wishlistRepository.deleteByMemberIdAndProductId(memberId, product.getId());
 
-        //프론트에서 소셜 로그인 기능이 없으니 메세지 전송 기능은 지워야할 수도?
         kakaoMessageService.sendMessageToKakao(order, memberId);
         return order;
     }
