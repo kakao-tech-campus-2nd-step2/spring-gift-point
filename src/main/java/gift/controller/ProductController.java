@@ -3,11 +3,17 @@ package gift.controller;
 import gift.dto.OneProductResponceDTO;
 import gift.dto.ProductRequestDTO;
 import gift.dto.ProductResponseDTO;
+import gift.dto.OneProductResponceDTO;
 import gift.service.CategoryService;
 import gift.service.ProductService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -29,14 +35,22 @@ public class ProductController {
 
     @Operation(summary = "상품 목록 조회", description = "모든 상품을 페이지네이션하여 조회합니다.")
     @GetMapping
-    public String getProducts(Model model,
-                              @RequestParam(defaultValue = "0") int page,
-                              @RequestParam(defaultValue = "10") int size,
-                              @RequestParam(defaultValue = "name,asc") String[] sort) {
-        model.addAttribute("productPage", productService.getProducts(page, size, sort));
-        model.addAttribute("currentPage", page);
-        model.addAttribute("pageSize", size);
-        return "products";
+    public ResponseEntity<Page<OneProductResponceDTO>> getProducts(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "name,asc") String[] sort,
+            @RequestParam(required = false) Long categoryId) {
+
+        Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.fromString(sort[1]), sort[0]));
+
+        Page<OneProductResponceDTO> productPage;
+        if (categoryId != null) {
+            productPage = productService.getProductsByCategory(categoryId, pageable);
+        } else {
+            productPage = productService.getProductsPage(pageable);
+        }
+
+        return new ResponseEntity<>(productPage, HttpStatus.OK);
     }
 
     @Operation(summary = "상품 조회", description = "특정 상품의 정보를 조회합니다.")

@@ -97,4 +97,22 @@ public class ProductService {
         return productRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid product Id:" + id));
     }
+
+    public Page<OneProductResponceDTO> getProductsPage(Pageable pageable) {
+        return productRepository.findAll(pageable).map(this::convertToDTO);
+    }
+
+    public Page<OneProductResponceDTO> getProductsByCategory(Long categoryId, Pageable pageable) {
+        return productRepository.findByCategoryId(categoryId, pageable).map(this::convertToDTO);
+    }
+
+    public OneProductResponceDTO convertToDTO(Product product) {
+        return new OneProductResponceDTO(
+                product.getId(),
+                product.getName(),
+                product.getPrice(),
+                product.getImageUrl(),
+                product.getCategory().getId()
+        );
+    }
 }
