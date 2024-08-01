@@ -1,6 +1,7 @@
 package gift.controller;
 
 import gift.dto.memberDto.MemberDto;
+import gift.dto.productDto.ProductResponseDto;
 import gift.dto.wishDto.WishDto;
 import gift.model.member.LoginMember;
 import gift.model.wish.Wish;
@@ -37,9 +38,9 @@ public class WishListController {
 
     @PostMapping
     @Operation(summary = "장바구니에 물건 추가", description = "회원이 물건을 장바구니에 추가할 때 사용하는 API")
-    public ResponseEntity<Void> insertWish(@LoginMember MemberDto memberDto, @RequestBody WishDto wishDto) {
-        wishListService.insertWish(wishDto);
-        return ResponseEntity.ok().build();
+    public ResponseEntity<ProductResponseDto> insertWish(@LoginMember MemberDto memberDto, @RequestBody WishDto wishDto) {
+        ProductResponseDto productResponseDto = wishListService.insertWish(wishDto,memberDto);
+        return ResponseEntity.ok().body(productResponseDto);
     }
 
     @DeleteMapping("/{wishId}")
@@ -49,10 +50,10 @@ public class WishListController {
         return ResponseEntity.ok().build();
     }
 
-    @PutMapping("/{wishId}")
+    /*@PutMapping("/{wishId}")
     @Operation(summary = "장바구니에 담긴 상품 업데이트", description = "장바구니 상품을 수정할 때 사용하는 API")
     public ResponseEntity<Void> updateWish(@LoginMember MemberDto memberDto, @PathVariable Long wishId, @RequestBody WishDto wishDto) {
         wishListService.updateWish(wishId,wishDto);
         return ResponseEntity.ok().build();
-    }
+    }*/
 }
