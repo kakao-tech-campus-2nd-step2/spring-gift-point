@@ -9,7 +9,7 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface OptionRepository extends JpaRepository<Option, Long> {
-    List<Option> findALlByProductId(Long productId);
+    List<Option> findAllByProductId(Long productId);
    Optional<Option> findByProductIdAndOptionName(Long productId,String name);
    boolean existsByProductIdAndOptionName(Long productId,String name);
 }
