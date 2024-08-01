@@ -45,31 +45,5 @@ INSERT INTO members (member_type, email, password, nickname) VALUES ('USER', 'em
 INSERT INTO members (member_type, email, password, nickname) VALUES ('USER', 'email2', 'password2', 'nickname2');
 
 -- wishes
-INSERT INTO wishes (member_id, product_id, product_count) VALUES (1, 1, 10);
-INSERT INTO wishes (member_id, product_id, product_count) VALUES (1, 2, 10);
-INSERT INTO wishes (member_id, product_id, product_count) VALUES (1, 3, 10);
-INSERT INTO wishes (member_id, product_id, product_count) VALUES (1, 4, 10);
-INSERT INTO wishes (member_id, product_id, product_count) VALUES (1, 5, 10);
-INSERT INTO wishes (member_id, product_id, product_count) VALUES (1, 6, 10);
-INSERT INTO wishes (member_id, product_id, product_count) VALUES (1, 7, 10);
-INSERT INTO wishes (member_id, product_id, product_count) VALUES (1, 8, 10);
-INSERT INTO wishes (member_id, product_id, product_count) VALUES (1, 9, 10);
-INSERT INTO wishes (member_id, product_id, product_count) VALUES (1, 10, 10);
-INSERT INTO wishes (member_id, product_id, product_count) VALUES (1, 11, 10);
-INSERT INTO wishes (member_id, product_id, product_count) VALUES (1, 12, 10);
-INSERT INTO wishes (member_id, product_id, product_count) VALUES (1, 13, 10);
-INSERT INTO wishes (member_id, product_id, product_count) VALUES (1, 14, 10);
-INSERT INTO wishes (member_id, product_id, product_count) VALUES (1, 15, 10);
-INSERT INTO wishes (member_id, product_id, product_count) VALUES (1, 16, 10);
-INSERT INTO wishes (member_id, product_id, product_count) VALUES (1, 17, 10);
-INSERT INTO wishes (member_id, product_id, product_count) VALUES (1, 18, 10);
-INSERT INTO wishes (member_id, product_id, product_count) VALUES (1, 19, 10);
-INSERT INTO wishes (member_id, product_id, product_count) VALUES (1, 20, 10);
-INSERT INTO wishes (member_id, product_id, product_count) VALUES (1, 21, 10);
-INSERT INTO wishes (member_id, product_id, product_count) VALUES (1, 22, 10);
-INSERT INTO wishes (member_id, product_id, product_count) VALUES (1, 23, 10);
-
-INSERT INTO wishes (member_id, product_id, product_count) VALUES (2, 1, 10);
-INSERT INTO wishes (member_id, product_id, product_count) VALUES (2, 2, 10);
 
 

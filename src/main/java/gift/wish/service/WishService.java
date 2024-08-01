@@ -20,7 +20,7 @@ public class WishService {
     private final WishRepository wishRepository;
     private final MemberService memberService;
     private final ProductService productService;
-    private static final int WISH_SIZE = 10;
+    private static final int WISH_SIZE = 20;
 
     public WishService(WishRepository wishRepository, MemberService memberService, ProductService productService) {
         this.wishRepository = wishRepository;
@@ -51,11 +51,6 @@ public class WishService {
         // Wish가 존재하지 않으면 새로운 Wish 생성
         Wish wish = wishRepository.findByMemberIdAndProductId(wishServiceDto.memberId(), wishServiceDto.productId())
                 .orElseGet(() -> getWishByWishServiceDto(wishServiceDto));
-
-        if (!wish.checkNew()) {
-            // Wish가 이미 존재하면 productCount 증가
-            wish.increaseProductCount(wishServiceDto.productCount());
-        }
 
         return wish;
     }

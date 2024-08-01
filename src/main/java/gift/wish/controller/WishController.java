@@ -39,9 +39,10 @@ public class WishController {
     }
 
     @GetMapping("")
-    public ResponseEntity<ResultResponseDto<WishResponseListDto>> getWishesByPage(@RequestParam(name = "page") int page, @Login AuthInfo authInfo) {
+    public ResponseEntity<WishResponseListDto> getWishesByPage(@RequestParam(name = "page") int page, @Login AuthInfo authInfo) {
         WishResponseListDto wishResponseDtos = wishService.getWishesByMemberAndPage(memberService.getMemberById(authInfo.memberId()), page);
-        return ResponseHelper.createResponse(ResultCode.GET_ALL_WISHES_SUCCESS, wishResponseDtos);
+        return ResponseEntity.status(200)
+                .body(wishResponseDtos);
     }
 
     @GetMapping("/{id}")
@@ -64,9 +65,10 @@ public class WishController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<SimpleResultResponseDto> deleteWish(@PathVariable(name = "id") Long id) {
+    public ResponseEntity<Void> deleteWish(@PathVariable(name = "id") Long id) {
         wishService.deleteWish(id);
-        return ResponseHelper.createSimpleResponse(ResultCode.DELETE_WISH_SUCCESS);
+        return ResponseEntity.status(200)
+                .build();
     }
 
     // GlobalException Handler 에서 처리할 경우,

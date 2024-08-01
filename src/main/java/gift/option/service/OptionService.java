@@ -60,7 +60,7 @@ public class OptionService {
     public void orderOption(OrderRequestDto orderRequestDto) {
         Option option = optionRepository.findById(orderRequestDto.optionId())
                 .orElseThrow(OptionNotFoundException::new);
-        option.subtract(orderRequestDto.count());
+        option.subtract(orderRequestDto.quantity());
         optionRepository.save(option);
         sendMessage(orderRequestDto.message());
     }*/

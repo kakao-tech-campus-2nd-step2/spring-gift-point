@@ -13,7 +13,7 @@ public class OrderQuantity {
     public static final long MIN_COUNT = 1L;
     public static final long MAX_COUNT = 100_000_000L;
 
-    @Column(name = "count")
+    @Column(name = "quantity")
     private Long orderCountValue;
 
     public OrderQuantity() {

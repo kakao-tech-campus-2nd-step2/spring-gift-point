@@ -23,7 +23,7 @@ Content-Type: application/json
 #
 #{
 #  "name": "aaa",
-#  "count": 123,
+#  "quantity": 123,
 #  "productId": 1
 #}
 

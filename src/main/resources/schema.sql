@@ -50,10 +50,9 @@ CREATE TABLE products
 
 CREATE TABLE wishes
 (
-    id            BIGINT AUTO_INCREMENT NOT NULL,
-    member_id     BIGINT                NULL,
-    product_id    BIGINT                NULL,
-    product_count BIGINT                NULL,
+    id         BIGINT AUTO_INCREMENT NOT NULL,
+    member_id  BIGINT                NULL,
+    product_id BIGINT                NULL,
     CONSTRAINT pk_wishes PRIMARY KEY (id)
 );
 
