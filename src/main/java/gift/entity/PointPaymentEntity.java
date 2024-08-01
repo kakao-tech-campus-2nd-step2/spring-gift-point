@@ -9,7 +9,6 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToOne;
 import java.time.LocalDateTime;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -30,7 +29,7 @@ public class PointPaymentEntity {
     @CreatedDate
     private LocalDateTime transactionDate;
     //    결제 대상
-    @OneToOne(mappedBy = "orders", fetch = FetchType.LAZY)
+    @ManyToOne(targetEntity = ProductOptionEntity.class, fetch = FetchType.LAZY)
     private ProductOptionEntity productOption;
     //    결제하는 유저
     @ManyToOne(targetEntity = UserEntity.class, fetch = FetchType.LAZY)
