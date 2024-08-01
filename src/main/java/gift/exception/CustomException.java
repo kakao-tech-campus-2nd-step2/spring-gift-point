@@ -27,6 +27,10 @@ public class CustomException {
         public InvalidQuantityException(String message) {super(message);}
     }
 
+    public static class InvalidPasswordException extends RuntimeException {
+        public InvalidPasswordException(String message) {super(message);}
+    }
+
     public static class GenericException extends RuntimeException {
         public GenericException(String message) {
             super(message);
