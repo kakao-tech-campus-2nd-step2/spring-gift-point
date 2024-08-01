@@ -27,7 +27,7 @@ public class WishlistService {
     }
 
     public List<Wishlist> getWishlist(long memberId) {
-        return wishlistJpaRepository.findByIdMemberId(memberId);
+        return wishlistJpaRepository.findByMemberId(memberId);
     }
 
     public Page<WishlistDto> getWishlistByPage(MemberDto memberDto, Pageable pageable) {
@@ -37,28 +37,19 @@ public class WishlistService {
     }
 
     public void addWishlistItem(WishlistDto wishlistDto) {
-        wishlistDto.setPrice(wishlistDto.getPrice() * wishlistDto.getCount());
+        wishlistDto.setPrice(wishlistDto.getPrice() * wishlistDto.getQuantity());
         Wishlist wishlist = mapper.wishlistDtoToEntity(wishlistDto);
         wishlistJpaRepository.save(wishlist);
     }
 
-    public void removeWishlistItem(WishlistDto wishListItem, Wishlist wishlistOptional) {
-        int newCount = wishListItem.getCount() - wishListItem.getQuantity();
-
-        if (newCount > 0) {
-            wishlistOptional.setCount(newCount);
-            wishlistOptional.setPrice(wishlistOptional.getPrice() / wishListItem.getCount() * newCount);
-            wishlistJpaRepository.save(wishlistOptional);
-            return;
-        }
-
-        wishlistJpaRepository.delete(wishlistOptional);
+    public void removeWishlistItem(long wishId) {
+        wishlistJpaRepository.deleteById(wishId);
 
     }
 
     @Transactional
     public void clearWishlist(long memberId) {
-        wishlistJpaRepository.deleteByIdMemberId(memberId);
+        wishlistJpaRepository.deleteByMemberId(memberId);
     }
 
 }

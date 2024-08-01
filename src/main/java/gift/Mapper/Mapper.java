@@ -29,7 +29,7 @@ public class Mapper {
 
 
     public Wishlist wishlistDtoToEntity(WishlistDto wishlistDto) {
-        Optional<MemberDto> memberDtoOptional = memberService.findByUserId(wishlistDto.getUserId());
+        Optional<MemberDto> memberDtoOptional = memberService.findByUserId(wishlistDto.getMemberId());
         MemberDto memberDto = memberDtoOptional.get();
 
         Optional<ProductDto> productDtoOptional = productService.getProductById(wishlistDto.getProductId());
@@ -38,52 +38,50 @@ public class Mapper {
 
         OptionDto optionDto = optionService.getOptionById(wishlistDto.getOptionId());
 
-        WishlistId id = new WishlistId(memberDto.getId(), productDto.getId());
-        return new Wishlist(id, memberDtoToEntity(memberDto), productDtoToEntity(productDto), wishlistDto.getProductName(), wishlistDto.getCount(), wishlistDto.getPrice(), optionDtoToEntity(optionDto));
+        return new Wishlist(wishlistDto.getWishlistId(), memberDtoToEntity(memberDto), productDtoToEntity(productDto), wishlistDto.getProductName(), wishlistDto.getQuantity(), wishlistDto.getPrice(), optionDtoToEntity(optionDto));
 
     }
 
     public WishlistDto wishlistToDto(Wishlist wishlist) {
-        return new WishlistDto(wishlist.getMemberId(), wishlist.getProductId(), wishlist.getCount(), 0, wishlist.getProductName(), wishlist.getPrice(), wishlist.getOption().getId());
+       return new WishlistDto(wishlist.getId(), wishlist.getMember().getId(), wishlist.getProduct().getId(), wishlist.getCount(), wishlist.getProductName(), wishlist.getPrice(), wishlist.getOption().getId());
     }
 
     public Category categoryDtoToEntity(CategoryDto categoryDto) {
-        return new Category(categoryDto.getId(), categoryDto.getName());
+        return new Category(categoryDto.getId(), categoryDto.getName(), categoryDto.getDescription(), categoryDto.getColor(), categoryDto.getImageUrl());
     }
 
     public CategoryDto categoryToDto(Category category) {
-        return new CategoryDto(category.getCategoryId(), category.getName());
+        return new CategoryDto(category.getId(), category.getName(), category.getDescription(), category.getColor(), category.getImageUrl());
     }
 
-    //categoryService를 포함하기엔 뭔가 일관성이 깨지는 느낌인데???
     public Product productDtoToEntity(ProductDto productDto) {
         Category category = categoryService.getCategoryById(productDto.getCategoryId()).get();
         CategoryDto categoryDto = categoryToDto(category);
-        return new Product(productDto.getId(), productDto.getName(), categoryDtoToEntity(categoryDto), productDto.getPrice(), productDto.getImageUrl(), productDto.isDeleted());
+        return new Product(productDto.getId(), productDto.getName(), categoryDtoToEntity(categoryDto), productDto.getPrice(), productDto.getImageUrl());
     }
 
     public ProductDto productToDto(Product product) {
-        Category category = categoryService.getCategoryById(product.getCategory().getCategoryId()).get();
+        Category category = categoryService.getCategoryById(product.getCategory().getId()).get();
 
-        return new ProductDto(product.getId(), product.getName(), categoryToDto(category).getId(), product.getPrice(), product.getImageUrl(), product.isDeleted());
+        return new ProductDto(product.getId(), product.getName(), categoryToDto(category).getId(), product.getPrice(), product.getImageUrl());
     }
 
     public Member memberDtoToEntity(MemberDto memberDto) {
-        return new Member(memberDto.getId(), memberDto.getEmail(), memberDto.getName(), memberDto.getPassword(), memberDto.isAdmin());
+        return new Member(memberDto.getId(), memberDto.getEmail(), memberDto.getPassword(), memberDto.isAdmin());
     }
 
     public MemberDto memberToDto(Member member) {
-        return new MemberDto(member.getId(), member.getEmail(), member.getName(), member.getPassword(), member.isAdmin());
+        return new MemberDto(member.getId(), member.getEmail(), member.getPassword(), member.isAdmin());
     }
 
     public OptionDto optionToDto(Option option) {
-        return new OptionDto(option.getId(), option.getProduct().getId(), option.getName(), option.getPrice(), option.getQuantity());
+        return new OptionDto(option.getId(), option.getProduct().getId(), option.getName(), option.getQuantity());
     }
 
     public Option optionDtoToEntity(OptionDto optionDto) {
         Optional<ProductDto> productDtoOptional = productService.getProductById(optionDto.getProductId());
         ProductDto productDto = productDtoOptional.get();
-        return new Option(optionDto.getId(), productDtoToEntity(productDto), optionDto.getName(), optionDto.getPrice(), optionDto.getQuantity());
+        return new Option(optionDto.getId(), productDtoToEntity(productDto), optionDto.getName(), optionDto.getQuantity());
     }
 
 }
