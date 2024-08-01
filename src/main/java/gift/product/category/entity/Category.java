@@ -59,6 +59,18 @@ public class Category {
         return name;
     }
 
+    public String getDescription() {
+        return description;
+    }
+
+    public String getColor() {
+        return color;
+    }
+
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
     public void edit(String name, String color, String description, String imageUrl) {
         validateColor(color);
         this.name = name;
