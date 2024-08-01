@@ -36,6 +36,12 @@ public class CategoryDTO {
         this.description = category.getDescription();
     }
 
+    public CategoryDTO(String name, String imgUrl, String description) {
+        this.id = null;
+        this.name = name;
+        this.imgUrl = imgUrl;
+        this.description = description;
+    }
     public Long getId() {
         return id;
     }

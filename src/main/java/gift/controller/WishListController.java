@@ -1,5 +1,7 @@
 package gift.controller;
 
+import gift.CustomAnnotation.RequestRole;
+import gift.model.entity.Role;
 import gift.model.response.WishListResponse;
 import gift.service.WishListService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -29,6 +31,7 @@ public class WishListController {
         this.wishListService = wishListService;
     }
 
+    @RequestRole(Role.ROLE_USER)
     @Operation(summary = "위시 리스트 조회")
     @GetMapping
     public Page<WishListResponse> getWishList(@RequestAttribute("userId") Long userId,
@@ -36,6 +39,7 @@ public class WishListController {
         return wishListService.getWishList(userId, pageable);
     }
 
+    @RequestRole(Role.ROLE_USER)
     @Operation(summary = "위시 상품 추가")
     @PostMapping("/{id}")
     public ResponseEntity<Long> addToWishList(
@@ -45,6 +49,7 @@ public class WishListController {
         return ResponseEntity.ok(wishId);
     }
 
+    @RequestRole(Role.ROLE_USER)
     @Operation(summary = "위시 상품 삭제")
     @DeleteMapping("/{id}")
     public ResponseEntity<Long> deleteFromWishList(
