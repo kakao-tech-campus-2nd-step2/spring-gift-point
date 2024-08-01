@@ -48,4 +48,19 @@ public class CategoryController {
         return ResponseEntity.ok().build();
     }
 
+    @GetMapping
+    public ResponseEntity<?> getAllCategories() {
+        List<Category> categories = categoryService.getAllCategories();
+        Map<String, Object> response = new HashMap<>();
+        response.put("categories", categories);
+        return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
+
+    @GetMapping("/{category_id}")
+    public ResponseEntity<?> getCategoryById(@PathVariable("category_id") long id) {
+        Category category = categoryService.getCategoryById(id);
+        Map<String, Object> response = new HashMap<>();
+        response.put("category", category);
+        return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
 }
