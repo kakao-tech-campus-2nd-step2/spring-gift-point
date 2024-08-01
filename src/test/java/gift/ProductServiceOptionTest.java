@@ -51,11 +51,11 @@ public class ProductServiceOptionTest {
 
     @Test
     public void testSaveOption_ProductNotFound() {
-        OptionDto optionDto = new OptionDto(1L, "Test Option", 100);
+        OptionDto optionDto = new OptionDto(1L, "Test Option", 100, 5L);
         given(productRepository.findById(product.getId())).willReturn(Optional.empty());
 
         assertThatExceptionOfType(NoSuchElementException.class)
-            .isThrownBy(()->productService.saveOption(product.getId(), optionDto));
+            .isThrownBy(()->productService.addOption(product.getId(), optionDto));
     }
 
     @Test
@@ -66,10 +66,10 @@ public class ProductServiceOptionTest {
         product.addOption(existingOption);
         given(productRepository.findById(product.getId())).willReturn(Optional.of(product)); // option이 들어간 product 리턴
 
-        OptionDto optionDto = new OptionDto(1L, "Test Option", 10);
+        OptionDto optionDto = new OptionDto(1L, "Test Option", 10, 5L);
 
         assertThatExceptionOfType(IllegalStateException.class)
-            .isThrownBy(()->productService.saveOption(product.getId(), optionDto));
+            .isThrownBy(()->productService.addOption(product.getId(), optionDto));
     }
 
     @Test
