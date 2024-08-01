@@ -41,10 +41,9 @@ public enum ErrorCode {
     PRODUCT_ALREADY_EXISTS_IN_WISHLIST("ECF_WS001", -40905, "The product already exists in member's wishlist."),
 
     //Unused
-    OPTION_UPDATE_ACTION_INVALID("EBR_OP002", -400_999, "The option update request's action was invalid. Available actions: " + Option.QuantityUpdateAction.toList()),
     OAUTH_VENDOR_ILLEGAL("EBR_OA001", -400_999, "Oauth 공급자가 잘못되었습니다. 관리자에게 문의하세요."),
     MEMBER_NOT_ADMIN("EFD_MB002", -403_999, "어드민 권한이 없습니다."),
-    MEMBER_NOT_FOUND("ENF_MB001", -404_999, "member"),
+    MEMBER_NOT_FOUND("ENF_MB001", -404_999, "The member was not found."),
     CATEGORY_HAS_PRODUCTS("ECF_CAT002", -409_999, "This category cannot be deleted because some products are included in it.");
 
     private final Integer errorCode;

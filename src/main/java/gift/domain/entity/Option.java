@@ -1,5 +1,6 @@
 package gift.domain.entity;
 
+import gift.domain.dto.request.OptionUpdateRequest;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -60,6 +61,11 @@ public class Option {
 
     public void setQuantity(Integer quantity) {
         this.quantity = quantity;
+    }
+
+    public void set(OptionUpdateRequest updateRequest) {
+        setName(updateRequest.name());
+        setQuantity(updateRequest.stockQuantity());
     }
 
     public synchronized void add(Integer quantity) {

@@ -1,5 +1,6 @@
 package gift.domain.controller;
 
+import gift.domain.controller.apiResponse.OptionAddApiResponse;
 import gift.domain.controller.apiResponse.ProductAddApiResponse;
 import gift.domain.controller.apiResponse.ProductGetApiResponse;
 import gift.domain.controller.apiResponse.ProductListApiResponse;
@@ -13,7 +14,6 @@ import gift.domain.dto.response.ProductCoreInfoResponse;
 import gift.domain.dto.response.ProductWithCategoryIdResponse;
 import gift.domain.service.CategoryService;
 import gift.domain.service.ProductService;
-import gift.global.apiResponse.BasicApiResponse;
 import gift.global.apiResponse.SuccessApiResponse;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -83,18 +83,18 @@ public class ProductController {
     }
 
     @PostMapping("/{productId}/options")
-    public ResponseEntity<BasicApiResponse> addProductOption(@PathVariable("productId") Long productId, @Valid @RequestBody OptionAddRequest optionAddRequest) {
-        productService.addProductOption(productId, optionAddRequest);
-        return SuccessApiResponse.ok();
+    public ResponseEntity<OptionAddApiResponse> addProductOption(@PathVariable("productId") Long productId, @Valid @RequestBody OptionAddRequest optionAddRequest) {
+        var created = HttpStatus.CREATED;
+        return SuccessApiResponse.of(new OptionAddApiResponse(created, productService.addProductOption(productId, optionAddRequest)), created);
     }
 
     @PutMapping("/{productId}/options/{optionId}")
-    public ResponseEntity<BasicApiResponse> updateProduct(@PathVariable("productId") Long productId,
+    public ResponseEntity<Void> updateProduct(@PathVariable("productId") Long productId,
         @PathVariable("optionId") Long optionId,
         @Valid @RequestBody OptionUpdateRequest optionUpdateRequest
     ) {
         productService.updateProductOptionById(productId, optionId, optionUpdateRequest);
-        return SuccessApiResponse.ok();
+        return SuccessApiResponse.noContent();
     }
 
     @DeleteMapping("/{productId}/options/{optionId}")
