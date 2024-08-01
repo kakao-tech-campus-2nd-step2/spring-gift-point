@@ -38,7 +38,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
                 .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS") // 허용할 HTTP 메서드 설정
                 .allowedHeaders("*") // 허용할 헤더 설정
                 .allowCredentials(true) // 자격 증명 허용 설정
-                .maxAge(3000); // 원하는 시간만큼 pre-flight 리퀘스트를 캐싱
+                .maxAge(1800); // 원하는 시간만큼 pre-flight 리퀘스트를 캐싱
     }
 
     @Bean
