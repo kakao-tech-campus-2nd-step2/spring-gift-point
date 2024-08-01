@@ -50,10 +50,13 @@ public class ItemController {
     @Operation(summary = "카테고리 별 상품 목록 조회", description = "카테고리 id에 해당되는 상품 목록을 반환합니다.")
     @GetMapping
     public ResponseEntity<Page<ItemResponse>> getItemListByCategory(
-        @Parameter(description = "조회할 카테고리 id") @RequestParam("categoryId") Long categoryId,
+        @Parameter(description = "조회할 카테고리 id") @RequestParam(value = "categoryId", defaultValue = "0") Long categoryId,
         @PageableDefault(size = 5, sort = "id", direction = Direction.DESC) Pageable pageable,
         @RequestAttribute("userId") Long userId) {
-        Page<ItemResponse> list = itemService.getListByCategoryId(categoryId, pageable, userId);
-        return ResponseEntity.ok(list);
+        if (categoryId != 0L) {
+            Page<ItemResponse> list = itemService.getListByCategoryId(categoryId, pageable, userId);
+            return ResponseEntity.ok(list);
+        }
+        return ResponseEntity.ok(itemService.getList(pageable, userId));
     }
 }
