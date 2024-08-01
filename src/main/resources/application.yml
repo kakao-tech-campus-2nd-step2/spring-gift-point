@@ -1,13 +1,22 @@
 spring:
   application:
     name: spring-gift
+
   thymeleaf:
     cache: false
+
   h2:
     console:
       enabled: true
+
   datasource:
     url: jdbc:h2:mem:test
+
+  sql:
+    init:
+      mode: always
+      data-locations: classpath:db/data.sql
+
   jpa:
     hibernate:
       ddl-auto: create
@@ -15,13 +24,13 @@ spring:
       hibernate:
         format_sql: true
     show-sql: true
-    defer-datasource-initialization:
-      true
-  config :
+    defer-datasource-initialization: true
+    generate-ddl: true
+
+  config:
     import: application-secret.yml
-jwt:
-  secret: Yn2kjibddFAWtnPJ2AFlL8WXmohJMCvigQggaEypa5E=
-  expiration: 86400
+
+
 logging:
   level:
     org:
