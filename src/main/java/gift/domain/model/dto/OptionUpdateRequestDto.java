@@ -4,6 +4,7 @@ import gift.domain.model.entity.Option;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 
@@ -15,6 +16,7 @@ public class OptionUpdateRequestDto {
         message = "허용되지 않는 특수문자가 포함되어 있습니다.")
     private final String optionName;
 
+    @NotNull
     @Min(value = 1)
     @Max(value = 99999999)
     private final int optionQuantity;
