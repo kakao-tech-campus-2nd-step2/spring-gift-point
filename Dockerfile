@@ -1,5 +1,5 @@
 # Start with a base image containing Java runtime
-FROM openjdk:21-jre-slim
+FROM openjdk:21
 
 # Add Maintainer Info
 LABEL maintainer="ez23re@gmail.com"
