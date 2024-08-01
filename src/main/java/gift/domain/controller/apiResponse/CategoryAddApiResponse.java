@@ -8,18 +8,18 @@ import org.springframework.http.HttpStatusCode;
 
 public class CategoryAddApiResponse extends BasicApiResponse {
 
-    private final CategoryResponse createdCategory;
+    private final CategoryResponse category;
 
     @JsonCreator
     public CategoryAddApiResponse(
         @JsonProperty(value = "status") HttpStatusCode statusCode,
-        @JsonProperty(value = "created-category") CategoryResponse createdCategory
+        @JsonProperty(value = "category") CategoryResponse category
     ) {
         super(statusCode);
-        this.createdCategory = createdCategory;
+        this.category = category;
     }
 
-    public CategoryResponse getCreatedCategory() {
-        return createdCategory;
+    public CategoryResponse getCategory() {
+        return category;
     }
 }

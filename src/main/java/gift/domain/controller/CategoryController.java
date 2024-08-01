@@ -50,9 +50,9 @@ public class CategoryController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<BasicApiResponse> updateCategory(@PathVariable("id") Long id, @RequestBody CategoryRequest request) {
+    public ResponseEntity<Void> updateCategory(@PathVariable("id") Long id, @RequestBody CategoryRequest request) {
         categoryService.updateCategory(id, request);
-        return SuccessApiResponse.ok();
+        return SuccessApiResponse.noContent();
     }
 
     @DeleteMapping("/{id}")
