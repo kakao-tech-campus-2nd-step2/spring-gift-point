@@ -457,7 +457,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <li><a href="#resources_products">Products</a>
 <ul class="sectlevel3">
 <li><a href="#resources_products_create">상품 생성</a></li>
-<li><a href="#resources_products_list">상품 조회</a></li>
+<li><a href="#resources_products_list">상품 전체 페이지</a></li>
 <li><a href="#resources_products_update">상품 수정</a></li>
 <li><a href="#resources_products_delete">상품 삭제</a></li>
 </ul>
@@ -480,7 +480,20 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </li>
 <li><a href="#resources_wishes">Wishes</a>
 <ul class="sectlevel3">
+<li><a href="#resources_wishes_add">장바구니 추가</a></li>
 <li><a href="#resources_wishes_retrieve">장바구니 조회</a></li>
+<li><a href="#resources_wishes_delete">장바구니 삭제</a></li>
+</ul>
+</li>
+<li><a href="#resources_orders">Orders</a>
+<ul class="sectlevel3">
+<li><a href="#resources_orders_add">주문 추가</a></li>
+<li><a href="#resources_orders_retreive">주문 조회</a></li>
+</ul>
+</li>
+<li><a href="#resources_options">Options</a>
+<ul class="sectlevel3">
+<li><a href="#_옵션_조회">옵션 조회</a></li>
 </ul>
 </li>
 </ul>
@@ -586,7 +599,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <h5 id="_curl_request"><a class="link" href="#_curl_request">Curl Request</a></h5>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">$ curl 'http://localhost:8080/product/add' -i -X POST \
+<pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">$ curl 'http://localhost:8080/api/products' -i -X POST \
     -H 'Content-Type: application/json' \
     -d '{
   "name" : "상품",
@@ -602,7 +615,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <h5 id="_http_request"><a class="link" href="#_http_request">Http Request</a></h5>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">POST /product/add HTTP/1.1
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">POST /api/products HTTP/1.1
 Content-Type: application/json
 Content-Length: 111
 Host: localhost:8080
@@ -621,32 +634,28 @@ Host: localhost:8080
 <h5 id="_example_response"><a class="link" href="#_example_response">Example Response</a></h5>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">HTTP/1.1 302 Found
-Content-Language: en
-Location: /</code></pre>
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">HTTP/1.1 200 OK
+Content-Type: application/json
+Content-Length: 99
+
+{
+  "result" : "OK",
+  "message" : "상품 추가 성공",
+  "httpStatus" : "OK",
+  "data" : null
+}</code></pre>
 </div>
 </div>
 </div>
 </div>
 <div class="sect3">
-<h4 id="resources_products_list"><a class="link" href="#resources_products_list">상품 조회</a></h4>
+<h4 id="resources_products_list"><a class="link" href="#resources_products_list">상품 전체 페이지</a></h4>
 <div class="sect4">
 <h5 id="_curl_request_2"><a class="link" href="#_curl_request_2">Curl Request</a></h5>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">$ curl 'http://localhost:8080/products/all' -i -X GET \
-    -H 'Content-Type: application/json' \
-    -d '{
-  "id" : 1,
-  "name" : "상품",
-  "price" : 10000,
-  "imageUrl" : "image.jpg",
-  "wishList" : [ ],
-  "category" : {
-    "id" : 1,
-    "name" : "카테고리"
-  }
-}'</code></pre>
+<pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">$ curl 'http://localhost:8080/api/products?page=0&amp;size=10&amp;sort=orderDateTime%2CDESC&amp;categoryId=1' -i -X GET \
+    -H 'Content-Type: application/json'</code></pre>
 </div>
 </div>
 </div>
@@ -654,22 +663,9 @@ Location: /</code></pre>
 <h5 id="_http_request_2"><a class="link" href="#_http_request_2">Http Request</a></h5>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">GET /products/all HTTP/1.1
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">GET /api/products?page=0&amp;size=10&amp;sort=orderDateTime%2CDESC&amp;categoryId=1 HTTP/1.1
 Content-Type: application/json
-Content-Length: 166
-Host: localhost:8080
-
-{
-  "id" : 1,
-  "name" : "상품",
-  "price" : 10000,
-  "imageUrl" : "image.jpg",
-  "wishList" : [ ],
-  "category" : {
-    "id" : 1,
-    "name" : "카테고리"
-  }
-}</code></pre>
+Host: localhost:8080</code></pre>
 </div>
 </div>
 </div>
@@ -679,12 +675,50 @@ Host: localhost:8080
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">HTTP/1.1 200 OK
 Content-Type: application/json
-Content-Length: 89
+Content-Length: 846
 
 {
   "result" : "OK",
-  "message" : "상품 전체 조회 성공",
-  "httpStatus" : "OK"
+  "message" : "상품 조회 성공",
+  "httpStatus" : "OK",
+  "data" : {
+    "totalPages" : 1,
+    "totalElements" : 2,
+    "first" : true,
+    "last" : true,
+    "size" : 10,
+    "content" : [ {
+      "id" : null,
+      "name" : "Product 1",
+      "price" : 10000,
+      "imageUrl" : "image1.jpg"
+    }, {
+      "id" : null,
+      "name" : "Product 2",
+      "price" : 20000,
+      "imageUrl" : "image2.jpg"
+    } ],
+    "number" : 0,
+    "sort" : {
+      "empty" : false,
+      "sorted" : true,
+      "unsorted" : false
+    },
+    "pageable" : {
+      "pageNumber" : 0,
+      "pageSize" : 10,
+      "sort" : {
+        "empty" : false,
+        "sorted" : true,
+        "unsorted" : false
+      },
+      "offset" : 0,
+      "paged" : true,
+      "unpaged" : false
+    },
+    "numberOfElements" : 2,
+    "empty" : false
+  }
 }</code></pre>
 </div>
 </div>
@@ -696,9 +730,15 @@ Content-Length: 89
 <h5 id="_curl_request_3"><a class="link" href="#_curl_request_3">Curl Request</a></h5>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">$ curl 'http://localhost:8080/product/update' -i -X POST \
+<pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">$ curl 'http://localhost:8080/api/products/1' -i -X PUT \
     -H 'Content-Type: application/json' \
-    -d '{"id":1,"name":"상품","price":2000,"imageUrl":"image.jpg","wishList":[],"category":{"id":1,"name":"카테고리"}}'</code></pre>
+    -d '{
+  "name" : "상품",
+  "price" : 2000,
+  "imageUrl" : "image.jpg",
+  "categoryId" : 1,
+  "optionId" : null
+}'</code></pre>
 </div>
 </div>
 </div>
@@ -706,12 +746,18 @@ Content-Length: 89
 <h5 id="_http_request_3"><a class="link" href="#_http_request_3">Http Request</a></h5>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">POST /product/update HTTP/1.1
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">PUT /api/products/1 HTTP/1.1
 Content-Type: application/json
-Content-Length: 116
+Content-Length: 110
 Host: localhost:8080
 
-{"id":1,"name":"상품","price":2000,"imageUrl":"image.jpg","wishList":[],"category":{"id":1,"name":"카테고리"}}</code></pre>
+{
+  "name" : "상품",
+  "price" : 2000,
+  "imageUrl" : "image.jpg",
+  "categoryId" : 1,
+  "optionId" : null
+}</code></pre>
 </div>
 </div>
 </div>
@@ -719,9 +765,21 @@ Host: localhost:8080
 <h5 id="_example_response_3"><a class="link" href="#_example_response_3">Example Response</a></h5>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">HTTP/1.1 302 Found
-Content-Language: en
-Location: /</code></pre>
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">HTTP/1.1 200 OK
+Content-Type: application/json
+Content-Length: 186
+
+{
+  "result" : "OK",
+  "message" : "상품 수정 성공",
+  "httpStatus" : "OK",
+  "data" : {
+    "id" : 1,
+    "name" : "상품",
+    "price" : 2000,
+    "imageUrl" : "image.jpg"
+  }
+}</code></pre>
 </div>
 </div>
 </div>
@@ -732,7 +790,7 @@ Location: /</code></pre>
 <h5 id="_curl_request_4"><a class="link" href="#_curl_request_4">Curl Request</a></h5>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">$ curl 'http://localhost:8080/product/delete/1' -i -X GET \
+<pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">$ curl 'http://localhost:8080/api/products/1' -i -X DELETE \
     -H 'Content-Type: application/json'</code></pre>
 </div>
 </div>
@@ -741,7 +799,7 @@ Location: /</code></pre>
 <h5 id="_http_request_4"><a class="link" href="#_http_request_4">Http Request</a></h5>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">GET /product/delete/1 HTTP/1.1
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">DELETE /api/products/1 HTTP/1.1
 Content-Type: application/json
 Host: localhost:8080</code></pre>
 </div>
@@ -751,9 +809,16 @@ Host: localhost:8080</code></pre>
 <h5 id="_example_response_4"><a class="link" href="#_example_response_4">Example Response</a></h5>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">HTTP/1.1 302 Found
-Content-Language: en
-Location: /</code></pre>
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">HTTP/1.1 200 OK
+Content-Type: application/json
+Content-Length: 99
+
+{
+  "result" : "OK",
+  "message" : "상품 삭제 성공",
+  "httpStatus" : "OK",
+  "data" : null
+}</code></pre>
 </div>
 </div>
 </div>
@@ -767,13 +832,14 @@ Location: /</code></pre>
 <h5 id="_curl_request_5"><a class="link" href="#_curl_request_5">Curl Request</a></h5>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">$ curl 'http://localhost:8080/members/register' -i -X POST \
+<pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">$ curl 'http://localhost:8080/api/members/register' -i -X POST \
     -H 'Content-Type: application/json' \
     -d '{
   "id" : null,
   "email" : "test@email.com",
   "password" : "password",
   "kakaoId" : null,
+  "orders" : null,
   "wishList" : [ ]
 }'</code></pre>
 </div>
@@ -783,9 +849,9 @@ Location: /</code></pre>
 <h5 id="_http_request_5"><a class="link" href="#_http_request_5">Http Request</a></h5>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">POST /members/register HTTP/1.1
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">POST /api/members/register HTTP/1.1
 Content-Type: application/json
-Content-Length: 114
+Content-Length: 133
 Host: localhost:8080
 
 {
@@ -793,6 +859,7 @@ Host: localhost:8080
   "email" : "test@email.com",
   "password" : "password",
   "kakaoId" : null,
+  "orders" : null,
   "wishList" : [ ]
 }</code></pre>
 </div>
@@ -804,12 +871,17 @@ Host: localhost:8080
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">HTTP/1.1 200 OK
 Content-Type: application/json
-Content-Length: 85
+Content-Length: 196
 
 {
   "result" : "OK",
-  "message" : "Member Register success",
-  "httpStatus" : "OK"
+  "message" : "회원 가입 성공",
+  "httpStatus" : "OK",
+  "data" : [ {
+    "email" : "test@email.com",
+    "password" : "password",
+    "token" : "generatedToken"
+  } ]
 }</code></pre>
 </div>
 </div>
@@ -821,13 +893,14 @@ Content-Length: 85
 <h5 id="_curl_request_6"><a class="link" href="#_curl_request_6">Curl Request</a></h5>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">$ curl 'http://localhost:8080/members/register' -i -X POST \
+<pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">$ curl 'http://localhost:8080/api/members/register' -i -X POST \
     -H 'Content-Type: application/json' \
     -d '{
   "id" : null,
   "email" : "test@email.com",
   "password" : "password",
   "kakaoId" : null,
+  "orders" : null,
   "wishList" : [ ]
 }'</code></pre>
 </div>
@@ -837,9 +910,9 @@ Content-Length: 85
 <h5 id="_http_request_6"><a class="link" href="#_http_request_6">Http Request</a></h5>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">POST /members/register HTTP/1.1
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">POST /api/members/register HTTP/1.1
 Content-Type: application/json
-Content-Length: 114
+Content-Length: 133
 Host: localhost:8080
 
 {
@@ -847,6 +920,7 @@ Host: localhost:8080
   "email" : "test@email.com",
   "password" : "password",
   "kakaoId" : null,
+  "orders" : null,
   "wishList" : [ ]
 }</code></pre>
 </div>
@@ -856,14 +930,17 @@ Host: localhost:8080
 <h5 id="_example_response_6"><a class="link" href="#_example_response_6">Example Response</a></h5>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">HTTP/1.1 403 Forbidden
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">HTTP/1.1 400 Bad Request
 Content-Type: application/json
-Content-Length: 138
+Content-Length: 179
 
 {
   "result" : "ERROR",
-  "message" : "Registration Failed, 올바른 이메일 형식이 아닙니다.",
-  "httpStatus" : "BAD_REQUEST"
+  "message" : "회원 가입 실패",
+  "httpStatus" : "BAD_REQUEST",
+  "data" : [ {
+    "error" : "비밀번호를 다시 입력해 주십시오."
+  } ]
 }</code></pre>
 </div>
 </div>
@@ -875,13 +952,14 @@ Content-Length: 138
 <h5 id="_curl_request_7"><a class="link" href="#_curl_request_7">Curl Request</a></h5>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">$ curl 'http://localhost:8080/members/login' -i -X POST \
+<pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">$ curl 'http://localhost:8080/api/members/login' -i -X POST \
     -H 'Content-Type: application/json' \
     -d '{
   "id" : null,
   "email" : "test@email.com",
   "password" : "password",
   "kakaoId" : null,
+  "orders" : null,
   "wishList" : [ ]
 }'</code></pre>
 </div>
@@ -891,9 +969,9 @@ Content-Length: 138
 <h5 id="_http_request_7"><a class="link" href="#_http_request_7">Http Request</a></h5>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">POST /members/login HTTP/1.1
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">POST /api/members/login HTTP/1.1
 Content-Type: application/json
-Content-Length: 114
+Content-Length: 133
 Host: localhost:8080
 
 {
@@ -901,6 +979,7 @@ Host: localhost:8080
   "email" : "test@email.com",
   "password" : "password",
   "kakaoId" : null,
+  "orders" : null,
   "wishList" : [ ]
 }</code></pre>
 </div>
@@ -912,12 +991,17 @@ Host: localhost:8080
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">HTTP/1.1 200 OK
 Content-Type: application/json
-Content-Length: 111
+Content-Length: 188
 
 {
   "result" : "OK",
-  "message" : "Request Success. 정상 로그인 되었습니다",
-  "httpStatus" : "OK"
+  "message" : "로그인 성공",
+  "httpStatus" : "OK",
+  "data" : [ {
+    "email" : "test@email.com",
+    "password" : "password",
+    "token" : "loginToken"
+  } ]
 }</code></pre>
 </div>
 </div>
@@ -929,13 +1013,14 @@ Content-Length: 111
 <h5 id="_curl_request_8"><a class="link" href="#_curl_request_8">Curl Request</a></h5>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">$ curl 'http://localhost:8080/members/login' -i -X POST \
+<pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">$ curl 'http://localhost:8080/api/members/login' -i -X POST \
     -H 'Content-Type: application/json' \
     -d '{
   "id" : null,
   "email" : "test@email.com",
   "password" : "password",
   "kakaoId" : null,
+  "orders" : null,
   "wishList" : [ ]
 }'</code></pre>
 </div>
@@ -945,9 +1030,9 @@ Content-Length: 111
 <h5 id="_http_request_8"><a class="link" href="#_http_request_8">Http Request</a></h5>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">POST /members/login HTTP/1.1
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">POST /api/members/login HTTP/1.1
 Content-Type: application/json
-Content-Length: 114
+Content-Length: 133
 Host: localhost:8080
 
 {
@@ -955,6 +1040,7 @@ Host: localhost:8080
   "email" : "test@email.com",
   "password" : "password",
   "kakaoId" : null,
+  "orders" : null,
   "wishList" : [ ]
 }</code></pre>
 </div>
@@ -966,12 +1052,15 @@ Host: localhost:8080
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">HTTP/1.1 403 Forbidden
 Content-Type: application/json
-Content-Length: 90
+Content-Length: 164
 
 {
   "result" : "ERROR",
   "message" : "로그인 실패",
-  "httpStatus" : "BAD_REQUEST"
+  "httpStatus" : "FORBIDDEN",
+  "data" : [ {
+    "Error" : "존재 하지 않는 계정입니다."
+  } ]
 }</code></pre>
 </div>
 </div>
@@ -986,11 +1075,14 @@ Content-Length: 90
 <h5 id="_curl_request_9"><a class="link" href="#_curl_request_9">Curl Request</a></h5>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">$ curl 'http://localhost:8080/add/category' -i -X POST \
+<pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">$ curl 'http://localhost:8080/api/categories' -i -X POST \
     -H 'Content-Type: application/json' \
     -d '{
   "id" : 1,
-  "name" : "상품권"
+  "name" : "상품권",
+  "color" : null,
+  "imageUrl" : null,
+  "description" : null
 }'</code></pre>
 </div>
 </div>
@@ -999,14 +1091,17 @@ Content-Length: 90
 <h5 id="_http_request_9"><a class="link" href="#_http_request_9">Http Request</a></h5>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">POST /add/category HTTP/1.1
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">POST /api/categories HTTP/1.1
 Content-Type: application/json
-Content-Length: 38
+Content-Length: 101
 Host: localhost:8080
 
 {
   "id" : 1,
-  "name" : "상품권"
+  "name" : "상품권",
+  "color" : null,
+  "imageUrl" : null,
+  "description" : null
 }</code></pre>
 </div>
 </div>
@@ -1017,12 +1112,19 @@ Host: localhost:8080
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">HTTP/1.1 200 OK
 Content-Type: application/json
-Content-Length: 94
+Content-Length: 214
 
 {
   "result" : "OK",
-  "message" : "Category{id=1, name='상품권'}",
-  "httpStatus" : "OK"
+  "message" : "카테고리 추가 성공",
+  "httpStatus" : "OK",
+  "data" : {
+    "id" : 1,
+    "name" : "상품권",
+    "color" : null,
+    "imageUrl" : null,
+    "description" : null
+  }
 }</code></pre>
 </div>
 </div>
@@ -1034,13 +1136,8 @@ Content-Length: 94
 <h5 id="_curl_request_10"><a class="link" href="#_curl_request_10">Curl Request</a></h5>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">$ curl 'http://localhost:8080/categories' -i -X GET \
-    -H 'Content-Type: application/json' \
-    -d '{
-  "id" : 1,
-  "name" : "상품권",
-  "productName" : [ "상품" ]
-}'</code></pre>
+<pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">$ curl 'http://localhost:8080/api/categories' -i -X GET \
+    -H 'Content-Type: application/json'</code></pre>
 </div>
 </div>
 </div>
@@ -1048,16 +1145,9 @@ Content-Length: 94
 <h5 id="_http_request_10"><a class="link" href="#_http_request_10">Http Request</a></h5>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">GET /categories HTTP/1.1
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">GET /api/categories HTTP/1.1
 Content-Type: application/json
-Content-Length: 70
-Host: localhost:8080
-
-{
-  "id" : 1,
-  "name" : "상품권",
-  "productName" : [ "상품" ]
-}</code></pre>
+Host: localhost:8080</code></pre>
 </div>
 </div>
 </div>
@@ -1067,12 +1157,20 @@ Host: localhost:8080
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">HTTP/1.1 200 OK
 Content-Type: application/json
-Content-Length: 93
+Content-Length: 259
 
 {
   "result" : "OK",
-  "message" : "[gift.dto.CategoryDto@28e2d3ed]",
-  "httpStatus" : "OK"
+  "message" : "카테고리 전체 조회 성공",
+  "httpStatus" : "OK",
+  "data" : [ {
+    "id" : 1,
+    "name" : "상품권",
+    "productName" : [ "상품" ],
+    "color" : null,
+    "imageUrl" : null,
+    "description" : null
+  } ]
 }</code></pre>
 </div>
 </div>
@@ -1084,12 +1182,15 @@ Content-Length: 93
 <h5 id="_curl_request_11"><a class="link" href="#_curl_request_11">Curl Request</a></h5>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">$ curl 'http://localhost:8080/update/category?id=1' -i -X PUT \
+<pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">$ curl 'http://localhost:8080/api/categories?id=1' -i -X PUT \
     -H 'Content-Type: application/json' \
     -d '{
   "id" : 1,
   "name" : "새상품권",
-  "productName" : [ "productName" ]
+  "productName" : [ "productName" ],
+  "color" : null,
+  "imageUrl" : null,
+  "description" : null
 }'</code></pre>
 </div>
 </div>
@@ -1098,15 +1199,18 @@ Content-Length: 93
 <h5 id="_http_request_11"><a class="link" href="#_http_request_11">Http Request</a></h5>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">PUT /update/category?id=1 HTTP/1.1
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">PUT /api/categories?id=1 HTTP/1.1
 Content-Type: application/json
-Content-Length: 78
+Content-Length: 141
 Host: localhost:8080
 
 {
   "id" : 1,
   "name" : "새상품권",
-  "productName" : [ "productName" ]
+  "productName" : [ "productName" ],
+  "color" : null,
+  "imageUrl" : null,
+  "description" : null
 }</code></pre>
 </div>
 </div>
@@ -1117,12 +1221,19 @@ Host: localhost:8080
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">HTTP/1.1 200 OK
 Content-Type: application/json
-Content-Length: 91
+Content-Length: 214
 
 {
   "result" : "OK",
-  "message" : "gift.dto.CategoryDto@6d9069ab",
-  "httpStatus" : "OK"
+  "message" : "카테고리 수정 성공",
+  "httpStatus" : "OK",
+  "data" : {
+    "id" : 1,
+    "name" : "상품권",
+    "color" : null,
+    "imageUrl" : null,
+    "description" : null
+  }
 }</code></pre>
 </div>
 </div>
@@ -1134,7 +1245,7 @@ Content-Length: 91
 <h5 id="_curl_request_12"><a class="link" href="#_curl_request_12">Curl Request</a></h5>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">$ curl 'http://localhost:8080/delete/category' -i -X DELETE \
+<pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">$ curl 'http://localhost:8080/api/categories' -i -X DELETE \
     -H 'Content-Type: application/json'</code></pre>
 </div>
 </div>
@@ -1143,7 +1254,7 @@ Content-Length: 91
 <h5 id="_http_request_12"><a class="link" href="#_http_request_12">Http Request</a></h5>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">DELETE /delete/category HTTP/1.1
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">DELETE /api/categories HTTP/1.1
 Content-Type: application/json
 Host: localhost:8080</code></pre>
 </div>
@@ -1155,12 +1266,13 @@ Host: localhost:8080</code></pre>
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">HTTP/1.1 200 OK
 Content-Type: application/json
-Content-Length: 75
+Content-Length: 105
 
 {
   "result" : "OK",
-  "message" : "삭제 성공",
-  "httpStatus" : "OK"
+  "message" : "카테고리 삭제 성공",
+  "httpStatus" : "OK",
+  "data" : null
 }</code></pre>
 </div>
 </div>
@@ -1170,13 +1282,17 @@ Content-Length: 75
 <div class="sect2">
 <h3 id="resources_wishes"><a class="link" href="#resources_wishes">Wishes</a></h3>
 <div class="sect3">
-<h4 id="resources_wishes_retrieve"><a class="link" href="#resources_wishes_retrieve">장바구니 조회</a></h4>
+<h4 id="resources_wishes_add"><a class="link" href="#resources_wishes_add">장바구니 추가</a></h4>
 <div class="sect4">
 <h5 id="_curl_request_13"><a class="link" href="#_curl_request_13">Curl Request</a></h5>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">$ curl 'http://localhost:8080/wishes' -i -X GET \
-    -H 'Content-Type: application/json'</code></pre>
+<pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">$ curl 'http://localhost:8080/api/wishes' -i -X POST \
+    -H 'Content-Type: application/json' \
+    -H 'Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIiwiZW1haWwiOiJ0ZXN0QGV4YW1wbGUuY29tIn0.m0SweCir-YSkg-OGMZWE2JPJ5VoYLinLYDu6OSl4ff8' \
+    -d '{
+  "productId" : 1
+}'</code></pre>
 </div>
 </div>
 </div>
@@ -1184,11 +1300,15 @@ Content-Length: 75
 <h5 id="_http_request_13"><a class="link" href="#_http_request_13">Http Request</a></h5>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">HTTP/1.1 200 OK
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">POST /api/wishes HTTP/1.1
 Content-Type: application/json
-Content-Length: 61
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIiwiZW1haWwiOiJ0ZXN0QGV4YW1wbGUuY29tIn0.m0SweCir-YSkg-OGMZWE2JPJ5VoYLinLYDu6OSl4ff8
+Content-Length: 21
+Host: localhost:8080
 
-{"wishes":[{"id":null,"productName":"product","memberId":1}]}</code></pre>
+{
+  "productId" : 1
+}</code></pre>
 </div>
 </div>
 </div>
@@ -1196,7 +1316,252 @@ Content-Length: 61
 <h5 id="_example_response_13"><a class="link" href="#_example_response_13">Example Response</a></h5>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight nowrap"><code data-lang="json" class="language-json hljs">{"wishes":[{"id":null,"productName":"product","memberId":1}]}</code></pre>
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">HTTP/1.1 200 OK
+Content-Type: application/json
+Content-Length: 175
+
+{
+  "result" : "OK",
+  "message" : "장바구니 추가 성공",
+  "httpStatus" : "OK",
+  "data" : {
+    "id" : 1,
+    "productName" : "Test Product",
+    "memberId" : 1
+  }
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="resources_wishes_retrieve"><a class="link" href="#resources_wishes_retrieve">장바구니 조회</a></h4>
+<div class="sect4">
+<h5 id="_curl_request_14"><a class="link" href="#_curl_request_14">Curl Request</a></h5>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">$ curl 'http://localhost:8080/api/wishes?page=0&amp;size=10&amp;sort=orderDateTime%2CDESC' -i -X GET \
+    -H 'Content-Type: application/json' \
+    -H 'Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIiwiZW1haWwiOiJ0ZXN0QGV4YW1wbGUuY29tIn0.m0SweCir-YSkg-OGMZWE2JPJ5VoYLinLYDu6OSl4ff8'</code></pre>
+</div>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_http_request_14"><a class="link" href="#_http_request_14">Http Request</a></h5>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">GET /api/wishes?page=0&amp;size=10&amp;sort=orderDateTime%2CDESC HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIiwiZW1haWwiOiJ0ZXN0QGV4YW1wbGUuY29tIn0.m0SweCir-YSkg-OGMZWE2JPJ5VoYLinLYDu6OSl4ff8
+Host: localhost:8080</code></pre>
+</div>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_example_response_14"><a class="link" href="#_example_response_14">Example Response</a></h5>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">HTTP/1.1 200 OK
+Content-Type: application/json
+Content-Length: 448
+
+{"result":"OK","message":"장바구니 조회 성공","httpStatus":"OK","data":{"totalPages":1,"totalElements":1,"first":true,"last":true,"size":10,"content":[{"id":1,"productName":"Test Product","memberId":1}],"number":0,"sort":{"empty":false,"sorted":true,"unsorted":false},"pageable":{"pageNumber":0,"pageSize":10,"sort":{"empty":false,"sorted":true,"unsorted":false},"offset":0,"paged":true,"unpaged":false},"numberOfElements":1,"empty":false}}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="resources_wishes_delete"><a class="link" href="#resources_wishes_delete">장바구니 삭제</a></h4>
+<div class="sect4">
+<h5 id="_curl_request_15"><a class="link" href="#_curl_request_15">Curl Request</a></h5>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">$ curl 'http://localhost:8080/api/wishes/1' -i -X DELETE \
+    -H 'Content-Type: application/json' \
+    -H 'Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIiwiZW1haWwiOiJ0ZXN0QGV4YW1wbGUuY29tIn0.m0SweCir-YSkg-OGMZWE2JPJ5VoYLinLYDu6OSl4ff8'</code></pre>
+</div>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_http_request_15"><a class="link" href="#_http_request_15">Http Request</a></h5>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">DELETE /api/wishes/1 HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIiwiZW1haWwiOiJ0ZXN0QGV4YW1wbGUuY29tIn0.m0SweCir-YSkg-OGMZWE2JPJ5VoYLinLYDu6OSl4ff8
+Host: localhost:8080</code></pre>
+</div>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_example_response_15"><a class="link" href="#_example_response_15">Example Response</a></h5>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">HTTP/1.1 200 OK
+Content-Type: application/json
+Content-Length: 84
+
+{"result":"OK","message":"장바구니 제거 성공","httpStatus":"OK","data":null}</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="resources_orders"><a class="link" href="#resources_orders">Orders</a></h3>
+<div class="sect3">
+<h4 id="resources_orders_add"><a class="link" href="#resources_orders_add">주문 추가</a></h4>
+<div class="sect4">
+<h5 id="_curl_request_16"><a class="link" href="#_curl_request_16">Curl Request</a></h5>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">$ curl 'http://localhost:8080/api/orders' -i -X POST \
+    -H 'Content-Type: application/json' \
+    -H 'Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIn0.u-_YvDmfRXj4ijS3DWiuIbGmzC2G1I-i9SMru-lW3kc' \
+    -d '{"productId":1,"optionId":1,"quantity":1,"message":"Test message"}'</code></pre>
+</div>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_http_request_16"><a class="link" href="#_http_request_16">Http Request</a></h5>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">POST /api/orders HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIn0.u-_YvDmfRXj4ijS3DWiuIbGmzC2G1I-i9SMru-lW3kc
+Content-Length: 66
+Host: localhost:8080
+
+{"productId":1,"optionId":1,"quantity":1,"message":"Test message"}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_example_response_16"><a class="link" href="#_example_response_16">Example Response</a></h5>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">HTTP/1.1 200 OK
+Content-Type: application/json
+Content-Length: 195
+
+{"result":"OK","message":"주문 추가 성공","httpStatus":"OK","data":{"id":null,"localDateTime":"2024-07-31T20:27:59.922393","message":"Test message","optionId":1,"quantity":1,"productId":1}}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="resources_orders_retreive"><a class="link" href="#resources_orders_retreive">주문 조회</a></h4>
+<div class="sect4">
+<h5 id="_curl_request_17"><a class="link" href="#_curl_request_17">Curl Request</a></h5>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">$ curl 'http://localhost:8080/api/orders?page=0&amp;size=10&amp;sort=orderDateTime%2CDESC' -i -X GET \
+    -H 'Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIiwiZW1haWwiOiJ0ZXN0QGV4YW1wbGUuY29tIn0.m0SweCir-YSkg-OGMZWE2JPJ5VoYLinLYDu6OSl4ff8'</code></pre>
+</div>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_http_request_17"><a class="link" href="#_http_request_17">Http Request</a></h5>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">GET /api/orders?page=0&amp;size=10&amp;sort=orderDateTime%2CDESC HTTP/1.1
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIiwiZW1haWwiOiJ0ZXN0QGV4YW1wbGUuY29tIn0.m0SweCir-YSkg-OGMZWE2JPJ5VoYLinLYDu6OSl4ff8
+Host: localhost:8080</code></pre>
+</div>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_example_response_17"><a class="link" href="#_example_response_17">Example Response</a></h5>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">HTTP/1.1 200 OK
+Content-Type: application/json
+Content-Length: 942
+
+{
+  "result" : "OK",
+  "message" : "주문 리스트 조회 성공",
+  "httpStatus" : "OK",
+  "data" : {
+    "totalPages" : 1,
+    "totalElements" : 2,
+    "first" : true,
+    "last" : true,
+    "size" : 10,
+    "content" : [ {
+      "id" : null,
+      "localDateTime" : null,
+      "message" : null,
+      "optionId" : null,
+      "quantity" : 0,
+      "productId" : null
+    }, {
+      "id" : null,
+      "localDateTime" : null,
+      "message" : null,
+      "optionId" : null,
+      "quantity" : 0,
+      "productId" : null
+    } ],
+    "number" : 0,
+    "sort" : {
+      "empty" : false,
+      "sorted" : true,
+      "unsorted" : false
+    },
+    "pageable" : {
+      "pageNumber" : 0,
+      "pageSize" : 10,
+      "sort" : {
+        "empty" : false,
+        "sorted" : true,
+        "unsorted" : false
+      },
+      "offset" : 0,
+      "paged" : true,
+      "unpaged" : false
+    },
+    "numberOfElements" : 2,
+    "empty" : false
+  }
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="resources_options"><a class="link" href="#resources_options">Options</a></h3>
+<div class="sect3">
+<h4 id="_옵션_조회"><a class="link" href="#_옵션_조회">옵션 조회</a></h4>
+<div class="sect4">
+<h5 id="_curl_request_18"><a class="link" href="#_curl_request_18">Curl Request</a></h5>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">$ curl 'http://localhost:8080/api/products/1/options' -i -X GET \
+    -H 'Content-Type: application/json'</code></pre>
+</div>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_http_request_18"><a class="link" href="#_http_request_18">Http Request</a></h5>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">GET /api/products/1/options HTTP/1.1
+Content-Type: application/json
+Host: localhost:8080</code></pre>
+</div>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_example_response_18"><a class="link" href="#_example_response_18">Example Response</a></h5>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">HTTP/1.1 200 OK
+Content-Type: application/json
+Content-Length: 489
+
+{"result":"OK","message":"옵션 조회 성공","httpStatus":"OK","data":[{"id":1,"name":"Option 1","quantity":100,"optionResponseList":[{"id":1,"name":"Option 1","productList":null,"quantity":100}],"optionResponseMap":{"id":1,"name":"Option 1","productList":null,"quantity":100}},{"id":2,"name":"Option 2","quantity":200,"optionResponseList":[{"id":2,"name":"Option 2","productList":null,"quantity":200}],"optionResponseMap":{"id":2,"name":"Option 2","productList":null,"quantity":200}}]}</code></pre>
 </div>
 </div>
 </div>
@@ -1208,7 +1573,7 @@ Content-Length: 61
 <div id="footer">
 <div id="footer-text">
 Version 0.0.1-SNAPSHOT<br>
-Last updated 2024-07-29 01:30:32 +0900
+Last updated 2024-07-31 20:27:50 +0900
 </div>
 </div>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/styles/github.min.css">
