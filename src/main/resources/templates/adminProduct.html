@@ -65,9 +65,8 @@
         <th scope="col">Name</th>
         <th scope="col">Price</th>
         <th scope="col">Image</th>
-        <th scope="col">Category</th>
-        <th scope="col">BasicOption</th>
         <th scope="col">Option</th>
+        <th scope="col">Delete</th>
     </tr>
     </thead>
     <tbody id="product-tbody">
@@ -91,7 +90,6 @@
 
     <label for="categoryId"></label>
     <select name="categoryId" id="categoryId">
-
     </select>
 
     <button id="search" onclick="getProducts(currentPage)">검색</button>
@@ -161,7 +159,6 @@
                             <td>${product.name}</td>
                             <td>${product.price}</td>
                             <td><img src="${product.imageUrl}" alt="image"/></td>
-                            <td>${product.category.name}</td>
                             <td>
                                 <a href="/adminOptions?product_id=${product.id}">옵션</a>
                             </td>

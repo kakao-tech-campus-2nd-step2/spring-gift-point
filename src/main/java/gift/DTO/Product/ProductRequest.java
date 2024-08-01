@@ -14,7 +14,6 @@ public class ProductRequest {
     private int price;
     private String imageUrl;
     private String categoryName;
-
     private String basicOption;
 
     public ProductRequest(){

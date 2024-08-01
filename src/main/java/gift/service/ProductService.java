@@ -73,6 +73,7 @@ public class ProductService {
 
         Option basicOption = new Option(productRequest.getBasicOption(), 1, productEntity);
         productEntity.addOption(basicOption);
+
         optionRepository.save(basicOption);
 
         return new ProductResponse(productEntity);
