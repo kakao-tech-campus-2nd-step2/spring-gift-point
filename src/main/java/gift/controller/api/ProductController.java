@@ -69,9 +69,8 @@ public class ProductController {
         return ResponseEntity.ok(productService.getOptionResponses(productId));
     }
 
-    @PutMapping ("api/products/{productId}/options/{optionId}")
-    public ResponseEntity<List<OptionResponse>> updateOption(@PathVariable("productId") Long productId,
-                                                             @PathVariable("optionId") Long optionId) {
+    @PutMapping("api/products/{productId}/options/")
+    public ResponseEntity<List<OptionResponse>> updateOption(@PathVariable("productId") Long productId) {
         return ResponseEntity.ok(productService.getOptionResponses(productId));
     }
 
