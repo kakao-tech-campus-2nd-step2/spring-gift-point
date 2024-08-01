@@ -14,24 +14,24 @@ public class CreateProductOptionRequest {
     private String name;
 
     @Range(min = 1, max = 100_000_000)
-    private Integer stock;
+    private Integer quantity;
 
-    public CreateProductOptionRequest(String name, Integer stock) {
+    public CreateProductOptionRequest(String name, Integer quantity) {
         this.name = name;
-        this.stock = stock;
+        this.quantity = quantity;
     }
 
     public ProductOption toEntity() {
         return new ProductOption.Builder()
             .name(this.name)
-            .stock(this.stock)
+            .stock(this.quantity)
             .build();
     }
 
     public ProductOption toEntity(Long productId) {
         return new ProductOption.Builder()
             .name(this.name)
-            .stock(this.stock)
+            .stock(this.quantity)
             .productId(productId)
             .build();
     }
@@ -40,8 +40,8 @@ public class CreateProductOptionRequest {
         return name;
     }
 
-    public Integer getStock() {
-        return stock;
+    public Integer getQuantity() {
+        return quantity;
     }
 
 }
