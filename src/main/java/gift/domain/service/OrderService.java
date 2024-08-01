@@ -1,7 +1,6 @@
 package gift.domain.service;
 
 import gift.domain.dto.request.OrderRequest;
-import gift.domain.dto.request.WishDeleteRequest;
 import gift.domain.dto.response.OrderResponse;
 import gift.domain.entity.Member;
 import gift.domain.entity.Option;
@@ -46,9 +45,9 @@ public class OrderService {
         //멤버의 위시리스트를 불러온뒤 옵션에 해당하는 상품이 존재하면 그 상품을 삭제함
         //TODO: 위시리스트에서 상품 옵션에 대해 위시 수량을 지정하고, 그 수량을 감소시킬 필요가 있음
         wishService.getWishlist(member).stream()
-            .filter(w -> w.productId().equals(productId))
+            .filter(w -> w.product().id().equals(productId))
             .findAny()
-            .ifPresent(w -> wishService.deleteWishlist(member, new WishDeleteRequest(productId)));
+            .ifPresent(w -> wishService.deleteWishlist(member, w.id()));
 
         //주문 저장
         Order order = orderRepository.save(request.toEntity(member, option));

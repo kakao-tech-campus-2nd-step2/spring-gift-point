@@ -24,12 +24,12 @@ public enum ErrorCode {
 
     //Forbidden
     MEMBER_INCORRECT_LOGIN_INFO("EFD_MB001", -40301, "Incorrect your email or password. Try again."),
-    //TODO: 다른 멤버의 위시를 삭제하는 오류 추가 (-40302)
+    OTHER_MEMBERS_WISH_DELETION("EFD_WS001", -40302, "Deleting other members' wishes is prohibited."),
 
     //Not Found
     PRODUCT_NOT_FOUND("ENF_PD001", -40401, "The product was not found."),
     CATEGORY_NOT_FOUND("ENF_CAT001", -40402, "The category was not found."),
-    //TODO: 위시 찾을 수 없는 오류 추가 (-40403)
+    WISH_NOT_FOUND("ENF_WS001", -40303, "The wish was not found."),
     OPTION_NOT_FOUND("ENF_OP001", -40404, "The option was not found."),
     OPTION_NOT_INCLUDED_IN_PRODUCT_OPTIONS("ENF_OP002", -40405, "The option is not included in the product's options."),
 
@@ -38,13 +38,12 @@ public enum ErrorCode {
     CATEGORY_ALREADY_EXISTS("ECF_CAT001", -40902, "This category name already exists. Try other one."),
     PRODUCT_ALREADY_EXISTS("ECF_PD001", -40903, "The product already exists."),
     OPTION_ALREADY_EXISTS_IN_PRODUCT("ECF_OP001", -40904, "The options already exists in product."),
-    //TODO: 위시리스트에 이미 상품이 존재하는 오류 추가 (-40905)
+    PRODUCT_ALREADY_EXISTS_IN_WISHLIST("ECF_WS001", -40905, "The product already exists in member's wishlist."),
 
     //Unused
     OPTION_UPDATE_ACTION_INVALID("EBR_OP002", -400_999, "The option update request's action was invalid. Available actions: " + Option.QuantityUpdateAction.toList()),
     OAUTH_VENDOR_ILLEGAL("EBR_OA001", -400_999, "Oauth 공급자가 잘못되었습니다. 관리자에게 문의하세요."),
     MEMBER_NOT_ADMIN("EFD_MB002", -403_999, "어드민 권한이 없습니다."),
-    PRODUCT_NOT_INCLUDED_IN_WISHLIST("ENF_WS001", -404_999, "The product is not included your wishlist."),
     MEMBER_NOT_FOUND("ENF_MB001", -404_999, "member"),
     CATEGORY_HAS_PRODUCTS("ECF_CAT002", -409_999, "This category cannot be deleted because some products are included in it.");
 

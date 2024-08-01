@@ -3,8 +3,6 @@ package gift.domain.controller;
 import gift.domain.annotation.ValidMember;
 import gift.domain.controller.apiResponse.WishAddApiResponse;
 import gift.domain.controller.apiResponse.WishListApiResponse;
-import gift.domain.controller.apiResponse.WishUpdateApiResponse;
-import gift.domain.dto.request.WishDeleteRequest;
 import gift.domain.dto.request.WishRequest;
 import gift.domain.entity.Member;
 import gift.domain.service.WishService;
@@ -14,8 +12,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -37,19 +35,13 @@ public class WishController {
 
     @PostMapping
     public ResponseEntity<WishAddApiResponse> addWish(@ValidMember Member member, @Valid @RequestBody WishRequest wishRequest) {
-        return SuccessApiResponse.ok(new WishAddApiResponse(HttpStatus.OK, wishService.addWishlist(member,
-            wishRequest)));
+        var created = HttpStatus.CREATED;
+        return SuccessApiResponse.of(new WishAddApiResponse(created, wishService.addWishlist(member, wishRequest)), created);
     }
 
-    @PutMapping
-    public ResponseEntity<WishUpdateApiResponse> updateWish(@ValidMember Member member, @Valid @RequestBody WishRequest wishRequest) {
-        return SuccessApiResponse.ok(new WishUpdateApiResponse(HttpStatus.OK, wishService.updateWishlist(member,
-            wishRequest)));
-    }
-
-    @DeleteMapping
-    public ResponseEntity<Void> deleteWish(@ValidMember Member member, @RequestBody WishDeleteRequest wishDeleteRequest) {
-        wishService.deleteWishlist(member, wishDeleteRequest);
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteWish(@ValidMember Member member, @PathVariable("id") Long id) {
+        wishService.deleteWishlist(member, id);
         return SuccessApiResponse.noContent();
     }
 }

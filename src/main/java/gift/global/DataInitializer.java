@@ -106,10 +106,10 @@ public class DataInitializer {
         }
 
         Wish[] wishes = {
-            new Wish(products[3], members[1], 5L),
-            new Wish(products[0], members[1], 2L),
-            new Wish(products[2], members[2], 4L),
-            new Wish(products[4], members[2], 1L)};
+            new Wish(products[3], members[1]),
+            new Wish(products[0], members[1]),
+            new Wish(products[2], members[2]),
+            new Wish(products[4], members[2])};
         for (int i = 0; i < wishes.length; i++) {
             wishes[i] = wishRepository.save(wishes[i]);
         }
