@@ -1,0 +1,42 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>Products</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+  <link rel="stylesheet" th:href="@{/css/get-products.css}">
+</head>
+<body>
+<h1>Product List</h1>
+
+<div class="actions">
+  <a href="/product/add" class="btn add-btn">Add Product</a>
+</div>
+
+<ul th:if="${not #lists.isEmpty(productList)}">
+  <li th:each="product : ${productList}">
+    <span class="product-id" th:text="${product.id}">Id</span>
+    <span class="product-name" th:text="${product.name}">Product Name</span>
+    <span class="product-price" th:text="${product.price}">Price</span>
+    <span class="product-image" th:text="${product.imageUrl}">imageUrl</span>
+    <span class="product-category" th:text="${product.category.name}">category</span>
+    <a th:href="@{/product/update/{id}(id=${product.id})}" class="btn update-btn">Update</a>
+    <a th:href="@{/product/delete/{id}(id=${product.id})}" class="btn delete-btn">Delete</a>
+  </li>
+</ul>
+
+<div class="empty-message" th:if="${#lists.isEmpty(productList)}">
+  No products available.
+</div>
+
+<div class="result-message" th:if="${resultMessage}" th:text="${resultMessage}"></div>
+
+<div class="error-message" th:if="${errorMessage}" th:text="${errorMessage}"></div>
+<nav>
+  <ul class="pagination">
+    <li th:each="pageNum : ${#numbers.sequence(0, totalPages - 1)}" class="page-item">
+      <a class="page-link" th:href="@{/(page=${pageNum})}" th:text="${pageNum + 1}"></a>
+    </li>
+  </ul>
+</nav>
+</body>
+</html>
