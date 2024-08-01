@@ -36,7 +36,7 @@ public class CategoryServiceTest {
         // given
         ArgumentCaptor<Category> captor_c = ArgumentCaptor.forClass(Category.class);
 
-        CategoryRequest categoryRequest = new CategoryRequest("신규");
+        CategoryRequest categoryRequest = new CategoryRequest("신규", "", "", "");
         Category category = new Category(categoryRequest.getName());
         given(categoryRepository.save(captor_c.capture())).willAnswer(invocation -> captor_c.getValue());
         // when
@@ -71,7 +71,7 @@ public class CategoryServiceTest {
     @DisplayName("updateTest")
     void test4(){
         // given
-        CategoryRequest categoryRequest = new CategoryRequest("신규 카테고리");
+        CategoryRequest categoryRequest = new CategoryRequest("신규 카테고리", "", "", "");
         Category category = new Category("신규");
         TestUtil.setId(category, 1L);
         given(categoryRepository.findById(1L)).willAnswer(invocation -> Optional.of(category));

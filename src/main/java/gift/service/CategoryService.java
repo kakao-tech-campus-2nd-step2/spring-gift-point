@@ -53,7 +53,9 @@ public class CategoryService {
     public void update(Long id, CategoryRequest categoryRequest){
         Category savedCategory = categoryRepository.findById(id).orElseThrow(NoSuchFieldError::new);
 
-        savedCategory.update(categoryRequest.getName());
+        savedCategory.update(
+                categoryRequest.getName(), categoryRequest.getDescription(), categoryRequest.getColor(), categoryRequest.getImageUrl()
+        );
     }
     /*
      * 카테고리를 삭제하는 로직
