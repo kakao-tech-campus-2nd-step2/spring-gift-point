@@ -1,6 +1,9 @@
 package gift.DTO.User;
 
+import jakarta.validation.constraints.Email;
+
 public class UserRequest {
+    @Email
     String email;
     String password;
 

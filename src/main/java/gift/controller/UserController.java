@@ -55,7 +55,8 @@ public class UserController {
     public ResponseEntity<Page<UserResponse>> readUsers(
             @RequestParam(value = "page", defaultValue = "0") int page,
             @RequestParam(value = "size", defaultValue = "5") int size,
-            @RequestParam(value = "sort") List<String> sort
+            @RequestParam(value = "sort") List<String> sort,
+            @AuthenticateMember UserResponse userRes
     ) {
         if(sort.getLast().equals("asc")) {
             Page<UserResponse> users = userService.findAllASC(page, size, sort.getFirst());
