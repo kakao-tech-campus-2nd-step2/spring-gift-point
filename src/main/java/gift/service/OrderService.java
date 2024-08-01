@@ -74,8 +74,12 @@ public class OrderService {
         //옵션 수량 감소
         optionService.subtractOption(option.getId(), quantity);
 
-        //카카오톡 메시지 보내기
-        sendMessage(message, snsMemberService.getOauthAccessTokenByEmail(email), option, quantity);
+
+        if(snsMemberService.isSnsMember(email)){
+            //카카오 로그인유저일 시 카카오톡 메시지 보내기
+            sendMessage(message, snsMemberService.getOauthAccessTokenByEmail(email), option, quantity);
+        }
+
 
         //주문목록 추가
         orderRepository.save(order);

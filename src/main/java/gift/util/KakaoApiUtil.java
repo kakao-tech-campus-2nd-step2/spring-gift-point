@@ -93,7 +93,6 @@ public class KakaoApiUtil {
             ,text,new LinkDTO("http://localhost:8080","http://localhost:8080"));
 
         String messageTemplateJson = gson.toJson(messageTemplate);
-        System.out.println(messageTemplateJson);
         LinkedMultiValueMap<String, String> body = new LinkedMultiValueMap<>();
         body.add("template_object", messageTemplateJson);
 

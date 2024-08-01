@@ -18,6 +18,8 @@ public class JwtUtil {
     // Header KEY 값
     public static final String AUTHORIZATION_HEADER = "Authorization";
 
+    // Token 식별자
+    public static final String BEARER_PREFIX = "Bearer ";
     // 토큰 만료시간
     private final long TOKEN_TIME = 60 * 60 * 1000L; // 60분
 
@@ -42,6 +44,9 @@ public class JwtUtil {
 
     // JWT Parsing, 클레임 추출
     public Claims extractClaims(String token) {
+        if (token.startsWith(BEARER_PREFIX)) {
+            token = token.substring(BEARER_PREFIX.length());
+        }
         return Jwts.parserBuilder()
             .setSigningKey(getSigningKey())
             .build()
