@@ -1,10 +1,9 @@
 package gift.dto.response;
 
-import java.util.List;
-
-public record CategoryResponseDTO(Long CategoryId,
+public record CategoryResponseDTO(Long Id,
                                   String name,
                                   String color,
-                                  String description,
-                                  String imageUrl) {
+                                  String imageUrl,
+                                  String description
+                                  ) {
 }

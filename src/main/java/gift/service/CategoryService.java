@@ -6,6 +6,7 @@ import gift.entity.Product;
 import gift.entity.Category;
 import gift.exception.categoryException.CategoryNotFoundException;
 import gift.repository.CategoryRepository;
+import jakarta.transaction.Transactional;
 import jdk.jfr.Description;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -24,12 +25,6 @@ public class CategoryService {
     }
 
     @Description("category get method")
-    public CategoryResponseDTO getCategory(Long categoryId){
-        Category category = getCategoryEntity(categoryId);
-        return toDTO(category);
-    }
-
-    @Description("category get method")
     public List<CategoryResponseDTO> getAllCategories() {
         List<Category> categories = categoryRepository.findAll();
         return categories.stream()
@@ -41,14 +36,6 @@ public class CategoryService {
     public void addCategory(CategoryRequestDTO categoryRequestDTO) {
         Category category = toEntity(categoryRequestDTO);
         categoryRepository.save(category);
-    }
-
-    @Description("category remove method")
-    public void removeCategory(Long categoryId){
-        System.out.println("remove category");
-        Category category = getCategoryEntity(categoryId);
-        categoryRepository.delete(category);
-        //categoryRepository.deleteById(categoryId);
     }
 
     @Description("category update method")
@@ -73,8 +60,8 @@ public class CategoryService {
                 category.getId(),
                 category.getName(),
                 category.getColor(),
-                category.getDescription(),
-                category.getImageUrl()
+                category.getImageUrl(),
+                category.getDescription()
         );
     }
 
@@ -82,11 +69,28 @@ public class CategoryService {
         Category category = new Category(
                 categoryRequestDTO.name(),
                 categoryRequestDTO.color(),
-                categoryRequestDTO.description(),
-                categoryRequestDTO.imageUrl()
+                categoryRequestDTO.imageUrl(),
+                categoryRequestDTO.description()
         );
         return category;
     }
 
-
 }
+
+/*
+Description("category remove method")
+public void removeCategory(Long categoryId){
+    System.out.println("remove category");
+    Category category = getCategoryEntity(categoryId);
+    categoryRepository.delete(category);
+    //categoryRepository.deleteById(categoryId);
+}
+
+
+@Description("category get method")
+public CategoryResponseDTO getCategory(Long categoryId){
+    Category category = getCategoryEntity(categoryId);
+    return toDTO(category);
+}
+
+*/

@@ -35,13 +35,6 @@ public class CategoryController {
                 .body("Category created");
     }
 
-    @DeleteMapping("/{categoryId}")
-    public ResponseEntity<String> deleteCategory (@PathVariable("categoryId") Long categoryId) {
-        categoryService.removeCategory(categoryId);
-        return ResponseEntity.status(HttpStatus.OK)
-                .body("Category deleted");
-    }
-
     @PutMapping("/{categoryId}")
     public ResponseEntity<String> updateCategory (@PathVariable("categoryId") Long categoryId,
                                                   @RequestBody CategoryRequestDTO categoryRequestDTO) {
@@ -51,5 +44,30 @@ public class CategoryController {
     }
 
 
-
 }
+
+/*
+* @GetMapping("/form")
+    public ResponseEntity<List<CategoryResponseDTO>> getCategoriesByForm() {
+        List<CategoryResponseDTO> categoryList = categoryService.getAllCategories();
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(categoryList);
+    }
+
+    @PostMapping("/form")
+    public ResponseEntity<String> createCategoryByForm (@RequestBody CategoryRequestDTO categoryRequestDTO) {
+        categoryService.addCategory(categoryRequestDTO);
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body("Category created");
+    }
+
+
+
+    @PutMapping("/form/{categoryId}")
+    public ResponseEntity<String> updateCategoryByForm (@PathVariable("categoryId") Long categoryId,
+                                                  @ModelAttribute CategoryRequestDTO categoryRequestDTO) {
+        categoryService.updateCategory(categoryId, categoryRequestDTO);
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body("Category updated");
+    }
+* */

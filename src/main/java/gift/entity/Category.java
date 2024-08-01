@@ -37,11 +37,11 @@ public class Category {
 
     }
 
-    public Category(String name, String color, String description, String imageUrl) {
+    public Category(String name, String color, String imageUrl, String description) {
         this.name = name;
         this.color = color;
-        this.description = description;
         this.imageUrl = imageUrl;
+        this.description = description;
     }
 
     public Long getId() {
