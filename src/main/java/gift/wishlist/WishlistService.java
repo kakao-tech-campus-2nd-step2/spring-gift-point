@@ -41,7 +41,7 @@ public class WishlistService {
     }
 
     @Transactional(readOnly = true)
-    public Page<ProductPaginationResponseDTO> getAllWishlists(String token, Pageable pageable) {
+    public Page<ProductPaginationResponseDTO> getWishlists(String token, Pageable pageable) {
         return wishlistRepository.findAllByMember(getMemberFromToken(token), pageable)
             .map(wishlist -> {
                 Product product = wishlist.getProduct();

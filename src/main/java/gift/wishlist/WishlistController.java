@@ -34,11 +34,11 @@ public class WishlistController {
     @ApiResponse(responseCode = "400", description = "입력 양식이 잘못된 경우")
     @ApiResponse(responseCode = "403", description = "인증 실패")
     @ApiResponse(responseCode = "500", description = "서버 에러")
-    public Page<ProductPaginationResponseDTO> getAllWishlists(
+    public Page<ProductPaginationResponseDTO> getWishlists(
         @RequestHeader("Authorization") String token,
         @ParameterObject Pageable pageable
     ) {
-        return wishlistService.getAllWishlists(token, pageable);
+        return wishlistService.getWishlists(token, pageable);
     }
 
     @PostMapping
