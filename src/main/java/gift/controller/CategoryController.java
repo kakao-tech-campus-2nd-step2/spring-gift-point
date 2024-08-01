@@ -36,8 +36,8 @@ public class CategoryController {
 
     @PutMapping("/{categoryId}")
     @Operation(summary = "카테고리 정보 수정", description = "카테고리를 수정할 때 사용하는 API")
-    public ResponseEntity<CategoryResponseDto> updateCategory(@PathVariable Long id, @RequestBody CategoryDto categoryDto) {
-        CategoryResponseDto categoryResponseDto = categoryService.updateCategory(id,categoryDto);
+    public ResponseEntity<CategoryResponseDto> updateCategory(@PathVariable Long categoryId, @RequestBody CategoryDto categoryDto) {
+        CategoryResponseDto categoryResponseDto = categoryService.updateCategory(categoryId,categoryDto);
         return ResponseEntity.ok().body(categoryResponseDto);
     }
 
