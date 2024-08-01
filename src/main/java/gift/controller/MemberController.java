@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import gift.dto.request.LoginRequest;
 import gift.dto.request.RegisteRequest;
+import gift.dto.response.TokenResponse;
 import gift.service.MemberService;
 import gift.util.JwtUtil;
 import io.swagger.v3.oas.annotations.Operation;
@@ -36,10 +37,10 @@ public class MemberController {
         @ApiResponse(responseCode = "201", description = "회원가입 성공"),
         @ApiResponse(responseCode = "409", description = "이미 존재하는 회원")
     })
-    public ResponseEntity<String> register(@Valid @RequestBody RegisteRequest registeRequest, BindingResult bindingResult){
+    public ResponseEntity<TokenResponse> register(@Valid @RequestBody RegisteRequest registeRequest, BindingResult bindingResult){
         memberService.addMember(registeRequest);
         String token = memberService.generateToken(registeRequest.getEmail());
-        return new ResponseEntity<>(token, HttpStatus.CREATED);
+        return new ResponseEntity<>(new TokenResponse(token), HttpStatus.CREATED);
     }
 
 
@@ -49,8 +50,8 @@ public class MemberController {
         @ApiResponse(responseCode = "200", description = "로그인 성공"),
         @ApiResponse(responseCode = "403", description = "이메일 혹은 비밀번호가 틀림")
     })
-    public ResponseEntity<String> login(@Valid @RequestBody LoginRequest loginRequest, BindingResult bindingResult){
+    public ResponseEntity<TokenResponse> login(@Valid @RequestBody LoginRequest loginRequest, BindingResult bindingResult){
         String token = memberService.authenticateMember(loginRequest);
-        return new ResponseEntity<>(token, HttpStatus.OK);
+        return new ResponseEntity<>(new TokenResponse(token), HttpStatus.OK);
     }
 }

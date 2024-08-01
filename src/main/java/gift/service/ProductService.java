@@ -11,7 +11,7 @@ import gift.dto.ProductDto;
 import gift.dto.ProductInfo;
 import gift.dto.request.OptionRequest;
 import gift.dto.request.ProductRequest;
-import gift.dto.response.FindAllProductResponse;
+import gift.dto.response.GetProductsResponse;
 import gift.dto.response.ProductPageResponse;
 import gift.dto.response.ProductResponse;
 import gift.entity.Category;
@@ -69,11 +69,11 @@ public class ProductService{
         );
     }
 
-    public FindAllProductResponse findAll(Long categoryId, String sort){
+    public GetProductsResponse findAll(Long categoryId, String sort){
 
         List<Product> products = findProductsBySort(categoryId, sort);
         List<ProductInfo> productInfos = products.stream().map(ProductInfo::fromEntity).toList();
-        return new FindAllProductResponse(categoryService.findById(categoryId), productInfos);
+        return new GetProductsResponse(categoryService.findById(categoryId), productInfos);
 
     }
 
@@ -152,7 +152,13 @@ public class ProductService{
         Category category = categoryRepository.findById(productRequest.getCategoryId())
             .orElseThrow(() -> new CustomException("Category with id" + productRequest.getCategoryId() + "NOT FOUND" , HttpStatus.NOT_FOUND, -40402));
         
-        product.update(productRequest, category);
+        if(productRepository.findByNameAndPriceAndImageUrl(productRequest.getProductName(), 
+            productRequest.getPrice(),
+            productRequest.getImageUrl()).isEmpty()){
+                product.update(productRequest, category);
+            }else{
+               throw new CustomException("Product with name " + productRequest.getProductName() + "exists", HttpStatus.CONFLICT, -40903);
+            }
     }
 
     @Transactional

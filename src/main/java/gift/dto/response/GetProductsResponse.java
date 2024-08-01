@@ -9,13 +9,13 @@ import gift.dto.ProductInfo;
 import java.util.List;
 
 
-public class FindAllProductResponse {
+public class GetProductsResponse {
     
     private CategoryDto categoryDto;
     private List<ProductInfo> productInfos;
 
     @JsonCreator
-    public FindAllProductResponse(
+    public GetProductsResponse(
         @JsonProperty("category")
         CategoryDto categoryDto,
 

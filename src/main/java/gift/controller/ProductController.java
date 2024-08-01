@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import gift.dto.request.ProductRequest;
-import gift.dto.response.FindAllProductResponse;
+import gift.dto.response.GetProductsResponse;
 import gift.dto.response.ProductResponse;
 import gift.service.ProductService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -40,7 +40,7 @@ public class ProductController {
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "상품 조회 성공")
     })
-    public ResponseEntity<FindAllProductResponse> getProducts(@RequestParam("categoryId") Long categoryId, @RequestParam("sort") String sort) {
+    public ResponseEntity<GetProductsResponse> getProducts(@RequestParam("categoryId") Long categoryId, @RequestParam("sort") String sort) {
         return new ResponseEntity<>(productService.findAll(categoryId, sort), HttpStatus.OK);
     }
 
@@ -69,7 +69,8 @@ public class ProductController {
     @Operation(summary = "상품 수정", description = "파라미터로 받은 상품을 수정합니다." )
     @ApiResponses(value = {
         @ApiResponse(responseCode = "204", description = "상품 수정 성공"),
-        @ApiResponse(responseCode = "404", description = "존재하지 않는 상품 혹은 카테고리")
+        @ApiResponse(responseCode = "404", description = "존재하지 않는 상품 혹은 카테고리"),
+        @ApiResponse(responseCode = "409", description = "이미 존재하는 상품")
     })
     public ResponseEntity<Void> updateProduct(@PathVariable Long productId, @Valid @RequestBody ProductRequest productRequest, BindingResult bindingResult) {
         productService.updateProduct(productId, productRequest);

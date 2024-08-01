@@ -64,12 +64,19 @@ public class OptionService {
         
         Option option = optionRepository.findById(optionId)
             .orElseThrow(() -> new CustomException("Option with id " + optionId + " not exist", HttpStatus.NOT_FOUND, -40404));
-
-        if(option.getProduct().equals(product)){
-            option.updateOption(optionRequest);
-        }else{
-            throw new CustomException("option does not belong to product", HttpStatus.NOT_FOUND, -40405);
+        
+        if(optionRepository.findByName(optionRequest.getOptionName()).isEmpty()){
+            if(option.getProduct().equals(product)){
+                option.updateOption(optionRequest);
+            }else{
+                throw new CustomException("option does not belong to product", HttpStatus.NOT_FOUND, -40405);
+            }
         }
+        else{
+            throw new CustomException("Option with name " +optionRequest.getOptionName() + " exist", HttpStatus.CONFLICT, -40904);
+        }
+
+        
     }
 
     @Transactional

@@ -71,9 +71,9 @@ public class OptionController{
     @DeleteMapping("{productId}/options/{optionId}")
     @Operation(summary = "옵션 삭제", description = "옵션의 정보를 수정합니다.")
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "204", description = "옵션 수정 성공"),
+        @ApiResponse(responseCode = "204", description = "옵션 삭제 성공"),
         @ApiResponse(responseCode = "400", description = "상품의 옵션은 최소 1개는 존재해야함"),
-        @ApiResponse(responseCode = "404", description = "상품혹은 옵션을 찾을 수 없음"),
+        @ApiResponse(responseCode = "404", description = "상품 혹은 옵션을 찾을 수 없음"),
     })
     public ResponseEntity<Void> deleteOption(@PathVariable Long productId, @PathVariable Long optionId){
         optionService.deleteOption(productId, optionId);

@@ -11,7 +11,7 @@ public class CategoryResponse {
     
     @JsonCreator
     public CategoryResponse(
-        @JsonProperty("created_category")
+        @JsonProperty("category")
         CategoryDto categoryDto
     ){
         this.categoryDto = categoryDto;

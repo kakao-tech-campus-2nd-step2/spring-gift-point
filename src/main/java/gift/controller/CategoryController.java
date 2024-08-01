@@ -54,7 +54,8 @@ public class CategoryController {
     @Operation(summary = "카테고리 수정", description = "카테고리를 수정합니다.")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "카테고리 수정 성공"),
-        @ApiResponse(responseCode = "404", description = "존재하지 않는 카테고리")
+        @ApiResponse(responseCode = "404", description = "존재하지 않는 카테고리"),
+        @ApiResponse(responseCode = "409", description = "이미 존재하는 카테고리")
     })
     public ResponseEntity<CategoryResponse> updateCategory(@PathVariable Long categoryId, @RequestBody CategoryRequest categoryRequest){
         return new ResponseEntity<>(categoryService.updateCategory(categoryId, categoryRequest), HttpStatus.OK);

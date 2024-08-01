@@ -70,7 +70,13 @@ public class CategoryService {
         Category category = categoryRepository.findById(categoryId)
             .orElseThrow(() -> new CustomException("Category with id " + categoryId + " not exists", HttpStatus.NOT_FOUND, -40402));
         
-        return new CategoryResponse(category.update(categoryRequest));
+        if(categoryRepository.findByName(categoryRequest.getName()).isEmpty()){
+            return new CategoryResponse(category.update(categoryRequest));
+        }else{
+            throw new CustomException("category already exist", HttpStatus.CONFLICT, -40902);
+        }
+        
+        
     }
 
     public Category toEntity(CategoryDto categoryDto){
