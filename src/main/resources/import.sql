@@ -24,7 +24,7 @@ insert into product(name, price, image_url, category_id, created_at) values ('20
 
 
 insert into users(password, email, name, social_Type, role, point) values ('yso3865', 'yso829612@gmail.com', '춘식이', 'DEFAULT', 'USER', 1000)
-insert into users(password, email, name, social_Type, role, point) values ('1234', 'admin@test.com', 'admin', '라이언', 'DEFAULT', 'ADMIN', 50000);
+insert into users(password, email, name, social_Type, role, point) values ('1234', 'admin@test.com', '라이언', 'DEFAULT', 'ADMIN', 50000);
 
 insert into wish(user_id, product_id, created_at) values(1, 1, NOW())
 insert into wish(user_id, product_id, created_at) values(1, 2, NOW())
