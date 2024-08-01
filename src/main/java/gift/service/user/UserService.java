@@ -1,5 +1,6 @@
 package gift.service.user;
 
+import gift.dto.point.MyPointResponse;
 import gift.dto.user.UserRequest;
 import gift.exception.InvalidUserException;
 import gift.exception.UserAlreadyExistException;
@@ -42,6 +43,7 @@ public class UserService {
                 .orElseThrow(() -> new InvalidUserException("존재하지 않는 사용자입니다."));
         return user.getName();
     }
+
 
     public boolean validateToken(String token) {
         boolean isValidToken = jwtUtil.checkValidateToken(token);

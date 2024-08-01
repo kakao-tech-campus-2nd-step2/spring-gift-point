@@ -27,8 +27,11 @@ public class User {
 
     @NotNull
     private String password;
+
     @NotNull
     private String name;
+
+    private int point;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<Wish> wishes = new ArrayList<>();
@@ -50,6 +53,7 @@ public class User {
         this.name = name;
         this.loginType = loginType;
         this.role = Role.USER;
+        this.point = 0;
     }
 
     public Long getId() {
@@ -70,6 +74,14 @@ public class User {
 
     public String getName() {
         return name;
+    }
+
+    public int getPoint() {
+        return point;
+    }
+
+    public Role getRole() {
+        return role;
     }
 
     public void checkLoginType(LoginType loginType) {
