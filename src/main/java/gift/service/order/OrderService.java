@@ -9,7 +9,7 @@ import gift.mapper.OrderMapper;
 import gift.service.category.CategoryService;
 import gift.service.option.OptionService;
 import gift.service.wish.WishService;
-import gift.web.dto.CategoryDto;
+import gift.web.dto.category.CategoryResponseDto;
 import gift.web.dto.MemberDto;
 import gift.web.dto.OrderDto;
 import gift.web.dto.ProductDto;
@@ -60,7 +60,7 @@ public class OrderService {
     public OrderDto createOrder(MemberDto memberDto, OrderDto orderDto) {
 
         ProductDto productDto = optionService.getProduct(orderDto.optionId());
-        CategoryDto categoryDto = categoryService.getCategory(productDto.categoryId());
+        CategoryResponseDto categoryResponseDto = categoryService.getCategory(productDto.categoryId());
 
         if (wishService.existsByMemberEmailAndProductId(memberDto.email(), productDto.id())) {
             wishService.deleteWish(memberDto.email(), productDto.id());
@@ -73,18 +73,18 @@ public class OrderService {
 
         oAuthTokenRepository.findByMemberEmail(memberDto.email())
             .ifPresent(token -> {
-                sendOrderKakaoMessage(productDto, categoryDto, order, token.getToken());
+                sendOrderKakaoMessage(productDto, categoryResponseDto, order, token.getToken());
             });
 
         return orderMapper.toDto(order);
     }
 
     @Transactional(propagation = Propagation.REQUIRES_NEW)
-    public void sendOrderKakaoMessage(ProductDto productDto, CategoryDto categoryDto, Order order, String token) {
+    public void sendOrderKakaoMessage(ProductDto productDto, CategoryResponseDto categoryResponseDto, Order order, String token) {
 
         Map<String, String> templateArgs = new HashMap<>();
         templateArgs.put("product_name", productDto.name());
-        templateArgs.put("category_name", categoryDto.name());
+        templateArgs.put("category_name", categoryResponseDto.name());
         templateArgs.put("price", productDto.price().toString());
         templateArgs.put("quantity", order.getQuantity().toString());
 

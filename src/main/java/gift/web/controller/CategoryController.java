@@ -1,7 +1,11 @@
 package gift.web.controller;
 
 import gift.service.category.CategoryService;
-import gift.web.dto.CategoryDto;
+import gift.web.dto.category.CategoryRequestDto;
+import gift.web.dto.category.CategoryResponseDto;
+import gift.web.dto.MemberDto;
+import gift.web.jwt.AuthUser;
+import jakarta.validation.Valid;
 import java.util.List;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,18 +28,18 @@ public class CategoryController {
     }
 
     @GetMapping
-    public ResponseEntity<List<CategoryDto>> getCategories() {
+    public ResponseEntity<List<CategoryResponseDto>> getCategories() {
         return new ResponseEntity<>(categoryService.getCategories(), HttpStatus.OK);
     }
 
     @PostMapping
-    public ResponseEntity<CategoryDto> createCategory(@RequestBody CategoryDto categoryDto) {
-        return new ResponseEntity<>(categoryService.createCategory(categoryDto), HttpStatus.CREATED);
+    public ResponseEntity<CategoryResponseDto> createCategory(@AuthUser MemberDto memberDto, @Valid @RequestBody CategoryRequestDto categoryRequestDto) {
+        return new ResponseEntity<>(categoryService.createCategory(categoryRequestDto), HttpStatus.CREATED);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<CategoryDto> updateCategory(@PathVariable Long id, @RequestBody CategoryDto categoryDto) {
-        return new ResponseEntity<>(categoryService.updateCategory(id, categoryDto), HttpStatus.OK);
+    public ResponseEntity<CategoryResponseDto> updateCategory(@AuthUser MemberDto memberDto, @PathVariable Long id, @Valid @RequestBody CategoryRequestDto categoryRequestDto) {
+        return new ResponseEntity<>(categoryService.updateCategory(id, categoryRequestDto), HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")

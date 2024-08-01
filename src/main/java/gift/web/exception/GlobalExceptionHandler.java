@@ -1,5 +1,6 @@
 package gift.web.exception;
 
+import gift.web.exception.duplicate.DuplicatedException;
 import gift.web.exception.forbidden.ForbiddenException;
 import gift.web.exception.kakaoapi.KakaoApiException;
 import gift.web.exception.notfound.NotFoundException;
@@ -26,12 +27,6 @@ public class GlobalExceptionHandler {
             ProblemDetail.forStatusAndDetail(HttpStatus.FORBIDDEN, e.getMessage()));
     }
 
-    @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<?> handleMethodArgumentNotValidException(MethodArgumentNotValidException e) {
-        return ResponseEntity.badRequest().body(
-            ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST, e.getBindingResult().getAllErrors().get(0).getDefaultMessage()));
-    }
-
     @ExceptionHandler(UnauthorizedException.class)
     public ResponseEntity<?> handleUnauthorizedException(UnauthorizedException e) {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(
@@ -43,4 +38,18 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(e.getStatusCode()).body(
             ProblemDetail.forStatusAndDetail(e.getStatusCode(), e.getMessage()));
     }
+
+    @ExceptionHandler(DuplicatedException.class)
+    public ResponseEntity<?> handleDuplicatedException(DuplicatedException e) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
+            ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST, e.getMessage()));
+    }
+
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<?> handleMethodArgumentNotValidException(MethodArgumentNotValidException e) {
+        return ResponseEntity.badRequest().body(
+            ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST, e.getBindingResult().getAllErrors().get(0).getDefaultMessage()));
+    }
+
+
 }
