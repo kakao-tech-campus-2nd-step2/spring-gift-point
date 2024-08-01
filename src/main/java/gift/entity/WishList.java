@@ -37,7 +37,7 @@ public class WishList {
         return id;
     }
 
-    public ResponseWishDTO toResponseDTO(){
-        return new ResponseWishDTO(id,product.toResponseDTO());
+    public ResponseWishDTO toResponseDTO() {
+        return new ResponseWishDTO(id, product.toResponseDTO());
     }
 }

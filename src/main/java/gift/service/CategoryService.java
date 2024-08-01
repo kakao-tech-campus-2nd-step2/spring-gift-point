@@ -44,11 +44,11 @@ public class CategoryService {
         return categoryRepository.findAll().stream().map(Category::toResponseDTO).toList();
     }
 
-    private Category findCategoryById(int categoryId){
+    private Category findCategoryById(int categoryId) {
         return categoryRepository.findById(categoryId).orElseThrow(() -> new NotFoundException("존재하지 않는 카테고리입니다."));
     }
 
-    private void checkDuplicateByName(String name){
+    private void checkDuplicateByName(String name) {
         categoryRepository.findByName(name).ifPresent(c -> {
             throw new BadRequestException("이미 존재하는 카테고리");
         });

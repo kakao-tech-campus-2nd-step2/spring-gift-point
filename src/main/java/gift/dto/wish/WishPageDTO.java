@@ -5,7 +5,7 @@ import org.springframework.data.domain.Page;
 
 import java.util.List;
 
-public class WishPageDTO{
+public class WishPageDTO {
     private List<ResponseWishDTO> content;
     private int number;
     private int totalElements;
@@ -19,8 +19,9 @@ public class WishPageDTO{
                 .toList();
 
         this.content = responseWishDTOs;
-        this.number = wishlistPage.getNumber();;
-        this.totalElements = (int)wishlistPage.getTotalElements();
+        this.number = wishlistPage.getNumber();
+        ;
+        this.totalElements = (int) wishlistPage.getTotalElements();
         this.size = wishlistPage.getSize();
         this.last = wishlistPage.isLast();
     }
