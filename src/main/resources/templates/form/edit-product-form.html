@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>상품 수정</title>
+  <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+<div class="container">
+  <h1 class="my-4">상품 수정</h1>
+  <form th:object="${product}" id="editProductForm">
+    <div class="form-group">
+      <label for="name">상품명</label>
+      <input type="text" id="name" th:field="*{name}" class="form-control">
+    </div>
+    <div class="form-group">
+      <label for="price">상품 가격</label>
+      <input type="number" id="price" th:field="*{price}" class="form-control">
+    </div>
+    <div class="form-group">
+      <label for="imageUrl">이미지 URL</label>
+      <input type="url" id="imageUrl" th:field="*{imageUrl}" class="form-control">
+    </div>
+    <button type="button" th:onclick="submitEditForm([[${product.id}]])" class="btn btn-primary">수정</button>
+  </form>
+</div>
+<script src="/js/script.js"></script>
+</body>
+</html>

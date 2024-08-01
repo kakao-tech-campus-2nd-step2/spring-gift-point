@@ -38,3 +38,6 @@ out/
 
 ### Mac OS ###
 .DS_Store
+
+### secret files ###
+src/main/resources/application-secret.yml

@@ -1,0 +1,19 @@
+== 회원 API
+
+=== 회원가입
+operation::member-api-controller-test/create-member[]
+
+=== 로그인
+operation::member-api-controller-test/login[]
+
+=== 회원 조회
+operation::member-api-controller-test/read-member[]
+
+=== 위시 상품 조회
+operation::member-api-controller-test/read-wish-product[]
+
+=== 위시 상품 수정
+operation::member-api-controller-test/update-wish-product[]
+
+=== 위시 상품 삭제
+operation::member-api-controller-test/delete-wish-product[]

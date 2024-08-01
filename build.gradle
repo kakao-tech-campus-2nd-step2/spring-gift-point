@@ -2,6 +2,7 @@ plugins {
     id 'java'
     id 'org.springframework.boot' version '3.3.1'
     id 'io.spring.dependency-management' version '1.1.5'
+    id 'org.asciidoctor.jvm.convert' version '4.0.3'
 }
 
 group = 'camp.nextstep.edu'
@@ -17,15 +18,78 @@ repositories {
     mavenCentral()
 }
 
+configurations {
+    asciidoctorExt //asciidoctorExt를 configurations로 지정
+    compileOnly {
+        extendsFrom annotationProcessor
+    }
+}
+
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-jdbc'
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
     implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
+    // OpenFeign
+    implementation 'org.springframework.cloud:spring-cloud-starter-openfeign'
+
+    //jwt
+    implementation 'io.jsonwebtoken:jjwt-api:0.12.6'
+    runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.12.6'
+    runtimeOnly 'io.jsonwebtoken:jjwt-jackson:0.12.6'
+
+    // Swagger
+    implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.0.4'
+
+    //REST Docs
+    asciidoctorExt 'org.springframework.restdocs:spring-restdocs-asciidoctor'
+    testImplementation 'org.springframework.restdocs:spring-restdocs-mockmvc'
+
     runtimeOnly 'com.h2database:h2'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 }
 
+dependencyManagement {
+    imports {
+        mavenBom "org.springframework.cloud:spring-cloud-dependencies:2023.0.3"
+    }
+}
+
 tasks.named('test') {
     useJUnitPlatform()
+}
+
+ext {
+    set('snippetsDir', file("build/generated-snippets")) //snippets 파일이 저장될 경로 snippetsDir로 변수 설정
+}
+
+test {
+    outputs.dir snippetsDir
+    useJUnitPlatform()
+}
+
+asciidoctor {
+    configurations 'asciidoctorExt' //Asciidoctor에서 asciidoctorExt를 사용하도록 설정
+    baseDirFollowsSourceFile()
+    inputs.dir snippetsDir
+    dependsOn test //gradle build 시 test -> asciiDoctor 순서로 실행
+}
+
+asciidoctor.doFirst {
+    delete file('src/main/resources/static/docs') //asciidoctor 실행 전 docs 폴더 삭제
+}
+
+task createDocument(type: Copy) {
+    dependsOn asciidoctor
+    from file("build/docs/asciidoc")
+    into file("src/main/resources/static")
+}
+
+bootJar {
+    dependsOn createDocument //Gradle build 시, createDocument -> bootJar 순으로 실행
+    from("${asciidoctor.outputDir}") {
+        into 'static/docs'
+    }
 }

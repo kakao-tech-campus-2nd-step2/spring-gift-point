@@ -1,0 +1,11 @@
+= 카카오 테크 캠퍼스 STEP 2 - REST Docs
+:doctype: book
+:source-highlighter: highlightjs
+:toc: left
+:toclevels: 3
+:sectlinks:
+
+include::product.adoc[]
+include::category.adoc[]
+include::member.adoc[]
+include::login.adoc[]
