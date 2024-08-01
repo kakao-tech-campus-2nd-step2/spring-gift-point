@@ -32,7 +32,7 @@ class OptionRepositoryTest {
     @BeforeEach
     void setUp() {
         Category category1 = new Category(null, "양식", new LinkedList<Menu>());
-        menu = new Menu("파스타", 3000, "naver.com", category1,new HashSet<>());
+        menu = new Menu("파스타", 3000, "naver.com", category1,new LinkedList<>());
         option = new Option(null, "검정색", 100L,menu);
         optionRepository.deleteAll();
     }

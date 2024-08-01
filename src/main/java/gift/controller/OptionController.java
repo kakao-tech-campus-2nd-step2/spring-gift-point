@@ -48,11 +48,4 @@ public class OptionController {
         return ResponseEntity.status(HttpStatus.NO_CONTENT).body(null);
     }
 
-    @GetMapping
-    public ResponseEntity<List<OptionResponse>> readOptions(
-            @PathVariable("productId") Long productId
-    ){
-        return ResponseEntity.ok().body(optionService.readAll(productId));
-    }
-
 }
