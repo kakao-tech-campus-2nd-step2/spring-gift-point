@@ -14,15 +14,30 @@ public class MemberResponse {
         }
     }
 
+    public record Point(
+        Integer point
+    ) {
+
+        public static Point from(MemberModel.Info model) {
+            return new Point(
+                model.point()
+            );
+        }
+    }
+
     public record Info(
+        Long id,
         String email,
-        String name
+        String name,
+        Integer point
     ) {
 
         public static Info from(MemberModel.Info model) {
             return new Info(
+                model.id(),
                 model.email(),
-                model.name()
+                model.name(),
+                model.point()
             );
         }
     }

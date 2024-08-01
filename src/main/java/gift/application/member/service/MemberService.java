@@ -1,5 +1,6 @@
 package gift.application.member.service;
 
+import gift.application.member.dto.MemberModel.Info;
 import gift.global.auth.jwt.JwtProvider;
 import gift.model.member.Member;
 import gift.global.validate.InvalidAuthRequestException;
@@ -8,6 +9,8 @@ import gift.model.member.Provider;
 import gift.repository.member.MemberRepository;
 import gift.application.member.dto.MemberCommand;
 import gift.application.member.dto.MemberModel;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.util.Pair;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -64,5 +67,17 @@ public class MemberService {
         var savedMember = memberRepository.save(create.toEntity());
         String jwt = jwtProvider.createToken(savedMember.getId(), savedMember.getRole());
         return new MemberModel.InfoAndJwt(MemberModel.Info.from(savedMember), jwt);
+    }
+
+    public Page<MemberModel.Info> getMemberPaging(Pageable pageable) {
+        var page = memberRepository.findAll(pageable);
+        return page.map(MemberModel.Info::from);
+    }
+
+    @Transactional
+    public Integer depositPoint(Long memberId, Integer point) {
+        var member = memberRepository.findById(memberId)
+            .orElseThrow(() -> new NotFoundException("User not found."));
+        return member.depositPoint(point);
     }
 }
