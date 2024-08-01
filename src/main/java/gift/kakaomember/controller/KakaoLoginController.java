@@ -1,13 +1,22 @@
+<<<<<<<< HEAD:src/main/java/gift/kakaomember/controller/KakaoLoginController.java
 package gift.kakaomember.controller;
+========
+package gift.member.kakaomember.controller;
+>>>>>>>> 624afd6 (feat: 회원 이메일 예외 추가):src/main/java/gift/member/kakaomember/controller/KakaoLoginController.java
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import gift.dto.ApiResponse;
 import gift.exception.IllegalEmailException;
+<<<<<<<< HEAD:src/main/java/gift/kakaomember/controller/KakaoLoginController.java
 import gift.member.dto.MemberResponse;
 import gift.member.service.MemberService;
 import gift.dto.HttpResult;
+========
+import gift.member.service.MemberService;
+import gift.model.HttpResult;
+>>>>>>>> 624afd6 (feat: 회원 이메일 예외 추가):src/main/java/gift/member/kakaomember/controller/KakaoLoginController.java
 import jakarta.servlet.http.HttpSession;
 import java.util.HashMap;
 import java.util.Optional;
@@ -97,10 +106,16 @@ public class KakaoLoginController {
                 );
             }
         } catch (Exception | IllegalEmailException e) {
+<<<<<<<< HEAD:src/main/java/gift/kakaomember/controller/KakaoLoginController.java
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
                 new MemberResponse(HttpResult.ERROR, "카카오 로그인 처리 중 오류 발생",
                     HttpStatus.INTERNAL_SERVER_ERROR, null)
             );
+========
+            return new ResponseEntity<>(
+                new ApiResponse(HttpResult.ERROR, "카카오 로그인 처리 중 오류 발생", HttpStatus.INTERNAL_SERVER_ERROR),
+                HttpStatus.INTERNAL_SERVER_ERROR);
+>>>>>>>> 624afd6 (feat: 회원 이메일 예외 추가):src/main/java/gift/member/kakaomember/controller/KakaoLoginController.java
         }
     }
 
