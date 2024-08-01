@@ -7,11 +7,12 @@ public class MemberModel {
     public record Info(
         Long id,
         String email,
-        String name
+        String name,
+        Integer point
     ) {
 
         public static Info from(Member member) {
-            return new Info(member.getId(), member.getEmail(), member.getName());
+            return new Info(member.getId(), member.getEmail(), member.getName(), member.getPoint());
         }
     }
 

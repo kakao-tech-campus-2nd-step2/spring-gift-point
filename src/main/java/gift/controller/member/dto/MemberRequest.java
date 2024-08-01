@@ -4,6 +4,7 @@ import gift.model.member.Provider;
 import gift.model.member.Role;
 import gift.application.member.dto.MemberCommand;
 import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 
 public class MemberRequest {
@@ -30,5 +31,11 @@ public class MemberRequest {
         public MemberCommand.Login toCommand() {
             return new MemberCommand.Login(email, password);
         }
+    }
+
+    public record DepositPoint(
+        @Min(0)
+        Integer depositPoint) {
+
     }
 }
