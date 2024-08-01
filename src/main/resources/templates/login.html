@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+  <title>LOGIN</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+  <style>
+    body {
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .login_wrapper {
+      width: 500px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      height: 50vh;
+      justify-content: space-evenly;
+      border-radius: 12px;
+      background-color: #F8F8FC;
+    }
+    .kakao_button {
+      border-radius: 3px;
+      background-color: #ffe500;
+      text-decoration: none;
+      width: 340px;
+      padding: 10px;
+      display: flex;
+      align-items: center;
+      font-weight: 600;
+      justify-content: center;
+    }
+    .img_align {
+      display: flex;
+      margin-right: 5px;
+    }
+  </style>
+</head>
+<body>
+<div class="main_content">
+  <div class="login_wrapper">
+    <img src="https://tistory1.daumcdn.net/tistory/5936542/skin/images/flannelsocks.png" style="width: 80px;">
+
+    <span style="text-align: center; font-size: larger; font-weight: 600;">로그인 후 <br> 상품 관리를 시작해보세요!</span>
+    <a class="kakao_button" th:href="@{/login/kakao-auth}">
+      <span class="img_align">
+        <svg width="15" height="15" viewBox="0 0 99.618 92.147" xmlns="http://www.w3.org/2000/svg">
+          <path d="M50.81 0c-26.953 0-48.808 17.256-48.808 38.555 0 13.681 9.052 25.693 22.646 32.549l-4.599 17.167c-.176.527-.03 1.085.352 1.465.263.265.614.411.995.411.294 0 .586-.117.85-.322l19.775-13.36c2.872.41 5.802.644 8.789.644 26.953 0 48.81-17.255 48.81-38.554 0-21.299-21.857-38.555-48.81-38.555z" fill="#3c1e1e"/>
+        </svg>
+      </span>
+      <span>카카오계정으로 로그인</span>
+    </a>
+  </div>
+</div>
+</body>
+</html>

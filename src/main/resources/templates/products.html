@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+  <title>Products</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</head>
+<body>
+  <h1>상품 목록</h1>
+  <a href="/admin/products/create">새 상품 만들기</a>
+  <table>
+    <tr>
+      <th>ID</th>
+      <th>Name</th>
+      <th>Price</th>
+      <th>ImageUrl</th>
+      <th>Actions</th>
+    </tr>
+    <tr th:each="productDto : ${products}">
+      <td th:text="${productDto.id()}">1</td>
+      <td th:text="${productDto.name()}">상품 이름예시</td>
+      <td th:text="${productDto.price()}">5000</td>
+      <td th:text="${productDto.imageUrl()}">https://image.jpg</td>
+      <td>
+        <a th:href="@{/admin/products/edit/{id}(id=${productDto.id()})}">Edit</a>
+        <form th:action="@{/admin/products/delete/{id}(id=${productDto.id()})}" method="post" style="display:inline;">
+          <button type="submit">Delete</button>
+        </form>
+      </td>
+    </tr>
+  </table>
+</body>
+</html>
