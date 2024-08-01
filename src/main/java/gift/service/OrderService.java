@@ -40,7 +40,7 @@ public class OrderService {
         Product product = optionService.findProductByOptionId(option.getId());
 
         wishlistRepository.deleteByMemberIdAndProductId(memberId, product.getId());
-
+        
         kakaoMessageService.sendMessageToKakao(order, memberId);
         return order;
     }
