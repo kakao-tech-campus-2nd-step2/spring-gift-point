@@ -62,7 +62,7 @@ public class OptionServiceTest {
         Product product = new Product("product", 10000, "url", new Category("신규"));
         for(int i = 1; i <= 5; i++){
             product.addOption(
-                    new Option("옵션" + i, i)
+                    new Option("옵션" + i, i, product)
             );
         }
         TestUtil.setId(product, 1L);
@@ -82,9 +82,10 @@ public class OptionServiceTest {
     @Test
     @DisplayName("updateTest")
     void test4(){
-        // given
+        // give
+        Product product = new Product("product", 4500, "url", new Category("신규"));
         OptionRequest optionRequest = new OptionRequest("[1] 수정", 50);
-        Option option = new Option("[1] 기본", 100);
+        Option option = new Option("[1] 기본", 100, product);
         TestUtil.setId(option, 1L);
         given(optionRepository.findById(1L)).willAnswer(invocation -> Optional.of(option));
         // when
@@ -100,8 +101,8 @@ public class OptionServiceTest {
         // given
         Product product = new Product("product", 10000, "url", new Category("신규"));
         TestUtil.setId(product, 1L);
-        Option option1 = new Option("[1] 옵션 1", 500);
-        Option option2 = new Option("[2] 옵션 2", 500);
+        Option option1 = new Option("[1] 옵션 1", 500, product);
+        Option option2 = new Option("[2] 옵션 2", 500, product);
         TestUtil.setId(option1, 1L);
         TestUtil.setId(option2, 1L);
         product.addOption(option1);
@@ -120,7 +121,7 @@ public class OptionServiceTest {
         // given
         Product product = new Product("product", 10000, "url", new Category("신규"));
         TestUtil.setId(product, 1L);
-        Option option1 = new Option("[1] 옵션 1", 500);
+        Option option1 = new Option("[1] 옵션 1", 500, product);
         TestUtil.setId(option1, 1L);
         product.addOption(option1);
 
