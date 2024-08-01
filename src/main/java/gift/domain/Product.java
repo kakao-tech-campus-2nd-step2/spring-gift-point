@@ -165,10 +165,11 @@ public class Product {
         private LocalDateTime updatedAt;
         private List<Long> wishUserId;
         private Long categoryId;
+        private List<Long> optionsId;
 
         public ProductDetail(Long id, String name, Integer price, String imageUrl,
             LocalDateTime createdAt, LocalDateTime updatedAt, List<Long> wishUserId,
-            Long categoryId) {
+            Long categoryId, List<Long> optionsId) {
             this.id = id;
             this.name = name;
             this.price = price;
@@ -177,6 +178,7 @@ public class Product {
             this.updatedAt = updatedAt;
             this.wishUserId = wishUserId;
             this.categoryId = categoryId;
+            this.optionsId = optionsId;
         }
 
         public Long getId() {
@@ -209,6 +211,10 @@ public class Product {
 
         public Long getCategoryId() {
             return categoryId;
+        }
+
+        public List<Long> getOptionsId() {
+            return optionsId;
         }
     }
 

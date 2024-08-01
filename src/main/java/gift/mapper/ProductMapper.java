@@ -38,7 +38,8 @@ public class ProductMapper {
                 entity.getCreatedAt(),
                 entity.getUpdatedAt(),
                 entity.getWish().stream().map(WishEntity::getId).collect(Collectors.toList()),
-                entity.getCategory().getId()
+                entity.getCategory().getId(),
+                entity.getOptions().stream().map(ProductOptionEntity::getId).collect(Collectors.toList())
             ))
             .collect(Collectors.toList());
 
@@ -54,7 +55,8 @@ public class ProductMapper {
             entity.getCreatedAt(),
             entity.getUpdatedAt(),
             entity.getWish().stream().map(WishEntity::getId).collect(Collectors.toList()),
-            entity.getCategory().getId());
+            entity.getCategory().getId(),
+            entity.getOptions().stream().map(ProductOptionEntity::getId).collect(Collectors.toList()));
     }
 
     public ProductEntity toEntity(CreateProduct create, CategoryEntity category) {
