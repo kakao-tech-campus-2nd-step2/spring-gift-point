@@ -9,7 +9,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Optional;
 
-import static gift.utils.FilterConstant.*;
+import static gift.filter.FilterUtils.*;
 
 public class AuthFilter implements Filter {
 
@@ -34,15 +34,13 @@ public class AuthFilter implements Filter {
         HttpServletRequest httpRequest = (HttpServletRequest) request;
         HttpServletResponse httpResponse = (HttpServletResponse) response;
 
+        setCorsHeader(httpResponse);
+        if(checkOptionMethod(httpRequest, httpResponse)) return;
+
         String path = httpRequest.getRequestURI();
 
         // Filter 를 통과하지 않아도 되는 url
-        if (path.equals(HOME_URL) || path.equals(KAKAO_TOKEN_RENEW_URL) || path.startsWith(LOGIN_URL_PREFIX) || path.startsWith(LOGIN_OAUTH_URL_PREFIX) || path.startsWith(H2_DB_URL)
-                || path.equals(SWAGGER_UI_HTML) // 변경
-                || path.startsWith(SWAGGER_UI)
-                || path.startsWith(API_DOCS) // 추가
-                || path.startsWith(V3_API_DOCS)
-                || path.startsWith(SWAGGER_RESOURCES)) {
+        if (isUrlInWhiteList(path)) {
             filterChain.doFilter(request, response);
             return;
         }
@@ -52,20 +50,18 @@ public class AuthFilter implements Filter {
         String authHeader = httpRequest.getHeader("Authorization");
 
         if (authHeader == null || authHeader.isEmpty()){
-            httpResponse.sendRedirect(NO_AUTHORIZATION_REDIRECT_URL);
+            sendErrorResponse(httpResponse, HttpServletResponse.SC_UNAUTHORIZED);
             return;
         }
 
         Optional<AuthToken> token = tokenRepository.findAuthTokenByToken(authHeader.substring(7));
 
         if (token.isEmpty()){
-            httpResponse.sendRedirect(NO_AUTHORIZATION_REDIRECT_URL);
+            sendErrorResponse(httpResponse, HttpServletResponse.SC_UNAUTHORIZED);
             return;
         }
 
         httpRequest.setAttribute("AuthToken",token.get());
         filterChain.doFilter(request, response);
     }
-
-
 }
