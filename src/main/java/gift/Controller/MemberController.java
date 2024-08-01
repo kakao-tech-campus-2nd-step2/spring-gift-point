@@ -1,6 +1,7 @@
 package gift.Controller;
 
 import gift.DTO.RequestMemberDTO;
+import gift.DTO.ResponseMemberDTO;
 import gift.Service.MemberService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -16,7 +17,7 @@ import java.net.URI;
 
 @Tag(name = "로그인 및 회원가입", description = "로그인 및 회원가입 API")
 @RestController
-@RequestMapping("/members")
+@RequestMapping("/api/members")
 public class MemberController {
     private final MemberService memberService;
 
@@ -36,9 +37,9 @@ public class MemberController {
             content = {@Content(mediaType = "application/json", schema = @Schema(implementation = String.class))
             })
     @PostMapping("/register")
-    public ResponseEntity<String> registerUser(@Valid @RequestBody RequestMemberDTO requestMemberDTO){
+    public ResponseEntity<ResponseMemberDTO> registerUser(@Valid @RequestBody RequestMemberDTO requestMemberDTO){
         String token = memberService.signUpUser(requestMemberDTO);
-        return new ResponseEntity<>(token, HttpStatus.CREATED);
+        return new ResponseEntity<>(new ResponseMemberDTO(token), HttpStatus.CREATED);
     }
 
     @Operation(summary = "로그인", description = "존재하는 사용자인지 확인 후 토큰을 발급합니다" )
@@ -55,7 +56,8 @@ public class MemberController {
             content = {@Content(mediaType = "application/json", schema = @Schema(implementation = String.class))
             })
     @PostMapping("/login")
-    public ResponseEntity<String> loginUser(@Valid @RequestBody RequestMemberDTO member) {
-        return ResponseEntity.ok(memberService.loginUser(member));
+    public ResponseEntity<ResponseMemberDTO> loginUser(@Valid @RequestBody RequestMemberDTO member) {
+        String token = memberService.loginUser(member);
+        return ResponseEntity.ok(new ResponseMemberDTO(token));
     }
 }
