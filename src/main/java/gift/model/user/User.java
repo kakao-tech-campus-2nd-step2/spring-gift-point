@@ -1,11 +1,15 @@
 package gift.model.user;
 
 import gift.common.enums.LoginType;
+import gift.common.enums.Role;
 import gift.exception.InvalidUserException;
 import gift.model.option.Option;
 import gift.model.wish.Wish;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
+import org.hibernate.annotations.ColumnDefault;
+import org.hibernate.annotations.DynamicInsert;
+import org.springframework.boot.context.properties.bind.DefaultValue;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,12 +27,14 @@ public class User {
 
     @NotNull
     private String password;
-
     @NotNull
     private String name;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<Wish> wishes = new ArrayList<>();
+
+    @Enumerated(EnumType.STRING)
+    private Role role;
 
     @Enumerated(EnumType.STRING)
     @NotNull
@@ -43,6 +49,7 @@ public class User {
         this.password = password;
         this.name = name;
         this.loginType = loginType;
+        this.role = Role.USER;
     }
 
     public Long getId() {

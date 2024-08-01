@@ -96,8 +96,8 @@ VALUES ('Americano', 10, 1),
        ('Latte', 5, 1),
        ('ColdBrew', 20, 1);
 
-INSERT INTO users (email, password, name, login_type)
-VALUES ('admin@email.com', 'password', 'dummyName', 'DEFAULT');
+INSERT INTO users (email, password, name, role, login_type)
+VALUES ('admin@email.com', 'password', 'dummyName', 'ADMIN', 'DEFAULT');
 
 INSERT INTO wish (user_id, product_id, quantity)
 VALUES (1, 1, 1);
