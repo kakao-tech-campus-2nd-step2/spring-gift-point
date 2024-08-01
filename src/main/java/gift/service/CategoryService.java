@@ -6,10 +6,10 @@ import gift.dto.CategoryRequestDto;
 import gift.dto.CategoryResponseDto;
 import gift.exception.CustomException;
 import gift.exception.ErrorCode;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
 
 @Service
 public class CategoryService {
@@ -26,8 +26,8 @@ public class CategoryService {
     }
 
     @Transactional(readOnly = true)
-    public List<CategoryResponseDto> getAll() {
-        return categoryRepository.findAll().stream().map(CategoryResponseDto::new).toList();
+    public Page<CategoryResponseDto> getAll(Pageable pageable) {
+        return categoryRepository.findAll(pageable).map(CategoryResponseDto::new);
     }
 
     @Transactional(readOnly = true)

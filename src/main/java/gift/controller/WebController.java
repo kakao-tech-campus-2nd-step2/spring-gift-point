@@ -4,6 +4,7 @@ import gift.dto.*;
 import gift.service.CategoryService;
 import gift.service.ProductService;
 import jakarta.validation.Valid;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -36,8 +37,8 @@ public class WebController {
     }
 
     @GetMapping("products/add")
-    public String getAddForm(Model model) {
-        List<CategoryResponseDto> list = categoryService.getAll();
+    public String getAddForm(Model model,Pageable pageable) {
+        Page<CategoryResponseDto> list = categoryService.getAll(pageable);
         model.addAttribute("requestDto", new ViewProductDto());
         model.addAttribute("list", list);
         return "addForm";
