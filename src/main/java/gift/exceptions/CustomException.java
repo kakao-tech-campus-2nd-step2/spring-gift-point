@@ -20,15 +20,15 @@ public class CustomException extends RuntimeException{
     }
 
     public static CustomException redundantEmailException() {
-        return new CustomException(ErrorMessage.emailAlreadyExists, HttpStatus.UNAUTHORIZED);
+        return new CustomException(ErrorMessage.emailAlreadyExists, HttpStatus.BAD_REQUEST);
     }
 
     public static CustomException userNotFoundException() {
-        return new CustomException(ErrorMessage.emailNotExists, HttpStatus.UNAUTHORIZED);
+        return new CustomException(ErrorMessage.emailNotExists, HttpStatus.FORBIDDEN);
     }
 
     public static CustomException invalidPasswordException() {
-        return new CustomException(ErrorMessage.passwordInvalid, HttpStatus.UNAUTHORIZED);
+        return new CustomException(ErrorMessage.passwordInvalid, HttpStatus.FORBIDDEN);
     }
 
     public static CustomException invalidTokenException() {
@@ -40,15 +40,19 @@ public class CustomException extends RuntimeException{
     }
 
     public static CustomException categoryNotFoundException() {
-        return new CustomException(ErrorMessage.categoryNotExists, HttpStatus.BAD_REQUEST);
+        return new CustomException(ErrorMessage.categoryNotExists, HttpStatus.NOT_FOUND);
     }
 
     public static CustomException productNotFoundException() {
-        return new CustomException(ErrorMessage.productNotExists, HttpStatus.BAD_REQUEST);
+        return new CustomException(ErrorMessage.productNotExists, HttpStatus.NOT_FOUND);
     }
 
     public static CustomException optionNotFoundException() {
-        return new CustomException(ErrorMessage.optionNotExists, HttpStatus.BAD_REQUEST);
+        return new CustomException(ErrorMessage.optionNotExists, HttpStatus.NOT_FOUND);
+    }
+
+    public static CustomException optionNotBelongProductException() {
+        return new CustomException(ErrorMessage.optionNotBelong, HttpStatus.NOT_FOUND);
     }
 
     public static CustomException quantityInvalidException() {
