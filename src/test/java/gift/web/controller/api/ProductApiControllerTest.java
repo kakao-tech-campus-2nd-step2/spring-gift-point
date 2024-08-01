@@ -38,6 +38,7 @@ import gift.web.dto.request.wishproduct.CreateWishProductRequest;
 import gift.web.dto.response.category.ReadCategoryResponse;
 import gift.web.dto.response.order.OrderResponse;
 import gift.web.dto.response.product.CreateProductResponse;
+import gift.web.dto.response.product.ProductResponseByPromise;
 import gift.web.dto.response.product.ReadAllProductsResponse;
 import gift.web.dto.response.product.ReadProductResponse;
 import gift.web.dto.response.product.UpdateProductResponse;
@@ -46,6 +47,7 @@ import gift.web.dto.response.productoption.ReadAllProductOptionsResponse;
 import gift.web.dto.response.productoption.ReadProductOptionResponse;
 import gift.web.dto.response.productoption.UpdateProductOptionResponse;
 import gift.web.dto.response.wishproduct.CreateWishProductResponse;
+import java.time.LocalDateTime;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -103,7 +105,7 @@ class ProductApiControllerTest {
         final RestDocumentationContextProvider provider
     ) {
         mockMvc = MockMvcBuilders
-            .standaloneSetup(new ProductApiController(productService, wishProductService, productOptionService, orderService))
+            .standaloneSetup(new ProductApiController(productService, productOptionService))
             .setCustomArgumentResolvers(new MockLoginMemberArgumentResolver(), new PageableHandlerMethodArgumentResolver())
             .apply(MockMvcRestDocumentation.documentationConfiguration(provider))
                 .alwaysDo(restDocs)
@@ -146,7 +148,7 @@ class ProductApiControllerTest {
                         fieldWithPath("products[].options").type(JsonFieldType.ARRAY).description("상품 옵션 목록"),
                         fieldWithPath("products[].options[].id").type(JsonFieldType.NUMBER).description("상품 옵션 ID"),
                         fieldWithPath("products[].options[].name").type(JsonFieldType.STRING).description("상품 옵션명"),
-                        fieldWithPath("products[].options[].stock").type(JsonFieldType.NUMBER).description("상품 옵션 재고"),
+                        fieldWithPath("products[].options[].quantity").type(JsonFieldType.NUMBER).description("상품 옵션 재고"),
                         fieldWithPath("products[].category.id").type(JsonFieldType.NUMBER).description("카테고리 ID"),
                         fieldWithPath("products[].category.name").type(JsonFieldType.STRING).description("카테고리명"),
                         fieldWithPath("products[].category.description").type(JsonFieldType.STRING).description("카테고리 설명"),
@@ -209,7 +211,7 @@ class ProductApiControllerTest {
         String content = objectMapper.writeValueAsString(request);
 
         given(productService.createProduct(any(CreateProductRequest.class)))
-            .willReturn(new CreateProductResponse(1L, "상품01", 1000, "https://via.placeholder.com/150", List.of(new ProductOption.Builder().id(1L).productId(1L).name("상품 옵션 01").stock(100).build())) );
+            .willReturn(new CreateProductResponse(1L, "상품01", 1000, "https://via.placeholder.com/150", List.of(ReadProductOptionResponse.fromEntity(new ProductOption.Builder().id(1L).productId(1L).name("상품 옵션 01").stock(100).build()))));
 
         mockMvc
             .perform(
@@ -226,9 +228,9 @@ class ProductApiControllerTest {
                         fieldWithPath("price").type(JsonFieldType.NUMBER).description("상품 가격"),
                         fieldWithPath("imageUrl").type(JsonFieldType.STRING).description("상품 이미지 URL"),
                         fieldWithPath("categoryId").type(JsonFieldType.NUMBER).description("카테고리 ID"),
-                        fieldWithPath("productOptions").type(JsonFieldType.ARRAY).description("상품 옵션 목록"),
-                        fieldWithPath("productOptions[].name").type(JsonFieldType.STRING).description("상품 옵션명"),
-                        fieldWithPath("productOptions[].stock").type(JsonFieldType.NUMBER).description("상품 옵션 재고")
+                        fieldWithPath("options").type(JsonFieldType.ARRAY).description("상품 옵션 목록"),
+                        fieldWithPath("options[].name").type(JsonFieldType.STRING).description("상품 옵션명"),
+                        fieldWithPath("options[].quantity").type(JsonFieldType.NUMBER).description("상품 옵션 재고")
                     ),
                     responseFields(
                         fieldWithPath("id").type(JsonFieldType.NUMBER).description("상품 ID"),
@@ -238,8 +240,7 @@ class ProductApiControllerTest {
                         fieldWithPath("options").type(JsonFieldType.ARRAY).description("상품 옵션 목록"),
                         fieldWithPath("options[].id").type(JsonFieldType.NUMBER).description("상품 옵션 ID"),
                         fieldWithPath("options[].name").type(JsonFieldType.STRING).description("상품 옵션명"),
-                        fieldWithPath("options[].stock").type(JsonFieldType.NUMBER).description("상품 옵션 재고"),
-                        fieldWithPath("options[].productId").type(JsonFieldType.NUMBER).description("상품 옵션 상품 ID")
+                        fieldWithPath("options[].quantity").type(JsonFieldType.NUMBER).description("상품 옵션 재고")
                     )
                 )
             );
@@ -248,10 +249,9 @@ class ProductApiControllerTest {
     @Test
     @DisplayName("단일 상품 조회")
     void readProduct() throws Exception {
-        given(productService.readProductById(any(Long.class)))
-            .willReturn(new ReadProductResponse(1L, "상품01", 1000, "https://via.placeholder.com/150",
-                List.of(new ReadProductOptionResponse(1L, "상품 옵션 01", 100)),
-                new ReadCategoryResponse(1L, "카테고리01", "카테고리01 입니다", "https://via.placeholder.com/150", "#FFFFFF")));
+        given(productService.readProductByIdByPromise(any(Long.class)))
+            .willReturn(new ProductResponseByPromise(1L, "상품01", 1000, "https://via.placeholder.com/150",
+                List.of(new ReadProductOptionResponse(1L, "상품 옵션 01", 100)), 1L));
 
         mockMvc
             .perform(
@@ -269,12 +269,8 @@ class ProductApiControllerTest {
                         fieldWithPath("options").type(JsonFieldType.ARRAY).description("상품 옵션 목록"),
                         fieldWithPath("options[].id").type(JsonFieldType.NUMBER).description("상품 옵션 ID"),
                         fieldWithPath("options[].name").type(JsonFieldType.STRING).description("상품 옵션명"),
-                        fieldWithPath("options[].stock").type(JsonFieldType.NUMBER).description("상품 옵션 재고"),
-                        fieldWithPath("category.id").type(JsonFieldType.NUMBER).description("카테고리 ID"),
-                        fieldWithPath("category.name").type(JsonFieldType.STRING).description("카테고리명"),
-                        fieldWithPath("category.description").type(JsonFieldType.STRING).description("카테고리 설명"),
-                        fieldWithPath("category.imageUrl").type(JsonFieldType.STRING).description("카테고리 이미지 URL"),
-                        fieldWithPath("category.color").type(JsonFieldType.STRING).description("카테고리 색상")
+                        fieldWithPath("options[].quantity").type(JsonFieldType.NUMBER).description("상품 옵션 재고"),
+                        fieldWithPath("categoryId").type(JsonFieldType.NUMBER).description("카테고리 ID")
                     )
                 )
             );
@@ -331,11 +327,7 @@ class ProductApiControllerTest {
                         fieldWithPath("name").type(JsonFieldType.STRING).description("상품명"),
                         fieldWithPath("price").type(JsonFieldType.NUMBER).description("상품 가격"),
                         fieldWithPath("imageUrl").type(JsonFieldType.STRING).description("상품 이미지 URL"),
-                        fieldWithPath("category.id").type(JsonFieldType.NUMBER).description("카테고리 ID"),
-                        fieldWithPath("category.name").type(JsonFieldType.STRING).description("카테고리명"),
-                        fieldWithPath("category.description").type(JsonFieldType.STRING).description("카테고리 설명"),
-                        fieldWithPath("category.imageUrl").type(JsonFieldType.STRING).description("카테고리 이미지 URL"),
-                        fieldWithPath("category.color").type(JsonFieldType.STRING).description("카테고리 색상")
+                        fieldWithPath("categoryId").type(JsonFieldType.NUMBER).description("카테고리 ID")
                     )
                 )
             );
@@ -356,37 +348,6 @@ class ProductApiControllerTest {
     }
 
     @Test
-    @DisplayName("위시 상품 추가")
-    void createWishProduct() throws Exception {
-        CreateWishProductRequest request = new CreateWishProductRequest(1L, 1);
-        String content = objectMapper.writeValueAsString(request);
-
-        given(wishProductService.createWishProduct(any(Long.class), any()))
-            .willReturn(new CreateWishProductResponse(1L, 1));
-
-        mockMvc
-            .perform(
-                post(BASE_URL + "/wish")
-                    .content(content)
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken)
-            )
-            .andExpect(status().isOk())
-            .andDo(
-                restDocs.document(
-                    requestFields(
-                        fieldWithPath("productId").type(JsonFieldType.NUMBER).description("상품 ID"),
-                        fieldWithPath("quantity").type(JsonFieldType.NUMBER).description("수량")
-                    ),
-                    responseFields(
-                        fieldWithPath("id").type(JsonFieldType.NUMBER).description("위시 상품 ID"),
-                        fieldWithPath("quantity").type(JsonFieldType.NUMBER).description("수량")
-                    )
-                )
-            );
-    }
-
-    @Test
     @DisplayName("상품 옵션 조회")
     void readOptions() throws Exception {
         given(productOptionService.readAllOptions(any(Long.class)))
@@ -403,9 +364,9 @@ class ProductApiControllerTest {
             .andDo(
                 restDocs.document(
                     responseFields(
-                        fieldWithPath("options[].id").type(JsonFieldType.NUMBER).description("상품 옵션 ID"),
-                        fieldWithPath("options[].name").type(JsonFieldType.STRING).description("상품 옵션명"),
-                        fieldWithPath("options[].stock").type(JsonFieldType.NUMBER).description("상품 옵션 재고")
+                        fieldWithPath("[].id").type(JsonFieldType.NUMBER).description("상품 옵션 ID"),
+                        fieldWithPath("[].name").type(JsonFieldType.STRING).description("상품 옵션명"),
+                        fieldWithPath("[].quantity").type(JsonFieldType.NUMBER).description("상품 옵션 재고")
                     )
                 )
             );
@@ -434,46 +395,13 @@ class ProductApiControllerTest {
                     responseFields(
                         fieldWithPath("id").type(JsonFieldType.NUMBER).description("상품 옵션 ID"),
                         fieldWithPath("name").type(JsonFieldType.STRING).description("상품 옵션명"),
-                        fieldWithPath("stock").type(JsonFieldType.NUMBER).description("상품 옵션 재고")
+                        fieldWithPath("quantity").type(JsonFieldType.NUMBER).description("상품 옵션 재고")
                     )
                 )
             );
     }
 
-    @Test
-    @DisplayName("상품 주문")
-    void orderProduct() throws Exception {
 
-        CreateOrderRequest request = new CreateOrderRequest(1L, 1, "message");
-        String content = objectMapper.writeValueAsString(request);
-
-        given(orderService.createOrder(any(String.class), any(Long.class), any(Long.class), any()))
-            .willReturn(new OrderResponse(1L, 1L, 10, "message"));
-
-        mockMvc
-            .perform(
-                post(BASE_URL + "/{productId}/order", 1L)
-                    .header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken)
-                    .content(content)
-                    .contentType(MediaType.APPLICATION_JSON)
-            )
-            .andExpect(status().isOk())
-            .andDo(
-                restDocs.document(
-                    requestFields(
-                        fieldWithPath("optionId").type(JsonFieldType.NUMBER).description("상품 옵션 ID"),
-                        fieldWithPath("quantity").type(JsonFieldType.NUMBER).description("주문 수량"),
-                        fieldWithPath("message").type(JsonFieldType.STRING).description("메시지")
-                    ),
-                    responseFields(
-                        fieldWithPath("productId").type(JsonFieldType.NUMBER).description("상품 ID"),
-                        fieldWithPath("optionId").type(JsonFieldType.NUMBER).description("상품 옵션 ID"),
-                        fieldWithPath("quantity").type(JsonFieldType.NUMBER).description("주문 수량"),
-                        fieldWithPath("message").type(JsonFieldType.STRING).description("메시지")
-                    )
-                )
-            );
-    }
 
     @Test
     @DisplayName("상품 옵션 수정")
@@ -497,12 +425,12 @@ class ProductApiControllerTest {
                 restDocs.document(
                     requestFields(
                         fieldWithPath("name").type(JsonFieldType.STRING).description("상품 옵션명"),
-                        fieldWithPath("stock").type(JsonFieldType.NUMBER).description("상품 옵션 재고")
+                        fieldWithPath("quantity").type(JsonFieldType.NUMBER).description("상품 옵션 재고")
                     ),
                     responseFields(
                         fieldWithPath("id").type(JsonFieldType.NUMBER).description("상품 옵션 ID"),
                         fieldWithPath("name").type(JsonFieldType.STRING).description("상품 옵션명"),
-                        fieldWithPath("stock").type(JsonFieldType.NUMBER).description("상품 옵션 재고")
+                        fieldWithPath("quantity").type(JsonFieldType.NUMBER).description("상품 옵션 재고")
                     )
                 )
             );

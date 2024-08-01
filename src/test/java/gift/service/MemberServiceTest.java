@@ -48,6 +48,7 @@ class MemberServiceTest {
         CreateMemberRequest request = new CreateMemberRequest("member01@naver.com", "password01", "이름");
         given(memberRepository.save(any())).willReturn(
             new Member.Builder().id(1L).name(request.getName()).email(Email.from(request.getEmail())).build());
+        given(jwtProvider.generateToken(any())).willReturn(Token.from("token"));
 
         //when
         CreateMemberResponse response = memberService.createMember(request);

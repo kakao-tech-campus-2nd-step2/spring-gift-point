@@ -56,7 +56,7 @@ class ProductOptionServiceTest {
         //then
         assertAll(
             () -> assertThat(response.getName()).isEqualTo(request.getName()),
-            () -> assertThat(response.getStock()).isEqualTo(request.getStock())
+            () -> assertThat(response.getQuantity()).isEqualTo(request.getQuantity())
         );
     }
 
@@ -88,9 +88,9 @@ class ProductOptionServiceTest {
         //then
         assertAll(
             () -> assertThat(response.getOptions().get(0).getName()).isEqualTo(option01.getName()),
-            () -> assertThat(response.getOptions().get(0).getStock()).isEqualTo(option01.getStock()),
+            () -> assertThat(response.getOptions().get(0).getQuantity()).isEqualTo(option01.getStock()),
             () -> assertThat(response.getOptions().get(1).getName()).isEqualTo(option02.getName()),
-            () -> assertThat(response.getOptions().get(1).getStock()).isEqualTo(option02.getStock())
+            () -> assertThat(response.getOptions().get(1).getQuantity()).isEqualTo(option02.getStock())
         );
     }
 
@@ -110,7 +110,7 @@ class ProductOptionServiceTest {
         //then
         assertAll(
             () -> assertThat(response.getName()).isEqualTo(request.getName()),
-            () -> assertThat(response.getStock()).isEqualTo(request.getStock())
+            () -> assertThat(response.getQuantity()).isEqualTo(request.getQuantity())
         );
     }
 
