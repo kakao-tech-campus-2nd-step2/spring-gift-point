@@ -61,9 +61,10 @@ public class OrderService {
         Option option = optionService.getOptionById(orderRequestDTO.getOptionId());
         Member member = memberService.findByEmail(email);
         int quantity = orderRequestDTO.getQuantity();
+        int subPoint = orderRequestDTO.getPoint();
         String message = orderRequestDTO.getMessage();
 
-        Orders order = new Orders(option, quantity, message, member, LocalDateTime.now());
+        Orders order = new Orders(option, quantity, message, member, LocalDateTime.now(), subPoint);
         //상품이 wishlist에 있을 시 위시리스트에서 삭제
         List<Wish> list = wishlistService.getWishlistByEmail(email);
         for (Wish wish : list) {
@@ -73,17 +74,19 @@ public class OrderService {
         }
         //옵션 수량 감소
         optionService.subtractOption(option.getId(), quantity);
+        //포인트 차감
+        memberService.subtractionPoint(email, subPoint);
 
-
-        if(snsMemberService.isSnsMember(email)){
+        if (snsMemberService.isSnsMember(email)) {
             //카카오 로그인유저일 시 카카오톡 메시지 보내기
-            sendMessage(message, snsMemberService.getOauthAccessTokenByEmail(email), option, quantity);
+            sendMessage(message, snsMemberService.getOauthAccessTokenByEmail(email), option,
+                quantity);
         }
-
 
         //주문목록 추가
         orderRepository.save(order);
-        return new OrderResponseDTO(option.getId(), quantity, LocalDateTime.now(), message);
+        return new OrderResponseDTO(option.getId(), quantity, LocalDateTime.now(), message,
+            subPoint);
     }
 
     private void sendMessage(String text, String accessToken, Option option, int quantity) {

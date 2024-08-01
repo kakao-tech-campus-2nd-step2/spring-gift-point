@@ -32,15 +32,20 @@ public class Orders {
     @CreatedDate
     private LocalDateTime orderDateTime;
 
+    @Column(nullable = false)
+    private int point;
+
     public Orders() {
     }
 
-    public Orders(Option option, int quantity, String message, Member member, LocalDateTime time) {
+    public Orders(Option option, int quantity, String message, Member member, LocalDateTime time,
+        int point) {
         this.option = option;
         this.quantity = quantity;
         this.message = message;
         this.member = member;
         this.orderDateTime = time;
+        this.point = point;
     }
 
     public Long getId() {
@@ -61,5 +66,9 @@ public class Orders {
 
     public LocalDateTime getOrderDateTime() {
         return orderDateTime;
+    }
+
+    public int getPoint() {
+        return point;
     }
 }

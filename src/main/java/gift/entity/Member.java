@@ -20,6 +20,9 @@ public class Member {
     @Column(nullable = false)
     private String password;
 
+    @Column(nullable = false)
+    private int point;
+
     protected Member() {
     }
 
@@ -28,6 +31,12 @@ public class Member {
     public Member(String email, String password) {
         this.email = email;
         this.password = password;
+    }
+
+    public Member(String email, String password, int point) {
+        this.email = email;
+        this.password = password;
+        this.point = point;
     }
 
     public Long getId() {
@@ -40,5 +49,13 @@ public class Member {
 
     public String getPassword() {
         return password;
+    }
+
+    public int getPoint() {
+        return point;
+    }
+
+    public void setPoint(int point) {
+        this.point = point;
     }
 }
