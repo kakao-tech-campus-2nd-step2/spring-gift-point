@@ -4,6 +4,7 @@ import gift.domain.member.Member;
 import gift.domain.member.MemberRepository;
 import gift.mapper.MemberMapper;
 import gift.web.dto.MemberDto;
+import gift.web.exception.duplicate.MemberDuplicatedException;
 import gift.web.exception.forbidden.MemberNotFoundException;
 import java.util.List;
 import org.springframework.stereotype.Service;
@@ -52,6 +53,11 @@ public class MemberService {
 
     @Transactional
     public void createMember(MemberDto memberDto) {
+        memberRepository.findByEmail(memberDto.email())
+            .ifPresent(member -> {
+                throw new MemberDuplicatedException();
+            });
+
         memberRepository.save(memberMapper.toEntity(memberDto));
     }
 
