@@ -17,6 +17,7 @@ import org.springframework.http.ResponseEntity;
 
 import gift.dto.MemberDto;
 import gift.dto.request.LoginRequest;
+import gift.dto.request.RegisteRequest;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class MemberControllerTest {
@@ -32,8 +33,8 @@ public class MemberControllerTest {
     void registerAndLoginTest(){
 
         String registerUrl = "http://localhost:" + port + "/members/register";
-        MemberDto memberDto = new MemberDto(1L, "testPassword", "testEmail", "testRole");
-        HttpEntity<MemberDto> registerRequestEntity =new HttpEntity<>(memberDto);
+        RegisteRequest registeRequest = new RegisteRequest("testEmail", "testPassword");
+        HttpEntity<RegisteRequest> registerRequestEntity =new HttpEntity<>(registeRequest);
 
         ResponseEntity<String> registerResponse = restTemplate.postForEntity(registerUrl, registerRequestEntity, String.class);
         assertEquals(HttpStatus.CREATED, registerResponse.getStatusCode());
@@ -44,14 +45,14 @@ public class MemberControllerTest {
         HttpEntity<LoginRequest> loginRequestEntity = new HttpEntity<>(loginRequest);
 
         ResponseEntity<String> loginResponse = restTemplate.postForEntity(loginUrl, loginRequestEntity, String.class);
-        assertEquals(HttpStatus.ACCEPTED, loginResponse.getStatusCode());
+        assertEquals(HttpStatus.OK, loginResponse.getStatusCode());
         assertNotNull(loginResponse.getBody());
 
         LoginRequest failRequest = new LoginRequest("wrongPassword", "wrongPassword");
         HttpEntity<LoginRequest> failRequestEntity = new HttpEntity<>(failRequest);
 
         ResponseEntity<String> failResponse =restTemplate.postForEntity(loginUrl, failRequestEntity, String.class);
-        assertThat(failResponse.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
+        assertThat(failResponse.getStatusCode()).isEqualTo(HttpStatus.FORBIDDEN);
 
     }
 

@@ -13,6 +13,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 
 import gift.dto.request.OptionRequest;
 import gift.dto.response.GetOptionsResponse;
+import gift.dto.response.OptionResponse;
 import gift.entity.Category;
 import gift.entity.Option;
 import gift.entity.Product;
@@ -27,14 +28,15 @@ import static org.junit.jupiter.api.Assertions.*;
 @SpringBootTest
 public class OptionServiceTest {
     
-    @Autowired
-    private OptionService optionService;
-
+    
     @MockBean
     private OptionRepository optionRepository;
 
     @MockBean
     private ProductRepository productRepository;
+
+    @Autowired
+    private OptionService optionService;
 
     @Test
     void findByProductId(){
@@ -68,15 +70,19 @@ public class OptionServiceTest {
         Category category = new Category("category", "color", "url", ""); 
         Product product = new Product("product", 0, "imageUrl", category);
         OptionRequest optionRequest = new OptionRequest(name, 1);
+        Option savedOption = new Option(product, name, 1);
 
         when(productRepository.findById(productId))
             .thenReturn(Optional.of(product));
-        when(optionRepository.findByName(null))
+        when(optionRepository.findByName(any()))
             .thenReturn(Optional.empty());
+        when(optionRepository.save(any(Option.class)))
+            .thenReturn(savedOption);
 
-        optionService.addOption(optionRequest, productId);
+        OptionResponse optionResponse = optionService.addOption(optionRequest, productId);
 
-        verify(optionRepository, times(1)).save(any(Option.class));
+        assertEquals(name, optionResponse.getOptionDto().getName());
+
     }
 
     @Test
@@ -90,7 +96,7 @@ public class OptionServiceTest {
 
         ArgumentCaptor<Option> optionCaptor = ArgumentCaptor.forClass(Option.class);
 
-        when(optionRepository.findByName(name))
+        when(optionRepository.findById(any()))
             .thenReturn(Optional.of(option));
         when(optionRepository.save(any(Option.class)))
             .thenReturn(option);
