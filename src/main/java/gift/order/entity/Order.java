@@ -1,20 +1,16 @@
 package gift.order.entity;
 
+import gift.common.entity.BaseEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.EntityListeners;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
-import java.time.LocalDateTime;
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 @Entity
-@Table(name = "orders" )
-@EntityListeners(AuditingEntityListener.class)
-public class Order {
+@Table(name = "orders")
+public class Order extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -25,10 +21,6 @@ public class Order {
 
     @Column(nullable = false)
     private Integer quantity;
-
-    @CreatedDate
-    @Column(nullable = false, updatable = false)
-    private LocalDateTime orderDateTime;
 
     @Column(nullable = false)
     private String message;
@@ -52,10 +44,6 @@ public class Order {
 
     public Integer getQuantity() {
         return quantity;
-    }
-
-    public LocalDateTime getOrderDateTime() {
-        return orderDateTime;
     }
 
     public String getMessage() {

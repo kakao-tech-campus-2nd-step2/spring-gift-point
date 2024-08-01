@@ -1,5 +1,6 @@
 package gift.wish.entity;
 
+import gift.common.entity.BaseEntity;
 import gift.exception.CustomException;
 import gift.exception.ErrorCode;
 import gift.product.entity.Product;
@@ -19,7 +20,7 @@ import jakarta.validation.constraints.Positive;
 
 @Entity
 @Table(name = "wishes")
-public class Wish {
+public class Wish extends BaseEntity {
 
     private static final int DEFAULT_QUANTITY = 1;
 
