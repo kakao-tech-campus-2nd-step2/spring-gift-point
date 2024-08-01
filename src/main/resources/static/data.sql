@@ -8,11 +8,11 @@ INSERT INTO `category` (`name`) VALUES ('Furniture');
 --- Options 데이터 삽입,
 
 -- User 데이터 삽입
-INSERT INTO `users` (`email`, `password`, `roles`) VALUES ('user1@example.com', 'password1', 'USER');
-INSERT INTO `users` (`email`, `password`, `roles`) VALUES ('user2@example.com', 'password2', 'USER');
-INSERT INTO `users` (`email`, `password`, `roles`) VALUES ('admin@example.com', 'adminpassword', 'ADMIN');
-INSERT INTO `users` (`email`, `password`, `roles`) VALUES ('manager@example.com', 'managerpassword', 'ADMIN');
-INSERT INTO `users` (`email`, `password`, `roles`) VALUES ('guest@example.com', 'guestpassword', 'GUEST');
+INSERT INTO `users` (`email`, `password`, `roles`,`point`) VALUES ('user1@example.com', 'password1', 'USER', 1000000);
+INSERT INTO `users` (`email`, `password`, `roles`, `point`) VALUES ('user2@example.com', 'password2', 'USER', 2000000);
+INSERT INTO `users` (`email`, `password`, `roles`,point) VALUES ('admin@example.com', 'adminpassword', 'ADMIN',300000);
+INSERT INTO `users` (`email`, `password`, `roles`,point) VALUES ('manager@example.com', 'managerpassword', 'ADMIN',100);
+INSERT INTO `users` (`email`, `password`, `roles`,point) VALUES ('guest@example.com', 'guestpassword', 'GUEST',0);
 
 -- Product 데이터 삽입
 INSERT INTO `product` (`name`, `price`, `image_url`, `category_id`) VALUES ('Product 1', 1000, 'http://example.com/images/product1.jpg', 1);
@@ -76,3 +76,16 @@ INSERT INTO wish_product (member_id, product_id) VALUES (4, 17);
 INSERT INTO wish_product (member_id, product_id) VALUES (4, 18);
 INSERT INTO wish_product (member_id, product_id) VALUES (4, 19);
 INSERT INTO wish_product (member_id, product_id) VALUES (4, 20);
+
+
+----options 데이터 삽입
+INSERT INTO `Option` (`name`, `quantity`, `product_id`) VALUES ('Option 1', 100, 1);
+INSERT INTO `Option` (`name`, `quantity`, `product_id`) VALUES ('Option 2', 150, 2);
+INSERT INTO `Option` (`name`, `quantity`, `product_id`) VALUES ('Option 3', 200, 3);
+INSERT INTO `Option` (`name`, `quantity`, `product_id`) VALUES ('Option 4', 250, 4);
+INSERT INTO `Option` (`name`, `quantity`, `product_id`) VALUES ('Option 5', 300, 5);
+INSERT INTO `Option` (`name`, `quantity`, `product_id`) VALUES ('Option 6', 120, 1);
+INSERT INTO `Option` (`name`, `quantity`, `product_id`) VALUES ('Option 7', 130, 2);
+INSERT INTO `Option` (`name`, `quantity`, `product_id`) VALUES ('Option 8', 140, 3);
+INSERT INTO `Option` (`name`, `quantity`, `product_id`) VALUES ('Option 9', 160, 4);
+INSERT INTO `Option` (`name`, `quantity`, `product_id`) VALUES ('Option 10', 170, 5);
