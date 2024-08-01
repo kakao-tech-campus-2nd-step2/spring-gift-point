@@ -56,7 +56,6 @@ class E2ETest {
     void 카테고리_상품_등록_후_조회() {
         CategoryRequestDto request = new CategoryRequestDto("예시", "color", "test", "카테고리임");
         ResponseEntity<SuccessResponse> response = restTemplate.postForEntity(baseUrl + "/categories", request, SuccessResponse.class);
-        System.out.println(response.getBody());
         ResponseEntity<List<CategoryResponseDto>> categoryResponse = restTemplate.exchange(
                 baseUrl + "/categories",
                 HttpMethod.GET,
