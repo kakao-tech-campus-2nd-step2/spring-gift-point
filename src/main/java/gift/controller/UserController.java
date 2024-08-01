@@ -56,7 +56,8 @@ public class UserController {
     @GetMapping("/points")
     @Operation(summary = "사용자 포인트 조회", description = "사용자의 잔여 포인트를 조회합니다.",
         responses = @ApiResponse(responseCode = "200", description = "조회 성공", content = @Content(mediaType = "application/json", schema = @Schema(implementation = UserPointResponse.class))))
-    public ResponseEntity<UserPointResponse> getUserPoint(@Parameter(hidden = true) @LoginUser User user) {
+    public ResponseEntity<UserPointResponse> getUserPoint(
+        @Parameter(hidden = true) @LoginUser User user) {
         UserPointResponse userPointResponse = new UserPointResponse(userService.getUserPoint(user));
         return ResponseEntity.ok().body(userPointResponse);
     }
