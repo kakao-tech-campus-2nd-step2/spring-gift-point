@@ -1,11 +1,12 @@
-package gift.service;
+package gift.member.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import gift.dto.KakaoProperties;
-import gift.dto.MemberDto;
-import gift.model.Member;
-import gift.repository.MemberRepository;
+import gift.exception.IllegalEmailException;
+import gift.member.dto.MemberRequest;
+import gift.member.kakaomember.property.KakaoProperties;
+import gift.member.model.Member;
+import gift.member.repository.MemberRepository;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 import jakarta.validation.constraints.NotNull;
@@ -38,10 +39,11 @@ public class MemberService {
     }
 
 
-    public Optional<String> registerMember(Member member) {
-        String hashedPassword = BCrypt.hashpw(member.getPassword(), BCrypt.gensalt());
+    public Optional<String> registerMember(MemberRequest memberRequest) throws IllegalEmailException {
+        String hashedPassword = BCrypt.hashpw(memberRequest.getPassword(), BCrypt.gensalt());
         // BCrypt 알고리즘에서 salt를 생성 -> 해시 함수에 추가되는 랜덤한 값으로 같은 비밀번호라도 솔트가 다르면 다른 해시값을 생성
         // hash password -> 비밀번호와 솔트를 조합하여 BCrypt 해시 함수를 적용, 해시된 비밀번호를 문자열로 반환
+        Member member = new Member(memberRequest.getEmail(), hashedPassword);
         member.setPassword(hashedPassword); // 암호화된 비밀번호를 멤버의 password로 설정!
         Member savedMember = memberRepository.save(member); // 해당 멤버를 memberRepository에 저장
 
@@ -76,7 +78,8 @@ public class MemberService {
 
     }
 
-    public Optional<String> loginOrRegisterKakaoUser(Long kakaoId, String kakaoEmail) {
+    public Optional<String> loginOrRegisterKakaoUser(Long kakaoId, String kakaoEmail)
+        throws IllegalEmailException {
         Optional<Member> existingMember = memberRepository.findByKakaoId(String.valueOf(kakaoId));
 
         Member member;
@@ -97,19 +100,17 @@ public class MemberService {
         return Optional.of(token);
     }
 
-    public Optional<String> login(String email, String password) {
-        Optional<Member> memberOptional = memberRepository.findByEmail(
-            email); // Email을 통해 repository에서 멤버 가져옴
-        if (memberOptional.isPresent()) {
-            Member member = memberOptional.get();
-            if (BCrypt.checkpw(password, member.getPassword())) { // BCrypt를 통해 password를 확인한다
-                String jws = Jwts.builder()
-                    .subject(member.getId().toString())
-                    .claim("email", member.getEmail())
-                    .signWith(Keys.hmacShaKeyFor(secretKey.getBytes()))
-                    .compact();
-                return Optional.of(jws);
-            }
+    public Optional<String> login(String email, String password) throws IllegalEmailException {
+        Member member = memberRepository.findByEmail(email).orElseThrow(
+            () -> new IllegalEmailException("존재하지 않는 계정입니다.")); // Email을 통해 repository에서 멤버 가져옴
+
+        if (BCrypt.checkpw(password, member.getPassword())) { // BCrypt를 통해 password를 확인한다
+            return Optional.of(
+                Jwts.builder()
+                .subject(member.getId().toString())
+                .claim("email", member.getEmail())
+                .signWith(Keys.hmacShaKeyFor(secretKey.getBytes()))
+                .compact());
         }
         return Optional.empty();
     }
@@ -134,13 +135,12 @@ public class MemberService {
     }
 
 
-
     public Optional<Member> findById(Long id) {
         return memberRepository.findById(id);
     }
 
 
-    public void getAuthentificationToken(@NotNull MemberDto memberDto) {
+    public void getAuthentificationToken(@NotNull MemberRequest memberRequest) {
         var url = "https://kauth.kakao.com/oauth/authorize";
         var headers = new HttpHeaders();
     }
