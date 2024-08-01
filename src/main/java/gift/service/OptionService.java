@@ -6,6 +6,7 @@ import gift.repository.OptionRepository;
 import gift.repository.ProductRepository;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -66,6 +67,7 @@ public class OptionService {
         optionRepository.delete(option);
     }
 
+    @Transactional
     public void subtractOptionQuantity(Long productId, String optionName, int quantity) {
         Option option = optionRepository.findByProductIdAndName(productId, optionName)
                 .orElseThrow(() -> new IllegalArgumentException("해당 옵션이 존재하지 않습니다."));

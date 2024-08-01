@@ -3,31 +3,31 @@ package gift.dto;
 import java.util.List;
 
 public class OrderRequest {
-    private List<OrderItemRequest> items;
-    private String recipientMessage;
+    private Long optionId;
+    private int quantity;
+    private String message;
 
-    public OrderRequest() {
+    public Long getOptionId() {
+        return optionId;
     }
 
-    public OrderRequest(List<OrderItemRequest> items, String recipientMessage) {
-        this.items = items;
-        this.recipientMessage = recipientMessage;
+    public void setOptionId(Long optionId) {
+        this.optionId = optionId;
     }
 
-    public List<OrderItemRequest> getItems() {
-        return items;
+    public int getQuantity() {
+        return quantity;
     }
 
-    public void setItems(List<OrderItemRequest> items) {
-        this.items = items;
+    public void setQuantity(int quantity) {
+        this.quantity = quantity;
     }
 
-    public String getRecipientMessage() {
-        return recipientMessage;
+    public String getMessage() {
+        return message;
     }
 
-    public void setRecipientMessage(String recipientMessage) {
-        this.recipientMessage = recipientMessage;
+    public void setMessage(String message) {
+        this.message = message;
     }
-
 }
