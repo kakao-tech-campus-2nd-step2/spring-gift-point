@@ -79,6 +79,9 @@
                 size : pageSize,
                 sort : [$('#p_field').val(), $('#p_sort').val()]
             },
+            headers : {
+                Authorization: 'Bearer ' + localStorage.getItem("token"),
+            },
             success: function(data) {
                 var contents = data.content;
                 var tbody = $('#user-tbody');
