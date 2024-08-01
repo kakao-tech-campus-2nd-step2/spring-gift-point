@@ -18,7 +18,6 @@ public class SwaggerConfig {
                         .version("v1.0.0")
                         .license(new License().name("Apache 2.0").url("http://springdoc.org")))
                 .externalDocs(new ExternalDocumentation()
-                        .description("Spring-gift api 문서입니다.")
                         .url("https://gift-order.wiki.github.org/docs"));
     }
 }

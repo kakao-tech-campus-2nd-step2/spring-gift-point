@@ -35,7 +35,7 @@ public class KakaoController {
         this.orderService = orderService;
     }
 
-    @Operation(summary = "카카오 로그인", description = "프론트 연결 때는 쓰이지 않음")
+    @Operation(summary = "카카오 로그인 : 프론트 연결 때는 쓰이지 않음")
     @GetMapping("/login")
     public void kakaoLogin(HttpServletResponse response) throws IOException {
         String clientId = kakaoAuthService.getClientId();
@@ -45,7 +45,7 @@ public class KakaoController {
         response.sendRedirect(url);
     }
 
-    @Operation(summary = "카카오 콜백 리디렉션(토큰받기)", description = "프론트 연결 때는 쓰이지 않음")
+    @Operation(summary = "카카오 콜백 리디렉션(토큰받기) : 프론트 연결 때는 쓰이지 않음")
     @GetMapping("/callback")
     public String callback(@RequestParam("code") String code, HttpServletRequest request) {
         String accessToken = kakaoAuthService.getAccessToken(code);

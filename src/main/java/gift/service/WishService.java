@@ -48,7 +48,7 @@ public class WishService {
         Member member = memberRepository.findByEmail(email)
                 .orElseThrow(() -> new RuntimeException("회원을 찾을 수 없습니다."));
         Product product = productRepository.findById(wishRequest.getProductId())
-                .orElseThrow(() -> new RuntimeException("제품을 찾을 수 없습니다."));
+                .orElseThrow(() -> new RuntimeException("해당 상품을 찾을 수 없습니다."));
         Option option = optionRepository.findById(wishRequest.getOptionId())
                 .orElseThrow(() -> new RuntimeException("옵션을 찾을 수 없습니다."));
 
@@ -64,7 +64,7 @@ public class WishService {
         Member member = memberRepository.findByEmail(email)
                 .orElseThrow(() -> new RuntimeException("회원을 찾을 수 없습니다."));
         Product product = productRepository.findById(productId)
-                .orElseThrow(() -> new RuntimeException("제품을 찾을 수 없습니다."));
+                .orElseThrow(() -> new RuntimeException("해당 상품을 찾을 수 없습니다."));
 
         wishRepository.deleteByMemberAndProduct(member, product);
     }

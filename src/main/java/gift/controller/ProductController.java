@@ -5,6 +5,11 @@ import gift.dto.ProductDto;
 import gift.exception.ProductNotFoundException;
 import gift.service.ProductService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.ExampleObject;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -25,6 +30,16 @@ public class ProductController {
     }
 
     @Operation(summary = "상품 목록 페이지네이션")
+    @ApiResponse(
+            responseCode = "200",
+            content = @Content(
+                    mediaType = "application/json",
+                    schema = @Schema(implementation = ProductDto.class),
+                    examples = @ExampleObject(
+                            value = "{\"content\":[{\"id\":1,\"name\":\"Product 1\",\"price\":1000,\"imgUrl\":\"http://example.com/image1.jpg\",\"categoryId\":1,\"options\":[{\"id\":1,\"name\":\"Option 1\",\"quantity\":10}]}],\"pageable\":\"INSTANCE\",\"last\":false,\"totalPages\":1,\"totalElements\":1,\"size\":20,\"number\":0,\"sort\":{\"sorted\":false,\"unsorted\":true,\"empty\":true},\"first\":true,\"numberOfElements\":1,\"empty\":false}"
+                    )
+            )
+    )
     @GetMapping
     public Page<ProductDto> getProducts(Pageable pageable) {
         return productService.getProducts(pageable).map(product -> new ProductDto(
@@ -39,52 +54,127 @@ public class ProductController {
         ));
     }
 
-    @Operation(summary = "전체 상품 조회",  description = "프론트 연결 때는 쓰이지 않음")
+
+    @Operation(summary = "전체 상품 조회 : 프론트 연결 때는 쓰이지 않음")
+    @ApiResponse(
+            responseCode = "200",
+            content = @Content(
+                    mediaType = "application/json",
+                    schema = @Schema(implementation = ProductDto.class),
+                    examples = @ExampleObject(
+                            value = "[{\"id\":1,\"name\":\"Product 1\",\"price\":1000,\"imgUrl\":\"http://example.com/image1.jpg\",\"categoryId\":1,\"options\":[{\"id\":1,\"name\":\"Option 1\",\"quantity\":10}]}]"
+                    )
+            )
+    )
     @GetMapping("/all")
     public List<ProductDto> findAll() {
         return productService.findAll();
     }
 
+
     @Operation(summary = "특정 상품 조회")
+    @ApiResponse(
+            responseCode = "200",
+            description = "성공적으로 특정 상품을 조회했습니다.",
+            content = @Content(
+                    mediaType = "application/json",
+                    schema = @Schema(implementation = ProductDto.class),
+                    examples = @ExampleObject(
+                            value = "{\"id\":1,\"name\":\"Product 1\",\"price\":1000,\"imgUrl\":\"http://example.com/image1.jpg\",\"categoryId\":1,\"options\":[{\"id\":1,\"name\":\"Option 1\",\"quantity\":10}]}"
+                    )
+            )
+    )
+    @Parameter(name = "productId", description = "조회할 상품의 ID", example = "1")
     @GetMapping("/{productId}")
-    public ProductDto getProductById(@PathVariable("id") Long id) {
+    public ProductDto getProductById(@PathVariable("productId") Long id) {
         return productService.findById(id)
                 .orElseThrow(() -> new ProductNotFoundException("상품을 찾을 수 없습니다. ID: " + id));
     }
 
-    @Operation(summary = "상품 추가", description = "프론트 연결 때는 쓰이지 않음")
+
+    @Operation(summary = "상품 추가 : 프론트 연결 때는 쓰이지 않음")
+    @ApiResponse(
+            responseCode = "200",
+            description = "성공적으로 상품을 추가했습니다.",
+            content = @Content(
+                    mediaType = "application/json",
+                    schema = @Schema(implementation = Long.class),
+                    examples = @ExampleObject(
+                            value = "1"
+                    )
+            )
+    )
     @PostMapping
     public Long addProduct(@RequestBody ProductDto productDto) {
         return productService.save(productDto);
     }
 
-    @Operation(summary = "상품 수정", description = "프론트 연결 때는 쓰이지 않음")
+
+    @Operation(summary = "상품 수정 : 프론트 연결 때는 쓰이지 않음")
+    @ApiResponse(
+            responseCode = "200",
+            description = "성공적으로 상품을 수정했습니다."
+    )
+    @Parameter(name = "productId", description = "수정할 상품의 ID", example = "1")
     @PutMapping("/{productId}")
-    public void updateProduct(@PathVariable Long id, @RequestBody ProductDto productDto) {
+    public void updateProduct(@PathVariable("productId") Long id, @RequestBody ProductDto productDto) {
         productService.update(id, productDto);
     }
 
-    @Operation(summary = "상품 삭제", description = "프론트 연결 때는 쓰이지 않음")
+
+    @Operation(summary = "상품 삭제 : 프론트 연결 때는 쓰이지 않음")
+    @ApiResponse(
+            responseCode = "200",
+            description = "성공적으로 상품을 삭제했습니다."
+    )
+    @Parameter(name = "productId", description = "삭제할 상품의 ID", example = "1")
     @DeleteMapping("/{productId}")
-    public void deleteProduct(@PathVariable Long id) {
+    public void deleteProduct(@PathVariable("productId") Long id) {
         productService.delete(id);
     }
 
+
     @Operation(summary = "상품 id로 옵션 조회")
+    @ApiResponse(
+            responseCode = "200",
+            description = "성공적으로 상품의 옵션을 조회했습니다.",
+            content = @Content(
+                    mediaType = "application/json",
+                    schema = @Schema(implementation = OptionDto.class),
+                    examples = @ExampleObject(
+                            value = "[{\"id\":1,\"name\":\"Option 1\",\"quantity\":10}]"
+                    )
+            )
+    )
+    @Parameter(name = "productId", description = "옵션을 조회할 상품의 ID", example = "1")
     @GetMapping("/{productId}/options")
-    public List<OptionDto> getProductOptions(@PathVariable Long productId) {
+    public List<OptionDto> getProductOptions(@PathVariable("productId") Long productId) {
         return productService.getProductOptions(productId);
     }
 
-    @Operation(summary = "해당 상품에 옵션 추가", description = "프론트 연결 때는 쓰이지 않음")
+
+    @Operation(summary = "해당 상품에 옵션 추가 : 프론트 연결 때는 쓰이지 않음")
+    @ApiResponse(
+            responseCode = "200",
+            description = "성공적으로 옵션을 추가했습니다."
+    )
+    @Parameter(name = "productId", description = "옵션을 추가할 상품의 ID", example = "1")
     @PostMapping("/{productId}/options")
-    public void addOptionToProduct(@PathVariable Long productId, @RequestBody OptionDto optionDto) {
+    public void addOptionToProduct(@PathVariable("productId") Long productId, @RequestBody OptionDto optionDto) {
         productService.addOptionToProduct(productId, optionDto);
     }
 
-    @Operation(summary = "해당 상품 수량 차감", description = "프론트 연결 때는 쓰이지 않음")
+
+    @Operation(summary = "해당 상품 수량 차감 : 프론트 연결 때는 쓰이지 않음")
+    @ApiResponse(
+            responseCode = "200",
+            description = "성공적으로 상품 옵션의 수량을 차감했습니다."
+    )
+    @Parameter(name = "productId", description = "수량을 차감할 상품의 ID", example = "1")
+    @Parameter(name = "optionId", description = "수량을 차감할 옵션의 ID", example = "1")
+    @Parameter(name = "quantity", description = "차감할 수량", example = "2")
     @PostMapping("/{productId}/options/{optionId}/subtract")
-    public void subtractOptionQuantity(@PathVariable Long productId, @PathVariable Long optionId, @RequestParam int quantity) {
+    public void subtractOptionQuantity(@PathVariable("productId") Long productId, @PathVariable("optionId") Long optionId, @RequestParam int quantity) {
         productService.subtractOptionQuantity(productId, optionId, quantity);
     }
 }

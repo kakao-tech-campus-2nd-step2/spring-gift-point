@@ -22,7 +22,7 @@ public class OrderController {
         this.tokenService = tokenService;
     }
 
-    @Operation(summary = "회원id로 주문 생성")
+    @Operation(summary = "주문 생성")
     @PostMapping
     public ResponseEntity<OrderResponse> createOrder(@RequestBody OrderRequest request, @RequestHeader("Authorization") String token) {
         OrderResponse response;

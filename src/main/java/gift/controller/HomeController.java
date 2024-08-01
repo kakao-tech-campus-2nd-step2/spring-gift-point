@@ -8,10 +8,10 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
 @Controller
-@Tag(name="기본 home 화면")
+@Tag(name="기본 home 화면", description = "프론트 연결 때는 쓰이지 않음")
 public class HomeController {
 
-    @Operation(summary = "로컬호스트 접속", description = "프론트 연결 때는 쓰이지 않음")
+    @Operation(summary = "로컬호스트 접속")
     @GetMapping("/home")
     public String home(HttpServletRequest request, Model model) {
         String accessToken = (String) request.getSession().getAttribute("accessToken");
