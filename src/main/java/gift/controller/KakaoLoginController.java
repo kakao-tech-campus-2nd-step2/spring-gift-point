@@ -3,6 +3,7 @@ package gift.controller;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import gift.DTO.Token;
 import gift.service.KakaoService;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -35,16 +36,15 @@ public class KakaoLoginController {
      * 카카오 로그인 페이지로 연결
      */
     @GetMapping("/kakaoLogin")
-    public String OauthLogin(){
-        String url = kakaoService.makeLoginUrl();
-        return "redirect:" + url;
+    public ResponseEntity<Token> OauthLogin(@RequestParam String code) throws JsonProcessingException {
+        Token token = kakaoService.getKakaoToken(code);
+        return new ResponseEntity<>(token, HttpStatus.OK);
     }
     /*
      * 카카오 로그인
      */
     @GetMapping("api/members/kakao")
-    @ResponseBody
-    public ResponseEntity<String> kakaoLogin(){
-        return kakaoService.getCode();
+    public RedirectView kakaoLogin(){
+        return new RedirectView(kakaoService.makeLoginUrl());
     }
 }

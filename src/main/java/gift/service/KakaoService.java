@@ -55,16 +55,6 @@ public class KakaoService {
     }
 
     /*
-     * 카카오 로그인 페이지를 연결하는 로직
-     */
-    public ResponseEntity<String> getCode(){
-        return client.get()
-                .uri(URI.create(loginUrl))
-                .header(HttpHeaders.ACCEPT, "text.html")
-                .retrieve()
-                .toEntity(String.class);
-    }
-    /*
      * Code를 이용하여 트큰을 발급하는 로직
      */
     @Transactional

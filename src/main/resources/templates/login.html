@@ -24,6 +24,7 @@
         </div>
         <div>
             <input type="button" id="kakaoLogin" value="카카오 로그인">
+            <a href="api/members/kakao">카카오</a>
         </div>
         <div>
             <a href="register">회원가입</a>
@@ -65,7 +66,7 @@
             type : "GET",
             url : "/api/members/kakao",
             success : function(res) {
-                console.log(res)
+                console.log(res);
             },
             error : function(err){
                 if(err.responseJSON){
