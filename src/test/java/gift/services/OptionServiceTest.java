@@ -55,7 +55,7 @@ class OptionServiceTest {
 
         assertEquals(2, result.size());
         assertEquals("Test Option1", result.get(0).getName());
-        assertEquals(10, result.get(0).getAmount());
+        assertEquals(10, result.get(0).getQuantity());
     }
 
     @Test
@@ -67,9 +67,11 @@ class OptionServiceTest {
         product.setId(productId);
 
         RequestOptionDto requestOptionDto = new RequestOptionDto("Test Option", 15);
+        Option savedOption = new Option(1L, requestOptionDto.getName(), requestOptionDto.getQuantity(), product);
 
         when(productRepository.findById(productId)).thenReturn(Optional.of(product));
         when(optionRepository.findAllByProductId(productId)).thenReturn(new ArrayList<>());
+        when(optionRepository.save(any(Option.class))).thenReturn(savedOption);
 
         optionService.addOption(productId, requestOptionDto);
 
@@ -89,7 +91,7 @@ class OptionServiceTest {
         optionService.updateOption(optionId, requestOptionDto);
 
         assertEquals("Updated Option", existingOption.getName());
-        assertEquals(20, existingOption.getAmount());
+        assertEquals(20, existingOption.getQuantity());
     }
 
     @Test
@@ -116,7 +118,7 @@ class OptionServiceTest {
 
         optionService.deductOption(optionId, 5);
 
-        assertEquals(5, existingOption.getAmount());
+        assertEquals(5, existingOption.getQuantity());
     }
 
     @Test

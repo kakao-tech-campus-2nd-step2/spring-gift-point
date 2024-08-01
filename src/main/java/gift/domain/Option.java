@@ -1,6 +1,7 @@
 package gift.domain;
 
 import gift.classes.Exceptions.OptionException;
+import gift.dto.OptionDto;
 import gift.dto.ProductDto;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -21,7 +22,7 @@ public class Option {
     private String name;
 
     @Column(nullable = false)
-    private int amount;
+    private int quantity;
 
     @ManyToOne
     @JoinColumn(name = "product_id")
@@ -30,9 +31,16 @@ public class Option {
     public Option() {
     }
 
-    public Option(String name, int amount, Product product) {
+    public Option(String name, int quantity, Product product) {
         this.name = name;
-        this.amount = amount;
+        this.quantity = quantity;
+        this.product = product;
+    }
+
+    public Option(Long id, String name, int quantity, Product product) {
+        this.id = id;
+        this.name = name;
+        this.quantity = quantity;
         this.product = product;
     }
 
@@ -44,8 +52,8 @@ public class Option {
         return name;
     }
 
-    public int getAmount() {
-        return amount;
+    public int getQuantity() {
+        return quantity;
     }
 
     public Product getProduct() {
@@ -54,20 +62,24 @@ public class Option {
 
     public ProductDto getProductDto() {
         return new ProductDto(product.getId(), product.getName(), product.getPrice(),
-            product.getImageUrl(), product.getCategoryDto());
+            product.getImageUrl());
     }
 
-    public void update(String name, int amount) {
+    public OptionDto getOptionDto() {
+        return new OptionDto(this.getId(), this.getName(), this.getQuantity());
+    }
+
+    public void update(String name, int quantity) {
         this.name = name;
-        this.amount = amount;
+        this.quantity = quantity;
     }
 
     public void decrementAmount(int quantity) {
         if (quantity <= 0) {
             throw new OptionException("The amount to be deducted must be greater than zero.");
         }
-        if (amount >= quantity) {
-            amount -= quantity;
+        if (this.quantity >= quantity) {
+            this.quantity -= quantity;
         } else {
             throw new OptionException("Deduction failed due to insufficient quantity.");
         }

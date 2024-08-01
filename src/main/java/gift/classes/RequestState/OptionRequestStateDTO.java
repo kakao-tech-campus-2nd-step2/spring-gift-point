@@ -1,19 +1,18 @@
 package gift.classes.RequestState;
 
 import gift.dto.OptionDto;
-import java.util.List;
+import org.springframework.http.HttpStatus;
 
 public class OptionRequestStateDTO extends RequestStateDTO {
 
-    private final List<OptionDto> options;
+    private final OptionDto data;
 
-    public OptionRequestStateDTO(RequestStatus requestStatus, String details,
-        List<OptionDto> options) {
-        super(requestStatus, details);
-        this.options = options;
+    public OptionRequestStateDTO(HttpStatus status, String message, OptionDto data) {
+        super(status, message);
+        this.data = data;
     }
 
-    public List<OptionDto> getOptions() {
-        return options;
+    public OptionDto getData() {
+        return data;
     }
 }
