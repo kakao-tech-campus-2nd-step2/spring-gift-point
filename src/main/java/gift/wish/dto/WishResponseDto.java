@@ -12,11 +12,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 public record WishResponseDto(Long id, @JsonProperty("product_id") Long productId, @JsonProperty("product_name") ProductName productName,
-                              @JsonProperty("image_url") ImageUrl imageUrl) {
+                              @JsonProperty("product_price") Long price, @JsonProperty("image_url") ImageUrl imageUrl) {
 
     public WishResponseDto(Wish wish) {
         this(wish.getId(), wish.getProduct().getId(), wish.getProduct().getName(),
-                wish.getProduct().getImageUrl());
+                wish.getProduct().getPrice().getProductPriceValue(), wish.getProduct().getImageUrl());
     }
 
     public static List<WishResponseDto> wishListToWishResponseList(List<Wish> wishes) {
