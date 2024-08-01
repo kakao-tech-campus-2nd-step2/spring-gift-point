@@ -1,13 +1,18 @@
 package gift.service;
 
 import gift.common.auth.JwtTokenProvider;
+import gift.common.dto.PageResponse;
 import gift.common.exception.ErrorCode;
 import gift.common.exception.UserException;
 import gift.controller.user.dto.UserRequest;
 import gift.controller.user.dto.UserResponse;
+import gift.controller.user.dto.UserResponse.Info;
 import gift.controller.user.dto.UserResponse.Point;
 import gift.model.User;
 import gift.repository.UserRepository;
+import java.util.List;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -46,5 +51,11 @@ public class UserService {
         User user = userRepository.findById(userId)
             .orElseThrow(() -> new UserException(ErrorCode.USER_NOT_FOUND));
         return UserResponse.Point.from(user.getPoint());
+    }
+
+    public PageResponse<UserResponse.Info> getAllUser(Pageable pageable) {
+        Page<User> userList = userRepository.findAll(pageable);
+        List<Info> responses = userList.getContent().stream().map(Info::from).toList();
+        return PageResponse.from(responses, userList);
     }
 }

@@ -1,5 +1,8 @@
 package gift.controller.user.dto;
 
+import gift.model.User;
+import java.util.List;
+
 public class UserResponse {
 
     public record Login(String name) {
@@ -16,4 +19,15 @@ public class UserResponse {
         }
     }
 
+    public record Info(
+        Long id,
+        String email,
+        String name,
+        int point
+    ) {
+
+        public static Info from(User user) {
+            return new Info(user.getId(), user.getEmail(), user.getName(), user.getPoint());
+        }
+    }
 }
