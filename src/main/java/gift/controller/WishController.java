@@ -6,6 +6,7 @@ import gift.domain.Wish;
 import gift.dto.PageRequestDto;
 import gift.dto.WishDto;
 import gift.dto.WishResponseDto;
+import gift.response.MessageResponse;
 import gift.service.WishService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -46,20 +47,20 @@ public class WishController {
         return ResponseEntity.ok(wishItems);
     }
 
-    @PostMapping
+    @PostMapping("/{productId}")
     @Operation(summary = "위시 리스트 상품 추가", description = "회원의 위시 리스트에 상품을 추가한다.")
     @SecurityRequirement(name = "Authorization")
-    public ResponseEntity<String> addWish(@Valid @RequestBody WishDto wishDto, @Parameter(hidden = true)@LoginMember Member member) {
-        wishService.addWish(member.getId(), wishDto);
-        return ResponseEntity.status(HttpStatus.CREATED).body("위시 추가 성공");
+    public ResponseEntity<MessageResponse> addWish(@PathVariable("productId") Long productId, @Parameter(hidden = true)@LoginMember Member member) {
+        wishService.addWish(member.getId(), productId);
+        return ResponseEntity.status(HttpStatus.CREATED).body(new MessageResponse("위시 추가 성공"));
     }
 
     @DeleteMapping("/{wishId}")
     @Operation(summary = "위시리스트 상품 삭제", description = "회원의 위시 리스트에서 상품을 삭제한다.")
     @SecurityRequirement(name = "Authorization")
-    public ResponseEntity<String> deleteWish(@PathVariable("wishId") Long wishId, @Parameter(hidden = true)@LoginMember Member member) {
+    public ResponseEntity<Void> deleteWish(@PathVariable("wishId") Long wishId, @Parameter(hidden = true)@LoginMember Member member) {
         wishService.deleteWish(wishId);
-        return ResponseEntity.status(HttpStatus.OK).body("위시 삭제 성공");
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
 }
