@@ -8,6 +8,7 @@ import gift.global.response.SimpleResultResponseDto;
 import gift.global.utils.ResponseHelper;
 import gift.product.domain.Product;
 import gift.product.dto.ProductRequestDto;
+import gift.product.dto.ProductResponseDto;
 import gift.product.dto.ProductResponseListDto;
 import gift.product.service.ProductService;
 import jakarta.validation.Valid;
@@ -34,33 +35,39 @@ public class ProductController {
     }
 
     @GetMapping("")
-    public ResponseEntity<ResultResponseDto<ProductResponseListDto>> getProductsByPage(@RequestParam(name = "page") int page) {
+    public ResponseEntity<ProductResponseListDto> getProductsByPage(@RequestParam(name = "page") int page) {
         ProductResponseListDto products = productService.getProductsByPage(page);
-        return ResponseHelper.createResponse(ResultCode.GET_ALL_PRODUCTS_SUCCESS, products);
+        return ResponseEntity.status(200)
+                .body(products);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ResultResponseDto<Product>> getProductById(@PathVariable(name = "id") Long id) {
+    public ResponseEntity<ProductResponseDto> getProductById(@PathVariable(name = "id") Long id) {
         Product product = productService.getProductById(id);
-        return ResponseHelper.createResponse(ResultCode.GET_PRODUCT_BY_ID_SUCCESS, product);
+        ProductResponseDto productResponseDto = ProductResponseDto.productToProductResponseDto(product);
+        return ResponseEntity.status(200)
+                .body(productResponseDto);
     }
 
     @PostMapping("")
-    public ResponseEntity<SimpleResultResponseDto> createProduct(@Valid @RequestBody ProductRequestDto productRequestDto) {
+    public ResponseEntity<Void> createProduct(@Valid @RequestBody ProductRequestDto productRequestDto) {
         productService.createProduct(productRequestDto.toProductServiceDto());
-        return ResponseHelper.createSimpleResponse(ResultCode.CREATE_PRODUCT_SUCCESS);
+        return ResponseEntity.status(200)
+                .build();
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<SimpleResultResponseDto> updateProduct(@PathVariable(name = "id") Long id, @Valid @RequestBody ProductRequestDto productRequestDto) {
+    public ResponseEntity<Void> updateProduct(@PathVariable(name = "id") Long id, @Valid @RequestBody ProductRequestDto productRequestDto) {
         productService.updateProduct(productRequestDto.toProductServiceDto(id));
-        return ResponseHelper.createSimpleResponse(ResultCode.UPDATE_PRODUCT_SUCCESS);
+        return ResponseEntity.status(200)
+                .build();
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<SimpleResultResponseDto> deleteProduct(@PathVariable(name = "id") Long id) {
+    public ResponseEntity<Void> deleteProduct(@PathVariable(name = "id") Long id) {
         productService.deleteProduct(id);
-        return ResponseHelper.createSimpleResponse(ResultCode.DELETE_PRODUCT_SUCCESS);
+        return ResponseEntity.status(200)
+                .build();
     }
 
     // GlobalException Handler 에서 처리할 경우,

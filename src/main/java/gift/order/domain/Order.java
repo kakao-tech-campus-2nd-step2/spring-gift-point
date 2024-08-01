@@ -14,7 +14,7 @@ public class Order {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @Embedded
-    private OrderCount count;
+    private OrderQuantity quantity;
     @Embedded
     private OrderMessage message;
 
@@ -28,9 +28,9 @@ public class Order {
     public Order() {
     }
 
-    public Order(Long id, OrderCount count, OrderMessage message, Member member, Option option) {
+    public Order(Long id, OrderQuantity quantity, OrderMessage message, Member member, Option option) {
         this.id = id;
-        this.count = count;
+        this.quantity = quantity;
         this.message = message;
         this.member = member;
         this.option = option;
@@ -45,8 +45,8 @@ public class Order {
         return message;
     }
 
-    public OrderCount getCount() {
-        return count;
+    public OrderQuantity getQuantity() {
+        return quantity;
     }
 
     public Member getMember() {
