@@ -38,8 +38,10 @@ public class ProductAdminController {
         Pageable pageable = pageRequestDto.toPageable();
         Page<ProductResponseDto> productPage = productService.getPagedProducts(pageable);
         model.addAttribute("products", productPage);
-        model.addAttribute("currentPage", pageRequestDto.getPageNumber());
-        model.addAttribute("sortBy", pageRequestDto.getSortBy());
+        model.addAttribute("currentPage", pageRequestDto.getPage());
+        String[] parts = pageRequestDto.getSort().split(",");
+        String sortProperty = parts[0];
+        model.addAttribute("sortBy", sortProperty);
         return "admin";
     }
 
