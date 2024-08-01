@@ -1,0 +1,12 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>해당 상품이 이미 존재합니다</title>
+    <link rel="stylesheet" type="text/css" href="/css/error_style.css">
+</head>
+<body>
+<h1>해당 상품이 이미 존재합니다</h1>
+<p th:text="${errorMessage}"></p>
+<a href="/api/products" class="button">상품 정보 페이지로 돌아가기</a>
+</body>
+</html>
