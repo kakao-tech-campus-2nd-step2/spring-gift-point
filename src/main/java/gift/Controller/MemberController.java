@@ -5,6 +5,8 @@ import gift.Service.MemberAccessTokenProvider;
 import gift.Service.MemberService;
 
 import jakarta.validation.Valid;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -23,7 +25,7 @@ public class MemberController {
     @PostMapping("/api/members/register")
     public ResponseEntity<String> signupMember(@Valid @RequestBody MemberDTO memberDTO){
         memberService.signupMember(memberDTO);
-        return ResponseEntity.ok("User registered successfully");
+        return ResponseEntity.status(HttpStatus.CREATED).body(("User registered successfully"));
     }
 
     @PostMapping("/api/members/login")

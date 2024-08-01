@@ -4,6 +4,7 @@ package gift.Controller;
 import gift.Model.Member;
 import gift.Model.Product;
 
+import gift.Model.Wishlist;
 import gift.Service.WishlistService;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -17,6 +18,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.ResponseEntity.BodyBuilder;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -70,14 +72,12 @@ public class WishListController {
     })
     @PostMapping("/api/wishes/{productId}")
     public ResponseEntity<String> editWishForm(@PathVariable(value = "productId") Long productId, HttpServletRequest request) {
-        //400 Bad Request: Invalid input
-        //404 Not Found: Member or Product not found
         String email = (String) request.getAttribute("email");
         wishlistService.checkUserByMemberEmail(email);
         Member member = wishlistService.getMemberByEmail(email);
         Product product = wishlistService.getProductById(productId);
         wishlistService.addWishlist(member.getId(), product.getId());
-        return ResponseEntity.ok().build();
+        return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
     @Operation(
@@ -92,13 +92,13 @@ public class WishListController {
         @Parameter(name = "productId", description = "위시리스트에 삭제 할 상품 Id"),
         @Parameter(name = "request", description = "메소드 실행 전 토큰을 전달 받기 위한 객체"),
     })
-    @DeleteMapping("/api/wishes/{productId}")
-    public ResponseEntity<String> deleteWish(@PathVariable(value = "productId") Long productId, HttpServletRequest request) {
+    @DeleteMapping("/api/wishes/{wishId}")
+    public ResponseEntity<String> deleteWish(@PathVariable(value = "wishId") Long wishId, HttpServletRequest request) {
         String email = (String) request.getAttribute("email");
         wishlistService.checkUserByMemberEmail(email);
-        Long wishlistId = wishlistService.getWishlistId(email,productId);
-        Product deleteProduct = wishlistService.deleteWishlist(email, productId, wishlistId);
-        //404 Not Found: Wish not found
+
+        Wishlist wishlist = wishlistService.getWishlistById(wishId);
+        wishlistService.deleteWishlist(email, wishlist.getProduct().getId(), wishId);
         return ResponseEntity.noContent().build();
     }
 }

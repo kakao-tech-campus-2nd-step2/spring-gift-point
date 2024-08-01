@@ -1,8 +1,10 @@
 package gift.Service;
 
+import gift.Exception.NotFoundException;
 import gift.Exception.UnauthorizedException;
 import gift.Model.Member;
 import gift.Model.Product;
+import gift.Model.Wishlist;
 import gift.Repository.MemberRepository;
 import gift.Repository.ProductRepository;
 import gift.Repository.WishlistRepository;
@@ -33,12 +35,14 @@ public class WishlistService {
     }
 
     public Product getProductById(long productId){
-        return productRepository.findProductById(productId);
+        Product product = productRepository.findProductById(productId);
+        if (product == null){
+            throw new NotFoundException("404 Not Found: Member or Product not found");
+        }
+        return product;
     }
 
-    public Page<Product> getAllProducts(Pageable pageable) {
-        return productRepository.findAll(pageable);
-    }
+
     public void addWishlist(Long memberId, Long productId){
         LocalDateTime createdDate = LocalDateTime.now();
         wishlistRepository.addProductInWishlist(memberId, productId, createdDate);
@@ -48,11 +52,13 @@ public class WishlistService {
         return wishlistRepository.getWishlistIdByMemberEmailAndProductId(email, productId);
     }
 
-    public Product deleteWishlist(String email, Long productId, Long wishlistId){
-        Product deleteProduct = productRepository.findProductById(productId);
+    public Wishlist getWishlistById(Long wishlistId){
+        return wishlistRepository.findWishlistById(wishlistId);
+    }
+
+    public void deleteWishlist(String email, Long productId, Long wishlistId){
         wishlistRepository.changeProductMemberNull(email,productId);
         wishlistRepository.deleteById(wishlistId);
-        return deleteProduct;
     }
 
     public void checkUserByMemberEmail(String email){
@@ -63,7 +69,11 @@ public class WishlistService {
     }
 
     public Member getMemberByEmail(String email){
-        return memberRepository.findByEmail(email);
+        Member member = memberRepository.findByEmail(email);
+        if(member == null){
+            throw new NotFoundException("404 Not Found: Member or Product not found");
+        }
+        return member;
     }
     public Sort getSort(String[] sort){
         Sort newSort = Sort.by(Sort.Order.asc(sort[0])); // 기본으로 asc인 sort[0]에 대해서 Sort 객체 생성
