@@ -1,21 +1,23 @@
-package gift.dto;
+package gift.member.dto;
 
 import jakarta.validation.constraints.Email;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
-public class MemberDto {
+@NoArgsConstructor
+public class MemberRequest {
     @Email
     private String email;
     private String password;
     private String kakaoId;
 
-    public MemberDto(String email, String password) {
+    public MemberRequest(String email, String password) {
         this.email = email;
         this.password = password;
     }
 
-    public MemberDto(String email, String password, String kakaoId) {
+    public MemberRequest(String email, String password, String kakaoId) {
         this.email = email;
         this.password = password;
         this.kakaoId = kakaoId;
