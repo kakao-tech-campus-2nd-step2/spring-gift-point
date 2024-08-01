@@ -41,4 +41,11 @@ public class MemberService {
                 .orElseThrow(() -> new MemberNotFoundException(NOT_FOUND_MEMBER));
         return MemberResponse.from(member);
     }
+
+    @Transactional(readOnly = true)
+    public int getMemberPoints(MemberRequest memberRequest){
+        Member member = memberRepository.findById(memberRequest.id())
+                .orElseThrow(() -> new MemberNotFoundException(NOT_FOUND_MEMBER));
+        return member.getPoints();
+    }
 }
