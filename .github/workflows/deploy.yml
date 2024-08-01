@@ -26,6 +26,9 @@ jobs:
           distribution: 'adopt'
 
       # 빌드
+      - name: Grant execute permission for Gradlew
+        run: chmod +x ./gradlew
+
       - name: Build with Gradle
-        run: sudo ./gradlew clean bootjar -x test
+        run: ./gradlew clean bootjar -x test
 
