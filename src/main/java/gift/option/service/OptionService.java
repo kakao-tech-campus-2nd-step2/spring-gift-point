@@ -1,12 +1,14 @@
-package gift.service;
+package gift.option.service;
 
 
-import gift.dto.OptionRequest;
+import gift.exception.ProductNotFoundException;
 import gift.exception.ResourceNotFoundException;
-import gift.model.Option;
-import gift.model.Options;
-import gift.repository.OptionRepository;
-import gift.repository.ProductRepository;
+import gift.option.dto.OptionRequest;
+import gift.option.model.Option;
+import gift.option.model.Options;
+import gift.option.repository.OptionRepository;
+import gift.product.model.Product;
+import gift.product.repository.ProductRepository;
 import java.util.List;
 import java.util.NoSuchElementException;
 import org.springframework.stereotype.Service;
@@ -35,16 +37,20 @@ public class OptionService {
     }
 
     // 옵션 탐색
-    public List<Option> retreiveOptions() {
-        return optionRepository.findAll();
+    public List<Option> findOptionsByProductId(Long productId) {
+        Product product = productRepository.findById(productId)
+            .orElseThrow(() -> new ProductNotFoundException("없는 상품입니다"));
+        return optionRepository.findAllByProduct(product);
     }
 
     // 옵션 제거
-    public void deleteOptions(Long id) {
-        if (!optionRepository.existsById(id)) {
-            throw new ResourceNotFoundException("없는 옵션입니다.");
-        }
-        optionRepository.deleteById(id);
+    public void deleteOptions(Long productId, Long optionId) {
+        Product product = productRepository.findById(productId)
+            .orElseThrow(() -> new ProductNotFoundException("없는 상품입니다."));
+        List<Option> optionList = optionRepository.findAllByProduct(product);
+        Option deletedOption = optionList.stream().filter(option -> option.getId().equals(optionId))
+            .findFirst().orElseThrow(() -> new ResourceNotFoundException("없는 옵션입니다."));
+        optionRepository.delete(deletedOption);
     }
 
     // 옵션 ID 탐색
@@ -54,14 +60,18 @@ public class OptionService {
     }
 
     // 옵션 수정
-    public Option updateOption(final OptionRequest optionRequest) {
-        var option = optionRepository.findById(optionRequest.getId())
+    public Option updateOption(Long productId, Long optionId, final OptionRequest optionRequest) {
+        Product product = productRepository.findById(productId)
+            .orElseThrow(() -> new ProductNotFoundException("존재하지 않는 상품입니다."));
+        List<Option> allOptionByProduct = optionRepository.findAllByProduct(product);
+        Option option = allOptionByProduct.stream()
+            .filter(o -> o.getId().equals(optionId))
+            .findFirst()
             .orElseThrow(() -> new ResourceNotFoundException("존재하지 않는 옵션입니다"));
-        var product = productRepository.findByName(optionRequest.getProductName())  // 여기를 수정
-            .orElseThrow(() -> new ResourceNotFoundException("존재하지 않는 상품입니다."));
+
         option.setName(optionRequest.getName());
-        option.setQuantity(optionRequest.getQuantity());  // 수량만 업데이트
-        option.setProduct(product);  // 상품 업데이트
+        option.setQuantity(optionRequest.getQuantity());
+        option.setProduct(product);
         return optionRepository.save(option);
     }
 
@@ -70,7 +80,7 @@ public class OptionService {
     public boolean updateOptionQuantity(Long id, int quantity) {
         var option = optionRepository.findById(id)
             .orElseThrow(() -> new ResourceNotFoundException("존재 하지 않는 옵션입니다."));
-        if(option.getQuantity() < quantity){
+        if (option.getQuantity() < quantity) {
             throw new IllegalArgumentException("재고가 부족합니다.");
         }
         option.subtract(quantity);
