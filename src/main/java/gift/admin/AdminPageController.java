@@ -1,14 +1,16 @@
 package gift.admin;
 
 import gift.category.CategoryService;
-import gift.product.Product;
 import gift.product.ProductService;
+import gift.product.dto.ProductPaginationResponseDTO;
+import gift.product.dto.ProductResponseDTO;
 import java.util.stream.IntStream;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 
 @Controller
 public class AdminPageController {
@@ -24,9 +26,14 @@ public class AdminPageController {
         this.categoryService = categoryService;
     }
 
-    @GetMapping(path = "/admin")
-    public String adminPage(Model model, Pageable pageable) {
-        Page<Product> products = productService.getAllProducts(pageable);
+    @Deprecated
+    @GetMapping(path = "/admin/{categoryId}")
+    public String adminPage(
+        Model model,
+        Pageable pageable,
+        @PathVariable long categoryId
+    ) {
+        Page<ProductPaginationResponseDTO> products = productService.getAllProducts(pageable, categoryId);
 
         model.addAttribute("products", products);
         model.addAttribute("page", pageable.getPageNumber() + 1);

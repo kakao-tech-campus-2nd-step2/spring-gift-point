@@ -3,13 +3,17 @@ package gift.product;
 import static gift.exception.ErrorMessage.CATEGORY_NOT_FOUND;
 import static gift.exception.ErrorMessage.PRODUCT_NOT_FOUND;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.when;
 
-import gift.category.Category;
-import gift.category.CategoryDTO;
 import gift.category.CategoryRepository;
+import gift.category.dto.CategoryRequestDTO;
+import gift.category.entity.Category;
+import gift.product.dto.ProductPaginationResponseDTO;
+import gift.product.dto.ProductRequestDTO;
+import gift.product.entity.Product;
 import java.util.List;
 import java.util.Optional;
 import org.junit.jupiter.api.DisplayName;
@@ -18,6 +22,9 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 
 @SpringBootTest
 class ProductServiceTest {
@@ -35,17 +42,64 @@ class ProductServiceTest {
     @DisplayName("[Unit] get all products test")
     void getAllProductsTest() {
         //given
-        List<Product> expect = List.of(
-            new Product(1L, "product-1", 1, "product-1-image", new Category(1, "category-1")),
-            new Product(2L, "product-2", 2, "product-2-image", new Category(1, "category-1")),
-            new Product(3L, "product-3", 3, "product-3-image", new Category(2, "category-2"))
-        );
-        when(productRepository.findAll()).thenReturn(expect);
+        Page<Product> expectFromRepository = new PageImpl<>(List.of(
+            new Product(
+                1L,
+                "product-1",
+                1,
+                "product-1-image",
+                new Category(
+                    1L,
+                    "category-1",
+                    "test-color",
+                    "test-image-url",
+                    "test-description"
+                )
+            ), new Product(
+                2L,
+                "product-2",
+                2,
+                "product-2-image",
+                new Category(
+                    1L,
+                    "category-1",
+                    "test-color",
+                    "test-image-url",
+                    "test-description"
+                )
+            ), new Product(
+                3L,
+                "product-3",
+                3,
+                "product-3-image",
+                new Category(
+                    2L,
+                    "category-2",
+                    "test-color-2",
+                    "test-image-url-2",
+                    "test-description-2"
+                )
+            )
+        ));
+
+        Page<ProductPaginationResponseDTO> expect = new PageImpl<>(List.of(
+            new ProductPaginationResponseDTO(1L, "product-1", 1, "product-1-image"),
+            new ProductPaginationResponseDTO(2L, "product-2", 2, "product-2-image")
+        ));
+
+        PageRequest pageable = PageRequest.of(0, Integer.MAX_VALUE);
+
         //when
-        List<Product> actual = productService.getAllProducts();
+        when(productRepository.findAll(pageable))
+            .thenReturn(expectFromRepository);
+        Page<ProductPaginationResponseDTO> actual = productService.getAllProducts(pageable, 1L);
 
         //then
-        assertEquals(expect, actual);
+        assertAll(
+            () -> assertEquals(expect.getContent(), actual.getContent()),
+            () -> assertEquals(expect.getTotalElements(), actual.getTotalElements()),
+            () -> assertEquals(expect.getTotalPages(), actual.getTotalPages())
+        );
     }
 
     @Nested
@@ -56,16 +110,22 @@ class ProductServiceTest {
         @DisplayName("success")
         void success() {
             //given
-            ProductDTO productDTO = new ProductDTO(
+            ProductRequestDTO productDTO = new ProductRequestDTO(
                 "product",
                 1,
                 "product-image",
-                new CategoryDTO("category-1")
+                new CategoryRequestDTO("category-1")
             );
 
             //when
             when(categoryRepository.findByName("category-1"))
-                .thenReturn(Optional.of(new Category(1, "category-1")));
+                .thenReturn(Optional.of(new Category(
+                    1L,
+                    "category-1",
+                    "test-color",
+                    "test-image-url",
+                    "test-description"
+                )));
 
             //then
             assertDoesNotThrow(
@@ -77,11 +137,11 @@ class ProductServiceTest {
         @DisplayName("category not found error")
         void addCategoryNotFoundError() {
             //given
-            ProductDTO productDTO = new ProductDTO(
+            ProductRequestDTO productDTO = new ProductRequestDTO(
                 "product",
                 1,
                 "product-image",
-                new CategoryDTO("category-1")
+                new CategoryRequestDTO("category-1")
             );
 
             //when
@@ -103,17 +163,36 @@ class ProductServiceTest {
         @DisplayName("success")
         void success() {
             //given
-            ProductDTO productDTO = new ProductDTO("product", 1, "product-image",
-                new CategoryDTO("category-1"));
+            ProductRequestDTO productDTO = new ProductRequestDTO("product", 1, "product-image",
+                new CategoryRequestDTO("category-1"));
             long id = 1L;
 
             //when
-            when(categoryRepository.findByName(productDTO.category().getName()))
-                .thenReturn(Optional.of(new Category(1L, "category-1")));
+            when(categoryRepository.findByName(productDTO.getCategory().getName()))
+                .thenReturn(Optional.of(new Category(
+                    1L,
+                    "category-1",
+                    "test-color",
+                    "test-image-url",
+                    "test-description"
+                )));
 
             when(productRepository.findById(id))
-                .thenReturn(Optional.of(new Product(1L, "prev-product", 1, "prev-product-image",
-                    new Category(1, "category-1"))));
+                .thenReturn(Optional.of(
+                    new Product(
+                        1L,
+                        "prev-product",
+                        1,
+                        "prev-product-image",
+                        new Category(
+                            1L,
+                            "category-1",
+                            "test-color",
+                            "test-image-url",
+                            "test-description"
+                        )
+                    )
+                ));
 
             //then
             assertDoesNotThrow(
@@ -125,16 +204,27 @@ class ProductServiceTest {
         @DisplayName("category not found error")
         void categoryNotFoundError() {
             //given
-            ProductDTO productDTO = new ProductDTO("product", 1, "product-image",
-                new CategoryDTO("wrong-category"));
+            ProductRequestDTO productDTO = new ProductRequestDTO("product", 1, "product-image",
+                new CategoryRequestDTO("wrong-category"));
             long id = 1L;
 
             //when
-            when(categoryRepository.findByName(productDTO.category().getName()))
+            when(categoryRepository.findByName(productDTO.getCategory().getName()))
                 .thenReturn(Optional.empty());
             when(productRepository.findById(id))
-                .thenReturn(Optional.of(new Product(1L, "prev-product", 1, "prev-product-image",
-                    new Category(1L, "category-1"))));
+                .thenReturn(Optional.of(new Product(
+                    1L,
+                    "prev-product",
+                    1,
+                    "prev-product-image",
+                    new Category(
+                        1L,
+                        "category-1",
+                        "test-color",
+                        "test-image-url",
+                        "test-description"
+                    )
+                )));
 
             //then
             assertThatThrownBy(() -> productService.updateProduct(id, productDTO))
@@ -146,13 +236,19 @@ class ProductServiceTest {
         @DisplayName("product not found error")
         void productNotFoundError() {
             //given
-            ProductDTO productDTO = new ProductDTO("product", 1, "product-image",
-                new CategoryDTO("category-1"));
+            ProductRequestDTO productDTO = new ProductRequestDTO("product", 1, "product-image",
+                new CategoryRequestDTO("category-1"));
             long id = 1L;
 
             //when
-            when(categoryRepository.findByName(productDTO.category().getName()))
-                .thenReturn(Optional.of(new Category(1L, "category-1")));
+            when(categoryRepository.findByName(productDTO.getCategory().getName()))
+                .thenReturn(Optional.of(new Category(
+                    1L,
+                    "category-1",
+                    "test-color",
+                    "test-image-url",
+                    "test-description"
+                )));
             when(productRepository.findById(id))
                 .thenReturn(Optional.empty());
 
@@ -181,7 +277,13 @@ class ProductServiceTest {
                             "product",
                             1,
                             "product-image",
-                            new Category(1L, "category-1")
+                            new Category(
+                                1L,
+                                "category-1",
+                                "test-color",
+                                "test-image-url",
+                                "test-description"
+                            )
                         )
                     )
                 );

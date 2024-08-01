@@ -4,8 +4,10 @@ import static gift.exception.ErrorMessage.OPTION_ALREADY_EXISTS;
 import static gift.exception.ErrorMessage.OPTION_NOT_FOUND;
 import static gift.exception.ErrorMessage.PRODUCT_NOT_FOUND;
 
+import gift.option.dto.OptionRequestDTO;
+import gift.option.dto.OptionResponseDTO;
 import gift.option.entity.Option;
-import gift.product.Product;
+import gift.product.entity.Product;
 import gift.product.ProductRepository;
 import java.util.List;
 import org.springframework.stereotype.Service;
@@ -27,19 +29,19 @@ public class OptionService {
     }
 
     @Transactional(readOnly = true)
-    public List<OptionDTO> getOptions(long productId) {
+    public List<OptionResponseDTO> getOptions(long productId) {
         validateProductExists(productId);
 
         return optionRepository.findAllByProductId(productId)
             .stream()
-            .map(option -> new OptionDTO(
+            .map(option -> new OptionResponseDTO(
                 option.getId(),
                 option.getName(),
                 option.getQuantity()
             )).toList();
     }
 
-    public void addOption(long productId, OptionDTO optionDTO) {
+    public void addOption(long productId, OptionRequestDTO optionDTO) {
         Product product = productRepository.findById(productId)
             .orElseThrow(() -> new IllegalArgumentException(PRODUCT_NOT_FOUND));
 
@@ -57,7 +59,7 @@ public class OptionService {
         ));
     }
 
-    public void updateOption(long productId, OptionDTO optionDTO) {
+    public void updateOption(long productId, OptionRequestDTO optionDTO) {
         validateProductExists(productId);
         validateOptionExists(productId, optionDTO.getName());
 

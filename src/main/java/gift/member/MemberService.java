@@ -5,7 +5,10 @@ import static gift.exception.ErrorMessage.MEMBER_NOT_FOUND;
 import static gift.exception.ErrorMessage.WRONG_PASSWORD;
 
 import gift.exception.FailedLoginException;
+import gift.member.dto.MemberRequestDTO;
+import gift.member.entity.Member;
 import gift.token.JwtProvider;
+import gift.token.MemberTokenDTO;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -29,16 +32,20 @@ public class MemberService {
             .orElseThrow(() -> new IllegalArgumentException(MEMBER_NOT_FOUND));
     }
 
-    public String register(MemberDTO memberDTO) {
-        memberRepository.findById(memberDTO.getEmail())
+    public String register(MemberRequestDTO memberRequestDTO) {
+        memberRepository.findById(memberRequestDTO.getEmail())
             .ifPresentOrElse(
                 e -> {
                     throw new IllegalArgumentException(MEMBER_ALREADY_EXISTS);
                 },
-                () -> memberRepository.save(memberDTO.toEntity())
+                () -> memberRepository.save(
+                    new Member(memberRequestDTO.getEmail(), memberRequestDTO.getPassword())
+                )
             );
 
-        return jwtProvider.generateToken(memberDTO.toTokenDTO());
+        return jwtProvider.generateToken(
+            new MemberTokenDTO(memberRequestDTO.getEmail())
+        );
     }
 
     public void registerIfNotExists(String email, String password) {
@@ -48,17 +55,20 @@ public class MemberService {
     }
 
     @Transactional(readOnly = true)
-    public String login(MemberDTO memberDTO) {
-        Member findMember = memberRepository.findById(memberDTO.getEmail())
+    public String login(MemberRequestDTO memberRequestDTO) {
+        Member findMember = memberRepository.findById(memberRequestDTO.getEmail())
             .orElseThrow(() -> new FailedLoginException(MEMBER_NOT_FOUND));
 
-        verifyPassword(findMember, memberDTO);
+        verifyPassword(findMember, memberRequestDTO);
 
-        return jwtProvider.generateToken(memberDTO.toTokenDTO());
+        return jwtProvider.generateToken(
+            new MemberTokenDTO(memberRequestDTO.getEmail())
+        );
     }
 
-    private void verifyPassword(Member member, MemberDTO memberDTO) {
-        if (!member.isSamePassword(memberDTO.toEntity())) {
+    private void verifyPassword(Member member, MemberRequestDTO memberRequestDTO) {
+        if (!member.isSamePassword(
+            new Member(memberRequestDTO.getEmail(), memberRequestDTO.getPassword()))) {
             throw new IllegalArgumentException(WRONG_PASSWORD);
         }
     }

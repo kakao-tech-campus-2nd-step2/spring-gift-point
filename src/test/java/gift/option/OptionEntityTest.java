@@ -10,12 +10,12 @@ import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
-import gift.category.Category;
+import gift.category.entity.Category;
 import gift.option.OptionTestCase.OptionNameAllowedCharacterError;
 import gift.option.OptionTestCase.OptionNameLengthError;
 import gift.option.OptionTestCase.OptionQuantitySizeError;
 import gift.option.entity.Option;
-import gift.product.Product;
+import gift.product.entity.Product;
 import java.util.stream.Stream;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -41,7 +41,13 @@ public class OptionEntityTest {
             "product",
             1,
             "imageUrl",
-            new Category(1L, "category")
+            new Category(
+                1L,
+                "category",
+                "test-color",
+                "test-image-url",
+                "test-description"
+            )
         );
         optionId = 1L;
         optionName = "optionName";
@@ -253,22 +259,28 @@ public class OptionEntityTest {
                         "imageUrl",
                         new Category(
                             1L,
-                            "category"
+                            "category",
+                            "test-color",
+                            "test-image-url",
+                            "test-description"
                         )
                     )
                 )),
                 Arguments.of(new Option(
                     1L,
-                    "differentOptionName",
+                    "diffOptionName",
                     10,
                     new Product(
                         10L,
-                        "differentProductName",
+                        "diffProduct",
                         100,
-                        "differentImageUrl",
+                        "diffImageUrl",
                         new Category(
                             1000L,
-                            "differentCategory"
+                            "diffCategory",
+                            "diffColor",
+                            "diffImageUrl",
+                            "diffDescription"
                         )
                     )
                 ))
@@ -294,7 +306,13 @@ public class OptionEntityTest {
                             "product",
                             1,
                             "imageUrl",
-                            new Category(1L, "category")
+                            new Category(
+                                1L,
+                                "category",
+                                "test-color",
+                                "test-image-url",
+                                "test-description"
+                            )
                         )
                     )
                 ),

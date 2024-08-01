@@ -21,6 +21,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import gift.option.OptionTestCase.OptionNameAllowedCharacterError;
 import gift.option.OptionTestCase.OptionNameLengthError;
 import gift.option.OptionTestCase.OptionQuantitySizeError;
+import gift.option.dto.OptionRequestDTO;
+import gift.option.dto.OptionResponseDTO;
 import gift.token.JwtProvider;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
@@ -57,10 +59,10 @@ public class OptionControllerTest {
         void success() throws Exception {
             //given
             long productId = 1L;
-            List<OptionDTO> expect = List.of(
-                new OptionDTO(1L, "option-1", 1),
-                new OptionDTO(2L, "option-2", 2),
-                new OptionDTO(3L, "option-3", 3)
+            List<OptionResponseDTO> expect = List.of(
+                new OptionResponseDTO(1L, "option-1", 1),
+                new OptionResponseDTO(2L, "option-2", 2),
+                new OptionResponseDTO(3L, "option-3", 3)
             );
 
             //when
@@ -100,7 +102,7 @@ public class OptionControllerTest {
         void success() throws Exception {
             //given
             long productId = 1L;
-            OptionDTO optionDTO = new OptionDTO(1L, "option-1", 10);
+            OptionRequestDTO optionDTO = new OptionRequestDTO(1L, "option-1", 10);
 
             //when
             doNothing().when(optionService).addOption(productId, optionDTO);
@@ -119,7 +121,7 @@ public class OptionControllerTest {
         void productNotFoundError() throws Exception {
             //given
             long productId = 1L;
-            OptionDTO optionDTO = new OptionDTO(1L, "option-1", 10);
+            OptionRequestDTO optionDTO = new OptionRequestDTO(1L, "option-1", 10);
 
             //when
             doThrow(new IllegalArgumentException(PRODUCT_NOT_FOUND))
@@ -140,7 +142,7 @@ public class OptionControllerTest {
         void optionAlreadyExistError() throws Exception {
             //given
             long productId = 1L;
-            OptionDTO optionDTO = new OptionDTO(1L, "option-1", 10);
+            OptionRequestDTO optionDTO = new OptionRequestDTO(1L, "option-1", 10);
 
             //when
             doThrow(new IllegalArgumentException(OPTION_ALREADY_EXISTS))
@@ -162,10 +164,10 @@ public class OptionControllerTest {
         void optionNameAllowedCharacterError(String optionName) throws Exception {
             //given
             long productId = 1L;
-            OptionDTO optionDTO = new OptionDTO(1L, optionName, 10);
+            OptionRequestDTO optionDTO = new OptionRequestDTO(1L, optionName, 10);
 
             //when
-            doNothing().when(optionService)
+            doThrow(new IllegalArgumentException(OPTION_NAME_ALLOWED_CHARACTER)).when(optionService)
                 .addOption(productId, optionDTO);
 
             //then
@@ -183,10 +185,10 @@ public class OptionControllerTest {
         void optionNameLengthError(String optionName) throws Exception {
             //given
             long productId = 1L;
-            OptionDTO optionDTO = new OptionDTO(1L, optionName, 10);
+            OptionRequestDTO optionDTO = new OptionRequestDTO(1L, optionName, 10);
 
             //when
-            doNothing().when(optionService)
+            doThrow(new IllegalArgumentException(OPTION_NAME_LENGTH)).when(optionService)
                 .addOption(productId, optionDTO);
 
             //then
@@ -204,10 +206,10 @@ public class OptionControllerTest {
         void optionQuantitySizeError(int optionQuantity) throws Exception {
             //given
             long productId = 1L;
-            OptionDTO optionDTO = new OptionDTO(1L, "option-1", optionQuantity);
+            OptionRequestDTO optionDTO = new OptionRequestDTO(1L, "option-1", optionQuantity);
 
             //when
-            doNothing().when(optionService)
+            doThrow(new IllegalArgumentException(OPTION_QUANTITY_SIZE)).when(optionService)
                 .addOption(productId, optionDTO);
 
             //then
@@ -229,7 +231,7 @@ public class OptionControllerTest {
         void success() throws Exception {
             //given
             long productId = 1L;
-            OptionDTO optionDTO = new OptionDTO(1L, "option-1", 10);
+            OptionRequestDTO optionDTO = new OptionRequestDTO(1L, "option-1", 10);
 
             //when
             doNothing().when(optionService)
@@ -249,7 +251,7 @@ public class OptionControllerTest {
         void productNotFoundError() throws Exception {
             //given
             long productId = 1L;
-            OptionDTO optionDTO = new OptionDTO(1L, "option-1", 10);
+            OptionRequestDTO optionDTO = new OptionRequestDTO(1L, "option-1", 10);
 
             //when
             doThrow(new IllegalArgumentException(PRODUCT_NOT_FOUND))
@@ -270,7 +272,7 @@ public class OptionControllerTest {
         void optionNotFoundError() throws Exception {
             //given
             long productId = 1L;
-            OptionDTO optionDTO = new OptionDTO(1L, "option-1", 10);
+            OptionRequestDTO optionDTO = new OptionRequestDTO(1L, "option-1", 10);
 
             //when
             doThrow(new IllegalArgumentException(OPTION_NOT_FOUND))
@@ -292,10 +294,10 @@ public class OptionControllerTest {
         void optionNameAllowedCharacterError(String optionName) throws Exception {
             //given
             long productId = 1L;
-            OptionDTO optionDTO = new OptionDTO(1L, optionName, 10);
+            OptionRequestDTO optionDTO = new OptionRequestDTO(1L, optionName, 10);
 
             //when
-            doNothing().when(optionService)
+            doThrow(new IllegalArgumentException(OPTION_NAME_ALLOWED_CHARACTER)).when(optionService)
                 .updateOption(productId, optionDTO);
 
             //then
@@ -313,10 +315,10 @@ public class OptionControllerTest {
         void optionNameLengthError(String optionName) throws Exception {
             //given
             long productId = 1L;
-            OptionDTO optionDTO = new OptionDTO(1L, optionName, 10);
+            OptionRequestDTO optionDTO = new OptionRequestDTO(1L, optionName, 10);
 
             //when
-            doNothing().when(optionService)
+            doThrow(new IllegalArgumentException(OPTION_NAME_LENGTH)).when(optionService)
                 .updateOption(productId, optionDTO);
 
             //then
@@ -334,10 +336,10 @@ public class OptionControllerTest {
         void optionQuantitySizeError(int optionQuantity) throws Exception {
             //given
             long productId = 1L;
-            OptionDTO optionDTO = new OptionDTO(1L, "option-1", optionQuantity);
+            OptionRequestDTO optionDTO = new OptionRequestDTO(1L, "option-1", optionQuantity);
 
             //when
-            doNothing().when(optionService)
+            doThrow(new IllegalArgumentException(OPTION_QUANTITY_SIZE)).when(optionService)
                 .updateOption(productId, optionDTO);
 
             //then

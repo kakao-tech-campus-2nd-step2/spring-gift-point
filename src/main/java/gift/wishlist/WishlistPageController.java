@@ -1,9 +1,8 @@
 package gift.wishlist;
 
-import gift.member.MemberTokenResolver;
-import gift.product.Product;
 import gift.product.ProductService;
-import gift.token.MemberTokenDTO;
+import gift.product.dto.ProductPaginationResponseDTO;
+import gift.product.dto.ProductResponseDTO;
 import java.util.List;
 import java.util.stream.IntStream;
 import org.springframework.data.domain.Page;
@@ -14,6 +13,8 @@ import org.springframework.data.domain.Sort.Order;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestHeader;
 
 @Controller
 public class WishlistPageController {
@@ -29,20 +30,26 @@ public class WishlistPageController {
         this.productService = productService;
     }
 
+    @Deprecated
     @GetMapping("/wishlist")
     public String wishlist() {
         return "/wishlist/emptyWishlistPage";
     }
 
-    @GetMapping("/wishlistPage")
+    @Deprecated
+    @GetMapping("/wishlistPage/{categoryId}")
     public String wishlistPage(
-        @MemberTokenResolver MemberTokenDTO token,
+        @RequestHeader("Authorization") String token,
         Model model,
-        Pageable pageable
+        Pageable pageable,
+        @PathVariable long categoryId
     ) {
         pageable = changePageable(pageable);
-        Page<Product> wishProducts = wishlistService.getAllWishlists(token, pageable);
-        List<Product> allProducts = productService.getAllProducts();
+        Page<ProductPaginationResponseDTO> wishProducts = wishlistService.getAllWishlists(token, pageable);
+        Page<ProductPaginationResponseDTO> allProducts = productService.getAllProducts(
+            PageRequest.of(0, Integer.MAX_VALUE),
+            categoryId
+        );
         wishProducts.getSort().getOrderFor("product.id");
 
         model.addAttribute("wishProducts", wishProducts);

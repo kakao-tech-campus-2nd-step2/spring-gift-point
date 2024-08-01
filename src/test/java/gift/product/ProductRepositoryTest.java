@@ -3,8 +3,9 @@ package gift.product;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
-import gift.category.Category;
 import gift.category.CategoryRepository;
+import gift.category.entity.Category;
+import gift.product.entity.Product;
 import java.util.ArrayList;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
@@ -36,7 +37,13 @@ class ProductRepositoryTest {
         jdbcTemplate.execute("TRUNCATE TABLE product RESTART IDENTITY");
         jdbcTemplate.execute("TRUNCATE TABLE category RESTART IDENTITY");
         jdbcTemplate.execute("SET REFERENTIAL_INTEGRITY TRUE");
-        categoryRepository.save(new Category(1L, "category-1"));
+        categoryRepository.save(new Category(
+            1L,
+            "category-1",
+            "test-color",
+            "test-image-url",
+            "test-description"
+        ));
     }
 
     @Test
@@ -48,7 +55,13 @@ class ProductRepositoryTest {
             "product-1",
             100,
             "product-image-url-1",
-            new Category(1L, "category-1")
+            new Category(
+                1L,
+                "category-1",
+                "test-color",
+                "test-image-url",
+                "test-description"
+            )
         );
 
         //when
@@ -70,7 +83,13 @@ class ProductRepositoryTest {
                 "product-" + i,
                 i * 100,
                 "product-image-url-" + i,
-                new Category(1L, "category-1")
+                new Category(
+                    1L,
+                    "category-1",
+                    "test-color",
+                    "test-image-url",
+                    "test-description"
+                )
             );
             productRepository.save(product);
             expected.add(product);
@@ -96,14 +115,26 @@ class ProductRepositoryTest {
             "product-1",
             100,
             "product-image-url-1",
-            new Category(1L, "category-1")
+            new Category(
+                1L,
+                "category-1",
+                "test-color",
+                "test-image-url",
+                "test-description"
+            )
         ));
         Product expected = new Product(
             1,
             "product-2",
             200,
             "product-image-url-2",
-            new Category(1L, "category-1")
+            new Category(
+                1L,
+                "category-1",
+                "test-color",
+                "test-image-url",
+                "test-description"
+            )
         );
 
         //when
@@ -123,7 +154,13 @@ class ProductRepositoryTest {
             "product-1",
             100,
             "product-image-url-1",
-            new Category(1L, "category-1")
+            new Category(
+                1L,
+                "category-1",
+                "test-color",
+                "test-image-url",
+                "test-description"
+            )
         ));
 
         //when
@@ -143,7 +180,13 @@ class ProductRepositoryTest {
             "product-1",
             100,
             "product-image-url-1",
-            new Category(1L, "category-1")
+            new Category(
+                1L,
+                "category-1",
+                "test-color",
+                "test-image-url",
+                "test-description"
+            )
         );
         productRepository.save(expect);
 
