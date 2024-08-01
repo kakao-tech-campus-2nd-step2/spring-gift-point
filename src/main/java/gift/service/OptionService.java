@@ -7,6 +7,7 @@ import gift.domain.model.entity.Option;
 import gift.domain.model.entity.Product;
 import gift.domain.repository.OptionRepository;
 import gift.domain.repository.ProductRepository;
+import gift.exception.LastOptionDeleteException;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
@@ -54,7 +55,16 @@ public class OptionService {
     }
 
     public void deleteOption(Long id) {
-        validateOptionId(id);
+        Option option = optionRepository.findById(id)
+            .orElseThrow(() -> new NoSuchElementException("해당 상품 옵션이 존재하지 않습니다."));
+
+        Product product = option.getProduct();
+        List<Option> productOptions = optionRepository.findAllByProductId(product.getId());
+
+        if (productOptions.size() == 1) {
+            throw new LastOptionDeleteException("상품의 마지막 옵션은 삭제할 수 없습니다.");
+        }
+
         optionRepository.deleteById(id);
     }
 
@@ -66,12 +76,6 @@ public class OptionService {
         Option savedOption = optionRepository.save(option);
 
         return OptionResponseDto.toDto(savedOption);
-    }
-
-    private void validateOptionId(Long id) {
-        if (!optionRepository.existsById(id)) {
-            throw new IllegalArgumentException("해당 상품 옵션이 존재하지 않습니다.");
-        }
     }
 
     private void validateOptionName(String name) {

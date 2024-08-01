@@ -95,4 +95,12 @@ public class GlobalExceptionHandler {
             e.getMessage());
         return new ResponseEntity<>(error, HttpStatus.CONFLICT);
     }
+
+    @ExceptionHandler(LastOptionDeleteException.class)
+    public ResponseEntity<ExceptionResponse> handleLastOptionDeleteException(
+        LastOptionDeleteException e) {
+        ExceptionResponse error = new ExceptionResponse(HttpStatus.BAD_REQUEST.value(),
+            e.getMessage());
+        return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
+    }
 }
