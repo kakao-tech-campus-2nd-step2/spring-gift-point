@@ -1,6 +1,7 @@
 package gift.service;
 
 import gift.dto.WishRequest;
+import gift.dto.WishResponseForPage;
 import gift.entity.Product;
 import gift.entity.User;
 import gift.entity.Wish;
@@ -10,8 +11,10 @@ import gift.exception.WishNotFoundException;
 import gift.repository.ProductRepository;
 import gift.repository.UserRepository;
 import gift.repository.WishRepository;
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
@@ -42,8 +45,20 @@ public class WishService {
         return wish;
     }
 
-    public Page<Wish> getWishes(Long userId, Pageable pageable) {
-        return wishRepository.findByUserId(userId, pageable);
+    public Page<WishResponseForPage> getWishes(Long userId, Pageable pageable) {
+        Page<Wish> wishPage = wishRepository.findByUserId(userId, pageable);
+
+        List<WishResponseForPage> wishResponseList = wishPage.stream()
+            .map(wish -> new WishResponseForPage(
+                wish.getId(),
+                wish.getProduct().getId(),
+                wish.getProduct().getName(),
+                wish.getProduct().getPrice(),
+                wish.getProduct().getImageUrl()
+            ))
+            .toList();
+
+        return new PageImpl<>(wishResponseList, pageable, wishPage.getTotalElements());
     }
 
     public Wish getWishById(Long userId, Long wishId) {

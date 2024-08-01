@@ -3,6 +3,7 @@ package gift.controller;
 import gift.config.LoginUser;
 import gift.dto.ResponseMessage;
 import gift.dto.WishRequest;
+import gift.dto.WishResponseForPage;
 import gift.entity.User;
 import gift.entity.Wish;
 import gift.service.WishService;
@@ -23,7 +24,6 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -50,8 +50,8 @@ public class WishController {
 
     @GetMapping
     @Operation(summary = "사용자 모든 위시 조회", description = "사용자의 모든 위시를 조회합니다.",
-        responses = @ApiResponse(responseCode = "200", description = "위시 조회 성공", content = @Content(mediaType = "application/json", schema = @Schema(implementation = Wish.class))))
-    public Page<Wish> getWishes(@Parameter(hidden = true) @LoginUser User user,
+        responses = @ApiResponse(responseCode = "200", description = "위시 조회 성공", content = @Content(mediaType = "application/json", schema = @Schema(implementation = Page.class))))
+    public Page<WishResponseForPage> getWishes(@Parameter(hidden = true) @LoginUser User user,
         @ParameterObject @PageableDefault(sort = "createdDate", direction = Sort.Direction.DESC) Pageable pageable) {
         return wishService.getWishes(user.getId(), pageable);
     }
