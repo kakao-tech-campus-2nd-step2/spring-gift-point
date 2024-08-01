@@ -3,6 +3,7 @@ package gift.api.member.service;
 import gift.api.member.domain.Member;
 import gift.api.member.dto.KakaoAccount;
 import gift.api.member.dto.MemberRequest;
+import gift.api.member.enums.Role;
 import gift.api.member.exception.EmailAgreementNeededException;
 import gift.api.member.exception.EmailAlreadyExistsException;
 import gift.api.member.exception.RegisterNeededException;
@@ -24,11 +25,12 @@ public class MemberService {
     }
 
     @Transactional
-    public Long register(MemberRequest memberRequest) {
+    public String register(MemberRequest memberRequest) {
         if (memberRepository.existsByEmail(memberRequest.email())) {
             throw new EmailAlreadyExistsException();
         }
-        return memberRepository.save(memberRequest.toEntity()).getId();
+        return issueAccessToken(memberRepository.save(memberRequest.toEntity()).getId(),
+            memberRequest.email(), memberRequest.role());
     }
 
     public void login(MemberRequest memberRequest, String token) {
@@ -40,6 +42,10 @@ public class MemberService {
             throw new UnauthorizedMemberException();
         }
         throw new ForbiddenMemberException();
+    }
+
+    public String issueAccessToken(Long id, String email, Role role) {
+        return JwtUtil.generateAccessToken(id, email, role);
     }
 
     public void verifyEmail(KakaoAccount kakaoAccount) {

@@ -39,8 +39,7 @@ public class MemberController {
         @RequestBody @Valid MemberRequest memberRequest) {
 
         HttpHeaders responseHeaders = new HttpHeaders();
-        String accessToken = JwtUtil.generateAccessToken(memberService.register(memberRequest),
-            memberRequest.email(), memberRequest.role());
+        String accessToken = memberService.register(memberRequest);
         responseHeaders.set("Authorization", JwtUtil.generateHeaderValue(accessToken));
         return ResponseEntity.ok().headers(responseHeaders).build();
     }
