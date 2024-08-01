@@ -8,6 +8,7 @@ import gift.web.dto.request.productoption.CreateProductOptionRequest;
 import gift.web.dto.request.productoption.SubtractProductOptionQuantityRequest;
 import gift.web.dto.request.productoption.UpdateProductOptionRequest;
 import gift.web.dto.response.productoption.CreateProductOptionResponse;
+import gift.web.dto.response.productoption.ProductOptionResponse;
 import gift.web.dto.response.productoption.ReadAllProductOptionsResponse;
 import gift.web.dto.response.productoption.ReadProductOptionResponse;
 import gift.web.dto.response.productoption.SubtractProductOptionQuantityResponse;
@@ -112,6 +113,13 @@ public class ProductOptionService {
         if (originalCount != distinctCount) {
             throw new IllegalStateException("상품 옵션 이름에 중복이 존재합니다");
         }
+    }
+
+    public ProductOptionResponse readProductOptionById(Long optionId) {
+        ProductOption option = productOptionRepository.findById(optionId)
+            .orElseThrow(() -> new ResourceNotFoundException("상품 옵션", optionId.toString()));
+
+        return ProductOptionResponse.fromEntity(option);
     }
 
     public ReadAllProductOptionsResponse readAllOptions(Long productId) {
