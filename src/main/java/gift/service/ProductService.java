@@ -5,15 +5,15 @@ import gift.exception.RepositoryException;
 import gift.model.Category;
 import gift.model.Option;
 import gift.model.OptionDTO;
+import gift.model.OptionResponseDTO;
 import gift.model.Product;
 import gift.model.ProductDTO;
-import gift.model.ProductPageDTO;
 import gift.repository.CategoryRepository;
 import gift.repository.OptionRepository;
 import gift.repository.ProductRepository;
 import java.util.List;
 import java.util.stream.Collectors;
-import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
@@ -36,19 +36,14 @@ public class ProductService {
             () -> new RepositoryException(ErrorCode.CATEGORY_NOT_FOUND, productDTO.categoryId()));
         Product product = new Product(productDTO.id(), productDTO.name(), productDTO.price(),
             productDTO.imageUrl(), category);
-        Option option = new Option("[기본 옵션] 추후 수정바랍니다", 1L,  product);
+        Option option = new Option("[기본 옵션] 추후 수정바랍니다", 1L, product);
         Product createdProduct = productRepository.save(product);
         return convertToDTO(createdProduct);
     }
 
-    public ProductPageDTO getAllProduct(int pageNum, int size) {
-        Pageable pageable = PageRequest.of(pageNum, size);
-        List<ProductDTO> productPage = productRepository.findAll(pageable)
-            .map(this::convertToDTO)
-            .stream()
-            .toList();
-
-        return new ProductPageDTO(pageNum, size, productPage.size(), productPage);
+    public Page<ProductDTO> getAllProduct(Pageable pageable) {
+        return productRepository.findAll(pageable)
+            .map(this::convertToDTO);
     }
 
     public List<ProductDTO> getAllProductByList() {
@@ -64,16 +59,16 @@ public class ProductService {
         return convertToDTO(product);
     }
 
-    public List<OptionDTO> getOptionsByProductId(long productId, Pageable pageable) {
+    public List<OptionResponseDTO> getOptionsByProductId(long productId, Pageable pageable) {
         Product product = productRepository.findById(productId)
             .orElseThrow(() -> new RepositoryException(ErrorCode.PRODUCT_NOT_FOUND, productId));
-        List<OptionDTO> optionDTOList = product.getOptions()
+        List<OptionResponseDTO> options = product.getOptions()
             .stream()
-            .map(this::convertToOptionDTO)
+            .map(this::convertToResponseDTO)
             .toList();
         int start = (int) pageable.getOffset();
-        int end = Math.min((start + pageable.getPageSize()), optionDTOList.size());
-        return optionDTOList.subList(start, end);
+        int end = Math.min((start + pageable.getPageSize()), options.size());
+        return options.subList(start, end);
     }
 
     public ProductDTO updateProduct(ProductDTO productDTO) {
@@ -103,5 +98,10 @@ public class ProductService {
 
     private OptionDTO convertToOptionDTO(Option option) {
         return new OptionDTO(option.getId(), option.getName(), option.getQuantity());
+    }
+
+    private OptionResponseDTO convertToResponseDTO(Option option) {
+        return new OptionResponseDTO(option.getId(), option.getName(), option.getQuantity(),
+            option.getProduct().getId());
     }
 }

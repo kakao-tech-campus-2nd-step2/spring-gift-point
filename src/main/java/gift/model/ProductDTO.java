@@ -14,5 +14,8 @@ public record ProductDTO(
     @NotEmpty(message = "imageURL은 필수 입력사항 입니다.") String imageUrl,
     Long categoryId
 ) {
-
+    public static ProductDTO convertToDTO(Product product) {
+        return new ProductDTO(product.getId(), product.getName(), product.getPrice(),
+            product.getImageUrl(), product.getCategory().getId());
+    }
 }
