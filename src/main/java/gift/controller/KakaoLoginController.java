@@ -42,7 +42,7 @@ public class KakaoLoginController {
     /*
      * 카카오 로그인
      */
-    @PostMapping("api/members/kakao")
+    @GetMapping("api/members/kakao")
     @ResponseBody
     public ResponseEntity<String> kakaoLogin(){
         return kakaoService.getCode();
