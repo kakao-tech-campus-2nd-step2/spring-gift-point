@@ -1,6 +1,9 @@
-package gift.model;
+package gift.product.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import gift.category.model.Category;
+import gift.option.model.Option;
+import gift.wish.model.Wish;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -16,11 +19,12 @@ import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 
 @Entity
 @Table(name = "product")
@@ -28,6 +32,8 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@ToString(exclude = {"wishList","category"})
+@EqualsAndHashCode
 public class Product {
 
     @Id
@@ -47,10 +53,12 @@ public class Product {
     private String imageUrl;
 
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnore
     private List<Wish> wishList = new ArrayList<>();
 
     @ManyToOne
     @JoinColumn(name = "category_id")
+    @JsonIgnore
     private Category category;
 
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
@@ -82,35 +90,5 @@ public class Product {
     }
 
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
-        Product product = (Product) o;
-        return Objects.equals(getName(), product.getName()) && Objects.equals(
-            getPrice(), product.getPrice()) && Objects.equals(getImageUrl(),
-            product.getImageUrl());
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(getName(), getPrice(), getImageUrl());
-    }
-
-    @Override
-    public String toString() {
-        return "Product{" +
-            "wishList=" + wishList +
-            ", imageUrl='" + imageUrl + '\'' +
-            ", price=" + price +
-            ", name='" + name + '\'' +
-            ", id=" + id + '\''+
-            ", category=" + category.getName()+
-            '}';
-    }
 
 }
