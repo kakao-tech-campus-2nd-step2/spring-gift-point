@@ -41,7 +41,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @DisplayName("위시 컨트롤러 단위테스트")
 class WishControllerTest {
 
-    private static final String URL = "/api/wishlist";
+    private static final String URL = "/api/wishes";
     @MockBean
     private TokenService tokenService;
     @MockBean
@@ -213,7 +213,7 @@ class WishControllerTest {
 
         //When
         mockMvc.perform(RestDocumentationRequestBuilders
-                        .delete(URL + "/{id}", 1))
+                        .delete(URL + "/{wishId}", 1))
                 //Then
                 .andExpect(
                         status().isOk()
@@ -224,7 +224,7 @@ class WishControllerTest {
                                         headerWithName("Authorization").description("Authorization: Bearer ${ACCESS_TOKEN} +\n인증방식, 액세스 토큰으로 인증요청").optional()
                                 ),
                                 pathParameters(
-                                        parameterWithName("id").description("삭제하고 싶은 위시 ID")
+                                        parameterWithName("wishId").description("삭제하고 싶은 위시 ID")
                                 )
                         )
                 );

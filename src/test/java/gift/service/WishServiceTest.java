@@ -116,18 +116,16 @@ class WishServiceTest {
         @DisplayName("성공")
         void success() {
             //Given
+            Long wishId = 1L;
             Long memberId = 1L;
-            Long productId = 1L;
             Member member = new Member("test@email.com", "password");
             Product product = new Product("name", 1000, "imageUrl", null, List.of(new Option("option1", 100)));
             Wish wish = new Wish(member, 1, product);
 
-            when(memberService.getMember(memberId)).thenReturn(member);
-            when(productService.getProduct(productId)).thenReturn(product);
-            when(wishRepository.findByMemberAndProduct(member, product)).thenReturn(Optional.of(wish));
+            when(wishRepository.findByIdAndMemberId(any(), any())).thenReturn(Optional.of(wish));
 
             //When
-            wishService.findAndDeleteProductInWish(memberId, productId);
+            wishService.findAndDeleteProductInWish(memberId, wishId);
 
             //Then
             verify(wishRepository).delete(wish);
@@ -137,17 +135,15 @@ class WishServiceTest {
         @DisplayName("실패 - 존재하지 않는 위시")
         void fail() {
             //Given
+            Long wishId = 1L;
             Long memberId = 1L;
-            Long productId = 1L;
             Member member = new Member("test@email.com", "password");
             Product product = new Product("name", 1000, "imageUrl", null, List.of(new Option("option1", 100)));
 
-            when(memberService.getMember(memberId)).thenReturn(member);
-            when(productService.getProduct(productId)).thenReturn(product);
-            when(wishRepository.findByMemberAndProduct(member, product)).thenReturn(Optional.empty());
+            when(wishRepository.findByIdAndMemberId(any(), any())).thenReturn(Optional.empty());
 
             //When Then
-            assertThatThrownBy(() -> wishService.findAndDeleteProductInWish(memberId, productId))
+            assertThatThrownBy(() -> wishService.findAndDeleteProductInWish(memberId, wishId))
                     .isInstanceOf(WishNotFoundException.class);
         }
     }
