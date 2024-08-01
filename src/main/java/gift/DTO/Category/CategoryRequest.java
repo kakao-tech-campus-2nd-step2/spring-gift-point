@@ -17,6 +17,22 @@ public class CategoryRequest {
         this.imageUrl = imageUrl;
     }
 
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public void setColor(String color) {
+        this.color = color;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
+    }
+
     public String getName() {
         return name;
     }

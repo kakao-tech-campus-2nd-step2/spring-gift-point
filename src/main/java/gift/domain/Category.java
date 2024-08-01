@@ -18,8 +18,11 @@ public class Category extends BaseEntity{
         super();
     }
 
-    public Category(String name) {
+    public Category(String name, String description, String color, String imageUrl) {
         this.name = name;
+        this.description = description;
+        this.color = color;
+        this.imageUrl = imageUrl;
     }
 
     public Long getId() {

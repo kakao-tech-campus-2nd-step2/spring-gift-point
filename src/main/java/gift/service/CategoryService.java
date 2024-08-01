@@ -27,7 +27,7 @@ public class CategoryService {
     @Transactional
     public CategoryResponse save(CategoryRequest categoryRequest){
         Category category = new Category(
-                categoryRequest.getName()
+                categoryRequest.getName(), categoryRequest.getDescription(), categoryRequest.getColor(), categoryRequest.getImageUrl()
         );
 
         Category savedCategory = categoryRepository.save(category);

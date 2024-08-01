@@ -19,6 +19,15 @@
     <label for="name">Name:</label>
     <input type="text" id="name" name="name" required>
 
+    <label for="description">Description:</label>
+    <input type="text" id="description" name="description" required>
+
+    <label for="color">Color:</label>
+    <input type="text" id="color" name="name" required>
+
+    <label for="imageUrl">ImageUrl:</label>
+    <input type="text" id="imageUrl" name="imageUrl" required>
+
     <input type="button" id="post" value="추가">
 </div>
 <div class="form-inline">
@@ -28,6 +37,15 @@
     <label for="p_name">Name:</label>
     <input type="text" id="p_name" name="name" required>
 
+    <label for="p_description">Description:</label>
+    <input type="text" id="p_description" name="p_description" required>
+
+    <label for="p_color">Color:</label>
+    <input type="text" id="p_color" name="p_color" required>
+
+    <label for="p_imageUrl">ImageUrl:</label>
+    <input type="text" id="p_imageUrl" name="p_imageUrl" required>
+
     <input type="button" id="put" value="수정">
 </div>
 <table id="product-table">
@@ -35,6 +53,9 @@
     <tr>
         <th scope="col">Id</th>
         <th scope="col">Name</th>
+        <th scope="col">Description</th>
+        <th scope="col">Color</th>
+        <th scope="col">ImageUrl</th>
         <th scope="col">Option</th>
     </tr>
     </thead>
@@ -49,17 +70,19 @@
             url: '/api/categories',
             method: 'GET',
             success: function(data) {
-                var contents = data.content;
                 var tbody = $('#category-tbody');
                 tbody.empty(); // 초기화
 
                 // 데이터에 따라 테이블 행을 생성
-                contents.forEach(function(category) {
+                data.forEach(function(category) {
                     // 한 행의 내용
                     var row = `
                         <tr>
                             <td>${category.id}</td>
                             <td>${category.name}</td>
+                            <td>${category.description}</td>
+                            <td>${category.color}</td>
+                            <td>${category.imageUrl}</td>
                             <td>
                                 <a href="#" onclick="deleteFunction(${category.id})">삭제</a>
                             </td>
@@ -96,6 +119,9 @@
     $("#post").click(function () {
         var category = {
             name : $("#name").val(),
+            description : $("#description").val(),
+            color : $("#color").val(),
+            imageUrl : $("#imageUrl").val()
         }
 
         $.ajax({
@@ -126,6 +152,9 @@
         $.ajax({
             type: "DELETE",
             url: "api/categories/" + id,
+            headers : {
+                Authorization: 'Bearer ' + localStorage.getItem("token"),
+            },
             success : function(res){
                 $('#product-table').find('tr[data-id="' + id + '"]').remove();
                 alert("카테고리 ID : " + id + "가 삭제되었습니다.");
@@ -146,6 +175,9 @@
     $("#put").click(function(){
         var category ={
             name : $("#p_name").val(),
+            description : $("#p_description").val(),
+            color : $("#p_color").val(),
+            imageUrl : $("#p_imageUrl").val()
         }
 
         $.ajax({
@@ -154,8 +186,11 @@
             contentType: "application/json",
             datatype : "json",
             data : JSON.stringify(category),
+            headers : {
+                Authorization: 'Bearer ' + localStorage.getItem("token"),
+            },
             success : function(res){
-                location.reload();
+                getCategories();
             },
             error : function(err){
                 if(err.responseJSON){
@@ -171,7 +206,6 @@
 
     function logoutFunction(){
         localStorage.removeItem('token');
-        localStorage.removeItem('email');
         backToHome();
     }
 </script>

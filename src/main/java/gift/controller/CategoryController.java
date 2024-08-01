@@ -45,11 +45,11 @@ public class CategoryController {
      */
     @PutMapping("/api/categories/{category_id}")
     public ResponseEntity<Void> updateCategory(
-            @PathVariable Long category_id,
+            @PathVariable("category_id") Long categoryId,
             @RequestBody CategoryRequest categoryRequest,
             @AuthenticateMember UserResponse user
     ){
-        categoryService.update(category_id, categoryRequest);
+        categoryService.update(categoryId, categoryRequest);
 
         return new ResponseEntity<>(HttpStatus.OK);
     }
@@ -58,10 +58,10 @@ public class CategoryController {
      */
     @DeleteMapping("/api/categories/{category_id}")
     public ResponseEntity<Void> deleteCategory(
-            @PathVariable Long category_id,
+            @PathVariable("category_id") Long categoryId,
             @AuthenticateMember UserResponse user
     ){
-        categoryService.delete(category_id);
+        categoryService.delete(categoryId);
 
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
