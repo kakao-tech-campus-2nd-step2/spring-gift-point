@@ -1,6 +1,9 @@
 package gift.product;
 
-public record ProductResponseDto(Long id, String name, int price, String imageUrl, Long categoryId) {
+import gift.option.Option;
+import java.util.List;
+
+public record ProductResponseDto(Long id, String name, int price, String imageUrl, Long categoryId, List<Option> options) {
 
 }
 

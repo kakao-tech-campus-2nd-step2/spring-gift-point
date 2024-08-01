@@ -37,7 +37,8 @@ public class ProductService {
             product.getName(),
             product.getPrice(),
             product.getImageUrl(),
-            product.getCategory().getId()));
+            product.getCategory().getId(),
+            product.getOptions()));
     }
 
     public Optional<ProductResponseDto> getProductById(Long id) {
@@ -47,22 +48,26 @@ public class ProductService {
                 product.getName(),
                 product.getPrice(),
                 product.getImageUrl(),
-                product.getCategory().getId()));
+                product.getCategory().getId(),
+                product.getOptions()));
     }
 
     public ProductResponseDto postProduct(ProductRequestDto productRequestDto) {
+        optionRepository.save(productRequestDto.options().get(0));
         Product product = productRepository.saveAndFlush(new Product(
             productRequestDto.name(),
             productRequestDto.price(),
-            productRequestDto.url(),
-            categoryRepository.findById(productRequestDto.categoryId()).orElseThrow()
+            productRequestDto.imageUrl(),
+            categoryRepository.findById(productRequestDto.categoryId()).orElseThrow(),
+            productRequestDto.options()
         ));
         return new ProductResponseDto(
             product.getId(),
             product.getName(),
             product.getPrice(),
             product.getImageUrl(),
-            product.getCategory().getId()
+            product.getCategory().getId(),
+            product.getOptions()
         );
     }
 
@@ -70,7 +75,7 @@ public class ProductService {
         Product product = productRepository.findById(id)
             .orElseThrow(() -> new InvalidProduct("유효하지 않은 상품입니다"));
 
-        product.update(productRequestDto.name(), productRequestDto.price(), productRequestDto.url());
+        product.update(productRequestDto.name(), productRequestDto.price(), productRequestDto.imageUrl());
         productRepository.saveAndFlush(product);
 
         return new ProductResponseDto(
@@ -78,7 +83,8 @@ public class ProductService {
             product.getName(),
             product.getPrice(),
             product.getImageUrl(),
-            product.getCategory().getId()
+            product.getCategory().getId(),
+            product.getOptions()
         );
     }
 
@@ -96,7 +102,8 @@ public class ProductService {
             product.getName(),
             product.getPrice(),
             product.getImageUrl(),
-            product.getCategory().getId()
+            product.getCategory().getId(),
+            product.getOptions()
         );
     }
 

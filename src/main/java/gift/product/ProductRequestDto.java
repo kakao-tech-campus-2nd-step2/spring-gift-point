@@ -1,9 +1,11 @@
 package gift.product;
 
+import gift.option.Option;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
+import java.util.List;
 
 public record ProductRequestDto(
     @NotBlank
@@ -14,6 +16,7 @@ public record ProductRequestDto(
     @Min(value = 1,message = "상품 가격을 입력해주세요")
     int price,
     @NotBlank(message = "상품 url을 등록해주세요")
-    String url,
-    Long categoryId) { }
+    String imageUrl,
+    Long categoryId,
+    List<Option> options) { }
 
