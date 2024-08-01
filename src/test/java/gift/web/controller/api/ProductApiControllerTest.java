@@ -90,11 +90,7 @@ class ProductApiControllerTest {
     @MockBean
     private ProductService productService;
     @MockBean
-    private WishProductService wishProductService;
-    @MockBean
     private ProductOptionService productOptionService;
-    @MockBean
-    private OrderService orderService;
 
     private String accessToken;
 
@@ -129,7 +125,6 @@ class ProductApiControllerTest {
         mockMvc
             .perform(
                 get(BASE_URL)
-                    .header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken)
                     .param("page", "0")
                     .param("size", "10")
             )
@@ -256,7 +251,6 @@ class ProductApiControllerTest {
         mockMvc
             .perform(
                 get(BASE_URL + "/{productId}", 1L)
-                    .header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken)
             )
             .andExpect(status().isOk())
             .andDo(
