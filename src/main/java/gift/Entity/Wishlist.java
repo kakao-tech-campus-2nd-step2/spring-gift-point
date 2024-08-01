@@ -1,28 +1,23 @@
 package gift.Entity;
 
-import gift.Model.MemberDto;
-import gift.Model.ProductDto;
-import gift.Model.WishlistDto;
 import jakarta.persistence.*;
 
 @Entity
 public class Wishlist {
-
-    @EmbeddedId
-    private WishlistId id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private long id;
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.REFRESH)
-    @MapsId("memberId")
-    @JoinColumn(name = "memberId", referencedColumnName = "memberId")
+    @JoinColumn(name = "memberId", referencedColumnName = "id")
     private Member member;
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.REFRESH)
-    @MapsId("productId")
-    @JoinColumn(name = "productId", referencedColumnName = "productId")
+    @JoinColumn(name = "productId", referencedColumnName = "id")
     private Product product;
 
     private String productName;
-    private int count;
+    private int quantity;
     private int price;
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.REFRESH)
@@ -32,38 +27,42 @@ public class Wishlist {
     protected Wishlist() {
     }
 
-    public Wishlist(WishlistId id, Member member, Product product, String productName, int count, int price, Option option) {
+    public Wishlist(long id, Member member, Product product, String productName, int quantity, int price, Option option) {
         this.id = id;
         this.member = member;
         this.product = product;
         this.productName = productName;
-        this.count = count;
+        this.quantity = quantity;
         this.price = price;
         this.option = option;
     }
 
-    public WishlistId getId() {
+    public long getId() {
         return id;
     }
 
-    public void setId(WishlistId id) {
+    public void setId(long id) {
         this.id = id;
     }
 
-    public long getMemberId() {
-        return id.getMemberId();
+    public Member getMember() {
+        return member;
     }
 
-    public void setMemberId(long memberId) {
-        id.setMemberId(memberId);
+    public void setMember(Member member) {
+        this.member = member;
     }
 
-    public long getProductId() {
-        return id.getProductId();
+    public Product getProduct() {
+        return product;
     }
 
-    public void setProductId(long productId) {
-        id.setProductId(productId);
+    public void setProduct(Product product) {
+        this.product = product;
+    }
+
+    public void setOption(Option option) {
+        this.option = option;
     }
 
     public String getProductName() {
@@ -75,11 +74,11 @@ public class Wishlist {
     }
 
     public int getCount() {
-        return count;
+        return quantity;
     }
 
     public void setCount(int count) {
-        this.count = count;
+        this.quantity = count;
     }
 
     public int getPrice() {
