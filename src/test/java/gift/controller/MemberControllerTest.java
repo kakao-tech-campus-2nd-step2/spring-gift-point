@@ -1,7 +1,7 @@
 package gift.controller;
 
-import gift.dto.LoginMemberToken;
-import gift.dto.MemberRequest;
+import gift.auth.dto.LoginMemberToken;
+import gift.member.dto.MemberRequest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

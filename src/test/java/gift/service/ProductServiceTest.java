@@ -3,19 +3,18 @@ package gift.service;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
-import gift.database.ProductFacadeRepository;
-import gift.database.repository.JpaCategoryRepository;
-import gift.database.repository.JpaGiftOptionRepository;
-import gift.dto.ProductRequest;
+import gift.product.facadeRepository.ProductFacadeRepository;
+import gift.repository.JpaCategoryRepository;
+import gift.repository.JpaGiftOptionRepository;
+import gift.product.dto.ProductRequest;
 import gift.exceptionAdvisor.exceptions.GiftException;
-import gift.model.Category;
-import gift.model.GiftOption;
+import gift.category.entity.Category;
+import gift.option.entity.GiftOption;
+import gift.product.service.ProductService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-
-import static org.mockito.Mockito.*;
 
 
 @SpringBootTest

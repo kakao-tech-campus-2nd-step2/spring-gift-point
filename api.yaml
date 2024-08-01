@@ -1,0 +1,797 @@
+openapi: "3.1.0"
+info:
+  title: "spring_gift API"
+  version: "1.0.0"
+servers:
+  - url: "http://localhost:8080"
+tags:
+  - name: "member"
+    description: "회원 관련 API"
+
+  - name: "product"
+    description: "상품 관련 API"
+
+  - name: "giftOption"
+    description: "상품 옵션 관련 API"
+
+  - name: "category"
+    description: "카테고리 관련 API"
+
+  - name: "wishlist"
+    description: "위시리스트 관련 API"
+
+  - name: "order"
+    description: "주문 관련 API"
+
+  - name: "admin"
+    description: "관리자 페이지 관련 API"
+
+
+paths:
+  /api/member/kakao/login:
+    get:
+      tags:
+        - "member"
+      summary: "카카오 로그인 요청"
+      operationId: "kakaoLoginTry"
+      responses:
+        "200":
+          description: "카카오 회원 로그인 창으로 리다이렉트"
+          content:
+            '*/*':
+              schema:
+                type: "string"
+  /api/member/kakao/login/callback:
+    get:
+      tags:
+        - "member"
+      summary: "member access token 획득"
+      operationId: "kakaoLogin"
+      parameters:
+        - name: "code"
+          in: "query"
+          required: true
+          schema:
+            type: "string"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/LoginMemberToken"
+  /admin/categories:
+    get:
+      tags:
+        - "admin"
+      summary: "GET admin/categories"
+      operationId: "adminPage"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                type: "string"
+  /admin/categories/new:
+    get:
+      tags:
+        - "admin"
+      summary: "GET admin/categories/new"
+      operationId: "createPage"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                type: "string"
+    post:
+      tags:
+        - "admin"
+      summary: "POST admin/categories/new"
+      operationId: "createPageSubmit"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                type: "string"
+  /admin/categories/{id}:
+    get:
+      tags:
+        - "admin"
+      summary: "GET admin/categories/{id}"
+      operationId: "updatePage"
+      parameters:
+        - name: "id"
+          in: "path"
+          required: true
+          schema:
+            type: "integer"
+            format: "int64"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                type: "string"
+  /admin/products:
+    get:
+      tags:
+        - "admin"
+      summary: "GET admin/products"
+      operationId: "adminPage"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                type: "string"
+  /admin/products/new:
+    get:
+      tags:
+        - "admin"
+      summary: "GET admin/products/new"
+      operationId: "createPage"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                type: "string"
+    post:
+      tags:
+        - "admin"
+      summary: "POST admin/products/new"
+      operationId: "createPageSubmit"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                type: "string"
+  /admin/products/{id}:
+    get:
+      tags:
+        - "admin"
+      summary: "GET admin/products/{id}"
+      operationId: "updatePage"
+      parameters:
+        - name: "id"
+          in: "path"
+          required: true
+          schema:
+            type: "integer"
+            format: "int64"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                type: "string"
+    put:
+      tags:
+        - "admin"
+      summary: "PUT admin/products/{id}"
+      operationId: "updatePageSubmit"
+      parameters:
+        - name: "id"
+          in: "path"
+          required: true
+          schema:
+            type: "integer"
+            format: "int64"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                type: "string"
+    delete:
+      tags:
+        - "admin"
+      summary: "DELETE admin/products/{id}"
+      operationId: "deletePageSubmit"
+      parameters:
+        - name: "id"
+          in: "path"
+          required: true
+          schema:
+            type: "integer"
+            format: "int64"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                type: "string"
+  /api/products:
+    get:
+      tags:
+        - "product"
+      summary: "상품 조회"
+      operationId: "getList"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                type: "array"
+                items:
+                  $ref: "#/components/schemas/ProductResponse"
+    post:
+      tags:
+        - "product"
+      summary: "상품 추가"
+      operationId: "add"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ProductRequest"
+        required: true
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/Void"
+  /api/products/{id}:
+    put:
+      tags:
+        - "product"
+      summary: "상품 수정"
+      operationId: "update"
+      parameters:
+        - name: "id"
+          in: "path"
+          required: true
+          schema:
+            type: "integer"
+            format: "int64"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ProductRequest"
+        required: true
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/Void"
+    delete:
+      tags:
+        - "product"
+      summary: "상품 삭제"
+      operationId: "delete"
+      parameters:
+        - name: "id"
+          in: "path"
+          required: true
+          schema:
+            type: "integer"
+            format: "int64"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/Void"
+  /api/products/{page}:
+    get:
+      tags:
+        - "product"
+      summary: "상품 조회 paging"
+      operationId: "getPage"
+      parameters:
+        - name: "page"
+          in: "path"
+          required: true
+          schema:
+            type: "integer"
+            format: "int32"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                type: "array"
+                items:
+                  $ref: "#/components/schemas/ProductResponse"
+  /api/categories:
+    get:
+      tags:
+        - "category"
+      summary: "카테고리 조회"
+      operationId: "getCategories"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                type: "array"
+                items:
+                  $ref: "#/components/schemas/CategoryResponse"
+    post:
+      tags:
+        - "category"
+      summary: "카테고리 추가"
+      operationId: "add"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CategoryRequest"
+        required: true
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/Void"
+  /api/categories/{id}:
+    put:
+      tags:
+        - "category"
+      summary: "카테고리 수정"
+      operationId: "update"
+      parameters:
+        - name: "id"
+          in: "path"
+          required: true
+          schema:
+            type: "integer"
+            format: "int32"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CategoryRequest"
+        required: true
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/Void"
+    delete:
+      tags:
+        - "category"
+      summary: "카테고리 삭제"
+      operationId: "delete"
+      parameters:
+        - name: "id"
+          in: "path"
+          required: true
+          schema:
+            type: "integer"
+            format: "int32"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/Void"
+  /api/member:
+    put:
+      tags:
+        - "member"
+      summary: "member 회원가입"
+      operationId: "register"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/MemberRequest"
+        required: true
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/Void"
+  /api/member/login:
+    get:
+      tags:
+        - "member"
+      summary: "member 로그인"
+      operationId: "login"
+      parameters:
+        - name: "email"
+          in: "query"
+          required: true
+          schema:
+            type: "string"
+        - name: "password"
+          in: "query"
+          required: true
+          schema:
+            type: "string"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/LoginMemberToken"
+  /api/products/{productId}/options:
+    get:
+      tags:
+        - "giftOption"
+      summary: "옵션 조회"
+      operationId: "getGiftOptions"
+      parameters:
+        - name: "productId"
+          in: "path"
+          required: true
+          schema:
+            type: "integer"
+            format: "int64"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                type: "array"
+                items:
+                  $ref: "#/components/schemas/GiftOptionResponse"
+    post:
+      tags:
+        - "giftOption"
+      summary: "옵션추가"
+      operationId: "add"
+      parameters:
+        - name: "productId"
+          in: "path"
+          required: true
+          schema:
+            type: "integer"
+            format: "int64"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/GiftOptionRequest"
+        required: true
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/Void"
+  /api/products/{productId}/options/{id}:
+    put:
+      tags:
+        - "giftOption"
+      summary: "옵션 수정"
+      operationId: "update"
+      parameters:
+        - name: "productId"
+          in: "path"
+          required: true
+          schema:
+            type: "integer"
+            format: "int64"
+        - name: "id"
+          in: "path"
+          required: true
+          schema:
+            type: "integer"
+            format: "int64"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/GiftOptionRequest"
+        required: true
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/Void"
+    delete:
+      tags:
+        - "giftOption"
+      summary: "옵션 삭제"
+      operationId: "delete"
+      parameters:
+        - name: "productId"
+          in: "path"
+          required: true
+          schema:
+            type: "integer"
+            format: "int64"
+        - name: "id"
+          in: "path"
+          required: true
+          schema:
+            type: "integer"
+            format: "int64"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/Void"
+  /api/member/{memberId}/order/create:
+    post:
+      tags:
+        - "order"
+      summary: "주문 추가"
+      operationId: "createOrder"
+      parameters:
+        - name: "memberId"
+          in: "path"
+          required: true
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/OrderRequest"
+        required: true
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/Void"
+  /api/wishlist:
+    get:
+      tags:
+        - "wishlist"
+      summary: "위시 리스트 조회"
+      operationId: "getWishList"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/WishListResponse"
+    put:
+      tags:
+        - "wishlist"
+      summary: "위시 리스트 수정"
+      operationId: "updateWishList"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/WishListRequest"
+        required: true
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/Void"
+    post:
+      tags:
+        - "wishlist"
+      summary: "위시 리스트 추가"
+      operationId: "addWishList"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/WishListRequest"
+        required: true
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/Void"
+    delete:
+      tags:
+        - "wishlist"
+      summary: "위시 리스트 삭제"
+      operationId: "deleteWishList"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/WishListRequest"
+        required: true
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/Void"
+  /api/wishlist/{page}:
+    get:
+      tags:
+        - "wishlist"
+      summary: "위시리스트 페이지"
+      operationId: "getWishListPage"
+      parameters:
+        - name: "page"
+          in: "path"
+          required: true
+          schema:
+            type: "integer"
+            format: "int32"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/WishListResponse"
+components:
+  schemas:
+    LoginMemberToken:
+      type: "string"
+      properties:
+        token:
+          type: "string"
+    ProductResponse:
+      type: "object"
+      properties:
+        id:
+          type: "long"
+          format: "long"
+        name:
+          type: "string"
+        price:
+          type: "integer"
+          format: "int32"
+        imageUrl:
+          type: "string"
+        categoryId:
+          type: "integer"
+          format: "int64"
+        giftOptionName:
+          type: "string"
+        giftOptionQuantity:
+          type: "integer"
+          format: "int32"
+    ProductRequest:
+      type: "object"
+      properties:
+        id:
+          type: "long"
+          format: "long"
+        name:
+          type: "string"
+        price:
+          type: "integer"
+          format: "int32"
+        imageUrl:
+          type: "string"
+        categoryId:
+          type: "integer"
+          format: "int64"
+        giftOptionName:
+          type: "string"
+        giftOptionQuantity:
+          type: "integer"
+          format: "int32"
+    Void:
+      type: "null"
+      properties: { }
+    CategoryResponse:
+      type: "object"
+      properties:
+        id:
+          type: "long"
+          format: "long"
+        name:
+          type: "string"
+        color:
+          type: "string"
+        imageUrl:
+          type: "string"
+        description:
+          type: "string"
+    CategoryRequest:
+      type: "object"
+      properties:
+        name:
+          type: "string"
+        color:
+          type: "string"
+        description:
+          type: "string"
+        imageUrl:
+          type: "string"
+    MemberRequest:
+      type: "object"
+      properties:
+        id:
+          type: "long"
+          format: "long"
+        email:
+          type: "string"
+        password:
+          type: "string"
+        role:
+          type: "string"
+          enum:
+            - "GUEST"
+            - "COMMON_MEMBER"
+            - "ADMIN_MEMBER"
+    GiftOptionResponse:
+      type: "object"
+      properties:
+        id:
+          type: "long"
+          format: "long"
+        name:
+          type: "string"
+        quantity:
+          type: "integer"
+          format: "int32"
+    GiftOptionRequest:
+      type: "object"
+      properties:
+        name:
+          type: "string"
+        quantity:
+          type: "integer"
+          format: "int32"
+    OrderRequest:
+      type: "object"
+      properties:
+        memberId:
+          type: "integer"
+          format: "int64"
+        productId:
+          type: "integer"
+          format: "int64"
+        giftOptionId:
+          type: "integer"
+          format: "int64"
+        quantity:
+          type: "integer"
+          format: "int32"
+        msg:
+          type: "string"
+    WishListResponse:
+      type: "object"
+      properties:
+        memberId:
+          type: "integer"
+          format: "int64"
+        wishList:
+          type: "string"
+    WishListRequest:
+      type: "object"
+      properties:
+        productId:
+          type: "integer"
+          format: "int64"
+        productCount:
+          type: "integer"
+          format: "int32"

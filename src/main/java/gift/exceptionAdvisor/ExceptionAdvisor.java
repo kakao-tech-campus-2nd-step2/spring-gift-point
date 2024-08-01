@@ -1,7 +1,6 @@
 package gift.exceptionAdvisor;
 
 
-import gift.dto.ExceptionResponse;
 import gift.exceptionAdvisor.exceptions.GiftException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;

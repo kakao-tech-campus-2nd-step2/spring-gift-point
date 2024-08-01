@@ -2,13 +2,14 @@ package gift.database;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import gift.database.repository.JpaCategoryRepository;
-import gift.database.repository.JpaGiftOptionRepository;
-import gift.database.repository.JpaProductRepository;
+import gift.repository.JpaCategoryRepository;
+import gift.repository.JpaGiftOptionRepository;
+import gift.repository.JpaProductRepository;
 import gift.exceptionAdvisor.exceptions.GiftException;
-import gift.model.Category;
-import gift.model.GiftOption;
-import gift.model.Product;
+import gift.category.entity.Category;
+import gift.option.entity.GiftOption;
+import gift.product.entity.Product;
+import gift.product.facadeRepository.ProductFacadeRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -131,6 +132,28 @@ class ProductFacadeRepositoryTest {
         assertEquals("test2", productFacadeRepository.getProduct(product2.getId()).getName());
         assertEquals(1, productFacadeRepository.findAll().size());
         assertEquals(123, productFacadeRepository.getProduct(product2.getId()).getPrice());
+    }
+
+    @Test
+    @DisplayName("상품을 조회했을 때 연관된 카테고리와 옵션이 조회된다.")
+    void test6() {
+        // given
+        Category category = new Category(null, "test", "red", "test", "test");
+        category = jpaCategoryRepository.save(category);
+        GiftOption giftOption = new GiftOption(null, "test", 123);
+
+        Product product = new Product(null, "test", 123, "abc", category, giftOption);
+
+        product.addGiftOption(giftOption);
+        product = productFacadeRepository.saveProduct(product);
+
+        // when
+        Product product2 = productFacadeRepository.getProduct(product.getId());
+
+        // then
+        assertNotNull(product2.getCategory());
+        assertNotNull(product2.getGiftOptionList());
+        assertEquals(category.getName(), product2.getCategory().getName());
     }
 
 }

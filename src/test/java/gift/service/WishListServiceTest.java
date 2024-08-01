@@ -2,13 +2,13 @@ package gift.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import gift.database.repository.JpaMemberRepository;
-import gift.database.repository.JpaProductRepository;
-import gift.database.repository.JpaWishRepository;
-import gift.model.Member;
-import gift.model.MemberRole;
-import gift.model.Product;
-import gift.model.Wish;
+import gift.repository.JpaMemberRepository;
+import gift.repository.JpaProductRepository;
+import gift.repository.JpaWishRepository;
+import gift.member.entity.Member;
+import gift.member.MemberRole;
+import gift.product.entity.Product;
+import gift.wish.entity.Wish;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

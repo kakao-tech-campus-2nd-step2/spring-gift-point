@@ -2,7 +2,8 @@ package gift.service;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-import gift.model.Member;
+import gift.auth.service.AuthenticationTool;
+import gift.member.entity.Member;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
