@@ -3,7 +3,7 @@ GET http://localhost:8080/api/products/all
 Content-Type: application/json
 
 ### get product page
-GET http://localhost:8080/api/products?page=0
+GET http://localhost:8080/api/products?page=4
 Content-Type: application/json
 
 ### get product

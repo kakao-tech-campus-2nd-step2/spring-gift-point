@@ -64,9 +64,6 @@ ALTER TABLE members
     ADD CONSTRAINT uc_members_nickname UNIQUE (nickname);
 
 ALTER TABLE options
-    ADD CONSTRAINT uc_options_name UNIQUE (name);
-
-ALTER TABLE options
     ADD CONSTRAINT FK_OPTIONS_ON_PRODUCT FOREIGN KEY (product_id) REFERENCES products (id);
 
 ALTER TABLE orders

@@ -1,15 +1,8 @@
 -- categories
-INSERT INTO categories (name, color, image_url, description) VALUES ('교환권', 'RED', 'http://example.com/coupon.jpg', '교환권 관련 카테고리');
-INSERT INTO categories (name, color, image_url, description) VALUES ('상품권', 'INDIGO', 'http://example.com/voucher.jpg', '상품권 관련 카테고리');
-INSERT INTO categories (name, color, image_url, description) VALUES ('뷰티', 'YELLOW', 'http://example.com/beauty.jpg', '뷰티 관련 카테고리');
-INSERT INTO categories (name, color, image_url, description) VALUES ('패션', 'GREEN', 'http://example.com/fashion.jpg', '패션 관련 카테고리');
-INSERT INTO categories (name, color, image_url, description) VALUES ('식품', 'BLUE', 'http://example.com/food.jpg', '식품 관련 카테고리');
-INSERT INTO categories (name, color, image_url, description) VALUES ('와인/양주/전통주', 'NAVY', 'http://example.com/alchol.jpg', '와인/양주/전통주 관련 카테고리');
-INSERT INTO categories (name, color, image_url, description) VALUES ('리빙/도서', 'PURPLE', 'http://example.com/book.jpg', '리빙/도서 관련 카테고리');
-INSERT INTO categories (name, color, image_url, description) VALUES ('레저/스포츠', 'BROWN', 'http://example.com/sports.jpg', '레저/스포츠 관련 카테고리');
-INSERT INTO categories (name, color, image_url, description) VALUES ('아티스트/캐릭터', 'PINK', 'http://example.com/artist.jpg', '아티스트/캐릭터 관련 카테고리');
-INSERT INTO categories (name, color, image_url, description) VALUES ('유아동/반려', 'WHITE', 'http://example.com/pet.jpg', '유아동/반려 관련 카테고리');
-INSERT INTO categories (name, color, image_url, description) VALUES ('디지털/가전', 'BLACK', 'http://example.com/digital.jpg', '디지털/가전 관련 카테고리');
-INSERT INTO categories (name, color, image_url, description) VALUES ('카카오프렌즈', 'ORANGE', 'http://example.com/friends.jpg', '카카오프렌즈 관련 카테고리');
-INSERT INTO categories (name, color, image_url, description) VALUES ('트렌드 선물', 'CYAN', 'http://example.com/trend.jpg', '트렌드 선물 관련 카테고리');
-INSERT INTO categories (name, color, image_url, description) VALUES ('백화점', 'GRAY', 'http://example.com/department.jpg', '백화점 관련 카테고리');
+INSERT INTO categories (name, color, image_url, description) VALUES ('교환권', '#6c95d1', 'https://', 'ㅁ');
+INSERT INTO categories (name, color, image_url, description) VALUES ('식품', '#ff5733', 'https://', '다양한 식품 교환권');
+INSERT INTO categories (name, color, image_url, description) VALUES ('음료', '#33ff57', 'https://', '다양한 음료 교환권');
+INSERT INTO categories (name, color, image_url, description) VALUES ('의류', '#3357ff', 'https://', '다양한 의류 교환권');
+INSERT INTO categories (name, color, image_url, description) VALUES ('전자제품', '#ff33a6', 'https://', '다양한 전자제품 교환권');
+
+
