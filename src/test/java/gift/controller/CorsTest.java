@@ -9,12 +9,14 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.transaction.annotation.Transactional;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
 @AutoConfigureMockMvc
+@Transactional
 public class CorsTest {
 
     @Autowired
@@ -28,7 +30,7 @@ public class CorsTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .header(HttpHeaders.ORIGIN, "http://localhost:3000")
                 .header(HttpHeaders.ACCESS_CONTROL_REQUEST_METHOD, "POST")
-                .content(objectMapper.writeValueAsString(new RegisterRequest("test@naver.com", "testPassword")));
+                .content(objectMapper.writeValueAsString(new RegisterRequest("corsTest@naver.com", "corsTestPassword")));
         //when
         var result = mockMvc.perform(postRequest);
         //then
@@ -41,10 +43,10 @@ public class CorsTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .header(HttpHeaders.ORIGIN, "http://localhost:3001")
                 .header(HttpHeaders.ACCESS_CONTROL_REQUEST_METHOD, "POST")
-                .content(objectMapper.writeValueAsString(new RegisterRequest("test@naver.com", "testPassword")));
+                .content(objectMapper.writeValueAsString(new RegisterRequest("corsTest@naver.com", "corsTestPassword")));
         //when
         var result = mockMvc.perform(postRequest);
         //then
-        result.andExpect(status().isOk());
+        result.andExpect(status().isForbidden());
     }
 }
