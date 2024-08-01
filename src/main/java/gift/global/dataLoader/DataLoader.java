@@ -50,44 +50,46 @@ public class DataLoader {
             new Category("교환권", "놓치면 후회할 교환권 특가", "#9290C3",
                 "'https://img1.daumcdn.net/thumb/S104x104/?fname=https%3A%2F%2Fst.kakaocdn.net%2Fproduct%2Fgift%2Fproduct%2F20240131153049_5a22b137a8d346e9beb020a7a7f4254a.jpg"));
 
-        // Product
-        Product americano = new Product("아이스 아메리카노 T", birthday, 4500, "description",
-            "https://example.com/image.jpg");
-        Product cafuchino = new Product("아이스 카푸치노 M", coupon, 4700,"description",
-            "https://example.com/image.jpg");
-        Product malcha = new Product("핫 말차라떼 L", birthday, 6800,"description",
-            "https://example.com/image.jpg");
-        jpaProductRepository.save(americano);
-        jpaProductRepository.save(cafuchino);
-        jpaProductRepository.save(malcha);
-
-        // dummy Product data
-        for (int i = 0; i < 100; i++) {
-            Product dummyProduct = new Product(
-                "더미 커피 " + (i + 1),
-                birthday,
-                1000 + (i * 10),
-                "description",
-                "https://example.com/dummy" + (i + 1) + ".jpg"
-            );
-            Product savedProduct = jpaProductRepository.save(dummyProduct);
-
-            // dummy Option data
-            jpaOptionRepository.save(new Option("option" + (i + 1), 2L, savedProduct));
-        }
-
-        // User
-        Member minji = new Member("minji@example.com", "password1");
-        Member junseo = new Member("junseo@example.com", "password2");
-        Member donghyun = new Member("donghyun@example.com", "password3");
-        jpaMemberRepository.save(minji);
-        jpaMemberRepository.save(junseo);
-        jpaMemberRepository.save(donghyun);
-
-        // CartItem
-        jpaWishRepository.save(new Wish(minji, malcha));
-        jpaWishRepository.save(new Wish(junseo, cafuchino));
-        jpaWishRepository.save(new Wish(donghyun, cafuchino));
+        jpaCategoryRepository.saveAndFlush(birthday);
+        jpaCategoryRepository.saveAndFlush(coupon);
+//        // Product
+//        Product americano = new Product("아이스 아메리카노 T", birthday, 4500, "description",
+//            "https://example.com/image.jpg");
+//        Product cafuchino = new Product("아이스 카푸치노 M", coupon, 4700,"description",
+//            "https://example.com/image.jpg");
+//        Product malcha = new Product("핫 말차라떼 L", birthday, 6800,"description",
+//            "https://example.com/image.jpg");
+//        jpaProductRepository.save(americano);
+//        jpaProductRepository.save(cafuchino);
+//        jpaProductRepository.save(malcha);
+//
+//        // dummy Product data
+//        for (int i = 0; i < 100; i++) {
+//            Product dummyProduct = new Product(
+//                "더미 커피 " + (i + 1),
+//                birthday,
+//                1000 + (i * 10),
+//                "description",
+//                "https://example.com/dummy" + (i + 1) + ".jpg"
+//            );
+//            Product savedProduct = jpaProductRepository.save(dummyProduct);
+//
+//            // dummy Option data
+//            jpaOptionRepository.save(new Option("option" + (i + 1), 2L, savedProduct));
+//        }
+//
+//        // User
+//        Member minji = new Member("minji@example.com", "password1");
+//        Member junseo = new Member("junseo@example.com", "password2");
+//        Member donghyun = new Member("donghyun@example.com", "password3");
+//        jpaMemberRepository.save(minji);
+//        jpaMemberRepository.save(junseo);
+//        jpaMemberRepository.save(donghyun);
+//
+//        // CartItem
+//        jpaWishRepository.save(new Wish(minji, malcha));
+//        jpaWishRepository.save(new Wish(junseo, cafuchino));
+//        jpaWishRepository.save(new Wish(donghyun, cafuchino));
 
     }
 }

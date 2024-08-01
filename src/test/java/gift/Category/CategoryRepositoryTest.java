@@ -4,7 +4,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import gift.domain.category.Category;
-import gift.domain.category.CategoryDTO;
 import gift.domain.category.JpaCategoryRepository;
 import gift.domain.category.dto.request.CategoryRequest;
 import gift.domain.product.JpaProductRepository;
