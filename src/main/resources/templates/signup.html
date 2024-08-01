@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sign Up</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+  <script>
+    async function signup(event) {
+        event.preventDefault();
+        const data = {
+            email: document.getElementById("email").value,
+            password: document.getElementById("password").value
+        };
+
+        const response = await fetch('/signup', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
+        });
+
+        if (response.ok) {
+            const result = await response.json();
+            alert("Signup 성공: " + result.token);
+        } else {
+            const error = await response.json();
+            alert("Signup 실패: " + error.error);
+        }
+    }
+  </script>
+</head>
+
+<body>
+<div class="container">
+  <h1 class="mt-4">Sign Up</h1>
+  <form onsubmit="signup(event)" method="post" th:object="${signupRequest}">
+    <div class="form-group">
+      <label for="email">Email:</label>
+      <input type="email" class="form-control" id="email" th:field="*{email}" required>
+    </div>
+    <div class="form-group">
+      <label for="password">Password:</label>
+      <input type="password" class="form-control" id="password" th:field="*{password}" required>
+    </div>
+    <div class="form-group">
+      <label for="confirmPassword">Confirm Password:</label>
+      <input type="password" class="form-control" id="confirmPassword" th:field="*{confirmPassword}" required>
+    </div>
+    <div th:if="${error}" class="alert alert-danger" th:text="${error}"></div>
+    <button type="submit" class="btn btn-primary">Sign Up</button>
+  </form>
+</div>
+</body>
+</html>

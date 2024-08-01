@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Product Form</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+</head>
+<body>
+<div class="container mt-5">
+  <h1>Add Product</h1>
+  <form th:action="@{/admin/product/add}" th:object="${product}" method="post">
+    <div class="form-group">
+      <label for="category">Category</label>
+      <select class="form-control" id="category" name="categoryId" th:field="*{categoryId}" required>
+        <option th:each="category : ${categories}" th:value="${category.id}" th:text="${category.name}">Category</option>
+      </select>
+      <div th:if="${#fields.hasErrors('categoryId')}" th:errors="*{categoryId}">Category Error</div>
+    </div>
+
+    <div class="form-group">
+      <label for="name">Name</label>
+      <input type="text" class="form-control" id="name" th:field="*{name}" required>
+      <td th:if="${#fields.hasErrors('name')}" th:errors="*{name}">Name Error</td>
+    </div>
+
+    <div class="form-group">
+      <label for="price">Price</label>
+      <input type="number" class="form-control" id="price" th:field="*{price}" required>
+      <td th:if="${#fields.hasErrors('price')}" th:errors="*{price}">Price Error</td>
+    </div>
+
+    <div class="form-group">
+      <label for="imageUrl">Image URL</label>
+      <input type="text" class="form-control" id="imageUrl" th:field="*{imageUrl}" required>
+      <td th:if="${#fields.hasErrors('imageUrl')}" th:errors="*{imageUrl}">Name Error</td>
+    </div>
+    <button type="submit" class="btn btn-primary">Submit</button>
+    <a href="/admin" class="btn btn-secondary">Cancel</a>
+  </form>
+</div>
+</body>
+</html>

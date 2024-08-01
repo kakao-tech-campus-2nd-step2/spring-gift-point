@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Product Management</title>
+  <link rel="stylesheet"
+        href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+</head>
+<body>
+<div class="container mt-5">
+  <h1>Product List</h1>
+
+  <div th:if="${error}" class="alert alert-danger" role="alert">
+    <p th:text="${error}"></p>
+  </div>
+
+  <a href="/admin/product/add" class="btn btn-success">Add New Product</a>
+
+  <ul class="list-group">
+    <li class="list-group-item" th:each="product : ${products}">
+      <span th:text="${product.name}">Product Name</span> -
+      <span th:text="${product.price}">Product Price</span> -
+      <img th:src="${product.imageUrl}" alt="Product Image" width="50">
+      <a th:href="@{/admin/product/edit/{id}(id=${product.id})}" class="btn btn-primary">Edit</a>
+      <a th:href="@{/admin/product/delete/{id}(id=${product.id})}" class="btn btn-danger">Delete</a>
+    </li>
+  </ul>
+</div>
+</body>
+</html>

@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login</title>
+  <link rel="stylesheet"
+        href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+  <script>
+    async function login(event) {
+      event.preventDefault();
+      const data = {
+        email : document.getElementById('email').value,
+        password : document.getElementById('password').value
+      };
+
+      const response = await fetch('/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)
+      });
+
+      if (!response.ok) {
+        const error = await response.json();
+        alert("login 실패");
+        return;
+      }
+      const result = await response.json();
+      localStorage.setItem('token', result.token);
+      alert("login 성공: " + result.token);
+      window.location.href = '/products'
+    };
+  </script>
+</head>
+<body>
+<div class="container">
+  <h1 class="mt-4">Login</h1>
+  <form id="loginForm">
+    <div class="form-group">
+      <label for="email">Email:</label>
+      <input type="email" class="form-control" id="email" required>
+    </div>
+    <div class="form-group">
+      <label for="password">Password:</label>
+      <input type="password" class="form-control" id="password" required>
+    </div>
+    <div id="error" class="alert alert-danger" style="display:none;"></div>
+    <button type="submit" class="btn btn-primary" onclick="login(event)">Login</button>
+  </form>
+</div>
+</body>
+</html>

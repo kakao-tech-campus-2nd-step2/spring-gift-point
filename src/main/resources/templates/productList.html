@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Product List</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+</head>
+<body>
+<div class="container mt-5">
+  <h1>Product List</h1>
+  <button class="btn btn-primary" onclick="goToWishlist()">My Wishlist</button>
+  <ul class="list-group">
+    <li class="list-group-item" th:each="product : ${products}">
+      <span th:text="${product.name}">Product Name</span> -
+      <span th:text="${product.price}">Product Price</span> -
+      <img th:src="${product.imageUrl}" alt="Product Image" width="50">
+      <button class="btn btn-primary" onclick="addToWishlist([[${product.id}]])">Add to Wishlist</button>
+    </li>
+  </ul>
+</div>
+
+<script>
+  async function goToWishlist() {
+    const token = localStorage.getItem('token');
+    if (!token) {
+      alert('로그인이 필요합니다.');
+      window.location.href = '/login';
+      return;
+    }
+
+    const response = await fetch('/my/wishlist', {
+        method: 'GET',
+        headers: {
+            'Authorization': 'Bearer ' + token
+        }
+    });
+
+    if (!response.ok) {
+        alert('위시리스트를 불러오는 데 실패했습니다.');
+        return;
+    }
+
+    const html = await response.text();
+    document.open();
+    document.write(html);
+    document.close();
+  }
+
+  async function addToWishlist(productId) {
+    const token = localStorage.getItem('token');
+    if (!token) {
+      alert('로그인이 필요합니다.');
+      window.location.href = '/login';
+      return;
+    }
+
+    const response = await fetch('/api/wishlist', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + token
+      },
+      body: JSON.stringify({ productId: productId })
+    });
+
+    if (!response.ok) {
+        alert('위시리스트 추가에 실패했습니다.');
+        return;
+    }
+    alert('위시리스트에 추가되었습니다.');
+  }
+</script>
+</body>
+</html>

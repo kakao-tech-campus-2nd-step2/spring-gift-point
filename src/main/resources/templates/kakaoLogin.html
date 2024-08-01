@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+</head>
+<body>
+<div class="container">
+  <h1>카카오 로그인</h1>
+  <button onclick="kakaoLogin()">카카오로 로그인</button>
+</div>
+
+<script th:inline="javascript" type="text/javascript">
+  var clientId = [[${kakao.clientId}]];
+  var redirectUri = [[${kakao.redirectUri}]];
+
+  function kakaoLogin() {
+      var kakaoAuthUrl = "https://kauth.kakao.com/oauth/authorize?scope=talk_message&response_type=code" +
+    "&redirect_uri=" + encodeURIComponent(redirectUri) + "&client_id=" + clientId;
+
+     window.location.href = kakaoAuthUrl
+  }
+</script>
+</body>
+</html>
