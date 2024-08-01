@@ -39,3 +39,4 @@ out/
 ### Mac OS ###
 .DS_Store
 
+application-private.properties
