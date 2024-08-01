@@ -21,6 +21,7 @@
 PROJECT_PATH=/home/ubuntu/repository
 PROJECT_NAME=spring-gift-point
 BUILD_PATH=build/libs
+JAR_NAME=$(basename $PROJECT_PATH/$PROJECT_NAME/.*jar)
 
 echo "\n 🐳    [$PROJECT_PATH/$PROJECT_NAME] 경로로 이동.\n"
 cd $PROJECT_PATH/$PROJECT_NAME
@@ -32,18 +33,17 @@ echo " 🐳    프로젝트 새로  빌드.\n"
 ./gradlew clean bootJar
 
 
-PID=$(pgrep -f ${PROJECT_NAME}*.jar)
+PID=$(pgrep -f $JAR_NAME)
 
 if [ -z $PID ]; then
-        echo " 🎉    실행중인 애플리케��션이 없어서 곧바로 실행합니다.\n"
+        echo " 🎉     실행중인 애플리케   션이 없어서 곧바로 실행합니다.\n"
 
 else
-        echo " ❌    실행중인 애플리케이션이 있어서 이를 종료합니다. [PID = $PID]\n"
+        echo " ❌     실행중인 애플리케이션이 있어서 이를 종료합니다. [PID = $PID]\n"
         kill -15 $PID
         sleep 5
 fi
 
-echo " 🎉  새 애플리케이션 배포\n"
 JAR_NAME=$(ls -tr $PROJECT_PATH/$PROJECT_NAME/$BUILD_PATH |grep .jar | tail -n 1)
 
 echo ">JAR NAME: $JAR_NAME"
