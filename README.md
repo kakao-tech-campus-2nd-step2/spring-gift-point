@@ -1,4 +1,5 @@
 
+
 # spring-gift-point
 
 # api 명세
@@ -193,11 +194,13 @@
     - **Request Fields**
 
       | Field        | Type   | Description                  | Required | Null Allowed |
-          |--------------|--------|------------------------------|----------|--------------|
+         |--------------|--------|------------------------------|----------|--------------|
       | `name`       | String | 카테고리 이름                | Yes      | No           |
       | `color`      | String | 카테고리 색상                | Yes      | No           |
       | `imageUrl`   | String | 카테고리 이미지 주소         | Yes      | No           |
       | `description`| String | 카테고리 설명                | Yes      | Yes          |
+
+
 
     - **Request Example**
       ```json
@@ -220,7 +223,7 @@
     - **Response Fields**
 
       | Field         | Type   | Description |
-          |---------------|--------|-------------|
+         |---------------|--------|-------------|
       | `id`          | number | 카테고리 고유 ID  |
       | `name`        | String | 카테고리 이름     |
       | `color`       | String | 카테고리 색상     |
@@ -254,7 +257,7 @@
     - **Response Fields**
 
       | Field         | Type   | Description             |
-          |---------------|--------|-------------------------|
+         |---------------|--------|-------------------------|
       | `id`          | String | 카테고리 고유 ID        |
       | `name`        | String | 카테고리 이름           |
       | `color`       | String | 카테고리 색상           |
@@ -338,8 +341,6 @@
       curl -X POST "localhost:8080/api/products" ^
       -H "Content-Type: application/json" ^
       -d "{\"name\": \"스마트폰\", \"price\": 1200000, \"categoryId\": 1, \"imageUrl\": \"https://example.com/smartphone.png\"}"
-
-
 - **Response**
     - **Type**: `application/json`
     - **Response Fields**
@@ -373,7 +374,7 @@
     - **Request Parameters**
 
       | Parameter    | Type   | Description          | Required |
-          |--------------|--------|----------------------|----------|
+         |--------------|--------|----------------------|----------|
       | `productId`  | Number | 조회할 상품의 ID     | Yes      |
 
     - **Request Example**
@@ -386,7 +387,7 @@
     - **Response Fields**
 
       | Field         | Type   | Description                      |
-          |---------------|--------|----------------------------------|
+         |---------------|--------|----------------------------------|
       | `id`          | Number | 상품 고유 ID                     |
       | `name`        | String | 상품 이름                        |
       | `price`       | Number | 상품 가격                        |
@@ -428,7 +429,7 @@
     - **Request Fields**
 
       | Field         | Type   | Description                    | Required | Null Allowed |
-          |---------------|--------|--------------------------------|----------|--------------|
+         |---------------|--------|--------------------------------|----------|--------------|
       | `name`        | String | 상품 이름                      | Yes      | No           |
       | `price`       | Number | 상품 가격                      | Yes      | No           |
       | `categoryId`  | Number | 카테고리 ID                    | Yes      | No           |
@@ -456,7 +457,7 @@
     - **Response Fields**
 
       | Field         | Type   | Description                    |
-          |---------------|--------|--------------------------------|
+         |---------------|--------|--------------------------------|
       | `id`          | Number | 상품 고유 ID                   |
       | `name`        | String | 상품 이름                      |
       | `price`       | Number | 상품 가격                      |
@@ -493,7 +494,7 @@
     - **Request Parameters**
 
       | Parameter    | Type   | Description          | Required |
-          |--------------|--------|----------------------|----------|
+         |--------------|--------|----------------------|----------|
       | `productId`  | Number | 삭제할 상품의 ID     | Yes      |
 
     - **Request URL Example**
@@ -506,7 +507,7 @@
     - **Response Fields**
 
       | Field         | Type   | Description                |
-          |---------------|--------|----------------------------|
+         |---------------|--------|----------------------------|
       | `message`     | String | 삭제 결과 메시지           |
 
     - **Response Example**
@@ -538,7 +539,7 @@
     - **Request Parameters**
 
       | Parameter    | Type    | Description                                  | Required | Default    |
-          |--------------|---------|----------------------------------------------|----------|------------|
+         |--------------|---------|----------------------------------------------|----------|------------|
       | `page`       | Integer | 조회할 페이지 번호 (0부터 시작)             | No       | 0          |
       | `size`       | Integer | 한 페이지에 표시할 항목 수                  | No       | 10         |
       | `sort`       | String  | 정렬 기준 (예: `name,asc` 또는 `price,desc`) | No       | `name,asc` |
@@ -652,7 +653,7 @@
     - **Request Fields**
 
       | Field       | Type   | Description | Required | Null Allowed |
-          |-------------|--------|-------------|----------|--------------|
+         |-------------|--------|-------------|----------|--------------|
       | `productId` | Number | 상품의 고유 Id   | Yes      | No           |
       | `name`      | String | 옵션 이름       | Yes      | No           |
       | `quantity`  | Number | 옵션 수량       | No       | Yes          |
@@ -677,7 +678,7 @@
     - **Response Fields**
 
       | Field      | Type   | Description | Required | Null Allowed |
-                |------------|--------|-------------|----------|--------------|
+         |------------|--------|-------------|----------|--------------|
       | `Id`       | Number | 상품의 고유 Id   | Yes      | No           |
       | `name`     | String | 옵션 이름       | Yes      | No           |
       | `quantity` | Number | 옵션 수량       | No       | Yes          |
@@ -712,7 +713,7 @@
     - **Request Fields**
 
       | Field       | Type   | Description | Required | Null Allowed |
-                |-------------|--------|-------------|----------|--------------|
+        |-------------|--------|-------------|----------|--------------|
       | `productId` | Number | 상품의 고유 Id   | Yes      | No           |
       | `name`      | String | 옵션 이름       | Yes      | No           |
       | `quantity`  | Number | 옵션 수량       | No       | Yes          |
@@ -737,7 +738,7 @@
     - **Response Fields**
 
       | Field         | Type   | Description          |
-          |---------------|--------|----------------------|
+         |---------------|--------|----------------------|
       | `id`          | Number | 옵션 고유 ID         |
       | `name`        | String | 옵션 이름           |
       | `value`       | String | 옵션 값             |
@@ -782,7 +783,7 @@
     - **Response Fields**
 
       | Field         | Type   | Description                |
-          |---------------|--------|----------------------------|
+         |---------------|--------|----------------------------|
       | `message`     | String | 삭제 결과 메시지           |
 
     - **Response Example**
@@ -826,7 +827,7 @@
     - **Response Fields**
 
       | Field       | Type   | Description |
-                      |-------------|--------|-------------|
+        |-------------|--------|-------------|
       | `id`        | Number | 옵션 고유 ID    |
       | `name`      | String | 옵션 이름       |
       | `quantity`  | Number | 옵션 수량       |
@@ -875,7 +876,7 @@
     - **Request Fields**
 
       | Field         | Type   | Description                    | Required | Null Allowed |
-          |---------------|--------|--------------------------------|----------|--------------|
+         |---------------|--------|--------------------------------|----------|--------------|
       | `productId`   | Number | 추가할 상품의 ID               | Yes      | No           |
 
     - **Request Example**
@@ -898,7 +899,7 @@
     - **Response Fields**
 
       | Field         | Type   | Description                |
-          |---------------|--------|----------------------------|
+         |---------------|--------|----------------------------|
       | `wishId`      | Number | 위시 리스트에서의 상품 ID  |
       | `productId`   | Number | 추가된 상품의 ID           |
 
@@ -945,7 +946,7 @@
     - **Response Fields**
 
       | Field         | Type   | Description                |
-          |---------------|--------|----------------------------|
+         |---------------|--------|----------------------------|
       | `message`     | String | 삭제 결과 메시지           |
 
     - **Response Example**
@@ -981,7 +982,7 @@
     - **Request Parameters**
 
       | Parameter     | Type   | Description                | Required |
-          |---------------|--------|----------------------------|----------|
+         |---------------|--------|----------------------------|----------|
       | `page`        | Number | 페이지 번호 (기본값: 0)    | No       |
       | `size`        | Number | 페이지당 항목 수 (기본값: 10) | No       |
       | `sort`        | String | 정렬 기준 및 방향 (기본값: createdDate,desc) | No       |
@@ -1061,7 +1062,7 @@
     - **Request Fields**
 
       | Field              | Type   | Description | Required | Null Allowed |
-          |--------------------|--------|-------------|----------|--------------|
+         |--------------------|--------|-------------|----------|--------------|
       | `optionId`         | Number | 주문 옵션 Id    | Yes      | No           |
       | `quantity`         | Number | 주문 상품 수량    | Yes      | No           |
       | `message`          | String | 주문 message  | Yes      | No           |
@@ -1089,7 +1090,7 @@
     - **Response Fields**
 
       | Field           | Type   | Description |
-          |-----------------|--------|-------------|
+         |-----------------|--------|-------------|
       | `id`            | Number | 생성된 주문의 ID  |
       | `optionId`      | Number | 주문 옵션 Id    |
       | `quantity`      | Array  | 주문 상품 수량    |
@@ -1121,7 +1122,7 @@
     - **Request Parameters**
 
       | Parameter     | Type   | Description                | Required |
-          |---------------|--------|----------------------------|----------|
+         |---------------|--------|----------------------------|----------|
       | `page`        | Number | 페이지 번호 (기본값: 0)    | No       |
       | `size`        | Number | 페이지당 항목 수 (기본값: 10) | No       |
       | `sort`        | String | 정렬 기준 및 방향 (기본값: orderDateTime,desc) | No       |
@@ -1136,7 +1137,7 @@
     - **Response Fields**
 
       | Field         | Type   | Description                |
-          |---------------|--------|----------------------------|
+         |---------------|--------|----------------------------|
       | `totalItems`  | Number | 총 주문 수                 |
       | `totalPages`  | Number | 총 페이지 수              |
       | `currentPage` | Number | 현재 페이지 번호           |
@@ -1145,7 +1146,7 @@
         - **Item Fields**
 
           | Field        | Type   | Description              |
-                |--------------|--------|--------------------------|
+             |--------------|--------|--------------------------|
           | `orderId`    | Number | 주문의 ID                |
           | `userId`     | Number | 주문한 사용자의 ID       |
           | `totalPrice` | Number | 총 주문 금액            |
