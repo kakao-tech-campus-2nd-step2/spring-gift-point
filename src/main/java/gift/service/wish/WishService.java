@@ -48,7 +48,7 @@ public class WishService {
     public void removeGiftFromUser(User user, Long wishId) {
         Wish wish =  wishRepository.findById(wishId)
                 .orElseThrow(() -> new WishNotFoundException("존재하지 않는 위시리스트입니다."));
-        if (!wish.getUser().equals(user)) {
+        if (wish.getUser().getId() != user.getId()) {
             throw new WishInvalidAuthException("본인의 위시리스트만 삭제 가능합니다.");
         }
         wishRepository.deleteByUserAndId(user, wishId);
