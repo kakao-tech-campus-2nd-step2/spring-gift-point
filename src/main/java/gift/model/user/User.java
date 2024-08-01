@@ -2,15 +2,10 @@ package gift.model.user;
 
 import gift.common.enums.LoginType;
 import gift.common.enums.Role;
-import gift.exception.InvalidUserException;
-import gift.exception.NotAdminException;
-import gift.model.option.Option;
+import gift.exception.*;
 import gift.model.wish.Wish;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
-import org.hibernate.annotations.ColumnDefault;
-import org.hibernate.annotations.DynamicInsert;
-import org.springframework.boot.context.properties.bind.DefaultValue;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -101,6 +96,13 @@ public class User {
         if(this.role != Role.ADMIN){
             throw new NotAdminException("Forbidden");
         }
+    }
+
+    public void subtractPoint(int point){
+        if(this.point < point){
+            throw new LackPointException("포인트가 부족합니다.");
+        }
+        this.point -= point;
     }
 
     public void addPoint(int depositPoint){

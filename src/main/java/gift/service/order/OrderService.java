@@ -76,13 +76,15 @@ public class OrderService {
     public OrderResponse.Info order(Long userId, Long giftId, OrderRequest.Create orderRequest) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("해당 유저를 찾을 수 없습니다."));
-
         Product product = productRepository.findById(giftId)
                 .orElseThrow(() -> new ProductNotFoundException("해당 상품이 존재하지 않습니다."));
         Option option = optionRepository.findById(orderRequest.optionId())
                 .orElseThrow(() -> new OptionNotFoundException("해당 옵션이 존재하지 않습니다,"));
 
+
         checkOptionInProduct(product, orderRequest.optionId());
+        user.subtractPoint(orderRequest.point());
+
         option.subtract(orderRequest.quantity());
         optionRepository.save(option);
 

@@ -4,7 +4,7 @@ import gift.model.user.User;
 
 public class MemberPointResponse {
     public record Info(
-            int totalPoint
+            int point
     ){
         public static Info fromEntity(User user){
             return new Info(user.getPoint());

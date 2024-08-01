@@ -13,7 +13,9 @@ public class OrderRequest {
             @NotNull
             int quantity,
             @NotNull
-            String message
+            String message,
+            @NotNull
+            int point
     ) {
 
     }

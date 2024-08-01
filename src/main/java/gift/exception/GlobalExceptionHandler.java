@@ -115,6 +115,12 @@ public class GlobalExceptionHandler {
         problemDetail.setDetail(ex.getMessage());
         return ResponseEntity.status(ex.getStatus()).body(problemDetail);
     }
+    @ExceptionHandler(LackPointException.class)
+    public ResponseEntity<ProblemDetail> handleLackPointException(LackPointException ex) {
+        ProblemDetail problemDetail = ProblemDetail.forStatus(ex.getStatus());
+        problemDetail.setDetail(ex.getMessage());
+        return ResponseEntity.status(ex.getStatus()).body(problemDetail);
+    }
 
 
     @ExceptionHandler(HttpClientErrorException.class)
