@@ -2,8 +2,12 @@ package gift.order;
 
 import gift.exception.NotFoundMember;
 import gift.login.LoginMember;
+import gift.member.Member;
 import gift.member.MemberRequestDto;
+import gift.member.RegisterRequestDto;
+import org.springframework.data.domain.Pageable;
 import java.util.List;
+import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -23,19 +27,19 @@ public class OrderController {
     }
 
     @PostMapping
-    public OrderResponseDto createdOrder(@LoginMember MemberRequestDto memberRequestDto, @RequestBody OrderRequestDto orderRequestDto)
+    public OrderResponseDto createdOrder(@LoginMember Member member, @RequestBody OrderRequestDto orderRequestDto)
         throws NotFoundMember {
-        return orderService.createOrder(memberRequestDto, orderRequestDto);
+        return orderService.createOrder(member, orderRequestDto);
     }
 
     @GetMapping
-    public List<OrderResponseDto> getOrders(@LoginMember MemberRequestDto memberRequestDto)
+    public Page<OrderResponseDto> getOrders(@LoginMember Member member, Pageable pageable)
         throws NotFoundMember {
-        return orderService.getOrders(memberRequestDto);
+        return orderService.getOrders(member, pageable);
     }
 
     @DeleteMapping("/{orderId}")
-    public void deletOrder(@LoginMember MemberRequestDto memberRequestDto, @PathVariable Long orderId)
+    public void deletOrder(@LoginMember RegisterRequestDto memberRequestDto, @PathVariable Long orderId)
         throws NotFoundMember {
         orderService.deleteOrder(memberRequestDto, orderId);
     }

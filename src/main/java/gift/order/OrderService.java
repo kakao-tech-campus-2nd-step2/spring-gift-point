@@ -7,15 +7,15 @@ import gift.exception.NotFoundOrder;
 import gift.member.Member;
 import gift.member.MemberRepository;
 import gift.member.MemberRequestDto;
-import gift.member.MemberService;
+import gift.member.RegisterRequestDto;
 import gift.option.Option;
 import gift.option.OptionRepository;
 import gift.option.OptionService;
-import gift.wishlist.Wishlist;
 import gift.wishlist.WishlistRepository;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -44,23 +44,18 @@ public class OrderService {
         this.wishlistRepository = wishlistRepository;
     }
 
-    public OrderResponseDto createOrder(MemberRequestDto memberRequestDto, OrderRequestDto orderRequestDto)
+    public OrderResponseDto createOrder(Member member, OrderRequestDto orderRequestDto)
         throws NotFoundMember {
         Option option = optionRepository.findById(orderRequestDto.optionId())
             .orElseThrow(() -> new NotFoundOption("해당 옵션을 찾을 수 없습니다"));
 
         option.substract(orderRequestDto.quantity());
 
-        Order order = new Order(option, orderRequestDto.quantity(), orderRequestDto.message(), new Member(memberRequestDto.email(), memberRequestDto.password()));
-
-        Member member = memberRepository.findByEmail(memberRequestDto.email())
-                .orElseThrow(() -> new NotFoundMember("유효하지 않은 회원입니다."));
+        Order order = new Order(option, orderRequestDto.quantity(), orderRequestDto.message(), member);
 
         removeFromWishlistIfExists(member.getId(), order.getOption().getId());
 
         orderRepository.save(order);
-
-        kakaoClient.sendMessage(memberRequestDto.email(), orderRequestDto.message());
 
         return new OrderResponseDto(
             order.getId(),
@@ -71,20 +66,23 @@ public class OrderService {
         );
     }
 
-    public List<OrderResponseDto> getOrders(MemberRequestDto memberRequestDto)
+    public Page<OrderResponseDto> getOrders(Member member, Pageable pageable)
         throws NotFoundMember {
-        Member member = memberRepository.findByEmail(memberRequestDto.email())
+        Member existMember = memberRepository.findByEmail(member.getEmail())
             .orElseThrow(() -> new NotFoundMember("회원정보가 올바르지 않습니다."));
 
-        List<Order>  orders = orderRepository.findAllByMemberId(member.getId());
+        Page<Order>  orders = orderRepository.findAllByMemberId(member.getId(), pageable);
 
-        return orders.stream()
-            .map(order -> new OrderResponseDto(order.getId(), order.getOption().getId(), order.getQuantity(), order.getOrderDateTime(), order.getMessage()))
-            .collect(Collectors.toList());
-
+        return orders.map(order -> new OrderResponseDto(
+            order.getId(),
+            order.getOption().getId(),
+            order.getQuantity(),
+            order.getOrderDateTime(),
+            order.getMessage()
+        ));
     }
 
-    public void deleteOrder(MemberRequestDto memberRequestDto, Long orderId) throws NotFoundMember {
+    public void deleteOrder(RegisterRequestDto memberRequestDto, Long orderId) throws NotFoundMember {
         Member member = memberRepository.findByEmail(memberRequestDto.email())
             .orElseThrow(() -> new NotFoundMember("회원정보가 올바르지 않습니다."));
 

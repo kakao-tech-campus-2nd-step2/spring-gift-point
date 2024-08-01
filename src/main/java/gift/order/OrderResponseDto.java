@@ -6,6 +6,6 @@ public record OrderResponseDto(
     Long id,
     Long optionId,
     int quantity,
-    LocalDateTime localDateTime,
+    LocalDateTime orderDateTime,
     String message) {
 }
