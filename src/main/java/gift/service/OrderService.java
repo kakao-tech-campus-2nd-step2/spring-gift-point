@@ -1,6 +1,7 @@
 package gift.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import gift.DTO.Order.OrderLogResponse;
 import gift.DTO.Order.OrderRequest;
 import gift.DTO.Order.OrderResponse;
 import gift.DTO.Product.ProductResponse;
@@ -15,10 +16,7 @@ import gift.repository.OrderRepository;
 import gift.repository.ProductRepository;
 import gift.repository.WishListRepository;
 import jakarta.transaction.Transactional;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -62,21 +60,21 @@ public class OrderService {
      */
     @Transactional
     public OrderResponse order(
-            OrderRequest orderRequest, UserResponse userResponse, Long productId) throws JsonProcessingException
+            OrderRequest orderRequest, UserResponse userResponse) throws JsonProcessingException
     {
         if(userResponse.getToken() == null)
             throw new NoSuchFieldError("카카오 유저만 구매할 수 있습니다!");
 
         Option option = optionRepository.findById(orderRequest.getOptionId()).orElseThrow(NoSuchFieldError::new);
-        Long before = option.getQuantity();
+        int before = option.getQuantity();
         option.subtract(orderRequest.getQuantity());
-        Long after = option.getQuantity();
+        int after = option.getQuantity();
 
-        if(before.equals(after)){
+        if(before == after){
             throw new LogicalException("수량보다 많은 수는 주문할 수 없습니다!");
         }
 
-        Product product = productRepository.findById(productId).orElseThrow(NoSuchFieldError::new);
+        Product product = productRepository.findById(orderRequest.getProductId()).orElseThrow(NoSuchFieldError::new);
         ProductResponse productResponse = new ProductResponse(product);
 
         if(wishListRepository.existsByUserIdAndProductId(userResponse.getId(), productResponse.getId())){
@@ -93,23 +91,47 @@ public class OrderService {
     /*
      * 주문 기록을 오름차순으로 정렬하여 조회
      */
-    public Page<OrderResponse> findAllASC(int page, int size, String field){
+    public Page<OrderLogResponse> findAllASC(int page, int size, String field){
+        List<OrderLogResponse> orderLogs = new ArrayList<>();
+        List<Order> orders = orderRepository.findAll();
+        for (Order order : orders) {
+            OrderResponse orderResponse = new OrderResponse(order);
+            ProductResponse productResponse = new ProductResponse(productRepository.findByOption(order.getOptionId()));
+
+            orderLogs.add(new OrderLogResponse(productResponse, orderResponse));
+        }
+
         List<Sort.Order> sorts = new ArrayList<>();
         sorts.add(Sort.Order.asc(field));
         Pageable pageable = PageRequest.of(page, size, Sort.by(sorts));
-        Page<Order> orders = orderRepository.findAll(pageable);
 
-        return orders.map(OrderResponse::new);
+        int start = (int) pageable.getOffset();
+        int end = Math.min((start + pageable.getPageSize()), orderLogs.size());
+        List<OrderLogResponse> subList = orderLogs.subList(start, end);
+
+        return new PageImpl<>(subList, pageable, orderLogs.size());
     }
     /*
      * 주문 기록을 내림차순으로 정렬하여 조회
      */
-    public Page<OrderResponse> findAllDESC(int page, int size, String field){
+    public Page<OrderLogResponse> findAllDESC(int page, int size, String field){
+        List<OrderLogResponse> orderLogs = new ArrayList<>();
+        List<Order> orders = orderRepository.findAll();
+        for (Order order : orders) {
+            OrderResponse orderResponse = new OrderResponse(order);
+            ProductResponse productResponse = new ProductResponse(productRepository.findByOption(order.getOptionId()));
+
+            orderLogs.add(new OrderLogResponse(productResponse, orderResponse));
+        }
+
         List<Sort.Order> sorts = new ArrayList<>();
         sorts.add(Sort.Order.desc(field));
         Pageable pageable = PageRequest.of(page, size, Sort.by(sorts));
-        Page<Order> orders = orderRepository.findAll(pageable);
 
-        return orders.map(OrderResponse::new);
+        int start = (int) pageable.getOffset();
+        int end = Math.min((start + pageable.getPageSize()), orderLogs.size());
+        List<OrderLogResponse> subList = orderLogs.subList(start, end);
+
+        return new PageImpl<>(subList, pageable, orderLogs.size());
     }
 }
