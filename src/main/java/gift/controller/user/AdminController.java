@@ -32,18 +32,20 @@ public class AdminController {
 
     @GetMapping("")
     public ResponseEntity<PageResponse<UserResponse.Info>> getAllUser(
+        @LoginUser LoginInfo user,
         @PageableDefault(page = 0, size = 10, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable
     ) {
-        PageResponse<UserResponse.Info> response = userService.getAllUser(pageable);
+        PageResponse<UserResponse.Info> response = userService.getAllUser(user.id(), pageable);
         return ResponseEntity.ok().body(response);
     }
 
     @PatchMapping("/{memberId}/point")
     public ResponseEntity<UserResponse.Point> addPoint(
+        @LoginUser LoginInfo user,
         @PathVariable("memberId") Long memberId,
         @Valid @RequestBody UserRequest.Point request
     ) {
-        UserResponse.Point response = userService.addPoint(memberId, request);
+        UserResponse.Point response = userService.addPoint(user.id(), memberId, request);
         return ResponseEntity.ok().body(response);
     }
 }

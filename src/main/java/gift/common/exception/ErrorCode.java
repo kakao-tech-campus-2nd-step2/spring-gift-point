@@ -10,6 +10,7 @@ public enum ErrorCode {
     INVALID_USER(HttpStatus.UNAUTHORIZED, "아이디 또는 비밀번호가 일치하지 않습니다."),
     EXIST_USER(HttpStatus.BAD_REQUEST, "이미 가입된 회원입니다."),
     LACK_POINT(HttpStatus.BAD_REQUEST, "포인트가 부족합니다."),
+    IS_NOT_ADMIN(HttpStatus.FORBIDDEN, "Forbidden"),
 
     WISH_NOT_FOUND(HttpStatus.NOT_FOUND, "존재하지 않는 위시리스트입니다."),
     EXIST_WISH(HttpStatus.BAD_REQUEST, "이미 위시 리스트에 추가된 상품입니다."),

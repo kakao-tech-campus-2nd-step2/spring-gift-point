@@ -95,4 +95,10 @@ public class User extends BaseEntity {
     public void addPoint(int depositPoint) {
         this.point += depositPoint;
     }
+
+    public void isAdmin() {
+        if (this.role != Role.ADMIN) {
+            throw new UserException(ErrorCode.IS_NOT_ADMIN);
+        }
+    }
 }

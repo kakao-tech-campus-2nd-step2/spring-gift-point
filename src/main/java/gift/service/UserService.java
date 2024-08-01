@@ -1,6 +1,7 @@
 package gift.service;
 
 import gift.common.auth.JwtTokenProvider;
+import gift.common.auth.LoginInfo;
 import gift.common.dto.PageResponse;
 import gift.common.exception.ErrorCode;
 import gift.common.exception.UserException;
@@ -53,17 +54,25 @@ public class UserService {
         return UserResponse.Point.from(user.getPoint());
     }
 
-    public PageResponse<UserResponse.Info> getAllUser(Pageable pageable) {
+    public PageResponse<UserResponse.Info> getAllUser(Long adminId, Pageable pageable) {
+        User admin = userRepository.findById(adminId)
+            .orElseThrow(() -> new UserException(ErrorCode.USER_NOT_FOUND));
+        admin.isAdmin();
+
         Page<User> userList = userRepository.findAll(pageable);
         List<Info> responses = userList.getContent().stream().map(Info::from).toList();
         return PageResponse.from(responses, userList);
     }
 
     @Transactional
-    public UserResponse.Point addPoint(Long userId, UserRequest.Point request) {
+    public UserResponse.Point addPoint(Long adminId, Long userId, UserRequest.Point request) {
+        User admin = userRepository.findById(adminId)
+            .orElseThrow(() -> new UserException(ErrorCode.USER_NOT_FOUND));
+        admin.isAdmin();
+
         User user = userRepository.findById(userId)
             .orElseThrow(() -> new UserException(ErrorCode.USER_NOT_FOUND));
-
+        user.isAdmin();
         user.addPoint(request.depositPoint());
 
         return UserResponse.Point.from(user.getPoint());
