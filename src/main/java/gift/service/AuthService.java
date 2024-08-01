@@ -27,11 +27,15 @@ public class AuthService {
   @Value("${kakao.auth.url}")
   private String authUrl;
 
+  @Value("${kakao.user.info.url}")
+  private String userInfoUrl;
+
   private final RestTemplate restTemplate;
 
   public AuthService(RestTemplate restTemplate) {
     this.restTemplate = restTemplate;
   }
+
   public String getAuthorizationUrl() {
     return UriComponentsBuilder.fromHttpUrl(authUrl)
             .queryParam("client_id", clientId)
@@ -63,6 +67,27 @@ public class AuthService {
       return root.path("access_token").asText();
     } catch (Exception e) {
       throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Failed to parse token");
+    }
+  }
+
+  public JsonNode getKakaoUserInfo(String accessToken) {
+    HttpHeaders headers = new HttpHeaders();
+    headers.setBearerAuth(accessToken);
+    headers.set("Content-Type", "application/x-www-form-urlencoded;charset=utf-8");
+
+    HttpEntity<String> entity = new HttpEntity<>(headers);
+
+    ResponseEntity<String> response = restTemplate.exchange(userInfoUrl, HttpMethod.GET, entity, String.class);
+
+    if (response.getStatusCode() != HttpStatus.OK) {
+      throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Failed to retrieve user info");
+    }
+
+    try {
+      ObjectMapper mapper = new ObjectMapper();
+      return mapper.readTree(response.getBody());
+    } catch (Exception e) {
+      throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Failed to parse user info");
     }
   }
 }

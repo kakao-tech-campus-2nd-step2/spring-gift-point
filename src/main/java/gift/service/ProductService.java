@@ -1,36 +1,43 @@
 package gift.service;
 
+import gift.dto.ProductDto;
 import gift.exception.CustomNotFoundException;
 import gift.exception.KakaoValidationException;
 import gift.exception.StringValidationException;
 import gift.model.Category;
 import gift.model.Product;
-import gift.dto.ProductDto;
 import gift.repository.CategoryRepository;
 import gift.repository.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
 
+import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class ProductService {
 
-  @Autowired
   private final ProductRepository productRepository;
-
-  @Autowired
   private final CategoryRepository categoryRepository;
 
+  @Autowired
   public ProductService(ProductRepository productRepository, CategoryRepository categoryRepository) {
     this.productRepository = productRepository;
     this.categoryRepository = categoryRepository;
   }
 
   public Page<ProductDto> findAll(Pageable pageable) {
-    return productRepository.findAll(pageable).map(this::convertToDto);
+    Page<Product> productPage = productRepository.findAll(pageable);
+    List<ProductDto> productDtos = productPage.getContent().stream()
+            .map(this::convertToDto)
+            .collect(Collectors.toList());
+
+    return new PageImpl<>(productDtos, pageable, productPage.getTotalElements());
   }
 
   public Optional<ProductDto> findById(Long id) {
@@ -46,11 +53,26 @@ public class ProductService {
     return convertToDto(savedProduct);
   }
 
-  public ProductDto createProduct(ProductDto productDto) {
-    return save(productDto);
+  public Page<ProductDto> createProduct(ProductDto productDto, Pageable pageable) {
+    validate(productDto);
+    Category category = categoryRepository.findById(productDto.getCategoryId())
+            .orElseThrow(() -> new CustomNotFoundException("Category not found"));
+    Product product = new Product(productDto.getName(), productDto.getPrice(), productDto.getImageUrl(), category);
+    Product savedProduct = productRepository.save(product);
+    List<ProductDto> productDtos = Collections.singletonList(convertToDto(savedProduct));
+    return new PageImpl<>(productDtos, pageable, 1);
   }
 
-  public boolean updateProduct(Long id, ProductDto productDetails) {
+  public ProductDto createProduct(ProductDto productDto) {
+    validate(productDto);
+    Category category = categoryRepository.findById(productDto.getCategoryId())
+            .orElseThrow(() -> new CustomNotFoundException("Category not found"));
+    Product product = new Product(productDto.getName(), productDto.getPrice(), productDto.getImageUrl(), category);
+    Product savedProduct = productRepository.save(product);
+    return convertToDto(savedProduct);
+  }
+
+  public ProductDto updateProduct(Long id, ProductDto productDetails) {
     if (id == null) {
       throw new IllegalArgumentException("The given id must not be null");
     }
@@ -59,9 +81,9 @@ public class ProductService {
       Category category = categoryRepository.findById(productDetails.getCategoryId())
               .orElseThrow(() -> new CustomNotFoundException("Category not found"));
       product.updateFromDto(productDetails.getName(), productDetails.getPrice(), productDetails.getImageUrl(), category);
-      productRepository.save(product);
-      return true;
-    }).orElse(false);
+      Product updatedProduct = productRepository.save(product);
+      return convertToDto(updatedProduct);
+    }).orElseThrow(() -> new CustomNotFoundException("Product not found"));
   }
 
   public void deleteById(Long id) {
@@ -69,8 +91,7 @@ public class ProductService {
   }
 
   private ProductDto convertToDto(Product product) {
-    Long categoryId = product.getCategory() != null ? product.getCategory().getId() : null;
-    return new ProductDto(product.getId(), product.getName(), product.getPrice(), product.getImageUrl(), categoryId);
+    return new ProductDto(product.getId(), product.getName(), product.getPrice(), product.getImageUrl(), product.getCategory().getId());
   }
 
   private void validate(ProductDto productDto) {

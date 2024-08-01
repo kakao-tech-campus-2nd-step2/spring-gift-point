@@ -1,12 +1,14 @@
 package gift.controller;
 
-import gift.dto.OrderRequest;
-import gift.dto.OrderResponse;
+import gift.dto.OrderDto;
 import gift.service.OrderService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @Tag(name = "OrderController", description = "주문 관련 API")
@@ -21,11 +23,23 @@ public class OrderController {
     this.orderService = orderService;
   }
 
-  @Operation(summary = "주문 생성", description = "새로운 주문을 생성합니다.")
+  @Operation(summary = "주문하기", description = "새 주문을 생성한다.")
   @PostMapping
-  @ResponseStatus(HttpStatus.CREATED)
-  public OrderResponse placeOrder(@RequestBody OrderRequest orderRequest, @RequestHeader("Authorization") String token) {
-    String accessToken = token.replace("Bearer ", "");
-    return orderService.placeOrder(orderRequest, accessToken);
+  public ResponseEntity<OrderDto> createOrder(
+          @RequestHeader("Authorization") String authorization,
+          @RequestHeader("Kakao-Authorization") String kakaoAuthorization,
+          @RequestBody OrderDto orderDto) {
+    OrderDto createdOrder = orderService.createOrder(orderDto);
+    return ResponseEntity.status(HttpStatus.CREATED).body(createdOrder);
+  }
+
+  @Operation(summary = "주문 목록 조회", description = "주문 목록을 페이지 단위로 조회한다.")
+  @GetMapping
+  public ResponseEntity<Page<OrderDto>> getOrders(
+          @RequestHeader("Authorization") String authorization,
+          @RequestHeader("Kakao-Access-Token") String kakaoAccessToken,
+          @RequestParam(defaultValue = "0") int page) {
+    Page<OrderDto> orders = orderService.getOrders(PageRequest.of(page, 10));
+    return ResponseEntity.ok(orders);
   }
 }
