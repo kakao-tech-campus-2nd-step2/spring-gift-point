@@ -76,7 +76,7 @@ public class OrderService {
         text = text.concat("수량 : " + option.getQuantity() + "\n");
         text = text.concat("주문 메세지 : " + orderRequest.message() + "\n");
 
-        var dto = new OrderBodyDto("text",text,link,"바로확인");
+        var dto = new OrderBodyDto(member.getId(),"text",text,link,"바로확인");
         MultiValueMap<String, Object> body = new LinkedMultiValueMap<>();
 
         ObjectMapper objectMapper = new ObjectMapper();
@@ -105,12 +105,12 @@ public class OrderService {
         memberRepository.save(member);
 
         Date now = new Date();
-        Order order = new Order(null,orderRequest.optionId(),orderRequest.quantity(),now,orderRequest.message());
+        Order order = new Order(null,orderRequest.optionId(),member.getId(),orderRequest.quantity(),now,orderRequest.message());
         order = orderRepository.save(order);
         return order;
     }
 
-    public List<Order> findAll(String memberId, Pageable pageable) {
-       return orderRepository.findByMemberId(memberId,pageable);
+    public List<Order> findAll(String jwtId, Pageable pageable) {
+        return orderRepository.findByMemberId(jwtId,pageable);
     }
 }
