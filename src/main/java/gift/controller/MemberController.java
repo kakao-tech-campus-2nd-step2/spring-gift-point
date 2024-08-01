@@ -17,7 +17,7 @@ import java.util.Map;
 
 @Tag(name = "회원 가입 및 로그인 API")
 @RestController
-@RequestMapping("/members")
+@RequestMapping("/api")
 public class MemberController {
 
     private final MemberService memberService;
@@ -30,7 +30,7 @@ public class MemberController {
     }
 
     @Operation(summary = "회원가입", description = "이메일과 비밀번호를 이용하여 회원가입을 진행합니다.")
-    @PostMapping("/register")
+    @PostMapping("/user/register")
     public ResponseEntity<?> registerUser(@RequestBody MemberDTO memberDTO) {
         memberService.save(memberDTO);
         return new ResponseEntity<>(Collections.singletonMap("status", "SUCCESS"), HttpStatus.OK);

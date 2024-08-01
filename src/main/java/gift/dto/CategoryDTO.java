@@ -19,6 +19,8 @@ public class CategoryDTO {
     @Size(max = 255, message = "설명은 최대 255글자 이하로 입력해 주세요.")
     private String description;
 
+    public CategoryDTO(){}
+
     public CategoryDTO(Long id, String name, String color, String imageUrl, String description) {
         this.id = id;
         this.name = name;

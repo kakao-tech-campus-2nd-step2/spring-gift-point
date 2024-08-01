@@ -16,7 +16,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 @Tag(name = "위시리스트 API")
 @RestController
-@RequestMapping("/wishlist")
+@RequestMapping("/api/wish")
 public class WishListController {
     private final WishListService wishListService;
     private final JwtUtil jwtUtil;
@@ -53,7 +53,7 @@ public class WishListController {
 
     // 위시리스트 추가
     @Operation(summary = "위시리스트 생성", description = "새 위시리스트를 생성합니다.")
-    @PostMapping("/add/{productId}")
+    @PostMapping
     public ResponseEntity<String> addWishList(@RequestHeader("Authorization") String token,
        @RequestBody ProductDTO product) throws Exception {
         Long userId = getUserId(token);
