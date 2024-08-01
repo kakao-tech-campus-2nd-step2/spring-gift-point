@@ -1,12 +1,12 @@
 package gift.service;
 
 import gift.common.auth.JwtTokenProvider;
+import gift.common.enums.Role;
 import gift.common.enums.SocialType;
 import gift.common.exception.ErrorCode;
 import gift.common.exception.OAuthException;
 import gift.common.util.KakaoUtil;
 import gift.controller.oauth.dto.TokenInfoResponse;
-import gift.controller.user.dto.UserResponse;
 import gift.model.Token;
 import gift.model.User;
 import gift.repository.TokenRepository;

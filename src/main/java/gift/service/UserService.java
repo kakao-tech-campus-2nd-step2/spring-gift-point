@@ -34,8 +34,8 @@ public class UserService {
     public UserDto login(UserRequest.Login userRequest) {
         User user = userRepository.findByEmailAndPassword(userRequest.email(),
                 userRequest.password())
-            .orElseThrow(() -> new UserException(
-                ErrorCode.INVALID_USER));
+            .orElseThrow(() -> new UserException(ErrorCode.INVALID_USER));
+
         String token = jwtTokenProvider.createToken(user.getEmail());
 
         return UserDto.from(token, user.getName());
