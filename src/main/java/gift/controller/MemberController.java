@@ -1,10 +1,13 @@
 package gift.controller;
 
+import gift.config.LoginMember;
+import gift.domain.member.Member;
 import gift.dto.MemberDto;
 import gift.dto.request.LoginRequest;
 import gift.dto.request.RegisterRequest;
 import gift.dto.response.ErrorResponse;
 import gift.dto.response.JwtResponse;
+import gift.dto.response.PointResponse;
 import gift.service.MemberService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -15,10 +18,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @Tag(name = "Member API", description = "회원 관련 API")
 @RequestMapping("/api/members")
@@ -60,6 +60,11 @@ public class MemberController {
 
         return ResponseEntity.ok()
                 .body(new JwtResponse(jwt));
+    }
+
+    @GetMapping("/point")
+    public ResponseEntity<PointResponse> point(@LoginMember Member member) {
+        return ResponseEntity.ok().body(new PointResponse(member.getPoint()));
     }
 
 }

@@ -52,6 +52,10 @@ public class Member {
         return socialAccount;
     }
 
+    public Integer getPoint() {
+        return point;
+    }
+
     public Member(Long id, String email, String password, MemberRole role, SocialAccount socialAccount) {
         this.id = id;
         this.email = email;
