@@ -79,6 +79,10 @@ public class AdminProductController {
         List<OptionDto> optionDtos = new ArrayList<>();
         optionDtos.add(new OptionDto("기본", 1));
         return new AdminProductRequest(
-            adminProductRequest.name(), adminProductRequest.price(), adminProductRequest.imageUrl(), adminProductRequest.categoryId(), optionDtos);
+            adminProductRequest.name(),
+            adminProductRequest.price(),
+            adminProductRequest.imageUrl(),
+            adminProductRequest.categoryId(),
+            optionDtos);
     }
 }

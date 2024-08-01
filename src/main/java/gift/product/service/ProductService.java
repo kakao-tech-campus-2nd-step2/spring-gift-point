@@ -1,8 +1,6 @@
 package gift.product.service;
 
-import gift.product.dto.category.CategoryIdAndName;
 import gift.product.dto.option.OptionDto;
-import gift.product.dto.option.OptionResponse;
 import gift.product.dto.product.ProductRequest;
 import gift.product.dto.product.ProductResponse;
 import gift.product.dto.product.ProductUpdateRequest;
@@ -43,7 +41,12 @@ public class ProductService {
     }
 
     public Page<ProductResponse> getProductAll(Pageable pageable, Long categoryId) {
-        return productRepository.findAllByCategoryId(pageable, categoryId).map(product -> new ProductResponse(product.getId(), product.getName(), product.getPrice(), product.getImageUrl(), product.getCategory().getId()));
+        return productRepository.findAllByCategoryId(pageable, categoryId)
+            .map(product -> new ProductResponse(product.getId(),
+                product.getName(),
+                product.getPrice(),
+                product.getImageUrl(),
+                product.getCategory().getId()));
     }
 
     public ProductResponse getProduct(Long id) {
