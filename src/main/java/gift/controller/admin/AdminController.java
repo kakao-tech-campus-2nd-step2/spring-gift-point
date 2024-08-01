@@ -1,105 +1,40 @@
 package gift.controller.admin;
 
-
-import gift.dto.category.CategoryResponse;
-import gift.dto.option.OptionRequest;
 import gift.dto.paging.PagingRequest;
 import gift.dto.paging.PagingResponse;
-import gift.dto.product.ProductRequest;
-import gift.dto.product.ProductResponse;
-import gift.service.category.CategoryService;
-import gift.service.option.OptionService;
-import gift.service.product.ProductService;
+import gift.dto.point.MemberPointRequest;
+import gift.dto.point.MemberPointResponse;
+import gift.dto.user.UserResponse;
+import gift.model.user.User;
+import gift.service.admin.AdminService;
 import jakarta.validation.Valid;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
-@Controller
+@RestController
+@RequestMapping("/api/admin")
 public class AdminController {
 
-    private final ProductService productService;
-    private final CategoryService categoryService;
-    private final OptionService optionService;
+    private final AdminService adminService;
 
-    @Autowired
-    public AdminController(ProductService productService, CategoryService categoryService, OptionService optionService) {
-        this.productService = productService;
-        this.categoryService = categoryService;
-        this.optionService = optionService;
+    public AdminController(AdminService adminService) {
+        this.adminService = adminService;
     }
 
-    @GetMapping
-    public String index() {
-        return "redirect:/admin";
+    @GetMapping("/members")
+    public ResponseEntity<PagingResponse<UserResponse.Info>> getUserList(@RequestAttribute("user") User user,
+                                                                         @ModelAttribute PagingRequest pagingRequest){
+        PagingResponse<UserResponse.Info> userList = adminService.getUserList(user, pagingRequest.getPage(), pagingRequest.getSize());
+        return ResponseEntity.ok(userList);
+
+    }
+    @PatchMapping("/members/{memberId}/point")
+    public ResponseEntity<MemberPointResponse.Info> addPointToUser(@RequestAttribute("user") User user,
+                                                              @PathVariable("memberId") Long userId,
+                                                              @Valid @RequestBody MemberPointRequest.Add memberPointRequest){
+        MemberPointResponse.Info info = adminService.addPointToUser(user, memberPointRequest.depositPoint(), userId);
+        return ResponseEntity.ok(info);
+
     }
 
-    @GetMapping("/admin")
-    public String adminHome(Model model, @ModelAttribute PagingRequest pagingRequest) {
-        PagingResponse<ProductResponse.Info> giftlist = productService.getAllGifts(pagingRequest.getPage(), pagingRequest.getSize());
-        model.addAttribute("giftlist", giftlist.getContent());
-        return "admin";
-    }
-
-    @GetMapping("/admin/gift/create")
-    public String giftCreate(Model model) {
-        CategoryResponse.InfoList infoList = categoryService.getAllCategories();
-        List<CategoryResponse.Info> categories = infoList.categories();
-        model.addAttribute("categories", categories);
-        return "create_form";
-    }
-
-    @PostMapping("/admin/gift/create")
-    public String giftCreate(@Valid @ModelAttribute ProductRequest.Create giftRequest) {
-        ProductResponse.Info productResponse = productService.addGift(giftRequest);
-        for (OptionRequest.Create optionRequest : giftRequest.options()) {
-            optionService.addOptionToGift(productResponse.productId(), optionRequest);
-        }
-        return "redirect:/admin";
-    }
-
-    @GetMapping("/admin/gift/detail/{id}")
-    public String detail(Model model, @PathVariable("id") Long id) {
-        ProductResponse.Info gift = productService.getGift(id);
-        model.addAttribute("gift", gift);
-        return "gift_detail";
-    }
-
-    @GetMapping("/admin/gift/modify/{id}")
-    public String giftModify(Model model, @PathVariable("id") Long id) {
-        CategoryResponse.InfoList infoList = categoryService.getAllCategories();
-        List<CategoryResponse.Info> categories = infoList.categories();
-        model.addAttribute("categories", categories);
-        ProductResponse.Info gift = productService.getGift(id);
-        model.addAttribute("gift", gift);
-        return "modify_form";
-    }
-
-    @PutMapping("/admin/gift/modify/{id}")
-    public String giftModify(@PathVariable("id") Long id, @ModelAttribute ProductRequest.Update giftRequest) {
-        productService.updateGift(giftRequest, id);
-        return "redirect:/admin";
-    }
-
-    @DeleteMapping("/admin/gift/delete/{id}")
-    public String giftDelete(@PathVariable("id") Long id) {
-        productService.deleteGift(id);
-        return "redirect:/admin";
-    }
-
-    @GetMapping("/admin/gift/{giftId}/option/create")
-    public String showCreateOptionForm(Model model, @PathVariable Long giftId) {
-        model.addAttribute("giftId", giftId);
-        return "create_option_form";
-    }
-
-    @PostMapping("/admin/gift/{giftId}/option/create")
-    public String createOption(@PathVariable Long giftId, @Valid @ModelAttribute OptionRequest.Create optionRequest) {
-        optionService.addOptionToGift(giftId, optionRequest);
-        return "redirect:/admin/gift/detail/" + giftId;
-    }
 }
-

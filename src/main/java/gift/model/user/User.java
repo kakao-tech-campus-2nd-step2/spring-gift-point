@@ -3,6 +3,7 @@ package gift.model.user;
 import gift.common.enums.LoginType;
 import gift.common.enums.Role;
 import gift.exception.InvalidUserException;
+import gift.exception.NotAdminException;
 import gift.model.option.Option;
 import gift.model.wish.Wish;
 import jakarta.persistence.*;
@@ -94,6 +95,16 @@ public class User {
         if (this.loginType != LoginType.DEFAULT) {
             throw new InvalidUserException("일반 로그인을 할 수 없습니다.(소셜 로그인 유저)");
         }
+    }
+
+    public void isAdmin(){
+        if(this.role != Role.ADMIN){
+            throw new NotAdminException("Forbidden");
+        }
+    }
+
+    public void addPoint(int depositPoint){
+        this.point += depositPoint;
     }
 
 }
