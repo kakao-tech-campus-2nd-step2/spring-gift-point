@@ -35,8 +35,7 @@ public class MemberController {
             @RequestBody MemberRequest memberRequest
     ) throws BadRequestException {
         memberService.join(memberRequest);
-        String jwt = memberService.login(new LoginRequest(memberRequest.id(),memberRequest.password()));
-        return ResponseEntity.ok().body(new TokenResponse(jwt));
+        return ResponseEntity.ok().body(new TokenResponse(memberRequest.email(),memberRequest.password()));
     }
 
     @PostMapping("/login")
@@ -44,7 +43,7 @@ public class MemberController {
             @RequestBody LoginRequest loginRequest
             ) {
         String jwt = memberService.login(loginRequest);
-        return ResponseEntity.ok().body(new TokenResponse(jwt));
+        return ResponseEntity.ok().body(new TokenResponse(loginRequest.email(),jwt));
     }
 
     @GetMapping("/login/kakao")
@@ -57,8 +56,7 @@ public class MemberController {
     public ResponseEntity<TokenResponse> getUserInfomation(
             @RequestParam("code") String code
     ) throws JsonProcessingException, AuthenticationException {
-        String jwt =  kakaoService.getToken(code);
-        return ResponseEntity.ok().body(new TokenResponse(jwt));
+        return ResponseEntity.ok().body(kakaoService.getToken(code));
     }
 
 

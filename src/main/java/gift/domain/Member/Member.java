@@ -3,6 +3,7 @@ package gift.domain.Member;
 import gift.domain.WishList.WishList;
 import jakarta.persistence.*;
 
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
 
@@ -12,7 +13,6 @@ public class Member {
     @Id
     private String id;
 
-    @Column(name = "name", nullable = false)
     private String name;
 
     @Column(name = "password")
@@ -29,6 +29,13 @@ public class Member {
         this.password = password;
         this.wishList = wishList;
         this.name = name;
+    }
+
+    public Member(String id, String password, LinkedList<WishList> wishLists) {
+        this.id = id;
+        this.password = password;
+        this.wishList = wishList;
+        this.name = null;
     }
 
 

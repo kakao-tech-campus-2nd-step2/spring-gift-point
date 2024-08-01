@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import gift.domain.Auth.KakaoLoginResponse;
+import gift.domain.Auth.TokenResponse;
 import gift.domain.Member.Member;
 import gift.domain.WishList.WishList;
 import gift.domain.Auth.getTokenDto;
@@ -46,7 +47,7 @@ public class KakaoService {
         return uri;
     }
 
-    public String getToken(String code) throws JsonProcessingException, AuthenticationException {
+    public TokenResponse getToken(String code) throws JsonProcessingException, AuthenticationException {
         var url = "https://kauth.kakao.com/oauth/token";
 
         var headers = new HttpHeaders();
@@ -68,7 +69,7 @@ public class KakaoService {
         headers = new HttpHeaders();
         headers.add("Authorization",response.getBody().access_token());
         Member member = getUserInformation(response.getBody().access_token());
-        return jwtService.createJWT(member.getId());
+        return new TokenResponse(member.getId(),jwtService.createJWT(member.getId()));
     }
 
     public Member getUserInformation(String token) throws AuthenticationException {
