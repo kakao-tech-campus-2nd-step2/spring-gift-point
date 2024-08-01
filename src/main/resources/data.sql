@@ -1,34 +1,34 @@
 INSERT INTO category (name, color, imageUrl, description)
-VALUES ('교환권', '#FF5733', 'http://example.com/exchange.jpg', '설명1'),
-       ('상품권', '#33FF57', 'http://example.com/giftcard.jpg', '설명2'),
-       ('뷰티', '#3357FF', 'http://example.com/beauty.jpg', '설명3'),
-       ('패션', '#FF33A5', 'http://example.com/fashion.jpg', '설명4'),
-       ('식품', '#33FFA5', 'http://example.com/food.jpg', '설명5'),
-       ('리빙/도서', '#FFA533', 'http://example.com/living_books.jpg', '설명6'),
-       ('레저/스포츠', '#A533FF', 'http://example.com/leisure_sports.jpg', '설명7'),
-       ('아티스트/캐릭터', '#FF33FF', 'http://example.com/artist_character.jpg', '설명8'),
-       ('유아동/반려', '#FFA5FF', 'http://example.com/kids_pets.jpg', '설명9'),
-       ('디지털/가전', '#33FFA5', 'http://example.com/digital_appliances.jpg', '설명10'),
-       ('카카오프렌즈', '#FF5733', 'http://example.com/kakao_friends.jpg', '설명11'),
-       ('트렌드선물', '#5733FF', 'http://example.com/trend_gifts.jpg', '설명12'),
-       ('백화점', '#33FF57', 'http://example.com/department_store.jpg', '설명13'),
-       ('홈/가전', '#FF5733', 'http://example.com/home_appliances.jpg', '설명14'),
-       ('커피/디저트', '#33FF57', 'http://example.com/coffee_dessert.jpg', '설명15'),
-       ('도서/음반', '#3357FF', 'http://example.com/books_music.jpg', '설명16'),
-       ('여행/숙박', '#FF33A5', 'http://example.com/travel_accommodation.jpg', '설명17'),
-       ('건강/뷰티', '#33FFA5', 'http://example.com/health_beauty.jpg', '설명18'),
-       ('자동차/공구', '#FFA533', 'http://example.com/automotive_tools.jpg', '설명19'),
-       ('화장품/향수', '#A533FF', 'http://example.com/cosmetics_perfume.jpg', '설명20'),
-       ('완구/취미', '#FF33FF', 'http://example.com/toys_hobbies.jpg', '설명21'),
-       ('음식점', '#FFA5FF', 'http://example.com/restaurants.jpg', '설명22'),
-       ('의류/잡화', '#33FFA5', 'http://example.com/clothing_accessories.jpg', '설명23'),
-       ('반려동물', '#FF5733', 'http://example.com/pets.jpg', '설명24'),
-       ('헬스/피트니스', '#33FF57', 'http://example.com/health_fitness.jpg', '설명25'),
-       ('전자기기', '#3357FF', 'http://example.com/electronics.jpg', '설명26'),
-       ('가구/인테리어', '#FF33A5', 'http://example.com/furniture_interior.jpg', '설명27'),
-       ('액세서리', '#33FFA5', 'http://example.com/accessories.jpg', '설명28'),
-       ('주얼리', '#FFA533', 'http://example.com/jewelry.jpg', '설명29'),
-       ('가전제품', '#A533FF', 'http://example.com/appliances.jpg', '설명30');
+VALUES ('교환권', '#FF5733', 'https://via.placeholder.com/150', '설명1'),
+       ('상품권', '#33FF57', 'https://via.placeholder.com/150', '설명2'),
+       ('뷰티', '#3357FF', 'https://via.placeholder.com/150', '설명3'),
+       ('패션', '#FF33A5', 'https://via.placeholder.com/150', '설명4'),
+       ('식품', '#33FFA5', 'https://via.placeholder.com/150', '설명5'),
+       ('리빙/도서', '#FFA533', 'https://via.placeholder.com/150', '설명6'),
+       ('레저/스포츠', '#A533FF', 'https://via.placeholder.com/150', '설명7'),
+       ('아티스트/캐릭터', '#FF33FF', 'https://via.placeholder.com/150', '설명8'),
+       ('유아동/반려', '#FFA5FF', 'https://via.placeholder.com/150', '설명9'),
+       ('디지털/가전', '#33FFA5', 'https://via.placeholder.com/150', '설명10'),
+       ('카카오프렌즈', '#FF5733', 'https://via.placeholder.com/150', '설명11'),
+       ('트렌드선물', '#5733FF', 'https://via.placeholder.com/150', '설명12'),
+       ('백화점', '#33FF57', 'https://via.placeholder.com/150', '설명13'),
+       ('홈/가전', '#FF5733', 'https://via.placeholder.com/150', '설명14'),
+       ('커피/디저트', '#33FF57', 'https://via.placeholder.com/150', '설명15'),
+       ('도서/음반', '#3357FF', 'https://via.placeholder.com/150', '설명16'),
+       ('여행/숙박', '#FF33A5', 'https://via.placeholder.com/150', '설명17'),
+       ('건강/뷰티', '#33FFA5', 'https://via.placeholder.com/150', '설명18'),
+       ('자동차/공구', '#FFA533', 'https://via.placeholder.com/150', '설명19'),
+       ('화장품/향수', '#A533FF', 'https://via.placeholder.com/150', '설명20'),
+       ('완구/취미', '#FF33FF', 'https://via.placeholder.com/150', '설명21'),
+       ('음식점', '#FFA5FF', 'https://via.placeholder.com/150', '설명22'),
+       ('의류/잡화', '#33FFA5', 'https://via.placeholder.com/150', '설명23'),
+       ('반려동물', '#FF5733', 'https://via.placeholder.com/150', '설명24'),
+       ('헬스/피트니스', '#33FF57', 'https://via.placeholder.com/150', '설명25'),
+       ('전자기기', '#3357FF', 'https://via.placeholder.com/150', '설명26'),
+       ('가구/인테리어', '#FF33A5', 'https://via.placeholder.com/150', '설명27'),
+       ('액세서리', '#33FFA5', 'https://via.placeholder.com/150', '설명28'),
+       ('주얼리', '#FFA533', 'https://via.placeholder.com/150', '설명29'),
+       ('가전제품', '#A533FF', 'https://via.placeholder.com/150', '설명30');
 
 INSERT INTO product (name, price, imageUrl, category_id)
 VALUES ('coffee', 1500, 'image1', 15);
@@ -97,7 +97,7 @@ VALUES ('Americano', 10, 1),
        ('ColdBrew', 20, 1);
 
 INSERT INTO users (email, password, name, point, role, login_type)
-VALUES ('admin@email.com', 'password', 'dummyName', 5000, 'ADMIN', 'DEFAULT');
+VALUES ('admin@test.com', '1234', 'dummyName', 5000, 'ADMIN', 'DEFAULT');
 
 INSERT INTO wish (user_id, product_id, quantity)
 VALUES (1, 1, 1);
