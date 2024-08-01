@@ -105,6 +105,10 @@ public class Member extends BaseTimeEntity {
     }
 
 
+    public Integer depositPoint(Integer point) {
+        this.point += point;
+        return this.point;
+    }
 }
 
 class PasswordUtil {
