@@ -1,8 +1,9 @@
 package gift.dto.response;
 
 public record OptionResponseDTO(
-        Long optionId,
+        Long Id,
         String name,
-        int quantity
+        int quantity,
+        Long productId
         ) {
 }

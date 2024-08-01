@@ -5,17 +5,15 @@ import gift.dto.request.OptionRequestDTO;
 import gift.dto.response.OptionResponseDTO;
 import gift.entity.Option;
 import gift.entity.Product;
-import gift.exception.ProductException;
 import gift.exception.optionException.DuplicatedOptionException;
-import gift.exception.optionException.OptionException;
 import gift.exception.optionException.OptionNotFoundException;
 import gift.exception.productException.ProductNotFoundException;
 import gift.repository.OptionRepository;
 import gift.repository.ProductRepository;
-import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Description;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -47,8 +45,7 @@ public class OptionService {
     }
 
     @Description("option add method")
-    public void addOption(OptionRequestDTO optionRequestDTO) {
-        Long productId = optionRequestDTO.productId();
+    public void addOption(Long productId, OptionRequestDTO optionRequestDTO) {
         Product existingProduct = productRepository.findById(productId)
                 .orElseThrow(() -> new ProductNotFoundException(productId));
         String optionName = optionRequestDTO.name();
@@ -66,6 +63,7 @@ public class OptionService {
         optionRepository.delete(option);
     }
 
+    @Transactional
     @Description("option update method")
     public void updateOption(Long optionId , OptionRequestDTO optionRequestDTO) {
         Option option = getOptionEntity(optionId);
@@ -89,7 +87,9 @@ public class OptionService {
         return new OptionResponseDTO(
                 option.getId(),
                 option.getName(),
-                option.getQuantity()
+                option.getQuantity(),
+                option.getProduct()
+                        .getId()
         );
     }
 
