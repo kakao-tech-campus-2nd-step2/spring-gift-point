@@ -1,7 +1,7 @@
 package gift.controller;
 
 import gift.model.JwtTokenDTO;
-import gift.model.OrderDTO;
+import gift.model.OrderRequest;
 import gift.service.KakaoApiService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -52,7 +52,7 @@ public class KakaoApiController {
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "정상적으로 주문 카카오톡 메시지가 전송됩니다.",
             content = {@Content(mediaType = "application/json",
-                schema = @Schema(implementation = OrderDTO.class))}),
+                schema = @Schema(implementation = OrderRequest.class))}),
         @ApiResponse(responseCode = "400", description = "입력값이 유효하지 않습니다.",
             content = @Content),
         @ApiResponse(responseCode = "500", description = "내부 서버 에러입니다.",

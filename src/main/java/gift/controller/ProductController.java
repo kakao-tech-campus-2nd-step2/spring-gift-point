@@ -2,7 +2,7 @@ package gift.controller;
 
 import gift.model.AuthInfo;
 import gift.model.OptionDTO;
-import gift.model.OptionResponseDTO;
+import gift.model.OptionResponse;
 import gift.model.ProductDTO;
 import gift.service.OptionService;
 import gift.service.ProductService;
@@ -75,7 +75,7 @@ public class ProductController {
         @PathVariable long productId,
         @PageableDefault(page = 0, size = 20, sort = "name", direction = Sort.Direction.ASC)
         Pageable pageable, AuthInfo authInfo) {
-        List<OptionResponseDTO> options = productService.getOptionsByProductId(productId, pageable);
+        List<OptionResponse> options = productService.getOptionsByProductId(productId, pageable);
         return ResponseEntity.ok(options);
     }
 

@@ -5,7 +5,7 @@ import gift.exception.RepositoryException;
 import gift.model.Category;
 import gift.model.Option;
 import gift.model.OptionDTO;
-import gift.model.OptionResponseDTO;
+import gift.model.OptionResponse;
 import gift.model.Product;
 import gift.model.ProductDTO;
 import gift.repository.CategoryRepository;
@@ -59,10 +59,10 @@ public class ProductService {
         return convertToDTO(product);
     }
 
-    public List<OptionResponseDTO> getOptionsByProductId(long productId, Pageable pageable) {
+    public List<OptionResponse> getOptionsByProductId(long productId, Pageable pageable) {
         Product product = productRepository.findById(productId)
             .orElseThrow(() -> new RepositoryException(ErrorCode.PRODUCT_NOT_FOUND, productId));
-        List<OptionResponseDTO> options = product.getOptions()
+        List<OptionResponse> options = product.getOptions()
             .stream()
             .map(this::convertToResponseDTO)
             .toList();
@@ -100,8 +100,8 @@ public class ProductService {
         return new OptionDTO(option.getId(), option.getName(), option.getQuantity());
     }
 
-    private OptionResponseDTO convertToResponseDTO(Option option) {
-        return new OptionResponseDTO(option.getId(), option.getName(), option.getQuantity(),
+    private OptionResponse convertToResponseDTO(Option option) {
+        return new OptionResponse(option.getId(), option.getName(), option.getQuantity(),
             option.getProduct().getId());
     }
 }
