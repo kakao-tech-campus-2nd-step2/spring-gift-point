@@ -8,4 +8,4 @@ https://fuchsia-tabletop-6fc.notion.site/API-438e773c1c0d475da1e87b4ef4ef42d8?p=
 
 배포한 페이지
 
-http://43.203.235.57:8080/manager/products
+http://3.37.113.212:8080/manager/products
