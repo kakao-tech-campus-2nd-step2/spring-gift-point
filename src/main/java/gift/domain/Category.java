@@ -20,6 +20,7 @@ public class Category {
     private String color;
 
     @Column(nullable = false)
+    @Lob
     private String imageUrl;
 
     private String description;

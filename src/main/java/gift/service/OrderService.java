@@ -85,8 +85,6 @@ public class OrderService {
 
         if (accessToken != null) {
             kakaoApiService.sendKakaoMessage(accessToken, message);
-        } else {
-            message = null;
         }
 
         Order order = new Order(option, quantity, message, member);
