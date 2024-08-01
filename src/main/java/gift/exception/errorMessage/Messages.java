@@ -23,5 +23,5 @@ public class Messages {
     public static final String API_INTERNAL_SERVER_ERROR =  "API 서버 오류";
     public static final String API_BAD_GATEWAY =  "API 게이트 웨이 오류";
     public static final String API_SERVICE_UNAVAILABLE =  "API 서비스 점검 중";
-
+    public static final String POINTS_CANNOT_BE_NEGATIVE = "포인트는 음수일 수 없습니다.";
 }
