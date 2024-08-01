@@ -38,6 +38,10 @@ public class Option {
 		return name;
 	}
 
+	public Product getProduct() {
+		return product;
+	}
+
 	public void setName(String name) {
 		this.name = name;
 	}
