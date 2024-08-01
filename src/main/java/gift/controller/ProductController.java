@@ -8,9 +8,9 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -45,12 +45,9 @@ public class ProductController {
     @ApiResponse(responseCode = "400", description = "잘못된 요청")
     @GetMapping
     public ResponseEntity<Page<ProductResponseDto>> getAll(
-            @RequestParam(required = false, defaultValue = "0", value = "page") int pageNum,
-            @RequestParam(required = false, defaultValue = "10", value = "size") int size,
-            @RequestParam(required = false, defaultValue = "name,asc", value = "sort") String[] sort,
-            @RequestParam(required = false, defaultValue = "1", value = "categoryId") Long categoryId
+            @PageableDefault(sort = "name", direction = Sort.Direction.ASC) Pageable pageable,
+            @RequestParam(value = "categoryId", required = false, defaultValue = "1") Long categoryId
     ) {
-        Pageable pageable = PageRequest.of(pageNum, size, Sort.by(sort[1], sort[0]));
         Page<ProductResponseDto> responses = productService.findAll(pageable,categoryId);
         return ResponseEntity.ok(responses);
     }
