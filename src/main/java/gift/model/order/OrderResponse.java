@@ -1,11 +1,12 @@
 package gift.model.order;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import java.time.LocalDateTime;
 
 public record OrderResponse(
     Long id,
-    Long product_id,
-    Long option_id,
+    @JsonProperty("product_id") Long productId,
+    @JsonProperty("option_id") Long optionId,
     int quantity,
     LocalDateTime orderDateTime,
     String message
