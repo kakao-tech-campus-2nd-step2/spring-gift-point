@@ -2,6 +2,7 @@ package gift.domain.Option;
 
 import gift.domain.Menu.Menu;
 import jakarta.persistence.*;
+import gift.domain.Option.OptionName;
 
 import java.util.Objects;
 
@@ -9,17 +10,19 @@ import java.util.Objects;
 public class Option {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long id;
-    String name;
-    Long quantity;
+    private Long id;
+    @Embedded
+    private OptionName name;
+    @Embedded
+    private OptionQuantity quantity;
 
     @ManyToOne
     Menu menu;
 
     public Option(Long id, String name, Long quantity,Menu menu) {
         this.id = id;
-        this.name = name;
-        this.quantity = quantity;
+        this.name = new OptionName(name);
+        this.quantity = new OptionQuantity(quantity);
         this.menu = menu;
     }
 
@@ -28,7 +31,7 @@ public class Option {
     }
 
     public String getName() {
-        return this.name;
+        return this.name.getoptionName();
     }
 
     public Long getId() {
@@ -36,7 +39,7 @@ public class Option {
     }
 
     public Long getQuantity() {
-        return quantity;
+        return quantity.getoptionQuantity();
     }
 
     public Menu getMenu() {
@@ -44,10 +47,7 @@ public class Option {
     }
 
     public void subtract(Long subtractNumber) throws IllegalAccessException {
-        quantity -= subtractNumber;
-        if(quantity <= 0 || quantity > 1_000_000_000){
-            throw new IllegalAccessException("옵션의 수량은 1이상이거나, 1억 이하여야 합니다.");
-        }
+        quantity.subtract(subtractNumber);
     }
 
     @Override
@@ -55,12 +55,12 @@ public class Option {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Option option = (Option) o;
-        return Objects.equals(name, option.name);
+        return Objects.equals(name.getoptionName(), option.name.getoptionName());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(name);
+        return Objects.hash(name.getoptionName());
     }
 
 }
