@@ -1,17 +1,15 @@
 package gift.controller;
 
-import gift.dto.TokenDTO;
-import gift.dto.UserDTO;
+import gift.dto.user.UserDTO;
 import gift.jwtutil.JwtUtil;
 import gift.service.AuthService;
 import gift.service.UserService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.validation.Valid;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -19,7 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 @Validated
 @Controller
-@RequestMapping("/members/register")
+@RequestMapping("/api/members/register")
 public class RegisterController {
     private final AuthService authService;
     private final UserService userService;
@@ -31,18 +29,22 @@ public class RegisterController {
         this.jwtUtil = jwtUtil;
     }
 
-    @GetMapping
-    public String registerPage() {
-        return "register";
-    }
-
     @PostMapping
-    public ResponseEntity<?> registUser(@Valid @RequestBody UserDTO userDTO) {
+    @Operation(summary = "회원가입",
+            description = "새로운 사용자를 등록합니다.",
+            responses = {
+            @ApiResponse(responseCode = "201", description = "회원가입 성공"),
+            @ApiResponse(responseCode = "400", description = "잘못된 값 입력"),
+            @ApiResponse(responseCode = "500", description = "서버 내부 오류")
+    })
+    public ResponseEntity<Void> registUser(@Valid @RequestBody UserDTO userDTO) {
         authService.redundantUser("regist", userDTO);
-
         userService.createUser(userDTO);
-        TokenDTO token = jwtUtil.makeToken(userDTO);
-        return new ResponseEntity<>(token, HttpStatus.OK);
+
+        var responseEntity = authService.createResponse(jwtUtil.makeToken(userDTO));
+
+        return responseEntity;
     }
 
 }
+
