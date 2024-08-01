@@ -2,7 +2,7 @@
 FROM openjdk:21-jre-slim
 
 # Add Maintainer Info
-LABEL maintainer="ez23rel@google.com"  # image(jdk?) manager email
+LABEL maintainer="ez23re@gmail.com"
 
 # Add a volume pointing to /tmp
 VOLUME /tmp
