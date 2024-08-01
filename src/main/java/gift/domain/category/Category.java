@@ -19,12 +19,18 @@ public class Category {
 
     private String description;
 
+    private String color;
+
+    private String imageUrl;
+
     protected Category() {
     }
 
-    public Category(String name, String description) {
+    public Category(String name, String description, String color, String imageUrl) {
         this.name = name;
         this.description = description;
+        this.color = color;
+        this.imageUrl = imageUrl;
     }
 
     public Category(long id, String name, String description) {
@@ -41,13 +47,24 @@ public class Category {
         return name;
     }
 
+    public String getColor() {
+        return color;
+    }
+
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
     public String getDescription() {
         return description;
     }
 
-    public void update(String name, String description) {
+
+    public void update(String name, String description, String color, String imageUrl) {
         this.name = name;
         this.description = description;
+        this.color = color;
+        this.imageUrl = imageUrl;
     }
 
     @Override

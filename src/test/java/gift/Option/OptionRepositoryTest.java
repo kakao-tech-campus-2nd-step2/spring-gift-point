@@ -7,7 +7,6 @@ import gift.domain.category.Category;
 import gift.domain.category.JpaCategoryRepository;
 import gift.domain.option.JpaOptionRepository;
 import gift.domain.option.Option;
-import gift.domain.option.OptionService;
 import gift.domain.product.JpaProductRepository;
 import gift.domain.product.Product;
 import jakarta.persistence.EntityManager;
@@ -16,7 +15,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Description;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.test.context.ActiveProfiles;
@@ -43,9 +41,9 @@ public class OptionRepositoryTest {
     @BeforeEach
     void setUp() {
         category = categoryRepository.saveAndFlush(
-            new Category("에티오피아산", "에티오피아 산 원두를 사용했습니다."));
+            new Category("에티오피아산", "에티오피아 산 원두를 사용했습니다.","color code", "http://www.example.com/index.html"));
 
-        product = productRepository.saveAndFlush(new Product("아이스 아메리카노 T", category, 4500,
+        product = productRepository.saveAndFlush(new Product("아이스 아메리카노 T", category, 4500,"description",
             "https://example.com/image.jpg"));
 
         option = optionRepository.saveAndFlush(new Option("에티오피아 커피 옵션1", 289L, product));

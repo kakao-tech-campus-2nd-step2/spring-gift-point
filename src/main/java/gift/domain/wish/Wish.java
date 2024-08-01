@@ -1,7 +1,9 @@
-package gift.domain.cartItem;
+package gift.domain.wish;
 
+import gift.domain.BaseTimeEntity;
 import gift.domain.member.Member;
 import gift.domain.product.Product;
+import gift.domain.wish.dto.WishResponse;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -12,7 +14,7 @@ import jakarta.persistence.ManyToOne;
 import java.util.Objects;
 
 @Entity
-public class CartItem {
+public class Wish extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -28,10 +30,10 @@ public class CartItem {
 
     private int count = 1;
 
-    protected CartItem() {
+    protected Wish() {
     }
 
-    public CartItem(Member member, Product product) {
+    public Wish(Member member, Product product) {
         this.member = member;
         this.product = product;
     }
@@ -66,16 +68,15 @@ public class CartItem {
 
     @Override
     public String toString() {
-        return "CartItem{" +
+        return "Wish{" +
                "id=" + id +
                ", member=" + member +
                ", product=" + product +
                '}';
     }
 
-    public int addOneMore() {
+    public void addOneMore() {
         this.count += 1;
-        return count;
     }
 
     public void updateCount(int count) {
@@ -90,20 +91,26 @@ public class CartItem {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        CartItem cartItem = (CartItem) o;
+        Wish wish = (Wish) o;
 
-//        // 프록시 객체 초기화
-//        Hibernate.initialize(cartItem.getMember());
-//        Hibernate.initialize(member);
-
-        return count == cartItem.count &&
-               Objects.equals(id, cartItem.id) &&
-               Objects.equals(member, cartItem.member) &&
-               Objects.equals(product.getId(), cartItem.product.getId());
+        return count == wish.count &&
+               Objects.equals(id, wish.id) &&
+               Objects.equals(member, wish.member) &&
+               Objects.equals(product.getId(), wish.product.getId());
     }
 
     @Override
     public int hashCode() {
         return Objects.hash(id, member, product, count);
+    }
+
+    public WishResponse toWishResponse() {
+        return new WishResponse(
+            id,
+            product.getId(),
+            product.getName(),
+            product.getPrice(),
+            product.getImageUrl()
+        );
     }
 }

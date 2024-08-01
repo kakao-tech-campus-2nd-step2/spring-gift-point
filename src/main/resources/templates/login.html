@@ -67,13 +67,13 @@
     const email = document.getElementById('email').value;
     const password = document.getElementById('password').value;
 
-    axios.post('/api/users/login', {
+    axios.post('/api/members/login', {
       email: email,
       password: password
     })
     .then(function (response) {
       console.log(response);
-      document.cookie = "jwt=" + response.headers['authorization'] + "; Path=/";
+      document.cookie = "jwt=" + response.data.accessToken + "; Path=/";
 
       // 리다이렉트
       window.location.href = "/";
@@ -87,7 +87,7 @@
 
   document.getElementById('kakaoLoginButton').addEventListener('click', function () {
     // 카카오 로그인 페이지로 리다이렉트
-    window.location.href = '/api/users/oauth/kakao/login';
+    window.location.href = '/api/members/oauth/kakao/login';
   });
 
   // 페이지 로드 시 code 파라미터를 추출하여 JWT 발급 요청
@@ -96,9 +96,10 @@
     const code = urlParams.get('code');
 
     if (code) {
-      axios.get(`/api/users/oauth/kakao?code=${code}`)
+      axios.get(`/api/members/oauth/kakao?code=${code}`)
       .then(function (response) {
-        const jwt = response.headers['authorization'].split(' ')[1];
+        const jwt = response.data.accessToken;
+        console.log(jwt);
         document.cookie = "jwt=" + jwt + "; Path=/";
         alert('카카오 로그인에 성공했습니다.');
         // 로그인 성공 후 홈 페이지로 이동

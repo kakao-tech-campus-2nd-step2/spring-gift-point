@@ -8,11 +8,13 @@ import gift.domain.category.JpaCategoryRepository;
 import gift.domain.option.JpaOptionRepository;
 import gift.domain.option.Option;
 import gift.domain.option.OptionService;
-import gift.domain.option.dto.OptionRequestDTO;
+import gift.domain.option.dto.request.OptionRequest;
+import gift.domain.option.dto.response.OptionResponse;
 import gift.domain.product.JpaProductRepository;
 import gift.domain.product.Product;
 import gift.global.exception.BusinessException;
 import jakarta.persistence.EntityManager;
+import java.util.ArrayList;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -46,9 +48,9 @@ public class OptionServiceTest {
     @BeforeEach
     void setUp() {
         category = categoryRepository.saveAndFlush(
-            new Category("에티오피아산", "에티오피아 산 원두를 사용했습니다."));
+            new Category("에티오피아산", "에티오피아 산 원두를 사용했습니다.","color code", "http://www.example.com/index.html"));
 
-        product = productRepository.saveAndFlush(new Product("아이스 아메리카노 T", category, 4500,
+        product = productRepository.saveAndFlush(new Product("아이스 아메리카노 T", category, 4500, "description",
             "https://example.com/image.jpg"));
 
         option1 = optionRepository.saveAndFlush(new Option("에티오피아 커피 옵션1", 100L, product));
@@ -57,69 +59,65 @@ public class OptionServiceTest {
     }
 
     @Test
-    @Description("전체 옵션 목록 조회")
-    void testGetOptions() {
-        /// when
-        List<Option> options = optionService.getOptions();
-
-        // then
-        assertThat(options).hasSize(2);
-        assertThat(options.get(0)).isEqualTo(option1);
-        assertThat(options.get(1)).isEqualTo(option2);
-    }
-
-    @Test
     @Description("상품 생성 시 옵션 입력")
     void testCreateOption() {
         // given
-        Product product = productRepository.save(new Product("productName", category, 4500,
+        Product product = productRepository.save(new Product("productName", category, 4500, "description",
             "https://example.com/image.jpg"));
-        OptionRequestDTO optionRequestDTO = new OptionRequestDTO("optionName", 100L);
+        OptionRequest optionRequest1 = new OptionRequest("optionName", 100L);
+        OptionRequest optionRequest2 = new OptionRequest("optionName", 100L);
+        List<OptionRequest> optionRequests = new ArrayList<>();
+        optionRequests.add(optionRequest1);
+        optionRequests.add(optionRequest2);
 
         // when
-        optionService.addOption(product, optionRequestDTO);
+        optionService.addOptionsToNewProduct(product, optionRequests);
 
         // then
-        assertThat(product.getOptions()).hasSize(1);
+        assertThat(product.getOptions()).hasSize(2);
         assertThat(product.getOptions().get(0).getName())
-            .isEqualTo(optionRequestDTO.name());
+            .isEqualTo(optionRequest1.name());
         assertThat(product.getOptions().get(0).getQuantity())
-            .isEqualTo(optionRequestDTO.quantity());
+            .isEqualTo(optionRequest1.quantity());
+        assertThat(product.getOptions().get(1).getName())
+            .isEqualTo(optionRequest2.name());
+        assertThat(product.getOptions().get(1).getQuantity())
+            .isEqualTo(optionRequest2.quantity());
     }
 
     @Test
     @Description("기존 상품에 옵션 추가")
     void testAddOption() {
         // when
-        OptionRequestDTO optionRequestDTO = new OptionRequestDTO("에티오피아산 커피 옵션3", 300L);
+        OptionRequest optionRequest = new OptionRequest("에티오피아산 커피 옵션3", 300L);
 
         // when
-        optionService.addOption(product.getId(), optionRequestDTO);
+        optionService.addOptionToExistsProduct(product.getId(), optionRequest);
         flushAndClear();
         Product findProduct = productRepository.findById(product.getId()).get();
 
         // then
         assertThat(findProduct.getOptions()).hasSize(3);
         assertThat(findProduct.getOptions().get(2).getName())
-            .isEqualTo(optionRequestDTO.name());
+            .isEqualTo(optionRequest.name());
         assertThat(findProduct.getOptions().get(2).getQuantity())
-            .isEqualTo(optionRequestDTO.quantity());
+            .isEqualTo(optionRequest.quantity());
     }
 
     @Test
     @Description("옵션 수정")
     void testUpdateOption() {
         // given
-        OptionRequestDTO optionRequestDTO = new OptionRequestDTO("에티오피아산 커피 옵션1 - 수정", 300L);
+        OptionRequest optionRequest = new OptionRequest("에티오피아산 커피 옵션1 - 수정", 300L);
 
         // when
-        optionService.updateOption(product.getId(), option1.getId(), optionRequestDTO);
+        optionService.updateOption(product.getId(), option1.getId(), optionRequest);
         flushAndClear();
         Option findOption = optionRepository.findById(option1.getId()).get();
 
         // then
-        assertThat(findOption.getName()).isEqualTo(optionRequestDTO.name());
-        assertThat(findOption.getQuantity()).isEqualTo(optionRequestDTO.quantity());
+        assertThat(findOption.getName()).isEqualTo(optionRequest.name());
+        assertThat(findOption.getQuantity()).isEqualTo(optionRequest.quantity());
     }
 
     @Test

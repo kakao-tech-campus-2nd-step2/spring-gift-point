@@ -7,11 +7,11 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import gift.domain.member.Member;
 import gift.domain.category.Category;
 import gift.domain.category.JpaCategoryRepository;
-import gift.domain.cartItem.CartItem;
-import gift.domain.cartItem.JpaCartItemRepository;
+import gift.domain.wish.JpaWishRepository;
 import gift.domain.product.JpaProductRepository;
 import gift.domain.product.Product;
 import gift.domain.member.JpaMemberRepository;
+import gift.domain.wish.Wish;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import java.util.ArrayList;
@@ -42,7 +42,7 @@ public class ProductRepositoryTest {
     @Autowired
     private JpaMemberRepository memberRepository;
     @Autowired
-    private JpaCartItemRepository cartItemRepository;
+    private JpaWishRepository cartItemRepository;
 
     @PersistenceContext
     private EntityManager entityManager;
@@ -57,13 +57,13 @@ public class ProductRepositoryTest {
 
     @BeforeEach
     void setUp() {
-        ethiopia = categoryRepository.saveAndFlush(new Category("에티오피아산", "에티오피아 산 원두를 사용했습니다."));
-        jamaica = categoryRepository.saveAndFlush(new Category("자메이카산", "자메이카산 원두를 사용했습니다."));
+        ethiopia = categoryRepository.saveAndFlush(new Category("에티오피아산", "에티오피아 산 원두를 사용했습니다.","color code", "http://www.example.com/index.html"));
+        jamaica = categoryRepository.saveAndFlush(new Category("자메이카산", "자메이카산 원두를 사용했습니다.","color code", "http://www.example.com/index.html"));
 
-        Product product1 = new Product("아이스 아메리카노 T", ethiopia, 4500,
+        Product product1 = new Product("아이스 아메리카노 T", ethiopia, 4500,"description",
             "https://example.com/image.jpg");
         this.product1 = product1;
-        Product product2 = new Product("아이스 말차라떼 T", jamaica, 4500,
+        Product product2 = new Product("아이스 말차라떼 T", jamaica, 4500,"description",
             "https://example.com/image.jpg");
         this.product2 = product2;
     }
@@ -84,9 +84,9 @@ public class ProductRepositoryTest {
     @Description("상품 저장 시 이름 중복 검증")
     void saveWithSameName() {
         // given
-        Product product1 = new Product("아이스 아메리카노 T", ethiopia, 4500,
+        Product product1 = new Product("아이스 아메리카노 T", ethiopia, 4500,"description",
             "https://example.com/image.jpg");
-        Product product2 = new Product("아이스 아메리카노 T", jamaica, 4700,
+        Product product2 = new Product("아이스 아메리카노 T", jamaica, 4700,"description",
             "https://example.com/image.jpg");
 
         // when
@@ -135,7 +135,7 @@ public class ProductRepositoryTest {
         // given
         Product savedProduct = productRepository.saveAndFlush(product1);
         Member savedMember = memberRepository.saveAndFlush(new Member("minji@example.com", "password1"));
-        CartItem savedCartItem = cartItemRepository.saveAndFlush(new CartItem(savedMember, savedProduct));
+        Wish savedWish = cartItemRepository.saveAndFlush(new Wish(savedMember, savedProduct));
         clear();
 
         // when
@@ -143,7 +143,7 @@ public class ProductRepositoryTest {
         flush();
 
         // then
-        assertThat(cartItemRepository.existsById(savedCartItem.getId())).isFalse();
+        assertThat(cartItemRepository.existsById(savedWish.getId())).isFalse();
     }
 
     @Test

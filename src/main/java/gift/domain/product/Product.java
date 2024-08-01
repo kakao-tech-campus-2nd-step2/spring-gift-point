@@ -3,6 +3,9 @@ package gift.domain.product;
 import gift.domain.BaseTimeEntity;
 import gift.domain.category.Category;
 import gift.domain.option.Option;
+import gift.domain.option.dto.response.OptionResponse;
+import gift.domain.product.dto.response.ProductPageResponse.ProductForPage;
+import gift.domain.product.dto.response.ProductResponse;
 import gift.global.exception.BusinessException;
 import gift.global.exception.ErrorCode;
 import jakarta.persistence.CascadeType;
@@ -28,34 +31,38 @@ public class Product extends BaseTimeEntity {
     @Column(unique = true)
     private String name;
 
+    private int price;
+
+    private String description;
+
     @ManyToOne
     @JoinColumn(name = "category_id")
     private Category category;
 
+    private String imageUrl;
     @OneToMany(mappedBy = "product", cascade = CascadeType.REMOVE, orphanRemoval = true)
     private List<Option> options = new ArrayList<>();
-
-    private int price;
-    private String imageUrl;
 
     // JPA 사용을 위한 기본 생성자
     protected Product() {
     }
 
-    public Product(String name, Category category, int price, String imageUrl) {
+    public Product(String name, Category category, int price, String description, String imageUrl) {
         validateNotContainKaKao(name);
         this.name = name;
         this.category = category;
         this.price = price;
+        this.description = description;
         this.imageUrl = imageUrl;
     }
 
-    public Product(Long id, String name, Category category, int price, String imageUrl) {
+    public Product(Long id, String name, Category category, int price, String description, String imageUrl) {
         validateNotContainKaKao(name);
         this.id = id;
         this.name = name;
         this.category = category;
         this.price = price;
+        this.description = description;
         this.imageUrl = imageUrl;
     }
 
@@ -103,11 +110,12 @@ public class Product extends BaseTimeEntity {
         return options.size() == 1;
     }
 
-    public void update(String name, Category category, int price, String imageUrl) {
+    public void update(String name, Category category, int price, String description, String imageUrl) {
         validateNotContainKaKao(name);
         this.name = name;
         this.category = category;
         this.price = price;
+        this.description = description;
         this.imageUrl = imageUrl;
     }
 
@@ -116,10 +124,11 @@ public class Product extends BaseTimeEntity {
         return "Product{" +
                "id=" + id +
                ", name='" + name + '\'' +
-               ", category=" + category +
-               ", options=" + options +
                ", price=" + price +
+               ", description='" + description + '\'' +
+               ", category=" + category +
                ", imageUrl='" + imageUrl + '\'' +
+               ", options=" + options +
                '}';
     }
 
@@ -149,5 +158,25 @@ public class Product extends BaseTimeEntity {
             throw new BusinessException(ErrorCode.BAD_REQUEST,
                 "'카카오' 문구를 포함할 수 없습니다. 담당 MD와 협의하세요.");
         }
+    }
+
+    public ProductResponse toProductResponse() {
+        List<OptionResponse> options = this.options.stream()
+            .map(option -> new OptionResponse(option.getId(), option.getName(),
+                option.getQuantity())).toList();
+
+        return new ProductResponse(
+            this.id, this.name, this.price, this.description, this.imageUrl, options
+        );
+    }
+
+    public ProductForPage toProductForPage() {
+        return new ProductForPage(
+            this.id,
+            this.name,
+            this.price,
+            this.description,
+            this.imageUrl
+        );
     }
 }
