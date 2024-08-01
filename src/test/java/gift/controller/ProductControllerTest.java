@@ -1,163 +1,212 @@
 package gift.controller;
 
-import gift.model.Product;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import gift.exception.ForbiddenWordException;
 import gift.exception.ProductNotFoundException;
+import gift.model.Category;
+import gift.model.Option;
+import gift.model.Product;
 import gift.service.ProductService;
+import gift.service.MemberService;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.http.MediaType;
+import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.*;
-import static org.mockito.Mockito.when;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.Mockito.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-class ProductControllerTest {
+@WebMvcTest(ProductController.class)
+@ExtendWith(MockitoExtension.class)
+public class ProductControllerTest {
 
-    @Mock
+    @Autowired
+    private MockMvc mockMvc;
+
+    @MockBean
     private ProductService productService;
 
-    @InjectMocks
-    private ProductController productController;
+    @MockBean
+    private MemberService memberService;
+
+    @Autowired
+    private ObjectMapper objectMapper;
+
+    private Product testProduct;
+    private Category testCategory;
+    private Option option1;
+    private Option option2;
 
     @BeforeEach
-    void setUp() {
-        MockitoAnnotations.openMocks(this);
+    public void setUp() {
+        testCategory = new Category();
+        testCategory.setId(1L);
+        testCategory.setName("Test Category");
+        testCategory.setColor("#FFFFFF");
+        testCategory.setImageUrl("http://example.com/image.jpg");
+
+        testProduct = new Product();
+        testProduct.setId(1L);
+        testProduct.setName("Test Product");
+        testProduct.setPrice(1000);
+        testProduct.setImageUrl("http://example.com/product_image.jpg");
+        testProduct.setCategory(testCategory);
+
+        option1 = new Option();
+        option1.setName("Option 1");
+        option1.setQuantity(10);
+        option1.setProduct(testProduct);
+
+        option2 = new Option();
+        option2.setName("Option 2");
+        option2.setQuantity(20);
+        option2.setProduct(testProduct);
+
+        testProduct.setOptions(Arrays.asList(option1, option2));
     }
 
     @Test
-    @DisplayName("모든 제품 조회")
-    void testGetAllProducts() {
-        Product product1 = new Product("Product1", 100, "http://example.com/image1");
-        Product product2 = new Product("Product2", 200, "http://example.com/image2");
-        when(productService.getAllProducts()).thenReturn(Arrays.asList(product1, product2));
+    public void testGetAllProducts_Success() throws Exception {
+        Pageable pageable = PageRequest.of(0, 10);
+        Page<Product> products = new PageImpl<>(List.of(testProduct), pageable, 1);
 
-        ResponseEntity<Map<String, Object>> response = productController.getAllProducts();
-        Map<String, Object> responseBody = response.getBody();
+        when(productService.getProducts(any(Pageable.class), any())).thenReturn(products);
 
-        assertNotNull(responseBody);
-        assertEquals(2, ((List<Product>) responseBody.get("products")).size());
-        assertEquals("All products retrieved successfully.", responseBody.get("message"));
-        assertEquals(HttpStatus.OK, response.getStatusCode());
+        mockMvc.perform(get("/api/products")
+                .param("categoryId", "1")
+                .param("page", "0")
+                .param("size", "10")
+                .param("sort", "name,asc")
+                .contentType(MediaType.APPLICATION_JSON))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.success").value(true))
+            .andExpect(jsonPath("$.data.content[0].name").value(testProduct.getName()));
     }
 
     @Test
-    @DisplayName("ID로 특정 제품 조회")
-    void testGetProductById() {
-        Product product = new Product("Product1", 100, "http://example.com/image1");
-        when(productService.getProductById(anyLong())).thenReturn(product);
+    public void testGetProductById_Success() throws Exception {
+        when(productService.getProductById(anyLong())).thenReturn(testProduct);
 
-        ResponseEntity<Map<String, Object>> response = productController.getProductById(1L);
-        Map<String, Object> responseBody = response.getBody();
-
-        assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertNotNull(responseBody);
-        assertEquals("Product retrieved successfully.", responseBody.get("message"));
-        assertEquals(product, responseBody.get("product"));
+        mockMvc.perform(get("/api/products/{id}", testProduct.getId())
+                .contentType(MediaType.APPLICATION_JSON))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.success").value(true))
+            .andExpect(jsonPath("$.data.name").value(testProduct.getName()));
     }
 
     @Test
-    @DisplayName("ID로 특정 제품 조회 - 존재하지 않는 경우")
-    void testGetProductById_NotFound() {
-        when(productService.getProductById(anyLong())).thenThrow(new ProductNotFoundException("Product not found with id: 999"));
+    public void testGetProductById_NotFound() throws Exception {
+        when(productService.getProductById(anyLong())).thenThrow(new ProductNotFoundException("Product not found"));
 
-        ResponseEntity<Map<String, Object>> response = productController.getProductById(999L);
-        Map<String, Object> responseBody = response.getBody();
-
-        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
-        assertNotNull(responseBody);
-        assertEquals("Product not found with id: 999", responseBody.get("message"));
+        mockMvc.perform(get("/api/products/{id}", 99L)
+                .contentType(MediaType.APPLICATION_JSON))
+            .andExpect(status().isNotFound())
+            .andExpect(jsonPath("$.success").value(false))
+            .andExpect(jsonPath("$.message").value("Product not found"))
+            .andExpect(jsonPath("$.errorCode").value("404"));
     }
 
     @Test
-    @DisplayName("새로운 상품 생성")
-    void testCreateProduct() {
-        Product product = new Product("Product1", 100, "http://example.com/image1");
+    public void testCreateProduct_Success() throws Exception {
         when(productService.createProduct(any(Product.class))).thenReturn(true);
 
-        ResponseEntity<Map<String, Object>> response = productController.createProduct(product);
-        assertEquals(HttpStatus.CREATED, response.getStatusCode());
-        assertNotNull(response.getBody());
-        assertEquals("Product created successfully.", response.getBody().get("message"));
-        assertEquals(product, response.getBody().get("product"));
+        mockMvc.perform(post("/api/products")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(testProduct)))
+            .andExpect(status().isCreated())
+            .andExpect(jsonPath("$.success").value(true))
+            .andExpect(jsonPath("$.data.name").value(testProduct.getName()));
     }
 
     @Test
-    @DisplayName("기존 상품을 수정")
-    void testUpdateProduct() {
-        Product updatedProduct = new Product("UpdatedProduct1", 150, "http://example.com/updated_image1");
+    public void testCreateProduct_ForbiddenWord() throws Exception {
+        testProduct.setName("카카오 상품");
+        when(productService.createProduct(any(Product.class)))
+            .thenThrow(new ForbiddenWordException("상품 이름에 '카카오'가 포함된 경우 담당 MD와 협의가 필요합니다."));
+
+        mockMvc.perform(post("/api/products")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(testProduct)))
+            .andExpect(status().isBadRequest())  // 400을 예상
+            .andExpect(jsonPath("$.success").value(false))
+            .andExpect(jsonPath("$.message").value("상품 이름에 '카카오'가 포함된 경우 담당 MD와 협의가 필요합니다."))
+            .andExpect(jsonPath("$.errorCode").value("400"));  // 올바른 경로 사용
+    }
+
+    @Test
+    public void testUpdateProduct_Success() throws Exception {
+        Product updatedProduct = new Product();
+        updatedProduct.setId(1L);
+        updatedProduct.setName("Updated Product");
+        updatedProduct.setPrice(1200);
+        updatedProduct.setImageUrl("http://example.com/updated_product_image.jpg");
+        updatedProduct.setCategory(testCategory);
+        updatedProduct.setOptions(Arrays.asList(option1, option2));
+
         when(productService.updateProduct(anyLong(), any(Product.class))).thenReturn(true);
         when(productService.getProductById(anyLong())).thenReturn(updatedProduct);
 
-        ResponseEntity<Map<String, Object>> response = productController.updateProduct(1L, updatedProduct);
-        assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertNotNull(response.getBody());
-        assertEquals("Product updated successfully.", response.getBody().get("message"));
-        assertEquals(updatedProduct, response.getBody().get("product"));
+        mockMvc.perform(put("/api/products/{id}", testProduct.getId())
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(updatedProduct)))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.success").value(true))
+            .andExpect(jsonPath("$.data.name").value("Updated Product"));
     }
 
     @Test
-    @DisplayName("기존 상품을 부분 수정")
-    void testPatchProduct() {
-        Product updatedProduct = new Product("UpdatedProduct1", 150, "http://example.com/updated_image1");
-        when(productService.patchProduct(anyLong(), any(Map.class))).thenReturn(true);
-        when(productService.getProductById(anyLong())).thenReturn(updatedProduct);
+    public void testUpdateProduct_NotFound() throws Exception {
+        doThrow(new ProductNotFoundException("Product not found with id: 99"))
+            .when(productService).updateProduct(eq(99L), any(Product.class));
 
-        Map<String, Object> updates = new HashMap<>();
-        updates.put("name", "UpdatedProduct1");
-        updates.put("price", 150);
+        Product updatedProduct = new Product();
+        updatedProduct.setName("Updated Product");
+        updatedProduct.setPrice(1200);
+        updatedProduct.setImageUrl("http://example.com/updated_product_image.jpg");
+        updatedProduct.setCategory(testCategory);
+        updatedProduct.setOptions(Arrays.asList(option1, option2));
 
-        ResponseEntity<Map<String, Object>> response = productController.patchProduct(1L, updates);
-        assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertNotNull(response.getBody());
-        assertEquals("Product patched successfully.", response.getBody().get("message"));
-        assertEquals(updatedProduct, response.getBody().get("product"));
+        mockMvc.perform(put("/api/products/{id}", 99L)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(updatedProduct)))
+            .andExpect(status().isNotFound())
+            .andExpect(jsonPath("$.success").value(false))
+            .andExpect(jsonPath("$.message").value("Product not found with id: 99"));
     }
 
     @Test
-    @DisplayName("여러 기존 상품을 부분 수정")
-    void testPatchProducts() {
-        Product product1 = new Product("UpdatedProduct1", 150, "http://example.com/updated_image1");
-        Product product2 = new Product("UpdatedProduct2", 250, "http://example.com/updated_image2");
-        when(productService.patchProducts(anyList())).thenReturn(Arrays.asList(product1, product2));
-
-        Map<String, Object> updates1 = new HashMap<>();
-        updates1.put("id", 1L);
-        updates1.put("name", "UpdatedProduct1");
-        updates1.put("price", 150);
-
-        Map<String, Object> updates2 = new HashMap<>();
-        updates2.put("id", 2L);
-        updates2.put("name", "UpdatedProduct2");
-        updates2.put("price", 250);
-
-        List<Map<String, Object>> updatesList = Arrays.asList(updates1, updates2);
-
-        ResponseEntity<Map<String, Object>> response = productController.patchProducts(updatesList);
-        assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertNotNull(response.getBody());
-        assertEquals("All products patched successfully.", response.getBody().get("message"));
-        List<Product> updatedProducts = (List<Product>) response.getBody().get("updatedProducts");
-        assertEquals(2, updatedProducts.size());
-        assertEquals(product1, updatedProducts.get(0));
-        assertEquals(product2, updatedProducts.get(1));
-    }
-
-    @Test
-    @DisplayName("기존 제품 삭제")
-    void testDeleteProduct() {
+    public void testDeleteProduct_Success() throws Exception {
         when(productService.deleteProduct(anyLong())).thenReturn(true);
 
-        ResponseEntity<Map<String, Object>> response = productController.deleteProduct(1L);
-        assertEquals(HttpStatus.NO_CONTENT, response.getStatusCode());
+        mockMvc.perform(delete("/api/products/{id}", testProduct.getId())
+                .contentType(MediaType.APPLICATION_JSON))
+            .andExpect(status().isNoContent());
+    }
+
+    @Test
+    public void testDeleteProduct_NotFound() throws Exception {
+        doThrow(new ProductNotFoundException("Product not found with id: 99"))
+            .when(productService).deleteProduct(99L);
+
+        mockMvc.perform(delete("/api/products/{id}", 99L)
+                .contentType(MediaType.APPLICATION_JSON))
+            .andExpect(status().isNotFound())
+            .andExpect(jsonPath("$.success").value(false))
+            .andExpect(jsonPath("$.message").value("Product not found with id: 99"));
     }
 }
