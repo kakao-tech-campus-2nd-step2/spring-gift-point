@@ -42,6 +42,7 @@ public class Member {
     public Member(String email, String password) {
         this.email = email;
         this.password = password;
+        this.type = MemberType.NORMAL_USER;
     }
 
     public Member(String email, String password, MemberType type) {

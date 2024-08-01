@@ -1,8 +1,11 @@
 package gift.controller;
 
 import gift.dto.request.LoginMemberDTO;
-import gift.dto.request.TokenLoginRequestDTO;
+import gift.dto.request.LoginRequestDTO;
+import gift.dto.request.RegisterRequestDTO;
 import gift.dto.request.NormalMemberRequestDTO;
+import gift.dto.response.LoginResponseDTO;
+import gift.dto.response.RegisterResponseDTO;
 import gift.entity.Member;
 import gift.service.LoginMember;
 import gift.service.MemberService;
@@ -17,7 +20,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-@RequestMapping("/api/members")
+@RequestMapping("/api")
 @Controller
 public class MemberController {
 
@@ -28,18 +31,50 @@ public class MemberController {
         this.memberService = memberService;
     }
 
-    @GetMapping("/signup")
+    @GetMapping("/register-page")
     public String signupRendering() {
-        return "signup";
+        return "register-page";
     }
 
-    @GetMapping("/login")
+    @GetMapping("/login-page")
     public String loginRendering() {
-        return "login";
+        return "login-page";
     }
 
     @PostMapping("/register")
-    public ResponseEntity<Map<String, String>> register(@RequestBody NormalMemberRequestDTO normalMemberRequestDTO) {
+    public ResponseEntity<RegisterResponseDTO> register(@RequestBody RegisterRequestDTO registerRequestDTO) {
+        System.out.println("registerRequestDTO: " + registerRequestDTO.email());
+        RegisterResponseDTO registerResponseDTO = memberService.addMember(registerRequestDTO);
+        return ResponseEntity.status(HttpStatus.CREATED).
+                body(registerResponseDTO);
+    }
+
+    @PostMapping("/register-form")
+    public ResponseEntity<RegisterResponseDTO> registerByForm(@ModelAttribute RegisterRequestDTO registerRequestDTO) {
+        System.out.println("registerRequestDTO: " + registerRequestDTO.email());
+        RegisterResponseDTO registerResponseDTO = memberService.addMember(registerRequestDTO);
+        return ResponseEntity.status(HttpStatus.CREATED).
+                body(registerResponseDTO);
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<LoginResponseDTO> login(@RequestBody LoginRequestDTO loginRequestDTO) {
+        LoginResponseDTO loginResponseDTO = memberService.login(loginRequestDTO);
+        return ResponseEntity.status(HttpStatus.CREATED).
+                body(loginResponseDTO);
+    }
+
+
+    @PostMapping("/login-form")
+    public ResponseEntity<LoginResponseDTO> loginByForm(@ModelAttribute LoginRequestDTO loginRequestDTO) {
+        LoginResponseDTO loginResponseDTO = memberService.login(loginRequestDTO);
+        return ResponseEntity.status(HttpStatus.CREATED).
+                body(loginResponseDTO);
+    }
+
+
+    /*@PostMapping("/v1/register")
+    public ResponseEntity<Map<String, String>> v1register(@RequestBody NormalMemberRequestDTO normalMemberRequestDTO) {
         String token = memberService.addMember(normalMemberRequestDTO);
         Map<String, String> responseBody = new HashMap<>();
         responseBody.put("token", token);
@@ -48,9 +83,20 @@ public class MemberController {
                 .body(responseBody);
     }
 
-    @PostMapping("/login")
-    public ResponseEntity<Map<String, String>> login(@RequestBody NormalMemberRequestDTO normalMemberRequestDTO) {
-        String token = memberService.login(normalMemberRequestDTO);
+    @PostMapping("/v2/register")
+    public ResponseEntity<Map<String, String>> normalregister(@RequestBody NormalMemberRequestDTO normalMemberRequestDTO) {
+        String token = memberService.addMember(normalMemberRequestDTO);
+        Map<String, String> responseBody = new HashMap<>();
+        responseBody.put("token", token);
+        return ResponseEntity.ok()
+                .header("Authorization", "Bearer " + token)
+                .body(responseBody);
+    }*/
+
+
+    /*@PostMapping("/v1/login")
+    public ResponseEntity<RegisterResponseDTO>v1login(@RequestBody NormalMemberRequestDTO normalMemberRequestDTO) {
+        RegisterResponseDTO registerResponseDTO = memberService.login(normalMemberRequestDTO);
         Map<String, String> responseBody = new HashMap<>();
         responseBody.put("token", token);
         return ResponseEntity.ok()
@@ -72,6 +118,6 @@ public class MemberController {
         List<Member> members = memberService.getAllUsers();
         return ResponseEntity.status(HttpStatus.OK).
                 body(members);
-    }
+    }*/
 
 }
