@@ -7,17 +7,17 @@ import org.springframework.http.HttpStatusCode;
 
 public class OrderCreateApiResponse extends BasicApiResponse {
 
-    private final OrderResponse createdOrder;
+    private final OrderResponse order;
 
     public OrderCreateApiResponse(
         @JsonProperty(value = "status", required = true) HttpStatusCode statusCode,
-        @JsonProperty(value = "created-order", required = true) OrderResponse createdOrder
+        @JsonProperty(value = "order", required = true) OrderResponse order
     ) {
         super(statusCode);
-        this.createdOrder = createdOrder;
+        this.order = order;
     }
 
-    public OrderResponse getCreatedOrder() {
-        return createdOrder;
+    public OrderResponse getOrder() {
+        return order;
     }
 }

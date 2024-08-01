@@ -43,7 +43,6 @@ public class OrderService {
         optionService.subtractQuantity(option, request.quantity());
 
         //멤버의 위시리스트를 불러온뒤 옵션에 해당하는 상품이 존재하면 그 상품을 삭제함
-        //TODO: 위시리스트에서 상품 옵션에 대해 위시 수량을 지정하고, 그 수량을 감소시킬 필요가 있음
         wishService.getWishlist(member).stream()
             .filter(w -> w.product().id().equals(productId))
             .findAny()
