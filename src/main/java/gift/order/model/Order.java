@@ -25,7 +25,7 @@ public class Order {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private LocalDateTime localDateTime;
+    private LocalDateTime orderDateTime;
 
     private String message;
 
@@ -48,6 +48,6 @@ public class Order {
         this.optionId = optionId;
         this.quantity = quantity;
         this.member = member;
-        this.localDateTime = LocalDateTime.now();
+        this.orderDateTime = LocalDateTime.now();
     }
 }
