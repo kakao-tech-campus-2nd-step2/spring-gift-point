@@ -36,10 +36,6 @@ public class CategoryController {
     @GetMapping
     public ResponseEntity<CategoryResponse> getAllCategories() {
         var allCategories = categoryService.getAllCategories();
-//        ArrayList<Map<String, Object>> categoryDtoMapList = new ArrayList<Map<String, Object>>();
-//        for (CategoryRequest category : allCategories) {
-//            categoryDtoMapList.add(getCategoryDtoStringObjectMap(category));
-//        }
         return ResponseEntity.ok(
             new CategoryResponse(HttpResult.OK, "카테고리 전체 조회 성공",
                 HttpStatus.OK,
@@ -92,8 +88,9 @@ public class CategoryController {
         return categoryMap;
     }
 
-    @PutMapping
+    @PutMapping("/{categoryId}")
     public ResponseEntity<ApiResponse<Category>> updateCategoryName(
+        @PathVariable(value = "categoryId") Long categoryId,
         @RequestBody CategoryRequest categoryRequest) {
         var updatedCategory = categoryService.updateCategory(categoryRequest);
         Map<String, Object> categoryStringObjectMap = getCategoryStringObjectMap(updatedCategory);
