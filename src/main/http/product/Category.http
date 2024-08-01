@@ -13,7 +13,7 @@ Content-Type: application/json
 {
   "name": "컴퓨터",
   "color": "#123",
-  "imageUrl": "http://hello",
+  "image_url": "http://hello",
   "description": "description"
 }
 
@@ -24,7 +24,7 @@ Content-Type: application/json
 {
   "name": "카테카테",
   "color": "#123",
-  "imageUrl": "http://hello",
+  "image_url": "http://hello",
   "description": "description"
 }
 

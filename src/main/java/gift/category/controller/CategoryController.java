@@ -2,6 +2,8 @@ package gift.category.controller;
 
 import gift.category.domain.Category;
 import gift.category.dto.CategoryRequestDto;
+import gift.category.dto.CategoryListResponseDto;
+import gift.category.dto.CategoryResponseDto;
 import gift.category.service.CategoryService;
 import gift.global.exception.DomainValidationException;
 import gift.global.response.ErrorResponseDto;
@@ -25,33 +27,40 @@ public class CategoryController {
     }
 
     @GetMapping("")
-    public ResponseEntity<ResultResponseDto<List<Category>>> getAllCategories() {
+    public ResponseEntity<CategoryListResponseDto> getAllCategories() {
         List<Category> categories = categoryService.getAllCategories();
-        return ResponseHelper.createResponse(ResultCode.GET_ALL_PRODUCTS_SUCCESS, categories);
+        CategoryListResponseDto categoryListResponseDto = new CategoryListResponseDto(categories);
+        return ResponseEntity.status(200)
+                .body(categoryListResponseDto);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ResultResponseDto<Category>> getCategoryById(@PathVariable(name = "id") Long id) {
+    public ResponseEntity<CategoryResponseDto> getCategoryById(@PathVariable(name = "id") Long id) {
         Category category = categoryService.getCategoryById(id);
-        return ResponseHelper.createResponse(ResultCode.GET_PRODUCT_BY_ID_SUCCESS, category);
+        CategoryResponseDto categoryResponseDto = new CategoryResponseDto(category);
+        return ResponseEntity.status(200)
+                .body(categoryResponseDto);
     }
 
     @PostMapping("")
-    public ResponseEntity<SimpleResultResponseDto> createCategory(@RequestBody CategoryRequestDto categoryRequestDto) {
+    public ResponseEntity<Void> createCategory(@RequestBody CategoryRequestDto categoryRequestDto) {
         categoryService.createCategory(categoryRequestDto.toCategoryServiceDto());
-        return ResponseHelper.createSimpleResponse(ResultCode.CREATE_PRODUCT_SUCCESS);
+        return ResponseEntity.status(200)
+                .build();
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<SimpleResultResponseDto> updateProduct(@PathVariable(name = "id") Long id, @Valid @RequestBody CategoryRequestDto categoryRequestDto) {
+    public ResponseEntity<Void> updateProduct(@PathVariable(name = "id") Long id, @Valid @RequestBody CategoryRequestDto categoryRequestDto) {
         categoryService.updateCategory(categoryRequestDto.toCategoryServiceDto(id));
-        return ResponseHelper.createSimpleResponse(ResultCode.UPDATE_PRODUCT_SUCCESS);
+        return ResponseEntity.status(200)
+                .build();
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<SimpleResultResponseDto> deleteProduct(@PathVariable(name = "id") Long id) {
+    public ResponseEntity<Void> deleteProduct(@PathVariable(name = "id") Long id) {
         categoryService.deleteCategory(id);
-        return ResponseHelper.createSimpleResponse(ResultCode.DELETE_PRODUCT_SUCCESS);
+        return ResponseEntity.status(200)
+                .build();
     }
 
     // GlobalException Handler 에서 처리할 경우,
