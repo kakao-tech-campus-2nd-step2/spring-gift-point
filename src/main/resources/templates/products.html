@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Product List</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script type="text/javascript" src="/js/authSetup.js"></script>
+</head>
+<body>
+<h1>Product List</h1>
+<table id="product-table">
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>Name</th>
+        <th>Price</th>
+        <th>Category</th>
+        <th>Image</th>
+        <th>Actions</th>
+    </tr>
+    </thead>
+    <tbody>
+
+    </tbody>
+</table>
+<div id="pagination">
+    <button id="prev-page" disabled>Previous</button>
+    <span id="current-page">1</span>
+    <button id="next-page">Next</button>
+</div>
+<script>
+    let currentPage = 1;
+    const pageSize = 10;
+
+    const getProducts = {
+
+        init: function () {
+            this.loadProducts(currentPage, pageSize);
+            this.setupEventHandlers();
+        },
+        loadProducts: function (page, size) {
+            authSetup.setAuthorizationHeader();
+            $.ajax({
+                type: "GET",
+                url: '/view/products/data?page=' + (page - 1) + '&size=' + size,
+                dataType: 'json',
+                contentType: 'application/json; charset=UTF-8',
+            }).done(function (response) {
+                $('#product-table tbody').empty();
+                $.each(response.content, function (index, product) {
+                    let row = $('<tr>');
+                    row.append($('<td>').text(product.id));
+                    row.append($('<td>').text(product.name));
+                    row.append($('<td>').text(product.price));
+                    row.append($('<td>').text(product.categoryName));
+                    row.append($('<td>').append($('<img>').attr('src', product.imageUrl).css({'max-width': '100px', 'max-height': '100px'})));
+                    row.append($('<td>').html('<a href="/view/products/edit/' + product.id + '">Edit</a> | <a href="/view/admin/products/delete/' + product.id + '">Delete</a>'));
+
+                    $('#product-table tbody').append(row);
+                });
+
+                $('#current-page').text(page);
+                $('#prev-page').prop('disabled', !response.hasPrevious);
+                $('#next-page').prop('disabled', !response.hasNext);
+            }).fail(function (xhr, status, error) {
+                console.error('Request failed:', status, error);
+                alert('Unable to load product list. Please try again later.');
+            });
+        },
+        setupEventHandlers: function () {
+            $('#prev-page').click(function () {
+                if (currentPage > 1) {
+                    currentPage--;
+                    getProducts.loadProducts(currentPage, pageSize);
+                }
+            });
+
+            $('#next-page').click(function () {
+                currentPage++;
+                getProducts.loadProducts(currentPage, pageSize);
+            });
+        }
+    };
+    getProducts.init();
+
+</script>
+<br>
+<a href="/view/products/add">Add Product</a>
+<a href="/view/home">go Home</a>
+</body>
+</html>
+

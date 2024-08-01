@@ -1,0 +1,900 @@
+openapi: 3.0.1
+info:
+  title: API 명세서
+  description: 프로젝트의 API 명세서
+  version: '1.0'
+servers:
+  - url: http://localhost:8000
+    description: Generated server url
+tags:
+  - name: Member API
+    description: 회원 관련 API
+  - name: Home API
+    description: 홈 컨트롤러 API
+  - name: Kakao Login API
+    description: 카카오 로그인 관련 API
+  - name: Option API
+    description: 옵션 관련 API
+  - name: Product API
+    description: 상품 관련 API
+  - name: Admin API
+    description: 관리자 전용 API
+  - name: Wishlist API
+    description: 위시리스트 관련 API
+paths:
+  /api/options/{id}:
+    get:
+      tags:
+        - Option API
+      summary: ID로 옵션 조회
+      description: ID로 특정 옵션을 조회합니다.
+      operationId: getOptionById
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/Option'
+        '400':
+          description: Bad Request
+          content:
+            '*/*':
+              schema:
+                type: string
+    put:
+      tags:
+        - Option API
+      summary: 옵션 업데이트
+      description: 기존 옵션을 업데이트합니다.
+      operationId: updateOption
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Option'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/Option'
+        '400':
+          description: Bad Request
+          content:
+            '*/*':
+              schema:
+                type: string
+    delete:
+      tags:
+        - Option API
+      summary: 옵션 삭제
+      description: ID로 특정 옵션을 삭제합니다.
+      operationId: deleteOption
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: OK
+        '400':
+          description: Bad Request
+          content:
+            '*/*':
+              schema:
+                type: string
+  /members/register:
+    get:
+      tags:
+        - Member API
+      summary: 회원가입 폼
+      description: 회원가입 폼을 반환합니다.
+      operationId: showRegistrationForm
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: string
+        '400':
+          description: Bad Request
+          content:
+            '*/*':
+              schema:
+                type: string
+    post:
+      tags:
+        - Member API
+      summary: 회원가입
+      description: 회원가입을 처리합니다.
+      operationId: register
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MemberDto'
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: string
+        '400':
+          description: Bad Request
+          content:
+            '*/*':
+              schema:
+                type: string
+  /members/login:
+    get:
+      tags:
+        - Member API
+      summary: 로그인 폼
+      description: 로그인 폼을 반환합니다.
+      operationId: showLoginForm
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: string
+        '400':
+          description: Bad Request
+          content:
+            '*/*':
+              schema:
+                type: string
+    post:
+      tags:
+        - Member API
+      summary: 로그인
+      description: 로그인을 처리합니다.
+      operationId: login
+      parameters:
+        - name: email
+          in: query
+          required: true
+          schema:
+            type: string
+        - name: password
+          in: query
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: object
+                additionalProperties:
+                  type: string
+        '400':
+          description: Bad Request
+          content:
+            '*/*':
+              schema:
+                type: string
+  /api/wishlist/{productId}:
+    post:
+      tags:
+        - Wishlist API
+      summary: 위시리스트 아이템 추가
+      description: 위시리스트에 특정 아이템을 추가합니다.
+      operationId: addWishlistItem
+      parameters:
+        - name: email
+          in: query
+          required: true
+          schema:
+            type: string
+        - name: productId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: OK
+        '400':
+          description: Bad Request
+          content:
+            '*/*':
+              schema:
+                type: string
+    delete:
+      tags:
+        - Wishlist API
+      summary: 위시리스트 아이템 삭제
+      description: 위시리스트에서 특정 아이템을 삭제합니다.
+      operationId: deleteWishlistItem
+      parameters:
+        - name: Authorization
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: productId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: OK
+        '400':
+          description: Bad Request
+          content:
+            '*/*':
+              schema:
+                type: string
+  /api/products/order/{productId}:
+    post:
+      tags:
+        - Product API
+      summary: 상품 주문
+      description: 상품을 주문하고 메시지를 보냅니다.
+      operationId: orderItem
+      parameters:
+        - name: email
+          in: query
+          required: true
+          schema:
+            type: string
+        - name: optionId
+          in: query
+          required: true
+          schema:
+            type: integer
+            format: int64
+        - name: quantity
+          in: query
+          required: true
+          schema:
+            type: integer
+            format: int32
+        - name: productId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+        - name: message
+          in: query
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+        '400':
+          description: Bad Request
+          content:
+            '*/*':
+              schema:
+                type: string
+  /api/products/edit/{id}:
+    post:
+      tags:
+        - Product API
+      summary: 상품 수정
+      description: 기존 상품을 수정합니다.
+      operationId: updateProduct
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProductDto'
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: string
+        '400':
+          description: Bad Request
+          content:
+            '*/*':
+              schema:
+                type: string
+  /api/products/add:
+    post:
+      tags:
+        - Product API
+      summary: 상품 추가
+      description: 새로운 상품을 추가합니다.
+      operationId: addProduct
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProductDto'
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: string
+        '400':
+          description: Bad Request
+          content:
+            '*/*':
+              schema:
+                type: string
+  /api/options:
+    get:
+      tags:
+        - Option API
+      summary: 모든 옵션 조회
+      description: 모든 옵션을 조회합니다.
+      operationId: getAllOptions
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                uniqueItems: true
+                type: array
+                items:
+                  $ref: '#/components/schemas/Option'
+        '400':
+          description: Bad Request
+          content:
+            '*/*':
+              schema:
+                type: string
+    post:
+      tags:
+        - Option API
+      summary: 옵션 생성
+      description: 새로운 옵션을 생성합니다.
+      operationId: createOption
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Option'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/Option'
+        '400':
+          description: Bad Request
+          content:
+            '*/*':
+              schema:
+                type: string
+  /view/wishlist:
+    get:
+      tags:
+        - Home API
+      summary: 위시리스트 폼
+      description: 위시리스트 폼을 반환합니다.
+      operationId: wishlistForm
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: string
+        '400':
+          description: Bad Request
+          content:
+            '*/*':
+              schema:
+                type: string
+  /view/wishlist/data:
+    get:
+      tags:
+        - Home API
+      summary: 위시리스트 데이터
+      description: 사용자의 이메일을 기준으로 페이지네이션된 위시리스트 데이터를 반환합니다.
+      operationId: getWishlistItems
+      parameters:
+        - name: email
+          in: query
+          required: true
+          schema:
+            type: string
+        - name: pageable
+          in: query
+          required: true
+          schema:
+            $ref: '#/components/schemas/Pageable'
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ProductResponse'
+        '400':
+          description: Bad Request
+          content:
+            '*/*':
+              schema:
+                type: string
+  /view/products:
+    get:
+      tags:
+        - Home API
+      summary: 제품 페이지
+      description: 제품 페이지를 반환합니다.
+      operationId: showProductsPage
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: string
+        '400':
+          description: Bad Request
+          content:
+            '*/*':
+              schema:
+                type: string
+  /view/products/edit/{id}:
+    get:
+      tags:
+        - Home API
+      summary: 제품 수정 폼
+      description: 제품 수정 폼을 반환합니다.
+      operationId: showEditProductForm
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: string
+        '400':
+          description: Bad Request
+          content:
+            '*/*':
+              schema:
+                type: string
+  /view/products/delete/{id}:
+    get:
+      tags:
+        - Home API
+      summary: 제품 삭제
+      description: 주어진 ID를 가진 제품을 삭제합니다.
+      operationId: deleteProduct
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: string
+        '400':
+          description: Bad Request
+          content:
+            '*/*':
+              schema:
+                type: string
+  /view/products/data:
+    get:
+      tags:
+        - Home API
+      summary: 제품 데이터
+      description: 페이지네이션된 제품 데이터를 반환합니다.
+      operationId: getProducts
+      parameters:
+        - name: pageable
+          in: query
+          required: true
+          schema:
+            $ref: '#/components/schemas/Pageable'
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ProductResponse'
+        '400':
+          description: Bad Request
+          content:
+            '*/*':
+              schema:
+                type: string
+  /view/products/add:
+    get:
+      tags:
+        - Home API
+      summary: 제품 추가 폼
+      description: 제품 추가 폼을 반환합니다.
+      operationId: showAddProductForm
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: string
+        '400':
+          description: Bad Request
+          content:
+            '*/*':
+              schema:
+                type: string
+  /view/productlist:
+    get:
+      tags:
+        - Home API
+      summary: 사용자 제품 리스트 페이지
+      description: 사용자 제품 리스트 페이지를 반환합니다.
+      operationId: showProductListsPage
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: string
+        '400':
+          description: Bad Request
+          content:
+            '*/*':
+              schema:
+                type: string
+  /view/home:
+    get:
+      tags:
+        - Home API
+      summary: 홈 페이지
+      description: 홈 페이지를 반환합니다.
+      operationId: showHomeForm
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: string
+        '400':
+          description: Bad Request
+          content:
+            '*/*':
+              schema:
+                type: string
+  /kakao/oauth2/callback:
+    get:
+      tags:
+        - Kakao Login API
+      summary: 카카오 로그인 콜백
+      description: 카카오 로그인 콜백을 처리합니다.
+      operationId: callbackKakao
+      parameters:
+        - name: code
+          in: query
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: string
+        '400':
+          description: Bad Request
+          content:
+            '*/*':
+              schema:
+                type: string
+  /kakao/login:
+    get:
+      tags:
+        - Kakao Login API
+      summary: 카카오 로그인 페이지
+      description: 카카오 로그인 페이지를 반환합니다.
+      operationId: login_1
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: string
+        '400':
+          description: Bad Request
+          content:
+            '*/*':
+              schema:
+                type: string
+  /kakao/loginSuccess:
+    get:
+      tags:
+        - Kakao Login API
+      summary: 카카오 로그인 성공 페이지
+      description: 카카오 로그인 성공 페이지를 반환합니다.
+      operationId: loginSuccess
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: string
+        '400':
+          description: Bad Request
+          content:
+            '*/*':
+              schema:
+                type: string
+  /admin:
+    get:
+      tags:
+        - Admin API
+      summary: 관리자 페이지
+      description: 관리자 페이지를 반환합니다. 관리자가 아닌 경우 홈 페이지로 리다이렉트합니다.
+      operationId: adminPage
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: string
+        '400':
+          description: Bad Request
+          content:
+            '*/*':
+              schema:
+                type: string
+  /admin/members/{id}:
+    delete:
+      tags:
+        - Admin API
+      summary: 회원 삭제
+      description: 주어진 ID를 가진 회원을 삭제합니다.
+      operationId: deleteMember
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: string
+        '400':
+          description: Bad Request
+          content:
+            '*/*':
+              schema:
+                type: string
+components:
+  schemas:
+    Category:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        name:
+          type: string
+        color:
+          type: string
+        imageUrl:
+          type: string
+        description:
+          type: string
+        products:
+          uniqueItems: true
+          type: array
+          items:
+            $ref: '#/components/schemas/Product'
+    Option:
+      required:
+        - name
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        name:
+          maxLength: 50
+          minLength: 0
+          pattern: ^[\w\s\(\)\[\]\+\-\&\/\_]+$
+          type: string
+        quantity:
+          maximum: 999999999
+          minimum: 1
+          type: integer
+          format: int32
+        product:
+          $ref: '#/components/schemas/Product'
+    Product:
+      required:
+        - imageUrl
+        - name
+        - options
+        - price
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        name:
+          type: string
+        price:
+          type: integer
+          format: int32
+        imageUrl:
+          pattern: ^(http|https)://.*$
+          type: string
+        options:
+          uniqueItems: true
+          type: array
+          items:
+            $ref: '#/components/schemas/Option'
+        category:
+          $ref: '#/components/schemas/Category'
+    MemberDto:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        email:
+          type: string
+        password:
+          type: string
+        role:
+          type: string
+          enum:
+            - USER
+            - ADMIN
+    OptionDto:
+      required:
+        - name
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        name:
+          maxLength: 50
+          minLength: 0
+          pattern: ^[\w\s\(\)\[\]\+\-\&\/\_]+$
+          type: string
+        quantity:
+          maximum: 999999999
+          minimum: 1
+          type: integer
+          format: int32
+    ProductDto:
+      required:
+        - imageUrl
+        - name
+        - options
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        name:
+          maxLength: 15
+          minLength: 0
+          pattern: ^[\w\s\(\)\[\]\+\-\&\/가-힣_]*$
+          type: string
+        price:
+          minimum: 0
+          type: integer
+          format: int32
+        imageUrl:
+          type: string
+        categoryId:
+          minimum: 1
+          type: integer
+          format: int64
+        options:
+          type: array
+          items:
+            $ref: '#/components/schemas/OptionDto'
+        selectOptionName:
+          type: string
+        categoryName:
+          type: string
+    Pageable:
+      type: object
+      properties:
+        page:
+          minimum: 0
+          type: integer
+          format: int32
+        size:
+          minimum: 1
+          type: integer
+          format: int32
+        sort:
+          type: array
+          items:
+            type: string
+    PaginationInfo:
+      type: object
+      properties:
+        currentPage:
+          type: integer
+          format: int32
+        totalPages:
+          type: integer
+          format: int32
+        hasNext:
+          type: boolean
+        hasPrevious:
+          type: boolean
+    ProductResponse:
+      type: object
+      properties:
+        content:
+          type: array
+          items:
+            $ref: '#/components/schemas/ProductDto'
+        pagination:
+          $ref: '#/components/schemas/PaginationInfo'
