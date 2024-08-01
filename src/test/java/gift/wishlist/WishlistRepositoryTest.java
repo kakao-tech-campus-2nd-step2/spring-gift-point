@@ -19,6 +19,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.TestPropertySource;
 
@@ -117,7 +118,11 @@ class WishlistRepositoryTest {
         );
 
         //when
-        List<Wishlist> actual = wishlistRepository.findAllByMember(member);
+        List<Wishlist> actual = wishlistRepository.findAllByMember(
+                member,
+                PageRequest.of(0, Integer.MAX_VALUE)
+            )
+            .getContent();
 
         //then
         assertAll(
