@@ -20,16 +20,16 @@ public class OrderController {
         this.orderService = orderService;
     }
 
-    @Operation(summary = "주문 생성", description = "새로운 주문을 생성합니다.")
-    @PostMapping("/orders")
-    public ResponseEntity<?> createOrder(
-            @RequestBody CreateOrderRequest createOrderRequest,
-            @Parameter(description = "액세스 토큰") @RequestHeader String accessToken) {
-        OrderCreateResponse order = orderService.createOrder(createOrderRequest, accessToken);
-        return ResponseEntity.ok().body(new CommonResponse<>(
-                order,
-                "주문 생성 성공",
-                true
-        ));
-    }
+//    @Operation(summary = "주문 생성", description = "새로운 주문을 생성합니다.")
+//    @PostMapping("/orders")
+//    public ResponseEntity<?> createOrder(
+//            @RequestBody CreateOrderRequest createOrderRequest,
+//            @Parameter(description = "액세스 토큰") @RequestHeader String accessToken) {
+//        OrderCreateResponse order = orderService.createOrder(createOrderRequest, accessToken);
+//        return ResponseEntity.ok().body(new CommonResponse<>(
+//                order,
+//                "주문 생성 성공",
+//                true
+//        ));
+//    }
 }
