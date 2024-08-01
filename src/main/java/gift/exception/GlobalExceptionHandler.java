@@ -1,9 +1,7 @@
 package gift.exception;
 
 import io.jsonwebtoken.ExpiredJwtException;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.mapping.PropertyReferenceException;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
@@ -11,8 +9,6 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-
-import java.net.URI;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
@@ -24,8 +20,6 @@ public class GlobalExceptionHandler {
     private static final String INVALID_LOGIN_INFO_MESSAGE = "로그인 정보가 유효하지 않습니다.";
     private static final String INVALID_PAGE_REQUEST_MESSAGE = "요청에 담긴 페이지 정보가 유효하지 않습니다.";
     private static final String EXPIRED_JWT_MESSAGE = "인증 정보가 만료되었습니다.";
-    @Value("${kakao.redirect-token-uri}")
-    private String redirectTokenUri;
 
     @ExceptionHandler(value = NotFoundElementException.class)
     public ResponseEntity<ExceptionResponse> notFoundElementExceptionHandling() {
@@ -60,14 +54,6 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(value = ExpiredJwtException.class)
     public ResponseEntity<ExceptionResponse> expiredJwtExceptionHandling() {
         return getExceptionResponse(EXPIRED_JWT_MESSAGE, HttpStatus.UNAUTHORIZED);
-    }
-
-    @ExceptionHandler(value = InvalidKakaoTokenException.class)
-    public ResponseEntity<Void> invalidKakaoTokenExceptionHandling() {
-        var headers = new HttpHeaders();
-        String redirectLocation = redirectTokenUri;
-        headers.setLocation(URI.create(redirectLocation));
-        return new ResponseEntity<>(headers, HttpStatus.MOVED_PERMANENTLY);
     }
 
     @ExceptionHandler(value = BadRequestException.class)
