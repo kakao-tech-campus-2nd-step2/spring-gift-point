@@ -32,6 +32,11 @@ public class MemberService {
         return new MemberResponseDto(savedMemner.getId(), savedMemner.getEmail());
     }
 
+    public String returnToken(MemberDto memberDto){
+        Member member = new Member(memberDto.email(),memberDto.password());
+        return jwtTokenProvider.generateToken(member);
+    }
+
     public String loginMember(MemberDto memberDto) {
         Member member = new Member(memberDto.email(),memberDto.password());
         Member registeredMember = memberRepository.findByEmail(member.getEmail())
