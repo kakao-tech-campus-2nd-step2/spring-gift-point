@@ -34,6 +34,12 @@ public class OptionForm {
         this.quantity = quantity;
     }
 
+    public OptionForm(OptionDTO optionDTO) {
+        this.id = optionDTO.getId();
+        this.name = optionDTO.getName();
+        this.quantity = optionDTO.getQuantity();
+    }
+
     public OptionForm() {
     }
 
@@ -60,6 +66,7 @@ public class OptionForm {
     public void setQuantity(Long quantity) {
         this.quantity = quantity;
     }
+
 
     public OptionDTO toDTO() {
         return new OptionDTO(id, null, name, quantity);
