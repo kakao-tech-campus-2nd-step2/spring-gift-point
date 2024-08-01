@@ -1,10 +1,19 @@
 package gift.controller.user.dto;
 
-import gift.model.User;
+public class UserResponse {
 
-public record UserResponse(String name) {
+    public record Login(String name) {
 
-    public static UserResponse from(String name) {
-        return new UserResponse(name);
+        public static Login from(String name) {
+            return new Login(name);
+        }
     }
+
+    public record Point(int point) {
+
+        public static Point from(int point) {
+            return new Point(point);
+        }
+    }
+
 }

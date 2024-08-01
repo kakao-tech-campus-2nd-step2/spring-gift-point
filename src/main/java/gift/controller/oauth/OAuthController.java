@@ -40,10 +40,10 @@ public class OAuthController {
 
     @GetMapping("/callback")
     @Operation(summary = "카카오 로그인", description = "카카오 로그인을 시도합니다.")
-    public ResponseEntity<UserResponse> registerUser(@RequestParam("code") String code) {
+    public ResponseEntity<UserResponse.Login> registerUser(@RequestParam("code") String code) {
         UserDto response = OAuthService.register(code);
         return ResponseEntity.ok()
             .header("Authorization", response.accessToken())
-            .body(UserResponse.from(response.name()));
+            .body(UserResponse.Login.from(response.name()));
     }
 }

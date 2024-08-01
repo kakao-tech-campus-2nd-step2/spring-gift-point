@@ -5,6 +5,7 @@ import gift.common.exception.ErrorCode;
 import gift.common.exception.UserException;
 import gift.controller.user.dto.UserRequest;
 import gift.controller.user.dto.UserResponse;
+import gift.controller.user.dto.UserResponse.Point;
 import gift.model.User;
 import gift.repository.UserRepository;
 import org.springframework.stereotype.Service;
@@ -39,5 +40,11 @@ public class UserService {
         String token = jwtTokenProvider.createToken(user.getEmail());
 
         return UserDto.from(token, user.getName());
+    }
+
+    public Point getPoint(Long userId) {
+        User user = userRepository.findById(userId)
+            .orElseThrow(() -> new UserException(ErrorCode.USER_NOT_FOUND));
+        return UserResponse.Point.from(user.getPoint());
     }
 }
