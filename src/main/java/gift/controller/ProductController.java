@@ -2,14 +2,17 @@ package gift.controller;
 
 import gift.domain.Option;
 import gift.domain.Product;
+import gift.dto.ProductDTO;
 import gift.service.CategoryService;
 import gift.service.ProductService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import org.apache.coyote.Response;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -36,19 +39,44 @@ public class ProductController {
 
     @GetMapping
     @Operation(summary = "상품 목록 조회", description = "모든 상품의 목록을 조회합니다.")
-    public String getProducts(Model model, @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size) {
-        Page<Product> productPage = productService.getAllProducts(PageRequest.of(page, size));
-        model.addAttribute("products", productPage.getContent());
-        model.addAttribute("totalPages", productPage.getTotalPages());
-        model.addAttribute("currentPage", page);
-        return "productList";
+    public ResponseEntity<Page<ProductDTO>> getProducts(@RequestParam(defaultValue = "0") int page,
+                                                     @RequestParam(defaultValue = "10") int size,
+                                                     @RequestParam(defaultValue = "id,asc") String[] sort,
+                                                     @RequestParam(required = false) Long categoryId) {
+        Sort.Direction direction = Sort.Direction.fromString(sort[1]);
+        PageRequest pageRequest = PageRequest.of(page, size, Sort.by(direction, sort[0]));
+
+        Page<Product> productPage;
+        if (categoryId != null) {
+            productPage = productService.getProductsByCategory(categoryId, pageRequest);
+        } else {
+            productPage = productService.getAllProducts(pageRequest);
+        }
+
+        Page<ProductDTO> dtoPage = productPage.map(ProductDTO::convertToDto);
+
+        return ResponseEntity.ok(dtoPage);
     }
+
+    @GetMapping("/{productId}")
+    @Operation(summary = "상품 개별 조회", description = "개별적인 상품을 조회합니다.")
+    public ResponseEntity<ProductDTO> getProduct(@PathVariable("productId") Long id) {
+        Product product = productService.getProductById(id);
+        if (product == null) {
+            return ResponseEntity.notFound().build();
+        }
+
+        ProductDTO productDTO = ProductDTO.convertToDto(product);
+
+        return ResponseEntity.ok(productDTO);
+    }
+
 
     @PostMapping
     @Operation(summary = "상품 추가", description = "새로운 상품을 추가합니다.")
-    public String addProduct(@Valid @ModelAttribute Product product, @RequestParam List<String> optionNames, @RequestParam List<Integer> optionQuantities, BindingResult bindingResult) {
+    public ResponseEntity<String> addProduct(@Valid @ModelAttribute Product product, @RequestParam List<String> optionNames, @RequestParam List<Integer> optionQuantities, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
-            return "addProduct";
+            return ResponseEntity.badRequest().body("Invalid product data");
         }
 
         productService.addProduct(product);
@@ -61,7 +89,7 @@ public class ProductController {
 
         }
 
-        return REDIRECT_URL;  // 새로운 상품 추가 후 상품 조회 화면으로 리다이렉트
+        return ResponseEntity.status(HttpStatus.CREATED).body("상품 추가 성공!");
     }
 
     @GetMapping("/new")
@@ -72,9 +100,9 @@ public class ProductController {
         return "addProduct";
     }
 
-    @GetMapping("/{id}/edit")
+    @GetMapping("/{productId}/edit")
     @Operation(summary = "상품 수정 폼 조회", description = "상품을 수정하기 위한 폼을 조회합니다.")
-    public String showEditProductForm(@PathVariable("id") Long id, Model model) {
+    public String showEditProductForm(@PathVariable("productId") Long id, Model model) {
         Product product = productService.getProductById(id);
 
         if (product == null) {
@@ -87,30 +115,30 @@ public class ProductController {
         return "editProduct";
     }
 
-    @PutMapping("/{id}")
-    @Operation(summary = "상품 수정", description = "기존 상품을 수정합니다.")
-    public String editProduct(@PathVariable("id") Long id, @Valid @ModelAttribute Product product, BindingResult bindingResult) {
+    @PutMapping("/{productId}")
+    @Operation(summary = "상품 수정", description = "기존 상품 정보를 수정합니다.")
+    public ResponseEntity<String> editProduct(@PathVariable("productId") Long id, @Valid @ModelAttribute Product product, BindingResult bindingResult) {
         // 상품 정보 수정
         if (bindingResult.hasErrors()) {
-            return "editProduct";
+            return ResponseEntity.badRequest().body("Invalid product data");
         }
         productService.updateProduct(id, product);
 
-        return REDIRECT_URL;
+        return ResponseEntity.ok("상품 수정 성공!");
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/{productId}")
     @Operation(summary = "상품 삭제", description = "특정 상품을 삭제합니다.")
-    public String deleteProduct(@PathVariable("id") Long id) {
+    public ResponseEntity<String> deleteProduct(@PathVariable("productId") Long id) {
         // 요청받은 id를 가진 상품을 삭제
         productService.deleteProduct(id);
 
-        return REDIRECT_URL;
+        return ResponseEntity.ok("상품 삭제 성공!");
     }
 
-    @GetMapping("/{id}/options")
-    @Operation(summary = "상품 옵션 조회", description = "특정 상품의 옵션을 조회합니다.")
-    public ResponseEntity<List<Option>> getOptions(@PathVariable("id") Long id) {
+    @GetMapping("/{productsId}/options")
+    @Operation(summary = "상품 옵션 목록 조회", description = "특정 상품의 옵션을 조회합니다.")
+    public ResponseEntity<List<Option>> getOptions(@PathVariable("productsId") Long id) {
         Product product = productService.getProductById(id);
         if (product == null) {
             return ResponseEntity.notFound().build();
@@ -119,9 +147,9 @@ public class ProductController {
         return ResponseEntity.ok(options);
     }
 
-    @PostMapping("/{id}/options")
+    @PostMapping("/{productsId}/options")
     @Operation(summary = "상품 옵션 추가", description = "특정 상품에 옵션을 추가합니다.")
-    public ResponseEntity<String> addOptionToProduct(@PathVariable("id") Long id, @RequestBody @Valid Option option) {
+    public ResponseEntity<String> addOptionToProduct(@PathVariable("productsId") Long id, @RequestBody @Valid Option option) {
         try {
             productService.addOptionToProduct(id, option);
             return ResponseEntity.status(HttpStatus.CREATED).body("옵션 추가 완료!");
@@ -132,4 +160,13 @@ public class ProductController {
         }
     }
 
+//    @PostMapping("/{productsId}/options/{optionId}")
+//    @Operation(summary = "상품 옵션 수정", description = "특정 상품의 기존 옵션 정보를 수정합니다.")
+//
+
+
+//    @DeleteMapping("/{productsId}/options/{optionId}")
+//    @Operation(summary = "상품 옵션 삭제", description = "특정 상품의 옵션을 삭제합니다.")
+//
+    
 }
