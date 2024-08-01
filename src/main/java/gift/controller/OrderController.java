@@ -7,9 +7,7 @@ import gift.dto.OrderRequestDto;
 import gift.service.OrderService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -31,7 +29,7 @@ public class OrderController {
     @ApiResponse(responseCode = "201", description = "주문 성공")
     @ApiResponse(responseCode = "400", description = "잘못된 요청")
     @PostMapping
-    public ResponseEntity<SuccessResponse> makeOrder(@LoginMember UserDetails userDetails, @Valid @RequestBody OrderRequestDto request) {
+    public ResponseEntity<SuccessResponse> makeOrder(@LoginMember UserDetails userDetails, @RequestBody OrderRequestDto request) {
         orderService.handleOrder(userDetails.id(), request);
         return ResponseEntity.ok(new SuccessResponse(HttpStatus.CREATED, "주문에 성공하였습니다"));
     }
