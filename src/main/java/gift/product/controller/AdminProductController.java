@@ -36,7 +36,7 @@ public class AdminProductController {
         this.categoryService = categoryService;
     }
 
-    @GetMapping("/list")
+    @GetMapping
     public String showProductList(Model model, Pageable pageable) {
         System.out.println("[ProductController] showProductList()");
         model.addAttribute("productList", productService.getAllProducts(pageable));
@@ -60,7 +60,7 @@ public class AdminProductController {
             return "product-form";
         }
         productService.registerProduct(productDTO);
-        return "redirect:/admin/product/list";
+        return "redirect:/admin/products";
     }
 
     @GetMapping("/{id}")
@@ -81,14 +81,14 @@ public class AdminProductController {
             return "product-form";
         }
         productService.updateProduct(id, productDTO);
-        return "redirect:/admin/product/list";
+        return "redirect:/admin/products";
     }
 
     @DeleteMapping("/{id}")
     public String deleteProduct(@PathVariable Long id, Model model) {
         System.out.println("[ProductController] deleteProduct()");
         productService.deleteProduct(id);
-        return "redirect:/admin/product/list";
+        return "redirect:/admin/products";
     }
 
     @GetMapping("/search")
