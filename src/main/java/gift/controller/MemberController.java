@@ -4,6 +4,7 @@ import gift.config.LoginMember;
 import gift.domain.member.Member;
 import gift.dto.MemberDto;
 import gift.dto.request.LoginRequest;
+import gift.dto.request.PointChargeRequest;
 import gift.dto.request.RegisterRequest;
 import gift.dto.response.ErrorResponse;
 import gift.dto.response.JwtResponse;
@@ -68,9 +69,16 @@ public class MemberController {
             @ApiResponse(responseCode = "200", description = "포인트 조회 성공", content = @Content(schema = @Schema(implementation = PointResponse.class))),
             @ApiResponse(responseCode = "401", description = "인증 필요")
     })
-    @GetMapping("/point")
+    @GetMapping("/points")
     public ResponseEntity<PointResponse> point(@Parameter(hidden = true) @LoginMember Member member) {
         return ResponseEntity.ok().body(new PointResponse(member.getPoint()));
+    }
+
+    @PostMapping("/{memberId}/points")
+    public ResponseEntity<Void> addPoint(@PathVariable Long memberId, @RequestBody @Valid PointChargeRequest request) {
+        memberService.chargePoint(memberId, request.getPoint());
+
+        return ResponseEntity.noContent().build();
     }
 
 }

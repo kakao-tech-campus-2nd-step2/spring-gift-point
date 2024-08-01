@@ -82,6 +82,10 @@ public class Member {
         this.point -= point;
     }
 
+    public void chargePoint(Integer point) {
+        this.point += point;
+    }
+
     public static class MemberBuilder {
         private Long id;
         private String email;
