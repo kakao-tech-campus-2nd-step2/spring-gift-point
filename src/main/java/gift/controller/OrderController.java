@@ -35,10 +35,13 @@ public class OrderController {
 	@Operation(summary = "주문 목록 조회", description = "주문 목록을 페이지 단위로 조회합니다.")
 	@ApiResponse(responseCode = "200", description = "주문 목록 조회 성공")
 	@GetMapping
-	public ResponseEntity<Page<OrderResponse>> getOrders(
+	public ResponseEntity<Page<OrderResponse>> getOrders(@RequestHeader("Authorization") String token, 
 		@PageableDefault(sort = "orderDateTime") Pageable pageable) {
-		Page<OrderResponse> orderList = orderService.getOrders(pageable);
-		return ResponseEntity.status(HttpStatus.OK).body(orderList);
+		Page<OrderResponse> order = orderService.getOrders(token, pageable);
+		if (order.isEmpty()) {
+			return ResponseEntity.noContent().build();
+		}
+		return ResponseEntity.status(HttpStatus.OK).body(order);
 	}
 
 	@Operation(summary = "주문 생성", description = "새 주문을 생성합니다.")
