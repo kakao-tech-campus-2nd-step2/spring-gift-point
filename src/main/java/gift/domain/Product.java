@@ -8,7 +8,7 @@ import java.util.List;
 @Entity
 @Table(name = "products")
 public class Product extends BaseEntity{
-    @Column(name = "name", nullable = false, length = 15)
+    @Column(name = "name", nullable = false, length = 50)
     private String name;
     @Column(name = "price", nullable = false)
     private int price;
