@@ -46,7 +46,7 @@ public class ProductController {
     @GetMapping("")
     @Operation(summary = "전체 상품 조회", description = "전체 상품을 조회합니다.")
     public ResponseEntity<PageResponse<ProductResponse>> getAllProducts(
-        @RequestParam(value = "categoryId") Long categoryId,
+        @RequestParam(value = "category-id") Long categoryId,
         @PageableDefault(page = 0, size = 10, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable
     ) {
         PageResponse<ProductResponse> response = productService.findAllProduct(categoryId, pageable);
