@@ -37,11 +37,11 @@
 
 <div class="pagination">
         <span th:if="${itemPage.hasPrevious()}">
-            <a th:href="@{/items(page=${itemPage.number-1},size=${itemPage.size})}">이전</a>
+            <a th:href="@{/admin/items(page=${itemPage.number-1},size=${itemPage.size})}">이전</a>
         </span>
 
   <span th:each="pageNumber : ${#numbers.sequence(0, itemPage.totalPages - 1)}">
-            <a th:href="@{/items(page=${pageNumber},size=${itemPage.size})}"
+            <a th:href="@{/admin/items(page=${pageNumber},size=${itemPage.size})}"
                th:text="${pageNumber + 1}"
                th:class="${pageNumber==itemPage.number} ? active"></a>
         </span>
