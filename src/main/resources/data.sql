@@ -9,7 +9,9 @@ VALUES ('교환권', '#FF5733', 'https://cdn.pixabay.com/photo/2015/08/11/08/21/
        ('아티스트/캐릭터', '#FF33FF', 'https://cdn.pixabay.com/photo/2022/08/07/08/32/tiger-7370142_640.png', '설명8'),
        ('유아동/반려', '#FFA5FF', 'https://cdn.pixabay.com/photo/2017/11/10/08/08/baby-2935722_640.jpg', '설명9'),
        ('디지털/가전', '#33FFA5', 'https://cdn.pixabay.com/photo/2018/08/09/03/58/home-3593730_640.jpg', '설명10'),
-       ('카카오프렌즈', '#FF5733', 'https://i.namu.wiki/i/vDDaVK4wm1-vPZgAOI65rbhLhr1vPCzBgoRKSS7mEFx4IH2vtHvvMN41Umw-taptksIW_WqnjwOdcGbAMpAmrQ.webp', '설명11'),
+       ('카카오프렌즈', '#FF5733',
+        'https://i.namu.wiki/i/vDDaVK4wm1-vPZgAOI65rbhLhr1vPCzBgoRKSS7mEFx4IH2vtHvvMN41Umw-taptksIW_WqnjwOdcGbAMpAmrQ.webp',
+        '설명11'),
        ('트렌드선물', '#5733FF', 'https://cdn.pixabay.com/photo/2014/04/03/11/36/gift-311970_640.png', '설명12'),
        ('홈/가전', '#FF5733', 'https://cdn.pixabay.com/photo/2021/08/19/06/47/architecture-6557219_640.jpg', '설명14'),
        ('커피/디저트', '#33FF57', 'https://cdn.pixabay.com/photo/2019/11/11/11/35/cafe-4618121_640.jpg', '설명15'),
@@ -19,65 +21,94 @@ VALUES ('교환권', '#FF5733', 'https://cdn.pixabay.com/photo/2015/08/11/08/21/
        ('자동차/공구', '#FFA533', 'https://cdn.pixabay.com/photo/2024/05/10/23/34/car-8753811_640.png', '설명19');
 
 INSERT INTO product (name, price, imageUrl, category_id)
-VALUES ('coffee', 1500, 'https://via.placeholder.com/150', 14);
+VALUES ('커피', 1500, 'https://via.placeholder.com/150', 14);
+
 INSERT INTO product (name, price, imageUrl, category_id)
-VALUES ('meat', 15500, 'https://via.placeholder.com/150', 5);
+VALUES ('고기', 15500, 'https://via.placeholder.com/150', 5);
+
 INSERT INTO product (name, price, imageUrl, category_id)
-VALUES ('egg', 3000, 'https://via.placeholder.com/150', 5);
+VALUES ('계란', 3000, 'https://via.placeholder.com/150', 5);
+
 INSERT INTO product (name, price, imageUrl, category_id)
-VALUES ('soup', 40000, 'https://via.placeholder.com/150', 5);
+VALUES ('수프', 40000, 'https://via.placeholder.com/150', 5);
+
 INSERT INTO product (name, price, imageUrl, category_id)
-VALUES ('bread', 2500, 'https://via.placeholder.com/150', 5);
+VALUES ('빵', 2500, 'https://via.placeholder.com/150', 5);
+
 INSERT INTO product (name, price, imageUrl, category_id)
-VALUES ('milk', 1000, 'https://via.placeholder.com/150', 5);
+VALUES ('우유', 1000, 'https://via.placeholder.com/150', 5);
+
 INSERT INTO product (name, price, imageUrl, category_id)
-VALUES ('cheese', 7000, 'https://via.placeholder.com/150', 5);
+VALUES ('치즈', 7000, 'https://via.placeholder.com/150', 5);
+
 INSERT INTO product (name, price, imageUrl, category_id)
-VALUES ('chocolate', 3500, 'https://via.placeholder.com/150', 14);
+VALUES ('초콜릿', 3500, 'https://via.placeholder.com/150', 14);
+
 INSERT INTO product (name, price, imageUrl, category_id)
-VALUES ('wine', 45000, 'https://via.placeholder.com/150', 14);
+VALUES ('와인', 45000, 'https://via.placeholder.com/150', 14);
+
 INSERT INTO product (name, price, imageUrl, category_id)
-VALUES ('beer', 2000, 'https://via.placeholder.com/150', 14);
+VALUES ('맥주', 2000, 'https://via.placeholder.com/150', 14);
+
 INSERT INTO product (name, price, imageUrl, category_id)
-VALUES ('juice', 1200, 'https://via.placeholder.com/150', 14);
+VALUES ('주스', 1200, 'https://via.placeholder.com/150', 14);
+
 INSERT INTO product (name, price, imageUrl, category_id)
-VALUES ('water', 500, 'https://via.placeholder.com/150', 14);
+VALUES ('물', 500, 'https://via.placeholder.com/150', 14);
+
 INSERT INTO product (name, price, imageUrl, category_id)
-VALUES ('soda', 800, 'https://via.placeholder.com/150', 14);
+VALUES ('소다', 800, 'https://via.placeholder.com/150', 14);
+
 INSERT INTO product (name, price, imageUrl, category_id)
-VALUES ('apple', 300, 'https://via.placeholder.com/150', 5);
+VALUES ('사과', 300, 'https://via.placeholder.com/150', 5);
+
 INSERT INTO product (name, price, imageUrl, category_id)
-VALUES ('banana', 600, 'https://via.placeholder.com/150', 5);
+VALUES ('바나나', 600, 'https://via.placeholder.com/150', 5);
+
 INSERT INTO product (name, price, imageUrl, category_id)
-VALUES ('grape', 2500, 'https://via.placeholder.com/150', 5);
+VALUES ('포도', 2500, 'https://via.placeholder.com/150', 5);
+
 INSERT INTO product (name, price, imageUrl, category_id)
-VALUES ('peach', 1500, 'https://via.placeholder.com/150', 5);
+VALUES ('복숭아', 1500, 'https://via.placeholder.com/150', 5);
+
 INSERT INTO product (name, price, imageUrl, category_id)
-VALUES ('pineapple', 3500, 'https://via.placeholder.com/150', 5);
+VALUES ('파인애플', 3500, 'https://via.placeholder.com/150', 5);
+
 INSERT INTO product (name, price, imageUrl, category_id)
-VALUES ('mango', 4000, 'https://via.placeholder.com/150', 5);
+VALUES ('망고', 4000, 'https://via.placeholder.com/150', 5);
+
 INSERT INTO product (name, price, imageUrl, category_id)
-VALUES ('strawberry', 3000, 'https://via.placeholder.com/150', 5);
+VALUES ('딸기', 3000, 'https://via.placeholder.com/150', 5);
+
 INSERT INTO product (name, price, imageUrl, category_id)
-VALUES ('blueberry', 5000, 'https://via.placeholder.com/150', 5);
+VALUES ('블루베리', 5000, 'https://via.placeholder.com/150', 5);
+
 INSERT INTO product (name, price, imageUrl, category_id)
-VALUES ('raspberry', 6000, 'https://via.placeholder.com/150', 5);
+VALUES ('라즈베리', 6000, 'https://via.placeholder.com/150', 5);
+
 INSERT INTO product (name, price, imageUrl, category_id)
-VALUES ('blackberry', 5500, 'https://via.placeholder.com/150', 5);
+VALUES ('블랙베리', 5500, 'https://via.placeholder.com/150', 5);
+
 INSERT INTO product (name, price, imageUrl, category_id)
-VALUES ('orange', 2000, 'https://via.placeholder.com/150', 5);
+VALUES ('오렌지', 2000, 'https://via.placeholder.com/150', 5);
+
 INSERT INTO product (name, price, imageUrl, category_id)
-VALUES ('lemon', 1000, 'https://via.placeholder.com/150', 5);
+VALUES ('레몬', 1000, 'https://via.placeholder.com/150', 5);
+
 INSERT INTO product (name, price, imageUrl, category_id)
-VALUES ('lime', 1100, 'https://via.placeholder.com/150', 5);
+VALUES ('라임', 1100, 'https://via.placeholder.com/150', 5);
+
 INSERT INTO product (name, price, imageUrl, category_id)
-VALUES ('avocado', 7000, 'https://via.placeholder.com/150', 5);
+VALUES ('아보카도', 7000, 'https://via.placeholder.com/150', 5);
+
 INSERT INTO product (name, price, imageUrl, category_id)
-VALUES ('broccoli', 2000, 'https://via.placeholder.com/150', 5);
+VALUES ('브로콜리', 2000, 'https://via.placeholder.com/150', 5);
+
 INSERT INTO product (name, price, imageUrl, category_id)
-VALUES ('carrot', 1000, 'https://via.placeholder.com/150', 5);
+VALUES ('당근', 1000, 'https://via.placeholder.com/150', 5);
+
 INSERT INTO product (name, price, imageUrl, category_id)
-VALUES ('tomato', 1500, 'https://via.placeholder.com/150', 5);
+VALUES ('토마토', 1500, 'https://via.placeholder.com/150', 5);
 
 
 INSERT INTO product_option (name, quantity, product_id)
