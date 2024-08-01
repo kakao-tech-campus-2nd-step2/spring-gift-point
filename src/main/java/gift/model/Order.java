@@ -16,7 +16,7 @@ public class Order {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @JsonProperty("optionId")
+    @JsonProperty("option_id")
     public Long optionId;
     @JsonProperty("quantity")
     public Long quantity;
@@ -24,6 +24,8 @@ public class Order {
     public String message;
     @JsonProperty("orderDateTime")
     public LocalDateTime orderDateTime;
+    @JsonProperty("total_price")
+    public Long totalPrice;
 
     public Long getId() {
         return id;
@@ -63,5 +65,13 @@ public class Order {
 
     public void setOrderDateTime(LocalDateTime orderDateTime) {
         this.orderDateTime = orderDateTime;
+    }
+
+    public Long getTotalPrice() {
+        return totalPrice;
+    }
+
+    public void setTotalPrice(Long totalPrice) {
+        this.totalPrice = totalPrice;
     }
 }
