@@ -32,6 +32,7 @@ public class Member {
 
     private String kakaoAccessToken;
     private String kakaoRefreshToken;
+    private Integer point;
 
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Wish> wishes;
@@ -80,6 +81,10 @@ public class Member {
 
     public String getKakaoRefreshToken() {
         return kakaoRefreshToken;
+    }
+
+    public Integer getPoint() {
+        return point;
     }
 
     public void setId(Long id) {

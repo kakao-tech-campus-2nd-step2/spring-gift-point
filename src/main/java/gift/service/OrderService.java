@@ -6,6 +6,7 @@ import gift.dto.LoginMember;
 import gift.dto.request.OrderRequest;
 import gift.dto.response.OrderListResponse;
 import gift.dto.response.OrderResponse;
+import gift.dto.response.PointResponse;
 import gift.exception.CustomException;
 import gift.repository.MemberRepository;
 import gift.repository.OptionRepository;
@@ -61,5 +62,10 @@ public class OrderService {
         Member member = memberRepository.findMemberById(loginMember.getId()).get();
         Page<Order> orders = orderRepository.findAllByMember(member, pageable);
         return orders.map(order -> new OrderListResponse(order, order.getOption().getProduct()));
+    }
+
+    public PointResponse getMemberPoint(Long memberId) {
+        Member member = memberRepository.findMemberById(memberId).get();
+        return new PointResponse(member.getPoint());
     }
 }
