@@ -97,7 +97,7 @@ public class ProductControllerTest {
 
         when(productService.getAllProducts(pageRequest)).thenReturn(productResponsePage);
 
-        this.mockMvc.perform(get("/api/products")
+        this.mockMvc.perform(get("/api/products/all")
                         .param("page", "0")
                         .param("size", "10")
                         .accept(MediaType.APPLICATION_JSON))
@@ -107,16 +107,31 @@ public class ProductControllerTest {
                                 fieldWithPath("content[].id").description("상품 아이디"),
                                 fieldWithPath("content[].name").description("상품 이름"),
                                 fieldWithPath("content[].price").description("상품 가격"),
-                                fieldWithPath("content[].imageUrl").description("상품 url"),
+                                fieldWithPath("content[].imageUrl").description("상품 URL"),
                                 fieldWithPath("content[].category.id").description("카테고리 아이디").optional(),
                                 fieldWithPath("content[].category.name").description("카테고리 이름"),
                                 fieldWithPath("content[].category.color").description("카테고리 색상"),
                                 fieldWithPath("content[].category.imageUrl").description("카테고리 이미지 URL"),
                                 fieldWithPath("content[].category.description").description("카테고리 설명"),
-                                fieldWithPath("page.size").description("페이지 크기"),
-                                fieldWithPath("page.number").description("현재 페이지 번호"),
-                                fieldWithPath("page.totalElements").description("총 요소 개수"),
-                                fieldWithPath("page.totalPages").description("총 페이지 개수")
+                                fieldWithPath("totalPages").description("총 페이지 수"),
+                                fieldWithPath("totalElements").description("총 요소 개수"),
+                                fieldWithPath("first").description("첫 페이지 여부"),
+                                fieldWithPath("last").description("마지막 페이지 여부"),
+                                fieldWithPath("size").description("페이지 크기"),
+                                fieldWithPath("number").description("현재 페이지 번호"),
+                                fieldWithPath("sort.empty").description("정렬 여부 (비어 있음)").optional(),
+                                fieldWithPath("sort.sorted").description("정렬 여부 (정렬됨)").optional(),
+                                fieldWithPath("sort.unsorted").description("정렬 여부 (정렬 안됨)").optional(),
+                                fieldWithPath("numberOfElements").description("현재 페이지 요소 개수"),
+                                fieldWithPath("pageable.pageNumber").description("페이지 번호"),
+                                fieldWithPath("pageable.pageSize").description("페이지 크기"),
+                                fieldWithPath("pageable.sort.empty").description("정렬 여부 (비어 있음)").optional(),
+                                fieldWithPath("pageable.sort.sorted").description("정렬 여부 (정렬됨)").optional(),
+                                fieldWithPath("pageable.sort.unsorted").description("정렬 여부 (정렬 안됨)").optional(),
+                                fieldWithPath("pageable.offset").description("오프셋"),
+                                fieldWithPath("pageable.paged").description("페이징 여부"),
+                                fieldWithPath("pageable.unpaged").description("비페이징 여부"),
+                                fieldWithPath("empty").description("페이지가 비어 있는지 여부")
                         )));
 
     }
