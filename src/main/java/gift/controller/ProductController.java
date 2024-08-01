@@ -56,7 +56,7 @@ public class ProductController {
     }
 
     @Operation(summary = "카테고리 별 상품 전체 조회", description = "상품 전체 조회 정보를 Page로 반환")
-    @GetMapping("/category/{categoryId}")
+    @GetMapping("/categories/{categoryId}")
     public ResponseEntity<?> findActiveProductsByCategoryWithWishCount(
             @PathVariable Long categoryId,
             @PageableDefault(size = DEFAULT_PAGE_SIZE, sort = "wishCount", direction = Sort.Direction.DESC) Pageable pageable) {

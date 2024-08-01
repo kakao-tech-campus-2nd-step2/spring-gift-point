@@ -32,10 +32,10 @@ public class CategoryController {
     }
 
     @Operation(summary = "Id로 카테고리 조회")
-    @GetMapping
+    @GetMapping("/{id}")
     public ResponseEntity<?> findCategoryById(
             @Parameter(description = "ID of the category to be searched", required = true)
-            @RequestParam Long id) {
+            @PathVariable Long id) {
         CategoryResponse response = categoryService.findCategoryById(id);
         return ResponseEntity.ok(new CommonResponse<>(response, "카테고리 조회가 완료되었습니다.", true));
     }
@@ -49,9 +49,9 @@ public class CategoryController {
 
     @Operation(summary = "카테고리 수정",
             security = @SecurityRequirement(name = "JWT"))
-    @PutMapping("/{id}")
+    @PutMapping
     public ResponseEntity<?> updateCategoryForAdmin(@Parameter(hidden = true)
-                                                    @PathVariable Long id,
+                                                    @RequestParam Long id,
                                                     @Valid @RequestBody CategoryRequest categoryRequest) {
         categoryService.updateCategory(id, categoryRequest);
         return ResponseEntity.ok(new CommonResponse<>(null, "관리자 권한으로 카테고리 수정이 완료되었습니다.", true));

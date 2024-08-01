@@ -9,6 +9,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.SQLRestriction;
 import security.SHA256Util;
@@ -36,6 +37,9 @@ public class AppUser extends BaseTimeEntity {
     private String salt;
 
     private String accessToken;
+
+    @ColumnDefault("5000")
+    private int point;
 
     public AppUser() {
     }
