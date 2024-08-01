@@ -21,7 +21,7 @@ public class Product {
     private String name;
 
     @Column(nullable = false, name = "price")
-    private int price;
+    private Integer price;
 
     @Column(nullable = false, name = "image_url")
     private String imageUrl;
@@ -35,9 +35,14 @@ public class Product {
             mappedBy = "product", orphanRemoval = true)
     private List<Option> options = new ArrayList<>();
 
+    @JsonManagedReference
+    @OneToMany(cascade = CascadeType.ALL,
+            mappedBy = "product", orphanRemoval = true)
+    private List<Wish> wishes = new ArrayList<>();
+
     public Product() {}
 
-    public Product(String name, int price, String imageUrl, Category category) {
+    public Product(String name, Integer price, String imageUrl, Category category) {
         this.name = name;
         this.price = price;
         this.imageUrl = imageUrl;
@@ -68,11 +73,18 @@ public class Product {
         return options;
     }
 
+    public List<Wish> getWishes() {
+        return wishes;
+    }
+
     public void updateProduct(ProductRequestDTO productRequestDTO){
         this.name=productRequestDTO.name();
         this.price=productRequestDTO.price();
         this.imageUrl=productRequestDTO.imageUrl();
     }
+
+
+
 
     public void addOption(OptionRequestDTO optionRequestDTO){
         Option option = new Option(

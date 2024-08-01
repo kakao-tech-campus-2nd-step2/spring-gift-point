@@ -1,6 +1,7 @@
 package gift.service;
 
 import gift.dto.request.ProductRequestDTO;
+import gift.dto.response.PagingProductResponseDTO;
 import gift.dto.response.ProductResponseDTO;
 import gift.entity.Category;
 import gift.entity.Product;
@@ -10,6 +11,8 @@ import gift.repository.CategoryRepository;
 import gift.repository.ProductRepository;
 import jdk.jfr.Description;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -64,6 +67,29 @@ public class ProductService {
         productRepository.save(product);
     }
 
+    @Description("페이지네이션 상품 조회. 모든 상품을 조회 가능")
+    public PagingProductResponseDTO getProductsByCategoryId(Long categoryId, Pageable pageable) {
+        Page<Product> productPage = productRepository.findByCategoryId(categoryId, pageable);
+        List<ProductResponseDTO> productResponseDTOs = productPage.getContent().stream()
+                .map(product -> new ProductResponseDTO(
+                        product.getId(),
+                        product.getName(),
+                        product.getImageUrl(),
+                        product.getPrice()))
+                .collect(Collectors.toList());
+
+        return new PagingProductResponseDTO(
+                productResponseDTOs,
+                productPage.getNumber(),
+                (int) productPage.getTotalElements(),
+                productPage.getSize(),
+                productPage.isLast()
+        );
+    }
+
+
+
+
     private Product getProductEntity(Long productId){
         return productRepository.findById(productId)
                 .orElseThrow(() -> new ProductNotFoundException(productId));
@@ -73,8 +99,8 @@ public class ProductService {
         return new ProductResponseDTO(
                 product.getId(),
                 product.getName(),
-                product.getPrice(),
-                product.getImageUrl()
+                product.getImageUrl(),
+                product.getPrice()
         );
     }
 
