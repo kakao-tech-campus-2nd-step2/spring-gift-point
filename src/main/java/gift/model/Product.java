@@ -24,7 +24,7 @@ public class Product extends BaseEntity{
     private Long id;
 
     @NotNull
-    @Column(length = 15)
+    @Column(length = 30)
     private String name;
 
     @NotNull
