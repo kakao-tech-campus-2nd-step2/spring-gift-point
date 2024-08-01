@@ -5,34 +5,35 @@ import gift.DTO.User.UserResponse;
 import gift.domain.WishProduct;
 
 public class WishProductResponse {
-    Long id;
-    UserResponse user;
-    ProductResponse product;
-    String createDate;
+    private Long wishId;
+    private String name;
+    private int price;
+    private String imageUrl;
 
     public WishProductResponse(){
 
     }
 
     public WishProductResponse(WishProduct wishProduct) {
-        this.id = wishProduct.getId();
-        this.user = new UserResponse(wishProduct.getUser());
-        this.product = new ProductResponse(wishProduct.getProduct());
-        this.createDate = wishProduct.getCreateDate();
+        this.wishId = wishProduct.getId();
+        this.name = wishProduct.getProduct().getName();
+        this.price = wishProduct.getProduct().getPrice();
+        this.imageUrl = wishProduct.getProduct().getImageUrl();
     }
 
-    public Long getId(){
-        return id;
-    }
-    public UserResponse getUser() {
-        return user;
+    public Long getWishId() {
+        return wishId;
     }
 
-    public ProductResponse getProduct() {
-        return product;
+    public String getName() {
+        return name;
     }
 
-    public String getCreateDate() {
-        return createDate;
+    public int getPrice() {
+        return price;
+    }
+
+    public String getImageUrl() {
+        return imageUrl;
     }
 }

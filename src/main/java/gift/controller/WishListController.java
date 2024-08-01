@@ -27,7 +27,7 @@ public class WishListController {
      * 위시 리스트 추가
      */
     @PostMapping("api/wishes/{productId}")
-    public ResponseEntity<Void> createWishList(
+    public ResponseEntity<String> createWishList(
             @PathVariable("productId") Long id, @AuthenticateMember UserResponse userRes
     ){
         ProductResponse productRes = productService.readOneProduct(id);
@@ -35,7 +35,8 @@ public class WishListController {
         WishProductRequest wishProduct = new WishProductRequest(userRes, productRes);
         wishListService.addWishList(wishProduct);
 
-        return new ResponseEntity<>(HttpStatus.OK);
+        String message = "위시리스트에 추가했습니다!";
+        return new ResponseEntity<>(message, HttpStatus.CREATED);
     }
     /*
      * 위시 리스트 조회
