@@ -116,7 +116,14 @@ public class GlobalExceptionHandler {
     }
 
 
-
+    @Description("상품 서비스 exception")
+    @ExceptionHandler(value = ProductException.class)
+    public ResponseEntity<ErrorResponse> handleProductNotFound(ProductException e) {
+        ErrorResponse errorResponse = new ErrorResponse(HttpStatus.NOT_FOUND
+                .value(), e.getMessage());
+        return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                .body(errorResponse);
+    }
 
 
 
@@ -153,6 +160,13 @@ public class GlobalExceptionHandler {
     }
 
 
+
+    @ExceptionHandler(value = WishException.class)
+    public ResponseEntity<ErrorResponse> handleWishException(ProductException e) {
+        ErrorResponse errorResponse = new ErrorResponse(HttpStatus.NOT_FOUND.value(), e.getMessage());
+        return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                .body(errorResponse);
+    }
 
 
 
