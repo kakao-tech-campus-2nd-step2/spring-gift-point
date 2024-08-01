@@ -2,6 +2,7 @@ package gift.controller;
 
 import gift.annotation.LoginMember;
 import gift.domain.Member;
+import gift.dto.OrderPagedResponseDto;
 import gift.dto.OrderRequestDto;
 import gift.dto.OrderResponseDto;
 import gift.dto.PageRequestDto;
@@ -47,12 +48,12 @@ public class OrderController {
     @GetMapping
     @Operation(summary = "주문 목록 조회 (페이지네이션 적용)", description = "주문 목록을 페이지 단위로 조회한다.")
     @SecurityRequirement(name = "Authorization")
-    public ResponseEntity<Page<OrderResponseDto>> getOrder(
+    public ResponseEntity<Page<OrderPagedResponseDto>> getOrder(
         @Parameter(hidden = true) @LoginMember Member member,
         @Valid @ModelAttribute PageRequestDto pageRequestDto) {
 
         Pageable pageable = pageRequestDto.toPageable();
-        Page<OrderResponseDto> orders = orderService.findByMemberId(member.getId(), pageable);
+        Page<OrderPagedResponseDto> orders = orderService.findByMemberId(member.getId(), pageable);
         return ResponseEntity.ok(orders);
     }
 }

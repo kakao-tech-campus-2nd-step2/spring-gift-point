@@ -7,8 +7,10 @@ import gift.domain.Option;
 import gift.domain.Order;
 import gift.domain.Product;
 import gift.dto.KakaoMessageDto;
+import gift.dto.OrderPagedResponseDto;
 import gift.dto.OrderRequestDto;
 import gift.dto.OrderResponseDto;
+import gift.dto.ProductResponseDto;
 import gift.repository.MemberRepository;
 import gift.repository.OrderRepository;
 import gift.repository.ProductRepository;
@@ -95,10 +97,18 @@ public class OrderService {
     }
 
     @Transactional(readOnly = true)
-    public Page<OrderResponseDto> findByMemberId(Long id, Pageable pageable) {
+    public Page<OrderPagedResponseDto> findByMemberId(Long id, Pageable pageable) {
 
         Page<Order> orderPage= orderRepository.findByMemberId(id, pageable);
-        return orderPage.map(OrderResponseDto::convertToDto);
-    }
+        return orderPage.map(order -> {
+            ProductResponseDto product = productService.getProductById(order.getProductId());
 
+            return OrderPagedResponseDto.convertToDto(
+                order,
+                product.name(),
+                product.price(),
+                product.imageUrl()
+            );
+        });
+    }
 }
