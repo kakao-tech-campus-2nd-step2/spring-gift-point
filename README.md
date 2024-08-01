@@ -7,7 +7,8 @@
 
 0. 이번 주차
    1. [1단계(API 명세)](#1단계API-명세-요구사항)
-
+   1. [2단계(배포하기)](#2단계배포하기-요구사항)
+   
 1. [1주차 - product](#1주차-과제-요구사항spring-gift-product)
    1. [1단계(상품 API)](#1단계상품-api-요구사항)
    2. [2단계(관리자 화면)](#2단계관리자-화면-요구사항)
@@ -48,6 +49,104 @@
 ### API 문서
 
 [notion](https://supreme-jewel-53e.notion.site/API-cc0ccfb63a2945d2835a4b330aaa304d?pvs=4)에서 작업했습니다.
+
+
+
+## 2단계(배포하기) 요구사항
+
+### 기능 요구 사항
+
+지금까지 만든 선물하기 서비스를 배포하고 클라이언트와 연동할 수 있어야 한다.
+
+- 지속적인 배포를 위한 배포 스크립트를 작성한다.
+- 클라이언트와 API 연동 시 발생하는 보안 문제에 대응한다.
+  - 서버와 클라이언트의 `Origin`이 달라 요청을 처리할 수 없는 경우를 해결한다.
+- HTTPS는 필수는 아니지만 팀 내에서 논의하고 필요한 경우 적용한다.
+
+### 힌트
+
+#### 셸 스크립트
+
+- 일련의 Linux 명령어로 구성된 텍스트 파일
+- 생산성을 높여 주는 도구
+  - 매번 같은 작업을 수행하기 위해 같은 명령을 반복해서 입력해야 할까?
+  - 배포할 때마다 모든 명령을 외우고 실행해야 할까?
+- [수업 개요 + 셸(SHELL)](https://missing-semester-kr.github.io/2020/course-shell)
+- [셸 툴과 스크립팅](https://missing-semester-kr.github.io/2020/shell-tools)
+- [The Shell Scripting Tutorial](https://www.shellscript.sh/first.html)
+
+```sh
+#!/bin/bash
+BUILD_PATH=$(ls /home/ubuntu/build/*.jar)
+JAR_NAME=$(basename $BUILD_PATH)
+
+CURRENT_PID=$(pgrep -f $JAR_NAME)
+
+if [ -z $CURRENT_PID ]
+then
+  sleep 1
+else
+  kill -15 $CURRENT_PID
+  sleep 5
+fi
+
+DEPLOY_PATH=/home/ubuntu/
+cp $BUILD_PATH $DEPLOY_PATH
+cd $DEPLOY_PATH
+
+DEPLOY_JAR=$DEPLOY_PATH$JAR_NAME
+nohup java -jar $DEPLOY_JAR > /dev/null 2> /dev/null < /dev/null &
+```
+
+#### 네트워크
+
+웹 애플리케이션은 네트워크를 통해 사용자에게 가치를 제공한다. 따라서 네트워크 문제로 인해 서비스에 심각한 문제가 발생할 수 있다. 안정적인 서비스 운영을 위해서는 네트워크에 대한 사전 학습이 필요하다.
+
+<iframe src="https://www.youtube.com/embed/1pfTxp25MA8" class="width-100" frameborder="0" allowfullscreen="" style="box-sizing: content-box; background-repeat: no-repeat; padding: 0px; margin: 0px; border: 0px; width: 920px; top: 0px; left: 0px; height: 517.5px; line-height: 24px;"></iframe>
+
+#### CORS
+
+- [교차 출처 리소스 공유 (CORS)](https://developer.mozilla.org/ko/docs/Web/HTTP/CORS)
+- [CORS는 왜 이렇게 우리를 힘들게 하는걸까?](https://evan-moon.github.io/2020/05/21/about-cors)
+
+#### CorsConfiguration#applyPermitDefaultValues()
+
+- Allow all origins.
+- Allow "simple" methods `GET`, `HEAD` and `POST`.
+- Allow all headers.
+- Set max age to 1800 seconds (30 minutes).
+
+#### 테스트
+
+```java
+@SpringBootTest
+@AutoConfigureMockMvc
+class AcceptanceTest {
+    @Autowired
+    private MockMvc mockMvc;
+
+    @Test
+    void cors() throws Exception {
+        mockMvc.perform(
+            options("/api/products")
+                .header(HttpHeaders.ORIGIN, "http://localhost:8080")
+                .header(HttpHeaders.ACCESS_CONTROL_REQUEST_METHOD, "GET")
+        )
+            .andExpect(status().isOk())
+            .andExpect(header().string(HttpHeaders.ACCESS_CONTROL_ALLOW_ORIGIN, "*"))
+            .andExpect(header().string(HttpHeaders.ACCESS_CONTROL_ALLOW_METHODS, ALLOWED_METHOD_NAMES))
+            .andExpect(header().string(HttpHeaders.ACCESS_CONTROL_EXPOSE_HEADERS, HttpHeaders.LOCATION))
+            .andDo(print())
+        ;
+    }
+}
+```
+
+### 기능 목록
+
+- [ ] CORS 문제 해결
+- [ ] 배포 스크립트 작성
+
 
 
 ---
