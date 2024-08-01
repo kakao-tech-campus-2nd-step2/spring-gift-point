@@ -82,11 +82,6 @@ public class Member {
         this.point -= point;
     }
 
-    public void earnPoint(int price, Long quantity) {
-        Long totalOrderPrice = price * quantity;
-        this.point += (int) Math.round(totalOrderPrice * 0.1);
-    }
-
     public static class MemberBuilder {
         private Long id;
         private String email;

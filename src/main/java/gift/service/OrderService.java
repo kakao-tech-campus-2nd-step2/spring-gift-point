@@ -82,11 +82,9 @@ public class OrderService {
 
         Option option = getOptionById(optionId);
         Product product = option.getProduct();
-        int price = product.getPrice();
 
         option.subtract(quantity);
         member.subtractPoint(point);
-        member.earnPoint(price, quantity);
         removeMemberWish(member, product);
 
         if (accessToken != null) {
