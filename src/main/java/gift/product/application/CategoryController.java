@@ -3,12 +3,12 @@ package gift.product.application;
 import gift.auth.interceptor.Authorized;
 import gift.member.domain.Role;
 import gift.product.application.dto.request.CategoryRequest;
-import gift.product.application.dto.response.CategoryPageResponse;
 import gift.product.application.dto.response.CategoryResponse;
 import gift.product.service.CategoryService;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import java.net.URI;
+import java.util.List;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -64,10 +64,13 @@ public class CategoryController {
     @ApiResponse(responseCode = "200", description = "카테고리 목록 조회 성공")
     @GetMapping()
     @Authorized(Role.USER)
-    public ResponseEntity<CategoryPageResponse> getCategoryList(Pageable pageable) {
+    public ResponseEntity<List<CategoryResponse>> getCategoryList(Pageable pageable) {
         var categoryList = categoryService.getCategoryList(pageable);
 
-        var response = CategoryPageResponse.from(categoryList);
+        var response = categoryList.categories().stream()
+                .map(CategoryResponse::from)
+                .toList();
+        
         return ResponseEntity.ok()
                 .body(response);
     }
