@@ -34,14 +34,14 @@ public class OptionService {
     public List<OptionResponse> getProductOptionList(Long productId) {
         Product product = findProductById(productId);
         return product.getOptions().stream()
-            .map(OptionResponse::new)
+            .map(option -> new OptionResponse(option, productId))
             .toList();
     }
 
     public OptionResponse findOptionById(Long optionId) {
         Option option = optionJpaDao.findById(optionId)
             .orElseThrow(() -> new NoSuchElementException(ErrorMessage.OPTION_NOT_EXISTS_MSG));
-        return new OptionResponse(option);
+        return new OptionResponse(option, null);
     }
 
     public void saveOption(OptionSaveRequest saveRequest) {
