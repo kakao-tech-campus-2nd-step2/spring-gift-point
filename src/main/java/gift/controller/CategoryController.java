@@ -2,7 +2,6 @@ package gift.controller;
 
 import gift.dto.CategoryRequestDTO;
 import gift.dto.CategoryResponseDTO;
-import gift.model.Category;
 import gift.service.CategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -31,14 +30,16 @@ public class CategoryController {
 
     // 새로운 카테고리 생성
     @PostMapping
-    public ResponseEntity<CategoryResponseDTO> createCategory(@RequestBody CategoryRequestDTO categoryRequestDTO) {
-        return ResponseEntity.status(201).body(categoryService.createCategory(categoryRequestDTO));
+    public ResponseEntity<Void> createCategory(@RequestBody CategoryRequestDTO categoryRequestDTO) {
+        categoryService.createCategory(categoryRequestDTO);
+        return ResponseEntity.status(201).build(); // 명세에 따라 Body 없음
     }
 
     // 기존 카테고리 업데이트
     @PutMapping("/{id}")
-    public ResponseEntity<CategoryResponseDTO> updateCategory(@PathVariable Long id, @RequestBody CategoryRequestDTO categoryRequestDTO) {
-        return ResponseEntity.ok(categoryService.updateCategory(id, categoryRequestDTO));
+    public ResponseEntity<String> updateCategory(@PathVariable Long id, @RequestBody CategoryRequestDTO categoryRequestDTO) {
+        categoryService.updateCategory(id, categoryRequestDTO);
+        return ResponseEntity.ok("카테고리 정보를 수정했습니다."); // 명세에 따라 수정 완료 메시지 반환
     }
 
     // 특정 ID의 카테고리 삭제
