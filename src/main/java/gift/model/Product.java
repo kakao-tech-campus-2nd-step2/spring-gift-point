@@ -30,7 +30,6 @@ public class Product {
   @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
   private List<Option> options = new ArrayList<>();
 
-
   protected Product() {
   }
 
@@ -60,6 +59,7 @@ public class Product {
   public Category getCategory() {
     return category;
   }
+
   public List<Option> getOptions() {
     return options;
   }
@@ -68,9 +68,9 @@ public class Product {
     options.remove(option);
     option.setProduct(null);
   }
-  public void updateFromDto(String name, int price, String imageUrl, Category category) {
 
-    if (name == null || name.isEmpty() || name.length()  > 15) {
+  public void updateFromDto(String name, int price, String imageUrl, Category category) {
+    if (name == null || name.isEmpty() || name.length() > 15) {
       throw new IllegalArgumentException("이름 필드를 비워둘 수 없습니다.");
     }
 
@@ -91,4 +91,8 @@ public class Product {
     this.imageUrl = imageUrl;
     this.category = category;
   }
+
+  public Long getCategoryId() {
+    return category.getId();
   }
+}

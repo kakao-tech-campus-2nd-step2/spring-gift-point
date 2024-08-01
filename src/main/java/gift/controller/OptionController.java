@@ -23,11 +23,10 @@ public class OptionController {
     this.optionService = optionService;
   }
 
-  @Operation(summary = "상품 옵션 조회", description = "상품 ID로 옵션을 조회합니다.")
+  @Operation(summary = "상품 ID로 옵션 조회", description = "특정 상품의 옵션을 상품 ID로 조회합니다.")
   @GetMapping
-  public ResponseEntity<List<OptionDto>> getOptionsByProductId(@PathVariable Long productId) {
-    List<OptionDto> options = optionService.getOptionsByProductId(productId);
-    return ResponseEntity.ok(options);
+  public List<OptionDto> getOptionsByProductId(@PathVariable Long productId) {
+    return optionService.getOptionsByProductId(productId);
   }
 
   @Operation(summary = "상품 옵션 추가", description = "상품에 새로운 옵션을 추가합니다.")

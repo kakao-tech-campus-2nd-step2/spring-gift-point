@@ -20,12 +20,16 @@ public class Wishlist {
   @JoinColumn(name = "product_id", nullable = false)
   private Product product;
 
-  public Long getId() {
-    return id;
+  public Wishlist() {}
+
+  public Wishlist(Product product, Member member, Long optionId) {
+    this.product = product;
+    this.member = member;
+    this.optionId = optionId;
   }
 
-  public void setId(Long id) {
-    this.id = id;
+  public Long getId() {
+    return id;
   }
 
   public Long getOptionId() {
@@ -36,15 +40,7 @@ public class Wishlist {
     return member;
   }
 
-  public void setMember(Member member) {
-    this.member = member;
-  }
-
   public Product getProduct() {
     return product;
-  }
-
-  public void setProduct(Product product) {
-    this.product = product;
   }
 }
