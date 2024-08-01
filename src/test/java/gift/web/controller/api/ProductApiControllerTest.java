@@ -327,7 +327,11 @@ class ProductApiControllerTest {
                         fieldWithPath("name").type(JsonFieldType.STRING).description("상품명"),
                         fieldWithPath("price").type(JsonFieldType.NUMBER).description("상품 가격"),
                         fieldWithPath("imageUrl").type(JsonFieldType.STRING).description("상품 이미지 URL"),
-                        fieldWithPath("categoryId").type(JsonFieldType.NUMBER).description("카테고리 ID")
+                        fieldWithPath("categoryId").type(JsonFieldType.NUMBER).description("카테고리 ID"),
+                        fieldWithPath("options").type(JsonFieldType.ARRAY).description("상품 옵션 목록"),
+                        fieldWithPath("options[].id").type(JsonFieldType.NUMBER).description("상품 옵션 ID"),
+                        fieldWithPath("options[].name").type(JsonFieldType.STRING).description("상품 옵션명"),
+                        fieldWithPath("options[].quantity").type(JsonFieldType.NUMBER).description("상품 옵션 재고")
                     )
                 )
             );
