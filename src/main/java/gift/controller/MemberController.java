@@ -1,14 +1,14 @@
 package gift.controller;
 
-import gift.classes.RequestState.RequestStateDTO;
-import gift.classes.RequestState.RequestStatus;
 import gift.classes.RequestState.SecureRequestStateDTO;
 import gift.dto.MemberDto;
+import gift.dto.TokenDto;
 import gift.services.MemberService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/api/member")
+@RequestMapping("/api/members")
 @Tag(name = "MemberController", description = "Member API")
 public class MemberController {
 
@@ -35,10 +35,12 @@ public class MemberController {
     })
     public ResponseEntity<?> register(@RequestBody MemberDto memberDto) {
         memberService.register(memberDto);
+        TokenDto tokenDto = memberService.login(memberDto);
 
-        return ResponseEntity.ok().body(new RequestStateDTO(
-            RequestStatus.success,
-            null
+        return ResponseEntity.ok().body(new SecureRequestStateDTO(
+            HttpStatus.OK,
+            "회원가입에 성공했습니다.",
+            tokenDto
         ));
     }
 
@@ -51,12 +53,12 @@ public class MemberController {
         @ApiResponse(responseCode = "500", description = "서버 내부 오류 발생")
     })
     public ResponseEntity<?> login(@RequestBody MemberDto memberDto) {
-        String token = memberService.login(memberDto);
+        TokenDto tokenDto = memberService.login(memberDto);
 
         return ResponseEntity.ok().body(new SecureRequestStateDTO(
-            RequestStatus.success,
-            null,
-            token
+            HttpStatus.OK,
+            "로그인에 성공했습니다.",
+            tokenDto
         ));
     }
 }

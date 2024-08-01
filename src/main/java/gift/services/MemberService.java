@@ -5,6 +5,7 @@ import gift.JWTUtil;
 import gift.classes.Exceptions.EmailAlreadyExistsException;
 import gift.domain.Member;
 import gift.dto.MemberDto;
+import gift.dto.TokenDto;
 import gift.repositories.MemberRepository;
 import java.util.NoSuchElementException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,7 +51,7 @@ public class MemberService {
         memberRepository.save(newmember);
     }
 
-    public String login(MemberDto memberDto) {
+    public TokenDto login(MemberDto memberDto) {
 
         // 이메일로 회원 조회
         Member existingMember = memberRepository.findByEmail(memberDto.getEmail());
@@ -63,7 +64,7 @@ public class MemberService {
 
         // JWT 토큰 생성 및 반환
         String token = jwtUtil.createJwt(existingMember.getEmail());
-        return token;
+        return new TokenDto(token);
 
     }
 

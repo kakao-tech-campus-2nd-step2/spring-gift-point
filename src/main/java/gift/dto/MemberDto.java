@@ -15,7 +15,7 @@ public class MemberDto {
         this.id = id;
         this.email = email;
         this.password = password;
-        this.role = role;
+        this.role = Role.ADMIN;
     }
 
     public Long getId() {
