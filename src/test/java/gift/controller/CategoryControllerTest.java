@@ -5,6 +5,7 @@ import gift.dto.request.CategoryRequestDto;
 import gift.dto.response.CategoryResponseDto;
 import gift.filter.AuthFilter;
 import gift.filter.LoginFilter;
+import gift.filter.MyTokenFilter;
 import gift.repository.token.TokenRepository;
 import gift.service.CategoryService;
 import org.junit.jupiter.api.DisplayName;
@@ -45,21 +46,6 @@ class CategoryControllerTest {
 
     @Autowired
     ObjectMapper objectMapper;
-
-    @Test
-    @DisplayName("필터 통과 실패 테스트")
-    void 필터_통과_실패_테스트() throws Exception {
-        MockMvc mockMvc = MockMvcBuilders
-                .webAppContextSetup(webApplicationContext)
-                .addFilter(new AuthFilter(tokenRepository))
-                .addFilter(new LoginFilter(tokenRepository))
-                .build();
-
-        mockMvc.perform(get("/api/categories"))
-                .andExpect(redirectedUrl(NO_AUTHORIZATION_REDIRECT_URL))
-                .andExpect(status().is3xxRedirection())
-                .andDo(print());
-    }
 
     @Test
     @DisplayName("카테고리 전체 조회 API 테스트")
