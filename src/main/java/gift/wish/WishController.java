@@ -37,7 +37,7 @@ public class WishController {
     @GetMapping
     public ResponseEntity<Page<WishResponse>> getWishList(
         @LoginMember LoginMemberDto loginMemberDto,
-        @PageableDefault(size = 10, sort = "createdAt", direction = Direction.ASC) Pageable pageable) {
+        @PageableDefault(size = 10, sort = "createdDate", direction = Direction.ASC) Pageable pageable) {
         return ResponseEntity.ok(wishService.getWishList(loginMemberDto, pageable));
     }
 

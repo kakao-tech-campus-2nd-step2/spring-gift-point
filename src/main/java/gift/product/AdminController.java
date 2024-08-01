@@ -29,7 +29,7 @@ public class AdminController {
     @GetMapping
     public String getAllProducts(Model model,
         @PageableDefault(size = 10, sort = "id", direction = Direction.ASC) Pageable pageable) {
-        Page<ProductResponse> productList = productService.getAllProducts(pageable);
+        Page<ProductResponse> productList = productService.getAllProducts(pageable, null);
         model.addAttribute("productList", productList);
         return "products";
     }

@@ -27,8 +27,10 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
+import org.springframework.test.context.ActiveProfiles;
 
 @ExtendWith(MockitoExtension.class)
+@ActiveProfiles("test")
 public class ProductServiceTest {
 
     @Mock
@@ -53,7 +55,7 @@ public class ProductServiceTest {
         Pageable pageable = PageRequest.of(0, 10, Sort.by(Direction.ASC, "id"));
         given(productRepository.findAll((Pageable) any())).willReturn(Page.empty());
 
-        productService.getAllProducts(pageable);
+        productService.getAllProducts(pageable, null);
 
         then(productRepository).should().findAll(pageable);
     }

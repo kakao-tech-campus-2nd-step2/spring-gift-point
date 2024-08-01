@@ -35,8 +35,9 @@ public class ProductController {
     @Operation(summary = "전체 Product 조회", description = "전체 Product 를 조회합니다.")
     @GetMapping
     public ResponseEntity<Page<ProductResponse>> getAllProducts(
-        @PageableDefault(size = 10, sort = "createdAt", direction = Direction.ASC) Pageable pageable) {
-        return ResponseEntity.ok(productService.getAllProducts(pageable));
+        @PathVariable(value = "categoryId", required = false) Long categoryId,
+        @PageableDefault(size = 10, sort = "createdDate", direction = Direction.ASC) Pageable pageable) {
+        return ResponseEntity.ok(productService.getAllProducts(pageable, categoryId));
     }
 
     @Operation(summary = "특정 Product 조희", description = "id에 해당하는 Product 를 조회합니다.")

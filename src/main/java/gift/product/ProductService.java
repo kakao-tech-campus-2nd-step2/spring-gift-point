@@ -31,8 +31,12 @@ public class ProductService {
     }
 
     @Transactional(readOnly = true)
-    public Page<ProductResponse> getAllProducts(Pageable pageable) {
-        return productRepository.findAll(pageable)
+    public Page<ProductResponse> getAllProducts(Pageable pageable, Long categoryId) {
+        if(categoryId == null) {
+            return productRepository.findAll(pageable)
+                .map(ProductResponse::from);
+        }
+        return productRepository.findAllByCategoryId(pageable, categoryId)
             .map(ProductResponse::from);
     }
 
