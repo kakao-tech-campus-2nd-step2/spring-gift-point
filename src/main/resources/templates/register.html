@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<script src="/js/register.js" defer></script>
+<title>회원가입</title>
+<style>
+  body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    font-family: Arial, sans-serif;
+    background-color: #f0f0f0;
+  }
+  .login-form {
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  }
+  .login-form h2 {
+    margin-bottom: 20px;
+  }
+  .login-form input {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+  }
+  .login-form button {
+    width: 100%;
+    padding: 10px;
+    background-color: #007BFF;
+    border: none;
+    border-radius: 4px;
+    color: white;
+    font-size: 16px;
+  }
+</style>
+</head>
+<body>
+<div class="login-form">
+  <h2>회원가입</h2>
+  <form id="registerForm" action="/members/register" method="post">
+    <label>
+      <input type="text" name="email" placeholder="이메일" required>
+    </label>
+    <label>
+      <input type="password" name="password" placeholder="비밀번호" required>
+    </label>
+    <button type="submit">회원가입</button>
+  </form>
+</div>
+</body>
+</html>

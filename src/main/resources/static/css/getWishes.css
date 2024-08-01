@@ -1,0 +1,120 @@
+.jua-regular {
+  font-family: "Jua", sans-serif;
+  font-weight: 400;
+  font-style: normal;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: "jua", sans-serif;
+  font-size: 20px;
+}
+
+table, th, td {
+  border: 1px solid black;
+  box-shadow: 2px 2px 6px #454545;
+}
+
+th, td {
+  padding: 10px;
+  text-align: left;
+}
+
+th {
+  background-color: #18c1ff2e;
+}
+
+.wishListBox {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.wishListBox h1 {
+  font-family: "jua", sans-serif;
+  font-size: 30px;
+  color: black;
+}
+
+span.message {
+  display: flex;
+}
+
+#userbox {
+  font-family: "Jua", sans-serif;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  padding: 10px;
+  background-color: #d5f4ff;
+  border: 1px solid #000000;
+  border-top-left-radius: 20px;
+  border-top-right-radius: 20px;
+}
+
+#username {
+  margin-right: 10px;
+  font-size: 18px;
+  color: #343a40;
+}
+
+#logoutButton {
+  font-family: "Jua", sans-serif;
+  padding: 5px 10px;
+  font-size: 16px;
+  color: #000000;
+  background-color: #ffbcc2;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+
+#logoutButton:hover {
+  background-color: #ff8490;
+}
+
+#loginLink {
+  font-family: "Jua", sans-serif;
+  padding: 5px 10px;
+  font-size: 16px;
+  color: #007bff;
+  text-decoration: none;
+}
+
+#loginLink:hover {
+  color: #0056b3;
+}
+
+.productListBox a{
+  font-family: "jua", sans-serif;
+  font-size: 30px;
+  color:black;
+  text-decoration: none;
+}
+
+.wishPagination {
+  display: flex;
+  justify-content: center;
+  margin-top: 1px;
+  background: #d5f4ff;
+  padding: 10px;
+  box-shadow: 2px 2px 2px black;
+  border-bottom-left-radius: 20px;
+  border-bottom-right-radius: 20px;
+  border: 1px solid black;
+}
+
+.wishPagination a {
+  display: inline-flex;
+  font-family: "Jua", sans-serif;
+  color: #454545;
+  text-decoration-line: none;
+  font-size: 25px;
+  height: 30px;
+  width: 30px;
+  justify-content: space-around;
+  border-radius: 5px;
+  margin-right: 8px;
+}

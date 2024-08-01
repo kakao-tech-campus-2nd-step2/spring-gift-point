@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>로그인 결과</title>
+</head>
+<body>
+<div id="result" th:data-token="${token}" th:data-success="${success}" th:data-message="${message}">
+  <h2>로그인 결과 처리 중...</h2>
+</div>
+
+<script>
+  window.onload = function() {
+    const resultElement = document.getElementById('result');
+    const success = resultElement.getAttribute('data-success') === 'true';
+    const token = resultElement.getAttribute('data-token');
+    const message = resultElement.getAttribute('data-message');
+
+    if (success) {
+      localStorage.setItem('token', token);
+      window.location.href = '/api/products';
+    } else {
+      alert('로그인 실패: ' + message);
+      window.location.href = '/members/login';
+    }
+  };
+</script>
+</body>
+</html>
