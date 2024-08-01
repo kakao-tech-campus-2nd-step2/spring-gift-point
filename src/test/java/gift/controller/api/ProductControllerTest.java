@@ -207,7 +207,7 @@ class ProductControllerTest {
 
         //When
         mockMvc.perform(RestDocumentationRequestBuilders
-                        .get(URL + "/{id}/options", 1L))
+                        .get(URL + "/{productId}/options", 1L))
                 //Then
                 .andExpectAll(
                         status().isOk(),
@@ -219,7 +219,7 @@ class ProductControllerTest {
                 .andDo(document("product-option-get",
                                 Preprocessors.preprocessResponse(Preprocessors.prettyPrint()),
                                 pathParameters(
-                                        parameterWithName("id").description("옵션을 조회 하고 싶은 상품 ID")
+                                        parameterWithName("productId").description("옵션을 조회 하고 싶은 상품 ID")
                                 ),
                                 responseFields(
                                         fieldWithPath("[]").type(JsonFieldType.ARRAY).description("OptionResponse 객체의 배열"),

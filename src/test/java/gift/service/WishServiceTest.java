@@ -26,8 +26,7 @@ import java.util.Optional;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 @DisplayName("위시리스트 서비스 단위테스트")
@@ -49,10 +48,14 @@ class WishServiceTest {
         Long memberId = 1L;
         Member member = new Member("test@email.com", "password");
         Product product = new Product("name", 1000, "imageUrl", null, List.of(new Option("option1", 100)));
-        Wish wish = new Wish(member, 1, product);
+        //Wish wish = new Wish(member, 1, product);
+        Wish wish = mock(Wish.class);
+
         PageRequest pageable = PageRequest.of(0, 10);
         Page<Wish> wishPage = new PageImpl<>(List.of(wish), pageable, 1);
 
+        when(wish.getId()).thenReturn(1L);
+        when(wish.getProduct()).thenReturn(product);
         when(memberService.getMember(memberId)).thenReturn(member);
         when(wishRepository.findAllByMember(member, pageable)).thenReturn(wishPage);
 
@@ -62,8 +65,8 @@ class WishServiceTest {
         //Then
         assertThat(responsePage.getContent()).hasSize(1);
         assertThat(responsePage.getContent().get(0))
-                .extracting("productName", "productAmount")
-                .containsExactly("name", 1);
+                .extracting("productName","wishId")
+                .containsExactly("name",1L);
     }
 
     @Nested
