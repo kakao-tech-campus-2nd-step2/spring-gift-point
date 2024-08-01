@@ -19,7 +19,7 @@ public class PageController {
             String token = (String) model.getAttribute("token");
             model.addAttribute("token", token);
         }
-        return "index.html";
+        return "adminProduct.html";
     }
     /*
      * 로그인 페이지
