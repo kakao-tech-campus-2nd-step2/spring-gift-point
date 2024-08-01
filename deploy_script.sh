@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # 설정 변수
-BUILD_DIR="/home/ubuntu/backend" # 프로젝트의 backend 폴더
+BUILD_DIR="/home/ubuntu/spring-gift-point" # 프로젝트의 backend 폴더
 BUILD_OUTPUT_DIR="$BUILD_DIR/build/libs" # 빌드 출력 디렉토리
 DEPLOY_DIR="/home/ubuntu"
 JAR_NAME="app.jar" # 빌드된 JAR 파일명
