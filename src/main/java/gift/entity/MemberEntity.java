@@ -23,7 +23,7 @@ public class MemberEntity {
     @Column(nullable = false)
     private LoginType loginType;
 
-    private KakaoToken kakaoToken;
+    private String kakaoToken;
 
     public MemberEntity() {
 
@@ -35,7 +35,7 @@ public class MemberEntity {
         this.loginType = loginType;
     }
 
-    public MemberEntity(String email, String password, LoginType loginType, KakaoToken kakaoToken) {
+    public MemberEntity(String email, String password, LoginType loginType, String kakaoToken) {
         this.email = email;
         this.password = password;
         this.loginType = loginType;
@@ -58,7 +58,7 @@ public class MemberEntity {
         return loginType;
     }
 
-    public KakaoToken getKakaoToken() {
+    public String getKakaoToken() {
         return kakaoToken;
     }
 

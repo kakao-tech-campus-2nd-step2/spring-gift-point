@@ -80,7 +80,7 @@ public class KakaoService {
     public Token login(String code) {
         KakaoToken kakaoToken = getToken(code);
         KakaoProfile profile = getUserProfile(kakaoToken.access_token());
-        return memberService.kakaoLogin(profile.id(), kakaoToken);
+        return memberService.kakaoLogin(profile.id(), kakaoToken.access_token());
     }
 
     public void sendOrderMessage(Long memberId, OrderResponse response) throws JsonProcessingException {
