@@ -139,11 +139,9 @@ public class ProductService {
 
     public Page<ProductDTO> findProductsByCategory(Long categoryId, Pageable pageable) {
         Page<Product> productsPage = productRepository.findByCategoryId(categoryId, pageable);
-        List<ProductDTO> productsDTO = productsPage.stream()
-            .map(ProductDTO::from)
-            .collect(Collectors.toList());
-        return new PageImpl<>(productsDTO, pageable, productsPage.getTotalElements());
+        return productsPage.map(ProductDTO::from);
     }
+
 
     @Transactional
     public ProductDTO updateProductCategory(Long productId, CategoryName categoryName) {
