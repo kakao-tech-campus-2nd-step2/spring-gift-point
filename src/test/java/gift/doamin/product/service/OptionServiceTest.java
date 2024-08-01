@@ -8,7 +8,7 @@ import static org.mockito.BDDMockito.then;
 import static org.mockito.Mockito.mock;
 
 import gift.doamin.category.entity.Category;
-import gift.doamin.product.dto.OptionForm;
+import gift.doamin.product.dto.OptionRequest;
 import gift.doamin.product.entity.Option;
 import gift.doamin.product.entity.Product;
 import gift.doamin.product.exception.ProductNotFoundException;
@@ -149,7 +149,7 @@ class OptionServiceTest {
         return new Option("option", quantity);
     }
 
-    OptionForm createOptionFrom() {
-        return new OptionForm("option", 1);
+    OptionRequest createOptionFrom() {
+        return new OptionRequest("option", 1);
     }
 }

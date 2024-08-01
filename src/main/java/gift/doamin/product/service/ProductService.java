@@ -3,7 +3,7 @@ package gift.doamin.product.service;
 import gift.doamin.category.entity.Category;
 import gift.doamin.category.exception.CategoryNotFoundException;
 import gift.doamin.category.repository.JpaCategoryRepository;
-import gift.doamin.product.dto.OptionForm;
+import gift.doamin.product.dto.OptionRequest;
 import gift.doamin.product.dto.ProductCreateRequest;
 import gift.doamin.product.dto.ProductResponse;
 import gift.doamin.product.dto.ProductUpdateRequest;
@@ -15,8 +15,6 @@ import gift.doamin.product.repository.JpaProductRepository;
 import gift.doamin.user.entity.User;
 import gift.doamin.user.exception.UserNotFoundException;
 import gift.doamin.user.repository.JpaUserRepository;
-import java.util.List;
-import java.util.Optional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -54,7 +52,7 @@ public class ProductService {
             productCreateRequest.getPrice(), productCreateRequest.getImageUrl());
 
         Options options = new Options(productCreateRequest.getOptions().stream()
-            .map(OptionForm::toEntity)
+            .map(OptionRequest::toEntity)
             .toList());
         options.toList().forEach(product::addOption);
 

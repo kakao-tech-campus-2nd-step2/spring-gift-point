@@ -1,6 +1,7 @@
 package gift.doamin.product.controller;
 
-import gift.doamin.product.dto.OptionForm;
+import gift.doamin.product.dto.OptionRequest;
+import gift.doamin.product.dto.OptionResponse;
 import gift.doamin.product.service.OptionService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -29,15 +30,16 @@ public class OptionsController {
     @Operation(summary = "옵션 추가", description = "선택한 상품에 새로운 옵션을 추가합니다.")
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public void addOption(@PathVariable Long productId, @Valid @RequestBody OptionForm optionForm) {
-        optionService.create(productId, optionForm);
+    public OptionResponse addOption(@PathVariable Long productId,
+        @Valid @RequestBody OptionRequest optionRequest) {
+        return optionService.create(productId, optionRequest);
     }
 
     @Operation(summary = "옵션 수정", description = "선택한 옵션의 이름이나 수량을 수정합니다.")
     @PutMapping("/{optionId}")
-    public void updateOption(@PathVariable Long productId, @PathVariable Long optionId,
-        @Valid @RequestBody OptionForm optionForm) {
-        optionService.update(productId, optionId, optionForm);
+    public OptionResponse updateOption(@PathVariable Long productId, @PathVariable Long optionId,
+        @Valid @RequestBody OptionRequest optionRequest) {
+        return optionService.update(productId, optionId, optionRequest);
     }
 
     @Operation(summary = "옵션 삭제", description = "선택한 옵션을 삭제합니다.")

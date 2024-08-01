@@ -1,6 +1,7 @@
 package gift.doamin.product.service;
 
-import gift.doamin.product.dto.OptionForm;
+import gift.doamin.product.dto.OptionRequest;
+import gift.doamin.product.dto.OptionResponse;
 import gift.doamin.product.entity.Option;
 import gift.doamin.product.entity.Product;
 import gift.doamin.product.exception.ProductNotFoundException;
@@ -24,27 +25,30 @@ public class OptionService {
     }
 
     @PreAuthorize("hasRole('ROLE_ADMIN') or @productService.isOwner(authentication.getName(), #productId)")
-    public void create(Long productId, OptionForm optionForm) {
+    public OptionResponse create(Long productId, OptionRequest optionRequest) {
         Product product = productRepository.findById(productId)
             .orElseThrow(ProductNotFoundException::new);
 
-        validateDuplicatedName(productId, optionForm);
+        validateDuplicatedName(productId, optionRequest);
 
-        optionRepository.save(new Option(product, optionForm.getName(), optionForm.getQuantity()));
+        Option option = optionRepository.save(
+            new Option(product, optionRequest.getName(), optionRequest.getQuantity()));
+        return new OptionResponse(option);
     }
 
+    @Transactional
     @PreAuthorize("hasRole('ROLE_ADMIN') or @productService.isOwner(authentication.getName(), #productId)")
-    public void update(Long productId, Long optionId, OptionForm optionForm) {
+    public OptionResponse update(Long productId, Long optionId, OptionRequest optionRequest) {
         Product product = productRepository.findById(productId)
             .orElseThrow(ProductNotFoundException::new);
 
         Option option = optionRepository.findById(optionId)
             .orElseThrow(() -> new NoSuchElementException("해당 옵션이 존재하지 않습니다."));
 
-        validateDuplicatedName(productId, optionForm);
+        validateDuplicatedName(productId, optionRequest);
 
-        option.update(optionForm);
-        optionRepository.save(option);
+        option.update(optionRequest);
+        return new OptionResponse(option);
     }
 
     @PreAuthorize("hasRole('ROLE_ADMIN') or @productService.isOwner(authentication.getName(), #productId)")
@@ -61,8 +65,8 @@ public class OptionService {
         option.subtract(quantity);
     }
 
-    private void validateDuplicatedName(Long productId, OptionForm optionForm) {
-        if (optionRepository.existsByProductIdAndName(productId, optionForm.getName())) {
+    private void validateDuplicatedName(Long productId, OptionRequest optionRequest) {
+        if (optionRepository.existsByProductIdAndName(productId, optionRequest.getName())) {
             throw new IllegalArgumentException("옵션 이름은 중복될 수 없습니다.");
         }
     }

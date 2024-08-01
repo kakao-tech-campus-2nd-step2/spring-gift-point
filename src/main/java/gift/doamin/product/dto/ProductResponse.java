@@ -36,8 +36,9 @@ public class ProductResponse {
         this.price = product.getPrice();
         this.imageUrl = product.getImageUrl();
         this.options = product.getOptions().stream()
-            .map(option -> new OptionResponse(option.getId(), option.getName(), option.getQuantity()))
+            .map(OptionResponse::new)
             .toList();
+
     }
 
     public Long getId() {

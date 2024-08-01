@@ -31,10 +31,10 @@ public class ProductCreateRequest {
     @Schema(description = "상품의 옵션 목록")
     @NotEmpty
     @Valid
-    private List<OptionForm> options;
+    private List<OptionRequest> options;
 
     public ProductCreateRequest(Long category_id, String name, Integer price, String imageUrl,
-        List<OptionForm> options) {
+        List<OptionRequest> options) {
         this.category_id = category_id;
         this.name = name;
         this.price = price;
@@ -58,7 +58,7 @@ public class ProductCreateRequest {
         return imageUrl;
     }
 
-    public List<OptionForm> getOptions() {
+    public List<OptionRequest> getOptions() {
         return options;
     }
 }
