@@ -1,6 +1,5 @@
 package gift.service;
 
-import gift.config.KakaoProperties;
 import java.net.URI;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
@@ -14,21 +13,18 @@ import org.springframework.web.client.RestTemplate;
 @Service
 public class KakaoMessageService {
 
-    private final KakaoProperties kakaoProperties;
     private final RestTemplate restTemplate;
 
-    public KakaoMessageService(KakaoProperties kakaoProperties, RestTemplate restTemplate) {
-        this.kakaoProperties = kakaoProperties;
+    public KakaoMessageService(RestTemplate restTemplate) {
         this.restTemplate = restTemplate;
     }
 
     public void sendOrderMessage(String message, String imageUrl, String productName,
-        Integer quantity,
-        Integer totalPrice) {
+        Integer quantity, Integer totalPrice, String accessToken) {
         String url = "https://kapi.kakao.com/v2/api/talk/memo/default/send";
         HttpHeaders headers = new HttpHeaders();
         headers.add(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_FORM_URLENCODED_VALUE);
-        headers.setBearerAuth(kakaoProperties.getAccessToken());
+        headers.setBearerAuth(accessToken);
 
         String templateObject = createTemplateObject(message, imageUrl, productName, quantity,
             totalPrice);

@@ -4,6 +4,7 @@ import gift.entity.User;
 import gift.exception.EmailAlreadyExistsException;
 import gift.exception.UserAuthException;
 import gift.repository.UserRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -54,5 +55,12 @@ public class UserService {
 
     public Integer getUserPoint(User user) {
         return user.getPoint();
+    }
+
+    @Transactional
+    public void setAccessToken(String accessToken, String email) {
+        User user = userRepository.findByEmail(email)
+            .orElseThrow(() -> new UserAuthException("유저가 가입되지 않았습니다."));
+        user.setAccessToken(accessToken);
     }
 }

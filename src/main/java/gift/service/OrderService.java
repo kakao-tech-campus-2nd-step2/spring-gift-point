@@ -1,6 +1,5 @@
 package gift.service;
 
-import gift.config.KakaoProperties;
 import gift.dto.OrderDetailResponse;
 import gift.dto.OrderRequest;
 import gift.dto.OrderResponse;
@@ -24,15 +23,12 @@ public class OrderService {
     private final OrderRepository orderRepository;
     private final OptionRepository optionRepository;
     private final KakaoMessageService kakaoMessageService;
-    private final KakaoProperties kakaoProperties;
 
     public OrderService(OrderRepository orderRepository, OptionRepository optionRepository,
-        KakaoMessageService kakaoMessageService,
-        KakaoProperties kakaoProperties) {
+        KakaoMessageService kakaoMessageService) {
         this.orderRepository = orderRepository;
         this.optionRepository = optionRepository;
         this.kakaoMessageService = kakaoMessageService;
-        this.kakaoProperties = kakaoProperties;
     }
 
     @Transactional
@@ -49,10 +45,10 @@ public class OrderService {
         option.subtractQuantity(request.getQuantity());
         user.deleteWish(product);
 
-        if (kakaoProperties.isKakaoLoginCompleted()) { //kakaologin이 수행되지 않으면 accessToken이 지정되지 않아 메시지를 보내지 않음
+        if (user.isKakaoLoginCompleted()) { //kakaologin이 수행되지 않으면 accessToken이 지정되지 않아 메시지를 보내지 않음
             kakaoMessageService.sendOrderMessage(request.getMessage(), product.getImageUrl(),
-                product.getName(),
-                request.getQuantity(), request.getTotalPrice(product));
+                product.getName(), request.getQuantity(), request.getTotalPrice(product),
+                user.getAccessToken());
         }
 
         return new OrderResponse(order.getId(), option.getId(), request.getQuantity(),

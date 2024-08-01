@@ -28,15 +28,19 @@ public class User {
     private List<Wish> wishes = new ArrayList<>();
     @NotNull
     private Integer point;
+    @NotNull
+    private String accessToken;
 
-    public User() {
+    protected User() {
         this.point = 0;
+        this.accessToken = "demoToken";
     }
 
     public User(String email, String password) {
         this.email = email;
         this.password = password;
         this.point = 0;
+        this.accessToken = "demoToken";
     }
 
     public Long getId() {
@@ -70,5 +74,17 @@ public class User {
 
     public Integer getPoint() {
         return point;
+    }
+
+    public String getAccessToken() {
+        return accessToken;
+    }
+
+    public void setAccessToken(String accessToken) {
+        this.accessToken = accessToken;
+    }
+
+    public boolean isKakaoLoginCompleted() {
+        return !this.accessToken.equals("demoToken");
     }
 }

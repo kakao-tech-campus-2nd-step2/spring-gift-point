@@ -50,15 +50,15 @@ public class KakaoUserController {
         responses = @ApiResponse(responseCode = "200", description = "카카오 로그인 성공", content = @Content(mediaType = "application/json", schema = @Schema(implementation = KakaoTokenResponse.class))))
     public ResponseEntity<Void> kakaoCallback(@RequestParam String code) {
         KakaoTokenResponse response = kakaoUserService.getAccessToken(code);
+        String userEmail = kakaoUserService.getUserInfo(
+            response.accessToken()).kakaoAccount().email();
 
-        kakaoProperties.setAccessToken(response.accessToken());
-
-        KakaoUserResponse userResponse = kakaoUserService.getUserInfo(
-            kakaoProperties.getAccessToken());
-        userService.kakaoUserRegister(userResponse.kakaoAccount().email(),
+        userService.kakaoUserRegister(userEmail,
             kakaoProperties.getDefaultPassword());
 
-        String jwtToken = tokenService.generateToken(userResponse.kakaoAccount().email());
+        userService.setAccessToken(response.accessToken(), userEmail);
+
+        String jwtToken = tokenService.generateToken(userEmail);
         HttpHeaders headers = new HttpHeaders();
         headers.setLocation(
             URI.create(kakaoProperties.getFrontRedirectUri() + "?tokenValue=" + jwtToken));
