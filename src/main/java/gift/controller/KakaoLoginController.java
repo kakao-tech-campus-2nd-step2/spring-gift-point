@@ -25,9 +25,9 @@ public class KakaoLoginController {
      * 카카오 로그인 페이지로 연결
      */
     @GetMapping("/kakaoLogin")
-    public String OauthLogin(@RequestParam String code) throws JsonProcessingException {
+    public RedirectView OauthLogin(@RequestParam String code) throws JsonProcessingException {
         Token token = kakaoService.getKakaoToken(code);
-        return "redirect:" + url + "?" + "token=" + token.getToken();
+        return new RedirectView(url + "?" + "token=" + token.getToken());
     }
     /*
      * 카카오 로그인
