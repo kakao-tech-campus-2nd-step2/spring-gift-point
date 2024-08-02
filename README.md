@@ -46,3 +46,7 @@ https://impossible-repair-22e.notion.site/57ec013f9424421eb2317b11a2b9a29c?v=f3f
   - [ ] 배포 및 연동 문서 작성하기
     - [ ] 배포 프로세스 문서 작성
     - [ ] API 연동 방법에 대한 문서 작성
+
+# 3단계
+- [ ] member entity에 point 추가
+- [ ] 특정 회원의 point 조회
