@@ -7,6 +7,7 @@ import gift.exception.customException.CustomException;
 import gift.exception.customException.PassWordMissMatchException;
 import gift.model.dto.UserDTO;
 import gift.model.form.UserForm;
+import gift.model.response.TokenResponse;
 import gift.oauth.KakaoOAuthService;
 import gift.service.JwtProvider;
 import gift.service.UserService;
@@ -53,7 +54,7 @@ public class AuthController {
         Long kakaoId = kakaoOAuthService.getKakaoId(token.accessToken());
         UserDTO userDTO = userService.findByKakaoId(kakaoId, token);
         String newToken = jwtProvider.generateToken(userDTO);
-        return ResponseEntity.ok(newToken);
+        return ResponseEntity.ok(new TokenResponse(newToken));
     }
 
     @Operation(summary = "로그인", responses = @ApiResponse(responseCode = "200", description = "로그인 성공시 토큰 반환"))
@@ -61,8 +62,9 @@ public class AuthController {
     public ResponseEntity<?> handleLoginRequest(@Valid @RequestBody UserForm userForm,
         BindingResult result) throws MethodArgumentNotValidException {
         checkLoginUser(userForm, result);
-        return ResponseEntity.ok(
+        TokenResponse tokenResponse = new TokenResponse(
             jwtProvider.generateToken(userService.findByEmail(userForm.getEmail())));
+        return ResponseEntity.ok(tokenResponse);
     }
 
     @Operation(summary = "회원가입")
@@ -76,9 +78,10 @@ public class AuthController {
             result.rejectValue("email", "", ErrorCode.DUPLICATE_EMAIL.getMessage());
             throw new CustomDuplicateException(ErrorCode.DUPLICATE_EMAIL);
         }
-        Long id = userService.insertUser(userForm);
-        return ResponseEntity.ok(
+        userService.insertUser(userForm);
+        TokenResponse tokenResponse = new TokenResponse(
             jwtProvider.generateToken(userService.findByEmail(userForm.getEmail())));
+        return ResponseEntity.ok(tokenResponse);
     }
 
     @Operation(hidden = true)
