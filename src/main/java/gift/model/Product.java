@@ -35,8 +35,8 @@ public class Product {
     @JsonProperty("name")
     private String name;
 
-    @Column(name = "image_url", nullable = false)
-    @JsonProperty("image_url")
+    @Column(name = "imageUrl", nullable = false)
+    @JsonProperty("imageUrl")
     private String imageUrl;
 
     @ManyToOne

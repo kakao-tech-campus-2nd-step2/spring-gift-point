@@ -57,12 +57,25 @@ public class ProductController {
         Page<Product> productPage = productService.getProductsByCategoryId(pageable, category_id);
         ProductPage productPage1 = new ProductPage();
         productPage1.setContent(productPage.getContent());
-        productPage1.setTotalPage(productPage.getTotalPages());
+        productPage1.setTotal_page(productPage.getTotalPages());
 
         Map<String, Object> dataWrapper = new HashMap<>();
 
         dataWrapper.put("data", productPage1);
         return ResponseEntity.status(HttpStatus.OK).body(dataWrapper);
+    }
+
+    @GetMapping("/list")
+    @ResponseBody
+    public String getAllProducts(@RequestParam(defaultValue = "0") int page,
+        @RequestParam(defaultValue = "5") int size, Model model) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<Product> productPage = productService.getAllProducts(pageable);
+        List<Category> categories = categoryService.getAllCategories();
+        model.addAttribute("productPage", productPage);
+        model.addAttribute("product", new Product());
+        model.addAttribute("categories", categories);
+        return "product-list";
     }
 
     @PostMapping
@@ -95,9 +108,9 @@ public class ProductController {
         productService.deleteProduct(id);
         return "redirect:/products";
     }
-/*
+
     @GetMapping("/view/{id}")
-    @ApiOperation(value = "Get product details", notes = "Retrieve the details of a specific product by ID")
+    @ResponseBody
     public String getProductDetails(@ApiParam(value = "Product ID", required = true) @PathVariable("id") Long id, Model model,
         RedirectAttributes redirectAttributes) {
         Optional<Product> product = productService.getProductById(id);
@@ -111,7 +124,7 @@ public class ProductController {
             return "redirect:/products";
         }
     }
-*/
+
     @GetMapping("/{product_id}")
     public ResponseEntity<?> getProductById(@PathVariable("product_id") Long id) {
         Optional<Product> product = productService.getProductById(id);
