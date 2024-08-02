@@ -39,6 +39,8 @@ public class OrderService {
             throw new IllegalArgumentException("Insufficient product quantity.");
         }
 
+        //email로 user객체알고, 거기서 id알아냄. -> point객체에서 userId로 포인트 수량 알아내고, product가격만큼 포인트 제외시킴(빠진 포인트값 기억)
+
         LocalDateTime now = LocalDateTime.now();
         OrderRequest order = new OrderRequest(
             orderDTO.getOptionId(),
@@ -49,6 +51,7 @@ public class OrderService {
         orderRepository.save(order);
         orderDTO.setOrderId(order.getOrderId());
         orderDTO.setOrderDateTime(now);
+        //여기에 orderDTO 메시지 정해서 얼마 할인됐는지 추가(포인트값)
 
         // 카카오톡 메시지 전송
         String token = authorization.replace("Bearer ", "");
