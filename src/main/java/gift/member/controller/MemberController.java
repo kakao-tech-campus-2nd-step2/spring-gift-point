@@ -71,8 +71,8 @@ public class MemberController {
         }
 
         String memberEmail = jwtUtil.extractEmail(token);
-        Long point = memberService.getPoint(memberEmail);
+        Long points = memberService.getPoint(memberEmail);
 
-        return ResponseEntity.ok(new CommonResponse<>(new PointResponse(point), "포인트 조회 성공", true));
+        return ResponseEntity.ok(new CommonResponse<>(new PointResponse(points), "포인트 조회 성공", true));
     }
 }

@@ -9,6 +9,7 @@ public class OrderRequest {
     @Max(value = 99999999, message = "Quantity는 최대 1억 미만 개까지 가능합니다.")
     Long quantity;
     String message;
+    Long points;
 
     // Constructors
     public OrderRequest() {
@@ -42,5 +43,13 @@ public class OrderRequest {
 
     public void setMessage(String message) {
         this.message = message;
+    }
+
+    public Long getPoints() {
+        return points;
+    }
+
+    public void setPoints(Long points) {
+        this.points = points;
     }
 }

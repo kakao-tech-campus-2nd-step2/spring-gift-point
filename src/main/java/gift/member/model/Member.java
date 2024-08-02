@@ -25,12 +25,20 @@ public class Member {
     @Column(nullable = false)
     private String password;
 
-    private Long point;
+    private Long points;
 
     @OneToMany(mappedBy = "member", cascade = CascadeType.REMOVE, orphanRemoval = true)
     private List<Wish> wishList = new ArrayList<>();
 
     // 활용 메서드들
+    public void addPoints(Long points) {
+        this.points += points;
+    }
+
+    public void subtractPoints(Long points) {
+        this.points -= points;
+    }
+
     public void addWish(Wish wish) {
         this.wishList.add(wish);
         wish.setMember(this);
@@ -60,10 +68,10 @@ public class Member {
         this.password = password;
     }
 
-    public Member(String email, String password, Long point) {
+    public Member(String email, String password, Long points) {
         this.email = email;
         this.password = password;
-        this.point = point;
+        this.points = points;
     }
 
     // Getters and setters
@@ -99,11 +107,11 @@ public class Member {
         this.wishList = wishList;
     }
 
-    public Long getPoint() {
-        return point;
+    public Long getPoints() {
+        return points;
     }
 
-    public void setPoint(Long point) {
-        this.point = point;
+    public void setPoints(Long points) {
+        this.points = points;
     }
 }

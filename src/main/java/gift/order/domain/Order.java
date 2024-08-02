@@ -15,7 +15,20 @@ public class Order {
     Long quantity;
     LocalDateTime orderDateTime;
     String message;
+    Long pointsUsed;
+    Long pointsReceived;
+    Long payment;
 
+    // Constructors
+    public Order(Long optionId, Long quantity, LocalDateTime orderDateTime, String requestMessage, Long pointsUsed, Long pointsReceived, Long payment) {
+        this.optionId = optionId;
+        this.quantity = quantity;
+        this.orderDateTime = orderDateTime;
+        this.message = requestMessage;
+        this.pointsUsed = pointsUsed;
+        this.pointsReceived = pointsReceived;
+        this.payment = payment;
+    }
     public Order(Long optionId, Long quantity, LocalDateTime orderDateTime, String requestMessage) {
         this.optionId = optionId;
         this.quantity = quantity;
@@ -67,5 +80,29 @@ public class Order {
 
     public void setMessage(String message) {
         this.message = message;
+    }
+
+    public Long getPointsUsed() {
+        return pointsUsed;
+    }
+
+    public void setPointsUsed(Long pointsUsed) {
+        this.pointsUsed = pointsUsed;
+    }
+
+    public Long getPointsReceived() {
+        return pointsReceived;
+    }
+
+    public void setPointsReceived(Long pointsReceived) {
+        this.pointsReceived = pointsReceived;
+    }
+
+    public Long getPayment() {
+        return payment;
+    }
+
+    public void setPayment(Long payment) {
+        this.payment = payment;
     }
 }

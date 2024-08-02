@@ -27,10 +27,12 @@ import java.util.Optional;
 public class ProductService {
     private final ProductRepository productRepository;
     private final CategoryRepository categoryRepository;
+    private final OptionJpaRepository optionJpaRepository;
 
-    public ProductService(ProductRepository productRepository, CategoryRepository categoryRepository) {
+    public ProductService(ProductRepository productRepository, CategoryRepository categoryRepository, OptionJpaRepository optionJpaRepository) {
         this.productRepository = productRepository;
         this.categoryRepository = categoryRepository;
+        this.optionJpaRepository = optionJpaRepository;
     }
 
     public List<Product> getAllProducts() {
@@ -168,5 +170,14 @@ public class ProductService {
         return productPage.map(product ->
                 new ProductResponse(product.getId(), product.getName(), product.getPrice(), product.getImageUrl(), product.getCategory().getId())
         );
+    }
+
+    // OptionId로 Product 조회
+    @Transactional(readOnly = true)
+    public Product getProductByOptionId(Long optionId) {
+        Option option = optionJpaRepository.findById(optionId)
+                .orElseThrow(() -> new IllegalArgumentException("Option with id " + optionId + " not found"));
+
+        return option.getProduct();
     }
 }

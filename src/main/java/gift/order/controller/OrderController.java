@@ -37,14 +37,13 @@ public class OrderController {
     {
         // 토큰 추출
         String token = authorizationHeader.startsWith("Bearer ") ? authorizationHeader.substring(7) : null;
-
         if (token == null || !jwtUtil.isTokenValid(token)) {
             // 401 Unauthorized
             return ResponseEntity.status(401).body(new CommonResponse<>(null, "Invalid or missing token", false));
         }
 
         // 1. 주문 요청 및 주문 내역 저장
-        OrderResponse orderResponse = orderService.requestOrder(orderRequest);
+        OrderResponse orderResponse = orderService.requestOrder(token, orderRequest);
 
         // 2. 주문 내역 카카오톡 메시지를 통해 나에게 보내기
         //kakaoService.sendKakaoMessage(orderResponse, accessToken);

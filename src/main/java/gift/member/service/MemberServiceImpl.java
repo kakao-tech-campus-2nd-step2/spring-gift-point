@@ -66,6 +66,6 @@ public class MemberServiceImpl implements MemberService {
                 () -> new IllegalArgumentException("No such member: ")
         );
 
-        return member.getPoint();
+        return member.getPoints();
     }
 }

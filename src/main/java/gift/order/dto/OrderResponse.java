@@ -7,6 +7,9 @@ public class OrderResponse {
     Long optionId;
     Long quantity;
     LocalDateTime orderDateTime;
+    Long pointsUsed;
+    Long pointsReceived;
+    Long payment;
     String message;
 
     // 활용 메서드들
@@ -17,20 +20,34 @@ public class OrderResponse {
                 ", optionId=" + optionId +
                 ", 수량 =" + quantity +
                 ", 주문 시간 =" + orderDateTime +
-                ", 메시지 ='" + message;
+                ", 메시지 ='" + message +
+                ", 사용한 포인트 =" + pointsUsed +
+                ", 받은 포인트 =" + pointsReceived +
+                ", 결제 금액 =" + payment;
     }
 
     // Constructors
-    public OrderResponse(Long id, Long optionId, Long quantity, LocalDateTime orderDateTime, String message) {
+    public OrderResponse(
+            Long id,
+            Long optionId,
+            Long quantity,
+            LocalDateTime orderDateTime,
+            String message,
+            Long pointsUsed,
+            Long pointsReceived,
+            Long payment
+    ) {
         this.id = id;
         this.optionId = optionId;
         this.quantity = quantity;
         this.orderDateTime = orderDateTime;
         this.message = message;
+        this.pointsUsed = pointsUsed;
+        this.pointsReceived = pointsReceived;
+        this.payment = payment;
     }
 
     // Getters and setters
-
     public Long getId() {
         return id;
     }
@@ -69,5 +86,29 @@ public class OrderResponse {
 
     public void setMessage(String message) {
         this.message = message;
+    }
+
+    public Long getPointsUsed() {
+        return pointsUsed;
+    }
+
+    public void setPointsUsed(Long pointsUsed) {
+        this.pointsUsed = pointsUsed;
+    }
+
+    public Long getPointsReceived() {
+        return pointsReceived;
+    }
+
+    public void setPointsReceived(Long pointsReceived) {
+        this.pointsReceived = pointsReceived;
+    }
+
+    public Long getPayment() {
+        return payment;
+    }
+
+    public void setPayment(Long payment) {
+        this.payment = payment;
     }
 }
