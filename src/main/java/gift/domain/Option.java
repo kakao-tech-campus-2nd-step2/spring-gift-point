@@ -41,16 +41,17 @@ public class Option {
 
     }
 
-    public Option(Long id, String name, int quantity, Product product) {
+    public Option(Long id, String name, int quantity, Product product, Long version) {
         this.id = id;
         this.name = name;
         this.quantity = quantity;
         this.product = product;
         product.getOptions().add(this);
+        this.version = version;
     }
 
     public Option(String name, int quantity, Product product) {
-        this(null, name, quantity, product);
+        this(null, name, quantity, product, null);
     }
 
     public void subtract(int quantity) {
@@ -58,6 +59,11 @@ public class Option {
             throw new InsufficientQuantityException(this.quantity);
         }
         this.quantity -= quantity;
+    }
+
+    public void update(String name, int quantity) {
+        this.name = name;
+        this.quantity = quantity;
     }
 
     public OptionDTO toDTO() {
@@ -75,4 +81,5 @@ public class Option {
     public Product getProduct() {
         return product;
     }
+
 }

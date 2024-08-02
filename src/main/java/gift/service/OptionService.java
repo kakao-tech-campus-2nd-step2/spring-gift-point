@@ -41,10 +41,10 @@ public class OptionService {
     public OptionDTO updateOption(long productId, OptionDTO optionDTO) {
         Product product = productRepository.findById(productId)
             .orElseThrow(NoSuchProductException::new);
-        optionRepository.findByProductAndId(product, optionDTO.id())
+        Option option = optionRepository.findByProductAndId(product, optionDTO.id())
             .orElseThrow(NoSuchOptionException::new);
-        Option updatedOption = new Option(optionDTO.id(), optionDTO.name(), optionDTO.quantity(), product);
-        return optionRepository.save(updatedOption).toDTO();
+        option.update(optionDTO.name(), optionDTO.quantity());
+        return optionRepository.save(option).toDTO();
     }
 
     public OptionDTO deleteOption(long productId, long id) {
