@@ -29,7 +29,8 @@ public class KakaoRequest {
                     new ItemContent(
                             DEFAULT_PROFILE_TEXT,
                             orders.productName(),
-                            orders.productName(),
+                            orders.productImageUrl(),
+                            orders.optionName(),
                             new Item[]{
                                     new Item(
                                             DEFAULT_ITEM_TEXT,
@@ -62,6 +63,7 @@ public class KakaoRequest {
     record ItemContent(
             String profileText,
             String titleImageText,
+            String titleImageUrl,
             String titleImageCategory,
             Item[] items,
             String sum,
