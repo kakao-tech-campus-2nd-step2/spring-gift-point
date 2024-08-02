@@ -26,7 +26,6 @@ public class OrderService {
     private final OptionRepository optionRepository;
     private final WishRepository wishRepository;
     private final MemberRepository memberRepository;
-
     private final KakaoService kakaoService;
 
     public OrderService(OrderRepository orderRepository,
@@ -46,12 +45,17 @@ public class OrderService {
         Option findOption = optionRepository.findOptionByIdForUpdate(orderRequestDto.optionId())
                 .orElseThrow(() -> new EntityNotFoundException(OPTION_NOT_FOUND));
 
-        Member findMember = memberRepository.findMemberByEmail(token.getEmail())
+        Member findMember = memberRepository.findMemberByEmailForUpdate(token.getEmail())
                 .orElseThrow(() -> new EntityNotFoundException(MEMBER_NOT_FOUND));
+
+        int totalPrice = findOption.getTotalPrice(orderRequestDto);
+
+        findMember.minusPoint(orderRequestDto.point());
 
         findOption.updateQuantity(orderRequestDto.quantity());
 
         Optional<Wish> findWish = wishRepository.findWishByProductIdAndMemberEmail(findOption.getProduct().getId(), token.getEmail());
+
         findWish.ifPresent(wishRepository::delete);
 
         Order order = new Order.Builder()
@@ -59,6 +63,7 @@ public class OrderService {
                 .member(findMember)
                 .quantity(orderRequestDto.quantity())
                 .message(orderRequestDto.message())
+                .point(orderRequestDto.point())
                 .build();
 
         Order savedOrder = orderRepository.save(order);
@@ -68,6 +73,10 @@ public class OrderService {
         if (token.getAccessToken() != null) {
             kakaoService.sendKakaoMessage(token.getAccessToken(), orderResponseDto);
         }
+
+        int savePoint = (int) (totalPrice * (0.01));
+
+        findMember.addPoint(savePoint);
 
         return orderResponseDto;
     }
