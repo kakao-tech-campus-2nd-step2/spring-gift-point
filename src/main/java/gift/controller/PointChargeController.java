@@ -1,9 +1,9 @@
 package gift.controller;
 
+import gift.domain.PointCharge;
 import gift.domain.PointCharge.CreatePointCharge;
 import gift.domain.PointCharge.PointChargeDetail;
 import gift.domain.PointCharge.PointChargeSimple;
-import gift.domain.User;
 import gift.service.PointChargeService;
 import gift.util.page.PageMapper;
 import gift.util.page.PageResult;
@@ -36,7 +36,7 @@ public class PointChargeController {
     @Operation(summary = "포인트 충전 내역 리스트 조회")
     @GetMapping
     public PageResult<PointChargeSimple> getPointChargeList(HttpServletRequest req,
-        @Valid User.getList param) {
+        @Valid PointCharge.getList param) {
         return PageMapper.toPageResult(pointChargeService.getPointChargeList(req, param));
     }
 

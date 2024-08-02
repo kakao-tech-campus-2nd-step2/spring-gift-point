@@ -3,7 +3,7 @@ package gift.service;
 import gift.domain.PointCharge.CreatePointCharge;
 import gift.domain.PointCharge.PointChargeDetail;
 import gift.domain.PointCharge.PointChargeSimple;
-import gift.domain.User.getList;
+import gift.domain.PointCharge.getList;
 import gift.entity.PointChargeEntity;
 import gift.entity.UserEntity;
 import gift.mapper.PointChargeMapper;
