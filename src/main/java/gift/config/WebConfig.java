@@ -25,45 +25,51 @@ public class WebConfig implements WebMvcConfigurer {
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/api/products/**")
-            .allowedOrigins("*")
+            .allowedOriginPatterns("*")
             .allowedMethods("GET", "POST", "PUT", "DELETE")
             .allowedHeaders("Content-Type", "Authorization")
             .exposedHeaders("Authorization", "Location")
-            .maxAge(1800);
+            .maxAge(1800)
+            .allowCredentials(true);
 
         registry.addMapping("/api/categories/**")
-            .allowedOrigins("*")
+            .allowedOriginPatterns("*")
             .allowedMethods("GET", "POST", "PUT", "DELETE")
             .allowedHeaders("Content-Type", "Authorization")
             .exposedHeaders("Authorization", "Location")
-            .maxAge(1800);
+            .maxAge(1800)
+            .allowCredentials(true);
 
         registry.addMapping("/api/orders/**")
-            .allowedOrigins("*")
+            .allowedOriginPatterns("*")
             .allowedMethods("POST")
             .allowedHeaders("Content-Type", "Authorization")
             .exposedHeaders("Authorization")
-            .maxAge(1800);
+            .maxAge(1800)
+            .allowCredentials(true);
 
         registry.addMapping("/api/wishes/**")
-            .allowedOrigins("*")
+            .allowedOriginPatterns("*")
             .allowedMethods("GET", "POST", "DELETE")
             .allowedHeaders("Content-Type", "Authorization")
             .exposedHeaders("Authorization")
-            .maxAge(1800);
+            .maxAge(1800)
+            .allowCredentials(true);
 
         registry.addMapping("/api/members/**")
-            .allowedOrigins("*")
+            .allowedOriginPatterns("*")
             .allowedMethods("POST")
             .allowedHeaders("Content-Type")
             .exposedHeaders("Authorization")
-            .maxAge(1800);
+            .maxAge(1800)
+            .allowCredentials(true);
 
         registry.addMapping("/api/products/{productId}/options/**")
-            .allowedOrigins("*")
+            .allowedOriginPatterns("*")
             .allowedMethods("GET", "POST", "PUT", "DELETE")
             .allowedHeaders("Content-Type", "Authorization")
             .exposedHeaders("Authorization", "Location")
-            .maxAge(1800);
+            .maxAge(1800)
+            .allowCredentials(true);
     }
 }
