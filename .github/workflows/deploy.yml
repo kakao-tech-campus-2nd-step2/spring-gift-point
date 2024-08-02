@@ -49,11 +49,11 @@ jobs:
 
             # 디렉토리 변경
             pwd
-            cd /home/ubuntu/katecam/build/libs # 절대
+            cd /home/ubuntu/katecam/build/libs # 절대 경로
             
             # 현재 실행 중인 애플리케이션 종료
             echo "Stopping existing Java process..."
-#            pkill -f "java -jar spring-gift.jar" || echo "No existing Java process found."
+            pkill -f "java -jar spring-gift.jar" || echo "No existing Java process found."
 
             # 기존 JAR 파일 삭제
             echo "Removing old JAR file..."
