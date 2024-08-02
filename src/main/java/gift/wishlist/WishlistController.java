@@ -42,15 +42,13 @@ public class WishlistController {
     }
 
     @GetMapping
-    public Page<WishPageDto> getWishlist(Pageable pageable) {
-        return wishlistService.checkWishlist(pageable);
+    public Page<WishPageDto> getWishlist(@LoginMember Member member, Pageable pageable) {
+        return wishlistService.checkWishlist(member, pageable);
     }
 
     @DeleteMapping("/{wishId}")
-    public void deleteWish(@PathVariable Long wishId, @LoginMember Member member, @RequestHeader("Authorization") String authHeader)
+    public void deleteWish(@PathVariable Long wishId, @LoginMember Member member)
         throws UnAuthorizationException {
-        String token = authHeader.replace("Bearer ", "");
-        tokenValidator.validateToken(token);
         wishlistService.deleteWishlist(wishId, member.getId());
     }
 

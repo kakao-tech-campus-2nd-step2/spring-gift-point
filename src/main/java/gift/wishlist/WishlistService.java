@@ -33,8 +33,8 @@ public class WishlistService {
         this.memberRepository = memberRepository;
     }
 
-    public Page<WishPageDto> checkWishlist(Pageable pageable) {
-        Page<Wishlist> wishlistPage = wishlistRepository.findAll(pageable);
+    public Page<WishPageDto> checkWishlist(Member member, Pageable pageable) {
+        Page<Wishlist> wishlistPage = wishlistRepository.findAllByMemberId(member.getId(), pageable);
         return wishlistPage.map(this::convertToWishlistDto);
     }
 
