@@ -50,7 +50,7 @@ public class ProductController {
     @Operation(summary = "상품 추가", description = "상품을 추가합니다.")
     @PostMapping
     public ResponseEntity<AddProductResponse> addProduct(@Valid @RequestBody AddProductRequest addProductRequest) {
-        return ResponseEntity.ok().body(productService.addProduct(addProductRequest.productDto(), addProductRequest.optionDTOs()));
+        return ResponseEntity.ok().body(productService.addProduct(addProductRequest.productDto(), addProductRequest.optionDtos()));
     }
 
     @Operation(summary = "상품 수정", description = "해당 id의 상품을 수정합니다.")

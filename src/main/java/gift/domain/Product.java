@@ -70,7 +70,7 @@ public class Product {
         return new AddProductResponse(
             toDto(),
             options.stream()
-                .map(option -> option.toDTO())
+                .map(option -> option.toDto())
                 .toList());
     }
     public Long getId() {

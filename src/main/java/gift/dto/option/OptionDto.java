@@ -1,4 +1,4 @@
-package gift.dto;
+package gift.dto.option;
 
 import gift.domain.Option;
 import gift.domain.Product;
@@ -7,7 +7,7 @@ import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import org.hibernate.validator.constraints.Range;
 
-public record OptionDTO(
+public record OptionDto(
     long id,
 
     @NotNull

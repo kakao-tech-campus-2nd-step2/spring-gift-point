@@ -2,7 +2,7 @@ package gift.service;
 
 import gift.domain.Category;
 import gift.domain.Product;
-import gift.dto.OptionDTO;
+import gift.dto.option.OptionDto;
 import gift.dto.member.MemberDto;
 import gift.dto.product.AddProductResponse;
 import gift.dto.product.GetProductResponse;
@@ -44,11 +44,11 @@ public class ProductService {
         return product.toGetProductResponse(isWish(memberDto, product));
     }
 
-    public AddProductResponse addProduct(ProductDto productDto, List<OptionDTO> optionDTOs) {
+    public AddProductResponse addProduct(ProductDto productDto, List<OptionDto> optionDtos) {
         Category category = categoryService.getCategory(productDto.categoryId()).toEntity();
         Product product = productRepository.save(productDto.toEntity(category));
-        for (OptionDTO optionDTO : optionDTOs) {
-            optionService.addOption(product.getId(), optionDTO);
+        for (OptionDto optionDto : optionDtos) {
+            optionService.addOption(product.getId(), optionDto);
         }
         return product.toAddProductResponse();
     }

@@ -11,7 +11,7 @@ import static org.mockito.BDDMockito.then;
 
 import gift.domain.Category;
 import gift.domain.Product;
-import gift.dto.OptionDTO;
+import gift.dto.option.OptionDto;
 import gift.dto.product.ProductDto;
 import gift.repository.ProductRepository;
 import java.util.Arrays;
@@ -49,17 +49,17 @@ public class ProductServiceTest {
     void addProduct() {
         // given
         Product product = createProduct(1L, "아이스 아메리카노", category);
-        OptionDTO optionDTO = createOption(1L, "test", 1, product).toDTO();
+        OptionDto optionDto = createOption(1L, "test", 1, product).toDto();
         given(categoryService.getCategory(anyLong())).willReturn(category.toDto());
         given(productRepository.save(any(Product.class))).willReturn(product);
-        given(optionService.addOption(anyLong(), any(OptionDTO.class))).willReturn(optionDTO);
+        given(optionService.addOption(anyLong(), any(OptionDto.class))).willReturn(optionDto);
 
         // when
-        var actual = productService.addProduct(product.toDto(), Arrays.asList(optionDTO));
+        var actual = productService.addProduct(product.toDto(), Arrays.asList(optionDto));
 
         // then
         assertThat(actual.productDto()).isEqualTo(product.toDto());
-        assertThat(actual.optionDTOs()).hasSize(1);
+        assertThat(actual.optionDtos()).hasSize(1);
     }
 
     @DisplayName("id로 상품 찾기")

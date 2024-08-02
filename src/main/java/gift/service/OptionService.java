@@ -2,7 +2,8 @@ package gift.service;
 
 import gift.domain.Option;
 import gift.domain.Product;
-import gift.dto.OptionDTO;
+import gift.dto.option.GetOptionResponse;
+import gift.dto.option.OptionDto;
 import gift.exception.NoOptionsForProductException;
 import gift.exception.NoSuchOptionException;
 import gift.exception.NoSuchProductException;
@@ -23,31 +24,31 @@ public class OptionService {
         this.optionRepository = optionRepository;
     }
 
-    public List<OptionDTO> getOptions(long productId) {
+    public List<GetOptionResponse> getOptions(long productId) {
         Product product = productRepository.findById(productId)
             .orElseThrow(NoSuchProductException::new);
         return optionRepository.findByProduct(product)
             .stream()
-            .map(option -> option.toDTO())
+            .map(option -> option.toGetOptionResponse())
             .toList();
     }
 
-    public OptionDTO addOption(long productId, OptionDTO optionDTO) {
+    public OptionDto addOption(long productId, OptionDto optionDto) {
         Product product = productRepository.findById(productId)
             .orElseThrow(NoSuchProductException::new);
-        return optionRepository.save(optionDTO.toEntity(product)).toDTO();
+        return optionRepository.save(optionDto.toEntity(product)).toDto();
     }
 
-    public OptionDTO updateOption(long productId, OptionDTO optionDTO) {
+    public OptionDto updateOption(long productId, OptionDto optionDto) {
         Product product = productRepository.findById(productId)
             .orElseThrow(NoSuchProductException::new);
-        Option option = optionRepository.findByProductAndId(product, optionDTO.id())
+        Option option = optionRepository.findByProductAndId(product, optionDto.id())
             .orElseThrow(NoSuchOptionException::new);
-        option.update(optionDTO.name(), optionDTO.quantity());
-        return optionRepository.save(option).toDTO();
+        option.update(optionDto.name(), optionDto.quantity());
+        return optionRepository.save(option).toDto();
     }
 
-    public OptionDTO deleteOption(long productId, long id) {
+    public OptionDto deleteOption(long productId, long id) {
         Product product = productRepository.findById(productId)
             .orElseThrow(NoSuchProductException::new);
         if (product.getOptions().size() == 1) {
@@ -56,14 +57,14 @@ public class OptionService {
         Option deletedOption = optionRepository.findById(id)
             .orElseThrow(NoSuchOptionException::new);
         optionRepository.delete(deletedOption);
-        return deletedOption.toDTO();
+        return deletedOption.toDto();
     }
 
     @Transactional
-    public OptionDTO buyOption(long id, int quantity) {
+    public OptionDto buyOption(long id, int quantity) {
         Option option = optionRepository.findById(id)
             .orElseThrow(NoSuchOptionException::new);
         option.subtract(quantity);
-        return optionRepository.save(option).toDTO();
+        return optionRepository.save(option).toDto();
     }
 }

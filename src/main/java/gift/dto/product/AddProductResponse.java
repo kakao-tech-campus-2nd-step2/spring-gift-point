@@ -1,11 +1,11 @@
 package gift.dto.product;
 
-import gift.dto.OptionDTO;
+import gift.dto.option.OptionDto;
 import java.util.List;
 
 public record AddProductResponse(
     ProductDto productDto,
-    List<OptionDTO> optionDTOs
+    List<OptionDto> optionDtos
 ) {
 
 }

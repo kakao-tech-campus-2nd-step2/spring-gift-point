@@ -1,6 +1,7 @@
 package gift.domain;
 
-import gift.dto.OptionDTO;
+import gift.dto.option.GetOptionResponse;
+import gift.dto.option.OptionDto;
 import gift.exception.InsufficientQuantityException;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -66,8 +67,12 @@ public class Option {
         this.quantity = quantity;
     }
 
-    public OptionDTO toDTO() {
-        return new OptionDTO(id, name, quantity);
+    public OptionDto toDto() {
+        return new OptionDto(id, name, quantity);
+    }
+
+    public GetOptionResponse toGetOptionResponse() {
+        return new GetOptionResponse(id, name, quantity);
     }
 
     public Long getId() {

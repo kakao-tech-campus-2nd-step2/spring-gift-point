@@ -34,7 +34,7 @@ function handleAddProductFormSubmit(event, url, method) {
             imageUrl: document.getElementById('imageUrl').value,
             categoryId: document.getElementById('categoryId').value
         },
-        optionDTOs: [{
+        optionDtos: [{
             name: document.getElementById('optionName').value,
             quantity: document.getElementById('optionQuantity').value,
         }]
