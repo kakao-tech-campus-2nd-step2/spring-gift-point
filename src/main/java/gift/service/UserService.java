@@ -1,6 +1,7 @@
 package gift.service;
 
 import gift.common.exception.DuplicatedEmailException;
+import gift.model.user.PointResponse;
 import gift.model.user.User;
 import gift.repository.user.UserRepository;
 import org.springframework.http.HttpStatus;
@@ -38,5 +39,16 @@ public class UserService {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "적절하지 않은 이메일이거나 비밀번호입니다.");
         }
         return user;
+    }
+
+    // 포인트 충전
+    public void addPoint(User user, int point) {
+        user.addPoints(point);
+        userRepository.save(user);
+    }
+
+    public PointResponse getPoint(User user) {
+        PointResponse pointResponse = PointResponse.from(user);
+        return pointResponse;
     }
 }
