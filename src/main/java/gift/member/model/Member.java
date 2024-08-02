@@ -25,6 +25,8 @@ public class Member {
     @Column(nullable = false)
     private String password;
 
+    private Long point;
+
     @OneToMany(mappedBy = "member", cascade = CascadeType.REMOVE, orphanRemoval = true)
     private List<Wish> wishList = new ArrayList<>();
 
@@ -58,6 +60,12 @@ public class Member {
         this.password = password;
     }
 
+    public Member(String email, String password, Long point) {
+        this.email = email;
+        this.password = password;
+        this.point = point;
+    }
+
     // Getters and setters
     public Long getId() {
         return id;
@@ -89,5 +97,13 @@ public class Member {
 
     public void setWishList(List<Wish> wishList) {
         this.wishList = wishList;
+    }
+
+    public Long getPoint() {
+        return point;
+    }
+
+    public void setPoint(Long point) {
+        this.point = point;
     }
 }
