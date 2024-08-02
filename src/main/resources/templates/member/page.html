@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+</head>
+<body>
+<table>
+  <tr>
+    <th>email</th>
+    <th>point</th>
+    <th>charge</th>
+    <th></th>
+  </tr>
+  <tr th:each="member : ${members}">
+    <th th:text="${member.getEmail()}"></th>
+    <th th:text="${member.getPoint()}"></th>
+    <th>
+      <input type="number"/>
+    </th>
+    <th>
+      <button class="charge-button">Charge</button>
+    </th>
+  </tr>
+</table>
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    const chargeButtons = document.querySelectorAll('.charge-button');
+    chargeButtons.forEach(function (button) {
+      button.addEventListener('click', function () {
+        const row = button.closest('tr');
+        const email = row.querySelector('th').innerHTML;
+        const point = row.querySelector('input[type="number"]').value;
+        sendChargeRequest(email, point);
+      });
+    });
+
+    function sendChargeRequest(email, point) {
+      fetch("http://localhost:8080/members/charge", {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          email: email,
+          point: point
+        })
+      }).then(response => {
+        if (response.status === 200) {
+          location.reload()
+        }
+      })
+    }
+  });
+</script>
+</body>
+</html>

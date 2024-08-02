@@ -29,6 +29,14 @@ public class Member {
         this.point = new Point();
     }
 
+    public String getEmail() {
+        return email;
+    }
+
+    public long getPoint() {
+        return point.getValue();
+    }
+
     public boolean isSamePassword(Member member) {
         return this.password.equals(member.password);
     }
