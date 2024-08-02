@@ -5,9 +5,15 @@ import gift.service.ProductService;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/products")
@@ -21,9 +27,26 @@ public class ProductRestController {
 
     @Operation(summary = "모든 상품 가져오기")
     @GetMapping
-    public ResponseEntity<Page<ProductDTO>> getAllProducts(Pageable pageable) {
-        Page<ProductDTO> products = productService.getAllProducts(pageable);
+    public ResponseEntity<Page<ProductDTO>> getAllProducts(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "id,asc") String[] sort,
+            @RequestParam(required = false) Long categoryId) {
+
+        Pageable pageable = PageRequest.of(page, size, Sort.by(getSortOrders(sort)));
+        Page<ProductDTO> products = productService.getAllProducts(pageable, categoryId);
         return ResponseEntity.ok(products);
+    }
+
+    private List<Sort.Order> getSortOrders(String[] sort) {
+        return Arrays.stream(sort)
+                .map(this::createSortOrder)
+                .collect(Collectors.toList());
+    }
+
+    private Sort.Order createSortOrder(String sortOrder) {
+        String[] parts = sortOrder.split(",");
+        return new Sort.Order(Sort.Direction.fromString(parts[1]), parts[0]);
     }
 
     @Operation(summary = "ID로 상품 가져오기")

@@ -56,7 +56,6 @@ public class MemberService {
         MemberDTO memberDTO = new MemberDTO();
         memberDTO.setId(member.getId());
         memberDTO.setEmail(member.getEmail());
-        memberDTO.setPassword(member.getPassword());
         return memberDTO;
     }
 }

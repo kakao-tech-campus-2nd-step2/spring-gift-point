@@ -8,11 +8,15 @@ import gift.util.LoginMember;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
+import java.util.Map;
+
 @RestController
-@RequestMapping("/members")
+@RequestMapping("/api/members")
 public class MemberController {
 
     private final MemberService memberService;
@@ -29,7 +33,12 @@ public class MemberController {
     public ResponseEntity<?> registerMember(@Valid @RequestBody MemberDTO memberDTO) {
         MemberDTO savedMember = memberService.register(memberDTO);
         String token = jwtUtil.generateToken(savedMember.getEmail());
-        return ResponseEntity.ok().body("{\"token\":\"" + token + "\"}");
+
+        Map<String, String> response = new HashMap<>();
+        response.put("email", savedMember.getEmail());
+        response.put("token", token);
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
     @Operation(summary = "로그인")
@@ -38,7 +47,12 @@ public class MemberController {
         String email = loginDetails.getEmail();
         String password = loginDetails.getPassword();
         String token = memberService.login(email, password);
-        return ResponseEntity.ok().body("{\"token\":\"" + token + "\"}");
+
+        Map<String, String> response = new HashMap<>();
+        response.put("email", email);
+        response.put("token", token);
+
+        return ResponseEntity.ok(response);
     }
 
     @Operation(summary = "회원 프로필 조회")

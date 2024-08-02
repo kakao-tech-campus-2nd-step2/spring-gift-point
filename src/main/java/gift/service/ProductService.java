@@ -31,8 +31,17 @@ public class ProductService {
         this.optionRepository = optionRepository;
     }
 
-    public Page<ProductDTO> getAllProducts(Pageable pageable) {
+    public Page<ProductDTO> getAllProducts(Pageable pageable, Long categoryId) {
+        return categoryId != null ? getProductsByCategory(categoryId, pageable) : getAllProducts(pageable);
+    }
+
+    private Page<ProductDTO> getAllProducts(Pageable pageable) {
         return productRepository.findAll(pageable)
+                .map(this::convertToDTO);
+    }
+
+    private Page<ProductDTO> getProductsByCategory(Long categoryId, Pageable pageable) {
+        return productRepository.findByCategoryId(categoryId, pageable)
                 .map(this::convertToDTO);
     }
 
@@ -48,28 +57,29 @@ public class ProductService {
                 .orElseThrow(() -> new IllegalArgumentException("Invalid category ID"));
         Product product = new Product(null, productDTO.getName(), productDTO.getPrice(), productDTO.getImageUrl(), category, null);
         Product savedProduct = productRepository.save(product);
-        final Product finalSavedProduct = savedProduct;
-        List<Option> options = productDTO.getOptions().stream()
-                .map(optionDTO -> new Option(optionDTO.getName(), optionDTO.getQuantity(), finalSavedProduct))
-                .collect(Collectors.toList());
-        optionRepository.saveAll(options);
-        savedProduct = new Product(savedProduct.getId(), savedProduct.getName(), savedProduct.getPrice(), savedProduct.getImageUrl(), savedProduct.getCategory(), options);
-        savedProduct.validateOptions();
-        savedProduct = productRepository.save(savedProduct);
         return convertToDTO(savedProduct);
     }
 
+    @Transactional
+    public OptionDTO addOptionToProduct(Long productId, OptionDTO optionDTO) {
+        Product product = productRepository.findById(productId)
+                .orElseThrow(() -> new IllegalArgumentException("Invalid product ID"));
+
+        Option option = new Option(optionDTO.getName(), optionDTO.getQuantity(), product);
+        Option savedOption = optionRepository.save(option);
+
+        return convertOptionToDTO(savedOption);
+    }
 
     @Transactional
     public ProductDTO updateProduct(long id, ProductDTO productDTO) {
         Category category = categoryRepository.findById(productDTO.getCategoryId())
                 .orElseThrow(() -> new IllegalArgumentException("Invalid category ID"));
-        List<Option> options = productDTO.getOptions().stream()
-                .map(optionDTO -> new Option(optionDTO.getName(), optionDTO.getQuantity(), null))
-                .collect(Collectors.toList());
-        Product product = new Product(id, productDTO.getName(), productDTO.getPrice(), productDTO.getImageUrl(), category, options);
-        options.forEach(option -> option.assignProduct(product));
-        product.validateOptions();
+        Product product = productRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Product not found"));
+
+        product.updateProductDetails(productDTO.getName(), productDTO.getPrice(), productDTO.getImageUrl(), category);
+
         Product updatedProduct = productRepository.save(product);
         return convertToDTO(updatedProduct);
     }
@@ -80,28 +90,27 @@ public class ProductService {
     }
 
     private ProductDTO convertToDTO(Product product) {
-        ProductDTO productDTO = new ProductDTO();
-        productDTO.setId(product.getId());
-        productDTO.setName(product.getName());
-        productDTO.setPrice(product.getPrice());
-        productDTO.setImageUrl(product.getImageUrl());
-        productDTO.setCategoryId(product.getCategory().getId());
-        productDTO.setCategoryName(product.getCategory().getName());
-        productDTO.setOptions(product.getOptions().stream()
-                .map(this::convertOptionToDTO)
-                .collect(Collectors.toList()));
-        return productDTO;
+        return new ProductDTO(
+                product.getId(),
+                product.getName(),
+                product.getPrice(),
+                product.getImageUrl(),
+                product.getCategory().getId(),
+                product.getCategory().getName()
+        );
     }
 
     public Product convertToEntity(ProductDTO productDTO) {
         Category category = categoryRepository.findById(productDTO.getCategoryId())
                 .orElseThrow(() -> new IllegalArgumentException("Invalid category ID"));
-        List<Option> options = productDTO.getOptions().stream()
-                .map(optionDTO -> new Option(optionDTO.getName(), optionDTO.getQuantity(), null))
-                .collect(Collectors.toList());
-        Product product = new Product(productDTO.getId(), productDTO.getName(), productDTO.getPrice(), productDTO.getImageUrl(), category, options);
-        options.forEach(option -> option.assignProduct(product));
-        return product;
+        return new Product(
+                productDTO.getId(),
+                productDTO.getName(),
+                productDTO.getPrice(),
+                productDTO.getImageUrl(),
+                category,
+                null
+        );
     }
 
     private OptionDTO convertOptionToDTO(Option option) {

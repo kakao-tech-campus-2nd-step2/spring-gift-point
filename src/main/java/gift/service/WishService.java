@@ -2,7 +2,6 @@ package gift.service;
 
 import gift.dto.ProductDTO;
 import gift.dto.WishDTO;
-import gift.model.Member;
 import gift.model.Product;
 import gift.model.Wish;
 import gift.repository.WishRepository;
@@ -11,9 +10,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class WishService {
@@ -33,24 +29,20 @@ public class WishService {
     }
 
     @Transactional
-    public WishDTO addWish(Member member, Long productId) {
+    public WishDTO addWish(Long memberId, Long productId) {
         ProductDTO productDTO = productService.getProductById(productId);
         Product product = productService.convertToEntity(productDTO);
-        Wish wish = new Wish(member, product);
+        Wish wish = new Wish(memberId, product);
         Wish savedWish = wishRepository.save(wish);
         return convertToDTO(savedWish);
     }
 
     @Transactional
-    public void deleteWish(Long memberId, Long productId) {
-        wishRepository.deleteByMemberIdAndProductId(memberId, productId);
+    public void deleteWish(Long wishId) {
+        wishRepository.deleteById(wishId);
     }
 
     private WishDTO convertToDTO(Wish wish) {
-        WishDTO wishDTO = new WishDTO();
-        wishDTO.setId(wish.getId());
-        wishDTO.setMemberId(wish.getMember().getId());
-        wishDTO.setProductId(wish.getProduct().getId());
-        return wishDTO;
+        return new WishDTO(wish.getId(), wish.getMemberId(), wish.getProduct().getId());
     }
 }
