@@ -30,7 +30,7 @@ class AcceptanceTest {
 
     String ALLOWED_METHOD_NAMES = "GET,POST,PUT,DELETE";
 
-    String CLIENT_ORIGIN = "http://localhost:8080";
+    String CLIENT_ORIGIN = "http://localhost:3000";
 
     @Test
     void CORS_설정_테스트() throws Exception {
