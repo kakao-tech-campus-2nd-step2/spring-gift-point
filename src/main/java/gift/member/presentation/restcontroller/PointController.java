@@ -1,5 +1,6 @@
 package gift.member.presentation.restcontroller;
 
+import gift.docs.member.PointApiDocs;
 import gift.global.authentication.annotation.MemberId;
 import gift.member.business.service.MemberService;
 import gift.member.presentation.dto.PointRequest;
@@ -13,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api/points")
-public class PointController {
+public class PointController implements PointApiDocs {
 
     private final MemberService memberService;
 
