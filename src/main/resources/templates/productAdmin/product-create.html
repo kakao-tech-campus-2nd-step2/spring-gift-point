@@ -9,11 +9,7 @@
 <body>
 	<div class="container mt-5">
 		<h2>상품 추가</h2>
-<<<<<<< HEAD
 		<form th:action="@{/admin/products}" th:object="${product}" method="post">
-=======
-		<form th:action="@{/admin/products/create}" th:object="${product}" method="post">
->>>>>>> b7b56435 (feat (product 관리자 페이지))
 			<div class="form-group">
 				<label for="name">이름</label>
 				<input type="text" class="form-control" id="name" name="name" th:field="*{name}" required>

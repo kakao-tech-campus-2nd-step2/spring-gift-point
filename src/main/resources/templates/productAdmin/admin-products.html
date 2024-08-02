@@ -30,18 +30,11 @@
 					</td>
 					<td th:text="${product.categoryId}"></td>
 					<td>
-<<<<<<< HEAD
 						<a th:href="@{/admin/products/{id}(id=${product.id})}"
 							class="btn btn-warning btn-sm">수정</a>
 						<form th:action="@{/admin/products/{id}(id=${product.id})}" method="post"
 							style="display:inline;">
 							<input type="hidden" name="_method" value="delete"/>
-=======
-						<a th:href="@{/admin/products/edit/{id}(id=${product.id})}"
-							class="btn btn-warning btn-sm">수정</a>
-						<form th:action="@{/admin/products/delete/{id}(id=${product.id})}" method="post"
-							style="display:inline;">
->>>>>>> b7b56435 (feat (product 관리자 페이지))
 							<button type="submit" class="btn btn-danger btn-sm">삭제</button>
 						</form>
 					</td>
