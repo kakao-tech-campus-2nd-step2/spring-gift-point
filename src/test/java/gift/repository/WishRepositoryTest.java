@@ -43,8 +43,8 @@ class WishRepositoryTest {
 
         categoryRepository.save(new Category("테스트1", "#000000", "https://st.kakaocdn.net/product/gift/product/20231010111814_9a667f9eccc943648797925498bdd8a3.jpg", ""));
 
-        member = memberRepository.save(new Member("12345@12345.com", "1", "basic", "홍길동", "user"));
-        member2 = memberRepository.save(new Member("22345@12345.com", "2", "basic", "라이언", "user"));
+        member = memberRepository.save(new Member("12345@12345.com", "1", "basic", "홍길동", "user", 0L));
+        member2 = memberRepository.save(new Member("22345@12345.com", "2", "basic", "라이언", "user", 0L));
         product = productRepository.save(new Product("커피", 10000,
                 "https://st.kakaocdn.net/product/gift/product/20231010111814_9a667f9eccc943648797925498bdd8a3.jpg",
                 categoryRepository.findByName("테스트1").get()));
