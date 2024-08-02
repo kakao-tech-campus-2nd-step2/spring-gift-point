@@ -27,11 +27,8 @@ public interface WishRepository extends JpaRepository<Wish, Long> {
   Page<Wish> findByUserId(Long userId, Pageable pageable);
 
   Optional<Wish> findByIdAndUserId(Long id, Long userId);
-
   @Transactional
   @Modifying
   @Query("DELETE FROM Wish w WHERE w.product.id = :productId")
   void deleteAllByProductId(Long productId);
-
-  void deleteByProductId(Long productId);
 }

@@ -10,21 +10,11 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
-import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Pattern;
-import jakarta.validation.constraints.Size;
+import jakarta.persistence.*;
+import jakarta.validation.constraints.*;
 import java.util.ArrayList;
 import java.util.List;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 @Entity
 @Getter
@@ -33,8 +23,6 @@ import lombok.Setter;
 @AllArgsConstructor
 @Builder
 public class Product extends BaseEntity {
-
-
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
@@ -70,6 +58,7 @@ public class Product extends BaseEntity {
       this.options = new ArrayList<>();
     }
 
+
     options.add(option);
     option.setProduct(this);
   }
@@ -83,29 +72,6 @@ public class Product extends BaseEntity {
     this.price = productRequestDto.price();
     this.imageUrl = productRequestDto.imageUrl();
     this.category = category;
-  }
 
-  public Long getId() {
-    return id;
-  }
-
-  public String getName() {
-    return name;
-  }
-
-  public int getPrice() {
-    return price;
-  }
-
-  public String getImageUrl() {
-    return imageUrl;
-  }
-
-  public Category getCategory() {
-    return category;
-  }
-
-  public List<Option> getOptions() {
-    return options;
   }
 }

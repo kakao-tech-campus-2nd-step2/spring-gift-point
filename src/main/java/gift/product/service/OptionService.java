@@ -1,21 +1,18 @@
 package gift.product.service;
 
-import gift.exception.BadRequestException;
 import gift.exception.DuplicateResourceException;
 import gift.exception.ResourceNotFoundException;
 import gift.product.dto.OptionRequestDto;
 import gift.product.dto.OptionResponseDto;
 import gift.product.entity.Option;
 import gift.product.entity.Product;
-import gift.product.repository.OptionRepository;
-import gift.product.repository.ProductRepository;
+import gift.product.repository.*;
 import jakarta.validation.Valid;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 
 @Service
 public class OptionService {
@@ -100,6 +97,7 @@ public class OptionService {
 
     return deletedOptionDto;
   }
+
 
 
 }

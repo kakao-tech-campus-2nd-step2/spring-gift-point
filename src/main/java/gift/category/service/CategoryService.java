@@ -74,13 +74,8 @@ public class CategoryService {
   public CategoryResponseDto deleteCategory(Long categoryId) {
     Category category = categoryRepository.findById(categoryId)
         .orElseThrow(() -> new ResourceNotFoundException("해당 카테고리를 찾을 수 없습니다."));
-    if (productRepository.existsByCategoryId(categoryId)) {
-      throw new BadRequestException("이 카테고리는 다른 제품이 참조하고 있습니다. 해당 제품들을 먼제 삭제해주세요.");
-    }
 
     categoryRepository.delete(category);
     return CategoryResponseDto.toDto(category);
   }
-
-
 }

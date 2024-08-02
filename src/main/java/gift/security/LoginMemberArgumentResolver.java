@@ -19,6 +19,7 @@ public class LoginMemberArgumentResolver implements HandlerMethodArgumentResolve
   public LoginMemberArgumentResolver(UserService userService, JWTUtil jwtUtil) {
     this.userService = userService;
     this.jwtUtil = jwtUtil;
+
   }
 
   @Override
@@ -47,3 +48,4 @@ public class LoginMemberArgumentResolver implements HandlerMethodArgumentResolve
     return null;
   }
 }
+

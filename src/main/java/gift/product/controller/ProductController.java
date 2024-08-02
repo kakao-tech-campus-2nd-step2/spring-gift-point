@@ -50,7 +50,8 @@ public class ProductController {
   public ResponseEntity<ProductResponseDto> createProduct(
       @Valid @RequestBody @Parameter(description = "상품 데이터", required = true) ProductRequestDto productRequestDto,
       @RequestBody @Parameter(description = "옵션 데이터", required = false) OptionRequestDto optionRequestDto) {
-    ProductResponseDto productResponseDto = productService.createProduct(productRequestDto, optionRequestDto);
+    ProductResponseDto productResponseDto = productService.createProduct(productRequestDto,
+        optionRequestDto);
     return new ResponseEntity<>(productResponseDto, HttpStatus.CREATED);
   }
 
@@ -70,4 +71,5 @@ public class ProductController {
     productService.deleteProduct(productId);
     return new ResponseEntity<>("상품이 성공적으로 삭제되었습니다.", HttpStatus.NO_CONTENT);
   }
+
 }

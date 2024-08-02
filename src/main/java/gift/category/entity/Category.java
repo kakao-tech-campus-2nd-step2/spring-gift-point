@@ -6,7 +6,6 @@ import gift.util.BaseEntity;
 import jakarta.persistence.*;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import java.util.ArrayList;
 import java.util.List;
 import lombok.*;
 

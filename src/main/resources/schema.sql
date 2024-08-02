@@ -1,4 +1,3 @@
--- Category 테이블 생성
 CREATE TABLE category
 (
     id          BIGINT AUTO_INCREMENT PRIMARY KEY,
@@ -10,7 +9,6 @@ CREATE TABLE category
     updated_at  TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
--- Product 테이블 생성
 CREATE TABLE product
 (
     id          BIGINT AUTO_INCREMENT PRIMARY KEY,
@@ -23,7 +21,6 @@ CREATE TABLE product
     FOREIGN KEY (category_id) REFERENCES category (id)
 );
 
--- Option 테이블 생성
 CREATE TABLE option
 (
     id         BIGINT AUTO_INCREMENT PRIMARY KEY,
@@ -35,7 +32,6 @@ CREATE TABLE option
     FOREIGN KEY (product_id) REFERENCES product (id)
 );
 
--- User 테이블 생성
 CREATE TABLE users
 (
     id                 BIGINT AUTO_INCREMENT PRIMARY KEY,
@@ -47,7 +43,6 @@ CREATE TABLE users
     updated_at         TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
--- Wish 테이블 생성
 CREATE TABLE wish
 (
     id         BIGINT AUTO_INCREMENT PRIMARY KEY,
@@ -60,7 +55,6 @@ CREATE TABLE wish
     FOREIGN KEY (product_id) REFERENCES product (id)
 );
 
--- Order 테이블 생성
 CREATE TABLE `order`
 (
     id              BIGINT AUTO_INCREMENT PRIMARY KEY,

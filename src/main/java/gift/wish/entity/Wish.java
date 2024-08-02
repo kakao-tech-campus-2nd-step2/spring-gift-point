@@ -19,7 +19,6 @@ import lombok.Setter;
 @AllArgsConstructor
 @Builder
 public class Wish extends BaseEntity {
-
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
@@ -36,6 +35,7 @@ public class Wish extends BaseEntity {
 
   @Column(nullable = false)
   private int count;
+
 }
 
 
