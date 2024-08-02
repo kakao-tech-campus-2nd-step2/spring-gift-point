@@ -1,14 +1,15 @@
-package gift.product.dto;
+package gift.order.dto;
 
-public enum ProductSortField {
+import gift.product.dto.ProductSortField;
+
+public enum OrderSortField {
   ID("id"),
   NAME("name"),
-  createdAt("createdAt"),
-  PRICE("price");
+  ORDER_DATE_TIME("orderDateTime");
 
   private final String fieldName;
 
-  ProductSortField(String fieldName) {
+  OrderSortField(String fieldName) {
     this.fieldName = fieldName;
   }
 
@@ -18,10 +19,12 @@ public enum ProductSortField {
 
   public static ProductSortField fromString(String value) {
     for (ProductSortField sortBy : ProductSortField.values()) {
-      if (sortBy.fieldName.equalsIgnoreCase(value)) {
+      if (sortBy.getFieldName().equalsIgnoreCase(value)) {
         return sortBy;
       }
     }
     throw new IllegalArgumentException("유효하지 않은 정렬 필드입니다: " + value);
   }
 }
+
+

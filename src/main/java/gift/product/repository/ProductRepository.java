@@ -6,7 +6,10 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import gift.product.entity.Product;
 
 public interface ProductRepository extends JpaRepository<Product, Long> {
+  Page<Product> findByCategoryId(Long categoryId, Pageable pageable);
 
+  boolean existsByName(String name);
 
+  boolean existsByCategoryId(Long categoryId);
 }
 

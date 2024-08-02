@@ -1,13 +1,22 @@
 package gift.category.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
+import gift.category.dto.CategoryRequestDto;
+import gift.product.entity.Product;
+import gift.util.BaseEntity;
+import jakarta.persistence.*;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import java.util.ArrayList;
+import java.util.List;
+import lombok.*;
 
 @Entity
-public class Category {
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+public class Category extends BaseEntity {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -16,19 +25,28 @@ public class Category {
   @Column(nullable = false, unique = true)
   private String name;
 
-  public void setId(Long id) {
-    this.id = id;
-  }
+  @Column(nullable = false)
+  private String color;
 
-  public Long getId() {
-    return id;
-  }
+  @Column(nullable = false)
+  String imageUrl;
 
-  public String getName() {
-    return name;
-  }
+  private String description;
 
-  public void setName(String name) {
+  @OneToMany(mappedBy = "category")
+  private List<Product> products;
+
+  public Category(String name, String color, String imageUrl, String description) {
     this.name = name;
+    this.color = color;
+    this.imageUrl = imageUrl;
+    this.description = description;
+  }
+
+  public void update(CategoryRequestDto categoryRequestDto) {
+    this.name = categoryRequestDto.name();
+    this.color = categoryRequestDto.color();
+    this.imageUrl = categoryRequestDto.imageUrl();
+    this.description = categoryRequestDto.description();
   }
 }

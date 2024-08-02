@@ -1,14 +1,15 @@
-package gift.product.dto;
+package gift.wish.dto;
 
-public enum ProductSortField {
+import gift.product.dto.ProductSortField;
+
+public enum WishSortField {
   ID("id"),
-  NAME("name"),
   createdAt("createdAt"),
-  PRICE("price");
+  COUNT("count");
 
   private final String fieldName;
 
-  ProductSortField(String fieldName) {
+  WishSortField(String fieldName) {
     this.fieldName = fieldName;
   }
 
@@ -16,8 +17,8 @@ public enum ProductSortField {
     return fieldName;
   }
 
-  public static ProductSortField fromString(String value) {
-    for (ProductSortField sortBy : ProductSortField.values()) {
+  public static WishSortField fromString(String value) {
+    for (WishSortField sortBy : WishSortField.values()) {
       if (sortBy.fieldName.equalsIgnoreCase(value)) {
         return sortBy;
       }

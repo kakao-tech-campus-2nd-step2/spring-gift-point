@@ -1,9 +1,12 @@
 package gift.product.entity;
 
 import gift.category.entity.Category;
+import gift.product.dto.ProductRequestDto;
+import gift.util.BaseEntity;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -17,9 +20,19 @@ import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import java.util.ArrayList;
 import java.util.List;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
-public class Product {
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+public class Product extends BaseEntity {
 
 
   @Id
@@ -42,84 +55,57 @@ public class Product {
   @Column(name = "image_url", nullable = false)
   private String imageUrl;
 
-  @ManyToOne
+  @ManyToOne(fetch = FetchType.LAZY)
   @NotNull(message = "카테고리를 입력해야 합니다.")
   @JoinColumn(name = "category_id", nullable = false)
   private Category category;
 
   @Size(min = 1)
   @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
-  private List<Option> options = new ArrayList<>();
+  private List<Option> options;
 
-  public Product(Long id, String name, int price, String imageUrl, Category category,
-      List<Option> options) {
-    this.id = id;
-    this.name = name;
-    this.price = price;
-    this.imageUrl = imageUrl;
-    this.category = category;
-    this.options = options;
-  }
-
-  public Product() {
-
-  }
 
   public void addOption(Option option) {
+    if (this.options == null){
+      this.options = new ArrayList<>();
+    }
+
     options.add(option);
     option.setProduct(this);
   }
 
   public void removeOption(Option option) {
-    options.remove(option);
-    option.setProduct(null);
+    this.options.clear();
+  }
+
+  public void update(ProductRequestDto productRequestDto, Category category) {
+    this.name = productRequestDto.name();
+    this.price = productRequestDto.price();
+    this.imageUrl = productRequestDto.imageUrl();
+    this.category = category;
   }
 
   public Long getId() {
     return id;
   }
 
-  public void setId(Long id) {
-    this.id = id;
-  }
-
   public String getName() {
     return name;
-  }
-
-  public void setName(String name) {
-    this.name = name;
   }
 
   public int getPrice() {
     return price;
   }
 
-  public void setPrice(int price) {
-    this.price = price;
-  }
-
   public String getImageUrl() {
     return imageUrl;
-  }
-
-  public void setImageUrl(String imageUrl) {
-    this.imageUrl = imageUrl;
   }
 
   public Category getCategory() {
     return category;
   }
 
-  public void setCategory(Category category) {
-    this.category = category;
-  }
-
   public List<Option> getOptions() {
     return options;
-  }
-
-  public void setOptions(List<Option> options) {
-    this.options = options;
   }
 }

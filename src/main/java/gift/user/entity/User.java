@@ -1,15 +1,27 @@
 package gift.user.entity;
 
+import gift.util.BaseEntity;
 import gift.wish.entity.Wish;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
+import java.util.ArrayList;
 import java.util.List;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 @Table(name = "users")
-public class User {
+public class User extends BaseEntity {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -20,7 +32,7 @@ public class User {
   @Column(nullable = false, unique = true)
   private String email;
 
-//  @NotBlank(message = "비밀번호를 입력해야 합니다.")
+  //  @NotBlank(message = "비밀번호를 입력해야 합니다.")
   @Column(nullable = true)
   private String password;
 
@@ -39,56 +51,6 @@ public class User {
     if (this.role == null) {
       this.role = UserRole.ROLE_USER;
     }
-  }
-
-  // Getters and setters
-  public Long getId() {
-    return id;
-  }
-
-  public void setId(Long id) {
-    this.id = id;
-  }
-
-  public String getEmail() {
-    return email;
-  }
-
-  public void setEmail(String email) {
-    this.email = email;
-  }
-
-  public UserRole getRole() {
-    return role;
-  }
-
-  public void setRole(UserRole role) {
-    this.role = role;
-  }
-
-  public String getPassword() {
-    return password;
-  }
-
-  public void setPassword(String password) {
-    this.password = password;
-  }
-
-
-  public String getKakaoAccessToken() {
-    return kakaoAccessToken;
-  }
-
-  public void setKakaoAccessToken(String kakaoAccessToken) {
-    this.kakaoAccessToken = kakaoAccessToken;
-  }
-
-  public List<Wish> getWishs() {
-    return wishs;
-  }
-
-  public void setWishs(List<Wish> wishs) {
-    this.wishs = wishs;
   }
 
 }

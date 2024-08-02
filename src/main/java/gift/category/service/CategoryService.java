@@ -1,8 +1,14 @@
 package gift.category.service;
 
-import gift.category.dto.CategoryDto;
+import gift.category.dto.CategoryRequestDto;
+import gift.category.dto.CategoryResponseDto;
+import gift.category.entity.Category;
 import gift.category.repository.CategoryRepository;
+import gift.exception.BadRequestException;
+import gift.exception.DuplicateResourceException;
 import gift.exception.ResourceNotFoundException;
+import gift.product.repository.ProductRepository;
+import jakarta.transaction.Transactional;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
@@ -12,19 +18,69 @@ public class CategoryService {
 
   private final CategoryRepository categoryRepository;
 
-  public CategoryService(CategoryRepository categoryRepository) {
+  private final ProductRepository productRepository;
+
+  public CategoryService(CategoryRepository categoryRepository, ProductRepository productRepository) {
     this.categoryRepository = categoryRepository;
+    this.productRepository = productRepository;
   }
 
-  public List<CategoryDto> getAllCategories() {
-    List<CategoryDto> categories = categoryRepository.findAll().stream().map(CategoryDto::toDto)
-        .toList();
+  @Transactional
+  public List<CategoryResponseDto> getAllCategories() {
+    List<Category> categories = categoryRepository.findAll();
 
     if (categories.isEmpty()) {
-      throw new ResourceNotFoundException("카테고리를 찾을 수 없습니다.");
+      throw new ResourceNotFoundException("등록된 카테고리가 존재하지 않습니다.");
     }
 
-    return categories;
+    return categories.stream().map(CategoryResponseDto::toDto).collect(Collectors.toList());
   }
+
+  @Transactional
+  public CategoryResponseDto createCategory(CategoryRequestDto categoryRequestDto) {
+    if (categoryRepository.existsByName(categoryRequestDto.name())) {
+      throw new DuplicateResourceException("이미 존재하는 카테고리 이름입니다.");
+    }
+
+    Category category = new Category(categoryRequestDto.name(), categoryRequestDto.color(),
+        categoryRequestDto.imageUrl(), categoryRequestDto.description());
+
+    categoryRepository.save(category);
+    return CategoryResponseDto.toDto(category);
+  }
+
+  @Transactional
+  public CategoryResponseDto updateCategory(Long categoryId,
+      CategoryRequestDto categoryRequestDto) {
+    Category category = categoryRepository.findById(categoryId)
+        .orElseThrow(() -> new ResourceNotFoundException("해당 카테고리를 찾을 수 없습니다."));
+
+    if (categoryRepository.existsByName(categoryRequestDto.name())) {
+      throw new DuplicateResourceException("이미 존재하는 카테고리 이름입니다.");
+    }
+
+    category.update(categoryRequestDto);
+    return CategoryResponseDto.toDto(category);
+  }
+
+  @Transactional
+  public CategoryResponseDto getCategory(Long categoryId) {
+    Category category = categoryRepository.findById(categoryId)
+        .orElseThrow(() -> new ResourceNotFoundException("해당 카테고리를 찾을 수 없습니다."));
+    return CategoryResponseDto.toDto(category);
+  }
+
+  @Transactional
+  public CategoryResponseDto deleteCategory(Long categoryId) {
+    Category category = categoryRepository.findById(categoryId)
+        .orElseThrow(() -> new ResourceNotFoundException("해당 카테고리를 찾을 수 없습니다."));
+    if (productRepository.existsByCategoryId(categoryId)) {
+      throw new BadRequestException("이 카테고리는 다른 제품이 참조하고 있습니다. 해당 제품들을 먼제 삭제해주세요.");
+    }
+
+    categoryRepository.delete(category);
+    return CategoryResponseDto.toDto(category);
+  }
+
 
 }
