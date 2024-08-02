@@ -18,9 +18,10 @@ public class CategoryService {
         this.jpaCategoryRepository = jpaCategoryRepository;
     }
 
-    public Long addCategory(CategoryRequestDTO categoryRequestDTO){
+    public CategoryResponseDTO addCategory(CategoryRequestDTO categoryRequestDTO){
         Category category = categoryRequestDTO.toEntity();
-        return jpaCategoryRepository.save(category).getId();
+        jpaCategoryRepository.save(category);
+        return CategoryResponseDTO.from(category);
     }
 
     @Transactional(readOnly = true)
@@ -37,14 +38,15 @@ public class CategoryService {
             .toList();
     }
 
-    public Long updateCategory(Long categoryId, CategoryRequestDTO categoryRequestDTO) {
+    public CategoryResponseDTO updateCategory(Long categoryId, CategoryRequestDTO categoryRequestDTO) {
         Category category = getCategory(categoryId);
 
         category.update(categoryRequestDTO.name(), categoryRequestDTO.color(),
             categoryRequestDTO.imageUrl(),
             categoryRequestDTO.description());
 
-        return category.getId();
+        CategoryResponseDTO categoryResponseDTO = CategoryResponseDTO.from(category);
+        return categoryResponseDTO;
     }
 
     public Long deleteCategory(Long categoryId) {

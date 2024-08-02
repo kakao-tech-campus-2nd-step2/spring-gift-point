@@ -5,13 +5,12 @@ import java.time.LocalDateTime;
 
 public record OrderResponseDTO(
     Long id,
-    Long optionId,
-    int quantity,
+    OptionResponseDTO optionResponseDTO,
     LocalDateTime orderDateTime,
     String message
 ) {
     public static OrderResponseDTO from(Order order) {
-        return new OrderResponseDTO(order.getId(), order.getOption().getId(), order.getQuantity(),
+        return new OrderResponseDTO(order.getId(), OptionResponseDTO.from(order.getOption()),
             order.getOrderDateTime(), order.getMessage());
     }
 }

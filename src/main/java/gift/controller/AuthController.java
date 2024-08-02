@@ -7,7 +7,7 @@ import gift.dto.common.apiResponse.ApiResponseBody.SuccessBody;
 import gift.dto.common.apiResponse.ApiResponseGenerator;
 import gift.dto.requestdto.UserLoginRequestDTO;
 import gift.dto.requestdto.UserSignupRequestDTO;
-import gift.dto.responsedto.UserResponseDTO;
+import gift.dto.responsedto.UserTokenResponseDTO;
 import gift.service.AuthService;
 import gift.service.UserService;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -35,23 +35,25 @@ public class AuthController {
     }
 
     @ResponseBody
-    @PostMapping("/api/auth/register")
+    @PostMapping("/api/members/register")
     @ApiResponse(responseCode = "200", description = "일반 회원가입 성공")
-    public ResponseEntity<SuccessBody<UserResponseDTO>> signUp(
+    public ResponseEntity<SuccessBody<UserTokenResponseDTO>> signUp(
         @Valid @RequestBody UserSignupRequestDTO userSignupRequestDTO) {
         userService.join(userSignupRequestDTO);
-        UserResponseDTO userResponseDTO = authService.register(userSignupRequestDTO);
-        return ApiResponseGenerator.success(HttpStatus.CREATED, "회원가입에 성공했습니다.", userResponseDTO);
+        UserTokenResponseDTO userTokenResponseDTO = authService.register(userSignupRequestDTO);
+        return ApiResponseGenerator.success(HttpStatus.OK, "회원가입에 성공했습니다.",
+            userTokenResponseDTO);
     }
 
     @ResponseBody
-    @PostMapping("/api/auth/login")
+    @PostMapping("/api/members/login")
     @ApiResponse(responseCode = "200", description = "일반 로그인 성공")
-    public ResponseEntity<SuccessBody<UserResponseDTO>> login(
+    public ResponseEntity<SuccessBody<UserTokenResponseDTO>> login(
         @Valid @RequestBody UserLoginRequestDTO userLoginRequestDTO) {
         User user = userService.findByEmail(userLoginRequestDTO);
-        UserResponseDTO userResponseDTO = authService.login(user, userLoginRequestDTO, null);
-        return ApiResponseGenerator.success(HttpStatus.ACCEPTED, "로그인에 성공했습니다.", userResponseDTO);
+        UserTokenResponseDTO userTokenResponseDTO = authService.login(user, userLoginRequestDTO, null);
+        return ApiResponseGenerator.success(HttpStatus.ACCEPTED, "로그인에 성공했습니다.",
+            userTokenResponseDTO);
     }
 
     @GetMapping("/api/oauth/redirect")
@@ -77,22 +79,22 @@ public class AuthController {
     @ResponseBody
     @PostMapping("/api/oauth/login")
     @ApiResponse(responseCode = "200", description = "카카오 로그인 성공")
-    public ResponseEntity<SuccessBody<UserResponseDTO>> kakaoLogin(
+    public ResponseEntity<SuccessBody<UserTokenResponseDTO>> kakaoLogin(
         @RequestParam("code") String code
     ) {
         String accessToken = authService.getAccessToken(code);
         String userEmail = authService.getUserEmail(accessToken);
         Optional<User> user = userService.findByEmail(userEmail);
 
-        UserResponseDTO userResponseDTO = user.map(existUser ->
+        UserTokenResponseDTO userTokenResponseDTO = user.map(existUser ->
             authService.login(existUser, new UserLoginRequestDTO(userEmail, existUser.getPassword()), accessToken)
         ).orElseGet(() -> {
             User joinedUser = userService.join(
-                new UserSignupRequestDTO(userEmail, "kakao", Role.USER.getRole()));
+                new UserSignupRequestDTO(userEmail, "kakao", Role.ADMIN.getRole()));
             return authService.login(joinedUser, new UserLoginRequestDTO(userEmail, "kakao"), accessToken);
         });
 
-        return ApiResponseGenerator.success(HttpStatus.OK, "jwt 토큰 발급 성공", userResponseDTO);
+        return ApiResponseGenerator.success(HttpStatus.OK, "jwt 토큰 발급 성공", userTokenResponseDTO);
     }
 
 }

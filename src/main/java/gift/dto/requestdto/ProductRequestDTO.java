@@ -14,8 +14,8 @@ public record ProductRequestDTO(
     int price,
     @NotBlank
     String imageUrl,
-    @NotNull
-    Long categoryId
+    @NotBlank
+    String categoryName
 ) {
     public Product toEntity(Category category){
         return new Product(name, price, imageUrl, category);

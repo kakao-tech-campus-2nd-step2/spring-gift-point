@@ -3,13 +3,16 @@ package gift.service;
 import gift.domain.Product;
 import gift.domain.User;
 import gift.domain.Wish;
+import gift.dto.common.PageInfo;
 import gift.dto.requestdto.WishRequestDTO;
+import gift.dto.responsedto.WishListPageResponseDTO;
 import gift.dto.responsedto.WishResponseDTO;
 import gift.repository.JpaProductRepository;
 import gift.repository.JpaUserRepository;
 import gift.repository.JpaWishRepository;
 import java.util.List;
 import java.util.NoSuchElementException;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -40,13 +43,18 @@ public class WishService {
     }
 
     @Transactional(readOnly = true)
-    public List<WishResponseDTO> getAllWishes(Long userId, int page, int size, String criteria) {
+    public WishListPageResponseDTO getAllWishes(Long userId, int page, int size, String criteria) {
         Pageable pageable = PageRequest.of(page, size, Sort.by(criteria));
-        List<WishResponseDTO> wishResponseDTOList = jpaWishRepository.findAllByUser(userId, pageable)
+
+        Page<Wish> wishList = jpaWishRepository.findAllByUser(userId, pageable);
+
+        List<WishResponseDTO> wishResponseDTOList = wishList
             .stream()
             .map(WishResponseDTO::from)
             .toList();
-        return wishResponseDTOList;
+
+        PageInfo pageInfo = new PageInfo(page, wishList.getTotalElements(), wishList.getTotalPages());
+        return new WishListPageResponseDTO(pageInfo, wishResponseDTOList);
     }
 
     @Transactional(readOnly = true)
@@ -55,14 +63,16 @@ public class WishService {
         return WishResponseDTO.from(wish);
     }
 
-    public Long addWish(WishRequestDTO wishRequestDTO) {
+    public WishResponseDTO addWish(WishRequestDTO wishRequestDTO) {
         //TODO: db에 존재하는 product는 insert하면 안됨
         User user = jpaUserRepository.findById(wishRequestDTO.userId())
             .orElseThrow(() -> new NoSuchElementException("id가 잘못되었습니다."));
         Product product = jpaProductRepository.findById(wishRequestDTO.productId())
             .orElseThrow(() -> new NoSuchElementException("id가 잘못되었습니다."));
-        Wish wish = new Wish(user, product, wishRequestDTO.count());
-        return jpaWishRepository.save(wish).getId();
+        Wish wish = new Wish(user, product);
+
+        jpaWishRepository.save(wish);
+        return WishResponseDTO.from(wish);
     }
 
     public Long deleteWish(Long wishId) {

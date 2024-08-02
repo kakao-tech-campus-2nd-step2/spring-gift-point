@@ -27,7 +27,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/categories")
 @Tag(name = "카테고리 api", description = "카테고리 api입니다")
 public class CategoryController {
 
@@ -39,18 +39,18 @@ public class CategoryController {
         this.authService = authService;
     }
 
-    @PostMapping("/category")
+    @PostMapping()
     @Operation(summary = "카테고리 등록 api", description = "카테고리 등록 api입니다")
     @ApiResponse(responseCode = "200", description = "카테고리 등록 성공")
-    public ResponseEntity<SuccessBody<Long>> addCategory(
+    public ResponseEntity<SuccessBody<CategoryResponseDTO>> addCategory(
         @Valid @RequestBody CategoryRequestDTO categoryRequestDTO,
         @LoginUser User user) {
         authService.authorizeAdminUser(user);
-        Long categoryId = categoryService.addCategory(categoryRequestDTO);
-        return ApiResponseGenerator.success(HttpStatus.CREATED, "카테고리가 생성되었습니다.", categoryId);
+        CategoryResponseDTO categoryResponseDTO = categoryService.addCategory(categoryRequestDTO);
+        return ApiResponseGenerator.success(HttpStatus.OK, "카테고리가 생성되었습니다.", categoryResponseDTO);
     }
 
-    @GetMapping("/category/{id}")
+    @GetMapping("/{id}")
     @Operation(summary = "카테고리 단일 조회 api", description = "카테고리 단일 조회 api입니다")
     @ApiResponse(responseCode = "200", description = "카테고리 단일 성공")
     public ResponseEntity<SuccessBody<CategoryResponseDTO>> getOneCategory(
@@ -60,7 +60,7 @@ public class CategoryController {
             categoryResponseDTO);
     }
 
-    @GetMapping("/categories")
+    @GetMapping()
     @Operation(summary = "카테고리 전체 조회 api", description = "카테고리 전체 조회 api입니다")
     @ApiResponse(responseCode = "200", description = "카테고리 전체 조회 성공")
     public ResponseEntity<SuccessBody<List<CategoryResponseDTO>>> getAllCategory() {
@@ -70,26 +70,26 @@ public class CategoryController {
             categoryResponseDTOList);
     }
 
-    @PutMapping("/category/{id}")
+    @PutMapping("/{id}")
     @Operation(summary = "카테고리 수정 api", description = "카테고리 수정 api입니다")
     @ApiResponse(responseCode = "200", description = "카테고리 수정 성공")
-    public ResponseEntity<SuccessBody<Long>> updateCategory(
+    public ResponseEntity<SuccessBody<CategoryResponseDTO>> updateCategory(
         @PathVariable("id") Long categoryId,
         @Valid @RequestBody CategoryRequestDTO categoryRequestDTO,
         @LoginUser User user) {
         authService.authorizeAdminUser(user);
-        Long updatedCategoryId = categoryService.updateCategory(categoryId, categoryRequestDTO);
-        return ApiResponseGenerator.success(HttpStatus.OK, "카테고리가 수정되었습니다.", updatedCategoryId);
+        CategoryResponseDTO categoryResponseDTO = categoryService.updateCategory(categoryId, categoryRequestDTO);
+        return ApiResponseGenerator.success(HttpStatus.OK, "카테고리가 수정되었습니다.", categoryResponseDTO);
     }
 
-    @DeleteMapping("/category/{id}")
-    @Operation(summary = "카테고리 삭제 api", description = "카테고리 삭제ㄴ api입니다")
+    @DeleteMapping("/{id}")
+    @Operation(summary = "카테고리 삭제 api", description = "카테고리 삭제 api입니다")
     @ApiResponse(responseCode = "200", description = "카테고리 삭제 성공")
-    public ResponseEntity<SuccessBody<Long>> deleteCategory(
+    public ResponseEntity<SuccessBody<Void>> deleteCategory(
         @PathVariable("id") Long categoryId,
         @LoginUser User user){
         authService.authorizeAdminUser(user);
-        Long deletedCategoryId = categoryService.deleteCategory(categoryId);
-        return ApiResponseGenerator.success(HttpStatus.OK, "카테고리가 삭제되었습니다.", deletedCategoryId);
+        categoryService.deleteCategory(categoryId);
+        return ApiResponseGenerator.success(HttpStatus.OK, "카테고리가 삭제되었습니다.", null);
     }
 }

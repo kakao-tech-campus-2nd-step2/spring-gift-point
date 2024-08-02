@@ -25,16 +25,13 @@ public class Wish {
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "product_id", nullable = false)
     private Product product;
-    @Column(nullable = false)
-    private int count;
 
     protected Wish() {
     }
 
-    public Wish(User user, Product product, int count) {
+    public Wish(User user, Product product) {
         this.user = user;
         this.product = product;
-        this.count = count;
     }
 
     public Long getId() {
@@ -47,10 +44,6 @@ public class Wish {
 
     public Product getProduct() {
         return product;
-    }
-
-    public int getCount() {
-        return count;
     }
 
     public static class WishList {

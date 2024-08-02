@@ -6,6 +6,7 @@ import gift.dto.common.apiResponse.ApiResponseBody.SuccessBody;
 import gift.dto.common.apiResponse.ApiResponseGenerator;
 import gift.dto.requestdto.ProductCreateRequestDTO;
 import gift.dto.requestdto.ProductRequestDTO;
+import gift.dto.responsedto.ProductPageResponseDTO;
 import gift.dto.responsedto.ProductResponseDTO;
 import gift.service.AuthService;
 import gift.service.OptionService;
@@ -30,7 +31,7 @@ import io.swagger.v3.oas.annotations.Parameter;
 
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/products")
 @Tag(name = "상품 api", description = "상품 api입니다")
 public class ProductController {
     private final ProductService productService;
@@ -41,7 +42,7 @@ public class ProductController {
         this.authService = authService;
     }
 
-    @GetMapping("/products")
+    @GetMapping("/normal")
     @Operation(summary = "상품 전체 조회 api", description = "상품 전체 조회 api입니다")
     @ApiResponse(responseCode = "200", description = "상품 전체 조회 성공")
     public ResponseEntity<SuccessBody<List<ProductResponseDTO>>> getAllProducts() {
@@ -50,19 +51,19 @@ public class ProductController {
             productResponseDTOList);
     }
 
-    @GetMapping("/products/page")
+    @GetMapping()
     @Operation(summary = "상품 조회 페이지 api", description = "상품 조회 페이지 api입니다")
     @ApiResponse(responseCode = "200", description = "상품 페이지 전체 조회 성공")
-    public ResponseEntity<SuccessBody<List<ProductResponseDTO>>> getAllProductPages(
+    public ResponseEntity<SuccessBody<ProductPageResponseDTO>> getAllProductPages(
         @RequestParam(value = "page", defaultValue = "0") int page,
         @RequestParam(value = "size", defaultValue = "8") int size,
         @RequestParam(value = "criteria", defaultValue = "id") String criteria) {
-        List<ProductResponseDTO> productResponseDTOList = productService.getAllProducts(page, size, criteria);
+        ProductPageResponseDTO productPageResponseDTO = productService.getAllProducts(page, size, criteria);
         return ApiResponseGenerator.success(HttpStatus.OK, "모든 상품을 조회했습니다.",
-            productResponseDTOList);
+            productPageResponseDTO);
     }
 
-    @GetMapping("/product/{id}")
+    @GetMapping("/{id}")
     @Operation(summary = "상품 단일 조회 api", description = "상품 단일 조회 api입니다")
     @ApiResponse(responseCode = "200", description = "상품 단일 조회 성공")
     public ResponseEntity<SuccessBody<ProductResponseDTO>> getOneProduct(
@@ -72,38 +73,39 @@ public class ProductController {
             productResponseDTO);
     }
 
-    @PostMapping("/product")
+    @PostMapping()
     @Operation(summary = "상품 추가 api", description = "상품 추가 api입니다")
     @ApiResponse(responseCode = "201", description = "상품 추가 성공")
-    public ResponseEntity<SuccessBody<Long>> addProduct(
-        @Valid @RequestBody ProductCreateRequestDTO productCreateRequestDTO,
+    public ResponseEntity<SuccessBody<ProductResponseDTO>> addProduct(
+        @Valid @RequestBody ProductRequestDTO productRequestDTO,
         @LoginUser User user) {
         authService.authorizeAdminUser(user);
-        Long productId = productService.addProduct(productCreateRequestDTO);
+//        ProductResponseDTO productResponseDTO = productService.addProduct(productCreateRequestDTO);
+        ProductResponseDTO productResponseDTO = productService.addProduct(productRequestDTO);
 
-        return ApiResponseGenerator.success(HttpStatus.CREATED, "상품이 등록되었습니다.", productId);
+        return ApiResponseGenerator.success(HttpStatus.OK, "상품이 등록되었습니다.", productResponseDTO);
     }
 
-    @PutMapping("/product/{id}")
+    @PutMapping("/{id}")
     @Operation(summary = "상품 수정 api", description = "상품 수정 api입니다")
     @ApiResponse(responseCode = "200", description = "상품 수정 성공")
-    public ResponseEntity<SuccessBody<Long>> updateProduct(
+    public ResponseEntity<SuccessBody<ProductResponseDTO>> updateProduct(
         @PathVariable("id") Long productId,
         @Valid @RequestBody ProductRequestDTO productRequestDTO,
         @LoginUser User user) {
         authService.authorizeAdminUser(user);
-        Long updatedProductId = productService.updateProduct(productId, productRequestDTO);
-        return ApiResponseGenerator.success(HttpStatus.OK, "상품이 수정되었습니다.", updatedProductId);
+        ProductResponseDTO productResponseDTO = productService.updateProduct(productId, productRequestDTO);
+        return ApiResponseGenerator.success(HttpStatus.OK, "상품이 수정되었습니다.", productResponseDTO);
     }
 
-    @DeleteMapping("/product/{id}")
+    @DeleteMapping("/{id}")
     @Operation(summary = "상품 삭제 api", description = "상품 삭제 api입니다")
     @ApiResponse(responseCode = "200", description = "상품 삭제 성공")
-    public ResponseEntity<SuccessBody<Long>> deleteProduct(
+    public ResponseEntity<SuccessBody<Void>> deleteProduct(
         @PathVariable("id") Long productId,
         @LoginUser User user) {
         authService.authorizeAdminUser(user);
-        Long deletedProductId = productService.deleteProduct(productId);
-        return ApiResponseGenerator.success(HttpStatus.OK, "상품이 삭제되었습니다.", deletedProductId);
+        productService.deleteProduct(productId);
+        return ApiResponseGenerator.success(HttpStatus.OK, "상품이 삭제되었습니다.", null);
     }
 }
