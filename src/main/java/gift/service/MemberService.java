@@ -111,7 +111,7 @@ public class MemberService {
         try{
             Member member = memberRepository.findByEmail(memberDTO.getEmail())
                     .orElseThrow(()  -> new BadRequestException("해당 유저를 찾을 수 없습니다."));
-            member.addPoint(addPointDTO.addPoint());
+            member.addPoint(addPointDTO.point());
         } catch (BadRequestException e) {
             throw e;
         } catch (Exception e) {
