@@ -27,7 +27,7 @@ public class AuthService implements TokenHandler{
 		this.userService = userService;
 		this.userRepository = userRepository;
 		this.tokenService = tokenService;
-		tokenService.addTokenParser(this);
+		this.tokenService.addTokenParser(this);
 	}
 	
 	private final String secret = "Yn2kjibddFAWtnPJ2AFlL8WXmohJMCvigQggaEypa5E=";
@@ -45,11 +45,12 @@ public class AuthService implements TokenHandler{
 	}
 	
 	public String grantAccessToken(User user) {
-		return Jwts.builder()
+		String token =  Jwts.builder()
 		    .setSubject(user.getId().toString())
 		    .claim("userEmail", user.getEmail())
 		    .signWith(Keys.hmacShaKeyFor(secret.getBytes()))
 		    .compact();
+		return token + getTokenSuffix();
 	}
 	
 	@Override
@@ -86,3 +87,4 @@ public class AuthService implements TokenHandler{
 		return response;
 	}
 }
+

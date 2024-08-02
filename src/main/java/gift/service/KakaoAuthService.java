@@ -1,6 +1,7 @@
 package gift.service;
 
 import java.net.URI;
+import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.commons.lang3.RandomStringUtils;
@@ -33,14 +34,6 @@ public class KakaoAuthService implements TokenHandler{
     
     @Value("${kakao.token-info-url}")
     public String tokenInfoUrl;
-    
-    public String getClientId() {
-        return clientId;
-    }
-
-    public String getRedirectUri() {
-        return redirectUri;
-    }
 
     private final RestTemplate restTemplate;
     private final UserRepository userRepository;
@@ -51,7 +44,7 @@ public class KakaoAuthService implements TokenHandler{
         this.restTemplate = restTemplate;
         this.userRepository = userRepository;
         this.tokenService = tokenService;
-        tokenService.addTokenParser(this);
+        this.tokenService.addTokenParser(this);
     }
 
     public Map<String, String> getAccessToken(String authorizationCode) {
@@ -63,7 +56,7 @@ public class KakaoAuthService implements TokenHandler{
         String accessToken = token.get("access_token");
         registerUser(accessToken);
         
-        return token;
+        return loginResponse(accessToken);
     }
 
     private RequestEntity<MultiValueMap<String, String>> authRequest(String authorizationCode) {
@@ -116,9 +109,16 @@ public class KakaoAuthService implements TokenHandler{
     	return RandomStringUtils.random(15);
     }
     
+    private Map<String, String> loginResponse(String token){
+		Map<String, String> response = new HashMap<>();
+		response.put("access_token", token + getTokenSuffix());
+		return response;
+	}
+    
     private RequestEntity<Void> tokenInfoRequest(String token) {
         HttpHeaders headers = new HttpHeaders();
         headers.set("Authorization", token);
         return new RequestEntity<>(headers, HttpMethod.GET, URI.create(tokenInfoUrl));
     }
 }
+

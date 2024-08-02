@@ -18,16 +18,19 @@ import org.springframework.util.MultiValueMap;
 public class KakaoMessageService {
 
 	private final KakaoAuthService kakaoAuthService;
+	private final TokenService tokenService;
 	
 	@Value("${kakao.message-url}")
     private String messageUrl;
 
-	public KakaoMessageService(KakaoAuthService kakaoAuthService) {
+	public KakaoMessageService(KakaoAuthService kakaoAuthService, TokenService tokenService) {
 		this.kakaoAuthService = kakaoAuthService;
+		this.tokenService = tokenService;
 	}
 
 	public Map<String, String> sendMessage(String accessToken, String message) {
-		RequestEntity<MultiValueMap<String, String>> request = messageRequest(accessToken, message);
+		String orignalToken = tokenService.removeTokenSuffix(accessToken);
+		RequestEntity<MultiValueMap<String, String>> request = messageRequest(orignalToken, message);
         ResponseEntity<Map<String, String>> response = kakaoAuthService.errorHandling(request,
         		new ParameterizedTypeReference<Map<String, String>>() {});
         return response.getBody();
@@ -61,3 +64,4 @@ public class KakaoMessageService {
 		return body;
 	}
 }
+
