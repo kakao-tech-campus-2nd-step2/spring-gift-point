@@ -47,6 +47,7 @@ public class WishProductService {
 		User user = userJpaRepository.findById(userId).orElseThrow();
 		Product product = productJpaRepository.findById(productId).orElseThrow();
 		WishProduct wishProduct = WishProduct.of(user, product);
+		wishProductJpaRepository.save(wishProduct);
 		return wishProduct.getId();
 	}
 
