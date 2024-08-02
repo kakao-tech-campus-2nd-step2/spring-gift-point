@@ -22,3 +22,5 @@ cd $DEPLOY_PATH
 DEPLOY_JAR=$DEPLOY_PATH$JAR_NAME
 echo "Deploying $DEPLOY_JAR"
 nohup java -jar $DEPLOY_JAR > /home/ubuntu/spring-gift-point/build/libs/nohup.out 2>&1 &
+
+tail -f /home/ubuntu/spring-gift/build/libs/nohup.out
