@@ -80,7 +80,7 @@ public class KakaoService {
             String name = email.split("@")[0];
             String password = generateRandomPassword();
             MemberDTO memberDTO = new MemberDTO(name, email, password);
-            member = new Member(null, memberDTO.name(), memberDTO.email(), memberDTO.password(),
+            member = new Member(null, memberDTO.email(), memberDTO.password(),
                 "user");
             memberRepository.save(member);
         }

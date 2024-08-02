@@ -1,7 +1,9 @@
 package gift.service;
 
-import gift.dto.CategoryDTO;
+import gift.dto.categoryDTO.CategoryRequestDTO;
+import gift.dto.categoryDTO.CategoryResponseDTO;
 import gift.model.Category;
+import gift.model.Option;
 import gift.model.Product;
 import gift.repository.CategoryRepository;
 import gift.repository.OptionRepository;
@@ -29,30 +31,38 @@ public class CategoryService {
         this.optionRepository = optionRepository;
     }
 
-    public List<Category> findAllCategories() {
-        return categoryRepository.findAll();
+    public List<CategoryResponseDTO> findAllCategories() {
+        return categoryRepository.findAll().stream()
+            .map(category -> toDTO(category))
+            .toList();
     }
 
-    public Category findCategoryById(Long id) {
-        return categoryRepository.findById(id).orElse(null);
+    public CategoryResponseDTO findCategoryById(Long id) {
+        Category category = categoryRepository.findById(id).orElse(null);
+        return toDTO(category);
     }
 
-    public Category findCategoryByName(String name) {
-        return categoryRepository.findByName(name);
+    public CategoryResponseDTO findCategoryByName(String name) {
+        Category category = categoryRepository.findByName(name);
+        return toDTO(category);
     }
 
     @Transactional
-    public void saveCategory(CategoryDTO categoryDTO) {
-        categoryRepository.save(toEntity(categoryDTO, null));
+    public CategoryResponseDTO saveCategory(CategoryRequestDTO categoryRequestDTO) {
+        Category category = requestToEntity(categoryRequestDTO, null);
+        category = categoryRepository.save(category);
+        return toDTO(category);
     }
 
     @Transactional
-    public void updateCategory(CategoryDTO categoryDTO, Long id) {
+    public CategoryResponseDTO updateCategory(Long id, CategoryRequestDTO categoryRequestDTO) {
         Category existingCategory = categoryRepository.findById(id).orElse(null);
         if (existingCategory != null) {
-            existingCategory.updateName(categoryDTO.name());
-            categoryRepository.save(existingCategory);
+            existingCategory.updateCategory(categoryRequestDTO.name(), categoryRequestDTO.color(),
+                categoryRequestDTO.imageUrl(), categoryRequestDTO.description());
+            existingCategory = categoryRepository.save(existingCategory);
         }
+        return toDTO(existingCategory);
     }
 
     @Transactional
@@ -62,7 +72,8 @@ public class CategoryService {
             List<Product> products = productRepository.findAllByCategoryId(id);
             if (!products.isEmpty()) {
                 List<Long> productIds = products.stream().map(Product::getId).toList();
-                wishlistRepository.deleteByProductIn(products);
+                List<Option> options = optionRepository.findAllByProductIdIn(productIds);
+                wishlistRepository.deleteByOptionIn(options);
                 optionRepository.deleteAllByProductIdIn(productIds);
                 productRepository.deleteAll(products);
             }
@@ -70,13 +81,25 @@ public class CategoryService {
         }
     }
 
-    public static CategoryDTO toDTO(Category category) {
-        return new CategoryDTO(category.getName());
+    public static CategoryResponseDTO toDTO(Category category) {
+        return new CategoryResponseDTO(
+            category.getId(),
+            category.getName(),
+            category.getColor(),
+            category.getImageUrl(),
+            category.getDescription()
+        );
     }
 
-    public static Category toEntity(CategoryDTO categoryDTO, Long id) {
-        Category category = new Category(id, categoryDTO.name());
-        return category;
+    public Category requestToEntity(CategoryRequestDTO categoryRequestDTO, Long id) {
+        return new Category(id, categoryRequestDTO.name(), categoryRequestDTO.color(),
+            categoryRequestDTO.imageUrl(), categoryRequestDTO.description());
+    }
+
+    public Category responseToEntity(CategoryResponseDTO categoryResponseDTO) {
+        return new Category(categoryResponseDTO.id(), categoryResponseDTO.name(),
+            categoryResponseDTO.color(), categoryResponseDTO.imageUrl(),
+            categoryResponseDTO.description());
     }
 
 }

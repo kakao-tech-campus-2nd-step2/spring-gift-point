@@ -1,6 +1,6 @@
 package gift.service;
 
-
+import gift.dto.optionDTO.OptionResponseDTO;
 import gift.dto.orderDTO.OrderRequestDTO;
 import gift.dto.orderDTO.OrderResponseDTO;
 import gift.model.Member;
@@ -8,8 +8,6 @@ import gift.model.Option;
 import gift.model.Order;
 import gift.repository.OrderRepository;
 import java.time.LocalDateTime;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,8 +15,6 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @Transactional(readOnly = true)
 public class OrderService {
-
-    private static final Logger logger = LoggerFactory.getLogger(OrderService.class);
 
     private final OrderRepository orderRepository;
     private final OptionService optionService;
@@ -36,26 +32,26 @@ public class OrderService {
 
     @Transactional
     public OrderResponseDTO createOrder(OrderRequestDTO orderRequestDTO, String email) {
-        Option option = optionService.findOptionById(orderRequestDTO.optionId());
+        OptionResponseDTO optionResponseDTO = optionService.findOptionById(orderRequestDTO.optionId());
         Member member = memberService.findMemberByEmail(email);
-        Long quantity = orderRequestDTO.quantity();
-        optionService.subtractQuantity(option.getId(), quantity);
-        Order order = new Order(null, option, quantity, LocalDateTime.now(),
+        Option option = optionService.toEntity(optionResponseDTO);
+        optionService.subtractQuantity(option.getId(), orderRequestDTO.quantity());
+        Order order = new Order(null, option, orderRequestDTO.quantity(), LocalDateTime.now(),
             orderRequestDTO.message(), member);
         orderRepository.save(order);
-        removeFromWishlist(member.getEmail(), option.getProduct().getId());
-        OrderResponseDTO orderResponseDTO = new OrderResponseDTO(order.getId(),
-            order.getOption().getId(), order.getQuantity(), order.getOrderDateTime(),
+        removeFromWishlistByOptionId(option.getId());
+        OrderResponseDTO orderResponseDTO = new OrderResponseDTO(order.getId(), order.getOption().getProduct().getId(),
+            order.getOption().getId(),  order.getOrderDateTime().toString(), order.getQuantity(),
             order.getMessage());
         return orderResponseDTO;
     }
 
     @Transactional(propagation = Propagation.REQUIRES_NEW)
-    public void removeFromWishlist(String email, Long productId) {
+    public void removeFromWishlistByOptionId(Long optionId) {
         try {
-            wishlistService.removeWishlist(email, productId);
+            wishlistService.removeWishlistByOptionId(optionId);
         } catch (Exception e) {
-            logger.error("주문은 성공했지만 위시리스트에서의 삭제는 실패했습니다.");
+
         }
     }
 
