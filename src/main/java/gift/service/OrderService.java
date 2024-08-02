@@ -14,7 +14,11 @@ import gift.repository.WishRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.*;
 import org.springframework.stereotype.Service;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
+import org.springframework.web.client.RestTemplate;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -28,16 +32,19 @@ public class OrderService {
     private final OptionRepository optionRepository;
     private final MemberRepository memberRepository;
     private final WishRepository wishRepository;
+    private final RestTemplate restTemplate;
 
     @Autowired
     public OrderService(OrderRepository orderRepository,
                         OptionRepository optionRepository,
                         MemberRepository memberRepository,
-                        WishRepository wishRepository) {
+                        WishRepository wishRepository,
+                        RestTemplate restTemplate) {
         this.orderRepository = orderRepository;
         this.optionRepository = optionRepository;
         this.memberRepository = memberRepository;
         this.wishRepository = wishRepository;
+        this.restTemplate = restTemplate;
     }
 
     public List<OrderResponseDTO> getAllOrders(LoginMemberDTO loginMemberDTO){
@@ -66,6 +73,8 @@ public class OrderService {
                 orderPage.isLast()
         );
     }
+
+
     //주문하기
     /*
     * 1. member - wish에 있다면 삭제해야 함.
@@ -77,6 +86,8 @@ public class OrderService {
     * 2. 존재하구나 -> 장바구니에 있나?
     * 3. 장바구니에 있네 -> 지우기. 없네? -> 그냥
     * */
+
+
     public OrderResponseDTO addOrder(LoginMemberDTO loginMemberDTO, OrderRequestDTO orderRequestDTO){
 
         Long optionId = orderRequestDTO.optionId();
@@ -103,9 +114,48 @@ public class OrderService {
 
         Order order = new Order(member, option, quantity, message, LocalDateTime.now());
         orderRepository.save(order);
-        return toDto(order);
+
+        OrderResponseDTO orderResponseDTO= toDto(order);
+        if(member.getType()==MemberType.KAKAO){
+            sendKakaoMessage(member);
+        }
+
+        return orderResponseDTO;
     }
 
+
+    private void sendKakaoMessage(Member member ){
+        String kakaoAccessToken = member.getKakaoToken();
+        String jsonBody = "{"
+                + "\"object_type\": \"text\","
+                + "\"text\": \"상품 주문 완료\","
+                + "\"link\": {"
+                + "  \"web_url\": \"https://developers.kakao.com\","
+                + "  \"mobile_web_url\": \"https://developers.kakao.com\""
+                + "},"
+                + "\"button_title\": \"바로 확인\""
+                + "}";
+
+        MultiValueMap<String, String> body = new LinkedMultiValueMap<>();
+        body.add("template_object", jsonBody);
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("Content-Type", "application/x-www-form-urlencoded");
+        headers.set("Authorization", "Bearer " + kakaoAccessToken);
+
+        HttpEntity<MultiValueMap<String, String>> requestEntity = new HttpEntity<>(body, headers);
+
+        var url = "https://kapi.kakao.com/v2/api/talk/memo/default/send";
+
+        ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.POST, requestEntity, String.class);
+
+        if (response.getStatusCode() == HttpStatus.OK) {
+            System.out.println("메시지 전송 성공");
+        } else {
+            System.out.println("메시지 전송 실패: " + response.getStatusCode());
+        }
+
+    }
 
     private OrderResponseDTO toDto(Order order) {
         return new OrderResponseDTO(
