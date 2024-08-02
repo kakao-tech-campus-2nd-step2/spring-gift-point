@@ -1,6 +1,7 @@
 package gift.entity;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import gift.exception.orderException.deductPointException;
 import jakarta.persistence.*;
 import org.hibernate.usertype.UserType;
 
@@ -39,6 +40,9 @@ public class Member {
     @Column(nullable = true, name="kakao-token")
     private String kakaoToken;
 
+    @Column(name="point")
+    private Long point;
+
 
     public Member() {}
 
@@ -54,6 +58,7 @@ public class Member {
         this.type = type;
         this.email = email;
         this.kakaoToken = kakaoToken;
+        this.point = 0L;
     }
 
     public Member(String email, MemberType type) {
@@ -85,7 +90,15 @@ public class Member {
         return orders;
     }
 
-    public String getKakaoToken() {
-        return kakaoToken;
+    public String getKakaoToken() { return kakaoToken; }
+
+    public Long getPoint() { return point; }
+
+    public void deductPoints(Long point){
+        if(this.point - point <0){
+            throw new deductPointException("가지고 있는 포인트보다 많이 입력했습니다. 다시 입력해주세요");
+        }
+        this.point -= point;
     }
+
 }
