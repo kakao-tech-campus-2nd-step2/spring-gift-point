@@ -101,4 +101,8 @@ public class Member {
         this.point -= point;
     }
 
+    public void accumulatePoint(Long point){
+        this.point += point;
+    }
+
 }
