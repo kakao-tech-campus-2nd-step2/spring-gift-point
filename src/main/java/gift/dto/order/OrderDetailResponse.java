@@ -15,7 +15,7 @@ public class OrderDetailResponse {
 
     private final int receivedPoint;
 
-    private final int totalPrice;
+    private final int payment;
 
     public OrderDetailResponse(Order order) {
         this.id = order.getId();
@@ -24,7 +24,7 @@ public class OrderDetailResponse {
         this.message = order.getMessage();
         this.usedPoint = order.getUsedPoint();
         this.receivedPoint = order.getReceivedPoint();
-        this.totalPrice = order.getTotalPrice();
+        this.payment = order.getTotalPrice();
     }
 
     public Long getId() {
@@ -52,6 +52,6 @@ public class OrderDetailResponse {
     }
 
     public int getTotalPrice() {
-        return totalPrice;
+        return payment;
     }
 }

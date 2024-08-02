@@ -54,14 +54,15 @@ public class OauthControllerTest {
 
     @Test
     public void testKakaoLoginRedirect() throws Exception {
-        when(kakaoLoginService.buildAuthorizeUrl()).thenReturn("https://kauth.kakao.com/oauth/authorize?client_id=123");
+        when(kakaoLoginService.buildAuthorizeUrl()).thenReturn(
+                "https://kauth.kakao.com/api/oauth/authorize?client_id=123");
 
-        mockMvc.perform(get("/oauth/login/kakao"))
+        mockMvc.perform(get("/api/oauth/login/kakao"))
                 .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl("https://kauth.kakao.com/oauth/authorize?client_id=123"));
+                .andExpect(redirectedUrl("https://kauth.kakao.com/api/oauth/authorize?client_id=123"));
     }
 
-//    @Test
+    //    @Test
     public void testKakaoCallbackSuccess() throws Exception {
         when(kakaoLoginService.getAccessToken(anyString())).thenReturn(mockToken);
         when(kakaoLoginService.getUserInfo(mockToken.accessToken())).thenReturn("email");
@@ -73,7 +74,7 @@ public class OauthControllerTest {
                 .andExpect(content().string("로그인 성공"));
     }
 
-//    @Test
+    //    @Test
     public void testKakaoCallbackFailure() throws Exception {
         when(kakaoLoginService.getAccessToken(anyString())).thenReturn(mockToken);
         when(kakaoLoginService.getUserInfo(mockToken.accessToken())).thenReturn("email");
