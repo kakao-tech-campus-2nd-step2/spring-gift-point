@@ -24,11 +24,46 @@ public class WebConfig implements WebMvcConfigurer {
 
     @Override
     public void addCorsMappings(CorsRegistry registry) {
-        registry.addMapping("/**")
+        registry.addMapping("/api/products/**")
             .allowedOrigins("*")
             .allowedMethods("GET", "POST", "PUT", "DELETE")
-            .allowedHeaders("*")
-            .exposedHeaders("Location")
+            .allowedHeaders("Content-Type", "Authorization")
+            .exposedHeaders("Authorization", "Location")
+            .maxAge(1800);
+
+        registry.addMapping("/api/categories/**")
+            .allowedOrigins("*")
+            .allowedMethods("GET", "POST", "PUT", "DELETE")
+            .allowedHeaders("Content-Type", "Authorization")
+            .exposedHeaders("Authorization", "Location")
+            .maxAge(1800);
+
+        registry.addMapping("/api/orders/**")
+            .allowedOrigins("*")
+            .allowedMethods("POST")
+            .allowedHeaders("Content-Type", "Authorization")
+            .exposedHeaders("Authorization")
+            .maxAge(1800);
+
+        registry.addMapping("/api/wishes/**")
+            .allowedOrigins("*")
+            .allowedMethods("GET", "POST", "DELETE")
+            .allowedHeaders("Content-Type", "Authorization")
+            .exposedHeaders("Authorization")
+            .maxAge(1800);
+
+        registry.addMapping("/api/members/**")
+            .allowedOrigins("*")
+            .allowedMethods("POST")
+            .allowedHeaders("Content-Type")
+            .exposedHeaders("Authorization")
+            .maxAge(1800);
+
+        registry.addMapping("/api/products/{productId}/options/**")
+            .allowedOrigins("*")
+            .allowedMethods("GET", "POST", "PUT", "DELETE")
+            .allowedHeaders("Content-Type", "Authorization")
+            .exposedHeaders("Authorization", "Location")
             .maxAge(1800);
     }
 }
