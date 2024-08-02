@@ -55,8 +55,8 @@ jobs:
           host: 43.202.208.102
           username: ubuntu
           key: ${{ secrets.EC2_SSH_KEY }}
-          source: 'build/libs/spring-gift-0.0.1-SNAPSHOT.jar'
-          target: '~/kakaoGift/spring-gift-0.0.1-SNAPSHOT.jar'
+          source: 'spring-gift-0.0.1-SNAPSHOT.jar'
+          target: '~/kakaoGift/'
 
       - name: Deploy to EC2
         uses: appleboy/ssh-action@v0.1.6
@@ -68,4 +68,3 @@ jobs:
             cd ~/kakaoGift/
             sudo fuser -k -n tcp 8080
             nohup java -jar spring-gift-0.0.1-SNAPSHOT.jar > log.txt 2>&1 &
-
