@@ -1,10 +1,10 @@
 package gift.controller;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import gift.model.dto.OrderDTO;
+import gift.CustomAnnotation.RequestRole;
+import gift.model.entity.Role;
 import gift.model.form.OrderForm;
+import gift.model.response.OrderResponse;
 import gift.service.OrderService;
-import gift.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
@@ -20,20 +20,17 @@ import org.springframework.web.bind.annotation.RestController;
 public class OrderController {
 
     private final OrderService orderService;
-    private final UserService userService;
 
-    public OrderController(OrderService orderService, UserService userService) {
+    public OrderController(OrderService orderService) {
         this.orderService = orderService;
-        this.userService = userService;
     }
 
+    @RequestRole(Role.ROLE_USER)
     @Operation(summary = "상품 주문", description = "특정 상품을 주문합니다.")
     @PostMapping
     public ResponseEntity<?> handleOrderToMe(@RequestBody OrderForm form,
-        @RequestAttribute("userId") Long userId)
-        throws JsonProcessingException {
-        OrderDTO orderDTO = new OrderDTO(form, userId);
-        orderService.executeOrder(userId, orderDTO);
-        return ResponseEntity.ok().build();
+        @RequestAttribute("userId") Long userId) {
+        OrderResponse orderResponse = new OrderResponse(orderService.executeOrder(userId, form));
+        return ResponseEntity.ok(orderResponse);
     }
 }
