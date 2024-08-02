@@ -1,11 +1,13 @@
 package gift.service;
 
+import gift.dto.response.CategoryResponse;
 import gift.entity.Category;
 import gift.repository.CategoryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class CategoryService {
@@ -22,8 +24,9 @@ public class CategoryService {
                 .orElseThrow(() -> new RuntimeException("Category not found"));
     }
 
-    public List<Category> getAllCategories() {
-        return categoryRepository.findAll();
+    public List<CategoryResponse> getAllCategories() {
+        return categoryRepository.findAll().stream().map(CategoryResponse::new)
+                .collect(Collectors.toList());
     }
 
 

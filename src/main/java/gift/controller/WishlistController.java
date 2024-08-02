@@ -1,7 +1,5 @@
 package gift.controller;
 
-import gift.service.MemberService;
-import gift.service.ProductService;
 import gift.service.WishlistService;
 import gift.util.JwtTokenProvider;
 import io.swagger.v3.oas.annotations.Operation;
