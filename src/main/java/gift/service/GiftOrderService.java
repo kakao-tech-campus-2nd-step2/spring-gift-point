@@ -21,14 +21,17 @@ public class GiftOrderService {
     private final GiftOrderRepository giftOrderRepository;
     private final MemberRepository memberRepository;
     private final WishProductService wishProductService;
+    private final PointService pointService;
 
-    public GiftOrderService(GiftOrderRepository giftOrderRepository, MemberRepository memberRepository, WishProductService wishProductService) {
+    public GiftOrderService(GiftOrderRepository giftOrderRepository, MemberRepository memberRepository, WishProductService wishProductService, PointService pointService) {
         this.giftOrderRepository = giftOrderRepository;
         this.memberRepository = memberRepository;
         this.wishProductService = wishProductService;
+        this.pointService = pointService;
     }
 
     public GiftOrderResponse addGiftOrder(Long memberId, Option option, GiftOrderRequest giftOrderRequest) {
+        pointService.subtractPoint(memberId, giftOrderRequest.point());
         var order = saveGiftOrderWithGiftOrderRequest(memberId, option, giftOrderRequest);
         wishProductService.deleteAllByMemberIdAndProductId(memberId, option.getProduct().getId());
         return getGiftOrderResponseFromGiftOrder(order);

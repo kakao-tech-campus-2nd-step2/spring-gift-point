@@ -18,6 +18,7 @@ public interface GiftOrderApi {
     @Operation(summary = "회원의 새 주문을 생성한다.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "주문 생성 성공", content = @Content(schema = @Schema(implementation = GiftOrderResponse.class))),
+            @ApiResponse(responseCode = "400", description = "주문 생성 실패(사유 : 사용할 수 있는 포인트보다 더 많은 포인트가 입력되었거나 주문 정보가 잘못되었습니다.)", content = @Content(schema = @Schema(hidden = true))),
             @ApiResponse(responseCode = "401", description = "주문 생성 실패(사유 : 카카오 토큰이 만료되었거나, 허용되지 않은 요청입니다.)", content = @Content(schema = @Schema(hidden = true))),
             @ApiResponse(responseCode = "500", description = "내부 서버의 오류", content = @Content(schema = @Schema(hidden = true)))
     })

@@ -46,6 +46,11 @@ public class GlobalExceptionHandler {
         return getExceptionResponse(INVALID_LOGIN_INFO_MESSAGE, HttpStatus.UNAUTHORIZED);
     }
 
+    @ExceptionHandler(value = GiftOrderException.class)
+    public ResponseEntity<ExceptionResponse> giftOrderExceptionHandling(GiftOrderException exception) {
+        return getExceptionResponse(exception.getMessage(), HttpStatus.BAD_REQUEST);
+    }
+
     @ExceptionHandler(value = UnauthorizedAccessException.class)
     public ResponseEntity<ExceptionResponse> unauthorizedAccessExceptionHandling(UnauthorizedAccessException exception) {
         return getExceptionResponse(exception.getMessage(), HttpStatus.UNAUTHORIZED);

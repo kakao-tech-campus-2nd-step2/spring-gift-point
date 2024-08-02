@@ -90,7 +90,7 @@ class OptionServiceTest {
         //given
         var optionRequest = new OptionRequest("옵션1", 0);
         var savedOption = optionService.addOption(1L, optionRequest);
-        var orderRequest = new GiftOrderRequest(savedOption.id(), 1, "hello");
+        var orderRequest = new GiftOrderRequest(savedOption.id(), 1, "hello", 0);
         //when, then
         Assertions.assertThatThrownBy(() -> optionService.orderOption(savedOption.id(), orderRequest)).isInstanceOf(BadRequestException.class);
 
@@ -101,7 +101,7 @@ class OptionServiceTest {
     @DisplayName("동시성 테스트 - 5개의 쓰레드풀에 500개의 요청을 보냈을 때에도 정상적으로 요청이 처리 된다.")
     public void concurrencyTest() throws InterruptedException {
         //given
-        var orderRequest = new GiftOrderRequest(1L, 1, "hello");
+        var orderRequest = new GiftOrderRequest(1L, 1, "hello", 0);
         int requestCount = 500;
         var executorService = Executors.newFixedThreadPool(5);
         var countDownLatch = new CountDownLatch(requestCount);
