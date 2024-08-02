@@ -4,7 +4,6 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import gift.domain.KakaoToken;
 import gift.dto.KakaoTalkRequest;
-import gift.dto.KakaoTalkResponse;
 import gift.dto.member.MemberDto;
 import gift.exception.InvalidKakaoTalkTemplateException;
 import gift.exception.InvalidKakaoTokenException;
@@ -34,7 +33,7 @@ public class KakaoTalkService {
         this.kakaoTokenRepository = kakaoTokenRepository;
     }
 
-    public KakaoTalkResponse sendTalk(MemberDto memberDto, KakaoTalkRequest kakaoTalkRequest) {
+    public void sendTalk(MemberDto memberDto, KakaoTalkRequest kakaoTalkRequest) {
         String templateObject;
         try {
             templateObject = objectMapper.writeValueAsString(kakaoTalkRequest);
@@ -48,12 +47,11 @@ public class KakaoTalkService {
         var body = new LinkedMultiValueMap<String, String>();
         body.add("template_object", templateObject);
         try {
-            return client.post()
+            client.post()
                 .uri(URI.create(KAKAO_SEND_TALK_URL))
                 .header("Authorization", "Bearer " + kakaoToken.getAccessToken())
                 .body(body)
-                .retrieve()
-                .body(KakaoTalkResponse.class);
+                .retrieve();
         } catch (HttpClientErrorException e) {
             throw new InvalidKakaoTokenException(e.getStatusCode(), e.getMessage());
         }

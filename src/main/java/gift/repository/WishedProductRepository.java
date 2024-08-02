@@ -13,7 +13,7 @@ public interface WishedProductRepository extends JpaRepository<WishedProduct, Lo
     Page<WishedProduct> findByMember(Member member, Pageable pageable);
 
     @Transactional
-    void deleteAllByMemberAndProduct(Member member, Product product);
+    void deleteByMemberAndProduct(Member member, Product product);
 
     boolean existsByMemberAndProduct(Member member, Product product);
 }

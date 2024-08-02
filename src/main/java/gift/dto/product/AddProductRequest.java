@@ -7,7 +7,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public record AddProductRequest(
-
     @NotNull
     ProductDto productDto,
 
