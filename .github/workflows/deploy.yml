@@ -53,28 +53,7 @@ jobs:
             # 디렉토리 내용 확인
             echo "Contents of the directory:"
             ls -l
-
-            # 새로운 JAR 파일 존재 여부 확인
-            if [ -f "spring-gift-0.0.1-SNAPSHOT.jar" ]; then
-              echo "File spring-gift-0.0.1-SNAPSHOT.jar exists."
-            else
-              echo "File spring-gift-0.0.1-SNAPSHOT.jar does not exist. Exiting."
-              exit 1
-            fi
-
-            # 현재 실행 중인 애플리케이션 종료
-            echo "Stopping existing Java process..."
-            pkill -f "java -jar spring-gift.jar" || true
-            echo "Stopping existing Java process success!"
-
-            # 기존 JAR 파일 삭제
-            echo "Removing old JAR file..."
-            if [ -f "spring-gift.jar" ]; then
-              rm -f spring-gift.jar
-            else
-              echo "Old JAR file does not exist."
-            fi
-
+  
             # 새로운 JAR 파일 이름 변경
             echo "Renaming new JAR file..."
             mv spring-gift-0.0.1-SNAPSHOT.jar spring-gift.jar
