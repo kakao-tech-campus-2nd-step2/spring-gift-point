@@ -11,6 +11,7 @@ public record OrderRequest(
         @Max(99999999)
         Long quantity,
         @NotBlank
-        String message
+        String message,
+        int usedPoint
 ) {
 }
