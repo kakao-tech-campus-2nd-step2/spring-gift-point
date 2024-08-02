@@ -11,8 +11,8 @@ import gift.service.option.OptionService;
 import gift.service.wish.WishService;
 import gift.web.dto.category.CategoryResponseDto;
 import gift.web.dto.MemberDto;
-import gift.web.dto.OrderDto;
-import gift.web.dto.product.ProductRequestDto;
+import gift.web.dto.order.OrderRequestDto;
+import gift.web.dto.order.OrderResponseDto;
 import gift.web.dto.product.ProductResponseDto;
 import java.net.URI;
 import java.util.HashMap;
@@ -58,18 +58,19 @@ public class OrderService {
     }
 
     @Transactional
-    public OrderDto createOrder(MemberDto memberDto, OrderDto orderDto) {
+    public OrderResponseDto createOrder(MemberDto memberDto, OrderRequestDto orderRequestDto) {
 
-        ProductResponseDto productResponseDto = optionService.getProduct(orderDto.optionId());
+        ProductResponseDto productResponseDto = optionService.getProduct(orderRequestDto.optionId());
         CategoryResponseDto categoryResponseDto = categoryService.getCategory(productResponseDto.categoryId());
 
         if (wishService.existsByMemberEmailAndProductId(memberDto.email(), productResponseDto.id())) {
             wishService.deleteWish(memberDto.email(), productResponseDto.id());
         }
 
-        optionService.subtractOptionQuantity(orderDto.optionId(), productResponseDto.id(), orderDto.quantity());
+        optionService.subtractOptionQuantity(orderRequestDto.optionId(), productResponseDto.id(), orderRequestDto.quantity());
 
-        Order order = orderRepository.save(orderMapper.toEntity(orderDto, optionService.getOptionEntityByOptionId(orderDto.optionId())));
+        Order order = orderRepository.save(orderMapper.toEntity(
+            orderRequestDto, optionService.getOptionEntityByOptionId(orderRequestDto.optionId())));
 
 
         oAuthTokenRepository.findByMemberEmail(memberDto.email())

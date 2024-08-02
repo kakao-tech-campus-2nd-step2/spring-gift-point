@@ -1,8 +1,8 @@
-package gift.web.dto;
+package gift.web.dto.order;
 
 import java.time.LocalDateTime;
 
-public record OrderDto(
+public record OrderResponseDto(
     Long id,
     Long optionId,
     Long quantity,

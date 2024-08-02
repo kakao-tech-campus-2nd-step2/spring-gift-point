@@ -2,14 +2,15 @@ package gift.mapper;
 
 import gift.domain.option.Option;
 import gift.domain.order.Order;
-import gift.web.dto.OrderDto;
+import gift.web.dto.order.OrderRequestDto;
+import gift.web.dto.order.OrderResponseDto;
 import org.springframework.stereotype.Component;
 
 @Component
 public class OrderMapper {
 
-    public OrderDto toDto(Order order) {
-        return new OrderDto(
+    public OrderResponseDto toDto(Order order) {
+        return new OrderResponseDto(
             order.getId(),
             order.getOption().getId(),
             order.getQuantity(),
@@ -18,7 +19,7 @@ public class OrderMapper {
         );
     }
 
-    public Order toEntity(OrderDto orderDto, Option option) {
-        return new Order(option, orderDto.quantity(), orderDto.message());
+    public Order toEntity(OrderRequestDto orderRequestDto, Option option) {
+        return new Order(option, orderRequestDto.quantity(), orderRequestDto.message());
     }
 }
