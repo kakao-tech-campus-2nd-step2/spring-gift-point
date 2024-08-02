@@ -56,10 +56,12 @@ public class OptionService {
             .orElseThrow(() -> new OptionNotFoundException("해당 옵션이 존재하지 않습니다."));
         option.subtractQuantity(quantity);
     }
+
     @Transactional
     public void updateProductOption(Long productId, Long optionId, OptionRequest request) {
-        Option savedOption = optionRepository.findById(optionId).orElseThrow(()-> new OptionNotFoundException("해당 옵션이 존재하지 않습니다."));
-        if(!savedOption.getProduct().getId().equals(productId)){
+        Option savedOption = optionRepository.findById(optionId)
+            .orElseThrow(() -> new OptionNotFoundException("해당 옵션이 존재하지 않습니다."));
+        if (!savedOption.getProduct().getId().equals(productId)) {
             throw new OptionNotFoundException("해당 상품에 대한 옵션이 아닙니다.");
         }
         savedOption.updateNameAndQuantity(request.getName(), request.getQuantity());
@@ -68,7 +70,8 @@ public class OptionService {
     @Transactional
     public void deleteProductOption(Long productId, Long optionId) {
 
-        Option option = optionRepository.findById(optionId).orElseThrow(()-> new OptionNotFoundException("해당 옵션이 존재하지 않습니다."));
+        Option option = optionRepository.findById(optionId)
+            .orElseThrow(() -> new OptionNotFoundException("해당 옵션이 존재하지 않습니다."));
         if (!option.getProduct().getId().equals(productId)) {
             throw new OptionNotFoundException("해당 상품에 존재하지 않는 옵션입니다.");
         }

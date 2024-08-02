@@ -46,7 +46,6 @@ class CategoryServiceTest {
     void getAllCategoriesTest() {
         List<Category> categoryList = Arrays.asList(createCategory(), createCategory(2L));
 
-
         doReturn(categoryList).when(categoryRepository).findAll();
 
         List<CategoryResponse> expected = categoryList.stream().map(this::entityToDto).toList();

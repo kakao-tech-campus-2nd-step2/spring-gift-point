@@ -45,12 +45,13 @@ public class ProductService {
     }
 
     public Page<ProductResponse> getAllProducts(Pageable pageable, Long categoryId) {
-        if (categoryId == null){
+        if (categoryId == null) {
             return productRepository.findAll(pageable).map(this::entityToDto);
         }
 
-        Category findCategory = categoryRepository.findById(categoryId).orElseThrow(()->new CategoryNotFoundException("해당 카테고리가 존재하지 않습니다."));
-        return productRepository.findAllByCategory(pageable,findCategory).map(this::entityToDto);
+        Category findCategory = categoryRepository.findById(categoryId)
+            .orElseThrow(() -> new CategoryNotFoundException("해당 카테고리가 존재하지 않습니다."));
+        return productRepository.findAllByCategory(pageable, findCategory).map(this::entityToDto);
     }
 
     @Transactional

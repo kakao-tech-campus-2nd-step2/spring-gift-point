@@ -76,7 +76,7 @@ class MemberServiceTest {
 
         // when
         // then
-        assertThatThrownBy(()->memberService.login(memberRequest));
+        assertThatThrownBy(() -> memberService.login(memberRequest));
     }
 
     @Test

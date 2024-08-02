@@ -46,9 +46,9 @@ public class ProductController {
 
     @Operation(summary = "상품 전체 조회", description = "상품 전체를 조회합니다.")
     @ApiResponses({
-        @ApiResponse(responseCode="200", description = "요청에 성공하였습니다.(Page 내부 값은 ProductResponse 입니다.)", content = @Content(schema = @Schema(implementation = Page.class), mediaType = "application/json")),
-        @ApiResponse(responseCode="400", description = "잘못된 요청", content = @Content(mediaType = "text/plain;charset=UTF-8\n")),
-        @ApiResponse(responseCode="500", description = "서버 오류", content = @Content(mediaType = "text/plain;charset=UTF-8\n"))
+        @ApiResponse(responseCode = "200", description = "요청에 성공하였습니다.(Page 내부 값은 ProductResponse 입니다.)", content = @Content(schema = @Schema(implementation = Page.class), mediaType = "application/json")),
+        @ApiResponse(responseCode = "400", description = "잘못된 요청", content = @Content(mediaType = "text/plain;charset=UTF-8\n")),
+        @ApiResponse(responseCode = "500", description = "서버 오류", content = @Content(mediaType = "text/plain;charset=UTF-8\n"))
     })
     @GetMapping()
     public ResponseEntity<Page<ProductResponse>> getAllProducts(
@@ -60,9 +60,9 @@ public class ProductController {
 
     @Operation(summary = "특정 상품 조회", description = "id 값의 상품을 조회합니다.")
     @ApiResponses({
-        @ApiResponse(responseCode="200", description = "요청에 성공하였습니다.", content = @Content(schema = @Schema(implementation = ProductResponse.class), mediaType = "application/json")),
-        @ApiResponse(responseCode="400", description = "잘못된 요청", content = @Content(mediaType = "text/plain;charset=UTF-8\n")),
-        @ApiResponse(responseCode="500", description = "서버 오류", content = @Content(mediaType = "text/plain;charset=UTF-8\n"))
+        @ApiResponse(responseCode = "200", description = "요청에 성공하였습니다.", content = @Content(schema = @Schema(implementation = ProductResponse.class), mediaType = "application/json")),
+        @ApiResponse(responseCode = "400", description = "잘못된 요청", content = @Content(mediaType = "text/plain;charset=UTF-8\n")),
+        @ApiResponse(responseCode = "500", description = "서버 오류", content = @Content(mediaType = "text/plain;charset=UTF-8\n"))
     })
     @Parameter(name = "productId", description = "조회할 상품의 ID", example = "1")
     @GetMapping("/{productId}")
@@ -70,6 +70,7 @@ public class ProductController {
         ProductDetailResponse response = productService.getProduct(id);
         return ResponseEntity.ok(response);
     }
+
     @Operation(summary = "상품 생성", description = "관리자가 상품을 생성합니다.")
     @ApiResponse(responseCode = "201", description = "요청에 성공하였습니다.", content = @Content(mediaType = "application/json"))
     @PostMapping()
@@ -105,9 +106,9 @@ public class ProductController {
 
     @Operation(summary = "해당 상품에 대한 옵션들 전체 조회", description = "id 값으로 지정된 상품에 대한 옵션들을 조회합니다.")
     @ApiResponses({
-        @ApiResponse(responseCode="200", description = "요청에 성공하였습니다.", content = @Content(schema = @Schema(implementation = OptionsResponse.class), mediaType = "application/json")),
-        @ApiResponse(responseCode="400", description = "잘못된 요청", content = @Content(mediaType = "text/plain;charset=UTF-8\n")),
-        @ApiResponse(responseCode="500", description = "서버 오류", content = @Content(mediaType = "text/plain;charset=UTF-8\n"))
+        @ApiResponse(responseCode = "200", description = "요청에 성공하였습니다.", content = @Content(schema = @Schema(implementation = OptionsResponse.class), mediaType = "application/json")),
+        @ApiResponse(responseCode = "400", description = "잘못된 요청", content = @Content(mediaType = "text/plain;charset=UTF-8\n")),
+        @ApiResponse(responseCode = "500", description = "서버 오류", content = @Content(mediaType = "text/plain;charset=UTF-8\n"))
     })
     @Parameter(name = "ProductId", description = "옵션을 조회할 상품의 ID", example = "1")
     @GetMapping("/{productId}/options")
@@ -136,7 +137,7 @@ public class ProductController {
         @PathVariable("productId") Long productId,
         @PathVariable("optionId") Long optionId,
         @RequestBody OptionRequest request
-    ){
+    ) {
         optionService.updateProductOption(productId, optionId, request);
         return ResponseEntity.status(HttpStatus.OK).build();
     }
@@ -147,7 +148,8 @@ public class ProductController {
     @Parameter(name = "productId", description = "해당 상품의 ID", example = "1")
     @Parameter(name = "optionId", description = "삭제할 옵션의 ID", example = "1")
     @DeleteMapping("/{productId}/options/{optionId}")
-    public ResponseEntity<Void> deleteProductOption(@PathVariable("productId") Long productId, @PathVariable("optionId") Long optionId){
+    public ResponseEntity<Void> deleteProductOption(@PathVariable("productId") Long productId,
+        @PathVariable("optionId") Long optionId) {
         optionService.deleteProductOption(productId, optionId);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }

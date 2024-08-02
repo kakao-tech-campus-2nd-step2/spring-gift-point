@@ -31,10 +31,11 @@ public class CategoryController {
     public CategoryController(CategoryService categoryService) {
         this.categoryService = categoryService;
     }
+
     @Operation(summary = "카테고리 전체 조회", description = "카테고리 전체를 조회합니다.")
     @ApiResponses({
-        @ApiResponse(responseCode="200", description = "요청에 성공하였습니다.", content =  @Content(schema = @Schema(implementation = CategoriesResponse.class), mediaType = "application/json")),
-        @ApiResponse(responseCode="500", description = "서버 오류", content = @Content(mediaType = "application/json")),
+        @ApiResponse(responseCode = "200", description = "요청에 성공하였습니다.", content = @Content(schema = @Schema(implementation = CategoriesResponse.class), mediaType = "application/json")),
+        @ApiResponse(responseCode = "500", description = "서버 오류", content = @Content(mediaType = "application/json")),
     })
     @GetMapping()
     public ResponseEntity<CategoriesResponse> getAllCategories() {
@@ -45,8 +46,8 @@ public class CategoryController {
 
     @Operation(summary = "카테고리 생성", description = "카테고리를 생성합니다.")
     @ApiResponses({
-        @ApiResponse(responseCode="201", description = "요청에 성공하였습니다.", content = @Content(mediaType = "application/json")),
-        @ApiResponse(responseCode="500", description = "서버 오류", content = @Content(mediaType = "application/json")),
+        @ApiResponse(responseCode = "201", description = "요청에 성공하였습니다.", content = @Content(mediaType = "application/json")),
+        @ApiResponse(responseCode = "500", description = "서버 오류", content = @Content(mediaType = "application/json")),
     })
     @PostMapping()
     public ResponseEntity<Void> createCategory(@RequestBody CategoryRequest request) {

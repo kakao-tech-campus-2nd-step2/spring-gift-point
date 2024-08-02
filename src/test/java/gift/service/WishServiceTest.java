@@ -103,7 +103,7 @@ class WishServiceTest {
 
         // when
         // then
-        assertDoesNotThrow(()-> wishService.createWish(wishRequest));
+        assertDoesNotThrow(() -> wishService.createWish(wishRequest));
     }
 
     @Test
@@ -116,9 +116,10 @@ class WishServiceTest {
         Wish wish = new Wish(savedMember, savedProduct, LocalDateTime.now());
 
         doReturn(Optional.of(savedProduct)).when(productRepository).findById(savedProduct.getId());
-        doReturn(Optional.of(wish)).when(wishRepository).findByProductAndMember(savedProduct,savedMember);
+        doReturn(Optional.of(wish)).when(wishRepository)
+            .findByProductAndMember(savedProduct, savedMember);
 
-        assertDoesNotThrow(()->wishService.deleteWish(id, savedMember));
+        assertDoesNotThrow(() -> wishService.deleteWish(id, savedMember));
         verify(wishRepository, times(1)).delete(any(Wish.class));
     }
 

@@ -12,6 +12,6 @@ public record WishResponse(
     int price,
     @Schema(description = "상품 이미지 Url")
     String imageUrl
-    ) {
+) {
 
 }
