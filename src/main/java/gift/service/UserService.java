@@ -6,7 +6,7 @@ import gift.entity.kakao.KakaoErrorCode;
 import gift.entity.kakao.KakaoProperties;
 import gift.entity.user.User;
 import gift.entity.user.UserDTO;
-import gift.entity.user.UserPointChargeDTO;
+import gift.entity.user.UserPointChargeRequest;
 import gift.exception.KakaoException;
 import gift.exception.ResourceNotFoundException;
 import gift.repository.UserRepository;
@@ -81,7 +81,7 @@ public class UserService {
         return findOne(email);
     }
 
-    public void chargePoint(UserPointChargeDTO form) {
+    public void chargePoint(UserPointChargeRequest form) {
         User targetUser = findOne(form.getEmail());
         targetUser.addPoint(form.getPoint());
         userRepository.save(targetUser);

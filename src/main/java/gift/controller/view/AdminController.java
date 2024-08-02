@@ -36,16 +36,16 @@ public class AdminController {
         return "adminDeleted";
     }
 
+    @GetMapping("/charge")
+    public String getAdminChargePointPage() {
+        return "adminChargePoint";
+    }
+
     @GetMapping("/{id}")
     public String getAdminAddPage(@PathVariable("id") Long id, Model model) {
         Optional<Product> product = productRepository.findById(id);
         if (product.isEmpty()) return "error";
         model.addAttribute("product", product);
         return "adminProductDetail";
-    }
-
-    @GetMapping("/charge")
-    public String getAdminChargePointPage() {
-        return "adminChargePoint";
     }
 }

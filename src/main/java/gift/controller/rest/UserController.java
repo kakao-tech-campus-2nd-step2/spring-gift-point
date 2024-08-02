@@ -62,17 +62,17 @@ public class UserController {
 
     @Operation(summary = "마이페이지", description = "마이페이지입니다.")
     @GetMapping("/me")
-    public ResponseEntity<UserResponseDTO> me(HttpSession session) {
+    public ResponseEntity<UserPointChargeDTO> me(HttpSession session) {
         String email = (String) session.getAttribute("email");
         User user = userService.me(email);
 
-        UserResponseDTO res = new UserResponseDTO(user);
+        UserPointChargeDTO res = new UserPointChargeDTO(user);
         return ResponseEntity.ok().body(res);
     }
 
     @Operation(summary = "포인트 충전", description = "포인트 충전 페이지입니다.")
     @PostMapping("/charge")
-    public ResponseEntity<MessageResponseDTO> chargePoint(@RequestBody UserPointChargeDTO form) {
+    public ResponseEntity<MessageResponseDTO> chargePoint(@RequestBody UserPointChargeRequest form) {
         userService.chargePoint(form);
         return ResponseEntity.ok().body(new MessageResponseDTO("point charged successfully"));
     }

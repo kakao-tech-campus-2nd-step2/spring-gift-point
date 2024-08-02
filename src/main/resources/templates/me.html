@@ -6,8 +6,6 @@
 </head>
 <body>
 <h1>me</h1>
-<h2>email</h2>
-<h3 id="email"></h3>
 <h2>point</h2>
 <h3 id="point"></h3>
 <h2>orders</h2>
@@ -28,11 +26,8 @@
 </table>
 
 <script>
-    const email = document.getElementById("email");
     const point = document.getElementById("point");
     const meUrl = "/api/members/me";
-
-    console.log(localStorage.getItem("accessToken"));
 
     fetch(meUrl, {
         method: 'GET',
@@ -43,8 +38,6 @@
     })
         .then(res => res.json())
         .then(data => {
-            console.log(data)
-            email.innerText = data.email;
             point.innerText = data.point;
         })
 
