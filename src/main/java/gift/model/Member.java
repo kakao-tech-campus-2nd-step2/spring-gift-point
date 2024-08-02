@@ -2,6 +2,7 @@ package gift.model;
 
 
 import gift.exception.InputException;
+import gift.exception.member.InvalidPointException;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -26,17 +27,30 @@ public class Member extends BaseEntity {
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private Role role;
+    @Column(nullable = false)
+    private Integer point;
 
     protected Member() {
     }
 
-    public Member(Long id, String email, String password, Role role) {
+    public Member(Long id, String email, String password, Role role, Integer point) {
         validEmail(email);
         validPassword(password);
         this.id = id;
         this.email = email;
         this.password = password;
         this.role = role;
+        this.point = point;
+    }
+
+    public Member(String email, String password, Role role, Integer point) {
+        validEmail(email);
+        validPassword(password);
+        validPoint(point);
+        this.email = email;
+        this.password = password;
+        this.role = role;
+        this.point = point;
     }
 
     //oAuth2 가입
@@ -45,6 +59,7 @@ public class Member extends BaseEntity {
         this.email = email;
         this.password = "OAUTH2";
         this.role = Role.ROLE_USER;
+        this.point = 0;
     }
 
     // 회원가입 시 ROLE 기본값은 일반 유저로 한다.
@@ -54,6 +69,7 @@ public class Member extends BaseEntity {
         this.email = email;
         this.password = password;
         this.role = Role.ROLE_USER;
+        this.point = 0;
     }
 
     public Member(String email, String password, Role role) {
@@ -62,10 +78,23 @@ public class Member extends BaseEntity {
         this.email = email;
         this.password = password;
         this.role = role;
+        this.point = 0;
     }
 
     public void makeAdminMember() {
         this.role = Role.ROLE_ADMIN;
+    }
+
+    public void addPoint(Integer price) {
+        int addedPoint = price / 10;
+        validPoint(addedPoint);
+        this.point += addedPoint;
+    }
+
+    public void subPoint(Integer subPoint) {
+        validPoint(subPoint);
+        validUsingPoint(subPoint);
+        this.point -= subPoint;
     }
 
     public Long getId() {
@@ -84,7 +113,11 @@ public class Member extends BaseEntity {
         return role;
     }
 
-    public boolean validating(String email, String password) {
+    public Integer getPoint() {
+        return point;
+    }
+
+    public boolean validatingMember(String email, String password) {
         return this.email.equals(email) && this.password.equals(password);
     }
 
@@ -97,6 +130,18 @@ public class Member extends BaseEntity {
     private void validPassword(String password) {
         if(!StringUtils.hasText(password)) {
             throw new InputException("알 수 없는 오류가 발생하였습니다.");
+        }
+    }
+
+    private void validPoint(Integer point) {
+        if(point == null || point < 0) {
+            throw new InputException("알 수 없는 오류가 발생하였습니다.");
+        }
+    }
+
+    private void validUsingPoint(Integer subPoint) {
+        if (point - subPoint < 0) {
+            throw new InvalidPointException();
         }
     }
 }
