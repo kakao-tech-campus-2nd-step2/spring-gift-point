@@ -98,7 +98,7 @@ public class ProductService {
         return ProductDTO.fromProduct(savedProduct);
     }
 
-    public ProductDTO updateProduct(ProductDTO productDTO, Long productId) {
+    public ProductDTO updateProduct(ProductUpdateDTO productDTO, Long productId) {
 
         Product existingProduct = findByProductId(productId);
         existsByNameAndIdNotThrowException(productDTO.getName(), productId);
@@ -106,12 +106,6 @@ public class ProductService {
 
         existingProduct.update(productDTO.getName(), productDTO.getPrice(),
             productDTO.getImageUrl(), newCategory);
-
-        List<Option> oldOptions = new ArrayList<>(existingProduct.getOptions());
-        existingProduct.removeOptions(oldOptions);
-
-        List<Option> options = optionDTOListToOptionList(productDTO.getOptions(), existingProduct);
-        existingProduct.addOptions(options);
 
         Product savedProduct = productRepository.save(existingProduct);
         return ProductDTO.fromProduct(savedProduct);
