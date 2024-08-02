@@ -40,9 +40,10 @@ public class OrderService {
         String accessToken = memberService.getMemberAccessToken(memberDTO.getEmail());
         Option option = optionService.getOption(orderRequestDTO.optionId());
 
-        memberService.subtractPoint(memberDTO, Long.valueOf(discountFilter(option.getProduct().getPrice())));
-        optionService.subtractOptionQuantity(orderRequestDTO.optionId(),
-                orderRequestDTO.quantity());
+        Long totalPrice = Long.valueOf(discountFilter(option.getProduct().getPrice() * orderRequestDTO.quantity()));
+
+        memberService.subtractPoint(memberDTO, totalPrice);
+        optionService.subtractOptionQuantity(orderRequestDTO.optionId(), orderRequestDTO.quantity());
 
         wishListService.removeWishListProduct(memberDTO, option.getProduct().getId());
 
