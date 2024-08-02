@@ -2,13 +2,13 @@ package gift.GiftTest;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import gift.controller.MemberController;
-import gift.domain.Category.Category;
-import gift.domain.Member.Member;
-import gift.domain.Menu.Menu;
-import gift.domain.Option.Option;
-import gift.domain.Order.Order;
-import gift.domain.Order.OrderRequest;
-import gift.domain.WishList.WishList;
+import gift.domain.CategoryDomain.Category;
+import gift.domain.MemberDomain.Member;
+import gift.domain.MenuDomain.Menu;
+import gift.domain.OptionDomain.Option;
+import gift.domain.OrderDomain.Order;
+import gift.domain.OrderDomain.OrderRequest;
+import gift.domain.WishListDomain.WishList;
 import gift.repository.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -23,7 +23,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.net.URI;
 import java.util.Date;
-import java.util.HashSet;
 import java.util.LinkedList;
 
 

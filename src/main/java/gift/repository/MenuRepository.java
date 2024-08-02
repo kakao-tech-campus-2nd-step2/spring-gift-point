@@ -1,7 +1,7 @@
 package gift.repository;
 
-import gift.domain.Menu.Menu;
-import gift.domain.Option.Option;
+import gift.domain.MenuDomain.Menu;
+import gift.domain.OptionDomain.Option;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;

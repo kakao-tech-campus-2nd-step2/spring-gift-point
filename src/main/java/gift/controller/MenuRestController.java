@@ -1,9 +1,9 @@
 package gift.controller;
 
-import gift.domain.Menu.MenuRequest;
-import gift.domain.Menu.MenuResponse;
-import gift.domain.Menu.MenuUpdateRequest;
-import gift.domain.Option.Option;
+import gift.domain.MenuDomain.MenuRequest;
+import gift.domain.MenuDomain.MenuResponse;
+import gift.domain.MenuDomain.MenuUpdateRequest;
+import gift.domain.OptionDomain.Option;
 import gift.service.MenuService;
 import io.jsonwebtoken.JwtException;
 import org.springframework.data.domain.Pageable;

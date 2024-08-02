@@ -1,6 +1,6 @@
 package gift.EntityTest;
 
-import gift.domain.Option.OptionName;
+import gift.domain.OptionDomain.OptionName;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 

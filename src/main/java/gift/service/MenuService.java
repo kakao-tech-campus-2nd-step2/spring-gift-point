@@ -1,10 +1,10 @@
 package gift.service;
 
-import gift.domain.Menu.Menu;
-import gift.domain.Menu.MenuRequest;
-import gift.domain.Menu.MenuResponse;
-import gift.domain.Menu.MenuUpdateRequest;
-import gift.domain.Option.Option;
+import gift.domain.MenuDomain.Menu;
+import gift.domain.MenuDomain.MenuRequest;
+import gift.domain.MenuDomain.MenuResponse;
+import gift.domain.MenuDomain.MenuUpdateRequest;
+import gift.domain.OptionDomain.Option;
 import gift.repository.CategoryRepository;
 import gift.repository.MenuRepository;
 import gift.repository.OptionRepository;

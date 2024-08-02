@@ -1,7 +1,7 @@
 package gift.service;
 
-import gift.domain.WishList.WishList;
-import gift.domain.WishList.WishListResponse;
+import gift.domain.WishListDomain.WishList;
+import gift.domain.WishListDomain.WishListResponse;
 import gift.repository.WishListRepository;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;

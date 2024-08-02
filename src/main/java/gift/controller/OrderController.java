@@ -1,8 +1,8 @@
 package gift.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import gift.domain.Order.Order;
-import gift.domain.Order.OrderRequest;
+import gift.domain.OrderDomain.Order;
+import gift.domain.OrderDomain.OrderRequest;
 import gift.service.JwtService;
 import gift.service.OrderService;
 import org.springframework.data.domain.Pageable;

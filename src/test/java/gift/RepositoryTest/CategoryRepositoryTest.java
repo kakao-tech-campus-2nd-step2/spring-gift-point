@@ -1,7 +1,7 @@
 package gift.RepositoryTest;
 
-import gift.domain.Category.Category;
-import gift.domain.Menu.Menu;
+import gift.domain.CategoryDomain.Category;
+import gift.domain.MenuDomain.Menu;
 import gift.repository.CategoryRepository;
 import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.DisplayName;

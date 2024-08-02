@@ -1,6 +1,6 @@
 package gift.EntityTest;
 
-import gift.domain.Menu.MenuName;
+import gift.domain.MenuDomain.MenuName;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 

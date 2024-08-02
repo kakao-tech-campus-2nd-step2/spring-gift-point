@@ -1,9 +1,9 @@
 package gift.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import gift.domain.Auth.LoginRequest;
-import gift.domain.Auth.TokenResponse;
-import gift.domain.Member.MemberRequest;
+import gift.domain.AuthDomain.LoginRequest;
+import gift.domain.AuthDomain.TokenResponse;
+import gift.domain.MemberDomain.MemberRequest;
 import gift.service.KakaoService;
 import gift.service.MemberService;
 import org.apache.coyote.BadRequestException;

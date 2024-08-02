@@ -1,7 +1,7 @@
 package gift.controller;
 
-import gift.domain.Category.CategoryRequest;
-import gift.domain.Category.CategoryResponse;
+import gift.domain.CategoryDomain.CategoryRequest;
+import gift.domain.CategoryDomain.CategoryResponse;
 import gift.service.CategoryService;
 import io.jsonwebtoken.JwtException;
 import org.apache.coyote.BadRequestException;

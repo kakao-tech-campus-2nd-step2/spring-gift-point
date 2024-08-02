@@ -1,9 +1,9 @@
 package gift.service;
 
-import gift.domain.Menu.Menu;
-import gift.domain.Option.Option;
-import gift.domain.Option.OptionRequest;
-import gift.domain.Option.OptionResponse;
+import gift.domain.MenuDomain.Menu;
+import gift.domain.OptionDomain.Option;
+import gift.domain.OptionDomain.OptionRequest;
+import gift.domain.OptionDomain.OptionResponse;
 import gift.repository.MenuRepository;
 import gift.repository.OptionRepository;
 import org.springframework.stereotype.Service;

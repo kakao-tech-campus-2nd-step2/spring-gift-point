@@ -1,8 +1,8 @@
 package gift.controller;
 
-import gift.domain.WishList.WishList;
-import gift.domain.WishList.WishListRequest;
-import gift.domain.WishList.WishListResponse;
+import gift.domain.WishListDomain.WishList;
+import gift.domain.WishListDomain.WishListRequest;
+import gift.domain.WishListDomain.WishListResponse;
 import gift.repository.MenuRepository;
 import gift.service.JwtService;
 import gift.service.MemberService;

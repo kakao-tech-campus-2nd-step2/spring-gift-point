@@ -1,7 +1,7 @@
 package gift.controller;
 
-import gift.domain.Option.OptionRequest;
-import gift.domain.Option.OptionResponse;
+import gift.domain.OptionDomain.OptionRequest;
+import gift.domain.OptionDomain.OptionResponse;
 import gift.repository.MenuRepository;
 import gift.service.OptionService;
 import org.springframework.http.HttpStatus;

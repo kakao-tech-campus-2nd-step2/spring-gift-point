@@ -1,7 +1,7 @@
 package gift.controller;
 
-import gift.domain.Menu.MenuRequest;
-import gift.domain.Menu.MenuResponse;
+import gift.domain.MenuDomain.MenuRequest;
+import gift.domain.MenuDomain.MenuResponse;
 import gift.service.MenuService;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;

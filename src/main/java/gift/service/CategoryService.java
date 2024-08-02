@@ -1,9 +1,9 @@
 package gift.service;
 
-import gift.domain.Category.Category;
-import gift.domain.Category.CategoryRequest;
-import gift.domain.Category.CategoryResponse;
-import gift.domain.Menu.Menu;
+import gift.domain.CategoryDomain.Category;
+import gift.domain.CategoryDomain.CategoryRequest;
+import gift.domain.CategoryDomain.CategoryResponse;
+import gift.domain.MenuDomain.Menu;
 import gift.repository.CategoryRepository;
 import org.apache.coyote.BadRequestException;
 import org.springframework.stereotype.Service;

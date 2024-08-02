@@ -1,9 +1,9 @@
 package gift.ServiceTest;
 
-import gift.domain.Auth.LoginRequest;
-import gift.domain.Member.Member;
-import gift.domain.Member.MemberRequest;
-import gift.domain.WishList.WishList;
+import gift.domain.AuthDomain.LoginRequest;
+import gift.domain.MemberDomain.Member;
+import gift.domain.MemberDomain.MemberRequest;
+import gift.domain.WishListDomain.WishList;
 import gift.repository.MemberRepository;
 import gift.service.JwtService;
 import gift.service.MemberService;
