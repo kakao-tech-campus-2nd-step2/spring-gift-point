@@ -13,5 +13,11 @@ logging:
     gift.authentication: debug
 
 cors:
-  exposed-headers: "Set-Cookie,Authorization,Content-Type,X-Requested-With,Accept,Origin,Access-Control-Request-Method,Access-Control-Request-Headers,Access-Control-Allow-Origin,Access-Control-Allow-Credentials"
-  allowed-method-names: "GET,HEAD,POST,PUT,DELETE,TRACE,OPTIONS,PATCH"
+  path-patterns: "/**"
+  origin-patterns: "http://localhost:3000"
+  allowed-methods: "*"
+  allowed-headers: "*"
+  exposed-headers: "Set-Cookie, Authorization, Content-Type, X-Requested-With, Accept, Origin, Access-Control-Request-Method, Access-Control-Request-Headers, Access-Control-Allow-Origin, Access-Control-Allow-Credentials"
+  allow-credentials: true
+  max-age: 1800
+

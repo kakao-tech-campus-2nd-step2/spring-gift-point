@@ -1,12 +1,12 @@
 package gift.config;
 
 import feign.Client;
+import gift.authentication.config.CorsConfigurationProperties;
 import gift.authentication.filter.AuthenticationExceptionHandlerFilter;
 import gift.authentication.filter.AuthenticationFilter;
 import gift.authentication.token.JwtResolver;
 import gift.web.resolver.LoginMemberArgumentResolver;
 import java.util.List;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -17,17 +17,14 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @Configuration
 public class WebConfig implements WebMvcConfigurer {
 
-    @Value("${cors.exposed-headers}")
-    public String EXPOSED_HEADERS;
-
-    @Value("${cors.allowed-method-names}")
-    public String ALLOWED_METHOD_NAMES;
+    private final CorsConfigurationProperties corsProperties;
 
     private final LoginMemberArgumentResolver loginUserArgumentResolver;
 
     private final JwtResolver jwtResolver;
 
-    public WebConfig(LoginMemberArgumentResolver loginUserArgumentResolver, JwtResolver jwtResolver) {
+    public WebConfig(CorsConfigurationProperties corsProperties, LoginMemberArgumentResolver loginUserArgumentResolver, JwtResolver jwtResolver) {
+        this.corsProperties = corsProperties;
         this.loginUserArgumentResolver = loginUserArgumentResolver;
         this.jwtResolver = jwtResolver;
     }
@@ -61,12 +58,12 @@ public class WebConfig implements WebMvcConfigurer {
 
     @Override
     public void addCorsMappings(CorsRegistry registry) {
-        registry.addMapping("/**")
-            .allowedOrigins("http://localhost:3000")
-            .allowedMethods(ALLOWED_METHOD_NAMES.split(","))
-            .allowedHeaders("*")
-            .exposedHeaders(EXPOSED_HEADERS.split(","))
-            .maxAge(1800)
-            .allowCredentials(true);
+        registry.addMapping(corsProperties.getPathPatterns())
+            .allowedOrigins(corsProperties.getOriginPatterns())
+            .allowedMethods(corsProperties.getAllowedMethods())
+            .allowedHeaders(corsProperties.getAllowedHeaders())
+            .allowCredentials(corsProperties.getAllowCredentials())
+            .exposedHeaders(corsProperties.getExposedHeaders())
+            .maxAge(corsProperties.getMaxAge());
     }
 }
