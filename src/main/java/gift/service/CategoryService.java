@@ -20,25 +20,21 @@ public class CategoryService {
     private final CategoryRepository categoryRepository;
 
     public ResponseCategoryDTO saveCategory(SaveCategoryDTO saveCategoryDTO) {
-        categoryRepository.findByName(saveCategoryDTO.name()).ifPresent(c -> {
-            throw new BadRequestException("이미 존재하는 카테고리");
-        });
+        checkDuplicateByName(saveCategoryDTO.name());
         Category category = new Category(saveCategoryDTO);
         return categoryRepository.save(category).toResponseDTO();
     }
 
     @Transactional
     public ResponseCategoryDTO updateCategory(int id, SaveCategoryDTO saveCategoryDTO) {
-        Category category = categoryRepository.findById(id).orElseThrow(() -> new NotFoundException("존재 하지 않는 카테고리입니다."));
-        categoryRepository.findByName(saveCategoryDTO.name()).ifPresent(c -> {
-            throw new BadRequestException("이미 존재하는 카테고리");
-        });
+        Category category = findCategoryById(id);
+        checkDuplicateByName(saveCategoryDTO.name());
         category = category.updateCategory(saveCategoryDTO);
         return category.toResponseDTO();
     }
 
     public ResponseCategoryDTO deleteCategory(int categoryId) {
-        Category category = categoryRepository.findById(categoryId).orElseThrow(() -> new NotFoundException("존재하지 않는 카테고리입니다."));
+        Category category = findCategoryById(categoryId);
         category.checkEmpty();
         categoryRepository.delete(category);
         return category.toResponseDTO();
@@ -46,5 +42,15 @@ public class CategoryService {
 
     public List<ResponseCategoryDTO> getCategory() {
         return categoryRepository.findAll().stream().map(Category::toResponseDTO).toList();
+    }
+
+    private Category findCategoryById(int categoryId) {
+        return categoryRepository.findById(categoryId).orElseThrow(() -> new NotFoundException("존재하지 않는 카테고리입니다."));
+    }
+
+    private void checkDuplicateByName(String name) {
+        categoryRepository.findByName(name).ifPresent(c -> {
+            throw new BadRequestException("이미 존재하는 카테고리");
+        });
     }
 }

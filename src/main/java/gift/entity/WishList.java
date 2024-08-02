@@ -3,9 +3,6 @@ package gift.entity;
 import gift.dto.wish.ResponseWishDTO;
 import jakarta.persistence.*;
 
-import java.io.Serializable;
-import java.util.Objects;
-
 @Entity
 public class WishList {
     @Id
@@ -41,6 +38,6 @@ public class WishList {
     }
 
     public ResponseWishDTO toResponseDTO() {
-        return new ResponseWishDTO(id, this.product.toResponseDTO());
+        return new ResponseWishDTO(id, product.toResponseDTO());
     }
 }

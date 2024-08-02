@@ -22,7 +22,7 @@ public class UserController {
     }
 
     @ResponseStatus(HttpStatus.CREATED)
-    @PostMapping("/api/members/register")
+    @PostMapping("/api/register")
     @ResponseBody
     public UserResponseDTO SignUp(@RequestBody SignUpDTO signUpDTO) {
         return userService.signUp(signUpDTO);
@@ -34,7 +34,7 @@ public class UserController {
     }
 
     @ResponseStatus(HttpStatus.CREATED)
-    @PostMapping("/api/members/login")
+    @PostMapping("/api/login")
     @ResponseBody
     public UserResponseDTO signIn(@RequestBody LoginDTO loginDTO) {
         return userService.signIn(loginDTO);

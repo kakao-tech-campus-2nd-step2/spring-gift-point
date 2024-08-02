@@ -38,7 +38,6 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class UserService {
     private final UserRepository userRepository;
-    private final JWTUtil jwtUtil;
     private final KakaoUserRepository kakaoUserRepository;
 
     @Value("${kakao.client_id}")
@@ -61,13 +60,13 @@ public class UserService {
             throw new BadRequestException("이미 존재하는 계정");
         });
         newUser = userRepository.save(newUser);
-        return new UserResponseDTO(newUser.getEmail(), jwtUtil.generateToken(newUser, null));
+        return new UserResponseDTO(newUser.getEmail(), JWTUtil.generateToken(newUser.getId(), null));
     }
 
     public UserResponseDTO signIn(LoginDTO loginDTO) {
         User user = userRepository.findByEmail(loginDTO.email()).orElseThrow(() -> new NotFoundException("존재하지 않는 계정"));
         if (!user.getPassword().equals(loginDTO.password())) throw new BadRequestException("비밀번호가 일치하지 않습니다.");
-        return new UserResponseDTO(user.getEmail(), jwtUtil.generateToken(user, null));
+        return new UserResponseDTO(user.getEmail(), JWTUtil.generateToken(user.getId(), null));
     }
 
     private String getKakaoToken() {
@@ -129,7 +128,7 @@ public class UserService {
         String kakaoToken = getKakaoToken();
         Long kakaoUserId = getKakaoUserId(kakaoToken);
         User user = findUserByKakaoUserId(kakaoUserId);
-        String token = jwtUtil.generateToken(user, kakaoToken);
+        String token = JWTUtil.generateToken(user.getId(), kakaoToken);
         return new UserResponseDTO(user.getEmail(), token);
     }
 
