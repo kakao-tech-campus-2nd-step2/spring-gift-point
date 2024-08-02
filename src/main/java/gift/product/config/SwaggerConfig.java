@@ -43,9 +43,6 @@ public class SwaggerConfig {
         Set<String> targetPaths = Set.of(
             "/api/wishes",
             "/api/orders",
-            "/api/categories",
-            "/api/options",
-            "/api/products",
             "/members/login/kakao/unlink");
 
         return openApi -> openApi
