@@ -1,7 +1,7 @@
 package gift.service;
 
 import gift.domain.Category;
-import gift.dto.CategoryDTO;
+import gift.dto.category.CategoryDto;
 import gift.exception.NoSuchCategoryException;
 import gift.repository.CategoryRepository;
 import java.util.List;
@@ -19,32 +19,32 @@ public class CategoryService {
         this.categoryRepository = categoryRepository;
     }
 
-    public List<CategoryDTO> getCategories() {
+    public List<CategoryDto> getCategories() {
         return categoryRepository.findAll()
             .stream()
-            .map(category -> category.toDTO())
+            .map(category -> category.toDto())
             .collect(Collectors.toList());
     }
 
-    public CategoryDTO getCategory(Long id) {
+    public CategoryDto getCategory(Long id) {
         return categoryRepository.findById(id)
             .orElseThrow(NoSuchCategoryException::new)
-            .toDTO();
+            .toDto();
     }
 
-    public CategoryDTO addCategory(CategoryDTO categoryDTO) {
-        return categoryRepository.save(categoryDTO.toEntity()).toDTO();
+    public CategoryDto addCategory(CategoryDto categoryDto) {
+        return categoryRepository.save(categoryDto.toEntity()).toDto();
     }
 
-    public CategoryDTO updateCategory(long id, CategoryDTO categoryDTO) {
+    public CategoryDto updateCategory(long id, CategoryDto categoryDto) {
         getCategory(id);
-        Category category = new Category(id, categoryDTO.name(), categoryDTO.color(), categoryDTO.imageUrl(), categoryDTO.description());
-        return categoryRepository.save(category).toDTO();
+        Category category = new Category(id, categoryDto.name(), categoryDto.imageUrl(), categoryDto.description());
+        return categoryRepository.save(category).toDto();
     }
 
-    public CategoryDTO deleteCategory(long id) {
+    public CategoryDto deleteCategory(long id) {
         Category deletedCategory = categoryRepository.findById(id).orElseThrow(NoSuchCategoryException::new);
         categoryRepository.delete(deletedCategory);
-        return deletedCategory.toDTO();
+        return deletedCategory.toDto();
     }
 }

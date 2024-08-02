@@ -44,7 +44,7 @@ public class ProductServiceTest {
     void addProduct() {
         // given
         Product product = createProduct(1L, "아이스 아메리카노", category);
-        given(categoryService.getCategory(anyLong())).willReturn(category.toDTO());
+        given(categoryService.getCategory(anyLong())).willReturn(category.toDto());
         given(productRepository.save(any(Product.class))).willReturn(product);
 
         // when
@@ -76,7 +76,7 @@ public class ProductServiceTest {
         long id = 1L;
         Product product = createProduct(id, "아이스 아메리카노", category);
         Product updatedProduct = createProduct(id, "핫 아메리카노", category);
-        given(categoryService.getCategory(anyLong())).willReturn(category.toDTO());
+        given(categoryService.getCategory(anyLong())).willReturn(category.toDto());
         given(productRepository.findById(anyLong())).willReturn(Optional.of(product));
         given(productRepository.save(any(Product.class))).willReturn(updatedProduct);
 

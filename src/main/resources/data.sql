@@ -1,17 +1,17 @@
-INSERT INTO CATEGORY (name, color, image_url, description)
-VALUES ('교환권', '#FFFFFF', 'testImageUrl', '교환권');
+INSERT INTO CATEGORY (name, image_url, description)
+VALUES ('교환권', 'testImageUrl', '교환권');
 
-INSERT INTO CATEGORY (name, color, image_url, description)
-VALUES ('상품권', '#FFFFFF', 'testImageUrl', '상품권');
+INSERT INTO CATEGORY (name, image_url, description)
+VALUES ('상품권', 'testImageUrl', '상품권');
 
-INSERT INTO CATEGORY (name, color, image_url, description)
-VALUES ('뷰티', '#FFFFFF', 'testImageUrl', '뷰티');
+INSERT INTO CATEGORY (name, image_url, description)
+VALUES ('뷰티', 'testImageUrl', '뷰티');
 
-INSERT INTO CATEGORY (name, color, image_url, description)
-VALUES ('패션', '#FFFFFF', 'testImageUrl', '패션');
+INSERT INTO CATEGORY (name, image_url, description)
+VALUES ('패션', 'testImageUrl', '패션');
 
-INSERT INTO CATEGORY (name, color, image_url, description)
-VALUES ('식품', '#FFFFFF', 'testImageUrl', '식품');
+INSERT INTO CATEGORY (name, image_url, description)
+VALUES ('식품', 'testImageUrl', '식품');
 
 INSERT INTO PRODUCT (name, price, image_url, category_id)
 VALUES ('아이스아메리카노',
