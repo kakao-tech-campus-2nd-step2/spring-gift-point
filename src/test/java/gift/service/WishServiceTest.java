@@ -83,7 +83,8 @@ class WishServiceTest {
         wishes.add(new Wish(member, product));
         LoginMemberIdDto loginMemberIdDto = new LoginMemberIdDto(member.getId());
 
-        given(wishRepository.findAllByMemberId(pageable, loginMemberIdDto.id())).willReturn(new PageImpl<>(wishes));
+        given(wishRepository.findAllByMemberId(pageable,
+            loginMemberIdDto.id())).willReturn(new PageImpl<>(wishes));
 
         //when
         wishService.getWishAll(pageable, loginMemberIdDto);

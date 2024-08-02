@@ -29,12 +29,20 @@ public class WishService {
         this.authRepository = authRepository;
     }
 
+    private static WishResponse getWishResponse(Wish wish) {
+        return new WishResponse(wish.getProduct().getId(),
+            wish.getProduct().getName(),
+            wish.getProduct().getPrice(),
+            wish.getProduct().getImageUrl());
+    }
+
     public List<Wish> getWishAll(LoginMemberIdDto loginMemberIdDto) {
         return wishRepository.findAllByMemberId(loginMemberIdDto.id());
     }
 
     public Page<WishResponse> getWishAll(Pageable pageable, LoginMemberIdDto loginMemberIdDto) {
-        return wishRepository.findAllByMemberId(pageable, loginMemberIdDto.id()).map(WishService::getWishResponse);
+        return wishRepository.findAllByMemberId(pageable, loginMemberIdDto.id())
+            .map(WishService::getWishResponse);
     }
 
     public Wish getWish(Long id, LoginMemberIdDto loginMemberIdDto) {
@@ -76,12 +84,5 @@ public class WishService {
         if (wishRepository.existsByProductIdAndMemberId(productId, memberId)) {
             throw new IllegalArgumentException("해당 상품이 이미 위시 리스트에 존재합니다.");
         }
-    }
-
-    private static WishResponse getWishResponse(Wish wish) {
-        return new WishResponse(wish.getProduct().getId(),
-            wish.getProduct().getName(),
-            wish.getProduct().getPrice(),
-            wish.getProduct().getImageUrl());
     }
 }

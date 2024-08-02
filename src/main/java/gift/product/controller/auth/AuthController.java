@@ -9,7 +9,6 @@ import gift.product.dto.auth.RegisterSuccessResponse;
 import gift.product.exception.ExceptionResponse;
 import gift.product.service.AuthService;
 import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
