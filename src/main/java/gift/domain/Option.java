@@ -8,32 +8,43 @@ public class Option extends BaseEntity {
     @Column(name="name", nullable = false)
     private String name;
     @Column(name="quantity", nullable = false)
-    private Long quantity;
+    private int quantity;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(
+            name = "product_id",
+            foreignKey = @ForeignKey(name = "fk_option_product_id_ref_product_id"),
+            nullable = false)
+    Product product;
   
     protected Option() {
         super();
     }
 
-    public Option(String name, Long quantity) {
+    public Option(String name, int quantity, Product product) {
         this.name = name;
         this.quantity = quantity;
+        this.product = product;
     }
 
     public String getName() {
         return name;
     }
 
-    public Long getQuantity() {
+    public int getQuantity() {
         return quantity;
     }
 
-    public void update(String name, Long quantity){
+    public Product getProduct() {
+        return product;
+    }
+
+    public void update(String name, int quantity){
         this.name = name;
         this.quantity = quantity;
     }
 
-    public void subtract(Long minus){
-        if(this.quantity - minus < 0L) {
+    public void subtract(int minus){
+        if(this.quantity - minus < 0) {
             return;
         }
         this.quantity -= minus;

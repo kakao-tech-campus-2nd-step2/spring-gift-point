@@ -1,6 +1,5 @@
 package gift.security;
 
-import gift.DTO.User.UserResponse;
 import gift.service.UserService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.MethodParameter;
@@ -42,11 +41,11 @@ public class AuthenticateMemberArgumentResolver implements HandlerMethodArgument
 
         token = token.substring(7); // "Bearer " 부분을 제거
 
-        String userId = jwtTokenProvider.getClaimsFromToken(token);
-        if(!userService.isUserIdDuplicate(userId)) {
+        String email = jwtTokenProvider.getClaimsFromToken(token);
+        if(!userService.isEmailDuplicate(email)) {
             throw new IllegalArgumentException("유효하지 않은 로그인 정보입니다!");
         }
 
-        return userService.findByUserId(userId);
+        return userService.findByEmail(email);
     }
 }

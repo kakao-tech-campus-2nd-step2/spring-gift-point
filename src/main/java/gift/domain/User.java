@@ -6,8 +6,6 @@ import jakarta.persistence.*;
 @Table(name = "users")
 public class User extends BaseEntity{
     @Column(nullable = false, unique = true)
-    private String userId;
-    @Column(nullable = false, unique = true)
     private String email;
     @Column(nullable = false)
     private String password;
@@ -20,18 +18,13 @@ public class User extends BaseEntity{
         super();
     }
 
-    public User(String userId, String email, String password) {
-        this.userId = userId;
+    public User(String email, String password) {
         this.email = email;
         this.password = password;
         this.admin = false;
     }
     public Long getId() {
         return super.getId();
-    }
-
-    public String getUserId(){
-        return userId;
     }
 
     public String getEmail() {

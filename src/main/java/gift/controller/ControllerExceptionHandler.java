@@ -41,7 +41,7 @@ public class ControllerExceptionHandler {
      * 값을 다시 확인해야 하는 부분에 대한 Handling
      */
     @ExceptionHandler(NoSuchFieldError.class)
-    public ResponseEntity<Map<String, String>> handleNullExceptions(NoSuchFieldError e){
+    public ResponseEntity<Map<String, String>> handleNoSuchFieldExceptions(NoSuchFieldError e){
         Map<String, String> errors = new HashMap<>();
         String message = (e.getMessage() != null) ? e.getMessage() : "입력 값을 다시 확인해보세요!";
         errors.put("nothing", message);

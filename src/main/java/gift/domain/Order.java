@@ -14,7 +14,7 @@ public class Order extends BaseEntity {
     @Column(nullable = false, name="option_id")
     private Long optionId;
     @Column(nullable = false, name="quantity")
-    private Long quantity;
+    private int quantity;
     @Column(nullable = false, name="message")
     private String message;
     @CreatedDate
@@ -26,7 +26,7 @@ public class Order extends BaseEntity {
         super();
     }
 
-    public Order(Long optionId, Long quantity, String message) {
+    public Order(Long optionId, int quantity, String message) {
         this.optionId = optionId;
         this.quantity = quantity;
         this.message = message;
@@ -36,7 +36,7 @@ public class Order extends BaseEntity {
         return optionId;
     }
 
-    public Long getQuantity() {
+    public int getQuantity() {
         return quantity;
     }
 

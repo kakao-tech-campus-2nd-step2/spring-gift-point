@@ -30,23 +30,23 @@ public class ProductService {
     /*
      * 상품을 오름차순으로 정렬하는 로직
      */
-    public Page<ProductResponse> readAllProductASC(int page, int size, String field){
+    public Page<ProductResponse> readAllProductASC(int page, int size, String field, Long categoryId){
         List<Sort.Order> sorts = new ArrayList<>();
         sorts.add(Sort.Order.asc(field));
         Pageable pageable = PageRequest.of(page, size, Sort.by(sorts));
-        Page<Product> products = productRepository.findAll(pageable);
+        Page<Product> products = productRepository.findAllByCategoryId(pageable, categoryId);
 
         return products.map(ProductResponse::new);
     }
     /*
      * 상품을 내림차순으로 조회하는 로직
      */
-    public Page<ProductResponse> readAllProductDESC(int page, int size, String field){
+    public Page<ProductResponse> readAllProductDESC(int page, int size, String field, Long categoryId){
         List<Sort.Order> sorts = new ArrayList<>();
         sorts.add(Sort.Order.desc(field));
         Pageable pageable = PageRequest.of(page, size, Sort.by(sorts));
 
-        Page<Product> products = productRepository.findAll(pageable);
+        Page<Product> products = productRepository.findAllByCategoryId(pageable, categoryId);
 
         return products.map(ProductResponse::new);
     }
@@ -71,8 +71,9 @@ public class ProductService {
         );
         productRepository.save(productEntity);
 
-        Option basicOption = new Option(productRequest.getBasicOption(), 1L);
+        Option basicOption = new Option(productRequest.getBasicOption(), 1, productEntity);
         productEntity.addOption(basicOption);
+
         optionRepository.save(basicOption);
 
         return new ProductResponse(productEntity);

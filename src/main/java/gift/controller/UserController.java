@@ -13,6 +13,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 public class UserController {
     private final UserService userService;
@@ -25,10 +27,10 @@ public class UserController {
     /*
      * 로그인 ( 유저 정보 인증 )
      */
-    @PostMapping("/login")
-    public ResponseEntity<Token> giveToken(@RequestBody UserRequest user) throws IllegalAccessException {
+    @PostMapping("/api/members/login")
+    public ResponseEntity<Token> login(@RequestBody UserRequest user) {
         if(!userService.login(user)){
-            throw new IllegalArgumentException("아이디나 비밀번호를 다시 확인해주세요!");
+            throw new IllegalArgumentException("이메일이나 비밀번호를 다시 확인해주세요!");
         }
 
         Token token = jwtTokenProvider.makeToken(user);
@@ -37,60 +39,57 @@ public class UserController {
     /*
      * 회원가입 ( 유저 추가 )
      */
-    @PostMapping("/register")
-    public ResponseEntity<Void> register(@RequestBody UserRequest user){
-        if(userService.isUserIdDuplicate(user.getUserId()))
-            throw new AlreadyExistException("이미 존재하는 유저 아이디입니다!");
-
+    @PostMapping("/api/members/register")
+    public ResponseEntity<Token> register(@RequestBody UserRequest user){
         if(userService.isEmailDuplicate(user.getEmail()))
             throw new AlreadyExistException("이미 존재하는 이메일입니다!");
 
         userService.save(user);
-        return new ResponseEntity<>(HttpStatus.CREATED);
+        Token token = jwtTokenProvider.makeToken(user);
+        return new ResponseEntity<>(token, HttpStatus.CREATED);
     }
     /*
      * 유저 조회
      */
-    @GetMapping("/api/users")
+    @GetMapping("/api/members")
     public ResponseEntity<Page<UserResponse>> readUsers(
             @RequestParam(value = "page", defaultValue = "0") int page,
             @RequestParam(value = "size", defaultValue = "5") int size,
-            @RequestParam(value = "sort", defaultValue = "asc") String sort,
-            @RequestParam(value = "field", defaultValue = "id") String field
+            @RequestParam(value = "sort") List<String> sort,
+            @AuthenticateMember UserResponse userRes
     ) {
-        if(sort.equals("asc")) {
-            Page<UserResponse> users = userService.findAllASC(page, size,field);
+        if(sort.getLast().equals("asc")) {
+            Page<UserResponse> users = userService.findAllASC(page, size, sort.getFirst());
             return new ResponseEntity<>(users, HttpStatus.OK);
         }
 
-        Page<UserResponse> users = userService.findAllDESC(page, size,field);
+        Page<UserResponse> users = userService.findAllDESC(page, size, sort.getFirst());
         return new ResponseEntity<>(users, HttpStatus.OK);
     }
     /*
      * 유저 수정
      */
-    @PutMapping("/api/users/{id}")
+    @PutMapping("/api/members/{id}")
     public ResponseEntity<Void> updateUsers(
             @PathVariable("id") Long id,
             @RequestBody UserRequest user,
             @AuthenticateMember UserResponse userRes
-    ) throws NoSuchFieldException {
-        if(!id.equals(userService.findByUserId(user.getUserId()).getId())) {
-            throw new LogicalException("리소스 접근 URI와 요청 데이터가 다릅니다!");
+    ){
+        if(!userService.isEmailDuplicate(user.getEmail())) {
+            throw new NoSuchFieldError("존재하지 않는 유저 정보는 수정할 수 없습니다!");
         }
 
-        if(!userService.isUserIdDuplicate(user.getUserId())) {
-            throw new NoSuchFieldException("존재하지 않는 유저 정보 접근입니다!");
+        if(!id.equals(userService.findByEmail(user.getEmail()).getId())) {
+            throw new LogicalException("리소스 접근 URI와 요청 데이터가 다릅니다!");
         }
 
         userService.update(user);
         return new ResponseEntity<>(HttpStatus.OK);
-
     }
     /*
      * 유저 삭제
      */
-    @DeleteMapping("/api/users/{id}")
+    @DeleteMapping("/api/members/{id}")
     public ResponseEntity<Void> deleteUsers(
             @PathVariable("id") Long id,
             @AuthenticateMember UserResponse user

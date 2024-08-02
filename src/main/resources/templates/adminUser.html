@@ -16,9 +16,6 @@
     <label for="id">Id:</label>
     <input type="text" id="id" name="id" disabled>
 
-    <label for="userId">UserId:</label>
-    <input type="text" id="userId" name="userId" required>
-
     <label for="email">Email:</label>
     <input type="text" id="email" name="email" required>
 
@@ -30,9 +27,6 @@
 <div class="form-inline">
     <label for="p_id">Id:</label>
     <input type="text" id="p_id" name="p_id" required>
-
-    <label for="p_userId">UserId:</label>
-    <input type="text" id="p_userId" name="p_userId" required>
 
     <label for="p_email">Email:</label>
     <input type="text" id="p_email" name="p_email" required>
@@ -46,7 +40,6 @@
     <thead>
     <tr>
         <th scope="col">Id</th>
-        <th scope="col">UserId</th>
         <th scope="col">Email</th>
         <th scope="col">Password</th>
         <th scope="col">Option</th>
@@ -79,13 +72,15 @@
 
     function getUsers(page){
         $.ajax({
-            url: '/api/users',
+            url: '/api/members',
             method: 'GET',
             data : {
                 page : page,
                 size : pageSize,
-                sort : $('#p_sort').val(),
-                field : $('#p_field').val()
+                sort : [$('#p_field').val(), $('#p_sort').val()]
+            },
+            headers : {
+                Authorization: 'Bearer ' + localStorage.getItem("token"),
             },
             success: function(data) {
                 var contents = data.content;
@@ -98,7 +93,6 @@
                     var row = `
                         <tr>
                             <td>${user.id}</td>
-                            <td>${user.userId}</td>
                             <td>${user.email}</td>
                             <td>${user.password}</td>
                             <td>
@@ -152,14 +146,13 @@
 
     $("#post").click(function () {
         var user = {
-            userId : $("#userId").val(),
             email : $("#email").val(),
             password : $("#password").val()
         }
 
         $.ajax({
             type : "POST",
-            url : "register",
+            url : "api/members/register",
             contentType: "application/json",
             datatype : "json",
             data : JSON.stringify(user),
@@ -181,7 +174,7 @@
     function deleteFunction(id){
         $.ajax({
             type: "DELETE",
-            url: "api/users/" + id,
+            url: "api/members/" + id,
             headers : {
                 Authorization: 'Bearer ' + localStorage.getItem("token"),
             },
@@ -204,14 +197,13 @@
 
     $("#put").click(function(){
         var user ={
-            userId : $("#p_userId").val(),
             email: $("#p_email").val(),
             password : $("#p_password").val()
         }
 
         $.ajax({
             type : "PUT",
-            url : "api/users/" + $("#p_id").val(),
+            url : "api/members/" + $("#p_id").val(),
             contentType: "application/json",
             datatype : "json",
             data : JSON.stringify(user),

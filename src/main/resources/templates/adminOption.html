@@ -12,6 +12,7 @@
 
 </div>
 <h1 th:text="'Administrator Product ' + ${product_id} + '\'s Option Manage Page'"></h1>
+<data th:value="${product_id}" id="productId"></data>
 <div class="form-inline">
     <label for="id">Id:</label>
     <input type="text" id="id" name="id" disabled>
@@ -49,48 +50,18 @@
     <!-- AJAX를 통해 데이터를 로드 -->
     </tbody>
 </table>
-<div>
-    <button id="prevPage">Previous</button>
-    <label for="p_sort"></label>
-    <select name="p_sort" id="p_sort">
-        <option value="asc">오름차순</option>
-        <option value="desc">내림차순</option>
-    </select>
-    <label for="p_field"></label>
-    <select name="p_field" id="p_field">
-        <option value="id">id</option>
-        <option value="name">name</option>
-        <option value="quantity">quantity</option>
-    </select>
-    <button id="search" onclick="getCategories(currentPage)">검색</button>
-    <button id="nextPage">Next</button>
-</div>
 </body>
 <script>
-    const url = new URL(window.location.href);
-    const params = new URLSearchParams(url.search);
-    var product_id = params.get('product_id');
-
-    var currentPage = 0;
-    var pageSize = 5;
-
-    function getOptions(page){
+    function getOptions(){
         $.ajax({
-            url: '/api/products/' + product_id + '/options',
+            url: '/api/products/' + $('#productId').val() + '/options',
             method: 'GET',
-            data : {
-                page : page,
-                size : pageSize,
-                sort : $('#p_sort').val(),
-                field : $('#p_field').val()
-            },
             success: function(data) {
-                var contents = data.content;
                 var tbody = $('#option-tbody');
                 tbody.empty(); // 초기화
 
                 // 데이터에 따라 테이블 행을 생성
-                contents.forEach(function(option) {
+                data.forEach(function(option) {
                     // 한 행의 내용
                     var row = `
                         <tr>
@@ -103,11 +74,6 @@
                         </tr>
                     `;
                     tbody.append(row);
-
-                    currentPage = data.number;
-
-                    $('#prevPage').prop('disabled', data.first);
-                    $('#nextPage').prop('disabled', data.last);
                 });
             },
             error: function(err) {
@@ -123,17 +89,7 @@
     }
 
     $(document).ready(function() {
-        getOptions(currentPage);
-
-        $('#prevPage').click(function() {
-            if (currentPage > 0) {
-                getOptions(currentPage - 1);
-            }
-        });
-
-        $('#nextPage').click(function() {
-            getOptions(currentPage + 1);
-        });
+        getOptions();
 
         if(localStorage.getItem('token')){
             var inline = $('#header');
@@ -153,7 +109,7 @@
 
         $.ajax({
             type : "POST",
-            url : "api/products/" + product_id + "/options",
+            url : "api/products/" + $('#productId').val() + "/options",
             contentType: "application/json",
             datatype : "json",
             data : JSON.stringify(option),
@@ -161,7 +117,7 @@
                 Authorization: 'Bearer ' + localStorage.getItem("token"),
             },
             success : function(res){
-                location.reload();
+                getOptions();
             },
             error : function(err){
                 var text = err.responseJSON;
@@ -185,7 +141,10 @@
     function deleteFunction(id){
         $.ajax({
             type: "DELETE",
-            url: "api/products/" + product_id + "/options/" +id,
+            url: "api/products/" + $('#productId').val() + "/options/" +id,
+            headers : {
+                Authorization: 'Bearer ' + localStorage.getItem("token"),
+            },
             success : function(res){
                 $('#option-table').find('tr[data-id="' + id + '"]').remove();
                 alert("옵션 ID : " + id + "가 삭제되었습니다.");
@@ -211,10 +170,13 @@
 
         $.ajax({
             type : "PUT",
-            url : "api/products/" + product_id + "/options/" + $("#p_id").val(),
+            url : "api/products/" + $('#productId').val() + "/options/" + $("#p_id").val(),
             contentType: "application/json",
             datatype : "json",
             data : JSON.stringify(option),
+            headers : {
+                Authorization: 'Bearer ' + localStorage.getItem("token"),
+            },
             success : function(res){
                 location.reload();
             },

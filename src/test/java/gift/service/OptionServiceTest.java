@@ -42,7 +42,7 @@ public class OptionServiceTest {
         // given
         ArgumentCaptor<Option> captor_o = ArgumentCaptor.forClass(Option.class);
 
-        OptionRequest optionRequest = new OptionRequest("[1] 기본", 1L);
+        OptionRequest optionRequest = new OptionRequest("[1] 기본", 1);
         Product product = new Product("product", 10000, "url", new Category("신규"));
         TestUtil.setId(product, 1L);
         given(productRepository.findById(1L)).willAnswer(invocation -> Optional.of(product));
@@ -56,51 +56,25 @@ public class OptionServiceTest {
     }
 
     @Test
-    @DisplayName("findOptionASCTest")
+    @DisplayName("findOptionsTest")
     void test2(){
         // given
         Product product = new Product("product", 10000, "url", new Category("신규"));
         for(int i = 1; i <= 5; i++){
             product.addOption(
-                    new Option("옵션" + i, (long)i)
+                    new Option("옵션" + i, i, product)
             );
         }
         TestUtil.setId(product, 1L);
 
         given(productRepository.findById(1L)).willAnswer(invocation -> Optional.of(product));
         // when
-        Page<OptionResponse> pageResult = optionService.findOptionASC(1L, 0, 5, "name");
+        List<OptionResponse> savedOptions = optionService.findOptions(1L);
         // then
-        Assertions.assertThat(pageResult).isNotNull();
-        Assertions.assertThat(pageResult.get().count()).isEqualTo(5);
-        List<OptionResponse> content = pageResult.getContent();
+        Assertions.assertThat(savedOptions).isNotNull();
+        Assertions.assertThat((long) savedOptions.size()).isEqualTo(5);
         for(int i = 1; i <= 5; i++){
-            String name = content.get(i-1).getName();
-            Assertions.assertThat(name).isEqualTo("옵션"+i);
-        }
-    }
-
-    @Test
-    @DisplayName("findOptionDESCTest")
-    void test3(){
-        // given
-        Product product = new Product("product", 10000, "url", new Category("신규"));
-        for(int i = 1; i <= 5; i++){
-            product.addOption(
-                    new Option("옵션" + i, (long)i)
-            );
-        }
-        TestUtil.setId(product, 1L);
-
-        given(productRepository.findById(1L)).willAnswer(invocation -> Optional.of(product));
-        // when
-        Page<OptionResponse> pageResult = optionService.findOptionDESC(1L, 0, 5, "name");
-        // then
-        Assertions.assertThat(pageResult).isNotNull();
-        Assertions.assertThat(pageResult.get().count()).isEqualTo(5);
-        List<OptionResponse> content = pageResult.getContent();
-        for(int i = 5; i >= 1; i--){
-            String name = content.get(i-1).getName();
+            String name = savedOptions.get(i-1).getName();
             Assertions.assertThat(name).isEqualTo("옵션"+i);
         }
     }
@@ -108,9 +82,10 @@ public class OptionServiceTest {
     @Test
     @DisplayName("updateTest")
     void test4(){
-        // given
-        OptionRequest optionRequest = new OptionRequest("[1] 수정", 50L);
-        Option option = new Option("[1] 기본", 100L);
+        // give
+        Product product = new Product("product", 4500, "url", new Category("신규"));
+        OptionRequest optionRequest = new OptionRequest("[1] 수정", 50);
+        Option option = new Option("[1] 기본", 100, product);
         TestUtil.setId(option, 1L);
         given(optionRepository.findById(1L)).willAnswer(invocation -> Optional.of(option));
         // when
@@ -126,8 +101,8 @@ public class OptionServiceTest {
         // given
         Product product = new Product("product", 10000, "url", new Category("신규"));
         TestUtil.setId(product, 1L);
-        Option option1 = new Option("[1] 옵션 1", 500L);
-        Option option2 = new Option("[2] 옵션 2", 500L);
+        Option option1 = new Option("[1] 옵션 1", 500, product);
+        Option option2 = new Option("[2] 옵션 2", 500, product);
         TestUtil.setId(option1, 1L);
         TestUtil.setId(option2, 1L);
         product.addOption(option1);
@@ -146,7 +121,7 @@ public class OptionServiceTest {
         // given
         Product product = new Product("product", 10000, "url", new Category("신규"));
         TestUtil.setId(product, 1L);
-        Option option1 = new Option("[1] 옵션 1", 500L);
+        Option option1 = new Option("[1] 옵션 1", 500, product);
         TestUtil.setId(option1, 1L);
         product.addOption(option1);
 

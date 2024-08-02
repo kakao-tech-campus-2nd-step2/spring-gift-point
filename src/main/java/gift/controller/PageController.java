@@ -13,13 +13,12 @@ public class PageController {
     /*
      * 메인 페이지
      */
-    @GetMapping("/home")
-    public String home(Model model){
-        if (model.containsAttribute("token")) {
-            String token = (String) model.getAttribute("token");
+    @GetMapping("/")
+    public String home(@RequestParam(required = false) String token, Model model){
+        if (token != null) {
             model.addAttribute("token", token);
         }
-        return "index.html";
+        return "adminProduct.html";
     }
     /*
      * 로그인 페이지

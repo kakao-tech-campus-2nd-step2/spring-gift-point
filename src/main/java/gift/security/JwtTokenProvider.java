@@ -26,7 +26,7 @@ public class JwtTokenProvider {
         Date now = new Date(System.currentTimeMillis());
 
         String accessToken = Jwts.builder()
-                .claim("userId", user.getUserId())
+                .claim("email", user.getEmail())
                 .issuedAt(now)
                 .expiration(new Date(nowMillis + validTime))
                 .signWith(Keys.hmacShaKeyFor(secretKey.getBytes()))
@@ -44,7 +44,7 @@ public class JwtTokenProvider {
                     .build()
                     .parseSignedClaims(token)
                     .getPayload();
-            return claims.get("userId", String.class);
+            return claims.get("email", String.class);
         } catch(Exception e){
             return "null";
         }

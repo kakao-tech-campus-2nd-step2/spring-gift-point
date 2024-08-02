@@ -12,6 +12,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @Controller
 public class OptionController {
     private final OptionService optionService;
@@ -23,30 +25,20 @@ public class OptionController {
      * 옵션 조회
      */
     @GetMapping("/api/products/{product_id}/options")
-    public ResponseEntity<Page<OptionResponse>> readOption(
-            @PathVariable("product_id") Long product_id,
-            @RequestParam(value = "page", defaultValue = "0") int page,
-            @RequestParam(value = "size", defaultValue = "5") int size,
-            @RequestParam(value = "sort", defaultValue = "asc") String sort,
-            @RequestParam(value = "field", defaultValue = "id") String field
-    ){
-        if(sort.equals("asc")){
-            Page<OptionResponse> oneProductOption = optionService.findOptionASC(product_id, page, size, field);
-            return new ResponseEntity<>(oneProductOption, HttpStatus.OK);
-        }
-        Page<OptionResponse> oneProductOption = optionService.findOptionDESC(product_id, page, size, field);
-        return new ResponseEntity<>(oneProductOption, HttpStatus.OK);
+    public ResponseEntity<List<OptionResponse>> readOption(@PathVariable("product_id") Long productId){
+        List<OptionResponse> options = optionService.findOptions(productId);
+        return new ResponseEntity<>(options, HttpStatus.OK);
     }
     /*
      * 옵션 추가
      */
     @PostMapping("/api/products/{product_id}/options")
     public ResponseEntity<Void> createOption(
-            @PathVariable("product_id") Long product_id,
+            @PathVariable("product_id") Long productId,
             @Valid @RequestBody OptionRequest optionRequest,
             @AuthenticateMember UserResponse user
     ){
-        optionService.save(product_id, optionRequest);
+        optionService.save(productId, optionRequest);
 
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
@@ -55,11 +47,11 @@ public class OptionController {
      */
     @PutMapping("/api/products/{product_id}/options/{option_id}")
     public ResponseEntity<Void> updateOption(
-            @PathVariable("option_id") Long option_id,
+            @PathVariable("option_id") Long optionId,
             @Valid @RequestBody OptionRequest optionRequest,
             @AuthenticateMember UserResponse user
     ){
-        optionService.update(option_id, optionRequest);
+        optionService.update(optionId, optionRequest);
 
         return new ResponseEntity<>(HttpStatus.OK);
     }

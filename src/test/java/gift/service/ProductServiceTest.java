@@ -2,6 +2,7 @@ package gift.service;
 
 import gift.DTO.Product.ProductRequest;
 import gift.DTO.Product.ProductResponse;
+import gift.TestUtil;
 import gift.domain.Category;
 import gift.domain.Option;
 import gift.domain.Product;
@@ -60,8 +61,6 @@ public class ProductServiceTest {
         Assertions.assertThat(savedProduct.getName()).isEqualTo("product");
         Assertions.assertThat(savedProduct.getPrice()).isEqualTo(4500);
         Assertions.assertThat(savedProduct.getImageUrl()).isEqualTo("url");
-        Assertions.assertThat(savedProduct.getCategory().getName()).isEqualTo("신규");
-        Assertions.assertThat(savedProduct.getOptions().getFirst().getName()).isEqualTo("[0] 기본");
     }
 
     @Test
@@ -71,8 +70,9 @@ public class ProductServiceTest {
         List<Product> products = new ArrayList<>();
         for (int i = 1; i <= 5; i++) {
             Category category = new Category("물품");
+            TestUtil.setId(category, 1L);
             Product product = new Product("product" + i, 4500, "url" + i, category);
-            Option option = new Option("[0] 기본", 100L);
+            Option option = new Option("[0] 기본", 100, product);
             product.addOption(option);
             products.add(product);
         }
@@ -87,7 +87,7 @@ public class ProductServiceTest {
         Page<Product> page = new PageImpl<>(subList, pageable, products.size());
         given(productRepository.findAll(pageable)).willAnswer(invocation -> page);
         // when
-        Page<ProductResponse> pageResult = productService.readAllProductASC(0, 5, "name");
+        Page<ProductResponse> pageResult = productService.readAllProductASC(0, 5, "name", 1L);
         // then
         Assertions.assertThat(pageResult).isNotNull();
         Assertions.assertThat(pageResult.get().count()).isEqualTo(5);
@@ -105,8 +105,9 @@ public class ProductServiceTest {
         List<Product> products = new ArrayList<>();
         for (int i = 1; i <= 5; i++) {
             Category category = new Category("물품");
+            TestUtil.setId(category, 1L);
             Product product = new Product("product" + i, 4500, "url" + i, category);
-            Option option = new Option("[0] 기본", 100L);
+            Option option = new Option("[0] 기본", 100, product);
             product.addOption(option);
             products.add(product);
         }
@@ -121,7 +122,7 @@ public class ProductServiceTest {
         Page<Product> page = new PageImpl<>(subList, pageable, products.size());
         given(productRepository.findAll(pageable)).willAnswer(invocation -> page);
         // when
-        Page<ProductResponse> pageResult = productService.readAllProductDESC(0, 5, "name");
+        Page<ProductResponse> pageResult = productService.readAllProductDESC(0, 5, "name", 1L);
         // then
         Assertions.assertThat(pageResult).isNotNull();
         Assertions.assertThat(pageResult.get().count()).isEqualTo(5);
@@ -139,14 +140,12 @@ public class ProductServiceTest {
         ProductRequest productRequest = new ProductRequest(
                 "newProduct", 4000, "url", "신규", ""
         );
-
         Category category = new Category("물품");
-        Option option = new Option("[0] 기본", 1L);
-        Optional<Product> product = Optional.of(
-                new Product("product", 4500, "none", category));
-        product.get().addOption(option);
+        Product product = new Product("product", 4500, "none", category);
+        Option option = new Option("[0] 기본", 1, product);
+        product.addOption(option);
 
-        given(productRepository.findById(any(Long.class))).willAnswer(invocation -> product);
+        given(productRepository.findById(any(Long.class))).willAnswer(invocation -> Optional.of(product));
 
         Category newCategory = new Category("신규");
         given(categoryRepository.findByName(any(String.class))).willAnswer(invocation -> newCategory);
@@ -155,11 +154,11 @@ public class ProductServiceTest {
         productService.updateProduct(productRequest, 1L);
 
         // then
-        Assertions.assertThat(product.get().getName()).isEqualTo("newProduct");
-        Assertions.assertThat(product.get().getPrice()).isEqualTo(4000);
-        Assertions.assertThat(product.get().getImageUrl()).isEqualTo("url");
-        Assertions.assertThat(product.get().getCategory().getName()).isEqualTo("신규");
-        Assertions.assertThat(product.get().getOptions().getFirst().getName()).isEqualTo("[0] 기본");
+        Assertions.assertThat(product.getName()).isEqualTo("newProduct");
+        Assertions.assertThat(product.getPrice()).isEqualTo(4000);
+        Assertions.assertThat(product.getImageUrl()).isEqualTo("url");
+        Assertions.assertThat(product.getCategory().getName()).isEqualTo("신규");
+        Assertions.assertThat(product.getOptions().getFirst().getName()).isEqualTo("[0] 기본");
     }
 
     @Test

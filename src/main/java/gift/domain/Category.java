@@ -7,13 +7,22 @@ import jakarta.persistence.*;
 public class Category extends BaseEntity{
     @Column(name = "name", nullable = false)
     String name;
+    @Column(name = "description", nullable = false)
+    String description;
+    @Column(name = "color", nullable = false)
+    String color;
+    @Column(name = "imageUrl", nullable = false)
+    String imageUrl;
 
     protected Category() {
         super();
     }
 
-    public Category(String name) {
+    public Category(String name, String description, String color, String imageUrl) {
         this.name = name;
+        this.description = description;
+        this.color = color;
+        this.imageUrl = imageUrl;
     }
 
     public Long getId() {
@@ -24,7 +33,22 @@ public class Category extends BaseEntity{
         return name;
     }
 
-    public void update(String name){
+    public String getDescription() {
+        return description;
+    }
+
+    public String getColor() {
+        return color;
+    }
+
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public void update(String name, String description, String color, String imageUrl){
         this.name = name;
+        this.description = description;
+        this.color = color;
+        this.imageUrl = imageUrl;
     }
 }

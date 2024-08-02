@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Stream;
 
 @Service
 public class OptionService {
@@ -26,49 +27,28 @@ public class OptionService {
      * 한 상품에 대한 새로운 옵션을 저장하는 로직
      */
     @Transactional
-    public OptionResponse save(Long product_id, OptionRequest optionRequest){
-        Product product = productRepository.findById(product_id).orElseThrow(NoSuchFieldError::new);
-        Option option = new Option(optionRequest.getName(), optionRequest.getQuantity());
-        product.getOptions().add(option);
+    public OptionResponse save(Long productId, OptionRequest optionRequest){
+        System.out.println("1 = " + 1);
+        Product product = productRepository.findById(productId).orElseThrow(NoSuchFieldError::new);
+        Option option = new Option(optionRequest.getName(), optionRequest.getQuantity(), product);
+        product.addOption(option);
 
         Option savedOption = optionRepository.save(option);
-        return new OptionResponse(savedOption);
+        return new OptionResponse(savedOption, productId);
     }
     /*
-     * 한 상품의 옵션을 오름차순으로 가져오는 로직
+     * 한 상품의 옵션을 가져오는 로직
      */
-    public Page<OptionResponse> findOptionASC(Long product_id, int page, int size, String field){
-        List<Sort.Order> sorts = new ArrayList<>();
-        sorts.add(Sort.Order.asc(field));
-        Pageable pageable = PageRequest.of(page, size, Sort.by(sorts));
+    public List<OptionResponse> findOptions(Long productId){
+        List<OptionResponse> answer = new ArrayList<>();
 
-        Product product = productRepository.findById(product_id).orElseThrow(NoSuchFieldError::new);
+        Product product = productRepository.findById(productId).orElseThrow(NoSuchFieldError::new);
         List<Option> options = product.getOptions();
+        for (Option option : options) {
+            answer.add(new OptionResponse(option, productId));
+        }
 
-        int start = (int) pageable.getOffset();
-        int end = Math.min((start + pageable.getPageSize()), options.size());
-
-        List<Option> subList = options.subList(start, end);
-
-        return new PageImpl<>(subList, pageable, options.size()).map(OptionResponse::new);
-    }
-    /*
-     * 한 상품의 옵션을 내림차순으로 가져오는 로직
-     */
-    public Page<OptionResponse> findOptionDESC(Long product_id, int page, int size, String field){
-        List<Sort.Order> sorts = new ArrayList<>();
-        sorts.add(Sort.Order.desc(field));
-        Pageable pageable = PageRequest.of(page, size, Sort.by(sorts));
-
-        Product product = productRepository.findById(product_id).orElseThrow(NoSuchFieldError::new);
-        List<Option> options = product.getOptions();
-
-        int start = (int) pageable.getOffset();
-        int end = Math.min((start + pageable.getPageSize()), options.size());
-
-        List<Option> subList = options.subList(start, end);
-
-        return new PageImpl<>(subList, pageable, options.size()).map(OptionResponse::new);
+        return answer;
     }
     /*
      * 옵션을 수정하는 로직

@@ -27,35 +27,24 @@ public class CategoryService {
     @Transactional
     public CategoryResponse save(CategoryRequest categoryRequest){
         Category category = new Category(
-                categoryRequest.getName()
+                categoryRequest.getName(), categoryRequest.getDescription(), categoryRequest.getColor(), categoryRequest.getImageUrl()
         );
 
         Category savedCategory = categoryRepository.save(category);
         return new CategoryResponse(savedCategory);
     }
     /*
-     * 카테고리를 오름차순으로 조회하는 로직
+     * 카테고리를 조회하는 로직
      */
-    public Page<CategoryResponse> findAllASC(int page, int size, String field){
-        List<Sort.Order> sorts = new ArrayList<>();
-        sorts.add(Sort.Order.asc(field));
-        Pageable pageable = PageRequest.of(page, size, Sort.by(sorts));
+    public List<CategoryResponse> findAll(){
+        List<CategoryResponse> answer = new ArrayList<>();
 
-        Page<Category> categories = categoryRepository.findAll(pageable);
+        List<Category> categories = categoryRepository.findAll();
+        for (Category category : categories) {
+            answer.add(new CategoryResponse(category));
+        }
 
-        return categories.map(CategoryResponse::new);
-    }
-    /*
-     * 카테고리를 내림차순으로 조회하는 로직
-     */
-    public Page<CategoryResponse> findAllDESC(int page, int size, String field){
-        List<Sort.Order> sorts = new ArrayList<>();
-        sorts.add(Sort.Order.desc(field));
-        Pageable pageable = PageRequest.of(page, size, Sort.by(sorts));
-
-        Page<Category> categories = categoryRepository.findAll(pageable);
-
-        return categories.map(CategoryResponse::new);
+        return answer;
     }
     /*
      * 카테고리를 갱신하는 로직
@@ -64,7 +53,9 @@ public class CategoryService {
     public void update(Long id, CategoryRequest categoryRequest){
         Category savedCategory = categoryRepository.findById(id).orElseThrow(NoSuchFieldError::new);
 
-        savedCategory.update(categoryRequest.getName());
+        savedCategory.update(
+                categoryRequest.getName(), categoryRequest.getDescription(), categoryRequest.getColor(), categoryRequest.getImageUrl()
+        );
     }
     /*
      * 카테고리를 삭제하는 로직

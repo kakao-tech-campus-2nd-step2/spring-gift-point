@@ -4,7 +4,7 @@ import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 
 public class ProductRequest {
-    @Size(min=1, max=15, message = "상품명은 1자 이상 15자 이하여야 합니다")
+    @Size(min=1, max=50, message = "상품명은 1자 이상 50자 이하여야 합니다")
     @Pattern.List({
         @Pattern(regexp = "^[가-힣a-zA-Z0-9\\s\\(\\)\\[\\]\\+\\-\\&\\/\\_]+$",
                 message = "특수문자는 ( ), [ ], +, -, &, /, _ 만 허용되며, 한글, 영어, 숫자만 입력 가능합니다."),
@@ -14,7 +14,6 @@ public class ProductRequest {
     private int price;
     private String imageUrl;
     private String categoryName;
-
     private String basicOption;
 
     public ProductRequest(){

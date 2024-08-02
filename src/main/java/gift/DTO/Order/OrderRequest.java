@@ -2,39 +2,33 @@ package gift.DTO.Order;
 
 public class OrderRequest {
     private Long optionId;
-    private Long quantity;
+    private int quantity;
     private String message;
+    private Long productId;
 
     public OrderRequest() {
     }
 
-    public OrderRequest(Long optionId, Long quantity, String message) {
+    public OrderRequest(Long optionId, int quantity, String message, Long productId) {
         this.optionId = optionId;
         this.quantity = quantity;
         this.message = message;
+        this.productId = productId;
     }
 
     public Long getOptionId() {
         return optionId;
     }
 
-    public void setOptionId(Long optionId) {
-        this.optionId = optionId;
-    }
-
-    public Long getQuantity() {
+    public int getQuantity() {
         return quantity;
-    }
-
-    public void setQuantity(Long quantity) {
-        this.quantity = quantity;
     }
 
     public String getMessage() {
         return message;
     }
 
-    public void setMessage(String message) {
-        this.message = message;
+    public Long getProductId() {
+        return productId;
     }
 }

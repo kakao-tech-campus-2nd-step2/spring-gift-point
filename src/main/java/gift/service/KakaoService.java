@@ -13,8 +13,10 @@ import gift.domain.User;
 import gift.security.JwtTokenProvider;
 import gift.security.KakaoTokenProvider;
 import jakarta.transaction.Transactional;
+import org.springframework.aot.generate.AccessControl;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -51,17 +53,18 @@ public class KakaoService {
         this.messageUrl = messageUrl;
         this.userInfoUrl = userInfoUrl;
     }
+
     /*
      * Code를 이용하여 트큰을 발급하는 로직
      */
     @Transactional
-    public Token login(String code) throws JsonProcessingException {
+    public Token getKakaoToken(String code) throws JsonProcessingException {
         String token = kakaoTokenProvider.getToken(code);
         String kakaoId = getKakaoUserInfo(token);
         UserResponse kakaoUserResponse = userService.saveKakao(kakaoId, token);
 
         return jwtTokenProvider.makeToken(new UserRequest(
-                kakaoUserResponse.getUserId(), kakaoUserResponse.getEmail(), kakaoUserResponse.getPassword()
+                kakaoUserResponse.getEmail(), kakaoUserResponse.getPassword()
         ));
     }
     /*

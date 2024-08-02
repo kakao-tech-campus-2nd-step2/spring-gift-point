@@ -36,7 +36,7 @@ public class CategoryServiceTest {
         // given
         ArgumentCaptor<Category> captor_c = ArgumentCaptor.forClass(Category.class);
 
-        CategoryRequest categoryRequest = new CategoryRequest("신규");
+        CategoryRequest categoryRequest = new CategoryRequest("신규", "", "", "");
         Category category = new Category(categoryRequest.getName());
         given(categoryRepository.save(captor_c.capture())).willAnswer(invocation -> captor_c.getValue());
         // when
@@ -46,7 +46,7 @@ public class CategoryServiceTest {
     }
 
     @Test
-    @DisplayName("findAllASCTest")
+    @DisplayName("findAllTest")
     void test2(){
         // given
         List<Category> categories = new ArrayList<>();
@@ -55,54 +55,14 @@ public class CategoryServiceTest {
             categories.add(category);
         }
 
-        List<Sort.Order> sorts = new ArrayList<>();
-        sorts.add(Sort.Order.asc("name"));
-        Pageable pageable = PageRequest.of(0, 5, Sort.by(sorts));
-        int start = (int) pageable.getOffset();
-        int end = Math.min((start + pageable.getPageSize()), categories.size());
-        List<Category> subList = categories.subList(start, end);
-
-        Page<Category> page = new PageImpl<>(subList, pageable, categories.size());
-        given(categoryRepository.findAll(pageable)).willAnswer(invocation -> page);
+        given(categoryRepository.findAll()).willAnswer(invocation -> categories);
         // when
-        Page<CategoryResponse> pageResult = categoryService.findAllASC(0, 5, "name");
+        List<CategoryResponse> savedCategories = categoryService.findAll();
         // then
-        Assertions.assertThat(pageResult).isNotNull();
-        Assertions.assertThat(pageResult.get().count()).isEqualTo(5);
-        List<CategoryResponse> content = pageResult.getContent();
+        Assertions.assertThat(savedCategories).isNotNull();
+        Assertions.assertThat((long) savedCategories.size()).isEqualTo(5);
         for(int i = 1; i <= 5; i++){
-            String name = content.get(i-1).getName();
-            Assertions.assertThat(name).isEqualTo("신규"+i);
-        }
-    }
-
-    @Test
-    @DisplayName("findAllDESCTest")
-    void test3(){
-        // given
-        List<Category> categories = new ArrayList<>();
-        for(int i = 1; i <= 5; i++){
-            Category category = new Category("신규" + i);
-            categories.add(category);
-        }
-
-        List<Sort.Order> sorts = new ArrayList<>();
-        sorts.add(Sort.Order.desc("name"));
-        Pageable pageable = PageRequest.of(0, 5, Sort.by(sorts));
-        int start = (int) pageable.getOffset();
-        int end = Math.min((start + pageable.getPageSize()), categories.size());
-        List<Category> subList = categories.subList(start, end);
-
-        Page<Category> page = new PageImpl<>(subList, pageable, categories.size());
-        given(categoryRepository.findAll(pageable)).willAnswer(invocation -> page);
-        // when
-        Page<CategoryResponse> pageResult = categoryService.findAllDESC(0, 5, "name");
-        // then
-        Assertions.assertThat(pageResult).isNotNull();
-        Assertions.assertThat(pageResult.get().count()).isEqualTo(5);
-        List<CategoryResponse> content = pageResult.getContent();
-        for(int i = 5; i >= 1; i--){
-            String name = content.get(i-1).getName();
+            String name = savedCategories.get(i-1).getName();
             Assertions.assertThat(name).isEqualTo("신규"+i);
         }
     }
@@ -111,7 +71,7 @@ public class CategoryServiceTest {
     @DisplayName("updateTest")
     void test4(){
         // given
-        CategoryRequest categoryRequest = new CategoryRequest("신규 카테고리");
+        CategoryRequest categoryRequest = new CategoryRequest("신규 카테고리", "", "", "");
         Category category = new Category("신규");
         TestUtil.setId(category, 1L);
         given(categoryRepository.findById(1L)).willAnswer(invocation -> Optional.of(category));

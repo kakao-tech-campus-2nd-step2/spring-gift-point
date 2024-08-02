@@ -46,7 +46,7 @@ public class WishListServiceTest {
     @Test
     @DisplayName("saveTestWhenNew")
     void test1() {
-        User user = new User("userid", "user1@email.com", "aaaaa");
+        User user = new User("user1@email.com", "aaaaa");
         TestUtil.setId(user, 1L);
         Product product = new Product("product", 15000, "url", new Category("물품"));
         TestUtil.setId(product, 1L);
@@ -60,25 +60,23 @@ public class WishListServiceTest {
         );
 
         WishProduct wishProduct = new WishProduct(user, product);
+        TestUtil.setId(wishProduct, 1L);
         given(userRepository.findById(1L)).willAnswer(invocation -> Optional.of(user));
         given(productRepository.findById(1L)).willAnswer(invocation -> Optional.of(product));
         given(wishListRepository.save(any(WishProduct.class))).willAnswer(invocation -> wishProduct);
         // when
         WishProductResponse savedWishProduct = wishListService.addWishList(wishProductRequest);
         //then
-        Assertions.assertThat(savedWishProduct.getProduct().getName()).isEqualTo(product.getName());
-        Assertions.assertThat(savedWishProduct.getProduct().getPrice()).isEqualTo(product.getPrice());
-        Assertions.assertThat(savedWishProduct.getProduct().getImageUrl()).isEqualTo(product.getImageUrl());
-        Assertions.assertThat(savedWishProduct.getProduct().getCategory().getName()).isEqualTo(product.getCategory().getName());
-        Assertions.assertThat(savedWishProduct.getUser().getUserId()).isEqualTo(user.getUserId());
-        Assertions.assertThat(savedWishProduct.getUser().getEmail()).isEqualTo(user.getEmail());
-        Assertions.assertThat(savedWishProduct.getUser().getPassword()).isEqualTo(user.getPassword());
+        Assertions.assertThat(savedWishProduct.getWishId()).isEqualTo(1L);
+        Assertions.assertThat(savedWishProduct.getName()).isEqualTo("product");
+        Assertions.assertThat(savedWishProduct.getPrice()).isEqualTo(15000);
+        Assertions.assertThat(savedWishProduct.getImageUrl()).isEqualTo("url");
     }
 
     @Test
     @DisplayName("saveTestWhenExist")
     void test2(){
-        User user = new User("userid", "user1@email.com", "aaaaa");
+        User user = new User("user1@email.com", "aaaaa");
         TestUtil.setId(user, 1L);
         Product product = new Product("product", 15000, "url", new Category("물품"));
         TestUtil.setId(product, 1L);
@@ -98,20 +96,17 @@ public class WishListServiceTest {
         // when
         WishProductResponse savedWishProduct = wishListService.addWishList(wishProductRequest);
         //then
-        Assertions.assertThat(savedWishProduct.getProduct().getName()).isEqualTo(product.getName());
-        Assertions.assertThat(savedWishProduct.getProduct().getPrice()).isEqualTo(product.getPrice());
-        Assertions.assertThat(savedWishProduct.getProduct().getImageUrl()).isEqualTo(product.getImageUrl());
-        Assertions.assertThat(savedWishProduct.getProduct().getCategory().getName()).isEqualTo(product.getCategory().getName());
-        Assertions.assertThat(savedWishProduct.getUser().getUserId()).isEqualTo(user.getUserId());
-        Assertions.assertThat(savedWishProduct.getUser().getEmail()).isEqualTo(user.getEmail());
-        Assertions.assertThat(savedWishProduct.getUser().getPassword()).isEqualTo(user.getPassword());
+        Assertions.assertThat(savedWishProduct.getWishId()).isEqualTo(1L);
+        Assertions.assertThat(savedWishProduct.getName()).isEqualTo("product");
+        Assertions.assertThat(savedWishProduct.getPrice()).isEqualTo(15000);
+        Assertions.assertThat(savedWishProduct.getImageUrl()).isEqualTo("url");
     }
 
     @Test
     @DisplayName("findWishListASCTest")
     void test3(){
         List<WishProduct> wishList = new ArrayList<>();
-        User user = new User("user", "user@email.com", "aaaaa");
+        User user = new User("user@email.com", "aaaaa");
         TestUtil.setId(user, 1L);
         for (int i = 1; i <= 5; i++) {
             Product product = new Product("product" + i, 4000, "url" + i, new Category("신규"));
@@ -136,7 +131,7 @@ public class WishListServiceTest {
         Assertions.assertThat(pageResult.get().count()).isEqualTo(5);
         List<WishProductResponse> content = pageResult.getContent();
         for(int i = 1; i <= 5; i++){
-            Long id = content.get(i-1).getId();
+            Long id = content.get(i-1).getWishId();
             Assertions.assertThat(id).isEqualTo((long)i);
         }
     }
@@ -145,7 +140,7 @@ public class WishListServiceTest {
     @DisplayName("findWishListDESCTest")
     void test4(){
         List<WishProduct> wishList = new ArrayList<>();
-        User user = new User("user", "user@email.com", "aaaaa");
+        User user = new User( "user@email.com", "aaaaa");
         TestUtil.setId(user, 1L);
         for (int i = 1; i <= 5; i++) {
             Product product = new Product("product" + i, 4000, "url" + i, new Category("신규"));
@@ -170,7 +165,7 @@ public class WishListServiceTest {
         Assertions.assertThat(pageResult.get().count()).isEqualTo(5);
         List<WishProductResponse> content = pageResult.getContent();
         for(int i = 5; i >= 1; i--){
-            Long id = content.get(i-1).getId();
+            Long id = content.get(i-1).getWishId();
             Assertions.assertThat(id).isEqualTo((long)i);
         }
     }
@@ -179,7 +174,7 @@ public class WishListServiceTest {
     @DisplayName("updateWishProductTest")
     void test5(){
         // given
-        User user = new User("user", "user@email.com", "aaaaa");
+        User user = new User("user@email.com", "aaaaa");
         Product product = new Product("product", 4500, "url", new Category("신규"));
         WishProduct wishProduct = new WishProduct(user, product);
         given(wishListRepository.findByUserIdAndProductId(anyLong(), anyLong())).willAnswer(
@@ -196,7 +191,7 @@ public class WishListServiceTest {
     @DisplayName("deleteWishProductTestWhenOneLeft")
     void test6(){
         // given
-        User user = new User("user", "user@email.com", "aaaaa");
+        User user = new User( "user@email.com", "aaaaa");
         Product product = new Product("product", 4500, "url", new Category("신규"));
         WishProduct wishProduct = new WishProduct(user, product);
         given(wishListRepository.findById(anyLong())).willAnswer(invocation -> Optional.of(wishProduct));

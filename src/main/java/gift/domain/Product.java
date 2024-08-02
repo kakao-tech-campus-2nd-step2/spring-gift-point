@@ -8,7 +8,7 @@ import java.util.List;
 @Entity
 @Table(name = "products")
 public class Product extends BaseEntity{
-    @Column(name = "name", nullable = false, length = 15)
+    @Column(name = "name", nullable = false, length = 50)
     private String name;
     @Column(name = "price", nullable = false)
     private int price;
@@ -20,11 +20,7 @@ public class Product extends BaseEntity{
             foreignKey = @ForeignKey(name = "fk_product_category_id_ref_category_id"),
             nullable = false)
     private Category category;
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
-    @JoinColumn(
-            name = "product_id",
-            foreignKey = @ForeignKey(name = "fk_option_product_id_ref_product_id"),
-            nullable = false)
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Option> options = new ArrayList<>();
 
     protected Product(){

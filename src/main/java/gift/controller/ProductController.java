@@ -16,6 +16,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 public class ProductController {
     private final ProductService productService;
@@ -25,24 +27,31 @@ public class ProductController {
     }
 
     /*
-     * 상품 조회
+     * 상품 전체 조회
      */
     @GetMapping("/api/products")
-    public ResponseEntity<Page<ProductResponse>> readProducts(
+    public ResponseEntity<Page<ProductResponse>> readAllProduct(
             @RequestParam(value = "page", defaultValue = "0") int page,
             @RequestParam(value = "size", defaultValue = "5") int size,
-            @RequestParam(value = "sort", defaultValue = "asc") String sort,
-            @RequestParam(value = "field", defaultValue = "id") String field
-    ) {
-        if(sort.equals("asc")) {
-            Page<ProductResponse> products = productService.readAllProductASC(page, size, field);
+            @RequestParam(value = "sort") List<String> sort,
+            @RequestParam(value = "categoryId", defaultValue = "1") Long categoryId
+            ) {
+        if(sort.getLast().equals("asc")) {
+            Page<ProductResponse> products = productService.readAllProductASC(page, size, sort.getFirst(), categoryId);
             return new ResponseEntity<>(products, HttpStatus.OK);
         }
 
-        Page<ProductResponse> products = productService.readAllProductDESC(page, size, field);
+        Page<ProductResponse> products = productService.readAllProductDESC(page, size, sort.getFirst(), categoryId);
         return new ResponseEntity<>(products, HttpStatus.OK);
     }
-
+    /*
+     * 상품 조회
+     */
+    @GetMapping("/api/products/{productId}")
+    public ResponseEntity<ProductResponse> readProduct(@PathVariable("productId") Long productId) {
+        ProductResponse productResponse = productService.readOneProduct(productId);
+        return new ResponseEntity<>(productResponse, HttpStatus.OK);
+    }
     /*
      * 상품 추가
      */

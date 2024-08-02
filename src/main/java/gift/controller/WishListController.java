@@ -12,6 +12,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 public class WishListController {
     private final WishListService wishListService;
@@ -25,7 +27,7 @@ public class WishListController {
      * 위시 리스트 추가
      */
     @PostMapping("api/wishes/{productId}")
-    public ResponseEntity<Void> createWishList(
+    public ResponseEntity<String> createWishList(
             @PathVariable("productId") Long id, @AuthenticateMember UserResponse userRes
     ){
         ProductResponse productRes = productService.readOneProduct(id);
@@ -33,7 +35,8 @@ public class WishListController {
         WishProductRequest wishProduct = new WishProductRequest(userRes, productRes);
         wishListService.addWishList(wishProduct);
 
-        return new ResponseEntity<>(HttpStatus.OK);
+        String message = "위시리스트에 추가했습니다!";
+        return new ResponseEntity<>(message, HttpStatus.CREATED);
     }
     /*
      * 위시 리스트 조회
@@ -43,14 +46,13 @@ public class WishListController {
             @AuthenticateMember UserResponse user,
             @RequestParam(value = "page", defaultValue = "0") int page,
             @RequestParam(value = "size", defaultValue = "5") int size,
-            @RequestParam(value = "sort", defaultValue = "asc") String sort,
-            @RequestParam(value = "field", defaultValue = "id") String field
+            @RequestParam(value = "sort") List<String> sort
     ){
-        if(sort.equals("asc")){
-            Page<WishProductResponse> wishList = wishListService.findWishListASC(user.getId(), page, size, field);
+        if(sort.getLast().equals("asc")){
+            Page<WishProductResponse> wishList = wishListService.findWishListASC(user.getId(), page, size, sort.getFirst());
             return new ResponseEntity<>(wishList, HttpStatus.OK);
         }
-        Page<WishProductResponse> wishList = wishListService.findWishListDESC(user.getId(), page, size, field);
+        Page<WishProductResponse> wishList = wishListService.findWishListDESC(user.getId(), page, size, sort.getFirst());
         return new ResponseEntity<>(wishList, HttpStatus.OK);
     }
     /*
