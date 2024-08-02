@@ -36,6 +36,10 @@ public class Member {
     @JsonManagedReference
     private List<Order> orders = new ArrayList<>();
 
+    @Column(nullable = true, name="kakao-token")
+    private String kakaoToken;
+
+
     public Member() {}
 
     @ConstructorProperties({"email", "password"})
@@ -45,12 +49,12 @@ public class Member {
         this.type = MemberType.NORMAL_USER;
     }
 
-    public Member(String email, String password, MemberType type) {
-        this.email = email;
-        this.password = password;
-        this.type = type;
-    }
 
+    public Member(MemberType type, String email, String kakaoToken) {
+        this.type = type;
+        this.email = email;
+        this.kakaoToken = kakaoToken;
+    }
 
     public Member(String email, MemberType type) {
         this.email = email;
@@ -79,5 +83,9 @@ public class Member {
 
     public List<Order> getOrders() {
         return orders;
+    }
+
+    public String getKakaoToken() {
+        return kakaoToken;
     }
 }
