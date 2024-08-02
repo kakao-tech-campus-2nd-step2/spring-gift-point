@@ -31,6 +31,10 @@ public class CategoryService {
         return categoryMapper.toSimpleList(categoryRepository.findAll(req.toPageable()));
     }
 
+    public Page<DetailCategory> getCategoryDetailList(Category.getList req) {
+        return categoryMapper.toDetailList(categoryRepository.findAll(req.toPageable()));
+    }
+
     public DetailCategory getCategory(long id) {
         CategoryEntity category = categoryRepository.findById(id)
             .orElseThrow(() -> new BaseHandler(HttpStatus.NOT_FOUND, "해당 카테고리가 존재하지 않습니다."));
