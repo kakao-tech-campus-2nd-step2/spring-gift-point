@@ -1,5 +1,6 @@
 package gift.controller;
 
+import gift.controller.api.PointApi;
 import gift.dto.point.PointRequest;
 import gift.dto.point.PointResponse;
 import gift.service.PointService;
@@ -12,11 +13,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.net.URI;
-
 @RestController
 @RequestMapping("/api/points")
-public class PointController {
+public class PointController implements PointApi {
 
     private final PointService pointService;
 
@@ -27,7 +26,7 @@ public class PointController {
     @PostMapping
     public ResponseEntity<PointResponse> addPoint(@RequestAttribute("memberId") Long memberId, @Valid @RequestBody PointRequest pointRequest) {
         var point = pointService.addPoint(memberId, pointRequest.point());
-        return ResponseEntity.created(URI.create("/api/points")).body(point);
+        return ResponseEntity.ok(point);
     }
 
     @GetMapping
