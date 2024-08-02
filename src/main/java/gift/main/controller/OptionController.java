@@ -55,11 +55,10 @@ public class OptionController {
     }
 
     //옵션 업데이트
-    @PutMapping("/{productId}/option/{optionId}")
-    public ResponseEntity<?> updateOption(@PathVariable(value = "productId") long productId,
-                                          @PathVariable(value = "optionId") long optionId,
+    @PutMapping("/{optionId}")
+    public ResponseEntity<?> updateOption(@PathVariable(value = "optionId") long optionId,
                                           @Valid @RequestBody OptionRequest optionRequest) {
-        optionService.updateOption(productId, optionId, optionRequest);
+        optionService.updateOption(optionId, optionRequest);
         return ResponseEntity.ok("Option updated successfully");
     }
 
