@@ -15,6 +15,7 @@ public enum ErrorCode {
     INVALID_OR_MISSING_TOKEN(HttpStatus.UNAUTHORIZED, "Invalid or missing token"),
 
     WISH_NOT_FOUND(HttpStatus.NOT_FOUND, "Wish not found");
+  
     private HttpStatus status;
 
     private String message;
