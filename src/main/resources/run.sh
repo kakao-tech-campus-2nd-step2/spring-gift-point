@@ -9,6 +9,6 @@ killall -9 java
 
 ./gradlew clean bootJar
 cd build/libs
-java -jar spring-gift-0.0.1-SNAPSHOT.jar &
+sudo java -jar spring-gift-0.0.1-SNAPSHOT.jar &
 exit
 EOF
