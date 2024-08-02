@@ -17,10 +17,10 @@ do
 
   if [ -z $CURRENT_PID ] # 비어있으면 1초 대기 후
   then
-    sleep 1
+   echo "실행중인 프로세스가 없습니다." # 터미널에 빌드 시작 출력
   else
     kill -15 $CURRENT_PID # 비어있지 않으면 kill -15 명령어로 프로세스 종료 훟 5초 대기
-    sleep 5
+    sleep 5 # 프로그램이 종료 될때 까지 대기
   fi
 
   DEPLOY_PATH=/home/ubuntu/spring-gift-point/ # 쉘 스크립트 경로
@@ -29,6 +29,7 @@ do
   cd $DEPLOY_PATH # DEPLOY_PATH로 이동
 
   DEPLOY_JAR=$DEPLOY_PATH$JAR_NAME # 이동된 jar파일
+
   # nohup 명령어로 터미널 세션이 종료돼도 계속 실행, & 명령어로 백그라운드에서 실행 /dev/null 2> /dev/null < /dev/null로그를 기록하지 않음
   nohup java -jar $DEPLOY_JAR > /dev/null 2> /dev/null < /dev/null &
 
