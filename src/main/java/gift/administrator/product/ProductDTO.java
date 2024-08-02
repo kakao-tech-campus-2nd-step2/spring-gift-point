@@ -36,7 +36,7 @@ public class ProductDTO {
     @Schema(description = "상품이 속한 카테고리 아이디", example = "1")
     @NotNull(message = "카테고리를 선택해야합니다.")
     private Long categoryId;
-    @Schema(description = "상품의 옵션", example = "optionDTO 참고")
+    @Schema(description = "상품의 옵션", example = "[{\"name\":\"한복 버전\",\"quantity\":\"4\"},{\"name\":\"XL\",\"quantity\":\"2\"}]")
     @Size(min = 1, message = "상품에는 적어도 하나의 옵션이 있어야 합니다.")
     private List<OptionDTO> options = new ArrayList<>();
 
@@ -94,7 +94,8 @@ public class ProductDTO {
     }
 
     public Product toProduct(ProductDTO productDTO, Category category) {
-        Product product = new Product(productDTO.getId(), productDTO.getName(), productDTO.getPrice(),
+        Product product = new Product(productDTO.getId(), productDTO.getName(),
+            productDTO.getPrice(),
             productDTO.getImageUrl(), category, new ArrayList<>());
         List<Option> options = productDTO.getOptions().stream()
             .map(optionDTO -> optionDTO.toOption(product))

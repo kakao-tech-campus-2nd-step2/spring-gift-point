@@ -36,7 +36,7 @@ public class ProductService {
         Sort sort = Sort.by(direction, sortBy);
         Pageable pageRequest = PageRequest.of(page, size, sort);
         Page<Product> productPage;
-        if(categoryId == null){
+        if(categoryId != null){
             productPage = productRepository.findAllByCategoryId(categoryId, pageRequest);
         }
         else {
@@ -52,7 +52,7 @@ public class ProductService {
         Sort sort = Sort.by(direction, sortBy);
         Pageable pageRequest = PageRequest.of(page, size, sort);
 
-        Page<Product> productPage = productPage = productRepository.findAll(pageRequest);
+        Page<Product> productPage = productRepository.findAll(pageRequest);
 
         List<ProductDTO> products = productPage.stream()
             .map(ProductDTO::fromProduct)
