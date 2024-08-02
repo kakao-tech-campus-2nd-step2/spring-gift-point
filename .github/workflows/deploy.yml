@@ -54,4 +54,4 @@ jobs:
           script: |
             cd ./project
             sudo fuser -k -n tcp 443 || true
-            nohup java -jar app.jar > ./output.log 2>&1 &
+            sudo nohup java -jar app.jar > ./output.log 2>&1 &
