@@ -1,4 +1,4 @@
-package gift.dto;
+package gift.dto.kakaoDTO;
 
 import java.util.Map;
 import java.util.HashMap;
