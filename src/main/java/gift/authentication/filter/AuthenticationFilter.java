@@ -10,7 +10,6 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.Enumeration;
 import java.util.List;
 import java.util.Objects;
 import java.util.regex.Pattern;
@@ -74,6 +73,6 @@ public class AuthenticationFilter extends OncePerRequestFilter {
         return ignorePathsOnlyMethodGet
             .stream()
             .anyMatch(regex -> Pattern.compile(regex).matcher(requestURI).matches()
-                && request.getMethod().equals("GET"));
+                && (request.getMethod().equals("GET") || request.getMethod().equals("OPTIONS")));
     }
 }
