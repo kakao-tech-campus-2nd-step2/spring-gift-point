@@ -41,4 +41,31 @@ public class OptionController {
         OptionDTO createdOption = optionService.addOptionToProduct(productId, optionDTO);
         return new ResponseEntity<>(createdOption, HttpStatus.CREATED);
     }
+
+    /**
+     * 제품 옵션 수정.
+     *
+     * @param productId 제품 ID
+     * @param optionId 옵션 ID
+     * @param optionDTO 수정할 옵션 DTO
+     * @return 수정된 옵션 DTO
+     */
+    @PutMapping("/{optionId}")
+    public ResponseEntity<OptionDTO> updateOption(@PathVariable Long productId, @PathVariable Long optionId, @RequestBody OptionDTO optionDTO) {
+        OptionDTO updatedOption = optionService.updateOption(productId, optionId, optionDTO);
+        return new ResponseEntity<>(updatedOption, HttpStatus.OK);
+    }
+
+    /**
+     * 제품 옵션 삭제.
+     *
+     * @param productId 제품 ID
+     * @param optionId 옵션 ID
+     * @return HTTP 204 No Content
+     */
+    @DeleteMapping("/{optionId}")
+    public ResponseEntity<Void> deleteOption(@PathVariable Long productId, @PathVariable Long optionId) {
+        optionService.deleteOption(productId, optionId);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
 }

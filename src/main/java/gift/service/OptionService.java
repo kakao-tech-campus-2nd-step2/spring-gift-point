@@ -28,7 +28,6 @@ public class OptionService {
         Product product = productRepository.findById(productId)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid product Id:" + productId));
 
-        // 동일한 상품 내에서 옵션 이름 중복 체크
         if (optionRepository.findByProductId(productId).stream()
                 .anyMatch(option -> option.getName().equals(optionDTO.getName()))) {
             throw new IllegalArgumentException("Option name already exists for this product.");
@@ -37,6 +36,29 @@ public class OptionService {
         Option option = new Option(null, optionDTO.getName(), optionDTO.getQuantity(), product);
         optionRepository.save(option);
         return new OptionDTO(option);
+    }
+
+    @Transactional
+    public OptionDTO updateOption(Long productId, Long optionId, OptionDTO optionDTO) {
+        Option option = optionRepository.findById(optionId)
+                .orElseThrow(() -> new IllegalArgumentException("Invalid option Id:" + optionId));
+        if (!option.getProduct().getId().equals(productId)) {
+            throw new IllegalArgumentException("Option does not belong to the given product.");
+        }
+        option.setName(optionDTO.getName());
+        option.setQuantity(optionDTO.getQuantity());
+        optionRepository.save(option);
+        return new OptionDTO(option);
+    }
+
+    @Transactional
+    public void deleteOption(Long productId, Long optionId) {
+        Option option = optionRepository.findById(optionId)
+                .orElseThrow(() -> new IllegalArgumentException("Invalid option Id:" + optionId));
+        if (!option.getProduct().getId().equals(productId)) {
+            throw new IllegalArgumentException("Option does not belong to the given product.");
+        }
+        optionRepository.delete(option);
     }
 
     public List<OptionDTO> getOptionsByProductId(Long productId) {
