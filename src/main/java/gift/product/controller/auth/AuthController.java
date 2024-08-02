@@ -43,7 +43,7 @@ public class AuthController {
         @ApiResponse(responseCode = "201", description = "회원 가입 성공", content = @Content(mediaType = "text/plain", schema = @Schema(implementation = String.class), examples = @ExampleObject("User registered successfully"))),
         @ApiResponse(responseCode = "409", description = "회원 가입 실패(이미 존재하는 이메일)", content = @Content(mediaType = "application/json", schema = @Schema(implementation = gift.product.exception.ExceptionResponse.class)))
     })
-    @PostMapping("/register")
+    @PostMapping(value = "/register", produces = "text/plain")
     public ResponseEntity<String> registerMember(
         @RequestBody MemberDto memberDto) {
         authService.register(memberDto);
@@ -55,7 +55,7 @@ public class AuthController {
         @ApiResponse(responseCode = "200", description = "로그인 성공", content = @Content(mediaType = "text/plain", schema = @Schema(implementation = String.class), examples = @ExampleObject("엑세스 토큰 값"))),
         @ApiResponse(responseCode = "401", description = "로그인 실패", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ExceptionResponse.class)))
     })
-    @PostMapping("/login")
+    @PostMapping(value = "/login", produces = "text/plain")
     public ResponseEntity<String> loginMember(@RequestBody AccountDto accountDto) {
         AccessTokenDto accessTokenDto = authService.login(accountDto);
 
