@@ -21,6 +21,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 @Entity(name = "DiscountPolicy")
 @EntityListeners(AuditingEntityListener.class)
 public class DiscountPolicyEntity {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -36,13 +37,19 @@ public class DiscountPolicyEntity {
     //    할인 한도
     @Column
     private Integer DiscountAmountLimit;
+    //     삭제 여부
+    @Column
+    private Integer isDelete;
+    //    주석
+    @Column
+    private String remark;
     //    정책 생성일
     @CreatedDate
     private LocalDateTime createdAt;
     //    대상 상품
     @ManyToOne(targetEntity = ProductEntity.class, fetch = FetchType.LAZY)
-    @JoinColumn(name = "productOption_id")
-    private ProductOptionEntity target;
+    @JoinColumn(name = "Product_id")
+    private ProductEntity target;
     //    할인이 적용된 결제건
     @JsonIgnore
     @OneToMany(mappedBy = "discountPolicy", fetch = FetchType.LAZY,
@@ -53,14 +60,15 @@ public class DiscountPolicyEntity {
     }
 
     public DiscountPolicyEntity(DiscountType discountType, Integer discount,
-        LocalDateTime endDate, Integer discountAmountLimit, ProductOptionEntity target,
-        List<PointPaymentEntity> pointPayment) {
+        LocalDateTime endDate, Integer discountAmountLimit, String remark,
+        ProductEntity target) {
         this.discountType = discountType;
         this.discount = discount;
         this.endDate = endDate;
         DiscountAmountLimit = discountAmountLimit;
+        this.remark = remark;
         this.target = target;
-        PointPayment = pointPayment;
+        this.isDelete = 0;
     }
 
     public Long getId() {
@@ -87,11 +95,23 @@ public class DiscountPolicyEntity {
         return createdAt;
     }
 
-    public ProductOptionEntity getTarget() {
+    public ProductEntity getTarget() {
         return target;
     }
 
     public List<PointPaymentEntity> getPointPayment() {
         return PointPayment;
+    }
+
+    public Integer getIsDelete() {
+        return isDelete;
+    }
+
+    public String getRemark() {
+        return remark;
+    }
+
+    public void setIsDelete(Integer isDelete) {
+        this.isDelete = isDelete;
     }
 }
