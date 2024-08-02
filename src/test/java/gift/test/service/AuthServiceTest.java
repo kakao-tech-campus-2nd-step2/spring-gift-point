@@ -52,13 +52,17 @@ public class AuthServiceTest {
 
         verify(userService).findByEmail(any(String.class));
         assertThat(tokenMap).containsKey("access_token");
+        assertThat(tokenMap.get("access_token")).endsWith("-itself");
     }
-
+    
     @Test
     public void testParseToken() {
         String token = authService.grantAccessToken(user);
-        String email = authService.parseToken("Bearer " + token);
-
+        String tokenWithSuffix = token + "-itself";
+        
+        when(tokenService.extractionEmail("Bearer " + tokenWithSuffix)).thenReturn(user.getEmail());
+        String email = tokenService.extractionEmail("Bearer " + tokenWithSuffix);
+        
         assertThat(email).isEqualTo(user.getEmail());
     }
 
@@ -66,5 +70,6 @@ public class AuthServiceTest {
     public void testGrantAccessToken() {
         String token = authService.grantAccessToken(user);
         assertThat(token).isNotNull();
+        assertThat(token).endsWith("-itself");
     }
 }

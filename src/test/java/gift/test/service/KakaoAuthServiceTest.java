@@ -86,7 +86,7 @@ public class KakaoAuthServiceTest {
         Map<String, String> result = kakaoAuthService.getAccessToken(authorizationCode);
 
         assertThat(result).isNotNull();
-        assertThat(result.get("access_token")).isEqualTo(accessToken);
+        assertThat(result.get("access_token")).isEqualTo(accessToken + "-kakao");
         verify(restTemplate).exchange(any(RequestEntity.class), eq(new ParameterizedTypeReference<Map<String, String>>() {}));
         verify(restTemplate).exchange(any(RequestEntity.class), eq(new ParameterizedTypeReference<Map<String, Object>>() {}));
         verify(userRepository, times(1)).save(any(User.class));
