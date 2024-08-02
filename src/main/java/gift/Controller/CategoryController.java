@@ -22,7 +22,7 @@ public class CategoryController {
     }
 
     @Operation(summary = "모든 카테고리 조회", description = "모든 카테고리를 조회합니다.")
-    @GetMapping("/")
+    @GetMapping
     public ResponseEntity<List<CategoryDto>> getAllCategories() {
         List<CategoryDto> categoryDtoList = categoryService.getAllCategories();
         return ResponseEntity.ok(categoryDtoList);
