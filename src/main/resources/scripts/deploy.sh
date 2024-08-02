@@ -30,4 +30,4 @@ nohup java -jar $DEPLOY_JAR > /dev/null 2> /dev/null < /dev/null &
 printf "애플리케이션 배포 완료. 로그 파일: %s\n" $LOG_FILE
 
 # tail -f /home/ubuntu/deploy.log
-# 위 명령어로 배포 로그를 확인할 수 있습니다.
+# 위 명령어로 배포 로그를 확인
