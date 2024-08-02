@@ -48,4 +48,6 @@
   - Controller 수정
     - 생성한 DTO를 사용하도록 수정
     - Controller -> RestController
+- 커스텀 예외 만들기
+  - 커스텀 예외 사용하기
 </details>
