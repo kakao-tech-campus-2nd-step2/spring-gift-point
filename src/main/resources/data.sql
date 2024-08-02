@@ -23,106 +23,41 @@ VALUES ('교환권', '#FF5733', 'https://cdn.pixabay.com/photo/2015/08/11/08/21/
 
 
 INSERT INTO product (name, price, imageUrl, category_id)
-VALUES ('커피', 1500, 'https://via.placeholder.com/150', 14);
+VALUES ('커피', 1500, 'https://via.placeholder.com/150', 14),
+       ('고기', 15500, 'https://via.placeholder.com/150', 5),
+       ('계란', 3000, 'https://via.placeholder.com/150', 5),
+       ('수프', 40000, 'https://via.placeholder.com/150', 5),
+       ('빵', 2500, 'https://via.placeholder.com/150', 5),
+       ('우유', 1000, 'https://via.placeholder.com/150', 5),
+       ('치즈', 7000, 'https://via.placeholder.com/150', 5),
+       ('초콜릿', 3500, 'https://via.placeholder.com/150', 14),
+       ('와인', 45000, 'https://via.placeholder.com/150', 14),
+       ('맥주', 2000, 'https://via.placeholder.com/150', 14),
+       ('주스', 1200, 'https://via.placeholder.com/150', 14),
+       ('물', 500, 'https://via.placeholder.com/150', 14),
+       ('소다', 800, 'https://via.placeholder.com/150', 14),
+       ('사과', 300, 'https://via.placeholder.com/150', 5),
+       ('바나나', 600, 'https://via.placeholder.com/150', 5),
+       ('포도', 2500, 'https://via.placeholder.com/150', 5),
+       ('복숭아', 1500, 'https://via.placeholder.com/150', 5),
+       ('파인애플', 3500, 'https://via.placeholder.com/150', 5),
+       ('망고', 4000, 'https://via.placeholder.com/150', 5),
+       ('딸기', 3000, 'https://via.placeholder.com/150', 5),
+       ('블루베리', 5000, 'https://via.placeholder.com/150', 5),
+       ('라즈베리', 6000, 'https://via.placeholder.com/150', 5),
+       ('블랙베리', 5500, 'https://via.placeholder.com/150', 5),
+       ('오렌지', 2000, 'https://via.placeholder.com/150', 5),
+       ('레몬', 1000, 'https://via.placeholder.com/150', 5),
+       ('라임', 1100, 'https://via.placeholder.com/150', 5),
+       ('아보카도', 7000, 'https://via.placeholder.com/150', 5),
+       ('브로콜리', 2000, 'https://via.placeholder.com/150', 5),
+       ('당근', 1000, 'https://via.placeholder.com/150', 5),
+       ('토마토', 1500, 'https://via.placeholder.com/150', 5),
+       ('가전교환권', 200000, 'https://via.placeholder.com/150', 1),
+       ('문화상품권', 200000, 'https://via.placeholder.com/150', 2),
+       ('립스틱', 20000, 'https://via.placeholder.com/150', 3);
 
-INSERT INTO product (name, price, imageUrl, category_id)
-VALUES ('고기', 15500, 'https://via.placeholder.com/150', 5);
-
-INSERT INTO product (name, price, imageUrl, category_id)
-VALUES ('계란', 3000, 'https://via.placeholder.com/150', 5);
-
-INSERT INTO product (name, price, imageUrl, category_id)
-VALUES ('수프', 40000, 'https://via.placeholder.com/150', 5);
-
-INSERT INTO product (name, price, imageUrl, category_id)
-VALUES ('빵', 2500, 'https://via.placeholder.com/150', 5);
-
-INSERT INTO product (name, price, imageUrl, category_id)
-VALUES ('우유', 1000, 'https://via.placeholder.com/150', 5);
-
-INSERT INTO product (name, price, imageUrl, category_id)
-VALUES ('치즈', 7000, 'https://via.placeholder.com/150', 5);
-
-INSERT INTO product (name, price, imageUrl, category_id)
-VALUES ('초콜릿', 3500, 'https://via.placeholder.com/150', 14);
-
-INSERT INTO product (name, price, imageUrl, category_id)
-VALUES ('와인', 45000, 'https://via.placeholder.com/150', 14);
-
-INSERT INTO product (name, price, imageUrl, category_id)
-VALUES ('맥주', 2000, 'https://via.placeholder.com/150', 14);
-
-INSERT INTO product (name, price, imageUrl, category_id)
-VALUES ('주스', 1200, 'https://via.placeholder.com/150', 14);
-
-INSERT INTO product (name, price, imageUrl, category_id)
-VALUES ('물', 500, 'https://via.placeholder.com/150', 14);
-
-INSERT INTO product (name, price, imageUrl, category_id)
-VALUES ('소다', 800, 'https://via.placeholder.com/150', 14);
-
-INSERT INTO product (name, price, imageUrl, category_id)
-VALUES ('사과', 300, 'https://via.placeholder.com/150', 5);
-
-INSERT INTO product (name, price, imageUrl, category_id)
-VALUES ('바나나', 600, 'https://via.placeholder.com/150', 5);
-
-INSERT INTO product (name, price, imageUrl, category_id)
-VALUES ('포도', 2500, 'https://via.placeholder.com/150', 5);
-
-INSERT INTO product (name, price, imageUrl, category_id)
-VALUES ('복숭아', 1500, 'https://via.placeholder.com/150', 5);
-
-INSERT INTO product (name, price, imageUrl, category_id)
-VALUES ('파인애플', 3500, 'https://via.placeholder.com/150', 5);
-
-INSERT INTO product (name, price, imageUrl, category_id)
-VALUES ('망고', 4000, 'https://via.placeholder.com/150', 5);
-
-INSERT INTO product (name, price, imageUrl, category_id)
-VALUES ('딸기', 3000, 'https://via.placeholder.com/150', 5);
-
-INSERT INTO product (name, price, imageUrl, category_id)
-VALUES ('블루베리', 5000, 'https://via.placeholder.com/150', 5);
-
-INSERT INTO product (name, price, imageUrl, category_id)
-VALUES ('라즈베리', 6000, 'https://via.placeholder.com/150', 5);
-
-INSERT INTO product (name, price, imageUrl, category_id)
-VALUES ('블랙베리', 5500, 'https://via.placeholder.com/150', 5);
-
-INSERT INTO product (name, price, imageUrl, category_id)
-VALUES ('오렌지', 2000, 'https://via.placeholder.com/150', 5);
-
-INSERT INTO product (name, price, imageUrl, category_id)
-VALUES ('레몬', 1000, 'https://via.placeholder.com/150', 5);
-
-INSERT INTO product (name, price, imageUrl, category_id)
-VALUES ('라임', 1100, 'https://via.placeholder.com/150', 5);
-
-INSERT INTO product (name, price, imageUrl, category_id)
-VALUES ('아보카도', 7000, 'https://via.placeholder.com/150', 5);
-
-INSERT INTO product (name, price, imageUrl, category_id)
-VALUES ('브로콜리', 2000, 'https://via.placeholder.com/150', 5);
-
-INSERT INTO product (name, price, imageUrl, category_id)
-VALUES ('당근', 1000, 'https://via.placeholder.com/150', 5);
-
-INSERT INTO product (name, price, imageUrl, category_id)
-VALUES ('토마토', 1500, 'https://via.placeholder.com/150', 5);
-
-INSERT INTO product (name, price, imageUrl, category_id)
-VALUES ('가전교환권', 200000, 'https://via.placeholder.com/150', 1);
-
-INSERT INTO product (name, price, imageUrl, category_id)
-VALUES ('문화상품권', 200000, 'https://via.placeholder.com/150', 2);
-
-INSERT INTO product (name, price, imageUrl, category_id)
-VALUES ('립스틱', 200000, 'https://via.placeholder.com/150', 3);
-
-
-
+-- 프로덕트 옵션 추가
 INSERT INTO product_option (name, quantity, product_id)
 VALUES ('Americano', 10, 1),
        ('Latte', 5, 1),
@@ -214,10 +149,13 @@ VALUES ('Americano', 10, 1),
        ('CherryTomatoes', 30, 30),
        ('RomaTomatoes', 25, 30),
        ('HeirloomTomatoes', 20, 30),
-       ('5개',20,31),
-       ('10개',10,31),
-       ('5개',10,32),
-       ('10개',10,32);
+       ('세탁기 교환권', 20, 31),
+       ('가스레인지 교환권', 20, 31),
+       ('백화점 상품권', 20, 32),
+       ('마트 상품권', 20, 32),
+       ('빨간 립스틱', 20, 33),
+       ('파란 립스틱', 20, 33);
+
 INSERT INTO users (email, password, name, point, role, login_type)
 VALUES ('admin@test.com', '1234', 'Peach', 5000, 'ADMIN', 'DEFAULT');
 
