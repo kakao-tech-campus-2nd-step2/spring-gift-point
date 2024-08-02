@@ -11,6 +11,7 @@ import io.swagger.v3.oas.annotations.Hidden;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -26,6 +27,8 @@ public class AuthController {
     private String getCodeUrl;
     private final AuthService authService;
     private final OrderService orderService;
+
+    private String baseUrl;
 
     public AuthController(AuthService authService, OrderService orderService) {
         this.authService = authService;
@@ -49,16 +52,31 @@ public class AuthController {
     @PostMapping("/kakao")
     @Operation(summary = "카카오 회원가입 및 로그인 api")
     @ApiResponse(responseCode = "200", description = "카카오 로그인 성공")
-    public RedirectView kakaoLoginRedirect() {
+    public RedirectView kakaoLoginRedirect(HttpServletRequest request) {
         RedirectView redirectView = new RedirectView();
         redirectView.setUrl(getCodeUrl);
+
+        // save client url
+        String scheme = request.getScheme();
+        String serverName = request.getServerName();
+        int serverPort = request.getServerPort();
+        String contextPath = request.getContextPath();
+        baseUrl = scheme + "://" + serverName + ":" + serverPort + contextPath;
+
         return redirectView;
     }
 
     @Hidden
     @GetMapping("/kakao/redirect")
-    public ResponseEntity<AuthResponse> kakaoLogin(@RequestParam("code") String code) {
-        return new ResponseEntity<>(authService.kakaoLogin(code), HttpStatus.OK);
+    public RedirectView kakaoLogin(@RequestParam("code") String code) {
+
+        String redirectTo = baseUrl + "?token=" + authService.kakaoLogin(code);
+//        return new ResponseEntity<>(authService.kakaoLogin(code), HttpStatus.OK);
+
+        RedirectView redirectView = new RedirectView();
+        redirectView.setUrl(redirectTo);
+
+        return redirectView;
     }
 
     @GetMapping("/point")
