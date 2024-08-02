@@ -43,6 +43,8 @@ public class WishService{
         Member member = memberService.getMemberbyEmail(email);
         Product product = productService.getProduct(product_id);
         Wish wish = wishRepository.findByProductAndMember(product, member);
-        wishRepository.delete(wish);
+        if (wish != null) {
+            wishRepository.delete(wish);
+        }
     }
 }

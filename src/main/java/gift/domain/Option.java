@@ -1,6 +1,8 @@
 package gift.domain;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 
@@ -13,11 +15,12 @@ public class Option {
 
     @Column(nullable = false, length = 50)
     @Size(min = 1, max = 50, message = "Option 이름은 공백 포함 50문자 이내여야 합니다.")
-    @Pattern(regexp = "^[a-zA-Z0-9\\s()\\[\\]+\\-&/\\_]*$", message = "허용된 특수 문자는 (, ), [, ], +, -, &, /, _ 입니다.")
+    //@Pattern(regexp = "^[a-zA-Z0-9\\s()\\[\\]+\\-&/\\_]*$", message = "허용되지 않는 특수 문자는 (, ), [, ], +, -, &, /, _ 입니다.")
     private String name;
 
     @Column(nullable = false)
-    @Size(min = 1, max = 100000000)
+    @Min(value = 0)
+    @Max(value = 1000)
     private Integer quantity;
 
     @ManyToOne
