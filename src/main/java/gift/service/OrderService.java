@@ -49,6 +49,8 @@ public class OrderService {
         }
 
         member.deductPoint(orderRequest.point());
+        member.savePoint(pointToSave(option.getProduct(), orderRequest.quantity()));
+
         Order savedOrder = orderRepository.save(new Order(option, member, orderRequest));
 
         return new OrderResponse(savedOrder);
@@ -68,5 +70,10 @@ public class OrderService {
     public PointResponse getMemberPoint(Long memberId) {
         Member member = memberRepository.findMemberById(memberId).get();
         return new PointResponse(member.getPoint());
+    }
+
+    private int pointToSave(Product product, Integer quantity) {
+        int totalPrice = product.getPrice() * quantity;
+        return (int) (totalPrice * 0.1);
     }
 }

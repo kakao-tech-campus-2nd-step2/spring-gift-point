@@ -76,7 +76,9 @@ class OrderServiceTest {
         Member member = new Member(1L, "MemberName", "password", LoginType.EMAIL);
         member.setPoint(100);
 
-        Integer originalPoint = member.getPoint();
+        int originalPoint = member.getPoint();
+        int pointToSave = (int) (product.getPrice() * orderRequest.quantity() * 0.1);
+
 
         LoginMember loginMember = new LoginMember(member.getId());
 
@@ -88,7 +90,7 @@ class OrderServiceTest {
         orderService.order(loginMember, orderRequest);
 
         // then
-        Assertions.assertThat(member.getPoint()).isEqualTo(originalPoint - orderRequest.point());
+        Assertions.assertThat(member.getPoint()).isEqualTo(originalPoint - orderRequest.point() + pointToSave);
 
     }
 

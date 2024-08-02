@@ -123,6 +123,10 @@ public class Member {
         this.point -= point;
     }
 
+    public void savePoint(Integer point) {
+        this.point += point;
+    }
+
     private void checkPointToDeduct(int point) {
         if (point < 1 || point > this.point) {
             throw new CustomException(INVALID_AMOUNT_ERROR);
