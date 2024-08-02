@@ -13,6 +13,10 @@ phases:
       java: corretto21
     commands:
       - echo Installing dependencies...
+      - yum update -y
+      - yum install -y docker
+      - service docker start
+      - usermod -a -G docker $USER
       - ./gradlew clean
   pre_build:
     commands:
