@@ -6,6 +6,7 @@ import gift.dto.OptionResponseDto;
 import gift.dto.ProductOptionRequestDto;
 import gift.service.OptionService;
 import gift.service.ProductService;
+import io.swagger.v3.oas.annotations.Operation;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -31,6 +32,7 @@ public class OptionApiController {
         this.optionService = optionService;
         this.productService = productService;
     }
+    @Operation(summary = "옵션을 포함하는 상품 생성")
     // 상품 생성
     @PostMapping
     public ResponseEntity<Void> addProduct(@RequestBody ProductOptionRequestDto productOptionRequestDto){
@@ -38,6 +40,7 @@ public class OptionApiController {
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
+    @Operation(summary = "상품에 옵션 추가")
     // 옵션 추가
     @PostMapping("/{productId}/options")
     public ResponseEntity<Void> addOption(@PathVariable Long productId,
@@ -45,6 +48,7 @@ public class OptionApiController {
         optionService.addOption(productId, optionRequestDto);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
+    @Operation(summary = "상품Id로 옵션 확인")
     // 옵션 확인
     @GetMapping("/{productId}/options")
     public ResponseEntity<List<OptionResponseDto>> findAllOptions(@PathVariable Long productId) {
@@ -52,6 +56,7 @@ public class OptionApiController {
         return ResponseEntity.status(HttpStatus.OK).body(options);
     }
 
+    @Operation(summary = "옵션 삭제")
     // 옵션 삭제
     @DeleteMapping("/{productId}/options/{optionId}")
     public ResponseEntity<Void> deleteOptions(@PathVariable Long productId, @PathVariable Long optionId){
@@ -59,6 +64,7 @@ public class OptionApiController {
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 
+    @Operation(summary = "옵션 수량 차감")
     // 옵션의 수량 차감
     @PutMapping("/{productId}/options/{optionId}")
     public ResponseEntity<Void> subQuantity(@PathVariable Long productId,@PathVariable Long optionId ,@RequestBody OptionQuantityRequestDto optionQuantityRequestDto){

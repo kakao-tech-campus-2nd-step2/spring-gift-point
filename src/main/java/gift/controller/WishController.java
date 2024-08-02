@@ -99,6 +99,7 @@ public class WishController {
             .body(new CommonResponse<>(null, "wish 삭제 성공", true));
     }
 
+    @Operation(summary = "위시를 수정합니다")
     @PatchMapping("/{productId}")
     public ResponseEntity<Void> updateWish(@RequestHeader("Authorization") String fullToken,
         @PathVariable Long productId, @RequestBody
