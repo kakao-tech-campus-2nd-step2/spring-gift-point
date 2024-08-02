@@ -1,6 +1,7 @@
 package gift.user;
 
 
+import gift.point.PointDTO;
 import gift.wishList.WishList;
 import jakarta.persistence.*;
 
@@ -23,7 +24,8 @@ public class User implements IntegratedUser {
     @OneToMany(cascade = CascadeType.ALL,
             mappedBy = "user", orphanRemoval = true)
     private List<WishList> wishLists = new ArrayList<>();
-
+    @Column
+    private Long point = 0L;
 
     public User() {
     }
@@ -32,6 +34,14 @@ public class User implements IntegratedUser {
         this.email = email;
         this.password = password;
         this.userType = userType;
+        this.point = 0L;
+    }
+
+    public User(String email, String password, UserType userType, Long point) {
+        this.email = email;
+        this.password = password;
+        this.userType = userType;
+        this.point = point;
     }
 
     public void addWishList(WishList wishList) {
@@ -64,5 +74,21 @@ public class User implements IntegratedUser {
 
     public List<WishList> getWishLists() {
         return wishLists;
+    }
+
+    public Long getPoint() {
+        return point;
+    }
+
+    public UserType getUserType() {
+        return userType;
+    }
+
+    public void setPoint(Long point) {
+        this.point = point;
+    }
+
+    public void chargePoint(Long point){
+        this.point += point;
     }
 }

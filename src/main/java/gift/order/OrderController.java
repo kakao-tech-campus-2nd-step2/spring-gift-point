@@ -33,13 +33,23 @@ public class OrderController {
 
     @PostMapping("/api/orders")
     public OrderResponse OrderProduct(@LoginUser IntegratedUser kakaoUser, @RequestBody OrderRequest request){
+        KakaoUser user = (KakaoUser) kakaoUser;
+        Long point = user.getPoint();
+        Long usePoint = request.getPoint();
+        if(point < usePoint) throw new IllegalArgumentException("사용하려는 포인트가 현재 보유한 포인트를 초과합니다.");
+        Long sum = request.getQuantity() * optionService.getPrice(request.getOptionId());
+        if(sum < usePoint) throw new IllegalArgumentException("사용하려는 포인트가 상품 가격을 초과합니다.");
 
         OptionResponse optionResponse = optionService.subtractOptionQuantity(request.getOptionId(), request.getQuantity());
-        Optional<List<WishList>> wishList = wishListService.findByKakaoUserAndOptionID(request.getOptionId(), (KakaoUser) kakaoUser);
+        Optional<List<WishList>> wishList = wishListService.findByKakaoUserAndOptionID(request.getOptionId(), user);
 
         wishList.ifPresent(list -> {
             list.forEach(wish -> wishListService.deleteByID(wish.getId(), kakaoUser));
         });
+
+        user.usePoint(usePoint);
+        sum -= usePoint;
+        user.chargePoint((long) (sum * 0.05));
 
         return orderService.sendMessage((KakaoUser) kakaoUser, request, optionResponse);
 

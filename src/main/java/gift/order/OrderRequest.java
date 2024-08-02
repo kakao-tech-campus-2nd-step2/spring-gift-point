@@ -9,10 +9,13 @@ public class OrderRequest {
     long quantity;
     String message;
 
-    public OrderRequest(long optionId, long quantity, String message) {
+    Long point;
+
+    public OrderRequest(long optionId, long quantity, String message, Long point) {
         this.optionId = optionId;
         this.quantity = quantity;
         this.message = message;
+        this.point = point;
     }
 
     public long getOptionId() {
@@ -27,6 +30,10 @@ public class OrderRequest {
         return message;
     }
 
+    public Long getPoint() {
+        return point;
+    }
+
     public void setOptionId(long optionId) {
         this.optionId = optionId;
     }
@@ -37,5 +44,9 @@ public class OrderRequest {
 
     public void setMessage(String message) {
         this.message = message;
+    }
+
+    public void setPoint(Long point) {
+        this.point = point;
     }
 }
