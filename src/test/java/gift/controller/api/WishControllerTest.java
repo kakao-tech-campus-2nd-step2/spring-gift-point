@@ -69,7 +69,7 @@ class WishControllerTest {
                         .content(objectMapper.writeValueAsString(request)))
                 //Then
                 .andExpect(
-                        status().isCreated()
+                        status().isOk()
                 )
                 .andDo(document("wish-add",
                                 Preprocessors.preprocessRequest(Preprocessors.prettyPrint()),

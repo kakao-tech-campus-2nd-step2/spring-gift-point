@@ -27,7 +27,7 @@ public class Wish {
 
     @CreatedDate
     @Column(updatable = false)
-    private LocalDateTime createdTime;
+    private LocalDateTime createdDate;
 
     public Wish(Member member, Integer quantity, Product product) {
         this.member = member;
@@ -50,8 +50,8 @@ public class Wish {
         return product;
     }
 
-    public LocalDateTime getCreatedTime() {
-        return createdTime;
+    public LocalDateTime getCreatedDate() {
+        return createdDate;
     }
 
     public void updateQuantity(Integer amount) {

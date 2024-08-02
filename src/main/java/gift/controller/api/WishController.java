@@ -25,7 +25,7 @@ public class WishController {
     @PostMapping("/api/wishes")
     public ResponseEntity<Void> addProductToWish(@MemberId Long memberId, @Valid @RequestBody WishRequest request) {
         wishService.addProductToWish(memberId, request);
-        return ResponseEntity.status(HttpStatus.CREATED).build();
+        return ResponseEntity.status(HttpStatus.OK).build();
     }
 
     @GetMapping("/api/wishes")
