@@ -25,15 +25,13 @@ jobs:
           java-version: '21'
           distribution: 'adopt'
 
-      # application-kakao.properties 파일에 있는 환경 변수를 secrets에 저장된 값으로 변경
-      - name: Replace environment variables in application-kakao.properties
+      # *.properties 파일에 있는 환경 변수를 secrets에 저장된 값으로 변경
+      - name: Replace environment variables in *.properties
         run: |
           sed -i "s/\${KAKAO_CLIENT_ID}/${{ secrets.KAKAO_CLIENT_ID }}/g" ./src/main/resources/application-kakao.properties
-
-      # application-dev.properties 파일에 있는 환경 변수를 secrets에 저장된 값으로 변경
-      - name: Replace environment variables in application-dev.properties
-        run: |
           sed -i "s/\${JWT_SECRET}/${{ secrets.JWT_SECRET }}/g" ./src/main/resources/application-dev.properties
+          sed -i "s/\${EC2_HOST}/${{ secrets.EC2_HOST }}/g" ./src/main/resources/application-redis.properties
+
 
       # 빌드
       - name: Grant execute permission for Gradlew
