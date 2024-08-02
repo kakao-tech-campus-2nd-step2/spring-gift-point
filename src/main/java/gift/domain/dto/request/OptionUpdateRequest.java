@@ -12,10 +12,8 @@ public record OptionUpdateRequest(
     @RestrictedSpecialChars
     String name,
     @NotNull
-    String action,
-    @NotNull
     @Range(min = Domain.Option.QUANTITY_RANGE_MIN, max = Domain.Option.QUANTITY_RANGE_MAX)
-    Integer quantity
+    Integer stockQuantity
 ) {
 
 }

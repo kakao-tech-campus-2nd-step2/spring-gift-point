@@ -8,12 +8,14 @@ import gift.domain.entity.Member;
 import gift.global.WebConfig.Constants.Domain;
 import gift.global.WebConfig.Constants.Domain.Member.Permission;
 import gift.global.WebConfig.Constants.Domain.Member.Type;
+import jakarta.annotation.Nullable;
 import jakarta.validation.constraints.NotNull;
+import java.util.Objects;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 // 파생된 멤버 요청을 처리할 수 있게 함
-@JsonTypeInfo(use = Id.NAME, include = As.EXISTING_PROPERTY, property = "user-type", visible = true)
+@JsonTypeInfo(use = Id.NAME, include = As.EXISTING_PROPERTY, property = "user-type", visible = true, defaultImpl = LocalMemberRequest.class)
 @JsonSubTypes({
     @JsonSubTypes.Type(value = LocalMemberRequest.class, name = "local"),
     @JsonSubTypes.Type(value = KakaoOauthMemberRequest.class, name = "kakao"),
@@ -27,8 +29,8 @@ public abstract class MemberRequest {
 
     private static final Logger log = LoggerFactory.getLogger(MemberRequest.class);
 
-    protected MemberRequest(Type userType, String email) {
-        this.userType = userType;
+    protected MemberRequest(@Nullable Type userType, String email) {
+        this.userType = Objects.requireNonNullElse(userType, Type.LOCAL);
         this.email = email;
     }
 

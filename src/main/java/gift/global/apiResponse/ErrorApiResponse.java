@@ -12,34 +12,41 @@ import org.springframework.http.ResponseEntity;
 public class ErrorApiResponse extends BasicApiResponse {
 
     private final String message;
-    private final String errorCode;
+    private final String errorIdentifier;
+    private final Integer errorCode;
 
     public ErrorApiResponse(
         @JsonProperty(value = "status", required = true) HttpStatusCode statusCode,
         @JsonProperty(value = "message", required = true) String message,
-        @JsonProperty(value = "error-code", required = true) String errorCode
+        @JsonProperty(value = "error_identifier", required = true) String errorIdentifier,
+        @JsonProperty(value = "error_code", required = true) Integer errorCode
     ) {
         super(statusCode, false);
         this.message = message;
+        this.errorIdentifier = errorIdentifier;
         this.errorCode = errorCode;
     }
     public String getMessage() {
         return message;
     }
 
-    public String getErrorCode() {
+    public String getErrorIdentifier() {
+        return errorIdentifier;
+    }
+
+    public Integer getErrorCode() {
         return errorCode;
     }
 
     // status 코드에 대한 기본적인 RESTful 응답을 생성
-    public static ResponseEntity<ErrorApiResponse> of(String message, String errorCode, HttpStatusCode statusCode) {
+    public static ResponseEntity<ErrorApiResponse> of(String message, String errorIdentifier, Integer errorCode, HttpStatusCode statusCode) {
         return ResponseEntity
             .status(statusCode)
-            .body(new ErrorApiResponse(statusCode, message, errorCode));
+            .body(new ErrorApiResponse(statusCode, message, errorIdentifier, errorCode));
     }
 
     public static ResponseEntity<ErrorApiResponse> of(ServerException cause, HttpStatusCode statusCode) {
-        return ErrorApiResponse.of(cause.getMessage(), cause.getErrorCode().getCode(), statusCode);
+        return ErrorApiResponse.of(cause.getMessage(), cause.getErrorCode().getErrorIdentifier(), cause.getErrorCode().getErrorCode(), statusCode);
     }
 
     // HTTP code 401에 대한 응답 생성

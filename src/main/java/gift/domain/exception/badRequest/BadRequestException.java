@@ -5,7 +5,7 @@ import gift.domain.exception.ServerException;
 
 public abstract class BadRequestException extends ServerException {
 
-    public BadRequestException(String message, ErrorCode errorCode) {
-        super(message, errorCode);
+    public BadRequestException(ErrorCode errorCode) {
+        super(errorCode);
     }
 }

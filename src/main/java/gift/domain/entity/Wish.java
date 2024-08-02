@@ -25,13 +25,9 @@ public class Wish {
     @JoinColumn(nullable = false)
     private Member member;
 
-    @Column(nullable = false)
-    private Long quantity;
-
-    public Wish(Product product, Member member, Long quantity) {
+    public Wish(Product product, Member member) {
         this.product = product;
         this.member = member;
-        this.quantity = quantity;
     }
 
     protected Wish() {
@@ -61,25 +57,12 @@ public class Wish {
         this.member = member;
     }
 
-    public Long getQuantity() {
-        return quantity;
-    }
-
-    public void setQuantity(Long quantity) {
-        this.quantity = quantity;
-    }
-
-    public void set(WishRequest request) {
-        this.quantity = request.quantity();
-    }
-
     @Override
     public String toString() {
         return "Wish{" +
             "id=" + id +
             ", product=" + product +
             ", member=" + member +
-            ", quantity=" + quantity +
             '}';
     }
 }

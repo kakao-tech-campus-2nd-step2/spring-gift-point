@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
 @RequestMapping("/products")
@@ -29,8 +30,8 @@ public class ServerRenderProductController {
     }
 
     @GetMapping
-    public String showProducts(Model model) {
-        List<ProductResponse> products = service.getAllProducts();
+    public String showProducts(Model model, @RequestParam("sort") String sortParams, @RequestParam("category_id") Long categoryId) {
+        List<ProductResponse> products = service.getAllProducts(sortParams, categoryId);
         model.addAttribute("products", products);
         return "products";
     }

@@ -1,18 +1,26 @@
 package gift.domain.service;
 
+import com.google.common.base.CaseFormat;
 import gift.domain.dto.request.OptionAddRequest;
 import gift.domain.dto.request.OptionUpdateRequest;
 import gift.domain.dto.request.ProductAddRequest;
 import gift.domain.dto.request.ProductUpdateRequest;
-import gift.domain.dto.response.CategoryResponse;
 import gift.domain.dto.response.OptionResponse;
 import gift.domain.dto.response.ProductResponse;
+import gift.domain.dto.response.ProductWithCategoryIdResponse;
 import gift.domain.entity.Product;
+import gift.domain.exception.badRequest.FieldNameIllegalException;
 import gift.domain.exception.badRequest.ProductOptionsEmptyException;
+import gift.domain.exception.badRequest.SortTypeIllegalException;
 import gift.domain.exception.conflict.ProductAlreadyExistsException;
 import gift.domain.exception.notFound.ProductNotFoundException;
 import gift.domain.repository.ProductRepository;
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,11 +30,14 @@ public class ProductService {
     private final ProductRepository productRepository;
     private final CategoryService categoryService;
     private final OptionService optionService;
+    private final Set<String> fieldName;
 
     public ProductService(ProductRepository productRepository, CategoryService categoryService, OptionService optionService) {
         this.productRepository = productRepository;
         this.categoryService = categoryService;
         this.optionService = optionService;
+        this.fieldName = new HashSet<>();
+        Arrays.stream(Product.class.getDeclaredFields()).forEach(f -> fieldName.add(f.getName()));
     }
 
     @Transactional(readOnly = true)
@@ -36,18 +47,15 @@ public class ProductService {
     }
 
     @Transactional(readOnly = true)
-    public List<ProductResponse> getAllProducts() {
-        return productRepository.findAll().stream()
+    public List<ProductResponse> getAllProducts(String sortParams, Long categoryId) {
+        String[] split = sortParams.split(",");
+        String sortField = CaseFormat.LOWER_UNDERSCORE.to(CaseFormat.LOWER_CAMEL, split[0]);
+        String sortType = split[1];
+        return productRepository.findAllByCategory(
+                categoryService.findById(categoryId),
+                Sort.by(getSortDirection(sortType), assertProductFieldValid(sortField)))
+            .stream()
             .map(ProductResponse::of)
-            .toList();
-    }
-
-    @Transactional(readOnly = true)
-    public List<CategoryResponse> getAllProductsCategories() {
-        return productRepository.findAll().stream()
-            .map(Product::getCategory)
-            .map(CategoryResponse::of)
-            .distinct()
             .toList();
     }
 
@@ -59,7 +67,7 @@ public class ProductService {
     }
 
     @Transactional
-    public ProductResponse addProduct(ProductAddRequest requestDto) {
+    public ProductWithCategoryIdResponse addProduct(ProductAddRequest requestDto) {
         //이미 존재하는 상품 등록 시도시 예외 발생
         productRepository.findByContents(requestDto).ifPresent((p) -> {
             throw new ProductAlreadyExistsException();});
@@ -71,7 +79,7 @@ public class ProductService {
 
         Product product = productRepository.save(requestDto.toEntity(categoryService));
         optionService.addOptions(product, requestDto.options());
-        return ProductResponse.of(product);
+        return ProductWithCategoryIdResponse.of(product);
     }
 
     @Transactional
@@ -107,5 +115,20 @@ public class ProductService {
     public void deleteProductOption(Long productId, Long optionId) {
         Product product = getProductById(productId);
         optionService.deleteOptionById(product, optionId);
+    }
+
+    private Sort.Direction getSortDirection(String direction) {
+        return switch (direction) {
+            case "asc" -> Direction.ASC;
+            case "desc" -> Direction.DESC;
+            default -> throw new SortTypeIllegalException();
+        };
+    }
+
+    private String assertProductFieldValid(String field) {
+        if (fieldName.contains(field)) {
+            return field;
+        }
+        throw new FieldNameIllegalException();
     }
 }

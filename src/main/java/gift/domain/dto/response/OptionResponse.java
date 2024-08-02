@@ -4,7 +4,7 @@ import gift.domain.entity.Option;
 import gift.domain.entity.Product;
 import java.util.List;
 
-public record OptionResponse(Long id, String name, Integer quantity) {
+public record OptionResponse(Long id, String name, Integer stockQuantity) {
 
     public static OptionResponse of(Option option) {
         return new OptionResponse(option.getId(), option.getName(), option.getQuantity());
@@ -17,6 +17,6 @@ public record OptionResponse(Long id, String name, Integer quantity) {
     }
 
     public Option toEntity(Product product) {
-        return new Option(product, name, quantity);
+        return new Option(product, name, stockQuantity);
     }
 }

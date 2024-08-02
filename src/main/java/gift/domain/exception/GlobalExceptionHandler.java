@@ -1,30 +1,10 @@
 package gift.domain.exception;
 
+import com.google.common.base.CaseFormat;
 import gift.domain.exception.badRequest.BadRequestException;
-import gift.domain.exception.badRequest.OauthVendorIllegalException;
-import gift.domain.exception.badRequest.OptionQuantityOutOfRangeException;
-import gift.domain.exception.badRequest.OptionUpdateActionInvalidException;
-import gift.domain.exception.badRequest.ProductOptionsEmptyException;
-import gift.domain.exception.conflict.CategoryAlreadyExistsException;
-import gift.domain.exception.conflict.CategoryHasProductsException;
 import gift.domain.exception.conflict.ConflictException;
-import gift.domain.exception.conflict.MemberAlreadyExistsException;
-import gift.domain.exception.conflict.OptionAlreadyExistsInProductException;
-import gift.domain.exception.conflict.ProductAlreadyExistsException;
 import gift.domain.exception.forbidden.ForbiddenException;
-import gift.domain.exception.forbidden.MemberIncorrectLoginInfoException;
-import gift.domain.exception.forbidden.MemberNotAdminException;
-import gift.domain.exception.forbidden.TokenExpiredException;
-import gift.domain.exception.forbidden.TokenStringInvalidException;
-import gift.domain.exception.notFound.CategoryNotFoundException;
-import gift.domain.exception.notFound.MemberNotFoundException;
 import gift.domain.exception.notFound.NotFoundException;
-import gift.domain.exception.notFound.OptionNotIncludedInProductOptionsException;
-import gift.domain.exception.notFound.ProductNotFoundException;
-import gift.domain.exception.notFound.ProductNotIncludedInWishlistException;
-import gift.domain.exception.unauthorized.TokenNotFoundException;
-import gift.domain.exception.notFound.OptionNotFoundException;
-import gift.domain.exception.unauthorized.TokenUnexpectedErrorException;
 import gift.domain.exception.unauthorized.UnauthorizedException;
 import gift.global.apiResponse.ErrorApiResponse;
 import org.springframework.http.HttpStatus;
@@ -44,57 +24,35 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ErrorApiResponse> handleMethodArgumentNotValidException(MethodArgumentNotValidException e) {
         FieldError error = e.getBindingResult().getFieldError();
         assert error != null;
-        return ErrorApiResponse.of(error.getField() + ": " + error.getDefaultMessage(), ErrorCode.FIELD_VALIDATION_FAIL.getCode(), HttpStatus.BAD_REQUEST);
+        return ErrorApiResponse.of(
+            CaseFormat.LOWER_CAMEL.to(CaseFormat.LOWER_UNDERSCORE, error.getField()) + ": " + error.getDefaultMessage(),
+            ErrorCode.FIELD_VALIDATION_FAIL.getErrorIdentifier(),
+            ErrorCode.FIELD_VALIDATION_FAIL.getErrorCode(),
+            HttpStatus.BAD_REQUEST);
     }
 
-    @ExceptionHandler({
-        ProductNotFoundException.class,
-        MemberNotFoundException.class,
-        ProductNotIncludedInWishlistException.class,
-        CategoryNotFoundException.class,
-        OptionNotFoundException.class,
-        OptionNotIncludedInProductOptionsException.class
-    })
-    public ResponseEntity<ErrorApiResponse> handleNotFoundException(NotFoundException e) {
-        return ErrorApiResponse.notFound(e);
+    @ExceptionHandler(BadRequestException.class)
+    public ResponseEntity<ErrorApiResponse> handleBadRequestException(BadRequestException e) {
+        return ErrorApiResponse.of(e, HttpStatus.BAD_REQUEST);
     }
 
-    @ExceptionHandler({
-        ProductAlreadyExistsException.class,
-        MemberAlreadyExistsException.class,
-        CategoryAlreadyExistsException.class,
-        CategoryHasProductsException.class,
-        OptionAlreadyExistsInProductException.class
-    })
-    public ResponseEntity<ErrorApiResponse> handleConflictException(ConflictException e) {
-        return ErrorApiResponse.conflict(e);
-    }
-
-    @ExceptionHandler({
-        MemberIncorrectLoginInfoException.class,
-        MemberNotAdminException.class,
-        TokenExpiredException.class,
-        TokenStringInvalidException.class
-    })
-    public ResponseEntity<ErrorApiResponse> handleForbiddenException(ForbiddenException e) {
-        return ErrorApiResponse.forbidden(e);
-    }
-
-    @ExceptionHandler({
-        TokenNotFoundException.class,
-        TokenUnexpectedErrorException.class
-    })
+    @ExceptionHandler(UnauthorizedException.class)
     public ResponseEntity<ErrorApiResponse> handleUnauthorizedException(UnauthorizedException e) {
         return ErrorApiResponse.unauthorized(e);
     }
 
-    @ExceptionHandler({
-        ProductOptionsEmptyException.class,
-        OptionQuantityOutOfRangeException.class,
-        OptionUpdateActionInvalidException.class,
-        OauthVendorIllegalException.class
-    })
-    public ResponseEntity<ErrorApiResponse> handleBadRequestException(BadRequestException e) {
-        return ErrorApiResponse.of(e, HttpStatus.BAD_REQUEST);
+    @ExceptionHandler(ForbiddenException.class)
+    public ResponseEntity<ErrorApiResponse> handleForbiddenException(ForbiddenException e) {
+        return ErrorApiResponse.forbidden(e);
+    }
+
+    @ExceptionHandler(NotFoundException.class)
+    public ResponseEntity<ErrorApiResponse> handleNotFoundException(NotFoundException e) {
+        return ErrorApiResponse.notFound(e);
+    }
+
+    @ExceptionHandler(ConflictException.class)
+    public ResponseEntity<ErrorApiResponse> handleConflictException(ConflictException e) {
+        return ErrorApiResponse.conflict(e);
     }
 }

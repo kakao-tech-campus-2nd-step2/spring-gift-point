@@ -5,7 +5,7 @@ import gift.domain.exception.ServerException;
 
 public abstract class ForbiddenException extends ServerException {
 
-    public ForbiddenException(String message, ErrorCode errorCode) {
-        super(message, errorCode);
+    public ForbiddenException(ErrorCode errorCode) {
+        super(errorCode);
     }
 }

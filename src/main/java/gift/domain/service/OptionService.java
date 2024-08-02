@@ -6,13 +6,11 @@ import gift.domain.dto.response.OptionDetailedResponse;
 import gift.domain.entity.Option;
 import gift.domain.entity.Product;
 import gift.domain.exception.badRequest.OptionQuantityOutOfRangeException;
-import gift.domain.exception.badRequest.OptionUpdateActionInvalidException;
 import gift.domain.exception.conflict.OptionAlreadyExistsInProductException;
 import gift.domain.exception.notFound.OptionNotFoundException;
 import gift.domain.exception.notFound.OptionNotIncludedInProductOptionsException;
 import gift.domain.repository.OptionRepository;
 import gift.global.WebConfig.Constants.Domain;
-import gift.global.WebConfig.Constants.Domain.Option.QuantityUpdateAction;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -64,20 +62,8 @@ public class OptionService {
             validateOptionIsUniqueInProduct(product, request.name());
         }
 
-        if (request.action().equals(QuantityUpdateAction.ADD.toString())) {
-            addQuantity(option, request.quantity());
-            option.setName(request.name());
-            return option;
-        }
-
-        if (request.action().equals(QuantityUpdateAction.SUBTRACT.toString())) {
-            subtractQuantity(option, request.quantity());
-            option.setName(request.name());
-            return option;
-
-        }
-
-        throw new OptionUpdateActionInvalidException();
+        option.set(request);
+        return option;
     }
 
     @Transactional

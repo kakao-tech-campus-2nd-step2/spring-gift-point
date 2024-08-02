@@ -5,7 +5,7 @@ import gift.domain.exception.ServerException;
 
 public abstract class UnauthorizedException extends ServerException {
 
-    public UnauthorizedException(String message, ErrorCode errorCode) {
-        super(message, errorCode);
+    public UnauthorizedException(ErrorCode errorCode) {
+        super(errorCode);
     }
 }

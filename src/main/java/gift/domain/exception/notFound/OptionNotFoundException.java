@@ -5,6 +5,6 @@ import gift.domain.exception.ErrorCode;
 public class OptionNotFoundException extends NotFoundException {
 
     public OptionNotFoundException() {
-        super("option", ErrorCode.OPTION_NOT_FOUND);
+        super(ErrorCode.OPTION_NOT_FOUND);
     }
 }

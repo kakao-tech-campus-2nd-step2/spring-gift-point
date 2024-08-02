@@ -5,19 +5,19 @@ import gift.domain.dto.response.ProductWithCategoryIdResponse;
 import gift.global.apiResponse.BasicApiResponse;
 import org.springframework.http.HttpStatusCode;
 
-public class ProductAddApiResponse extends BasicApiResponse {
+public class ProductGetApiResponse extends BasicApiResponse {
 
-    @JsonProperty(value = "product") private final ProductWithCategoryIdResponse product;
+    private final ProductWithCategoryIdResponse product;
 
-    public ProductAddApiResponse(
-        @JsonProperty(value = "status", required = true) HttpStatusCode statusCode,
+    public ProductGetApiResponse(
+        @JsonProperty(value = "status", required = true) HttpStatusCode status,
         @JsonProperty(value = "product", required = true) ProductWithCategoryIdResponse product
     ) {
-        super(statusCode);
+        super(status);
         this.product = product;
     }
 
-    public ProductWithCategoryIdResponse getProduct() {
+    public ProductWithCategoryIdResponse getProducts() {
         return product;
     }
 }

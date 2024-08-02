@@ -33,6 +33,7 @@ public class OrderController {
 
     @PostMapping
     public ResponseEntity<OrderCreateApiResponse> createOrder(@ValidMember Member member, @Valid @RequestBody OrderRequest request) {
-        return SuccessApiResponse.of(new OrderCreateApiResponse(HttpStatus.CREATED, orderService.createOrder(member, request)), HttpStatus.CREATED);
+        var created = HttpStatus.CREATED;
+        return SuccessApiResponse.of(new OrderCreateApiResponse(created, orderService.createOrder(member, request)), created);
     }
 }

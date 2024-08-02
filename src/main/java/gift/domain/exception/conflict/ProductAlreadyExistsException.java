@@ -8,6 +8,6 @@ import gift.domain.exception.ErrorCode;
 public class ProductAlreadyExistsException extends ConflictException {
 
     public ProductAlreadyExistsException() {
-        super("The product already exists.", ErrorCode.PRODUCT_ALREADY_EXISTS);
+        super(ErrorCode.PRODUCT_ALREADY_EXISTS);
     }
 }

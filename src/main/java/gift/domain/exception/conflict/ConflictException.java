@@ -5,7 +5,7 @@ import gift.domain.exception.ServerException;
 
 public abstract class ConflictException extends ServerException {
 
-    public ConflictException(String message, ErrorCode errorCode) {
-        super(message, errorCode);
+    public ConflictException(ErrorCode errorCode) {
+        super(errorCode);
     }
 }

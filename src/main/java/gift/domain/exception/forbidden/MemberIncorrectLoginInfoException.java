@@ -1,11 +1,10 @@
 package gift.domain.exception.forbidden;
 
 import gift.domain.exception.ErrorCode;
-import gift.domain.exception.ServerException;
 
-public class MemberIncorrectLoginInfoException extends ServerException {
+public class MemberIncorrectLoginInfoException extends ForbiddenException {
 
     public MemberIncorrectLoginInfoException() {
-        super("Incorrect your email or password. Try again.", ErrorCode.MEMBER_INCORRECT_LOGIN_INFO);
+        super(ErrorCode.MEMBER_INCORRECT_LOGIN_INFO);
     }
 }

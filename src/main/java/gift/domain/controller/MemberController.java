@@ -25,7 +25,8 @@ public class MemberController {
 
     @PostMapping("/register")
     public ResponseEntity<MemberRegisterApiResponse> registerMember(@Valid @RequestBody MemberRequest requestDto) {
-        return SuccessApiResponse.ok(new MemberRegisterApiResponse(HttpStatus.OK, memberService.registerMember(requestDto).token()));
+        var created = HttpStatus.CREATED;
+        return SuccessApiResponse.of(new MemberRegisterApiResponse(created, memberService.registerMember(requestDto).token()), created);
     }
 
     @PostMapping("/login")

@@ -4,6 +4,7 @@ import gift.domain.dto.request.member.MemberRequest;
 import gift.domain.dto.response.MemberResponse;
 import gift.domain.entity.Member;
 import gift.domain.exception.conflict.MemberAlreadyExistsException;
+import gift.domain.exception.forbidden.MemberIncorrectLoginInfoException;
 import gift.domain.exception.notFound.MemberNotFoundException;
 import gift.domain.repository.MemberRepository;
 import gift.global.WebConfig.Constants.Domain.Member.Permission;
@@ -37,7 +38,7 @@ public class MemberService {
     @Transactional(readOnly = true)
     public MemberResponse loginMember(MemberRequest requestDto) {
         // 존재하지 않은 이메일을 가진 유저로 로그인 시도한 경우 예외
-        Member member = findByEmail(requestDto.getEmail());
+        Member member = memberRepository.findByEmail(requestDto.getEmail()).orElseThrow(MemberIncorrectLoginInfoException::new);
         return new MemberResponse(jwtUtil.generateToken(memberServiceFactory.getInstance(requestDto).loginMember(requestDto, member)));
     }
 
