@@ -1,6 +1,7 @@
 package gift.domain;
 
 import gift.LoginType;
+import gift.exception.CustomException;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -9,6 +10,7 @@ import java.util.List;
 
 import static gift.constant.Message.EMAIL_PATTERN_ERROR_MSG;
 import static gift.constant.Message.REQUIRED_FIELD_MSG;
+import static gift.exception.ErrorCode.INVALID_AMOUNT_ERROR;
 
 @Entity
 @Table(name = "member")
@@ -117,6 +119,13 @@ public class Member {
     }
 
     public void deductPoint(Integer point) {
+        checkPointToDeduct(point);
         this.point -= point;
+    }
+
+    private void checkPointToDeduct(int point) {
+        if (point < 1 || point > this.point) {
+            throw new CustomException(INVALID_AMOUNT_ERROR);
+        }
     }
 }
