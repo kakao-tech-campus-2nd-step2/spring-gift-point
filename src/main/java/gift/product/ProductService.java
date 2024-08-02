@@ -34,7 +34,21 @@ public class ProductService {
     }
 
     @Transactional(readOnly = true)
-    public Page<ProductPaginationResponseDTO> getAllProducts(Pageable pageable, long categoryId) {
+    public Page<ProductPaginationResponseDTO> getAllProducts(Pageable pageable) {
+
+        return productRepository.findAll(pageable)
+            .map(product -> new ProductPaginationResponseDTO(
+                    product.getId(),
+                    product.getName(),
+                    product.getPrice(),
+                    product.getImageUrl()
+                )
+            );
+    }
+
+    @Transactional(readOnly = true)
+    public Page<ProductPaginationResponseDTO> getAllProductsByCategoryId(Pageable pageable,
+        long categoryId) {
 
         Category category = categoryRepository.findById(categoryId)
             .orElseThrow(() -> new IllegalArgumentException(CATEGORY_NOT_FOUND));

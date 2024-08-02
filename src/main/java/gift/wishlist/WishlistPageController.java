@@ -45,7 +45,7 @@ public class WishlistPageController {
     ) {
         pageable = changePageable(pageable);
         Page<ProductPaginationResponseDTO> wishProducts = wishlistService.getWishlists(token, pageable);
-        Page<ProductPaginationResponseDTO> allProducts = productService.getAllProducts(
+        Page<ProductPaginationResponseDTO> allProducts = productService.getAllProductsByCategoryId(
             PageRequest.of(0, Integer.MAX_VALUE),
             categoryId
         );

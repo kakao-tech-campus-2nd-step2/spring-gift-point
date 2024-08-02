@@ -51,7 +51,7 @@ public class ProductController {
         @ParameterObject Pageable pageable,
         @RequestParam long categoryId
     ) {
-        return productService.getAllProducts(pageable, categoryId);
+        return productService.getAllProductsByCategoryId(pageable, categoryId);
     }
 
     @Deprecated

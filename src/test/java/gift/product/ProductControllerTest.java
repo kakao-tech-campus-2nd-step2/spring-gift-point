@@ -16,10 +16,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import gift.category.dto.CategoryRequestDTO;
-import gift.category.dto.CategoryResponseDTO;
 import gift.product.dto.ProductPaginationResponseDTO;
 import gift.product.dto.ProductRequestDTO;
-import gift.product.dto.ProductResponseDTO;
 import java.util.List;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
@@ -70,7 +68,7 @@ class ProductControllerTest {
         );
 
         //when
-        when(productService.getAllProducts(PageRequest.of(0, 10), 1L))
+        when(productService.getAllProductsByCategoryId(PageRequest.of(0, 10), 1L))
             .thenReturn(expect);
 
         //then
