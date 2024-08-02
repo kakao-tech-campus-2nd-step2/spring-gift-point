@@ -17,7 +17,7 @@ public record OrderRequest(
     @NotNull
     Long optionId,
     @NotNull
-    @Min(1)
+    @Min(value = 1, message = "차감할 수량의 값은 1 이상이어야 합니다.")
     Long quantity,
     Boolean hasCashReceipt,
     @NotNull
@@ -26,7 +26,7 @@ public record OrderRequest(
     String cashReceiptNumber,
     @NotBlank
     String message,
-    @NotBlank
+    @NotNull
     Integer point // 사용 포인트
 ) {
 

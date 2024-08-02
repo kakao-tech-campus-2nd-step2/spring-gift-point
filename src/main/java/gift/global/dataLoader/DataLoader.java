@@ -52,16 +52,18 @@ public class DataLoader {
 
         jpaCategoryRepository.saveAndFlush(birthday);
         jpaCategoryRepository.saveAndFlush(coupon);
-//        // Product
-//        Product americano = new Product("아이스 아메리카노 T", birthday, 4500, "description",
-//            "https://example.com/image.jpg");
-//        Product cafuchino = new Product("아이스 카푸치노 M", coupon, 4700,"description",
-//            "https://example.com/image.jpg");
-//        Product malcha = new Product("핫 말차라떼 L", birthday, 6800,"description",
-//            "https://example.com/image.jpg");
-//        jpaProductRepository.save(americano);
-//        jpaProductRepository.save(cafuchino);
-//        jpaProductRepository.save(malcha);
+        // Product
+        Product americano = new Product("아이스 아메리카노 T", birthday, 4500, "description",
+            "https://example.com/image.jpg");
+        Product savedAmericano = jpaProductRepository.saveAndFlush(americano);
+        jpaOptionRepository.saveAndFlush(new Option("option1", 100L, savedAmericano));
+
+
+        Product cafuchino = new Product("아이스 카푸치노 M", coupon, 4700,"description",
+            "https://example.com/image.jpg");
+        Product savedCafuchino = jpaProductRepository.saveAndFlush(cafuchino);
+        jpaOptionRepository.saveAndFlush(new Option("option1", 100L, savedCafuchino));
+
 //
 //        // dummy Product data
 //        for (int i = 0; i < 100; i++) {

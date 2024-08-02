@@ -103,21 +103,14 @@ public class OptionService {
         Product product = productRepository.findById(option.getProduct().getId())
             .orElseThrow(() -> new ProductNotFoundException(option.getProduct().getId()));
 
-        if (option.getQuantity() < quantity || quantity <= 0) {
-            throw new BusinessException(ErrorCode.BAD_REQUEST, "차감할 수량의 값이 올바르지 않습니다.");
+        if (quantity <= 0) {
+            throw new BusinessException(ErrorCode.BAD_REQUEST, "차감할 수량의 값은 1 이상이어야 합니다.");
+        }
+        if (option.getQuantity() < quantity) {
+            throw new BusinessException(ErrorCode.BAD_REQUEST, "차감할 수량이 옵션의 잔여 수량보다 많습니다.");
         }
 
-        if (Objects.equals(option.getQuantity(), quantity)) {
-            // 상품에 옵션이 1개밖에 없을 때 - 옵션, 해당 옵션의 상품 모두 삭제
-            if (product.hasOneOption()) {
-                productRepository.delete(option.getProduct()); // Cascade 로 옵션도 삭제됨
-                return;
-            }
-            // 상품에 옵션이 2개 이상일 때 - 옵션 삭제
-            optionRepository.deleteById(optionId);
-            return;
-        }
-        // 수량만 차감
+        // 수량 차감 - 차감 수량이 옵션의 잔여 수량과 같은 경우 잔여 수량이 0이 됨
         option.decrease(quantity);
     }
 

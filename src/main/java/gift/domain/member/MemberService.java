@@ -33,14 +33,14 @@ public class MemberService {
     }
 
 
-    /**
-     * 로그인, 성공 시 JWT 반환
-     */
-    public MemberResponse login(MemberRequest memberRequest) {
-        Member member = memberRepository.findByEmailAndPassword(memberRequest.email(), memberRequest.password())
-            .orElseThrow(() -> new BusinessException(ErrorCode.BAD_REQUEST, "입력 정보가 올바르지 않습니다."));
+        /**
+         * 로그인, 성공 시 JWT 반환
+         */
+        public MemberResponse login(MemberRequest memberRequest) {
+            Member member = memberRepository.findByEmailAndPassword(memberRequest.email(), memberRequest.password())
+                .orElseThrow(() -> new BusinessException(ErrorCode.BAD_REQUEST, "입력 정보가 올바르지 않습니다."));
 
-        String jwt = JwtProvider.generateToken(member);
-        return new MemberResponse(member.getEmail(), jwt);
-    }
+            String jwt = JwtProvider.generateToken(member);
+            return new MemberResponse(member.getEmail(), jwt);
+        }
 }

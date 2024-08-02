@@ -27,7 +27,7 @@ public class KaKaoController {
     }
 
     /**
-     * 카카오 로그인 페이지로 이동
+     * 카카오 로그인 페이지 뷰 제공
      */
     @GetMapping("/api/oauth/kakao")
     @Operation(summary = "카카오 로그인 페이지로 이동")
@@ -48,6 +48,7 @@ public class KaKaoController {
 
         String jwt = JwtProvider.generateToken(findMember);
         MemberResponse memberResponse = new MemberResponse(findMember.getEmail(), jwt);
+        System.out.println("memberResponse = " + memberResponse);
         return ResponseEntity.ok(memberResponse);
     }
 }
