@@ -52,7 +52,7 @@ public class KakaoController {
         @ApiResponse(responseCode = "400", description = "Invalid authorization code."),
         @ApiResponse(responseCode = "500", description = "Internal server error.")
     })
-    public ResponseEntity<String> kakaoCallback(@RequestParam("code") String authorizationCode, HttpSession session) {
+    public ResponseEntity<Map<String, String>> kakaoCallback(@RequestParam("code") String authorizationCode, HttpSession session) {
         String accessToken = kakaoService.getAccessToken(authorizationCode);
         String email = kakaoService.getUserEmail(accessToken);
 
