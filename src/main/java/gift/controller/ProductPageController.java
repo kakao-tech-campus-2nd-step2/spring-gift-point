@@ -8,6 +8,7 @@ import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -27,10 +28,18 @@ public class ProductPageController {
 
     @Operation(summary = "상품 목록 페이지 보기")
     @GetMapping
-    public String viewHomePage(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size, Model model) {
-        Pageable pageable = PageRequest.of(page, size);
-        Page<ProductDTO> productPage = productService.getAllProducts(pageable);
+    public String viewHomePage(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "name,asc") String[] sort,
+            @RequestParam(required = false) Long categoryId,
+            Model model) {
+
+        Pageable pageable = PageRequest.of(page, size, Sort.by(sort));
+        Page<ProductDTO> productPage = productService.getAllProducts(pageable, categoryId);
         model.addAttribute("productPage", productPage);
+        model.addAttribute("selectedCategoryId", categoryId);
+        model.addAttribute("categories", categoryService.getAllCategories());
         return "index";
     }
 

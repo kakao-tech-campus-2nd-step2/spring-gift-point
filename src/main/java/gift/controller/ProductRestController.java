@@ -5,7 +5,9 @@ import gift.service.ProductService;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,8 +23,14 @@ public class ProductRestController {
 
     @Operation(summary = "모든 상품 가져오기")
     @GetMapping
-    public ResponseEntity<Page<ProductDTO>> getAllProducts(Pageable pageable) {
-        Page<ProductDTO> products = productService.getAllProducts(pageable);
+    public ResponseEntity<Page<ProductDTO>> getAllProducts(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "name,asc") String[] sort,
+            @RequestParam(required = false) Long categoryId) {
+
+        Pageable pageable = PageRequest.of(page, size, Sort.by(sort));
+        Page<ProductDTO> products = productService.getAllProducts(pageable, categoryId);
         return ResponseEntity.ok(products);
     }
 

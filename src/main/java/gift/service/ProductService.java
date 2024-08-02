@@ -31,9 +31,14 @@ public class ProductService {
         this.optionRepository = optionRepository;
     }
 
-    public Page<ProductDTO> getAllProducts(Pageable pageable) {
-        return productRepository.findAll(pageable)
-                .map(this::convertToDTO);
+    public Page<ProductDTO> getAllProducts(Pageable pageable, Long categoryId) {
+        Page<Product> productPage;
+        if (categoryId != null) {
+            productPage = productRepository.findByCategoryId(categoryId, pageable);
+        } else {
+            productPage = productRepository.findAll(pageable);
+        }
+        return productPage.map(this::convertToDTO);
     }
 
     public ProductDTO getProductById(long id) {
