@@ -1,6 +1,6 @@
 package gift.web.dto.product;
 
-import gift.web.dto.OptionDto;
+import gift.web.dto.option.OptionResponseDto;
 import java.util.List;
 
 public record ProductResponseDto(
@@ -9,7 +9,7 @@ public record ProductResponseDto(
     Long price,
     String imageUrl,
     Long categoryId,
-    List<OptionDto> options
+    List<OptionResponseDto> options
 ) {
 
 }

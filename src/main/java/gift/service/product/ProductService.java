@@ -8,7 +8,6 @@ import gift.domain.product.Product;
 import gift.domain.product.ProductRepository;
 import gift.mapper.OptionMappper;
 import gift.mapper.ProductMapper;
-import gift.web.dto.OptionDto;
 import gift.web.dto.product.ProductPutRequestDto;
 import gift.web.dto.product.ProductRequestDto;
 import gift.web.dto.product.ProductResponseDto;

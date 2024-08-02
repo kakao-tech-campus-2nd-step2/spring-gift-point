@@ -7,8 +7,8 @@ import gift.domain.product.Product;
 import gift.domain.product.ProductRepository;
 import gift.mapper.OptionMappper;
 import gift.mapper.ProductMapper;
-import gift.web.dto.OptionDto;
-import gift.web.dto.product.ProductRequestDto;
+import gift.web.dto.option.OptionRequestDto;
+import gift.web.dto.option.OptionResponseDto;
 import gift.web.dto.product.ProductResponseDto;
 import gift.web.exception.notfound.OptionNotFoundException;
 import gift.web.exception.notfound.ProductNotFoundException;
@@ -33,16 +33,16 @@ public class OptionService {
     }
 
     @Transactional
-    public OptionDto createOption(Long productId, OptionDto optionDto) {
+    public OptionResponseDto createOption(Long productId, OptionRequestDto optionRequestDto) {
         Product product = productRepository.findById(productId)
             .orElseThrow(() -> new ProductNotFoundException());
 
-        Option option = new Option(optionDto.name(), optionDto.quantity(), product);
+        Option option = new Option(optionRequestDto.name(), optionRequestDto.quantity(), product);
 
         final Options options = new Options(optionRepository.findAllByProductId(productId));
         options.validate(option);
 
-        optionRepository.save(optionMapper.toEntity(optionDto, product));
+        optionRepository.save(optionMapper.toEntity(optionRequestDto, product));
         return optionMapper.toDto(option);
     }
 
@@ -60,7 +60,7 @@ public class OptionService {
         return productMapper.toDto(option.getProduct());
     }
 
-    public List<OptionDto> getOptionsByProductId(Long productId) {
+    public List<OptionResponseDto> getOptionsByProductId(Long productId) {
         Product product = productRepository.findById(productId)
             .orElseThrow(() -> new ProductNotFoundException());
 
@@ -71,17 +71,17 @@ public class OptionService {
     }
 
     @Transactional
-    public OptionDto updateOption(Long optionId, Long productId, OptionDto optionDto) {
+    public OptionResponseDto updateOption(Long optionId, Long productId, OptionRequestDto optionRequestDto) {
         Option option = optionRepository.findByIdAndProductId(optionId, productId)
             .orElseThrow(() -> new OptionNotFoundException());
 
-        option.updateOption(optionDto.name(), optionDto.quantity());
+        option.updateOption(optionRequestDto.name(), optionRequestDto.quantity());
 
         return optionMapper.toDto(option);
     }
 
     @Transactional
-    public OptionDto subtractOptionQuantity(Long optionId, Long productId, Long quantity) {
+    public OptionResponseDto subtractOptionQuantity(Long optionId, Long productId, Long quantity) {
         Option option = optionRepository.findByIdAndProductId(optionId, productId)
             .orElseThrow(() -> new OptionNotFoundException());
 

@@ -10,7 +10,7 @@ import gift.domain.option.OptionRepository;
 import gift.domain.product.Product;
 import gift.domain.product.ProductRepository;
 import gift.service.option.OptionService;
-import gift.web.dto.OptionDto;
+import gift.web.dto.option.OptionRequestDto;
 import gift.web.exception.notfound.ProductNotFoundException;
 import java.util.List;
 import java.util.Optional;
@@ -40,7 +40,7 @@ public class OptionServiceTest {
 
     @Test
     void 상품이_없는_경우() {
-        var optionDto = new OptionDto(null, "상품1", 999L);
+        var optionDto = new OptionRequestDto("상품1", 999L);
         Assertions.assertThatExceptionOfType(ProductNotFoundException.class)
                 .isThrownBy(() -> optionService.createOption(1L, optionDto));
     }
@@ -52,7 +52,7 @@ public class OptionServiceTest {
         var category = new Category("name", "color", "desc", "image");
         given(productRepository.findById(any())).willReturn(
             Optional.of(new Product("product", 1000L, "image.url", category)));
-        var optionDto = new OptionDto(null, "상품1".repeat(50), 999L);
+        var optionDto = new OptionRequestDto("상품1".repeat(50), 999L);
 
         // when
         // then
@@ -73,7 +73,7 @@ public class OptionServiceTest {
         given(optionRepository.findAllByProductId(any())).willReturn(
             List.of(option)
         );
-        var optionDto = new OptionDto(null, option.getName(), 999L);
+        var optionDto = new OptionRequestDto(option.getName(), 999L);
 
         // when
         // then

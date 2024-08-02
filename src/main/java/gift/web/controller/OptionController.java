@@ -1,8 +1,11 @@
 package gift.web.controller;
 
-import gift.domain.option.Option;
 import gift.service.option.OptionService;
-import gift.web.dto.OptionDto;
+import gift.web.dto.MemberDto;
+import gift.web.dto.option.OptionRequestDto;
+import gift.web.dto.option.OptionResponseDto;
+import gift.web.jwt.AuthUser;
+import jakarta.validation.Valid;
 import java.util.List;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,24 +27,25 @@ public class OptionController {
         this.optionService = optionService;
     }
 
-    @PostMapping("/{productId}")
-    public ResponseEntity<OptionDto> createOption(@PathVariable Long productId, @RequestBody OptionDto optionDto) {
-        return new ResponseEntity<>(optionService.createOption(productId, optionDto), HttpStatus.CREATED);
+    @PostMapping("/{productId}/options")
+    public ResponseEntity<OptionResponseDto> createOption(@AuthUser MemberDto memberDto, @PathVariable Long productId, @RequestBody @Valid OptionRequestDto optionRequestDto) {
+        return new ResponseEntity<>(optionService.createOption(productId, optionRequestDto), HttpStatus.CREATED);
     }
 
     @GetMapping("/{productId}/options")
-    public ResponseEntity<List<OptionDto>> getOptionsByProductId(@PathVariable Long productId) {
+    public ResponseEntity<List<OptionResponseDto>> getOptionsByProductId(@PathVariable Long productId) {
         return new ResponseEntity<>(optionService.getOptionsByProductId(productId), HttpStatus.OK);
     }
 
     @PutMapping("/{productId}/options/{optionId}")
-    public ResponseEntity<OptionDto> updateOption(@PathVariable Long productId, @PathVariable Long optionId, @RequestBody OptionDto optionDto) {
-        return new ResponseEntity<>(optionService.updateOption(optionId, productId, optionDto), HttpStatus.OK);
+    public ResponseEntity<OptionResponseDto> updateOption(@AuthUser MemberDto memberDto, @PathVariable Long productId, @PathVariable Long optionId, @RequestBody @Valid OptionRequestDto optionRequestDto) {
+        return new ResponseEntity<>(optionService.updateOption(optionId, productId,
+            optionRequestDto), HttpStatus.OK);
     }
 
     @DeleteMapping("/{productId}/options/{optionId}")
-    public ResponseEntity<String> deleteOption(@PathVariable Long productId, @PathVariable Long optionId) {
+    public ResponseEntity<String> deleteOption(@AuthUser MemberDto memberDto, @PathVariable Long productId, @PathVariable Long optionId) {
         optionService.deleteOption(optionId, productId);
-        return ResponseEntity.ok("Option deleted");
+        return ResponseEntity.noContent().build();
     }
 }

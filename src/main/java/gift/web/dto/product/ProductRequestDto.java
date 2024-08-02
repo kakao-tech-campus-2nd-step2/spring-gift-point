@@ -1,12 +1,11 @@
 package gift.web.dto.product;
 
-import gift.web.dto.OptionDto;
+import gift.web.dto.option.OptionRequestDto;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.PositiveOrZero;
 import jakarta.validation.constraints.Size;
-import java.util.List;
 
 public record ProductRequestDto(
 
@@ -29,6 +28,6 @@ public record ProductRequestDto(
     Long categoryId,
 
     @NotNull
-    OptionDto option
+    OptionRequestDto option
 ) {
 }
