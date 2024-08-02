@@ -45,7 +45,7 @@ public class AuthFilter implements Filter {
         HttpServletResponse httpResponse = (HttpServletResponse) response;
 
         // CORS 헤더 설정
-        httpResponse.setHeader("Access-Control-Allow-Origin", "http://server.cla6sha.de");
+        httpResponse.setHeader("Access-Control-Allow-Origin", "*");
         httpResponse.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
         httpResponse.setHeader("Access-Control-Allow-Headers", "Authorization, Content-Type");
         httpResponse.setHeader("Access-Control-Allow-Credentials", "true");
