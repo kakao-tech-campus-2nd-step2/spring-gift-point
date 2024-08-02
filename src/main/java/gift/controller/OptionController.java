@@ -3,9 +3,12 @@ package gift.controller;
 import gift.dto.option.DeleteOptionRequest;
 import gift.dto.option.OptionRequest;
 import gift.dto.option.OptionResponse;
+import gift.dto.option.OptionUpdateResponse;
 import gift.entity.Option;
+import gift.exception.CustomException;
 import gift.service.OptionService;
 import jakarta.validation.Valid;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -52,25 +55,33 @@ public class OptionController {
 
     @PutMapping("/{optionId}")
     @Operation(summary = "Update an option for a product", description = "Updates an existing option of a specified product", tags = { "Product Option Management System" })
-    public ResponseEntity<OptionResponse> updateOption(
+    public ResponseEntity<OptionUpdateResponse> updateOption(
             @Parameter(description = "ID of the option to be updated", required = true)
             @PathVariable Long optionId,
             @Parameter(description = "Updated option details", required = true)
             @RequestBody OptionRequest optionRequest,
             @Parameter(description = "ID of the product", required = true)
             @PathVariable String productId) {
-        OptionResponse updatedOption = optionService.updateOption(optionId, optionRequest.getName(), optionRequest.getQuantity());
-        return ResponseEntity.noContent().build();
+        OptionUpdateResponse updatedOption = optionService.updateOption(optionId, optionRequest.getName(), optionRequest.getQuantity());
+        return ResponseEntity.ok(updatedOption);
     }
 
     @DeleteMapping("/{optionId}")
     @Operation(summary = "Delete an option from a product", description = "Deletes an option from a specified product", tags = { "Product Option Management System" })
-    public ResponseEntity<Void> deleteOption(
+    public ResponseEntity<String> deleteOption(
             @Parameter(description = "ID of the option to be deleted", required = true)
             @PathVariable Long optionId,
             @Parameter(description = "ID of the product", required = true)
-            @PathVariable String productId) {
-        optionService.deleteOption(optionId, DeleteOptionRequest.getEmail(), DeleteOptionRequest.getPassword());
-        return ResponseEntity.noContent().build();
+            @RequestBody DeleteOptionRequest deleteOptionRequest) {
+        try {
+            optionService.deleteOption(optionId, DeleteOptionRequest.getEmail(), DeleteOptionRequest.getPassword());
+            return ResponseEntity.ok("Option successfully deleted.");
+        } catch (CustomException.EntityNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        } catch (CustomException.InvalidPasswordException e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred: " + e.getMessage());
+        }
     }
 }

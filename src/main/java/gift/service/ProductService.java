@@ -1,5 +1,6 @@
 package gift.service;
 
+import gift.dto.product.ProductUpdateRequest;
 import gift.entity.Category;
 import gift.entity.Member;
 import gift.entity.Option;
@@ -54,10 +55,10 @@ public class ProductService {
     }
 
     @Transactional
-    public Product updateProduct(Long productId, String name, Integer price, String imageUrl) {
+    public Product updateProduct(Long productId, ProductUpdateRequest productUpdateRequest) {
         Product product = productRepository.findById(productId).orElseThrow(()-> new CustomException.EntityNotFoundException("Product not found"));
 
-        product.update(price, name, imageUrl, product.getCategory());
+        product.update(productUpdateRequest.getPrice(), productUpdateRequest.getName(), productUpdateRequest.getImageUrl(), product.getCategory());
 
         return productRepository.save(product);
     }

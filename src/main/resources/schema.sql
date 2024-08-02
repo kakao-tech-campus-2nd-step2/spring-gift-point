@@ -29,7 +29,7 @@ CREATE TABLE IF NOT EXISTS options (
     FOREIGN KEY (product_id) REFERENCES product(id)
 );
 
-CREATE TABLE IF NOT EXISTS wishlist (
+CREATE TABLE IF NOT EXISTS wish (
     member_id BIGINT,
     product_id BIGINT,
     PRIMARY KEY (member_id, product_id),

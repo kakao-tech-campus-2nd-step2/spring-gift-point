@@ -4,15 +4,18 @@ import gift.dto.option.OptionResponse;
 import gift.dto.product.ProductCategoryResponse;
 import gift.dto.product.ProductRequest;
 import gift.dto.product.ProductResponse;
+import gift.dto.product.ProductUpdateRequest;
 import gift.entity.Category;
 import gift.entity.Option;
 import gift.entity.Product;
+import gift.exception.CustomException;
 import gift.service.ProductService;
 import gift.util.ProductValidator;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -101,23 +104,27 @@ public class ProductController {
             @Parameter(description = "ID of the product to be updated", required = true)
             @PathVariable Long id,
             @Parameter(description = "Updated product details", required = true)
-            @Valid @RequestBody ProductRequest productRequest) {
+            @Valid @RequestBody ProductUpdateRequest productRequest) {
 
-        Product updatedProduct = productService.updateProduct(id, productRequest.getName(), productRequest.getPrice(), productRequest.getImageUrl());
-        ProductResponse response = mapProductToResponse(updatedProduct);
+        Product updateProduct = productService.updateProduct(id, productRequest);
+        ProductResponse response = mapProductToResponse(updateProduct);
         return ResponseEntity.ok(response);
     }
 
     @DeleteMapping("/{id}")
     @Operation(summary = "Delete a product", description = "Deletes a product from the system", tags = { "Product Management System" })
-    public ResponseEntity<Void> deleteProduct(
+    public ResponseEntity<String> deleteProduct(
             @Parameter(description = "ID of the product to be deleted", required = true)
             @PathVariable Long id) {
         productService.deleteById(id);
-        return ResponseEntity.noContent().build();
+        try {
+            productService.deleteById(id);
+            return ResponseEntity.ok("성공적으로 삭제되었습니다.");
+        } catch (Exception ex){
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ex.getMessage());
+        }
     }
 
-    // Helper method to map Product to ProductResponse
     private ProductResponse mapProductToResponse(Product product) {
         List<OptionResponse> optionResponses = product.getOptions().stream()
                 .map(option -> new OptionResponse(option.getId(), option.getName(), option.getQuantity()))

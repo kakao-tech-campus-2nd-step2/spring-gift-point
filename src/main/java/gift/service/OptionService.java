@@ -2,6 +2,7 @@ package gift.service;
 
 import gift.dto.option.OptionRequest;
 import gift.dto.option.OptionResponse;
+import gift.dto.option.OptionUpdateResponse;
 import gift.entity.Option;
 import gift.entity.Product;
 import gift.entity.Member;
@@ -36,12 +37,12 @@ public class OptionService {
                 .collect(Collectors.toList());
     }
 
-    public OptionResponse updateOption(Long optionId, String name, Long quantity) {
+    public OptionUpdateResponse updateOption(Long optionId, String name, Long quantity) {
         Option option = optionRepository.findById(optionId).orElseThrow(()-> new CustomException.EntityNotFoundException("Option not found"));
 
         option.update(name, quantity);
         Option updatedOption = optionRepository.save(option);
-        return new OptionResponse(updatedOption.getId(), updatedOption.getName(), updatedOption.getQuantity());
+        return new OptionUpdateResponse(updatedOption.getId(), updatedOption.getName(), updatedOption.getQuantity());
     }
 
     @Transactional

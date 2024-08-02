@@ -14,4 +14,4 @@ INSERT INTO options (name, quantity, product_id) VALUES ('Option1', 100, 1);
 INSERT INTO options (name, quantity, product_id) VALUES ('Option2', 200, 1);
 
 -- wish
-INSERT INTO wishlist (member_id, product_id) VALUES (1, 1);
+INSERT INTO wish (member_id, product_id) VALUES (1, 1);

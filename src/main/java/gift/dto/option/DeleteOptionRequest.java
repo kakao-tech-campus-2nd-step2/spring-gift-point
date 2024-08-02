@@ -1,13 +1,10 @@
 package gift.dto.option;
 
-public class DeleteOptionRequest {
-    private static String email;
-    private static String password;
+import lombok.Getter;
 
-    public static String getEmail() {
-        return email;
-    }
-    public static String getPassword() {
-        return password;
-    }
+public class DeleteOptionRequest {
+    @Getter
+    private static String email;
+    @Getter
+    private static String password;
 }
