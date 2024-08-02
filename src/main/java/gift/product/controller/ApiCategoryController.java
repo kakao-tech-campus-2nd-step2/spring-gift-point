@@ -4,12 +4,14 @@ import gift.product.docs.CategoryControllerDocs;
 import gift.product.dto.CategoryDTO;
 import gift.product.model.Category;
 import gift.product.service.CategoryService;
-import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -18,7 +20,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/api/category")
+@RequestMapping("/api/categories")
 public class ApiCategoryController implements CategoryControllerDocs {
 
     private final CategoryService categoryService;
@@ -33,6 +35,12 @@ public class ApiCategoryController implements CategoryControllerDocs {
         System.out.println("[CategoryController] registerCategory()");
         Category category = categoryService.registerCategory(categoryDTO.convertToDomain());
         return ResponseEntity.status(HttpStatus.CREATED).body(category);
+    }
+
+    @GetMapping
+    public Page<Category> researchCategory(Pageable pageable) {
+        System.out.println("[CategoryController] researchCategory()");
+        return categoryService.findAllCategory(pageable);
     }
 
     @PutMapping("/{id}")

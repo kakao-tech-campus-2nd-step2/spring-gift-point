@@ -1,5 +1,6 @@
 package gift.product.service;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.verify;
@@ -43,7 +44,7 @@ public class ProductServiceTest {
 
     @BeforeEach
     void setUp() {
-        category = new Category(1L,"교환권");
+        category = new Category(1L,"교환권", "#000000", "categoryImage", "실제 상품과 교환이 가능합니다.");
         product = new Product(1L, "originalProduct", 1000, "image", category);
     }
 

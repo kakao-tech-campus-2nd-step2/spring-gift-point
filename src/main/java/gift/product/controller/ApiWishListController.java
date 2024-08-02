@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/api/wishlist")
+@RequestMapping("/api/wishes")
 public class ApiWishListController implements WishListControllerDocs {
 
     private final WishListService wishListService;
@@ -47,12 +47,12 @@ public class ApiWishListController implements WishListControllerDocs {
             .body(wishListService.registerWishProduct(authorization, wishRequestDTO));
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/{productId}")
     public ResponseEntity<String> deleteWishProduct(
         @RequestHeader("Authorization") String authorization,
-        @PathVariable Long id) {
+        @PathVariable Long productId) {
         System.out.println("[ApiWishListController] deleteWishProduct()");
-        wishListService.deleteWishProduct(authorization, id);
+        wishListService.deleteWishProduct(authorization, productId);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 }

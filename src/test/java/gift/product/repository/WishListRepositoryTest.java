@@ -30,7 +30,7 @@ public class WishListRepositoryTest {
 
     @BeforeEach
     void setUp() {
-        originCategory = categoryRepository.save(new Category("교환권"));
+        originCategory = categoryRepository.save(new Category("교환권", "#000000", "image", "교환권 설명"));
         originProduct = productRepository.save(new Product("product", 1000, "image.url", originCategory));
         originMember = memberRepository.save(new Member("user@email.com", "1234"));
     }

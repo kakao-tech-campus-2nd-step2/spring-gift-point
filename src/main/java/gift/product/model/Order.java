@@ -34,18 +34,18 @@ public class Order {
 
     @ManyToOne
     @JoinColumn(nullable = false)
-    private Member orderer;
+    private Member member;
 
     public Order() {
 
     }
 
-    public Order(Option option, int quantity, String message, Member orderer) {
+    public Order(Option option, int quantity, String message, Member member) {
         this.option = option;
         this.quantity = quantity;
         this.orderDateTime = LocalDateTime.now();
         this.message = message;
-        this.orderer = orderer;
+        this.member = member;
     }
 
     public Long getId() {
@@ -68,8 +68,8 @@ public class Order {
     public String getMessage() {
         return message;
     }
-
-    public Member getOrderer() {
-        return orderer;
+  
+    public Member getMember() {
+        return member;
     }
 }

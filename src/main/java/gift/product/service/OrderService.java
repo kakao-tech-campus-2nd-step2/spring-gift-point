@@ -21,8 +21,13 @@ import gift.product.repository.OrderRepository;
 import gift.product.util.JwtUtil;
 import jakarta.validation.constraints.NotNull;
 import java.net.URI;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
@@ -80,7 +85,7 @@ public class OrderService {
                 + "\n옵션 명: " + order.getOption().getName()
                 + "\n수량: " + order.getQuantity()
                 + "\n메세지: " + order.getMessage());
-        String kakaoAccessToken = order.getOrderer().getSnsMember().getAccessToken();
+        String kakaoAccessToken = order.getMember().getSnsMember().getAccessToken();
         postRequest(kakaoAccessToken, body);
     }
 
@@ -113,5 +118,26 @@ public class OrderService {
             .body(body)
             .retrieve()
             .toEntity(String.class);
+    }
+
+    public Page<OrderResponseDTO> getAllOrders(String authorization, Pageable pageable) {
+        Member member = jwtUtil.parsingToken(authorization);
+        Page<Order> myOrders =  orderRepository.findAllByMember(pageable, member);
+        return convertToResponseDTOList(myOrders, pageable);
+    }
+
+    private Page<OrderResponseDTO> convertToResponseDTOList(Page<Order> myOrders, Pageable pageable) {
+        List<OrderResponseDTO> orders = myOrders.stream()
+            .map(this::convertToResponseDTO)
+            .collect(Collectors.toList());
+        return new PageImpl<>(
+            orders,
+            pageable,
+            myOrders.getTotalElements()
+        );
+    }
+
+    private OrderResponseDTO convertToResponseDTO(Order order) {
+        return new OrderResponseDTO(order);
     }
 }
