@@ -2,7 +2,7 @@ package gift.config;
 
 import gift.argumentresolver.AuthArgumentResolver;
 import gift.argumentresolver.KakaoAuthArgumentResolver;
-import gift.security.JwtUtil;
+import gift.service.JwtUtil;
 import gift.service.KakaoApiService;
 import java.util.List;
 import org.springframework.context.annotation.Configuration;

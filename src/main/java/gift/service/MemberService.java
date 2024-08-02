@@ -5,7 +5,6 @@ import gift.exception.RepositoryException;
 import gift.model.Member;
 import gift.model.MemberDTO;
 import gift.repository.MemberRepository;
-import gift.security.JwtUtil;
 import org.springframework.stereotype.Service;
 
 @Service
