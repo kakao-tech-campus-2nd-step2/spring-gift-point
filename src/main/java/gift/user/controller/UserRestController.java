@@ -29,26 +29,15 @@ public class UserRestController {
 		this.oAuthService = oAuthService;
 	}
 
-	@Operation(summary = "카카오 로그인", description = "카카오 로그인 페이지로 이동")
-	@GetMapping("/oauth/kakao/redirect")
-	public ResponseEntity<String> login(@RequestParam("code") String code,
-			HttpServletResponse response) {
-		String email = oAuthService.authenticate(code);
-		String token = userService.loginOauth2User(email);
-
-		response.setHeader("Authorization", "Bearer "+token);
-		return ResponseEntity.ok(token);
-	}
-
 	@Operation(summary = "포인트 조회", description = "유저의 포인트 조회")
 	@GetMapping("/api/points")
-	public ResponseEntity<Long> getPoints(@RequestAttribute("UserDetails")UserDetails userDetails) {
+	public ResponseEntity<Long> getPoints(@RequestAttribute("userDetails")UserDetails userDetails) {
 		return ResponseEntity.ok(userService.getPoints(userDetails.userId()));
 	}
 
 	@Operation(summary = "포인트 적립", description = "유저의 포인트를 10000포인트 적립하는 테스트 API")
 	@GetMapping("/api/test/points")
-	public ResponseEntity<Long> addPoints(@RequestAttribute("UserDetails")UserDetails userDetails) {
+	public ResponseEntity<Long> addPoints(@RequestAttribute("userDetails")UserDetails userDetails) {
 		return ResponseEntity.ok(userService.addPoints(userDetails.userId(), 10000L));
 	}
 }
