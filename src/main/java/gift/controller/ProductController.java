@@ -52,9 +52,9 @@ public class ProductController {
 
     @GetMapping
     public ResponseEntity<?> getProducts(@RequestParam(defaultValue = "0") int page,
-        @RequestParam Long category_id) {
+        @RequestParam Long category) {
         Pageable pageable = PageRequest.of(page, 20);
-        Page<Product> productPage = productService.getProductsByCategoryId(pageable, category_id);
+        Page<Product> productPage = productService.getProductsByCategoryId(pageable, category);
         ProductPage productPage1 = new ProductPage();
         productPage1.setContent(productPage.getContent());
         productPage1.setTotal_page(productPage.getTotalPages());
