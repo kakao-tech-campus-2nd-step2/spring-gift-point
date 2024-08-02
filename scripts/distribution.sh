@@ -6,15 +6,26 @@ CURRENT_PID=$(pgrep -f $JAR_NAME)
 
 if [ -z $CURRENT_PID ]
 then
+  echo "🌈 구동중인 애플리케이션이 없으므로 종료하지 않습니다."
   sleep 1
 else
+  echo "🌈 구동중인 애플리케이션을 종료했습니다. (pid : $CURRENT_PID)"
   kill -15 $CURRENT_PID
   sleep 5
 fi
+
+echo "🌈 Github에서 프로젝트를 Pull 합니다.\n"
+
+git pull
+
+echo "\n🌈 SpringBoot 프로젝트 빌드를 시작합니다.\n"
+./gradlew clean
+./gradlew bootJar
 
 DEPLOY_PATH=/home/ubuntu/spring-gift-point/
 cp $BUILD_PATH $DEPLOY_PATH
 cd $DEPLOY_PATH
 
+echo "\n🌈 SpringBoot 애플리케이션을 실행합니다.\n"
 DEPLOY_JAR=$DEPLOY_PATH$JAR_NAME
 nohup java -jar $DEPLOY_JAR > /dev/null 2> /dev/null < /dev/null &
