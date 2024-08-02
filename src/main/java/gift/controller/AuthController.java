@@ -8,6 +8,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
+import org.apache.coyote.Response;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -46,31 +47,16 @@ public class AuthController {
     @PostMapping("/kakao")
     @Operation(summary = "카카오 회원가입 및 로그인 api")
     @ApiResponse(responseCode = "200", description = "카카오 로그인 성공")
-    public RedirectView kakaoLoginRedirect(HttpServletRequest request) {
+    public RedirectView kakaoLoginRedirect() {
         RedirectView redirectView = new RedirectView();
         redirectView.setUrl(getCodeUrl);
-
-        // save client url
-        String scheme = request.getScheme();
-        String serverName = request.getServerName();
-        int serverPort = request.getServerPort();
-        String contextPath = request.getContextPath();
-        baseUrl = scheme + "://" + serverName + ":" + serverPort + contextPath;
-
         return redirectView;
     }
 
     @Hidden
     @GetMapping("/kakao/redirect")
-    public RedirectView kakaoLogin(@RequestParam("code") String code) {
-
-        String redirectTo = baseUrl + "?token=" + authService.kakaoLogin(code);
-//        return new ResponseEntity<>(authService.kakaoLogin(code), HttpStatus.OK);
-
-        RedirectView redirectView = new RedirectView();
-        redirectView.setUrl(redirectTo);
-
-        return redirectView;
+    public ResponseEntity<AuthResponse> kakaoLogin(@RequestParam("code") String code) {
+        return new ResponseEntity<>(authService.kakaoLogin(code), HttpStatus.OK);
     }
 
 }
