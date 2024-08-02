@@ -1,5 +1,6 @@
 package gift.model;
 
+import gift.exception.GiftOrderException;
 import gift.exception.InvalidLoginInfoException;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -19,6 +20,9 @@ public class Member extends BaseEntity {
     @NotNull
     @Column(name = "password")
     private String password;
+    @NotNull
+    @Column(name = "point")
+    private Integer point = 0;
     @NotNull
     @Column(name = "deleted")
     private Boolean deleted = Boolean.FALSE;
@@ -40,9 +44,24 @@ public class Member extends BaseEntity {
         return password;
     }
 
+    public Integer getPoint() {
+        return point;
+    }
+
     public void passwordCheck(String inputPassword) {
         if (!password.equals(inputPassword)) {
             throw new InvalidLoginInfoException("로그인 정보가 유효하지 않습니다.");
         }
+    }
+
+    public void addPoint(Integer newPoint) {
+        this.point = point + newPoint;
+    }
+
+    public void subtractPoint(Integer usedPoint) {
+        if (point < usedPoint) {
+            throw new GiftOrderException("사용가능한 포인트보다 더 많은 포인트를 사용할 수 없습니다.");
+        }
+        this.point = point - usedPoint;
     }
 }
