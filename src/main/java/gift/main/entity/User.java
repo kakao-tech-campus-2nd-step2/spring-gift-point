@@ -54,10 +54,10 @@ public class User {
     }
 
     public User(UserJoinRequest userJoinRequest) {
-        this.name = userJoinRequest.name();
+        this.name = "유저";
         this.email = userJoinRequest.email();
         this.password = userJoinRequest.password();
-        this.role = userJoinRequest.role();
+        this.role = Role.USER;
     }
 
     public User(String name, String email, String password, String role) {
