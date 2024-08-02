@@ -38,8 +38,3 @@ out/
 
 ### Mac OS ###
 .DS_Store
-
-application.properties
-application-API-KEY.properties
-application-dev.properties
-application-test.properties
