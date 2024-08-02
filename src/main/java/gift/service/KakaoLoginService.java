@@ -41,14 +41,14 @@ public class KakaoLoginService {
     }
 
     public String makeKakaoAuthorizationURI() {
-        StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append("https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=")
+        StringBuilder kakaoLoginAuthorizationStringBuilder = new StringBuilder();
+        kakaoLoginAuthorizationStringBuilder.append("https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=")
                 .append(loginRestApiKey)
                 .append("&redirect_uri=")
                 .append(loginRedirectUri)
                 .append("&scope=account_email");
 
-        return stringBuilder.toString();
+        return kakaoLoginAuthorizationStringBuilder.toString();
     }
 
 
