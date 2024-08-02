@@ -10,9 +10,8 @@ public class Wish {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "member_id", nullable = false)
-    private Member member;
+    @Column(name = "member_id", nullable = false)
+    private Long memberId;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "product_id", nullable = false)
@@ -21,8 +20,8 @@ public class Wish {
     protected Wish() {
     }
 
-    public Wish(Member member, Product product) {
-        this.member = member;
+    public Wish(Long memberId, Product product) {
+        this.memberId = memberId;
         this.product = product;
     }
 
@@ -30,8 +29,8 @@ public class Wish {
         return id;
     }
 
-    public Member getMember() {
-        return member;
+    public Long getMemberId() {
+        return memberId;
     }
 
     public Product getProduct() {
