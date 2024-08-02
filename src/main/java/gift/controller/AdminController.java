@@ -142,6 +142,15 @@ public class AdminController {
         return "addOption-form";
     }
 
+    // 옵션 목록 조회
+    @GetMapping("/{productId}/options")
+    public String viewOptions(@PathVariable Long productId, Model model) {
+        List<Option> options = optionService.findByProductId(productId);
+        model.addAttribute("options", options);
+        model.addAttribute("productId", productId);
+        return "options-list";
+    }
+
     // 옵션 추가 Post
     @PostMapping("/{productId}/options/add")
     public String addOption(@PathVariable Long productId, Model model, @Valid @ModelAttribute Option option, BindingResult bindingResult) {
