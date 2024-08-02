@@ -60,8 +60,7 @@ public class WishedProductRepositoryTest {
         assertAll(
             () -> assertThat(actual.getId()).isNotNull(),
             () -> assertThat(actual.getMemberEmail()).isEqualTo(expected.getMemberEmail()),
-            () -> assertThat(actual.getProductId()).isEqualTo(expected.getProductId()),
-            () -> assertThat(actual.getAmount()).isEqualTo(expected.getAmount())
+            () -> assertThat(actual.getProductId()).isEqualTo(expected.getProductId())
         );
     }
 
@@ -91,24 +90,5 @@ public class WishedProductRepositoryTest {
 
         // then
         assertThat(wishedProductRepository.findById(id)).isEmpty();
-    }
-
-    @DisplayName("위시리스트 상품 수량 변경")
-    @Test
-    void update() {
-        // given
-        WishedProduct expected = wishedProductRepository.save(createWishedProduct(member, product));
-        expected.setAmount(5);
-
-        // when
-        WishedProduct actual = wishedProductRepository.save(expected);
-
-        // then
-        assertAll(
-            () -> assertThat(actual.getId()).isEqualTo(expected.getId()),
-            () -> assertThat(actual.getMemberEmail()).isEqualTo(expected.getMemberEmail()),
-            () -> assertThat(actual.getProductId()).isEqualTo(expected.getProductId()),
-            () -> assertThat(actual.getAmount()).isEqualTo(expected.getAmount())
-        );
     }
 }

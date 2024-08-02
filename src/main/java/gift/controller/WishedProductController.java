@@ -2,7 +2,9 @@ package gift.controller;
 
 import gift.argumentresolver.LoginMember;
 import gift.dto.member.MemberDto;
-import gift.dto.WishedProductDTO;
+import gift.dto.wishedProduct.AddWishedProductRequest;
+import gift.dto.wishedProduct.GetWishedProductResponse;
+import gift.dto.wishedProduct.WishedProductDto;
 import gift.service.WishedProductService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -15,7 +17,6 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -34,25 +35,22 @@ public class WishedProductController {
 
     @Operation(summary = "위시 리스트 조회", description = "해당 회원의 위시 리스트를 조회합니다.")
     @GetMapping
-    public ResponseEntity<Page<WishedProductDTO>> getWishedProducts(@LoginMember MemberDto memberDto, Pageable pageable) {
+    public ResponseEntity<Page<GetWishedProductResponse>> getWishedProducts(@LoginMember MemberDto memberDto, Pageable pageable) {
         return ResponseEntity.ok().body(wishedProductService.getWishedProducts(memberDto, pageable));
     }
 
     @Operation(summary = "위시 리스트에 상품 추가", description = "해당 상품을 특정 회원의 위시 리스트에 추가합니다.")
     @PostMapping
-    public ResponseEntity<WishedProductDTO> addWishedProduct(@LoginMember MemberDto memberDto, @Valid @RequestBody WishedProductDTO wishedProductDTO) {
-        return ResponseEntity.ok().body(wishedProductService.addWishedProduct(memberDto, wishedProductDTO));
+    public ResponseEntity<WishedProductDto> addWishedProduct(
+        @LoginMember MemberDto memberDto,
+        @Valid @RequestBody AddWishedProductRequest addWishedProductRequest
+    ) {
+        return ResponseEntity.ok().body(wishedProductService.addWishedProduct(memberDto, addWishedProductRequest));
     }
 
     @Operation(summary = "위시 리스트의 상품 삭제", description = "해당 상품을 특정 회원의 위시 리스트에서 삭제합니다.")
     @DeleteMapping("/{id}")
-    public ResponseEntity<WishedProductDTO> deleteWishedProduct(@PathVariable("id") long id, @LoginMember MemberDto memberDto) {
+    public ResponseEntity<WishedProductDto> deleteWishedProduct(@LoginMember MemberDto memberDto, @PathVariable("id") long id) {
         return ResponseEntity.ok().body(wishedProductService.deleteWishedProduct(id));
-    }
-
-    @Operation(summary = "위시 리스트의 상품 수정", description = "해당 상품을 특정 회원의 위시 리스트에서 수정합니다.")
-    @PutMapping
-    public ResponseEntity<WishedProductDTO> updateWishedProduct(@LoginMember MemberDto memberDto, @Valid @RequestBody WishedProductDTO wishedProductDTO) {
-        return ResponseEntity.ok().body(wishedProductService.updateWishedProduct(wishedProductDTO));
     }
 }

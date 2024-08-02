@@ -1,7 +1,7 @@
 package gift.domain;
 
-import gift.dto.WishedProductDTO;
-import jakarta.persistence.Column;
+import gift.dto.wishedProduct.GetWishedProductResponse;
+import gift.dto.wishedProduct.WishedProductDto;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -27,21 +27,21 @@ public class WishedProduct {
     @JoinColumn(name = "product_id", nullable = false)
     private Product product;
 
-    @Column(name = "amount", nullable = false)
-    private int amount;
-
     protected WishedProduct() {
 
     }
 
-    public WishedProduct(Member member, Product product, int amount) {
+    public WishedProduct(Member member, Product product) {
         this.member = member;
         this.product = product;
-        this.amount = amount;
     }
 
-    public WishedProductDTO toDTO() {
-        return new WishedProductDTO(id, member.getEmail(), product.getId(), amount);
+    public WishedProductDto toDTO() {
+        return new WishedProductDto(id, member.getEmail(), product.getId());
+    }
+
+    public GetWishedProductResponse toGetWishedProductResponse() {
+        return new GetWishedProductResponse(product.getId(), product.getName(), product.getPrice(), product.getImageUrl(), id);
     }
 
     public Long getId() {
@@ -54,13 +54,5 @@ public class WishedProduct {
 
     public Long getProductId() {
         return product.getId();
-    }
-
-    public int getAmount() {
-        return amount;
-    }
-
-    public void setAmount(int amount) {
-        this.amount = amount;
     }
 }
