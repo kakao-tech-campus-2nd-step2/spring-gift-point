@@ -32,15 +32,19 @@ public class Order {
     @Column(nullable = false, updatable = false, name = "order_date")
     private LocalDateTime orderDateTime;
 
+    @Column(nullable = false, name = "total_price")
+    private Long totalPrice;
+
     public Order() {
     }
 
-    public Order(Member member, Option option, Integer orderQuantity, String message, LocalDateTime orderDateTime) {
+    public Order(Member member, Option option, Integer orderQuantity, String message, LocalDateTime orderDateTime, Long totalPrice) {
         this.member = member;
         this.option = option;
         this.orderQuantity = orderQuantity;
         this.message = message;
         this.orderDateTime = orderDateTime;
+        this.totalPrice = totalPrice;
     }
 
     public Long getId() {
@@ -66,4 +70,6 @@ public class Order {
     public String getMessage() {
         return message;
     }
+
+    public Long getTotalPrice() { return totalPrice; }
 }
