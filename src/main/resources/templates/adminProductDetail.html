@@ -34,7 +34,7 @@
 </div>
 
 <script>
-    const adminHomeUrl = "http://localhost:8080/api/products";
+    const adminHomeUrl = "/api/products";
 
     const h1 = document.querySelector("h1");
 
@@ -42,7 +42,7 @@
         fetch(`${adminHomeUrl}/${h1.id}`, {
             method: 'DELETE',
         })
-        window.location.href = `http://localhost:8080/admin/deleted`;
+        window.location.href = `/admin/deleted`;
     }
 
     function submitForm() {

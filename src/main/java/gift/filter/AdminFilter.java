@@ -36,7 +36,6 @@ public class AdminFilter implements Filter {
         }
 
         String authorizationHeader = request.getHeader("Authorization");
-        System.out.println("authorizationHeader = " + authorizationHeader);
         if (authorizationHeader == null) {
             response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Unauthorized");
             return;

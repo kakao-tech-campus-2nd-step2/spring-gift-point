@@ -122,7 +122,7 @@ public class OrderService {
     }
 
     private LinkedMultiValueMap<String, String> makeRequestBody(OrderDTO order) {
-        String redirect_url = "http://localhost:8080/me";
+        String redirect_url = "/me";
         Product product = productService.findById(order.getProduct_id());
         String msg = product.getName() + " : " + Integer.toString(order.getQuantity()) + "\n" + order.getMessage();
 

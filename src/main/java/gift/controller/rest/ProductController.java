@@ -29,7 +29,7 @@ public class ProductController {
         this.productService = productService;
     }
 
-    // http://localhost:8080/api/products?page=1&size=3
+    // /api/products?page=1&size=3
     @Operation(summary = "모든 상품 조회", description = "모든 상품을 조회합니다.")
     @GetMapping()
     public List<Product> getAllProducts(Pageable pageable) {

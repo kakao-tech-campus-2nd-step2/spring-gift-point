@@ -1,4 +1,4 @@
-const homeAdminUrl = "http://localhost:8080/admin";
+const homeAdminUrl = "/admin";
 
 
 function gotoHome() {
