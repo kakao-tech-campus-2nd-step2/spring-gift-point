@@ -6,7 +6,6 @@ import gift.service.WishService;
 import gift.util.JwtUtil;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
@@ -16,12 +15,12 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/api/wish")
 @Tag(name = "Wish", description = "위시리스트 API")
-public class WishListController {
+public class WishController {
 
     private final WishService wishService;
     private final JwtUtil jwtUtil;
 
-    public WishListController(WishService wishService, JwtUtil jwtUtil) {
+    public WishController(WishService wishService, JwtUtil jwtUtil) {
         this.wishService = wishService;
         this.jwtUtil = jwtUtil;
     }
