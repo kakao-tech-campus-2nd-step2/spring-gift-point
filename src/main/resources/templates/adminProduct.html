@@ -1,56 +1,52 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>Bootstrap Example</title>
+    <title>Product Management Page</title>
     <meta charset="utf-8">
     <meta content="width=device-width, initial-scale=1" name="viewport">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/popper.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
 </head>
 <body>
 <div class="container p-3 my-3 bg-dark text-white">
-    <h1>상품 페이지</h1>
-    <p>환영합니다!🖐️🖐️</p>
+    <h1>관리자 페이지</h1>
+    <p> 🖐️🖐️</p>
 </div>
 <br><br>
 <div class="container">
     <div class="container">
-        <h2>상품 등록하기</h2>
-        <p>상품을 등록하세요.</p>
-    </div>
-    <div class="container">
-        <div class="form-inline" id="registerInPut">
-            <input class="form-control" id="name" placeholder="물건명" required type="text">
-            <input class="form-control" id="price" placeholder="가격" required type="text">
-            <input class="form-control" id="imageUrl" placeholder="이미지 주소" required type="text">
-            <button class="btn btn-primary btn-sm" id="registerButton">등록하기</button>
+        <h2>상품추가</h2>
+        <p>* 옵션 수량은 1개 이상</p>
+        <div class="form-inline" id="registerInput">
+            <input class="form-control m-2" id="name" placeholder="Product Name" required type="text">
+            <input class="form-control m-2" id="price" placeholder="Price" required type="text">
+            <input class="form-control m-2" id="imageUrl" placeholder="Image URL" required type="text">
+            <input class="form-control m-2" id="categoryId" placeholder="Category ID" required type="number">
+            <div id="optionsContainer">
+                <div class="option-group"> <!-- Add this div wrapper -->
+                    <input class="form-control m-2 option-name" placeholder="Option Name" type="text">
+                    <input class="form-control m-2 option-quantity" placeholder="Option Quantity" type="number">
+                </div>
+            </div>
+            <button class="btn btn-success m-2" id="addOptionButton">Add Another Option</button>
+            <button class="btn btn-primary m-2" id="registerButton">Register</button>
         </div>
     </div>
 </div>
-
 <br>
 <div class="container">
     <div class="container">
-        <h2>조회하기</h2>
-        <p>상품의 id를 입력해 상품을 조회할 수 있습니다.</p>
-    </div>
-    <div class="container">
-        <div id="searchForm" style="display: flex; align-items: center; gap: 10px;">
-            <div class="form-group">
-                <input class="form-control" id="id" placeholder="id값" required type="number">
-            </div>
-            <button class="btn btn-primary btn-sm" id="searchButton">조회하기</button>
+        <h2>상품 옵션 관리</h2>
+        <div class="form-inline" id="optionInput">
+            <input class="form-control m-2" id="productIdInput" placeholder="Product ID" required type="number">
+            <button class="btn btn-primary m-2" id="loadOptionsButton">옵션 불러오기</button>
         </div>
-    </div>
-    <div class="container">
-        <table class="table table-striped">
-            <tbody id="searchResult"></tbody>
-        </table>
+        <ul id="productOptionsList" class="list-group"></ul>
     </div>
 </div>
-
+<br>
 <div class="container">
     <div class="container">
         <h2>물건 리스트 확인</h2>
@@ -64,10 +60,10 @@
                 <th>Name</th>
                 <th>Price</th>
                 <th>Image</th>
-                <th>Seller</th>
                 <th>
-                    페이지당 항목 수<b></b><input id="sizeInput" min="1" style="width: 60px;" type="number" value="10">
-
+                    원하는 카테고리
+                    <input id="categoryInput" min="1" style="width: 60px;" type="number" value="14">
+                    <button class="btn btn-secondary btn-sm" id="searchButton">조회</button>
                 </th>
             </tr>
             </thead>
@@ -78,6 +74,7 @@
         <ul class="pagination justify-content-center" id="pagination"></ul>
     </div>
 </div>
+
 
 <!-- 모달 창 -->
 <div aria-hidden="true" aria-labelledby="editModalLabel" class="modal fade" id="editModal" tabindex="-1">
@@ -92,6 +89,10 @@
             <div class="modal-body">
                 <form id="editForm">
                     <input id="editId" type="hidden">
+                    <div class="form-group">
+                        <label for="editCategoryId">카테고리 ID</label>
+                        <input class="form-control" id="editCategoryId" required type="number">
+                    </div>
                     <div class="form-group">
                         <label for="editName">상품명</label>
                         <input class="form-control" id="editName" required type="text">
@@ -109,89 +110,110 @@
             <div class="modal-footer">
                 <button class="btn btn-secondary" data-dismiss="modal" type="button">닫기</button>
                 <button class="btn btn-primary" id="saveChanges" type="button">저장</button>
+
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 옵션 수정 모달 -->
+<div class="modal fade" id="editOptionModal" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Edit Option</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="editOptionForm">
+                    <input type="hidden" id="editOptionId">
+                    <div class="form-group">
+                        <label for="editOptionName">Option Name</label>
+                        <input type="text" class="form-control" id="editOptionName" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="editOptionQuantity">Quantity</label>
+                        <input type="number" class="form-control" id="editOptionQuantity" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary" id="saveOptionChanges" >Save Changes</button>
+                </form>
             </div>
         </div>
     </div>
 </div>
 
 
+
 <script>
     $(document).ready(function () {
         let currentPage = 0;
-        let currentSize = $('#sizeInput').val();
 
-        $('#sizeInput').on('change', function () {
-            currentSize = $(this).val();
-            loadProducts(currentPage);
+        $('#addOptionButton').click(function (e) {
+            e.preventDefault();
+            var newOption = '<div class="option-group"><input class="form-control m-2 option-name" placeholder="Option Name" type="text"><input class="form-control m-2 option-quantity" placeholder="Option Quantity" type="number"></div>';
+            $('#optionsContainer').append(newOption);
         });
 
-        // 상품 등록하기
+        // Register a new product with options
         $('#registerButton').on('click', function (e) {
             e.preventDefault();
+            var options = [];
+            $('.option-group').each(function () {
+                var optionName = $(this).find('.option-name').val();
+                var optionQuantity = parseInt($(this).find('.option-quantity').val());
+                if (optionName && optionQuantity) {
+                    options.push({ name: optionName, quantity: optionQuantity });
+                }
+            });
+
             var productData = {
-                name: $('#name').val(),
-                price: $('#price').val(),
-                imageUrl: $('#imageUrl').val()
+                name: $('#name').val(),  // Product name
+                price: parseFloat($('#price').val()),  // Ensure price is a number
+                image_url: $('#imageUrl').val(),
+                category_id: parseInt($('#categoryId').val()),
+                options: options
             };
+
             $.ajax({
                 type: 'POST',
-                url: '/spring-gift/admin/product',
+                url: '/api/products',
                 contentType: 'application/json',
                 data: JSON.stringify(productData),
                 success: function (response) {
-                    console.log("Product registered successfully:", response);
-                    alert('상품이 등록되었습니다.');
+                    alert('Product has been registered successfully.');
                     fnReset();
-                    loadProducts();
+                    loadProducts(currentPage);
                 },
                 error: function (error) {
-                    alert(error);
-                }
-            });
-        });
-
-        // 상품 조회하기
-        $('#searchButton').on('click', function (e) {
-            e.preventDefault();
-            var productId = $('#id').val();
-            $.ajax({
-                type: 'GET',
-                url: '/spring-gift/admin/product/' + productId,
-                success: function (searchProduct) {
-                    var html = '';
-                    if (searchProduct) {
-                        html += '<tr>' +
-                            '<td>' + searchProduct.id + '</td>' +
-                            '<td>' + searchProduct.name + '</td>' +
-                            '<td>' + searchProduct.price + '</td>' +
-                            '<td>' + searchProduct.imageUrl + '</td>' +
-                            '<td>' + searchProduct.seller + '</td>' +
-                            '</tr>';
-                    } else {
-                        html += '<tr><td colspan="4">상품을 찾을 수 없습니다.</td></tr>';
-                    }
-                    $('#searchResult').html(html);
-                },
-                error: function (error) {
-                    alert(error);
+                    console.log('Error:', error);
+                    alert('Failed to register product.');
                 }
             });
         });
 
         function fnReset() {
-            $("#name").val("");
-            $("#price").val("");
-            $("#imageUrl").val("");
+            $("#registerInput input").val("");
+            $("#optionsContainer").html('<input class="form-control m-2 option-name" placeholder="Option Name" type="text"><input class="form-control m-2 option-quantity" placeholder="Option Quantity" type="number">');
         }
+
+        // Load products when the search button is clicked
+        $('#searchButton').on('click', function () {
+            currentPage = 0;  // Reset to the first page on new search
+            loadProducts(currentPage);
+        });
 
         // 상품 리스트 로드하기
         function loadProducts(pageNum) {
             $.ajax({
                 type: 'GET',
-                url: '/spring-gift/products?page=' + pageNum + '&size=' + currentSize,
+                url: '/api/products?page=' + pageNum + '&category=' + $('#categoryInput').val(),
+                contentType: 'application/json',
                 success: function (response) {
-                    var products = response.content;
-                    var totalPages = response.totalPages;
+                    var products = response.data.content;
+                    var totalPages = response.data.total_page;
                     var html = '';
 
                     products.forEach(function (product) {
@@ -199,11 +221,10 @@
                             '<td>' + product.id + '</td>' +
                             '<td>' + product.name + '</td>' +
                             '<td>' + product.price + '</td>' +
-                            '<td>' + product.imag + '</td>' +
-                            '<td>' + product.seller + '</td>' +
+                            '<td><img src="' + product.image_url + '" alt="product image" style="width: 50px; height: auto;"></td>' +
                             '<td>' +
                             '<div style="display: flex; justify-content: center; gap: 10px;">' +
-                            '<button class="btn btn-warning btn-sm edit-button" data-id="' + product.id + '" data-name="' + product.name + '" data-price="' + product.price + '" data-imageurl="' + product.imageUrl + '" style="width: 100px;">수정하기</button>' +
+                            '<button class="btn btn-warning btn-sm edit-button" data-id="' + product.id + '" data-name="' + product.name + '" data-price="' + product.price + '" data-imageurl="' + product.image_url + '" style="width: 100px;">수정하기</button>' +
                             '<button class="btn btn-danger btn-sm delete-button" data-id="' + product.id + '" style="width: 100px;">삭제하기</button>' +
                             '</div>' +
                             '</td>' +
@@ -213,27 +234,27 @@
                     setupPagination(totalPages, pageNum);
                 },
                 error: function (error) {
-                    alert(error);
+                    alert(error.responseJSON.errorMessage);
                 }
             });
         }
 
         function setupPagination(totalPages, currentPage) {
-
             let paginationHtml = '';
+            const pageWindow = 2;
 
             // 처음 버튼
             paginationHtml += '<li class="page-item"><a class="page-link" href="javascript:void(0);" data-page="0">처음</a></li>';
 
             // 중간 페이지 버튼들
-            const startPage = Math.max(0, currentPage - 2);
-            const endPage = Math.min(totalPages - 1, currentPage + 2);
+            const startPage = Math.max(0, currentPage - pageWindow);
+            const endPage = Math.min(totalPages - 1, currentPage + pageWindow);
 
             for (let i = startPage; i <= endPage; i++) {
                 if (i === currentPage) {
-                    paginationHtml += '<li class="page-item active"><a class="page-link" href="javascript:void(0);" data-page="' + i + '">' + i + '</a></li>';
+                    paginationHtml += '<li class="page-item active"><a class="page-link" href="javascript:void(0);" data-page="' + i + '">' + (i + 1) + '</a></li>';
                 } else {
-                    paginationHtml += '<li class="page-item"><a class="page-link" href="javascript:void(0);" data-page="' + i + '">' + i + '</a></li>';
+                    paginationHtml += '<li class="page-item"><a class="page-link" href="javascript:void(0);" data-page="' + i + '">' + (i + 1) + '</a></li>';
                 }
             }
 
@@ -251,22 +272,6 @@
             }
         });
 
-        $(document).on('click', '.add-button', function () {
-            var productId = $(this).data('id');
-            $.ajax({
-                type: 'POST',
-                url: '/spring-gift/wishlist/' + productId,
-                success: function (response) {
-                    alert('상품이 위시리스트에 담겼습니다.');
-                    loadProducts(currentPage);
-                },
-                error: function (xhr, status, error) {
-                    var errorResponse = JSON.parse(xhr.responseText);
-                    alert(errorResponse.errorMessage);
-                }
-            });
-        });
-
 
         // 수정 버튼 클릭 시 모달 창 띄우기
         $(document).on('click', '.edit-button', function () {
@@ -274,12 +279,13 @@
             var productName = $(this).data('name');
             var productPrice = $(this).data('price');
             var productImageUrl = $(this).data('imageurl');
+            var productCategoryId = $(this).data('categoryid'); // 데이터 속성에서 카테고리 ID를 가져옵니다.
 
             $('#editId').val(productId);
             $('#editName').val(productName);
             $('#editPrice').val(productPrice);
             $('#editImageUrl').val(productImageUrl);
-
+            $('#editCategoryId').val(productCategoryId); // 카테고리 ID 입력 필드에 값을 설정합니다.
             $('#editModal').modal('show');
         });
 
@@ -288,26 +294,25 @@
             var productId = $('#editId').val();
             var productData = {
                 name: $('#editName').val(),
-                price: $('#editPrice').val(),
-                imageUrl: $('#editImageUrl').val()
+                price: parseFloat($('#editPrice').val()), // 가격을 숫자로 파싱
+                image_url: $('#editImageUrl').val(),
+                category_id: parseInt($('#editCategoryId').val()) // 입력 필드에서 카테고리 ID를 가져와 숫자로 파싱
             };
 
             $.ajax({
                 type: 'PUT',
-                url: '/spring-gift/admin/product/' + productId,
+                url: '/api/products/' + productId,
                 contentType: 'application/json',
                 data: JSON.stringify(productData),
                 success: function (response) {
                     console.log("Product updated successfully:", response);
                     alert('상품이 수정되었습니다.');
                     $('#editModal').modal('hide');
-                    loadProducts(currentPage);
+                    loadProducts(currentPage); // 상품 목록을 다시 로드
                 },
                 error: function (xhr, status, error) {
-
                     var errorResponse = JSON.parse(xhr.responseText);
                     alert(errorResponse.errorMessage);
-
                 }
             });
         });
@@ -317,7 +322,7 @@
             var productId = $(this).data('id');
             $.ajax({
                 type: 'DELETE',
-                url: '/spring-gift/admin/product/' + productId,
+                url: '/api/products/' + productId,
                 success: function (response) {
                     alert('상품이 삭제되었습니다.');
                     loadProducts(currentPage);
@@ -329,7 +334,86 @@
             });
         });
 
-        // 초기 로드
+        $('#loadOptionsButton').on('click', function () {
+            var productId = $('#productIdInput').val();
+            $.ajax({
+                type: 'GET',
+                url: '/api/options/' + productId,
+                contentType: 'application/json',
+                success: function (response) {
+                    var options = response.options;
+                    var html = '';
+                    options.forEach(function (option) {
+                        html += '<li class="list-group-item">' +
+                            '옵션 명: <span>[' + option.name + ']</span> ' +
+                            '옵션 수량: <span>[' + option.quantity + ']</span> ' +
+                            ' <button class="btn btn-danger btn-sm delete-option" data-id="' + option.id + '">삭제</button>' +
+                            ' <button class="btn btn-warning btn-sm edit-option" data-id="' + option.id + '" data-name="' + option.name + '" data-quantity="' + option.quantity + '">수정</button>' +
+                            '</li>';
+                    });
+                    $('#productOptionsList').html(html);
+                },
+                error: function (error) {
+                    alert('옵션을 로드하는 데 실패했습니다.');
+                    console.log(error);
+                }
+            });
+        });
+
+        $(document).on('click', '.edit-option', function () {
+            var optionId = $(this).data('id');
+            var optionName = $(this).data('name');
+            var optionQuantity = $(this).data('quantity');
+
+            $('#editOptionId').val(optionId);
+            $('#editOptionName').val(optionName);
+            $('#editOptionQuantity').val(optionQuantity);
+            $('#editOptionModal').modal('show');
+        });
+
+        $('#editOptionForm').on('submit', function (e) {
+            e.preventDefault();  // 폼의 기본 제출 동작을 방지
+
+            var optionId = $('#editOptionId').val();
+            var updatedData = {
+                name: $('#editOptionName').val(),
+                quantity: parseInt($('#editOptionQuantity').val())
+            };
+
+            $.ajax({
+                type: 'PUT',
+                url: '/api/options/' + optionId,
+                contentType: 'application/json',
+                data: JSON.stringify(updatedData),
+                success: function (response) {
+                    alert('옵션이 성공적으로 수정되었습니다.');
+                    $('#editOptionModal').modal('hide');
+                    $('#loadOptionsButton').click(); // 옵션 리스트 새로고침
+                },
+                error: function (xhr, status, error) {
+                    var errorResponse = JSON.parse(xhr.responseText);
+                    alert('옵션 수정 실패: ' + errorResponse.message);
+                }
+            });
+        });
+
+        $(document).on('click', '.delete-option', function () {
+            var optionId = $(this).data('id');
+            $.ajax({
+                type: 'DELETE',
+                url: '/api/options/' + optionId,
+                success: function (response) {
+                    alert('옵션이 삭제되었습니다.');
+                    $('#loadOptionsButton').click();  // Reload options list
+                },
+                error: function (error) {
+                    alert('옵션 삭제 실패.');
+                    console.log(error);
+                }
+            });
+        });
+
+        // 초기 로드 with a default category if needed
         loadProducts(currentPage);
     });
 </script>
