@@ -40,8 +40,11 @@ public class LoginMemberArgumentResolver implements HandlerMethodArgumentResolve
         String authorization = webRequest.getHeader(AUTHORIZATION_HEADER);
         Token token = Token.from(extractToken(authorization));
 
+//        Long memberId = jwtResolver.resolveId(token)
+//            .orElseThrow(InvalidCredentialsException::new);
+
         Long memberId = jwtResolver.resolveId(token)
-            .orElseThrow(InvalidCredentialsException::new);
+            .orElseThrow(() -> new InvalidCredentialsException("Argument Resolver 에서 발생한 예외"));
 
         return memberDetailsService.loadUserById(memberId);
     }

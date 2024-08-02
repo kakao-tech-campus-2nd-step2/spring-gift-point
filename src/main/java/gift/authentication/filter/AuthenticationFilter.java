@@ -40,10 +40,16 @@ public class AuthenticationFilter extends OncePerRequestFilter {
         FilterChain filterChain) throws ServletException, IOException {
 
         String authorization = request.getHeader(AUTHORIZATION_HEADER);
+        System.out.println("Authorization = " + authorization);
         if(Objects.nonNull(authorization) && authorization.startsWith(BEARER)) {
             String token = authorization.substring(BEARER.length());
 
-            Long memberId = jwtResolver.resolveId(Token.from(token)).orElseThrow(InvalidCredentialsException::new);
+            System.out.println("Bear token = " + token);
+
+            Long memberId = jwtResolver.resolveId(Token.from(token)).orElseThrow(() ->
+                new InvalidCredentialsException(
+                    "AuthenticationFilter.doFilterInternal.jwtResolver.resolveid 에서 예외 발생"));
+
             TokenContext.addCurrentMemberId(memberId);
 
             filterChain.doFilter(request, response);
