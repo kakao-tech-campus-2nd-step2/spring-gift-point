@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/api/products")
 @Tag(name = "Product API", description = "상품 관련 API")
-public class ProductRestController {
+public class KakaoOrderController {
 
     private OptionService optionService;
     private WishlistService wishlistService;
@@ -20,7 +20,7 @@ public class ProductRestController {
     private final KakaoService kakaoService;
 
     @Autowired
-    public ProductRestController(OptionService optionService, WishlistService wishlistService, KakaoService kakaoService, KakaoTokenService kakaoTokenService) {
+    public KakaoOrderController(OptionService optionService, WishlistService wishlistService, KakaoService kakaoService, KakaoTokenService kakaoTokenService) {
         this.optionService = optionService;
         this.wishlistService = wishlistService;
         this.kakaoService = kakaoService;

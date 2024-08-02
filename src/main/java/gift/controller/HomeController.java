@@ -2,7 +2,7 @@ package gift.controller;
 
 import gift.dto.PaginationInfo;
 import gift.dto.ProductDto;
-import gift.dto.ProductResponse;
+import gift.dto.response.ProductResponse;
 import gift.entity.Product;
 import gift.service.CategoryService;
 import gift.service.OptionService;
