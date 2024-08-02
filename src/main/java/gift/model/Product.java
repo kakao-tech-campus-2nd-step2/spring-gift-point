@@ -1,6 +1,8 @@
 package gift.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import java.util.List;
 
 @Entity
@@ -11,11 +13,13 @@ public class Product {
     private Long id;
 
     @Column(nullable = false, length = 20)
+    @NotNull(message = "이름에 NULL 불가능")
+    @Size(max = 20, message = "20자 이상 불가능")
     private String name;
 
-    @Column(nullable = false)
-    private int price;
+    @Column(nullable = false)    private int price;
 
+    @NotNull(message = "URL에 NULL 불가능")
     private String imageUrl;
 
     @ManyToOne(fetch = FetchType.LAZY)
