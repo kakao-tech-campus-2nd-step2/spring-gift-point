@@ -34,7 +34,6 @@ public class MemberController {
         MemberDTO savedMember = memberService.register(memberDTO);
         String token = jwtUtil.generateToken(savedMember.getEmail());
 
-        // 응답 데이터를 명세에 맞게 구성
         Map<String, String> response = new HashMap<>();
         response.put("email", savedMember.getEmail());
         response.put("token", token);
@@ -49,7 +48,6 @@ public class MemberController {
         String password = loginDetails.getPassword();
         String token = memberService.login(email, password);
 
-        // 응답 데이터를 명세에 맞게 구성
         Map<String, String> response = new HashMap<>();
         response.put("email", email);
         response.put("token", token);
