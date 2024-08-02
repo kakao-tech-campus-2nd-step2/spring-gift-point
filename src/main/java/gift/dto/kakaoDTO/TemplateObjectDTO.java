@@ -8,7 +8,9 @@ public record TemplateObjectDTO(
     String text,
     Map<String, String> link
 ) {
-    public TemplateObjectDTO(Long id, Long optionId, Long quantity, String orderDateTime, String message) {
+
+    public TemplateObjectDTO(Long id, Long optionId, Long quantity, String orderDateTime,
+        String message) {
         this(
             "text",
             String.format("주문 정보:\n주문 ID: %d\n옵션 ID: %d\n수량: %d\n주문 시간: %s\n메시지: %s",

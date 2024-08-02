@@ -32,7 +32,8 @@ public class OrderService {
 
     @Transactional
     public OrderResponseDTO createOrder(OrderRequestDTO orderRequestDTO, String email) {
-        OptionResponseDTO optionResponseDTO = optionService.findOptionById(orderRequestDTO.optionId());
+        OptionResponseDTO optionResponseDTO = optionService.findOptionById(
+            orderRequestDTO.optionId());
         Member member = memberService.findMemberByEmail(email);
         Option option = optionService.toEntity(optionResponseDTO);
         optionService.subtractQuantity(option.getId(), orderRequestDTO.quantity());
@@ -40,8 +41,9 @@ public class OrderService {
             orderRequestDTO.message(), member);
         orderRepository.save(order);
         removeFromWishlistByOptionId(option.getId());
-        OrderResponseDTO orderResponseDTO = new OrderResponseDTO(order.getId(), order.getOption().getProduct().getId(),
-            order.getOption().getId(),  order.getOrderDateTime().toString(), order.getQuantity(),
+        OrderResponseDTO orderResponseDTO = new OrderResponseDTO(order.getId(),
+            order.getOption().getProduct().getId(),
+            order.getOption().getId(), order.getOrderDateTime().toString(), order.getQuantity(),
             order.getMessage());
         return orderResponseDTO;
     }

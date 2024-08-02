@@ -39,13 +39,15 @@ public class OptionService {
         if (optionRepository.existsByProductIdAndName(productId, optionRequestDTO.name())) {
             throw new IllegalArgumentException("동일한 상품 내의 옵션 이름은 중복될 수 없습니다.");
         }
-        Option option = new Option(null, optionRequestDTO.name(), optionRequestDTO.quantity(), product);
+        Option option = new Option(null, optionRequestDTO.name(), optionRequestDTO.quantity(),
+            product);
         optionRepository.save(option);
         return toDTO(option);
     }
 
     @Transactional
-    public OptionResponseDTO updateOption(Long productId, Long optionId, OptionRequestDTO optionRequestDTO) {
+    public OptionResponseDTO updateOption(Long productId, Long optionId,
+        OptionRequestDTO optionRequestDTO) {
         Product product = productRepository.findById(productId).orElse(null);
         Option existingOption = optionRepository.findById(optionId).orElse(null);
         if (!existingOption.getName().equals(optionRequestDTO.name())
@@ -78,7 +80,8 @@ public class OptionService {
     }
 
     public Option toEntity(OptionResponseDTO optionResponseDTO) {
-        return new Option(optionResponseDTO.id(), optionResponseDTO.name(), optionResponseDTO.quantity(), null);
+        return new Option(optionResponseDTO.id(), optionResponseDTO.name(),
+            optionResponseDTO.quantity(), null);
     }
 
 }

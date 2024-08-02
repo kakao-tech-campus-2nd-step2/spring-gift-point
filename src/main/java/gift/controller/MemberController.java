@@ -26,7 +26,8 @@ public class MemberController {
 
     @PostMapping("/register")
     @Operation(summary = "회원가입", description = "회원 가입합니다.")
-    public ResponseEntity<Void> registerMember(@Valid @RequestBody RegisterRequestDTO registerRequestDTO) {
+    public ResponseEntity<Void> registerMember(
+        @Valid @RequestBody RegisterRequestDTO registerRequestDTO) {
         String token = memberService.registerMember(registerRequestDTO);
         return ResponseEntity.status(HttpStatus.CREATED)
             .header("Authorization", "Bearer " + token)

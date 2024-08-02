@@ -32,13 +32,15 @@ public class OrderController {
 
     @PostMapping
     @Operation(summary = "주문하기", description = "새로운 주문을 생성합니다.")
-    public ResponseEntity<OrderResponseDTO> createOrder(@Valid @RequestBody OrderRequestDTO orderRequestDTO,
+    public ResponseEntity<OrderResponseDTO> createOrder(
+        @Valid @RequestBody OrderRequestDTO orderRequestDTO,
         @LoginMember Member member) {
         if (member == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
 
-        OrderResponseDTO orderResponseDTO = orderService.createOrder(orderRequestDTO, member.getEmail());
+        OrderResponseDTO orderResponseDTO = orderService.createOrder(orderRequestDTO,
+            member.getEmail());
 
         String accessToken = orderRequestDTO.accessToken();
         try {

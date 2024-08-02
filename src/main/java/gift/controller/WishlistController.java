@@ -36,11 +36,13 @@ public class WishlistController {
 
     @PostMapping
     @Operation(summary = "상품을 위시리스트에 추가", description = "상품을 위시리스트에 추가합니다.")
-    public ResponseEntity<WishlistResponseDTO> addWishlist(@RequestBody @Valid WishlistRequestDTO wishlistRequestDTO, @LoginMember Member member) {
+    public ResponseEntity<WishlistResponseDTO> addWishlist(
+        @RequestBody @Valid WishlistRequestDTO wishlistRequestDTO, @LoginMember Member member) {
         if (member == null) {
             return ResponseEntity.status(401).build();
         }
-        WishlistResponseDTO wishlistResponseDTO = wishlistService.addWishlist(member.getEmail(), wishlistRequestDTO);
+        WishlistResponseDTO wishlistResponseDTO = wishlistService.addWishlist(member.getEmail(),
+            wishlistRequestDTO);
         return ResponseEntity.status(201).body(wishlistResponseDTO);
     }
 
@@ -52,14 +54,17 @@ public class WishlistController {
         if (member == null) {
             return ResponseEntity.status(401).build();
         }
-        Pageable pageable = PageRequest.of(pageRequestDTO.page(), pageRequestDTO.size(), Sort.by(pageRequestDTO.sort()));
-        WishlistPageResponseDTO wishlistPageResponseDTO = wishlistService.getWishlists(member.getEmail(), pageable);
+        Pageable pageable = PageRequest.of(pageRequestDTO.page(), pageRequestDTO.size(),
+            Sort.by(pageRequestDTO.sort()));
+        WishlistPageResponseDTO wishlistPageResponseDTO = wishlistService.getWishlists(
+            member.getEmail(), pageable);
         return ResponseEntity.ok(wishlistPageResponseDTO);
     }
 
     @DeleteMapping("/{wishId}")
     @Operation(summary = "위시리스트에서 상품 삭제", description = "위시리스트에서 상품을 삭제합니다.")
-    public ResponseEntity<Void> removeWishlist(@PathVariable Long wishId, @LoginMember Member member) {
+    public ResponseEntity<Void> removeWishlist(@PathVariable Long wishId,
+        @LoginMember Member member) {
         if (member == null) {
             return ResponseEntity.status(401).build();
         }

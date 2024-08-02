@@ -40,11 +40,14 @@ public class ProductController {
 
     @GetMapping
     @Operation(summary = "상품 목록 조회", description = "모든 상품을 조회합니다.")
-    public ResponseEntity<ProductPageResponseDTO> getAllProduct(@Valid PageRequestDTO pageRequestDTO) {
-        Pageable pageable = PageRequest.of(pageRequestDTO.page(), pageRequestDTO.size(), Sort.by(pageRequestDTO.sort()));
+    public ResponseEntity<ProductPageResponseDTO> getAllProduct(
+        @Valid PageRequestDTO pageRequestDTO) {
+        Pageable pageable = PageRequest.of(pageRequestDTO.page(), pageRequestDTO.size(),
+            Sort.by(pageRequestDTO.sort()));
         ProductPageResponseDTO productPageResponseDTO = productService.findAllProducts(pageable);
         return ResponseEntity.ok(productPageResponseDTO);
     }
+
     @GetMapping("/{productId}")
     @Operation(summary = "상품 조회", description = "ID로 상품을 조회합니다.")
     public ResponseEntity<ProductGetResponseDTO> getProduct(@PathVariable Long productId) {
@@ -54,15 +57,19 @@ public class ProductController {
 
     @PostMapping
     @Operation(summary = "상품 추가", description = "상품을 추가합니다.")
-    public ResponseEntity<ProductAddResponseDTO> addProduct(@RequestBody @Valid ProductAddRequestDTO productAddRequestDTO) {
-        ProductAddResponseDTO productAddResponseDTO = productService.saveProduct(productAddRequestDTO);
+    public ResponseEntity<ProductAddResponseDTO> addProduct(
+        @RequestBody @Valid ProductAddRequestDTO productAddRequestDTO) {
+        ProductAddResponseDTO productAddResponseDTO = productService.saveProduct(
+            productAddRequestDTO);
         return ResponseEntity.status(201).body(productAddResponseDTO);
     }
 
     @PutMapping("/{productId}")
     @Operation(summary = "상품 수정", description = "상품을 수정합니다.")
-    public ResponseEntity<ProductUpdateResponseDTO> updateProduct(@PathVariable Long productId, @RequestBody @Valid ProductUpdateRequestDTO productUpdateRequestDTO) {
-        ProductUpdateResponseDTO productUpdateResponseDTO = productService.updateProduct(productUpdateRequestDTO, productId);
+    public ResponseEntity<ProductUpdateResponseDTO> updateProduct(@PathVariable Long productId,
+        @RequestBody @Valid ProductUpdateRequestDTO productUpdateRequestDTO) {
+        ProductUpdateResponseDTO productUpdateResponseDTO = productService.updateProduct(
+            productUpdateRequestDTO, productId);
         return ResponseEntity.ok(productUpdateResponseDTO);
     }
 

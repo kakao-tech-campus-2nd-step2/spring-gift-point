@@ -49,13 +49,15 @@ public class OptionController {
     @Operation(summary = "옵션 수정", description = "옵션을 수정합니다.")
     public ResponseEntity<OptionResponseDTO> updateOption(@PathVariable Long productId,
         @PathVariable Long optionId, @Valid @RequestBody OptionRequestDTO optionRequestDTO) {
-        OptionResponseDTO optionResponseDTO = optionService.updateOption(productId, optionId, optionRequestDTO);
+        OptionResponseDTO optionResponseDTO = optionService.updateOption(productId, optionId,
+            optionRequestDTO);
         return ResponseEntity.ok(optionResponseDTO);
     }
 
     @DeleteMapping("/{optionId}")
     @Operation(summary = "옵션 삭제", description = "옵션을 삭제합니다.")
-    public ResponseEntity<Void> deleteOption(@PathVariable Long productId, @PathVariable Long optionId) {
+    public ResponseEntity<Void> deleteOption(@PathVariable Long productId,
+        @PathVariable Long optionId) {
         optionService.deleteOption(productId, optionId);
         return ResponseEntity.noContent().build();
     }
