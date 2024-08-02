@@ -1,5 +1,7 @@
 package gift;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import gift.dto.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.MethodOrderer;
@@ -11,6 +13,10 @@ import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.core.annotation.Order;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.*;
 import org.springframework.test.context.ActiveProfiles;
 
@@ -56,11 +62,11 @@ class E2ETest {
     void 카테고리_상품_등록_후_조회() {
         CategoryRequestDto request = new CategoryRequestDto("예시", "color", "test", "카테고리임");
         ResponseEntity<SuccessResponse> response = restTemplate.postForEntity(baseUrl + "/categories", request, SuccessResponse.class);
-        ResponseEntity<List<CategoryResponseDto>> categoryResponse = restTemplate.exchange(
+        ResponseEntity<RestPageImpl<CategoryResponseDto>> categoryResponse = restTemplate.exchange(
                 baseUrl + "/categories",
                 HttpMethod.GET,
                 null,
-                new ParameterizedTypeReference<List<CategoryResponseDto>>() {
+                new ParameterizedTypeReference<RestPageImpl<CategoryResponseDto>>() {
                 });
         assertThat(categoryResponse.getBody()).isNotNull();
 
@@ -70,7 +76,32 @@ class E2ETest {
         ResponseEntity<SuccessResponse> productPostResponse = restTemplate.postForEntity(baseUrl + "/products", productRequestDto, SuccessResponse.class);
         assertThat(productPostResponse.getStatusCode()).isEqualTo(HttpStatus.OK);
     }
+    //Page를 받아오기 위한 구현체
+    public static class RestPageImpl<T> extends PageImpl<T> {
 
+        @JsonCreator(mode = JsonCreator.Mode.PROPERTIES)
+        public RestPageImpl(@JsonProperty("content") List<T> content,
+                            @JsonProperty("number") int number,
+                            @JsonProperty("size") int size,
+                            @JsonProperty("totalElements") long totalElements,
+                            @JsonProperty("pageable") Object pageable,
+                            @JsonProperty("last") boolean last,
+                            @JsonProperty("totalPages") int totalPages,
+                            @JsonProperty("sort") Object sort,
+                            @JsonProperty("first") boolean first,
+                            @JsonProperty("numberOfElements") int numberOfElements) {
+
+            super(content, PageRequest.of(number, size), totalElements);
+        }
+
+        public RestPageImpl(List<T> content, Pageable pageable, long total) {
+            super(content, pageable, total);
+        }
+
+        public RestPageImpl(List<T> content) {
+            super(content);
+        }
+    }
     @Order(3)
     @Test
     void 로그인_위시_리스트_등록_후_조회() {
