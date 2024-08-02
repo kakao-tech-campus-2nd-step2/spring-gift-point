@@ -61,3 +61,6 @@ jobs:
             # 새로운 JAR 파일 실행
             echo "Starting new JAR file..."
             nohup java -jar spring-gift.jar > spring-gift.log 2>&1 &
+            
+            # 테스트
+            echo "after starting new jar file..."
