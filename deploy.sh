@@ -6,6 +6,7 @@ PROJECT_DIR="$BASE_DIR/spring-gift-point"
 BUILD_DIR="$PROJECT_DIR/build/libs"
 JAR_NAME="spring-gift-0.0.1-SNAPSHOT.jar"
 PORT=8080
+NOHUP_FILE="$BUILD_DIR/nohup.out"
 
 # 1. 프로젝트 클론 또는 업데이트
 cd $BASE_DIR
@@ -34,4 +35,7 @@ cd $PROJECT_DIR
 
 # 4. 새로운 JAR 파일 실행
 cd $BUILD_DIR
-nohup java -jar $JAR_NAME > /dev/null 2> /dev/null < /dev/null &
+nohup java -jar $JAR_NAME > $NOHUP_FILE 2>&1 &
+
+# 5. nohup.out 파일 실시간 보기
+tail -f $NOHUP_FILE
