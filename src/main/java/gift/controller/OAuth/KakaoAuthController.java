@@ -27,10 +27,10 @@ public class KakaoAuthController implements KakaoAuthSpecification {
     public ResponseEntity<Void> getAuthCode(HttpServletResponse response,
                                             @RequestParam("redirect-url") String redirectUrl) throws IOException {
         String url = kakaoAuthService.createCodeUrl(redirectUrl);
-        HttpHeaders headers = new HttpHeaders();
-        headers.add("Location", url);
 
-        return new ResponseEntity<>(headers, HttpStatus.FOUND);
+        return ResponseEntity.status(HttpStatus.SEE_OTHER)
+                .header("location", url)
+                .build();
     }
 
     @GetMapping("/callback")
