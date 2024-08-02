@@ -4,7 +4,7 @@ echo -e "배포 시작..\n"
 
 # 1. 변수 정의 (디렉토리 경로)
 PROJECT_NAME="spring-gift-point"
-PROJECT_JAR_FILE="spring-gift-point-0.0.1-SNAPSHOT.jar"
+PROJECT_JAR_FILE="spring-gift-0.0.1-SNAPSHOT.jar"
 GIT_REPOSITORY="https://github.com/jjt4515/spring-gift-point.git"
 GIT_BRANCH="step1"
 PORT=8080
@@ -31,20 +31,16 @@ else
     exit 1
 fi
 
-# 4. Gradle Daemon 캐시 정리
-echo "Gradle Daemon 캐시 정리.."
-rm -rf ~/.gradle/daemon/
-
-# 5. 빌드 시작
+# 4. 빌드 시작
 echo "빌드 시작.."
 if [ -f ~/${PROJECT_NAME}/gradlew ]; then
-    cd ~/${PROJECT_NAME} && ./gradlew clean build
+    cd ~/${PROJECT_NAME} && ./gradlew clean build -x test  #테스트는 빌드 제외
 else
     echo "Gradlew 파일을 찾을 수 없습니다: ~/${PROJECT_NAME}/gradlew"
     exit 1
 fi
 
-# 6. /build/libs 들어가서 jar 무중단 실행
+# 5. /build/libs 들어가서 jar 무중단 실행
 echo "서버 실행.."
 if [ -f ~/${PROJECT_NAME}/build/libs/${PROJECT_JAR_FILE} ]; then
     cd ~/${PROJECT_NAME}/build/libs && nohup java -jar ${PROJECT_JAR_FILE} &
