@@ -15,7 +15,7 @@ do
 
   CURRENT_PID=$(pgrep -f $JAR_NAME) # JAR_NAME과 일치하는 프로세스 ID를 찾아 저장
 
-  if [ -z $CURRENT_PID ] # 비어있으면 1초 대기
+  if [ -z $CURRENT_PID ] # 비어있으면 1초 대기 후
   then
     sleep 1
   else
@@ -25,6 +25,9 @@ do
 
   DEPLOY_PATH=/home/ubuntu/spring-gift-point/ # 쉘 스크립트 경로
   cp $BUILD_PATH $DEPLOY_PATH # jar파일을 $DEPLOY_PATH로 복사
+  # /mnt를 사용해 윈도우 로컬에 있는 application-private.properties 파일 복사
+  cp /mnt/c/Users/박상우/Desktop/new/private/application-private.properties $DEPLOY_PATH
+
   cd $DEPLOY_PATH # DEPLOY_PATH로 이동
 
   DEPLOY_JAR=$DEPLOY_PATH$JAR_NAME # 이동된 jar파일
