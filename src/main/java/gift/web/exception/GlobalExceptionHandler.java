@@ -2,6 +2,7 @@ package gift.web.exception;
 
 import gift.web.exception.duplicate.DuplicatedException;
 import gift.web.exception.forbidden.ForbiddenException;
+import gift.web.exception.invalidvalue.InvalidValueException;
 import gift.web.exception.kakaoapi.KakaoApiException;
 import gift.web.exception.notfound.NotFoundException;
 import gift.web.exception.unauthorized.UnauthorizedException;
@@ -19,6 +20,12 @@ public class GlobalExceptionHandler {
     public ResponseEntity<?> handleNotFoundException(NotFoundException e) {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
             ProblemDetail.forStatusAndDetail(HttpStatus.NOT_FOUND, e.getMessage()));
+    }
+
+    @ExceptionHandler(InvalidValueException.class)
+    public ResponseEntity<?> handleInvalidValueException(InvalidValueException e) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
+            ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST, e.getMessage()));
     }
 
     @ExceptionHandler(ForbiddenException.class)

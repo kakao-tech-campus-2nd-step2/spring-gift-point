@@ -1,5 +1,6 @@
 package gift.domain.option;
 
+import gift.web.exception.duplicate.OptionDuplicatedException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,7 +13,7 @@ public class Options {
 
     public void validate(Option option) {
         if(options.stream().anyMatch(it -> it.isSameName(option))) {
-            throw new IllegalArgumentException("Option already exists");
+            throw new OptionDuplicatedException();
         }
 
         options.add(option);
