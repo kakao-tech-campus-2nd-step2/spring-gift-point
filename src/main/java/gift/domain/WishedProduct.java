@@ -38,7 +38,6 @@ public class WishedProduct {
         this.member = member;
         this.product = product;
         this.amount = amount;
-        member.getWishList().add(this);
     }
 
     public WishedProductDTO toDTO() {
