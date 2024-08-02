@@ -24,8 +24,9 @@ public class KakaoAuthController implements KakaoAuthSpecification {
     }
 
     @GetMapping("/login")
-    public ResponseEntity<Void> getAuthCode(HttpServletResponse response) throws IOException {
-        String url = kakaoAuthService.createCodeUrl();
+    public ResponseEntity<Void> getAuthCode(HttpServletResponse response,
+                                            @RequestParam("redirect-url") String redirectUrl) throws IOException {
+        String url = kakaoAuthService.createCodeUrl(redirectUrl);
         HttpHeaders headers = new HttpHeaders();
         headers.add("Location", url);
 
@@ -33,8 +34,10 @@ public class KakaoAuthController implements KakaoAuthSpecification {
     }
 
     @GetMapping("/callback")
-    public ResponseEntity<Map<String, String>> getAccessToken(@RequestParam String code) {
-        LoginInfoResponse.Info loginInfo = kakaoAuthService.register(code);
+    public ResponseEntity<Map<String, String>> getAccessToken(
+            @RequestParam String code,
+            @RequestParam("redirect-url") String redirectUrl) {
+        LoginInfoResponse.Info loginInfo = kakaoAuthService.register(code,redirectUrl);
 
         HttpHeaders headers = new HttpHeaders();
         headers.set("Authorization", loginInfo.token());

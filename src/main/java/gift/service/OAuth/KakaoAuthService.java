@@ -28,13 +28,13 @@ public class KakaoAuthService {
         this.OAuthTokenRepository = OAuthTokenRepository;
     }
 
-    public String createCodeUrl() {
-        return kakaoApiCaller.createGetCodeUrl();
+    public String createCodeUrl(String rediectUrl) {
+        return kakaoApiCaller.createGetCodeUrl(rediectUrl);
     }
 
-    public LoginInfoResponse.Info register(String authCode) {
+    public LoginInfoResponse.Info register(String authCode, String redirectUrl) {
 
-        AuthTokenResponse tokenResponse = kakaoApiCaller.getAccessToken(authCode);
+        AuthTokenResponse tokenResponse = kakaoApiCaller.getAccessToken(authCode, redirectUrl);
 
         UserInfoResponse.Info userInfo = kakaoApiCaller.extractUserInfo(tokenResponse.accessToken());
 

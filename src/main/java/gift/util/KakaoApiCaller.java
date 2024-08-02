@@ -27,21 +27,21 @@ public class KakaoApiCaller {
         this.restClient = restClient;
     }
 
-    public String createGetCodeUrl() {
+    public String createGetCodeUrl(String redirectUrl) {
         String authUrl = kakaoProperties.authUrl();
 
         String url = UriComponentsBuilder.fromHttpUrl(authUrl)
                 .queryParam("client_id", kakaoProperties.restAPiKey())
-                .queryParam("redirect_uri", kakaoProperties.redirectUri())
+                .queryParam("redirect_uri", redirectUrl)
                 .queryParam("response_type", "code")
                 .toUriString();
         return url;
     }
 
 
-    public AuthTokenResponse getAccessToken(String authCode) {
+    public AuthTokenResponse getAccessToken(String authCode, String redirectUrl) {
         String url = kakaoProperties.tokenUrl();
-        MultiValueMap<String, String> params = createParamsForAccessToken(authCode);
+        MultiValueMap<String, String> params = createParamsForAccessToken(authCode, redirectUrl);
         try{
             AuthTokenResponse resp = restClient.post()
                     .uri(URI.create(url))
@@ -116,11 +116,11 @@ public class KakaoApiCaller {
         return resp;
     }
 
-    private MultiValueMap<String, String> createParamsForAccessToken(String authCode) {
+    private MultiValueMap<String, String> createParamsForAccessToken(String authCode, String redirectUrl) {
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
         params.add("grant_type", "authorization_code");
         params.add("client_id", kakaoProperties.restAPiKey());
-        params.add("redirect_uri", kakaoProperties.redirectUri());
+        params.add("redirect_uri", redirectUrl);
         params.add("code", authCode);
         return params;
     }
