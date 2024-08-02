@@ -61,9 +61,14 @@ public class Category {
         return description;
     }
 
-    public void updateName(String name) {
+    public void updateCategory(String name, String color, String imageUrl, String description) {
         validateName(name);
+        validateColor(color);
+        validateImageUrl(imageUrl);
         this.name = name;
+        this.color = color;
+        this.imageUrl = imageUrl;
+        this.description = description;
     }
 
     private void validateName(String name) {
