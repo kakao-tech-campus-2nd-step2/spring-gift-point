@@ -39,4 +39,10 @@ public class CustomException {
             super(message, cause);
         }
     }
+
+    public static class EntityAlreadyExistException extends RuntimeException {
+        public EntityAlreadyExistException(String message) {
+            super(message);
+        }
+    }
 }

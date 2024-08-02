@@ -10,7 +10,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -47,17 +46,17 @@ public class WishService {
         return wishRepository.save(wish);
     }
 
-    public Wish modifyWish(Member member, Product product, int quantity) {
+    public Wish createWish(Member member,Product product, int quantity) {
         Optional<Wish> existingWish = wishRepository.findByMemberAndProduct(member, product);
-        
-        Wish wish = null;
         if(existingWish.isPresent()) {
-            wish = existingWish.get();
-            wish.update(quantity);
-        } else {
-            throw new CustomException.EntityNotFoundException("Wish not found");
+            throw new CustomException.EntityAlreadyExistException("Wish already exist for this product");
         }
-
+        Wish wish = new Wish.Builder()
+                .member(member)
+                .product(product)
+                .build();
+        wish.update(quantity);
         return wishRepository.save(wish);
     }
+
 }

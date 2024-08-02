@@ -42,7 +42,7 @@ public class OrderService {
                 order.getId(),
                 order.getOptionId(),
                 order.getQuantity(),
-                order.getOrderTime(),
+                order.getOrderDateTime(),
                 order.getMessage()
         );
     }
@@ -54,7 +54,7 @@ public class OrderService {
                 order.getId(),
                 order.getOptionId(),
                 order.getQuantity(),
-                order.getOrderTime(),
+                order.getOrderDateTime(),
                 order.getMessage()
         ));
     }

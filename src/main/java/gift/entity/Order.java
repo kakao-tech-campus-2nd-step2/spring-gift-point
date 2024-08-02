@@ -13,7 +13,7 @@ public class Order {
 
     private Long optionId;
     private int quantity;
-    private LocalDateTime orderTime;
+    private LocalDateTime orderDateTime;
     private String message;
     private String email;
 
@@ -23,7 +23,7 @@ public class Order {
         this.id = builder.id;
         this.optionId = builder.optionId;
         this.quantity = builder.quantity;
-        this.orderTime = builder.orderTime;
+        this.orderDateTime = builder.orderDateTime;
         this.message = builder.message;
         this.email = builder.email;
     }
@@ -36,8 +36,8 @@ public class Order {
     public int getQuantity() {
         return quantity;
     }
-    public LocalDateTime getOrderTime() {
-        return orderTime;
+    public LocalDateTime getOrderDateTime() {
+        return orderDateTime;
     }
     public String getMessage() {
         return message;
@@ -51,7 +51,7 @@ public class Order {
         private Long id;
         private Long optionId;
         private int quantity;
-        private LocalDateTime orderTime;
+        private LocalDateTime orderDateTime;
         private String message;
         private String email;
 
@@ -67,8 +67,8 @@ public class Order {
             this.quantity = quantity;
             return this;
         }
-        public Builder orderTime(LocalDateTime orderTime) {
-            this.orderTime = orderTime;
+        public Builder orderTime(LocalDateTime orderDateTime) {
+            this.orderDateTime = orderDateTime;
             return this;
         }
         public Builder message(String message) {

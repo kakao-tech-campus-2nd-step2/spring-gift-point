@@ -58,8 +58,7 @@ public class OptionService {
         Option option = new Option.Builder()
                 .name(optionRequest.getName())
                 .quantity(optionRequest.getQuantity())
-                .product(product)
-                .build();
+                .product(product).build();
         optionRepository.save(option);
 
         product.getOptions().add(option);
@@ -67,6 +66,7 @@ public class OptionService {
     }
 
     public void deleteOption(Long optionId, String email, String password) {
+        System.out.println("email: " + email);
         Option deletedOption = optionRepository.findById(optionId).orElseThrow(()-> new CustomException.EntityNotFoundException("Option not found"));
         Member member = memberService.findByEmail(email).orElseThrow(()-> new CustomException.EntityNotFoundException("Member not found"));
         memberService.verifyPassword(member, password);

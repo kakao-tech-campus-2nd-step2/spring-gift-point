@@ -74,7 +74,7 @@ public class OptionController {
             @Parameter(description = "ID of the product", required = true)
             @RequestBody DeleteOptionRequest deleteOptionRequest) {
         try {
-            optionService.deleteOption(optionId, DeleteOptionRequest.getEmail(), DeleteOptionRequest.getPassword());
+            optionService.deleteOption(optionId, deleteOptionRequest.getEmail(), deleteOptionRequest.getPassword());
             return ResponseEntity.ok("Option successfully deleted.");
         } catch (CustomException.EntityNotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());

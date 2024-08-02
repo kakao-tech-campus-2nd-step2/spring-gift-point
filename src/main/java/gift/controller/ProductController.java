@@ -116,7 +116,6 @@ public class ProductController {
     public ResponseEntity<String> deleteProduct(
             @Parameter(description = "ID of the product to be deleted", required = true)
             @PathVariable Long id) {
-        productService.deleteById(id);
         try {
             productService.deleteById(id);
             return ResponseEntity.ok("성공적으로 삭제되었습니다.");
