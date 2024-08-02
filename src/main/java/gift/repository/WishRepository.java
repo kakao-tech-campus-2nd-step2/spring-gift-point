@@ -12,9 +12,7 @@ import java.util.List;
 public interface WishRepository extends JpaRepository<Wish, Long> {
     List<Wish> findByMember(Member member);
 
-    boolean existsByMemberAndProduct(Member member, Product product);
-
-    void deleteByMemberAndProduct(Member member, Product product);
-
     Page<Wish> findByMember(Member member, Pageable pageable);
+    boolean existsByMemberAndProduct(Member member, Product product);
+    void deleteByMemberAndProduct(Member member, Product product);
 }

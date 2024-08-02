@@ -18,7 +18,7 @@ public class MemberTest {
     @Test
     public void testMemberWishes() {
         Member member = new Member("test@example.com", "password123");
-        Category category = new Category("Test Category");
+        Category category = new Category();
         Product product = new Product("Test Product", 1000, "test.jpg", category);
         Wish wish = new Wish(member, product);
 

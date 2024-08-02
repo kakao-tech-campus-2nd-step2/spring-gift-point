@@ -60,4 +60,13 @@ public class JwtUtil {
             return null;
         }
     }
+
+    public String getEmail(String token) {
+        try {
+            Claims claims = extractClaims(token);
+            return claims.get("email", String.class);
+        } catch (Exception e) {
+            return null;
+        }
+    }
 }
