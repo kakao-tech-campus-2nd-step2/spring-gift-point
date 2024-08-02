@@ -1,5 +1,6 @@
 package gift.user.jwt;
 
+import static gift.util.jwt.JwtUtil.TOKEN_PREFIX;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
@@ -15,10 +16,9 @@ import org.springframework.boot.test.context.SpringBootTest;
 public class JwtServiceTest {
 
     @Autowired
-    private JwtService jwtService;
-
-    @Autowired
     UserRepository userRepository;
+    @Autowired
+    private JwtService jwtService;
 
     @Test
     public void testCreateToken() {
@@ -36,7 +36,7 @@ public class JwtServiceTest {
         userRepository.save(appUser);
         String token = jwtService.createToken(id);
 
-        AppUser loginAppUser = jwtService.getLoginUser(token);
+        AppUser loginAppUser = jwtService.getLoginUser(TOKEN_PREFIX + token);
         assertEquals(appUser.getId(), loginAppUser.getId());
     }
 }

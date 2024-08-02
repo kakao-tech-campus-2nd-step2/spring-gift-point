@@ -14,14 +14,10 @@ public class UserExceptionHandler {
         return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new CommonResponse<>(null, ex.getMessage(), false));
     }
 
-    @ExceptionHandler(RuntimeException.class)
-    public ResponseEntity<?> handleRuntimeException(RuntimeException ex) {
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new CommonResponse<>(null, ex.getMessage(), false));
-    }
-
     @ExceptionHandler(RestClientException.class)
     public ResponseEntity<?> handleRestClientException(RestClientException ex) {
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new CommonResponse<>(null, "소셜 로그인 토큰 발급에 실패했습니다.", false));
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body(new CommonResponse<>(null, "소셜 로그인 토큰 발급에 실패했습니다.", false));
 
     }
 }
