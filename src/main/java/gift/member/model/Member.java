@@ -38,6 +38,14 @@ public class Member extends BaseEntity {
         this.role = role;
     }
 
+    public Member(Long id, String email, String name, String role, Integer point) {
+        this.setId(id);
+        this.email = email;
+        this.name = name;
+        this.role = role;
+        this.point = point;
+    }
+
     public String getEmail() {
         return email;
     }

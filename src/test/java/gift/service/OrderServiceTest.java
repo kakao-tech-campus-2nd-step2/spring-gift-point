@@ -9,6 +9,8 @@ import static org.mockito.BDDMockito.then;
 import gift.api.kakaoMessage.KakaoMessageClient;
 import gift.category.model.Category;
 import gift.common.auth.LoginMemberDto;
+import gift.member.MemberRepository;
+import gift.member.model.Member;
 import gift.member.oauth.OauthTokenRepository;
 import gift.member.oauth.model.OauthToken;
 import gift.option.OptionRepository;
@@ -37,6 +39,8 @@ import org.springframework.test.context.ActiveProfiles;
 public class OrderServiceTest {
 
     @Mock
+    private MemberRepository memberRepository;
+    @Mock
     private OrderRepository orderRepository;
     @Mock
     private OptionRepository optionRepository;
@@ -51,7 +55,7 @@ public class OrderServiceTest {
 
     @BeforeEach
     void setUp() {
-        orderService = new OrderService(orderRepository, optionRepository, oauthTokenRepository,
+        orderService = new OrderService(memberRepository, orderRepository, optionRepository, oauthTokenRepository,
             wishRepository, kakaoMessageClient);
     }
 
@@ -60,6 +64,9 @@ public class OrderServiceTest {
         Category category = new Category("category", "##cate", "category.jpg", "category");
         Product product = new Product("product", 1000, "image.jpg", category);
         Option option = new Option(1L, "option", 3, product);
+        Member member = new Member(1L, "test@test.com", "test", "test", 10000);
+        given(memberRepository.findById(any())).willReturn(
+            Optional.of(member));
         given(optionRepository.findById(any())).willReturn(
             Optional.of(option));
         given(wishRepository.existsByMemberIdAndProductId(any(), any())).willReturn(false);
@@ -67,15 +74,15 @@ public class OrderServiceTest {
             Optional.of(
                 new OauthToken("kakao", "email", "acessToken", 50000, "refreshToken", null)));
 
-        OrderResponse orderResponse = orderService.createOrder(new OrderRequest(1L, 1, "hello"),
-            new LoginMemberDto(1L, "member", "email", "user"));
-
+        OrderResponse orderResponse = orderService.createOrder(new OrderRequest(1L, 2, "hello", true, 500),
+            new LoginMemberDto(1L, "test", "test@test.com", "test"));
         then(orderRepository).should().save(any());
         then(kakaoMessageClient).should().sendOrderMessage(any(), any());
+
         assertAll(
-            () -> assertThat(orderResponse.optionId()).isEqualTo(1L),
-            () -> assertThat(orderResponse.message()).isEqualTo("hello"),
-            () -> assertThat(orderResponse.quantity()).isEqualTo(1)
+            () -> assertThat(orderResponse.totalPrice()).isEqualTo(2000),
+            () -> assertThat(orderResponse.discountedPrice()).isEqualTo(500),
+            () -> assertThat(orderResponse.accumulatedPoint()).isEqualTo(150)
         );
     }
 }

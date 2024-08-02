@@ -1,14 +1,13 @@
 package gift.order;
 
-import java.time.LocalDateTime;
-
 public record OrderResponse(Long id,
                             Integer totalPrice,
                             Integer discountedPrice,
                             Integer accumulatedPoint) {
 
     public static OrderResponse from(Order order) {
-        return new OrderResponse(order.getId(),
+        return new OrderResponse(
+            order.getId(),
             order.getTotalPrice(),
             order.getDiscountedPrice(),
             order.getAccumulatedPoint()
