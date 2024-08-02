@@ -71,10 +71,10 @@ public class ProductServiceTest {
         given(productRepository.findById(anyLong())).willReturn(Optional.of(product));
 
         // when
-        ProductDto actual = productService.getProduct(id);
+        var actual = productService.getProduct(null, id);
 
         // then
-        assertThat(actual).isEqualTo(product.toDto());
+        assertThat(actual).isEqualTo(product.toGetProductResponse(false));
     }
 
     @DisplayName("상품 수정")

@@ -14,4 +14,6 @@ public interface WishedProductRepository extends JpaRepository<WishedProduct, Lo
 
     @Transactional
     void deleteAllByMemberAndProduct(Member member, Product product);
+
+    boolean existsByMemberAndProduct(Member member, Product product);
 }

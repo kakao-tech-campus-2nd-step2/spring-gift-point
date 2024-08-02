@@ -20,7 +20,7 @@
                     <th>Category</th>
                     <td>
                         <select id="categoryId" required>
-                            <option th:each="category: ${categories}" th:value="${category.id}" th:text="${category.name}" th:selected="${category.id == product.categoryId}"}></option>
+                            <option th:each="category: ${categories}" th:value="${category.id}" th:text="${category.name}" required></option>
                         </select>
                     </td>
                 </tr>
@@ -54,8 +54,8 @@
                                     <input class="editedOptionQuantity" type="text" th:value="${option.quantity}" required>
                                 </td>
                                 <td>
-                                    <button class="btn primary-btn" type="button" th:onclick="editOption([[${product.id}]], [[${option.id}]])">Edit</button>
-                                    <button class="btn danger-btn" th:data-product-id="${product.id}" th:data-option-id="${option.id}" type="button" onclick="deleteOption(this)">Delete</button>
+                                    <button class="btn primary-btn" type="button" th:onclick="editOption([[${product.productId}]], [[${option.id}]])">Edit</button>
+                                    <button class="btn danger-btn" th:data-product-id="${product.productId}" th:data-option-id="${option.id}" type="button" onclick="deleteOption(this)">Delete</button>
                                 </td>
                             </tr>
                             <tr>
@@ -66,7 +66,7 @@
                                     <input id="optionQuantity" type="text">
                                 </td>
                                 <td>
-                                    <button class="btn primary-btn" type="button" th:onclick="addOption([[${product.id}]])">Add</button>
+                                    <button class="btn primary-btn" type="button" th:onclick="addOption([[${product.productId}]])">Add</button>
                                 </td>
                             </tr>
                         </table>

@@ -1,6 +1,7 @@
 package gift.domain;
 
 import gift.dto.product.AddProductResponse;
+import gift.dto.product.GetProductResponse;
 import gift.dto.product.ProductDto;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -60,6 +61,11 @@ public class Product {
         return new ProductDto(id, name, price, imageUrl, category.getId());
     }
 
+    public GetProductResponse toGetProductResponse(boolean isWish) {
+        return new GetProductResponse(id, name, price, imageUrl, isWish);
+    }
+
+
     public AddProductResponse toAddProductResponse() {
         return new AddProductResponse(
             toDto(),
@@ -67,7 +73,6 @@ public class Product {
                 .map(option -> option.toDTO())
                 .toList());
     }
-
     public Long getId() {
         return id;
     }

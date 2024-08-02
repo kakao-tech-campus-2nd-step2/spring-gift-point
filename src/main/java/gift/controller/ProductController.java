@@ -1,7 +1,10 @@
 package gift.controller;
 
+import gift.argumentresolver.LoginMember;
+import gift.dto.member.MemberDto;
 import gift.dto.product.AddProductRequest;
 import gift.dto.product.AddProductResponse;
+import gift.dto.product.GetProductResponse;
 import gift.dto.product.ProductDto;
 import gift.service.ProductService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -34,14 +37,14 @@ public class ProductController {
 
     @Operation(summary = "모든 상품 조회", description = "모든 상품을 조회합니다.")
     @GetMapping
-    public ResponseEntity<Page<ProductDto>> getProducts(Pageable pageable) {
-        return ResponseEntity.ok().body(productService.getProducts(pageable));
+    public ResponseEntity<Page<GetProductResponse>> getProducts(@LoginMember MemberDto memberDto, Pageable pageable) {
+        return ResponseEntity.ok().body(productService.getProducts(memberDto, pageable));
     }
 
     @Operation(summary = "한 상품 조회", description = "해당 id의 상품을 조회합니다.")
     @GetMapping("/{id}")
-    public ResponseEntity<ProductDto> getProduct(@PathVariable("id") long id) {
-        return ResponseEntity.ok().body(productService.getProduct(id));
+    public ResponseEntity<GetProductResponse> getProduct(@LoginMember MemberDto memberDto, @PathVariable("id") long id) {
+        return ResponseEntity.ok().body(productService.getProduct(memberDto, id));
     }
 
     @Operation(summary = "상품 추가", description = "상품을 추가합니다.")
