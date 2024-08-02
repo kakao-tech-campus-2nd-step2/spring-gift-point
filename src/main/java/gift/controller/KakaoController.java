@@ -42,7 +42,7 @@ public class KakaoController {
     }
 
     @GetMapping("/redirect")
-    public ResponseEntity<HttpStatus> getTokenAndUserInfo(
+    public ResponseEntity<Object> getTokenAndUserInfo(
             @RequestParam(value = "code") String kakaoCode
     ) {
         String returnUrl = "http://localhost:3000/token.html?tokenValue=";
