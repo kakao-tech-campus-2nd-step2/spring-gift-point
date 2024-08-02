@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>포인트 충전</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
+  <style>
+    .field-error {
+      border-color: #dc3545;
+      color: #dc3545;
+    }
+  </style>
+</head>
+<body>
+<div class="p-5 mb-5 text-center</> bg-light">
+  <h1 class="mb-3" th:align="center"><b>상품 관리</b></h1>
+  <h4 class="mb-3" th:align="center">관리자 전용 상품 관리 페이지</h4>
+</div>
+<div class="container">
+  <form method="post">
+    <div>
+      <label for="category">사용자 선택</label>
+      <select id="category" th:name="memberId" class="form-control">
+        <option value="">==사용자 선택==</option>
+        <option th:each="user : ${users}" th:value="${user.getId()}"
+                th:text="${user.getId()} + ' - ' + ${user.getUserType()}"></option>
+      </select>
+    </div>
+    <br/>
+    <div class="row">
+      <div class="col">
+        <button class="w-100 btn btn-primary btn-lg"
+                type="submit">사용자 선택</button>
+      </div>
+      <div class="col">
+        <button class="w-100 btn btn-secondary btn-lg"
+                onclick="location.href='ManageProduct.html'"
+                th:onclick="|location.href='@{/manager/products}'|"
+                type="button">취소</button>
+      </div>
+    </div>
+  </form>
+
+</div>
+</body>
