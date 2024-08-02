@@ -11,6 +11,10 @@ import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
+
 @RestController
 @RequestMapping("/api/products")
 public class ProductRestController {
@@ -26,12 +30,23 @@ public class ProductRestController {
     public ResponseEntity<Page<ProductDTO>> getAllProducts(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size,
-            @RequestParam(defaultValue = "name,asc") String[] sort,
+            @RequestParam(defaultValue = "id,asc") String[] sort,
             @RequestParam(required = false) Long categoryId) {
 
-        Pageable pageable = PageRequest.of(page, size, Sort.by(sort));
+        Pageable pageable = PageRequest.of(page, size, Sort.by(getSortOrders(sort)));
         Page<ProductDTO> products = productService.getAllProducts(pageable, categoryId);
         return ResponseEntity.ok(products);
+    }
+
+    private List<Sort.Order> getSortOrders(String[] sort) {
+        return Arrays.stream(sort)
+                .map(this::createSortOrder)
+                .collect(Collectors.toList());
+    }
+
+    private Sort.Order createSortOrder(String sortOrder) {
+        String[] parts = sortOrder.split(",");
+        return new Sort.Order(Sort.Direction.fromString(parts[1]), parts[0]);
     }
 
     @Operation(summary = "ID로 상품 가져오기")

@@ -32,13 +32,17 @@ public class ProductService {
     }
 
     public Page<ProductDTO> getAllProducts(Pageable pageable, Long categoryId) {
-        Page<Product> productPage;
-        if (categoryId != null) {
-            productPage = productRepository.findByCategoryId(categoryId, pageable);
-        } else {
-            productPage = productRepository.findAll(pageable);
-        }
-        return productPage.map(this::convertToDTO);
+        return categoryId != null ? getProductsByCategory(categoryId, pageable) : getAllProducts(pageable);
+    }
+
+    private Page<ProductDTO> getAllProducts(Pageable pageable) {
+        return productRepository.findAll(pageable)
+                .map(this::convertToDTO);
+    }
+
+    private Page<ProductDTO> getProductsByCategory(Long categoryId, Pageable pageable) {
+        return productRepository.findByCategoryId(categoryId, pageable)
+                .map(this::convertToDTO);
     }
 
     public ProductDTO getProductById(long id) {

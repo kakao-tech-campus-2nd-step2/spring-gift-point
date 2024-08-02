@@ -14,6 +14,10 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Controller
 @RequestMapping("/products")
 public class ProductPageController {
@@ -31,17 +35,36 @@ public class ProductPageController {
     public String viewHomePage(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size,
-            @RequestParam(defaultValue = "name,asc") String[] sort,
+            @RequestParam(defaultValue = "name,asc") String sort,
             @RequestParam(required = false) Long categoryId,
             Model model) {
 
-        Pageable pageable = PageRequest.of(page, size, Sort.by(sort));
+        String[] sortParams = sort.split(",");
+        Sort.Direction sortDirection = Sort.Direction.fromOptionalString(sortParams.length > 1 ? sortParams[1] : "asc").orElse(Sort.Direction.ASC);
+        Pageable pageable = PageRequest.of(page, size, Sort.by(new Sort.Order(sortDirection, sortParams[0])));
+
         Page<ProductDTO> productPage = productService.getAllProducts(pageable, categoryId);
         model.addAttribute("productPage", productPage);
         model.addAttribute("selectedCategoryId", categoryId);
         model.addAttribute("categories", categoryService.getAllCategories());
         return "index";
     }
+
+
+    private List<Sort.Order> getSortOrders(String[] sort) {
+        return Arrays.stream(sort)
+                .map(this::createSortOrder)
+                .collect(Collectors.toList());
+    }
+
+    private Sort.Order createSortOrder(String sortOrder) {
+        String[] parts = sortOrder.split(",");
+        if (parts.length < 2) {
+            return new Sort.Order(Sort.Direction.ASC, parts[0]);
+        }
+        return new Sort.Order(Sort.Direction.fromString(parts[1]), parts[0]);
+    }
+
 
     @Operation(summary = "새 상품 생성 폼")
     @GetMapping("/new")
