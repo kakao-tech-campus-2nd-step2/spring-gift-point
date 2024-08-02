@@ -12,6 +12,8 @@
 
 </div>
 <h1>Administrator Product Manage Page</h1>
+<data id="token" th:value="${token != null ? token : 'null'}"></data>
+
 <div class="form-inline">
     <label for="id">Id:</label>
     <input type="text" id="id" name="id" disabled>
@@ -188,6 +190,8 @@
     }
 
     $(document).ready(function() {
+        if($('#token').val() !== 'null')
+            localStorage.setItem('token', $('#token').val());
         getCategories();
         getProducts(currentPage);
 

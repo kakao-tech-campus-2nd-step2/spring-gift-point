@@ -3,6 +3,7 @@ package gift.controller;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import gift.DTO.Token;
 import gift.service.KakaoService;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -14,37 +15,32 @@ import org.springframework.web.servlet.view.RedirectView;
 @Controller
 public class KakaoLoginController {
     private final KakaoService kakaoService;
+    private String url;
 
     public KakaoLoginController(KakaoService kakaoService) {
         this.kakaoService = kakaoService;
     }
-    /*
-     * 카카오 로그인 이후 코드를 이용해 토큰 발급 및 메인 페이지로 전달
-     */
-    @GetMapping("/")
-    public RedirectView kakaoLogin(
-            @RequestParam(required = false) String code, RedirectAttributes redirectAttributes
-    ) throws JsonProcessingException {
-        if(code != null){
-            Token login = kakaoService.getKakaoToken(code);
-            redirectAttributes.addFlashAttribute("token", login.getToken());
-            return new RedirectView("/home");
-        }
-        return new RedirectView("/home");
-    }
+
     /*
      * 카카오 로그인 페이지로 연결
      */
     @GetMapping("/kakaoLogin")
-    public ResponseEntity<Token> OauthLogin(@RequestParam String code) throws JsonProcessingException {
+    public String OauthLogin(@RequestParam String code) throws JsonProcessingException {
         Token token = kakaoService.getKakaoToken(code);
-        return new ResponseEntity<>(token, HttpStatus.OK);
+        return "redirect:" + url + "?" + "token=" + token.getToken();
     }
     /*
      * 카카오 로그인
      */
-    @GetMapping("api/members/kakao")
-    public RedirectView kakaoLogin(){
+    @PostMapping("api/members/kakao")
+    public RedirectView getCode(HttpServletRequest request){
+        String scheme = request.getScheme();
+        String serverName = request.getServerName();
+        int serverPort = request.getServerPort();
+        String contextPath = request.getContextPath();
+
+        url = scheme + "://" + serverName + ":" + serverPort + contextPath;
+
         return new RedirectView(kakaoService.makeLoginUrl());
     }
 }

@@ -24,7 +24,6 @@
         </div>
         <div>
             <input type="button" id="kakaoLogin" value="카카오 로그인">
-            <a href="api/members/kakao">카카오</a>
         </div>
         <div>
             <a href="register">회원가입</a>
@@ -63,7 +62,7 @@
 
     $("#kakaoLogin").click(function(){
         $.ajax({
-            type : "GET",
+            type : "POST",
             url : "/api/members/kakao",
             success : function(res) {
                 console.log(res);
