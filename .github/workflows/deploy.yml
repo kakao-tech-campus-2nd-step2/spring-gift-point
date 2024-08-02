@@ -63,12 +63,7 @@ jobs:
           key: ${{ secrets.EC2_KEY }}
           port: 22
           script: |
-            CONTAINER_ID=$(sudo docker ps -q --filter "publish=80-8080")
-            
-            if [ ! -z "$CONTAINER_ID" ]; then
-              sudo docker stop $CONTAINER_ID
-              sudo docker rm $CONTAINER_ID
-            fi
-            
+            sudo docker rm -f $(docker ps -a -q)
+            sudo docker image prune -f
             sudo docker pull ${{ secrets.DOCKER_REPO }}:latest
-            sudo docker run -d -p 8080:8080 --name spring-app ${{ secrets.DOCKER_REPO }}:latest --spring.profiles.active=dev
+            sudo docker run -d -p 8080:8080 --name spring-app ${{ secrets.DOCKER_REPO }}:latest
