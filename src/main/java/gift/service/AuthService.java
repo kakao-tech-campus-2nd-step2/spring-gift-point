@@ -52,7 +52,7 @@ public class AuthService {
             .orElseThrow(MemberNotExistsException::new);
         String encryptedPassword;
         try {
-            encryptedPassword = HashUtil.hashPassword(member.rawPassword());
+            encryptedPassword = HashUtil.hashPassword(member.password());
         } catch (Exception e) {
             throw new FailedHashException();
         }
