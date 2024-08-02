@@ -5,10 +5,8 @@ import gift.domain.dto.request.OptionUpdateRequest;
 import gift.domain.dto.response.OptionDetailedResponse;
 import gift.domain.entity.Option;
 import gift.domain.entity.Product;
-import gift.domain.exception.badRequest.OptionQuantityOutOfRangeException;
-import gift.domain.exception.conflict.OptionAlreadyExistsInProductException;
-import gift.domain.exception.notFound.OptionNotFoundException;
-import gift.domain.exception.notFound.OptionNotIncludedInProductOptionsException;
+import gift.domain.exception.ErrorCode;
+import gift.domain.exception.ServerException;
 import gift.domain.repository.OptionRepository;
 import gift.global.WebConfig.Constants.Domain;
 import java.util.ArrayList;
@@ -33,7 +31,7 @@ public class OptionService {
 
     @Transactional(readOnly = true)
     public Option getOptionById(Long id) {
-        return optionRepository.findById(id).orElseThrow(OptionNotFoundException::new);
+        return optionRepository.findById(id).orElseThrow(() -> new ServerException(ErrorCode.OPTION_NOT_FOUND));
     }
 
     @Transactional
@@ -75,20 +73,10 @@ public class OptionService {
     }
 
     @Transactional
-    public Option addQuantity(Option option, Integer quantity) {
-        int updatedQuantity = option.getQuantity() + quantity;
-        if (updatedQuantity > Domain.Option.QUANTITY_RANGE_MAX) {
-            throw new OptionQuantityOutOfRangeException();
-        }
-        option.add(quantity);
-        return option;
-    }
-
-    @Transactional
     public Option subtractQuantity(Option option, Integer quantity) {
         int updatedQuantity = option.getQuantity() - quantity;
         if (updatedQuantity < Domain.Option.QUANTITY_RANGE_MIN) {
-            throw new OptionQuantityOutOfRangeException();
+            throw new ServerException(ErrorCode.OPTION_QUANTITY_OUT_OF_RANGE);
         }
         option.subtract(quantity);
         return option;
@@ -107,7 +95,7 @@ public class OptionService {
 
         //이름 중복을 제거한 리스트 길이가 원래 두 옵션이름 리스트 길이 합보다 줄어들었으면 중복이 존재함
         if (distinctOptionNames.size() < productOptions.size() + request.size()) {
-            throw new OptionAlreadyExistsInProductException();
+            throw new ServerException(ErrorCode.OPTION_ALREADY_EXISTS_IN_PRODUCT);
         }
     }
 
@@ -117,7 +105,7 @@ public class OptionService {
             .filter(o -> o.getName().equals(optionName))
             .findAny()
             .ifPresent(o -> {
-                throw new OptionAlreadyExistsInProductException();
+                throw new ServerException(ErrorCode.OPTION_ALREADY_EXISTS_IN_PRODUCT);
             });
     }
 
@@ -126,6 +114,6 @@ public class OptionService {
         product.getOptions().stream()
             .filter(o -> o.getId().equals(optionId))
             .findAny()
-            .orElseThrow(OptionNotIncludedInProductOptionsException::new);
+            .orElseThrow(() -> new ServerException(ErrorCode.OPTION_NOT_INCLUDED_IN_PRODUCT_OPTIONS));
     }
 }

@@ -4,8 +4,8 @@ import gift.domain.dto.request.member.LocalMemberRequest;
 import gift.domain.dto.request.member.MemberRequest;
 import gift.domain.entity.LocalMember;
 import gift.domain.entity.Member;
-import gift.domain.exception.forbidden.MemberIncorrectLoginInfoException;
-import gift.domain.exception.notFound.MemberNotFoundException;
+import gift.domain.exception.ErrorCode;
+import gift.domain.exception.ServerException;
 import gift.domain.repository.LocalMemberRepository;
 import gift.global.util.HashUtil;
 import org.slf4j.Logger;
@@ -38,7 +38,7 @@ public class LocalMemberService implements DerivedMemberService<LocalMember, Loc
 
         // 유저는 존재하나 비밀번호가 맞지 않은 채 로그인 시도
         if (!HashUtil.hashCode(convert(requestDto).getPassword()).equals(localMember.getPassword())) {
-            throw new MemberIncorrectLoginInfoException();
+            throw new ServerException(ErrorCode.MEMBER_INCORRECT_LOGIN_INFO);
         }
 
         return member;
@@ -47,7 +47,7 @@ public class LocalMemberService implements DerivedMemberService<LocalMember, Loc
     @Override
     @Transactional(readOnly = true)
     public LocalMember findDerivedMemberBy(Member member) {
-        return localMemberRepository.findByMember(member).orElseThrow(MemberNotFoundException::new);
+        return localMemberRepository.findByMember(member).orElseThrow(() -> new ServerException(ErrorCode.MEMBER_NOT_FOUND));
     }
 
     @Override

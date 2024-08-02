@@ -2,7 +2,6 @@ package gift.global.apiResponse;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import gift.domain.exception.ServerException;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 
@@ -47,25 +46,5 @@ public class ErrorApiResponse extends BasicApiResponse {
 
     public static ResponseEntity<ErrorApiResponse> of(ServerException cause, HttpStatusCode statusCode) {
         return ErrorApiResponse.of(cause.getMessage(), cause.getErrorCode().getErrorIdentifier(), cause.getErrorCode().getErrorCode(), statusCode);
-    }
-
-    // HTTP code 401에 대한 응답 생성
-    public static ResponseEntity<ErrorApiResponse> unauthorized(ServerException cause) {
-        return ErrorApiResponse.of(cause, HttpStatus.UNAUTHORIZED);
-    }
-
-    // HTTP code 403에 대한 응답 생성
-    public static ResponseEntity<ErrorApiResponse> forbidden(ServerException cause) {
-        return ErrorApiResponse.of(cause, HttpStatus.FORBIDDEN);
-    }
-
-    // HTTP code 404에 대한 응답 생성
-    public static ResponseEntity<ErrorApiResponse> notFound(ServerException cause) {
-        return ErrorApiResponse.of(cause, HttpStatus.NOT_FOUND);
-    }
-
-    // HTTP code 409에 대한 응답 생성
-    public static ResponseEntity<ErrorApiResponse> conflict(ServerException cause) {
-        return ErrorApiResponse.of(cause, HttpStatus.CONFLICT);
     }
 }

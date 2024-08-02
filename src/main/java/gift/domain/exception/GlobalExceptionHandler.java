@@ -1,11 +1,6 @@
 package gift.domain.exception;
 
 import com.google.common.base.CaseFormat;
-import gift.domain.exception.badRequest.BadRequestException;
-import gift.domain.exception.conflict.ConflictException;
-import gift.domain.exception.forbidden.ForbiddenException;
-import gift.domain.exception.notFound.NotFoundException;
-import gift.domain.exception.unauthorized.UnauthorizedException;
 import gift.global.apiResponse.ErrorApiResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -31,28 +26,8 @@ public class GlobalExceptionHandler {
             HttpStatus.BAD_REQUEST);
     }
 
-    @ExceptionHandler(BadRequestException.class)
-    public ResponseEntity<ErrorApiResponse> handleBadRequestException(BadRequestException e) {
-        return ErrorApiResponse.of(e, HttpStatus.BAD_REQUEST);
-    }
-
-    @ExceptionHandler(UnauthorizedException.class)
-    public ResponseEntity<ErrorApiResponse> handleUnauthorizedException(UnauthorizedException e) {
-        return ErrorApiResponse.unauthorized(e);
-    }
-
-    @ExceptionHandler(ForbiddenException.class)
-    public ResponseEntity<ErrorApiResponse> handleForbiddenException(ForbiddenException e) {
-        return ErrorApiResponse.forbidden(e);
-    }
-
-    @ExceptionHandler(NotFoundException.class)
-    public ResponseEntity<ErrorApiResponse> handleNotFoundException(NotFoundException e) {
-        return ErrorApiResponse.notFound(e);
-    }
-
-    @ExceptionHandler(ConflictException.class)
-    public ResponseEntity<ErrorApiResponse> handleConflictException(ConflictException e) {
-        return ErrorApiResponse.conflict(e);
+    @ExceptionHandler(ServerException.class)
+    public ResponseEntity<ErrorApiResponse> handleServerException(ServerException e) {
+        return ErrorApiResponse.of(e, e.getErrorCode().getStatus());
     }
 }
