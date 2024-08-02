@@ -7,11 +7,11 @@ spring:
       enabled: true
 
   datasource:
-    url: jdbc:h2:mem:serverdb;MODE=MYSQL;DB_CLOSE_DELAY=-1
+    url: jdbc:h2:~/gift/db;MODE=MYSQL;DB_CLOSE_DELAY=-1
 
   jpa:
     hibernate:
-      ddl-auto: create
+      ddl-auto: update
     show-sql: true
     properties:
       hibernate:

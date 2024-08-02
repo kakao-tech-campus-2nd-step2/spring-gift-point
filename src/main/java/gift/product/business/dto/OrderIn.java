@@ -11,6 +11,9 @@ public class OrderIn {
         Long productId,
         Long optionId,
         Integer quantity,
+        Boolean hasCashReceipt,
+        String cashReceiptType,
+        String cashReceiptNumber,
         String message
     ) {
 
@@ -20,6 +23,9 @@ public class OrderIn {
                 member,
                 optionId,
                 quantity,
+                hasCashReceipt,
+                cashReceiptType,
+                cashReceiptNumber,
                 message
             );
         }

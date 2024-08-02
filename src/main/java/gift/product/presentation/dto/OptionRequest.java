@@ -32,8 +32,6 @@ public class OptionRequest {
     }
 
     public record Update(
-        @Min(1)
-        Long id,
         @Size(max = 50, message = nameSizeMessage)
         @Pattern(
             regexp = nameRegex,
@@ -44,8 +42,8 @@ public class OptionRequest {
         @Max(value = 100000000, message = quantityMaxMessage)
         Integer quantity) {
 
-        public OptionIn.Update toOptionInUpdate() {
-            return new OptionIn.Update(id, name, quantity);
+        public OptionIn.Update toOptionInUpdate(Long optionId) {
+            return new OptionIn.Update(optionId, name, quantity);
         }
     }
 }

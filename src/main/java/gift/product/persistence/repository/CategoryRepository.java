@@ -14,4 +14,6 @@ public interface CategoryRepository {
     Category getCategory(Long id);
 
     Long deleteCategory(Long id);
+
+    void saveCategories(List<Category> categories);
 }

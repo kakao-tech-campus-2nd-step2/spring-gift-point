@@ -3,13 +3,22 @@ package gift.product.presentation.dto;
 import gift.product.business.dto.CategoryDto;
 import java.util.List;
 
-public record ResponseCategoryDto(Long id, String name) {
+public record ResponseCategoryDto(
+    Long id,
+    String name,
+    String description,
+    String color,
+    String imageUrl
+) {
 
 
     public static ResponseCategoryDto from(CategoryDto categoryDto) {
         return new ResponseCategoryDto(
             categoryDto.id(),
-            categoryDto.name()
+            categoryDto.name(),
+            categoryDto.description(),
+            categoryDto.color(),
+            categoryDto.imageUrl()
         );
     }
 

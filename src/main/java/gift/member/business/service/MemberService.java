@@ -35,33 +35,33 @@ public class MemberService {
         this.jwtValidator = jwtValidator;
     }
 
-    public JwtToken registerMember(MemberIn.Register MemberInRegister) {
+    public String registerMember(MemberIn.Register MemberInRegister) {
         var member = MemberInRegister.toMember();
         var id = memberRepository.saveMember(member);
-        return createToken(id);
+        return createToken(id).accessToken();
     }
 
-    public JwtToken loginMember(MemberIn.Login MemberInLogin) {
+    public String loginMember(MemberIn.Login MemberInLogin) {
         var member = memberRepository.getMemberByEmail(MemberInLogin.email());
         if (!member.getPassword().equals(MemberInLogin.password())) {
             throw new LoginException(ErrorCode.LOGIN_ERROR, "패스워드가 이메일과 일치하지 않습니다.");
         }
-        return createToken(member.getId());
+        return createToken(member.getId()).accessToken();
     }
 
-    public JwtToken registerVendorMember(MemberIn.VendorRegister memberInRegister) {
+    public String registerVendorMember(MemberIn.VendorRegister memberInRegister) {
         var member = memberInRegister.toMember();
         var id = memberRepository.saveMember(member);
-        return createToken(id);
+        return createToken(id).accessToken();
     }
 
-    public JwtToken loginVendorMember(MemberIn.VendorLogin memberInLogin) {
+    public String loginVendorMember(MemberIn.VendorLogin memberInLogin) {
         var member = memberRepository.getMemberByEmail(memberInLogin.email());
         if (member.getOAuthProvider() != memberInLogin.oAuthProvider()) {
             throw new LoginException(ErrorCode.LOGIN_ERROR, "OAuthProvider가 일치하지 않습니다.");
         }
         member.updateToken(memberInLogin.accessToken(), memberInLogin.refreshToken());
-        return createToken(member.getId());
+        return createToken(member.getId()).accessToken();
     }
 
     public String reissueAccessToken(String refreshToken) {

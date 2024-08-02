@@ -23,7 +23,10 @@ import org.hibernate.annotations.BatchSize;
 
 @Entity
 @Table(name = "product",
-    indexes = {@Index(name = "idx_modified_date", columnList = "modified_date")}
+    indexes = {
+    @Index(name = "idx_product_name", columnList = "name"),
+    @Index(name = "idx_product_price", columnList = "price")
+}
 )
 public class Product extends BaseTimeEntity {
 
@@ -142,5 +145,20 @@ public class Product extends BaseTimeEntity {
             .findFirst()
             .orElseThrow(() -> new IllegalArgumentException("Option not found"));
         option.subtractQuantity(quantity);
+    }
+
+    public void updateOption(Long id, String name, Integer quantity) {
+        var option = options.stream()
+            .filter(o -> o.getId().equals(id))
+            .findFirst()
+            .orElseThrow(() -> new IllegalArgumentException("Option not found"));
+        option.update(name, quantity);
+    }
+
+    public Option getOptionByOptionId(Long optionId) {
+        return options.stream()
+            .filter(option -> option.getId().equals(optionId))
+            .findFirst()
+            .orElseThrow(() -> new IllegalArgumentException("Option not found"));
     }
 }

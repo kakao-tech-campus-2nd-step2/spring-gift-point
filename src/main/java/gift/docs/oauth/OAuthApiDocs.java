@@ -1,6 +1,6 @@
 package gift.docs.oauth;
 
-import gift.member.business.dto.JwtToken;
+import gift.global.authentication.dto.AuthResponse;
 import io.swagger.v3.oas.annotations.Hidden;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 public interface OAuthApiDocs {
 
     @Hidden
-    public ResponseEntity<JwtToken> getKakaoCode(@RequestParam String code);
+    public ResponseEntity<AuthResponse> getKakaoCode(@RequestParam String code);
 
     @Operation(summary = "카카오 로그인")
     public ResponseEntity<Void> singInKaKao();

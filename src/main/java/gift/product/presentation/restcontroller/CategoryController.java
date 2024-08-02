@@ -2,7 +2,7 @@ package gift.product.presentation.restcontroller;
 
 import gift.docs.product.CategoryApiDocs;
 import gift.product.business.service.CategoryService;
-import gift.product.presentation.dto.RequestCategoryDto;
+import gift.product.presentation.dto.CategoryRequest;
 import gift.product.presentation.dto.ResponseCategoryDto;
 import jakarta.validation.Valid;
 import java.util.List;
@@ -34,18 +34,20 @@ public class CategoryController implements CategoryApiDocs {
     }
 
     @PostMapping
-    public ResponseEntity<Long> createCategory(
-        @Valid @RequestBody RequestCategoryDto requestCategoryDto) {
-        var categoryRegisterDto = requestCategoryDto.toCategoryRegisterDto();
-        var createdCategoryId = categoryService.createCategory(categoryRegisterDto);
-        return ResponseEntity.ok(createdCategoryId);
+    public ResponseEntity<Void> createCategory(
+        @RequestBody List<CategoryRequest.Create> categoryRequestCreates) {
+        var categoryInCreates = categoryRequestCreates.stream()
+            .map(CategoryRequest.Create::toCategoryInCreate)
+            .toList();
+        categoryService.createCategory(categoryInCreates);
+        return ResponseEntity.ok().build();
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<Long> updateCategory(@RequestParam("id") Long id,
-        @Valid @RequestBody RequestCategoryDto requestCategoryDto) {
-        var categoryUpdateDto = requestCategoryDto.toCategoryUpdateDto(id);
-        var updatedCategoryId = categoryService.updateCategory(categoryUpdateDto);
+        @Valid @RequestBody CategoryRequest.Update categoryRequestUpdate) {
+        var categoryInUpdate = categoryRequestUpdate.toCategoryInUpdate(id);
+        var updatedCategoryId = categoryService.updateCategory(categoryInUpdate);
         return ResponseEntity.ok(updatedCategoryId);
     }
 

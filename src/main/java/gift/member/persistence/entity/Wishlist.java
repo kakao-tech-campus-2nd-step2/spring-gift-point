@@ -15,7 +15,7 @@ import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "wishlist",
-    indexes = {@Index(name = "idx_modified_date", columnList = "modified_date")}
+    indexes = {@Index(name = "idx_wishes_created_date", columnList = "created_date")}
 )
 public class Wishlist extends BaseTimeEntity {
 

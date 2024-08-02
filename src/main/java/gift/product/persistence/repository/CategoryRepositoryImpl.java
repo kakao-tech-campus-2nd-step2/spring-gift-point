@@ -59,4 +59,9 @@ public class CategoryRepositoryImpl implements CategoryRepository {
         }
         return id;
     }
+
+    @Override
+    public void saveCategories(List<Category> categories) {
+        categoryJpaRepository.saveAll(categories);
+    }
 }

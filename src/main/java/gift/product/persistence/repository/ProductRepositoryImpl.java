@@ -71,7 +71,7 @@ public class ProductRepositoryImpl implements ProductRepository {
     }
 
     @Override
-    public Page<Product> getProductsByPage(Pageable pageRequest) {
-        return productJpaRepository.findAll(pageRequest);
+    public Page<Product> getProductsByPage(Pageable pageRequest, Long categoryId) {
+        return productJpaRepository.findAllByCategoryId(categoryId, pageRequest);
     }
 }

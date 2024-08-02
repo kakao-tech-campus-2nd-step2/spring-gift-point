@@ -14,7 +14,7 @@ import jakarta.validation.constraints.NotNull;
 
 @Entity
 @Table(name = "option",
-    indexes = {@Index(name = "idx_product_id", columnList = "product_id")}
+    indexes = {@Index(name = "idx_option_product_id", columnList = "product_id")}
 )
 public class Option {
 

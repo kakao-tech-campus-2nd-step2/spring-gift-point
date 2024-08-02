@@ -1,7 +1,7 @@
 package gift.oauth.presentation.restcontroller;
 
 import gift.docs.oauth.OAuthApiDocs;
-import gift.member.business.dto.JwtToken;
+import gift.global.authentication.dto.AuthResponse;
 import gift.oauth.business.dto.KakaoParam;
 import gift.oauth.business.dto.OAuthParam;
 import gift.oauth.business.service.OAuthService;
@@ -27,13 +27,14 @@ public class OAuthController implements OAuthApiDocs{
     }
 
     @GetMapping
-    public ResponseEntity<JwtToken> getKakaoCode(@RequestParam String code) {
+    public ResponseEntity<AuthResponse> getKakaoCode(@RequestParam String code) {
         OAuthParam param = new KakaoParam(kakaoConfig, code);
-        var jwtToken = oauthService.loginOrRegister(param);
-        return ResponseEntity.ok(jwtToken);
+        var authOutInit = oauthService.loginOrRegister(param);
+        var authResponse = new AuthResponse(authOutInit.email(), authOutInit.accessToken());
+        return ResponseEntity.ok(authResponse);
     }
 
-    @GetMapping("/oauth/kakao")
+    @GetMapping("/api/oauth/kakao")
     public ResponseEntity<Void> singInKaKao() {
         var redirectUrl = UriComponentsBuilder.fromUriString(kakaoConfig.codeUrl())
             .queryParam("scope", "talk_message")

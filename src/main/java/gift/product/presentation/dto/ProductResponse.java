@@ -30,13 +30,13 @@ public class ProductResponse {
         }
     }
 
-    public record PagingInfo(
+    public record Paging(
         boolean hasNext,
-        List<Info> productList
+        List<Info> products
     ) {
 
-        public static PagingInfo from(ProductOut.Paging productOutPaging) {
-            return new PagingInfo(
+        public static Paging from(ProductOut.Paging productOutPaging) {
+            return new Paging(
                 productOutPaging.hasNext(),
                 Info.of(productOutPaging.productList())
             );

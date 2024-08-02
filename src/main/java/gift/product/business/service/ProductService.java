@@ -1,6 +1,7 @@
 package gift.product.business.service;
 
 import gift.product.business.dto.OptionIn;
+import gift.product.business.dto.OptionIn.Create;
 import gift.product.business.dto.ProductIn;
 import gift.product.business.dto.ProductOut;
 import gift.product.persistence.entity.Option;
@@ -35,8 +36,8 @@ public class ProductService {
     }
 
     @Transactional(readOnly = true)
-    public ProductOut.Paging getProductsByPage(Pageable pageable) {
-        Page<Product> products = productRepository.getProductsByPage(pageable);
+    public ProductOut.Paging getProductsByPage(Pageable pageable, Long categoryId) {
+        Page<Product> products = productRepository.getProductsByPage(pageable, categoryId);
         return ProductOut.Paging.from(products);
     }
 
@@ -82,11 +83,10 @@ public class ProductService {
     }
 
     @Transactional
-    public void updateOptions(List<OptionIn.Update> optionInUpdates, Long productId) {
+    public void updateOption(OptionIn.Update optionInUpdate, Long productId) {
         var product = productRepository.getProductById(productId);
-        Map<Long, Option> optionMap = optionInUpdates.stream()
-            .collect(Collectors.toMap(OptionIn.Update::id, OptionIn.Update::toOption));
-        product.updateOptions(optionMap);
+        product.updateOption(optionInUpdate.id(), optionInUpdate.name(),
+            optionInUpdate.quantity());
         productRepository.saveProduct(product);
     }
 
@@ -108,4 +108,11 @@ public class ProductService {
         return productRepository.getProductById(productId);
     }
 
+    @Transactional
+    public void addOption(Create optionInCreate, Long productId) {
+        var product = productRepository.getProductById(productId);
+        var option = optionInCreate.toOption();
+        product.addOptions(List.of(option));
+        productRepository.saveProduct(product);
+    }
 }
