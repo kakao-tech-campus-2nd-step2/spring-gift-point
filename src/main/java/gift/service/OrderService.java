@@ -3,20 +3,16 @@ package gift.service;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import gift.Util.JWTUtil;
-import gift.dto.order.OrderPageDTO;
-import gift.dto.order.OrderResponseDTO;
-import gift.dto.order.OrderRequestDTO;
+import gift.dto.order.*;
 import gift.entity.Option;
 import gift.entity.Order;
+import gift.entity.Product;
 import gift.entity.User;
 import gift.exception.exception.BadRequestException;
 import gift.exception.exception.NotFoundException;
 import gift.exception.exception.ServerInternalException;
 import gift.exception.exception.UnAuthException;
-import gift.repository.OptionRepository;
-import gift.repository.OrderRepository;
-import gift.repository.UserRepository;
-import gift.repository.WishListRepository;
+import gift.repository.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
@@ -37,6 +33,7 @@ public class OrderService {
     private final OrderRepository orderRepository;
     private final OptionRepository optionRepository;
     private final UserRepository userRepository;
+    private final ProductRepository productRepository;
     private final WishListRepository wishListRepository;
     RestTemplate restTemplate = new RestTemplate();
     ObjectMapper objectMapper = new ObjectMapper();
@@ -47,13 +44,18 @@ public class OrderService {
     @Transactional
     public OrderResponseDTO order(OrderRequestDTO orderRequestDTO, String token) {
         Option option = findOptionById(orderRequestDTO.optionId());
+        Product product = findProductById(orderRequestDTO.productId());
         User user = findUserByIdFromToken(token);
+
         option.subQuantity(orderRequestDTO.quantity());
+        user.subPoint(orderRequestDTO.point());
 
         String kakaoToken = JWTUtil.getKakaoTokenFromToken(token);
 
-        Order order = new Order(orderRequestDTO, option, user);
-        user.addOrder(order);
+        int price = calcPrice(product.getPrice(), orderRequestDTO.quantity()) - orderRequestDTO.point();
+        Order order = new Order(orderRequestDTO, product, option, user, price);
+
+        user.addOrderAndPoint(order);
 
         if (kakaoToken != null) sendMessage(order, kakaoToken);
 
@@ -118,5 +120,22 @@ public class OrderService {
         int userId = JWTUtil.getUserIdFromToken(token);
         return userRepository.findById(userId)
                 .orElseThrow(() -> new NotFoundException("유저 없음"));
+    }
+
+    public PriceResponseDTO getPrice(PriceRequestDTO priceRequestDTO) {
+        Product product = findProductById(priceRequestDTO.productId());
+        findOptionById(priceRequestDTO.optionId());
+        int price = calcPrice(product.getPrice(), priceRequestDTO.quantity());
+        return new PriceResponseDTO(price);
+    }
+
+    private Product findProductById(int id) {
+        return productRepository.findById(id).orElseThrow(() -> new NotFoundException("제품 없음"));
+    }
+
+    public int calcPrice(int productPrice, int quantity) {
+        int price = productPrice * quantity;
+        if (price >= 50000) price = (int) (price * 0.9);
+        return price;
     }
 }

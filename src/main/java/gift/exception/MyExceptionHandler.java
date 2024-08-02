@@ -5,11 +5,13 @@ import gift.exception.exception.NotFoundException;
 import gift.exception.exception.ServerInternalException;
 import gift.exception.exception.UnAuthException;
 import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.security.SignatureException;
 import jakarta.validation.ConstraintViolationException;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.*;
-
-import io.jsonwebtoken.security.SignatureException;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 
 @RestControllerAdvice
@@ -25,6 +27,7 @@ public class MyExceptionHandler {
 
     private static final String EXPIRED_TOKEN = "인증이 잘못됨";
     private static final String SIGNATURE = "토큰이 변조됨";
+    private static final String VALIDATION = "제약사항 어긋남";
 
     @ResponseStatus(HttpStatus.NOT_FOUND)
     @ResponseBody
@@ -58,7 +61,7 @@ public class MyExceptionHandler {
     @ResponseBody
     @ExceptionHandler(ConstraintViolationException.class)
     public String ConstaintViolation(ConstraintViolationException e) {
-        return "제약사항 어긋남";
+        return VALIDATION;
     }
 
     @ResponseStatus(HttpStatus.UNAUTHORIZED)

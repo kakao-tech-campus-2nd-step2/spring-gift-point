@@ -1,34 +1,19 @@
 package gift.service;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import gift.Util.JWTUtil;
-import gift.dto.option.*;
+import gift.dto.option.OptionQuantityDTO;
+import gift.dto.option.OptionResponseDTO;
+import gift.dto.option.SaveOptionDTO;
 import gift.entity.Option;
-import gift.entity.Order;
 import gift.entity.Product;
-import gift.entity.User;
 import gift.exception.exception.BadRequestException;
 import gift.exception.exception.NotFoundException;
-import gift.exception.exception.ServerInternalException;
-import gift.exception.exception.UnAuthException;
-import gift.repository.*;
+import gift.repository.OptionRepository;
+import gift.repository.ProductRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
-import org.springframework.web.client.RestTemplate;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URI;
-import java.net.URLEncoder;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @Service
 @RequiredArgsConstructor

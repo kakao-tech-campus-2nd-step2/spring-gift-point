@@ -2,8 +2,8 @@ package gift.controller;
 
 
 import gift.dto.user.LoginDTO;
+import gift.dto.user.PointDTO;
 import gift.dto.user.SignUpDTO;
-
 import gift.dto.user.UserResponseDTO;
 import gift.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -22,7 +22,7 @@ public class UserController {
     }
 
     @ResponseStatus(HttpStatus.CREATED)
-    @PostMapping("/api/register")
+    @PostMapping("/api/members/register")
     @ResponseBody
     public UserResponseDTO SignUp(@RequestBody SignUpDTO signUpDTO) {
         return userService.signUp(signUpDTO);
@@ -34,7 +34,7 @@ public class UserController {
     }
 
     @ResponseStatus(HttpStatus.CREATED)
-    @PostMapping("/api/login")
+    @PostMapping("/api/members/login")
     @ResponseBody
     public UserResponseDTO signIn(@RequestBody LoginDTO loginDTO) {
         return userService.signIn(loginDTO);
@@ -44,6 +44,12 @@ public class UserController {
     @ResponseBody
     public UserResponseDTO kakakLogin() {
         return userService.kakaoLogin();
+    }
+
+    @GetMapping("/api/members/point")
+    @ResponseBody
+    public PointDTO getPoint(@RequestHeader("Authorization") String token) {
+        return userService.getPoint(token);
     }
 
 }

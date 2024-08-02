@@ -1,26 +1,21 @@
 package gift.Util;
 
-import gift.entity.User;
-
-import io.jsonwebtoken.*;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.JwtException;
+import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
 
 import javax.crypto.SecretKey;
-import java.time.*;
+import java.time.Duration;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
-
 
 public class JWTUtil {
-
     private static SecretKey key;
     private static int expirationMs;
 
-    public JWTUtil(@Value("${jwt.secretKey}") String jwtSecret,
-                   @Value("${jwt.expiredMs}") int jwtExpirationMs) {
+    public static void init(String jwtSecret, int jwtExpirationMs) {
         key = Keys.hmacShaKeyFor(jwtSecret.getBytes());
         expirationMs = jwtExpirationMs;
     }

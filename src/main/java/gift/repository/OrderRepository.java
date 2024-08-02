@@ -10,6 +10,6 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface OrderRepository extends JpaRepository<Order, Integer> {
-    @Query("select new gift.dto.order.OrderResponseDTO(o.id, o.quantity, o.orderDateTime, o.message) from order_tb o where o.user.id = :userId")
+    @Query("select new gift.dto.order.OrderResponseDTO(o.id, o.product.id, o.product.name, o.product.imageUrl, o.option.id, o.quantity, o.price, o.orderDateTime, o.message, true) from order_tb o where o.user.id = :userId")
     Page<OrderResponseDTO> findAllWithPage(int userId, Pageable pageable);
 }

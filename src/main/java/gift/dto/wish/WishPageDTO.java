@@ -12,15 +12,33 @@ public class WishPageDTO {
     private int size;
     private boolean last;
 
-    public WishPageDTO(Page<WishList> wishlistPage) {
-        List<ResponseWishDTO> responseWishDTOs = wishlistPage
-                .getContent().stream()
-                .map(wishList -> wishList.toResponseDTO())
-                .toList();
+    public List<ResponseWishDTO> getContent() {
+        return content;
+    }
 
-        this.content = responseWishDTOs;
+    public int getNumber() {
+        return number;
+    }
+
+    public int getTotalElements() {
+        return totalElements;
+    }
+
+    public int getSize() {
+        return size;
+    }
+
+    public boolean isLast() {
+        return last;
+    }
+
+    public WishPageDTO(Page<WishList> wishlistPage) {
+
+        this.content = wishlistPage
+                .getContent().stream()
+                .map(WishList::toResponseDTO)
+                .toList();
         this.number = wishlistPage.getNumber();
-        ;
         this.totalElements = (int) wishlistPage.getTotalElements();
         this.size = wishlistPage.getSize();
         this.last = wishlistPage.isLast();
