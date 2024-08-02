@@ -2,11 +2,9 @@ package gift.argumentresolver;
 
 import gift.exception.UnauthorizedException;
 import gift.model.AuthInfo;
-import gift.security.JwtUtil;
+import gift.service.JwtUtil;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.core.MethodParameter;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.support.WebDataBinderFactory;
 import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
