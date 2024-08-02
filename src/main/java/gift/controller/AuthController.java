@@ -46,7 +46,7 @@ public class AuthController {
         return new ResponseEntity<>(authService.login(authRequest), HttpStatus.OK);
     }
 
-    @GetMapping("/kakao")
+    @PostMapping("/kakao")
     @Operation(summary = "카카오 회원가입 및 로그인 api")
     @ApiResponse(responseCode = "200", description = "카카오 로그인 성공")
     public RedirectView kakaoLoginRedirect() {
