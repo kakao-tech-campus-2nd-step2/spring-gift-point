@@ -12,6 +12,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import gift.service.WishService;
@@ -28,9 +29,15 @@ public class WishController {
     }
 
     @Operation(summary = "특정 회원의 위시리스트 조회")
-    @GetMapping
-    public ResponseEntity<List<WishListDto>> getWishList(@RequestHeader(HttpHeaders.AUTHORIZATION) String accessToken, @RequestParam(defaultValue = "0") int page,
-                                                         @RequestParam(defaultValue = "10") int size) {
+    @GetMapping()
+    public ResponseEntity<List<WishListDto>> getWishList(
+            @RequestHeader(HttpHeaders.AUTHORIZATION) String accessToken,
+            @RequestParam(defaultValue = "10") int size) {
+        System.out.println(accessToken);
+        if (accessToken == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
+        }
+        int page = 0;
         Pageable pageable = PageRequest.of(page, size);
         Page<WishListDto> wishPage = wishService.getWishPage(accessToken, pageable);
         return ResponseEntity.ok(wishPage.getContent());
@@ -39,6 +46,7 @@ public class WishController {
     @Operation(summary = "위시리스트에 상품 추가")
     @PostMapping("/{product_id}")
     public ResponseEntity<Void> addToWishList(@RequestHeader(HttpHeaders.AUTHORIZATION) String accessToken, @PathVariable Long product_id) {
+        System.out.println(accessToken);
         wishService.addWish(accessToken, product_id);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
