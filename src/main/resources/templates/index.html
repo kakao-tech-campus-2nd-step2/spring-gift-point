@@ -17,21 +17,19 @@
   <table>
     <thead>
     <tr>
-      <th><input type="checkbox"></th>
       <th>Id</th>
       <th>Name</th>
       <th>Price</th>
-      <th>Image URL</th>
-      <th>Actions</th>
+      <th>Image</th>
+      <th>Action</th>
     </tr>
     </thead>
     <tbody>
     <tr th:each="product: ${products}">
-      <td><input type="checkbox"></td>
       <td th:text="${product.id}"></td>
       <td th:text="${product.name}"></td>
       <td th:text="${product.price}"></td>
-      <td th:text="${product.imageUrl}"></td>
+      <td><img th:src="${product.imageUrl}" alt="Product Image" width="100"></td>
       <td>
         <a th:href="@{/update-product/{id}(id=${product.id})}"><button class="btn btn-edit">✏️</button></a>
         <a th:href="@{/delete-product/{id}(id=${product.id})}"><button class="btn btn-delete-row">🗑️</button></a>
