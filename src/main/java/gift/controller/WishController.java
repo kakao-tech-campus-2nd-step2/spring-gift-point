@@ -80,8 +80,8 @@ public class WishController {
     })
     @DeleteMapping
     public ResponseEntity<String> deleteWishlist(@LoginMember Long memberId,
-        @RequestBody Long productId) {
-        wishService.deleteById(memberId, productId);
+        @RequestBody @Valid WishRequestDto wishRequestDto) {
+        wishService.deleteById(memberId, wishRequestDto.getProductId());
         return new ResponseEntity<>(HttpStatus.OK);
     }
 }
