@@ -18,7 +18,6 @@ public class WishResponseDto {
         return count;
     }
 
-
     public WishResponseDto() {
     }
 

@@ -2,7 +2,6 @@ package gift.domain.model.dto;
 
 import gift.domain.model.entity.Category;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import org.hibernate.validator.constraints.URL;
 
@@ -32,7 +31,6 @@ public class CategoryUpdateRequestDto {
     public String getName() {
         return name;
     }
-
     public String getColor() {
         return color;
     }
