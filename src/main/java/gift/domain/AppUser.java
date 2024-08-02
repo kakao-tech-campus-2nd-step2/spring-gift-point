@@ -38,7 +38,7 @@ public class AppUser extends BaseTimeEntity {
 
     private String accessToken;
 
-    @ColumnDefault("5000")
+    @ColumnDefault("3000")
     private int point;
 
     public AppUser() {
@@ -69,6 +69,10 @@ public class AppUser extends BaseTimeEntity {
 
     public String getAccessToken() {
         return accessToken;
+    }
+
+    public int getPoint() {
+        return point;
     }
 
     public void setAccessToken(String accessToken) {
