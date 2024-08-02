@@ -46,15 +46,17 @@ public class WishController {
     public ResponseEntity<Page<WishResponse>> getWishAll(
         @RequestParam(name = "page", defaultValue = "0") int page,
         @RequestParam(name = "size", defaultValue = "5") int size,
-        @RequestParam(name = "sort", defaultValue = "createdDate,asc") String sortParam) {
+        @RequestParam(name = "sort", defaultValue = "createdDate,asc") String sortParam,
+        HttpServletRequest request) {
 
+        LoginMemberIdDto loginMemberIdDto = getLoginMember(request);
         String[] sortParamSplited = sortParam.split(",");
         String sort = sortParamSplited[0];
         String direction = (sortParamSplited.length > 1) ? sortParamSplited[1] : "asc";
 
         Pageable pageable = PageRequest.of(page, size, Sort.Direction.fromString(direction), sort);
 
-        return ResponseEntity.ok(wishService.getWishAll(pageable));
+        return ResponseEntity.ok(wishService.getWishAll(pageable, loginMemberIdDto));
     }
 
     @ApiResponses(value = {
