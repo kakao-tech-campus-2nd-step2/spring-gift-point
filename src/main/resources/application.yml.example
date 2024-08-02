@@ -1,0 +1,3 @@
+kakao:
+  redirect-uri: https://example.com
+  rest-api-key: abcdefghijklmnopqrstuvwxyz
