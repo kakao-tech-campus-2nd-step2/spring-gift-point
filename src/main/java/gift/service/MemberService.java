@@ -2,6 +2,7 @@ package gift.service;
 
 import gift.dto.memberDTO.LoginRequestDTO;
 import gift.dto.memberDTO.RegisterRequestDTO;
+import gift.exception.InvalidInputValueException;
 import gift.model.Member;
 import gift.repository.MemberRepository;
 import gift.util.JwtUtil;
@@ -24,7 +25,7 @@ public class MemberService {
     public String registerMember(RegisterRequestDTO registerRequestDTO) {
         Member existingMember = memberRepository.findByEmail(registerRequestDTO.email());
         if (existingMember != null) {
-            throw new IllegalArgumentException("이메일이 이미 존재합니다.");
+            throw new InvalidInputValueException("이메일이 이미 존재합니다.");
         }
         Member member = new Member(null, registerRequestDTO.email(), registerRequestDTO.password(),
             "user");
@@ -36,7 +37,7 @@ public class MemberService {
     public String loginMember(LoginRequestDTO loginRequestDTO) {
         Member member = memberRepository.findByEmail(loginRequestDTO.email());
         if (member == null || !member.getPassword().equals(loginRequestDTO.password())) {
-            throw new IllegalArgumentException("잘못된 이메일 또는 비밀번호입니다.");
+            throw new InvalidInputValueException("잘못된 이메일 또는 비밀번호입니다.");
         }
 
         return jwtUtil.generateToken(member.getEmail(), member.getPassword());

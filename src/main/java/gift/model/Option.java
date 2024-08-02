@@ -1,5 +1,6 @@
 package gift.model;
 
+import gift.exception.InvalidInputValueException;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -60,7 +61,7 @@ public class Option {
 
     public void subtractQuantity(Long subtractQuantity) {
         if (this.quantity < subtractQuantity) {
-            throw new IllegalArgumentException("차감할 수량이 현재 수량보다 많을 수 없습니다.");
+            throw new InvalidInputValueException("차감할 수량이 현재 수량보다 많을 수 없습니다.");
         }
         this.quantity = this.quantity - subtractQuantity;
     }
@@ -72,32 +73,32 @@ public class Option {
 
     private void validateName(String name) {
         if (name == null) {
-            throw new IllegalArgumentException("옵션 이름은 최소 1자 이상이어야 합니다.");
+            throw new InvalidInputValueException("옵션 이름은 최소 1자 이상이어야 합니다.");
         }
         if (name.trim().isEmpty()) {
-            throw new IllegalArgumentException("옵션 이름은 최소 1자 이상이어야 합니다.");
+            throw new InvalidInputValueException("옵션 이름은 최소 1자 이상이어야 합니다.");
         }
         if (name.length() > 50) {
-            throw new IllegalArgumentException("옵션 이름은 공백 포함 최대 50자까지 입력할 수 있습니다.");
+            throw new InvalidInputValueException("옵션 이름은 공백 포함 최대 50자까지 입력할 수 있습니다.");
         }
         if (!name.matches(
             "^[a-zA-Z0-9가-힣ㄱ-ㅎㅏ-ㅣ\\s\\(\\)\\[\\]\\+\\-\\&\\/\\_]*$")) {
-            throw new IllegalArgumentException("옵션 이름에 (), [], +, -, &, /, _ 외 특수 문자는 사용할 수 없습니다.");
+            throw new InvalidInputValueException("옵션 이름에 (), [], +, -, &, /, _ 외 특수 문자는 사용할 수 없습니다.");
         }
     }
 
     private void validateQuantity(Long quantity) {
         if (quantity == null) {
-            throw new IllegalArgumentException("옵션 수량은 최소 1개 이상이어야 합니다.");
+            throw new InvalidInputValueException("옵션 수량은 최소 1개 이상이어야 합니다.");
         }
         if (quantity == 0) {
-            throw new IllegalArgumentException("옵션 수량은 최소 1개 이상이어야 합니다.");
+            throw new InvalidInputValueException("옵션 수량은 최소 1개 이상이어야 합니다.");
         }
         if (quantity < 0) {
-            throw new IllegalArgumentException("옵션 수량은 최소 1개 이상이어야 합니다.");
+            throw new InvalidInputValueException("옵션 수량은 최소 1개 이상이어야 합니다.");
         }
         if (quantity > 100_000_000) {
-            throw new IllegalArgumentException("옵션 수량은 최대 1억 개 미만까지 가능합니다.");
+            throw new InvalidInputValueException("옵션 수량은 최대 1억 개 미만까지 가능합니다.");
         }
     }
 }

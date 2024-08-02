@@ -3,6 +3,8 @@ package gift.service;
 import gift.dto.pageDTO.WishlistPageResponseDTO;
 import gift.dto.wishlistDTO.WishlistRequestDTO;
 import gift.dto.wishlistDTO.WishlistResponseDTO;
+import gift.exception.InvalidInputValueException;
+import gift.exception.NotFoundException;
 import gift.model.Member;
 import gift.model.Option;
 import gift.model.Wishlist;
@@ -32,6 +34,9 @@ public class WishlistService {
 
     public WishlistPageResponseDTO getWishlists(String email, Pageable pageable) {
         Member member = memberRepository.findByEmail(email);
+        if (member == null) {
+            throw new InvalidInputValueException("유효하지 않은 이메일입니다.");
+        }
         Page<Wishlist> wishlists = wishlistRepository.findByMember(member, pageable);
         return new WishlistPageResponseDTO(wishlists);
     }
@@ -39,7 +44,10 @@ public class WishlistService {
     @Transactional
     public WishlistResponseDTO addWishlist(String email, WishlistRequestDTO wishlistRequestDTO) {
         Member member = memberRepository.findByEmail(email);
-        Option option = optionRepository.findById(wishlistRequestDTO.optionId()).orElse(null);
+        if (member == null) {
+            throw new InvalidInputValueException("유효하지 않은 이메일입니다.");
+        }
+        Option option = optionRepository.findById(wishlistRequestDTO.optionId()).orElseThrow(() -> new NotFoundException("옵션을 찾을 수 없습니다."));
         Wishlist wishlist = new Wishlist(null, member, option);
         wishlistRepository.save(wishlist);
         return new WishlistResponseDTO(wishlist.getId(), option.getProduct().getId());
@@ -47,7 +55,7 @@ public class WishlistService {
 
     @Transactional
     public void removeWishlist(Long wishlistId) {
-        Wishlist wishlist = wishlistRepository.findById(wishlistId).orElse(null);
+        Wishlist wishlist = wishlistRepository.findById(wishlistId).orElseThrow(()-> new NotFoundException("위시리스트를 찾을 수 없습니다."));
         wishlistRepository.delete(wishlist);
     }
 

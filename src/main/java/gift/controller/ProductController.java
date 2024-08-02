@@ -8,6 +8,10 @@ import gift.dto.productDTO.ProductAddResponseDTO;
 import gift.dto.productDTO.ProductGetResponseDTO;
 import gift.dto.productDTO.ProductUpdateRequestDTO;
 import gift.dto.productDTO.ProductUpdateResponseDTO;
+import gift.exception.AuthorizationFailedException;
+import gift.exception.InvalidInputValueException;
+import gift.exception.NotFoundException;
+import gift.exception.ServerErrorException;
 import gift.model.Member;
 import gift.service.CategoryService;
 import gift.service.ProductService;
@@ -44,16 +48,23 @@ public class ProductController {
     @Operation(summary = "상품 목록 조회", description = "모든 상품을 조회합니다.")
     public ResponseEntity<ProductPageResponseDTO> getAllProduct(
         @Valid PageRequestDTO pageRequestDTO) {
-        Pageable pageable = PageRequest.of(pageRequestDTO.page(), pageRequestDTO.size(),
-            Sort.by(pageRequestDTO.sort()));
-        ProductPageResponseDTO productPageResponseDTO = productService.findAllProducts(pageable);
-        return ResponseEntity.ok(productPageResponseDTO);
+        try {
+            Pageable pageable = PageRequest.of(pageRequestDTO.page(), pageRequestDTO.size(),
+                Sort.by(pageRequestDTO.sort()));
+            ProductPageResponseDTO productPageResponseDTO = productService.findAllProducts(pageable);
+            return ResponseEntity.ok(productPageResponseDTO);
+        } catch (Exception e) {
+            throw new InvalidInputValueException("잘못된 값이 입력되었습니다.");
+        }
     }
 
     @GetMapping("/{productId}")
     @Operation(summary = "상품 조회", description = "ID로 상품을 조회합니다.")
     public ResponseEntity<ProductGetResponseDTO> getProduct(@PathVariable Long productId) {
         ProductGetResponseDTO productGetResponseDTO = productService.findProductById(productId);
+        if (productGetResponseDTO == null) {
+            throw new NotFoundException("상품을 찾을 수 없습니다.");
+        }
         return ResponseEntity.ok(productGetResponseDTO);
     }
 
@@ -63,11 +74,15 @@ public class ProductController {
         @RequestBody @Valid ProductAddRequestDTO productAddRequestDTO,
         @LoginMember Member member) {
         if (member == null) {
-            return ResponseEntity.status(401).build();
+            throw new AuthorizationFailedException("인증되지 않은 사용자입니다.");
         }
-        ProductAddResponseDTO productAddResponseDTO = productService.saveProduct(
-            productAddRequestDTO);
-        return ResponseEntity.status(201).body(productAddResponseDTO);
+        try {
+            ProductAddResponseDTO productAddResponseDTO = productService.saveProduct(
+                productAddRequestDTO);
+            return ResponseEntity.status(201).body(productAddResponseDTO);
+        } catch (Exception e) {
+            throw new ServerErrorException("서버 오류가 발생했습니다.");
+        }
     }
 
     @PutMapping("/{productId}")
@@ -76,11 +91,17 @@ public class ProductController {
         @RequestBody @Valid ProductUpdateRequestDTO productUpdateRequestDTO,
         @LoginMember Member member) {
         if (member == null) {
-            return ResponseEntity.status(401).build();
+            throw new AuthorizationFailedException("인증되지 않은 사용자입니다.");
         }
-        ProductUpdateResponseDTO productUpdateResponseDTO = productService.updateProduct(
-            productUpdateRequestDTO, productId);
-        return ResponseEntity.ok(productUpdateResponseDTO);
+        try {
+            ProductUpdateResponseDTO productUpdateResponseDTO = productService.updateProduct(
+                productUpdateRequestDTO, productId);
+            return ResponseEntity.ok(productUpdateResponseDTO);
+        } catch (NotFoundException e) {
+            throw new NotFoundException("상품을 찾을 수 없습니다.");
+        } catch (Exception e) {
+            throw new ServerErrorException("서버 오류가 발생했습니다.");
+        }
     }
 
     @DeleteMapping("/{productId}")
@@ -88,9 +109,15 @@ public class ProductController {
     public ResponseEntity<Void> deleteProduct(@PathVariable Long productId,
         @LoginMember Member member) {
         if (member == null) {
-            return ResponseEntity.status(401).build();
+            throw new AuthorizationFailedException("인증되지 않은 사용자입니다.");
         }
-        productService.deleteProductAndWishlistAndOptions(productId);
-        return ResponseEntity.noContent().build();
+        try {
+            productService.deleteProductAndWishlistAndOptions(productId);
+            return ResponseEntity.noContent().build();
+        } catch (NotFoundException e) {
+            throw new NotFoundException("상품을 찾을 수 없습니다.");
+        } catch (Exception e) {
+            throw new ServerErrorException("서버 오류가 발생했습니다.");
+        }
     }
 }

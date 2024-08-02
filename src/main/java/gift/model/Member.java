@@ -1,5 +1,6 @@
 package gift.model;
 
+import gift.exception.InvalidInputValueException;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -54,16 +55,16 @@ public class Member {
 
     private void validateEmail(String email) {
         if (email == null || email.trim().isEmpty()) {
-            throw new IllegalArgumentException("이메일을 입력하세요.");
+            throw new InvalidInputValueException("이메일을 입력하세요.");
         }
         if (!email.matches("^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$")) {
-            throw new IllegalArgumentException("유효한 이메일을 입력하세요.");
+            throw new InvalidInputValueException("유효한 이메일을 입력하세요.");
         }
     }
 
     private void validatePassword(String password) {
         if (password == null || password.trim().isEmpty()) {
-            throw new IllegalArgumentException("비밀 번호를 입력하세요.");
+            throw new InvalidInputValueException("비밀 번호를 입력하세요.");
         }
     }
 

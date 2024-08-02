@@ -4,6 +4,8 @@ import gift.dto.pageDTO.PageRequestDTO;
 import gift.dto.pageDTO.WishlistPageResponseDTO;
 import gift.dto.wishlistDTO.WishlistRequestDTO;
 import gift.dto.wishlistDTO.WishlistResponseDTO;
+import gift.exception.AuthorizationFailedException;
+import gift.exception.ServerErrorException;
 import gift.model.Member;
 import gift.service.WishlistService;
 import gift.annotation.LoginMember;
@@ -39,11 +41,14 @@ public class WishlistController {
     public ResponseEntity<WishlistResponseDTO> addWishlist(
         @RequestBody @Valid WishlistRequestDTO wishlistRequestDTO, @LoginMember Member member) {
         if (member == null) {
-            return ResponseEntity.status(401).build();
+            throw new AuthorizationFailedException("인증되지 않은 사용자입니다.");
         }
-        WishlistResponseDTO wishlistResponseDTO = wishlistService.addWishlist(member.getEmail(),
-            wishlistRequestDTO);
-        return ResponseEntity.status(201).body(wishlistResponseDTO);
+        try {
+            WishlistResponseDTO wishlistResponseDTO = wishlistService.addWishlist(member.getEmail(), wishlistRequestDTO);
+            return ResponseEntity.status(201).body(wishlistResponseDTO);
+        } catch (Exception e) {
+            throw new ServerErrorException("서버 오류가 발생했습니다.");
+        }
     }
 
     @GetMapping
@@ -52,13 +57,15 @@ public class WishlistController {
         @Valid PageRequestDTO pageRequestDTO, @LoginMember Member member
     ) {
         if (member == null) {
-            return ResponseEntity.status(401).build();
+            throw new AuthorizationFailedException("인증되지 않은 사용자입니다.");
         }
-        Pageable pageable = PageRequest.of(pageRequestDTO.page(), pageRequestDTO.size(),
-            Sort.by(pageRequestDTO.sort()));
-        WishlistPageResponseDTO wishlistPageResponseDTO = wishlistService.getWishlists(
-            member.getEmail(), pageable);
-        return ResponseEntity.ok(wishlistPageResponseDTO);
+        try {
+            Pageable pageable = PageRequest.of(pageRequestDTO.page(), pageRequestDTO.size(), Sort.by(pageRequestDTO.sort()));
+            WishlistPageResponseDTO wishlistPageResponseDTO = wishlistService.getWishlists(member.getEmail(), pageable);
+            return ResponseEntity.ok(wishlistPageResponseDTO);
+        } catch (Exception e) {
+            throw new ServerErrorException("서버 오류가 발생했습니다.");
+        }
     }
 
     @DeleteMapping("/{wishId}")
@@ -66,9 +73,13 @@ public class WishlistController {
     public ResponseEntity<Void> removeWishlist(@PathVariable Long wishId,
         @LoginMember Member member) {
         if (member == null) {
-            return ResponseEntity.status(401).build();
+            throw new AuthorizationFailedException("인증되지 않은 사용자입니다.");
         }
-        wishlistService.removeWishlist(wishId);
-        return ResponseEntity.status(204).build();
+        try {
+            wishlistService.removeWishlist(wishId);
+            return ResponseEntity.noContent().build();
+        } catch (Exception e) {
+            throw new ServerErrorException("서버 오류가 발생했습니다.");
+        }
     }
 }

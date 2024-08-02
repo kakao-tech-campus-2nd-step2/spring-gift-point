@@ -3,6 +3,8 @@ package gift.controller;
 import gift.annotation.LoginMember;
 import gift.dto.optionDTO.OptionRequestDTO;
 import gift.dto.optionDTO.OptionResponseDTO;
+import gift.exception.AuthorizationFailedException;
+import gift.exception.ServerErrorException;
 import gift.model.Member;
 import gift.service.OptionService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -34,8 +36,12 @@ public class OptionController {
     @GetMapping
     @Operation(summary = "옵션 목록 조회", description = "해당 상품의 옵션들을 조회합니다.")
     public ResponseEntity<List<OptionResponseDTO>> listOptions(@PathVariable Long productId) {
-        List<OptionResponseDTO> options = optionService.findALlByProductId(productId);
-        return ResponseEntity.ok(options);
+        try {
+            List<OptionResponseDTO> options = optionService.findALlByProductId(productId);
+            return ResponseEntity.ok(options);
+        } catch (Exception e) {
+            throw new ServerErrorException("서버 오류가 발생했습니다.");
+        }
     }
 
     @PostMapping
@@ -44,11 +50,15 @@ public class OptionController {
         @Valid @RequestBody OptionRequestDTO optionRequestDTO,
         @LoginMember Member member) {
         if (member == null) {
-            return ResponseEntity.status(401).build();
+            throw new AuthorizationFailedException("인증되지 않은 사용자입니다.");
         }
-        OptionResponseDTO optionResponseDTO = optionService.saveOption(productId, optionRequestDTO);
-        return ResponseEntity.status(HttpStatus.CREATED)
-            .body(optionResponseDTO);
+        try {
+            OptionResponseDTO optionResponseDTO = optionService.saveOption(productId,
+                optionRequestDTO);
+            return ResponseEntity.status(HttpStatus.CREATED).body(optionResponseDTO);
+        } catch (Exception e) {
+            throw new ServerErrorException("서버 오류가 발생했습니다.");
+        }
     }
 
     @PutMapping("/{optionId}")
@@ -57,11 +67,14 @@ public class OptionController {
         @PathVariable Long optionId, @Valid @RequestBody OptionRequestDTO optionRequestDTO,
         @LoginMember Member member) {
         if (member == null) {
-            return ResponseEntity.status(401).build();
+            throw new AuthorizationFailedException("인증되지 않은 사용자입니다.");
         }
-        OptionResponseDTO optionResponseDTO = optionService.updateOption(productId, optionId,
-            optionRequestDTO);
-        return ResponseEntity.ok(optionResponseDTO);
+        try {
+            OptionResponseDTO optionResponseDTO = optionService.updateOption(productId, optionId, optionRequestDTO);
+            return ResponseEntity.ok(optionResponseDTO);
+        } catch (Exception e) {
+            throw new ServerErrorException("서버 오류가 발생했습니다.");
+        }
     }
 
     @DeleteMapping("/{optionId}")
@@ -69,9 +82,13 @@ public class OptionController {
     public ResponseEntity<Void> deleteOption(@PathVariable Long productId,
         @PathVariable Long optionId, @LoginMember Member member) {
         if (member == null) {
-            return ResponseEntity.status(401).build();
+            throw new AuthorizationFailedException("인증되지 않은 사용자입니다.");
         }
-        optionService.deleteOption(productId, optionId);
-        return ResponseEntity.noContent().build();
+        try {
+            optionService.deleteOption(productId, optionId);
+            return ResponseEntity.noContent().build();
+        } catch (Exception e) {
+            throw new ServerErrorException("서버 오류가 발생했습니다.");
+        }
     }
 }

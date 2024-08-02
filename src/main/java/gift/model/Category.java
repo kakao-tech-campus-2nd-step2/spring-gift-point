@@ -1,5 +1,6 @@
 package gift.model;
 
+import gift.exception.InvalidInputValueException;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -73,19 +74,19 @@ public class Category {
 
     private void validateName(String name) {
         if (name == null || name.trim().isEmpty()) {
-            throw new IllegalArgumentException("카테고리 이름을 입력하세요.");
+            throw new InvalidInputValueException("카테고리 이름을 입력하세요.");
         }
     }
 
     private void validateColor(String color) {
         if (color == null || color.trim().isEmpty()) {
-            throw new IllegalArgumentException("카테고리 색상을 입력하세요");
+            throw new InvalidInputValueException("카테고리 색상을 입력하세요");
         }
     }
 
     private void validateImageUrl(String imageUrl) {
         if (imageUrl == null || imageUrl.trim().isEmpty()) {
-            throw new IllegalArgumentException("이미지 URL을 입력하세요");
+            throw new InvalidInputValueException("이미지 URL을 입력하세요");
         }
     }
 

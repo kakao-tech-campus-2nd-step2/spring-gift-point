@@ -3,6 +3,10 @@ package gift.controller;
 import gift.annotation.LoginMember;
 import gift.dto.categoryDTO.CategoryRequestDTO;
 import gift.dto.categoryDTO.CategoryResponseDTO;
+import gift.exception.AuthorizationFailedException;
+import gift.exception.InvalidInputValueException;
+import gift.exception.NotFoundException;
+import gift.exception.ServerErrorException;
 import gift.model.Member;
 import gift.service.CategoryService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -34,8 +38,12 @@ public class CategoryController {
     @GetMapping
     @Operation(summary = "카테고리 조회", description = "모든 카테고리를 조회합니다.")
     public ResponseEntity<List<CategoryResponseDTO>> getCategories() {
-        List<CategoryResponseDTO> categories = categoryService.findAllCategories();
-        return ResponseEntity.ok(categories);
+        try {
+            List<CategoryResponseDTO> categories = categoryService.findAllCategories();
+            return ResponseEntity.ok(categories);
+        } catch (Exception e) {
+            throw new ServerErrorException("서버 내부 오류가 발생했습니다.");
+        }
     }
 
     @PostMapping
@@ -43,10 +51,16 @@ public class CategoryController {
     public ResponseEntity<CategoryResponseDTO> addCategory(
         @Valid @RequestBody CategoryRequestDTO categoryRequestDTO, @LoginMember Member member) {
         if (member == null) {
-            return ResponseEntity.status(401).build();
+            throw new AuthorizationFailedException("인증되지 않은 사용자입니다.");
         }
-        CategoryResponseDTO categoryResponseDTO = categoryService.saveCategory(categoryRequestDTO);
-        return ResponseEntity.status(HttpStatus.CREATED).body(categoryResponseDTO);
+        try {
+            CategoryResponseDTO categoryResponseDTO = categoryService.saveCategory(categoryRequestDTO);
+            return ResponseEntity.status(HttpStatus.CREATED).body(categoryResponseDTO);
+        } catch (InvalidInputValueException e) {
+            throw new InvalidInputValueException("중복된 카테고리 이름입니다.");
+        } catch (Exception e) {
+            throw new ServerErrorException("서버 내부 오류가 발생했습니다.");
+        }
     }
 
     @PutMapping("/{categoryId}")
@@ -54,11 +68,16 @@ public class CategoryController {
     public ResponseEntity<CategoryResponseDTO> updateCategory(@PathVariable Long categoryId,
         @Valid @RequestBody CategoryRequestDTO categoryRequestDTO, @LoginMember Member member) {
         if (member == null) {
-            return ResponseEntity.status(401).build();
+            throw new AuthorizationFailedException("인증되지 않은 사용자입니다.");
         }
-        CategoryResponseDTO categoryResponseDTO = categoryService.updateCategory(categoryId,
-            categoryRequestDTO);
-        return ResponseEntity.ok(categoryResponseDTO);
+        try {
+            CategoryResponseDTO categoryResponseDTO = categoryService.updateCategory(categoryId, categoryRequestDTO);
+            return ResponseEntity.ok(categoryResponseDTO);
+        } catch (NotFoundException e) {
+            throw new NotFoundException("존재하지 않는 카테고리입니다.");
+        } catch (Exception e) {
+            throw new ServerErrorException("서버 오류가 발생했습니다.");
+        }
     }
 
     @DeleteMapping("/{categoryId}")
@@ -66,10 +85,16 @@ public class CategoryController {
     public ResponseEntity<Void> deleteCategory(@PathVariable Long categoryId,
         @LoginMember Member member) {
         if (member == null) {
-            return ResponseEntity.status(401).build();
+            throw new AuthorizationFailedException("인증되지 않은 사용자입니다.");
         }
-        categoryService.deleteCategory(categoryId);
-        return ResponseEntity.noContent().build();
+        try {
+            categoryService.deleteCategory(categoryId);
+            return ResponseEntity.noContent().build();
+        } catch (NotFoundException e) {
+            throw new NotFoundException("존재하지 않는 카테고리입니다.");
+        } catch (Exception e) {
+            throw new ServerErrorException("서버 오류가 발생했습니다.");
+        }
     }
 
 }

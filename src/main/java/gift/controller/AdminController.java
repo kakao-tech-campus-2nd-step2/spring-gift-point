@@ -5,6 +5,8 @@ import gift.dto.pageDTO.ProductPageResponseDTO;
 import gift.dto.productDTO.ProductAddRequestDTO;
 import gift.dto.productDTO.ProductGetResponseDTO;
 import gift.dto.productDTO.ProductUpdateRequestDTO;
+import gift.exception.InvalidInputValueException;
+import gift.exception.NotFoundException;
 import gift.service.CategoryService;
 import gift.service.ProductService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -40,11 +42,14 @@ public class AdminController {
     @GetMapping
     @Operation(summary = "상품 목록 얻기", description = "모든 상품을 페이지로 조회합니다.")
     public String getProducts(Model model, @Valid PageRequestDTO pageRequestDTO) {
-        Pageable pageable = PageRequest.of(pageRequestDTO.page(), pageRequestDTO.size(),
-            Sort.by(pageRequestDTO.sort()));
-        ProductPageResponseDTO productPageResponseDTO = productService.findAllProducts(pageable);
-        model.addAttribute("products", productPageResponseDTO);
-        return "product_list";
+        try {
+            Pageable pageable = PageRequest.of(pageRequestDTO.page(), pageRequestDTO.size(), Sort.by(pageRequestDTO.sort()));
+            ProductPageResponseDTO productPageResponseDTO = productService.findAllProducts(pageable);
+            model.addAttribute("products", productPageResponseDTO);
+            return "product_list";
+        } catch (Exception e) {
+            throw new InvalidInputValueException("잘못된 요청입니다.");
+        }
     }
 
     @GetMapping("/new")
@@ -64,8 +69,12 @@ public class AdminController {
             model.addAttribute("categories", categoryService.findAllCategories());
             return "add_product_form";
         }
-        productService.saveProduct(productAddRequestDTO);
-        return "redirect:/admin/products";
+        try {
+            productService.saveProduct(productAddRequestDTO);
+            return "redirect:/admin/products";
+        } catch (Exception e) {
+            throw new InvalidInputValueException("잘못된 값이 입력되었습니다.");
+        }
     }
 
     @GetMapping("/{id}")
@@ -88,15 +97,23 @@ public class AdminController {
             model.addAttribute("categories", categoryService.findAllCategories());
             return "edit_product_form";
         }
-        productService.updateProduct(productUpdateRequestDTO, id);
-        return "redirect:/admin/products";
+        try {
+            productService.updateProduct(productUpdateRequestDTO, id);
+            return "redirect:/admin/products";
+        } catch (Exception e) {
+            throw new InvalidInputValueException("잘못된 값이 입력되었습니다.");
+        }
     }
 
     @DeleteMapping("/{id}")
     @Operation(summary = "상품 삭제", description = "상품을 삭제합니다.")
     public String deleteProduct(@PathVariable("id") long id) {
-        productService.deleteProductAndWishlistAndOptions(id);
-        return "redirect:/admin/products";
+        try {
+            productService.deleteProductAndWishlistAndOptions(id);
+            return "redirect:/admin/products";
+        } catch (Exception e) {
+            throw new NotFoundException("존재하지 않는 상품입니다.");
+        }
     }
 
 }

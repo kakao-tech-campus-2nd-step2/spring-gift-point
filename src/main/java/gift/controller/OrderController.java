@@ -3,6 +3,8 @@ package gift.controller;
 import gift.annotation.LoginMember;
 import gift.dto.orderDTO.OrderRequestDTO;
 import gift.dto.orderDTO.OrderResponseDTO;
+import gift.exception.AuthorizationFailedException;
+import gift.exception.ServerErrorException;
 import gift.model.Member;
 import gift.service.KakaoService;
 import gift.service.OrderService;
@@ -36,18 +38,20 @@ public class OrderController {
         @Valid @RequestBody OrderRequestDTO orderRequestDTO,
         @LoginMember Member member) {
         if (member == null) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+            throw new AuthorizationFailedException("인증되지 않은 사용자입니다.");
         }
-
-        OrderResponseDTO orderResponseDTO = orderService.createOrder(orderRequestDTO,
-            member.getEmail());
-
+        OrderResponseDTO orderResponseDTO;
+        try {
+            orderResponseDTO = orderService.createOrder(orderRequestDTO, member.getEmail());
+        } catch (Exception e) {
+            throw new ServerErrorException("서버 오류가 발생했습니다.");
+        }
         String accessToken = orderRequestDTO.accessToken();
         try {
             kakaoService.sendKakaoMessage(accessToken, orderResponseDTO);
         } catch (Exception e) {
+            throw new ServerErrorException("주문은 생성되었지만 카카오톡 메시지는 발송되지 않았습니다.");
         }
-
         return ResponseEntity.status(HttpStatus.CREATED).body(orderResponseDTO);
     }
 

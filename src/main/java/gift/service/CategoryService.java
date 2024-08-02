@@ -2,6 +2,8 @@ package gift.service;
 
 import gift.dto.categoryDTO.CategoryRequestDTO;
 import gift.dto.categoryDTO.CategoryResponseDTO;
+import gift.exception.InvalidInputValueException;
+import gift.exception.NotFoundException;
 import gift.model.Category;
 import gift.model.Option;
 import gift.model.Product;
@@ -38,7 +40,8 @@ public class CategoryService {
     }
 
     public CategoryResponseDTO findCategoryById(Long id) {
-        Category category = categoryRepository.findById(id).orElse(null);
+        Category category = categoryRepository.findById(id)
+            .orElseThrow(() -> new NotFoundException("카테고리를 찾을 수 없습니다."));
         return toDTO(category);
     }
 
@@ -49,6 +52,9 @@ public class CategoryService {
 
     @Transactional
     public CategoryResponseDTO saveCategory(CategoryRequestDTO categoryRequestDTO) {
+        if (categoryRepository.findByName(categoryRequestDTO.name()) != null) {
+            throw new InvalidInputValueException("중복된 카테고리 이름입니다.");
+        }
         Category category = requestToEntity(categoryRequestDTO, null);
         category = categoryRepository.save(category);
         return toDTO(category);
@@ -56,29 +62,27 @@ public class CategoryService {
 
     @Transactional
     public CategoryResponseDTO updateCategory(Long id, CategoryRequestDTO categoryRequestDTO) {
-        Category existingCategory = categoryRepository.findById(id).orElse(null);
-        if (existingCategory != null) {
-            existingCategory.updateCategory(categoryRequestDTO.name(), categoryRequestDTO.color(),
-                categoryRequestDTO.imageUrl(), categoryRequestDTO.description());
-            existingCategory = categoryRepository.save(existingCategory);
-        }
+        Category existingCategory = categoryRepository.findById(id)
+            .orElseThrow(() -> new NotFoundException("카테고리를 찾을 수 없습니다."));
+        existingCategory.updateCategory(categoryRequestDTO.name(), categoryRequestDTO.color(),
+            categoryRequestDTO.imageUrl(), categoryRequestDTO.description());
+        existingCategory = categoryRepository.save(existingCategory);
         return toDTO(existingCategory);
     }
 
     @Transactional
     public void deleteCategory(Long id) {
-        Category category = categoryRepository.findById(id).orElse(null);
-        if (category != null) {
-            List<Product> products = productRepository.findAllByCategoryId(id);
-            if (!products.isEmpty()) {
-                List<Long> productIds = products.stream().map(Product::getId).toList();
-                List<Option> options = optionRepository.findAllByProductIdIn(productIds);
-                wishlistRepository.deleteByOptionIn(options);
-                optionRepository.deleteAllByProductIdIn(productIds);
-                productRepository.deleteAll(products);
-            }
-            categoryRepository.delete(category);
+        Category category = categoryRepository.findById(id)
+            .orElseThrow(() -> new NotFoundException("카테고리를 찾을 수 없습니다."));
+        List<Product> products = productRepository.findAllByCategoryId(id);
+        if (!products.isEmpty()) {
+            List<Long> productIds = products.stream().map(Product::getId).toList();
+            List<Option> options = optionRepository.findAllByProductIdIn(productIds);
+            wishlistRepository.deleteByOptionIn(options);
+            optionRepository.deleteAllByProductIdIn(productIds);
+            productRepository.deleteAll(products);
         }
+        categoryRepository.delete(category);
     }
 
     public static CategoryResponseDTO toDTO(Category category) {

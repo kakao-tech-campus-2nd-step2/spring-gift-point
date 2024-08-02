@@ -3,6 +3,9 @@ package gift.service;
 import gift.dto.optionDTO.OptionResponseDTO;
 import gift.dto.orderDTO.OrderRequestDTO;
 import gift.dto.orderDTO.OrderResponseDTO;
+import gift.exception.InvalidInputValueException;
+import gift.exception.NotFoundException;
+import gift.exception.ServerErrorException;
 import gift.model.Member;
 import gift.model.Option;
 import gift.model.Order;
@@ -34,7 +37,16 @@ public class OrderService {
     public OrderResponseDTO createOrder(OrderRequestDTO orderRequestDTO, String email) {
         OptionResponseDTO optionResponseDTO = optionService.findOptionById(
             orderRequestDTO.optionId());
+        if (optionResponseDTO == null) {
+            throw new NotFoundException("존재하지 않는 옵션입니다.");
+        }
         Member member = memberService.findMemberByEmail(email);
+        if (member == null) {
+            throw new InvalidInputValueException("유효하지 않은 이메일입니다.");
+        }
+        if (orderRequestDTO.quantity() <= 0) {
+            throw new InvalidInputValueException("잘못된 수량 입력입니다.");
+        }
         Option option = optionService.toEntity(optionResponseDTO);
         optionService.subtractQuantity(option.getId(), orderRequestDTO.quantity());
         Order order = new Order(null, option, orderRequestDTO.quantity(), LocalDateTime.now(),
@@ -53,7 +65,7 @@ public class OrderService {
         try {
             wishlistService.removeWishlistByOptionId(optionId);
         } catch (Exception e) {
-
+            throw new ServerErrorException("위시리스트에 없거나 위시리스트에서 지워지지 않았습니다.");
         }
     }
 

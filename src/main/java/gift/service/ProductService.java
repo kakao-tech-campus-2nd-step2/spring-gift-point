@@ -8,6 +8,7 @@ import gift.dto.productDTO.ProductAddResponseDTO;
 import gift.dto.productDTO.ProductGetResponseDTO;
 import gift.dto.productDTO.ProductUpdateRequestDTO;
 import gift.dto.productDTO.ProductUpdateResponseDTO;
+import gift.exception.NotFoundException;
 import gift.model.Category;
 import gift.model.Option;
 import gift.model.Product;
@@ -44,7 +45,7 @@ public class ProductService {
     }
 
     public ProductGetResponseDTO findProductById(Long id) {
-        Product product = productRepository.findById(id).orElse(null);
+        Product product = productRepository.findById(id).orElseThrow(() -> new NotFoundException("상품을 찾을 수 없습니다."));
         return toGetResponseDTO(product);
     }
 
@@ -68,7 +69,7 @@ public class ProductService {
     @Transactional
     public ProductUpdateResponseDTO updateProduct(ProductUpdateRequestDTO productUpdateRequestDTO,
         Long id) {
-        Product existingProduct = productRepository.findById(id).orElse(null);
+        Product existingProduct = productRepository.findById(id).orElseThrow(() -> new NotFoundException("상품을 찾을 수 없습니다."));
         CategoryResponseDTO categoryResponseDTO = categoryService.findCategoryById(
             productUpdateRequestDTO.categoryId());
         Category category = categoryService.responseToEntity(categoryResponseDTO);
@@ -80,7 +81,7 @@ public class ProductService {
 
     @Transactional
     public void deleteProductAndWishlistAndOptions(Long id) {
-        Product product = productRepository.findById(id).orElse(null);
+        Product product = productRepository.findById(id).orElseThrow(() -> new NotFoundException("상품을 찾을 수 없습니다."));
         List<Option> options = optionRepository.findAllByProductId(id);
         wishlistRepository.deleteByOptionIn(options);
         optionRepository.deleteAll(options);
