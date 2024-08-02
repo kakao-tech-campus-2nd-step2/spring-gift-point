@@ -4,7 +4,7 @@ import java.util.List;
 
 public record OrderPageResponse(
     boolean hasNext,
-    List<OrderResponse> options
+    List<OrderResponse> orders
 ) {
 
 }

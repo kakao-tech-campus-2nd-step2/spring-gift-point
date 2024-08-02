@@ -3,6 +3,7 @@ package gift.global.handler;
 import gift.global.exception.BusinessException;
 import gift.global.exception.ErrorCode;
 import gift.global.exception.option.OptionOnlyOneDeleteException;
+import gift.global.exception.point.PointNotEnoughException;
 import gift.global.exception.restTemplate.RestTemplateException;
 import gift.global.exception.wish.WishNotFoundException;
 import gift.global.exception.category.CategoryDuplicateException;
@@ -152,6 +153,14 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(OptionOnlyOneDeleteException.class)
     public ResponseEntity<ErrorResponseDto> OptionOnlyOneDeleteException(
         OptionOnlyOneDeleteException e) {
+        return ResponseMaker.createErrorResponse(ErrorCode.BAD_REQUEST, e.getMessage());
+    }
+
+    /**
+     * Point 관련 에러
+     */
+    @ExceptionHandler(PointNotEnoughException.class)
+    public ResponseEntity<ErrorResponseDto> PointNotEnoughException(PointNotEnoughException e) {
         return ResponseMaker.createErrorResponse(ErrorCode.BAD_REQUEST, e.getMessage());
     }
 }

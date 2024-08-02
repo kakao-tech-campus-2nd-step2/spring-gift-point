@@ -19,6 +19,7 @@ import gift.domain.member.JpaMemberRepository;
 import gift.global.exception.BusinessException;
 import gift.global.exception.ErrorCode;
 import gift.global.exception.option.OptionNotFoundException;
+import gift.global.exception.point.PointNotEnoughException;
 import gift.global.exception.product.ProductNotFoundException;
 import gift.global.exception.user.MemberNotFoundException;
 import java.util.List;
@@ -90,16 +91,31 @@ public class OrderService {
         // 해당 상품이 (나의) 위시리스트에 있는 경우 위시 리스트에서 삭제
         wishService.deleteWishIfExists(loginInfo.getId(), orderRequest.optionId());
 
-        // 주문 정보 저장
+        // 보유 포인트에서 사용 포인트 차감
+        usePoint(orderRequest.point(), loginInfo.getId());
+
+        // 포인트 적립(사용 현금의 5%)
+        Member member = memberRepository.findById(loginInfo.getId()).get();
         Product product = productRepository.findById(orderRequest.productId())
             .orElseThrow(() -> new ProductNotFoundException(orderRequest.productId()));
-        Option option = optionRepository.findById(orderRequest.optionId())
-            .orElseThrow(() -> new OptionNotFoundException(orderRequest.optionId()));
-        Member member = memberRepository.findById(loginInfo.getId())
-            .orElseThrow(() -> new MemberNotFoundException(loginInfo.getId()));
+        int usedCash = product.getPrice() * orderRequest.quantity().intValue() - orderRequest.point(); // 포인트 제외 사용금액
+        member.chargePoint((int) (usedCash * 0.05));
+
+        // 주문 정보 저장
+        Option option = optionRepository.findById(orderRequest.optionId()).get();
         Order order = orderRequest.toOrder(member, product, option);
         orderRepository.save(order);
     }
+
+    private void usePoint(int usePoint, Long userId) {
+        Member member = memberRepository.findById(userId)
+            .orElseThrow(() -> new MemberNotFoundException(userId));
+        if(member.getPoint() < usePoint){ // 보유 포인트가 사용 포인트보다 적은 경우
+            throw new PointNotEnoughException(usePoint, member.getPoint());
+        }
+        member.usePoint(usePoint);
+    }
+
     private void sendMessage(OrderRequest orderRequest, LoginInfo loginInfo) {
         // 메세지 작성
         MultiValueMap<String, String> body = createTemplateObject(

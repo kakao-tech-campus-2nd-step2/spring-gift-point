@@ -9,7 +9,6 @@ import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import java.time.LocalDateTime;
-import java.util.Date;
 
 public record OrderRequest(
 
@@ -26,22 +25,24 @@ public record OrderRequest(
     @NotNull
     String cashReceiptNumber,
     @NotBlank
-    String message
+    String message,
+    @NotBlank
+    Integer point // 사용 포인트
 ) {
 
     public Order toOrder(Member member, Product product, Option option) {
         return new Order(
-            member,
-            product,
-            option.getName(),
-            this.quantity,
-            LocalDateTime.now(),
-            product.getPrice() * this.quantity.intValue(),
-            product.getImageUrl(),
-            this.hasCashReceipt,
-            this.cashReceiptType,
-            this.cashReceiptNumber,
-            this.message
+            member, // 주문자
+            product, // 주문 상품
+            option.getName(), // 상품 옵션 이름
+            this.quantity, // 상품 수량
+            LocalDateTime.now(), // 주문 시각
+            product.getPrice() * this.quantity.intValue(), // 총 주문 금액
+            product.getImageUrl(), // 상품 이미지 주소
+            this.hasCashReceipt, // 현금 영수증 발행 유무
+            this.cashReceiptType, // 현금 영수증 타입
+            this.cashReceiptNumber, // 핸드폰 번호
+            this.message // 주문 메시지
         );
     }
 }
