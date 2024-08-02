@@ -36,10 +36,8 @@ public class WishlistController {
     }
 
     @PostMapping
-    public WishResponseDto create(@RequestBody WishRequestDto request, @LoginMember Member member, @RequestHeader("Authorization") String authHeader)
+    public WishResponseDto create(@RequestBody WishRequestDto request, @LoginMember Member member)
         throws UnAuthorizationException {
-        String token = authHeader.replace("Bearer ", "");
-        tokenValidator.validateToken(token);
         return wishlistService.addWishlist(request, member);
     }
 
@@ -48,8 +46,8 @@ public class WishlistController {
         return wishlistService.checkWishlist(pageable);
     }
 
-    @DeleteMapping("/{id}")
-    public void deleteWish(@PathVariable(name="id") Long wishId, @LoginMember Member member, @RequestHeader("Authorization") String authHeader)
+    @DeleteMapping("/{wishId}")
+    public void deleteWish(@PathVariable Long wishId, @LoginMember Member member, @RequestHeader("Authorization") String authHeader)
         throws UnAuthorizationException {
         String token = authHeader.replace("Bearer ", "");
         tokenValidator.validateToken(token);
