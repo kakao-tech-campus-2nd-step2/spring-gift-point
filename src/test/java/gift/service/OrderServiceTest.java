@@ -61,7 +61,7 @@ class OrderServiceTest {
 
     @BeforeEach
     void setUp() {
-        member = new Member(1L, "234242@kakao.com", "OAUTH2", Role.ROLE_USER);
+        member = new Member(1L, "234242@kakao.com", "OAUTH2", Role.ROLE_USER, 0);
         category = new Category(1L, "카테고리");
         product = new Product(1L, "상품", 1000, "http://image.com", category);
         option = new Options(1L, "옵션", 10, product);
