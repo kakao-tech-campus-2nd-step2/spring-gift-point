@@ -1,46 +1,40 @@
 package gift.Util;
 
-import gift.entity.User;
-
-import io.jsonwebtoken.*;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.JwtException;
+import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
 
 import javax.crypto.SecretKey;
-import java.time.*;
+import java.time.Duration;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
 
-
-@Component
 public class JWTUtil {
+    private static SecretKey key;
+    private static int expirationMs;
 
-    private final SecretKey key;
-    private final int expirationMs;
-
-    public JWTUtil(@Value("${jwt.secretKey}") String jwtSecret,
-                   @Value("${jwt.expiredMs}") int jwtExpirationMs) {
-        this.key = Keys.hmacShaKeyFor(jwtSecret.getBytes());
-        this.expirationMs = jwtExpirationMs;
+    public static void init(String jwtSecret, int jwtExpirationMs) {
+        key = Keys.hmacShaKeyFor(jwtSecret.getBytes());
+        expirationMs = jwtExpirationMs;
     }
 
-    public String generateToken(User user, String kakaoToken) {
+    public static String generateToken(int userId, String kakaoToken) {
         LocalDateTime now = LocalDateTime.now();
-        Instant nowInstant = now.atZone(ZoneId.systemDefault()).toInstant();
-        Instant expireInstant = nowInstant.plus(Duration.ofMillis(expirationMs));
+        Date issuedAt = Date.from(now.atZone(ZoneId.systemDefault()).toInstant());
+        Date expiryDate = Date.from(now.plus(Duration.ofMillis(expirationMs)).atZone(ZoneId.systemDefault()).toInstant());
 
         return Jwts.builder()
-                .subject(Integer.toString(user.getId()))
+                .subject(Integer.toString(userId))
                 .claim("kakaoToken", kakaoToken)
-                .issuedAt(Date.from(nowInstant))
-                .expiration(Date.from(expireInstant))
+                .issuedAt(issuedAt)
+                .expiration(expiryDate)
                 .signWith(key)
                 .compact();
     }
 
-    public boolean validateToken(String token) throws JwtException {
+    public static boolean validateToken(String token) throws JwtException {
         try {
             Jwts.parser().verifyWith(key).build().parseSignedClaims(token);
         } catch (JwtException e) {
@@ -49,7 +43,7 @@ public class JWTUtil {
         return true;
     }
 
-    public Integer getUserIdFromToken(String token) {
+    public static Integer getUserIdFromToken(String token) {
         return Integer.parseInt(Jwts.parser()
                 .verifyWith(key)
                 .build()
@@ -58,7 +52,7 @@ public class JWTUtil {
                 .getSubject());
     }
 
-    public String getKakaoTokenFromToken(String token) {
+    public static String getKakaoTokenFromToken(String token) {
         Claims claims = Jwts.parser()
                 .verifyWith(key)
                 .build()

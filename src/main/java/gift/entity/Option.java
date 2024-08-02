@@ -6,8 +6,6 @@ import gift.dto.option.SaveOptionDTO;
 import gift.exception.exception.BadRequestException;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.Pattern;
-import jakarta.validation.constraints.Size;
 
 @JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY)
 @Entity
@@ -20,7 +18,6 @@ public class Option {
     @ManyToOne(fetch = FetchType.LAZY)
     Product product;
 
-    @Pattern(regexp = "^[a-zA-Z0-9()\\[\\]+\\-&/_]+$", message = "특수기호 안됨")
     String name;
 
     @Min(0)

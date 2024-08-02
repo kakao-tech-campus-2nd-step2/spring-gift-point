@@ -3,7 +3,6 @@ plugins {
     id 'org.springframework.boot' version '3.3.1'
     id 'io.spring.dependency-management' version '1.1.5'
     id "org.asciidoctor.jvm.convert" version "3.3.2"
-
 }
 
 group = 'camp.nextstep.edu'
@@ -29,9 +28,9 @@ dependencies {
 
     implementation 'com.google.code.gson:gson:2.8.9'
 
-    implementation 'io.jsonwebtoken:jjwt-api:0.12.3'
-    implementation 'io.jsonwebtoken:jjwt-impl:0.12.3'
-    implementation 'io.jsonwebtoken:jjwt-jackson:0.12.3'
+    implementation 'io.jsonwebtoken:jjwt-api:0.12.5'
+    runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.12.5'
+    runtimeOnly 'io.jsonwebtoken:jjwt-jackson:0.12.5'
     implementation 'org.springframework.security:spring-security-crypto:5.7.1'
 
     implementation 'org.thymeleaf:thymeleaf:3.1.2.RELEASE'
@@ -52,6 +51,7 @@ dependencies {
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 }
+
 ext {
     set('snippetsDir', file("build/generated-snippets"))
 }
