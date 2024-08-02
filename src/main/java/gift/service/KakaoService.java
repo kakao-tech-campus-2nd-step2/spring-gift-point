@@ -1,3 +1,4 @@
+/*
 package gift.service;
 
 import com.fasterxml.jackson.databind.JsonNode;
@@ -84,3 +85,5 @@ public class KakaoService {
         }
     }
 }
+
+ */

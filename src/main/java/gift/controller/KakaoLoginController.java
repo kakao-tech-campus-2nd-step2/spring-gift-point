@@ -1,3 +1,4 @@
+/*
 package gift.controller;
 
 import gift.model.User;
@@ -54,3 +55,5 @@ public class KakaoLoginController {
         return "home";
     }
 }
+
+ */
