@@ -1,8 +1,8 @@
 package gift.controller;
 
 import gift.dto.wish.ResponseWishDTO;
-import gift.dto.wish.WishPageDTO;
 import gift.dto.wish.SaveWishlistDTO;
+import gift.dto.wish.WishPageDTO;
 import gift.service.WishListService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;

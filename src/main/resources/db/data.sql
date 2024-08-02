@@ -15,6 +15,4 @@ insert into option(id,name,quantity,product_id) values(5,'Option D',15,1181831);
 insert into option(id,name,quantity,product_id) values(6,'Option E',12,1379982);
 insert into option(id,name,quantity,product_id) values(7,'Option E',12,1379982);
 
-insert into user_tb(email,password) values('test','test');
-
-
+insert into user_tb(email,password,point) values('test','test',10000);

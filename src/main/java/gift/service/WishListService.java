@@ -2,8 +2,8 @@ package gift.service;
 
 import gift.Util.JWTUtil;
 import gift.dto.wish.ResponseWishDTO;
-import gift.dto.wish.WishPageDTO;
 import gift.dto.wish.SaveWishlistDTO;
+import gift.dto.wish.WishPageDTO;
 import gift.entity.Product;
 import gift.entity.User;
 import gift.entity.WishList;
@@ -11,7 +11,6 @@ import gift.exception.exception.BadRequestException;
 import gift.exception.exception.NotFoundException;
 import gift.exception.exception.UnAuthException;
 import gift.repository.ProductRepository;
-
 import gift.repository.UserRepository;
 import gift.repository.WishListRepository;
 import lombok.RequiredArgsConstructor;

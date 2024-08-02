@@ -11,6 +11,26 @@ public class OrderPageDTO {
     private int size;
     private boolean last;
 
+    public List<OrderResponseDTO> getContent() {
+        return content;
+    }
+
+    public int getNumber() {
+        return number;
+    }
+
+    public int getTotalElements() {
+        return totalElements;
+    }
+
+    public int getSize() {
+        return size;
+    }
+
+    public boolean isLast() {
+        return last;
+    }
+
     public OrderPageDTO(Page<OrderResponseDTO> orders) {
         this.content = orders.getContent();
         this.number = orders.getNumber();

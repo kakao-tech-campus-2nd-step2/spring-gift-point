@@ -2,31 +2,23 @@ package gift.service;
 
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import gift.Util.JWTUtil;
-
 import gift.dto.user.*;
-
 import gift.entity.KakaoUser;
 import gift.entity.User;
 import gift.exception.exception.BadRequestException;
 import gift.exception.exception.NotFoundException;
 import gift.exception.exception.ServerInternalException;
-import gift.exception.exception.UnAuthException;
 import gift.repository.KakaoUserRepository;
 import gift.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
-
-
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
 import java.net.URI;
@@ -144,4 +136,9 @@ public class UserService {
     }
 
 
+    public PointDTO getPoint(String token) {
+        int userId = JWTUtil.getUserIdFromToken(token);
+        User user = userRepository.findById(userId).orElseThrow(() -> new NotFoundException("존재하지 않는 계정"));
+        return new PointDTO(user.getPoint());
+    }
 }

@@ -1,13 +1,12 @@
 package gift.controller;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import gift.dto.option.*;
+import gift.dto.option.OptionQuantityDTO;
+import gift.dto.option.OptionResponseDTO;
+import gift.dto.option.SaveOptionDTO;
 import gift.service.OptionService;
 import gift.service.ProductService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;

@@ -1,10 +1,7 @@
 package gift.controller;
 
-import gift.dto.order.OrderPageDTO;
-import gift.dto.order.OrderResponseDTO;
-import gift.dto.order.OrderRequestDTO;
+import gift.dto.order.*;
 import gift.service.OrderService;
-import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -37,6 +34,11 @@ public class OrderController {
         else
             pageable = PageRequest.of(pageNum, size, Sort.by(Sort.Direction.DESC, sortProperty));
         return orderService.getOrders(token, pageable);
+    }
+
+    @GetMapping("/api/orders/price")
+    public PriceResponseDTO getPrice(@RequestBody PriceRequestDTO priceRequestDTO) {
+        return orderService.getPrice(priceRequestDTO);
     }
 
 }
