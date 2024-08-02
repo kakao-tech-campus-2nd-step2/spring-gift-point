@@ -9,41 +9,47 @@ import org.springframework.data.domain.Sort;
 
 public class PageRequestDto {
     @Min(value = 0, message = "page number는 0이상만 가능합니다.")
-    protected int pageNumber = 0;
+    protected int page = 0;
 
     @Min(value = 1, message = "page size의 최소는 1 입니다.")
     @Max(value = 100, message = "page size의 최대는 100 입니다.")
-    protected int pageSize = 10;
+    protected int size = 10;
 
     // product, wish 분리하기
-    @Pattern(regexp = "id|name|price|product_price", message = "정렬 방식은 id, name, price만 가능합니다.")
-    private String sortBy = "id";
+    @Pattern(regexp = "^(id|name|price|product_price|createdDate|orderDateTime),(asc|desc)$",
+        message = "형식은 '(id|name|price|product_price|createdDate|orderDateTime),(asc|desc)' 만 가능합니다.")
+    private String sort = "id,asc";
+
 
     public Pageable toPageable() {
-        return PageRequest.of(pageNumber, pageSize, Sort.by(sortBy));
+        String[] parts = sort.split(",");
+        String sortProperty = parts[0];
+        String sortDirection = parts[1];
+        Sort.Direction direction = Sort.Direction.fromString(sortDirection);
+        return PageRequest.of(page, size, Sort.by(direction, sortProperty));
     }
 
-    public int getPageNumber() {
-        return pageNumber;
+    public int getPage() {
+        return page;
     }
 
-    public int getPageSize() {
-        return pageSize;
+    public int getSize() {
+        return size;
     }
 
-    public String getSortBy() {
-        return sortBy;
+    public String getSort() {
+        return sort;
     }
 
-    public void setPageNumber(int pageNumber) {
-        this.pageNumber = pageNumber;
+    public void setPage(int page) {
+        this.page = page;
     }
 
-    public void setPageSize(int pageSize) {
-        this.pageSize = pageSize;
+    public void setSize(int size) {
+        this.size = size;
     }
 
-    public void setSortBy(String sortBy) {
-        this.sortBy = sortBy;
+    public void setSort(String sort) {
+        this.sort = sort;
     }
 }

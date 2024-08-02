@@ -1,6 +1,7 @@
 package gift.domain;
 
 import jakarta.persistence.*;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "wish")
@@ -15,18 +16,24 @@ public class Wish {
     @JoinColumn(name = "product_id", nullable = false)
     private Product product;
 
+    private LocalDateTime createdDate;
+
+
     protected Wish() {
+        this.createdDate = LocalDateTime.now();
     }
 
-    public Wish(Long id, Member member, Product product) {
+    public Wish(Long id, Member member, Product product, LocalDateTime createdDate) {
         this.id = id;
         this.member = member;
         this.product = product;
+        this.createdDate = createdDate;
     }
 
     public Wish(Member member, Product product) {
         this.member = member;
         this.product = product;
+        this.createdDate = LocalDateTime.now();
     }
 
     public Long getId() {
@@ -51,5 +58,9 @@ public class Wish {
 
     public void setProduct(Product product) {
         this.product = product;
+    }
+
+    public LocalDateTime getCreatedDate() {
+        return createdDate;
     }
 }

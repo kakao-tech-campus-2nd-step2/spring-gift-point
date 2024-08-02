@@ -28,9 +28,9 @@ public class WishService {
     }
 
     @Transactional
-    public void addWish(Long memberId, WishDto wishDto) {
+    public void addWish(Long memberId, Long productId) {
         Member member = memberRepository.findById(memberId).orElseThrow();
-        Product product = productRepository.findById(wishDto.productId()).orElseThrow();
+        Product product = productRepository.findById(productId).orElseThrow();
         Wish newWish = new Wish(member, product);
         wishRepository.save(newWish);
     }

@@ -104,6 +104,24 @@ public class Product {
         newOption.setProduct(this);
     }
 
+    public void updateOption(Option updatedOption) {
+        options.stream()
+            .filter(option -> option.getId().equals(updatedOption.getId()))
+            .findFirst()
+            .ifPresentOrElse(
+                option -> {
+                    options.set(options.indexOf(option), updatedOption);
+                },
+                () -> {
+                    throw new NoSuchElementException("해당 ID의 옵션 없음: " + updatedOption.getId());
+                }
+            );
+    }
+
+    public void deleteOption(Long optionId) {
+        options.removeIf(option -> option.getId().equals(optionId));
+    }
+
     public List<Option> getOptions() {
         return options;
     }

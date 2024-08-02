@@ -13,34 +13,41 @@ public class Order {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    private Long memberId;
     private Long productId;
     private Long optionId;
     private int quantity;
-    private LocalDateTime createdAt;
+    private LocalDateTime orderDateTime;
     private String message;
 
     protected Order() {
     }
 
-    public Order(Long productId, Long optionId, int quantity, String message) {
+    public Order(Long memberId, Long productId, Long optionId, int quantity, String message) {
+        this.memberId = memberId;
         this.productId = productId;
         this.optionId = optionId;
         this.quantity = quantity;
         this.message = message;
-        this.createdAt = LocalDateTime.now();
+        this.orderDateTime = LocalDateTime.now();
     }
 
-    public Order(Long id, Long productId, Long optionId, int quantity, String message) {
+    public Order(Long id, Long memberId, Long productId, Long optionId, int quantity, String message) {
         this.id = id;
+        this.memberId = memberId;
         this.productId = productId;
         this.optionId = optionId;
         this.quantity = quantity;
-        this.createdAt = LocalDateTime.now();
+        this.orderDateTime = LocalDateTime.now();
         this.message = message;
     }
 
     public Long getId() {
         return id;
+    }
+
+    public Long getMemberId() {
+        return memberId;
     }
 
     public Long getProductId() {
@@ -55,8 +62,8 @@ public class Order {
         return quantity;
     }
 
-    public LocalDateTime getCreatedAt() {
-        return createdAt;
+    public LocalDateTime getOrderDateTime() {
+        return orderDateTime;
     }
 
     public String getMessage() {

@@ -54,7 +54,7 @@ public class MemberIntegrationTest {
         memberRepository.save(member);
 
         // When & Then
-        mockMvc.perform(post("/members/login")
+        mockMvc.perform(post("/api/members/login")
                 .contentType("application/json")
                 .content("{ \"email\": \"valid@example.com\", \"password\": \"validPassword\" }"))
             .andExpect(status().isOk())
@@ -68,7 +68,7 @@ public class MemberIntegrationTest {
         Member member = new Member("invalid@example.com","invalidPassword");
 
         // When & Then
-        mockMvc.perform(post("/members/login")
+        mockMvc.perform(post("/api/members/login")
                 .contentType("application/json")
                 .content("{ \"email\": \"invalid@example.com\", \"password\": \"invalidPassword\" }"))
             .andExpect(status().isForbidden())

@@ -12,29 +12,16 @@ public record OptionDto(Long id,
                             message = "허용 가능한 특수문자는 ( ), [ ], +, -, &, /, _ 입니다.")
                         String name,
                         @Min(1) @Max(99999999)
-                        int quantity) {
-
-    public OptionDto(Long id, String name, int quantity) {
-        this.id = id;
-        this.name = name;
-        this.quantity = quantity;
-    }
-
-    @Override
-    public String name() {
-        return name;
-    }
-
-    @Override
-    public int quantity() {
-        return quantity;
-    }
+                        int quantity,
+                        Long productId
+) {
 
     public static OptionDto convertToDto(Option option) {
         return new OptionDto(
             option.getId(),
             option.getName(),
-            option.getQuantity()
+            option.getQuantity(),
+            option.getProduct().getId()
         );
     }
 }

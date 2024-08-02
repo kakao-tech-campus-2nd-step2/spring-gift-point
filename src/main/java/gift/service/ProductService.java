@@ -36,7 +36,7 @@ public class ProductService {
     public ProductResponseDto getProductById(long id) {
         Product product = productRepository.findById(id)
             .orElseThrow(() -> new NoSuchElementException("해당 id의 상품 없음: " + id));;
-        return new ProductResponseDto(product.getId(), product.getName(), product.getPrice(), product.getImageUrl(), product.getCategory().getName());
+        return new ProductResponseDto(product.getId(), product.getName(), product.getPrice(), product.getImageUrl());
     }
 
     @Transactional
@@ -80,6 +80,11 @@ public class ProductService {
         return productPage.map(ProductResponseDto::convertToDto);
     }
 
+    public Page<ProductResponseDto> getPagedProductsByCategory(Pageable pageable, Long categoryId) {
+        Page<Product> productPage = productRepository.findByCategoryId(pageable, categoryId);
+        return productPage.map(ProductResponseDto::convertToDto);
+    }
+
     @Transactional(readOnly=true)
     public List<OptionDto> getOptionsByProductId(Long productId) {
         Product product = productRepository.findById(productId)
@@ -92,7 +97,7 @@ public class ProductService {
     }
 
     @Transactional
-    public OptionDto saveOption(Long productId , OptionDto optionDto) {
+    public OptionDto addOption(Long productId , OptionDto optionDto) {
         Product product = productRepository.findById(productId)
             .orElseThrow(() -> new NoSuchElementException("해당 id의 상품 없음: " + productId));
         Option newOption = new Option(optionDto.name(), optionDto.quantity(), product);
@@ -102,7 +107,32 @@ public class ProductService {
         // 새로 저장된 Option을 찾기
         Option addedOption = addedOptionProduct.getOptionByName(optionDto.name());
 
-        return new OptionDto(addedOption.getId(), addedOption.getName(), addedOption.getQuantity());
+        return new OptionDto(addedOption.getId(), addedOption.getName(), addedOption.getQuantity(), addedOptionProduct.getId());
+    }
+
+    @Transactional
+    public OptionDto updateOption(Long productId, Long optionId, OptionDto optionDto) {
+        Product product = productRepository.findById(productId)
+            .orElseThrow(() -> new NoSuchElementException("해당 id의 상품 없음: " + productId));
+        Option updatedOption = new Option(optionId, optionDto.name(), optionDto.quantity(), product);
+        product.updateOption(updatedOption);
+
+        productRepository.save(product);
+
+        return new OptionDto(updatedOption.getId(), updatedOption.getName(), updatedOption.getQuantity(), updatedOption.getId());
+    }
+
+    @Transactional
+    public List<OptionDto> deleteOption(Long productId, Long optionId) {
+        Product product = productRepository.findById(productId)
+            .orElseThrow(() -> new NoSuchElementException("해당 id의 상품 없음: " + productId));
+
+        product.deleteOption(optionId);
+        productRepository.save(product);
+
+        return product.getOptions().stream()
+            .map(OptionDto::convertToDto)
+            .collect(Collectors.toList());
     }
 
     @Transactional

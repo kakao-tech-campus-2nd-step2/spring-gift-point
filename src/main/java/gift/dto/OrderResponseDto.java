@@ -3,7 +3,7 @@ package gift.dto;
 import gift.domain.Order;
 import java.time.LocalDateTime;
 
-public record OrderResponseDto(Long id, Long optionId, int quantity, LocalDateTime createdAt,
+public record OrderResponseDto(Long id, Long optionId, int quantity, LocalDateTime orderDateTime,
                                String message) {
 
     public static OrderResponseDto convertToDto(Order order) {
@@ -11,7 +11,7 @@ public record OrderResponseDto(Long id, Long optionId, int quantity, LocalDateTi
             order.getId(),
             order.getOptionId(),
             order.getQuantity(),
-            order.getCreatedAt(),
+            order.getOrderDateTime(),
             order.getMessage()
         );
     }
