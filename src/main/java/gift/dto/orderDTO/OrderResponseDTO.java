@@ -1,4 +1,4 @@
-package gift.dto;
+package gift.dto.orderDTO;
 
 import java.time.LocalDateTime;
 

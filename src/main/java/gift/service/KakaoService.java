@@ -6,7 +6,7 @@ import gift.config.KakaoProperties;
 import gift.dto.KakaoAccessTokenDTO;
 import gift.dto.KakaoUserInfoDTO;
 import gift.dto.memberDTO.MemberDTO;
-import gift.dto.OrderResponseDTO;
+import gift.dto.orderDTO.OrderResponseDTO;
 import gift.dto.TemplateObjectDTO;
 import gift.model.Member;
 import gift.repository.MemberRepository;

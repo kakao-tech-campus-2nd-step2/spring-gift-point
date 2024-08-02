@@ -1,8 +1,8 @@
 package gift.controller;
 
 import gift.annotation.LoginMember;
-import gift.dto.OrderRequestDTO;
-import gift.dto.OrderResponseDTO;
+import gift.dto.orderDTO.OrderRequestDTO;
+import gift.dto.orderDTO.OrderResponseDTO;
 import gift.model.Member;
 import gift.service.KakaoService;
 import gift.service.OrderService;

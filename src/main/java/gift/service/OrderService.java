@@ -1,8 +1,8 @@
 package gift.service;
 
 
-import gift.dto.OrderRequestDTO;
-import gift.dto.OrderResponseDTO;
+import gift.dto.orderDTO.OrderRequestDTO;
+import gift.dto.orderDTO.OrderResponseDTO;
 import gift.model.Member;
 import gift.model.Option;
 import gift.model.Order;
