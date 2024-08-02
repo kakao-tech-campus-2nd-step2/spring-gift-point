@@ -2,6 +2,7 @@ package gift.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import gift.domain.AuthDomain.LoginRequest;
+import gift.domain.AuthDomain.RegisterResponse;
 import gift.domain.AuthDomain.TokenResponse;
 import gift.domain.MemberDomain.MemberRequest;
 import gift.service.KakaoService;
@@ -30,11 +31,11 @@ public class MemberController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<TokenResponse> join(
+    public ResponseEntity<RegisterResponse> join(
             @RequestBody MemberRequest memberRequest
     ) throws BadRequestException {
         memberService.join(memberRequest);
-        return ResponseEntity.status(HttpStatus.CREATED).body(new TokenResponse(memberRequest.email(),memberRequest.password()));
+        return ResponseEntity.status(HttpStatus.CREATED).body(new RegisterResponse("User registered successfully"));
     }
 
     @PostMapping("/login")
