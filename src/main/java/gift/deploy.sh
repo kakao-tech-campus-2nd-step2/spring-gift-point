@@ -3,7 +3,7 @@ REPOSITORY=/home/ubuntu/spring-gift-point
 DEPLOY_PATH=/home/ubuntu/
 
 echo "> 해당 repository로 이동"
-cd "$REPOSITORY" || exit
+cd $REPOSITORY
 
 echo "> git pull origin step2"
 git pull origin step2
