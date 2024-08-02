@@ -1,7 +1,6 @@
 package gift.controller;
 
 import gift.dto.ApiResponse;
-import gift.dto.ProductDto;
 import gift.exception.NonIntegerPriceException;
 import gift.exception.ProductNotFoundException;
 import gift.model.HttpResult;

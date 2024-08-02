@@ -1,7 +1,6 @@
 package gift.controller;
 
 import gift.annotation.LoginMember;
-import gift.dto.WishRequest;
 import gift.model.Member;
 import gift.model.Wish;
 import gift.service.WishService;
