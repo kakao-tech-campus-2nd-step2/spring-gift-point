@@ -25,12 +25,13 @@ public class OrderDto {
         this.point = point;
     }
 
-    public OrderDto(Long id, Long optionId, Long quantity, LocalDateTime orderDateTime, String message) {
+    public OrderDto(Long id, Long optionId, Long quantity, LocalDateTime orderDateTime, String message, Integer point) {
         this.id = id;
         this.optionId = optionId;
         this.quantity = quantity;
         this.orderDateTime = orderDateTime;
         this.message = message;
+        this.point = point;
     }
 
     public OrderDto(Long id, Long optionId, Long quantity, Member member, String message, Integer point) {
@@ -47,7 +48,7 @@ public class OrderDto {
     }
 
     public static OrderDto from(Order order) {
-        return new OrderDto(order.getId(), order.getOption().getId(), order.getQuantity(), order.getOrderDateTime(), order.getMessage());
+        return new OrderDto(order.getId(), order.getOption().getId(), order.getQuantity(), order.getOrderDateTime(), order.getMessage(), order.getPoint());
     }
 
     public Member getMember() {
@@ -71,7 +72,7 @@ public class OrderDto {
     }
 
     public OrderResponse toResponseDto() {
-        return new OrderResponse(this.id, this.optionId, this.quantity, this.orderDateTime, this.message);
+        return new OrderResponse(this.id, this.optionId, this.quantity, this.orderDateTime, this.message, this.point);
     }
 
 }

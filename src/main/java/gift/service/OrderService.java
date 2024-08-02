@@ -91,7 +91,7 @@ public class OrderService {
             kakaoApiService.sendKakaoMessage(accessToken, message);
         }
 
-        Order order = new Order(option, quantity, message, member);
+        Order order = new Order(option, quantity, message, member, point);
         return orderRepository.save(order);
     }
 
