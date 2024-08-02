@@ -16,6 +16,7 @@ create table member
     email    varchar(255) not null unique,
     password varchar(255) not null,
     role     varchar(64) not null,
+    point    integer not null,
     primary key (id)
 );
 
