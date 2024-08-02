@@ -58,4 +58,6 @@
 <summary><strong>2단계 - 배포하기</strong></summary>
 
 - 배포 쉘 스크립트 작성
+- CORS 작성
+- CORS 테스트 코드 작성
 </details>
