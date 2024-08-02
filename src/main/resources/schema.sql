@@ -29,7 +29,8 @@ CREATE TABLE option
 CREATE TABLE member
 (
     email    VARCHAR(255) PRIMARY KEY,
-    password VARCHAR(255) NOT NULL
+    password VARCHAR(255) NOT NULL,
+    point    BIGINT       NOT NULL
 );
 
 CREATE Table wishlist
