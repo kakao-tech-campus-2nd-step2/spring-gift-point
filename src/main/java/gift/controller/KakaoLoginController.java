@@ -4,15 +4,11 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import gift.DTO.Token;
 import gift.service.KakaoService;
 import jakarta.servlet.http.HttpServletRequest;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.view.RedirectView;
 
 
-@Controller
+@RestController
 public class KakaoLoginController {
     private final KakaoService kakaoService;
     private String url;
