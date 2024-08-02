@@ -9,4 +9,6 @@ public interface MemberService {
     String generateToken(Member member);
 
     String login(String email, String password);
+
+    Long getPoint(String memberEmail);
 }

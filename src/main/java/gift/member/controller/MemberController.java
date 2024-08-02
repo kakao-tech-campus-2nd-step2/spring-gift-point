@@ -2,10 +2,7 @@ package gift.member.controller;
 
 import gift.common.auth.JwtUtil;
 import gift.common.util.CommonResponse;
-import gift.member.dto.LoginRequest;
-import gift.member.dto.LoginResponse;
-import gift.member.dto.SignUpReqeust;
-import gift.member.dto.SignUpResponse;
+import gift.member.dto.*;
 import gift.member.service.MemberService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -62,7 +59,7 @@ public class MemberController {
 
     // 특정 회원의 포인트 조회
     @Operation(summary = "포인트 조회", description = "특정 회원의 포인트를 조회한다.")
-    @PostMapping("/point")
+    @GetMapping("/point")
     public ResponseEntity<?> getPoint(
             @Parameter(hidden = true) @RequestHeader("Authorization") String authorizationHeader
     ) {
@@ -76,6 +73,6 @@ public class MemberController {
         String memberEmail = jwtUtil.extractEmail(token);
         Long point = memberService.getPoint(memberEmail);
 
-        return ResponseEntity.ok(new CommonResponse<>(point, "포인트 조회 성공", true));
+        return ResponseEntity.ok(new CommonResponse<>(new PointResponse(point), "포인트 조회 성공", true));
     }
 }

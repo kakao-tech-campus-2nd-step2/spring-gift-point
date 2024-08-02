@@ -52,7 +52,7 @@
 - [x] Member 엔티티에 point 필드 추가하기
 - [x] 신규회원은 3000포인트를 부여받는다.
 ## 2. 회원별 포인트 조회하는 API 추가하기
-- [ ] accessToken을 통해 회원의 포인트를 조회하는 API 추가하기
+- [x] accessToken을 통해 회원의 포인트를 조회하는 API 추가하기
 ## 주문하기 API 수정하기 (포인트 사용할 수 있게)
 - [ ] OrderRequest, OrderResponse DTO 수정하기
 - [ ] 포인트가 있는지 검증하는 로직 추가

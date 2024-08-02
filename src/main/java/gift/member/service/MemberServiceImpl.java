@@ -22,8 +22,10 @@ public class MemberServiceImpl implements MemberService {
         this.key = Keys.hmacShaKeyFor(secretKey.getBytes(StandardCharsets.UTF_8));
     }
 
+    // 회원가입
     public void registerMember(String email, String password) {
-        Member member = new Member(email, password);
+        // 신규 회원은 3000포인트를 부여
+        Member member = new Member(email, password, 3000L);
         Optional<Member> existingMember = memberRepository.findByEmail(email);
 
         // validation
@@ -34,6 +36,7 @@ public class MemberServiceImpl implements MemberService {
         memberRepository.save(member);
     }
 
+    // 토큰 생성
     public String generateToken(Member member) {
         return Jwts.builder()
                 .setSubject(member.getId().toString())
@@ -44,6 +47,7 @@ public class MemberServiceImpl implements MemberService {
                 .compact();
     }
 
+    // 로그인
     public String login(String email, String password) {
         Member member = memberRepository.findByEmail(email).orElseThrow(
                 () -> new IllegalArgumentException("No such member: ")
@@ -54,5 +58,14 @@ public class MemberServiceImpl implements MemberService {
         }
 
         return generateToken(member);
+    }
+
+    // 포인트 조회
+    public Long getPoint(String email) {
+        Member member = memberRepository.findByEmail(email).orElseThrow(
+                () -> new IllegalArgumentException("No such member: ")
+        );
+
+        return member.getPoint();
     }
 }
