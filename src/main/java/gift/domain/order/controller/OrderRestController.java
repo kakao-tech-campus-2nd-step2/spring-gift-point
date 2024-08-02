@@ -4,7 +4,7 @@ import gift.config.LoginUser;
 import gift.domain.order.dto.OrderRequest;
 import gift.domain.order.dto.OrderResponse;
 import gift.domain.order.service.OrderService;
-import gift.domain.user.entity.User;
+import gift.domain.member.entity.Member;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -33,9 +33,9 @@ public class OrderRestController {
         @Parameter(description = "주문 요청 정보", required = true)
         @RequestBody @Valid OrderRequest orderRequest,
         @Parameter(hidden = true)
-        @LoginUser User user
+        @LoginUser Member member
     ) {
-        OrderResponse orderResponse = orderService.createAndSendMessage(orderRequest, user);
+        OrderResponse orderResponse = orderService.create(orderRequest, member);
         return ResponseEntity.status(HttpStatus.CREATED).body(orderResponse);
     }
 }

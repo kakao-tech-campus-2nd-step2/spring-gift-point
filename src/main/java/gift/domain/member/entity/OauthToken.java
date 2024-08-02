@@ -1,4 +1,4 @@
-package gift.domain.user.entity;
+package gift.domain.member.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -15,7 +15,7 @@ import jakarta.persistence.UniqueConstraint;
 
 @Entity
 @Table(
-    uniqueConstraints = { @UniqueConstraint(columnNames = { "user_id", "provider" }) }
+    uniqueConstraints = { @UniqueConstraint(columnNames = { "member_id", "provider" }) }
 )
 public class OauthToken {
 
@@ -24,8 +24,8 @@ public class OauthToken {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", nullable = false)
-    private User user;
+    @JoinColumn(name = "member_id", nullable = false)
+    private Member member;
 
     @Column(nullable = false)
     @Enumerated(value = EnumType.STRING)
@@ -40,10 +40,9 @@ public class OauthToken {
     protected OauthToken() {
     }
 
-    public OauthToken(Long id, User user, AuthProvider provider, String accessToken,
-        String refreshToken) {
+    public OauthToken(Long id, Member member, AuthProvider provider, String accessToken, String refreshToken) {
         this.id = id;
-        this.user = user;
+        this.member = member;
         this.provider = provider;
         this.accessToken = accessToken;
         this.refreshToken = refreshToken;
@@ -60,8 +59,8 @@ public class OauthToken {
         return id;
     }
 
-    public User getUser() {
-        return user;
+    public Member getMember() {
+        return member;
     }
 
     public AuthProvider getProvider() {

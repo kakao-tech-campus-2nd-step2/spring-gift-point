@@ -1,9 +1,10 @@
-package gift.domain.user.controller;
+package gift.domain.member.controller;
 
 import gift.auth.jwt.JwtToken;
-import gift.domain.user.dto.UserRequest;
-import gift.domain.user.dto.UserLoginRequest;
-import gift.domain.user.service.UserService;
+import gift.domain.member.dto.MemberLoginResponse;
+import gift.domain.member.dto.MemberRequest;
+import gift.domain.member.dto.MemberLoginRequest;
+import gift.domain.member.service.MemberService;
 import gift.exception.DuplicateEmailException;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -18,25 +19,26 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/api/users")
-@Tag(name = "User", description = "회원 API")
-public class UserRestController {
+@RequestMapping("/api/members")
+@Tag(name = "Member", description = "회원 API")
+public class MemberRestController {
 
-    private final UserService userService;
+    private final MemberService memberService;
 
-    public UserRestController(UserService userService) {
-        this.userService = userService;
+    public MemberRestController(MemberService memberService) {
+        this.memberService = memberService;
     }
 
     @PostMapping("/register")
     @Operation(summary = "회원 가입", description = "회원 정보를 등록합니다.")
-    public ResponseEntity<JwtToken> create(
+    public ResponseEntity<MemberLoginResponse> create(
         @Parameter(description = "회원 등록 정보", required = true)
-        @RequestBody @Valid UserRequest userRequest
+        @RequestBody @Valid MemberRequest memberRequest
     ) {
         try {
-            JwtToken jwtToken = userService.signUp(userRequest);
-            return ResponseEntity.status(HttpStatus.CREATED).body(jwtToken);
+            JwtToken jwtToken = memberService.signUp(memberRequest);
+            MemberLoginResponse response = new MemberLoginResponse(memberRequest.email(), jwtToken.token());
+            return ResponseEntity.status(HttpStatus.CREATED).body(response);
         } catch (DuplicateKeyException e) {
             throw new DuplicateEmailException("error.duplicate.key.email");
         }
@@ -44,11 +46,12 @@ public class UserRestController {
 
     @PostMapping("/login")
     @Operation(summary = "로그인", description = "회원 정보를 통해 로그인합니다.")
-    public ResponseEntity<JwtToken> login(
+    public ResponseEntity<MemberLoginResponse> login(
         @Parameter(description = "회원 로그인 정보", required = true)
-        @RequestBody @Valid UserLoginRequest userLoginRequest
+        @RequestBody @Valid MemberLoginRequest memberLoginRequest
     ) {
-        JwtToken jwtToken = userService.login(userLoginRequest);
-        return ResponseEntity.status(HttpStatus.OK).body(jwtToken);
+        JwtToken jwtToken = memberService.login(memberLoginRequest);
+        MemberLoginResponse response = new MemberLoginResponse(memberLoginRequest.email(), jwtToken.token());
+        return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 }

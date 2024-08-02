@@ -1,7 +1,7 @@
 package gift.domain.wishlist.controller;
 
 import gift.config.LoginUser;
-import gift.domain.user.entity.User;
+import gift.domain.member.entity.Member;
 import gift.domain.wishlist.dto.WishItemRequestDto;
 import gift.domain.wishlist.dto.WishItemResponseDto;
 import gift.domain.wishlist.service.WishlistService;
@@ -9,6 +9,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -22,7 +23,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/api/wishlist")
+@RequestMapping("/api/wishes")
 @Tag(name = "Wishlist", description = "위시리스트 API")
 public class WishlistRestController {
 
@@ -38,9 +39,9 @@ public class WishlistRestController {
         @Parameter(description = "위시리시트 항목 요청 정보", required = true)
         @RequestBody WishItemRequestDto wishItemRequestDto,
         @Parameter(hidden = true)
-        @LoginUser User user
+        @LoginUser Member member
     ) {
-        WishItemResponseDto wishItemResponseDto = wishlistService.create(wishItemRequestDto, user);
+        WishItemResponseDto wishItemResponseDto = wishlistService.create(wishItemRequestDto, member);
         return ResponseEntity.status(HttpStatus.CREATED).body(wishItemResponseDto);
     }
 
@@ -48,11 +49,11 @@ public class WishlistRestController {
     @Operation(summary = "위시리스트 조회", description = "회원의 위시리스트를 조회합니다.")
     public ResponseEntity<Page<WishItemResponseDto>> readAll(
         @Parameter(description = "페이징 정보", in = ParameterIn.QUERY)
-        Pageable pageable,
+        @ParameterObject Pageable pageable,
         @Parameter(hidden = true)
-        @LoginUser User user
+        @LoginUser Member member
     ) {
-        return ResponseEntity.status(HttpStatus.OK).body(wishlistService.readAll(pageable, user));
+        return ResponseEntity.status(HttpStatus.OK).body(wishlistService.readAll(pageable, member));
     }
 
     @DeleteMapping("/{wishItemId}")
@@ -61,7 +62,7 @@ public class WishlistRestController {
         @Parameter(description = "위시리스트 항목 ID", in = ParameterIn.PATH, required = true)
         @PathVariable("wishItemId") long wishItemId,
         @Parameter(hidden = true)
-        @LoginUser User user
+        @LoginUser Member member
     ) {
         wishlistService.delete(wishItemId);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
@@ -69,11 +70,11 @@ public class WishlistRestController {
 
     @DeleteMapping
     @Operation(summary = "위시리스트 전체 삭제", description = "회원의 위시리스트를 전부 비웁니다.")
-    public ResponseEntity<Void> deleteAllByUser(
+    public ResponseEntity<Void> deleteAllByMember(
         @Parameter(hidden = true)
-        @LoginUser User user
+        @LoginUser Member member
     ) {
-        wishlistService.deleteAllByUserId(user);
+        wishlistService.deleteAllByMemberId(member);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 }

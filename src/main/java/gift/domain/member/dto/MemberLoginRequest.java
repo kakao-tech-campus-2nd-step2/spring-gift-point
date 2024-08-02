@@ -1,4 +1,4 @@
-package gift.domain.user.dto;
+package gift.domain.member.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Email;
@@ -7,7 +7,7 @@ import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 
 @Schema(description = "회원 로그인 정보")
-public record UserLoginRequest(
+public record MemberLoginRequest(
     @NotBlank(message = "이메일은 필수 입력 필드입니다.")
     @Email(message = "잘못된 이메일 형식입니다.")
     @Schema(description = "회원 이메일")

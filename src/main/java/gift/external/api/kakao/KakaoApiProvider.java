@@ -2,7 +2,7 @@ package gift.external.api.kakao;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import gift.domain.order.service.MessageApiProvider;
-import gift.domain.user.service.OauthApiProvider;
+import gift.domain.member.service.OauthApiProvider;
 import gift.external.api.kakao.client.KakaoApiClient;
 import gift.external.api.kakao.client.KakaoAuthClient;
 import org.springframework.http.HttpHeaders;

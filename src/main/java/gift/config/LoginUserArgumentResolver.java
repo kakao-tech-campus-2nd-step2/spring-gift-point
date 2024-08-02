@@ -1,8 +1,8 @@
 package gift.config;
 
 import gift.auth.jwt.JwtProvider;
-import gift.domain.user.repository.UserJpaRepository;
-import gift.domain.user.entity.User;
+import gift.domain.member.entity.Member;
+import gift.domain.member.repository.MemberJpaRepository;
 import gift.exception.InvalidAuthException;
 import io.jsonwebtoken.Claims;
 import org.springframework.core.MethodParameter;
@@ -19,17 +19,17 @@ public class LoginUserArgumentResolver implements HandlerMethodArgumentResolver 
     public static final String HEADER_TYPE = "Bearer";
 
     private final JwtProvider jwtProvider;
-    private final UserJpaRepository userJpaRepository;
+    private final MemberJpaRepository memberJpaRepository;
 
-    public LoginUserArgumentResolver(JwtProvider jwtProvider, UserJpaRepository userJpaRepository) {
+    public LoginUserArgumentResolver(JwtProvider jwtProvider, MemberJpaRepository memberJpaRepository) {
         this.jwtProvider = jwtProvider;
-        this.userJpaRepository = userJpaRepository;
+        this.memberJpaRepository = memberJpaRepository;
     }
 
     @Override
     public boolean supportsParameter(MethodParameter parameter) {
         boolean hasAnnotation = parameter.hasParameterAnnotation(LoginUser.class);
-        boolean isUserType = User.class.isAssignableFrom(parameter.getParameterType());
+        boolean isUserType = Member.class.isAssignableFrom(parameter.getParameterType());
         return hasAnnotation && isUserType;
     }
 
@@ -48,7 +48,7 @@ public class LoginUserArgumentResolver implements HandlerMethodArgumentResolver 
         }
 
         Claims claims = jwtProvider.getAuthentication(splitField[1]);
-        return userJpaRepository.findById(Long.parseLong(claims.getSubject()))
+        return memberJpaRepository.findById(Long.parseLong(claims.getSubject()))
             .orElseThrow(() -> new InvalidAuthException("error.invalid.token"));
     }
 }

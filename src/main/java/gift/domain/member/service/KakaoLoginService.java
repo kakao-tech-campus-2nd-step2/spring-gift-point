@@ -1,13 +1,13 @@
-package gift.domain.user.service;
+package gift.domain.member.service;
 
 import gift.auth.jwt.JwtProvider;
 import gift.auth.jwt.JwtToken;
-import gift.domain.user.entity.AuthProvider;
-import gift.domain.user.entity.OauthToken;
-import gift.domain.user.entity.Role;
-import gift.domain.user.entity.User;
-import gift.domain.user.repository.OauthTokenJpaRepository;
-import gift.domain.user.repository.UserJpaRepository;
+import gift.domain.member.entity.AuthProvider;
+import gift.domain.member.entity.Member;
+import gift.domain.member.entity.OauthToken;
+import gift.domain.member.entity.Role;
+import gift.domain.member.repository.OauthTokenJpaRepository;
+import gift.domain.member.repository.MemberJpaRepository;
 import gift.exception.InvalidUserInfoException;
 import gift.external.api.kakao.dto.KakaoToken;
 import gift.external.api.kakao.dto.KakaoUserInfo;
@@ -18,18 +18,18 @@ import org.springframework.transaction.annotation.Transactional;
 public class KakaoLoginService {
 
     private final OauthApiProvider<KakaoToken, KakaoUserInfo> kakaoApiProvider; // 좀 이상한 것 같다.. 생각해보기
-    private final UserJpaRepository userJpaRepository;
+    private final MemberJpaRepository memberJpaRepository;
     private final OauthTokenJpaRepository oauthTokenJpaRepository;
     private final JwtProvider jwtProvider;
 
     public KakaoLoginService(
         OauthApiProvider<KakaoToken, KakaoUserInfo> kakaoApiProvider,
-        UserJpaRepository userJpaRepository,
+        MemberJpaRepository memberJpaRepository,
         OauthTokenJpaRepository oauthTokenJpaRepository,
         JwtProvider jwtProvider
     ) {
         this.kakaoApiProvider = kakaoApiProvider;
-        this.userJpaRepository = userJpaRepository;
+        this.memberJpaRepository = memberJpaRepository;
         this.oauthTokenJpaRepository = oauthTokenJpaRepository;
         this.jwtProvider = jwtProvider;
     }
@@ -50,23 +50,23 @@ public class KakaoLoginService {
         String email = userInfo.kakaoAccount().email();
         String name = userInfo.kakaoAccount().profile().nickname();
 
-        return userJpaRepository.findByEmail(email)
-            .map(user -> {
-                if (user.getAuthProvider() != AuthProvider.KAKAO) {
+        return memberJpaRepository.findByEmail(email)
+            .map(member -> {
+                if (member.getAuthProvider() != AuthProvider.KAKAO) {
                     throw new InvalidUserInfoException("error.invalid.userinfo.provider");
                 }
-                oauthTokenJpaRepository.save(new OauthToken(null, user, AuthProvider.KAKAO, accessToken, refreshToken));
-                return jwtProvider.generateToken(user);
+                oauthTokenJpaRepository.save(new OauthToken(null, member, AuthProvider.KAKAO, accessToken, refreshToken));
+                return jwtProvider.generateToken(member);
             })
             .orElseGet(() -> signUp(name, email, accessToken, refreshToken));
     }
 
     private JwtToken signUp(String name, String email, String accessToken, String refreshToken) {
-        User user = new User(null, name, email, "kakao", Role.USER, AuthProvider.KAKAO);
-        User savedUser = userJpaRepository.save(user);
+        Member member = new Member(null, name, email, "kakao", Role.USER, AuthProvider.KAKAO);
+        Member savedMember = memberJpaRepository.save(member);
 
-        oauthTokenJpaRepository.save(new OauthToken(null, savedUser, AuthProvider.KAKAO, accessToken, refreshToken));
+        oauthTokenJpaRepository.save(new OauthToken(null, savedMember, AuthProvider.KAKAO, accessToken, refreshToken));
 
-        return jwtProvider.generateToken(savedUser);
+        return jwtProvider.generateToken(savedMember);
     }
 }

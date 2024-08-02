@@ -1,4 +1,4 @@
-package gift.domain.user.entity;
+package gift.domain.member.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -11,7 +11,7 @@ import jakarta.persistence.Table;
 
 @Entity
 @Table
-public class User {
+public class Member {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -34,11 +34,11 @@ public class User {
     @Enumerated(value = EnumType.STRING)
     private AuthProvider authProvider;
 
-    protected User() {
+    protected Member() {
 
     }
 
-    public User(Long id, String name, String email, String password, Role role,
+    public Member(Long id, String name, String email, String password, Role role,
         AuthProvider authProvider) {
         this.id = id;
         this.name = name;

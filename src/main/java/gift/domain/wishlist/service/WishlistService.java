@@ -1,8 +1,8 @@
 package gift.domain.wishlist.service;
 
+import gift.domain.member.entity.Member;
 import gift.domain.product.entity.Product;
 import gift.domain.product.repository.ProductJpaRepository;
-import gift.domain.user.entity.User;
 import gift.domain.wishlist.dto.WishItemRequestDto;
 import gift.domain.wishlist.dto.WishItemResponseDto;
 import gift.domain.wishlist.entity.WishItem;
@@ -25,18 +25,18 @@ public class WishlistService {
     }
 
     @Transactional
-    public WishItemResponseDto create(WishItemRequestDto wishItemRequestDto, User user) {
+    public WishItemResponseDto create(WishItemRequestDto wishItemRequestDto, Member member) {
         Product product = productJpaRepository.findById(wishItemRequestDto.productId())
             .orElseThrow(() -> new InvalidProductInfoException("error.invalid.product.id"));
 
-        WishItem wishItem = wishItemRequestDto.toWishItem(user, product);
+        WishItem wishItem = wishItemRequestDto.toWishItem(member, product);
         WishItem savedWishItem = wishlistJpaRepository.save(wishItem);
 
         return WishItemResponseDto.from(savedWishItem);
     }
 
-    public Page<WishItemResponseDto> readAll(Pageable pageable, User user) {
-        Page<WishItem> foundWishlist = wishlistJpaRepository.findAllByUserId(user.getId(), pageable);
+    public Page<WishItemResponseDto> readAll(Pageable pageable, Member member) {
+        Page<WishItem> foundWishlist = wishlistJpaRepository.findAllByMemberId(member.getId(), pageable);
 
         if (foundWishlist == null) {
             return Page.empty();
@@ -51,7 +51,7 @@ public class WishlistService {
         wishlistJpaRepository.delete(wishItem);
     }
 
-    public void deleteAllByUserId(User user) {
-        wishlistJpaRepository.deleteAllByUserId(user.getId());
+    public void deleteAllByMemberId(Member member) {
+        wishlistJpaRepository.deleteAllByMemberId(member.getId());
     }
 }

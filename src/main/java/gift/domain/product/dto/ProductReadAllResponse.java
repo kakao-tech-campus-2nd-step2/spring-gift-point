@@ -4,18 +4,20 @@ import gift.domain.product.entity.Product;
 
 public record ProductReadAllResponse(
     Long id,
-    CategoryResponse category,
     String name,
     int price,
-    String imageUrl
+    String imageUrl,
+    Long categoryId,
+    String categoryName
 ) {
     public static ProductReadAllResponse from(Product product) {
         return new ProductReadAllResponse(
             product.getId(),
-            CategoryResponse.from(product.getCategory()),
             product.getName(),
             product.getPrice(),
-            product.getImageUrl()
+            product.getImageUrl(),
+            product.getCategory().getId(),
+            product.getCategory().getName()
         );
     }
 }

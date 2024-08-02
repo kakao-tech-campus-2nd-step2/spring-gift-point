@@ -1,7 +1,7 @@
 package gift.auth.jwt;
 
-import gift.domain.user.entity.Role;
-import gift.domain.user.entity.User;
+import gift.domain.member.entity.Member;
+import gift.domain.member.entity.Role;
 import gift.exception.InvalidAuthException;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
@@ -27,17 +27,17 @@ public class JwtProvider {
         this.secretKey = Keys.hmacShaKeyFor(key.getBytes());
     }
 
-    public JwtToken generateToken(User user) {
+    public JwtToken generateToken(Member member) {
 
         long now = (new Date()).getTime();
 
         Date accessTokenExpiresIn = new Date(now + ACCESSTOKEN_EXPIRATION_TIME);
 
         return new JwtToken(Jwts.builder()
-            .subject(user.getId().toString())
-            .claim("name", user.getName())
-            .claim("email", user.getEmail())
-            .claim("role", user.getRole())
+            .subject(member.getId().toString())
+            .claim("name", member.getName())
+            .claim("email", member.getEmail())
+            .claim("role", member.getRole())
             .expiration(accessTokenExpiresIn)
             .signWith(secretKey)
             .compact());

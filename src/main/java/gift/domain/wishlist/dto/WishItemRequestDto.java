@@ -1,7 +1,7 @@
 package gift.domain.wishlist.dto;
 
 import gift.domain.product.entity.Product;
-import gift.domain.user.entity.User;
+import gift.domain.member.entity.Member;
 import gift.domain.wishlist.entity.WishItem;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
@@ -13,7 +13,7 @@ public record WishItemRequestDto(
     @Schema(description = "상품 ID")
     Long productId
 ) {
-    public WishItem toWishItem(User user, Product product) {
-        return new WishItem(null, user, product);
+    public WishItem toWishItem(Member member, Product product) {
+        return new WishItem(null, member, product);
     }
 }

@@ -1,9 +1,9 @@
-package gift.domain.user.service;
+package gift.domain.member.service;
 
-import gift.domain.user.entity.AuthProvider;
-import gift.domain.user.entity.OauthToken;
-import gift.domain.user.entity.User;
-import gift.domain.user.repository.OauthTokenJpaRepository;
+import gift.domain.member.entity.AuthProvider;
+import gift.domain.member.entity.OauthToken;
+import gift.domain.member.entity.Member;
+import gift.domain.member.repository.OauthTokenJpaRepository;
 import gift.exception.InvalidAuthException;
 import gift.external.api.kakao.dto.KakaoToken;
 import gift.external.api.kakao.dto.KakaoUserInfo;
@@ -23,8 +23,8 @@ public class OauthTokenService {
         this.oauthApiProvider = oauthApiProvider;
     }
 
-    public OauthToken getOauthToken(User user, AuthProvider provider) {
-        OauthToken oauthToken = oauthTokenJpaRepository.findByUserAndProvider(user, provider)
+    public OauthToken getOauthToken(Member member, AuthProvider provider) {
+        OauthToken oauthToken = oauthTokenJpaRepository.findByMemberAndProvider(member, provider)
             .orElseThrow(() -> new InvalidAuthException("error.invalid.token"));
         return renew(oauthToken);
     }
