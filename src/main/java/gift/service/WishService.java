@@ -11,7 +11,6 @@ import gift.entity.Member;
 import gift.entity.Option;
 import gift.entity.Product;
 import gift.entity.Wish;
-import gift.exception.WishException;
 import gift.exception.memberException.MemberNotFoundException;
 import gift.exception.optionException.OptionNotFoundException;
 import gift.exception.productException.ProductNotFoundException;

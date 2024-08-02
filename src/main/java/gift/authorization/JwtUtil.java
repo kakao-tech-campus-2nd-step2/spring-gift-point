@@ -1,7 +1,6 @@
 package gift.authorization;
 
 import gift.dto.request.LoginMemberDTO;
-import gift.dto.request.TokenLoginRequestDTO;
 import gift.entity.Member;
 import gift.entity.MemberType;
 import io.jsonwebtoken.Claims;

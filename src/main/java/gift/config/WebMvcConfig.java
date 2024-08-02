@@ -1,10 +1,8 @@
 package gift.config;
 
 import gift.authorization.JwtUtil;
-import gift.entity.Member;
 import gift.repository.MemberRepository;
 import gift.service.LoginMemberArgumentResolver;
-import gift.service.MemberService;
 import gift.service.WishService;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
