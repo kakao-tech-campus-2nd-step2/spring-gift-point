@@ -1,2 +1,4 @@
-package gift.Model.response;public class PointRequest {
+package gift.Model.response;
+
+public record PointResponse(int point) {
 }
