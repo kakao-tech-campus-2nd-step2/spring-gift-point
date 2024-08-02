@@ -37,8 +37,7 @@ public class ProductPageController {
     @Operation(summary = "새 상품 생성 폼")
     @GetMapping("/new")
     public String createProductForm(Model model) {
-        ProductDTO productDTO = new ProductDTO();
-        model.addAttribute("product", productDTO);
+        model.addAttribute("product", new ProductDTO(null, "", 0, "", null, ""));
         model.addAttribute("categories", categoryService.getAllCategories());
         return "addProduct";
     }
