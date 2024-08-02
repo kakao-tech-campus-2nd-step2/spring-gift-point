@@ -50,11 +50,11 @@ public class Option {
         this.id = id;
     }
 
-    public String getOptionName() {
+    public String getName() {
         return name;
     }
 
-    public void setOptionName(String optionName) {
+    public void setName(String name) {
         this.name = name;
     }
 
