@@ -59,4 +59,9 @@ public class UserAdminController {
         }
         return "redirect:/admin/users";
     }
+
+    @GetMapping("/healthcheck")
+    public String healthcheck() {
+        return "OK";
+    }
 }
