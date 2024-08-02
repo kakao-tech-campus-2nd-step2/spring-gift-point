@@ -1,5 +1,7 @@
 package gift.dto;
 
+import gift.entity.Orders;
+import jakarta.persistence.criteria.Order;
 import java.time.LocalDateTime;
 import java.util.Date;
 
@@ -18,6 +20,14 @@ public class OrderResponseDTO {
         this.orderDateTime = orderDateTime;
         this.message = message;
         this.point = point;
+    }
+
+    public OrderResponseDTO(Orders order) {
+        this.optionId = order.getOption().getId();
+        this.point = order.getPoint();
+        this.quantity = order.getQuantity();
+        this.message = order.getMessage();
+        this.orderDateTime = order.getOrderDateTime();
     }
 
 

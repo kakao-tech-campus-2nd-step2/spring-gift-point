@@ -3,6 +3,7 @@ package gift.controller;
 import gift.annotation.LoginUser;
 import gift.dto.ErrorResponse;
 import gift.dto.OrderRequestDTO;
+import gift.dto.OrderResponseDTO;
 import gift.entity.Orders;
 import gift.service.OrderService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -44,11 +45,12 @@ public class OrderController {
         @ApiResponse(responseCode = "200", description = "주문 목록 조회 성공", content = @Content(array = @ArraySchema(schema = @Schema(implementation = PagedModel.class)))),
         @ApiResponse(responseCode = "401", description = "유효한 토큰 필요", content = @Content(array = @ArraySchema(schema = @Schema(implementation = ErrorResponse.class))))})
     @GetMapping
-    public ResponseEntity<Page<Orders>> getOrderList(
+    public ResponseEntity<Page<OrderResponseDTO>> getOrderList(
         @LoginUser String email,
-        @ParameterObject @PageableDefault(page=0, size=10, sort="id") Pageable pageable) {
+        @ParameterObject @PageableDefault(page = 0, size = 10, sort = "id") Pageable pageable) {
         Page<Orders> order = orderService.getProductPage(email, pageable);
-        return new ResponseEntity<>(order, HttpStatus.OK);
+        Page<OrderResponseDTO> response = order.map(OrderResponseDTO::new);
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @Operation(summary = "상품 주문", description = "사용자가 상품을 주문합니다.")
