@@ -17,6 +17,15 @@ public class AuthInterceptor implements HandlerInterceptor {
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
+
+        if(request.getMethod().equals("OPTIONS")){
+            // OPTIONS 요청에 대해 상태 코드 200을 반환
+            response.setStatus(HttpServletResponse.SC_OK);
+            // 자격 증명 허용
+            response.setHeader("Access-Control-Allow-Credentials", "true");
+            return false;
+        }
+
         String authHeader = request.getHeader("Authorization");
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
             response.setHeader("WWW-Authenticate", "Bearer");
