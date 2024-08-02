@@ -16,10 +16,8 @@ public class Category {
     @Column(nullable = false, unique = true)
     private String name;
 
-    @Column(nullable = false)
     private String color;
 
-    @Column(nullable = false)
     @Lob
     private String imageUrl;
 

@@ -21,7 +21,6 @@ public class Product {
     @Column(nullable = false)
     private int price;
 
-    @Column(nullable = false)
     @Lob
     private String imageUrl;
 

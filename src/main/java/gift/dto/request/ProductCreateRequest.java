@@ -22,7 +22,6 @@ public class ProductCreateRequest {
     @NotNull
     private Integer price;
 
-    @NotBlank
     private String imageUrl;
 
     @NotNull
