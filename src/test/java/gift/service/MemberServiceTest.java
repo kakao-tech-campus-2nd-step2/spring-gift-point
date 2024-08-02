@@ -7,6 +7,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import gift.exception.member.NotFoundMemberException;
 import gift.exception.member.DuplicateEmailException;
 import gift.model.Member;
+import gift.response.MemberInfoResponse;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -62,6 +63,17 @@ class MemberServiceTest {
         assertThatThrownBy(
             () -> memberService.login("wrong email", "wrong password")
         ).isInstanceOf(NotFoundMemberException.class);
+    }
+
+    @Test
+    @DisplayName("나의 정보 조회 테스트")
+    void getInfo() {
+        Member member = memberService.join(this.member.getEmail(), this.member.getPassword());
+
+        MemberInfoResponse memberInfo = memberService.getMemberInfo(member.getId());
+        assertThat(memberInfo).isNotNull();
+        assertThat(memberInfo.email()).isEqualTo(member.getEmail());
+        assertThat(memberInfo.remainPoint()).isEqualTo(0);
     }
 
 
