@@ -1,21 +1,13 @@
 package gift.member.controller;
 
 import gift.auth.domain.AuthInfo;
-import gift.global.exception.DomainValidationException;
-import gift.global.response.ErrorResponseDto;
-import gift.global.response.ResultCode;
-import gift.global.response.ResultResponseDto;
-import gift.global.response.SimpleResultResponseDto;
 import gift.global.security.Login;
-import gift.global.utils.ResponseHelper;
-import gift.member.domain.Member;
-import gift.member.dto.MemberRequestDto;
 import gift.member.dto.PointResponseDto;
 import gift.member.service.MemberService;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api/points")
