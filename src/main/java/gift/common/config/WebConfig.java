@@ -38,7 +38,7 @@ public class WebConfig implements WebMvcConfigurer {
         registry
             .addMapping("/**")
             .allowedHeaders("*")
-            .allowedOrigins("http://localhost:3000")
+            .allowedOrigins("http://kakaogift.s3-website.ap-northeast-2.amazonaws.com/")
             .allowedMethods("*");
     }
 }
