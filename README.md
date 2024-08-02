@@ -1,8 +1,24 @@
 # spring-gift-point
 
-작성한 API 문서를 기반으로 팀 내에서 지금까지 만든 API를 검토하고 통일하여 변경 사항을 반영한다.
+포인트
+: 포인트는 주문금액에 보유 포인트 내에서 상품금액의 최대 10%까지 자동 차감된다.
+포인트의 충전은 관리자 화면에서만 이루어진다(이벤트성).
+URL           메서드  기능        설명
+/admin/points GET    포인트 충전  관리자가 유저의 포인트를 충전해준다.
+/api/points   GET    포인트 조회  유저 본인의 포인트 조회가 가능하다.
 
-팀 내에서 일관된 기준을 정하여 API 명세를 결정한다.
 
-프론트 엔드 쪽의 api명세를 받은 후, 백엔드끼리 response와 request 를 설정하였음.
+포인트 조회
+request
+http://{awsIp}:8080/api/points
+
+Authorization: Bearer {token}
+
+response
+
+{
+"point": 1000
+}
+
+
 
