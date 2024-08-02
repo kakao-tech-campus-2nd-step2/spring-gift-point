@@ -47,7 +47,7 @@ public class WishedProductRepositoryTest {
         product = productRepository.save(product);
     }
 
-    @DisplayName("위시리스트 상품 추가")
+    @DisplayName("위시 리스트 상품 추가")
     @Test
     void save() {
         // given
@@ -64,7 +64,7 @@ public class WishedProductRepositoryTest {
         );
     }
 
-    @DisplayName("한 회원의 위시리스트 조회")
+    @DisplayName("한 회원의 위시 리스트 조회")
     @Test
     void findByMemberEmail() {
         // given
@@ -79,7 +79,7 @@ public class WishedProductRepositoryTest {
         assertThat(actual).isEqualTo(expected);
     }
 
-    @DisplayName("위시리스트 상품 삭제")
+    @DisplayName("위시 리스트 상품 삭제")
     @Test
     void delete() {
         // given
