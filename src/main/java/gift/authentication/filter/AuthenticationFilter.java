@@ -25,6 +25,7 @@ public class AuthenticationFilter extends OncePerRequestFilter {
     private final List<String> ignorePathsOnlyMethodGet = List.of(
         "/api/categories",
         "/api/products",
+        "/api/products/\\d+",
         "/api/products/\\d+/options");
     private final String AUTHORIZATION_HEADER = "Authorization";
     private final String BEARER = "Bearer ";
