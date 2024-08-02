@@ -26,7 +26,7 @@ public class WishProduct extends BaseEntity{
     @CreatedDate
     @Temporal(TemporalType.TIMESTAMP)
     @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
-    private LocalDateTime createDate;
+    private LocalDateTime createdDate;
 
 
     protected WishProduct(){
@@ -49,6 +49,6 @@ public class WishProduct extends BaseEntity{
         return product;
     }
     public String getCreateDate(){
-        return createDate.toString();
+        return createdDate.toString();
     }
 }
