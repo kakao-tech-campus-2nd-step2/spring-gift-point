@@ -1,4 +1,12 @@
 #!/bin/bash
+echo "🌈 Github에서 프로젝트를 Pull 합니다."
+
+git pull
+
+echo "🌈 SpringBoot 프로젝트 빌드를 시작합니다."
+./gradlew clean
+./gradlew bootJar
+
 BUILD_PATH=$(ls /home/ubuntu/spring-gift-point/build/libs/*.jar)
 JAR_NAME=$(basename $BUILD_PATH)
 
@@ -14,18 +22,10 @@ else
   sleep 5
 fi
 
-echo "🌈 Github에서 프로젝트를 Pull 합니다.\n"
-
-git pull
-
-echo "\n🌈 SpringBoot 프로젝트 빌드를 시작합니다.\n"
-./gradlew clean
-./gradlew bootJar
-
 DEPLOY_PATH=/home/ubuntu/spring-gift-point/
 cp $BUILD_PATH $DEPLOY_PATH
 cd $DEPLOY_PATH
 
-echo "\n🌈 SpringBoot 애플리케이션을 실행합니다.\n"
+echo "🌈 SpringBoot 애플리케이션을 실행합니다."
 DEPLOY_JAR=$DEPLOY_PATH$JAR_NAME
 nohup java -jar $DEPLOY_JAR > /dev/null 2> /dev/null < /dev/null &
