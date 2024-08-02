@@ -3,7 +3,6 @@ package gift.restdocs.product;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
-import static org.mockito.Mockito.doCallRealMethod;
 import static org.mockito.Mockito.doNothing;
 import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
 import static org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders;
@@ -25,9 +24,7 @@ import gift.model.Product;
 import gift.paging.PagingService;
 import gift.request.ProductAddRequest;
 import gift.request.ProductUpdateRequest;
-import gift.response.OptionResponse;
-import gift.response.ProductOptionsResponse;
-import gift.response.ProductResponse;
+import gift.response.product.ProductResponse;
 import gift.restdocs.AbstractRestDocsTest;
 import gift.service.OptionsService;
 import gift.service.ProductService;
@@ -50,7 +47,6 @@ import org.springframework.data.domain.Sort.Direction;
 import org.springframework.data.jpa.mapping.JpaMetamodelMappingContext;
 import org.springframework.http.MediaType;
 import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders;
-import org.springframework.restdocs.request.RequestDocumentation;
 
 
 @WebMvcTest(value = ProductApiController.class,

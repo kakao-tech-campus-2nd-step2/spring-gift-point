@@ -1,8 +1,7 @@
-package gift.response;
+package gift.response.order;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import gift.model.Order;
-import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 public record OrderResponse(

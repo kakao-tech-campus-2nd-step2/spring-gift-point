@@ -1,4 +1,4 @@
-package gift.response;
+package gift.response.product;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;

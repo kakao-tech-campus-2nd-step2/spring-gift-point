@@ -21,9 +21,9 @@ import gift.model.Category;
 import gift.model.Options;
 import gift.model.Product;
 import gift.request.OptionsRequest;
-import gift.response.OptionResponse;
-import gift.response.ProductOptionsResponse;
-import gift.response.ProductResponse;
+import gift.response.option.OptionResponse;
+import gift.response.option.ProductOptionsResponse;
+import gift.response.product.ProductResponse;
 import gift.restdocs.AbstractRestDocsTest;
 import gift.service.OptionsService;
 import gift.service.ProductService;
@@ -39,7 +39,6 @@ import org.springframework.context.annotation.FilterType;
 import org.springframework.data.jpa.mapping.JpaMetamodelMappingContext;
 import org.springframework.http.MediaType;
 import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 @WebMvcTest(value = OptionsApiController.class,
     excludeFilters = {@Filter(type = FilterType.ASSIGNABLE_TYPE, classes = LoginWebConfig.class)})

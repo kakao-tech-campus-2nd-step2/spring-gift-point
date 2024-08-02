@@ -1,4 +1,4 @@
-package gift.response;
+package gift.response.category;
 
 import java.util.List;
 

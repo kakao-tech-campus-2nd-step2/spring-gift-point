@@ -1,4 +1,4 @@
-package gift.response;
+package gift.response.order;
 
 import java.util.List;
 

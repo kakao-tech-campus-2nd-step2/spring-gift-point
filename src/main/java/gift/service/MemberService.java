@@ -4,7 +4,7 @@ import gift.exception.member.NotFoundMemberException;
 import gift.exception.member.DuplicateEmailException;
 import gift.model.Member;
 import gift.repository.MemberRepository;
-import gift.response.MemberInfoResponse;
+import gift.response.member.MemberInfoResponse;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

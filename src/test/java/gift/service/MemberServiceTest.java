@@ -7,7 +7,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import gift.exception.member.NotFoundMemberException;
 import gift.exception.member.DuplicateEmailException;
 import gift.model.Member;
-import gift.response.MemberInfoResponse;
+import gift.response.member.MemberInfoResponse;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
