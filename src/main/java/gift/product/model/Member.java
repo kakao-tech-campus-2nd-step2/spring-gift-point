@@ -19,17 +19,22 @@ public class Member {
     @JoinColumn
     private SnsMember snsMember;
 
+    @Column(nullable = false)
+    private int point;
+
     public Member() {}
 
     public Member(String email, String password) {
         this.email = email;
         this.password = password;
+        this.point = 0;
     }
 
     public Member(SnsMember snsMember) {
         this.email = "";
         this.password = "";
         this.snsMember = snsMember;
+        this.point = 0;
     }
 
     public Long getId() {
@@ -46,5 +51,19 @@ public class Member {
 
     public SnsMember getSnsMember() {
         return snsMember;
+    }
+
+    public int getPoint() {
+        return point;
+    }
+
+    public void subtractPoint(Order order) {
+        int orderAmount = order.getOption().getProduct().getPrice() * order.getQuantity();
+        int oneTenth = (int) (orderAmount * 0.1);
+        if(oneTenth >= point) {
+            point -= oneTenth;
+            return;
+        }
+        point = 0;
     }
 }

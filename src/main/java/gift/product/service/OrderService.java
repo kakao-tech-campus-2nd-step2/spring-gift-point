@@ -67,13 +67,14 @@ public class OrderService {
         String authorization,
         OrderRequestDTO orderRequestDTO) {
         System.out.println("[OrderService] orderProduct()");
-        Member orderer = jwtUtil.parsingToken(authorization);
+        Member member = jwtUtil.parsingToken(authorization);
         Option option = optionRepository.findById(orderRequestDTO.getOptionId())
             .orElseThrow(() -> new InvalidIdException(NOT_EXIST_ID));
         option.subtractQuantity(orderRequestDTO.getQuantity());
-        Order order = orderRequestDTO.convertToDomain(option, orderer);
+        Order order = orderRequestDTO.convertToDomain(option, member);
+        member.subtractPoint(order);
         orderRepository.save(order);
-        if(orderer.getSnsMember() != null)
+        if(member.getSnsMember() != null)
             sendToMe(order);
         return new OrderResponseDTO(order);
     }
