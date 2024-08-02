@@ -38,7 +38,7 @@ public class OAuthRestController {
     @Operation(summary = "카카오 로그아웃", description = "카카오에서 로그아웃합니다.")
     @SecurityRequirement(name = "Authorization")
     public ResponseEntity<Void> kakaoLogOut(
-            @Parameter(hidden = true) @NotNull @LoginMember Long memberId) {
+            @Parameter(hidden = true) @LoginMember Long memberId) {
         oAuthService.signOut(memberId);
         return ResponseEntity.ok().build();
     }

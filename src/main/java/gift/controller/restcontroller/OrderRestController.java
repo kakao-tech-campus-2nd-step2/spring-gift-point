@@ -11,7 +11,6 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotNull;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
@@ -36,7 +35,7 @@ public class OrderRestController {
     @SecurityRequirement(name = "Authorization")
     public ResponseEntity<Void> createOrder(
             @Valid @RequestBody OrderRequest orderRequest,
-            @Parameter(hidden = true) @NotNull @LoginMember Long memberId
+            @Parameter(hidden = true) @LoginMember Long memberId
     ) {
         redisService.createOrderRedisLock(memberId, orderRequest);
         return ResponseEntity.ok().build();
@@ -46,7 +45,7 @@ public class OrderRestController {
     @Operation(summary = "주문 목록 조회", description = "주문목록을 조회합니다.")
     @SecurityRequirement(name = "Authorization")
     public ResponseEntity<PagingResponse<OrderResponse>> getOrders(
-            @Parameter(hidden = true) @NotNull @LoginMember Long memberId,
+            @Parameter(hidden = true) @LoginMember Long memberId,
             @PageableDefault(size = 10, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable
     ) {
         PagingResponse<OrderResponse> pages = orderService.findOrdersByMemberId(memberId, pageable);
