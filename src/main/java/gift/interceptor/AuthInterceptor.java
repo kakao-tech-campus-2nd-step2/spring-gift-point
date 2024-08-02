@@ -12,7 +12,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
-import org.springframework.web.servlet.resource.ResourceHttpRequestHandler;
 
 @Component
 public class AuthInterceptor implements HandlerInterceptor {
@@ -28,7 +27,7 @@ public class AuthInterceptor implements HandlerInterceptor {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response,
         Object handler) {
-        if (handler instanceof ResourceHttpRequestHandler) {
+        if (!(handler instanceof HandlerMethod)) {
             return true;
         }
         HandlerMethod handlerMethod = (HandlerMethod) handler;
@@ -70,5 +69,4 @@ public class AuthInterceptor implements HandlerInterceptor {
             throw new JwtException(ErrorCode.ACCESS_DENIED.getMessage());
         }
     }
-
 }
