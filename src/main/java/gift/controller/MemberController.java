@@ -39,7 +39,7 @@ import org.springframework.web.bind.annotation.RestController;
 @PropertySource("classpath:application-secret.properties")
 @PropertySource("classpath:application-kakao-login.properties")
 @Validated
-@RequestMapping("/members")
+@RequestMapping("api/members")
 public class MemberController {
 
     private final MemberService memberService;
