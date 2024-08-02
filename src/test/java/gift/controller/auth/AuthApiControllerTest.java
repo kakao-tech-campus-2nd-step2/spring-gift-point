@@ -90,7 +90,7 @@ class AuthApiControllerTest {
     void 회원_처음_로그인_테스트() throws Exception{
         //given
         MemberRequestDto memberRequestDto = new MemberRequestDto("test@pusan.ac.kr", "password");
-        MemberResponseDto memberResponseDto = new MemberResponseDto(1L, "test@pusan.ac.kr", "password");
+        MemberResponseDto memberResponseDto = new MemberResponseDto(1L, "test@pusan.ac.kr", "password", 0);
 
         given(authService.findOneByEmailAndPassword(memberRequestDto)).willReturn(memberResponseDto);
 
