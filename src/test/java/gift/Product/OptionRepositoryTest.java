@@ -46,14 +46,14 @@ public class OptionRepositoryTest {
         Category category = new Category(CATEGORY_NAME);
         category.setId(1L);
 
-        when(categoryRepository.findByCategoryName(CATEGORY_NAME)).thenReturn(Optional.of(category));
+        when(categoryRepository.findByName(CATEGORY_NAME)).thenReturn(Optional.of(category));
         when(categoryRepository.save(any(Category.class))).thenReturn(category);
     }
 
     @Test
     void optionAddTest(){
 
-        Category category = categoryRepository.findByCategoryName(CATEGORY_NAME).orElseThrow();
+        Category category = categoryRepository.findByName(CATEGORY_NAME).orElseThrow();
         Product expected = new Product(PRODUCT_NAME, PRODUCT_PRICE, PRODUCT_URL, category);
         expected.setId(2L);
         Option option = new Option(OPTION_NAME, OPTION_QUANTITY, expected);
@@ -68,7 +68,7 @@ public class OptionRepositoryTest {
 
     @Test
     void deleteTest(){
-        Category category = categoryRepository.findByCategoryName(CATEGORY_NAME).orElseThrow();
+        Category category = categoryRepository.findByName(CATEGORY_NAME).orElseThrow();
         Product expected = new Product(PRODUCT_NAME, PRODUCT_PRICE, PRODUCT_URL, category);
         expected.setId(2L);
         Option option = new Option(OPTION_NAME, OPTION_QUANTITY, expected);

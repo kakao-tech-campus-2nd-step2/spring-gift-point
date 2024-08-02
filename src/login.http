@@ -91,14 +91,25 @@ host: localhost:8080
   "id": 78
 }
 ###
-POST /products/add HTTP/1.1
+POST /api/products HTTP/1.1
 content-type: application/json
 host: localhost:8080
 
 {
-  "price": 1500,
-  "name": "돌체",
-  "image_url": "example"
+  "name": "name",
+  "price": 4500,
+  "image_url": "http://hello",
+  "category_id": 1,
+  "options": [
+    {
+      "name": "name1",
+      "quantity": 20000
+    },
+    {
+      "name": "name2",
+      "quantity": 20000
+    }
+  ]
 }
 ###
 DELETE /products/delete/2 HTTP/1.1
@@ -109,22 +120,27 @@ host: localhost:8080
   "id": 2
 }
 #####
-POST /category/add HTTP/1.1
+GET /api/categories HTTP/1.1
+content-type: application/json
+host: localhost:8080
+###
+POST /api/categories HTTP/1.1
 content-type: application/json
 host: localhost:8080
 
 {
-  "categoryName": "패션"
+  "name": "상품권211111"
 }
 ###
-POST /category/delete/1 HTTP/1.1
+GET /api/categories/2 HTTP/1.1
 content-type: application/json
 host: localhost:8080
 
-{
-  "id": 1,
-  "categoryName": "상품권"
-}
+###
+DELETE /api/categories/1 HTTP/1.1
+content-type: application/json
+host: localhost:8080
+
 ####
 POST /option/add HTTP/1.1
 content-type: application/json
@@ -139,7 +155,9 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIiwiZW1haWwiOiJwYXNzd29yZ
 Content-Type: application/json
 
 {
-  "optionId": 1,
+  "option_id": 1,
   "quantity": 1,
   "message": "조심하세요."
 }
+###
+GET http://localhost:8080/api/auth/kakao

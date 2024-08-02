@@ -19,10 +19,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/kakao/login")
+@RequestMapping("/api/auth")
 public class KakaoController {
     private final JwtUtil jwtUtil;
     private final KakaoService kakaoService;
@@ -37,13 +38,14 @@ public class KakaoController {
         this.memberRepository = memberRepository;
     }
 
-    @GetMapping("/authorize")
+    @GetMapping("/kakao")
     public void authorize(HttpServletResponse response) throws IOException {
-        response.sendRedirect("https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=8b0993ea8425d3f401667223d8d6b1a7&redirect_uri=http://localhost:8080/kakao/login/token");
+        response.sendRedirect("https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=8b0993ea8425d3f401667223d8d6b1a7&redirect_uri=http://localhost:8080/api/auth/kakao/callback");
 
     }
 
-    @GetMapping("/token")
+    @GetMapping("/kakao/callback")
+    @ResponseBody
     public ResponseEntity<?> token(@RequestParam("code") String code) {
         Map<String, Object> responseBody = new HashMap<>();
         KakaoTokenResponseDto kakaoTokenResponseDto = kakaoService.getAccessTokenFromKakao(code);
@@ -55,9 +57,9 @@ public class KakaoController {
         member.setAccessToken(token);// jwt 토큰 멤버 DB에 저장
         member.setKakaoToken(kakaoTokenResponseDto.getAccessToken());// 카카오에서 발급받은 엑세스 토큰도 멤버 DB에 저장
         memberService.updateMember(member);
-        return ResponseEntity.status(HttpStatus.CREATED)
+        return ResponseEntity.status(HttpStatus.OK)
             .header(HttpHeaders.AUTHORIZATION, token)
-            .body(responseBody);
+            .build();
     }
 
 }

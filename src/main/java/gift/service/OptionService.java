@@ -1,5 +1,6 @@
 package gift.service;
 
+import gift.dto.OptionRequest;
 import gift.exception.ProductNotFoundException;
 import gift.model.Option;
 import gift.repository.OptionRepository;
@@ -22,8 +23,8 @@ public class OptionService {
         this.optionRepository = optionRepository;
     }
 
-    public void addOption(List<Option> option) {
-        optionRepository.saveAll(option);
+    public void addOption(List<Option> options) {
+        optionRepository.saveAll(options);
     }
 
     @Transactional
@@ -40,12 +41,13 @@ public class OptionService {
         }
 
     }
-
-    public void deleteOption(Long productId) {
-        if (!optionRepository.existsById(productId)) {
+    @Transactional
+    public void deleteOption(Long optionId) {
+        if (!optionRepository.existsById(optionId)) {
             throw new ProductNotFoundException("Option not found");
         }
-        optionRepository.deleteById(productId);
+        Option option = optionRepository.findById(optionId).get();
+        optionRepository.delete(option);
     }
 
 
@@ -71,6 +73,10 @@ public class OptionService {
 
         option.setQuantity(option.getQuantity() - subtractQuantities);
         return optionRepository.save(option);
+    }
+
+    public List<Option> getOptionByProductID(Long productId){
+        return optionRepository.findAllByProductId(productId);
     }
 
 

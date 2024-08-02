@@ -1,5 +1,7 @@
 package gift.controller;
 
+import gift.dto.WishData;
+import gift.dto.WishPage;
 import gift.model.Member;
 import gift.model.WishList;
 import gift.repository.MemberRepository;
@@ -7,6 +9,8 @@ import gift.service.MemberService;
 import gift.service.WishlistService;
 import gift.util.JwtUtil;
 import io.jsonwebtoken.Claims;
+import java.util.HashMap;
+import java.util.Map;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -15,10 +19,10 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.http.HttpStatus;
 
 import java.util.List;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-@Controller
-@RequestMapping("/wishlist")
+
+@RestController
+@RequestMapping("/api/wishes")
 public class WishlistController {
     private final WishlistService wishlistService;
     private final MemberRepository memberRepository;
@@ -30,31 +34,40 @@ public class WishlistController {
         this.jwtUtil = jwtUtil;
     }
 
-    @PostMapping("/add")
-    public ResponseEntity<?> addItem(@RequestHeader("Authorization") String token, @RequestParam Long productId) {
+    @PostMapping
+    public ResponseEntity<?> addItem(@RequestHeader("Authorization") String token, @RequestBody WishData wishData) {
         Claims claims = jwtUtil.extractClaims(token.replace("Bearer ", ""));
         Long memberId = Long.parseLong(claims.getSubject());
         boolean result = jwtUtil.isTokenValid(token.replace("Bearer ", ""), memberId);
         if (!result) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Token is invalid!");
         }
-        WishList addedItem = wishlistService.addProduct(memberId, productId);
+
+        WishList addedItem = wishlistService.addProduct(memberId, wishData.getProduct_id());
         return ResponseEntity.ok(addedItem);
     }
 
-    @GetMapping("/items")
-    public String getItems(@RequestHeader("Authorization") String token, @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "5") int size, Model model) {
+    @GetMapping
+    public ResponseEntity<?> getItems(@RequestHeader("Authorization") String token, @RequestParam(value = "page") int page,  Model model) {
         Claims claims = jwtUtil.extractClaims(token.replace("Bearer ", ""));
         Long memberId = Long.parseLong(claims.getSubject());
-        Page<WishList> wishlistPage = wishlistService.getProductsByMember(memberId, page, size);
+        Page<WishList> wishlistPage = wishlistService.getProductsByMember(memberId, page, 20);
         model.addAttribute("wishlistPage", wishlistPage);
-        return "wishlist";
+
+        WishPage wishPage = new WishPage();
+        wishPage.setContent(wishlistPage.getContent());
+        wishPage.setTotalPage(wishlistPage.getTotalPages());
+
+        Map<String, Object> dataWrapper = new HashMap<>();
+
+        dataWrapper.put("data", wishPage);
+
+        return ResponseEntity.status(HttpStatus.OK).body(dataWrapper);
     }
 
-    @PostMapping("/delete/{id}")
-    public String deleteItem(@PathVariable("id") Long productId, RedirectAttributes redirectAttributes) {
+    @DeleteMapping("/{wish_id}")
+    public ResponseEntity<?> deleteItem(@PathVariable("wish_id") Long productId) {
         wishlistService.deleteById(productId);
-        redirectAttributes.addFlashAttribute("message", "Product successfully deleted!");
-        return "redirect:/wishlist/items";
+        return ResponseEntity.status(HttpStatus.OK).build();
     }
 }

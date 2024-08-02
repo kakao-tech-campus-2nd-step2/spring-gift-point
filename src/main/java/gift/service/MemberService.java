@@ -26,7 +26,7 @@ public class MemberService {
 
     public Optional<Member> authenticate(String email, String password) {
         Optional<Member> member = memberRepository.findByEmail(email);
-        if (member. isPresent() && member.get().getPassword().equals(PasswordUtil.hashPassword(password))) {
+        if (member. isPresent() && member.get().getPassword().equals(password)) {
             return member;
         }
         return Optional.empty();

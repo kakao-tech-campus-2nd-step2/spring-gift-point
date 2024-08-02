@@ -1,6 +1,9 @@
 package gift.service;
+import gift.dto.ProductRequest;
 import gift.exception.InvalidProductException;
 import gift.exception.ProductNotFoundException;
+import gift.model.Category;
+import gift.repository.CategoryRepository;
 import gift.repository.ProductRepository;
 
 import java.util.Optional;
@@ -14,9 +17,12 @@ import java.util.List;
 @Service
 public class ProductService  {
     private final ProductRepository productRepository;
+    private final CategoryRepository categoryRepository;
 
-    public ProductService(ProductRepository productRepository) {
+    public ProductService(ProductRepository productRepository,
+        CategoryRepository categoryRepository) {
         this.productRepository = productRepository;
+        this.categoryRepository = categoryRepository;
     }
 
 
@@ -33,8 +39,19 @@ public class ProductService  {
         }
     }
 
+    public Page<Product> getProductsByCategoryId(Pageable pageable,Long category_id) {
+        try {
+            return productRepository.findAllByCategoryId(pageable,category_id);
+        } catch (Exception e) {
+            throw new IllegalArgumentException("Product not found: " + e.getMessage());
+        }
+    }
 
-    public Product addProduct(Product product) {
+
+    public Product addProduct(ProductRequest productRequest) {
+        Category category = categoryRepository.findById(productRequest.getCategoryId())
+            .orElseThrow(()-> new IllegalArgumentException("Category not found!"));
+        Product product = new Product(category, productRequest);
         validateProduct(product);
         return productRepository.save(product);
     }

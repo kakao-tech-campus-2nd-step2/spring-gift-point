@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/orders")
+@RequestMapping("/api/orders")
 public class OrderController {
     private final JwtUtil jwtUtil;
     private final MemberService memberService;
@@ -49,9 +49,7 @@ public class OrderController {
         Member member = memberService.getMemberById(memberId);// 토큰에서 멤버 정보 추출
         orderService.sendMessage(order, member);
 
-        return ResponseEntity.status(HttpStatus.CREATED)
-            .header(HttpHeaders.AUTHORIZATION, token)
-            .body(order);
+        return ResponseEntity.ok().build();
     }
 
 }

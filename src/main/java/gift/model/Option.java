@@ -2,6 +2,7 @@ package gift.model;
 
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import gift.dto.OptionRequest;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -35,9 +36,9 @@ public class Option {
 
     }
 
-    public Option(String optionName, Long quantity, Product product) {
-        this.optionName = optionName;
-        this.quantity = quantity;
+    public Option(OptionRequest optionRequest, Product product) {
+        this.optionName = optionRequest.getName();
+        this.quantity = optionRequest.getQuantity();
         this.product = product;
     }
 

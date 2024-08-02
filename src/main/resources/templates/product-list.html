@@ -99,7 +99,7 @@
                 <option value="" disabled selected>Select a category</option>
                 <option th:each="category : ${categories}"
                         th:value="${category.id}"
-                        th:text="${category.categoryName}"></option>
+                        th:text="${category.name}"></option>
               </select>
             </div>
             <div id="options">
