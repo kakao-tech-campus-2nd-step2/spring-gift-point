@@ -83,7 +83,7 @@ public class ProductOptionServiceTest {
         ProductOptionResponseDto createdProductOption = productOptionService.addProductOption(productId, productOptionRequestDto);
 
         assertNotNull(createdProductOption);
-        assertEquals("상품1", createdProductOption.getProductName());
+        assertEquals(productId, createdProductOption.getProductId());
         assertEquals(optionName, createdProductOption.getOptionName());
         assertEquals(quantity, createdProductOption.getQuantity());
     }

@@ -80,7 +80,7 @@ public class ProductOptionControllerTest {
                 .post("/api/products/" + productId + "/options")
                 .then()
                 .statusCode(HttpStatus.CREATED.value())
-                .body("productName", equalTo("상품1"))
+                .body("productId", equalTo(productId.intValue()))
                 .body("optionName", equalTo("옵션1"))
                 .body("quantity", equalTo(10));
     }
