@@ -13,6 +13,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
@@ -39,7 +40,7 @@ public class OrderController {
             security = @SecurityRequirement(name = "JWT"))
     @PostMapping
     public ResponseEntity<?> createOrder(@Parameter(hidden = true) @LoginUser AppUser loginAppUser,
-                                         @RequestBody OrderRequest orderRequest) {
+                                         @Valid @RequestBody OrderRequest orderRequest) {
         OrderResponse orderResponse = orderService.createOrder(loginAppUser, orderRequest);
         kakaoService.sendMessageToMe(loginAppUser, orderRequest.message());
         return ResponseEntity.ok(new CommonResponse<>(orderResponse, "사용자의 주문이 성공적으로 완료되었습니다.", true));

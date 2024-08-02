@@ -1,6 +1,7 @@
 package gift.domain;
 
 import gift.BaseTimeEntity;
+import gift.exception.order.OrderCustomException.ExceedsPointLimitException;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -62,10 +63,13 @@ public class Order extends BaseTimeEntity {
         this.receivedPoint = Math.round(price * 0.05f);
         this.totalPrice = price - usedPoint;
 
-        processUserPoints(user, usedPoint, receivedPoint);
+        processUserPoints(user, price, usedPoint, receivedPoint);
     }
 
-    private void processUserPoints(AppUser user, int usedPoint, int receivedPoint) {
+    private void processUserPoints(AppUser user, int price, int usedPoint, int receivedPoint) {
+        if (usedPoint > price / 2) {
+            throw new ExceedsPointLimitException();
+        }
         user.usePoint(usedPoint);
         user.addPoint(receivedPoint);
     }
