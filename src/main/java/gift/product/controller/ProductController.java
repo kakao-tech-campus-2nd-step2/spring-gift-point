@@ -61,10 +61,14 @@ public class ProductController {
     @GetMapping("/products")
     public ResponseEntity<List<ProductResponse>> getPage(@RequestParam(required = false, defaultValue = "0") Integer page,
             @RequestParam(required = false, defaultValue = "10") Integer size,
-            @RequestParam(required = false, defaultValue = "id") List<String> sortedBy,
+            @RequestParam(required = false) List<String> sort,
             @RequestParam(defaultValue = "0") Long categoryId) {
 
-        return ResponseEntity.ok(productService.readProduct(page, size,sortedBy,categoryId));
+        if(sort == null){
+            sort = List.of("id","ASC");
+        }
+
+        return ResponseEntity.ok(productService.readProduct(page, size,sort,categoryId));
     }
 
 }

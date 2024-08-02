@@ -78,9 +78,11 @@ public class ProductService {
         }
     }
 
-    public List<ProductResponse> readProduct(int pageNumber, int pageSize,List<String> sortedBy, Long categoryId) {
-        String sortedName = sortedBy.get(0);
-        String sortedOrder = sortedBy.get(1);
+    public List<ProductResponse> readProduct(int pageNumber, int pageSize,List<String> sort, Long categoryId) {
+
+        String sortedName = sort.get(0);
+        String sortedOrder = sort.get(1);
+
 
         Pageable pageable = PageRequest.of(pageNumber, pageSize, Sort.by(Sort.Direction.fromString(sortedOrder), sortedName));
 
