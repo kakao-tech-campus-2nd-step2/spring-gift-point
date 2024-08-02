@@ -54,7 +54,8 @@ public class User {
         this.authProvider = AuthProvider.LOCAL;
     }
 
-    public User(String email, AuthProvider authProvider, String providerId, String kakaoAccessToken, LocalDateTime kakaoTokenExpireAt) {
+    public User(String email, AuthProvider authProvider, String providerId, String kakaoAccessToken,
+        LocalDateTime kakaoTokenExpireAt) {
         this.email = email;
         this.authProvider = authProvider;
         this.providerId = providerId;

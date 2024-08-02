@@ -27,7 +27,8 @@ public class UserController {
 
     @Operation(summary = "사용자 등록", description = "새로운 사용자를 등록합니다.")
     @PostMapping("register")
-    public ResponseEntity<UserResponseDto> joinUser(@Valid @RequestBody UserRequestDto userRequestDto) {
+    public ResponseEntity<UserResponseDto> joinUser(
+        @Valid @RequestBody UserRequestDto userRequestDto) {
         UserResponseDto response = userService.joinUser(userRequestDto);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }

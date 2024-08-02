@@ -25,7 +25,8 @@ public class ProductViewController {
         @RequestParam(defaultValue = "10") @Positive int size,
         @RequestParam(defaultValue = "name,asc") String sort,
         @RequestParam Long categoryId) {
-        Page<ProductResponseDto> productPage = productService.getAllProducts(page, size, sort, categoryId);
+        Page<ProductResponseDto> productPage = productService.getAllProducts(page, size, sort,
+            categoryId);
         model.addAttribute("productPage", productPage);
         return "admin";
     }

@@ -6,6 +6,7 @@ import jakarta.validation.constraints.Size;
 import org.hibernate.validator.constraints.URL;
 
 public class CategoryAddRequestDto {
+
     @NotBlank
     private final String name;
 

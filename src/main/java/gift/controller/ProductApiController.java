@@ -55,7 +55,8 @@ public class ProductApiController {
     @PostMapping
     public ResponseEntity<ProductResponseDto> addProduct(
         @Valid @RequestBody ProductAddRequestDto productAddRequestDto) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(productService.addProduct(productAddRequestDto));
+        return ResponseEntity.status(HttpStatus.CREATED)
+            .body(productService.addProduct(productAddRequestDto));
     }
 
     @Operation(summary = "상품 수정", description = "지정된 ID의 상품을 수정합니다.")

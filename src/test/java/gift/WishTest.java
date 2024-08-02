@@ -33,7 +33,9 @@ public class WishTest {
     @BeforeEach
     public void setUp() {
         user = new User("test@example.com", "password123");
-        category = new Category("test Category", "Test Color", "https://img1.kakaocdn.net/thumb/C320x320@2x.fwebp.q82/?fname=https%3A%2F%2Fst.kakaocdn.net%2Fproduct%2Fgift%2Fproduct%2F20240508101036_6c7f02cb957848a69a25018a664a3c89.jpg", "Test Description");
+        category = new Category("test Category", "Test Color",
+            "https://img1.kakaocdn.net/thumb/C320x320@2x.fwebp.q82/?fname=https%3A%2F%2Fst.kakaocdn.net%2Fproduct%2Fgift%2Fproduct%2F20240508101036_6c7f02cb957848a69a25018a664a3c89.jpg",
+            "Test Description");
         product = new Product("Test Product", 1000, "http://example.com/image.jpg", category);
         entityManager.persist(user);
         entityManager.persist(category);
@@ -143,7 +145,7 @@ public class WishTest {
     @Test
     public void existsByUserEmailAndProductIdTest() {
         // given
-        Wish wish = new Wish(user, product,1 );
+        Wish wish = new Wish(user, product, 1);
         wishRepository.save(wish);
 
         // when

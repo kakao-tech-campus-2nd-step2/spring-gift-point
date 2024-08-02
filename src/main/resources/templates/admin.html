@@ -30,7 +30,8 @@
     <td>
       <button
           th:attr="data-id=${product.id}, data-name=${product.name}, data-price=${product.price}, data-image-url=${product.imageUrl}, data-category-id=${product.categoryId}"
-          onclick="openUpdateModal(this)">Update</button>
+          onclick="openUpdateModal(this)">Update
+      </button>
       <button class="delete" th:onclick="|deleteProduct(${product.id})|">Delete</button>
     </td>
   </tr>

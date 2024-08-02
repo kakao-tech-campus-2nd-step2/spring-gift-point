@@ -21,7 +21,8 @@ public class CategoryUpdateRequestDto {
     @Size(max = 255)
     private final String description;
 
-    public CategoryUpdateRequestDto(String name, String color, String imageUrl, String description) {
+    public CategoryUpdateRequestDto(String name, String color, String imageUrl,
+        String description) {
         this.name = name;
         this.color = color;
         this.imageUrl = imageUrl;

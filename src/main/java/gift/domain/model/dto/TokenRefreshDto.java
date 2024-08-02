@@ -3,6 +3,7 @@ package gift.domain.model.dto;
 import gift.domain.model.entity.User;
 
 public class TokenRefreshDto {
+
     private final boolean refreshed;
     private final String newToken;
     private final User user;
