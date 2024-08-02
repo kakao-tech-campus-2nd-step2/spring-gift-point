@@ -91,6 +91,13 @@ public class ExceptionController {
     }
 
     @ResponseBody
+    @ExceptionHandler(ToMuchPointException.class)
+    public ResponseEntity<ErrorResult> toMuchPointHandler(ToMuchPointException e){
+        ErrorResult errorResult = new ErrorResult("400", e.getMessage());
+        return new ResponseEntity<>(errorResult, HttpStatus.BAD_REQUEST);
+    }
+
+    @ResponseBody
     @ExceptionHandler(HttpClientErrorException.class)
     public ResponseEntity<ErrorResult> httpClientHandler(HttpClientErrorException e){
         ErrorResult errorResult = new ErrorResult(e.getStatusCode().toString(), e.getMessage());
