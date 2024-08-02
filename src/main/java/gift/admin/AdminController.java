@@ -1,11 +1,13 @@
 package gift.admin;
 
 import gift.domain.product.dto.ProductRequest;
+import gift.domain.product.dto.ProductResponse;
 import gift.domain.product.service.ProductService;
 import jakarta.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
 import org.springdoc.core.annotations.ParameterObject;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
@@ -28,42 +30,43 @@ public class AdminController {
     }
 
     @GetMapping("/")
-    public String index(
-        Model model,
-        @ParameterObject Pageable pageable
-    ) {
-        model.addAttribute("products", productService.getAllProducts(pageable, null));
+    public String index(Model model, @ParameterObject Pageable pageable) {
+        Page<ProductResponse> productPage = productService.getAllProducts(pageable, null);
+        model.addAttribute("products", productPage.getContent());
+        model.addAttribute("page", productPage);
+        model.addAttribute("currentPage", productPage.getNumber()+1);
+        model.addAttribute("totalPages", productPage.getTotalPages());
         return "index";
     }
 
-    @GetMapping("/create-product")
-    public String createPage() {
+    @GetMapping("/products/create")
+    public String getCreatePage() {
         return "create";
     }
 
-    @PostMapping("/create-product")
-    public String create(@ModelAttribute @Valid ProductRequest productRequest) {
+    @PostMapping("/products/create")
+    public String createProduct(@ModelAttribute @Valid ProductRequest productRequest) {
 
         productService.createProduct(productRequest);
         return "redirect:/";
     }
 
-    @GetMapping("/update-product/{id}")
-    public String updatePage(@PathVariable("id") Long id, Model model) {
+    @GetMapping("/products/update/{id}")
+    public String getUpdatePage(@PathVariable("id") Long id, Model model) {
         model.addAttribute("id", id);
         return "update";
     }
 
-    @PostMapping("/update-product/{id}")
-    public String update(@PathVariable("id") Long id,
+    @PostMapping("/product/update/{id}")
+    public String updateProduct(@PathVariable("id") Long id,
         @ModelAttribute @Valid ProductRequest productRequest) {
 
         productService.updateProduct(id, productRequest);
         return "redirect:/";
     }
 
-    @GetMapping("/delete-product/{id}")
-    public String delete(@PathVariable("id") Long id) {
+    @GetMapping("/products/delete/{id}")
+    public String deleteProduct(@PathVariable("id") Long id) {
         productService.deleteProduct(id);
         return "redirect:/";
     }
