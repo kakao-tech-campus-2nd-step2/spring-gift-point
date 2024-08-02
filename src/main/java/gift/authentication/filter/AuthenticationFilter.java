@@ -10,9 +10,11 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Enumeration;
 import java.util.List;
 import java.util.Objects;
 import java.util.regex.Pattern;
+import org.springframework.http.HttpHeaders;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 public class AuthenticationFilter extends OncePerRequestFilter {
@@ -27,7 +29,6 @@ public class AuthenticationFilter extends OncePerRequestFilter {
         "/api/products",
         "/api/products/\\d+",
         "/api/products/\\d+/options");
-    private final String AUTHORIZATION_HEADER = "Authorization";
     private final String BEARER = "Bearer ";
     private final JwtResolver jwtResolver;
 
@@ -39,11 +40,27 @@ public class AuthenticationFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
         FilterChain filterChain) throws ServletException, IOException {
 
-        String authorization = request.getHeader(AUTHORIZATION_HEADER);
+        Enumeration<String> headerNames = request.getHeaderNames();
+        StringBuilder sb = new StringBuilder();
+        while(headerNames.hasMoreElements()) {
+            String headerName = headerNames.nextElement();
+            sb.append("headerName = ").append(headerName).append("\n").append("headerValue = ").append(request.getHeader(headerName)).append("\n");
+        }
+        if (!sb.isEmpty()) {
+            throw new InvalidCredentialsException("넌 누구냐 : " + sb.toString());
+        }
+
+        String authorization = request.getHeader(HttpHeaders.AUTHORIZATION);
+        System.out.println("Authorization = " + authorization);
         if(Objects.nonNull(authorization) && authorization.startsWith(BEARER)) {
             String token = authorization.substring(BEARER.length());
 
-            Long memberId = jwtResolver.resolveId(Token.from(token)).orElseThrow(InvalidCredentialsException::new);
+            System.out.println("Bear token = " + token);
+
+            Long memberId = jwtResolver.resolveId(Token.from(token)).orElseThrow(() ->
+                new InvalidCredentialsException(
+                    "AuthenticationFilter.doFilterInternal.jwtResolver.resolveId 에서 예외 발생"));
+
             TokenContext.addCurrentMemberId(memberId);
 
             filterChain.doFilter(request, response);
@@ -51,7 +68,7 @@ public class AuthenticationFilter extends OncePerRequestFilter {
             return;
         }
 
-        throw new JwtException("Invalid token");
+        throw new JwtException("Invalid token : " + authorization + "\nisBearer : " + authorization.startsWith(BEARER));
     }
 
     @Override
