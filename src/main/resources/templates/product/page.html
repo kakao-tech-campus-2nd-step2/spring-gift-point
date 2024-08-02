@@ -57,8 +57,9 @@
       </div>
       <div class="form-label-input">
         <label for="category">Category:</label>
-        <select id="category" th:each="category : ${categories}">
+        <select id="category">
           <option
+              th:each="category : ${categories}"
               th:value="${category.getName()}"
               th:text="${category.getName()}"
           />
@@ -123,7 +124,6 @@
           </button>
         </th>
         <th>ImageUrl</th>
-        <th>Category</th>
         <th>Action</th>
       </tr>
 
@@ -132,8 +132,7 @@
         <td th:text="${product.getId()}" id="id"></td>
         <td th:text="${product.getName()}"></td>
         <td th:text="${product.getPrice()}"></td>
-        <td th:text="${product.getImageUrl()}"></td>
-        <td th:text="${product.getCategory().getName()}"></td>
+        <td th:text="${product.getImageURL()}"></td>
         <td>
           <button
               class="material-symbols-outlined content-edit"
