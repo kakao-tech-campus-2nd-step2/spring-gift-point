@@ -20,6 +20,7 @@ public class Category {
     @Column(nullable = false, unique = true, length = 7)
     private String name;
     private String color;
+    @Column(name = "image_url", length = 300)
     private String imageUrl;
     private String description;
     @OneToMany(mappedBy = "category", orphanRemoval = true, cascade = CascadeType.ALL)

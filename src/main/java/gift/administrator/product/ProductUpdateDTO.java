@@ -1,8 +1,5 @@
 package gift.administrator.product;
 
-import gift.administrator.category.Category;
-import gift.administrator.option.Option;
-import gift.administrator.option.OptionDTO;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Digits;
 import jakarta.validation.constraints.Min;
@@ -10,11 +7,9 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
-import java.util.ArrayList;
-import java.util.List;
 
 @Schema(description = "상품 DTO")
-public class ProductDTO {
+public class ProductUpdateDTO {
 
     private Long id;
     @Schema(description = "상품 이름", example = "춘식이 잠옷")
@@ -36,21 +31,16 @@ public class ProductDTO {
     @Schema(description = "상품이 속한 카테고리 아이디", example = "1")
     @NotNull(message = "카테고리를 선택해야합니다.")
     private Long categoryId;
-    @Schema(description = "상품의 옵션", example = "[{\"name\":\"한복 버전\",\"quantity\":\"4\"},{\"name\":\"XL\",\"quantity\":\"2\"}]")
-    @Size(min = 1, message = "상품에는 적어도 하나의 옵션이 있어야 합니다.")
-    private List<OptionDTO> options = new ArrayList<>();
 
-    public ProductDTO() {
+    public ProductUpdateDTO() {
     }
 
-    public ProductDTO(Long id, String name, int price, String imageUrl, Long categoryId,
-        List<OptionDTO> options) {
+    public ProductUpdateDTO(Long id, String name, int price, String imageUrl, Long categoryId) {
         this.id = id;
         this.name = name;
         this.price = price;
         this.imageUrl = imageUrl;
         this.categoryId = categoryId;
-        this.options = options;
     }
 
     public Long getId() {
@@ -87,26 +77,5 @@ public class ProductDTO {
 
     public Long getCategoryId() {
         return categoryId;
-    }
-
-    public List<OptionDTO> getOptions() {
-        return options;
-    }
-
-    public Product toProduct(ProductDTO productDTO, Category category) {
-        Product product = new Product(productDTO.getId(), productDTO.getName(),
-            productDTO.getPrice(),
-            productDTO.getImageUrl(), category, new ArrayList<>());
-        List<Option> options = productDTO.getOptions().stream()
-            .map(optionDTO -> optionDTO.toOption(product))
-            .toList();
-        product.setOption(options);
-        return product;
-    }
-
-    public static ProductDTO fromProduct(Product product) {
-        return new ProductDTO(product.getId(), product.getName(), product.getPrice(),
-            product.getImageUrl(), product.getCategory().getId(),
-            product.getOptions().stream().map(OptionDTO::fromOption).toList());
     }
 }

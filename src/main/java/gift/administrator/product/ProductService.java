@@ -36,7 +36,7 @@ public class ProductService {
         Sort sort = Sort.by(direction, sortBy);
         Pageable pageRequest = PageRequest.of(page, size, sort);
         Page<Product> productPage;
-        if(categoryId == null){
+        if(categoryId != null){
             productPage = productRepository.findAllByCategoryId(categoryId, pageRequest);
         }
         else {
@@ -52,7 +52,7 @@ public class ProductService {
         Sort sort = Sort.by(direction, sortBy);
         Pageable pageRequest = PageRequest.of(page, size, sort);
 
-        Page<Product> productPage = productPage = productRepository.findAll(pageRequest);
+        Page<Product> productPage = productRepository.findAll(pageRequest);
 
         List<ProductDTO> products = productPage.stream()
             .map(ProductDTO::fromProduct)
@@ -98,7 +98,7 @@ public class ProductService {
         return ProductDTO.fromProduct(savedProduct);
     }
 
-    public ProductDTO updateProduct(ProductDTO productDTO, Long productId) {
+    public ProductDTO updateProduct(ProductUpdateDTO productDTO, Long productId) {
 
         Product existingProduct = findByProductId(productId);
         existsByNameAndIdNotThrowException(productDTO.getName(), productId);
@@ -106,12 +106,6 @@ public class ProductService {
 
         existingProduct.update(productDTO.getName(), productDTO.getPrice(),
             productDTO.getImageUrl(), newCategory);
-
-        List<Option> oldOptions = new ArrayList<>(existingProduct.getOptions());
-        existingProduct.removeOptions(oldOptions);
-
-        List<Option> options = optionDTOListToOptionList(productDTO.getOptions(), existingProduct);
-        existingProduct.addOptions(options);
 
         Product savedProduct = productRepository.save(existingProduct);
         return ProductDTO.fromProduct(savedProduct);

@@ -4,7 +4,6 @@ import gift.administrator.category.CategoryService;
 import gift.util.PageUtil;
 import jakarta.validation.Valid;
 import java.util.Arrays;
-import org.springframework.data.crossstore.ChangeSetPersister.NotFoundException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Controller;
@@ -56,8 +55,7 @@ public class ProductController {
     }
 
     @GetMapping("/update/{id}")
-    public String showPutProduct(@PathVariable("id") long id, Model model)
-        throws NotFoundException {
+    public String showPutProduct(@PathVariable("id") long id, Model model) {
         ProductDTO product = productService.getProductById(id);
         model.addAttribute("productDTO", product);
         model.addAttribute("categories", categoryService.getAllCategories());
@@ -65,14 +63,14 @@ public class ProductController {
     }
 
     @GetMapping("/delete/{id}")
-    public String deleteProduct(@PathVariable("id") long id) throws NotFoundException {
+    public String deleteProduct(@PathVariable("id") long id) {
         productService.deleteProduct(id);
         return "redirect:/products";
     }
 
     @PostMapping("/add")
     public String postProduct(@Valid @ModelAttribute("productDTO") ProductDTO product,
-        BindingResult result, Model model) throws NotFoundException {
+        BindingResult result, Model model) {
         productService.existsByNamePutResult(product.getName(), result);
         if (result.hasErrors()) {
             model.addAttribute("categories", categoryService.getAllCategories());
@@ -86,10 +84,10 @@ public class ProductController {
 
     @PostMapping("/update/{id}")
     public String putProduct(@PathVariable("id") Long id,
-        @Valid @ModelAttribute("productDTO") ProductDTO product, BindingResult result,
+        @Valid @ModelAttribute("productDTO") ProductUpdateDTO product, BindingResult result,
         Model model) {
-        ProductDTO product1 = new ProductDTO(id, product.getName(), product.getPrice(),
-            product.getImageUrl(), product.getCategoryId(), product.getOptions());
+        ProductUpdateDTO product1 = new ProductUpdateDTO(id, product.getName(), product.getPrice(),
+            product.getImageUrl(), product.getCategoryId());
         productService.existsByNameAndIdPutResult(product1.getName(), id, result);
         if (result.hasErrors()) {
             model.addAttribute("categories", categoryService.getAllCategories());

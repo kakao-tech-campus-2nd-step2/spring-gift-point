@@ -30,7 +30,7 @@ public class Product {
     private int price;
     @Column(nullable = false, unique = true, length = 15)
     private String name;
-    @Column(nullable = false)
+    @Column(name = "image_url", length = 300, nullable = false)
     private String imageUrl;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "category_id", nullable = false)

@@ -79,7 +79,7 @@ public class ProductApiController {
         + "required info(name, price, imageUrl, categoryId, option)")
     public ResponseEntity<ApiResponse<ProductDTO>> updateProduct(
         @PathVariable("productId") Long productId,
-        @Valid @RequestBody ProductDTO productDTO) {
+        @Valid @RequestBody ProductUpdateDTO productDTO) {
         productService.existsByNameAndId(productDTO.getName(), productId);
 
         ProductDTO result = productService.updateProduct(productDTO, productId);

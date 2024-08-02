@@ -16,7 +16,7 @@ public class Token {
     private Long userId;
     @Column(nullable = false)
     private String sns;
-    @Column(nullable = false)
+    @Column(name = "access_token", nullable = false)
     private String accessToken;
     private int expiresIn;
     private String refreshToken;
