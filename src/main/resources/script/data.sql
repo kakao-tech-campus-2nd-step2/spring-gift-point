@@ -16,7 +16,7 @@ VALUES ('카카오 초콜릿', 100, 1),
        ('아메리카노', 60, 3),
        ('디카페인 아메리카노', 1, 3);
 
-INSERT INTO member(email, password)
-VALUES ('admin@email.com', 'password'),
-       ('testuser@gmail.com', 'user123'),
-       ('useruser@naver.com', '1q2w3e4r!@#$');
+INSERT INTO member(email, password, point)
+VALUES ('admin@email.com', 'password', 0),
+       ('testuser@gmail.com', 'user123', 0),
+       ('useruser@naver.com', '1q2w3e4r!@#$', 0);

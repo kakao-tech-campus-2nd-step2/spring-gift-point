@@ -8,7 +8,7 @@ import gift.global.security.JwtUtil;
 import gift.kakao.auth.dto.KakaoTokenResponse;
 import gift.kakao.client.KakaoClient;
 import gift.member.dao.MemberRepository;
-import gift.member.dto.MemberDto;
+import gift.member.dto.MemberRequest;
 import gift.member.entity.Member;
 import gift.member.util.KakaoTokenMapper;
 import org.springframework.stereotype.Service;
@@ -31,15 +31,19 @@ public class AuthService {
         this.kakaoClient = kakaoClient;
     }
 
-    public AuthResponse authenticate(MemberDto memberDto) {
-        Member member = memberRepository.findByEmail(memberDto.email())
+    public AuthResponse authenticate(MemberRequest memberRequest) {
+        Member member = memberRepository.findByEmail(memberRequest.email())
                 .orElseThrow(() -> new CustomException(ErrorCode.MEMBER_NOT_FOUND));
 
         if (!member.getPassword()
-                   .equals(memberDto.password())) {
+                   .equals(memberRequest.password())) {
             throw new CustomException(ErrorCode.AUTHENTICATION_FAILED);
         }
 
+        return generateAuthResponse(member);
+    }
+
+    public AuthResponse generateAuthResponse(Member member) {
         return AuthResponse.of(
                 jwtUtil.generateToken(member.getId())
         );
@@ -61,9 +65,7 @@ public class AuthService {
                     return memberRepository.save(newMember);
                 });
 
-        return AuthResponse.of(
-                jwtUtil.generateToken(member.getId())
-        );
+        return generateAuthResponse(member);
     }
 
 }

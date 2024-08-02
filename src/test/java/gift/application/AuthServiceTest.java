@@ -8,7 +8,7 @@ import gift.global.security.JwtUtil;
 import gift.kakao.auth.dto.KakaoTokenResponse;
 import gift.kakao.client.KakaoClient;
 import gift.member.dao.MemberRepository;
-import gift.member.dto.MemberDto;
+import gift.member.dto.MemberRequest;
 import gift.member.entity.Member;
 import gift.member.util.MemberMapper;
 import org.junit.jupiter.api.DisplayName;
@@ -45,15 +45,15 @@ class AuthServiceTest {
     @Test
     @DisplayName("회원 검증 서비스 테스트")
     void authenticate() {
-        MemberDto memberDto = new MemberDto("test@email.com", "password");
-        Member member = MemberMapper.toEntity(memberDto);
+        MemberRequest memberRequest = new MemberRequest("test@email.com", "password");
+        Member member = MemberMapper.toEntity(memberRequest);
         String token = "token";
         given(jwtUtil.generateToken(any()))
                 .willReturn(token);
         given(memberRepository.findByEmail(any()))
                 .willReturn(Optional.of(member));
 
-        AuthResponse authToken = authService.authenticate(memberDto);
+        AuthResponse authToken = authService.authenticate(memberRequest);
 
         assertThat(authToken.token()).isEqualTo(token);
     }
@@ -61,11 +61,11 @@ class AuthServiceTest {
     @Test
     @DisplayName("존재하지 않는 회원 검증 실패 테스트")
     void authenticateMemberNotFound() {
-        MemberDto memberDto = new MemberDto("test@email.com", "password");
+        MemberRequest memberRequest = new MemberRequest("test@email.com", "password");
         given(memberRepository.findByEmail(any()))
                 .willReturn(Optional.empty());
 
-        assertThatThrownBy(() -> authService.authenticate(memberDto))
+        assertThatThrownBy(() -> authService.authenticate(memberRequest))
                 .isInstanceOf(CustomException.class)
                 .hasMessage(ErrorCode.MEMBER_NOT_FOUND
                                      .getMessage());
@@ -75,11 +75,11 @@ class AuthServiceTest {
     @DisplayName("회원 비밀번호 검증 실패 테스트")
     void authenticateIncorrectPassword() {
         Member member = MemberFixture.createMember("test@email.com");
-        MemberDto memberDto = new MemberDto("test@email.com", "incorrect " + member.getPassword());
+        MemberRequest memberRequest = new MemberRequest("test@email.com", "incorrect " + member.getPassword());
         given(memberRepository.findByEmail(any()))
                 .willReturn(Optional.of(member));
 
-        assertThatThrownBy(() -> authService.authenticate(memberDto))
+        assertThatThrownBy(() -> authService.authenticate(memberRequest))
                 .isInstanceOf(CustomException.class)
                 .hasMessage(ErrorCode.AUTHENTICATION_FAILED
                                      .getMessage());

@@ -1,5 +1,6 @@
 package gift.admin.api;
 
+import gift.member.application.MemberService;
 import gift.product.api.CategoryController;
 import gift.global.pagination.dto.PageResponse;
 import gift.product.api.ProductController;
@@ -22,18 +23,23 @@ public class AdminController {
 
     private final CategoryController categoryController;
 
-    public AdminController(ProductController productController, CategoryController categoryController) {
+    private final MemberService memberService;
+
+    public AdminController(ProductController productController,
+                           CategoryController categoryController,
+                           MemberService memberService) {
         this.productController = productController;
         this.categoryController = categoryController;
+        this.memberService = memberService;
     }
 
     // 상품 조회
     @GetMapping
-    public String getAllProducts(Model model,
-                                 @PageableDefault(
-                                         sort = "id",
-                                         direction = Sort.Direction.DESC)
-                                 Pageable pageable) {
+    public String showProductListView(Model model,
+                                      @PageableDefault(
+                                              sort = "id",
+                                              direction = Sort.Direction.DESC)
+                                      Pageable pageable) {
         Page<GetProductResponse> pagedProducts = productController.getPagedProducts(pageable);
         PageResponse pageInfo = new PageResponse(pagedProducts);
 
@@ -62,6 +68,13 @@ public class AdminController {
     public String showOptionAddForm(Model model, @PathVariable("id") Long id) {
         model.addAttribute("productId", id);
         return "option-add-form";
+    }
+
+    // 회원 목록 조회
+    @GetMapping("/members")
+    public String showMemberListView(Model model) {
+        model.addAttribute("memberList", memberService.getAllMembers());
+        return "admin-member-list";
     }
 
 }

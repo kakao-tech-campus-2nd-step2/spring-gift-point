@@ -1,7 +1,7 @@
 package gift.dao;
 
 import gift.member.dao.MemberRepository;
-import gift.member.dto.MemberDto;
+import gift.member.dto.MemberRequest;
 import gift.member.entity.Member;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
@@ -77,7 +77,7 @@ class MemberRepositoryTest {
     void updateMember() {
         Member member = MemberFixture.createMember("user@email.com");
         Member savedMember = memberRepository.save(member);
-        savedMember.update(new MemberDto("updateuser@email.com", "update!@#"));
+        savedMember.update(new MemberRequest("updateuser@email.com", "update!@#"));
 
         Member foundMember = memberRepository.findById(savedMember.getId())
                 .orElse(null);

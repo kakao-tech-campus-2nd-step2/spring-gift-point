@@ -3,7 +3,7 @@ package gift.member.api;
 import gift.auth.application.AuthService;
 import gift.auth.dto.AuthResponse;
 import gift.member.application.MemberService;
-import gift.member.dto.MemberDto;
+import gift.member.dto.MemberRequest;
 import gift.member.dto.PointRequest;
 import gift.member.entity.Member;
 import jakarta.validation.Valid;
@@ -23,17 +23,16 @@ public class MemberRestController {
     }
 
     @PostMapping("/register")
-    public AuthResponse signUp(@RequestBody @Valid MemberDto memberDto) {
-        return authService.authenticate(
-                memberService.registerMember(memberDto)
+    public AuthResponse signUp(@RequestBody @Valid MemberRequest memberRequest) {
+        return authService.generateAuthResponse(
+                memberService.registerMember(memberRequest)
         );
     }
 
     @PostMapping("/login")
-    public AuthResponse login(@RequestBody @Valid MemberDto memberDto) {
-        return authService.authenticate(memberDto);
+    public AuthResponse login(@RequestBody @Valid MemberRequest memberRequest) {
+        return authService.authenticate(memberRequest);
     }
-
 
     @PutMapping("/{memberId}/point")
     public void chargeMemberPoint(@PathVariable("memberId") Long memberId,

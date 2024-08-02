@@ -1,6 +1,6 @@
 package gift.member.entity;
 
-import gift.member.dto.MemberDto;
+import gift.member.dto.MemberRequest;
 import gift.wishlist.entity.Wish;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
@@ -74,9 +74,13 @@ public class Member {
         return kakaoTokenInfo.getKakaoRefreshToken();
     }
 
-    public void update(MemberDto memberDto) {
-        email = memberDto.email();
-        password = memberDto.password();
+    public Integer getPoint() {
+        return point;
+    }
+
+    public void update(MemberRequest memberRequest) {
+        email = memberRequest.email();
+        password = memberRequest.password();
     }
 
     public void refreshKakaoTokens(KakaoTokenInfo tokenInfo) {

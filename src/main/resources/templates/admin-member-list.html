@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Admin</title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+<div class="container">
+  <div class="table-wrapper">
+    <div class="table-title">
+      <div class="row">
+        <div class="col-sm-6">
+          <h2>
+            Members
+            <a th:href="@{/admin}">Product List</a>
+          </h2>
+        </div>
+      </div>
+    </div>
+    <table class="table table-striped table-hover">
+      <thead>
+      <tr>
+        <th>Email</th>
+        <th>Point</th>
+        <th>Actions</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr th:each="member : ${memberList}">
+        <td th:text="${member.email}"></td>
+        <td th:text="${member.point}"></td>
+        <td>
+          <form>
+            <input type="number" th:id="point + ${member.id}" required/>
+            <button type="button" th:onclick="|chargeMemberPoint(${member.id})|">Charge</button>
+          </form>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+<script>
+  function chargeMemberPoint(memberId) {
+      const point = document.getElementById("point" + memberId).value;
+
+      fetch(`/api/members/${memberId}/point`, {
+          method: 'PUT',
+          headers: {
+              'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+              point: point
+          })
+      })
+          .then(response => {
+              if (!response.ok) {
+                  return response.text().then(text => {
+                      throw new Error(text)
+                  });
+              }
+              alert('포인트가 충전되었습니다.');
+              window.location.href = "members";
+          })
+          .catch(error => {
+              alert(error);
+          });
+  }
+
+</script>
+</body>
+</html>
