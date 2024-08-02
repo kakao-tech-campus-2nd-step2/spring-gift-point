@@ -5,9 +5,9 @@ import io.swagger.v3.oas.annotations.media.Schema;
 @Schema(description = "위시 응답 DTO")
 public class WishResponseDto {
     @Schema(description = "위시 고유 id")
-    private final Long id;
+    private Long id;
     @Schema(description = "위시리스트에 추가된 상품의 id")
-    private final Long productId;
+    private Long productId;
     @Schema(description = "해당 위시 요청하는 사람의 id 값")
     private Long memberId;
 

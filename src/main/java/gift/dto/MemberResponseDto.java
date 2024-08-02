@@ -11,7 +11,7 @@ public class MemberResponseDto {
     private Long id;
     @Email
     @Schema(description = "멤버 email ")
-    private final String email;
+    private String email;
     @Schema(description = "멤버 토큰")
     private String token;
 
