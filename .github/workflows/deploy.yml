@@ -20,6 +20,9 @@ jobs:
           distribution: 'zulu'
           java-version: '21'
 
+      - run: touch ./src/main/resources/application.properties
+      - run: echo "${{ secrets.APPLICATION_KEY_PROPERTIES }}" > ./src/main/resources/application-key.properties
+
       - name: Build Spring Boot application
         run: ./gradlew build -x test  # Gradle build 수행
 
