@@ -3,9 +3,11 @@ package gift.service;
 import gift.domain.Category;
 import gift.domain.Product;
 import gift.dto.OptionDTO;
-import gift.dto.ProductDTO;
+import gift.dto.product.AddProductResponse;
+import gift.dto.product.ProductDto;
 import gift.exception.NoSuchProductException;
 import gift.repository.ProductRepository;
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -26,37 +28,37 @@ public class ProductService {
         this.optionService = optionService;
     }
 
-    public Page<ProductDTO> getProducts(Pageable pageable) {
+    public Page<ProductDto> getProducts(Pageable pageable) {
         return productRepository.findAll(pageable)
-            .map(product -> product.toDTO());
+            .map(product -> product.toDto());
     }
 
-    public ProductDTO getProduct(Long id) {
+    public ProductDto getProduct(Long id) {
         return productRepository.findById(id)
             .orElseThrow(NoSuchProductException::new)
-            .toDTO();
+            .toDto();
     }
 
-    public ProductDTO addProduct(ProductDTO productDTO) {
-        Category category = categoryService.getCategory(productDTO.categoryId()).toEntity();
-        Product product = productRepository.save(productDTO.toEntity(category));
-        for (OptionDTO optionDTO : productDTO.optionDTOs()) {
+    public AddProductResponse addProduct(ProductDto productDto, List<OptionDTO> optionDTOs) {
+        Category category = categoryService.getCategory(productDto.categoryId()).toEntity();
+        Product product = productRepository.save(productDto.toEntity(category));
+        for (OptionDTO optionDTO : optionDTOs) {
             optionService.addOption(product.getId(), optionDTO);
         }
-        return product.toDTO();
+        return product.toAddProductResponse();
     }
 
-    public ProductDTO updateProduct(long id, ProductDTO productDTO) {
+    public ProductDto updateProduct(long id, ProductDto productDTO) {
         getProduct(id);
         Category category = categoryService.getCategory(productDTO.categoryId()).toEntity();
         Product product = new Product(id, productDTO.name(), productDTO.price(), productDTO.imageUrl(), category);
-        return productRepository.save(product).toDTO();
+        return productRepository.save(product).toDto();
     }
 
-    public ProductDTO deleteProduct(long id) {
+    public ProductDto deleteProduct(long id) {
         Product deletedProduct = productRepository.findById(id)
             .orElseThrow(NoSuchProductException::new);
         productRepository.delete(deletedProduct);
-        return deletedProduct.toDTO();
+        return deletedProduct.toDto();
     }
 }

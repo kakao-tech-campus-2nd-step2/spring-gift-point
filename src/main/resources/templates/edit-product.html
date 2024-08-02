@@ -46,7 +46,7 @@
                     <th>Option</th>
                     <td>
                         <table>
-                            <tr th:each="option: ${product.optionDTOs}">
+                            <tr th:each="option: ${options}">
                                 <td>
                                     <input class="editedOptionName" type="text" th:value="${option.name}" required>
                                 </td>
