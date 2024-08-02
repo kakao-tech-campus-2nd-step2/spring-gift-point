@@ -15,6 +15,8 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.validation.BindingResult;
 
+import gift.dto.CategoryRequest;
+import gift.dto.CategoryResponse;
 import gift.entity.Category;
 import gift.repository.CategoryRepository;
 import gift.service.CategoryService;
@@ -30,11 +32,13 @@ public class CategoryServiceTest {
     @Mock
     BindingResult bindingResult;
 
+    private CategoryRequest categoryRequest;
     private Category category;
 
     @BeforeEach
     public void setUp() {
         MockitoAnnotations.openMocks(this);
+        categoryRequest = new CategoryRequest("교환권", "#6c95d1", "https://example.com/image.jpg", "");
         category = new Category("교환권", "#6c95d1", "https://example.com/image.jpg", "");
         category.setId(1L);
     }
@@ -42,16 +46,17 @@ public class CategoryServiceTest {
     @Test
     public void testGetAllCategories() {
         when(categoryRepository.findAll()).thenReturn(Collections.singletonList(category));
-        List<Category> categories = categoryService.getAllCategories();
+        List<CategoryResponse> responses = categoryService.getAllCategories();
         
         verify(categoryRepository).findAll();
-        assertThat(categories).hasSize(1);
+        assertThat(responses).hasSize(1);
+        assertThat(responses.get(0)).isEqualTo(category.toDto());
     }
 
     @Test
     public void testCreateCategory() {
         when(categoryRepository.save(any(Category.class))).thenReturn(category);
-        categoryService.createCategory(category, bindingResult);
+        categoryService.createCategory(categoryRequest, bindingResult);
         
         verify(categoryRepository).save(any(Category.class));
     }
@@ -60,7 +65,7 @@ public class CategoryServiceTest {
     public void testUpdateCategory() {
         when(categoryRepository.existsById(any(Long.class))).thenReturn(true);
         when(categoryRepository.save(any(Category.class))).thenReturn(category);
-        categoryService.updateCategory(1L, category, bindingResult);
+        categoryService.updateCategory(1L, categoryRequest, bindingResult);
         
         verify(categoryRepository).existsById(any(Long.class));
         verify(categoryRepository).save(any(Category.class));
