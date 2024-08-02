@@ -61,7 +61,7 @@ public class AuthController {
     @Operation(summary = "authorize", description = "카카오 서버에서 인가코드 획득 및 리다이렉션")
     public void getAuthorizationCode(HttpServletResponse response) {
         try {
-            response.sendRedirect(authService.getAuthorizationUrl());
+            response.sendRedirect(kakaoTokenService.getAuthorizationUrl());
         } catch (Exception e) {
             throw new AuthorizationCodeException();
         }
@@ -70,9 +70,9 @@ public class AuthController {
     @GetMapping("/kakao/login")
     @Operation(summary = "kakaoLogin", description = "인가코드를 통해 토큰 발급 및 DB 저장, 카카오 계정의 이메일로 로그인(미 가입시 예외 발생)")
     public ResponseEntity<ApiResponseBody<Token>> loginWithKakao(@RequestParam String code) {
-        KakaoTokenResponse kakaoToken = authService.getKakaoToken(code);
+        KakaoTokenResponse kakaoToken = kakaoTokenService.getKakaoToken(code);
         MemberResponse member = memberService.findByEmail(
-            authService.getMemberInfo(kakaoToken).email());
+            kakaoTokenService.getMemberInfo(kakaoToken).email());
         kakaoTokenService.save(member.id(), kakaoToken);
         Token token = new Token(JwtUtil.generateToken(member.id(), member.email()));
         HttpHeaders headers = new HttpHeaders();

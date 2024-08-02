@@ -1,6 +1,5 @@
 package gift.controller.auth;
 
-import gift.config.KakaoConfig;
 import gift.controller.member.MemberResponse;
 import gift.domain.KakaoToken;
 import org.springframework.util.LinkedMultiValueMap;
@@ -15,8 +14,9 @@ public class AuthMapper {
         return new KakaoTokenResponse(kakaoToken.getAccessToken());
     }
 
-    public static LinkedMultiValueMap<String, String> toTokenRequestBody(String grantType, String clientId, String redirectUrl, String code) {
-        LinkedMultiValueMap<String, String> requestBody = new LinkedMultiValueMap<String, String>();
+    public static LinkedMultiValueMap<String, String> toTokenRequestBody(String grantType,
+        String clientId, String redirectUrl, String code) {
+        LinkedMultiValueMap<String, String> requestBody = new LinkedMultiValueMap<>();
         requestBody.add("grant_type", grantType);
         requestBody.add("client_id", clientId);
         requestBody.add("redirect_uri", redirectUrl);
