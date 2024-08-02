@@ -5,8 +5,14 @@
 2. deploy.sh
 3. data.sql
 <<<<<<< HEAD
+<<<<<<< HEAD
 
 배포된 링크
 http://43.203.28.55:8080/api/products
 =======
 >>>>>>> 4de7272 (docs: README.md)
+=======
+
+배포된 링크
+http://43.203.28.55:8080/api/products
+>>>>>>> 765430e (docs: 배포된 링크)
