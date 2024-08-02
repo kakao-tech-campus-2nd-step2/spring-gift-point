@@ -13,7 +13,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import gift.entity.Category;
+import gift.dto.CategoryRequest;
+import gift.dto.CategoryResponse;
 import gift.service.CategoryService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -34,25 +35,25 @@ public class CategoryController {
 	@Operation(summary = "모든 카테고리 조회", description = "모든 카테고리 정보를 반환합니다.")
     @ApiResponse(responseCode = "200", description = "카테고리 리스트 반환 성공")
 	@GetMapping
-	public ResponseEntity<List<Category>> getAllCategories(){
-		List<Category> categories = categoryService.getAllCategories();
+	public ResponseEntity<List<CategoryResponse>> getAllCategories(){
+		List<CategoryResponse> categories = categoryService.getAllCategories();
 		return ResponseEntity.status(HttpStatus.OK).body(categories);
 	}
 	
 	@Operation(summary = "카테고리 추가", description = "새 카테고리를 추가합니다.")
     @ApiResponse(responseCode = "201", description = "카테고리 추가 성공")
 	@PostMapping
-	public ResponseEntity<Void> addCategory(@Valid @RequestBody Category category, BindingResult bindingResult){
-		categoryService.createCategory(category, bindingResult);
+	public ResponseEntity<Void> addCategory(@Valid @RequestBody CategoryRequest request, BindingResult bindingResult){
+		categoryService.createCategory(request, bindingResult);
 		return ResponseEntity.status(HttpStatus.CREATED).build();
 	}
 	
 	@Operation(summary = "카테고리 수정", description = "기존 카테고리를 수정합니다.")
     @ApiResponse(responseCode = "200", description = "카테고리 수정 성공")
 	@PutMapping("/{categoryId}")
-	public ResponseEntity<Void> updateCategory(@PathVariable("categoryId") Long categoryId, @Valid Category category,
+	public ResponseEntity<Void> updateCategory(@PathVariable("categoryId") Long categoryId, @Valid CategoryRequest request,
 			BindingResult bindingResult){
-		categoryService.updateCategory(categoryId, category, bindingResult);
+		categoryService.updateCategory(categoryId, request, bindingResult);
 		return ResponseEntity.status(HttpStatus.OK).build();
 	}
 }
