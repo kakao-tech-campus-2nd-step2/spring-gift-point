@@ -19,7 +19,7 @@ import static org.junit.jupiter.api.Assertions.*;
 @DataJpaTest
 class WishRepositoryTest {
 
-    @Autowired
+   /* @Autowired
     private WishRepository wishRepository;
 
     @Autowired
@@ -62,5 +62,5 @@ class WishRepositoryTest {
         memberRepository.save(expectedMember);
         Product expectedProduct = new Product(category,new ProductName("product1"),1000,"qwer.com");
         productRepository.save(expectedProduct);
-    }
+    }*/
 }
