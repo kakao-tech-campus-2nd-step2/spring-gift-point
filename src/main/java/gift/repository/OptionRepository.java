@@ -10,7 +10,7 @@ public interface OptionRepository extends JpaRepository<Option, Long> {
 
     List<Option> findAllByProductId(Long productId);
 
-    List<Option> findAllbyProductIdIn(List<Long> productIds);
+    List<Option> findAllByProductIdIn(List<Long> productIds);
 
     void deleteAllByProductIdIn(List<Long> productIds);
 
