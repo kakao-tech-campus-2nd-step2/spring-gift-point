@@ -25,7 +25,7 @@ public class OrderService {
 
     public OrderResponse createOrder(AppUser user, OrderRequest orderRequest) {
         Option option = optionService.subtractOptionQuantity(orderRequest.optionId(), orderRequest.quantity());
-        Order order = new Order(option, user, orderRequest.quantity(), orderRequest.message());
+        Order order = new Order(option, user, orderRequest.quantity(), orderRequest.message(), orderRequest.point());
         order = orderRepository.save(order);
 
         checkOrderInWishList(user, option);
@@ -48,6 +48,4 @@ public class OrderService {
         Product product = option.getProduct();
         wishListService.deleteWishIfExists(appUser.getId(), product.getId());
     }
-
-    private void
 }

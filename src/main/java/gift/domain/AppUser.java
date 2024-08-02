@@ -105,7 +105,7 @@ public class AppUser extends BaseTimeEntity {
         this.point += point;
     }
 
-    public void subtractPoint(int point) {
+    public void usePoint(int point) {
         if (this.point < point) {
             throw new InsufficientPointsException();
         }

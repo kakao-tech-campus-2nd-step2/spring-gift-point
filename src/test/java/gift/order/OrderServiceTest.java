@@ -48,7 +48,7 @@ public class OrderServiceTest {
         product.setId(5L);
         user = new AppUser("aabb@kakao.com", "1234", Role.USER, "aaaa");
         option = new Option("option", 10, product);
-        expectedOrder = new Order(option, user, 5, "message");
+        expectedOrder = new Order(option, user, 5, "message", 0);
     }
 
     @Test
