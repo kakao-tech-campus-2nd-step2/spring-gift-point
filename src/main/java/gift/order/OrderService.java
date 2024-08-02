@@ -1,11 +1,11 @@
 package gift.order;
 
 import gift.member.MemberService;
-import gift.oauth.KakaoOauthService;
 import gift.option.OptionService;
 import gift.option.entity.Option;
 import gift.order.dto.CreateOrderRequestDTO;
 import gift.order.dto.CreateOrderResponseDTO;
+import gift.token.JwtProvider;
 import gift.wishlist.WishlistService;
 import java.time.LocalDateTime;
 import org.springframework.stereotype.Service;
@@ -17,18 +17,18 @@ public class OrderService {
     private final OptionService optionService;
     private final WishlistService wishlistService;
     private final MemberService memberService;
-    private final KakaoOauthService kakaoOauthService;
+    private final JwtProvider jwtProvider;
 
     public OrderService(
         OptionService optionService,
         MemberService memberService,
         WishlistService wishlistService,
-        KakaoOauthService kakaoOauthService
+        JwtProvider jwtProvider
     ) {
         this.optionService = optionService;
         this.memberService = memberService;
         this.wishlistService = wishlistService;
-        this.kakaoOauthService = kakaoOauthService;
+        this.jwtProvider = jwtProvider;
     }
 
     @Transactional
@@ -44,11 +44,9 @@ public class OrderService {
         wishlistService.deleteWishlistIfExists(
             option.getProduct(),
             memberService.getMember(
-                kakaoOauthService.getEmailAndSubFromAccessToken(accessToken).getFirst()
+                jwtProvider.getMemberTokenDTOFromToken(accessToken).getEmail()
             )
         );
-
-        kakaoOauthService.sendMessage(createOrderRequestDTO.getMessage(), accessToken);
 
         return new CreateOrderResponseDTO(
             option.getProduct().getId(),
