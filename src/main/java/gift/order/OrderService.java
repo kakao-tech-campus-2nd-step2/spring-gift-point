@@ -4,7 +4,6 @@ import gift.api.kakaoMessage.KakaoMessageClient;
 import gift.common.auth.LoginMemberDto;
 import gift.common.exception.MemberException;
 import gift.common.exception.OptionException;
-import gift.member.MemberErrorCode;
 import gift.member.MemberRepository;
 import gift.member.model.Member;
 import gift.member.oauth.OauthTokenRepository;
@@ -12,6 +11,7 @@ import gift.member.oauth.model.OauthToken;
 import gift.option.OptionErrorCode;
 import gift.option.OptionRepository;
 import gift.option.model.Option;
+import gift.product.model.Product;
 import gift.wish.WishRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -51,11 +51,16 @@ public class OrderService {
             wishRepository.deleteByMemberIdAndProductId(loginMemberDto.getId(),
                 option.getProduct().getId());
         }
+        Product product = option.getProduct();
 
         option.subtract(orderRequest.quantity());
+        int accumulatedPoint = (product.getTotalPrice(orderRequest.quantity()) - orderRequest.point()) / 10;
         Order order = new Order(loginMemberDto.toEntity(), option, orderRequest.quantity(),
-            orderRequest.message());
+            orderRequest.message(), product.getTotalPrice(orderRequest.quantity()),
+            orderRequest.point(),
+            accumulatedPoint);
         orderRepository.save(order);
+        member.accumulatePoint(accumulatedPoint);
 
         OauthToken oauthToken = oauthTokenRepository.findByMemberId(loginMemberDto.getId())
             .orElseThrow();

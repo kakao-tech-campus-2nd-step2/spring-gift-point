@@ -84,6 +84,10 @@ public class Product extends BaseEntity {
         Product.Validator.validateDuplicated(options);
     }
 
+    public Integer getTotalPrice(Integer quantity) {
+        return price * quantity;
+    }
+
     private static class Validator {
 
         private static void validateKakaoWord(String name) throws ProductException {

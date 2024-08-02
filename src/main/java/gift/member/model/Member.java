@@ -67,4 +67,8 @@ public class Member extends BaseEntity {
             throw new MemberException(MemberErrorCode.NOT_ENOUGH_POINT);
         }
     }
+
+    public void accumulatePoint(int accumulatedPoint) {
+        point = point + accumulatedPoint;
+    }
 }
