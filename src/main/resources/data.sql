@@ -1,6 +1,6 @@
 -- 카테고리 지정
-INSERT INTO category (name, color, description, image_url) VALUES
-('음료', '#FFFFFF', '음료 카테고리', 'https://example.com/image.jpg');
+INSERT INTO category (name, color, image_url, description) VALUES
+('음료', '#FFFFFF', 'https://example.com/image.jpg', '음료 카테고리');
 
 INSERT INTO products (name, price, image_url) VALUES ('아이스 카페 아메리카노 T', 4500, 'https://st.kakaocdn.net/product/gift/product/20231010111814_9a667f9eccc943648797925498bdd8a3.jpg');
 INSERT INTO products (name, price, image_url) VALUES ('카페 라떼', 5800, 'http://image2.jpg');
