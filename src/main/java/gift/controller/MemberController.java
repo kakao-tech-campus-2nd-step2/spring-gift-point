@@ -4,6 +4,7 @@ import gift.dto.request.LoginMemberDTO;
 import gift.dto.request.LoginRequestDTO;
 import gift.dto.request.RegisterRequestDTO;
 import gift.dto.response.LoginResponseDTO;
+import gift.dto.response.MemberPointResponseDTO;
 import gift.dto.response.RegisterResponseDTO;
 import gift.entity.Member;
 import gift.service.LoginMember;
@@ -71,6 +72,11 @@ public class MemberController {
                 body(loginResponseDTO);
     }
 
+    @GetMapping("/point")
+    public ResponseEntity<MemberPointResponseDTO> getPoint(@LoginMember LoginMemberDTO loginMemberDTO) {
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(memberService.getPoint(loginMemberDTO));
+    }
 
 
 }
