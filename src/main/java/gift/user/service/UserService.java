@@ -79,7 +79,8 @@ public class UserService {
 	public void usePoints(OrderRequest orderRequest, Long userId) {
 		User user = userJpaRepository.findById(userId).orElseThrow(() -> new UserNotFoundException(userId));
 		Long price = optionJpaRepository.findById(orderRequest.optionId()).orElseThrow().getProduct().getPrice();
-		user.chargePoint(price);
+		user.usePoint(price);
+		userJpaRepository.save(user);
 	}
 
 	@Transactional
@@ -92,6 +93,7 @@ public class UserService {
 	public Long addPoints(Long userId, Long points) {
 		User user = userJpaRepository.findById(userId).orElseThrow(() -> new UserNotFoundException(userId));
 		user.addPoint(points);
+		userJpaRepository.save(user);
 		return user.getPoint();
 	}
 }
