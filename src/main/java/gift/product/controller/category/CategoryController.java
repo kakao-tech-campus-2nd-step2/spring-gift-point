@@ -57,7 +57,6 @@ public class CategoryController {
 
     @ApiResponses(value = {
         @ApiResponse(responseCode = "201", description = "카테고리 생성 성공"),
-        @ApiResponse(responseCode = "401", description = "허용되지 않는 요청", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ExceptionResponse.class))),
         @ApiResponse(responseCode = "409", description = "이미 존재하는 카테고리명", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ExceptionResponse.class)))
     })
     @PostMapping
@@ -68,7 +67,6 @@ public class CategoryController {
 
     @ApiResponses(value = {
         @ApiResponse(responseCode = "204", description = "카테고리 수정 성공"),
-        @ApiResponse(responseCode = "401", description = "허용되지 않는 요청", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ExceptionResponse.class))),
         @ApiResponse(responseCode = "404", description = "존재하지 않는 리소스", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ExceptionResponse.class)))
     })
     @PutMapping("/{id}")
@@ -80,7 +78,6 @@ public class CategoryController {
 
     @ApiResponses(value = {
         @ApiResponse(responseCode = "204", description = "카테고리 삭제 성공"),
-        @ApiResponse(responseCode = "401", description = "허용되지 않는 요청", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ExceptionResponse.class))),
         @ApiResponse(responseCode = "404", description = "존재하지 않는 리소스", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ExceptionResponse.class)))
     })
     @DeleteMapping("/{id}")

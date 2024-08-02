@@ -36,8 +36,7 @@ public class OptionController {
     }
 
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "옵션 조회 성공", content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = OptionResponse.class)))),
-        @ApiResponse(responseCode = "401", description = "허용되지 않는 요청", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ExceptionResponse.class)))
+        @ApiResponse(responseCode = "200", description = "옵션 조회 성공", content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = OptionResponse.class))))
     })
     @GetMapping("/options")
     public ResponseEntity<List<OptionResponse>> getOptionAll() {
@@ -46,7 +45,6 @@ public class OptionController {
 
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "옵션 조회 성공", content = @Content(mediaType = "application/json", schema = @Schema(implementation = Option.class))),
-        @ApiResponse(responseCode = "401", description = "허용되지 않는 요청", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ExceptionResponse.class))),
         @ApiResponse(responseCode = "404", description = "존재하지 않는 리소스", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ExceptionResponse.class)))
     })
     @GetMapping("/options/{id}")
@@ -56,7 +54,6 @@ public class OptionController {
 
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "성공", content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = OptionResponse.class)))),
-        @ApiResponse(responseCode = "401", description = "허용되지 않는 요청", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ExceptionResponse.class))),
         @ApiResponse(responseCode = "404", description = "존재하지 않는 리소스", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ExceptionResponse.class)))
     })
     @GetMapping("/products/{productId}/options")
@@ -68,7 +65,6 @@ public class OptionController {
     @ApiResponses(value = {
         @ApiResponse(responseCode = "201", description = "옵션 추가 성공"),
         @ApiResponse(responseCode = "400", description = "잘못된 요청", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ExceptionResponse.class))),
-        @ApiResponse(responseCode = "401", description = "허용되지 않는 요청", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ExceptionResponse.class))),
         @ApiResponse(responseCode = "404", description = "존재하지 않는 리소스", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ExceptionResponse.class)))
     })
     @PostMapping("/products/{productId}/options")
@@ -80,7 +76,6 @@ public class OptionController {
 
     @ApiResponses(value = {
         @ApiResponse(responseCode = "204", description = "옵션 수정 성공"),
-        @ApiResponse(responseCode = "401", description = "허용되지 않는 요청", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ExceptionResponse.class))),
         @ApiResponse(responseCode = "404", description = "존재하지 않는 리소스", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ExceptionResponse.class)))
     })
     @PutMapping("/products/{productId}/options/{optionId}")
@@ -94,7 +89,6 @@ public class OptionController {
     @ApiResponses(value = {
         @ApiResponse(responseCode = "204", description = "옵션 삭제 성공"),
         @ApiResponse(responseCode = "400", description = "잘못된 요청", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ExceptionResponse.class))),
-        @ApiResponse(responseCode = "401", description = "허용되지 않는 요청", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ExceptionResponse.class))),
         @ApiResponse(responseCode = "404", description = "옵션 삭제 실패 (존재하지 않는 ID)", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ExceptionResponse.class)))
     })
     @DeleteMapping("/products/{productId}/options/{optionId}")

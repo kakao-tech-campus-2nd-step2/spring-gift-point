@@ -81,14 +81,15 @@ class WishServiceTest {
         Product product = new Product(1L, "테스트상품", 1000, "테스트주소", category);
         List<Wish> wishes = new ArrayList<>();
         wishes.add(new Wish(member, product));
+        LoginMemberIdDto loginMemberIdDto = new LoginMemberIdDto(member.getId());
 
-        given(wishRepository.findAll(pageable)).willReturn(new PageImpl<>(wishes));
+        given(wishRepository.findAllByMemberId(pageable, loginMemberIdDto.id())).willReturn(new PageImpl<>(wishes));
 
         //when
-        wishService.getWishAll(pageable);
+        wishService.getWishAll(pageable, loginMemberIdDto);
 
         //then
-        then(wishRepository).should().findAll(pageable);
+        then(wishRepository).should().findAllByMemberId(pageable, loginMemberIdDto.id());
     }
 
     @Test

@@ -96,17 +96,13 @@ public class WebConfig implements WebMvcConfigurer {
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(tokenValidationInterceptor())
             .order(2)
-            .addPathPatterns("/admin/**")
-            .addPathPatterns("/api/**")
-            .excludePathPatterns("/api/members/register")
-            .excludePathPatterns("/api/members/login")
-            .excludePathPatterns("/api/members/login/kakao")
-            .excludePathPatterns("/api/members/login/kakao/callback")
-            .excludePathPatterns("/admin/login/**");
+            .addPathPatterns("/admin/wishes/**")
+            .addPathPatterns("/api/wishes/**")
+            .addPathPatterns("/api/orders/**")
+            .addPathPatterns("/api/members/login/kakao/unlink");
         registry.addInterceptor(new JwtCookieToHeaderInterceptor())
             .order(1)
-            .addPathPatterns("/admin/**")
-            .excludePathPatterns("/admin/login/**");
+            .addPathPatterns("/admin/wishes/**");
     }
 
     @Override
