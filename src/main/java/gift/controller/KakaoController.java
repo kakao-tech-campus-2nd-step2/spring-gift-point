@@ -20,7 +20,6 @@ public class KakaoController {
     private final MemberService memberService;
     private final KakaoTokenService kakaoTokenService;
 
-    @Autowired
     public KakaoController(KakaoService kakaoService, MemberService memberService, KakaoTokenService kakaoTokenService) {
         this.kakaoService = kakaoService;
         this.memberService = memberService;
