@@ -1,9 +1,9 @@
 package gift.service;
 
-import gift.dto.JwtResponse;
+import gift.dto.member.MemberResponse;
 import gift.dto.KakaoProfileDTO;
 import gift.dto.KakaoTokenDTO;
-import gift.dto.MemberDTO;
+import gift.dto.member.MemberDto;
 import gift.exception.InvalidKakaoTokenException;
 import gift.repository.KakaoTokenRepository;
 import gift.util.JwtProvider;
@@ -40,14 +40,14 @@ public class KakaoLoginService {
         this.kakaoTokenRepository = kakaoTokenRepository;
     }
 
-    public JwtResponse login(String code) {
+    public MemberResponse login(String code) {
         var kakaoTokenDTO = getKakaoToken(code);
         var kakaoProfileDTO = getKakaoProfile(kakaoTokenDTO.access_token());
 
         String email = kakaoProfileDTO.kakao_account().email();
-        MemberDTO foundMemberDTO = memberService.findMember(email);
+        MemberDto foundMemberDto = memberService.findMember(email);
         kakaoTokenRepository.save(kakaoTokenDTO.toEntity(email));
-        return new JwtResponse(jwtProvider.createAccessToken(foundMemberDTO));
+        return new MemberResponse(jwtProvider.createAccessToken(foundMemberDto));
     }
 
     private KakaoTokenDTO getKakaoToken(String code) {

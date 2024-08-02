@@ -2,7 +2,7 @@ package gift.controller;
 
 import gift.argumentresolver.LoginMember;
 import gift.dto.KakaoTalkResponse;
-import gift.dto.MemberDTO;
+import gift.dto.member.MemberDto;
 import gift.dto.OrderOptionDTO;
 import gift.service.KakaoTalkService;
 import gift.service.OrderOptionService;
@@ -32,7 +32,7 @@ public class OrderOptionController {
 
     @Operation(summary = "주문", description = "해당 옵션을 주문합니다.")
     @PostMapping
-    public ResponseEntity<KakaoTalkResponse> order(@LoginMember MemberDTO memberDTO, @Valid @RequestBody OrderOptionDTO orderOptionDTO) {
-        return ResponseEntity.ok().body(orderOptionService.order(memberDTO, orderOptionDTO));
+    public ResponseEntity<KakaoTalkResponse> order(@LoginMember MemberDto memberDto, @Valid @RequestBody OrderOptionDTO orderOptionDTO) {
+        return ResponseEntity.ok().body(orderOptionService.order(memberDto, orderOptionDTO));
     }
 }

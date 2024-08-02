@@ -3,7 +3,7 @@ package gift.service;
 import gift.domain.Option;
 import gift.dto.KakaoTalkRequest;
 import gift.dto.KakaoTalkResponse;
-import gift.dto.MemberDTO;
+import gift.dto.member.MemberDto;
 import gift.dto.OrderOptionDTO;
 import gift.exception.NoSuchOptionException;
 import gift.repository.OptionRepository;
@@ -34,18 +34,18 @@ public class OrderOptionService {
     }
 
     @Transactional
-    public KakaoTalkResponse order(MemberDTO memberDTO, OrderOptionDTO orderOptionDTO) {
+    public KakaoTalkResponse order(MemberDto memberDto, OrderOptionDTO orderOptionDTO) {
         optionService.buyOption(orderOptionDTO.optionId(), orderOptionDTO.quantity());
         Option option = optionRepository.findById(orderOptionDTO.optionId())
             .orElseThrow(NoSuchOptionException::new);
-        wishedProductRepository.deleteAllByMemberAndProduct(memberDTO.toEntity(), option.getProduct());
-        orderOptionRepository.save(orderOptionDTO.toEntity(option, memberDTO.toEntity()));
+        wishedProductRepository.deleteAllByMemberAndProduct(memberDto.toEntity(), option.getProduct());
+        orderOptionRepository.save(orderOptionDTO.toEntity(option, memberDto.toEntity()));
 
         KakaoTalkRequest kakaoTalkRequest = KakaoTalkRequest.of(orderOptionDTO.message(),
             option.getProduct().getImageUrl(),
             "http://localhost:8080/api/products/" + option.getProduct().getId(),
             option.getProduct().getName(), option.getProduct().getCategory().getName(),
             option.getProduct().getPrice());
-        return kakaoTalkService.sendTalk(memberDTO, kakaoTalkRequest);
+        return kakaoTalkService.sendTalk(memberDto, kakaoTalkRequest);
     }
 }

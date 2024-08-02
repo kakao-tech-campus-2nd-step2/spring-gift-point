@@ -5,7 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import gift.domain.KakaoToken;
 import gift.dto.KakaoTalkRequest;
 import gift.dto.KakaoTalkResponse;
-import gift.dto.MemberDTO;
+import gift.dto.member.MemberDto;
 import gift.exception.InvalidKakaoTalkTemplateException;
 import gift.exception.InvalidKakaoTokenException;
 import gift.exception.NoKakaoTokenException;
@@ -34,14 +34,14 @@ public class KakaoTalkService {
         this.kakaoTokenRepository = kakaoTokenRepository;
     }
 
-    public KakaoTalkResponse sendTalk(MemberDTO memberDTO, KakaoTalkRequest kakaoTalkRequest) {
+    public KakaoTalkResponse sendTalk(MemberDto memberDto, KakaoTalkRequest kakaoTalkRequest) {
         String templateObject;
         try {
             templateObject = objectMapper.writeValueAsString(kakaoTalkRequest);
         } catch (JsonProcessingException e) {
             throw new InvalidKakaoTalkTemplateException();
         }
-        KakaoToken kakaoToken = kakaoTokenRepository.findById(memberDTO.email())
+        KakaoToken kakaoToken = kakaoTokenRepository.findById(memberDto.email())
             .orElseThrow(NoKakaoTokenException::new);
 
         var client = RestClient.builder(restTemplate).build();

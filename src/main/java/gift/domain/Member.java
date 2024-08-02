@@ -1,6 +1,6 @@
 package gift.domain;
 
-import gift.dto.MemberDTO;
+import gift.dto.member.MemberDto;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
@@ -32,8 +32,8 @@ public class Member {
         this.password = password;
     }
 
-    public MemberDTO toDTO() {
-        return new MemberDTO(email, password);
+    public MemberDto toDto() {
+        return new MemberDto(email, password);
     }
 
     public String getEmail() {

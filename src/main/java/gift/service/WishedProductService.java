@@ -2,7 +2,7 @@ package gift.service;
 
 import gift.domain.Product;
 import gift.domain.WishedProduct;
-import gift.dto.MemberDTO;
+import gift.dto.member.MemberDto;
 import gift.dto.WishedProductDTO;
 import gift.exception.NoSuchProductException;
 import gift.exception.NoSuchWishedProductException;
@@ -25,14 +25,14 @@ public class WishedProductService {
         this.productRepository = productRepository;
     }
 
-    public Page<WishedProductDTO> getWishedProducts(MemberDTO memberDTO, Pageable pageable) {
-        return wishedProductRepository.findByMember(memberDTO.toEntity(), pageable)
+    public Page<WishedProductDTO> getWishedProducts(MemberDto memberDto, Pageable pageable) {
+        return wishedProductRepository.findByMember(memberDto.toEntity(), pageable)
             .map(wishedProduct -> wishedProduct.toDTO());
     }
 
-    public WishedProductDTO addWishedProduct(MemberDTO memberDTO, WishedProductDTO wishedProductDTO) {
+    public WishedProductDTO addWishedProduct(MemberDto memberDto, WishedProductDTO wishedProductDTO) {
         Product product = productRepository.findById(wishedProductDTO.productId()).orElseThrow(NoSuchProductException::new);
-        WishedProduct wishedProduct = new WishedProduct(memberDTO.toEntity(), product, wishedProductDTO.amount());
+        WishedProduct wishedProduct = new WishedProduct(memberDto.toEntity(), product, wishedProductDTO.amount());
         return wishedProductRepository.save(wishedProduct).toDTO();
     }
 

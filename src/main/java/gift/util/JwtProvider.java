@@ -1,6 +1,6 @@
 package gift.util;
 
-import gift.dto.MemberDTO;
+import gift.dto.member.MemberDto;
 import gift.exception.InvalidAccessTokenException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
@@ -21,10 +21,10 @@ public class JwtProvider {
         this.accessTokenExpirationTime = accessTokenExpirationTime;
     }
 
-    public String createAccessToken(MemberDTO memberDTO) {
+    public String createAccessToken(MemberDto memberDto) {
         Date now = new Date();
         return Jwts.builder()
-            .claim("email", memberDTO.email())
+            .claim("email", memberDto.email())
             .expiration(new Date(now.getTime() + accessTokenExpirationTime))
             .signWith(secretKey)
             .compact();
