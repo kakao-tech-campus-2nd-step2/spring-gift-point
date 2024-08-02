@@ -28,6 +28,10 @@ public class WebConfig implements WebMvcConfigurer {
     @Autowired
     private KakaoProperties kakaoProperties;
 
+    public WebConfig(LoginMemberArgumentResolver argumentResolver) {
+        this.loginMemberArgumentResolver = argumentResolver;
+    }
+
     @Override
     public void addArgumentResolvers(List<HandlerMethodArgumentResolver> resolvers) {
         resolvers.add(loginMemberArgumentResolver);
@@ -50,6 +54,7 @@ public class WebConfig implements WebMvcConfigurer {
         registry.addMapping("/**")
                 .allowedOrigins("http://localhost:3000", "http://localhost:8080", "http://43.202.61.165:8080")
                 .allowedMethods("GET", "POST", "PUT", "DELETE", "HEAD")
-                .allowedHeaders("*");
+                .allowedHeaders("*")
+                .allowCredentials(true);
     }
 }
