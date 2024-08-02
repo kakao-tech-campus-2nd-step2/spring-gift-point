@@ -27,7 +27,7 @@ jobs:
         with:
           files: ./src/main/resources/application-kakao.properties
         env:
-          kakao.client-id: ${{ secrets.CLIENT_ID }}
+          KAKAO_CLIENT_ID: ${{ secrets.CLIENT_ID }}
 
       # application-dev.properties 파일에 있는 환경 변수를 secrets에 저장된 값으로 변경
       - name: Replace environment variables in application-dev.properties
@@ -35,7 +35,7 @@ jobs:
         with:
           files: ./src/main/resources/application-dev.properties
         env:
-          jwt.secret: ${{ secrets.JWT_SECRET }}
+          JWT_SECRET: ${{ secrets.JWT_SECRET }}
 
       # 빌드
       - name: Grant execute permission for Gradlew
