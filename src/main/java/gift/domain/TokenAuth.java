@@ -50,4 +50,11 @@ public class TokenAuth {
         return member.getId();
     }
 
+    @PreRemove
+    private void preRemove() {
+        if (member != null) {
+            member.setTokenAuth(null);
+        }
+    }
+
 }
