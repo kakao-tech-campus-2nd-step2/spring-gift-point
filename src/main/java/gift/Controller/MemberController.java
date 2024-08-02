@@ -13,8 +13,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.net.URI;
-
 @Tag(name = "로그인 및 회원가입", description = "로그인 및 회원가입 API")
 @RestController
 @RequestMapping("/api/members")
