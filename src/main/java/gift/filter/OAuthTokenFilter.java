@@ -9,6 +9,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.time.LocalDateTime;
 
+import static gift.filter.FilterUtils.isUrlInWhiteList;
 import static gift.utils.FilterConstant.*;
 
 public class OAuthTokenFilter implements Filter {
@@ -34,12 +35,8 @@ public class OAuthTokenFilter implements Filter {
         HttpServletResponse httpResponse = (HttpServletResponse) response;
 
         String path = httpRequest.getRequestURI();
-        if (path.equals(HOME_URL) || path.equals(KAKAO_TOKEN_RENEW_URL) || path.startsWith(LOGIN_URL_PREFIX) || path.startsWith(LOGIN_OAUTH_URL_PREFIX) || path.startsWith(H2_DB_URL)
-                || path.equals(SWAGGER_UI_HTML) // 변경
-                || path.startsWith(SWAGGER_UI)
-                || path.startsWith(API_DOCS) // 추가
-                || path.startsWith(V3_API_DOCS)
-                || path.startsWith(SWAGGER_RESOURCES)) {
+
+        if (isUrlInWhiteList(path)) {
             filterChain.doFilter(request, response);
             return;
         }

@@ -71,8 +71,9 @@ class WishControllerTest {
                 .build();
 
         mockMvc.perform(get("/api/wishes"))
-                .andExpect(redirectedUrl(NO_AUTHORIZATION_REDIRECT_URL))
-                .andExpect(status().is3xxRedirection())
+                .andExpect(status().isUnauthorized())
+                .andExpect(jsonPath("$.code").value("401"))
+                .andExpect(jsonPath("$.message").value("인증되지 않은 사용자 입니다."))
                 .andDo(print());
     }
 

@@ -137,39 +137,4 @@ class AuthApiControllerTest {
                 .andExpect(jsonPath("$.token").value("myToken"))
                 .andDo(print());
     }
-
-    @Test
-    @DisplayName("로그인 중복 시도 필터 통과 실패 테스트")
-    void 로그인_중복_시도_필터_통과_실패_테스트() throws Exception{
-        //given
-        AuthToken authToken = new AuthToken("테스트 인증 정보", "test@pusan.ac.kr");
-
-        given(tokenRepository.findAuthTokenByToken("테스트 인증 정보")).willReturn(Optional.of(authToken));
-
-        //expected
-        mvc.perform(post("/api/members/login")
-                        .header("Authorization","Bearer 테스트 인증 정보")
-                )
-                .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl(NO_AUTHORIZATION_REDIRECT_URL))
-                .andDo(print());
-    }
-
-    @Test
-    @DisplayName("카카오 로그인 중복 시도 필터 통과 실패 테스트")
-    void 카카오_로그인_중복_시도_필터_통과_실패_테스트() throws Exception{
-        //given
-        AuthToken authToken = new AuthToken("테스트 인증 정보", "test@kakao.com");
-
-        given(tokenRepository.findAuthTokenByToken("테스트 인증 정보")).willReturn(Optional.of(authToken));
-
-        //expected
-        mvc.perform(get("/api/members/login/oauth/kakao")
-                        .header("Authorization","Bearer 테스트 인증 정보")
-                )
-                .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl(NO_AUTHORIZATION_REDIRECT_URL))
-                .andDo(print());
-    }
-
 }

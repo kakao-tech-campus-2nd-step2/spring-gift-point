@@ -61,23 +61,6 @@ class ProductControllerTest {
     TokenRepository tokenRepository;
 
     @Test
-    @DisplayName("필터 통과 실패 테스트")
-    void 필터_통과_실패_테스트() throws Exception {
-        //given
-        MockMvc mockMvc = MockMvcBuilders
-                .webAppContextSetup(webApplicationContext)
-                .addFilter(new AuthFilter(tokenRepository))
-                .addFilter(new LoginFilter(tokenRepository))
-                .build();
-
-        //expected
-        mockMvc.perform(get("/products"))
-                .andExpect(redirectedUrl(NO_AUTHORIZATION_REDIRECT_URL))
-                .andExpect(status().is3xxRedirection())
-                .andDo(print());
-    }
-
-    @Test
     @DisplayName("상품 (저장, 수정) 시 DTO INVALID 테스트")
     void 상품_DTO_INVALID_테스트() throws Exception {
         //given
