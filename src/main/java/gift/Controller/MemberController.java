@@ -1,6 +1,8 @@
 package gift.Controller;
 
 import gift.DTO.MemberDTO;
+import gift.DTO.SuccessMessageDTO;
+import gift.DTO.TokenDTO;
 import gift.Service.MemberAccessTokenProvider;
 import gift.Service.MemberService;
 
@@ -36,9 +38,10 @@ public class MemberController {
     )
     @Parameter(name = "memberDTO", description = "회원 정보")
     @PostMapping("/api/members/register")
-    public ResponseEntity<String> signupMember(@Valid @RequestBody MemberDTO memberDTO){
+    public ResponseEntity<SuccessMessageDTO> signupMember(@Valid @RequestBody MemberDTO memberDTO){
         memberService.signupMember(memberDTO);
-        return ResponseEntity.status(HttpStatus.CREATED).body(("User registered successfully"));
+        SuccessMessageDTO successMessageDTO = new SuccessMessageDTO("User registered successfully");
+        return ResponseEntity.status(HttpStatus.CREATED).body(successMessageDTO);
     }
     @Operation(
         summary = "회원 로그인",
@@ -50,9 +53,10 @@ public class MemberController {
     )
     @Parameter(name = "memberDTO", description = "회원 정보")
     @PostMapping("/api/members/login")
-    public ResponseEntity<String> loginMember(@Valid @RequestBody MemberDTO memberDTO){
+    public ResponseEntity<TokenDTO> loginMember(@Valid @RequestBody MemberDTO memberDTO){
         memberService.checkMember(memberDTO);
         String token = memberAccessTokenProvider.createJwt(memberDTO.getEmail());
-        return ResponseEntity.ok(token);
+        TokenDTO tokenResponse = new TokenDTO(token);
+        return ResponseEntity.ok().body(tokenResponse);
     }
 }
