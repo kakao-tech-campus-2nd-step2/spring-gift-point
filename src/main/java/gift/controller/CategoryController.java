@@ -1,7 +1,9 @@
 package gift.controller;
 
+import gift.annotation.LoginMember;
 import gift.dto.categoryDTO.CategoryRequestDTO;
 import gift.dto.categoryDTO.CategoryResponseDTO;
+import gift.model.Member;
 import gift.service.CategoryService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -39,7 +41,10 @@ public class CategoryController {
     @PostMapping
     @Operation(summary = "카테고리 추가", description = "새로운 카테고리를 추가합니다.")
     public ResponseEntity<CategoryResponseDTO> addCategory(
-        @Valid @RequestBody CategoryRequestDTO categoryRequestDTO) {
+        @Valid @RequestBody CategoryRequestDTO categoryRequestDTO, @LoginMember Member member) {
+        if (member == null) {
+            return ResponseEntity.status(401).build();
+        }
         CategoryResponseDTO categoryResponseDTO = categoryService.saveCategory(categoryRequestDTO);
         return ResponseEntity.status(HttpStatus.CREATED).body(categoryResponseDTO);
     }
@@ -47,7 +52,10 @@ public class CategoryController {
     @PutMapping("/{categoryId}")
     @Operation(summary = "카테고리 수정", description = "카테고리를 수정합니다.")
     public ResponseEntity<CategoryResponseDTO> updateCategory(@PathVariable Long categoryId,
-        @Valid @RequestBody CategoryRequestDTO categoryRequestDTO) {
+        @Valid @RequestBody CategoryRequestDTO categoryRequestDTO, @LoginMember Member member) {
+        if (member == null) {
+            return ResponseEntity.status(401).build();
+        }
         CategoryResponseDTO categoryResponseDTO = categoryService.updateCategory(categoryId,
             categoryRequestDTO);
         return ResponseEntity.ok(categoryResponseDTO);
@@ -55,7 +63,11 @@ public class CategoryController {
 
     @DeleteMapping("/{categoryId}")
     @Operation(summary = "카테고리 삭제", description = "카테고리를 삭제합니다.")
-    public ResponseEntity<Void> deleteCategory(@PathVariable Long categoryId) {
+    public ResponseEntity<Void> deleteCategory(@PathVariable Long categoryId,
+        @LoginMember Member member) {
+        if (member == null) {
+            return ResponseEntity.status(401).build();
+        }
         categoryService.deleteCategory(categoryId);
         return ResponseEntity.noContent().build();
     }
