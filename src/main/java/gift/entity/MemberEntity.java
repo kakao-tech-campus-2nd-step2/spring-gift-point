@@ -1,8 +1,9 @@
 package gift.entity;
 
-import gift.domain.Member;
+import gift.domain.KakaoToken;
+import gift.util.LoginType;
 import jakarta.persistence.*;
-import java.util.List;
+
 
 @Entity
 @Table(name = "members")
@@ -18,8 +19,9 @@ public class MemberEntity {
     @Column(name = "password", nullable = false)
     private String password;
 
-    @OneToMany(mappedBy = "memberEntity", cascade = CascadeType.ALL)
-    private List<WishListEntity> wishListEntities;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "type")
+    private LoginType loginType;
 
     private String kakaoToken;
 
@@ -27,14 +29,16 @@ public class MemberEntity {
 
     }
 
-    public MemberEntity(String email, String password) {
+    public MemberEntity(String email, String password, LoginType loginType) {
         this.email = email;
         this.password = password;
+        this.loginType = loginType;
     }
 
-    public MemberEntity(String email, String password, String kakaoToken) {
+    public MemberEntity(String email, String password, LoginType loginType, String kakaoToken) {
         this.email = email;
         this.password = password;
+        this.loginType = loginType;
         this.kakaoToken = kakaoToken;
     }
 
@@ -46,37 +50,16 @@ public class MemberEntity {
         return email;
     }
 
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
     public String getPassword() {
         return password;
     }
 
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public List<WishListEntity> getWishListEntities() {
-        return wishListEntities;
+    public LoginType getLoginType() {
+        return loginType;
     }
 
     public String getKakaoToken() {
         return kakaoToken;
-    }
-
-    public void setKakaoToken(String kakaoToken) {
-        this.kakaoToken = kakaoToken;
-    }
-
-    public void removeWishListHasProductEntity(ProductEntity productEntity) {
-        wishListEntities.removeIf(wishList -> wishList.getProductEntity().equals(productEntity));
-    }
-
-    public static Member toDto(MemberEntity memberEntity) {
-        return new Member(memberEntity.getId(), memberEntity.getEmail(),
-            memberEntity.getPassword());
     }
 
 }

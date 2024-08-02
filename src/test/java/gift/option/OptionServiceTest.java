@@ -4,6 +4,7 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 import static org.mockito.BDDMockito.given;
 
 import gift.entity.OptionEntity;
+import gift.entity.ProductEntity;
 import gift.repository.OptionRepository;
 import gift.service.OptionService;
 import java.util.Optional;
@@ -28,7 +29,7 @@ public class OptionServiceTest {
     @DisplayName("정상적인 수로 감소 시킬때")
     void checkSuccessSubQuantity() {
         //given
-        OptionEntity optionEntity = new OptionEntity(1L, "Option1", 1000L);
+        OptionEntity optionEntity = new OptionEntity("Option4", 1000L);
         given(optionRepository.findById(1L)).willReturn(Optional.of(optionEntity));
 
         //when
@@ -41,7 +42,7 @@ public class OptionServiceTest {
     @DisplayName("옵션 수량 보다 더 많이 감소 시킬 때")
     void checkFailSubQuantity() {
         //given
-        OptionEntity optionEntity = new OptionEntity(1L, "Option1", 1L);
+        OptionEntity optionEntity = new OptionEntity("Option1", 1L);
         given(optionRepository.findById(1L)).willReturn(Optional.of(optionEntity));
 
         //when, then

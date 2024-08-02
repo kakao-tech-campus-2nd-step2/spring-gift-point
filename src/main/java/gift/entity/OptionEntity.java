@@ -30,8 +30,13 @@ public class OptionEntity {
         this.quantity = quantity;
     }
 
-    public OptionEntity(Long id, String name, Long quantity) {
-        this.id = id;
+    public OptionEntity(String name, Long quantity, ProductEntity productEntity) {
+        this.name = name;
+        this.quantity = quantity;
+        this.productEntity = productEntity;
+    }
+
+    public void updateOptionEntity(String name, Long quantity) {
         this.name = name;
         this.quantity = quantity;
     }
@@ -44,24 +49,12 @@ public class OptionEntity {
         return name;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
     public Long getQuantity() {
         return quantity;
     }
 
-    public void setQuantity(Long quantity) {
-        this.quantity = quantity;
-    }
-
     public ProductEntity getProductEntity() {
         return productEntity;
-    }
-
-    public void setProductEntity(ProductEntity productEntity) {
-        this.productEntity = productEntity;
     }
 
     public void subtractQuantity(Long amountToSubtract) {
@@ -69,14 +62,6 @@ public class OptionEntity {
             throw new IllegalArgumentException("Input value should to be positive");
         }
         this.quantity-=amountToSubtract;
-    }
-
-    public static Option toDto(OptionEntity optionEntity) {
-        return new Option(
-            optionEntity.getId(),
-            optionEntity.getName(),
-            optionEntity.getQuantity()
-        );
     }
 
 }

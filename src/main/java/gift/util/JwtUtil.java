@@ -1,6 +1,7 @@
 package gift.util;
 
 import gift.domain.Member;
+import gift.domain.Member.MemberResponse;
 import gift.error.UnauthorizedException;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
@@ -29,10 +30,10 @@ public class JwtUtil {
         this.key = Keys.hmacShaKeyFor(secret.getBytes());
     }
 
-    public String generateToken(Member member) {
+    public String generateToken(MemberResponse member) {
         Claims claims = Jwts.claims();
-        claims.put("id", member.getId());
-        claims.put("email", member.getEmail());
+        claims.put("id", member.id());
+        claims.put("email", member.email());
 
         return Jwts.builder()
             .setClaims(claims)
@@ -60,16 +61,15 @@ public class JwtUtil {
             .getBody();
     }
 
-    public String extractToken(HttpServletRequest request) {
-        String authHeader = request.getHeader("Authorization");
-        if (authHeader != null && authHeader.startsWith("Bearer ")) {
-            return authHeader.substring(7);
+    public String extractToken(String header) {
+        if (header != null && header.startsWith("Bearer ")) {
+            return header.substring(7);
         }
         throw new UnauthorizedException("Invalid token");
     }
 
-    public Long extractMemberId(HttpServletRequest request) {
-        Claims claims = extractAllClaims(extractToken(request));
+    public Long extractMemberId(String header) {
+        Claims claims = extractAllClaims(extractToken(header));
         Number memberId = (Number) claims.get("id");
         return memberId.longValue();
     }

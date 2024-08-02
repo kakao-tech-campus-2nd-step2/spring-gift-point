@@ -23,7 +23,7 @@ public class ProductRepositoryTest {
 
     @BeforeEach
     public void setUp() {
-        categoryEntity = new CategoryEntity(1L,"식품", "#3EE715", "https://category1.jpg", "식품 카테고리");
+        categoryEntity = new CategoryEntity("식품", "#3EE715", "https://category1.jpg", "식품 카테고리");
     }
 
     @Test

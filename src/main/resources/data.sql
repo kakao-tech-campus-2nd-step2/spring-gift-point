@@ -18,8 +18,8 @@ INSERT INTO options (id, name, quantity, product_id) VALUES (2, 'Option2', 20, 1
 INSERT INTO options (id, name, quantity, product_id) VALUES (3, 'Option3', 30, 2);
 ALTER TABLE options ALTER COLUMN id RESTART WITH 4;
 
-INSERT INTO wish_lists (id, product_id, member_id) VALUES (1, 1, 1);
-INSERT INTO wish_lists (id, product_id, member_id) VALUES (2, 2, 1);
-INSERT INTO wish_lists (id, product_id, member_id) VALUES (3, 1, 2);
-INSERT INTO wish_lists (id, product_id, member_id) VALUES (4, 3, 2);
-ALTER TABLE wish_lists ALTER COLUMN id RESTART WITH 5;
+INSERT INTO wishes (id, product_id, member_id) VALUES (1, 1, 1);
+INSERT INTO wishes (id, product_id, member_id) VALUES (2, 2, 1);
+INSERT INTO wishes (id, product_id, member_id) VALUES (3, 1, 2);
+INSERT INTO wishes (id, product_id, member_id) VALUES (4, 3, 2);
+ALTER TABLE wishes ALTER COLUMN id RESTART WITH 5;

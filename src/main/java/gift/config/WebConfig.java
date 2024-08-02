@@ -9,8 +9,6 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @Configuration
 public class WebConfig implements WebMvcConfigurer {
 
-    private static final String[] ALLOWED_METHOD_NAMES = {"GET", "HEAD", "POST", "PUT", "DELETE", "TRACE", "OPTIONS", "PATCH"};
-
     private final JwtInterceptor jwtInterceptor;
 
     public WebConfig(JwtInterceptor jwtInterceptor) {
@@ -33,7 +31,8 @@ public class WebConfig implements WebMvcConfigurer {
     @Override
     public void addCorsMappings(final CorsRegistry registry) {
         registry.addMapping("/**")
-            .allowedMethods(ALLOWED_METHOD_NAMES)
-            .exposedHeaders(HttpHeaders.LOCATION);
+            .allowedOrigins("*")
+            .allowedMethods("*")
+            .allowedHeaders("*");
     }
 }

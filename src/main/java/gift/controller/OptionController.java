@@ -1,7 +1,7 @@
 package gift.controller;
 
 
-import gift.domain.Option;
+import gift.domain.Option.OptionRequest;
 import gift.service.OptionService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/api/products/{product_id}/options")
+@RequestMapping("/api/products/{productId}/options")
 @Tag(name = "Option", description = "옵션 API")
 public class OptionController {
 
@@ -30,14 +30,14 @@ public class OptionController {
 
     @GetMapping
     @Operation(summary = "전체 옵션 조회", description = "해당 상품의 전체 옵션을 조회합니다.")
-    public ResponseEntity<?> getAllOptions(@PathVariable("product_id") Long productId) {
+    public ResponseEntity<?> getAllOptions(@PathVariable("productId") Long productId) {
         return ResponseEntity.ok(optionService.getAllOptionByProductId(productId));
     }
 
     @GetMapping("/{id}")
     @Operation(summary = "단일 옵션 조회", description = "아이디로 해당 상품의 옵션을 조회합니다.")
     public ResponseEntity<?> getOptionById(
-        @PathVariable("product_id") Long productId,
+        @PathVariable("productId") Long productId,
         @PathVariable("id") Long id) {
         return ResponseEntity.ok(optionService.getOptionByProductIdAndId(productId,id));
     }
@@ -45,9 +45,9 @@ public class OptionController {
     @PostMapping
     @Operation(summary = "옵션 추가", description = "해당 상품에 옵션을 추가합니다.")
     public ResponseEntity<?> addOption(
-        @PathVariable("product_id") Long productId,
-        @Valid @RequestBody Option option) {
-        optionService.addOption(productId, option);
+        @PathVariable("productId") Long productId,
+        @Valid @RequestBody OptionRequest request) {
+        optionService.addOption(productId, request);
         return ResponseEntity.status(HttpStatus.CREATED).body("Option added");
     }
 
@@ -55,16 +55,16 @@ public class OptionController {
     @Operation(summary = "옵션 수정", description = "아이디로 옵션을 수정합니다.")
     public ResponseEntity<?> updateOption(
         @PathVariable("id") Long id,
-        @Valid @RequestBody Option option) {
-        optionService.updateOption(id, option);
-        return ResponseEntity.ok().build();
+        @Valid @RequestBody OptionRequest request) {
+        optionService.updateOption(id, request);
+        return ResponseEntity.status(HttpStatus.OK).body("Option updated");
     }
 
     @DeleteMapping("/{id}")
     @Operation(summary = "옵션 삭제", description = "아이디로 옵션을 삭제합니다.")
     public ResponseEntity<?> deleteOption(@PathVariable("id") Long id) {
         optionService.deleteOption(id);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.status(HttpStatus.OK).body("Option deleted");
     }
 
 }
