@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <title>옵션 생성</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+
+<body>
+    <div class="container mt-5">
+        <h2>옵션 추가</h2>
+        <form th:action="@{/admin/products/{productId}/options/create(productId=${productId})}" th:object="${option}"
+            method="post">
+            <div class="form-group">
+                <label for="name">옵션 이름</label>
+                <input type="text" class="form-control" id="name" name="name" th:field="*{name}" required>
+                <div th:if="${#fields.hasErrors('name')}" th:errors="*{name}" class="alert alert-danger"></div>
+            </div>
+            <div class="form-group">
+                <label for="quantity">수량</label>
+                <input type="number" class="form-control" id="quantity" name="quantity" th:field="*{quantity}" required>
+                <div th:if="${#fields.hasErrors('quantity')}" th:errors="*{quantity}" class="alert alert-danger"></div>
+            </div>
+            <button type="submit" class="btn btn-primary">저장</button>
+            <a th:href="@{/admin/products/{productId}/options(productId=${productId})}" class="btn btn-secondary">취소</a>
+        </form>
+    </div>
+</body>
+
+</html>
