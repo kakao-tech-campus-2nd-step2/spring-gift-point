@@ -1,17 +1,14 @@
 package gift.controller;
 
-import gift.dto.KakaoTokenDto;
+import gift.dto.response.CategoryResponse;
 import gift.dto.ProductDto;
-import gift.entity.Category;
 import gift.entity.Product;
 import gift.service.*;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
@@ -26,18 +23,14 @@ public class ProductController {
     private final CategoryService categoryService;
     private final ProductService productService;
     private OptionService optionService;
-    private WishlistService wishlistService;
-    private final KakaoTokenService kakaoTokenService;
-    private final KakaoService kakaoService;
+
 
     @Autowired
-    public ProductController(CategoryService categoryService, ProductService productService, OptionService optionService, WishlistService wishlistService, KakaoService kakaoService, KakaoTokenService kakaoTokenService) {
+    public ProductController(CategoryService categoryService, ProductService productService, OptionService optionService) {
         this.categoryService = categoryService;
         this.productService = productService;
         this.optionService = optionService;
-        this.wishlistService = wishlistService;
-        this.kakaoService = kakaoService;
-        this.kakaoTokenService = kakaoTokenService;
+
     }
 
     @PostMapping("/add")
@@ -64,7 +57,7 @@ public class ProductController {
         }
         if (productDto.getName().contains("카카오")) {
             result.rejectValue("name", "error.product", "상품 이름에 '카카오'가 포함되어 있습니다. 담당 MD와 협의하십시오.");
-            List<Category> categories = categoryService.getAllCategories();
+            List<CategoryResponse> categories = categoryService.getAllCategories();
             model.addAttribute("categories", categories);
             return "edit-product";
         }

@@ -1,4 +1,7 @@
-package gift.dto;
+package gift.dto.response;
+
+import gift.dto.PaginationInfo;
+import gift.dto.ProductDto;
 
 import java.util.List;
 
