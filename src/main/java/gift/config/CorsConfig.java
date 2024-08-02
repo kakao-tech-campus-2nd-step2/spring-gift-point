@@ -9,8 +9,10 @@ public class CorsConfig implements WebMvcConfigurer {
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**")
-                .allowedOrigins("http://localhost:3000", "https://react-deploy-eight-omega.vercel.app") // 허용할 Origin을 명시적으로 지정
-                .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS") // 허용할 메서드 명시
+                .allowedOrigins("http://localhost:3000",
+                        "https://react-deploy-eight-omega.vercel.app",
+                        "http://101.101.216.221:8080")
+                .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
                 .allowedHeaders("*")
                 .allowCredentials(true);
     }
