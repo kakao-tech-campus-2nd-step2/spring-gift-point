@@ -23,6 +23,7 @@ public class KakaoLoginController {
     @GetMapping("/kakaoLogin")
     public RedirectView OauthLogin(@RequestParam String code) throws JsonProcessingException {
         Token token = kakaoService.getKakaoToken(code);
+        System.out.println("url = " + url);
         return new RedirectView(url + "?" + "token=" + token.getToken());
     }
     /*
