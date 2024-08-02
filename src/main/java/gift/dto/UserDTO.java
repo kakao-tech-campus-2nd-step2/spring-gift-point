@@ -12,11 +12,20 @@ public class UserDTO {
     @NotBlank
     private String password;
 
+    private int point; // 포인트 필드 추가
+
     public UserDTO() {}
 
     public UserDTO(String email, String password) {
         this.email = email;
         this.password = password;
+        this.point = 0; // 포인트 기본값 설정
+    }
+
+    public UserDTO(String email, String password, int point) {
+        this.email = email;
+        this.password = password;
+        this.point = point;
     }
 
     public String getEmail() {
@@ -33,5 +42,13 @@ public class UserDTO {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public int getPoint() {
+        return point;
+    }
+
+    public void setPoint(int point) {
+        this.point = point;
     }
 }

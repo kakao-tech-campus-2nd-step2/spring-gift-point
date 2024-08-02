@@ -121,4 +121,10 @@ public class ProductService {
         return products.map(ProductConverter::convertToDTO);
     }
 
+    public int getProductPriceById(Long productId) {
+        Product product = productRepository.findById(productId)
+            .orElseThrow(() -> new IllegalArgumentException("상품을 찾을 수 없습니다."));
+        return product.getPrice();
+    }
+
 }

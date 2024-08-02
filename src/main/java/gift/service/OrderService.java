@@ -20,15 +20,17 @@ public class OrderService {
     private final KakaoService kakaoService;
     private final KakaoMessageService kakaoMessageService;
     private final OrderRepository orderRepository;
+    private final ProductService productService;
 
     public OrderService(OptionService optionService, UserService userService,
-        WishListService wishListService, KakaoService kakaoService, KakaoMessageService kakaoMessageService, OrderRepository orderRepository) {
+        WishListService wishListService, KakaoService kakaoService, KakaoMessageService kakaoMessageService, OrderRepository orderRepository, ProductService productService) {
         this.optionService = optionService;
         this.userService = userService;
         this.wishListService = wishListService;
         this.kakaoService = kakaoService;
         this.kakaoMessageService = kakaoMessageService;
         this.orderRepository = orderRepository;
+        this.productService = productService;
     }
 
     public OrderResponse createOrder(String authorization, OrderDTO orderDTO) {
@@ -39,7 +41,16 @@ public class OrderService {
             throw new IllegalArgumentException("Insufficient product quantity.");
         }
 
-        //email로 user객체알고, 거기서 id알아냄. -> point객체에서 userId로 포인트 수량 알아내고, product가격만큼 포인트 제외시킴(빠진 포인트값 기억)
+        String token = authorization.replace("Bearer ", "");
+        // access token에서 이메일 추출
+        String email = kakaoService.getUserEmail(token);
+
+        Long productId = optionService.getProductIdByOptionId(orderDTO.getOptionId());
+
+        int amount = (int) productService.getProductPriceById(productId)/10;
+
+        //email로 point객체찾고 포인트 수량 알아내고, product가격만큼 포인트 제외시킴(빠진 포인트값 기억)
+        int remainingPoints = userService.deductPoints(email, amount);
 
         LocalDateTime now = LocalDateTime.now();
         OrderRequest order = new OrderRequest(
@@ -54,14 +65,12 @@ public class OrderService {
         //여기에 orderDTO 메시지 정해서 얼마 할인됐는지 추가(포인트값)
 
         // 카카오톡 메시지 전송
-        String token = authorization.replace("Bearer ", "");
         OrderResponse orderResponse = kakaoMessageService.sendKakaoMessage(token, orderDTO);
 
 
-        // access token에서 이메일 추출
-        String email = kakaoService.getUserEmail(token);
 
-        Long productId = optionService.getProductIdByOptionId(orderDTO.getOptionId());
+
+
 
         if (wishListService.isProductInWishList(email, productId)){
             wishListService.removeProductFromWishList(email, productId);
