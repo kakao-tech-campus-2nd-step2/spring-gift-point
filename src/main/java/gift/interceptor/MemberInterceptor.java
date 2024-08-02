@@ -22,6 +22,9 @@ public class MemberInterceptor implements HandlerInterceptor {
         @NonNull HttpServletResponse response,
         @NonNull Object handler
     ) throws Exception {
+        if ("OPTIONS".equalsIgnoreCase(request.getMethod())) {
+            return true;
+        }
         tokenValidator.validateToken(request);
         return true;
     }

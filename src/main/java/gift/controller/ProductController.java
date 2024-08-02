@@ -2,6 +2,7 @@ package gift.controller;
 
 import static gift.util.constants.ProductConstants.PRODUCT_NOT_FOUND;
 
+import gift.config.CommonApiResponses.CommonServerErrorResponse;
 import gift.dto.product.ProductCreateRequest;
 import gift.dto.product.ProductResponse;
 import gift.dto.product.ProductUpdateRequest;
@@ -42,19 +43,8 @@ public class ProductController {
     }
 
     @Operation(summary = "(명세 통일) 모든 상품 조회", description = "모든 상품을 페이징하여 조회합니다.")
-    @ApiResponses(
-        value = {
-            @ApiResponse(responseCode = "200", description = "조회 성공"),
-            @ApiResponse(
-                responseCode = "500",
-                description = "서버 오류",
-                content = @Content(
-                    mediaType = "application/json",
-                    examples = @ExampleObject(value = "{\"error\": \"(서버 오류 메시지)\"}")
-                )
-            )
-        }
-    )
+    @ApiResponse(responseCode = "200", description = "조회 성공")
+    @CommonServerErrorResponse
     @GetMapping
     public ResponseEntity<Page<ProductResponse>> getAllProducts(
         @PageableDefault(size = 10, sort = "id", direction = Sort.Direction.ASC) Pageable pageable,
@@ -75,17 +65,10 @@ public class ProductController {
                     mediaType = "application/json",
                     examples = @ExampleObject(value = "{\"error\": \"" + PRODUCT_NOT_FOUND + "(상품 Id)\"}")
                 )
-            ),
-            @ApiResponse(
-                responseCode = "500",
-                description = "서버 오류",
-                content = @Content(
-                    mediaType = "application/json",
-                    examples = @ExampleObject(value = "{\"error\": \"(서버 오류 메시지)\"}")
-                )
             )
         }
     )
+    @CommonServerErrorResponse
     @GetMapping("/{productId}")
     public ResponseEntity<ProductResponse> getProductById(@PathVariable Long productId) {
         ProductResponse product = productService.getProductById(productId);

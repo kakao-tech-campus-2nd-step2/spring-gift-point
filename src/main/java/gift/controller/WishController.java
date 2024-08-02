@@ -1,14 +1,14 @@
 package gift.controller;
 
-import static gift.util.constants.MemberConstants.INVALID_AUTHORIZATION_HEADER;
 import static gift.util.constants.MemberConstants.INVALID_CREDENTIALS;
 import static gift.util.constants.ProductConstants.PRODUCT_NOT_FOUND;
 import static gift.util.constants.WishConstants.ALREADY_EXISTS;
 import static gift.util.constants.WishConstants.PERMISSION_DENIED;
 import static gift.util.constants.WishConstants.WISH_NOT_FOUND;
-import static gift.util.constants.auth.TokenConstants.EXPIRED_TOKEN;
-import static gift.util.constants.auth.TokenConstants.INVALID_TOKEN;
 
+import gift.config.CommonApiResponses.CommonForbiddenResponse;
+import gift.config.CommonApiResponses.CommonServerErrorResponse;
+import gift.config.CommonApiResponses.CommonUnauthorizedResponse;
 import gift.dto.wish.WishCreateRequest;
 import gift.dto.wish.WishResponse;
 import gift.service.WishService;
@@ -48,42 +48,10 @@ public class WishController {
     }
 
     @Operation(summary = "(명세 통일) 위시리스트 조회", description = "회원의 위시리스트를 조회합니다.")
-    @ApiResponses(
-        {
-            @ApiResponse(responseCode = "200", description = "조회 성공"),
-            @ApiResponse(
-                responseCode = "401",
-                description = "유효하지 않은 Authorization 헤더 또는 토큰",
-                content = @Content(
-                    mediaType = "application/json",
-                    examples = {
-                        @ExampleObject(
-                            name = "유효하지 않은 Authorization 헤더",
-                            value = "{\"error\": \"" + INVALID_AUTHORIZATION_HEADER + "\"}"
-                        ),
-                        @ExampleObject(name = "유효하지 않은 JWT 토큰", value = "{\"error\": \"" + INVALID_TOKEN + "\"}"),
-                        @ExampleObject(name = "만료된 JWT 토큰", value = "{\"error\": \"" + EXPIRED_TOKEN + "\"}")
-                    }
-                )
-            ),
-            @ApiResponse(
-                responseCode = "403",
-                description = "JWT 토큰으로 회원 찾기 실패",
-                content = @Content(
-                    mediaType = "application/json",
-                    examples = @ExampleObject(value = "{\"error\": \"" + INVALID_CREDENTIALS + "\"}")
-                )
-            ),
-            @ApiResponse(
-                responseCode = "500",
-                description = "서버 오류",
-                content = @Content(
-                    mediaType = "application/json",
-                    examples = @ExampleObject(value = "{\"error\": \"(서버 오류 메시지)\"}")
-                )
-            )
-        }
-    )
+    @ApiResponse(responseCode = "200", description = "조회 성공")
+    @CommonUnauthorizedResponse
+    @CommonForbiddenResponse
+    @CommonServerErrorResponse
     @GetMapping
     public ResponseEntity<Page<WishResponse>> getWishlist(
         @RequestAttribute("memberId") Long memberId,
@@ -97,29 +65,6 @@ public class WishController {
     @ApiResponses(
         {
             @ApiResponse(responseCode = "201", description = "위시 추가 성공"),
-            @ApiResponse(
-                responseCode = "401",
-                description = "유효하지 않은 Authorization 헤더 또는 토큰",
-                content = @Content(
-                    mediaType = "application/json",
-                    examples = {
-                        @ExampleObject(
-                            name = "유효하지 않은 Authorization 헤더",
-                            value = "{\"error\": \"" + INVALID_AUTHORIZATION_HEADER + "\"}"
-                        ),
-                        @ExampleObject(name = "유효하지 않은 JWT 토큰", value = "{\"error\": \"" + INVALID_TOKEN + "\"}"),
-                        @ExampleObject(name = "만료된 JWT 토큰", value = "{\"error\": \"" + EXPIRED_TOKEN + "\"}")
-                    }
-                )
-            ),
-            @ApiResponse(
-                responseCode = "403",
-                description = "JWT 토큰으로 회원 찾기 실패",
-                content = @Content(
-                    mediaType = "application/json",
-                    examples = @ExampleObject(value = "{\"error\": \"" + INVALID_CREDENTIALS + "\"}")
-                )
-            ),
             @ApiResponse(
                 responseCode = "404",
                 description = "존재하지 않는 상품 Id",
@@ -135,17 +80,12 @@ public class WishController {
                     mediaType = "application/json",
                     examples = @ExampleObject(value = "{\"error\": \"" + ALREADY_EXISTS + "\"}")
                 )
-            ),
-            @ApiResponse(
-                responseCode = "500",
-                description = "서버 오류",
-                content = @Content(
-                    mediaType = "application/json",
-                    examples = @ExampleObject(value = "{\"error\": \"(서버 오류 메시지)\"}")
-                )
             )
         }
     )
+    @CommonUnauthorizedResponse
+    @CommonForbiddenResponse
+    @CommonServerErrorResponse
     @PostMapping
     public ResponseEntity<WishResponse> addWish(
         @Valid @RequestBody WishCreateRequest wishCreateRequest,
@@ -159,21 +99,6 @@ public class WishController {
     @ApiResponses(
         {
             @ApiResponse(responseCode = "204", description = "위시리스트 항목 삭제 성공"),
-            @ApiResponse(
-                responseCode = "401",
-                description = "유효하지 않은 Authorization 헤더 또는 토큰",
-                content = @Content(
-                    mediaType = "application/json",
-                    examples = {
-                        @ExampleObject(
-                            name = "유효하지 않은 Authorization 헤더",
-                            value = "{\"error\": \"" + INVALID_AUTHORIZATION_HEADER + "\"}"
-                        ),
-                        @ExampleObject(name = "유효하지 않은 JWT 토큰", value = "{\"error\": \"" + INVALID_TOKEN + "\"}"),
-                        @ExampleObject(name = "만료된 JWT 토큰", value = "{\"error\": \"" + EXPIRED_TOKEN + "\"}")
-                    }
-                )
-            ),
             @ApiResponse(
                 responseCode = "403",
                 description = "승인되지 않은 접근",
@@ -196,16 +121,10 @@ public class WishController {
                     examples = @ExampleObject(value = "{\"error\": \"" + WISH_NOT_FOUND + "(위시 Id)\"}")
                 )
             ),
-            @ApiResponse(
-                responseCode = "500",
-                description = "서버 오류",
-                content = @Content(
-                    mediaType = "application/json",
-                    examples = @ExampleObject(value = "{\"error\": \"(서버 오류 메시지)\"}")
-                )
-            )
         }
     )
+    @CommonServerErrorResponse
+    @CommonUnauthorizedResponse
     @DeleteMapping("/{wishId}")
     public ResponseEntity<Void> deleteWish(
         @PathVariable("wishId") Long wishId,
