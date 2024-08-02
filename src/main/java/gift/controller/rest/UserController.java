@@ -1,9 +1,7 @@
 package gift.controller.rest;
 
 import gift.entity.response.MessageResponseDTO;
-import gift.entity.user.AccessTokenResponse;
-import gift.entity.user.UserDTO;
-import gift.entity.user.UserResponseDTO;
+import gift.entity.user.*;
 import gift.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -57,7 +55,6 @@ public class UserController {
         Map<String, String> response = userService.getKakaoProfile(kakaoAccessToken);
 
         session.setAttribute("email", response.get("email"));
-        session.setAttribute("role", "USER");
         session.setAttribute("kakaoAccessToken", kakaoAccessToken);
 
         return ResponseEntity.ok().body(makeAccessTokenResponse(response.get("accessToken")));
@@ -67,10 +64,17 @@ public class UserController {
     @GetMapping("/me")
     public ResponseEntity<UserResponseDTO> me(HttpSession session) {
         String email = (String) session.getAttribute("email");
-        String role = (String) session.getAttribute("role");
+        User user = userService.me(email);
 
-        UserResponseDTO res = new UserResponseDTO(email, role);
+        UserResponseDTO res = new UserResponseDTO(user);
         return ResponseEntity.ok().body(res);
+    }
+
+    @Operation(summary = "포인트 충전", description = "포인트 충전 페이지입니다.")
+    @PostMapping("/charge")
+    public ResponseEntity<MessageResponseDTO> chargePoint(@RequestBody UserPointChargeDTO form) {
+        userService.chargePoint(form);
+        return ResponseEntity.ok().body(new MessageResponseDTO("point charged successfully"));
     }
 
     private AccessTokenResponse makeAccessTokenResponse(String accessToken) {

@@ -43,4 +43,9 @@ public class AdminController {
         model.addAttribute("product", product);
         return "adminProductDetail";
     }
+
+    @GetMapping("/charge")
+    public String getAdminChargePointPage() {
+        return "adminChargePoint";
+    }
 }

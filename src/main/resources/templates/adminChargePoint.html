@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Charge Point</title>
+    <link rel="stylesheet" href="https://unpkg.com/mvp.css">
+</head>
+<body>
+<h1>Charge Point</h1>
+<form id="chargeForm">
+    <label for="email">Email:</label>
+    <input type="email" id="email" name="email" required>
+    <br>
+    <label for="point">Point:</label>
+    <input type="number" id="point" name="point" required>
+    <button type="submit">charge</button>
+</form>
+<br>
+<div id="message"></div>
+
+<script th:inline="javascript">
+    const userUrl = "http://localhost:8080/api/members";
+
+    const chargeForm = document.getElementById('chargeForm');
+    const messageDiv = document.getElementById('message');
+
+    chargeForm.addEventListener('submit', async function (event) {
+        event.preventDefault();
+
+        const email = document.getElementById('email');
+        const point = document.getElementById('point');
+
+        const response = await fetch(`${userUrl}/charge`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${localStorage.getItem('accessToken')}`
+            },
+            body: JSON.stringify({email: email.value, point: point.value})
+        });
+
+        if (response.ok) {
+            messageDiv.textContent = 'Charged successfully!';
+            email.value = "";
+            point.value = "";
+        } else {
+            const errorText = await response.text();
+            messageDiv.textContent = `Error: ${errorText}`;
+        }
+    });
+</script>
+</body>
+</html>

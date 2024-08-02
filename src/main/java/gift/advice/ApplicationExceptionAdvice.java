@@ -30,14 +30,6 @@ public class ApplicationExceptionAdvice {
                 .body(new MessageResponseDTO(e.getMessage()));
     }
 
-    @ExceptionHandler(AuthenticationException.class)
-    @ResponseStatus(HttpStatus.UNAUTHORIZED)
-    public ResponseEntity<MessageResponseDTO> handleUnauthorized(AuthenticationException e) {
-        return ResponseEntity
-                .status(HttpStatus.UNAUTHORIZED)
-                .body(new MessageResponseDTO(e.getMessage()));
-    }
-
     @ExceptionHandler(ResponseStatusException.class)
     public ResponseEntity<MessageResponseDTO> handleResponseError(ResponseStatusException e) {
         return ResponseEntity
