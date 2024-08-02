@@ -27,8 +27,12 @@ class CategoryTest {
     @Test
     void getAllCategoriesTest() {
         // Given
-        CategoryAddRequestDto category1 = new CategoryAddRequestDto("New Category 1", "Test Color", "https://img1.kakaocdn.net/thumb/C320x320@2x.fwebp.q82/?fname=https%3A%2F%2Fst.kakaocdn.net%2Fproduct%2Fgift%2Fproduct%2F20240508101036_6c7f02cb957848a69a25018a664a3c89.jpg", "Test Description");
-        CategoryAddRequestDto category2 = new CategoryAddRequestDto("New Category 2", "Test Color", "https://img1.kakaocdn.net/thumb/C320x320@2x.fwebp.q82/?fname=https%3A%2F%2Fst.kakaocdn.net%2Fproduct%2Fgift%2Fproduct%2F20240508101036_6c7f02cb957848a69a25018a664a3c89.jpg", "Test Description");
+        CategoryAddRequestDto category1 = new CategoryAddRequestDto("New Category 1", "Test Color",
+            "https://img1.kakaocdn.net/thumb/C320x320@2x.fwebp.q82/?fname=https%3A%2F%2Fst.kakaocdn.net%2Fproduct%2Fgift%2Fproduct%2F20240508101036_6c7f02cb957848a69a25018a664a3c89.jpg",
+            "Test Description");
+        CategoryAddRequestDto category2 = new CategoryAddRequestDto("New Category 2", "Test Color",
+            "https://img1.kakaocdn.net/thumb/C320x320@2x.fwebp.q82/?fname=https%3A%2F%2Fst.kakaocdn.net%2Fproduct%2Fgift%2Fproduct%2F20240508101036_6c7f02cb957848a69a25018a664a3c89.jpg",
+            "Test Description");
         categoryController.addCategory(category1);
         categoryController.addCategory(category2);
 
@@ -44,7 +48,9 @@ class CategoryTest {
     @Test
     void addCategoryTest() {
         // Given
-        CategoryAddRequestDto requestDto = new CategoryAddRequestDto("New Category", "Test Color", "https://img1.kakaocdn.net/thumb/C320x320@2x.fwebp.q82/?fname=https%3A%2F%2Fst.kakaocdn.net%2Fproduct%2Fgift%2Fproduct%2F20240508101036_6c7f02cb957848a69a25018a664a3c89.jpg", "Test Description");
+        CategoryAddRequestDto requestDto = new CategoryAddRequestDto("New Category", "Test Color",
+            "https://img1.kakaocdn.net/thumb/C320x320@2x.fwebp.q82/?fname=https%3A%2F%2Fst.kakaocdn.net%2Fproduct%2Fgift%2Fproduct%2F20240508101036_6c7f02cb957848a69a25018a664a3c89.jpg",
+            "Test Description");
 
         // When
         CategoryResponseDto response = categoryController.addCategory(requestDto).getBody();
@@ -57,13 +63,20 @@ class CategoryTest {
     @Test
     void updateCategoryTest() {
         // Given
-        CategoryAddRequestDto addRequestDto = new CategoryAddRequestDto("Origin Category", "Test Color", "https://img1.kakaocdn.net/thumb/C320x320@2x.fwebp.q82/?fname=https%3A%2F%2Fst.kakaocdn.net%2Fproduct%2Fgift%2Fproduct%2F20240508101036_6c7f02cb957848a69a25018a664a3c89.jpg", "Test Description");
+        CategoryAddRequestDto addRequestDto = new CategoryAddRequestDto("Origin Category",
+            "Test Color",
+            "https://img1.kakaocdn.net/thumb/C320x320@2x.fwebp.q82/?fname=https%3A%2F%2Fst.kakaocdn.net%2Fproduct%2Fgift%2Fproduct%2F20240508101036_6c7f02cb957848a69a25018a664a3c89.jpg",
+            "Test Description");
         CategoryResponseDto addedCategory = categoryController.addCategory(addRequestDto).getBody();
 
-        CategoryUpdateRequestDto updateRequestDto = new CategoryUpdateRequestDto("Updated Category", "Test Color", "https://img1.kakaocdn.net/thumb/C320x320@2x.fwebp.q82/?fname=https%3A%2F%2Fst.kakaocdn.net%2Fproduct%2Fgift%2Fproduct%2F20240508101036_6c7f02cb957848a69a25018a664a3c89.jpg", "Test Description");
+        CategoryUpdateRequestDto updateRequestDto = new CategoryUpdateRequestDto("Updated Category",
+            "Test Color",
+            "https://img1.kakaocdn.net/thumb/C320x320@2x.fwebp.q82/?fname=https%3A%2F%2Fst.kakaocdn.net%2Fproduct%2Fgift%2Fproduct%2F20240508101036_6c7f02cb957848a69a25018a664a3c89.jpg",
+            "Test Description");
 
         // When
-        CategoryResponseDto updatedCategory = categoryController.updateCategory(1L, updateRequestDto)
+        CategoryResponseDto updatedCategory = categoryController.updateCategory(1L,
+                updateRequestDto)
             .getBody();
 
         // Then
@@ -74,7 +87,10 @@ class CategoryTest {
     @Test
     void validDeleteCategoryTest() {
         // Given
-        CategoryAddRequestDto addRequestDto = new CategoryAddRequestDto("Category To Delete", "Test Color", "https://img1.kakaocdn.net/thumb/C320x320@2x.fwebp.q82/?fname=https%3A%2F%2Fst.kakaocdn.net%2Fproduct%2Fgift%2Fproduct%2F20240508101036_6c7f02cb957848a69a25018a664a3c89.jpg", "Test Description");
+        CategoryAddRequestDto addRequestDto = new CategoryAddRequestDto("Category To Delete",
+            "Test Color",
+            "https://img1.kakaocdn.net/thumb/C320x320@2x.fwebp.q82/?fname=https%3A%2F%2Fst.kakaocdn.net%2Fproduct%2Fgift%2Fproduct%2F20240508101036_6c7f02cb957848a69a25018a664a3c89.jpg",
+            "Test Description");
         CategoryResponseDto addedCategory = categoryController.addCategory(addRequestDto).getBody();
 
         // When & Then
@@ -82,7 +98,8 @@ class CategoryTest {
 
         List<CategoryResponseDto> remainingCategories = categoryController.getAllCategories()
             .getBody();
-        assertFalse(remainingCategories.stream().anyMatch(c -> c.getId().equals(addedCategory.getId())));
+        assertFalse(
+            remainingCategories.stream().anyMatch(c -> c.getId().equals(addedCategory.getId())));
     }
 
     @Test
@@ -91,6 +108,7 @@ class CategoryTest {
         Long nonExistentCategoryId = 9999L;
 
         // When & Then
-        assertThrows(IllegalArgumentException.class, () -> categoryController.deleteCategory(nonExistentCategoryId));
+        assertThrows(IllegalArgumentException.class,
+            () -> categoryController.deleteCategory(nonExistentCategoryId));
     }
 }

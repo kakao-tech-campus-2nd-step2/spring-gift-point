@@ -1,6 +1,9 @@
 package gift.domain.model.entity;
 
+<<<<<<< HEAD
 import gift.util.TimeStamp;
+=======
+>>>>>>> upstream/j-1ac
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
