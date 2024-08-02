@@ -44,7 +44,7 @@ public class CategoryResponse {
         return imageUrl;
     }
 
-    public  String getDescription() {
+    public String getDescription() {
         return description;
     }
 }

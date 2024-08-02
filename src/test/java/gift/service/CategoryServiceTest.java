@@ -83,7 +83,6 @@ public class CategoryServiceTest {
         CategoryRequest categoryRequest = new CategoryRequest("교환권", "초록색", "image.url", "description");
         when(categoryRepository.existsByName(categoryRequest.getName())).thenReturn(false);
         when(categoryRepository.save(any(Category.class))).thenReturn(mockCategory1);
-        when(mockCategory1.getName()).thenReturn("교환권");
 
         CategoryResponse createdCategory = categoryService.createCategory(categoryRequest);
 
@@ -109,20 +108,28 @@ public class CategoryServiceTest {
         Long categoryId = 1L;
         CategoryRequest categoryRequest = new CategoryRequest("뷰티", "초록색", "image.url", "description");
 
-        when(categoryRepository.findById(categoryId)).thenReturn(Optional.of(mockCategory1));
+        Category existingCategory = new Category("패션", "파란색", "image.url", "description");
+        existingCategory.setId(categoryId);
+
+        when(categoryRepository.findById(categoryId)).thenReturn(Optional.of(existingCategory));
         when(categoryRepository.existsByName(categoryRequest.getName())).thenReturn(false);
 
-        Category updatedCategory = mock(Category.class);
-        when(updatedCategory.getName()).thenReturn("뷰티");
+        Category updatedCategory = new Category(categoryRequest);
+        updatedCategory.setId(categoryId);
         when(categoryRepository.save(any(Category.class))).thenReturn(updatedCategory);
 
         CategoryResponse result = categoryService.updateCategory(categoryId, categoryRequest);
 
         assertEquals("뷰티", result.getName());
+        assertEquals("초록색", result.getColor());
+        assertEquals("image.url", result.getImageUrl());
+        assertEquals("description", result.getDescription());
+
         verify(categoryRepository, times(1)).findById(categoryId);
         verify(categoryRepository, times(1)).existsByName("뷰티");
         verify(categoryRepository, times(1)).save(any(Category.class));
     }
+
 
 
 

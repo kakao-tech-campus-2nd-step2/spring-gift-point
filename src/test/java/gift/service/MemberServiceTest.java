@@ -60,6 +60,7 @@ public class MemberServiceTest {
 
         when(memberRepository.findByEmailAndLoginType("test@example.com", NORMAL)).thenReturn(Optional.of(member));
         when(member.getPassword()).thenReturn("password");
+        when(member.getEmail()).thenReturn("test@example.com");
 
         Member authenticatedMember = memberService.authenticate(memberRequest, NORMAL);
 

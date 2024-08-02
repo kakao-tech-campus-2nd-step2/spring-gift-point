@@ -49,4 +49,5 @@ public class TokenAuth {
     public Long getMemberId(){
         return member.getId();
     }
+
 }
