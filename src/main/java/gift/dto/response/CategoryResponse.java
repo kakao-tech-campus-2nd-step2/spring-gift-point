@@ -7,17 +7,16 @@ import gift.dto.CategoryDto;
 
 public class CategoryResponse {
 
-    private CategoryDto categoryDto;
-    
+    private CategoryDto category;
+
     @JsonCreator
     public CategoryResponse(
-        @JsonProperty("category")
-        CategoryDto categoryDto
-    ){
-        this.categoryDto = categoryDto;
+        @JsonProperty("category") CategoryDto category
+    ) {
+        this.category = category;
     }
 
-    public CategoryDto getCategoryDto(){
-        return categoryDto;
+    public CategoryDto getCategory() {
+        return category;
     }
 }

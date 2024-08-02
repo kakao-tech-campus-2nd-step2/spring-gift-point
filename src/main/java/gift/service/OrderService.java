@@ -58,7 +58,7 @@ public class OrderService {
 
         try {
             OrderResponse orderResponse = orderOption(token, orderRequest);
-            deleteWishListByOrder(token, orderResponse.getOrderDto().getId());
+            deleteWishListByOrder(token, orderResponse.getOrder().getId());
             sendKakaoMessage(token, orderResponse);
             return orderResponse;
         } catch (CustomException e) {
@@ -93,7 +93,7 @@ public class OrderService {
 
         String kakaoToken = kakaoTokenService.findKakaoToken(token);
         
-        Product product = optionService.findProductByOptionId(orderResponse.getOrderDto().getOptionId());
+        Product product = optionService.findProductByOptionId(orderResponse.getOrder().getOptionId());
         MessageRequest messageRequest = new MessageRequest(kakaoToken, product);
         MessageResponse messageResponse = kakaoApiService.sendMessage(messageRequest);
         if(messageResponse.getCode() != 0){

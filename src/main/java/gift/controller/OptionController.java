@@ -23,7 +23,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 
 @RestController
-@Tag(name = "option", description = "Option API")
+@Tag(name = "option", description = "상품 옵션 API")
 @RequestMapping("/api/products")
 public class OptionController{
 

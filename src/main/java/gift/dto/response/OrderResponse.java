@@ -8,18 +8,18 @@ import gift.dto.OrderDto;
 
 public class OrderResponse {
     
-    private OrderDto orderDto;
+    private OrderDto order;
 
     @JsonCreator
     public OrderResponse(
         @JsonProperty("order")
-        OrderDto orderDto
+        OrderDto order
     ){
-        this.orderDto = orderDto;
+        this.order = order;
     }
 
-    public OrderDto getOrderDto(){
-        return orderDto;
+    public OrderDto getOrder(){
+        return order;
     }
 
 }

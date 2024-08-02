@@ -6,6 +6,9 @@ import jakarta.validation.constraints.Size;
 
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 public class ProductDto {
 
     private long id;
@@ -23,7 +26,15 @@ public class ProductDto {
     public ProductDto() {
     }
 
-    public ProductDto(long id, String name, int price, String imageUrl, Long categoryId, List<OptionDto> options) {
+    @JsonCreator
+    public ProductDto(
+        @JsonProperty("id") Long id,
+        @JsonProperty("name") String name,
+        @JsonProperty("price") int price,
+        @JsonProperty("image_url") String imageUrl,
+        @JsonProperty("category_id") Long categoryId,
+        @JsonProperty("options") List<OptionDto> options
+    ) {
         this.id = id;
         this.name = name;
         this.price = price;

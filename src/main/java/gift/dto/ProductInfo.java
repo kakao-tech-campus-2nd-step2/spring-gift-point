@@ -1,5 +1,8 @@
 package gift.dto;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import gift.entity.Product;
 
 public class ProductInfo {
@@ -9,7 +12,13 @@ public class ProductInfo {
     private int price;
     private String imageUrl;
 
-    public ProductInfo(Long id, String name, int price, String imageUrl) {
+    @JsonCreator
+    public ProductInfo(
+        @JsonProperty("id") Long id,
+        @JsonProperty("name") String name,
+        @JsonProperty("price") int price,
+        @JsonProperty("image_url") String imageUrl
+    ) {
         this.id = id;
         this.name = name;
         this.price = price;

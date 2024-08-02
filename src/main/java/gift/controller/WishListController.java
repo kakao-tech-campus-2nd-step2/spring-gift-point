@@ -45,7 +45,7 @@ public class WishListController {
     @GetMapping("/page")
     @Operation(summary = "위시리스트 페이지 조회", description = "파라미터로 위시리스트 페이지를 반환합니다." )
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "위시리스트 삭제 성공"),
+        @ApiResponse(responseCode = "200", description = "위시리스트 조회 성공"),
         @ApiResponse(responseCode = "401", description = "잘못된 토큰")
     })
     public ResponseEntity<List<WishListDto>> getWishListPage(@RequestHeader("Authorization") String authorizationHeader, @RequestBody MemberDto memberDto, 
@@ -71,7 +71,7 @@ public class WishListController {
     @PostMapping
     @Operation(summary = "위시리스트 추가", description = "파라미터로 위시리스트를 추가합니다." )
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "위시리스트 삭제 성공"),
+        @ApiResponse(responseCode = "200", description = "위시리스트 추가 성공"),
         @ApiResponse(responseCode = "401", description = "잘못된 토큰"),
         @ApiResponse(responseCode = "404", description = "존재하지 않는 상품"),
         @ApiResponse(responseCode = "409", description = "존재하는 위시리스트")

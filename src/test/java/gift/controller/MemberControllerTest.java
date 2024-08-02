@@ -15,7 +15,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 
-import gift.dto.MemberDto;
 import gift.dto.request.LoginRequest;
 import gift.dto.request.RegisteRequest;
 

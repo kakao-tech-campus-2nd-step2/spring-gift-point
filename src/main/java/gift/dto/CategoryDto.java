@@ -1,5 +1,8 @@
 package gift.dto;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import gift.entity.Category;
 
 public class CategoryDto {
@@ -13,15 +16,20 @@ public class CategoryDto {
 
     public CategoryDto(){}
 
-    
-
-    public CategoryDto(Long id, String name, String color, String imageUrl, String description) {
-            this.id = id;
-            this.name = name;
-            this.color = color;
-            this.imageUrl = imageUrl;
-            this.description = description;
-        }
+    @JsonCreator
+    public CategoryDto(
+        @JsonProperty("id") Long id,
+        @JsonProperty("name") String name,
+        @JsonProperty("color") String color,
+        @JsonProperty("image_url") String imageUrl,
+        @JsonProperty("description") String description
+    ) {
+        this.id = id;
+        this.name = name;
+        this.color = color;
+        this.imageUrl = imageUrl;
+        this.description = description;
+    }
 
     public Long getId() {
         return id;

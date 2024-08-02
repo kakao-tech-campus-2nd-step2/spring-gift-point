@@ -52,7 +52,7 @@ public class ProductViewController {
         @ApiResponse(responseCode = "200", description = "상품 추가 화면 이동 성공")
     })
     public String showProductForm(Model model){
-        model.addAttribute("product", new ProductDto(0, "", 0, "", null, null));
+        model.addAttribute("product", new ProductDto());
         model.addAttribute("categories", categoryService.findAll().getCategories());
         return "product_form";
     }

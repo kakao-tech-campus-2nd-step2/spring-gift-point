@@ -11,27 +11,27 @@ import java.util.List;
 
 public class GetProductsResponse {
     
-    private CategoryDto categoryDto;
-    private List<ProductInfo> productInfos;
+    private CategoryDto category;
+    private List<ProductInfo> products;
 
     @JsonCreator
     public GetProductsResponse(
         @JsonProperty("category")
-        CategoryDto categoryDto,
+        CategoryDto category,
 
         @JsonProperty("products")
-        List<ProductInfo> productInfos
+        List<ProductInfo> products
     ){
-        this.categoryDto = categoryDto;
-        this.productInfos = productInfos;
+        this.category = category;
+        this.products = products;
     }
 
-    public CategoryDto getCategoryDto(){
-        return categoryDto;
+    public CategoryDto getCategory(){
+        return category;
     }
 
-    public List<ProductInfo> geProductInfos(){
-        return productInfos;
+    public List<ProductInfo> geProducts(){
+        return products;
     }
 
 }

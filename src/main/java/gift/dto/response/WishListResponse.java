@@ -8,26 +8,26 @@ import gift.entity.WishList;
 
 public class WishListResponse {
     
-    private Long wishListId;
-    private ProductInfo productInfo;
+    private Long id;
+    private ProductInfo product;
 
     @JsonCreator
     public WishListResponse(
         @JsonProperty("id")
-        Long wishListId,
+        Long id,
         @JsonProperty("product")
-        ProductInfo productInfo
+        ProductInfo product
     ){
-        this.wishListId = wishListId;
-        this.productInfo = productInfo;
+        this.id = id;
+        this.product = product;
     }
 
-    public Long getWishListId() {
-        return wishListId;
+    public Long getId() {
+        return id;
     }
 
-    public ProductInfo getProductInfo() {
-        return productInfo;
+    public ProductInfo getProduct() {
+        return product;
     }
 
     public static WishListResponse fromEntity(WishList wishList){

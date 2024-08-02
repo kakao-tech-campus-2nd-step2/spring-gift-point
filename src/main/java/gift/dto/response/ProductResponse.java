@@ -6,17 +6,17 @@ import gift.dto.ProductDto;
 
 public class ProductResponse {
 
-    private ProductDto productDto;
+    private ProductDto product;
 
     public ProductResponse(
         @JsonProperty("product")
-        ProductDto productDto
+        ProductDto product
     ){
-        this.productDto = productDto;
+        this.product = product;
     }
 
-    public ProductDto getProductDto(){
-        return productDto;
+    public ProductDto getProduct(){
+        return product;
     }
     
 }
