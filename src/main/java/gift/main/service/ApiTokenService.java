@@ -44,11 +44,11 @@ public class ApiTokenService {
         if (apiTokenRepository.existsByUserId(user.getId())) {
             ApiToken apiToken = apiTokenRepository.findByUserId(user.getId()).get();
             apiToken.updete(kakaoToken);
+            return;
         }
 
         ApiToken apiToken = new ApiToken(user, kakaoToken);
         apiTokenRepository.save(apiToken);
-
     }
 
     //토큰갱신
