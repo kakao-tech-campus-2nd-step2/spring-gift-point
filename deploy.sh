@@ -6,8 +6,14 @@ cd $REPO_PATH
 
 while true # 무한 루프
 do
-  # git pull로 최신 변경 사항 가져오기
-  git pull
+  # 로컬 변경 사항 스태시
+    git stash
+
+    # git pull로 최신 변경 사항 가져오기
+    git pull
+
+    # 스태시된 변경 사항 다시 적용
+    git stash pop
 
   # /home/ubuntu/spring-gift-point/build/libs/*.jar 에있는 jar 파일 변수설정
   BUILD_PATH=$(ls /home/ubuntu/spring-gift-point/build/libs/*.jar)
