@@ -13,8 +13,4 @@ else
   sleep 5
 fi
 
-DEPLOY_PATH=/home/ubuntu/
-cp $BUILD_PATH $DEPLOY_PATH
-cd $DEPLOY_PATH
-
 nohup java -jar build/libs/$JAR_NAME &
