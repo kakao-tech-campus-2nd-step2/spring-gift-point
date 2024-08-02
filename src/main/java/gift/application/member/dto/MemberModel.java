@@ -1,6 +1,7 @@
 package gift.application.member.dto;
 
 import gift.model.member.Member;
+import gift.model.member.Role;
 
 public class MemberModel {
 
@@ -8,11 +9,13 @@ public class MemberModel {
         Long id,
         String email,
         String name,
-        Integer point
+        Integer point,
+        Role role
     ) {
 
         public static Info from(Member member) {
-            return new Info(member.getId(), member.getEmail(), member.getName(), member.getPoint());
+            return new Info(member.getId(), member.getEmail(), member.getName(), member.getPoint(),
+                member.getRole());
         }
     }
 
