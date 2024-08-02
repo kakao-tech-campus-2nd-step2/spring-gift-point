@@ -65,8 +65,9 @@ public class KakaoLoginController {
         String scheme = request.getScheme(); // http or https
         String serverName = request.getServerName(); //hostname.com
         int serverPort = request.getServerPort(); // ex) 80
-
-        baseUrl = scheme + "://" + serverName + ":" + serverPort;
+        String contextPath = request.getContextPath();
+        String requestURI = request.getRequestURI();
+        baseUrl = scheme + "://" + serverName + ":" + serverPort + contextPath + requestURI;
 
         RedirectView redirectView = new RedirectView();
         String uri = "https://kauth.kakao.com/oauth/authorize?scope=talk_message&response_type=code&client_id=" + clientId + "&redirect_uri=" + redirectUri;
@@ -83,6 +84,7 @@ public class KakaoLoginController {
         String jwtToken = userService.getJwtTokenByUserId(userId);
 
         String redirectUrl = baseUrl;
+
         String urlWithToken = redirectUrl + "?token=" + jwtToken;
 
         RedirectView redirectView = new RedirectView();
