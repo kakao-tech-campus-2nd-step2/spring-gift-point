@@ -34,6 +34,8 @@ public class ProductDTO {
     @NotNull(message = "카테고리는 필수 입력 항목입니다.")
     private CategoryName categoryName;
 
+    private Long categoryId;
+
     @NotNull(message = "옵션은 필수 입력 항목입니다.")
     private List<OptionDTO> options = new ArrayList<>();
 
@@ -46,6 +48,7 @@ public class ProductDTO {
         this.imageUrl = builder.imageUrl;
         this.description = builder.description;
         this.categoryName = builder.categoryName;
+        this.categoryId = builder.categoryId;
         this.options = builder.options != null ? builder.options : new ArrayList<>();
     }
 
@@ -57,6 +60,7 @@ public class ProductDTO {
             .imageUrl(product.getImageUrl())
             .description(product.getDescription())
             .categoryName(product.getCategory().getName())
+            .categoryId(product.getCategory().getId())
             .options(product.getOptions().stream()
                 .map(OptionDTO::from)
                 .collect(Collectors.toList()))
@@ -87,6 +91,10 @@ public class ProductDTO {
         return categoryName;
     }
 
+    public Long getCategoryId() {
+        return categoryId;
+    }
+
     public List<OptionDTO> getOptions() {
         return options;
     }
@@ -98,6 +106,7 @@ public class ProductDTO {
         private String imageUrl;
         private String description;
         private CategoryName categoryName;
+        private Long categoryId;
         private List<OptionDTO> options;
 
         public ProductDTOBuilder id(Long id) {
@@ -127,6 +136,11 @@ public class ProductDTO {
 
         public ProductDTOBuilder categoryName(CategoryName categoryName) {
             this.categoryName = categoryName;
+            return this;
+        }
+
+        public ProductDTOBuilder categoryId(Long categoryId) {
+            this.categoryId = categoryId;
             return this;
         }
 

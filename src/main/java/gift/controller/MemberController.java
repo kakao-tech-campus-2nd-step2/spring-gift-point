@@ -8,6 +8,7 @@ import gift.service.MemberService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -20,7 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @Tag(name = "회원 API", description = "회원 관련된 API")
 @RestController
-@RequestMapping("/members")
+@RequestMapping("api/members")
 public class MemberController {
 
     private final MemberService memberService;
@@ -38,7 +39,8 @@ public class MemberController {
         Member savedMember = memberService.createMember(member);
         Map<String, String> response = new HashMap<>();
         response.put("token", jwtService.generateToken(savedMember));
-        return ResponseEntity.ok(response);
+        URI location = URI.create("/members/" + savedMember.getId());
+        return ResponseEntity.created(location).body(response);
     }
 
     @Operation(summary = "회원 로그인", description = "회원 로그인을 처리합니다.")
@@ -54,10 +56,10 @@ public class MemberController {
 
     private Member getValidMember(Member member) {
         Member foundMember = memberService.getMemberByEmail(member.getEmail())
-            .orElseThrow(() -> new IllegalArgumentException("Invalid email or password"));
+            .orElseThrow(() -> new IllegalArgumentException("Username or password incorrect"));
 
         if (!isPasswordValid(foundMember, member.getPassword())) {
-            throw new IllegalArgumentException("Invalid email or password");
+            throw new IllegalArgumentException("Username or password incorrect");
         }
 
         return foundMember;
