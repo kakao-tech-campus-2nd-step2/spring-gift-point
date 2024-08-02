@@ -1,4 +1,4 @@
-package gift.restdocs.login;
+package gift.restdocs.oauth2;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;

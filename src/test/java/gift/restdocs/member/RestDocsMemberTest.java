@@ -1,9 +1,10 @@
-package gift.restdocs.login;
+package gift.restdocs.member;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.doCallRealMethod;
 import static org.mockito.Mockito.verify;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.cookie;
@@ -16,8 +17,10 @@ import gift.auth.OAuthService;
 import gift.config.LoginWebConfig;
 import gift.controller.MemberApiController;
 import gift.model.Member;
+import gift.model.Role;
 import gift.request.JoinRequest;
 import gift.response.JoinResponse;
+import gift.response.MemberInfoResponse;
 import gift.restdocs.AbstractRestDocsTest;
 import gift.service.MemberService;
 import jakarta.servlet.http.HttpServletResponse;
@@ -36,7 +39,7 @@ import org.springframework.test.util.ReflectionTestUtils;
     excludeFilters = {@Filter(type = FilterType.ASSIGNABLE_TYPE, classes = LoginWebConfig.class)})
 @AutoConfigureRestDocs
 @MockBean(JpaMetamodelMappingContext.class)
-public class RestDocsLoginTest extends AbstractRestDocsTest {
+public class RestDocsMemberTest extends AbstractRestDocsTest {
 
     @Autowired
     private ObjectMapper objectMapper;
@@ -103,6 +106,23 @@ public class RestDocsLoginTest extends AbstractRestDocsTest {
                 .contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk())
             .andExpect(cookie().value("access_token", token))
+            .andDo(print());
+    }
+
+    @Test
+    void memberInfo() throws Exception {
+        //given
+        ReflectionTestUtils.setField(jwtService, "jwtTokenProvider", jwtTokenProvider);
+        Member member = new Member("abc123@a.com", "1234", Role.ROLE_USER, 1500);
+        MemberInfoResponse memberInfoResponse = MemberInfoResponse.createMemberInfo(member);
+
+        given(memberService.getMemberInfo(any(Long.class)))
+            .willReturn(memberInfoResponse);
+
+        //when //then
+        mockMvc.perform(get("/api/members/me")
+                .header("Authorization", "Bearer " + token))
+            .andExpect(status().isOk())
             .andDo(print());
     }
 

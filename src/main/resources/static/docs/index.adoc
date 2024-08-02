@@ -5,7 +5,7 @@
 :toclevels: 2
 :seclinks:
 
-include::loginApi.adoc[]
+include::memberApi.adoc[]
 include::categoryApi.adoc[]
 include::productApi.adoc[]
 include::optionsApi.adoc[]
