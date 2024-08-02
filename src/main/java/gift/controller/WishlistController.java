@@ -1,67 +1,62 @@
 package gift.controller;
 
-import gift.dto.ProductDTO;
+import gift.dto.WishlistDTO;
 import gift.model.User;
+import gift.service.UserService;
 import gift.service.WishlistService;
+import gift.security.JwtTokenProvider;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import jakarta.servlet.http.HttpSession;
-
 @RestController
-@RequestMapping("/api/wishlist")
+@RequestMapping("/api/wishes")
 public class WishlistController {
 
     private final WishlistService wishlistService;
+    private final UserService userService;
+    private final JwtTokenProvider jwtTokenProvider;
 
-    public WishlistController(WishlistService wishlistService) {
+    public WishlistController(WishlistService wishlistService, UserService userService, JwtTokenProvider jwtTokenProvider) {
         this.wishlistService = wishlistService;
+        this.userService = userService;
+        this.jwtTokenProvider = jwtTokenProvider;
     }
 
-    /**
-     * 위시리스트에 제품 추가.
-     *
-     * @param productId 제품 ID
-     * @param session HTTP 세션
-     * @return 응답 엔티티
-     */
-    @PostMapping("/{productId}")
-    public ResponseEntity<Void> addWishlist(@PathVariable("productId") Long productId, HttpSession session) {
-        User user = (User) session.getAttribute("user");
-        wishlistService.addWishlist(user, productId);
-        return new ResponseEntity<>(HttpStatus.OK);
+    @PostMapping
+    public ResponseEntity<WishlistDTO> addWishlist(@RequestHeader("Authorization") String token, @RequestBody WishlistDTO wishlistDTO) {
+        String email = jwtTokenProvider.getUsernameFromToken(token.substring(7)); // 'Bearer ' 제거
+        User user = userService.loadOneUser(email);
+        if (user == null) {
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        }
+        WishlistDTO createdWishlist = wishlistService.addWishlist(user, wishlistDTO);
+        return new ResponseEntity<>(createdWishlist, HttpStatus.CREATED);
     }
 
-    /**
-     * 사용자의 위시리스트 조회.
-     *
-     * @param session HTTP 세션
-     * @param page 페이지 번호
-     * @param size 페이지 크기
-     * @return 제품 목록
-     */
     @GetMapping
-    public ResponseEntity<Page<ProductDTO>> getWishlist(HttpSession session,
-                                                        @RequestParam(defaultValue = "0") int page,
-                                                        @RequestParam(defaultValue = "5") int size) {
-        User user = (User) session.getAttribute("user");
-        Page<ProductDTO> products = wishlistService.getProductsFromWishlist(user, page, size);
-        return new ResponseEntity<>(products, HttpStatus.OK);
+    public ResponseEntity<Page<WishlistDTO>> getWishlist(@RequestHeader("Authorization") String token,
+                                                         @RequestParam(defaultValue = "0") int page,
+                                                         @RequestParam(defaultValue = "10") int size,
+                                                         @RequestParam(defaultValue = "createdDate,desc") String[] sort) {
+        String email = jwtTokenProvider.getUsernameFromToken(token.substring(7)); // 'Bearer ' 제거
+        User user = userService.loadOneUser(email);
+        if (user == null) {
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        }
+        Page<WishlistDTO> wishes = wishlistService.getWishlist(user, page, size, sort);
+        return new ResponseEntity<>(wishes, HttpStatus.OK);
     }
 
-    /**
-     * 위시리스트에서 제품 삭제.
-     *
-     * @param productId 제품 ID
-     * @param session HTTP 세션
-     * @return 응답 엔티티
-     */
-    @DeleteMapping("/{productId}")
-    public ResponseEntity<Void> deleteWishlist(@PathVariable("productId") Long productId, HttpSession session) {
-        User user = (User) session.getAttribute("user");
-        wishlistService.deleteWishlist(user, productId);
-        return new ResponseEntity<>(HttpStatus.OK);
+    @DeleteMapping("/{wishId}")
+    public ResponseEntity<Void> deleteWishlist(@RequestHeader("Authorization") String token, @PathVariable("wishId") Long wishId) {
+        String email = jwtTokenProvider.getUsernameFromToken(token.substring(7)); // 'Bearer ' 제거
+        User user = userService.loadOneUser(email);
+        if (user == null) {
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        }
+        wishlistService.deleteWishlist(user, wishId);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }

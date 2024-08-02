@@ -1,45 +1,47 @@
 package gift.service;
 
-import gift.dto.ProductDTO;
-import gift.model.Product;
+import gift.dto.WishlistDTO;
+import gift.model.Option;
 import gift.model.User;
 import gift.model.Wishlist;
+import gift.repository.OptionRepository;
 import gift.repository.WishlistRepository;
-import gift.repository.ProductRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class WishlistService {
     private final WishlistRepository wishlistRepository;
-    private final ProductRepository productRepository;
+    private final OptionRepository optionRepository;
 
-    public WishlistService(WishlistRepository wishlistRepository, ProductRepository productRepository) {
+    public WishlistService(WishlistRepository wishlistRepository, OptionRepository optionRepository) {
         this.wishlistRepository = wishlistRepository;
-        this.productRepository = productRepository;
+        this.optionRepository = optionRepository;
     }
 
     @Transactional
-    public void addWishlist(User user, Long productId) {
-        Product product = productRepository.findById(productId)
-                .orElseThrow(() -> new IllegalArgumentException("Invalid product Id:" + productId));
+    public WishlistDTO addWishlist(User user, WishlistDTO wishlistDTO) {
+        Option option = optionRepository.findById(wishlistDTO.getOptionId())
+                .orElseThrow(() -> new IllegalArgumentException("Invalid option Id:" + wishlistDTO.getOptionId()));
 
-        Wishlist wishlist = new Wishlist(user, product);
+        Wishlist wishlist = new Wishlist(user, option.getProduct(), option);
         wishlistRepository.save(wishlist);
+        return new WishlistDTO(user.getEmail(), option.getProduct().getId(), option.getId());
     }
 
     @Transactional(readOnly = true)
-    public Page<ProductDTO> getProductsFromWishlist(User user, int page, int size) {
-        Pageable pageable = PageRequest.of(page, size);
+    public Page<WishlistDTO> getWishlist(User user, int page, int size, String[] sort) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Order.desc(sort[0])));
         return wishlistRepository.findByUserEmail(user.getEmail(), pageable)
-                .map(wishlist -> new ProductDTO(wishlist.getProduct()));
+                .map(wishlist -> new WishlistDTO(wishlist.getUser().getEmail(), wishlist.getProduct().getId(), wishlist.getOption().getId()));
     }
 
     @Transactional
-    public void deleteWishlist(User user, Long productId) {
-        wishlistRepository.deleteByUserEmailAndProductId(user.getEmail(), productId);
+    public void deleteWishlist(User user, Long wishId) {
+        wishlistRepository.deleteById(wishId);
     }
 }
