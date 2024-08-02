@@ -78,4 +78,11 @@ public class UserController {
         }
         throw new ForbiddenException("비밀번호 찾기 실패: 로그인한 사용자의 이메일이 아닙니다");
     }
+
+    @Operation(summary = "로그인 유저 포인트 조회",
+            security = @SecurityRequirement(name = "JWT"))
+    @GetMapping("/points")
+    public ResponseEntity<?> getPoints(@Parameter(hidden = true) @LoginUser AppUser loginAppUser) {
+        return ResponseEntity.ok(new CommonResponse<>(loginAppUser.getPoint(), "포인트 조회가 완료되었습니다.", true));
+    }
 }

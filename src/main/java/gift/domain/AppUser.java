@@ -1,6 +1,7 @@
 package gift.domain;
 
 import gift.BaseTimeEntity;
+import gift.exception.order.OrderCustomException.InsufficientPointsException;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -38,7 +39,7 @@ public class AppUser extends BaseTimeEntity {
 
     private String accessToken;
 
-    @ColumnDefault("5000")
+    @ColumnDefault("3000")
     private int point;
 
     public AppUser() {
@@ -71,6 +72,10 @@ public class AppUser extends BaseTimeEntity {
         return accessToken;
     }
 
+    public int getPoint() {
+        return point;
+    }
+
     public void setAccessToken(String accessToken) {
         this.accessToken = accessToken;
     }
@@ -94,5 +99,16 @@ public class AppUser extends BaseTimeEntity {
 
     public boolean isAdmin() {
         return this.role == Role.ADMIN;
+    }
+
+    public void addPoint(int point) {
+        this.point += point;
+    }
+
+    public void usePoint(int point) {
+        if (this.point < point) {
+            throw new InsufficientPointsException();
+        }
+        this.point -= point;
     }
 }
