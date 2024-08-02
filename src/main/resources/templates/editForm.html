@@ -1,0 +1,65 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <style>
+      .container {
+        max-width: 560px;
+      }
+    </style>
+</head>
+<body>
+<div class="container">
+
+    <div class="text-center">
+        <h2>상품 수정 폼</h2>
+    </div>
+
+    <form th:action="@{/products/{id}/edit(id=${productDto.id})}" th:object="${productDto}" method="post">
+        <div>
+            <label for="id">상품 ID</label>
+            <input type="text" id="id" name="id" th:value="${id}" readonly>
+        </div>
+
+        <div>
+            <label for="name">상품명</label>
+            <input type="text" id="name" th:field="*{name}">
+            <div th:if="${#fields.hasErrors('name')}" th:errors="*{name}">상품명 오류</div>
+        </div>
+
+        <div>
+            <label for="price">가격</label>
+
+            <input type="text" id="price" th:field="*{price}">
+            <div th:if="${#fields.hasErrors('price')}" th:errors="*{price}">가격 오류</div>
+        </div>
+        <div>
+            <label for="imageUrl">이미지 URL</label>
+            <input type="text" id="imageUrl" th:field="*{imageUrl}">
+            <div th:if="${#fields.hasErrors('imageUrl')}" th:errors="*{imageUrl}">이미지 오류</div>
+        </div>
+        <div>
+            <label for="category">카테고리</label>
+            <select id="category" th:field="*{categoryId}">
+                <option th:each="categoryResponseDto : ${categories}" th:value="${categoryResponseDto.id}" th:text="${categoryResponseDto.name}"></option>
+            </select>
+        </div>
+
+        <hr>
+
+        <div>
+            <div>
+                <button type="submit">저장</button>
+            </div>
+            <div>
+
+                <button th:onclick="|location.href='@{/products}'|" type="button">취소</button>
+
+            </div>
+        </div>
+
+    </form>
+</div>
+</body>
+</html>
+

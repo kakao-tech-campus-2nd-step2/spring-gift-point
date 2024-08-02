@@ -1,0 +1,70 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+</head>
+<body>
+<div class="container" style="max-width: 600px">
+    <div class="text-center">
+        <h2>상품 목록</h2>
+    </div>
+    <div>
+        <div>
+
+
+            <button th:onclick="|location.href='@{/products/add}'|"
+
+                    type="button">상품 등록
+            </button>
+        </div>
+    </div>
+    <hr>
+    <div>
+        <table>
+
+            <thead>
+            <tr>
+                <th>ID</th>
+                <th>상품명</th>
+                <th>가격</th>
+                <th>이미지</th>
+                <th>카테고리</th>
+                <th>작업</th>
+            </tr>
+            </thead>
+
+            <tbody>
+
+            <tr th:each="product : ${products}">
+                <td>
+                    <a th:href="@{|/products/${product.id}|}"
+                       th:text="${product.id}">상품 ID</a>
+                </td>
+
+                <td th:text="${product.name}">상품명</td>
+
+                <td th:text="${product.price}">가격</td>
+
+                <td th:text="${product.imageUrl}">이미지</td>
+
+                <td th:text="${product.category.name}">카테고리</td>
+
+                <td>
+
+                    <button th:onclick="|location.href='@{/products/{id}/edit(id=${product.id})}'|"
+                            type="button">수정
+                    </button>
+                    <button th:onclick="|location.href='@{/products/{id}/delete(id=${product.id})}'|"
+                            type="button">삭제
+                    </button>
+                </td>
+
+            </tr>
+            </tbody>
+
+        </table>
+    </div>
+</div>
+</body>
+</html>
+
