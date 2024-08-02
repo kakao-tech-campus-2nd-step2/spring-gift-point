@@ -75,7 +75,7 @@ public class RestDocsOptionsTest extends AbstractRestDocsTest {
         ProductOptionsResponse response = new ProductOptionsResponse(options);
         given(productService.getProduct(any(Long.class)))
             .willReturn(product);
-        given(optionsService.getAllProductOptions(any(Product.class)))
+        given(optionsService.getAllProductOptions(any(Long.class)))
             .willReturn(response);
 
         //when //then

@@ -110,6 +110,28 @@ public class RestDocsProductTest extends AbstractRestDocsTest {
     }
 
     @Test
+    void getProduct() throws Exception {
+        //given
+        Product product = demoProduct(1L);
+        ProductResponse productResponse = ProductResponse.createProductResponse(product);
+        given(productService.getProduct(any(Long.class)))
+            .willReturn(product);
+
+        //when //then
+        mockMvc.perform(
+                RestDocumentationRequestBuilders.get("/api/products/{productId}", product.getId())
+                    .header("Authorization", "Bearer " + token))
+            .andExpect(status().isOk())
+            .andDo(document("rest-docs-product-test/get-product",
+                requestHeaders(
+                    headerWithName("Authorization").description("service access token")
+                ),
+                pathParameters(
+                    parameterWithName("productId").description("Product id")
+                )));
+    }
+
+    @Test
     void addProduct() throws Exception {
         //given
         ProductAddRequest addRequest = demoAddRequest();

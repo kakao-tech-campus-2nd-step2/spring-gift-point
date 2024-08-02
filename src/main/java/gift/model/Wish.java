@@ -79,7 +79,7 @@ public class Wish extends BaseEntity {
 
     private void validateQuantity(Integer quantity) {
         if(quantity == null || quantity < 0) {
-            throw new InputException("알 수 없는 오류가 발생하였습니다.");
+            throw new InputException("위시리스트 수량을 입력해주세요.");
         }
     }
 }

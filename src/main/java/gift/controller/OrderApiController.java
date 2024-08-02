@@ -1,5 +1,7 @@
 package gift.controller;
 
+import static gift.auth.KakaoAuthService.X_GATEWAY_TOKEN;
+
 import gift.auth.CheckRole;
 import gift.auth.JwtService;
 import gift.auth.LoginMember;
@@ -42,9 +44,8 @@ public class OrderApiController {
         }
 
         Long memberId = Long.valueOf(request.getAttribute("member_id").toString());
-        String xOAuthToken = request.getAttribute("X-GATEWAY-TOKEN").toString();
-        OrderResponse dto = orderService.makeOrder(memberId, xOAuthToken, orderRequest.productId(),
-            orderRequest.optionId(), orderRequest.quantity(), orderRequest.message());
+        String xOAuthToken = request.getAttribute(X_GATEWAY_TOKEN).toString();
+        OrderResponse dto = orderService.makeOrder(memberId, xOAuthToken, orderRequest);
 
         return new ResponseEntity<>(dto, HttpStatus.CREATED);
 

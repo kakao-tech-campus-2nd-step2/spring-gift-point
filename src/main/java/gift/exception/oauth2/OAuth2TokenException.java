@@ -2,8 +2,6 @@ package gift.exception.oauth2;
 
 public class OAuth2TokenException extends RuntimeException {
 
-    ;
-
     public OAuth2TokenException() {
         super();
     }

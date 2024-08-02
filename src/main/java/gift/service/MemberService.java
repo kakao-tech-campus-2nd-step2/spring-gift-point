@@ -34,10 +34,4 @@ public class MemberService {
             .orElseThrow(NotFoundMemberException::new);
     }
 
-//    @Transactional
-//    public Member loginByOAuth2(String email) {
-//        return memberRepository.findByEmail(email)
-//            .orElseGet(() -> memberRepository.save(new Member(email)));
-//    }
-
 }

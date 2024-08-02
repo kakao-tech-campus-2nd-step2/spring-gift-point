@@ -72,7 +72,7 @@ public class ProductApiControllerTest {
 
         given(productService.getProduct(any(Long.class)))
             .willReturn(product);
-        given(optionsService.getAllProductOptions(any(Product.class)))
+        given(optionsService.getAllProductOptions(any(Long.class)))
             .willReturn(response);
 
         //when //then
