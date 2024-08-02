@@ -33,7 +33,7 @@ jobs:
           key: ${{ secrets.REMOTE_SSH_KEY }}
           port: ${{ secrets.REMOTE_SSH_PORT }}
           source: "./build/libs/spring-gift-0.0.1-SNAPSHOT.jar"  # 빌드된 JAR 파일을
-          target: "/katecam/"  # 원격 서버의 디렉토리에 옮김
+          target: "/home/ubuntu/katecam/"  # 원격 서버의 디렉토리에 옮김
 
       - name: Restart Spring Boot application on remote server
         uses: appleboy/ssh-action@master
