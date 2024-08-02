@@ -9,10 +9,13 @@ import gift.product.service.OrderService;
 import jakarta.validation.Valid;
 import jakarta.validation.ValidationException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
@@ -44,5 +47,12 @@ public class ApiOrderController implements OrderControllerDocs {
         }
         return ResponseEntity.status(HttpStatus.CREATED)
             .body(orderService.orderProduct(authorization, orderRequestDTO));
+    }
+
+    @GetMapping
+    public Page<OrderResponseDTO> researchOrderList(
+        @RequestHeader("Authorization") String authorization,
+        Pageable pageable) {
+        return orderService.getAllOrders(authorization, pageable);
     }
 }

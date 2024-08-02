@@ -5,9 +5,9 @@
     <title>상품 추가 페이지</title>
 </head>
 <body>
-<a href="/admin/product/list"><- 상품 관리 페이지로 돌아가기</a>
+<a href="/admin/products"><- 상품 관리 페이지로 돌아가기</a>
 <h2>새 상품 추가</h2>
-<form action="/admin/product" th:action="@{/admin/product}" th:object="${product}" method="post">
+<form action="/admin/products" th:action="@{/admin/products}" th:object="${product}" method="post">
     <table>
         <tr>
             <td>카테고리: </td>

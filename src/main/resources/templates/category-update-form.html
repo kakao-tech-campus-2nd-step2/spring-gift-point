@@ -5,9 +5,9 @@
     <title>카테고리 수정 페이지</title>
 </head>
 <body>
-<a href="/admin/category"><- 카테고리 관리 페이지로 돌아가기</a>
+<a href="/admin/categories"><- 카테고리 관리 페이지로 돌아가기</a>
 <h2>카테고리 수정</h2>
-<form th:action="@{/admin/category/{id}(id=${categoryDTO.id})}" th:object="${categoryDTO}" method="post">
+<form th:action="@{/admin/categories/{id}(id=${categoryDTO.id})}" th:object="${categoryDTO}" method="post">
     <input type="hidden" name="_method" value="put" />
     <table>
         <tr>
@@ -16,6 +16,27 @@
                 <input type="text" name="name" th:field="*{name}" required/>
             </label></td>
             <td th:if="${#fields.hasErrors('name')}" th:errors="*{name}">Category Name Error Message</td>
+        </tr>
+        <tr>
+            <td>색상: </td>
+            <td><label>
+                <input type="text" name="color" th:field="*{color}" required/>
+            </label></td>
+            <td th:if="${#fields.hasErrors('color')}" th:errors="*{color}">Category Color Error Message</td>
+        </tr>
+        <tr>
+            <td>이미지 주소: </td>
+            <td><label>
+                <input type="text" name="imageUrl" th:field="*{imageUrl}" required/>
+            </label></td>
+            <td th:if="${#fields.hasErrors('imageUrl')}" th:errors="*{imageUrl}">Category ImageUrl Error Message</td>
+        </tr>
+        <tr>
+            <td>설명: </td>
+            <td><label>
+                <input type="text" name="description" th:field="*{description}" required/>
+            </label></td>
+            <td th:if="${#fields.hasErrors('description')}" th:errors="*{description}">Category Description Error Message</td>
         </tr>
         <tr>
             <td><button type="submit">카테고리 수정</button></td>

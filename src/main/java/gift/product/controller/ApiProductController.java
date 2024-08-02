@@ -36,7 +36,7 @@ public class ApiProductController implements ProductControllerDocs {
         this.productService = productService;
     }
 
-    @GetMapping("/list")
+    @GetMapping
     public Page<Product> showProductList(Pageable pageable) {
         System.out.println("[ProductController] showProductList()");
         return productService.getAllProducts(pageable);
@@ -57,9 +57,9 @@ public class ApiProductController implements ProductControllerDocs {
             .body(productService.registerProduct(productDTO));
     }
 
-    @PutMapping("/{id}")
+    @PutMapping("/{productId}")
     public ResponseEntity<Product> updateProduct(
-        @PathVariable Long id,
+        @PathVariable Long productId,
         @Valid @RequestBody ProductDTO productDTO,
         BindingResult bindingResult) {
         System.out.println("[ProductController] updateProduct()");
@@ -70,7 +70,7 @@ public class ApiProductController implements ProductControllerDocs {
             throw new ValidationException(UNKNOWN_VALIDATION_ERROR);
         }
         return ResponseEntity.status(HttpStatus.CREATED)
-            .body(productService.updateProduct(id, productDTO));
+            .body(productService.updateProduct(productId, productDTO));
     }
 
     @DeleteMapping("/{id}")

@@ -9,6 +9,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -17,7 +18,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
-@RequestMapping("/admin/product/{productId}/option")
+@RequestMapping("/admin/products/{productId}/options")
 public class AdminOptionController {
 
     private final OptionService optionService;
@@ -48,32 +49,52 @@ public class AdminOptionController {
     }
 
     @PostMapping
-    public String registerOption(@PathVariable Long productId, @Valid @ModelAttribute OptionDTO optionDTO, BindingResult bindingResult, Model model) {
+    public String registerOption(
+        @PathVariable Long productId,
+        @Valid @ModelAttribute OptionDTO optionDTO,
+        BindingResult bindingResult,
+        Model model) {
         System.out.println("[AdminOptionController] registerOption()");
         if (bindingResult.hasErrors()) {
+            System.out.println("registerOption(): validation error: " + bindingResult.getAllErrors());
             model.addAttribute("option", optionDTO);
             return "product-option-form";
         }
         optionService.registerOption(productId, optionDTO);
-        return "redirect:/admin/product/" + productId + "/option";
+        return "redirect:/admin/products/" + productId + "/options";
     }
 
     @GetMapping("/{optionId}")
-    public String showOptionUpdateForm(@PathVariable Long productId, @PathVariable Long optionId, Model model) {
+    public String showOptionUpdateForm(
+        @PathVariable Long productId,
+        @PathVariable Long optionId,
+        Model model) {
         System.out.println("[AdminOptionController] showOptionUpdateForm()");
         model.addAttribute("option", optionService.findById(optionId));
         return "product-option-update-form";
     }
 
     @PutMapping("/{optionId}")
-    public String updateOption(@PathVariable Long optionId, @PathVariable Long productId, @Valid @ModelAttribute OptionDTO optionDTO, BindingResult bindingResult, Model model) {
+    public String updateOption(
+        @PathVariable Long optionId,
+        @PathVariable Long productId,
+        @Valid @ModelAttribute OptionDTO optionDTO,
+        BindingResult bindingResult,
+        Model model) {
         System.out.println("[AdminOptionController] updateOption()");
         if(bindingResult.hasErrors()) {
             model.addAttribute("option", optionDTO);
             return "product-option-update-form";
         }
         optionService.updateOption(optionId, productId, optionDTO);
-        return "redirect:/admin/product/" + productId + "/option";
+        return "redirect:/admin/products/" + productId + "/options";
+    }
+
+    @DeleteMapping("/{optionId}")
+    public String deleteOption(@PathVariable Long optionId, @PathVariable Long productId) {
+        System.out.println("[AdminOptionController] deleteOption()");
+        optionService.deleteOption(optionId, productId);
+        return "redirect:/admin/products/" + productId + "/options";
     }
 
 }

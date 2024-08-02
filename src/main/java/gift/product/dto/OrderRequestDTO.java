@@ -34,12 +34,12 @@ public class OrderRequestDTO {
         this.message = message;
     }
 
-    public Order convertToDomain(Option option, Member orderer) {
+    public Order convertToDomain(Option option, Member member) {
         return new Order(
             option,
             quantity,
             message,
-            orderer
+            member
         );
     }
 

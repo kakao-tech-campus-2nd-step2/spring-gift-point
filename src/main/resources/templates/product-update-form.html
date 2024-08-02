@@ -5,9 +5,9 @@
     <title>상품 수정 페이지</title>
 </head>
 <body>
-<a href="/admin/product/list"><- 상품 관리 페이지로 돌아가기</a>
+<a href="/admin/products"><- 상품 관리 페이지로 돌아가기</a>
 <h1>상품 정보 수정</h1>
-<form th:action="@{/admin/product/{id}(id=${product.id})}" th:object="${product}" method="post">
+<form th:action="@{/admin/products/{id}(id=${product.id})}" th:object="${product}" method="post">
     <input type="hidden" name="_method" value="put" />
     <table>
         <tr>

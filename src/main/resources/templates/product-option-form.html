@@ -5,9 +5,9 @@
     <title>옵션 추가 페이지</title>
 </head>
 <body>
-<a th:action="@{/admin/product/{productId}/option(productId=${productId})}"><- 상품 옵션 관리 페이지로 돌아가기</a>
+<a href="#" onclick="window.history.back(); return false;"><- 이전 페이지로 돌아가기</a>
 <h2>상품 옵션 추가</h2>
-<form th:action="@{/admin/product/{productId}/option(productId=${productId})}" th:object="${option}" method="post">
+<form th:action="@{/admin/products/{productId}/options(productId=${productId})}" th:object="${option}" method="post">
     <table>
         <tr>
             <td>옵션 명: </td>

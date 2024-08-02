@@ -1,7 +1,6 @@
 package gift.product.controller;
 
 import gift.product.dto.CategoryDTO;
-import gift.product.model.Category;
 import gift.product.service.CategoryService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +17,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
-@RequestMapping("/admin/category")
+@RequestMapping("/admin/categories")
 public class AdminCategoryController {
 
     private final CategoryService categoryService;
@@ -31,7 +30,7 @@ public class AdminCategoryController {
     @GetMapping
     public String category(Model model, Pageable pageable) {
         model.addAttribute("categoryList", categoryService.findAllCategory(pageable));
-        return "category";
+        return "category-management";
     }
 
     @GetMapping("/register")
@@ -42,7 +41,10 @@ public class AdminCategoryController {
     }
 
     @PostMapping
-    public String registerCategory(@Valid @ModelAttribute CategoryDTO categoryDTO, BindingResult bindingResult, Model model) {
+    public String registerCategory(
+        @Valid @ModelAttribute CategoryDTO categoryDTO,
+        BindingResult bindingResult,
+        Model model) {
         System.out.println("[AdminCategoryController] registerCategory()");
         if(bindingResult.hasErrors()) {
             System.out.println("[AdminCategoryController] registerCategory(): validation error: " + bindingResult.getAllErrors() + ", categoryDTO: " + categoryDTO.getName());
@@ -50,7 +52,7 @@ public class AdminCategoryController {
             return "category-form";
         }
         categoryService.registerCategory(categoryDTO.convertToDomain());
-        return "redirect:/admin/category";
+        return "redirect:/admin/categories";
     }
 
     @GetMapping("/{id}")
@@ -66,7 +68,7 @@ public class AdminCategoryController {
         if(bindingResult.hasErrors()) {
             model.addAttribute("categoryDTO", categoryDTO);
         }
-        categoryService.updateCategory(new Category(id, categoryDTO.getName()));
+        categoryService.updateCategory(categoryDTO.convertToDomain(id));
         return "redirect:/admin/category";
     }
 

@@ -7,6 +7,7 @@ import gift.product.exception.InstanceValueException;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.PositiveOrZero;
+import java.util.Objects;
 
 @Entity
 public class Option {
@@ -61,6 +62,8 @@ public class Option {
     }
 
     public boolean isSameName(Option option) {
+        if(Objects.equals(option.id, this.id))
+            return false;
         return this.name.equals(option.getName());
     }
 
