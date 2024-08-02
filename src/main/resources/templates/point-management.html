@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>포인트 추가 페이지</title>
+</head>
+<body>
+<form action="/admin/points" th:action="@{/admin/points}" th:object="${pointDTO}" method="post">
+    <table>
+        <tr>
+            <td>유저: </td>
+            <td>
+                <label>
+                    <select name="memberId" required>
+                        <option value="" disabled selected>포인트를 추가할 유저의 ID를 선택하세요</option>
+                        <option th:each="member : ${members}" th:value="${member.id}" th:text="${member.id}"></option>
+                    </select>
+                </label>
+            </td>
+            <td th:if="${#fields.hasErrors('memberId')}" th:errors="*{memberId}">MemberId Error Message</td>
+        </tr>
+        <tr>
+            <td>추가 포인트: </td>
+            <td>
+                <label>
+                    <input type="number" name="point" value="" required />
+                </label>
+            </td>
+            <td th:if="${#fields.hasErrors('point')}" th:errors="*{point}">Point Error Message</td>
+        </tr>
+        <tr>
+            <td><button type="submit">포인트 추가</button></td>
+        </tr>
+    </table>
+</form>
+</body>
+</html>

@@ -57,6 +57,10 @@ public class Member {
         return point;
     }
 
+    public void addPoint(int point) {
+        this.point += point;
+    }
+
     public void subtractPoint(Order order) {
         int orderAmount = order.getOption().getProduct().getPrice() * order.getQuantity();
         int oneTenth = (int) (orderAmount * 0.1);
