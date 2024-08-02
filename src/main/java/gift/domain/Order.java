@@ -10,6 +10,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.Min;
+import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.SQLRestriction;
 
@@ -36,6 +37,16 @@ public class Order extends BaseTimeEntity {
     private int quantity;
 
     private String message;
+
+    @Column(nullable = false, name = "used_point")
+    @ColumnDefault("0")
+    private int usedPoint;
+
+    @Column(nullable = false, name = "received_point")
+    private int receivedPoint;
+
+    @Column(nullable = false, name = "total_price")
+    private int totalPrice;
 
     public Order() {
     }
@@ -65,5 +76,17 @@ public class Order extends BaseTimeEntity {
 
     public String getMessage() {
         return message;
+    }
+
+    public int getUsedPoint() {
+        return usedPoint;
+    }
+
+    public int getReceivedPoint() {
+        return receivedPoint;
+    }
+
+    public int getTotalPrice() {
+        return totalPrice;
     }
 }
