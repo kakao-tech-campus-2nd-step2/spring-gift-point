@@ -39,6 +39,7 @@ public class User {
 		this.email = email;
 		this.password = password;
 		this.roles = roles;
+		this.point = 0L;
 	}
 
 	public static User of(String email, String password, Set<Role> roles) {
@@ -65,11 +66,11 @@ public class User {
 		return point;
 	}
 
-	public boolean chargePoint(Long point) {
-		if (point < 0) {
+	public boolean usePoint(Long point) {
+		if (this.point < point) {
 			return false;
 		}
-		this.point += point;
+		this.point -= point;
 		return true;
 	}
 
