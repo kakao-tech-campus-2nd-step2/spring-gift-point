@@ -41,7 +41,7 @@ class OptionRepositoryTest {
         Optional<Option> option = optionRepository.findById(First_Option_Id);
 
         assertThat(option).isPresent().hasValueSatisfying(
-            w -> assertThat(w.getName()).isEqualTo("[Best] 시어버터 핸드 & 시어 스틱 립 밤"));
+            w -> assertThat(w.getName()).isEqualTo("모바일 상품권 50,000원"));
     }
 
     @Test
@@ -52,6 +52,6 @@ class OptionRepositoryTest {
 
         assertThat(options).isNotNull();
         assertThat(options).hasSize(2);
-        assertThat(options.get(0).getName()).isEqualTo("[Best] 시어버터 핸드 & 시어 스틱 립 밤");
+        assertThat(options.get(0).getName()).isEqualTo("모바일 상품권 50,000원");
     }
 }

@@ -44,7 +44,7 @@ class CategoryRepositoryTest {
         Pageable pageable = PageRequest.of(0, 10);
         Page<Category> page = categoryRepository.findAll(pageable);
 
-        assertThat(page.getTotalElements()).isEqualTo(13);
+        assertThat(page.getTotalElements()).isEqualTo(12);
         assertThat(page.getTotalPages()).isEqualTo(2);
         assertThat(page.getContent()).hasSize(10);
 

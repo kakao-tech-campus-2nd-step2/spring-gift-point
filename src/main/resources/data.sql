@@ -52,10 +52,6 @@ INSERT INTO categories (name, color, image_url, description)
 VALUES ('트렌드 선물', '#6c95dc',
         'https://img1.kakaocdn.net/thumb/C320x320@2x.fwebp.q82/?fname=https%3A%2F%2Fst.kakaocdn.net%2Fproduct%2Fgift%2Fproduct%2F20230331164317_fcf6a6df886b47059a07e5cab1127f73.png',
         '트렌드 선물 카테고리입니다.');
-INSERT INTO categories (name, color, image_url, description)
-VALUES ('백화점', '#6c95dd',
-        'https://img1.kakaocdn.net/thumb/C320x320@2x.fwebp.q82/?fname=https%3A%2F%2Fst.kakaocdn.net%2Fproduct%2Fgift%2Fproduct%2F20240619170546_e1237aae130546b6bb542c3e8a0dbf8e',
-        '백화점 카테고리입니다.');
 
 -- 제품 더미 데이터 추가 (카테고리와 연관)
 INSERT INTO products (name, price, image_url, category_id)
@@ -107,9 +103,9 @@ VALUES ('서촌 핫플패스 모바일권', 10000,
         'https://img1.kakaocdn.net/thumb/C320x320@2x.fwebp.q82/?fname=https%3A%2F%2Fst.kakaocdn.net%2Fproduct%2Fgift%2Fproduct%2F20230331164317_fcf6a6df886b47059a07e5cab1127f73.png',
         12);
 INSERT INTO products (name, price, image_url, category_id)
-VALUES ('[롯데백화점] 텀블러 세트', 17000,
+VALUES ('텀블러 세트', 17000,
         'https://img1.kakaocdn.net/thumb/C320x320@2x.fwebp.q82/?fname=https%3A%2F%2Fst.kakaocdn.net%2Fproduct%2Fgift%2Fproduct%2F20240619170546_e1237aae130546b6bb542c3e8a0dbf8e',
-        13);
+        4);
 INSERT INTO products (name, price, image_url, category_id)
 VALUES ('복숭아 케이크 + 아메리카노', 15700,
         'https://img1.kakaocdn.net/thumb/C320x320@2x.fwebp.q82/?fname=https%3A%2F%2Fst.kakaocdn.net%2Fproduct%2Fgift%2Fproduct%2F20240624170139_de4e5324f9124d438e9b60a4ab9b19a8.jpg',
@@ -123,93 +119,103 @@ VALUES ('카카오페이 상품권', 30000,
 
 -- Product 1
 INSERT INTO options (name, quantity, product_id)
-VALUES ('[Best] 시어버터 핸드 & 시어 스틱 립 밤', 969, 1);
+VALUES ('모바일 상품권 50,000원', 969, 1);
 INSERT INTO options (name, quantity, product_id)
-VALUES ('[Top] 라벤더 핸드 & 스틱 립 밤', 500, 1);
+VALUES ('실물 상품권 50,000원', 500, 1);
 
 -- Product 2
 INSERT INTO options (name, quantity, product_id)
-VALUES ('[Best] 시어버터 핸드 & 시어 스틱 립 밤', 969, 2);
+VALUES ('모바일 상품권 30,000원', 969, 2);
 INSERT INTO options (name, quantity, product_id)
-VALUES ('[Top] 라벤더 핸드 & 스틱 립 밤', 500, 2);
+VALUES ('실물 상품권 30,000원', 500, 2);
 
 -- Product 3
 INSERT INTO options (name, quantity, product_id)
 VALUES ('(밤) 모닝베이지(카카오 단독)', 350, 3);
 INSERT INTO options (name, quantity, product_id)
 VALUES ('(글로스) 얼리라벤더(카카오 단독)', 350, 3);
+INSERT INTO options (name, quantity, product_id)
+VALUES ('(밤) 핑크브라운', 350, 3);
+INSERT INTO options (name, quantity, product_id)
+VALUES ('(글로스) 윔플라워', 350, 3);
 
 -- Product 4
 INSERT INTO options (name, quantity, product_id)
-VALUES ('[Best] 시어버터 핸드 & 시어 스틱 립 밤', 969, 4);
+VALUES ('그린', 969, 4);
 INSERT INTO options (name, quantity, product_id)
-VALUES ('[Top] 라벤더 핸드 & 스틱 립 밤', 500, 4);
+VALUES ('블루', 500, 4);
+INSERT INTO options (name, quantity, product_id)
+VALUES ('오렌지', 500, 4);
+INSERT INTO options (name, quantity, product_id)
+VALUES ('그레이', 500, 4);
 
 -- Product 5
 INSERT INTO options (name, quantity, product_id)
-VALUES ('[Best] 시어버터 핸드 & 시어 스틱 립 밤', 969, 5);
+VALUES ('빅 사이즈 2송이', 969, 5);
 INSERT INTO options (name, quantity, product_id)
-VALUES ('[Top] 라벤더 핸드 & 스틱 립 밤', 500, 5);
+VALUES ('스몰 사이즈 3송이', 500, 5);
 
 -- Product 6
 INSERT INTO options (name, quantity, product_id)
-VALUES ('[Best] 시어버터 핸드 & 시어 스틱 립 밤', 969, 6);
+VALUES ('[한정판] 작가 친필 사인본', 969, 6);
 INSERT INTO options (name, quantity, product_id)
-VALUES ('[Top] 라벤더 핸드 & 스틱 립 밤', 500, 6);
+VALUES ('기본판', 500, 6);
 
 -- Product 7
 INSERT INTO options (name, quantity, product_id)
-VALUES ('[Best] 시어버터 핸드 & 시어 스틱 립 밤', 969, 7);
+VALUES ('[이벤트] 텀블러 추가', 969, 7);
 INSERT INTO options (name, quantity, product_id)
-VALUES ('[Top] 라벤더 핸드 & 스틱 립 밤', 500, 7);
+VALUES ('[이벤트] 나이키 양말 추가', 500, 7);
 
 -- Product 8
 INSERT INTO options (name, quantity, product_id)
-VALUES ('[Best] 시어버터 핸드 & 시어 스틱 립 밤', 969, 8);
+VALUES ('[Best] 딸기맛', 969, 8);
 INSERT INTO options (name, quantity, product_id)
-VALUES ('[Top] 라벤더 핸드 & 스틱 립 밤', 500, 8);
+VALUES ('자몽맛', 500, 8);
 
 -- Product 9
 INSERT INTO options (name, quantity, product_id)
-VALUES ('[Best] 시어버터 핸드 & 시어 스틱 립 밤', 969, 9);
+VALUES ('파란색 에디션', 969, 9);
 INSERT INTO options (name, quantity, product_id)
-VALUES ('[Top] 라벤더 핸드 & 스틱 립 밤', 500, 9);
+VALUES ('분홍색 에디션', 500, 9);
 
 -- Product 10
 INSERT INTO options (name, quantity, product_id)
-VALUES ('[Best] 시어버터 핸드 & 시어 스틱 립 밤', 969, 10);
+VALUES ('교환권으로 받기', 969, 10);
 INSERT INTO options (name, quantity, product_id)
-VALUES ('[Top] 라벤더 핸드 & 스틱 립 밤', 500, 10);
+VALUES ('배송으로 받기', 500, 10);
 
 -- Product 11
 INSERT INTO options (name, quantity, product_id)
-VALUES ('[Best] 시어버터 핸드 & 시어 스틱 립 밤', 969, 11);
+VALUES ('[이벤트] 춘식이 볼펜 추가', 969, 11);
 INSERT INTO options (name, quantity, product_id)
-VALUES ('[Top] 라벤더 핸드 & 스틱 립 밤', 500, 11);
+VALUES ('[이벤트] 춘식이 수건 추가', 500, 11);
 
 -- Product 12
 INSERT INTO options (name, quantity, product_id)
-VALUES ('[Best] 시어버터 핸드 & 시어 스틱 립 밤', 969, 12);
+VALUES ('모바일 교환권 10,000원', 969, 12);
 INSERT INTO options (name, quantity, product_id)
-VALUES ('[Top] 라벤더 핸드 & 스틱 립 밤', 500, 12);
+VALUES ('실물 교환권 10,000원', 500, 12);
 
 -- Product 13
 INSERT INTO options (name, quantity, product_id)
-VALUES ('[Best] 시어버터 핸드 & 시어 스틱 립 밤', 969, 13);
+VALUES ('퍼플 + 옐로우', 969, 13);
 INSERT INTO options (name, quantity, product_id)
-VALUES ('[Top] 라벤더 핸드 & 스틱 립 밤', 500, 13);
+VALUES ('파스텔 핑크 + 옐로우', 500, 13);
+INSERT INTO options (name, quantity, product_id)
+VALUES ('파스텔 스카이 + 그린', 500, 13);
 
 -- Product 14
 INSERT INTO options (name, quantity, product_id)
-VALUES ('[Best] 시어버터 핸드 & 시어 스틱 립 밤', 969, 14);
+VALUES ('딸기 케이크 + 아메리카노', 969, 13);
 INSERT INTO options (name, quantity, product_id)
-VALUES ('[Top] 라벤더 핸드 & 스틱 립 밤', 500, 14);
+VALUES ('오레오 케이크 + 아메리카노', 500, 13);
 
 -- Product 15
 INSERT INTO options (name, quantity, product_id)
-VALUES ('[Best] 시어버터 핸드 & 시어 스틱 립 밤', 969, 15);
+VALUES ('모바일 상품권 30,000원', 969, 15);
 INSERT INTO options (name, quantity, product_id)
-VALUES ('[Top] 라벤더 핸드 & 스틱 립 밤', 500, 15);
+VALUES ('실물 상품권 30,000원', 500, 15);
 
 
 INSERT INTO wishes (user_id, product_id, created_date)
