@@ -15,7 +15,8 @@ phases:
       - echo Installing dependencies...
       - yum update -y
       - yum install -y docker
-      - service docker start
+      - systemctl start docker
+      - systemctl enable docker
       - usermod -a -G docker $USER
       - ./gradlew clean
   pre_build:
