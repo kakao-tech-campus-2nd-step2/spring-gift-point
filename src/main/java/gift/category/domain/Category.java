@@ -1,6 +1,7 @@
 package gift.category.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import gift.category.dto.CategoryRequestDto;
 import gift.product.domain.Product;
 import jakarta.persistence.*;
@@ -21,6 +22,7 @@ public class Category {
     @Embedded
     private CategoryColor color;
     @Embedded
+    @JsonProperty("image_url")
     private CategoryImageUrl imageUrl;
     @Embedded
     private CategoryDescription description;

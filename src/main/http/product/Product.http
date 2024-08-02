@@ -3,11 +3,11 @@ GET http://localhost:8080/api/products/all
 Content-Type: application/json
 
 ### get product page
-GET http://localhost:8080/api/products?page=0
+GET http://localhost:8080/api/products?page=4
 Content-Type: application/json
 
 ### get product
-GET http://localhost:8080/api/products/1
+GET http://localhost:8080/api/products/3
 Content-Type: application/json
 
 ### create product
@@ -15,10 +15,20 @@ POST http://localhost:8080/api/products
 Content-Type: application/json
 
 {
-  "name": "123",
-  "price": "4500",
-  "imageUrl": "http://hello",
-  "categoryId": 2
+  "name": "na",
+  "price": 4500,
+  "image_url": "http://hello",
+  "category_id": 1,
+  "options": [
+    {
+      "name": "n1",
+      "quantity": 20000
+    },
+    {
+      "name": "n2",
+      "quantity": 20000
+    }
+  ]
 }
 
 ### update product
@@ -27,9 +37,9 @@ Content-Type: application/json
 
 {
   "name": "아메리카노2",
-  "price": "5000",
-  "imageUrl": "http://hello",
-  "categoryId": 3
+  "price": 5000,
+  "image_url": "http://hello",
+  "category_id": 3
 }
 
 ### delete product

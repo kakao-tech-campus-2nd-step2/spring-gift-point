@@ -12,4 +12,6 @@ public interface OptionRepository extends MyCrudRepository<Option, Long> {
     List<Option> findByProductId(Long productId);
 
     boolean existsByName(OptionName name);
+
+    List<Option> saveAll(Iterable<Option> options);
 }

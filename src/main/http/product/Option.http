@@ -3,7 +3,7 @@ GET http://localhost:8080/api/options
 Content-Type: application/json
 
 ### get option list by product id
-GET http://localhost:8080/api/options/products/1
+GET http://localhost:8080/api/options/1
 Content-Type: application/json
 
 ### get option
@@ -16,8 +16,8 @@ Content-Type: application/json
 
 {
   "name": "123",
-  "count": 1000,
-  "productId": 1
+  "quantity": 1000,
+  "product_id": 1
 }
 
 ### update option

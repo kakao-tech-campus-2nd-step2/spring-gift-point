@@ -10,6 +10,7 @@ import gift.global.response.SimpleResultResponseDto;
 import gift.global.security.Login;
 import gift.global.utils.ResponseHelper;
 import gift.member.service.MemberService;
+import gift.product.dto.DataDto;
 import gift.wish.domain.Wish;
 import gift.wish.dto.WishRequestDto;
 import gift.wish.dto.WishResponseDto;
@@ -39,9 +40,11 @@ public class WishController {
     }
 
     @GetMapping("")
-    public ResponseEntity<ResultResponseDto<WishResponseListDto>> getWishesByPage(@RequestParam(name = "page") int page, @Login AuthInfo authInfo) {
+    public ResponseEntity<DataDto<WishResponseListDto>> getWishesByPage(@RequestParam(name = "page") int page, @Login AuthInfo authInfo) {
         WishResponseListDto wishResponseDtos = wishService.getWishesByMemberAndPage(memberService.getMemberById(authInfo.memberId()), page);
-        return ResponseHelper.createResponse(ResultCode.GET_ALL_WISHES_SUCCESS, wishResponseDtos);
+        DataDto<WishResponseListDto> dataDto = new DataDto<>(wishResponseDtos);
+        return ResponseEntity.status(200)
+                .body(dataDto);
     }
 
     @GetMapping("/{id}")
@@ -51,9 +54,10 @@ public class WishController {
     }
 
     @PostMapping("")
-    public ResponseEntity<SimpleResultResponseDto> createWish(@Login AuthInfo authInfo, @RequestBody WishRequestDto wishRequestDto) {
+    public ResponseEntity<Void> createWish(@Login AuthInfo authInfo, @RequestBody WishRequestDto wishRequestDto) {
         wishService.createWish(wishRequestDto.toWishServiceDto(authInfo.memberId()));
-        return ResponseHelper.createSimpleResponse(ResultCode.CREATE_WISH_SUCCESS);
+        return ResponseEntity.status(200)
+                .build();
     }
 
     @PutMapping("/{id}")
@@ -64,9 +68,10 @@ public class WishController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<SimpleResultResponseDto> deleteWish(@PathVariable(name = "id") Long id) {
+    public ResponseEntity<Void> deleteWish(@PathVariable(name = "id") Long id) {
         wishService.deleteWish(id);
-        return ResponseHelper.createSimpleResponse(ResultCode.DELETE_WISH_SUCCESS);
+        return ResponseEntity.status(200)
+                .build();
     }
 
     // GlobalException Handler 에서 처리할 경우,

@@ -24,17 +24,18 @@ CREATE TABLE options
     id         BIGINT AUTO_INCREMENT NOT NULL,
     product_id BIGINT                NULL,
     name       VARCHAR(255)          NULL,
-    count      BIGINT                NULL,
+    quantity   BIGINT                NULL,
     CONSTRAINT pk_options PRIMARY KEY (id)
 );
 
 CREATE TABLE orders
 (
-    id        BIGINT AUTO_INCREMENT NOT NULL,
-    member_id BIGINT                NULL,
-    option_id BIGINT                NULL,
-    count     BIGINT                NULL,
-    message   VARCHAR(255)          NULL,
+    id          BIGINT AUTO_INCREMENT NOT NULL,
+    member_id   BIGINT                NULL,
+    option_id   BIGINT                NULL,
+    quantity    BIGINT                NULL,
+    message     VARCHAR(255)          NULL,
+    total_price BIGINT                NULL,
     CONSTRAINT pk_orders PRIMARY KEY (id)
 );
 
@@ -50,10 +51,9 @@ CREATE TABLE products
 
 CREATE TABLE wishes
 (
-    id            BIGINT AUTO_INCREMENT NOT NULL,
-    member_id     BIGINT                NULL,
-    product_id    BIGINT                NULL,
-    product_count BIGINT                NULL,
+    id         BIGINT AUTO_INCREMENT NOT NULL,
+    member_id  BIGINT                NULL,
+    product_id BIGINT                NULL,
     CONSTRAINT pk_wishes PRIMARY KEY (id)
 );
 
@@ -62,9 +62,6 @@ ALTER TABLE members
 
 ALTER TABLE members
     ADD CONSTRAINT uc_members_nickname UNIQUE (nickname);
-
-ALTER TABLE options
-    ADD CONSTRAINT uc_options_name UNIQUE (name);
 
 ALTER TABLE options
     ADD CONSTRAINT FK_OPTIONS_ON_PRODUCT FOREIGN KEY (product_id) REFERENCES products (id);

@@ -28,22 +28,24 @@ public class OptionController {
         return ResponseHelper.createResponse(ResultCode.GET_ALL_OPTIONS_SUCCESS, optionListResponseDto);
     }
 
-    @GetMapping("/products/{product_id}")
-    public ResponseEntity<ResultResponseDto<OptionListResponseDto>> getOptionsByProductId(@PathVariable(name = "product_id") Long productId) {
+    @GetMapping("/{product_id}")
+    public ResponseEntity<OptionListResponseDto> getOptionsByProductId(@PathVariable(name = "product_id") Long productId) {
         OptionListResponseDto optionListResponseDto = optionService.getOptionsByProductId(productId);
-        return ResponseHelper.createResponse(ResultCode.GET_OPTIONS_BY_PRODUCT_ID_SUCCESS, optionListResponseDto);
+        return ResponseEntity.status(200)
+                .body(optionListResponseDto);
     }
 
-    @GetMapping("/{id}")
+/*    @GetMapping("/{id}")
     public ResponseEntity<ResultResponseDto<OptionResponseDto>> getOptionById(@PathVariable(name = "id") Long id) {
         OptionResponseDto optionResponseDto = optionService.getOptionResponseDtoById(id);
         return ResponseHelper.createResponse(ResultCode.GET_OPTION_BY_ID_SUCCESS, optionResponseDto);
-    }
+    }*/
 
     @PostMapping("")
-    public ResponseEntity<SimpleResultResponseDto> createOption(@RequestBody OptionRequestDto optionRequestDto) {
+    public ResponseEntity<Void> createOption(@RequestBody OptionRequestDto optionRequestDto) {
         optionService.createOption(optionRequestDto.toOptionServiceDto());
-        return ResponseHelper.createSimpleResponse(ResultCode.CREATE_OPTION_SUCCESS);
+        return ResponseEntity.status(200)
+                .build();
     }
 
     @PutMapping("/{id}")
@@ -53,9 +55,10 @@ public class OptionController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<SimpleResultResponseDto> deleteOption(@PathVariable(name = "id") Long id) {
+    public ResponseEntity<Void> deleteOption(@PathVariable(name = "id") Long id) {
         optionService.deleteOption(id);
-        return ResponseHelper.createSimpleResponse(ResultCode.DELETE_OPTION_SUCCESS);
+        return ResponseEntity.status(200)
+                .build();
     }
 
     // GlobalException Handler 에서 처리할 경우,

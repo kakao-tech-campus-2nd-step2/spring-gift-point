@@ -14,7 +14,7 @@ public class OptionName {
     public static final int MAX_LENGTH = 50;
     public static final Pattern PATTERN = Pattern.compile("^[a-zA-Z0-9ㄱ-ㅎㅏ-ㅣ가-힣 ()\\[\\]+\\-&/_]*$");
 
-    @Column(name = "name", unique = true)
+    @Column(name = "name")
     private String optionNameValue;
 
     public OptionName() {

@@ -16,7 +16,7 @@ public class Option {
     @Embedded
     private OptionName name;
     @Embedded
-    private OptionCount count;
+    private OptionQuantity quantity;
 
     @ManyToOne(fetch = FetchType.EAGER)
     private Product product;
@@ -25,10 +25,10 @@ public class Option {
     public Option() {
     }
 
-    public Option(Long id, OptionName name, OptionCount count, Product product) {
+    public Option(Long id, OptionName name, OptionQuantity quantity, Product product) {
         this.id = id;
         this.name = name;
-        this.count = count;
+        this.quantity = quantity;
         this.product = product;
     }
 
@@ -40,8 +40,8 @@ public class Option {
         return name;
     }
 
-    public OptionCount getCount() {
-        return count;
+    public OptionQuantity getQuantity() {
+        return quantity;
     }
 
     public Product getProduct() {
@@ -67,10 +67,14 @@ public class Option {
     }
 
     public void subtract(Long quantity) {
-        Long stock = this.count.getOptionCountValue();
+        Long stock = this.quantity.getOptionCountValue();
         if (stock < quantity) {
             throw new OptionNotEnoughException();
         }
-        this.count = new OptionCount(stock - quantity);
+        this.quantity = new OptionQuantity(stock - quantity);
+    }
+
+    public void setProduct(Product product) {
+        this.product = product;
     }
 }

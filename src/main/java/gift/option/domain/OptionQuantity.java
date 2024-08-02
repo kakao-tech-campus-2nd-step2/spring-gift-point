@@ -9,17 +9,17 @@ import jakarta.persistence.Embeddable;
 import java.util.Objects;
 
 @Embeddable
-public class OptionCount {
+public class OptionQuantity {
     public static final long MIN_COUNT = 1L;
     public static final long MAX_COUNT = 100_000_000L;
 
-    @Column(name = "count")
+    @Column(name = "quantity")
     private Long optionCountValue;
 
-    public OptionCount() {
+    public OptionQuantity() {
     }
 
-    public OptionCount(Long optionCountValue) {
+    public OptionQuantity(Long optionCountValue) {
         if (optionCountValue == null || optionCountValue < MIN_COUNT || optionCountValue >= MAX_COUNT) {
             throw new OptionValidException(ErrorCode.OPTION_COUNT_OUTBOUND_ERROR);
         }
@@ -40,7 +40,7 @@ public class OptionCount {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        OptionCount that = (OptionCount) o;
+        OptionQuantity that = (OptionQuantity) o;
         return Objects.equals(optionCountValue, that.optionCountValue);
     }
 

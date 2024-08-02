@@ -1,5 +1,6 @@
 package gift.wish.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import gift.product.domain.ImageUrl;
 import gift.product.domain.ProductName;
 import gift.wish.domain.ProductCount;
@@ -10,12 +11,12 @@ import org.springframework.data.domain.Pageable;
 import java.util.ArrayList;
 import java.util.List;
 
-public record WishResponseDto(Long id, Long productId, ProductName productName,
-                              ImageUrl imageUrl, ProductCount productCount) {
+public record WishResponseDto(Long id, @JsonProperty("product_id") Long productId, @JsonProperty("product_name") ProductName productName,
+                              @JsonProperty("product_price") Long price, @JsonProperty("image_url") ImageUrl imageUrl) {
 
     public WishResponseDto(Wish wish) {
         this(wish.getId(), wish.getProduct().getId(), wish.getProduct().getName(),
-                wish.getProduct().getImageUrl(), wish.getProductCount());
+                wish.getProduct().getPrice().getProductPriceValue(), wish.getProduct().getImageUrl());
     }
 
     public static List<WishResponseDto> wishListToWishResponseList(List<Wish> wishes) {

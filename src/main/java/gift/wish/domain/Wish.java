@@ -24,17 +24,13 @@ public class Wish {
     @JoinColumn(name = "product_id")
     private Product product;
 
-    @Embedded
-    private ProductCount productCount;
-
     public Wish() {
     }
 
-    public Wish(Long id, Member member, Product product, ProductCount productCount) {
+    public Wish(Long id, Member member, Product product) {
         this.id = id;
         this.member = member;
         this.product = product;
-        this.productCount = productCount;
     }
 
     public boolean checkNew() {
@@ -53,9 +49,6 @@ public class Wish {
         return member;
     }
 
-    public ProductCount getProductCount() {
-        return productCount;
-    }
 
     @Override
     public boolean equals(Object o) {
@@ -69,9 +62,5 @@ public class Wish {
     @Override
     public int hashCode() {
         return Objects.hash(id);
-    }
-
-    public void increaseProductCount(ProductCount productCount) {
-        this.productCount = new ProductCount(this.productCount.getProductCountValue() + productCount.getProductCountValue());
     }
 }
