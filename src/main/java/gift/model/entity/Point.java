@@ -30,6 +30,11 @@ public class Point {
         this.point = point;
     }
 
+    public Point updatePoint(long points){
+        this.point = this.point + points;
+        return this;
+    }
+
     public long getId() {
         return id;
     }
