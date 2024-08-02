@@ -16,6 +16,8 @@ public class Member {
     @Column(nullable = false)
     private String password;
     private String accessToken;
+    @Column(columnDefinition = "integer default 10000000000")
+    private Integer point;
 
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Wish> wishes =  new ArrayList<>();
