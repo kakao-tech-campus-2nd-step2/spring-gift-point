@@ -9,13 +9,15 @@ public class OrderResponse {
     private Long quantity;
     private LocalDateTime orderDateTime;
     private String message;
+    private Integer point;
 
-    public OrderResponse(Long id, Long optionId, Long quantity, LocalDateTime orderDateTime, String message) {
+    public OrderResponse(Long id, Long optionId, Long quantity, LocalDateTime orderDateTime, String message, Integer point) {
         this.id = id;
         this.optionId = optionId;
         this.quantity = quantity;
         this.orderDateTime = orderDateTime;
         this.message = message;
+        this.point = point;
     }
 
     public Long getId() {
@@ -36,6 +38,10 @@ public class OrderResponse {
 
     public String getMessage() {
         return message;
+    }
+
+    public Integer getPoint() {
+        return point;
     }
 
 }

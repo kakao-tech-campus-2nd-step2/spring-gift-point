@@ -10,10 +10,8 @@ public class CategoryRequest {
     @NotEmpty
     private String name;
 
-    @NotEmpty
     private String color;
 
-    @NotEmpty
     private String imageUrl;
 
     private String description;

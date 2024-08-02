@@ -1,12 +1,17 @@
 package gift.controller;
 
+import gift.config.LoginMember;
+import gift.domain.member.Member;
 import gift.dto.MemberDto;
 import gift.dto.request.LoginRequest;
+import gift.dto.request.PointChargeRequest;
 import gift.dto.request.RegisterRequest;
 import gift.dto.response.ErrorResponse;
 import gift.dto.response.JwtResponse;
+import gift.dto.response.PointResponse;
 import gift.service.MemberService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -15,10 +20,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @Tag(name = "Member API", description = "회원 관련 API")
 @RequestMapping("/api/members")
@@ -60,6 +62,29 @@ public class MemberController {
 
         return ResponseEntity.ok()
                 .body(new JwtResponse(jwt));
+    }
+
+    @Operation(summary = "포인트 조회", description = "로그인한 사용자의 보유 포인트를 조회합니다.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "포인트 조회 성공", content = @Content(schema = @Schema(implementation = PointResponse.class))),
+            @ApiResponse(responseCode = "401", description = "인증 필요")
+    })
+    @GetMapping("/points")
+    public ResponseEntity<PointResponse> point(@Parameter(hidden = true) @LoginMember Member member) {
+        return ResponseEntity.ok().body(new PointResponse(member.getPoint()));
+    }
+
+    @Operation(summary = "포인트 충전", description = "회원 아이디를 받아, 해당 회원의 포인트를 충전합니다.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "204", description = "포인트 조회 성공"),
+            @ApiResponse(responseCode = "400", description = "잘못된 입력 데이터", content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
+            @ApiResponse(responseCode = "404", description = "존재하지 않는 회원")
+    })
+    @PostMapping("/{memberId}/points")
+    public ResponseEntity<Void> addPoint(@Parameter(description = "회원ID", required = true) @PathVariable Long memberId, @RequestBody @Valid PointChargeRequest request) {
+        memberService.chargePoint(memberId, request.getPoint());
+
+        return ResponseEntity.noContent().build();
     }
 
 }

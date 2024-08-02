@@ -25,6 +25,8 @@ public class Order {
 
     private String message;
 
+    private Integer point;
+
     @ManyToOne(fetch = FetchType.LAZY)
     private Member member;
 
@@ -34,11 +36,12 @@ public class Order {
     public Order() {
     }
 
-    public Order(Option option, Long quantity, String message, Member member) {
+    public Order(Option option, Long quantity, String message, Member member, Integer point) {
         this.option = option;
         this.quantity = quantity;
         this.message = message;
         this.member = member;
+        this.point = point;
     }
 
     public Long getId() {
@@ -61,4 +64,8 @@ public class Order {
         return orderDateTime;
     }
 
+    public Integer getPoint() {
+        return point;
+    }
+    
 }

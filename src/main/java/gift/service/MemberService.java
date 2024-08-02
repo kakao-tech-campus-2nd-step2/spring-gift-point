@@ -49,4 +49,10 @@ public class MemberService {
                 .orElseThrow(() -> new GiftException(ErrorCode.MEMBER_NOT_FOUND));
     }
 
+    public void chargePoint(Long memberId, Integer point) {
+        Member member = getMember(memberId);
+
+        member.chargePoint(point);
+    }
+
 }

@@ -1,6 +1,8 @@
 package gift.domain.member;
 
 import gift.domain.Wish;
+import gift.exception.ErrorCode;
+import gift.exception.GiftException;
 import jakarta.persistence.*;
 
 import java.util.ArrayList;
@@ -16,9 +18,14 @@ public class Member {
     @Column(unique = true)
     private String email;
 
+    @Column(nullable = false)
     private String password;
 
+    @Enumerated(EnumType.STRING)
     private MemberRole role;
+
+    @Column(nullable = false)
+    private Integer point;
 
     @OneToOne(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
     private SocialAccount socialAccount;
@@ -27,6 +34,12 @@ public class Member {
     private List<Wish> wishes = new ArrayList<>();
 
     public Member() {
+    }
+
+    @PrePersist
+    private void prePersist() {
+        this.point = this.point == null ? 0 : this.point;
+        this.role = this.role == null ? MemberRole.MEMBER : this.role;
     }
 
     public Long getId() {
@@ -41,17 +54,36 @@ public class Member {
         return socialAccount;
     }
 
-    public Member(Long id, String email, String password, MemberRole role, SocialAccount socialAccount) {
+    public Integer getPoint() {
+        return point;
+    }
+
+    public Member(Long id, String email, String password, MemberRole role, SocialAccount socialAccount, Integer point) {
         this.id = id;
         this.email = email;
         this.password = password;
         this.role = role;
         this.socialAccount = socialAccount;
+        this.point = point;
     }
 
     public void setSocialAccount(SocialAccount socialAccount) {
         socialAccount.setMember(this);
         this.socialAccount = socialAccount;
+    }
+
+    public void subtractPoint(Integer point) {
+        if (point == null || point < 0) {
+            throw new GiftException(ErrorCode.INVALID_POINT);
+        }
+        if (this.point < point) {
+            throw new GiftException(ErrorCode.INSUFFICIENT_POINT);
+        }
+        this.point -= point;
+    }
+
+    public void chargePoint(Integer point) {
+        this.point += point;
     }
 
     public static class MemberBuilder {
@@ -60,6 +92,7 @@ public class Member {
         private String password;
         private MemberRole role;
         private SocialAccount socialAccount;
+        private Integer point;
 
         public MemberBuilder id(Long id) {
             this.id = id;
@@ -86,8 +119,13 @@ public class Member {
             return this;
         }
 
+        public MemberBuilder point(Integer point) {
+            this.point = point;
+            return this;
+        }
+
         public Member build() {
-            return new Member(id, email, password, role, socialAccount);
+            return new Member(id, email, password, role, socialAccount, point);
         }
     }
 

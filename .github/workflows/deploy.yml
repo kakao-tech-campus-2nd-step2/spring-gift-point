@@ -3,7 +3,7 @@ name: 카테캠 Step2 프로젝트 자동 재배포
 on:
   push:
     branches:
-      - step1
+      - step3
 
 jobs:
   deploy:
@@ -26,6 +26,7 @@ jobs:
         env:
           kakao.client-id: ${{ secrets.KAKAO_CLIENT_ID }}
           kakao.redirect-url: ${{ secrets.KAKAO_REDIRECT_URL }}
+          server.ssl.key-store-password: ${{ secrets.KEY_STORE_PASSWORD }}
 
       - name: 빌드로 테스트 수행 및 Jar 파일 생성
         run: |
@@ -52,5 +53,5 @@ jobs:
           script_stop: true
           script: |
             cd ./project
-            sudo fuser -k -n tcp 8080 || true
-            nohup java -jar app.jar > ./output.log 2>&1 &
+            sudo fuser -k -n tcp 443 || true
+            sudo nohup java -jar app.jar > ./output.log 2>&1 &

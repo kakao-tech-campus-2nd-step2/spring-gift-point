@@ -36,7 +36,7 @@ class KakaoControllerTest {
         given(kakaoLoginService.getRedirectHeaders()).willReturn(headers);
 
         //when
-        ResultActions result = mvc.perform(get("/kakao/login"));
+        ResultActions result = mvc.perform(get("/api/kakao/login"));
 
         //then
         result.andExpect(status().isFound());
@@ -54,7 +54,7 @@ class KakaoControllerTest {
         given(kakaoLoginService.processKakaoAuth(code)).willReturn(tokenResponse);
 
         //when
-        ResultActions result = mvc.perform(get("/kakao/oauth")
+        ResultActions result = mvc.perform(get("/api/kakao/auth")
                 .param("code", code));
 
         //then

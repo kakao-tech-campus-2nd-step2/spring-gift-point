@@ -12,7 +12,10 @@ public class OrderCreateRequest {
     @NotNull
     private Long quantity;
 
-    private String message = "주문 성공!";
+    private String message;
+
+    @NotNull
+    private Integer point;
 
     public Long getOptionId() {
         return optionId;
@@ -24,6 +27,10 @@ public class OrderCreateRequest {
 
     public String getMessage() {
         return message;
+    }
+
+    public Integer getPoint() {
+        return point;
     }
 
 }

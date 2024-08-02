@@ -52,13 +52,14 @@ public class OrderServiceTest {
     void processOrder() throws Exception {
         //given
         SocialAccount socialAccount = new SocialAccount(SocialType.KAKAO, 123L, "test-access-token", "test-refresh-token");
-        Member member = new Member.MemberBuilder().socialAccount(socialAccount).build();
+        Member member = new Member.MemberBuilder().socialAccount(socialAccount).point(5000).build();
 
         Long originalQuantity = 10L;
         Long orderQuantity = 5L;
         String message = "Test Message";
+        Integer usePoint = 3000;
 
-        OrderDto orderDto = new OrderDto(1L, 2L, orderQuantity, member, message);
+        OrderDto orderDto = new OrderDto(1L, 2L, orderQuantity, member, message, usePoint);
 
         Option option = new Option();
         option.setProduct(new Product());
@@ -70,7 +71,7 @@ public class OrderServiceTest {
         given(wishRepository.findByMemberAndProduct(any(Member.class), any(Product.class))).willReturn(Optional.of(new Wish()));
         willDoNothing().given(wishRepository).delete(any(Wish.class));
         willDoNothing().given(kakaoApiService).sendKakaoMessage(anyString(), anyString());
-        given(orderRepository.save(any(Order.class))).willReturn(new Order(option, orderQuantity, message, member));
+        given(orderRepository.save(any(Order.class))).willReturn(new Order(option, orderQuantity, message, member, usePoint));
 
         //when
         OrderDto result = orderService.processOrder(orderDto);
@@ -92,13 +93,14 @@ public class OrderServiceTest {
     void processOrderWithExpiredAccessToken() throws Exception {
         //given
         SocialAccount socialAccount = new SocialAccount(SocialType.KAKAO, 123L, "test-access-token", "test-refresh-token");
-        Member member = new Member.MemberBuilder().socialAccount(socialAccount).build();
+        Member member = new Member.MemberBuilder().socialAccount(socialAccount).point(5000).build();
 
         Long originalQuantity = 10L;
         Long orderQuantity = 5L;
         String message = "Test Message";
+        Integer usePoint = 3000;
 
-        OrderDto orderDto = new OrderDto(1L, 2L, orderQuantity, member, message);
+        OrderDto orderDto = new OrderDto(1L, 2L, orderQuantity, member, message, usePoint);
 
         Option option = new Option();
         option.setProduct(new Product());
@@ -111,7 +113,7 @@ public class OrderServiceTest {
         given(wishRepository.findByMemberAndProduct(any(Member.class), any(Product.class))).willReturn(Optional.of(new Wish()));
         willDoNothing().given(wishRepository).delete(any(Wish.class));
         willDoNothing().given(kakaoApiService).sendKakaoMessage(anyString(), anyString());
-        given(orderRepository.save(any(Order.class))).willReturn(new Order(option, orderQuantity, message, member));
+        given(orderRepository.save(any(Order.class))).willReturn(new Order(option, orderQuantity, message, member, usePoint));
 
         //when
         OrderDto result = orderService.processOrder(orderDto);
