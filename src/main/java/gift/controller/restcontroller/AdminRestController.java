@@ -40,8 +40,8 @@ public class AdminRestController {
     @Operation(summary = "특정 멤버 포인트 주입", description = "특정 멤버에서 포인트를 주입합니다.")
     @SecurityRequirement(name = "Authorization")
     public ResponseEntity<PointResponse> getMemberPoint(
-            @NotNull @Min(1) @PathVariable("memberId") Long memberId,
-            @Valid PointUpdateRequest request
+            @PathVariable("memberId") @NotNull @Min(1) Long memberId,
+            @Valid @RequestBody PointUpdateRequest request
     ) {
         PointResponse response = memberService.updatePointById(memberId, request);
         return ResponseEntity.ok().body(response);
