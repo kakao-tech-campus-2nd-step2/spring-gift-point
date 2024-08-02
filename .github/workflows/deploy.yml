@@ -48,6 +48,7 @@ jobs:
             set -e
 
             # 디렉토리 변경
+            pwd
             cd /katecam/build/libs
 
             # 현재 실행 중인 애플리케이션 종료
