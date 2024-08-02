@@ -1,7 +1,6 @@
 package gift.controller;
 
 import gift.dto.ApiResponse;
-import gift.dto.OptionRequest;
 import gift.model.HttpResult;
 import gift.service.OptionService;
 import org.springframework.http.HttpStatus;
