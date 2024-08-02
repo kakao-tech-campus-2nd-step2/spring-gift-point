@@ -1,12 +1,11 @@
 package gift.dto.orderDTO;
 
-import java.time.LocalDateTime;
-
 public record OrderResponseDTO(
     Long id,
+    Long productId,
     Long optionId,
+    String orderDateTime,
     Long quantity,
-    LocalDateTime orderDateTime,
     String message
 ) {
 
