@@ -40,6 +40,8 @@ public class User {
     private String refreshToken;
     @Column
     private Role role;
+    @Column
+    private Long point;
 
     protected User() {
     }
@@ -52,6 +54,7 @@ public class User {
         this.accessToken = accessToken;
         this.refreshToken = refreshToken;
         this.role = Role.ROLE_USER;
+        this.point = 0L;
     }
 
     public User(String email, String password) {
@@ -93,6 +96,20 @@ public class User {
     public Order addOrder(Order order) {
         this.orders.add(order);
         return order;
+    }
+
+    public Long getPoint() {
+        return point;
+    }
+
+    public void increasingPoint(Long point) {
+        this.point += point;
+    }
+
+    public void decreasingPoint(Long point) {
+        if (this.point - point >= 0) {
+            this.point -= point;
+        }
     }
 
 }
