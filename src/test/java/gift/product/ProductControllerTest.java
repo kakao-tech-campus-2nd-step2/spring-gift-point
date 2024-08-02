@@ -3,6 +3,7 @@ package gift.product;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import gift.product.application.dto.ProductRequestDto;
 import java.net.URI;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

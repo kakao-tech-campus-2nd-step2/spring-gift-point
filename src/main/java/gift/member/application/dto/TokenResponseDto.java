@@ -1,0 +1,25 @@
+package gift.member.application.dto;
+
+import gift.member.application.resolver.LoginMemberArgumentResolver;
+import java.util.List;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.web.method.support.HandlerMethodArgumentResolver;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+
+public record TokenResponseDto(String accessToken) {
+
+    @Configuration
+    public static class WebConfig implements WebMvcConfigurer {
+        private final LoginMemberArgumentResolver loginMemberArgumentResolver;
+
+        public WebConfig(LoginMemberArgumentResolver loginMemberArgumentResolver) {
+            this.loginMemberArgumentResolver = loginMemberArgumentResolver;
+        }
+
+        @Override
+        public void addArgumentResolvers(List<HandlerMethodArgumentResolver> argumentResolvers) {
+            argumentResolvers.add(loginMemberArgumentResolver);
+        }
+    }
+}
+

@@ -1,6 +1,5 @@
 package gift.auth;
 
-import gift.order.KakaoMessage;
 import java.net.URI;
 import java.util.Objects;
 import org.springframework.beans.factory.annotation.Value;

@@ -1,13 +1,10 @@
 package gift.auth;
 
-import ch.qos.logback.classic.Logger;
 import gift.exception.NotFoundMember;
-import gift.login.JwtTokenUtil;
-import gift.member.Member;
-import gift.member.MemberService;
-import io.jsonwebtoken.Jwt;
+import gift.member.util.JwtTokenUtil;
+import gift.member.persistence.Member;
+import gift.member.application.service.MemberService;
 import org.springframework.stereotype.Service;
-import org.slf4j.LoggerFactory;
 
 @Service
 public class AuthService {
