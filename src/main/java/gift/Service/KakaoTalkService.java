@@ -33,8 +33,9 @@ public class KakaoTalkService {
         this.restTemplate = new RestTemplate();
     }
 
-    public void sendMessageToMe(String token, List<OrderRequestDto> orderRequestDtoList) throws Exception {
+    public void sendMessageToMe(String token, List<OrderRequestDto> orderRequestDtoList, int totalPrice) throws Exception {
         // 카카오톡 메시지 전송
+        // 가능하다면 메시지를 만드는 부분을 별도의 메서드로 분리하자! -> 추후 리팩토링 필요!
         StringBuilder message = new StringBuilder();
         message.append("주문 내역\n");
         for (OrderRequestDto orderRequestDto : orderRequestDtoList) {
@@ -50,16 +51,6 @@ public class KakaoTalkService {
                     .append(orderRequestDto.getQuantity())
                     .append("개\n\n");
         }
-
-        long totalPrice = orderRequestDtoList.stream()
-                .mapToLong(orderRequestDto -> {
-                    Product product = productJpaRepository.findById(orderRequestDto.getProductId()).orElseThrow();
-                    int price = product.getPrice();
-                    int quantity = orderRequestDto.getQuantity();
-
-                    return (long) price * quantity;
-                })
-                .sum();
 
         message.append("총 주문 금액 : ").append(totalPrice).append("원\n");
         message.append("정상적으로 주문이 완료되었습니다.");
