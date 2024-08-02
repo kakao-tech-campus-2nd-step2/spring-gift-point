@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin Page</title>
+</head>
+<body>
+<h1>Admin Page</h1>
+<table>
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>Email</th>
+        <th>Role</th>
+        <th>Action</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="member : ${members}">
+        <td th:text="${member.id}"></td>
+        <td th:text="${member.email}"></td>
+        <td th:text="${member.role}"></td>
+        <td>
+            <button th:attr="onclick=|deleteMember(${member.id})|">Delete</button>
+        </td>
+    </tr>
+    </tbody>
+</table>
+
+<script type="text/javascript">
+    function deleteMember(id) {
+        fetch(`/admin/members/${id}`, {
+            method: 'DELETE',
+            headers:
+        })
+        .then(response => {
+            if (response.ok) {
+                location.reload();
+            } else {
+                alert('Failed to delete member');
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
+    }
+</script>
+</body>
+</html>

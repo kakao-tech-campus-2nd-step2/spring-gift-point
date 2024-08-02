@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wishlist</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        .wishlist-item {
+            border: 1px solid #ccc;
+            padding: 10px;
+            margin: 10px 0;
+            display: flex;
+            align-items: center;
+        }
+        .wishlist-item img {
+            max-width: 100px;
+            margin-right: 20px;
+        }
+        .wishlist-item .info {
+            flex: 1;
+        }
+        .wishlist-item .actions {
+            margin-left: 20px;
+        }
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/jwt-decode@3.1.2/build/jwt-decode.min.js"></script>
+</head>
+<body>
+<h1>Your Wishlist</h1>
+<div id="wishlist"></div>
+<div id="pagination">
+    <button id="prev-page" disabled>Previous</button>
+    <span id="current-page">1</span>
+    <button id="next-page">Next</button>
+</div>
+<a href="/view/home">go Home</a>
+<script>
+    let currentPage = 1;
+    const pageSize = 10;
+
+    function getEmailFromToken() {
+        const token = localStorage.getItem('token');
+        if (!token) {
+            alert('You need to log in first.');
+            return null;
+        }
+
+        try {
+            console.log('Token:', token);
+            const decodedToken = jwt_decode(token);
+            console.log('Decoded Token:', decodedToken);
+            return decodedToken.sub;  // 이메일을 sub 필드에서 추출합니다.
+        } catch (error) {
+            console.error('Error decoding token:', error);
+            alert('Failed to decode token. Please log in again.');
+            return null;
+        }
+    }
+
+    function getAuthHeaders() {
+        const token = localStorage.getItem('token');
+        if (!token) {
+            alert('You need to log in first.');
+            return null;
+        }
+
+        return {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+        };
+    }
+
+    function fetchWishlist(page, size) {
+        const email = getEmailFromToken();
+        if (!email) {
+            alert('토큰에서 이메일을 추출하지 못했습니다.');
+            return;
+        }
+
+        fetch(`/view/wishlist/data?email=${email}&page=${page - 1}&size=${size}`, {
+        method: 'GET',
+        headers: getAuthHeaders()
+        })
+        .then(response => {
+            if (!response.ok) {
+                return response.text().then(text => { throw new Error(text); });
+            }
+            return response.json();
+        })
+        .then(data => {
+            renderWishlist(data.content);
+            updatePagination(data.pagination.currentPage, data.pagination.hasPrevious, data.pagination.hasNext);
+        })
+        .catch(error => {
+            console.error('Error fetching wishlist:', error);
+            alert('Failed to fetch wishlist. Please try again later.');
+        });
+
+    }
+
+    function renderWishlist(products) {
+        const wishlistContainer = document.getElementById('wishlist');
+        wishlistContainer.innerHTML = '';
+
+        if (products.length === 0) {
+            wishlistContainer.innerHTML = '<p>Your wishlist is empty.</p>';
+        } else {
+            products.forEach(product => {
+                const item = document.createElement('div');
+                item.className = 'wishlist-item';
+
+                item.innerHTML = `
+                    <img src="${product.imageUrl}" alt="${product.name}">
+                    <div class="info">
+                        <h2>${product.name}</h2>
+                        <h5>${product.categoryName}</h5>
+                        <p>Price: $${product.price}</p>
+                    </div>
+                    <div class="actions">
+                        <button onclick="removeFromWishlist(${product.id})">Remove</button>
+                    </div>
+                `;
+
+                wishlistContainer.appendChild(item);
+            });
+        }
+    }
+
+    function updatePagination(currentPage, hasPrevious, hasNext) {
+        document.getElementById('current-page').textContent = currentPage;
+        document.getElementById('prev-page').disabled = !hasPrevious;
+        document.getElementById('next-page').disabled = !hasNext;
+    }
+
+    function removeFromWishlist(productId) {
+        const token = localStorage.getItem('token');
+        if (!token) {
+            alert('You need to log in first.');
+            return;
+        }
+
+        fetch(`/api/wishlist/${productId}`, {
+            method: 'DELETE',
+            headers: getAuthHeaders()
+        })
+        .then(() => {
+            fetchWishlist(currentPage, pageSize);  // Reload wishlist after removal
+        })
+        .catch(error => {
+            console.error('Error removing wishlist item:', error);
+            alert('Failed to remove item from wishlist. Please try again later.');
+        });
+    }
+
+
+    document.addEventListener('DOMContentLoaded', function () {
+        fetchWishlist(currentPage, pageSize);
+
+        document.getElementById('prev-page').addEventListener('click', function () {
+            if (currentPage > 1) {
+                currentPage--;
+                fetchWishlist(currentPage, pageSize);
+            }
+        });
+
+        document.getElementById('next-page').addEventListener('click', function () {
+            currentPage++;
+            fetchWishlist(currentPage, pageSize);
+        });
+    });
+</script>
+</body>
+</html>
