@@ -5,7 +5,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
-public record TokenResponseDto(String token) {
+public record TokenResponseDto(String accessToken) {
 
     @Configuration
     public static class WebConfig implements WebMvcConfigurer {
