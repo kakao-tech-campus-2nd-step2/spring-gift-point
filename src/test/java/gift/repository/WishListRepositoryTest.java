@@ -73,11 +73,11 @@ public class WishListRepositoryTest {
         assertThat(actual)
             .extracting(wish -> wish.getUser().getEmail(), wish -> wish.getProduct().getName(),
                 wish -> wish.getProduct().getPrice(), wish -> wish.getProduct().getImageUrl(),
-                wish -> wish.getProduct().getCategory(), WishList::getNum,
+                wish -> wish.getProduct().getCategory(), WishList::getQuantity,
                 wish -> wish.getOption().getName(), wish -> wish.getOption().getProduct())
             .containsExactly(expected.getUser().getEmail(), expected.getProduct().getName(),
                 expected.getProduct().getPrice(), expected.getProduct().getImageUrl(),
-                expected.getProduct().getCategory(), expected.getNum(),
+                expected.getProduct().getCategory(), expected.getQuantity(),
                 expected.getOption().getName(), expected.getOption().getProduct());
     }
 
@@ -108,13 +108,13 @@ public class WishListRepositoryTest {
         //Then
         assertThat(result.getTotalElements()).isEqualTo(expected.size());
         assertThat(result.getContent().get(0))
-            .extracting(WishList::getUser, WishList::getOption, WishList::getProduct, WishList::getNum)
+            .extracting(WishList::getUser, WishList::getOption, WishList::getProduct, WishList::getQuantity)
             .containsExactly(expected.getFirst().getUser(), expected.getFirst().getOption(),
-                expected.getFirst().getProduct(), expected.getFirst().getNum());
+                expected.getFirst().getProduct(), expected.getFirst().getQuantity());
         assertThat(result.getContent().get(1))
-            .extracting(WishList::getUser, WishList::getOption, WishList::getProduct, WishList::getNum)
+            .extracting(WishList::getUser, WishList::getOption, WishList::getProduct, WishList::getQuantity)
             .containsExactly(expected.get(1).getUser(), expected.get(1).getOption(),
-                expected.get(1).getProduct(), expected.get(1).getNum());
+                expected.get(1).getProduct(), expected.get(1).getQuantity());
     }
 
     @Test

@@ -51,7 +51,7 @@ public class KakaoOrderService {
     }
 
     @Transactional
-    public KakaoOrderDTO kakaoOrder(long userId, KakaoOrderDTO kakaoOrderDTO,
+    public KakaoOrderDTO kakaoOrder(Long userId, KakaoOrderDTO kakaoOrderDTO,
         String orderDateTime) {
 
         if (productService.existsByProductId(kakaoOrderDTO.productId())) {

@@ -18,6 +18,7 @@ import gift.administrator.option.OptionDTO;
 import gift.administrator.option.OptionRepository;
 import gift.administrator.option.OptionService;
 import gift.administrator.product.Product;
+import gift.administrator.product.ProductService;
 import gift.error.NotFoundIdException;
 import java.util.ArrayList;
 import java.util.List;
@@ -30,6 +31,7 @@ public class OptionServiceTest {
 
     private OptionService optionService;
     private final OptionRepository optionRepository = mock(OptionRepository.class);
+    private final ProductService productService = mock(ProductService.class);
     private Option option;
     private Option option1;
     private OptionDTO expected;
@@ -37,7 +39,7 @@ public class OptionServiceTest {
 
     @BeforeEach
     void beforeEach() {
-        optionService = new OptionService(optionRepository);
+        optionService = new OptionService(optionRepository, productService);
         Category category = new Category("상품권", null, null, null);
         option = new Option("L", 3, null);
         List<Option> options = new ArrayList<>(List.of(option));
@@ -192,7 +194,7 @@ public class OptionServiceTest {
             .willReturn(2);
 
         //when
-        int actual = optionService.countAllOptionsByProductIdFromOptionId(1L);
+        int actual = optionService.countAllOptionsByProductId(1L);
 
         //then
         assertThat(actual).isEqualTo(2);
@@ -226,7 +228,7 @@ public class OptionServiceTest {
         //when
 
         //then
-        assertThatThrownBy(() -> optionService.countAllOptionsByProductIdFromOptionId(1L))
+        assertThatThrownBy(() -> optionService.updateOption(1L, OptionDTO.fromOption(option)))
             .isInstanceOf(NotFoundIdException.class)
             .hasMessageContaining("옵션 아이디를 찾을 수 없습니다.");
     }

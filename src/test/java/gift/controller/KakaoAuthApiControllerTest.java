@@ -9,7 +9,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import gift.error.KakaoAuthenticationException;
+import gift.response.ApiResponse;
+import gift.response.ApiResponse.HttpResult;
 import gift.users.kakao.KakaoAuthApiController;
 import gift.users.kakao.KakaoAuthService;
 import gift.users.kakao.KakaoProperties;
@@ -20,6 +23,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.HttpStatus;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -31,6 +35,7 @@ public class KakaoAuthApiControllerTest {
     private final KakaoAuthService kakaoAuthService = mock(KakaoAuthService.class);
     private MockMvc mvc;
     private KakaoAuthApiController kakaoAuthApiController;
+    private ObjectMapper objectMapper = new ObjectMapper();
     @Autowired
     private KakaoProperties kakaoProperties;
 
@@ -66,6 +71,8 @@ public class KakaoAuthApiControllerTest {
         String code = "test_code";
         String accessToken = "test_access_token";
         given(kakaoAuthService.kakaoCallBack(code)).willReturn(accessToken);
+        ApiResponse<String> expectedResponse = new ApiResponse<>(HttpResult.OK, "카카오 로그인 성공",
+            HttpStatus.OK, accessToken);
 
         //when
         ResultActions resultActions = mvc.perform(
@@ -75,7 +82,7 @@ public class KakaoAuthApiControllerTest {
 
         //then
         resultActions.andExpect(status().isOk())
-            .andExpect(content().string(accessToken));
+            .andExpect(content().json(objectMapper.writeValueAsString(expectedResponse)));
     }
 
     @Test

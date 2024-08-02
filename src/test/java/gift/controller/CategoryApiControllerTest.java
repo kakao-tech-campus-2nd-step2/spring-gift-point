@@ -1,7 +1,6 @@
 package gift.controller;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -17,12 +16,18 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import gift.administrator.category.CategoryApiController;
 import gift.administrator.category.CategoryDTO;
 import gift.administrator.category.CategoryService;
+import gift.error.ErrorResponse;
+import gift.error.ErrorResponse.ErrorField;
 import gift.error.GlobalExceptionRestController;
 import gift.error.NotFoundIdException;
+import gift.response.ApiResponse;
+import gift.response.ApiResponse.HttpResult;
 import java.util.Arrays;
+import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.http.HttpStatus;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -40,8 +45,7 @@ public class CategoryApiControllerTest {
         categoryApiController = new CategoryApiController(categoryService);
         mvc = MockMvcBuilders.standaloneSetup(categoryApiController)
             .setControllerAdvice(new GlobalExceptionRestController())
-            .defaultResponseCharacterEncoding(UTF_8)
-            .build();
+            .defaultResponseCharacterEncoding(UTF_8).build();
         objectMapper = new ObjectMapper();
     }
 
@@ -51,18 +55,19 @@ public class CategoryApiControllerTest {
         //given
         CategoryDTO categoryDTO = new CategoryDTO(1L, "상품권", "#ff11ff", "image.jpg", "");
         CategoryDTO categoryDTO1 = new CategoryDTO(2L, "인형", "#dd11ff", "image.jpg", "none");
-        given(categoryService.getAllCategories()).willReturn(
-            Arrays.asList(categoryDTO, categoryDTO1));
+        List<CategoryDTO> categories = Arrays.asList(categoryDTO, categoryDTO1);
+        given(categoryService.getAllCategories()).willReturn(categories);
+        ApiResponse<List<CategoryDTO>> expectedResponse = new ApiResponse<>(HttpResult.OK,
+            "카테고리 전체 조회 성공", HttpStatus.OK, categories);
 
         //when
         ResultActions resultActions = mvc.perform(
-            MockMvcRequestBuilders.get("/api/categories")
-                .contentType("application/json"));
+            MockMvcRequestBuilders.get("/api/categories").contentType("application/json")
+                .accept("application/json"));
 
         //then
         resultActions.andExpect(status().isOk())
-            .andExpect(content().json(
-                objectMapper.writeValueAsString(Arrays.asList(categoryDTO, categoryDTO1))));
+            .andExpect(content().json(objectMapper.writeValueAsString(expectedResponse)));
     }
 
     @Test
@@ -71,16 +76,17 @@ public class CategoryApiControllerTest {
         //given
         CategoryDTO categoryDTO = new CategoryDTO(1L, "상품권", "#ff11ff", "image.jpg", "");
         given(categoryService.getCategoryById(1L)).willReturn(categoryDTO);
+        ApiResponse<CategoryDTO> expectedResponse = new ApiResponse<>(HttpResult.OK, "카테고리 조회 성공",
+            HttpStatus.OK, categoryDTO);
 
         //when
         ResultActions resultActions = mvc.perform(
-            MockMvcRequestBuilders.get("/api/categories/1")
-                .contentType("application/json"));
+            MockMvcRequestBuilders.get("/api/categories/1").contentType("application/json")
+                .accept("application/json"));
 
         //then
         resultActions.andExpect(status().isOk())
-            .andExpect(content().json(
-                objectMapper.writeValueAsString(categoryDTO)));
+            .andExpect(content().json(objectMapper.writeValueAsString(expectedResponse)));
     }
 
     @Test
@@ -90,16 +96,17 @@ public class CategoryApiControllerTest {
         CategoryDTO categoryDTO = new CategoryDTO(1L, "상품권", "#ff11ff", "image.jpg", "");
         doNothing().when(categoryService).existsByNameThrowException(any());
         given(categoryService.addCategory(any(CategoryDTO.class))).willReturn(categoryDTO);
+        ApiResponse<CategoryDTO> expectedResponse = new ApiResponse<>(HttpResult.OK, "카테고리 추가 성공",
+            HttpStatus.CREATED, categoryDTO);
 
         //when
         ResultActions resultActions = mvc.perform(
-            MockMvcRequestBuilders.post("/api/categories")
-                .contentType("application/json")
-                .content(objectMapper.writeValueAsString(categoryDTO)));
+            MockMvcRequestBuilders.post("/api/categories").contentType("application/json")
+                .accept("application/json").content(objectMapper.writeValueAsString(categoryDTO)));
 
         //then
         resultActions.andExpect(status().isCreated())
-            .andExpect(content().json(objectMapper.writeValueAsString(categoryDTO)));
+            .andExpect(content().json(objectMapper.writeValueAsString(expectedResponse)));
     }
 
     @Test
@@ -108,16 +115,18 @@ public class CategoryApiControllerTest {
         //given
         CategoryDTO categoryDTO = new CategoryDTO(1L, "상품권", "#", "image.jpg", "");
         doNothing().when(categoryService).existsByNameThrowException(any());
+        ApiResponse<ErrorResponse> expectedResponse = new ApiResponse<>(HttpResult.ERROR,
+            "잘못된 요청입니다.", HttpStatus.BAD_REQUEST,
+            new ErrorResponse(List.of(new ErrorField("color", "#", "컬러코드가 아닙니다."))));
 
         //when
         ResultActions resultActions = mvc.perform(
-            MockMvcRequestBuilders.post("/api/categories")
-                .contentType("application/json")
-                .content(objectMapper.writeValueAsString(categoryDTO)));
+            MockMvcRequestBuilders.post("/api/categories").contentType("application/json")
+                .accept("application/json").content(objectMapper.writeValueAsString(categoryDTO)));
 
         //then
         resultActions.andExpect(status().isBadRequest())
-            .andExpect(jsonPath("$.errors[0].reason").value("컬러코드가 아닙니다."));
+            .andExpect(content().json(objectMapper.writeValueAsString(expectedResponse)));
     }
 
     @Test
@@ -126,18 +135,19 @@ public class CategoryApiControllerTest {
         //given
         CategoryDTO categoryDTO = new CategoryDTO(1L, "상품권", "#ff11ff", "image.jpg", "");
         doNothing().when(categoryService).existsByNameAndId(anyString(), anyLong());
-        given(categoryService.updateCategory(any(CategoryDTO.class), anyLong())).willReturn(categoryDTO);
+        given(categoryService.updateCategory(any(CategoryDTO.class), anyLong())).willReturn(
+            categoryDTO);
+        ApiResponse<CategoryDTO> expectedResponse = new ApiResponse<>(HttpResult.OK, "카테고리 수정 성공",
+            HttpStatus.OK, categoryDTO);
 
         //when
         ResultActions resultActions = mvc.perform(
-            MockMvcRequestBuilders.put("/api/categories/1")
-                .contentType("application/json")
+            MockMvcRequestBuilders.put("/api/categories/1").contentType("application/json")
                 .content(objectMapper.writeValueAsString(categoryDTO)));
 
         //then
         resultActions.andExpect(status().isOk())
-            .andExpect(content().json(
-                objectMapper.writeValueAsString(categoryDTO)));
+            .andExpect(content().json(objectMapper.writeValueAsString(expectedResponse)));
     }
 
     @Test
@@ -147,26 +157,35 @@ public class CategoryApiControllerTest {
         CategoryDTO categoryDTO = new CategoryDTO(1L, "상품권", "#ff11ff", "image.jpg", "");
         given(categoryService.getCategoryById(1L)).willReturn(categoryDTO);
         doNothing().when(categoryService).deleteCategory(1L);
+        ApiResponse<CategoryDTO> expectedResponse = new ApiResponse<>(HttpResult.OK, "카테고리 삭제 성공",
+            HttpStatus.OK, null);
 
         //when
         ResultActions resultActions = mvc.perform(
-            MockMvcRequestBuilders.delete("/api/categories/1")
-                .contentType("application/json"));
+            MockMvcRequestBuilders.delete("/api/categories/1").contentType("application/json")
+                .accept("application/json"));
 
         //then
-        resultActions.andExpect(status().isOk());
+        resultActions.andExpect(status().isOk())
+            .andExpect(content().json(objectMapper.writeValueAsString(expectedResponse)));
     }
 
     @Test
-    @DisplayName("카테고리 삭제 존재하지 않는 아이디라 실패해서 NotFoundException 던짐")
-    void deleteCategoryFailed() {
+    @DisplayName("카테고리 삭제 존재하지 않는 아이디라 실패해서 NotFoundIdException 던짐")
+    void deleteCategoryFailed() throws Exception {
         //given
-        doThrow(new NotFoundIdException("삭제하려는 카테고리가 존재하지 않습니다.")).when(categoryService).deleteCategory(1L);
+        doThrow(new NotFoundIdException("삭제하려는 카테고리가 존재하지 않습니다.")).when(categoryService)
+            .deleteCategory(1L);
+        ApiResponse<String> expectedResponse = new ApiResponse<>(HttpResult.ERROR,
+            "아이디 에러", HttpStatus.NOT_FOUND, "삭제하려는 카테고리가 존재하지 않습니다.");
 
         //when
+        ResultActions resultActions = mvc.perform(
+            MockMvcRequestBuilders.delete("/api/categories/1").contentType("application/json")
+                .accept("application/json"));
 
         //then
-        assertThatThrownBy(() -> categoryApiController.deleteCategory(1L)).isInstanceOf(
-            NotFoundIdException.class).hasMessageContaining("삭제하려는 카테고리가 존재하지 않습니다.");
+        resultActions.andExpect(status().isNotFound())
+            .andExpect(content().json(objectMapper.writeValueAsString(expectedResponse)));
     }
 }

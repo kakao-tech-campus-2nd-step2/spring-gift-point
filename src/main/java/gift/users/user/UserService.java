@@ -25,7 +25,7 @@ public class UserService {
         return user.getId();
     }
 
-    public String findSns(long userId){
+    public String findSns(Long userId){
         User user = findUserById(userId);
         return user.getSns();
     }
@@ -38,15 +38,13 @@ public class UserService {
         throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "토큰 생성 실패");
     }
 
-    public void register(UserDTO user) {
+    public UserDTO register(UserDTO user) {
         String password = user.password();
         String email = user.email();
         if (email == null || email.isEmpty() || password == null || password.isEmpty()) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "이메일과 비밀번호는 빈칸일 수 없습니다.");
         }
-        if (!registerUser(user)) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "존재하는 이메일입니다.");
-        }
+        return registerUser(user);
     }
 
     public String login(UserDTO user) {
@@ -62,16 +60,15 @@ public class UserService {
         return loginGiveJwt(userDTO.id().toString());
     }
 
-    public boolean registerUser(UserDTO userDTO) {
+    public UserDTO registerUser(UserDTO userDTO) {
         User user = userDTO.toUser();
         if (userRepository.existsByEmail(user.getEmail())) {
-            return false;
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "존재하는 이메일입니다.");
         }
-        userRepository.save(user);
-        return true;
+        return UserDTO.fromUser(userRepository.save(user));
     }
 
-    private User findUserById(long id){
+    private User findUserById(Long id){
         return userRepository.findById(id)
             .orElseThrow(() -> new NotFoundIdException("없는 회원 아이디입니다."));
     }

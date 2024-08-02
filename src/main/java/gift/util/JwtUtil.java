@@ -18,7 +18,7 @@ public class JwtUtil {
     @Value("${jwt.expiration}")
     private long expiration;
 
-    public String generateToken(String userId){
+    public String generateToken(String userId) {
         return Jwts.builder()
             .setSubject(userId)
             .setIssuedAt(new Date(System.currentTimeMillis()))
@@ -35,5 +35,9 @@ public class JwtUtil {
     private Jws<Claims> parseClaimsJws(String token) {
         return Jwts.parser().setSigningKey(secretKey.getBytes(StandardCharsets.UTF_8)).build()
             .parseClaimsJws(token);
+    }
+
+    public boolean isTokenExpired(String token) {
+        return parseClaimsJws(token).getBody().getExpiration().before(new Date());
     }
 }
