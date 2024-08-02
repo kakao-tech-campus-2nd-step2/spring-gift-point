@@ -11,7 +11,7 @@
   <div class="header">
     <h2>Manage Products</h2>
     <div class="button-group">
-      <a href="/create-product" class="btn btn-add">Add New Product</a>
+      <a href="/products/create" class="btn btn-add">Add New Product</a>
     </div>
   </div>
   <table>
@@ -31,12 +31,99 @@
       <td th:text="${product.price}"></td>
       <td><img th:src="${product.imageUrl}" alt="Product Image" width="100"></td>
       <td>
-        <a th:href="@{/update-product/{id}(id=${product.id})}"><button class="btn btn-edit">✏️</button></a>
-        <a th:href="@{/delete-product/{id}(id=${product.id})}"><button class="btn btn-delete-row">🗑️</button></a>
+        <a th:href="@{/products/update/{id}(id=${product.id})}"><button class="btn btn-edit">✏️</button></a>
+        <a th:href="@{/products/delete/{id}(id=${product.id})}"><button class="btn btn-delete-row">🗑️</button></a>
       </td>
     </tr>
     </tbody>
   </table>
+
+  <div class="pagination">
+    <ul id="pagination">
+    </ul>
+  </div>
 </div>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function() {
+    const pagination = document.getElementById("pagination");
+    const currentPage = [[${page.number}]] ;
+    const totalPages = [[${page.totalPages}]];
+    const pageSize = [[${page.size}]];
+    const maxPagesToShow = 8;
+
+    const createPageLink = (pageIndex, text, isActive) => {
+      const li = document.createElement("li");
+      const a = document.createElement("a");
+      a.href = `?page=${pageIndex}&size=${pageSize}`;
+      a.textContent = text;
+      if (isActive) {
+        a.classList.add("active");
+      }
+      li.appendChild(a);
+      return li;
+    };
+
+    const updatePagination = (currentPage, totalPages) => {
+      pagination.innerHTML = "";
+      const startPage = Math.floor(currentPage / maxPagesToShow) * maxPagesToShow;
+      const endPage = Math.min(startPage + maxPagesToShow, totalPages);
+
+      if (currentPage > 0) {
+        pagination.appendChild(createPageLink(currentPage - 1, "«"));
+      }
+
+      for (let i = startPage; i < endPage; i++) {
+        pagination.appendChild(createPageLink(i, i + 1, i === currentPage));
+      }
+
+      if (endPage < totalPages) {
+        pagination.appendChild(createPageLink(currentPage + 1, "»"));
+      }
+    };
+
+    updatePagination(currentPage, totalPages);
+  });
+</script>
+
+<style>
+  .pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 20px;
+  }
+
+  .pagination ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+  }
+
+  .pagination li {
+    margin: 0 5px;
+  }
+
+  .pagination a {
+    text-decoration: none;
+    color: #007bff;
+    padding: 8px 16px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    transition: background-color 0.3s, color 0.3s;
+  }
+
+  .pagination a:hover {
+    background-color: #007bff;
+    color: white;
+  }
+
+  .pagination a.active {
+    background-color: #007bff;
+    color: white;
+    border-color: #007bff;
+  }
+</style>
 </body>
 </html>
