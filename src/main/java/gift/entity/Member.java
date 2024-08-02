@@ -41,8 +41,7 @@ public class Member {
     private String kakaoToken;
 
     @Column(name="point")
-    private Long point;
-
+    private Long point=0L;
 
     public Member() {}
 

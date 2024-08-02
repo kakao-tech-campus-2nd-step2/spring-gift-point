@@ -3,6 +3,7 @@ package gift.service;
 import gift.authorization.JwtUtil;
 import gift.dto.request.*;
 import gift.dto.response.LoginResponseDTO;
+import gift.dto.response.MemberPointResponseDTO;
 import gift.dto.response.RegisterResponseDTO;
 import gift.entity.Member;
 import gift.exception.memberException.*;
@@ -58,6 +59,15 @@ public class MemberService {
         return new LoginResponseDTO(email, token);
     }
 
+
+    @Description("포인트 조회")
+    public MemberPointResponseDTO getPoint(LoginMemberDTO loginMemberDTO) {
+        Long memberId = loginMemberDTO.memberId();
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow( () -> new MemberNotFoundException("member not found"));
+
+        return new MemberPointResponseDTO(member.getPoint());
+    }
 
 
     /*public String login(NormalMemberRequestDTO normalMemberRequestDTO) {
