@@ -20,6 +20,8 @@ VALUES ('교환권', '#FF5733', 'https://cdn.pixabay.com/photo/2015/08/11/08/21/
        ('건강/뷰티', '#33FFA5', 'https://cdn.pixabay.com/photo/2023/08/30/09/44/woman-8222956_640.jpg', '설명18'),
        ('자동차/공구', '#FFA533', 'https://cdn.pixabay.com/photo/2024/05/10/23/34/car-8753811_640.png', '설명19');
 
+
+
 INSERT INTO product (name, price, imageUrl, category_id)
 VALUES ('커피', 1500, 'https://via.placeholder.com/150', 14);
 
@@ -109,6 +111,16 @@ VALUES ('당근', 1000, 'https://via.placeholder.com/150', 5);
 
 INSERT INTO product (name, price, imageUrl, category_id)
 VALUES ('토마토', 1500, 'https://via.placeholder.com/150', 5);
+
+INSERT INTO product (name, price, imageUrl, category_id)
+VALUES ('가전교환권', 200000, 'https://via.placeholder.com/150', 1);
+
+INSERT INTO product (name, price, imageUrl, category_id)
+VALUES ('문화상품권', 200000, 'https://via.placeholder.com/150', 2);
+
+INSERT INTO product (name, price, imageUrl, category_id)
+VALUES ('립스틱', 200000, 'https://via.placeholder.com/150', 3);
+
 
 
 INSERT INTO product_option (name, quantity, product_id)
@@ -201,7 +213,11 @@ VALUES ('Americano', 10, 1),
        ('CarrotCubes', 15, 29),
        ('CherryTomatoes', 30, 30),
        ('RomaTomatoes', 25, 30),
-       ('HeirloomTomatoes', 20, 30);
+       ('HeirloomTomatoes', 20, 30),
+       ('5개',20,31),
+       ('10개',10,31),
+       ('5개',10,32),
+       ('10개',10,32);
 INSERT INTO users (email, password, name, point, role, login_type)
 VALUES ('admin@test.com', '1234', 'Peach', 5000, 'ADMIN', 'DEFAULT');
 
