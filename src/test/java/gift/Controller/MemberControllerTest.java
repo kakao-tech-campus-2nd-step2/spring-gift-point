@@ -14,6 +14,7 @@ import java.util.Set;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.HttpStatus;
 import org.springframework.test.context.ActiveProfiles;
 
 @SpringBootTest
@@ -30,12 +31,7 @@ class MemberControllerTest {
   @Test
   void memberSignUpTest() {
     MemberDto memberDto = new MemberDto(1L, "a@naver.com", "abcde");
-    MemberDto signedUpMemberDto = memberController.SignUp(memberDto).getBody();
-
-    assertThat(signedUpMemberDto.getId()).isEqualTo(memberDto.getId());
-    assertThat(signedUpMemberDto.getEmail()).isEqualTo(memberDto.getEmail());
-    assertThat(signedUpMemberDto.getPassword()).isEqualTo(memberDto.getPassword());
-
+    assertThat(memberController.SignUp(memberDto).getStatusCode()).isEqualTo(HttpStatus.CREATED);
   }
 
   @Test

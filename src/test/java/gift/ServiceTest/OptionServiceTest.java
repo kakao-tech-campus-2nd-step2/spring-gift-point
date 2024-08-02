@@ -68,19 +68,19 @@ public class OptionServiceTest {
 
   @Test
   void getOptionByIdTest() {
-    Long id = 1L;
+    Long productId = 1L;
+
     OptionDto optionDto1 = new OptionDto(1L, "옵션1", 2,
       new ProductDto(1L, "product1", 300, "fadsklf",
         new CategoryDto(1L, "교환권", "#6c95d1", "image_url", "교환권 카테고리")));
 
-    when(optionService.getOptionById(id)).thenReturn(optionDto1);
+    List<OptionDto> optionDtos = new ArrayList<>();
+    optionDtos.add(optionDto1);
+    when(optionService.getOptionsById(productId)).thenReturn(optionDtos);
 
-    OptionDto optionDtoByOptionService = optionService.getOptionById(id);
+    List<OptionDto> optionDtoByOptionService = optionService.getOptionsById(productId);
 
-    assertThat(optionDtoByOptionService.getId()).isEqualTo(optionDto1.getId());
-    assertThat(optionDtoByOptionService.getName()).isEqualTo(optionDto1.getName());
-    assertThat(optionDtoByOptionService.getQuantity()).isEqualTo(optionDto1.getQuantity());
-    assertThat(optionDtoByOptionService.getProductDto()).isEqualTo(optionDto1.getProductDto());
+    assertThat(optionDtoByOptionService).isEqualTo(optionDtos);
   }
 
   @Test

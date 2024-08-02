@@ -1,19 +1,14 @@
 package gift.DTO;
 
 public class JwtToken {
+  private final String token;
 
-  private final String accessToken;
-  private String refreshToken;
-
-  public JwtToken(String accessToken) {
-    this.accessToken = accessToken;
+  public JwtToken(String token) {
+    this.token = token;
   }
 
   public String getAccessToken() {
-    return this.accessToken;
+    return this.token;
   }
 
-  public String getRefreshToken() {
-    return this.refreshToken;
-  }
 }

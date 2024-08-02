@@ -1,7 +1,12 @@
 package gift.Controller;
 
-import gift.DTO.OrderDto;
+import gift.DTO.MemberDto;
+import gift.LoginUser;
+import gift.ResponseDto.RequestOrderDto;
+import gift.ResponseDto.ResponseOrderDto;
 import gift.Service.OrderService;
+import java.net.URI;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -20,14 +25,10 @@ public class OrderController {
   }
 
   @PostMapping
-  public ResponseEntity<OrderDto> orderOption(@RequestBody OrderDto orderDto)
-    throws IllegalAccessException {
-    OrderDto orderdDto = orderService.orderOption(orderDto);
-    var location = ServletUriComponentsBuilder.fromCurrentRequest()
-      .path("/{id}")
-      .buildAndExpand(orderdDto.getId())
-      .toUri();
-    return ResponseEntity.created(location).body(orderdDto);
+  public ResponseEntity<ResponseOrderDto> orderOption(@RequestBody RequestOrderDto requestOrderDto,
+    @LoginUser MemberDto memberDto) {
+    ResponseOrderDto responseOrderDto = orderService.orderOption(requestOrderDto);
+    return ResponseEntity.created(URI.create("/orders")).body(responseOrderDto);
   }
 
 }

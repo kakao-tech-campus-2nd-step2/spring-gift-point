@@ -10,6 +10,8 @@ import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @Entity
@@ -28,11 +30,18 @@ public class Orders {
   private String orderDateTime;
   private String message;
 
-  public Orders(Long id, Option option, int quantity, String orderDateTime, String message) {
+  public Orders(Option option, int quantity, String message) {
+    this.option = option;
+    this.quantity = quantity;
+    this.orderDateTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+    this.message = message;
+  }
+
+  public Orders(Long id, Option option, int quantity, String message) {
     this.id = id;
     this.option = option;
     this.quantity = quantity;
-    this.orderDateTime = orderDateTime;
+    this.orderDateTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
     this.message = message;
   }
 

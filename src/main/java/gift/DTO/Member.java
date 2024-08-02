@@ -17,8 +17,6 @@ import java.util.List;
 @Table
 public class Member {
 
-  @OneToMany(mappedBy = "member")
-  private final List<WishList> wishLists = new ArrayList<>();
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;

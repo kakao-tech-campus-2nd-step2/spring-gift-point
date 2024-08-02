@@ -42,11 +42,13 @@ public class OptionService {
     return optionDtos;
   }
 
-  public OptionDto getOptionById(Long id) {
-    Option option = optionRepository.findById(id)
+  public List<OptionDto> getOptionsById(Long productId) {
+    Product product = productRepository.findById(productId)
       .orElseThrow(() -> new EmptyResultDataAccessException("해당 데이터가 없습니다", 1));
 
-    return ConverterToDto.convertToOptionDto(option);
+    List<Option> options = product.getOptions();
+    List<OptionDto> optionDtos = options.stream().map(ConverterToDto::convertToOptionDto).toList();
+    return optionDtos;
   }
 
   public void deleteOption(Long id) {
@@ -69,9 +71,8 @@ public class OptionService {
     return ConverterToDto.convertToOptionDto(updatedOption);
   }
 
-  public void optionQuantitySubtract(OptionDto optionDto, int amount) {
-    Long id = optionDto.getId();
-    Option option = optionRepository.findById(id)
+  public void optionQuantitySubtract(Long optionId, int amount) {
+    Option option = optionRepository.findById(optionId)
       .orElseThrow(() -> new EmptyResultDataAccessException("해당 데이터가 없습니다", 1));
     option.subtract(amount);
     optionRepository.save(option);
