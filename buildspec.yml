@@ -14,9 +14,8 @@ phases:
     commands:
       - echo Installing dependencies...
       - yum update -y
-      - yum install -y docker
-      - systemctl start docker
-      - systemctl enable docker
+      - amazon-linux-extras install docker -y
+      - service docker start
       - usermod -a -G docker $USER
       - ./gradlew clean
   pre_build:
