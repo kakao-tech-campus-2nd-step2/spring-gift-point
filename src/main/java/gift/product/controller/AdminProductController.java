@@ -53,7 +53,10 @@ public class AdminProductController {
     }
 
     @PostMapping
-    public String registerProduct(@Valid @ModelAttribute ProductDTO productDTO, BindingResult bindingResult, Model model) {
+    public String registerProduct(
+        @Valid @ModelAttribute ProductDTO productDTO,
+        BindingResult bindingResult,
+        Model model) {
         System.out.println("[ProductController] registerProduct()");
         if (bindingResult.hasErrors()) {
             model.addAttribute("product", productDTO);
@@ -74,7 +77,11 @@ public class AdminProductController {
     }
 
     @PutMapping("/{id}")
-    public String updateProduct(@PathVariable Long id, @ModelAttribute ProductDTO productDTO, BindingResult bindingResult, Model model) {
+    public String updateProduct(
+        @PathVariable Long id,
+        @ModelAttribute ProductDTO productDTO,
+        BindingResult bindingResult,
+        Model model) {
         System.out.println("[ProductController] updateProduct()");
         if (bindingResult.hasErrors()) {
             model.addAttribute("product", productDTO);
@@ -85,14 +92,17 @@ public class AdminProductController {
     }
 
     @DeleteMapping("/{id}")
-    public String deleteProduct(@PathVariable Long id, Model model) {
+    public String deleteProduct(@PathVariable Long id) {
         System.out.println("[ProductController] deleteProduct()");
         productService.deleteProduct(id);
         return "redirect:/admin/products";
     }
 
     @GetMapping("/search")
-    public String searchProduct(@RequestParam("keyword") String keyword, Model model, Pageable pageable) {
+    public String searchProduct(
+        @RequestParam("keyword") String keyword,
+        Model model,
+        Pageable pageable) {
         System.out.println("[ProductController] searchProduct()");
         model.addAttribute("searchResults", productService.searchProducts(keyword, pageable));
         model.addAttribute("keyword", keyword);

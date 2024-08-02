@@ -1,7 +1,6 @@
 package gift.product.service;
 
 import static gift.product.exception.GlobalExceptionHandler.INVALID_HTTP_REQUEST;
-import static gift.product.exception.GlobalExceptionHandler.NOT_EXIST_ID;
 import static gift.product.exception.GlobalExceptionHandler.NOT_RECEIVE_RESPONSE;
 import static gift.product.intercepter.AuthInterceptor.AUTHORIZATION_HEADER;
 import static gift.product.intercepter.AuthInterceptor.BEARER_PREFIX;
@@ -10,7 +9,6 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import gift.product.dto.OrderRequestDTO;
 import gift.product.dto.OrderResponseDTO;
-import gift.product.exception.InvalidIdException;
 import gift.product.exception.RequestException;
 import gift.product.exception.ResponseException;
 import gift.product.model.Member;
@@ -37,7 +35,6 @@ import org.springframework.web.client.RestClient;
 @Service
 public class OrderService {
 
-    private final OptionRepository optionRepository;
     private final ObjectMapper objectMapper;
     private final JwtUtil jwtUtil;
     private final OrderRepository orderRepository;
@@ -49,18 +46,18 @@ public class OrderService {
             throw new ResponseException(NOT_RECEIVE_RESPONSE);
         })
         .build();
+    private final OptionService optionService;
 
     @Autowired
     public OrderService(
-        OptionRepository optionRepository,
+        OptionService optionService,
         ObjectMapper objectMapper,
         JwtUtil jwtUtil,
-        OrderRepository orderRepository
-    ) {
-        this.optionRepository = optionRepository;
+        OrderRepository orderRepository) {
         this.objectMapper = objectMapper;
         this.jwtUtil = jwtUtil;
         this.orderRepository = orderRepository;
+        this.optionService = optionService;
     }
 
     public OrderResponseDTO orderProduct(
@@ -68,9 +65,7 @@ public class OrderService {
         OrderRequestDTO orderRequestDTO) {
         System.out.println("[OrderService] orderProduct()");
         Member member = jwtUtil.parsingToken(authorization);
-        Option option = optionRepository.findById(orderRequestDTO.getOptionId())
-            .orElseThrow(() -> new InvalidIdException(NOT_EXIST_ID));
-        option.subtractQuantity(orderRequestDTO.getQuantity());
+        Option option = optionService.subtractQuantity(orderRequestDTO);
         Order order = orderRequestDTO.convertToDomain(option, member);
         member.subtractPoint(order);
         orderRepository.save(order);

@@ -68,10 +68,6 @@ public class Option {
     }
 
     public void subtractQuantity(int amountToSubtract) {
-        if(amountToSubtract < 1)
-            throw new InstanceValueException(CANNOT_SUBTRACT_ZERO_OR_NEGATIVE);
-        if(this.quantity < amountToSubtract)
-            throw new InstanceValueException(SUBTRACT_EXCEED_QUANTITY);
-        this.quantity -= quantity;
+        this.quantity -= amountToSubtract;
     }
 }
