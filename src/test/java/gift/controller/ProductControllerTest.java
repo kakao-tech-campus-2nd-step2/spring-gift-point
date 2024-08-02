@@ -54,24 +54,28 @@ public class ProductControllerTest {
     @Test
     public void 상품_추가_성공() {
         Long categoryId = categoryService.addCategory(new CategoryRequestDto("테스트", "#FF0000", "https://example.com/test.png", "테스트 카테고리")).getId();
+        System.out.println("Created Category ID: " + categoryId);
         ProductRequestDto productRequestDto = new ProductRequestDto("오둥이 입니다만", 29800, "https://example.com/product2.jpg", categoryId);
 
         given()
                 .contentType(ContentType.JSON)
                 .body(productRequestDto)
+                .log().all()
                 .when()
                 .post("/api/products")
                 .then()
+                .log().all()
                 .statusCode(HttpStatus.CREATED.value())
                 .body("name", equalTo("오둥이 입니다만"))
                 .body("price", equalTo(29800))
                 .body("imageUrl", equalTo("https://example.com/product2.jpg"))
-                .body("category.id", equalTo(categoryId.intValue()));
+                .body("categoryId", equalTo(categoryId.intValue()));
     }
 
     @Test
     public void 상품_수정_성공() {
         Long categoryId = categoryService.addCategory(new CategoryRequestDto("테스트", "#FF0000", "https://example.com/test.png", "테스트 카테고리")).getId();
+        System.out.println("Created Category ID: " + categoryId);
         ProductResponseDto productResponseDto = productService.addProduct(new ProductRequestDto("오둥이 입니다만", 29800, "https://example.com/product2.jpg", categoryId));
         Long productId = productResponseDto.getId();
 
@@ -80,31 +84,36 @@ public class ProductControllerTest {
         given()
                 .contentType(ContentType.JSON)
                 .body(updateDTO)
+                .log().all()
                 .when()
                 .put("/api/products/{id}", productId)
                 .then()
+                .log().all()
                 .statusCode(HttpStatus.OK.value())
                 .body("name", equalTo("오둥이 아닙니다만"))
                 .body("price", equalTo(35000))
                 .body("imageUrl", equalTo("https://example.com/product3.jpg"))
-                .body("category.id", equalTo(categoryId.intValue()));
+                .body("categoryId", equalTo(categoryId.intValue()));
     }
 
     @Test
     public void 모든_상품_조회_성공() {
         Long categoryId = categoryService.addCategory(new CategoryRequestDto("테스트", "#FF0000", "https://example.com/test.png", "테스트 카테고리")).getId();
+        System.out.println("Created Category ID: " + categoryId);
         ProductResponseDto productResponseDto = productService.addProduct(new ProductRequestDto("오둥이 입니다만", 29800, "https://example.com/product2.jpg", categoryId));
 
         given()
+                .log().all()
                 .when()
                 .get("/api/products?page=0&size=10")
                 .then()
+                .log().all()
                 .statusCode(HttpStatus.OK.value())
                 .body("products[0].id", equalTo(productResponseDto.getId().intValue()))
                 .body("products[0].name", equalTo("오둥이 입니다만"))
                 .body("products[0].price", equalTo(29800))
                 .body("products[0].imageUrl", equalTo("https://example.com/product2.jpg"))
-                .body("products[0].category.id", equalTo(categoryId.intValue()))
+                .body("products[0].categoryId", equalTo(categoryId.intValue()))
                 .body("currentPage", equalTo(0))
                 .body("totalPages", equalTo(1))
                 .body("totalItems", equalTo(1));
@@ -113,13 +122,16 @@ public class ProductControllerTest {
     @Test
     public void 상품_삭제_성공() {
         Long categoryId = categoryService.addCategory(new CategoryRequestDto("테스트", "#FF0000", "https://example.com/test.png", "테스트 카테고리")).getId();
+        System.out.println("Created Category ID: " + categoryId);
         ProductResponseDto productResponseDto = productService.addProduct(new ProductRequestDto("오둥이 입니다만", 29800, "https://example.com/product2.jpg", categoryId));
         Long productId = productResponseDto.getId();
 
         given()
+                .log().all()
                 .when()
                 .delete("/api/products/{id}", productId)
                 .then()
+                .log().all()
                 .statusCode(HttpStatus.NO_CONTENT.value());
     }
 }

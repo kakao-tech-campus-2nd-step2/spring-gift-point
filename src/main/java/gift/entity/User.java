@@ -21,6 +21,8 @@ public class User {
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
     private KakaoUser kakaoUser;
 
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY, optional = false)
+    private Point point;
     protected User() {
     }
 
@@ -37,6 +39,7 @@ public class User {
     public User(KakaoUser kakaoUser) {
         this.kakaoUser = kakaoUser;
         this.kakaoUser.setUser(this);
+        this.point = new Point(this);
     }
 
     public void update(String email, String password) {
@@ -76,5 +79,9 @@ public class User {
 
     public String getPassword() {
         return password;
+    }
+
+    public Point getPoint() {
+        return point;
     }
 }

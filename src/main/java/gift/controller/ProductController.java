@@ -5,9 +5,9 @@ import gift.dto.ProductRequestDto;
 import gift.dto.ProductResponseDto;
 import gift.service.ProductService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
-import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -28,14 +28,7 @@ public class ProductController {
     }
 
     @PostMapping
-    @Operation(summary = "상품 추가", description = "새로운 상품을 추가합니다.",
-            requestBody = @RequestBody(
-                    description = "추가할 상품의 정보",
-                    required = true,
-                    content = @Content(
-                            schema = @Schema(implementation = ProductRequestDto.class)
-                    )
-            ))
+    @Operation(summary = "상품 추가", description = "새로운 상품을 추가합니다.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "상품이 성공적으로 추가되었습니다.",
                     content = @Content(
@@ -48,28 +41,14 @@ public class ProductController {
             @ApiResponse(responseCode = "500", description = "서버 오류.",
                     content = @Content)
     })
-    public ResponseEntity<ProductResponseDto> addProduct(@RequestBody ProductRequestDto productRequestDTO) {
+    public ResponseEntity<ProductResponseDto> addProduct(
+            @Parameter(description = "추가할 상품의 정보", required = true) @RequestBody ProductRequestDto productRequestDTO) {
         ProductResponseDto createdProductDTO = productService.addProduct(productRequestDTO);
         return new ResponseEntity<>(createdProductDTO, HttpStatus.CREATED);
     }
 
     @PutMapping("/{id}")
-    @Operation(summary = "상품 수정", description = "기존 상품을 수정합니다.",
-            parameters = {
-                    @io.swagger.v3.oas.annotations.Parameter(
-                            name = "id",
-                            description = "수정할 상품 ID",
-                            required = true,
-                            schema = @Schema(type = "integer")
-                    )
-            },
-            requestBody = @RequestBody(
-                    description = "수정할 상품의 정보",
-                    required = true,
-                    content = @Content(
-                            schema = @Schema(implementation = ProductRequestDto.class)
-                    )
-            ))
+    @Operation(summary = "상품 수정", description = "기존 상품을 수정합니다.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "상품이 성공적으로 수정되었습니다.",
                     content = @Content(
@@ -82,21 +61,15 @@ public class ProductController {
             @ApiResponse(responseCode = "500", description = "서버 오류.",
                     content = @Content)
     })
-    public ResponseEntity<ProductResponseDto> updateProduct(@PathVariable Long id, @RequestBody ProductRequestDto productRequestDTO) {
+    public ResponseEntity<ProductResponseDto> updateProduct(
+            @Parameter(description = "수정할 상품 ID", required = true) @PathVariable Long id,
+            @Parameter(description = "수정할 상품의 정보", required = true) @RequestBody ProductRequestDto productRequestDTO) {
         ProductResponseDto updatedProductDTO = productService.updateProduct(id, productRequestDTO);
         return new ResponseEntity<>(updatedProductDTO, HttpStatus.OK);
     }
 
     @GetMapping
-    @Operation(summary = "모든 상품 조회", description = "모든 상품을 조회합니다.",
-            parameters = {
-                    @io.swagger.v3.oas.annotations.Parameter(
-                            name = "page",
-                            description = "페이지 번호 (0부터 시작)",
-                            required = false,
-                            schema = @Schema(type = "integer", defaultValue = "0")
-                    )
-            })
+    @Operation(summary = "모든 상품 조회", description = "모든 상품을 조회합니다.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "상품 목록이 성공적으로 반환되었습니다.",
                     content = @Content(
@@ -105,21 +78,14 @@ public class ProductController {
             @ApiResponse(responseCode = "500", description = "서버 오류.",
                     content = @Content)
     })
-    public ResponseEntity<ProductPageResponseDto> getAllProducts(@RequestParam(defaultValue = "0") @Min(0) int page) {
+    public ResponseEntity<ProductPageResponseDto> getAllProducts(
+            @Parameter(description = "페이지 번호 (0부터 시작)", required = false, schema = @Schema(type = "integer", defaultValue = "0")) @RequestParam(defaultValue = "0") @Min(0) int page) {
         ProductPageResponseDto responseDto = productService.getAllProducts(page, DEFAULT_SIZE);
         return new ResponseEntity<>(responseDto, HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
-    @Operation(summary = "상품 조회", description = "ID로 상품을 조회합니다.",
-            parameters = {
-                    @io.swagger.v3.oas.annotations.Parameter(
-                            name = "id",
-                            description = "조회할 상품 ID",
-                            required = true,
-                            schema = @Schema(type = "integer")
-                    )
-            })
+    @Operation(summary = "상품 조회", description = "ID로 상품을 조회합니다.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "상품이 성공적으로 반환되었습니다.",
                     content = @Content(
@@ -130,21 +96,14 @@ public class ProductController {
             @ApiResponse(responseCode = "500", description = "서버 오류.",
                     content = @Content)
     })
-    public ResponseEntity<ProductResponseDto> getProductById(@PathVariable Long id) {
+    public ResponseEntity<ProductResponseDto> getProductById(
+            @Parameter(description = "조회할 상품 ID", required = true) @PathVariable Long id) {
         ProductResponseDto productResponseDto = productService.getProductById(id);
         return new ResponseEntity<>(productResponseDto, HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")
-    @Operation(summary = "상품 삭제", description = "기존 상품을 삭제합니다.",
-            parameters = {
-                    @io.swagger.v3.oas.annotations.Parameter(
-                            name = "id",
-                            description = "삭제할 상품 ID",
-                            required = true,
-                            schema = @Schema(type = "integer")
-                    )
-            })
+    @Operation(summary = "상품 삭제", description = "기존 상품을 삭제합니다.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "204", description = "상품이 성공적으로 삭제되었습니다."),
             @ApiResponse(responseCode = "404", description = "상품을 찾을 수 없음.",
@@ -152,7 +111,8 @@ public class ProductController {
             @ApiResponse(responseCode = "500", description = "서버 오류.",
                     content = @Content)
     })
-    public ResponseEntity<Void> deleteProduct(@PathVariable Long id) {
+    public ResponseEntity<Void> deleteProduct(
+            @Parameter(description = "삭제할 상품 ID", required = true) @PathVariable Long id) {
         productService.deleteProduct(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }

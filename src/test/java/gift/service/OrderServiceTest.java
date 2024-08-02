@@ -43,6 +43,9 @@ public class OrderServiceTest {
     @Autowired
     private WishRepository wishRepository;
 
+    @Autowired
+    private PointRepository pointRepository;
+
     @MockBean
     private KakaoApiClient kakaoApiClient;
 
@@ -71,9 +74,9 @@ public class OrderServiceTest {
         Product product = productRepository.save(new Product(new ProductName("Test Product"), 1000, "https://example.com/image.jpg", category));
         Option option = optionRepository.save(new Option(new OptionName("Test Option")));
         ProductOption productOption = productOptionRepository.save(new ProductOption(product, option, 10));
-        OrderRequestDto orderRequestDto = new OrderRequestDto(productOption.getId(), 2, "Test Message");
+        OrderRequestDto orderRequestDto = new OrderRequestDto(productOption.getId(), 2, "Test Message", false);
 
-        OrderService orderService = new OrderService(orderRepository, productOptionRepository, userRepository, wishRepository, kakaoApiClient);
+        OrderService orderService = new OrderService(orderRepository, productOptionRepository, userRepository, wishRepository, kakaoApiClient, pointRepository);
         OrderResponseDto orderResponseDto = orderService.createOrder(testUser, "Bearer kakaoAccessToken", orderRequestDto);
 
         assertNotNull(orderResponseDto);
@@ -93,9 +96,9 @@ public class OrderServiceTest {
         Product product = productRepository.save(new Product(new ProductName("Test Product"), 1000, "https://example.com/image.jpg", category));
         Option option = optionRepository.save(new Option(new OptionName("Test Option")));
         ProductOption productOption = productOptionRepository.save(new ProductOption(product, option, 1));
-        OrderRequestDto orderRequestDto = new OrderRequestDto(productOption.getId(), 2, "Test Message");
+        OrderRequestDto orderRequestDto = new OrderRequestDto(productOption.getId(), 2, "Test Message", false);
 
-        OrderService orderService = new OrderService(orderRepository, productOptionRepository, userRepository, wishRepository, kakaoApiClient);
+        OrderService orderService = new OrderService(orderRepository, productOptionRepository, userRepository, wishRepository, kakaoApiClient, pointRepository);
 
         assertThrows(BusinessException.class, () -> orderService.createOrder(testUser, "Bearer kakaoAccessToken", orderRequestDto));
     }
@@ -111,11 +114,12 @@ public class OrderServiceTest {
         Product product = productRepository.save(new Product(new ProductName("Test Product"), 1000, "https://example.com/image.jpg", category));
         Option option = optionRepository.save(new Option(new OptionName("Test Option")));
         ProductOption productOption = productOptionRepository.save(new ProductOption(product, option, 10));
-        OrderRequestDto orderRequestDto = new OrderRequestDto(productOption.getId(), 2, "Test Message");
+        OrderRequestDto orderRequestDto = new OrderRequestDto(productOption.getId(), 2, "Test Message", false);
 
-        OrderService orderService = new OrderService(orderRepository, productOptionRepository, userRepository, wishRepository, kakaoApiClient);
+        OrderService orderService = new OrderService(orderRepository, productOptionRepository, userRepository, wishRepository, kakaoApiClient, pointRepository);
         orderService.createOrder(testUser, "Bearer kakaoAccessToken", orderRequestDto);
 
         verify(kakaoApiClient, times(1)).sendMessageToMe(anyString(), any(Order.class));
     }
+
 }

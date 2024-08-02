@@ -54,7 +54,6 @@ public class ProductServiceTest {
         assertEquals("아이스 카페 아메리카노 T", createdProduct.getName());
         assertEquals(4500, createdProduct.getPrice());
         assertEquals("https://example.com/product1.jpg", createdProduct.getImageUrl());
-        assertEquals("테스트카테고리", createdProduct.getCategory().getName());
     }
 
     @Test
@@ -72,7 +71,6 @@ public class ProductServiceTest {
         assertEquals("오둥이 입니다만", retrievedProduct.getName());
         assertEquals(29800, retrievedProduct.getPrice());
         assertEquals("https://example.com/product2.jpg", retrievedProduct.getImageUrl());
-        assertEquals("테스트카테고리", retrievedProduct.getCategory().getName());
     }
 
     @Test
@@ -90,7 +88,6 @@ public class ProductServiceTest {
         assertEquals("오둥이 아닙니다만", result.getName());
         assertEquals(35000, result.getPrice());
         assertEquals("https://example.com/product3.jpg", result.getImageUrl());
-        assertEquals("테스트카테고리", result.getCategory().getName());
     }
 
     @Test

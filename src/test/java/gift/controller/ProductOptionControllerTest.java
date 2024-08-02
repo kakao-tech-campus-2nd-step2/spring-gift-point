@@ -1,7 +1,13 @@
 package gift.controller;
 
-import gift.dto.*;
-import gift.entity.*;
+import gift.dto.CategoryRequestDto;
+import gift.dto.ProductOptionRequestDto;
+import gift.dto.ProductOptionResponseDto;
+import gift.dto.ProductRequestDto;
+import gift.entity.Category;
+import gift.entity.OptionName;
+import gift.entity.Product;
+import gift.entity.ProductName;
 import gift.repository.CategoryRepository;
 import gift.repository.OptionRepository;
 import gift.repository.ProductOptionRepository;
@@ -80,7 +86,7 @@ public class ProductOptionControllerTest {
                 .post("/api/products/" + productId + "/options")
                 .then()
                 .statusCode(HttpStatus.CREATED.value())
-                .body("productName", equalTo("상품1"))
+                .body("productId", equalTo(productId.intValue()))
                 .body("optionName", equalTo("옵션1"))
                 .body("quantity", equalTo(10));
     }

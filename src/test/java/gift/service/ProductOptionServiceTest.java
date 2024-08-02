@@ -1,6 +1,9 @@
 package gift.service;
 
-import gift.dto.*;
+import gift.dto.CategoryRequestDto;
+import gift.dto.ProductOptionRequestDto;
+import gift.dto.ProductOptionResponseDto;
+import gift.dto.ProductRequestDto;
 import gift.entity.*;
 import gift.exception.BusinessException;
 import gift.exception.ErrorCode;
@@ -83,7 +86,7 @@ public class ProductOptionServiceTest {
         ProductOptionResponseDto createdProductOption = productOptionService.addProductOption(productId, productOptionRequestDto);
 
         assertNotNull(createdProductOption);
-        assertEquals("상품1", createdProductOption.getProductName());
+        assertEquals(productId, createdProductOption.getProductId());
         assertEquals(optionName, createdProductOption.getOptionName());
         assertEquals(quantity, createdProductOption.getQuantity());
     }
