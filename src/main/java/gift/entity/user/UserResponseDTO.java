@@ -6,12 +6,9 @@ public class UserResponseDTO {
 
     @Schema(description = "유저 이메일", nullable = false, example = "test@mail.com")
     private String email;
-    @Schema(description = "유저 role", nullable = false, example = "USER")
-    private String role;
 
-    public UserResponseDTO(String email, String role) {
+    public UserResponseDTO(String email) {
         this.email = email;
-        this.role = role;
     }
 
     public String getEmail() {
@@ -20,13 +17,5 @@ public class UserResponseDTO {
 
     public void setEmail(String email) {
         this.email = email;
-    }
-
-    public String getRole() {
-        return role;
-    }
-
-    public void setRole(String role) {
-        this.role = role;
     }
 }

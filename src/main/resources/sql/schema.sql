@@ -4,8 +4,7 @@ create table users
 (
     id       bigint AUTO_INCREMENT PRIMARY KEY,
     email    varchar(50),
-    password varchar(255),
-    role     varchar(10)
+    password varchar(255)
 );
 
 -- order

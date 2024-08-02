@@ -57,7 +57,6 @@ public class UserController {
         Map<String, String> response = userService.getKakaoProfile(kakaoAccessToken);
 
         session.setAttribute("email", response.get("email"));
-        session.setAttribute("role", "USER");
         session.setAttribute("kakaoAccessToken", kakaoAccessToken);
 
         return ResponseEntity.ok().body(makeAccessTokenResponse(response.get("accessToken")));
@@ -67,9 +66,8 @@ public class UserController {
     @GetMapping("/me")
     public ResponseEntity<UserResponseDTO> me(HttpSession session) {
         String email = (String) session.getAttribute("email");
-        String role = (String) session.getAttribute("role");
 
-        UserResponseDTO res = new UserResponseDTO(email, role);
+        UserResponseDTO res = new UserResponseDTO(email);
         return ResponseEntity.ok().body(res);
     }
 

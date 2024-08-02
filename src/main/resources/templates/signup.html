@@ -19,7 +19,7 @@
 <div id="message"></div>
 
 <script th:inline="javascript">
-    const userUrl = "http://localhost:8080/api/users";
+    const userUrl = "http://localhost:8080/api/members";
 
     const loginForm = document.getElementById('loginForm');
     const messageDiv = document.getElementById('message');
@@ -41,7 +41,7 @@
         const email = document.getElementById('email');
         const password = document.getElementById('password');
 
-        const response = await fetch(`${userUrl}/signup`, {
+        const response = await fetch(`${userUrl}/register`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -51,7 +51,7 @@
 
         if (response.ok) {
             const responseBody = await response.json();
-            localStorage.setItem('accessToken', responseBody.accessToken);
+            localStorage.setItem('accessToken', responseBody.access_token);
             messageDiv.textContent = 'Signed up successfully!';
             email.value = "";
             password.value = "";
