@@ -1,4 +1,3 @@
-/*
 package gift.security;
 
 import gift.model.User;
@@ -39,7 +38,7 @@ public class LoginMemberArgumentResolver implements HandlerMethodArgumentResolve
 
         token = token.substring(7); // "Bearer " 부분을 제거
 
-        String email = jwtTokenProvider.getEmailFromToken(token);
+        String email = jwtTokenProvider.getUsernameFromToken(token); // 수정된 메서드 호출
         User user = userService.loadOneUser(email);
 
         if (user == null) {
@@ -49,5 +48,3 @@ public class LoginMemberArgumentResolver implements HandlerMethodArgumentResolve
         return user;
     }
 }
-
- */
