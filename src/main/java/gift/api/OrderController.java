@@ -70,7 +70,7 @@ public class OrderController {
         return ResponseEntity.ok(orderPage);
     }
 
-    @GetMapping("/api/points")
+    @GetMapping("/api/member/points")
     @Operation(summary = "Get user points", description = "This API returns the points of the authenticated user.")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "Points retrieved successfully."),
