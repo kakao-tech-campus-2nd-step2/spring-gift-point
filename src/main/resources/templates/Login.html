@@ -11,14 +11,15 @@
         fetch(form.action, {
           method: 'POST',
           body: new URLSearchParams(formData)
-        }).then(response => response.json())
+        })
+        .then(response => response.json())
         .then(data => {
+          const tokenDisplay = document.getElementById('tokenDisplay');
           if (data.token) {
             localStorage.setItem('jwtToken', data.token);
-            alert('토큰이 저장되었습니다.');
-            window.location.href = '/wishlist.html';
+            tokenDisplay.textContent = '로그인 성공! 토큰: ' + data.token;
           } else {
-            alert('로그인 실패: ' + data.error);
+            tokenDisplay.textContent = '로그인 실패: ' + data.error;
           }
         });
       });
@@ -43,5 +44,7 @@
     <p th:text="${error}"></p>
   </div>
 </form>
+<div id="tokenDisplay"></div> <!-- 토큰을 표시할 영역 -->
 <p>계정이 없으신가요? <a th:href="@{/users/register}">회원 가입</a></p>
 </body>
+</html>

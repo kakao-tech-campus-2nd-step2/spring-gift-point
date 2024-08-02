@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Charge Points</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f5f5f5;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    .container {
+      background-color: #ffffff;
+      padding: 20px;
+      border-radius: 5px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      width: 300px;
+    }
+
+    .container h1 {
+      font-size: 24px;
+      margin-bottom: 20px;
+      text-align: center;
+    }
+
+    .container label {
+      font-size: 14px;
+      color: #333333;
+    }
+
+    .container input[type="number"],
+    .container input[type="text"] {
+      width: 100%;
+      padding: 8px;
+      margin: 10px 0;
+      border-radius: 3px;
+      border: 1px solid #dddddd;
+      box-sizing: border-box;
+    }
+
+    .container button {
+      width: 100%;
+      background-color: #4CAF50;
+      color: white;
+      padding: 10px;
+      border: none;
+      border-radius: 3px;
+      cursor: pointer;
+      font-size: 16px;
+    }
+
+    .container button:hover {
+      background-color: #45a049;
+    }
+
+    .container .message {
+      margin-top: 15px;
+      font-size: 14px;
+      color: red;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+<div class="container">
+  <h1>Charge Points</h1>
+  <form id="chargePointsForm">
+    <label for="userId">User ID:</label>
+    <input type="number" id="userId" name="userId" required>
+
+    <label for="amount">Points to Charge:</label>
+    <input type="number" id="amount" name="amount" required>
+
+    <button type="submit">Charge Points</button>
+
+    <div class="message" id="responseMessage"></div>
+  </form>
+</div>
+
+<script>
+  document.getElementById('chargePointsForm').addEventListener('submit', function(event) {
+    event.preventDefault(); // Prevent form from submitting the default way
+
+    const userId = document.getElementById('userId').value;
+    const amount = document.getElementById('amount').value;
+
+    fetch('/admin/points', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json', // JSON 형식으로 전송
+      },
+      body: JSON.stringify({ userId: parseInt(userId, 10), amount: parseInt(amount, 10) }) // JSON 형식으로 데이터 변환
+    })
+    .then(response => {
+      if (response.ok) {
+        return response.json(); // JSON 형식으로 응답 받기
+      } else if (response.status === 404) {
+        throw new Error('User not found.');
+      } else {
+        throw new Error('Internal server error.');
+      }
+    })
+    .then(data => {
+      document.getElementById('responseMessage').style.color = 'green';
+      document.getElementById('responseMessage').textContent = data.message || "Points charged successfully.";
+    })
+    .catch(error => {
+      document.getElementById('responseMessage').style.color = 'red';
+      document.getElementById('responseMessage').textContent = error.message;
+    });
+  });
+</script>
+</body>
+</html>

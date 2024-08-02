@@ -10,6 +10,9 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpSession;
+import java.util.HashMap;
+import java.util.Map;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -49,7 +52,7 @@ public class KakaoController {
         @ApiResponse(responseCode = "400", description = "Invalid authorization code."),
         @ApiResponse(responseCode = "500", description = "Internal server error.")
     })
-    public ResponseEntity<String> kakaoCallback(@RequestParam("code") String authorizationCode, HttpSession session) {
+    public ResponseEntity<Map<String, String>> kakaoCallback(@RequestParam("code") String authorizationCode, HttpSession session) {
         String accessToken = kakaoService.getAccessToken(authorizationCode);
         String email = kakaoService.getUserEmail(accessToken);
 
@@ -62,6 +65,9 @@ public class KakaoController {
             userService.save(user);
         }
 
-        return ResponseEntity.ok(accessToken);
+        Map<String, String> response = new HashMap<>();
+        response.put("token", accessToken);
+
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 }
