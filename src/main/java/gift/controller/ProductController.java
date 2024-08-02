@@ -1,5 +1,6 @@
 package gift.controller;
 
+import gift.annotation.LoginMember;
 import gift.dto.pageDTO.PageRequestDTO;
 import gift.dto.pageDTO.ProductPageResponseDTO;
 import gift.dto.productDTO.ProductAddRequestDTO;
@@ -7,6 +8,7 @@ import gift.dto.productDTO.ProductAddResponseDTO;
 import gift.dto.productDTO.ProductGetResponseDTO;
 import gift.dto.productDTO.ProductUpdateRequestDTO;
 import gift.dto.productDTO.ProductUpdateResponseDTO;
+import gift.model.Member;
 import gift.service.CategoryService;
 import gift.service.ProductService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -58,7 +60,11 @@ public class ProductController {
     @PostMapping
     @Operation(summary = "상품 추가", description = "상품을 추가합니다.")
     public ResponseEntity<ProductAddResponseDTO> addProduct(
-        @RequestBody @Valid ProductAddRequestDTO productAddRequestDTO) {
+        @RequestBody @Valid ProductAddRequestDTO productAddRequestDTO,
+        @LoginMember Member member) {
+        if (member == null) {
+            return ResponseEntity.status(401).build();
+        }
         ProductAddResponseDTO productAddResponseDTO = productService.saveProduct(
             productAddRequestDTO);
         return ResponseEntity.status(201).body(productAddResponseDTO);
@@ -67,7 +73,11 @@ public class ProductController {
     @PutMapping("/{productId}")
     @Operation(summary = "상품 수정", description = "상품을 수정합니다.")
     public ResponseEntity<ProductUpdateResponseDTO> updateProduct(@PathVariable Long productId,
-        @RequestBody @Valid ProductUpdateRequestDTO productUpdateRequestDTO) {
+        @RequestBody @Valid ProductUpdateRequestDTO productUpdateRequestDTO,
+        @LoginMember Member member) {
+        if (member == null) {
+            return ResponseEntity.status(401).build();
+        }
         ProductUpdateResponseDTO productUpdateResponseDTO = productService.updateProduct(
             productUpdateRequestDTO, productId);
         return ResponseEntity.ok(productUpdateResponseDTO);
@@ -75,7 +85,11 @@ public class ProductController {
 
     @DeleteMapping("/{productId}")
     @Operation(summary = "상품 삭제", description = "상품을 삭제합니다.")
-    public ResponseEntity<Void> deleteProduct(@PathVariable Long productId) {
+    public ResponseEntity<Void> deleteProduct(@PathVariable Long productId,
+        @LoginMember Member member) {
+        if (member == null) {
+            return ResponseEntity.status(401).build();
+        }
         productService.deleteProductAndWishlistAndOptions(productId);
         return ResponseEntity.noContent().build();
     }
