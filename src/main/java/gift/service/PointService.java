@@ -1,5 +1,6 @@
 package gift.service;
 
+import gift.dto.PointDTO;
 import gift.model.entity.Member;
 import gift.model.entity.Point;
 import gift.model.entity.Product;
@@ -16,10 +17,10 @@ public class PointService {
         this.pointRepository = pointRepository;
     }
 
-    public void addPoint(Member member, Long updatePoints){
-        Optional<Point> OptionalPoint = pointRepository.findByMember_Id(member.getId());
+    public void addPoint(PointDTO pointDTO){
+        Optional<Point> OptionalPoint = pointRepository.findByMember_Id(pointDTO.getMemberId());
         OptionalPoint.ifPresent(point -> {
-            pointRepository.save(point.updatePoint(updatePoints));
+            pointRepository.save(point.updatePoint(pointDTO.getPoints()));
         });
     }
 

@@ -10,7 +10,7 @@ public class Point {
     private long id;
 
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "member_id", foreignKey = @ForeignKey(name = "member_id"), nullable = false)
+    @JoinColumn(name = "member_id", foreignKey = @ForeignKey(name = "fk_point_member"), nullable = false)
     private Member member;
 
     @Column(name = "point", columnDefinition = "integer", nullable = false)
