@@ -60,15 +60,15 @@ class ProductControllerTest {
     void getProducts() throws Exception {
         // Given
         List<ProductResponse> products = List.of(
-                new ProductResponse(1L, "Product 1", 100, "img1.com", 1L, "Cloth"),
-                new ProductResponse(2L, "Product 2", 200, "img2.com", 2L, "Food")
+                new ProductResponse(1L, "Product 1", 100, "img1.com", 1L, "Food"),
+                new ProductResponse(2L, "Product 2", 200, "img2.com", 1L, "Food")
         );
         Page<ProductResponse> page = new PageImpl<>(products);
-        when(productService.getProductResponses(any(Pageable.class))).thenReturn(page);
+        when(productService.getProductResponsesByCategoryId(any(),any())).thenReturn(page);
 
         // When
         mockMvc.perform(MockMvcRequestBuilders
-                        .get(URL)
+                        .get("/api/products?categoryId={categoryId}", 1L)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpectAll(
                         status().isOk(),

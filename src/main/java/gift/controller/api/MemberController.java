@@ -24,14 +24,14 @@ public class MemberController {
     @PostMapping("/api/members/register")
     public ResponseEntity<JwtResponse> registerMember(@Valid @RequestBody MemberRequest request) {
         Long registeredMemberId = memberService.register(request);
-        JwtResponse token = tokenService.generateJwt(registeredMemberId);
+        JwtResponse token = tokenService.generateJwt(registeredMemberId, request.email());
         return ResponseEntity.ok(token);
     }
 
     @PostMapping("/api/members/login")
     public ResponseEntity<JwtResponse> loginMember(@Valid @RequestBody MemberRequest request) {
         Long registeredMemberId = memberService.login(request);
-        JwtResponse token = tokenService.generateJwt(registeredMemberId);
+        JwtResponse token = tokenService.generateJwt(registeredMemberId, request.email());
         return ResponseEntity.ok(token);
     }
 }

@@ -34,8 +34,9 @@ public class ProductController {
     }
 
     @GetMapping("/api/products")
-    public ResponseEntity<Page<ProductResponse>> getProducts(@PageableDefault(sort = "id") Pageable pageable) {
-        Page<ProductResponse> productResponses = productService.getProductResponses(pageable);
+    public ResponseEntity<Page<ProductResponse>> getProducts(@PageableDefault(sort = "id") Pageable pageable,
+                                                             @RequestParam(value = "categoryId", required = false) Long categoryId) {
+        Page<ProductResponse> productResponses = productService.getProductResponsesByCategoryId(pageable, categoryId);
         return ResponseEntity.ok(productResponses);
     }
 

@@ -102,4 +102,9 @@ public class ProductService {
         Product product = getProduct(productId);
         return ProductResponse.fromProduct(product);
     }
+
+    public Page<ProductResponse> getProductResponsesByCategoryId(Pageable pageable, Long categoryId) {
+        return productRepository.findByCategoryId(pageable, categoryId)
+                .map(ProductResponse::fromProduct);
+    }
 }
