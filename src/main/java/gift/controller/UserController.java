@@ -58,12 +58,7 @@ public class UserController {
             @RequestParam(value = "sort") List<String> sort,
             @AuthenticateMember UserResponse userRes
     ) {
-        if(sort.getLast().equals("asc")) {
-            Page<UserResponse> users = userService.findAllASC(page, size, sort.getFirst());
-            return new ResponseEntity<>(users, HttpStatus.OK);
-        }
-
-        Page<UserResponse> users = userService.findAllDESC(page, size, sort.getFirst());
+        Page<UserResponse> users = userService.findAll(page, size, sort.getFirst(), sort.getLast());
         return new ResponseEntity<>(users, HttpStatus.OK);
     }
     /*

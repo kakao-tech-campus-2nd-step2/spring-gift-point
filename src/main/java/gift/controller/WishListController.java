@@ -48,11 +48,7 @@ public class WishListController {
             @RequestParam(value = "size", defaultValue = "5") int size,
             @RequestParam(value = "sort") List<String> sort
     ){
-        if(sort.getLast().equals("asc")){
-            Page<WishProductResponse> wishList = wishListService.findWishListASC(user.getId(), page, size, sort.getFirst());
-            return new ResponseEntity<>(wishList, HttpStatus.OK);
-        }
-        Page<WishProductResponse> wishList = wishListService.findWishListDESC(user.getId(), page, size, sort.getFirst());
+        Page<WishProductResponse> wishList = wishListService.findWishList(user.getId(), page, size, sort.getFirst(), sort.getLast());
         return new ResponseEntity<>(wishList, HttpStatus.OK);
     }
     /*

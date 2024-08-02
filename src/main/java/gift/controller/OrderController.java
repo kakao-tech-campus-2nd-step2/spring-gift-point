@@ -42,12 +42,7 @@ public class OrderController {
             @RequestParam(value = "size", defaultValue = "5") int size,
             @RequestParam(value = "sort") List<String> sort
     ){
-        if(sort.getLast().equals("asc")) {
-            Page<OrderLogResponse> orders = orderService.findAllASC(page, size, sort.getFirst());
-            return new ResponseEntity<>(orders, HttpStatus.OK);
-        }
-
-        Page<OrderLogResponse> orders = orderService.findAllDESC(page, size, sort.getFirst());
+        Page<OrderLogResponse> orders = orderService.findAll(page, size, sort.getFirst(), sort.getLast());
         return new ResponseEntity<>(orders, HttpStatus.OK);
     }
 }

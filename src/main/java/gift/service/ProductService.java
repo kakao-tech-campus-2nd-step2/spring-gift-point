@@ -30,26 +30,20 @@ public class ProductService {
     /*
      * 상품을 오름차순으로 정렬하는 로직
      */
-    public Page<ProductResponse> readAllProductASC(int page, int size, String field, Long categoryId){
+    public Page<ProductResponse> readAllProduct(int page, int size, String field, String sort, Long categoryId){
         List<Sort.Order> sorts = new ArrayList<>();
-        sorts.add(Sort.Order.asc(field));
-        Pageable pageable = PageRequest.of(page, size, Sort.by(sorts));
-        Page<Product> products = productRepository.findAllByCategoryId(pageable, categoryId);
-
-        return products.map(ProductResponse::new);
-    }
-    /*
-     * 상품을 내림차순으로 조회하는 로직
-     */
-    public Page<ProductResponse> readAllProductDESC(int page, int size, String field, Long categoryId){
-        List<Sort.Order> sorts = new ArrayList<>();
+        if(sort.equals("asc")) {
+            sorts.add(Sort.Order.asc(field));
+            Pageable pageable = PageRequest.of(page, size, Sort.by(sorts));
+            Page<Product> products = productRepository.findAllByCategoryId(pageable, categoryId);
+            return products.map(ProductResponse::new);
+        }
         sorts.add(Sort.Order.desc(field));
         Pageable pageable = PageRequest.of(page, size, Sort.by(sorts));
-
         Page<Product> products = productRepository.findAllByCategoryId(pageable, categoryId);
-
         return products.map(ProductResponse::new);
     }
+
     /*
      * id를 기준으로 한 상품을 조회
      */
