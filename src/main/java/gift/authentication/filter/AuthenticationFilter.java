@@ -57,22 +57,39 @@ public class AuthenticationFilter extends OncePerRequestFilter {
         throw new JwtException("인증 토큰이 없습니다.");
     }
 
+    /**
+     * 필터링을 하지 않아야 하는 경로를 설정한다.<br><br>
+     * 1. ignorePaths에 포함된 경로는 필터링을 하지 않는다.<br>
+     * 2. HttpMethod이 OPTIONS인 경우 필터링을 하지 않는다.<br>
+     * 3. ignorePathsOnlyMethodGet에 포함된 경로 중 HttpMethod.GET인 경우 필터링을 하지 않는다.
+     * @param request 요청
+     * @return 필터링을 하지 않아야 하는 경우 true, 그 외, false
+     * @throws ServletException
+     */
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
         String requestURI = request.getRequestURI();
-        return ignorePaths.contains(requestURI) || isOptionalIgnorePathsWithGetMethod(request, requestURI);
+        return ignorePaths.contains(requestURI) || isOptionsMethod(request) || isOptionalIgnorePathsWithGetMethod(request);
     }
 
     /**
-     * ignorePathsOnlyMethodGet에 포함된 경로 중 GET 메서드일 때만 필터링을 하지 않는다.
-     * @param request
-     * @param requestURI
-     * @return ignorePathsOnlyMethodGet에 포함된 경로 중 GET 메서드인 경우 true 를 반환 그 외, false
+     * ignorePathsOnlyMethodGet에 포함된 경로 중 HttpMethod.GET인 경우 필터링을 하지 않는다.
+     * @param request 요청
+     * @return ignorePathsOnlyMethodGet에 포함된 경로 중 HttpMethod.GET 경우 true 를 반환 그 외, false
      */
-    private boolean isOptionalIgnorePathsWithGetMethod(HttpServletRequest request, String requestURI) {
+    private boolean isOptionalIgnorePathsWithGetMethod(HttpServletRequest request) {
         return ignorePathsOnlyMethodGet
             .stream()
-            .anyMatch(regex -> Pattern.compile(regex).matcher(requestURI).matches()
-                && (request.getMethod().equals("GET") || request.getMethod().equals("OPTIONS")));
+            .anyMatch(regex -> Pattern.compile(regex).matcher(request.getRequestURI()).matches()
+                && (isGetMethod(request)));
     }
+
+    private boolean isGetMethod(HttpServletRequest request) {
+        return request.getMethod().equals("GET");
+    }
+
+    private boolean isOptionsMethod(HttpServletRequest request) {
+        return request.getMethod().equals("OPTIONS");
+    }
+
 }
