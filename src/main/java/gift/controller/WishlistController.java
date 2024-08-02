@@ -1,6 +1,6 @@
 package gift.controller;
 
-import gift.entity.Wishlist;
+import gift.domain.WishlistDTO;
 import gift.service.WishlistService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.data.domain.Page;
@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 
 @Tag(name = "위시리스트", description = "위시리스트 관련 API")
 @RestController
-@RequestMapping("/api/wishlist")
+@RequestMapping("/api/wishes")
 public class WishlistController {
     private final WishlistService wishlistService;
     public WishlistController(WishlistService wishlistService) {
@@ -19,8 +19,8 @@ public class WishlistController {
     }
 
     @GetMapping
-    public ResponseEntity<Page<Wishlist>> getAllWishlist(@RequestHeader("Authorization") String token, @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size) {
-        Page<Wishlist> wishlistPage = wishlistService.getAllWishlist(token, page, size);
+    public ResponseEntity<Page<WishlistDTO>> getAllWishlist(@RequestHeader("Authorization") String token, @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size) {
+        Page<WishlistDTO> wishlistPage = wishlistService.getAllWishlist(token, page, size);
         HttpHeaders headers = new HttpHeaders();
         headers.add("X-Page-Number", String.valueOf(wishlistPage.getNumber()));
         headers.add("X-Page-Size", String.valueOf(wishlistPage.getSize()));

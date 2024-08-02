@@ -1,5 +1,6 @@
 package gift.service;
 
+import gift.domain.WishlistDTO;
 import gift.repository.MemberRepository;
 import gift.repository.ProductRepository;
 import gift.entity.Wishlist;
@@ -12,7 +13,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.NoSuchElementException;
-
+import java.util.stream.Collectors;
 
 @Service
 public class WishlistService {
@@ -26,7 +27,7 @@ public class WishlistService {
         this.productRepository = productRepository;
     }
 
-    public Page<Wishlist> getAllWishlist(String token, int page, int size) {
+    public Page<WishlistDTO> getAllWishlist(String token, int page, int size) {
         Pageable pageRequest = createPageRequestUsing(page, size);
         var member_id = memberRepository.searchIdByToken(token);
 
@@ -35,7 +36,9 @@ public class WishlistService {
         if (page > 0) { start += 1; }
 
         List<Wishlist> pageContent = wishlistRepository.findByIdAndIdAndMember_id(start, end, member_id);
-        return new PageImpl<>(pageContent, pageRequest, pageContent.size());
+        List<WishlistDTO> dto = pageContent.stream().map(this::toDTO)
+                .collect(Collectors.toList());
+        return new PageImpl<>(dto, pageRequest, pageContent.size());
     }
 
     private Pageable createPageRequestUsing(int page, int size) {
@@ -56,7 +59,7 @@ public class WishlistService {
     public void changeNum(String token, int product_id, int count) {
         var member_id = memberRepository.searchIdByToken(token);
         var member = memberRepository.findById(member_id);
-        var product = productRepository.findById(product_id);
+        var product = productRepository.findById(product_id).orElseThrow(NoSuchElementException::new);
 
         try {
             if (count == 0) {
@@ -74,7 +77,7 @@ public class WishlistService {
     public void addItem(String token, int product_id) {
         var member_id = memberRepository.searchIdByToken(token);
         var member = memberRepository.findById(member_id);
-        var product = productRepository.findById(product_id);
+        var product = productRepository.findById(product_id).orElseThrow(NoSuchElementException::new);
 
         try {
             if (isItem(member_id, product_id)) {
@@ -93,5 +96,12 @@ public class WishlistService {
 
     public boolean isItem(int member_id, int product_id) {
         return wishlistRepository.searchCount_productByMember_idAndProduct_id(member_id, product_id) > 0;
+    }
+
+    public WishlistDTO toDTO(Wishlist wishlist) {
+        WishlistDTO dto = new WishlistDTO();
+        dto.id = wishlist.getId();
+        dto.product = wishlist.getProduct();
+        return dto;
     }
 }
