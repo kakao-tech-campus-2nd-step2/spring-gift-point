@@ -3,6 +3,7 @@ package gift.category.service;
 import gift.category.dto.CategoryRequest;
 import gift.category.dto.CategoryResponse;
 import gift.category.entity.Category;
+import gift.exceptionAdvisor.exceptions.GiftBadRequestException;
 import gift.repository.JpaCategoryRepository;
 import gift.exceptionAdvisor.exceptions.GiftNotFoundException;
 import jakarta.transaction.Transactional;
@@ -27,6 +28,11 @@ public class CategoryService {
     public CategoryResponse create(CategoryRequest categoryRequest) {
         Category category = getCategory(null, categoryRequest);
 
+        jpaCategoryRepository.findByName(category.getName())
+            .ifPresent(cate -> {
+                throw new GiftBadRequestException(cate.getName()+"은 이미 존재하는 카테고리입니다.");
+            });
+
         category = jpaCategoryRepository.save(category);
 
         return new CategoryResponse(category);
@@ -34,6 +40,9 @@ public class CategoryService {
 
 
     public CategoryResponse update(long id, CategoryRequest categoryRequest) {
+        if(!jpaCategoryRepository.existsById(id)){
+            throw new GiftNotFoundException("카테고리가 존재하지 않습니다.");
+        }
         Category category = getCategory(id, categoryRequest);
         category = jpaCategoryRepository.save(category);
 
