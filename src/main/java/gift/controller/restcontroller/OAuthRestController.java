@@ -31,7 +31,7 @@ public class OAuthRestController {
         LoginDto response = oAuthService.signIn(code, redirectUrl);
         return ResponseEntity.ok()
                 .header("Authorization", response.accessToken())
-                .body(LoginResponse.of(response.name()));
+                .body(LoginResponse.from(response));
     }
 
     @PostMapping("/kakao/logout")

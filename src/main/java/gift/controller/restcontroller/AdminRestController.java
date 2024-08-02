@@ -39,7 +39,7 @@ public class AdminRestController {
     @PatchMapping("members/{memberId}/point")
     @Operation(summary = "특정 멤버 포인트 주입", description = "특정 멤버에서 포인트를 주입합니다.")
     @SecurityRequirement(name = "Authorization")
-    public ResponseEntity<?> getMemberPoint(
+    public ResponseEntity<PointResponse> getMemberPoint(
             @NotNull @Min(1) @PathVariable("memberId") Long memberId,
             @Valid PointUpdateRequest request
     ) {

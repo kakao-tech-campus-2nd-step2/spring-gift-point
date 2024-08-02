@@ -36,7 +36,7 @@ public class OAuthService {
 
         kakaoTokenService.saveToken(member.getId(), kakaoTokenDto);
         String token = jwtProvider.generateToken(member.getId(), member.getEmail(), member.getRole());
-        return LoginDto.of(token, member.getName());
+        return LoginDto.of(token, member.getName(), member.getRole());
     }
 
     public void signOut(Long memberId) {
