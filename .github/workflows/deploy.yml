@@ -68,3 +68,4 @@ jobs:
             cd ~/kakaoGift/
             sudo fuser -k -n tcp 8080
             nohup java -jar spring-gift-0.0.1-SNAPSHOT.jar > log.txt 2>&1 &
+
