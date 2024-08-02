@@ -203,7 +203,7 @@ VALUES ('Americano', 10, 1),
        ('RomaTomatoes', 25, 30),
        ('HeirloomTomatoes', 20, 30);
 INSERT INTO users (email, password, name, point, role, login_type)
-VALUES ('admin@test.com', '1234', 'dummyName', 5000, 'ADMIN', 'DEFAULT');
+VALUES ('admin@test.com', '1234', 'Peach', 5000, 'ADMIN', 'DEFAULT');
 
 INSERT INTO wish (user_id, product_id, quantity)
 VALUES (1, 1, 1);
