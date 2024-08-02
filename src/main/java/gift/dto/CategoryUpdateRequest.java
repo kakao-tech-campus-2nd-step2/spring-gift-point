@@ -7,6 +7,8 @@ public class CategoryUpdateRequest {
 	@NotNull(message = "선택할 수 있는 카테고리 번호를 입력해야 합니다.")
 	private Long categoryId;
 	
+	public CategoryUpdateRequest() {}
+	
 	public Long getCategoryId() {
 		return categoryId;
 	}
