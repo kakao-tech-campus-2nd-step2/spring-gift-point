@@ -1,6 +1,7 @@
 package gift.model;
 
 import gift.common.exception.DuplicateDataException;
+import gift.common.exception.EntityNotFoundException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -82,6 +83,24 @@ class ProductTest {
         // then
         assertThat(option.getId()).isEqualTo(1L);
         assertThat(option.getName()).isEqualTo(oName1);
+    }
+
+    @Test
+    @DisplayName("Product에서 Option 찾기 테스트[실패] - option이 없음")
+    void findOptionByOptionIdFail() {
+        // given
+        String oName1 = "oName1";
+        String oName2 = "oName2";
+        Category category = new Category();
+        List<Option> options = List.of(
+                new Option(1L, oName1),
+                new Option(2L, oName2));
+        Product product = new Product("pname", 123, "purl", category, options);
+
+        // when
+        // then
+        assertThatExceptionOfType(EntityNotFoundException.class)
+                .isThrownBy(() -> product.findOptionByOptionId(3L));
     }
 
     @Test
