@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<title>상품 관리</title>
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+
+<body>
+	<div class="container mt-5">
+		<h2>상품 목록</h2>
+		<table class="table table-bordered">
+			<thead>
+				<tr>
+					<th>ID</th>
+					<th>이름</th>
+					<th>가격</th>
+					<th>이미지</th>
+					<th>카테고리 ID</th>
+					<th>작업</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr th:each="product : ${products}">
+					<td th:text="${product.id}"></td>
+					<td th:text="${product.name}"></td>
+					<td th:text="${product.price}"></td>
+					<td>
+						<a th:href="${product.imageUrl}" target="_blank" th:text="${product.imageUrl}"></a>
+					</td>
+					<td th:text="${product.categoryId}"></td>
+					<td>
+						<a th:href="@{/admin/products/edit/{id}(id=${product.id})}"
+							class="btn btn-warning btn-sm">수정</a>
+						<form th:action="@{/admin/products/delete/{id}(id=${product.id})}" method="post"
+							style="display:inline;">
+							<button type="submit" class="btn btn-danger btn-sm">삭제</button>
+						</form>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+		<a href="/admin/products/create" class="btn btn-primary">상품 추가</a>
+	</div>
+</body>
+
+</html>

@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<title>상품 수정</title>
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+
+<body>
+	<div class="container mt-5">
+		<h2>상품 수정</h2>
+		<form th:action="@{/admin/products/edit/{id}(id=${product.id})}" th:object="${product}" method="post">
+			<div class="form-group">
+				<label for="name">이름</label>
+				<input type="text" class="form-control" id="name" name="name" th:field="*{name}" required>
+			</div>
+			<div class="form-group">
+				<label for="price">가격</label>
+				<input type="number" class="form-control" id="price" name="price" th:field="*{price}" required>
+			</div>
+			<div class="form-group">
+				<label for="imageUrl">이미지 URL</label>
+				<input type="url" class="form-control" id="imageUrl" name="imageUrl" th:field="*{imageUrl}">
+			</div>
+			<div class="form-group">
+				<label for="categoryId">카테고리 ID</label>
+				<input type="number" class="form-control" id="categoryId" name="categoryId" th:field="*{categoryId}" readonly>
+				<a th:href="@{/admin/products/edit/{id}/category(id=${product.id})}" class="btn btn-link">카테고리 수정</a>
+			</div>
+			<button type="submit" class="btn btn-primary">저장</button>
+			<a href="/admin/products" class="btn btn-secondary">취소</a>
+		</form>
+	</div>
+</body>
+
+</html>
