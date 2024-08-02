@@ -14,7 +14,8 @@ public class OrderIn {
         Boolean hasCashReceipt,
         String cashReceiptType,
         String cashReceiptNumber,
-        String message
+        String message,
+        Long point
     ) {
 
         public Order toOrder(Product product, Member member) {
@@ -26,7 +27,8 @@ public class OrderIn {
                 hasCashReceipt,
                 cashReceiptType,
                 cashReceiptNumber,
-                message
+                message,
+                point
             );
         }
     }
