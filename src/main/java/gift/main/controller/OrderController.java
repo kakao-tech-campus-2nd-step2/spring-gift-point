@@ -55,7 +55,7 @@ public class OrderController {
 
         //4. 주문 메시지 보내기 (보내기 전에 토큰 갱신하기)
         apiTokenService.renewToken(sessionUserVo);
-        kakaoService.sendOrderMessage(orderResponse, sessionUserVo);
+//        kakaoService.sendOrderMessage(orderResponse, sessionUserVo);
 
         return ResponseEntity.ok(orderResponse);
     }
