@@ -8,6 +8,7 @@ import gift.user.service.UserService;
 import gift.utility.JwtUtil;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.servlet.http.HttpServletRequest;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
@@ -29,6 +30,8 @@ public class KakaoLoginController {
 
     @Value("${kakao.redirect-uri}")
     private String redirectUri;
+
+    private String baseUrl;
 
     private final UserService userService;
     private final KakaoLoginService kakaoLoginService;
@@ -57,7 +60,14 @@ public class KakaoLoginController {
 
     @PostMapping("/kakao")
     @Operation(summary = "카카오 회원가입 로그인 api")
-    public RedirectView showKakaoLogin() {
+    public RedirectView showKakaoLogin(HttpServletRequest request) {
+        //base url 받기
+        String scheme = request.getScheme(); // http or https
+        String serverName = request.getServerName(); //hostname.com
+        int serverPort = request.getServerPort(); // ex) 80
+
+        baseUrl = scheme + "://" + serverName + ":" + serverPort;
+
         RedirectView redirectView = new RedirectView();
         String uri = "https://kauth.kakao.com/oauth/authorize?scope=talk_message&response_type=code&client_id=" + clientId + "&redirect_uri=" + redirectUri;
         redirectView.setUrl(uri);
@@ -66,11 +76,17 @@ public class KakaoLoginController {
 
     @GetMapping("/kakao/redirect")
     @Operation(summary = "카카오로부터 access code 받아서 로그인 진행")
-    public ResponseEntity<LoginResponse> handleKakaoCallback(
+    public RedirectView handleKakaoCallback(
         @RequestParam(value = "code") String code) {
         String accessToken = kakaoLoginService.getAccessToken(code);
         Long userId = kakaoLoginService.getUserInfo(accessToken);
         String jwtToken = userService.getJwtTokenByUserId(userId);
-        return new ResponseEntity<>(new LoginResponse(jwtToken), HttpStatus.OK);
+
+        String redirectUrl = baseUrl;
+        String urlWithToken = redirectUrl + "?token=" + jwtToken;
+
+        RedirectView redirectView = new RedirectView();
+        redirectView.setUrl(urlWithToken);
+        return redirectView;
     }
 }
