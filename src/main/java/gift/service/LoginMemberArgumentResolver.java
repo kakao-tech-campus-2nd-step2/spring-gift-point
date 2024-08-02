@@ -43,7 +43,6 @@ public class LoginMemberArgumentResolver implements HandlerMethodArgumentResolve
             Long memberId = memberRepository.findByEmail(email)
                     .get()
                     .getId();
-
             return new LoginMemberDTO(memberId, token);
         }
         return null;

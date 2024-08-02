@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
-import java.util.Date;
 
 @Entity
 @Table(name = "order_table")
@@ -31,17 +30,17 @@ public class Order {
     private String message;
 
     @Column(nullable = false, updatable = false, name = "order_date")
-    private LocalDateTime orderDate;
+    private LocalDateTime orderDateTime;
 
     public Order() {
     }
 
-    public Order(Member member, Option option, Integer orderQuantity, String message, LocalDateTime orderDate) {
+    public Order(Member member, Option option, Integer orderQuantity, String message, LocalDateTime orderDateTime) {
         this.member = member;
         this.option = option;
         this.orderQuantity = orderQuantity;
         this.message = message;
-        this.orderDate = orderDate;
+        this.orderDateTime = orderDateTime;
     }
 
     public Long getId() {
@@ -60,8 +59,8 @@ public class Order {
         return orderQuantity;
     }
 
-    public LocalDateTime getOrderDate() {
-        return orderDate;
+    public LocalDateTime getOrderDateTime() {
+        return orderDateTime;
     }
 
     public String getMessage() {

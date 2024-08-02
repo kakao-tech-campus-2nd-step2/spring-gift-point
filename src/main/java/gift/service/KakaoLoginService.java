@@ -6,11 +6,14 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import gift.authorization.JwtUtil;
+import gift.dto.response.LoginResponseDTO;
 import gift.entity.Member;
 import gift.entity.MemberType;
 import gift.exception.KakaoLoginException;
 import gift.repository.MemberRepository;
+import jdk.jfr.Description;
 import org.json.JSONObject;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
@@ -26,34 +29,61 @@ public class KakaoLoginService {
 
     private final MemberRepository memberRepository;
     private final JwtUtil jwtUtil;
-
+    private final RestTemplate restTemplate;
     @Value("${kakao.login.REST-API-KEY}")
     private String loginRestApiKey;
 
     @Value("${kakao.login.REDIRECT-URI}")
     private String loginRedirectUri;
 
-    RestTemplate restTemplate = new RestTemplate();
-
-    public KakaoLoginService(MemberRepository memberRepository, JwtUtil jwtUtil) {
+    @Autowired
+    public KakaoLoginService(MemberRepository memberRepository, JwtUtil jwtUtil, RestTemplate restTemplate) {
         this.memberRepository = memberRepository;
         this.jwtUtil = jwtUtil;
+        this.restTemplate = restTemplate;
     }
 
     public String makeKakaoAuthorizationURI() {
-        StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append("https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=")
+        StringBuilder kakaoLoginAuthorizationStringBuilder = new StringBuilder();
+        kakaoLoginAuthorizationStringBuilder.append("https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=")
                 .append(loginRestApiKey)
                 .append("&redirect_uri=")
                 .append(loginRedirectUri)
                 .append("&scope=account_email");
 
-        return stringBuilder.toString();
+        return kakaoLoginAuthorizationStringBuilder.toString();
     }
 
 
-    //RequestEntity<LinkedMultiValueMap<String, String>>
-    public String getKakaoAuthorizationToken(String code){
+    @Description("token을 통해 user email 받아옴")
+    public LoginResponseDTO getKakaoEmailByToken(String code){
+
+        String kakaoAccessToken = getKakaoAuthorizationToken(code);
+
+        var url = "https://kapi.kakao.com/v2/user/me";
+        var headers = new HttpHeaders();
+        headers.setContentType(org.springframework.http.MediaType.APPLICATION_FORM_URLENCODED);
+        headers.set("Authorization", "Bearer " + kakaoAccessToken);
+
+        String requestBody = "";
+        HttpEntity<String> entity = new HttpEntity<>(requestBody, headers);
+        ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.POST, entity, String.class);
+        String email = "";
+        ObjectMapper objectMapper = new ObjectMapper();
+        try {
+            JsonNode rootNode = objectMapper.readTree(response.getBody());
+            JsonNode kakaoAccountNode = rootNode.path("kakao_account");
+            email = kakaoAccountNode.path("email").asText();
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new KakaoLoginException("카카오 로그인 - 유저 정보 받아오기 실패");
+        }
+
+        return new LoginResponseDTO(email, generateJwtToken(email, kakaoAccessToken));
+    }
+    
+    @Description("code를 통해 kakao server access token을 받아옴")
+    private String getKakaoAuthorizationToken(String code){
         var url = "https://kauth.kakao.com/oauth/token";
         var headers = new HttpHeaders();
         headers.add(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_FORM_URLENCODED_VALUE);
@@ -68,19 +98,35 @@ public class KakaoLoginService {
                 request, String.class);
 
         String jsonResponse = response.getBody();
-
         JSONObject jsonObject = new JSONObject(jsonResponse);
-        String accessToken = jsonObject.getString("access_token");
+        String kakaoAccessToken = jsonObject.getString("access_token");
 
-        return accessToken;
+        return kakaoAccessToken;
     }
 
-    public void validationKaKaoToken(String accessToken){
+
+    // email 있으면 -> 토큰 생성 (우리 서버), 만약 없으면 회원 가입 후 토큰 발급
+    public String generateJwtToken(String email,String kakaoAccessToken){
+        Member member;
+        if(!memberRepository.existsByEmail(email)){
+            member = new Member(MemberType.KAKAO, email, kakaoAccessToken);
+            memberRepository.save(member);
+        }else{
+            member = memberRepository.findByEmail(email)
+                    .get();
+        }
+
+        return jwtUtil.generateToken(member);
+    }
+
+}
+
+
+/*public void validationKaKaoToken(String accessToken){
         String url = "https://kapi.kakao.com/v1/user/access_token_info";
         var headers = new HttpHeaders();
         headers.set("Authorization", "Bearer " + accessToken);
         HttpEntity<String> entity = new HttpEntity<>(headers);
-
         try {
             ResponseEntity<String> response = restTemplate.exchange(
                     url,
@@ -91,49 +137,4 @@ public class KakaoLoginService {
         }catch(Exception e) {
             throw new KakaoLoginException("카카오 로그인 오류 발생");
         }
-
-
-    }//HttpClientErrorException
-
-    public String getKakaoEmailByToken(String accessToken){
-
-        var url = "https://kapi.kakao.com/v2/user/me";
-        var headers = new HttpHeaders();
-        headers.setContentType(org.springframework.http.MediaType.APPLICATION_FORM_URLENCODED);
-        headers.set("Authorization", "Bearer " + accessToken);
-
-        String requestBody = "";
-        HttpEntity<String> entity = new HttpEntity<>(requestBody, headers);
-        ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.POST, entity, String.class);
-        String email = "";
-        ObjectMapper objectMapper = new ObjectMapper();
-        try {
-            JsonNode rootNode = objectMapper.readTree(response.getBody());
-            JsonNode kakaoAccountNode = rootNode.path("kakao_account");
-            email = kakaoAccountNode.path("email").asText();
-            // 이메일 출력
-            System.out.println("Email: " + email);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return email;
-    }
-    
-    // email 있으면 -> 토큰 생성 (우리 서버), 만약 없으면 회원 가입 후 토큰 발급
-    public String checkEmail(String email){
-        Member member;
-        if(!memberRepository.existsByEmail(email)){
-            member = new Member(email, MemberType.KAKAO);
-            memberRepository.save(member);
-        }else{
-            member = memberRepository.findByEmail(email)
-                    .get();
-        }
-
-        return jwtUtil.generateToken(member);
-    }
-
-   
-
-
-}
+    }*/

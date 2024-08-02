@@ -23,6 +23,30 @@ public class OptionController {
         this.optionService = optionService;
     }
 
+    @PostMapping("")
+    public ResponseEntity<String> createOption(@PathVariable("productId") Long productId,
+                                               @Valid @RequestBody OptionRequestDTO optionRequestDTO) {
+        optionService.addOption(productId, optionRequestDTO);
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body("상품 option 등록 완료");
+    }
+
+    @PutMapping("/{optionId}")
+    public ResponseEntity<String> updateOption(@PathVariable("optionId") Long optionId ,
+                                               @Valid @RequestBody OptionRequestDTO optionRequestDTO) {
+        optionService.updateOption(optionId, optionRequestDTO);
+        return ResponseEntity.status(HttpStatus.OK)
+                .body("상품 option update 완료");
+    }
+
+
+    @DeleteMapping("/{optionId}")
+    public ResponseEntity<String> deleteOption(@PathVariable("optionId") Long optionId) {
+        optionService.removeOption(optionId);
+        return ResponseEntity.status(HttpStatus.OK)
+                .body("option 삭제 완료");
+    }
+
     @GetMapping("")
     public ResponseEntity<List<OptionResponseDTO>> getOptions(@PathVariable("productId") Long productId) {
         List<OptionResponseDTO> options = optionService.getOptions(productId);
@@ -35,28 +59,6 @@ public class OptionController {
         OptionResponseDTO option = optionService.getOption(optionId);
         return ResponseEntity.status(HttpStatus.OK)
                 .body(option);
-    }
-
-    @PostMapping("")
-    public ResponseEntity<String> createOption(@Valid @RequestBody OptionRequestDTO optionRequestDTO) {
-        optionService.addOption(optionRequestDTO);
-        return ResponseEntity.status(HttpStatus.CREATED)
-                .body("상품 option 등록 완료");
-    }
-
-    @DeleteMapping("/{optionId}")
-    public ResponseEntity<String> deleteOption(@PathVariable("optionId") Long optionId) {
-        optionService.removeOption(optionId);
-        return ResponseEntity.status(HttpStatus.OK)
-                .body("option 삭제 완료");
-    }
-
-    @PutMapping("/{optionId}")
-    public ResponseEntity<String> updateOption(@PathVariable("optionId") Long optionId ,
-                                               @Valid @RequestBody OptionRequestDTO optionRequestDTO) {
-        optionService.updateOption(optionId, optionRequestDTO);
-        return ResponseEntity.status(HttpStatus.OK)
-                .body("상품 option update 완료");
     }
 
 

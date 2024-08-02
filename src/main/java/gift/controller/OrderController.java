@@ -3,9 +3,14 @@ package gift.controller;
 
 import gift.dto.request.LoginMemberDTO;
 import gift.dto.request.OrderRequestDTO;
+import gift.dto.response.PagingOrderResponseDTO;
+import gift.dto.response.PagingWishResponseDTO;
 import gift.service.LoginMember;
 import gift.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -34,16 +39,18 @@ public class OrderController {
     }
 
 
-    /*@GetMapping("")
-    public ResponseEntity<Map<String, Object>> getOrders(
-            @LoginMember LoginMemberDTO loginMemberDTO,
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size,
-            @RequestParam(defaultValue = "orderDateTime,desc") String sort
-    ) {
+    @GetMapping("")
+    public ResponseEntity<PagingOrderResponseDTO> getOrders(@LoginMember LoginMemberDTO loginMemberDTO,
+                                                         @RequestParam(name = "page", defaultValue = "0") int page,
+                                                         @RequestParam(name = "size" , defaultValue = "10") int size,
+                                                         @RequestParam(name = "sort", defaultValue = "orderDateTime,desc") String sort) {
+        String[] sortParams = sort.split(",");
+        Sort.Order order = new Sort.Order(Sort.Direction.fromString(sortParams[1]), sortParams[0]);
+        Pageable pageable = PageRequest.of(page, size, Sort.by(order));
 
+        PagingOrderResponseDTO pagingOrderResponseDTO = orderService.getOrders(loginMemberDTO, pageable);
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(pagingOrderResponseDTO);
 
-
-
-    }*/
+    }
 }

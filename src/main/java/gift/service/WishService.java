@@ -2,14 +2,18 @@ package gift.service;
 
 import gift.dto.request.LoginMemberDTO;
 import gift.dto.request.TokenLoginRequestDTO;
+import gift.dto.request.WishRequestDTO;
+import gift.dto.response.PagingProductResponseDTO;
+import gift.dto.response.PagingWishResponseDTO;
+import gift.dto.response.ProductResponseDTO;
 import gift.dto.response.WishResponseDTO;
 import gift.entity.Member;
 import gift.entity.Option;
 import gift.entity.Product;
 import gift.entity.Wish;
-import gift.exception.WishException;
 import gift.exception.memberException.MemberNotFoundException;
 import gift.exception.optionException.OptionNotFoundException;
+import gift.exception.productException.ProductNotFoundException;
 import gift.exception.wishException.DuplicatedWishException;
 import gift.exception.wishException.WishNotFoundException;
 import gift.repository.MemberRepository;
@@ -24,6 +28,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -35,46 +40,65 @@ public class WishService {
     private final WishRepository wishRepository;
     private final OptionRepository optionRepository;
     private final MemberRepository memberRepository;
+    private final ProductRepository productRepository;
 
     @Autowired
     public WishService(WishRepository wishRepository,
                        OptionRepository optionRepository,
-                       MemberRepository memberRepository) {
+                       MemberRepository memberRepository, ProductRepository productRepository) {
         this.wishRepository = wishRepository;
         this.optionRepository = optionRepository;
         this.memberRepository = memberRepository;
+        this.productRepository = productRepository;
     }
 
-    public List<WishResponseDTO> getWishes(LoginMemberDTO loginMemberDTO){
+
+    public PagingWishResponseDTO getWishes(LoginMemberDTO loginMemberDTO, Pageable pageable) {
         Long memberId = loginMemberDTO.memberId();
-        List<Wish> wishes = wishRepository.findByMemberId(memberId);
-        return wishes.stream()
+
+        Page<Wish> wishPage = wishRepository.findByMemberId(memberId, pageable);
+        List<WishResponseDTO> wishResponseDTOs = wishPage.getContent()
+                .stream()
                 .map(this::toDto)
                 .collect(Collectors.toList());
+
+        return new PagingWishResponseDTO(
+                wishResponseDTOs,
+                wishPage.getNumber(),
+                (int) wishPage.getTotalElements(),
+                wishPage.getSize(),
+                wishPage.isLast()
+        );
+
     }
 
-    public void addWish(Long optionId, LoginMemberDTO loginMemberDTO) {
+
+    @Transactional
+    public void addWish(WishRequestDTO wishRequestDTO , LoginMemberDTO loginMemberDTO) {
+        Long productId = wishRequestDTO.productId();
         Long memberId = loginMemberDTO.memberId();
 
         Member member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new MemberNotFoundException("잘못된 회원입니다."));
 
-        Option option = optionRepository.findById(optionId)
-                .orElseThrow(() -> new OptionNotFoundException("옵션을 찾을 수 없습니다."));
-        Optional<Wish> existingWish = wishRepository.findByMemberIdAndOptionId(memberId, optionId);
+        Product product = productRepository.findById(productId)
+                .orElseThrow(()-> new ProductNotFoundException(productId));
+
+        Optional<Wish> existingWish = wishRepository.findByMemberIdAndProductId(memberId, productId);
 
         if (existingWish.isPresent()) {
             throw new DuplicatedWishException("이미 존재하는 상풉입니다.");
         }
-        Wish wish = new Wish(member, option);
+
+        Wish wish = new Wish(member, product, LocalDateTime.now() );
         wishRepository.save(wish);
     }
 
-    public void removeWish(Long optionId, LoginMemberDTO loginMemberDTO) {
+    public void removeWish(Long wishId, LoginMemberDTO loginMemberDTO) {
         Long memberId = loginMemberDTO.memberId();
-        Wish existingWish = wishRepository.findByMemberIdAndOptionId(memberId, optionId)
+        Wish wish = wishRepository.findByIdAndMemberId(wishId, memberId)
                 .orElseThrow(()-> new WishNotFoundException("상품을 찾을 수 없습니다") );
-        wishRepository.delete(existingWish);
+        wishRepository.delete(wish);
     }
 
 
@@ -85,9 +109,19 @@ public class WishService {
 
     private WishResponseDTO toDto(Wish wish){
         return new WishResponseDTO(
-                wish.getId());
+                wish.getId(),
+                productToDto(wish.getProduct())
+        );
     }
 
+
+    private ProductResponseDTO productToDto(Product product){
+        return new ProductResponseDTO(product.getId(),
+                product.getName(),
+                product.getImageUrl(),
+                product.getPrice()
+        );
+    }
 
 
     /*public Page<WishResponseDTO> paging(Pageable pageable){

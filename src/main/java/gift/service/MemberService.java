@@ -1,15 +1,12 @@
 package gift.service;
 
 import gift.authorization.JwtUtil;
-import gift.dto.request.KakaoMemberRequestDTO;
-import gift.dto.request.LoginMemberDTO;
-import gift.dto.request.NormalMemberRequestDTO;
-import gift.dto.request.TokenLoginRequestDTO;
+import gift.dto.request.*;
+import gift.dto.response.LoginResponseDTO;
+import gift.dto.response.RegisterResponseDTO;
 import gift.entity.Member;
-import gift.exception.DuplicateValueException;
-import gift.exception.memberException.KakaoMemberSignUpException;
-import gift.exception.memberException.MemberEmailNotFoundException;
-import gift.exception.memberException.NormalMemberSignUpException;
+import gift.exception.memberException.*;
+import gift.exception.wishException.DuplicatedWishException;
 import gift.repository.MemberRepository;
 import io.jsonwebtoken.JwtException;
 import jdk.jfr.Description;
@@ -30,6 +27,50 @@ public class MemberService {
         this.jwtUtil = jwtUtil;
     }
 
+    @Description("회원 가입")
+    public RegisterResponseDTO addMember(RegisterRequestDTO registerRequestDTO){
+        String email = registerRequestDTO.email();
+        if (memberRepository.existsByEmail(email)) {
+            throw new DuplicatedEmailException(email);
+        }
+
+        Member member = toEntity(registerRequestDTO);
+        memberRepository.save(member);
+        String token = jwtUtil.generateToken(member);
+
+        return new RegisterResponseDTO(email, token);
+    }
+
+    private Member toEntity(RegisterRequestDTO registerRequestDTO) {
+        String email = registerRequestDTO.email();
+        String password = registerRequestDTO.password();
+        Member member = new Member(email, password);
+        return member;
+    }
+
+    @Description("로그인")
+    public LoginResponseDTO login(LoginRequestDTO loginRequestDTO) {
+        String email = loginRequestDTO.email();
+        String password = loginRequestDTO.password();
+        Member existingMember = memberRepository.findByEmailAndPassword(email, password)
+                .orElseThrow(() -> new InvalidLoginException("ID 혹은 비밀번호를 다시 확인하세요."));
+        String token = jwtUtil.generateToken(existingMember);
+        return new LoginResponseDTO(email, token);
+    }
+
+
+
+    /*public String login(NormalMemberRequestDTO normalMemberRequestDTO) {
+        String email = normalMemberRequestDTO.email();
+        String password = normalMemberRequestDTO.password();
+        Member existingMember = memberRepository.findByEmailAndPassword(email, password)
+                .orElseThrow(() -> new NormalMemberSignUpException("ID 혹은 비밀번호를 다시 확인하세요."));
+        String token = jwtUtil.generateToken(existingMember);
+        return token;
+    }
+
+
+
     @Description("normal member signup")
     public String addMember(NormalMemberRequestDTO normalMemberRequestDTO) {
         String email = normalMemberRequestDTO.email();
@@ -41,6 +82,11 @@ public class MemberService {
         String token = jwtUtil.generateToken(member);
         return token;
     }
+
+
+
+
+
 
     public String addKakaoMember(KakaoMemberRequestDTO kakaoMemberRequestDTO) {
         String kakaoEmail = kakaoMemberRequestDTO.email();
@@ -55,14 +101,7 @@ public class MemberService {
     }
 
 
-    public String login(NormalMemberRequestDTO normalMemberRequestDTO) {
-        String email = normalMemberRequestDTO.email();
-        String password = normalMemberRequestDTO.password();
-        Member existingMember = memberRepository.findByEmailAndPassword(email, password)
-                .orElseThrow(() -> new NormalMemberSignUpException("ID 혹은 비밀번호를 다시 확인하세요."));
-        String token = jwtUtil.generateToken(existingMember);
-        return token;
-    }
+
 
     public void tokenLogin(LoginMemberDTO loginMemberDTO) {
         if (jwtUtil.isNotValidToken(loginMemberDTO)) {
@@ -99,7 +138,7 @@ public class MemberService {
         );
     }
 
-
+*/
 
 }
 

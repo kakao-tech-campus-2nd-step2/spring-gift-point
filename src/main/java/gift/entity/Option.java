@@ -2,7 +2,7 @@ package gift.entity;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import gift.dto.request.OptionRequestDTO;
-import gift.exception.optionException.OptionException;
+import gift.exception.optionException.OptionQuantityException;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
@@ -33,11 +33,6 @@ public class Option {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "product_id", nullable = false)
     private Product product;
-
-    @JsonManagedReference
-    @OneToMany(cascade = CascadeType.ALL,
-            mappedBy = "option", orphanRemoval = true)
-    private List<Wish> wishes = new ArrayList<>();
 
     @JsonManagedReference
     @OneToMany(cascade = CascadeType.ALL,
@@ -80,7 +75,7 @@ public class Option {
             this.quantity-=quantity;
             return;
         }
-        throw new OptionException("상품 수보다 많은 수량을 입력하였습니다.");
+        throw new OptionQuantityException("상품 수보다 많은 수량을 입력하였습니다.");
     }
 
 }

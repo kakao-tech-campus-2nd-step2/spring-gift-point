@@ -1,8 +1,7 @@
 package gift.dto.response;
 
-public record ProductResponseDTO(Long productId,
+public record ProductResponseDTO(Long Id,
                                  String name,
-                                 int price,
-                                 String imageUrl
-) {
+                                 String imageUrl,
+                                 Integer price) {
 }

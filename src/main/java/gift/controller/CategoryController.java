@@ -35,13 +35,6 @@ public class CategoryController {
                 .body("Category created");
     }
 
-    @DeleteMapping("/{categoryId}")
-    public ResponseEntity<String> deleteCategory (@PathVariable("categoryId") Long categoryId) {
-        categoryService.removeCategory(categoryId);
-        return ResponseEntity.status(HttpStatus.OK)
-                .body("Category deleted");
-    }
-
     @PutMapping("/{categoryId}")
     public ResponseEntity<String> updateCategory (@PathVariable("categoryId") Long categoryId,
                                                   @RequestBody CategoryRequestDTO categoryRequestDTO) {
@@ -49,7 +42,5 @@ public class CategoryController {
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body("Category updated");
     }
-
-
 
 }

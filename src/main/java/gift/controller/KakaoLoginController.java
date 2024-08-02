@@ -1,23 +1,22 @@
 package gift.controller;
 
 
+import gift.dto.response.LoginResponseDTO;
 import gift.service.KakaoLoginService;
-import jakarta.persistence.Access;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.client.RestTemplate;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
-@RequestMapping("/kakao-login")
+@RequestMapping("/api/members/kakao-login")
 public class KakaoLoginController {
 
     private final KakaoLoginService kakaoLoginService ;
-
 
     @Autowired
     public KakaoLoginController(KakaoLoginService kakaoLoginService){
@@ -30,31 +29,18 @@ public class KakaoLoginController {
         return "redirect:" + authorizationURI;
     }
 
-
     @GetMapping("/callback")
-    public ResponseEntity<String> getKakaoToken(@RequestParam(name = "code") String code) {
-        String accessToken = kakaoLoginService.getKakaoAuthorizationToken(code);
-        return ResponseEntity.status(HttpStatus.OK).body(accessToken);
-    }
-
-    @GetMapping("/{token}")
-    public ResponseEntity<String> valdidateKakaoToken(@PathVariable("token") String token) {
-        System.out.println(token);
-        kakaoLoginService.validationKaKaoToken(token);
+    public ResponseEntity<LoginResponseDTO> kakaoLogin(@RequestParam(name = "code") String code) {
         return ResponseEntity.status(HttpStatus.OK)
-                .body(token);
+                .body(kakaoLoginService.getKakaoEmailByToken(code));
     }
 
-    @GetMapping("/{token}/info")
+    /*@GetMapping("/{token}/info")
     public ResponseEntity<String> getKakaoTokenInfo(@PathVariable("token") String token) {
-        System.out.println(token);
         String email = kakaoLoginService.getKakaoEmailByToken(token);
         String jwtToken = kakaoLoginService.checkEmail(email);
         return ResponseEntity.status(HttpStatus.OK).body("jwt token " + jwtToken);
-
-    }
-
-
-
+    }*/
 
 }
+
