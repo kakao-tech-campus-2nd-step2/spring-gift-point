@@ -6,7 +6,11 @@
 </head>
 <body>
 <h1>상품 리스트 페이지</h1>
-<a style="margin-right: 30px" th:href="@{'/admin/products/add'}">추가</a>
+<div class="actions">
+  <a th:href="@{'/admin/products/add'}">상품 추가</a>
+  <br><br>
+  <a th:href="@{'/admin/users'}">유저 포인트 관리</a>
+</div>
 <table>
   <thead>
   <tr>

@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>유저 포인트 수정</title>
+  <link rel="stylesheet" th:href="@{/css/styles.css}">
+</head>
+<body>
+<h1>유저 포인트 수정</h1>
+<form method="post" th:action="@{'/admin/users/edit/' + ${user.id}}">
+  <h3>유저 정보</h3>
+  <div>
+    <label>Email: </label>
+    <span th:text="${user.email}">Email</span>
+  </div>
+  <div style="margin-bottom: 10px"></div>
+  <div>
+    <label>Points: </label>
+    <input name="point" th:value="${user.point}" type="number">
+  </div>
+  <div style="margin-bottom: 10px"></div>
+  <div>
+    <label>Password: </label>
+    <input name="password" type="password">
+  </div>
+  <div style="color: red;" th:if="${error}">
+    <p th:text="${error}"></p>
+  </div>
+  <div style="margin-bottom: 10px"></div>
+  <div>
+    <button type="submit">수정</button>
+  </div>
+</form>
+<a th:href="@{'/admin/users'}">유저 리스트로 돌아가기</a>
+</body>
+</html>

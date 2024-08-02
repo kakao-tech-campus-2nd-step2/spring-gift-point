@@ -33,14 +33,14 @@ public class User {
     private String accessToken;
 
     protected User() {
-        this.point = 300000; //테스트용으로 기본 포인트 추가
+        this.point = 0;
         this.accessToken = "demoToken";
     }
 
     public User(String email, String password) {
         this.email = email;
         this.password = password;
-        this.point = 300000; //테스트용으로 기본 포인트 추가
+        this.point = 0;
         this.accessToken = "demoToken";
     }
 
@@ -98,5 +98,9 @@ public class User {
 
     public void addPoint(Integer pointAmount) {
         this.point += pointAmount;
+    }
+
+    public void updatePoint(Integer point) {
+        this.point = point;
     }
 }

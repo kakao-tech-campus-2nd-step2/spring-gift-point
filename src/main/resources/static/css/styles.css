@@ -131,3 +131,15 @@ a {
 a:hover {
   background-color: #0056b3;
 }
+
+/* New styles for actions */
+.actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 20px;
+}
+
+.actions .btn {
+  justify-content: flex-end;
+  margin-right: 20px;
+}
