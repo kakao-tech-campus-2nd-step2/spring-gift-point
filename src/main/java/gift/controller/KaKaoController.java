@@ -13,10 +13,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
-@RequestMapping("kakao")
+@RequestMapping("/api/kakao")
 @Tag(name = "KaKaoController", description = "KaKao API")
 public class KaKaoController {
 
@@ -42,7 +43,7 @@ public class KaKaoController {
         return "kakaologin";
     }
 
-    @GetMapping("/callback")
+    @PostMapping("/login")
     @Operation(summary = "카카오 로그인 콜백", description = "카카오 로그인 후 콜백을 처리하는 API")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "성공적으로 콜백을 처리함"),
@@ -50,12 +51,12 @@ public class KaKaoController {
         @ApiResponse(responseCode = "401", description = "유효하지 않은 인증 코드로 요청"),
         @ApiResponse(responseCode = "500", description = "서버 내부 오류 발생")
     })
-    public ResponseEntity<?> callback(HttpServletRequest request) throws Exception {
+    public ResponseEntity<SecureRequestStateDTO> callback(HttpServletRequest request) throws Exception {
         String token = kaKaoService.getKaKaoToken(request.getParameter("code"));
 
         return ResponseEntity.ok().body(new SecureRequestStateDTO(
             HttpStatus.OK,
-            null,
+            "카카오 로그인에 성공했습니다.",
             new TokenDto(token)
         ));
     }
