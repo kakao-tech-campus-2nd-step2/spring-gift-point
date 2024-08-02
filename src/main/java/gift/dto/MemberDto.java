@@ -9,14 +9,12 @@ public record MemberDto(Long id,
                         String email,
                         @NotEmpty(message = "비밀번호 입력은 필수 입니다.")
                         @Size(min = 5, message = "비밀번호는 최소 5자 이상이어야 합니다.")
-                        String password,
-                        String accessToken) {
+                        String password) {
 
-    public MemberDto(Long id, String email, String password, String accessToken) {
+    public MemberDto(Long id, String email, String password) {
         this.id = id;
         this.email = email;
         this.password = password;
-        this.accessToken = accessToken;
     }
 
 
