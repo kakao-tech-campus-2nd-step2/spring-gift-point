@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/signup")
+@RequestMapping("/api/members/register")
 public class SignupController {
 
     private final MemberService memberService;
@@ -24,11 +24,11 @@ public class SignupController {
     }
 
     @PostMapping
-    public ResponseEntity<SignupResponse> signup(
+    public ResponseEntity<String> signup(
             @RequestBody
             @Valid SignupRequest signupRequest
     ) {
         SignupResponse signupResponse = memberService.registerMember(signupRequest);
-        return new ResponseEntity<>(signupResponse, HttpStatus.CREATED);
+        return ResponseEntity.status(HttpStatus.CREATED).body("User registered successfully");
     }
 }

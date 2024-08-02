@@ -17,17 +17,18 @@ INSERT INTO product (name, price, image_url, category_id)
     VALUES ('Product 3', 3000, 'http://example.com/product3.jpg', 3);
 
 -- Insert Options
-INSERT INTO option (name, quantity, product_id)
+INSERT INTO `option` (name, quantity, product_id)
     VALUES ('Option 1 for Product 1', 10, 1);
-INSERT INTO option (name, quantity, product_id)
+INSERT INTO `option` (name, quantity, product_id)
     VALUES ('Option 1 for Product 2', 20, 2);
-INSERT INTO option (name, quantity, product_id)
+INSERT INTO `option` (name, quantity, product_id)
     VALUES ('Option 1 for Product 3', 30, 3);
 
 -- Insert wishlist items
-INSERT INTO wishlist (member_id, product_id) VALUES (1, 1);
-INSERT INTO wishlist (member_id, product_id) VALUES (1, 2);
-INSERT INTO wishlist (member_id, product_id) VALUES (2, 2);
-INSERT INTO wishlist (member_id, product_id) VALUES (2, 3);
-INSERT INTO wishlist (member_id, product_id) VALUES (3, 1);
-INSERT INTO wishlist (member_id, product_id) VALUES (3, 3);
+INSERT INTO wishlist (member_id, product_id, created_date) VALUES
+(1, 1, '2023-01-01T10:00:00'),
+(1, 2, '2023-01-02T10:00:00'),
+(2, 2, '2023-01-03T10:00:00'),
+(2, 3, '2023-01-04T10:00:00'),
+(3, 1, '2023-01-05T10:00:00'),
+(3, 3, '2023-01-06T10:00:00');
