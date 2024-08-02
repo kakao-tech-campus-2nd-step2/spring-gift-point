@@ -15,6 +15,8 @@ public class Member extends BaseEntity {
     private String name;
     @Column(name = "role")
     private String role;
+    @Column(name = "point")
+    private Integer point;
 
     protected Member() {
 
@@ -48,6 +50,10 @@ public class Member extends BaseEntity {
 
     public String getRole() {
         return role;
+    }
+
+    public Integer getPoint() {
+        return point;
     }
 
     public boolean matchPassword(String password) {
