@@ -42,17 +42,16 @@ public class Option {
 
     }
 
-    public Option(Long id, String name, int quantity, Product product, Long version) {
+    public Option(Long id, String name, int quantity, Product product) {
         this.id = id;
         this.name = name;
         this.quantity = quantity;
         this.product = product;
         product.getOptions().add(this);
-        this.version = version;
     }
 
     public Option(String name, int quantity, Product product) {
-        this(null, name, quantity, product, null);
+        this(null, name, quantity, product);
     }
 
     public void subtract(int quantity) {

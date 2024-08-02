@@ -54,8 +54,8 @@
                                     <input class="editedOptionQuantity" type="text" th:value="${option.quantity}" required>
                                 </td>
                                 <td>
-                                    <button class="btn primary-btn" type="button" th:onclick="editOption([[${product.productId}]], [[${option.id}]])">Edit</button>
-                                    <button class="btn danger-btn" th:data-product-id="${product.productId}" th:data-option-id="${option.id}" type="button" onclick="deleteOption(this)">Delete</button>
+                                    <button class="btn primary-btn" type="button" th:onclick="editOption([[${product.productId}]], [[${option.optionId}]])">Edit</button>
+                                    <button class="btn danger-btn" th:data-product-id="${product.productId}" th:data-option-id="${option.optionId}" type="button" onclick="deleteOption(this)">Delete</button>
                                 </td>
                             </tr>
                             <tr>

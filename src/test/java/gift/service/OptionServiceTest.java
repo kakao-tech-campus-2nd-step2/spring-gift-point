@@ -13,6 +13,7 @@ import static org.mockito.BDDMockito.then;
 import gift.domain.Category;
 import gift.domain.Option;
 import gift.domain.Product;
+import gift.dto.option.GetOptionResponse;
 import gift.dto.option.OptionDto;
 import gift.exception.NoOptionsForProductException;
 import gift.repository.OptionRepository;
@@ -57,7 +58,7 @@ public class OptionServiceTest {
             .willReturn(List.of(createOption(1L, "test1", 1, product), createOption(2L, "test2", 1, product)));
 
         // when
-        List<OptionDto> actual = optionService.getOptions(product.getId());
+        List<GetOptionResponse> actual = optionService.getOptions(product.getId());
 
         // then
         assertThat(actual).hasSize(2);
