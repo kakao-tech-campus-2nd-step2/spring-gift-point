@@ -73,16 +73,15 @@ public class ProductRestController {
     @GetMapping()
     public Page<ProductDTO> viewAllProductsByPage(@RequestParam(value = "page", defaultValue = "0") int page,
                                                   @RequestParam(value = "size", defaultValue = "10") int size,
-                                                  @RequestParam(value = "sort", defaultValue = "10") String sort,
-                                                  @RequestAttribute("Email") String email){
-        return productService.getPage(email, page, size, sort);
+                                                  @RequestParam(value = "sort", defaultValue = "10") String sort){
+        return productService.getPage(page, size, sort);
     }
 
     @Operation(summary = "특정 상품 조회", description = "이메일과 상품을 받아 product 데이터베이스에서 특정 상품을 조회한다.")
     @Parameter(name="email", description = "사용자의 이메일로, intercepter에서 header에 있는 인증 토큰을 디코딩하여 email에 추가한다.")
     @Parameter(name="id", description = "상품의 id로, product 데이터베이스에서 조회할 데이터의 id이다.")
     @GetMapping("/{productId}")
-    public ProductDTO viewProduct(@RequestAttribute("Email") String email, @PathVariable Long productId){
-        return productService.getById(email, productId);
+    public ProductDTO viewProduct(@PathVariable Long productId){
+        return productService.getById(productId);
     }
 }
