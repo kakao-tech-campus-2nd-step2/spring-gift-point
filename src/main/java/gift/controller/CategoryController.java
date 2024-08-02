@@ -7,6 +7,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+/**
+ * 카테고리 관련 요청을 처리하는 컨트롤러입니다.
+ */
 @RestController
 @RequestMapping("/api/categories")
 public class CategoryController {
@@ -17,7 +20,7 @@ public class CategoryController {
     }
 
     /**
-     * 모든 카테고리 조회.
+     * 모든 카테고리 조회
      *
      * @param page 페이지 번호
      * @param size 페이지 크기
@@ -30,39 +33,39 @@ public class CategoryController {
     }
 
     /**
-     * 새로운 카테고리 생성.
+     * 새로운 카테고리를 생성
      *
-     * @param categoryDTO 카테고리 DTO
-     * @return 응답 엔티티
+     * @param categoryDTO 생성할 카테고리 데이터
+     * @return 생성된 카테고리 DTO
      */
     @PostMapping
-    public ResponseEntity<Void> createCategory(@RequestBody CategoryDTO categoryDTO) {
+    public ResponseEntity<CategoryDTO> createCategory(@RequestBody CategoryDTO categoryDTO) {
         categoryService.save(categoryDTO);
-        return new ResponseEntity<>(HttpStatus.CREATED);
+        return new ResponseEntity<>(categoryDTO, HttpStatus.CREATED);
     }
 
     /**
-     * 기존 카테고리 수정.
+     * 기존 카테고리 수정
      *
-     * @param id 카테고리 ID
-     * @param categoryDTO 카테고리 DTO
-     * @return 응답 엔티티
+     * @param id          카테고리 ID
+     * @param categoryDTO 수정할 카테고리 데이터
+     * @return 수정된 카테고리 DTO
      */
     @PutMapping("/{category_id}")
-    public ResponseEntity<Void> updateCategory(@PathVariable("category_id") Long id, @RequestBody CategoryDTO categoryDTO) {
+    public ResponseEntity<CategoryDTO> updateCategory(@PathVariable("category_id") Long id, @RequestBody CategoryDTO categoryDTO) {
         categoryService.update(id, categoryDTO);
-        return new ResponseEntity<>(HttpStatus.OK);
+        return ResponseEntity.ok(categoryDTO);
     }
 
     /**
-     * 카테고리 삭제.
+     * 카테고리 삭제
      *
      * @param id 카테고리 ID
-     * @return 응답 엔티티
+     * @return HTTP 204 No Content
      */
     @DeleteMapping("/{category_id}")
     public ResponseEntity<Void> deleteCategory(@PathVariable("category_id") Long id) {
         categoryService.delete(id);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        return ResponseEntity.noContent().build();
     }
 }

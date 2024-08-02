@@ -39,6 +39,9 @@ public class CategoryService {
     }
 
     public void delete(Long id) {
+        if (!categoryRepository.existsById(id)) {
+            throw new IllegalArgumentException("Invalid category Id:" + id);
+        }
         categoryRepository.deleteById(id);
     }
 }
