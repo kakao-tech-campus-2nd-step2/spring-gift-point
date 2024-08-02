@@ -43,31 +43,4 @@ public class CategoryController {
                 .body("Category updated");
     }
 
-
 }
-
-/*
-* @GetMapping("/form")
-    public ResponseEntity<List<CategoryResponseDTO>> getCategoriesByForm() {
-        List<CategoryResponseDTO> categoryList = categoryService.getAllCategories();
-        return ResponseEntity.status(HttpStatus.OK)
-                .body(categoryList);
-    }
-
-    @PostMapping("/form")
-    public ResponseEntity<String> createCategoryByForm (@RequestBody CategoryRequestDTO categoryRequestDTO) {
-        categoryService.addCategory(categoryRequestDTO);
-        return ResponseEntity.status(HttpStatus.CREATED)
-                .body("Category created");
-    }
-
-
-
-    @PutMapping("/form/{categoryId}")
-    public ResponseEntity<String> updateCategoryByForm (@PathVariable("categoryId") Long categoryId,
-                                                  @ModelAttribute CategoryRequestDTO categoryRequestDTO) {
-        categoryService.updateCategory(categoryId, categoryRequestDTO);
-        return ResponseEntity.status(HttpStatus.CREATED)
-                .body("Category updated");
-    }
-* */
