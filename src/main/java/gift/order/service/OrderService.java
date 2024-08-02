@@ -7,6 +7,7 @@ import gift.order.entity.Order;
 import gift.order.repository.OrderRepository;
 import gift.product.entity.Option;
 import gift.product.repository.OptionRepository;
+import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -30,7 +31,7 @@ public class OrderService {
   }
 
   @Transactional
-  public OrderResponseDto createOrder(OrderRequestDto orderRequestDto) {
+  public OrderResponseDto createOrder(@Valid OrderRequestDto orderRequestDto) {
     Option option = optionRepository.findById(orderRequestDto.optionId())
         .orElseThrow(() -> new ResourceNotFoundException("옵션을 찾을 수 없습니다."));
 

@@ -10,6 +10,7 @@ import gift.wish.entity.Wish;
 import gift.user.repository.UserRepository;
 import gift.product.repository.ProductRepository;
 import gift.wish.repository.WishRepository;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -37,7 +38,7 @@ public class WishService {
   }
 
 
-  public WishResponseDto addWish(Long userId, WishRequestDto wishRequestDto) {
+  public WishResponseDto addWish(Long userId,@Valid WishRequestDto wishRequestDto) {
     User user = userRepository.findById(userId)
         .orElseThrow(() -> new ResourceNotFoundException("회원 정보를 찾을 수 없습니다."));
     Product product = productRepository.findById(wishRequestDto.productId())

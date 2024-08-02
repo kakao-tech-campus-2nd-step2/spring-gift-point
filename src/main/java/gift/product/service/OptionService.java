@@ -1,5 +1,6 @@
 package gift.product.service;
 
+import gift.exception.BadRequestException;
 import gift.exception.DuplicateResourceException;
 import gift.exception.ResourceNotFoundException;
 import gift.product.dto.OptionRequestDto;
@@ -82,10 +83,17 @@ public class OptionService {
 
   @Transactional
   public OptionResponseDto deleteOption(Long productId, Long optionId) {
-
     Option option = optionRepository.findByIdAndProductId(optionId, productId)
         .orElseThrow(() -> new ResourceNotFoundException(
             "옵션을 찾을 수 없습니다."));
+
+
+    long optionCount = optionRepository.countByProductId(productId);
+
+    if (optionCount <=1 ){
+      throw new BadRequestException("제품에는 최소 1개의 옵션이 필요합니다. 삭제할 수 없습니다.");
+    }
+
 
     OptionResponseDto deletedOptionDto = new OptionResponseDto(
         option.getId(),

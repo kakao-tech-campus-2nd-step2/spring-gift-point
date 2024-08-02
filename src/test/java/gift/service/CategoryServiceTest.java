@@ -12,12 +12,26 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+
 import static org.mockito.Mockito.*;
 
 import java.util.List;
 import java.util.Optional;
-import static org.junit.jupiter.api.Assertions.*;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.HttpHeaders;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
+import static org.junit.jupiter.api.Assertions.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+
+@SpringBootTest
+@AutoConfigureMockMvc
 public class CategoryServiceTest {
 
   @Mock
@@ -25,6 +39,9 @@ public class CategoryServiceTest {
 
   @InjectMocks
   private CategoryService categoryService;
+
+  @Autowired
+  private MockMvc mockMvc;
 
   @BeforeEach
   public void setUp() {
@@ -56,9 +73,11 @@ public class CategoryServiceTest {
 
   @Test
   public void testCreateCategoryWhenCategoryDoesNotExist() {
-    CategoryRequestDto requestDto = new CategoryRequestDto("Category1", "Red", "imageUrl", "Description");
+    CategoryRequestDto requestDto = new CategoryRequestDto("Category1", "Red", "imageUrl",
+        "Description");
     when(categoryRepository.existsByName("Category1")).thenReturn(false);
-    when(categoryRepository.save(any(Category.class))).thenAnswer(invocation -> invocation.getArguments()[0]);
+    when(categoryRepository.save(any(Category.class))).thenAnswer(
+        invocation -> invocation.getArguments()[0]);
 
     CategoryResponseDto result = categoryService.createCategory(requestDto);
 
@@ -69,7 +88,8 @@ public class CategoryServiceTest {
 
   @Test
   public void testCreateCategoryWhenCategoryAlreadyExists() {
-    CategoryRequestDto requestDto = new CategoryRequestDto("Category1", "Red", "imageUrl", "Description");
+    CategoryRequestDto requestDto = new CategoryRequestDto("Category1", "Red", "imageUrl",
+        "Description");
     when(categoryRepository.existsByName("Category1")).thenReturn(true);
 
     DuplicateResourceException thrown = assertThrows(DuplicateResourceException.class, () -> {
@@ -82,7 +102,8 @@ public class CategoryServiceTest {
   @Test
   public void testUpdateCategoryWhenCategoryExists() {
     Long categoryId = 1L;
-    CategoryRequestDto requestDto = new CategoryRequestDto("UpdatedCategory", "Blue", "newImageUrl", "New Description");
+    CategoryRequestDto requestDto = new CategoryRequestDto("UpdatedCategory", "Blue", "newImageUrl",
+        "New Description");
     Category category = new Category("Category1", "Red", "imageUrl", "Description");
     when(categoryRepository.findById(categoryId)).thenReturn(Optional.of(category));
     when(categoryRepository.existsByName("UpdatedCategory")).thenReturn(false);
@@ -97,7 +118,8 @@ public class CategoryServiceTest {
   @Test
   public void testUpdateCategoryWhenCategoryDoesNotExist() {
     Long categoryId = 1L;
-    CategoryRequestDto requestDto = new CategoryRequestDto("UpdatedCategory", "Blue", "newImageUrl", "New Description");
+    CategoryRequestDto requestDto = new CategoryRequestDto("UpdatedCategory", "Blue", "newImageUrl",
+        "New Description");
     when(categoryRepository.findById(categoryId)).thenReturn(Optional.empty());
 
     ResourceNotFoundException thrown = assertThrows(ResourceNotFoundException.class, () -> {
@@ -110,7 +132,8 @@ public class CategoryServiceTest {
   @Test
   public void testUpdateCategoryWhenCategoryNameAlreadyExists() {
     Long categoryId = 1L;
-    CategoryRequestDto requestDto = new CategoryRequestDto("ExistingCategory", "Blue", "newImageUrl", "New Description");
+    CategoryRequestDto requestDto = new CategoryRequestDto("ExistingCategory", "Blue",
+        "newImageUrl", "New Description");
     Category category = new Category("Category1", "Red", "imageUrl", "Description");
     when(categoryRepository.findById(categoryId)).thenReturn(Optional.of(category));
     when(categoryRepository.existsByName("ExistingCategory")).thenReturn(true);
@@ -168,4 +191,19 @@ public class CategoryServiceTest {
 
     assertEquals("해당 카테고리를 찾을 수 없습니다.", thrown.getMessage());
   }
+
+  @Test
+  void cors() throws Exception {
+    mockMvc.perform(MockMvcRequestBuilders.options("/api/products")
+            .header(HttpHeaders.ORIGIN, "http://localhost:8080")
+            .header(HttpHeaders.ACCESS_CONTROL_REQUEST_METHOD, "GET"))
+        .andExpect(status().isOk())
+        .andExpect(
+            header().string(HttpHeaders.ACCESS_CONTROL_ALLOW_ORIGIN, "*"))
+        .andExpect(header().string(HttpHeaders.ACCESS_CONTROL_ALLOW_METHODS,
+            "GET,POST,PUT,DELETE,OPTIONS"))
+        .andDo(print());
+  }
+
+
 }

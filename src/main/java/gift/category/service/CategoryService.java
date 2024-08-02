@@ -9,6 +9,7 @@ import gift.exception.DuplicateResourceException;
 import gift.exception.ResourceNotFoundException;
 import gift.product.repository.ProductRepository;
 import jakarta.transaction.Transactional;
+import jakarta.validation.Valid;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
@@ -20,7 +21,8 @@ public class CategoryService {
 
   private final ProductRepository productRepository;
 
-  public CategoryService(CategoryRepository categoryRepository, ProductRepository productRepository) {
+  public CategoryService(CategoryRepository categoryRepository,
+      ProductRepository productRepository) {
     this.categoryRepository = categoryRepository;
     this.productRepository = productRepository;
   }
@@ -37,7 +39,7 @@ public class CategoryService {
   }
 
   @Transactional
-  public CategoryResponseDto createCategory(CategoryRequestDto categoryRequestDto) {
+  public CategoryResponseDto createCategory(@Valid CategoryRequestDto categoryRequestDto) {
     if (categoryRepository.existsByName(categoryRequestDto.name())) {
       throw new DuplicateResourceException("이미 존재하는 카테고리 이름입니다.");
     }
@@ -51,7 +53,7 @@ public class CategoryService {
 
   @Transactional
   public CategoryResponseDto updateCategory(Long categoryId,
-      CategoryRequestDto categoryRequestDto) {
+      @Valid CategoryRequestDto categoryRequestDto) {
     Category category = categoryRepository.findById(categoryId)
         .orElseThrow(() -> new ResourceNotFoundException("해당 카테고리를 찾을 수 없습니다."));
 

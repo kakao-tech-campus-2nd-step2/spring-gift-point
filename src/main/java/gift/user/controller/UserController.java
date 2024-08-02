@@ -6,6 +6,7 @@ import gift.user.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -26,11 +27,16 @@ public class UserController {
   @PostMapping("/register")
   @Operation(summary = "회원 가입", description = "새 회원을 등록하고 토큰을 받는다.")
   public ResponseEntity<TokenResponseDto> register(
-      @RequestBody @Parameter(description = "사용자 데이터", required = true) UserRequestDto userRequestDto) {
-    TokenResponseDto tokenResponse = userService.register(userRequestDto);
-    return new ResponseEntity<>(tokenResponse, HttpStatus.CREATED);
+      @RequestBody @Parameter(description = "사용자 데이터", required = true) @Valid UserRequestDto userRequestDto) {
+    try {
+      TokenResponseDto tokenResponse = userService.register(userRequestDto);
+      return new ResponseEntity<>(tokenResponse, HttpStatus.CREATED);
+    } catch (Exception e) {
+      System.out.println("에러 뜸 큰이 ");
+      System.out.println(e);
+      throw e;
+    }
   }
-
   @PostMapping("/login")
   @Operation(summary = "로그인", description = "회원을 인증하고 토큰을 받는다.")
   public ResponseEntity<TokenResponseDto> login(
