@@ -26,7 +26,7 @@ do
   DEPLOY_PATH=/home/ubuntu/spring-gift-point/ # 쉘 스크립트 경로
   cp $BUILD_PATH $DEPLOY_PATH # jar파일을 $DEPLOY_PATH로 복사
   # /mnt를 사용해 윈도우 로컬에 있는 application-private.properties 파일 복사
-  cp /mnt/c/Users/박상우/Desktop/new/private/application-private.properties $DEPLOY_PATH
+  cp /mnt/C:/Users/박상우/Desktop/new/private/application-private.properties $DEPLOY_PATH
 
   cd $DEPLOY_PATH # DEPLOY_PATH로 이동
 
