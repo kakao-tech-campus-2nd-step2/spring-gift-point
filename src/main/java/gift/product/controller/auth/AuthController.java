@@ -5,6 +5,7 @@ import gift.product.dto.auth.AccountDto;
 import gift.product.dto.auth.LoginMemberIdDto;
 import gift.product.dto.auth.MemberDto;
 import gift.product.dto.auth.OAuthJwt;
+import gift.product.dto.auth.RegisterSuccessResponse;
 import gift.product.exception.ExceptionResponse;
 import gift.product.service.AuthService;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -40,26 +41,28 @@ public class AuthController {
     }
 
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "201", description = "회원 가입 성공", content = @Content(mediaType = "text/plain", schema = @Schema(implementation = String.class), examples = @ExampleObject("User registered successfully"))),
+        @ApiResponse(responseCode = "201", description = "회원 가입 성공", content = @Content(mediaType = "application/json", schema = @Schema(implementation = RegisterSuccessResponse.class))),
         @ApiResponse(responseCode = "409", description = "회원 가입 실패(이미 존재하는 이메일)", content = @Content(mediaType = "application/json", schema = @Schema(implementation = gift.product.exception.ExceptionResponse.class)))
     })
-    @PostMapping(value = "/register", produces = "text/plain")
-    public ResponseEntity<String> registerMember(
+    @PostMapping("/register")
+    public ResponseEntity<RegisterSuccessResponse> registerMember(
         @RequestBody MemberDto memberDto) {
         authService.register(memberDto);
+        RegisterSuccessResponse registerSuccessResponse = new RegisterSuccessResponse(
+            "User registered successfully");
 
-        return ResponseEntity.status(HttpStatus.CREATED).body("User registered successfully");
+        return ResponseEntity.status(HttpStatus.CREATED).body(registerSuccessResponse);
     }
 
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "로그인 성공", content = @Content(mediaType = "text/plain", schema = @Schema(implementation = String.class), examples = @ExampleObject("엑세스 토큰 값"))),
+        @ApiResponse(responseCode = "200", description = "로그인 성공", content = @Content(mediaType = "application/json", schema = @Schema(implementation = AccessTokenDto.class))),
         @ApiResponse(responseCode = "401", description = "로그인 실패", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ExceptionResponse.class)))
     })
-    @PostMapping(value = "/login", produces = "text/plain")
-    public ResponseEntity<String> loginMember(@RequestBody AccountDto accountDto) {
+    @PostMapping("/login")
+    public ResponseEntity<AccessTokenDto> loginMember(@RequestBody AccountDto accountDto) {
         AccessTokenDto accessTokenDto = authService.login(accountDto);
 
-        return ResponseEntity.ok(accessTokenDto.accessToken());
+        return ResponseEntity.ok(accessTokenDto);
     }
 
     @ApiResponses(value = {
