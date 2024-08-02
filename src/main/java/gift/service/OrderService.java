@@ -5,11 +5,13 @@ import gift.dto.OrderPageResponseDto;
 import gift.dto.OrderRequestDto;
 import gift.dto.OrderResponseDto;
 import gift.entity.Order;
+import gift.entity.Point;
 import gift.entity.ProductOption;
 import gift.entity.User;
 import gift.exception.BusinessException;
 import gift.exception.ErrorCode;
 import gift.repository.OrderRepository;
+import gift.repository.PointRepository;
 import gift.repository.ProductOptionRepository;
 import gift.repository.UserRepository;
 import gift.repository.WishRepository;
@@ -29,15 +31,17 @@ public class OrderService {
     private final UserRepository userRepository;
     private final WishRepository wishRepository;
     private final KakaoApi kakaoApi;
+    private final PointRepository pointRepository;
 
     public OrderService(OrderRepository orderRepository, ProductOptionRepository productOptionRepository,
                         UserRepository userRepository, WishRepository wishRepository,
-                        KakaoApi kakaoApi) {
+                        KakaoApi kakaoApi, PointRepository pointRepository) {
         this.orderRepository = orderRepository;
         this.productOptionRepository = productOptionRepository;
         this.userRepository = userRepository;
         this.wishRepository = wishRepository;
         this.kakaoApi = kakaoApi;
+        this.pointRepository = pointRepository;
     }
 
     @Transactional
@@ -48,12 +52,28 @@ public class OrderService {
         productOptionRepository.save(productOption);
 
         Order order = saveOrder(loginUser, productOption, requestDto);
-
         removeWish(loginUser, productOption);
+
+        OrderResponseDto responseDto;
+        if (requestDto.isUsePoint()) {
+            responseDto = applyPointDiscount(loginUser, order, productOption);
+        } else {
+            responseDto = new OrderResponseDto(order.getId(), productOption.getId(), order.getQuantity(), order.getOrderDateTime(), order.getMessage());
+        }
 
         sendOrderConfirmationMessage(kakaoAccessToken, order);
 
-        return new OrderResponseDto(order.getId(), productOption.getId(), order.getQuantity(), order.getOrderDateTime(), order.getMessage());
+        return responseDto;
+    }
+
+    private OrderResponseDto applyPointDiscount(User user, Order order, ProductOption productOption) {
+        Point point = user.getPoint();
+        int totalPrice = productOption.getProduct().getPrice() * order.getQuantity();
+        int discount = totalPrice / 10;
+        point.subtractPoints(discount);
+        pointRepository.save(point);
+
+        return new OrderResponseDto(order.getId(), productOption.getId(), order.getQuantity(), order.getOrderDateTime(), order.getMessage(), totalPrice - discount, discount, point.getPoints());
     }
 
     @Transactional(readOnly = true)
