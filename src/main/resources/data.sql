@@ -1,9 +1,0 @@
-INSERT INTO categories (color, image_url, name, description) VALUES ('#abcdef', 'https://asdfa.com', '교환권', 'description');
-INSERT INTO categories (color, image_url, name, description) VALUES ('#abcdef', 'https://asdfa.com', '상품권', 'description');
-INSERT INTO categories (color, image_url, name, description) VALUES ('#abcdef', 'https://asdfa.com', '음식', 'description');
-INSERT INTO categories (color, image_url, name, description) VALUES ('#abcdef', 'https://asdfa.com', '음료', 'description');
-INSERT INTO categories (color, image_url, name, description) VALUES ('#abcdef', 'https://asdfa.com', '디저트', 'description');
-INSERT INTO categories (color, image_url, name, description) VALUES ('#abcdef', 'https://asdfa.com', '중식', 'description');
-INSERT INTO categories (color, image_url, name, description) VALUES ('#abcdef', 'https://asdfa.com', '일식', 'description');
-INSERT INTO categories (color, image_url, name, description) VALUES ('#abcdef', 'https://asdfa.com', '한식', 'description');
-INSERT INTO categories (color, image_url, name, description) VALUES ('#abcdef', 'https://asdfa.com', '패션', 'description');
