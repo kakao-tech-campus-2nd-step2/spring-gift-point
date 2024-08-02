@@ -13,6 +13,8 @@ public class User extends BaseEntity{
     private Boolean admin;
     @Column
     private String token;
+    @Column(nullable = false)
+    private int point;
 
     protected User(){
         super();
@@ -22,6 +24,7 @@ public class User extends BaseEntity{
         this.email = email;
         this.password = password;
         this.admin = false;
+        this.point = 0;
     }
     public Long getId() {
         return super.getId();
@@ -50,5 +53,15 @@ public class User extends BaseEntity{
     public void updateEntity(String email, String password){
         this.email = email;
         this.password = password;
+    }
+
+    public void addPoint(int point){
+        this.point += point;
+    }
+
+    public void usePoint(int point){
+        if(this.point - point < 0)
+            return;
+        this.point -= point;
     }
 }
