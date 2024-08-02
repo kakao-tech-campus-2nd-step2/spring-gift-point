@@ -1,15 +1,18 @@
 package gift.Service;
 
 import gift.Exception.Login.AuthorizedException;
+import gift.Exception.ProductNotFoundException;
 import gift.Model.Entity.MemberEntity;
 import gift.Model.Entity.OptionEntity;
 import gift.Model.Entity.OrderEntity;
+import gift.Model.Entity.ProductEntity;
 import gift.Model.Role;
 import gift.Model.request.OrderRequest;
 import gift.Model.response.OrderResponse;
 import gift.Repository.MemberRepository;
 import gift.Repository.OptionRepository;
 import gift.Repository.OrderRepository;
+import gift.Repository.ProductRepository;
 import org.springframework.data.domain.*;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
@@ -28,25 +31,50 @@ public class OrderService {
     private final MemberRepository memberRepository;
     private final OptionRepository optionRepository;
     private final OrderRepository orderRepository;
+    private final ProductRepository productRepository;
     private final RestTemplate restTemplate;
 
-    public OrderService(MemberRepository memberRepository, OptionRepository optionRepository, OrderRepository orderRepository, RestTemplate restTemplate){
+    public OrderService(MemberRepository memberRepository, OptionRepository optionRepository, OrderRepository orderRepository, ProductRepository productRepository, RestTemplate restTemplate){
         this.memberRepository = memberRepository;
         this.optionRepository = optionRepository;
         this.orderRepository = orderRepository;
+        this.productRepository = productRepository;
         this.restTemplate = restTemplate;
     }
 
-    public OrderResponse order(OrderRequest orderRequest){
+    public OrderResponse order(String email, OrderRequest orderRequest){
         Optional<OptionEntity> optionEntityOptional = optionRepository.findById(orderRequest.optionId());
+        // 옵션 수량 차감
         if(optionEntityOptional.isEmpty()){
             throw new IllegalArgumentException("해당 옵션이 없습니다.");
         }
+        MemberEntity memberEntity = memberRepository.findByEmail(email).get();
 
         OptionEntity optionEntity = optionEntityOptional.get();
         optionEntity.subtract(orderRequest.quantity());
         optionRepository.save(optionEntity);
 
+        // 포인트 사용 및 적립
+        Optional<ProductEntity> productEntityOptional = productRepository.findById(orderRequest.productId());
+
+        if(productEntityOptional.isEmpty()){
+            throw new ProductNotFoundException("제품을 찾을 수 없습니다.");
+        }
+
+        ProductEntity productEntity = productEntityOptional.get();
+
+        if(productEntity.getPrice() >= memberEntity.getPoint()){
+            int priceAfterPoint = productEntity.getPrice() - memberEntity.getPoint();
+            memberEntity.setPoint(0);
+            memberEntity.setPoint(priceAfterPoint / 10);
+        }
+        else{
+            memberEntity.setPoint(memberEntity.getPoint() - productEntity.getPrice());
+        }
+
+        memberRepository.save(memberEntity);
+
+        // 주문 내역 저장
         OrderEntity orderEntity = new OrderEntity(optionEntity, orderRequest.quantity(), LocalDateTime.now(), orderRequest.message());
         orderRepository.save(orderEntity);
 

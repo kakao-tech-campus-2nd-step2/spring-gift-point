@@ -1,2 +1,4 @@
-package gift.Model.request;public class OrderIdResponse {
+package gift.Model.response;
+
+public record OrderIdResponse(Long orderId) {
 }
