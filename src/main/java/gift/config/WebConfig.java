@@ -58,7 +58,7 @@ public class WebConfig implements WebMvcConfigurer {
         configuration.addAllowedOrigin("http://43.202.61.165:8080");
         configuration.addAllowedMethod("*");
         configuration.addAllowedHeader("*");
-        configuration.setAllowCredentials(true);
+        configuration.setAllowCredentials(false);
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
@@ -70,6 +70,7 @@ public class WebConfig implements WebMvcConfigurer {
         registry.addMapping("/**")
                 .allowedOrigins("http://localhost:3000", "http://localhost:8080", "http://43.202.61.165:8080")
                 .allowedMethods("GET", "POST", "PUT", "DELETE", "HEAD")
-                .allowedHeaders("*");
+                .allowedHeaders("*")
+                .allowCredentials(false);
     }
 }
