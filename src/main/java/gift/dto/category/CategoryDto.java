@@ -4,7 +4,7 @@ import gift.domain.Category;
 import jakarta.validation.constraints.NotNull;
 
 public record CategoryDto(
-    long id,
+    long categoryId,
 
     @NotNull
     String name,
@@ -17,6 +17,6 @@ public record CategoryDto(
 ) {
 
     public Category toEntity() {
-        return new Category(id, name, imageUrl, description);
+        return new Category(categoryId, name, imageUrl, description);
     }
 }

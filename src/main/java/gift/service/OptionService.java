@@ -2,7 +2,6 @@ package gift.service;
 
 import gift.domain.Option;
 import gift.domain.Product;
-import gift.dto.option.GetOptionResponse;
 import gift.dto.option.OptionDto;
 import gift.exception.NoOptionsForProductException;
 import gift.exception.NoSuchOptionException;
@@ -24,12 +23,12 @@ public class OptionService {
         this.optionRepository = optionRepository;
     }
 
-    public List<GetOptionResponse> getOptions(long productId) {
+    public List<OptionDto> getOptions(long productId) {
         Product product = productRepository.findById(productId)
             .orElseThrow(NoSuchProductException::new);
         return optionRepository.findByProduct(product)
             .stream()
-            .map(option -> option.toGetOptionResponse())
+            .map(option -> option.toDto())
             .toList();
     }
 
@@ -42,7 +41,7 @@ public class OptionService {
     public OptionDto updateOption(long productId, OptionDto optionDto) {
         Product product = productRepository.findById(productId)
             .orElseThrow(NoSuchProductException::new);
-        Option option = optionRepository.findByProductAndId(product, optionDto.id())
+        Option option = optionRepository.findByProductAndId(product, optionDto.optionId())
             .orElseThrow(NoSuchOptionException::new);
         option.update(optionDto.name(), optionDto.quantity());
         return optionRepository.save(option).toDto();

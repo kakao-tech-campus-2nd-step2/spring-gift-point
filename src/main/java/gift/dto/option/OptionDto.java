@@ -8,7 +8,7 @@ import jakarta.validation.constraints.Size;
 import org.hibernate.validator.constraints.Range;
 
 public record OptionDto(
-    long id,
+    long optionId,
 
     @NotNull
     @Size(max = 50, message = "옵션 이름은 공백을 포함하여 최대 50자까지 입력할 수 있습니다.")

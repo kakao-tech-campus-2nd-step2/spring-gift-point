@@ -20,7 +20,7 @@
                     <th>Category</th>
                     <td>
                         <select id="categoryId" required>
-                            <option th:each="category: ${categories}" th:value="${category.id}" th:text="${category.name}" required></option>
+                            <option th:each="category: ${categories}" th:value="${category.categoryId}" th:text="${category.name}" required></option>
                         </select>
                     </td>
                 </tr>

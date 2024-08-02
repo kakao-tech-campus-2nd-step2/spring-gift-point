@@ -1,6 +1,5 @@
 package gift.controller;
 
-import gift.dto.option.GetOptionResponse;
 import gift.dto.option.OptionDto;
 import gift.service.OptionService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -30,7 +29,7 @@ public class OptionController {
 
     @Operation(summary = "옵션 조회", description = "해당 상품의 모든 옵션을 조회합니다.")
     @GetMapping
-    public ResponseEntity<List<GetOptionResponse>> getOptions(@PathVariable("product_id") long productId) {
+    public ResponseEntity<List<OptionDto>> getOptions(@PathVariable("product_id") long productId) {
         return ResponseEntity.ok().body(optionService.getOptions(productId));
     }
 
