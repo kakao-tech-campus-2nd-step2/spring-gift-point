@@ -1,5 +1,5 @@
-INSERT INTO MEMBER (EMAIL, PASSWORD)
-VALUES ('test@naver.com', '123');
+INSERT INTO MEMBER (EMAIL, PASSWORD, POINT)
+VALUES ('test@naver.com', '123', 1000000);
 
 INSERT INTO CATEGORY (ID, COLOR, DESCRIPTION, IMAGE_URL, NAME)
 VALUES (91, '#6c95d1', '', 'https://gift-s.kakaocdn.net/dn/gift/images/m640/dimm_theme.png', '교환권');

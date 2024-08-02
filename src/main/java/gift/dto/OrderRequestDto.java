@@ -18,7 +18,10 @@ public record OrderRequestDto (
         int quantity,
         
         @Schema(description = "주문 메시지")
-        String message
+        String message,
+
+        @Schema(description = "사용한 포인트")
+        int usedPoint
 
 ){
     public Order toOrder(Long memberId) {

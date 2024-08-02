@@ -3,6 +3,7 @@ package gift.vo;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.PositiveOrZero;
 
 @Entity
 @Table(uniqueConstraints = {@UniqueConstraint(name = "uk_member", columnNames = {"email"})})
@@ -20,12 +21,17 @@ public class Member {
     @NotBlank
     private String password;
 
+    @PositiveOrZero
+    private int point;
+
     public Member(String email, String password) {
         this.email = email;
         this.password = password;
+        this.point = 0;
     }
 
     public Member() {
+        this.point = 0;
     }
 
     public Long getId() {
@@ -44,6 +50,11 @@ public class Member {
         this.email = email;
     }
 
+    @PositiveOrZero
+    public int getPoint() {
+        return point;
+    }
+
     /**
      * 비즈니스 로직을 통한 Member 정보 업데이트
      * @param newEmail 업데이트할 이메일
@@ -57,6 +68,17 @@ public class Member {
         if (newPassword != null && !newPassword.isEmpty() &&!this.password.equals(newPassword)) {
             this.password = newPassword;
         }
+    }
+
+    public void updatePoint(@PositiveOrZero int point) {
+        this.point = point;
+    }
+
+    public void subtractPoint(@PositiveOrZero int point) {
+        if (this.point < point) {
+            throw new IllegalArgumentException("보유한 포인트가 부족합니다. 현재 보유 포인트: " + this.point + "차감하려는 포인트: " + point + ". 포인트를 충전한 후 다시 시도해 주세요.");
+        }
+        this.point -= point;
     }
 
     /**
