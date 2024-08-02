@@ -86,16 +86,17 @@ public class UserProductController {
 	//카테고리 목록 조회
 	@Operation(summary = "카테고리 목록 조회", description = "카테고리 전체 조회")
 	@GetMapping("/api/categories")
-	public ResponseEntity<List<Category>> getCategories() {
-		return ResponseEntity.ok(categoryService.getAllCategories());
+	public ResponseEntity<Page<Category>> getCategories(
+		@PageableDefault(size = 10, sort = "id", direction = Sort.Direction.DESC) Pageable pageable
+	) {
+		return ResponseEntity.ok(categoryService.getAllCategories(pageable));
 	}
 
 	//특정 상품에 대한 모든 옵션을 조회한다.
 	@Operation(summary = "상품 옵션 조회", description = "상품 옵션 전체 조회")
 	@GetMapping("api/products/{productId}/options")
-	public ResponseEntity<Page<OptionResponse>> getOptions(
-		@PathVariable Long productId,
-		@PageableDefault(size = 10, sort = "id", direction = Sort.Direction.DESC) Pageable pageable ){
-		return ResponseEntity.ok(optionService.getOptions(productId, pageable));
+	public ResponseEntity<List<OptionResponse>> getOptions(
+		@PathVariable Long productId ){
+		return ResponseEntity.ok(optionService.getOptions(productId));
 	}
 }
