@@ -1,5 +1,5 @@
 #!/bin/bash
-PROJECT_PATH=home/ubuntu/step2
+PROJECT_PATH=/home/ubuntu/step2
 PROJECT_NAME=spring-gift-point
 BUILD_PATH=build/libs
 
@@ -30,4 +30,4 @@ fi
 
 echo ">새 애플리케이션 배포"
 JAR_NAME=$(ls -tr $PROJECT_PATH/ | grep *.jar | tail -n 1)
-nohub java -jar $PROJECT_PATH/$JAR_NAME 2>&1 &
+nohup java -jar $PROJECT_PATH/$JAR_NAME &
