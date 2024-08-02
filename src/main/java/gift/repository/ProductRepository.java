@@ -6,9 +6,10 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface ProductRepository extends JpaRepository<Product, Long> {
-    Product findById(int Id);
+    Optional<Product> findById(int Id);
     List<Product> findAll();
     @Query("SELECT p FROM Product p where p.id BETWEEN :startId AND :endId")
     List<Product> findByProductIdBetween(@Param("startId") int startId, @Param("endId") int endId);

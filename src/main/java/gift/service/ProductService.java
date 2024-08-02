@@ -39,12 +39,8 @@ public class ProductService {
         return PageRequest.of(page, size);
     }
 
-    public Optional<Product> getProductById(int id) {
-        var product = productRepository.findById(id);
-        if (product == null) {
-            return Optional.empty();
-        }
-        return Optional.of(product);
+    public Product getProductById(int id) {
+        return productRepository.findById(id).orElseThrow(NoSuchElementException::new);
     }
 
     public Product addProduct(ProductDTO productDTO) {

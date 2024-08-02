@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.net.URISyntaxException;
 import java.net.URI;
-import java.util.Optional;
 
 @Tag(name = "상품", description = "상품 관련 API")
 @RestController
@@ -36,7 +35,7 @@ public class ProductController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Optional<Product>> getProduct(@PathVariable int id) {
+    public ResponseEntity<Product> getProduct(@PathVariable int id) {
         return ResponseEntity.ok(productService.getProductById(id));
     }
 
