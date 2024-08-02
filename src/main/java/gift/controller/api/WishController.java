@@ -29,7 +29,7 @@ public class WishController {
     }
 
     @GetMapping("/api/wishes")
-    public ResponseEntity<Page<WishProductResponse>> getWishProducts(@MemberId Long memberId, @PageableDefault(sort = "createdTime", direction = Sort.Direction.DESC) Pageable pageable) {
+    public ResponseEntity<Page<WishProductResponse>> getWishProducts(@MemberId Long memberId, @PageableDefault(sort = "createdDate", direction = Sort.Direction.DESC) Pageable pageable) {
         Page<WishProductResponse> wishProductResponses = wishService.getWishProductResponses(memberId, pageable);
         return ResponseEntity.ok(wishProductResponses);
     }
