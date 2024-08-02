@@ -3,6 +3,7 @@ package gift.controller;
 import static gift.util.constants.MemberConstants.EMAIL_ALREADY_USED;
 import static gift.util.constants.MemberConstants.INVALID_CREDENTIALS;
 
+import gift.config.CommonApiResponses.CommonServerErrorResponse;
 import gift.dto.member.MemberAuthResponse;
 import gift.dto.member.MemberLoginRequest;
 import gift.dto.member.MemberRegisterRequest;
@@ -43,17 +44,10 @@ public class MemberController {
                     mediaType = "application/json",
                     examples = @ExampleObject(value = "{\"error\": \"" + EMAIL_ALREADY_USED + "\"}")
                 )
-            ),
-            @ApiResponse(
-                responseCode = "500",
-                description = "서버 오류",
-                content = @Content(
-                    mediaType = "application/json",
-                    examples = @ExampleObject(value = "{\"error\": \"(서버 오류 메시지)\"}")
-                )
             )
         }
     )
+    @CommonServerErrorResponse
     @PostMapping("/register")
     public ResponseEntity<MemberAuthResponse> register(
         @Valid @RequestBody MemberRegisterRequest memberRegisterRequest
@@ -68,22 +62,15 @@ public class MemberController {
             @ApiResponse(responseCode = "201", description = "로그인 성공"),
             @ApiResponse(
                 responseCode = "403",
-                description = "잘못된 입력",
+                description = "email 또는 패스워드 불일치",
                 content = @Content(
                     mediaType = "application/json",
                     examples = @ExampleObject(value = "{\"error\": \"" + INVALID_CREDENTIALS + "\"}")
                 )
-            ),
-            @ApiResponse(
-                responseCode = "500",
-                description = "서버 오류",
-                content = @Content(
-                    mediaType = "application/json",
-                    examples = @ExampleObject(value = "{\"error\": \"(서버 오류 메시지)\"}")
-                )
             )
         }
     )
+    @CommonServerErrorResponse
     @PostMapping("/login")
     public ResponseEntity<MemberAuthResponse> login(
         @Valid @RequestBody MemberLoginRequest memberLoginRequest

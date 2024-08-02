@@ -1,14 +1,12 @@
 package gift.controller;
 
+import gift.config.CommonApiResponses.CommonServerErrorResponse;
 import gift.dto.category.CategoryCreateRequest;
 import gift.dto.category.CategoryResponse;
 import gift.dto.category.CategoryUpdateRequest;
 import gift.service.CategoryService;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import java.util.List;
@@ -34,19 +32,8 @@ public class CategoryController {
     }
 
     @Operation(summary = "(명세 통일) 모든 카테고리 조회", description = "모든 카테고리를 조회합니다.")
-    @ApiResponses(
-        value = {
-            @ApiResponse(responseCode = "200", description = "조회 성공"),
-            @ApiResponse(
-                responseCode = "500",
-                description = "서버 오류",
-                content = @Content(
-                    mediaType = "application/json",
-                    examples = @ExampleObject(value = "{\"error\": \"(서버 오류 메시지)\"}")
-                )
-            )
-        }
-    )
+    @ApiResponse(responseCode = "200", description = "조회 성공")
+    @CommonServerErrorResponse
     @GetMapping
     public ResponseEntity<List<CategoryResponse>> getAllCategories() {
         List<CategoryResponse> categories = categoryService.getAllCategories();

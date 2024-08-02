@@ -3,7 +3,6 @@ package gift.dto.member;
 import static gift.util.constants.GeneralConstants.REQUIRED_FIELD_MISSING;
 import static org.assertj.core.api.Assertions.assertThat;
 
-import gift.model.RegisterType;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validation;
 import jakarta.validation.Validator;
