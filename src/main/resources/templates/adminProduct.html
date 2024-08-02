@@ -43,7 +43,9 @@
             <input class="form-control m-2" id="productIdInput" placeholder="Product ID" required type="number">
             <button class="btn btn-primary m-2" id="loadOptionsButton">옵션 불러오기</button>
         </div>
+
         <ul id="productOptionsList" class="list-group"></ul>
+        <button class="btn btn-success m-2" id="addNewOptionButton">옵션 추가</button> <!-- 추가 버튼 -->
     </div>
 </div>
 <br>
@@ -145,7 +147,35 @@
     </div>
 </div>
 
-
+<div class="modal fade" id="addOptionModal" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Add New Option</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="addOptionForm">
+                    <div class="form-group">
+                        <label for="newOptionName">Option Name</label>
+                        <input type="text" class="form-control" id="newOptionName" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="newOptionQuantity">Quantity</label>
+                        <input type="number" class="form-control" id="newOptionQuantity" required>
+                    </div>
+                    <input type="hidden" id="newOptionProductId" value="">
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="submit" class="btn btn-primary" onclick="submitNewOption()">Save Changes</button>
+            </div>
+        </div>
+    </div>
+</div>
 
 <script>
     $(document).ready(function () {
@@ -410,6 +440,74 @@
                     alert('옵션 삭제 실패.');
                     console.log(error);
                 }
+            });
+        });
+        $(document).ready(function () {
+            // 옵션 추가 버튼 이벤트 리스너
+            $('#addNewOptionButton').on('click', function() {
+                var productId = $('#productIdInput').val(); // 상품 ID 가져오기
+                $('#newOptionProductId').val(productId); // 모달 폼에 상품 ID 설정
+                $('#addOptionModal').modal('show'); // 모달 창 표시
+            });
+
+            // 새 옵션 제출 함수
+            function submitNewOption() {
+                var name = $('#newOptionName').val();
+                var quantity = $('#newOptionQuantity').val();
+                var productId = $('#newOptionProductId').val();
+
+                $.ajax({
+                    type: 'POST',
+                    url: '/api/options/'+productId,
+                    contentType: 'application/json',
+                    data: JSON.stringify({
+                        name: name,
+                        quantity: parseInt(quantity),
+                    }),
+                    success: function (response) {
+                        alert('New option added successfully.');
+                        $('#addOptionModal').modal('hide');
+                        $('#loadOptionsButton').click(); // 옵션 리스트 새로고침
+                    },
+                    error: function (error) {
+                        console.error('Error adding option:', error);
+                        alert('Failed to add new option.');
+                    }
+                });
+            }
+
+            // 버튼을 클릭할 때 submitNewOption 함수가 호출되도록 설정
+            $('#addOptionModal button[type="submit"]').on('click', submitNewOption);
+        });
+
+        // 옵션 추가 버튼 이벤트 리스너 saveOptionChanges
+        $(document).ready(function () {
+            // 기존에 등록된 이벤트 핸들러 제거
+            $('#editOptionForm').off('submit');
+
+            // 새로운 'Save Changes' 버튼 클릭 이벤트 핸들러 등록
+            $('#saveOptionChanges').on('click', function () {
+                var optionId = $('#editOptionId').val();
+                var updatedData = {
+                    name: $('#editOptionName').val(),
+                    quantity: parseInt($('#editOptionQuantity').val())
+                };
+
+                $.ajax({
+                    type: 'PUT',
+                    url: '/api/options/' + optionId,
+                    contentType: 'application/json',
+                    data: JSON.stringify(updatedData),
+                    success: function (response) {
+                        alert('옵션이 성공적으로 수정되었습니다.');
+                        $('#editOptionModal').modal('hide');
+                        $('#loadOptionsButton').click(); // 옵션 리스트 새로고침
+                    },
+                    error: function (xhr, status, error) {
+                        var errorResponse = JSON.parse(xhr.responseText);
+                        alert('옵션 수정 실패: ' + errorResponse.message);
+                    }
+                });
             });
         });
 
