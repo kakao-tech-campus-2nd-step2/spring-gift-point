@@ -5,6 +5,7 @@ import gift.exception.customException.CustomNotFoundException;
 import gift.model.dto.UserDTO;
 import gift.model.entity.User;
 import gift.model.form.UserForm;
+import gift.model.response.PointResponse;
 import gift.model.response.WishListResponse;
 import gift.oauth.response.KakaoTokenResponse;
 import gift.repository.UserRepository;
@@ -25,6 +26,12 @@ public class UserService {
     @Transactional
     public Long insertUser(UserForm userForm) {
         return userRepository.save(new User(userForm.getEmail(), userForm.getPassword())).getId();
+    }
+
+    @Transactional(readOnly = true)
+    public User findUserEntityByUserId(Long userId) {
+        return userRepository.findById(userId)
+            .orElseThrow(() -> new CustomNotFoundException(ErrorCode.USER_NOT_FOUND));
     }
 
     @Transactional(readOnly = true)
@@ -69,11 +76,17 @@ public class UserService {
     }
 
     @Transactional(readOnly = true)
-    public List<WishListResponse> getWishListFromUser(Long userId) {
+    public List<WishListResponse> findWishListFromUser(Long userId) {
         User user = userRepository.findById(userId)
             .orElseThrow(() -> new CustomNotFoundException(ErrorCode.USER_NOT_FOUND));
         return user.getWishItemList().stream().map(WishListResponse::new)
             .collect(Collectors.toList());
     }
 
+    @Transactional(readOnly = true)
+    public PointResponse getPointFromUser(Long userId) {
+        User user = userRepository.findById(userId)
+            .orElseThrow(() -> new CustomNotFoundException(ErrorCode.USER_NOT_FOUND));
+        return new PointResponse(user.getPoint());
+    }
 }
