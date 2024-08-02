@@ -31,7 +31,7 @@ public class ProductController {
     @Operation(summary = "상품 목록 조회", description = "상품 목록을 페이지네이션으로 조회합니다.")
     @ApiResponse(responseCode = "200", description = "상품 목록 반환 성공")
     @GetMapping
-    public ResponseEntity<Page<ProductResponse>> getProducts(@RequestParam(required = true) Long categoryId,
+    public ResponseEntity<Page<ProductResponse>> getProducts(@RequestParam(name = "categoryId", required = true) Long categoryId,
     		@PageableDefault(sort="name") Pageable pageable) {
     	Page<ProductResponse> products = productService.getProducts(categoryId, pageable);
     	if (products.isEmpty()) {
@@ -80,5 +80,5 @@ public class ProductController {
     public ResponseEntity<Void> deleteProduct(@PathVariable("product_id") Long product_id) {
         productService.deleteProduct(product_id);
         return ResponseEntity.status(HttpStatus.OK).build();
-    } 
+    }
 }
