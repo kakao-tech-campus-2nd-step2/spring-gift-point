@@ -41,6 +41,9 @@ public class CategoryService {
         Category category = categoryRepository.findById(id)
             .orElseThrow(() -> new IllegalArgumentException("해당 카테고리를 찾을 수 없습니다."));
         category.setName(categoryRequestDTO.getName());
+        category.setDescription(categoryRequestDTO.getDescription());
+        category.setColor(categoryRequestDTO.getColor());
+        category.setImageUrl(categoryRequestDTO.getImageUrl());
         category = categoryRepository.save(category);
         return CategoryResponseDTO.fromEntity(category);
     }
@@ -54,5 +57,10 @@ public class CategoryService {
     public Category findCategoryEntityById(Long id) {
         return categoryRepository.findById(id)
             .orElseThrow(() -> new IllegalArgumentException("해당 카테고리를 찾을 수 없습니다."));
+    }
+
+    public Category findCategoryEntityByName(String name) {
+        return categoryRepository.findByName(name)
+            .orElseThrow(() -> new IllegalArgumentException("카테고리를 찾을 수 없습니다."));
     }
 }

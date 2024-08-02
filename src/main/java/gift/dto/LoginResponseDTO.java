@@ -2,13 +2,19 @@ package gift.dto;
 
 public class LoginResponseDTO {
 
-    private String accessToken;
+    private String token;  // 변경된 필드 이름
+    private String email;
 
-    public LoginResponseDTO(String accessToken) {
-        this.accessToken = accessToken;
+    public LoginResponseDTO(String token, String email) {
+        this.token = token;
+        this.email = email;
     }
 
-    public String getAccessToken() {
-        return accessToken;
+    public String getEmail() {
+        return email;
+    }
+
+    public String getToken() {
+        return token;
     }
 }

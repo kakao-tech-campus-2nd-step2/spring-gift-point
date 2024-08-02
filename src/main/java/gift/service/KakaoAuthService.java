@@ -74,7 +74,7 @@ public class KakaoAuthService {
             .orElseGet(() -> {
                 // 카카오 로그인을 통해 가입한 회원의 경우 임의로 비밀번호 생성
                 Member newMember = new Member(kakaoUserDTO.getEmail(), "kakao");
-                newMember.setToken(accessToken);
+//                newMember.setToken(accessToken); 현재 협업에서 카카오 로그인을 사용하지 않으니 임시로 주석처리
                 memberRepository.save(newMember);
                 return newMember;
             });

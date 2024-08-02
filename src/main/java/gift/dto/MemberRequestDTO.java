@@ -7,6 +7,13 @@ public class MemberRequestDTO {
     private String password;
     private String token;
 
+
+
+    public MemberRequestDTO(String email, String password) {
+        this.email = email;
+        this.password = password;
+    }
+
     public MemberRequestDTO(String email, String password, String token) {
         this.email = email;
         this.password = password;
