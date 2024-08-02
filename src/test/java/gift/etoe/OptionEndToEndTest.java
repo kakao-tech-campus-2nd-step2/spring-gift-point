@@ -81,8 +81,7 @@ public class OptionEndToEndTest {
 
     private HttpHeaders getToken() throws JsonProcessingException {
         var tokenUrl = "http://localhost:" + port + "/api/members/register";
-        var tokenRequest = new MemberRequest("member1@example.com", "password", "member1",
-            "user");
+        var tokenRequest = new MemberRequest("member1@example.com", "password");
         var tokenRequestEntity = new RequestEntity<>(tokenRequest, HttpMethod.POST,
             URI.create(tokenUrl));
         var tokenResponseEntity = restTemplate.exchange(tokenRequestEntity, String.class);

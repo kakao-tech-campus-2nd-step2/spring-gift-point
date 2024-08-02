@@ -31,7 +31,7 @@ class MemberEndToEndTest {
     @Test
     void register() {
         var url = "http://localhost:" + port + "/api/members/register";
-        var request = new MemberRequest("member2@example.com", "password2", "member2", "user");
+        var request = new MemberRequest("member2@example.com", "password2");
         var requestEntity = new RequestEntity<>(request, HttpMethod.POST, URI.create(url));
 
         var actual = restTemplate.exchange(requestEntity, String.class);
@@ -42,7 +42,7 @@ class MemberEndToEndTest {
     @Test
     void login() {
         var url = "http://localhost:" + port + "/api/members/register";
-        var request = new MemberRequest("member1@example.com", "password", "member1", "user");
+        var request = new MemberRequest("member1@example.com", "password");
         var requestEntity = new RequestEntity<>(request, HttpMethod.POST, URI.create(url));
         restTemplate.exchange(requestEntity, String.class);
 
