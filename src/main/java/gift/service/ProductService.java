@@ -50,15 +50,12 @@ public class ProductService {
             throw new IllegalArgumentException("상품 이름에 '카카오'가 포함되어 있습니다. 담당 MD와 협의하세요.");
         }
 
-        CategoryDTO categoryDTO = productDTO.getCategory();
-        if (categoryDTO == null || categoryDTO.getName() == null) {
+        if (productDTO.getCategory() == null || productDTO.getCategory().getId() == null) {
             throw new IllegalArgumentException("Category must not be null");
         }
 
-        Category category = categoryRepository.findByName(categoryDTO.getName());
-        if (category == null) {
-            throw new IllegalArgumentException("Invalid category name: " + categoryDTO.getName());
-        }
+        Category category = categoryRepository.findById(productDTO.getCategory().getId())
+                .orElseThrow(() -> new IllegalArgumentException("Invalid category Id:" + productDTO.getCategory().getId()));
 
         Product product = new Product(null, productDTO.getName(), productDTO.getPrice(), productDTO.getImageUrl(), category);
 
@@ -83,7 +80,13 @@ public class ProductService {
             throw new IllegalArgumentException("상품 이름에 '카카오'가 포함되어 있습니다. 담당 MD와 협의하세요.");
         }
 
-        Category category = categoryRepository.findByName(productDTO.getCategory().getName());
+        if (productDTO.getCategory() == null || productDTO.getCategory().getId() == null) {
+            throw new IllegalArgumentException("Category must not be null");
+        }
+
+        Category category = categoryRepository.findById(productDTO.getCategory().getId())
+                .orElseThrow(() -> new IllegalArgumentException("Invalid category Id:" + productDTO.getCategory().getId()));
+
         product.setName(productDTO.getName());
         product.setPrice(productDTO.getPrice());
         product.setImageUrl(productDTO.getImageUrl());
