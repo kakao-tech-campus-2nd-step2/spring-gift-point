@@ -32,13 +32,11 @@ jobs:
       - name: Build with Gradle
         run: ./gradlew clean bootjar -x test
 
-      # docker 빌드
-
       # docker 빌드 & 푸쉬
       - name: Login to Docker Hub
         run: |
           docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
-          docker build -f Dockerfile -t ${{ secrets.DOCKER_REPO }} .
+          docker build -f Dockerfile -t ${{ secrets.DOCKER_REPO }} . 
           docker push ${{ secrets.DOCKER_REPO }}: latest
 
       # EC2 접근
