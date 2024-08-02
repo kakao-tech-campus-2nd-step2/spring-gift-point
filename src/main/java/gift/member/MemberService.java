@@ -5,6 +5,7 @@ import static gift.exception.ErrorMessage.MEMBER_NOT_FOUND;
 import static gift.exception.ErrorMessage.WRONG_PASSWORD;
 
 import gift.exception.FailedLoginException;
+import gift.member.dto.MemberChargePointRequestDTO;
 import gift.member.dto.MemberRequestDTO;
 import gift.member.entity.Member;
 import gift.token.JwtProvider;
@@ -71,5 +72,10 @@ public class MemberService {
             new Member(memberRequestDTO.getEmail(), memberRequestDTO.getPassword()))) {
             throw new IllegalArgumentException(WRONG_PASSWORD);
         }
+    }
+
+    public void chargePoint(MemberChargePointRequestDTO memberChargePointRequestDTO) {
+        getMember(memberChargePointRequestDTO.getEmail())
+            .chargePoint(memberChargePointRequestDTO.getPoint());
     }
 }

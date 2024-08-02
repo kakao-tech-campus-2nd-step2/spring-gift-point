@@ -1,5 +1,6 @@
 package gift.member;
 
+import gift.member.dto.MemberChargePointRequestDTO;
 import gift.member.dto.MemberRequestDTO;
 import gift.token.TokenResponseDTO;
 import io.swagger.v3.oas.annotations.Operation;
@@ -42,5 +43,11 @@ public class MemberController {
     @ApiResponse(responseCode = "500", description = "서버 에러")
     public TokenResponseDTO login(@RequestBody MemberRequestDTO memberRequestDTO) {
         return new TokenResponseDTO(memberService.login(memberRequestDTO));
+    }
+
+    @PostMapping("/charge")
+    @Operation(hidden = true)
+    public void chargePoint(@RequestBody MemberChargePointRequestDTO memberPointChargeRequestDTO) {
+        memberService.chargePoint(memberPointChargeRequestDTO);
     }
 }
