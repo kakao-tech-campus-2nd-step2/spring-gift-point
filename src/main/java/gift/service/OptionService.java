@@ -36,10 +36,8 @@ public class OptionService {
 	
 	public void addOption(Long productId, OptionRequest request, BindingResult bindingResult) {
 		validateBindingResult(bindingResult);
-		
 		Product product = findProductById(productId);
 		validateDuplicateOption(productId, request.getName());
-		
 		Option option = request.toEntity(product);
 		optionRepository.save(option);
 	}

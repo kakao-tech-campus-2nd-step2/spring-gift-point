@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<title>카테고리 관리</title>
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+
+<body>
+	<div class="container mt-5">
+		<h2>카테고리 목록</h2>
+		<table class="table table-bordered">
+			<thead>
+				<tr>
+					<th>ID</th>
+					<th>이름</th>
+					<th>색상</th>
+					<th>이미지 URL</th>
+					<th>설명</th>
+					<th>작업</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr th:each="category : ${categories}">
+					<td th:text="${category.id}"></td>
+					<td th:text="${category.name}"></td>
+					<td th:text="${category.color}"></td>
+					<td>
+						<a th:href="${category.imageUrl}" th:text="${category.imageUrl}" target="_blank"></a>
+					</td>
+					<td th:text="${category.description}"></td>
+					<td>
+						<a th:href="@{/admin/categories/edit/{id}(id=${category.id})}"
+							class="btn btn-warning btn-sm">수정</a>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+		<a href="/admin/categories/create" class="btn btn-primary">카테고리 추가</a>
+	</div>
+</body>
+
+</html>

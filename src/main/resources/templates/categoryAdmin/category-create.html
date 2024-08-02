@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<title>카테고리 생성</title>
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+
+<body>
+	<div class="container mt-5">
+		<h2>카테고리 추가</h2>
+		<form th:action="@{/admin/categories/create}" th:object="${category}" method="post">
+			<div class="form-group">
+				<label for="name">이름</label>
+				<input type="text" class="form-control" id="name" name="name" th:field="*{name}" required>
+			</div>
+			<div class="form-group">
+				<label for="color">색상</label>
+				<input type="text" class="form-control" id="color" name="color" th:field="*{color}" required>
+			</div>
+			<div class="form-group">
+				<label for="imageUrl">이미지 URL</label>
+				<input type="url" class="form-control" id="imageUrl" name="imageUrl" th:field="*{imageUrl}" required>
+			</div>
+			<div class="form-group">
+				<label for="description">설명</label>
+				<textarea class="form-control" id="description" name="description" th:field="*{description}"></textarea>
+			</div>
+			<button type="submit" class="btn btn-primary">저장</button>
+			<a href="/admin/categories" class="btn btn-secondary">취소</a>
+		</form>
+	</div>
+</body>
+
+</html>
