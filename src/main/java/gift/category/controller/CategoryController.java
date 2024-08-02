@@ -5,7 +5,7 @@ import gift.category.dto.CategoryListDTO;
 import gift.category.dto.CategoryRequest;
 import gift.category.service.CategoryService;
 import gift.common.util.CommonResponse;
-import gift.product.domain.ProductDTO;
+import gift.product.dto.ProductDTO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
@@ -15,7 +15,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/categories")
-@Tag(name = "Category", description = "카테고리 API")
+@Tag(name = "카테고리 API", description = "카테고리 생성, 수정, 조회 API")
 public class CategoryController {
     private final CategoryService categoryService;
     public CategoryController(CategoryService categoryService) {
@@ -26,7 +26,7 @@ public class CategoryController {
     @Operation(summary = "카테고리 생성", description = "새 카테고리를 등록한다.")
     @PostMapping
     public ResponseEntity<?> createCategory(@RequestBody CategoryRequest categoryRequest) {
-        Category category = new Category(categoryRequest.getName());
+        Category category = new Category(categoryRequest.getName(), categoryRequest.getColor(), categoryRequest.getImageUrl(), categoryRequest.getDescription());
         categoryService.createCategory(category);
 
         return ResponseEntity.ok(new CommonResponse<>(null, "카테고리 생성 성공", true));
@@ -36,7 +36,7 @@ public class CategoryController {
     @Operation(summary = "카테고리 수정", description = "기존 카테고리를 수정한다.")
     @PutMapping("/{categoryId}")
     public ResponseEntity<?> updateCategory(@PathVariable Long categoryId, @RequestBody CategoryRequest categoryRequest) {
-        Category category = new Category(categoryRequest.getName());
+        Category category = new Category(categoryRequest.getName(), categoryRequest.getColor(), categoryRequest.getImageUrl(), categoryRequest.getDescription());
         categoryService.updateCategory(categoryId, category);
 
         return ResponseEntity.ok(new CommonResponse<>(null, "카테고리 수정 성공", true));

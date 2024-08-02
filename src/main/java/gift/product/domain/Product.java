@@ -1,9 +1,8 @@
 package gift.product.domain;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import gift.category.domain.Category;
 import gift.option.domain.Option;
-import gift.wish.model.Wish;
+import gift.wish.domain.Wish;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import org.hibernate.validator.constraints.Range;
@@ -12,7 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Table(name = "product")
+@Table(name = "products")
 public class Product {
 
     @Id

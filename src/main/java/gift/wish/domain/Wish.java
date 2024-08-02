@@ -1,8 +1,10 @@
-package gift.wish.model;
+package gift.wish.domain;
 
 import gift.member.model.Member;
 import gift.product.domain.Product;
 import jakarta.persistence.*;
+
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "wish")
@@ -21,6 +23,8 @@ public class Wish {
     @JoinColumn(name = "product_id", nullable = false)
     private Product product;
 
+    LocalDateTime createdDate;
+
     // 활용 메서드들
     @Override
     public boolean equals(Object o) {
@@ -38,9 +42,10 @@ public class Wish {
     // Constructors, Getters, and Setters
     public Wish() {}
 
-    public Wish(Member member, Product product) {
+    public Wish(Member member, Product product, LocalDateTime createdDate) {
         this.member = member;
         this.product = product;
+        this.createdDate = createdDate;
     }
 
     // Getters and setters
@@ -66,5 +71,9 @@ public class Wish {
 
     public void setProduct(Product product) {
         this.product = product;
+    }
+
+    public LocalDateTime getCreatedDate() {
+        return createdDate;
     }
 }

@@ -15,7 +15,7 @@ import java.util.List;
 
 @Controller
 @RequestMapping("/api/products")
-@Tag(name = "Option", description = "옵션 API")
+@Tag(name = "상품 옵션 API", description = "상품 옵션 관리 API")
 public class OptionController {
     private final OptionService optionService;
 

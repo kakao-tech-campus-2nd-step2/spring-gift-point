@@ -2,21 +2,23 @@ package gift.member.controller;
 
 import gift.common.util.CommonResponse;
 import gift.member.dto.LoginRequest;
-import gift.member.dto.RegisterRequest;
+import gift.member.dto.LoginResponse;
+import gift.member.dto.SignUpReqeust;
+import gift.member.dto.SignUpResponse;
 import gift.member.service.MemberService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.Map;
-
 @RestController
 @RequestMapping("/api/members")
-@Tag(name = "Member API", description = "회원가입, 로그인 API")
+@Tag(name = "회원 API", description = "회원가입, 로그인 API")
 public class MemberController {
 
     private final MemberService memberService;
@@ -28,27 +30,32 @@ public class MemberController {
     // 회원가입
     @Operation(summary = "회원 가입", description = "새 회원을 등록하고 토큰을 받는다")
     @PostMapping("/register")
-    public ResponseEntity<?> register(@RequestBody RegisterRequest request) {
+    public ResponseEntity<?> register(@Valid @RequestBody SignUpReqeust request) {
         String email = request.getEmail();
         String password = request.getPassword();
 
         memberService.registerMember(email, password);
         String token = memberService.login(email, password);
-        return ResponseEntity.ok(new CommonResponse<>(token, "회원 가입 후 토큰 받기 성공", true));
+
+        SignUpResponse response = new SignUpResponse(email, token);
+
+        return ResponseEntity.ok(new CommonResponse<>(response, "회원 가입 후 토큰 받기 성공", true));
     }
 
     // 로그인
     @Operation(summary = "로그인", description = "회원을 인증하고 토큰을 받는다.")
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody LoginRequest request) {
+    public ResponseEntity<?> login(@Valid @RequestBody LoginRequest request) {
         String email = request.getEmail();
         String password = request.getPassword();
         String token = memberService.login(email, password);
 
         if (token == null) {
-            return ResponseEntity.status(401).build(); // Unauthorized
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Invalid email or password"); // 403 Forbidden
         }
 
-        return ResponseEntity.ok(new CommonResponse<>(token, "로그인 후 토큰 발기 성공", true));
+        LoginResponse response = new LoginResponse(email, token);
+
+        return ResponseEntity.ok(new CommonResponse<>(response, "로그인 후 토큰 발기 성공", true));
     }
 }

@@ -1,4 +1,4 @@
-package gift.product.domain;
+package gift.product.dto;
 
 public class ProductDTO {
     private Long id;

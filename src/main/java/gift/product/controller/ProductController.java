@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.*;
 @Controller
 @RequestMapping("/api/products")
 @Validated
-@Tag(name = "Product", description = "상품 API")
+@Tag(name = "상품 API", description = "상품 생성, 수정, 삭제, 조회 API")
 // crud를 진행하고 다시 api/products로 보내는 역할
 public class ProductController {
     private final ProductService productService;
@@ -83,5 +83,30 @@ public class ProductController {
         Page<ProductResponse> productPage = productService.getProductsByPage(page, size, sortBy, direction, categoryId);
 
         return ResponseEntity.ok(new CommonResponse<>(productPage, "제품 페이지를 받아오는데 성공하였습니다.", true));
+    }
+
+    // 5. 카테고리별 상품 조회
+    @Operation(summary = "카테고리 별 상품 조회", description = "특정 카테고리에 속한 상품들을 조회한다.")
+    @GetMapping("/categories")
+    public ResponseEntity<?> getProductsByCategory(@RequestParam Long categoryId) {
+        return ResponseEntity.ok(new CommonResponse<>(productService.getProductsByCategory(categoryId), "카테고리 별 상품 조회 성공", true));
+    }
+
+    // 6. 카테고리별 상품 조회 (페이지네이션 적용)
+    @Operation(summary = "카테고리 별 상품 조회 (페이지네이션 적용)", description = "특정 카테고리에 속한 상품들을 페이지 단위로 조회한다.")
+    @GetMapping("/categories/{categoryId}")
+    public ResponseEntity<?> getProductsByCategoryAndPage(@RequestParam int page,
+                                                          @RequestParam int size,
+                                                          @RequestParam(defaultValue = "name,asc") String sort,
+                                                          @PathVariable Long categoryId) {
+        // sort 파라미터를 ',' 기준으로 분리
+        String[] sortParams = sort.split(",");
+        String sortBy = sortParams[0];
+        String direction = sortParams.length > 1 ? sortParams[1] : "desc";
+
+        // 페이지네이션 처리
+        Page<ProductResponse> productPage = productService.getProductsByCategoryAndPage(page, size, sortBy, direction, categoryId);
+
+        return ResponseEntity.ok(new CommonResponse<>(productPage, "카테고리 별 상품 페이지를 받아오는데 성공하였습니다.", true));
     }
 }

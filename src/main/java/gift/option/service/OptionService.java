@@ -136,7 +136,7 @@ public class OptionService {
 
         // 옵션들을 OptionResponse로 변환하여 반환
         return options.stream()
-                .map(option -> new OptionResponse(option.getId(), option.getName(), option.getQuantity(), product.getName()))
+                .map(option -> new OptionResponse(option.getId(), option.getName(), option.getQuantity(), productId))
                 .collect(Collectors.toList());
     }
 }

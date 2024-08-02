@@ -6,7 +6,7 @@ public class OrderResponse {
     Long id;
     Long optionId;
     Long quantity;
-    LocalDateTime orderDateTime = LocalDateTime.now();
+    LocalDateTime orderDateTime;
     String message;
 
     // 활용 메서드들

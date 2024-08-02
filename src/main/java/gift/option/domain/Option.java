@@ -5,7 +5,7 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 
 @Entity
-@Table(name = "option")
+@Table(name = "options")
 public class Option {
 
     @Id
