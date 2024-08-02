@@ -3,6 +3,7 @@ package gift.service;
 import gift.constants.ErrorMessage;
 import gift.dto.MemberDto;
 import gift.dto.ProductResponse;
+import gift.dto.WishlistResponse;
 import gift.entity.Member;
 import gift.entity.Product;
 import gift.entity.Wishlist;
@@ -47,9 +48,11 @@ public class MemberService {
         return jwtUtil.createJwt(member.getEmail(), 1000 * 60 * 30);
     }
 
-    public Page<ProductResponse> getAllWishlist(String email, Pageable pageable) {
+    public Page<WishlistResponse> getAllWishlist(String email, Pageable pageable) {
         return wishlistJpaDao.findAllByMember_Email(email, pageable)
-            .map(wishlist -> new ProductResponse(wishlist.getProduct()));
+            .map(wishlist ->
+                new WishlistResponse(wishlist.getId(), new ProductResponse(wishlist.getProduct()))
+            );
     }
 
     public void addWishlist(String email, Long productId) {
@@ -62,15 +65,11 @@ public class MemberService {
         wishlistJpaDao.save(wishlist);
     }
 
-    public void deleteWishlist(String email, Long productId) {
-        findWishlistByEmailAndProductId(email, productId);
-
-        wishlistJpaDao.deleteByMember_EmailAndProduct_Id(email, productId);
-    }
-
-    private Wishlist findWishlistByEmailAndProductId(String email, Long productId) {
-        return wishlistJpaDao.findByMember_EmailAndProduct_Id(email, productId)
+    public void deleteWishlist(String email, Long wishId) {
+        wishlistJpaDao.findById(wishId)
             .orElseThrow(() -> new NoSuchElementException(ErrorMessage.WISHLIST_NOT_EXISTS_MSG));
+
+        wishlistJpaDao.deleteById(wishId);
     }
 
     private Member findMemberByEmail(String member) {
