@@ -25,6 +25,14 @@ public class Interceptor implements HandlerInterceptor {
 
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response,
         Object handler) throws Exception {
+
+        String path = request.getRequestURI();
+        String method = request.getMethod();
+
+        if (checkMethod(path, method)) {
+            return true;
+        }
+
         String token = request.getHeader(AUTHORIZATION_HEADER);
 
         if (token != null && token.startsWith(BEARER_PREFIX)) {
@@ -41,5 +49,24 @@ public class Interceptor implements HandlerInterceptor {
         } else {
             throw new BaseHandler(HttpStatus.UNAUTHORIZED, "토큰이 존재하지 않습니다.");
         }
+    }
+
+    public boolean checkMethod(String path, String method) {
+        if (method.equals("GET")) {
+            if (path.equals("/api/category")) {
+                return true;
+            } else if (path.matches("/api/category")) {
+                return true;
+            } else if (path.matches("/api/category/.*")) {
+                return true;
+            } else if (path.matches("/api/products/.*")) {
+                return true;
+            } else if (path.matches("/api/products")) {
+                return true;
+            } else if (path.matches("/api/products/.*/options")) {
+                return true;
+            }
+        }
+        return false;
     }
 }
