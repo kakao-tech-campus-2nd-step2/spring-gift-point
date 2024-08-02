@@ -4,7 +4,6 @@ import gift.doamin.order.dto.OrderRequest;
 import gift.doamin.order.dto.OrderResponse;
 import gift.doamin.order.service.OrderService;
 import gift.doamin.user.dto.UserDto;
-import gift.doamin.user.entity.User;
 import gift.global.LoginUser;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -35,7 +34,7 @@ public class OrderController {
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping
     public OrderResponse makeOrder(@Valid @RequestBody OrderRequest orderRequest,
-        @LoginUser User user) {
+        @LoginUser UserDto user) {
 
         return orderService.makeOrder(user, orderRequest);
     }

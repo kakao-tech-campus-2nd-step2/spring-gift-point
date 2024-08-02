@@ -11,8 +11,11 @@ import gift.doamin.order.entity.Order;
 import gift.doamin.order.repository.OrderRepository;
 import gift.doamin.product.entity.Option;
 import gift.doamin.product.repository.OptionRepository;
+import gift.doamin.user.dto.UserDto;
 import gift.doamin.user.entity.KakaoOAuthToken;
 import gift.doamin.user.entity.User;
+import gift.doamin.user.exception.UserNotFoundException;
+import gift.doamin.user.repository.JpaUserRepository;
 import gift.doamin.user.repository.KakaoOAuthTokenRepository;
 import gift.doamin.user.service.OAuthService;
 import gift.doamin.wishlist.repository.JpaWishListRepository;
@@ -35,28 +38,34 @@ public class OrderService {
     private final OrderRepository orderRepository;
     private final JpaWishListRepository jpaWishListRepository;
     private final KakaoOAuthTokenRepository oAuthTokenRepository;
+    private final JpaUserRepository userRepository;
     private final OAuthService oAuthService;
     private final RestClient restClient = RestClient.builder().build();
 
     public OrderService(OptionRepository optionRepository, OrderRepository orderRepository,
         JpaWishListRepository jpaWishListRepository, KakaoOAuthTokenRepository oAuthTokenRepository,
-        OAuthService oAuthService) {
+        JpaUserRepository userRepository, OAuthService oAuthService) {
         this.optionRepository = optionRepository;
         this.orderRepository = orderRepository;
         this.jpaWishListRepository = jpaWishListRepository;
         this.oAuthTokenRepository = oAuthTokenRepository;
+        this.userRepository = userRepository;
         this.oAuthService = oAuthService;
     }
 
     @Transactional
-    public OrderResponse makeOrder(User user, OrderRequest orderRequest) {
+    public OrderResponse makeOrder(UserDto userDto, OrderRequest orderRequest) {
         Option option = optionRepository.findById(orderRequest.getOptionId()).orElseThrow(() ->
             new NoSuchElementException("해당 옵션이 존재하지 않습니다."));
+        User user = userRepository.findById(userDto.getId())
+            .orElseThrow(UserNotFoundException::new);
         Order order = new Order(user, user, option, orderRequest.getQuantity(),
             orderRequest.getMessage());
         order = orderRepository.save(order);
 
         option.subtract(orderRequest.getQuantity());
+
+        user.subtractPoint(option.getProduct().getPrice());
 
         subtractWishList(user, option, orderRequest.getQuantity());
 
