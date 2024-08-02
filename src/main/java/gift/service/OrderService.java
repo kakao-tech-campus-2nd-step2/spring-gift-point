@@ -48,18 +48,14 @@ public class OrderService {
         Product product = productRepository.findProductAndOptionByIdFetchJoin(orderRequest.productId())
                 .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 상품입니다."));
         Option option = product.findOptionByOptionId(orderRequest.optionId());
-        System.out.println("00000000000000000000000000");
 
         Member member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 멤버입니다."));
-        System.out.println("1111111111111111111111111111");
         member.usePoint(orderRequest.point());
-        System.out.println("222222222222222222222222222");
-        int price = product.usePoint(orderRequest.point());
-        System.out.println("333333333333333333333333333333");
+        product.validatePoint(orderRequest.point());
 
-        Orders orders = orderRepository.save(new Orders(product.getId(), option.getId(), memberId, product.getName(),
-                product.getImageUrl(), option.getName(), price, orderRequest.quantity(), orderRequest.message(), orderRequest.point()));
+        Orders orders = orderRepository.save(new Orders(product.getId(), option.getId(), memberId, product.getName(), product.getImageUrl(),
+                option.getName(), product.getPrice(), orderRequest.quantity(), orderRequest.message(), orderRequest.point()));
         productService.subtractQuantity(orders.getProductId(), orders.getOptionId(), orders.getQuantity());
 
         eventPublisher.publishEvent(OrderEventDto.toDto(orders));

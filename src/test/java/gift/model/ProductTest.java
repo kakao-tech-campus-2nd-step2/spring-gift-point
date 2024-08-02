@@ -8,7 +8,8 @@ import org.junit.jupiter.api.Test;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 
 class ProductTest {
 
@@ -141,23 +142,8 @@ class ProductTest {
     }
 
     @Test
-    @DisplayName("usePoint 테스트[성공]")
-    void usePointSuccess() {
-        // given
-        int price = 10000;
-        int point = 1000;
-        Product product = new Product("pname", price, "purl", null, new ArrayList<>());
-
-        // when
-        int actual = product.usePoint(point);
-
-        // then
-        assertThat(actual).isEqualTo(price - point);
-    }
-
-    @Test
     @DisplayName("usePoint 테스트[실패] - 상품 가격보다 큰 포인트")
-    void usePointFail() {
+    void validatePointFail() {
         // given
         int price = 10000;
         int point = 100000;
@@ -166,6 +152,6 @@ class ProductTest {
         // when
         // then
         assertThatExceptionOfType(IllegalArgumentException.class)
-                .isThrownBy(() -> product.usePoint(point));
+                .isThrownBy(() -> product.validatePoint(point));
     }
 }

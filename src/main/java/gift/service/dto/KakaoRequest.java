@@ -38,15 +38,15 @@ public class KakaoRequest {
                                     ),
                                     new Item(
                                             DEFAULT_ITEM_COUNT_TEXT,
-                                            orders.quantity() + "개"
+                                            "x " + orders.quantity() + "개"
                                     ),
                                     new Item(
                                             DEFAULT_POINT_TEXT,
-                                            orders.point() + "포인트"
+                                            "- " + orders.point() + "p"
                                     ),
                             },
                             DEFAULT_SUM_TEXT,
-                            (orders.price() * orders.quantity()) + "원"
+                            (orders.price() * orders.quantity() - orders.point()) + "원"
                     )
             );
         }
