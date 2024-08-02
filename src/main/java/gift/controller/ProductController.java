@@ -12,11 +12,12 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @RestController
 @Tag(name="상품 API")
@@ -41,17 +42,17 @@ public class ProductController {
             )
     )
     @GetMapping
-    public Page<ProductDto> getProducts(Pageable pageable) {
-        return productService.getProducts(pageable).map(product -> new ProductDto(
-                product.getId(),
-                product.getName(),
-                product.getPrice(),
-                product.getImgUrl(),
-                product.getCategory().getId(),
-                product.getOptions().stream()
-                        .map(option -> new OptionDto(option.getId(), option.getName(), option.getQuantity()))
-                        .collect(Collectors.toList())
-        ));
+    public Page<ProductDto> getProducts(
+            @RequestParam(value = "categoryId", required = false) String categoryId,
+            @RequestParam(value = "page", defaultValue = "0") int page,
+            @RequestParam(value = "size", defaultValue = "10") int size,
+            @RequestParam(value = "sort", defaultValue = "name,asc") String sort
+    ) {
+        String[] sortParams = sort.split(",");
+        Sort.Direction direction = Sort.Direction.fromString(sortParams[1]);
+        Sort sortObj = Sort.by(direction, sortParams[0]);
+        Pageable pageable = PageRequest.of(page, size, sortObj);
+        return productService.getProductsByCategory(categoryId, pageable);
     }
 
 
@@ -142,14 +143,17 @@ public class ProductController {
                     mediaType = "application/json",
                     schema = @Schema(implementation = OptionDto.class),
                     examples = @ExampleObject(
-                            value = "[{\"id\":1,\"name\":\"Option 1\",\"quantity\":10}]"
+                            value = "{\"id\":1,\"name\":\"Option 1\",\"quantity\":10,\"productId\":1}"
                     )
             )
     )
     @Parameter(name = "productId", description = "옵션을 조회할 상품의 ID", example = "1")
-    @GetMapping("/{productId}/options")
-    public List<OptionDto> getProductOptions(@PathVariable("productId") Long productId) {
-        return productService.getProductOptions(productId);
+    @Parameter(name = "optionId", description = "조회할 옵션의 ID", example = "1")
+    @GetMapping("/{productId}/options/{optionId}")
+    public OptionDto getProductOption(
+            @PathVariable("productId") Long productId,
+            @PathVariable("optionId") Long optionId) {
+        return productService.getProductOption(productId, optionId);
     }
 
 
