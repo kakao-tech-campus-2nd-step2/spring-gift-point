@@ -9,6 +9,7 @@ import gift.domain.Wish;
 import gift.repository.ProductRepository;
 import gift.repository.UserInfoRepository;
 import gift.repository.WishRepository;
+import gift.utils.error.AuthorizationException;
 import gift.utils.error.ProductNotFoundException;
 import gift.utils.error.UserNotFoundException;
 import gift.utils.error.WishListNotFoundException;
@@ -50,9 +51,17 @@ public class WishService {
     @Transactional
     public WishResponse removeFromWishlist(String email, Long wishId) {
 
+        UserInfo userInfo = userInfoRepository.findByEmail(email).orElseThrow(
+            () -> new UserNotFoundException("User Not Found")
+        );
+
         Wish wish = wishRepository.findById(wishId).orElseThrow(
             () -> new WishListNotFoundException("Wish Not Found")
         );
+
+        if (userInfo.getId().equals(wish.getProduct().getId())){
+            throw new AuthorizationException("Not Authorization");
+        }
 
         wishRepository.deleteByProductIdAndUserInfoId(wish.getProduct().getId(), wish.getUserInfo().getId());
         return new WishResponse(wish.getId(),wish.getProduct().getId(),wish.getCount());

@@ -21,4 +21,5 @@ public interface WishRepository extends JpaRepository<Wish, Long> {
     @Query("SELECT w FROM Wish w " +
         "WHERE w.id = :id and w.userInfo.email = :email")
     Optional<Wish> findWishByIdAndMemberEmail(@Param("id") Long id, @Param("email") String email);
+
 }

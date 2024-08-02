@@ -138,6 +138,40 @@ public class KakaoApiService {
     }
 
     @Transactional
+    public KakaoApiDTO.KakaoOrderResponse Order(KakaoApiDTO.KakaoOrderRequest kakaoOrderRequest,String jwttoken){
+        Option option = optionRepository.findById(kakaoOrderRequest.optionId()).orElseThrow(
+            () -> new OptionNotFoundException("Option Not Found")
+        );
+        String emailFromToken = jwtTokenProvider.getEmailFromToken(jwttoken);
+
+        UserInfo userInfo = userInfoRepository.findByEmail(emailFromToken).orElseThrow(
+            () -> new UserNotFoundException("User Not Found")
+        );
+
+        Order order = new Order(kakaoOrderRequest.quantity(),
+            LocalDateTime.now(), kakaoOrderRequest.message());
+
+        userInfo.addOrder(order);
+        option.addOrder(order);
+
+        Optional<Wish> byUserInfoIdAndProductId = wishRepository.findByUserInfoIdAndProductId(
+            userInfo.getId(), option.getProduct().getId());
+
+        byUserInfoIdAndProductId.ifPresent(wishRepository::delete);
+
+        option.subtract(kakaoOrderRequest.quantity());
+
+        orderRepository.save(order);
+
+        KakaoOrderResponse kakaoOrderResponse = new KakaoOrderResponse(order.getId(),
+            option.getId(), order.getQuantity(), order.getOrderDateTime(),
+            order.getMessage());
+
+        return kakaoOrderResponse;
+
+    }
+
+    @Transactional
     public Page<KakaoApiDTO.KakaoOrderResponse> kakaoGetOrder(Pageable pageable){
         Page<Order> all = orderRepository.findAll(pageable);
         return all.map(this::convertToOrderDto);

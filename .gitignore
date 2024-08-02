@@ -38,3 +38,10 @@ out/
 
 ### Mac OS ###
 .DS_Store
+# Ignore all .properties files
+*.properties
+
+# Or specify particular files
+application.properties
+application-dev.properties
+application-prod.properties
