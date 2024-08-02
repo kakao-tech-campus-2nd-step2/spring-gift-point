@@ -3,7 +3,7 @@ package gift.service;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import gift.domain.KakaoToken;
-import gift.dto.KakaoTalkRequest;
+import gift.dto.kakao.KakaoTalkDto;
 import gift.dto.member.MemberDto;
 import gift.exception.InvalidKakaoTalkTemplateException;
 import gift.exception.InvalidKakaoTokenException;
@@ -33,10 +33,10 @@ public class KakaoTalkService {
         this.kakaoTokenRepository = kakaoTokenRepository;
     }
 
-    public void sendTalk(MemberDto memberDto, KakaoTalkRequest kakaoTalkRequest) {
+    public void sendTalk(MemberDto memberDto, KakaoTalkDto kakaoTalkDto) {
         String templateObject;
         try {
-            templateObject = objectMapper.writeValueAsString(kakaoTalkRequest);
+            templateObject = objectMapper.writeValueAsString(kakaoTalkDto);
         } catch (JsonProcessingException e) {
             throw new InvalidKakaoTalkTemplateException();
         }

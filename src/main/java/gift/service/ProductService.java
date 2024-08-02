@@ -53,11 +53,11 @@ public class ProductService {
         return product.toAddProductResponse();
     }
 
-    public ProductDto updateProduct(long id, ProductDto productDTO) {
+    public ProductDto updateProduct(long id, ProductDto productDto) {
         productRepository.findById(id)
             .orElseThrow(NoSuchProductException::new);
-        Category category = categoryService.getCategory(productDTO.categoryId()).toEntity();
-        Product product = new Product(id, productDTO.name(), productDTO.price(), productDTO.imageUrl(), category);
+        Category category = categoryService.getCategory(productDto.categoryId()).toEntity();
+        Product product = new Product(id, productDto.name(), productDto.price(), productDto.imageUrl(), category);
         return productRepository.save(product).toDto();
     }
 

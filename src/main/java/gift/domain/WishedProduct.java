@@ -39,7 +39,7 @@ public class WishedProduct {
         this.product = product;
     }
 
-    public WishedProductDto toDTO() {
+    public WishedProductDto toDto() {
         return new WishedProductDto(id, member.getEmail(), product.getId());
     }
 

@@ -3,7 +3,7 @@ package gift.service;
 import gift.domain.CashReceipt;
 import gift.domain.Option;
 import gift.domain.OrderOption;
-import gift.dto.KakaoTalkRequest;
+import gift.dto.kakao.KakaoTalkDto;
 import gift.dto.member.MemberDto;
 import gift.dto.orderOption.OrderOptionRequest;
 import gift.dto.orderOption.OrderOptionResponse;
@@ -52,14 +52,14 @@ public class OrderOptionService {
         }
         orderOption = orderOptionRepository.save(orderOption);
 
-        KakaoTalkRequest kakaoTalkRequest = KakaoTalkRequest.of(
+        KakaoTalkDto kakaoTalkDto = KakaoTalkDto.of(
             orderOptionRequest.message(),
             option.getProduct().getImageUrl(),
             "http://localhost:8080/api/products/" + option.getProduct().getId(),
             option.getProduct().getName(), option.getProduct().getCategory().getName(),
             option.getProduct().getPrice()
         );
-        kakaoTalkService.sendTalk(memberDto, kakaoTalkRequest);
+        kakaoTalkService.sendTalk(memberDto, kakaoTalkDto);
         return orderOption.toOrderOptionResponse();
     }
 }

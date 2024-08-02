@@ -1,6 +1,6 @@
-package gift.dto;
+package gift.dto.kakao;
 
-public record KakaoProfileDTO(
+public record KakaoProfileDto(
     String id,
     KakaoAccount kakao_account
 ) {

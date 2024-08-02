@@ -36,13 +36,13 @@ public class WishedProductService {
         Product product = productRepository.findById(addWishedProductRequest.productId())
             .orElseThrow(NoSuchProductException::new);
         WishedProduct wishedProduct = new WishedProduct(memberDto.toEntity(), product);
-        return wishedProductRepository.save(wishedProduct).toDTO();
+        return wishedProductRepository.save(wishedProduct).toDto();
     }
 
     public WishedProductDto deleteWishedProduct(long id) {
         WishedProductDto deletedWishedProductDto = wishedProductRepository.findById(id)
             .orElseThrow(NoSuchWishedProductException::new)
-            .toDTO();
+            .toDto();
         wishedProductRepository.deleteById(id);
         return deletedWishedProductDto;
     }

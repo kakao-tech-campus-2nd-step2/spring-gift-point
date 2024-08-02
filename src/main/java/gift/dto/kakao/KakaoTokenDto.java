@@ -1,8 +1,8 @@
-package gift.dto;
+package gift.dto.kakao;
 
 import gift.domain.KakaoToken;
 
-public record KakaoTokenDTO(
+public record KakaoTokenDto(
     String access_token,
     String refresh_token
 ) {
