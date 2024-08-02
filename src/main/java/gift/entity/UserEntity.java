@@ -54,6 +54,11 @@ public class UserEntity {
         cascade = CascadeType.ALL, orphanRemoval = true)
     private List<SocialEntity> socials;
 
+    @JsonIgnore
+    @OneToMany(mappedBy = "userEntity", fetch = FetchType.LAZY,
+        cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<ProductOrderEntity> orders;
+
     public UserEntity() {
     }
 
