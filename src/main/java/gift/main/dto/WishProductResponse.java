@@ -8,6 +8,7 @@ import gift.main.entity.WishProduct;
 public record WishProductResponse(Long id,
                                   long product_id,
                                   String productName,
+                                  int productPrice,
                                   String imageUrl) {
 
     public WishProductResponse(WishProduct wishProduct) {
@@ -15,6 +16,7 @@ public record WishProductResponse(Long id,
                 wishProduct.getId(),
                 wishProduct.getProduct().getId(),
                 wishProduct.product.getName(),
+                wishProduct.product.getPrice(),
                 wishProduct.getProduct().getImageUrl()
         );
 
