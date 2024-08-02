@@ -1,5 +1,6 @@
-package gift.dto;
+package gift.dto.product;
 
+import gift.dto.option.OptionCreateRequest;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;

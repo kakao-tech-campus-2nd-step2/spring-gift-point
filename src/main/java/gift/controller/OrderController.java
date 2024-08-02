@@ -1,7 +1,7 @@
 package gift.controller;
 
-import gift.dto.OrderRequest;
-import gift.dto.OrderResponse;
+import gift.dto.order.OrderRequest;
+import gift.dto.order.OrderResponse;
 import gift.service.OrderService;
 import gift.util.JwtUtil;
 import org.slf4j.Logger;

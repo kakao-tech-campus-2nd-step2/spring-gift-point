@@ -1,8 +1,8 @@
 package gift.controller;
 
-import gift.dto.DeleteOptionRequest;
-import gift.dto.OptionRequest;
-import gift.dto.OptionResponse;
+import gift.dto.option.DeleteOptionRequest;
+import gift.dto.option.OptionRequest;
+import gift.dto.option.OptionResponse;
 import gift.entity.Option;
 import gift.service.OptionService;
 import jakarta.validation.Valid;

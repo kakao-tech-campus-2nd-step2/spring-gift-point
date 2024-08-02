@@ -1,4 +1,4 @@
-package gift.dto;
+package gift.dto.option;
 
 public record OptionResponse(Long id, String name, Long quantity) {
     public OptionResponse(Long id, String name, Long quantity) {

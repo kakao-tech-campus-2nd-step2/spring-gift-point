@@ -1,5 +1,7 @@
-package gift.dto;
+package gift.dto.wish;
 
+import gift.dto.product.ProductResponse;
+import gift.dto.option.OptionResponse;
 import gift.entity.Product;
 import gift.entity.Wish;
 

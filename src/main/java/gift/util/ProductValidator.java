@@ -1,7 +1,7 @@
 package gift.util;
 
-import gift.dto.OptionRequest;
-import gift.dto.ProductRequest;
+import gift.dto.option.OptionRequest;
+import gift.dto.product.ProductRequest;
 
 public class ProductValidator {
     public static void validateProductRequest(ProductRequest productRequest) {

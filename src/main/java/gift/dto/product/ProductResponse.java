@@ -1,5 +1,6 @@
-package gift.dto;
+package gift.dto.product;
 
+import gift.dto.option.OptionResponse;
 import lombok.Getter;
 import lombok.Setter;
 

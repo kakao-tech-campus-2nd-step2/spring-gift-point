@@ -1,8 +1,8 @@
 package gift.controller;
 
-import gift.dto.LoginResponse;
-import gift.dto.MemberRequest;
-import gift.dto.MemberResponse;
+import gift.dto.member.LoginResponse;
+import gift.dto.member.MemberRequest;
+import gift.dto.member.MemberResponse;
 import gift.entity.Member;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -14,8 +14,6 @@ import gift.util.JwtUtil;
 import jakarta.servlet.http.HttpServletRequest;
 
 import java.net.URI;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Optional;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -23,7 +21,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 
 @RestController
-@RequestMapping("/member")
+@RequestMapping("/api/members")
 @Tag(name = "Member Management System", description = "Operations related to member management")
 public class MemberController {
     private final MemberService memberService;
@@ -35,7 +33,7 @@ public class MemberController {
         this.jwtUtil = util;
     }
 
-    @PostMapping(value ="/register", produces = "application/json")
+    @PostMapping(value ="/register")
     @Operation(summary = "Register a new member", description = "Registers a new member to the system", tags = { "Member Management System" })
     public ResponseEntity<MemberResponse> register(
             @Parameter(description = "Member object to be registered", required = true)

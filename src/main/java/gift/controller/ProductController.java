@@ -1,8 +1,9 @@
 package gift.controller;
 
-import gift.dto.OptionResponse;
-import gift.dto.ProductRequest;
-import gift.dto.ProductResponse;
+import gift.dto.option.OptionResponse;
+import gift.dto.product.ProductCategoryResponse;
+import gift.dto.product.ProductRequest;
+import gift.dto.product.ProductResponse;
 import gift.entity.Category;
 import gift.entity.Option;
 import gift.entity.Product;
@@ -35,17 +36,17 @@ public class ProductController {
 
     @GetMapping
     @Operation(summary="Get products by CategoryId", description = "Fetches a product by Category ID", tags = {"Product Management System"})
-    public ResponseEntity<Page<ProductResponse>> getProductsByCategoryId(
+    public ResponseEntity<Page<ProductCategoryResponse>> getProductsByCategoryId(
             @Parameter(description = "ID of the category to be fetched", required = true)
             @RequestParam Long categoryId, Pageable pageable) {
         Page<Product> products = productService.findByCategoryId(categoryId, pageable);
-        Page<ProductResponse> response = products.map(product -> {
+        Page<ProductCategoryResponse> response = products.map(product -> {
             List<OptionResponse> options = product.getOptions().stream()
                     .map(option -> new OptionResponse(option.getId(), option.getName(), option.getQuantity()))
                     .collect(Collectors.toList());
-            return new ProductResponse(
+            return new ProductCategoryResponse(
                     product.getId(),
-                    product.getCategory().getId(),
+                    product.getCategoryId(),
                     product.getName(),
                     product.getPrice(),
                     product.getImageUrl(),

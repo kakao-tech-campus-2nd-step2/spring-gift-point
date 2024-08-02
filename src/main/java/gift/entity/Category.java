@@ -49,6 +49,13 @@ public class Category {
         this.color = color;
     }
 
+    public void updatePut(String name, String description, String imageUrl, String color) {
+        this.name = name;
+        this.description = description;
+        this.imageUrl = imageUrl;
+        this.color = color;
+    }
+
     public void updateId(Long id) {this.id = id;}
 
     public static class Builder {

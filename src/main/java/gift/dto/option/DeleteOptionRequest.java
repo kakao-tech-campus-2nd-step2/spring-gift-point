@@ -1,4 +1,4 @@
-package gift.dto;
+package gift.dto.option;
 
 public class DeleteOptionRequest {
     private static String email;

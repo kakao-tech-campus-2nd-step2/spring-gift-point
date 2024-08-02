@@ -1,6 +1,7 @@
 package gift.service;
 
 import gift.entity.Category;
+import gift.entity.Member;
 import gift.entity.Option;
 import gift.entity.Product;
 import gift.exception.CustomException;
@@ -34,7 +35,7 @@ public class ProductService {
     }
 
     public Page<Product> findByCategoryId(Long categoryId, Pageable pageable) {
-        return productRepository.findByCategoryId(categoryId, pageable);
+        return productRepository.findByCategory_Id(categoryId, pageable);
     }
 
     @Transactional

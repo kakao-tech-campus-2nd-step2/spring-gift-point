@@ -1,12 +1,11 @@
 package gift.service;
 
-import gift.dto.OptionRequest;
-import gift.dto.OptionResponse;
+import gift.dto.option.OptionRequest;
+import gift.dto.option.OptionResponse;
 import gift.entity.Option;
 import gift.entity.Product;
 import gift.entity.Member;
 import gift.exception.CustomException;
-import gift.repository.MemberRepository;
 import gift.repository.OptionRepository;
 import gift.repository.ProductRepository;
 import jakarta.transaction.Transactional;
