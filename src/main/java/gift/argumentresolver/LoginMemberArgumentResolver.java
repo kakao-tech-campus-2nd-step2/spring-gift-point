@@ -34,7 +34,7 @@ public class LoginMemberArgumentResolver implements HandlerMethodArgumentResolve
     public MemberDto resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer, NativeWebRequest webRequest, WebDataBinderFactory binderFactory) throws Exception {
         HttpServletRequest request = (HttpServletRequest) webRequest.getNativeRequest();
         String authorization = request.getHeader("Authorization");
-        if (authorization == null || authorization.startsWith("Bearer ")) {
+        if (authorization == null || !authorization.startsWith("Bearer ")) {
             if (request.getRequestURI().startsWith("/api/products")) {
                 return null;
             }
