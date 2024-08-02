@@ -4,9 +4,9 @@ import gift.dto.CategoryRequestDto;
 import gift.dto.CategoryResponseDto;
 import gift.service.CategoryService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
-import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -27,14 +27,7 @@ public class CategoryController {
     }
 
     @PostMapping
-    @Operation(summary = "카테고리 추가", description = "새로운 카테고리를 추가합니다.",
-            requestBody = @RequestBody(
-                    description = "추가할 카테고리의 정보",
-                    required = true,
-                    content = @Content(
-                            schema = @Schema(implementation = CategoryRequestDto.class)
-                    )
-            ))
+    @Operation(summary = "카테고리 추가", description = "새로운 카테고리를 추가합니다.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "카테고리가 성공적으로 추가되었습니다.",
                     content = @Content(
@@ -45,28 +38,14 @@ public class CategoryController {
             @ApiResponse(responseCode = "500", description = "서버 오류.",
                     content = @Content)
     })
-    public ResponseEntity<CategoryResponseDto> addCategory(@RequestBody CategoryRequestDto categoryRequestDto) {
+    public ResponseEntity<CategoryResponseDto> addCategory(
+            @Parameter(description = "추가할 카테고리의 정보", required = true) @RequestBody CategoryRequestDto categoryRequestDto) {
         CategoryResponseDto createdCategory = categoryService.addCategory(categoryRequestDto);
         return new ResponseEntity<>(createdCategory, HttpStatus.CREATED);
     }
 
     @PutMapping("/{id}")
-    @Operation(summary = "카테고리 수정", description = "기존 카테고리를 수정합니다.",
-            parameters = {
-                    @io.swagger.v3.oas.annotations.Parameter(
-                            name = "id",
-                            description = "수정할 카테고리 ID",
-                            required = true,
-                            schema = @Schema(type = "integer")
-                    )
-            },
-            requestBody = @RequestBody(
-                    description = "수정할 카테고리의 정보",
-                    required = true,
-                    content = @Content(
-                            schema = @Schema(implementation = CategoryRequestDto.class)
-                    )
-            ))
+    @Operation(summary = "카테고리 수정", description = "기존 카테고리를 수정합니다.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "카테고리가 성공적으로 수정되었습니다.",
                     content = @Content(
@@ -77,7 +56,9 @@ public class CategoryController {
             @ApiResponse(responseCode = "500", description = "서버 오류.",
                     content = @Content)
     })
-    public ResponseEntity<CategoryResponseDto> updateCategory(@PathVariable Long id, @RequestBody CategoryRequestDto categoryRequestDto) {
+    public ResponseEntity<CategoryResponseDto> updateCategory(
+            @Parameter(description = "수정할 카테고리 ID", required = true) @PathVariable Long id,
+            @Parameter(description = "수정할 카테고리의 정보", required = true) @RequestBody CategoryRequestDto categoryRequestDto) {
         CategoryResponseDto updatedCategory = categoryService.updateCategory(id, categoryRequestDto);
         return new ResponseEntity<>(updatedCategory, HttpStatus.OK);
     }
@@ -98,15 +79,7 @@ public class CategoryController {
     }
 
     @GetMapping("/{id}")
-    @Operation(summary = "카테고리 조회", description = "ID로 카테고리를 조회합니다.",
-            parameters = {
-                    @io.swagger.v3.oas.annotations.Parameter(
-                            name = "id",
-                            description = "조회할 카테고리 ID",
-                            required = true,
-                            schema = @Schema(type = "integer")
-                    )
-            })
+    @Operation(summary = "카테고리 조회", description = "ID로 카테고리를 조회합니다.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "카테고리가 성공적으로 반환되었습니다.",
                     content = @Content(
@@ -117,21 +90,14 @@ public class CategoryController {
             @ApiResponse(responseCode = "500", description = "서버 오류.",
                     content = @Content)
     })
-    public ResponseEntity<CategoryResponseDto> getCategoryById(@PathVariable Long id) {
+    public ResponseEntity<CategoryResponseDto> getCategoryById(
+            @Parameter(description = "조회할 카테고리 ID", required = true) @PathVariable Long id) {
         CategoryResponseDto category = categoryService.getCategoryById(id);
         return new ResponseEntity<>(category, HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")
-    @Operation(summary = "카테고리 삭제", description = "기존 카테고리를 삭제합니다.",
-            parameters = {
-                    @io.swagger.v3.oas.annotations.Parameter(
-                            name = "id",
-                            description = "삭제할 카테고리 ID",
-                            required = true,
-                            schema = @Schema(type = "integer")
-                    )
-            })
+    @Operation(summary = "카테고리 삭제", description = "기존 카테고리를 삭제합니다.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "204", description = "카테고리가 성공적으로 삭제되었습니다."),
             @ApiResponse(responseCode = "404", description = "카테고리를 찾을 수 없음.",
@@ -139,7 +105,8 @@ public class CategoryController {
             @ApiResponse(responseCode = "500", description = "서버 오류.",
                     content = @Content)
     })
-    public ResponseEntity<Void> deleteCategory(@PathVariable Long id) {
+    public ResponseEntity<Void> deleteCategory(
+            @Parameter(description = "삭제할 카테고리 ID", required = true) @PathVariable Long id) {
         categoryService.deleteCategory(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
