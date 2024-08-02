@@ -51,7 +51,7 @@ class MemberControllerTest {
         JwtResponse jwtResponse = new JwtResponse("{access_token}");
 
         when(memberService.register(registerRequest)).thenReturn(1L);
-        when(tokenService.generateJwt(1L)).thenReturn(jwtResponse);
+        when(tokenService.generateJwt(1L, "test@test.com")).thenReturn(jwtResponse);
 
         //When
         mockMvc.perform(RestDocumentationRequestBuilders
@@ -87,7 +87,7 @@ class MemberControllerTest {
         JwtResponse jwtResponse = new JwtResponse("{access_token}");
 
         when(memberService.login(loginRequest)).thenReturn(1L);
-        when(tokenService.generateJwt(1L)).thenReturn(jwtResponse);
+        when(tokenService.generateJwt(1L, "test@test.com")).thenReturn(jwtResponse);
 
         //When
         mockMvc.perform(RestDocumentationRequestBuilders
