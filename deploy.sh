@@ -1,12 +1,13 @@
-#!/bin/bash
+#!/bin/sh
 PROJECT_PATH=/home/ubuntu/step2
 PROJECT_NAME=spring-gift-point
 BUILD_PATH=build/libs
+JAR_NAME=$(basename $PROJECT_PATH/$PROJECT_NAME/.*jar)
 
 cd $PROJECT_PATH/$PROJECT_NAME
 
 echo ">Git pull"
-git pull
+git pull origin step2
 
 echo ">Build 시작"
 ./gradlew bootJar
@@ -18,7 +19,10 @@ echo ">Build 파일 복사"
 cp $PROJECT_PATH/$PROJECT_NAME/$BUILD_PATH/*.jar $PROJECT_PATH
 
 echo ">실행중 PID 확인"
-CURRENT_PID=$(pgrep -f ${PROJECT_NAME}*.jar)
+CURRENT_PID=$(pgrep -f JAR_NAME)
+
+if [ -z $CURRENT_PID ]; then
+        echo " >실행중인 애플리케이션이 없어서 바로 실행됩니다)
 
 if [ -z $CURRENT_PID ]; then
         echo " >실행중인 애플리케이션이 없어서 바로 실행됩니다..\n"
