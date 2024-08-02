@@ -5,17 +5,14 @@ import gift.exception.user.InvalidCredentialsException;
 import gift.exception.user.UserAlreadyExistsException;
 import gift.exception.user.UserNotFoundException;
 import gift.service.user.UserService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Map;
-
-
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
 
 @RestController
 @RequestMapping("/api/members")
@@ -31,17 +28,11 @@ public class UserController {
     @PostMapping("/login")
     public ResponseEntity<?> login(
             @Parameter(description = "로그인 요청 정보", required = true)
-            @RequestBody LoginRequest loginRequest) {
-        try {
-            String accessToken = userService.login(loginRequest.getEmail(), loginRequest.getPassword());
-            String refreshToken = userService.generateRefreshToken(loginRequest.getEmail());
+            @RequestBody LoginRequest loginRequest) throws UserNotFoundException, InvalidCredentialsException {
+        String accessToken = userService.login(loginRequest.getEmail(), loginRequest.getPassword());
+        String refreshToken = userService.generateRefreshToken(loginRequest.getEmail());
 
-            return ResponseEntity.ok(new JwtResponse(accessToken, refreshToken));
-        } catch (UserNotFoundException e) {
-            return ResponseEntity.status(404).body(e.getMessage());
-        } catch (InvalidCredentialsException e) {
-            return ResponseEntity.status(401).body(e.getMessage());
-        }
+        return ResponseEntity.ok(new JwtResponse(accessToken, refreshToken));
     }
 
     @Operation(summary = "모든 사용자 조회", description = "모든 사용자를 조회합니다.")
@@ -55,15 +46,13 @@ public class UserController {
     @PostMapping("/register")
     public ResponseEntity<?> registerUser(
             @Parameter(description = "사용자 등록 요청 정보", required = true)
-            @RequestBody RegisterRequest registerRequest) {
-        try {
-            Map<String, String> tokens = userService.registerUser(registerRequest.getEmail(), registerRequest.getPassword());
-            return ResponseEntity.ok(tokens);
-        } catch (UserAlreadyExistsException e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
-        }
+            @RequestBody RegisterRequest registerRequest) throws UserAlreadyExistsException {
+        Map<String, String> tokens = userService.registerUser(registerRequest.getEmail(), registerRequest.getPassword());
+        return ResponseEntity.ok(tokens);
     }
 }
+
+
 
 class LoginRequest {
     private String email;
