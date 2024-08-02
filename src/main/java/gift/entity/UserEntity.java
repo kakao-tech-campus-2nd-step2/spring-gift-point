@@ -79,7 +79,7 @@ public class UserEntity {
         this.email = email;
         this.password = password;
         this.isDelete = 0;
-        this.point=0;
+        this.point = 0;
     }
 
     public Long getId() {
@@ -136,5 +136,9 @@ public class UserEntity {
 
     public List<ProductOrderEntity> getOrders() {
         return orders;
+    }
+
+    public void setPoint(Integer point) {
+        this.point += point;
     }
 }
