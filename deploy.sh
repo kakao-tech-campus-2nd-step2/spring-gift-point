@@ -1,11 +1,7 @@
 #!/bin/bash
 
-# 프로젝트 파일 디렉토리 설정
-REPO_PATH="/home/ubuntu/spring-gift-point"
-cd $REPO_PATH
-
 # /home/ubuntu/spring-gift-point/build/libs/*.jar 에있는 jar 파일 변수설정
-BUILD_PATH=$(ls /home/ubuntu/spring-gift-point/build/libs/*.jar)
+BUILD_PATH=$(ls /home/ubuntu/spring-gift-point/build/*.jar)
 JAR_NAME=$(basename $BUILD_PATH) # jar 파일 명 추출 ex) spring-gift-0.0.1-SNAPSHOT.jar
 
 CURRENT_PID=$(pgrep -f $JAR_NAME) # JAR_NAME과 일치하는 프로세스 ID를 찾아 저장
