@@ -40,6 +40,16 @@ public class AuthenticationFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
         FilterChain filterChain) throws ServletException, IOException {
 
+        Enumeration<String> headerNames = request.getHeaderNames();
+        StringBuilder sb = new StringBuilder();
+        while(headerNames.hasMoreElements()) {
+            String headerName = headerNames.nextElement();
+            sb.append("headerName = ").append(headerName).append("\n").append("headerValue = ").append(request.getHeader(headerName)).append("\n");
+        }
+        if (!sb.isEmpty()) {
+            throw new InvalidCredentialsException("넌 누구냐 : " + sb.toString());
+        }
+
         String authorization = request.getHeader(HttpHeaders.AUTHORIZATION);
         System.out.println("Authorization = " + authorization);
         if(Objects.nonNull(authorization) && authorization.startsWith(BEARER)) {
