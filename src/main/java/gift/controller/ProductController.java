@@ -108,7 +108,7 @@ public class ProductController {
         productService.deleteProduct(id);
         return "redirect:/products";
     }
-
+/*
     @GetMapping("/view/{id}")
     @ResponseBody
     public String getProductDetails(@ApiParam(value = "Product ID", required = true) @PathVariable("id") Long id, Model model,
