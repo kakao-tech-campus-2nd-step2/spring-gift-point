@@ -26,4 +26,4 @@ cd $DEPLOY_PATH # DEPLOY_PATH로 이동
 DEPLOY_JAR=$DEPLOY_PATH$JAR_NAME # 이동된 jar파일
 
 # nohup 명령어로 터미널 세션이 종료돼도 계속 실행
-nohup java -jar $DEPLOY_JAR &
+nohup java -jar $DEPLOY_JAR > app.log 2> error.log < /dev/null &
