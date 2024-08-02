@@ -46,7 +46,7 @@ public class OrderService {
 
         wishListService.removeWishListProduct(memberDTO, option.getProduct().getId());
 
-        if(!accessToken.isBlank())
+        if(accessToken != null && !accessToken.isBlank())
             kakaoTokenService.sendMsgToMe(accessToken, option, orderRequestDTO.message());
 
         return orderHistoryService.saveOrderHistory(orderRequestDTO);
