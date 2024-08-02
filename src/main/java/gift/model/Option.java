@@ -22,7 +22,7 @@ public class Option {
     private Long id;
 
     @Column(nullable = false)
-    private String optionName;
+    private String name;
 
     @Column(nullable = false)
     private Long quantity;
@@ -37,7 +37,7 @@ public class Option {
     }
 
     public Option(OptionRequest optionRequest, Product product) {
-        this.optionName = optionRequest.getName();
+        this.name = optionRequest.getName();
         this.quantity = optionRequest.getQuantity();
         this.product = product;
     }
@@ -51,11 +51,11 @@ public class Option {
     }
 
     public String getOptionName() {
-        return optionName;
+        return name;
     }
 
     public void setOptionName(String optionName) {
-        this.optionName = optionName;
+        this.name = name;
     }
 
     public Product getProduct() {
