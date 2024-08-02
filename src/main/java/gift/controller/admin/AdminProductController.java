@@ -40,7 +40,7 @@ public class AdminProductController {
 
         model.addAttribute("productsPage", productsPage);
         model.addAttribute("categories", categories);
-        return "product";  // Thymeleaf 템플릿 이름
+        return "product";
     }
 
 

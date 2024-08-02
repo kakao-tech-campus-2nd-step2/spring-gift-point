@@ -49,22 +49,6 @@ public class SecurityConfig {
         return http.build();
     }
 
-/*
-    @Bean
-    public CorsConfigurationSource corsConfigurationSource() {
-        CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(Arrays.asList("*")); // 모든 도메인 허용
-        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
-        configuration.setAllowedHeaders(Arrays.asList("Authorization", "Content-Type"));
-        configuration.setAllowCredentials(true); // 쿠키 및 인증 정보를 허용
-        configuration.setExposedHeaders(Arrays.asList("Authorization", "Content-Disposition"));
-
-        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**", configuration);
-        return source;
-    }
-
- */
 
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {

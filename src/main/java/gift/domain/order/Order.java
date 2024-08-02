@@ -38,7 +38,7 @@ public class Order {
         this.orderDateTime = orderDateTime;
     }
 
-    // Getters only
+
     public Long getId() {
         return id;
     }

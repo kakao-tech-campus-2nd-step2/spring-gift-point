@@ -18,7 +18,7 @@ public class ProductRequestDTO {
     @NotBlank(message = "상품 설명은 필수입니다.")
     private String description;
 
-    private String imageUrl; // 이미지 URL
+    private String imageUrl;
 
     @NotNull(message = "카테고리는 필수입니다.")
     private Long categoryId;

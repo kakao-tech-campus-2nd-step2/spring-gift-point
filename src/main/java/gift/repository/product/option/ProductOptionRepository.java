@@ -13,7 +13,7 @@ import java.util.Optional;
 public interface ProductOptionRepository extends JpaRepository<ProductOption, Long> {
     @EntityGraph(attributePaths = {"product", "product.category"})
     List<ProductOption> findByProductId(Long productId);
-    //boolean existsByProductIdAndName(Long productId, String name);
+
     boolean existsByProductAndName(Product product, String name);
 
     @Query("SELECT p FROM Product p JOIN FETCH p.options WHERE p.id = :productId")

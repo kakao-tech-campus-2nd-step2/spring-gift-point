@@ -8,8 +8,9 @@ import org.springframework.data.domain.Pageable;
 import java.util.Optional;
 
 public interface WishRepository extends JpaRepository<Wish, Long> {
-    //List<Wish> findByUserIdAndIsDeletedFalse(Long userId);
+
     Optional<Wish> findByIdAndUserId(Long wishId, Long userId);
+
     Page<Wish> findByUserIdAndIsDeletedFalse(Long userId, Pageable pageable);
 
     Optional<Wish> findByUserIdAndProductIdAndIsDeletedFalse(Long userId, Long productId);

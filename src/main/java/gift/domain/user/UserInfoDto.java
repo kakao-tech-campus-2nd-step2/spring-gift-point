@@ -10,7 +10,6 @@ public class UserInfoDto {
     private Long serverUserId;
     private String serverUserEmail;
 
-    // All-arguments constructor
     public UserInfoDto(long id, String nickname, String email, String accessToken,
                        String jwtToken, String refreshToken, Long serverUserId,
                        String serverUserEmail) {
