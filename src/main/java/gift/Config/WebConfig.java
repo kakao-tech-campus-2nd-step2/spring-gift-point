@@ -22,7 +22,16 @@ public class WebConfig implements WebMvcConfigurer {
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(interceptorOfToken).addPathPatterns("/**");
+        registry.addInterceptor(new InterceptorOfToken())
+                .addPathPatterns("/**")
+                .excludePathPatterns(
+                        "/login",
+                        "/swagger-ui/**",
+                        "/v3/api-docs/**",
+                        "/swagger-resources/**",
+                        "/webjars/**",
+                        "/swagger-ui.html"
+                ); // 스웨거 및 공개 경로 예외 처리
     }
 
     @Override

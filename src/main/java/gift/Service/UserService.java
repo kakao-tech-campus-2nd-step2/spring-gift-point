@@ -11,9 +11,11 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.Date;
 import java.util.Optional;
 
@@ -21,13 +23,11 @@ import java.util.Optional;
 public class UserService {
 
     private final UserRepository userRepository;
-    private final PasswordEncoder passwordEncoder;
     private final UserServiceMapper userServiceMapper;
 
     @Autowired
-    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder, UserServiceMapper userServiceMapper) {
+    public UserService(UserRepository userRepository, UserServiceMapper userServiceMapper) {
         this.userRepository = userRepository;
-        this.passwordEncoder = passwordEncoder;
         this.userServiceMapper = userServiceMapper;
     }
 
@@ -40,6 +40,10 @@ public class UserService {
     // 회원 저장
     public UserDTO saveUser(UserDTO userDTO) {
         UserEntity userEntity = userServiceMapper.convertToEntity(userDTO);
+        // 비밀번호 암호화
+        String encodedPassword = encodePassword(userDTO.getPassword());
+        userEntity.setPassword(encodedPassword);
+
         UserEntity savedUserEntity = userRepository.save(userEntity);
         return userServiceMapper.convertToDTO(savedUserEntity);
     }
@@ -50,6 +54,11 @@ public class UserService {
         if (existingUser.isPresent()) {
             UserEntity user = existingUser.get();
             user.setEmail(userDTO.getEmail());
+            if (userDTO.getPassword() != null) {
+                // 비밀번호가 제공된 경우에만 업데이트
+                String encodedPassword = encodePassword(userDTO.getPassword());
+                user.setPassword(encodedPassword);
+            }
             UserEntity updatedUserEntity = userRepository.save(user);
             return userServiceMapper.convertToDTO(updatedUserEntity);
         } else {
@@ -62,15 +71,12 @@ public class UserService {
         userRepository.deleteById(id);
     }
 
-
-
-
     // 로그인
     public AuthResponseDTO loginUser(AuthRequestDTO authRequest) {
         UserEntity userEntity = userRepository.findByEmail(authRequest.getEmail())
                 .orElseThrow(() -> new RuntimeException("이메일이 잘못 입력되었습니다."));
 
-        if (passwordEncoder.matches(authRequest.getPassword(), userEntity.getPassword())) {
+        if (matchesPassword(authRequest.getPassword(), userEntity.getPassword())) {
             String accessToken = generateToken(userEntity); // 엑세스 토큰
             String refreshToken = generateRefreshToken(userEntity);
             return new AuthResponseDTO(accessToken, refreshToken);
@@ -78,8 +84,6 @@ public class UserService {
             throw new RuntimeException("비밀번호가 틀렸습니다.");
         }
     }
-
-
 
     @Value("${jwt.secret}")
     private String secretKey;
@@ -89,7 +93,6 @@ public class UserService {
 
     @Value("${jwt.refreshExpiration}")
     private long refreshExpiration;
-
 
     // 액세스 토큰 생성
     public String generateToken(UserEntity userEntity) {
@@ -175,5 +178,29 @@ public class UserService {
         } catch (Exception e) {
             return Optional.empty();
         }
+    }
+
+    // 비밀번호 암호화
+    private String encodePassword(String password) {
+        try {
+            MessageDigest digest = MessageDigest.getInstance("SHA-256");
+            byte[] hash = digest.digest(password.getBytes(StandardCharsets.UTF_8));
+            StringBuilder hexString = new StringBuilder(2 * hash.length);
+            for (byte b : hash) {
+                String hex = Integer.toHexString(0xff & b);
+                if (hex.length() == 1) {
+                    hexString.append('0');
+                }
+                hexString.append(hex);
+            }
+            return hexString.toString();
+        } catch (NoSuchAlgorithmException e) {
+            throw new RuntimeException("Error encoding password", e);
+        }
+    }
+
+    // 비밀번호 비교
+    private boolean matchesPassword(String rawPassword, String encodedPassword) {
+        return encodePassword(rawPassword).equals(encodedPassword);
     }
 }
