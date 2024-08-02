@@ -1,7 +1,7 @@
 package gift.wish.dto;
 
 import gift.dto.ApiResponse;
-import gift.model.HttpResult;
+import gift.dto.HttpResult;
 import org.springframework.http.HttpStatus;
 
 public class WishResponse extends ApiResponse {

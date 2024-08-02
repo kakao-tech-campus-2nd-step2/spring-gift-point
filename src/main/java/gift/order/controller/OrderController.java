@@ -6,7 +6,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import gift.annotation.LoginMember;
 import gift.member.model.Member;
 import gift.member.service.MemberService;
-import gift.model.HttpResult;
+import gift.dto.HttpResult;
 import gift.order.dto.OrderRequest;
 import gift.order.dto.OrderResponse;
 import gift.order.model.Order;

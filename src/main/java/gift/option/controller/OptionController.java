@@ -1,12 +1,9 @@
 package gift.option.controller;
 
-import gift.dto.ApiResponse;
-import gift.model.HttpResult;
+import gift.dto.HttpResult;
 import gift.option.dto.OptionRequest;
 import gift.option.dto.OptionResponse;
 import gift.option.service.OptionService;
-import java.util.LinkedHashMap;
-import java.util.Map;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -32,7 +29,7 @@ public class OptionController {
     public ResponseEntity<OptionResponse> addOptions(
         @PathVariable(value = "productId") Long productId,
         @RequestBody OptionRequest optionRequest) {
-        var option = optionService.createOption(optionRequest);
+        var option = optionService.createOption(productId, optionRequest);
         return ResponseEntity.ok(
             new OptionResponse(HttpResult.OK, "옵션 추가 성공", HttpStatus.OK, option));
     }
@@ -47,12 +44,12 @@ public class OptionController {
             new OptionResponse(HttpResult.OK, "옵션 조회 성공", HttpStatus.OK, optionList));
     }
 
-    @GetMapping("/options/{id}")
-    public ResponseEntity<ApiResponse> getOptionById(@PathVariable("id") Long id,
-        @PathVariable(value = "productId") String productId) {
-        var option = optionService.retrieveOption(id);
-        var apiResponse = new ApiResponse(HttpResult.OK, option.toString(), HttpStatus.OK);
-        return new ResponseEntity<>(apiResponse, apiResponse.getHttpStatus());
+    @GetMapping("/{optionId}")
+    public ResponseEntity<OptionResponse> getOptionById(@PathVariable("optionId") Long optionId,
+        @PathVariable(value = "productId") Long productId) {
+        var option = optionService.retrieveOption(productId,optionId);
+        return ResponseEntity.ok(
+            new OptionResponse(HttpResult.OK, "옵션 조회 성공", HttpStatus.OK, option));
     }
 
     @DeleteMapping("/{optionId}")
@@ -60,8 +57,6 @@ public class OptionController {
         @PathVariable(value = "productId") Long productId,
         @PathVariable(value = "optionId") Long optionId) {
         optionService.deleteOptions(productId, optionId);
-        Map<String, Object> messageResponse = new LinkedHashMap<>();
-        messageResponse.put("message", "삭제 성공");
         return ResponseEntity.ok(
             new OptionResponse(HttpResult.OK,
                 "옵션 삭제 성공",

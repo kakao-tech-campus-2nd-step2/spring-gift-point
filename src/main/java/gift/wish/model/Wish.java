@@ -75,25 +75,6 @@ public class Wish {
         this.productName = productName;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
-        Wish wish = (Wish) o;
-        return Objects.equals(product, wish.product) && Objects.equals(member,
-            wish.member);
-    }
-
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(product, member);
-    }
-
     public Product getProduct() {
         return product;
     }

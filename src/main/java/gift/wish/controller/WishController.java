@@ -2,7 +2,7 @@ package gift.wish.controller;
 
 import gift.annotation.LoginMember;
 import gift.member.model.Member;
-import gift.model.HttpResult;
+import gift.dto.HttpResult;
 import gift.wish.dto.WishRequest;
 import gift.wish.dto.WishResponse;
 import gift.wish.model.Wish;

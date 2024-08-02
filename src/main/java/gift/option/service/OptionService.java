@@ -25,8 +25,8 @@ public class OptionService {
     }
 
     // 옵션 생성
-    public Option createOption(final OptionRequest optionRequest) {
-        var product = productRepository.findByName(optionRequest.getProductName())
+    public Option createOption(Long productId, final OptionRequest optionRequest) {
+        var product = productRepository.findById(productId)
             .orElseThrow(() -> new NoSuchElementException("상품이 존재하지 않습니다"));
         var option = new Option(optionRequest.getName(), optionRequest.getQuantity(), product);
         var foundOption = optionRepository.findAllByProduct(product);
@@ -54,8 +54,8 @@ public class OptionService {
     }
 
     // 옵션 ID 탐색
-    public Option retrieveOption(Long id) {
-        return optionRepository.findById(id)
+    public Option retrieveOption(Long productId,Long optionId) {
+        return optionRepository.findById(optionId)
             .orElseThrow(() -> new ResourceNotFoundException("없는 옵션입니다."));
     }
 

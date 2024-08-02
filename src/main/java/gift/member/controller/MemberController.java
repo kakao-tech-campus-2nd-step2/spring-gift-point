@@ -4,7 +4,7 @@ import gift.exception.IllegalEmailException;
 import gift.member.dto.MemberRequest;
 import gift.member.dto.MemberResponse;
 import gift.member.service.MemberService;
-import gift.model.HttpResult;
+import gift.dto.HttpResult;
 import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.Map;

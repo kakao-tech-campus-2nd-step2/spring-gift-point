@@ -57,10 +57,10 @@ class OptionServiceTest {
 
     @Test
     void createOptionTest() {
-        when(productRepository.findByName(anyString())).thenReturn(Optional.of(product));
+        when(productRepository.findById(anyLong())).thenReturn(Optional.of(product));
         when(optionRepository.save(any(Option.class))).thenReturn(option);
 
-        Option createdOption = optionService.createOption(optionRequest);
+        Option createdOption = optionService.createOption(1L,optionRequest);
 
         assertThat(createdOption).isNotNull();
         assertThat(createdOption.getName()).isEqualTo("테스트 옵션");
@@ -95,7 +95,7 @@ class OptionServiceTest {
     void retrieveOptionTest() {
         when(optionRepository.findById(anyLong())).thenReturn(Optional.of(option));
 
-        Option retrievedOption = optionService.retrieveOption(1L);
+        Option retrievedOption = optionService.retrieveOption(1L,1L);
 
         assertThat(retrievedOption).isNotNull();
         assertThat(retrievedOption.getName()).isEqualTo("테스트 옵션");
@@ -105,7 +105,7 @@ class OptionServiceTest {
     void retrieveOptionNotFoundTest() {
         when(optionRepository.findById(anyLong())).thenReturn(Optional.empty());
 
-        assertThatThrownBy(() -> optionService.retrieveOption(1L))
+        assertThatThrownBy(() -> optionService.retrieveOption(1L,1L))
             .isInstanceOf(ResourceNotFoundException.class)
             .hasMessage("없는 옵션입니다.");
     }

@@ -1,9 +1,8 @@
 package gift.exception;
 
 import gift.category.dto.CategoryResponse;
-import gift.dto.ApiResponse;
 import gift.member.dto.MemberResponse;
-import gift.model.HttpResult;
+import gift.dto.HttpResult;
 import gift.option.dto.OptionResponse;
 import gift.product.dto.ProductResponse;
 import java.util.Collections;
@@ -105,10 +104,11 @@ public class GlobalExceptionHandler {
 
     @ResponseStatus(value = HttpStatus.UNAUTHORIZED)
     @ExceptionHandler(IllegalAccessWithOutLoginException.class)
-    public final ResponseEntity<ApiResponse> handleIllegalAcessWithoutLoginException(
+    public final ResponseEntity<MemberResponse> handleIllegalAcessWithoutLoginException(
         IllegalAccessWithOutLoginException e) {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-            .body(new ApiResponse(HttpResult.ERROR, "로그인되지 않았습니다.", HttpStatus.UNAUTHORIZED));
+            .body(new MemberResponse(HttpResult.ERROR, "로그인되지 않았습니다.", HttpStatus.UNAUTHORIZED,
+                null));
     }
 
     @ResponseStatus(value = HttpStatus.FORBIDDEN)

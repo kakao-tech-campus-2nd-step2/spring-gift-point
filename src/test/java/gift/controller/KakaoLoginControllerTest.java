@@ -14,7 +14,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import gift.member.kakaomember.controller.KakaoLoginController;
+import gift.kakaomember.controller.KakaoLoginController;
 import gift.security.LoginMemberArgumentResolver;
 import gift.member.service.MemberService;
 import jakarta.servlet.http.HttpSession;

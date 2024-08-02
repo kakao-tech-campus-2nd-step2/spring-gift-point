@@ -4,7 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import gift.exception.IllegalEmailException;
 import gift.member.dto.MemberRequest;
-import gift.member.kakaomember.property.KakaoProperties;
+import gift.kakaomember.property.KakaoProperties;
 import gift.member.model.Member;
 import gift.member.repository.MemberRepository;
 import io.jsonwebtoken.Jwts;

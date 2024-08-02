@@ -8,7 +8,6 @@ import static org.springframework.restdocs.operation.preprocess.Preprocessors.pr
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessResponse;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.prettyPrint;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
-import static org.springframework.restdocs.payload.PayloadDocumentation.requestBody;
 import static org.springframework.restdocs.payload.PayloadDocumentation.requestFields;
 import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -17,7 +16,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import gift.dto.ApiResponse;
 import gift.exception.IllegalEmailException;
 import gift.member.controller.MemberController;
 import gift.member.dto.MemberRequest;
@@ -59,7 +57,6 @@ class MemberControllerTest {
     private WebApplicationContext context;
 
     private Member member;
-    private ApiResponse apiResponse;
 
     @BeforeEach
     void setUp(RestDocumentationContextProvider restDocumentation) throws IllegalEmailException {

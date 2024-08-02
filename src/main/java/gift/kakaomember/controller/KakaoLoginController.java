@@ -1,13 +1,15 @@
-package gift.member.kakaomember.controller;
+package gift.kakaomember.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import gift.dto.ApiResponse;
 import gift.exception.IllegalEmailException;
+import gift.member.dto.MemberResponse;
 import gift.member.service.MemberService;
-import gift.model.HttpResult;
+import gift.dto.HttpResult;
 import jakarta.servlet.http.HttpSession;
+import java.util.HashMap;
 import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.web.client.RestTemplateBuilder;
@@ -22,11 +24,14 @@ import org.springframework.ui.Model;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 
 @Slf4j
-@Controller
+@RestController
+@RequestMapping("/api/oauth")
 public class KakaoLoginController {
 
     private MemberService memberService;
@@ -37,8 +42,8 @@ public class KakaoLoginController {
         this.memberService = memberService;
     }
 
-    @GetMapping("/")
-    public String redirectedPageForAuthCode(
+    @GetMapping("/authorize")
+    public ResponseEntity<ApiResponse> getKakaoLogin(
         @RequestParam(value = "code", required = false) String code,
         Model model, HttpSession session) {
         model.addAttribute("message", "homepage");
@@ -46,10 +51,15 @@ public class KakaoLoginController {
             session.setAttribute("kakao_auth_code", code);
             authCode = code;
             model.addAttribute("message", "인가 코드 확인");
-            log.info("This is an info code {}",code);
-            return "redirect:/kakao/login";
+            log.info("This is an info code {}", code);
+            HashMap<Object, Object> objectObjectHashMap = new HashMap<>();
+            objectObjectHashMap.put("code", authCode);
+            return ResponseEntity.ok(
+                new ApiResponse(HttpResult.OK, "카카오 계정으로 로그인 이동", HttpStatus.OK,
+                    objectObjectHashMap));
         }
-        return "kakaologin";
+        return ResponseEntity.ok(new ApiResponse(HttpResult.OK, "카카오 로그인 이동", HttpStatus.OK,
+            memberService.getAuthentificationCode()));
     }
 
     @GetMapping("/kakao/page")
@@ -57,23 +67,18 @@ public class KakaoLoginController {
         return "kakaologin";
     }
 
-    @GetMapping("/kakao/authcode")
-    public String getAuthentificationCodeWithKakao(
-    ) {
-        return "redirect:" + memberService.getAuthentificationCode();
-    }
 
-    @GetMapping("/kakao/login")
-    public ResponseEntity<ApiResponse> loginWithKakao(HttpSession session) throws JsonProcessingException {
+    @GetMapping("/token")
+    public ResponseEntity<MemberResponse> loginAsKakaoMember(HttpSession session)
+        throws JsonProcessingException {
         String authCode = (String) session.getAttribute("kakao_auth_code");
         if (authCode == null) {
-            return new ResponseEntity<>(
-                new ApiResponse(HttpResult.ERROR, "인가 코드 에러", HttpStatus.BAD_REQUEST),
-                HttpStatus.BAD_REQUEST);
+            return ResponseEntity.ok(
+                new MemberResponse(HttpResult.ERROR, "인가 코드 에러", HttpStatus.BAD_REQUEST, authCode));
         }
 
         ResponseEntity<String> response = memberService.getResponseEntity(authCode);
-        String accessToken = memberService.getAccessToken(response.getBody());
+        accessToken = memberService.getAccessToken(response.getBody());
         var headers = getHttpHeaders(accessToken);
         var responseEntity = getHttpResponse(headers);
 
@@ -83,24 +88,25 @@ public class KakaoLoginController {
         try {
             Optional<String> jwtToken = memberService.loginOrRegisterKakaoUser(kakaoId, kakaoEmail);
             if (jwtToken.isPresent()) {
-                ApiResponse apiResponse = new ApiResponse(HttpResult.OK, "카카오 로그인 성공", HttpStatus.OK);
-                System.out.println(jwtToken.get());
-                return new ResponseEntity<>(apiResponse, HttpStatus.OK);
+                return ResponseEntity.ok(new MemberResponse(HttpResult.OK, "카카오 로그인 성공",
+                    HttpStatus.OK, jwtToken));
             } else {
-                return new ResponseEntity<>(
-                    new ApiResponse(HttpResult.ERROR, "카카오 로그인 실패", HttpStatus.UNAUTHORIZED),
-                    HttpStatus.UNAUTHORIZED);
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
+                    new MemberResponse(HttpResult.ERROR, "카카오 로그인 실패", HttpStatus.UNAUTHORIZED,
+                        null)
+                );
             }
         } catch (Exception | IllegalEmailException e) {
-            return new ResponseEntity<>(
-                new ApiResponse(HttpResult.ERROR, "카카오 로그인 처리 중 오류 발생", HttpStatus.INTERNAL_SERVER_ERROR),
-                HttpStatus.INTERNAL_SERVER_ERROR);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
+                new MemberResponse(HttpResult.ERROR, "카카오 로그인 처리 중 오류 발생",
+                    HttpStatus.INTERNAL_SERVER_ERROR, null)
+            );
         }
     }
 
 
     @GetMapping("/kakao/gift/self")
-    public ResponseEntity<ApiResponse> giftForOneSelf(HttpSession session)
+    public ResponseEntity<MemberResponse> giftForOneSelf(HttpSession session)
         throws JsonProcessingException {
         ObjectMapper objectMapper = new ObjectMapper();
         // Create the template object as a JSON string
@@ -117,11 +123,11 @@ public class KakaoLoginController {
 
         var resultCode = jsonNode.get("result_code").asText();
         if (resultCode.equals("0")) {
-            return new ResponseEntity<>(new ApiResponse(HttpResult.OK, "성공", HttpStatus.OK),
-                HttpStatus.OK);
+            return ResponseEntity.ok(
+                new MemberResponse(HttpResult.OK, "성공", HttpStatus.OK, jsonNode));
         }
-        return new ResponseEntity<>(new ApiResponse(HttpResult.ERROR, "실패", HttpStatus.BAD_REQUEST),
-            HttpStatus.BAD_REQUEST);
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
+            new MemberResponse(HttpResult.ERROR, "실패", HttpStatus.BAD_REQUEST, null));
     }
 
     private static String getString() {
@@ -131,7 +137,8 @@ public class KakaoLoginController {
             .append("\"content\": {")
             .append("  \"title\": \"오늘의 디저트\",")
             .append("  \"description\": \"아메리카노, 빵, 케익\",")
-            .append("  \"image_url\": \"https://mud-kage.kakao.com/dn/NTmhS/btqfEUdFAUf/FjKzkZsnoeE4o19klTOVI1/openlink_640x640s.jpg\",")
+            .append(
+                "  \"image_url\": \"https://mud-kage.kakao.com/dn/NTmhS/btqfEUdFAUf/FjKzkZsnoeE4o19klTOVI1/openlink_640x640s.jpg\",")
             .append("  \"image_width\": 640,")
             .append("  \"image_height\": 640,")
             .append("  \"link\": {")
@@ -143,8 +150,10 @@ public class KakaoLoginController {
             .append("},")
             .append("\"item_content\": {")
             .append("  \"profile_text\": \"Kakao\",")
-            .append("  \"profile_image_url\": \"https://mud-kage.kakao.com/dn/Q2iNx/btqgeRgV54P/VLdBs9cvyn8BJXB3o7N8UK/kakaolink40_original.png\",")
-            .append("  \"title_image_url\": \"https://mud-kage.kakao.com/dn/Q2iNx/btqgeRgV54P/VLdBs9cvyn8BJXB3o7N8UK/kakaolink40_original.png\",")
+            .append(
+                "  \"profile_image_url\": \"https://mud-kage.kakao.com/dn/Q2iNx/btqgeRgV54P/VLdBs9cvyn8BJXB3o7N8UK/kakaolink40_original.png\",")
+            .append(
+                "  \"title_image_url\": \"https://mud-kage.kakao.com/dn/Q2iNx/btqgeRgV54P/VLdBs9cvyn8BJXB3o7N8UK/kakaolink40_original.png\",")
             .append("  \"title_image_text\": \"Cheese cake\",")
             .append("  \"title_image_category\": \"Cake\",")
             .append("  \"items\": [")
@@ -183,6 +192,7 @@ public class KakaoLoginController {
             .append("}");
         return templateObject.toString();
     }
+
     private Long getKakaoId(ResponseEntity<String> response) throws JsonProcessingException {
         String responseBody = response.getBody();
         ObjectMapper objectMapper = new ObjectMapper();

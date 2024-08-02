@@ -4,11 +4,7 @@ import gift.category.dto.CategoryRequest;
 import gift.category.dto.CategoryResponse;
 import gift.category.model.Category;
 import gift.category.service.CategoryService;
-import gift.dto.ApiResponse;
-import gift.model.HttpResult;
-import java.util.Collections;
-import java.util.LinkedHashMap;
-import java.util.Map;
+import gift.dto.HttpResult;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -47,8 +43,6 @@ public class CategoryController {
     public ResponseEntity<CategoryResponse> getCategory(
         @PathVariable("categoryId") Long id) {
         var foundCategory = categoryService.getCategoryById(id);
-        var getAllCateogiresSucess = new ApiResponse(HttpResult.OK,
-            Collections.singletonList(foundCategory).toString(), HttpStatus.OK);
         return ResponseEntity.ok(
             new CategoryResponse(HttpResult.OK, "카테고리 검색 성공", HttpStatus.OK, foundCategory));
     }
@@ -58,7 +52,6 @@ public class CategoryController {
     public ResponseEntity<CategoryResponse> addCategory(
         @RequestBody CategoryRequest categoryRequest) {
         Category category = categoryService.addCategory(categoryRequest);
-        Map<String, Object> categoryMap = getCategoryStringObjectMap(category);
         return ResponseEntity.ok(
             new CategoryResponse(HttpResult.OK,
                 "카테고리 추가 성공",
@@ -68,34 +61,14 @@ public class CategoryController {
     }
 
 
-    private static Map<String, Object> getCategoryStringObjectMap(Category category) {
-        Map<String, Object> categoryMap = new LinkedHashMap<>();
-        categoryMap.put("id", category.getId());
-        categoryMap.put("name", category.getName());
-        categoryMap.put("color", category.getColor());
-        categoryMap.put("imageUrl", category.getImageUrl());
-        categoryMap.put("description", category.getDescription());
-        return categoryMap;
-    }
-
-    private static Map<String, Object> getCategoryDtoStringObjectMap(CategoryRequest category) {
-        Map<String, Object> categoryMap = new LinkedHashMap<>();
-        categoryMap.put("id", category.getId());
-        categoryMap.put("name", category.getName());
-        categoryMap.put("color", category.getColor());
-        categoryMap.put("imageUrl", category.getImageUrl());
-        categoryMap.put("description", category.getDescription());
-        return categoryMap;
-    }
 
     @PutMapping("/{categoryId}")
-    public ResponseEntity<ApiResponse<Category>> updateCategoryName(
+    public ResponseEntity<CategoryResponse> updateCategoryName(
         @PathVariable(value = "categoryId") Long categoryId,
         @RequestBody CategoryRequest categoryRequest) {
-        var updatedCategory = categoryService.updateCategory(categoryRequest);
-        Map<String, Object> categoryStringObjectMap = getCategoryStringObjectMap(updatedCategory);
+        var updatedCategory = categoryService.updateCategory(categoryId,categoryRequest);
         return ResponseEntity.ok(
-            new ApiResponse(HttpResult.OK, "카테고리 수정 성공", HttpStatus.OK, updatedCategory));
+            new CategoryResponse(HttpResult.OK, "카테고리 수정 성공", HttpStatus.OK, updatedCategory));
     }
 
     @DeleteMapping

@@ -1,6 +1,5 @@
 package gift.dto;
 
-import gift.model.HttpResult;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.Getter;

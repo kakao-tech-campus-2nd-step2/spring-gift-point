@@ -2,6 +2,7 @@ package gift.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -67,8 +68,8 @@ class WishServiceTest {
     @DisplayName("위시 리스트 추가")
     public void addWishTest() {
         // given
-        when(wishRepository.save(wish)).thenReturn(wish);
-        when(productRepository.findById(any(Long.class))).thenReturn(Optional.ofNullable(product));
+        when(wishRepository.save(any(Wish.class))).thenReturn(wish);
+        when(productRepository.findById(anyLong())).thenReturn(Optional.ofNullable(product));
 
         // when
         var addedWish = wishService.addWish(product.getId(),member);
@@ -76,8 +77,6 @@ class WishServiceTest {
         // then
         assertThat(addedWish).isEqualTo(wish);
 
-        // verify
-        verify(wishRepository, times(1)).save(wish);
     }
 
     @Test

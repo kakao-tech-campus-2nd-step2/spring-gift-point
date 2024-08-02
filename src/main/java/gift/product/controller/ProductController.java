@@ -1,10 +1,9 @@
 package gift.product.controller;
 
 import gift.category.service.CategoryService;
-import gift.dto.ApiResponse;
 import gift.exception.NonIntegerPriceException;
 import gift.exception.OptionNotFoundException;
-import gift.model.HttpResult;
+import gift.dto.HttpResult;
 import gift.option.service.OptionService;
 import gift.product.dto.ProductRequest;
 import gift.product.dto.ProductResponse;
@@ -55,7 +54,8 @@ public class ProductController {
         @RequestParam(value = "categoryId", defaultValue = "1") Long categoryId, Model model) {
         String[] sortParams = sort.split(",");
         String property = sortParams[0];
-        Direction direction = sortParams.length > 1 ? Direction.valueOf(sortParams[1]) : Direction.DESC;
+        Direction direction =
+            sortParams.length > 1 ? Direction.valueOf(sortParams[1]) : Direction.DESC;
 
         Page<Product> productList = productService.getProductList(page, size, property, direction);
         model.addAttribute("productList", productList.getContent());
@@ -74,12 +74,10 @@ public class ProductController {
     }
 
     @GetMapping("/products/all")
-    public ResponseEntity<ApiResponse> getAllProducts() {
+    public ResponseEntity<ProductResponse> getAllProducts() {
         List<Product> products = productService.getAllProducts();
-        Map<String, Object> response = new HashMap<>();
-        response.put("message", "All products retrieved successfully.");
-        response.put("products", products);
-        var productsRetreiveSucess = new ApiResponse(HttpResult.OK, "상품 전체 조회 성공", HttpStatus.OK);
+        var productsRetreiveSucess = new ProductResponse(HttpResult.OK, "상품 전체 조회 성공",
+            HttpStatus.OK, products);
         return new ResponseEntity<>(productsRetreiveSucess, productsRetreiveSucess.getHttpStatus());
     }
 

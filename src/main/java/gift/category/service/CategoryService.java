@@ -63,8 +63,8 @@ public class CategoryService {
     }
 
     @Transactional
-    public Category updateCategory(CategoryRequest categoryRequest) {
-        var foundCategory = categoryRepository.findById(categoryRequest.getId())
+    public Category updateCategory(Long categoryId,CategoryRequest categoryRequest) {
+        var foundCategory = categoryRepository.findById(categoryId)
             .orElseThrow(() -> new IllegalCategoryException("없는 카테고리 입니다."));
         foundCategory.setName(categoryRequest.getName());
         foundCategory.setColor(categoryRequest.getColor());

@@ -2,6 +2,7 @@ package gift.controller;
 
 import static org.hamcrest.Matchers.containsString;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.willDoNothing;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
@@ -192,7 +193,7 @@ class CategoryControllerTest {
     void updateCategoryTest() throws Exception {
         // given
         var categoryDto = new CategoryRequest(1L, "새상품권", Collections.singletonList("productName"));
-        given(categoryService.updateCategory(any(CategoryRequest.class))).willReturn(
+        given(categoryService.updateCategory(anyLong(),any(CategoryRequest.class))).willReturn(
             category);
 
         // when & then
