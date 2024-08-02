@@ -6,7 +6,6 @@ public record OrderResponseDTO(Long id,
                                Long optionId,
                                Integer quantity,
                                LocalDateTime orderDateTime,
-                               String message,
-                               boolean success) {
+                               String message) {
 }
 
