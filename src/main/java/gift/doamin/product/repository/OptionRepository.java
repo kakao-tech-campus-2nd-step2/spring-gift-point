@@ -1,7 +1,6 @@
 package gift.doamin.product.repository;
 
 import gift.doamin.product.entity.Option;
-import java.nio.ByteBuffer;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 

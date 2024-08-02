@@ -9,6 +9,6 @@ values ('패션', '#000000', '');
 Insert Into category(name, color, image_url)
 values ('식품', '#000000', '');
 
-INSERT INTO users(email, name, password, role)
+INSERT INTO users(email, name, password, role, point)
 values ('admin@admin.com', 'admin',
-        '{bcrypt}$2a$10$Kd3Tjp96Ox4L6PTNpJ2byuDKRRUdFnJl89a85O8mTFzMQkyTowKFS', 'ADMIN')
+        '{bcrypt}$2a$10$Kd3Tjp96Ox4L6PTNpJ2byuDKRRUdFnJl89a85O8mTFzMQkyTowKFS', 'ADMIN', 10000)
