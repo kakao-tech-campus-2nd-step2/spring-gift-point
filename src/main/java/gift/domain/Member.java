@@ -16,7 +16,7 @@ public class Member {
     @Column(nullable = false)
     private String password;
     private String accessToken;
-    @Column(columnDefinition = "integer default 10000000000")
+    @Column(columnDefinition = "integer default 0")
     private Integer point;
 
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
