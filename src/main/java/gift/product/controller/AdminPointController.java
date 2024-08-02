@@ -1,6 +1,6 @@
 package gift.product.controller;
 
-import gift.product.dto.PointDTO;
+import gift.product.dto.PointRequestDTO;
 import gift.product.model.Member;
 import gift.product.service.MemberService;
 import jakarta.validation.Valid;
@@ -29,22 +29,22 @@ public class AdminPointController {
     public String pointAdminPage(Model model) {
         List<Member> members = memberService.findAll();
         model.addAttribute("members", members);
-        model.addAttribute("pointDTO", new PointDTO());
+        model.addAttribute("pointDTO", new PointRequestDTO());
         return "point-management";
     }
 
     @PostMapping
     public String addPoint(
-        @Valid @ModelAttribute PointDTO pointDTO,
+        @Valid @ModelAttribute PointRequestDTO pointRequestDTO,
         BindingResult bindingResult,
         Model model) {
         System.out.println("[AdminPointController] addPoint()");
         if (bindingResult.hasErrors()) {
             System.out.println(bindingResult.getFieldError().getDefaultMessage());
-            model.addAttribute("pointDTO", pointDTO);
+            model.addAttribute("pointDTO", pointRequestDTO);
             return "point-management";
         }
-        memberService.addPoint(pointDTO);
+        memberService.addPoint(pointRequestDTO);
         return "success-add-point";
     }
 }

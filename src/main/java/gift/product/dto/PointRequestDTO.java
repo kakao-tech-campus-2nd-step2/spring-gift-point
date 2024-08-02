@@ -3,7 +3,7 @@ package gift.product.dto;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 
-public class PointDTO {
+public class PointRequestDTO {
 
     @NotNull(message = "포인트를 추가할 사용자 정보가 입력되지 않았습니다.")
     private Long memberId;
@@ -11,11 +11,11 @@ public class PointDTO {
     @Positive(message = "추가하는 포인트는 1이상의 양의 정수여야 합니다.")
     private int point;
 
-    public PointDTO() {}
+    public PointRequestDTO() {}
 
-    public PointDTO(PointDTO pointDTO) {
-        this.memberId = pointDTO.getMemberId();
-        this.point = pointDTO.getPoint();
+    public PointRequestDTO(PointRequestDTO pointRequestDTO) {
+        this.memberId = pointRequestDTO.getMemberId();
+        this.point = pointRequestDTO.getPoint();
     }
 
     public Long getMemberId() {

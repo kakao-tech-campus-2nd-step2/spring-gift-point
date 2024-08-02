@@ -3,7 +3,8 @@ package gift.product.service;
 import static gift.product.exception.GlobalExceptionHandler.NOT_EXIST_ID;
 
 import gift.product.dto.MemberDTO;
-import gift.product.dto.PointDTO;
+import gift.product.dto.PointRequestDTO;
+import gift.product.dto.PointResponseDTO;
 import gift.product.dto.TokenDTO;
 import gift.product.exception.InvalidIdException;
 import gift.product.model.Member;
@@ -54,11 +55,19 @@ public class MemberService {
         return memberRepository.findAll();
     }
 
-    public void addPoint(PointDTO pointDTO) {
+    public void addPoint(PointRequestDTO pointRequestDTO) {
         System.out.println("[MemberService] addPoint()");
-        Member member = memberRepository.findById(pointDTO.getMemberId())
+        Member member = memberRepository.findById(pointRequestDTO.getMemberId())
             .orElseThrow(() -> new InvalidIdException(NOT_EXIST_ID));
-        member.addPoint(pointDTO.getPoint());
+        member.addPoint(pointRequestDTO.getPoint());
         memberRepository.save(member);
+    }
+
+    public PointResponseDTO getPoint(String authorization) {
+        Member member = jwtUtil.parsingToken(authorization);
+        return new PointResponseDTO(
+            memberRepository.findById(member.getId())
+            .orElseThrow(() -> new InvalidIdException(NOT_EXIST_ID))
+            .getPoint());
     }
 }
