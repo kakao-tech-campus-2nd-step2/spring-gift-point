@@ -51,11 +51,14 @@ public class Order extends BaseTimeEntity {
     public Order() {
     }
 
-    public Order(Option option, AppUser user, int quantity, String message) {
+    public Order(Option option, AppUser user, int quantity, String message, int usedPoint, int price) {
         this.option = option;
         this.user = user;
         this.quantity = quantity;
         this.message = message;
+        this.usedPoint = usedPoint;
+        this.receivedPoint = Math.round(price * 0.05f);
+        this.totalPrice = price - usedPoint;
     }
 
     public Long getId() {
