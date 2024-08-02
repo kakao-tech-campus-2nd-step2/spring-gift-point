@@ -2,7 +2,8 @@ package gift.Service;
 
 import gift.Exception.Category.CategoryDuplicatedException;
 import gift.Exception.Category.CategoryNotFoundException;
-import gift.Model.DTO.CategoryDTO;
+import gift.Model.request.CategoryRequest;
+import gift.Model.response.CategoryResponse;
 import gift.Model.Entity.CategoryEntity;
 import gift.Repository.CategoryRepository;
 import org.springframework.stereotype.Service;
@@ -19,35 +20,35 @@ public class CategoryService {
         this.categoryRepository = categoryRepository;
     }
 
-    public void create(CategoryDTO categoryDTO){
-        Optional<CategoryEntity> categoryEntityOptional = categoryRepository.findByName(categoryDTO.name());
+    public void create(CategoryRequest categoryRequest){
+        Optional<CategoryEntity> categoryEntityOptional = categoryRepository.findByName(categoryRequest.name());
 
         if(categoryEntityOptional.isPresent()){
             throw new CategoryDuplicatedException("중복된 카테고리가 이미 있습니다.");
         }
 
-        categoryRepository.save(new CategoryEntity(categoryDTO.name(), categoryDTO.imageUrl(), categoryDTO.description()));
+        categoryRepository.save(new CategoryEntity(categoryRequest.name(), categoryRequest.imageUrl(), categoryRequest.description()));
     }
 
-    public List<CategoryDTO> read(){
+    public List<CategoryResponse> read(){
         List<CategoryEntity> categoryEntityList = categoryRepository.findAll();
 
-        List<CategoryDTO> categoryDTOList = new ArrayList<>();
+        List<CategoryResponse> categoryResponseList = new ArrayList<>();
 
         for(CategoryEntity c: categoryEntityList){
-            categoryDTOList.add(c.mapToDTO());
+            categoryResponseList.add(c.mapToDTO());
         }
 
-        return categoryDTOList;
+        return categoryResponseList;
     }
 
-    public void update(Long categoryId, CategoryDTO categoryDTO){
+    public void update(Long categoryId, CategoryRequest categoryRequest){
         Optional<CategoryEntity> categoryEntityOptional = categoryRepository.findById(categoryId);
 
         if(categoryEntityOptional.isEmpty()){
             throw new CategoryNotFoundException("카테고리를 찾을 수 없습니다.");
         }
-        CategoryEntity categoryEntity = new CategoryEntity(categoryDTO.name(), categoryDTO.imageUrl(), categoryDTO.description());
+        CategoryEntity categoryEntity = new CategoryEntity(categoryRequest.name(), categoryRequest.imageUrl(), categoryRequest.description());
         categoryEntity.setId(categoryId);
         categoryRepository.save(categoryEntity);
     }

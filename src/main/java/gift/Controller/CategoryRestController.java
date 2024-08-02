@@ -1,6 +1,7 @@
 package gift.Controller;
 
-import gift.Model.DTO.CategoryDTO;
+import gift.Model.request.CategoryRequest;
+import gift.Model.response.CategoryResponse;
 import gift.Service.CategoryService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -21,19 +22,18 @@ public class CategoryRestController {
 
     @Operation(summary = "카테고리 목록 조회", description = "category 데이터베이스에 있는 데이터를 조회합니다.")
     @GetMapping
-    public List<CategoryDTO> read(){
+    public List<CategoryResponse> read(){
         return categoryService.read();
     }
 
     @PostMapping
-    public ResponseEntity<?> create(@RequestBody CategoryDTO categoryDTO){
-        categoryService.create(categoryDTO);
+    public ResponseEntity<?> create(@RequestBody CategoryRequest categoryRequest){
         return ResponseEntity.ok("성공");
     }
 
     @PutMapping("/{categoryId}")
-    public ResponseEntity<?> update(@PathVariable Long categoryId, @RequestBody CategoryDTO categoryDTO){
-        categoryService.update(categoryId, categoryDTO);
+    public ResponseEntity<?> update(@PathVariable Long categoryId, @RequestBody CategoryRequest categoryRequest){
+        categoryService.update(categoryId, categoryRequest);
         return ResponseEntity.ok("성공");
     }
 }
