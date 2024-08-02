@@ -1,59 +1,49 @@
 package gift.service;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import gift.exception.ErrorCode;
-import gift.exception.customException.CustomNotFoundException;
-import gift.model.dto.OrderDTO;
+import gift.model.entity.Item;
 import gift.model.entity.Option;
 import gift.model.entity.Order;
 import gift.model.entity.User;
-import gift.oauth.KakaoApiService;
-import gift.repository.ItemRepository;
-import gift.repository.OptionRepository;
+import gift.model.form.OrderForm;
 import gift.repository.OrderRepository;
-import gift.repository.UserRepository;
+import java.time.LocalDateTime;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class OrderService {
 
-    private final UserRepository userRepository;
-    private final KakaoApiService kakaoApiService;
+    private final UserService userService;
     private final OrderRepository orderRepository;
-    private final OptionRepository optionRepository;
-    private final ItemRepository itemRepository;
+    private final ItemService itemService;
+    private final Long POINT_ACCUMULATION_RATE;
 
-    public OrderService(UserRepository userRepository,
-        KakaoApiService kakaoApiService,
-        OrderRepository orderRepository, OptionRepository optionRepository,
-        ItemRepository itemRepository) {
-        this.userRepository = userRepository;
-        this.kakaoApiService = kakaoApiService;
+    public OrderService(UserService userService, OrderRepository orderRepository,
+        ItemService itemService, @Value("${order.par}") Long POINT_ACCUMULATION_RATE) {
+        this.userService = userService;
         this.orderRepository = orderRepository;
-        this.optionRepository = optionRepository;
-        this.itemRepository = itemRepository;
+        this.itemService = itemService;
+        this.POINT_ACCUMULATION_RATE = POINT_ACCUMULATION_RATE;
     }
 
     @Transactional
-    public OrderDTO executeOrder(Long userId, OrderDTO orderDTO)
-        throws JsonProcessingException {
-        User user = findUserByUserId(userId);
-        Option option = findOptionByOptionId(orderDTO.getOptionId());
-        option.decreaseQuantity(orderDTO.getQuantity());
-        //kakaoApiService.sendMessageToMe(user.getAccessToken(), orderDTO.getMessage());
-        Order order = user.addOrder(new Order(user, orderDTO.getOptionId(),
-            orderDTO.getQuantity(), orderDTO.getMessage(), orderDTO.getOrderDateTime()));
-        return new OrderDTO(orderRepository.save(order));
+    public Long executeOrder(Long userId, OrderForm form) {
+        User user = userService.findUserEntityByUserId(userId);
+        Item item = itemService.findItemById(form.getProductId());
+        Option option = item.getOptionByOptionId(form.getOptionId());
+        option.decreaseQuantity(form.getQuantity());
+        user.decreasingPoint(form.getPoint());
+        Long totalPrice = (item.getPrice() * form.getQuantity() - form.getPoint());
+        Long accumulatePoint = calculatePoint(totalPrice);
+        user.increasingPoint(accumulatePoint);
+        Order order = new Order(user, form.getProductId(), form.getOptionId(), form.getQuantity(),
+            form.getMessage(), LocalDateTime.now(), totalPrice);
+        user.addOrder(order);
+        return orderRepository.save(order).getId();
     }
 
-    public User findUserByUserId(Long userId) {
-        return userRepository.findById(userId).orElseThrow(() -> new CustomNotFoundException(
-            ErrorCode.USER_NOT_FOUND));
-    }
-
-    public Option findOptionByOptionId(Long optionId) {
-        return optionRepository.findById(optionId)
-            .orElseThrow(() -> new CustomNotFoundException(ErrorCode.OPTION_NOT_FOUND));
+    public Long calculatePoint(Long totalPrice) {
+        return totalPrice / POINT_ACCUMULATION_RATE;
     }
 }

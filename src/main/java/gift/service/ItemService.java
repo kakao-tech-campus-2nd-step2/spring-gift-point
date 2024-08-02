@@ -38,7 +38,7 @@ public class ItemService {
         Item item = findItemById(id);
         boolean isWish = false;
         if (userId != 0) {
-            List<WishListResponse> wishes = userService.getWishListFromUser(userId);
+            List<WishListResponse> wishes = userService.findWishListFromUser(userId);
             isWish = wishes.stream().anyMatch(o -> o.getProductId().equals(item.getId()));
         }
         return new ItemResponse(item.getId(), item.getName(), item.getPrice(), item.getImgUrl(),
@@ -86,7 +86,7 @@ public class ItemService {
 
     private Page<ItemResponse> isIncludeWishItems(Long userId, Page<Item> list) {
         if (userId != 0) {
-            List<WishListResponse> wishes = userService.getWishListFromUser(userId);
+            List<WishListResponse> wishes = userService.findWishListFromUser(userId);
             return list.map(
                 o -> new ItemResponse(o.getId(), o.getName(), o.getPrice(), o.getImgUrl(),
                     wishes.stream().anyMatch(w -> w.getProductId().equals(o.getId()))));
@@ -171,3 +171,4 @@ public class ItemService {
     }
 
 }
+
