@@ -1,7 +1,7 @@
 package gift.controller;
 
 import gift.dto.LoginDTO;
-import gift.dto.MemberDTO;
+import gift.dto.memberDTO.MemberDTO;
 import gift.service.MemberService;
 import gift.util.JwtUtil;
 import gift.model.Member;

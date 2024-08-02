@@ -4,7 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-import gift.dto.MemberDTO;
+import gift.dto.memberDTO.MemberDTO;
 import gift.model.Member;
 import gift.repository.MemberRepository;
 import org.junit.jupiter.api.Test;
