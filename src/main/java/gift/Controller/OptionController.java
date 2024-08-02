@@ -43,8 +43,8 @@ public class OptionController {
     @PostMapping("/")
     @Operation(summary = "상품 옵션 추가", description = "상품에 대한 옵션을 추가합니다.")
     public ResponseEntity<?> addOption(@RequestBody OptionDto optionDto) {
-        optionService.addOption(optionDto);
-        return new ResponseEntity<>(HttpStatus.OK);
+        OptionDto savedOptionDto = optionService.addOption(optionDto);
+        return ResponseEntity.status(HttpStatus.CREATED).body(savedOptionDto);
     }
 /*
     //이건 필요한가?

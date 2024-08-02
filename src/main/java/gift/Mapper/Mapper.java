@@ -55,15 +55,14 @@ public class Mapper {
     }
 
     public Product productDtoToEntity(ProductDto productDto) {
-        Category category = categoryService.getCategoryById(productDto.getCategoryId()).get();
-        CategoryDto categoryDto = categoryToDto(category);
+        CategoryDto categoryDto = categoryService.getCategoryById(productDto.getCategoryId());
         return new Product(productDto.getId(), productDto.getName(), categoryDtoToEntity(categoryDto), productDto.getPrice(), productDto.getImageUrl());
     }
 
     public ProductDto productToDto(Product product) {
-        Category category = categoryService.getCategoryById(product.getCategory().getId()).get();
+        CategoryDto categoryDto = categoryService.getCategoryById(product.getCategory().getId());
 
-        return new ProductDto(product.getId(), product.getName(), categoryToDto(category).getId(), product.getPrice(), product.getImageUrl());
+        return new ProductDto(product.getId(), product.getName(), categoryDto.getId(), product.getPrice(), product.getImageUrl());
     }
 
     public Member memberDtoToEntity(MemberDto memberDto) {

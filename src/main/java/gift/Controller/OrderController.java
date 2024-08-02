@@ -4,6 +4,7 @@ import gift.Annotation.LoginMemberResolver;
 import gift.Model.MemberDto;
 import gift.Model.OrderRequestDto;
 import gift.Service.KakaoTalkService;
+import gift.Service.OrderService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.Cookie;
@@ -18,10 +19,12 @@ import java.util.List;
 @Tag(name = "Order", description = "주문 관련 api")
 public class OrderController {
 
+    private final OrderService orderService;
     private final KakaoTalkService kakaoTalkService;
 
     @Autowired
-    public OrderController(KakaoTalkService kakaoTalkService) {
+    public OrderController(OrderService orderService, KakaoTalkService kakaoTalkService) {
+        this.orderService = orderService;
         this.kakaoTalkService = kakaoTalkService;
     }
 
@@ -47,7 +50,8 @@ public class OrderController {
         //토큰으로 메시지 보내기
         if (token != null) { //
             try {
-                kakaoTalkService.sendMessageToMe(token, orderRequestDtoList);
+                int totalPrice = orderService.calculateTotalPrice(orderRequestDtoList);
+                kakaoTalkService.sendMessageToMe(token, orderRequestDtoList, totalPrice);
             } catch (Exception e) {
                 return ResponseEntity.badRequest().body("Error sending message");
             }

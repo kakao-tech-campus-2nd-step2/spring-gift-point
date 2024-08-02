@@ -45,15 +45,17 @@ public class ProductService {
 
     }
 
-    public void saveProduct(ProductDto productDto) {
+    public ProductDto saveProduct(ProductDto productDto) {
         Product product = mapper.productDtoToEntity(productDto);
-        productJpaRepository.save(product);
+        Product savedProduct = productJpaRepository.save(product);
+        return mapper.productToDto(savedProduct);
 
     }
 
-    public Product updateProduct(ProductDto productDtoDetails) {
+    public ProductDto updateProduct(ProductDto productDtoDetails) {
         Product product = mapper.productDtoToEntity(productDtoDetails);
-        return productJpaRepository.save(product);
+        Product updatedProduct = productJpaRepository.save(product);
+        return mapper.productToDto(updatedProduct);
     }
 
     public void deleteProduct(Long id) {

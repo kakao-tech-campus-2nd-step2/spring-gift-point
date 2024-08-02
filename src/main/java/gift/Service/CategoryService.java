@@ -28,8 +28,20 @@ public class CategoryService {
         return categoryList.stream().map(mapper::categoryToDto).collect(Collectors.toList());
     }
 
-    public Optional<Category> getCategoryById(Long id) {
-        return categoryJpaRepository.findById(id);
+    public CategoryDto getCategoryById(Long id) {
+        Category category = categoryJpaRepository.findById(id).get();
+        return mapper.categoryToDto(category);
+    }
+
+    public CategoryDto addCategory(CategoryDto categoryDto) {
+        Category category = mapper.categoryDtoToEntity(categoryDto);
+        Category addedCategory = categoryJpaRepository.save(category);
+        return mapper.categoryToDto(addedCategory);
+    }
+
+    public CategoryDto updateCategory(CategoryDto categoryDto) {
+        Category category = mapper.categoryDtoToEntity(categoryDto);
+        return mapper.categoryToDto(category);
     }
 
     public CategoryDto addCategory(CategoryDto categoryDto) {

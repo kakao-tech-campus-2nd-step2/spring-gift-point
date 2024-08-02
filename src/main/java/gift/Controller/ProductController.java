@@ -16,8 +16,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -55,28 +55,26 @@ public class ProductController {
     @PostMapping("/")
     @Operation(summary = "상품 생성", description = "상품을 생성합니다.")
     public ResponseEntity<?> createProduct(@Valid @RequestBody ProductDto productDto) {
-        productService.saveProduct(productDto);
-        URI location = ServletUriComponentsBuilder.fromCurrentRequest()
-                .path("/")
-                .buildAndExpand(productDto.getId())
-                .toUri();
-        return ResponseEntity.created(location).body("Product added successfully");
+        ProductDto savedproductDto = productService.saveProduct(productDto);
+        return ResponseEntity.status(HttpStatus.CREATED).body(savedproductDto);
     }
 
     @PutMapping("/{productId}")
     @Operation(summary = "상품 수정", description = "상품에 대한 정보를 수정합니다.")
-    public ResponseEntity<?> updateProductById(@PathVariable Long productId, @Valid @ModelAttribute ProductDto productDtoDetails) {
-        Product product = productService.updateProduct(productDtoDetails);
-        return ResponseEntity.ok(product);
+    public ResponseEntity<?> updateProductById(@PathVariable Long productId, @Valid @RequestBody ProductDto productDtoDetails) {
+        ProductDto productDto = productService.updateProduct(productDtoDetails);
+        return ResponseEntity.ok(productDto);
     }
 
     @DeleteMapping("/{productId}")
     @Operation(summary = "상품 삭제", description = "상품을 삭제합니다.")
-    public ResponseEntity<?> deleteProduct(@PathVariable Long productId, Model model) {
+    public ResponseEntity<?> deleteProduct(@PathVariable Long productId) {
         Optional<ProductDto> optionalProduct = productService.getProductById(productId);
-        model.addAttribute("product", optionalProduct.get());
+        if (optionalProduct.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Product not found");
+        }
         productService.deleteProduct(productId);
-        return ResponseEntity.ok(null);
+        return ResponseEntity.ok("Product deleted successfully");
     }
 
 }

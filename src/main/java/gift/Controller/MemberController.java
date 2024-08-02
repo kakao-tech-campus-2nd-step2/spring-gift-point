@@ -69,13 +69,7 @@ public class MemberController {
             body.add("token", token);
             body.add("email", email);
 
-            if (isAdmin) {
-
-                headers.add("Location", "/api/products");
-                return new ResponseEntity<>(body, headers, HttpStatus.OK);
-            }
-
-            headers.add("Location", "/products");
+            //프론트에서 관리자인지 확인함
             return new ResponseEntity<>(body, headers, HttpStatus.OK);
         }
 

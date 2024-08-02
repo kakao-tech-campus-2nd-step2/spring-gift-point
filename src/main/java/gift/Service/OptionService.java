@@ -36,14 +36,16 @@ public class OptionService {
         return mapper.optionToDto(option);
     }
 
-    public void addOption(OptionDto optionDto) {
+    public OptionDto addOption(OptionDto optionDto) {
         Option option = mapper.optionDtoToEntity(optionDto);
-        optionJpaRepository.save(option);
+        Option savedOption = optionJpaRepository.save(option);
+        return mapper.optionToDto(savedOption);
     }
 
-    public void updateOption(OptionDto optionDto) {
+    public OptionDto updateOption(OptionDto optionDto) {
         Option option = mapper.optionDtoToEntity(optionDto);
-        optionJpaRepository.save(option);
+        Option updatedOption = optionJpaRepository.save(option);
+        return mapper.optionToDto(updatedOption);
     }
 
     public void deleteOption(long id) {
@@ -57,6 +59,8 @@ public class OptionService {
         optionJpaRepository.save(option); // 뺀 이후 update
     }
 
+    /*
+    추후 사용될 수도...?
     public void subtractOption(List<OrderRequestDto> orderRequestDtoList) {
         for (OrderRequestDto orderRequestDto : orderRequestDtoList) {
             if(orderRequestDto.getQuantity() <= 0) continue; // 주문 수량이 0 이하인 경우 continue (다음 주문으로 넘어감
@@ -65,4 +69,6 @@ public class OptionService {
             optionJpaRepository.save(option);
         }
     }
+
+     */
 }
