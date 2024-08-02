@@ -77,4 +77,8 @@ public class User {
     public void addPoint(int amount) {
         this.point += amount;
     }
+
+    public void subtractPoint(int amount) {
+        this.point -= amount;
+    }
 }

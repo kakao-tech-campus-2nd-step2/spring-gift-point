@@ -62,8 +62,19 @@ public class OrderService {
 
         User user = userService.findOne(email);
 
-        // 해당 옵션 수량 차감
+        Product product = productOption.getProduct();
         Option option = productOption.getOption();
+
+        // 포인트 사용 가능 조건
+        int totalPrice = option.getQuantity() * product.getPrice();
+        if (orderDTO.getPoint() > user.getPoint() || orderDTO.getPoint() > totalPrice) {
+            throw new IllegalArgumentException("Illegal order");
+        }
+        // 포인트 차감
+        user.subtractPoint(orderDTO.getPoint());
+        userRepository.save(user);
+
+        // 해당 옵션 수량 차감
         optionService.subtract(option.getId(), orderDTO.getQuantity());
 
         // 위시리스트에 있으면 삭제

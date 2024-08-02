@@ -11,6 +11,8 @@ public class OrderDTO {
     private int quantity;
     @Schema(description = "주문 메시지", nullable = false, example = "주문 메시지 입니다")
     private String message;
+    @Schema(description = "주문 포인트", nullable = false, example = "1")
+    private int point;
 
     public OrderDTO() {
     }
@@ -20,6 +22,14 @@ public class OrderDTO {
         this.option_id = optionId;
         this.quantity = quantity;
         this.message = message;
+    }
+
+    public OrderDTO(Long product_id, Long option_id, int quantity, String message, int point) {
+        this.product_id = product_id;
+        this.option_id = option_id;
+        this.quantity = quantity;
+        this.message = message;
+        this.point = point;
     }
 
     public Long getProduct_id() {
@@ -52,5 +62,13 @@ public class OrderDTO {
 
     public void setMessage(String message) {
         this.message = message;
+    }
+
+    public int getPoint() {
+        return point;
+    }
+
+    public void setPoint(int point) {
+        this.point = point;
     }
 }
