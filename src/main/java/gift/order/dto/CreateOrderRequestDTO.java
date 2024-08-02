@@ -14,6 +14,9 @@ public class CreateOrderRequestDTO {
     @Schema(description = "보내고 싶은 메시지")
     private String message;
 
+    @Schema(description = "현금 영수증 제출 용 휴대전화 번호")
+    private String phoneNumber;
+
     public long getOptionId() {
         return optionId;
     }
@@ -24,5 +27,9 @@ public class CreateOrderRequestDTO {
 
     public String getMessage() {
         return message;
+    }
+
+    public String getPhoneNumber() {
+        return phoneNumber;
     }
 }
