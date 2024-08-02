@@ -1,24 +1,25 @@
 INSERT INTO category (name, color, imageUrl, description)
-VALUES ('교환권', '#FF5733', 'https://cdn.pixabay.com/photo/2015/08/11/08/21/coupon-883642_640.png', '설명1'),
-       ('상품권', '#33FF57', 'https://cdn.pixabay.com/photo/2014/10/23/10/10/dollars-499481_640.jpg', '설명2'),
-       ('뷰티', '#3357FF', 'https://cdn.pixabay.com/photo/2016/05/02/17/56/lipstick-1367771_640.jpg', '설명3'),
-       ('패션', '#FF33A5', 'https://cdn.pixabay.com/photo/2021/11/12/13/14/sweater-6788998_640.jpg', '설명4'),
-       ('식품', '#33FFA5', 'https://cdn.pixabay.com/photo/2019/08/15/09/03/pizza-4407510_640.jpg', '설명5'),
-       ('리빙/도서', '#FFA533', 'https://cdn.pixabay.com/photo/2017/08/09/10/32/reading-2614105_640.jpg', '설명6'),
-       ('레저/스포츠', '#A533FF', 'https://cdn.pixabay.com/photo/2023/07/22/04/15/motorbike-8142649_640.jpg', '설명7'),
-       ('아티스트/캐릭터', '#FF33FF', 'https://cdn.pixabay.com/photo/2022/08/07/08/32/tiger-7370142_640.png', '설명8'),
-       ('유아동/반려', '#FFA5FF', 'https://cdn.pixabay.com/photo/2017/11/10/08/08/baby-2935722_640.jpg', '설명9'),
-       ('디지털/가전', '#33FFA5', 'https://cdn.pixabay.com/photo/2018/08/09/03/58/home-3593730_640.jpg', '설명10'),
+VALUES ('교환권', '#FF5733', 'https://cdn.pixabay.com/photo/2015/08/11/08/21/coupon-883642_640.png', '다양한 상품으로 교환할 수 있는 교환권'),
+       ('상품권', '#33FF57', 'https://cdn.pixabay.com/photo/2014/10/23/10/10/dollars-499481_640.jpg', '다양한 매장에서 사용할 수 있는 상품권'),
+       ('뷰티', '#3357FF', 'https://cdn.pixabay.com/photo/2016/05/02/17/56/lipstick-1367771_640.jpg', '뷰티 제품 및 화장품'),
+       ('패션', '#FF33A5', 'https://cdn.pixabay.com/photo/2021/11/12/13/14/sweater-6788998_640.jpg', '최신 유행 패션 아이템'),
+       ('식품', '#33FFA5', 'https://cdn.pixabay.com/photo/2019/08/15/09/03/pizza-4407510_640.jpg', '다양한 음식 및 식료품'),
+       ('리빙/도서', '#FFA533', 'https://cdn.pixabay.com/photo/2017/08/09/10/32/reading-2614105_640.jpg', '생활용품 및 도서'),
+       ('레저/스포츠', '#A533FF', 'https://cdn.pixabay.com/photo/2023/07/22/04/15/motorbike-8142649_640.jpg', '레저 및 스포츠 용품'),
+       ('아티스트/캐릭터', '#FF33FF', 'https://cdn.pixabay.com/photo/2022/08/07/08/32/tiger-7370142_640.png', '아티스트 및 캐릭터 상품'),
+       ('유아동/반려', '#FFA5FF', 'https://cdn.pixabay.com/photo/2017/11/10/08/08/baby-2935722_640.jpg', '유아 및 반려동물 용품'),
+       ('디지털/가전', '#33FFA5', 'https://cdn.pixabay.com/photo/2018/08/09/03/58/home-3593730_640.jpg', '디지털 기기 및 가전 제품'),
        ('카카오프렌즈', '#FF5733',
         'https://i.namu.wiki/i/vDDaVK4wm1-vPZgAOI65rbhLhr1vPCzBgoRKSS7mEFx4IH2vtHvvMN41Umw-taptksIW_WqnjwOdcGbAMpAmrQ.webp',
-        '설명11'),
-       ('트렌드선물', '#5733FF', 'https://cdn.pixabay.com/photo/2014/04/03/11/36/gift-311970_640.png', '설명12'),
-       ('홈/가전', '#FF5733', 'https://cdn.pixabay.com/photo/2021/08/19/06/47/architecture-6557219_640.jpg', '설명14'),
-       ('커피/디저트', '#33FF57', 'https://cdn.pixabay.com/photo/2019/11/11/11/35/cafe-4618121_640.jpg', '설명15'),
-       ('도서/음반', '#3357FF', 'https://cdn.pixabay.com/photo/2016/11/29/01/22/album-1866523_640.jpg', '설명16'),
-       ('여행/숙박', '#FF33A5', 'https://cdn.pixabay.com/photo/2020/02/27/20/48/aircraft-4885805_640.jpg', '설명17'),
-       ('건강/뷰티', '#33FFA5', 'https://cdn.pixabay.com/photo/2023/08/30/09/44/woman-8222956_640.jpg', '설명18'),
-       ('자동차/공구', '#FFA533', 'https://cdn.pixabay.com/photo/2024/05/10/23/34/car-8753811_640.png', '설명19');
+        '카카오프렌즈 캐릭터 상품'),
+       ('트렌드선물', '#5733FF', 'https://cdn.pixabay.com/photo/2014/04/03/11/36/gift-311970_640.png', '최신 트렌드의 선물 아이템'),
+       ('홈/가전', '#FF5733', 'https://cdn.pixabay.com/photo/2021/08/19/06/47/architecture-6557219_640.jpg', '가정용 가전 및 인테리어 용품'),
+       ('커피/디저트', '#33FF57', 'https://cdn.pixabay.com/photo/2019/11/11/11/35/cafe-4618121_640.jpg', '커피 및 디저트'),
+       ('도서/음반', '#3357FF', 'https://cdn.pixabay.com/photo/2016/11/29/01/22/album-1866523_640.jpg', '도서 및 음반'),
+       ('여행/숙박', '#FF33A5', 'https://cdn.pixabay.com/photo/2020/02/27/20/48/aircraft-4885805_640.jpg', '여행 및 숙박 관련 상품'),
+       ('건강/뷰티', '#33FFA5', 'https://cdn.pixabay.com/photo/2023/08/30/09/44/woman-8222956_640.jpg', '건강 및 뷰티 제품'),
+       ('자동차/공구', '#FFA533', 'https://cdn.pixabay.com/photo/2024/05/10/23/34/car-8753811_640.png', '자동차 및 공구 용품');
+
 
 
 
