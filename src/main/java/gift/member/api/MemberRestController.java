@@ -4,11 +4,10 @@ import gift.auth.application.AuthService;
 import gift.auth.dto.AuthResponse;
 import gift.member.application.MemberService;
 import gift.member.dto.MemberDto;
+import gift.member.dto.PointRequest;
+import gift.member.entity.Member;
 import jakarta.validation.Valid;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/members")
@@ -35,5 +34,12 @@ public class MemberRestController {
         return authService.authenticate(memberDto);
     }
 
+
+    @PutMapping("/{memberId}/point")
+    public void chargeMemberPoint(@PathVariable("memberId") Long memberId,
+                                  @RequestBody @Valid PointRequest request) {
+        Member member = memberService.getMemberByIdOrThrow(memberId);
+        memberService.saveMemberPoint(member, request.point());
+    }
 
 }
