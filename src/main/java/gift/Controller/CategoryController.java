@@ -4,6 +4,7 @@ import gift.Model.CategoryDto;
 import gift.Service.CategoryService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -30,15 +31,15 @@ public class CategoryController {
     @Operation(summary = "카테고리 생성", description = "카테고리를 생성합니다.")
     @PostMapping("/")
     public ResponseEntity<?> addCategory(CategoryDto categoryDto) {
-        categoryService.addCategory(categoryDto);
-        return new ResponseEntity<>(null,null,201);
+        CategoryDto savedCategoryDto = categoryService.addCategory(categoryDto);
+        return ResponseEntity.status(HttpStatus.CREATED).body(savedCategoryDto);
     }
 
     @Operation(summary = "카테고리 수정", description = "카테고리를 수정합니다.")
     @PutMapping("/{categoryId}")
-    public ResponseEntity<String> updateCategory(@PathVariable long categoryId, @RequestBody CategoryDto categoryDto) {
+    public ResponseEntity<?> updateCategory(@PathVariable long categoryId, @RequestBody CategoryDto categoryDto) {
         categoryDto.setId(categoryId);
-        categoryService.updateCategory(categoryDto);
-        return ResponseEntity.ok("카테고리 정보를 수정했습니다.");
+        CategoryDto updatedCategory = categoryService.updateCategory(categoryDto);
+        return ResponseEntity.ok(updatedCategory);
     }
 }
