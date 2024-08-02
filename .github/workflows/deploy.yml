@@ -37,6 +37,18 @@ jobs:
         with:
           name: spring-gift-point
 
+      - name: Backup existing JAR
+        uses: appleboy/ssh-action@v0.1.6
+        with:
+          host: 43.202.208.102
+          username: ubuntu
+          key: ${{ secrets.EC2_SSH_KEY }}
+          script: |
+            if [ -f ~/kakaoGift/spring-gift-0.0.1-SNAPSHOT.jar ]; then
+              timestamp=$(date +%Y%m%d%H%M%S)
+              cp ~/kakaoGift/spring-gift-0.0.1-SNAPSHOT.jar ~/kakaoGift/backup/spring-gift-0.0.1-SNAPSHOT-$timestamp.jar
+            fi
+
       - name: Copy files via SSH
         uses: appleboy/scp-action@v0.1.3
         with:
