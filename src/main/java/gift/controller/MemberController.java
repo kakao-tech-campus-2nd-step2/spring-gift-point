@@ -30,8 +30,9 @@ public class MemberController {
      */
     @PostMapping("/register")
     public ResponseEntity<String> registerMember(@RequestBody @Valid MemberDto member) {
-        memberService.registerMember(member);
-        return ResponseEntity.ok(SuccessMessage.REGISTER_MEMBER_SUCCESS_MSG);
+        String token = memberService.registerMember(member);
+        return ResponseEntity.ok().header("token", token)
+            .body(SuccessMessage.REGISTER_MEMBER_SUCCESS_MSG);
     }
 
     /**

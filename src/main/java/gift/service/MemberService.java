@@ -32,10 +32,12 @@ public class MemberService {
         this.jwtUtil = jwtUtil;
     }
 
-    public void registerMember(MemberDto memberDto) {
+    public String registerMember(MemberDto memberDto) {
         Member member = new Member(memberDto);
         assertUserEmailNotDuplicate(member.getEmail());
         memberJpaDao.save(member);
+
+        return jwtUtil.createJwt(member.getEmail(), 1000 * 60 * 30);
     }
 
     public String login(MemberDto memberDto) {
