@@ -1,7 +1,9 @@
 package gift.controller;
 
+import gift.annotation.LoginMember;
 import gift.dto.optionDTO.OptionRequestDTO;
 import gift.dto.optionDTO.OptionResponseDTO;
+import gift.model.Member;
 import gift.service.OptionService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -39,7 +41,11 @@ public class OptionController {
     @PostMapping
     @Operation(summary = "옵션 추가", description = "새로운 옵션을 추가합니다.")
     public ResponseEntity<OptionResponseDTO> addOption(@PathVariable Long productId,
-        @Valid @RequestBody OptionRequestDTO optionRequestDTO) {
+        @Valid @RequestBody OptionRequestDTO optionRequestDTO,
+        @LoginMember Member member) {
+        if (member == null) {
+            return ResponseEntity.status(401).build();
+        }
         OptionResponseDTO optionResponseDTO = optionService.saveOption(productId, optionRequestDTO);
         return ResponseEntity.status(HttpStatus.CREATED)
             .body(optionResponseDTO);
@@ -48,7 +54,11 @@ public class OptionController {
     @PutMapping("/{optionId}")
     @Operation(summary = "옵션 수정", description = "옵션을 수정합니다.")
     public ResponseEntity<OptionResponseDTO> updateOption(@PathVariable Long productId,
-        @PathVariable Long optionId, @Valid @RequestBody OptionRequestDTO optionRequestDTO) {
+        @PathVariable Long optionId, @Valid @RequestBody OptionRequestDTO optionRequestDTO,
+        @LoginMember Member member) {
+        if (member == null) {
+            return ResponseEntity.status(401).build();
+        }
         OptionResponseDTO optionResponseDTO = optionService.updateOption(productId, optionId,
             optionRequestDTO);
         return ResponseEntity.ok(optionResponseDTO);
@@ -57,7 +67,10 @@ public class OptionController {
     @DeleteMapping("/{optionId}")
     @Operation(summary = "옵션 삭제", description = "옵션을 삭제합니다.")
     public ResponseEntity<Void> deleteOption(@PathVariable Long productId,
-        @PathVariable Long optionId) {
+        @PathVariable Long optionId, @LoginMember Member member) {
+        if (member == null) {
+            return ResponseEntity.status(401).build();
+        }
         optionService.deleteOption(productId, optionId);
         return ResponseEntity.noContent().build();
     }
