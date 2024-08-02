@@ -27,7 +27,8 @@ public enum ErrorCode {
     INVALID_DECREASE_QUANTITY("감소할 수량은 0보다 커야합니다.", HttpStatus.BAD_REQUEST),
     CATEGORY_NOT_FOUND("해당 카테고리가 존재하지 않습니다.", HttpStatus.NOT_FOUND),
     KAKAO_MESSAGE_SEND_FAILED("카카오 메시지 전송을 실패했습니다.", HttpStatus.BAD_REQUEST),
-    KAKAO_AUTH_FAILED("카카오 인증에 실패했습니다.", HttpStatus.UNAUTHORIZED);
+    KAKAO_AUTH_FAILED("카카오 인증에 실패했습니다.", HttpStatus.UNAUTHORIZED),
+    INSUFFICIENT_POINTS("포인트가 부족합니다.", HttpStatus.BAD_REQUEST);
 
     private final String message;
     private final HttpStatus status;
