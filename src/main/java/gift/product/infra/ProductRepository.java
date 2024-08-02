@@ -57,4 +57,11 @@ public class ProductRepository {
     public Page<Product> findByCategoryId(Long categoryId, Pageable pageable) {
         return productJpaRepository.findByCategoryId(categoryId, pageable);
     }
+
+    public void decreaseOptionQuantity(Long optionId, Long quantity) {
+        ProductOption productOption = productOptionJpaRepository.findById(optionId)
+                .orElseThrow(() -> new ProductException(ErrorCode.PRODUCT_OPTION_NOT_FOUND));
+        productOption.decreaseQuantity(quantity);
+        productOptionJpaRepository.save(productOption);
+    }
 }

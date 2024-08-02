@@ -29,6 +29,7 @@ public enum ErrorCode {
     NOT_USER_OWNED("해당 유저의 소유가 아닙니다.", HttpStatus.BAD_REQUEST),
     INVALID_USER_TYPE("유효하지 않은 사용자 타입입니다.", HttpStatus.BAD_REQUEST),
 
+    OUT_OF_STOCK("재고가 부족합니다.", HttpStatus.BAD_REQUEST),
     ;
 
     private final String message;

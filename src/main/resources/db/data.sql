@@ -5,70 +5,70 @@ VALUES ('USER', '테스트유저', 'test@test.com', '$2a$10$SGtj9v1PCwZNmTGxwAHi
 
 -- 카테고리 데이터 삽입
 INSERT INTO category (name, description, image_url, color)
-VALUES ('도서', '다양한 책과 문학 작품', 'https://newsimg.hankookilbo.com/2020/04/21/202004211422083541_3.jpg', '#0000ff');
+VALUES ('선물', '선물하기 좋은 것들',
+        'https://img1.kakaocdn.net/thumb/C320x320@2x.fwebp.q82/?fname=https%3A%2F%2Fst.kakaocdn.net%2Fproduct%2Fgift%2Fproduct%2F20240417111629_616eccb9d4cd464fa06d3430947dce15.jpg',
+        '#0000ff');
 
 INSERT INTO category (name, description, image_url, color)
-VALUES ('전자 제품', '최신 전자 제품 및 가전 기기',
-        'https://cphoto.asiae.co.kr/listimglink/1/2014082807172651648_1.jpg',
+VALUES ('스몰 럭셔리', '스몰 럭셔리 상품들',
+        'https://img1.kakaocdn.net/thumb/C320x320@2x.fwebp.q82/?fname=https%3A%2F%2Fst.kakaocdn.net%2Fproduct%2Fgift%2Fproduct%2F20240722070659_be50b3e055754d4390058be02d116169.jpg',
         '#ff5733');
 
 -- 상품 데이터 삽입
 INSERT INTO product (name, price, image_url, category_id)
-VALUES ('참을 수 없는 존재의 가벼움', 15300, 'https://contents.kyobobook.co.kr/sih/fit-in/400x0/pdt/9788937437564.jpg',
-        (SELECT category_id FROM category WHERE name = '도서'));
+VALUES ('[단독]푸드장 프리미엄 구이 선물세트1.15kg(부채살+살치살+토시살+소목등심(척아이롤))', 49900,
+        'https://img1.kakaocdn.net/thumb/C320x320@2x.fwebp.q82/?fname=https%3A%2F%2Fst.kakaocdn.net%2Fproduct%2Fgift%2Fproduct%2F20240129103642_a5ca62d182ec419285ba708b51cb72c2.jpg',
+        (SELECT category_id FROM category WHERE name = '선물'));
 
 INSERT INTO product (name, price, image_url, category_id)
-VALUES ('육각형 개발자', 19800, 'https://contents.kyobobook.co.kr/sih/fit-in/458x0/pdt/9791169211239.jpg',
-        (SELECT category_id FROM category WHERE name = '도서'));
+VALUES ('[단독]하겐다즈 프리미엄 수제 아이스크림 케이크 리얼블랑 (바닐라+벨지안초코)', 29900,
+        'https://img1.kakaocdn.net/thumb/C320x320@2x.fwebp.q82/?fname=https%3A%2F%2Fst.kakaocdn.net%2Fproduct%2Fgift%2Fproduct%2F20240417111629_616eccb9d4cd464fa06d3430947dce15.jpg',
+        (SELECT category_id FROM category WHERE name = '선물'));
 
 INSERT INTO product (name, price, image_url, category_id)
-VALUES ('드라이브', 13500, 'https://contents.kyobobook.co.kr/sih/fit-in/458x0/pdt/9788935208951.jpg',
-        (SELECT category_id FROM category WHERE name = '도서'));
+VALUES ('[센트룸] 맛있는 멀티비타민 미네랄 구미 (80구미)', 24000,
+        'https://img1.kakaocdn.net/thumb/C320x320@2x.fwebp.q82/?fname=https%3A%2F%2Fst.kakaocdn.net%2Fproduct%2Fgift%2Fproduct%2F20240722113431_fd84a02c41514839a0afaa9ba040f003.jpg',
+        (SELECT category_id FROM category WHERE name = '선물'));
+
 
 INSERT INTO product (name, price, image_url, category_id)
-VALUES ('함께 자라기', 11700, 'https://contents.kyobobook.co.kr/sih/fit-in/458x0/pdt/9788966262335.jpg',
-        (SELECT category_id FROM category WHERE name = '도서'));
+VALUES ('[생일/선물포장] ''휩드 선물 1위'' 비건 팩클렌저 디스커버리 키트(4종) + 팝업 카드 + 수플레 크림 2종 샘플 증정', 25700,
+        'https://img1.kakaocdn.net/thumb/C320x320@2x.fwebp.q82/?fname=https%3A%2F%2Fst.kakaocdn.net%2Fproduct%2Fgift%2Fproduct%2F20240725090331_257e7b0d12b441cd8dc41d49e0fb27dc.jpg',
+        (SELECT category_id FROM category WHERE name = '스몰 럭셔리'));
 
 INSERT INTO product (name, price, image_url, category_id)
-VALUES ('Apple 정품 아이폰 15 Pro', 1555700,
-        'https://thumbnail10.coupangcdn.com/thumbnails/remote/230x230ex/image/retail/images/4434414951782396-0046b204-9f46-48d4-9483-c50be7ba1cbf.jpg',
-        (SELECT category_id FROM category WHERE name = '전자 제품'));
-
-INSERT INTO product (name, price, image_url, category_id)
-VALUES ('Apple 2023 맥북 프로 14 M3', 2570190,
-        'https://thumbnail9.coupangcdn.com/thumbnails/remote/230x230ex/image/retail/images/2119768668797193-b109eb1a-fd30-4420-850f-04faf0aea2f9.jpg',
-        (SELECT category_id FROM category WHERE name = '전자 제품'));
+VALUES ('[한정수량/각인/선물포장] 헤라 센슈얼 누드 밤 무디,할라피뇨 중 택 1(+블랙 손거울 증정)', 36000,
+        'https://img1.kakaocdn.net/thumb/C320x320@2x.fwebp.q82/?fname=https%3A%2F%2Fst.kakaocdn.net%2Fproduct%2Fgift%2Fproduct%2F20240725132635_f56aa979b4dc4713a0e1c1a0500fc070.jpg',
+        (SELECT category_id FROM category WHERE name = '스몰 럭셔리'));
 
 -- 상품 옵션 데이터 삽입
 INSERT INTO product_option (name, product_id, quantity)
-VALUES ('하드커버', (SELECT product_id FROM product WHERE name = '참을 수 없는 존재의 가벼움'), 50);
+VALUES ('[단독]푸드장 프리미엄 구이 선물세트1.15kg(부채살+살치살+토시살+소목등심(척아이롤))',
+        (SELECT product_id FROM product WHERE name = '[단독]푸드장 프리미엄 구이 선물세트1.15kg(부채살+살치살+토시살+소목등심(척아이롤))'), 50);
 
 INSERT INTO product_option (name, product_id, quantity)
-VALUES ('페이퍼백', (SELECT product_id FROM product WHERE name = '참을 수 없는 존재의 가벼움'), 100);
+VALUES ('[단독]하겐다즈 프리미엄 수제 아이스크림 케이크 리얼블랑 (바닐라+벨지안초코)',
+        (SELECT product_id FROM product WHERE name = '[단독]하겐다즈 프리미엄 수제 아이스크림 케이크 리얼블랑 (바닐라+벨지안초코)'), 30);
+
 
 INSERT INTO product_option (name, product_id, quantity)
-VALUES ('양장본', (SELECT product_id FROM product WHERE name = '육각형 개발자'), 30);
+VALUES ('[센트룸] 맛있는 멀티비타민 미네랄 구미 (80구미)', (SELECT product_id FROM product WHERE name = '[센트룸] 맛있는 멀티비타민 미네랄 구미 (80구미)'),
+        60);
+
 
 INSERT INTO product_option (name, product_id, quantity)
-VALUES ('소프트커버', (SELECT product_id FROM product WHERE name = '육각형 개발자'), 70);
+VALUES ('[생일/선물포장] ''휩드 선물 1위'' 비건 팩클렌저 디스커버리 키트(4종) + 팝업 카드 + 수플레 크림 2종 샘플 증정', (SELECT product_id
+                                                                                  FROM product
+                                                                                  WHERE name =
+                                                                                        '[생일/선물포장] ''휩드 선물 1위'' 비건 팩클렌저 디스커버리 키트(4종) + 팝업 카드 + 수플레 크림 2종 샘플 증정'),
+        100);
 
 INSERT INTO product_option (name, product_id, quantity)
-VALUES ('일반판', (SELECT product_id FROM product WHERE name = '드라이브'), 60);
+VALUES ('무디', (SELECT product_id FROM product WHERE name = '[한정수량/각인/선물포장] 헤라 센슈얼 누드 밤 무디,할라피뇨 중 택 1(+블랙 손거울 증정)'),
+        0);
+VALUES ('할라피뇨', (SELECT product_id FROM product WHERE name = '[한정수량/각인/선물포장] 헤라 센슈얼 누드 밤 무디,할라피뇨 중 택 1(+블랙 손거울 증정)'),
+        30);
 
-INSERT INTO product_option (name, product_id, quantity)
-VALUES ('특별판', (SELECT product_id FROM product WHERE name = '드라이브'), 20);
 
-INSERT INTO product_option (name, product_id, quantity)
-VALUES ('일반판', (SELECT product_id FROM product WHERE name = '함께 자라기'), 60);
-
-INSERT INTO product_option (name, product_id, quantity)
-VALUES ('블랙', (SELECT product_id FROM product WHERE name = 'Apple 정품 아이폰 15 Pro'), 100);
-
-INSERT INTO product_option (name, product_id, quantity)
-VALUES ('화이트', (SELECT product_id FROM product WHERE name = 'Apple 정품 아이폰 15 Pro'), 50);
-
-INSERT INTO product_option (name, product_id, quantity)
-VALUES ('까리한 블랙', (SELECT product_id FROM product WHERE name = 'Apple 2023 맥북 프로 14 M3'), 30);
-
-INSERT INTO product_option (name, product_id, quantity)
-VALUES ('세련된 실버', (SELECT product_id FROM product WHERE name = 'Apple 2023 맥북 프로 14 M3'), 20);
+INSERT INTO user_points (user_id, point)
+VALUES (1, 1000);

@@ -68,7 +68,19 @@ CREATE TABLE orders
     option_id       BIGINT NOT NULL,
     quantity        BIGINT NOT NULL,
     message         VARCHAR(255),
+    is_receipt    BOOLEAN   DEFAULT FALSE,
+    phone_number    VARCHAR(255),
     order_date_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (user_id) REFERENCES users (user_id),
     FOREIGN KEY (option_id) REFERENCES product_option (id)
+);
+
+
+
+CREATE TABLE user_points
+(
+    id         BIGINT AUTO_INCREMENT PRIMARY KEY,
+    user_id    BIGINT NOT NULL,
+    point      BIGINT NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
