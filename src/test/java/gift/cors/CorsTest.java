@@ -27,6 +27,6 @@ public class CorsTest {
                 .andExpect(header().string("Access-Control-Allow-Origin", origin))
                 .andExpect(header().string("Access-Control-Allow-Methods", "GET,POST,PUT,DELETE,OPTIONS"))
                 .andExpect(header().string("Access-Control-Allow-Credentials", "true"))
-                .andExpect(header().string("Access-Control-Max-Age", "3000"));
+                .andExpect(header().string("Access-Control-Max-Age", "1800"));
     }
 }
