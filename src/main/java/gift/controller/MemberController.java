@@ -36,7 +36,7 @@ public class MemberController {
 
     @Operation(summary = "회원 가입", description = "새로운 회원을 등록한다.")
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "201", description = "회원 가입 성공", content = @Content(schema = @Schema(implementation = TokenResponseEntity.class))),
+        @ApiResponse(responseCode = "201", description = "회원 가입 성공", content = @Content(schema = @Schema(implementation = MemberRegisterDto.class))),
         @ApiResponse(responseCode = "400", description = "잘못된 요청 데이터", content = @Content(schema = @Schema(implementation = ErrorResponseDto.class))),
         @ApiResponse(responseCode = "409", description = "이미 존재하는 이메일", content = @Content(schema = @Schema(implementation = ErrorResponseDto.class)))
     })
@@ -52,7 +52,7 @@ public class MemberController {
 
     @Operation(summary = "회원 로그인", description = "사용자 로그인 처리를 하고 성공 시 JWT를 응답한다.")
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "로그인 성공", content = @Content(schema = @Schema(implementation = TokenResponseEntity.class))),
+        @ApiResponse(responseCode = "200", description = "로그인 성공", content = @Content(schema = @Schema(implementation = MemberLoginDto.class))),
         @ApiResponse(responseCode = "400", description = "잘못된 요청 데이터", content = @Content(schema = @Schema(implementation = ErrorResponseDto.class))),
         @ApiResponse(responseCode = "403", description = "이메일 혹은 비밀번호 불일치", content = @Content(schema = @Schema(implementation = ErrorResponseDto.class)))
     })

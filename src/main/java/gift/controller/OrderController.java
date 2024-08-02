@@ -19,6 +19,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PagedModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -44,7 +45,7 @@ public class OrderController {
 
     @Operation(summary = "주문 목록 조회", description = "로그인한 사용자의 모든 주문 목록을 페이지별로 조회한다.")
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "주문 목록 조회 성공", content = @Content(schema = @Schema(implementation = Page.class))),
+        @ApiResponse(responseCode = "200", description = "주문 목록 조회 성공", content = @Content(schema = @Schema(implementation = PagedModel.class))),
         @ApiResponse(responseCode = "401", description = "인증 실패", content = @Content(schema = @Schema(implementation = ErrorResponseDto.class)))
     })
     @GetMapping
