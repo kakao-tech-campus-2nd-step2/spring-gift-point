@@ -14,7 +14,7 @@ public class ProductRequest {
     )
     private String name;
     @NotEmpty(message = "Price cannot be empty")
-    private Double price;
+    private int price;
 
     @NotEmpty(message = "Image URL cannot be empty")
     private String imageUrl;
@@ -31,7 +31,7 @@ public class ProductRequest {
     public ProductRequest() {
     }
 
-    public ProductRequest(String name, Double price, String imageUrl, Long categoryId) {
+    public ProductRequest(String name, int price, String imageUrl, Long categoryId) {
         this.name = name;
         this.price = price;
         this.imageUrl = imageUrl;
@@ -42,7 +42,7 @@ public class ProductRequest {
         return name;
     }
 
-    public double getPrice() {
+    public int getPrice() {
         return price;
     }
 

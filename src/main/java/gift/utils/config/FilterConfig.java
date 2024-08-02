@@ -25,7 +25,6 @@ public class FilterConfig {
         this.objectMapper = objectMapper;
     }
 
-
     @Bean
     public FilterRegistrationBean<AuthFilter> authFilter() {
         FilterRegistrationBean<AuthFilter> registrationBean = new FilterRegistrationBean<>();

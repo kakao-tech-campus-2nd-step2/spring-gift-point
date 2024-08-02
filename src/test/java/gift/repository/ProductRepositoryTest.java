@@ -73,7 +73,7 @@ public class ProductRepositoryTest {
         assertThat(all.getContent()).extracting(Product::getName)
             .containsExactlyInAnyOrder("kakao", "pnu", "uni");
         assertThat(all.getContent()).extracting(Product::getPrice)
-            .containsExactlyInAnyOrder(1000.0, 2000.0, 3000.0);
+            .containsExactlyInAnyOrder(1000, 2000, 3000);
         assertThat(all.getContent()).extracting(Product::getImageUrl)
             .containsExactlyInAnyOrder("img1", "img2", "img3");
         assertThat(all.getContent()).allSatisfy(product -> {

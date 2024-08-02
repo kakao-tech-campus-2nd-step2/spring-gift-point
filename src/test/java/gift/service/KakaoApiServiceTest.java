@@ -6,6 +6,7 @@ import gift.repository.*;
 import gift.utils.ExternalApiService;
 import gift.utils.JwtTokenProvider;
 import gift.utils.error.OptionNotFoundException;
+import gift.utils.error.TokenAuthException;
 import gift.utils.error.UserNotFoundException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -14,10 +15,11 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-
-import java.util.Optional;
 import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
+
+import java.time.LocalDateTime;
+import java.util.Optional;
 
 import static org.mockito.Mockito.*;
 import static org.junit.jupiter.api.Assertions.*;
@@ -30,8 +32,8 @@ class KakaoApiServiceTest {
     @Mock private TokenRepository tokenRepository;
     @Mock private UserInfoRepository userInfoRepository;
     @Mock private OrderRepository orderRepository;
-    @Mock private ExternalApiService externalApiService;
     @Mock private WishRepository wishRepository;
+    @Mock private ExternalApiService externalApiService;
     @Mock private JwtTokenProvider jwtTokenProvider;
 
     @InjectMocks
@@ -45,11 +47,12 @@ class KakaoApiServiceTest {
     }
 
     @Test
-    @DisplayName("주문 성공 상황")
+    @DisplayName("카카오 주문 성공")
     void kakaoOrder_Success() {
         // Given
         fixture.givenValidOrderRequest()
             .andValidOption()
+            .andValidToken()
             .andValidUser()
             .andNoExistingWish();
 
@@ -71,30 +74,36 @@ class KakaoApiServiceTest {
     }
 
     @Test
-    @DisplayName("주문 성공 및 위시리스트 삭제 상황")
-    void kakaoOrder_SuccessWithWishDelete() {
+    @DisplayName("일반 주문 성공")
+    void Order_Success() {
         // Given
         fixture.givenValidOrderRequest()
             .andValidOption()
-            .andValidUser()
-            .andExistingWish();
+            .andValidUser();
 
         // When
-        KakaoApiDTO.KakaoOrderResponse response = kakaoApiService.kakaoOrder(fixture.orderRequest, fixture.jwtToken);
+        KakaoApiDTO.KakaoOrderResponse response = kakaoApiService.Order(fixture.orderRequest, fixture.jwtToken);
 
         // Then
         assertNotNull(response);
-        verify(wishRepository).delete(fixture.wish);
+        assertEquals(fixture.optionId, response.optionId());
+        assertEquals(fixture.quantity, response.quantity());
+        assertEquals(fixture.message, response.message());
+
+        verify(orderRepository).save(any(Order.class));
+        verify(wishRepository).findByUserInfoIdAndProductId(fixture.userInfo.getId(), fixture.product.getId());
+        verify(wishRepository, never()).delete(any());
+
+        assertEquals(fixture.initialQuantity - fixture.quantity, fixture.option.getQuantity());
+        assertEquals(fixture.initialPoint - fixture.point + (int)(fixture.totalPrice * 0.01), fixture.userInfo.getPoint());
     }
 
     @Test
-    @DisplayName("옵션을 찾을 수 없는 상황")
+    @DisplayName("옵션을 찾을 수 없는 경우")
     void kakaoOrder_OptionNotFound() {
         // Given
         fixture.givenValidOrderRequest()
             .givenInvalidOption();
-
-        when(jwtTokenProvider.getEmailFromToken(anyString())).thenReturn("test@example.com");
 
         // When & Then
         assertThrows(OptionNotFoundException.class, () ->
@@ -103,29 +112,30 @@ class KakaoApiServiceTest {
     }
 
     @Test
-    @DisplayName("유저를 찾을 수 없는 상황")
-    void kakaoOrder_UserNotFound() {
+    @DisplayName("토큰을 찾을 수 없는 경우")
+    void kakaoOrder_TokenNotFound() {
         // Given
         fixture.givenValidOrderRequest()
             .andValidOption()
-            .andInvalidUser();
+            .andInvalidToken();
 
         // When & Then
-        assertThrows(UserNotFoundException.class, () ->
+        assertThrows(TokenAuthException.class, () ->
             kakaoApiService.kakaoOrder(fixture.orderRequest, fixture.jwtToken)
         );
     }
 
     @Test
-    @DisplayName("재고가 부족한 상황")
-    void kakaoOrder_InsufficientQuantity() {
+    @DisplayName("유저를 찾을 수 없는 경우")
+    void kakaoOrder_UserNotFound() {
         // Given
         fixture.givenValidOrderRequest()
-            .andInsufficientStock()
-            .andValidUser();
+            .andValidOption()
+            .andValidToken()
+            .andInvalidUser();
 
         // When & Then
-        assertThrows(IllegalStateException.class, () ->
+        assertThrows(UserNotFoundException.class, () ->
             kakaoApiService.kakaoOrder(fixture.orderRequest, fixture.jwtToken)
         );
     }
@@ -137,16 +147,18 @@ class KakaoApiServiceTest {
         String jwtToken = "jwt_token";
         String accessToken = "access_token";
         int initialQuantity = 10;
+        int point = 100;
+        int initialPoint = 1000;
+        int totalPrice = 10000;
 
         KakaoApiDTO.KakaoOrderRequest orderRequest;
         Product product;
         Option option;
         Token token;
         UserInfo userInfo;
-        Wish wish;
 
         TestFixture givenValidOrderRequest() {
-            this.orderRequest = new KakaoApiDTO.KakaoOrderRequest(optionId, quantity, message);
+            this.orderRequest = new KakaoApiDTO.KakaoOrderRequest(optionId, quantity, point,message);
             return this;
         }
 
@@ -160,41 +172,27 @@ class KakaoApiServiceTest {
             option.setProduct(product);
 
             when(optionRepository.findById(optionId)).thenReturn(Optional.of(option));
+            when(option.getTotalPrice(quantity, point)).thenReturn(totalPrice);
             return this;
         }
 
-        TestFixture andInsufficientStock() {
-            product = new Product();
-            product.setId(1L);
-
-            option = new Option();
-            option.setId(optionId);
-            option.setQuantity(1); // 요청 수량보다 적은 재고
-            option.setProduct(product);
-
-            when(optionRepository.findById(optionId)).thenReturn(Optional.of(option));
-            return this;
-        }
-
-        TestFixture andValidUser() {
+        TestFixture andValidToken() {
             token = new Token();
             token.setEmail("test@example.com");
             token.updateAccesstoken(accessToken);
 
-            userInfo = new UserInfo();
-            userInfo.setId(1L);
-            userInfo.setEmail("test@example.com");
-
             when(jwtTokenProvider.getEmailFromToken(jwtToken)).thenReturn("test@example.com");
             when(tokenRepository.findByEmail("test@example.com")).thenReturn(Optional.of(token));
-            when(userInfoRepository.findByEmail("test@example.com")).thenReturn(Optional.of(userInfo));
             return this;
         }
 
-        TestFixture andInvalidUser() {
-            when(jwtTokenProvider.getEmailFromToken(jwtToken)).thenReturn("test@example.com");
-            when(tokenRepository.findByEmail("test@example.com")).thenReturn(Optional.of(new Token()));
-            when(userInfoRepository.findByEmail("test@example.com")).thenReturn(Optional.empty());
+        TestFixture andValidUser() {
+            userInfo = new UserInfo();
+            userInfo.setId(1L);
+            userInfo.setEmail("test@example.com");
+            userInfo.setPoint(initialPoint);
+
+            when(userInfoRepository.findByEmail("test@example.com")).thenReturn(Optional.of(userInfo));
             return this;
         }
 
@@ -203,14 +201,19 @@ class KakaoApiServiceTest {
             return this;
         }
 
-        TestFixture andExistingWish() {
-            wish = new Wish();
-            when(wishRepository.findByUserInfoIdAndProductId(userInfo.getId(), product.getId())).thenReturn(Optional.of(wish));
+        TestFixture givenInvalidOption() {
+            when(optionRepository.findById(anyLong())).thenReturn(Optional.empty());
             return this;
         }
 
-        TestFixture givenInvalidOption() {
-            when(optionRepository.findById(anyLong())).thenReturn(Optional.empty());
+        TestFixture andInvalidToken() {
+            when(jwtTokenProvider.getEmailFromToken(jwtToken)).thenReturn("test@example.com");
+            when(tokenRepository.findByEmail("test@example.com")).thenReturn(Optional.empty());
+            return this;
+        }
+
+        TestFixture andInvalidUser() {
+            when(userInfoRepository.findByEmail("test@example.com")).thenReturn(Optional.empty());
             return this;
         }
     }

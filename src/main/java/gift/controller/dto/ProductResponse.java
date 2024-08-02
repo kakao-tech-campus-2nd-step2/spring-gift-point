@@ -14,7 +14,7 @@ public class ProductResponse {
         message = "상품 이름은 공백을 포함하여 최대 15자까지 입력할 수 있다 해당 특수문자 사용가능 : ( ), [ ], +, -, &, /, _"
     )
     private String name;
-    private Double price;
+    private int price;
 
     private String imageUrl;
 
@@ -24,7 +24,7 @@ public class ProductResponse {
     public ProductResponse() {
     }
 
-    public ProductResponse(Long id, String name, Double price, String imageUrl, Category category) {
+    public ProductResponse(Long id, String name, int price, String imageUrl, Category category) {
         this.id = id;
         this.name = name;
         this.price = price;
@@ -36,7 +36,7 @@ public class ProductResponse {
         return name;
     }
 
-    public Double getPrice() {
+    public int getPrice() {
         return price;
     }
 
@@ -56,7 +56,7 @@ public class ProductResponse {
         this.name = name;
     }
 
-    public void setPrice(Double price) {
+    public void setPrice(int price) {
         this.price = price;
     }
 

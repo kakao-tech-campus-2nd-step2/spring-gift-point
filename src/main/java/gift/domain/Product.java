@@ -27,7 +27,7 @@ public class Product extends TimeStamp {
     @Column(nullable = false)
     private String name;
     @Column(nullable = false)
-    private double price;
+    private int price;
 
     @Column(nullable = false)
     private String imageUrl;
@@ -44,13 +44,13 @@ public class Product extends TimeStamp {
     private List<Option> options = new ArrayList<>();
 
 
-    public Product(String name, double price, String imageUrl) {
+    public Product(String name, int price, String imageUrl) {
         this.name = name;
         this.price = price;
         this.imageUrl = imageUrl;
     }
 
-    public Product(String name, double price, String imageUrl, Category category) {
+    public Product(String name, int price, String imageUrl, Category category) {
         this.name = name;
         this.price = price;
         this.imageUrl = imageUrl;
@@ -65,7 +65,7 @@ public class Product extends TimeStamp {
     }
 
 
-    public double getPrice() {
+    public int getPrice() {
         return price;
     }
 
@@ -85,7 +85,7 @@ public class Product extends TimeStamp {
         this.name = name;
     }
 
-    public void setPrice(double price) {
+    public void setPrice(int price) {
         this.price = price;
     }
 
@@ -97,7 +97,7 @@ public class Product extends TimeStamp {
         return category;
     }
 
-    public Product(Long id, String name, double price, String imageUrl, Category category) {
+    public Product(Long id, String name, int price, String imageUrl, Category category) {
         this.id = id;
         this.name = name;
         this.price = price;
@@ -165,7 +165,7 @@ public class Product extends TimeStamp {
         }
     }
 
-    public void updateProduct(String name,double price,String imageUrl){
+    public void updateProduct(String name,int price,String imageUrl){
         this.name = name;
         this.price = price;
         this.imageUrl = imageUrl;
