@@ -2,7 +2,9 @@ package gift.controller;
 
 
 import gift.dto.request.LoginMemberDTO;
+import gift.dto.request.OrderPriceRequestDTO;
 import gift.dto.request.OrderRequestDTO;
+import gift.dto.response.OrderPriceResponseDTO;
 import gift.dto.response.PagingOrderResponseDTO;
 import gift.dto.response.PagingWishResponseDTO;
 import gift.service.LoginMember;
@@ -53,4 +55,12 @@ public class OrderController {
                 .body(pagingOrderResponseDTO);
 
     }
+
+    @GetMapping("/price")
+    public ResponseEntity<OrderPriceResponseDTO> getPrice(OrderPriceRequestDTO orderPriceRequestDTO){
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(orderService.getOrderPrice(orderPriceRequestDTO));
+    }
+
+
 }

@@ -1,16 +1,16 @@
 package gift.service;
 
 import gift.dto.request.LoginMemberDTO;
+import gift.dto.request.OrderPriceRequestDTO;
 import gift.dto.request.OrderRequestDTO;
+import gift.dto.response.OrderPriceResponseDTO;
 import gift.dto.response.OrderResponseDTO;
 import gift.dto.response.PagingOrderResponseDTO;
 import gift.entity.*;
 import gift.exception.memberException.MemberNotFoundException;
 import gift.exception.optionException.OptionNotFoundException;
-import gift.repository.MemberRepository;
-import gift.repository.OptionRepository;
-import gift.repository.OrderRepository;
-import gift.repository.WishRepository;
+import gift.exception.productException.ProductNotFoundException;
+import gift.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -33,18 +33,21 @@ public class OrderService {
     private final MemberRepository memberRepository;
     private final WishRepository wishRepository;
     private final RestTemplate restTemplate;
+    private final ProductRepository productRepository;
 
     @Autowired
     public OrderService(OrderRepository orderRepository,
                         OptionRepository optionRepository,
                         MemberRepository memberRepository,
                         WishRepository wishRepository,
-                        RestTemplate restTemplate) {
+                        RestTemplate restTemplate,
+                        ProductRepository productRepository) {
         this.orderRepository = orderRepository;
         this.optionRepository = optionRepository;
         this.memberRepository = memberRepository;
         this.wishRepository = wishRepository;
         this.restTemplate = restTemplate;
+        this.productRepository = productRepository;
     }
 
     public List<OrderResponseDTO> getAllOrders(LoginMemberDTO loginMemberDTO){
@@ -122,6 +125,25 @@ public class OrderService {
 
         return orderResponseDTO;
     }
+
+    public OrderPriceResponseDTO getOrderPrice(OrderPriceRequestDTO orderPriceRequestDTO){
+
+        Long productId= orderPriceRequestDTO.productId();
+        Long optionId = orderPriceRequestDTO.optionId();
+        Integer quantity = orderPriceRequestDTO.quantity();
+        Product product = productRepository.findById(productId)
+                .orElseThrow(() -> new ProductNotFoundException(productId));
+        int price = product.getPrice();
+
+        Long totalPrice = (long) price * quantity;
+
+        if (totalPrice > 50_000) {
+            totalPrice = (long) (totalPrice * 0.9);
+        }
+
+        return new OrderPriceResponseDTO(totalPrice);
+    }
+
 
 
     private void sendKakaoMessage(Member member ){
