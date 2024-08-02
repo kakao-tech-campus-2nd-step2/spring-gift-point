@@ -8,6 +8,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -88,14 +89,19 @@ public class ProductController {
             @ApiResponse(responseCode = "200", description = "상품 목록 조회 성공")
     })
     @GetMapping
-    public ResponseEntity<List<ProductDTO>> getProduct(
+    public ResponseEntity<Page<ProductDTO>> getProduct(
+            @RequestParam(required = false, defaultValue = "0", value = "0") Long categoryId,
             @RequestParam(required = false, defaultValue = "0", value = "page") int page,
             @RequestParam(required = false, defaultValue = "10", value = "size") int size,
             @RequestParam(required = false, defaultValue = "createdAt", value = "criteria") String criteria,
             @RequestParam(required = false, defaultValue = "desc", value = "direction") String direction) {
         Pageable pageable = PageRequest.of(page, size,
                 Sort.by(Sort.Direction.valueOf(direction.toUpperCase()), criteria));
-        List<ProductDTO> productIds = productService.getAllProducts(pageable);
+        if (categoryId == 0) {
+            Page<ProductDTO> productIds = productService.getAllProducts(pageable);
+            return ResponseEntity.ok(productIds);
+        }
+        Page<ProductDTO> productIds = productService.getAllProducts(pageable, categoryId);
         return ResponseEntity.ok(productIds);
     }
 

@@ -6,6 +6,7 @@ import gift.exception.ProductNotFoundException;
 import gift.mapper.ProductMapper;
 import gift.repository.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -102,10 +103,21 @@ public class ProductService {
      * @return ProductDTO 목록
      */
     @Transactional(readOnly = true)
-    public List<ProductDTO> getAllProducts(Pageable pageable) {
-        var productEntities = productRepository.findAll(pageable).toList();
-        return productEntities.stream()
-                .map(productMapper::toProductDTO).toList();
+    public Page<ProductDTO> getAllProducts(Pageable pageable) {
+        var productEntities = productRepository.findAll(pageable);
+        return productEntities.map(productMapper::toProductDTO);
+    }
+
+    /**
+     * 사용자의 상품 목록을 가져옵니다.
+     *
+     * @param pageable 페이지 정보
+     * @return ProductDTO 목록
+     */
+    @Transactional(readOnly = true)
+    public Page<ProductDTO> getAllProducts(Pageable pageable, Long categoryId) {
+        var productEntities = productRepository.findAllByCategoryEntity_Id(pageable, categoryId);
+        return productEntities.map(productMapper::toProductDTO);
     }
 
     public boolean isProdutExit(Long id) {
