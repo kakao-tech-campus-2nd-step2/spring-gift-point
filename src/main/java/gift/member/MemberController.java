@@ -8,6 +8,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -45,7 +46,7 @@ public class MemberController {
         return new TokenResponseDTO(memberService.login(memberRequestDTO));
     }
 
-    @PostMapping("/charge")
+    @PutMapping("/charge")
     @Operation(hidden = true)
     public void chargePoint(@RequestBody MemberChargePointRequestDTO memberPointChargeRequestDTO) {
         memberService.chargePoint(memberPointChargeRequestDTO);
