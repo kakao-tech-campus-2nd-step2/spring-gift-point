@@ -20,7 +20,7 @@ public class Product {
     @NotNull
     private int price;
     @NotNull
-    @Column(length = 15)
+    @Column(length = 255)
     private String imgUrl;
 
     @JoinColumn(name = "category_id")
