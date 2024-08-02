@@ -5,9 +5,9 @@ import gift.dto.ProductRequest;
 import gift.dto.ProductResponse;
 import gift.service.ProductService;
 import jakarta.validation.Valid;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
-import org.springframework.data.web.PagedModel;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -35,9 +35,9 @@ public class ProductController {
     }
 
     @GetMapping
-    public PagedModel<ProductResponse> getAllProducts(@PageableDefault(size = 5) Pageable pageable,
+    public Page<ProductResponse> getAllProducts(@PageableDefault(size = 5) Pageable pageable,
         @RequestParam("categoryId") Long categoryId) {
-        return new PagedModel<>(productService.getAllProducts(categoryId, pageable));
+        return productService.getAllProducts(categoryId, pageable);
     }
 
     @PostMapping
