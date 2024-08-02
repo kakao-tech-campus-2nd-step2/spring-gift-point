@@ -5,7 +5,6 @@ import gift.domain.member.Member;
 import gift.domain.member.MemberRepository;
 import gift.dto.KakaoToken;
 import gift.dto.KakaoUser;
-import gift.dto.TokenResponseDto;
 import gift.exception.CustomException;
 import gift.exception.ErrorCode;
 import gift.util.JwtUtil;
@@ -58,7 +57,7 @@ public class KakaoOAuthService {
         return new KakaoToken(response.getBody().accessToken(), response.getBody().refreshToken());
     }
 
-    public TokenResponseDto kakaoMemberRegister(KakaoToken token) {
+    public String kakaoMemberRegister(KakaoToken token) {
         var response = restClient.post()
                 .uri(URI.create(KAKAO_USER_INFO))
                 .header("Authorization", "Bearer " + token.accessToken())
@@ -71,8 +70,7 @@ public class KakaoOAuthService {
                 .toEntity(KakaoUser.class);
         log.info(response.toString());
         Member member = registerMember(response.getBody(), token);
-        String jwtToken = jwtUtil.generateToken(member.getId(), member.getEmail());
-        return new TokenResponseDto(jwtToken);
+        return jwtUtil.generateToken(member.getId(), member.getEmail());
     }
 
     private Member registerMember(KakaoUser memberInfo, KakaoToken token) {
