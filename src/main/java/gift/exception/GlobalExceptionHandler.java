@@ -4,6 +4,7 @@ import gift.constants.ResponseMsgConstants;
 import gift.dto.betweenClient.ResponseDTO;
 import gift.exception.BadRequestExceptions.BadRequestException;
 import gift.util.ResponseEntityUtil;
+import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
 import org.slf4j.Logger;
@@ -48,10 +49,15 @@ public class GlobalExceptionHandler {
                 HttpStatus.BAD_REQUEST);
     }
 
+    @ExceptionHandler(ExpiredJwtException.class)
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    public ResponseEntity<ResponseDTO> handleValidationExceptions(ExpiredJwtException ex) {
+        return new ResponseEntity<>(new ResponseDTO(true, "토큰이 만료되었습니다."), HttpStatus.UNAUTHORIZED);
+    }
+
     @ExceptionHandler(HttpMessageNotReadableException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ResponseEntity<ResponseDTO> handleValidationExceptions(
-            HttpMessageNotReadableException ex) {
+    public ResponseEntity<ResponseDTO> handleValidationExceptions(HttpMessageNotReadableException ex) {
         return new ResponseEntity<>(new ResponseDTO(true, "가격이나 개수는 숫자로 입력해야 합니다."), HttpStatus.BAD_REQUEST);
     }
 
