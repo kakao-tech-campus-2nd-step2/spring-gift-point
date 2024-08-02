@@ -57,6 +57,18 @@ public class Order extends BaseEntity {
         return option.getId();
     }
 
+    public Integer getTotalPrice() {
+        return totalPrice;
+    }
+
+    public Integer getDiscountedPrice() {
+        return discountedPrice;
+    }
+
+    public Integer getAccumulatedPoint() {
+        return accumulatedPoint;
+    }
+
     public String createOrderText() {
         return String.format("""
                 -주문 내역-

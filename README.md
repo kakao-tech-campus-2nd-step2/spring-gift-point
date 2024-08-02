@@ -22,7 +22,7 @@ Point 구현
     "point": 1000
 }
 
-Response
+[x] Response
 성공 시, 200 OK
 {
     "orderId": 1,
