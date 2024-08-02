@@ -46,4 +46,9 @@ public class JwtUtil {
         Claims claims = extractClaims(token);
         return claims.get("email", String.class);
     }
+
+    // 헤더값에서 토큰 추출하기 (Bearer 제거)
+    public String extractToken(String authorizationHeader) {
+        return authorizationHeader.startsWith("Bearer ") ? authorizationHeader.substring(7) : null;
+    }
 }

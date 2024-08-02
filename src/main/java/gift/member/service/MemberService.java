@@ -11,4 +11,6 @@ public interface MemberService {
     String login(String email, String password);
 
     Long getPoint(String memberEmail);
+
+    Member getMemberByToken(String token);
 }

@@ -1,5 +1,6 @@
 package gift.member.service;
 
+import gift.common.auth.JwtUtil;
 import gift.member.model.Member;
 import gift.member.repository.MemberRepository;
 import io.jsonwebtoken.Jwts;
@@ -16,10 +17,12 @@ import java.security.Key;
 public class MemberServiceImpl implements MemberService {
     private final MemberRepository memberRepository;
     private final Key key;
+    private final JwtUtil jwtUtil;
 
-    public MemberServiceImpl(MemberRepository memberRepository, @Value("${jwt.secret}") String secretKey) {
+    public MemberServiceImpl(MemberRepository memberRepository, @Value("${jwt.secret}") String secretKey, JwtUtil jwtUtil) {
         this.memberRepository = memberRepository;
         this.key = Keys.hmacShaKeyFor(secretKey.getBytes(StandardCharsets.UTF_8));
+        this.jwtUtil = jwtUtil;
     }
 
     // 회원가입
@@ -67,5 +70,14 @@ public class MemberServiceImpl implements MemberService {
         );
 
         return member.getPoints();
+    }
+
+    // 토큰으로 사용자 정보 조회하기
+    public Member getMemberByToken(String token) {
+        String email = jwtUtil.extractEmail(token);
+
+        return memberRepository.findByEmail(email).orElseThrow(
+                () -> new IllegalArgumentException("토큰값에 해당하는 사용자 없음!!!")
+        );
     }
 }

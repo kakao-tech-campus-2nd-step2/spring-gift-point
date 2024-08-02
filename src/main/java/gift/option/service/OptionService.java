@@ -128,8 +128,8 @@ public class OptionService {
         }
     }
 
+    // 상품 id로 상품 조회하고 해당 상품의 옵션들 조회
     public List<OptionResponse> getOptions(Long productId) {
-        // 상품 id로 상품 조회하고 해당 상품의 옵션들 조회
         Product product = productRepository.findById(productId)
                 .orElseThrow(() -> new IllegalArgumentException("[ERROR] 다음 id의 상품은 존재하지 않음 : " + productId));
         List<Option> options = optionJpaRepository.findAllByProduct(product);
@@ -139,4 +139,6 @@ public class OptionService {
                 .map(option -> new OptionResponse(option.getId(), option.getName(), option.getQuantity(), productId))
                 .collect(Collectors.toList());
     }
+
+    //
 }

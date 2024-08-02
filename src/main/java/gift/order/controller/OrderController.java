@@ -2,6 +2,7 @@ package gift.order.controller;
 
 import gift.common.auth.JwtUtil;
 import gift.common.util.CommonResponse;
+import gift.order.dto.OrderPageResponse;
 import gift.order.dto.OrderResponse;
 import gift.order.dto.OrderRequest;
 import gift.order.service.KakaoService;
@@ -36,17 +37,14 @@ public class OrderController {
     ) 
     {
         // 토큰 추출
-        String token = authorizationHeader.startsWith("Bearer ") ? authorizationHeader.substring(7) : null;
+        String token = jwtUtil.extractToken(authorizationHeader);
         if (token == null || !jwtUtil.isTokenValid(token)) {
             // 401 Unauthorized
             return ResponseEntity.status(401).body(new CommonResponse<>(null, "Invalid or missing token", false));
         }
 
-        // 1. 주문 요청 및 주문 내역 저장
+        // 주문 요청
         OrderResponse orderResponse = orderService.requestOrder(token, orderRequest);
-
-        // 2. 주문 내역 카카오톡 메시지를 통해 나에게 보내기
-        //kakaoService.sendKakaoMessage(orderResponse, accessToken);
 
         return ResponseEntity.status(201).body(new CommonResponse<>(orderResponse, "주문이 완료되었습니다.", true));
     }
@@ -73,7 +71,7 @@ public class OrderController {
         String direction = sortParams.length > 1 ? sortParams[1] : "desc";
 
         // 페이지네이션 처리
-        Page<OrderResponse> orderResponseList = orderService.getOrderByPage(page, size, sortBy, direction);
+        Page<OrderPageResponse> orderResponseList = orderService.getOrderByPage(page, size, sortBy, direction);
 
         return ResponseEntity.ok(new CommonResponse<>(orderResponseList, "주문 목록 조회 성공", true));
     }
