@@ -44,4 +44,3 @@ public class WishPageDTO {
         this.last = wishlistPage.isLast();
     }
 }
-
