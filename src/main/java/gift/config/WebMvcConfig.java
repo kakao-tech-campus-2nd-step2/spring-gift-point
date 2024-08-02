@@ -53,7 +53,8 @@ public class WebMvcConfig implements WebMvcConfigurer {
         registry.addInterceptor(jwtInterceptor())
                 .excludePathPatterns(
                         "/api/oauth/**",
-                        "/api/members/**");
+                        "/api/members/register",
+                        "/api/members/login");
         registry.addInterceptor(authorizationInterceptor())
                 .addPathPatterns("/api/admin/**");
         registry.addInterceptor(adminInterceptor())
@@ -69,10 +70,11 @@ public class WebMvcConfig implements WebMvcConfigurer {
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**")
-                .allowedOrigins("*")
-                .allowedMethods("GET", "POST", "PUT", "DELETE")
+                .allowedOriginPatterns("*")
+                .allowedMethods("GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS")
                 .allowedHeaders("Authorization", "Content-Type")
                 .exposedHeaders("Authorization")
+                .allowCredentials(true)
                 .maxAge(3600);
     }
 }
