@@ -2,10 +2,7 @@ package gift.service;
 
 import gift.config.JwtConfig;
 import gift.domain.Member;
-import gift.dto.LoginRequest;
-import gift.dto.LoginResponse;
-import gift.dto.MemberRequest;
-import gift.dto.JoinResponse;
+import gift.dto.*;
 import gift.exception.ErrorMessage;
 import gift.repository.MemberRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -57,5 +54,11 @@ public class MemberService {
 
     public Member getMemberbyEmail(String email) {
         return memberRepository.findByEmail(email).orElseThrow();
+    }
+
+    public MemberPointDto getMemberPoint(String accessToken) {
+        String email = jwtConfig.extractEmail(accessToken);
+        Member member = getMemberbyEmail(email);
+        return new MemberPointDto(member);
     }
 }

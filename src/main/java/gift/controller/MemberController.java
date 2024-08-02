@@ -1,18 +1,13 @@
 package gift.controller;
 
 import gift.constant.Constants;
-import gift.dto.LoginRequest;
-import gift.dto.LoginResponse;
-import gift.dto.MemberRequest;
-import gift.dto.JoinResponse;
+import gift.dto.*;
 import gift.service.MemberService;
 import io.swagger.v3.oas.annotations.Operation;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("api/members")
@@ -38,5 +33,12 @@ public class MemberController {
         return ResponseEntity.status(loginResponse.getAccess_token() != null ? HttpStatus.OK : HttpStatus.UNAUTHORIZED)
                 .header(Constants.AUTHENTICATE_HEADER, Constants.BEARER)
                 .body(loginResponse);
+    }
+
+    @Operation(summary = "특정 사용자 포인트 조회")
+    @GetMapping("/me")
+    public ResponseEntity<MemberPointDto> getMemberPoint(@RequestHeader(HttpHeaders.AUTHORIZATION) String accessToken) {
+        MemberPointDto memberPointDto = memberService.getMemberPoint(accessToken);
+        return ResponseEntity.status(HttpStatus.OK).body(memberPointDto);
     }
 }

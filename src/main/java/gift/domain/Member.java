@@ -55,4 +55,8 @@ public class Member {
     public void setAccessToken(String token) {
         this.accessToken = token;
     }
+
+    public int getPoint() {
+        return point;
+    }
 }
