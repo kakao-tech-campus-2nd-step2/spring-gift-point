@@ -55,3 +55,60 @@
   - 유저생성
   - 상품주문
   - 상품 주문 리스트 조회
+
+## step3 구현 기능
+
+- 포인트 관련 기능 구현
+  - 유저
+    - 포인트 충전(list)
+    - 포인트 결제(list)
+  - 상품 옵션
+    - 해당 옵션 구매 내역(list)
+  - 상품
+    - 적용할 수 있는 할인 정책(list)
+  - 포인트 충전
+    - id
+    - price
+    - user(user entity)
+    - transactionDate(create)
+  - 포인트 결제
+    - id
+    - regularPrice(정가)
+    - paymentAmount(결제액)
+    - user(user entity)
+    - discountPolicy(discountPolicy entity)
+    - productOptionId(구매 대상)
+    - transactionDate(create)
+  - 할인 정책
+    - id
+    - target(product entity)(상품 단위로 할인 진행)
+    - discountType(enum)(fix, percent)
+    - discount(1~100, 금액)
+      - discountType과 discount을 조합해서 사용
+    - createDate(create)
+    - endDate(기한)(기한이 없다면 9999년 12월 31일로 설정)
+    - DiscountAmountLimit(할인 한도)
+    - PointPayment(list)
+    - remark
+- api목록
+  - "/api/point/charge"
+    - (로그인한 유저)포인트 충전내역 리스트 조회
+    - (로그인한 유저)포인트 충전내역 조회
+    - (로그인한 유저)포인트 충전
+    - 결제는 없다고 가정
+    - 숫자만 넣으면 충전되게 구현
+    - (로그인한 유저)포인트 충전 취소
+
+  - "/api/point/payment"
+    - (로그인한 유저)포인트 사용 내역 리스트 조회
+    - (로그인한 유저)포인트 사용 내역 조회
+    - 결제시 포인트 사용
+      - 할인 적용
+      - 결제내역 저장
+    - 결제 취소
+  - "/api/discountPolicy"
+    - 할인정책 생성
+    - 할인정책 리스트 조회
+    - 할인정책 조회
+    - 할인정책 삭제
+  - 추후 유저별 권한이 생긴다면 할인 정책은 어드민만 가능함
