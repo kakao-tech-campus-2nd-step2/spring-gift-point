@@ -42,9 +42,11 @@ public class MemberService {
         }
     }
 
-    public void kakaoLogin(String email, String token) {
+    public String kakaoLogin(String email, String token) {
         try {
-            memberRepository.save(new Member(email, token));
+            String jwtToken = getToken(email, token);
+            memberRepository.save(new Member(email, token, jwtToken));
+            return jwtToken;
         } catch (IllegalArgumentException e) {
             throw new IllegalArgumentException("유효하지 않은 이메일입니다.: " + email);
         } catch (Exception e) {
