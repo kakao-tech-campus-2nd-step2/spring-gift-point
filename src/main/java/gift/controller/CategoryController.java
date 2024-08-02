@@ -40,7 +40,7 @@ public class CategoryController {
 
     @Operation(summary = "카테고리 조회", description = "해당 카테고리를 반환합니다.")
     @GetMapping("/{categoryId}")
-    public ResponseEntity<CategoryResponseDto> getCategory(@PathVariable Long categoryId){
+    public ResponseEntity<CategoryResponseDto> getCategory(@PathVariable Long categoryId) {
         return ResponseEntity.ok(categoryService.getCategory(categoryId));
     }
 
@@ -57,7 +57,8 @@ public class CategoryController {
     public ResponseEntity<CategoryResponseDto> updateCategory(
         @PathVariable Long categoryId,
         @Valid @RequestBody CategoryUpdateRequestDto categoryUpdateRequestDto) {
-        return ResponseEntity.ok(categoryService.updateCategory(categoryId, categoryUpdateRequestDto));
+        return ResponseEntity.ok(
+            categoryService.updateCategory(categoryId, categoryUpdateRequestDto));
     }
 
     @Operation(summary = "카테고리 삭제", description = "기존 카테고리를 삭제합니다.")

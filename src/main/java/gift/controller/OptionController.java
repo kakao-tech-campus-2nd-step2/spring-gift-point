@@ -35,7 +35,8 @@ public class OptionController {
 
     @Operation(summary = "상품의 모든 옵션 조회", description = "지정된 상품 ID의 모든 옵션을 조회합니다.")
     @GetMapping
-    public ResponseEntity<List<OptionResponseDto>> getAllOptionsByProductId(@PathVariable Long productId) {
+    public ResponseEntity<List<OptionResponseDto>> getAllOptionsByProductId(
+        @PathVariable Long productId) {
         return ResponseEntity.ok(optionService.getAllOptionsByProductId(productId));
     }
 

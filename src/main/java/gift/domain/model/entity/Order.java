@@ -16,6 +16,7 @@ import org.springframework.data.annotation.CreatedDate;
 @Entity
 @Table(name = "orders")
 public class Order extends TimeStamp {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

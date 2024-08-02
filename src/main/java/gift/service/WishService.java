@@ -46,7 +46,8 @@ public class WishService {
     @Transactional
     public WishResponseDto addWish(User user, WishAddRequestDto wishAddRequestDto) {
         productService.validateExistProductId(wishAddRequestDto.getProductId());
-        if (wishRepository.existsByUserEmailAndProductId(user.getEmail(), wishAddRequestDto.getProductId())) {
+        if (wishRepository.existsByUserEmailAndProductId(user.getEmail(),
+            wishAddRequestDto.getProductId())) {
             throw new DuplicateWishItemException("이미 위시리스트에 존재하는 상품입니다.");
         }
 

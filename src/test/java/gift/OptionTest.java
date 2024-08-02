@@ -84,7 +84,8 @@ class OptionTest {
 
         when(productRepository.findById(productId)).thenReturn(Optional.empty());
 
-        assertThrows(NoSuchElementException.class, () -> optionService.addOption(productId, requestDto));
+        assertThrows(NoSuchElementException.class,
+            () -> optionService.addOption(productId, requestDto));
     }
 
     @Test
@@ -111,7 +112,8 @@ class OptionTest {
 
         when(optionRepository.findById(optionId)).thenReturn(Optional.empty());
 
-        assertThrows(NoSuchElementException.class, () -> optionService.updateOption(optionId, requestDto));
+        assertThrows(NoSuchElementException.class,
+            () -> optionService.updateOption(optionId, requestDto));
     }
 
     @Test
@@ -146,7 +148,8 @@ class OptionTest {
         when(optionRepository.findById(optionId)).thenReturn(Optional.of(mockOption));
         when(optionRepository.save(any(Option.class))).thenReturn(mockOption);
 
-        OptionResponseDto result = optionService.subtractOptionQuantity(optionId, quantityToSubtract);
+        OptionResponseDto result = optionService.subtractOptionQuantity(optionId,
+            quantityToSubtract);
 
         assertNotNull(result);
         assertEquals("Test Option", result.getName());
@@ -161,7 +164,8 @@ class OptionTest {
 
         when(optionRepository.findById(optionId)).thenReturn(Optional.empty());
 
-        assertThrows(NoSuchElementException.class, () -> optionService.subtractOptionQuantity(optionId, quantityToSubtract));
+        assertThrows(NoSuchElementException.class,
+            () -> optionService.subtractOptionQuantity(optionId, quantityToSubtract));
     }
 
     @Test
@@ -176,7 +180,8 @@ class OptionTest {
         Option mockOption = new Option(mockProduct, "Test Option", 10);
         when(optionRepository.findById(optionId)).thenReturn(Optional.of(mockOption));
 
-        assertThrows(IllegalArgumentException.class, () -> optionService.subtractOptionQuantity(optionId, quantityToSubtract));
+        assertThrows(IllegalArgumentException.class,
+            () -> optionService.subtractOptionQuantity(optionId, quantityToSubtract));
     }
 
     @Test
@@ -191,6 +196,7 @@ class OptionTest {
         Option mockOption = new Option(mockProduct, "Test Option", 10);
         when(optionRepository.findById(optionId)).thenReturn(Optional.of(mockOption));
 
-        assertThrows(IllegalStateException.class, () -> optionService.subtractOptionQuantity(optionId, quantityToSubtract));
+        assertThrows(IllegalStateException.class,
+            () -> optionService.subtractOptionQuantity(optionId, quantityToSubtract));
     }
 }

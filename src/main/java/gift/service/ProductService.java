@@ -39,7 +39,8 @@ public class ProductService {
     }
 
     @Transactional(readOnly = true)
-    public Page<ProductResponseDto> getAllProducts(int page, int size, String sort, Long categoryId) {
+    public Page<ProductResponseDto> getAllProducts(int page, int size, String sort,
+        Long categoryId) {
         Sort sortObj = SortUtil.createSort(sort);
         Pageable pageable = PageRequest.of(page, size, sortObj);
 
@@ -113,7 +114,8 @@ public class ProductService {
         }
     }
 
-    private Product convertAddRequestToEntity(ProductAddRequestDto productAddRequestDto, Category category) {
+    private Product convertAddRequestToEntity(ProductAddRequestDto productAddRequestDto,
+        Category category) {
         return new Product(
             productAddRequestDto.getName(),
             productAddRequestDto.getPrice(),

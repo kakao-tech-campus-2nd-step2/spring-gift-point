@@ -46,9 +46,11 @@ public class WishController {
 
     @Operation(summary = "위시리스트에 상품 추가", description = "위시리스트에 새로운 상품을 추가합니다.")
     @PostMapping
-    public ResponseEntity<WishResponseDto> addWish(@Valid @RequestBody WishAddRequestDto wishAddRequestDto,
+    public ResponseEntity<WishResponseDto> addWish(
+        @Valid @RequestBody WishAddRequestDto wishAddRequestDto,
         @LoginUser User user) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(wishService.addWish(user, wishAddRequestDto));
+        return ResponseEntity.status(HttpStatus.CREATED)
+            .body(wishService.addWish(user, wishAddRequestDto));
     }
 
     @Operation(summary = "위시리스트 상품 수정", description = "위시리스트에 있는 상품의 정보를 수정합니다.")
