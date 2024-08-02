@@ -26,7 +26,7 @@ class ProductServiceTest {
     private ProductRepository productRepository;
 
     @Test
-    @DisplayName("옵션 저장 테스트[실패] - 잘못된 product id")
+    @DisplayName("옵션 저장 테스트[실패] - 잘못된 product productId")
     void save() {
         // given
         String name = "name";

@@ -4,6 +4,7 @@ import gift.common.enums.SocialLoginType;
 import gift.common.exception.EntityNotFoundException;
 import gift.controller.dto.request.OrderRequest;
 import gift.controller.dto.response.OrderResponse;
+import gift.controller.dto.response.PagingResponse;
 import gift.event.OrderEventDto;
 import gift.model.Member;
 import gift.model.Option;
@@ -13,6 +14,8 @@ import gift.repository.MemberRepository;
 import gift.repository.OrderRepository;
 import gift.repository.ProductRepository;
 import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -40,29 +43,33 @@ public class OrderService {
     }
 
     @Transactional
-    public OrderResponse createOrder(Long memberId, OrderRequest orderRequest) {
+    public void createOrder(Long memberId, OrderRequest orderRequest) {
         Product product = productRepository.findProductAndOptionByIdFetchJoin(orderRequest.productId())
-                .orElseThrow(() -> new EntityNotFoundException("Product with id " + orderRequest.productId() + " not found"));
+                .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 상품입니다."));
         Option option = product.findOptionByOptionId(orderRequest.optionId());
         Orders orders = orderRepository.save(new Orders(product.getId(), option.getId(), memberId,
-                product.getName(), option.getName(), product.getPrice(), orderRequest.quantity(), orderRequest.message()));
+                product.getName(), product.getImageUrl(), option.getName(), product.getPrice(), orderRequest.quantity(), orderRequest.message()));
         productService.subtractQuantity(orders.getProductId(), orders.getOptionId(), orders.getQuantity());
 
         eventPublisher.publishEvent(new OrderEventDto(product.getId(), memberId, orders.getId()));
-        return OrderResponse.from(orders);
     }
 
     public void sendKakaoMessage(Long memberId, Long orderId) {
         Member member = memberRepository.findById(memberId)
-                .orElseThrow(() -> new EntityNotFoundException("Member Not Exists."));
+                .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 멤버입니다."));
         if(member.getLoginType() != SocialLoginType.KAKAO) {
             return;
         }
 
         Orders orders = orderRepository.findById(orderId)
-                .orElseThrow(() -> new EntityNotFoundException("Order Not Exists."));
+                .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 주문입니다."));
         String accessToken = kakaoTokenService.refreshIfAccessTokenExpired(memberId);
         kakaoApiCaller.sendKakaoMessage(accessToken, orders);
     }
 
+    public PagingResponse<OrderResponse> findOrdersByMemberId(Long memberId, Pageable pageable) {
+        Page<OrderResponse> pages = orderRepository.findByMemberId(memberId, pageable)
+                .map(OrderResponse::from);
+        return PagingResponse.from(pages);
+    }
 }

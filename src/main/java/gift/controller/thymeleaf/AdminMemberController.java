@@ -1,4 +1,4 @@
-package gift.controller.admin;
+package gift.controller.thymeleaf;
 
 import gift.controller.dto.request.MemberRequest;
 import gift.controller.dto.response.MemberResponse;
@@ -43,7 +43,7 @@ public class AdminMemberController {
 
     @PostMapping("")
     public String newMember(@ModelAttribute MemberRequest request) {
-        memberService.signUp(request.email(), request.password(), request.role());
+        memberService.signUp(request.email(), request.password(), request.name(), request.role());
         return "redirect:/admin/member";
     }
 

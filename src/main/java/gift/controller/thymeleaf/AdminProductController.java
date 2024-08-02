@@ -1,4 +1,4 @@
-package gift.controller.admin;
+package gift.controller.thymeleaf;
 
 import gift.controller.dto.request.ProductRequest;
 import gift.controller.dto.response.CategoryResponse;
@@ -30,7 +30,7 @@ public class AdminProductController {
     @GetMapping("")
     public String getProducts(Model model,
               @PageableDefault(size = 10) Pageable pageable) {
-        PagingResponse<ProductResponse.WithOption> products = productService.findAllProductPaging(pageable);
+        PagingResponse<ProductResponse.Info> products = productService.findAllProductPaging(pageable);
         model.addAttribute("products", products);
         return "product/products";
     }
@@ -44,7 +44,7 @@ public class AdminProductController {
 
     @GetMapping("/{id}")
     public String updateProduct(@PathVariable("id") @NotNull @Min(1) Long id, Model model) {
-        ProductResponse.WithOption product = productService.findById(id);
+        ProductResponse.WithOption product = productService.findWIthOptionById(id);
         CategoryResponse.InfoList categories = categoryService.getAllCategories();
         model.addAttribute("product", product);
         model.addAttribute("categories", categories);

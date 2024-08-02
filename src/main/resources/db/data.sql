@@ -30,5 +30,5 @@ insert into option(name, quantity, product_id) values ('1. default', 100, 10);
 insert into option(name, quantity, product_id) values ('1. default', 100, 11);
 insert into option(name, quantity, product_id) values ('1. default', 100, 12);
 
-insert into member(email, password, role, login_type) values ('gudwls818@gmail.com', '1234', 'ADMIN', 'DEFAULT');
+insert into member(email, password, name, role, login_type) values ('gudwls818@gmail.com', '1234', 'hjinshin', 'ADMIN', 'DEFAULT');
 

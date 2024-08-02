@@ -11,6 +11,8 @@ public record MemberRequest(
         String email,
         @NotBlank(message = "비밀번호를 입력해주세요.")
         String password,
+        @NotBlank
+        String name,
         @Pattern(regexp = "ADMIN|USER", message = "Must be a valid role: ADMIN, USER")
         Role role) {
 }

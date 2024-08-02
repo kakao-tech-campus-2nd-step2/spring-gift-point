@@ -38,7 +38,7 @@ public class KakaoTokenService {
             return accessTokenRepository.findById(memberId)
                     .orElseGet(() -> {
                         String refreshToken = refreshTokenRepository.findById(memberId)
-                                .orElseThrow(() -> new AuthenticationException("Login has expired"))
+                                .orElseThrow(() -> new AuthenticationException("로그인이 만료되었습니다."))
                                 .getRefreshToken();
                         KakaoTokenDto tokenDto = kakaoApiCaller.refreshAccessToken(refreshToken);
                         return new KakaoAccessToken(memberId, tokenDto.accessToken(), tokenDto.expiresIn());

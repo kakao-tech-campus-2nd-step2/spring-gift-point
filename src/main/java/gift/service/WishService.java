@@ -31,11 +31,11 @@ public class WishService {
     @Transactional
     public void update(WishRequest.UpdateWish request, Long memberId) {
         Wish wish = wishRepository.findByIdFetchJoin(request.id())
-                .orElseThrow(() -> new EntityNotFoundException("Wish with id " + request.id() + " Does not exist"));
+                .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 위시리스트입니다."));
         wish.checkWishByMemberId(memberId);
         wish.checkWishByProductId(request.productId());
         if (request.productCount() == 0) {
-            deleteByProductId(request.productId(), memberId);
+            deleteById(request.productId(), memberId);
             return;
         }
         wish.updateWish(wish.getMember(), request.productCount(), wish.getProduct());
@@ -58,8 +58,11 @@ public class WishService {
     }
 
     @Transactional
-    public void deleteByProductId(Long productId, Long memberId) {
-        wishRepository.deleteByProductIdAndMemberId(productId, memberId);
+    public void deleteById(Long wishId, Long memberId) {
+        Wish wish = wishRepository.findByIdFetchJoin(wishId)
+                        .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 위시리스트입니다."));
+        wish.checkWishByMemberId(memberId);
+        wishRepository.deleteById(wishId);
     }
 
     @Transactional
@@ -71,13 +74,13 @@ public class WishService {
 
     private void checkProductByProductId(Long productId) {
         if (!productRepository.existsById(productId)) {
-            throw new EntityNotFoundException("Product with id " + productId + " does not exist");
+            throw new EntityNotFoundException("존재하지 않는 상품입니다.");
         }
     }
 
     private void checkDuplicateWish(Long productId, Long memberId) {
         if (wishRepository.existsByProductIdAndMemberId(productId, memberId)) {
-            throw new DuplicateDataException("Product with id " + productId + " already exists in wish", "Duplicate Wish");
+            throw new DuplicateDataException("이미 위시리스트에 추가된 상품입니다.");
         }
     }
 }

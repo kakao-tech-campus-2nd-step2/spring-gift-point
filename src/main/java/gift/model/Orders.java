@@ -8,6 +8,7 @@ public class Orders extends BasicEntity {
     private Long optionId;
     private Long memberId;
     private String productName;
+    private String productImageUrl;
     private String optionName;
     private int price;
     private int quantity;
@@ -15,11 +16,12 @@ public class Orders extends BasicEntity {
 
     protected Orders() {}
 
-    public Orders(Long productId, Long optionId, Long memberId, String productName, String optionName, int price, int quantity, String description) {
+    public Orders(Long productId, Long optionId, Long memberId, String productName, String productImageUrl, String optionName, int price, int quantity, String description) {
         this.productId = productId;
         this.optionId = optionId;
         this.memberId = memberId;
         this.productName = productName;
+        this.productImageUrl = productImageUrl;
         this.optionName = optionName;
         this.price = price;
         this.quantity = quantity;
@@ -44,6 +46,10 @@ public class Orders extends BasicEntity {
 
     public String getProductName() {
         return productName;
+    }
+
+    public String getProductImageUrl() {
+        return productImageUrl;
     }
 
     public String getOptionName() {

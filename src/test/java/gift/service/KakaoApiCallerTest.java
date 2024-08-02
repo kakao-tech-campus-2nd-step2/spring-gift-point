@@ -1,4 +1,4 @@
-package gift.service;//package gift.service;
+//package gift.service;//package gift.service;
 //
 //import com.fasterxml.jackson.core.JsonProcessingException;
 //import com.fasterxml.jackson.databind.ObjectMapper;
@@ -63,7 +63,7 @@ package gift.service;//package gift.service;
 //
 //    @Test
 //    void getKakaoMemberInfo() {
-//        var accessToken = "EXzy9fHlc7wjc6GlfR1uRVo9yKYPTqJHAAAAAQorDR8AAAGQ3w6vZyn2EFsnJsRZ?";
+//        var accessToken = "XVsQuCJBhItrqe0GkYwvwgHe9g9rTQYvAAAAAQo8JFkAAAGRCE_skyn2EFsnJsRZ";
 //        var response = client.post()
 //                .uri(URI.create(properties.memberInfoUrl()))
 //                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
@@ -107,9 +107,9 @@ package gift.service;//package gift.service;
 //
 //    @Test
 //    void sendSelfMessage() throws JsonProcessingException {
-//        String accessToken = "9oPh4kFJB_mKt-94b_3hXPZ9HEwB1UiDAAAAAQo8JCAAAAGQ6pC9Eyn2EFsnJsRZ";
+//        String accessToken = "bNBqp4sTLxsOJ5L-ZqXIkJ4gfdmuVnaFAAAAAQo8I-cAAAGRCCuCjSn2EFsnJsRZ";
 //        Orders orders = new Orders(1L, 2L, 3L, "상품명", "옵션명",
-//                1000, 10, "이건 설명이다.");
+//                "oNme", 1000, 10, "이건 설명이다.");
 //        KakaoRequest.Feed feed = KakaoRequest.Feed.from(orders);
 //
 //        String template_str = objectMapper.writeValueAsString(feed);

@@ -52,7 +52,7 @@ class ProductRestControllerTest {
     void create() {
         List<OptionRequest.InitOption> options = List.of(new OptionRequest.InitOption("oName", 100), new OptionRequest.InitOption("oName1", 1100));
         Category category = categoryRepository.save(new Category("상품권", "#123", "url", ""));
-        var url = "http://localhost:" + port + "/api/v1/product";
+        var url = "http://localhost:" + port + "/api/products";
         var request = new ProductRequest.CreateProduct("product", 1_000, "Url", category.getId(), options);
         var requestEntity = new RequestEntity<>(request, HttpMethod.POST, URI.create(url));
         var actual = restTemplate.exchange(requestEntity, String.class);
@@ -64,7 +64,7 @@ class ProductRestControllerTest {
     void getOptions() {
         Category category = categoryRepository.save(new Category("상품권", "#123", "url", ""));
         Product product = productRepository.save(new Product("pname", 1_000, "purl", category, List.of(new Option("oname", 10))));
-        var url = "http://localhost:" + port + "/api/v1/product/" + product.getId() + "/options";
+        var url = "http://localhost:" + port + "/api/products/" + product.getId() + "/options";
         var requestEntity = new RequestEntity<>(HttpMethod.GET, URI.create(url));
         var actual = restTemplate.exchange(requestEntity, String.class);
         assertThat(actual.getStatusCode()).isEqualTo(HttpStatus.OK);

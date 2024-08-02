@@ -119,7 +119,7 @@ class ProductRepositoryTest {
 
     @Test
     @DisplayName("카테고리 id로 Product 조회 테스트[성공]")
-    void findByCategoryId() {
+    void findByCategoryIdFetchJoin() {
         // given
         String pName = "name1";
         int price = 1000;
@@ -127,16 +127,18 @@ class ProductRepositoryTest {
         Category category = categoryRepository.save(new Category("name", "#123", "url", ""));
         List<Option> options = List.of(new Option("oName", 123));
         Product product = new Product(pName, price, imageUrl, category, options);
+        Pageable pageable = PageRequest.of(0, 10);
         productRepository.save(product);
 
+
         // when
-        List<Product> products = productRepository.findByCategoryId(product.getCategory().getId());
+        Page<Product> products = productRepository.findByCategoryIdFetchJoin(pageable, product.getCategory().getId());
 
         // then
-        assertThat(products.size()).isEqualTo(1);
-        assertThat(products.get(0).getName()).isEqualTo(pName);
-        assertThat(products.get(0).getPrice()).isEqualTo(price);
-        assertThat(products.get(0).getImageUrl()).isEqualTo(imageUrl);
+        assertThat(products.getContent().size()).isEqualTo(1);
+        assertThat(products.getContent().get(0).getName()).isEqualTo(pName);
+        assertThat(products.getContent().get(0).getPrice()).isEqualTo(price);
+        assertThat(products.getContent().get(0).getImageUrl()).isEqualTo(imageUrl);
     }
 
     @Test
