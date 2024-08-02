@@ -48,9 +48,20 @@ jobs:
             set -e
 
             # 디렉토리 변경
-            pwd
-            cd /home/ubuntu/katecam/build/libs # 절대 경로
-            
+            cd /home/ubuntu/katecam/build/libs || { echo "Failed to change directory. Exiting."; exit 1; }
+
+            # 디렉토리 내용 확인
+            echo "Contents of the directory:"
+            ls -l
+
+            # 새로운 JAR 파일 존재 여부 확인
+            if [ -f "spring-gift-0.0.1-SNAPSHOT.jar" ]; then
+              echo "File spring-gift-0.0.1-SNAPSHOT.jar exists."
+            else
+              echo "File spring-gift-0.0.1-SNAPSHOT.jar does not exist. Exiting."
+              exit 1
+            fi
+
             # 현재 실행 중인 애플리케이션 종료
             echo "Stopping existing Java process..."
             pkill -f "java -jar spring-gift.jar" || echo "No existing Java process found."
