@@ -1,4 +1,4 @@
-package gift.domain.product.controller;
+package gift.admin;
 
 import gift.domain.product.dto.ProductRequest;
 import gift.domain.product.service.ProductService;
@@ -19,11 +19,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 @Controller
-public class ProductViewController {
+public class AdminController {
 
     private final ProductService productService;
 
-    public ProductViewController(ProductService productService) {
+    public AdminController(ProductService productService) {
         this.productService = productService;
     }
 
