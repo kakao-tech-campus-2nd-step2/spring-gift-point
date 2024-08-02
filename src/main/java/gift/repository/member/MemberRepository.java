@@ -1,7 +1,9 @@
 package gift.repository.member;
 
 import gift.domain.Member;
+import jakarta.persistence.LockModeType;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Lock;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
@@ -21,4 +23,8 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
     Optional<Member> findMemberWithRelation(@Param("email") String email);
 
     Optional<Member> findMemberByKakaoId(String kakaoId);
+
+    @Lock(LockModeType.PESSIMISTIC_WRITE)
+    @Query("select m from Member m where m.email = :email")
+    Optional<Member> findMemberByEmailForUpdate(@Param("email") String email);
 }
