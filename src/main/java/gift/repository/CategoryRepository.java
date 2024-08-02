@@ -8,5 +8,5 @@ import gift.entity.Category;
 @Repository
 public interface CategoryRepository extends JpaRepository<Category, Long> {
 
-	boolean existsById(Long categoryId);	
+	boolean existsByName(String categoryName);	
 }
