@@ -34,6 +34,14 @@ public class OptionRequest {
 		return quantity;
 	}
 	
+	public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setQuantity(int quantity) {
+        this.quantity = quantity;
+    }
+	
 	public Option toEntity(Product product) {
 		return new Option(this.name, this.quantity, product);
 	}
