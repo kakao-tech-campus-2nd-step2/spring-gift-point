@@ -44,7 +44,7 @@ class MemberServiceTest {
 
     @Test
     void getMember() {
-        memberRepository.save(memberDTO.convertToMember());
+        memberRepository.save(memberDTO.convertToMember(1L));
 
         assertThat(memberService.getMember(memberDTO.getEmail())).isNotNull();
     }
