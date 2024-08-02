@@ -26,6 +26,9 @@ public class PointChargeEntity {
     //    포인트 충전일
     @CreatedDate
     private LocalDateTime transactionDate;
+    //    결제 취소 여부(취소 안됨 0, 취소 됨 1)
+    @Column
+    private Integer isRevoke;
     //    포인트 충전 유저
     @ManyToOne(targetEntity = UserEntity.class, fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
@@ -38,6 +41,7 @@ public class PointChargeEntity {
     public PointChargeEntity(Integer price, UserEntity user) {
         this.price = price;
         this.user = user;
+        this.isRevoke = 0;
     }
 
     public Long getId() {
@@ -54,5 +58,9 @@ public class PointChargeEntity {
 
     public UserEntity getUser() {
         return user;
+    }
+
+    public void setIsRevoke(Integer isRevoke) {
+        this.isRevoke = isRevoke;
     }
 }
