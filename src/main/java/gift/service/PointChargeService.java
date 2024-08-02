@@ -54,12 +54,15 @@ public class PointChargeService {
         return pointChargeMapper.toDetail(pointChargeEntity);
     }
 
+    @Transactional
     public Long createPointCharge(HttpServletRequest req, CreatePointCharge create) {
         UserEntity userEntity = userRepository.findByIdAndIsDelete(parsingPram.getId(req), 0)
             .orElseThrow(() -> new BaseHandler(HttpStatus.NOT_FOUND, "유저가 존재하지 않습니다."));
 
         PointChargeEntity pointChargeEntity = pointChargeMapper.toEntity(create, userEntity);
         pointChargeRepository.save(pointChargeEntity);
+
+        userEntity.setPoint(create.getPrice());
 
         return pointChargeEntity.getId();
     }
@@ -70,6 +73,13 @@ public class PointChargeService {
                 parsingPram.getId(req), 0)
             .orElseThrow(() -> new BaseHandler(HttpStatus.NOT_FOUND, "해당 포인트 충전 내역이 없습니다."));
 
+        UserEntity userEntity = userRepository.findByIdAndIsDelete(parsingPram.getId(req), 0)
+            .orElseThrow(() -> new BaseHandler(HttpStatus.NOT_FOUND, "유저가 존재하지 않습니다."));
+
+        if (userEntity.getPoint() < pointChargeEntity.getPrice()) {
+            throw new BaseHandler(HttpStatus.UNAUTHORIZED, "취소할 포인트보다 보유한 포인트가 더 적습니다.");
+        }
+        userEntity.setPoint(pointChargeEntity.getPrice() * -1);
         pointChargeEntity.setIsRevoke(1);
 
         return pointChargeEntity.getId();
