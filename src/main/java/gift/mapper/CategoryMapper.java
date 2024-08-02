@@ -30,6 +30,28 @@ public class CategoryMapper {
         return new PageImpl<>(simpleList, all.getPageable(), all.getTotalElements());
     }
 
+    public Page<DetailCategory> toDetailList(Page<CategoryEntity> all) {
+        List<DetailCategory> simpleList = all.stream()
+            .map(entity -> new DetailCategory(
+                entity.getProductEntities()
+                    .stream()
+                    .map(ProductEntity::getId)
+                    .collect(
+                        Collectors.toList()),
+                entity.getId(),
+                entity.getName(),
+                entity.getImageURL(),
+                entity.getTitle(),
+                entity.getDescription(),
+                entity.getBackgroundColor(),
+                entity.getCreatedAt(),
+                entity.getUpdatedAt()
+            ))
+            .collect(Collectors.toList());
+
+        return new PageImpl<>(simpleList, all.getPageable(), all.getTotalElements());
+    }
+
     public DetailCategory toDetail(CategoryEntity entity) {
         return new DetailCategory(
             entity.getProductEntities()
