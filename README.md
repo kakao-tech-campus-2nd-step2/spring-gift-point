@@ -1,9 +1,11 @@
 # spring-gift-point
-1. 조원들과 API 명세 결정하기
-2. API 명세에 맞게 수정
+1. 스크립트 파일작성
+2. 배포
 
 API 문서
 
 https://fuchsia-tabletop-6fc.notion.site/API-438e773c1c0d475da1e87b4ef4ef42d8?p=816a121fffed4aada9a3402293dd3b47&pm=s
 
+배포한 페이지
 
+http://3.37.113.212:8080/manager/products
