@@ -71,8 +71,8 @@ class OrderServiceTest {
         );
         Option option = OptionFixture.createOption("옵션", product);
         Long memberId = 1L;
-        OrderRequest request = new OrderRequest(2L, 1, "message");
-        given(optionService.getOptionById(anyLong()))
+        OrderRequest request = new OrderRequest(2L, 1, "message", 100);
+        given(optionService.getOptionByIdOrThrow(anyLong()))
                 .willReturn(option);
         given(memberService.getMemberByIdOrThrow(anyLong()))
                 .willReturn(member);
@@ -82,7 +82,7 @@ class OrderServiceTest {
         OrderResponse response = orderService.order(memberId, request);
 
         assertThat(response.message()).isEqualTo(request.message());
-        verify(optionService).getOptionById(request.optionId());
+        verify(optionService).getOptionByIdOrThrow(request.optionId());
         verify(optionService).subtractQuantity(any(), eq(request.quantity()));
         verify(wishesService).removeWishIfPresent(eq(memberId), any());
         verify(memberService).getMemberByIdOrThrow(memberId);

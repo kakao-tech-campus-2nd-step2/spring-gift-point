@@ -30,12 +30,15 @@ public class Member {
     @Embedded
     private KakaoTokenInfo kakaoTokenInfo;
 
+    private Integer point;
+
     protected Member() {
     }
 
     public Member(String email, String password) {
         this.email = email;
         this.password = password;
+        this.point = 0;
     }
 
     public Member(String email,
@@ -44,6 +47,7 @@ public class Member {
         this.email = email;
         this.password = password;
         this.kakaoTokenInfo = kakaoTokenInfo;
+        this.point = 0;
     }
 
     public Long getId() {
@@ -85,6 +89,18 @@ public class Member {
 
     public boolean isTokenExpired() {
         return kakaoTokenInfo.isExpired();
+    }
+
+    public boolean isPointDeductible(Integer point) {
+        return this.point <= point;
+    }
+
+    public void savePoint(Integer point) {
+        this.point += point;
+    }
+
+    public void subtractPoint(Integer point) {
+        this.point -= point;
     }
 
 }

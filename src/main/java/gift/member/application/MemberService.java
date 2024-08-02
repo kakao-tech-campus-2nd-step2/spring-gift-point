@@ -61,4 +61,19 @@ public class MemberService {
         );
     }
 
+    @Transactional
+    public void saveMemberPoint(Member member, int point) {
+        member.savePoint(point);
+    }
+
+    @Transactional
+    public void subtractMemberPoint(Member member, Integer point) {
+        if (member.isPointDeductible(point)) {
+            member.subtractPoint(point);
+            return;
+        }
+
+        throw new CustomException(ErrorCode.MEMBER_POINT_NOT_DEDUCTIBLE);
+    }
+
 }

@@ -60,7 +60,8 @@ class OrderControllerTest {
         OrderRequest request = new OrderRequest(
                 2L,
                 1,
-                "message"
+                "message",
+                100
         );
         OrderResponse response = new OrderResponse(
                 1L,
