@@ -1,6 +1,7 @@
 package gift.service.user;
 
 import gift.dto.point.MyPointResponse;
+import gift.dto.user.LoginResponse;
 import gift.dto.user.UserRequest;
 import gift.exception.InvalidUserException;
 import gift.exception.UserAlreadyExistException;
@@ -38,10 +39,10 @@ public class UserService {
         return token;
     }
 
-    public String getName(String email){
+    public LoginResponse.Info getLoginInfo(String email){
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new InvalidUserException("존재하지 않는 사용자입니다."));
-        return user.getName();
+        return new LoginResponse.Info(user.getName(),user.getRole());
     }
 
 

@@ -1,5 +1,6 @@
 package gift.controller.user;
 
+import gift.dto.user.LoginResponse;
 import gift.dto.user.UserRequest;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.*;
@@ -28,7 +29,7 @@ public interface UserSpecification {
                     )
             }
     )
-    ResponseEntity<Map<String, String>> login(@RequestBody UserRequest.Check userRequest);
+    ResponseEntity<LoginResponse.Info> login(@RequestBody UserRequest.Check userRequest);
 
     @Operation(
             summary = "유저 회원가입",

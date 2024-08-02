@@ -33,7 +33,7 @@ public class KakaoAuthController implements KakaoAuthSpecification {
                 .build();
     }
 
-    @GetMapping("/callback")
+    @GetMapping("/login/callback")
     public ResponseEntity<Map<String, String>> getAccessToken(
             @RequestParam String code,
             @RequestParam("redirect-url") String redirectUrl) {

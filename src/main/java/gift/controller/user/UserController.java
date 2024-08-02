@@ -1,6 +1,6 @@
 package gift.controller.user;
 
-import gift.dto.user.UserRequest;
+import gift.dto.user.*;
 import gift.service.user.UserService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,16 +22,15 @@ public class UserController implements UserSpecification {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<Map<String, String>> login(@RequestBody UserRequest.Check userRequest) {
+    public ResponseEntity<LoginResponse.Info> login(@RequestBody UserRequest.Check userRequest) {
         String token = userService.login(userRequest);
-        String name = userService.getName(userRequest.email());
 
         HttpHeaders headers = new HttpHeaders();
         headers.set("Authorization", token);
 
-        Map<String, String> responseBody = Map.of("name", name);
+        LoginResponse.Info userResponse = userService.getLoginInfo(userRequest.email());
 
-        return ResponseEntity.ok().headers(headers).body(responseBody);
+        return ResponseEntity.ok().headers(headers).body(userResponse);
     }
 
     @PostMapping("/register")

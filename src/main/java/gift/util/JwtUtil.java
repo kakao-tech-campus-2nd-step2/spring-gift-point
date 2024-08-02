@@ -42,6 +42,7 @@ public class JwtUtil {
 
         String token = Jwts.builder()
                 .setSubject(user.getEmail())
+                .claim("roles", user.getRole())
                 .setExpiration(expirationDate)
                 .signWith(SignatureAlgorithm.HS512, secretKey)
                 .compact();
