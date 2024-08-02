@@ -1,15 +1,14 @@
 package gift.api.product.service;
 
-import gift.api.category.Category;
-import gift.api.category.CategoryRepository;
+import gift.api.category.domain.Category;
+import gift.api.category.repository.CategoryRepository;
 import gift.api.product.domain.Product;
 import gift.api.product.dto.ProductRequest;
 import gift.api.product.dto.ProductResponse;
 import gift.api.product.repository.ProductRepository;
+import gift.global.PageResponse;
 import gift.global.exception.NoSuchEntityException;
-import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -21,20 +20,25 @@ public class ProductService {
     private final ProductRepository productRepository;
     private final CategoryRepository categoryRepository;
 
-    public ProductService(ProductRepository productRepository, CategoryRepository categoryRepository) {
+    public ProductService(ProductRepository productRepository,
+        CategoryRepository categoryRepository) {
         this.productRepository = productRepository;
         this.categoryRepository = categoryRepository;
     }
 
-    public List<ProductResponse> getProducts(Pageable pageable) {
+    public ProductResponse getProduct(Long id) {
+        return ProductResponse.of(productRepository.findById(id)
+            .orElseThrow(() -> new NoSuchEntityException("product")));
+    }
+
+    public PageResponse<ProductResponse> getAllProducts(Pageable pageable) {
         Page<Product> products = productRepository.findAll(pageable);
-        if (products.hasContent()) {
-            return products.getContent()
-                    .stream()
-                    .map(ProductResponse::of)
-                    .collect(Collectors.toList());
-        }
-        return Collections.emptyList();
+        List<ProductResponse> contents = products.getContent()
+            .stream()
+            .map(ProductResponse::of)
+            .toList();
+        return PageResponse.of(products.getPageable(), products.getTotalElements(),
+            products.getTotalPages(), contents);
     }
 
     @Transactional
@@ -48,11 +52,11 @@ public class ProductService {
     public void update(Long id, ProductRequest productRequest) {
         Category category = findCategoryById(productRequest.categoryId());
         Product product = productRepository.findById(id)
-                .orElseThrow(() -> new NoSuchEntityException("product"));
+            .orElseThrow(() -> new NoSuchEntityException("product"));
         product.update(category,
-                productRequest.name(),
-                productRequest.price(),
-                productRequest.imageUrl());
+            productRequest.name(),
+            productRequest.price(),
+            productRequest.imageUrl());
     }
 
     @Transactional

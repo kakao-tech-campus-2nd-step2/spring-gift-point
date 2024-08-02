@@ -1,5 +1,6 @@
-package gift.api.category;
+package gift.api.category.repository;
 
+import gift.api.category.domain.Category;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

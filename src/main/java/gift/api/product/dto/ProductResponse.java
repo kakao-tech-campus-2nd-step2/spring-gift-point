@@ -1,8 +1,11 @@
 package gift.api.product.dto;
 
-import gift.api.category.Category;
+import com.fasterxml.jackson.databind.PropertyNamingStrategies;
+import com.fasterxml.jackson.databind.annotation.JsonNaming;
+import gift.api.category.domain.Category;
 import gift.api.product.domain.Product;
 
+@JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public record ProductResponse(
     Long id,
     Category category,

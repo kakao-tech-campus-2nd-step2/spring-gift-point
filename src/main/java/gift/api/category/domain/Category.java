@@ -1,4 +1,4 @@
-package gift.api.category;
+package gift.api.category.domain;
 
 import gift.global.BaseEntity;
 import jakarta.persistence.Column;
@@ -9,6 +9,7 @@ import jakarta.persistence.UniqueConstraint;
 @Entity
 @Table(uniqueConstraints = @UniqueConstraint(name = "uk_category", columnNames = {"name"}))
 public class Category extends BaseEntity {
+
     @Column(nullable = false)
     private String name;
     @Column(length = 7, nullable = false)
@@ -17,10 +18,17 @@ public class Category extends BaseEntity {
     private String imageUrl;
     private String description;
 
-    protected Category(){
+    protected Category() {
     }
 
     public Category(String name, String color, String imageUrl, String description) {
+        this.name = name;
+        this.color = color;
+        this.imageUrl = imageUrl;
+        this.description = description;
+    }
+
+    public void update(String name, String color, String imageUrl, String description) {
         this.name = name;
         this.color = color;
         this.imageUrl = imageUrl;

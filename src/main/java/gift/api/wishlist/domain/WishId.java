@@ -3,12 +3,13 @@ package gift.api.wishlist.domain;
 import java.io.Serializable;
 import java.util.Objects;
 
+@Deprecated
 public class WishId implements Serializable {
 
     private Long member;
     private Long product;
 
-    protected WishId(){
+    protected WishId() {
     }
 
     public WishId(Long member, Long product) {

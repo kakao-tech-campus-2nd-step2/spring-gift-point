@@ -31,7 +31,7 @@ public class SwaggerConfig {
     private Info apiInfo() {
         return new Info()
             .title("spring-gift")
-            .description("Let's practice Swagger UI")
+            .description("API Docs")
             .version("0.0.1-SNAPSHOT");
     }
 }

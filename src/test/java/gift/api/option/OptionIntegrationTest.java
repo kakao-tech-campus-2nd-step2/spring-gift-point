@@ -2,8 +2,8 @@ package gift.api.option;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import gift.api.category.Category;
-import gift.api.category.CategoryRepository;
+import gift.api.category.domain.Category;
+import gift.api.category.repository.CategoryRepository;
 import gift.api.option.domain.Option;
 import gift.api.option.repository.OptionRepository;
 import gift.api.option.service.OptionService;

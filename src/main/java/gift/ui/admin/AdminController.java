@@ -26,7 +26,7 @@ public class AdminController {
 
     @GetMapping()
     public String view(Model model, Pageable pageable) {
-        model.addAttribute("products", productService.getProducts(pageable));
+        model.addAttribute("products", productService.getAllProducts(pageable));
         model.addAttribute("productRequest", new ProductRequest(0L, "", 0, ""));
         return "administrator";
     }

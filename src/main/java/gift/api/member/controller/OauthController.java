@@ -1,33 +1,39 @@
 package gift.api.member.controller;
 
-import gift.api.member.enums.Scope;
-import gift.global.config.KakaoProperties;
-import org.springframework.stereotype.Controller;
+import gift.api.member.dto.KakaoLoginResponse;
+import gift.api.member.service.MemberFacade;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.servlet.view.RedirectView;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
-@Controller
-@RequestMapping("/oauth")
+@RestController
+@RequestMapping("/api/oauth2")
+@Tag(name = "OAuth", description = "OAuth API")
 public class OauthController {
 
-    private final KakaoProperties kakaoProperties;
+    private final MemberFacade memberFacade;
 
-    public OauthController(KakaoProperties kakaoProperties) {
-        this.kakaoProperties = kakaoProperties;
-    }
-
-    @GetMapping
-    public String requestLogin() {
-        return "oauth";
+    public OauthController(MemberFacade memberFacade) {
+        this.memberFacade = memberFacade;
     }
 
     @GetMapping("/kakao")
-    public RedirectView requestAuthorizationCode() {
-        return new RedirectView(
-            String.format(kakaoProperties.url().requestFormat(),
-                String.join(",", Scope.EMAIL.id(), Scope.MESSAGE.id()),
-                kakaoProperties.url().redirect(),
-                kakaoProperties.clientId()));
+    @Operation(summary = "카카오 로그인")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "OK"),
+        @ApiResponse(responseCode = "400", description = "이메일 제공 동의 필요")
+    })
+    public ResponseEntity<KakaoLoginResponse> loginKakao(
+        @Parameter(required = true, description = "카카오 인가 코드")
+        @RequestParam("code") String code) {
+
+        return ResponseEntity.ok().body(memberFacade.loginKakao(code));
     }
 }

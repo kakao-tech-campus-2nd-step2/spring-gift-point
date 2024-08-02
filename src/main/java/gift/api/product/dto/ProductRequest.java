@@ -1,6 +1,8 @@
 package gift.api.product.dto;
 
-import gift.api.category.Category;
+import com.fasterxml.jackson.databind.PropertyNamingStrategies;
+import com.fasterxml.jackson.databind.annotation.JsonNaming;
+import gift.api.category.domain.Category;
 import gift.api.product.domain.Product;
 import gift.api.product.validator.NoKakao;
 import jakarta.validation.constraints.NotBlank;
@@ -10,6 +12,7 @@ import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.PositiveOrZero;
 import jakarta.validation.constraints.Size;
 
+@JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public record ProductRequest (
     @NotNull(message = "Category id is mandatory")
     @Positive(message = "Category id must be greater than zero")

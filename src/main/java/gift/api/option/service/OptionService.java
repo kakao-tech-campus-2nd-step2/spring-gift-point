@@ -42,6 +42,17 @@ public class OptionService {
     }
 
     @Transactional
+    public void update(Long id, OptionRequest optionRequest) {
+        Option option = findOptionById(id);
+        option.update(optionRequest.name(), optionRequest.quantity());
+    }
+
+    @Transactional
+    public void delete(Long id) {
+        optionRepository.deleteById(id);
+    }
+
+    @Transactional
     public void subtract(Long id, Integer quantity) {
         Option option = optionRepository.findByIdWithPessimisticWrite(id)
             .orElseThrow(() -> new NoSuchEntityException("option"));

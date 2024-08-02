@@ -1,5 +1,7 @@
 package gift.api.option.dto;
 
+import com.fasterxml.jackson.databind.PropertyNamingStrategies;
+import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import gift.api.option.domain.Option;
 import gift.api.product.domain.Product;
 import jakarta.validation.constraints.Max;
@@ -9,6 +11,7 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 
+@JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public record OptionRequest(
     @NotBlank(message = "Name is mandatory")
     @Size(max = 50, message = "Name must be less than or equal to 50 characters long")

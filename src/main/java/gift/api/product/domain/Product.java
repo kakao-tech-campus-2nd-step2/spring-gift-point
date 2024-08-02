@@ -1,6 +1,6 @@
 package gift.api.product.domain;
 
-import gift.api.category.Category;
+import gift.api.category.domain.Category;
 import gift.global.BaseEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

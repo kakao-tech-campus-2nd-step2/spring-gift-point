@@ -1,7 +1,8 @@
 package gift.api.member.service;
 
+import gift.api.member.dto.KakaoAccount;
+import gift.api.member.dto.KakaoLoginResponse;
 import gift.api.member.dto.TokenResponse;
-import gift.api.member.dto.UserInfoResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 
@@ -16,11 +17,16 @@ public class MemberFacade {
         this.kakaoService = kakaoService;
     }
 
-    public void loginKakao(String code) {
+    public KakaoLoginResponse loginKakao(String code) {
         ResponseEntity<TokenResponse> tokenResponse = kakaoService.obtainToken(code);
-        ResponseEntity<UserInfoResponse> userInfoResponse = kakaoService.obtainUserInfo(tokenResponse);
-        memberService.verifyEmail(userInfoResponse.getBody().kakaoAccount());
-        memberService.saveKakaoToken(userInfoResponse.getBody().kakaoAccount().email(),
-            tokenResponse.getBody().accessToken());
+        String kakaoAccessToken = tokenResponse.getBody()
+            .accessToken();
+        KakaoAccount kakaoAccount = kakaoService.obtainUserInfo(tokenResponse)
+            .getBody()
+            .kakaoAccount();
+        memberService.verifyEmail(kakaoAccount);
+        memberService.saveKakaoToken(kakaoAccount.email(), kakaoAccessToken);
+        return KakaoLoginResponse.of(
+            memberService.issueAccessToken(kakaoAccount.email()), kakaoAccessToken);
     }
 }
