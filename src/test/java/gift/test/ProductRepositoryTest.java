@@ -54,6 +54,7 @@ public class ProductRepositoryTest {
         assertThat(updatedProduct.getImageUrl()).isEqualTo("test.jpg");
     }
 
+
     @Test
     @DisplayName("상품 수정할때 성공적으로 작동되는 경우")
     void updateProductPrice() {
@@ -101,7 +102,7 @@ public class ProductRepositoryTest {
 
         // when
         Set<ConstraintViolation<Product>> violations = validator.validate(product);
-
+      
         // then
         assertThat(violations).anyMatch(v -> v.getPropertyPath().toString().equals("name") && v.getMessage().contains("이름에 NULL 불가능"));
     }
