@@ -1,27 +1,29 @@
 package gift.dto;
 
+import java.time.LocalDateTime;
+
 public class WishDTO {
+
     private Long id;
-    private Long memberId;
     private Long productId;
     private String productName;
-    private int productPrice;
-    private String productImageUrl;
+    private LocalDateTime createdDate;
 
+    public WishDTO() {
+    }
+
+    public WishDTO(Long id, Long productId, String productName, LocalDateTime createdDate) {
+        this.id = id;
+        this.productId = productId;
+        this.productName = productName;
+        this.createdDate = createdDate;
+    }
     public Long getId() {
         return id;
     }
 
     public void setId(Long id) {
         this.id = id;
-    }
-
-    public Long getMemberId() {
-        return memberId;
-    }
-
-    public void setMemberId(Long memberId) {
-        this.memberId = memberId;
     }
 
     public Long getProductId() {
@@ -40,19 +42,11 @@ public class WishDTO {
         this.productName = productName;
     }
 
-    public int getProductPrice() {
-        return productPrice;
+    public LocalDateTime getCreatedDate() {
+        return createdDate;
     }
 
-    public void setProductPrice(int productPrice) {
-        this.productPrice = productPrice;
-    }
-
-    public String getProductImageUrl() {
-        return productImageUrl;
-    }
-
-    public void setProductImageUrl(String productImageUrl) {
-        this.productImageUrl = productImageUrl;
+    public void setCreatedDate(LocalDateTime createdDate) {
+        this.createdDate = createdDate;
     }
 }

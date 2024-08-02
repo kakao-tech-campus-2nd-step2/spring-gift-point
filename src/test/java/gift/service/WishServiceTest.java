@@ -1,6 +1,5 @@
 package gift.service;
 
-import gift.domain.Category;
 import gift.domain.Member;
 import gift.domain.Product;
 import gift.domain.Wish;
@@ -12,9 +11,15 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 
+import java.util.Arrays;
 import java.util.Optional;
 
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
@@ -32,44 +37,36 @@ public class WishServiceTest {
     @InjectMocks
     private WishService wishService;
 
+    private Member member;
+    private Product product;
+    private Wish wish;
+
     @BeforeEach
     public void setUp() {
         MockitoAnnotations.openMocks(this);
+        member = new Member("test@example.com", "password");
+        product = new Product("Product Name", 100, "image-url", null);
+        wish = new Wish(member, product);
     }
 
     @Test
     public void testAddWish() {
-        Long memberId = 1L;
-        String productName = "Test Product";
+        when(memberRepository.findByEmail(anyString())).thenReturn(Optional.of(member));
+        when(productRepository.findById(anyLong())).thenReturn(Optional.of(product));
+        when(wishRepository.existsByMemberAndProduct(any(Member.class), any(Product.class))).thenReturn(false);
 
-        Member member = new Member("test@example.com", "password123");
-        Product product = new Product("Test Product", 1000, "test.jpg", new Category("Test Category"));
-
-        when(memberRepository.findById(memberId)).thenReturn(Optional.of(member));
-        when(productRepository.findByName(productName)).thenReturn(Optional.of(product));
-        when(wishRepository.existsByMemberAndProduct(member, product)).thenReturn(false);
-        when(wishRepository.save(any(Wish.class))).thenAnswer(invocation -> invocation.getArgument(0));
-
-        wishService.addWish(memberId, productName);
+        wishService.addWish(member.getEmail(), 1L);
 
         verify(wishRepository, times(1)).save(any(Wish.class));
     }
 
     @Test
     public void testRemoveWish() {
-        Long memberId = 1L;
-        String productName = "Test Product";
+        when(memberRepository.findByEmail(anyString())).thenReturn(Optional.of(member));
+        when(productRepository.findById(anyLong())).thenReturn(Optional.of(product));
 
-        Member member = new Member("test@example.com", "password123");
-        Product product = new Product("Test Product", 1000, "test.jpg", new Category("Test Category"));
+        wishService.removeWish(member.getEmail(), 1L);
 
-        when(memberRepository.findById(memberId)).thenReturn(Optional.of(member));
-        when(productRepository.findByName(productName)).thenReturn(Optional.of(product));
-
-        doNothing().when(wishRepository).deleteByMemberAndProduct(member, product);
-
-        wishService.removeWish(memberId, productName);
-
-        verify(wishRepository, times(1)).deleteByMemberAndProduct(member, product);
+        verify(wishRepository, times(1)).deleteByMemberAndProduct(any(Member.class), any(Product.class));
     }
 }

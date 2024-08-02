@@ -1,6 +1,9 @@
 CREATE TABLE IF NOT EXISTS category (
                                         id BIGINT AUTO_INCREMENT PRIMARY KEY,
-                                        name VARCHAR(255) NOT NULL UNIQUE
+                                        name VARCHAR(255) NOT NULL,
+    description VARCHAR(255),
+    color VARCHAR(50),
+    image_url VARCHAR(255)
     );
 
 CREATE TABLE IF NOT EXISTS product (

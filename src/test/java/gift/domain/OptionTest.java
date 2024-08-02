@@ -8,7 +8,7 @@ public class OptionTest {
 
     @Test
     public void testOptionCreation() {
-        Category category = new Category("Test Category");
+        Category category = new Category();
         Product product = new Product("Test Product", 1000, "test.jpg", category);
         Option option = new Option("Test Option", 10, product);
 
