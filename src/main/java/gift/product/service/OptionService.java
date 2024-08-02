@@ -42,9 +42,11 @@ public class OptionService {
 	}
 
 	@Transactional
-	public Page<OptionResponse> getOptions(Long productId, Pageable pageable) {
-		Page<Option> options = optionRepository.findAllByProductId(productId, pageable);
-		return options.map(OptionResponse::from);
+	public List<OptionResponse> getOptions(Long productId) {
+		List<Option> options = optionRepository.findAllByProductId(productId);
+		return options.stream()
+			.map(OptionResponse::from)
+			.toList();
 	}
 
 	@Transactional
