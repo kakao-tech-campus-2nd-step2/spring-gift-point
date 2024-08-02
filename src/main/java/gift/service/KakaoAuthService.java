@@ -2,9 +2,11 @@ package gift.service;
 
 import gift.config.KakaoProperties;
 import gift.model.entity.Member;
+import gift.model.entity.Point;
 import gift.model.kakao.KakaoAuth;
 import gift.model.kakao.KakaoMember;
 import gift.repository.MemberRepository;
+import gift.repository.PointRepository;
 import gift.service.intercptor.ClientInterceptor;
 import jakarta.validation.constraints.NotNull;
 import org.slf4j.Logger;
@@ -17,6 +19,7 @@ import org.springframework.web.client.RestClient;
 
 import java.net.URI;
 import java.util.NoSuchElementException;
+import java.util.Optional;
 
 @Service
 public class KakaoAuthService {
@@ -26,10 +29,12 @@ public class KakaoAuthService {
 
     private final KakaoProperties kakaoProperties;
     private final MemberRepository memberRepository;
+    private final PointRepository pointRepository;
 
-    public KakaoAuthService(RestClient.Builder builder, KakaoProperties kakaoProperties, MemberRepository memberRepository) {
+    public KakaoAuthService(RestClient.Builder builder, KakaoProperties kakaoProperties, MemberRepository memberRepository, PointRepository pointRepository) {
         this.kakaoProperties = kakaoProperties;
         this.memberRepository = memberRepository;
+        this.pointRepository = pointRepository;
 
         SimpleClientHttpRequestFactory requestFactory = new SimpleClientHttpRequestFactory();
         requestFactory.setConnectTimeout(kakaoProperties.getConnectTimeout());
@@ -57,11 +62,20 @@ public class KakaoAuthService {
         //email 카카오 아이디로
         Long memberid = getKakakoMemberId(response.getBody().getAccessToken());
         if(!memberRepository.existsByEmail(memberid.toString())){
-            Member member = new Member(memberid.toString(), "password");
-            memberRepository.save(member);
+            signIn(memberid);
         }
 
         return response.getBody().getAccessToken();
+    }
+
+    private void signIn(Long memberid) {
+        Member member = new Member(memberid.toString(), "password");
+        memberRepository.save(member);
+
+        memberRepository.findByEmail(memberid.toString()).ifPresent(newMember -> {
+            Point point = new Point(newMember, 0);
+            pointRepository.save(point);
+        });
     }
 
     public Member getDBMemberByToken(String token){
