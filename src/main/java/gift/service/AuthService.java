@@ -46,7 +46,7 @@ public class AuthService {
         return new AuthResponse(jwtUtil.createJWT(storedMember.getId(), storedMember.getLoginType()));
     }
 
-    public AuthResponse kakaoLogin(String code) {
+    public String kakaoLogin(String code) {
         KakaoTokenInfo kakaoTokenInfo = kaKaoService.getKakaoTokenInfo(code);
         String email = kaKaoService.getKakaoAccountEmail(kakaoTokenInfo.access_token());
 
@@ -55,7 +55,7 @@ public class AuthService {
             throw new CustomException(ALREADY_REGISTERED_ERROR);
         }
 
-        return new AuthResponse(jwtUtil.createJWT(member.getId(), member.getLoginType()));
+        return jwtUtil.createJWT(member.getId(), member.getLoginType());
     }
 
     private Member findOrSaveMember(String email, String accessToken, String refreshToken) {
