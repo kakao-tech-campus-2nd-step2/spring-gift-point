@@ -73,7 +73,7 @@ public class OrderService {
 
         // 포인트 더하기
         int pointsReceived = (int) Math.floor(price * 0.05);
-        memberService.addMemberPoints(memberRequest, pointsReceived);
+        memberService.addMemberPoints(memberRequest.id(), pointsReceived);
 
         int payment = price - pointsUsed;
 
