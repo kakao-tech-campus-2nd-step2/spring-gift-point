@@ -1,8 +1,9 @@
 package gift.service;
 
 import static gift.util.CategoryFixture.createCategory;
+import static gift.util.OptionFixture.createOption;
 import static gift.util.ProductFixture.createProduct;
-import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.given;
@@ -10,8 +11,10 @@ import static org.mockito.BDDMockito.then;
 
 import gift.domain.Category;
 import gift.domain.Product;
-import gift.dto.ProductDTO;
+import gift.dto.option.OptionDto;
+import gift.dto.product.ProductDto;
 import gift.repository.ProductRepository;
+import java.util.Arrays;
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -28,6 +31,8 @@ public class ProductServiceTest {
     private CategoryService categoryService;
     @Mock
     private ProductRepository productRepository;
+    @Mock
+    private OptionService optionService;
 
     @InjectMocks
     private ProductService productService;
@@ -44,14 +49,17 @@ public class ProductServiceTest {
     void addProduct() {
         // given
         Product product = createProduct(1L, "아이스 아메리카노", category);
-        given(categoryService.getCategory(anyLong())).willReturn(category.toDTO());
+        OptionDto optionDto = createOption(1L, "test", 1, product).toDto();
+        given(categoryService.getCategory(anyLong())).willReturn(category.toDto());
         given(productRepository.save(any(Product.class))).willReturn(product);
+        given(optionService.addOption(anyLong(), any(OptionDto.class))).willReturn(optionDto);
 
         // when
-        ProductDTO actual = productService.addProduct(product.toDTO());
+        var actual = productService.addProduct(product.toDto(), Arrays.asList(optionDto));
 
         // then
-        assertThat(actual).isEqualTo(product.toDTO());
+        assertThat(actual.productDto()).isEqualTo(product.toDto());
+        assertThat(actual.optionDtos()).hasSize(1);
     }
 
     @DisplayName("id로 상품 찾기")
@@ -63,10 +71,10 @@ public class ProductServiceTest {
         given(productRepository.findById(anyLong())).willReturn(Optional.of(product));
 
         // when
-        ProductDTO actual = productService.getProduct(id);
+        var actual = productService.getProduct(null, id);
 
         // then
-        assertThat(actual).isEqualTo(product.toDTO());
+        assertThat(actual).isEqualTo(product.toGetProductResponse(false));
     }
 
     @DisplayName("상품 수정")
@@ -76,15 +84,15 @@ public class ProductServiceTest {
         long id = 1L;
         Product product = createProduct(id, "아이스 아메리카노", category);
         Product updatedProduct = createProduct(id, "핫 아메리카노", category);
-        given(categoryService.getCategory(anyLong())).willReturn(category.toDTO());
+        given(categoryService.getCategory(anyLong())).willReturn(category.toDto());
         given(productRepository.findById(anyLong())).willReturn(Optional.of(product));
         given(productRepository.save(any(Product.class))).willReturn(updatedProduct);
 
         // when
-        ProductDTO actual = productService.updateProduct(id, updatedProduct.toDTO());
+        ProductDto actual = productService.updateProduct(id, updatedProduct.toDto());
 
         // then
-        assertThat(actual).isEqualTo(updatedProduct.toDTO());
+        assertThat(actual).isEqualTo(updatedProduct.toDto());
     }
 
     @DisplayName("상품 삭제")

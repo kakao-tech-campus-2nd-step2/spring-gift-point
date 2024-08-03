@@ -1,9 +1,9 @@
 package gift.controller;
 
 import gift.argumentresolver.LoginMember;
-import gift.dto.JwtResponse;
-import gift.dto.MemberDTO;
-import gift.dto.MemberPasswordDTO;
+import gift.dto.member.MemberResponse;
+import gift.dto.member.MemberDto;
+import gift.dto.member.MemberPasswordRequest;
 import gift.service.MemberService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -29,22 +29,22 @@ public class MemberController {
 
     @Operation(summary = "회원가입", description = "회원가입을 합니다.")
     @PostMapping("/register")
-    public ResponseEntity<JwtResponse> register(@Valid @RequestBody MemberDTO memberDTO) {
-        return ResponseEntity.ok().body(memberService.register(memberDTO));
+    public ResponseEntity<MemberResponse> register(@Valid @RequestBody MemberDto memberDto) {
+        return ResponseEntity.ok().body(memberService.register(memberDto));
     }
 
     @Operation(summary = "로그인", description = "로그인을 합니다.")
     @PostMapping("/login")
-    public ResponseEntity<JwtResponse> login(@Valid @RequestBody MemberDTO memberDTO) {
-        return ResponseEntity.ok().body(memberService.login(memberDTO));
+    public ResponseEntity<MemberResponse> login(@Valid @RequestBody MemberDto memberDto) {
+        return ResponseEntity.ok().body(memberService.login(memberDto));
     }
 
     @Operation(summary = "비밀번호 변경", description = "해당 회원의 비밀번호를 변경합니다.")
     @PostMapping("/password")
-    public ResponseEntity<JwtResponse> changePassword(
-        @LoginMember MemberDTO memberDTO,
-        @Valid @RequestBody MemberPasswordDTO memberPasswordDTO
+    public ResponseEntity<MemberResponse> changePassword(
+        @LoginMember MemberDto memberDto,
+        @Valid @RequestBody MemberPasswordRequest memberPasswordRequest
     ) {
-        return ResponseEntity.ok().body(memberService.changePassword(memberDTO, memberPasswordDTO));
+        return ResponseEntity.ok().body(memberService.changePassword(memberDto, memberPasswordRequest));
     }
 }

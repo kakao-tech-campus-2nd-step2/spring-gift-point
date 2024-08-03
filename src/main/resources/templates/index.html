@@ -20,26 +20,26 @@
             <tr>
                 <th>Image</th>
                 <th>ID</th>
-                <th>Category ID</th>
+                <th>Wish</th>
                 <th>Name</th>
                 <th>Price</th>
                 <th>Actions</th>
             </tr>
             <tr th:each="product: ${pages.content}">
                 <td>
-                    <a th:href="@{'/admin/products/' + ${product.id}}">
+                    <a th:href="@{'/admin/products/' + ${product.productId}}">
                         <img class="product-img" th:src="@{${product.imageUrl}}" alt="no image" />
                     </a>
                 </td>
-                <td th:text="${product.id}"></td>
-                <td th:text="${product.categoryId}"></td>
+                <td th:text="${product.productId}"></td>
+                <td th:text="${product.isWish}"></td>
                 <td th:text="${product.name}"></td>
                 <td th:text="${product.price}"></td>
                 <td>
-                    <a th:href="@{'/admin/products/edit/' + ${product.id}}">
+                    <a th:href="@{'/admin/products/edit/' + ${product.productId}}">
                         <button class="btn primary-btn">Edit</button>
                     </a>
-                    <button class="btn danger-btn" th:data-product-id="${product.id}" onclick="deleteProduct(this)">Delete</button>
+                    <button class="btn danger-btn" th:data-product-id="${product.productId}" onclick="deleteProduct(this)">Delete</button>
                 </td>
             </tr>
         </table>

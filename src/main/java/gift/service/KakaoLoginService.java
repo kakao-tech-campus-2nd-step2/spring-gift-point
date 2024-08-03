@@ -1,9 +1,9 @@
 package gift.service;
 
-import gift.dto.JwtResponse;
-import gift.dto.KakaoProfileDTO;
-import gift.dto.KakaoTokenDTO;
-import gift.dto.MemberDTO;
+import gift.dto.member.MemberResponse;
+import gift.dto.kakao.KakaoProfileDto;
+import gift.dto.kakao.KakaoTokenDto;
+import gift.dto.member.MemberDto;
 import gift.exception.InvalidKakaoTokenException;
 import gift.repository.KakaoTokenRepository;
 import gift.util.JwtProvider;
@@ -40,17 +40,17 @@ public class KakaoLoginService {
         this.kakaoTokenRepository = kakaoTokenRepository;
     }
 
-    public JwtResponse login(String code) {
-        var kakaoTokenDTO = getKakaoToken(code);
-        var kakaoProfileDTO = getKakaoProfile(kakaoTokenDTO.access_token());
+    public MemberResponse login(String code) {
+        var kakaoTokenDto = getKakaoToken(code);
+        var kakaoProfileDto = getKakaoProfile(kakaoTokenDto.access_token());
 
-        String email = kakaoProfileDTO.kakao_account().email();
-        MemberDTO foundMemberDTO = memberService.findMember(email);
-        kakaoTokenRepository.save(kakaoTokenDTO.toEntity(email));
-        return new JwtResponse(jwtProvider.createAccessToken(foundMemberDTO));
+        String email = kakaoProfileDto.kakao_account().email();
+        MemberDto foundMemberDto = memberService.findMember(email);
+        kakaoTokenRepository.save(kakaoTokenDto.toEntity(email));
+        return new MemberResponse(jwtProvider.createAccessToken(foundMemberDto));
     }
 
-    private KakaoTokenDTO getKakaoToken(String code) {
+    private KakaoTokenDto getKakaoToken(String code) {
         var client = RestClient.builder(restTemplate).build();
         var body = new LinkedMultiValueMap<String, String>();
         body.add("grant_type", "authorization_code");
@@ -63,20 +63,20 @@ public class KakaoLoginService {
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .body(body)
                 .retrieve()
-                .body(KakaoTokenDTO.class);
+                .body(KakaoTokenDto.class);
         } catch (HttpClientErrorException e) {
             throw new InvalidKakaoTokenException(e.getStatusCode(), e.getMessage());
         }
     }
 
-    private KakaoProfileDTO getKakaoProfile(String kakaoAccessToken) {
+    private KakaoProfileDto getKakaoProfile(String kakaoAccessToken) {
         var client = RestClient.builder(restTemplate).build();
         try {
             return client.get()
                 .uri(URI.create(KAKAO_PROFILE_URL))
                 .header("Authorization", "Bearer " + kakaoAccessToken)
                 .retrieve()
-                .body(KakaoProfileDTO.class);
+                .body(KakaoProfileDto.class);
         } catch (HttpClientErrorException e) {
             throw new InvalidKakaoTokenException(e.getStatusCode(), e.getMessage());
         }

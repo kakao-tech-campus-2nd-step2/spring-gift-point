@@ -1,6 +1,6 @@
 package gift.controller;
 
-import gift.dto.CategoryDTO;
+import gift.dto.category.CategoryDto;
 import gift.service.CategoryService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -31,32 +31,32 @@ public class CategoryController {
 
     @Operation(summary = "모든 카테고리 조회", description = "모든 카테고리를 조회합니다.")
     @GetMapping
-    public ResponseEntity<List<CategoryDTO>> getCategories() {
+    public ResponseEntity<List<CategoryDto>> getCategories() {
         return ResponseEntity.ok().body(categoryService.getCategories());
     }
 
     @Operation(summary = "한 카테고리 조회", description = "해당 id의 카테고리를 조회합니다.")
     @GetMapping("/{id}")
-    public ResponseEntity<CategoryDTO> getCategory(@PathVariable("id") Long id) {
+    public ResponseEntity<CategoryDto> getCategory(@PathVariable("id") Long id) {
         return ResponseEntity.ok().body(categoryService.getCategory(id));
     }
 
     @Operation(summary = "카테고리 추가", description = "카테고리를 추가합니다.")
     @PostMapping
-    public ResponseEntity<CategoryDTO> addCategory(@RequestBody CategoryDTO categoryDTO) {
-        CategoryDTO addedcategoryDTO = categoryService.addCategory(categoryDTO);
-        return ResponseEntity.ok().body(addedcategoryDTO);
+    public ResponseEntity<CategoryDto> addCategory(@RequestBody CategoryDto categoryDto) {
+        CategoryDto addedcategoryDto = categoryService.addCategory(categoryDto);
+        return ResponseEntity.ok().body(addedcategoryDto);
     }
 
     @Operation(summary = "카테고리 수정", description = "해당 id의 카테고리를 수정합니다.")
     @PutMapping("/{id}")
-    public ResponseEntity<CategoryDTO> updateCategory(@PathVariable("id") long id, @Valid @RequestBody CategoryDTO categoryDTO) {
-        return ResponseEntity.ok().body(categoryService.updateCategory(id, categoryDTO));
+    public ResponseEntity<CategoryDto> updateCategory(@PathVariable("id") long id, @Valid @RequestBody CategoryDto categoryDto) {
+        return ResponseEntity.ok().body(categoryService.updateCategory(id, categoryDto));
     }
 
     @Operation(summary = "카테고리 삭제", description = "해당 id의 카테고리를 삭제합니다.")
     @DeleteMapping("/{id}")
-    public ResponseEntity<CategoryDTO> deleteCategory(@PathVariable("id") long id) {
+    public ResponseEntity<CategoryDto> deleteCategory(@PathVariable("id") long id) {
         return ResponseEntity.ok().body(categoryService.deleteCategory(id));
     }
 }

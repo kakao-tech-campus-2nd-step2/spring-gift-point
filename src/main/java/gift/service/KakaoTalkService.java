@@ -3,9 +3,8 @@ package gift.service;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import gift.domain.KakaoToken;
-import gift.dto.KakaoTalkRequest;
-import gift.dto.KakaoTalkResponse;
-import gift.dto.MemberDTO;
+import gift.dto.kakao.KakaoTalkDto;
+import gift.dto.member.MemberDto;
 import gift.exception.InvalidKakaoTalkTemplateException;
 import gift.exception.InvalidKakaoTokenException;
 import gift.exception.NoKakaoTokenException;
@@ -34,26 +33,25 @@ public class KakaoTalkService {
         this.kakaoTokenRepository = kakaoTokenRepository;
     }
 
-    public KakaoTalkResponse sendTalk(MemberDTO memberDTO, KakaoTalkRequest kakaoTalkRequest) {
+    public void sendTalk(MemberDto memberDto, KakaoTalkDto kakaoTalkDto) {
         String templateObject;
         try {
-            templateObject = objectMapper.writeValueAsString(kakaoTalkRequest);
+            templateObject = objectMapper.writeValueAsString(kakaoTalkDto);
         } catch (JsonProcessingException e) {
             throw new InvalidKakaoTalkTemplateException();
         }
-        KakaoToken kakaoToken = kakaoTokenRepository.findById(memberDTO.email())
+        KakaoToken kakaoToken = kakaoTokenRepository.findById(memberDto.email())
             .orElseThrow(NoKakaoTokenException::new);
 
         var client = RestClient.builder(restTemplate).build();
         var body = new LinkedMultiValueMap<String, String>();
         body.add("template_object", templateObject);
         try {
-            return client.post()
+            client.post()
                 .uri(URI.create(KAKAO_SEND_TALK_URL))
                 .header("Authorization", "Bearer " + kakaoToken.getAccessToken())
                 .body(body)
-                .retrieve()
-                .body(KakaoTalkResponse.class);
+                .retrieve();
         } catch (HttpClientErrorException e) {
             throw new InvalidKakaoTokenException(e.getStatusCode(), e.getMessage());
         }

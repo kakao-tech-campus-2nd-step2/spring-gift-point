@@ -13,7 +13,7 @@ import static org.mockito.BDDMockito.then;
 import gift.domain.Category;
 import gift.domain.Option;
 import gift.domain.Product;
-import gift.dto.OptionDTO;
+import gift.dto.option.OptionDto;
 import gift.exception.NoOptionsForProductException;
 import gift.repository.OptionRepository;
 import gift.repository.ProductRepository;
@@ -57,7 +57,7 @@ public class OptionServiceTest {
             .willReturn(List.of(createOption(1L, "test1", 1, product), createOption(2L, "test2", 1, product)));
 
         // when
-        List<OptionDTO> actual = optionService.getOptions(product.getId());
+        List<OptionDto> actual = optionService.getOptions(product.getId());
 
         // then
         assertThat(actual).hasSize(2);
@@ -72,10 +72,10 @@ public class OptionServiceTest {
         given(optionRepository.save(any(Option.class))).willReturn(option);
 
         // when
-        OptionDTO actual = optionService.addOption(product.getId(), option.toDTO());
+        OptionDto actual = optionService.addOption(product.getId(), option.toDto());
 
         // then
-        assertThat(actual).isEqualTo(option.toDTO());
+        assertThat(actual).isEqualTo(option.toDto());
     }
 
     @DisplayName("중복된 이름의 옵션 추가")
@@ -89,7 +89,7 @@ public class OptionServiceTest {
         // when
         // then
         assertThatExceptionOfType(DataIntegrityViolationException.class)
-            .isThrownBy(() -> optionService.addOption(product.getId(), option.toDTO()));
+            .isThrownBy(() -> optionService.addOption(product.getId(), option.toDto()));
     }
 
     @DisplayName("옵션 수정")
@@ -104,10 +104,10 @@ public class OptionServiceTest {
         given(optionRepository.save(any(Option.class))).willReturn(updatedOption);
 
         // when
-        OptionDTO actual = optionService.updateOption(product.getId(), updatedOption.toDTO());
+        OptionDto actual = optionService.updateOption(product.getId(), updatedOption.toDto());
 
         // then
-        assertThat(actual).isEqualTo(updatedOption.toDTO());
+        assertThat(actual).isEqualTo(updatedOption.toDto());
     }
 
     @DisplayName("옵션 삭제")

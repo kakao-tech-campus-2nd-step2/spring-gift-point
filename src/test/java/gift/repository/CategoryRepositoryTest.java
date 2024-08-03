@@ -31,7 +31,6 @@ public class CategoryRepositoryTest {
         assertAll(
             () -> assertThat(actual.getId()).isNotNull(),
             () -> assertThat(actual.getName()).isEqualTo(expected.getName()),
-            () -> assertThat(actual.getColor()).isEqualTo(expected.getColor()),
             () -> assertThat(actual.getImageUrl()).isEqualTo(expected.getImageUrl()),
             () -> assertThat(actual.getDescription()).isEqualTo(expected.getDescription())
         );
@@ -50,7 +49,6 @@ public class CategoryRepositoryTest {
         // then
         assertAll(
             () -> assertThat(actual.getName()).isEqualTo(expected.getName()),
-            () -> assertThat(actual.getColor()).isEqualTo(expected.getColor()),
             () -> assertThat(actual.getImageUrl()).isEqualTo(expected.getImageUrl()),
             () -> assertThat(actual.getDescription()).isEqualTo(expected.getDescription())
         );
@@ -70,7 +68,6 @@ public class CategoryRepositoryTest {
         assertAll(
             () -> assertThat(actual.getId()).isEqualTo(expected.getId()),
             () -> assertThat(actual.getName()).isEqualTo(expected.getName()),
-            () -> assertThat(actual.getColor()).isEqualTo(expected.getColor()),
             () -> assertThat(actual.getImageUrl()).isEqualTo(expected.getImageUrl()),
             () -> assertThat(actual.getDescription()).isEqualTo(expected.getDescription())
         );

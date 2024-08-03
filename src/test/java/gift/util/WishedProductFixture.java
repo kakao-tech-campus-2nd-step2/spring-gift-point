@@ -7,6 +7,6 @@ import gift.domain.WishedProduct;
 public class WishedProductFixture {
 
     public static WishedProduct createWishedProduct(Member member, Product product) {
-        return new WishedProduct(member, product, 3);
+        return new WishedProduct(member, product);
     }
 }

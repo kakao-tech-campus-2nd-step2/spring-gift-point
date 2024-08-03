@@ -1,9 +1,9 @@
 package gift.service;
 
 import gift.domain.Member;
-import gift.dto.JwtResponse;
-import gift.dto.MemberDTO;
-import gift.dto.MemberPasswordDTO;
+import gift.dto.member.MemberResponse;
+import gift.dto.member.MemberDto;
+import gift.dto.member.MemberPasswordRequest;
 import gift.exception.AlreadyExistMemberException;
 import gift.exception.InvalidPasswordException;
 import gift.exception.NoSuchMemberException;
@@ -24,33 +24,33 @@ public class MemberService {
         this.jwtProvider = jwtProvider;
     }
 
-    public MemberDTO findMember(String email) {
+    public MemberDto findMember(String email) {
         return memberRepository.findById(email)
             .orElseThrow(NoSuchMemberException::new)
-            .toDTO();
+            .toDto();
     }
 
-    public JwtResponse register(MemberDTO memberDTO) {
+    public MemberResponse register(MemberDto memberDto) {
         try {
-            findMember(memberDTO.email());
+            findMember(memberDto.email());
             throw new AlreadyExistMemberException();
         } catch (NoSuchMemberException e) {
-            MemberDTO savedMemberDTO = memberRepository.save(memberDTO.toEntity()).toDTO();
-            return new JwtResponse(jwtProvider.createAccessToken(savedMemberDTO));
+            MemberDto savedMemberDto = memberRepository.save(memberDto.toEntity()).toDto();
+            return new MemberResponse(jwtProvider.createAccessToken(savedMemberDto));
         }
     }
 
-    public JwtResponse login(MemberDTO memberDTO) {
-        MemberDTO foundMemberDTO = findMember(memberDTO.email());
-        checkPassword(memberDTO.password(), foundMemberDTO.password());
-        return new JwtResponse(jwtProvider.createAccessToken(memberDTO));
+    public MemberResponse login(MemberDto memberDto) {
+        MemberDto foundMemberDto = findMember(memberDto.email());
+        checkPassword(memberDto.password(), foundMemberDto.password());
+        return new MemberResponse(jwtProvider.createAccessToken(memberDto));
     }
 
-    public JwtResponse changePassword(MemberDTO memberDTO, MemberPasswordDTO memberPasswordDTO) {
-        checkPassword(memberPasswordDTO.password(), memberDTO.password());
-        Member member = new Member(memberDTO.email(), memberPasswordDTO.newPassword1());
-        MemberDTO updatedMemberDTO = memberRepository.save(member).toDTO();
-        return new JwtResponse(jwtProvider.createAccessToken(updatedMemberDTO));
+    public MemberResponse changePassword(MemberDto memberDto, MemberPasswordRequest memberPasswordRequest) {
+        checkPassword(memberPasswordRequest.password(), memberDto.password());
+        Member member = new Member(memberDto.email(), memberPasswordRequest.newPassword1());
+        MemberDto updatedMemberDto = memberRepository.save(member).toDto();
+        return new MemberResponse(jwtProvider.createAccessToken(updatedMemberDto));
     }
 
     private void checkPassword(String password, String expectedPassword) {

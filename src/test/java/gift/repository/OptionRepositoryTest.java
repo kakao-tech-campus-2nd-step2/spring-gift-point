@@ -29,7 +29,7 @@ public class OptionRepositoryTest {
         quantity = 3;
         Product product = createProduct(1L, "아이스 아메리카노", createCategory());
         option = optionRepository.save(createOption(null, "test", quantity, product));
-        System.out.println(option.toDTO());
+        System.out.println(option.toDto());
     }
 
     @DisplayName("옵션 수량 차감")

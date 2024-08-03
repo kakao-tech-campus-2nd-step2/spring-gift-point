@@ -1,13 +1,10 @@
 package gift.domain;
 
-import gift.dto.MemberDTO;
+import gift.dto.member.MemberDto;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
-import java.util.ArrayList;
-import java.util.List;
 
 @Entity
 @Table(name = "member")
@@ -20,9 +17,6 @@ public class Member {
     @Column(name = "password", nullable = false)
     private String password;
 
-    @OneToMany(mappedBy = "member")
-    private List<WishedProduct> wishList = new ArrayList<>();
-
     protected Member() {
 
     }
@@ -32,8 +26,8 @@ public class Member {
         this.password = password;
     }
 
-    public MemberDTO toDTO() {
-        return new MemberDTO(email, password);
+    public MemberDto toDto() {
+        return new MemberDto(email, password);
     }
 
     public String getEmail() {
@@ -42,9 +36,5 @@ public class Member {
 
     public String getPassword() {
         return password;
-    }
-
-    public List<WishedProduct> getWishList() {
-        return wishList;
     }
 }

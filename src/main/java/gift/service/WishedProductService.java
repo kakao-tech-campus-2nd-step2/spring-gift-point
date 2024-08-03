@@ -2,8 +2,10 @@ package gift.service;
 
 import gift.domain.Product;
 import gift.domain.WishedProduct;
-import gift.dto.MemberDTO;
-import gift.dto.WishedProductDTO;
+import gift.dto.member.MemberDto;
+import gift.dto.wishedProduct.AddWishedProductRequest;
+import gift.dto.wishedProduct.GetWishedProductResponse;
+import gift.dto.wishedProduct.WishedProductDto;
 import gift.exception.NoSuchProductException;
 import gift.exception.NoSuchWishedProductException;
 import gift.repository.ProductRepository;
@@ -25,34 +27,23 @@ public class WishedProductService {
         this.productRepository = productRepository;
     }
 
-    public Page<WishedProductDTO> getWishedProducts(MemberDTO memberDTO, Pageable pageable) {
-        return wishedProductRepository.findByMember(memberDTO.toEntity(), pageable)
-            .map(wishedProduct -> wishedProduct.toDTO());
+    public Page<GetWishedProductResponse> getWishedProducts(MemberDto memberDto, Pageable pageable) {
+        return wishedProductRepository.findByMember(memberDto.toEntity(), pageable)
+            .map(wishedProduct -> wishedProduct.toGetWishedProductResponse());
     }
 
-    public WishedProductDTO addWishedProduct(MemberDTO memberDTO, WishedProductDTO wishedProductDTO) {
-        Product product = productRepository.findById(wishedProductDTO.productId()).orElseThrow(NoSuchProductException::new);
-        WishedProduct wishedProduct = new WishedProduct(memberDTO.toEntity(), product, wishedProductDTO.amount());
-        return wishedProductRepository.save(wishedProduct).toDTO();
+    public WishedProductDto addWishedProduct(MemberDto memberDto, AddWishedProductRequest addWishedProductRequest) {
+        Product product = productRepository.findById(addWishedProductRequest.productId())
+            .orElseThrow(NoSuchProductException::new);
+        WishedProduct wishedProduct = new WishedProduct(memberDto.toEntity(), product);
+        return wishedProductRepository.save(wishedProduct).toDto();
     }
 
-    public WishedProductDTO deleteWishedProduct(long id) {
-        WishedProductDTO deletedWishedProductDTO = wishedProductRepository.findById(id)
+    public WishedProductDto deleteWishedProduct(long id) {
+        WishedProductDto deletedWishedProductDto = wishedProductRepository.findById(id)
             .orElseThrow(NoSuchWishedProductException::new)
-            .toDTO();
+            .toDto();
         wishedProductRepository.deleteById(id);
-        return deletedWishedProductDTO;
-    }
-
-    public WishedProductDTO updateWishedProduct(WishedProductDTO wishedProductDTO) {
-        long id = wishedProductDTO.id();
-        int amount = wishedProductDTO.amount();
-        if (amount == 0) {
-            return deleteWishedProduct(id);
-        }
-        WishedProduct wishedProduct = wishedProductRepository.findById(id)
-            .orElseThrow(NoSuchWishedProductException::new);
-        wishedProduct.setAmount(amount);
-        return wishedProductRepository.save(wishedProduct).toDTO();
+        return deletedWishedProductDto;
     }
 }

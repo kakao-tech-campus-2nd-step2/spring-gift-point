@@ -1,16 +1,13 @@
-package gift.dto;
+package gift.dto.category;
 
 import gift.domain.Category;
 import jakarta.validation.constraints.NotNull;
 
-public record CategoryDTO(
-    long id,
+public record CategoryDto(
+    long categoryId,
 
     @NotNull
     String name,
-
-    @NotNull
-    String color,
 
     @NotNull
     String imageUrl,
@@ -20,6 +17,6 @@ public record CategoryDTO(
 ) {
 
     public Category toEntity() {
-        return new Category(id, name, color, imageUrl, description);
+        return new Category(categoryId, name, imageUrl, description);
     }
 }

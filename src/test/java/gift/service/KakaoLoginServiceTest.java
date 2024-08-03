@@ -11,8 +11,8 @@ import static org.springframework.test.web.client.match.MockRestRequestMatchers.
 import static org.springframework.test.web.client.response.MockRestResponseCreators.withSuccess;
 
 import gift.domain.KakaoToken;
-import gift.dto.JwtResponse;
-import gift.dto.MemberDTO;
+import gift.dto.member.MemberResponse;
+import gift.dto.member.MemberDto;
 import gift.repository.KakaoTokenRepository;
 import gift.util.JwtProvider;
 import gift.util.KakaoProperties;
@@ -66,14 +66,14 @@ public class KakaoLoginServiceTest {
                 """, MediaType.APPLICATION_JSON));
 
         String token = "testToken";
-        given(memberService.findMember(anyString())).willReturn(createMember().toDTO());
-        given(jwtProvider.createAccessToken(any(MemberDTO.class))).willReturn(token);
+        given(memberService.findMember(anyString())).willReturn(createMember().toDto());
+        given(jwtProvider.createAccessToken(any(MemberDto.class))).willReturn(token);
 
         // when
-        JwtResponse jwtResponse = kakaoLoginService.login("testCode");
+        MemberResponse memberResponse = kakaoLoginService.login("testCode");
 
         // then
         then(kakaoTokenRepository).should().save(any(KakaoToken.class));
-        assertThat(jwtResponse.token()).isEqualTo(token);
+        assertThat(memberResponse.token()).isEqualTo(token);
     }
 }

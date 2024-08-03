@@ -1,16 +1,13 @@
-package gift.dto;
+package gift.dto.product;
 
 import gift.domain.Category;
 import gift.domain.Product;
-import jakarta.validation.constraints.AssertTrue;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.Size;
-import java.util.List;
-import java.util.stream.Collectors;
 
-public record ProductDTO(
+public record ProductDto(
     long id,
 
     @NotNull
@@ -26,17 +23,8 @@ public record ProductDTO(
     String imageUrl,
 
     @NotNull
-    long categoryId,
-
-    List<OptionDTO> optionDTOs
+    long categoryId
 ) {
-
-    @AssertTrue(message = "동일한 상품 내의 옵션 이름은 중복될 수 없습니다.")
-    public boolean isOptionNameUnique() {
-        return optionDTOs == null || optionDTOs.stream()
-            .map(optionDTO -> optionDTO.name())
-            .collect(Collectors.toSet()).size() == optionDTOs.size();
-    }
 
     public Product toEntity(Category category) {
         return new Product(name, price, imageUrl, category);

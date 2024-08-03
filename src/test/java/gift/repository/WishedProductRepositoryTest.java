@@ -47,7 +47,7 @@ public class WishedProductRepositoryTest {
         product = productRepository.save(product);
     }
 
-    @DisplayName("위시리스트 상품 추가")
+    @DisplayName("위시 리스트 상품 추가")
     @Test
     void save() {
         // given
@@ -60,12 +60,11 @@ public class WishedProductRepositoryTest {
         assertAll(
             () -> assertThat(actual.getId()).isNotNull(),
             () -> assertThat(actual.getMemberEmail()).isEqualTo(expected.getMemberEmail()),
-            () -> assertThat(actual.getProductId()).isEqualTo(expected.getProductId()),
-            () -> assertThat(actual.getAmount()).isEqualTo(expected.getAmount())
+            () -> assertThat(actual.getProductId()).isEqualTo(expected.getProductId())
         );
     }
 
-    @DisplayName("한 회원의 위시리스트 조회")
+    @DisplayName("한 회원의 위시 리스트 조회")
     @Test
     void findByMemberEmail() {
         // given
@@ -80,7 +79,7 @@ public class WishedProductRepositoryTest {
         assertThat(actual).isEqualTo(expected);
     }
 
-    @DisplayName("위시리스트 상품 삭제")
+    @DisplayName("위시 리스트 상품 삭제")
     @Test
     void delete() {
         // given
@@ -91,24 +90,5 @@ public class WishedProductRepositoryTest {
 
         // then
         assertThat(wishedProductRepository.findById(id)).isEmpty();
-    }
-
-    @DisplayName("위시리스트 상품 수량 변경")
-    @Test
-    void update() {
-        // given
-        WishedProduct expected = wishedProductRepository.save(createWishedProduct(member, product));
-        expected.setAmount(5);
-
-        // when
-        WishedProduct actual = wishedProductRepository.save(expected);
-
-        // then
-        assertAll(
-            () -> assertThat(actual.getId()).isEqualTo(expected.getId()),
-            () -> assertThat(actual.getMemberEmail()).isEqualTo(expected.getMemberEmail()),
-            () -> assertThat(actual.getProductId()).isEqualTo(expected.getProductId()),
-            () -> assertThat(actual.getAmount()).isEqualTo(expected.getAmount())
-        );
     }
 }

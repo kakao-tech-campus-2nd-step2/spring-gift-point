@@ -8,7 +8,7 @@ import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
 
 import gift.domain.Category;
-import gift.dto.CategoryDTO;
+import gift.dto.category.CategoryDto;
 import gift.repository.CategoryRepository;
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
@@ -44,10 +44,10 @@ public class CategoryServiceTest {
         given(categoryRepository.save(any(Category.class))).willReturn(category);
 
         // when
-        CategoryDTO actual = categoryService.addCategory(category.toDTO());
+        CategoryDto actual = categoryService.addCategory(category.toDto());
 
         // then
-        assertThat(actual).isEqualTo(category.toDTO());
+        assertThat(actual).isEqualTo(category.toDto());
     }
 
     @DisplayName("id로 카테고리 찾기")
@@ -57,10 +57,10 @@ public class CategoryServiceTest {
         given(categoryRepository.findById(anyLong())).willReturn(Optional.of(category));
 
         // when
-        CategoryDTO actual = categoryService.getCategory(id);
+        CategoryDto actual = categoryService.getCategory(id);
 
         // then
-        assertThat(actual).isEqualTo(category.toDTO());
+        assertThat(actual).isEqualTo(category.toDto());
     }
 
     @DisplayName("카테고리 수정")
@@ -72,10 +72,10 @@ public class CategoryServiceTest {
         given(categoryRepository.save(any(Category.class))).willReturn(updatedCategory);
 
         // when
-        CategoryDTO actual = categoryService.updateCategory(id, updatedCategory.toDTO());
+        CategoryDto actual = categoryService.updateCategory(id, updatedCategory.toDto());
 
         // then
-        assertThat(actual).isEqualTo(updatedCategory.toDTO());
+        assertThat(actual).isEqualTo(updatedCategory.toDto());
     }
 
     @DisplayName("카테고리 삭제")

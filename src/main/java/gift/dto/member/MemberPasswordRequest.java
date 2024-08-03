@@ -1,9 +1,9 @@
-package gift.dto;
+package gift.dto.member;
 
 import jakarta.validation.constraints.AssertTrue;
 import jakarta.validation.constraints.NotBlank;
 
-public record MemberPasswordDTO(
+public record MemberPasswordRequest(
     @NotBlank
     String password,
 

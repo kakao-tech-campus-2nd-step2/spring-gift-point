@@ -1,10 +1,10 @@
-package gift.dto;
+package gift.dto.kakao;
 
 import jakarta.validation.constraints.NotNull;
 import java.util.Arrays;
 import java.util.List;
 
-public record KakaoTalkRequest(
+public record KakaoTalkDto(
     @NotNull
     String object_type,
 
@@ -49,9 +49,9 @@ public record KakaoTalkRequest(
 
     }
 
-    public static KakaoTalkRequest of(String message, String imageUrl, String webUrl,
+    public static KakaoTalkDto of(String message, String imageUrl, String webUrl,
         String productName, String categoryName, int productPrice) {
-        return new KakaoTalkRequest(
+        return new KakaoTalkDto(
             "feed",
             new Content(
                 message,

@@ -2,10 +2,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // 상품 추가 폼
     if (document.getElementById('product-add-form')) {
         document.getElementById('product-add-form').addEventListener('submit', function(event) {
-            handleProductFormSubmit(event, '/api/products', 'POST')
-            .then(productId => {
-                addOption(productId);
-            });
+            handleAddProductFormSubmit(event, '/api/products', 'POST');
         });
     }
 
@@ -15,7 +12,7 @@ document.addEventListener('DOMContentLoaded', function() {
             const url = new URL(window.location.href);
             const pathSegments = url.pathname.split('/');
             const productId = pathSegments[pathSegments.length - 1];
-            handleProductFormSubmit(event, `/api/products/${productId}`, 'PUT');
+            handleEditProductFormSubmit(event, `/api/products/${productId}`, 'PUT');
         });
     }
 
@@ -27,7 +24,47 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 });
 
-function handleProductFormSubmit(event, url, method) {
+function handleAddProductFormSubmit(event, url, method) {
+    event.preventDefault();
+
+    const productData = {
+        productDto: {
+            name: document.getElementById('name').value,
+            price: document.getElementById('price').value,
+            imageUrl: document.getElementById('imageUrl').value,
+            categoryId: document.getElementById('categoryId').value
+        },
+        optionDtos: [{
+            name: document.getElementById('optionName').value,
+            quantity: document.getElementById('optionQuantity').value,
+        }]
+    };
+
+    return fetch(url, {
+        method: method,
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(productData)
+    })
+    .then(response => {
+        if (response.ok) {
+            window.location.href = '/admin/products?page=0&size=5';
+            return response.json().then(product => {
+                return product.id;
+            });
+        } else {
+            return response.json().then(errorData => {
+                throw new Error(errorData.message || '상품을 처리하지 못하였습니다.');
+            });
+        }
+    })
+    .catch(error => {
+        alert('Error: ' + error.message);
+    });
+}
+
+function handleEditProductFormSubmit(event, url, method) {
     event.preventDefault();
 
     const productData = {
