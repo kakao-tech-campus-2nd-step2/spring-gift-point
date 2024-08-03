@@ -4,6 +4,8 @@ import gift.model.valueObject.OptionName;
 import gift.model.valueObject.Quantity;
 import jakarta.persistence.*;
 
+import java.util.Objects;
+
 @Entity
 public class Option {
     @Id
@@ -70,6 +72,19 @@ public class Option {
 
     public Long getProductID() {
         return product.getId();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Option option = (Option) o;
+        return Objects.equals(name, option.name) && Objects.equals(product, option.product);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(name, product);
     }
 
     @Override
