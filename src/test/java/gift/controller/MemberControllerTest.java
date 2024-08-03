@@ -37,7 +37,7 @@ class MemberControllerTest {
                 """;
 
         doNothing().when(memberService).register(any());
-        mockMvc.perform(MockMvcRequestBuilders.post("/members/register").content(requestBody).contentType(
+        mockMvc.perform(MockMvcRequestBuilders.post("/api/members/register").content(requestBody).contentType(
                 MediaType.APPLICATION_JSON)).andExpect(status().isCreated())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON));
     }
@@ -52,7 +52,7 @@ class MemberControllerTest {
                 """;
 
         doNothing().when(memberService).login(any());
-        mockMvc.perform(MockMvcRequestBuilders.post("/members/login").content(requestBody)
+        mockMvc.perform(MockMvcRequestBuilders.post("/api/members/login").content(requestBody)
                 .contentType(MediaType.APPLICATION_JSON)).andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON));
     }
