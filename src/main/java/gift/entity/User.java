@@ -33,8 +33,7 @@ public class User {
     private String accessToken;
 
     protected User() {
-        this.point = 0;
-        this.accessToken = "demoToken";
+
     }
 
     public User(String email, String password) {
