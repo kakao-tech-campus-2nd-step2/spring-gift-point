@@ -3,7 +3,6 @@ package gift.api.product.controller;
 import gift.api.product.dto.ProductRequest;
 import gift.api.product.dto.ProductResponse;
 import gift.api.product.service.ProductService;
-import gift.global.PageResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -11,6 +10,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import java.net.URI;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -49,7 +49,7 @@ public class ProductController {
     @GetMapping
     @Operation(summary = "상품 조회", description = "전체 상품 페이지별 조회")
     @ApiResponse(responseCode = "200", description = "OK")
-    public ResponseEntity<PageResponse<ProductResponse>> getAllProducts(
+    public ResponseEntity<Page<ProductResponse>> getAllProducts(
         @Parameter(description = "페이지네이션 요청")
         Pageable pageable) {
 

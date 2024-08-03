@@ -6,9 +6,7 @@ import gift.api.product.domain.Product;
 import gift.api.product.dto.ProductRequest;
 import gift.api.product.dto.ProductResponse;
 import gift.api.product.repository.ProductRepository;
-import gift.global.PageResponse;
 import gift.global.exception.NoSuchEntityException;
-import java.util.List;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -31,14 +29,9 @@ public class ProductService {
             .orElseThrow(() -> new NoSuchEntityException("product")));
     }
 
-    public PageResponse<ProductResponse> getAllProducts(Pageable pageable) {
-        Page<Product> products = productRepository.findAll(pageable);
-        List<ProductResponse> contents = products.getContent()
-            .stream()
-            .map(ProductResponse::of)
-            .toList();
-        return PageResponse.of(products.getPageable(), products.getTotalElements(),
-            products.getTotalPages(), contents);
+    public Page<ProductResponse> getAllProducts(Pageable pageable) {
+        return productRepository.findAll(pageable)
+            .map(ProductResponse::of);
     }
 
     @Transactional

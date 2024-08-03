@@ -3,7 +3,6 @@ package gift.api.wishlist.controller;
 import gift.api.wishlist.dto.WishRequest;
 import gift.api.wishlist.dto.WishResponse;
 import gift.api.wishlist.service.WishService;
-import gift.global.PageResponse;
 import gift.global.resolver.LoginMember;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -12,6 +11,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import java.net.URI;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -37,7 +37,7 @@ public class WishController {
     @GetMapping
     @Operation(summary = "위시리스트 조회", description = "사용자의 위시리스트 페이지별 조회")
     @ApiResponse(responseCode = "200", description = "OK")
-    public ResponseEntity<PageResponse<WishResponse>> getItems(
+    public ResponseEntity<Page<WishResponse>> getItems(
         @Parameter(name = "Authorization", required = true, description = "사용자 액세스 토큰")
         @LoginMember Long memberId,
         @Parameter(description = "페이지네이션 요청")
