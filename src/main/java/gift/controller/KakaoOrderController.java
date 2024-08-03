@@ -6,10 +6,7 @@ import gift.dto.order.OrderRequestDTO;
 import gift.dto.order.OrderResponseDTO;
 import gift.dto.user.KakaoUserDTO;
 
-import gift.service.KakaoApiService;
-import gift.service.OptionService;
-import gift.service.WishService;
-
+import gift.service.OrderService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -23,14 +20,11 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/orders")
 @Tag(name = "Kakao Wish API", description = "카카오 위시리스트 및 주문 관련 API")
 public class KakaoOrderController {
-    private final WishService wishService;
-    private final OptionService optionService;
-    private final KakaoApiService kakaoApiService;
 
-    public KakaoOrderController(WishService wishService, OptionService optionService, KakaoApiService kakaoApiService) {
-        this.wishService = wishService;
-        this.kakaoApiService = kakaoApiService;
-        this.optionService = optionService;
+    private final OrderService orderService;
+
+    public KakaoOrderController(OrderService orderService) {
+        this.orderService = orderService;
     }
 
     @GetMapping
@@ -43,10 +37,7 @@ public class KakaoOrderController {
                     @ApiResponse(responseCode = "500", description = "서버 오류")
             })
     public ResponseEntity<OrderResponseDTO> handleKakaoOrder(@KakaoUser KakaoUserDTO kakaoUserDTO, @RequestBody OrderRequestDTO orderRequestDTO) {
-        optionService.subtractOptionQuantity(orderRequestDTO.optionId(), orderRequestDTO.quantity());
-        wishService.deleteWishOption(kakaoUserDTO.user().getId(), orderRequestDTO.optionId());
-        kakaoApiService.sendMessage(kakaoUserDTO.accessToken(), orderRequestDTO);
-        OrderResponseDTO orderResponseDTO = kakaoApiService.getOrderResponseDTO(orderRequestDTO);
+        OrderResponseDTO orderResponseDTO = orderService.processOrder(kakaoUserDTO, orderRequestDTO);
 
         return new ResponseEntity<>(orderResponseDTO, HttpStatus.CREATED);
     }
