@@ -40,7 +40,7 @@ public class LoginUserArgumentResolver implements HandlerMethodArgumentResolver 
             userEmail = kakaoService.getKakaoUserEmail(token);
         }
 
-        MemberResponse memberDto = memberService.findByEmail(userEmail);
+        MemberResponse memberDto = memberService.getMemberByEmail(userEmail);
         return new MemberRequest(memberDto.id(),memberDto.email(),memberDto.password(), memberDto.points());
     }
 }
