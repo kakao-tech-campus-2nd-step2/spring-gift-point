@@ -36,7 +36,10 @@ public class Order {
     private String recipientMessage;
 
     @Column(nullable = false)
-    private int totalPrice;
+    private int originalPrice;
+
+    @Column(nullable = false)
+    private int finalPrice;
 
     @CreationTimestamp
     @Column(updatable = false)
@@ -45,11 +48,10 @@ public class Order {
     protected Order() {
     }
 
-    public Order(Long id, Member member, String recipientMessage, int totalPrice) {
+    public Order(Long id, Member member, String recipientMessage) {
         this.id = id;
         this.member = member;
         this.recipientMessage = recipientMessage;
-        this.totalPrice = totalPrice;
     }
 
     public void addOrderItem(OrderItem orderItem) {
@@ -73,8 +75,20 @@ public class Order {
         return recipientMessage;
     }
 
-    public int getTotalPrice() {
-        return totalPrice;
+    public int getOriginalPrice() {
+        return originalPrice;
+    }
+
+    public void addOriginalPrice(int itemPrice) {
+        this.originalPrice += itemPrice;
+    }
+
+    public int getFinalPrice() {
+        return finalPrice;
+    }
+
+    public void setFinalPrice(int finalPrice) {
+        this.finalPrice = finalPrice;
     }
 
     public LocalDateTime getOrderDateTime() {

@@ -62,10 +62,9 @@ public class OptionService {
         maxAttempts = 100,
         backoff = @Backoff(delay = 100)
     )
-    public Option subtractQuantity(long optionId, int quantity) {
+    public void subtractQuantity(long optionId, int quantity) {
         Option option = optionJpaRepository.findByIdWithOptimisticLock(optionId)
             .orElseThrow(() -> new InvalidOptionInfoException("error.invalid.option.id"));
         option.subtract(quantity);
-        return option;
     }
 }

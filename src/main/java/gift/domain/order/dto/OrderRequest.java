@@ -22,6 +22,6 @@ public record OrderRequest(
     String message
 ) {
     public Order toOrder(Member member) {
-        return new Order(null, member, message, 0);
+        return new Order(null, member, message);
     }
 }

@@ -2,11 +2,14 @@ package gift.domain.order.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.doNothing;
 
+import gift.domain.member.entity.AuthProvider;
+import gift.domain.member.entity.Member;
+import gift.domain.member.entity.Role;
 import gift.domain.order.dto.OrderItemRequest;
 import gift.domain.order.entity.Order;
 import gift.domain.product.entity.Category;
@@ -14,9 +17,6 @@ import gift.domain.product.entity.Option;
 import gift.domain.product.entity.Product;
 import gift.domain.product.repository.ProductJpaRepository;
 import gift.domain.product.service.OptionService;
-import gift.domain.member.entity.AuthProvider;
-import gift.domain.member.entity.Role;
-import gift.domain.member.entity.Member;
 import gift.domain.wishlist.repository.WishlistJpaRepository;
 import java.util.List;
 import java.util.Optional;
@@ -52,24 +52,23 @@ class OrderItemServiceTest {
 
     @Test
     @DisplayName("구매 아이템 생성 테스트")
-    void create() {
+    void create_multiple_item() {
         // given
         product.addOption(option1);
         product.addOption(option2);
 
-        Order order = new Order(1L, MEMBER, "testMessage", 150000);
+        Order order = new Order(1L, MEMBER, "testMessage");
         List<OrderItemRequest> orderItemRequests = List.of(
-            new OrderItemRequest(1L, 1L, 70),
-            new OrderItemRequest(1L, 2L, 30)
+            new OrderItemRequest(1L, 70),
+            new OrderItemRequest(2L, 30)
         );
 
-        given(productJpaRepository.findById(anyLong())).willReturn(Optional.of(product));
-        given(optionService.subtractQuantity(eq(1L), eq(70))).willReturn(option1);
-        given(optionService.subtractQuantity(eq(2L), eq(30))).willReturn(option2);
+        given(productJpaRepository.findByOptionId(anyLong())).willReturn(Optional.of(product));
+        doNothing().when(optionService).subtractQuantity(anyLong(), anyInt());
         doNothing().when(wishlistJpaRepository).deleteByMemberAndProduct(any(Member.class), any(Product.class));
 
         // when
-        orderItemService.create(MEMBER, order, orderItemRequests);
+        orderItemService.createMultiple(MEMBER, order, orderItemRequests);
 
         // then
         assertThat(order.getOrderItems().size()).isEqualTo(2);

@@ -2,21 +2,20 @@ package gift.domain.order.dto;
 
 import gift.domain.order.entity.Order;
 import java.time.LocalDateTime;
+import java.util.List;
 
-public record OrderResponse(
+public record MultipleOrderResponse(
     Long id,
-    Long optionId,
-    int quantity,
-    String message,
+    List<OrderItemResponse> orderItems,
+    String recipientMessage,
     int originalPrice,
     int finalPrice,
     LocalDateTime orderDateTime
 ) {
-    public static OrderResponse from(Order order) {
-        return new OrderResponse(
+    public static MultipleOrderResponse from(Order order) {
+        return new MultipleOrderResponse(
             order.getId(),
-            order.getOrderItems().getFirst().getId(),
-            order.getOrderItems().getFirst().getQuantity(),
+            order.getOrderItems().stream().map(OrderItemResponse::from).toList(),
             order.getRecipientMessage(),
             order.getOriginalPrice(),
             order.getFinalPrice(),

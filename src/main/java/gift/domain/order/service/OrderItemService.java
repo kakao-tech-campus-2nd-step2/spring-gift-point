@@ -10,10 +10,7 @@ import gift.domain.product.repository.ProductJpaRepository;
 import gift.domain.product.service.OptionService;
 import gift.domain.wishlist.repository.WishlistJpaRepository;
 import gift.exception.InvalidOptionInfoException;
-import gift.exception.InvalidProductInfoException;
-import java.util.AbstractMap.SimpleEntry;
 import java.util.List;
-import java.util.Map.Entry;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -35,18 +32,9 @@ public class OrderItemService {
     }
 
     @Transactional
-    public void create(Member member, Order order, List<OrderItemRequest> orderItemRequests) {
+    public void createMultiple(Member member, Order order, List<OrderItemRequest> orderItemRequests) {
         for (OrderItemRequest orderItemRequest : orderItemRequests) {
-            Entry<Product, Option> item = buy(
-                orderItemRequest.productId(), orderItemRequest.optionId(), orderItemRequest.quantity()
-            );
-            Product product = item.getKey();
-            Option option = item.getValue();
-
-            OrderItem orderItem = orderItemRequest.toOrderItem(order, product, option);
-            order.addOrderItem(orderItem);
-
-            wishlistJpaRepository.deleteByMemberAndProduct(member, product);
+            createOne(member, order, orderItemRequest);
         }
     }
 
@@ -56,23 +44,19 @@ public class OrderItemService {
         Product product = productJpaRepository.findByOptionId(optionId)
             .orElseThrow(() -> new InvalidOptionInfoException("error.invalid.option.id"));
 
-        Entry<Product, Option> item = buy(product.getId(), optionId, orderItemRequest.quantity());
+        Option option = product.getOption(optionId);
 
-        OrderItem orderItem = orderItemRequest.toOrderItem(order, item.getKey(), item.getValue());
+        buy(optionId, orderItemRequest.quantity());
+
+        OrderItem orderItem = orderItemRequest.toOrderItem(order, product, option);
         order.addOrderItem(orderItem);
 
         wishlistJpaRepository.deleteByMemberAndProduct(member, product);
+
+        order.addOriginalPrice(product.getPrice() * orderItemRequest.quantity());
     }
 
-    private Entry<Product, Option> buy(Long productId, Long optionId, int quantity) {
-        Product product = productJpaRepository.findById(productId)
-            .orElseThrow(() -> new InvalidProductInfoException("error.invalid.product.id"));
-
-        if (!product.hasOption(optionId)) {
-            throw new InvalidOptionInfoException("error.invalid.option.id");
-        }
-        Option option = optionService.subtractQuantity(optionId, quantity);
-
-        return new SimpleEntry<>(product, option);
+    private void buy(Long optionId, int quantity) {
+        optionService.subtractQuantity(optionId, quantity);
     }
 }

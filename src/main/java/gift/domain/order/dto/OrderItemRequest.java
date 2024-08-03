@@ -11,10 +11,6 @@ import org.hibernate.validator.constraints.Range;
 @Schema(description = "주문 요청 상품 정보")
 public record OrderItemRequest(
 
-    @NotNull(message = "상품을 선택해주세요.")
-    @Schema(description = "상품 ID")
-    Long productId,
-
     @NotNull(message = "옵션을 선택해주세요.")
     @Schema(description = "옵션 ID")
     Long optionId,
