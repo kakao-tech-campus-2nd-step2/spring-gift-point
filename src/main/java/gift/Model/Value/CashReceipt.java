@@ -11,27 +11,27 @@ public class CashReceipt {
             "^01[0-9]-\\d{4}-\\d{4}$"
     );
 
-    private String phoneNumber;
+    private String value;
 
     private CashReceipt() {}
 
-    public CashReceipt(String phoneNumber) {
-        validatePhoneNumber(phoneNumber);
+    public CashReceipt(String value) {
+        validateValue(value);
 
-        this.phoneNumber = phoneNumber;
+        this.value= value;
     }
 
-    private void validatePhoneNumber(String phoneNumber) {
-        if(phoneNumber == null || phoneNumber.isBlank())
+    private void validateValue(String value) {
+        if(value == null || value.isBlank())
             throw new IllegalArgumentException("phoneNumber 값은 필수입니다");
-        if(!PHONE_NUMBER_PATTERN.matcher(phoneNumber).matches())
+        if(!PHONE_NUMBER_PATTERN.matcher(value).matches())
             throw new IllegalArgumentException("phoneNumber의 양식을 다시 확인해 주세요");
 
-        this.phoneNumber = phoneNumber;
+        this.value = value;
     }
 
-    public String getPhoneNumber() {
-        return phoneNumber;
+    public String getValue() {
+        return value;
     }
 
     @Override
@@ -43,16 +43,16 @@ public class CashReceipt {
             return false;
 
         CashReceipt cashReceipt = (CashReceipt) object;
-        return Objects.equals(this.phoneNumber, cashReceipt.getPhoneNumber());
+        return Objects.equals(this.value, cashReceipt.getValue());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(phoneNumber);
+        return Objects.hash(value);
     }
 
     @Override
     public String toString() {
-        return phoneNumber;
+        return value;
     }
 }
