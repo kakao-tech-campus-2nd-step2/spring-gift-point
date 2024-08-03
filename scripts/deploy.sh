@@ -7,7 +7,7 @@ JAR_NAME=$(basename $PROJECT_PATH/$PROJECT_NAME/.*jar)
 cd $PROJECT_PATH/$PROJECT_NAME
 
 echo ">Git pull"
-git pull origin step2
+git pull origin step3
 
 echo ">Build 시작"
 ./gradlew bootJar
