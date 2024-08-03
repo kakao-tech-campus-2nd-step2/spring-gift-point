@@ -3,7 +3,6 @@ package gift.domain;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 
 @Entity
@@ -11,7 +10,7 @@ import jakarta.validation.constraints.Size;
 public class Option {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long option_id;
+    private Long product_option_id;
 
     @Column(nullable = false, length = 50)
     @Size(min = 1, max = 50, message = "Option 이름은 공백 포함 50문자 이내여야 합니다.")
@@ -51,7 +50,7 @@ public class Option {
     }
 
     public Long getId() {
-        return option_id;
+        return product_option_id;
     }
 
     public void setName(String name) {
@@ -67,7 +66,7 @@ public class Option {
     }
 
     public void setId(long l) {
-        this.option_id = l;
+        this.product_option_id = l;
     }
 
     public Product getProduct() {

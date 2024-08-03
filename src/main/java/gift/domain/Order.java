@@ -17,12 +17,12 @@ public class Order {
     @JoinColumn(name = "member_id", nullable = false)
     private Member member;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "product_id", nullable = false)
     private Product product;
 
-    @OneToOne
-    @JoinColumn(name = "option_id", nullable = false)
+    @ManyToOne
+    @JoinColumn(name = "product_option_id", nullable = false)
     private Option option;
 
     private int quantity;
