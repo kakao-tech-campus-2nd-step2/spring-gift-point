@@ -11,6 +11,7 @@
   <div class="header">
     <h2>Manage Products</h2>
     <div class="button-group">
+      <a href="/members" class="btn btn-add">Manage Member</a>
       <a href="/products/create" class="btn btn-add">Add New Product</a>
     </div>
   </div>
@@ -38,8 +39,10 @@
     </tbody>
   </table>
 
+  <!-- Pagination -->
   <div class="pagination">
     <ul id="pagination">
+      <!-- Pagination will be populated by JavaScript -->
     </ul>
   </div>
 </div>
@@ -85,45 +88,5 @@
     updatePagination(currentPage, totalPages);
   });
 </script>
-
-<style>
-  .pagination {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin-top: 20px;
-  }
-
-  .pagination ul {
-    list-style-type: none;
-    padding: 0;
-    margin: 0;
-    display: flex;
-  }
-
-  .pagination li {
-    margin: 0 5px;
-  }
-
-  .pagination a {
-    text-decoration: none;
-    color: #007bff;
-    padding: 8px 16px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    transition: background-color 0.3s, color 0.3s;
-  }
-
-  .pagination a:hover {
-    background-color: #007bff;
-    color: white;
-  }
-
-  .pagination a.active {
-    background-color: #007bff;
-    color: white;
-    border-color: #007bff;
-  }
-</style>
 </body>
 </html>
