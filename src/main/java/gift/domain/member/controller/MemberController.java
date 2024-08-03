@@ -2,6 +2,7 @@ package gift.domain.member.controller;
 
 import gift.domain.member.dto.MemberRequest;
 import gift.domain.member.dto.MemberResponse;
+import gift.domain.member.dto.PointRequest;
 import gift.domain.member.service.MemberService;
 import gift.util.dto.JwtResponse;
 import io.swagger.v3.oas.annotations.Operation;
@@ -13,16 +14,18 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -48,10 +51,9 @@ public class MemberController {
         @Parameter(name = "pageSize", description = "페이지 크기", example = "10")
     })
     public ResponseEntity<Page<MemberResponse>> getAllMember(
-        @RequestParam(defaultValue = "0") int pageNo,
-        @RequestParam(defaultValue = "10") int pageSize
+        @ParameterObject Pageable pageable
     ) {
-        Page<MemberResponse> responses = memberService.getAllMember(pageNo, pageSize);
+        Page<MemberResponse> responses = memberService.getAllMember(pageable);
         return ResponseEntity.ok(responses);
     }
 
@@ -90,5 +92,11 @@ public class MemberController {
     public ResponseEntity<Void> delete(@PathVariable("id") Long id) {
         memberService.deleteMember(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @PutMapping("/{memberId}/points")
+    public ResponseEntity<Void> updatePoints(@PathVariable("memberId") Long memberId, @Valid @RequestBody PointRequest pointRequest){
+        memberService.updatePoint(memberId, pointRequest);
+        return ResponseEntity.ok().build();
     }
 }
