@@ -42,8 +42,3 @@ https://impossible-repair-22e.notion.site/57ec013f9424421eb2317b11a2b9a29c?v=f3f
   - [ ] ~~application에서 CORS 설정 사용~~
   
 - [x] CORS 테스트 구현
-
-- [ ] 문서화
-  - [ ] 배포 및 연동 문서 작성하기
-    - [ ] 배포 프로세스 문서 작성
-    - [ ] API 연동 방법에 대한 문서 작성
