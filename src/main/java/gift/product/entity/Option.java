@@ -1,5 +1,6 @@
 package gift.product.entity;
 import gift.exception.QuantityException;
+import gift.util.BaseEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -8,13 +9,20 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import jakarta.validation.constraints.Max;
-import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.Pattern;
-import jakarta.validation.constraints.Size;
+import jakarta.validation.constraints.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
-public class Option {
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+public class Option extends BaseEntity {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -34,49 +42,6 @@ public class Option {
   @Column(nullable = false)
   private int quantity;
 
-  public Option(Long id, Product product, String name, int quantity) {
-    this.id = id;
-    this.product = product;
-    this.name = name;
-    this.quantity = quantity;
-  }
-
-  public Option() {
-
-  }
-
-  public void setId(Long id) {
-    this.id = id;
-  }
-
-  public Long getId() {
-    return id;
-  }
-
-  public Product getProduct() {
-    return product;
-  }
-
-  public void setProduct(Product product) {
-    this.product = product;
-  }
-
-  public String getName() {
-    return name;
-  }
-
-  public void setName(String name) {
-    this.name = name;
-  }
-
-  public int getQuantity() {
-    return quantity;
-  }
-
-  public void setQuantity(int quantity) {
-    this.quantity = quantity;
-  }
-
   public void subtractQuantity(int quantity){
     if (quantity <= 0) {
       throw new QuantityException("차감할 수량은 0보다 커야 합니다.");
@@ -86,4 +51,9 @@ public class Option {
     }
     this.quantity -= quantity;
   }
+  public void update(String name, int quantity) {
+    this.name = name;
+    this.quantity = quantity;
+  }
+
 }

@@ -1,6 +1,7 @@
 package gift.product.controller;
 
-import gift.product.dto.OptionDto;
+import gift.product.dto.OptionRequestDto;
+import gift.product.dto.OptionResponseDto;
 import gift.product.service.OptionService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -14,7 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import jakarta.validation.Valid;
 
 @RestController
-@RequestMapping("/products/{productId}/options")
+@RequestMapping("/api/products/{productId}/options")
 @Tag(name = "Option API", description = "상품 옵션 관련 API")
 public class OptionController {
 
@@ -26,57 +27,39 @@ public class OptionController {
   }
 
   @PostMapping
-  @Operation(summary = "옵션 생성", description = "상품에 대한 새로운 옵션 생성")
-  public ResponseEntity<OptionDto> createOption(
+  @Operation(summary = "상품 옵션 추가", description = "상품에 옵션을 추가한다.")
+  public ResponseEntity<OptionResponseDto> createOption(
       @PathVariable @Parameter(description = "상품 ID", required = true) Long productId,
-      @Valid @RequestBody @Parameter(description = "옵션 데이터", required = true) OptionDto optionDto) {
-    OptionDto createdOption = optionService.createOption(optionDto, productId);
-    return new ResponseEntity<>(createdOption, HttpStatus.CREATED);
+      @Valid @RequestBody @Parameter(description = "옵션 데이터", required = true) OptionRequestDto optionDto) {
+    OptionResponseDto optionResponseDto = optionService.createOption(optionDto, productId);
+    return new ResponseEntity<>(optionResponseDto, HttpStatus.CREATED);
   }
 
   @GetMapping
-  @Operation(summary = "모든 옵션 조회", description = "상품 ID로 모든 옵션을 조회")
-  public ResponseEntity<List<OptionDto>> getAllOptions(
+  @Operation(summary = "상품 옵션 목록 조회", description = "특정 상품에 대한 모든 옵션을 조회한다.")
+  public ResponseEntity<List<OptionResponseDto>> getAllOptions(
       @PathVariable @Parameter(description = "상품 ID", required = true) Long productId) {
-    List<OptionDto> options = optionService.getAllOptionsByProductId(productId);
+    List<OptionResponseDto> options = optionService.getProductOptions(productId);
     return ResponseEntity.ok(options);
   }
 
-  @GetMapping("/{optionId}")
-  @Operation(summary = "옵션 조회", description = "상품 ID와 옵션 ID로 특정 옵션을 조회")
-  public ResponseEntity<OptionDto> getOption(
-      @PathVariable @Parameter(description = "상품 ID", required = true) Long productId,
-      @PathVariable @Parameter(description = "옵션 ID", required = true) Long optionId) {
-    OptionDto option = optionService.getOptionById(optionId);
-    return ResponseEntity.ok(option);
-  }
-
   @PutMapping("/{optionId}")
-  @Operation(summary = "옵션 수정", description = "상품 ID와 옵션 ID로 특정 옵션을 수정")
-  public ResponseEntity<OptionDto> updateOption(
+  @Operation(summary = "옵션 수정", description = "기존 상품 옵션의 정보를 수정한다.")
+  public ResponseEntity<OptionResponseDto> updateOption(
       @PathVariable @Parameter(description = "상품 ID", required = true) Long productId,
       @PathVariable @Parameter(description = "옵션 ID", required = true) Long optionId,
-      @Valid @RequestBody @Parameter(description = "옵션 데이터", required = true) OptionDto optionDto) {
-    optionDto.setId(optionId);
-    OptionDto updatedOption = optionService.updateOption(optionDto);
-    return ResponseEntity.ok(updatedOption);
+      @Valid @RequestBody @Parameter(description = "옵션 데이터", required = true) OptionRequestDto optionRequestDto) {
+
+    OptionResponseDto optionResponseDto = optionService.updateOption(optionRequestDto, productId, optionId);
+    return ResponseEntity.ok(optionResponseDto);
   }
 
   @DeleteMapping("/{optionId}")
-  @Operation(summary = "옵션 삭제", description = "상품 ID와 옵션 ID로 특정 옵션을 삭제")
-  public ResponseEntity<Void> deleteOption(
+  @Operation(summary = "옵션 삭제", description = "기존 제품 옵션을 삭제한다.")
+  public ResponseEntity<OptionResponseDto> deleteOption(
       @PathVariable @Parameter(description = "상품 ID", required = true) Long productId,
       @PathVariable @Parameter(description = "옵션 ID", required = true) Long optionId) {
-    optionService.deleteOption(optionId);
-    return ResponseEntity.noContent().build();
-  }
-
-  @GetMapping("/check")
-  @Operation(summary = "옵션 존재 여부 확인", description = "상품 ID와 옵션 이름으로 옵션의 존재 여부를 확인")
-  public ResponseEntity<Boolean> checkOptionExists(
-      @PathVariable @Parameter(description = "상품 ID", required = true) Long productId,
-      @RequestParam @Parameter(description = "옵션 이름", required = true) String name) {
-    boolean exists = optionService.optionExistsByProductIdAndName(productId, name);
-    return ResponseEntity.ok(exists);
+    OptionResponseDto deletedOption = optionService.deleteOption(productId, optionId);
+    return new ResponseEntity<>(deletedOption, HttpStatus.NO_CONTENT);
   }
 }

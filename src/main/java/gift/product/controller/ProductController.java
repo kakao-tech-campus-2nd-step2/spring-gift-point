@@ -1,24 +1,18 @@
 package gift.product.controller;
 
-import gift.product.dto.OptionDto;
-import gift.product.dto.ProductDto;
-import gift.product.dto.ProductSortField;
+import gift.product.dto.*;
 import gift.product.service.ProductService;
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.*;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
-import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.*;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/products")
+@RequestMapping("/api/products")
 @Tag(name = "Product API", description = "상품 관련 API")
 public class ProductController {
 
@@ -30,56 +24,52 @@ public class ProductController {
   }
 
   @GetMapping
-  @Operation(summary = "모든 상품 조회")
-  public ResponseEntity<Page<ProductDto>> getAllProducts(
+  @Operation(summary = "모든 상품 조회", description = "모든 상품의 목록을 페이지 단위로 조회한다.")
+  public ResponseEntity<Page<ProductResponseDto>> getAllProducts(
       @RequestParam(defaultValue = "0") @Parameter(description = "페이지 번호", example = "0") int page,
       @RequestParam(defaultValue = "10") @Parameter(description = "페이지 크기", example = "10") int size,
-      @RequestParam(defaultValue = "ID") @Parameter(description = "정렬 필드", example = "ID") ProductSortField sort,
-      @RequestParam(defaultValue = "ASC") @Parameter(description = "정렬 방향", example = "ASC") Sort.Direction direction) {
+      @RequestParam(defaultValue = "CREATED_AT") @Parameter(description = "정렬 필드", example = "ID") ProductSortField sort,
+      @RequestParam(defaultValue = "DESC") @Parameter(description = "정렬 방향", example = "ASC") Sort.Direction direction,
+      @RequestParam @Parameter(description = "카테고리 ID", example = "1") Long categoryId) {
 
     Pageable pageable = PageRequest.of(page, size, Sort.by(direction, sort.getFieldName()));
-    Page<ProductDto> products = productService.findAll(pageable);
+    Page<ProductResponseDto> products = productService.getAllProducts(categoryId, pageable);
     return ResponseEntity.ok(products);
   }
 
   @GetMapping("/{id}")
-  @Operation(summary = "상품 조회", description = "ID로 특정 상품을 조회")
-  public ResponseEntity<ProductDto> getProductById(
+  @Operation(summary = "상품 조회", description = "특정 상품의 정보를 조회한다.")
+  public ResponseEntity<ProductResponseDto> getProductById(
       @PathVariable @Parameter(description = "상품 ID", required = true) long id) {
-    ProductDto product = productService.getProductById(id);
-    return ResponseEntity.ok(product);
+    ProductResponseDto productResponseDto = productService.getProductById(id);
+    return ResponseEntity.ok(productResponseDto);
   }
 
   @PostMapping
-  @Operation(summary = "상품 생성", description = "새로운 상품을 생성")
-  public ResponseEntity<ProductDto> createProduct(
-      @Valid @RequestBody @Parameter(description = "상품 데이터", required = true) ProductDto productDto) {
-    ProductDto createdProduct = productService.addProduct(productDto);
-    return ResponseEntity.ok(createdProduct);
+  @Operation(summary = "상품 생성", description = "새 상품을 등록한다.")
+  public ResponseEntity<ProductResponseDto> createProduct(
+      @Valid @RequestBody @Parameter(description = "상품 데이터", required = true) ProductRequestDto productRequestDto,
+      @RequestBody @Parameter(description = "옵션 데이터", required = false) OptionRequestDto optionRequestDto) {
+    ProductResponseDto productResponseDto = productService.createProduct(productRequestDto,
+        optionRequestDto);
+    return new ResponseEntity<>(productResponseDto, HttpStatus.CREATED);
   }
 
   @PutMapping("/{id}")
   @Operation(summary = "상품 수정", description = "ID로 특정 상품을 수정")
-  public ResponseEntity<ProductDto> updateProduct(
+  public ResponseEntity<ProductResponseDto> updateProduct(
       @PathVariable @Parameter(description = "상품 ID", required = true) long id,
-      @Valid @RequestBody @Parameter(description = "상품 데이터", required = true) ProductDto productDto) {
-    ProductDto updatedProduct = productService.updateProduct(id, productDto);
-    return ResponseEntity.ok(updatedProduct);
+      @Valid @RequestBody @Parameter(description = "상품 데이터", required = true) ProductRequestDto productRequestDto) {
+    ProductResponseDto productResponseDto = productService.updateProduct(id, productRequestDto);
+    return ResponseEntity.ok(productResponseDto);
   }
 
   @DeleteMapping("/{id}")
-  @Operation(summary = "상품 삭제", description = "ID로 특정 상품을 삭제")
-  public ResponseEntity<?> deleteProduct(
-      @PathVariable @Parameter(description = "상품 ID", required = true) long id) {
-    productService.deleteProduct(id);
-    return ResponseEntity.ok().build();
+  @Operation(summary = "상품 삭제", description = "특정 상품을 삭제한다.")
+  public ResponseEntity<String> deleteProduct(
+      @PathVariable @Parameter(description = "상품 ID", required = true) Long productId) {
+    productService.deleteProduct(productId);
+    return new ResponseEntity<>("상품이 성공적으로 삭제되었습니다.", HttpStatus.NO_CONTENT);
   }
 
-  @GetMapping("/{id}/options")
-  @Operation(summary = "상품 옵션 조회", description = "ID로 특정 상품의 옵션을 조회")
-  public ResponseEntity<List<OptionDto>> getProductOptions(
-      @PathVariable @Parameter(description = "상품 ID", required = true) long id) {
-    List<OptionDto> options = productService.getProductOptions(id);
-    return ResponseEntity.ok(options);
-  }
 }

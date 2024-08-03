@@ -1,52 +1,48 @@
 package gift.order.service;
 
-import gift.exception.InvalidUserInputException;
-import gift.order.dto.OrderDto;
+import gift.exception.ResourceNotFoundException;
+import gift.order.dto.OrderRequestDto;
+import gift.order.dto.OrderResponseDto;
 import gift.order.entity.Order;
 import gift.order.repository.OrderRepository;
 import gift.product.entity.Option;
 import gift.product.repository.OptionRepository;
-import gift.user.service.KakaoApiService;
-import gift.wish.repository.WishRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
+import jakarta.validation.Valid;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class OrderService {
 
-  @Autowired
-  private OrderRepository orderRepository;
+  private final OrderRepository orderRepository;
+  private final OptionRepository optionRepository;
 
-  @Autowired
-  private OptionRepository optionRepository;
+  public OrderService(OrderRepository orderRepository, OptionRepository optionRepository) {
+    this.orderRepository = orderRepository;
+    this.optionRepository = optionRepository;
+  }
 
-  @Autowired
-  private WishRepository wishRepository;
-
-  @Autowired
-  private KakaoApiService kakaoApiService;
+  @Transactional(readOnly = true)
+  public Page<OrderResponseDto> getOrders(Pageable pageable) {
+    Page<Order> orders = orderRepository.findAll(pageable);
+    return orders.map(OrderResponseDto::toDto);
+  }
 
   @Transactional
-  public Order createOrder(OrderDto orderDto) {
-    Option option = optionRepository.findById(orderDto.getOptionId())
-        .orElseThrow(() -> new InvalidUserInputException("유효하지 않은 옵션 ID입니다."));
+  public OrderResponseDto createOrder(@Valid OrderRequestDto orderRequestDto) {
+    Option option = optionRepository.findById(orderRequestDto.optionId())
+        .orElseThrow(() -> new ResourceNotFoundException("옵션을 찾을 수 없습니다."));
 
-    option.subtractQuantity(orderDto.getQuantity());
-    optionRepository.save(option);
+    Order order = Order.builder()
+        .option(option)
+        .quantity(orderRequestDto.quantity())
+        .message(orderRequestDto.message())
+        .build();
 
-    wishRepository.deleteByProductId(option.getProduct().getId());
-
-    Order order = new Order(orderDto.getOptionId(), orderDto.getQuantity(), orderDto.getMessage());
-    order = orderRepository.save(order);
-
-    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-    String userEmail = authentication.getName();
-
-    kakaoApiService.sendOrderMessage(order, userEmail).subscribe();
-
-    return order;
+    Order savedOrder = orderRepository.save(order);
+    return OrderResponseDto.toDto(savedOrder);
   }
+
 }

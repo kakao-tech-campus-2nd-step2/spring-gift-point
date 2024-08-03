@@ -3,6 +3,8 @@ package gift.product.dto;
 public enum ProductSortField {
   ID("id"),
   NAME("name"),
+  createdAt("createdAt"),
+
   PRICE("price");
 
   private final String fieldName;

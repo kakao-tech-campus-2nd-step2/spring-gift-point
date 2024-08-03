@@ -1,27 +1,28 @@
 package gift.product.entity;
 
 import gift.category.entity.Category;
+import gift.product.dto.ProductRequestDto;
+import gift.util.BaseEntity;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
-import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Pattern;
-import jakarta.validation.constraints.Size;
+import jakarta.persistence.*;
+import jakarta.validation.constraints.*;
 import java.util.ArrayList;
 import java.util.List;
+import lombok.*;
 
 @Entity
-public class Product {
-
-
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+public class Product extends BaseEntity {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
@@ -42,84 +43,35 @@ public class Product {
   @Column(name = "image_url", nullable = false)
   private String imageUrl;
 
-  @ManyToOne
+  @ManyToOne(fetch = FetchType.LAZY)
   @NotNull(message = "카테고리를 입력해야 합니다.")
   @JoinColumn(name = "category_id", nullable = false)
   private Category category;
 
   @Size(min = 1)
   @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
-  private List<Option> options = new ArrayList<>();
+  private List<Option> options;
 
-  public Product(Long id, String name, int price, String imageUrl, Category category,
-      List<Option> options) {
-    this.id = id;
-    this.name = name;
-    this.price = price;
-    this.imageUrl = imageUrl;
-    this.category = category;
-    this.options = options;
-  }
-
-  public Product() {
-
-  }
 
   public void addOption(Option option) {
+    if (this.options == null){
+      this.options = new ArrayList<>();
+    }
+
+
     options.add(option);
     option.setProduct(this);
   }
 
   public void removeOption(Option option) {
-    options.remove(option);
-    option.setProduct(null);
+    this.options.clear();
   }
 
-  public Long getId() {
-    return id;
-  }
-
-  public void setId(Long id) {
-    this.id = id;
-  }
-
-  public String getName() {
-    return name;
-  }
-
-  public void setName(String name) {
-    this.name = name;
-  }
-
-  public int getPrice() {
-    return price;
-  }
-
-  public void setPrice(int price) {
-    this.price = price;
-  }
-
-  public String getImageUrl() {
-    return imageUrl;
-  }
-
-  public void setImageUrl(String imageUrl) {
-    this.imageUrl = imageUrl;
-  }
-
-  public Category getCategory() {
-    return category;
-  }
-
-  public void setCategory(Category category) {
+  public void update(ProductRequestDto productRequestDto, Category category) {
+    this.name = productRequestDto.name();
+    this.price = productRequestDto.price();
+    this.imageUrl = productRequestDto.imageUrl();
     this.category = category;
-  }
 
-  public List<Option> getOptions() {
-    return options;
-  }
-
-  public void setOptions(List<Option> options) {
-    this.options = options;
   }
 }
