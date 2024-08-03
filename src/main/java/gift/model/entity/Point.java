@@ -31,6 +31,9 @@ public class Point {
     }
 
     public Point updatePoint(long points){
+        if(this.point + points < 0){
+            throw new IllegalArgumentException("포인트가 부족합니다.");
+        }
         this.point = this.point + points;
         return this;
     }
