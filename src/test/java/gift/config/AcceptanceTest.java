@@ -20,7 +20,7 @@ class AcceptanceTest {
     @Autowired
     private MockMvc mockMvc;
 
-    private static final String ALLOWED_METHOD_NAMES = "GET,POST,PUT,DELETE,OPTIONS,HEAD";
+    private static final String ALLOWED_METHOD_NAMES = "GET,POST,PUT,DELETE,OPTIONS,HEAD,PATCH";
     private static final String AUTH_HEADER = "Authorization";
     private static final String BEARER_TOKEN = "Bearer test1234";
 
