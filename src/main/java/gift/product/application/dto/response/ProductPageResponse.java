@@ -2,12 +2,19 @@ package gift.product.application.dto.response;
 
 import gift.product.service.dto.ProductPageInfo;
 import java.util.List;
+import org.springframework.data.domain.Pageable;
 
 public record ProductPageResponse(
-        List<ProductResponse> products,
-        long totalElements,
-        int totalPages,
-        int currentPage
+        List<ProductResponse> contents,
+        Pageable pageable,
+        Integer totalPages,
+        Long totalElements,
+        Boolean last,
+        Integer number,
+        Integer size,
+        Integer numberOfElements,
+        Boolean first,
+        Boolean empty
 ) {
     public static ProductPageResponse from(ProductPageInfo productPageInfo) {
         var products = productPageInfo.products().stream()
@@ -15,9 +22,15 @@ public record ProductPageResponse(
                 .toList();
         return new ProductPageResponse(
                 products,
-                productPageInfo.totalElements(),
+                productPageInfo.pageable(),
                 productPageInfo.totalPages(),
-                productPageInfo.currentPage()
+                productPageInfo.totalElements(),
+                productPageInfo.last(),
+                productPageInfo.number(),
+                productPageInfo.size(),
+                productPageInfo.numberOfElements(),
+                productPageInfo.first(),
+                productPageInfo.empty()
         );
     }
 }

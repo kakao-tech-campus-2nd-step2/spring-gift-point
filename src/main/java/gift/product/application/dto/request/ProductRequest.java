@@ -23,10 +23,10 @@ public record ProductRequest(
         @URL(message = ValidateErrorMessage.INVALID_PRODUCT_IMG_URL_FORMAT)
         String imgUrl,
 
-        @NotBlank(message = ValidateErrorMessage.INVALID_CATEGORY_NAME_NULL)
-        String categoryName
+        @NotNull(message = ValidateErrorMessage.INVALID_CATEGORY_NAME_NULL)
+        Long categoryId
 ) {
     public ProductCommand toProductCommand() {
-        return new ProductCommand(name(), price(), imgUrl(), categoryName());
+        return new ProductCommand(name(), price(), imgUrl(), categoryId());
     }
 }

@@ -11,7 +11,7 @@ import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
-@Profile("dev")
+@Profile("!test")
 @Configuration
 public class WebConfig implements WebMvcConfigurer {
     private final JwtProvider jwtProvider;

@@ -30,7 +30,7 @@ public class ProductService {
 
     @Transactional
     public Long saveProduct(ProductCommand productRequest) {
-        Category category = categoryRepository.findByName(productRequest.categoryName())
+        Category category = categoryRepository.findById(productRequest.categoryId())
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 카테고리입니다."));
         Product product = productRequest.toEntity(category);
         var newProduct = productRepository.save(product);
@@ -42,7 +42,7 @@ public class ProductService {
     public void modifyProduct(final Long id, ProductCommand productRequest) {
         var product = productRepository.findById(id)
                 .orElseThrow(() -> ProductNotFoundException.of(id));
-        var category = categoryRepository.findByName(productRequest.categoryName())
+        var category = categoryRepository.findById(productRequest.categoryId())
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 카테고리입니다."));
 
         product.modify(productRequest.name(), productRequest.price(), productRequest.imgUrl(), category);

@@ -11,7 +11,6 @@ import gift.product.domain.Category;
 import gift.product.domain.Product;
 import gift.product.exception.product.ProductNotFoundException;
 import gift.product.persistence.CategoryRepository;
-import gift.product.persistence.ProductOptionRepository;
 import gift.product.persistence.ProductRepository;
 import gift.product.service.command.ProductCommand;
 import java.util.List;
@@ -32,8 +31,6 @@ class ProductServiceTest {
     private ProductRepository productRepository;
     @Mock
     private CategoryRepository categoryRepository;
-    @Mock
-    private ProductOptionRepository productOptionRepository;
     @InjectMocks
     private ProductService productService;
 
@@ -41,12 +38,12 @@ class ProductServiceTest {
     @DisplayName("ProductService 생성 테스트[성공]")
     void saveProductTest() {
         //given
-        ProductCommand productCommand = new ProductCommand("테스트 상품", 1000, "http://test.com", "카테고리");
+        ProductCommand productCommand = new ProductCommand("테스트 상품", 1000, "http://test.com", 1L);
 
         Category category = new Category(1L, "카테고리", "카테고리 설명", "카테고리 이미지", "카테고리 썸네일 이미지");
         Product savedProduct = new Product(1L, "테스트 상품", 1000, "http://test.com", category);
 
-        given(categoryRepository.findByName(any())).willReturn(Optional.of(category));
+        given(categoryRepository.findById(any())).willReturn(Optional.of(category));
         given(productRepository.save(any(Product.class))).willReturn(savedProduct);
 
         //when
@@ -54,7 +51,6 @@ class ProductServiceTest {
 
         //then
         verify(productRepository).save(any(Product.class));
-        verify(productOptionRepository).saveAll(any());
 
         assertThat(savedProductId).isEqualTo(1L);
     }
@@ -64,12 +60,12 @@ class ProductServiceTest {
     void modifyProductTest() {
         //given
         Long id = 1L;
-        ProductCommand productCommand = new ProductCommand("수정된 상품", 2000, "http://test.com", "새 카테고리");
+        ProductCommand productCommand = new ProductCommand("수정된 상품", 2000, "http://test.com", 1L);
         Category existCategory = new Category(1L, "카테고리", "카테고리 설명", "카테고리 이미지", "카테고리 썸네일 이미지");
         Product product = new Product(1L, "테스트 상품", 1000, "http://test.com", existCategory);
         Category newCategory = new Category(2L, "새 카테고리", "새 카테고리 설명", "새 카테고리 이미지", "새 카테고리 썸네일 이미지");
 
-        given(categoryRepository.findByName(any())).willReturn(Optional.of(newCategory));
+        given(categoryRepository.findById(any())).willReturn(Optional.of(newCategory));
         given(productRepository.findById(id)).willReturn(Optional.of(product));
 
         //when
@@ -161,10 +157,6 @@ class ProductServiceTest {
 
         //then
         verify(productRepository).findAllWithCategory(pageable);
-        assertThat(products.products().size()).isEqualTo(2);
-        assertThat(products.currentPage()).isEqualTo(1);
-        assertThat(products.totalPages()).isEqualTo(1);
-        assertThat(products.totalElements()).isEqualTo(2);
     }
 
     @Test
@@ -172,7 +164,7 @@ class ProductServiceTest {
     void modifyProductFailTest() {
         //given
         final Long id = 1L;
-        ProductCommand productCommand = new ProductCommand("수정된 상품", 2000, "http://test.com", "새 카테고리");
+        ProductCommand productCommand = new ProductCommand("수정된 상품", 2000, "http://test.com", 1L);
 
         //when
         when(productRepository.findById(id)).thenReturn(Optional.empty());

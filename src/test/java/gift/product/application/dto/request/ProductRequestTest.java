@@ -29,7 +29,7 @@ class ProductRequestTest {
         String name = "테스트 상품";
         Integer price = 1000;
         String imgUrl = "http://test.com";
-        String category = "카테고리";
+        Long category = 1L;
 
         // when
         ProductRequest productRequest = new ProductRequest(name, price, imgUrl, category);
@@ -46,7 +46,7 @@ class ProductRequestTest {
         String name = "";
         Integer price = 1000;
         String imgUrl = "http://test.com";
-        String category = "카테고리";
+        Long category = 1L;
 
         // when
         ProductRequest productRequest = new ProductRequest(name, price, imgUrl, category);
@@ -65,7 +65,7 @@ class ProductRequestTest {
         String name = null;
         Integer price = 1000;
         String imgUrl = "http://test.com";
-        String category = "카테고리";
+        Long category = 1L;
 
         // when
         ProductRequest productRequest = new ProductRequest(name, price, imgUrl, category);
@@ -84,7 +84,7 @@ class ProductRequestTest {
         String name = "1234567890123456";
         Integer price = 1000;
         String imgUrl = "http://test.com";
-        String category = "카테고리";
+        Long category = 1L;
 
         // when
         ProductRequest productRequest = new ProductRequest(name, price, imgUrl, category);
@@ -103,7 +103,7 @@ class ProductRequestTest {
         String name = "1234567890 1234 ";
         Integer price = 1000;
         String imgUrl = "http://test.com";
-        String category = "카테고리";
+        Long category = 1L;
 
         // when
         ProductRequest productRequest = new ProductRequest(name, price, imgUrl, category);
@@ -122,7 +122,7 @@ class ProductRequestTest {
         String name = "테스트 상품!";
         Integer price = 1000;
         String imgUrl = "http://test.com";
-        String category = "카테고리";
+        Long category = 1L;
 
         // when
         ProductRequest productRequest = new ProductRequest(name, price, imgUrl, category);
@@ -141,7 +141,7 @@ class ProductRequestTest {
         String name = "테스트 상품";
         Integer price = null;
         String imgUrl = "http://test.com";
-        String category = "카테고리";
+        Long category = 1L;
 
         // when
         ProductRequest productRequest = new ProductRequest(name, price, imgUrl, category);
@@ -160,7 +160,7 @@ class ProductRequestTest {
         String name = "테스트 상품";
         Integer price = -1;
         String imgUrl = "http://test.com";
-        String category = "카테고리";
+        Long category = 1L;
 
         // when
         ProductRequest productRequest = new ProductRequest(name, price, imgUrl, category);
@@ -179,7 +179,7 @@ class ProductRequestTest {
         String name = "테스트 상품";
         Integer price = 2_100_000_001;
         String imgUrl = "http://test.com";
-        String category = "카테고리";
+        Long category = 1L;
 
         // when
         ProductRequest productRequest = new ProductRequest(name, price, imgUrl, category);
@@ -198,7 +198,7 @@ class ProductRequestTest {
         String name = "테스트 상품";
         Integer price = 1000;
         String imgUrl = "";
-        String category = "카테고리";
+        Long category = 1L;
 
         // when
         ProductRequest productRequest = new ProductRequest(name, price, imgUrl, category);
@@ -217,7 +217,7 @@ class ProductRequestTest {
         String name = "테스트 상품";
         Integer price = 1000;
         String imgUrl = null;
-        String category = "카테고리";
+        Long category = 1L;
 
         // when
         ProductRequest productRequest = new ProductRequest(name, price, imgUrl, category);
