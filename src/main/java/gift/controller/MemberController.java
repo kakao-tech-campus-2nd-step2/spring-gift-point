@@ -1,9 +1,11 @@
 package gift.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import gift.annotation.LoginMember;
 import gift.dto.ErrorResponseDto;
 import gift.dto.MemberLoginDto;
 import gift.dto.MemberRegisterDto;
+import gift.entity.PointResponseEntity;
 import gift.entity.TokenResponseEntity;
 import gift.service.MemberService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -16,6 +18,7 @@ import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -64,5 +67,18 @@ public class MemberController {
         return new ResponseEntity<>(
             objectMapper.writeValueAsString(new TokenResponseEntity(generatedToken)),
             HttpStatus.OK);
+    }
+
+    @Operation(summary = "포인트 조회", description = "로그인한 사용자의 보유 포인트를 조회합니다.")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "포인트 조회 성공"),
+        @ApiResponse(responseCode = "401", description = "인증 필요", content = @Content(schema = @Schema(implementation = ErrorResponseDto.class)))
+    })
+    @GetMapping("/points")
+    public ResponseEntity<String> getPoint(@LoginMember Long memberId) throws Exception {
+        Integer point = memberService.getPointByMemberId(memberId);
+        return new ResponseEntity<>(
+            objectMapper.writeValueAsString(new PointResponseEntity(point)), HttpStatus.OK
+        );
     }
 }
