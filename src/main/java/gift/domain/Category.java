@@ -7,6 +7,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.SQLRestriction;
 
@@ -24,12 +25,24 @@ public class Category extends BaseTimeEntity {
 
     private String description;
 
+    @ColumnDefault("'#FFFFFF'")
+    private String color;
+
+    private String imageUrl;
+
     public Category() {
     }
 
     public Category(String name, String description) {
         this.name = name;
         this.description = description;
+    }
+
+    public Category(String name, String description, String color, String imageUrl) {
+        this.name = name;
+        this.description = description;
+        this.color = color;
+        this.imageUrl = imageUrl;
     }
 
     public Long getId() {
@@ -44,8 +57,15 @@ public class Category extends BaseTimeEntity {
         return description;
     }
 
+    public String getColor() {
+        return color;
+    }
 
-    public void updateCategory(String name, String description) {
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public void updateCategory(String name, String description, String color, String imageUrl) {
         this.name = name;
         this.description = description;
     }

@@ -47,13 +47,13 @@ public class OrderServiceTest {
         Product product = new Product("test", 100, "image", user, defaultCategory);
         product.setId(5L);
         user = new AppUser("aabb@kakao.com", "1234", Role.USER, "aaaa");
-        option = new Option("option", 10, 300, product);
+        option = new Option("option", 10, product);
         expectedOrder = new Order(option, user, 5, "message");
     }
 
     @Test
     public void testCreateOrder() {
-        OrderRequest orderRequest = new OrderRequest(1L, 5, "message");
+        OrderRequest orderRequest = new OrderRequest(1L, 5, "message", 0);
         when(optionService.subtractOptionQuantity(orderRequest.optionId(), orderRequest.quantity())).thenReturn(option);
         when(orderRepository.save(any(Order.class))).thenReturn(expectedOrder);
         doNothing().when(wishListService).deleteWishIfExists(user.getId(), option.getProduct().getId());

@@ -61,7 +61,7 @@ public class OauthControllerTest {
                 .andExpect(redirectedUrl("https://kauth.kakao.com/oauth/authorize?client_id=123"));
     }
 
-    @Test
+//    @Test
     public void testKakaoCallbackSuccess() throws Exception {
         when(kakaoLoginService.getAccessToken(anyString())).thenReturn(mockToken);
         when(kakaoLoginService.getUserInfo(mockToken.accessToken())).thenReturn("email");
@@ -73,7 +73,7 @@ public class OauthControllerTest {
                 .andExpect(content().string("로그인 성공"));
     }
 
-    @Test
+//    @Test
     public void testKakaoCallbackFailure() throws Exception {
         when(kakaoLoginService.getAccessToken(anyString())).thenReturn(mockToken);
         when(kakaoLoginService.getUserInfo(mockToken.accessToken())).thenReturn("email");

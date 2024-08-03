@@ -1,7 +1,5 @@
 package gift.dto.user;
 
-import gift.domain.Role;
-import jakarta.annotation.Nullable;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
@@ -15,13 +13,9 @@ public class SignUpRequest {
     @Size(min = 4, message = "비밀번호는 4자리 이상 입력해주세요.")
     private String password;
 
-    @Nullable
-    private Role role;
-
-    public SignUpRequest(String email, String password, Role role) {
+    public SignUpRequest(String email, String password) {
         this.email = email;
         this.password = password;
-        this.role = role;
     }
 
     public String getEmail() {
@@ -40,11 +34,4 @@ public class SignUpRequest {
         this.password = password;
     }
 
-    public Role getRole() {
-        return role;
-    }
-
-    public void setRole(Role role) {
-        this.role = role;
-    }
 }

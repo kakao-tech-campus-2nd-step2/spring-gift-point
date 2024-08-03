@@ -2,10 +2,13 @@ package gift.controller;
 
 import gift.domain.AppUser;
 import gift.dto.category.CategoryRequest;
+import gift.dto.common.CommonResponse;
 import gift.service.CategoryService;
 import gift.util.aspect.AdminController;
 import gift.util.resolver.LoginUser;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -29,26 +32,32 @@ public class CategoryAdminController {
         this.categoryService = categoryService;
     }
 
-    @Operation(summary = "관리자 권한으로 카테고리 추가")
+    @Operation(summary = "관리자 권한으로 카테고리 추가",
+            security = @SecurityRequirement(name = "JWT"))
     @PostMapping
-    public ResponseEntity<String> addCategoryForAdmin(@LoginUser AppUser loginAppUser,
-                                                      @Valid @RequestBody CategoryRequest categoryRequest) {
+    public ResponseEntity<?> addCategoryForAdmin(@Parameter(hidden = true) @LoginUser AppUser loginAppUser,
+                                                 @Valid @RequestBody CategoryRequest categoryRequest) {
         categoryService.addCategory(categoryRequest);
-        return ResponseEntity.status(HttpStatus.CREATED).body("ok");
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(new CommonResponse<>(null, "관리자 권한으로 카테고리 추가가 완료되었습니다.", true));
     }
 
-    @Operation(summary = "관리자 권한으로 카테고리 수정")
+    @Operation(summary = "관리자 권한으로 카테고리 수정",
+            security = @SecurityRequirement(name = "JWT"))
     @PutMapping("/{id}")
-    public ResponseEntity<String> updateCategoryForAdmin(@LoginUser AppUser loginAppUser, @PathVariable Long id,
-                                                         @Valid @RequestBody CategoryRequest categoryRequest) {
+    public ResponseEntity<?> updateCategoryForAdmin(@Parameter(hidden = true) @LoginUser AppUser loginAppUser,
+                                                    @PathVariable Long id,
+                                                    @Valid @RequestBody CategoryRequest categoryRequest) {
         categoryService.updateCategory(id, categoryRequest);
-        return ResponseEntity.ok().body("ok");
+        return ResponseEntity.ok(new CommonResponse<>(null, "관리자 권한으로 카테고리 수정이 완료되었습니다.", true));
     }
 
-    @Operation(summary = "관리자 권한으로 카테고리 삭제")
+    @Operation(summary = "관리자 권한으로 카테고리 삭제",
+            security = @SecurityRequirement(name = "JWT"))
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> deleteCategoryByIdForAdmin(@LoginUser AppUser loginAppUser, @PathVariable Long id) {
+    public ResponseEntity<?> deleteCategoryByIdForAdmin(@Parameter(hidden = true) @LoginUser AppUser loginAppUser,
+                                                        @PathVariable Long id) {
         categoryService.deleteCategory(id);
-        return ResponseEntity.ok().body("ok");
+        return ResponseEntity.ok(new CommonResponse<>(null, "관리자 권한으로 카테고리 삭제가 완료되었습니다.", true));
     }
 }

@@ -19,8 +19,8 @@ import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.SQLRestriction;
 
 @Entity
-@Table(name = "option", uniqueConstraints = {@UniqueConstraint(columnNames = {"product_id", "name"})})
-@SQLDelete(sql = "UPDATE option SET deletion_date = CURRENT_TIMESTAMP WHERE id = ?")
+@Table(name = "options", uniqueConstraints = {@UniqueConstraint(columnNames = {"product_id", "name"})})
+@SQLDelete(sql = "UPDATE options SET deletion_date = CURRENT_TIMESTAMP WHERE id = ?")
 @SQLRestriction("deletion_date IS NULL")
 public class Option extends BaseTimeEntity {
 
@@ -37,18 +37,13 @@ public class Option extends BaseTimeEntity {
     @Column(nullable = false)
     private int quantity;
 
-    @Min(0)
-    @Column(name = "additional_cost", nullable = false)
-    private int additionalCost = 0;
-
     @ManyToOne
     @JoinColumn(name = "product_id", nullable = false)
     private Product product;
 
-    public Option(String name, Integer quantity, Integer additionalCost, Product product) {
+    public Option(String name, Integer quantity, Product product) {
         this.name = name;
         this.quantity = quantity;
-        this.additionalCost = additionalCost;
         this.product = product;
     }
 
@@ -67,18 +62,13 @@ public class Option extends BaseTimeEntity {
         return quantity;
     }
 
-    public int getAdditionalCost() {
-        return additionalCost;
-    }
-
     public Product getProduct() {
         return product;
     }
 
-    public void updateOption(String name, int quantity, int additionalCost) {
+    public void updateOption(String name, int quantity) {
         this.name = name;
         this.quantity = quantity;
-        this.additionalCost = additionalCost;
     }
 
     public boolean isOwner(Long productId) {

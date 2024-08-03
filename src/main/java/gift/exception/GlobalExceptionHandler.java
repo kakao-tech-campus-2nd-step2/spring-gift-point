@@ -1,5 +1,6 @@
 package gift.exception;
 
+import gift.dto.common.CommonResponse;
 import jakarta.persistence.EntityNotFoundException;
 import java.util.HashMap;
 import java.util.Map;
@@ -26,38 +27,38 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(IllegalArgumentException.class)
-    public ResponseEntity<String> handleIllegalArgumentException(IllegalArgumentException ex) {
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
+    public ResponseEntity<?> handleIllegalArgumentException(IllegalArgumentException ex) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new CommonResponse<>(null, ex.getMessage(), false));
     }
 
     // jdbc 관련 오류 처리
     @ExceptionHandler(DataIntegrityViolationException.class)
-    public ResponseEntity<String> handleDataIntegrityViolation(DataIntegrityViolationException ex) {
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("데이터 무결성 오류로 인해 요청을 처리할 수 없습니다. 입력 데이터를 확인해 주세요.");
+    public ResponseEntity<?> handleDataIntegrityViolation(DataIntegrityViolationException ex) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new CommonResponse<>(null,"데이터 무결성 오류로 인해 요청을 처리할 수 없습니다. 입력 데이터를 확인해 주세요.", false));
     }
 
     @ExceptionHandler(DataAccessException.class)
-    public ResponseEntity<String> handleDataAccess(DataAccessException ex) {
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("데이터베이스 처리 중 오류가 발생했습니다.");
+    public ResponseEntity<?> handleDataAccess(DataAccessException ex) {
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new CommonResponse<>(null, "데이터베이스 처리 중 오류가 발생했습니다.", false));
     }
 
     @ExceptionHandler(EmptyResultDataAccessException.class)
-    public ResponseEntity<String> handleEmptyResultDataAccess(EmptyResultDataAccessException ex) {
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("요청한 데이터가 존재하지 않습니다.");
+    public ResponseEntity<?> handleEmptyResultDataAccess(EmptyResultDataAccessException ex) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new CommonResponse<>(null, "요청한 데이터가 존재하지 않습니다.", false));
     }
 
     @ExceptionHandler(EntityNotFoundException.class)
-    public ResponseEntity<String> handleEntityNotFound(EntityNotFoundException ex) {
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("요청한 데이터가 존재하지 않습니다 : " + ex.getMessage());
+    public ResponseEntity<?> handleEntityNotFound(EntityNotFoundException ex) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new CommonResponse<>(null, "요청한 데이터가 존재하지 않습니다 : " + ex.getMessage(), false));
     }
 
     @ExceptionHandler(InvalidForeignKeyException.class)
-    public ResponseEntity<String> handleInvalidForeignKeyException(InvalidForeignKeyException ex) {
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
+    public ResponseEntity<?> handleInvalidForeignKeyException(InvalidForeignKeyException ex) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new CommonResponse<>(null, ex.getMessage(), false));
     }
 
     @ExceptionHandler(CustomException.class)
-    public ResponseEntity<String> handleCustomException(CustomException ex) {
-        return ResponseEntity.status(ex.getHttpStatus()).body(ex.getMessage());
+    public ResponseEntity<?> handleCustomException(CustomException ex) {
+        return ResponseEntity.status(ex.getHttpStatus()).body(new CommonResponse<>(null, ex.getMessage(), false));
     }
 }

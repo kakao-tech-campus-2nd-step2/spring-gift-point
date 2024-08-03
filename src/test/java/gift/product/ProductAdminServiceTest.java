@@ -57,7 +57,7 @@ public class ProductAdminServiceTest {
 
     @BeforeEach
     void setUp() {
-        List<CreateOptionRequest> createRequest = List.of(new CreateOptionRequest("option", 10, 300));
+        List<CreateOptionRequest> createRequest = List.of(new CreateOptionRequest("option", 10));
         createProductAdminRequest = new CreateProductAdminRequest("ProductName", 100, "http://image.url", 1L, 1L,
                 createRequest);
         defaultCategory = new Category("기본", "기본 카테고리");

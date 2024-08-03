@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import gift.domain.AppUser;
 import gift.domain.Role;
+import gift.repository.UserRepository;
 import gift.util.jwt.JwtService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +16,9 @@ public class JwtServiceTest {
 
     @Autowired
     private JwtService jwtService;
+
+    @Autowired
+    UserRepository userRepository;
 
     @Test
     public void testCreateToken() {
@@ -29,6 +33,7 @@ public class JwtServiceTest {
         Long id = 1L;
         AppUser appUser = new AppUser("yoo@example.com", "1234", Role.ADMIN, "1");
         appUser.setId(id);
+        userRepository.save(appUser);
         String token = jwtService.createToken(id);
 
         AppUser loginAppUser = jwtService.getLoginUser(token);

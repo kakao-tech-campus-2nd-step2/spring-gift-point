@@ -6,11 +6,15 @@ public class CategoryResponse {
     private Long id;
     private String name;
     private String description;
+    private String color;
+    private String imageUrl;
 
     public CategoryResponse(Category category) {
         this.id = category.getId();
         this.name = category.getName();
         this.description = category.getDescription();
+        this.color = category.getColor();
+        this.imageUrl = category.getImageUrl();
     }
 
     public Long getId() {
@@ -35,5 +39,21 @@ public class CategoryResponse {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public String getColor() {
+        return color;
+    }
+
+    public void setColor(String color) {
+        this.color = color;
+    }
+
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
     }
 }

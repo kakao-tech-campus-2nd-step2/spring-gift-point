@@ -14,7 +14,13 @@ public record CategoryRequest(
         String name,
 
         @Nullable
-        String description
+        String description,
+
+        @Nullable
+        String color,
+
+        @Nullable
+        String imageUrl
 
 ) {
 }
