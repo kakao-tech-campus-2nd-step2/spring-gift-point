@@ -70,7 +70,7 @@ public class CustomJwtFilter extends OncePerRequestFilter {
         String path = request.getRequestURI();
         return path.startsWith("/api/members/login")
                 || path.startsWith("/api/members/register")
-                || path.startsWith("/api/oauth")
+                || path.startsWith("/api/oauth2")
                 || path.startsWith("/swagger-ui")
                 || path.startsWith("/v3/api-docs");
     }
