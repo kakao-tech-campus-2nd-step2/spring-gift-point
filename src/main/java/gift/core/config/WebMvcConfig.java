@@ -20,4 +20,13 @@ public class WebMvcConfig implements WebMvcConfigurer {
 			.excludePathPatterns("/api/v1/user/signup")
 			.excludePathPatterns("/api/v1/user/login");
 	}
+
+	@Override
+	public void addCorsMappings(CorsRegistry registry) {
+		registry.addMapping("/api/**")
+			.allowedOrigins("http://localhost:3000")
+			.allowedMethods("GET", "POST", "PUT", "DELETE")
+			.allowedHeaders("*")
+			.allowCredentials(true);
+	}
 }

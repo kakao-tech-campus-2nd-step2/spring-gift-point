@@ -1,6 +1,10 @@
 package gift.wishList.domain;
 
 
+import java.time.LocalDateTime;
+
+import org.springframework.data.annotation.CreatedDate;
+
 import gift.product.domain.Product;
 import gift.user.domain.User;
 import jakarta.persistence.Entity;
@@ -25,6 +29,9 @@ public class WishProduct {
 	@JoinColumn(name = "product_id")
 	private Product product;
 
+	@CreatedDate
+	private LocalDateTime createdDate;
+
 	protected WishProduct() {
 	}
 
@@ -48,6 +55,9 @@ public class WishProduct {
 		return product;
 	}
 
+	public LocalDateTime getCreatedDate() {
+		return createdDate;
+	}
 }
 
 

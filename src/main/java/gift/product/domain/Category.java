@@ -40,8 +40,4 @@ public class Category {
 	public String getImageUrl() {
 		return imageUrl;
 	}
-
-	public static Category of(String name) {
-		return new Category(name);
-	}
 }

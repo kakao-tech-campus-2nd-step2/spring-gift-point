@@ -4,6 +4,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.GetMapping;
 
 import gift.core.exception.product.CategoryNotFoundException;
 import gift.dto.response.ProductResponse;
@@ -63,14 +64,15 @@ public class ProductService {
 	}
 
 	@Transactional(readOnly = true)
-	public Page<ProductResponse> getProductsWithPaging(Pageable pageable, SearchType searchType, String searchValue) {
-		if (searchValue == null || searchValue.isBlank()) {
-			return productRepository.findAll(pageable).map(ProductResponse::from);
-		}
-		return switch (searchType) {
-			case NAME -> productRepository.findByNameContaining(searchValue, pageable).map(ProductResponse::from);
-			case CATEGORY -> productRepository.findByCategoryName(searchValue, pageable).map(ProductResponse::from);
-		};
+	public Page<ProductResponse> getProductsWithPaging(Pageable pageable) {
+		// if (searchValue == null || searchValue.isBlank()) {
+		// 	return productRepository.findAll(pageable).map(ProductResponse::from);
+		// }
+		// return switch (searchType) {
+		// 	case NAME -> productRepository.findByNameContaining(searchValue, pageable).map(ProductResponse::from);
+		// 	case CATEGORY -> productRepository.findByCategoryName(searchValue, pageable).map(ProductResponse::from);
+		// };
+		return productRepository.findAll(pageable).map(ProductResponse::from);
 	}
 
 	// 변경하려는 상품 이름이 이미 존재하는지 확인한다. 카테고리 또한 확인한다.
