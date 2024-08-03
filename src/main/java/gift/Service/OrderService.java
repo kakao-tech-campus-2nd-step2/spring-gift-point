@@ -3,12 +3,11 @@ package gift.Service;
 import gift.DTO.RequestOrderDTO;
 import gift.DTO.ResponseOrderDTO;
 import gift.Event.EventObject.SendMessageToMeEvent;
-import gift.Exception.InvalidEditTypeException;
 import gift.Exception.OptionNotFoundException;
 import gift.Exception.OrderNotFoundException;
 import gift.Model.Entity.*;
 import gift.Model.Value.AccessToken;
-import gift.Model.Value.Quantity;
+import gift.Model.Value.CashReceipt;
 import gift.Repository.OptionRepository;
 import gift.Repository.OrderRepository;
 import gift.Repository.WishRepository;
@@ -53,8 +52,15 @@ public class OrderService {
                 .findFirst()
                 .ifPresent(wish->wishRepository.deleteById(wish.getId()));
 
+        int totalPrice = option.getProduct().getPrice().getValue() * requestOrderDTO.quantity();
+        member.subtractPoint(totalPrice);
+
+        CashReceipt cashReceipt = null;
+        if (requestOrderDTO.phoneNumber() != null)
+            cashReceipt = new CashReceipt(requestOrderDTO.phoneNumber());
+
         Order order = orderRepository.save(
-                new Order(option, member, requestOrderDTO.quantity(), LocalDateTime.now(), requestOrderDTO.message())
+                new Order(option, member, requestOrderDTO.quantity(), LocalDateTime.now(), requestOrderDTO.message(), cashReceipt)
         );
 
 
@@ -72,25 +78,6 @@ public class OrderService {
                .stream()
                .map(ResponseOrderDTO::of)
                .toList();
-    }
-
-    @Transactional
-    public void editOrder(Member member, Long orderId, String editType, int deltaQuantity){
-        Order order = orderRepository.findById(orderId).orElseThrow(
-                ()-> new OrderNotFoundException("해당하는 주문을 찾을 수 없습니다"));
-        order.checkOrderBelongsToMember(member);
-
-        if (!(editType.equals("add") || editType.equals("subtract"))) {
-            throw new InvalidEditTypeException("edit-type을 잘못적으셨습니다. add와 subtract 둘 중 하나로 적어주세요");
-        }
-
-        if (editType.equals("add")) {
-            order.addQuantity(new Quantity(deltaQuantity));
-        }
-
-        if (editType.equals("subtract")) {
-            order.subtractQuantity(new Quantity(deltaQuantity));
-        }
     }
 
     @Transactional

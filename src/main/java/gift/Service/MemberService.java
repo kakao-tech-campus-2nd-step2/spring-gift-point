@@ -6,6 +6,7 @@ import gift.Exception.MemberNotFoundException;
 import gift.Model.Entity.Member;
 import gift.DTO.RequestMemberDTO;
 import gift.Model.Value.Email;
+import gift.Model.Value.Point;
 import gift.Repository.MemberRepository;
 import gift.Util.JwtUtil;
 import org.springframework.stereotype.Service;
@@ -29,7 +30,7 @@ public class MemberService {
         Optional<Member> optionalMember = memberRepository.findByEmail(new Email(requestMemberDTO.email()));
         if(optionalMember.isPresent())
             throw new EmailAlreadyExistsException("이미 존재하는 이메일입니다");
-        Member member =  memberRepository.save(new Member(requestMemberDTO.email(), requestMemberDTO.password()));
+        Member member =  memberRepository.save(new Member(requestMemberDTO.email(), requestMemberDTO.password(), 0));
         return jwtUtil.generateToken(member);
     }
 
