@@ -67,4 +67,5 @@ public class OrderRequest {
     public boolean isReceipt() {
         return receipt;
     }
+
 }

@@ -17,7 +17,7 @@ public enum ErrorCode {
     INSUFFICIENT_QUANTITY("수량이 부족합니다.", 400, HttpStatus.BAD_REQUEST),
     OPTION_NOT_MATCH_PRODUCT("잘못된 옵션입니다.", 400, HttpStatus.BAD_REQUEST),
     INSUFFICIENT_POINTS("포인트가 부족합니다.", 400, HttpStatus.BAD_REQUEST),
-    EXCESSIVE_POINTS("포인트를 다시 입력하세요.", 400, HttpStatus.BAD_REQUEST),
+    EXCESSIVE_POINTS("포인트가 주문 가격을 초과했습니다.", 400, HttpStatus.BAD_REQUEST),
     RECEIPT_REQUIRED_PHONE("현금 영수증을 받기 전에 전화번호를 입력하세요.",400, HttpStatus.BAD_REQUEST);
 
     private final String message;

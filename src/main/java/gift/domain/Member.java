@@ -72,4 +72,8 @@ public class Member {
     public LoginType getLoginType() {
         return loginType;
     }
+
+    public void setPoint(int point) {
+        this.point = point;
+    }
 }

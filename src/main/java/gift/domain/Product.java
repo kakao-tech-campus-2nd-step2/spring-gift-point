@@ -85,4 +85,8 @@ public class Product {
     public List<Option> getOptions() {
         return options;
     }
+
+    public void setPrice(Integer price) {
+        this.price = price;
+    }
 }
