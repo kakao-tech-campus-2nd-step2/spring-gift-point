@@ -78,7 +78,7 @@ public class UserService {
     return userRepository.findByEmail(email)
         .orElseThrow(() -> new ResourceNotFoundException("사용자를 찾을 수 없습니다"));
   }
-
+ 
   public PointResponseDto getPoint(Long userId) {
     User user = userRepository.findById(userId)
         .orElseThrow(() -> new ResourceNotFoundException("해당 유저를 찾을 수 없습니다."));

@@ -18,9 +18,9 @@ public class CategoryService {
 
   private final CategoryRepository categoryRepository;
 
-
   public CategoryService(CategoryRepository categoryRepository) {
     this.categoryRepository = categoryRepository;
+    this.productRepository = productRepository;
   }
 
   public List<CategoryResponseDto> getAllCategories() {

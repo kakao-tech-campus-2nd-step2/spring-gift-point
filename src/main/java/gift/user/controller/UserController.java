@@ -35,7 +35,6 @@ public class UserController {
     TokenResponseDto tokenResponse = userService.register(userRequestDto);
     return new ResponseEntity<>(tokenResponse, HttpStatus.CREATED);
   }
-
   @PostMapping("/login")
   @Operation(summary = "로그인", description = "회원을 인증하고 토큰을 받는다.")
   public ResponseEntity<TokenResponseDto> login(
