@@ -64,7 +64,7 @@ class CategoryIntegrityTest {
         //given
         String url = BASE_URL + port + "/api/categories";
         CategoryDto categoryDto = new CategoryDto("테스트카테고리", "테스트컬러", "테스트주소", "테스트설명");
-        RequestEntity<CategoryDto> requestEntity = generateRequestEntityWithDto(categoryDto, url, HttpMethod.POST);
+        RequestEntity<CategoryDto> requestEntity = generateRequestEntity(categoryDto, url, HttpMethod.POST);
 
         //when
         var actual = testRestTemplate.exchange(requestEntity, String.class);
@@ -111,7 +111,7 @@ class CategoryIntegrityTest {
         String url = BASE_URL + port + "/api/categories/1";
         CategoryDto categoryDto = new CategoryDto("테스트카테고리", "테스트컬러", "테스트주소", "테스트설명");
 
-        RequestEntity<CategoryDto> requestEntity = generateRequestEntityWithDto(categoryDto, url, HttpMethod.PUT);
+        RequestEntity<CategoryDto> requestEntity = generateRequestEntity(categoryDto, url, HttpMethod.PUT);
 
         //when
         var actual = testRestTemplate.exchange(requestEntity, String.class);
@@ -126,7 +126,7 @@ class CategoryIntegrityTest {
         //given
         String url = BASE_URL + port + "/api/categories";
         CategoryDto categoryDto = new CategoryDto("테스트카테고리", "테스트컬러", "테스트주소", "테스트설명");
-        RequestEntity<CategoryDto> requestEntity = generateRequestEntityWithDto(categoryDto,
+        RequestEntity<CategoryDto> requestEntity = generateRequestEntity(categoryDto,
             url,
             HttpMethod.POST);
         testRestTemplate.exchange(requestEntity, String.class);
@@ -150,7 +150,7 @@ class CategoryIntegrityTest {
     }
 
     @NotNull
-    private RequestEntity<CategoryDto> generateRequestEntityWithDto(CategoryDto categoryDto,
+    private RequestEntity<CategoryDto> generateRequestEntity(CategoryDto categoryDto,
         String url, HttpMethod httpMethod) {
         HttpHeaders headers = new HttpHeaders();
         headers.setBearerAuth(accessToken);
