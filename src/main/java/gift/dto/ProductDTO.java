@@ -67,7 +67,7 @@ public class ProductDTO {
 
     public Long getCategoryId() {return categoryId;}
 
-    public List<Long> getOptionIds() {
+    public List<Long> getOptionId() {
         return optionId;
     }
 

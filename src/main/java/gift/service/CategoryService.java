@@ -62,9 +62,4 @@ public class CategoryService {
         }
         categoryRepository.deleteById(id);
     }
-
-    public List<ProductDTO> getCategoryWithProducts(Long categoryId) {
-        List<ProductEntity> products = productRepository.findByCategory_Id(categoryId);
-        return products.stream().map(ProductEntity::toDTO).collect(Collectors.toList());
-    }
 }

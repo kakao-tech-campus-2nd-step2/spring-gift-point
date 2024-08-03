@@ -29,13 +29,6 @@ public class CategoryController {
         this.categoryService = categoryService;
     }
 
-    @GetMapping("/detail/{id}")
-    @Operation(summary = "카테고리 별 상품 조회", description = "해당 카테고리에 속한 상품의 정보를 가져옵니다.")
-    public ResponseEntity<List<ProductDTO>> getCategoryWithProducts(@PathVariable Long id) {
-        List<ProductDTO> response = categoryService.getCategoryWithProducts(id);
-        return new ResponseEntity<>(response, HttpStatus.OK);
-    }
-
     @GetMapping
     @Operation(summary = "카테고리 전체 조회", description = "전체 카테고리의 정보를 가져옵니다.")
     public ResponseEntity<List<CategoryDTO>> getCategory() {

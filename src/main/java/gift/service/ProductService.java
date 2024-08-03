@@ -30,9 +30,11 @@ public class ProductService {
             .collect(Collectors.toList());
     }
 
-    public Page<ProductDTO> getAllProducts(Pageable pageable) {
-        Page<ProductEntity> productEntities = productRepository.findAll(pageable);
-        return productEntities.map(ProductEntity::toDTO);
+    public List<ProductDTO> getAllProducts(Long categoryId, Pageable pageable) {
+        Page<ProductEntity> productEntities = productRepository.findByCategory_Id(categoryId, pageable);
+        return productEntities.stream()
+            .map(ProductEntity::toDTO)
+            .collect(Collectors.toList());
     }
 
     // Read(단일 상품) - getProduct()
