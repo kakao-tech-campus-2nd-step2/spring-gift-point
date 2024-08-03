@@ -58,6 +58,10 @@
 
 ## step3 구현 기능
 
+- 기능별 패키지 분리
+  - auth
+  - point
+  - product
 - cors 정책 설정
 - fe요청 수행
   - 상품 카테고리 리스트 조회시 imageURL, title, description, backgroundColor 추가 반환
