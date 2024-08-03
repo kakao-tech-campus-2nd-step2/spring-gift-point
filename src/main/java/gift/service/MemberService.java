@@ -1,5 +1,6 @@
 package gift.service;
 
+import gift.dto.PointResponseDTO;
 import gift.dto.memberDTO.LoginRequestDTO;
 import gift.dto.memberDTO.RegisterRequestDTO;
 import gift.exception.InvalidInputValueException;
@@ -28,7 +29,7 @@ public class MemberService {
             throw new InvalidInputValueException("이메일이 이미 존재합니다.");
         }
         Member member = new Member(null, registerRequestDTO.email(), registerRequestDTO.password(),
-            "user");
+            "user", 0L);
         memberRepository.save(member);
 
         return jwtUtil.generateToken(member.getEmail(), member.getPassword());
@@ -45,5 +46,23 @@ public class MemberService {
 
     public Member findMemberByEmail(String email) {
         return memberRepository.findByEmail(email);
+    }
+
+    public PointResponseDTO getPoints(String email) {
+        Member member = memberRepository.findByEmail(email);
+        if (member == null) {
+            throw new InvalidInputValueException("유효하지 않은 이메일입니다.");
+        }
+        return new PointResponseDTO(member.getPoints());
+    }
+
+    @Transactional
+    public void subtractPoints(String email, Long price) {
+        Member member = memberRepository.findByEmail(email);
+        if (member == null) {
+            throw new InvalidInputValueException("유효하지 않은 이메일입니다.");
+        }
+        member.subtractPoints(price);
+        memberRepository.save(member);
     }
 }
