@@ -44,6 +44,10 @@ public class Option {
         return product.getId();
     }
 
+    public Product getProduct() {
+        return product;
+    }
+
     public void associateWithProduct(Product product) {
         this.product = product;
     }
