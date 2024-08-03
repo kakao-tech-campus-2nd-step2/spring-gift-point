@@ -1,20 +1,11 @@
 #!/bin/bash
 
+# copy this file your home directory, change CLONE_PATH, and run it.
+
 CLONE_PATH="/home/ubuntu/spring-gift-point"
 CLONE_URL="https://github.com/lja3723/spring-gift-point"
 BRANCH="step2"
 ENV_FILE="/home/ubuntu/.env"
-
-# Check if .env file exists
-if [ ! -f "$ENV_FILE" ]; then
-    echo "[$0] >> File ${ENV_FILE} not found!"
-    echo "[$0] >> You should include JWT_SECRET_KEY, KAKAO_API_KEY in the \"${ENV_FILE}\"."
-    echo "[$0] >> Exiting..."
-    exit 1
-fi
-
-# Load environment variables from .env file
-export $(grep -v '^#' "${ENV_FILE}" | xargs)
 
 stop_application() {
     echo "[$0] >> Stopping application..."
@@ -67,11 +58,8 @@ start_application() {
             echo "[$0] >> Building application..."
             chmod +x ./gradlew
             ./gradlew bootJar
-
-            BUILD_REQUIRED=true
         else
             echo "[$0] >> No changes detected. Skipping build."
-            BUILD_REQUIRED=false
         fi
     fi
 
@@ -81,17 +69,20 @@ start_application() {
 
     echo "[$0] >> Running application..."
     cd "${CLONE_PATH}/build/libs"
-
-    # Run the application only if the build was required
-    if [ "$BUILD_REQUIRED" = true ]; then
-        nohup java -jar "${JAR_NAME}" &
-    else
-        echo "[$0] >> Application was already up-to-date. Restarting the existing application..."
-        nohup java -jar "${JAR_NAME}" &
-    fi
-
+    nohup java -jar "${JAR_NAME}" &
     echo "[$0] >> Application started. Execute \"tail -f ${CLONE_PATH}/build/libs/nohup.out\" to look at the server log."
 }
+
+# Check if .env file exists
+if [ ! -f "$ENV_FILE" ]; then
+    echo "[$0] >> File ${ENV_FILE} not found!"
+    echo "[$0] >> You should include JWT_SECRET_KEY, KAKAO_API_KEY in the \"${ENV_FILE}\"."
+    echo "[$0] >> Exiting..."
+    exit 1
+fi
+
+# Load environment variables from .env file
+export $(grep -v '^#' "${ENV_FILE}" | xargs)
 
 case "$1" in
     start)
