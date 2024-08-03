@@ -28,7 +28,7 @@ class AcceptanceTest {
     @Autowired
     AuthService authService;
 
-    String ALLOWED_METHOD_NAMES = "GET,POST,PUT,DELETE";
+    String ALLOWED_METHOD_NAMES = "GET,POST,PUT,DELETE,OPTIONS";
 
     String CLIENT_ORIGIN = "http://localhost:3000";
 
