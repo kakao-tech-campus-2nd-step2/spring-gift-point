@@ -1,0 +1,85 @@
+header {
+  position: relative;
+  background-color: blueviolet;
+  height: 10vh;
+  margin-bottom: 20px;
+}
+
+button {
+  height: 50px;
+  width: 100px;
+  margin: 10px;
+}
+
+.title {
+  font-size: 25px;
+  font-weight: 600;
+}
+
+h1,
+h3,
+p,
+form {
+  margin: auto;
+  text-align: center;
+}
+
+input[type='email'],
+input[type='password'] {
+  height: 4vh;
+  text-align: center;
+}
+
+.y-middle {
+  position: absolute;
+  top: 50%;
+  transform: translate(0, -50%);
+}
+
+.x-middle {
+  position: absolute;
+  left: 50%;
+  transform: translate(-50%, 0);
+}
+
+.xy-middle {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.x-start {
+  position: absolute;
+  left: 3%;
+}
+
+.x-end {
+  position: absolute;
+  right: 3%;
+}
+
+.y-end {
+  position: absolute;
+  bottom: 3%;
+}
+
+.normal-buttons {
+  background-color: seashell;
+}
+
+.invisible {
+  display: none;
+}
+
+#loginform {
+  border: 1px solid black;
+  width: 20vw;
+  height: 23vh;
+  padding: 2vw;
+}
+
+#logintable {
+  width: 20vw;
+  height: 15vh;
+}

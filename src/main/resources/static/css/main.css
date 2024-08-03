@@ -1,0 +1,103 @@
+header {
+  position: relative;
+  background-color: blueviolet;
+  height: 10vh;
+  margin-bottom: 20px;
+}
+
+button {
+  height: 50px;
+  width: 100px;
+  margin: 10px;
+}
+
+caption {
+  width: 90vw;
+}
+
+table {
+  border-collapse: collapse;
+  width: 90vw;
+  text-align: center;
+}
+
+tr {
+  border-top: 1px solid black;
+  border-bottom: 1px solid black;
+  height: 7vh;
+}
+
+thead {
+  background-color: lightgray;
+}
+
+form {
+  display: inline-block;
+}
+
+input[type='text'],
+input[type='number'] {
+  height: 4vh;
+  text-align: center;
+}
+
+colgroup col:nth-child(1) {
+  width: 19vw;
+}
+
+colgroup col:nth-child(2) {
+  width: 19vw;
+}
+
+colgroup col:nth-child(3) {
+  width: 19vw;
+}
+
+colgroup col:nth-child(4) {
+  width: 19vw;
+}
+
+colgroup col:nth-child(5) {
+  width: 24vw;
+}
+
+.y-middle {
+  position: absolute;
+  top: 50%;
+  transform: translate(0, -50%);
+}
+
+.x-start {
+  position: absolute;
+  left: 3%;
+}
+
+.x-end {
+  position: absolute;
+  right: 3%;
+}
+
+.x-middle {
+  margin: auto;
+}
+
+.title {
+  font-size: 25px;
+  font-weight: 600;
+}
+
+.delete-buttons {
+  background-color: red;
+}
+
+.normal-buttons {
+  background-color: seashell;
+}
+
+.invisible {
+  display: none;
+}
+
+#buttons {
+  position: absolute;
+}

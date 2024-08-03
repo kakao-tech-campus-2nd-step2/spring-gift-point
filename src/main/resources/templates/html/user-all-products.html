@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="https://www.thymeleaf.org">
+<head>
+  <meta http-equiv="Content-Type" , content="text/html; charset=UTF-8"/>
+  <link th:href="@{/css/user-all-products.css}" rel="stylesheet"/>
+  <title>Adding Page</title>
+</head>
+<header>
+  <span class="title y-middle x-start">Adding Page</span>
+  <div id="buttons" class="x-end y-middle">
+    <form>
+      <button class="delete-buttons" onclick="loadMainPage()">
+        뒤로 가기
+      </button>
+    </form>
+  </div>
+</header>
+<body
+    th:attr="data-userId=${userId}, data-token=${token}, page-no=${pageNo}, sorting-state=${sortingState}"
+>
+<table id="products" class="x-middle">
+  <caption class="title">
+    Product List
+  </caption>
+  <colgroup>
+    <col/>
+    <col/>
+    <col/>
+    <col/>
+  </colgroup>
+  <thead>
+  <tr>
+    <th>Name</th>
+    <th>Price</th>
+    <th>Image</th>
+    <th>Control</th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr
+      th:id="'product'+${product.productId}"
+      th:each="product : ${products}"
+  >
+    <td th:text="${product.name}">Name</td>
+    <td th:text="${product.price}">Price</td>
+    <td th:text="${product.imageUrl}">Image</td>
+    <td>
+      <div class="buttons">
+        <form>
+          <button
+              type="button"
+              class="normal-buttons"
+              th:onclick="|addWishProduct(${product.productId})|"
+          >
+            제품 담기
+          </button>
+        </form>
+      </div>
+    </td>
+  </tr>
+  </tbody>
+</table>
+
+<script th:inline="javascript">
+  async function addWishProduct(productId) {
+    const userId = document.body.getAttribute('data-userId');
+    const token = document.body.getAttribute('data-token');
+    const targetUrl = `/api/users/${userId}/wishlist/products/${productId}`;
+    const headers = {
+      'Content-Type': 'application/json',
+      Authorization: token,
+    };
+    const body = JSON.stringify({
+      userId: userId,
+      productId: productId,
+    });
+    const method = 'post';
+
+    const result = await requestApi(targetUrl, headers, body, method);
+
+    if (result.response) {
+      if (result.response == 'success') {
+        alert('장바구니에 추가했습니다.');
+      } else {
+        alert(result.response);
+      }
+    } else {
+      alert('알 수 없는 에러가 발생했습니다.');
+    }
+  }
+
+  function loadMainPage() {
+    const userId = document.body.getAttribute('data-userId');
+    const token = document.body.getAttribute('data-token');
+    const targetUrl = `/users/${userId}/main?page-no=0&&sorting-state=0`;
+    const headers = {Authorization: token};
+    requestView(targetUrl, headers);
+  }
+</script>
+</body>
+</html>
