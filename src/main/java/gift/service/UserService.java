@@ -1,5 +1,6 @@
 package gift.service;
 
+import gift.dto.point.PointResponseDTO;
 import gift.dto.user.UserDTO;
 import gift.exceptions.CustomException;
 import gift.model.User;
@@ -20,11 +21,17 @@ public class UserService {
     public void createUser(UserDTO userDTO) {
         userRepository.save(new User(userDTO.email(),
                 userDTO.password(),
-                "user"));
+                "user",
+                0L));
     }
 
     public User findUser(String email) {
         return userRepository.findByEmail(email).orElseThrow(CustomException::userNotFoundException);
+    }
+
+    public PointResponseDTO findPoint(Long userId) {
+        Long point = userRepository.getPointById(userId);
+        return new PointResponseDTO(point);
     }
 
     public void kakaoSign(String email) {
@@ -32,7 +39,7 @@ public class UserService {
 
         if (user == null) {
             String tempPassword = UUID.randomUUID().toString();
-            userRepository.save(new User(email, tempPassword, "kakao"));
+            userRepository.save(new User(email, tempPassword, "kakao", 0L));
         }
     }
 }
