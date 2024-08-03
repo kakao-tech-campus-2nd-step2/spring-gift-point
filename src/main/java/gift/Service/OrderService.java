@@ -52,7 +52,7 @@ public class OrderService {
                 .findFirst()
                 .ifPresent(wish->wishRepository.deleteById(wish.getId()));
 
-        int totalPrice = option.getProduct().getPrice().getValue() * requestOrderDTO.quantity();
+        int totalPrice = getToalPrice(requestOrderDTO, option);
         member.subtractPoint(totalPrice);
 
         CashReceipt cashReceipt = null;
@@ -63,13 +63,20 @@ public class OrderService {
                 new Order(option, member, requestOrderDTO.quantity(), LocalDateTime.now(), requestOrderDTO.message(), cashReceipt)
         );
 
-
         Optional<AccessToken> accessToken = member.getAccessToken();
         if(accessToken.isPresent()){
             eventPublisher.publishEvent(new SendMessageToMeEvent(accessToken.get(), requestOrderDTO.message()));
         }
 
         return ResponseOrderDTO.of(order);
+    }
+
+    private int getToalPrice(RequestOrderDTO requestOrderDTO, Option option) {
+        int totalPrice = option.getProduct().getPrice().getValue() * requestOrderDTO.quantity();
+        if (totalPrice >= 50000) //주문 금액이 5만원 이상인 경우 10프로 할인
+            totalPrice *= 0.9;
+
+        return totalPrice;
     }
 
     @Transactional(readOnly = true)
