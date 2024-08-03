@@ -257,6 +257,7 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   });
 
-  // Load categories on page load
+  // Load categories and products on page load
   loadCategories();
+  loadProducts();
 });
