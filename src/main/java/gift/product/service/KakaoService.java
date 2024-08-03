@@ -110,12 +110,8 @@ public class KakaoService {
             memberRepository.save(new Member(newMember));
             return newMember;
         }
-        return snsMemberRepository.save(
-            new SnsMember(
-                existMember.get().getKakaoId(),
-                accessToken,
-                existMember.get().getProvider()
-            )
-        );
+        SnsMember snsMember = existMember.get();
+        snsMember.setAccessToken(accessToken);
+        return snsMemberRepository.save(snsMember);
     }
 }
