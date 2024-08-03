@@ -64,6 +64,11 @@ public class AuthController {
         return ResponseEntity.ok(accessTokenDto);
     }
 
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "포인트 조회 성공", content = @Content(mediaType = "application/json", schema = @Schema(implementation = AccessTokenDto.class))),
+        @ApiResponse(responseCode = "401", description = "사용자 인증 오류", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ExceptionResponse.class))),
+        @ApiResponse(responseCode = "404", description = "존재하지 않는 회원 정보", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ExceptionResponse.class)))
+    })
     @GetMapping("/point")
     public ResponseEntity<PointResponse> getMemberPoint(HttpServletRequest request) {
         LoginMemberIdDto loginMemberIdDto = getLoginMember(request);

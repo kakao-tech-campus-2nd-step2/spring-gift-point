@@ -99,6 +99,7 @@ public class WebConfig implements WebMvcConfigurer {
             .addPathPatterns("/admin/wishes/**")
             .addPathPatterns("/api/wishes/**")
             .addPathPatterns("/api/orders/**")
+            .addPathPatterns("/api/members/point/**")
             .addPathPatterns("/api/members/login/kakao/unlink");
         registry.addInterceptor(new JwtCookieToHeaderInterceptor())
             .order(1)
