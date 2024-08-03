@@ -7,11 +7,14 @@ import gift.domain.Member;
 import gift.domain.Product;
 import gift.domain.Wish;
 import gift.dto.MemberDto;
+import gift.dto.PageInfoDto;
 import gift.dto.WishDto;
+import gift.dto.WishPageDto;
 import gift.repositories.MemberRepository;
 import gift.repositories.ProductRepository;
 import gift.repositories.WishRepository;
 import jakarta.transaction.Transactional;
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -36,7 +39,7 @@ public class WishService {
 
     //    Wishlist 조회
     @Transactional
-    public Page<WishDto> getWishListById(Long memberId, int page, int size) {
+    public WishPageDto getWishListById(Long memberId, int page, int size) {
         if (page < 0 || size <= 0) {
             throw new WishException(
                 "Page must be non-negative and size must be greater than zero. ");
@@ -44,29 +47,32 @@ public class WishService {
 
         Pageable pageable = PageRequest.of(page, size, Sort.by("id").descending());
         Page<Wish> wishList = wishRepository.findAllByMemberId(memberId, pageable);
+        List<WishDto> wishDtoList = wishList.stream()
+            .map(Wish::toWishDto)
+            .toList();
 
-        return wishList.map(wish -> new WishDto(
-            wish.getMember().getId(),
-            wish.getProduct().getId()
-        ));
+        PageInfoDto pageInfo = new PageInfoDto(page, wishList.getTotalElements(),
+            wishList.getTotalPages());
+
+        return new WishPageDto(pageInfo, wishDtoList);
     }
 
     //    Wish 추가
     @Transactional
-    public void addWish(MemberDto memberDto, Long productId) {
+    public WishDto addWish(MemberDto memberDto, Long productId) {
         Member member = memberRepository.findByEmail(memberDto.getEmail());
         Product product = productRepository.findById(productId)
             .orElseThrow(() -> new ProductException("Product with ID " + productId + " not found"));
 
         Wish wish = new Wish(member, product);
-        wishRepository.save(wish);
-
+        Wish addedWish = wishRepository.save(wish);
+        return addedWish.toWishDto();
     }
 
     //    Wish 삭제
     @Transactional
-    public void deleteWish(Long memberId, Long productId) {
-        wishRepository.deleteByMemberIdAndProductId(memberId, productId);
+    public void deleteWish(Long wishId) {
+        wishRepository.deleteById(wishId);
     }
 
 }

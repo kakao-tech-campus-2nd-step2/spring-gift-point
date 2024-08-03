@@ -1,18 +1,30 @@
 package gift.services;
 
+import gift.domain.Member;
 import gift.domain.Option;
 import gift.domain.Order;
+import gift.domain.Product;
 import gift.domain.Wish;
 import gift.dto.KaKaoUserDto;
+import gift.dto.MemberDto;
 import gift.dto.OrderDto;
+import gift.dto.OrderPageDto;
+import gift.dto.PageInfoDto;
 import gift.dto.RequestOrderDto;
+import gift.repositories.MemberRepository;
 import gift.repositories.OptionRepository;
 import gift.repositories.OrderRepository;
+import gift.repositories.ProductRepository;
 import gift.repositories.WishRepository;
+import java.util.List;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -27,38 +39,54 @@ public class OrderService {
     private final OrderRepository orderRepository;
     private final OptionRepository optionRepository;
     private final WishRepository wishRepository;
+    private final ProductRepository productRepository;
+    private final MemberRepository memberRepository;
 
 
-    @Value("${kakao.api.userInfo.uri")
+    @Value("${kakao.api.userInfo.uri}")
     private String KAKAO_API_USERINFO_URI;
     @Value("${kakao.api.send.message.uri}")
     private String KAKAO_API_SEND_MESSAGE_URI;
 
     public OrderService(OrderRepository orderRepository, OptionRepository optionRepository,
-        WishRepository wishRepository) {
+        WishRepository wishRepository, ProductRepository productRepository,
+        MemberRepository memberRepository) {
         this.orderRepository = orderRepository;
         this.optionRepository = optionRepository;
         this.wishRepository = wishRepository;
+        this.productRepository = productRepository;
+        this.memberRepository = memberRepository;
     }
 
-    public OrderDto addOrder(RequestOrderDto requestOrderDto, String token) {
+    public OrderDto addOrder(RequestOrderDto requestOrderDto, MemberDto memberDto) {
+        Member member = memberRepository.findByEmail(memberDto.getEmail());
+
         Option option = optionRepository.findById(requestOrderDto.getOptionId()).orElseThrow(
             () -> new IllegalArgumentException(
                 "Option not found with id " + requestOrderDto.getOptionId()));
 
         option.decrementAmount(requestOrderDto.getQuantity());
 
-        KaKaoUserDto kaKaoUserDto = getUserInfoWithToken(token);
-
-        deleteWishWithOptionId(kaKaoUserDto.getId(), requestOrderDto.getOptionId());
+        deleteWishWithOptionId(memberDto.getId(), option);
 
         Order order = orderRepository.save(
-            new Order(requestOrderDto.getOptionId(), requestOrderDto.getQuantity(),
+            new Order(member, option, requestOrderDto.getQuantity(),
                 requestOrderDto.getMessage()));
 
-        sendKaKaoMessage(requestOrderDto, token);
+//        sendKaKaoMessage(requestOrderDto, token);
 
         return order.toOrderDto();
+    }
+
+    public OrderPageDto getOrderById(Long memberId, int page, int size) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by("id").descending());
+        Page<Order> orders = orderRepository.findAllByMemberId(memberId, pageable);
+        List<OrderDto> orderDtoList = orders.stream().map(Order::toOrderDto).toList();
+
+        PageInfoDto pageInfo = new PageInfoDto(page, orders.getTotalElements(),
+            orders.getTotalPages());
+
+        return new OrderPageDto(pageInfo, orderDtoList);
     }
 
     public void sendKaKaoMessage(RequestOrderDto requestOrderDto, String token) {
@@ -90,10 +118,10 @@ public class OrderService {
         }
     }
 
-    private void deleteWishWithOptionId(Long memberId, Long optionId) {
+    private void deleteWishWithOptionId(Long memberId, Option option) {
+        Product product = option.getProduct();
         Wish wishToDelete = wishRepository.findAllByMemberId(memberId).stream()
-            .filter(wish -> wish.getProduct().getOptions().stream()
-                .anyMatch(option -> option.getId().equals(optionId)))
+            .filter(wish -> wish.getProduct().getId().equals(product.getId())) // Product ID 비교
             .findFirst()
             .orElse(null);
 

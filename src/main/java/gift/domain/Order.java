@@ -1,11 +1,14 @@
 package gift.domain;
 
+import gift.dto.MemberDto;
 import gift.dto.OrderDto;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import java.time.LocalDateTime;
 
@@ -17,8 +20,13 @@ public class Order {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
-    private Long optionId;
+    @ManyToOne
+    @JoinColumn(name = "option_id", nullable = false)
+    private Option option;
+
+    @ManyToOne
+    @JoinColumn(name = "member_id", nullable = false)
+    private Member member;
 
     @Column(nullable = false)
     private int quantity;
@@ -32,15 +40,20 @@ public class Order {
     public Order() {
     }
 
-    public Order(Long optionId, int quantity, String message) {
-        this.optionId = optionId;
+    public Order(Member member, Option option, int quantity, String message) {
+        this.member = member;
+        this.option = option;
         this.quantity = quantity;
         this.message = message;
         this.orderDateTime = LocalDateTime.now();
     }
 
+    public MemberDto memberDto(){
+        return new MemberDto(this.member.getId(), this.member.getEmail());
+    }
+
     public OrderDto toOrderDto() {
-        return new OrderDto(this.id, this.optionId, this.quantity, this.orderDateTime,
+        return new OrderDto(this.id, this.memberDto(), this.option.getId(), this.quantity, this.orderDateTime,
             this.message);
     }
 }

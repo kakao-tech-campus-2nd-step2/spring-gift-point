@@ -1,0 +1,21 @@
+#!/usr/bin/env bash
+
+# Configuration
+ORIGIN_URL=https://github.com/ariimo/spring-gift-point
+TARGET_BRANCH=stable
+CLONE_PATH=~/deploy
+
+# Install Java
+ wget -O- https://apt.corretto.aws/corretto.key | sudo apt-key add -
+ sudo add-apt-repository 'deb https://apt.corretto.aws stable main'
+ sudo apt-get update
+ sudo apt-get install -y java-21-amazon-corretto-jdk
+
+# Clone Repository
+mkdir $CLONE_PATH
+git clone $ORIGIN_URL -b $TARGET_BRANCH $CLONE_PATH
+
+# Install Dependices
+cd $CLONE_PATH
+./gradlew build --refresh-dependencies
+./gradlew bootJar

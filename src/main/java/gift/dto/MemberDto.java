@@ -8,14 +8,20 @@ public class MemberDto {
 
     private final Long id;
     private final String email;
-    private final String password;
-    private final Role role;
+    private String password;
+    private Role role;
+
 
     public MemberDto(Long id, String email, String password, Role role) {
         this.id = id;
         this.email = email;
         this.password = password;
-        this.role = role;
+        this.role = Role.ADMIN;
+    }
+
+    public MemberDto(Long id, String email) {
+        this.id = id;
+        this.email = email;
     }
 
     public Long getId() {

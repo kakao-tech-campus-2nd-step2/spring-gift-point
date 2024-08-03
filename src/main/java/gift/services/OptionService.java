@@ -24,16 +24,12 @@ public class OptionService {
     public List<OptionDto> getOptionsByProductId(Long productId) {
         return optionRepository.findAllByProductId(productId)
             .stream()
-            .map(product -> new OptionDto(
-                product.getId(),
-                product.getName(),
-                product.getAmount(),
-                product.getProductDto())
+            .map(Option::getOptionDto
             )
             .toList();
     }
 
-    public void addOption(Long productId, RequestOptionDto requestOptionDto) {
+    public OptionDto addOption(Long productId, RequestOptionDto requestOptionDto) {
         Product product = productRepository.findById(productId).orElseThrow(
             () -> new NoSuchElementException("Product not found with id " + productId));
 
@@ -43,18 +39,22 @@ public class OptionService {
             .anyMatch(option -> option.getName().equals(requestOptionDto.getName()));
 
         if (isDuplicate) {
-            throw new IllegalArgumentException("동일한 상품 내에 옵션 이름이 중복될 수 없습니다."); //400번대로 넘기기
+            throw new IllegalArgumentException("동일한 상품 내에 옵션 이름이 중복될 수 없습니다.");
         }
 
-        Option option = new Option(requestOptionDto.getName(), requestOptionDto.getAmount(),
+        Option option = new Option(requestOptionDto.getName(), requestOptionDto.getQuantity(),
             product);
-        optionRepository.save(option);
+
+        Option savedOption = optionRepository.save(option);
+        return savedOption.getOptionDto();
     }
 
-    public void updateOption(Long optionId, RequestOptionDto requestOptionDto) {
+    public OptionDto updateOption(Long optionId, RequestOptionDto requestOptionDto) {
         Option option = optionRepository.findById(optionId).orElseThrow(
             () -> new IllegalArgumentException("Option not found with id " + optionId));
-        option.update(requestOptionDto.getName(), requestOptionDto.getAmount());
+        option.update(requestOptionDto.getName(), requestOptionDto.getQuantity());
+
+        return option.getOptionDto();
     }
 
     public void deleteOption(Long optionId) {

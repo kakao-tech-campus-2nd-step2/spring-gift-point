@@ -2,19 +2,18 @@ package gift.classes.RequestState;
 
 import gift.dto.CategoryDto;
 import java.util.List;
+import org.springframework.http.HttpStatus;
 
 public class CategoryRequestStateDTO extends RequestStateDTO {
 
-    private final List<CategoryDto> categories;
+    private final List<CategoryDto> data;
 
-    public CategoryRequestStateDTO(RequestStatus requestStatus, String details,
-        List<CategoryDto> categories) {
-        super(requestStatus, details);
-        this.categories = categories;
+    public CategoryRequestStateDTO(HttpStatus status, String message, List<CategoryDto> data) {
+        super(status, message);
+        this.data = data;
     }
 
-    public List<CategoryDto> getCategories() {
-        return categories;
+    public List<CategoryDto> getData() {
+        return data;
     }
-
 }

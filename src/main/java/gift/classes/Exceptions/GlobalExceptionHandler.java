@@ -1,7 +1,6 @@
 package gift.classes.Exceptions;
 
 import gift.classes.RequestState.RequestStateDTO;
-import gift.classes.RequestState.RequestStatus;
 import jakarta.validation.ConstraintViolationException;
 import java.util.HashMap;
 import java.util.Map;
@@ -66,7 +65,7 @@ public class GlobalExceptionHandler {
     public ResponseEntity<RequestStateDTO> handleEmailAlreadyExistsException(
         EmailAlreadyExistsException e) {
         RequestStateDTO response = new RequestStateDTO(
-            RequestStatus.failed,
+            HttpStatus.BAD_REQUEST,
             e.getMessage()
         );
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);

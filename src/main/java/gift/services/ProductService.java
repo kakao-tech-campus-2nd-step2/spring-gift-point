@@ -1,11 +1,10 @@
 package gift.services;
 
-import gift.classes.Exceptions.ProductException;
 import gift.domain.Category;
-import gift.domain.Option;
 import gift.domain.Product;
+import gift.dto.PageInfoDto;
 import gift.dto.ProductDto;
-import gift.dto.RequestOptionDto;
+import gift.dto.ProductPageDto;
 import gift.dto.RequestProductDto;
 import gift.repositories.CategoryRepository;
 import gift.repositories.OptionRepository;
@@ -15,7 +14,9 @@ import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -50,9 +51,20 @@ public class ProductService {
         return productDtos;
     }
 
+    public ProductPageDto getAllProductsByCategoryId(int page, int size, Long categoryId) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by("id").descending());
+        Page<Product> products = productRepository.findAllByCategoryId(categoryId, pageable);
+        List<ProductDto> productDtoList = products
+            .stream()
+            .map(Product::toProductDto)
+            .toList();
+        PageInfoDto pageInfoDto = new PageInfoDto(page, products.getTotalElements(),
+            products.getTotalPages());
+        return new ProductPageDto(pageInfoDto, productDtoList);
+    }
+
     // 특정 제품 조회
     public ProductDto getProductById(Long id) {
-
         Product product = productRepository.findById(id).orElseThrow(
             () -> new NoSuchElementException("Product not found with id " + id));
 
@@ -62,16 +74,7 @@ public class ProductService {
 
     // 제품 추가
     public ProductDto addProduct(@Valid RequestProductDto requestProductDto) {
-        if (requestProductDto.getOptionDtos().isEmpty()) {
-            throw new ProductException("One or more options are required to add a product.");
-        }
         Product product = toProductEntity(requestProductDto);
-
-        for (RequestOptionDto requestOptionDto : requestProductDto.getOptionDtos()) {
-            optionService.addOption(product.getId(), requestOptionDto);
-        }
-        List<Option> options = optionRepository.findAllByProductId(product.getId());
-        product.setOptions(options);
 
         productRepository.save(product);
 
@@ -79,14 +82,12 @@ public class ProductService {
     }
 
     // 제품 수정
-    public ProductDto updateProduct(@Valid RequestProductDto requestProductDto) {
-        Product product = productRepository.findById(requestProductDto.getId())
+    public ProductDto updateProduct(@Valid RequestProductDto requestProductDto, Long id) {
+        Product product = productRepository.findById(id)
             .orElseThrow(() -> new NoSuchElementException(
-                "Product not found with id " + requestProductDto.getId()));
+                "Product not found with id " + id));
 
-        Category category = categoryRepository.findById(requestProductDto.getCategoryDto().getId())
-            .orElseThrow(() -> new NoSuchElementException(
-                "Category not found"));
+        Category category = categoryRepository.findByName(requestProductDto.getCategoryName());
 
         product.update(requestProductDto.getName(), requestProductDto.getPrice(),
             requestProductDto.getImageUrl(), category);
@@ -105,10 +106,10 @@ public class ProductService {
 
     public Product toProductEntity(RequestProductDto requestProductDto) {
         Category category = categoryRepository.findByName(
-            requestProductDto.getCategoryDto().getName());
+            requestProductDto.getCategoryName());
+
         return new Product(requestProductDto.getName(), requestProductDto.getPrice(),
             requestProductDto.getImageUrl(), category);
-
     }
 }
 

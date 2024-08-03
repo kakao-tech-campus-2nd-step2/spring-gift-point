@@ -1,9 +1,11 @@
 package gift.controller;
 
 
+import gift.LoginMember;
+import gift.classes.RequestState.OptionListRequestStateDTO;
 import gift.classes.RequestState.OptionRequestStateDTO;
 import gift.classes.RequestState.RequestStateDTO;
-import gift.classes.RequestState.RequestStatus;
+import gift.dto.MemberDto;
 import gift.dto.OptionDto;
 import gift.dto.RequestOptionDto;
 import gift.services.OptionService;
@@ -13,17 +15,19 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import java.util.List;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/api/options")
+@RequestMapping("/api/products")
 @Tag(name = "OptionController", description = "Option API")
 public class OptionController {
 
@@ -40,26 +44,28 @@ public class OptionController {
         @ApiResponse(responseCode = "200", description = "옵션 조회 성공"),
         @ApiResponse(responseCode = "400", description = "옵션 조회 실패(잘못된 요청)")
     })
-    public ResponseEntity<OptionRequestStateDTO> getOptionsByProductId(
+    public ResponseEntity<OptionListRequestStateDTO> getOptionsByProductId(
         @PathVariable Long productId) {
         List<OptionDto> options = optionService.getOptionsByProductId(productId);
-        return ResponseEntity.ok().body(new OptionRequestStateDTO(
-            RequestStatus.success,
-            null,
+        return ResponseEntity.ok().body(new OptionListRequestStateDTO(
+            HttpStatus.OK,
+            "해당 상품의 모든 옵션을 조회했습니다.",
             options
         ));
     }
 
-////    Option 추가
-//    @PostMapping("/{productId}/options")
-//    public ResponseEntity<RequestStateDTO> addOption(@PathVariable Long productId, @Valid @RequestBody
-//    RequestOptionDto requestOptionDto) {
-//        optionService.addOption(productId, requestOptionDto);
-//        return ResponseEntity.ok().body(new RequestStateDTO(
-//            RequestStatus.success,
-//            null
-//        ));
-//    }
+    //    Option 추가
+    @PostMapping("/{productId}/options")
+    public ResponseEntity<OptionRequestStateDTO> addOption(@LoginMember MemberDto memberDto,
+        @PathVariable Long productId,
+        @Valid @RequestBody RequestOptionDto requestOptionDto) {
+        OptionDto optionDto = optionService.addOption(productId, requestOptionDto);
+        return ResponseEntity.ok().body(new OptionRequestStateDTO(
+            HttpStatus.OK,
+            "옵션이 생성되었습니다.",
+            optionDto
+        ));
+    }
 
     //    Option 수정
     @PutMapping("/{productId}/options/{optionId}")
@@ -69,13 +75,14 @@ public class OptionController {
         @ApiResponse(responseCode = "400", description = "옵션 수정 실패"),
         @ApiResponse(responseCode = "500", description = "서버 내부 오류 발생")
     })
-    public ResponseEntity<RequestStateDTO> updateOption(@PathVariable Long optionId,
-        @Valid @RequestBody
-        RequestOptionDto requestOptionDto) {
-        optionService.updateOption(optionId, requestOptionDto);
-        return ResponseEntity.ok().body(new RequestStateDTO(
-            RequestStatus.success,
-            null
+    public ResponseEntity<RequestStateDTO> updateOption(@LoginMember MemberDto memberDto,
+        @PathVariable(value = "optionId") Long optionId,
+        @Valid @RequestBody RequestOptionDto requestOptionDto) {
+        OptionDto optionDto = optionService.updateOption(optionId, requestOptionDto);
+        return ResponseEntity.ok().body(new OptionRequestStateDTO(
+            HttpStatus.OK,
+            "옵션이 수정되었습니다.",
+            optionDto
         ));
     }
 
@@ -88,8 +95,14 @@ public class OptionController {
         @ApiResponse(responseCode = "404", description = "옵션을 찾을 수 없음"),
         @ApiResponse(responseCode = "500", description = "서버 내부 오류 발생")
     })
-    public void deleteOption(@PathVariable Long optionId) {
+    public ResponseEntity<RequestStateDTO> deleteOption(
+        @PathVariable(value = "optionId") Long optionId) {
         optionService.deleteOption(optionId);
+        return ResponseEntity.ok().body(new OptionRequestStateDTO(
+            HttpStatus.OK,
+            "옵션이 삭제되었습니다.",
+            null
+        ));
     }
 
 }

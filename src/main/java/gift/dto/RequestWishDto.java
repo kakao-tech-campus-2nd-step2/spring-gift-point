@@ -2,10 +2,9 @@ package gift.dto;
 
 public class RequestWishDto {
 
-    private final Long productId;
+    private Long productId;
 
     public RequestWishDto() {
-        this.productId = -1L;
     }
 
     public RequestWishDto(Long productId) {

@@ -1,15 +1,18 @@
 package gift.classes.RequestState;
 
+import gift.dto.TokenDto;
+import org.springframework.http.HttpStatus;
+
 public class SecureRequestStateDTO extends RequestStateDTO {
 
-    public String secure;
+    public TokenDto data;
 
-    public SecureRequestStateDTO(RequestStatus requestStatus, String details, String secure) {
-        super(requestStatus, details);
-        this.secure = secure;
+    public SecureRequestStateDTO(HttpStatus status, String message, TokenDto data) {
+        super(status, message);
+        this.data = data;
     }
 
-    public String getSecure() {
-        return secure;
+    public TokenDto getData() {
+        return data;
     }
 }

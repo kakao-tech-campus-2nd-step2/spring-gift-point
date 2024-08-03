@@ -13,18 +13,18 @@ public class RequestOptionDto {
 
     @Min(value = 1, message = "옵션 수량은 최소 1개 이상이어야 합니다.")
     @Max(value = 99999999, message = "옵션 수량은 1억 개 미만이어야 합니다.")
-    private final int amount;
+    private final int quantity;
 
-    public RequestOptionDto(String name, int amount) {
+    public RequestOptionDto(String name, int quantity) {
         this.name = name;
-        this.amount = amount;
+        this.quantity = quantity;
     }
 
     public String getName() {
         return name;
     }
 
-    public int getAmount() {
-        return amount;
+    public int getQuantity() {
+        return quantity;
     }
 }

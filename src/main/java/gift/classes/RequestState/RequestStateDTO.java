@@ -1,20 +1,22 @@
 package gift.classes.RequestState;
 
+import org.springframework.http.HttpStatus;
+
 public class RequestStateDTO {
 
-    public RequestStatus status;
-    public String details;
+    public HttpStatus status;
+    public String message;
 
-    public RequestStateDTO(RequestStatus requestStatus, String details) {
-        this.status = requestStatus;
-        this.details = details;
+    public RequestStateDTO(HttpStatus status, String message) {
+        this.status = status;
+        this.message = message;
     }
 
-    public RequestStatus getStatus() {
+    public HttpStatus getStatus() {
         return status;
     }
 
-    public String getDetails() {
-        return details;
+    public String getMessage() {
+        return message;
     }
 }
