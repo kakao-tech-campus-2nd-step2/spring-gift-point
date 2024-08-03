@@ -4,6 +4,7 @@ import gift.domain.point.DiscountPolicy.CreateDiscountPolicy;
 import gift.domain.point.DiscountPolicy.DiscountPolicyDetail;
 import gift.domain.point.DiscountPolicy.DiscountPolicySimple;
 import gift.domain.point.DiscountPolicy.getList;
+import gift.entity.enums.DiscountType;
 import gift.entity.point.DiscountPolicyEntity;
 import gift.entity.product.ProductEntity;
 import gift.mapper.point.DiscountPolicyMapper;
@@ -53,6 +54,10 @@ public class DiscountPolicyService {
 
         if (create.getEndDate().isBefore(LocalDateTime.now())){
             throw new BaseHandler(HttpStatus.BAD_REQUEST, "종료 시간은 현재보다 이전일수는 없습니다.");
+        }
+
+        if (create.getDiscountType()== DiscountType.PERCENT && create.getDiscount()>100){
+            throw new BaseHandler(HttpStatus.BAD_REQUEST, "할인 퍼센트는 100을 초과할 수 없습니다.");
         }
 
         DiscountPolicyEntity discountPolicy = discountPolicyMapper.toEntity(create, product);
