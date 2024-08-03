@@ -50,7 +50,7 @@ public class OrderController {
     @Operation(summary = "주문 목록 조회", description = "해당 사용자의 주문 목록을 페이지네이션으로 조회합니다.")
     public ResponseEntity<Page<OrderDTO>> getOrder(
         @RequestHeader("Authorization") String token,
-        @Min(value = 1, message = "페이지 번호는 1이상이어야 합니다.")
+        @Min(value = 0, message = "페이지 번호는 0 이상이어야 합니다.")
         @RequestParam(value = "page", defaultValue = "0") int page,
         @Min(value = 1, message = "한 페이지당 1개 이상의 항목이 포함되어야 합니다.")
         @RequestParam(value = "size", defaultValue = "10") int size) {

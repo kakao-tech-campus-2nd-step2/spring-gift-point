@@ -39,12 +39,13 @@ public class WishListController {
     public ResponseEntity<Page<WishListDTO>> getWishList(
         @RequestHeader("Authorization") String token,
 
-        @Min(value = 1, message = "페이지 번호는 1이상이어야 합니다.")
+        @Min(value = 0, message = "페이지 번호는 0 이상이어야 합니다.")
         @RequestParam(defaultValue = "0") int page,
 
         @Min(value = 1, message = "한 페이지당 1개 이상의 항목이 포함되어야 합니다.")
         @RequestParam(defaultValue = "10") int size) {
-        Long userId = getUserId(token);
+        String parsedToken = token.replace("Bearer ", "");
+        Long userId = getUserId(parsedToken);
         Pageable pageable = PageRequest.of(page, size);
         Page<WishListDTO> wishList = wishListService.readWishList(userId, pageable);
         return ResponseEntity.ok(wishList);
@@ -56,7 +57,8 @@ public class WishListController {
     @PostMapping
     public ResponseEntity<String> addWishList(@RequestHeader("Authorization") String token,
        @RequestBody ProductDTO product) throws Exception {
-        Long userId = getUserId(token);
+        String parsedToken = token.replace("Bearer ", "");
+        Long userId = getUserId(parsedToken);
         wishListService.addProductToWishList(userId, product);
         return new ResponseEntity<>("Product added to wishlist", HttpStatus.CREATED);
     }
@@ -66,7 +68,8 @@ public class WishListController {
     @DeleteMapping("/delete/{productId}")
     public ResponseEntity<String> removeProductFromWishList(@RequestHeader("Authorization") String token,
         @PathVariable Long productId) {
-        Long userId = getUserId(token);
+        String parsedToken = token.replace("Bearer ", "");
+        Long userId = getUserId(parsedToken);
         wishListService.removeProductFromWishList(userId, productId);
         return new ResponseEntity<>("Product removed from wishlist", HttpStatus.OK);
     }
@@ -75,7 +78,8 @@ public class WishListController {
     @Operation(summary = "위시리스트 전체 삭제", description = "특정 사용자의 전체 위시리스트를 모두 삭제합니다.")
     @DeleteMapping("/deleteAll")
     public ResponseEntity<String> removeAllWishList(@RequestHeader("Authorization") String token) {
-        Long userId = getUserId(token);
+        String parsedToken = token.replace("Bearer ", "");
+        Long userId = getUserId(parsedToken);
         wishListService.removeWishList(userId);
         return new ResponseEntity<>("Wishlist deleted", HttpStatus.OK);
     }
