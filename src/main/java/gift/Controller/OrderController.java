@@ -28,7 +28,7 @@ public class OrderController {
         this.kakaoTalkService = kakaoTalkService;
     }
 
-    @PostMapping("/")
+    @PostMapping
     @Operation(summary = "주문 생성", description = "주문을 생성합니다.")
     public ResponseEntity<String> purchaseWishlist(@LoginMemberResolver MemberDto memberDto, @RequestBody List<OrderRequestDto> orderRequestDtoList, HttpServletRequest request) {
         for (OrderRequestDto orderRequestDto : orderRequestDtoList) {

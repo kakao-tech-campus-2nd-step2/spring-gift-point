@@ -29,7 +29,7 @@ public class CategoryController {
     }
 
     @Operation(summary = "카테고리 생성", description = "카테고리를 생성합니다.")
-    @PostMapping("/")
+    @PostMapping
     public ResponseEntity<?> addCategory(CategoryDto categoryDto) {
         CategoryDto savedCategoryDto = categoryService.addCategory(categoryDto);
         return ResponseEntity.status(HttpStatus.CREATED).body(savedCategoryDto);
