@@ -114,17 +114,4 @@ public class ProductEntity {
         );
     }
 
-//    public class ProductMapper {
-//        public static ProductDTO toDTO(ProductEntity productEntity) {
-//            return new ProductDTO(
-//                productEntity.getId(),
-//                productEntity.getName(),
-//                productEntity.getPrice(),
-//                productEntity.getImageUrl(),
-//                productEntity.getCategory() != null ? productEntity.getCategory().getId() : null,
-//                productEntity.getOptions() != null ? productEntity.getOptions().stream().map(OptionEntity::getId).collect(Collectors.toList()) : new ArrayList<>()
-//            );
-//        }
-//    }
-
 }
