@@ -1,25 +1,57 @@
 package gift.dto.order;
 
+import gift.domain.Order;
+
 public class OrderDetailResponse {
-    private final OrderResponse order;
-    private final int pointsUsed;
-    private final int pointsReceived;
+    private final Long id;
 
-    public OrderDetailResponse(OrderResponse order, int pointsUsed, int pointsReceived) {
-        this.order = order;
-        this.pointsUsed = pointsUsed;
-        this.pointsReceived = pointsReceived;
+    private final Long optionId;
+
+    private final int quantity;
+
+    private final String message;
+
+    private final int usedPoint;
+
+    private final int receivedPoint;
+
+    private final int payment;
+
+    public OrderDetailResponse(Order order) {
+        this.id = order.getId();
+        this.optionId = order.getOption().getId();
+        this.quantity = order.getQuantity();
+        this.message = order.getMessage();
+        this.usedPoint = order.getUsedPoint();
+        this.receivedPoint = order.getReceivedPoint();
+        this.payment = order.getTotalPrice();
     }
 
-    public OrderResponse getOrder() {
-        return order;
+    public Long getId() {
+        return id;
     }
 
-    public int getPointUsed() {
-        return pointsUsed;
+    public Long getOptionId() {
+        return optionId;
     }
 
-    public int getPointsReceived() {
-        return pointsReceived;
+    public int getQuantity() {
+        return quantity;
+    }
+
+    public String getMessage() {
+        return message;
+    }
+
+    public int getUsedPoint() {
+        return usedPoint;
+    }
+
+    public int getReceivedPoint() {
+        return receivedPoint;
+    }
+
+    public int getTotalPrice() {
+        return payment;
     }
 }

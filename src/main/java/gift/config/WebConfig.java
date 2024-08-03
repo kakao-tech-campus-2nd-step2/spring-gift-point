@@ -1,6 +1,7 @@
 package gift.config;
 
 import gift.util.jwt.JwtService;
+import gift.util.resolver.CustomPageableHandlerMethodArgumentResolver;
 import gift.util.resolver.LoginUserArgumentResolver;
 import java.util.List;
 import org.springframework.context.annotation.Configuration;
@@ -19,6 +20,8 @@ public class WebConfig implements WebMvcConfigurer {
 
     @Override
     public void addArgumentResolvers(List<HandlerMethodArgumentResolver> resolvers) {
+
+        resolvers.add(new CustomPageableHandlerMethodArgumentResolver());
         resolvers.add(new LoginUserArgumentResolver(jwtService));
     }
 

@@ -22,7 +22,7 @@ public class JwtService {
     }
 
     public String createToken(Long id) {
-        return TOKEN_PREFIX + Jwts.builder()
+        return Jwts.builder()
                 .subject(id.toString())
                 .issuer(ISSUER)
                 .issuedAt(new Date())
