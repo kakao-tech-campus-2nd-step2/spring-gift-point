@@ -19,7 +19,7 @@ import java.util.List;
 @Tag(name="관리자 화면 API", description = "프론트 연결 때는 쓰이지 않음")
 @RequestMapping("/api/admin")
 public class AdminController {
-    private final ProductService productService;
+    private final ProductService productService ;
 
     public AdminController(ProductService productService) {
         this.productService = productService;
