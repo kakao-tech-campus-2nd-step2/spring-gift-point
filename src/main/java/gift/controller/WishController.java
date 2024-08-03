@@ -1,6 +1,6 @@
 package gift.controller;
 
-import static gift.util.constants.MemberConstants.INVALID_CREDENTIALS;
+import static gift.util.constants.MemberConstants.ID_NOT_FOUND;
 import static gift.util.constants.ProductConstants.PRODUCT_NOT_FOUND;
 import static gift.util.constants.WishConstants.ALREADY_EXISTS;
 import static gift.util.constants.WishConstants.PERMISSION_DENIED;
@@ -107,7 +107,7 @@ public class WishController {
                     examples = {
                         @ExampleObject(
                             name = "JWT 토큰으로 회원 찾기 실패",
-                            value = "{\"error\": \"" + INVALID_CREDENTIALS + "\"}"
+                            value = "{\"error\": \"" + ID_NOT_FOUND + "(회원 Id)\"}"
                         ),
                         @ExampleObject(name = "위시 삭제 권한 없음", value = "{\"error\": \"" + PERMISSION_DENIED + "\"}")
                     }

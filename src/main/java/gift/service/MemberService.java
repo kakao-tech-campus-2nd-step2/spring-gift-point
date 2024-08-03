@@ -107,15 +107,15 @@ public class MemberService {
     }
 
     @Transactional(readOnly = true)
-    public MemberEditResponse getMemberById(Long id) {
-        return memberRepository.findById(id)
+    public MemberEditResponse getMemberById(Long memberId) {
+        return memberRepository.findById(memberId)
             .map(this::convertToDTO)
-            .orElseThrow(() -> new ForbiddenException(INVALID_CREDENTIALS));
+            .orElseThrow(() -> new ForbiddenException(ID_NOT_FOUND + memberId));
     }
 
-    public MemberEditResponse updateMember(Long id, MemberEditRequest memberEditRequest) {
-        Member member = memberRepository.findById(id)
-            .orElseThrow(() -> new ForbiddenException(INVALID_CREDENTIALS));
+    public MemberEditResponse updateMember(Long memberId, MemberEditRequest memberEditRequest) {
+        Member member = memberRepository.findById(memberId)
+            .orElseThrow(() -> new ForbiddenException(ID_NOT_FOUND + memberId));
 
         boolean emailChanged = !member.isEmailMatching(memberEditRequest.email());
         boolean emailAlreadyUsed = memberRepository.existsByEmail(memberEditRequest.email());
@@ -134,12 +134,16 @@ public class MemberService {
         return convertToDTO(updatedMember);
     }
 
-    public void deleteMember(Long id) throws ForbiddenException {
-        if (!memberRepository.existsById(id)) {
-            throw new ForbiddenException(ID_NOT_FOUND);
+    public void deleteMember(Long memberId) throws ForbiddenException {
+        if (!memberRepository.existsById(memberId)) {
+            throw new ForbiddenException(ID_NOT_FOUND + memberId);
         }
-        memberRepository.deleteById(id);
+        memberRepository.deleteById(memberId);
     }
+
+//    public int getPoints(Long memberId) {
+//
+//    }
 
     // Mapper methods
     public Member convertToEntity(MemberEditResponse memberEditResponse) {

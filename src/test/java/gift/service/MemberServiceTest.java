@@ -155,7 +155,7 @@ public class MemberServiceTest {
             memberService.getMemberById(1L);
         });
 
-        assertEquals(INVALID_CREDENTIALS, exception.getMessage());
+        assertEquals(ID_NOT_FOUND + 1L, exception.getMessage());
     }
 
     @Test
@@ -196,6 +196,6 @@ public class MemberServiceTest {
             memberService.deleteMember(1L);
         });
 
-        assertEquals(ID_NOT_FOUND, exception.getMessage());
+        assertEquals(ID_NOT_FOUND + 1L, exception.getMessage());
     }
 }

@@ -1,7 +1,7 @@
 package gift.config;
 
+import static gift.util.constants.MemberConstants.ID_NOT_FOUND;
 import static gift.util.constants.MemberConstants.INVALID_AUTHORIZATION_HEADER;
-import static gift.util.constants.MemberConstants.INVALID_CREDENTIALS;
 import static gift.util.constants.auth.TokenConstants.EXPIRED_TOKEN;
 import static gift.util.constants.auth.TokenConstants.INVALID_TOKEN;
 
@@ -39,7 +39,7 @@ public class CommonApiResponses {
         description = "JWT 토큰으로 회원 찾기 실패",
         content = @Content(
             mediaType = "application/json",
-            examples = @ExampleObject(value = "{\"error\": \"" + INVALID_CREDENTIALS + "\"}")
+            examples = @ExampleObject(value = "{\"error\": \"" + ID_NOT_FOUND + "(회원 Id)\"}")
         )
     )
     @Retention(RetentionPolicy.RUNTIME)
