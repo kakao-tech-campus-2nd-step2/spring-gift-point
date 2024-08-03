@@ -1,5 +1,6 @@
 package gift.model;
 
+import static gift.util.constants.MemberConstants.INSUFFICIENT_POINTS;
 import static gift.util.constants.MemberConstants.INVALID_EMAIL;
 import static gift.util.constants.MemberConstants.INVALID_PASSWORD;
 
@@ -34,6 +35,9 @@ public class Member {
     @Column(name = "register_type", nullable = false)
     private RegisterType registerType;
 
+    @Column(nullable = false)
+    private int points = 0;
+
     protected Member() {
     }
 
@@ -42,12 +46,14 @@ public class Member {
         this.email = email;
         this.password = password;
         this.registerType = registerType;
+        this.points = 0;
     }
 
     public Member(String email, String password, RegisterType registerType) {
         this.email = email;
         this.password = password;
         this.registerType = registerType;
+        this.points = 0;
     }
 
     public Long getId() {
@@ -69,6 +75,17 @@ public class Member {
     public void update(String email, String password) {
         this.email = email;
         this.password = password;
+    }
+
+    public void addPoints(int amount) {
+        points += amount;
+    }
+
+    public void deductPoints(int amount) {
+        if (points < amount) {
+            throw new IllegalArgumentException(INSUFFICIENT_POINTS + points);
+        }
+        points -= amount;
     }
 
     public boolean isEmailMatching(String email) {

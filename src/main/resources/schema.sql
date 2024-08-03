@@ -22,7 +22,8 @@ CREATE TABLE IF NOT EXISTS member (
     id       BIGINT AUTO_INCREMENT PRIMARY KEY,
     email    VARCHAR (255) NOT NULL UNIQUE,
     password VARCHAR (255) NOT NULL,
-    register_type VARCHAR (255) NOT NULL DEFAULT 'DEFAULT'
+    register_type VARCHAR (255) NOT NULL DEFAULT 'DEFAULT',
+    points  INT NOT NULL    DEFAULT 0
 );
 
 -- 위시 리스트(WISHLISTS) 스키마
