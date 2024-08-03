@@ -7,7 +7,7 @@ CREATE TABLE IF NOT EXISTS members
 );
 
 
-CREATE TABLE wishes
+CREATE TABLE IF NOT EXISTS wishes
 (
     id         BIGINT AUTO_INCREMENT PRIMARY KEY,
     member_id  BIGINT NOT NULL,
@@ -15,7 +15,7 @@ CREATE TABLE wishes
     FOREIGN KEY (member_id) REFERENCES members (id)
 );
 
-CREATE TABLE categories
+CREATE TABLE IF NOT EXISTS categories
 (
     id          BIGINT AUTO_INCREMENT PRIMARY KEY,
     name        VARCHAR(255) NOT NULL UNIQUE,
@@ -24,7 +24,7 @@ CREATE TABLE categories
     description VARCHAR(255)
 );
 
-CREATE TABLE products
+CREATE TABLE IF NOT EXISTS products
 (
     id          BIGINT AUTO_INCREMENT PRIMARY KEY,
     name        VARCHAR(255) NOT NULL UNIQUE,
@@ -34,7 +34,7 @@ CREATE TABLE products
     CONSTRAINT fk_category FOREIGN KEY (category_id) REFERENCES categories (id)
 );
 
-CREATE TABLE options
+CREATE TABLE IF NOT EXISTS options
 (
     id             BIGINT AUTO_INCREMENT PRIMARY KEY,
     name           VARCHAR(255) NOT NULL,
