@@ -10,7 +10,7 @@ public class CORSConfig implements WebMvcConfigurer {
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**")
-            .allowedOrigins("*") // 모든 origin 추가
+            .allowedOriginPatterns("*") // 모든 origin 추가
             .allowedMethods("GET", "POST", "PUT" ,"DELETE","OPTIONS", "PATCH") // 프론트에서 쓰이는 허용할 HTTP 메서드 OPTIONS 추가
             .allowedHeaders("*") // 모든 헤더를 허용
             .allowCredentials(true) // Bearer token으로 인증을 하기 때문에 true
