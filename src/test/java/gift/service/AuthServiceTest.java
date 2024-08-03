@@ -14,7 +14,9 @@ import gift.product.dto.auth.AccessTokenDto;
 import gift.product.dto.auth.LoginMemberIdDto;
 import gift.product.dto.auth.MemberDto;
 import gift.product.dto.auth.OAuthJwt;
+import gift.product.dto.auth.PointRequest;
 import gift.product.dto.auth.PointResponse;
+import gift.product.dto.auth.RemainingPointResponse;
 import gift.product.exception.LoginFailedException;
 import gift.product.model.KakaoToken;
 import gift.product.model.Member;
@@ -140,6 +142,23 @@ class AuthServiceTest {
 
         //then
         assertThat(pointResponse.point()).isEqualTo(member.getPoint());
+    }
+
+    @Test
+    void 포인트_차감() {
+        //given
+        LoginMemberIdDto loginMemberIdDto = new LoginMemberIdDto(1L);
+        Member member = new Member(loginMemberIdDto.id(), "test@test.com", "test", 1000);
+        given(authRepository.findById(loginMemberIdDto.id())).willReturn(Optional.of(member));
+
+        PointRequest pointRequest = new PointRequest(500);
+
+        //when
+        RemainingPointResponse remainingPointResponse = authService.subtractMemberPoint(pointRequest, loginMemberIdDto);
+
+        //then
+        assertThat(remainingPointResponse.point()).isEqualTo(
+            member.getPoint() - pointRequest.point());
     }
 
     @Test
@@ -285,5 +304,43 @@ class AuthServiceTest {
         //when, then
         assertThatThrownBy(() -> authService.getMemberPoint(new LoginMemberIdDto(1L))).isInstanceOf(
             NoSuchElementException.class);
+    }
+
+    @Test
+    void 실패_존재하지_않는_회원_정보로_포인트_차감() {
+        //given
+        LoginMemberIdDto loginMemberIdDto = new LoginMemberIdDto(1L);
+        PointRequest pointRequest = new PointRequest(500);
+        given(authRepository.findById(any())).willReturn(Optional.empty());
+
+        //when, then
+        assertThatThrownBy(() -> authService.subtractMemberPoint(pointRequest, loginMemberIdDto)).isInstanceOf(
+            NoSuchElementException.class);
+    }
+
+    @Test
+    void 실패_보유_포인트보다_많은_양을_차감() {
+        //given
+        LoginMemberIdDto loginMemberIdDto = new LoginMemberIdDto(1L);
+        Member member = new Member(loginMemberIdDto.id(), "test@test.com", "test", 1000);
+        given(authRepository.findById(loginMemberIdDto.id())).willReturn(Optional.of(member));
+
+        PointRequest pointRequest = new PointRequest(9999);
+
+        //when, then
+        assertThatThrownBy(() -> authService.subtractMemberPoint(pointRequest, loginMemberIdDto)).isInstanceOf(IllegalArgumentException.class).hasMessage("회원의 보유 포인트보다 많은 양을 사용할 수 없습니다.");
+    }
+
+    @Test
+    void 실패_보유_포인트가_1000_미만() {
+        //given
+        LoginMemberIdDto loginMemberIdDto = new LoginMemberIdDto(1L);
+        Member member = new Member(loginMemberIdDto.id(), "test@test.com", "test", 900);
+        given(authRepository.findById(loginMemberIdDto.id())).willReturn(Optional.of(member));
+
+        PointRequest pointRequest = new PointRequest(200);
+
+        //when, then
+        assertThatThrownBy(() -> authService.subtractMemberPoint(pointRequest, loginMemberIdDto)).isInstanceOf(IllegalArgumentException.class).hasMessage("회원의 보유 포인트가 1000 이상일 때만 사용할 수 있습니다.");
     }
 }
