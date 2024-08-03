@@ -11,19 +11,17 @@ import gift.category.CategoryService;
 import gift.category.model.Category;
 import gift.category.model.CategoryRequest;
 import gift.product.ProductRepository;
+import java.util.List;
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.domain.Sort.Direction;
+import org.springframework.test.context.ActiveProfiles;
 
 @ExtendWith(MockitoExtension.class)
+@ActiveProfiles("test")
 public class CategoryServiceTest {
 
     @Mock
@@ -41,12 +39,11 @@ public class CategoryServiceTest {
 
     @Test
     void getAllCategoriesTest() {
-        Pageable pageable = PageRequest.of(0, 10, Sort.by(Direction.ASC, "id"));
-        given(categoryRepository.findAll(pageable)).willReturn(Page.empty());
+        given(categoryRepository.findAll()).willReturn(List.of());
 
-        categoryService.getAllCategories(pageable);
+        categoryService.getAllCategories();
 
-        then(categoryRepository).should().findAll(pageable);
+        then(categoryRepository).should().findAll();
     }
 
     @Test

@@ -1,6 +1,6 @@
 package gift.member.oauth;
 
-
+import gift.member.model.MemberResponse;
 import io.swagger.v3.oas.annotations.Hidden;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -31,8 +31,8 @@ public class OauthController {
 
     @Hidden
     @GetMapping("/callback")
-    public ResponseEntity<String> getKakaoToken(@RequestParam("code") String authorizationCode) {
-        String accessToken = oauthService.loginByKakao(authorizationCode);
-        return ResponseEntity.ok(accessToken);
+    public ResponseEntity<MemberResponse> getKakaoToken(
+        @RequestParam("code") String authorizationCode) {
+        return ResponseEntity.ok(oauthService.loginByKakao(authorizationCode));
     }
 }

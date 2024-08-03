@@ -15,9 +15,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.RequestEntity;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.annotation.DirtiesContext.ClassMode;
+import org.springframework.test.context.ActiveProfiles;
 
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 @DirtiesContext(classMode = ClassMode.BEFORE_CLASS)
+@ActiveProfiles("test")
 class MemberEndToEndTest {
 
     @LocalServerPort
@@ -29,7 +31,7 @@ class MemberEndToEndTest {
     @Test
     void register() {
         var url = "http://localhost:" + port + "/api/members/register";
-        var request = new MemberRequest("member2@example.com", "password2", "member2", "user");
+        var request = new MemberRequest("member2@example.com", "password2");
         var requestEntity = new RequestEntity<>(request, HttpMethod.POST, URI.create(url));
 
         var actual = restTemplate.exchange(requestEntity, String.class);
@@ -40,7 +42,7 @@ class MemberEndToEndTest {
     @Test
     void login() {
         var url = "http://localhost:" + port + "/api/members/register";
-        var request = new MemberRequest("member1@example.com", "password", "member1", "user");
+        var request = new MemberRequest("member1@example.com", "password");
         var requestEntity = new RequestEntity<>(request, HttpMethod.POST, URI.create(url));
         restTemplate.exchange(requestEntity, String.class);
 

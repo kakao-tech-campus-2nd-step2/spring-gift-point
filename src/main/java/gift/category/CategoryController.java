@@ -2,15 +2,12 @@ package gift.category;
 
 import gift.category.model.CategoryRequest;
 import gift.category.model.CategoryResponse;
-import gift.common.model.PageResponseDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import java.net.URI;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort.Direction;
-import org.springframework.data.web.PageableDefault;
+import java.util.List;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -34,10 +31,8 @@ public class CategoryController {
 
     @Operation(summary = "전체 카테고리 조회", description = "전체 카테고리를 조회합니다.")
     @GetMapping
-    public ResponseEntity<PageResponseDto<CategoryResponse>> getAllCategories(
-        @PageableDefault(size = 10, sort = "id", direction = Direction.ASC) Pageable pageable) {
-        return ResponseEntity.ok(
-            PageResponseDto.of(categoryService.getAllCategories(pageable), pageable));
+    public ResponseEntity<List<CategoryResponse>> getAllCategories() {
+        return ResponseEntity.ok(categoryService.getAllCategories());
     }
 
     @Operation(summary = "특정 카테고리 조회", description = "id에 해당하는 카테고리를 조회합니다.")

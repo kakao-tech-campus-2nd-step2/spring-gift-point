@@ -20,7 +20,7 @@ import java.util.Set;
 @Entity
 public class Product extends BaseEntity {
 
-    @Column(name = "name", nullable = false, length = 15)
+    @Column(name = "name", nullable = false)
     private String name;
     @Column(name = "price", nullable = false)
     private Integer price;

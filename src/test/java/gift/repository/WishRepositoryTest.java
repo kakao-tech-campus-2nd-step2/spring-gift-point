@@ -22,9 +22,11 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.annotation.DirtiesContext.ClassMode;
+import org.springframework.test.context.ActiveProfiles;
 
 @DataJpaTest
 @DirtiesContext(classMode = ClassMode.BEFORE_CLASS)
+@ActiveProfiles("test")
 class WishRepositoryTest {
 
     @Autowired
@@ -60,8 +62,7 @@ class WishRepositoryTest {
         assertAll(
             () -> assertThat(actual.getId()).isNotNull(),
             () -> assertThat(actual.getMember().getId()).isEqualTo(expectedMember.getId()),
-            () -> assertThat(actual.getProduct().getId()).isEqualTo(expectedProduct1.getId()),
-            () -> assertThat(actual.getCount()).isEqualTo(expected.getCount())
+            () -> assertThat(actual.getProduct().getId()).isEqualTo(expectedProduct1.getId())
         );
     }
 
@@ -92,8 +93,7 @@ class WishRepositoryTest {
             () -> assertThat(actual.getMember().getId()).isEqualTo(expectedMember.getId()),
             () -> assertThat(actual.getMember().getRole()).isEqualTo(expectedMember.getRole()),
             () -> assertThat(actual.getProduct().getId()).isEqualTo(expectedProduct1.getId()),
-            () -> assertThat(actual.getProduct().getPrice()).isEqualTo(expectedProduct1.getPrice()),
-            () -> assertThat(actual.getCount()).isEqualTo(expected.getCount())
+            () -> assertThat(actual.getProduct().getPrice()).isEqualTo(expectedProduct1.getPrice())
         );
     }
 
@@ -112,8 +112,7 @@ class WishRepositoryTest {
     }
 
     private Wish createWish(Member expectedMember, Product expectedProduct) {
-        return new Wish(
-            expectedMember, expectedProduct, 1);
+        return new Wish(expectedMember, expectedProduct);
     }
 
     private void saveProduct() {

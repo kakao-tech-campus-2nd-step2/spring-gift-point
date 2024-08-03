@@ -16,9 +16,11 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.annotation.DirtiesContext.ClassMode;
+import org.springframework.test.context.ActiveProfiles;
 
 @DataJpaTest
 @DirtiesContext(classMode = ClassMode.BEFORE_CLASS)
+@ActiveProfiles("test")
 class ProductRepositoryTest {
 
     @Autowired

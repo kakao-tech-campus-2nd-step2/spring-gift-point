@@ -26,9 +26,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.RequestEntity;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.annotation.DirtiesContext.ClassMode;
+import org.springframework.test.context.ActiveProfiles;
 
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 @DirtiesContext(classMode = ClassMode.BEFORE_EACH_TEST_METHOD)
+@ActiveProfiles("test")
 public class OptionEndToEndTest {
 
     @LocalServerPort
@@ -56,7 +58,7 @@ public class OptionEndToEndTest {
         var actual = restTemplate.exchange(requestEntity,
             new ParameterizedTypeReference<List<OptionResponse>>() {
             });
-        assertThat(actual.getBody()).isEqualTo(List.of(new OptionResponse(1L, "option", 1)));
+        assertThat(actual.getBody()).isEqualTo(List.of(new OptionResponse(1L, "option", 1, 1L)));
     }
 
     @Test
@@ -65,7 +67,7 @@ public class OptionEndToEndTest {
         var request = new OptionRequest.Create("option1", 2);
         var requestEntity = new RequestEntity<>(request, headers, HttpMethod.POST, URI.create(url));
         var actual = restTemplate.exchange(requestEntity, String.class);
-        System.out.println(actual);
+        assertThat(actual.getStatusCode()).isEqualTo(HttpStatus.CREATED);
     }
 
     @Test
@@ -79,8 +81,7 @@ public class OptionEndToEndTest {
 
     private HttpHeaders getToken() throws JsonProcessingException {
         var tokenUrl = "http://localhost:" + port + "/api/members/register";
-        var tokenRequest = new MemberRequest("member1@example.com", "password", "member1",
-            "user");
+        var tokenRequest = new MemberRequest("member1@example.com", "password");
         var tokenRequestEntity = new RequestEntity<>(tokenRequest, HttpMethod.POST,
             URI.create(tokenUrl));
         var tokenResponseEntity = restTemplate.exchange(tokenRequestEntity, String.class);

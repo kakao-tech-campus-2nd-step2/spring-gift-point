@@ -16,7 +16,7 @@ public class KakaoMessageMaker {
             ObjectMapper objectMapper = new ObjectMapper();
             LinkedMultiValueMap<String, String> body = new LinkedMultiValueMap<>();
             TextTemplate textTemplate = new TextTemplate("text", order.createOrderText(),
-                new Link("http://localhost:8080", "http://localhost:8080"));
+                new Link("http://15.165.164.139:8080", "http://15.165.164.139:8080"));
             body.add("template_object", objectMapper.writeValueAsString(textTemplate));
             return body;
         } catch (JsonProcessingException e) {

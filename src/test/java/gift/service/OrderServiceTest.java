@@ -28,10 +28,12 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.annotation.DirtiesContext.ClassMode;
+import org.springframework.test.context.ActiveProfiles;
 
 @DataJpaTest
 @ExtendWith(MockitoExtension.class)
 @DirtiesContext(classMode = ClassMode.BEFORE_EACH_TEST_METHOD)
+@ActiveProfiles("test")
 public class OrderServiceTest {
 
     @Mock
@@ -62,7 +64,8 @@ public class OrderServiceTest {
             Optional.of(option));
         given(wishRepository.existsByMemberIdAndProductId(any(), any())).willReturn(false);
         given(oauthTokenRepository.findByMemberId(any())).willReturn(
-            Optional.of(new OauthToken("kakao", "email", "acessToken", 50000, "refreshToken", null)));
+            Optional.of(
+                new OauthToken("kakao", "email", "acessToken", 50000, "refreshToken", null)));
 
         OrderResponse orderResponse = orderService.createOrder(new OrderRequest(1L, 1, "hello"),
             new LoginMemberDto(1L, "member", "email", "user"));

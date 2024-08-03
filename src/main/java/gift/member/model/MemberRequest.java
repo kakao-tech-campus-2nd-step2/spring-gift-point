@@ -7,16 +7,14 @@ public record MemberRequest(
     @Email
     String email,
     @NotBlank(message = "비밀번호를 입력해주세요.")
-    String password,
-    String name,
-    String role) {
+    String password) {
 
     public Member toEntity() {
         return new Member(
             email,
             password,
-            name,
-            role
+            null,
+            null
         );
     }
 }

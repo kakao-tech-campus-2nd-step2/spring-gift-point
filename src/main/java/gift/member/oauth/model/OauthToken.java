@@ -34,7 +34,8 @@ public class OauthToken {
 
     }
 
-    public OauthToken(String provider, String email, String accessToken, Integer expiresTime, String refreshToken,
+    public OauthToken(String provider, String email, String accessToken, Integer expiresTime,
+        String refreshToken,
         Member member) {
         this.provider = provider;
         this.email = email;
@@ -55,7 +56,7 @@ public class OauthToken {
     public Member getMember() {
         return member;
     }
-  
+
     public void updateToken(String accessToken, String refreshToken) {
         this.accessToken = accessToken;
         if (refreshToken != null) {

@@ -1,7 +1,5 @@
 package gift.service;
 
-
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
@@ -23,8 +21,10 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.test.context.ActiveProfiles;
 
 @ExtendWith(MockitoExtension.class)
+@ActiveProfiles("test")
 public class WishServiceTest {
 
     @Mock
@@ -62,21 +62,9 @@ public class WishServiceTest {
     }
 
     @Test
-    void updateWishTest() {
-        Wish wish = new Wish(new Member(1L, "member1@example.com", "member1", "user"), null, 1);
-        given(wishRepository.findById(any())).willReturn(Optional.of(wish));
-        WishRequest wishRequest = getWishRequestDto();
-        LoginMemberDto loginMemberDto = getLoginMemberDto();
-
-        wishService.updateProductInWishList(1L, wishRequest, loginMemberDto);
-
-        assertThat(wish.getCount()).isEqualTo(3);
-    }
-
-    @Test
     void deleteWishTest() {
         given(wishRepository.findById(any())).willReturn(
-            Optional.of(new Wish(new Member(1L, "email", "name", "role"), null, 1)));
+            Optional.of(new Wish(new Member(1L, "email", "name", "role"), null)));
         LoginMemberDto loginMemberDto = getLoginMemberDto();
 
         wishService.deleteProductInWishList(1L, loginMemberDto);
@@ -90,7 +78,7 @@ public class WishServiceTest {
     }
 
     private WishRequest getWishRequestDto() {
-        WishRequest wishRequest = new WishRequest(1L, 3);
+        WishRequest wishRequest = new WishRequest(1L);
         return wishRequest;
     }
 

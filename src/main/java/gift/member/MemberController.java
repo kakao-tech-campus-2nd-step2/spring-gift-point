@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-@Tag(name="Member API", description = "멤버 생성에 관한 API")
+@Tag(name = "Member API", description = "멤버 생성에 관한 API")
 @RestController
 @RequestMapping("/api/members")
 public class MemberController {

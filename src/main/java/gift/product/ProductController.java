@@ -1,6 +1,5 @@
 package gift.product;
 
-import gift.common.model.PageResponseDto;
 import gift.product.model.ProductRequest;
 import gift.product.model.ProductResponse;
 import io.swagger.v3.oas.annotations.Operation;
@@ -8,6 +7,7 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import java.net.URI;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.data.web.PageableDefault;
@@ -34,10 +34,10 @@ public class ProductController {
 
     @Operation(summary = "전체 Product 조회", description = "전체 Product 를 조회합니다.")
     @GetMapping
-    public ResponseEntity<PageResponseDto<ProductResponse>> getAllProducts(
-        @PageableDefault(size = 10, sort = "id", direction = Direction.ASC) Pageable pageable) {
-        return ResponseEntity.ok(
-            PageResponseDto.of(productService.getAllProducts(pageable).getContent(), pageable));
+    public ResponseEntity<Page<ProductResponse>> getAllProducts(
+        @PathVariable(value = "categoryId", required = false) Long categoryId,
+        @PageableDefault(size = 10, sort = "createdDate", direction = Direction.ASC) Pageable pageable) {
+        return ResponseEntity.ok(productService.getAllProducts(pageable, categoryId));
     }
 
     @Operation(summary = "특정 Product 조희", description = "id에 해당하는 Product 를 조회합니다.")

@@ -2,7 +2,6 @@ package gift.api.kakaoAuth;
 
 import gift.api.KakaoProperties;
 import java.net.URI;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.retry.annotation.Backoff;
@@ -23,11 +22,7 @@ public class KakaoAuthClient {
     }
 
     public URI getAuthorization() {
-        ResponseEntity<String> response = restClient.get()
-            .uri(URI.create(kakaoProperties.getAuthorizationUrl()))
-            .retrieve()
-            .toEntity(String.class);
-        return response.getHeaders().getLocation();
+        return URI.create(kakaoProperties.getAuthorizationUrl());
     }
 
     public KakaoTokenResponse getKakaoTokenResponse(String authorizationCode) {
