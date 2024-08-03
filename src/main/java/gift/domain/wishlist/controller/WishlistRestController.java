@@ -2,8 +2,8 @@ package gift.domain.wishlist.controller;
 
 import gift.config.LoginUser;
 import gift.domain.member.entity.Member;
-import gift.domain.wishlist.dto.WishItemRequestDto;
-import gift.domain.wishlist.dto.WishItemResponseDto;
+import gift.domain.wishlist.dto.WishItemRequest;
+import gift.domain.wishlist.dto.WishItemResponse;
 import gift.domain.wishlist.service.WishlistService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -35,19 +35,19 @@ public class WishlistRestController {
 
     @PostMapping
     @Operation(summary = "위시리스트 항목 추가", description = "위시리스트에 담을 항목을 생성합니다.")
-    public ResponseEntity<WishItemResponseDto> create(
+    public ResponseEntity<WishItemResponse> create(
         @Parameter(description = "위시리시트 항목 요청 정보", required = true)
-        @RequestBody WishItemRequestDto wishItemRequestDto,
+        @RequestBody WishItemRequest wishItemRequest,
         @Parameter(hidden = true)
         @LoginUser Member member
     ) {
-        WishItemResponseDto wishItemResponseDto = wishlistService.create(wishItemRequestDto, member);
-        return ResponseEntity.status(HttpStatus.CREATED).body(wishItemResponseDto);
+        WishItemResponse wishItemResponse = wishlistService.create(wishItemRequest, member);
+        return ResponseEntity.status(HttpStatus.CREATED).body(wishItemResponse);
     }
 
     @GetMapping
     @Operation(summary = "위시리스트 조회", description = "회원의 위시리스트를 조회합니다.")
-    public ResponseEntity<Page<WishItemResponseDto>> readAll(
+    public ResponseEntity<Page<WishItemResponse>> readAll(
         @Parameter(description = "페이징 정보", in = ParameterIn.QUERY)
         @ParameterObject Pageable pageable,
         @Parameter(hidden = true)

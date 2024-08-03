@@ -17,8 +17,8 @@ import gift.domain.product.entity.Product;
 import gift.domain.member.repository.MemberJpaRepository;
 import gift.domain.member.entity.Role;
 import gift.domain.member.entity.Member;
-import gift.domain.wishlist.dto.WishItemRequestDto;
-import gift.domain.wishlist.dto.WishItemResponseDto;
+import gift.domain.wishlist.dto.WishItemRequest;
+import gift.domain.wishlist.dto.WishItemResponse;
 import gift.domain.wishlist.entity.WishItem;
 import gift.domain.wishlist.service.WishlistService;
 import io.jsonwebtoken.Claims;
@@ -79,11 +79,12 @@ class WishlistRestControllerTest {
     @DisplayName("위시리스트 추가")
     void create_success() throws Exception {
         // given
-        WishItemRequestDto wishItemRequestDto = new WishItemRequestDto(1L);
-        String jsonContent = objectMapper.writeValueAsString(wishItemRequestDto);
+        WishItemRequest wishItemRequest = new WishItemRequest(1L);
+        String jsonContent = objectMapper.writeValueAsString(wishItemRequest);
 
-        WishItem wishItem = wishItemRequestDto.toWishItem(MEMBER, product);
-        given(wishlistService.create(any(WishItemRequestDto.class), any(Member.class))).willReturn(WishItemResponseDto.from(wishItem));
+        WishItem wishItem = wishItemRequest.toWishItem(MEMBER, product);
+        given(wishlistService.create(any(WishItemRequest.class), any(Member.class))).willReturn(
+            WishItemResponse.from(wishItem));
 
         // when & then
         mockMvc.perform(post(DEFAULT_URL)
@@ -91,7 +92,7 @@ class WishlistRestControllerTest {
             .content(jsonContent)
             .header("Authorization", "Bearer token"))
             .andExpect(status().isCreated())
-            .andExpect(content().json(objectMapper.writeValueAsString(WishItemResponseDto.from(wishItem))));
+            .andExpect(content().json(objectMapper.writeValueAsString(WishItemResponse.from(wishItem))));
     }
 
     @Test
@@ -99,8 +100,8 @@ class WishlistRestControllerTest {
     void readAll_success() throws Exception {
         // given
         List<WishItem> wishItems = List.of(new WishItem(1L, MEMBER, product));
-        Page<WishItemResponseDto> expectedPage = new PageImpl<>(wishItems, PageRequest.of(0, 5),wishItems.size())
-                                                    .map(WishItemResponseDto::from);
+        Page<WishItemResponse> expectedPage = new PageImpl<>(wishItems, PageRequest.of(0, 5),wishItems.size())
+                                                    .map(WishItemResponse::from);
 
         given(wishlistService.readAll(any(Pageable.class), any(Member.class))).willReturn(expectedPage);
 
