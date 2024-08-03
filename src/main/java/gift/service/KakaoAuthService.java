@@ -25,47 +25,28 @@ import java.util.Optional;
 public class KakaoAuthService {
     private static final Logger logger = LoggerFactory.getLogger(KakaoAuthService.class);
 
-    private final RestClient client;
-
-    private final KakaoProperties kakaoProperties;
+    private final KakaoApi kakaoApi;
     private final MemberRepository memberRepository;
     private final PointRepository pointRepository;
 
-    public KakaoAuthService(RestClient.Builder builder, KakaoProperties kakaoProperties, MemberRepository memberRepository, PointRepository pointRepository) {
-        this.kakaoProperties = kakaoProperties;
+    public KakaoAuthService(KakaoApi kakaoApi, MemberRepository memberRepository, PointRepository pointRepository) {
+        this.kakaoApi = kakaoApi;
         this.memberRepository = memberRepository;
         this.pointRepository = pointRepository;
-
-        SimpleClientHttpRequestFactory requestFactory = new SimpleClientHttpRequestFactory();
-        requestFactory.setConnectTimeout(kakaoProperties.getConnectTimeout());
-        requestFactory.setReadTimeout(kakaoProperties.getReadTimeout());
-
-        this.client = builder
-                .requestFactory(requestFactory)
-                .requestInterceptor(new ClientInterceptor())
-                .build();
     }
 
 
     public String getKakaoToken(String code){
-        var url = "https://kauth.kakao.com/oauth/token";
-
-        var body = createBody(code);
-        var response =  this.client.post()
-                .uri(URI.create(url))
-                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                .body(body)
-                .retrieve()
-                .toEntity(KakaoAuth.class);
+        var response = kakaoApi.getKakaoToken(code);
         logger.info("getKakaoToekon" + response);
 
         //email 카카오 아이디로
-        Long memberid = getKakakoMemberId(response.getBody().getAccessToken());
+        Long memberid = getKakakoMemberId(response.getAccessToken());
         if(!memberRepository.existsByEmail(memberid.toString())){
             signIn(memberid);
         }
 
-        return response.getBody().getAccessToken();
+        return response.getAccessToken();
     }
 
     private void signIn(Long memberid) {
@@ -85,27 +66,8 @@ public class KakaoAuthService {
     }
 
     public Long getKakakoMemberId(String token){
-        var url = "https://kapi.kakao.com/v2/user/me";
-        var headers = new HttpHeaders();
-        headers.setBearerAuth(token);
-
-        var response = this.client.get()
-                .uri(url)
-                .headers(httpHeaders -> {
-                    httpHeaders.addAll(headers);
-                })
-                .retrieve()
-                .toEntity(KakaoMember.class);
+        var response = kakaoApi.getKakaoMemberId(token);
         logger.info("getKakaoMeberId{}", response);
-        return response.getBody().getId();
-    }
-
-    private @NotNull LinkedMultiValueMap<String, String> createBody(String code){
-        var body = new LinkedMultiValueMap<String, String>();
-        body.add("grant_type", "authorization_code");
-        body.add("client_id", kakaoProperties.getClientId());
-        body.add("redirect_uri", kakaoProperties.getRedirectUrl());
-        body.add("code", code);
-        return body;
+        return response.getId();
     }
 }
