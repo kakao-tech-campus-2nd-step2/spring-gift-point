@@ -58,7 +58,7 @@ public class KakaoLoginController {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
     }
 
-    @PostMapping("/kakao")
+    @GetMapping("/kakao")
     @Operation(summary = "카카오 회원가입 로그인 api")
     public RedirectView showKakaoLogin(@RequestParam(value = "redirect_url", required = true) String frontUrl) {
         this.frontUrl = frontUrl;
