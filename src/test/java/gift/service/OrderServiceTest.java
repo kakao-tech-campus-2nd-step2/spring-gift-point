@@ -27,6 +27,8 @@ class OrderServiceTest {
     private WishService wishService;
     @Mock
     private KakaoApiService kakaoApiService;
+    @Mock
+    private PointService pointService;
     @InjectMocks
     private OrderService orderService;
 
