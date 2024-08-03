@@ -74,3 +74,11 @@ echo "Deployment completed!"
 - [x] EC2 생성
 - [x] 배포 하기
   - http://43.201.148.248:8080/admin?page=0&size=10&sort=createdDate,asc&categoryId=1
+
+---
+
+## step 3
+
+- 포인트 기능 구현
+- [ ] 주문시 1% 포인트 적립
+- [ ] 자신의 포인트 이상 사용하려는 경우 400 error
