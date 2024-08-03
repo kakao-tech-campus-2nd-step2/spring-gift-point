@@ -9,16 +9,18 @@ public record OrderResponse(
     @JsonProperty("option_id") Long optionId,
     int quantity,
     LocalDateTime orderDateTime,
-    String message
+    String message,
+    int price
 ) {
-    public static OrderResponse from(Order order) {
+    public static OrderResponse from(Order order, int price) {
         return new OrderResponse(
             order.getId(),
             order.getProductId(),
             order.getOption().getId(),
             order.getQuantity(),
             order.getOrderDateTime(),
-            order.getMessage()
+            order.getMessage(),
+            price
         );
     }
 }
