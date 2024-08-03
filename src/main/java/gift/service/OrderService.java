@@ -3,16 +3,13 @@ package gift.service;
 import gift.dto.request.OrderRequest;
 import gift.dto.response.OrderResponse;
 import gift.entity.Order;
-import gift.exception.WishNotFoundException;
 import gift.repository.OrderRepository;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class OrderService {
 
-    private static final org.slf4j.Logger log = LoggerFactory.getLogger(OrderService.class);
     private final OrderRepository orderRepository;
     private final OptionService optionService;
     private final WishService wishService;
@@ -29,18 +26,14 @@ public class OrderService {
 
     @Transactional
     public OrderResponse processOrder(Long memberId, OrderRequest orderRequest) {
-        pointService.subtractPoint(memberId,orderRequest);
+        pointService.subtractPoint(memberId, orderRequest);
 
         OrderResponse orderResponse = saveOrder(orderRequest);
         optionService.subtractOptionQuantity(orderRequest.optionId(), orderRequest.quantity());
 
         Long productId = optionService.getProductIdByOptionId(orderRequest);
+        wishService.deleteProductInWish(memberId, productId);
 
-        try {
-            wishService.findAndDeleteProductInWish(memberId, productId);
-        } catch (WishNotFoundException e) {
-            log.info("위시리스트에 없는 상품입니다");
-        }
         kakaoApiService.sendMessageToMe(memberId, orderRequest);
         return orderResponse;
     }
