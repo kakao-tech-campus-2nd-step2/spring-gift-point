@@ -14,6 +14,7 @@ import gift.product.dto.auth.AccessTokenDto;
 import gift.product.dto.auth.LoginMemberIdDto;
 import gift.product.dto.auth.MemberDto;
 import gift.product.dto.auth.OAuthJwt;
+import gift.product.dto.auth.PointResponse;
 import gift.product.exception.LoginFailedException;
 import gift.product.model.KakaoToken;
 import gift.product.model.Member;
@@ -124,6 +125,20 @@ class AuthServiceTest {
 
         //then
         assertSoftly(softly -> assertThat(accessTokenDto.accessToken()).isNotEmpty());
+    }
+
+    @Test
+    void 포인트_조회() {
+        //given
+        LoginMemberIdDto loginMemberIdDto = new LoginMemberIdDto(1L);
+        Member member = new Member(loginMemberIdDto.id(), "test@test.com", "test", 1000);
+        given(authRepository.findById(any())).willReturn(Optional.of(member));
+
+        //when
+        PointResponse pointResponse = authService.getMemberPoint(loginMemberIdDto);
+
+        //then
+        assertThat(pointResponse.point()).isEqualTo(member.getPoint());
     }
 
     @Test
