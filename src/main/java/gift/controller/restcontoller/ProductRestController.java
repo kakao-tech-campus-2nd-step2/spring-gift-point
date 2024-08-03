@@ -1,4 +1,4 @@
-package gift.controller;
+package gift.controller.restcontoller;
 
 import gift.dto.request.OptionRequest;
 import gift.dto.request.ProductOptionRequest;

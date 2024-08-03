@@ -1,4 +1,4 @@
-package gift.controller;
+package gift.controller.restcontoller;
 
 import gift.annotation.LoginMember;
 import gift.dto.request.MemberRequest;
