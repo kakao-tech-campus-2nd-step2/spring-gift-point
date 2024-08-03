@@ -1,4 +1,4 @@
-package gift.dto;
+package gift.dto.pointDTO;
 
 public record PointResponseDTO(
     Long points

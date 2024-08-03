@@ -1,6 +1,6 @@
 package gift.service;
 
-import gift.dto.PointResponseDTO;
+import gift.dto.pointDTO.PointResponseDTO;
 import gift.dto.memberDTO.LoginRequestDTO;
 import gift.dto.memberDTO.RegisterRequestDTO;
 import gift.exception.InvalidInputValueException;

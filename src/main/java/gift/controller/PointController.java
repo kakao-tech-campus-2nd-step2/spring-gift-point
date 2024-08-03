@@ -2,7 +2,7 @@ package gift.controller;
 
 
 import gift.annotation.LoginMember;
-import gift.dto.PointResponseDTO;
+import gift.dto.pointDTO.PointResponseDTO;
 import gift.exception.AuthorizationFailedException;
 import gift.model.Member;
 import gift.service.MemberService;
