@@ -25,7 +25,7 @@ public class MemberService {
         if(memberRepository.existsByEmail(memberRequest.email())){
             throw new DuplicateMemberEmailException(MEMBER_EMAIL_ALREADY_EXISTS);
         }
-        memberRepository.save(memberRequest.toEntity());
+        memberRepository.save(new Member(memberRequest.email(), memberRequest.password(), 3000));
     }
 
     @Transactional(readOnly = true)
@@ -47,5 +47,19 @@ public class MemberService {
         Member member = memberRepository.findById(memberRequest.id())
                 .orElseThrow(() -> new MemberNotFoundException(NOT_FOUND_MEMBER));
         return member.getPoints();
+    }
+
+    @Transactional
+    public void addMemberPoints(MemberRequest memberRequest, int addPoints){
+        Member member = memberRepository.findById(memberRequest.id())
+                .orElseThrow(() -> new MemberNotFoundException(NOT_FOUND_MEMBER));
+        member.addPoints(addPoints);
+    }
+
+    @Transactional
+    public void useMemberPoints(MemberRequest memberRequest, int usePoints){
+        Member member = memberRepository.findById(memberRequest.id())
+                .orElseThrow(() -> new MemberNotFoundException(NOT_FOUND_MEMBER));
+        member.usePoints(usePoints);
     }
 }
