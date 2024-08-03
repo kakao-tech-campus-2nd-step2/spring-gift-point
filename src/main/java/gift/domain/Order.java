@@ -43,9 +43,12 @@ public class Order {
     @Column(nullable = false)
     private boolean success;
 
+    @Column(nullable = false)
+    private Long memberId;
+
     public Order() { }
 
-    public Order(Long optionId, Integer quantity, LocalDateTime orderDateTime, String message, Long productId, Integer point, String phone, Integer price, boolean receipt, boolean success) {
+    public Order(Long optionId, Integer quantity, LocalDateTime orderDateTime, String message, Long productId, Integer point, String phone, Integer price, boolean receipt, boolean success, Long memberId) {
         this.optionId = optionId;
         this.quantity = quantity;
         this.orderDateTime = orderDateTime;
@@ -56,6 +59,7 @@ public class Order {
         this.price = price;
         this.receipt = receipt;
         this.success = success;
+        this.memberId = memberId;
     }
 
     public Long getId() {
@@ -102,7 +106,11 @@ public class Order {
         return success;
     }
 
-    public static Order from(OrderRequest orderRequest, int price, boolean isSuccess) {
+    public Long getMemberId() {
+        return memberId;
+    }
+
+    public static Order from(OrderRequest orderRequest, int price, boolean isSuccess, Long memberId) {
         return new Order(orderRequest.getOptionId(),
                 orderRequest.getQuantity(),
                 LocalDateTime.now(),
@@ -112,7 +120,8 @@ public class Order {
                 orderRequest.getPhone(),
                 price,
                 orderRequest.isReceipt(),
-                isSuccess);
+                isSuccess,
+                memberId);
     }
 
 }

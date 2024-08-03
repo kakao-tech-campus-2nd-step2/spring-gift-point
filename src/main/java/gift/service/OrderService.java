@@ -76,7 +76,7 @@ public class OrderService {
 
         wishlistRepository.deleteByMemberIdAndProductId(memberId, productId);
 
-        Order order = Order.from(orderRequest, orderPrice, true);
+        Order order = Order.from(orderRequest, orderPrice, true, memberId);
 
         orderRepository.save(order);
 

@@ -13,8 +13,9 @@ public class OrderResponse {
     private String message;
     private Integer price;
     private boolean success;
+    private Long memberId;
 
-    public OrderResponse(Long id, Long optionId, Integer quantity, LocalDateTime orderDateTime, String message, Integer price, boolean success) {
+    public OrderResponse(Long id, Long optionId, Integer quantity, LocalDateTime orderDateTime, String message, Integer price, boolean success, Long memberId) {
         this.id = id;
         this.optionId = optionId;
         this.quantity = quantity;
@@ -22,6 +23,7 @@ public class OrderResponse {
         this.message = message;
         this.price = price;
         this.success = success;
+        this.memberId = memberId;
     }
 
     public static OrderResponse fromOrder(Order order) {
@@ -32,7 +34,8 @@ public class OrderResponse {
                 order.getOrderDateTime(),
                 order.getMessage(),
                 order.getPrice(),
-                order.isSuccess()
+                order.isSuccess(),
+                order.getMemberId()
         );
     }
 
@@ -62,6 +65,10 @@ public class OrderResponse {
 
     public boolean isSuccess() {
         return success;
+    }
+
+    public Long getMemberId() {
+        return memberId;
     }
 
 }
