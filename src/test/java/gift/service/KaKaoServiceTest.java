@@ -4,6 +4,8 @@ import gift.dto.KakaoTokenInfo;
 import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.MockWebServer;
 import org.assertj.core.api.Assertions;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -40,15 +42,17 @@ class KaKaoServiceTest {
     }
 
     @Test
-    void sendMessageTest() {
+    void sendMessageTest() throws JSONException {
         // given
         String message = "test_message";
         String token = "test_token";
-        String sendMessageResponse = "{\"result_code\": 0}";
+
+        JSONObject sendMessageResponse = new JSONObject();
+        sendMessageResponse.put("result_code", 0);
 
         mockWebServer.enqueue(new MockResponse()
                 .setResponseCode(HttpStatus.OK.value())
-                .setBody(sendMessageResponse)
+                .setBody(sendMessageResponse.toString())
                 .setHeader("Content-Type", "application/json;charset=UTF-8"));
 
         // when
@@ -60,15 +64,21 @@ class KaKaoServiceTest {
     }
 
     @Test
-    void getKakaoTokenInfoTest() {
+    void getKakaoTokenInfoTest() throws JSONException {
         // given
         String code = "test_code";
-        String getKakaoTokenInfoResponse = "{\"token_type\":\"bearer\",\"access_token\":\"test_access_token\",\"expires_in\":43199,\"refresh_token\":\"test_refresh_token\",\"refresh_token_expires_in\":5184000}";
+
+        JSONObject getKakaoTokenInfoResponse = new JSONObject();
+        getKakaoTokenInfoResponse.put("token_type", "bearer");
+        getKakaoTokenInfoResponse.put("access_token", "test_access_token");
+        getKakaoTokenInfoResponse.put("expires_in", 43199);
+        getKakaoTokenInfoResponse.put("refresh_token", "test_refresh_token");
+        getKakaoTokenInfoResponse.put("refresh_token_expires_in", 5184000);
 
         mockWebServer.enqueue(new MockResponse()
                 .setResponseCode(HttpStatus.OK.value())
                 .setHeader("Content-Type", "application/json;charset=UTF-8")
-                .setBody(getKakaoTokenInfoResponse));
+                .setBody(getKakaoTokenInfoResponse.toString()));
 
         // when
         KakaoTokenInfo kakaoTokenInfo = kaKaoService.getKakaoTokenInfo(code);
@@ -82,21 +92,32 @@ class KaKaoServiceTest {
     }
 
     @Test
-    void getKakaoAccountEmailTest() {
+    void getKakaoAccountEmailTest() throws JSONException {
         // given
         String accessToken = "test_accessToken";
-        String getKakaoAccountEmailResponse = "{\"id\":3636172101,\"connected_at\":\"2024-07-24T14:39:41Z\",\"kakao_account\":{\"has_email\":true,\"email_needs_agreement\":false,\"is_email_valid\":true,\"is_email_verified\":true,\"email\":\"trichat26@naver.com\"}}";
+
+        JSONObject kakaoAccount = new JSONObject();
+        kakaoAccount.put("has_email", true);
+        kakaoAccount.put("email_needs_agreement", false);
+        kakaoAccount.put("is_email_valid", true);
+        kakaoAccount.put("is_email_verified", true);
+        kakaoAccount.put("email", "trichat26@naver.com");
+
+        JSONObject getKakaoAccountEmailResponse = new JSONObject();
+        getKakaoAccountEmailResponse.put("id", 3636172);
+        getKakaoAccountEmailResponse.put("connected_at", "2024-07-24T14:39:41Z");
+        getKakaoAccountEmailResponse.put("kakao_account", kakaoAccount);
 
         mockWebServer.enqueue(new MockResponse()
                 .setResponseCode(HttpStatus.OK.value())
                 .setHeader("Content-Type", "application/json;charset=UTF-8")
-                .setBody(getKakaoAccountEmailResponse));
+                .setBody(getKakaoAccountEmailResponse.toString()));
 
         // when
         String actualEmail = kaKaoService.getKakaoAccountEmail(accessToken);
 
         // then
-        Assertions.assertThat("trichat26@naver.com").isEqualTo(actualEmail);
+        Assertions.assertThat(actualEmail).isEqualTo("trichat26@naver.com");
     }
 
 }
