@@ -7,13 +7,13 @@ public class MemberDTO {
     private String email;
     private String password;
 
-    public MemberDTO(Long id, String email, String password){
+    public MemberDTO(Long id, String email, String password) {
         this.id = id;
         this.email = email;
         this.password = password;
     }
 
-    public static MemberDTO getMemberDTO(Member member){
+    public static MemberDTO getMemberDTO(Member member) {
         return new MemberDTO(member.getId(), member.getEmail(), member.getPassword());
     }
 

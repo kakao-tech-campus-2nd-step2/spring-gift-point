@@ -23,7 +23,7 @@ public class ProductDTO {
         this.name = productName.getName();
     }
 
-    public static ProductDTO getProductDTO(Product product){
+    public static ProductDTO getProductDTO(Product product) {
         return new ProductDTO(product.getId(), product.getName(), product.getPrice(), product.getImageUrl(), product.getCategory().getId());
     }
 

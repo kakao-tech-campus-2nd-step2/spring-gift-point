@@ -1,26 +1,13 @@
 package gift.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import gift.config.KakaoProperties;
 import gift.dto.OrderDTO;
 import gift.model.entity.Member;
 import gift.model.entity.Option;
 import gift.model.entity.Product;
 import gift.model.entity.Wish;
-import gift.model.kakao.LinkObject;
-import gift.model.kakao.TemplateObject;
 import gift.repository.WishRepository;
-import gift.service.intercptor.ClientInterceptor;
-import jakarta.validation.constraints.NotNull;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
-import org.springframework.http.client.SimpleClientHttpRequestFactory;
 import org.springframework.stereotype.Service;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.web.client.RestClient;
 
 import java.util.Optional;
 
@@ -56,7 +43,7 @@ public class OrderService {
                 wishRepository.deleteById(wish.getId()));
 
         //포인트 사용시 가격의 10% 포인트 감소
-        if(orderDTO.getPoint()){
+        if (orderDTO.getPoint()) {
             pointService.usePoint(member, product);
         }
 

@@ -4,8 +4,8 @@ import gift.dto.optionsDTOs.AddOptionDTO;
 import gift.dto.optionsDTOs.AllOptionDto;
 import gift.dto.optionsDTOs.GetOptionDTO;
 import gift.model.entity.Option;
-import gift.model.valueObject.OptionList;
 import gift.model.entity.Product;
+import gift.model.valueObject.OptionList;
 import gift.model.valueObject.OptionNameList;
 import gift.repository.OptionRepository;
 import gift.repository.ProductRepository;
@@ -27,14 +27,14 @@ public class OptionService {
     }
 
     @Transactional
-    public void deleteOption(String option, Long productId){
+    public void deleteOption(String option, Long productId) {
         OptionList optionList = new OptionList(optionRepository.findAllByProduct_Id(productId));
-        if(optionList.canDelete()){
+        if (optionList.canDelete()) {
             optionRepository.deleteByName(option);
         }
     }
 
-    public void addOptions(String options, String quantitiy, Long productID){
+    public void addOptions(String options, String quantitiy, Long productID) {
         List<String> optionList = List.of(options.split(","));
         OptionNameList optionListWrapper = new OptionNameList(optionList);
 
@@ -44,7 +44,7 @@ public class OptionService {
                 .orElseThrow(() -> new NoSuchElementException("해당 상품이 없습니다."));
 
         List<Option> optionsToSave = new ArrayList<>();
-        for(int i=0; i<optionList.size(); i++){
+        for (int i = 0; i < optionList.size(); i++) {
             Option addOption = new Option(
                     optionList.get(i),
                     Long.parseLong(optionQuantities.get(i)),
@@ -56,7 +56,7 @@ public class OptionService {
     }
 
     @Transactional
-    public void addOption(AddOptionDTO addOptionDTO, Long productId){
+    public void addOption(AddOptionDTO addOptionDTO, Long productId) {
         OptionList optionList = new OptionList(optionRepository.findAll());
         Product product = productRepository.findById(productId)
                 .orElseThrow(() -> new NoSuchElementException("해당 상품이 없습니다."));
@@ -65,28 +65,28 @@ public class OptionService {
                 addOptionDTO.getQuantity(),
                 product
         );
-        if(!optionList.isContains(addOption)){
+        if (!optionList.isContains(addOption)) {
             optionRepository.save(addOption);
         }
     }
 
-    public void updateOption(String oldName, String newName, long productID){
+    public void updateOption(String oldName, String newName, long productID) {
         Option updateOption = optionRepository.findByName(oldName)
                 .orElseThrow(() -> new NoSuchElementException("해당 옵션이 없습니다."));
         OptionList optionList = new OptionList(optionRepository.findAll());
         Option newOption = updateOption.update(newName);
-        if(!optionList.isContains(newOption)){
+        if (!optionList.isContains(newOption)) {
             optionRepository.save(newOption);
         }
     }
 
     @Transactional
-    public void removeOption(Option option, int num){
+    public void removeOption(Option option, int num) {
         Option updateOption = option.quantityUpdate(-num);
         optionRepository.save(updateOption);
     }
 
-    public GetOptionDTO getOptionsForHtml(Long productId){
+    public GetOptionDTO getOptionsForHtml(Long productId) {
         List<Option> optionList = optionRepository.findAllByProduct_Id(productId);
         List<String> optionNameList = optionList.stream()
                 .map(Option::getName)
@@ -98,7 +98,7 @@ public class OptionService {
         return getOptionDTO;
     }
 
-    public List<AllOptionDto> getAllOptions(Long productId){
+    public List<AllOptionDto> getAllOptions(Long productId) {
         List<Option> optionListT = optionRepository.findAllByProduct_Id(productId);
         List<AllOptionDto> optionList = optionListT.stream()
                 .map(AllOptionDto::getAllOptionDto)
@@ -106,7 +106,7 @@ public class OptionService {
         return optionList;
     }
 
-    public Option getOption(Long id){
+    public Option getOption(Long id) {
         return optionRepository.findById(id)
                 .orElseThrow(() -> new NoSuchElementException("해당 옵션이 없습니다."));
     }

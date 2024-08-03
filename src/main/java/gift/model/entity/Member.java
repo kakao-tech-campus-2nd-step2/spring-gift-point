@@ -17,13 +17,13 @@ public class Member {
     @Column(name = "PASSWORD", columnDefinition = "varchar(255) not null")
     private String password;
 
-    public Member(Long id, String email, String password){
+    public Member(Long id, String email, String password) {
         this.id = id;
         this.email = email;
         this.password = password;
     }
 
-    public Member(String email, String password){
+    public Member(String email, String password) {
         this.email = email;
         this.password = password;
     }
@@ -32,7 +32,7 @@ public class Member {
     }
 
     public boolean comfirmPassword(String password) {
-        if(this.password.equals(password)){
+        if (this.password.equals(password)) {
             return true;
         }
         throw new IllegalStateException("비밀번호가 일치하지 않습니다.");

@@ -21,13 +21,13 @@ import org.springframework.web.client.RestClient;
 import java.net.URI;
 
 @Component
-public class KakaoRestClient implements KakaoApi{
+public class KakaoRestClient implements KakaoApi {
     private static final Logger logger = LoggerFactory.getLogger(KakaoRestClient.class);
 
     private final RestClient client;
     private final KakaoProperties kakaoProperties;
 
-    public KakaoRestClient(RestClient.Builder builder,  KakaoProperties kakaoProperties) {
+    public KakaoRestClient(RestClient.Builder builder, KakaoProperties kakaoProperties) {
         this.kakaoProperties = kakaoProperties;
 
         SimpleClientHttpRequestFactory requestFactory = new SimpleClientHttpRequestFactory();
@@ -44,7 +44,7 @@ public class KakaoRestClient implements KakaoApi{
     public KakaoAuth getKakaoToken(String code) {
         var url = "https://kauth.kakao.com/oauth/token";
         var body = createBody(code);
-        var response =  this.client.post()
+        var response = this.client.post()
                 .uri(URI.create(url))
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .body(body)
@@ -92,7 +92,7 @@ public class KakaoRestClient implements KakaoApi{
         logger.info("sendKakaoMessget result" + response);
     }
 
-    private @NotNull LinkedMultiValueMap<String, String> createBody(String code){
+    private @NotNull LinkedMultiValueMap<String, String> createBody(String code) {
         var body = new LinkedMultiValueMap<String, String>();
         body.add("grant_type", "authorization_code");
         body.add("client_id", kakaoProperties.getClientId());

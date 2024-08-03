@@ -28,7 +28,7 @@ public class CategoryDTO {
         this.description = description;
     }
 
-    public static CategoryDTO getCategoryDTO(Category category){
+    public static CategoryDTO getCategoryDTO(Category category) {
         return new CategoryDTO(
                 category.getId(),
                 category.getName(),

@@ -16,7 +16,7 @@ public class PointController {
     }
 
     @PostMapping
-    public String addPoints(PointDTO pointDTO){
+    public String addPoints(PointDTO pointDTO) {
         System.out.println(pointDTO);
         pointService.addPoint(pointDTO);
         return "redirect:/products";

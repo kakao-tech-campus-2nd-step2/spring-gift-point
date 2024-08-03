@@ -23,8 +23,7 @@ public class UpdateProductDTO {
     public void setCategory(String category) {
         if (category == null || category.trim().isEmpty()) {
             this.category = "NONE";
-        }
-        else {
+        } else {
             this.category = category;
         }
     }

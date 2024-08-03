@@ -3,7 +3,9 @@ package gift.controller;
 import gift.service.KakaoAuthService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 public class KakaoController {
@@ -16,7 +18,7 @@ public class KakaoController {
     }
 
     @GetMapping("/oauth/kakao/callback")
-    public String getKakaoAuthToken(@RequestParam String code){
+    public String getKakaoAuthToken(@RequestParam String code) {
         String token = kakaoAuthService.getKakaoToken(code);
         logger.info("kakaoAuth return : {}", token);
         return token;

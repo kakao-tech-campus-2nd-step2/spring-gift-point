@@ -26,13 +26,13 @@ public class Option {
     protected Option() {
     }
 
-    public Option(String name, long quantity, Product product){
+    public Option(String name, long quantity, Product product) {
         this.updateName(name);
         this.updateQuantity(quantity);
         this.product = product;
     }
 
-    public Option(Long id, String name, long quantity, Product product){
+    public Option(Long id, String name, long quantity, Product product) {
         this.id = id;
         this.updateName(name);
         this.updateQuantity(quantity);
@@ -40,20 +40,22 @@ public class Option {
     }
 
 
-    public void updateName(String name){
+    public void updateName(String name) {
         OptionName optionName = new OptionName(name);
         this.name = optionName.getName();
     }
-    public Option update(String name){
+
+    public Option update(String name) {
         this.updateName(name);
         return this;
     }
-    public void updateQuantity(long quantity){
+
+    public void updateQuantity(long quantity) {
         Quantity OptionQuantity = new Quantity(quantity);
         this.quantity = OptionQuantity.getQuantity();
     }
 
-    public Option quantityUpdate(int num){
+    public Option quantityUpdate(int num) {
         this.updateQuantity(this.quantity + num);
         return this;
     }

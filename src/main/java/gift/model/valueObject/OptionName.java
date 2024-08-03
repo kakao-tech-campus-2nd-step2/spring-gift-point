@@ -15,14 +15,14 @@ public class OptionName {
         return name;
     }
 
-    private boolean isCorrectOptionName(String name){
-        if(name.length()>50){
+    private boolean isCorrectOptionName(String name) {
+        if (name.length() > 50) {
             return false;
         }
         String letters = "()[]+-&/_ ";
-        for(int i=0; i<name.length(); i++){
+        for (int i = 0; i < name.length(); i++) {
             char one = name.charAt(i);
-            if(!Character.isLetterOrDigit(one) && !letters.contains(Character.toString(one))){
+            if (!Character.isLetterOrDigit(one) && !letters.contains(Character.toString(one))) {
                 return false;
             }
         }

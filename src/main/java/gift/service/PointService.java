@@ -17,14 +17,14 @@ public class PointService {
         this.pointRepository = pointRepository;
     }
 
-    public void addPoint(PointDTO pointDTO){
+    public void addPoint(PointDTO pointDTO) {
         Optional<Point> OptionalPoint = pointRepository.findByMember_Id(pointDTO.getMemberId());
         OptionalPoint.ifPresent(point -> {
             pointRepository.save(point.updatePoint(pointDTO.getPoints()));
         });
     }
 
-    public void usePoint(Member member, Product product){
+    public void usePoint(Member member, Product product) {
         Optional<Point> OptionalPoint = pointRepository.findByMember_Id(member.getId());
         Long updatePoints = (long) (product.getPrice() * 0.1);
         OptionalPoint.ifPresent(point -> {

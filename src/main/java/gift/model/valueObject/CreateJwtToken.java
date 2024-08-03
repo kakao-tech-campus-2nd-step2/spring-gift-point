@@ -1,9 +1,8 @@
 package gift.model.valueObject;
 
-import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
-
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -12,7 +11,7 @@ public class CreateJwtToken {
     @Value("${secret_key}")
     private String secretKey;
 
-    public String createJwt(Long id, String email){
+    public String createJwt(Long id, String email) {
         Claims claims = Jwts.claims();
         claims.put("id", id);
         claims.put("email", email);

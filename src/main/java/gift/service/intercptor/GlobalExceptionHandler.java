@@ -14,7 +14,7 @@ public class GlobalExceptionHandler {
 
     @ResponseStatus(value = HttpStatus.NOT_FOUND)
     @ExceptionHandler(NoSuchElementException.class)
-    public String handleNoSuchElementException(NoSuchElementException e){
+    public String handleNoSuchElementException(NoSuchElementException e) {
         return e.getMessage();
     }
 

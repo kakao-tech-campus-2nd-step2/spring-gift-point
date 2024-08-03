@@ -1,9 +1,9 @@
 package gift.controller;
 
-import gift.dto.wishDTOs.CustomWishPageDTO;
 import gift.dto.PageRequestDTO;
-import gift.model.valueObject.BearerToken;
+import gift.dto.wishDTOs.CustomWishPageDTO;
 import gift.model.entity.Member;
+import gift.model.valueObject.BearerToken;
 import gift.service.KakaoAuthService;
 import gift.service.WishService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -45,7 +45,7 @@ public class WishController {
 
     //위시리스크 상품 wishlist id 받아와 삭제
     @DeleteMapping("/{whishId}")
-    public void deleteProductController(@PathVariable Long whishId){
+    public void deleteProductController(@PathVariable Long whishId) {
         wishService.deleteProduct(whishId);
     }
 }

@@ -8,6 +8,8 @@ import org.springframework.stereotype.Component;
 @Component
 public interface KakaoApi {
     KakaoAuth getKakaoToken(String code);
+
     KakaoMember getKakaoMemberId(String token);
+
     void sendKakaoMessage(String token, String message) throws JsonProcessingException;
 }

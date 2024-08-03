@@ -14,7 +14,8 @@ public class TokenInterceptor implements HandlerInterceptor {
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-        try{String authHeader = request.getHeader("Authorization");
+        try {
+            String authHeader = request.getHeader("Authorization");
             BearerToken token = new BearerToken(authHeader);
             request.setAttribute("bearerToken", token);
 

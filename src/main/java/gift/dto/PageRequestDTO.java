@@ -13,9 +13,9 @@ public class PageRequestDTO {
         this.sort = getSort(sortBy, sortOrder);
     }
 
-    public Sort getSort(String sortBy, String sortOrder){
+    public Sort getSort(String sortBy, String sortOrder) {
         Sort sort = Sort.by(sortBy);
-        if(sortOrder.equals("desc")){
+        if (sortOrder.equals("desc")) {
             return sort.descending();
         }
         return sort;
