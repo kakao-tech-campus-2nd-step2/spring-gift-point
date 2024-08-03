@@ -5,6 +5,8 @@ import gift.dto.betweenClient.ResponseDTO;
 import gift.exception.BadRequestExceptions.BadRequestException;
 import gift.util.ResponseEntityUtil;
 import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.JwtException;
+import io.jsonwebtoken.SignatureException;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
 import org.slf4j.Logger;
@@ -49,10 +51,10 @@ public class GlobalExceptionHandler {
                 HttpStatus.BAD_REQUEST);
     }
 
-    @ExceptionHandler(ExpiredJwtException.class)
+    @ExceptionHandler(JwtException.class)
     @ResponseStatus(HttpStatus.UNAUTHORIZED)
-    public ResponseEntity<ResponseDTO> handleValidationExceptions(ExpiredJwtException ex) {
-        return new ResponseEntity<>(new ResponseDTO(true, "토큰이 만료되었습니다."), HttpStatus.UNAUTHORIZED);
+    public ResponseEntity<ResponseDTO> handleValidationExceptions(JwtException ex) {
+        return new ResponseEntity<>(new ResponseDTO(true, "올바르지 않은 토큰이거나 만료된 토큰입니다."), HttpStatus.UNAUTHORIZED);
     }
 
     @ExceptionHandler(HttpMessageNotReadableException.class)
