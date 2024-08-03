@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Member List</title>
+</head>
+<body>
+<h1>Member List</h1>
+<table>
+    <thead>
+    <tr>
+        <th><a th:href="@{/admin/members(page=${currentPage}, size=${size}, sort='id,' + ${reverseSortDir})}">ID</a>
+        </th>
+        <th><a th:href="@{/admin/members(page=${currentPage}, size=${size}, sort='email.value,' + ${reverseSortDir})}">Email</a>
+        </th>
+        <th><a th:href="@{/admin/members(page=${currentPage}, size=${size}, sort='point.value,' + ${reverseSortDir})}">Point</a>
+        </th>
+        <th>Actions</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="member : ${members}">
+        <td th:text="${member.id}">ID</td>
+        <td th:text="${member.email.value}">Email</td>
+        <td th:text="${member.point.value}">Point</td>
+        <td>
+            <a th:href="@{/admin/members/charge/{id}(id=${member.id})}">Charge</a>
+            <form th:action="@{/admin/members/delete/{id}(id=${member.id})}" method="post" style="display:inline;">
+                <input type="hidden" name="_method" value="delete"/>
+                <button type="submit">Delete</button>
+            </form>
+        </td>
+    </tr>
+    </tbody>
+</table>
+<div>
+    <span th:if="${currentPage > 0}">
+        <a th:href="@{/admin/members(page=${currentPage - 1}, size=${size}, sort=${sortField + ',' + sortDir})}">Previous</a>
+    </span>
+    <span th:each="i : ${#numbers.sequence(0, totalPages - 1)}">
+        <a th:href="@{/admin/members(page=${i}, size=${size}, sort=${sortField + ',' + sortDir})}" th:text="${i + 1}">Page Number</a>
+    </span>
+    <span th:if="${currentPage < totalPages - 1}">
+        <a th:href="@{/admin/members(page=${currentPage + 1}, size=${size}, sort=${sortField + ',' + sortDir})}">Next</a>
+    </span>
+</div>
+</body>
+</html>

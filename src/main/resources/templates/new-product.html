@@ -5,7 +5,7 @@
 </head>
 <body>
 <h1>Add New Product</h1>
-<form th:action="@{/api/products}" th:object="${product}" method="post">
+<form th:action="@{/admin/products}" th:object="${product}" method="post">
     <div>
         <label>Name:</label>
         <input type="text" th:field="*{name}"/>
