@@ -69,6 +69,9 @@ public class OptionService {
         return optionRepository.existsByNameAndProductId(name, productId);
     }
 
+    public List<Option> findByProductId(Long productId) {
+        return optionRepository.findByProductId(productId);
+    }
 
 
 

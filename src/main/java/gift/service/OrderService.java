@@ -47,6 +47,15 @@ public class OrderService {
         if (option.getQuantity() < orderRequestDto.getQuantity()) {
             throw new OptionException("수량이 부족합니다.");
         }
+
+        //포인트 처리 로직
+        int orderBill = orderRequestDto.getQuantity() * option.getProduct().getPrice();
+        int maxPoint = (int)(orderBill*0.1);
+        int usePoint = Math.min(maxPoint, orderBill);
+        member.setPoint(member.getPoint() - usePoint);
+        memberRepository.save(member);
+
+
         option.setQuantity(option.getQuantity() - orderRequestDto.getQuantity());
         optionRepository.save(option);
         wishService.deleteWishlist(member.getId(), option.getProduct().getId());

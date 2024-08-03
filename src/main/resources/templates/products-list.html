@@ -36,6 +36,17 @@
   </table>
   <a href="/products/add" class="btn btn-primary mt-3">새 상품 추가</a>
   <a href="/products/categories/add" class="btn btn-secondary mt-3">새 카테고리 추가</a>
+
+  <div class="mt-5">
+    <h2>포인트 충전</h2>
+    <form th:action="@{/products/points}" method="get">
+      <div class="form-group">
+        <label for="memberId">유저 ID:</label>
+        <input type="text" class="form-control" id="memberId" name="memberId" required>
+      </div>
+      <button type="submit" class="btn btn-warning">포인트 충전하기</button>
+    </form>
+  </div>
 </div>
 </body>
 </html>

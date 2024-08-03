@@ -31,18 +31,24 @@ public class Member {
     @Column
     private String accessToken;
 
+    @Column
+    private int point;
+
     public Member(){};
 
     public Member(String email, String password) {
         this.email = email;
         this.password = password;
+        this.point = 0;
     }
 
     public Member(String email, String password, String accessToken) {
         this.email = email;
         this.password = password;
         this.accessToken = accessToken;
+        this.point = 0;
     }
+
 
     public Long getId() {
         return id;
@@ -83,4 +89,13 @@ public class Member {
     public void setAccessToken(String accessToken) {
         this.accessToken = accessToken;
     }
+
+    public int getPoint() {
+        return point;
+    }
+
+    public void setPoint(int point) {
+        this.point = point;
+    }
+
 }
