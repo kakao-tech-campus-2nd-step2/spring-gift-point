@@ -1,6 +1,6 @@
 package gift.service;
 
-import gift.dto.UserDTO;
+import gift.dto.user.UserDTO;
 import gift.exceptions.CustomException;
 import gift.model.User;
 import gift.repository.UserRepository;

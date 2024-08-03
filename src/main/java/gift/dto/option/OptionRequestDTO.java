@@ -1,11 +1,9 @@
-package gift.dto;
+package gift.dto.option;
 
-import jakarta.validation.constraints.Max;
-import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.Pattern;
-import jakarta.validation.constraints.Size;
+import jakarta.validation.constraints.*;
 
 public record OptionRequestDTO(
+        @NotNull
         @Size(max=50, message = "이름이 50글자를 초과하였습니다.")
         @Pattern(
                 regexp = "^[a-zA-Z0-9-ㄱ-하-ㅣ()\\[\\]+\\-\\&/_\\s]*$",
@@ -13,6 +11,7 @@ public record OptionRequestDTO(
         )
         String name,
 
+        @NotNull
         @Min(value = 1, message = "수량은 최소 1 이상이어야 합니다.")
         @Max(value = 100000000, message = "수량은 최대 1억 이하여야 합니다.")
         Long quantity) {

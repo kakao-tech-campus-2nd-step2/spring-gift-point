@@ -2,10 +2,9 @@ package gift.jwtutil;
 
 import gift.config.JwtTokenProperties;
 import gift.dto.TokenDTO;
-import gift.dto.UserDTO;
+import gift.dto.user.UserDTO;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.security.Key;

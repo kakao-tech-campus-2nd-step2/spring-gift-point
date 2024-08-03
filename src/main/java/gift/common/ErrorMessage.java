@@ -11,6 +11,7 @@ public class ErrorMessage {
     public static final String categoryNotExists = "카테고리가 존재하지 않습니다.";
     public static final String productNotExists = "상품이 존재하지 않습니다.";
     public static final String optionNotExists = "옵션이 존재하지 않습니다.";
+    public static final String optionNotBelong = "옵션이 해당 제품에 존재하지 않습니다.";
     public static final String quantityInvalid = "감소량이 현재 수량 이상입니다.";
     public static final String apiInvalid = "카카오 로그인에 실패하였습니다.";
 }

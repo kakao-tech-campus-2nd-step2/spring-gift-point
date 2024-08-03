@@ -1,6 +1,6 @@
 package gift.annotation;
 
-import gift.dto.KakaoUserDTO;
+import gift.dto.user.KakaoUserDTO;
 import gift.exceptions.CustomException;
 import gift.model.User;
 import gift.service.KakaoApiService;

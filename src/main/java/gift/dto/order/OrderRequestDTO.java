@@ -1,6 +1,10 @@
-package gift.dto;
+package gift.dto.order;
 
-public record OrderRequestDTO(Long optionId, Long quantity, String message) {
+import jakarta.validation.constraints.NotNull;
+
+public record OrderRequestDTO(@NotNull Long optionId,
+                              @NotNull Long quantity,
+                              @NotNull String message) {
     @Override
     public String toString() {
         return "{" +

@@ -1,4 +1,4 @@
-package gift.dto;
+package gift.dto.user;
 
 import gift.model.User;
 
