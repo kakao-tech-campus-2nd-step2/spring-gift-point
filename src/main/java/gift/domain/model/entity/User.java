@@ -95,6 +95,10 @@ public class User {
         return kakaoTokenExpireAt;
     }
 
+    public Integer getPointBalance() {
+        return pointBalance;
+    }
+
     public void update(String email, String password) {
         this.email = email;
         this.password = password;
