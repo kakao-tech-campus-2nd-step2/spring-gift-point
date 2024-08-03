@@ -1,21 +1,34 @@
 package gift.domain.member.controller;
 
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import gift.auth.jwt.JwtProvider;
 import gift.auth.jwt.JwtToken;
 import gift.domain.member.dto.MemberLoginRequest;
 import gift.domain.member.dto.MemberLoginResponse;
 import gift.domain.member.dto.MemberRequest;
+import gift.domain.member.dto.PointRechargeRequest;
+import gift.domain.member.dto.PointResponse;
+import gift.domain.member.entity.AuthProvider;
+import gift.domain.member.entity.Member;
+import gift.domain.member.entity.Role;
+import gift.domain.member.repository.MemberJpaRepository;
 import gift.domain.member.service.MemberService;
 import gift.exception.InvalidUserInfoException;
+import io.jsonwebtoken.Claims;
+import java.util.Optional;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -34,6 +47,12 @@ class MemberRestControllerTest {
 
     @MockBean
     private MemberService memberService;
+
+    @MockBean
+    private MemberJpaRepository memberJpaRepository;
+
+    @MockBean
+    private JwtProvider jwtProvider;
 
     @Autowired
     private ObjectMapper objectMapper;
@@ -117,5 +136,56 @@ class MemberRestControllerTest {
         mockMvc.perform(postRequest(LOGIN_URL, jsonContent))
             .andExpect(status().isBadRequest())
             .andExpect(content().string("잘못된 비밀번호입니다."));
+    }
+
+    @Test
+    @DisplayName("포인트 충전")
+    void recharge_success() throws Exception {
+        // given
+        Member member = new Member(1L, "testUser", "test@test.com", "test123", Role.USER, AuthProvider.LOCAL);
+        member.rechargePoint(1000);
+
+        given(memberJpaRepository.findById(any(Long.class))).willReturn(Optional.of(member));
+
+        Claims claims = Mockito.mock(Claims.class);
+        given(jwtProvider.getAuthentication(any(String.class))).willReturn(claims);
+        given(claims.getSubject()).willReturn(String.valueOf(member.getId()));
+
+        PointRechargeRequest pointRechargeRequest = new PointRechargeRequest(10000);
+        PointResponse pointResponse = new PointResponse(11000);
+
+        given(memberService.rechargePoint(any(PointRechargeRequest.class), eq(member))).willReturn(pointResponse);
+
+        // when & then
+        mockMvc.perform(patch("/api/members/point")
+            .content(objectMapper.writeValueAsString(pointRechargeRequest))
+            .contentType(MediaType.APPLICATION_JSON)
+            .header("Authorization", "Bearer token"))
+            .andExpect(status().isOk())
+            .andExpect(content().json(objectMapper.writeValueAsString(pointResponse)));
+    }
+
+    @Test
+    @DisplayName("포인트 조회")
+    void read_point_success() throws Exception {
+        // given
+        Member member = new Member(1L, "testUser", "test@test.com", "test123", Role.USER, AuthProvider.LOCAL);
+        member.rechargePoint(1000);
+
+        given(memberJpaRepository.findById(any(Long.class))).willReturn(Optional.of(member));
+
+        Claims claims = Mockito.mock(Claims.class);
+        given(jwtProvider.getAuthentication(any(String.class))).willReturn(claims);
+        given(claims.getSubject()).willReturn(String.valueOf(member.getId()));
+
+        PointResponse pointResponse = new PointResponse(1000);
+
+        given(memberService.readPoint(eq(member))).willReturn(pointResponse);
+
+        // when & then
+        mockMvc.perform(get("/api/members/point")
+            .header("Authorization", "Bearer token"))
+            .andExpect(status().isOk())
+            .andExpect(content().json(objectMapper.writeValueAsString(pointResponse)));
     }
 }

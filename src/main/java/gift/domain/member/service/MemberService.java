@@ -4,6 +4,8 @@ import gift.auth.jwt.JwtProvider;
 import gift.auth.jwt.JwtToken;
 import gift.domain.member.dto.MemberLoginRequest;
 import gift.domain.member.dto.MemberRequest;
+import gift.domain.member.dto.PointRechargeRequest;
+import gift.domain.member.dto.PointResponse;
 import gift.domain.member.entity.AuthProvider;
 import gift.domain.member.entity.Role;
 import gift.domain.member.entity.Member;
@@ -46,5 +48,14 @@ public class MemberService {
 
     public Role verifyRole(JwtToken jwtToken) {
         return jwtProvider.getAuthorization(jwtToken.token());
+    }
+
+    public PointResponse rechargePoint(PointRechargeRequest pointRechargeRequest, Member member) {
+        member.rechargePoint(pointRechargeRequest.amount());
+        return PointResponse.from(member);
+    }
+
+    public PointResponse readPoint(Member member) {
+        return PointResponse.from(member);
     }
 }
