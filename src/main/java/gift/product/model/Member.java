@@ -76,4 +76,16 @@ public class Member {
     public int getPoint() {
         return point;
     }
+
+    public Member subtractPoint(int requestPoint) {
+        if (this.point < requestPoint) {
+            throw new IllegalArgumentException("회원의 보유 포인트보다 많은 양을 사용할 수 없습니다.");
+        }
+
+        if (this.point < 1000) {
+            throw new IllegalArgumentException("회원의 보유 포인트가 1000 이상일 때만 사용할 수 있습니다.");
+        }
+
+        return new Member(id, name, email, password, point - requestPoint);
+    }
 }

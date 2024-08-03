@@ -7,7 +7,9 @@ import gift.product.dto.auth.AccessTokenDto;
 import gift.product.dto.auth.LoginMemberIdDto;
 import gift.product.dto.auth.MemberDto;
 import gift.product.dto.auth.OAuthJwt;
+import gift.product.dto.auth.PointRequest;
 import gift.product.dto.auth.PointResponse;
+import gift.product.dto.auth.RemainingPointResponse;
 import gift.product.exception.LoginFailedException;
 import gift.product.model.KakaoToken;
 import gift.product.model.Member;
@@ -69,6 +71,11 @@ public class AuthService {
     public PointResponse getMemberPoint(LoginMemberIdDto loginMemberIdDto) {
         Member member = getValidatedMember(loginMemberIdDto);
         return new PointResponse(member.getPoint());
+    }
+
+    public RemainingPointResponse subtractMemberPoint(PointRequest pointRequest, LoginMemberIdDto loginMemberIdDto) {
+        Member member = getValidatedMember(loginMemberIdDto);
+        return new RemainingPointResponse(member.subtractPoint(pointRequest.point()).getPoint());
     }
 
     public String getKakaoAuthCodeUrl() {
