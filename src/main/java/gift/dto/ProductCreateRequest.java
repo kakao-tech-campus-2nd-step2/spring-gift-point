@@ -19,7 +19,7 @@ public class ProductCreateRequest {
     @Schema(description = "Name of the product", example = "운동복")
     private String name;
     @Schema(description = "Price of the product", example = "18000")
-    private Integer price;
+    private int price;
     @Schema(description = "Image URL of the product", example = "testimage.jpg")
     private String imageUrl;
     @NotNull(message = "상품에는 항상 하나의 카테고리가 있어야 합니다.")
@@ -34,7 +34,7 @@ public class ProductCreateRequest {
     public ProductCreateRequest() {
     }
 
-    public ProductCreateRequest(String name, Integer price, String imageUrl, Long categoryId,
+    public ProductCreateRequest(String name, int price, String imageUrl, Long categoryId,
         List<OptionRequest> options) {
         this.name = name;
         this.price = price;
@@ -59,11 +59,11 @@ public class ProductCreateRequest {
         this.name = name;
     }
 
-    public Integer getPrice() {
+    public int getPrice() {
         return price;
     }
 
-    public void setPrice(Integer price) {
+    public void setPrice(int price) {
         this.price = price;
     }
 

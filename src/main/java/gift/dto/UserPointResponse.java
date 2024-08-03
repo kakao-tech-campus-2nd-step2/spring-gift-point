@@ -6,7 +6,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 public record UserPointResponse(
 
     @Schema(description = "User Point", example = "10000")
-    Integer point
+    int point
 ) {
 
 }

@@ -24,7 +24,7 @@ public class OptionRequest {
     public OptionRequest() {
     }
 
-    public OptionRequest(String name, Integer quantity) {
+    public OptionRequest(String name, int quantity) {
         this.name = name;
         this.quantity = quantity;
     }
@@ -37,11 +37,11 @@ public class OptionRequest {
         this.name = name;
     }
 
-    public Integer getQuantity() {
+    public int getQuantity() {
         return quantity;
     }
 
-    public void setQuantity(Integer quantity) {
+    public void setQuantity(int quantity) {
         this.quantity = quantity;
     }
 }
