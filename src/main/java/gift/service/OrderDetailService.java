@@ -1,5 +1,7 @@
 package gift.service;
 
+import static gift.util.constants.MemberConstants.POINT_OVERFLOW;
+
 import gift.dto.member.MemberEditResponse;
 import gift.dto.member.MemberPointRequest;
 import gift.dto.option.OptionResponse;
@@ -61,6 +63,10 @@ public class OrderDetailService {
 
         MemberEditResponse memberEditResponse = memberService.getMemberById(memberId);
         int totalPrice = option.getProduct().getPrice() * orderDetailRequest.quantity();
+        if (totalPrice > Integer.MAX_VALUE - totalPrice) {
+            throw new IllegalArgumentException(POINT_OVERFLOW);
+        }
+
         int finalPrice = totalPrice;
         if (totalPrice >= 50000) {
             finalPrice = (int) Math.ceil(finalPrice * 0.9);

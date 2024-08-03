@@ -3,6 +3,7 @@ package gift.model;
 import static gift.util.constants.MemberConstants.INSUFFICIENT_POINTS;
 import static gift.util.constants.MemberConstants.INVALID_EMAIL;
 import static gift.util.constants.MemberConstants.INVALID_PASSWORD;
+import static gift.util.constants.MemberConstants.POINT_OVERFLOW;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -82,6 +83,9 @@ public class Member {
     }
 
     public void addPoints(int amount) {
+        if (points > Integer.MAX_VALUE - amount) {
+            throw new IllegalArgumentException(POINT_OVERFLOW);
+        }
         points += amount;
     }
 

@@ -10,4 +10,5 @@ public class MemberConstants {
     public static final String INVALID_EMAIL = "유효한 이메일 주소를 입력해야 합니다.";
     public static final String INVALID_PASSWORD = "비밀번호는 최소 4자리 이상이어야 합니다.";
     public static final String INSUFFICIENT_POINTS = "사용할 수 있는 포인트가 부족합니다. 잔여 포인트: ";
+    public static final String POINT_OVERFLOW = "오버플로우가 발생했습니다.";
 }
