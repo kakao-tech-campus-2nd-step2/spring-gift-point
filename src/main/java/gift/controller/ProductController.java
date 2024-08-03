@@ -21,7 +21,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("/api/products")
@@ -41,8 +40,12 @@ public class ProductController {
     @PostMapping
     public ResponseEntity<DomainResponse> addProduct(@Valid @RequestBody Product product, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
+            Map<String, Object> errors = new HashMap<>();
+            bindingResult.getFieldErrors().forEach(error ->
+                    errors.put(error.getField(), error.getDefaultMessage())
+            );
             HttpResult httpResult = new HttpResult(HttpStatus.BAD_REQUEST.value(), "Validation errors");
-            return new ResponseEntity<>(new DomainResponse(httpResult, List.of(Map.of("errors", bindingResult.getAllErrors())), HttpStatus.BAD_REQUEST), HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(new DomainResponse(httpResult, List.of(errors), HttpStatus.BAD_REQUEST), HttpStatus.BAD_REQUEST);
         }
         product.setCategory(categoryService.findById(product.getCategory().getId()));
         productService.save(product);

@@ -45,7 +45,7 @@ public class WebController {
     @GetMapping("/order")
     public String showOrderForm(@RequestParam(name = "optionId", required = false) Long optionId, Model model) {
         model.addAttribute("optionId", optionId);
-        return "order";
+        return "Order";
     }
 
     @GetMapping("/user-wishes")
@@ -60,7 +60,7 @@ public class WebController {
         if (response.getStatusCode() != HttpStatus.OK || response.getBody() == null) {
             return "error/500";
         }
-        List<Product> products = (List<Product>) response.getBody().getDomain().get(0).get("products");
+        Page<Product> products = (Page<Product>) response.getBody().getDomain().get(0).get("products");
         model.addAttribute("products", products);
         return "user-products";
     }
@@ -73,10 +73,7 @@ public class WebController {
             return "error/500";
         }
         Page<Product> productPage = (Page<Product>) response.getBody().getDomain().get(0).get("products");
-        model.addAttribute("products", productPage.getContent());
-        model.addAttribute("currentPage", productPage.getNumber());
-        model.addAttribute("totalPages", productPage.getTotalPages());
-        model.addAttribute("pageSize", size);
+        model.addAttribute("products", productPage);
         return "product/index";
     }
 
@@ -122,7 +119,6 @@ public class WebController {
         model.addAttribute("categories", categories);
         return "product/edit";
     }
-
 
     @PostMapping("/products/{id}")
     public String updateProduct(@PathVariable Long id, @Valid @ModelAttribute("product") Product product, BindingResult bindingResult, Model model) {

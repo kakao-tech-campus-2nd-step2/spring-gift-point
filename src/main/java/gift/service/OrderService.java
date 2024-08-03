@@ -13,6 +13,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.nio.charset.StandardCharsets;
+import java.util.Base64;
 
 @Service
 public class OrderService {
@@ -32,6 +34,9 @@ public class OrderService {
     private KakaoMessageService kakaoMessageService;
 
     @Autowired
+    private PointService pointService;
+
+    @Autowired
     private HttpSession session;
 
     public Page<OrderResponse> getAllOrders(Pageable pageable) {
@@ -40,7 +45,7 @@ public class OrderService {
     }
 
     @Transactional
-    public Order createOrder(Long optionId, int quantity, String message, Member member) {
+    public Order createOrder(Long optionId, int quantity, String message, Member member, int pointsToUse) {
         ProductOption productOption = productOptionService.findProductOptionById(optionId);
         if (productOption == null) {
             throw new IllegalArgumentException("Invalid product option");
@@ -48,7 +53,15 @@ public class OrderService {
 
         productOptionService.subtractProductOptionQuantity(optionId, quantity);
 
+        // Use points
+        if (pointsToUse > 0) {
+            pointService.usePoints(member.getId(), pointsToUse);
+        }
+
         Order order = new Order(productOption, member, quantity, message, LocalDateTime.now());
+
+        System.out.println("Original message: " + message);
+        System.out.println("Encoded message: " + order.getMessage());
 
         wishService.deleteWishByProductOptionIdAndMemberId(optionId, member.getId());
 
@@ -65,7 +78,10 @@ public class OrderService {
     }
 
     private String createKakaoMessage(Order order) {
+        String productName = order.getProductOption().getName();
+        String encodedProductName = java.net.URLEncoder.encode(productName, StandardCharsets.UTF_8);
+
         return String.format("{\"object_type\":\"text\",\"text\":\"order: %d of %s\",\"link\":{\"web_url\":\"http://localhost:8080/user-products\"}}",
-                order.getQuantity(), order.getProductOption().getName());
+                order.getQuantity(), encodedProductName);
     }
 }

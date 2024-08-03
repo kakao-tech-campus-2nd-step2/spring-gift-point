@@ -16,6 +16,9 @@ public class Member {
     @Column(nullable = false)
     private String password;
 
+    @Column(nullable = false)
+    private int points = 0;
+
     @OneToMany(mappedBy = "member")
     private List<Wish> wishes;
 
@@ -42,11 +45,30 @@ public class Member {
         this.password = password;
     }
 
+    public int getPoints() {
+        return points;
+    }
+
+    public void setPoints(int points) {
+        this.points = points;
+    }
+
     public List<Wish> getWishes() {
         return wishes;
     }
 
     public void setWishes(List<Wish> wishes) {
         this.wishes = wishes;
+    }
+
+    public void addPoints(int points) {
+        this.points += points;
+    }
+
+    public void subtractPoints(int points) {
+        if (this.points < points) {
+            throw new IllegalArgumentException("Not enough points");
+        }
+        this.points -= points;
     }
 }

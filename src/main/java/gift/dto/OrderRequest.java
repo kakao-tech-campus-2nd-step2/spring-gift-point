@@ -4,17 +4,17 @@ public class OrderRequest {
     private Long optionId;
     private int quantity;
     private String message;
-
+    private int pointsToUse;
 
     public OrderRequest() {
     }
 
-    public OrderRequest(Long optionId, int quantity, String message) {
+    public OrderRequest(Long optionId, int quantity, String message, int pointsToUse) {
         this.optionId = optionId;
         this.quantity = quantity;
         this.message = message;
+        this.pointsToUse = pointsToUse;
     }
-
 
     public Long getOptionId() {
         return optionId;
@@ -38,5 +38,13 @@ public class OrderRequest {
 
     public void setMessage(String message) {
         this.message = message;
+    }
+
+    public int getPointsToUse() {
+        return pointsToUse;
+    }
+
+    public void setPointsToUse(int pointsToUse) {
+        this.pointsToUse = pointsToUse;
     }
 }
