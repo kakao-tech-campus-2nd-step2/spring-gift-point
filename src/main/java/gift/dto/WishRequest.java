@@ -7,9 +7,6 @@ public class WishRequest {
 
     @Schema(description = "ID of the product", example = "1")
     private Long productId;
-//    @Schema(description = "Quantity of the product", example = "5")
-//    private int number;
-
 
     public WishRequest() {
     }
@@ -17,10 +14,6 @@ public class WishRequest {
     public WishRequest(Long product_id) {
         this.productId = product_id;
     }
-
-//    public int getNumber() {
-//        return number;
-//    }
 
     public Long getProductId() {
         return productId;

@@ -64,16 +64,6 @@ public class WishController {
         return wishService.getWishById(user.getId(), wishId);
     }
 
-//    @PutMapping("/{wishId}")
-//    @Operation(summary = "위시 업데이트", description = "위시 ID에 해당하는 위시를 업데이트합니다.",
-//        responses = @ApiResponse(responseCode = "200", description = "위시 업데이트 성공", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ResponseMessage.class))))
-//    public ResponseEntity<ResponseMessage> updateNumber(@PathVariable Long wishId,
-//        @Parameter(hidden = true) @LoginUser User user, @RequestBody WishRequest wishRequest) {
-//        wishService.updateNumber(user.getId(), wishId, wishRequest.getNumber());
-//        ResponseMessage responseMessage = new ResponseMessage("수정되었습니다.");
-//        return ResponseEntity.ok(responseMessage);
-//    }
-
     @DeleteMapping("/{wishId}")
     @Operation(summary = "위시 삭제", description = "위시 ID에 해당하는 위시를 삭제합니다.",
         responses = @ApiResponse(responseCode = "200", description = "위시 삭제 성공", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ResponseMessage.class))))

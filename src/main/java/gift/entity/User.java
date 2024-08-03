@@ -59,15 +59,6 @@ public class User {
         return this.password.equals(password);
     }
 
-//    public void subtractWishNumber(Integer number, Product product) {
-//        wishes.removeIf(wish -> {
-//            if (wish.sameProduct(product)) {
-//                wish.subtractNumber(number);
-//            }
-//            return wish.checkLeftWishNumber();
-//        });
-//    }
-
     public void deleteWish(Product product) {
         this.wishes.removeIf(wish -> wish.sameProduct(product));
     }

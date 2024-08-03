@@ -75,13 +75,4 @@ public class WishService {
         );
     }
 
-//    public void updateNumber(Long userId, Long wishId, int number) {
-//        wishRepository.findByUserIdAndId(userId, wishId).ifPresentOrElse(
-//            wish -> wishRepository.updateWishNumber(userId, wishId, number),
-//            () -> {
-//                throw new WishNotFoundException("위시 리스트가 없습니다.");
-//            }
-//        );
-//    }
-
 }
