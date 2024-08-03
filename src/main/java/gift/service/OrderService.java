@@ -13,7 +13,6 @@ import gift.exception.optionException.OptionNotFoundException;
 import gift.exception.orderException.DeductPointException;
 import gift.exception.productException.ProductNotFoundException;
 import gift.repository.*;
-import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -61,7 +60,7 @@ public class OrderService {
                 .collect(Collectors.toList());
     }
 
-    public PagingOrderResponseDTO getOrders(LoginMemberDTO loginMemberDTO, Pageable pageable){
+    public PagingOrderResponseDTO getPagingOrders(LoginMemberDTO loginMemberDTO, Pageable pageable){
         Long memberId = loginMemberDTO.memberId();
 
         Page<Order> orderPage = orderRepository.findBymemberId(memberId, pageable);
@@ -72,7 +71,7 @@ public class OrderService {
                 .collect(Collectors.toList());
 
         return new PagingOrderResponseDTO(
-                orderResponseDTOs,
+                orderResponseDTOs, //contents
                 orderPage.getNumber(),
                 (int) orderPage.getTotalElements(),
                 orderPage.getSize(),
@@ -222,13 +221,21 @@ public class OrderService {
     }
 
     private OrderResponseDTO toDto(Order order) {
+        Product product =  order.getOption()
+                .getProduct();
+        Option option = order.getOption();
+
         return new OrderResponseDTO(
                 order.getId(),
-                order.getOption()
-                        .getId(),
+                product.getId(),
+                product.getName(),
+                product.getImageUrl(),
+                option.getId(),
                 order.getOrderQuantity(),
+                order.getTotalPrice(),
                 order.getOrderDateTime(),
-                order.getMessage()
+                order.getMessage(),
+                order.getOrderSuccess()
         );
     }
 

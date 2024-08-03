@@ -7,7 +7,6 @@ import gift.dto.request.OrderRequestDTO;
 import gift.dto.response.OrderPriceResponseDTO;
 import gift.dto.response.OrderSuccessResponseDTO;
 import gift.dto.response.PagingOrderResponseDTO;
-import gift.dto.response.PagingWishResponseDTO;
 import gift.service.LoginMember;
 import gift.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,8 +17,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.Map;
 
 @RequestMapping("/api/orders")
 @Controller
@@ -51,7 +48,7 @@ public class OrderController {
         Sort.Order order = new Sort.Order(Sort.Direction.fromString(sortParams[1]), sortParams[0]);
         Pageable pageable = PageRequest.of(page, size, Sort.by(order));
 
-        PagingOrderResponseDTO pagingOrderResponseDTO = orderService.getOrders(loginMemberDTO, pageable);
+        PagingOrderResponseDTO pagingOrderResponseDTO = orderService.getPagingOrders(loginMemberDTO, pageable);
         return ResponseEntity.status(HttpStatus.OK)
                 .body(pagingOrderResponseDTO);
 
