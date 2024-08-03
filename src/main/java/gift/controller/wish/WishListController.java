@@ -27,7 +27,7 @@ import org.springframework.web.bind.annotation.RestController;
 @Tag(name = "Wish", description = "위시리스트 API")
 @SecurityRequirement(name = "Authorization")
 @RestController
-@RequestMapping("/api/v1/wish")
+@RequestMapping("/api/wishes")
 public class WishListController {
 
     private final WishService wishService;
@@ -40,7 +40,7 @@ public class WishListController {
     @Operation(summary = "전체 위시리스트 조회", description = "전체 위시리스트를 조회합니다.")
     public ResponseEntity<PageResponse<WishResponse>> getAllWishList(
         @LoginUser LoginInfo user,
-        @PageableDefault(page = 0, size = 10, sort = "id", direction = Sort.Direction.DESC) Pageable pageable
+        @PageableDefault(page = 0, size = 10, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable
     ) {
         PageResponse<WishResponse> responses = wishService.findAllWish(user.id(), pageable);
         return ResponseEntity.ok().body(responses);
@@ -51,7 +51,7 @@ public class WishListController {
     public ResponseEntity<Void> addWishProduct(@LoginUser LoginInfo user,
         @Valid @RequestBody WishRequest.Create request) {
         Long id = wishService.addWistList(user.id(), request);
-        return ResponseEntity.created(URI.create("/api/v1/wish/" + id)).build();
+        return ResponseEntity.ok().build();
     }
 
     @PatchMapping("/{wishId}")
@@ -65,9 +65,9 @@ public class WishListController {
 
     @DeleteMapping("/{wishId}")
     @Operation(summary = "위시리스트 삭제", description = "위시리스트를 삭제합니다.")
-    public ResponseEntity<String> deleteWishProduct(@PathVariable("wishId") Long wishId,
+    public ResponseEntity<Void> deleteWishProduct(@PathVariable("wishId") Long wishId,
         @LoginUser LoginInfo user) {
         wishService.deleteWishList(user.id(), wishId);
-        return ResponseEntity.ok().body("위시리스트에서 상품이 삭제되었습니다.");
+        return ResponseEntity.ok().build();
     }
 }

@@ -1,8 +1,9 @@
 package gift.controller.oauth;
 
-import gift.common.properties.KakaoProperties;
 import gift.common.util.KakaoUtil;
+import gift.controller.user.dto.UserResponse;
 import gift.service.OAuthService;
+import gift.service.UserDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.HttpHeaders;
@@ -15,16 +16,13 @@ import org.springframework.web.bind.annotation.RestController;
 
 @Tag(name = "OAuth", description = "OAuth API")
 @RestController
-@RequestMapping("/api/v1/kakao/login")
+@RequestMapping("/api/oauth/kakao/login")
 public class OAuthController {
 
-    private final KakaoProperties kakaoProperties;
     private final OAuthService OAuthService;
     private final KakaoUtil kakaoUtil;
 
-    public OAuthController(KakaoProperties kakaoProperties, OAuthService OAuthService,
-        KakaoUtil kakaoUtil) {
-        this.kakaoProperties = kakaoProperties;
+    public OAuthController(OAuthService OAuthService, KakaoUtil kakaoUtil) {
         this.OAuthService = OAuthService;
         this.kakaoUtil = kakaoUtil;
     }
@@ -42,8 +40,10 @@ public class OAuthController {
 
     @GetMapping("/callback")
     @Operation(summary = "카카오 로그인", description = "카카오 로그인을 시도합니다.")
-    public ResponseEntity<String> registerUser(@RequestParam("code") String code) {
-        String token = OAuthService.register(code);
-        return ResponseEntity.ok().header("Authorization", "Bearer " + token).body(token);
+    public ResponseEntity<UserResponse> registerUser(@RequestParam("code") String code) {
+        UserDto response = OAuthService.register(code);
+        return ResponseEntity.ok()
+            .header("Authorization", response.accessToken())
+            .body(UserResponse.from(response.name()));
     }
 }

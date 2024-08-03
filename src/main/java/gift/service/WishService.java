@@ -57,7 +57,7 @@ public class WishService {
             throw new WishException(ErrorCode.EXIST_WISH);
         }
 
-        Wish wish = wishRepository.save(request.toEntity(user, product, request.count()));
+        Wish wish = wishRepository.save(request.toEntity(user, product));
         return wish.getId();
     }
 
@@ -75,7 +75,7 @@ public class WishService {
             throw new WishException(ErrorCode.WISH_NOT_FOUND);
         }
 
-        wish.updateWish(request.count());
+        //wish.updateWish(request.count());
     }
 
     @Transactional
@@ -84,7 +84,7 @@ public class WishService {
             .orElseThrow(() -> new WishException(ErrorCode.WISH_NOT_FOUND));
 
         if (!wish.isOwner(userId)) {
-            throw new WishException(ErrorCode.WISH_NOT_FOUND);
+            throw new WishException(ErrorCode.INVALID_WISH_DELETE);
         }
 
         wishRepository.deleteById(wishId);

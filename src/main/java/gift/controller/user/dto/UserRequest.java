@@ -11,14 +11,17 @@ public class UserRequest {
         @NotBlank
         String password,
         @Email
-        String email) {
+        String email,
+        @NotBlank
+        String name
+        ) {
 
         public User toEntity() {
-            return new User(password, email, SocialType.DEFAULT);
+            return new User(password, email, name, SocialType.DEFAULT);
         }
     }
 
-    public record Update(
+    public record Login(
         @NotBlank
         String password,
         @Email

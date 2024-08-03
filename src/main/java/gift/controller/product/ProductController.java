@@ -21,12 +21,13 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @Tag(name = "Product", description = "상품 API")
 @SecurityRequirement(name = "Authorization")
 @RestController
-@RequestMapping("/api/v1/products")
+@RequestMapping("/api/products")
 public class ProductController {
 
     private final ProductService productService;
@@ -47,9 +48,10 @@ public class ProductController {
     @GetMapping("")
     @Operation(summary = "전체 상품 조회", description = "전체 상품을 조회합니다.")
     public ResponseEntity<PageResponse<ProductResponse>> getAllProducts(
-        @PageableDefault(page = 0, size = 10, sort = "id", direction = Sort.Direction.DESC) Pageable pageable
+        @RequestParam(value = "categoryId", required = false) Long categoryId,
+        @PageableDefault(page = 0, size = 10, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable
     ) {
-        PageResponse<ProductResponse> response = productService.findAllProduct(pageable);
+        PageResponse<ProductResponse> response = productService.findAllProduct(categoryId, pageable);
         return ResponseEntity.ok().body(response);
     }
 

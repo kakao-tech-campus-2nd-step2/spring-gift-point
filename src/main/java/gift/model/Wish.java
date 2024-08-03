@@ -26,17 +26,12 @@ public class Wish extends BaseEntity{
     @NotNull
     private Product product;
 
-    @NotNull
-    private int count;
-
     protected Wish() {
     }
 
-    public Wish(Long id, User user, Product product, int count) {
-        this.id = id;
+    public Wish(User user, Product product) {
         this.user = user;
         this.product = product;
-        this.count = count;
     }
 
     public Long getId() {
@@ -49,14 +44,6 @@ public class Wish extends BaseEntity{
 
     public Product getProduct() {
         return product;
-    }
-
-    public int getCount() {
-        return count;
-    }
-
-    public void updateWish(int count) {
-        this.count = count;
     }
 
     public boolean isOwner(Long userId) {

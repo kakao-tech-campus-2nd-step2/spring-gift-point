@@ -2,6 +2,8 @@ package gift.common.util;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import gift.common.exception.ErrorCode;
+import gift.common.exception.OAuthException;
 import gift.common.properties.KakaoProperties;
 import gift.controller.oauth.dto.Link;
 import gift.controller.oauth.dto.TextTemplate;
@@ -13,6 +15,7 @@ import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
+import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestClient;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -46,15 +49,19 @@ public class KakaoUtil {
         var url = kakaoProperties.tokenUrl();
         LinkedMultiValueMap<String, String> body = createAccessBody(code);
 
-        TokenInfoResponse response = restClient.post()
-            .uri(URI.create(url))
-            .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-            .body(body)
-            .retrieve()
-            .toEntity(TokenInfoResponse.class)
-            .getBody();
+        try {
+            TokenInfoResponse response = restClient.post()
+                .uri(URI.create(url))
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .body(body)
+                .retrieve()
+                .toEntity(TokenInfoResponse.class)
+                .getBody();
 
-        return response;
+            return response;
+        } catch (ResourceAccessException e) {
+            throw new OAuthException(ErrorCode.NETWORK_ERROR);
+        }
     }
 
     public String getRequestUrl() {
