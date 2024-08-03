@@ -37,7 +37,7 @@ public class DiscountPolicyEntity {
     private LocalDateTime endDate;
     //    할인 한도
     @Column
-    private Integer DiscountAmountLimit;
+    private Integer discountAmountLimit;
     //     삭제 여부
     @Column
     private Integer isDelete;
@@ -66,7 +66,7 @@ public class DiscountPolicyEntity {
         this.discountType = discountType;
         this.discount = discount;
         this.endDate = endDate;
-        DiscountAmountLimit = discountAmountLimit;
+        this.discountAmountLimit = discountAmountLimit;
         this.remark = remark;
         this.target = target;
         this.isDelete = 0;
@@ -89,7 +89,7 @@ public class DiscountPolicyEntity {
     }
 
     public Integer getDiscountAmountLimit() {
-        return DiscountAmountLimit;
+        return discountAmountLimit;
     }
 
     public LocalDateTime getCreatedAt() {

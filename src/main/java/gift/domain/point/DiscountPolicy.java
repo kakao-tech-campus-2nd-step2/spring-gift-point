@@ -2,6 +2,7 @@ package gift.domain.point;
 
 import gift.entity.enums.DiscountType;
 import gift.util.page.PageParam;
+import jakarta.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -13,12 +14,17 @@ public class DiscountPolicy {
 
     }
     public static class CreateDiscountPolicy{
+        @NotNull
         private Long productId;
+        @NotNull
         private DiscountType discountType;
+        @NotNull
         private Integer discount;
+        @NotNull
         private LocalDateTime endDate;
+        @NotNull
         private Integer discountAmountLimit;
-        private String remark;
+        private String remark="";
 
         public CreateDiscountPolicy(Long productId, DiscountType discountType, Integer discount,
             LocalDateTime endDate, Integer discountAmountLimit, String remark) {
