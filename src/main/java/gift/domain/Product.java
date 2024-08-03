@@ -56,7 +56,7 @@ public class Product {
         category.getProducts().add(this);
     }
 
-    public long getId() {
+    public Long getId() {
         return id;
     }
 

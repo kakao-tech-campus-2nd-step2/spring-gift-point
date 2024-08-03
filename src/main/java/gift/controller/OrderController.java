@@ -3,7 +3,9 @@ package gift.controller;
 import gift.annotation.LoginMember;
 import gift.domain.TokenAuth;
 import gift.dto.request.OrderRequest;
+import gift.dto.request.PriceRequest;
 import gift.dto.response.OrderResponse;
+import gift.dto.response.PriceResponse;
 import gift.service.OrderService;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
@@ -30,4 +32,12 @@ public class OrderController {
         OrderResponse orderResponse = orderService.createOrder(token, orderRequest);
         return new ResponseEntity<>(orderResponse, HttpStatus.CREATED);
     }
+
+    @GetMapping("/price")
+    @Operation(summary = "결제 금액 조회", description = "결제 직전 페이지에서 금액을 조회한다.")
+    public ResponseEntity<PriceResponse> getOrderPrice(@RequestBody PriceRequest priceRequest) {
+        PriceResponse priceResponse = orderService.getOrderPrice(priceRequest);
+        return ResponseEntity.ok(priceResponse);
+    }
+
 }
