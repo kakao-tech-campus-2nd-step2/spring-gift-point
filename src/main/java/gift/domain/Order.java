@@ -17,6 +17,12 @@ public class Order {
     private LocalDateTime orderDateTime;
     @Column(name="message")
     private String message;
+    @Column(name="points_used")
+    private int pointsUsed;
+    @Column(name="points_received")
+    private int pointsReceived;
+    @Column(name="payment")
+    private int payment;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
     private Member member;
@@ -26,12 +32,15 @@ public class Order {
 
     protected Order(){}
 
-    public Order(int quantity, LocalDateTime orderDateTime, String message, Member member, Option option) {
+    public Order(int quantity, LocalDateTime orderDateTime, String message, Member member, Option option, int pointsUsed, int pointsReceived, int payment) {
         this.quantity = quantity;
         this.orderDateTime = orderDateTime;
         this.message = message;
         this.member = member;
         this.option = option;
+        this.pointsUsed = pointsUsed;
+        this.pointsReceived = pointsReceived;
+        this.payment = payment;
     }
 
     public Long getId() {
@@ -80,6 +89,18 @@ public class Order {
 
     public void setOption(Option option) {
         this.option = option;
+    }
+
+    public int getPointsUsed() {
+        return pointsUsed;
+    }
+
+    public int getPointsReceived() {
+        return pointsReceived;
+    }
+
+    public int getPayment() {
+        return payment;
     }
 
     @Override
