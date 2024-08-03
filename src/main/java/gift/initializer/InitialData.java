@@ -33,18 +33,18 @@ public class InitialData implements CommandLineRunner {
     }
 
     private void initialCategory() {
-        categoryRepository.save(new Category("교환권", "color", "imageUrl", "description"));
-        categoryRepository.save(new Category("상품권", "color", "imageUrl", "description"));
-        categoryRepository.save(new Category("뷰티", "color", "imageUrl", "description"));
-        categoryRepository.save(new Category("패션", "color", "imageUrl", "description"));
-        categoryRepository.save(new Category("리빙/도서", "color", "imageUrl", "description"));
-        categoryRepository.save(new Category("레저/스포츠", "color", "imageUrl", "description"));
-        categoryRepository.save(new Category("아티스트/캐릭터", "color", "imageUrl", "description"));
-        categoryRepository.save(new Category("유아동/반려", "color", "imageUrl", "description"));
-        categoryRepository.save(new Category("디지털/가전", "color", "imageUrl", "description"));
-        categoryRepository.save(new Category("카카오프렌즈", "color", "imageUrl", "description"));
-        categoryRepository.save(new Category("트랜드 선물", "color", "imageUrl", "description"));
-        categoryRepository.save(new Category("백화점", "color", "imageUrl", "description"));
+        categoryRepository.save(new Category("교환권", "#5858FA", "https://plus.unsplash.com/premium_vector-1718166509526-7da664a2034f?q=80&w=2960&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D", "교환권 상품"));
+        categoryRepository.save(new Category("상품권", "#5858FA", "https://images.unsplash.com/photo-1526336024174-e58f5cdd8e13?q=80&w=2787&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D", "상품권 상품"));
+        categoryRepository.save(new Category("뷰티", "#5858FA", "https://plus.unsplash.com/premium_vector-1721535318800-98558631fff7?q=80&w=2960&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D", "뷰티 상품"));
+        categoryRepository.save(new Category("패션", "#5858FA", "https://images.unsplash.com/photo-1517849845537-4d257902454a?q=80&w=2835&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D", "패션 상품"));
+        categoryRepository.save(new Category("리빙/도서", "#5858FA", "https://plus.unsplash.com/premium_vector-1719858610584-14eae64834af?q=80&w=2960&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D", "리빙/도서 상풍"));
+        categoryRepository.save(new Category("레저/스포츠", "#5858FA", "https://plus.unsplash.com/premium_vector-1712678583326-87d20031198d?q=80&w=2960&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D", "레저/스포츠 상품"));
+        categoryRepository.save(new Category("캐릭터", "#5858FA", "https://plus.unsplash.com/premium_vector-1721995308967-c7802e7361c9?q=80&w=3176&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D", "캐릭터 상품"));
+        categoryRepository.save(new Category("유아동/반려", "#5858FA", "https://plus.unsplash.com/premium_vector-1682298438546-b35366b75af3?q=80&w=2960&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D", "유아동/반려 상품"));
+        categoryRepository.save(new Category("디지털/가전", "#5858FA", "https://plus.unsplash.com/premium_vector-1716910449787-ce65ae43d54e?q=80&w=2960&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D", "디지털,가전 상품"));
+        categoryRepository.save(new Category("카카오프렌즈", "#5858FA", "https://plus.unsplash.com/premium_vector-1720833276380-436f053a77bd?q=80&w=2960&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D", "카카오프렌즈 상품"));
+        categoryRepository.save(new Category("트랜드 선물", "#5858FA", "https://plus.unsplash.com/premium_vector-1701795462492-d97da6d52d73?q=80&w=2960&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D", "트렌드 선물 상품"));
+        categoryRepository.save(new Category("백화점", "#5858FA", "https://plus.unsplash.com/premium_vector-1718370392246-cfc9c9cca202?q=80&w=2960&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D", "백화점 상품"));
     }
 
     private void initialProduct() {

@@ -92,7 +92,7 @@ class WishRepositoryTest {
 
             Wish save = wishRepository.save(wish);
 
-            assertThat(save.getCreatedTime())
+            assertThat(save.getCreatedDate())
                     .isInstanceOf(LocalDateTime.class);
         }
 

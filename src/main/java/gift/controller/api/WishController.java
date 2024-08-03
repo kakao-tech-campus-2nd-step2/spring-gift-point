@@ -25,11 +25,11 @@ public class WishController {
     @PostMapping("/api/wishes")
     public ResponseEntity<Void> addProductToWish(@MemberId Long memberId, @Valid @RequestBody WishRequest request) {
         wishService.addProductToWish(memberId, request);
-        return ResponseEntity.status(HttpStatus.CREATED).build();
+        return ResponseEntity.status(HttpStatus.OK).build();
     }
 
     @GetMapping("/api/wishes")
-    public ResponseEntity<Page<WishProductResponse>> getWishProducts(@MemberId Long memberId, @PageableDefault(sort = "createdTime", direction = Sort.Direction.DESC) Pageable pageable) {
+    public ResponseEntity<Page<WishProductResponse>> getWishProducts(@MemberId Long memberId, @PageableDefault(sort = "createdDate", direction = Sort.Direction.DESC) Pageable pageable) {
         Page<WishProductResponse> wishProductResponses = wishService.getWishProductResponses(memberId, pageable);
         return ResponseEntity.ok(wishProductResponses);
     }

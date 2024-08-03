@@ -22,10 +22,11 @@ public class TokenService {
         this.kakaoAccessTokenRepository = kakaoAccessTokenRepository;
     }
 
-    public JwtResponse generateJwt(Long registeredMemberId) {
+    public JwtResponse generateJwt(Long registeredMemberId, String email) {
         Date now = new Date();
         Date expiryDate = new Date(now.getTime() + JWT_EXPIRATION_IN_MS);
         String tokenValue = Jwts.builder()
+                .claim("sub", email)
                 .claim("memberId", registeredMemberId)
                 .expiration(expiryDate)
                 .signWith(KEY)
