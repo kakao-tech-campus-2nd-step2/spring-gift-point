@@ -7,9 +7,9 @@ DEPLOY_PATH=/home/ubuntu/deploy/
 JAR_NAME=$(basename $BUILD_PATH)
 
 # kill process
-CURRENT_PID = $(pgrep -f $JAR_NAME)
+CURRENT_PID = $(lsof -t -i:8080)
 
-if [ -z $CURRENT_PID ]
+if [ -z "$CURRENT_PID" ]
 then
         sleep 1
 else
