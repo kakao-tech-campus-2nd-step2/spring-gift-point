@@ -2,7 +2,6 @@ package gift.wishlist;
 
 import gift.product.ProductService;
 import gift.product.dto.ProductPaginationResponseDTO;
-import gift.product.dto.ProductResponseDTO;
 import java.util.List;
 import java.util.stream.IntStream;
 import org.springframework.data.domain.Page;
@@ -45,7 +44,7 @@ public class WishlistPageController {
         @PathVariable long categoryId
     ) {
         pageable = changePageable(pageable);
-        Page<ProductPaginationResponseDTO> wishProducts = wishlistService.getAllWishlists(token, pageable);
+        Page<ProductPaginationResponseDTO> wishProducts = wishlistService.getWishlists(token, pageable);
         Page<ProductPaginationResponseDTO> allProducts = productService.getAllProducts(
             PageRequest.of(0, Integer.MAX_VALUE),
             categoryId

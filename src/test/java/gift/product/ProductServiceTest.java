@@ -67,20 +67,16 @@ class ProductServiceTest {
                     "test-image-url",
                     "test-description"
                 )
-            ), new Product(
-                3L,
-                "product-3",
-                3,
-                "product-3-image",
-                new Category(
-                    2L,
-                    "category-2",
-                    "test-color-2",
-                    "test-image-url-2",
-                    "test-description-2"
-                )
             )
         ));
+
+        Category findCategory = new Category(
+            1L,
+            "category-1",
+            "test-color",
+            "test-image-url",
+            "test-description"
+        );
 
         Page<ProductPaginationResponseDTO> expect = new PageImpl<>(List.of(
             new ProductPaginationResponseDTO(1L, "product-1", 1, "product-1-image"),
@@ -90,8 +86,12 @@ class ProductServiceTest {
         PageRequest pageable = PageRequest.of(0, Integer.MAX_VALUE);
 
         //when
-        when(productRepository.findAll(pageable))
+        when(productRepository.findAllByCategory(findCategory, pageable))
             .thenReturn(expectFromRepository);
+        when(categoryRepository.findById(1L))
+            .thenReturn(
+                Optional.of(findCategory)
+            );
         Page<ProductPaginationResponseDTO> actual = productService.getAllProducts(pageable, 1L);
 
         //then

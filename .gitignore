@@ -39,4 +39,4 @@ out/
 ### Mac OS ###
 .DS_Store
 
-.env.properties
+src/main/resources/.env.properties

@@ -13,8 +13,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface WishlistRepository extends JpaRepository<Wishlist, Long> {
 
-    List<Wishlist> findAllByMember(Member member);
-
     Page<Wishlist> findAllByMember(Member member, Pageable pageable);
 
     Optional<Wishlist> findByProductAndMember(Product product, Member member);

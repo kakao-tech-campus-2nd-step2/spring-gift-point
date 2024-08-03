@@ -5,19 +5,15 @@ import static gift.exception.ErrorMessage.PRODUCT_NOT_FOUND;
 import static gift.exception.ErrorMessage.WISHLIST_ALREADY_EXISTS;
 import static gift.exception.ErrorMessage.WISHLIST_NOT_FOUND;
 
-import gift.category.dto.CategoryResponseDTO;
 import gift.member.MemberRepository;
 import gift.member.entity.Member;
 import gift.product.ProductRepository;
 import gift.product.dto.ProductPaginationResponseDTO;
-import gift.product.dto.ProductResponseDTO;
 import gift.product.entity.Product;
 import gift.token.JwtProvider;
 import gift.wishlist.dto.ProductIdRequestDTO;
 import gift.wishlist.entity.Wishlist;
-import java.util.List;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.util.Pair;
 import org.springframework.stereotype.Service;
@@ -45,11 +41,8 @@ public class WishlistService {
     }
 
     @Transactional(readOnly = true)
-    public Page<ProductPaginationResponseDTO> getAllWishlists(String token, Pageable pageable) {
-        Member member = getMemberFromToken(token);
-
-        List<ProductPaginationResponseDTO> wishlistProducts = wishlistRepository.findAllByMember(member)
-            .stream()
+    public Page<ProductPaginationResponseDTO> getWishlists(String token, Pageable pageable) {
+        return wishlistRepository.findAllByMember(getMemberFromToken(token), pageable)
             .map(wishlist -> {
                 Product product = wishlist.getProduct();
                 return new ProductPaginationResponseDTO(
@@ -58,9 +51,7 @@ public class WishlistService {
                     product.getPrice(),
                     product.getImageUrl()
                 );
-            }).toList();
-
-        return new PageImpl<>(wishlistProducts, pageable, wishlistProducts.size());
+            });
     }
 
     public void addWishlist(String token, ProductIdRequestDTO productIdRequestDTO) {
