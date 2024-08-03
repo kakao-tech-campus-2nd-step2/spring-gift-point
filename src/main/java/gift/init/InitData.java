@@ -1,5 +1,11 @@
 package gift.init;
 
+import gift.init.auth.UserCreator;
+import gift.init.product.CategoryCreator;
+import gift.init.product.ProductCreator;
+import gift.init.product.ProductOptionCreator;
+import gift.init.product.ProductOrderCreator;
+import gift.init.product.WishCreator;
 import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;

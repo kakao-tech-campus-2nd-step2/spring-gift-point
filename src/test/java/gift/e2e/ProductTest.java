@@ -7,9 +7,9 @@ import static org.springframework.http.HttpMethod.PUT;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
 import static org.springframework.http.HttpStatus.OK;
 
-import gift.auth.domain.Login;
-import gift.domain.Product.CreateProduct;
-import gift.domain.Product.UpdateProduct;
+import gift.domain.auth.Login;
+import gift.domain.product.Product.CreateProduct;
+import gift.domain.product.Product.UpdateProduct;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
