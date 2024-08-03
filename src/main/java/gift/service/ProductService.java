@@ -4,10 +4,10 @@ import gift.domain.model.dto.ProductAddRequestDto;
 import gift.domain.model.dto.ProductResponseDto;
 import gift.domain.model.dto.ProductUpdateRequestDto;
 import gift.domain.model.entity.Category;
-import gift.domain.model.enums.ProductSortBy;
 import gift.domain.repository.CategoryRepository;
 import gift.domain.repository.ProductRepository;
 import gift.domain.model.entity.Product;
+import gift.util.SortUtil;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -39,13 +39,25 @@ public class ProductService {
     }
 
     @Transactional(readOnly = true)
-    public Page<ProductResponseDto> getAllProducts(int page, ProductSortBy sortBy) {
-        Sort sort = sortBy.getSort();
-        Pageable pageable = PageRequest.of(page, PAGE_SIZE, sort);
+    public Page<ProductResponseDto> getAllProducts(int page, int size, String sort,
+        Long categoryId) {
+        Sort sortObj = SortUtil.createSort(sort);
+        Pageable pageable = PageRequest.of(page, size, sortObj);
 
-        Page<Product> productPage = productRepository.findAllProducts(pageable);
+        Page<Product> products;
+        if (categoryId > 0) {
+            products = productRepository.findByCategoryId(categoryId, pageable);
+        } else {
+            products = productRepository.findAll(pageable);
+        }
 
-        return productPage.map(this::convertToResponseDto);
+        return products.map(product -> new ProductResponseDto(
+            product.getId(),
+            product.getName(),
+            product.getPrice(),
+            product.getImageUrl(),
+            product.getCategory().getId()
+        ));
     }
 
     @Transactional
@@ -53,7 +65,7 @@ public class ProductService {
         validateProductName(productAddRequestDto.getName());
         validateDuplicateProduct(productAddRequestDto.getName());
 
-        Category category = categoryRepository.findByName(productAddRequestDto.getCategoryName())
+        Category category = categoryRepository.findById(productAddRequestDto.getCategoryId())
             .orElseThrow(() -> new NoSuchElementException("존재하지 않는 카테고리입니다."));
 
         Product product = convertAddRequestToEntity(productAddRequestDto, category);
@@ -78,7 +90,7 @@ public class ProductService {
         Product product = productRepository.findById(id)
             .orElseThrow(() -> new NoSuchElementException("존재하지 않는 상품입니다."));
 
-        Category category = categoryRepository.findByName(productAddRequestDto.getCategoryName())
+        Category category = categoryRepository.findById(productAddRequestDto.getCategoryId())
             .orElseThrow(() -> new NoSuchElementException("존재하지 않는 카테고리입니다."));
 
         if (productRepository.existsByName(productAddRequestDto.getName())) {
@@ -102,7 +114,8 @@ public class ProductService {
         }
     }
 
-    private Product convertAddRequestToEntity(ProductAddRequestDto productAddRequestDto, Category category) {
+    private Product convertAddRequestToEntity(ProductAddRequestDto productAddRequestDto,
+        Category category) {
         return new Product(
             productAddRequestDto.getName(),
             productAddRequestDto.getPrice(),
@@ -117,7 +130,7 @@ public class ProductService {
             product.getName(),
             product.getPrice(),
             product.getImageUrl(),
-            product.getCategory().getName()
+            product.getCategory().getId()
         );
     }
 

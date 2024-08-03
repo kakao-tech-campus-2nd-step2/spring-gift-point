@@ -40,7 +40,9 @@ public class DataInitializer {
             // 카테고리 생성
             List<Category> categories = new ArrayList<>();
             for (int i = 1; i <= 5; i++) {
-                Category category = new Category("Category " + i);
+                Category category = new Category("Category " + i, "random color",
+                    "https://img1.kakaocdn.net/thumb/C50x50@2x.fwebp.q82/?fname=https%3A%2F%2Fst.kakaocdn.net%2Fproduct%2Fgift%2Fgift_brand%2F20200331035648_4f7fd5bab2564f88ae561161dce7966d",
+                    "starbucks");
                 categories.add(category);
             }
             categories = categoryRepository.saveAll(categories);
@@ -53,7 +55,7 @@ public class DataInitializer {
                 Category randomCategory = categories.get(random.nextInt(categories.size()));
                 Product product = new Product(
                     "Product " + i,
-                    random.nextLong(100000) + 1000,
+                    random.nextInt(100000) + 1000,
                     "https://img1.kakaocdn.net/thumb/C320x320@2x.fwebp.q82/?fname=https%3A%2F%2Fst.kakaocdn.net%2Fproduct%2Fgift%2Fproduct%2F20240508101036_6c7f02cb957848a69a25018a664a3c89.jpg",
                     randomCategory
                 );
@@ -65,7 +67,7 @@ public class DataInitializer {
             // 위시리스트에 모든 상품 추가
             List<Wish> wishes = new ArrayList<>();
             for (Product product : products) {
-                Wish wish = new Wish(savedUser, product);
+                Wish wish = new Wish(savedUser, product, 1);
                 wishes.add(wish);
             }
 

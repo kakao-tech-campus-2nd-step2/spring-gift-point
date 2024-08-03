@@ -44,7 +44,7 @@ public class UserService {
 
         String token = jwtUtil.generateToken(userRequestDto.getEmail());
 
-        return new UserResponseDto(savedUser, token);
+        return new UserResponseDto(token);
     }
 
     public TokenResponseDto loginUser(UserRequestDto userRequestDto) {

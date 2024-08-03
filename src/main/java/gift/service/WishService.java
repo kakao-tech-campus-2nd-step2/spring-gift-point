@@ -1,14 +1,15 @@
 package gift.service;
 
+import gift.domain.model.dto.WishAddRequestDto;
 import gift.domain.model.dto.WishResponseDto;
 import gift.domain.model.dto.WishUpdateRequestDto;
 import gift.domain.model.entity.Product;
 import gift.domain.model.entity.User;
 import gift.domain.model.entity.Wish;
-import gift.domain.model.enums.WishSortBy;
 import gift.domain.repository.WishRepository;
 import gift.exception.DuplicateWishItemException;
 import gift.exception.NoSuchWishException;
+import gift.util.SortUtil;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -21,37 +22,39 @@ public class WishService {
 
     private final WishRepository wishRepository;
     private final ProductService productService;
-    private final UserService userService;
     private static final int PAGE_SIZE = 10;
 
-    public WishService(WishRepository wishRepository, ProductService productService,
-        UserService userService) {
+    public WishService(WishRepository wishRepository, ProductService productService) {
         this.wishRepository = wishRepository;
         this.productService = productService;
-        this.userService = userService;
     }
 
     @Transactional(readOnly = true)
-    public Page<WishResponseDto> getWishes(User user, int page, WishSortBy sortBy) {
-        Sort sort = sortBy.getSort();
-        Pageable pageable = PageRequest.of(page, PAGE_SIZE, sort);
+    public Page<WishResponseDto> getWishes(User user, int page, int size, String sort) {
+        Sort sortObj = SortUtil.createSort(sort);
+        Pageable pageable = PageRequest.of(page, size, sortObj);
 
-        Page<Wish> wishPage = wishRepository.findByUserEmail(user.getEmail(), pageable);
+        Page<Wish> wishes = wishRepository.findByUser(user, pageable);
 
-        return wishPage.map(this::convertToWishResponseDto);
+        return wishes.map(wish -> new WishResponseDto(
+            wish.getId(),
+            wish.getProduct().getId(),
+            wish.getCount()
+        ));
     }
 
     @Transactional
-    public WishResponseDto addWish(User user, Long productId) {
-        productService.validateExistProductId(productId);
-        if (wishRepository.existsByUserEmailAndProductId(user.getEmail(), productId)) {
+    public WishResponseDto addWish(User user, WishAddRequestDto wishAddRequestDto) {
+        productService.validateExistProductId(wishAddRequestDto.getProductId());
+        if (wishRepository.existsByUserEmailAndProductId(user.getEmail(),
+            wishAddRequestDto.getProductId())) {
             throw new DuplicateWishItemException("이미 위시리스트에 존재하는 상품입니다.");
         }
 
         Product product = productService.convertResponseDtoToEntity(
-            productService.getProduct(productId));
+            productService.getProduct(wishAddRequestDto.getProductId()));
 
-        Wish wish = new Wish(user, product);
+        Wish wish = new Wish(user, product, wishAddRequestDto.getCount());
         return convertToWishResponseDto(wishRepository.save(wish));
     }
 
@@ -67,7 +70,11 @@ public class WishService {
         WishUpdateRequestDto wishUpdateRequestDto) {
         productService.validateExistProductId(productId);
         Wish wish = validateExistWishProduct(user, productId);
-        wish.setCount(wishUpdateRequestDto.getCount());
+
+        Product product = productService.convertResponseDtoToEntity(
+            productService.getProduct(productId));
+
+        wish.updateWish(user, product, wishUpdateRequestDto.getCount());
         return convertToWishResponseDto(wishRepository.save(wish));
     }
 
@@ -80,11 +87,8 @@ public class WishService {
     private WishResponseDto convertToWishResponseDto(Wish wish) {
         return new WishResponseDto(
             wish.getId(),
-            wish.getCount(),
             wish.getProduct().getId(),
-            wish.getProduct().getName(),
-            wish.getProduct().getPrice(),
-            wish.getProduct().getImageUrl()
+            wish.getCount()
         );
     }
 }

@@ -2,25 +2,50 @@ package gift.domain.model.dto;
 
 import gift.domain.model.entity.Category;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
+import org.hibernate.validator.constraints.URL;
 
 public class CategoryUpdateRequestDto {
 
     @NotBlank
-    private String name;
+    private final String name;
 
-    public CategoryUpdateRequestDto() {
-    }
+    @NotBlank
+    private final String color;
 
-    public CategoryUpdateRequestDto(String name) {
+    @NotBlank
+    @URL
+    private final String imageUrl;
+
+    @NotBlank
+    @Size(max = 255)
+    private final String description;
+
+    public CategoryUpdateRequestDto(String name, String color, String imageUrl,
+        String description) {
         this.name = name;
-    }
-
-    public Category toEntity() {
-        return new Category(name);
+        this.color = color;
+        this.imageUrl = imageUrl;
+        this.description = description;
     }
 
     public String getName() {
         return name;
+    }
+
+    public String getColor() {
+        return color;
+    }
+
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public Category toEntity() {
+        return new Category(this.name, this.color, this.imageUrl, this.description);
     }
 }

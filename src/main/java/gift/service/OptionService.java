@@ -7,6 +7,7 @@ import gift.domain.model.entity.Option;
 import gift.domain.model.entity.Product;
 import gift.domain.repository.OptionRepository;
 import gift.domain.repository.ProductRepository;
+import gift.exception.LastOptionDeleteException;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
@@ -30,12 +31,12 @@ public class OptionService {
     }
 
     public OptionResponseDto addOption(Long productId, OptionAddRequestDto optionAddRequestDto) {
-        validateOptionName(optionAddRequestDto.getName());
+        validateOptionName(optionAddRequestDto.getOptionName());
 
         Product product = productRepository.findById(productId)
             .orElseThrow(() -> new NoSuchElementException("해당 상품이 존재하지 않습니다."));
-        Option option = new Option(product, optionAddRequestDto.getName(),
-            optionAddRequestDto.getQuantity());
+        Option option = new Option(product, optionAddRequestDto.getOptionName(),
+            optionAddRequestDto.getOptionQuantity());
 
         Option savedOption = optionRepository.save(option);
         return OptionResponseDto.toDto(savedOption);
@@ -46,14 +47,24 @@ public class OptionService {
         Option option = optionRepository.findById(id)
             .orElseThrow(() -> new NoSuchElementException("해당 상품 옵션이 존재하지 않습니다."));
 
-        option.update(id, optionUpdateRequestDto.getName(), optionUpdateRequestDto.getQuantity());
+        option.update(id, optionUpdateRequestDto.getOptionName(),
+            optionUpdateRequestDto.getOptionQuantity());
         Option savedOption = optionRepository.save(option);
 
         return OptionResponseDto.toDto(savedOption);
     }
 
     public void deleteOption(Long id) {
-        validateOptionId(id);
+        Option option = optionRepository.findById(id)
+            .orElseThrow(() -> new NoSuchElementException("해당 상품 옵션이 존재하지 않습니다."));
+
+        Product product = option.getProduct();
+        List<Option> productOptions = optionRepository.findAllByProductId(product.getId());
+
+        if (productOptions.size() == 1) {
+            throw new LastOptionDeleteException("상품의 마지막 옵션은 삭제할 수 없습니다.");
+        }
+
         optionRepository.deleteById(id);
     }
 
@@ -65,12 +76,6 @@ public class OptionService {
         Option savedOption = optionRepository.save(option);
 
         return OptionResponseDto.toDto(savedOption);
-    }
-
-    private void validateOptionId(Long id) {
-        if (!optionRepository.existsById(id)) {
-            throw new IllegalArgumentException("해당 상품 옵션이 존재하지 않습니다.");
-        }
     }
 
     private void validateOptionName(String name) {

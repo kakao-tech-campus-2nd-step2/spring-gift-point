@@ -35,7 +35,8 @@ public class OptionController {
 
     @Operation(summary = "상품의 모든 옵션 조회", description = "지정된 상품 ID의 모든 옵션을 조회합니다.")
     @GetMapping
-    public ResponseEntity<List<OptionResponseDto>> getAllOptionsByProductId(@PathVariable Long productId) {
+    public ResponseEntity<List<OptionResponseDto>> getAllOptionsByProductId(
+        @PathVariable Long productId) {
         return ResponseEntity.ok(optionService.getAllOptionsByProductId(productId));
     }
 
@@ -49,17 +50,17 @@ public class OptionController {
     }
 
     @Operation(summary = "옵션 수정", description = "지정된 ID의 옵션을 수정합니다.")
-    @PutMapping("/{id}")
+    @PutMapping("/{optionId}")
     public ResponseEntity<OptionResponseDto> updateOption(
-        @PathVariable Long id,
+        @PathVariable Long optionId,
         @Valid @RequestBody OptionUpdateRequestDto optionUpdateRequestDto) {
-        return ResponseEntity.ok(optionService.updateOption(id, optionUpdateRequestDto));
+        return ResponseEntity.ok(optionService.updateOption(optionId, optionUpdateRequestDto));
     }
 
     @Operation(summary = "옵션 삭제", description = "지정된 ID의 옵션을 삭제합니다.")
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteOption(@PathVariable Long id) {
-        optionService.deleteOption(id);
+    @DeleteMapping("/{optionId}")
+    public ResponseEntity<Void> deleteOption(@PathVariable Long optionId) {
+        optionService.deleteOption(optionId);
         return ResponseEntity.noContent().build();
     }
 }

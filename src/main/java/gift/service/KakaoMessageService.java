@@ -22,9 +22,11 @@ public class KakaoMessageService {
         this.objectMapper = objectMapper;
     }
 
-    public void sendOrderMessage(String accessToken, String productName, String optionName, int quantity, String message, String imageUrl) {
+    public void sendOrderMessage(String accessToken, String productName, String optionName,
+        int quantity, String message, String imageUrl) {
         try {
-            String templateObject = createTemplateObject(productName, optionName, quantity, message, imageUrl);
+            String templateObject = createTemplateObject(productName, optionName, quantity, message,
+                imageUrl);
 
             MultiValueMap<String, String> body = new LinkedMultiValueMap<>();
             body.add("template_object", templateObject);
@@ -41,13 +43,16 @@ public class KakaoMessageService {
         }
     }
 
-    private String createTemplateObject(String productName, String optionName, int quantity, String message, String imageUrl) throws Exception {
+    private String createTemplateObject(String productName, String optionName, int quantity,
+        String message, String imageUrl) throws Exception {
         Map<String, Object> templateObject = new HashMap<>();
         templateObject.put("object_type", "feed");
 
         Map<String, Object> content = new HashMap<>();
         content.put("title", "주문이 완료되었습니다");
-        content.put("description", String.format("상품명: %s\n옵션: %s\n수량: %d\n메시지: %s", productName, optionName, quantity, message));
+        content.put("description",
+            String.format("상품명: %s\n옵션: %s\n수량: %d\n메시지: %s", productName, optionName, quantity,
+                message));
         content.put("image_url", imageUrl);
         content.put("image_width", 640);
         content.put("image_height", 640);

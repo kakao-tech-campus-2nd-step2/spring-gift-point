@@ -1,6 +1,6 @@
 package gift.domain.model.entity;
 
-
+import gift.util.TimeStamp;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -19,7 +19,7 @@ import jakarta.persistence.UniqueConstraint;
         , columnNames = {"user_id", "product_id"})
 )
 
-public class Wish {
+public class Wish extends TimeStamp {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -39,9 +39,10 @@ public class Wish {
     protected Wish() {
     }
 
-    public Wish(User user, Product product) {
+    public Wish(User user, Product product, Integer count) {
         this.user = user;
         this.product = product;
+        this.count = count;
     }
 
     public Long getId() {
@@ -60,7 +61,9 @@ public class Wish {
         return count;
     }
 
-    public void setCount(Integer count) {
+    public void updateWish(User user, Product product, Integer count) {
+        this.user = user;
+        this.product = product;
         this.count = count;
     }
 }

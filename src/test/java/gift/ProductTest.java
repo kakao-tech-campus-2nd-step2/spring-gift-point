@@ -26,7 +26,8 @@ public class ProductTest {
         Category category = new Category("Category 1");
         category = categoryRepository.save(category);
 
-        Product product = new Product("Test Product", 1000L, "http://example.com/image.jpg", category);
+        Product product = new Product("Test Product", 1000L, "http://example.com/image.jpg",
+            category);
 
         // when
         Product savedProduct = productRepository.save(product);
@@ -45,7 +46,8 @@ public class ProductTest {
         Category category = new Category("Category 1");
         category = categoryRepository.save(category);
 
-        Product product = new Product("Test Product", 1000L, "http://example.com/image.jpg", category);
+        Product product = new Product("Test Product", 1000L, "http://example.com/image.jpg",
+            category);
         productRepository.save(product);
 
         // when
@@ -64,7 +66,8 @@ public class ProductTest {
         Category category = new Category("Category 1");
         category = categoryRepository.save(category);
 
-        Product product = new Product("Test Product", 1000L, "http://example.com/image.jpg", category);
+        Product product = new Product("Test Product", 1000L, "http://example.com/image.jpg",
+            category);
         productRepository.save(product);
 
         // when
@@ -88,7 +91,8 @@ public class ProductTest {
         category = categoryRepository.save(category);
 
         String productName = "Test Product";
-        Product product = new Product("Test Product", 1000L, "http://example.com/image.jpg", category);
+        Product product = new Product("Test Product", 1000L, "http://example.com/image.jpg",
+            category);
         productRepository.save(product);
 
         // when
@@ -107,7 +111,8 @@ public class ProductTest {
         category = categoryRepository.save(category);
 
         String productName = "Test Product";
-        Product product = new Product("Test Product", 1000L, "http://example.com/image.jpg", category);
+        Product product = new Product("Test Product", 1000L, "http://example.com/image.jpg",
+            category);
         productRepository.save(product);
 
         // when

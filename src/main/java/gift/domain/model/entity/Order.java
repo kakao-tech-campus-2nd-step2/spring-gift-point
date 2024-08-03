@@ -1,5 +1,6 @@
 package gift.domain.model.entity;
 
+import gift.util.TimeStamp;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -10,10 +11,11 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import java.time.LocalDateTime;
+import org.springframework.data.annotation.CreatedDate;
 
 @Entity
 @Table(name = "orders")
-public class Order {
+public class Order extends TimeStamp {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -30,11 +32,12 @@ public class Order {
     @Column(nullable = false)
     private Integer quantity;
 
-    @Column(nullable = false)
-    private LocalDateTime orderDateTime;
-
     @Column(length = 500)
     private String message;
+
+    @Column(nullable = false)
+    @CreatedDate
+    private LocalDateTime orderDateTime;
 
     public Order() {
     }

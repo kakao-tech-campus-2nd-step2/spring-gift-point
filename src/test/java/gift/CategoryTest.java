@@ -61,10 +61,12 @@ class CategoryTest {
         CategoryAddRequestDto addRequestDto = new CategoryAddRequestDto("Original Category");
         CategoryResponseDto addedCategory = categoryController.addCategory(addRequestDto).getBody();
 
-        CategoryUpdateRequestDto updateRequestDto = new CategoryUpdateRequestDto("Updated Category");
+        CategoryUpdateRequestDto updateRequestDto = new CategoryUpdateRequestDto(
+            "Updated Category");
 
         // When
-        CategoryResponseDto updatedCategory = categoryController.updateCategory(1L, updateRequestDto)
+        CategoryResponseDto updatedCategory = categoryController.updateCategory(1L,
+                updateRequestDto)
             .getBody();
 
         // Then
@@ -83,7 +85,8 @@ class CategoryTest {
 
         List<CategoryResponseDto> remainingCategories = categoryController.getAllCategories()
             .getBody();
-        assertFalse(remainingCategories.stream().anyMatch(c -> c.getId().equals(addedCategory.getId())));
+        assertFalse(
+            remainingCategories.stream().anyMatch(c -> c.getId().equals(addedCategory.getId())));
     }
 
     @Test
@@ -92,6 +95,7 @@ class CategoryTest {
         Long nonExistentCategoryId = 9999L;
 
         // When & Then
-        assertThrows(IllegalArgumentException.class, () -> categoryController.deleteCategory(nonExistentCategoryId));
+        assertThrows(IllegalArgumentException.class,
+            () -> categoryController.deleteCategory(nonExistentCategoryId));
     }
 }

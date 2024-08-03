@@ -3,12 +3,12 @@ package gift.controller;
 import gift.domain.model.dto.ProductAddRequestDto;
 import gift.domain.model.dto.ProductResponseDto;
 import gift.domain.model.dto.ProductUpdateRequestDto;
-import gift.domain.model.enums.ProductSortBy;
 import gift.service.ProductService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.Positive;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -36,38 +36,41 @@ public class ProductApiController {
     }
 
     @Operation(summary = "상품 조회", description = "지정된 ID의 상품을 조회합니다.")
-    @GetMapping("/{id}")
-    public ResponseEntity<ProductResponseDto> getProduct(@PathVariable Long id) {
-        return ResponseEntity.ok(productService.getProduct(id));
+    @GetMapping("/{productId}")
+    public ResponseEntity<ProductResponseDto> getProduct(@PathVariable Long productId) {
+        return ResponseEntity.ok(productService.getProduct(productId));
     }
 
     @Operation(summary = "모든 상품 조회", description = "모든 상품을 페이지네이션하여 조회합니다.")
     @GetMapping
     public ResponseEntity<Page<ProductResponseDto>> getAllProducts(
         @RequestParam(defaultValue = "0") @Min(value = 0, message = "페이지 번호는 0 이상이어야 합니다.") int page,
-        @RequestParam(defaultValue = "ID_DESC") ProductSortBy sortBy) {
-        return ResponseEntity.ok(productService.getAllProducts(page, sortBy));
+        @RequestParam(defaultValue = "10") @Positive int size,
+        @RequestParam(defaultValue = "name,asc") String sort,
+        @RequestParam Long categoryId) {
+        return ResponseEntity.ok(productService.getAllProducts(page, size, sort, categoryId));
     }
 
     @Operation(summary = "상품 추가", description = "새로운 상품을 추가합니다.")
     @PostMapping
     public ResponseEntity<ProductResponseDto> addProduct(
         @Valid @RequestBody ProductAddRequestDto productAddRequestDto) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(productService.addProduct(productAddRequestDto));
+        return ResponseEntity.status(HttpStatus.CREATED)
+            .body(productService.addProduct(productAddRequestDto));
     }
 
     @Operation(summary = "상품 수정", description = "지정된 ID의 상품을 수정합니다.")
-    @PutMapping("/{id}")
+    @PutMapping("/{productId}")
     public ResponseEntity<ProductResponseDto> updateProduct(
-        @PathVariable Long id,
+        @PathVariable Long productId,
         @Valid @RequestBody ProductUpdateRequestDto productUpdateRequestDto) {
-        return ResponseEntity.ok(productService.updateProduct(id, productUpdateRequestDto));
+        return ResponseEntity.ok(productService.updateProduct(productId, productUpdateRequestDto));
     }
 
     @Operation(summary = "상품 삭제", description = "지정된 ID의 상품을 삭제합니다.")
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteProduct(@PathVariable Long id) {
-        productService.deleteProduct(id);
+    @DeleteMapping("/{productId}")
+    public ResponseEntity<Void> deleteProduct(@PathVariable Long productId) {
+        productService.deleteProduct(productId);
         return ResponseEntity.noContent().build();
     }
 }

@@ -13,19 +13,19 @@ public class ProductUpdateRequestDto {
 
     @NotNull
     @Positive
-    private Long price;
+    private int price;
 
     @NotNull
     private String imageUrl;
 
     @NotNull
-    private String categoryName;
+    private Long categoryId;
 
     public String getName() {
         return name;
     }
 
-    public Long getPrice() {
+    public int getPrice() {
         return price;
     }
 
@@ -33,7 +33,7 @@ public class ProductUpdateRequestDto {
         return imageUrl;
     }
 
-    public String getCategoryName() {
-        return categoryName;
+    public Long getCategoryId() {
+        return categoryId;
     }
 }

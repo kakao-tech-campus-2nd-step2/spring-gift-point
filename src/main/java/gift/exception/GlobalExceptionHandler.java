@@ -35,9 +35,9 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(DuplicateEmailException.class)
     public ResponseEntity<ExceptionResponse> handleDuplicateEmailException(
         DuplicateEmailException e) {
-        ExceptionResponse error = new ExceptionResponse(HttpStatus.CONFLICT.value(),
+        ExceptionResponse error = new ExceptionResponse(HttpStatus.BAD_REQUEST.value(),
             e.getMessage());
-        return new ResponseEntity<>(error, HttpStatus.CONFLICT);
+        return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(NoSuchEmailException.class)
@@ -67,9 +67,9 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(DuplicateWishItemException.class)
     public ResponseEntity<ExceptionResponse> handleDuplicateWishItemException(
         DuplicateWishItemException e) {
-        ExceptionResponse error = new ExceptionResponse(HttpStatus.CONFLICT.value(),
+        ExceptionResponse error = new ExceptionResponse(HttpStatus.BAD_REQUEST.value(),
             e.getMessage());
-        return new ResponseEntity<>(error, HttpStatus.CONFLICT);
+        return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(NoSuchWishException.class)
@@ -94,5 +94,13 @@ public class GlobalExceptionHandler {
         ExceptionResponse error = new ExceptionResponse(HttpStatus.CONFLICT.value(),
             e.getMessage());
         return new ResponseEntity<>(error, HttpStatus.CONFLICT);
+    }
+
+    @ExceptionHandler(LastOptionDeleteException.class)
+    public ResponseEntity<ExceptionResponse> handleLastOptionDeleteException(
+        LastOptionDeleteException e) {
+        ExceptionResponse error = new ExceptionResponse(HttpStatus.BAD_REQUEST.value(),
+            e.getMessage());
+        return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
     }
 }

@@ -38,6 +38,12 @@ public class CategoryController {
         return ResponseEntity.ok(categoryService.getAllCategories());
     }
 
+    @Operation(summary = "카테고리 조회", description = "해당 카테고리를 반환합니다.")
+    @GetMapping("/{categoryId}")
+    public ResponseEntity<CategoryResponseDto> getCategory(@PathVariable Long categoryId) {
+        return ResponseEntity.ok(categoryService.getCategory(categoryId));
+    }
+
     @Operation(summary = "카테고리 추가", description = "새로운 카테고리를 추가합니다.")
     @PostMapping
     public ResponseEntity<CategoryResponseDto> addCategory(
@@ -47,17 +53,18 @@ public class CategoryController {
     }
 
     @Operation(summary = "카테고리 수정", description = "기존 카테고리를 수정합니다.")
-    @PutMapping("/{id}")
+    @PutMapping("/{categoryId}")
     public ResponseEntity<CategoryResponseDto> updateCategory(
-        @PathVariable Long id,
+        @PathVariable Long categoryId,
         @Valid @RequestBody CategoryUpdateRequestDto categoryUpdateRequestDto) {
-        return ResponseEntity.ok(categoryService.updateCategory(id, categoryUpdateRequestDto));
+        return ResponseEntity.ok(
+            categoryService.updateCategory(categoryId, categoryUpdateRequestDto));
     }
 
     @Operation(summary = "카테고리 삭제", description = "기존 카테고리를 삭제합니다.")
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteCategory(@PathVariable Long id) {
-        categoryService.deleteCategory(id);
+    @DeleteMapping("/{categoryId}")
+    public ResponseEntity<Void> deleteCategory(@PathVariable Long categoryId) {
+        categoryService.deleteCategory(categoryId);
         return ResponseEntity.noContent().build();
     }
 }

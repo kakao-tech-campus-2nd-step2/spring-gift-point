@@ -50,7 +50,8 @@ public class LoginUserArgumentResolver implements HandlerMethodArgumentResolver 
 
     private User handleExpiredToken(String userEmail, NativeWebRequest webRequest) {
         TokenRefreshDto result = userService.refreshToken(userEmail);
-        webRequest.setAttribute("newJwtToken", result.getNewToken(), NativeWebRequest.SCOPE_REQUEST);
+        webRequest.setAttribute("newJwtToken", result.getNewToken(),
+            NativeWebRequest.SCOPE_REQUEST);
         return result.getUser();
     }
 
