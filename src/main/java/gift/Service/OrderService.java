@@ -52,7 +52,7 @@ public class OrderService {
                 .findFirst()
                 .ifPresent(wish->wishRepository.deleteById(wish.getId()));
 
-        int totalPrice = getToalPrice(requestOrderDTO, option);
+        int totalPrice = getToalPrice(requestOrderDTO.quantity(), option.getProduct());
         member.subtractPoint(totalPrice);
 
         CashReceipt cashReceipt = null;
@@ -71,8 +71,8 @@ public class OrderService {
         return ResponseOrderDTO.of(order);
     }
 
-    private int getToalPrice(RequestOrderDTO requestOrderDTO, Option option) {
-        int totalPrice = option.getProduct().getPrice().getValue() * requestOrderDTO.quantity();
+    private int getToalPrice(int quantity, Product product) {
+        int totalPrice = product.getPrice().getValue() * quantity;
         if (totalPrice >= 50000) //주문 금액이 5만원 이상인 경우 10프로 할인
             totalPrice *= 0.9;
 
@@ -93,6 +93,16 @@ public class OrderService {
                 () -> new OrderNotFoundException("해당하는 주문을 찾을 수 없습니다"));
         order.checkOrderBelongsToMember(member);
         order.getOption().addQuantity(order.getQuantity().getValue());
+        refundPoints(member, order);
         orderRepository.deleteById(orderId);
+    }
+
+    private void refundPoints(Member member, Order order) {
+        int totalPrice = getToalPrice(order.getQuantity().getValue(), order.getOption().getProduct());
+        int refundPoint = totalPrice;
+        if(totalPrice > 50000)
+            refundPoint = totalPrice /9 *10;
+
+        member.addPoint(refundPoint);
     }
 }
