@@ -31,7 +31,7 @@ public class KakaoLoginController {
     @Value("${kakao.redirect-uri}")
     private String redirectUri;
 
-    private String baseUrl;
+    private String frontUrl;
 
     private final UserService userService;
     private final KakaoLoginService kakaoLoginService;
@@ -60,7 +60,9 @@ public class KakaoLoginController {
 
     @PostMapping("/kakao")
     @Operation(summary = "카카오 회원가입 로그인 api")
-    public RedirectView showKakaoLogin(HttpServletRequest request) {
+    public RedirectView showKakaoLogin(@RequestParam(value = "redirect_url", required = true) String frontUrl) {
+        this.frontUrl = frontUrl;
+        /*
         //base url 받기
         String scheme = request.getScheme(); // http or https
         String serverName = request.getServerName(); //hostname.com
@@ -68,7 +70,7 @@ public class KakaoLoginController {
         String contextPath = request.getContextPath();
         String requestURI = request.getRequestURI();
         baseUrl = scheme + "://" + serverName + ":" + serverPort + contextPath + requestURI;
-
+*/
         RedirectView redirectView = new RedirectView();
         String uri = "https://kauth.kakao.com/oauth/authorize?scope=talk_message&response_type=code&client_id=" + clientId + "&redirect_uri=" + redirectUri;
         redirectView.setUrl(uri);
@@ -83,7 +85,7 @@ public class KakaoLoginController {
         Long userId = kakaoLoginService.getUserInfo(accessToken);
         String jwtToken = userService.getJwtTokenByUserId(userId);
 
-        String redirectUrl = baseUrl;
+        String redirectUrl = frontUrl;
 
         String urlWithToken = redirectUrl + "?token=" + jwtToken;
 
