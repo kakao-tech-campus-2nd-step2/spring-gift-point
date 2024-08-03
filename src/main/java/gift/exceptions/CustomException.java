@@ -62,4 +62,8 @@ public class CustomException extends RuntimeException{
     public static CustomException invalidAPIException(HttpStatus httpStatus) {
         return new CustomException(ErrorMessage.apiInvalid, httpStatus);
     }
+
+    public static CustomException pointLackException() {
+        return new CustomException(ErrorMessage.pointLack, HttpStatus.BAD_REQUEST);
+    }
 }
