@@ -16,6 +16,7 @@ import jakarta.persistence.Table;
 @Entity
 @Table(name = "points")
 public class Point extends TimeStamp {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
