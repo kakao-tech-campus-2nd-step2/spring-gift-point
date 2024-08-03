@@ -8,7 +8,7 @@ import gift.dto.request.OrderRequest;
 import gift.dto.response.OptionResponse;
 import gift.dto.response.OrderPaginationResponse;
 import gift.dto.response.OrderResponse;
-import gift.exception.customException.PointsNotAvailableException;
+import gift.dto.response.PointsTransactionResponse;
 import gift.repository.OrderRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -18,9 +18,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-
-import static gift.exception.errorMessage.Messages.INSUFFICIENT_POINTS;
-import static gift.exception.errorMessage.Messages.POINTS_USAGE_LIMIT;
 
 @Service
 public class OrderService {
@@ -55,30 +52,15 @@ public class OrderService {
                 .getProduct()
                 .getPrice();
 
+        // 상품 가격 계산
         int price = productPrice * orderRequest.quantity();
 
-        // 사용자 포인트 조회
-        int pointsUsed = orderRequest.points();
-        int memberPoints = memberService.getMemberPoints(memberRequest);
-        if(pointsUsed > memberPoints) {
-            throw new PointsNotAvailableException(INSUFFICIENT_POINTS);
-        }
-
-        if(pointsUsed > price/2) {
-            throw new PointsNotAvailableException(POINTS_USAGE_LIMIT);
-        }
-
-        // 포인트 차감
-        memberService.useMemberPoints(memberRequest,pointsUsed);
-
-        // 포인트 더하기
-        int pointsReceived = (int) Math.floor(price * 0.05);
-        memberService.addMemberPoints(memberRequest.id(), pointsReceived);
-
-        int payment = price - pointsUsed;
+        // 포인트 처리
+        PointsTransactionResponse pointsTransactionResponse = memberService.processPoints(memberRequest.id(), orderRequest.points(), price);
+        int payment = price - pointsTransactionResponse.pointsUsed();
 
         // 주문 저장하기
-        Order savedOrder = save(memberRequest, orderRequest, pointsUsed, pointsReceived, payment);
+        Order savedOrder = save(memberRequest, orderRequest, pointsTransactionResponse.pointsUsed(), pointsTransactionResponse.pointsReceived(), payment);
 
         // 주문 메시지 전송하기
         //String message = "옵션 id " + orderRequest.optionId() + " 상품이 주문되었습니다.";
