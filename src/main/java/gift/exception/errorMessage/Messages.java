@@ -24,4 +24,6 @@ public class Messages {
     public static final String API_BAD_GATEWAY =  "API 게이트 웨이 오류";
     public static final String API_SERVICE_UNAVAILABLE =  "API 서비스 점검 중";
     public static final String POINTS_CANNOT_BE_NEGATIVE = "포인트는 음수일 수 없습니다.";
+    public static final String INSUFFICIENT_POINTS = "포인트가 부족합니다.";
+    public static final String POINTS_USAGE_LIMIT = "상품의 50% 이상 포인트를 사용할 수 없습니다.";
 }
