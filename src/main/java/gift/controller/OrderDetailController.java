@@ -1,5 +1,6 @@
 package gift.controller;
 
+import static gift.util.constants.GeneralConstants.REQUIRED_FIELD_MISSING;
 import static gift.util.constants.OptionConstants.INSUFFICIENT_QUANTITY;
 import static gift.util.constants.OptionConstants.OPTION_NOT_FOUND;
 
@@ -42,10 +43,16 @@ public class OrderDetailController {
             @ApiResponse(responseCode = "201", description = "주문 성공"),
             @ApiResponse(
                 responseCode = "400",
-                description = "옵션 수량 부족",
+                description = "올바르지 않은 요청",
                 content = @Content(
                     mediaType = "application/json",
-                    examples = @ExampleObject(value = "{\"error\": \"" + INSUFFICIENT_QUANTITY + "(옵션 Id)\"}")
+                    examples = {
+                        @ExampleObject(
+                            name = "옵션 수량 부족",
+                            value = "{\"error\": \"" + INSUFFICIENT_QUANTITY + "(옵션 Id)\"}"
+                        ),
+                        @ExampleObject(name = "필수 입력 값 누락", value = "{\"(필드 명)\": \"" + REQUIRED_FIELD_MISSING + "\"}")
+                    }
                 )
             ),
             @ApiResponse(

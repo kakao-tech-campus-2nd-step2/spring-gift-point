@@ -6,6 +6,7 @@ import static gift.util.constants.WishConstants.ALREADY_EXISTS;
 import static gift.util.constants.WishConstants.PERMISSION_DENIED;
 import static gift.util.constants.WishConstants.WISH_NOT_FOUND;
 
+import gift.config.CommonApiResponses.CommonBadRequestResponse;
 import gift.config.CommonApiResponses.CommonForbiddenResponse;
 import gift.config.CommonApiResponses.CommonServerErrorResponse;
 import gift.config.CommonApiResponses.CommonUnauthorizedResponse;
@@ -83,6 +84,7 @@ public class WishController {
             )
         }
     )
+    @CommonBadRequestResponse
     @CommonUnauthorizedResponse
     @CommonForbiddenResponse
     @CommonServerErrorResponse

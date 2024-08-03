@@ -56,6 +56,7 @@ public class MemberController {
             )
         }
     )
+    @CommonBadRequestResponse
     @CommonServerErrorResponse
     @PostMapping("/register")
     public ResponseEntity<MemberAuthResponse> register(
@@ -79,6 +80,7 @@ public class MemberController {
             )
         }
     )
+    @CommonBadRequestResponse
     @CommonServerErrorResponse
     @PostMapping("/login")
     public ResponseEntity<MemberAuthResponse> login(
@@ -90,6 +92,7 @@ public class MemberController {
 
     @Operation(summary = "(명세 통일) 개인 포인트 조회", description = "개인의 포인트를 조회합니다.")
     @ApiResponse(responseCode = "200", description = "조회 성공")
+    @CommonBadRequestResponse
     @CommonUnauthorizedResponse
     @CommonForbiddenResponse
     @CommonServerErrorResponse
