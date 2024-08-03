@@ -65,4 +65,12 @@ public class SwaggerConfig {
             .build();
     }
 
+    @Bean
+    public GroupedOpenApi PointApi() {
+        return GroupedOpenApi.builder()
+            .group("point")
+            .pathsToMatch("/api/points/**")
+            .build();
+    }
+
 }

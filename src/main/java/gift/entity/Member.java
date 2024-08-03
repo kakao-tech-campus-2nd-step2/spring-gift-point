@@ -30,6 +30,9 @@ public class Member {
     @Column(name = "refresh_token")
     private String refreshToken;
 
+    @Column(name = "points")
+    private Long points = 0L;
+
     public Member() {
     }
 
@@ -41,12 +44,14 @@ public class Member {
         this.email = email;
         this.password = password;
         this.role = Role.USER;
+        this.points = 0L;
     }
 
     public Member(String email, String password, Role role) {
         this.email = email;
         this.password = password;
         this.role = role;
+        this.points = 0L;
     }
 
     public Long getId() {
@@ -71,6 +76,14 @@ public class Member {
 
     public void setRefreshToken(String refreshToken) {
         this.refreshToken = refreshToken;
+    }
+
+    public Long getPoints() {
+        return points != null ? points : 0L;
+    }
+
+    public void setPoints(Long points) {
+        this.points = points;
     }
 
 }

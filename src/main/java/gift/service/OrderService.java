@@ -50,6 +50,17 @@ public class OrderService {
             .orElseThrow(TokenErrorException::new);
 
         Option option = validateAndUpdateOption(orderRequest);
+
+        Long usedPoints = orderRequest.getPointAmount();
+        Long remainingPoints = member.getPoints() - usedPoints;
+        member.setPoints(remainingPoints);
+
+        int earnedPoints = calculateEarnedPoints(option.getProduct().getPrice(),
+            orderRequest.getQuantity());
+        member.setPoints(member.getPoints() + earnedPoints);
+
+        memberRepository.save(member);
+
         Order order = createOrder(orderRequest, option);
         wishRepository.deleteByOptionId(orderRequest.getOptionId());
 
@@ -81,6 +92,10 @@ public class OrderService {
             .orElseThrow(TokenErrorException::new);
     }
 
+    private int calculateEarnedPoints(int price, int quantity) {
+        return (int) (price * quantity * 0.03);
+    }
+
     private Option validateAndUpdateOption(OrderRequest orderRequest) {
         Option option = optionRepository.findWithId(orderRequest.getOptionId())
             .orElseThrow(OptionNotFoundException::new);
@@ -95,6 +110,7 @@ public class OrderService {
 
     private Order createOrder(OrderRequest orderRequest, Option option) {
         Order order = new Order(orderRequest.getOptionId(), orderRequest.getQuantity(),
+            orderRequest.getPointAmount(),
             LocalDateTime.now(), orderRequest.getMessage());
         order = orderRepository.save(order);
         return order;
