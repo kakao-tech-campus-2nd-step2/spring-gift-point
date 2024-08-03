@@ -1,3 +1,6 @@
+insert into member (email, password, point)
+values ('test@test.com', 'test', 1000000);
+
 insert into category (id, name, color, image_url, description)
 values (2920, '생일', '#5949a3',
         'https://img1.daumcdn.net/thumb/S104x104/?fname=https%3A%2F%2Ft1.daumcdn.net%2Fgift%2Fhome%2Ftheme%2F292020231106_MXMUB.png',
