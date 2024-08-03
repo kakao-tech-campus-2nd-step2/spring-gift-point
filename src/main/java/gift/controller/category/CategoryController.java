@@ -32,11 +32,11 @@ public class CategoryController {
     }
 
     @Operation(summary = "카테고리 ID로 조회", description = "카테고리 ID로 카테고리를 조회합니다.")
-    @GetMapping("/{id}")
+    @GetMapping("/{categoryId}")
     public ResponseEntity<Category> getCategoryById(
             @Parameter(description = "조회할 카테고리의 ID", required = true)
-            @PathVariable Long id) {
-        Category category = categoryService.getCategoryById(id);
+            @PathVariable Long categoryId) {
+        Category category = categoryService.getCategoryById(categoryId);
         return ResponseEntity.ok(category);
     }
 
@@ -50,22 +50,22 @@ public class CategoryController {
     }
 
     @Operation(summary = "카테고리 수정", description = "카테고리 ID로 카테고리 정보를 수정합니다.")
-    @PutMapping("/{id}")
+    @PutMapping("/{categoryId}")
     public ResponseEntity<Category> updateCategory(
             @Parameter(description = "수정할 카테고리의 ID", required = true)
-            @PathVariable Long id,
+            @PathVariable Long categoryId,
             @Parameter(description = "수정할 카테고리 정보", required = true)
             @RequestBody @Valid Category updatedCategory) {
-        Category savedCategory = categoryService.updateCategory(id, updatedCategory);
+        Category savedCategory = categoryService.updateCategory(categoryId, updatedCategory);
         return ResponseEntity.ok(savedCategory);
     }
 
     @Operation(summary = "카테고리 삭제", description = "카테고리 ID로 카테고리를 삭제합니다.")
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/{categoryId}")
     public ResponseEntity<Void> deleteCategory(
             @Parameter(description = "삭제할 카테고리의 ID", required = true)
-            @PathVariable Long id) {
-        categoryService.deleteCategory(id);
+            @PathVariable Long categoryId) {
+        categoryService.deleteCategory(categoryId);
         return ResponseEntity.noContent().build();
     }
 }

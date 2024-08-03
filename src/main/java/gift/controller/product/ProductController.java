@@ -32,17 +32,18 @@ public class ProductController {
 
     @Operation(summary = "모든 상품 조회", description = "페이징 처리된 모든 상품을 조회합니다.")
     @GetMapping
-    public ResponseEntity<Page<Product>> getAllProducts(Pageable pageable) {
-        Page<Product> products = productService.getAllProducts(pageable);
+    public ResponseEntity<Page<Product>> getAllProducts(Pageable pageable,
+                                                        @RequestParam(required = false) Long categoryId) {
+        Page<Product> products = productService.getAllProducts(pageable, categoryId);
         return ResponseEntity.ok(products);
     }
 
     @Operation(summary = "상품 ID로 조회", description = "상품 ID로 상품을 조회합니다.")
-    @GetMapping("/{id}")
+    @GetMapping("/{productId}")
     public ResponseEntity<Product> getProductById(
             @Parameter(description = "조회할 상품의 ID", required = true)
-            @PathVariable Long id) {
-        Product product = productService.getProductById(id);
+            @PathVariable Long productId) {
+        Product product = productService.getProductById(productId);
         if (product == null) {
             return ResponseEntity.notFound().build();
         }
@@ -61,13 +62,13 @@ public class ProductController {
     }
 
     @Operation(summary = "상품 수정", description = "상품 ID로 상품 정보를 수정합니다.")
-    @PutMapping("/{id}")
+    @PutMapping("/{productId}")
     public ResponseEntity<Product> updateProduct(
             @Parameter(description = "수정할 상품의 ID", required = true)
-            @PathVariable Long id,
+            @PathVariable Long productId,
             @Parameter(description = "수정할 상품 정보", required = true)
             @RequestBody @Valid ProductRequestDTO productRequestDTO) {
-        Product product = productService.getProductById(id);
+        Product product = productService.getProductById(productId);
         if (product == null) {
             return ResponseEntity.notFound().build();
         }
@@ -80,15 +81,15 @@ public class ProductController {
     }
 
     @Operation(summary = "상품 삭제", description = "상품 ID로 상품을 삭제합니다.")
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/{productId}")
     public ResponseEntity<Void> deleteProduct(
             @Parameter(description = "삭제할 상품의 ID", required = true)
-            @PathVariable Long id) {
-        Product product = productService.getProductById(id);
+            @PathVariable Long productId) {
+        Product product = productService.getProductById(productId);
         if (product == null) {
             return ResponseEntity.notFound().build();
         }
-        productService.deleteProduct(id);
+        productService.deleteProduct(productId);
         return ResponseEntity.noContent().build();
     }
 
@@ -103,13 +104,13 @@ public class ProductController {
     }
 
     @Operation(summary = "상품 이미지 수정", description = "상품 ID로 상품 이미지를 수정합니다.")
-    @PostMapping("/{id}/imageUpdate")
+    @PostMapping("/{productId}/imageUpdate")
     public ResponseEntity<Product> updateProductImage(
             @Parameter(description = "이미지를 수정할 상품의 ID", required = true)
-            @PathVariable Long id,
+            @PathVariable Long productId,
             @Parameter(description = "업로드할 새로운 이미지 파일", required = true)
             @RequestParam("imageFile") MultipartFile imageFile) throws IOException {
-        Product product = productService.getProductById(id);
+        Product product = productService.getProductById(productId);
         if (product == null) {
             return ResponseEntity.notFound().build();
         }

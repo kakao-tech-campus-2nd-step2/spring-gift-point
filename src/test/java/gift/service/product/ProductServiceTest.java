@@ -41,19 +41,27 @@ class ProductServiceTest {
     @Test
     @DisplayName("모든 제품을 조회할 수 있어야 한다")
     void getAllProducts() {
+        // 테스트용 제품 리스트 생성
         List<Product> productList = new ArrayList<>();
         productList.add(new Product("Product 1", 1000L, "Description 1", "image1.jpg", null));
         productList.add(new Product("Product 2", 2000L, "Description 2", "image2.jpg", null));
         Page<Product> page = new PageImpl<>(productList);
 
-        when(productRepository.findAll(any(PageRequest.class))).thenReturn(page);
+        // Mock 객체 사용하여 카테고리 생성
+        Long categoryId = 1L;
+        Category category = mock(Category.class); // Mock 객체로 대체
+        when(categoryRepository.findById(categoryId)).thenReturn(Optional.of(category));
+        when(productRepository.findAllByCategory(eq(category), any(PageRequest.class))).thenReturn(page);
 
-        Page<Product> products = productService.getAllProducts(PageRequest.of(0, 10));
+        // 서비스 메서드 호출
+        Page<Product> products = productService.getAllProducts(PageRequest.of(0, 10), categoryId);
 
+        // 검증
         assertEquals(2, products.getTotalElements());
         assertEquals("Product 1", products.getContent().get(0).getName());
         assertEquals("Product 2", products.getContent().get(1).getName());
     }
+
 
     @Test
     @DisplayName("존재하지 않는 제품 ID로 조회 시 예외가 발생해야 한다")

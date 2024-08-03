@@ -18,6 +18,6 @@ public class AdminKakaoController {
     @GetMapping
     public String kakaoLoginPage(Model model) {
         model.addAttribute("kakao", kakaoProperties);
-        return "kakao"; // 템플릿 파일 kakao.html
+        return "kakao";
     }
 }

@@ -10,7 +10,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import jakarta.validation.Valid;
 import java.io.IOException;
 import java.util.List;
@@ -30,14 +32,17 @@ public class AdminProductController {
     }
 
     @GetMapping
-    public String getAllProducts(Model model, Pageable pageable) {
-        Page<Product> productsPage = productService.getAllProducts(pageable);
-        model.addAttribute("productsPage", productsPage);
+    public String getProducts(Model model, @RequestParam(defaultValue = "0") int page,
+                              @RequestParam(defaultValue = "10") int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        var productsPage = productService.getAllProducts(pageable, null);
+        var categories = categoryService.getAllCategories();
 
-        List<Category> categories = categoryService.getAllCategories();
+        model.addAttribute("productsPage", productsPage);
         model.addAttribute("categories", categories);
         return "product";
     }
+
 
     @PostMapping("/add")
     public String addProduct(@Valid @ModelAttribute ProductRequestDTO productRequestDTO,
