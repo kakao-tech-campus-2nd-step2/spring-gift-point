@@ -17,6 +17,12 @@ public class PriceRequest {
     @NotNull(message = "상품 ID를 입력하세요.")
     private Long productId;
 
+    public PriceRequest(Long productId, Long optionId, Integer quantity) {
+        this.optionId = optionId;
+        this.quantity = quantity;
+        this.productId = productId;
+    }
+
     public Long getOptionId() {
         return optionId;
     }

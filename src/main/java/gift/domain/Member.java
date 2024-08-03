@@ -68,4 +68,8 @@ public class Member {
     public TokenAuth getTokenAuth() {
         return tokenAuth;
     }
+
+    public LoginType getLoginType() {
+        return loginType;
+    }
 }

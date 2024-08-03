@@ -16,14 +16,26 @@ public class OrderRequest {
     @NotBlank(message = "메시지를 입력하세요.")
     private String message;
 
-    @NotNull(message = "수령 멤버를 선택하세요.")
-    private Long receiveMemberId;
+    @NotNull(message = "상품 ID를 입력하세요.")
+    private Long productId;
 
-    public OrderRequest(Long optionId, int quantity, String message, Long receiveMemberId) {
+    @NotNull(message = "포인트를 입력하세요.")
+    private Integer point;
+
+    @NotNull(message = "전화번호를 입력하세요.")
+    private String phone;
+
+    @NotNull(message = "영수증 여부를 입력하세요.")
+    private boolean receipt;
+
+    public OrderRequest(Long optionId, int quantity, String message, Long productId, Integer point, String phone, boolean receipt) {
         this.optionId = optionId;
         this.quantity = quantity;
         this.message = message;
-        this.receiveMemberId = receiveMemberId;
+        this.productId = productId;
+        this.point = point;
+        this.phone = phone;
+        this.receipt = receipt;
     }
 
     public Long getOptionId() {
@@ -34,11 +46,23 @@ public class OrderRequest {
         return quantity;
     }
 
-    public Long getReceiveMemberId() {
-        return receiveMemberId;
-    }
-
     public String getMessage() {
         return message;
+    }
+
+    public Long getProductId() {
+        return productId;
+    }
+
+    public Integer getPoint() {
+        return point;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public boolean isReceipt() {
+        return receipt;
     }
 }

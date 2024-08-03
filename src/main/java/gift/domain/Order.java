@@ -1,5 +1,6 @@
 package gift.domain;
 
+import gift.dto.request.OrderRequest;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
@@ -25,16 +26,36 @@ public class Order {
     private String message;
 
     @Column(nullable = false)
-    private Long receiveMemberId;
+    private Long productId;
+
+    @Column(nullable = false)
+    private Integer point;
+
+    @Column(nullable = false)
+    private String phone;
+
+    @Column(nullable = false)
+    private Integer price;
+
+    @Column(nullable = false)
+    private boolean receipt;
+
+    @Column(nullable = false)
+    private boolean success;
 
     public Order() { }
 
-    public Order(Long optionId, Integer quantity, LocalDateTime orderDateTime, String message, Long receiveMemberId) {
+    public Order(Long optionId, Integer quantity, LocalDateTime orderDateTime, String message, Long productId, Integer point, String phone, Integer price, boolean receipt, boolean success) {
         this.optionId = optionId;
         this.quantity = quantity;
         this.orderDateTime = orderDateTime;
         this.message = message;
-        this.receiveMemberId = receiveMemberId;
+        this.productId = productId;
+        this.point = point;
+        this.phone = phone;
+        this.price = price;
+        this.receipt = receipt;
+        this.success = success;
     }
 
     public Long getId() {
@@ -57,7 +78,41 @@ public class Order {
         return message;
     }
 
-    public Long getReceiveMemberId() {
-        return receiveMemberId;
+    public Long getProductId() {
+        return productId;
     }
+
+    public Integer getPoint() {
+        return point;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public Integer getPrice() {
+        return price;
+    }
+
+    public boolean isReceipt() {
+        return receipt;
+    }
+
+    public boolean isSuccess() {
+        return success;
+    }
+
+    public static Order from(OrderRequest orderRequest, int price, boolean isSuccess) {
+        return new Order(orderRequest.getOptionId(),
+                orderRequest.getQuantity(),
+                LocalDateTime.now(),
+                orderRequest.getMessage(),
+                orderRequest.getProductId(),
+                orderRequest.getPoint(),
+                orderRequest.getPhone(),
+                price,
+                orderRequest.isReceipt(),
+                isSuccess);
+    }
+
 }

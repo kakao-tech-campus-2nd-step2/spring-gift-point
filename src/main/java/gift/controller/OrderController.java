@@ -28,8 +28,7 @@ public class OrderController {
     @PostMapping
     @Operation(summary = "주문하기", description = "새 주문을 생성한다.")
     public ResponseEntity<OrderResponse> createOrder(@LoginMember TokenAuth tokenAuth, @Valid @RequestBody OrderRequest orderRequest) {
-        String token = tokenAuth.getToken();
-        OrderResponse orderResponse = orderService.createOrder(token, orderRequest);
+        OrderResponse orderResponse = orderService.createOrder(tokenAuth, orderRequest);
         return new ResponseEntity<>(orderResponse, HttpStatus.CREATED);
     }
 
