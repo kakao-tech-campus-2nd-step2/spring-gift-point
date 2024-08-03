@@ -31,6 +31,10 @@ public class OrderService {
     private final OptionService optionService;
     private final KakaoMessageService kakaoMessageService;
 
+    private static final double POINT_EARNING_RATE = 0.1;
+    private static final double PRICE_IF_DISCOUNT = 0.9;
+    private static final int DISCOUNT_CONDITION_PRICE = 50000;
+
     @Autowired
     public OrderService(OrderSpringDataJpaRepository orderRepository, ProductSpringDataJpaRepository productRepository, WishlistSpringDataJpaRepository wishlistRepository, MemberSpringDataJpaRepository memberRepository, OptionService optionService, KakaoMessageService kakaoMessageService) {
         this.orderRepository = orderRepository;
@@ -84,6 +88,9 @@ public class OrderService {
             kakaoMessageService.sendOrderMessage(tokenAuth.getToken(), order);
         }
 
+        int earnedPoints = (int) (orderPrice * POINT_EARNING_RATE);
+        memberRepository.addPoints(memberId, earnedPoints);
+
         return OrderResponse.fromOrder(order);
     }
 
@@ -98,8 +105,8 @@ public class OrderService {
 
         int orderPrice = product.getPrice() * priceRequest.getQuantity();
 
-        if (orderPrice >= 50000) {
-            orderPrice = (int) (orderPrice * 0.9);
+        if (orderPrice >= DISCOUNT_CONDITION_PRICE) {
+            orderPrice = (int) (orderPrice * PRICE_IF_DISCOUNT);
         }
 
         return new PriceResponse(orderPrice);
