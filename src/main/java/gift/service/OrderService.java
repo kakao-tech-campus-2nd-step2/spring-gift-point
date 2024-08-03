@@ -48,6 +48,12 @@ public class OrderService {
             throw new InvalidInputValueException("잘못된 수량 입력입니다.");
         }
         Option option = optionService.toEntity(optionResponseDTO);
+        Long productPrice = Long.parseLong(option.getProduct().getPrice());
+        Long totalPrice = productPrice * orderRequestDTO.quantity();
+        if (member.getPoints() < totalPrice) {
+            throw new InvalidInputValueException("포인트가 부족합니다.");
+        }
+        memberService.subtractPoints(email, totalPrice);
         optionService.subtractQuantity(option.getId(), orderRequestDTO.quantity());
         Order order = new Order(null, option, orderRequestDTO.quantity(), LocalDateTime.now(),
             orderRequestDTO.message(), member);
