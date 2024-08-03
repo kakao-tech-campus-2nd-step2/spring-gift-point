@@ -74,7 +74,7 @@ public class KakaoService {
         String memberEmail = response.id() + "@kakao.com";
         String password = "password";
         Member member = new Member(memberEmail, password, accessToken);
-        Long userId = memberService.register(member);
+        Long userId = memberService.kakaoRegister(member);
         if(userId == -1){
             throw new LoginException("이메일이 이미 존재합니다.");
         }

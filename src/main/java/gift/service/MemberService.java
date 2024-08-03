@@ -64,6 +64,20 @@ public class MemberService {
         memberRepository.save(member);
     }
 
+    public Long kakaoRegister(Member member) {
+        Optional<Member> existingMember = memberRepository.findByEmail(member.getEmail());
+        if (existingMember.isPresent()) {
+            Member updateMember = existingMember.get();
+            updateMember.setAccessToken(member.getAccessToken());
+            memberRepository.save(updateMember);
+            return updateMember.getId();
+        }
+            memberRepository.save(member);
+            return member.getId();
+
+    }
+
+
 
 
 
