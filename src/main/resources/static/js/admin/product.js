@@ -242,7 +242,7 @@ document.addEventListener('DOMContentLoaded', function() {
       price: parseFloat(document.getElementById('addProductPrice').value),
       imageUrl: document.getElementById('addProductImageUrl').value,
       categoryId: parseInt(document.getElementById('addProductCategory').value),
-      options: {'name': name, 'quantity': 1000},
+      options: [{'name': document.getElementById('addProductName').value, 'quantity': 1000},],
     };
     createProduct(productData);
   });

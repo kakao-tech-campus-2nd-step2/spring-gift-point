@@ -87,7 +87,7 @@ public class ProductService {
         Product product = productRepository.findById(productId)
             .orElseThrow(ProductNotFoundException::new);
 
-        Category category = categoryRepository.findById(updateRequest.getCategory_id())
+        Category category = categoryRepository.findById(updateRequest.getCategoryId())
             .orElseThrow(CategoryNotFoundException::new);
         product.updateAll(updateRequest, category);
         return new ProductResponse(product);
