@@ -45,7 +45,7 @@ public class ProductService {
         User user = userRepository.findById(userId)
             .orElseThrow(UserNotFoundException::new);
 
-        Category category = categoryRepository.findById(productCreateRequest.getCategory_id())
+        Category category = categoryRepository.findById(productCreateRequest.getCategoryId())
             .orElseThrow(CategoryNotFoundException::new);
 
         Product product = new Product(user, category, productCreateRequest.getName(),

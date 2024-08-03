@@ -1,183 +1,262 @@
-const newProductModal = document.querySelector('.new_product');
-const newProductModalOpen = document.querySelector('.new_product_modal_btn');
-const newProductModalClose = document.querySelector('.new_product .close_btn');
+document.addEventListener('DOMContentLoaded', function() {
+  const accessToken = localStorage.getItem('accessToken');
 
-//열기 버튼을 눌렀을 때 모달팝업이 열림
-newProductModalOpen.addEventListener('click', function () {
-  //'on' class 추가
-  newProductModal.classList.add('on');
-});
-//닫기 버튼을 눌렀을 때 모달팝업이 닫힘
-newProductModalClose.addEventListener('click', function () {
-  //'on' class 제거
-  newProductModal.classList.remove('on');
-});
-document.getElementById('new_product_form').addEventListener('submit',
-    function (event) {
-      event.preventDefault();
-
-      const formData = new FormData(event.target);
-      const data = {};
-
-      formData.forEach((value, key) => {
-        data[key] = value;
-      });
-
-      // JSON 형식으로 변환
-      const jsonData = JSON.stringify(data);
-
-      // fetch를 이용하여 서버로 전송
-      fetch('/api/products', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: jsonData
-      })
-      .then(response => response.json())
-      .then(data => {
-        location.reload()
-      })
-    });
-
-const updateProductModal = document.querySelector('.update_product');
-const updateProductButtons = document.querySelectorAll(
-    '.update_product_button');
-const updateProductModalClose = document.querySelector(
-    '.update_product .close_btn');
-
-//열기 버튼을 눌렀을 때 모달팝업이 열림
-updateProductButtons.forEach(button => {
-  button.addEventListener('click', function (event) {
-    // 모달의 폼에 데이터 작성
-    const row = event.target.parentElement.parentElement;
-    const id = row.cells[1].innerText;
-    const name = row.cells[2].innerText;
-    const price = row.cells[3].innerText;
-    const imageUrl = row.cells[4].querySelector('img').src;
-
-    document.getElementById('id').value = id;
-    document.getElementById('new_name').value = name;
-    document.getElementById('new_price').value = price;
-    document.getElementById('new_imageUrl').value = imageUrl;
-
-    //'on' class 추가
-    updateProductModal.classList.add('on');
-  })
-})
-//닫기 버튼을 눌렀을 때 모달팝업이 닫힘
-updateProductModalClose.addEventListener('click', function () {
-  //'on' class 제거
-  updateProductModal.classList.remove('on');
-});
-document.getElementById('update_product_form').addEventListener('submit',
-    function (event) {
-      event.preventDefault();
-
-      const formData = new FormData(event.target);
-      const data = {};
-
-      formData.forEach((value, key) => {
-        data[key] = value;
-      });
-
-      // id값 추출
-      const id = data['id']
-      delete data['id']
-
-      // JSON 형식으로 변환
-      const jsonData = JSON.stringify(data);
-
-      // fetch를 이용하여 서버로 전송
-      fetch('/api/products/' + id, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: jsonData
-      })
-      .then(response => response.json())
-      .then(data => {
-        location.reload()
-      })
-    });
-
-const deleteProductButtons = document.querySelectorAll(
-    '.delete_product_button');
-
-deleteProductButtons.forEach(button => {
-  button.addEventListener('click', function (event) {
-    // 상품 id와 name 가져옴
-    const row = event.target.parentElement.parentElement;
-    const id = row.cells[1].innerText;
-    const name = row.cells[2].innerText;
-
-    // 확인 경고창 띄우고
-    const isConfirmed = confirm("상품명: " + name + "\n정말로 삭제하시겠습니까?");
-    // 확인 누르면 삭제
-    if (isConfirmed) {
-      fetch('/api/products/' + id, {
-        method: 'DELETE'
-      })
-      .then(data => {
-        location.reload()
-      })
-    }
-  })
-})
-
-const masterCheckbox = document.querySelector('.master_checkbox');
-const checkboxes = document.querySelectorAll('.product_checkbox');
-
-masterCheckbox.addEventListener('change', function () {
-  checkboxes.forEach(checkbox => {
-    checkbox.checked = masterCheckbox.checked;
-  });
-});
-
-checkboxes.forEach(checkbox => {
-  checkbox.addEventListener('change', function () {
-    // 모든 체크박스가 체크되었는지 확인
-    const allChecked = Array.from(checkboxes).every(cb => cb.checked);
-    // 모든 체크박스가 체크되지 않았는지 확인
-    const noneChecked = Array.from(checkboxes).every(cb => !cb.checked);
-
-    if (allChecked) {
-      masterCheckbox.checked = true;
-      masterCheckbox.indeterminate = false;
-    } else if (noneChecked) {
-      masterCheckbox.checked = false;
-      masterCheckbox.indeterminate = false;
-    } else {
-      masterCheckbox.checked = false;
-      masterCheckbox.indeterminate = true;
-    }
-  });
-});
-
-const deleteSelectedProductsButton = document.querySelector(
-    '.delete_selected_products_bnt');
-deleteSelectedProductsButton.addEventListener('click', function () {
-  // 선택된 상품 id 가져옴
-  const selectedProductsIds = [];
-
-  checkboxes.forEach(checkbox => {
-    if (checkbox.checked) {
-      selectedProductsIds.push(checkbox.id)
-    }
-  })
-
-  // 확인 경고창 띄우고
-  const isConfirmed = confirm(
-      selectedProductsIds.length + "개의 상품을 정말로 삭제하시겠습니까?");
-  // 확인 누르면 선택된 상품 전체 삭제
-  if (isConfirmed) {
-    selectedProductsIds.forEach(id => {
-      fetch('/api/products/' + id, {
-        method: 'DELETE'
-      })
-    })
-    location.reload();
+  if (!accessToken) {
+    alert('로그인이 필요합니다.');
+    window.location.href = '/admin'; // Redirect to login page
+    return;
   }
-})
 
+  let currentPage = 0;
+  let totalPages = 1;
+  let categories = {};
+
+  function loadCategories() {
+    fetch('/api/categories', {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': accessToken
+      }
+    })
+    .then(response => response.json())
+    .then(data => {
+      const categorySelect = document.getElementById('categorySelect');
+      const editProductCategorySelect = document.getElementById('editProductCategory');
+      const addProductCategorySelect = document.getElementById('addProductCategory');
+      data.forEach(category => {
+        const option = document.createElement('option');
+        option.value = category.id;
+        option.textContent = category.name;
+        categorySelect.appendChild(option);
+
+        categories[category.id] = category.name
+
+        const editOption = option.cloneNode(true);
+        editProductCategorySelect.appendChild(editOption);
+
+        const addOption = option.cloneNode(true);
+        addProductCategorySelect.appendChild(addOption);
+      });
+    })
+    .catch(error => {
+      console.error('Error loading categories:', error);
+      alert('카테고리 로딩에 실패했습니다.');
+    });
+  }
+
+  function loadProducts() {
+    const categoryId = document.getElementById('categorySelect').value;
+
+    fetch(`/api/products?categoryId=${categoryId}&page=${currentPage}&size=10`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': accessToken
+      }
+    })
+    .then(response => response.json())
+    .then(data => {
+      totalPages = data.totalPages;
+      const productsList = document.getElementById('productsList');
+      productsList.innerHTML = ''; // Clear the current list
+
+      data.content.forEach(product => {
+        const productItem = document.createElement('div');
+        productItem.className = 'product-item';
+        productItem.innerHTML = `
+                    <img src="${product.imageUrl}" alt="${product.name}">
+                    <h3>${product.name}</h3>
+                    <p>가격: ${product.price} 원</p>
+                    <p>카테고리: ${categories[product.categoryId]}</p>
+                    <input type="hidden" value="${product.id}" class="productId">
+                    <div class="buttons">
+                        <button class="editProductButton">수정</button>
+                        <button class="deleteProductButton">삭제</button>
+                    </div>
+                `;
+        productsList.appendChild(productItem);
+
+        const editButton = productItem.querySelector('.editProductButton');
+        const deleteButton = productItem.querySelector('.deleteProductButton');
+
+        editButton.addEventListener('click', function() {
+          openEditProductModal(product);
+        });
+
+        deleteButton.addEventListener('click', function() {
+          if (confirm('정말로 이 상품을 삭제하시겠습니까?')) {
+            deleteProduct(product.id);
+          }
+        });
+      });
+
+      document.getElementById('prevPageButton').disabled = currentPage === 0;
+      document.getElementById('nextPageButton').disabled = currentPage === totalPages-1;
+    })
+    .catch(error => {
+      console.error('Error loading products:', error);
+      alert('상품 로딩에 실패했습니다.');
+    });
+  }
+
+  function openEditProductModal(product) {
+    document.getElementById('editProductId').value = product.id;
+    document.getElementById('editProductName').value = product.name;
+    document.getElementById('editProductPrice').value = product.price;
+    document.getElementById('editProductImageUrl').value = product.imageUrl;
+
+    const modal = document.getElementById('editProductModal');
+    modal.style.display = 'block';
+  }
+
+  function closeEditProductModal() {
+    const modal = document.getElementById('editProductModal');
+    modal.style.display = 'none';
+  }
+
+  function openAddProductModal() {
+    const modal = document.getElementById('addProductModal');
+    modal.style.display = 'block';
+  }
+
+  function closeAddProductModal() {
+    const modal = document.getElementById('addProductModal');
+    modal.style.display = 'none';
+  }
+
+  function updateProduct(productData) {
+    fetch(`/api/products/${productData.productId}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': accessToken
+      },
+      body: JSON.stringify(productData)
+    })
+    .then(response => {
+      if (response.ok) {
+        alert('상품이 성공적으로 수정되었습니다.');
+        closeEditProductModal();
+        loadProducts();
+      } else {
+        throw new Error('Failed to update product');
+      }
+    })
+    .catch(error => {
+      console.error('Error updating product:', error);
+      alert('상품 수정에 실패했습니다.');
+    });
+  }
+
+  function deleteProduct(productId) {
+    fetch(`/api/products/${productId}`, {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': accessToken
+      }
+    })
+    .then(response => {
+      if (response.ok) {
+        alert('상품이 삭제되었습니다.');
+        loadProducts(); // Reload products list
+      } else {
+        throw new Error('Failed to delete product');
+      }
+    })
+    .catch(error => {
+      console.error('Error deleting product:', error);
+      alert('상품 삭제에 실패했습니다.');
+    });
+  }
+
+  function createProduct(productData) {
+    fetch('/api/products', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': accessToken
+      },
+      body: JSON.stringify(productData)
+    })
+    .then(response => {
+      if (response.ok) {
+        alert('상품이 성공적으로 추가되었습니다.');
+        closeAddProductModal();
+        loadProducts();
+      } else {
+        throw new Error('Failed to create product');
+      }
+    })
+    .catch(error => {
+      console.error('Error creating product:', error);
+      alert('상품 추가에 실패했습니다.');
+    });
+  }
+
+  document.getElementById('loadProductsButton').addEventListener('click', loadProducts);
+
+  document.getElementById('prevPageButton').addEventListener('click', function() {
+    if (currentPage > 0) {
+      currentPage--;
+      loadProducts();
+    }
+  });
+
+  document.getElementById('nextPageButton').addEventListener('click', function() {
+    if (currentPage < totalPages-1) {
+      currentPage++;
+      loadProducts();
+    }
+  });
+
+  document.getElementById('goToMainPageButton').addEventListener('click', function() {
+    window.location.href = '/admin'; // Redirect to main page
+  });
+
+  document.getElementById('editProductForm').addEventListener('submit', function(event) {
+    event.preventDefault();
+
+    const productId = document.getElementById('editProductId').value;
+    const name = document.getElementById('editProductName').value;
+    const price = parseFloat(document.getElementById('editProductPrice').value);
+    const imageUrl = document.getElementById('editProductImageUrl').value;
+    const categoryId = parseInt(document.getElementById('editProductCategory').value);
+
+    const productData = {
+      productId,
+      name,
+      price,
+      imageUrl,
+      categoryId
+    };
+
+    updateProduct(productData);
+  });
+
+  document.getElementById('addProductForm').addEventListener('submit', function(event) {
+    event.preventDefault();
+    const productData = {
+      name: document.getElementById('addProductName').value,
+      price: parseFloat(document.getElementById('addProductPrice').value),
+      imageUrl: document.getElementById('addProductImageUrl').value,
+      categoryId: parseInt(document.getElementById('addProductCategory').value),
+      options: {'name': name, 'quantity': 1000},
+    };
+    createProduct(productData);
+  });
+
+  document.getElementById('openAddProductModalButton').addEventListener('click', openAddProductModal);
+
+  const closeButtons = document.querySelectorAll('.close-button');
+  closeButtons.forEach(button => {
+    button.addEventListener('click', function() {
+      closeEditProductModal();
+      closeAddProductModal();
+    });
+  });
+
+  // Load categories on page load
+  loadCategories();
+});

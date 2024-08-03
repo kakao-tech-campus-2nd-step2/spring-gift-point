@@ -40,19 +40,7 @@ public class AdminController {
     }
 
     @GetMapping("/product")
-    public ModelAndView showProductPage(
-        @RequestParam(defaultValue = "1", name = "page") int pageNum) {
-        Page<ProductResponse> page = productService.getPage(pageNum - 1);
-        int lastPage = Math.max(1, page.getTotalPages());
-
-        ModelAndView modelAndView = new ModelAndView();
-        modelAndView.setViewName("/admin/product");
-        modelAndView.addObject("products", page.getContent());
-        modelAndView.addObject("productsCnt", page.getTotalElements());
-        modelAndView.addObject("page", pageNum);
-        modelAndView.addObject("startPage", Math.max(1, pageNum - 2));
-        modelAndView.addObject("endPage", Math.max(lastPage, pageNum + 2));
-        modelAndView.addObject("lastPage", lastPage);
-        return modelAndView;
+    public String showProductPage() {
+        return "admin/product";
     }
 }
