@@ -3,6 +3,7 @@ package gift.DTO;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
 
 @Schema(description = "주문 요청 DTO")
 public record RequestOrderDTO (
@@ -17,5 +18,12 @@ public record RequestOrderDTO (
     Integer quantity,
 
     @Schema(description = "주문 메세지")
-    String message
+    String message,
+
+    @Pattern(
+            regexp = "^01[0-9]-\\d{4}-\\d{4}$",
+            message = "현금 영수증 휴대폰 번호의 양식이 잘못되었습니다"
+    )
+    @Schema(description= "현금 영수증 신청 휴대폰 번호")
+    String phoneNumber
 ) { }
