@@ -10,7 +10,8 @@ import gift.api.order.domain.Order;
 public record OrderRequest(
     Long optionId,
     Integer quantity,
-    String message
+    String message,
+    Integer point
 ) {
 
     public Order toEntity(Member member, Option option) {

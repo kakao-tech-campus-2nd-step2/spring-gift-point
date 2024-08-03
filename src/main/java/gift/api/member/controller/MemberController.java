@@ -65,7 +65,7 @@ public class MemberController {
     }
 
     @GetMapping("/me")
-    @Operation(summary = "내 정보 확인", description = "잔여 포인트 확인")
+    @Operation(summary = "사용자 정보 확인", description = "잔여 포인트 확인")
     @ApiResponse(responseCode = "200", description = "OK")
     public ResponseEntity<MyInfoResponse> me(
         @Parameter(name = "Authorization", required = true, description = "사용자 액세스 토큰")

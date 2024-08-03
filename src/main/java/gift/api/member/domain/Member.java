@@ -1,6 +1,7 @@
 package gift.api.member.domain;
 
 import gift.api.member.enums.Role;
+import gift.api.member.exception.NotEnoughPointException;
 import gift.global.BaseEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -29,6 +30,13 @@ public class Member extends BaseEntity {
         this.email = email;
         this.password = password;
         this.role = role;
+    }
+
+    public void subtractPoint(Integer point) {
+        if (this.point < point) {
+            throw new NotEnoughPointException();
+        }
+        this.point -= point;
     }
 
     public void saveKakaoToken(String accessToken) {
