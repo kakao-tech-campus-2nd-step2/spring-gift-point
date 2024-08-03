@@ -12,13 +12,12 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.servlet.function.EntityResponse;
 
 @RestController
 @RequestMapping("api/points")
 public class PointController {
 
-  private PointService pointService;
+  private final PointService pointService;
 
   public PointController(PointService pointService) {
     this.pointService = pointService;
@@ -27,12 +26,12 @@ public class PointController {
   @PostMapping
   public ResponseEntity addPoint(@RequestBody RequestPointDto requestPointDto,
     @LoginUser MemberDto memberDto) {
-    pointService.addPoint(requestPointDto,memberDto);
+    pointService.addPoint(requestPointDto, memberDto);
     return ResponseEntity.created(URI.create("point")).build();
   }
 
   @GetMapping
-  public ResponseEntity<ResponsePointDto> getPoint(@LoginUser MemberDto memberDto){
+  public ResponseEntity<ResponsePointDto> getPoint(@LoginUser MemberDto memberDto) {
     return ResponseEntity.ok(pointService.getPoint(memberDto));
   }
 }

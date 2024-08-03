@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 @RestController
 @RequestMapping("/api/members")
@@ -29,7 +28,7 @@ public class MemberController {
   }
 
   @PostMapping("/login")
-  public ResponseEntity<JwtToken> Login (@Valid @RequestBody MemberDto memberDtoInfo) {
+  public ResponseEntity<JwtToken> Login(@Valid @RequestBody MemberDto memberDtoInfo) {
     JwtToken jwtToken = memberService.Login(memberDtoInfo);
     return ResponseEntity.ok(jwtToken);
   }

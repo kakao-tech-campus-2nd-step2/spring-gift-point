@@ -1,7 +1,6 @@
 package gift.Service;
 
 import gift.ConverterToDto;
-import gift.DTO.Member;
 import gift.DTO.Product;
 import gift.DTO.WishList;
 import gift.DTO.WishListDto;
@@ -29,7 +28,7 @@ public class WishListService {
 
   public void addProductToWishList(Long productId) {
     Product product = productRepository.findById(productId)
-      .orElseThrow(()->new EmptyResultDataAccessException("해당 데이터가 없습니다", 1));
+      .orElseThrow(() -> new EmptyResultDataAccessException("해당 데이터가 없습니다", 1));
 
     WishList wishList = new WishList(product);
     wishListRepository.save(wishList);

@@ -1,7 +1,8 @@
 package gift.ResponseDto;
 
 public class ResponsePointDto {
-  private int point;
+
+  private final int point;
 
   public ResponsePointDto(int point) {
     this.point = point;

@@ -34,7 +34,7 @@ public class OrderService {
     this.wishListService = wishListService;
     this.optionRepository = optionRepository;
     this.orderRepository = orderRepository;
-    this.memberRepository=memberRepository;
+    this.memberRepository = memberRepository;
   }
 
   @Transactional
@@ -51,7 +51,7 @@ public class OrderService {
 
     Long memberId = memberDto.getId();
     Member member = memberRepository.findById(memberId)
-      .orElseThrow(()->new EmptyResultDataAccessException("해당 고객이 없습니다.",1));
+      .orElseThrow(() -> new EmptyResultDataAccessException("해당 고객이 없습니다.", 1));
     member.subtractPoint(requestOrderDto.getUsedPoint());
     Orders savedOrder = orderRepository.save(order);
     ResponseOrderDto responseOrderDto = new ResponseOrderDto(savedOrder.getId(),

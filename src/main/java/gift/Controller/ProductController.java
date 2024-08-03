@@ -107,7 +107,7 @@ public class ProductController {
     @PageableDefault(size = 10, sort = "name", direction = Sort.Direction.ASC) Pageable pageable,
     @RequestParam Long categoryId) {
 
-    return ResponseEntity.ok(productService.getAllProductsByCategory(pageable,categoryId));
+    return ResponseEntity.ok(productService.getAllProductsByCategory(pageable, categoryId));
   }
 
   @Operation(summary = "특정 상품 가져오기", description = "데이터 베이스에 저장되어 있는 특정 상품을 가져온다.")

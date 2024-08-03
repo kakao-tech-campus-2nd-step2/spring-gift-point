@@ -5,14 +5,11 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.PositiveOrZero;
 import jakarta.validation.constraints.Size;
-import java.util.ArrayList;
-import java.util.List;
 
 @Entity
 @Table
@@ -32,6 +29,7 @@ public class Member {
 
   @PositiveOrZero
   private int point;
+
   protected Member() {
 
   }
@@ -40,13 +38,13 @@ public class Member {
     this.id = id;
     this.email = email;
     this.password = password;
-    this.point=0;
+    this.point = 0;
   }
 
   public Member(String email, String password) {
     this.email = email;
     this.password = password;
-    this.point=0;
+    this.point = 0;
   }
 
   public Long getId() {
@@ -70,14 +68,14 @@ public class Member {
       memberDtoByEmail.getPassword());
   }
 
-  public void subtractPoint(int point) throws IllegalAccessException{
-    if(point>this.point){
+  public void subtractPoint(int point) throws IllegalAccessException {
+    if (point > this.point) {
       throw new IllegalAccessException();
     }
-    this.point-=point;
+    this.point -= point;
   }
 
-  public void addPoint(int point){
-    this.point+=point;
+  public void addPoint(int point) {
+    this.point += point;
   }
 }

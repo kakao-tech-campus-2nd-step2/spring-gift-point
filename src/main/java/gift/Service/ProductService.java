@@ -7,7 +7,6 @@ import gift.DTO.Product;
 import gift.DTO.ProductDto;
 import gift.Repository.CategoryRepository;
 import gift.Repository.ProductRepository;
-import java.util.List;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -80,7 +79,7 @@ public class ProductService {
   }
 
   public Page<ProductDto> getAllProductsByCategory(Pageable pageable, Long categoryId) {
-    Page<Product> products = productRepository.findAllByCategoryId(categoryId,pageable);
+    Page<Product> products = productRepository.findAllByCategoryId(categoryId, pageable);
     Page<ProductDto> productDtos = products.map(ConverterToDto::convertToProductDto);
     return productDtos;
   }

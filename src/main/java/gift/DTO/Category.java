@@ -16,7 +16,7 @@ import java.util.List;
 @Table
 public class Category {
 
-  @OneToMany(mappedBy = "category",cascade = CascadeType.REMOVE)
+  @OneToMany(mappedBy = "category", cascade = CascadeType.REMOVE)
   private final List<Product> products = new ArrayList<>();
 
   @Id
@@ -78,6 +78,8 @@ public class Category {
     return this.description;
   }
 
-  public List<Product> getProducts() {return this.products;}
+  public List<Product> getProducts() {
+    return this.products;
+  }
 
 }
