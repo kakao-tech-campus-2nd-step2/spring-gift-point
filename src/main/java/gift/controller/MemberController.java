@@ -2,6 +2,7 @@ package gift.controller;
 
 import gift.anotation.LoginMember;
 import gift.domain.Member;
+import gift.dto.AddPointsDTO;
 import gift.service.MemberService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -85,7 +86,7 @@ public class MemberController {
         int currentPoints = member.getPoints();
 
         if (currentPoints < 1000) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("error", ));
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("error", -1));
         }
 
         if (pointsToUse > currentPoints) {
@@ -96,5 +97,11 @@ public class MemberController {
         memberService.save(member);
 
         return ResponseEntity.ok(Map.of("remainingPoints", member.getPoints()));
+    }
+
+    @PostMapping("/addPoints")
+    public ResponseEntity<Void> addPoints(@RequestBody AddPointsDTO addPointsDTO) {
+        memberService.addPoints(addPointsDTO.getMemberId(), addPointsDTO.getPoints());
+        return ResponseEntity.ok().build();
     }
 }
