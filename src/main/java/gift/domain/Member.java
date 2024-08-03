@@ -1,5 +1,6 @@
 package gift.domain;
 
+import gift.exception.customException.PointsNotAvailableException;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Min;
 
@@ -8,7 +9,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
 
-import static gift.exception.errorMessage.Messages.POINTS_CANNOT_BE_NEGATIVE;
+import static gift.exception.errorMessage.Messages.*;
 
 @Entity
 @Table(name="members")
@@ -105,11 +106,21 @@ public class Member {
     }
 
     public void addPoints(int addPoints){
-        this.points = this.points + addPoints;
+        this.points += addPoints;
     }
 
     public void usePoints(int usePoints){
-        this.points = this.points - usePoints;
+        this.points -= usePoints;
+    }
+
+    public void validatePointsUsage(int pointsUsed, int price) {
+        if(pointsUsed > this.points) {
+            throw new PointsNotAvailableException(INSUFFICIENT_POINTS);
+        }
+
+        if(pointsUsed > price / 2) {
+            throw new PointsNotAvailableException(POINTS_USAGE_LIMIT);
+        }
     }
 
     @Override
