@@ -2,6 +2,7 @@ package gift.domain.member.service;
 
 import gift.domain.member.dto.MemberRequest;
 import gift.domain.member.dto.MemberResponse;
+import gift.domain.member.dto.PointRequest;
 import gift.domain.member.entity.Member;
 import gift.domain.member.exception.MemberAuthorizationException;
 import gift.domain.member.exception.MemberNotFoundException;
@@ -9,7 +10,6 @@ import gift.domain.member.repository.MemberRepository;
 import gift.global.exception.DuplicateException;
 import gift.util.JwtUtil;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,8 +26,7 @@ public class MemberService {
         this.jwtUtil = jwtUtil;
     }
 
-    public Page<MemberResponse> getAllMember(int pageNo, int pageSize) {
-        Pageable pageable = PageRequest.of(pageNo, pageSize);
+    public Page<MemberResponse> getAllMember(Pageable pageable) {
         return memberRepository.findAll(pageable).map(this::entityToDto);
     }
 
@@ -67,10 +66,14 @@ public class MemberService {
             .findByEmail(email)
             .orElseThrow(() -> new MemberNotFoundException("유저가 존재하지 않습니다."));
     }
-
+    @Transactional
+    public void updatePoint(Long memberId, PointRequest pointRequest) {
+        Member savedMember = memberRepository.findById(memberId).orElseThrow(()-> new MemberNotFoundException("해당 유저가 존재하지 않습니다."));
+        savedMember.updatePoint(pointRequest.getPoint());
+    }
     private MemberResponse entityToDto(Member member) {
-        return new MemberResponse(member.getEmail(),
-            member.getPassword());
+        return new MemberResponse(member.getId(),member.getEmail(),
+            member.getPassword(), member.getPoint());
     }
 
     private Member dtoToEntity(MemberRequest memberRequest) {
