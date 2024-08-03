@@ -28,7 +28,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @Tag(name = "product", description = "상품 API")
-@RequestMapping("/product/jdbc")
+@RequestMapping("/api/products")
 @RestController()
 public class productController {
 
@@ -39,7 +39,7 @@ public class productController {
     }
 
     @PostMapping("")
-    @Operation(summary = "상품 응답 DTO 생성", description = "상품요청 DTO를 보내면, 상품응답 DTO를 만들어줍니다.")
+    @Operation(summary = "상품 등록", description = "신규 상품을 등록합니다.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "상품 생성 성공", content = @Content(schema = @Schema(implementation = ProductResponseDto.class))),
             @ApiResponse(responseCode = "404", description = "존재하지 않는 리소스 접근", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))})
@@ -52,7 +52,7 @@ public class productController {
         return new ResponseEntity<>(productResponseDto, HttpStatus.OK);
     }
 
-    @GetMapping("")
+    @GetMapping("/all")
     @Operation(summary = "상품 목록 조회", description = "모든 상품 목록을 조회합니다.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "상품 목록 조회 성공", content = @Content(schema = @Schema(implementation = ProductResponseDto.class))),
@@ -61,13 +61,13 @@ public class productController {
         return new ResponseEntity<>(productService.getAllAndMakeProductResponseDto(), HttpStatus.OK);
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/{productId}")
     @Operation(summary = "상품 id로 상품 조회", description = "상품 id로 상품을 조회합니다.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "상품 조회 성공", content = @Content(schema = @Schema(implementation = ProductResponseDto.class))),
             @ApiResponse(responseCode = "404", description = "존재하지 않는 리소스 접근", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))})
-    public ResponseEntity<ProductResponseDto> getOneById(@Parameter(name = "id", description = "product 의 id", in = ParameterIn.PATH)
-                                                         @PathVariable("id") Long id
+    public ResponseEntity<ProductResponseDto> getOneById(@Parameter(name = "productId", description = "product 의 id", in = ParameterIn.PATH)
+                                                         @PathVariable("productId") Long id
     ) {
         return new ResponseEntity<>(productService.getProductResponseDtoById(id), HttpStatus.OK);
     }
@@ -102,7 +102,7 @@ public class productController {
         return new ResponseEntity<>(productService.findProductByName(name), HttpStatus.OK);
     }
 
-    @GetMapping("/products")
+    @GetMapping("")
     @Operation(summary = "페이지네이션을 적용하여 모든 상품 조회", description = "모든 상품을 조회하되, 페이지네이션을 적용하여 가져옵니다.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "페이지네이션으로 상품 목록 조회 성공", content = @Content(schema = @Schema(implementation = ProductResponseDto.class))),

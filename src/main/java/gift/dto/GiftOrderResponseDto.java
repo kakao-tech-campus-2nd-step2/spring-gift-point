@@ -13,10 +13,11 @@ public class GiftOrderResponseDto {
     private Long optionId;
     @Schema(description = "선택한 상품 개수")
     private Long quantity;
-    @Schema(description = "요청 메세지")
-    private String message;
     @Schema(description = "선물 주문 일시")
     private LocalDateTime orderDateTime;
+    @Schema(description = "요청 메세지")
+    private String message;
+
 
     public GiftOrderResponseDto(Long id, Long optionId, Long quantity, LocalDateTime orderDateTime, String message) {
         this.id = id;

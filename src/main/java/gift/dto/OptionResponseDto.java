@@ -5,13 +5,13 @@ import io.swagger.v3.oas.annotations.media.Schema;
 @Schema(description = "옵션 응답 DTO")
 public class OptionResponseDto {
     @Schema(description = "옵션 고유 id")
-    private final Long id;
+    private Long id;
     @Schema(description = "옵션 이름")
-    private final String name;
+    private String name;
     @Schema(description = "옵션 개수")
-    private final Long quantity;
+    private  Long quantity;
     @Schema(description = "옵션이 속한 상품 id")
-    private final Long product_id;
+    private Long product_id;
 
     public OptionResponseDto(Long id, String name, Long quantity, Long product_id) {
         this.id = id;

@@ -8,10 +8,10 @@ import jakarta.validation.constraints.Email;
 public class MemberResponseDto {
 
     @Schema(description = "멤버 고유 id ")
-    private final Long id;
+    private Long id;
     @Email
     @Schema(description = "멤버 email ")
-    private final String email;
+    private String email;
     @Schema(description = "멤버 토큰")
     private String token;
 
@@ -25,6 +25,11 @@ public class MemberResponseDto {
         this.email = actualMember.getEmail();
         this.token = actualMember.getToken();
     }
+    public MemberResponseDto(String email , String token) {
+        this.email = email;
+        this.token = token;
+     }
+
 
     public Long getId() {
         return id;
