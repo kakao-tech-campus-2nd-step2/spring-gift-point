@@ -11,11 +11,13 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import java.time.LocalDateTime;
 import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 @Entity(name = "PointPayment")
 @EntityListeners(AuditingEntityListener.class)
 public class PointPaymentEntity {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -25,9 +27,15 @@ public class PointPaymentEntity {
     //    결제액
     @Column
     private Integer paymentAmount;
+    //    결제 취소 여부(취소 안됨 0, 취소 됨 1)
+    @Column
+    private Integer isRevoke;
     //    결제일시
     @CreatedDate
     private LocalDateTime transactionDate;
+    //    결제 취소일
+    @LastModifiedDate
+    private LocalDateTime RevokeDate;
     //    결제 대상
     @ManyToOne(targetEntity = ProductOptionEntity.class, fetch = FetchType.LAZY)
     private ProductOptionEntity productOption;
@@ -45,11 +53,14 @@ public class PointPaymentEntity {
     }
 
     public PointPaymentEntity(Integer regularPrice, Integer paymentAmount,
-        ProductOptionEntity productOption, UserEntity user) {
+        ProductOptionEntity productOption, UserEntity user,
+        DiscountPolicyEntity discountPolicy) {
         this.regularPrice = regularPrice;
         this.paymentAmount = paymentAmount;
         this.productOption = productOption;
         this.user = user;
+        this.discountPolicy = discountPolicy;
+        this.isRevoke = 0;
     }
 
     public Long getId() {
@@ -74,5 +85,13 @@ public class PointPaymentEntity {
 
     public UserEntity getUser() {
         return user;
+    }
+
+    public DiscountPolicyEntity getDiscountPolicy() {
+        return discountPolicy;
+    }
+
+    public void setIsRevoke(Integer isRevoke) {
+        this.isRevoke = isRevoke;
     }
 }

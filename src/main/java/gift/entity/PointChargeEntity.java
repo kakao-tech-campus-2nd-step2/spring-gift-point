@@ -11,6 +11,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import java.time.LocalDateTime;
 import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 @Entity(name = "pointCharge")
@@ -23,12 +24,15 @@ public class PointChargeEntity {
     //    포인트 충전 금액
     @Column
     private Integer price;
+    //   충전 취소 여부(취소 안됨 0, 취소 됨 1)
+    @Column
+    private Integer isRevoke;
     //    포인트 충전일
     @CreatedDate
     private LocalDateTime transactionDate;
-    //    결제 취소 여부(취소 안됨 0, 취소 됨 1)
-    @Column
-    private Integer isRevoke;
+    //    결제 취소일
+    @LastModifiedDate
+    private LocalDateTime RevokeDate;
     //    포인트 충전 유저
     @ManyToOne(targetEntity = UserEntity.class, fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
