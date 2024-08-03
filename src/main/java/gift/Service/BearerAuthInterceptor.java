@@ -22,6 +22,7 @@ public class BearerAuthInterceptor implements HandlerInterceptor {
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
         String token = authExtractor.extract(request);//토큰 추출
         if (StringUtils.isEmpty(token)) {// 토큰이 비어있는지 체크해 비어있으면 토큰을 비어있으면 false
+            System.out.println("preHandle: 작동안됨");
             throw new UnauthorizedException("401 Unauthorized : Invalid or missing token");
         }
         String email = memberAccessTokenProvider.getEmail(token);//토큰을 디코딩해 email을 얻음

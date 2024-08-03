@@ -64,6 +64,7 @@ public class WishlistService {
     public void checkUserByMemberEmail(String email){
         Member checkMember = memberRepository.findByEmail(email);
         if (checkMember == null){
+            System.out.println("wishservice: !!!!!!!!!!!!!!!!!!!!!!!!");
             throw new UnauthorizedException("401 Unauthorized : Invalid or missing token");
         }
     }
