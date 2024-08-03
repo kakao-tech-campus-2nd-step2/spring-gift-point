@@ -10,6 +10,7 @@ import gift.dto.member.MemberEditRequest;
 import gift.dto.member.MemberEditResponse;
 import gift.dto.member.MemberLoginRequest;
 import gift.dto.member.MemberOAuthResponse;
+import gift.dto.member.MemberPointResponse;
 import gift.dto.member.MemberRegisterRequest;
 import gift.exception.member.EmailAlreadyUsedException;
 import gift.exception.member.ForbiddenException;
@@ -141,9 +142,11 @@ public class MemberService {
         memberRepository.deleteById(memberId);
     }
 
-//    public int getPoints(Long memberId) {
-//
-//    }
+    public MemberPointResponse getPoints(Long memberId) {
+        Member member = memberRepository.findById(memberId)
+            .orElseThrow(() -> new ForbiddenException(ID_NOT_FOUND + memberId));
+        return new MemberPointResponse(member.getPoints());
+    }
 
     // Mapper methods
     public Member convertToEntity(MemberEditResponse memberEditResponse) {

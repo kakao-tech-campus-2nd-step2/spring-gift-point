@@ -72,6 +72,10 @@ public class Member {
         return registerType;
     }
 
+    public int getPoints() {
+        return points;
+    }
+
     public void update(String email, String password) {
         this.email = email;
         this.password = password;
