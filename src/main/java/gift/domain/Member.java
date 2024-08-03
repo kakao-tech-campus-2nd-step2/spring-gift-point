@@ -84,6 +84,14 @@ public class Member {
         return points;
     }
 
+    public void addPoints(int addPoints){
+        this.points = this.points + addPoints;
+    }
+
+    public void usePoints(int usePoints){
+        this.points = this.points - usePoints;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
