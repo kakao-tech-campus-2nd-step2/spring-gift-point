@@ -18,7 +18,8 @@ public class Member extends BaseEntity {
     private String password;
     @Enumerated(EnumType.STRING)
     private Role role;
-
+    @Column(columnDefinition = "integer default 0")
+    private Integer point;
     private String kakaoAccessToken;
 
     protected Member() {
@@ -36,6 +37,10 @@ public class Member extends BaseEntity {
 
     public String getEmail() {
         return email;
+    }
+
+    public Integer getPoint() {
+        return point;
     }
 
     public String getKakaoAccessToken() {

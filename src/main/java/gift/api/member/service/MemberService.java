@@ -3,6 +3,7 @@ package gift.api.member.service;
 import gift.api.member.domain.Member;
 import gift.api.member.dto.KakaoAccount;
 import gift.api.member.dto.MemberRequest;
+import gift.api.member.dto.MyInfoResponse;
 import gift.api.member.enums.Role;
 import gift.api.member.exception.EmailAgreementNeededException;
 import gift.api.member.exception.EmailAlreadyExistsException;
@@ -42,6 +43,10 @@ public class MemberService {
             throw new UnauthorizedMemberException();
         }
         throw new ForbiddenMemberException();
+    }
+
+    public MyInfoResponse me(Long id) {
+        return MyInfoResponse.of(findMemberById(id));
     }
 
     public String issueAccessToken(String email) {

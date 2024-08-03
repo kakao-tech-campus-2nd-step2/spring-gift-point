@@ -1,7 +1,9 @@
 package gift.api.member.controller;
 
 import gift.api.member.dto.MemberRequest;
+import gift.api.member.dto.MyInfoResponse;
 import gift.api.member.service.MemberService;
+import gift.global.resolver.LoginMember;
 import gift.global.utils.JwtUtil;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -11,6 +13,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
@@ -59,5 +62,15 @@ public class MemberController {
 
         memberService.login(memberRequest, token.split(" ")[1]);
         return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/me")
+    @Operation(summary = "내 정보 확인", description = "잔여 포인트 확인")
+    @ApiResponse(responseCode = "200", description = "OK")
+    public ResponseEntity<MyInfoResponse> me(
+        @Parameter(name = "Authorization", required = true, description = "사용자 액세스 토큰")
+        @LoginMember Long id) {
+
+        return ResponseEntity.ok().body(memberService.me(id));
     }
 }
