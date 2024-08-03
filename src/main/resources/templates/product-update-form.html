@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Update Product</title>
+    <script src="/js/update-product.js" defer></script>
+</head>
+<body>
+<h1>Edit Product</h1>
+<form id="product-update-form">
+    <div>
+        <label for="product-id">ID:</label>
+        <input type="text" id="product-id" name="id" readonly>
+    </div>
+    <div>
+        <label for="product-name">Name:</label>
+        <input type="text" id="product-name" name="name">
+    </div>
+    <div>
+        <label for="product-price">Price:</label>
+        <input type="number" id="product-price" name="price">
+    </div>
+    <div>
+        <label for="product-image">Image URL:</label>
+        <input type="text" id="product-image" name="imageUrl">
+    </div>
+    <div>
+        <label for="product-category">Category:</label>
+        <select id="product-category" name="category" required></select>
+    </div>
+    <button type="submit">저장</button>
+</form>
+</body>
+</html>
+
