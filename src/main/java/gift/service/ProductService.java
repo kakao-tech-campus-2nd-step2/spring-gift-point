@@ -55,8 +55,9 @@ public class ProductService {
         productJpaDao.deleteById(id);
     }
 
-    public Page<ProductResponse> getAllProducts(Pageable pageable) {
-        return productJpaDao.findAll(pageable).map(ProductResponse::new);
+    public Page<ProductResponse> getAllProducts(Long categoryId, Pageable pageable) {
+//        return productJpaDao.findAll(pageable).map(ProductResponse::new);
+        return productJpaDao.findByCategory_Id(categoryId, pageable).map(ProductResponse::new);
     }
 
     public ProductResponse getProduct(Long id) {

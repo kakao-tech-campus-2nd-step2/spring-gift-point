@@ -49,12 +49,10 @@
 
 ## Product API
 
-### 상품 조회 페이지
-
-- 모든 상품들의 정보를 나타내는 페이지를 서버 사이드 렌더링하여 반환.
+### 모든 상품 조회
 
 ```
-GET /api/products
+GET /api/products?page=0&size=10&sort=name,asc&categoryId=1
 ```
 
 ### 상품 추가 페이지
@@ -62,15 +60,13 @@ GET /api/products
 - 추가할 상품의 정보를 폼 태그에 입력하는 페이지.
 
 ```
-GET /api/products/prduct
+GET /api/products/addForm
 ```
 
 ### 상품 추가
 
-- HTML 폼 정보에 맞게 상품을 추가하고 목록 페이지로 리다이렉션.
-
 ```
-POST /api/products/product
+POST /api/products
 ```
 
 ### 상품 수정 페이지
@@ -78,23 +74,19 @@ POST /api/products/product
 - 상품의 정보를 수정할 수 있는 폼 태그 페이지.
 
 ```
-GET /api/products/product/{id}
+GET /api/products/editForm/{productId}
 ```
 
 ### 상품 수정
 
-- 수정된 정보에 맞게 상품을 수정하고 목록 페이지로 리다이렉션.
-
 ```
-POST /api/products/product
+PUT /api/products/{productId}
 ```
 
 ### 상품 삭제
 
-- 해당하는 상품을 삭제.
-
 ```
-DELETE /api/products/product/{id}
+DELETE /api/products/{productId}
 ```
 
 ## Member API
@@ -140,19 +132,19 @@ GET /api/members/login/kakao/oauth/token
 ### 위시 리스트 조회
 
 ```
-GET /api/members/wishlist
+GET /api/wishes?page=0&size=10&sort=createdDate,desc
 ```
 
 ### 위시 리스트에 상품 추가
 
 ```
-POST /api/members/wishlist/{id}
+POST /api/wishes
 ```
 
 ### 위시 리스트 상품 삭제
 
 ```
-DELETE /api/members/wishlist/{id}
+DELETE /api/wishes/{wishId}
 ```
 
 ## Category API
@@ -184,13 +176,13 @@ POST /api/categories
 ### 카테고리 수정
 
 ```
-PUT /api/categories
+PUT /api/categories/{categoryId}
 ```
 
 ### 카테고리 삭제
 
 ```
-DELETE /api/categories/{id}
+DELETE /api/categories/{categoryId}
 ```
 
 ## Option API
@@ -198,37 +190,37 @@ DELETE /api/categories/{id}
 ### 옵션 조회
 
 ```
-GET /api/products/product/{productId}/options
+GET /api/products/{productId}/options
 ```
 
 ### 옵션 추가 페이지
 
 ```
-GET /api/products/product/{productId}/options/addForm
+GET /api/products/{productId}/options/addForm
 ```
 
 ### 옵션 수정 페이지
 
 ```
-GET /api/products/product/{productId}/options/{optionId}
+GET /api/products/{productId}/options/{optionId}
 ```
 
 ### 옵션 추가
 
 ```
-POST /api/products/product/{productId}/options
+POST /api/products/{productId}/options
 ```
 
 ### 옵션 수정
 
 ```
-PUT /api/products/product/{productId}/options
+PUT /api/products/{productId}/options/{optionId}
 ```
 
 ### 옵션 삭제
 
 ```
-DELETE /api/products/product/{productId}/options/{optionId}
+DELETE /api/products/{productId}/options/{optionId}
 ```
 
 ## Order API

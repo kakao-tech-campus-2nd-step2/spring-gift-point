@@ -1,11 +1,6 @@
 package gift.controller;
 
-import gift.dto.CategoryDto;
 import gift.service.CategoryService;
-import gift.utils.PageNumberListGenerator;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,16 +15,6 @@ public class CategoryViewController {
 
     public CategoryViewController(CategoryService categoryService) {
         this.categoryService = categoryService;
-    }
-
-    @GetMapping
-    public String getAllCategoriesView(Model model, @PageableDefault(size = 5) Pageable pageable) {
-        Page<CategoryDto> categories = categoryService.getCategoryPage(pageable);
-        model.addAttribute("pageNumbers",
-            PageNumberListGenerator.generatePageNumberList(categories));
-        model.addAttribute("categories", categories);
-
-        return "category";
     }
 
     @GetMapping("/addForm")
