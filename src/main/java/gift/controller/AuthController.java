@@ -48,15 +48,4 @@ public class AuthController {
     return ResponseEntity.status(HttpStatus.OK).body(responseDto);
   }
 
-  @Operation(summary = "주문 목록 조회 (페이지네이션 적용)", description = "카카오 로그인 콜백 처리하고 토큰 반환합니다.")
-  @GetMapping("/callback/orders")
-  public List<OrderDto> getOrderListWithPagination(@RequestHeader("Authorization") String authorization,
-                                                   @RequestHeader("Kakao-Access-Token") String kakaoAccessToken,
-                                                   @RequestParam int page) {
-    String token = authorization.replace("Bearer ", "");
-    Long memberId = jwtUtil.getMemberIdFromToken(token);
-
-    PageRequest pageRequest = PageRequest.of(page, 10);
-    return orderService.getOrders(pageRequest).getContent();
-  }
 }
