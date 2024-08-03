@@ -20,6 +20,9 @@ public class JwtServiceTest {
     @Autowired
     private JwtService jwtService;
 
+    @Autowired
+    UserRepository userRepository;
+
     @Test
     public void testCreateToken() {
         Long id = 1L;
