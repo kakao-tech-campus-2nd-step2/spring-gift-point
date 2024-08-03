@@ -19,14 +19,14 @@ public class MemberAdminController {
     }
 
     @GetMapping("/members")
-    public String showMembers(Model model){
+    public String showMembers(Model model) {
         List<MemberInfoResponse> allMemberInfo = memberService.getAllMember();
         model.addAttribute("members", allMemberInfo);
         return "version-SSR/members";
     }
 
     @GetMapping("/members/point")
-    public String  updatePoint(@RequestParam Long memberId, @RequestParam int newPoint) {
+    public String updatePoint(@RequestParam Long memberId, @RequestParam int newPoint) {
         memberService.updateMemberPoint(memberId, newPoint);
         return "redirect:/members";
     }

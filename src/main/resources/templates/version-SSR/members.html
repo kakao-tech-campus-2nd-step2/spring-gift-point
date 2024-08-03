@@ -2,9 +2,9 @@
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport"
-          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0"
+          name="viewport">
+    <meta content="ie=edge" http-equiv="X-UA-Compatible">
     <link rel="stylesheet" th:href="@{/style.css}"/>
     <title>Members</title>
 </head>
@@ -26,9 +26,9 @@
                 <td th:text="${member.email()}">category</td>
                 <td th:text="${member.point()}">name</td>
                 <td>
-                    <form th:action="@{/members/point}" method="get">
-                        <input type="hidden" name="memberId" th:value="${member.id}">
-                        <input type="number" name="newPoint" min="0" th:value="${member.point()}" required>
+                    <form method="get" th:action="@{/members/point}">
+                        <input name="memberId" th:value="${member.id}" type="hidden">
+                        <input min="0" name="newPoint" required th:value="${member.point()}" type="number">
                         <button type="submit">수정</button>
                     </form>
                 </td>
