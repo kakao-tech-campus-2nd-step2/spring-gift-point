@@ -9,9 +9,9 @@ import static org.springframework.http.HttpStatus.FORBIDDEN;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
 import static org.springframework.http.HttpStatus.UNAUTHORIZED;
 
-import gift.auth.domain.Login;
-import gift.domain.ProductOption.CreateOption;
-import gift.domain.ProductOption.UpdateOption;
+import gift.domain.auth.Login;
+import gift.domain.product.ProductOption.CreateOption;
+import gift.domain.product.ProductOption.UpdateOption;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
