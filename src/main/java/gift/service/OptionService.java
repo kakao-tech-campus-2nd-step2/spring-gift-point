@@ -35,4 +35,11 @@ public class OptionService {
                 .map(Option::getId)
                 .orElseThrow(() -> new OptionNotFoundException(orderRequest.optionId()));
     }
+
+    public int getProductPrice(Long optionId) {
+        return optionRepository.findById(optionId)
+                .orElseThrow(() -> new OptionNotFoundException(optionId))
+                .getProduct()
+                .getPrice();
+    }
 }
