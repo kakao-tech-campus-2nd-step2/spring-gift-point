@@ -1,5 +1,6 @@
 package gift.model;
 
+import gift.exception.InvalidInputValueException;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -40,6 +41,7 @@ public class Order {
 
     public Order(Long id, Option option, Long quantity, LocalDateTime orderDateTime, String message,
         Member member) {
+        validateQuantity(quantity);
         this.id = id;
         this.option = option;
         this.quantity = quantity;
@@ -72,4 +74,12 @@ public class Order {
         return member;
     }
 
+    private void validateQuantity(Long quantity) {
+        if (quantity == null) {
+            throw new InvalidInputValueException("주문 수량을 입력해야 합니다.");
+        }
+        if (quantity <= 0) {
+            throw new InvalidInputValueException("주문 수량은 1 이상이어야 합니다.");
+        }
+    }
 }
