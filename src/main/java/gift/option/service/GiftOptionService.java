@@ -32,7 +32,7 @@ public class GiftOptionService {
     }
 
 
-    public void create(Long productId, GiftOptionRequest giftOptionRequest) {
+    public GiftOptionResponse create(Long productId, GiftOptionRequest giftOptionRequest) {
 
         Product product = getProduct(productId);
 
@@ -41,13 +41,19 @@ public class GiftOptionService {
 
         product.addGiftOption(giftOption);
 
-        jpaGiftOptionRepository.save(giftOption);
+        giftOption = jpaGiftOptionRepository.save(giftOption);
+
+        return new GiftOptionResponse(giftOption);
 
     }
 
-    public void update(Long productId, Long id, GiftOptionRequest giftOptionRequest) {
+    public GiftOptionResponse update(Long productId, Long id, GiftOptionRequest giftOptionRequest) {
         GiftOption giftOption = new GiftOption(id,giftOptionRequest.getName(),
             giftOptionRequest.getQuantity());
+
+        giftOption = jpaGiftOptionRepository.save(giftOption);
+
+        return new GiftOptionResponse(giftOption);
 
     }
 

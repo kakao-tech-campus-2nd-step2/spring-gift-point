@@ -1,20 +1,8 @@
-# spring-gift-order
+# spring-gift-point
 
-## step0
+## step1 api 명세서 작성
 
-기존 코드 옮겨오기
+https://meowing-blender-d28.notion.site/API-436de51b5eeb4119beab453213f31875?pvs=4
 
-## step1
+팀원들과 협의 하에 작성 완료
 
-- 카카오 로그인 처리 컨트롤러 추가
-- 로그인 위한 request, response dto 추가
-- 카카오 로그인 서비스 추가
-- 카카오 로그인 서비스 테스트 추가
-
-## step2
-
-1. 오더 서비스 테스트 추가 - 주문 성공
-2. 서비스 필요 DTO 추가
-3. 서비스 필요 컨트롤러 추가
-
-4. 카카오 메세지 전송 서비스 추가

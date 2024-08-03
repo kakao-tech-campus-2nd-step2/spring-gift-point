@@ -33,19 +33,19 @@ public class GiftOptionController {
     }
 
     @PostMapping
-    public ResponseEntity<Void> add(@PathVariable @NotNull Long productId,
+    public ResponseEntity<GiftOptionResponse> add(@PathVariable @NotNull Long productId,
         @RequestBody @Valid GiftOptionRequest giftOptionRequest) {
-        giftOptionService.create(productId, giftOptionRequest);
+        var body = giftOptionService.create(productId, giftOptionRequest);
 
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok(body);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Void> update(@PathVariable @NotNull Long productId, @PathVariable Long id,
+    public ResponseEntity<GiftOptionResponse> update(@PathVariable @NotNull Long productId, @PathVariable Long id,
         @RequestBody @Valid GiftOptionRequest giftOptionRequest) {
-        giftOptionService.update(productId,id,giftOptionRequest);
+        var body = giftOptionService.update(productId,id,giftOptionRequest);
 
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok(body);
     }
 
     @DeleteMapping("/{id}")

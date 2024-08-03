@@ -34,12 +34,16 @@ public class CategoryFacadeRepository {
             throw new GiftNotFoundException("카테고리가 존재하지 않습니다. 카테고리를 먼저 생성해주세요");
         }
 
+        if (category.getId() == null && jpaCategoryRepository.findByName(category.getName()).isPresent()) {
+            throw new GiftBadRequestException("이미 존재하는 카테고리입니다.");
+        }
+
         category.getProductList().stream()
             .map(product -> jpaProductRepository.existsById(product.getId())).forEach(exists -> {
                 if (!exists) {
                     throw new GiftNotFoundException("상품이 존재하지 않습니다.");
                 }
-            }); //TODO : 한번에 묶어서 실행하는 방법은 없는가?
+            });
 
         return jpaCategoryRepository.save(category);
     }

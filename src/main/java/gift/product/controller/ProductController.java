@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
@@ -30,15 +31,15 @@ public class ProductController {
         this.productService = productService;
     }
 
-    @GetMapping("/products")
-    public ResponseEntity<List<ProductResponse>> getList() {
-        return ResponseEntity.ok(productService.readAll());
+    @GetMapping("/products/{id}")
+    public ResponseEntity<ProductResponse> get(@PathVariable Long id) {
+        return ResponseEntity.ok(productService.read(id));
     }
 
     @PostMapping("/products")
-    public ResponseEntity<Void> add(@RequestBody @Valid ProductRequest productRequest) {
-        productService.create(productRequest);
-        return ResponseEntity.ok().build();
+    public ResponseEntity<ProductResponse> add(@RequestBody @Valid ProductRequest productRequest) {
+        var body = productService.create(productRequest);
+        return ResponseEntity.ok(body);
     }
 
     @PutMapping("/products/{id}")
@@ -57,10 +58,17 @@ public class ProductController {
     }
 
 
-    @GetMapping("/products/{page}")
-    public ResponseEntity<List<ProductResponse>> getPage(@PathVariable int page) {
-        return null;
-        //return ResponseEntity.ok(productService.readProduct(page, 10));
+    @GetMapping("/products")
+    public ResponseEntity<List<ProductResponse>> getPage(@RequestParam(required = false, defaultValue = "0") Integer page,
+            @RequestParam(required = false, defaultValue = "10") Integer size,
+            @RequestParam(required = false) List<String> sort,
+            @RequestParam(defaultValue = "0") Long categoryId) {
+
+        if(sort == null){
+            sort = List.of("id","ASC");
+        }
+
+        return ResponseEntity.ok(productService.readProduct(page, size,sort,categoryId));
     }
 
 }

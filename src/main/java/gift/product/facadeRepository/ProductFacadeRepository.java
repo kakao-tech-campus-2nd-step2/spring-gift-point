@@ -83,4 +83,9 @@ public class ProductFacadeRepository {
     public List<Page<Product>> findPageList(Pageable pageable) {
         return null;
     }
+
+    public List<Product> findByCategoryId(Long categoryId, Pageable pageable) {
+        return jpaProductRepository.findByCategoryId(categoryId, pageable)
+            .orElseThrow(() -> new GiftNotFoundException("카테고리가 존재하지 않습니다."));
+    }
 }

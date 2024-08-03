@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-@RequestMapping("/api/member/kakao")
+@RequestMapping("/api/oauth/kakao")
 @Controller
 public class KakaoController {
 
@@ -22,12 +22,12 @@ public class KakaoController {
         this.memberService = memberService;
     }
 
-    @GetMapping("/login")
+    @GetMapping("/url")
     public String kakaoLoginTry() {
         return "redirect:" + kakaoLoginService.getConnectionUrl();
     }
 
-    @GetMapping("/login/callback")
+    @GetMapping("/code")
     public ResponseEntity<LoginMemberToken> kakaoLogin(@RequestParam @NotNull String code) {
 
         String token = kakaoLoginService.getToken(code);

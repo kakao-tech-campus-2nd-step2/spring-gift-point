@@ -1,7 +1,9 @@
 package gift.wish.dto;
 
 import gift.wish.entity.Wish;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 public class WishListResponse {
 
@@ -10,6 +12,12 @@ public class WishListResponse {
 
 
     public WishListResponse() {
+    }
+
+    public WishListResponse(Long memberId, List<Wish> wishList) {
+        this.memberId = memberId;
+        this.wishList = wishList.stream().collect(
+            Collectors.toMap(wish -> wish.getProduct().getName(), Wish::getProductCount));
     }
 
     public WishListResponse(Wish wish,Map<String,Integer> wishList){
