@@ -3,10 +3,7 @@ package gift.service;
 import gift.domain.LoginType;
 import gift.domain.Member;
 import gift.dto.request.MemberRequest;
-import gift.dto.response.KakaoLoginResponse;
-import gift.dto.response.KakaoProfileResponse;
-import gift.dto.response.KakaoTokenResponse;
-import gift.dto.response.TokenResponse;
+import gift.dto.response.*;
 import gift.exception.DuplicateMemberEmailException;
 import gift.exception.InvalidCredentialsException;
 import gift.exception.MemberNotFoundException;
@@ -84,7 +81,7 @@ public class MemberService {
         KakaoTokenResponse tokenResponse = kakaoAuthService.getKakaoToken(code);
         KakaoProfileResponse profileResponse = kakaoAuthService.getUserProfile(tokenResponse.accessToken());
 
-        String email = profileResponse.kakaoAccount().profile().nickname() +  KAKAO_EMAIL_SUFFIX;
+        String email = profileResponse.kakaoAccount().profile().nickname() + KAKAO_EMAIL_SUFFIX;
 
         if (KAKAO_EMAIL_SUFFIX.equals(email)) {
             throw new RuntimeException("이메일을 가져올 수 없습니다.");
@@ -103,4 +100,10 @@ public class MemberService {
         return new KakaoLoginResponse(code, accessToken, email);
     }
 
+    public PointResponse getPoint(Long memberId) {
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new MemberNotFoundException(MEMBER_NOT_FOUND));
+
+        return PointResponse.from(member);
+    }
 }

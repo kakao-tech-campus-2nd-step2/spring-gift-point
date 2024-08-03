@@ -1,7 +1,10 @@
 package gift.controller;
 
+import gift.annotation.LoginMember;
+import gift.domain.TokenAuth;
 import gift.dto.request.MemberRequest;
 import gift.dto.response.KakaoLoginResponse;
+import gift.dto.response.PointResponse;
 import gift.dto.response.TokenResponse;
 import gift.service.MemberService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -44,6 +47,13 @@ public class MemberController {
     public ResponseEntity<KakaoLoginResponse> kakaoCallback(@RequestParam String code) {
         KakaoLoginResponse response = memberService.handleKakaoLogin(code);
         return ResponseEntity.ok(response);
+    }
 
+    @GetMapping("/point")
+    @Operation(summary = "포인트 조회", description = "회원의 포인트를 조회한다.")
+    public ResponseEntity<PointResponse> getMemberPoint(@LoginMember TokenAuth tokenAuth) {
+        Long memberId = tokenAuth.getMemberId();
+        PointResponse response = memberService.getPoint(memberId);
+        return ResponseEntity.ok(response);
     }
 }

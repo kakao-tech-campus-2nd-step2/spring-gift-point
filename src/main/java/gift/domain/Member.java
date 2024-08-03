@@ -23,6 +23,9 @@ public class Member {
     @Column(nullable = false)
     private LoginType loginType;
 
+    @Column(nullable = false)
+    private int point;
+
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<WishlistItem> wishlistItems = new ArrayList<>();
 
@@ -52,6 +55,10 @@ public class Member {
 
     public String getPassword() {
         return password;
+    }
+
+    public int getPoint() {
+        return point;
     }
 
     public void setTokenAuth(TokenAuth tokenAuth) {
