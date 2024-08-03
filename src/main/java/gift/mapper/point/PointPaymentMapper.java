@@ -2,11 +2,11 @@ package gift.mapper.point;
 
 import gift.domain.point.PointPayment.PointPaymentDetail;
 import gift.domain.point.PointPayment.PointPaymentSimple;
+import gift.entity.auth.UserEntity;
+import gift.entity.enums.DiscountType;
 import gift.entity.point.DiscountPolicyEntity;
 import gift.entity.point.PointPaymentEntity;
 import gift.entity.product.ProductOptionEntity;
-import gift.entity.auth.UserEntity;
-import gift.entity.enums.DiscountType;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.data.domain.Page;
@@ -50,18 +50,29 @@ public class PointPaymentMapper {
 
     public Integer toDiscount(Integer regularPrice, DiscountPolicyEntity discountPolicy) {
         Integer paymentAmount = regularPrice;
+
         if (discountPolicy.getDiscountType().equals(DiscountType.FIX)) {
-            if (discountPolicy.getDiscountAmountLimit() < discountPolicy.getDiscount()) {
-                paymentAmount -= discountPolicy.getDiscountAmountLimit();
+            if (regularPrice < discountPolicy.getDiscount()) {
+                paymentAmount = 0;
             } else {
-                paymentAmount -= discountPolicy.getDiscount();
+                if (discountPolicy.getDiscountAmountLimit() < discountPolicy.getDiscount()) {
+                    paymentAmount -= discountPolicy.getDiscountAmountLimit();
+                } else {
+                    paymentAmount -= discountPolicy.getDiscount();
+                }
             }
+
         } else if (discountPolicy.getDiscountType().equals(DiscountType.PERCENT)) {
             Integer discount = (Integer) (regularPrice * discountPolicy.getDiscount() / 100);
-            if (discountPolicy.getDiscountAmountLimit() < discount) {
-                paymentAmount -= discountPolicy.getDiscountAmountLimit();
+
+            if (regularPrice < discount) {
+                paymentAmount = 0;
             } else {
-                paymentAmount -= discount;
+                if (discountPolicy.getDiscountAmountLimit() < discount) {
+                    paymentAmount -= discountPolicy.getDiscountAmountLimit();
+                } else {
+                    paymentAmount -= discount;
+                }
             }
         }
 
