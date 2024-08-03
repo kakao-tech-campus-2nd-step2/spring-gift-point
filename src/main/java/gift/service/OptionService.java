@@ -37,9 +37,7 @@ public class OptionService {
     public void addOptions(String options, String quantitiy, Long productID){
         List<String> optionList = List.of(options.split(","));
         OptionNameList optionListWrapper = new OptionNameList(optionList);
-        if(optionListWrapper.hasDuplicates()){
-            throw new IllegalArgumentException("옵션은 중복될 수 없습니다.");
-        }
+
         List<String> optionQuantities = List.of(quantitiy.split(","));
 
         Product product = productRepository.findById(productID)

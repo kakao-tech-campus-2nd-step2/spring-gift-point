@@ -8,12 +8,15 @@ public class OptionNameList {
     private final List<String> options;
 
     public OptionNameList(List<String> options) {
+        if (hasDuplicates(options)) {
+            throw new IllegalArgumentException("옵션은 중복될 수 없습니다.");
+        }
         this.options = options;
     }
 
-    public boolean hasDuplicates() {
-        Set<String> optionSet = new HashSet<>(this.options);
-        return this.options.size() != optionSet.size();
+    private boolean hasDuplicates(List<String> options) {
+        Set<String> optionSet = new HashSet<>(options);
+        return options.size() != optionSet.size();
     }
 
     @Override
