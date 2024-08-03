@@ -5,7 +5,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import gift.dto.memberDTO.LoginRequestDTO;
-import gift.dto.memberDTO.MemberDTO;
 import gift.dto.memberDTO.RegisterRequestDTO;
 import gift.model.Member;
 import gift.repository.MemberRepository;

@@ -43,8 +43,10 @@ public class AdminController {
     @Operation(summary = "상품 목록 얻기", description = "모든 상품을 페이지로 조회합니다.")
     public String getProducts(Model model, @Valid PageRequestDTO pageRequestDTO) {
         try {
-            Pageable pageable = PageRequest.of(pageRequestDTO.page(), pageRequestDTO.size(), Sort.by(pageRequestDTO.sort()));
-            ProductPageResponseDTO productPageResponseDTO = productService.findAllProducts(pageable);
+            Pageable pageable = PageRequest.of(pageRequestDTO.page(), pageRequestDTO.size(),
+                Sort.by(pageRequestDTO.sort()));
+            ProductPageResponseDTO productPageResponseDTO = productService.findAllProducts(
+                pageable);
             model.addAttribute("products", productPageResponseDTO);
             return "product_list";
         } catch (Exception e) {

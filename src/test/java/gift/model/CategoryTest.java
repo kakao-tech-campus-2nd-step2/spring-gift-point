@@ -85,7 +85,7 @@ class CategoryTest {
     void testUpdateValidValue() {
         category.updateCategory("테스트", "#770077", "테스트 이미지", "테스트 설명");
         assertAll(
-            () ->assertThat("테스트").isEqualTo(category.getName()),
+            () -> assertThat("테스트").isEqualTo(category.getName()),
             () -> assertThat("#770077").isEqualTo(category.getColor()),
             () -> assertThat("테스트 이미지").isEqualTo(category.getImageUrl()),
             () -> assertThat("테스트 설명").isEqualTo(category.getDescription())

@@ -79,7 +79,8 @@ class CategoryServiceTest {
     @Test
     @Transactional
     void testSaveCategory() {
-        CategoryRequestDTO categoryRequestDTO = new CategoryRequestDTO("new테스트", "#770077", "테스트 이미지2", "테스트 설명2");
+        CategoryRequestDTO categoryRequestDTO = new CategoryRequestDTO("new테스트", "#770077",
+            "테스트 이미지2", "테스트 설명2");
         categoryService.saveCategory(categoryRequestDTO);
         Category savedCategory = categoryRepository.findByName("new테스트");
         assertAll(
@@ -94,7 +95,8 @@ class CategoryServiceTest {
     @Test
     @Transactional
     void testUpdateCategory() {
-        CategoryRequestDTO categoryRequestDTO = new CategoryRequestDTO("update테스트", "#770077", "테스트 이미지2", "테스트 설명2");
+        CategoryRequestDTO categoryRequestDTO = new CategoryRequestDTO("update테스트", "#770077",
+            "테스트 이미지2", "테스트 설명2");
         categoryService.updateCategory(testCategory.getId(), categoryRequestDTO);
 
         Category updatedCategory = categoryRepository.findById(testCategory.getId()).get();

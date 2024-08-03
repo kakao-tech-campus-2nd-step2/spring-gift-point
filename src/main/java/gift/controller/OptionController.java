@@ -70,7 +70,8 @@ public class OptionController {
             throw new AuthorizationFailedException("인증되지 않은 사용자입니다.");
         }
         try {
-            OptionResponseDTO optionResponseDTO = optionService.updateOption(productId, optionId, optionRequestDTO);
+            OptionResponseDTO optionResponseDTO = optionService.updateOption(productId, optionId,
+                optionRequestDTO);
             return ResponseEntity.ok(optionResponseDTO);
         } catch (Exception e) {
             throw new ServerErrorException("서버 오류가 발생했습니다.");

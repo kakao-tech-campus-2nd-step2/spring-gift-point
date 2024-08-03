@@ -83,7 +83,8 @@ public class Option {
         }
         if (!name.matches(
             "^[a-zA-Z0-9가-힣ㄱ-ㅎㅏ-ㅣ\\s\\(\\)\\[\\]\\+\\-\\&\\/\\_]*$")) {
-            throw new InvalidInputValueException("옵션 이름에 (), [], +, -, &, /, _ 외 특수 문자는 사용할 수 없습니다.");
+            throw new InvalidInputValueException(
+                "옵션 이름에 (), [], +, -, &, /, _ 외 특수 문자는 사용할 수 없습니다.");
         }
     }
 

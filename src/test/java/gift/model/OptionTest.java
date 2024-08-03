@@ -105,9 +105,9 @@ class OptionTest {
 
     @Test
     void testUpdateWithValidNameValidQuantity() {
-        option.updateOption("테스트",10L);
+        option.updateOption("테스트", 10L);
         assertThat("테스트").isEqualTo(option.getName());
-        assertEquals(10L,option.getQuantity());
+        assertEquals(10L, option.getQuantity());
     }
 
     @Test

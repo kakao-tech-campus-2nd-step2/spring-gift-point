@@ -51,7 +51,8 @@ public class ProductController {
         try {
             Pageable pageable = PageRequest.of(pageRequestDTO.page(), pageRequestDTO.size(),
                 Sort.by(pageRequestDTO.sort()));
-            ProductPageResponseDTO productPageResponseDTO = productService.findAllProducts(pageable);
+            ProductPageResponseDTO productPageResponseDTO = productService.findAllProducts(
+                pageable);
             return ResponseEntity.ok(productPageResponseDTO);
         } catch (Exception e) {
             throw new InvalidInputValueException("잘못된 값이 입력되었습니다.");

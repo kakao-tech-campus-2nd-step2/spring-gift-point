@@ -18,7 +18,7 @@ class OrderTest {
 
     @BeforeEach
     void setUp() {
-        member = new Member(1L, "email@email.com","password","user");
+        member = new Member(1L, "email@email.com", "password", "user");
         category = new Category(1L, "교환권", "#007700", "임시 이미지", "임시 설명");
         product = new Product(1L, "상품", "100", category, "https://kakao");
         option = new Option(1L, "임시 옵션", 10L, product);
@@ -39,7 +39,8 @@ class OrderTest {
     @Test
     void testCreateWithNullQuantity() {
         try {
-            Order nullQuantityOrder = new Order(1L, option, null, LocalDateTime.now(), "임시 메시지", member);
+            Order nullQuantityOrder = new Order(1L, option, null, LocalDateTime.now(), "임시 메시지",
+                member);
         } catch (InvalidInputValueException e) {
             assertThat(e).isInstanceOf(InvalidInputValueException.class);
         }
@@ -48,7 +49,8 @@ class OrderTest {
     @Test
     void testCreateWithZeroQuantity() {
         try {
-            Order zeoQuantityOrder = new Order(1L, option, 0L, LocalDateTime.now(), "임시 메시지", member);
+            Order zeoQuantityOrder = new Order(1L, option, 0L, LocalDateTime.now(), "임시 메시지",
+                member);
         } catch (InvalidInputValueException e) {
             assertThat(e).isInstanceOf(InvalidInputValueException.class);
         }
@@ -57,7 +59,8 @@ class OrderTest {
     @Test
     void testCreateWithMinusQuantity() {
         try {
-            Order minusQuantityOrder = new Order(1L, option, -10L, LocalDateTime.now(), "임시 메시지", member);
+            Order minusQuantityOrder = new Order(1L, option, -10L, LocalDateTime.now(), "임시 메시지",
+                member);
         } catch (InvalidInputValueException e) {
             assertThat(e).isInstanceOf(InvalidInputValueException.class);
         }

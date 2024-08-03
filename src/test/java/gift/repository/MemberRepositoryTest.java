@@ -20,7 +20,7 @@ class MemberRepositoryTest {
 
     @BeforeEach
     public void setUp() {
-        member = new Member(1L,"kbm@kbm.com", "mbk", "user");
+        member = new Member(1L, "kbm@kbm.com", "mbk", "user");
         savedMember = memberRepository.save(member);
     }
 

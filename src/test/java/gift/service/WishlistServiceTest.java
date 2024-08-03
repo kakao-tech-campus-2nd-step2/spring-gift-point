@@ -78,10 +78,12 @@ class WishlistServiceTest {
     void testGetWishlists() {
         wishlist = new Wishlist(null, member, option);
         wishlistRepository.save(wishlist);
-        WishlistPageResponseDTO wishlists = wishlistService.getWishlists(member.getEmail(), pageable);
+        WishlistPageResponseDTO wishlists = wishlistService.getWishlists(member.getEmail(),
+            pageable);
         assertAll(
             () -> assertEquals(1, wishlists.wishlists().getTotalElements()),
-            () -> assertEquals("상품1", wishlists.wishlists().getContent().get(0).getOption().getProduct().getName())
+            () -> assertEquals("상품1",
+                wishlists.wishlists().getContent().get(0).getOption().getProduct().getName())
         );
     }
 
@@ -89,7 +91,8 @@ class WishlistServiceTest {
     @Transactional
     void testAddWishlist() {
         WishlistRequestDTO wishlistRequestDTO = new WishlistRequestDTO(option.getId());
-        WishlistResponseDTO wishlistResponseDTO = wishlistService.addWishlist(member.getEmail(), wishlistRequestDTO);
+        WishlistResponseDTO wishlistResponseDTO = wishlistService.addWishlist(member.getEmail(),
+            wishlistRequestDTO);
         List<Wishlist> wishlists = wishlistRepository.findAll();
         Wishlist wishlist = wishlists.get(0);
         assertAll(

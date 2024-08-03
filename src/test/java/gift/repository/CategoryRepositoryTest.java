@@ -23,7 +23,7 @@ class CategoryRepositoryTest {
     @BeforeEach
     void setUp() {
         category1 = new Category(null, "상품권", "#007700", "임시 이미지1", "임시 설명1");
-        category2 = new Category(null, "카카오프렌즈", "#770077","임시 이미지2", "임시 설명2");
+        category2 = new Category(null, "카카오프렌즈", "#770077", "임시 이미지2", "임시 설명2");
         savedCategory = categoryRepository.save(category1);
         categoryRepository.save(category2);
     }

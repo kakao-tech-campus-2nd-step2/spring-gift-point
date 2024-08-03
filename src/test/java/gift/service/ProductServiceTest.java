@@ -79,8 +79,8 @@ class ProductServiceTest {
     @Test
     @Transactional
     void testSaveProduct() {
-        List<OptionRequestDTO> options = List.of(new OptionRequestDTO("옵션",10L));
-        ProductAddRequestDTO productDTO = new ProductAddRequestDTO("상품3", "100","https://kakao",
+        List<OptionRequestDTO> options = List.of(new OptionRequestDTO("옵션", 10L));
+        ProductAddRequestDTO productDTO = new ProductAddRequestDTO("상품3", "100", "https://kakao",
             savedCategory.getId(), options);
         productService.saveProduct(productDTO);
         List<Product> savedProducts = productRepository.findAll();
@@ -94,7 +94,8 @@ class ProductServiceTest {
     @Transactional
     void testUpdateProduct() {
         Long productId = product1.getId();
-        ProductUpdateRequestDTO productDTO = new ProductUpdateRequestDTO("상품3", "100", "https://kakao", savedCategory.getId());
+        ProductUpdateRequestDTO productDTO = new ProductUpdateRequestDTO("상품3", "100",
+            "https://kakao", savedCategory.getId());
         productService.updateProduct(productDTO, productId);
 
         Product updatedProduct = productRepository.findById(productId).get();

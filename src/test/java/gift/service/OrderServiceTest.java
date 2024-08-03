@@ -1,22 +1,17 @@
 package gift.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertAll;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import gift.dto.memberDTO.LoginRequestDTO;
 import gift.dto.memberDTO.RegisterRequestDTO;
 import gift.dto.orderDTO.OrderRequestDTO;
-import gift.dto.orderDTO.OrderResponseDTO;
 import gift.dto.wishlistDTO.WishlistRequestDTO;
 import gift.exception.InvalidInputValueException;
 import gift.exception.NotFoundException;
 import gift.model.Category;
 import gift.model.Member;
 import gift.model.Option;
-import gift.model.Order;
 import gift.model.Product;
 import gift.model.Wishlist;
 import gift.repository.CategoryRepository;
@@ -79,7 +74,8 @@ class OrderServiceTest {
         category = new Category(null, "임시카테고리", "#770077", "임시 이미지", "임시 설명");
         category = categoryRepository.save(category);
 
-        RegisterRequestDTO registerRequestDTO = new RegisterRequestDTO("test@email.com", "password");
+        RegisterRequestDTO registerRequestDTO = new RegisterRequestDTO("test@email.com",
+            "password");
         memberService.registerMember(registerRequestDTO);
 
         product = new Product(null, "테스트 상품", "100", category, "https://kakao");
@@ -95,7 +91,8 @@ class OrderServiceTest {
 
     @Test
     void testCreateOrderWithInvalidEmail() {
-        OrderRequestDTO orderRequestDTO = new OrderRequestDTO(savedOption.getId(), 5L, "메시지", accessToken);
+        OrderRequestDTO orderRequestDTO = new OrderRequestDTO(savedOption.getId(), 5L, "메시지",
+            accessToken);
         try {
             orderService.createOrder(orderRequestDTO, "invalid@kbm.com");
         } catch (InvalidInputValueException e) {
@@ -115,7 +112,8 @@ class OrderServiceTest {
 
     @Test
     void testCreateOrderWithInvalidQuantity() {
-        OrderRequestDTO orderRequestDTO = new OrderRequestDTO(savedOption.getId(), -5L, "메시지", accessToken);
+        OrderRequestDTO orderRequestDTO = new OrderRequestDTO(savedOption.getId(), -5L, "메시지",
+            accessToken);
         try {
             orderService.createOrder(orderRequestDTO, member.getEmail());
         } catch (InvalidInputValueException e) {

@@ -134,18 +134,19 @@ class ProductTest {
 
     @Test
     void testUpdateValidProduct() {
-        product.updateProduct("테스트","200", testCategory, "https://test");
+        product.updateProduct("테스트", "200", testCategory, "https://test");
         assertAll(
-            () -> assertEquals(product.getId(),1L),
-            () -> assertEquals(product.getPrice(),"200"),
-            () -> assertEquals(product.getCategory().getName(),"테스트"),
-            () -> assertEquals(product.getImageUrl(),"https://test")
+            () -> assertEquals(product.getId(), 1L),
+            () -> assertEquals(product.getPrice(), "200"),
+            () -> assertEquals(product.getCategory().getName(), "테스트"),
+            () -> assertEquals(product.getImageUrl(), "https://test")
         );
     }
+
     @Test
     void testUpdateWithNullName() {
         try {
-            product.updateProduct(null,"200", testCategory, "https://test");
+            product.updateProduct(null, "200", testCategory, "https://test");
         } catch (InvalidInputValueException e) {
             assertThat(e).isInstanceOf(InvalidInputValueException.class);
         }
@@ -154,7 +155,7 @@ class ProductTest {
     @Test
     void testUpdateWithEmptyName() {
         try {
-            product.updateProduct("","200", testCategory, "https://test");
+            product.updateProduct("", "200", testCategory, "https://test");
         } catch (InvalidInputValueException e) {
             assertThat(e).isInstanceOf(InvalidInputValueException.class);
         }
@@ -163,7 +164,7 @@ class ProductTest {
     @Test
     void testUpdateWithLengthName() {
         try {
-            product.updateProduct("test".repeat(300),"200", testCategory, "https://test");
+            product.updateProduct("test".repeat(300), "200", testCategory, "https://test");
         } catch (InvalidInputValueException e) {
             assertThat(e).isInstanceOf(InvalidInputValueException.class);
         }
@@ -172,7 +173,7 @@ class ProductTest {
     @Test
     void testUpdateWithInvalidName() {
         try {
-            product.updateProduct(".<>".repeat(300),"200", testCategory, "https://test");
+            product.updateProduct(".<>".repeat(300), "200", testCategory, "https://test");
         } catch (InvalidInputValueException e) {
             assertThat(e).isInstanceOf(InvalidInputValueException.class);
         }
@@ -181,7 +182,7 @@ class ProductTest {
     @Test
     void testUpdateWithKaKaoName() {
         try {
-            product.updateProduct("뱅크카카오뱅크","200", testCategory, "https://test");
+            product.updateProduct("뱅크카카오뱅크", "200", testCategory, "https://test");
         } catch (InvalidInputValueException e) {
             assertThat(e).isInstanceOf(InvalidInputValueException.class);
         }
@@ -190,7 +191,7 @@ class ProductTest {
     @Test
     void testUpdateWithNullPrice() {
         try {
-            product.updateProduct("테스트",null, testCategory, "https://test");
+            product.updateProduct("테스트", null, testCategory, "https://test");
         } catch (InvalidInputValueException e) {
             assertThat(e).isInstanceOf(InvalidInputValueException.class);
         }
@@ -199,7 +200,7 @@ class ProductTest {
     @Test
     void testUpdateWithEmptyPrice() {
         try {
-            product.updateProduct("테스트","", testCategory, "https://test");
+            product.updateProduct("테스트", "", testCategory, "https://test");
         } catch (InvalidInputValueException e) {
             assertThat(e).isInstanceOf(InvalidInputValueException.class);
         }
@@ -208,7 +209,7 @@ class ProductTest {
     @Test
     void testUpdateWithInvalidPrice() {
         try {
-            product.updateProduct("테스트","가격", testCategory, "https://test");
+            product.updateProduct("테스트", "가격", testCategory, "https://test");
         } catch (InvalidInputValueException e) {
             assertThat(e).isInstanceOf(InvalidInputValueException.class);
         }
@@ -217,7 +218,7 @@ class ProductTest {
     @Test
     void testUpdateWithNullImageUrl() {
         try {
-            product.updateProduct("테스트","2000", testCategory, null);
+            product.updateProduct("테스트", "2000", testCategory, null);
         } catch (InvalidInputValueException e) {
             assertThat(e).isInstanceOf(InvalidInputValueException.class);
         }
@@ -226,7 +227,7 @@ class ProductTest {
     @Test
     void testUpdateWithEmptyImageUrl() {
         try {
-            product.updateProduct("테스트","2000", testCategory, "");
+            product.updateProduct("테스트", "2000", testCategory, "");
         } catch (InvalidInputValueException e) {
             assertThat(e).isInstanceOf(InvalidInputValueException.class);
         }
@@ -235,7 +236,7 @@ class ProductTest {
     @Test
     void testUpdateWithInvalidImageUrl() {
         try {
-            product.updateProduct("테스트","2000", testCategory, "test");
+            product.updateProduct("테스트", "2000", testCategory, "test");
         } catch (InvalidInputValueException e) {
             assertThat(e).isInstanceOf(InvalidInputValueException.class);
         }
