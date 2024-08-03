@@ -1,6 +1,5 @@
 package gift.domain.point;
 
-import gift.entity.point.DiscountPolicyEntity;
 import gift.util.page.PageParam;
 import java.time.LocalDateTime;
 
@@ -51,18 +50,18 @@ public class PointPayment {
         private Integer paymentAmount;
         private Integer regularPrice;
         private LocalDateTime transactionDate;
-        private DiscountPolicyEntity discountPolicy;
+        private Long discountPolicyId;
 
         public PointPaymentDetail(Long id, Long userId, Long productOptionId,
             Integer paymentAmount, Integer regularPrice, LocalDateTime transactionDate,
-            DiscountPolicyEntity discountPolicy) {
+            Long discountPolicyId) {
             this.id = id;
             this.userId = userId;
             this.productOptionId = productOptionId;
             this.paymentAmount = paymentAmount;
             this.regularPrice = regularPrice;
             this.transactionDate = transactionDate;
-            this.discountPolicy = discountPolicy;
+            this.discountPolicyId = discountPolicyId;
         }
 
         public Long getId() {
@@ -89,8 +88,8 @@ public class PointPayment {
             return transactionDate;
         }
 
-        public DiscountPolicyEntity getDiscountPolicy() {
-            return discountPolicy;
+        public Long getDiscountPolicyId() {
+            return discountPolicyId;
         }
     }
 
