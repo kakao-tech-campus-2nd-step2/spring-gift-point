@@ -71,7 +71,7 @@ public class Member {
     }
 
     public void updatePoint(@PositiveOrZero int point) {
-        this.point = point;
+        this.point += point;
     }
 
     public void subtractPoint(@PositiveOrZero int point) {
