@@ -47,9 +47,5 @@ public class MemberController {
         return ResponseEntity.ok("로그아웃 되었습니다");
     }
 
-    @Retention(RetentionPolicy.RUNTIME)
-    @Target(ElementType.PARAMETER)
-    public static @interface LoginMember {
 
-    }
 }
