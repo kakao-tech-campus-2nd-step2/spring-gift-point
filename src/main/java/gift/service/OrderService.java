@@ -1,16 +1,23 @@
 package gift.service;
 
+import gift.common.exception.badRequest.OverStockQuantityException;
+import gift.common.exception.notFound.OptionNotFoundException;
+import gift.common.exception.unauthorized.TokenErrorException;
+import gift.common.exception.unauthorized.TokenNotFoundException;
+import gift.common.util.JwtUtil;
+import gift.dto.KakaoAccessToken;
 import gift.dto.OrderRequest;
 import gift.dto.OrderResponse;
+import gift.entity.Member;
 import gift.entity.Option;
 import gift.entity.Order;
+import gift.repository.MemberRepository;
 import gift.repository.OptionRepository;
 import gift.repository.OrderRepository;
 import gift.repository.WishRepository;
 import jakarta.transaction.Transactional;
 import java.time.LocalDateTime;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Slice;
+import java.util.List;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -20,37 +27,66 @@ public class OrderService {
     private final OptionRepository optionRepository;
     private final WishRepository wishRepository;
     private final OrderMessageService orderMessageService;
+    private final JwtUtil jwtUtil;
+    private final MemberRepository memberRepository;
+    private final KakaoService kakaoService;
 
     public OrderService(OrderRepository orderRepository, OptionRepository optionRepository,
-        WishRepository wishRepository, OrderMessageService orderMessageService) {
+        WishRepository wishRepository, OrderMessageService orderMessageService, JwtUtil jwtUtil,
+        MemberRepository memberRepository, KakaoService kakaoService) {
         this.orderRepository = orderRepository;
         this.optionRepository = optionRepository;
         this.wishRepository = wishRepository;
         this.orderMessageService = orderMessageService;
+        this.jwtUtil = jwtUtil;
+        this.memberRepository = memberRepository;
+        this.kakaoService = kakaoService;
     }
 
     @Transactional
     public OrderResponse addOrder(OrderRequest orderRequest, String token) {
+        String email = jwtUtil.extractEmail(token);
+        Member member = memberRepository.findByEmail(email)
+            .orElseThrow(TokenErrorException::new);
+
         Option option = validateAndUpdateOption(orderRequest);
         Order order = createOrder(orderRequest, option);
         wishRepository.deleteByOptionId(orderRequest.getOptionId());
-        orderMessageService.sendOrderMessage(order, token);
+
+        // 새로운 Access Token 발급
+        KakaoAccessToken newAccessToken = kakaoService.refreshAccessToken(member.getRefreshToken());
+        member.setRefreshToken(newAccessToken.getRefreshToken());
+        memberRepository.save(member);
+
+        orderMessageService.sendOrderMessage(order, newAccessToken.getAccessToken());
 
         return getOrderResponse(order);
     }
 
-    public Slice<OrderResponse> getPagedOrders(Pageable pageable) {
-        Slice<Order> ordersSlice = orderRepository.findBy(pageable);
-        return ordersSlice.map(order -> new OrderResponse(order.getId(), order.getOptionId(),
-            order.getQuantity(), order.getOrderDateTime(), order.getMessage()));
+    public List<OrderResponse> getOrders(String token) {
+        validateToken(token);
+        List<Order> orders = orderRepository.findAll();
+        return orders.stream().map(order -> new OrderResponse(order.getId(), order.getOptionId(),
+                order.getQuantity(), order.getOrderDateTime(), order.getMessage()))
+            .toList();
+    }
+
+    private void validateToken(String token) {
+        if (token == null || !token.startsWith("Bearer ")) {
+            throw new TokenNotFoundException();
+        }
+        String authToken = token.substring(7);
+        String email = jwtUtil.extractEmail(authToken);
+        memberRepository.findByEmail(email)
+            .orElseThrow(TokenErrorException::new);
     }
 
     private Option validateAndUpdateOption(OrderRequest orderRequest) {
         Option option = optionRepository.findWithId(orderRequest.getOptionId())
-            .orElseThrow(() -> new IllegalArgumentException("옵션을 찾을 수 없습니다."));
+            .orElseThrow(OptionNotFoundException::new);
 
-        if (option.getQuantity() < orderRequest.getQuantity()) {
-            throw new IllegalArgumentException("재고가 부족합니다.");
+        if (option.getStockQuantity() < orderRequest.getQuantity()) {
+            throw new OverStockQuantityException();
         }
         option.subtractQuantity(orderRequest.getQuantity());
         optionRepository.save(option);

@@ -37,7 +37,7 @@ public class KakaoApiClient {
     public void sendOrderMessage(String token, String messageTemplate) {
         String url = KAKAO_API_URI + "/v2/api/talk/memo/default/send";
         HttpHeaders headers = new HttpHeaders();
-        headers.add(HttpHeaders.AUTHORIZATION, token);
+        headers.add(HttpHeaders.AUTHORIZATION, "Bearer " + token);
         headers.add(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_FORM_URLENCODED_VALUE);
 
         MultiValueMap<String, String> body = new LinkedMultiValueMap<>();

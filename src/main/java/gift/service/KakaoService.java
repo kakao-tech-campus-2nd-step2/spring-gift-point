@@ -15,7 +15,6 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
-import org.springframework.web.server.ResponseStatusException;
 
 @Service
 public class KakaoService {
@@ -25,6 +24,7 @@ public class KakaoService {
     private final RestTemplate restTemplate = new RestTemplate();
 
     private final static String KAKAO_AUTH_URI = "https://kauth.kakao.com";
+    private final static String KAKAO_TOKEN_URI = KAKAO_AUTH_URI + "/oauth/token";
 
     public KakaoService(KakaoProperties kakaoProperties, KakaoApiClient kakaoApiClient) {
         this.kakaoProperties = kakaoProperties;
@@ -46,7 +46,8 @@ public class KakaoService {
 
         HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(body, headers);
         try {
-            ResponseEntity<KakaoAccessToken> response = restTemplate.exchange(URI.create(url), HttpMethod.POST,
+            ResponseEntity<KakaoAccessToken> response = restTemplate.exchange(URI.create(url),
+                HttpMethod.POST,
                 request, KakaoAccessToken.class);
 
             System.out.println("Response: " + response);
@@ -56,6 +57,31 @@ public class KakaoService {
             throw new RuntimeException("Error while getting access token", e);
         }
 
+    }
+
+    public KakaoAccessToken refreshAccessToken(String refreshToken) {
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+
+        MultiValueMap<String, String> body = new LinkedMultiValueMap<>();
+        body.add("grant_type", "refresh_token");
+        body.add("client_id", kakaoProperties.getClientId());
+        body.add("refresh_token", refreshToken);
+
+        HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(body, headers);
+        try {
+            ResponseEntity<KakaoAccessToken> response = restTemplate.exchange(
+                URI.create(KAKAO_TOKEN_URI), HttpMethod.POST, request, KakaoAccessToken.class);
+
+            if (!response.getStatusCode().is2xxSuccessful()) {
+                throw new RuntimeException(
+                    "Failed to refresh access token: " + response.getStatusCode());
+            }
+
+            return response.getBody();
+        } catch (RestClientException e) {
+            throw new RuntimeException("Error while refreshing access token", e);
+        }
     }
 
     public KakaoUserInfo getUserInfo(String accessToken) {
@@ -79,7 +105,8 @@ public class KakaoService {
 
     private KakaoAccessToken extractAccessToken(ResponseEntity<KakaoAccessToken> response) {
         if (response.getStatusCode() != HttpStatus.OK) {
-            throw new IllegalArgumentException("access token 발급 실패 : HTTP status " + response.getStatusCode());
+            throw new IllegalArgumentException(
+                "access token 발급 실패 : HTTP status " + response.getStatusCode());
         }
 
         KakaoAccessToken responseBody = response.getBody();

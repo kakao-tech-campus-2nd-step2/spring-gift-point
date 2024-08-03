@@ -15,10 +15,6 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Slice;
-import org.springframework.data.domain.Sort;
 
 @DataJpaTest
 class WishRepositoryTest {
@@ -48,7 +44,7 @@ class WishRepositoryTest {
             "https://gift-s.kakaocdn.net/dn/gift/images/m640/dimm_theme.png", "");
         categoryRepository.save(category);
 
-        member = new Member("user@example.com", "password");
+        member = new Member("test@example.com", "password");
         member = memberRepository.save(member);
 
         product = new Product("product", 5000, "http://example.com/image1.jpg", category);
@@ -67,11 +63,13 @@ class WishRepositoryTest {
         em.flush();
         em.clear();
 
-        List<Wish> wishList = wishRepository.findByMemberIdAndProductId(member.getId(),
+        Optional<Wish> wishes = wishRepository.findByMemberIdAndProductId(member.getId(),
             product.getId());
-        assertThat(wishList).hasSize(1);
-        assertThat(wishList.get(0).getMember().getId()).isEqualTo(member.getId());
-        assertThat(wishList.get(0).getProduct().getId()).isEqualTo(product.getId());
+        assertThat(wishes).isPresent();
+
+        Wish wishList = wishes.get();
+        assertThat(wishList.getMember().getId()).isEqualTo(member.getId());
+        assertThat(wishList.getProduct().getId()).isEqualTo(product.getId());
     }
 
     @Test
@@ -109,9 +107,9 @@ class WishRepositoryTest {
 
         wishRepository.delete(wish);
 
-        List<Wish> wishList = wishRepository.findByMemberIdAndProductId(member.getId(),
+        Optional<Wish> wishes = wishRepository.findByMemberIdAndProductId(member.getId(),
             product.getId());
-        assertThat(wishList).isEmpty();
+        assertThat(wishes).isEmpty();
     }
 
     @Test
@@ -148,9 +146,9 @@ class WishRepositoryTest {
 
         wishRepository.delete(wish);
 
-        List<Wish> wishList = wishRepository.findByMemberIdAndProductId(member.getId(),
+        Optional<Wish> wishes = wishRepository.findByMemberIdAndProductId(member.getId(),
             product.getId());
-        assertThat(wishList).isEmpty();
+        assertThat(wishes).isEmpty();
     }
 
     @Test
@@ -176,29 +174,4 @@ class WishRepositoryTest {
         assertThat(fetchedWish.get().getProduct().getPrice()).isEqualTo(6000);
     }
 
-    @Test
-    @DisplayName("회원 ID로 페이징된 위시리스트 찾기")
-    void testFindByMemberIdWithPagination() {
-        Wish wish = new Wish(member, product);
-        wishRepository.save(wish);
-
-        for (int i = 1; i < 21; i++) {
-            Product newProduct = new Product("product" + i, 5000 + i,
-                "http://example.com/image" + i + ".jpg", category);
-            newProduct = productRepository.save(newProduct);
-            Wish wish2 = new Wish(member, newProduct);
-            wishRepository.save(wish2);
-        }
-
-        em.flush();
-        em.clear();
-
-        Pageable pageable = PageRequest.of(0, 5, Sort.by("id").ascending());
-
-        Slice<Wish> wishPage = wishRepository.findByMemberId(member.getId(), pageable);
-
-        assertThat(wishPage).isNotNull();
-        assertThat(wishPage.getContent()).hasSize(5);
-        assertThat(wishPage.getContent().get(0).getMember().getId()).isEqualTo(member.getId());
-    }
 }

@@ -1,5 +1,7 @@
 package gift.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+import gift.entity.Option;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
@@ -15,22 +17,27 @@ public class OptionRequest {
 
     @Min(value = 1, message = "0개 이하는 등록할 수 없습니다.")
     @Max(value = 99999999, message = "판매 가능한 수량은 1억 개 미만 입니다.")
-    private int quantity;
+    @JsonProperty("stock_quantity")
+    private int stockQuantity;
 
     public OptionRequest() {
     }
 
-    public OptionRequest(String name, int quantity) {
+    public OptionRequest(String name, int stockQuantity) {
         this.name = name;
-        this.quantity = quantity;
+        this.stockQuantity = stockQuantity;
     }
 
     public String getName() {
         return name;
     }
 
-    public int getQuantity() {
-        return quantity;
+    public int getStockQuantity() {
+        return stockQuantity;
+    }
+
+    public static Option toEntity(OptionRequest request) {
+        return new Option(request.getName(), request.getStockQuantity());
     }
 
 }

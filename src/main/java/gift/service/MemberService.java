@@ -1,11 +1,14 @@
 package gift.service;
 
+import gift.common.exception.conflict.EmailAlreadyExistsException;
+import gift.common.exception.forbidden.InvalidCredentialsException;
+import gift.common.exception.unauthorized.TokenErrorException;
+import gift.common.exception.unauthorized.TokenNotFoundException;
 import gift.common.util.JwtUtil;
 import gift.dto.MemberRequest;
 import gift.entity.Member;
 import gift.repository.MemberRepository;
 import java.util.Optional;
-import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -22,7 +25,7 @@ public class MemberService {
     public String register(MemberRequest memberRequest) {
         Optional<Member> existingMember = memberRepository.findByEmail(memberRequest.getEmail());
         if (existingMember.isPresent()) {
-            throw new DuplicateKeyException("이미 존재하는 이메일 : " + memberRequest.getEmail());
+            throw new EmailAlreadyExistsException();
         }
 
         Member member = new Member(memberRequest.getEmail(), memberRequest.getPassword());
@@ -35,18 +38,27 @@ public class MemberService {
         return memberRepository.findByEmail(email)
             .filter(member -> member.getPassword().equals(password))
             .map(member -> jwtUtil.createToken(member.getEmail()))
-            .orElse(null);
+            .orElseThrow(InvalidCredentialsException::new);
     }
 
     public Member getMemberFromToken(String token) {
         try {
             String email = jwtUtil.extractEmail(token);
-            Optional<Member> member = memberRepository.findByEmail(email);
-            return member.orElse(null);
+            return memberRepository.findByEmail(email)
+                .orElseThrow(TokenNotFoundException::new);
         } catch (Exception e) {
-            e.printStackTrace();
-            throw new RuntimeException("token이 잘못되었습니다.");
+            throw new TokenErrorException();
         }
+    }
+
+    // 신규 회원 등록
+    public void registerNewMember(Member member) {
+        memberRepository.save(member);
+    }
+
+    // 이메일로 멤버 찾기
+    public Optional<Member> findByEmail(String email) {
+        return memberRepository.findByEmail(email);
     }
 
 }

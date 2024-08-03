@@ -10,17 +10,14 @@ import gift.repository.CategoryRepository;
 import gift.repository.MemberRepository;
 import gift.entity.Product;
 import gift.repository.ProductRepository;
-import gift.dto.WishResponse;
 import gift.entity.Wish;
 import gift.repository.WishRepository;
+import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Slice;
 
 @DataJpaTest
 class WishServiceTest {
@@ -53,7 +50,7 @@ class WishServiceTest {
         wishRepository.deleteAll();
 
         categoryService = new CategoryService(categoryRepository);
-        member = new Member("user@example.com", "password");
+        member = new Member("test@example.com", "password");
         member = memberRepository.save(member);
 
         CategoryRequest categoryRequest = new CategoryRequest("테스트 카테고리", "#FFFFFF",
@@ -75,18 +72,14 @@ class WishServiceTest {
     }
 
     @Test
-    @DisplayName("페이징된 위시리스트 가져오기")
-    void testGetWishesPaged() {
-        Pageable pageable = PageRequest.of(0, 10);
-        Slice<WishResponse> wishesPage = wishService.getWishes(member, pageable)
-            .map(WishResponse::from);
+    @DisplayName("위시리스트 가져오기")
+    void testGetWishes() {
+        List<Wish> wishes = wishService.getWishes(member);
 
-        assertThat(wishesPage).isNotNull();
-        assertThat(wishesPage.getContent()).hasSize(2);
-        assertThat(wishesPage.getContent().get(0).getProduct().getName()).isEqualTo(
-            "Sample Product 1");
-        assertThat(wishesPage.getContent().get(1).getProduct().getName()).isEqualTo(
-            "Sample Product 2");
+        assertThat(wishes).isNotNull();
+        assertThat(wishes).hasSize(2);
+        assertThat(wishes.get(0).getProduct().getName()).isEqualTo("Sample Product 1");
+        assertThat(wishes.get(1).getProduct().getName()).isEqualTo("Sample Product 2");
     }
 
 }

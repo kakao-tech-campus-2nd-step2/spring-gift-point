@@ -1,6 +1,8 @@
 package gift.service;
 
-import gift.common.exception.WishNotFoundException;
+import gift.common.exception.conflict.WishAlreadyExistsException;
+import gift.common.exception.notFound.ProductNotFoundException;
+import gift.common.exception.notFound.WishNotFoundException;
 import gift.entity.Member;
 import gift.entity.Product;
 import gift.repository.ProductRepository;
@@ -9,8 +11,7 @@ import gift.dto.WishResponse;
 import gift.entity.Wish;
 import gift.repository.WishRepository;
 import jakarta.transaction.Transactional;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Slice;
+import java.util.List;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -28,27 +29,31 @@ public class WishService {
     public WishResponse addWish(Member member, WishRequest request) {
         Product product = validateProductExist(request.getProductId());
 
+        if (wishRepository.findByMemberIdAndProductId(member.getId(), product.getId())
+            .isPresent()) {
+            throw new WishAlreadyExistsException();
+        }
+
         Wish wish = new Wish();
         wish.addWish(member, product);
         wishRepository.save(wish);
         return new WishResponse(wish.getId(), wish.getProduct());
     }
 
-    public Slice<Wish> getWishes(Member member, Pageable pageable) {
-        return wishRepository.findByMemberId(member.getId(), pageable);
+    public List<Wish> getWishes(Member member) {
+        return wishRepository.findByMemberId(member.getId());
     }
 
-    public void deleteWishById(Long id) {
+    public void deleteWishById(Member member, Long id) {
         if (!wishRepository.existsById(id)) {
-            throw new WishNotFoundException("Wishlist에 ID: " + id + "인 상품은 존재하지 않습니다.");
+            throw new WishNotFoundException();
         }
         wishRepository.deleteById(id);
     }
 
     private Product validateProductExist(Long productId) {
         return productRepository.findById(productId)
-            .orElseThrow(() -> new IllegalArgumentException(
-                "Product ID: " + productId + "인 상품은 존재하지 않습니다."));
+            .orElseThrow(ProductNotFoundException::new);
     }
 
 }

@@ -1,5 +1,8 @@
 package gift.service;
 
+import gift.common.exception.badRequest.RequestValidationException;
+import gift.common.exception.conflict.CategoryNameConflictException;
+import gift.common.exception.notFound.CategoryNotFoundException;
 import gift.dto.CategoryRequest;
 import gift.dto.CategoryResponse;
 import gift.entity.Category;
@@ -28,22 +31,31 @@ public class CategoryService {
     }
 
     public CategoryResponse addCategory(CategoryRequest categoryRequest) {
+        if (categoryRequest.getName() == null || categoryRequest.getName().isEmpty()) {
+            throw new RequestValidationException();
+        }
+
+        if (categoryRepository.existsByName(categoryRequest.getName())) {
+            throw new CategoryNameConflictException();
+        }
+
         Category category = CategoryRequest.toEntity(categoryRequest);
-
         Category savedCategory = categoryRepository.save(category);
-
         return CategoryResponse.from(savedCategory);
     }
 
     public CategoryResponse updateCategory(Long id, CategoryRequest categoryRequest) {
         Category category = categoryRepository.findById(id)
-            .orElseThrow(() -> new IllegalArgumentException("카테고리를 찾을 수 없습니다."));
+            .orElseThrow(CategoryNotFoundException::new);
+
+        if (categoryRepository.existsByName(categoryRequest.getName())) {
+            throw new CategoryNameConflictException();
+        }
 
         category.updateCategory(categoryRequest.getName(), categoryRequest.getColor(),
             categoryRequest.getImgUrl(), categoryRequest.getDescription());
 
         Category updatedCategory = categoryRepository.save(category);
-
         return CategoryResponse.from(updatedCategory);
     }
 

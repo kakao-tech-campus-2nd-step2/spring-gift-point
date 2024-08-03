@@ -1,11 +1,16 @@
 package gift.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import gift.entity.Category;
 
+@JsonPropertyOrder({"name", "color", "image_url", "description"})
 public class CategoryRequest {
 
     private String name;
     private String color;
+
+    @JsonProperty("image_url")
     private String imgUrl;
     private String description;
 

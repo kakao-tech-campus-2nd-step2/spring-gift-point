@@ -8,6 +8,8 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import java.util.HashMap;
+import java.util.Map;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -30,15 +32,19 @@ public class MemberController {
     @PostMapping("/register")
     @Operation(summary = "회원 가입", description = "새로운 회원을 등록합니다.")
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "성공",
+        @ApiResponse(responseCode = "201", description = "회원 가입 성공",
             content = {@Content(schema = @Schema(implementation = String.class))}),
-        @ApiResponse(responseCode = "409", description = "이미 존재하는 이메일 - 회원가입 실패")
+        @ApiResponse(responseCode = "-40901", description = "이미 존재하는 이메일 - 회원가입 실패")
     })
-    public ResponseEntity<String> register(@RequestBody MemberRequest memberRequest) {
+    public ResponseEntity<Map<String, String>> register(@RequestBody MemberRequest memberRequest) {
         String token = memberService.register(memberRequest);
         HttpHeaders headers = new HttpHeaders();
         headers.add("Authorization", "Bearer " + token);
-        return ResponseEntity.ok().headers(headers).body("{\"token\": \"" + token + "\"}");
+
+        Map<String, String> responseBody = new HashMap<>();
+        responseBody.put("token", token);
+
+        return ResponseEntity.status(HttpStatus.CREATED).headers(headers).body(responseBody);
     }
 
     @PostMapping("/login")
@@ -46,17 +52,17 @@ public class MemberController {
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "성공",
             content = {@Content(schema = @Schema(implementation = String.class))}),
-        @ApiResponse(responseCode = "403", description = "사용자 인증 실패")
+        @ApiResponse(responseCode = "-40301", description = "사용자 인증 실패")
     })
-    public ResponseEntity<String> login(@RequestBody MemberRequest memberRequest) {
+    public ResponseEntity<Map<String, String>> login(@RequestBody MemberRequest memberRequest) {
         String token = memberService.login(memberRequest.getEmail(), memberRequest.getPassword());
-        if (token != null) {
-            HttpHeaders headers = new HttpHeaders();
-            headers.add("Authorization", "Bearer " + token);
-            return ResponseEntity.ok().headers(headers).body("{\"token\": \"" + token + "\"}");
-        }
-        return ResponseEntity.status(HttpStatus.FORBIDDEN)
-            .body("{\"error\": \"존재하지 않는 이메일이거나 비밀번호가 잘못되었습니다.\"}");
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Authorization", "Bearer " + token);
+
+        Map<String, String> responseBody = new HashMap<>();
+        responseBody.put("token", token);
+
+        return ResponseEntity.ok().headers(headers).body(responseBody);
     }
 
 }

@@ -1,6 +1,7 @@
 package gift.controller;
 
 import gift.dto.ProductRequest;
+import gift.dto.ProductUpdateRequest;
 import gift.entity.Product;
 import gift.service.CategoryService;
 import gift.service.ProductService;
@@ -41,28 +42,27 @@ public class WebProductController {
 
     @PostMapping("/saveProducts")
     public String saveProducts(@ModelAttribute("product") ProductRequest productRequest) {
-        if (productRequest.getId() == null) {
+        if (productRequest.getName() == null) {
             productService.addProduct(productRequest);
             return "redirect:/products";
         }
-        productService.updateProduct(productRequest.getId(), productRequest);
+        ProductUpdateRequest updateRequest = ProductUpdateRequest.from(productRequest);
+        productService.updateProduct(productRequest.getCategoryId(), updateRequest);
         return "redirect:/products";
     }
 
     @GetMapping("/showUpdateProducts/{id}")
     public String showUpdateProducts(@PathVariable(value = "id") Long id, Model model) {
-        Optional<Product> product = productService.findById(id);
-        if (product.isEmpty()) {
-            return "redirect:/products";
-        }
-        model.addAttribute("product", ProductRequest.from(product.get()));
+        Product product = productService.findById(id);
+        model.addAttribute("product", ProductRequest.from(product));
         model.addAttribute("categories", categoryService.findAll());
         return "updateProduct";
     }
 
     @GetMapping("/deleteProduct/{id}")
     public String deleteProduct(@PathVariable Long id) {
-        if (productService.findById(id).isEmpty()) {
+        Optional<Product> productOptional = Optional.ofNullable(productService.findById(id));
+        if (productOptional.isEmpty()) {
             return "redirect:/products";
         }
         productService.deleteById(id);

@@ -17,6 +17,7 @@ public interface OptionRepository extends JpaRepository<Option, Long> {
     @Query("SELECT o FROM Option o JOIN FETCH o.product WHERE o.id = :id")
     Optional<Option> findWithId(@Param("id") Long id);
 
-    Optional<Option> findByIdAndProductId(Long optionId, Long productId);
+    Optional<Option> findByNameAndProductId(String name, Long productId);
 
+    Optional<Option> findByIdAndProductId(Long optionId, Long productId);
 }

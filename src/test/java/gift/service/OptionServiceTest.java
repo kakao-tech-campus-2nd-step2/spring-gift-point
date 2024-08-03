@@ -1,5 +1,6 @@
 package gift.service;
 
+import gift.common.exception.badRequest.OverStockQuantityException;
 import gift.dto.CategoryRequest;
 import gift.dto.CategoryResponse;
 import gift.dto.OptionRequest;
@@ -83,7 +84,7 @@ class OptionServiceTest {
         // then
         assertThat(optionResponse).isNotNull();
         assertThat(optionResponse.getName()).isEqualTo("새 옵션");
-        assertThat(optionResponse.getQuantity()).isEqualTo(5);
+        assertThat(optionResponse.getStockQuantity()).isEqualTo(5);
     }
 
     @Test
@@ -101,7 +102,7 @@ class OptionServiceTest {
     @DisplayName("옵션 삭제")
     void testDeleteOption() {
         // when
-        optionService.deleteOption(optionId, product.getId());
+        optionService.deleteOption(product.getId(), optionId);
 
         // then
         Optional<Option> option = optionRepository.findById(optionId);
@@ -116,18 +117,16 @@ class OptionServiceTest {
 
         // then
         Option updatedOption = optionRepository.findById(optionId).orElseThrow();
-        assertThat(updatedOption.getQuantity()).isEqualTo(5);
+        assertThat(updatedOption.getStockQuantity()).isEqualTo(5);
     }
 
     @Test
     @DisplayName("옵션 수량 감소 실패")
     void testDecreaseOptionQuantity_fail() {
         // when, then
-        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
+        assertThrows(OverStockQuantityException.class, () -> {
             optionService.decreaseOptionQuantity(optionId, product.getId(), 15);
         });
-
-        assertThat(exception.getMessage()).isEqualTo("재고가 부족합니다.");
     }
 
 

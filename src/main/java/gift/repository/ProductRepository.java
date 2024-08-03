@@ -1,14 +1,17 @@
 package gift.repository;
 
 import gift.entity.Product;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Slice;
+import java.util.List;
+import java.util.Optional;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Repository;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 @Repository
 public interface ProductRepository extends JpaRepository<Product, Long> {
 
-    Slice<Product> findByCategoryId(Long categoryId, Pageable pageable);
+    Optional<Product> findByName(String name);
+
+    List<Product> findByCategoryId(Long categoryId, Sort sort);
 
 }
