@@ -61,3 +61,15 @@
 - CORS 작성
 - CORS 테스트 코드 작성
 </details>
+
+---
+
+<details>
+<summary><strong>3단계 - 포인트</strong></summary>
+
+- Member에 포인트 추가하기
+- 포인트 조회 기능 만들기
+- 주문 시 포인트 차감 기능 만들기
+  - 주문 가격보다 포인트 부족하면 에러
+- 관리자 화면에서 포인트 충전 가능하게 하기
+</details>
