@@ -86,12 +86,13 @@ public class OptionService {
     }
 
     private OptionResponseDTO toDTO(Option option) {
-        return new OptionResponseDTO(option.getId(), option.getName(), option.getQuantity());
+        return new OptionResponseDTO(option.getId(), option.getName(), option.getQuantity(), option.getProduct().getId());
     }
 
     public Option toEntity(OptionResponseDTO optionResponseDTO) {
+        Product product = productRepository.findById(optionResponseDTO.productId()).orElseThrow(() -> new NotFoundException("상품을 찾을 수 없습니다."));
         return new Option(optionResponseDTO.id(), optionResponseDTO.name(),
-            optionResponseDTO.quantity(), null);
+            optionResponseDTO.quantity(), product);
     }
 
 }
