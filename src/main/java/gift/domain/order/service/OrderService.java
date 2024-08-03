@@ -30,6 +30,9 @@ public class OrderService {
     private final OptionService optionService;
     private final OAuthService oauthService;
 
+    private static final int DISCOUNT_THRESHOLD = 50_000;
+    private static final double DISCOUNT_RATE = 0.1;
+
     public OrderService(WishRepository wishRepository, OrderRepository orderRepository,
         KakaoApiService kakaoApiService, OptionService optionService, OAuthService oauthService) {
         this.wishRepository = wishRepository;
@@ -52,6 +55,28 @@ public class OrderService {
         return entityToDto(orderRepository.save(newOrder));
     }
 
+    private boolean hasSufficientPoints(Orders order, Member member){
+        int totalPrice = calculateTotalPrice(order);
+
+        if (member.getPoint() < totalPrice) {
+            throw new OrderException("포인트가 부족합니다.");
+        }
+
+        member.updatePoint(member.getPoint() - totalPrice);
+
+        return true;
+    }
+
+    private int calculateTotalPrice(Orders order) {
+        int totalPrice = order.getOption().getProduct().getPrice() * order.getQuantity();
+
+        if (totalPrice >= DISCOUNT_THRESHOLD) {
+            totalPrice = (int) Math.round(totalPrice * (1 - DISCOUNT_RATE));
+        }
+
+        return totalPrice;
+    }
+
     private void orderProcess(Orders order) {
 
         optionService.subtractQuantity(order.getOption().getId(), order.getQuantity());
@@ -66,23 +91,6 @@ public class OrderService {
         if (kakaoApiService.sendKakaoMessage(kakaoAccessToken, order)) {
             oauthService.registerOrLoginKakoMember(kakaoAccessToken);
         }
-    }
-
-    private boolean hasSufficientPoints(Orders order, Member member){
-        int currentPoint = member.getPoint();
-        int totalPrice = order.getOption().getProduct().getPrice() * order.getQuantity();
-
-        if( totalPrice >= 50_000){
-            totalPrice = (int)(totalPrice * 0.9);
-        }
-
-        if( currentPoint < totalPrice ){
-            throw new OrderException("포인트가 부족합니다.");
-        }
-
-        member.updatePoint(currentPoint - totalPrice);
-
-        return true;
     }
     private void removeIfInWishlist(Member member, Option option) {
         Optional<Wish> wish = wishRepository.findByProductAndMember(option.getProduct(), member);
