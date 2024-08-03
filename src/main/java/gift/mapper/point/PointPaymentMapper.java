@@ -37,7 +37,7 @@ public class PointPaymentMapper {
             entity.getPaymentAmount(),
             entity.getRegularPrice(),
             entity.getTransactionDate(),
-            entity.getDiscountPolicy()
+            entity.getDiscountPolicy().getId()
         );
         return pointPaymentDetail;
     }
