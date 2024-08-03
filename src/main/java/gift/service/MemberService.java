@@ -9,6 +9,8 @@ import gift.repository.MemberRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 import static gift.exception.errorMessage.Messages.MEMBER_EMAIL_ALREADY_EXISTS;
 import static gift.exception.errorMessage.Messages.NOT_FOUND_MEMBER;
 
@@ -36,7 +38,14 @@ public class MemberService {
     }
 
     @Transactional(readOnly = true)
-    public MemberResponse findByEmail(String email){
+    public MemberResponse getMemberById(Long id){
+        Member member = memberRepository.findById(id)
+                .orElseThrow(() -> new MemberNotFoundException(NOT_FOUND_MEMBER));
+        return MemberResponse.from(member);
+    }
+
+    @Transactional(readOnly = true)
+    public MemberResponse getMemberByEmail(String email){
         Member member = memberRepository.findByEmail(email)
                 .orElseThrow(() -> new MemberNotFoundException(NOT_FOUND_MEMBER));
         return MemberResponse.from(member);
@@ -50,8 +59,8 @@ public class MemberService {
     }
 
     @Transactional
-    public void addMemberPoints(MemberRequest memberRequest, int addPoints){
-        Member member = memberRepository.findById(memberRequest.id())
+    public void addMemberPoints(Long memberId, int addPoints){
+        Member member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new MemberNotFoundException(NOT_FOUND_MEMBER));
         member.addPoints(addPoints);
     }
@@ -61,5 +70,13 @@ public class MemberService {
         Member member = memberRepository.findById(memberRequest.id())
                 .orElseThrow(() -> new MemberNotFoundException(NOT_FOUND_MEMBER));
         member.usePoints(usePoints);
+    }
+
+    @Transactional(readOnly = true)
+    public List<MemberResponse> getAllMembers(){
+        return memberRepository.findAll()
+                .stream()
+                .map(MemberResponse::from)
+                .toList();
     }
 }
