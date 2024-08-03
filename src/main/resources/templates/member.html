@@ -63,7 +63,7 @@
   function updatePoints() {
     const memberId = document.getElementById('memberId').value;
     const points = document.getElementById('points').value;
-    fetch(`/api/members/${memberId}/points`, {
+    fetch(`/api/members/${memberId}/point`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json'
