@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Manage Members</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<div class="container">
+  <div class="header">
+    <h2>Manage Members</h2>
+    <div class="button-group">
+      <a href="/" class="btn btn-add">Manage Product</a>
+    </div>
+  </div>
+  <table>
+    <thead>
+    <tr>
+      <th>Id</th>
+      <th>Email</th>
+      <th>Points</th>
+      <th>Actions</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="member : ${members}">
+      <td th:text="${member.id}"></td>
+      <td th:text="${member.email}"></td>
+      <td th:text="${member.point}"></td>
+      <td>
+        <button class="btn btn-edit" th:onclick="'showEditPointModal(' + ${member.id} + ')'">Edit Points</button>
+      </td>
+    </tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- Edit Points Modal -->
+<div id="editPointModal" class="modal">
+  <div class="modal-content">
+    <span class="close" onclick="closeEditPointModal()">&times;</span>
+    <h2>Edit Points</h2>
+    <form id="editPointForm">
+      <input type="hidden" id="memberId">
+      <label for="points">Points:</label>
+      <input type="number" id="points" name="points" required>
+      <button type="button" onclick="updatePoints()">Update</button>
+    </form>
+  </div>
+</div>
+
+<script>
+  function showEditPointModal(memberId) {
+    document.getElementById('memberId').value = memberId;
+    document.getElementById('editPointModal').style.display = "block";
+  }
+
+  function closeEditPointModal() {
+    document.getElementById('editPointModal').style.display = "none";
+  }
+
+  function updatePoints() {
+    const memberId = document.getElementById('memberId').value;
+    const points = document.getElementById('points').value;
+    fetch(`/api/members/${memberId}/points`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ point: points })
+    })
+    .then(response => {
+      if (response.ok) {
+        alert('포인트가 성공적으로 저장되었습니다.');
+        window.location.reload();
+      } else {
+        alert('[Error] 포인트 저장에 실패하였습니다.');
+      }
+    });
+  }
+</script>
+
+<style>
+  .btn-edit {
+    background-color: #4CAF50; /* Green */
+    border: none;
+    color: white;
+    padding: 10px 20px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+    cursor: pointer;
+    border-radius: 8px;
+  }
+
+  .btn-edit:hover {
+    background-color: #45a049; /* Darker green */
+  }
+  .modal {
+    display: none;
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgb(0,0,0);
+    background-color: rgba(0,0,0,0.4);
+    padding-top: 60px;
+  }
+
+  .modal-content {
+    background-color: #fefefe;
+    margin: 5% auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%;
+  }
+
+  .close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+  }
+
+  .close:hover,
+  .close:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+  }
+</style>
+</body>
+</html>
