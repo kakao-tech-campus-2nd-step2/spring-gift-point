@@ -120,7 +120,8 @@ class WishControllerTest {
 
             Product product = new Product("name", 1000, "imageUrl", savedCategory);
             productRepository.save(product);
-            Wish newWish = new Wish(memberService.getMemberFromToken(token), product, LocalDateTime.now());
+            Wish newWish = new Wish(memberService.getMemberFromToken(token), product,
+                LocalDateTime.now());
             wishRepository.save(newWish);
 
             return null;

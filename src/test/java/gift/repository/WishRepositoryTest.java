@@ -50,8 +50,10 @@ class WishRepositoryTest {
         Product savedProduct1 = productRepository.save(createProduct(savedCategory));
         Product savedProduct2 = productRepository.save(createProduct(savedCategory));
 
-        Wish expected1 = wishRepository.save(new Wish(savedMember, savedProduct1, LocalDateTime.now()));
-        Wish expected2 = wishRepository.save(new Wish(savedMember, savedProduct2, LocalDateTime.now()));
+        Wish expected1 = wishRepository.save(
+            new Wish(savedMember, savedProduct1, LocalDateTime.now()));
+        Wish expected2 = wishRepository.save(
+            new Wish(savedMember, savedProduct2, LocalDateTime.now()));
 
         Pageable pageable = PageRequest.of(0, 10);
 
@@ -73,7 +75,8 @@ class WishRepositoryTest {
         Category savedCategory = categoryRepository.save(createCategory());
         Product savedProduct = productRepository.save(createProduct(savedCategory));
 
-        Wish expected = wishRepository.save(new Wish(savedMember, savedProduct,LocalDateTime.now()));
+        Wish expected = wishRepository.save(
+            new Wish(savedMember, savedProduct, LocalDateTime.now()));
 
         // when
         Wish actual = wishRepository.findById(expected.getId()).orElseThrow();
@@ -113,7 +116,8 @@ class WishRepositoryTest {
         Category savedCategory = categoryRepository.save(createCategory());
         Product savedProduct = productRepository.save(createProduct(savedCategory));
 
-        Wish savedWish = wishRepository.save(new Wish(savedMember, savedProduct,LocalDateTime.now()));
+        Wish savedWish = wishRepository.save(
+            new Wish(savedMember, savedProduct, LocalDateTime.now()));
 
         // when
         wishRepository.delete(savedWish);

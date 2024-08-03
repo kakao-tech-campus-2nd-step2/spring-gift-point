@@ -19,4 +19,5 @@ public record ProductResponse(
     @Schema(description = "카테고리 Id")
     Long categoryId
 ) {
+
 }

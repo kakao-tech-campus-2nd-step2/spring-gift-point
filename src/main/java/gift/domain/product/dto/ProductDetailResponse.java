@@ -10,4 +10,5 @@ public record ProductDetailResponse(
     String imageUrl,
     List<OptionResponse> options
 ) {
+
 }

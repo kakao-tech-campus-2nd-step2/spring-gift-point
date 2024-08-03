@@ -40,7 +40,7 @@ public class OrderController {
     public ResponseEntity<Page<OrderResponse>> getAllOrders(
         @Parameter(hidden = true) @LoginMember Member member,
         @ParameterObject Pageable pageable
-    ){
+    ) {
         Page<OrderResponse> responses = orderService.getAllOrders(pageable, member);
         return ResponseEntity.ok(responses);
     }
@@ -48,10 +48,10 @@ public class OrderController {
     @PostMapping()
     @Operation(summary = "주문 하기", description = "상품을 주문합니다.")
     @ApiResponses({
-        @ApiResponse(responseCode="201", description = "요청에 성공하였습니다.", content = @Content(schema = @Schema(implementation = OrderResponse.class))),
-        @ApiResponse(responseCode="400", description = "잘못된 요청", content = @Content(mediaType = "text/plain;charset=UTF-8\n")),
-        @ApiResponse(responseCode="403", description = "인가 실패", content = @Content(mediaType = "text/plain;charset=UTF-8\n")),
-        @ApiResponse(responseCode="500", description = "서버 오류", content = @Content(mediaType = "text/plain;charset=UTF-8\n"))
+        @ApiResponse(responseCode = "201", description = "요청에 성공하였습니다.", content = @Content(schema = @Schema(implementation = OrderResponse.class))),
+        @ApiResponse(responseCode = "400", description = "잘못된 요청", content = @Content(mediaType = "text/plain;charset=UTF-8\n")),
+        @ApiResponse(responseCode = "403", description = "인가 실패", content = @Content(mediaType = "text/plain;charset=UTF-8\n")),
+        @ApiResponse(responseCode = "500", description = "서버 오류", content = @Content(mediaType = "text/plain;charset=UTF-8\n"))
     })
     public ResponseEntity<OrderResponse> createOrder(
         @Parameter(hidden = true) @LoginMember Member member,

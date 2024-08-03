@@ -67,7 +67,9 @@ class ProductServiceTest {
 
         doReturn(Optional.of(savedProduct)).when(productRepository).findById(any());
 
-        ProductDetailResponse expected = new ProductDetailResponse(savedProduct.getId(), savedProduct.getName(), savedProduct.getPrice(),savedProduct.getImageUrl(),optionList);
+        ProductDetailResponse expected = new ProductDetailResponse(savedProduct.getId(),
+            savedProduct.getName(), savedProduct.getPrice(), savedProduct.getImageUrl(),
+            optionList);
 
         // when
         ProductDetailResponse actual = productService.getProduct(requestId);
@@ -131,7 +133,7 @@ class ProductServiceTest {
 
         // when
         // then
-        assertDoesNotThrow(()->productService.createProduct(productRequest));
+        assertDoesNotThrow(() -> productService.createProduct(productRequest));
     }
 
     @Test
@@ -152,7 +154,7 @@ class ProductServiceTest {
 
         // when
         // then
-        assertDoesNotThrow(()->
+        assertDoesNotThrow(() ->
             productService.updateProduct(requestId, productRequest));
     }
 

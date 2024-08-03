@@ -57,7 +57,8 @@ public class WishService {
 
     @Transactional
     public void deleteWish(Long id, Member member) {
-        Product savedProduct = productRepository.findById(id).orElseThrow(()->new ProductNotFoundException("해당 상품이 존재하지 않습니다."));
+        Product savedProduct = productRepository.findById(id)
+            .orElseThrow(() -> new ProductNotFoundException("해당 상품이 존재하지 않습니다."));
         Wish wish = wishRepository
             .findByProductAndMember(savedProduct, member)
             .orElseThrow(() -> new WishNotFoundException("해당 위시리스트가 존재하지 않습니다."));

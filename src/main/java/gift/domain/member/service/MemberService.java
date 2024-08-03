@@ -33,8 +33,8 @@ public class MemberService {
 
     @Transactional
     public String register(MemberRequest memberRequest) {
-        if(memberRepository.existsByEmail(memberRequest.getEmail())){
-           throw new DuplicateException("중복된 이메일 입니다.");
+        if (memberRepository.existsByEmail(memberRequest.getEmail())) {
+            throw new DuplicateException("중복된 이메일 입니다.");
         }
         Member member = memberRepository.save(dtoToEntity(memberRequest));
 

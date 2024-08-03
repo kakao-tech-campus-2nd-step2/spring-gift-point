@@ -7,5 +7,6 @@ import java.util.List;
 public record CategoriesResponse(
     @Schema(description = "카테고리 리스트")
     List<CategoryResponse> categories
-){
+) {
+
 }
