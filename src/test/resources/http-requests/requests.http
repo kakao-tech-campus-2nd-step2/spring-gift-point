@@ -1,0 +1,158 @@
+@baseUrl = http://localhost:8080
+@token =eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJzZW9sYmluQGV4YW1wbGUuY29tIiwiaWF0IjoxNzIyNTgxMTEyLCJleHAiOjE3MjI1ODQ3MTJ9.plV3MSACo_vwtsU2gEy4FbiXE28GQrFl_T4owXsM79A
+
+### 회원가입
+POST {{baseUrl}}/api/members/register
+Content-Type: application/json
+
+{
+  "email": "seolbin@example.com",
+  "password": "password123"
+}
+
+### 로그인
+POST {{baseUrl}}/api/members/login
+Content-Type: application/json
+
+{
+  "email": "seolbin@example.com",
+  "password": "password123"
+}
+
+### 카테고리 생성
+POST {{baseUrl}}/api/categories
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "name": "New Category",
+  "color": "#FF5733",
+  "imageUrl": "http://example.com/category.jpg",
+  "description": "This is a new category"
+}
+
+### 모든 카테고리 조회
+GET {{baseUrl}}/api/categories?page=0&size=10
+
+
+### 카테고리 수정
+PUT {{baseUrl}}/api/categories/1
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "name": "Updated Category",
+  "color": "#33FF57",
+  "imageUrl": "http://example.com/updated_category.jpg",
+  "description": "This is an updated category"
+}
+
+### 카테고리 삭제
+DELETE {{baseUrl}}/api/categories/1
+Authorization: Bearer {{token}}
+
+### 상품 생성
+POST {{baseUrl}}/api/products
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "name": "New Product",
+  "price": 1000,
+  "imageUrl": "http://example.com/product.jpg",
+  "category": {
+    "id": 1
+  },
+  "options": [
+    {
+      "name": "Option 1",
+      "quantity": 10
+    },
+    {
+      "name": "Option 2",
+      "quantity": 20
+    }
+  ]
+}
+
+### 특정 상품 조회
+GET {{baseUrl}}/api/products/1
+
+### 상품 수정
+PUT {{baseUrl}}/api/products/1
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "name": "Updated Product",
+  "price": 1200,
+  "imageUrl": "http://example.com/updated_product.jpg",
+  "category": {
+    "id": 1
+  },
+  "options": [
+    {
+      "id": 1,
+      "name": "Updated Option 1",
+      "quantity": 15
+    },
+    {
+      "id": 2,
+      "name": "Updated Option 2",
+      "quantity": 25
+    }
+  ]
+}
+
+### 상품 삭제
+DELETE {{baseUrl}}/api/products/1
+Authorization: Bearer {{token}}
+
+### 모든 상품 조회
+GET {{baseUrl}}/api/products?page=0&size=10&sort=name,asc&categoryId=1
+
+### 상품 옵션 추가
+POST {{baseUrl}}/api/products/1/options
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "name": "New Option",
+  "quantity": 50
+}
+
+### 상품 옵션 수정
+PUT {{baseUrl}}/api/products/1/options/1
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "name": "Updated Option",
+  "quantity": 60
+}
+
+### 상품 옵션 삭제
+DELETE {{baseUrl}}/api/products/1/options/1
+Authorization: Bearer {{token}}
+
+### 모든 옵션 조회
+GET {{baseUrl}}/api/products/1/options
+Authorization: Bearer {{token}}
+
+### 위시리스트 상품 추가
+POST {{baseUrl}}/api/wishes
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "optionId": 1,
+  "quantity": 5
+}
+
+### 위시리스트 상품 삭제
+DELETE {{baseUrl}}/api/wishes/1
+Authorization: Bearer {{token}}
+
+### 위시리스트 상품 조회
+GET {{baseUrl}}/api/wishes?page=0&size=10&sort=createdDate,desc
+Authorization: Bearer {{token}}

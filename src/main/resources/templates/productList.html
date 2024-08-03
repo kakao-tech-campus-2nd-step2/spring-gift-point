@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>상품 목록</title>
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
+</head>
+<body>
+<div class="container">
+    <div class="header">
+        <h1>Manage Products</h1>
+        <div class="actions">
+            <a href="/admin/products/add" class="btn btn-success">Add New Product</a>
+        </div>
+    </div>
+    <table>
+        <thead>
+        <tr>
+            <th><input type="checkbox"></th>
+            <th>Name</th>
+            <th>Price</th>
+            <th>Image</th>
+            <th>Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="product : ${productsPage.content}">
+            <td><input type="checkbox"></td>
+            <td th:text="${product.name}"></td>
+            <td th:text="${product.price}"></td>
+            <td><img th:src="${product.imageUrl}" alt="Product Image" style="width: 50px; height: 50px;"></td> <!-- 수정: 이미지 태그 사용 -->
+            <td>
+                <a th:href="@{/admin/products/edit/{id}(id=${product.id})}" class="btn btn-edit">✏️</a>
+                <a th:href="@{/admin/products/delete/{id}(id=${product.id})}" class="btn btn-delete">🗑️</a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+    <div class="pagination">
+        <span>Showing <span th:text="${productsPage.size}">5</span> out of <span th:text="${productsPage.totalElements}">25</span> entries</span>
+        <div>
+            <a th:if="${!productsPage.first}" th:href="@{/admin/products(page=${productsPage.number - 1}, size=${productsPage.size})}">Previous</a>
+            <span th:each="pageNum : ${#numbers.sequence(0, productsPage.totalPages - 1)}">
+                <a th:href="@{/admin/products(page=${pageNum}, size=${productsPage.size})}" th:text="${pageNum + 1}" th:classappend="${pageNum == productsPage.number} ? 'active' : ''"></a>
+            </span>
+            <a th:if="${!productsPage.last}" th:href="@{/admin/products(page=${productsPage.number + 1}, size=${productsPage.size})}">Next</a>
+        </div>
+    </div>
+</div>
+</body>
+</html>
