@@ -7,4 +7,5 @@ public record PointResponse(
     @Schema(description = "포인트")
     int point
 ) {
+
 }

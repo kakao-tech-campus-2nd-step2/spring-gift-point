@@ -11,6 +11,6 @@ public record MemberResponse(
     @Schema(description = "회원 패스워드")
     String password,
     @Schema(description = "멤버 포인트")
-    int point)
-{
+    int point) {
+
 }

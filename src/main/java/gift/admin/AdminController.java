@@ -37,7 +37,7 @@ public class AdminController {
         Page<ProductResponse> productPage = productService.getAllProducts(pageable, null);
         model.addAttribute("products", productPage.getContent());
         model.addAttribute("page", productPage);
-        model.addAttribute("currentPage", productPage.getNumber()+1);
+        model.addAttribute("currentPage", productPage.getNumber() + 1);
         model.addAttribute("totalPages", productPage.getTotalPages());
         return "index";
     }
@@ -78,7 +78,7 @@ public class AdminController {
     public String getMemberPage(
         Model model,
         @ParameterObject Pageable pageable
-    ){
+    ) {
         model.addAttribute("members", memberService.getAllMember(pageable));
         return "member";
     }

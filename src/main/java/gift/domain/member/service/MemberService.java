@@ -74,11 +74,13 @@ public class MemberService {
 
     @Transactional
     public void updatePoint(Long memberId, PointRequest pointRequest) {
-        Member savedMember = memberRepository.findById(memberId).orElseThrow(()-> new MemberNotFoundException("해당 유저가 존재하지 않습니다."));
+        Member savedMember = memberRepository.findById(memberId)
+            .orElseThrow(() -> new MemberNotFoundException("해당 유저가 존재하지 않습니다."));
         savedMember.updatePoint(pointRequest.getPoint());
     }
+
     private MemberResponse entityToDto(Member member) {
-        return new MemberResponse(member.getId(),member.getEmail(),
+        return new MemberResponse(member.getId(), member.getEmail(),
             member.getPassword(), member.getPoint());
     }
 

@@ -41,18 +41,18 @@ public class Member {
     }
 
     public Member(String email, String password) {
-        this(null, email, password, null,0);
+        this(null, email, password, null, 0);
     }
 
     public Member(Long id, String email, String password) {
-        this(id, email, password, null,0);
+        this(id, email, password, null, 0);
     }
 
     public Member(String email, String password, String kakaoAccessToken) {
-        this(null, email, password, kakaoAccessToken,0);
+        this(null, email, password, kakaoAccessToken, 0);
     }
 
-    public Member(Long id, String email, String password, String kakaoAccessToken,int point) {
+    public Member(Long id, String email, String password, String kakaoAccessToken, int point) {
         this.id = id;
         this.email = email;
         this.password = password;
@@ -89,7 +89,9 @@ public class Member {
         this.kakaoAccessToken = accessToken;
     }
 
-    public void updatePoint(int point){this.point= point;}
+    public void updatePoint(int point) {
+        this.point = point;
+    }
 
     public void addWish(Wish wish) {
         this.wishList.add(wish);

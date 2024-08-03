@@ -105,7 +105,8 @@ public class MemberController {
         @ApiResponse(responseCode = "403", description = "인가 실패", content = @Content(mediaType = "text/plain;charset=UTF-8")),
         @ApiResponse(responseCode = "500", description = "서버 오류", content = @Content(mediaType = "text/plain;charset=UTF-8"))
     })
-    public ResponseEntity<PointResponse> getPoint(@Parameter(hidden = true) @LoginMember Member member){
+    public ResponseEntity<PointResponse> getPoint(
+        @Parameter(hidden = true) @LoginMember Member member) {
         PointResponse response = memberService.getPoint(member);
         return ResponseEntity.ok(response);
     }
@@ -118,7 +119,8 @@ public class MemberController {
         @ApiResponse(responseCode = "400", description = "잘못된 요청", content = @Content(mediaType = "application/json")),
         @ApiResponse(responseCode = "500", description = "서버 오류", content = @Content(mediaType = "application/json"))
     })
-    public ResponseEntity<Void> updatePoints(@PathVariable("memberId") Long memberId, @Valid @RequestBody PointRequest pointRequest){
+    public ResponseEntity<Void> updatePoints(@PathVariable("memberId") Long memberId,
+        @Valid @RequestBody PointRequest pointRequest) {
         memberService.updatePoint(memberId, pointRequest);
         return ResponseEntity.ok().build();
     }

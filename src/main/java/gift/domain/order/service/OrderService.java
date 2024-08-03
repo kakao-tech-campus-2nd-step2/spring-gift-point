@@ -49,13 +49,13 @@ public class OrderService {
     @Transactional
     public OrderResponse createOrder(Member member, OrderRequest request) {
         Orders newOrder = dtoToEntity(member, request);
-        if(hasSufficientPoints(newOrder, member)) {
+        if (hasSufficientPoints(newOrder, member)) {
             orderProcess(newOrder);
         }
         return entityToDto(orderRepository.save(newOrder));
     }
 
-    private boolean hasSufficientPoints(Orders order, Member member){
+    private boolean hasSufficientPoints(Orders order, Member member) {
         int totalPrice = calculateTotalPrice(order);
 
         if (member.getPoint() < totalPrice) {
@@ -92,6 +92,7 @@ public class OrderService {
             oauthService.registerOrLoginKakoMember(kakaoAccessToken);
         }
     }
+
     private void removeIfInWishlist(Member member, Option option) {
         Optional<Wish> wish = wishRepository.findByProductAndMember(option.getProduct(), member);
         wish.ifPresent(wishRepository::delete);
