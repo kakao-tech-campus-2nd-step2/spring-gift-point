@@ -9,14 +9,16 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import gift.dto.OptionRequest;
+import gift.category.model.Category;
 import gift.exception.ResourceNotFoundException;
-import gift.model.Category;
-import gift.model.Option;
-import gift.model.Product;
-import gift.repository.OptionRepository;
-import gift.repository.ProductRepository;
+import gift.option.dto.OptionRequest;
+import gift.option.model.Option;
+import gift.option.repository.OptionRepository;
+import gift.option.service.OptionService;
+import gift.product.model.Product;
+import gift.product.repository.ProductRepository;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
@@ -49,15 +51,16 @@ class OptionServiceTest {
         product.setId(1L);
         option = new Option("테스트 옵션", 10, product);
         option.setId(1L);
+        product.getOptionList().add(option);
         optionRequest = new OptionRequest(1L, "테스트 옵션", 10, "테스트 상품");
     }
 
     @Test
     void createOptionTest() {
-        when(productRepository.findByName(anyString())).thenReturn(Optional.of(product));
+        when(productRepository.findById(anyLong())).thenReturn(Optional.of(product));
         when(optionRepository.save(any(Option.class))).thenReturn(option);
 
-        Option createdOption = optionService.createOption(optionRequest);
+        Option createdOption = optionService.createOption(1L,optionRequest);
 
         assertThat(createdOption).isNotNull();
         assertThat(createdOption.getName()).isEqualTo("테스트 옵션");
@@ -65,39 +68,34 @@ class OptionServiceTest {
     }
 
     @Test
-    void retreiveOptionsTest() {
-        List<Option> options = Arrays.asList(option);
-        when(optionRepository.findAll()).thenReturn(options);
+    void findOptionsByProductIdTest() {
+        when(productRepository.findById(anyLong())).thenReturn(Optional.ofNullable(product));
 
-        List<Option> retrievedOptions = optionService.retreiveOptions();
+        List<Option> retrievedOptions = optionService.findOptionsByProductId(1L);
 
-        assertThat(retrievedOptions).hasSize(1);
-        assertThat(retrievedOptions.get(0).getName()).isEqualTo("테스트 옵션");
+        assertThat(retrievedOptions).hasSize(0);
     }
 
     @Test
     void deleteOptionsTest() {
-        when(optionRepository.existsById(anyLong())).thenReturn(true);
+        // given
+        when(optionRepository.findAllByProduct(product)).thenReturn(Arrays.asList(option));
+        when(productRepository.findById(product.getId())).thenReturn(Optional.ofNullable(product));
 
-        optionService.deleteOptions(1L);
+        // when
+        optionService.deleteOptions(product.getId(), option.getId());
 
-        verify(optionRepository, times(1)).deleteById(1L);
+        // then
+        verify(optionRepository, times(1)).delete(option);
     }
 
-    @Test
-    void deleteOptionsNotFoundTest() {
-        when(optionRepository.existsById(anyLong())).thenReturn(false);
 
-        assertThatThrownBy(() -> optionService.deleteOptions(1L))
-            .isInstanceOf(ResourceNotFoundException.class)
-            .hasMessage("없는 옵션입니다.");
-    }
 
     @Test
     void retrieveOptionTest() {
         when(optionRepository.findById(anyLong())).thenReturn(Optional.of(option));
 
-        Option retrievedOption = optionService.retrieveOption(1L);
+        Option retrievedOption = optionService.retrieveOption(1L,1L);
 
         assertThat(retrievedOption).isNotNull();
         assertThat(retrievedOption.getName()).isEqualTo("테스트 옵션");
@@ -107,18 +105,19 @@ class OptionServiceTest {
     void retrieveOptionNotFoundTest() {
         when(optionRepository.findById(anyLong())).thenReturn(Optional.empty());
 
-        assertThatThrownBy(() -> optionService.retrieveOption(1L))
+        assertThatThrownBy(() -> optionService.retrieveOption(1L,1L))
             .isInstanceOf(ResourceNotFoundException.class)
             .hasMessage("없는 옵션입니다.");
     }
 
     @Test
     void updateOptionTest() {
-        when(optionRepository.findById(anyLong())).thenReturn(Optional.of(option));
-        when(productRepository.findByName(anyString())).thenReturn(Optional.of(product));
+        when(productRepository.findById(anyLong())).thenReturn(Optional.of(product));
         when(optionRepository.save(any(Option.class))).thenReturn(option);
+        when(optionRepository.findAllByProduct(any(Product.class))).thenReturn(
+            Collections.singletonList(option));
 
-        Option updatedOption = optionService.updateOption(optionRequest);
+        Option updatedOption = optionService.updateOption(1L, 1L, optionRequest);
 
         assertThat(updatedOption).isNotNull();
         assertThat(updatedOption.getName()).isEqualTo("테스트 옵션");

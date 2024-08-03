@@ -11,7 +11,7 @@
 </div>
 
 <h1>Add New Product</h1>
-<form action="#" th:action="@{/product/add}" th:object="${productDto}" method="post">
+<form action="#" th:action="@{/product/add}" th:object="${productRequest}" method="post">
   <div>
     <label for="name">Name:</label>
     <input type="text" id="name" th:field="*{name}" placeholder="Enter product name"/>

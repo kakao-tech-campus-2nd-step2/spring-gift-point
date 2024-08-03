@@ -8,6 +8,7 @@ import static org.springframework.restdocs.operation.preprocess.Preprocessors.pr
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessResponse;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.prettyPrint;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
+import static org.springframework.restdocs.payload.PayloadDocumentation.requestFields;
 import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -15,9 +16,11 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import gift.dto.ApiResponse;
-import gift.model.Member;
-import gift.service.MemberService;
+import gift.exception.IllegalEmailException;
+import gift.member.controller.MemberController;
+import gift.member.dto.MemberRequest;
+import gift.member.model.Member;
+import gift.member.service.MemberService;
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -30,6 +33,7 @@ import org.springframework.http.MediaType;
 import org.springframework.restdocs.RestDocumentationContextProvider;
 import org.springframework.restdocs.RestDocumentationExtension;
 import org.springframework.restdocs.mockmvc.MockMvcRestDocumentation;
+import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
@@ -53,10 +57,9 @@ class MemberControllerTest {
     private WebApplicationContext context;
 
     private Member member;
-    private ApiResponse apiResponse;
 
     @BeforeEach
-    void setUp(RestDocumentationContextProvider restDocumentation) {
+    void setUp(RestDocumentationContextProvider restDocumentation) throws IllegalEmailException {
         this.mockMvc = MockMvcBuilders.webAppContextSetup(context)
             .apply(MockMvcRestDocumentation.documentationConfiguration(restDocumentation))
             .alwaysDo(document("{method-name}",
@@ -68,77 +71,122 @@ class MemberControllerTest {
     }
 
     @Test
-    void registerMemberSuccess() throws Exception {
+    void registerMemberSuccess() throws Exception, IllegalEmailException {
         // Given
         String token = "generatedToken";
-        given(memberService.registerMember(any(Member.class))).willReturn(Optional.of(token));
+        given(memberService.registerMember(any(MemberRequest.class))).willReturn(
+            Optional.of(token));
 
         // When & Then
-        mockMvc.perform(post("/members/register")
+        mockMvc.perform(RestDocumentationRequestBuilders.post("/api/members/register")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(member))).andDo(print())
-            .andExpect(status().isOk())
-            .andExpect(jsonPath("$.message").value("Member Register success"))
-            .andDo(document("products/register-success", responseFields(
-                fieldWithPath("result").description("API 호출 결과"),
-                fieldWithPath("message").description("호출 내용"),
-                fieldWithPath("httpStatus").description("HTTP 응답 상태")
-            )));
+                .content(objectMapper.writeValueAsString(member))).
+            andExpect(status().isOk()).andDo(print())
+            .andExpect(jsonPath("$.result").value("OK"))
+            .andExpect(jsonPath("$.message").value("회원 가입 성공"))
+            .andExpect(jsonPath("$.httpStatus").value("OK"))
+            .andDo(document("members/register-success",
+                requestFields(
+                    fieldWithPath("email").description("이메일"),
+                    fieldWithPath("password").description("비밀번호"),
+                    fieldWithPath("id").description("회원 ID").optional(),
+                    fieldWithPath("email").description("이메일").optional(),
+                    fieldWithPath("kakaoId").description("카카오 ID").optional(),
+                    fieldWithPath("wishList").description("위시리스트").optional(),
+                    fieldWithPath("orders").description("주문").optional()
+                ),
+                responseFields(
+                    fieldWithPath("result").description("API 호출 결과"),
+                    fieldWithPath("message").description("호출 내용"),
+                    fieldWithPath("httpStatus").description("HTTP 응답 상태"),
+                    fieldWithPath("data").description("응답 데이터 배열"),
+                    fieldWithPath("data[].email").description("이메일"),
+                    fieldWithPath("data[].password").description("비밀번호"),
+                    fieldWithPath("data[].token").description("로그인 토큰")
+                )));
     }
 
     @Test
-    void registerMemberFail() throws Exception {
+    void registerMemberFail() throws Exception, IllegalEmailException {
         // Given
-        when(memberService.registerMember(any(Member.class))).thenReturn(Optional.empty());
+        when(memberService.registerMember(any(MemberRequest.class))).thenReturn(Optional.empty());
 
         // When & Then
-        mockMvc.perform(post("/members/register")
+        mockMvc.perform(post("/api/members/register")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(member)))
-            .andExpect(status().isForbidden())
-            .andExpect(jsonPath("$.message").value("Registration Failed, 올바른 이메일 형식이 아닙니다."))
-            .andDo(document("products/register-fail", responseFields(
-                fieldWithPath("result").description("API 호출 결과"),
-                fieldWithPath("message").description("호출 내용"),
-                fieldWithPath("httpStatus").description("HTTP 응답 상태")
-            )));
+            .andExpect(status().isBadRequest()).andDo(print())
+            .andExpect(jsonPath("$.result").value("ERROR"))
+            .andExpect(jsonPath("$.message").value("회원 가입 실패"))
+            .andExpect(jsonPath("$.httpStatus").value("BAD_REQUEST"))
+            .andDo(document("members/register-fail",
+                requestFields(
+                    fieldWithPath("email").description("이메일"),
+                    fieldWithPath("password").description("비밀번호"),
+                    fieldWithPath("id").description("회원 ID").optional(),
+                    fieldWithPath("email").description("이메일").optional(),
+                    fieldWithPath("kakaoId").description("카카오 ID").optional(),
+                    fieldWithPath("wishList").description("위시리스트").optional(),
+                    fieldWithPath("orders").description("주문").optional()
+                ),
+                responseFields(
+                    fieldWithPath("result").description("API 호출 결과"),
+                    fieldWithPath("message").description("호출 내용"),
+                    fieldWithPath("httpStatus").description("HTTP 응답 상태"),
+                    fieldWithPath("data[].error").description("에러 내용")
+                )));
     }
 
     @Test
-    void loginSuccess() throws Exception {
+    void loginSuccess() throws Exception, IllegalEmailException {
         // Given
         String token = "loginToken";
         when(memberService.login(member.getEmail(), member.getPassword())).thenReturn(
             Optional.of(token));
 
         // When & Then
-        mockMvc.perform(post("/members/login")
+        mockMvc.perform(post("/api/members/login")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(member)))
-            .andExpect(status().isOk())
-            .andExpect(jsonPath("$.message").value("Request Success. 정상 로그인 되었습니다"))
-            .andDo(document("products/login-success", responseFields(
-                fieldWithPath("result").description("API 호출 결과"),
-                fieldWithPath("message").description("호출 내용"),
-                fieldWithPath("httpStatus").description("HTTP 응답 상태")
-            )));
+            .andExpect(status().isOk()).andDo(print())
+            .andExpect(jsonPath("$.message").value("로그인 성공"))
+            .andDo(document("members/login-success",
+                requestFields(
+                    fieldWithPath("email").description("이메일"),
+                    fieldWithPath("password").description("비밀번호"),
+                    fieldWithPath("id").description("회원 ID").optional(),
+                    fieldWithPath("email").description("이메일").optional(),
+                    fieldWithPath("kakaoId").description("카카오 ID").optional(),
+                    fieldWithPath("wishList").description("위시리스트").optional(),
+                    fieldWithPath("orders").description("주문").optional()
+                ),
+                responseFields(
+                    fieldWithPath("result").description("API 호출 결과"),
+                    fieldWithPath("message").description("호출 내용"),
+                    fieldWithPath("httpStatus").description("HTTP 응답 상태"),
+                    fieldWithPath("data").description("응답 데이터 배열"),
+                    fieldWithPath("data[].email").description("이메일"),
+                    fieldWithPath("data[].password").description("비밀번호"),
+                    fieldWithPath("data[].token").description("로그인 토큰")
+                )));
     }
 
     @Test
-    void loginFail() throws Exception {
+    void loginFail() throws Exception, IllegalEmailException {
         // Given
         when(memberService.login(member.getEmail(), member.getPassword())).thenReturn(
             Optional.empty());
 
         // When & Then
-        mockMvc.perform(post("/members/login")
+        mockMvc.perform(post("/api/members/login")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(member)))
-            .andExpect(status().isForbidden())
-            .andDo(document("products/login-fail", responseFields(
+            .andExpect(status().isForbidden()).andDo(print())
+            .andDo(document("members/login-fail", responseFields(
                 fieldWithPath("result").description("API 호출 결과"),
                 fieldWithPath("message").description("호출 내용"),
-                fieldWithPath("httpStatus").description("HTTP 응답 상태")
+                fieldWithPath("httpStatus").description("HTTP 응답 상태"),
+                fieldWithPath("data[0].Error").description("에러 내용")
             )));
     }
 }

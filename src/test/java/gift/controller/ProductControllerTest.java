@@ -1,8 +1,11 @@
 package gift.controller;
 
 
+import static org.hamcrest.Matchers.hasSize;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
+import static org.springframework.mock.http.server.reactive.MockServerHttpRequest.put;
 import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
 import static org.springframework.restdocs.headers.HeaderDocumentation.responseHeaders;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
@@ -24,15 +27,17 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import gift.dto.ProductDto;
+import gift.exception.OptionNotFoundException;
+import gift.product.dto.ProductRequest;
 import gift.exception.NonIntegerPriceException;
-import gift.model.Category;
-import gift.model.Option;
-import gift.model.Product;
+import gift.category.model.Category;
+import gift.option.model.Option;
+import gift.product.model.Product;
+import gift.product.controller.ProductController;
 import gift.security.LoginMemberArgumentResolver;
-import gift.service.CategoryService;
-import gift.service.OptionService;
-import gift.service.ProductService;
+import gift.category.service.CategoryService;
+import gift.option.service.OptionService;
+import gift.product.service.ProductService;
 import java.util.ArrayList;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
@@ -42,6 +47,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Direction;
 import org.springframework.http.MediaType;
 import org.springframework.restdocs.RestDocumentationContextProvider;
 import org.springframework.restdocs.RestDocumentationExtension;
@@ -49,6 +59,7 @@ import org.springframework.restdocs.mockmvc.MockMvcRestDocumentation;
 import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
@@ -103,35 +114,92 @@ class ProductControllerTest {
     }
 
     @Test
-    void getAllProductsTest() throws Exception {
-        // given
-        given(productService.getAllProducts()).willReturn(productList);
+    void getPaginationTest() throws Exception {
+        // Given
+        int page = 0;
+        int size = 10;
+        String sort = "orderDateTime,DESC";
+        Long categoryId = 1L;
 
-        // when & then
-        mockMvc.perform(get("/products/all").contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(product))).andDo(print())
-            .andExpect(status().isOk())
+        List<Product> products = List.of(
+            new Product("Product 1", 10000, "image1.jpg"),
+            new Product("Product 2", 20000, "image2.jpg")
+        );
+        Page<Product> productPage = new PageImpl<>(products,
+            PageRequest.of(page, size, Sort.by(Direction.DESC, "orderDateTime")), products.size());
+
+        given(productService.getProductList(eq(page), eq(size), eq("orderDateTime"),
+            eq(Direction.DESC)))
+            .willReturn(productPage);
+
+        // When & Then
+        mockMvc.perform(get("/api/products")
+                .param("page", String.valueOf(page))
+                .param("size", String.valueOf(size))
+                .param("sort", sort)
+                .param("categoryId", String.valueOf(categoryId))
+                .contentType(MediaType.APPLICATION_JSON))
+            .andExpect(status().isOk()).andDo(print())
             .andExpect(jsonPath("$.result").value("OK"))
-            .andExpect(jsonPath("$.message").value("상품 전체 조회 성공"))
+            .andExpect(jsonPath("$.message").value("상품 조회 성공"))
             .andExpect(jsonPath("$.httpStatus").value("OK"))
-            .andDo(document("getAllProductsTest", responseFields(
-                fieldWithPath("result").description("API 호출 결과"),
-                fieldWithPath("message").description("The Welcome message for the user"),
-                fieldWithPath("httpStatus").description("HTTP 응답 상태")
-            )));
+            .andExpect(jsonPath("$.data.content", hasSize(2)))
+            .andExpect(jsonPath("$.data.content[0].name").value("Product 1"))
+            .andExpect(jsonPath("$.data.content[1].name").value("Product 2"))
+            .andExpect(jsonPath("$.data.totalPages").value(1))
+            .andExpect(jsonPath("$.data.totalElements").value(2))
+            .andExpect(jsonPath("$.data.size").value(10))
+            .andExpect(jsonPath("$.data.number").value(0))
+            .andDo(print())
+            .andDo(document("get-products-pagination",
+                responseFields(
+                    fieldWithPath("result").description("API 호출 결과"),
+                    fieldWithPath("message").description("응답 메시지"),
+                    fieldWithPath("httpStatus").description("HTTP 응답 상태"),
+                    fieldWithPath("data.content").description("상품 목록"),
+                    fieldWithPath("data.content[].id").description("상품 ID"),
+                    fieldWithPath("data.content[].name").description("상품 이름"),
+                    fieldWithPath("data.content[].price").description("상품 가격"),
+                    fieldWithPath("data.content[].imageUrl").description("상품 이미지 URL"),
+                    fieldWithPath("data.totalPages").description("전체 페이지 수"),
+                    fieldWithPath("data.totalElements").description("전체 상품 수"),
+                    fieldWithPath("data.size").description("페이지 크기"),
+                    fieldWithPath("data.number").description("현재 페이지 번호"),
+                    fieldWithPath("data.first").description("첫 페이지 여부"),
+                    fieldWithPath("data.last").description("마지막 페이지 여부"),
+                    fieldWithPath("data.numberOfElements").description("현재 페이지의 요소 수"),
+                    fieldWithPath("data.empty").description("페이지가 비어있는지 여부"),
+                    fieldWithPath("data.sort.empty").description("정렬 정보가 비어있는지 여부"),
+                    fieldWithPath("data.sort.sorted").description("정렬되어 있는지 여부"),
+                    fieldWithPath("data.sort.unsorted").description("정렬되어 있지 않은지 여부"),
+                    fieldWithPath("data.pageable.pageNumber").description("현재 페이지 번호"),
+                    fieldWithPath("data.pageable.pageSize").description("페이지 크기"),
+                    fieldWithPath("data.pageable.sort.empty").description("정렬 정보가 비어있는지 여부"),
+                    fieldWithPath("data.pageable.sort.sorted").description("정렬되어 있는지 여부"),
+                    fieldWithPath("data.pageable.sort.unsorted").description("정렬되어 있지 않은지 여부"),
+                    fieldWithPath("data.pageable.offset").description("현재 페이지의 시작 오프셋"),
+                    fieldWithPath("data.pageable.paged").description("페이징 사용 여부"),
+                    fieldWithPath("data.pageable.unpaged").description("페이징 미사용 여부")
+                )
+            ));
+
     }
 
     @Test
-    void addProductTest() throws Exception, NonIntegerPriceException {
+    void addProductTest() throws Exception, NonIntegerPriceException, OptionNotFoundException {
         // given
-        var productDto = new ProductDto(product.getName(), product.getPrice(),
+        var productDto = new ProductRequest(product.getName(), product.getPrice(),
             product.getImageUrl(), category.getId());
+        System.out.println(productDto);
         given(productService.createProduct(productDto)).willReturn(product);
-
+        System.out.println(product);
         // when & then
-        mockMvc.perform(post("/product/add").contentType(MediaType.APPLICATION_JSON)
+        mockMvc.perform(post("/api/products").contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(productDto)))
-            .andExpect(status().is3xxRedirection()).andExpect(view().name("redirect:/"))
+            .andExpect(status().isOk()).andDo(print())
+            .andExpect(jsonPath("$.result").value("OK"))
+            .andExpect(jsonPath("$.message").value("상품 추가 성공"))
+            .andExpect(jsonPath("$.httpStatus").value("OK"))
             .andDo(document("add-product",
                 requestFields(
                     fieldWithPath("name").description("상품 이름"),
@@ -139,8 +207,15 @@ class ProductControllerTest {
                     fieldWithPath("imageUrl").description("상품 이미지 URL"),
                     fieldWithPath("categoryId").description("카테고리 ID"),
                     fieldWithPath("optionId").description("옵션 Id")
+                ),
+                responseFields(
+                    fieldWithPath("result").description("API 호출 결과"),
+                    fieldWithPath("message").description("응답 메시지"),
+                    fieldWithPath("httpStatus").description("HTTP 응답 상태"),
+                    fieldWithPath("data").description("상품")
                 )
             ));
+
 
     }
 
@@ -148,23 +223,38 @@ class ProductControllerTest {
     void updateProductTest() throws Exception {
         // given
         var newProduct = new Product(product.getId(), product.getName(), product.getPrice(),
-            product.getImageUrl(), product.getWishList(), product.getCategory(), product.getOptionList());
+            product.getImageUrl(), product.getWishList(), product.getCategory(),
+            product.getOptionList());
         newProduct.setPrice(2000);
-        given(productService.updateProduct(newProduct)).willReturn(newProduct);
+
+        var newProductRequest = new ProductRequest(newProduct.getName(), newProduct.getPrice(),
+            newProduct.getImageUrl(), newProduct.getCategory().getId());
+
+        given(productService.updateProduct(any(Long.class), any(ProductRequest.class))).willReturn(
+            newProduct);
 
         // when & then
-        mockMvc.perform(post("/product/update").contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(newProduct)))
-            .andExpect(status().is3xxRedirection()).andExpect(redirectedUrl("/"))
+        mockMvc.perform(MockMvcRequestBuilders.put("/api/products/1")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(newProductRequest)))
+            .andExpect(status().isOk()).andDo(print())
             .andDo(document("update-product",
                 requestFields(
-                    fieldWithPath("id").description("상품 ID"),
                     fieldWithPath("name").description("상품 이름"),
                     fieldWithPath("price").description("상품 가격"),
                     fieldWithPath("imageUrl").description("상품 이미지 URL"),
-                    fieldWithPath("wishList").description("위시리스트").optional(),
-                    fieldWithPath("category.id").description("카테고리 ID"),
-                    fieldWithPath("category.name").description("카테고리 이름")
+                    fieldWithPath("categoryId").description("카테고리 ID"),
+                    fieldWithPath("optionId").description("옵션 ID")
+                ),
+                responseFields(
+                    fieldWithPath("result").description("API 호출 결과"),
+                    fieldWithPath("message").description("응답 메시지"),
+                    fieldWithPath("httpStatus").description("HTTP 응답 상태"),
+                    fieldWithPath("data").description("상품"),
+                    fieldWithPath("data.id").description("상품 ID"),
+                    fieldWithPath("data.name").description("상품 ID"),
+                    fieldWithPath("data.price").description("상품 ID"),
+                    fieldWithPath("data.imageUrl").description("상품 ID")
                 )
             ));
     }
@@ -177,26 +267,17 @@ class ProductControllerTest {
         // when & then
         mockMvc.perform(
                 RestDocumentationRequestBuilders.
-                get("/product/delete/{id}", product.getId()).contentType(MediaType.APPLICATION_JSON))
-            .andExpect(status().is3xxRedirection()).andExpect(redirectedUrl("/"))
+                    delete("/api/products/{id}", product.getId())
+                    .contentType(MediaType.APPLICATION_JSON))
+            .andExpect(status().isOk()).andDo(print())
             .andDo(document("delete-product",
-                pathParameters(
-                    parameterWithName("id").description("삭제할 상품의 ID")
-                ),
-                responseHeaders(
-                    headerWithName("Location").description("리다이렉션 URL")
+                responseFields(
+                    fieldWithPath("result").description("API 호출 결과"),
+                    fieldWithPath("message").description("응답 메시지"),
+                    fieldWithPath("httpStatus").description("HTTP 응답 상태"),
+                    fieldWithPath("data").description("응답 null")
                 )
             ));
     }
 
-    @Test
-    void deleteProductFormFailureTest() throws Exception {
-        // given
-        given(productService.deleteProduct(product.getId())).willReturn(false);
-
-        // when & then
-        mockMvc.perform(get("/product/delete/{id}", product.getId()))
-            .andExpect(status().is3xxRedirection()).andExpect(redirectedUrl("/"))
-            .andExpect(flash().attributeCount(0));
-    }
 }

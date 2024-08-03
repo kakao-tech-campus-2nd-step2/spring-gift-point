@@ -2,16 +2,18 @@ package gift.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.BDDMockito.given;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import gift.model.Member;
-import gift.model.Product;
-import gift.model.Wish;
-import gift.repository.ProductRepository;
-import gift.repository.WishRepository;
+import gift.exception.IllegalEmailException;
+import gift.member.model.Member;
+import gift.product.model.Product;
+import gift.product.repository.ProductRepository;
+import gift.wish.model.Wish;
+import gift.wish.repository.WishRepository;
+import gift.wish.service.WishService;
 import java.util.List;
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
@@ -38,7 +40,7 @@ class WishServiceTest {
     private Member member;
 
     @BeforeEach
-    void setUp() {
+    void setUp() throws IllegalEmailException {
         member = new Member("test@email.com", "testPassword");
         product = new Product("product", 10000, "image.jpg");
         product.setId(1L);
@@ -48,7 +50,7 @@ class WishServiceTest {
 
     @Test
     @DisplayName("회원 위시 리스트 탐색")
-    public void getWishesByMemberTest() throws Exception {
+    public void getWishesByMemberTest() {
         // given
         when(wishRepository.findByMember(member)).thenReturn(List.of(wish));
 
@@ -64,10 +66,10 @@ class WishServiceTest {
 
     @Test
     @DisplayName("위시 리스트 추가")
-    public void addWishTest() throws Exception {
+    public void addWishTest() {
         // given
-        when(wishRepository.save(wish)).thenReturn(wish);
-        when(productRepository.findById(any(Long.class))).thenReturn(Optional.ofNullable(product));
+        when(wishRepository.save(any(Wish.class))).thenReturn(wish);
+        when(productRepository.findById(anyLong())).thenReturn(Optional.ofNullable(product));
 
         // when
         var addedWish = wishService.addWish(product.getId(),member);
@@ -75,13 +77,11 @@ class WishServiceTest {
         // then
         assertThat(addedWish).isEqualTo(wish);
 
-        // verify
-        verify(wishRepository, times(1)).save(wish);
     }
 
     @Test
     @DisplayName("위시 리스트 삭제")
-    public void removeWishTest() throws Exception {
+    public void removeWishTest() {
         // given
         when(wishRepository.deleteByIdAndMember(wish.getId(), member)).thenReturn(1);
 

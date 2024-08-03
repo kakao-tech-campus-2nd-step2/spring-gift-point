@@ -15,16 +15,16 @@ VALUES ('교환권'),
 
 
 INSERT
-INTO product (id, name, price, image_url, category_id)
-VALUES ('1', '상품1', 10000, 'image.jpg', 1),
-       ('2', '상품2', 20000, 'image2.jpg', 1),
-       ('3', '상품3', 30000, 'image3.jpg', 2),
-       ('4', '상품4', 40000, 'image4.jpg', 2),
-       ('5', '상품5', 50000, 'image5.jpg', 3),
-       ('6', '상품6', 60000, 'image6.jpg', 3),
-       ('7', '상품7', 70000, 'image7.jpg', 4),
-       ('8', '상품8', 80000, 'image8.jpg', 4),
-       ('9', '상품9', 90000, 'image9.jpg', 5),
-       ('10', '상품10', 100000, 'image10.jpg', 5);
+INTO product (name, price, image_url, category_id)
+VALUES ( '상품1', 10000, 'image.jpg', 1),
+       ( '상품2', 20000, 'image2.jpg', 1),
+       ( '상품3', 30000, 'image3.jpg', 2),
+       ( '상품4', 40000, 'image4.jpg', 2),
+       ( '상품5', 50000, 'image5.jpg', 3),
+       ( '상품6', 60000, 'image6.jpg', 3),
+       ( '상품7', 70000, 'image7.jpg', 4),
+       ( '상품8', 80000, 'image8.jpg', 4),
+       ( '상품9', 90000, 'image9.jpg', 5),
+       ( '상품10', 100000, 'image10.jpg', 5);
 
 
