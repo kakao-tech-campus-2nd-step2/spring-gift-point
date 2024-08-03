@@ -2,8 +2,8 @@ package gift.mapper;
 
 import gift.domain.category.Category;
 import gift.domain.product.Product;
-import gift.web.dto.OptionDto;
-import gift.web.dto.ProductDto;
+import gift.web.dto.product.ProductRequestDto;
+import gift.web.dto.product.ProductResponseDto;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -16,8 +16,9 @@ public class ProductMapper {
         this.optionMappper = optionMappper;
     }
 
-    public ProductDto toDto(Product product) {
-        return new ProductDto(product.getId(),
+    public ProductResponseDto toDto(Product product) {
+        return new ProductResponseDto(
+            product.getId(),
             product.getName(),
             product.getPrice(),
             product.getImageUrl(),
@@ -29,10 +30,10 @@ public class ProductMapper {
         );
     }
 
-    public Product toEntity(ProductDto productDto, Category category) {
-        return new Product(productDto.name(),
-            productDto.price(),
-            productDto.imageUrl(),
+    public Product toEntity(ProductRequestDto productRequestDto, Category category) {
+        return new Product(productRequestDto.name(),
+            productRequestDto.price(),
+            productRequestDto.imageUrl(),
             category
         );
     }

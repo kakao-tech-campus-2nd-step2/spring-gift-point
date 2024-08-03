@@ -1,14 +1,14 @@
-package gift.web.dto;
+package gift.web.dto.product;
 
-import gift.domain.option.Option;
+import gift.web.dto.option.OptionRequestDto;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.PositiveOrZero;
 import jakarta.validation.constraints.Size;
-import java.util.List;
 
-public record ProductDto(
-    Long id,
+public record ProductRequestDto(
+
     @NotBlank
     @Size(max=15)
     @Pattern(regexp="^[가-힣 \\w\\(\\)\\[\\]\\+\\-\\&\\/]*$",
@@ -16,10 +16,18 @@ public record ProductDto(
     @Pattern(regexp="^(?!.*카카오).*$",
         message = "\"카카오\"가 포함된 문구는 담당 MD와 협의한 경우에만 사용할 수 있습니다.")
     String name,
+
     @PositiveOrZero(message = "가격은 0원 이상이어야 합니다.")
+    @NotNull
     Long price,
+
+    @NotNull
     String imageUrl,
+
+    @NotNull
     Long categoryId,
-    List<OptionDto> optionDtoList
+
+    @NotNull
+    OptionRequestDto option
 ) {
 }

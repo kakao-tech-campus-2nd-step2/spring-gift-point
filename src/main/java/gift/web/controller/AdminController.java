@@ -1,10 +1,10 @@
 package gift.web.controller;
 
-import gift.domain.product.Product;
 import gift.service.category.CategoryService;
 import gift.service.product.ProductService;
-import gift.web.dto.CategoryDto;
-import gift.web.dto.ProductDto;
+import gift.web.dto.product.ProductPutRequestDto;
+import gift.web.dto.product.ProductRequestDto;
+import gift.web.dto.product.ProductResponseDto;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
 @RequestMapping("/admin/products")
@@ -28,52 +29,52 @@ public class AdminController {
     }
 
     @GetMapping
-    public String getProducts(Model model, Pageable pageable) {
-        model.addAttribute("products", productService.getProducts(pageable));
+    public String getProducts(Model model, Pageable pageable, @RequestParam(required = false) Long categoryId) {
+        model.addAttribute("products", productService.getProducts(categoryId, pageable));
         return "products";
     }
 
     @GetMapping("/{id}")
     public String getProductById(@PathVariable Long id, Model model) {
-        ProductDto productDto = productService.getProductById(id);
-        model.addAttribute("product", productDto);
+        ProductResponseDto productResponseDto = productService.getProductById(id);
+        model.addAttribute("product", productResponseDto);
         return "products";
     }
 
     @GetMapping("/create")
     public String createProductForm(Model model) {
-        model.addAttribute("product", new ProductDto(1L, "name", 0L, "image.url", null, null));
+        model.addAttribute("product", new ProductRequestDto( "name", 0L, "image.url", null, null));
         model.addAttribute("categories", categoryService.getCategories());
         return "create";
     }
 
     @PostMapping("/create")
-    public String createProduct(@ModelAttribute @Valid ProductDto productDto, BindingResult bindingResult, Model model) {
+    public String createProduct(@ModelAttribute @Valid ProductRequestDto productRequestDto, BindingResult bindingResult, Model model) {
         if (bindingResult.hasErrors()) {
             model.addAttribute("categories", categoryService.getCategories());
             return "create";
         }
-        productService.createProduct(productDto);
+        productService.createProduct(productRequestDto);
         return "redirect:/admin/products";
     }
 
     @GetMapping("/edit/{id}")
     public String editProductForm(@PathVariable Long id, Model model) {
-        ProductDto productDto = productService.getProductById(id);
-        model.addAttribute("product", productDto);
+        ProductResponseDto productResponseDto = productService.getProductById(id);
+        model.addAttribute("product", productResponseDto);
         model.addAttribute("categories", categoryService.getCategories());
         return "edit";
     }
 
     @PostMapping("/edit/{id}")
-    public String editProduct(@PathVariable Long id, @ModelAttribute @Valid ProductDto productDto, BindingResult bindingResult, Model model) {
+    public String editProduct(@PathVariable Long id, @ModelAttribute @Valid ProductPutRequestDto productputRequestDto, BindingResult bindingResult, Model model) {
         if (bindingResult.hasErrors()) {
-            model.addAttribute("product", productDto);
+            model.addAttribute("product", productputRequestDto);
             model.addAttribute("categories", categoryService.getCategories());
             model.addAttribute("org.springframework.validation.BindingResult.product", bindingResult);
             return "edit";
         }
-        productService.updateProduct(id, productDto);
+        productService.updateProduct(id, productputRequestDto);
         return "redirect:/admin/products";
     }
 

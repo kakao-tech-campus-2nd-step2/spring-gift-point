@@ -1,5 +1,6 @@
 package gift.service.kakaoAuth;
 
+import gift.web.exception.invalidvalue.CodeValueInvalidException;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.util.LinkedMultiValueMap;
 
@@ -16,7 +17,7 @@ public record KakaoProperties(
     public LinkedMultiValueMap<String, String> createBody(String code) {
 
         if(code == null) {
-            throw new IllegalArgumentException("code cannot be null");
+            throw new CodeValueInvalidException("code cannot be null");
         }
 
         LinkedMultiValueMap<String, String> body = new LinkedMultiValueMap<>();

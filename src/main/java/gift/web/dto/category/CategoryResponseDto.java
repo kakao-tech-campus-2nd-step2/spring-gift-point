@@ -1,6 +1,6 @@
-package gift.web.dto;
+package gift.web.dto.category;
 
-public record CategoryDto(
+public record CategoryResponseDto(
     Long id,
     String name,
     String color,

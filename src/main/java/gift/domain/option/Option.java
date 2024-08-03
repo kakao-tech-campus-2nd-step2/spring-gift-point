@@ -1,6 +1,8 @@
 package gift.domain.option;
 
 import gift.domain.product.Product;
+import gift.web.exception.invalidvalue.NameLengthInvalidException;
+import gift.web.exception.invalidvalue.QuantityValueInvalidException;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -32,10 +34,10 @@ public class Option {
 
     public Option(String name, Long quantity, Product product) {
         if (name.length() > 50) {
-            throw new IllegalArgumentException("Name is too long");
+            throw new NameLengthInvalidException("Name is too long");
         }
         if (quantity < 1 || quantity >= 100_000_000)  {
-            throw new IllegalArgumentException("Quantity is invalid");
+            throw new NameLengthInvalidException("Quantity is invalid");
         }
 
         this.name = name;
@@ -79,10 +81,10 @@ public class Option {
 
     public void subtractQuantity(Long quantity) {
         if (quantity < 1) {
-            throw new IllegalArgumentException("Deduct Quantity value is invalid");
+            throw new QuantityValueInvalidException("Deduct Quantity value is invalid");
         }
         if(quantity > this.quantity) {
-            throw new IllegalArgumentException("cannot subtract by more than quantity");
+            throw new QuantityValueInvalidException("cannot subtract by more than quantity");
         }
 
         this.quantity -= quantity;

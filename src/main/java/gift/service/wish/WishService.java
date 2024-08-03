@@ -7,10 +7,11 @@ import gift.domain.product.ProductRepository;
 import gift.domain.wish.Wish;
 import gift.domain.wish.WishRepository;
 import gift.mapper.WishMapper;
-import gift.web.dto.WishDto;
-import gift.web.exception.MemberNotFoundException;
-import gift.web.exception.ProductNotFoundException;
-import gift.web.exception.WishProductNotFoundException;
+import gift.web.dto.wish.WishRequestDto;
+import gift.web.dto.wish.WishResponseDto;
+import gift.web.exception.forbidden.MemberNotFoundException;
+import gift.web.exception.notfound.ProductNotFoundException;
+import gift.web.exception.notfound.WishProductNotFoundException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -36,56 +37,55 @@ public class WishService {
     }
 
 
-    public Page<WishDto> getWishes(Pageable pageable) {
+    public Page<WishResponseDto> getWishes(Pageable pageable) {
         return wishRepository.findAll(pageable)
             .map(wishMapper::toDto);
     }
 
-    public Page<WishDto> getWishesByEmail(String email, Pageable pageable) {
+    public Page<WishResponseDto> getWishesByEmail(String email, Pageable pageable) {
         Member member = memberRepository.findByEmail(email)
-            .orElseThrow(() -> new MemberNotFoundException("멤버가 엄슴다"));
+            .orElseThrow(() -> new MemberNotFoundException());
 
         return wishRepository.findAllByMemberId(member.getId(), pageable)
             .map(wishMapper::toDto);
     }
 
     @Transactional
-    public WishDto createWish(String email, WishDto wishDto) {
+    public WishResponseDto createWish(String email, WishRequestDto wishRequestDto) {
         Member member = memberRepository.findByEmail(email)
-            .orElseThrow(() -> new MemberNotFoundException("멤버가 엄슴다"));
+            .orElseThrow(() -> new MemberNotFoundException());
 
-        Product product = productRepository.findById(wishDto.productId())
-            .orElseThrow(() -> new ProductNotFoundException("제품이 없슴다."));
+        Product product = productRepository.findById(wishRequestDto.productId())
+            .orElseThrow(() -> new ProductNotFoundException());
 
-        Wish wish = wishRepository.save(wishMapper.toEntity(wishDto, member, product));
+        Wish wish = wishRepository.save(wishMapper.toEntity(member, product));
         return wishMapper.toDto(wish);
     }
 
+    /** @Deprecated count가 없어짐에 따라 update 서비스 삭제
     @Transactional
-    public WishDto updateWish(String email, WishDto wishDto) {
+    public WishResponseDto updateWish(String email, WishRequestDto wishRequestDto) {
         Member member = memberRepository.findByEmail(email)
-            .orElseThrow(() -> new MemberNotFoundException("멤버가 엄슴다"));
+            .orElseThrow(() -> new MemberNotFoundException());
 
-        Product product = productRepository.findById(wishDto.productId())
-            .orElseThrow(() -> new ProductNotFoundException("제품이 없슴다."));
+        Product product = productRepository.findById(wishRequestDto.productId())
+            .orElseThrow(() -> new ProductNotFoundException());
 
-        Wish wish = wishRepository.findByMemberIdAndProductId(member.getId(), wishDto.productId())
-                .orElseThrow(() -> new WishProductNotFoundException("위시 제품이 없슴다."));
+        Wish wish = wishRepository.findByMemberIdAndProductId(member.getId(), wishRequestDto.productId())
+                .orElseThrow(() -> new WishProductNotFoundException());
 
-        wish.updateWish(wishDto.count());
+        wish.updateWish(wishRequestDto.count());
 
         return wishMapper.toDto(wish);
     }
+    **/
 
-    public void deleteWish(String email, Long productId) {
+    public void deleteWish(String email, Long wishId) {
         Member member = memberRepository.findByEmail(email)
-            .orElseThrow(() -> new MemberNotFoundException("멤버가 엄슴다"));
+            .orElseThrow(() -> new MemberNotFoundException());
 
-        Product product = productRepository.findById(productId)
-            .orElseThrow(() -> new ProductNotFoundException("제품이 없슴다."));
-
-        Wish wish = wishRepository.findByMemberIdAndProductId(member.getId(), productId)
-            .orElseThrow(() -> new WishProductNotFoundException("위시 제품이 없슴다."));
+        Wish wish = wishRepository.findByMemberIdAndId(member.getId(), wishId)
+            .orElseThrow(() -> new WishProductNotFoundException());
 
         wishRepository.delete(wish);
     }

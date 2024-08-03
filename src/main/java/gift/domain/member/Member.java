@@ -1,6 +1,7 @@
 package gift.domain.member;
 
 import gift.domain.wish.Wish;
+import gift.web.exception.forbidden.PasswordWrongException;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -68,5 +69,11 @@ public class Member{
     public void addWish(Wish wish) {
         wishList.add(wish);
         wish.setMember(this);
+    }
+
+    public void validatePassword(String password) {
+        if(!this.password.equals(password)) {
+            throw new PasswordWrongException();
+        }
     }
 }

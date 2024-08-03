@@ -16,14 +16,14 @@
       <th>ImageUrl</th>
       <th>Actions</th>
     </tr>
-    <tr th:each="productDto : ${products}">
-      <td th:text="${productDto.id()}">1</td>
-      <td th:text="${productDto.name()}">상품 이름예시</td>
-      <td th:text="${productDto.price()}">5000</td>
-      <td th:text="${productDto.imageUrl()}">https://image.jpg</td>
+    <tr th:each="productRequestDto : ${products}">
+      <td th:text="${productRequestDto.id()}">1</td>
+      <td th:text="${productRequestDto.name()}">상품 이름예시</td>
+      <td th:text="${productRequestDto.price()}">5000</td>
+      <td th:text="${productRequestDto.imageUrl()}">https://image.jpg</td>
       <td>
-        <a th:href="@{/admin/products/edit/{id}(id=${productDto.id()})}">Edit</a>
-        <form th:action="@{/admin/products/delete/{id}(id=${productDto.id()})}" method="post" style="display:inline;">
+        <a th:href="@{/admin/products/edit/{id}(id=${productRequestDto.id()})}">Edit</a>
+        <form th:action="@{/admin/products/delete/{id}(id=${productRequestDto.id()})}" method="post" style="display:inline;">
           <button type="submit">Delete</button>
         </form>
       </td>

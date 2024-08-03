@@ -2,7 +2,6 @@ package gift.domain.wish;
 
 import gift.domain.member.Member;
 import gift.domain.product.Product;
-import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -24,21 +23,13 @@ public class Wish {
     @JoinColumn(nullable = false)
     private Product product;
 
-    @Column(nullable = false)
-    private Long count;
-
     protected Wish() {
 
     }
 
-    public Wish(Member member, Product product, Long count) {
+    public Wish(Member member, Product product) {
         this.member = member;
         this.product = product;
-        this.count = count;
-    }
-
-    public void updateWish(Long count) {
-        this.count = count;
     }
 
     public Long getId() {
@@ -71,10 +62,5 @@ public class Wish {
     public Product getProduct() {
         return product;
     }
-
-    public Long getCount() {
-        return count;
-    }
-
 
 }

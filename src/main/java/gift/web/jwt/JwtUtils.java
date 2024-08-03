@@ -2,7 +2,7 @@ package gift.web.jwt;
 
 import gift.web.dto.MemberDto;
 import gift.web.dto.Token;
-import gift.web.exception.UnauthorizedException;
+import gift.web.exception.unauthorized.UnauthorizedException;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;

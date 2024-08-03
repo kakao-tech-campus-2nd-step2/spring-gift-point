@@ -20,7 +20,7 @@ public interface WishRepository extends JpaRepository<Wish, Long> {
     @EntityGraph(attributePaths = {"member", "product"})
     Page<Wish> findAllByMemberId(Long memberId, Pageable pageable);
 
-    Optional<Wish> findByMemberIdAndProductId(Long memberId, Long productId);
+    Optional<Wish> findByMemberIdAndId(Long memberId, Long id);
 
     boolean existsByMemberEmailAndProductId(String memberEmail, Long productId);
 }

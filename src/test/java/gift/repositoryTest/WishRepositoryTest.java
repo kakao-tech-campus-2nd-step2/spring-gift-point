@@ -46,7 +46,7 @@ public class WishRepositoryTest {
         Product product = new Product("물건1", 1000L, "image.url", category);
         products.save(product);
 
-        Wish expected = new Wish(member, product, 1L);
+        Wish expected = new Wish(member, product);
 
 
         wishes.save(expected);
@@ -67,13 +67,12 @@ public class WishRepositoryTest {
         Product product = new Product("물건1", 1000L, "image.url", category);
         products.save(product);
 
-        Wish expected = new Wish(member,product,1L);
+        Wish expected = new Wish(member,product);
 
         Wish actual = wishes.save(expected);
 
         Assertions.assertThat(actual.getId()).isEqualTo(expected.getId());
         Assertions.assertThat(actual.getProduct()).isEqualTo(expected.getProduct());
-        Assertions.assertThat(actual.getCount()).isEqualTo(expected.getCount());
         Assertions.assertThat(actual.getMember()).isEqualTo(expected.getMember());
         Assertions.assertThat(actual.getProduct().getCategory()).isEqualTo(expected.getProduct().getCategory());
 
@@ -90,7 +89,7 @@ public class WishRepositoryTest {
             for(int j = 0; j < 10; j++) {
                 Product product = new Product("product" + j, 1000L, "image.url", category);
                 products.save(product);
-                wishes.save(new Wish(member,product,1L));
+                wishes.save(new Wish(member,product));
             }
         }
 
@@ -116,7 +115,7 @@ public class WishRepositoryTest {
             for(int j = 0; j < 10; j++) {
                 Product product = new Product("product" + j, 1000L, "image.url", category);
                 products.save(product);
-                wishes.save(new Wish(member,product,1L));
+                wishes.save(new Wish(member,product));
             }
         }
 
@@ -129,6 +128,7 @@ public class WishRepositoryTest {
             .doesNotContain(2L);
     }
 
+    /**
     @Test
     public void updateWish() {
         Category category = new Category("교환권", "#6c95d1", "", "https://www.kakao.com");
@@ -140,13 +140,14 @@ public class WishRepositoryTest {
         Product product = new Product("물건1", 1000L, "image.url", category);
         products.save(product);
 
-        Wish expected = new Wish(member,product,1L);
+        Wish expected = new Wish(member,product);
         wishes.save(expected);
 
         expected.updateWish(3L);
 
         Assertions.assertThat(expected.getCount()).isEqualTo(3L);
     }
+     **/
 
     @Test
     public void deleteWish() {
@@ -159,11 +160,11 @@ public class WishRepositoryTest {
         Product product = new Product("물건1", 1000L, "image.url", category);
         products.save(product);
 
-        Wish expected = new Wish(member,product,1L);
+        Wish expected = new Wish(member,product);
         wishes.save(expected);
 
         wishes.delete(expected);
-        Assertions.assertThat(wishes.findByMemberIdAndProductId(1L, 1L)).isNotPresent();
+        Assertions.assertThat(wishes.findByMemberIdAndId(1L, 1L)).isNotPresent();
     }
 
     @Test
@@ -186,7 +187,7 @@ public class WishRepositoryTest {
         List<Wish> wishList = new ArrayList<>();
 
         for (int i = 0; i < 10; i++) {
-            Wish wish = new Wish(memberList.get(i), productList.get(i), 2L);
+            Wish wish = new Wish(memberList.get(i), productList.get(i));
             wishList.add(wish);
         }
 
