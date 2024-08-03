@@ -3,7 +3,6 @@ package gift.integrity;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import gift.product.dto.auth.MemberDto;
-import gift.product.dto.category.CategoryDto;
 import gift.product.dto.option.OptionDto;
 import gift.product.dto.product.ClientProductRequest;
 import gift.product.dto.product.ProductRequest;
@@ -11,7 +10,6 @@ import gift.product.dto.wish.WishDto;
 import gift.product.model.Category;
 import gift.product.repository.CategoryRepository;
 import gift.product.service.AuthService;
-import gift.product.service.CategoryService;
 import gift.product.service.ProductService;
 import gift.product.service.WishService;
 import java.net.URI;

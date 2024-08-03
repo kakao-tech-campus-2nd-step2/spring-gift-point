@@ -2,7 +2,6 @@ package gift.service;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.BDDMockito.clearInvocations;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
 
@@ -111,7 +110,10 @@ class CategoryServiceTest {
         Category category = new Category(1L, "테스트카테고리", "테스트컬러", "테스트주소", "테스트설명");
         given(categoryRepository.findByName(category.getName())).willReturn(Optional.of(category));
 
-        CategoryDto categoryDto = new CategoryDto(category.getName(), category.getColor(), category.getImageUrl(), category.getDescription());
+        CategoryDto categoryDto = new CategoryDto(category.getName(),
+            category.getColor(),
+            category.getImageUrl(),
+            category.getDescription());
 
         //when, then
         assertThatThrownBy(

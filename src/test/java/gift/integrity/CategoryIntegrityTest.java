@@ -63,7 +63,9 @@ class CategoryIntegrityTest {
         //given
         String url = BASE_URL + port + "/api/categories";
         CategoryDto categoryDto = new CategoryDto("테스트카테고리", "테스트컬러", "테스트주소", "테스트설명");
-        RequestEntity<CategoryDto> requestEntity = generateRequestEntity(categoryDto, url, HttpMethod.POST);
+        RequestEntity<CategoryDto> requestEntity = generateRequestEntity(categoryDto,
+            url,
+            HttpMethod.POST);
 
         //when
         var actual = testRestTemplate.exchange(requestEntity, String.class);
@@ -102,7 +104,6 @@ class CategoryIntegrityTest {
     }
 
 
-
     @Order(4)
     @Test
     void 카테고리_수정() {
@@ -110,7 +111,9 @@ class CategoryIntegrityTest {
         String url = BASE_URL + port + "/api/categories/1";
         CategoryDto categoryDto = new CategoryDto("테스트카테고리", "테스트컬러", "테스트주소", "테스트설명");
 
-        RequestEntity<CategoryDto> requestEntity = generateRequestEntity(categoryDto, url, HttpMethod.PUT);
+        RequestEntity<CategoryDto> requestEntity = generateRequestEntity(categoryDto,
+            url,
+            HttpMethod.PUT);
 
         //when
         var actual = testRestTemplate.exchange(requestEntity, String.class);
