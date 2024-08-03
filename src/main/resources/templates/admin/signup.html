@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <link th:href="@{/css/admin/login.css}" rel="stylesheet"/>
+  <script defer th:src="@{/js/admin/signup.js}"></script>
+  <title>회원가입 페이지</title>
+</head>
+<body>
+<div class="login-container">
+  <h2>Register</h2>
+  <form id="loginForm">
+    <div class="input-group">
+      <label for="email">Email:</label>
+      <input type="email" id="email" name="email" required>
+    </div>
+    <div class="input-group">
+      <label for="password">Password:</label>
+      <input type="password" id="password" name="password" required>
+    </div>
+    <button type="submit">회원가입</button>
+  </form>
+</div>
+</body>
+</html>

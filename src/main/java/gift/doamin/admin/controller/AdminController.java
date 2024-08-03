@@ -5,10 +5,12 @@ import gift.doamin.product.service.ProductService;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 @Controller
+@RequestMapping("/admin")
 public class AdminController {
 
     private final ProductService productService;
@@ -17,14 +19,29 @@ public class AdminController {
         this.productService = productService;
     }
 
-    @GetMapping("/admin")
-    public ModelAndView showAdminPage(
+    @GetMapping
+    public String showAdminPage() {
+        return "admin/index";
+    }
+
+    @GetMapping("/login")
+    public String showLoginPage() {
+        return "admin/login";
+    }
+
+    @GetMapping("/register")
+    public String showSignUpPage() {
+        return "admin/signup";
+    }
+
+    @GetMapping("/product")
+    public ModelAndView showProductPage(
         @RequestParam(defaultValue = "1", name = "page") int pageNum) {
         Page<ProductResponse> page = productService.getPage(pageNum - 1);
         int lastPage = Math.max(1, page.getTotalPages());
 
         ModelAndView modelAndView = new ModelAndView();
-        modelAndView.setViewName("admin/index");
+        modelAndView.setViewName("/admin/product");
         modelAndView.addObject("products", page.getContent());
         modelAndView.addObject("productsCnt", page.getTotalElements());
         modelAndView.addObject("page", pageNum);
