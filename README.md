@@ -41,7 +41,7 @@ https://impossible-repair-22e.notion.site/57ec013f9424421eb2317b11a2b9a29c?v=f3f
   - [ ] ~~Spring Security에서 CORS 설정~~
   - [ ] ~~application에서 CORS 설정 사용~~
   
-- [ ] CORS 테스트 구현
+- [x] CORS 테스트 구현
 
 - [ ] 문서화
   - [ ] 배포 및 연동 문서 작성하기
