@@ -29,14 +29,17 @@ public class OrderService {
     private final OrderRepository orderRepository;
     private final KakaoUtil kakaoUtil;
     private final ApplicationEventPublisher eventPublisher;
+    private final MemberService memberService;
 
-    public OrderService(OptionService optionService, WishRepository wishRepository, OptionRepository optionRepository, OrderRepository orderRepository, KakaoUtil kakaoUtil, ApplicationEventPublisher eventPublisher) {
+    public OrderService(OptionService optionService, WishRepository wishRepository, OptionRepository optionRepository, OrderRepository orderRepository,
+                        KakaoUtil kakaoUtil, ApplicationEventPublisher eventPublisher, MemberService memberService) {
         this.optionService = optionService;
         this.wishRepository = wishRepository;
         this.optionRepository = optionRepository;
         this.orderRepository = orderRepository;
         this.kakaoUtil = kakaoUtil;
         this.eventPublisher = eventPublisher;
+        this.memberService = memberService;
     }
 
     @Transactional
@@ -53,7 +56,7 @@ public class OrderService {
                 .ifPresent(wish->wishRepository.deleteById(wish.getId()));
 
         int totalPrice = getToalPrice(requestOrderDTO.quantity(), option.getProduct());
-        member.subtractPoint(totalPrice);
+        memberService.subtractPoint(member, totalPrice);
 
         CashReceipt cashReceipt = null;
         if (requestOrderDTO.phoneNumber() != null)
@@ -93,16 +96,8 @@ public class OrderService {
                 () -> new OrderNotFoundException("해당하는 주문을 찾을 수 없습니다"));
         order.checkOrderBelongsToMember(member);
         order.getOption().addQuantity(order.getQuantity().getValue());
-        refundPoints(member, order);
-        orderRepository.deleteById(orderId);
-    }
-
-    private void refundPoints(Member member, Order order) {
         int totalPrice = getToalPrice(order.getQuantity().getValue(), order.getOption().getProduct());
-        int refundPoint = totalPrice;
-        if(totalPrice > 50000)
-            refundPoint = totalPrice /9 *10;
-
-        member.addPoint(refundPoint);
+        memberService.refundPoints(member, totalPrice);
+        orderRepository.deleteById(orderId);
     }
 }
