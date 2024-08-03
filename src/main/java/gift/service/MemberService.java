@@ -51,6 +51,19 @@ public class MemberService {
         return memberRepository.findByEmail(email).isPresent();
     }
 
+    public int getPoints(String email) {
+        Member member = memberRepository.findByEmail(email)
+            .orElseThrow(() -> new RuntimeException("존재하지 않는 유저"));
+        return member.getPoint();
+    }
+
+    public void chargePoints(Long memberId, int points) {
+        Member member = memberRepository.findById(memberId)
+            .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저"));
+        member.setPoint(member.getPoint() + points);
+        memberRepository.save(member);
+    }
+
 
 
 

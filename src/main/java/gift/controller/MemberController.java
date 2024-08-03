@@ -1,7 +1,9 @@
 package gift.controller;
 
+import gift.annotation.LoginUser;
 import gift.domain.JwtToken;
 import gift.dto.JwtResponseDto;
+import gift.dto.PointResponseDto;
 import gift.dto.UserRequestDto;
 import gift.entity.Member;
 import gift.exception.LoginException;
@@ -17,6 +19,7 @@ import java.util.Optional;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -25,7 +28,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 @Tag(name = "Member API")
 @RestController
-@RequestMapping("/members")
+@RequestMapping("/api/members")
 public class MemberController {
     private final MemberService memberService;
     private final JwtToken jwtToken;
@@ -49,6 +52,7 @@ public class MemberController {
             )
         }
     )
+
     @PostMapping("/register")
     public ResponseEntity<?> register(@Valid @RequestBody UserRequestDto userRequestDto, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
@@ -77,6 +81,7 @@ public class MemberController {
             )
         }
     )
+
     @PostMapping("login")
     public ResponseEntity<?> login(@Valid @RequestBody UserRequestDto userRequestDto, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
@@ -90,4 +95,11 @@ public class MemberController {
         }
         throw new LoginException("이메일이나 비밀번호가 틀렸습니다.");
     }
+
+    @GetMapping("/points")
+    public ResponseEntity<PointResponseDto> getPoints(@LoginUser String email) {
+        PointResponseDto pointResponseDto = new PointResponseDto(memberService.getPoints(email));
+        return new ResponseEntity<>(pointResponseDto, HttpStatus.OK);
+    }
+
 }

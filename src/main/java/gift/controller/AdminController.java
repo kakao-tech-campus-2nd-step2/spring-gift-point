@@ -8,6 +8,7 @@ import gift.entity.Category;
 import gift.entity.Option;
 import gift.entity.Product;
 import gift.service.CategoryService;
+import gift.service.MemberService;
 import gift.service.OptionService;
 import gift.service.ProductService;
 import jakarta.validation.Valid;
@@ -23,6 +24,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
 @RequestMapping("/products")
@@ -30,11 +32,13 @@ public class AdminController {
     private final ProductService productService;
     private final CategoryService categoryService;
     private final OptionService optionService;
+    private final MemberService memberService;
 
-    public AdminController(ProductService productService, CategoryService categoryService, OptionService optionService) {
+    public AdminController(ProductService productService, CategoryService categoryService, OptionService optionService, MemberService memberService) {
         this.productService = productService;
         this.categoryService = categoryService;
         this.optionService = optionService;
+        this.memberService = memberService;
     }
 
     // 전체 상품목록
@@ -186,5 +190,17 @@ public class AdminController {
     public String deleteOption(@PathVariable Long productId, @PathVariable Long optionId, Model model) {
         optionService.deleteById(optionId);
         return "redirect:/products";
+    }
+
+    @GetMapping("/points")
+    public String chargePointsForm(@RequestParam Long memberId, Model model) {
+        model.addAttribute("memberId", memberId);
+        return  "point-form"; // 포인트 충전 화면 (Thymeleaf 템플릿 파일명)
+    }
+
+    @PostMapping("/points")
+    public String chargePoints(@RequestParam Long memberId, @RequestParam int points, Model model) {
+        memberService.chargePoints(memberId, points);
+        return "redirect:/products"; // 상품 목록으로 리디렉션
     }
 }
