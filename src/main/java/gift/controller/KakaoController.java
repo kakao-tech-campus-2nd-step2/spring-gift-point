@@ -2,6 +2,7 @@ package gift.controller;
 
 import gift.domain.KakaoProperties;
 import gift.domain.KakaoTokenResponsed;
+import gift.dto.TokenResponseDto;
 import gift.service.KakaoService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -55,10 +56,10 @@ public class KakaoController {
                 content = @Content(schema = @Schema(implementation = String.class)))
         })
     @GetMapping("/token")
-    public ResponseEntity<String> getAccessToken(@RequestParam String code){
+    public ResponseEntity<TokenResponseDto> getAccessToken(@RequestParam String code){
         KakaoTokenResponsed token = kakaoService.getTokeResponse(code);
         String jwt = kakaoService.LoginWithKakao(token.accessToken());
-        return new ResponseEntity<>(jwt, HttpStatus.OK);
+        return new ResponseEntity<>(new TokenResponseDto(jwt), HttpStatus.OK);
     }
 
 
