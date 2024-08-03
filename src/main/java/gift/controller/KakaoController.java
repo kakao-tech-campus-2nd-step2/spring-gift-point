@@ -3,14 +3,16 @@ package gift.controller;
 import gift.config.KakaoProperties;
 import gift.dto.SuccessResponse;
 import gift.dto.KakaoToken;
-import gift.dto.TokenResponseDto;
 import gift.service.KakaoOAuthService;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.view.RedirectView;
 import org.springframework.web.util.UriComponentsBuilder;
+
+import java.net.URI;
 
 @Tag(name = "카카오 로그인 API", description = "카카오 로그인 관련 API")
 @RestController
@@ -40,12 +42,15 @@ public class KakaoController {
     }
 
     @GetMapping("/redirect")
-    public ResponseEntity<TokenResponseDto> getTokenAndUserInfo(
+    public ResponseEntity<Object> getTokenAndUserInfo(
             @RequestParam(value = "code") String kakaoCode
     ) {
+        String returnUrl = "http://localhost:3000/token.html?tokenValue=";
         KakaoToken kakaoToken = kakaoOAuthService.getKakaoToken(kakaoCode);
-        TokenResponseDto token = kakaoOAuthService.kakaoMemberRegister(kakaoToken);
-        return ResponseEntity.ok(token);
+        String token = kakaoOAuthService.kakaoMemberRegister(kakaoToken);
+        HttpHeaders headers = new HttpHeaders();
+        headers.setLocation(URI.create(returnUrl + token));
+        return new ResponseEntity<>(headers, HttpStatus.OK);
     }
 
     @PostMapping("/unlink")

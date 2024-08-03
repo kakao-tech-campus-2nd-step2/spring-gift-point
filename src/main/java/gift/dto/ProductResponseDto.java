@@ -8,7 +8,7 @@ public class ProductResponseDto {
     private final long id;
     private final String name;
     private final int price;
-    private final String imgUrl;
+    private final String imageUrl;
     private final String category;
     private final List<OptionResponseDto> options;
 
@@ -16,7 +16,7 @@ public class ProductResponseDto {
         this.id = product.getId();
         this.name = product.getName();
         this.price = product.getPrice();
-        this.imgUrl = product.getImgUrl();
+        this.imageUrl = product.getImgUrl();
         this.category = product.getCategory().getName();
         this.options = product.getOptions().stream().map(OptionResponseDto::new).toList();
     }
@@ -33,8 +33,8 @@ public class ProductResponseDto {
         return price;
     }
 
-    public String getImgUrl() {
-        return imgUrl;
+    public String getImageUrl() {
+        return imageUrl;
     }
 
     public String getCategory() {

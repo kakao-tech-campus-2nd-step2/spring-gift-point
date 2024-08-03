@@ -10,6 +10,7 @@ import gift.dto.ProductRequestDto;
 import gift.dto.ProductResponseDto;
 import gift.exception.CustomException;
 import gift.exception.ErrorCode;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -43,11 +44,11 @@ public class ProductService {
     }
 
     @Transactional(readOnly = true)
-    public List<ProductResponseDto> findAll(Pageable pageable) {
-        return productRepository.findAll(pageable)
-                .stream()
-                .map(ProductResponseDto::new)
-                .toList();
+    public Page<ProductResponseDto> findAll(Pageable pageable, Long categoryId) {
+        Category category = categoryRepository.findById(categoryId)
+                .orElseThrow(() -> new CustomException(INVALID_CATEGORY));
+        return productRepository.findAllByCategory(pageable,category)
+                .map(ProductResponseDto::new);
     }
 
     @Transactional(readOnly = true)

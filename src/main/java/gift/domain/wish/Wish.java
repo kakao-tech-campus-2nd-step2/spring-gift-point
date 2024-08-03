@@ -1,12 +1,13 @@
 package gift.domain.wish;
 
+import gift.domain.BaseEntity;
 import gift.domain.member.Member;
 import gift.domain.product.Product;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 
 @Entity
-public class Wish {
+public class Wish extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
@@ -23,6 +24,7 @@ public class Wish {
     private int quantity;
 
     public Wish(Member member, Product product, Integer quantity) {
+        super();
         this.member = member;
         this.product = product;
         this.quantity = quantity;
