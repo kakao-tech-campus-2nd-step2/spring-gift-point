@@ -1,6 +1,7 @@
 package gift.controller;
 
 import gift.dto.CategoryDTO;
+import gift.dto.ProductDTO;
 import gift.service.CategoryService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -26,6 +27,13 @@ public class CategoryController {
     @Autowired
     public CategoryController(CategoryService categoryService){
         this.categoryService = categoryService;
+    }
+
+    @GetMapping("/detail/{id}")
+    @Operation(summary = "카테고리 별 상품 조회", description = "해당 카테고리에 속한 상품의 정보를 가져옵니다.")
+    public ResponseEntity<List<ProductDTO>> getCategoryWithProducts(@PathVariable Long id) {
+        List<ProductDTO> response = categoryService.getCategoryWithProducts(id);
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @GetMapping

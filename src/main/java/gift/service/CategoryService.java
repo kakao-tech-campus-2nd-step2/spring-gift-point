@@ -1,8 +1,11 @@
 package gift.service;
 
 import gift.dto.CategoryDTO;
+import gift.dto.ProductDTO;
 import gift.entity.CategoryEntity;
+import gift.entity.ProductEntity;
 import gift.repository.CategoryRepository;
+import gift.repository.ProductRepository;
 import jakarta.transaction.Transactional;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -12,10 +15,12 @@ import org.springframework.stereotype.Service;
 @Service
 public class CategoryService {
     private final CategoryRepository categoryRepository;
+    private final ProductRepository productRepository;
 
     @Autowired
-    public CategoryService(CategoryRepository categoryRepository) {
+    public CategoryService(CategoryRepository categoryRepository, ProductRepository productRepository) {
         this.categoryRepository = categoryRepository;
+        this.productRepository = productRepository;
     }
 
     // 카테고리 전체 조회
@@ -58,4 +63,8 @@ public class CategoryService {
         categoryRepository.deleteById(id);
     }
 
+    public List<ProductDTO> getCategoryWithProducts(Long categoryId) {
+        List<ProductEntity> products = productRepository.findByCategory_Id(categoryId);
+        return products.stream().map(ProductEntity::toDTO).collect(Collectors.toList());
+    }
 }
