@@ -29,7 +29,7 @@ public record RequestProductDTO(
         Long categoryId
 ) {
         public static RequestProductDTO of(Product product){
-                return new RequestProductDTO(product.getName().getValue(), product.getPrice().getValue(), product.getImageUrl().getValue(), product.getId());
+                return new RequestProductDTO(product.getName().getValue(), product.getPrice().getValue(), product.getImageUrl().getValue(), product.getCategory().getId());
         }
 }
 
