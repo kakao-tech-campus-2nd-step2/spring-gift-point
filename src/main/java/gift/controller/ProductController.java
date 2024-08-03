@@ -62,18 +62,20 @@ public class ProductController {
 
     @GetMapping
     @Operation(summary = "상품 목록 조회 (페이지네이션 적용)", description = "특정 카테고리의 상품 목록을 페이지 단위로 조회한다.")
-    public ProductPageResponse getProducts(@RequestParam(required = false) Long categoryId,
+    public ResponseEntity<ProductPageResponse> getProducts(@RequestParam(required = false) Long categoryId,
                                            @RequestParam(defaultValue = "20") int size,
                                            @RequestParam(defaultValue = "0") int page,
                                            @RequestParam(defaultValue = "price,desc") String sort) {
         Pageable pageable = PageRequest.of(page, size, Sort.by(SortUtils.parseSortParameter(sort)));
-        return productService.getProducts(categoryId, pageable);
+        ProductPageResponse productPageResponse = productService.getProducts(categoryId, pageable);
+        return ResponseEntity.ok(productPageResponse);
     }
 
     @GetMapping("/{id}")
     @Operation(summary = "상품 조회", description = "특정 상품의 정보를 조회한다.")
-    public ProductResponse getProduct(@PathVariable Long id) {
-        return productService.findOne(id);
+    public ResponseEntity<ProductResponse> getProduct(@PathVariable Long id) {
+        ProductResponse productResponse = productService.findOne(id);
+        return ResponseEntity.ok(productResponse);
     }
 
     @GetMapping("/new")
@@ -86,8 +88,9 @@ public class ProductController {
 
     @PostMapping
     @Operation(summary = "상품 생성", description = "새 상품을 등록한다.")
-    public ProductResponse addProduct(@Valid @RequestBody ProductOptionRequest request) {
-        return productService.register(request.getProductRequest(), request.getOptionRequest());
+    public ResponseEntity<ProductResponse> addProduct(@Valid @RequestBody ProductOptionRequest request) {
+        ProductResponse productResponse = productService.register(request.getProductRequest(), request.getOptionRequest());
+        return new ResponseEntity<>(productResponse, HttpStatus.CREATED);
     }
 
     @GetMapping("/edit/{id}")

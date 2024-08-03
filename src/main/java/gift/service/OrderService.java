@@ -3,6 +3,7 @@ package gift.service;
 import gift.domain.*;
 import gift.dto.request.OrderRequest;
 import gift.dto.request.PriceRequest;
+import gift.dto.response.OrderPageResponse;
 import gift.dto.response.OrderResponse;
 import gift.dto.response.PriceResponse;
 import gift.exception.*;
@@ -11,6 +12,8 @@ import gift.repository.order.OrderSpringDataJpaRepository;
 import gift.repository.product.ProductSpringDataJpaRepository;
 import gift.repository.wishlist.WishlistSpringDataJpaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -100,5 +103,10 @@ public class OrderService {
         }
 
         return new PriceResponse(orderPrice);
+    }
+
+    public OrderPageResponse getOrdersByMemberId(Long memberId, Pageable pageable) {
+        Page<Order> ordersPage = orderRepository.findByMemberId(memberId, pageable);
+        return OrderPageResponse.fromOrderPage(ordersPage);
     }
 }

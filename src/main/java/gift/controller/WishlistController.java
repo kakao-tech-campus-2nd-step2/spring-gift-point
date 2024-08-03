@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.ResponseEntity;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
@@ -51,13 +52,14 @@ public class WishlistController {
 
     @GetMapping
     @Operation(summary = "위시 리스트 상품 조회 (페이지네이션 적용)", description = "회원의 위시 리스트에 있는 상품을 페이지 단위로 조회한다.")
-    public WishlistPageResponse getWishlistForCurrentUser(@RequestParam(defaultValue = "20") int size,
-                                                          @RequestParam(defaultValue = "0") int page,
-                                                          @RequestParam(defaultValue = "id,desc") String sort,
-                                                          @Parameter(hidden = true) @LoginMember TokenAuth tokenAuth) {
+    public ResponseEntity<WishlistPageResponse> getWishlistForCurrentUser(@RequestParam(defaultValue = "20") int size,
+                                                                          @RequestParam(defaultValue = "0") int page,
+                                                                          @RequestParam(defaultValue = "id,desc") String sort,
+                                                                          @Parameter(hidden = true) @LoginMember TokenAuth tokenAuth) {
         Long memberId = tokenAuth.getMemberId();
         Pageable pageable = PageRequest.of(page, size, Sort.by(SortUtils.parseSortParameter(sort)));
-        return wishlistService.getWishlistByMemberId(memberId, pageable);
+        WishlistPageResponse wishlistPageResponse = wishlistService.getWishlistByMemberId(memberId, pageable);
+        return ResponseEntity.ok(wishlistPageResponse);
     }
 
 }

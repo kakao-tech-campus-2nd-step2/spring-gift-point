@@ -60,7 +60,8 @@ public class AuthFilter implements Filter {
         return path.equals("/home") || (path.startsWith("/api/members") && !path.equals("/api/members/point"))
                 || path.startsWith("/h2-console") || path.startsWith("/api/products")
                 || path.startsWith("/api/kakao") || path.startsWith("/api/categories")
-                || path.startsWith("/swagger-ui") || path.startsWith("/api-docs");
+                || path.startsWith("/swagger-ui") || path.startsWith("/api-docs")
+                || path.startsWith("/api/orders/price");
     }
 
     private boolean isTokenValid(String token) {

@@ -8,6 +8,7 @@ import gift.dto.response.PointResponse;
 import gift.dto.response.TokenResponse;
 import gift.service.MemberService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -51,7 +52,7 @@ public class MemberController {
 
     @GetMapping("/point")
     @Operation(summary = "포인트 조회", description = "회원의 포인트를 조회한다.")
-    public ResponseEntity<PointResponse> getMemberPoint(@LoginMember TokenAuth tokenAuth) {
+    public ResponseEntity<PointResponse> getMemberPoint(@Parameter(hidden = true) @LoginMember TokenAuth tokenAuth) {
         Long memberId = tokenAuth.getMemberId();
         PointResponse response = memberService.getPoint(memberId);
         return ResponseEntity.ok(response);
