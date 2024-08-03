@@ -2,7 +2,7 @@ package gift.service;
 
 import gift.dto.response.WishlistResponse;
 import gift.entity.Member;
-import gift.entity.Option;
+
 import gift.entity.Product;
 import gift.entity.Wishlist;
 import gift.repository.WishlistRepository;
