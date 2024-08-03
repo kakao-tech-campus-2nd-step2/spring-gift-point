@@ -28,7 +28,7 @@ public class Member {
     private AccessToken accessToken;
 
     @Embedded
-    @AttributeOverride(name = "value", column = @Column(name = "pont", nullable = false))
+    @AttributeOverride(name = "value", column = @Column(name = "point", nullable = false))
     private Point point;
 
     protected Member() {}
