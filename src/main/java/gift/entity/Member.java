@@ -1,6 +1,5 @@
 package gift.entity;
 
-import gift.exception.InsufficientPointException;
 import jakarta.persistence.*;
 
 @Entity
@@ -42,11 +41,7 @@ public class Member {
     }
 
     public void subtractPoint(int totalPrice) {
-        int discountedPrice = (int) (0.95 * totalPrice);
-        if (discountedPrice > point.getBalance()) {
-            throw new InsufficientPointException();
-        }
-        point.subtractBalance(discountedPrice);
+        point.subtractBalance(totalPrice);
     }
 
     public void updatePoint(int newPoint) {
