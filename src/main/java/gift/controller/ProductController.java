@@ -1,13 +1,11 @@
 package gift.controller;
 
 import gift.dto.ProductDTO;
-import gift.entity.ProductEntity;
 import gift.service.ProductService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
-import java.util.List;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -48,7 +46,7 @@ public class ProductController {
 
     @Operation(summary = "전체 상품 조회", description = "전체 상품 정보를 가져옵니다.")
     @GetMapping
-    public ResponseEntity<List<ProductDTO>> selectAllProducts(
+    public ResponseEntity<Page<ProductDTO>> selectAllProducts(
         @Min(value = 0, message = "페이지 번호는 0이상이어야 합니다.") // 페이지 번호는 0부터 시작합니다.
         @RequestParam(value = "page", defaultValue = "0") int page,
         @Min(value = 1, message = "한 페이지당 1개 이상의 항목이 포함되어야 합니다.")
@@ -63,7 +61,7 @@ public class ProductController {
             Sort.by(Sort.Direction.fromString(sortParams[1]), sortParams[0])
         );
 
-        List<ProductDTO> products = productService.getAllProducts(categoryId, pageable);
+        Page<ProductDTO> products = productService.getAllProducts(categoryId, pageable);
 
         return new ResponseEntity<>(products, HttpStatus.OK);
     }

@@ -1,8 +1,10 @@
 package gift.service;
 
+import gift.dto.WishListDTO;
 import gift.entity.CategoryEntity;
 import gift.entity.ProductEntity;
 import gift.dto.ProductDTO;
+import gift.entity.WishListEntity;
 import gift.repository.CategoryRepository;
 import gift.repository.ProductRepository;
 import jakarta.persistence.EntityNotFoundException;
@@ -30,11 +32,9 @@ public class ProductService {
             .collect(Collectors.toList());
     }
 
-    public List<ProductDTO> getAllProducts(Long categoryId, Pageable pageable) {
+    public Page<ProductDTO> getAllProducts(Long categoryId, Pageable pageable) {
         Page<ProductEntity> productEntities = productRepository.findByCategory_Id(categoryId, pageable);
-        return productEntities.stream()
-            .map(ProductEntity::toDTO)
-            .collect(Collectors.toList());
+        return productEntities.map(ProductEntity::toDTO);
     }
 
     // Read(단일 상품) - getProduct()
