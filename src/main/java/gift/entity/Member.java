@@ -83,4 +83,8 @@ public class Member {
     public void subtract(Integer requestPoint) {
         this.point -= requestPoint;
     }
+
+    public void add(Integer requestPoint) {
+        this.point += requestPoint;
+    }
 }

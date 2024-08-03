@@ -1,5 +1,6 @@
 package gift.service;
 
+import gift.dto.PointRequestDto;
 import gift.entity.Member;
 import gift.exception.LoginException;
 import gift.exception.ServiceException;
@@ -8,7 +9,9 @@ import gift.util.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+@Transactional
 @Service
 public class MemberService {
 
@@ -53,5 +56,11 @@ public class MemberService {
     public Integer getPointByMemberId(Long memberId) {
         Member member = memberRepository.findById(memberId).orElseThrow(() -> new ServiceException("해당 아이디로 등록된 사용자 정보가 없습니다.", HttpStatus.NOT_FOUND));
         return member.getPoint();
+    }
+
+    public void chargePoint(Long memberId, PointRequestDto pointRequestDto) {
+        Member member = memberRepository.findById(memberId).orElseThrow(
+            () -> new ServiceException("해당 아이디로 등록된 사용자 정보가 없습니다.", HttpStatus.NOT_FOUND));
+        member.add(pointRequestDto.getPoint());
     }
 }

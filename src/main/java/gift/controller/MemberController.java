@@ -5,6 +5,7 @@ import gift.annotation.LoginMember;
 import gift.dto.ErrorResponseDto;
 import gift.dto.MemberLoginDto;
 import gift.dto.MemberRegisterDto;
+import gift.dto.PointRequestDto;
 import gift.entity.PointResponseEntity;
 import gift.entity.TokenResponseEntity;
 import gift.service.MemberService;
@@ -19,6 +20,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -80,5 +82,18 @@ public class MemberController {
         return new ResponseEntity<>(
             objectMapper.writeValueAsString(new PointResponseEntity(point)), HttpStatus.OK
         );
+    }
+
+    @Operation(summary = "포인트 조회", description = "로그인한 사용자의 보유 포인트를 조회합니다.")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "204", description = "포인트 충전 성공"),
+        @ApiResponse(responseCode = "400", description = "잘못된 입력 데이터", content = @Content(schema = @Schema(implementation = ErrorResponseDto.class))),
+        @ApiResponse(responseCode = "404", description = "존재하지 않는 회원", content = @Content(schema = @Schema(implementation = ErrorResponseDto.class)))
+    })
+    @PostMapping("/{memberId}/points")
+    public ResponseEntity<String> chargePoint(@PathVariable Long memberId,
+        @RequestBody @Valid PointRequestDto pointRequestDto) {
+        memberService.chargePoint(memberId, pointRequestDto);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }
