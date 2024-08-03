@@ -1,6 +1,7 @@
 package gift.service;
 
 import gift.dto.OptionDto;
+import gift.dto.response.OptionResponse;
 import gift.entity.Option;
 import gift.entity.Product;
 import gift.repository.OptionRepository;
@@ -8,10 +9,12 @@ import gift.repository.ProductRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import java.util.HashSet;
-import java.util.NoSuchElementException;
-import java.util.Optional;
-import java.util.Set;
+
+import java.util.*;
+import java.util.stream.Collectors;
+
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class OptionService {
@@ -32,8 +35,9 @@ public class OptionService {
         return new HashSet<>(optionRepository.findAll());
     }
 
-    public Set<Option> getOptionsByProductId(Long productId) {
-        return optionRepository.findByProductId(productId);
+    public List<OptionResponse> getOptionsByProductId(Long productId) {
+        return optionRepository.findByProductId(productId).stream().map(OptionResponse::new)
+                .collect(Collectors.toList());
     }
 
     public Option getOptionById(Long id) {

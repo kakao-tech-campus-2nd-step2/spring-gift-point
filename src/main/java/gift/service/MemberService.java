@@ -49,6 +49,15 @@ public class MemberService {
         }
     }
 
+    public Member getMemberById(Long id) {
+        Member member = memberRepository.findById(id).get();
+        if (member != null) {
+            return member;
+        } else {
+            throw new MemberNotFoundException("Member with email " +id + " not found");
+        }
+    }
+
     public List<Member> getAllMembers() {
         return memberRepository.findAll();
     }
