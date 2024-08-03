@@ -3,9 +3,9 @@ package gift.service.impl;
 import gift.model.Wish;
 import gift.repository.WishRepository;
 import gift.service.WishService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 @Service
 public class WishServiceImpl implements WishService {
@@ -17,8 +17,8 @@ public class WishServiceImpl implements WishService {
     }
 
     @Override
-    public List<Wish> getWishesByMemberId(Long memberId) {
-        return wishRepository.findByMemberId(memberId);
+    public Page<Wish> getWishesByMemberId(Long memberId, Pageable pageable) {
+        return wishRepository.findAllByMemberId(memberId, pageable);
     }
 
     @Override
@@ -28,10 +28,11 @@ public class WishServiceImpl implements WishService {
 
     @Override
     public boolean removeWish(Long id, Long memberId) {
-        if (wishRepository.existsById(id)) {
-            wishRepository.deleteByIdAndMemberId(id, memberId);
-            return true;
-        }
-        return false;
+        return wishRepository.findByIdAndMemberId(id, memberId)
+            .map(wish -> {
+                wishRepository.delete(wish);
+                return true;
+            })
+            .orElse(false);
     }
 }

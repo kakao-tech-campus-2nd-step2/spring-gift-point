@@ -5,6 +5,7 @@ import gift.model.Product;
 import gift.repository.OptionRepository;
 import gift.repository.ProductRepository;
 import gift.service.OptionService;
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -22,6 +23,7 @@ public class OptionServiceImpl implements OptionService {
     }
 
     @Override
+    @Transactional
     public Option addOptionToProduct(Long productId, Option option) {
         Product product = productRepository.findById(productId)
             .orElseThrow(() -> new NoSuchElementException("상품이 존재하지 않습니다."));
@@ -39,6 +41,33 @@ public class OptionServiceImpl implements OptionService {
     }
 
     @Override
+    @Transactional
+    public Option updateOption(Long productId, Long optionId, Option updatedOption) {
+        Product product = productRepository.findById(productId)
+            .orElseThrow(() -> new NoSuchElementException("상품이 존재하지 않습니다."));
+        return optionRepository.findById(optionId)
+            .map(existingOption -> {
+                existingOption.setName(updatedOption.getName());
+                existingOption.setQuantity(updatedOption.getQuantity());
+                existingOption.setProduct(product);
+                return optionRepository.save(existingOption);
+            })
+            .orElseThrow(() -> new NoSuchElementException("옵션이 존재하지 않습니다."));
+    }
+
+    @Override
+    @Transactional
+    public void deleteOption(Long productId, Long optionId) {
+        if (!productRepository.existsById(productId)) {
+            throw new NoSuchElementException("상품이 존재하지 않습니다.");
+        }
+        if (!optionRepository.existsById(optionId)) {
+            throw new NoSuchElementException("옵션이 존재하지 않습니다.");
+        }
+        optionRepository.deleteById(optionId);
+    }
+
+    @Transactional
     public void subtractOptionQuantity(Long optionId, int quantity) {
         Option option = optionRepository.findById(optionId)
             .orElseThrow(() -> new NoSuchElementException("옵션이 존재하지 않습니다."));

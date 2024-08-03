@@ -1,10 +1,11 @@
 package gift.service;
 
 import gift.model.Wish;
-import java.util.List;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 public interface WishService {
-    List<Wish> getWishesByMemberId(Long memberId);
+    Page<Wish> getWishesByMemberId(Long memberId, Pageable pageable);
     Wish addWish(Wish wish);
     boolean removeWish(Long id, Long memberId);
 }
