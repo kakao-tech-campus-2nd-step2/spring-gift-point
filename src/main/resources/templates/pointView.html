@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>포인트 충전</title>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/styles.css}">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+<center><h1>💰포인트 충전</h1></center>
+<hr>
+<div class="point-charge-container">
+    <div id="current-points">
+        <h2>보유한 포인트</h2>
+        <span id="points-balance">0</span>
+    </div><br><br>
+    <h2>충전할 포인트</h2><br>
+    <input type="number" id="points-amount" placeholder="포인트 입력" aria-label="충전할 포인트 입력"><br><br><br>
+    <button class="add-button" type="button" onclick="chargePoints()">충전</button>
+</div>
+
+<script>
+    $(document).ready(function() {
+        fetchPoints();
+    });
+
+    function fetchPoints() {
+        const token = "Bearer " + localStorage.getItem('token');
+        $.ajax({
+            url: "/api/points",
+            type: "GET",
+            beforeSend: function (xhr) {
+                xhr.setRequestHeader('Authorization', token);
+            },
+            success: function(data) {
+                $("#points-balance").text(data.point);
+            },
+            error: function(xhr) {
+                alert("포인트 조회 실패: " + xhr.responseText);
+            }
+        });
+    }
+
+    function chargePoints() {
+        const amount = $("#points-amount").val();
+        if (!amount || amount <= 0) {
+            alert("유효한 포인트 금액을 입력하세요.");
+            return;
+        }
+        const token = "Bearer " + localStorage.getItem('token');
+        $.ajax({
+            url: "/api/points",
+            type: "POST",
+            contentType: "application/json",
+            data: JSON.stringify({ point: parseInt(amount, 10) }),
+            beforeSend: function (xhr) {
+                xhr.setRequestHeader('Authorization', token);
+            },
+            success: function() {
+                alert("포인트 충전이 완료되었습니다.");
+                $("#points-amount").val(""); // 입력 필드 비우기
+                fetchPoints(); // 포인트를 다시 조회하여 업데이트
+            },
+            error: function(xhr) {
+                var errorMessage = xhr.responseText;
+                alert("포인트 충전 실패: " + errorMessage);
+            }
+        });
+    }
+</script>
+</body>
+</html>

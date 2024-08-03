@@ -9,6 +9,11 @@
 <body>
 <center><h1>👤관리자 페이지</h1></center>
 <hr>
+<!-- 포인트 충전 버튼 -->
+<div style="text-align: right; margin-bottom: 20px;">
+    <button class="charge-button" type="button" onclick="redirectToPointPage()">포인트 충전</button>
+</div>
+
 <h1>🔎상품 목록</h1>
 <table>
     <thead>
@@ -279,6 +284,11 @@
 
     function removeOption(button) {
         $(button).closest('.option').remove();
+    }
+
+
+    function redirectToPointPage() {
+        window.location.href = 'pointView';
     }
 
     $(document).ready(function() {
