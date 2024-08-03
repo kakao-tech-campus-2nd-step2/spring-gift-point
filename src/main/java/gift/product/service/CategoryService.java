@@ -28,7 +28,7 @@ public class CategoryService {
 
     @Transactional
     public void insertCategory(CategoryDto categoryDto) {
-        ValidateRedundancyCategory(categoryDto.name());
+        validateRedundancyCategory(categoryDto.name());
 
         Category category = new Category(categoryDto.name(), categoryDto.color(),
             categoryDto.imageUrl(), categoryDto.description());
@@ -56,7 +56,7 @@ public class CategoryService {
             .orElseThrow(() -> new NoSuchElementException("해당 ID의 카테고리가 존재하지 않습니다."));
     }
 
-    private void ValidateRedundancyCategory(String name) {
+    private void validateRedundancyCategory(String name) {
         Optional<Category> categoryOptional = categoryRepository.findByName(name);
 
         if (categoryOptional.isPresent()) {
