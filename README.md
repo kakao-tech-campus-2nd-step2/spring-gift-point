@@ -58,6 +58,11 @@
 
 ## step3 구현 기능
 
+- cors 정책 설정
+- fe요청 수행
+  - 상품 카테고리 리스트 조회시 imageURL, title, description, backgroundColor 추가 반환
+  - 상품 조회시 포함된 옵션id도 볼 수 있음
+  - 카테고리로 상품 조회하는 기능 추가
 - 포인트 관련 기능 구현
   - 유저
     - 포인트 충전(list)
