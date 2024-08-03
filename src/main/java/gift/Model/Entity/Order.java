@@ -1,9 +1,11 @@
 package gift.Model.Entity;
 
+import gift.Model.Value.CashReceipt;
 import gift.Model.Value.Quantity;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
+import java.util.Optional;
 
 @Entity
 @Table(name = "orders")
@@ -22,31 +24,38 @@ public class Order {
     private Member member;
 
     @Embedded
-    @AttributeOverride(name="value", column = @Column(name="quantity"))
+    @AttributeOverride(name="value", column = @Column(name="quantity", nullable = false))
     private Quantity quantity;
 
+    @Column(nullable = false)
     private LocalDateTime orderDateTime;
 
     private String message;
 
+    @Embedded
+    @AttributeOverride(name = "phoneNumber", column = @Column(name = "cash_receipt"))
+    private CashReceipt cashReceipt;
+
+
     protected Order() {
     }
 
-    public Order(Option option, Member member, Quantity quantity, LocalDateTime orderDateTime, String message) {
+    public Order(Option option, Member member, Quantity quantity, LocalDateTime orderDateTime, String message, CashReceipt cashReceipt) {
         validateOption(option);
         validateMember(member);
         validateQuantity(quantity);
+        validateOrderDateTIme(orderDateTime);
 
         this.option = option;
         this.quantity = quantity;
         this.member = member;
         this.orderDateTime = orderDateTime;
         this.message = message;
+        this.cashReceipt = cashReceipt;
     }
 
-
-    public Order(Option option, Member member, Integer quantity, LocalDateTime orderDateTime, String message) {
-        this(option, member, new Quantity(quantity), orderDateTime, message);
+    public Order(Option option, Member member, Integer quantity, LocalDateTime orderDateTime, String message, CashReceipt cashReceipt) {
+        this(option, member, new Quantity(quantity), orderDateTime, message, cashReceipt);
     }
 
     private void validateMember(Member member) {
@@ -62,6 +71,11 @@ public class Order {
     private void validateOption(Option option) {
         if(option == null)
             throw new IllegalArgumentException("Option은 null이 될 수 없습니다");
+    }
+
+    private void validateOrderDateTIme(LocalDateTime orderDateTime) {
+        if(orderDateTime == null)
+            throw new IllegalArgumentException("orderDateTime은 null이 될 수 없습니다");
     }
 
     public Long getId() {
@@ -84,25 +98,17 @@ public class Order {
         return orderDateTime;
     }
 
-    public String getMessage() {
-        return message;
+    public Optional<String> getMessage() {
+        return Optional.ofNullable(message);
+    }
+
+    public Optional<CashReceipt> getCashReceipt() {
+        return Optional.ofNullable(cashReceipt);
     }
 
     public void checkOrderBelongsToMember(Member member) {
         if (this.member != member) {
             throw new IllegalArgumentException("이 주문은 해당 member의 주문이 아닙니다");
         }
-    }
-
-    public void addQuantity(Quantity deltaQuantity) {
-        validateQuantity(deltaQuantity);
-        this.quantity.add(deltaQuantity.getValue());
-        this.option.subtractQuantity(deltaQuantity.getValue());
-    }
-
-    public void subtractQuantity(Quantity deltaQuantity) {
-        validateQuantity(deltaQuantity);
-        this.quantity.subtract(deltaQuantity.getValue());
-        this.option.addQuantity(deltaQuantity.getValue());
     }
 }
