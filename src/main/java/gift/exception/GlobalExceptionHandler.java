@@ -103,4 +103,12 @@ public class GlobalExceptionHandler {
             e.getMessage());
         return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
     }
+
+    @ExceptionHandler(InsufficientPointsException.class)
+    public ResponseEntity<ExceptionResponse> handleInsufficientPointsException(
+        InsufficientPointsException e) {
+        ExceptionResponse error = new ExceptionResponse(HttpStatus.BAD_REQUEST.value(),
+            e.getMessage());
+        return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
+    }
 }

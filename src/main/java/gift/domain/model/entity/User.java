@@ -1,6 +1,7 @@
 package gift.domain.model.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import gift.exception.InsufficientPointsException;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -38,6 +39,9 @@ public class User {
 
     @Column
     private LocalDateTime kakaoTokenExpireAt;
+
+    @Column(name = "point_balance", nullable = true)
+    private Integer pointBalance = 0;
 
     protected User() {
     }
@@ -103,5 +107,29 @@ public class User {
 
     public enum AuthProvider {
         LOCAL, KAKAO
+    }
+
+    public void addPoints(int points) throws IllegalArgumentException {
+        if (points < 0) {
+            throw new IllegalArgumentException("포인트는 음수일 수 없습니다.");
+        }
+
+        if (this.pointBalance == null) {
+            this.pointBalance = 0;
+        }
+
+        this.pointBalance = this.pointBalance + points;
+    }
+
+    public void usePoints(int points) throws InsufficientPointsException {
+        if (this.pointBalance == null) {
+            this.pointBalance = 0;
+        }
+
+        if (this.pointBalance < points) {
+            throw new InsufficientPointsException("포인트가 부족합니다.");
+        }
+
+        this.pointBalance = this.pointBalance - points;
     }
 }
