@@ -1,12 +1,15 @@
 package gift.service;
 
 import gift.dto.request.MemberRequest;
+import gift.dto.response.MemberInfoResponse;
 import gift.entity.Member;
 import gift.exception.EmailDuplicateException;
 import gift.exception.MemberNotFoundException;
 import gift.repository.MemberRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Service
 public class MemberService {
@@ -42,5 +45,17 @@ public class MemberService {
         return memberRepository.findByEmail(email)
                 .map(Member::getId)
                 .orElseThrow(MemberNotFoundException::new);
+    }
+
+    public List<MemberInfoResponse> getAllMember() {
+        return memberRepository.findAll()
+                .stream()
+                .map(MemberInfoResponse::fromMember)
+                .toList();
+    }
+
+    public void updateMemberPoint(Long memberId, int newPoint) {
+        memberRepository.getReferenceById(memberId)
+                .updatePoint(newPoint);
     }
 }
