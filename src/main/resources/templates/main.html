@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="ko">
+<script src='/main.js'></script>
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+</head>
+<body>
+
+<div id="userbox">
+  <div id="userInfo" style="display: none;">
+    <span id="username"></span>
+    <button id="logoutButton" style="display: none;">로그아웃</button>
+  </div>
+  <a href="/api/members/login" id="loginLink" style="display:none;">
+    로그인 하기
+  </a>
+</div>
+
+<button type="button" onclick="getMemberInfo()"> 회원 정보 보기 </button>
+
+
+</body>
+</html>

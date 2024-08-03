@@ -27,15 +27,16 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
 
-@RestController
+@Controller
 @PropertySource("classpath:application-secret.properties")
 @PropertySource("classpath:application-kakao-login.properties")
 @Validated
@@ -57,6 +58,21 @@ public class MemberController {
         this.jwtUtil = jwtUtil;
     }
 
+    @GetMapping("/info")
+    public String memberInfo(@LoginMember MemberDTO memberDTO, Model model) {
+        model.addAttribute("name", memberDTO.getName());
+        model.addAttribute("email", memberDTO.getEmail());
+        model.addAttribute("point", memberService.getPoint(memberDTO));
+        return "member";
+    }
+
+    @GetMapping("/register")
+    @Hidden
+    public String register(){
+        return "register";
+    }
+
+
     @PostMapping("/register")
     @Operation(description = "서버가 클라이언트가 제출한 사용자 정보를 가지고 회원가입을 진행합니다.", tags = "Member")
     @ApiResponses(value = {
@@ -71,6 +87,13 @@ public class MemberController {
         memberService.register(memberDTO);
         String token = jwtUtil.generateToken(memberDTO);
         return new ResponseEntity<>(new JwtDTO(token), HttpStatus.CREATED);
+    }
+
+
+    @GetMapping("/login")
+    @Hidden
+    public String login(){
+        return "login";
     }
 
 
