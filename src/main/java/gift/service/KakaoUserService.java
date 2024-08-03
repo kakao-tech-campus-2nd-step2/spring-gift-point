@@ -26,8 +26,7 @@ public class KakaoUserService {
 
     public String getAuthorizationUrl() {
         return "https://kauth.kakao.com/oauth/authorize?response_type=code&client_id="
-            + kakaoProperties.getClientId() + "&redirect_uri=" + kakaoProperties.getRedirectUri()
-            +"&scope=talk_message";
+            + kakaoProperties.getClientId() + "&redirect_uri=" + kakaoProperties.getRedirectUri();
     }
 
     public KakaoTokenResponse getAccessToken(String authorizationCode) {

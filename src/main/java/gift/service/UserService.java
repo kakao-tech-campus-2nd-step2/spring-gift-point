@@ -68,10 +68,6 @@ public class UserService {
             .orElseThrow(() -> new UserAuthException(id + "에 해당하는 유저가 없습니다."));
     }
 
-    public Integer getUserPoint(User user) {
-        return user.getPoint();
-    }
-
     @Transactional
     public void addPoint(User user, Integer pointAmount) {
         user.addPoint(pointAmount);
