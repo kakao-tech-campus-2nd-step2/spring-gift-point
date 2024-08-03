@@ -37,15 +37,19 @@ public class Member {
         return email;
     }
 
-    public int getPoint() {
-        return point.getValue();
+    public int getPointBalance() {
+        return point.getBalance();
     }
 
     public void subtractPoint(int totalPrice) {
         int discountedPrice = (int) (0.95 * totalPrice);
-        if (discountedPrice > point.getValue()) {
+        if (discountedPrice > point.getBalance()) {
             throw new InsufficientPointException();
         }
-        point.subtractValue(discountedPrice);
+        point.subtractBalance(discountedPrice);
+    }
+
+    public void updatePoint(int newPoint) {
+        this.point.updateBalance(newPoint);
     }
 }
