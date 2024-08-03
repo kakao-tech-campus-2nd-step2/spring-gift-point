@@ -22,27 +22,39 @@ public class Member {
     @Column(nullable = false)
     private final String password;
 
+    @Column(nullable = false, columnDefinition = "int default 0")
+    private final int point;
+
     protected Member() {
-        this(null, null, null, null);
+        this(null, null, null, null, 0);
     }
 
     public Member(String email, String password) {
-        this(null, null, email, password);
+        this(null, null, email, password, 0);
     }
 
-    public Member(String name, String email, String password) {
-        this(null, name, email, password);
+    public Member(String email, String password, int count) {
+        this(null, null, email, password, count);
     }
 
     public Member(Long id, String email, String password) {
-        this(id, null, email, password);
+        this(id, null, email, password, 0);
     }
 
-    public Member(Long memberId, String name, String email, String password) {
-        this.id = memberId;
+    public Member(Long id, String name, String email, String password) {
+        this(id, name, email, password, 0);
+    }
+
+    public Member(Long id, String email, String password, int point) {
+        this(id, null, email, password, point);
+    }
+
+    public Member(Long id, String name, String email, String password, int point) {
+        this.id = id;
         this.name = name;
         this.email = email;
         this.password = password;
+        this.point = point;
     }
 
     public Long getId() {
@@ -59,5 +71,9 @@ public class Member {
 
     public String getPassword() {
         return password;
+    }
+
+    public int getPoint() {
+        return point;
     }
 }

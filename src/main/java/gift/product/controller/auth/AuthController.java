@@ -4,6 +4,7 @@ import gift.product.dto.auth.AccessTokenDto;
 import gift.product.dto.auth.LoginMemberIdDto;
 import gift.product.dto.auth.MemberDto;
 import gift.product.dto.auth.OAuthJwt;
+import gift.product.dto.auth.PointResponse;
 import gift.product.dto.auth.RegisterSuccessResponse;
 import gift.product.exception.ExceptionResponse;
 import gift.product.service.AuthService;
@@ -61,6 +62,12 @@ public class AuthController {
         AccessTokenDto accessTokenDto = authService.login(memberDto);
 
         return ResponseEntity.ok(accessTokenDto);
+    }
+
+    @GetMapping("/point")
+    public ResponseEntity<PointResponse> getMemberPoint(HttpServletRequest request) {
+        LoginMemberIdDto loginMemberIdDto = getLoginMember(request);
+        return ResponseEntity.ok(authService.getMemberPoint(loginMemberIdDto));
     }
 
     @ApiResponses(value = {

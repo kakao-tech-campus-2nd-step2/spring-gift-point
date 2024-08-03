@@ -7,6 +7,7 @@ import gift.product.dto.auth.AccessTokenDto;
 import gift.product.dto.auth.LoginMemberIdDto;
 import gift.product.dto.auth.MemberDto;
 import gift.product.dto.auth.OAuthJwt;
+import gift.product.dto.auth.PointResponse;
 import gift.product.exception.LoginFailedException;
 import gift.product.model.KakaoToken;
 import gift.product.model.Member;
@@ -54,7 +55,7 @@ public class AuthService {
     public void register(MemberDto memberDto) {
         validateMemberExist(memberDto);
 
-        Member member = new Member(memberDto.email(), memberDto.password());
+        Member member = new Member(memberDto.email(), memberDto.password(), 1000);
         authRepository.save(member);
     }
 
@@ -63,6 +64,11 @@ public class AuthService {
         Member member = authRepository.findByEmail(memberDto.email());
 
         return new AccessTokenDto(getAccessToken(member));
+    }
+
+    public PointResponse getMemberPoint(LoginMemberIdDto loginMemberIdDto) {
+        Member member = getValidatedMember(loginMemberIdDto);
+        return new PointResponse(member.getPoint());
     }
 
     public String getKakaoAuthCodeUrl() {
@@ -209,5 +215,9 @@ public class AuthService {
     private KakaoToken getKakaoToken(LoginMemberIdDto loginMemberIdDto) {
         return kakaoTokenRepository.findByMemberId(loginMemberIdDto.id())
             .orElseThrow(() -> new NoSuchElementException("카카오 계정 로그인을 수행한 후 다시 시도해주세요."));
+    }
+
+    private Member getValidatedMember(LoginMemberIdDto loginMemberIdDto) {
+        return authRepository.findById(loginMemberIdDto.id()).orElseThrow(() -> new NoSuchElementException("회원 정보가 존재하지 않습니다."));
     }
 }
