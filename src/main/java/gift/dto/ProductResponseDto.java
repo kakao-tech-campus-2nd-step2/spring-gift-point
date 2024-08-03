@@ -11,17 +11,29 @@ public class ProductResponseDto {
     @Schema(description = "상품 가격")
     private Integer price;
     @Schema(description = "상품 url")
-    private String url;
-
-    public ProductResponseDto(Long id, String name, Integer price, String url) {
+    private String imageUrl;
+    @Schema(description = "상품 카테고리 id")
+    private Long categoryId;
+    @Schema(description = "카테고리 이름")
+    private String categoryName;
+    public ProductResponseDto(Long id, String name, Integer price, String imageUrl) {
         this.id = id;
         this.name = name;
         this.price = price;
-        this.url = url;
+        this.imageUrl = imageUrl;
     }
 
-    public ProductResponseDto(String name, Integer price, String url) {
-        this(null, name, price, url);
+    public ProductResponseDto(Long id, String name, Integer price, String imageUrl, Long categoryId, String categoryName) {
+        this.id = id;
+        this.name = name;
+        this.price = price;
+        this.imageUrl = imageUrl;
+        this.categoryId = categoryId;
+        this.categoryName = categoryName;
+    }
+
+    public ProductResponseDto(String name, Integer price, String imageUrl) {
+        this(null, name, price, imageUrl);
     }
 
     public Long getId() {
@@ -36,8 +48,15 @@ public class ProductResponseDto {
         return price;
     }
 
-    public String getUrl() {
-        return url;
+    public String getImageUrl() {
+        return imageUrl;
     }
 
+    public Long getCategoryId() {
+        return categoryId;
+    }
+
+    public String getCategoryName() {
+        return categoryName;
+    }
 }
