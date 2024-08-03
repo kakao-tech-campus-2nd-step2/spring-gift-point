@@ -1,5 +1,6 @@
 package gift.product.controller;
 
+import gift.product.dto.TokenDTO;
 import gift.product.service.KakaoService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -23,7 +24,7 @@ public class KakaoController {
     }
 
     @GetMapping("/callback")
-    public ResponseEntity<String> handleKakaoCallback(@RequestParam String code) {
+    public ResponseEntity<TokenDTO> handleKakaoCallback(@RequestParam("code") String code) {
         return ResponseEntity.ok(kakaoService.login(code));
     }
 }

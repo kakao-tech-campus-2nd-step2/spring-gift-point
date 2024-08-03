@@ -3,6 +3,7 @@ package gift.product.service;
 import static gift.product.exception.GlobalExceptionHandler.INVALID_HTTP_REQUEST;
 import static gift.product.exception.GlobalExceptionHandler.NOT_RECEIVE_RESPONSE;
 
+import gift.product.dto.TokenDTO;
 import gift.product.exception.RequestException;
 import gift.product.exception.ResponseException;
 import gift.product.model.Member;
@@ -48,11 +49,11 @@ public class KakaoService {
         this.snsMemberRepository = snsMemberRepository;
     }
 
-    public String login(String authCode) {
+    public TokenDTO login(String authCode) {
         String accessToken = getAccessToken(authCode);
         Long kakaoMemberId = parsingAccessToken(accessToken);
         SnsMember snsMember = signUpAndLogin(kakaoMemberId, accessToken);
-        return jwtUtil.generateToken(snsMember.getKakaoId().toString());
+        return new TokenDTO(jwtUtil.generateToken(snsMember.getKakaoId().toString()));
     }
 
     public String getAuthCode() {
