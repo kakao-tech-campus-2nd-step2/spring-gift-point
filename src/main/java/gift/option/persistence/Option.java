@@ -60,7 +60,11 @@ public class Option {
     }
 
     public void substract(int quantity) {
-        this.quantity = quantity;
+        if (this.quantity >= quantity) {
+            this.quantity -= quantity;
+        } else {
+            throw new IllegalArgumentException("Not enough quantity to subtract");
+        }
     }
 
 }
