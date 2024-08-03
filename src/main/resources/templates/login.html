@@ -44,7 +44,7 @@
                 contentType: 'application/json',
                 data: JSON.stringify(formData),
                 success: function(response) {
-                    localStorage.setItem('token', response);
+                    localStorage.setItem('token', response.token);
                     window.location.href = '/';
                 },
                 error: function() {

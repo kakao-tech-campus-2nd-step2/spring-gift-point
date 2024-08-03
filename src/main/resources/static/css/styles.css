@@ -31,13 +31,25 @@ tr:hover {
     background-color: #f1f1f1;
 }
 
+.add-button, .charge-button {
+    padding: 8px 12px;
+    border: none;
+    color: #ffffff;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: background-color 0.3s;
+}
+
 .add-button {
-    float: right;
     background-color: #0988d4;
 }
 
-.edit-button {
-    background-color: #0988d4;
+.charge-button {
+    background-color: #ff5722;
+}
+
+.add-button:hover, .charge-button:hover {
+    background-color: #0056b3;
 }
 
 button {
@@ -85,7 +97,6 @@ form input {
     border-radius: 4px;
 }
 
-/* Add styles for pagination */
 .pagination {
     display: flex;
     justify-content: center;
@@ -107,4 +118,30 @@ form input {
     background-color: #007bff;
     color: white;
     border-color: #007bff;
+}
+
+.point-charge-container {
+    text-align: center;
+    margin-top: 50px;
+}
+
+.point-charge-container label {
+    font-size: 18px;
+    margin-bottom: 10px;
+    display: block;
+}
+
+.point-charge-container input {
+    width: 200px;
+    padding: 10px;
+    margin-bottom: 20px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+.point-charge-container button {
+    width: 100px;
+    padding: 10px;
+    display: block;
+    margin: 0 auto; /* 중앙 배치 */
 }

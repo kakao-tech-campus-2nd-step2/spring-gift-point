@@ -32,10 +32,11 @@
 <body>
 <h1>🎁선물하기 상품 목록</h1>
 
-<div class = "href-link">
+<div class="href-link">
     <a href="/api/members/register">회원가입</a> |
     <a href="/api/members/login">로그인</a> |
-    <a href="/wish">위시리스트</a>
+    <a href="/wish">위시리스트</a> |
+    <a href="/admin">관리자 페이지</a>
 </div>
 
 <table>
@@ -111,9 +112,15 @@
 
     function addToWishlist(productId) {
         const token = "Bearer " + localStorage.getItem('token'); // Authorization 토큰을 가져옴
+        const wishRequestDto = {
+            productId: productId
+        };
+
         $.ajax({
-            url: `/wishlist/${productId}`,
+            url: `/api/wishes`,
             type: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify(wishRequestDto),
             beforeSend: function (xhr) {
                 xhr.setRequestHeader('Authorization', token);
             },
@@ -138,6 +145,7 @@
         icon.classList.remove('fas');
         icon.classList.add('far');
     }
+
     $(document).ready(function() {
         fetchProducts();
     });
