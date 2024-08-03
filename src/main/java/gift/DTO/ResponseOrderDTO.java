@@ -49,7 +49,7 @@ public class ResponseOrderDTO {
     }
 
     public static ResponseOrderDTO of(Order order){
-        return new ResponseOrderDTO(order.getId(), order.getOption().getId(), order.getQuantity().getValue(), order.getOrderDateTime().toString(), order.getMessage());
+        return new ResponseOrderDTO(order.getId(), order.getOption().getId(), order.getQuantity().getValue(), order.getOrderDateTime().toString(), order.getMessage().orElseGet(()->""));
     }
 
 }
