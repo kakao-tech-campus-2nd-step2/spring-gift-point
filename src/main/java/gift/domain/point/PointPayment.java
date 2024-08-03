@@ -16,14 +16,11 @@ public class PointPayment {
         private Long userId;
         private Long productOptionId;
         private Long discountPolicyId;
-        private Integer regularPrice;
 
-        public CreatePointPayment(Long userId, Long productOptionId, Long discountPolicyId,
-            Integer regularPrice) {
+        public CreatePointPayment(Long userId, Long productOptionId, Long discountPolicyId) {
             this.userId = userId;
             this.productOptionId = productOptionId;
             this.discountPolicyId = discountPolicyId;
-            this.regularPrice = regularPrice;
         }
 
         public Long getUserId() {
@@ -36,10 +33,6 @@ public class PointPayment {
 
         public Long getDiscountPolicyId() {
             return discountPolicyId;
-        }
-
-        public Integer getRegularPrice() {
-            return regularPrice;
         }
     }
 
