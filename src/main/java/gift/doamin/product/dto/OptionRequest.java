@@ -6,8 +6,8 @@ import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Positive;
 
-@Schema(description = "옵션 추가, 삭제 요청")
-public class OptionForm {
+@Schema(description = "옵션 추가, 수정 요청")
+public class OptionRequest {
 
     @Schema(description = "옵션명")
     @Pattern(regexp = "^[ㄱ-ㅎㅏ-ㅣ가-힣\\w ()\\[\\]+\\-&/_]{1,50}$", message = "이름 형식이 잘못되었습니다.")
@@ -18,7 +18,7 @@ public class OptionForm {
     @Max(99_999_999)
     private Integer quantity;
 
-    public OptionForm(String name, Integer quantity) {
+    public OptionRequest(String name, Integer quantity) {
         this.name = name;
         this.quantity = quantity;
     }

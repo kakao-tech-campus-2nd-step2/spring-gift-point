@@ -1,18 +1,12 @@
 package gift.doamin.product.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.PositiveOrZero;
-import java.util.List;
 
-@Schema(description = "상품 등록, 수정 요청")
-public class ProductForm {
-
-    @Schema(description = "등록한 사용자 id")
-    private Long userId;
+@Schema(description = "상품 수정 요청")
+public class ProductUpdateRequest {
 
     @Schema(description = "상품의 카테고리 id")
     @NotNull
@@ -31,22 +25,11 @@ public class ProductForm {
     @NotNull
     private String imageUrl;
 
-    @Schema(description = "상품의 옵션 목록")
-    @NotEmpty
-    @Valid
-    private List<OptionForm> options;
-
-    public ProductForm(Long category_id, String name, Integer price, String imageUrl,
-        List<OptionForm> options) {
+    public ProductUpdateRequest(Long category_id, String name, Integer price, String imageUrl) {
         this.category_id = category_id;
         this.name = name;
         this.price = price;
         this.imageUrl = imageUrl;
-        this.options = options;
-    }
-
-    public Long getUserId() {
-        return userId;
     }
 
     public Long getCategory_id() {
@@ -63,13 +46,5 @@ public class ProductForm {
 
     public String getImageUrl() {
         return imageUrl;
-    }
-
-    public List<OptionForm> getOptions() {
-        return options;
-    }
-
-    public void setUserId(Long userId) {
-        this.userId = userId;
     }
 }

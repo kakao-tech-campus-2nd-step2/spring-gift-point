@@ -1,7 +1,7 @@
 package gift.doamin.user.service;
 
-import gift.doamin.user.dto.LoginForm;
-import gift.doamin.user.dto.SignUpForm;
+import gift.doamin.user.dto.LoginRequest;
+import gift.doamin.user.dto.SignUpRequest;
 import gift.doamin.user.entity.RefreshToken;
 import gift.doamin.user.entity.User;
 import gift.doamin.user.entity.UserRole;
@@ -10,7 +10,8 @@ import gift.doamin.user.exception.InvalidSignUpFormException;
 import gift.doamin.user.exception.UserNotFoundException;
 import gift.doamin.user.repository.JpaUserRepository;
 import gift.doamin.user.repository.RefreshTokenRepository;
-import gift.global.JwtProvider;
+import gift.global.util.JwtDto;
+import gift.global.util.JwtProvider;
 import java.util.Optional;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -31,34 +32,30 @@ public class AuthService {
         this.refreshTokenRepository = refreshTokenRepository;
     }
 
-    public void signUp(SignUpForm signUpForm) {
-        String email = signUpForm.getEmail();
+    public JwtDto signUp(SignUpRequest signUpRequest) {
+        String email = signUpRequest.getEmail();
         if (userRepository.existsByEmail(email)) {
             throw new InvalidSignUpFormException("중복된 이메일은 사용할 수 없습니다");
         }
 
-        UserRole role = signUpForm.getRole();
-        if (UserRole.ADMIN == role) {
-            throw new InvalidSignUpFormException("ADMIN으로 가입하실 수 없습니다.");
-        }
+        String password = passwordEncoder.encode(signUpRequest.getPassword());
 
-        String password = passwordEncoder.encode(signUpForm.getPassword());
-        String name = signUpForm.getName();
+        User user = new User(email, password, null, UserRole.USER);
+        user = userRepository.save(user);
 
-        User user = new User(email, password, name, role);
-        userRepository.save(user);
+        return genrateToken(user);
     }
 
-    public String login(LoginForm loginForm) {
-        String email = loginForm.getEmail();
-        String password = loginForm.getPassword();
+    public JwtDto login(LoginRequest loginRequest) {
+        String email = loginRequest.getEmail();
+        String password = loginRequest.getPassword();
 
         Optional<User> user = userRepository.findByEmail(email);
         if (user.isEmpty() || !passwordEncoder.matches(password, user.get().getPassword())) {
             throw new UserNotFoundException();
         }
 
-        return jwtProvider.generateToken(user.get().getId(), user.get().getRole());
+        return genrateToken(user.get());
     }
 
     public String makeNewAccessToken(String refreshToken) {
@@ -70,6 +67,18 @@ public class AuthService {
             .orElseThrow(InvalidRefreshTokenException::new);
 
         User user = tokenEntity.getUser();
-        return jwtProvider.generateToken(user.getId(), user.getRole());
+        return jwtProvider.generateAccessToken(user.getId(), user.getRole());
+    }
+
+    private JwtDto genrateToken(User user) {
+        JwtDto jwt = jwtProvider.generateToken(user.getId(), user.getRole());
+
+        RefreshToken refreshToken = refreshTokenRepository.findByUser(user)
+            .orElseGet(() -> new RefreshToken(jwt.getRefreshToken(), user));
+
+        refreshToken.setToken(jwt.getRefreshToken());
+
+        refreshTokenRepository.save(refreshToken);
+        return jwt;
     }
 }

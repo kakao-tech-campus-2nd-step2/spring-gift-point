@@ -1,6 +1,6 @@
 package gift.doamin.wishlist.entity;
 
-import gift.doamin.product.entity.Product;
+import gift.doamin.product.entity.Option;
 import gift.doamin.user.entity.User;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -20,15 +20,15 @@ public class Wish {
     private User user;
 
     @ManyToOne(optional = false)
-    private Product product;
+    private Option option;
 
     @Column(nullable = false)
     private Integer quantity;
 
 
-    public Wish(User user, Product product, Integer quantity) {
+    public Wish(User user, Option option, Integer quantity) {
         this.user = user;
-        this.product = product;
+        this.option = option;
         this.quantity = quantity;
     }
 
@@ -44,8 +44,8 @@ public class Wish {
         return user;
     }
 
-    public Product getProduct() {
-        return product;
+    public Option getOption() {
+        return option;
     }
 
     public Integer getQuantity() {

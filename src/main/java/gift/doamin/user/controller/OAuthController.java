@@ -2,11 +2,13 @@ package gift.doamin.user.controller;
 
 import gift.doamin.user.dto.KakaoOAuthTokenResponse;
 import gift.doamin.user.service.OAuthService;
+import gift.global.util.JwtDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -37,14 +39,15 @@ public class OAuthController {
     @GetMapping("login/oauth2/code/kakao")
     public ResponseEntity<Void> kakaoLogin(@RequestParam(name = "code") String authorizeCode) {
         KakaoOAuthTokenResponse kakaoOAuthToken = oAuthService.requestToken(authorizeCode);
-        String myRefreshToken = oAuthService.authenticate(kakaoOAuthToken);
+        JwtDto tokens = oAuthService.authenticate(kakaoOAuthToken);
 
-        ResponseCookie cookie = ResponseCookie.from("refreshToken", myRefreshToken)
+        ResponseCookie cookie = ResponseCookie.from("refreshToken", tokens.getRefreshToken())
             .httpOnly(true)
             .maxAge(12 * 60 * 60)
-            .path("/api/auth/accessToken")
+            .path("/api/members/accessToken")
             .build();
         return ResponseEntity.ok()
+            .header(HttpHeaders.AUTHORIZATION, tokens.getAccessToken())
             .header("Set-Cookie", cookie.toString())
             .build();
     }

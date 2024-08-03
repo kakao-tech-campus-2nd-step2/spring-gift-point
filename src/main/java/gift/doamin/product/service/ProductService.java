@@ -3,9 +3,10 @@ package gift.doamin.product.service;
 import gift.doamin.category.entity.Category;
 import gift.doamin.category.exception.CategoryNotFoundException;
 import gift.doamin.category.repository.JpaCategoryRepository;
-import gift.doamin.product.dto.OptionForm;
-import gift.doamin.product.dto.ProductForm;
-import gift.doamin.product.dto.ProductParam;
+import gift.doamin.product.dto.OptionRequest;
+import gift.doamin.product.dto.ProductCreateRequest;
+import gift.doamin.product.dto.ProductResponse;
+import gift.doamin.product.dto.ProductUpdateRequest;
 import gift.doamin.product.entity.Options;
 import gift.doamin.product.entity.Product;
 import gift.doamin.product.exception.NotEnoughAutorityException;
@@ -14,12 +15,12 @@ import gift.doamin.product.repository.JpaProductRepository;
 import gift.doamin.user.entity.User;
 import gift.doamin.user.exception.UserNotFoundException;
 import gift.doamin.user.repository.JpaUserRepository;
-import java.util.Optional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class ProductService {
@@ -35,57 +36,61 @@ public class ProductService {
         this.categoryRepository = categoryRepository;
     }
 
-    public ProductParam create(ProductForm productForm) {
-        if (productForm.getName().contains("카카오")) {
+    @Transactional
+    public ProductResponse create(Long userId, ProductCreateRequest productCreateRequest) {
+        if (productCreateRequest.getName().contains("카카오")) {
             throw new NotEnoughAutorityException("'카카오'가 포함된 문구는 담당 MD와 협의한 경우에만 사용할 수 있습니다.");
         }
 
-        User user = userRepository.findById(productForm.getUserId())
+        User user = userRepository.findById(userId)
             .orElseThrow(UserNotFoundException::new);
 
-        Category category = categoryRepository.findById(productForm.getCategory_id())
+        Category category = categoryRepository.findById(productCreateRequest.getCategory_id())
             .orElseThrow(CategoryNotFoundException::new);
 
-        Product product = new Product(user, category, productForm.getName(), productForm.getPrice(),
-            productForm.getImageUrl());
+        Product product = new Product(user, category, productCreateRequest.getName(),
+            productCreateRequest.getPrice(), productCreateRequest.getImageUrl());
 
-        Options options = new Options(productForm.getOptions().stream()
-            .map(OptionForm::toEntity)
+        Options options = new Options(productCreateRequest.getOptions().stream()
+            .map(OptionRequest::toEntity)
             .toList());
         options.toList().forEach(product::addOption);
 
         Product actual = productRepository.save(product);
 
-        return new ProductParam(actual);
+        return new ProductResponse(actual);
     }
 
-    public Page<ProductParam> getPage(int pageNum) {
-
-        Pageable pageable = PageRequest.of(pageNum, 5);
-        return productRepository.findAll(pageable).map(ProductParam::new);
+    public Page<ProductResponse> getPage(Pageable pageable, Long categoryId) {
+        if (categoryId.equals(-1L)) {
+            return productRepository.findAll(pageable).map(ProductResponse::new);
+        }
+        return productRepository.findAllByCategoryId(categoryId, pageable)
+            .map(ProductResponse::new);
     }
 
-    public ProductParam readOne(Long id) {
+    public Page<ProductResponse> getPage(int pageNum) {
+        return this.getPage(PageRequest.of(pageNum, 5), -1L);
+    }
+
+    public ProductResponse readOne(Long id) {
 
         Product product = productRepository.findById(id).orElseThrow(ProductNotFoundException::new);
 
-        return new ProductParam(product);
+        return new ProductResponse(product);
     }
 
-    @PreAuthorize("hasRole('ROLE_ADMIN') or @productService.isOwner(authentication.name, #id)")
-    public ProductParam update(Long id, ProductForm productForm) {
+    @Transactional
+    @PreAuthorize("hasRole('ROLE_ADMIN') or @productService.isOwner(authentication.name, #productId)")
+    public ProductResponse update(Long productId, ProductUpdateRequest updateRequest) {
 
-        Optional<Product> target = productRepository.findById(id);
-        if (target.isEmpty()) {
-            return create(productForm);
-        }
+        Product product = productRepository.findById(productId)
+            .orElseThrow(ProductNotFoundException::new);
 
-        Product product = target.get();
-
-        Category category = categoryRepository.findById(productForm.getCategory_id())
+        Category category = categoryRepository.findById(updateRequest.getCategory_id())
             .orElseThrow(CategoryNotFoundException::new);
-        product.updateAll(productForm, category);
-        return new ProductParam(productRepository.save(product));
+        product.updateAll(updateRequest, category);
+        return new ProductResponse(product);
     }
 
     @PreAuthorize("hasRole('ROLE_ADMIN') or @productService.isOwner(authentication.name, #id)")

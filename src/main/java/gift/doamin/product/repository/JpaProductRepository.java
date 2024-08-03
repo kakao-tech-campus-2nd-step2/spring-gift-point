@@ -11,4 +11,6 @@ public interface JpaProductRepository extends JpaRepository<Product, Long> {
     Page<Product> findAll(Pageable pageable);
 
     List<Product> findByName(String name);
+
+    Page<Product> findAllByCategoryId(Long categoryId, Pageable pageable);
 }

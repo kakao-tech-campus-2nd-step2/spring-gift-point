@@ -14,7 +14,8 @@ import gift.doamin.user.repository.JpaUserRepository;
 import gift.doamin.user.repository.KakaoOAuthTokenRepository;
 import gift.doamin.user.repository.RefreshTokenRepository;
 import gift.doamin.user.util.AuthorizationOAuthUriBuilder;
-import gift.global.JwtProvider;
+import gift.global.util.JwtDto;
+import gift.global.util.JwtProvider;
 import java.time.LocalDateTime;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -75,7 +76,7 @@ public class OAuthService {
     }
 
     @Transactional
-    public String authenticate(KakaoOAuthTokenResponse tokenResponse) {
+    public JwtDto authenticate(KakaoOAuthTokenResponse tokenResponse) {
 
         ResponseEntity<KakaoOAuthUserInfoResponse> entity = restClient.get()
             .uri(providerProperties.userInfoUri())
@@ -95,13 +96,13 @@ public class OAuthService {
 
         saveToken(user, tokenResponse);
 
-        String myRefreshToken = jwtProvider.generateRefreshToken();
+        JwtDto tokens = jwtProvider.generateToken(user.getId(), user.getRole());
         RefreshToken refreshToken = refreshTokenRepository.findByUser(user)
-            .orElseGet(() -> new RefreshToken(myRefreshToken, user));
-        refreshToken.setToken(myRefreshToken);
+            .orElseGet(() -> new RefreshToken(tokens.getRefreshToken(), user));
+        refreshToken.setToken(tokens.getRefreshToken());
         refreshTokenRepository.save(refreshToken);
 
-        return myRefreshToken;
+        return tokens;
     }
 
     @Transactional

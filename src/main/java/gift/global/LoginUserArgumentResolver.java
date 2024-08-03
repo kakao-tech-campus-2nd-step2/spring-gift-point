@@ -1,5 +1,6 @@
 package gift.global;
 
+import gift.doamin.user.dto.UserDto;
 import gift.doamin.user.exception.UserNotFoundException;
 import gift.doamin.user.repository.JpaUserRepository;
 import org.springframework.core.MethodParameter;
@@ -12,11 +13,11 @@ import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.ModelAndViewContainer;
 
 @Component
-public class LoginMemberArgumentResolver implements HandlerMethodArgumentResolver {
+public class LoginUserArgumentResolver implements HandlerMethodArgumentResolver {
 
     private final JpaUserRepository userRepository;
 
-    public LoginMemberArgumentResolver(JpaUserRepository userRepository) {
+    public LoginUserArgumentResolver(JpaUserRepository userRepository) {
         this.userRepository = userRepository;
     }
 
@@ -36,6 +37,6 @@ public class LoginMemberArgumentResolver implements HandlerMethodArgumentResolve
 
         Long userId = Long.parseLong(authentication.getName());
 
-        return userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
+        return new UserDto(userRepository.findById(userId).orElseThrow(UserNotFoundException::new));
     }
 }

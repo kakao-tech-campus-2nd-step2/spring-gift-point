@@ -35,7 +35,7 @@ public class MemoryWishListRepository implements WishListRepository {
     @Override
     public Wish findByUserIdAndProductId(Long userId, Long productId) {
         for (Wish wish : wishLists.values()) {
-            if (wish.getUser().getId().equals(userId) && wish.getProduct().getId()
+            if (wish.getUser().getId().equals(userId) && wish.getOption().getId()
                 .equals(productId)) {
                 return wish;
             }
@@ -56,7 +56,7 @@ public class MemoryWishListRepository implements WishListRepository {
     @Override
     public boolean existsByUserIdAndProductId(Long userId, Long productId) {
         for (Wish wish : wishLists.values()) {
-            if (wish.getUser().getId().equals(userId) && wish.getProduct().getId()
+            if (wish.getUser().getId().equals(userId) && wish.getOption().getId()
                 .equals(productId)) {
                 return true;
             }

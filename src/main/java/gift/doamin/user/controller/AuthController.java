@@ -1,13 +1,15 @@
 package gift.doamin.user.controller;
 
-import gift.doamin.user.dto.LoginForm;
-import gift.doamin.user.dto.SignUpForm;
+import gift.doamin.user.dto.LoginRequest;
+import gift.doamin.user.dto.SignUpRequest;
 import gift.doamin.user.service.AuthService;
+import gift.global.util.JwtDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,7 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @Tag(name = "회원", description = "로그인, 회원가입, 토큰 갱신 API")
 @RestController
-@RequestMapping("/api/auth")
+@RequestMapping("/api/members")
 public class AuthController {
 
     private final AuthService authService;
@@ -30,17 +32,24 @@ public class AuthController {
 
     @Operation(summary = "회원가입", description = "이메일과 비밀번호를 입력하여 새로운 회원으로 등록합니다.")
     @ResponseStatus(HttpStatus.CREATED)
-    @PostMapping("/signup")
-    public void signUp(@Valid @RequestBody SignUpForm signUpForm) {
-        authService.signUp(signUpForm);
+    @PostMapping("/register")
+    public ResponseEntity<Void> signUp(@Valid @RequestBody SignUpRequest signUpRequest) {
+        JwtDto tokens = authService.signUp(signUpRequest);
+
+        return ResponseEntity.status(HttpStatus.CREATED)
+            .header(HttpHeaders.AUTHORIZATION, tokens.getAccessToken())
+            .header("Set-Cookie", makeRefreshTokenCookie(tokens.getRefreshToken()))
+            .build();
     }
 
     @Operation(summary = "로그인", description = "이메일과 비밀번호로 로그인합니다.")
     @PostMapping("/login")
-    public ResponseEntity<Void> login(@Valid @RequestBody LoginForm loginForm) {
-        String token = authService.login(loginForm);
+    public ResponseEntity<Void> login(@Valid @RequestBody LoginRequest loginRequest) {
+        JwtDto tokens = authService.login(loginRequest);
+
         return ResponseEntity.ok()
-            .header(HttpHeaders.AUTHORIZATION, token)
+            .header(HttpHeaders.AUTHORIZATION, tokens.getAccessToken())
+            .header("Set-Cookie", makeRefreshTokenCookie(tokens.getRefreshToken()))
             .build();
     }
 
@@ -51,5 +60,14 @@ public class AuthController {
         return ResponseEntity.ok()
             .header(HttpHeaders.AUTHORIZATION, accessToken)
             .build();
+    }
+
+    private static String makeRefreshTokenCookie(String refreshToken) {
+        return ResponseCookie.from("refreshToken", refreshToken)
+            .httpOnly(true)
+            .maxAge(12 * 60 * 60)
+            .path("/api/members/accessToken")
+            .build()
+            .toString();
     }
 }

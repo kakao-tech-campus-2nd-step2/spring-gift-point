@@ -7,8 +7,8 @@ import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
 import static org.mockito.Mockito.mock;
 
-import gift.doamin.category.dto.CategoryForm;
-import gift.doamin.category.dto.CategoryParam;
+import gift.doamin.category.dto.CategoryRequest;
+import gift.doamin.category.dto.CategoryResponse;
 import gift.doamin.category.entity.Category;
 import gift.doamin.category.exception.CategoryNotFoundException;
 import gift.doamin.category.repository.JpaCategoryRepository;
@@ -29,61 +29,61 @@ class CategoryServiceTest {
 
     @Test
     void createCategory() {
-        categoryService.createCategory(new CategoryForm("test"));
+        given(categoryRepository.existsByName(any())).willReturn(false);
+        given(categoryRepository.save(any())).willReturn(
+            new Category("test", "#000000", "", "테스트 카테고리"));
+        categoryService.createCategory(new CategoryRequest("test", "#000000", "", "테스트 카테고리"));
 
         then(categoryRepository).should().save(any());
     }
 
     @Test
     void getAllCategories() {
-        given(categoryRepository.findAll())
-            .willReturn(List.of(new Category("test1"), new Category("test2")));
+        given(categoryRepository.findAll()).willReturn(
+            List.of(new Category("test1", "#000000", "", "테스트 카테고리"),
+                new Category("test2", "#000000", "", "테스트 카테고리")));
 
-        List<CategoryParam> categories = categoryService.getAllCategories();
+        List<CategoryResponse> categories = categoryService.getAllCategories();
 
         assertThat(categories.size()).isEqualTo(2);
     }
 
     @Test
     void getCategory_existing() {
-        given(categoryRepository.findById(1L))
-            .willReturn(Optional.of(new Category("test")));
+        given(categoryRepository.findById(1L)).willReturn(
+            Optional.of(new Category("test", "#000000", "", "테스트 카테고리")));
 
-        CategoryParam category = categoryService.getCategory(1L);
+        CategoryResponse category = categoryService.getCategory(1L);
 
         assertThat(category.getName()).isEqualTo("test");
     }
 
     @Test
     void getCategory_nonExistent() {
-        given(categoryRepository.findById(2L))
-            .willReturn(Optional.empty());
+        given(categoryRepository.findById(2L)).willReturn(Optional.empty());
 
-        assertThatThrownBy(() -> categoryService.getCategory(2L))
-            .isInstanceOf(CategoryNotFoundException.class);
+        assertThatThrownBy(() -> categoryService.getCategory(2L)).isInstanceOf(
+            CategoryNotFoundException.class);
     }
 
     @Test
     void updateCategory_existing() {
-        given(categoryRepository.findById(1L))
-            .willReturn(Optional.of(new Category("test")));
-        CategoryForm categoryForm = new CategoryForm("test2");
-        categoryForm.setId(1L);
+        given(categoryRepository.findById(1L)).willReturn(
+            Optional.of(new Category("test", "#000000", "", "테스트 카테고리")));
+        CategoryRequest categoryRequest = new CategoryRequest("test2", "#000000", "", "테스트 카테고리");
 
-        categoryService.updateCategory(categoryForm);
+        var categoryResponse = categoryService.updateCategory(1L, categoryRequest);
 
-        then(categoryRepository).should().save(any());
+        assertThat(categoryResponse.getName()).isEqualTo("test2");
     }
 
     @Test
     void updateCategory_nonExistent() {
-        given(categoryRepository.findById(2L))
-            .willReturn(Optional.empty());
-        CategoryForm categoryForm = new CategoryForm("test2");
-        categoryForm.setId(2L);
+        given(categoryRepository.findById(2L)).willReturn(Optional.empty());
+        CategoryRequest categoryRequest = new CategoryRequest("test2", "#000000", "", "테스트 카테고리");
 
-        assertThatThrownBy(() -> categoryService.updateCategory(categoryForm))
-            .isInstanceOf(CategoryNotFoundException.class);
+        assertThatThrownBy(() -> categoryService.updateCategory(2L, categoryRequest)).isInstanceOf(
+            CategoryNotFoundException.class);
     }
 
     @Test

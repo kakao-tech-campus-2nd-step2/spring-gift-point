@@ -1,5 +1,6 @@
 package gift.global;
 
+import gift.global.util.JwtProvider;
 import io.jsonwebtoken.Claims;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;

@@ -1,12 +1,13 @@
 package gift.doamin.category.service;
 
-import gift.doamin.category.dto.CategoryForm;
-import gift.doamin.category.dto.CategoryParam;
+import gift.doamin.category.dto.CategoryRequest;
+import gift.doamin.category.dto.CategoryResponse;
 import gift.doamin.category.entity.Category;
 import gift.doamin.category.exception.CategoryNotFoundException;
 import gift.doamin.category.repository.JpaCategoryRepository;
 import java.util.List;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class CategoryService {
@@ -17,27 +18,33 @@ public class CategoryService {
         this.categoryRepository = categoryRepository;
     }
 
-    public void createCategory(CategoryForm categoryForm) {
-        categoryRepository.save(new Category(categoryForm.getName()));
+    public CategoryResponse createCategory(CategoryRequest categoryRequest) {
+        if (categoryRepository.existsByName(categoryRequest.getName())) {
+            throw new IllegalArgumentException("중복된 카테고리명입니다.");
+        }
+
+        Category category = categoryRepository.save(categoryRequest.toEntity());
+        return new CategoryResponse(category);
     }
 
-    public List<CategoryParam> getAllCategories() {
-        return categoryRepository.findAll().stream().map(CategoryParam::new).toList();
+    public List<CategoryResponse> getAllCategories() {
+        return categoryRepository.findAll().stream().map(CategoryResponse::new).toList();
     }
 
-    public CategoryParam getCategory(Long id) {
-        return categoryRepository.findById(id).map(CategoryParam::new)
+    public CategoryResponse getCategory(Long id) {
+        return categoryRepository.findById(id).map(CategoryResponse::new)
             .orElseThrow(CategoryNotFoundException::new);
     }
 
-    public void updateCategory(CategoryForm categoryForm) {
+    @Transactional
+    public CategoryResponse updateCategory(Long categoryId, CategoryRequest categoryRequest) {
 
-        Category category = categoryRepository.findById(categoryForm.getId())
+        Category category = categoryRepository.findById(categoryId)
             .orElseThrow(CategoryNotFoundException::new);
 
-        category.update(categoryForm);
+        category.update(categoryRequest);
 
-        categoryRepository.save(category);
+        return new CategoryResponse(category);
     }
 
     public void deleteCategory(Long id) {
