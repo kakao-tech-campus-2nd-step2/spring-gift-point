@@ -84,6 +84,26 @@ public class Member {
         return points;
     }
 
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public void setPoints(int points) {
+        this.points = points;
+    }
+
+    public void setWishes(List<Wish> wishes) {
+        this.wishes = wishes;
+    }
+
     public void addPoints(int addPoints){
         this.points = this.points + addPoints;
     }
