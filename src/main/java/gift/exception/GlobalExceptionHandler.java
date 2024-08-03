@@ -8,7 +8,7 @@ import gift.exception.memberException.InvalidLoginException;
 import gift.exception.memberException.NormalMemberSignUpException;
 import gift.exception.optionException.DuplicatedOptionException;
 import gift.exception.optionException.OptionQuantityException;
-import gift.exception.orderException.deductPointException;
+import gift.exception.orderException.DeductPointException;
 import gift.exception.productException.ProductNotFoundException;
 import gift.exception.wishException.DuplicatedWishException;
 import io.jsonwebtoken.JwtException;
@@ -159,8 +159,8 @@ public class GlobalExceptionHandler {
 
     // order exception
 
-    @ExceptionHandler(value = deductPointException.class)
-    public ResponseEntity<ErrorResponse> handledeductPointException(deductPointException e) {
+    @ExceptionHandler(value = DeductPointException.class)
+    public ResponseEntity<ErrorResponse> handledeductPointException(DeductPointException e) {
         ErrorResponse errorResponse = new ErrorResponse(HttpStatus.BAD_REQUEST.value(), e.getMessage());
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                 .body(errorResponse);
