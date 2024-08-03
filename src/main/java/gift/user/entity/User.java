@@ -14,7 +14,6 @@ import lombok.Setter;
 
 @Entity
 @Getter
-@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
@@ -56,5 +55,9 @@ public class User extends BaseEntity {
     if (this.point == null){
       this.point = 0;
     }
+  }
+
+  public void setPoint(Integer point) {
+    this.point = point;
   }
 }

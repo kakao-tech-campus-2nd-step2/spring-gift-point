@@ -18,7 +18,6 @@ import lombok.*;
 
 @Entity
 @Getter
-@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
@@ -58,9 +57,8 @@ public class Product extends BaseEntity {
       this.options = new ArrayList<>();
     }
 
-
     options.add(option);
-    option.setProduct(this);
+    option.setAssociateProduct(this);
   }
 
   public void removeOption(Option option) {

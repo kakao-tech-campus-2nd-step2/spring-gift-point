@@ -4,7 +4,6 @@ import gift.category.dto.CategoryRequestDto;
 import gift.category.dto.CategoryResponseDto;
 import gift.category.entity.Category;
 import gift.category.repository.CategoryRepository;
-import gift.exception.BadRequestException;
 import gift.exception.DuplicateResourceException;
 import gift.exception.ResourceNotFoundException;
 import gift.product.repository.ProductRepository;
@@ -19,15 +18,11 @@ public class CategoryService {
 
   private final CategoryRepository categoryRepository;
 
-  private final ProductRepository productRepository;
 
-  public CategoryService(CategoryRepository categoryRepository,
-      ProductRepository productRepository) {
+  public CategoryService(CategoryRepository categoryRepository) {
     this.categoryRepository = categoryRepository;
-    this.productRepository = productRepository;
   }
 
-  @Transactional
   public List<CategoryResponseDto> getAllCategories() {
     List<Category> categories = categoryRepository.findAll();
 
@@ -65,7 +60,6 @@ public class CategoryService {
     return CategoryResponseDto.toDto(category);
   }
 
-  @Transactional
   public CategoryResponseDto getCategory(Long categoryId) {
     Category category = categoryRepository.findById(categoryId)
         .orElseThrow(() -> new ResourceNotFoundException("해당 카테고리를 찾을 수 없습니다."));

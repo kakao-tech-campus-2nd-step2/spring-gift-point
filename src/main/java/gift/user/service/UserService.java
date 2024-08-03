@@ -55,6 +55,7 @@ public class UserService {
     return new TokenResponseDto(token, user.getEmail());
   }
 
+  @Transactional
   public TokenResponseDto authenticate(String email, String password) {
     User user = userRepository.findByEmail(email)
         .orElseThrow(() -> new AuthenticationFailedException("이메일 또는 비밀번호가 올바르지 않습니다."));
@@ -85,6 +86,7 @@ public class UserService {
     return new PointResponseDto(user.getPoint());
   }
 
+  @Transactional
   public PointResponseDto managePoint(Long userId, PointRequestDto pointRequestDto) {
     User user = userRepository.findById(userId)
         .orElseThrow(() -> new ResourceNotFoundException("해당 유저를 찾을 수 없습니다."));

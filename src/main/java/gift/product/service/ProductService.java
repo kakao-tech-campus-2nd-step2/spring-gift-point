@@ -34,7 +34,6 @@ public class ProductService {
   }
 
 
-  @Transactional
   public Page<ProductResponseDto> getAllProducts(Long categoryId, Pageable pageable) {
     if (!categoryRepository.existsById(categoryId)) {
       throw new ResourceNotFoundException("해당 카테고리를 찾을 수 없습니다.");
