@@ -40,4 +40,5 @@ out/
 .DS_Store
 
 ### properties ###
+application-db.properties
 kakao.properties
