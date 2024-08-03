@@ -5,7 +5,7 @@ public class InvalidPointException extends RuntimeException {
     private static final String INVALID_POINT_MESSAGE = "보유한 포인트를 초과하여 사용할 수 없습니다.";
 
     public InvalidPointException() {
-        super();
+        super(INVALID_POINT_MESSAGE);
     }
 
     public InvalidPointException(String message) {
