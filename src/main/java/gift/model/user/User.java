@@ -34,6 +34,7 @@ public class User {
         this.email = email;
         this.password = password;
         this.role = role;
+        this.point = 0;
     }
 
     // 비밀번호 검증 메서드
@@ -44,6 +45,11 @@ public class User {
     // 포인트 충전
     public void addPoints(int point) {
         this.point += point;
+    }
+
+    // 포인트 차감
+    public void subtractPoints(int point) {
+        this.point -= point;
     }
 
     // getters, setters
