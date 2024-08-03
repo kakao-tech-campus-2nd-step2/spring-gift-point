@@ -35,13 +35,13 @@ public class DiscountPolicyService {
     }
 
     public Page<DiscountPolicySimple> getDiscountPolicyList(getList param) {
-        Page<DiscountPolicyEntity> discountPolicy = discountPolicyRepository.findAllByIsDeleteAndEndDateLessThanEqual(
+        Page<DiscountPolicyEntity> discountPolicy = discountPolicyRepository.findAllByIsDeleteAndEndDateAfter(
             0, param.toPageable(), LocalDateTime.now());
         return discountPolicyMapper.toSimpleList(discountPolicy);
     }
 
     public DiscountPolicyDetail getDiscountPolicy(long id) {
-        DiscountPolicyEntity discountPolicy = discountPolicyRepository.findByIdAndIsDeleteAndEndDateLessThanEqual(
+        DiscountPolicyEntity discountPolicy = discountPolicyRepository.findByIdAndIsDeleteAndEndDateAfter(
                 id, 0, LocalDateTime.now())
             .orElseThrow(() -> new BaseHandler(HttpStatus.NOT_FOUND, "해당 할인 정책이 없습니다."));
 
@@ -68,7 +68,7 @@ public class DiscountPolicyService {
 
     @Transactional
     public Long deleteDiscountPolicy(long id) {
-        DiscountPolicyEntity discountPolicy = discountPolicyRepository.findByIdAndIsDeleteAndEndDateLessThanEqual(
+        DiscountPolicyEntity discountPolicy = discountPolicyRepository.findByIdAndIsDeleteAndEndDateAfter(
                 id, 0, LocalDateTime.now())
             .orElseThrow(() -> new BaseHandler(HttpStatus.NOT_FOUND, "해당 할인 정책이 없습니다."));
 

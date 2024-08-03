@@ -10,6 +10,6 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface DiscountPolicyRepository extends JpaRepository<DiscountPolicyEntity,Long> {
-    Page<DiscountPolicyEntity> findAllByIsDeleteAndEndDateLessThanEqual(Integer isDelete, Pageable page, LocalDateTime now);
-    Optional<DiscountPolicyEntity> findByIdAndIsDeleteAndEndDateLessThanEqual(Long id, Integer isDelete, LocalDateTime now);
+    Page<DiscountPolicyEntity> findAllByIsDeleteAndEndDateAfter(Integer isDelete, Pageable page, LocalDateTime now);
+    Optional<DiscountPolicyEntity> findByIdAndIsDeleteAndEndDateAfter(Long id, Integer isDelete, LocalDateTime now);
 }
