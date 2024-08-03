@@ -79,4 +79,8 @@ public class Member {
     public Integer getPoint() {
         return point;
     }
+
+    public void subtract(Integer requestPoint) {
+        this.point -= requestPoint;
+    }
 }
