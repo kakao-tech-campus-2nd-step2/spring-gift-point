@@ -1,5 +1,6 @@
 package gift.member.application.resolver;
 
+import gift.member.presentation.LoginMember;
 import gift.member.util.JwtTokenUtil;
 import gift.member.persistence.MemberRepository;
 import gift.member.application.service.MemberService;
@@ -28,8 +29,7 @@ public class LoginMemberArgumentResolver implements HandlerMethodArgumentResolve
 
     @Override
     public boolean supportsParameter(MethodParameter parameter) {
-        boolean hashLoginUserAnnotation = parameter.hasParameterAnnotation(
-            MemberController.LoginMember.class);
+        boolean hashLoginUserAnnotation = parameter.hasParameterAnnotation(LoginMember.class);
         return hashLoginUserAnnotation;
     }
 
