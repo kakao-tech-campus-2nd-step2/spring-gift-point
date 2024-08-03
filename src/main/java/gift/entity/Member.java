@@ -15,9 +15,14 @@ public class Member {
     @Column(nullable = false)
     private String password;
 
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinColumn(name = "point_id")
+    private Point point;
+
     public Member(String email, String password) {
         this.email = email;
         this.password = password;
+        this.point = new Point();
     }
 
     protected Member() {
@@ -29,5 +34,9 @@ public class Member {
 
     public String getEmail() {
         return email;
+    }
+
+    public int getPoint() {
+        return point.getValue();
     }
 }
