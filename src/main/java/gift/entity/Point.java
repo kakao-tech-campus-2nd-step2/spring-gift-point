@@ -11,13 +11,17 @@ public class Point {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private int point;
+    private int value;
 
     public Point() {
-        this.point = 0;
+        this.value = 0;
     }
 
     public int getValue() {
-        return point;
+        return value;
+    }
+
+    public void subtractValue(int discountedPrice) {
+        this.value -= discountedPrice;
     }
 }
