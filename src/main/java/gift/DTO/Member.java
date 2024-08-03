@@ -9,6 +9,7 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.PositiveOrZero;
 import jakarta.validation.constraints.Size;
 import java.util.ArrayList;
 import java.util.List;
@@ -29,6 +30,8 @@ public class Member {
   @Column(nullable = false)
   private String password;
 
+  @PositiveOrZero
+  private int point;
   protected Member() {
 
   }
@@ -37,11 +40,13 @@ public class Member {
     this.id = id;
     this.email = email;
     this.password = password;
+    this.point=0;
   }
 
   public Member(String email, String password) {
     this.email = email;
     this.password = password;
+    this.point=0;
   }
 
   public Long getId() {
@@ -56,9 +61,23 @@ public class Member {
     return this.password;
   }
 
+  public int getPoint() {
+    return point;
+  }
+
   public boolean matchLoginInfo(MemberDto memberDtoByEmail) {
     return this.email.equals(memberDtoByEmail.getEmail()) && this.password.equals(
       memberDtoByEmail.getPassword());
   }
 
+  public void subtractPoint(int point) throws IllegalAccessException{
+    if(point>this.point){
+      throw new IllegalAccessException();
+    }
+    this.point-=point;
+  }
+
+  public void addPoint(int point){
+    this.point+=point;
+  }
 }

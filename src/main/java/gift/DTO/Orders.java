@@ -30,19 +30,23 @@ public class Orders {
   private LocalDateTime orderDateTime;
   private String message;
 
-  public Orders(Option option, int quantity, String message) {
+  private int usedPoint;
+
+  public Orders(Option option, int quantity, String message, int usedPoint) {
     this.option = option;
     this.quantity = quantity;
     this.orderDateTime = LocalDateTime.now();
     this.message = message;
+    this.usedPoint=usedPoint;
   }
 
-  public Orders(Long id, Option option, int quantity, String message) {
+  public Orders(Long id, Option option, int quantity, String message,int usedPoint) {
     this.id = id;
     this.option = option;
     this.quantity = quantity;
     this.orderDateTime = LocalDateTime.now();
     this.message = message;
+    this.usedPoint=usedPoint;
   }
 
   protected Orders() {
@@ -66,5 +70,9 @@ public class Orders {
 
   public String getMessage() {
     return message;
+  }
+
+  public int getUsedPoint() {
+    return usedPoint;
   }
 }

@@ -10,13 +10,16 @@ public class OrderDto {
   private final String orderDateTime;
   private final String message;
 
+  private final int usedPoint;
+
   public OrderDto(Long id, OptionDto optionDto, int quantity, String orderDateTime,
-    String message) {
+    String message,int usedPoint) {
     this.id = id;
     this.optionDto = optionDto;
     this.quantity = quantity;
     this.orderDateTime = orderDateTime;
     this.message = message;
+    this.usedPoint=usedPoint;
   }
 
   public Long getId() {
@@ -37,5 +40,9 @@ public class OrderDto {
 
   public String getMessage() {
     return message;
+  }
+
+  public int getUsedPoint() {
+    return usedPoint;
   }
 }

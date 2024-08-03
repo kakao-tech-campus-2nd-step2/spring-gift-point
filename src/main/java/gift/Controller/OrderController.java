@@ -24,9 +24,8 @@ public class OrderController {
 
   @PostMapping
   public ResponseEntity<ResponseOrderDto> orderOption(@RequestBody RequestOrderDto requestOrderDto,
-    @LoginUser MemberDto memberDto) {
-    ResponseOrderDto responseOrderDto = orderService.orderOption(requestOrderDto);
+    @LoginUser MemberDto memberDto) throws IllegalAccessException {
+    ResponseOrderDto responseOrderDto = orderService.orderOption(requestOrderDto, memberDto);
     return ResponseEntity.created(URI.create("/orders")).body(responseOrderDto);
   }
-
 }
