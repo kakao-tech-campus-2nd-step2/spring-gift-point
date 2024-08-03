@@ -5,15 +5,18 @@ import static org.mockito.BDDMockito.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
 
-import gift.product.dto.product.ClientProductDto;
-import gift.product.dto.product.ProductDto;
+import gift.product.dto.option.OptionDto;
+import gift.product.dto.product.ClientProductRequest;
+import gift.product.dto.product.ClientProductUpdateRequest;
 import gift.product.model.Category;
 import gift.product.model.Product;
 import gift.product.repository.CategoryRepository;
 import gift.product.repository.OptionRepository;
 import gift.product.repository.ProductRepository;
 import gift.product.service.ProductService;
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 import org.junit.jupiter.api.DisplayNameGeneration;
@@ -23,6 +26,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -47,14 +51,19 @@ class ProductServiceTest {
     @Test
     void 상품_추가() {
         //given
-        Category category = new Category(1L, "테스트카테고리");
+        Category category = new Category(1L, "테스트카테고리", "테스트컬러", "테스트주소", "테스트설명");
         Product product = new Product(1L, "테스트상품", 1500, "테스트주소", category);
-        given(categoryRepository.findByName("테스트카테고리")).willReturn(Optional.of(category));
+        given(categoryRepository.findById(category.getId())).willReturn(Optional.of(category));
+        List<OptionDto> optionDtos = new ArrayList<>();
+        optionDtos.add(new OptionDto("테스트옵션", 1));
 
         //when
         productService.insertProduct(
-            new ClientProductDto(product.getName(), product.getPrice(), product.getImageUrl(),
-                product.getCategory().getName()));
+            new ClientProductRequest(product.getName(),
+                product.getPrice(),
+                product.getImageUrl(),
+                product.getCategory().getId(),
+                optionDtos));
 
         //then
         then(productRepository).should().save(any());
@@ -64,7 +73,7 @@ class ProductServiceTest {
     @Test
     void 상품_조회() {
         //given
-        Category category = new Category(1L, "테스트카테고리");
+        Category category = new Category(1L, "테스트카테고리", "테스트컬러", "테스트주소", "테스트설명");
         Product product = new Product(1L, "테스트상품", 1500, "테스트주소", category);
         given(productRepository.findById(product.getId())).willReturn(Optional.of(product));
 
@@ -92,9 +101,11 @@ class ProductServiceTest {
         //given
         int PAGE = 1;
         int SIZE = 4;
-        String SORT = "name";
-        String DIRECTION = "desc";
-        Pageable pageable = PageRequest.of(PAGE, SIZE, Sort.Direction.fromString(DIRECTION), SORT);
+        Pageable pageable = PageRequest.of(PAGE, SIZE, Sort.Direction.fromString("desc"), "name");
+        Category category = new Category(1L, "테스트카테고리", "테스트컬러", "테스트주소", "테스트설명");
+        List<Product> products = new ArrayList<>();
+        products.add(new Product(1L, "테스트상품", 1000, "테스트주소", category));
+        given(productRepository.findAll(pageable)).willReturn(new PageImpl<>(products));
 
         //when
         productService.getProductAll(pageable);
@@ -104,16 +115,39 @@ class ProductServiceTest {
     }
 
     @Test
-    void 상품_수정() {
+    void 상품_전체_조회_페이지_특정_카테고리만() {
         //given
-        Category category = new Category(1L, "테스트카테고리");
-        Product product = new Product(1L, "테스트상품", 1500, "테스트주소", category);
-        given(productRepository.findById(product.getId())).willReturn(Optional.of(product));
-        given(categoryRepository.findByName("테스트카테고리")).willReturn(Optional.of(category));
+        int PAGE = 1;
+        int SIZE = 4;
+        Pageable pageable = PageRequest.of(PAGE, SIZE, Sort.Direction.fromString("desc"), "name");
+        Category category = new Category(1L, "테스트카테고리", "테스트컬러", "테스트주소", "테스트설명");
+        List<Product> products = new ArrayList<>();
+        products.add(new Product(1L, "테스트상품", 1000, "테스트주소", category));
+        given(productRepository.findAllByCategoryId(pageable,
+            category.getId())).willReturn(new PageImpl<>(products));
 
         //when
-        ProductDto updatedProductDto = new ClientProductDto("테스트상품수정", 2000, "테스트주소수정", "테스트카테고리");
-        productService.updateProduct(product.getId(), updatedProductDto);
+        productService.getProductAll(pageable, category.getId());
+
+        //then
+        then(productRepository).should().findAllByCategoryId(pageable, category.getId());
+    }
+
+    @Test
+    void 상품_수정() {
+        //given
+        Category category = new Category(1L, "테스트카테고리", "테스트컬러", "테스트주소", "테스트설명");
+        Product product = new Product(1L, "테스트상품", 1500, "테스트주소", category);
+        given(productRepository.findById(product.getId())).willReturn(Optional.of(product));
+        given(categoryRepository.findById(category.getId())).willReturn(Optional.of(category));
+
+        //when
+        ClientProductUpdateRequest clientProductUpdateRequest = new ClientProductUpdateRequest(
+            "테스트상품수정",
+            2000,
+            "테스트주소수정",
+            category.getId());
+        productService.updateProduct(product.getId(), clientProductUpdateRequest);
 
         //then
         then(productRepository).should().save(any());
@@ -122,7 +156,7 @@ class ProductServiceTest {
     @Test
     void 상품_삭제() {
         //given
-        Category category = new Category(1L, "테스트카테고리");
+        Category category = new Category(1L, "테스트카테고리", "테스트컬러", "테스트주소", "테스트설명");
         Product product = new Product(1L, "테스트상품", 1500, "테스트주소", category);
         given(productRepository.findById(product.getId())).willReturn(Optional.of(product));
 

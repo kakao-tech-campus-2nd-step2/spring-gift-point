@@ -10,10 +10,13 @@ import gift.product.dto.wish.WishDto;
 import gift.product.model.Category;
 import gift.product.model.Member;
 import gift.product.model.Product;
+import gift.product.model.Wish;
 import gift.product.repository.AuthRepository;
 import gift.product.repository.ProductRepository;
 import gift.product.repository.WishRepository;
 import gift.product.service.WishService;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 import org.junit.jupiter.api.DisplayNameGeneration;
@@ -23,6 +26,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -47,9 +51,9 @@ class WishServiceTest {
     @Test
     void 위시리스트_항목_추가() {
         //given
-        Category category = new Category(1L, "테스트카테고리");
+        Category category = new Category(1L, "테스트카테고리", "테스트컬러", "테스트주소", "테스트설명");
         Product product = new Product(1L, "테스트상품", 1500, "테스트주소", category);
-        Member member = new Member(1L, "test@test.com", "test");
+        Member member = new Member(1L, "테스트회원이름", "test@test.com", "test");
         given(productRepository.findById(product.getId())).willReturn(Optional.of(product));
         given(authRepository.findById(any())).willReturn(Optional.of(member));
         given(wishRepository.existsByProductIdAndMemberId(product.getId(),
@@ -72,12 +76,21 @@ class WishServiceTest {
         String SORT = "product.name";
         String DIRECTION = "desc";
         Pageable pageable = PageRequest.of(PAGE, SIZE, Sort.Direction.fromString(DIRECTION), SORT);
+        Member member = new Member(1L, "테스트멤버이름", "test@test.com", "test");
+        Category category = new Category(1L, "테스트카테고리", "테스트컬러", "테스트주소", "테스트설명");
+        Product product = new Product(1L, "테스트상품", 1000, "테스트주소", category);
+        List<Wish> wishes = new ArrayList<>();
+        wishes.add(new Wish(member, product));
+        LoginMemberIdDto loginMemberIdDto = new LoginMemberIdDto(member.getId());
+
+        given(wishRepository.findAllByMemberId(pageable,
+            loginMemberIdDto.id())).willReturn(new PageImpl<>(wishes));
 
         //when
-        wishService.getWishAll(pageable);
+        wishService.getWishAll(pageable, loginMemberIdDto);
 
         //then
-        then(wishRepository).should().findAll(pageable);
+        then(wishRepository).should().findAllByMemberId(pageable, loginMemberIdDto.id());
     }
 
     @Test
@@ -105,7 +118,7 @@ class WishServiceTest {
     @Test
     void 실패_존재하지_않는_회원_정보로_위시리스트_추가_시도() {
         //given
-        Category category = new Category(1L, "테스트카테고리");
+        Category category = new Category(1L, "테스트카테고리", "테스트컬러", "테스트주소", "테스트설명");
         Product product = new Product(1L, "테스트상품", 1500, "테스트주소", category);
         given(productRepository.findById(product.getId())).willReturn(Optional.of(product));
         given(authRepository.findById(any())).willReturn(Optional.empty());
@@ -122,7 +135,7 @@ class WishServiceTest {
     @Test
     void 실패_위시_리스트에_상품_중복_추가() {
         //given
-        Category category = new Category(1L, "테스트카테고리");
+        Category category = new Category(1L, "테스트카테고리", "테스트컬러", "테스트주소", "테스트설명");
         Product product = new Product(1L, "테스트상품", 1500, "테스트주소", category);
         WishDto wishDto = new WishDto(product.getId());
         LoginMemberIdDto loginMemberIdDto = new LoginMemberIdDto(1L);

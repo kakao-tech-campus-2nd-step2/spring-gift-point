@@ -1,6 +1,9 @@
 package gift.product.service;
 
-import gift.product.dto.product.ProductDto;
+import gift.product.dto.option.OptionDto;
+import gift.product.dto.product.ProductRequest;
+import gift.product.dto.product.ProductResponse;
+import gift.product.dto.product.ProductUpdateRequest;
 import gift.product.model.Category;
 import gift.product.model.Option;
 import gift.product.model.Product;
@@ -33,33 +36,48 @@ public class ProductService {
         return productRepository.findAll();
     }
 
-    public Page<Product> getProductAll(Pageable pageable) {
-        return productRepository.findAll(pageable);
+    public Page<ProductResponse> getProductAll(Pageable pageable) {
+        return productRepository.findAll(pageable).map(this::getProductResponse);
     }
 
-    public Product getProduct(Long id) {
-        return getValidatedProduct(id);
+    public Page<ProductResponse> getProductAll(Pageable pageable, Long categoryId) {
+        return productRepository.findAllByCategoryId(pageable, categoryId)
+            .map(product -> new ProductResponse(product.getId(),
+                product.getName(),
+                product.getPrice(),
+                product.getImageUrl(),
+                product.getCategory().getId()));
+    }
+
+    public ProductResponse getProduct(Long id) {
+        Product product = getValidatedProduct(id);
+        return new ProductResponse(product.getId(), product.getName(),
+            product.getPrice(), product.getImageUrl(), product.getCategory().getId());
     }
 
     @Transactional
-    public Product insertProduct(ProductDto productDto) {
-        Category category = getValidatedCategory(productDto.categoryName());
-        Product product = new Product(productDto.name(), productDto.price(), productDto.imageUrl(),
+    public Product insertProduct(ProductRequest clientProductRequest) {
+        Category category = getValidatedCategory(clientProductRequest.categoryId());
+        Product product = new Product(clientProductRequest.name(),
+            clientProductRequest.price(),
+            clientProductRequest.imageUrl(),
             category);
         Product savedProduct = productRepository.save(product);
 
-        optionRepository.save(new Option("기본", 1, savedProduct));
+        for (OptionDto optionDto : clientProductRequest.options()) {
+            optionRepository.save(new Option(optionDto.name(), optionDto.quantity(), savedProduct));
+        }
 
         return savedProduct;
     }
 
     @Transactional
-    public Product updateProduct(Long id, ProductDto productDto) {
+    public Product updateProduct(Long id, ProductUpdateRequest productUpdateRequest) {
         getValidatedProduct(id);
-        Category category = getValidatedCategory(productDto.categoryName());
+        Category category = getValidatedCategory(productUpdateRequest.categoryId());
 
-        Product product = new Product(id, productDto.name(), productDto.price(),
-            productDto.imageUrl(), category);
+        Product product = new Product(id, productUpdateRequest.name(), productUpdateRequest.price(),
+            productUpdateRequest.imageUrl(), category);
 
         return productRepository.save(product);
     }
@@ -75,8 +93,16 @@ public class ProductService {
             .orElseThrow(() -> new NoSuchElementException("해당 ID의 상품이 존재하지 않습니다."));
     }
 
-    private Category getValidatedCategory(String categoryName) {
-        return categoryRepository.findByName(categoryName)
+    private Category getValidatedCategory(Long categoryId) {
+        return categoryRepository.findById(categoryId)
             .orElseThrow(() -> new NoSuchElementException("해당 카테고리가 존재하지 않습니다."));
+    }
+
+    private ProductResponse getProductResponse(Product product) {
+        return new ProductResponse(product.getId(),
+            product.getName(),
+            product.getPrice(),
+            product.getImageUrl(),
+            product.getCategory().getId());
     }
 }

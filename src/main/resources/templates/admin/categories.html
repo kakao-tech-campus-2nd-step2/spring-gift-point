@@ -29,6 +29,9 @@
       <tr>
         <th class="text-center">카테고리 ID</th>
         <th class="text-center">카테고리 이름</th>
+        <th class="text-center">색상</th>
+        <th class="text-center">이미지 주소</th>
+        <th class="text-center">설명</th>
         <th class="text-center"></th>
         <th class="text-center"></th>
       </tr>
@@ -42,6 +45,15 @@
           <span th:text="${category.name}">카테고리 이름 tmp</span>
         </td>
         <td class="text-center">
+          <span th:text="${category.color}">색상 tmp</span>
+        </td>
+        <td class="text-center">
+          <span th:text="${category.imageUrl}">이미지 주소 tmp</span>
+        </td>
+        <td class="text-center">
+          <span th:text="${category.description}">설명 tmp</span>
+        </td>
+        <td class="text-center">
           <button class="btn btn-primary"
                   onclick="location.href='updateForm.html'"
                   th:onclick="|location.href='@{/admin/categories/update/{categoryId}(categoryId=${category.id})}'|"
@@ -50,7 +62,8 @@
         </td>
         <td class="text-center">
           <form method="post"
-                th:action="@{/admin/categories/delete/{categoryId}(categoryId=${category.id})}" th:method="delete">
+                th:action="@{/admin/categories/delete/{categoryId}(categoryId=${category.id})}"
+                th:method="delete">
             <button class="btn btn-danger" type="submit">삭제</button>
           </form>
         </td>

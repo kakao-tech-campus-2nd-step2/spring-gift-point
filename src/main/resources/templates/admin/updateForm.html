@@ -13,12 +13,14 @@
     <form method="post" th:action th:method="put">
       <div class="mb-3">
         <label class="mb-2" for="name">상품명</label>
-        <input class="form-control" id="name" name="name" placeholder="상품명을 입력하세요." th:value="${product.name}"
+        <input class="form-control" id="name" name="name" placeholder="상품명을 입력하세요."
+               th:value="${product.name}"
                type="text">
       </div>
       <div class="mb-3">
         <label class="mb-2" for="price">가격</label>
-        <input class="form-control" id="price" name="price" placeholder="가격을 입력하세요." th:value="${product.price}"
+        <input class="form-control" id="price" name="price" placeholder="가격을 입력하세요."
+               th:value="${product.price}"
                type="text">
       </div>
       <div class="mb-3">
@@ -27,9 +29,9 @@
                th:value="${product.imageUrl}" type="text">
       </div>
       <div class="mb-3">
-        <label class="mb-2" for="categoryName">카테고리</label>
-        <input class="form-control" id="categoryName" name="categoryName" placeholder="카테고리를 입력하세요."
-               th:value="${product.category.name}" type="text">
+        <label class="mb-2" for="categoryId">카테고리</label>
+        <input class="form-control" id="categoryId" name="categoryId" placeholder="카테고리 ID를 입력하세요."
+               th:value="${product.categoryId}" type="text">
       </div>
       <div class="row mt-5">
         <div class="col">

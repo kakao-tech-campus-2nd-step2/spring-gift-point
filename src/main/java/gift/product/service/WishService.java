@@ -2,6 +2,7 @@ package gift.product.service;
 
 import gift.product.dto.auth.LoginMemberIdDto;
 import gift.product.dto.wish.WishDto;
+import gift.product.dto.wish.WishResponse;
 import gift.product.model.Member;
 import gift.product.model.Product;
 import gift.product.model.Wish;
@@ -28,12 +29,20 @@ public class WishService {
         this.authRepository = authRepository;
     }
 
+    private static WishResponse getWishResponse(Wish wish) {
+        return new WishResponse(wish.getProduct().getId(),
+            wish.getProduct().getName(),
+            wish.getProduct().getPrice(),
+            wish.getProduct().getImageUrl());
+    }
+
     public List<Wish> getWishAll(LoginMemberIdDto loginMemberIdDto) {
         return wishRepository.findAllByMemberId(loginMemberIdDto.id());
     }
 
-    public Page<Wish> getWishAll(Pageable pageable) {
-        return wishRepository.findAll(pageable);
+    public Page<WishResponse> getWishAll(Pageable pageable, LoginMemberIdDto loginMemberIdDto) {
+        return wishRepository.findAllByMemberId(pageable, loginMemberIdDto.id())
+            .map(WishService::getWishResponse);
     }
 
     public Wish getWish(Long id, LoginMemberIdDto loginMemberIdDto) {

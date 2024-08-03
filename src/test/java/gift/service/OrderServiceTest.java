@@ -22,6 +22,8 @@ import gift.product.repository.OrderRepository;
 import gift.product.repository.WishRepository;
 import gift.product.service.OrderService;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 import okhttp3.mockwebserver.MockResponse;
@@ -35,6 +37,10 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 
 @ExtendWith(MockitoExtension.class)
 @DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
@@ -83,13 +89,27 @@ class OrderServiceTest {
     @Test
     void 주문_전체_조회() {
         //given
+        int PAGE = 1;
+        int SIZE = 4;
+        String SORT = "orderDateTime";
+        String DIRECTION = "desc";
+        Pageable pageable = PageRequest.of(PAGE, SIZE, Sort.Direction.fromString(DIRECTION), SORT);
         LoginMemberIdDto loginMemberIdDto = new LoginMemberIdDto(1L);
+        Category category = new Category(1L, "테스트카테고리", "테스트컬러", "테스트주소", "테스트설명");
+        Product product = new Product(1L, "테스트상품", 1000, "테스트주소", category);
+        Option option = new Option(1L, "테스트옵션", 1000, product);
+        List<Order> orders = new ArrayList<>();
+        orders.add(new Order(option.getId(), loginMemberIdDto.id(), 1, "test_message"));
+
+        given(orderRepository.findAllByMemberId(pageable,
+            loginMemberIdDto.id())).willReturn(new PageImpl<>(orders));
+        given(optionRepository.findById(option.getId())).willReturn(Optional.of(option));
 
         //when
-        orderService.getOrderAll(loginMemberIdDto);
+        orderService.getOrderAll(pageable, loginMemberIdDto);
 
         //then
-        then(orderRepository).should().findAllByMemberId(loginMemberIdDto.id());
+        then(orderRepository).should().findAllByMemberId(pageable, loginMemberIdDto.id());
     }
 
     @Test
@@ -117,7 +137,7 @@ class OrderServiceTest {
             loginMemberIdDto.id(),
             2,
             orderDto.message());
-        Category category = new Category(1L, "테스트카테고리");
+        Category category = new Category(1L, "테스트카테고리", "테스트컬러", "테스트주소", "테스트설명");
         Product product = new Product(1L, "테스트상품", 1500, "테스트주소", category);
         Option option = new Option(1L, "테스트옵션", 5, product);
         KakaoToken kakaoToken = new KakaoToken(1L,
@@ -159,7 +179,7 @@ class OrderServiceTest {
     @Test
     void 실패_옵션_수량보다_더_많이_차감() {
         //given
-        Category category = new Category("테스트카테고리");
+        Category category = new Category("테스트카테고리", "테스트컬러", "테스트주소", "테스트설명");
         Product product = new Product(1L, "테스트상품", 1500, "테스트주소", category);
         Option option = new Option(1L, "테스트옵션", 1, product);
         OrderDto orderDto = new OrderDto(option.getId(), 999, "test_message");
@@ -190,7 +210,7 @@ class OrderServiceTest {
         //given
         LoginMemberIdDto loginMemberIdDto = new LoginMemberIdDto(1L);
         OrderDto orderDto = new OrderDto(1L, 2, "test_message");
-        Category category = new Category(1L, "테스트카테고리");
+        Category category = new Category(1L, "테스트카테고리", "테스트컬러", "테스트주소", "테스트설명");
         Product product = new Product(1L, "테스트상품", 1000, "테스트주소", category);
         Option option = new Option(1L, "테스트옵션", 5, product);
         Order order = new Order(1L,
@@ -239,7 +259,7 @@ class OrderServiceTest {
         //given
         LoginMemberIdDto loginMemberIdDto = new LoginMemberIdDto(1L);
         OrderDto orderDto = new OrderDto(1L, 2, "test_message");
-        Category category = new Category(1L, "테스트카테고리");
+        Category category = new Category(1L, "테스트카테고리", "테스트컬러", "테스트주소", "테스트설명");
         Product product = new Product(1L, "테스트상품", 1000, "테스트주소", category);
         Option option = new Option(1L, "테스트옵션", 5, product);
 
@@ -258,7 +278,7 @@ class OrderServiceTest {
         //given
         LoginMemberIdDto loginMemberIdDto = new LoginMemberIdDto(1L);
         OrderDto orderDto = new OrderDto(1L, 2, "test_message");
-        Category category = new Category(1L, "테스트카테고리");
+        Category category = new Category(1L, "테스트카테고리", "테스트컬러", "테스트주소", "테스트설명");
         Product product = new Product(1L, "테스트상품", 1000, "테스트주소", category);
         Option option = new Option(1L, "테스트옵션", 5, product);
 
@@ -278,7 +298,7 @@ class OrderServiceTest {
         //given
         LoginMemberIdDto loginMemberIdDto = new LoginMemberIdDto(1L);
         OrderDto orderDto = new OrderDto(1L, 2, "test_message");
-        Category category = new Category(1L, "테스트카테고리");
+        Category category = new Category(1L, "테스트카테고리", "테스트컬러", "테스트주소", "테스트설명");
         Product product = new Product(1L, "테스트상품", 1000, "테스트주소", category);
         Option option = new Option(1L, "테스트옵션", 5, product);
         Order order = new Order(1L,

@@ -2,16 +2,20 @@ package gift.integrity;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import gift.product.dto.auth.AccountDto;
 import gift.product.dto.auth.MemberDto;
 import gift.product.dto.category.CategoryDto;
-import gift.product.dto.product.ClientProductDto;
-import gift.product.dto.product.ProductDto;
+import gift.product.dto.option.OptionDto;
+import gift.product.dto.product.ClientProductRequest;
+import gift.product.dto.product.ProductRequest;
 import gift.product.dto.wish.WishDto;
 import gift.product.service.AuthService;
 import gift.product.service.CategoryService;
 import gift.product.service.ProductService;
 import gift.product.service.WishService;
 import java.net.URI;
+import java.util.ArrayList;
+import java.util.List;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator;
@@ -62,20 +66,28 @@ class WishIntegrityTest {
     String accessToken;
 
     @BeforeAll
-    void 로그인() {
+    void 멤버_및_상품_셋팅() {
         MemberDto memberDto = new MemberDto("test@test.com", "1234");
         authService.register(memberDto);
-        accessToken = authService.login(memberDto).accessToken();
-    }
+        accessToken = authService.login(new AccountDto(memberDto.email(), memberDto.password()))
+            .accessToken();
 
-    @BeforeAll
-    void 상품_추가() {
-        CategoryDto categoryDto = new CategoryDto("테스트카테고리1");
-        categoryService.insertCategory(categoryDto);
+        CategoryDto categoryDto = new CategoryDto("테스트카테고리", "테스트컬러", "테스트주소", "테스트설명");
+        Long categoryId = categoryService.insertCategory(categoryDto).getId();
 
-        String url = BASE_URL + port + "/api/products/insert";
-        ProductDto productDto = new ClientProductDto("테스트1", 1500, "테스트주소1", categoryDto.name());
-        RequestEntity<ProductDto> requestEntity = new RequestEntity<>(productDto, HttpMethod.POST,
+        String url = BASE_URL + port + "/api/products";
+        List<OptionDto> options = new ArrayList<>();
+        options.add(new OptionDto("테스트옵션", 1));
+        ProductRequest productRequest = new ClientProductRequest("테스트1",
+            1500,
+            "테스트주소1",
+            categoryId,
+            options);
+        HttpHeaders headers = new HttpHeaders();
+        headers.setBearerAuth(accessToken);
+        RequestEntity<ProductRequest> requestEntity = new RequestEntity<>(productRequest,
+            headers,
+            HttpMethod.POST,
             URI.create(url));
 
         testRestTemplate.exchange(requestEntity, String.class);
@@ -85,11 +97,10 @@ class WishIntegrityTest {
     @Test
     void 위시리스트_추가() {
         //given
-        String url = BASE_URL + port + "/api/wishes/insert";
-        WishDto wishDto = new WishDto(1L);
+        String url = BASE_URL + port + "/api/wishes/1";
         HttpHeaders headers = new HttpHeaders();
         headers.setBearerAuth(accessToken);
-        RequestEntity<WishDto> requestEntity = new RequestEntity<>(wishDto, headers,
+        RequestEntity<WishDto> requestEntity = new RequestEntity<>(headers,
             HttpMethod.POST, URI.create(url));
 
         //when
@@ -137,7 +148,7 @@ class WishIntegrityTest {
     @Test
     void 위시리스트_삭제() {
         //given
-        String url = BASE_URL + port + "/api/wishes/delete/1";
+        String url = BASE_URL + port + "/api/wishes/1";
         HttpHeaders headers = new HttpHeaders();
         headers.setBearerAuth(accessToken);
         RequestEntity<WishDto> requestEntity = new RequestEntity<>(headers, HttpMethod.DELETE,
@@ -147,6 +158,6 @@ class WishIntegrityTest {
         var actual = testRestTemplate.exchange(requestEntity, String.class);
 
         //then
-        assertThat(actual.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(actual.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
     }
 }

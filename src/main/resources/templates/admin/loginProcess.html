@@ -11,9 +11,7 @@
 </body>
 <script th:inline="javascript">
   let accessToken = [[${accessToken}]];
-  let refreshToken = [[${refreshToken}]];
   localStorage.setItem("accessToken", accessToken);
-  localStorage.setItem("refreshToken", refreshToken);
   let form = document.getElementById("form");
   form.submit();
 </script>

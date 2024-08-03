@@ -18,6 +18,7 @@ import gift.product.service.ProductService;
 import gift.product.service.WishService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
@@ -98,10 +99,20 @@ public class WebConfig implements WebMvcConfigurer {
             .addPathPatterns("/admin/wishes/**")
             .addPathPatterns("/api/wishes/**")
             .addPathPatterns("/api/orders/**")
-            .addPathPatterns("/members/login/kakao/unlink");
-
+            .addPathPatterns("/api/members/login/kakao/unlink");
         registry.addInterceptor(new JwtCookieToHeaderInterceptor())
             .order(1)
             .addPathPatterns("/admin/wishes/**");
+    }
+
+    @Override
+    public void addCorsMappings(CorsRegistry registry) {
+        registry.addMapping("/api/**")
+            .allowedOrigins("http://localhost:3000")
+            .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
+            .allowedHeaders("*")
+            .exposedHeaders("Location")
+            .allowCredentials(true)
+            .maxAge(1800);
     }
 }

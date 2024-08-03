@@ -1,10 +1,11 @@
 package gift.product.controller.category;
 
 
-import gift.product.ProblemDetailResponse;
 import gift.product.dto.category.CategoryDto;
+import gift.product.exception.ExceptionResponse;
 import gift.product.model.Category;
 import gift.product.service.CategoryService;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -33,6 +34,8 @@ public class CategoryController {
         this.categoryService = categoryService;
     }
 
+
+    @ApiResponse(responseCode = "200", description = "성공", content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = Category.class))))
     @GetMapping
     public ResponseEntity<List<Category>> getCategoryAll() {
         List<Category> categories = categoryService.getCategoryAll();
@@ -41,7 +44,7 @@ public class CategoryController {
 
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "성공", content = @Content(mediaType = "application/json", schema = @Schema(implementation = Category.class))),
-        @ApiResponse(responseCode = "404", description = "존재하지 않는 리소스", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProblemDetailResponse.class)))
+        @ApiResponse(responseCode = "404", description = "존재하지 않는 리소스", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ExceptionResponse.class)))
     })
     @GetMapping("/{id}")
     public ResponseEntity<Category> getCategory(@PathVariable(name = "id") Long id) {
@@ -50,33 +53,33 @@ public class CategoryController {
     }
 
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "성공", content = @Content(mediaType = "application/json", schema = @Schema(implementation = Category.class))),
-        @ApiResponse(responseCode = "400", description = "잘못된 요청", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProblemDetailResponse.class)))
+        @ApiResponse(responseCode = "201", description = "카테고리 생성 성공"),
+        @ApiResponse(responseCode = "409", description = "이미 존재하는 카테고리명", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ExceptionResponse.class)))
     })
-    @PostMapping("/insert")
-    public ResponseEntity<Category> insertCategory(@RequestBody CategoryDto categoryDto) {
-        Category category = categoryService.insertCategory(categoryDto);
-        return ResponseEntity.status(HttpStatus.CREATED).body(category);
+    @PostMapping
+    public ResponseEntity<Void> insertCategory(@RequestBody CategoryDto categoryDto) {
+        categoryService.insertCategory(categoryDto);
+        return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "성공", content = @Content(mediaType = "application/json", schema = @Schema(implementation = Category.class))),
-        @ApiResponse(responseCode = "404", description = "존재하지 않는 리소스", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProblemDetailResponse.class)))
+        @ApiResponse(responseCode = "204", description = "카테고리 수정 성공"),
+        @ApiResponse(responseCode = "404", description = "존재하지 않는 리소스", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ExceptionResponse.class)))
     })
-    @PutMapping("/update/{id}")
-    public ResponseEntity<Category> updateCategory(@PathVariable(name = "id") Long id,
+    @PutMapping("/{id}")
+    public ResponseEntity<Void> updateCategory(@PathVariable(name = "id") Long id,
         @RequestBody CategoryDto categoryDto) {
-        Category category = categoryService.updateCategory(id, categoryDto);
-        return ResponseEntity.ok(category);
+        categoryService.updateCategory(id, categoryDto);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "성공"),
-        @ApiResponse(responseCode = "404", description = "존재하지 않는 리소스", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProblemDetailResponse.class)))
+        @ApiResponse(responseCode = "204", description = "카테고리 삭제 성공"),
+        @ApiResponse(responseCode = "404", description = "존재하지 않는 리소스", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ExceptionResponse.class)))
     })
-    @DeleteMapping("/delete/{id}")
+    @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteCategory(@PathVariable(name = "id") Long id) {
         categoryService.deleteCategory(id);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 }

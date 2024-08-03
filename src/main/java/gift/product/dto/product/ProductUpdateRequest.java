@@ -1,6 +1,6 @@
 package gift.product.dto.product;
 
-public interface ProductDto {
+public interface ProductUpdateRequest {
 
     String name();
 
@@ -8,5 +8,5 @@ public interface ProductDto {
 
     String imageUrl();
 
-    String categoryName();
+    Long categoryId();
 }

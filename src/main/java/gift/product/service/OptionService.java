@@ -22,8 +22,10 @@ public class OptionService {
         this.productRepository = productRepository;
     }
 
-    public List<Option> getOptionAll() {
-        return optionRepository.findAll();
+    public List<OptionResponse> getOptionAll() {
+        return optionRepository.findAll().stream().map(option -> new OptionResponse(option.getId(),
+            option.getName(),
+            option.getQuantity())).toList();
     }
 
     public List<OptionResponse> getOptionAllByProductId(Long productId) {
@@ -36,27 +38,28 @@ public class OptionService {
     }
 
     @Transactional
-    public Option insertOption(OptionDto optionDto) {
-        validateRedundancyOptionName(optionDto.name(), optionDto.productId());
-        Product product = getValidatedProduct(optionDto.productId());
+    public Option insertOption(OptionDto optionDto, Long productId) {
+        validateRedundancyOptionName(optionDto.name(), productId);
+        Product product = getValidatedProduct(productId);
 
         return optionRepository.save(new Option(optionDto.name(), optionDto.quantity(), product));
     }
 
     @Transactional
-    public Option updateOption(Long id, OptionDto optionDto) {
-        Product product = getValidatedProduct(optionDto.productId());
-        getValidatedOption(id);
+    public Option updateOption(Long optionId, OptionDto optionDto, Long productId) {
+        Product product = getValidatedProduct(productId);
+        getValidatedOption(optionId);
 
         return optionRepository.save(
-            new Option(id, optionDto.name(), optionDto.quantity(), product));
+            new Option(optionId, optionDto.name(), optionDto.quantity(), product));
     }
 
     @Transactional
-    public void deleteOption(Long id) {
-        Option option = getValidatedOption(id);
+    public void deleteOption(Long optionId, Long productId) {
+        getValidatedProduct(productId);
+        Option option = getValidatedOption(optionId);
         validateOptionOnlyOne(option);
-        optionRepository.deleteById(id);
+        optionRepository.deleteByIdAndProductId(optionId, productId);
     }
 
     private Product getValidatedProduct(Long productId) {

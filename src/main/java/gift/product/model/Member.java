@@ -13,6 +13,9 @@ public class Member {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private final Long id;
 
+    @Column(nullable = true)
+    private final String name;
+
     @Column(nullable = false, unique = true)
     private final String email;
 
@@ -20,21 +23,34 @@ public class Member {
     private final String password;
 
     protected Member() {
-        this(null, null, null);
+        this(null, null, null, null);
     }
 
     public Member(String email, String password) {
-        this(null, email, password);
+        this(null, null, email, password);
     }
 
-    public Member(Long memberId, String email, String password) {
+    public Member(String name, String email, String password) {
+        this(null, name, email, password);
+    }
+
+    public Member(Long id, String email, String password) {
+        this(id, null, email, password);
+    }
+
+    public Member(Long memberId, String name, String email, String password) {
         this.id = memberId;
+        this.name = name;
         this.email = email;
         this.password = password;
     }
 
     public Long getId() {
         return id;
+    }
+
+    public String getName() {
+        return name;
     }
 
     public String getEmail() {

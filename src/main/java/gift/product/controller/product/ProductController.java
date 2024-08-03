@@ -1,7 +1,10 @@
 package gift.product.controller.product;
 
-import gift.product.ProblemDetailResponse;
-import gift.product.dto.product.ClientProductDto;
+import gift.product.dto.product.ClientProductRequest;
+import gift.product.dto.product.ClientProductUpdateRequest;
+import gift.product.dto.product.PageProductResponse;
+import gift.product.dto.product.ProductResponse;
+import gift.product.exception.ExceptionResponse;
 import gift.product.model.Product;
 import gift.product.service.ProductService;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -10,7 +13,6 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
-import java.util.List;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -38,63 +40,66 @@ public class ProductController {
         this.productService = productService;
     }
 
+    @ApiResponse(responseCode = "200", description = "성공", content = @Content(mediaType = "application/json", schema = @Schema(implementation = PageProductResponse.class)))
     @GetMapping
-    public ResponseEntity<List<Product>> getProductAll() {
-        List<Product> productAll = productService.getProductAll();
-        return ResponseEntity.ok(productAll);
-    }
-
-    @GetMapping("/paged")
-    public ResponseEntity<Page<Product>> getProductAll(
+    public ResponseEntity<Page<ProductResponse>> getProductAll(
         @RequestParam(name = "page", defaultValue = "0") int page,
         @RequestParam(name = "size", defaultValue = "5") int size,
-        @RequestParam(name = "sort", defaultValue = "id") String sort,
-        @RequestParam(name = "direction", defaultValue = "asc") String direction) {
+        @RequestParam(name = "sort", defaultValue = "name,asc") String sortParam,
+        @RequestParam(name = "categoryId", required = false) Long categoryId) {
+
+        String[] sortParamSplited = sortParam.split(",");
+        String sort = sortParamSplited[0];
+        String direction = (sortParamSplited.length > 1) ? sortParamSplited[1] : "asc";
+
         Pageable pageable = PageRequest.of(page, size, Sort.Direction.fromString(direction), sort);
-        Page<Product> products = productService.getProductAll(pageable);
-        return ResponseEntity.ok(products);
+
+        if (categoryId == null) {
+            return ResponseEntity.ok(productService.getProductAll(pageable));
+        }
+
+        return ResponseEntity.ok(productService.getProductAll(pageable, categoryId));
     }
 
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "성공", content = @Content(mediaType = "application/json", schema = @Schema(implementation = Product.class))),
-        @ApiResponse(responseCode = "404", description = "존재하지 않는 리소스", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProblemDetailResponse.class)))
+        @ApiResponse(responseCode = "200", description = "성공", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProductResponse.class))),
+        @ApiResponse(responseCode = "404", description = "존재하지 않는 리소스", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ExceptionResponse.class)))
     })
     @GetMapping("/{id}")
-    public ResponseEntity<Product> getProduct(@PathVariable(name = "id") Long id) {
-        Product product = productService.getProduct(id);
-        return ResponseEntity.ok(product);
+    public ResponseEntity<ProductResponse> getProduct(@PathVariable(name = "id") Long id) {
+        return ResponseEntity.ok(productService.getProduct(id));
     }
 
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "성공", content = @Content(mediaType = "application/json", schema = @Schema(implementation = Product.class))),
-        @ApiResponse(responseCode = "404", description = "존재하지 않는 리소스", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProblemDetailResponse.class)))
+        @ApiResponse(responseCode = "201", description = "상품 등록 성공"),
+        @ApiResponse(responseCode = "404", description = "존재하지 않는 리소스", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ExceptionResponse.class)))
     })
-    @PostMapping("/insert")
-    public ResponseEntity<Product> insertProduct(@Valid @RequestBody ClientProductDto productDto) {
-        Product responseProduct = productService.insertProduct(productDto);
+    @PostMapping
+    public ResponseEntity<Void> insertProduct(@Valid @RequestBody ClientProductRequest clientProductRequest) {
+        productService.insertProduct(clientProductRequest);
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(responseProduct);
+        return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "성공", content = @Content(mediaType = "application/json", schema = @Schema(implementation = Product.class))),
-        @ApiResponse(responseCode = "404", description = "존재하지 않는 리소스", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProblemDetailResponse.class)))
+        @ApiResponse(responseCode = "204", description = "상품 수정 성공", content = @Content(mediaType = "application/json", schema = @Schema(implementation = Product.class))),
+        @ApiResponse(responseCode = "404", description = "존재하지 않는 리소스", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ExceptionResponse.class)))
     })
-    @PutMapping("/update/{id}")
-    public ResponseEntity<Product> updateProduct(@PathVariable(name = "id") Long id,
-        @Valid @RequestBody ClientProductDto productDto) {
-        Product product = productService.updateProduct(id, productDto);
-        return ResponseEntity.ok(product);
+    @PutMapping("/{id}")
+    public ResponseEntity<Void> updateProduct(@PathVariable(name = "id") Long id,
+        @Valid @RequestBody ClientProductUpdateRequest clientProductUpdateRequest) {
+        productService.updateProduct(id, clientProductUpdateRequest);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "성공"),
-        @ApiResponse(responseCode = "404", description = "존재하지 않는 리소스", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProblemDetailResponse.class)))
+        @ApiResponse(responseCode = "204", description = "상품 삭제 성공"),
+        @ApiResponse(responseCode = "404", description = "상품 삭제 실패 (존재하지 않는 ID)", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ExceptionResponse.class)))
     })
-    @DeleteMapping("/delete/{id}")
+    @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteProduct(@PathVariable(name = "id") Long id) {
         productService.deleteProduct(id);
 
-        return ResponseEntity.ok().build();
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 }

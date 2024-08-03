@@ -2,7 +2,9 @@ package gift.product.service;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import gift.product.dto.auth.JwtResponse;
+import com.sun.jdi.request.DuplicateRequestException;
+import gift.product.dto.auth.AccessTokenDto;
+import gift.product.dto.auth.AccountDto;
 import gift.product.dto.auth.LoginMemberIdDto;
 import gift.product.dto.auth.MemberDto;
 import gift.product.dto.auth.OAuthJwt;
@@ -21,6 +23,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.Date;
 import java.util.NoSuchElementException;
 import javax.crypto.SecretKey;
+import org.apache.logging.log4j.util.InternalException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.MediaType;
@@ -49,22 +52,20 @@ public class AuthService {
     }
 
     @Transactional
-    public void register(MemberDto memberDto) {
+    public AccessTokenDto register(MemberDto memberDto) {
         validateMemberExist(memberDto);
 
         Member member = new Member(memberDto.email(), memberDto.password());
         authRepository.save(member);
+
+        return new AccessTokenDto(getAccessToken(member));
     }
 
-    public JwtResponse login(MemberDto memberDto) {
-        validateMemberInfo(memberDto);
+    public AccessTokenDto login(AccountDto accountDto) {
+        validateMemberInfo(accountDto);
+        Member member = authRepository.findByEmail(accountDto.email());
 
-        Member member = authRepository.findByEmail(memberDto.email());
-
-        String accessToken = getAccessToken(member);
-        String refreshToken = getRefreshToken(member);
-
-        return new JwtResponse(accessToken, refreshToken);
+        return new AccessTokenDto(getAccessToken(member));
     }
 
     public String getKakaoAuthCodeUrl() {
@@ -93,11 +94,11 @@ public class AuthService {
 
             return new OAuthJwt(accessToken, refreshToken);
         } catch (Exception e) {
-            throw new LoginFailedException("소셜 로그인 진행 중 예기치 못한 오류가 발생하였습니다. 다시 시도해 주세요.");
+            throw new InternalException("소셜 로그인 진행 중 예기치 못한 오류가 발생하였습니다. 다시 시도해 주세요.");
         }
     }
 
-    public JwtResponse registerKakaoMember(OAuthJwt oAuthJwt, String externalApiUrl) {
+    public AccessTokenDto registerKakaoMember(OAuthJwt oAuthJwt, String externalApiUrl) {
         ResponseEntity<String> response = restClient.post()
             .uri(URI.create(externalApiUrl))
             .contentType(MediaType.APPLICATION_FORM_URLENCODED)
@@ -117,9 +118,9 @@ public class AuthService {
                 authRepository.save(new Member(memberEmail, "oauth"));
             }
 
-            return getJwtResponse(oAuthJwt, memberEmail);
+            return getAccessTokenDto(oAuthJwt, memberEmail);
         } catch (Exception e) {
-            throw new LoginFailedException("소셜 로그인 진행 중 예기치 못한 오류가 발생하였습니다. 다시 시도해 주세요.");
+            throw new InternalException("소셜 로그인 진행 중 예기치 못한 오류가 발생하였습니다. 다시 시도해 주세요.");
         }
     }
 
@@ -138,7 +139,7 @@ public class AuthService {
             JsonNode rootNode = objectMapper.readTree(response.getBody());
             return Long.parseLong(rootNode.path("id").asText());
         } catch (Exception e) {
-            throw new LoginFailedException("소셜 로그인 진행 중 예기치 못한 오류가 발생하였습니다. 다시 시도해 주세요.");
+            throw new InternalException("소셜 로그인 진행 중 예기치 못한 오류가 발생하였습니다. 다시 시도해 주세요.");
         }
     }
 
@@ -170,20 +171,20 @@ public class AuthService {
         boolean isMemberExist = authRepository.existsByEmail(memberDto.email());
 
         if (isMemberExist) {
-            throw new IllegalArgumentException("이미 회원으로 등록된 이메일입니다.");
+            throw new DuplicateRequestException("이미 회원으로 등록된 이메일입니다.");
         }
     }
 
-    private void validateMemberInfo(MemberDto memberDto) {
-        boolean isMemberExist = authRepository.existsByEmail(memberDto.email());
+    private void validateMemberInfo(AccountDto accountDto) {
+        boolean isMemberExist = authRepository.existsByEmail(accountDto.email());
 
         if (!isMemberExist) {
             throw new LoginFailedException("회원 정보가 존재하지 않습니다.");
         }
 
-        Member member = authRepository.findByEmail(memberDto.email());
+        Member member = authRepository.findByEmail(accountDto.email());
 
-        if (!memberDto.password().equals(member.getPassword())) {
+        if (!accountDto.password().equals(member.getPassword())) {
             throw new LoginFailedException("비밀번호가 일치하지 않습니다.");
         }
     }
@@ -198,14 +199,14 @@ public class AuthService {
         return body;
     }
 
-    private JwtResponse getJwtResponse(OAuthJwt oAuthJwt, String memberEmail) {
+    private AccessTokenDto getAccessTokenDto(OAuthJwt oAuthJwt, String memberEmail) {
         Member member = authRepository.findByEmail(memberEmail);
 
         kakaoTokenRepository.save(new KakaoToken(member.getId(),
             oAuthJwt.accessToken(),
             oAuthJwt.refreshToken()));
 
-        return new JwtResponse(getAccessToken(member), getRefreshToken(member));
+        return new AccessTokenDto(getAccessToken(member));
     }
 
     private KakaoToken getKakaoToken(LoginMemberIdDto loginMemberIdDto) {
