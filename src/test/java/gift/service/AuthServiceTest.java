@@ -2,7 +2,6 @@ package gift.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.assertj.core.api.SoftAssertions.*;
 import static org.assertj.core.api.SoftAssertions.assertSoftly;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
@@ -31,7 +30,6 @@ import java.util.Optional;
 import java.util.Properties;
 import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.MockWebServer;
-import org.assertj.core.api.SoftAssertions;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayNameGeneration;
@@ -154,11 +152,15 @@ class AuthServiceTest {
         given(authRepository.findById(loginMemberIdDto.id())).willReturn(Optional.of(member));
 
         PointRequest pointRequest = new PointRequest(500);
-        Member resultMember = new Member(member.getId(), member.getEmail(), member.getPassword(), member.getPoint() - pointRequest.point());
+        Member resultMember = new Member(member.getId(),
+            member.getEmail(),
+            member.getPassword(),
+            member.getPoint() - pointRequest.point());
         given(authRepository.save(any(Member.class))).willReturn(resultMember);
 
         //when
-        RemainingPointResponse remainingPointResponse = authService.subtractMemberPoint(pointRequest, loginMemberIdDto);
+        RemainingPointResponse remainingPointResponse = authService.subtractMemberPoint(pointRequest,
+            loginMemberIdDto);
 
         //then
         assertSoftly(softly -> {
@@ -321,7 +323,8 @@ class AuthServiceTest {
         given(authRepository.findById(any())).willReturn(Optional.empty());
 
         //when, then
-        assertThatThrownBy(() -> authService.subtractMemberPoint(pointRequest, loginMemberIdDto)).isInstanceOf(
+        assertThatThrownBy(() -> authService.subtractMemberPoint(pointRequest,
+            loginMemberIdDto)).isInstanceOf(
             NoSuchElementException.class);
     }
 
@@ -335,7 +338,9 @@ class AuthServiceTest {
         PointRequest pointRequest = new PointRequest(9999);
 
         //when, then
-        assertThatThrownBy(() -> authService.subtractMemberPoint(pointRequest, loginMemberIdDto)).isInstanceOf(IllegalArgumentException.class).hasMessage("회원의 보유 포인트보다 많은 양을 사용할 수 없습니다.");
+        assertThatThrownBy(() -> authService.subtractMemberPoint(pointRequest,
+            loginMemberIdDto)).isInstanceOf(IllegalArgumentException.class)
+            .hasMessage("회원의 보유 포인트보다 많은 양을 사용할 수 없습니다.");
     }
 
     @Test
@@ -348,6 +353,8 @@ class AuthServiceTest {
         PointRequest pointRequest = new PointRequest(200);
 
         //when, then
-        assertThatThrownBy(() -> authService.subtractMemberPoint(pointRequest, loginMemberIdDto)).isInstanceOf(IllegalArgumentException.class).hasMessage("회원의 보유 포인트가 1000 이상일 때만 사용할 수 있습니다.");
+        assertThatThrownBy(() -> authService.subtractMemberPoint(pointRequest,
+            loginMemberIdDto)).isInstanceOf(IllegalArgumentException.class)
+            .hasMessage("회원의 보유 포인트가 1000 이상일 때만 사용할 수 있습니다.");
     }
 }

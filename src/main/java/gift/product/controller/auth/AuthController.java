@@ -9,7 +9,6 @@ import gift.product.dto.auth.PointResponse;
 import gift.product.dto.auth.RegisterSuccessResponse;
 import gift.product.dto.auth.RemainingPointResponse;
 import gift.product.exception.ExceptionResponse;
-import gift.product.model.Member;
 import gift.product.service.AuthService;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -69,7 +68,7 @@ public class AuthController {
     }
 
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "포인트 조회 성공", content = @Content(mediaType = "application/json", schema = @Schema(implementation = AccessTokenDto.class))),
+        @ApiResponse(responseCode = "200", description = "포인트 조회 성공", content = @Content(mediaType = "application/json", schema = @Schema(implementation = PointResponse.class))),
         @ApiResponse(responseCode = "401", description = "사용자 인증 오류", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ExceptionResponse.class))),
         @ApiResponse(responseCode = "404", description = "존재하지 않는 회원 정보", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ExceptionResponse.class)))
     })
@@ -80,12 +79,13 @@ public class AuthController {
     }
 
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "포인트 차감(사용) 성공", content = @Content(mediaType = "application/json", schema = @Schema(implementation = AccessTokenDto.class))),
+        @ApiResponse(responseCode = "200", description = "포인트 차감(사용) 성공", content = @Content(mediaType = "application/json", schema = @Schema(implementation = RemainingPointResponse.class))),
         @ApiResponse(responseCode = "400", description = "잘못된 요청", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ExceptionResponse.class))),
         @ApiResponse(responseCode = "401", description = "사용자 인증 오류", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ExceptionResponse.class)))
     })
     @PostMapping("/point")
-    public ResponseEntity<RemainingPointResponse> subtractMemberPoint(@Valid @RequestBody PointRequest pointRequest, HttpServletRequest request) {
+    public ResponseEntity<RemainingPointResponse> subtractMemberPoint(@Valid @RequestBody PointRequest pointRequest,
+        HttpServletRequest request) {
         LoginMemberIdDto loginMemberIdDto = getLoginMember(request);
         return ResponseEntity.ok(authService.subtractMemberPoint(pointRequest, loginMemberIdDto));
     }

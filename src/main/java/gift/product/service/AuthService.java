@@ -22,7 +22,9 @@ import io.jsonwebtoken.io.Encoders;
 import io.jsonwebtoken.security.Keys;
 import java.net.URI;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.AccessDeniedException;
 import java.util.Date;
+import java.util.List;
 import java.util.NoSuchElementException;
 import javax.crypto.SecretKey;
 import org.apache.logging.log4j.util.InternalException;
@@ -68,16 +70,30 @@ public class AuthService {
         return new AccessTokenDto(getAccessToken(member));
     }
 
+    public List<Member> getMemberAll(LoginMemberIdDto loginMemberIdDto)
+        throws AccessDeniedException {
+        validateAdminMember(loginMemberIdDto);
+        return authRepository.findAll();
+    }
+
     public PointResponse getMemberPoint(LoginMemberIdDto loginMemberIdDto) {
         Member member = getValidatedMember(loginMemberIdDto);
         return new PointResponse(member.getPoint());
     }
 
     @Transactional
-    public RemainingPointResponse subtractMemberPoint(PointRequest pointRequest, LoginMemberIdDto loginMemberIdDto) {
+    public RemainingPointResponse subtractMemberPoint(PointRequest pointRequest,
+        LoginMemberIdDto loginMemberIdDto) {
         Member member = getValidatedMember(loginMemberIdDto);
         Member resultMember = authRepository.save(member.subtractPoint(pointRequest.point()));
         return new RemainingPointResponse(resultMember.getPoint());
+    }
+
+    @Transactional
+    public void addMemberPoint(PointRequest pointRequest, LoginMemberIdDto loginMemberIdDto)
+        throws AccessDeniedException {
+        Member member = getValidatedMember(loginMemberIdDto);
+        authRepository.save(member.addPoint(pointRequest.point()));
     }
 
     public String getKakaoAuthCodeUrl() {
@@ -227,6 +243,17 @@ public class AuthService {
     }
 
     private Member getValidatedMember(LoginMemberIdDto loginMemberIdDto) {
-        return authRepository.findById(loginMemberIdDto.id()).orElseThrow(() -> new NoSuchElementException("회원 정보가 존재하지 않습니다."));
+        return authRepository.findById(loginMemberIdDto.id())
+            .orElseThrow(() -> new NoSuchElementException("회원 정보가 존재하지 않습니다."));
+    }
+
+    private Member validateAdminMember(LoginMemberIdDto loginMemberIdDto)
+        throws AccessDeniedException {
+        Member member = getValidatedMember(loginMemberIdDto);
+        if (!member.getEmail().equals("admin")) {
+            throw new AccessDeniedException("관리자 계정만 수행 가능한 기능입니다.");
+        }
+
+        return member;
     }
 }

@@ -88,4 +88,8 @@ public class Member {
 
         return new Member(id, name, email, password, point - requestPoint);
     }
+
+    public Member addPoint(int requestPoint) {
+        return new Member(id, name, email, password, point + requestPoint);
+    }
 }

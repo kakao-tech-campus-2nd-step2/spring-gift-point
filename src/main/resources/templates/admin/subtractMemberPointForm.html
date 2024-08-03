@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <link rel="stylesheet" th:href="@{/bootstrap.min.css}" type="text/css">
+  <title>admin - subtract member's point</title>
+</head>
+<body>
+<div class="container"
+     style="display: flex; flex-direction: column; justify-content: center; margin-top: 50px;">
+  <h2 class="py-4 text-center border-bottom mb-5">포인트 차감</h2>
+  <div>
+    <form method="post" th:action th:method="put">
+      <div class="mb-3">
+        <label class="mb-2" for="point">차감할 포인트</label>
+        <input class="form-control" id="point" name="point" placeholder="차감할 포인트를 입력하세요."
+               type="text">
+      </div>
+      <div class="row mt-5">
+        <div class="col">
+          <button class="btn btn-primary w-100" type="submit">적용</button>
+        </div>
+        <div class="col">
+          <button class="btn btn-primary w-100" onclick="location.href='members.html'"
+                  th:onclick="|location.href='@{/admin/members}'|" type="button">취소
+          </button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+</body>
+</html>
