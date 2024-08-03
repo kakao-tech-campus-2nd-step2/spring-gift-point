@@ -73,9 +73,11 @@ public class AuthService {
         return new PointResponse(member.getPoint());
     }
 
+    @Transactional
     public RemainingPointResponse subtractMemberPoint(PointRequest pointRequest, LoginMemberIdDto loginMemberIdDto) {
         Member member = getValidatedMember(loginMemberIdDto);
-        return new RemainingPointResponse(member.subtractPoint(pointRequest.point()).getPoint());
+        Member resultMember = authRepository.save(member.subtractPoint(pointRequest.point()));
+        return new RemainingPointResponse(resultMember.getPoint());
     }
 
     public String getKakaoAuthCodeUrl() {

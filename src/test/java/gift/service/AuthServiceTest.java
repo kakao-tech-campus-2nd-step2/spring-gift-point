@@ -2,6 +2,7 @@ package gift.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.assertj.core.api.SoftAssertions.*;
 import static org.assertj.core.api.SoftAssertions.assertSoftly;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
@@ -30,6 +31,7 @@ import java.util.Optional;
 import java.util.Properties;
 import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.MockWebServer;
+import org.assertj.core.api.SoftAssertions;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayNameGeneration;
@@ -152,13 +154,18 @@ class AuthServiceTest {
         given(authRepository.findById(loginMemberIdDto.id())).willReturn(Optional.of(member));
 
         PointRequest pointRequest = new PointRequest(500);
+        Member resultMember = new Member(member.getId(), member.getEmail(), member.getPassword(), member.getPoint() - pointRequest.point());
+        given(authRepository.save(any(Member.class))).willReturn(resultMember);
 
         //when
         RemainingPointResponse remainingPointResponse = authService.subtractMemberPoint(pointRequest, loginMemberIdDto);
 
         //then
-        assertThat(remainingPointResponse.point()).isEqualTo(
-            member.getPoint() - pointRequest.point());
+        assertSoftly(softly -> {
+            then(authRepository).should().save(any());
+            assertThat(remainingPointResponse.point()).isEqualTo(
+                member.getPoint() - pointRequest.point());
+        });
     }
 
     @Test
