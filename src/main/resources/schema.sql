@@ -53,7 +53,12 @@ CREATE TABLE IF NOT EXISTS `order` (
                                        PRIMARY KEY (id)
 );
 
+
 ALTER TABLE `order`
-    ADD CONSTRAINT FKbtvfujlvyoah90rtq73gq2412
+    ADD CONSTRAINT IF NOT EXISTS FKbtvfujlvyoah90rtq73gq2412
         FOREIGN KEY (product_option_id)
             REFERENCES product_option (id);
+ALTER TABLE member ADD COLUMN points INTEGER DEFAULT 0;
+
+ALTER TABLE `order` ADD COLUMN points_used INTEGER DEFAULT 0;
+ALTER TABLE `order` ADD COLUMN points_earned INTEGER DEFAULT 0;

@@ -14,22 +14,25 @@ public class Member {
   private String password;
   @Column(nullable = false)
   private String name;
+  @Column(nullable = false)
+  private int points;
 
-  public Member(Long id, String email, String password, String name) {
+  public Member(Long id, String email, String password, String name, int points) {
     this.id = id;
     this.email = email;
     this.password = password;
     this.name = name;
+    this.points = points;
   }
-  
-  public Member(String email, String password, String name) {
+
+  public Member(String email, String password, String name, int points) {
     this.email = email;
     this.password = password;
     this.name = name;
+    this.points = points;
   }
 
   public Member() {
-
   }
 
   public Long getId() {
@@ -46,5 +49,17 @@ public class Member {
 
   public String getName() {
     return name;
+  }
+
+  public int getPoints() {
+    return points;
+  }
+
+  public void addPoints(int points) {
+    this.points += points;
+  }
+
+  public void deductPoints(int points) {
+    this.points -= points;
   }
 }

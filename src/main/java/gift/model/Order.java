@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
+@Table(name = "orders")
 public class Order {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -13,17 +14,26 @@ public class Order {
   @JoinColumn(name = "product_option_id", nullable = false)
   private ProductOption productOption;
 
+  @ManyToOne
+  @JoinColumn(name = "member_id", nullable = false)
+  private Member member;
+
   private int quantity;
   private LocalDateTime orderDateTime;
   private String message;
+  private int pointsUsed;
+  private int pointsEarned;
 
   public Order() {}
 
-  public Order(ProductOption productOption, int quantity, String message) {
+  public Order(ProductOption productOption, Member member, int quantity, String message, LocalDateTime orderDateTime, int pointsUsed, int pointsEarned) {
     this.productOption = productOption;
+    this.member = member;
     this.quantity = quantity;
-    this.orderDateTime = LocalDateTime.now();
     this.message = message;
+    this.orderDateTime = orderDateTime;
+    this.pointsUsed = pointsUsed;
+    this.pointsEarned = pointsEarned;
   }
 
   public Long getId() {
@@ -32,6 +42,10 @@ public class Order {
 
   public ProductOption getProductOption() {
     return productOption;
+  }
+
+  public Member getMember() {
+    return member;
   }
 
   public int getQuantity() {
@@ -44,5 +58,18 @@ public class Order {
 
   public String getMessage() {
     return message;
+  }
+
+  public int getPointsUsed() {
+    return pointsUsed;
+  }
+
+  public int getPointsEarned() {
+    return pointsEarned;
+  }
+
+  public void updatePoints(int pointsUsed, int pointsEarned) {
+    this.pointsUsed = pointsUsed;
+    this.pointsEarned = pointsEarned;
   }
 }
