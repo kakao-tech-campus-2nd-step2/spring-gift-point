@@ -6,6 +6,7 @@ import gift.domain.option.service.OptionService;
 import gift.domain.order.dto.OrderRequest;
 import gift.domain.order.dto.OrderResponse;
 import gift.domain.order.entity.Orders;
+import gift.domain.order.exception.OrderException;
 import gift.domain.order.repository.OrderRepository;
 import gift.domain.wishlist.entity.Wish;
 import gift.domain.wishlist.repository.WishRepository;
@@ -45,7 +46,9 @@ public class OrderService {
     @Transactional
     public OrderResponse createOrder(Member member, OrderRequest request) {
         Orders newOrder = dtoToEntity(member, request);
-        orderProcess(newOrder);
+        if(hasSufficientPoints(newOrder, member)) {
+            orderProcess(newOrder);
+        }
         return entityToDto(orderRepository.save(newOrder));
     }
 
@@ -65,6 +68,22 @@ public class OrderService {
         }
     }
 
+    private boolean hasSufficientPoints(Orders order, Member member){
+        int currentPoint = member.getPoint();
+        int totalPrice = order.getOption().getProduct().getPrice() * order.getQuantity();
+
+        if( totalPrice >= 50_000){
+            totalPrice = (int)(totalPrice * 0.9);
+        }
+
+        if( currentPoint < totalPrice ){
+            throw new OrderException("포인트가 부족합니다.");
+        }
+
+        member.updatePoint(currentPoint - totalPrice);
+
+        return true;
+    }
     private void removeIfInWishlist(Member member, Option option) {
         Optional<Wish> wish = wishRepository.findByProductAndMember(option.getProduct(), member);
         wish.ifPresent(wishRepository::delete);
