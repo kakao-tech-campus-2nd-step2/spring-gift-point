@@ -7,6 +7,7 @@ import gift.exception.WishNotFoundException;
 import gift.repository.OrderRepository;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class OrderService {
@@ -16,17 +17,21 @@ public class OrderService {
     private final OptionService optionService;
     private final WishService wishService;
     private final KakaoApiService kakaoApiService;
+    private final PointService pointService;
 
-    public OrderService(OrderRepository orderRepository, OptionService optionService, WishService wishService, KakaoApiService kakaoApiService) {
+    public OrderService(OrderRepository orderRepository, OptionService optionService, WishService wishService, KakaoApiService kakaoApiService, PointService pointService) {
         this.orderRepository = orderRepository;
         this.optionService = optionService;
         this.wishService = wishService;
         this.kakaoApiService = kakaoApiService;
+        this.pointService = pointService;
     }
 
+    @Transactional
     public OrderResponse processOrder(Long memberId, OrderRequest orderRequest) {
-        OrderResponse orderResponse = saveOrder(orderRequest);
+        pointService.subtractPoint(memberId,orderRequest);
 
+        OrderResponse orderResponse = saveOrder(orderRequest);
         optionService.subtractOptionQuantity(orderRequest.optionId(), orderRequest.quantity());
 
         Long productId = optionService.getProductIdByOptionId(orderRequest);
@@ -36,7 +41,6 @@ public class OrderService {
         } catch (WishNotFoundException e) {
             log.info("위시리스트에 없는 상품입니다");
         }
-
         kakaoApiService.sendMessageToMe(memberId, orderRequest);
         return orderResponse;
     }
