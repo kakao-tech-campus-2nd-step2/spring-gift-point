@@ -5,8 +5,9 @@ import gift.dto.OrderDTO;
 import gift.entity.OrderEntity;
 import gift.repository.OrderRepository;
 import jakarta.transaction.Transactional;
-import java.time.LocalDateTime;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -28,16 +29,9 @@ public class OrderService {
     @Transactional
     public void createOrder(OrderDTO order, Long userId, String email, String accessToken) {
         optionService.subtractOptionQuantity(order.getOptionId(), order.getQuantity());
-
         wishListService.removeOptionFromWishList(userId, order.getOptionId());
 
-        OrderEntity orderEntity = new OrderEntity(
-            order.getOptionId(),
-            order.getQuantity(),
-            LocalDateTime.now().toString(),
-            order.getMessage()
-        );
-
+        OrderEntity orderEntity = new OrderEntity(userId, order.getOptionId(), order.getQuantity(), order.getMessage());
         orderRepository.save(orderEntity);
 
         try {
@@ -45,5 +39,10 @@ public class OrderService {
         } catch (JsonProcessingException e) {
             throw new RuntimeException("카카오 메시지 전송 실패: " + e.getMessage(), e);
         }
+    }
+
+    public Page<OrderDTO> getUserOrders(Long userId, Pageable pageable) {
+        Page<OrderEntity> orders = orderRepository.findByUserId(userId, pageable);
+        return orders.map(OrderEntity::toDTO);
     }
 }

@@ -1,7 +1,9 @@
 package gift.dto;
 
+import gift.entity.OrderEntity;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
+import java.time.LocalDateTime;
 
 public class OrderDTO {
     @NotNull(message = "옵션 id는 필수 입력 사항입니다.")
@@ -11,6 +13,8 @@ public class OrderDTO {
     private int quantity;
     private String message;
 
+    private LocalDateTime orderDateTime;
+
     // 기본 생성자
     public OrderDTO() {}
 
@@ -19,6 +23,13 @@ public class OrderDTO {
         this.optionId = optionId;
         this.quantity = quantity;
         this.message = message;
+    }
+
+    public OrderDTO(Long optionId, int quantity, String message, LocalDateTime orderDateTime) {
+        this.optionId = optionId;
+        this.quantity = quantity;
+        this.message = message;
+        this.orderDateTime = orderDateTime;
     }
 
     // Getters and Setters

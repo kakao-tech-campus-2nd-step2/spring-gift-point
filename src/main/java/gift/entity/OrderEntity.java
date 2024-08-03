@@ -1,10 +1,8 @@
 package gift.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import gift.dto.OrderDTO;
+import jakarta.persistence.*;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "orders")
@@ -13,28 +11,43 @@ public class OrderEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private final Long optionId;
-    private final int quantity;
-    private final String orderDateTime;
-    private final String message;
+    @Column(nullable = false)
+    private Long userId;
 
-    public OrderEntity(Long id, Long optionId, int quantity, String orderDateTime, String message) {
-        this.id = id;
+    @Column(nullable = false)
+    private Long optionId;
+
+    @Column(nullable = false)
+    private int quantity;
+
+    @Column(nullable = false)
+    private LocalDateTime orderDateTime;
+
+    @Column(nullable = false)
+    private String message;
+
+    public OrderEntity() {}
+
+    public OrderEntity(Long userId, Long optionId, int quantity, String message) {
+        this.userId = userId;
         this.optionId = optionId;
         this.quantity = quantity;
-        this.orderDateTime = orderDateTime;
+        this.orderDateTime = LocalDateTime.now();
         this.message = message;
     }
 
-    public OrderEntity(Long optionId, int quantity, String orderDateTime, String message) {
+    public OrderEntity(Long optionId, int quantity, String message) {
         this.optionId = optionId;
         this.quantity = quantity;
-        this.orderDateTime = orderDateTime;
         this.message = message;
     }
 
     public Long getId() {
         return id;
+    }
+
+    public Long getUserId() {
+        return userId;
     }
 
     public Long getOptionId() {
@@ -45,7 +58,7 @@ public class OrderEntity {
         return quantity;
     }
 
-    public String getOrderDateTime() {
+    public LocalDateTime getOrderDateTime() {
         return orderDateTime;
     }
 
@@ -53,4 +66,7 @@ public class OrderEntity {
         return message;
     }
 
+    public OrderDTO toDTO() {
+        return new OrderDTO(optionId, quantity, message, orderDateTime);
+    }
 }

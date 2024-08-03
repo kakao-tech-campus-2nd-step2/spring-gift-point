@@ -23,7 +23,7 @@ public class AdminController {
 
     @GetMapping
     public String listProducts(Model model) {
-        model.addAttribute("products", productService.getAllProducts());
+        model.addAttribute("productDTO", productService.getAllProducts());
         return "list";
     }
 
@@ -46,16 +46,13 @@ public class AdminController {
     @GetMapping("/update/{id}")
     public String editProductForm(@PathVariable Long id, Model model) {
         var productDTO = productService.getProduct(id)
-            .orElse(null); // Optional에서 직접 null을 반환
-        if (productDTO == null) {
-            return "redirect:/admin/products";
-        }
-        model.addAttribute("product", productDTO);
+            .orElseThrow(() -> new RuntimeException("Product not found"));
+        model.addAttribute("productDTO", productDTO);
         return "update";
     }
 
     @PostMapping("/update/{id}")
-    public String editProduct(@PathVariable Long id, @ModelAttribute @Valid ProductDTO productDTO, BindingResult bindingResult) {
+    public String editProduct(@PathVariable Long id, @Valid @ModelAttribute ProductDTO productDTO, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             return "update";
         }
