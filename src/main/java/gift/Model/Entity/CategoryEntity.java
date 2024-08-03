@@ -1,6 +1,6 @@
 package gift.Model.Entity;
 
-import gift.Model.DTO.CategoryDTO;
+import gift.Model.response.CategoryResponse;
 import jakarta.persistence.*;
 
 @Entity
@@ -27,8 +27,8 @@ public class CategoryEntity {
         this.description = description;
     }
 
-    public CategoryDTO mapToDTO(){
-        return new CategoryDTO(this.id, this.name, this.imageUrl,this.description);
+    public CategoryResponse mapToDTO(){
+        return new CategoryResponse(this.id, this.name, this.imageUrl, this.description);
     }
 
     public Long getId() {

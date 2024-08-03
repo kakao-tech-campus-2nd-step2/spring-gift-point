@@ -25,6 +25,9 @@ public class MemberEntity {
         @Column(name="role")
         private Role role;
 
+        @Column(name="point")
+        private int point;
+
         public MemberEntity(){}
 
         public MemberEntity(String email, String password, Role role){
@@ -71,5 +74,13 @@ public class MemberEntity {
 
         public void setRole(Role role) {
                 this.role = role;
+        }
+
+        public int getPoint() {
+                return point;
+        }
+
+        public void setPoint(int point) {
+                this.point = point;
         }
 }

@@ -151,5 +151,39 @@ public class ProductService {
         return categoriesId;
     }
 
+    public ProductDTO getById(Long id){
+        Optional<ProductEntity> productEntityOptional = productRepository.findById(id);
 
+        if(productEntityOptional.isEmpty()){
+            throw new ProductNotFoundException("제품을 찾을 수 없습니다.");
+        }
+        ProductEntity productEntity = productEntityOptional.get();
+
+        return productEntity.mapToDTO(false);
+    }
+
+
+    public List<ProductDTO> read(){
+        List<ProductEntity> entityList = productRepository.findAll();
+        List<ProductDTO> dtoList = new ArrayList<>();
+
+        for(ProductEntity p: entityList){
+            dtoList.add(p.mapToDTO(false));
+        }
+
+        return dtoList;
+    }
+
+    public Page<ProductDTO> getPage(int page, int size, String sort){
+        List<ProductDTO> dtoList = read();
+        Sort sortType = Sort.by(Sort.Direction.DESC, sort);
+        Pageable pageable = PageRequest.of(page, size, sortType);
+
+        int start = (int) pageable.getOffset();
+        int end = Math.min((start + pageable.getPageSize()), dtoList.size());
+
+        List<ProductDTO> subList = dtoList.subList(start, end);
+
+        return new PageImpl<>(subList, pageable, dtoList.size());
+    }
 }

@@ -1,4 +1,4 @@
-insert into member(email, password, role) values ('admin', '1234', 'ADMIN');
+insert into member(email, password, role, point) values ('admin', '1234', 'ADMIN', 1000);
 
 insert into category(name, image_url, description) values('상품권','https://gift-s.kakaocdn.net/dn/gift/images/m640/dimm_theme.png','');
 insert into category(name, image_url, description) values('인형','https://gift-s.kakaocdn.net/dn/gift/images/m640/dimm_theme.png','');

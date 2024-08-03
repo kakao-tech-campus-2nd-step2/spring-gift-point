@@ -1,9 +1,11 @@
 package gift.Service;
 
+import gift.Exception.Login.AuthorizedException;
 import gift.Exception.Login.LoginException;
 import gift.Model.Role;
 import gift.Model.DTO.MemberDTO;
 import gift.Model.Entity.MemberEntity;
+import gift.Model.response.PointResponse;
 import gift.Repository.MemberRepository;
 import gift.Token.JwtToken;
 import gift.Token.JwtTokenProvider;
@@ -51,6 +53,16 @@ public class UserService {
                 throw new LoginException("회원 정보가 일치하지 않습니다.");
 
             return new JwtToken(jwtTokenProvider.createToken(member.get()));
+        }
+
+        public PointResponse read(String email){
+            Optional<MemberEntity> memberEntityOptional = memberRepository.findByEmail(email);
+
+            if(memberEntityOptional.isEmpty()){
+                throw new AuthorizedException("회원 정보가 없습니다.");
+            }
+
+            return new PointResponse(memberEntityOptional.get().getPoint());
         }
 
         public String getKakaoLoginUrl(){
