@@ -1,6 +1,7 @@
 package gift.init;
 
 import gift.init.auth.UserCreator;
+import gift.init.point.DiscountPolicyCreator;
 import gift.init.product.CategoryCreator;
 import gift.init.product.ProductCreator;
 import gift.init.product.ProductOptionCreator;
@@ -21,17 +22,21 @@ public class InitData {
     private final WishCreator wishCreator;
     private final ProductOptionCreator productOptionCreator;
     private final ProductOrderCreator productOrderCreator;
+    private final DiscountPolicyCreator discountPolicyCreator;
 
     @Autowired
     public InitData(UserCreator userCreator, CategoryCreator categoryCreator,
         ProductCreator productCreator, WishCreator wishCreator,
-        ProductOptionCreator productOptionCreator, ProductOrderCreator productOrderCreator) {
+        ProductOptionCreator productOptionCreator,
+        ProductOrderCreator productOrderCreator,
+        DiscountPolicyCreator discountPolicyCreator) {
         this.userCreator = userCreator;
         this.categoryCreator = categoryCreator;
         this.productCreator = productCreator;
         this.wishCreator = wishCreator;
         this.productOptionCreator = productOptionCreator;
         this.productOrderCreator = productOrderCreator;
+        this.discountPolicyCreator = discountPolicyCreator;
     }
 
     @PostConstruct
@@ -48,5 +53,7 @@ public class InitData {
         productOptionCreator.creator();
         //        상품의 옵션 재고 증감(상품주문)
         productOrderCreator.creator();
+        //        할인정책 추가
+        discountPolicyCreator.creator();
     }
 }
