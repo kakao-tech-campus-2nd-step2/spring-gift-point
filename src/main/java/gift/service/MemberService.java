@@ -33,4 +33,7 @@ public class MemberService {
             throw new RuntimeException("Invalid email or password");
         }
     }
+    public Member save(Member member) {
+        return memberRepository.save(member);
+    }
 }
