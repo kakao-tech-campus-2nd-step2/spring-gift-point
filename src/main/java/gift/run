@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+
+JAR_NAME=spring-gift-0.0.1-SNAPSHOT.jar
+CURRENT_PID=$(pgrep -f $JAR_NAME)
+CLONE_PATH=~/deploy
+
+if [ -z $CURRENT_PID ]
+then
+  sleep 1
+else
+  kill -15 $CURRENT_PID
+  sleep 5
+fi
+
+nohup java -jar $CLONE_PATH/build/libs/$JAR_NAME > /dev/null 2> /dev/null < /dev/null &

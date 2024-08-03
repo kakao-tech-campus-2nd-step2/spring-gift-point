@@ -1,0 +1,19 @@
+#!/usr/bin/env bash
+
+# Configuration
+CLONE_PATH=~/deploy
+
+cd $CLONE_PATH
+git pull
+
+./gradlew build --refresh-dependencies
+
+if [ -z $CURRENT_PID ]
+then
+  sleep 1
+else
+  kill -15 $CURRENT_PID
+  sleep 5
+fi
+
+./gradlew bootJar
