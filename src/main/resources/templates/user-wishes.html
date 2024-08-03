@@ -79,41 +79,47 @@
 
     function loadWishes(page) {
         const token = localStorage.getItem('jwtToken');
-        fetch(`/wishes?page=${page}&size=${size}`, {
+        fetch(`/api/wishes?page=${page}&size=${size}`, {
             method: 'GET',
             headers: {
                 'Authorization': 'Bearer ' + token,
                 'Content-Type': 'application/json'
             }
         })
-            .then(response => response.json())
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                return response.json();
+            })
             .then(data => {
                 const wishList = document.getElementById('wish-list');
                 wishList.innerHTML = '';
 
-                data.content.forEach(wish => {
+                data.domain.forEach(wish => {
                     const wishRow = document.createElement('tr');
                     wishRow.innerHTML = `
-                        <td class="font-weight-bold">${wish.productName}</td>
-                        <td>${wish.productPrice}</td>
-                        <td>
-                            <img src="${wish.productImageurl}" alt="Product Image" style="max-width: 100px; height: auto;">
-                        </td>
-                        <td>${wish.optionName}</td>
-                        <td>
-                            <button class="btn btn-danger btn-sm" onclick="removeFromWishList(${wish.id})">Remove</button>
-                        </td>
-                    `;
+                <td class="font-weight-bold">${wish.productName}</td>
+                <td>${wish.productPrice}</td>
+                <td>
+                    <img src="${wish.productImageurl}" alt="Product Image" style="max-width: 100px; height: auto;">
+                </td>
+                <td>${wish.optionName}</td>
+                <td>
+                    <button class="btn btn-danger btn-sm" onclick="removeFromWishList(${wish.id})">Remove</button>
+                </td>
+            `;
                     wishList.appendChild(wishRow);
                 });
 
-                updatePagination(data.totalPages, data.number);
+                updatePagination(data.httpResult.totalPages, data.httpResult.number);
             })
             .catch(error => {
                 console.error('Error:', error);
                 alert('Failed to load wish list.');
             });
     }
+
 
     function updatePagination(totalPages, currentPage) {
         const pagination = document.getElementById('pagination');
@@ -135,7 +141,7 @@
 
     function removeFromWishList(wishId) {
         const token = localStorage.getItem('jwtToken');
-        fetch('/wishes/' + wishId, {
+        fetch('/api/wishes/' + wishId, {
             method: 'DELETE',
             headers: {
                 'Authorization': 'Bearer ' + token,

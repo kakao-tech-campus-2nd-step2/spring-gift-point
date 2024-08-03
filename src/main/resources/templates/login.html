@@ -30,7 +30,7 @@
         const email = document.getElementById('email').value;
         const password = document.getElementById('password').value;
 
-        fetch('/members/login', {
+        fetch('/api/members/login', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -40,24 +40,22 @@
                 password: password
             })
         })
-            .then(response => {
-                if (response.ok) {
-                    return response.text();
-                } else if (response.status === 401) {
-                    throw new Error('Invalid email or password');
+            .then(response => response.json())
+            .then(data => {
+                if (data.httpResult.statusCode === 200) {
+                    localStorage.setItem('jwtToken', data.domain[0].token);
+                    alert('Login successful');
+                    window.location.href = "/user-products";
                 } else {
-                    throw new Error('Login failed');
+                    alert('Error: ' + data.domain[0].error);
                 }
             })
-            .then(token => {
-                localStorage.setItem('jwtToken', token);
-                alert('Login successful');
-                window.location.href = "/user-products";
-            })
             .catch(error => {
-                alert(error.message);
+                console.error('Error:', error);
+                alert('Login failed');
             });
     });
+
 </script>
 </body>
 </html>
