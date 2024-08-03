@@ -1,6 +1,8 @@
 package gift.domain;
 
 import gift.utils.TimeStamp;
+import gift.utils.error.PointNotEnoughException;
+import gift.utils.error.PointOverException;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -30,6 +32,9 @@ public class UserInfo extends TimeStamp {
     @OneToMany(mappedBy = "userInfo",cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Order> orders = new ArrayList<>();
 
+    @Column(nullable = false)
+    private int point;
+
     public UserInfo() {
     }
 
@@ -46,6 +51,9 @@ public class UserInfo extends TimeStamp {
         return password;
     }
 
+    public void setPoint(int point) {
+        this.point = point;
+    }
 
     public String getEmail() {
         return email;
@@ -61,6 +69,10 @@ public class UserInfo extends TimeStamp {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public int getPoint() {
+        return point;
     }
 
     @Override
@@ -100,6 +112,19 @@ public class UserInfo extends TimeStamp {
     public void removeOrder(Order order) {
         orders.remove(order);
         order.setUserInfo(null);
+    }
+    public void minusPoint(int point,int totalPrice){
+        if (this.point < point){
+            throw new PointNotEnoughException("Point Not Enough");
+        }
+        if (totalPrice < point){
+            throw new PointOverException("Point Over Exception");
+        }
+        this.point -= point;
+    }
+
+    public void plusPoint(int point){
+        this.point+=point;
     }
 
 

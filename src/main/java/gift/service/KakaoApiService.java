@@ -148,6 +148,15 @@ public class KakaoApiService {
             () -> new UserNotFoundException("User Not Found")
         );
 
+        int totalPrice = option.getTotalPrice(kakaoOrderRequest.quantity(),
+            kakaoOrderRequest.point());
+
+        userInfo.minusPoint(kakaoOrderRequest.point(),totalPrice);
+
+
+        int pluspoint = (int) (totalPrice*0.01);
+        userInfo.plusPoint(pluspoint);
+
         Order order = new Order(kakaoOrderRequest.quantity(),
             LocalDateTime.now(), kakaoOrderRequest.message());
 

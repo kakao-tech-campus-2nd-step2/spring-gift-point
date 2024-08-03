@@ -41,7 +41,7 @@ class OptionServiceTest {
     void addOption() {
         // Given
         Long productId = 1L;
-        Product product = new Product("Test Product", 100.0, "image.jpg");
+        Product product = new Product("Test Product", 100, "image.jpg");
         product.setId(productId);
 
         OptionRequest optionRequest = new OptionRequest("New Option", 200);
@@ -91,7 +91,7 @@ class OptionServiceTest {
         // Given
         Long productId = 1L;
         Long optionId = 1L;
-        Product product = new Product("Test Product", 100.0, "image.jpg");
+        Product product = new Product("Test Product", 100, "image.jpg");
         product.setId(productId);
 
         Option existingOption = new Option("Existing Option", 100);

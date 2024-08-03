@@ -121,4 +121,18 @@ public class GlobalExceptionHandler {
         ErrorResponse errorResponse = new ErrorResponse(401, ex.getMessage());
         return new ResponseEntity<>(errorResponse, HttpStatus.UNAUTHORIZED);
     }
+
+    @ExceptionHandler(PointNotEnoughException.class)
+    public ResponseEntity<ErrorResponse> handlePointNotEnoughException(PointNotEnoughException ex,
+        WebRequest request){
+        ErrorResponse errorResponse = new ErrorResponse(400, ex.getMessage());
+        return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(PointOverException.class)
+    public ResponseEntity<ErrorResponse> handlePointOverException(PointOverException ex,
+        WebRequest request){
+        ErrorResponse errorResponse = new ErrorResponse(400, ex.getMessage());
+        return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+    }
 }

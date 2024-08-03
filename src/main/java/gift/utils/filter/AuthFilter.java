@@ -1,11 +1,8 @@
 package gift.utils.filter;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import gift.repository.TokenRepository;
 import gift.utils.JwtTokenProvider;
-import gift.utils.error.AuthorizationException;
 import gift.utils.error.ErrorResponse;
-import gift.utils.error.TokenAuthException;
 import jakarta.servlet.Filter;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.FilterConfig;
@@ -15,8 +12,6 @@ import jakarta.servlet.ServletResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -45,7 +40,7 @@ public class AuthFilter implements Filter {
         HttpServletResponse httpResponse = (HttpServletResponse) response;
 
         // CORS 헤더 설정
-        httpResponse.setHeader("Access-Control-Allow-Origin", "*");
+        httpResponse.setHeader("Access-Control-Allow-Origin", "http://server.cla6sha.de");
         httpResponse.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
         httpResponse.setHeader("Access-Control-Allow-Headers", "Authorization, Content-Type");
         httpResponse.setHeader("Access-Control-Allow-Credentials", "true");

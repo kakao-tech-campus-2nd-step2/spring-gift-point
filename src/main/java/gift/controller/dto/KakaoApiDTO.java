@@ -13,6 +13,7 @@ public class KakaoApiDTO {
                                     String client_secret){}
     public record KakaoOrderRequest(Long optionId,
                                     int quantity,
+                                    int point,
                                     String message){}
     public record KakaoOrderResponse(Long id,
                                      Long optionId,

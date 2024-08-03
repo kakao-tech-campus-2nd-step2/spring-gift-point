@@ -55,7 +55,7 @@ class GiftServiceTest {
         // Given
         Long productId = 1L;
         Category category = new Category(1L, "Test Category", "Red", "category.jpg", "Description");
-        Product product = new Product("Test Product", 100.0, "image.jpg", category);
+        Product product = new Product("Test Product", 100, "image.jpg", category);
         product.setId(productId);
 
         when(productRepository.findByIdWithCategoryAndOption(productId)).thenReturn(Optional.of(product));
@@ -77,8 +77,8 @@ class GiftServiceTest {
         Pageable pageable = PageRequest.of(0, 10);
         Category category1 = new Category(1L, "Category 1", "Red", "cat1.jpg", "Description 1");
         Category category2 = new Category(2L, "Category 2", "Blue", "cat2.jpg", "Description 2");
-        Product product1 = new Product("Product 1", 100.0, "image1.jpg", category1);
-        Product product2 = new Product("Product 2", 200.0, "image2.jpg", category2);
+        Product product1 = new Product("Product 1", 100, "image1.jpg", category1);
+        Product product2 = new Product("Product 2", 200, "image2.jpg", category2);
         List<Product> products = Arrays.asList(product1, product2);
         Page<Product> productPage = new PageImpl<>(products, pageable, products.size());
 
@@ -98,10 +98,10 @@ class GiftServiceTest {
     @DisplayName("postProducts 메서드 확인")
     void postProducts() {
         // Given
-        ProductRequest productRequest = new ProductRequest("New Product", 150.0, "new-image.jpg", 1L);
+        ProductRequest productRequest = new ProductRequest("New Product", 150, "new-image.jpg", 1L);
         OptionRequest optionRequest = new OptionRequest("Option 1", 5);
         Category category = new Category(1L, "Test Category", "Blue", "category.jpg", "Description");
-        Product savedProduct = new Product("New Product", 150.0, "new-image.jpg", category);
+        Product savedProduct = new Product("New Product", 150, "new-image.jpg", category);
         savedProduct.setId(1L);
 
         when(categoryRepository.findById(1L)).thenReturn(Optional.of(category));
@@ -124,7 +124,7 @@ class GiftServiceTest {
         // Given
         Long productId = 1L;
         Category category = new Category(1L, "Test Category", "Red", "category-image.jpg", "Test Description");
-        Product product = new Product("Test Product", 100.0, "test-image.jpg", category);
+        Product product = new Product("Test Product", 100, "test-image.jpg", category);
         product.setId(productId);
 
         when(productRepository.findById(productId)).thenReturn(Optional.of(product));
@@ -144,7 +144,7 @@ class GiftServiceTest {
     void getOption() {
         // Given
         Long productId = 1L;
-        Product product = new Product("Test Product", 100.0, "image.jpg");
+        Product product = new Product("Test Product", 100, "image.jpg");
         product.setId(productId);
         product.addOption(new Option("Option 1", 10));
         product.addOption(new Option("Option 2", 20));
@@ -165,7 +165,7 @@ class GiftServiceTest {
     @DisplayName("카카오가 포함된 상품명 예외 처리 확인")
     void postProductWithInvalidName() {
         // Given
-        ProductRequest request = new ProductRequest("카카오 상품", 100.0, "image.jpg", 1L);
+        ProductRequest request = new ProductRequest("카카오 상품", 100, "image.jpg", 1L);
         OptionRequest optionRequest = new OptionRequest("Option", 5);
 
         // When & Then
@@ -176,7 +176,7 @@ class GiftServiceTest {
     @DisplayName("존재하지 않는 카테고리로 상품 등록 시 예외 처리 확인")
     void postProductWithNonExistentCategory() {
         // Given
-        ProductRequest request = new ProductRequest("Valid Product", 100.0, "image.jpg", 999L);
+        ProductRequest request = new ProductRequest("Valid Product", 100, "image.jpg", 999L);
         OptionRequest optionRequest = new OptionRequest("Option", 5);
         when(categoryRepository.findById(999L)).thenReturn(Optional.empty());
 

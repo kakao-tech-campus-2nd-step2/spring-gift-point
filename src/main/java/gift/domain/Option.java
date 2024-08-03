@@ -86,4 +86,8 @@ public class Option extends TimeStamp {
         order.setOption(null);
     }
 
+    public int getTotalPrice(int quantity,int point){
+        return (int) product.getPrice()*quantity-point;
+    }
+
 }
