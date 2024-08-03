@@ -4,6 +4,8 @@ import gift.annotation.LoginMember;
 import gift.dto.orderDTO.OrderRequestDTO;
 import gift.dto.orderDTO.OrderResponseDTO;
 import gift.exception.AuthorizationFailedException;
+import gift.exception.InvalidInputValueException;
+import gift.exception.NotFoundException;
 import gift.exception.ServerErrorException;
 import gift.model.Member;
 import gift.service.KakaoService;
@@ -43,7 +45,9 @@ public class OrderController {
         OrderResponseDTO orderResponseDTO;
         try {
             orderResponseDTO = orderService.createOrder(orderRequestDTO, member.getEmail());
-        } catch (Exception e) {
+        } catch(InvalidInputValueException | NotFoundException e) {
+            throw e;
+        }catch (Exception e) {
             throw new ServerErrorException("서버 오류가 발생했습니다.");
         }
         String accessToken = orderRequestDTO.accessToken();
