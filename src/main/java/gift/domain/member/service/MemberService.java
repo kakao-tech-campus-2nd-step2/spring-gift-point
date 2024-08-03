@@ -3,6 +3,7 @@ package gift.domain.member.service;
 import gift.domain.member.dto.MemberRequest;
 import gift.domain.member.dto.MemberResponse;
 import gift.domain.member.dto.PointRequest;
+import gift.domain.member.dto.PointResponse;
 import gift.domain.member.entity.Member;
 import gift.domain.member.exception.MemberAuthorizationException;
 import gift.domain.member.exception.MemberNotFoundException;
@@ -66,6 +67,11 @@ public class MemberService {
             .findByEmail(email)
             .orElseThrow(() -> new MemberNotFoundException("유저가 존재하지 않습니다."));
     }
+
+    public PointResponse getPoint(Member member) {
+        return new PointResponse(member.getPoint());
+    }
+
     @Transactional
     public void updatePoint(Long memberId, PointRequest pointRequest) {
         Member savedMember = memberRepository.findById(memberId).orElseThrow(()-> new MemberNotFoundException("해당 유저가 존재하지 않습니다."));
