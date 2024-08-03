@@ -158,6 +158,13 @@ public class MemberService {
         return new MemberPointResponse(member.getPoints());
     }
 
+    public void deductPoints(Long memberId, MemberPointRequest memberPointRequest) {
+        Member member = memberRepository.findById(memberId)
+            .orElseThrow(() -> new ForbiddenException(ID_NOT_FOUND + memberId));
+        member.deductPoints(memberPointRequest.amount());
+        memberRepository.save(member);
+    }
+
     // Mapper methods
     public Member convertToEntity(MemberEditResponse memberEditResponse) {
         return new Member(memberEditResponse.id(), memberEditResponse.email(), null, memberEditResponse.registerType());

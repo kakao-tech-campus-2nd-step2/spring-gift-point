@@ -1,6 +1,7 @@
 package gift.controller;
 
 import static gift.util.constants.GeneralConstants.REQUIRED_FIELD_MISSING;
+import static gift.util.constants.MemberConstants.INSUFFICIENT_POINTS;
 import static gift.util.constants.OptionConstants.INSUFFICIENT_QUANTITY;
 import static gift.util.constants.OptionConstants.OPTION_NOT_FOUND;
 
@@ -51,7 +52,11 @@ public class OrderDetailController {
                             name = "옵션 수량 부족",
                             value = "{\"error\": \"" + INSUFFICIENT_QUANTITY + "(옵션 Id)\"}"
                         ),
-                        @ExampleObject(name = "필수 입력 값 누락", value = "{\"(필드 명)\": \"" + REQUIRED_FIELD_MISSING + "\"}")
+                        @ExampleObject(
+                            name = "포인트 부족",
+                            value = "{\"(필드 명)\": \"" + INSUFFICIENT_POINTS + "(잔여 포인트)\"}"
+                        ),
+                        @ExampleObject(name = "필수 입력 값 누락", value = "{\"error\": \"" + REQUIRED_FIELD_MISSING + "\"}")
                     }
                 )
             ),
