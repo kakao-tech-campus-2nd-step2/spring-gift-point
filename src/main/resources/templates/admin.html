@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>상품 관리</title>
+<!--    <script> type="text/javascript" th:src="@{/js/admin.js}"</script>-->
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f5f5f5;
+            color: #333;
+            margin: 0;
+            padding: 0;
+        }
+
+        h1, h2 {
+            color: #444;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background-color: #fff;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        th {
+            background-color: #f8f8f8;
+            font-weight: bold;
+        }
+
+        tr:hover {
+            background-color: #f1f1f1;
+        }
+
+        button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            margin: 4px 2px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        img {
+            max-width: 100px;
+            max-height: 100px;
+            border-radius: 4px;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.5);
+        }
+
+        .modal-content {
+            background-color: #fff;
+            margin: 10% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            animation: fadeIn 0.3s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        form label {
+            display: block;
+            margin-top: 10px;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+
+        form input[type="text"], form input[type="number"] {
+            width: calc(100% - 22px);
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        form button[type="submit"], form button[type="button"] {
+            width: 100px;
+            padding: 10px;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <h1>상품 관리</h1>
+    <div>
+        <h2>상품 목록</h2>
+        <button onclick="showAddProductModal()">상품 추가</button>
+        <table>
+            <thead>
+            <tr>
+                <th>ID</th>
+                <th>이름</th>
+                <th>가격</th>
+                <th>이미지</th>
+                <th>수정</th>
+                <th>삭제</th>
+            </tr>
+            </thead>
+            <tbody id="productTableBody">
+            </tbody>
+        </table>
+    </div>
+
+    <div id="productModal" class="modal">
+        <div class="modal-content">
+            <h2 id="modalTitle">상품 추가/수정</h2>
+            <form id="productForm">
+                <input type="hidden" id="productId">
+                <label for="productName">이름:</label>
+                <input type="text" id="productName" required><br><br>
+                <label for="productPrice">가격:</label>
+                <input type="number" id="productPrice" required><br><br>
+                <label for="productImagePath">이미지 경로:</label>
+                <input type="text" id="productImagePath" required><br><br>
+                <button type="submit">저장</button>
+                <button type="button" onclick="closeModal()">취소</button>
+            </form>
+        </div>
+    </div>
+    <script>
+        let products = [];
+
+        // 페이지 로드 시 상품 목록을 가져옴
+        document.addEventListener("DOMContentLoaded", () => {
+            fetchProducts();
+        });
+
+        /**
+         * 모든 상품을 가져와서 테이블에 렌더링합니다.
+         */
+        const fetchProducts = async () => {
+            try {
+                const response = await fetch("/api/products/all");
+                const data = await response.json();
+                products = data;
+                renderProducts(products);
+            } catch (error) {
+                console.error('Failed to fetch products:', error);
+            }
+        };
+
+        /**
+         * 상품 목록을 테이블에 렌더링합니다.
+         * @param {Array} products - 상품 목록
+         */
+        const renderProducts = (products) => {
+            const tbody = document.getElementById("productTableBody");
+            tbody.innerHTML = products.map(product => `
+            <tr>
+                <td>${product.id}</td>
+                <td>${product.name}</td>
+                <td>${product.price}</td>
+                <td><img src="${product.imageUrl}" alt="${product.name}"></td>
+                <td><button onclick="showEditProductModal(${product.id})">수정</button></td>
+                <td><button onclick="deleteProduct(${product.id})">삭제</button></td>
+            </tr>
+        `).join("");
+        };
+
+        /**
+         * 특정 상품을 삭제합니다.
+         * @param {number} id - 상품 ID
+         */
+        const deleteProduct = async (id) => {
+            if (confirm('정말로 이 상품을 삭제하시겠습니까?')) {
+                try {
+                    await fetch(`/api/products/${id}`, { method: 'DELETE' });
+                    fetchProducts();
+                } catch (error) {
+                    console.error('Failed to delete product:', error);
+                }
+            }
+        };
+
+        /**
+         * 상품 추가 모달을 표시합니다.
+         */
+        const showAddProductModal = () => {
+            document.getElementById('modalTitle').textContent = '상품 추가';
+            document.getElementById('productForm').reset();
+            document.getElementById('productId').value = '';
+            document.getElementById('productModal').style.display = 'block';
+        };
+
+        /**
+         * 상품 수정 모달을 표시합니다.
+         * @param {number} id - 상품 ID
+         */
+        const showEditProductModal = (id) => {
+            const product = products.find(p => p.id === id);
+            if (product) {
+                document.getElementById('modalTitle').textContent = '상품 수정';
+                document.getElementById('productId').value = product.id;
+                document.getElementById('productName').value = product.name;
+                document.getElementById('productPrice').value = product.price;
+                document.getElementById('productImagePath').value = product.imageUrl;
+                document.getElementById('productModal').style.display = 'block';
+            }
+        };
+
+        /**
+         * 모달을 닫습니다.
+         */
+        const closeModal = () => {
+            document.getElementById('productModal').style.display = 'none';
+        };
+
+        /**
+         * 상품 추가 또는 수정을 처리합니다.
+         */
+        document.getElementById('productForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const productId = document.getElementById('productId').value;
+            const product = {
+                name: document.getElementById('productName').value,
+                price: parseFloat(document.getElementById('productPrice').value),
+                imageUrl: document.getElementById('productImagePath').value
+            };
+
+            try {
+                if (products.find(p => p.id === parseInt(productId))) {
+                    await fetch(`/api/products/${productId}`, {
+                        method: 'PUT',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ id: parseInt(productId), ...product })
+                    });
+                } else {
+                    await fetch('/api/products', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(product)
+                    });
+                }
+                closeModal();
+                await fetchProducts();
+            } catch (error) {
+                console.error('Failed to save product:', error);
+            }
+        });
+    </script>
+</body>
+</html>
