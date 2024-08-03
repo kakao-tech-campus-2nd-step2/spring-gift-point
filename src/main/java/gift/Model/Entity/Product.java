@@ -26,7 +26,7 @@ public class Product {
     private Long id;
 
     @Embedded
-    @AttributeOverride(name = "value", column = @Column(name = "name", nullable = false, length = 50))
+    @AttributeOverride(name = "value", column = @Column(name = "name", nullable = false, length = 100)) //6주차 미션에서만 상품의 길이를 50글자에서 100글자로 수정
     private Name name;
 
     @Embedded
