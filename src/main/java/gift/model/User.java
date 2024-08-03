@@ -1,6 +1,7 @@
 package gift.model;
 
 
+import gift.exceptions.CustomException;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -26,6 +27,9 @@ public class User {
     @Column(name="password", nullable = false)
     private String password;
 
+    @Column(name="point", nullable = false)
+    private Long point;
+
     @Column(name="role", nullable = false)
     private String role;
 
@@ -34,10 +38,11 @@ public class User {
 
     public User() { }
 
-    public User(String email, String password, String role) {
+    public User(String email, String password, String role, Long point) {
         this.email = email;
         this.password = password;
         this.role = role;
+        this.point = point;
     }
 
     public Long getId() {
@@ -52,8 +57,24 @@ public class User {
         return password;
     }
 
+    public Long getPoint() { return point; }
+
     public String getRole() {
         return role;
     }
 
+    public Long subtractPoint(Long price, Long quantity) {
+        Long productPrice = price * quantity;
+
+        if (productPrice > this.point) {
+            throw CustomException.pointLackException();
+        }
+
+        this.point -= productPrice;
+        return this.point;
+    }
+
+    public void chargePoint(Long points) {
+        this.point += points;
+    }
 }
