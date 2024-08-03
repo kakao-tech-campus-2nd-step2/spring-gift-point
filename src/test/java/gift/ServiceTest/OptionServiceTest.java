@@ -69,6 +69,7 @@ public class OptionServiceTest {
   @Test
   void getOptionByIdTest() {
     Long productId = 1L;
+
     OptionDto optionDto1 = new OptionDto(1L, "옵션1", 2,
       new ProductDto(1L, "product1", 300, "fadsklf",
         new CategoryDto(1L, "교환권", "#6c95d1", "image_url", "교환권 카테고리")));
@@ -114,5 +115,4 @@ public class OptionServiceTest {
     assertThat(updateOptionDtoByOptionService.getProductDto()).isEqualTo(
       optionDto2.getProductDto());
   }
-
 }

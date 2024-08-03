@@ -1,7 +1,6 @@
 package gift.DTO;
 
 public class JwtToken {
-
   private final String token;
 
   public JwtToken(String token) {

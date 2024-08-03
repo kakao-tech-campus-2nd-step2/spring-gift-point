@@ -32,7 +32,7 @@ public class ResponseOrderDto {
   }
 
   public LocalDateTime getOrderDateTime() {
-    return orderDateTime;
+  public String getOrderDateTime() {
   }
 
   public String getMessage() {
