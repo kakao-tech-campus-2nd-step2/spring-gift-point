@@ -4,7 +4,6 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sun.jdi.request.DuplicateRequestException;
 import gift.product.dto.auth.AccessTokenDto;
-import gift.product.dto.auth.AccountDto;
 import gift.product.dto.auth.LoginMemberIdDto;
 import gift.product.dto.auth.MemberDto;
 import gift.product.dto.auth.OAuthJwt;
@@ -52,18 +51,16 @@ public class AuthService {
     }
 
     @Transactional
-    public AccessTokenDto register(MemberDto memberDto) {
+    public void register(MemberDto memberDto) {
         validateMemberExist(memberDto);
 
         Member member = new Member(memberDto.email(), memberDto.password());
         authRepository.save(member);
-
-        return new AccessTokenDto(getAccessToken(member));
     }
 
-    public AccessTokenDto login(AccountDto accountDto) {
-        validateMemberInfo(accountDto);
-        Member member = authRepository.findByEmail(accountDto.email());
+    public AccessTokenDto login(MemberDto memberDto) {
+        validateMemberInfo(memberDto);
+        Member member = authRepository.findByEmail(memberDto.email());
 
         return new AccessTokenDto(getAccessToken(member));
     }
@@ -175,16 +172,16 @@ public class AuthService {
         }
     }
 
-    private void validateMemberInfo(AccountDto accountDto) {
-        boolean isMemberExist = authRepository.existsByEmail(accountDto.email());
+    private void validateMemberInfo(MemberDto memberDto) {
+        boolean isMemberExist = authRepository.existsByEmail(memberDto.email());
 
         if (!isMemberExist) {
             throw new LoginFailedException("회원 정보가 존재하지 않습니다.");
         }
 
-        Member member = authRepository.findByEmail(accountDto.email());
+        Member member = authRepository.findByEmail(memberDto.email());
 
-        if (!accountDto.password().equals(member.getPassword())) {
+        if (!memberDto.password().equals(member.getPassword())) {
             throw new LoginFailedException("비밀번호가 일치하지 않습니다.");
         }
     }

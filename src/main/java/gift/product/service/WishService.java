@@ -50,13 +50,13 @@ public class WishService {
     }
 
     @Transactional
-    public Wish insertWish(WishDto wishDto, LoginMemberIdDto loginMemberIdDto) {
+    public void insertWish(WishDto wishDto, LoginMemberIdDto loginMemberIdDto) {
         Product product = getValidatedProduct(wishDto.productId());
         validateRedundancyWishByProductIdAndMemberId(wishDto.productId(), loginMemberIdDto.id());
 
         Member member = getMember(loginMemberIdDto);
         Wish wish = new Wish(member, product);
-        return wishRepository.save(wish);
+        wishRepository.save(wish);
     }
 
     @Transactional

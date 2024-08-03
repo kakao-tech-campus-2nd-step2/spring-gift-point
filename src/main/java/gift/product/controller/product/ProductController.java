@@ -77,7 +77,6 @@ public class ProductController {
     @PostMapping
     public ResponseEntity<Void> insertProduct(@Valid @RequestBody ClientProductRequest clientProductRequest) {
         productService.insertProduct(clientProductRequest);
-
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 

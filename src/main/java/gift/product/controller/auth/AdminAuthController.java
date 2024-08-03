@@ -1,7 +1,7 @@
 package gift.product.controller.auth;
 
 import gift.product.dto.auth.AccessTokenDto;
-import gift.product.dto.auth.AccountDto;
+import gift.product.dto.auth.MemberDto;
 import gift.product.service.AuthService;
 import io.swagger.v3.oas.annotations.Hidden;
 import jakarta.servlet.http.Cookie;
@@ -38,8 +38,8 @@ public class AdminAuthController {
     }
 
     @PostMapping("/login")
-    public String login(AccountDto accountDto, RedirectAttributes redirectAttributes) {
-        AccessTokenDto accessTokenDto = authService.login(accountDto);
+    public String login(MemberDto memberDto, RedirectAttributes redirectAttributes) {
+        AccessTokenDto accessTokenDto = authService.login(memberDto);
         redirectAttributes.addAttribute(ACCESS_TOKEN, accessTokenDto.accessToken());
 
         return REDIRECT_ADMIN_LOGIN_PROCESSING;

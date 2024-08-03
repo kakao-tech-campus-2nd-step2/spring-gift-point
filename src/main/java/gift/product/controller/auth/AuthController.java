@@ -1,7 +1,6 @@
 package gift.product.controller.auth;
 
 import gift.product.dto.auth.AccessTokenDto;
-import gift.product.dto.auth.AccountDto;
 import gift.product.dto.auth.LoginMemberIdDto;
 import gift.product.dto.auth.MemberDto;
 import gift.product.dto.auth.OAuthJwt;
@@ -58,8 +57,8 @@ public class AuthController {
         @ApiResponse(responseCode = "401", description = "로그인 실패", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ExceptionResponse.class)))
     })
     @PostMapping("/login")
-    public ResponseEntity<AccessTokenDto> loginMember(@RequestBody AccountDto accountDto) {
-        AccessTokenDto accessTokenDto = authService.login(accountDto);
+    public ResponseEntity<AccessTokenDto> loginMember(@RequestBody MemberDto memberDto) {
+        AccessTokenDto accessTokenDto = authService.login(memberDto);
 
         return ResponseEntity.ok(accessTokenDto);
     }

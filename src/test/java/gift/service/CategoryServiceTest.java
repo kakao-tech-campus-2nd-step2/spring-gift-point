@@ -48,27 +48,14 @@ class CategoryServiceTest {
     @Test
     void 카테고리_조회() {
         //given
-        CategoryDto categoryDto = new CategoryDto("테스트카테고리", "테스트컬러", "테스트주소", "테스트설명");
-        given(categoryRepository.findByName(categoryDto.name())).willReturn(Optional.empty());
-        given(categoryRepository.save(any())).willReturn(new Category(1L,
-            categoryDto.name(),
-            categoryDto.color(),
-            categoryDto.imageUrl(),
-            categoryDto.description()));
-        Long insertedCategoryId = categoryService.insertCategory(categoryDto).getId();
-
-        given(categoryRepository.findById(insertedCategoryId)).willReturn(
-            Optional.of(new Category(insertedCategoryId,
-                categoryDto.name(),
-                categoryDto.color(),
-                categoryDto.imageUrl(),
-                categoryDto.description())));
+        Category category = new Category(1L, "테스트카테고리", "테스트컬러", "테스트주소", "테스트설명");
+        given(categoryRepository.findById(category.getId())).willReturn(Optional.of(category));
 
         //when
-        categoryService.getCategory(insertedCategoryId);
+        categoryService.getCategory(category.getId());
 
         //then
-        then(categoryRepository).should().findById(insertedCategoryId);
+        then(categoryRepository).should().findById(category.getId());
     }
 
     @Test
@@ -83,26 +70,12 @@ class CategoryServiceTest {
     @Test
     void 카테고리_수정() {
         //given
-        CategoryDto categoryDto = new CategoryDto("테스트카테고리", "테스트컬러", "테스트주소", "테스트설명");
-        given(categoryRepository.findByName(categoryDto.name())).willReturn(Optional.empty());
-        given(categoryRepository.save(any())).willReturn(new Category(1L,
-            categoryDto.name(),
-            categoryDto.color(),
-            categoryDto.imageUrl(),
-            categoryDto.description()));
-        Long insertedCategoryId = categoryService.insertCategory(categoryDto).getId();
-        clearInvocations(categoryRepository);
-
-        given(categoryRepository.findById(insertedCategoryId)).willReturn(
-            Optional.of(new Category(insertedCategoryId,
-                categoryDto.name(),
-                categoryDto.color(),
-                categoryDto.imageUrl(),
-                categoryDto.description())));
+        Category category = new Category(1L, "테스트카테고리", "테스트컬러", "테스트주소", "테스트설명");
+        given(categoryRepository.findById(category.getId())).willReturn(Optional.of(category));
 
         //when
         CategoryDto updatedCategoryDto = new CategoryDto("테스트카테고리수정", "테스트컬러", "테스트주소", "테스트설명");
-        categoryService.updateCategory(insertedCategoryId, updatedCategoryDto);
+        categoryService.updateCategory(category.getId(), updatedCategoryDto);
 
         //then
         then(categoryRepository).should().save(any());
@@ -111,28 +84,14 @@ class CategoryServiceTest {
     @Test
     void 카테고리_삭제() {
         //given
-        CategoryDto categoryDto = new CategoryDto("테스트카테고리", "테스트컬러", "테스트주소", "테스트설명");
-        given(categoryRepository.findByName(categoryDto.name())).willReturn(Optional.empty());
-        given(categoryRepository.save(any())).willReturn(new Category(1L,
-            categoryDto.name(),
-            categoryDto.color(),
-            categoryDto.imageUrl(),
-            categoryDto.description()));
-        Long insertedCategoryId = categoryService.insertCategory(categoryDto).getId();
-        clearInvocations(categoryRepository);
-
-        given(categoryRepository.findById(insertedCategoryId)).willReturn(
-            Optional.of(new Category(insertedCategoryId,
-                categoryDto.name(),
-                categoryDto.color(),
-                categoryDto.imageUrl(),
-                categoryDto.description())));
+        Category category = new Category(1L, "테스트카테고리", "테스트컬러", "테스트주소", "테스트설명");
+        given(categoryRepository.findById(category.getId())).willReturn(Optional.of(category));
 
         //when
-        categoryService.deleteCategory(insertedCategoryId);
+        categoryService.deleteCategory(category.getId());
 
         //then
-        then(categoryRepository).should().deleteById(insertedCategoryId);
+        then(categoryRepository).should().deleteById(category.getId());
     }
 
     @Test
@@ -149,21 +108,10 @@ class CategoryServiceTest {
     @Test
     void 실패_이미_존재하는_카테고리_추가() {
         //given
-        CategoryDto categoryDto = new CategoryDto("테스트카테고리", "테스트컬러", "테스트주소", "테스트설명");
-        given(categoryRepository.findByName(categoryDto.name())).willReturn(Optional.empty());
-        given(categoryRepository.save(any())).willReturn(new Category(1L,
-            categoryDto.name(),
-            categoryDto.color(),
-            categoryDto.imageUrl(),
-            categoryDto.description()));
-        Long insertedCategoryId = categoryService.insertCategory(categoryDto).getId();
+        Category category = new Category(1L, "테스트카테고리", "테스트컬러", "테스트주소", "테스트설명");
+        given(categoryRepository.findByName(category.getName())).willReturn(Optional.of(category));
 
-        given(categoryRepository.findByName(categoryDto.name())).willReturn(
-            Optional.of(new Category(insertedCategoryId,
-                categoryDto.name(),
-                categoryDto.color(),
-                categoryDto.imageUrl(),
-                categoryDto.description())));
+        CategoryDto categoryDto = new CategoryDto(category.getName(), category.getColor(), category.getImageUrl(), category.getDescription());
 
         //when, then
         assertThatThrownBy(

@@ -11,7 +11,6 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sun.jdi.request.DuplicateRequestException;
 import gift.product.dto.auth.AccessTokenDto;
-import gift.product.dto.auth.AccountDto;
 import gift.product.dto.auth.LoginMemberIdDto;
 import gift.product.dto.auth.MemberDto;
 import gift.product.dto.auth.OAuthJwt;
@@ -107,22 +106,21 @@ class AuthServiceTest {
         given(authRepository.existsByEmail(EMAIL)).willReturn(false);
 
         //when
-        AccessTokenDto accessTokenDto = authService.register(memberDto);
+        authService.register(memberDto);
 
         //then
         then(authRepository).should().save(any());
-        assertThat(accessTokenDto.accessToken()).isNotNull();
     }
 
     @Test
     void 로그인() {
         //given
-        AccountDto accountDto = new AccountDto(EMAIL, PASSWORD);
+        MemberDto memberDto = new MemberDto(EMAIL, PASSWORD);
         given(authRepository.findByEmail(EMAIL)).willReturn(new Member(1L, EMAIL, PASSWORD));
         given(authRepository.existsByEmail(EMAIL)).willReturn(true);
 
         //when
-        AccessTokenDto accessTokenDto = authService.login(accountDto);
+        AccessTokenDto accessTokenDto = authService.login(memberDto);
 
         //then
         assertSoftly(softly -> assertThat(accessTokenDto.accessToken()).isNotEmpty());
@@ -209,11 +207,11 @@ class AuthServiceTest {
     @Test
     void 실패_존재하지_않는_회원_로그인() {
         //given
-        AccountDto accountDto = new AccountDto(EMAIL, PASSWORD);
+        MemberDto memberDto = new MemberDto(EMAIL, PASSWORD);
         given(authRepository.existsByEmail(EMAIL)).willReturn(false);
 
         //when, then
-        assertThatThrownBy(() -> authService.login(accountDto)).isInstanceOf(
+        assertThatThrownBy(() -> authService.login(memberDto)).isInstanceOf(
             LoginFailedException.class);
     }
 

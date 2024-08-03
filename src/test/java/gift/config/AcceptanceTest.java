@@ -34,8 +34,9 @@ class AcceptanceTest {
 
     @Test
     void CORS_설정_테스트() throws Exception {
-        String accessToken = authService.register(new MemberDto("test@test.com", "test"))
-            .accessToken();
+        MemberDto memberDto = new MemberDto("test@test.com", "test");
+        authService.register(memberDto);
+        String accessToken = authService.login(memberDto).accessToken();
 
         mockMvc.perform(
                 options("/api/products")

@@ -27,21 +27,21 @@ public class CategoryService {
     }
 
     @Transactional
-    public Category insertCategory(CategoryDto categoryDto) {
+    public void insertCategory(CategoryDto categoryDto) {
         ValidateRedundancyCategory(categoryDto.name());
 
         Category category = new Category(categoryDto.name(), categoryDto.color(),
             categoryDto.imageUrl(), categoryDto.description());
-        return categoryRepository.save(category);
+        categoryRepository.save(category);
     }
 
     @Transactional
-    public Category updateCategory(Long id, CategoryDto categoryDto) {
+    public void updateCategory(Long id, CategoryDto categoryDto) {
         getExistenceValidatedCategory(id);
 
         Category category = new Category(id, categoryDto.name(), categoryDto.color(),
             categoryDto.imageUrl(), categoryDto.description());
-        return categoryRepository.save(category);
+        categoryRepository.save(category);
     }
 
     @Transactional
