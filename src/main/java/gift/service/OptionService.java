@@ -35,7 +35,7 @@ public class OptionService {
 
         if (optionRepository.existsById(id)) {
             Option option1 = optionRepository.findById(id).get();
-            option1.setOptionName(option.getOptionName());
+            option1.setName(option.getName());
             option1.setQuantity(option.getQuantity());
             optionRepository.save(option1);
         }

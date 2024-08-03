@@ -3,16 +3,16 @@ package gift.dto;
 import java.util.List;
 
 public class ProductPage {
-    private int totalPage;
+    private int total_page;
 
     private List<?> content ;
 
-    public int getTotalPage() {
-        return totalPage;
+    public int getTotal_page() {
+        return total_page;
     }
 
-    public void setTotalPage(int totalPage) {
-        this.totalPage = totalPage;
+    public void setTotal_page(int total_page) {
+        this.total_page = total_page;
     }
 
     public List<?> getContent() {

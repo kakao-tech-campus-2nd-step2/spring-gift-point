@@ -37,7 +37,7 @@ public class Product {
 
     @Column(name = "image_url", nullable = false)
     @JsonProperty("image_url")
-    private String imageUrl;
+    private String image_url;
 
     @ManyToOne
     @JoinColumn(name = "category", nullable = false)
@@ -66,7 +66,7 @@ public class Product {
     public Product(Category category, ProductRequest productRequest) {
         this.name = productRequest.getName();
         this.price = productRequest.getPrice();
-        this.imageUrl = productRequest.getImageUrl();
+        this.image_url = productRequest.getImageUrl();
         this.category = category;
     }
 
@@ -95,12 +95,12 @@ public class Product {
         this.price = price;
     }
 
-    public String getImageUrl() {
-        return imageUrl;
+    public String getImage_url() {
+        return image_url;
     }
 
-    public void setImageUrl(String imageUrl) {
-        this.imageUrl = imageUrl;
+    public void setImage_url(String image_url) {
+        this.image_url = image_url;
     }
 
     public Category getCategory() {

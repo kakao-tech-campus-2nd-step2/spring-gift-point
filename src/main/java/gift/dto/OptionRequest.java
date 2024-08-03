@@ -25,7 +25,7 @@ public class OptionRequest {
 
     public void DtoToEntity(){
         Option option = new Option();
-        option.setOptionName(this.name);
+        option.setName(this.name);
         option.setQuantity(this.quantity);
     }
 

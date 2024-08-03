@@ -54,8 +54,8 @@ public class OptionController {
     }
     /*
     @PostMapping("/update")
-    public String updateOption(@RequestParam String optionName){
-        Option option = optionService.getOptionByName(optionName);
+    public String updateOption(@RequestParam String name){
+        Option option = optionService.getOptionByName(name);
         Option newoption = new Option()
     }*/
 
