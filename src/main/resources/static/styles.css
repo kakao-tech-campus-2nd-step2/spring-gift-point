@@ -37,7 +37,7 @@ body {
 table {
   width: 100%;
   border-collapse: collapse;
-  table-layout: fixed;  /* Add this line */
+  table-layout: fixed;
 }
 
 table th, table td {
@@ -54,7 +54,7 @@ table th {
 }
 
 table th, table td {
-  width: 150px;  /* Set a fixed width for each column */
+  width: 150px;
 }
 
 .btn-edit, .btn-delete-row {
@@ -71,6 +71,48 @@ table th, table td {
   color: red;
 }
 
-table td input[type="checkbox"] {
-  width: auto;
+.button-group a {
+  margin-right: 10px;
+}
+
+.button-group a:last-child {
+  margin-right: 0;
+}
+
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 20px;
+}
+
+.pagination ul {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+}
+
+.pagination li {
+  margin: 0 5px;
+}
+
+.pagination a {
+  text-decoration: none;
+  color: #007bff;
+  padding: 8px 16px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+.pagination a:hover {
+  background-color: #007bff;
+  color: white;
+}
+
+.pagination a.active {
+  background-color: #007bff;
+  color: white;
+  border-color: #007bff;
 }
