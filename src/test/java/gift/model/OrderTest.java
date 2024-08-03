@@ -18,7 +18,7 @@ class OrderTest {
 
     @BeforeEach
     void setUp() {
-        member = new Member(1L, "email@email.com", "password", "user");
+        member = new Member(1L, "email@email.com", "password", "user", 0L);
         category = new Category(1L, "교환권", "#007700", "임시 이미지", "임시 설명");
         product = new Product(1L, "상품", "100", category, "https://kakao");
         option = new Option(1L, "임시 옵션", 10L, product);

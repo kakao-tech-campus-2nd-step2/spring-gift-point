@@ -66,7 +66,7 @@ class WishlistServiceTest {
     void setUp() {
         category = new Category(null, "임시카테고리", "#770077", "임시 이미지", "임시 설명");
         categoryRepository.save(category);
-        member = new Member(null, "kbm@kbm.com", "kbm", "user");
+        member = new Member(null, "kbm@kbm.com", "kbm", "user", 0L);
         memberRepository.save(member);
         product = new Product(null, "상품1", "100", category, "https://kakao");
         productRepository.save(product);

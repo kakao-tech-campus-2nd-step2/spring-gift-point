@@ -42,7 +42,7 @@ class OrderRepositoryTest {
     public void setUp() {
         Category category = new Category(null, "사치품", "#007700", "임시 이미지", "임시 설명");
         savedCategory = categoryRepository.save(category);
-        Member member = new Member(null, "email@email.com", "password", "user");
+        Member member = new Member(null, "email@email.com", "password", "user", 0L);
         savedMember = memberRepository.save(member);
         Product product = new Product(null, "상품", "100", savedCategory, "https://kakao");
         savedProduct = productRepository.save(product);

@@ -81,7 +81,7 @@ public class KakaoService {
             String password = generateRandomPassword();
             MemberDTO memberDTO = new MemberDTO(name, email, password);
             member = new Member(null, memberDTO.email(), memberDTO.password(),
-                "user");
+                "user", 0L);
             memberRepository.save(member);
         }
         return member;

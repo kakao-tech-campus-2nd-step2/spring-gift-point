@@ -10,7 +10,7 @@ class MemberTest {
 
     @Test
     void testCreateValidMember() {
-        Member member = new Member(1L, "kbm@kbm.com", "mbk", "user");
+        Member member = new Member(1L, "kbm@kbm.com", "mbk", "user", 0L);
         assertAll(
             () -> assertThat(member.getId()).isNotNull(),
             () -> assertThat(member.getEmail()).isEqualTo("kbm@kbm.com"),
@@ -22,7 +22,7 @@ class MemberTest {
     @Test
     void testCreateWithNullEmail() {
         try {
-            Member nullEmailMember = new Member(1L, null, "mbk", "user");
+            Member nullEmailMember = new Member(1L, null, "mbk", "user", 0L);
         } catch (InvalidInputValueException e) {
             assertThat(e).isInstanceOf(InvalidInputValueException.class);
         }
@@ -31,7 +31,7 @@ class MemberTest {
     @Test
     void testCreateWithEmptyEmail() {
         try {
-            Member emptyEmailMember = new Member(1L, "", "mbk", "user");
+            Member emptyEmailMember = new Member(1L, "", "mbk", "user", 0L);
         } catch (InvalidInputValueException e) {
             assertThat(e).isInstanceOf(InvalidInputValueException.class);
         }
@@ -40,7 +40,7 @@ class MemberTest {
     @Test
     void testCreateWithInvalidEmail() {
         try {
-            Member invalidEmailMember = new Member(1L, "kbm", "mbk", "user");
+            Member invalidEmailMember = new Member(1L, "kbm", "mbk", "user", 0L);
         } catch (InvalidInputValueException e) {
             assertThat(e).isInstanceOf(InvalidInputValueException.class);
         }
@@ -49,7 +49,7 @@ class MemberTest {
     @Test
     void testCreateWithNullPassword() {
         try {
-            Member nullPasswordMember = new Member(1L, "kbm@kbm.com", null, "user");
+            Member nullPasswordMember = new Member(1L, "kbm@kbm.com", null, "user", 0L);
         } catch (InvalidInputValueException e) {
             assertThat(e).isInstanceOf(InvalidInputValueException.class);
         }
@@ -58,7 +58,7 @@ class MemberTest {
     @Test
     void testCreateWithEmptyPassword() {
         try {
-            Member emptyPasswordMember = new Member(1L, "kbm@kbm.com", "", "user");
+            Member emptyPasswordMember = new Member(1L, "kbm@kbm.com", "", "user", 0L);
         } catch (InvalidInputValueException e) {
             assertThat(e).isInstanceOf(InvalidInputValueException.class);
         }
