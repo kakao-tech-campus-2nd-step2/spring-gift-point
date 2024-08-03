@@ -18,7 +18,6 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.mapping.JpaMetamodelMappingContext;
 import org.springframework.http.MediaType;
 import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders;
@@ -64,7 +63,7 @@ class ProductControllerTest {
                 new ProductResponse(2L, "Product 2", 200, "img2.com", 1L, "Food")
         );
         Page<ProductResponse> page = new PageImpl<>(products);
-        when(productService.getProductResponsesByCategoryId(any(),any())).thenReturn(page);
+        when(productService.getProductResponsesByCategoryId(any(), any())).thenReturn(page);
 
         // When
         mockMvc.perform(MockMvcRequestBuilders
