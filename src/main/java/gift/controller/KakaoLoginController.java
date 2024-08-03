@@ -43,10 +43,10 @@ public class KakaoLoginController {
     }
 
     @GetMapping("/getauth")
-    public ResponseEntity<?> getAuth(@RequestParam("code") String code) {
+    public ResponseEntity<String> getAuth(@RequestParam("code") String code) {
         String token = kakaoLoginService.getToken(code);
         String email = kakaoLoginService.getEmail(token);
-        memberService.kakaoLogin(email, token);
-        return ResponseEntity.ok().build();
+        var jwtToken = memberService.kakaoLogin(email, token);
+        return ResponseEntity.ok(jwtToken);
     }
 }

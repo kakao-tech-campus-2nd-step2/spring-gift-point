@@ -1,5 +1,6 @@
 package gift.entity;
 
+import gift.domain.WishlistDTO;
 import jakarta.persistence.*;
 
 @Entity
