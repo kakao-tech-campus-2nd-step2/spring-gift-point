@@ -11,17 +11,21 @@ public class Point {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private int value;
+    private int balance;
 
     public Point() {
-        this.value = 0;
+        this.balance = 0;
     }
 
-    public int getValue() {
-        return value;
+    public int getBalance() {
+        return balance;
     }
 
-    public void subtractValue(int discountedPrice) {
-        this.value -= discountedPrice;
+    public void subtractBalance(int discountedPrice) {
+        this.balance -= discountedPrice;
+    }
+
+    public void updateBalance(int newPoint) {
+        this.balance = newPoint;
     }
 }

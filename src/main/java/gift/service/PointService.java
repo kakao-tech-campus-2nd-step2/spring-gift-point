@@ -17,7 +17,7 @@ public class PointService {
 
     public PointResponse getMemberPoint(Long memberId) {
         Member member = memberService.getMember(memberId);
-        return new PointResponse(member.getPoint());
+        return new PointResponse(member.getPointBalance());
     }
 
     public void subtractPoint(Long memberId, OrderRequest orderRequest) {
