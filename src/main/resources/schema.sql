@@ -39,6 +39,7 @@ CREATE TABLE users
     password           VARCHAR(255),
     kakao_access_token VARCHAR(255),
     role               VARCHAR(255) NOT NULL,
+    point              INT DEFAULT 0,
     created_at         TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at         TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );

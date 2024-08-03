@@ -1,10 +1,13 @@
 package gift.user.service;
 
 import gift.exception.AuthenticationFailedException;
+import gift.exception.BadRequestException;
 import gift.exception.DuplicateEmailException;
 import gift.exception.InvalidUserInputException;
 import gift.exception.ResourceNotFoundException;
 import gift.security.JWTUtil;
+import gift.user.dto.PointRequestDto;
+import gift.user.dto.PointResponseDto;
 import gift.user.dto.TokenResponseDto;
 import gift.user.dto.UserRequestDto;
 import gift.user.entity.User;
@@ -73,5 +76,32 @@ public class UserService {
   public User getUserByEmail(String email) {
     return userRepository.findByEmail(email)
         .orElseThrow(() -> new ResourceNotFoundException("사용자를 찾을 수 없습니다"));
+  }
+
+  public PointResponseDto getPoint(Long userId) {
+    User user = userRepository.findById(userId)
+        .orElseThrow(() -> new ResourceNotFoundException("해당 유저를 찾을 수 없습니다."));
+
+    return new PointResponseDto(user.getPoint());
+  }
+
+  public PointResponseDto managePoint(Long userId, PointRequestDto pointRequestDto) {
+    User user = userRepository.findById(userId)
+        .orElseThrow(() -> new ResourceNotFoundException("해당 유저를 찾을 수 없습니다."));
+
+    Integer point = pointRequestDto.point();
+
+    if (pointRequestDto.isCredit()) {
+      user.setPoint(user.getPoint() + point);
+    } else {
+      if (user.getPoint() < point) {
+        throw new BadRequestException("보유하고 있는 포인트가 부족합니다.");
+      }
+      user.setPoint(user.getPoint() - point);
+    }
+
+    userRepository.save(user);
+
+    return new PointResponseDto(user.getPoint());
   }
 }
