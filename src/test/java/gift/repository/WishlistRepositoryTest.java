@@ -1,6 +1,6 @@
 package gift.repository;
 
-import gift.entity.Wishlist;
+import gift.entity.wishlist.Wishlist;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

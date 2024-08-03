@@ -1,6 +1,6 @@
 package gift.filter;
 
-import gift.entity.User;
+import gift.entity.user.User;
 import gift.util.UserUtility;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;

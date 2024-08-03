@@ -1,10 +1,9 @@
 package gift.service;
 
-import gift.entity.Product;
-import gift.entity.ProductWishlist;
-import gift.entity.Wishlist;
-import gift.entity.WishlistDTO;
-import gift.exception.ResourceNotFoundException;
+import gift.entity.middle.ProductWishlist;
+import gift.entity.product.Product;
+import gift.entity.wishlist.Wishlist;
+import gift.entity.wishlist.WishlistResponse;
 import gift.repository.ProductRepository;
 import gift.repository.ProductWishlistRepository;
 import gift.repository.WishlistRepository;
@@ -33,15 +32,17 @@ public class WishlistService {
         this.productWishlistRepository = productWishlistRepository;
     }
 
-    public Page<Product> getWishlistProducts(String email, Pageable pageable) {
-        Optional<Wishlist> wishlist = wishlistRepository.findByEmail(email);
-        if (wishlist.isEmpty()) {
-            wishlist = Optional.of(wishlistRepository.save(new Wishlist(email)));
-        }
+    public Page<WishlistResponse> getWishlistProducts(String email, Pageable pageable) {
+        Wishlist wishlist = wishlistRepository.findByEmail(email)
+                .orElseGet(() -> wishlistRepository.save(new Wishlist(email)));
 
-        Page<ProductWishlist> productWishlists = productWishlistRepository.findByWishlistId(wishlist.get().getId(), pageable);
-        List<Product> products = productWishlists.stream()
-                .map(productWishlist -> productWishlist.getProduct())
+        Page<ProductWishlist> productWishlists = productWishlistRepository.findByWishlistId(wishlist.getId(), pageable);
+
+        List<WishlistResponse> products = productWishlists.stream()
+                .map(productWishlist -> {
+                    Product product = productWishlist.getProduct();
+                    return new WishlistResponse(wishlist.getId(), product);
+                })
                 .collect(Collectors.toList());
 
         return new PageImpl<>(products, pageable, productWishlists.getTotalElements());
@@ -62,12 +63,10 @@ public class WishlistService {
     }
 
     @Transactional
-    public void addWishlistProduct(String email, WishlistDTO wishlistDTO) {
-        Long id = wishlistDTO.getProductId();
-        Product product = productRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Product not found with id: " + id));
+    public void addWishlistProduct(String email, Long productId) {
+        Product product = productRepository.findById(productId)
+                .orElseThrow(() -> new IllegalArgumentException("Product not found with id: " + productId));
         Optional<Wishlist> wishlist = wishlistRepository.findByEmail(email);
-
         if (wishlist.isEmpty()) {
             Wishlist saved = wishlistRepository.save(new Wishlist(email));
             wishlist = Optional.of(saved);

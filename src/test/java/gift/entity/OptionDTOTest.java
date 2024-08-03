@@ -1,5 +1,6 @@
 package gift.entity;
 
+import gift.entity.option.OptionDTO;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validator;
 import org.junit.jupiter.api.Test;

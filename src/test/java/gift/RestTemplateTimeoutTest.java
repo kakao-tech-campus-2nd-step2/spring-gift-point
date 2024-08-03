@@ -31,7 +31,6 @@ public class RestTemplateTimeoutTest {
         // when
         mockServer.expect(requestTo(url))
                 .andRespond(delayedResponse(Duration.ofSeconds(10)));
-        
         ResourceAccessException e = assertThrows(ResourceAccessException.class,
                 () -> restTemplate.getForObject(url, String.class));
 

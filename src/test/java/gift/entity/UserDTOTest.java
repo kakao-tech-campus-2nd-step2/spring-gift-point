@@ -1,5 +1,6 @@
 package gift.entity;
 
+import gift.entity.user.UserDTO;
 import jakarta.validation.Validator;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

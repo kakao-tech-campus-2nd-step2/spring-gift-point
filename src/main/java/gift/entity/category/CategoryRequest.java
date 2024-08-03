@@ -1,25 +1,25 @@
-package gift.entity;
+package gift.entity.category;
 
 
 import io.swagger.v3.oas.annotations.media.Schema;
 
-public class CategoryDTO {
+public class CategoryRequest {
     @Schema(description = "카테고리명", nullable = false, example = "전자기기")
     private String name;
     @Schema(description = "카테고리 색상", nullable = false, example = "#FFFFFF")
     private String color;
     @Schema(description = "카테고리 이미지 url", nullable = false, example = "https://www.test.com")
-    private String imageurl;
+    private String image_url;
     @Schema(description = "카테고리 설명", nullable = false, example = "카테고리 설명 입니다")
     private String description;
 
-    public CategoryDTO() {
+    public CategoryRequest() {
     }
 
-    public CategoryDTO(String name, String color, String imageurl, String description) {
+    public CategoryRequest(String name, String color, String image_url, String description) {
         this.name = name;
         this.color = color;
-        this.imageurl = imageurl;
+        this.image_url = image_url;
         this.description = description;
     }
 
@@ -39,12 +39,12 @@ public class CategoryDTO {
         this.color = color;
     }
 
-    public String getImageurl() {
-        return imageurl;
+    public String getImage_url() {
+        return image_url;
     }
 
-    public void setImageurl(String imageurl) {
-        this.imageurl = imageurl;
+    public void setImage_url(String image_url) {
+        this.image_url = image_url;
     }
 
     public String getDescription() {

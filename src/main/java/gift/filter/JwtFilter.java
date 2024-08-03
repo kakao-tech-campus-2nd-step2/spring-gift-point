@@ -5,6 +5,7 @@ import io.jsonwebtoken.Claims;
 import jakarta.servlet.*;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.thymeleaf.util.StringUtils;
 
 import java.io.IOException;
 
@@ -28,6 +29,12 @@ public class JwtFilter implements Filter {
         HttpServletRequest request = (HttpServletRequest) servletRequest;
         HttpServletResponse response = (HttpServletResponse) servletResponse;
 
+        if(StringUtils.equals(request.getMethod(), "OPTIONS")){
+            response.setStatus(HttpServletResponse.SC_OK);
+            filterChain.doFilter(request, response);
+            return;
+        }
+
         String authorizationHeader = request.getHeader("Authorization");
         if (authorizationHeader == null) {
             response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Unauthorized");
@@ -42,14 +49,12 @@ public class JwtFilter implements Filter {
             }
 
             String email = claims.get("email", String.class);
-            String role = claims.get("role", String.class);
-            if (email == null || role == null) {
+            if (email == null) {
                 response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Unauthorized");
                 return;
             }
 
             servletRequest.setAttribute("email", email);
-            servletRequest.setAttribute("role", role);
         }
 
         filterChain.doFilter(servletRequest, servletResponse);

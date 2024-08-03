@@ -1,4 +1,4 @@
-package gift.entity;
+package gift.entity.category;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
@@ -15,33 +15,33 @@ public class Category {
     @Schema(description = "카테고리 색상", nullable = false, example = "#FFFFFF")
     private String color;
     @Schema(description = "카테고리 이미지 url", nullable = false, example = "https://www.test.com")
-    private String imageurl;
+    private String image_url;
     @Schema(description = "카테고리 설명", nullable = false, example = "카테고리 설명 입니다.")
     private String description;
 
     public Category() {
     }
 
-    public Category(Long id, String name, String color, String imageurl, String description) {
+    public Category(Long id, String name, String color, String image_url, String description) {
         this.id = id;
         this.name = name;
         this.color = color;
-        this.imageurl = imageurl;
+        this.image_url = image_url;
         this.description = description;
     }
 
-    public Category(CategoryDTO categoryDTO) {
-        this.name = categoryDTO.getName();
-        this.color = categoryDTO.getColor();
-        this.imageurl = categoryDTO.getImageurl();
-        this.description = categoryDTO.getDescription();
+    public Category(CategoryRequest categoryRequest) {
+        this.name = categoryRequest.getName();
+        this.color = categoryRequest.getColor();
+        this.image_url = categoryRequest.getImage_url();
+        this.description = categoryRequest.getDescription();
     }
 
-    public void setCategory(CategoryDTO categoryDTO) {
-        this.name = categoryDTO.getName();
-        this.color = categoryDTO.getColor();
-        this.imageurl = categoryDTO.getImageurl();
-        this.description = categoryDTO.getDescription();
+    public void setCategory(CategoryRequest categoryRequest) {
+        this.name = categoryRequest.getName();
+        this.color = categoryRequest.getColor();
+        this.image_url = categoryRequest.getImage_url();
+        this.description = categoryRequest.getDescription();
     }
 
     public Long getId() {
@@ -68,12 +68,12 @@ public class Category {
         this.color = color;
     }
 
-    public String getImageurl() {
-        return imageurl;
+    public String getImage_url() {
+        return image_url;
     }
 
-    public void setImageurl(String imageurl) {
-        this.imageurl = imageurl;
+    public void setImage_url(String image_url) {
+        this.image_url = image_url;
     }
 
     public String getDescription() {

@@ -1,6 +1,13 @@
 package gift.service;
 
-import gift.entity.*;
+import gift.entity.kakao.KakaoErrorCode;
+import gift.entity.middle.ProductOption;
+import gift.entity.option.Option;
+import gift.entity.order.Order;
+import gift.entity.order.OrderDTO;
+import gift.entity.product.Product;
+import gift.entity.user.User;
+import gift.entity.wishlist.Wishlist;
 import gift.exception.KakaoException;
 import gift.exception.ResourceNotFoundException;
 import gift.repository.*;
@@ -14,7 +21,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestClient;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.net.URI;
 import java.util.List;
@@ -51,7 +57,7 @@ public class OrderService {
         String email = (String) session.getAttribute("email");
 
         ProductOption productOption = productOptionRepository
-                .findByProductIdAndOptionId(orderDTO.getProductId(), orderDTO.getOptionId())
+                .findByProductIdAndOptionId(orderDTO.getProduct_id(), orderDTO.getOption_id())
                 .orElseThrow(() -> new ResourceNotFoundException("Illegal order"));
 
         User user = userService.findOne(email);
@@ -63,7 +69,7 @@ public class OrderService {
         // 위시리스트에 있으면 삭제
         Optional<Wishlist> wishlist = wishlistRepository.findByEmail(email);
         if (wishlist.isPresent()) {
-            productWishlistRepository.deleteByProductIdAndWishlistId(orderDTO.getProductId(), wishlist.get().getId());
+            productWishlistRepository.deleteByProductIdAndWishlistId(orderDTO.getProduct_id(), wishlist.get().getId());
         }
 
         Order order = new Order(orderDTO);
@@ -117,7 +123,7 @@ public class OrderService {
 
     private LinkedMultiValueMap<String, String> makeRequestBody(OrderDTO order) {
         String redirect_url = "http://localhost:8080/me";
-        Product product = productService.findById(order.getProductId());
+        Product product = productService.findById(order.getProduct_id());
         String msg = product.getName() + " : " + Integer.toString(order.getQuantity()) + "\n" + order.getMessage();
 
         LinkedMultiValueMap<String, String> body = new LinkedMultiValueMap<>();

@@ -1,7 +1,8 @@
 package gift.service;
 
-import gift.entity.Category;
-import gift.entity.CategoryDTO;
+import gift.entity.category.Category;
+import gift.entity.category.CategoryDTO;
+import gift.entity.category.CategoryRequest;
 import gift.exception.ResourceNotFoundException;
 import gift.repository.CategoryRepository;
 import org.springframework.stereotype.Service;
@@ -25,10 +26,33 @@ public class CategoryService {
         return categoryRepository.findAll();
     }
 
+    public CategoryDTO findOne(Long id) {
+        return new CategoryDTO(findById(id));
+    }
+
     @Transactional
-    public Category save(CategoryDTO categoryDTO) {
-        Category category = new Category(categoryDTO);
+    public Category save(CategoryRequest categoryRequest) {
+        Category category = new Category(categoryRequest);
         return categoryRepository.save(category);
+    }
+
+    @Transactional
+    public Category update(Long id, CategoryRequest categoryRequest) {
+        Category category = findById(id);
+        if (category.getId() == 1L) {
+            throw new ResourceNotFoundException("Category not found with id " + id);
+        }
+        category.setCategory(categoryRequest);
+        return categoryRepository.save(category);
+    }
+
+    @Transactional
+    public void delete(Long id) {
+        Category category = findById(id);
+        if (category.getId() == 1L) {
+            throw new ResourceNotFoundException("Category not found with id " + id);
+        }
+        categoryRepository.delete(category);
     }
 
     public Category findById(Long id) {
@@ -37,21 +61,5 @@ public class CategoryService {
             return categoryRepository.findById(1L).get(); // return defaultCategory
         }
         return category.get();
-    }
-
-    @Transactional
-    public Category update(Long id, CategoryDTO categoryDTO) {
-        Category category = findById(id);
-        if (category.getId() == 1L) {
-            throw new ResourceNotFoundException("Category not found with id " + id);
-        }
-        category.setCategory(categoryDTO);
-        return categoryRepository.save(category);
-    }
-
-    @Transactional
-    public void delete(Long id) {
-        Category category = findById(id);
-        categoryRepository.delete(category);
     }
 }
