@@ -69,7 +69,7 @@ public class PointPaymentService {
         ProductOptionEntity option = productOptionRepository.findById(create.getProductOptionId())
             .orElseThrow(() -> new BaseHandler(HttpStatus.NOT_FOUND, "해당 상품의 옵션이 존재하지 않습니다."));
 
-        DiscountPolicyEntity discountPolicy = discountPolicyRepository.findByIdAndIsDeleteAndEndDateLessThanEqual(
+        DiscountPolicyEntity discountPolicy = discountPolicyRepository.findByIdAndIsDeleteAndEndDateAfter(
                 create.getDiscountPolicyId(), 0, LocalDateTime.now())
             .orElseThrow(() -> new BaseHandler(HttpStatus.NOT_FOUND, "해당 할인 정책이 없습니다."));
 
