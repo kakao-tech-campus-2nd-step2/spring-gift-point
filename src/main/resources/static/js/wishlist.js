@@ -11,9 +11,9 @@ function updateOptionQuantity(selectElement) {
     })
     .then(response => response.json())
     .then(data => {
-        console.log('Option quantity updated.');
+        console.log('옵션 수량이 업데이트되었습니다.');
     })
-    .catch(error => console.error('Error:', error));
+    .catch(error => console.error('오류:', error));
 }
 
 function refreshPage() {
@@ -33,32 +33,43 @@ function deleteWishlistItem(button) {
         alert(data);
         window.location.reload();
     })
-    .catch(error => console.error('Error:', error));
+    .catch(error => console.error('오류:', error));
 }
 
 function orderWishlistItem(button) {
     const wishlistId = button.getAttribute('data-wishlist-id');
+    const pointsInput = document.querySelector(`input.use-points[data-wishlist-id='${wishlistId}']`);
+    const pointsToUse = pointsInput ? pointsInput.value : "0";
 
     fetch(`/api/orders/order/${wishlistId}`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/x-www-form-urlencoded'
         },
-        body: new URLSearchParams()
+        body: new URLSearchParams({ pointsToUse: pointsToUse })
     })
     .then(response => {
         if (!response.ok) {
-            throw new Error('Network response was not ok');
+            throw new Error('네트워크 응답이 올바르지 않습니다');
         }
         return response.json();
     })
     .then(data => {
-        alert('Order placed successfully');
-        window.location.reload();
+        if (data.error) {
+            alert(data.error);
+        } else {
+            alert('주문이 성공적으로 완료되었습니다');
+            // 세션의 포인트를 업데이트
+            const pointsElement = document.getElementById('points');
+            if (pointsElement && data.newPoints !== undefined) { // null 체크 및 newPoints 존재 여부 확인
+                pointsElement.innerText = data.newPoints;
+            }
+            window.location.reload();
+        }
     })
     .catch(error => {
-        console.error('Error:', error);
-        alert('An error occurred while placing the order');
+        console.error('오류:', error);
+        alert('주문하는 중 오류가 발생했습니다');
     });
 }
 
