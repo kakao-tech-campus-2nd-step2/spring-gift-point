@@ -1,12 +1,19 @@
 package gift.controller.wishlist;
 
 import gift.DTO.product.ProductResponse;
+import gift.DTO.wishlist.WishResponse;
 import gift.domain.Product;
 import gift.service.MemberService;
 import gift.service.TokenService;
 import gift.service.WishlistService;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Direction;
+import org.springframework.data.web.PageableDefault;
+import org.springframework.data.web.SortDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -19,7 +26,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/api/wishlist")
+@RequestMapping("/api/wishes")
 public class WishlistController {
 
     private final WishlistService wishlistService;
@@ -35,34 +42,30 @@ public class WishlistController {
     }
 
     @GetMapping
-    public ResponseEntity<List<ProductResponse>> getWishlist(
+    public ResponseEntity<Page<WishResponse>> getWishlist(
         @RequestHeader("Authorization") String authorizationHeader,
-        @RequestParam(defaultValue = "0") Integer page,
-        @RequestParam(defaultValue = "2") Integer size
+        @PageableDefault(page = 0, size = 10)
+        @SortDefault(sort = "createdDate", direction = Direction.DESC) Pageable pageable
     ) {
         String token = tokenService.getBearerTokenFromHeader(authorizationHeader);
-        if (!tokenService.validateToken(token)) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-        }
+        tokenService.validateToken(token);
 
         String email = tokenService.extractEmailFromToken(token);
-        List<ProductResponse> wishlist = wishlistService.getWishlistByEmail(email, page, size);
-        return ResponseEntity.ok(wishlist);
+        Page<WishResponse> pageWishResponse = wishlistService.getWishlistByEmail(email, pageable);
+        return ResponseEntity.status(HttpStatus.OK).body(pageWishResponse);
     }
 
     @PostMapping("/{productId}")
-    public ResponseEntity<String> addToWishlist(
+    public ResponseEntity<WishResponse> addToWishlist(
         @RequestHeader("Authorization") String authorizationHeader,
         @PathVariable Long productId
     ) {
         String token = tokenService.getBearerTokenFromHeader(authorizationHeader);
-        if (!tokenService.validateToken(token)) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid token");
-        }
+        tokenService.validateToken(token);
         String email = tokenService.extractEmailFromToken(token);
 
-        wishlistService.addWishlist(email, productId);
-        return ResponseEntity.ok("Product added to wishlist");
+        WishResponse wish = wishlistService.addWishlist(email, productId);
+        return ResponseEntity.status(HttpStatus.CREATED).body(wish);
     }
 
     @DeleteMapping("/{productId}")
@@ -71,12 +74,10 @@ public class WishlistController {
         @PathVariable Long productId
     ) {
         String token = tokenService.getBearerTokenFromHeader(authorizationHeader);
-        if (!tokenService.validateToken(token)) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid token");
-        }
+        tokenService.validateToken(token);
         String email = tokenService.extractEmailFromToken(token);
 
         wishlistService.removeWishlist(email, productId);
-        return ResponseEntity.ok("Product removed from wishlist");
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 }

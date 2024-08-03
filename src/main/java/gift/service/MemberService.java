@@ -9,7 +9,9 @@ import gift.DTO.member.SignupResponse;
 import gift.domain.Member;
 import gift.exception.member.DuplicatedEmailException;
 import gift.exception.member.InvalidAccountException;
+import gift.exception.member.MemberNotFoundException;
 import gift.exception.member.PasswordMismatchException;
+import gift.exception.product.ProductNotFoundException;
 import gift.repository.MemberRepository;
 import java.util.List;
 import java.util.Optional;
@@ -34,13 +36,12 @@ public class MemberService {
         memberRepository.findByEmail(signupRequest.getEmail()).ifPresent(p -> {
             throw new DuplicatedEmailException();
         });
+        // confirmPassword(signupRequest.getPassword(), signupRequest.getConfirmPassword());
         Member member = new Member(signupRequest.getEmail(),
                                     signupRequest.getPassword(),
                                     signupRequest.getKakaoId());
+
         memberRepository.save(member);
-
-        confirmPassword(signupRequest.getPassword(), signupRequest.getConfirmPassword());
-
         return new SignupResponse(member.getEmail());
     }
 
@@ -64,9 +65,9 @@ public class MemberService {
     }
 
     @Transactional(readOnly = true)
-    public Member getMemberByEmail(String email) {
+    protected Member getMemberByEmail(String email) {
         Member member = memberRepository.findByEmail(email)
-                                .orElseThrow(() -> new InvalidAccountException());
+                                .orElseThrow(() -> new MemberNotFoundException());
         return member;
     }
 

@@ -1,9 +1,12 @@
 package gift.service;
 
 import gift.DTO.product.ProductResponse;
+import gift.DTO.wishlist.WishResponse;
 import gift.domain.Member;
 import gift.domain.Product;
 import gift.domain.Wishlist;
+import gift.exception.product.ProductNotFoundException;
+import gift.exception.wish.WishNotFoundException;
 import gift.repository.ProductRepository;
 import gift.repository.WishlistRepository;
 import java.util.List;
@@ -37,29 +40,33 @@ public class WishlistService {
     }
 
     @Transactional(readOnly = true)
-    public List<ProductResponse> getWishlistByEmail(String email, Integer pageNumber, Integer pageSize) {
-        Pageable pageable = PageRequest.of(pageNumber, pageSize);
+    public Page<WishResponse> getWishlistByEmail(String email, Pageable pageable) {
         Page<Wishlist> wishes = wishlistRepository.findByMemberEmail(email, pageable);
-        return wishes.stream()
-                    .map(Wishlist::getProduct)
-                    .map(ProductResponse::fromEntity)
-                    .toList();
+        return wishes.map(WishResponse::fromEntity);
     }
 
     @Transactional
-    public void addWishlist(String email, Long productId) {
+    public WishResponse addWishlist(String email, Long productId) {
         Product product= productRepository.findById(productId)
-                                        .orElseThrow(() -> new RuntimeException());
+                                        .orElseThrow(() -> new ProductNotFoundException());
         Member member = memberService.getMemberByEmail(email);
 
         Wishlist wish = new Wishlist(member, product);
-        wishlistRepository.save(wish);
+        Wishlist savedWish = wishlistRepository.save(wish);
+        return WishResponse.fromEntity(savedWish);
     }
 
     @Transactional
     public void removeWishlist(String email, Long productId) {
         Wishlist wish = wishlistRepository.findByMemberEmailAndProductId(email, productId)
-            .orElseThrow(() -> new RuntimeException("Wish Not Found"));
+            .orElseThrow(() -> new WishNotFoundException());
+        wishlistRepository.delete(wish);
+    }
+
+    @Transactional
+    public void deleteWish(String email, Long wishId) {
+        Wishlist wish = wishlistRepository.findById(wishId)
+            .orElseThrow(() -> new WishNotFoundException());
         wishlistRepository.delete(wish);
     }
 }

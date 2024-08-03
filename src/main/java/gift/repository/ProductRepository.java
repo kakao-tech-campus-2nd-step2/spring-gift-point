@@ -1,5 +1,6 @@
 package gift.repository;
 
+import gift.domain.Category;
 import gift.domain.Product;
 import java.util.Optional;
 import org.springframework.data.domain.Page;
@@ -13,4 +14,6 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     Page<Product> findAll(Pageable pageable);
 
     Optional<Product> findByName(String name);
+
+    Page<Product> findByCategory(Category category, Pageable pageable);
 }
