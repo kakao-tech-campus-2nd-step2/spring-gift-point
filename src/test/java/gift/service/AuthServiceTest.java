@@ -23,6 +23,7 @@ import gift.product.repository.AuthRepository;
 import gift.product.repository.KakaoTokenRepository;
 import gift.product.service.AuthService;
 import java.io.IOException;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.Properties;
 import okhttp3.mockwebserver.MockResponse;
@@ -274,5 +275,15 @@ class AuthServiceTest {
         assertThatThrownBy(() -> authService.unlinkKakaoAccount(loginMemberIdDto,
             mockUrl)).isInstanceOf(
             LoginFailedException.class);
+    }
+
+    @Test
+    void 실패_존재하지_않는_회원_정보로_포인트_조회() {
+        //given
+        given(authRepository.findById(any())).willReturn(Optional.empty());
+
+        //when, then
+        assertThatThrownBy(() -> authService.getMemberPoint(new LoginMemberIdDto(1L))).isInstanceOf(
+            NoSuchElementException.class);
     }
 }
