@@ -7,7 +7,6 @@ import gift.dto.response.CommonResponse;
 import gift.dto.response.OrderResponse;
 import gift.service.OrderService;
 import io.swagger.v3.oas.annotations.Operation;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -23,9 +22,8 @@ public class OrderRestController {
 
     @Operation(summary = "새로운 주문을 생성합니다")
     @PostMapping
-    public ResponseEntity<CommonResponse> order(@RequestHeader(HttpHeaders.AUTHORIZATION) String header, @LoginMember MemberRequest memberRequest, @RequestBody OrderRequest orderRequest){
-        String token = header.substring(7);
-        OrderResponse orderResponse = orderService.orderOption(orderRequest, memberRequest, token);
+    public ResponseEntity<CommonResponse> order(@LoginMember MemberRequest memberRequest, @RequestBody OrderRequest orderRequest){
+        OrderResponse orderResponse = orderService.orderOption(orderRequest, memberRequest);
         return ResponseEntity.status(HttpStatus.CREATED).body(new CommonResponse(orderResponse, "주문 생성 성공", true));
     }
 
