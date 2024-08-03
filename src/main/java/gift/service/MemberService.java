@@ -3,6 +3,7 @@ package gift.service;
 import gift.domain.Member;
 import gift.dto.request.MemberRequest;
 import gift.dto.response.MemberResponse;
+import gift.dto.response.PointsTransactionResponse;
 import gift.exception.customException.DuplicateMemberEmailException;
 import gift.exception.customException.MemberNotFoundException;
 import gift.repository.MemberRepository;
@@ -65,18 +66,25 @@ public class MemberService {
         member.addPoints(addPoints);
     }
 
-    @Transactional
-    public void useMemberPoints(MemberRequest memberRequest, int usePoints){
-        Member member = memberRepository.findById(memberRequest.id())
-                .orElseThrow(() -> new MemberNotFoundException(NOT_FOUND_MEMBER));
-        member.usePoints(usePoints);
-    }
-
     @Transactional(readOnly = true)
     public List<MemberResponse> getAllMembers(){
         return memberRepository.findAll()
                 .stream()
                 .map(MemberResponse::from)
                 .toList();
+    }
+
+    @Transactional
+    public PointsTransactionResponse processPoints(Long memberId, int pointsUsed, int price) {
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new MemberNotFoundException(NOT_FOUND_MEMBER));
+
+        member.validatePointsUsage(pointsUsed, price);
+        member.usePoints(pointsUsed);
+
+        int pointsReceived = (int) Math.floor(price * 0.05);
+        member.addPoints(pointsReceived);
+
+        return new PointsTransactionResponse(pointsUsed, pointsReceived);
     }
 }
