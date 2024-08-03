@@ -35,6 +35,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
 @PropertySource("classpath:application-secret.properties")
@@ -132,6 +133,7 @@ public class MemberController {
                     content = @Content(mediaType = "application/json", schema = @Schema(implementation = ResponseDTO.class))),
             @ApiResponse(responseCode = "500", description = "서버에 의한 오류입니다.",
                     content = @Content(mediaType = "application/json", schema = @Schema(implementation = ResponseDTO.class)))})
+    @ResponseBody
     public Map<String, Long> getPoint(@Parameter(hidden = true) @LoginMember MemberDTO memberDTO) {
         Map<String, Long> myPointMap = new HashMap<>();
         myPointMap.put("point", memberService.getPoint(memberDTO));
