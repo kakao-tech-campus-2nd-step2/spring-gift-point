@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <link th:href="@{/css/admin/category.css}" rel="stylesheet"/>
+  <script defer th:src="@{/js/admin/category.js}"></script>
+  <title>카테고리 관리 페이지</title>
+</head>
+<body>
+<div id="categoryContainer" class="category-container">
+  <h1>카테고리 관리</h1>
+  <button id="loadCategoriesButton">카테고리 조회</button>
+  <div id="categoriesList"></div>
+  <h2>카테고리 등록</h2>
+  <input type="text" id="newCategoryName" placeholder="카테고리 이름" required>
+  <input type="color" id="newCategoryColor" required>
+  <input type="text" id="newCategoryImageUrl" placeholder="이미지 URL" required>
+  <input type="text" id="newCategoryDescription" placeholder="카테고리 설명 (선택)">
+  <button id="addCategoryButton">등록</button>
+  <button id="goToMainPageButton">메인 페이지로 돌아가기</button>
+</div>
+</body>
+</html>

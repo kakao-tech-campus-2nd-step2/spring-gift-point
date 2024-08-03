@@ -25,7 +25,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 <div id="point">현재 포인트: ${point}</div>
                 <ul>
                     <li><a href="#" id="chargeButton">포인트 충전</a></li>
-                    <li><a href="#">카테고리</a></li>
+                    <li><a href="/admin/category">카테고리</a></li>
                     <li><a href="#">상품</a></li>
                     <li><a href="#">옵션</a></li>
                     <li><a href="#" id="logoutButton">로그아웃</a></li>

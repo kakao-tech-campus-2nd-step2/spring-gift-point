@@ -34,6 +34,11 @@ public class AdminController {
         return "admin/signup";
     }
 
+    @GetMapping("/category")
+    public String showCategoryPage() {
+        return "admin/category";
+    }
+
     @GetMapping("/product")
     public ModelAndView showProductPage(
         @RequestParam(defaultValue = "1", name = "page") int pageNum) {
