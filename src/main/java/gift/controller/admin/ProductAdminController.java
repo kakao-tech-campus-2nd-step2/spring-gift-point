@@ -6,7 +6,6 @@ import gift.entity.Product;
 import gift.service.CategoryService;
 import gift.service.ProductService;
 import jakarta.validation.Valid;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
@@ -24,18 +23,10 @@ public class ProductAdminController {
 
     private final ProductService productService;
     private final CategoryService categoryService;
-    @Value("${clientId}")
-    private String clientId;
 
     public ProductAdminController(ProductService productService, CategoryService categoryService) {
         this.productService = productService;
         this.categoryService = categoryService;
-    }
-
-    @GetMapping("/login")
-    public String kakaoLogin(Model model) {
-        model.addAttribute("clientId", clientId);
-        return "version-SSR/kakaoLogin";
     }
 
     @GetMapping("/product")
@@ -91,5 +82,4 @@ public class ProductAdminController {
             return "version-SSR/edit-error";
         }
     }
-
 }
