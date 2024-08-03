@@ -33,7 +33,7 @@ public class Order {
     private String message;
 
     @Embedded
-    @AttributeOverride(name = "phoneNumber", column = @Column(name = "cash_receipt"))
+    @AttributeOverride(name = "value", column = @Column(name = "cash_receipt"))
     private CashReceipt cashReceipt;
 
 
