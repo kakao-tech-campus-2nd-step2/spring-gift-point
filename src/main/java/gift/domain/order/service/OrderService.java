@@ -37,7 +37,10 @@ public class OrderService {
         Order order = orderRequest.toOrder(member);
 
         orderItemService.createMultiple(member, order, orderRequest.orderItems());
+
         applyDiscountPolicy(order, DiscountPolicy.DEFAULT);
+        member.userPoint(order.getFinalPrice());
+
         Order savedOrder = orderJpaRepository.save(order);
 
         if (member.getAuthProvider() != AuthProvider.KAKAO) {
@@ -56,7 +59,9 @@ public class OrderService {
 
         OrderItemRequest orderItemRequest = new OrderItemRequest(orderRequest.optionId(), orderRequest.quantity());
         orderItemService.createOne(member, order, orderItemRequest);
+
         applyDiscountPolicy(order, DiscountPolicy.DEFAULT);
+        member.userPoint(order.getFinalPrice());
 
         Order savedOrder = orderJpaRepository.save(order);
         return OrderResponse.from(savedOrder);

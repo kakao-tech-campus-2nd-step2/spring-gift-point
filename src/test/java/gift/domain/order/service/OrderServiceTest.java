@@ -1,6 +1,7 @@
 package gift.domain.order.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.eq;
@@ -74,6 +75,8 @@ class OrderServiceTest {
     @DisplayName("여러 아이템 주문 테스트")
     void createMultipleAndSendMessage() {
         // given
+        member.rechargePoint(162000);
+
         List<OrderItemRequest> orderItemRequests = List.of(
             new OrderItemRequest(1L, 10),
             new OrderItemRequest(2L, 30)
@@ -95,13 +98,17 @@ class OrderServiceTest {
         MultipleOrderResponse actual = orderService.createMultipleAndSendMessage(orderRequest, member);
 
         // then
-        assertThat(actual).isEqualTo(expected);
+        assertAll(
+            () -> assertThat(actual).isEqualTo(expected),
+            () -> assertThat(member.getPoint()).isEqualTo(0)
+        );
     }
 
     @Test
     @DisplayName("주문 생성, 할인 테스트")
     void create_One_and_discount() {
         // given
+        member.rechargePoint(70000);
         OrderRequest orderRequest = new OrderRequest(1L, 15, "5만원 넘음~");
         Order order = orderRequest.toOrder(member);
         OrderItem orderItem = new OrderItem(1L, order, product, option1, 15);
@@ -118,6 +125,9 @@ class OrderServiceTest {
         OrderResponse response = orderService.createOne(orderRequest, member);
 
         // then
-        assertThat(response.finalPrice()).isEqualTo(60750);
+        assertAll(
+            () -> assertThat(response.finalPrice()).isEqualTo(60750),
+            () -> assertThat(member.getPoint()).isEqualTo(9250)
+        );
     }
 }
