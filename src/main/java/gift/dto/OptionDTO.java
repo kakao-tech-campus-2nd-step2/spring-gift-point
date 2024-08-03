@@ -34,6 +34,7 @@ public class OptionDTO {
     private Long productId;
     @Max(value = 100000000, message = "수량은 최대 1억개 이하이어야 합니다.")
     private int maxQuantity;
+    
 
     public OptionDTO() {}
 

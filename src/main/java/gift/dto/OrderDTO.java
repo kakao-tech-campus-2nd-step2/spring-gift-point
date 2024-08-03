@@ -19,6 +19,9 @@ public class OrderDTO {
     @Schema(description = "주문 시간", example = "2024-07-26T12:34:56")
     private LocalDateTime orderDateTime;
 
+    @Schema(description = "사용 후 남은 포인트", example = "950")
+    private int newPoints;
+
     public OrderDTO() {
     }
 
@@ -52,5 +55,13 @@ public class OrderDTO {
 
     public LocalDateTime getOrderDateTime() {
         return orderDateTime;
+    }
+
+    public int getNewPoints() {
+        return newPoints;
+    }
+
+    public void setNewPoints(int newPoints) {
+        this.newPoints = newPoints;
     }
 }
