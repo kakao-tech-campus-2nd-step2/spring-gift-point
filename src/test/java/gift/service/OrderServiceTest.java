@@ -40,7 +40,7 @@ public class OrderServiceTest {
         Integer quantity = 2;
         Long productId = 1L;
         Long receiveMemberId = 1L;
-        OrderRequest orderRequest = new OrderRequest(optionId, quantity, "테스트 메시지", receiveMemberId);
+        OrderRequest orderRequest = new OrderRequest(optionId, quantity, "테스트 메시지", productId, 20, "010-0000-0000", true);
 
         when(optionService.getProductIdByOptionId(optionId)).thenReturn(productId);
         doNothing().when(optionService).subtractOptionQuantity(productId, optionId, quantity);
