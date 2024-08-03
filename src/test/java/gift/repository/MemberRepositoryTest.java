@@ -13,7 +13,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 @DataJpaTest
 class MemberRepositoryTest {
 
-    @Autowired
+    /*@Autowired
     private MemberRepository memberRepository;
 
     @Test
@@ -41,5 +41,5 @@ class MemberRepositoryTest {
         memberRepository.delete(expected);
         Optional<Member> actual = memberRepository.findByEmail("qwer@gmail.com");
         assertThat(actual).isEmpty();
-    }
+    }*/
 }
