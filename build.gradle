@@ -54,3 +54,8 @@ dependencies {
 tasks.named('test') {
     useJUnitPlatform()
 }
+
+bootJar {
+    destinationDirectory = file("$buildDir/libs")
+    archiveFileName = 'spring-gift-0.0.1-SNAPSHOT.jar'
+}
