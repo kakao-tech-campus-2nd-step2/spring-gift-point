@@ -1,11 +1,14 @@
 package gift.service;
 
+import gift.dto.OptionRequest;
 import gift.dto.ProductRequest;
 import gift.dto.ProductResponse;
 import gift.entity.Category;
+import gift.entity.Option;
 import gift.entity.Product;
-import gift.repository.ProductRepository;
 import gift.repository.CategoryRepository;
+import gift.repository.OptionRepository;
+import gift.repository.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -19,11 +22,13 @@ public class ProductService {
 
     private final ProductRepository productRepository;
     private final CategoryRepository categoryRepository;
+    private final OptionRepository optionRepository;
 
     @Autowired
-    public ProductService(ProductRepository productRepository, CategoryRepository categoryRepository) {
+    public ProductService(ProductRepository productRepository, CategoryRepository categoryRepository, OptionRepository optionRepository) {
         this.productRepository = productRepository;
         this.categoryRepository = categoryRepository;
+        this.optionRepository = optionRepository;
     }
 
     public Page<ProductResponse> findAll(PageRequest pageRequest) {
@@ -41,24 +46,46 @@ public class ProductService {
 
     public void save(ProductRequest productRequest) {
         Category category = categoryRepository.findById(productRequest.categoryId())
-                .orElseThrow(() -> new IllegalArgumentException("Invalid category ID"));
+                .orElseThrow(() -> new IllegalArgumentException("Category with id " + productRequest.categoryId() + " not found"));
+
         Product product = new Product(productRequest.name(), productRequest.price(), productRequest.imageUrl(), category);
         productRepository.save(product);
+
+        List<Option> options = productRequest.options().stream()
+                .map(optionRequest -> new Option(optionRequest.name(), optionRequest.quantity(), product))
+                .collect(Collectors.toList());
+
+        optionRepository.saveAll(options);
     }
 
     public void update(Long id, ProductRequest productRequest) {
+        Product product = productRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Product with id " + id + " not found"));
+
         Category category = categoryRepository.findById(productRequest.categoryId())
                 .orElseThrow(() -> new IllegalArgumentException("Invalid category ID"));
-        Product product = new Product(id, productRequest.name(), productRequest.price(), productRequest.imageUrl(), category);
+
+        product.setName(productRequest.name());
+        product.setPrice(productRequest.price());
+        product.setImageUrl(productRequest.imageUrl());
+        product.setCategory(category);
+
         productRepository.save(product);
     }
 
     public void delete(Long id) {
-        productRepository.deleteById(id);
+        Product product = productRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Product with id " + id + " not found"));
+
+        productRepository.delete(product);
     }
 
     public void deleteBatch(List<Long> ids) {
-        productRepository.deleteAllById(ids);
+        for (Long id : ids) {
+            Product product = productRepository.findById(id)
+                    .orElseThrow(() -> new IllegalArgumentException("Product with id " + id + " not found"));
+            productRepository.delete(product);
+        }
     }
 
     private ProductResponse convertToResponse(Product product) {

@@ -25,16 +25,26 @@ public class OptionService {
     }
 
     public List<OptionResponse> findByProductId(Long productId) {
+        if (!productRepository.existsById(productId)) {
+            throw new IllegalArgumentException("Product with id " + productId + " not found");
+        }
         List<Option> options = optionRepository.findByProductId(productId);
         return options.stream().map(this::convertToResponse).collect(Collectors.toList());
     }
 
     public OptionResponse save(OptionRequest optionRequest) {
         Product product = productRepository.findById(optionRequest.productId())
-                .orElseThrow(() -> new IllegalArgumentException("Invalid product ID"));
+                .orElseThrow(() -> new IllegalArgumentException("Product with id " + optionRequest.productId() + " not found"));
         Option option = new Option(optionRequest.name(), optionRequest.quantity(), product);
         Option savedOption = optionRepository.save(option);
         return convertToResponse(savedOption);
+    }
+
+    public void delete(Long optionId) {
+        if (!optionRepository.existsById(optionId)) {
+            throw new IllegalArgumentException("Option with id " + optionId + " not found");
+        }
+        optionRepository.deleteById(optionId);
     }
 
     private OptionResponse convertToResponse(Option option) {
@@ -42,7 +52,8 @@ public class OptionService {
     }
 
     public void subtractQuantity(Long optionId, int quantity) {
-        Option option = optionRepository.findById(optionId).orElseThrow(() -> new IllegalArgumentException("Option not found"));
+        Option option = optionRepository.findById(optionId)
+                .orElseThrow(() -> new IllegalArgumentException("Option with id " + optionId + " not found"));
         option.subtractQuantity(quantity);
         optionRepository.save(option);
     }

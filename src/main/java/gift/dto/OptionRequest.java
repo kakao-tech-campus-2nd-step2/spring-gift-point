@@ -1,5 +1,6 @@
 package gift.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
@@ -16,6 +17,7 @@ public record OptionRequest(
         @Min(value = 1, message = "하나 이상의 옵션이 있어야 합니다.")
         int quantity,
 
+        @JsonProperty("product_id")
         Long productId
 ) {
     public OptionRequest {

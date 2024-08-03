@@ -4,13 +4,16 @@ import gift.dto.CategoryRequest;
 import gift.dto.CategoryResponse;
 import gift.service.CategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.expression.spel.ast.OperatorBetween;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
-@Controller
+@RestController
 @RequestMapping("/api/categories")
 public class CategoryController {
 
@@ -22,44 +25,42 @@ public class CategoryController {
     }
 
     @GetMapping
-    public ResponseEntity<List<CategoryResponse>> getAllCategories() {
+    public ResponseEntity<?> getAllCategories() {
         List<CategoryResponse> categories = categoryService.findAll();
-        return ResponseEntity.ok(categories);
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("categories", categories);
+
+        return ResponseEntity.ok(response);
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<?> getCategoryById(@PathVariable Long id) {
         try {
             CategoryResponse category = categoryService.findById(id);
-            return ResponseEntity.ok(category);
+
+            Map<String, Object> response = new HashMap<>();
+            response.put("category", category);
+
+            return ResponseEntity.ok(response);
         } catch (IllegalArgumentException e) {
-            return ResponseEntity.status(404).body("Category not found.");
+            return ResponseEntity.status(404).body(e.getMessage());
         }
     }
 
     @PostMapping
-    public ResponseEntity<CategoryResponse> addCategory(@RequestBody CategoryRequest categoryRequest) {
-        CategoryResponse savedCategory = categoryService.save(categoryRequest);
-        return ResponseEntity.ok(savedCategory);
-    }
-
-    @PutMapping("/{id}")
-    public ResponseEntity<?> updateCategory(@PathVariable Long id, @RequestBody CategoryRequest categoryRequest) {
-        try {
-            CategoryResponse updatedCategory = categoryService.update(id, categoryRequest);
-            return ResponseEntity.ok(updatedCategory);
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.status(404).body("Category not found.");
-        }
+    public ResponseEntity<?> addCategory(@RequestBody CategoryRequest categoryRequest) {
+        categoryService.save(categoryRequest);
+        return ResponseEntity.ok().build();
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteCategory(@PathVariable Long id) {
         try {
             categoryService.delete(id);
-            return ResponseEntity.ok().body("Successfully deleted Category.");
+            return ResponseEntity.ok().build();
         } catch (IllegalArgumentException e) {
-            return ResponseEntity.status(404).body("Category not found.");
+            return ResponseEntity.status(404).body(e.getMessage());
         }
     }
 }

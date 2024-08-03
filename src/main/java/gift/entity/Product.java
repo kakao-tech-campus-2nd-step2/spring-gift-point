@@ -1,5 +1,6 @@
 package gift.entity;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
@@ -17,10 +18,10 @@ public class Product extends BaseEntity {
     @ManyToOne
     @JoinColumn(name = "category_id", nullable = false)
     private Category category;
-    
-    @OneToMany(mappedBy = "product")
+
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Option> options = new ArrayList<>();
-    
+
     @OneToMany(mappedBy = "product")
     private List<Wish> wishes = new ArrayList<>();
 
@@ -72,21 +73,5 @@ public class Product extends BaseEntity {
 
     public void setCategory(Category category) {
         this.category = category;
-    }
-
-    public List<Option> getOptions() {
-        return options;
-    }
-
-    public void setOptions(List<Option> options) {
-        this.options = options;
-    }
-
-    public List<Wish> getWishes() {
-        return wishes;
-    }
-
-    public void setWishes(List<Wish> wishes) {
-        this.wishes = wishes;
     }
 }

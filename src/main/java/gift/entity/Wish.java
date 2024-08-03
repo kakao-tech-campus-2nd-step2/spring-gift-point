@@ -14,14 +14,11 @@ public class Wish extends BaseEntity {
     @JoinColumn(name = "product_id", nullable = false)
     private Product product;
 
-    private int productNumber;
-
     public Wish() {}
 
-    public Wish(Member member, Product product, int productNumber) {
+    public Wish(Member member, Product product) {
         this.member = member;
         this.product = product;
-        this.productNumber = productNumber;
     }
 
     public Member getMember() {
@@ -38,13 +35,5 @@ public class Wish extends BaseEntity {
 
     public void setProduct(Product product) {
         this.product = product;
-    }
-
-    public int getProductNumber() {
-        return productNumber;
-    }
-
-    public void setProductNumber(int productNumber) {
-        this.productNumber = productNumber;
     }
 }

@@ -3,7 +3,6 @@ package gift.controller;
 import gift.dto.ProductRequest;
 import gift.dto.ProductResponse;
 import gift.service.ProductService;
-import gift.service.CategoryService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -20,12 +19,10 @@ import java.util.Map;
 public class ProductController {
 
     private final ProductService productService;
-    private final CategoryService categoryService;
 
     @Autowired
-    public ProductController(ProductService productService, CategoryService categoryService) {
+    public ProductController(ProductService productService) {
         this.productService = productService;
-        this.categoryService = categoryService;
     }
 
     @GetMapping
@@ -51,26 +48,14 @@ public class ProductController {
         return ResponseEntity.ok(response);
     }
 
-    private Map<String, Object> convertToDto(ProductResponse product) {
-        Map<String, Object> productDto = new HashMap<>();
-        productDto.put("id", product.getId());
-        productDto.put("name", product.getName());
-        productDto.put("price", product.getPrice());
-        productDto.put("image_url", product.getImageUrl());
-        productDto.put("category_id", product.getCategoryId());
-        return productDto;
-    }
-
     @GetMapping("/{id}")
-    public ResponseEntity<Map<String, Object>> getProduct(@PathVariable long id) {
-        ProductResponse product = productService.findById(id);
-        Map<String, Object> productDto = convertToDto(product);
-        return ResponseEntity.ok(productDto);
-    }
-
-    @GetMapping("/new")
-    public ResponseEntity<ProductRequest> addProductForm() {
-        return ResponseEntity.ok(new ProductRequest("", 0, "", 1L));
+    public ResponseEntity<?> getProduct(@PathVariable long id) {
+        try {
+            ProductResponse product = productService.findById(id);
+            return ResponseEntity.ok(product);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(404).body(e.getMessage());
+        }
     }
 
     @PostMapping
@@ -79,7 +64,7 @@ public class ProductController {
             productService.save(productRequest);
             return ResponseEntity.ok().build();
         } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
+            return ResponseEntity.status(404).body(e.getMessage());
         }
     }
 
@@ -89,19 +74,27 @@ public class ProductController {
             productService.update(id, productRequest);
             return ResponseEntity.ok().build();
         } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
+            return ResponseEntity.status(404).body(e.getMessage());
         }
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteProduct(@PathVariable Long id) {
-        productService.delete(id);
-        return ResponseEntity.ok().build();
+        try {
+            productService.delete(id);
+            return ResponseEntity.ok().build();
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(404).body(e.getMessage());
+        }
     }
 
     @PostMapping("/delete-batch")
     public ResponseEntity<?> deleteBatch(@RequestBody Map<String, List<Long>> request) {
-        productService.deleteBatch(request.get("ids"));
-        return ResponseEntity.ok("Success");
+        try {
+            productService.deleteBatch(request.get("ids"));
+            return ResponseEntity.ok("Success");
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(404).body(e.getMessage());
+        }
     }
 }

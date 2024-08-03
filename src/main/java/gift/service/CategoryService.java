@@ -28,7 +28,7 @@ public class CategoryService {
 
     public CategoryResponse findById(Long id) {
         Category category = categoryRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Category not found"));
+                .orElseThrow(() -> new IllegalArgumentException("Category with id " + id + " not found"));
         return convertToResponse(category);
     }
 
@@ -43,21 +43,10 @@ public class CategoryService {
         return convertToResponse(savedCategory);
     }
 
-    public CategoryResponse update(Long id, CategoryRequest categoryRequest) {
-        Category category = categoryRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Category not found"));
-
-        category.setName(categoryRequest.name());
-        category.setColor(categoryRequest.color());
-        category.setImageUrl(categoryRequest.imageUrl());
-        category.setDescription(categoryRequest.description());
-
-        Category updatedCategory = categoryRepository.save(category);
-        return convertToResponse(updatedCategory);
-    }
-
     public void delete(Long id) {
-        categoryRepository.deleteById(id);
+        Category category = categoryRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Category with id " + id + " not found"));
+        categoryRepository.delete(category);
     }
 
     private CategoryResponse convertToResponse(Category category) {
