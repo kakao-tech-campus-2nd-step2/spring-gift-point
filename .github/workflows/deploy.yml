@@ -29,7 +29,7 @@ jobs:
       - name: Replace environment variables in *.properties
         run: |
           sed -i "s/\${KAKAO_CLIENT_ID}/${{ secrets.KAKAO_CLIENT_ID }}/g" ./src/main/resources/application-kakao.properties
-          sed -i "s/\${JWT_SECRET}/${{ secrets.JWT_SECRET }}/g" ./src/main/resources/application-dev.properties
+          sed -i "s/\${JWT_SECRET}/${{ secrets.JWT_SECRET }}/g" ./src/main/resources/application.properties
           sed -i "s/\${REDIS_HOST}/${{ secrets.REDIS_HOST }}/g" ./src/main/resources/application-redis.properties
 
 
