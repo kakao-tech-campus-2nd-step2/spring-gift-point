@@ -77,6 +77,9 @@ public class Member {
     }
 
     public void addPoints(Long points) {
+        if (points <= 0) {
+            throw new InvalidInputValueException("충전할 포인트는 0보다 커야 합니다.");
+        }
         this.points += points;
     }
 
