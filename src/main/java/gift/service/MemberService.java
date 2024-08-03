@@ -10,6 +10,7 @@ import gift.dto.member.MemberEditRequest;
 import gift.dto.member.MemberEditResponse;
 import gift.dto.member.MemberLoginRequest;
 import gift.dto.member.MemberOAuthResponse;
+import gift.dto.member.MemberPointRequest;
 import gift.dto.member.MemberPointResponse;
 import gift.dto.member.MemberRegisterRequest;
 import gift.exception.member.EmailAlreadyUsedException;
@@ -142,9 +143,18 @@ public class MemberService {
         memberRepository.deleteById(memberId);
     }
 
+    @Transactional(readOnly = true)
     public MemberPointResponse getPoints(Long memberId) {
         Member member = memberRepository.findById(memberId)
             .orElseThrow(() -> new ForbiddenException(ID_NOT_FOUND + memberId));
+        return new MemberPointResponse(member.getPoints());
+    }
+
+    public MemberPointResponse addPoints(Long memberId, MemberPointRequest memberPointRequest) {
+        Member member = memberRepository.findById(memberId)
+            .orElseThrow(() -> new ForbiddenException(ID_NOT_FOUND + memberId));
+        member.addPoints(memberPointRequest.amount());
+        memberRepository.save(member);
         return new MemberPointResponse(member.getPoints());
     }
 
