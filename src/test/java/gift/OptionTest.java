@@ -8,7 +8,13 @@ import gift.domain.model.entity.Option;
 import gift.domain.model.entity.Product;
 import gift.domain.repository.OptionRepository;
 import gift.domain.repository.ProductRepository;
+<<<<<<<HEAD
+import gift.exception.LastOptionDeleteException;
 import gift.service.OptionService;
+import java.util.Collections;
+=======
+import gift.service.OptionService;
+>>>>>>>upstream/j-1ac
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -118,12 +124,52 @@ class OptionTest {
 
     @Test
     void validDeleteOptionTest() {
+        // Given
         Long optionId = 1L;
+        Long productId = 1L;
 
-        when(optionRepository.existsById(optionId)).thenReturn(true);
+        Product mockProduct = mock(Product.class);
+        when(mockProduct.getId()).thenReturn(productId);
 
-        assertDoesNotThrow(() -> optionService.deleteOption(optionId));
+        Option mockOption1 = mock(Option.class);
+        when(mockOption1.getId()).thenReturn(optionId);
+        when(mockOption1.getProduct()).thenReturn(mockProduct);
+
+        Option mockOption2 = mock(Option.class);
+        when(mockOption2.getId()).thenReturn(2L);
+        when(mockOption2.getProduct()).thenReturn(mockProduct);
+
+        when(optionRepository.findById(optionId)).thenReturn(Optional.of(mockOption1));
+        when(optionRepository.findAllByProductId(productId)).thenReturn(
+            Arrays.asList(mockOption1, mockOption2));
+
+        // When
+        optionService.deleteOption(optionId);
+
+        // Then
+        verify(optionRepository, times(1)).findById(optionId);
+        verify(optionRepository, times(1)).findAllByProductId(productId);
         verify(optionRepository, times(1)).deleteById(optionId);
+    }
+
+    @Test
+    void invalidDeleteOption_LastOptionDeleteException() {
+        Long optionId = 1L;
+        Long productId = 1L;
+
+        Product mockProduct = mock(Product.class);
+        when(mockProduct.getId()).thenReturn(productId);
+
+        Option mockOption = mock(Option.class);
+        when(mockOption.getId()).thenReturn(optionId);
+        when(mockOption.getProduct()).thenReturn(mockProduct);
+
+        when(optionRepository.findById(optionId)).thenReturn(Optional.of(mockOption));
+        when(optionRepository.findAllByProductId(productId)).thenReturn(
+            Collections.singletonList(mockOption));
+
+        assertThrows(LastOptionDeleteException.class, () -> optionService.deleteOption(optionId));
+        verify(optionRepository, never()).deleteById(any());
     }
 
     @Test
@@ -132,7 +178,7 @@ class OptionTest {
 
         when(optionRepository.existsById(optionId)).thenReturn(false);
 
-        assertThrows(IllegalArgumentException.class, () -> optionService.deleteOption(optionId));
+        assertThrows(NoSuchElementException.class, () -> optionService.deleteOption(optionId));
     }
 
     @Test

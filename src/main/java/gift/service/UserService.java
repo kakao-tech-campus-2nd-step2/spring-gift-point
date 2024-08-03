@@ -51,10 +51,6 @@ public class UserService {
         User user = userRepository.findByEmail(userRequestDto.getEmail())
             .orElseThrow(() -> new NoSuchEmailException("사용자를 찾을 수 없습니다."));
 
-        if (user.getAuthProvider() != User.AuthProvider.LOCAL) {
-            throw new BadCredentialsException("소셜 로그인 사용자입니다. 해당 로그인 방식을 이용해주세요.");
-        }
-
         if (!BCrypt.checkpw(userRequestDto.getPassword(), user.getPassword())) {
             throw new BadCredentialsException("비밀번호가 일치하지 않습니다.");
         }

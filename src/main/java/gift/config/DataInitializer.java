@@ -1,10 +1,12 @@
 package gift.config;
 
 import gift.domain.model.entity.Category;
+import gift.domain.model.entity.Option;
 import gift.domain.model.entity.Product;
 import gift.domain.model.entity.User;
 import gift.domain.model.entity.Wish;
 import gift.domain.repository.CategoryRepository;
+import gift.domain.repository.OptionRepository;
 import gift.domain.repository.ProductRepository;
 import gift.domain.repository.UserRepository;
 import gift.domain.repository.WishRepository;
@@ -16,15 +18,18 @@ import org.mindrot.jbcrypt.BCrypt;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import org.springframework.transaction.annotation.Transactional;
 
 @Configuration
 public class DataInitializer {
 
     @Bean
+    @Transactional
     public CommandLineRunner initData(ProductRepository productRepository,
         UserRepository userRepository,
         WishRepository wishRepository,
         CategoryRepository categoryRepository,
+        OptionRepository optionRepository,
         JwtUtil jwtUtil) {
         return args -> {
             // 사용자 생성
@@ -47,7 +52,7 @@ public class DataInitializer {
             }
             categories = categoryRepository.saveAll(categories);
 
-            // 상품 생성
+            // 상품 및 옵션 생성
             Random random = new Random();
             List<Product> products = new ArrayList<>();
 
@@ -59,10 +64,26 @@ public class DataInitializer {
                     "https://img1.kakaocdn.net/thumb/C320x320@2x.fwebp.q82/?fname=https%3A%2F%2Fst.kakaocdn.net%2Fproduct%2Fgift%2Fproduct%2F20240508101036_6c7f02cb957848a69a25018a664a3c89.jpg",
                     randomCategory
                 );
+                product = productRepository.save(product);
                 products.add(product);
-            }
 
-            products = productRepository.saveAll(products);
+                System.out.println("Saved product with ID: " + product.getId());
+
+                // 각 상품에 3개의 옵션 추가 및 즉시 저장
+                for (int j = 1; j <= 3; j++) {
+                    Option option = new Option(
+                        product,
+                        "Option " + j + " for Product " + i,
+                        random.nextInt(100) + 1
+                    );
+                    try {
+                        optionRepository.save(option);
+                        System.out.println("Saved option for product " + product.getId() + ": " + option.getName());
+                    } catch (Exception e) {
+                        System.err.println("Error saving option for product " + product.getId() + ": " + e.getMessage());
+                    }
+                }
+            }
 
             // 위시리스트에 모든 상품 추가
             List<Wish> wishes = new ArrayList<>();

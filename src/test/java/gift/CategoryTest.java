@@ -5,7 +5,6 @@ import gift.domain.model.dto.CategoryAddRequestDto;
 import gift.domain.model.dto.CategoryResponseDto;
 import gift.domain.model.dto.CategoryUpdateRequestDto;
 import gift.service.CategoryService;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -28,8 +27,12 @@ class CategoryTest {
     @Test
     void getAllCategoriesTest() {
         // Given
-        CategoryAddRequestDto category1 = new CategoryAddRequestDto("New Category 1");
-        CategoryAddRequestDto category2 = new CategoryAddRequestDto("New Category 2");
+        CategoryAddRequestDto category1 = new CategoryAddRequestDto("New Category 1", "Test Color",
+            "https://img1.kakaocdn.net/thumb/C320x320@2x.fwebp.q82/?fname=https%3A%2F%2Fst.kakaocdn.net%2Fproduct%2Fgift%2Fproduct%2F20240508101036_6c7f02cb957848a69a25018a664a3c89.jpg",
+            "Test Description");
+        CategoryAddRequestDto category2 = new CategoryAddRequestDto("New Category 2", "Test Color",
+            "https://img1.kakaocdn.net/thumb/C320x320@2x.fwebp.q82/?fname=https%3A%2F%2Fst.kakaocdn.net%2Fproduct%2Fgift%2Fproduct%2F20240508101036_6c7f02cb957848a69a25018a664a3c89.jpg",
+            "Test Description");
         categoryController.addCategory(category1);
         categoryController.addCategory(category2);
 
@@ -37,7 +40,7 @@ class CategoryTest {
         List<CategoryResponseDto> categories = categoryController.getAllCategories().getBody();
 
         // Then
-        assertFalse(categories.isEmpty());
+        assert categories != null;
         assertTrue(categories.stream().anyMatch(c -> c.getName().equals("New Category 1")));
         assertTrue(categories.stream().anyMatch(c -> c.getName().equals("New Category 2")));
     }
@@ -45,7 +48,9 @@ class CategoryTest {
     @Test
     void addCategoryTest() {
         // Given
-        CategoryAddRequestDto requestDto = new CategoryAddRequestDto("New Category");
+        CategoryAddRequestDto requestDto = new CategoryAddRequestDto("New Category", "Test Color",
+            "https://img1.kakaocdn.net/thumb/C320x320@2x.fwebp.q82/?fname=https%3A%2F%2Fst.kakaocdn.net%2Fproduct%2Fgift%2Fproduct%2F20240508101036_6c7f02cb957848a69a25018a664a3c89.jpg",
+            "Test Description");
 
         // When
         CategoryResponseDto response = categoryController.addCategory(requestDto).getBody();
@@ -58,11 +63,16 @@ class CategoryTest {
     @Test
     void updateCategoryTest() {
         // Given
-        CategoryAddRequestDto addRequestDto = new CategoryAddRequestDto("Original Category");
+        CategoryAddRequestDto addRequestDto = new CategoryAddRequestDto("Origin Category",
+            "Test Color",
+            "https://img1.kakaocdn.net/thumb/C320x320@2x.fwebp.q82/?fname=https%3A%2F%2Fst.kakaocdn.net%2Fproduct%2Fgift%2Fproduct%2F20240508101036_6c7f02cb957848a69a25018a664a3c89.jpg",
+            "Test Description");
         CategoryResponseDto addedCategory = categoryController.addCategory(addRequestDto).getBody();
 
-        CategoryUpdateRequestDto updateRequestDto = new CategoryUpdateRequestDto(
-            "Updated Category");
+        CategoryUpdateRequestDto updateRequestDto = new CategoryUpdateRequestDto("Updated Category",
+            "Test Color",
+            "https://img1.kakaocdn.net/thumb/C320x320@2x.fwebp.q82/?fname=https%3A%2F%2Fst.kakaocdn.net%2Fproduct%2Fgift%2Fproduct%2F20240508101036_6c7f02cb957848a69a25018a664a3c89.jpg",
+            "Test Description");
 
         // When
         CategoryResponseDto updatedCategory = categoryController.updateCategory(1L,
@@ -77,7 +87,10 @@ class CategoryTest {
     @Test
     void validDeleteCategoryTest() {
         // Given
-        CategoryAddRequestDto addRequestDto = new CategoryAddRequestDto("Category to Delete");
+        CategoryAddRequestDto addRequestDto = new CategoryAddRequestDto("Category To Delete",
+            "Test Color",
+            "https://img1.kakaocdn.net/thumb/C320x320@2x.fwebp.q82/?fname=https%3A%2F%2Fst.kakaocdn.net%2Fproduct%2Fgift%2Fproduct%2F20240508101036_6c7f02cb957848a69a25018a664a3c89.jpg",
+            "Test Description");
         CategoryResponseDto addedCategory = categoryController.addCategory(addRequestDto).getBody();
 
         // When & Then

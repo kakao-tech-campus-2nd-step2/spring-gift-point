@@ -33,8 +33,10 @@ public class WishTest {
     @BeforeEach
     public void setUp() {
         user = new User("test@example.com", "password123");
-        category = new Category("test Category");
-        product = new Product("Test Product", 1000L, "http://example.com/image.jpg", category);
+        category = new Category("test Category", "Test Color",
+            "https://img1.kakaocdn.net/thumb/C320x320@2x.fwebp.q82/?fname=https%3A%2F%2Fst.kakaocdn.net%2Fproduct%2Fgift%2Fproduct%2F20240508101036_6c7f02cb957848a69a25018a664a3c89.jpg",
+            "Test Description");
+        product = new Product("Test Product", 1000, "http://example.com/image.jpg", category);
         entityManager.persist(user);
         entityManager.persist(category);
         entityManager.persist(product);
@@ -44,7 +46,7 @@ public class WishTest {
     @Test
     public void saveWishTest() {
         // given
-        Wish wish = new Wish(user, product);
+        Wish wish = new Wish(user, product, 1);
 
         // when
         Wish savedWish = wishRepository.save(wish);
@@ -60,7 +62,7 @@ public class WishTest {
     @Test
     public void findByIdTest() {
         // given
-        Wish wish = new Wish(user, product);
+        Wish wish = new Wish(user, product, 1);
         Wish savedWish = wishRepository.save(wish);
 
         // when
@@ -76,11 +78,11 @@ public class WishTest {
     @Test
     public void updateWishTest() {
         // given
-        Wish wish = new Wish(user, product);
+        Wish wish = new Wish(user, product, 1);
         Wish savedWish = wishRepository.save(wish);
 
         // when
-        savedWish.setCount(2);
+        savedWish.updateWish(user, product, 2);
         Wish updatedWish = wishRepository.save(savedWish);
 
         // then
@@ -91,7 +93,7 @@ public class WishTest {
     @Test
     public void deleteWishTest() {
         // given
-        Wish wish = new Wish(user, product);
+        Wish wish = new Wish(user, product, 1);
         Wish savedWish = wishRepository.save(wish);
 
         // when
@@ -104,7 +106,7 @@ public class WishTest {
     @Test
     public void findByUserEmailTest() {
         // given
-        Wish wish = new Wish(user, product);
+        Wish wish = new Wish(user, product, 1);
         wishRepository.save(wish);
 
         // when
@@ -124,7 +126,7 @@ public class WishTest {
     @Test
     public void findByUserEmailAndProductIdTest() {
         // given
-        Wish wish = new Wish(user, product);
+        Wish wish = new Wish(user, product, 1);
         wishRepository.save(wish);
 
         // when
@@ -143,7 +145,7 @@ public class WishTest {
     @Test
     public void existsByUserEmailAndProductIdTest() {
         // given
-        Wish wish = new Wish(user, product);
+        Wish wish = new Wish(user, product, 1);
         wishRepository.save(wish);
 
         // when
@@ -160,7 +162,7 @@ public class WishTest {
     @Test
     public void deleteByUserEmailAndProductIdTest() {
         // given
-        Wish wish = new Wish(user, product);
+        Wish wish = new Wish(user, product, 1);
         wishRepository.save(wish);
 
         assertThat(wishRepository.existsByUserEmailAndProductId(user.getEmail(),

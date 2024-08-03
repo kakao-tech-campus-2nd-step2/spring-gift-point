@@ -42,8 +42,6 @@ class KakaoLoginControllerTest {
             "test_access_token",
             null,
             3600,
-            "test_refresh_token",
-            5184000,
             "profile"
         );
         TokenResponseDto expectedTokenResponse = new TokenResponseDto("jwt_token");
