@@ -4,15 +4,15 @@ import gift.domain.point.PointPayment.CreatePointPayment;
 import gift.domain.point.PointPayment.PointPaymentDetail;
 import gift.domain.point.PointPayment.PointPaymentSimple;
 import gift.domain.point.PointPayment.getList;
+import gift.entity.auth.UserEntity;
 import gift.entity.point.DiscountPolicyEntity;
 import gift.entity.point.PointPaymentEntity;
 import gift.entity.product.ProductOptionEntity;
-import gift.entity.auth.UserEntity;
 import gift.mapper.point.PointPaymentMapper;
+import gift.repository.auth.UserRepository;
 import gift.repository.point.DiscountPolicyRepository;
 import gift.repository.point.PointPaymentRepository;
 import gift.repository.product.ProductOptionRepository;
-import gift.repository.auth.UserRepository;
 import gift.util.auth.ParsingPram;
 import gift.util.errorException.BaseHandler;
 import jakarta.servlet.http.HttpServletRequest;
@@ -63,20 +63,25 @@ public class PointPaymentService {
     }
 
     public Long createPointPayment(HttpServletRequest req, CreatePointPayment create) {
-        UserEntity user = userRepository.findByIdAndIsDelete(parsingPram.getId(req), 0)
-            .orElseThrow(() -> new BaseHandler(HttpStatus.NOT_FOUND, "유저가 존재하지 않습니다."));
-
-        ProductOptionEntity option = productOptionRepository.findById(create.getProductOptionId())
-            .orElseThrow(() -> new BaseHandler(HttpStatus.NOT_FOUND, "해당 상품의 옵션이 존재하지 않습니다."));
-
         DiscountPolicyEntity discountPolicy = discountPolicyRepository.findByIdAndIsDeleteAndEndDateAfter(
                 create.getDiscountPolicyId(), 0, LocalDateTime.now())
             .orElseThrow(() -> new BaseHandler(HttpStatus.NOT_FOUND, "해당 할인 정책이 없습니다."));
 
-        Integer paymentAmount = pointPaymentMapper.toDiscount(create.getRegularPrice(),
+        ProductOptionEntity option = productOptionRepository.findById(create.getProductOptionId())
+            .orElseThrow(() -> new BaseHandler(HttpStatus.NOT_FOUND, "해당 상품의 옵션이 존재하지 않습니다."));
+
+        if (discountPolicy.getTarget().getId() != option.getProduct().getId()){
+            throw new BaseHandler(HttpStatus.UNAUTHORIZED, "할인을 적용할수 없는 상품입니다.");
+        }
+
+        UserEntity user = userRepository.findByIdAndIsDelete(parsingPram.getId(req), 0)
+            .orElseThrow(() -> new BaseHandler(HttpStatus.NOT_FOUND, "유저가 존재하지 않습니다."));
+
+        Integer paymentAmount = pointPaymentMapper.toDiscount(option.getProduct().getPrice(),
             discountPolicy);
 
-        PointPaymentEntity pointPayment = pointPaymentMapper.toEntity(create.getRegularPrice(),
+        PointPaymentEntity pointPayment = pointPaymentMapper.toEntity(
+            option.getProduct().getPrice(),
             paymentAmount, option, user, discountPolicy);
 
         pointPaymentRepository.save(pointPayment);
