@@ -28,6 +28,10 @@ public class Member {
         this.accessToken = accessToken;
     }
 
+    public void addPoint(int point){
+        this.point += point;
+    }
+
     public Member() {
 
     }

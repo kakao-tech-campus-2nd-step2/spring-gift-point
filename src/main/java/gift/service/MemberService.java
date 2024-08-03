@@ -61,4 +61,11 @@ public class MemberService {
         Member member = getMemberbyEmail(email);
         return new MemberPointDto(member);
     }
+
+    public PointResponse addPoint(Long user_id, PointRequest pointRequest) {
+        Member member = getMemberById(user_id);
+        member.addPoint(pointRequest.getPoint());
+        memberRepository.save(member);
+        return new PointResponse(member);
+    }
 }
