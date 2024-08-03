@@ -3,6 +3,7 @@ package gift.service;
 import gift.dto.optionDTO.OptionResponseDTO;
 import gift.dto.orderDTO.OrderRequestDTO;
 import gift.dto.orderDTO.OrderResponseDTO;
+import gift.dto.pointDTO.PointRequestDTO;
 import gift.exception.InvalidInputValueException;
 import gift.exception.NotFoundException;
 import gift.exception.ServerErrorException;
@@ -53,7 +54,8 @@ public class OrderService {
         if (member.getPoints() < totalPrice) {
             throw new InvalidInputValueException("포인트가 부족합니다.");
         }
-        memberService.subtractPoints(email, totalPrice);
+        PointRequestDTO pointRequestDTO = new PointRequestDTO(email, totalPrice);
+        memberService.subtractPoints(pointRequestDTO);
         optionService.subtractQuantity(option.getId(), orderRequestDTO.quantity());
         Order order = new Order(null, option, orderRequestDTO.quantity(), LocalDateTime.now(),
             orderRequestDTO.message(), member);
