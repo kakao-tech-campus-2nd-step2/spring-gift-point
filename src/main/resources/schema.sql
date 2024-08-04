@@ -3,6 +3,7 @@ create table if not exists member (
     email           VARCHAR(255)    not null,
     password        VARCHAR(255),
     oauth_provider  VARCHAR(255),
+    points          INT             NOT NULL DEFAULT 0,
     PRIMARY KEY     (id),
     UNIQUE          (email)
 );
@@ -55,12 +56,16 @@ create table if not exists wish (
     FOREIGN KEY     (product_id)    REFERENCES product(id)
 );
 
-create table if not exists orders (
-    id              BIGINT          not null AUTO_INCREMENT,
-    option_id       BIGINT          not null,
-    quantity        INTEGER         not null,
+CREATE TABLE IF NOT EXISTS orders (
+    id              BIGINT          NOT NULL AUTO_INCREMENT,
+    option_id       BIGINT          NOT NULL,
+    quantity        INT             NOT NULL,
     message         VARCHAR(255),
-    order_date_time TIMESTAMP       not null,
-    PRIMARY KEY (id),
-    FOREIGN KEY (option_id)         REFERENCES option(id)
+    order_date_time TIMESTAMP       NOT NULL,
+    cash_receipt    BOOLEAN         NOT NULL,
+    phone_number    VARCHAR(20),
+    payment_amount  INT             NOT NULL,
+    points_used     INT             NOT NULL,
+    PRIMARY KEY     (id),
+    FOREIGN KEY     (option_id)     REFERENCES option(id)
 );
