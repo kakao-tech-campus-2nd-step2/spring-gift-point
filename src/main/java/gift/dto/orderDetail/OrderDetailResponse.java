@@ -14,8 +14,8 @@ public record OrderDetailResponse(
     @Schema(description = "주문 수량", example = "2")
     int quantity,
 
-    @Schema(description = "할인 금액", example = "1000")
-    int discountedPrice,
+    @Schema(description = "합계 금액", example = "10000")
+    int originalPrice,
 
     @Schema(description = "최종 금액", example = "9000")
     int finalPrice,
