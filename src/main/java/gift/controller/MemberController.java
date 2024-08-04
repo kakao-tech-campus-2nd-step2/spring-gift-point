@@ -1,6 +1,7 @@
 package gift.controller;
 
 import gift.dto.MemberDTO;
+import gift.dto.MemberResponse;
 import gift.model.Member;
 import gift.service.MemberService;
 import gift.util.JwtUtil;
@@ -48,9 +49,7 @@ public class MemberController {
         String password = loginDetails.getPassword();
         String token = memberService.login(email, password);
 
-        Map<String, String> response = new HashMap<>();
-        response.put("email", email);
-        response.put("token", token);
+        MemberResponse response = new MemberResponse(email, token);
 
         return ResponseEntity.ok(response);
     }
