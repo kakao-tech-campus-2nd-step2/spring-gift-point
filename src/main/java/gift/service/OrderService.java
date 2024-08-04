@@ -1,5 +1,6 @@
 package gift.service;
 
+import gift.dto.PointHistory.PointHistoryDto;
 import gift.dto.kakao.KakaoErrorCode;
 import gift.dto.order.OrderDTO;
 import gift.entity.*;
@@ -34,9 +35,10 @@ public class OrderService {
     private final ProductWishlistRepository productWishlistRepository;
     private final ProductService productService;
     private final UserService userService;
+    private final PointHistoryRepository pointHistoryRepository;
 
     @Autowired
-    public OrderService(UserRepository userRepository, WishlistRepository wishlistRepository, OrderRepository orderRepository, ProductOptionRepository productOptionRepository, OptionService optionService, ProductWishlistRepository productWishlistRepository, ProductService productService, UserService userService) {
+    public OrderService(UserRepository userRepository, WishlistRepository wishlistRepository, OrderRepository orderRepository, ProductOptionRepository productOptionRepository, OptionService optionService, ProductWishlistRepository productWishlistRepository, ProductService productService, UserService userService, PointHistoryRepository pointHistoryRepository) {
         this.userRepository = userRepository;
         this.wishlistRepository = wishlistRepository;
         this.orderRepository = orderRepository;
@@ -45,6 +47,7 @@ public class OrderService {
         this.productWishlistRepository = productWishlistRepository;
         this.productService = productService;
         this.userService = userService;
+        this.pointHistoryRepository = pointHistoryRepository;
     }
 
     @Transactional
@@ -60,11 +63,18 @@ public class OrderService {
         Product product = productOption.getProduct();
         Option option = productOption.getOption();
 
+        PointHistoryDto pointHistoryDto = new PointHistoryDto();
+        pointHistoryDto.setUserId(user.getId());
+        pointHistoryDto.setPreviousPoints(user.getPoint());
+
         // 포인트 사용 가능 조건
         int totalPrice = option.getQuantity() * product.getPrice();
         if (orderDTO.getPoint() > user.getPoint() || orderDTO.getPoint() > totalPrice) {
             throw new IllegalArgumentException("Illegal order");
         }
+        pointHistoryDto.setChangePoints(orderDTO.getPoint());
+        pointHistoryDto.setCurrentPoints(user.getPoint()-orderDTO.getPoint());
+
         // 포인트 차감
         user.subtractPoint(orderDTO.getPoint());
         userRepository.save(user);
@@ -82,6 +92,7 @@ public class OrderService {
         order.setUser(user);
 
         Order result = orderRepository.save(order);
+        pointHistoryRepository.save(new PointHistory(pointHistoryDto));
 
         // 카톡 나에게 전송
         String kakaoAccessToken = (String) session.getAttribute("kakaoAccessToken");
