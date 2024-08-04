@@ -229,3 +229,27 @@ function handleMemberFormSubmit(event, url, method) {
         alert('Error: ' + error.message);
     });
 }
+
+function addPoint(email) {
+    fetch(`/admin/members/${email}/points`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            point: 10
+        })
+    })
+    .then(response => {
+        if (response.ok) {
+            location.reload();
+        } else {
+            return response.json().then(errorData => {
+                throw new Error(errorData.message || '포인트를 처리하지 못하였습니다.');
+            });
+        }
+    })
+    .catch(error => {
+        alert('Error: ' + error.message);
+    });
+}

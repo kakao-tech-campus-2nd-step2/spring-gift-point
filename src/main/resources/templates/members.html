@@ -24,9 +24,8 @@
         <tr th:each="member: ${pages.content}">
             <td th:text="${member.email}"></td>
             <td>
-                <button class="btn danger-btn">-</button>
                 <label th:text="${member.point}" />
-                <button class="btn primary-btn">+</button>
+                <button class="btn primary-btn" th:onclick="addPoint([[${member.email}]])">+</button>
             </td>
         </tr>
     </table>
