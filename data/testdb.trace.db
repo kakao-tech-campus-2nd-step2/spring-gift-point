@@ -1,6 +1,0 @@
-2024-08-04 02:07:12.346937+09:00 jdbc[3]: exception
-org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "WISHES" already exists; SQL statement:
-CREATE TABLE wishes ( id BIGINT AUTO_INCREMENT PRIMARY KEY, member_id BIGINT NOT NULL, product_id BIGINT NOT NULL, FOREIGN KEY (member_id) REFERENCES members (id) ) [42101-224]
-2024-08-04 02:09:24.342999+09:00 jdbc[3]: exception
-org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "WISHES" already exists; SQL statement:
-CREATE TABLE wishes ( id BIGINT AUTO_INCREMENT PRIMARY KEY, member_id BIGINT NOT NULL, product_id BIGINT NOT NULL, FOREIGN KEY (member_id) REFERENCES members (id) ) [42101-224]
