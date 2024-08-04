@@ -11,7 +11,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
-import gift.dto.OptionDto;
+import gift.dto.request.OptionRequest;
+import gift.dto.response.GetOptionsResponse;
 import gift.dto.response.OptionResponse;
 import gift.entity.Category;
 import gift.entity.Option;
@@ -27,14 +28,15 @@ import static org.junit.jupiter.api.Assertions.*;
 @SpringBootTest
 public class OptionServiceTest {
     
-    @Autowired
-    private OptionService optionService;
-
+    
     @MockBean
     private OptionRepository optionRepository;
 
     @MockBean
     private ProductRepository productRepository;
+
+    @Autowired
+    private OptionService optionService;
 
     @Test
     void findByProductId(){
@@ -50,7 +52,7 @@ public class OptionServiceTest {
         when(optionRepository.findByProductId(productId))
             .thenReturn(List.of(option));
 
-        OptionResponse optionResponse = optionService.findByProductId(1L);
+        GetOptionsResponse optionResponse = optionService.findByProductId(1L);
 
         assertAll(
             () -> assertNotNull(optionResponse),
@@ -67,16 +69,20 @@ public class OptionServiceTest {
         String name = "option";
         Category category = new Category("category", "color", "url", ""); 
         Product product = new Product("product", 0, "imageUrl", category);
-        OptionDto optionDto = new OptionDto(1L, name, 1);
+        OptionRequest optionRequest = new OptionRequest(name, 1);
+        Option savedOption = new Option(product, name, 1);
 
         when(productRepository.findById(productId))
             .thenReturn(Optional.of(product));
-        when(optionRepository.findByName(null))
+        when(optionRepository.findByName(any()))
             .thenReturn(Optional.empty());
+        when(optionRepository.save(any(Option.class)))
+            .thenReturn(savedOption);
 
-        optionService.addOption(optionDto, productId);
+        OptionResponse optionResponse = optionService.addOption(optionRequest, productId);
 
-        verify(optionRepository, times(1)).save(any(Option.class));
+        assertEquals(name, optionResponse.getOptionDto().getName());
+
     }
 
     @Test
@@ -90,7 +96,7 @@ public class OptionServiceTest {
 
         ArgumentCaptor<Option> optionCaptor = ArgumentCaptor.forClass(Option.class);
 
-        when(optionRepository.findByName(name))
+        when(optionRepository.findById(any()))
             .thenReturn(Optional.of(option));
         when(optionRepository.save(any(Option.class)))
             .thenReturn(option);
@@ -101,6 +107,6 @@ public class OptionServiceTest {
         verify(optionRepository, times(1)).save(optionCaptor.capture());
         Option savedOption = optionCaptor.getValue();
 
-        assertEquals(50, savedOption.getQuantity());
+        assertEquals(50, savedOption.getStockQuantity());
     }
 }

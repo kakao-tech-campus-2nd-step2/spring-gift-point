@@ -29,6 +29,9 @@ public class Member {
 
     @OneToMany(mappedBy = "member", fetch = FetchType.LAZY, orphanRemoval = true)
     private List<WishList> wishList;
+
+    @OneToMany(mappedBy = "member", fetch = FetchType.LAZY, orphanRemoval = true)
+    private List<Order> orders;
     
     protected Member() {
 
@@ -58,5 +61,9 @@ public class Member {
 
     public List<WishList> getWishList(){
         return wishList;
+    }
+
+    public List<Order> getOrders(){
+        return orders;
     }
 }

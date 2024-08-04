@@ -37,7 +37,7 @@ public class KakaoTokenService {
         String email = (String)jwtUtil.extractAllClaims(token).get("email");
         
         KakaoToken kakaoToken = kakaoTokenRepository.findByEmail(email)
-            .orElseThrow(() -> new CustomException("KakaoToken is not exists", HttpStatus.NOT_FOUND));
+            .orElseThrow(() -> new CustomException("KakaoToken is not exists", HttpStatus.NOT_FOUND, -400));
         
         return kakaoToken.getAccessToken();
     }

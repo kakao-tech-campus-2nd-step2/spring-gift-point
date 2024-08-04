@@ -6,12 +6,14 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
-import gift.dto.OptionDto;
 import gift.dto.ProductDto;
-import gift.dto.request.ProductCreateRequest;
+import gift.dto.ProductInfo;
+import gift.dto.request.OptionRequest;
+import gift.dto.request.ProductRequest;
+import gift.dto.response.GetProductsResponse;
 import gift.dto.response.ProductPageResponse;
+import gift.dto.response.ProductResponse;
 import gift.entity.Category;
 import gift.entity.Option;
 import gift.entity.Product;
@@ -30,15 +32,22 @@ public class ProductService{
     private WishListRepository wishListRepository;
     private CategoryRepository categoryRepository;
     private OptionRepository optionRepository;
-
     private OptionService optionService;
+    private CategoryService categoryService;
 
-    public ProductService(ProductRepository productRepository, WishListRepository wishListRepository, CategoryRepository categoryRepository, OptionRepository optionRepository, OptionService optionService) {
+    public ProductService(
+        ProductRepository productRepository, 
+        WishListRepository wishListRepository, 
+        CategoryRepository categoryRepository, 
+        OptionRepository optionRepository, 
+        OptionService optionService,
+        CategoryService categoryService) {
         this.productRepository = productRepository;
         this.wishListRepository = wishListRepository;
         this.categoryRepository = categoryRepository;
         this.optionRepository = optionRepository;
         this.optionService = optionService;
+        this.categoryService = categoryService;
     }
 
     public ProductPageResponse getPage(int page, int size) {
@@ -60,63 +69,103 @@ public class ProductService{
         );
     }
 
-    public List<ProductDto> findAll(){
+    public GetProductsResponse findAll(Long categoryId, String sort){
 
-        List<Product> products = productRepository.findAll();
-        return products
-                .stream()
-                .map(ProductDto::fromEntity)
-                .toList();
+        List<Product> products = findProductsBySort(categoryId, sort);
+        List<ProductInfo> productInfos = products.stream().map(ProductInfo::fromEntity).toList();
+        return new GetProductsResponse(categoryService.findById(categoryId), productInfos);
+
     }
 
-    public ProductDto findById(Long id){
-        Product product = productRepository.findById(id)
-            .orElseThrow(() -> new CustomException("Product with id " + id + " not found", HttpStatus.NOT_FOUND));
-        return new ProductDto(product.getId(), product.getName(), product.getPrice(), product.getImageUrl(), product.getCategory().getName());
+    public List<Product> findProductsBySort(Long categoryId, String sort){
+
+        String[] sortParams = sort.split(",");
+        if(sortParams.length != 2) {
+            throw new CustomException("sort value error", HttpStatus.BAD_REQUEST, -40001);
+        }
+
+        if(sortParams[0].equals("name")){
+            if(sortParams[1].equals("asc")){
+                return productRepository.findByCategoryIdOrderByNameAsc(categoryId);
+            }else if(sortParams[1].equals("desc")){
+                return productRepository.findByCategoryIdOrderByNameDesc(categoryId);
+            }else{
+                throw new CustomException("sort value error", HttpStatus.BAD_REQUEST, -40001);
+            }
+        }else if(sortParams[0].equals("price")){
+            if(sortParams[1].equals("asc")){
+               return productRepository.findByCategoryIdOrderByPriceAsc(categoryId);
+            }else if(sortParams[1].equals("desc")){
+               return productRepository.findByCategoryIdOrderByPriceDesc(categoryId);   
+            }else{
+                throw new CustomException("sort value error", HttpStatus.BAD_REQUEST, -40001);
+            }
+        }else{
+            throw new CustomException("sort value error", HttpStatus.BAD_REQUEST, -40001);
+
+        }
+    }
+
+    public ProductResponse findById(Long productId){
+        Product product = productRepository.findById(productId)
+            .orElseThrow(() -> new CustomException("Product with id " + productId + " not found", HttpStatus.NOT_FOUND, -40401));
+        return new ProductResponse(ProductDto.fromEntity(product));
     }
 
     @Transactional
-    public void addProduct(ProductCreateRequest productCreateRequest) {
+    public ProductResponse addProduct(ProductRequest productRequest) {
   
-        if(productRepository.findByNameAndPriceAndImageUrl(productCreateRequest.getProductName(), 
-                                                            productCreateRequest.getPrice(),
-                                                            productCreateRequest.getImageUrl()).isEmpty()){
-        
-            Category category = categoryRepository.findByName(productCreateRequest.getCategory())
-                    .orElseThrow(() -> new CustomException("Category with name" + productCreateRequest.getCategory() + "NOT FOUND" , HttpStatus.NOT_FOUND));
+        if(productRepository.findByNameAndPriceAndImageUrl(productRequest.getName(), 
+                                                            productRequest.getPrice(),
+                                                            productRequest.getImageUrl()).isEmpty()){
+                                                                
+            Category category = categoryRepository.findById(productRequest.getCategoryId())
+                    .orElseThrow(() -> new CustomException("Category with id" + productRequest.getCategoryId() + "NOT FOUND" , HttpStatus.NOT_FOUND, -40402));
             
-            Product product = new Product(productCreateRequest.getProductName(), 
-                                          productCreateRequest.getPrice(),
-                                          productCreateRequest.getImageUrl(),
+            if(productRequest.getOptions().isEmpty()){
+                throw new CustomException("Option must exist", HttpStatus.BAD_REQUEST, -40002);
+            }
+            Product product = new Product(productRequest.getName(), 
+                                          productRequest.getPrice(),
+                                          productRequest.getImageUrl(),
                                           category);
             
             Product savedProduct = productRepository.save(product);
-            
-            optionService.addOption(new OptionDto(0L, productCreateRequest.getOptionName(), productCreateRequest.getQuantity()), savedProduct.getId());
+
+            for (OptionRequest optionRequest : productRequest.getOptions()) {
+                optionService.addOption(optionRequest, savedProduct.getId());
+            }
+
+            return new ProductResponse(ProductDto.fromEntity(savedProduct));
+
         }else{
-            throw new CustomException("Product with name " + productCreateRequest.getProductName() + "exists", HttpStatus.CONFLICT);
+            throw new CustomException("Product with name " + productRequest.getName() + "exists", HttpStatus.CONFLICT, -40903);
         }
     }
 
     @Transactional
-    public void updateProduct(ProductDto productDto) {
+    public void updateProduct(Long productId, ProductRequest productRequest) {
 
-        Optional<Product> optionalProduct = productRepository.findById(productDto.getId());
-
-        if (optionalProduct.isPresent()) {
-            Product product = toEntity(productDto);
-            productRepository.delete(optionalProduct.get());
-            productRepository.save(product);
-        }else{
-            throw new CustomException("Product with id " + productDto.getId() + " not found", HttpStatus.NOT_FOUND);
-        }
+        Product product = productRepository.findById(productId)
+            .orElseThrow(() -> new CustomException("Product with id " + productId + " not found", HttpStatus.NOT_FOUND, -40401));
+        
+        Category category = categoryRepository.findById(productRequest.getCategoryId())
+            .orElseThrow(() -> new CustomException("Category with id" + productRequest.getCategoryId() + "NOT FOUND" , HttpStatus.NOT_FOUND, -40402));
+        
+        if(productRepository.findByNameAndPriceAndImageUrl(productRequest.getName(), 
+            productRequest.getPrice(),
+            productRequest.getImageUrl()).isEmpty()){
+                product.update(productRequest, category);
+            }else{
+               throw new CustomException("Product with name " + productRequest.getName() + "exists", HttpStatus.CONFLICT, -40903);
+            }
     }
 
     @Transactional
     public void deleteProduct(Long id) {
 
-        productRepository.findById(id)
-            .orElseThrow(() -> new CustomException("Product with id " + id + " not found", HttpStatus.NOT_FOUND));
+        Product product = productRepository.findById(id)
+            .orElseThrow(() -> new CustomException("Product with id " + id + " not found", HttpStatus.NOT_FOUND, -40401));
 
         List<WishList> wishList = wishListRepository.findByProductId(id);
         wishListRepository.deleteAll(wishList);
@@ -124,12 +173,12 @@ public class ProductService{
         List<Option> options = optionRepository.findByProductId(id);
         optionRepository.deleteAll(options);
 
-        productRepository.deleteById(id);
+        productRepository.delete(product);
     }
 
     public Product toEntity(ProductDto productDto){
-        Category category = categoryRepository.findByName(productDto.getCategory())
-                    .orElseThrow(() -> new CustomException("Category with name" + productDto.getCategory() + "NOT FOUND" , HttpStatus.NOT_FOUND));
+        Category category = categoryRepository.findById(productDto.getCategoryId())
+            .orElseThrow(() -> new CustomException("Category with id" + productDto.getCategoryId() + "NOT FOUND" , HttpStatus.NOT_FOUND, -40402));
         return new Product(productDto.getName(), productDto.getPrice(), productDto.getImageUrl(), category);
     }
 }

@@ -1,41 +1,25 @@
 package gift.dto.response;
 
-import java.time.LocalDateTime;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
+import gift.dto.OrderDto;
 
 
 public class OrderResponse {
     
-    private Long id;
-    private Long optionId;
-    private int quantity;
-    private LocalDateTime orderTime;
-    private String message;
+    private OrderDto order;
 
-    public OrderResponse(Long id, Long optionId, int quantity, String message, LocalDateTime orderTime) {
-        this.id = id;
-        this.optionId = optionId;
-        this.quantity = quantity;
-        this.message = message;
-        this.orderTime = orderTime;
+    @JsonCreator
+    public OrderResponse(
+        @JsonProperty("order")
+        OrderDto order
+    ){
+        this.order = order;
     }
 
-    public Long getId() {
-        return id;
+    public OrderDto getOrder(){
+        return order;
     }
 
-    public Long getOptionId() {
-        return optionId;
-    }
-
-    public int getQuantity() {
-        return quantity;
-    }
-
-    public LocalDateTime getOrderTime() {
-        return orderTime;
-    }
-
-    public String getMessage() {
-        return message;
-    }
 }

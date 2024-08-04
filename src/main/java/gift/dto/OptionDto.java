@@ -1,5 +1,8 @@
 package gift.dto;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import gift.entity.Option;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
@@ -16,27 +19,44 @@ public class OptionDto {
 
     @Min(value = 1, message = "quantity must be more than 1")
     @Max(value = 99999999, message = "quantity must be less than 100,000,000")
-    private int quantity;
+    private int stockQuantity;
 
-    public OptionDto(Long id, String name, int quantity) {
+    public OptionDto(){}
+    
+    @JsonCreator
+    public OptionDto(
+        @JsonProperty("id")
+        Long id,
+        @JsonProperty("name") 
+        String name,
+        @JsonProperty("stock_quantity") 
+        int stockQuantity) {
         this.id = id;
         this.name = name;
-        this.quantity = quantity;
+        this.stockQuantity = stockQuantity;
     }
 
     public Long getId() {
         return id;
     }
 
-    public int getQuantity() {
-        return quantity;
+    public int getStockQuantity() {
+        return stockQuantity;
+    }
+
+    public void setStockQuantity(int stockQuantity){
+        this.stockQuantity = stockQuantity;
     }
 
     public String getName() {
         return name;
     }
 
+    public void setName(String name) {
+        this.name = name;
+    }
+ 
     public static OptionDto fromEntity(Option option){
-        return new OptionDto(option.getId(), option.getName(), option.getQuantity());
+        return new OptionDto(option.getId(), option.getName(), option.getStockQuantity());
     }
 }

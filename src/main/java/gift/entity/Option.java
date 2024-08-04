@@ -2,6 +2,7 @@ package gift.entity;
 
 import org.springframework.http.HttpStatus;
 
+import gift.dto.request.OptionRequest;
 import gift.exception.CustomException;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -26,14 +27,14 @@ public class Option {
 
     @Column(nullable = false, unique = true)
     private String name;
-    private int quantity;
+    private int stockQuantity;
 
     public Option(){}
     
-    public Option(Product product, String name, int quantity) {
+    public Option(Product product, String name, int stockQuantity) {
         this.product = product;
         this.name = name;
-        this.quantity = quantity;
+        this.stockQuantity = stockQuantity;
     }
     
     public Long getId() {
@@ -48,14 +49,20 @@ public class Option {
         return name;
     }
 
-    public int getQuantity() {
-        return quantity;
+    public int getStockQuantity() {
+        return stockQuantity;
+    }
+
+    public void updateOption(OptionRequest optionRequest){
+        this.name = optionRequest.getOptionName();
+        this.stockQuantity = optionRequest.getStockQuantity();
     }
 
     public Option substract(int substractQuantity){
-        if(this.quantity <= substractQuantity){
-            throw new CustomException("substract quantity is too big", HttpStatus.BAD_REQUEST);
+        if(this.stockQuantity <= substractQuantity){
+            throw new CustomException("substract quantity is too big", HttpStatus.BAD_REQUEST, -40003);
+        }else{
+            return new Option(this.product, this.name, this.stockQuantity - substractQuantity);
         }
-        return new Option(this.product, this.name, this.quantity - substractQuantity);
     }
 }

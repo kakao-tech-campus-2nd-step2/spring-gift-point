@@ -20,6 +20,10 @@ public class Order {
     private Long id;
 
     @ManyToOne
+    @JoinColumn(name = "member_id", nullable = false)
+    private Member member;
+
+    @ManyToOne
     @JoinColumn(name = "option_id", nullable = false)
     private Option option;
 
@@ -30,10 +34,10 @@ public class Order {
 
     private LocalDateTime orderTime;
 
-
     public Order() {}
 
-    public Order(Option option, int quantity, String message, LocalDateTime orderTime) {
+    public Order(Member member, Option option, int quantity, String message, LocalDateTime orderTime) {
+        this.member = member;
         this.option = option;
         this.quantity = quantity;
         this.message = message;
@@ -42,6 +46,10 @@ public class Order {
 
     public Long getId() {
         return id;
+    }
+
+    public Member getMember(){
+        return member;
     }
 
     public Option getOption() {

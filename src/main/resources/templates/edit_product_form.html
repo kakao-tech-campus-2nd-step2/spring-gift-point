@@ -6,7 +6,7 @@
 </head>
 <body>
     <p>Edit Product Form</p>
-    <form th:action="@{'/api/products/edit/' + ${product.getId()}}" th:object="${product}" method="post">
+    <form th:action="@{'/products/edit/' + ${product.getId()}}" th:object="${product}" method="post">
         <div>
             <label>id</label>
             <input type="text" th:value="${product.getId()}" readonly/>
@@ -33,6 +33,6 @@
             <button type="submit">Save</button>
         </div>
     </form>
-    <a href="/api/products">Back to Product List</a>
+    <a href="/products">Back to Product List</a>
 </body>
 </html>

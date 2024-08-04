@@ -1,19 +1,22 @@
 package gift.dto.response;
 
-import java.util.List;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import gift.dto.CategoryDto;
 
 public class CategoryResponse {
-    
-    private List<CategoryDto> categories;
 
-    public CategoryResponse(List<CategoryDto> categories){
-        this.categories = categories;
+    private CategoryDto category;
+
+    @JsonCreator
+    public CategoryResponse(
+        @JsonProperty("category") CategoryDto category
+    ) {
+        this.category = category;
     }
 
-    public List<CategoryDto> getCategories(){
-        return this.categories;
+    public CategoryDto getCategory() {
+        return category;
     }
-
 }
