@@ -10,6 +10,8 @@ import gift.dto.member.MemberEditRequest;
 import gift.dto.member.MemberEditResponse;
 import gift.dto.member.MemberLoginRequest;
 import gift.dto.member.MemberOAuthResponse;
+import gift.dto.member.MemberPointRequest;
+import gift.dto.member.MemberPointResponse;
 import gift.dto.member.MemberRegisterRequest;
 import gift.exception.member.EmailAlreadyUsedException;
 import gift.exception.member.ForbiddenException;
@@ -107,15 +109,15 @@ public class MemberService {
     }
 
     @Transactional(readOnly = true)
-    public MemberEditResponse getMemberById(Long id) {
-        return memberRepository.findById(id)
+    public MemberEditResponse getMemberById(Long memberId) {
+        return memberRepository.findById(memberId)
             .map(this::convertToDTO)
-            .orElseThrow(() -> new ForbiddenException(INVALID_CREDENTIALS));
+            .orElseThrow(() -> new ForbiddenException(ID_NOT_FOUND + memberId));
     }
 
-    public MemberEditResponse updateMember(Long id, MemberEditRequest memberEditRequest) {
-        Member member = memberRepository.findById(id)
-            .orElseThrow(() -> new ForbiddenException(INVALID_CREDENTIALS));
+    public MemberEditResponse updateMember(Long memberId, MemberEditRequest memberEditRequest) {
+        Member member = memberRepository.findById(memberId)
+            .orElseThrow(() -> new ForbiddenException(ID_NOT_FOUND + memberId));
 
         boolean emailChanged = !member.isEmailMatching(memberEditRequest.email());
         boolean emailAlreadyUsed = memberRepository.existsByEmail(memberEditRequest.email());
@@ -134,11 +136,33 @@ public class MemberService {
         return convertToDTO(updatedMember);
     }
 
-    public void deleteMember(Long id) throws ForbiddenException {
-        if (!memberRepository.existsById(id)) {
-            throw new ForbiddenException(ID_NOT_FOUND);
+    public void deleteMember(Long memberId) throws ForbiddenException {
+        if (!memberRepository.existsById(memberId)) {
+            throw new ForbiddenException(ID_NOT_FOUND + memberId);
         }
-        memberRepository.deleteById(id);
+        memberRepository.deleteById(memberId);
+    }
+
+    @Transactional(readOnly = true)
+    public MemberPointResponse getPoints(Long memberId) {
+        Member member = memberRepository.findById(memberId)
+            .orElseThrow(() -> new ForbiddenException(ID_NOT_FOUND + memberId));
+        return new MemberPointResponse(member.getPoints());
+    }
+
+    public MemberPointResponse addPoints(Long memberId, MemberPointRequest memberPointRequest) {
+        Member member = memberRepository.findById(memberId)
+            .orElseThrow(() -> new ForbiddenException(ID_NOT_FOUND + memberId));
+        member.addPoints(memberPointRequest.amount());
+        memberRepository.save(member);
+        return new MemberPointResponse(member.getPoints());
+    }
+
+    public void deductPoints(Long memberId, MemberPointRequest memberPointRequest) {
+        Member member = memberRepository.findById(memberId)
+            .orElseThrow(() -> new ForbiddenException(ID_NOT_FOUND + memberId));
+        member.deductPoints(memberPointRequest.amount());
+        memberRepository.save(member);
     }
 
     // Mapper methods

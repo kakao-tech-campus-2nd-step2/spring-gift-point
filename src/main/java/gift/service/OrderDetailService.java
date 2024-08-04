@@ -1,6 +1,9 @@
 package gift.service;
 
+import static gift.util.constants.MemberConstants.POINT_OVERFLOW;
+
 import gift.dto.member.MemberEditResponse;
+import gift.dto.member.MemberPointRequest;
 import gift.dto.option.OptionResponse;
 import gift.dto.orderDetail.OrderDetailRequest;
 import gift.dto.orderDetail.OrderDetailResponse;
@@ -59,6 +62,17 @@ public class OrderDetailService {
         OrderDetail savedOrderDetail = orderDetailRepository.save(orderDetail);
 
         MemberEditResponse memberEditResponse = memberService.getMemberById(memberId);
+        int originalPrice = option.getProduct().getPrice() * orderDetailRequest.quantity();
+        if (originalPrice > Integer.MAX_VALUE - originalPrice) {
+            throw new IllegalArgumentException(POINT_OVERFLOW);
+        }
+
+        int finalPrice = originalPrice;
+        if (originalPrice >= 50000) {
+            finalPrice = (int) Math.ceil(finalPrice * 0.9);
+        }
+        memberService.deductPoints(memberId, new MemberPointRequest(finalPrice));
+
         if (memberEditResponse.registerType() == RegisterType.KAKAO) {
             sendKakaoMessage(savedOrderDetail, memberId);
         }
@@ -69,6 +83,8 @@ public class OrderDetailService {
             savedOrderDetail.getId(),
             option.getId(),
             orderDetail.getQuantity(),
+            originalPrice,
+            finalPrice,
             orderDetail.getOrderDateTime(),
             orderDetail.getMessage()
         );

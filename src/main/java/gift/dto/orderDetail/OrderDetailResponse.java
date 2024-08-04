@@ -14,6 +14,12 @@ public record OrderDetailResponse(
     @Schema(description = "주문 수량", example = "2")
     int quantity,
 
+    @Schema(description = "합계 금액", example = "10000")
+    int originalPrice,
+
+    @Schema(description = "최종 금액", example = "9000")
+    int finalPrice,
+
     @Schema(description = "주문 시간", example = "2024-07-28T19:10:00")
     LocalDateTime orderDateTime,
 

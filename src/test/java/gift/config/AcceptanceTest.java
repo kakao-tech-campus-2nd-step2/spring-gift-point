@@ -1,5 +1,10 @@
 package gift.config;
 
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.options;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,11 +13,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpHeaders;
 import org.springframework.test.web.servlet.MockMvc;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.options;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-
 @SpringBootTest
 @AutoConfigureMockMvc
 class AcceptanceTest {
@@ -20,7 +20,7 @@ class AcceptanceTest {
     @Autowired
     private MockMvc mockMvc;
 
-    private static final String ALLOWED_METHOD_NAMES = "GET,POST,PUT,DELETE,OPTIONS,HEAD";
+    private static final String ALLOWED_METHOD_NAMES = "GET,POST,PUT,DELETE,OPTIONS,HEAD,PATCH";
     private static final String AUTH_HEADER = "Authorization";
     private static final String BEARER_TOKEN = "Bearer test1234";
 

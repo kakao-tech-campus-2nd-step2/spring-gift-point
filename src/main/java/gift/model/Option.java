@@ -85,12 +85,12 @@ public class Option {
     }
 
     public boolean isProductIdMatching(Long productId) {
-        return Objects.equals(this.product.getId(), productId);
+        return Objects.equals(product.getId(), productId);
     }
 
     public void subtractQuantity(int quantity) {
         if (this.quantity < quantity) {
-            throw new IllegalArgumentException(INSUFFICIENT_QUANTITY + this.id);
+            throw new IllegalArgumentException(INSUFFICIENT_QUANTITY + id);
         }
         this.quantity -= quantity;
     }

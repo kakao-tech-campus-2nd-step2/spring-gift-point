@@ -3,9 +3,14 @@ package gift.controller;
 import static gift.util.constants.MemberConstants.EMAIL_ALREADY_USED;
 import static gift.util.constants.MemberConstants.INVALID_CREDENTIALS;
 
+import gift.config.CommonApiResponses.CommonBadRequestResponse;
+import gift.config.CommonApiResponses.CommonForbiddenResponse;
 import gift.config.CommonApiResponses.CommonServerErrorResponse;
+import gift.config.CommonApiResponses.CommonUnauthorizedResponse;
 import gift.dto.member.MemberAuthResponse;
 import gift.dto.member.MemberLoginRequest;
+import gift.dto.member.MemberPointRequest;
+import gift.dto.member.MemberPointResponse;
 import gift.dto.member.MemberRegisterRequest;
 import gift.service.MemberService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -13,11 +18,15 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestAttribute;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -47,6 +56,7 @@ public class MemberController {
             )
         }
     )
+    @CommonBadRequestResponse
     @CommonServerErrorResponse
     @PostMapping("/register")
     public ResponseEntity<MemberAuthResponse> register(
@@ -70,6 +80,7 @@ public class MemberController {
             )
         }
     )
+    @CommonBadRequestResponse
     @CommonServerErrorResponse
     @PostMapping("/login")
     public ResponseEntity<MemberAuthResponse> login(
@@ -77,5 +88,34 @@ public class MemberController {
     ) {
         MemberAuthResponse loggedInMember = memberService.loginMember(memberLoginRequest);
         return ResponseEntity.ok(loggedInMember);
+    }
+
+    @Operation(summary = "(명세 통일) 개인 포인트 조회", description = "개인의 포인트를 조회합니다.")
+    @ApiResponse(responseCode = "200", description = "조회 성공")
+    @CommonBadRequestResponse
+    @CommonUnauthorizedResponse
+    @CommonForbiddenResponse
+    @CommonServerErrorResponse
+    @SecurityRequirement(name = "bearerAuth")
+    @GetMapping("/point")
+    public ResponseEntity<MemberPointResponse> getPoints(@RequestAttribute("memberId") Long memberId) {
+        MemberPointResponse memberPointResponse = memberService.getPoints(memberId);
+        return ResponseEntity.ok(memberPointResponse);
+    }
+
+    @Operation(summary = "(명세 통일) 개인 포인트 추가", description = "개인의 포인트를 추가합니다.")
+    @ApiResponse(responseCode = "200", description = "추가 성공")
+    @CommonBadRequestResponse
+    @CommonUnauthorizedResponse
+    @CommonForbiddenResponse
+    @CommonServerErrorResponse
+    @SecurityRequirement(name = "bearerAuth")
+    @PatchMapping("/point")
+    public ResponseEntity<MemberPointResponse> addPoints(
+        @RequestAttribute("memberId") Long memberId,
+        @Valid @RequestBody MemberPointRequest memberPointRequest
+    ) {
+        MemberPointResponse memberPointResponse = memberService.addPoints(memberId, memberPointRequest);
+        return ResponseEntity.ok(memberPointResponse);
     }
 }

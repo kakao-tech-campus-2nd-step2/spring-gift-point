@@ -1,7 +1,8 @@
 package gift.config;
 
+import static gift.util.constants.GeneralConstants.REQUIRED_FIELD_MISSING;
+import static gift.util.constants.MemberConstants.ID_NOT_FOUND;
 import static gift.util.constants.MemberConstants.INVALID_AUTHORIZATION_HEADER;
-import static gift.util.constants.MemberConstants.INVALID_CREDENTIALS;
 import static gift.util.constants.auth.TokenConstants.EXPIRED_TOKEN;
 import static gift.util.constants.auth.TokenConstants.INVALID_TOKEN;
 
@@ -13,6 +14,19 @@ import java.lang.annotation.RetentionPolicy;
 
 
 public class CommonApiResponses {
+
+    @ApiResponse(
+        responseCode = "400",
+        description = "필수 입력 값 누락",
+        content = @Content(
+            mediaType = "application/json",
+            examples = @ExampleObject(value = "{\"(필드 명)\": \"" + REQUIRED_FIELD_MISSING + "\"}")
+        )
+    )
+    @Retention(RetentionPolicy.RUNTIME)
+    public @interface CommonBadRequestResponse {
+
+    }
 
     @ApiResponse(
         responseCode = "401",
@@ -39,7 +53,7 @@ public class CommonApiResponses {
         description = "JWT 토큰으로 회원 찾기 실패",
         content = @Content(
             mediaType = "application/json",
-            examples = @ExampleObject(value = "{\"error\": \"" + INVALID_CREDENTIALS + "\"}")
+            examples = @ExampleObject(value = "{\"error\": \"" + ID_NOT_FOUND + "(회원 Id)\"}")
         )
     )
     @Retention(RetentionPolicy.RUNTIME)

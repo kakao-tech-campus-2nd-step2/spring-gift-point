@@ -19,7 +19,7 @@ public class WebConfig implements WebMvcConfigurer {
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(memberInterceptor)
-            .addPathPatterns("/api/wishes/**", "/oauth/kakao/**", "/api/orders/**")
+            .addPathPatterns("/api/wishes/**", "/oauth/kakao/**", "/api/orders/**", "/api/members/point")
             .excludePathPatterns("/oauth/kakao", "/oauth/kakao/callback");
     }
 
@@ -27,7 +27,7 @@ public class WebConfig implements WebMvcConfigurer {
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**")
             .allowedOriginPatterns("*")
-            .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS", "HEAD")
+            .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS", "HEAD", "PATCH")
             .allowedHeaders("*")
             .exposedHeaders(HttpHeaders.LOCATION)
             .allowCredentials(true)
