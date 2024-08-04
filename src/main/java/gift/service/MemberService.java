@@ -4,6 +4,7 @@ import gift.authentication.token.JwtProvider;
 import gift.authentication.token.Token;
 import gift.domain.Member;
 import gift.domain.vo.Email;
+import gift.domain.vo.Point;
 import gift.repository.MemberRepository;
 import gift.repository.WishProductRepository;
 import gift.web.client.dto.KakaoAccount;
@@ -11,6 +12,7 @@ import gift.web.dto.request.LoginRequest;
 import gift.web.dto.request.member.CreateMemberRequest;
 import gift.web.dto.response.LoginResponse;
 import gift.web.dto.response.member.CreateMemberResponse;
+import gift.web.dto.response.member.PointResponse;
 import gift.web.dto.response.member.ReadMemberResponse;
 import gift.web.validation.exception.client.IncorrectEmailException;
 import java.util.NoSuchElementException;
@@ -53,6 +55,24 @@ public class MemberService {
         String email = kakaoAccount.getEmail();
         return memberRepository.findByEmail(Email.from(email))
             .orElseGet(() -> memberRepository.save(kakaoAccount.toMember()));
+    }
+
+    public PointResponse readPoint(Long id) {
+        Point point = memberRepository
+            .findById(id)
+            .orElseThrow(NoSuchElementException::new)
+            .getPoint();
+        return PointResponse.from(point);
+    }
+
+    public Point addPoint(Long id, int point) {
+        Member member = memberRepository.findById(id).orElseThrow(NoSuchElementException::new);
+        return member.addPoint(point);
+    }
+
+    public Point subtractPoint(Long id, int point) {
+        Member member = memberRepository.findById(id).orElseThrow(NoSuchElementException::new);
+        return member.subtractPoint(point);
     }
 
     public void deleteMember(Long id) {
