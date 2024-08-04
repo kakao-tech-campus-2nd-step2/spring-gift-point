@@ -46,6 +46,9 @@ public class PointEntity {
     }
 
     public void subtractPoint(Long point) {
+        if (point < 0) {
+            throw new InvalidArgumentException(ErrorCode.NEGATIVE_POINT);
+        }
         if (this.point < point) {
             throw new PointNotEnoughException();
         }
