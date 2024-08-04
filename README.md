@@ -12,3 +12,6 @@
     - [x] 목록 반환은 Contents로 이름 통일
     - [x] status 값 수정 (get - 200, post - 201, put - 200, delete - 204)
   - [x] 카카오 토큰 헤더 이름 X-GATEWAY-TOKEN으로 변경
+# step2
+- [x] CORS 설정
+- [ ] 배포 스크립트 작성
