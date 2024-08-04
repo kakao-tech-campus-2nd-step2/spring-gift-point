@@ -27,7 +27,7 @@ public class MemberService {
         return memberRepository.findByEmail(email);
     }
     public void signupMember(MemberDTO memberDTO){
-        Member member = new Member(memberDTO.getId(), memberDTO.getEmail(), memberDTO.getPassword(),memberDTO.getAccessToken(),1000);
+        Member member = new Member(memberDTO.getId(), memberDTO.getEmail(), memberDTO.getPassword(),memberDTO.getAccessToken());
         if(getMemberByEmail(memberDTO.getEmail()) != null){
             throw new BadRequestException("400 Bad Request : Invalid input");
         }

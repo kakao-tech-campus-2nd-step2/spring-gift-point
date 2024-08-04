@@ -32,12 +32,12 @@ public class Member {
     }
 
     @ConstructorProperties({"id","email","password","accessToken","point"})
-    public Member(Long id, String email, String password, String accessToken,int point) {
+    public Member(Long id, String email, String password, String accessToken) {
         this.id = id;
         this.email = email;
         this.password = password;
         this.accessToken = accessToken;
-        this.point = point;
+        this.point = 1000;
     }
 
     public Long getId() {
