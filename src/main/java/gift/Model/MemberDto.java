@@ -6,6 +6,7 @@ public class MemberDto {
     private String password;
     private boolean isAdmin;
     private long kakaoId;
+    private int point;
 
     public MemberDto() {
 
@@ -56,5 +57,13 @@ public class MemberDto {
 
     public long getKakaoId() {
         return kakaoId;
+    }
+
+    public int getPoint() {
+        return point;
+    }
+
+    public void setPoint(int point) {
+        this.point = point;
     }
 }
