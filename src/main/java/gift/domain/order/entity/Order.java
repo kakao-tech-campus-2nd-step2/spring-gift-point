@@ -36,10 +36,7 @@ public class Order {
     private String recipientMessage;
 
     @Column(nullable = false)
-    private int originalPrice;
-
-    @Column(nullable = false)
-    private int finalPrice;
+    private int purchasePrice;
 
     @CreationTimestamp
     @Column(updatable = false)
@@ -75,20 +72,12 @@ public class Order {
         return recipientMessage;
     }
 
-    public int getOriginalPrice() {
-        return originalPrice;
+    public int getPurchasePrice() {
+        return purchasePrice;
     }
 
-    public void addOriginalPrice(int itemPrice) {
-        this.originalPrice += itemPrice;
-    }
-
-    public int getFinalPrice() {
-        return finalPrice;
-    }
-
-    public void setFinalPrice(int finalPrice) {
-        this.finalPrice = finalPrice;
+    public void setPurchasePrice(int purchasePrice) {
+        this.purchasePrice = purchasePrice;
     }
 
     public LocalDateTime getOrderDateTime() {

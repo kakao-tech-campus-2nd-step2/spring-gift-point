@@ -12,13 +12,13 @@ public record MultipleOrderResponse(
     int finalPrice,
     LocalDateTime orderDateTime
 ) {
-    public static MultipleOrderResponse from(Order order) {
+    public static MultipleOrderResponse from(Order order, int originalPrice) {
         return new MultipleOrderResponse(
             order.getId(),
             order.getOrderItems().stream().map(OrderItemResponse::from).toList(),
             order.getRecipientMessage(),
-            order.getOriginalPrice(),
-            order.getFinalPrice(),
+            originalPrice,
+            order.getPurchasePrice(),
             order.getOrderDateTime()
         );
     }

@@ -32,14 +32,16 @@ public class OrderItemService {
     }
 
     @Transactional
-    public void createMultiple(Member member, Order order, List<OrderItemRequest> orderItemRequests) {
+    public int createMultiple(Member member, Order order, List<OrderItemRequest> orderItemRequests) {
+        int totalPrice = 0;
         for (OrderItemRequest orderItemRequest : orderItemRequests) {
-            createOne(member, order, orderItemRequest);
+            totalPrice += createOne(member, order, orderItemRequest);
         }
+        return totalPrice;
     }
 
     @Transactional
-    public void createOne(Member member, Order order, OrderItemRequest orderItemRequest) {
+    public int createOne(Member member, Order order, OrderItemRequest orderItemRequest) {
         Long optionId = orderItemRequest.optionId();
         Product product = productJpaRepository.findByOptionId(optionId)
             .orElseThrow(() -> new InvalidOptionInfoException("error.invalid.option.id"));
@@ -53,7 +55,7 @@ public class OrderItemService {
 
         wishlistJpaRepository.deleteByMemberAndProduct(member, product);
 
-        order.addOriginalPrice(product.getPrice() * orderItemRequest.quantity());
+        return product.getPrice() * orderItemRequest.quantity();
     }
 
     private void buy(Long optionId, int quantity) {

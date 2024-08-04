@@ -36,45 +36,45 @@ public class OrderService {
     public MultipleOrderResponse createMultipleAndSendMessage(MultipleOrderRequest orderRequest, Member member) {
         Order order = orderRequest.toOrder(member);
 
-        orderItemService.createMultiple(member, order, orderRequest.orderItems());
-
-        applyDiscountPolicy(order, DiscountPolicy.DEFAULT);
-        member.userPoint(order.getFinalPrice());
-
-        Order savedOrder = orderJpaRepository.save(order);
+        int originalPrice = orderItemService.createMultiple(member, order, orderRequest.orderItems());
+        Order savedOrder = purchase(member, originalPrice, order);
 
         if (member.getAuthProvider() != AuthProvider.KAKAO) {
             throw new InvalidOrderException("error.invalid.userinfo.provider");
         }
 
-        if (!messageService.sendMessageToMe(member, MultipleOrderResponse.from(savedOrder)).equals("0")) {
+        MultipleOrderResponse response = MultipleOrderResponse.from(savedOrder, originalPrice);
+        if (!messageService.sendMessageToMe(member, response).equals("0")) {
             throw new ExternalApiException("error.kakao.talk.message.response");
         };
-        return MultipleOrderResponse.from(savedOrder);
+        return response;
     }
 
     @Transactional
     public OrderResponse createOne(OrderRequest orderRequest, Member member) {
         Order order = orderRequest.toOrder(member);
-
         OrderItemRequest orderItemRequest = new OrderItemRequest(orderRequest.optionId(), orderRequest.quantity());
-        orderItemService.createOne(member, order, orderItemRequest);
 
-        applyDiscountPolicy(order, DiscountPolicy.DEFAULT);
-        member.userPoint(order.getFinalPrice());
-
-        Order savedOrder = orderJpaRepository.save(order);
-        return OrderResponse.from(savedOrder);
+        int originalPrice = orderItemService.createOne(member, order, orderItemRequest);
+        Order savedOrder = purchase(member, originalPrice, order);
+        return OrderResponse.from(savedOrder, originalPrice);
     }
 
-    private void applyDiscountPolicy(Order order, DiscountPolicy discountPolicy) {
-        int originalPrice = order.getOriginalPrice();
-        order.setFinalPrice(originalPrice);
+    private Order purchase(Member member, int originalPrice, Order order) {
+        int purchasePrice = applyDiscountPolicy(originalPrice, DiscountPolicy.DEFAULT);
+        order.setPurchasePrice(purchasePrice);
+        member.usePoint(purchasePrice);
 
+        return orderJpaRepository.save(order);
+    }
+
+    private int applyDiscountPolicy(int originalPrice, DiscountPolicy discountPolicy) {
+        int purchasePrice = originalPrice;
         if (discountPolicy == DiscountPolicy.DEFAULT) {
             if (originalPrice >= 50000) {
-            order.setFinalPrice((int) (originalPrice * 0.9));
+                purchasePrice = (int) (originalPrice * 0.9);
             }
         }
+        return purchasePrice;
     }
 }

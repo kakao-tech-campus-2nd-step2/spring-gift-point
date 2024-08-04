@@ -83,8 +83,7 @@ class OrderServiceTest {
         );
         MultipleOrderRequest orderRequest = new MultipleOrderRequest(orderItemRequests, "Test Message");
         Order order = orderRequest.toOrder(member);
-        MultipleOrderResponse expected = MultipleOrderResponse.from(orderRequest.toOrder(member));
-
+        MultipleOrderResponse expected = MultipleOrderResponse.from(orderRequest.toOrder(member), 180000);
 
         given(productJpaRepository.findByOptionId(anyLong())).willReturn(Optional.of(product));
         doNothing().when(wishlistJpaRepository).deleteByMemberAndProduct(any(Member.class), any(Product.class));
@@ -113,7 +112,6 @@ class OrderServiceTest {
         Order order = orderRequest.toOrder(member);
         OrderItem orderItem = new OrderItem(1L, order, product, option1, 15);
         order.addOrderItem(orderItem);
-        order.addOriginalPrice(product.getPrice() * orderRequest.quantity());
 
         given(productJpaRepository.findByOptionId(anyLong())).willReturn(Optional.of(product));
         doNothing().when(wishlistJpaRepository).deleteByMemberAndProduct(any(Member.class), any(Product.class));

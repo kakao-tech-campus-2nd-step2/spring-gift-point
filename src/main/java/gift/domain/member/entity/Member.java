@@ -93,7 +93,7 @@ public class Member {
         this.point += amount;
     }
 
-    public void userPoint(int amount) {
+    public void usePoint(int amount) {
         if (amount <= 0) {
             throw new IllegalPointUseException("error.member.negative.point.value");
         }

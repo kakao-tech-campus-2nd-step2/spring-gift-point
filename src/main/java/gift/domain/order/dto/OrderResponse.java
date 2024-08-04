@@ -12,14 +12,14 @@ public record OrderResponse(
     int finalPrice,
     LocalDateTime orderDateTime
 ) {
-    public static OrderResponse from(Order order) {
+    public static OrderResponse from(Order order, int originalPrice) {
         return new OrderResponse(
             order.getId(),
             order.getOrderItems().getFirst().getId(),
             order.getOrderItems().getFirst().getQuantity(),
             order.getRecipientMessage(),
-            order.getOriginalPrice(),
-            order.getFinalPrice(),
+            originalPrice,
+            order.getPurchasePrice(),
             order.getOrderDateTime()
         );
     }
