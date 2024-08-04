@@ -28,7 +28,11 @@ public class Member {
     private int point;
 
     public Member(String email, String name, String password, int role) {
+<<<<<<< HEAD
         this(email, name, password, null, null, role);
+=======
+        this(email,name,password,null,null,role);
+>>>>>>> b88ce5db (Refactor: 생성자 호출)
     }
 
     public Member(String email, String name, String password, String accessToken, String refreshToken, int role) {
