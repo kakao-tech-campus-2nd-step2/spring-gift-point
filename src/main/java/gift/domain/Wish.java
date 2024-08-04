@@ -53,10 +53,6 @@ public class Wish {
         return member;
     }
 
-    public LocalDateTime getCreatedDate() {
-        return createdDate;
-    }
-
     public void setCreatedDate(LocalDateTime createdDate) {
         this.createdDate = createdDate;
     }
