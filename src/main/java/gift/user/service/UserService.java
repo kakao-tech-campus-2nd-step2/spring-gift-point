@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class UserService {
@@ -32,10 +33,15 @@ public class UserService {
         userRepository.save(user);
     }
 
+    @Transactional
     public void updateUser(Long id, User user) {
         if(userRepository.existsById(id)){
-            user.setId(id);
-            userRepository.save(user);
+            User existingUser = userRepository.findById(id)
+                    .orElseThrow(() -> new IllegalArgumentException("userId " + id + "가 없습니다."));
+            existingUser.setEmail(user.getEmail());
+            existingUser.setPassword(user.getPassword());
+            existingUser.setPoint(user.getPoint());
+            userRepository.save(existingUser);
         }
     }
 
