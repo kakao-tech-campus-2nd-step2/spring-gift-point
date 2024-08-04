@@ -26,6 +26,7 @@ public class Order {
     @Column(nullable = false)
     private int quantity;
     private String message;
+    private int point;
 
     @CreatedDate
     @Column(updatable = false)
@@ -39,6 +40,7 @@ public class Order {
         this.option = builder.option;
         this.quantity = builder.quantity;
         this.message = builder.message;
+        this.point = builder.point;
     }
 
     // 빌더 클래스
@@ -47,6 +49,7 @@ public class Order {
         private Option option;
         private int quantity;
         private String message;
+        private int point;
 
         public Builder member(Member member) {
             this.member = member;
@@ -65,6 +68,11 @@ public class Order {
 
         public Builder message(String message) {
             this.message = message;
+            return this;
+        }
+
+        public Builder point(int point) {
+            this.point = point;
             return this;
         }
 
@@ -91,6 +99,10 @@ public class Order {
 
     public String getMessage() {
         return message;
+    }
+
+    public int getPoint() {
+        return point;
     }
 
     public LocalDateTime getOrderDateTime() {

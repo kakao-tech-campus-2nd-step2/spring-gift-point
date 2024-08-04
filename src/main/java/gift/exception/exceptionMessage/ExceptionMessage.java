@@ -25,5 +25,6 @@ public class ExceptionMessage {
     public static final String API_INTERNAL_SERVER_ERROR =  "API 서버 오류";
     public static final String API_BAD_GATEWAY =  "API 게이트 웨이 오류";
     public static final String API_SERVICE_UNAVAILABLE =  "API 서비스 점검 중";
-
+    public static final String POINT_EXCEED_PURCHASE_AMOUNT =  "포인트는 구매 금액을 넘을 수 없습니다.";
+    public static final String POINT_EXCEED_USER_POINT =  "사용 포인트는 보유 포인트양을 넘을 수 없습니다.";
 }

@@ -1,10 +1,13 @@
 package gift.domain;
 
+import gift.exception.customException.ToMuchPointException;
 import gift.utils.TimeStamp;
 import jakarta.persistence.*;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static gift.exception.exceptionMessage.ExceptionMessage.*;
 
 @Entity
 public class Member extends TimeStamp {
@@ -20,6 +23,8 @@ public class Member extends TimeStamp {
     private String password;
 
     private String kakaoId;
+
+    private int point;
 
     @OneToMany(mappedBy = "member")
     private List<Wish> wishList = new ArrayList<>();
@@ -70,8 +75,24 @@ public class Member extends TimeStamp {
     public String getKakaoId() {
         return kakaoId;
     }
+
+    public int getPoint() {
+        return point;
+    }
+
     public List<Wish> getWishList() {
         return wishList;
+    }
+
+    public void addPoint(int point){
+        this.point = this.point + point;
+    }
+
+    public void minusPoint(int point){
+        if(this.point < point){
+            throw new ToMuchPointException(POINT_EXCEED_USER_POINT);
+        }
+        this.point = this.point - point;
     }
 
 }

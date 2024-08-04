@@ -73,7 +73,7 @@ class OrderControllerTest {
     @DisplayName("주문 저장 시 OrderRequestDto Invalid 테스트")
     void 옵션_저장_DTO_INVALID_테스트() throws Exception{
         //given
-        OrderRequestDto invalidOrderRequestDto = new OrderRequestDto(null, -1, null);
+        OrderRequestDto invalidOrderRequestDto = new OrderRequestDto(null, -1, null, -1);
 
         //expected
         mvc.perform(post("/api/orders")
@@ -94,7 +94,7 @@ class OrderControllerTest {
     void 주문_성공_테스트() throws Exception{
         //given
         AuthToken authToken = new AuthToken("테스트용 인증코드", "123@kakao.com");
-        OrderRequestDto orderRequestDto = new OrderRequestDto(1L, 100, "해피");
+        OrderRequestDto orderRequestDto = new OrderRequestDto(1L, 100, "해피", 0);
         OrderResponseDto orderResponseDto = new OrderResponseDto(1L, 1L, 100, LocalDateTime.now(), "해피");
 
         given(tokenService.findToken("테스트용 인증코드")).willReturn(authToken);

@@ -54,7 +54,7 @@ class OrderServiceTest {
         //given
         Long invalidOptionId = 1L;
 
-        OrderRequestDto orderRequestDto = new OrderRequestDto(invalidOptionId, 100, "안되지롱");
+        OrderRequestDto orderRequestDto = new OrderRequestDto(invalidOptionId, 100, "안되지롱", 0);
         AuthToken authToken = new AuthToken("안되지롱", "안되지롱");
         given(optionRepository.findOptionByIdForUpdate(invalidOptionId)).willReturn(Optional.empty());
 
@@ -69,11 +69,11 @@ class OrderServiceTest {
     void 주문_Member_NOT_FOUND_테스트(){
         //given
         Long validOptionId = 1L;
-        OrderRequestDto orderRequestDto = new OrderRequestDto(validOptionId, 100, "테스트");
+        OrderRequestDto orderRequestDto = new OrderRequestDto(validOptionId, 100, "테스트", 0);
         Option option = new Option("테스트", 100);
         AuthToken authToken = new AuthToken("1234", "123@kakao.com");
         given(optionRepository.findOptionByIdForUpdate(validOptionId)).willReturn(Optional.of(option));
-        given(memberRepository.findMemberByEmail(authToken.getEmail())).willReturn(Optional.empty());
+        given(memberRepository.findMemberByEmailForUpdate(authToken.getEmail())).willReturn(Optional.empty());
 
         //expected
         assertThatThrownBy(() -> orderService.addOrder(orderRequestDto, authToken))
@@ -87,7 +87,7 @@ class OrderServiceTest {
         //given
         Long validOptionId = 1L;
 
-        OrderRequestDto orderRequestDto = new OrderRequestDto(validOptionId, 100, "테스트");
+        OrderRequestDto orderRequestDto = new OrderRequestDto(validOptionId, 100, "테스트", 0);
 
         Option option = new Option("테스트", 100);
 
@@ -125,7 +125,7 @@ class OrderServiceTest {
         Wish wish = new Wish();
 
         given(optionRepository.findOptionByIdForUpdate(validOptionId)).willReturn(Optional.of(option));
-        given(memberRepository.findMemberByEmail(authToken.getEmail())).willReturn(Optional.of(member));
+        given(memberRepository.findMemberByEmailForUpdate(authToken.getEmail())).willReturn(Optional.of(member));
         given(wishRepository.findWishByProductIdAndMemberEmail(anyLong(), anyString())).willReturn(Optional.of(wish));
         given(orderRepository.save(any(Order.class))).willReturn(order);
 
@@ -147,7 +147,7 @@ class OrderServiceTest {
         //given
         Long validOptionId = 1L;
 
-        OrderRequestDto orderRequestDto = new OrderRequestDto(validOptionId, 100, "테스트");
+        OrderRequestDto orderRequestDto = new OrderRequestDto(validOptionId, 100, "테스트", 0);
 
         Option option = new Option("테스트", 100);
 
@@ -192,7 +192,7 @@ class OrderServiceTest {
         createdAtField.set(order, LocalDateTime.now());
 
         given(optionRepository.findOptionByIdForUpdate(validOptionId)).willReturn(Optional.of(option));
-        given(memberRepository.findMemberByEmail(authToken.getEmail())).willReturn(Optional.of(member));
+        given(memberRepository.findMemberByEmailForUpdate(authToken.getEmail())).willReturn(Optional.of(member));
         given(wishRepository.findWishByProductIdAndMemberEmail(anyLong(), anyString())).willReturn(Optional.empty());
         given(orderRepository.save(any(Order.class))).willReturn(order);
 
@@ -203,6 +203,78 @@ class OrderServiceTest {
         assertAll(
                 () -> assertThat(orderResponseDto.quantity()).isEqualTo(orderRequestDto.quantity()),
                 () -> assertThat(orderResponseDto.message()).isEqualTo(orderRequestDto.message()),
+                () -> verify(wishRepository,times(0)).delete(any(Wish.class)),
+                () -> verify(kakaoService,times(1)).sendKakaoMessage(any(String.class), any(OrderResponseDto.class))
+        );
+    }
+
+    @Test
+    @DisplayName("주문 시 상품이 포인트 사용 TEST")
+    void 주문_포인트_사용_테스트() throws Exception{
+        //given
+        Long validOptionId = 1L;
+
+        OrderRequestDto orderRequestDto = new OrderRequestDto(validOptionId, 10, "테스트", 100);
+
+        Option option = new Option("테스트", 100);
+
+        Product product = new Product.Builder()
+                .name("테스트 상품")
+                .price(100)
+                .imageUrl("abc.png")
+                .category(null)
+                .build();
+
+        option.addProduct(product);
+
+        Field idField = Product.class.getDeclaredField("id");
+        idField.setAccessible(true);
+        idField.set(product, 1L);
+
+        AuthToken authToken = new AuthToken.Builder()
+                .token("테스트 토큰")
+                .tokenTime(3000)
+                .email("123@kakao.com")
+                .accessToken("a1b2c3")
+                .accessTokenTime(300000)
+                .refreshToken("a2b3c4d5")
+                .refreshTokenTime(300000)
+                .build();
+
+        Member member = new Member.Builder()
+                .email("123@kakao.com")
+                .password("123@kakao.com")
+                .kakaoId("123")
+                .build();
+
+        Field pointField = Member.class.getDeclaredField("point");
+        pointField.setAccessible(true);
+        pointField.set(member, 1000);
+
+        Order order = new Order.Builder()
+                .option(option)
+                .member(member)
+                .quantity(orderRequestDto.quantity())
+                .message(orderRequestDto.message())
+                .build();
+
+        Field createdAtField = Order.class.getDeclaredField("orderDateTime");
+        createdAtField.setAccessible(true);
+        createdAtField.set(order, LocalDateTime.now());
+
+        given(optionRepository.findOptionByIdForUpdate(validOptionId)).willReturn(Optional.of(option));
+        given(memberRepository.findMemberByEmailForUpdate(authToken.getEmail())).willReturn(Optional.of(member));
+        given(wishRepository.findWishByProductIdAndMemberEmail(anyLong(), anyString())).willReturn(Optional.empty());
+        given(orderRepository.save(any(Order.class))).willReturn(order);
+
+        //when
+        OrderResponseDto orderResponseDto = orderService.addOrder(orderRequestDto, authToken);
+
+        //then
+        assertAll(
+                () -> assertThat(orderResponseDto.quantity()).isEqualTo(orderRequestDto.quantity()),
+                () -> assertThat(orderResponseDto.message()).isEqualTo(orderRequestDto.message()),
+                () -> assertThat(member.getPoint()).isEqualTo(909),
                 () -> verify(wishRepository,times(0)).delete(any(Wish.class)),
                 () -> verify(kakaoService,times(1)).sendKakaoMessage(any(String.class), any(OrderResponseDto.class))
         );

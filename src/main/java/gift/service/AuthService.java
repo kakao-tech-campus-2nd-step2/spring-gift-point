@@ -74,4 +74,20 @@ public class AuthService {
         return MemberResponseDto.from(findMember);
     }
 
+    public MemberResponseDto findOneByEmail(String email) {
+        Member findMember = memberRepository.findMemberByEmail(email)
+                .orElseThrow(MemberNotFoundException::new);
+
+        return MemberResponseDto.from(findMember);
+    }
+
+    @Transactional
+    public MemberResponseDto addPoint(String email, int point) {
+        Member findMember = memberRepository.findMemberByEmailForUpdate(email)
+                .orElseThrow(MemberNotFoundException::new);
+
+        findMember.addPoint(point);
+
+        return MemberResponseDto.from(findMember);
+    }
 }
