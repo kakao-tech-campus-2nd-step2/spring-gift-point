@@ -5,6 +5,7 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.PositiveOrZero;
 
+
 @Entity
 @Table(uniqueConstraints = {@UniqueConstraint(name = "uk_member", columnNames = {"email"})})
 public class Member {
