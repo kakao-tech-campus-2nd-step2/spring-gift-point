@@ -7,9 +7,11 @@ import gift.entity.*;
 import gift.exception.KakaoException;
 import gift.exception.ResourceNotFoundException;
 import gift.repository.*;
+import jakarta.persistence.LockModeType;
 import jakarta.servlet.http.HttpSession;
 import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.repository.Lock;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
@@ -50,8 +52,8 @@ public class OrderService {
         this.pointHistoryRepository = pointHistoryRepository;
     }
 
-    @Transactional
-    public Order save(HttpSession session, OrderDTO orderDTO) throws InterruptedException {
+    @Lock(LockModeType.OPTIMISTIC)
+    public synchronized Order save(HttpSession session, OrderDTO orderDTO) {
         String email = (String) session.getAttribute("email");
 
         ProductOption productOption = productOptionRepository
@@ -73,7 +75,7 @@ public class OrderService {
             throw new IllegalArgumentException("Illegal order");
         }
         pointHistoryDto.setChangePoints(orderDTO.getPoint());
-        pointHistoryDto.setCurrentPoints(user.getPoint()-orderDTO.getPoint());
+        pointHistoryDto.setCurrentPoints(user.getPoint() - orderDTO.getPoint());
 
         // 포인트 차감
         user.subtractPoint(orderDTO.getPoint());
