@@ -50,7 +50,7 @@ public class KakaoController {
             @RequestParam("accessToken") String accessToken,
             @Parameter(description = "주문 요청 정보", required = true)
             @RequestBody OrderRequest orderRequest) {
-        Map<String, Object> response = kakaoService.createOrder(loginUser, accessToken, orderRequest);
+        Map<String, Object> response = kakaoService.createKakaoOrder(loginUser, accessToken, orderRequest);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
@@ -65,6 +65,7 @@ public class KakaoController {
 
         HttpHeaders headers = new HttpHeaders();
         headers.setLocation(URI.create(redirectUrl));
+        //System.out.println(redirectUrl);
 
         return new ResponseEntity<>(headers, HttpStatus.FOUND);
     }

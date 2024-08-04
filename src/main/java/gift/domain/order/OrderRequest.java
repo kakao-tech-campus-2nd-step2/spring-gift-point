@@ -4,6 +4,7 @@ public class OrderRequest {
     private Long optionId;
     private Long quantity;
     private String message;
+    private Long pointsToUse;  // 새로운 필드 추가
 
 
     public Long getOptionId() {
@@ -28,5 +29,13 @@ public class OrderRequest {
 
     public void setMessage(String message) {
         this.message = message;
+    }
+
+    public Long getPointsToUse() {
+        return pointsToUse;
+    }
+
+    public void setPointsToUse(Long pointsToUse) {
+        this.pointsToUse = pointsToUse;
     }
 }

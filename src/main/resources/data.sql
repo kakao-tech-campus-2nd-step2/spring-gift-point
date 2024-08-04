@@ -20,6 +20,10 @@ VALUES
     ('Option 1', 1000, 1),
     ('Option 3', 4000, 1),
     ('Option 2', 2000, 2);
+
+-- 포인트 테이블에 데이터 추가
+INSERT INTO points (user_id, amount)
+VALUES (1, 0);
 /*
 INSERT INTO product (name, price, description, image_url) VALUES
     ('Sample Product', 10000, 'Sample Description', 'c3JjL21haW4vcmVzb3VyY2VzL2ltYWdlU3RvcmFnZS90ZXN0LmpwZw');
