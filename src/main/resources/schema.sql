@@ -10,7 +10,8 @@ CREATE TABLE IF NOT EXISTS member (
                                       id BIGINT AUTO_INCREMENT PRIMARY KEY,
                                       email VARCHAR(255) NOT NULL UNIQUE,
     password VARCHAR(255) NOT NULL,
-    active_token VARCHAR(255)
+    active_token VARCHAR(255),
+    point INTEGER NOT NULL DEFAULT 0
     );
 
 CREATE TABLE IF NOT EXISTS product (
