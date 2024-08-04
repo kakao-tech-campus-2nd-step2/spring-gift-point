@@ -5,6 +5,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import org.hibernate.annotations.ColumnDefault;
 
 @Entity
 public class Member {
@@ -21,6 +22,10 @@ public class Member {
 
     @Column(name = "name", nullable = false)
     private String name;
+
+    @Column(name = "point", nullable = false)
+    @ColumnDefault("10000")
+    private int point;
 
     protected Member() {}
 
@@ -46,5 +51,20 @@ public class Member {
         return name;
     }
 
-}
+    public int getPoint() {
+        return point;
+    }
 
+    public void initPoint(int point) {
+        this.point = point;
+    }
+
+    public void addPoint(int productPrice) {
+        this.point += productPrice * 0.03;
+    }
+
+    public void usePoint(int point) {
+        this.point -= point;
+    }
+
+}

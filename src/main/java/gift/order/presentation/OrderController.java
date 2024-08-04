@@ -1,9 +1,9 @@
 package gift.order.presentation;
 
 import gift.exception.NotFoundMember;
-import gift.member.presentation.MemberController.LoginMember;
 import gift.member.persistence.Member;
 import gift.member.application.dto.RegisterRequestDto;
+import gift.member.presentation.LoginMember;
 import gift.order.application.dto.OrderRequestDto;
 import gift.order.application.dto.OrderResponseDto;
 import gift.order.application.service.OrderService;

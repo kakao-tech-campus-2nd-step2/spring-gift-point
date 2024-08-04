@@ -58,6 +58,9 @@ public class OrderService {
 
         orderRepository.save(order);
 
+        member.addPoint(option.getProduct().getPrice());
+        member.usePoint(orderRequestDto.point());
+
         return new OrderResponseDto(
             order.getId(),
             order.getOption().getId(),

@@ -2,6 +2,7 @@ package gift.member.application.service;
 
 import gift.exception.AlreadyExistMember;
 import gift.exception.NotFoundMember;
+import gift.member.application.dto.PointResponseDto;
 import gift.member.util.JwtTokenUtil;
 import gift.member.application.dto.TokenResponseDto;
 import gift.member.application.dto.RegisterResponseDto;
@@ -27,8 +28,8 @@ public class MemberService {
     public RegisterResponseDto register(Member member) throws AlreadyExistMember {
         Optional<Member> existMember = memberRepository.findByEmail(member.getEmail());
 
-
         if (!existMember.isPresent()) {
+            member.initPoint(10000);
             memberRepository.saveAndFlush(member);
             String token = JwtTokenUtil.generateToken(member.getEmail());
             return new RegisterResponseDto(member.getId(), member.getEmail(), member.getName(), token);
@@ -45,6 +46,10 @@ public class MemberService {
         } else {
             throw new NotFoundMember("회원정보가 존재하지 않습니다");
         }
+    }
+
+    public PointResponseDto getPoint(Member member) {
+        return new PointResponseDto(member.getPoint());
     }
 
 }

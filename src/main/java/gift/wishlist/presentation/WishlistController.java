@@ -1,9 +1,9 @@
 package gift.wishlist.presentation;
 
 import gift.exception.UnAuthorizationException;
-import gift.member.presentation.MemberController.LoginMember;
 import gift.member.application.service.TokenValidator;
 import gift.member.persistence.Member;
+import gift.member.presentation.LoginMember;
 import gift.product.application.service.ProductService;
 import gift.wishlist.application.dto.WishPageDto;
 import gift.wishlist.application.dto.WishRequestDto;
