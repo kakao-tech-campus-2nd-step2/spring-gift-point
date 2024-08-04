@@ -7,9 +7,10 @@ import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
 
-import gift.domain.Category;
-import gift.dto.category.CategoryDto;
-import gift.repository.CategoryRepository;
+import gift.category.entity.Category;
+import gift.category.dto.CategoryDto;
+import gift.category.repository.CategoryRepository;
+import gift.category.service.CategoryService;
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;

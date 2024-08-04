@@ -4,8 +4,9 @@ import static gift.util.CategoryFixture.createCategory;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
-import gift.domain.Category;
-import gift.exception.NoSuchProductException;
+import gift.category.entity.Category;
+import gift.category.repository.CategoryRepository;
+import gift.product.exception.NoSuchProductException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

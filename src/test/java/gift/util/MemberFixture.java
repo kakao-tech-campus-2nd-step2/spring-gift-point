@@ -1,6 +1,6 @@
 package gift.util;
 
-import gift.domain.Member;
+import gift.member.entity.Member;
 
 public class MemberFixture {
 

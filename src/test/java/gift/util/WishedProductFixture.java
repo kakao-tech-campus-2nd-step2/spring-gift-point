@@ -1,8 +1,8 @@
 package gift.util;
 
-import gift.domain.Member;
-import gift.domain.Product;
-import gift.domain.WishedProduct;
+import gift.member.entity.Member;
+import gift.product.entity.Product;
+import gift.wishedProduct.entity.WishedProduct;
 
 public class WishedProductFixture {
 
