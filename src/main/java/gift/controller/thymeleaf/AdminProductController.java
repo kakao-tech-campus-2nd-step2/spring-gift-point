@@ -44,7 +44,7 @@ public class AdminProductController {
 
     @GetMapping("/{id}")
     public String updateProduct(@PathVariable("id") @NotNull @Min(1) Long id, Model model) {
-        ProductResponse.WithOption product = productService.findWIthOptionById(id);
+        ProductResponse.WithOption product = productService.findWithOptionById(id);
         CategoryResponse.InfoList categories = categoryService.getAllCategories();
         model.addAttribute("product", product);
         model.addAttribute("categories", categories);

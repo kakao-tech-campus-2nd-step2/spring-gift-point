@@ -87,6 +87,12 @@ public class Product extends BasicEntity{
         }
     }
 
+    public void validatePoint(int point) {
+        if (price < point) {
+            throw new IllegalArgumentException("상품 가격보다 큰 포인트를 사용할 수 없습니다.");
+        }
+    }
+
     public String getName() {
         return name;
     }

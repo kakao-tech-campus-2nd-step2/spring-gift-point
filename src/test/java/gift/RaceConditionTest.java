@@ -58,7 +58,7 @@ public class RaceConditionTest {
         Product product = productRepository.save(new Product("pName", 0, "purl", category, options));
         Long optionId = product.getOptions().get(0).getId();
         Member member = memberRepository.save(new Member("test@email", "1234", "name", Role.USER));
-        OrderRequest request = new OrderRequest(product.getId(), optionId, subtractAmount, "message");
+        OrderRequest request = new OrderRequest(product.getId(), optionId, subtractAmount, 0, "message");
 
         doNothing().when(eventPublisher).publishEvent(any());
 

@@ -25,18 +25,20 @@ public class OAuthRestController {
 
     @GetMapping("/kakao/login/callback")
     @Operation(summary = "카카오 로그인 리다이렉션", description = "카카오 액세스 토큰을 발급받습니다.")
-    public ResponseEntity<LoginResponse> kakaoToken(@RequestParam("code") @NotNull String code) {
-        LoginDto response = oAuthService.signIn(code);
+    public ResponseEntity<LoginResponse> kakaoToken(
+            @RequestParam("code") @NotNull String code,
+            @RequestParam("redirect-url") @NotNull String redirectUrl) {
+        LoginDto response = oAuthService.signIn(code, redirectUrl);
         return ResponseEntity.ok()
                 .header("Authorization", response.accessToken())
-                .body(LoginResponse.of(response.name()));
+                .body(LoginResponse.from(response));
     }
 
     @PostMapping("/kakao/logout")
     @Operation(summary = "카카오 로그아웃", description = "카카오에서 로그아웃합니다.")
     @SecurityRequirement(name = "Authorization")
     public ResponseEntity<Void> kakaoLogOut(
-            @Parameter(hidden = true) @NotNull @LoginMember Long memberId) {
+            @Parameter(hidden = true) @LoginMember Long memberId) {
         oAuthService.signOut(memberId);
         return ResponseEntity.ok().build();
     }

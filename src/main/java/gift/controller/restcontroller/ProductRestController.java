@@ -32,7 +32,7 @@ public class ProductRestController {
     @GetMapping("")
     @Operation(summary = "카테고리 상품 조회", description = "특정 카테고리의 모든 상품을 조회합니다.")
     public ResponseEntity<PagingResponse<ProductResponse.Info>> getProductsByCategoryId(
-            @RequestParam("categoryId") @NotNull @Min(1) Long categoryId,
+            @RequestParam("category-id") @NotNull @Min(1) Long categoryId,
             @PageableDefault(size = 10, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable
     ) {
         PagingResponse<ProductResponse.Info> responses = productService.findAllProductPagingByCategoryId(pageable, categoryId);

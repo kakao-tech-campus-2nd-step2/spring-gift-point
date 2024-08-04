@@ -2,7 +2,6 @@ package gift.service.dto;
 
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
-import gift.model.Orders;
 
 public class KakaoRequest {
     private static final String DEFAULT_OBJECT_TYPE = "feed";
@@ -11,6 +10,7 @@ public class KakaoRequest {
     private static final String DEFAULT_TITLE = "주문해주셔서 감사합니다.";
     private static final String DEFAULT_ITEM_TEXT = "가격";
     private static final String DEFAULT_ITEM_COUNT_TEXT = "개수";
+    private static final String DEFAULT_POINT_TEXT = "사용 포인트";
 
     @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
     public record Feed (
@@ -18,30 +18,35 @@ public class KakaoRequest {
             Content content,
             ItemContent itemContent
     ){
-        public static Feed from(Orders orders) {
+        public static Feed from(OrderDto orders) {
             return new Feed(
                     DEFAULT_OBJECT_TYPE,
                     new Content(
                             DEFAULT_TITLE,
-                            orders.getDescription(),
+                            orders.description(),
                             null
                     ),
                     new ItemContent(
                             DEFAULT_PROFILE_TEXT,
-                            orders.getProductName(),
-                            orders.getOptionName(),
+                            orders.productName(),
+                            orders.productImageUrl(),
+                            orders.optionName(),
                             new Item[]{
                                     new Item(
                                             DEFAULT_ITEM_TEXT,
-                                            orders.getPrice() + "원"
+                                            orders.price() + "원"
                                     ),
                                     new Item(
                                             DEFAULT_ITEM_COUNT_TEXT,
-                                            orders.getQuantity() + "개"
+                                            "x " + orders.quantity() + "개"
+                                    ),
+                                    new Item(
+                                            DEFAULT_POINT_TEXT,
+                                            "- " + orders.point() + "p"
                                     ),
                             },
                             DEFAULT_SUM_TEXT,
-                            orders.getTotalPrice() + "원"
+                            (orders.price() * orders.quantity() - orders.point()) + "원"
                     )
             );
         }
@@ -58,6 +63,7 @@ public class KakaoRequest {
     record ItemContent(
             String profileText,
             String titleImageText,
+            String titleImageUrl,
             String titleImageCategory,
             Item[] items,
             String sum,

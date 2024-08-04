@@ -1,12 +1,15 @@
 package gift.model;
 
 import gift.common.exception.DuplicateDataException;
+import gift.common.exception.EntityNotFoundException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+import java.util.ArrayList;
 import java.util.List;
 
-import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 
 class ProductTest {
 
@@ -84,6 +87,24 @@ class ProductTest {
     }
 
     @Test
+    @DisplayName("Product에서 Option 찾기 테스트[실패] - option이 없음")
+    void findOptionByOptionIdFail() {
+        // given
+        String oName1 = "oName1";
+        String oName2 = "oName2";
+        Category category = new Category();
+        List<Option> options = List.of(
+                new Option(1L, oName1),
+                new Option(2L, oName2));
+        Product product = new Product("pname", 123, "purl", category, options);
+
+        // when
+        // then
+        assertThatExceptionOfType(EntityNotFoundException.class)
+                .isThrownBy(() -> product.findOptionByOptionId(3L));
+    }
+
+    @Test
     @DisplayName("Product에서 Option 제거 테스트[성공]")
     void subOption() {
         // given
@@ -118,5 +139,19 @@ class ProductTest {
         // then
         assertThatExceptionOfType(IllegalArgumentException.class)
                 .isThrownBy(() -> product.subOption(option));
+    }
+
+    @Test
+    @DisplayName("usePoint 테스트[실패] - 상품 가격보다 큰 포인트")
+    void validatePointFail() {
+        // given
+        int price = 10000;
+        int point = 100000;
+        Product product = new Product("pname", price, "purl", null, new ArrayList<>());
+
+        // when
+        // then
+        assertThatExceptionOfType(IllegalArgumentException.class)
+                .isThrownBy(() -> product.validatePoint(point));
     }
 }

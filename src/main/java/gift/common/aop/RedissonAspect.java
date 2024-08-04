@@ -8,6 +8,7 @@ import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.reflect.MethodSignature;
 import org.redisson.api.RLock;
 import org.redisson.api.RedissonClient;
+import org.redisson.client.RedisException;
 import org.springframework.expression.spel.standard.SpelExpressionParser;
 import org.springframework.expression.spel.support.StandardEvaluationContext;
 import org.springframework.stereotype.Component;
@@ -39,7 +40,7 @@ public class RedissonAspect {
                 return false;
             }
             return joinPoint.proceed();
-        } catch (Exception e) {
+        } catch (RedisException e) {
             throw new RedissonLockException("Temporary errors failed to access the service");
         } finally {
             lock.unlock();

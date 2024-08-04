@@ -1,7 +1,12 @@
 package gift.controller.dto.response;
 
-public record LoginResponse(String name) {
-    public static LoginResponse of(String name) {
-        return new LoginResponse(name);
+import gift.common.enums.Role;
+import gift.service.dto.LoginDto;
+
+public record LoginResponse(
+        String name,
+        Role role) {
+    public static LoginResponse from(LoginDto loginDto) {
+        return new LoginResponse(loginDto.name(), loginDto.role());
     }
 }

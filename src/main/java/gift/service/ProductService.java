@@ -55,7 +55,7 @@ public class ProductService {
     }
 
     @Transactional(readOnly = true)
-    public ProductResponse.WithOption findWIthOptionById(Long id) {
+    public ProductResponse.WithOption findWithOptionById(Long id) {
         Product product = productRepository.findAllByIdFetchJoin(id)
                 .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 상품입니다."));
         return ProductResponse.WithOption.from(product);

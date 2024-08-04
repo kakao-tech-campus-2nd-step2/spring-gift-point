@@ -36,7 +36,7 @@ public class WishesRestController {
     @ApiResponse(responseCode = "201")
     public ResponseEntity<Void> insertWish(
             @Valid @RequestBody WishRequest.CreateWish request,
-            @Parameter(hidden = true) @NotNull @LoginMember Long memberId) {
+            @Parameter(hidden = true) @LoginMember Long memberId) {
         wishService.save(request, 1, memberId);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
@@ -45,7 +45,7 @@ public class WishesRestController {
     @Operation(summary = "위시리스트 조회", description = "위시리스트를 조회합니다.")
     @SecurityRequirement(name = "Authorization")
     public ResponseEntity<PagingResponse<WishResponse>> getWishes(
-            @Parameter(hidden = true) @NotNull @LoginMember Long memberId,
+            @Parameter(hidden = true) @LoginMember Long memberId,
             @PageableDefault(size = 10, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable
     ) {
         PagingResponse<WishResponse> responses = wishService.findAllWishPagingByMemberId(memberId, pageable);
@@ -57,7 +57,7 @@ public class WishesRestController {
     @SecurityRequirement(name = "Authorization")
     public ResponseEntity<Integer> updateWish(
             @Valid @RequestBody WishRequest.UpdateWish request,
-            @Parameter(hidden = true) @NotNull @LoginMember Long memberId
+            @Parameter(hidden = true) @LoginMember Long memberId
     ) {
         wishService.update(request, memberId);
         return ResponseEntity.ok().body(request.productCount());
@@ -68,7 +68,7 @@ public class WishesRestController {
     @SecurityRequirement(name = "Authorization")
     public ResponseEntity<Void> deleteWish(
             @PathVariable("wish-id") @NotNull @Min(1) Long wishId,
-            @Parameter(hidden = true) @NotNull @LoginMember Long memberId
+            @Parameter(hidden = true) @LoginMember Long memberId
     ) {
         wishService.deleteById(wishId, memberId);
         return ResponseEntity.ok().build();

@@ -25,7 +25,7 @@ public class AuthService {
         Member member = findEmailAndPassword(request);
         member.checkLoginType(SocialLoginType.DEFAULT);
         String token = jwtProvider.generateToken(member.getId(), member.getEmail(), member.getRole());
-        return LoginDto.of(token, member.getName());
+        return LoginDto.of(token, member.getName(), member.getRole());
     }
 
     private Member findEmailAndPassword(SignInRequest request) {

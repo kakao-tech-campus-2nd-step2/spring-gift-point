@@ -2,7 +2,6 @@ package gift.service;
 
 import gift.common.enums.Role;
 import gift.common.enums.SocialLoginType;
-import gift.common.properties.KakaoProperties;
 import gift.model.Member;
 import gift.repository.MemberRepository;
 import gift.security.JwtProvider;
@@ -17,21 +16,14 @@ public class OAuthService {
 
     private final MemberRepository memberRepository;
     private final JwtProvider jwtProvider;
-    private final KakaoProperties properties;
     private final KakaoApiCaller kakaoApiCaller;
     private final KakaoTokenService kakaoTokenService;
 
-    public OAuthService(MemberRepository memberRepository, JwtProvider jwtProvider, KakaoProperties kakaoProperties, KakaoApiCaller kakaoApiCaller, KakaoTokenService kakaoTokenService) {
+    public OAuthService(MemberRepository memberRepository, JwtProvider jwtProvider, KakaoApiCaller kakaoApiCaller, KakaoTokenService kakaoTokenService) {
         this.memberRepository = memberRepository;
         this.jwtProvider = jwtProvider;
-        this.properties = kakaoProperties;
         this.kakaoApiCaller = kakaoApiCaller;
         this.kakaoTokenService = kakaoTokenService;
-    }
-
-    @Transactional
-    public LoginDto signIn(String code) {
-        return signIn(code, properties.redirectUrl());
     }
 
     @Transactional
@@ -44,7 +36,7 @@ public class OAuthService {
 
         kakaoTokenService.saveToken(member.getId(), kakaoTokenDto);
         String token = jwtProvider.generateToken(member.getId(), member.getEmail(), member.getRole());
-        return LoginDto.of(token, member.getName());
+        return LoginDto.of(token, member.getName(), member.getRole());
     }
 
     public void signOut(Long memberId) {

@@ -5,7 +5,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 
 @ResponseStatus(HttpStatus.FORBIDDEN)
 public class AuthorizationException extends CustomException {
-    private static final String DEFAULT_TITLE = "Access Denied";
+    private static final String DEFAULT_TITLE = "Forbidden";
 
     public AuthorizationException(String message) {
         super(message, HttpStatus.FORBIDDEN, DEFAULT_TITLE);

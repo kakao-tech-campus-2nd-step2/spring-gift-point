@@ -43,7 +43,7 @@ public class AdminLoginController {
         String token = tokenResponse.accessToken();
         ResponseCookie cookie = ResponseCookie.from("Authorization", token)
                 .httpOnly(true)
-                .secure(true)
+//                .secure(true)
                 .path("/")
                 .maxAge(24 * 60 * 60) // 24시간 유효기간
                 .build();
@@ -58,7 +58,7 @@ public class AdminLoginController {
         String token = tokenResponse.accessToken();
         ResponseCookie cookie = ResponseCookie.from("Authorization", token)
                 .httpOnly(true)
-                .secure(true)
+//                .secure(true)
                 .path("/")
                 .maxAge(24 * 60 * 60) // 24시간 유효기간
                 .build();

@@ -29,6 +29,6 @@ public class AuthRestController {
         LoginDto response = authService.signIn(request);
         return ResponseEntity.ok()
                 .header("Authorization", response.accessToken())
-                .body(LoginResponse.of(response.name()));
+                .body(LoginResponse.from(response));
     }
 }
