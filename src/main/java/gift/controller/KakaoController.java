@@ -42,7 +42,7 @@ public class KakaoController {
     }
 
     @GetMapping("/redirect")
-    public ResponseEntity<Object> getTokenAndUserInfo(
+    public ResponseEntity<Void> getTokenAndUserInfo(
             @RequestParam(value = "code") String kakaoCode
     ) {
         String returnUrl = "http://localhost:3000/token.html?tokenValue=";
@@ -50,7 +50,7 @@ public class KakaoController {
         String token = kakaoOAuthService.kakaoMemberRegister(kakaoToken);
         HttpHeaders headers = new HttpHeaders();
         headers.setLocation(URI.create(returnUrl + token));
-        return new ResponseEntity<>(headers, HttpStatus.OK);
+        return new ResponseEntity<>(headers, HttpStatus.FOUND);
     }
 
     @PostMapping("/unlink")
