@@ -2,7 +2,7 @@ FROM openjdk:21-jdk-oraclelinux7
 
 WORKDIR /app
 
-COPY ./spring-gift-0.0.1-SNAPSHOT.jar /app/spring-gift.jar
+COPY ./build/libs/spring-gift-0.0.1-SNAPSHOT.jar /app/spring-gift.jar
 
 ENV TZ=Asia/Seoul
 
