@@ -20,6 +20,7 @@ public class User {
     @Column(name = "sns_id")
     private String snsId;
     private String sns;
+    private int points = 0;
 
     public User() {
     }
@@ -29,11 +30,12 @@ public class User {
         this.sns = sns;
     }
 
-    public User(Long id, String email, String password, String sns) {
+    public User(Long id, String email, String password, String sns, int points) {
         this.id = id;
         this.email = email;
         this.password = password;
         this.sns = sns;
+        this.points = points;
     }
 
     public User(String email, String password, String sns) {
@@ -57,4 +59,10 @@ public class User {
     public String getSns(){return sns;}
 
     public String getSnsId(){return snsId;}
+
+    public int getPoints(){return points;}
+
+    public void addPoints(int points){this.points += points;}
+
+    public void usePoints(int points){this.points -= points;}
 }

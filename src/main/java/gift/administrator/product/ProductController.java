@@ -1,9 +1,11 @@
 package gift.administrator.product;
 
 import gift.administrator.category.CategoryService;
+import gift.administrator.option.OptionDTO;
 import gift.util.PageUtil;
 import jakarta.validation.Valid;
 import java.util.Arrays;
+import java.util.List;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Controller;
@@ -17,7 +19,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
-@RequestMapping("products")
+@RequestMapping("/products")
 public class ProductController {
 
     private final ProductService productService;
@@ -43,27 +45,40 @@ public class ProductController {
         model.addAttribute("currentPage", paging.getNumber());
         model.addAttribute("sortBy", sortBy);
         model.addAttribute("sortDirection", direction.toString());
-        model.addAttribute("categories",productService.getAllCategoryName());
+        List<String> categoryNames = paging.stream()
+            .map(product -> productService.getCategoryNameByCategoryId(product.getCategoryId()))
+            .toList();
+        model.addAttribute("categories", categoryNames);
         return "products";
     }
 
     @GetMapping("/add")
     public String showPostProduct(Model model) {
-        model.addAttribute("productDTO", new ProductDTO());
+        if (!model.containsAttribute("productDTO")) {
+            model.addAttribute("productDTO", new ProductDTO());
+            model.addAttribute("categories", categoryService.getAllCategories());
+        }
+        return "add";
+    }
+
+    @PostMapping("/add/option")
+    public String addOption(@ModelAttribute ProductDTO productDTO, Model model) {
+        productDTO.getOptions().add(new OptionDTO());
+        model.addAttribute("productDTO", productDTO);
         model.addAttribute("categories", categoryService.getAllCategories());
         return "add";
     }
 
     @GetMapping("/update/{id}")
-    public String showPutProduct(@PathVariable("id") long id, Model model) {
-        ProductDTO product = productService.getProductById(id);
-        model.addAttribute("productDTO", product);
+    public String showPutProduct(@PathVariable("id") Long id, Model model) {
+        ProductDTO productDTO = productService.getProductById(id);
+        model.addAttribute("productDTO", productDTO);
         model.addAttribute("categories", categoryService.getAllCategories());
         return "update";
     }
 
     @GetMapping("/delete/{id}")
-    public String deleteProduct(@PathVariable("id") long id) {
+    public String deleteProduct(@PathVariable("id") Long id) {
         productService.deleteProduct(id);
         return "redirect:/products";
     }
@@ -72,6 +87,7 @@ public class ProductController {
     public String postProduct(@Valid @ModelAttribute("productDTO") ProductDTO product,
         BindingResult result, Model model) {
         productService.existsByNamePutResult(product.getName(), result);
+        productService.existsByNameAddingProductsPutResult(product, result);
         if (result.hasErrors()) {
             model.addAttribute("categories", categoryService.getAllCategories());
             return "add";
@@ -84,16 +100,18 @@ public class ProductController {
 
     @PostMapping("/update/{id}")
     public String putProduct(@PathVariable("id") Long id,
-        @Valid @ModelAttribute("productDTO") ProductUpdateDTO product, BindingResult result,
+        @Valid @ModelAttribute("productDTO") ProductDTO productDTO, BindingResult result,
         Model model) {
-        ProductUpdateDTO product1 = new ProductUpdateDTO(id, product.getName(), product.getPrice(),
-            product.getImageUrl(), product.getCategoryId());
-        productService.existsByNameAndIdPutResult(product1.getName(), id, result);
+        productService.existsByNameAndIdPutResult(productDTO.getName(), id, result);
         if (result.hasErrors()) {
             model.addAttribute("categories", categoryService.getAllCategories());
             return "update";
         }
-        productService.updateProduct(product1, id);
+        ProductUpdateDTO productUpdateDTO = new ProductUpdateDTO(productDTO.getId(), productDTO.getName(),
+            productDTO.getPrice(), productDTO.getImageUrl(), productDTO.getCategoryId());
+        productService.updateProduct(productUpdateDTO, id);
+        model.addAttribute("productDTO", productDTO);
+        model.addAttribute("categories", categoryService.getAllCategories());
         return "redirect:/products";
     }
 }

@@ -4,6 +4,7 @@ import gift.administrator.category.Category;
 import gift.administrator.option.Option;
 import gift.administrator.option.OptionDTO;
 import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.Digits;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
@@ -38,6 +39,7 @@ public class ProductDTO {
     private Long categoryId;
     @Schema(description = "상품의 옵션", example = "[{\"name\":\"한복 버전\",\"quantity\":\"4\"},{\"name\":\"XL\",\"quantity\":\"2\"}]")
     @Size(min = 1, message = "상품에는 적어도 하나의 옵션이 있어야 합니다.")
+    @Valid
     private List<OptionDTO> options = new ArrayList<>();
 
     public ProductDTO() {
@@ -56,6 +58,8 @@ public class ProductDTO {
     public Long getId() {
         return id;
     }
+
+    public void setId(Long id){this.id = id;}
 
     public int getPrice() {
         return price;
@@ -91,6 +95,10 @@ public class ProductDTO {
 
     public List<OptionDTO> getOptions() {
         return options;
+    }
+
+    public void setOptions(List<OptionDTO> options) {
+        this.options = options;
     }
 
     public Product toProduct(ProductDTO productDTO, Category category) {

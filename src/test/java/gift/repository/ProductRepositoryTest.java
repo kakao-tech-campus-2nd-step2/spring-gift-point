@@ -122,26 +122,6 @@ public class ProductRepositoryTest {
 
     @Test
     @DisplayName("상품 아이디로 존재 여부 확인 시 존재함")
-    void findDistinctCategoryNamesWithProducts() {
-        //Given
-        productRepository.save(product);
-        Category category = new Category(1L, "도서", null, null, null);
-        Option option = new Option("어린왕자", 3, null);
-        category = categoryRepository.save(category);
-        Product product1 = new Product(1L, "Product1", 1000, "imageUrl1", category, List.of(option));
-        product1 = productRepository.save(product1);
-        option.setProduct(product1);
-        List<String> expected = List.of(product.getCategory().getName(), category.getName());
-
-        //When
-        List<String> actual = productRepository.findDistinctCategoryNamesWithProducts();
-
-        //Then
-        assertThat(actual).containsAll(expected);
-    }
-
-    @Test
-    @DisplayName("상품 아이디로 존재 여부 확인 시 존재함")
     void existsById() {
         //Given
         productRepository.save(product);

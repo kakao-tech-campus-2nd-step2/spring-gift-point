@@ -85,4 +85,8 @@ public class UserService {
         User user = userDTO.toUser();
         return userRepository.existsByEmailAndPassword(user.getEmail(), user.getPassword());
     }
+
+    public void updatePoints(User user){
+        userRepository.save(user);
+    }
 }

@@ -13,13 +13,14 @@ public record UserDTO(Long id,
                       @Schema(description = "회원 비밀번호", example = "134ff1")
                       @NotBlank(message = "비밀번호를 입력하지 않았습니다.")
                       String password,
-                      String sns) {
+                      String sns,
+                      int points) {
 
     public User toUser() {
-        return new User(id, email, password, "local");
+        return new User(id, email, password, "local", points);
     }
 
     public static UserDTO fromUser(User user) {
-        return new UserDTO(user.getId(), user.getEmail(), user.getPassword(), "local");
+        return new UserDTO(user.getId(), user.getEmail(), user.getPassword(), "local", user.getPoints());
     }
 }
