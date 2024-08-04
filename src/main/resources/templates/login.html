@@ -32,24 +32,33 @@
                 'password': password
             })
         })
-        .then(response => response.json())
+        .then(response => {
+            if (!response.ok) {
+                return response.json().then(errorData => {
+                    throw new Error(errorData.message || 'An unexpected error occurred');
+                });
+            }
+            return response.json();
+        })
         .then(data => {
-            if (data.token) {
+            console.log(data); // data 확인용 로그
+            if (!data) {
+                alert('Invalid email or password');
+            } else if (data.token && data.role) {
                 console.log('Token saved to local storage:', data.token);
                 authSetup.storeToken(data.token);
-
                 if (data.role === 'ADMIN') {
                     location.href = "/admin/v2";
                 } else if (data.role === 'USER') {
                     location.href = "/view/v2/home";
+                } else {
+                    alert('Please try logging in again');
                 }
-
-            } else {
-                alert('Invalid email or password');
             }
         })
         .catch((error) => {
             console.error('Error:', error);
+            alert("invalid id or password try again");
         });
     });
 </script>

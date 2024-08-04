@@ -1,5 +1,6 @@
 package gift.controller;
 
+import gift.dto.response.LoginResponse;
 import gift.service.MemberService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -24,23 +25,14 @@ public class MemberRestController {
 
     @PostMapping("/login")
     @Operation(summary = "로그인", description = "로그인을 처리합니다.")
-    public Map<String, String> login(@RequestParam String email, @RequestParam String password, HttpSession session) {
-        Map<String, String> response = new HashMap<>();
-        try {
-            String token = memberService.login(email, password);
-            if ("admin@kakao.com".equals(email) && "admin".equals(password)) {
-                session.setAttribute("user", email);
-                response.put("token", token);
-                response.put("role", "ADMIN");
-            } else {
-                session.setAttribute("user", email);
-                response.put("token", token);
-                response.put("role", "USER");
-            }
-            return response;
-        } catch (RuntimeException e) {
-            response.put("error", "Invalid email or password");
-            return response;
+    public LoginResponse login(@RequestParam String email, @RequestParam String password, HttpSession session) {
+        String token = memberService.login(email, password);
+        session.setAttribute("user", email);
+        if ("admin@kakao.com".equals(email) && "admin".equals(password)) {
+            return new LoginResponse(token, "ADMIN");
+        } else {
+            return new LoginResponse(token, "USER");
         }
     }
+
 }

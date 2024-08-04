@@ -34,7 +34,7 @@ public class HomeController {
         this.productService = productService;
         this.categoryService = categoryService;
         this.optionService = optionService;
-        this.wishlistService= wishlistService;
+        this.wishlistService = wishlistService;
     }
 
     @GetMapping("/home")
@@ -86,7 +86,6 @@ public class HomeController {
 
         model.addAttribute("categories", categoryService.getAllCategories());
         model.addAttribute("options", optionService.getAllOptions());
-
         model.addAttribute("product", new ProductDto(product));
         return "edit-product";
     }
