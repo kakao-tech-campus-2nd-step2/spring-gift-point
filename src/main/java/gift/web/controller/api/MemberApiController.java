@@ -1,10 +1,13 @@
 package gift.web.controller.api;
 
+import gift.authentication.annotation.LoginMember;
 import gift.service.MemberService;
+import gift.web.dto.MemberDetails;
 import gift.web.dto.request.LoginRequest;
 import gift.web.dto.request.member.CreateMemberRequest;
 import gift.web.dto.response.LoginResponse;
 import gift.web.dto.response.member.CreateMemberResponse;
+import gift.web.dto.response.member.PointResponse;
 import gift.web.dto.response.member.ReadMemberResponse;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -46,6 +49,12 @@ public class MemberApiController {
     @GetMapping("/{memberId}")
     public ResponseEntity<ReadMemberResponse> readMember(@PathVariable Long memberId) {
         ReadMemberResponse response = memberService.readMember(memberId);
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/points")
+    public ResponseEntity<PointResponse> readPoint(@LoginMember MemberDetails memberDetails) {
+        PointResponse response = memberService.readPoint(memberDetails.getId());
         return ResponseEntity.ok(response);
     }
 
