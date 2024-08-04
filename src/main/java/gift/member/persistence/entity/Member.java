@@ -24,9 +24,12 @@ public class Member {
     private String accessToken;
     private String refreshToken;
 
+    private Long point;
+
     public Member(String email, String password) {
         this.email = email;
         this.password = password;
+        this.point = 0L;
     }
 
     public Member(String email, OAuthProvider oAuthProvider, String accessToken,
@@ -35,6 +38,7 @@ public class Member {
         this.oAuthProvider = oAuthProvider;
         this.accessToken = accessToken;
         this.refreshToken = refreshToken;
+        this.point = 0L;
     }
 
     protected Member() {
@@ -63,5 +67,17 @@ public class Member {
 
     public String getAccessToken() {
         return accessToken;
+    }
+
+    public void addPoint(Long point) {
+        this.point += point;
+    }
+
+    public Long getPoint() {
+        return point;
+    }
+
+    public void subtractPoint(Long point) {
+        this.point -= point;
     }
 }

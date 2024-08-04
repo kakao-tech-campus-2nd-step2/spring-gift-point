@@ -24,6 +24,19 @@ public class TokenCheckInterceptor implements HandlerInterceptor {
             return true;
         }
 
+        if (request.getRequestURI().equals("/api/products")) {
+            if(request.getMethod().equals(HttpMethod.GET.name())) {
+                return true;
+            }
+        }
+
+        String pattern = "^/api/products/\\d+$";
+        if (request.getRequestURI().matches(pattern)) {
+            if(request.getMethod().equals(HttpMethod.GET.name())) {
+                return true;
+            }
+        }
+
         String rawToken = request.getHeader("Authorization");
 
         request.setAttribute("id", jwtValidator.validateAndParseToken(rawToken, TokenType.ACCESS));

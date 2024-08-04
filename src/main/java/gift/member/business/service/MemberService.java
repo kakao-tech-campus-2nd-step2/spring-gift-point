@@ -14,6 +14,7 @@ import java.util.Map;
 import javax.crypto.SecretKey;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class MemberService {
@@ -93,5 +94,18 @@ public class MemberService {
             .expiration(expireTime)
             .signWith(secretKey)
             .compact();
+    }
+
+    @Transactional
+    public void addPoint(Long memberId, Long point) {
+        var member = memberRepository.getMemberById(memberId);
+        member.addPoint(point);
+        memberRepository.saveMember(member);
+    }
+
+    @Transactional(readOnly = true)
+    public Long getPoint(Long memberId) {
+        var member = memberRepository.getMemberById(memberId);
+        return member.getPoint();
     }
 }

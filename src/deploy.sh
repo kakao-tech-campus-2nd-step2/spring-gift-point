@@ -12,7 +12,7 @@ then
 else
   echo "> 현재 구동중인 애플리케이션을 종료합니다. kill $CURRENT_PID"
   kill $CURRENT_PID
-  sleep 3
+  sleep 5
 fi
 
 echo "> 디렉토리를 이동합니다."

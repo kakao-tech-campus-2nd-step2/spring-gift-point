@@ -49,10 +49,12 @@ public class Order extends BaseTimeEntity {
 
     private String message;
 
+    private Long point;
+
     protected Order() {
     }
 
-    public Order(Product product, Member member, Long optionId, Integer quantity, Boolean hasCashReceipt, String cashReceiptType, String cashReceiptNumber, String message) {
+    public Order(Product product, Member member, Long optionId, Integer quantity, Boolean hasCashReceipt, String cashReceiptType, String cashReceiptNumber, String message, Long point) {
         this.product = product;
         this.member = member;
         this.optionId = optionId;
@@ -61,6 +63,7 @@ public class Order extends BaseTimeEntity {
         this.cashReceiptType = cashReceiptType;
         this.cashReceiptNumber = cashReceiptNumber;
         this.message = message;
+        this.point = point;
     }
 
     public Long getId() {

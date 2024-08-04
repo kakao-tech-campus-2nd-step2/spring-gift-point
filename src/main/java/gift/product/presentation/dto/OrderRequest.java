@@ -15,7 +15,8 @@ public class OrderRequest {
         Boolean hasCashReceipt,
         String cashReceiptType,
         String cashReceiptNumber,
-        String message
+        String message,
+        Long point
     ) {
 
         public OrderIn.Create toOrderInCreate(Long memberId) {
@@ -27,7 +28,8 @@ public class OrderRequest {
                 hasCashReceipt,
                 cashReceiptType,
                 cashReceiptNumber,
-                message
+                message,
+                point
             );
         }
     }
