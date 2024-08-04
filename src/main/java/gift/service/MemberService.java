@@ -1,5 +1,7 @@
 package gift.service;
 
+import gift.dto.MemberPointChargingRequestDto;
+import gift.dto.MemberPointViewResponseDto;
 import gift.dto.MemberRequestDto;
 import gift.dto.MemberResponseDto;
 import gift.entity.Member;
@@ -12,11 +14,9 @@ import java.util.List;
 @Service
 public class MemberService {
     private final MemberRepository memberRepository;
-    private final BasicTokenService basicTokenService;
 
     public MemberService(MemberRepository memberRepository, BasicTokenService basicTokenService) {
         this.memberRepository = memberRepository;
-        this.basicTokenService = basicTokenService;
     }
 
     public MemberResponseDto save(String email, String password) {
@@ -69,5 +69,23 @@ public class MemberService {
 
     public Member getById(Long memberId) {
         return memberRepository.findById(memberId).get();
+    }
+
+    public MemberPointViewResponseDto updateMemberPoint(MemberPointChargingRequestDto memberPointChargingRequestDto, Long memberId) {
+
+        Long addPoint = memberPointChargingRequestDto.getAmount();
+        Member oldMember = memberRepository.findById(memberId).get();
+
+        Long newPoint = oldMember.getPoint() + addPoint;
+
+        Member newMember = new Member(oldMember.getId(),oldMember.getEmail(),oldMember.getToken(), newPoint);
+        Member savedMember = memberRepository.save(newMember);
+
+        return new MemberPointViewResponseDto(savedMember.getPoint());
+    }
+
+    public MemberPointViewResponseDto getMemberPoint(Long memberId) {
+        Member member = memberRepository.findById(memberId).get();
+        return new MemberPointViewResponseDto(member.getPoint());
     }
 }
