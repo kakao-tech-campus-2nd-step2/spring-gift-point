@@ -3,17 +3,21 @@ package gift.filter;
 import gift.util.JwtTokenProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
 import jakarta.servlet.*;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+
 @Component
 public class JwtTokenFilter implements Filter {
 
     private final JwtTokenProvider jwtTokenProvider;
+    private static final Logger logger = LoggerFactory.getLogger(JwtTokenFilter.class);
 
     @Autowired
     public JwtTokenFilter(JwtTokenProvider jwtTokenProvider) {
@@ -42,7 +46,8 @@ public class JwtTokenFilter implements Filter {
     private String resolveToken(HttpServletRequest request) {
 
         String bearerToken = request.getHeader("Authorization");
-        System.out.println("at resolveToken mathod : " + bearerToken);
+        logger.info("at resolveToken method : {}", bearerToken);
+
         if (bearerToken != null && bearerToken.startsWith("Bearer ")) {
             return bearerToken.substring(7);
         }
