@@ -15,6 +15,6 @@ public record OrderRequest(
 ) {
 
     public Order toEntity(Member member, Option option) {
-        return new Order(member, option, message);
+        return new Order(member, option, quantity, message);
     }
 }
