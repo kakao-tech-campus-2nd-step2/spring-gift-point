@@ -36,14 +36,10 @@ public class KakaoLoginController {
         this.kakaoAuthProperties = kakaoAuthProperties;
     }
 
-    @PostMapping("/api/members/kakao")
+    @GetMapping("/api/members/kakao")
     @Operation(summary = "카카오 로그인 페이지 리다이렉트", description = "카카오 로그인 페이지로 리다이렉트한다.")
-    public RedirectView redirectLoginPage(HttpServletRequest request) {
-        String scheme = request.getScheme();             // http or https
-        String serverName = request.getServerName();     // hostname.com
-        int serverPort = request.getServerPort();        // 80 or 443
-        String contextPath = request.getContextPath();   // /myapp
-        baseUrl = scheme + "://" + serverName + ":" + serverPort + contextPath;
+    public RedirectView redirectLoginPage(@RequestParam("redirect_url") String redirectUrl) {
+        baseUrl = redirectUrl;
         System.out.println("baseUrl = " + baseUrl);
 
         String location = UriComponentsBuilder.fromHttpUrl("https://kauth.kakao.com/oauth/authorize")
@@ -68,16 +64,14 @@ public class KakaoLoginController {
 
             if (memberService.findByEmail(kakaoInfo.getEmail()).isPresent()) {
                 // 회원이 존재하면 로그인 처리 및 JWT 발급
-                String jwt = memberService.login(new MemberDto(kakaoInfo.getId(), kakaoInfo.getEmail(), kakaoInfo.getPassword()));
-                String redirectUrl = baseUrl + "?token=" + jwt;
-                return new RedirectView(redirectUrl);
+                String jwt = memberService.login(new MemberDto(kakaoInfo.getEmail(), kakaoInfo.getPassword()));
+                return new RedirectView(baseUrl + "?token=" + jwt);
 
             } else {
                 // 4. 회원이 없으면 회원가입 후 로그인 처리 및 JWT 발급
-                memberService.registerMember(new MemberDto(kakaoInfo.getId(), kakaoInfo.getEmail(), kakaoInfo.getPassword()), accessToken);
-                String jwt = memberService.login(new MemberDto(kakaoInfo.getId(), kakaoInfo.getEmail(), kakaoInfo.getPassword()));
-                String redirectUrl = baseUrl + "?token=" + jwt;
-                return new RedirectView(redirectUrl);
+                memberService.registerMember(new MemberDto(kakaoInfo.getEmail(), kakaoInfo.getPassword()), accessToken);
+                String jwt = memberService.login(new MemberDto(kakaoInfo.getEmail(), kakaoInfo.getPassword()));
+                return new RedirectView(baseUrl + "?token=" + jwt);
             }
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
