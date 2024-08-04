@@ -1,7 +1,6 @@
 package gift.entity;
 
-import gift.entity.product.Product;
-import gift.entity.wishlist.WishlistDTO;
+import gift.dto.wishlist.WishlistDTO;
 import gift.repository.ProductRepository;
 import jakarta.validation.Validator;
 import org.junit.jupiter.api.BeforeEach;
@@ -29,7 +28,7 @@ public class WishlistDTOTest {
 
     @BeforeEach
     void setUp() {
-        wishlist = new WishlistDTO(1L);
+        wishlist = new WishlistDTO(-1L);
     }
 
     @Test

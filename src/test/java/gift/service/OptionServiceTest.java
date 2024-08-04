@@ -1,11 +1,11 @@
 package gift.service;
 
-import gift.entity.option.Option;
-import gift.entity.option.OptionDTO;
-import gift.entity.product.Product;
-import gift.entity.product.ProductDTO;
-import gift.entity.user.User;
-import gift.entity.user.UserDTO;
+import gift.dto.option.OptionRequestDTO;
+import gift.dto.product.ProductRequestDto;
+import gift.dto.product.ProductResponseDto;
+import gift.dto.user.UserRequestDTO;
+import gift.entity.Option;
+import gift.entity.User;
 import gift.exception.ResourceNotFoundException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -39,10 +39,10 @@ public class OptionServiceTest {
     void setUp() {
         email = "test@gmail.com";
         String password = "test";
-        userService.signup(new UserDTO(email, password));
+        userService.signup(new UserRequestDTO(email, password));
         user = userService.findOne(email);
 
-        option = optionService.save(new OptionDTO("abc", 10), email);
+        option = optionService.save(new OptionRequestDTO("abc", 10), email);
     }
 
     @Test
@@ -61,7 +61,7 @@ public class OptionServiceTest {
     @Test
     void update() {
         // given
-        OptionDTO update = new OptionDTO("def", 456);
+        OptionRequestDTO update = new OptionRequestDTO("def", 456);
 
         // when
         Option expect = optionService.update(option.getId(), update, email);
@@ -112,7 +112,7 @@ public class OptionServiceTest {
     }
 
     @Test
-    void subtract_성공() {
+    void subtract_성공() throws InterruptedException {
         // given
         int total = 2834;
         int amount = 349;
@@ -129,12 +129,12 @@ public class OptionServiceTest {
     @Test
     void 같은_이름의_option이_product에_있을_때() {
         // given
-        Product product = productService.save(new ProductDTO("test", 123, "test.com", 1L), email);
-        OptionDTO optionDTO = new OptionDTO("abc", 456);
-        OptionDTO sameNameOption = new OptionDTO("abc", 456);
+        ProductResponseDto product = productService.save(new ProductRequestDto("test", 123, "test.com", -1L), email);
+        OptionRequestDTO optionRequestDTO = new OptionRequestDTO("abc", 456);
+        OptionRequestDTO sameNameOption = new OptionRequestDTO("abc", 456);
 
         // when
-        productService.addProductOption(product.getId(), List.of(optionDTO), email);
+        productService.addProductOption(product.getId(), List.of(optionRequestDTO), email);
 
         // then
         assertThrows(DataIntegrityViolationException.class,

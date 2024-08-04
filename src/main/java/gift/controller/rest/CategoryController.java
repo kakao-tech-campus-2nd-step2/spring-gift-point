@@ -1,9 +1,9 @@
 package gift.controller.rest;
 
-import gift.entity.category.Category;
-import gift.entity.category.CategoryDTO;
-import gift.entity.category.CategoryRequest;
-import gift.entity.response.MessageResponseDTO;
+import gift.dto.category.CategoryDTO;
+import gift.dto.category.CategoryRequest;
+import gift.dto.response.MessageResponseDTO;
+import gift.entity.Category;
 import gift.service.CategoryService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;

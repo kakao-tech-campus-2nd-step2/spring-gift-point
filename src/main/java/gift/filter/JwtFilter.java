@@ -29,7 +29,7 @@ public class JwtFilter implements Filter {
         HttpServletRequest request = (HttpServletRequest) servletRequest;
         HttpServletResponse response = (HttpServletResponse) servletResponse;
 
-        if(StringUtils.equals(request.getMethod(), "OPTIONS")){
+        if (StringUtils.equals(request.getMethod(), "OPTIONS")) {
             response.setStatus(HttpServletResponse.SC_OK);
             filterChain.doFilter(request, response);
             return;

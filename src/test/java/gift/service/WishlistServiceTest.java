@@ -1,9 +1,9 @@
 package gift.service;
 
-import gift.entity.product.Product;
-import gift.entity.product.ProductDTO;
-import gift.entity.user.UserDTO;
-import gift.entity.wishlist.WishlistDTO;
+import gift.dto.product.ProductRequestDto;
+import gift.dto.product.ProductResponseDto;
+import gift.dto.user.UserRequestDTO;
+import gift.entity.Product;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -21,9 +21,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class WishlistServiceTest {
 
     private String testEmail;
-    private Product product1;
-    private Product product2;
-    private Product product3;
+    private ProductResponseDto product1;
+    private ProductResponseDto product2;
+    private ProductResponseDto product3;
 
     @Autowired
     private WishlistService wishlistService;
@@ -35,10 +35,10 @@ public class WishlistServiceTest {
     @BeforeEach
     void setUp() {
         testEmail = "test@gmail.com";
-        userService.signup(new UserDTO(testEmail, "test"));
-        product1 = productService.save(new ProductDTO("test1", 123, "test.com", 1L), testEmail);
-        product2 = productService.save(new ProductDTO("test2", 123, "test.com", 1L), testEmail);
-        product3 = productService.save(new ProductDTO("test3", 123, "test.com", 1L), testEmail);
+        userService.signup(new UserRequestDTO(testEmail, "test"));
+        product1 = productService.save(new ProductRequestDto("test1", 123, "test.com", -1L), testEmail);
+        product2 = productService.save(new ProductRequestDto("test2", 123, "test.com", -1L), testEmail);
+        product3 = productService.save(new ProductRequestDto("test3", 123, "test.com", -1L), testEmail);
     }
 
     @Test

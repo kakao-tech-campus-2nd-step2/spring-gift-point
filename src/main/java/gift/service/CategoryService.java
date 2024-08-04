@@ -1,8 +1,8 @@
 package gift.service;
 
-import gift.entity.category.Category;
-import gift.entity.category.CategoryDTO;
-import gift.entity.category.CategoryRequest;
+import gift.dto.category.CategoryDTO;
+import gift.dto.category.CategoryRequest;
+import gift.entity.Category;
 import gift.exception.ResourceNotFoundException;
 import gift.repository.CategoryRepository;
 import org.springframework.stereotype.Service;
@@ -14,7 +14,7 @@ import java.util.Optional;
 @Service
 public class CategoryService {
 
-    Long defaultCategoryId = 1L;
+    Long defaultCategoryId = -1L;
 
     private final CategoryRepository categoryRepository;
 
@@ -39,7 +39,7 @@ public class CategoryService {
     @Transactional
     public Category update(Long id, CategoryRequest categoryRequest) {
         Category category = findById(id);
-        if (category.getId() == 1L) {
+        if (category.getId() == -1L) {
             throw new ResourceNotFoundException("Category not found with id " + id);
         }
         category.setCategory(categoryRequest);
@@ -49,7 +49,7 @@ public class CategoryService {
     @Transactional
     public void delete(Long id) {
         Category category = findById(id);
-        if (category.getId() == 1L) {
+        if (category.getId() == -1L) {
             throw new ResourceNotFoundException("Category not found with id " + id);
         }
         categoryRepository.delete(category);
@@ -58,7 +58,7 @@ public class CategoryService {
     public Category findById(Long id) {
         Optional<Category> category = categoryRepository.findById(id);
         if (category.isEmpty()) {
-            return categoryRepository.findById(1L).get(); // return defaultCategory
+            return categoryRepository.findById(-1L).get(); // return defaultCategory
         }
         return category.get();
     }

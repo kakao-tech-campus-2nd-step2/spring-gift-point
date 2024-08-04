@@ -4,7 +4,8 @@ create table users
 (
     id       bigint AUTO_INCREMENT PRIMARY KEY,
     email    varchar(50),
-    password varchar(255)
+    password varchar(255),
+    point    int
 );
 
 -- order
@@ -32,8 +33,8 @@ create table category
     description varchar(255)
 );
 -- category default data
-INSERT INTO category (name, color, image_url, description)
-VALUES ('DefaultCategory', '#FFFFFF', '', '');
+INSERT INTO category (id, name, color, image_url, description)
+VALUES (-1, 'DefaultCategory', '#FFFFFF', '', '');
 
 -- wishlist
 drop table if exists wishlist CASCADE;
@@ -80,8 +81,8 @@ create table option
     FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE
 );
 -- option default data
-INSERT INTO option (name, quantity)
-VALUES ('DefaultOption', 1);
+INSERT INTO option (id, name, quantity)
+VALUES (-1, 'DefaultOption', 1);
 
 -- product_option(중간 테이블)
 drop table if exists product_option CASCADE;
@@ -94,4 +95,16 @@ create table product_option
     FOREIGN KEY (product_id) REFERENCES product (id) ON DELETE CASCADE,
     FOREIGN KEY (option_id) REFERENCES option (id) ON DELETE CASCADE,
     UNIQUE (product_id, option_name)
+);
+
+-- point_histories
+drop table if exists point_histories CASCADE;
+create table point_histories
+(
+    id bigint AUTO_INCREMENT PRIMARY KEY,
+    user_id bigint,
+    previous_points int,
+    change_points int,
+    current_points int,
+    change_date TIMESTAMP
 );

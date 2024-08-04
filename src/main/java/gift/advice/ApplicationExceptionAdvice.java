@@ -1,15 +1,14 @@
 package gift.advice;
 
-import gift.entity.response.MessageResponseDTO;
+import gift.dto.response.MessageResponseDTO;
 import gift.exception.ResourceNotFoundException;
+import org.springframework.dao.OptimisticLockingFailureException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.server.ResponseStatusException;
-
-import javax.security.sasl.AuthenticationException;
 
 @RestControllerAdvice
 public class ApplicationExceptionAdvice {
@@ -30,11 +29,11 @@ public class ApplicationExceptionAdvice {
                 .body(new MessageResponseDTO(e.getMessage()));
     }
 
-    @ExceptionHandler(AuthenticationException.class)
-    @ResponseStatus(HttpStatus.UNAUTHORIZED)
-    public ResponseEntity<MessageResponseDTO> handleUnauthorized(AuthenticationException e) {
+    @ExceptionHandler(OptimisticLockingFailureException.class)
+    @ResponseStatus(HttpStatus.CONFLICT)
+    public ResponseEntity<MessageResponseDTO> handleConflict(OptimisticLockingFailureException e) {
         return ResponseEntity
-                .status(HttpStatus.UNAUTHORIZED)
+                .status(HttpStatus.CONFLICT)
                 .body(new MessageResponseDTO(e.getMessage()));
     }
 

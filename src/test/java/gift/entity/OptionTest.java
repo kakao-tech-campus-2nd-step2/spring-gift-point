@@ -1,7 +1,6 @@
 package gift.entity;
 
-import gift.entity.option.Option;
-import gift.entity.option.OptionDTO;
+import gift.dto.option.OptionRequestDTO;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -13,7 +12,7 @@ public class OptionTest {
         // given
         int total = 100;
         int amount = 30;
-        Option option = new Option(new OptionDTO("test", total));
+        Option option = new Option(new OptionRequestDTO("test", total));
 
         // when
         option.subtract(amount);

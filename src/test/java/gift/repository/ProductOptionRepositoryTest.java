@@ -1,10 +1,10 @@
 package gift.repository;
 
-import gift.entity.middle.ProductOption;
-import gift.entity.option.Option;
-import gift.entity.option.OptionDTO;
-import gift.entity.product.Product;
-import gift.entity.product.ProductDTO;
+import gift.dto.option.OptionRequestDTO;
+import gift.dto.product.ProductRequestDto;
+import gift.entity.Option;
+import gift.entity.Product;
+import gift.entity.ProductOption;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,8 +31,8 @@ public class ProductOptionRepositoryTest {
 
     @BeforeEach
     void setUp() {
-        product = productRepository.save(new Product(new ProductDTO("test", 123, "test.com", 1L)));
-        option = optionRepository.save(new Option(new OptionDTO("test", 123)));
+        product = productRepository.save(new Product(new ProductRequestDto("test", 123, "test.com", 1L)));
+        option = optionRepository.save(new Option(new OptionRequestDTO("test", 123)));
         productOptionRepository.save(new ProductOption(product, option, option.getName()));
     }
 

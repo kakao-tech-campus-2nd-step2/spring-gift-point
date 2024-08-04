@@ -1,19 +1,17 @@
 package gift.service;
 
-import gift.entity.kakao.KakaoErrorCode;
-import gift.entity.middle.ProductOption;
-import gift.entity.option.Option;
-import gift.entity.order.Order;
-import gift.entity.order.OrderDTO;
-import gift.entity.product.Product;
-import gift.entity.user.User;
-import gift.entity.wishlist.Wishlist;
+import gift.dto.PointHistory.PointHistoryDto;
+import gift.dto.kakao.KakaoErrorCode;
+import gift.dto.order.OrderDTO;
+import gift.entity.*;
 import gift.exception.KakaoException;
 import gift.exception.ResourceNotFoundException;
 import gift.repository.*;
+import jakarta.persistence.LockModeType;
 import jakarta.servlet.http.HttpSession;
 import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.repository.Lock;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
@@ -39,9 +37,10 @@ public class OrderService {
     private final ProductWishlistRepository productWishlistRepository;
     private final ProductService productService;
     private final UserService userService;
+    private final PointHistoryRepository pointHistoryRepository;
 
     @Autowired
-    public OrderService(UserRepository userRepository, WishlistRepository wishlistRepository, OrderRepository orderRepository, ProductOptionRepository productOptionRepository, OptionService optionService, ProductWishlistRepository productWishlistRepository, ProductService productService, UserService userService) {
+    public OrderService(UserRepository userRepository, WishlistRepository wishlistRepository, OrderRepository orderRepository, ProductOptionRepository productOptionRepository, OptionService optionService, ProductWishlistRepository productWishlistRepository, ProductService productService, UserService userService, PointHistoryRepository pointHistoryRepository) {
         this.userRepository = userRepository;
         this.wishlistRepository = wishlistRepository;
         this.orderRepository = orderRepository;
@@ -50,10 +49,11 @@ public class OrderService {
         this.productWishlistRepository = productWishlistRepository;
         this.productService = productService;
         this.userService = userService;
+        this.pointHistoryRepository = pointHistoryRepository;
     }
 
-    @Transactional
-    public Order save(HttpSession session, OrderDTO orderDTO) {
+    @Lock(LockModeType.OPTIMISTIC)
+    public synchronized Order save(HttpSession session, OrderDTO orderDTO) {
         String email = (String) session.getAttribute("email");
 
         ProductOption productOption = productOptionRepository
@@ -62,8 +62,26 @@ public class OrderService {
 
         User user = userService.findOne(email);
 
-        // 해당 옵션 수량 차감
+        Product product = productOption.getProduct();
         Option option = productOption.getOption();
+
+        PointHistoryDto pointHistoryDto = new PointHistoryDto();
+        pointHistoryDto.setUserId(user.getId());
+        pointHistoryDto.setPreviousPoints(user.getPoint());
+
+        // 포인트 사용 가능 조건
+        int totalPrice = option.getQuantity() * product.getPrice();
+        if (orderDTO.getPoint() > user.getPoint() || orderDTO.getPoint() > totalPrice) {
+            throw new IllegalArgumentException("Illegal order");
+        }
+        pointHistoryDto.setChangePoints(orderDTO.getPoint());
+        pointHistoryDto.setCurrentPoints(user.getPoint() - orderDTO.getPoint());
+
+        // 포인트 차감
+        user.subtractPoint(orderDTO.getPoint());
+        userRepository.save(user);
+
+        // 해당 옵션 수량 차감
         optionService.subtract(option.getId(), orderDTO.getQuantity());
 
         // 위시리스트에 있으면 삭제
@@ -76,6 +94,7 @@ public class OrderService {
         order.setUser(user);
 
         Order result = orderRepository.save(order);
+        pointHistoryRepository.save(new PointHistory(pointHistoryDto));
 
         // 카톡 나에게 전송
         String kakaoAccessToken = (String) session.getAttribute("kakaoAccessToken");
@@ -122,7 +141,7 @@ public class OrderService {
     }
 
     private LinkedMultiValueMap<String, String> makeRequestBody(OrderDTO order) {
-        String redirect_url = "http://localhost:8080/me";
+        String redirect_url = "/me";
         Product product = productService.findById(order.getProduct_id());
         String msg = product.getName() + " : " + Integer.toString(order.getQuantity()) + "\n" + order.getMessage();
 

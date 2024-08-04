@@ -1,14 +1,11 @@
 package gift.controller.rest;
 
-import gift.entity.option.Option;
-import gift.entity.option.OptionDTO;
-import gift.entity.response.MessageResponseDTO;
+import gift.dto.option.OptionRequestDTO;
+import gift.dto.option.OptionResponseDto;
+import gift.dto.response.MessageResponseDTO;
+import gift.entity.Option;
 import gift.service.OptionService;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.media.Schema;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
@@ -30,47 +27,34 @@ public class OptionController {
 
     @Operation(summary = "모든 옵션 조회", description = "모든 옵션을 조회합니다.")
     @GetMapping()
-    public ResponseEntity<List<Option>> getAllOptions() {
+    public ResponseEntity<List<OptionResponseDto>> getAllOptions() {
         return ResponseEntity.ok().body(optionService.findAll());
     }
 
     @Operation(summary = "옵션 조회", description = "id로 옵션을 조회합니다.")
     @GetMapping("/{id}")
-    public ResponseEntity<Option> getOptionById(@PathVariable Long id) {
-        return ResponseEntity.ok().body(optionService.findById(id));
+    public ResponseEntity<OptionResponseDto> getOptionById(@PathVariable Long id) {
+        Option option = optionService.findById(id);
+        return ResponseEntity.ok().body(new OptionResponseDto(option));
     }
 
     @Operation(summary = "옵션 생성", description = "옵션을 생성합니다.")
     @PostMapping()
-    public ResponseEntity<Option> createOption(@RequestBody @Valid OptionDTO optionDTO, HttpSession session) {
+    public ResponseEntity<OptionResponseDto> createOption(@RequestBody @Valid OptionRequestDTO optionRequestDTO, HttpSession session) {
         String email = (String) session.getAttribute("email");
-        return ResponseEntity.ok().body(optionService.save(optionDTO, email));
+        Option option = optionService.save(optionRequestDTO, email);
+        return ResponseEntity.ok().body(new OptionResponseDto(option));
     }
 
     @Operation(summary = "옵션 편집", description = "옵션을 편집합니다.")
-    @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "옵션 생성 성공",
-                    content = @Content(schema = @Schema(implementation = Option.class))),
-            @ApiResponse(responseCode = "401", description = "인가 기능이 확인되지 않은 접근",
-                    content = @Content(schema = @Schema(implementation = MessageResponseDTO.class))),
-            @ApiResponse(responseCode = "404", description = "대상 옵션 조회 살패",
-                    content = @Content(schema = @Schema(implementation = MessageResponseDTO.class)))
-    })
     @PutMapping("/{id}")
-    public ResponseEntity<Option> updateOption(@PathVariable Long id, @RequestBody @Valid OptionDTO optionDTO, HttpSession session) {
+    public ResponseEntity<OptionResponseDto> updateOption(@PathVariable Long id, @RequestBody @Valid OptionRequestDTO optionRequestDTO, HttpSession session) {
         String email = (String) session.getAttribute("email");
-        return ResponseEntity.ok().body(optionService.update(id, optionDTO, email));
+        Option option = optionService.update(id, optionRequestDTO, email);
+        return ResponseEntity.ok().body(new OptionResponseDto(option));
     }
 
     @Operation(summary = "옵션 삭제", description = "옵션을 삭제합니다.")
-    @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "옵션 생성 성공",
-                    content = @Content(schema = @Schema(implementation = MessageResponseDTO.class))),
-            @ApiResponse(responseCode = "401", description = "인가 기능이 확인되지 않은 접근",
-                    content = @Content(schema = @Schema(implementation = MessageResponseDTO.class))),
-            @ApiResponse(responseCode = "404", description = "대상 옵션 조회 살패",
-                    content = @Content(schema = @Schema(implementation = MessageResponseDTO.class)))
-    })
     @DeleteMapping("/{id}")
     public ResponseEntity<MessageResponseDTO> deleteOption(@PathVariable Long id, HttpSession session) {
         String email = (String) session.getAttribute("email");

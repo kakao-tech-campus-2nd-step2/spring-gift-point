@@ -8,7 +8,7 @@ import org.aspectj.lang.annotation.Aspect;
 //@Component
 public class TimeTraceAop {
 
-    @Around("execution(* gift..*(..))")
+    @Around("execution(* gift..*(..))&& !within(gift.filter..*)")
     public Object execute(ProceedingJoinPoint joinPoint) throws Throwable {
         long start = System.currentTimeMillis();
         System.out.println("START: " + joinPoint.toString());

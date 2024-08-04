@@ -1,8 +1,8 @@
 package gift.service;
 
-import gift.entity.middle.ProductOption;
-import gift.entity.product.Product;
-import gift.entity.user.User;
+import gift.entity.Product;
+import gift.entity.ProductOption;
+import gift.entity.User;
 import gift.repository.ProductOptionRepository;
 import gift.repository.ProductRepository;
 import org.junit.jupiter.api.Test;
@@ -34,7 +34,7 @@ public class ProductServiceMockTest {
     void 상품에_옵션이_한개_이하_존재할_때_옵션_삭제_불가() {
         // given
         User user = new User();
-        user.setId(1L);
+        user.setId(-1L);
         Product product = new Product();
         product.setUser(user);
 

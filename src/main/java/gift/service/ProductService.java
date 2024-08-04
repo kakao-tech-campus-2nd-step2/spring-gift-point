@@ -1,24 +1,16 @@
 package gift.service;
 
-import gift.entity.category.Category;
-import gift.entity.middle.ProductOption;
-import gift.entity.middle.ProductWishlist;
-import gift.entity.option.Option;
-import gift.entity.option.OptionDTO;
-import gift.entity.product.Product;
-import gift.entity.product.ProductDTO;
-import gift.entity.product.ProductResponse;
-import gift.entity.user.User;
-import gift.entity.wishlist.Wishlist;
+import gift.dto.option.OptionRequestDTO;
+import gift.dto.product.ProductRequestDto;
+import gift.dto.product.ProductResponseDto;
+import gift.dto.product.ProductResponseWithDetailsDto;
+import gift.entity.*;
 import gift.exception.ResourceNotFoundException;
 import gift.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -50,72 +42,62 @@ public class ProductService {
         this.optionService = optionService;
     }
 
-    public ProductResponse findOne(Long id) {
+    public ProductResponseWithDetailsDto findOne(Long id) {
         Product product = findById(id);
-        Category category = categoryService.findById(product.getCategory_id());
+        Category category = categoryService.findById(product.getCategoryId());
         List<Option> options = productOptionRepository
                 .findByProductId(id)
                 .stream().map(op -> op.getOption())
                 .collect(Collectors.toList());
-        ProductResponse res = new ProductResponse(product, category, options);
-        return res;
+        return new ProductResponseWithDetailsDto(product, category, options);
     }
 
-    public Page<Product> findAll(Pageable pageable) {
-        return productRepository.findAll(pageable);
-    }
-
-    public List<Wishlist> getProductWishlist(Long productId) {
-        List<ProductWishlist> productWishlists = productWishlistRepository.findByProductId(productId);
-        List<Wishlist> wishlists = productWishlists.stream()
-                .map(productWishlist -> productWishlist.getWishlist())
+    public List<ProductResponseDto> findAll(Pageable pageable) {
+        return productRepository.findAll(pageable).getContent()
+                .stream()
+                .map(product -> new ProductResponseDto(product))
                 .collect(Collectors.toList());
-        return wishlists;
     }
 
     // category
-    public Page<Product> getProductsByCategory(Long categoryId, Pageable pageable) {
-        return productRepository.findAllByCategoryId(categoryId, pageable);
+    public List<ProductResponseDto> getProductsByCategory(Long categoryId, Pageable pageable) {
+        return productRepository.findAllByCategoryId(categoryId, pageable).getContent()
+                .stream()
+                .map(product -> new ProductResponseDto(product))
+                .collect(Collectors.toList());
     }
 
     @Transactional
-    public Product save(ProductDTO productDTO, String email) {
+    public ProductResponseDto save(ProductRequestDto productRequestDto, String email) {
         User user = userService.findOne(email);
 
-        Product product = productRepository.save(new Product(productDTO, user));
-        Option defaultOption = optionRepository.findById(1L)
-                .orElseThrow(() -> new IllegalArgumentException("Option not found with id: 1L"));
-        categoryRepository.findById(productDTO.getCategory_id())
-                .orElseThrow(() -> new IllegalArgumentException("Category not found with id: " + productDTO.getCategory_id()));
+        Product product = productRepository.save(new Product(productRequestDto, user));
+        Option defaultOption = optionRepository.findById(-1L)
+                .orElseThrow(() -> new IllegalArgumentException("Option not found with id: -1L"));
+        categoryRepository.findById(productRequestDto.getCategory_id())
+                .orElseThrow(() -> new IllegalArgumentException("Category not found with id: " + productRequestDto.getCategory_id()));
 
         productOptionRepository.save(new ProductOption(product, defaultOption, defaultOption.getName()));
 
-        return product;
+        return new ProductResponseDto(product);
     }
 
     @Transactional
-    public Product update(Long id, ProductDTO productDTO, String email) {
-        if (!productMatchesUser(id, email)) {
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Unauthorized");
-        }
-
+    public ProductResponseDto update(Long id, ProductRequestDto productRequestDto, String email) {
         Product product = findById(id);
-        if (product.getCategory_id() != productDTO.getCategory_id()) {
-            Category category = categoryService.findById(productDTO.getCategory_id());
-            productDTO.setCategory_id(category.getId());
+        if (product.getCategoryId() != productRequestDto.getCategory_id()) {
+            Category category = categoryService.findById(productRequestDto.getCategory_id());
+            productRequestDto.setCategory_id(category.getId());
         }
 
-        product.updateProduct(productDTO);
+        product.updateProduct(productRequestDto);
 
-        return productRepository.save(product);
+        Product updatedProduct = productRepository.save(product);
+        return new ProductResponseDto(updatedProduct);
     }
 
     @Transactional
     public void delete(Long id, String email) {
-        if (!productMatchesUser(id, email)) {
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Unauthorized");
-        }
-
         Product product = findById(id);
         product.setUser(null);
 
@@ -131,15 +113,12 @@ public class ProductService {
     }
 
     @Transactional
-    public List<Option> addProductOption(Long productId, List<OptionDTO> optionDTOs, String email) {
-        if (!productMatchesUser(productId, email)) {
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Unauthorized");
-        }
+    public List<Option> addProductOption(Long productId, List<OptionRequestDTO> optionRequestDTOS, String email) {
         Product product = findById(productId);
         List<Option> res = new ArrayList<>();
 
-        for (OptionDTO optionDTO : optionDTOs) {
-            Option option = optionService.save(optionDTO, email);
+        for (OptionRequestDTO optionRequestDTO : optionRequestDTOS) {
+            Option option = optionService.save(optionRequestDTO, email);
             productOptionRepository.save(new ProductOption(product, option, option.getName()));
             res.add(option);
         }
@@ -148,31 +127,19 @@ public class ProductService {
     }
 
     @Transactional
-    public void editProductOption(Long productId, Long optionId, OptionDTO optionDTO, String email) {
-        if (!productMatchesUser(productId, email)) {
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Unauthorized");
-        }
+    public void editProductOption(Long productId, Long optionId, OptionRequestDTO optionRequestDTO, String email) {
         Product product = findById(productId);
-        optionService.update(optionId, optionDTO, email);
+        optionService.update(optionId, optionRequestDTO, email);
     }
 
     @Transactional
     public void deleteProductOption(Long productId, Long optionId, String email) {
-        if (!productMatchesUser(productId, email)) {
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Unauthorized");
-        }
         // 옵션이 하나 이상인지 확인 로직
         if (productOptionRepository.findByProductId(productId).size() <= 1) {
             throw new IllegalArgumentException("Option should have at least one product option");
         }
 
         productOptionRepository.deleteByProductIdAndOptionId(productId, optionId);
-    }
-
-    public boolean productMatchesUser(Long id, String email) {
-        User user = userService.findOne(email);
-        Product product = findById(id);
-        return user.getId() == product.getUser().getId();
     }
 
     public Product findById(Long id) {

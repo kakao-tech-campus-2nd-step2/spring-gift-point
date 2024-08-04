@@ -1,6 +1,6 @@
 package gift.controller.view;
 
-import gift.entity.product.Product;
+import gift.entity.Product;
 import gift.repository.ProductRepository;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -34,6 +34,11 @@ public class AdminController {
     @GetMapping("/deleted")
     public String getAdminDeletedPage() {
         return "adminDeleted";
+    }
+
+    @GetMapping("/charge")
+    public String getAdminChargePointPage() {
+        return "adminChargePoint";
     }
 
     @GetMapping("/{id}")

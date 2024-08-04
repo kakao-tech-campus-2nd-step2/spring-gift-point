@@ -1,9 +1,9 @@
 package gift.service;
 
-import gift.entity.middle.ProductWishlist;
-import gift.entity.product.Product;
-import gift.entity.wishlist.Wishlist;
-import gift.entity.wishlist.WishlistResponse;
+import gift.dto.wishlist.WishlistResponse;
+import gift.entity.Product;
+import gift.entity.ProductWishlist;
+import gift.entity.Wishlist;
 import gift.repository.ProductRepository;
 import gift.repository.ProductWishlistRepository;
 import gift.repository.WishlistRepository;
