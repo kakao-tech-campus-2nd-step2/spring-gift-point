@@ -4,6 +4,7 @@ import gift.kakao.login.service.KakaoLoginService;
 import gift.user.domain.User;
 import gift.user.domain.dto.LoginRequest;
 import gift.user.domain.dto.LoginResponse;
+import gift.user.domain.dto.PointDTO;
 import gift.user.service.UserService;
 import gift.utility.JwtUtil;
 import io.swagger.v3.oas.annotations.Operation;
@@ -16,6 +17,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -92,5 +94,14 @@ public class KakaoLoginController {
         RedirectView redirectView = new RedirectView();
         redirectView.setUrl(urlWithToken);
         return redirectView;
+    }
+
+    @GetMapping("/point")
+    @Operation(summary = "사용자의 현재 포인트 받기")
+    public ResponseEntity<PointDTO> getUsersPoint(@RequestHeader("Authorization") String token){
+        String email = JwtUtil.extractEmail(token);
+        User user = userService.findByEmail(email)
+            .orElseThrow(() -> new IllegalArgumentException("email " + email + "이 없습니다."));
+        return new ResponseEntity<>(new PointDTO(user.getPoint()), HttpStatus.OK);
     }
 }
