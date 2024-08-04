@@ -35,6 +35,10 @@ public class Order {
 
     private Long productId;
 
+    private int totalPrice;
+
+    private String cashReceipt;
+
 
     @ManyToOne
     @JoinColumn(name = "member_id")
@@ -43,11 +47,16 @@ public class Order {
 
 
     public Order(Long productId,Long optionId, int quantity, String message,Member member) {
+        this(productId, optionId, quantity, message, member, 0,"");
+    }
+    public Order(Long productId,Long optionId, int quantity, String message,Member member, int totalPrice, String cashReceipt) {
         this.productId = productId;
         this.message = message;
         this.optionId = optionId;
         this.quantity = quantity;
         this.member = member;
         this.orderDateTime = LocalDateTime.now();
+        this.totalPrice = totalPrice;
+        this.cashReceipt = cashReceipt;
     }
 }
