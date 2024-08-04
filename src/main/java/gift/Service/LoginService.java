@@ -108,7 +108,7 @@ public class LoginService {
 
 
     public Member signupMember(String id, String accessToken){ // 기본 비밀번호 id로 설정
-        return memberRepository.save(new Member(null, id+"@kakao.com",id,accessToken));
+        return memberRepository.save(new Member(null, id+"@kakao.com",id,accessToken,1000));
     }
 
 }
