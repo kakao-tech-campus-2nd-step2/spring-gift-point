@@ -4,6 +4,7 @@ import gift.auth.dto.LoginReqDto;
 import gift.auth.dto.LoginResDto;
 import gift.auth.dto.RegisterResDto;
 import gift.auth.service.AuthService;
+import gift.common.annotation.AllowAnonymous;
 import gift.member.dto.MemberReqDto;
 import gift.member.dto.MemberResDto;
 import gift.member.service.MemberService;
@@ -39,6 +40,7 @@ public class MemberController {
             responses = {
                     @ApiResponse(responseCode = "200", description = "회원 가입 성공"),
             })
+    @AllowAnonymous
     public ResponseEntity<RegisterResDto> register(@RequestBody MemberReqDto memberReqDto) {
         return ResponseEntity.ok(memberService.register(memberReqDto));
     }
@@ -48,6 +50,7 @@ public class MemberController {
             responses = {
                     @ApiResponse(responseCode = "200", description = "로그인 성공"),
             })
+    @AllowAnonymous
     public ResponseEntity<LoginResDto> login(@RequestBody LoginReqDto loginReqDto) {
         return ResponseEntity.ok(authService.login(loginReqDto));
     }

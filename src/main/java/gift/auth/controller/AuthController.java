@@ -2,6 +2,7 @@ package gift.auth.controller;
 
 import gift.auth.service.AuthService;
 import gift.auth.token.AuthToken;
+import gift.common.annotation.AllowAnonymous;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -27,6 +28,7 @@ public class AuthController {
             responses = {
                     @ApiResponse(responseCode = "200", description = "로그인 성공"),
             })
+    @AllowAnonymous
     public ResponseEntity<AuthToken> login(@RequestParam("code") String code) {
         AuthToken token = authService.login(code);
         return ResponseEntity.ok(token);

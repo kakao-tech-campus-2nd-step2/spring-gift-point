@@ -23,10 +23,6 @@ public class JwtInterceptor implements HandlerInterceptor {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
 
-        if (CorsUtils.isCorsRequest(request)) {
-            return true;
-        }
-
         if (CorsUtils.isPreFlightRequest(request)) {
             return true;
         }
