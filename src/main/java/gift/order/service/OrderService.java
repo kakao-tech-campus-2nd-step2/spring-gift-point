@@ -67,7 +67,6 @@ public class OrderService {
         optionRepository.save(option);
         /// 3-2. 주문 상품이 위시리스트에 있으면 삭제
         Long productId = orderProduct.getId(); // 상품 id
-        System.out.println("lllllllllllproductId = " + productId);
         if (wishService.getWishByProductId(productId) != null) {
             wishService.deleteWish(productId); // 위시리스트에 해당 상품이 있으면 삭제
         }
@@ -126,6 +125,10 @@ public class OrderService {
         return orderPage.map(order -> new OrderPageResponse(
                 order.getId(),
                 order.getOptionId(),
+                optionRepository.findById(order.getOptionId()).getName(),
+                productService.getProductByOptionId(order.getOptionId()).getName(),
+                productService.getProductByOptionId(order.getOptionId()).getPrice(),
+                productService.getProductByOptionId(order.getOptionId()).getImageUrl(),
                 order.getQuantity(),
                 order.getOrderDateTime(),
                 order.getMessage()
