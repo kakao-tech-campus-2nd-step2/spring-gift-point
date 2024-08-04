@@ -3,6 +3,7 @@ package gift.domain.order.entity;
 import gift.domain.member.entity.Member;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
+import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -35,8 +36,9 @@ public class Order {
     @Column
     private String recipientMessage;
 
+    @Embedded
     @Column(nullable = false)
-    private int purchasePrice;
+    private Price purchasePrice;
 
     @CreationTimestamp
     @Column(updatable = false)
@@ -73,10 +75,10 @@ public class Order {
     }
 
     public int getPurchasePrice() {
-        return purchasePrice;
+        return purchasePrice.getValue();
     }
 
-    public void setPurchasePrice(int purchasePrice) {
+    public void assignPurchasePrice(Price purchasePrice) {
         this.purchasePrice = purchasePrice;
     }
 

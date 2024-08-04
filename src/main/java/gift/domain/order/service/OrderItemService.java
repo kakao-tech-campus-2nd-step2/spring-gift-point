@@ -4,6 +4,7 @@ import gift.domain.member.entity.Member;
 import gift.domain.order.dto.OrderItemRequest;
 import gift.domain.order.entity.Order;
 import gift.domain.order.entity.OrderItem;
+import gift.domain.order.entity.Price;
 import gift.domain.product.entity.Option;
 import gift.domain.product.entity.Product;
 import gift.domain.product.repository.ProductJpaRepository;
@@ -32,16 +33,16 @@ public class OrderItemService {
     }
 
     @Transactional
-    public int createMultiple(Member member, Order order, List<OrderItemRequest> orderItemRequests) {
-        int totalPrice = 0;
+    public Price createMultiple(Member member, Order order, List<OrderItemRequest> orderItemRequests) {
+        Price totalPrice = new Price(0);
         for (OrderItemRequest orderItemRequest : orderItemRequests) {
-            totalPrice += createOne(member, order, orderItemRequest);
+            totalPrice.add(createOne(member, order, orderItemRequest));
         }
         return totalPrice;
     }
 
     @Transactional
-    public int createOne(Member member, Order order, OrderItemRequest orderItemRequest) {
+    public Price createOne(Member member, Order order, OrderItemRequest orderItemRequest) {
         Long optionId = orderItemRequest.optionId();
         Product product = productJpaRepository.findByOptionId(optionId)
             .orElseThrow(() -> new InvalidOptionInfoException("error.invalid.option.id"));
@@ -55,7 +56,7 @@ public class OrderItemService {
 
         wishlistJpaRepository.deleteByMemberAndProduct(member, product);
 
-        return product.getPrice() * orderItemRequest.quantity();
+        return new Price(product.getPrice() * orderItemRequest.quantity());
     }
 
     private void buy(Long optionId, int quantity) {

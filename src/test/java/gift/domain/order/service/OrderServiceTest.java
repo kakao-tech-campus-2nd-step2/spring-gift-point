@@ -3,10 +3,7 @@ package gift.domain.order.service;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.doNothing;
 
 import gift.domain.member.entity.AuthProvider;
 import gift.domain.member.entity.Member;
@@ -18,15 +15,12 @@ import gift.domain.order.dto.OrderRequest;
 import gift.domain.order.dto.OrderResponse;
 import gift.domain.order.entity.Order;
 import gift.domain.order.entity.OrderItem;
+import gift.domain.order.entity.Price;
 import gift.domain.order.repository.OrderJpaRepository;
 import gift.domain.product.entity.Category;
 import gift.domain.product.entity.Option;
 import gift.domain.product.entity.Product;
-import gift.domain.product.repository.OptionJpaRepository;
-import gift.domain.product.repository.ProductJpaRepository;
-import gift.domain.wishlist.repository.WishlistJpaRepository;
 import java.util.List;
-import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -46,13 +40,7 @@ class OrderServiceTest {
     private OrderJpaRepository orderJpaRepository;
 
     @MockBean
-    private ProductJpaRepository productJpaRepository;
-
-    @MockBean
-    private WishlistJpaRepository wishlistJpaRepository;
-
-    @MockBean
-    private OptionJpaRepository optionJpaRepository;
+    private OrderItemService orderItemService;
 
     @MockBean
     private MessageService messageService;
@@ -83,13 +71,12 @@ class OrderServiceTest {
         );
         MultipleOrderRequest orderRequest = new MultipleOrderRequest(orderItemRequests, "Test Message");
         Order order = orderRequest.toOrder(member);
-        MultipleOrderResponse expected = MultipleOrderResponse.from(orderRequest.toOrder(member), 180000);
+        order.addOrderItem(orderItemRequests.get(0).toOrderItem(order, product, option1));
+        order.addOrderItem(orderItemRequests.get(1).toOrderItem(order, product, option2));
+        order.assignPurchasePrice(new Price(162000));
+        MultipleOrderResponse expected = MultipleOrderResponse.from(order, 180000);
 
-        given(productJpaRepository.findByOptionId(anyLong())).willReturn(Optional.of(product));
-        doNothing().when(wishlistJpaRepository).deleteByMemberAndProduct(any(Member.class), any(Product.class));
-        given(optionJpaRepository.findByIdWithOptimisticLock(eq(1L))).willReturn(Optional.of(option1));
-        given(optionJpaRepository.findByIdWithOptimisticLock(eq(2L))).willReturn(Optional.of(option2));
-
+        given(orderItemService.createMultiple(any(Member.class), any(Order.class), any(List.class))).willReturn(new Price(180000));
         given(orderJpaRepository.save(any(Order.class))).willReturn(order);
         given(messageService.sendMessageToMe(any(Member.class), any(MultipleOrderResponse.class))).willReturn("0");
 
@@ -112,12 +99,10 @@ class OrderServiceTest {
         Order order = orderRequest.toOrder(member);
         OrderItem orderItem = new OrderItem(1L, order, product, option1, 15);
         order.addOrderItem(orderItem);
+        order.assignPurchasePrice(new Price(60750));
 
-        given(productJpaRepository.findByOptionId(anyLong())).willReturn(Optional.of(product));
-        doNothing().when(wishlistJpaRepository).deleteByMemberAndProduct(any(Member.class), any(Product.class));
-        given(optionJpaRepository.findByIdWithOptimisticLock(eq(1L))).willReturn(Optional.of(option1));
-
-        given(orderJpaRepository.save(any(Order.class))).willAnswer(invocation -> invocation.getArgument(0));
+        given(orderItemService.createOne(any(Member.class), any(Order.class), any(OrderItemRequest.class))).willReturn(new Price(67500));
+        given(orderJpaRepository.save(any(Order.class))).willReturn(order);
 
         // when
         OrderResponse response = orderService.createOne(orderRequest, member);

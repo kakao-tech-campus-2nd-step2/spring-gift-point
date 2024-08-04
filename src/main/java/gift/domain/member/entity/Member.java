@@ -1,5 +1,6 @@
 package gift.domain.member.entity;
 
+import gift.domain.order.entity.Price;
 import gift.exception.IllegalPointUseException;
 import gift.exception.LackOfPointException;
 import jakarta.persistence.Column;
@@ -93,7 +94,9 @@ public class Member {
         this.point += amount;
     }
 
-    public void usePoint(int amount) {
+    public void usePoint(Price price) {
+        int amount = price.getValue();
+
         if (amount <= 0) {
             throw new IllegalPointUseException("error.member.negative.point.value");
         }
