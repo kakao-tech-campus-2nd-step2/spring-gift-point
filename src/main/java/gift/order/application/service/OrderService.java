@@ -1,6 +1,7 @@
 package gift.order.application.service;
 
 import gift.auth.KakaoClient;
+import gift.exception.InvalidOrder;
 import gift.exception.NotFoundMember;
 import gift.exception.NotFoundOption;
 import gift.exception.NotFoundOrder;
@@ -18,6 +19,7 @@ import gift.wishlist.persistence.WishlistRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class OrderService {
@@ -45,6 +47,7 @@ public class OrderService {
         this.wishlistRepository = wishlistRepository;
     }
 
+    @Transactional
     public OrderResponseDto createOrder(Member member, OrderRequestDto orderRequestDto)
         throws NotFoundMember {
         Option option = optionRepository.findById(orderRequestDto.optionId())
@@ -58,8 +61,15 @@ public class OrderService {
 
         orderRepository.save(order);
 
-        member.addPoint(option.getProduct().getPrice());
-        member.usePoint(orderRequestDto.point());
+        int productPrice = option.getProduct().getPrice();
+
+        member.addPoint(productPrice);
+
+        if (productPrice < orderRequestDto.point()) {
+            throw new InvalidOrder("유효하지 않은 주문입니다. 포인트가 부족합니다.");
+        } else {
+            member.usePoint(orderRequestDto.point());
+        }
 
         return new OrderResponseDto(
             order.getId(),
@@ -100,6 +110,7 @@ public class OrderService {
         orderRepository.delete(order);
     }
 
+    @Transactional
     public void removeFromWishlistIfExists(Long memberId, Long optionId) {
         Option option = optionRepository.findById(optionId)
             .orElseThrow(() -> new NotFoundOption("유효하지 않은 옵션입니다."));
