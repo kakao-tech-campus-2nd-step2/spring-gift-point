@@ -41,4 +41,5 @@ public class WebConfig implements WebMvcConfigurer {
         registry.addInterceptor(authInterceptor)
                 .addPathPatterns("/api/orders/**");
     }
+
 }
