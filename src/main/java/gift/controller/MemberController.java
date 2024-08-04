@@ -5,6 +5,7 @@ import gift.util.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -36,7 +37,7 @@ public class MemberController {
                 + kakaoClientId + "&redirect_uri=" + kakaoRedirectUri;
         HttpHeaders headers = new HttpHeaders();
         headers.add("Location", kakaoAuthUrl);
-        return ResponseEntity.status(302).headers(headers).build();
+        return ResponseEntity.status(HttpStatus.FOUND).headers(headers).build();
     }
 
     @GetMapping("/kakao/callback")
@@ -48,7 +49,7 @@ public class MemberController {
             headers.add("Content-Type", "application/json");
             return ResponseEntity.ok().headers(headers).body("{\"token\": \"" + token + "\"}");
         } catch (Exception e) {
-            return ResponseEntity.status(400).body("Authentication failed");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Authentication failed");
         }
     }
 }

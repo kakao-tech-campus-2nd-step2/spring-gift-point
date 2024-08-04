@@ -9,7 +9,7 @@ import io.jsonwebtoken.Claims;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -23,10 +23,12 @@ import java.util.Map;
 public class WishlistController {
 
     private final WishlistService wishlistService;
+    private final JwtUtil jwtUtil;
 
     @Autowired
-    public WishlistController(WishlistService wishlistService) {
+    public WishlistController(WishlistService wishlistService, JwtUtil jwtUtil) {
         this.wishlistService = wishlistService;
+        this.jwtUtil = jwtUtil;
     }
 
     @PostMapping
@@ -37,7 +39,7 @@ public class WishlistController {
             wishlistService.addProduct(memberId, wishRequest);
             return ResponseEntity.ok().build();
         } catch (IllegalArgumentException e) {
-            return ResponseEntity.status(404).body(e.getMessage());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
     }
 
@@ -66,7 +68,7 @@ public class WishlistController {
             wishlistService.deleteItem(id);
             return ResponseEntity.ok().build();
         } catch (IllegalArgumentException e) {
-            return ResponseEntity.status(404).body(e.getMessage());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
     }
 }
