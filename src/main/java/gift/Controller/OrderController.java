@@ -4,6 +4,7 @@ import gift.Annotation.LoginMemberResolver;
 import gift.Model.MemberDto;
 import gift.Model.OrderRequestDto;
 import gift.Service.KakaoTalkService;
+import gift.Service.MemberService;
 import gift.Service.OrderService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -21,11 +22,13 @@ public class OrderController {
 
     private final OrderService orderService;
     private final KakaoTalkService kakaoTalkService;
+    private final MemberService memberService;
 
     @Autowired
-    public OrderController(OrderService orderService, KakaoTalkService kakaoTalkService) {
+    public OrderController(OrderService orderService, KakaoTalkService kakaoTalkService, MemberService memberService) {
         this.orderService = orderService;
         this.kakaoTalkService = kakaoTalkService;
+        this.memberService = memberService;
     }
 
     @PostMapping
@@ -50,6 +53,9 @@ public class OrderController {
         //토큰으로 메시지 보내기
         if (token != null) { //
             try {
+                if(memberDto.getPoint() > memberService.findByMemberId(memberDto.getId()).get().getPoint()) {
+                    return ResponseEntity.badRequest().body("Not enough points");
+                }
                 int totalPrice = orderService.calculateTotalPrice(orderRequestDtoList) - memberDto.getPoint(); //포인트만큼 차감! -> 사용자는 포인트를 사용만 한다!
                 kakaoTalkService.sendMessageToMe(token, orderRequestDtoList, totalPrice);
             } catch (Exception e) {
