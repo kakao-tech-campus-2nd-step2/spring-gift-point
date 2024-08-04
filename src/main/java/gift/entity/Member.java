@@ -10,6 +10,7 @@ public class Member extends BaseEntity {
     private Long kakaoId;
     private String nickname;
     private String kakaoToken;
+    private int points; // New field for points balance
 
     @OneToMany(mappedBy = "member")
     private List<Wish> wishes = new ArrayList<>();
@@ -20,6 +21,7 @@ public class Member extends BaseEntity {
         this.kakaoId = kakaoId;
         this.nickname = nickname;
         this.kakaoToken = kakaoToken;
+        this.points = 0; // Initialize points to zero
     }
 
     public Long getKakaoId() {
@@ -52,5 +54,24 @@ public class Member extends BaseEntity {
 
     public void setWishes(List<Wish> wishes) {
         this.wishes = wishes;
+    }
+
+    public int getPoints() {
+        return points;
+    }
+
+    public void setPoints(int points) {
+        this.points = points;
+    }
+
+    public void addPoints(int points) {
+        this.points += points;
+    }
+
+    public void deductPoints(int points) {
+        if (this.points < points) {
+            throw new IllegalArgumentException("Insufficient points");
+        }
+        this.points -= points;
     }
 }
