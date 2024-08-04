@@ -9,6 +9,7 @@ import gift.util.SortUtils;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Min;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -52,8 +53,8 @@ public class WishlistController {
 
     @GetMapping
     @Operation(summary = "위시 리스트 상품 조회 (페이지네이션 적용)", description = "회원의 위시 리스트에 있는 상품을 페이지 단위로 조회한다.")
-    public ResponseEntity<WishlistPageResponse> getWishlistForCurrentUser(@RequestParam(defaultValue = "20") int size,
-                                                                          @RequestParam(defaultValue = "0") int page,
+    public ResponseEntity<WishlistPageResponse> getWishlistForCurrentUser(@RequestParam(defaultValue = "20") @Min(1) int size,
+                                                                          @RequestParam(defaultValue = "0") @Min(0) int page,
                                                                           @RequestParam(defaultValue = "id,desc") String sort,
                                                                           @Parameter(hidden = true) @LoginMember TokenAuth tokenAuth) {
         Long memberId = tokenAuth.getMemberId();

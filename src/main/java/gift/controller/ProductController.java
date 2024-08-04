@@ -13,6 +13,7 @@ import gift.service.ProductService;
 import gift.util.SortUtils;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Min;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -63,8 +64,8 @@ public class ProductController {
     @GetMapping
     @Operation(summary = "상품 목록 조회 (페이지네이션 적용)", description = "특정 카테고리의 상품 목록을 페이지 단위로 조회한다.")
     public ResponseEntity<ProductPageResponse> getProducts(@RequestParam(required = false) Long categoryId,
-                                           @RequestParam(defaultValue = "20") int size,
-                                           @RequestParam(defaultValue = "0") int page,
+                                           @RequestParam(defaultValue = "20") @Min(1) int size,
+                                           @RequestParam(defaultValue = "0") @Min(0) int page,
                                            @RequestParam(defaultValue = "price,desc") String sort) {
         Pageable pageable = PageRequest.of(page, size, Sort.by(SortUtils.parseSortParameter(sort)));
         ProductPageResponse productPageResponse = productService.getProducts(categoryId, pageable);
