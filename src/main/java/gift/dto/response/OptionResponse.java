@@ -18,12 +18,20 @@ public class OptionResponse {
         this.productId = productId;
     }
 
+    public Long getId() {
+        return id;
+    }
+
     public String getName() {
         return name;
     }
 
     public Integer getQuantity() {
         return quantity;
+    }
+
+    public Long getProductId() {
+        return productId;
     }
 
     public static OptionResponse fromOption(Option option) {
