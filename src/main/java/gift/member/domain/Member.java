@@ -1,5 +1,6 @@
 package gift.member.domain;
 
+import gift.auth.KakaoResponse;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
@@ -20,6 +21,9 @@ public class Member {
 
     @Column(nullable = true, length = 255)
     private String password;
+
+    @Column(nullable = false)
+    private int point = 0;
 
     @Enumerated(STRING)
     @Column(nullable = false)
@@ -79,8 +83,14 @@ public class Member {
         this.kakaoRefreshTokenExpiresAt = kakaoRefreshTokenExpiresAt;
     }
 
-    public static Member ofKakao(Long kakaoId, String email) {
-        return new Member(null, email, null, KAKAO, kakaoId);
+    public static Member fromKakao(KakaoResponse memberInfo) {
+        return new Member(
+                null,
+                memberInfo.kakaoAccount().email(),
+                null,
+                KAKAO,
+                memberInfo.id()
+        );
     }
 
     public Long getId() {
@@ -93,6 +103,10 @@ public class Member {
 
     public String getPassword() {
         return password;
+    }
+
+    public int getPoint() {
+        return point;
     }
 
     public Long getKakaoId() {
@@ -152,5 +166,9 @@ public class Member {
         this.kakaoRefreshToken = refreshToken != null ? refreshToken : this.kakaoRefreshToken;
         this.kakaoAccessTokenExpiresAt = kakaoAccessTokenExpiresAt;
         this.kakaoRefreshTokenExpiresAt = kakaoRefreshTokenExpiresAt;
+    }
+
+    public void addPoint(int amount) {
+        this.point += amount;
     }
 }
