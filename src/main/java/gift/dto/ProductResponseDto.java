@@ -9,18 +9,18 @@ public class ProductResponseDto {
     @Schema(description = "상품 이름")
     private String name;
     @Schema(description = "상품 가격")
-    private Integer price;
+    private Long price;
     @Schema(description = "상품 url")
     private String url;
 
-    public ProductResponseDto(Long id, String name, Integer price, String url) {
+    public ProductResponseDto(Long id, String name, Long price, String url) {
         this.id = id;
         this.name = name;
         this.price = price;
         this.url = url;
     }
 
-    public ProductResponseDto(String name, Integer price, String url) {
+    public ProductResponseDto(String name, Long price, String url) {
         this(null, name, price, url);
     }
 
@@ -32,7 +32,7 @@ public class ProductResponseDto {
         return name;
     }
 
-    public Integer getPrice() {
+    public Long getPrice() {
         return price;
     }
 

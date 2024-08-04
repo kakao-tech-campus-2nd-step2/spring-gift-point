@@ -1,6 +1,7 @@
 package gift.service;
 
 import gift.dto.MemberPointChargingRequestDto;
+import gift.dto.MemberPointSubtractRequestDto;
 import gift.dto.MemberPointViewResponseDto;
 import gift.dto.MemberRequestDto;
 import gift.dto.MemberResponseDto;
@@ -77,6 +78,19 @@ public class MemberService {
         Member oldMember = memberRepository.findById(memberId).get();
 
         Long newPoint = oldMember.getPoint() + addPoint;
+
+        Member newMember = new Member(oldMember.getId(),oldMember.getEmail(),oldMember.getToken(), newPoint);
+        Member savedMember = memberRepository.save(newMember);
+
+        return new MemberPointViewResponseDto(savedMember.getPoint());
+    }
+
+    public MemberPointViewResponseDto updateMemberPoint(MemberPointSubtractRequestDto memberPointSubtractRequestDto, Long memberId) {
+
+        Long subtractPoint = memberPointSubtractRequestDto.getAmount();
+        Member oldMember = memberRepository.findById(memberId).get();
+
+        Long newPoint = oldMember.getPoint() - subtractPoint;
 
         Member newMember = new Member(oldMember.getId(),oldMember.getEmail(),oldMember.getToken(), newPoint);
         Member savedMember = memberRepository.save(newMember);

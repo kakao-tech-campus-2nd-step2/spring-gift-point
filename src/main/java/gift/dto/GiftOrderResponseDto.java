@@ -17,25 +17,20 @@ public class GiftOrderResponseDto {
     private LocalDateTime orderDateTime;
     @Schema(description = "요청 메세지")
     private String message;
+    @Schema(description = "할인 전 가격 ")
+    private Long originalPrice;
+    @Schema(description = "할인 후 가격 ")
+    private Long finalPrice;
 
 
-    public GiftOrderResponseDto(Long id, Long optionId, Long quantity, LocalDateTime orderDateTime, String message) {
+    public GiftOrderResponseDto(Long id, Long optionId, Long quantity, LocalDateTime orderDateTime, String message, Long originalPrice, Long finalPrice) {
         this.id = id;
         this.optionId = optionId;
         this.quantity = quantity;
         this.orderDateTime = orderDateTime;
         this.message = message;
-    }
-
-    public GiftOrderResponseDto(Long optionId, Long quantity, LocalDateTime orderDateTime, String message) {
-        this.optionId = optionId;
-        this.quantity = quantity;
-        this.orderDateTime = orderDateTime;
-        this.message = message;
-    }
-
-    public static GiftOrderResponseDto fromEntity(GiftOrder giftOrder) {
-        return new GiftOrderResponseDto(giftOrder.getId(), giftOrder.getQuantity(), giftOrder.getOrderDateTime(), giftOrder.getMessage());
+        this.originalPrice = originalPrice;
+        this.finalPrice = finalPrice;
     }
 
     public Long getId() {
@@ -56,5 +51,13 @@ public class GiftOrderResponseDto {
 
     public String getMessage() {
         return message;
+    }
+
+    public Long getOriginalPrice() {
+        return originalPrice;
+    }
+
+    public Long getFinalPrice() {
+        return finalPrice;
     }
 }

@@ -14,7 +14,7 @@ public class ProductRequestDto {
     @Schema(description = "상품 이름")
     private String name;
     @Schema(description = "상품 가격")
-    private Integer price;
+    private Long price;
     @Schema(description = "상품 url")
     private String url;
     @Schema(description = "상품이 속한 카테고리")
@@ -22,7 +22,7 @@ public class ProductRequestDto {
     @Schema(description = "상품이 갖고 있는 옵션들")
     private List<Option> options;
 
-    public ProductRequestDto(String name, Integer price, String url, Category category) {
+    public ProductRequestDto(String name, Long price, String url, Category category) {
         if (checkValidProductName(name)) {
             this.name = name;
             this.price = price;
@@ -31,7 +31,7 @@ public class ProductRequestDto {
         }
     }
 
-    public ProductRequestDto(Long id, String name, Integer price, String url, Category category) {
+    public ProductRequestDto(Long id, String name, Long price, String url, Category category) {
         if (checkValidProductName(name)) {
             this.id = id;
             this.name = name;
@@ -110,7 +110,7 @@ public class ProductRequestDto {
         return name;
     }
 
-    public Integer getPrice() {
+    public Long getPrice() {
         return price;
     }
 
