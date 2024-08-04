@@ -42,7 +42,7 @@ public class UserController {
         UserDto response = userService.login(request);
         return ResponseEntity.ok()
             .header("Authorization", response.accessToken())
-            .body(UserResponse.Login.from(response.name()));
+            .body(UserResponse.Login.from(response.name(), response.role()));
     }
 
     @GetMapping("/point")

@@ -45,7 +45,7 @@ public class UserService {
 
         String token = jwtTokenProvider.createToken(user.getEmail());
 
-        return UserDto.from(token, user.getName());
+        return UserDto.from(token, user.getName(), user.getRole());
     }
 
     public Point getPoint(Long userId) {

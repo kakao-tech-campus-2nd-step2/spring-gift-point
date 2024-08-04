@@ -45,9 +45,9 @@ public class KakaoUtil {
         return email;
     }
 
-    public TokenInfoResponse getToken(String code) {
+    public TokenInfoResponse getToken(String code, String redirectUrl) {
         var url = kakaoProperties.tokenUrl();
-        LinkedMultiValueMap<String, String> body = createAccessBody(code);
+        LinkedMultiValueMap<String, String> body = createAccessBody(code, redirectUrl);
 
         try {
             TokenInfoResponse response = restClient.post()
@@ -64,21 +64,21 @@ public class KakaoUtil {
         }
     }
 
-    public String getRequestUrl() {
+    public String getRequestUrl(String redirectUrl) {
         var kakaoLoginUrl = UriComponentsBuilder.fromHttpUrl(kakaoProperties.authUrl())
             .queryParam("scope", "account_email")
             .queryParam("response_type", "code")
-            .queryParam("redirect_uri", kakaoProperties.redirectUri())
+            .queryParam("redirect_uri", redirectUrl)
             .queryParam("client_id", kakaoProperties.clientId())
             .build().toString();
         return kakaoLoginUrl;
     }
 
-    public LinkedMultiValueMap<String, String> createAccessBody(String code) {
+    public LinkedMultiValueMap<String, String> createAccessBody(String code, String redirectUrl) {
         var body = new LinkedMultiValueMap<String, String>();
         body.add("grant_type", "authorization_code");
         body.add("client_id", kakaoProperties.clientId());
-        body.add("redirect_url", kakaoProperties.redirectUri());
+        body.add("redirect_url", redirectUrl);
         body.add("code", code);
         return body;
     }

@@ -29,21 +29,26 @@ public class OAuthController {
 
     @GetMapping("")
     @Operation(summary = "카카오 로그인 리다이렉션", description = "카카오 인가 코드를 발급받습니다.")
-    public ResponseEntity<Void> login() {
-        String loginUrl = kakaoUtil.getRequestUrl();
+    public ResponseEntity<Void> login(
+        @RequestParam("redirect-url") String redirectUrl
+    ) {
+        String loginUrl = kakaoUtil.getRequestUrl(redirectUrl);
 
         HttpHeaders headers = new HttpHeaders();
         headers.add("Location", loginUrl);
 
-        return new ResponseEntity<>(headers, HttpStatus.FOUND);
+        return new ResponseEntity<>(headers, HttpStatus.SEE_OTHER);
     }
 
     @GetMapping("/callback")
     @Operation(summary = "카카오 로그인", description = "카카오 로그인을 시도합니다.")
-    public ResponseEntity<UserResponse.Login> registerUser(@RequestParam("code") String code) {
-        UserDto response = OAuthService.register(code);
+    public ResponseEntity<UserResponse.Login> registerUser(
+        @RequestParam("code") String code,
+        @RequestParam("redirect-url") String redirectUrl
+    ) {
+        UserDto response = OAuthService.register(code, redirectUrl);
         return ResponseEntity.ok()
             .header("Authorization", response.accessToken())
-            .body(UserResponse.Login.from(response.name()));
+            .body(UserResponse.Login.from(response.name(), response.role()));
     }
 }

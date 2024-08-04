@@ -1,14 +1,15 @@
 package gift.controller.user.dto;
 
+import gift.common.enums.Role;
 import gift.model.User;
 import java.util.List;
 
 public class UserResponse {
 
-    public record Login(String name) {
+    public record Login(String name, Role role) {
 
-        public static Login from(String name) {
-            return new Login(name);
+        public static Login from(String name, Role role) {
+            return new Login(name, role);
         }
     }
 
