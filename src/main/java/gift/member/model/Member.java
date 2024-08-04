@@ -79,4 +79,8 @@ public class Member extends BaseEntity {
     public void accumulatePoint(int accumulatedPoint) {
         point = point + accumulatedPoint;
     }
+
+    public void addPoint(Integer point) {
+        this.point = this.point + point;
+    }
 }
