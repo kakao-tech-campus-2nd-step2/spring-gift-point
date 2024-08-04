@@ -1,11 +1,15 @@
 package gift.domain;
 
+import gift.exception.customException.PointsNotAvailableException;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Min;
 
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
+
+import static gift.exception.errorMessage.Messages.*;
 
 @Entity
 @Table(name="members")
@@ -15,8 +19,11 @@ public class Member {
     private Long id;
     @Column(name = "email", nullable = false, unique = true)
     private String email;
-    @Column(name = "password", nullable = true)
+    @Column(name = "password")
     private String password;
+    @Column(name = "points")
+    @Min(value = 0, message = POINTS_CANNOT_BE_NEGATIVE)
+    private int points;
 
     @OneToMany(mappedBy = "member", cascade = {CascadeType.PERSIST, CascadeType.MERGE}, orphanRemoval = false)
     private List<Wish> wishes = new ArrayList<>();
@@ -45,20 +52,17 @@ public class Member {
     protected Member() {
     }
 
-    private Member(Builder builder) {
-        this.email = builder.email;
-        this.password = builder.password;
-    }
-
-    public Member(Long id, String email, String password) {
+    public Member(Long id, String email, String password, int points) {
         this.id = id;
         this.email = email;
         this.password = password;
+        this.points = points;
     }
 
-    public Member(String email, String password) {
+    public Member(String email, String password, int points) {
         this.email = email;
         this.password = password;
+        this.points = points;
     }
 
     public Long getId() {
@@ -77,22 +81,45 @@ public class Member {
         return wishes;
     }
 
-    public static class Builder{
-        private String email;
-        private String password;
+    public int getPoints() {
+        return points;
+    }
 
-        public Builder email(String email) {
-            this.email = email;
-            return this;
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public void setPoints(int points) {
+        this.points = points;
+    }
+
+    public void setWishes(List<Wish> wishes) {
+        this.wishes = wishes;
+    }
+
+    public void addPoints(int addPoints){
+        this.points += addPoints;
+    }
+
+    public void usePoints(int usePoints){
+        this.points -= usePoints;
+    }
+
+    public void validatePointsUsage(int pointsUsed, int price) {
+        if(pointsUsed > this.points) {
+            throw new PointsNotAvailableException(INSUFFICIENT_POINTS);
         }
 
-        public Builder password(String password) {
-            this.password = password;
-            return this;
-        }
-
-        public Member build() {
-            return new Member(this);
+        if(pointsUsed > price / 2) {
+            throw new PointsNotAvailableException(POINTS_USAGE_LIMIT);
         }
     }
 

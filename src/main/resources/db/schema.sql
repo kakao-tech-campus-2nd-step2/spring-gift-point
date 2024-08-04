@@ -14,10 +14,11 @@ CREATE TABLE CATEGORIES (
                             DESCRIPTION TEXT NOT NULL
 );
 
-CREATE TABLE MEMBERS (
-                         ID BIGINT AUTO_INCREMENT PRIMARY KEY,
-                         EMAIL VARCHAR(255) NOT NULL UNIQUE,
-                         PASSWORD VARCHAR(255)
+CREATE TABLE members (
+                         id BIGINT AUTO_INCREMENT PRIMARY KEY,
+                         email VARCHAR(255) NOT NULL UNIQUE,
+                         password VARCHAR(255),
+                         points INT DEFAULT 0
 );
 
 CREATE TABLE PRODUCTS (
@@ -51,6 +52,9 @@ CREATE TABLE ORDERS (
                         QUANTITY INT NOT NULL,
                         ORDER_DATE_TIME DATETIME NOT NULL,
                         MESSAGE TEXT,
+                        POINTS_USED INT,
+                        POINTS_RECEIVED INT,
+                        PAYMENT INT,
                         MEMBER_ID BIGINT,
                         OPTION_ID BIGINT,
                         FOREIGN KEY (MEMBER_ID) REFERENCES MEMBERS(ID),

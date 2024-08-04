@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>포인트 적립</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+<div class="container mt-5">
+    <h1 class="mb-4">포인트 적립</h1>
+    <form th:action="@{/members/{id}/points(id=${member.id})}" method="post">
+        <div class="form-group">
+            <label for="points">적립할 포인트</label>
+            <input type="number" class="form-control" id="points" name="points" min="0" required>
+        </div>
+        <button type="submit" class="btn btn-primary">적립</button>
+        <a href="#" th:href="@{/members}" class="btn btn-secondary">취소</a>
+    </form>
+</div>
+
+<!-- Bootstrap JS and dependencies -->
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

@@ -61,7 +61,7 @@ public class KakaoMemberController {
         String code = servletRequest.getParameter("code");
         String token = kakaoService.getKakaoToken(code);
         String userEmail = kakaoService.getKakaoUserEmail(token);
-        memberService.save(new MemberRequest(null,userEmail,null));
+        memberService.save(new MemberRequest(null,userEmail,null,3000));
 
         HttpHeaders headers = new HttpHeaders();
         headers.set("Authorization", "Bearer " + token);
