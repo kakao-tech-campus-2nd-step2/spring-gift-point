@@ -67,6 +67,7 @@ public class OrderService {
         optionRepository.save(option);
         /// 3-2. 주문 상품이 위시리스트에 있으면 삭제
         Long productId = orderProduct.getId(); // 상품 id
+        System.out.println("lllllllllllproductId = " + productId);
         if (wishService.getWishByProductId(productId) != null) {
             wishService.deleteWish(productId); // 위시리스트에 해당 상품이 있으면 삭제
         }

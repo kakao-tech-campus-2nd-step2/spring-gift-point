@@ -5,11 +5,6 @@ plugins {
     // id 'jacoco'
 }
 
-java {
-    sourceCompatibility = JavaVersion.VERSION_21 // 자바 버전 명시
-    targetCompatibility = JavaVersion.VERSION_21 // 자바 버전 명시
-}
-
 tasks.bootJar {
     archiveFileName.set("spring-gift-1.0-SNAPSHOT.jar") // 자바 빌드 후 jar 파일명 명확히 기재
 }

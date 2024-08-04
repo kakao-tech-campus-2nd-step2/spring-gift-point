@@ -75,7 +75,7 @@ public class WishController {
                                       @Parameter(hidden = true) @RequestHeader("Authorization") String authorizationHeader,
                                       @RequestParam int page,
                                       @RequestParam int size,
-                                      @RequestParam(defaultValue = "price,desc") String sort
+                                      @RequestParam(defaultValue = "createdDate,desc") String sort
     ) {
         // 토큰 추출
         String token = jwtUtil.extractToken(authorizationHeader);

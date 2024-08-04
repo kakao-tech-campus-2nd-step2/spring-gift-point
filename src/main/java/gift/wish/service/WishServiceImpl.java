@@ -96,9 +96,11 @@ public class WishServiceImpl implements WishService {
 
     @Override
     @Transactional
-    public void deleteWish(Long wishId) {
-        Wish wish = wishRepository.findById(wishId)
+    public void deleteWish(Long productId) {
+        Wish wish = wishRepository.findByProductId(productId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Wish not found"));
+        System.out.println("lllllwish.getCreatedDate() = " + wish.getCreatedDate());
+
         wishRepository.delete(wish);
     }
 

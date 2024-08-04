@@ -56,7 +56,7 @@ public class OrderController {
             @Parameter(hidden = true) @RequestHeader("Authorization") String authorizationHeader,
             @RequestParam int page,
             @RequestParam int size,
-            @RequestParam(defaultValue = "price,desc") String sort) {
+            @RequestParam(defaultValue = "orderDateTime,desc") String sort) {
         // 토큰 추출
         String token = jwtUtil.extractToken(authorizationHeader);
         if (token == null || !jwtUtil.isTokenValid(token)) {
