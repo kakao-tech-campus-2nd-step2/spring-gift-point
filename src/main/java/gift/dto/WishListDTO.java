@@ -2,7 +2,7 @@ package gift.dto;
 
 
 public class WishListDTO {
-    private Long userId;
+    private Long wishId;
 
     private Long productId;
 
@@ -11,17 +11,17 @@ public class WishListDTO {
     /**
      * 해당 생성자를 통해 WishListDTO 객체를 생성
      *
-     * @param userId 멤버의 고유 ID
+     * @param wishId 멤버의 고유 ID
      * @param productId 상품의 고유 ID
      */
-    public WishListDTO(Long userId, Long productId) {
-        this.userId = userId;
+    public WishListDTO(Long wishId, Long productId) {
+        this.wishId = wishId;
         this.productId = productId;
 
     }
 
-    public Long getUserId() {
-        return userId;
+    public Long getWishId() {
+        return wishId;
     }
 
     public Long getProductId() {

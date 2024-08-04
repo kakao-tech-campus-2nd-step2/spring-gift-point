@@ -16,6 +16,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
@@ -25,41 +26,66 @@ public class WishListService {
     private final MemberRepository memberRepository;
 
     @Autowired
-    public WishListService(WishListRepository wishListRepository,
-        WishListRepository wishListRepository1, ProductRepository productRepository, MemberRepository memberRepository) {
-        this.wishListRepository = wishListRepository1;
+    public WishListService(WishListRepository wishListRepository, ProductRepository productRepository, MemberRepository memberRepository) {
+        this.wishListRepository = wishListRepository;
         this.productRepository = productRepository;
         this.memberRepository = memberRepository;
     }
 
+    @Transactional
     private WishListEntity dtoToEntity(Long userId, ProductDTO product) throws Exception {
         if (product.getId() == null) {
+            System.out.println("Product ID is null: " + product);
             throw new IllegalArgumentException("상품 id는 null일 수 없습니다.");
         }
+        System.out.println("1차");
 
         MemberEntity memberEntity = memberRepository.findById(userId)
             .orElseThrow(() -> new EntityNotFoundException("유저가 존재하지 않습니다."));
-        System.out.println("memberEntity:" + memberEntity);
+        System.out.println("2차");
 
         ProductEntity productEntity = productRepository.findById(product.getId())
             .orElseThrow(() -> new EntityNotFoundException("상품이 존재하지 않습니다."));
-        System.out.println("productEntity:" + productEntity);
+
+        System.out.println("3차");
         return new WishListEntity(productEntity, memberEntity);
     }
 
+//    public WishListEntity dtoToEntity(Long userId, ProductDTO product) {
+//        if(memberRepository.findById(userId) == null) {
+//            throw new EntityNotFoundException("유저가 존재하지 않습니다.");
+//        }
+//
+//        if (productRepository.findById(product.getId()) == null) {
+//            throw new EntityNotFoundException("상품이 존재하지 않습니다.");
+//        }
+//        return new WishListEntity()
+//    }
+
+    @Transactional(readOnly = true)
     public Page<WishListDTO> readWishList(Long userId, Pageable pageable) {
         Page<WishListEntity> wishListEntities = wishListRepository.findByUserEntity_Id(userId, pageable);
         return wishListEntities.map(WishListEntity::toDTO);
     }
 
+    @Transactional(propagation = Propagation.REQUIRES_NEW, rollbackFor = Exception.class)
+    public WishListDTO addProductToWishList(Long userId, ProductDTO product) throws Exception {
+        WishListEntity wishList = wishListRepository.save(dtoToEntity(userId, product));
+        return WishListEntity.toDTO(wishList);
+    }
+
+    // 특정 위시리스트만 삭제
     @Transactional
-    public void addProductToWishList(Long userId, ProductDTO product) throws Exception {
-        wishListRepository.save(dtoToEntity(userId, product));
+    public void removeWishList(Long id) {
+        if (!wishListRepository.existsById(id)) {
+            throw new EntityNotFoundException("위시리스트 항목이 존재하지 않습니다.");
+        }
+        wishListRepository.deleteById(id);
     }
 
     // 특정 유저의 id로 만들어진 위시리스트 전체 삭제
     @Transactional
-    public void removeWishList(Long userId) {
+    public void removeUserWishList(Long userId) {
         List<WishListEntity> wishListEntities = wishListRepository.findByUserEntity_Id(userId,Pageable.unpaged()).getContent();
         wishListRepository.deleteAll(wishListEntities);
     }

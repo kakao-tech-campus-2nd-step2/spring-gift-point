@@ -8,6 +8,7 @@ import java.util.List;
 
 public class ProductDTO {
     // 필드 생성
+    @NotNull
     private Long id;
 
     @NotNull(message = "상품명은 필수 항목입니다.")
