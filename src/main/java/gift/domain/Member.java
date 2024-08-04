@@ -15,6 +15,9 @@ public class Member extends BaseEntity {
     @Column(nullable = false)
     private String password;
 
+    @Column(nullable = false)
+    private int points = 1000;
+
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Wish> wishes = new HashSet<>();
 
@@ -25,6 +28,7 @@ public class Member extends BaseEntity {
         super();
         this.email = email;
         this.password = password;
+        this.points = 1000;
     }
 
     public String getEmail() {
@@ -39,4 +43,11 @@ public class Member extends BaseEntity {
         return wishes;
     }
 
+    public Integer getPoints() {
+        return points;
+    }
+
+    public void setPoints(int points) {
+        this.points = points;
+    }
 }

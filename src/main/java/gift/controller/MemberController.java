@@ -1,12 +1,15 @@
 package gift.controller;
 
+import gift.anotation.LoginMember;
 import gift.domain.Member;
+import gift.dto.AddPointsDTO;
 import gift.service.MemberService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -67,5 +70,38 @@ public class MemberController {
         headers.add("Content-Type", "application/json");
 
         return new ResponseEntity<>(jsonResponse, headers, HttpStatus.OK);
+    }
+
+    @GetMapping("/point")
+    public ResponseEntity<Map<String, Integer>> getPoint(@LoginMember Member member) {
+        int points = member.getPoints();
+        Map<String, Integer> response = new HashMap<>();
+        response.put("point", points);
+        return ResponseEntity.ok(response);
+    }
+
+    @PostMapping("/point")
+    public ResponseEntity<Map<String, Integer>> usePoint(@LoginMember Member member, @RequestBody Map<String, Integer> request) {
+        int pointsToUse = request.get("point");
+        int currentPoints = member.getPoints();
+
+        if (currentPoints < 1000) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("error", -1));
+        }
+
+        if (pointsToUse > currentPoints) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("error", -1));
+        }
+
+        member.setPoints(currentPoints - pointsToUse);
+        memberService.save(member);
+
+        return ResponseEntity.ok(Map.of("remainingPoints", member.getPoints()));
+    }
+
+    @PostMapping("/addPoints")
+    public ResponseEntity<Void> addPoints(@RequestBody AddPointsDTO addPointsDTO) {
+        memberService.addPoints(addPointsDTO.getMemberId(), addPointsDTO.getPoints());
+        return ResponseEntity.ok().build();
     }
 }

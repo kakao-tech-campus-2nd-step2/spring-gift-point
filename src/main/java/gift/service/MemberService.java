@@ -5,6 +5,7 @@ import gift.domain.Member;
 import gift.repository.MemberRepository;
 import gift.util.JwtUtil;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
@@ -32,5 +33,16 @@ public class MemberService {
         } else {
             throw new RuntimeException("Invalid email or password");
         }
+    }
+    public Member save(Member member) {
+        return memberRepository.save(member);
+    }
+
+    @Transactional
+    public void addPoints(Long memberId, int points) {
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new IllegalArgumentException("Member not found"));
+        member.setPoints(member.getPoints() + points);
+        memberRepository.save(member);
     }
 }
