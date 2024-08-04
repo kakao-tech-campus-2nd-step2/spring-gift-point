@@ -5,6 +5,7 @@ import gift.dto.ProductDto;
 import gift.entity.Category;
 import gift.entity.Option;
 import gift.entity.Product;
+import gift.exception.OptionNotFoundException;
 import gift.exception.ProductNotFoundException;
 import gift.exception.CategoryNotFoundException;
 import gift.repository.CategoryRepository;
@@ -31,38 +32,41 @@ public class ProductService {
         this.optionRepository = optionRepository;
     }
 
-    public Page<Product> getProducts(Pageable pageable) {
-        return productRepository.findAll(pageable);
+    public Page<ProductDto> getProducts(Pageable pageable) {
+        return productRepository.findAll(pageable).map(this::convertToDto);
+    }
+
+    public Page<ProductDto> getProductsByCategory(String categoryId, Pageable pageable) {
+        if (categoryId == null || categoryId.isEmpty()) {
+            return getProducts(pageable);
+        } else {
+            return productRepository.findByCategoryId(Long.valueOf(categoryId), pageable).map(this::convertToDto);
+        }
+    }
+
+    private ProductDto convertToDto(Product product) {
+        return new ProductDto(
+                product.getId(),
+                product.getName(),
+                product.getPrice(),
+                product.getImgUrl(),
+                product.getCategory().getId(),
+                product.getOptions().stream()
+                        .map(option -> new OptionDto(option.getId(), option.getName(), option.getQuantity(), product.getId()))
+                        .collect(Collectors.toList())
+        );
     }
 
     public List<ProductDto> findAll() {
         List<Product> products = productRepository.findAll();
         return products.stream()
-                .map(product -> new ProductDto(
-                        product.getId(),
-                        product.getName(),
-                        product.getPrice(),
-                        product.getImgUrl(),
-                        product.getCategory().getId(),
-                        product.getOptions().stream()
-                                .map(option -> new OptionDto(option.getId(), option.getName(), option.getQuantity()))
-                                .collect(Collectors.toList())
-                ))
+                .map(this::convertToDto)
                 .collect(Collectors.toList());
     }
 
     public Optional<ProductDto> findById(Long id) {
         Optional<Product> product = productRepository.findById(id);
-        return product.map(prod -> new ProductDto(
-                prod.getId(),
-                prod.getName(),
-                prod.getPrice(),
-                prod.getImgUrl(),
-                prod.getCategory().getId(),
-                prod.getOptions().stream()
-                        .map(option -> new OptionDto(option.getId(), option.getName(), option.getQuantity()))
-                        .collect(Collectors.toList())
-        ));
+        return product.map(this::convertToDto);
     }
 
     public Long save(ProductDto productDto) {
@@ -88,13 +92,16 @@ public class ProductService {
         productRepository.deleteById(id);
     }
 
-    public List<OptionDto> getProductOptions(Long productId) {
+    public OptionDto getProductOption(Long productId, Long optionId) {
         Product product = productRepository.findById(productId)
                 .orElseThrow(() -> new ProductNotFoundException("해당 id로 상품이 존재하지 않습니다.: " + productId));
 
-        return product.getOptions().stream()
-                .map(option -> new OptionDto(option.getId(), option.getName(), option.getQuantity()))
-                .collect(Collectors.toList());
+        Option option = product.getOptions().stream()
+                .filter(opt -> opt.getId().equals(optionId))
+                .findFirst()
+                .orElseThrow(() -> new OptionNotFoundException("해당 id로 옵션이 존재하지 않습니다.: " + optionId));
+
+        return new OptionDto(option.getId(), option.getName(), option.getQuantity(), product.getId());
     }
 
     public void addOptionToProduct(Long productId, OptionDto optionDto) {

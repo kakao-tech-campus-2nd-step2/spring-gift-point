@@ -6,13 +6,15 @@ import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
 @Tag(name="기본 home 화면", description = "프론트 연결 때는 쓰이지 않음")
+@RequestMapping("/")
 public class HomeController {
 
     @Operation(summary = "로컬호스트 접속")
-    @GetMapping("/home")
+    @GetMapping
     public String home(HttpServletRequest request, Model model) {
         String accessToken = (String) request.getSession().getAttribute("accessToken");
 

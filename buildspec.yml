@@ -1,11 +1,22 @@
 version: 0.2
 
+env:
+  variables:
+    IMAGE_REPO_NAME: "public.ecr.aws/z4r5c8s2/ez23re-repo"
+    IMAGE_TAG: "latest"  # Docker 이미지 태그
+    AWS_ACCOUNT_ID: "010928188508"  # AWS 계정 ID
+    AWS_DEFAULT_REGION: "us-east-1"  # 공용 ECR은 일반적으로 us-east-1 리전에 있다.
+
 phases:
   install:
     runtime-versions:
       java: corretto21
     commands:
       - echo Installing dependencies...
+      - yum update -y
+      - amazon-linux-extras install docker -y
+      - service docker start
+      - usermod -a -G docker $USER
       - ./gradlew clean
   pre_build:
     commands:
@@ -20,6 +31,7 @@ phases:
       - echo Build started on `date`
       - ./gradlew build
       - echo Building the Docker image...
+      - docker images
       - docker build -t $IMAGE_REPO_NAME:$IMAGE_TAG .
       - docker tag $IMAGE_REPO_NAME:$IMAGE_TAG $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$IMAGE_REPO_NAME:$IMAGE_TAG
   post_build:

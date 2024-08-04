@@ -1,5 +1,7 @@
 package gift.controller;
 
+import gift.dto.OptionDto;
+import gift.dto.ProductDto;
 import gift.dto.WishRequest;
 import gift.dto.WishResponse;
 import gift.entity.Wish;
@@ -16,6 +18,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.stream.Collectors;
 
 @RestController
 @Tag(name="위시리스트 API")
@@ -36,23 +40,36 @@ public class WishController {
                     mediaType = "application/json",
                     schema = @Schema(implementation = WishResponse.class),
                     examples = @ExampleObject(
-                            value = "{\"totalPages\":1,\"totalElements\":1,\"size\":1,\"content\":[{\"id\":1,\"productId\":1,\"productName\":\"Sample Product\",\"productImgUrl\":\"https://product.png\",\"memberId\":1,\"email\":\"test@example.com\"}]}"
+                            value = "{\"totalPages\":1,\"totalElements\":1,\"size\":1,\"content\":[{\"id\":1,\"product\":{\"id\":1,\"name\":\"Sample Product\",\"price\":1000,\"imgUrl\":\"https://product.png\",\"categoryId\":1,\"options\":[{\"id\":1,\"name\":\"Option 1\",\"quantity\":10,\"productId\":1}]},\"memberId\":1,\"email\":\"test@example.com\"}]}"
                     )
             )
     )
     @GetMapping
     public ResponseEntity<Page<WishResponse>> getWishes(Pageable pageable) {
         Page<Wish> wishes = wishService.getWishes(pageable);
-        Page<WishResponse> wishDtos = wishes.map(wish -> new WishResponse(
+        Page<WishResponse> wishResponses = wishes.map(wish -> new WishResponse(
                 wish.getId(),
-                wish.getProduct().getId(),
-                wish.getProduct().getName(),
-                wish.getProduct().getImgUrl(),
+                new ProductDto(
+                        wish.getProduct().getId(),
+                        wish.getProduct().getName(),
+                        wish.getProduct().getPrice(),
+                        wish.getProduct().getImgUrl(),
+                        wish.getProduct().getCategory().getId(),
+                        wish.getProduct().getOptions().stream()
+                                .map(option -> new OptionDto(
+                                        option.getId(),
+                                        option.getName(),
+                                        option.getQuantity(),
+                                        option.getProduct().getId()
+                                ))
+                                .collect(Collectors.toList())
+                ),
                 wish.getMember().getId(),
                 wish.getMember().getEmail()
         ));
-        return ResponseEntity.ok(wishDtos);
+        return ResponseEntity.ok(wishResponses);
     }
+
 
     @Operation(summary = "위시리스트 추가")
     @ApiResponse(
@@ -81,16 +98,30 @@ public class WishController {
     @PostMapping
     public ResponseEntity<WishResponse> addWish(@RequestBody WishRequest wishRequest, @RequestHeader(value = HttpHeaders.AUTHORIZATION, required = false) String token) {
         Wish wish = wishService.addWish(token, wishRequest);
-        WishResponse dto = new WishResponse(
-                wish.getId(),
+        ProductDto productDto = new ProductDto(
                 wish.getProduct().getId(),
                 wish.getProduct().getName(),
+                wish.getProduct().getPrice(),
                 wish.getProduct().getImgUrl(),
+                wish.getProduct().getCategory().getId(),
+                wish.getProduct().getOptions().stream()
+                        .map(option -> new OptionDto(
+                                option.getId(),
+                                option.getName(),
+                                option.getQuantity(),
+                                option.getProduct().getId()
+                        ))
+                        .collect(Collectors.toList())
+        );
+        WishResponse dto = new WishResponse(
+                wish.getId(),
+                productDto,
                 wish.getMember().getId(),
                 wish.getMember().getEmail()
         );
         return ResponseEntity.ok(dto);
     }
+
 
     @Operation(summary = "위시리스트 삭제")
     @ApiResponse(

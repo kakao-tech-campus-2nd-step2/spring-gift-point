@@ -4,11 +4,13 @@
 - 5주차 피드백 반영
 - 조원과 협의 후 통일한 api 엔드포인트 수정
 - 조원과 협의 후 로직(ex.로그인) 수정
-- api 명세서 최대한 상세하게 작성
-- codepipeline을 활용해서 배포 자동화
+- swagger api 작성
+- CorsConfig 생성
+- 배포스크립트 작성
 
 ## api 명세서
-http://localhost:8080/swagger-ui.html
+http://13.125.222.237:8080/swagger-ui/index.html
+
 
 ## 현재 코드 구조
 ```plaintext
@@ -21,6 +23,7 @@ http://localhost:8080/swagger-ui.html
         │       ├── config
         │       │   ├── AppConfig.java
         │       │   ├── AppConfigProperties.java
+        │       │   ├── CorsConfig.java
         │       │   ├── InterceptorConfig.java
         │       │   └── SwaggerConfig.java
         │       ├── controller
@@ -33,13 +36,16 @@ http://localhost:8080/swagger-ui.html
         │       │   ├── ProductConroller.java
         │       │   └── WishController.java
         │       ├── dto
+        │       │   ├── CategoryDto.java
+        │       │   ├── KakaoProperties.java
         │       │   ├── MemberDto.java
         │       │   ├── OptionDto.java
         │       │   ├── OrderRequest.java
         │       │   ├── OrderResponse.java
         │       │   ├── ProductDto.java
         │       │   ├── SendMessageRequest.java
-        │       │   └── WishRequest.java
+        │       │   ├── WishRequest.java
+        │       │   └── WishResponse.java
         │       ├── entity
         │       │   ├── Catogory.java
         │       │   ├── Member.java
@@ -52,6 +58,7 @@ http://localhost:8080/swagger-ui.html
         │       │   ├── CategoryNotFoundException.java
         │       │   ├── GlobalExceptionHandler.java
         │       │   ├── InvalidProductNameException.java
+        │       │   ├── OptionNotFoundException.java
         │       │   └── ProductNotFoundException.java
         │       ├── interceptor
         │       │   └── TokenInterceptor.java
@@ -93,19 +100,22 @@ http://localhost:8080/swagger-ui.html
         └── java
             └── gift 
                 ├── controller
-                │    ├── AdminControllerTest.java
                 │    ├── CategoryControllerTest.java
                 │    ├── KakaoControllerTest.java
-                │    └── MemberControllerTest.java
+                │    ├── MemberControllerTest.java
+                │    └── OrderControllerTest.java
                 ├── entity
                 │    └── ProductTest.java
                 ├── Repository
                 │    ├── CategoryrepositoryTest.java
                 │    ├── MemberRepositoryTest.java
                 │    ├── OptionRepositoryTest.java
-                │    ├── ProductReposiroryTest.java
-                │    └── WishRepositoryTest.java
+                │    └── ProductReposiroryTest.java
                 └── service
                      ├── CategoryServiceTest.java
+                     ├── KakaoAuthServiceTest.java
+                     ├── KakaoMessageServiceTest.java
                      ├── MemberServiceTest.java
-                     └── ProductSerivceTest.java
+                     ├── ProductServiceTest.java
+                     ├── TokenServiceTest.java
+                     └── WishSerivceTest.java
