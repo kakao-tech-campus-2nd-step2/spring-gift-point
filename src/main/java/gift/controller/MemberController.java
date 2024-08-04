@@ -1,9 +1,12 @@
 package gift.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import gift.annotation.LoginMember;
 import gift.dto.ErrorResponseDto;
 import gift.dto.MemberLoginDto;
 import gift.dto.MemberRegisterDto;
+import gift.dto.PointRequestDto;
+import gift.entity.PointResponseEntity;
 import gift.entity.TokenResponseEntity;
 import gift.service.MemberService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -16,6 +19,8 @@ import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -36,7 +41,7 @@ public class MemberController {
 
     @Operation(summary = "회원 가입", description = "새로운 회원을 등록한다.")
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "201", description = "회원 가입 성공", content = @Content(schema = @Schema(implementation = TokenResponseEntity.class))),
+        @ApiResponse(responseCode = "201", description = "회원 가입 성공", content = @Content(schema = @Schema(implementation = MemberRegisterDto.class))),
         @ApiResponse(responseCode = "400", description = "잘못된 요청 데이터", content = @Content(schema = @Schema(implementation = ErrorResponseDto.class))),
         @ApiResponse(responseCode = "409", description = "이미 존재하는 이메일", content = @Content(schema = @Schema(implementation = ErrorResponseDto.class)))
     })
@@ -52,7 +57,7 @@ public class MemberController {
 
     @Operation(summary = "회원 로그인", description = "사용자 로그인 처리를 하고 성공 시 JWT를 응답한다.")
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "로그인 성공", content = @Content(schema = @Schema(implementation = TokenResponseEntity.class))),
+        @ApiResponse(responseCode = "200", description = "로그인 성공", content = @Content(schema = @Schema(implementation = MemberLoginDto.class))),
         @ApiResponse(responseCode = "400", description = "잘못된 요청 데이터", content = @Content(schema = @Schema(implementation = ErrorResponseDto.class))),
         @ApiResponse(responseCode = "403", description = "이메일 혹은 비밀번호 불일치", content = @Content(schema = @Schema(implementation = ErrorResponseDto.class)))
     })
@@ -64,5 +69,31 @@ public class MemberController {
         return new ResponseEntity<>(
             objectMapper.writeValueAsString(new TokenResponseEntity(generatedToken)),
             HttpStatus.OK);
+    }
+
+    @Operation(summary = "포인트 조회", description = "로그인한 사용자의 보유 포인트를 조회합니다.")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "포인트 조회 성공"),
+        @ApiResponse(responseCode = "401", description = "인증 필요", content = @Content(schema = @Schema(implementation = ErrorResponseDto.class)))
+    })
+    @GetMapping("/points")
+    public ResponseEntity<String> getPoint(@LoginMember Long memberId) throws Exception {
+        Integer point = memberService.getPointByMemberId(memberId);
+        return new ResponseEntity<>(
+            objectMapper.writeValueAsString(new PointResponseEntity(point)), HttpStatus.OK
+        );
+    }
+
+    @Operation(summary = "포인트 조회", description = "로그인한 사용자의 보유 포인트를 조회합니다.")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "204", description = "포인트 충전 성공"),
+        @ApiResponse(responseCode = "400", description = "잘못된 입력 데이터", content = @Content(schema = @Schema(implementation = ErrorResponseDto.class))),
+        @ApiResponse(responseCode = "404", description = "존재하지 않는 회원", content = @Content(schema = @Schema(implementation = ErrorResponseDto.class)))
+    })
+    @PostMapping("/{memberId}/points")
+    public ResponseEntity<String> chargePoint(@PathVariable Long memberId,
+        @RequestBody @Valid PointRequestDto pointRequestDto) {
+        memberService.chargePoint(memberId, pointRequestDto);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }

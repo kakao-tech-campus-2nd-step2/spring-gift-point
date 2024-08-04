@@ -17,6 +17,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PagedModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -43,7 +44,7 @@ public class ProductController {
 
     @Operation(summary = "상품 목록 조회", description = "모든 상품의 정보를 페이지별로 조회한다. (카테고리로 필터링 가능)")
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "상품 목록 조회 성공", content = @Content(schema = @Schema(implementation = Page.class)))
+        @ApiResponse(responseCode = "200", description = "상품 목록 조회 성공", content = @Content(schema = @Schema(implementation = PagedModel.class)))
     })
     @GetMapping
     public ResponseEntity<Page<ProductResponseDto>> getAllProducts(

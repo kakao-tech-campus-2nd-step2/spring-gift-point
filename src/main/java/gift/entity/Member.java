@@ -5,7 +5,9 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.Min;
 
 @Entity
 @Table(name = "member")
@@ -24,7 +26,15 @@ public class Member {
     @Column(nullable = true)
     private String accessToken;
 
+    @Min(value = 0)
+    private Integer point;
+
     protected Member() {
+    }
+
+    @PrePersist
+    private void prePersist() {
+        this.point = this.point == null ? 0 : this.point;
     }
 
     public Member(String email, String password) {
@@ -64,5 +74,17 @@ public class Member {
 
     public String getAccessToken() {
         return accessToken;
+    }
+
+    public Integer getPoint() {
+        return point;
+    }
+
+    public void subtract(Integer requestPoint) {
+        this.point -= requestPoint;
+    }
+
+    public void add(Integer requestPoint) {
+        this.point += requestPoint;
     }
 }

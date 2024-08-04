@@ -71,7 +71,12 @@ public class OrderService {
             throw new ServiceException("수량은 0보다 작을 수 없습니다.", HttpStatus.BAD_REQUEST);
         }
 
+        if (member.getPoint() < request.getPoint()) {
+            throw new ServiceException("요청한 포인트가 보유 포인트보다 큽니다.", HttpStatus.NOT_FOUND);
+        }
+
         option.subtract(request.getQuantity());
+        member.subtract(request.getPoint());
 
         Optional<Wish> wish = wishRepository.findByMemberIdAndProductId(memberId,
             option.getProduct().getId());
