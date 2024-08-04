@@ -8,6 +8,7 @@ import gift.security.AuthenticateMember;
 import gift.service.ProductService;
 import gift.service.WishListService;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -43,12 +44,10 @@ public class WishListController {
      */
     @GetMapping("api/wishes")
     public ResponseEntity<Page<WishProductResponse>> readWishList(
-            @AuthenticateMember UserResponse user,
-            @RequestParam(value = "page", defaultValue = "0") int page,
-            @RequestParam(value = "size", defaultValue = "5") int size,
-            @RequestParam(value = "sort") List<String> sort
+            Pageable pageable,
+            @AuthenticateMember UserResponse user
     ){
-        Page<WishProductResponse> wishList = wishListService.findWishList(user.getId(), page, size, sort.getFirst(), sort.getLast());
+        Page<WishProductResponse> wishList = wishListService.findWishList(user.getId(), pageable);
         return new ResponseEntity<>(wishList, HttpStatus.OK);
     }
     /*

@@ -26,16 +26,7 @@ public class UserService {
     /*
      * 유저 정보를 정렬하여 페이지 형식으로 조회하는 로직
      */
-    public Page<UserResponse> findAll(int page, int size, String field, String sort) {
-        List<Sort.Order> sorts = new ArrayList<>();
-        if(sort.equals("asc")){
-            sorts.add(Sort.Order.desc(field));
-            Pageable pageable = PageRequest.of(page, size, Sort.by(sorts));
-            Page<User> users = userRepository.findAll(pageable);
-            return users.map(UserResponse::new);
-        }
-        sorts.add(Sort.Order.asc(field));
-        Pageable pageable = PageRequest.of(page, size, Sort.by(sorts));
+    public Page<UserResponse> findAll(Pageable pageable) {
         Page<User> users = userRepository.findAll(pageable);
         return users.map(UserResponse::new);
     }

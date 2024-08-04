@@ -8,6 +8,7 @@ import gift.DTO.User.UserResponse;
 import gift.security.AuthenticateMember;
 import gift.service.OrderService;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -38,11 +39,9 @@ public class OrderController {
      */
     @GetMapping("/api/orders")
     public ResponseEntity<Page<OrderLogResponse>> orderLog(
-            @RequestParam(value = "page", defaultValue = "0") int page,
-            @RequestParam(value = "size", defaultValue = "5") int size,
-            @RequestParam(value = "sort") List<String> sort
+            Pageable pageable
     ){
-        Page<OrderLogResponse> orders = orderService.findAll(page, size, sort.getFirst(), sort.getLast());
+        Page<OrderLogResponse> orders = orderService.findAll(pageable);
         return new ResponseEntity<>(orders, HttpStatus.OK);
     }
 }

@@ -12,6 +12,7 @@ import gift.security.AuthenticateMember;
 import gift.service.ProductService;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -31,12 +32,10 @@ public class ProductController {
      */
     @GetMapping("/api/products")
     public ResponseEntity<Page<ProductResponse>> readAllProduct(
-            @RequestParam(value = "page", defaultValue = "0") int page,
-            @RequestParam(value = "size", defaultValue = "5") int size,
-            @RequestParam(value = "sort") List<String> sort,
+            Pageable pageable,
             @RequestParam(value = "categoryId", defaultValue = "1") Long categoryId
-            ) {
-        Page<ProductResponse> products = productService.readAllProduct(page, size, sort.getFirst(), sort.getLast(), categoryId);
+    ) {
+        Page<ProductResponse> products = productService.readAllProduct(pageable, categoryId);
         return new ResponseEntity<>(products, HttpStatus.OK);
     }
     /*

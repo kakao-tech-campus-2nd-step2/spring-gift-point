@@ -30,16 +30,7 @@ public class ProductService {
     /*
      * 상품을 오름차순으로 정렬하는 로직
      */
-    public Page<ProductResponse> readAllProduct(int page, int size, String field, String sort, Long categoryId){
-        List<Sort.Order> sorts = new ArrayList<>();
-        if(sort.equals("asc")) {
-            sorts.add(Sort.Order.asc(field));
-            Pageable pageable = PageRequest.of(page, size, Sort.by(sorts));
-            Page<Product> products = productRepository.findAllByCategoryId(pageable, categoryId);
-            return products.map(ProductResponse::new);
-        }
-        sorts.add(Sort.Order.desc(field));
-        Pageable pageable = PageRequest.of(page, size, Sort.by(sorts));
+    public Page<ProductResponse> readAllProduct(Pageable pageable, Long categoryId){
         Page<Product> products = productRepository.findAllByCategoryId(pageable, categoryId);
         return products.map(ProductResponse::new);
     }
@@ -66,7 +57,6 @@ public class ProductService {
         productRepository.save(productEntity);
 
         Option basicOption = new Option(productRequest.getBasicOption(), 1, productEntity);
-        productEntity.addOption(basicOption);
 
         optionRepository.save(basicOption);
 
