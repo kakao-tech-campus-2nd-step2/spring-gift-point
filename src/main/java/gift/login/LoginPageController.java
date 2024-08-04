@@ -9,6 +9,6 @@ public class LoginPageController {
     @GetMapping("/members/login")
     @Deprecated
     public String loginPage() {
-        return "/login/page";
+        return "login/page";
     }
 }

@@ -42,9 +42,9 @@ public class AdminPageController {
         model.addAttribute("currentPageProductSize", products.get().toList().size());
         model.addAttribute("pageLists",
             IntStream.range(0, products.getTotalPages()).boxed().toList());
-        model.addAttribute("categories", categoryService.getAllCategories());
+        model.addAttribute("categories", categoryService.getAllCategories().getCategories());
 
-        return "/product/page";
+        return "product/page";
     }
 
     @GetMapping("/member")
@@ -52,6 +52,6 @@ public class AdminPageController {
         Model model
     ) {
         model.addAttribute("members", memberService.getAllMembers());
-        return "/member/page";
+        return "member/page";
     }
 }

@@ -32,7 +32,7 @@ public class WishlistPageController {
     @Deprecated
     @GetMapping("/wishlist")
     public String wishlist() {
-        return "/wishlist/emptyWishlistPage";
+        return "wishlist/emptyWishlistPage";
     }
 
     @Deprecated
@@ -44,7 +44,8 @@ public class WishlistPageController {
         @PathVariable long categoryId
     ) {
         pageable = changePageable(pageable);
-        Page<ProductPaginationResponseDTO> wishProducts = wishlistService.getWishlists(token, pageable);
+        Page<ProductPaginationResponseDTO> wishProducts = wishlistService.getWishlists(token,
+            pageable);
         Page<ProductPaginationResponseDTO> allProducts = productService.getAllProductsByCategoryId(
             PageRequest.of(0, Integer.MAX_VALUE),
             categoryId
@@ -60,7 +61,7 @@ public class WishlistPageController {
 
         model.addAttribute("allProducts", allProducts);
 
-        return "/wishlist/page";
+        return "wishlist/page";
     }
 
     private Pageable changePageable(Pageable pageable) {
