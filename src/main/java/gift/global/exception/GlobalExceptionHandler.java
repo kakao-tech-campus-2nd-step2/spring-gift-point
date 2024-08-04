@@ -1,9 +1,9 @@
 package gift.global.exception;
 
 import gift.category.exception.NoSuchCategoryException;
-import gift.kakao.exception.InvalidKakaoTalkTemplateException;
-import gift.kakao.exception.InvalidKakaoTokenException;
-import gift.kakao.exception.NoKakaoTokenException;
+import gift.member.exception.InvalidKakaoTalkTemplateException;
+import gift.member.exception.InvalidKakaoTokenException;
+import gift.member.exception.NoKakaoTokenException;
 import gift.member.exception.AlreadyExistMemberException;
 import gift.member.exception.InsufficientPointException;
 import gift.member.exception.InvalidPasswordException;

@@ -1,14 +1,14 @@
-package gift.kakao.service;
+package gift.orderOption.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import gift.kakao.entity.KakaoToken;
-import gift.kakao.dto.KakaoTalkDto;
+import gift.member.entity.KakaoToken;
+import gift.orderOption.dto.KakaoTalkDto;
 import gift.member.dto.MemberDto;
-import gift.kakao.exception.InvalidKakaoTalkTemplateException;
-import gift.kakao.exception.InvalidKakaoTokenException;
-import gift.kakao.exception.NoKakaoTokenException;
-import gift.kakao.repository.KakaoTokenRepository;
+import gift.member.exception.InvalidKakaoTalkTemplateException;
+import gift.member.exception.InvalidKakaoTokenException;
+import gift.member.exception.NoKakaoTokenException;
+import gift.member.repository.KakaoTokenRepository;
 import java.net.URI;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.web.client.RestTemplateBuilder;

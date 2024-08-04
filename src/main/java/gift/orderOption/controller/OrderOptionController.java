@@ -1,7 +1,7 @@
 package gift.orderOption.controller;
 
 import gift.global.argumentresolver.LoginMember;
-import gift.kakao.service.KakaoTalkService;
+import gift.orderOption.service.KakaoTalkService;
 import gift.member.entity.Member;
 import gift.orderOption.dto.OrderOptionRequest;
 import gift.orderOption.dto.OrderOptionResponse;

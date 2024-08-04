@@ -1,4 +1,4 @@
-package gift.kakao.exception;
+package gift.member.exception;
 
 import org.springframework.http.HttpStatusCode;
 import org.springframework.web.server.ResponseStatusException;

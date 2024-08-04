@@ -1,7 +1,6 @@
 package gift.orderOption.service;
 
-import gift.kakao.dto.KakaoTalkDto;
-import gift.kakao.service.KakaoTalkService;
+import gift.orderOption.dto.KakaoTalkDto;
 import gift.member.entity.Member;
 import gift.member.service.PointService;
 import gift.orderOption.dto.OrderOptionRequest;

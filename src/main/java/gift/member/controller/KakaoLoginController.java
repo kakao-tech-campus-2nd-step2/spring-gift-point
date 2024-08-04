@@ -1,8 +1,8 @@
-package gift.kakao.controller;
+package gift.member.controller;
 
 import gift.member.exception.NoSuchMemberException;
-import gift.kakao.service.KakaoLoginService;
-import gift.kakao.KakaoProperties;
+import gift.member.service.KakaoLoginService;
+import gift.member.KakaoProperties;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
