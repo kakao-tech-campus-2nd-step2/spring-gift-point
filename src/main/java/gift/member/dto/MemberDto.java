@@ -16,6 +16,6 @@ public record MemberDto(
 ) {
 
     public Member toEntity() {
-        return new Member(email, password);
+        return new Member(email, password, point);
     }
 }

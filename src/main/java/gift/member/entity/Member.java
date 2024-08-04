@@ -27,9 +27,10 @@ public class Member {
 
     }
 
-    public Member(String email, String password) {
+    public Member(String email, String password, int point) {
         this.email = email;
         this.password = password;
+        this.point = point;
     }
 
     public void changePassword(String newPassword) {
