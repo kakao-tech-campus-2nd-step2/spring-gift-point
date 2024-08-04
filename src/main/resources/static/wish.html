@@ -451,7 +451,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div class="content">
 <pre class="highlight"><code class="language-bash" data-lang="bash">$ curl 'http://localhost:8080/api/wishes' -i -X POST \
     -H 'Content-Type: application/json' \
-    -H 'Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJtZW1iZXJJZCI6MSwiaWF0IjoxNzIyNTMxMTc2LCJleHAiOjE3MjI2MTc1NzZ9.Tg5JTDOkekgVUcdDR-2BKotdPM0OsvwwqmFfJmxjq4fOgZ1A4TmhC6Sq69_2U4bqa-xRshFu9WajdkpoC7xuzA' \
+    -H 'Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJtZW1iZXJJZCI6MSwiaWF0IjoxNzIyNjk5NTg0LCJleHAiOjE3MjI3ODU5ODR9.kNTATvJsas_CoMlsduyccQw1qi50ru_Q7amU65aLH-LuFEdXrQLfn6-JIViJxq-jSPQW5OBDssVpg-hD6HbK9A' \
     -d '{
   "productId" : 1,
   "quantity" : 1
@@ -465,7 +465,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div class="content">
 <pre class="highlight nowrap"><code class="language-http" data-lang="http">POST /api/wishes HTTP/1.1
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJtZW1iZXJJZCI6MSwiaWF0IjoxNzIyNTMxMTc2LCJleHAiOjE3MjI2MTc1NzZ9.Tg5JTDOkekgVUcdDR-2BKotdPM0OsvwwqmFfJmxjq4fOgZ1A4TmhC6Sq69_2U4bqa-xRshFu9WajdkpoC7xuzA
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJtZW1iZXJJZCI6MSwiaWF0IjoxNzIyNjk5NTg0LCJleHAiOjE3MjI3ODU5ODR9.kNTATvJsas_CoMlsduyccQw1qi50ru_Q7amU65aLH-LuFEdXrQLfn6-JIViJxq-jSPQW5OBDssVpg-hD6HbK9A
 Content-Length: 39
 Host: localhost:8080
 
@@ -500,7 +500,7 @@ Content-Length: 32
   "quantity" : 1
 }' | http POST 'http://localhost:8080/api/wishes' \
     'Content-Type:application/json' \
-    'Authorization:Bearer eyJhbGciOiJIUzUxMiJ9.eyJtZW1iZXJJZCI6MSwiaWF0IjoxNzIyNTMxMTc2LCJleHAiOjE3MjI2MTc1NzZ9.Tg5JTDOkekgVUcdDR-2BKotdPM0OsvwwqmFfJmxjq4fOgZ1A4TmhC6Sq69_2U4bqa-xRshFu9WajdkpoC7xuzA'</code></pre>
+    'Authorization:Bearer eyJhbGciOiJIUzUxMiJ9.eyJtZW1iZXJJZCI6MSwiaWF0IjoxNzIyNjk5NTg0LCJleHAiOjE3MjI3ODU5ODR9.kNTATvJsas_CoMlsduyccQw1qi50ru_Q7amU65aLH-LuFEdXrQLfn6-JIViJxq-jSPQW5OBDssVpg-hD6HbK9A'</code></pre>
 </div>
 </div>
 </div>
@@ -592,7 +592,7 @@ Content-Length: 32
 <div class="listingblock">
 <div class="content">
 <pre class="highlight"><code class="language-bash" data-lang="bash">$ curl 'http://localhost:8080/api/wishes' -i -X GET \
-    -H 'Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJtZW1iZXJJZCI6MSwiaWF0IjoxNzIyNTMxMTc2LCJleHAiOjE3MjI2MTc1NzZ9.Tg5JTDOkekgVUcdDR-2BKotdPM0OsvwwqmFfJmxjq4fOgZ1A4TmhC6Sq69_2U4bqa-xRshFu9WajdkpoC7xuzA'</code></pre>
+    -H 'Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJtZW1iZXJJZCI6MSwiaWF0IjoxNzIyNjk5NTg0LCJleHAiOjE3MjI3ODU5ODR9.kNTATvJsas_CoMlsduyccQw1qi50ru_Q7amU65aLH-LuFEdXrQLfn6-JIViJxq-jSPQW5OBDssVpg-hD6HbK9A'</code></pre>
 </div>
 </div>
 </div>
@@ -601,7 +601,7 @@ Content-Length: 32
 <div class="listingblock">
 <div class="content">
 <pre class="highlight nowrap"><code class="language-http" data-lang="http">GET /api/wishes HTTP/1.1
-Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJtZW1iZXJJZCI6MSwiaWF0IjoxNzIyNTMxMTc2LCJleHAiOjE3MjI2MTc1NzZ9.Tg5JTDOkekgVUcdDR-2BKotdPM0OsvwwqmFfJmxjq4fOgZ1A4TmhC6Sq69_2U4bqa-xRshFu9WajdkpoC7xuzA
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJtZW1iZXJJZCI6MSwiaWF0IjoxNzIyNjk5NTg0LCJleHAiOjE3MjI3ODU5ODR9.kNTATvJsas_CoMlsduyccQw1qi50ru_Q7amU65aLH-LuFEdXrQLfn6-JIViJxq-jSPQW5OBDssVpg-hD6HbK9A
 Host: localhost:8080</code></pre>
 </div>
 </div>
@@ -630,25 +630,25 @@ Content-Length: 661
     "pageSize" : 10,
     "sort" : {
       "empty" : true,
-      "unsorted" : true,
-      "sorted" : false
+      "sorted" : false,
+      "unsorted" : true
     },
     "offset" : 0,
     "paged" : true,
     "unpaged" : false
   },
-  "totalElements" : 1,
-  "last" : true,
   "totalPages" : 1,
+  "last" : true,
+  "totalElements" : 1,
   "size" : 10,
   "number" : 0,
   "sort" : {
     "empty" : true,
-    "unsorted" : true,
-    "sorted" : false
+    "sorted" : false,
+    "unsorted" : true
   },
-  "numberOfElements" : 1,
   "first" : true,
+  "numberOfElements" : 1,
   "empty" : false
 }</code></pre>
 </div>
@@ -659,7 +659,7 @@ Content-Length: 661
 <div class="listingblock">
 <div class="content">
 <pre class="highlight"><code class="language-bash" data-lang="bash">$ http GET 'http://localhost:8080/api/wishes' \
-    'Authorization:Bearer eyJhbGciOiJIUzUxMiJ9.eyJtZW1iZXJJZCI6MSwiaWF0IjoxNzIyNTMxMTc2LCJleHAiOjE3MjI2MTc1NzZ9.Tg5JTDOkekgVUcdDR-2BKotdPM0OsvwwqmFfJmxjq4fOgZ1A4TmhC6Sq69_2U4bqa-xRshFu9WajdkpoC7xuzA'</code></pre>
+    'Authorization:Bearer eyJhbGciOiJIUzUxMiJ9.eyJtZW1iZXJJZCI6MSwiaWF0IjoxNzIyNjk5NTg0LCJleHAiOjE3MjI3ODU5ODR9.kNTATvJsas_CoMlsduyccQw1qi50ru_Q7amU65aLH-LuFEdXrQLfn6-JIViJxq-jSPQW5OBDssVpg-hD6HbK9A'</code></pre>
 </div>
 </div>
 </div>
@@ -716,25 +716,25 @@ Content-Length: 661
     "pageSize" : 10,
     "sort" : {
       "empty" : true,
-      "unsorted" : true,
-      "sorted" : false
+      "sorted" : false,
+      "unsorted" : true
     },
     "offset" : 0,
     "paged" : true,
     "unpaged" : false
   },
-  "totalElements" : 1,
-  "last" : true,
   "totalPages" : 1,
+  "last" : true,
+  "totalElements" : 1,
   "size" : 10,
   "number" : 0,
   "sort" : {
     "empty" : true,
-    "unsorted" : true,
-    "sorted" : false
+    "sorted" : false,
+    "unsorted" : true
   },
-  "numberOfElements" : 1,
   "first" : true,
+  "numberOfElements" : 1,
   "empty" : false
 }</code></pre>
 </div>
@@ -913,7 +913,7 @@ Content-Length: 661
 <div class="content">
 <pre class="highlight"><code class="language-bash" data-lang="bash">$ curl 'http://localhost:8080/api/wishes/1' -i -X PUT \
     -H 'Content-Type: application/json' \
-    -H 'Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJtZW1iZXJJZCI6MSwiaWF0IjoxNzIyNTMxMTc2LCJleHAiOjE3MjI2MTc1NzZ9.Tg5JTDOkekgVUcdDR-2BKotdPM0OsvwwqmFfJmxjq4fOgZ1A4TmhC6Sq69_2U4bqa-xRshFu9WajdkpoC7xuzA' \
+    -H 'Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJtZW1iZXJJZCI6MSwiaWF0IjoxNzIyNjk5NTg0LCJleHAiOjE3MjI3ODU5ODR9.kNTATvJsas_CoMlsduyccQw1qi50ru_Q7amU65aLH-LuFEdXrQLfn6-JIViJxq-jSPQW5OBDssVpg-hD6HbK9A' \
     -d '{
   "quantity" : 5
 }'</code></pre>
@@ -926,7 +926,7 @@ Content-Length: 661
 <div class="content">
 <pre class="highlight nowrap"><code class="language-http" data-lang="http">PUT /api/wishes/1 HTTP/1.1
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJtZW1iZXJJZCI6MSwiaWF0IjoxNzIyNTMxMTc2LCJleHAiOjE3MjI2MTc1NzZ9.Tg5JTDOkekgVUcdDR-2BKotdPM0OsvwwqmFfJmxjq4fOgZ1A4TmhC6Sq69_2U4bqa-xRshFu9WajdkpoC7xuzA
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJtZW1iZXJJZCI6MSwiaWF0IjoxNzIyNjk5NTg0LCJleHAiOjE3MjI3ODU5ODR9.kNTATvJsas_CoMlsduyccQw1qi50ru_Q7amU65aLH-LuFEdXrQLfn6-JIViJxq-jSPQW5OBDssVpg-hD6HbK9A
 Content-Length: 20
 Host: localhost:8080
 
@@ -963,7 +963,7 @@ Content-Length: 143
   "quantity" : 5
 }' | http PUT 'http://localhost:8080/api/wishes/1' \
     'Content-Type:application/json' \
-    'Authorization:Bearer eyJhbGciOiJIUzUxMiJ9.eyJtZW1iZXJJZCI6MSwiaWF0IjoxNzIyNTMxMTc2LCJleHAiOjE3MjI2MTc1NzZ9.Tg5JTDOkekgVUcdDR-2BKotdPM0OsvwwqmFfJmxjq4fOgZ1A4TmhC6Sq69_2U4bqa-xRshFu9WajdkpoC7xuzA'</code></pre>
+    'Authorization:Bearer eyJhbGciOiJIUzUxMiJ9.eyJtZW1iZXJJZCI6MSwiaWF0IjoxNzIyNjk5NTg0LCJleHAiOjE3MjI3ODU5ODR9.kNTATvJsas_CoMlsduyccQw1qi50ru_Q7amU65aLH-LuFEdXrQLfn6-JIViJxq-jSPQW5OBDssVpg-hD6HbK9A'</code></pre>
 </div>
 </div>
 </div>
@@ -1073,7 +1073,7 @@ Content-Length: 143
 <div class="listingblock">
 <div class="content">
 <pre class="highlight"><code class="language-bash" data-lang="bash">$ curl 'http://localhost:8080/api/wishes/1' -i -X DELETE \
-    -H 'Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJtZW1iZXJJZCI6MSwiaWF0IjoxNzIyNTMxMTc2LCJleHAiOjE3MjI2MTc1NzZ9.Tg5JTDOkekgVUcdDR-2BKotdPM0OsvwwqmFfJmxjq4fOgZ1A4TmhC6Sq69_2U4bqa-xRshFu9WajdkpoC7xuzA'</code></pre>
+    -H 'Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJtZW1iZXJJZCI6MSwiaWF0IjoxNzIyNjk5NTg0LCJleHAiOjE3MjI3ODU5ODR9.kNTATvJsas_CoMlsduyccQw1qi50ru_Q7amU65aLH-LuFEdXrQLfn6-JIViJxq-jSPQW5OBDssVpg-hD6HbK9A'</code></pre>
 </div>
 </div>
 </div>
@@ -1082,7 +1082,7 @@ Content-Length: 143
 <div class="listingblock">
 <div class="content">
 <pre class="highlight nowrap"><code class="language-http" data-lang="http">DELETE /api/wishes/1 HTTP/1.1
-Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJtZW1iZXJJZCI6MSwiaWF0IjoxNzIyNTMxMTc2LCJleHAiOjE3MjI2MTc1NzZ9.Tg5JTDOkekgVUcdDR-2BKotdPM0OsvwwqmFfJmxjq4fOgZ1A4TmhC6Sq69_2U4bqa-xRshFu9WajdkpoC7xuzA
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJtZW1iZXJJZCI6MSwiaWF0IjoxNzIyNjk5NTg0LCJleHAiOjE3MjI3ODU5ODR9.kNTATvJsas_CoMlsduyccQw1qi50ru_Q7amU65aLH-LuFEdXrQLfn6-JIViJxq-jSPQW5OBDssVpg-hD6HbK9A
 Host: localhost:8080</code></pre>
 </div>
 </div>
@@ -1100,7 +1100,7 @@ Host: localhost:8080</code></pre>
 <div class="listingblock">
 <div class="content">
 <pre class="highlight"><code class="language-bash" data-lang="bash">$ http DELETE 'http://localhost:8080/api/wishes/1' \
-    'Authorization:Bearer eyJhbGciOiJIUzUxMiJ9.eyJtZW1iZXJJZCI6MSwiaWF0IjoxNzIyNTMxMTc2LCJleHAiOjE3MjI2MTc1NzZ9.Tg5JTDOkekgVUcdDR-2BKotdPM0OsvwwqmFfJmxjq4fOgZ1A4TmhC6Sq69_2U4bqa-xRshFu9WajdkpoC7xuzA'</code></pre>
+    'Authorization:Bearer eyJhbGciOiJIUzUxMiJ9.eyJtZW1iZXJJZCI6MSwiaWF0IjoxNzIyNjk5NTg0LCJleHAiOjE3MjI3ODU5ODR9.kNTATvJsas_CoMlsduyccQw1qi50ru_Q7amU65aLH-LuFEdXrQLfn6-JIViJxq-jSPQW5OBDssVpg-hD6HbK9A'</code></pre>
 </div>
 </div>
 </div>

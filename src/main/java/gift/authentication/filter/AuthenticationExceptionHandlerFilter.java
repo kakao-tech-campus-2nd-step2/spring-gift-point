@@ -21,7 +21,7 @@ public class AuthenticationExceptionHandlerFilter extends OncePerRequestFilter {
         try {
             filterChain.doFilter(request, response);
         } catch (JwtException e) {
-            ErrorResponse errorResponse = ErrorResponse.from(new InvalidCredentialsException());
+            ErrorResponse errorResponse = ErrorResponse.from(new InvalidCredentialsException(e.getMessage()));
             String errorResponseJson = JsonUtils.toJson(errorResponse);
 
             response.setContentType("application/json;charset=UTF-8");

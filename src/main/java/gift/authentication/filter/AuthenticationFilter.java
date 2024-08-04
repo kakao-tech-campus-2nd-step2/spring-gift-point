@@ -13,6 +13,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Objects;
 import java.util.regex.Pattern;
+import org.springframework.http.HttpHeaders;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 public class AuthenticationFilter extends OncePerRequestFilter {
@@ -27,7 +28,6 @@ public class AuthenticationFilter extends OncePerRequestFilter {
         "/api/products",
         "/api/products/\\d+",
         "/api/products/\\d+/options");
-    private final String AUTHORIZATION_HEADER = "Authorization";
     private final String BEARER = "Bearer ";
     private final JwtResolver jwtResolver;
 
@@ -39,11 +39,14 @@ public class AuthenticationFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
         FilterChain filterChain) throws ServletException, IOException {
 
-        String authorization = request.getHeader(AUTHORIZATION_HEADER);
+        String authorization = request.getHeader(HttpHeaders.AUTHORIZATION);
         if(Objects.nonNull(authorization) && authorization.startsWith(BEARER)) {
             String token = authorization.substring(BEARER.length());
 
-            Long memberId = jwtResolver.resolveId(Token.from(token)).orElseThrow(InvalidCredentialsException::new);
+            Long memberId = jwtResolver.resolveId(Token.from(token)).orElseThrow(() ->
+                new InvalidCredentialsException(
+                    "AuthenticationFilter.doFilterInternal.jwtResolver.resolveId 에서 예외 발생"));
+
             TokenContext.addCurrentMemberId(memberId);
 
             filterChain.doFilter(request, response);
@@ -51,25 +54,42 @@ public class AuthenticationFilter extends OncePerRequestFilter {
             return;
         }
 
-        throw new JwtException("Invalid token");
-    }
-
-    @Override
-    protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
-        String requestURI = request.getRequestURI();
-        return ignorePaths.contains(requestURI) || isOptionalIgnorePathsWithGetMethod(request, requestURI);
+        throw new JwtException("인증 토큰이 없습니다.");
     }
 
     /**
-     * ignorePathsOnlyMethodGet에 포함된 경로 중 GET 메서드일 때만 필터링을 하지 않는다.
-     * @param request
-     * @param requestURI
-     * @return ignorePathsOnlyMethodGet에 포함된 경로 중 GET 메서드인 경우 true 를 반환 그 외, false
+     * 필터링을 하지 않아야 하는 경로를 설정한다.<br><br>
+     * 1. ignorePaths에 포함된 경로는 필터링을 하지 않는다.<br>
+     * 2. HttpMethod이 OPTIONS인 경우 필터링을 하지 않는다.<br>
+     * 3. ignorePathsOnlyMethodGet에 포함된 경로 중 HttpMethod.GET인 경우 필터링을 하지 않는다.
+     * @param request 요청
+     * @return 필터링을 하지 않아야 하는 경우 true, 그 외, false
+     * @throws ServletException
      */
-    private boolean isOptionalIgnorePathsWithGetMethod(HttpServletRequest request, String requestURI) {
+    @Override
+    protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
+        String requestURI = request.getRequestURI();
+        return ignorePaths.contains(requestURI) || isOptionsMethod(request) || isOptionalIgnorePathsWithGetMethod(request);
+    }
+
+    /**
+     * ignorePathsOnlyMethodGet에 포함된 경로 중 HttpMethod.GET인 경우 필터링을 하지 않는다.
+     * @param request 요청
+     * @return ignorePathsOnlyMethodGet에 포함된 경로 중 HttpMethod.GET 경우 true 를 반환 그 외, false
+     */
+    private boolean isOptionalIgnorePathsWithGetMethod(HttpServletRequest request) {
         return ignorePathsOnlyMethodGet
             .stream()
-            .anyMatch(regex -> Pattern.compile(regex).matcher(requestURI).matches()
-                && request.getMethod().equals("GET"));
+            .anyMatch(regex -> Pattern.compile(regex).matcher(request.getRequestURI()).matches()
+                && (isGetMethod(request)));
     }
+
+    private boolean isGetMethod(HttpServletRequest request) {
+        return request.getMethod().equals("GET");
+    }
+
+    private boolean isOptionsMethod(HttpServletRequest request) {
+        return request.getMethod().equals("OPTIONS");
+    }
+
 }

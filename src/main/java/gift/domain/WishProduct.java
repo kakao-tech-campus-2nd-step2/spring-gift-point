@@ -7,6 +7,8 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import java.time.LocalDateTime;
+import org.springframework.data.annotation.CreatedDate;
 
 @Entity
 public class WishProduct extends BaseEntity {
@@ -21,6 +23,10 @@ public class WishProduct extends BaseEntity {
 
     @Column(nullable = false)
     private Integer quantity;
+
+    @CreatedDate
+    @Column(nullable = false, updatable = false)
+    private LocalDateTime createdDate;
 
     protected WishProduct() {
     }
@@ -74,6 +80,10 @@ public class WishProduct extends BaseEntity {
 
     public Integer getQuantity() {
         return quantity;
+    }
+
+    public LocalDateTime getCreatedDate() {
+        return createdDate;
     }
 
     public Integer updateQuantity(Integer quantity) {
