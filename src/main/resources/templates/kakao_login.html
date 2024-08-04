@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>카카오 로그인</title>
+</head>
+<body>
+<button id="login-kakao-btn" onclick="redirectToKakao()">
+  카카오로 로그인하기
+</button>
+
+<script>
+  function redirectToKakao() {
+    const url = "/api/members/kakao";
+    const redirectUrl = "http://43.203.238.246:8080"; // redirect URL
+
+    // GET 요청으로 리디렉션
+    window.location.href = `${url}?redirect_url=${encodeURIComponent(redirectUrl)}`;
+  }
+</script>
+</body>
+</html>

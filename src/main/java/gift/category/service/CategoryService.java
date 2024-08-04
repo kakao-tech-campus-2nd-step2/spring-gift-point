@@ -18,29 +18,46 @@ public class CategoryService {
     }
 
     public List<CategoryDTO> findAll() {
-        List<Category> categories = categoryRepository.findAll();
-        return categories.stream()
-            .map(category -> new CategoryDTO(category.getId(), category.getName()))
+        return categoryRepository.findAll().stream()
+            .map(this::convertEntityToDTO)
             .toList();
     }
 
     public Optional<CategoryDTO> findById(Long id) {
         return categoryRepository.findById(id)
-            .map(category -> new CategoryDTO(category.getId(), category.getName()));
+            .map(this::convertEntityToDTO);
     }
 
     public CategoryDTO save(CategoryDTO categoryDTO) {
-        Category category = new Category();
-        category.setName(categoryDTO.name());
-        categoryRepository.save(category);
+        categoryRepository.save(convertDTOToEntity(categoryDTO));
         return categoryDTO;
     }
 
-    public CategoryDTO update(CategoryDTO categoryDTO) {
+    public CategoryDTO update(Long categoryId, CategoryDTO categoryDTO) {
         Category category = categoryRepository.findById(categoryDTO.id())
             .orElseThrow(() -> new EntityNotFoundException("Category Id " + categoryDTO.id() + "가 없습니다."));
+
         category.setName(categoryDTO.name());
-        categoryRepository.save(category);
-        return new CategoryDTO(category.getId(), category.getName());
+        category.setDescription(categoryDTO.description());
+        category.setColor(categoryDTO.color());
+        category.setImageUrl(categoryDTO.imageUrl());
+
+        return convertEntityToDTO(categoryRepository.save(category));
+    }
+
+
+    public CategoryDTO convertEntityToDTO(Category category){
+        return new CategoryDTO(category.getId(),
+            category.getName(),
+            category.getDescription(),
+            category.getColor(),
+            category.getImageUrl());
+    }
+    public Category convertDTOToEntity(CategoryDTO categoryDTO){
+        return new Category(categoryDTO.id(),
+            categoryDTO.name(),
+            categoryDTO.description(),
+            categoryDTO.color(),
+            categoryDTO.imageUrl());
     }
 }

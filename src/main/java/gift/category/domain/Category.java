@@ -22,19 +22,29 @@ public class Category {
     @NotNull
     private String name;
 
-    @OneToMany(mappedBy = "category")
-    private List<Product> productList;
+    @NotNull
+    private String description;
+    @NotNull
+    private String color;
+    @NotNull
+    private String imageUrl;
 
     public Category() {
     }
 
-    public Category(String name) {
+    public Category(String name, String description, String color, String imageUrl) {
         this.name = name;
+        this.description = description;
+        this.color = color;
+        this.imageUrl = imageUrl;
     }
 
-    public Category(Long id, String name) {
+    public Category(Long id, String name, String description, String color, String imageUrl) {
         this.id = id;
         this.name = name;
+        this.description = description;
+        this.color = color;
+        this.imageUrl = imageUrl;
     }
 
     public Long getId() {
@@ -51,5 +61,29 @@ public class Category {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public String getColor() {
+        return color;
+    }
+
+    public void setColor(String color) {
+        this.color = color;
+    }
+
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
     }
 }

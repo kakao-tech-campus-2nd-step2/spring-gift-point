@@ -1,10 +1,11 @@
 package gift.order.domain;
 
-import gift.option.domain.Option;
+import gift.product.option.domain.Option;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.Min;
@@ -24,8 +25,12 @@ public class Order {
     @NotNull
     String message;
     @ManyToOne
+    @JoinColumn(name = "option_id", nullable = false)
     Option option;
 
+    public Order() {
+
+    }
     public Order(Long quantity, String orderDateTime, String message, Option option) {
         this.quantity = quantity;
         this.orderDateTime = orderDateTime;
@@ -40,6 +45,7 @@ public class Order {
         this.message = message;
         this.option = option;
     }
+
 
     public Long getId() {
         return id;

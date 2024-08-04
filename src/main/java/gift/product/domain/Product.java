@@ -1,8 +1,9 @@
 package gift.product.domain;
 
 import gift.category.domain.Category;
-import gift.option.domain.Option;
+import gift.product.option.domain.Option;
 import gift.wish.domain.WishlistItem;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -37,7 +38,7 @@ public class Product {
     @OneToMany(mappedBy = "product")
     private List<WishlistItem> wishlistItemList;
 
-    @OneToMany(mappedBy = "product")
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
     @Size(min=1, message = "option은 최소한 1개 있어야한다.")
     private List<Option> optionList = new ArrayList<>();
 
@@ -109,5 +110,9 @@ public class Product {
 
     public void setOptionList(List<Option> optionList) {
         this.optionList = optionList;
+    }
+    public void addOption(Option option) {
+        optionList.add(option);
+        option.setProduct(this);
     }
 }

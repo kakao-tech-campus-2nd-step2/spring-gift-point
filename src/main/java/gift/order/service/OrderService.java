@@ -2,27 +2,37 @@ package gift.order.service;
 
 import gift.kakao.login.dto.KakaoMessageSendResponse;
 import gift.kakao.login.service.KakaoLoginService;
-import gift.option.domain.Option;
-import gift.option.repository.OptionRepository;
+import gift.order.domain.OrderListDTO;
+import gift.product.domain.ProductResponse;
+import gift.product.option.domain.Option;
+import gift.product.option.repository.OptionRepository;
 import gift.order.domain.Order;
 import gift.order.domain.OrderRequest;
 import gift.order.domain.OrderResponse;
 import gift.order.repository.OrderRepository;
+import gift.product.service.ProductService;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 @Service
 public class OrderService {
     private final OrderRepository orderRepository;
     private final OptionRepository optionRepository;
-
+    private final ProductService productService;
     private final KakaoLoginService kakaoLoginService;
 
     public OrderService(OrderRepository orderRepository, OptionRepository optionRepository,
-        KakaoLoginService kakaoLoginService) {
+        ProductService productService, KakaoLoginService kakaoLoginService) {
         this.orderRepository = orderRepository;
         this.optionRepository = optionRepository;
+        this.productService = productService;
         this.kakaoLoginService = kakaoLoginService;
     }
 
@@ -34,8 +44,28 @@ public class OrderService {
         return orderRepository.save(order);
     }
 
-    public KakaoMessageSendResponse sendMessage(String jwtAccessToken, String message){
-        return kakaoLoginService.sendMessage(jwtAccessToken, message);
+    public KakaoMessageSendResponse sendMessage(String accessToken, String message){
+        return kakaoLoginService.sendMessage(accessToken, message);
+    }
+    public Page<OrderResponse> getOrderResponses(Pageable pageable) {
+        return orderRepository.findAll(pageable)
+            .map(this::convertEntityToResponse);
+    }
+    public Page<OrderListDTO> getOrderListDTOs(Pageable pageable) {
+        Page<Order> ordersPage = orderRepository.findAll(pageable);
+        List<OrderListDTO> orderListDTOs = ordersPage.stream()
+            .map(order -> {
+                ProductResponse productResponse = productService.convertToResponse(order.getOption().getProduct());
+                return new OrderListDTO(
+                    productResponse.name(),
+                    productResponse.price(),
+                    order.getQuantity(),
+                    productResponse.imageUrl(),
+                    order.getOrderDateTime());
+            })
+            .collect(Collectors.toList());
+
+        return new PageImpl<>(orderListDTOs, pageable, ordersPage.getTotalElements());
     }
     private Order convertRequestToEntity(OrderRequest orderRequest){
         Option option = optionRepository.findById(orderRequest.optionId())
@@ -50,4 +80,5 @@ public class OrderService {
                         order.getOrderDateTime(),
                         order.getMessage());
     }
+
 }

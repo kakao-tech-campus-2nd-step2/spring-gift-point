@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>메인 페이지</title>
+</head>
+<body>
+<h1>메인 페이지</h1>
+
+<script>
+  // 토큰이 있는지 확인하고, 있으면 로컬 스토리지에 저장 후 루트로 POST 요청
+  function checkToken() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const token = urlParams.get('token');
+    if (token) {
+      localStorage.setItem('jwtToken', token);
+      window.history.replaceState({}, document.title, "/");  // URL에서 토큰 제거
+      alert('Token found: ' + token);
+
+      // 루트로 POST 요청
+      postToRoot(token);
+    } else {
+      alert('No token found in URL');
+    }
+  }
+
+  function postToRoot(token) {
+    const form = document.createElement('form');
+    form.method = 'POST';
+    form.action = '/';
+
+    const hiddenField = document.createElement('input');
+    hiddenField.type = 'hidden';
+    hiddenField.name = 'token';
+    hiddenField.value = token;
+    form.appendChild(hiddenField);
+
+    document.body.appendChild(form);
+    form.submit();
+  }
+
+  window.onload = checkToken;
+</script>
+</body>
+</html>

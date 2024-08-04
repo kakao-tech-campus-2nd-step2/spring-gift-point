@@ -1,16 +1,14 @@
 package gift.wish.controller;
 
 import gift.kakao.login.dto.KakaoUser;
-import gift.product.domain.Product;
-import gift.product.domain.ProductDTO;
+import gift.product.domain.ProductRequest;
+import gift.product.domain.ProductResponse;
 import gift.user.repository.UserRepository;
-import gift.wish.domain.WishlistDTO;
-import gift.wish.domain.WishlistItem;
+import gift.wish.domain.WishlistRequest;
 import gift.product.service.ProductService;
 import gift.user.service.UserService;
 import gift.wish.domain.WishlistResponse;
 import gift.wish.service.WishlistService;
-import java.util.ArrayList;
 import java.util.List;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -50,7 +48,6 @@ public class WishlistViewController {
         model.addAttribute("id", userId);
         String token = ((KakaoUser) userRepository.findById(userId).get()).getToken();
         model.addAttribute("token", token);
-        System.out.println("token: " + token);
         return "wishlist";
     }
 
@@ -59,25 +56,14 @@ public class WishlistViewController {
                                 @RequestParam(defaultValue = "0") int page,
                                  @RequestParam(defaultValue = "10") int size) {
         Pageable pageable = PageRequest.of(page, size);
-        Page<ProductDTO> productPages = productService.getAllProducts(pageable);
+        Page<ProductResponse> productPages = productService.getAllProducts(pageable);
         model.addAttribute("products", productPages);
         model.addAttribute("userId", userId);
         return "add_wishlist";
     }
     @PostMapping("{id}/save")
-    public String saveWishlist(@PathVariable("id") Long userId, @RequestBody List<WishlistDTO> wishlistDTOList) {
-        List<WishlistItem> wishlistItemList = new ArrayList<>();
-        for(WishlistDTO wishlistDTO : wishlistDTOList){
-            WishlistItem wishlistItem = new WishlistItem();
-            wishlistItem.setUser(userService.findById(userId).get());
-
-            Long productId = wishlistDTO.getProductId();
-            wishlistItem.setProduct(productService.getProductById(productId).get());
-
-            wishlistItem.setAmount(wishlistDTO.getAmount());
-            wishlistItemList.add(wishlistItem);
-        }
-        wishlistService.saveWishlistItemsWithUserId(userId, wishlistItemList);
+    public String saveWishlist(@PathVariable("id") Long userId, @RequestBody List<WishlistRequest> wishlistRequests) {
+        wishlistService.addWishes(wishlistRequests);
         return "redirect:/wishlist/" + userId;
     }
 }
