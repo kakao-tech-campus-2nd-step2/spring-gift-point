@@ -95,10 +95,6 @@ public class ProductService {
 
     @Transactional
     public Product update(Long id, ProductDTO productDTO, String email) {
-        if (!productMatchesUser(id, email)) {
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Unauthorized");
-        }
-
         Product product = findById(id);
         if (product.getCategory_id() != productDTO.getCategory_id()) {
             Category category = categoryService.findById(productDTO.getCategory_id());
@@ -112,10 +108,6 @@ public class ProductService {
 
     @Transactional
     public void delete(Long id, String email) {
-        if (!productMatchesUser(id, email)) {
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Unauthorized");
-        }
-
         Product product = findById(id);
         product.setUser(null);
 
@@ -132,9 +124,6 @@ public class ProductService {
 
     @Transactional
     public List<Option> addProductOption(Long productId, List<OptionDTO> optionDTOs, String email) {
-        if (!productMatchesUser(productId, email)) {
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Unauthorized");
-        }
         Product product = findById(productId);
         List<Option> res = new ArrayList<>();
 
@@ -149,30 +138,18 @@ public class ProductService {
 
     @Transactional
     public void editProductOption(Long productId, Long optionId, OptionDTO optionDTO, String email) {
-        if (!productMatchesUser(productId, email)) {
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Unauthorized");
-        }
         Product product = findById(productId);
         optionService.update(optionId, optionDTO, email);
     }
 
     @Transactional
     public void deleteProductOption(Long productId, Long optionId, String email) {
-        if (!productMatchesUser(productId, email)) {
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Unauthorized");
-        }
         // 옵션이 하나 이상인지 확인 로직
         if (productOptionRepository.findByProductId(productId).size() <= 1) {
             throw new IllegalArgumentException("Option should have at least one product option");
         }
 
         productOptionRepository.deleteByProductIdAndOptionId(productId, optionId);
-    }
-
-    public boolean productMatchesUser(Long id, String email) {
-        User user = userService.findOne(email);
-        Product product = findById(id);
-        return user.getId() == product.getUser().getId();
     }
 
     public Product findById(Long id) {
