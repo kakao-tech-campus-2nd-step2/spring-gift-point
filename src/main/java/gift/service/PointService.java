@@ -16,9 +16,8 @@ public class PointService {
         this.memberRepository = memberRepository;
     }
 
-    public int pointCharge(PointRequest request, Member member) {
+    public void pointCharge(PointRequest request, Member member) {
         member.chargePoint(request.point());
-        return member.getPoint();
     }
 
     public PointResponse getPoint(Member member) {

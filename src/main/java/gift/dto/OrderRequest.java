@@ -12,6 +12,7 @@ public record OrderRequest(
         Long quantity,
         @NotBlank
         String message,
+        @Min(0)
         int usedPoint
 ) {
 }

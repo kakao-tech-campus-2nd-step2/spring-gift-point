@@ -5,6 +5,7 @@ import gift.dto.PointResponse;
 import gift.model.LoginMember;
 import gift.model.Member;
 import gift.service.PointService;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -18,10 +19,10 @@ public class PointController {
         this.pointService = pointService;
     }
 
-    @PostMapping
-    public ResponseEntity<Void> chargePoint(@RequestBody PointRequest request, @LoginMember Member member) {
+    @PutMapping
+    public ResponseEntity<Void> chargePoint(@Valid @RequestBody PointRequest request, @LoginMember Member member) {
         pointService.pointCharge(request, member);
-        return ResponseEntity.status(HttpStatus.CREATED).build();
+        return ResponseEntity.status(HttpStatus.OK).build();
     }
 
     @GetMapping
