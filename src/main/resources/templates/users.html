@@ -2,9 +2,107 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>$Title$</title>
+  <title>User List</title>
 </head>
 <body>
-$END$
+<h1>User List</h1>
+<table id="userTable" border="1">
+  <thead>
+  <tr>
+    <th>ID</th>
+    <th>Email</th>
+    <th>Point</th>
+    <th>Actions</th>
+  </tr>
+  </thead>
+  <tbody>
+  <!-- User rows will be added here dynamically -->
+  </tbody>
+</table>
+
+<script>
+  function getToken() {
+    return localStorage.getItem('jwtToken');
+  }
+
+  async function fetchUsers() {
+    const token = getToken();
+    if (!token) {
+      alert("You are not logged in.");
+      return;
+    }
+
+    const response = await fetch('/api/users', {
+      headers: {
+        'Authorization': token
+      }
+    });
+    if (response.ok) {
+      const users = await response.json();
+      populateUserTable(users);
+    } else {
+      console.error('Failed to fetch users');
+    }
+  }
+
+  function populateUserTable(users) {
+    const userTableBody = document.getElementById('userTable').querySelector('tbody');
+    userTableBody.innerHTML = '';  // Clear existing rows
+
+    users.forEach(user => {
+      const row = document.createElement('tr');
+
+      const idCell = document.createElement('td');
+      idCell.textContent = user.id;
+      row.appendChild(idCell);
+
+      const emailCell = document.createElement('td');
+      emailCell.textContent = user.email;
+      row.appendChild(emailCell);
+
+      const pointCell = document.createElement('td');
+      const pointInput = document.createElement('input');
+      pointInput.type = 'number';
+      pointInput.value = user.point;
+      pointInput.dataset.userId = user.id;  // Store user ID in a data attribute
+      pointCell.appendChild(pointInput);
+      row.appendChild(pointCell);
+
+      const actionCell = document.createElement('td');
+      const saveButton = document.createElement('button');
+      saveButton.textContent = 'Save';
+      saveButton.onclick = () => updateUserPoint(user.id, pointInput.value);
+      actionCell.appendChild(saveButton);
+      row.appendChild(actionCell);
+
+      userTableBody.appendChild(row);
+    });
+  }
+
+  async function updateUserPoint(userId, newPoint) {
+    const token = getToken();
+    if (!token) {
+      alert("You are not logged in.");
+      return;
+    }
+
+    const response = await fetch(`/api/users/${userId}/point`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': token
+      },
+      body: JSON.stringify({ point: newPoint })
+    });
+
+    if (response.ok) {
+      alert('User point updated successfully');
+    } else {
+      alert('Failed to update user point');
+    }
+  }
+
+  fetchUsers();  // Fetch and display users when the page loads
+</script>
 </body>
 </html>
