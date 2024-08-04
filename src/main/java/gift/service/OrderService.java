@@ -9,7 +9,6 @@ import gift.repository.MemberRepository;
 import gift.repository.OrderRepository;
 import gift.repository.WishlistRepository;
 import jakarta.transaction.Transactional;
-import org.springframework.dao.DuplicateKeyException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -49,10 +48,10 @@ public class OrderService {
         wishlistRepository.deleteByMemberIdAndProductId(memberId, product.getId());
         Member member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new NoSuchElementException("존재하지 않는 회원입니다."));
-        Member updatedMember = new Member(member.getId(), member.getEmail(), member.getPassword(), member.getActiveToken(), (int) (orderRequestDto.getPoints()*0.5));
+        Member updatedMember = new Member(member.getId(), member.getEmail(), member.getPassword(), member.getActiveToken(), (int) (orderRequestDto.getPoints() * 0.5));
         memberRepository.save(updatedMember);
 
-//        kakaoMessageService.sendMessageToKakao(order, memberId);
+        kakaoMessageService.sendMessageToKakao(order, memberId);
         return order;
     }
 
