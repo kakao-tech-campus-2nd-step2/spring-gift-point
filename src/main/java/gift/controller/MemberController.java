@@ -13,9 +13,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.HashMap;
-import java.util.Map;
-
 @RestController
 @RequestMapping("/api/members")
 public class MemberController {
@@ -35,9 +32,7 @@ public class MemberController {
         MemberDTO savedMember = memberService.register(memberDTO);
         String token = jwtUtil.generateToken(savedMember.getEmail());
 
-        Map<String, String> response = new HashMap<>();
-        response.put("email", savedMember.getEmail());
-        response.put("token", token);
+        MemberResponse response = new MemberResponse(savedMember.getEmail(), token);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
