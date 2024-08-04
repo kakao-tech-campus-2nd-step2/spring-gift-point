@@ -38,6 +38,7 @@ public class OrderService {
 
     public OrderResponseDTO order(OrderRequestDTO orderRequestDTO, User user, Option option){
         option.subtract(orderRequestDTO.quantity());
+        user.usePoint(orderRequestDTO.point());
 
         WishList wishList = new WishList(jpaWishRepository.findAllByUserId(user.getId()));
         wishList.checkWishList(option.getProduct())
