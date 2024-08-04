@@ -1,31 +1,39 @@
 package gift.dto;
 
+import gift.domain.Category;
+
 public class WishResponse {
 
-    private Long id;
+    private Long wishId;
+    private Long productId;
     private String productName;
-    private Long memberId;
+    private Long productPrice;
+    private String productImageUrl;
+    private Category category;
 
-    public WishResponse(Long id, String productName, Long memberId) {
-        this.id = id;
+    public WishResponse(Long wishId, Long productId, String productName, Long productPrice, String productImageUrl, Category category) {
+        this.wishId = wishId;
+        this.productId = productId;
         this.productName = productName;
-        this.memberId = memberId;
+        this.productPrice = productPrice;
+        this.productImageUrl = productImageUrl;
+        this.category = category;
     }
 
-    public Long getId() {
-        return id;
+    public Long getWishId() {
+        return wishId;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public void setWishId(Long wishId) {
+        this.wishId = wishId;
     }
 
-    public Long getMemberId() {
-        return memberId;
+    public Long getProductId() {
+        return productId;
     }
 
-    public void setMemberId(Long memberId) {
-        this.memberId = memberId;
+    public void setProductId(Long productId) {
+        this.productId = productId;
     }
 
     public String getProductName() {
@@ -36,5 +44,28 @@ public class WishResponse {
         this.productName = productName;
     }
 
+    public Long getProductPrice() {
+        return productPrice;
+    }
+
+    public void setProductPrice(Long productPrice) {
+        this.productPrice = productPrice;
+    }
+
+    public String getProductImageUrl() {
+        return productImageUrl;
+    }
+
+    public void setProductImageUrl(String productImageUrl) {
+        this.productImageUrl = productImageUrl;
+    }
+
+    public Category getCategory() {
+        return category;
+    }
+
+    public void setCategory(Category category) {
+        this.category = category;
+    }
 
 }

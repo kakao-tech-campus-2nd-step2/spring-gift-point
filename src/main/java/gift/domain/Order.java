@@ -2,8 +2,7 @@ package gift.domain;
 
 import jakarta.persistence.*;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "orders")
@@ -17,18 +16,27 @@ public class Order {
     @JoinColumn(name = "member_id", nullable = false)
     private Member member;
 
-    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<OrderItem> orderItems = new ArrayList<>();
+    @ManyToOne
+    @JoinColumn(name = "option_id", nullable = false)
+    private Option option;
 
-    @Column(name = "recipient_message")
-    private String recipientMessage;
+    @Column(name = "quantity", nullable = false)
+    private int quantity;
+
+    private LocalDateTime orderDateTime;
+
+    @Column(name = "message")
+    private String message;
 
     public Order() {
     }
 
-    public Order(Member member, String recipientMessage) {
+    public Order(Member member, Option option, int quantity, LocalDateTime orderDateTime, String message) {
         this.member = member;
-        this.recipientMessage = recipientMessage;
+        this.option = option;
+        this.quantity = quantity;
+        this.orderDateTime = orderDateTime;
+        this.message = message;
     }
 
     public Long getId() {
@@ -47,20 +55,35 @@ public class Order {
         this.member = member;
     }
 
-    public List<OrderItem> getOrderItems() {
-        return orderItems;
+    public Option getOption() {
+        return option;
     }
 
-    public void setOrderItems(List<OrderItem> orderItems) {
-        this.orderItems = orderItems;
+    public void setOption(Option option) {
+        this.option = option;
     }
 
-    public String getRecipientMessage() {
-        return recipientMessage;
+    public int getQuantity() {
+        return quantity;
     }
 
-    public void setRecipientMessage(String recipientMessage) {
-        this.recipientMessage = recipientMessage;
+    public void setQuantity(int quantity) {
+        this.quantity = quantity;
     }
 
+    public LocalDateTime getOrderDateTime() {
+        return orderDateTime;
+    }
+
+    public void setOrderDateTime(LocalDateTime orderDateTime) {
+        this.orderDateTime = orderDateTime;
+    }
+
+    public String getMessage() {
+        return message;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
+    }
 }

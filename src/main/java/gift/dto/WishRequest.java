@@ -2,12 +2,12 @@ package gift.dto;
 
 public class WishRequest {
 
-    private String productName;
+    private Long productId;
 
     public WishRequest() {}
 
-    public String getProductName() {
-        return productName;
+    public Long getProductId() {
+        return productId;
     }
 
 }

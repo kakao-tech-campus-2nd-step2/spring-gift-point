@@ -30,16 +30,16 @@ public class WishService {
 
     public Page<WishResponse> getWishes(Long memberId, PageRequest pageRequest) {
         return wishRepository.findByMemberId(memberId, pageRequest)
-                .map(wish -> new WishResponse(wish.getId(), wish.getProduct().getName(), wish.getMember().getId()));
+                .map(wish -> new WishResponse(wish.getId(), wish.getProduct().getId(), wish.getProduct().getName(), wish.getProduct().getPrice(), wish.getProduct().getImageUrl(), wish.getProduct().getCategory()));
     }
 
     public WishResponse addWish(WishRequest wishRequest, Long memberId) {
         Member member = memberRepository.findById(memberId).orElseThrow(() -> new IllegalArgumentException("Invalid member ID"));
-        Product product = productRepository.findByName(wishRequest.getProductName()).orElseThrow(() -> new IllegalArgumentException("Invalid product name"));
+        Product product = productRepository.findById(wishRequest.getProductId()).orElseThrow(() -> new IllegalArgumentException("Invalid product name"));
 
         Wish wish = new Wish(product, member);
         wishRepository.save(wish);
-        return new WishResponse(wish.getId(), wish.getProduct().getName(), wish.getMember().getId());
+        return new WishResponse(wish.getId(), wish.getProduct().getId(), wish.getProduct().getName(), wish.getProduct().getPrice(), wish.getProduct().getImageUrl(), wish.getProduct().getCategory());
     }
 
     public void removeWish(Long wishId) {

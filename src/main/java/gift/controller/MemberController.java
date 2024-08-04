@@ -10,7 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/members")
+@RequestMapping("api/members")
 @Tag(name = "Member API", description = "회원 API 관련 엔드포인트")
 public class MemberController {
 
@@ -21,7 +21,7 @@ public class MemberController {
     }
 
     @PostMapping("/register")
-    @Operation(summary = "회원 가입", description = "새로운 회원을 등록합니다.")
+    @Operation(summary = "회원가입", description = "새로운 회원을 등록합니다.")
     public ResponseEntity<Object> register(@RequestBody Member member) {
         try {
             memberService.register(member);
@@ -33,7 +33,7 @@ public class MemberController {
     }
 
     @PostMapping("/login")
-    @Operation(summary = "회원 로그인", description = "회원 인증 정보를 사용하여 로그인합니다.")
+    @Operation(summary = "로그인", description = "회원 인증 정보를 사용하여 로그인합니다.")
     public ResponseEntity<Object> login(@RequestBody Member member) {
         try {
             String token = memberService.login(member);

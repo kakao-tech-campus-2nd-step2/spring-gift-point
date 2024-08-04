@@ -4,7 +4,6 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import gift.domain.KakaoToken;
 import gift.domain.Order;
-import gift.domain.OrderItem;
 import gift.repository.KakaoTokenRepository;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
@@ -98,10 +97,10 @@ public class KakaoService {
     private String createOrderMessage(Order order) throws Exception {
         StringBuilder message = new StringBuilder();
         message.append("주문 내역:\n");
-        for (OrderItem item : order.getOrderItems()) {
-            message.append(item.getProduct().getName()).append(" - ").append(item.getOption().getName()).append(" - ").append(item.getQuantity()).append("\n");
-        }
-        message.append("메시지: ").append(order.getRecipientMessage());
+
+        message.append(order.getOption().getProduct().getName()).append(" - ").append(order.getOption().getName()).append(" - ").append(order.getQuantity()).append("\n");
+
+        message.append("메시지: ").append(order.getMessage());
 
         Map<String, Object> templateObject = new HashMap<>();
         templateObject.put("object_type", "text");

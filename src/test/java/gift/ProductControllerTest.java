@@ -14,7 +14,6 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
@@ -61,14 +60,14 @@ class ProductControllerTest {
     void getProductsTest() throws Exception {
         mockMvc.perform(get("/api/products"))  // 'api/products' 경로로 GET 요청
                 .andExpect(status().isOk())  // 응답 상태 코드가 '200 OK'인지 검증
-                .andExpect(model().attributeExists("products"))
-                .andExpect(model().attribute("products", hasItem(hasProperty("name", is("아이스 카페 아메리카노 T")))));
+                .andExpect(jsonPath("$.content", hasSize(greaterThan(0))))
+                .andExpect(jsonPath("$.content[0].name", is("아이스 카페 아메리카노 T")));
     }
 
     @Test
     @DisplayName("상품 추가 테스트")
     void addProductTest() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.post("/api/products")
+        mockMvc.perform(post("/api/products")
                         .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                         .param("name", "복숭아 아이스티 T")
                         .param("price", "5900")
@@ -76,19 +75,17 @@ class ProductControllerTest {
                         .param("category.id", String.valueOf(sampleProduct.getCategory().getId()))
                         .param("optionNames", "Large")
                         .param("optionQuantities", "10"))
-                .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl("/api/products"));
+                .andExpect(status().isCreated());
 
         mockMvc.perform(get("/api/products"))
                 .andExpect(status().isOk())
-                .andExpect(model().attributeExists("products"))
-                .andExpect(model().attribute("products", hasItem(hasProperty("name", is("복숭아 아이스티 T")))));
+                .andExpect(jsonPath("$.content", hasSize(greaterThan(1))))
+                .andExpect(jsonPath("$.content[?(@.name == '복숭아 아이스티 T')]").exists());
     }
 
     @Test
     @DisplayName("상품 수정 테스트")
     void editProductTest() throws Exception {
-
         Product existingProduct = productRepository.findAll().get(0);
 
         mockMvc.perform(put("/api/products/" + existingProduct.getId())
@@ -97,32 +94,29 @@ class ProductControllerTest {
                         .param("price", "3000")
                         .param("imageUrl", "https://st.kakaocdn.net/product/gift/product/20231010111814_9a667f9eccc943648797925498bdd8a3.jpg")
                         .param("category.id", String.valueOf(existingProduct.getCategory().getId())))
-                .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl("/api/products"));
+                .andExpect(status().isOk());
 
         mockMvc.perform(get("/api/products"))
                 .andExpect(status().isOk())
-                .andExpect(model().attributeExists("products"))
-                .andExpect(model().attribute("products", hasItem(hasProperty("name", is("아이스 카페 아메리카노 V")))));
+                .andExpect(jsonPath("$.content", hasSize(greaterThan(0))))
+                .andExpect(jsonPath("$.content[?(@.name == '아이스 카페 아메리카노 V')]").exists());
     }
 
     @Test
     @DisplayName("상품 삭제 테스트")
     void deleteProductTest() throws Exception {
-
         Product existingProduct = productRepository.findAll().get(0);
         String productName = existingProduct.getName();
 
         mockMvc.perform(delete("/api/products/" + existingProduct.getId())
-                        .contentType(MediaType.APPLICATION_FORM_URLENCODED))
-                .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl("/api/products"));
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(content().string(containsString("상품 삭제 성공!")));
 
         mockMvc.perform(get("/api/products"))
                 .andExpect(status().isOk())
-                .andExpect(model().attributeExists("products"))
-                .andExpect(model().attribute("products", not(hasItem(hasProperty("name", is(productName))))));
-
+                .andExpect(jsonPath("$.content", hasSize(0)))
+                .andExpect(jsonPath("$.content", not(hasItem(hasProperty("name", is(productName))))));
     }
 
     @Test

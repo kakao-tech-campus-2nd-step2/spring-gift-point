@@ -3,6 +3,7 @@ package gift;
 import gift.domain.Option;
 import gift.repository.OptionRepository;
 import gift.repository.ProductRepository;
+import gift.service.OptionService;
 import gift.service.ProductService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -27,7 +28,7 @@ class ProductServiceTest {
     private OptionRepository optionRepository;
 
     @InjectMocks
-    private ProductService productService;
+    private OptionService optionService;
 
     @Test
     @DisplayName("옵션 수량 차감 성공 테스트")
@@ -43,7 +44,7 @@ class ProductServiceTest {
 
         when(optionRepository.findByProductIdAndName(productId, optionName)).thenReturn(Optional.of(option));
 
-        productService.subtractOptionQuantity(productId, optionName, quantityToSubtract);
+        optionService.subtractOptionQuantity(productId, optionName, quantityToSubtract);
 
         assertThat(option.getQuantity()).isEqualTo(5);
         verify(optionRepository, times(1)).save(option);
@@ -64,7 +65,7 @@ class ProductServiceTest {
         when(optionRepository.findByProductIdAndName(productId, optionName)).thenReturn(Optional.of(option));
 
         assertThatThrownBy(() -> {
-            productService.subtractOptionQuantity(productId, optionName, quantityToSubtract);
+            optionService.subtractOptionQuantity(productId, optionName, quantityToSubtract);
         }).isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("차감할 수량이 현재 수량보다 많습니다.");
     }
@@ -79,7 +80,7 @@ class ProductServiceTest {
         when(optionRepository.findByProductIdAndName(productId, optionName)).thenReturn(Optional.empty());
 
         assertThatThrownBy(() -> {
-            productService.subtractOptionQuantity(productId, optionName, quantityToSubtract);
+            optionService.subtractOptionQuantity(productId, optionName, quantityToSubtract);
         }).isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("해당 옵션이 존재하지 않습니다.");
     }
