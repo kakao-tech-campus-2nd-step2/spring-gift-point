@@ -97,7 +97,7 @@ class OrderControllerTest {
         // Given
         Member member = new Member("test@example.com", "password");
         member.setId(1L);
-        OrderRequest orderRequest = new OrderRequest(1L, 1L, 1, "Test message");
+        OrderRequest orderRequest = new OrderRequest(1L, 1L, 1, "Test message",false,"000-0000-0000");
         Order order = new Order(1L, orderRequest.getOptionId(), orderRequest.getQuantity(), orderRequest.getMessage(),member);
 
         given(loginMemberArgumentResolver.supportsParameter(any())).willReturn(true);
@@ -126,7 +126,9 @@ class OrderControllerTest {
                     fieldWithPath("optionId").description("주문 옵션 ID"),
                     fieldWithPath("productId").description("상품 ID"),
                     fieldWithPath("quantity").description("주문 수량"),
-                    fieldWithPath("message").description("주문 메시지")
+                    fieldWithPath("message").description("주문 메시지"),
+                    fieldWithPath("cashReceipt").description("현금 영수증 여부"),
+                    fieldWithPath("phoneNumber").description("휴대폰 번호")
                 ),
                 responseFields(
                     fieldWithPath("result").description("API 호출 결과"),
@@ -135,10 +137,12 @@ class OrderControllerTest {
                     fieldWithPath("data").description("주문 데이터"),
                     fieldWithPath("data.id").description("주문 데이터 ID"),
                     fieldWithPath("data.orderDateTime").description("주문 데이터 ID"),
-                    fieldWithPath("data.message").description("주문 데이터 ID"),
-                    fieldWithPath("data.optionId").description("주문 데이터 ID"),
-                    fieldWithPath("data.quantity").description("주문 데이터 ID"),
-                    fieldWithPath("data.productId").description("주문 데이터 ID")
+                    fieldWithPath("data.message").description("주문 데이터 메세지"),
+                    fieldWithPath("data.optionId").description("주문 데이터 옵션ID"),
+                    fieldWithPath("data.quantity").description("주문 데이터 상품 수량"),
+                    fieldWithPath("data.productId").description("주문 데이터 상품 ID"),
+                    fieldWithPath("data.totalPrice").description("주문 데이터 총 가격"),
+                    fieldWithPath("data.cashReceipt").description("주문 데이터 현금 영수증")
                 )
             ));
     }
@@ -200,6 +204,8 @@ class OrderControllerTest {
                     fieldWithPath("data.content[].optionId").description("옵션 ID").optional(),
                     fieldWithPath("data.content[].quantity").description("주문 수량"),
                     fieldWithPath("data.content[].productId").description("상품 ID").optional(),
+                    fieldWithPath("data.content[].totalPrice").description("주문 총액"),
+                    fieldWithPath("data.content[].cashReceipt").description("주문 현금 영수증"),
                     fieldWithPath("data.totalElements").description("전체 주문 수"),
                     fieldWithPath("data.totalPages").description("전체 페이지 수"),
                     fieldWithPath("data.size").description("페이지 크기"),
