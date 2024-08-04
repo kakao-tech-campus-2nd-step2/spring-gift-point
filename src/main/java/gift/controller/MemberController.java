@@ -47,7 +47,7 @@ public class MemberController {
         return ResponseEntity.ok().headers(headers).body(response);
     }
 
-    @GetMapping("/point")
+    @GetMapping("/points")
     @Operation(summary = "포인트 조회", description = "회원의 포인트를 조회합니다.")
     public ResponseEntity<Map<String, Integer>> getPoints(@CurrentMember Member member) {
         int points = memberService.getMemberPoints(member.getEmail());

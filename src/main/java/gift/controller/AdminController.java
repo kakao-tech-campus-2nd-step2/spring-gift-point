@@ -18,7 +18,7 @@ public class AdminController {
         this.memberService = memberService;
     }
 
-    @GetMapping("/admin/points")
+    @GetMapping("/web/admin/points")
     public String getPointsPage(Model model) {
         List<Member> members = memberService.getAllMembers();
         model.addAttribute("members", members);
@@ -28,6 +28,6 @@ public class AdminController {
     @PostMapping("/admin/points/update")
     public String updatePoints(@RequestParam String email, @RequestParam int points) {
         memberService.updateMemberPoints(email, points);
-        return "redirect:/admin/points";
+        return "redirect:/web/admin/points";
     }
 }
