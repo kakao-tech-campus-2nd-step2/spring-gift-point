@@ -84,7 +84,11 @@ class KakaoServiceTest {
 
         assertNotNull(result);
         assertEquals("test@example.com", result.getEmail());
+<<<<<<< HEAD
         assertEquals("test_nickname", result.getName());
+=======
+        assertEquals("test_nickname", result.getNickname());
+>>>>>>> e3b9ef38d18104514aa1d0951ff1a098ff9a093f
         mockServer.verify();
     }
 }

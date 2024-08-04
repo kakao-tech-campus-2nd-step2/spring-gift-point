@@ -1,7 +1,12 @@
 package gift.service;
 
+<<<<<<< HEAD
 import gift.dto.order.OrderRequest;
 import gift.dto.order.OrderResponse;
+=======
+import gift.dto.OrderRequest;
+import gift.dto.OrderResponse;
+>>>>>>> e3b9ef38d18104514aa1d0951ff1a098ff9a093f
 import gift.entity.Order;
 import gift.repository.OrderRepository;
 import org.junit.jupiter.api.BeforeEach;
