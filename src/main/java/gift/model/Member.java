@@ -35,11 +35,25 @@ public class Member {
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Wish> wishes;
 
+    @Column(nullable = false)
+    private int points = 0;
+
     public Member() {}
 
     public Member(@Email @NotBlank String email, String password, String oauthProvider) {
         this.email = email;
         this.password = password;
         this.oauthProvider = oauthProvider;
+    }
+
+    public void addPoints(int points) {
+        this.points += points;
+    }
+
+    public void subtractPoints(int points) {
+        if (this.points < points) {
+            throw new IllegalArgumentException("Not enough points");
+        }
+        this.points -= points;
     }
 }
