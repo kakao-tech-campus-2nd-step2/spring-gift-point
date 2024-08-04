@@ -16,9 +16,9 @@ INSERT INTO options (name, quantity, product_id) VALUES ('콜드브루', 100, 1)
 INSERT INTO options (name, quantity, product_id) VALUES ('딸기 케이크', 2000, 2);
 INSERT INTO options (name, quantity, product_id) VALUES ('초코 케이크', 200, 2);
 
-INSERT INTO users (email, password, role) VALUES ('admin@admin', 'admin', 'admin');
-INSERT INTO users (email, password, role) VALUES ('user@user', 'user', 'user');
-INSERT INTO users (email, password, role) VALUES ('rbgusdn123@naver.com', 'edsfs-gaga33dsakfo2s-dasfas', 'kakao');
+INSERT INTO users (email, password, point, role) VALUES ('admin@admin', 'admin', 9999999999, 'admin');
+INSERT INTO users (email, password, point, role) VALUES ('user@user', 'user', 1000000, 'user');
+INSERT INTO users (email, password, point, role) VALUES ('rbgusdn123@naver.com', '1111', 2000000, 'kakao');
 
 INSERT INTO wish (user_id, option_id) VALUES (3, 1);
 INSERT INTO wish (user_id, option_id) VALUES (3, 2);

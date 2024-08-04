@@ -14,4 +14,5 @@ public class ErrorMessage {
     public static final String optionNotBelong = "옵션이 해당 제품에 존재하지 않습니다.";
     public static final String quantityInvalid = "감소량이 현재 수량 이상입니다.";
     public static final String apiInvalid = "카카오 로그인에 실패하였습니다.";
+    public static final String pointLack = "포인트가 부족합니다.";
 }
