@@ -14,12 +14,12 @@ jobs:
 
      - name: Set up JDK 21
        uses: actions/setup-java@v3
-        with:
+       with:
           java-version: 21
 
      - name: Setup SSH
         uses: webfactory/ssh-agent@v0.5.0
         with:
           ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
-     - name: Connect to EC2 and excute script
+     - name: Connect to EC2 and execute script
        run: ssh -o StrictHostKeyChecking=no ubuntu@${{ secrets.EC2_IP }} "~/deploy.sh" 
