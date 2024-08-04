@@ -24,7 +24,7 @@ public class WebConfig implements WebMvcConfigurer {
     public void addCorsMappings(CorsRegistry registry) {
         // 위시리스트 API에 대한 CORS 설정
         registry.addMapping("/api/wishes/**")
-                .allowedOrigins("아직 프론트분들이 배포가 안되서 추후 채울 예정")
+                .allowedOrigins("https://minji2219.github.io/")
                 .allowedMethods("GET", "POST", "DELETE", "OPTIONS")
                 .allowedHeaders("Authorization", "Content-Type")
                 .allowCredentials(true)
@@ -32,8 +32,17 @@ public class WebConfig implements WebMvcConfigurer {
 
         // 주문 API에 대한 CORS 설정
         registry.addMapping("/api/orders/**")
-                .allowedOrigins("아직 프론트분들이 배포가 안되서 추후 채울 예정")
-                .allowedMethods("POST", "PUT", "OPTIONS")
+                .allowedOrigins("https://minji2219.github.io/")
+                .allowedMethods("POST", "OPTIONS")
+                .allowedHeaders("Authorization", "Content-Type")
+                .allowCredentials(true)
+                .maxAge(1800);
+
+
+        //멤버 포인트 조회 API에 대한 CORS 설정
+        registry.addMapping("/api/members/point")
+                .allowedOrigins("https://minji2219.github.io/")
+                .allowedMethods("GET", "OPTIONS")
                 .allowedHeaders("Authorization", "Content-Type")
                 .allowCredentials(true)
                 .maxAge(1800);
