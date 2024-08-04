@@ -1,16 +1,14 @@
 package gift.main.controller;
 
-import gift.main.dto.UserJoinRequest;
-import gift.main.dto.UserLoginRequest;
+import gift.main.dto.*;
 import gift.main.service.UserService;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -39,6 +37,14 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.CREATED)
                 .header(HttpHeaders.AUTHORIZATION, token)
                 .body(responseBody);
+
+    }
+
+
+    @GetMapping("/api/admin/users")
+    public ResponseEntity<?> loinMember(@RequestParam(value = "page") int pageNum) {
+        Page<UserResponse> userPage = userService.getUserPage(pageNum);
+        return ResponseEntity.ok(new PageResponse(userPage));
 
     }
 }

@@ -20,7 +20,6 @@ public class AdminProductController {
     @PostMapping
     public ResponseEntity<String> registerProduct(@RequestBody ProductAllRequest productAllRequest) {
         productService.registerProduct(productAllRequest);
-        System.out.println("productAllInformation = " + productAllRequest);
         return ResponseEntity.ok("Product added successfully");
     }
 
