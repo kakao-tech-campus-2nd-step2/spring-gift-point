@@ -68,4 +68,11 @@ public class MemberService {
             throw new MemberNotFoundException();
         }
     }
+
+    public Integer getPoint(Long memberId) {
+        var member = memberRepository.findById(memberId)
+                .orElseThrow(MemberNotFoundException::new);
+
+        return member.getPoint();
+    }
 }

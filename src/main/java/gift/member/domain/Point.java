@@ -19,6 +19,10 @@ public class Point implements Serializable {
         return new Point(value);
     }
 
+    public Integer getValue() {
+        return value;
+    }
+
     public void use(Integer value) {
         if (this.value < value) {
             throw new IllegalArgumentException("포인트가 부족합니다.");

@@ -75,4 +75,8 @@ public class Member extends BaseEntity {
     public Integer accumulatePoint(Integer price) {
         return point.accumulate(price);
     }
+
+    public Integer getPoint() {
+        return point.getValue();
+    }
 }
