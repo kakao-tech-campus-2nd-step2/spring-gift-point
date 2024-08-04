@@ -37,10 +37,21 @@ public class OrderService {
         Option option = optionRepository.findById(orderRequest.optionId())
                 .orElseThrow(() -> new IllegalArgumentException("Invalid option ID"));
 
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new IllegalArgumentException("Member not found"));
+
+        int totalPrice = option.getQuantity() * orderRequest.quantity();
+        if (orderRequest.usingPoint() > 0) {
+            if (member.getPoints() < orderRequest.usingPoint()) {
+                throw new IllegalArgumentException("Insufficient points");
+            }
+            totalPrice -= orderRequest.usingPoint();
+            member.deductPoints(orderRequest.usingPoint());
+        }
+
         if (option.getQuantity() < orderRequest.quantity()) {
             throw new IllegalArgumentException("Insufficient quantity");
         }
-
         option.setQuantity(option.getQuantity() - orderRequest.quantity());
         optionRepository.save(option);
 
@@ -53,8 +64,10 @@ public class OrderService {
         order.setMessage(orderRequest.message());
         orderRepository.save(order);
 
-        Member member = memberRepository.findById(memberId)
-                .orElseThrow(() -> new IllegalArgumentException("Member not found"));
+        int earnedPoints = (int) Math.floor(totalPrice * 0.005);
+        member.addPoints(earnedPoints);
+
+        memberRepository.save(member);
 
         sendOrderMessage(order, member.getKakaoToken());
     }
