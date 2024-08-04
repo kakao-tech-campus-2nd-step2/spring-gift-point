@@ -11,6 +11,7 @@ import gift.domain.user.UserInfoDto;
 import gift.repository.order.OrderRepository;
 import gift.repository.product.option.ProductOptionRepository;
 import gift.repository.wish.WishRepository;
+import gift.service.point.PointService;
 import gift.service.user.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -43,6 +44,7 @@ public class KakaoService {
     private final WishRepository wishRepository;
     private final OrderRepository orderRepository;
     private final JwtTokenUtil jwtTokenUtil;
+    private final PointService pointService;
 
     @Autowired
     public KakaoService(KakaoProperties kakaoProperties,
@@ -50,7 +52,8 @@ public class KakaoService {
                         ProductOptionRepository productOptionRepository,
                         WishRepository wishRepository,
                         OrderRepository orderRepository,
-                        JwtTokenUtil jwtTokenUtil) {
+                        JwtTokenUtil jwtTokenUtil,
+                        PointService pointService) {
         this.client = RestClient.builder().build();
         this.objectMapper = new ObjectMapper();
         this.kakaoProperties = kakaoProperties;
@@ -59,6 +62,7 @@ public class KakaoService {
         this.wishRepository = wishRepository;
         this.orderRepository = orderRepository;
         this.jwtTokenUtil = jwtTokenUtil;
+        this.pointService = pointService;
     }
 
     public UserInfoDto kakaoLogin(String authorizationCode) {
@@ -176,13 +180,36 @@ public class KakaoService {
     }
 
     @Transactional
-    public Map<String, Object> createOrder(User user, String accessToken, OrderRequest orderRequest) {
+    public Map<String, Object> createKakaoOrder(User user, String accessToken, OrderRequest orderRequest) {
         ProductOption productOption = productOptionRepository.findById(orderRequest.getOptionId())
                 .orElseThrow(() -> new IllegalArgumentException("옵션을 찾을 수 없음"));
 
+        Long totalPrice = productOption.getPrice() * orderRequest.getQuantity();
+
+        //주문 총 가격이 1000원인데 사용자가 2000원의 포인트를 사용하려고 한다면, pointsToUse는 1000원이 됩니다.
+        Long pointsToUse = Math.min(orderRequest.getPointsToUse(), totalPrice);
+        //pointsToUse와 사용자의 보유 포인트 중 작은 값을 pointsToUse에 할당합니다. 이렇게 함으로써, 사용자가 보유한 포인트를 초과하여 사용할 수 없도록 함.
+        pointsToUse = Math.min(pointsToUse, pointService.getUserPoints(user));
+
+        // 포인트 사용 및 적립
+        pointService.usePoints(user, pointsToUse);
+        Long remainingCashAmount = totalPrice - pointsToUse;
+        Long pointsToEarn = (long) (remainingCashAmount * 0.05);
+        pointService.addPoints(user, pointsToEarn);
+
+        logger.info("포인트 실제 사용 : {}", pointsToUse);
+        logger.info("결제 금액 : {}", remainingCashAmount);
+        logger.info("포인트 적립: {}", pointsToEarn);
+
+        // 총 포인트 조회 및 로깅
+        Long totalPoints = pointService.getUserPoints(user); // 현재 총 포인트 조회
+        logger.info("총포인트: {}", totalPoints);
+
+        //옵션 개수 차감
         productOption.subtract(orderRequest.getQuantity());
         productOptionRepository.save(productOption);
 
+        //위시리스트 삭제
         wishRepository.findByUserIdAndProductIdAndIsDeletedFalse(user.getId(), productOption.getProduct().getId())
                 .ifPresent(wish -> {
                     wish.setIsDeleted(true);
@@ -195,7 +222,8 @@ public class KakaoService {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss");
         String formattedNow = now.format(formatter);
 
-        Order order = new Order(user, productOption, orderRequest.getQuantity(), orderRequest.getMessage(), now);
+        //주문 생성
+        Order order = new Order(user, productOption, orderRequest.getQuantity(), orderRequest.getMessage(), now, remainingCashAmount, pointsToUse);
         orderRepository.save(order);
 
         Map<String, Object> response = new HashMap<>();
@@ -204,7 +232,14 @@ public class KakaoService {
         response.put("quantity", orderRequest.getQuantity());
         response.put("orderDateTime", formattedNow);
         response.put("message", orderRequest.getMessage());
+        //실제 결제 금액
+        response.put("remainingCashAmount", remainingCashAmount);
+        //사용 포인트
+        response.put("pointsToUse", pointsToUse);
+        //남은 총포인트
+        response.put("totalPoints", totalPoints);
 
+        logger.info("주문 완료: {}", response);
         return response;
     }
 

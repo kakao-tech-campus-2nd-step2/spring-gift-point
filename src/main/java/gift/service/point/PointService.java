@@ -3,6 +3,7 @@ package gift.service.point;
 import gift.domain.point.Point;
 import gift.domain.user.User;
 import gift.repository.point.PointRepository;
+import gift.service.kakao.KakaoService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -53,7 +54,6 @@ public class PointService {
         pointRepository.save(point);
         logger.info("포인트 사용 완료. 사용자: {}, 사용된 포인트: {}, 남은 포인트: {}", user.getId(), amount, point.getAmount());
     }
-
 
     @Transactional
     public void addPoints(User user, Long amount) {
