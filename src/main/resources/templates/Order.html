@@ -20,6 +20,10 @@
             <label>Message:</label>
             <input type="text" class="form-control" id="message" required/>
         </div>
+        <div class="form-group">
+            <label>Points to Use:</label>
+            <input type="number" class="form-control" id="pointsToUse" required/>
+        </div>
         <button type="submit" class="btn btn-primary">Order</button>
     </form>
 </div>
@@ -31,6 +35,7 @@
         const optionId = document.getElementById('optionId').value;
         const quantity = document.getElementById('quantity').value;
         const message = document.getElementById('message').value;
+        const pointsToUse = document.getElementById('pointsToUse').value;
 
         const token = localStorage.getItem('jwtToken');
 
@@ -43,7 +48,8 @@
             body: JSON.stringify({
                 optionId: optionId,
                 quantity: quantity,
-                message: message
+                message: message,
+                pointsToUse: pointsToUse
             })
         })
             .then(response => {

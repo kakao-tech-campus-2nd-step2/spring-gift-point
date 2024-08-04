@@ -1,7 +1,10 @@
 package gift.model;
 
 import jakarta.persistence.*;
+
+import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
+import java.util.Base64;
 
 @Entity
 @Table(name = "orders")
@@ -19,6 +22,7 @@ public class Order {
     private Member member;
 
     private int quantity;
+    @Lob
     private String message;
     private LocalDateTime orderDateTime;
 
@@ -30,7 +34,7 @@ public class Order {
         this.productOption = productOption;
         this.member = member;
         this.quantity = quantity;
-        this.message = message;
+        this.setMessage(message);
         this.orderDateTime = orderDateTime;
     }
 
@@ -68,11 +72,13 @@ public class Order {
     }
 
     public String getMessage() {
-        return message;
+
+        return new String(Base64.getUrlDecoder().decode(this.message), StandardCharsets.UTF_8);
     }
 
     public void setMessage(String message) {
-        this.message = message;
+
+        this.message = Base64.getUrlEncoder().encodeToString(message.getBytes(StandardCharsets.UTF_8));
     }
 
     public LocalDateTime getOrderDateTime() {

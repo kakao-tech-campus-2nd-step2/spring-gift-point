@@ -68,7 +68,7 @@
                 </td>
                 <td>
                     <button class="btn btn-primary btn-sm" th:attr="onclick='addToWishList(' + ${product.id} + ')'">Add to Wish List</button>
-                    <a th:href="@{/order(optionId=${product.id})}" class="btn btn-success btn-sm mt-1">Order</a> <!-- 주문하기 버튼 추가 -->
+                    <a th:href="@{/order(optionId=${product.id})}" class="btn btn-success btn-sm mt-1">Order</a>
                 </td>
             </tr>
             </tbody>
@@ -99,7 +99,9 @@
         const token = localStorage.getItem('jwtToken');
         const selectedOptionId = document.getElementById(`optionDropdown_${productId}`).value;
 
-        fetch('/wishes', {
+        console.log('Selected Option ID:', selectedOptionId); // 디버깅 메시지 추가
+
+        fetch('/api/wishes', {
             method: 'POST',
             headers: {
                 'Authorization': 'Bearer ' + token,
@@ -120,6 +122,7 @@
                 console.error('Error:', error);
             });
     }
+
 </script>
 </body>
 </html>

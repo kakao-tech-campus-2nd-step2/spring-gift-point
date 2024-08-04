@@ -33,7 +33,7 @@ public class OrderController {
     @Operation(summary = "주문하기", description = "새 주문을 생성한다.")
     @PostMapping
     public ResponseEntity<DomainResponse> createOrder(@RequestBody OrderRequest orderRequest, @LoginMember Member member) {
-        Order order = orderService.createOrder(orderRequest.getOptionId(), orderRequest.getQuantity(), orderRequest.getMessage(), member);
+        Order order = orderService.createOrder(orderRequest.getOptionId(), orderRequest.getQuantity(), orderRequest.getMessage(), member, orderRequest.getPointsToUse());
         OrderResponse response = new OrderResponse(order);
         Map<String, Object> responseMap = new HashMap<>();
         responseMap.put("id", response.getId());
