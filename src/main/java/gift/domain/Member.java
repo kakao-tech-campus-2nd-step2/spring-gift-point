@@ -4,6 +4,8 @@ import gift.domain.base.BaseTimeEntity;
 import gift.domain.constants.Platform;
 import gift.domain.vo.Email;
 import gift.domain.vo.Password;
+import gift.domain.vo.Point;
+import gift.web.validation.exception.client.BadRequestException;
 import gift.web.validation.exception.client.IncorrectPasswordException;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
@@ -30,6 +32,9 @@ public class Member extends BaseTimeEntity {
     @Enumerated(EnumType.STRING)
     @ColumnDefault("'GIFT'")
     private Platform platform;
+
+    @Embedded
+    private Point point;
 
     protected Member() {
     }
@@ -80,6 +85,23 @@ public class Member extends BaseTimeEntity {
         platform = builder.platform;
     }
 
+    public void matchPassword(final String password) {
+        if (!this.password.matches(password)) {
+            throw new IncorrectPasswordException();
+        }
+    }
+
+    public Point subtractPoint(final Integer point) {
+        if (this.point.getValue() < point) {
+            throw new BadRequestException("포인트가 부족합니다.");
+        }
+        return this.point.subtract(point);
+    }
+
+    public Point addPoint(final Integer point) {
+        return this.point.add(point);
+    }
+
     public Email getEmail() {
         return email;
     }
@@ -96,9 +118,8 @@ public class Member extends BaseTimeEntity {
         return platform;
     }
 
-    public void matchPassword(final String password) {
-        if (!this.password.matches(password)) {
-            throw new IncorrectPasswordException();
-        }
+    public Point getPoint() {
+        return point;
     }
+
 }
