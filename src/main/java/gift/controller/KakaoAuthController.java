@@ -1,15 +1,16 @@
 package gift.controller;
 
+import gift.dto.ApiResponse;
 import gift.dto.UserInfo;
 import gift.service.KakaoAuthService;
 import gift.service.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
-@Controller
+@RestController
 public class KakaoAuthController {
 
     private final KakaoAuthService kakaoAuthService;
@@ -21,7 +22,7 @@ public class KakaoAuthController {
     }
 
     @GetMapping("/oauth/kakao")
-    public String kakaoLogin(@RequestParam("code") String authorizationCode, HttpServletRequest request) {
+    public ApiResponse<String> kakaoLogin(@RequestParam("code") String authorizationCode, HttpServletRequest request) {
         try {
             String accessToken = kakaoAuthService.getAccessToken(authorizationCode);
             UserInfo userInfo = kakaoAuthService.getUserInfo(accessToken);
@@ -32,9 +33,9 @@ public class KakaoAuthController {
 
             userService.saveUser(accessToken, userInfo);
 
-            return "redirect:/order";
+            return new ApiResponse<>(true, "Access token retrieved successfully", accessToken, null);
         } catch (Exception e) {
-            return "redirect:/login";
+            return new ApiResponse<>(true, "Access token retrieved successfully", null, null);
         }
     }
 }
