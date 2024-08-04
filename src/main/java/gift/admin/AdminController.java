@@ -1,5 +1,6 @@
 package gift.admin;
 
+import gift.domain.member.service.MemberService;
 import gift.domain.product.dto.ProductRequest;
 import gift.domain.product.dto.ProductResponse;
 import gift.domain.product.service.ProductService;
@@ -24,9 +25,11 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 public class AdminController {
 
     private final ProductService productService;
+    private final MemberService memberService;
 
-    public AdminController(ProductService productService) {
+    public AdminController(ProductService productService, MemberService memberService) {
         this.productService = productService;
+        this.memberService = memberService;
     }
 
     @GetMapping("/")
@@ -34,7 +37,7 @@ public class AdminController {
         Page<ProductResponse> productPage = productService.getAllProducts(pageable, null);
         model.addAttribute("products", productPage.getContent());
         model.addAttribute("page", productPage);
-        model.addAttribute("currentPage", productPage.getNumber()+1);
+        model.addAttribute("currentPage", productPage.getNumber() + 1);
         model.addAttribute("totalPages", productPage.getTotalPages());
         return "index";
     }
@@ -70,6 +73,16 @@ public class AdminController {
         productService.deleteProduct(id);
         return "redirect:/";
     }
+
+    @GetMapping("/members")
+    public String getMemberPage(
+        Model model,
+        @ParameterObject Pageable pageable
+    ) {
+        model.addAttribute("members", memberService.getAllMember(pageable));
+        return "member";
+    }
+
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(value = MethodArgumentNotValidException.class)

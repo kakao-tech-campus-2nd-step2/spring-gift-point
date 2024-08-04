@@ -31,6 +31,9 @@ public class Member {
     @Column
     private String kakaoAccessToken;
 
+    @Column
+    private int point;
+
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Wish> wishList;
 
@@ -38,23 +41,24 @@ public class Member {
     }
 
     public Member(String email, String password) {
-        this(null, email, password, null);
+        this(null, email, password, null, 0);
     }
 
     public Member(Long id, String email, String password) {
-        this(id, email, password, null);
+        this(id, email, password, null, 0);
     }
 
     public Member(String email, String password, String kakaoAccessToken) {
-        this(null, email, password, kakaoAccessToken);
+        this(null, email, password, kakaoAccessToken, 0);
     }
 
-    public Member(Long id, String email, String password, String kakaoAccessToken) {
+    public Member(Long id, String email, String password, String kakaoAccessToken, int point) {
         this.id = id;
         this.email = email;
         this.password = password;
         this.kakaoAccessToken = kakaoAccessToken;
         this.wishList = new ArrayList<>();
+        this.point = point;
     }
 
     public Long getId() {
@@ -69,6 +73,10 @@ public class Member {
         return password;
     }
 
+    public int getPoint() {
+        return point;
+    }
+
     public List<Wish> getWishList() {
         return wishList;
     }
@@ -79,6 +87,10 @@ public class Member {
 
     public void updateKakaoAccessToken(String accessToken) {
         this.kakaoAccessToken = accessToken;
+    }
+
+    public void updatePoint(int point) {
+        this.point = point;
     }
 
     public void addWish(Wish wish) {

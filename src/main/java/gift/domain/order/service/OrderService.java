@@ -6,6 +6,7 @@ import gift.domain.option.service.OptionService;
 import gift.domain.order.dto.OrderRequest;
 import gift.domain.order.dto.OrderResponse;
 import gift.domain.order.entity.Orders;
+import gift.domain.order.exception.OrderException;
 import gift.domain.order.repository.OrderRepository;
 import gift.domain.wishlist.entity.Wish;
 import gift.domain.wishlist.repository.WishRepository;
@@ -29,6 +30,9 @@ public class OrderService {
     private final OptionService optionService;
     private final OAuthService oauthService;
 
+    private static final int DISCOUNT_THRESHOLD = 50_000;
+    private static final double DISCOUNT_RATE = 0.1;
+
     public OrderService(WishRepository wishRepository, OrderRepository orderRepository,
         KakaoApiService kakaoApiService, OptionService optionService, OAuthService oauthService) {
         this.wishRepository = wishRepository;
@@ -45,8 +49,32 @@ public class OrderService {
     @Transactional
     public OrderResponse createOrder(Member member, OrderRequest request) {
         Orders newOrder = dtoToEntity(member, request);
-        orderProcess(newOrder);
+        if (hasSufficientPoints(newOrder, member)) {
+            orderProcess(newOrder);
+        }
         return entityToDto(orderRepository.save(newOrder));
+    }
+
+    private boolean hasSufficientPoints(Orders order, Member member) {
+        int totalPrice = calculateTotalPrice(order);
+
+        if (member.getPoint() < totalPrice) {
+            throw new OrderException("포인트가 부족합니다.");
+        }
+
+        member.updatePoint(member.getPoint() - totalPrice);
+
+        return true;
+    }
+
+    private int calculateTotalPrice(Orders order) {
+        int totalPrice = order.getOption().getProduct().getPrice() * order.getQuantity();
+
+        if (totalPrice >= DISCOUNT_THRESHOLD) {
+            totalPrice = (int) Math.round(totalPrice * (1 - DISCOUNT_RATE));
+        }
+
+        return totalPrice;
     }
 
     private void orderProcess(Orders order) {

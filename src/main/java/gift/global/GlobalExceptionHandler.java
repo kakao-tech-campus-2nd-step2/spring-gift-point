@@ -2,6 +2,7 @@ package gift.global;
 
 import gift.domain.member.exception.MemberAuthorizationException;
 import gift.domain.option.exception.OptionValidException;
+import gift.domain.order.exception.OrderException;
 import gift.global.exception.DuplicateException;
 import gift.global.exception.NotFoundException;
 import gift.kakaoApi.exception.KakaoApiException;
@@ -58,6 +59,12 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(DuplicateException.class)
     public ResponseEntity<String> handleDuplicateException(DuplicateException e) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+            .body(e.getMessage());
+    }
+
+    @ExceptionHandler(OrderException.class)
+    public ResponseEntity<String> handleOrderException(OrderException e) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
             .body(e.getMessage());
     }
