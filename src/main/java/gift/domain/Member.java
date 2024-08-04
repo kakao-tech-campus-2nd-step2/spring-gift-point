@@ -13,6 +13,7 @@ public class Member {
     @Column(nullable = false)
     private String password;
     private String accessToken;
+    private Integer points = 0;
 
     protected Member() {
     }
@@ -64,5 +65,26 @@ public class Member {
 
     public void setAccessToken(String accessToken) {
         this.accessToken = accessToken;
+    }
+
+    public Integer getPoints() {
+        return points;
+    }
+
+    public void addPoints(int price, int quantity) {
+        if (this.points == null) {
+            this.points = 0;
+        }
+        this.points += (int) Math.round(price * quantity * 0.01);
+    }
+
+    public void subtractPoints(int amount) {
+        if (amount < 0) {
+            throw new IllegalArgumentException("사용할 포인트 값은 0, 양수만 가능하다.");
+        }
+        if (points < amount) {
+            throw new IllegalStateException("사용할 포인트 값은 기존 포인트보다 작아야 한다.");
+        }
+        this.points -= amount;
     }
 }
