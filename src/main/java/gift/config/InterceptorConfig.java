@@ -20,15 +20,18 @@ public class InterceptorConfig implements WebMvcConfigurer {
             .order(1)
             .addPathPatterns("/**")
             .excludePathPatterns(
-                "/login",
-                "/register",
-                "/login/kakao",
+                "/api/members/login",
+                "/api/members/register",
+                "/api/members/login/kakao",
                 "/",
                 "/swagger-ui/**",
                 "/swagger-ui.html",
                 "/api-docs/**",
                 "/v3/api-docs/**",
-                "/webjars/**"
+                "/webjars/**",
+                "/admin/**",
+                "/css/**",
+                "/js/**"
             );
     }
 }

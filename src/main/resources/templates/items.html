@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>상품 목록</title>
+  <link rel="stylesheet" th:href="@{/css/main.css}">
+</head>
+<body>
+<a href="/admin" class="button">관리자 홈으로</a>
+<h1>상품 목록</h1>
+<a href="/admin/items/add" class="button">상품 추가</a>
+<table>
+  <tr>
+    <th>ID</th>
+    <th>이름</th>
+    <th>가격</th>
+    <th>이미지</th>
+  </tr>
+  <tr th:each="item : ${itemPage.content}">
+    <td th:text="${item.productId}">ID</td>
+    <td>
+      <a th:href="@{/admin/items/info/{itemId}(itemId=${item.productId})}"
+         th:text="${item.name}">이름</a>
+    </td>
+    <td th:text="${item.price}">가격</td>
+    <td><img th:src="${item.imageUrl}" alt="상품 이미지" class="item-image"></td>
+    <td>
+      <a th:href="@{/admin/items/update/{itemId}(itemId=${item.productId})}" class="button">상품 수정</a>
+    </td>
+    <td>
+      <form th:action="@{/admin/items/{itemId}(itemId=${item.productId})}" method="POST">
+        <input type="hidden" name="_method" value="DELETE"/>
+        <button type="submit">삭제</button>
+      </form>
+    </td>
+  </tr>
+</table>
+
+<div class="pagination">
+        <span th:if="${itemPage.hasPrevious()}">
+            <a th:href="@{/admin/items(page=${itemPage.number-1},size=${itemPage.size})}">이전</a>
+        </span>
+
+  <span th:each="pageNumber : ${#numbers.sequence(0, itemPage.totalPages - 1)}">
+            <a th:href="@{/admin/items(page=${pageNumber},size=${itemPage.size})}"
+               th:text="${pageNumber + 1}"
+               th:class="${pageNumber==itemPage.number} ? active"></a>
+        </span>
+
+  <span th:if="${itemPage.hasNext()}">
+            <a th:href="@{/admin/items(page=${itemPage.number+1},size=${itemPage.size})}">다음</a>
+        </span>
+</div>
+
+<div>
+  <span th:text="${itemPage.number + 1}"></span> /
+  <span th:text="${itemPage.totalPages}"></span> 페이지
+  (총 <span th:text="${itemPage.totalElements}"></span>개의 상품)
+</div>
+</body>
+</html>

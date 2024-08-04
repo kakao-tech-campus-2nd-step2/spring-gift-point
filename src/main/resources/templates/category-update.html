@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>카테고리 수정</title>
+  <link rel="stylesheet" th:href="@{/css/main.css}">
+</head>
+<body>
+<div class="container">
+  <h1>카테고리 수정</h1>
+  <form th:action="@{/admin/categories/update/{id}(id=${category.id})}" th:object="${category}"
+        method="POST">
+    <input type="hidden" id="id" th:field="*{id}">
+    <div class="form-group">
+      <label for="name">카테고리 이름:</label>
+      <input type="text" id="name" th:field="*{name}" required>
+      <span th:if="${#fields.hasErrors('name')}" th:errors="*{name}" class="error"></span>
+    </div>
+    <div class="form-group">
+      <label for="imgUrl">이미지 URL:</label>
+      <input type="text" id="imgUrl" th:field="*{imgUrl}">
+    </div>
+    <div class="form-group">
+      <label for="name">카테고리 설명:</label>
+      <input type="text" id="description" th:field="*{description}" required>
+      <span th:if="${#fields.hasErrors('description')}" th:errors="*{description}"
+            class="error"></span>
+    </div>
+    <input type="hidden" name="_method" value="PUT">
+    <button type="submit" class="button">카테고리 수정</button>
+  </form>
+  <a href="/admin/categories" class="button secondary">카테고리 목록으로</a>
+</div>
+</body>
+</html>

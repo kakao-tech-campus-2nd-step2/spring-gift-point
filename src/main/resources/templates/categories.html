@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>카테고리 목록</title>
+  <link rel="stylesheet" th:href="@{/css/main.css}">
+</head>
+<body>
+<div class="container">
+  <a href="/admin/categories/add" class="button">카테고리 추가</a>
+  <h1>카테고리 목록</h1>
+  <table class="category-table">
+    <thead>
+    <tr>
+      <th>ID</th>
+      <th>이름</th>
+      <th>설명</th>
+      <th>이미지</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="category : ${categories}">
+      <td th:text="${category.categoryId}">ID</td>
+      <td th:text="${category.name}">이름</td>
+      <td th:text="${category.description}">설명</td>
+      <td>
+        <img th:if="${category.imageUrl}" th:src="${category.imageUrl}" alt="카테고리 이미지"
+             class="category-image">
+        <span th:unless="${category.imageUrl}">이미지 없음</span>
+      </td>
+      <td>
+        <a class="button"
+           th:href="@{/admin/categories/update/{categoryId}(categoryId=${category.categoryId})}">수정
+        </a>
+      </td>
+      <form></form>
+      </td>
+    </tr>
+    </tbody>
+  </table>
+  <a href="/admin" class="button">관리자 홈으로</a>
+</div>
+</body>
+</html>

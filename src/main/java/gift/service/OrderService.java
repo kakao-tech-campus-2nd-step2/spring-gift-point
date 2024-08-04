@@ -1,66 +1,49 @@
 package gift.service;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import gift.exception.ErrorCode;
-import gift.exception.customException.CustomNotFoundException;
-import gift.model.item.Item;
-import gift.model.order.Order;
-import gift.model.order.OrderDTO;
-import gift.model.user.User;
-import gift.oauth.KakaoApiService;
-import gift.repository.ItemRepository;
+import gift.model.entity.Item;
+import gift.model.entity.Option;
+import gift.model.entity.Order;
+import gift.model.entity.User;
+import gift.model.form.OrderForm;
 import gift.repository.OrderRepository;
-import gift.repository.UserRepository;
-import gift.repository.WishListRepository;
+import java.time.LocalDateTime;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class OrderService {
 
-    private final UserRepository userRepository;
-    private final ItemRepository itemRepository;
-    private final WishListRepository wishListRepository;
-    private final KakaoApiService kakaoApiService;
+    private final UserService userService;
     private final OrderRepository orderRepository;
+    private final ItemService itemService;
+    private final Long POINT_ACCUMULATION_RATE;
 
-    public OrderService(UserRepository userRepository, ItemRepository itemRepository,
-        WishListRepository wishListRepository, KakaoApiService kakaoApiService,
-        OrderRepository orderRepository) {
-        this.userRepository = userRepository;
-        this.itemRepository = itemRepository;
-        this.wishListRepository = wishListRepository;
-        this.kakaoApiService = kakaoApiService;
+    public OrderService(UserService userService, OrderRepository orderRepository,
+        ItemService itemService, @Value("${order.par}") Long POINT_ACCUMULATION_RATE) {
+        this.userService = userService;
         this.orderRepository = orderRepository;
+        this.itemService = itemService;
+        this.POINT_ACCUMULATION_RATE = POINT_ACCUMULATION_RATE;
     }
 
     @Transactional
-    public OrderDTO executeOrder(Long userId, OrderDTO orderDTO)
-        throws JsonProcessingException {
-        User user = findUserByUserId(userId);
-        Long targetId = findItemByItemId(orderDTO.getTargetId()).getId();
-        Item item = findItemByItemId(orderDTO.getItemId());
-
-        item.getOptionByOptionId(orderDTO.getOptionId())
-            .decreaseQuantity(orderDTO.getQuantity());
-        if (wishListRepository.existsByUserIdAndItemId(userId, item.getId())) {
-            wishListRepository.deleteByUserIdAndItemId(userId, item.getId());
-        }
-        kakaoApiService.sendMessageToMe(user.getAccessToken(), orderDTO.getMessage());
-        Order order = user.addOrder(new Order(user, targetId, item.getId(), orderDTO.getOptionId(),
-            orderDTO.getQuantity(), orderDTO.getMessage(), orderDTO.getOrderDateTime()));
-        return new OrderDTO(orderRepository.save(order));
+    public Long executeOrder(Long userId, OrderForm form) {
+        User user = userService.findUserEntityByUserId(userId);
+        Item item = itemService.findItemById(form.getProductId());
+        Option option = item.getOptionByOptionId(form.getOptionId());
+        option.decreaseQuantity(form.getQuantity());
+        user.decreasingPoint(form.getPoint());
+        Long totalPrice = (item.getPrice() * form.getQuantity() - form.getPoint());
+        Long accumulatePoint = calculatePoint(totalPrice);
+        user.increasingPoint(accumulatePoint);
+        Order order = new Order(user, form.getProductId(), form.getOptionId(), form.getQuantity(),
+            form.getMessage(), LocalDateTime.now(), totalPrice);
+        user.addOrder(order);
+        return orderRepository.save(order).getId();
     }
 
-
-    public User findUserByUserId(Long userId) {
-        return userRepository.findById(userId).orElseThrow(() -> new CustomNotFoundException(
-            ErrorCode.USER_NOT_FOUND));
+    public Long calculatePoint(Long totalPrice) {
+        return totalPrice / POINT_ACCUMULATION_RATE;
     }
-
-    public Item findItemByItemId(Long itemId) {
-        return itemRepository.findItemByIdWithPLock(itemId)
-            .orElseThrow(() -> new CustomNotFoundException(ErrorCode.ITEM_NOT_FOUND));
-    }
-
 }

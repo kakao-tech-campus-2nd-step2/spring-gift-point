@@ -2,10 +2,10 @@ package gift.service;
 
 import gift.exception.ErrorCode;
 import gift.exception.customException.CustomNotFoundException;
-import gift.model.item.Item;
-import gift.model.user.User;
-import gift.model.wishList.WishItem;
-import gift.model.wishList.WishListResponse;
+import gift.model.entity.Item;
+import gift.model.entity.User;
+import gift.model.entity.WishItem;
+import gift.model.response.WishListResponse;
 import gift.repository.ItemRepository;
 import gift.repository.UserRepository;
 import gift.repository.WishListRepository;
@@ -33,7 +33,7 @@ public class WishListService {
     @Transactional(readOnly = true)
     public Page<WishListResponse> getWishList(Long userId, Pageable pageable) {
         return wishListRepository.findAllByUserIdFetchJoin(userId, pageable)
-            .map(WishItem::toResponse);
+            .map(WishListResponse::new);
     }
 
     @Transactional

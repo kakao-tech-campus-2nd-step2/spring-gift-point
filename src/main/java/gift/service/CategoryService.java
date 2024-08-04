@@ -2,8 +2,8 @@ package gift.service;
 
 import gift.exception.ErrorCode;
 import gift.exception.customException.CustomNotFoundException;
-import gift.model.categories.Category;
-import gift.model.categories.CategoryDTO;
+import gift.model.dto.CategoryDTO;
+import gift.model.entity.Category;
 import gift.repository.CategoryRepository;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -21,24 +21,27 @@ public class CategoryService {
 
     @Transactional
     public CategoryDTO insertCategory(CategoryDTO categoryDTO) {
-        return categoryRepository.save(categoryDTO.toEntity()).toDTO();
+        return new CategoryDTO(categoryRepository.save(categoryDTO.toEntity()));
     }
 
+
     @Transactional(readOnly = true)
-    public CategoryDTO findCategoryByName(String name) {
-        return categoryRepository.findByName(name).orElseThrow(() -> new CustomNotFoundException(
-            ErrorCode.CATEGORY_NOT_FOUND)).toDTO();
+    public CategoryDTO getCategoryById(Long id) {
+        Category saved = categoryRepository.findById(id)
+            .orElseThrow(() -> new CustomNotFoundException(
+                ErrorCode.CATEGORY_NOT_FOUND));
+        return new CategoryDTO(saved);
     }
 
     @Transactional(readOnly = true)
     public List<CategoryDTO> getCategoryList() {
-        return categoryRepository.findAll().stream().map(Category::toDTO)
+        return categoryRepository.findAll().stream().map(CategoryDTO::new)
             .collect(Collectors.toList());
     }
 
     @Transactional
     public CategoryDTO updateCategory(CategoryDTO categoryDTO) {
-        return categoryRepository.save(categoryDTO.toEntity()).toDTO();
+        return new CategoryDTO(categoryRepository.save(categoryDTO.toEntity()));
     }
 
     @Transactional(readOnly = true)

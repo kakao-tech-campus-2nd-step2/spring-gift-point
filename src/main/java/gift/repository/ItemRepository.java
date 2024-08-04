@@ -1,6 +1,6 @@
 package gift.repository;
 
-import gift.model.item.Item;
+import gift.model.entity.Item;
 import jakarta.persistence.LockModeType;
 import java.util.Optional;
 import org.springframework.data.domain.Page;

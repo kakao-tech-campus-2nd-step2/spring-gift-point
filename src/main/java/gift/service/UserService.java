@@ -2,11 +2,15 @@ package gift.service;
 
 import gift.exception.ErrorCode;
 import gift.exception.customException.CustomNotFoundException;
-import gift.model.user.User;
-import gift.model.user.UserDTO;
-import gift.model.user.UserForm;
+import gift.model.dto.UserDTO;
+import gift.model.entity.User;
+import gift.model.form.UserForm;
+import gift.model.response.PointResponse;
+import gift.model.response.WishListResponse;
 import gift.oauth.response.KakaoTokenResponse;
 import gift.repository.UserRepository;
+import java.util.List;
+import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,6 +26,12 @@ public class UserService {
     @Transactional
     public Long insertUser(UserForm userForm) {
         return userRepository.save(new User(userForm.getEmail(), userForm.getPassword())).getId();
+    }
+
+    @Transactional(readOnly = true)
+    public User findUserEntityByUserId(Long userId) {
+        return userRepository.findById(userId)
+            .orElseThrow(() -> new CustomNotFoundException(ErrorCode.USER_NOT_FOUND));
     }
 
     @Transactional(readOnly = true)
@@ -63,5 +73,20 @@ public class UserService {
     @Transactional
     public void deleteUser(Long id) {
         userRepository.deleteById(id);
+    }
+
+    @Transactional(readOnly = true)
+    public List<WishListResponse> findWishListFromUser(Long userId) {
+        User user = userRepository.findById(userId)
+            .orElseThrow(() -> new CustomNotFoundException(ErrorCode.USER_NOT_FOUND));
+        return user.getWishItemList().stream().map(WishListResponse::new)
+            .collect(Collectors.toList());
+    }
+
+    @Transactional(readOnly = true)
+    public PointResponse getPointFromUser(Long userId) {
+        User user = userRepository.findById(userId)
+            .orElseThrow(() -> new CustomNotFoundException(ErrorCode.USER_NOT_FOUND));
+        return new PointResponse(user.getPoint());
     }
 }

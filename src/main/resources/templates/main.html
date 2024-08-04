@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <link rel="stylesheet" th:href="@{/css/main.css}">
+  <title>관리자 화면</title>
+</head>
+<body>
+<div class="admin-container">
+  <h1 class="admin-title">관리자 페이지</h1>
+  <div class="admin-buttons">
+    <a th:href="@{/admin/items}" class="admin-button">상품 관리</a>
+    <a th:href="@{/admin/categories}" class="admin-button">카테고리 관리</a>
+  </div>
+</div>
+</body>
+</html>

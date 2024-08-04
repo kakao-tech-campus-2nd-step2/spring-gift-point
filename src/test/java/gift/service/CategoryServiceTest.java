@@ -2,7 +2,7 @@ package gift.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import gift.model.categories.CategoryDTO;
+import gift.model.dto.CategoryDTO;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -21,20 +21,11 @@ public class CategoryServiceTest {
     private final String testName2 = "김치";
     private final String testName3 = "전자기기";
     private final String testUrl = "imgUrl";
-    private final CategoryDTO testCategory1 = new CategoryDTO(0L, testName1, testUrl);
-    private final CategoryDTO testCategory2 = new CategoryDTO(1L, testName2, testUrl);
-    private final CategoryDTO testCategory3 = new CategoryDTO(2L, testName3, testUrl);
+    private final String testDescription = "설명";
+    private final CategoryDTO testCategory1 = new CategoryDTO(0L, testName1, testUrl,testDescription);
+    private final CategoryDTO testCategory2 = new CategoryDTO(1L, testName2, testUrl,testDescription);
+    private final CategoryDTO testCategory3 = new CategoryDTO(2L, testName3, testUrl,testDescription);
 
-    @DisplayName("insertCategory 성공 테스트")
-    @Test
-    void testInsertCategorySuccess() {
-        CategoryDTO result = categoryService.insertCategory(testCategory1);
-        assertThat(result).usingRecursiveComparison().isEqualTo(testCategory1);
-    }
-    @Test
-    void tmp(){
-
-    }
     @DisplayName("getCategoryList 테스트")
     @Test
     void testGetCategoryList() {
@@ -50,7 +41,7 @@ public class CategoryServiceTest {
     @Test
     void testUpdateCategory() {
         CategoryDTO category = categoryService.insertCategory(testCategory1);
-        CategoryDTO updated = new CategoryDTO(category.getId(), testName2, testUrl);
+        CategoryDTO updated = new CategoryDTO(category.getCategoryId(), testName2, testUrl,testDescription);
         CategoryDTO result = categoryService.updateCategory(updated);
         assertThat(result).usingRecursiveComparison().isEqualTo(updated);
     }

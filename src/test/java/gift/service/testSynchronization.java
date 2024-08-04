@@ -2,9 +2,9 @@ package gift.service;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
-import gift.model.categories.Category;
-import gift.model.item.Item;
-import gift.model.option.Option;
+import gift.model.entity.Category;
+import gift.model.entity.Item;
+import gift.model.entity.Option;
 import gift.repository.CategoryRepository;
 import gift.repository.ItemRepository;
 import java.util.concurrent.CountDownLatch;
@@ -30,11 +30,12 @@ public class testSynchronization {
 
     private final String TEST_NAME = "name";
     private final String TEST_URL = "imgUrl";
+    private final String TEST_DES = "설명";
     private final int NUM_REF = 50;
 
 
     private Long quantity = 100L;
-    private Category category = new Category(0L, TEST_NAME, TEST_URL);
+    private Category category = new Category(0L, TEST_NAME, TEST_URL,TEST_DES);
     private Long itemId;
     private Long optionId;
 
@@ -49,7 +50,6 @@ public class testSynchronization {
         optionId = item.getOptions().get(0).getId();
     }
 
-    @Transactional
     @DisplayName("재고 감소 동시성 테스트")
     @Test
     void testSynchronousDecreasing() throws InterruptedException {

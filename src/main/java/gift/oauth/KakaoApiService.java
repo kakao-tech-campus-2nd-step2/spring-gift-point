@@ -23,27 +23,36 @@ public class KakaoApiService {
         this.client = restClient;
     }
 
-    public void sendMessageToMe(String token, String text)
-        throws JsonProcessingException {
+    public void sendMessageToMe(String token, String text) throws JsonProcessingException {
         var uri = kakaoApiSecurityProps.getMemoSend();
-        var body = getSelfMessageRequestBody(text);
-        client.post().uri(uri).contentType(MediaType.APPLICATION_FORM_URLENCODED)
-            .body(body).contentType(MediaType.APPLICATION_JSON)
-            .headers(httpHeaders -> httpHeaders.setBearerAuth(token)).retrieve().toBodilessEntity();
-    }
-
-    public MultiValueMap<String, String> getSelfMessageRequestBody(String text)
-        throws JsonProcessingException {
-        Map<String, String> templateObject = new HashMap<>();
-        templateObject.put("object_type", "text");
-        templateObject.put("text", text);
-        templateObject.put("link", null);
-        templateObject.put("button_title", "버튼");
-        var jsonTemplateObject = objectMapper.writeValueAsString(templateObject);
+        String templateObject = getSelfMessageRequestBody(text);
 
         MultiValueMap<String, String> body = new LinkedMultiValueMap<>();
-        body.add("template_object", jsonTemplateObject);
-        return body;
+        body.add("template_object", templateObject);
+
+        client.post()
+            .uri(uri)
+            .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+            .body(body)
+            .headers(httpHeaders -> {
+                httpHeaders.setBearerAuth(token);
+            })
+            .retrieve()
+            .toEntity(String.class);
+    }
+
+    public String getSelfMessageRequestBody(String text) throws JsonProcessingException {
+        Map<String, Object> link = new HashMap<>();
+        link.put("web_url", "");
+        link.put("mobile_web_url", "");
+
+        Map<String, Object> templateObject = new HashMap<>();
+        templateObject.put("object_type", "text");
+        templateObject.put("text", text);
+        templateObject.put("link", link);
+        templateObject.put("button_title", "바로 확인");
+
+        return objectMapper.writeValueAsString(templateObject);
     }
 
 

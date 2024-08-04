@@ -2,8 +2,8 @@ package gift.repository;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import gift.model.categories.Category;
-import gift.model.item.Item;
+import gift.model.entity.Category;
+import gift.model.entity.Item;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -15,7 +15,7 @@ public class ItemRepositoryTest {
 
     @Autowired
     private ItemRepository itemRepository;
-    private final Category category = new Category("식품","img");
+    private final Category category = new Category("식품","img","설명");
     private final Item testItem = new Item("김치",2000L,"url",category);
 
     @BeforeEach

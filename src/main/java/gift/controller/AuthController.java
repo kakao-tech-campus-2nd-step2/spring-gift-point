@@ -5,8 +5,9 @@ import gift.exception.customException.CustomArgumentNotValidException;
 import gift.exception.customException.CustomDuplicateException;
 import gift.exception.customException.CustomException;
 import gift.exception.customException.PassWordMissMatchException;
-import gift.model.user.UserDTO;
-import gift.model.user.UserForm;
+import gift.model.dto.UserDTO;
+import gift.model.form.UserForm;
+import gift.model.response.TokenResponse;
 import gift.oauth.KakaoOAuthService;
 import gift.service.JwtProvider;
 import gift.service.UserService;
@@ -39,9 +40,8 @@ public class AuthController {
         this.kakaoOAuthService = kakaoOAuthService;
     }
 
-
     @Operation(summary = "카카오 소셜 로그인", responses = @ApiResponse(responseCode = "200", description = "로그인 성공시 토큰 반환"))
-    @GetMapping("/login/kakao")
+    @GetMapping("/api/members/login/kakao")
     public ResponseEntity<?> getKakaoLoginPage() {
         var uri = kakaoOAuthService.getKakaoLoginPage();
         return ResponseEntity.status(HttpStatus.PERMANENT_REDIRECT).location(uri).build();
@@ -54,14 +54,38 @@ public class AuthController {
         Long kakaoId = kakaoOAuthService.getKakaoId(token.accessToken());
         UserDTO userDTO = userService.findByKakaoId(kakaoId, token);
         String newToken = jwtProvider.generateToken(userDTO);
-        return ResponseEntity.ok(newToken);
+        return ResponseEntity.ok(new TokenResponse(newToken));
     }
 
-    @Operation(summary = "로그인", responses = @ApiResponse(responseCode = "200", description = "로그인 성공시 토큰 반환")
-    )
-    @PostMapping("/login")
+    @Operation(summary = "로그인", responses = @ApiResponse(responseCode = "200", description = "로그인 성공시 토큰 반환"))
+    @PostMapping("/api/members/login")
     public ResponseEntity<?> handleLoginRequest(@Valid @RequestBody UserForm userForm,
-        BindingResult result)
+        BindingResult result) throws MethodArgumentNotValidException {
+        checkLoginUser(userForm, result);
+        TokenResponse tokenResponse = new TokenResponse(
+            jwtProvider.generateToken(userService.findByEmail(userForm.getEmail())));
+        return ResponseEntity.ok(tokenResponse);
+    }
+
+    @Operation(summary = "회원가입")
+    @PostMapping("/api/members/register")
+    public ResponseEntity<?> handleSignUpRequest(@Valid @RequestBody UserForm userForm,
+        BindingResult result) throws CustomException, CustomArgumentNotValidException {
+        if (result.hasErrors()) {
+            throw new CustomArgumentNotValidException(result, ErrorCode.BAD_REQUEST);
+        }
+        if (userService.existsEmail(userForm.getEmail())) {
+            result.rejectValue("email", "", ErrorCode.DUPLICATE_EMAIL.getMessage());
+            throw new CustomDuplicateException(ErrorCode.DUPLICATE_EMAIL);
+        }
+        userService.insertUser(userForm);
+        TokenResponse tokenResponse = new TokenResponse(
+            jwtProvider.generateToken(userService.findByEmail(userForm.getEmail())));
+        return ResponseEntity.ok(tokenResponse);
+    }
+
+    @Operation(hidden = true)
+    public void checkLoginUser(UserForm userForm, BindingResult result)
         throws MethodArgumentNotValidException {
         if (result.hasErrors()) {
             throw new CustomArgumentNotValidException(result, ErrorCode.BAD_REQUEST);
@@ -74,23 +98,6 @@ public class AuthController {
             result.rejectValue("password", "", ErrorCode.PASSWORD_MISMATCH.getMessage());
             throw new PassWordMissMatchException(result, ErrorCode.PASSWORD_MISMATCH);
         }
-        return ResponseEntity.ok(
-            jwtProvider.generateToken(userService.findByEmail(userForm.getEmail())));
-    }
-
-    @Operation(summary = "회원가입")
-    @PostMapping("/register")
-    public ResponseEntity<?> handleSignUpRequest(@Valid @RequestBody UserForm userForm,
-        BindingResult result) throws CustomException, CustomArgumentNotValidException {
-        if (result.hasErrors()) {
-            throw new CustomArgumentNotValidException(result, ErrorCode.BAD_REQUEST);
-        }
-        if (userService.existsEmail(userForm.getEmail())) {
-            result.rejectValue("email", "", ErrorCode.DUPLICATE_EMAIL.getMessage());
-            throw new CustomDuplicateException(ErrorCode.DUPLICATE_EMAIL);
-        }
-        Long id = userService.insertUser(userForm);
-        return ResponseEntity.ok(id);
     }
 
 }

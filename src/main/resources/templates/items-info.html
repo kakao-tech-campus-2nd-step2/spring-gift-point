@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>상품 정보</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      line-height: 1.6;
+      margin: 0;
+      padding: 20px;
+      background-color: #f4f4f4;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+      background-color: #fff;
+      padding: 20px;
+      border-radius: 5px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    h1 {
+      color: #333;
+    }
+
+    .item-image {
+      max-width: 100%;
+      height: auto;
+      margin-bottom: 20px;
+    }
+
+    .item-details {
+      margin-bottom: 20px;
+    }
+
+    .item-price {
+      font-size: 1.2em;
+      font-weight: bold;
+      color: #e44d26;
+    }
+
+    .options-list {
+      list-style-type: none;
+      padding: 0;
+    }
+
+    .options-list li {
+      background-color: #f9f9f9;
+      margin-bottom: 10px;
+      padding: 10px;
+      border-radius: 3px;
+    }
+
+    .category {
+      font-style: italic;
+      color: #666;
+    }
+  </style>
+</head>
+<body>
+<div class="container">
+  <h1 th:text="${item.name}">상품 이름</h1>
+
+  <img th:if="${item.imageUrl}" th:src="${item.imageUrl}" alt="상품 이미지" class="item-image">
+
+  <div class="item-details">
+    <p class="item-price"
+       th:text="'가격: ' + ${#numbers.formatDecimal(item.price, 0, 'COMMA', 0, 'POINT')} + '원'">가격:
+      0원
+    </p>
+  </div>
+
+  <h2>옵션</h2>
+  <ul class="options-list">
+    <li th:each="option : ${options}">
+      <span th:text="${option.name}">옵션 이름</span>
+      <span th:text="'(수량: ' + ${option.quantity} + ')'"></span>
+    </li>
+  </ul>
+</div>
+</body>
+</html>
