@@ -24,14 +24,11 @@ public class Member {
     private String refreshToken;
     private int role;
 
+    @NotNull
     private int point;
 
     public Member(String email, String name, String password, int role) {
-        this.email = email;
-        this.name = name;
-        this.password = password;
-        this.role = role;
-        this.point = 0;
+        this(email,name,password,null,null,role);
     }
 
     public Member(String email, String name, String password, String accessToken, String refreshToken, int role) {
