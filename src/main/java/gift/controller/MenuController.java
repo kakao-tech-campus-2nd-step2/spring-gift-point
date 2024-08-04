@@ -1,10 +1,8 @@
 package gift.controller;
 
-import gift.domain.Menu;
-import gift.domain.MenuRequest;
-import gift.domain.MenuResponse;
+import gift.domain.MenuDomain.MenuRequest;
+import gift.domain.MenuDomain.MenuResponse;
 import gift.service.MenuService;
-import jakarta.validation.Valid;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -37,7 +35,7 @@ public class MenuController {
 
     @PostMapping
     public void save(
-            @ModelAttribute @Valid MenuRequest request,
+            @ModelAttribute MenuRequest request,
             Model model,
             Pageable pageable
     ) {
@@ -53,7 +51,7 @@ public class MenuController {
 
     @GetMapping("/edit/{id}")
     public String edit(@PathVariable("id") Long id, Model model) {
-        Menu menu = menuService.findById(id);
+        MenuResponse menu = menuService.findById(id);
         model.addAttribute("menu", menu);
         return "update_menu";
     }

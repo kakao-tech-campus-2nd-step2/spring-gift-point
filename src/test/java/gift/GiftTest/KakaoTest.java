@@ -1,10 +1,15 @@
 package gift.GiftTest;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import gift.controller.KakaoController;
-import gift.domain.*;
+import gift.controller.MemberController;
+import gift.domain.CategoryDomain.Category;
+import gift.domain.MemberDomain.Member;
+import gift.domain.MenuDomain.Menu;
+import gift.domain.OptionDomain.Option;
+import gift.domain.OrderDomain.Order;
+import gift.domain.OrderDomain.OrderRequest;
+import gift.domain.WishListDomain.WishList;
 import gift.repository.*;
-import gift.service.KakaoService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -13,12 +18,11 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.http.*;
-import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.web.client.RestTemplate;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.net.URI;
-import java.util.HashSet;
+import java.util.Date;
 import java.util.LinkedList;
 
 
@@ -29,12 +33,6 @@ public class KakaoTest {
     @Autowired
     private TestRestTemplate restTemplate;
     @Autowired
-    private KakaoService kakaoService;
-    @Autowired
-    private KakaoController kakaoController;
-    @Autowired
-    private MockMvc mockMvc;
-    @Autowired
     private MenuRepository menuRepository;
     @Autowired
     private OptionRepository optionRepository;
@@ -44,6 +42,8 @@ public class KakaoTest {
     private WishListRepository wishListRepository;
     @Autowired
     private MemberRepository memberRepository;
+    @Autowired
+    private MemberController memberController;
 
     private Category category1;
     private Category category2;
@@ -54,11 +54,10 @@ public class KakaoTest {
 
     @BeforeEach
     void setUp() {
-        category1 = new Category(null, "양식", new LinkedList<Menu>());
-        category2 = new Category(null, "한식", new LinkedList<Menu>());
-        categoryRepository.save(category1);
+        category1 = new Category(null, "중식","dis","빨강","image.com", new LinkedList<Menu>());
+        category2 = new Category(null, "일식","dis","빨강","image.com", new LinkedList<Menu>());
         categoryRepository.save(category2);
-        Menu menu = new Menu("파스타", 3000, "naver.com", category1,new HashSet<>());
+        Menu menu = new Menu("파스타", 3000, "naver.com", category1,new LinkedList<>());
         menuRepository.save(menu);
 
         option1 = new Option(null, "알리오올리오", 3L,menu);
@@ -74,7 +73,7 @@ public class KakaoTest {
         Member member = new Member("member1", "password1","김민지",new LinkedList<WishList>());
         memberRepository.save(member);
 
-        WishList wishList = new WishList(member, menu);
+        WishList wishList = new WishList(member, menu,new Date());
         wishListRepository.save(wishList);
     }
 
@@ -82,7 +81,7 @@ public class KakaoTest {
     @DisplayName("code로 Member 정보 가져오기")
     void test1() throws Exception {
         RestTemplate restTemplate = new RestTemplate();
-        String string = kakaoController.getUserAgree().getUrl();
+        String string = memberController.getUserAgree().getUrl();
         URI uri = new URI(string);
         ResponseEntity<Object> object = restTemplate.getForEntity(uri,Object.class);
     }

@@ -3,10 +3,11 @@ package gift.service;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import gift.domain.KakaoLoginResponse;
-import gift.domain.Member;
-import gift.domain.WishList;
-import gift.domain.getTokenDto;
+import gift.domain.AuthDomain.KakaoLoginResponse;
+import gift.domain.AuthDomain.TokenResponse;
+import gift.domain.AuthDomain.getTokenDto;
+import gift.domain.MemberDomain.Member;
+import gift.domain.WishListDomain.WishList;
 import gift.repository.MemberRepository;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
@@ -16,6 +17,7 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import javax.naming.AuthenticationException;
 import java.net.URI;
 import java.util.LinkedList;
 import java.util.Map;
@@ -26,9 +28,11 @@ public class KakaoService {
     private String client_id;
 
     private MemberRepository memberRepository;
+    private JwtService jwtService;
 
-    public KakaoService(MemberRepository memberRepository){
+    public KakaoService(MemberRepository memberRepository,JwtService jwtService){
         this.memberRepository = memberRepository;
+        this.jwtService = jwtService;
     }
 
     public URI makeUri() {
@@ -43,7 +47,7 @@ public class KakaoService {
         return uri;
     }
 
-    public Member getToken(String code) throws JsonProcessingException {
+    public TokenResponse getToken(String code) throws JsonProcessingException, AuthenticationException {
         var url = "https://kauth.kakao.com/oauth/token";
 
         var headers = new HttpHeaders();
@@ -64,10 +68,11 @@ public class KakaoService {
 
         headers = new HttpHeaders();
         headers.add("Authorization",response.getBody().access_token());
-        return getUserInformation(response.getBody().access_token());
+        Member member = getUserInformation(response.getBody().access_token());
+        return new TokenResponse(member.getId(),jwtService.createJWT(member.getId()));
     }
 
-    public Member getUserInformation(String token){
+    public Member getUserInformation(String token) throws AuthenticationException {
         var url = "https://kapi.kakao.com/v2/user/me";
 
         var headers = new HttpHeaders();
@@ -79,6 +84,11 @@ public class KakaoService {
         RestTemplate restTemplate = new RestTemplate();
 
         ResponseEntity<String> response = restTemplate.exchange(request, String.class);
+
+        if (response.getStatusCode() != HttpStatus.OK) {
+            throw new AuthenticationException("유효하지 않은 토큰입니다.");
+        }
+
         ObjectMapper objectMapper = new ObjectMapper();
         String responseBody = response.getBody();
         try{

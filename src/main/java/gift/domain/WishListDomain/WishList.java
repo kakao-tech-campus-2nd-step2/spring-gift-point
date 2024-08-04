@@ -1,7 +1,10 @@
-package gift.domain;
+package gift.domain.WishListDomain;
 
+import gift.domain.MemberDomain.Member;
+import gift.domain.MenuDomain.Menu;
 import jakarta.persistence.*;
 
+import java.util.Date;
 import java.util.Objects;
 
 @Entity
@@ -17,17 +20,20 @@ public class WishList {
     @OneToOne
     private Menu menu;
 
+    private Date createdDate;
+
     public WishList() {
     }
 
-    public WishList(Member member, Menu menu) {
-        this(null, member, menu);
+    public WishList(Member member, Menu menu,Date createdDate) {
+        this(null, member, menu,createdDate);
     }
 
-    public WishList(Long id, Member member, Menu menu) {
+    public WishList(Long id, Member member, Menu menu,Date createdDate) {
         this.id = id;
         this.member = member;
         this.menu = menu;
+        this.createdDate = createdDate;
     }
 
     public Menu getMenu() {

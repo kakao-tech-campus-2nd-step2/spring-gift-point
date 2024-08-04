@@ -1,7 +1,7 @@
 package gift.RepositoryTest;
 
-import gift.domain.Category;
-import gift.domain.Menu;
+import gift.domain.CategoryDomain.Category;
+import gift.domain.MenuDomain.Menu;
 import gift.repository.CategoryRepository;
 import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.DisplayName;
@@ -26,7 +26,7 @@ class CategoryRepositoryTest {
     @Test
     @DisplayName("카테고리 저장 테스트")
     void testSaveCategory() {
-        Category category = new Category(null,"한식",new LinkedList<Menu>());
+        Category category = new Category(null, "양식","dis","빨강","image.com", new LinkedList<Menu>());
         category = categoryRepository.save(category);
 
         assertThat(category).isNotNull();
@@ -35,7 +35,7 @@ class CategoryRepositoryTest {
     @Test
     @DisplayName("id로 카테고리 찾기 테스트")
     void testFindCategoryById() {
-        Category category = new Category(null,"한식",new LinkedList<Menu>());
+        Category category = new Category(null, "양식","dis","빨강","image.com", new LinkedList<Menu>());
         category = categoryRepository.save(category);
 
         Optional<Category> foundCategory = categoryRepository.findById(category.getId());
@@ -47,7 +47,7 @@ class CategoryRepositoryTest {
     @Test
     @DisplayName("카테고리 삭제 테스트")
     void testDeleteCategory() {
-        Category category = new Category(null,"한식",new LinkedList<Menu>());
+        Category category = new Category(null, "양식","dis","빨강","image.com", new LinkedList<Menu>());
         category = categoryRepository.save(category);
 
         categoryRepository.deleteById(category.getId());
@@ -59,10 +59,10 @@ class CategoryRepositoryTest {
     @Test
     @DisplayName("카테고리 FindAll 테스트")
     void testFindAllCategories() {
-        Category category1 = new Category(null,"한식",new LinkedList<Menu>());
+        Category category1 = new Category(null, "양식","dis","빨강","image.com", new LinkedList<Menu>());
         categoryRepository.save(category1);
 
-        Category category2 = new Category(null,"중식",new LinkedList<Menu>());
+        Category category2 = new Category(null, "중식","dis","빨강","image.com", new LinkedList<Menu>());
         categoryRepository.save(category2);
 
         Iterable<Category> categories = categoryRepository.findAll();
@@ -72,10 +72,10 @@ class CategoryRepositoryTest {
     @Test
     @DisplayName("카테고리 동등성 테스트")
     void testEquals() {
-        Category category1 = new Category(null,"한식",new LinkedList<Menu>());
+        Category category1 = new Category(null, "양식","dis","빨강","image.com", new LinkedList<Menu>());
         categoryRepository.save(category1);
 
-        Category category2 = new Category(null,"한식",new LinkedList<Menu>());
+        Category category2 = new Category(null, "양식","dis","빨강","image.com", new LinkedList<Menu>());
         categoryRepository.save(category2);
 
         Set<Category> categories = new HashSet<>();

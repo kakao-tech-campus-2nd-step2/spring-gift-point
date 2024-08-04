@@ -1,5 +1,6 @@
-package gift.domain;
+package gift.domain.CategoryDomain;
 
+import gift.domain.MenuDomain.Menu;
 import jakarta.persistence.*;
 
 import java.util.LinkedList;
@@ -14,9 +15,24 @@ public class Category {
 
     @Column(name = "name", nullable = false)
     private String name;
+    @Column(name = "description", nullable = false)
+    private String description;
+    @Column(name = "color", nullable = false)
+    private String color;
+    @Column(name = "imageUrl", nullable = false)
+    private String imageUrl;
 
     @OneToMany(mappedBy = "category")
     private List<Menu> menus;
+
+    public Category(Long id, String name, String description, String color, String imageUrl, List<Menu> menus) {
+        this.id = id;
+        this.name = name;
+        this.description = description;
+        this.color = color;
+        this.imageUrl = imageUrl;
+        this.menus = menus;
+    }
 
     public List<Menu> getMenus(){
         return this.menus;
@@ -42,6 +58,22 @@ public class Category {
     }
 
     public Category() {
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public String getColor() {
+        return color;
+    }
+
+    public String getImageUrl() {
+        return imageUrl;
     }
 
     @Override

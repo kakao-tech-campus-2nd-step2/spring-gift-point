@@ -1,8 +1,8 @@
 package gift.RepositoryTest;
 
-import gift.domain.Category;
-import gift.domain.Menu;
-import gift.domain.Option;
+import gift.domain.CategoryDomain.Category;
+import gift.domain.MenuDomain.Menu;
+import gift.domain.OptionDomain.Option;
 import gift.repository.MenuRepository;
 import gift.repository.OptionRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -32,7 +32,7 @@ class OptionRepositoryTest {
     @BeforeEach
     void setUp() {
         Category category1 = new Category(null, "양식", new LinkedList<Menu>());
-        menu = new Menu("파스타", 3000, "naver.com", category1,new HashSet<>());
+        menu = new Menu("파스타", 3000, "naver.com", category1,new LinkedList<>());
         option = new Option(null, "검정색", 100L,menu);
         optionRepository.deleteAll();
     }

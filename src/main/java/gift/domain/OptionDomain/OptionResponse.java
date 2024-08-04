@@ -1,9 +1,8 @@
-package gift.domain;
+package gift.domain.OptionDomain;
 
 public record OptionResponse(
         Long id,
         String name,
-        Long quantity,
-        Menu menu
+        Long quantity
 ) {
 }

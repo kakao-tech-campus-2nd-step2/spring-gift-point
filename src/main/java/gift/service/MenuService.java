@@ -1,9 +1,10 @@
 package gift.service;
 
-import gift.domain.Menu;
-import gift.domain.MenuRequest;
-import gift.domain.MenuResponse;
-import gift.domain.Option;
+import gift.domain.MenuDomain.Menu;
+import gift.domain.MenuDomain.MenuRequest;
+import gift.domain.MenuDomain.MenuResponse;
+import gift.domain.MenuDomain.MenuUpdateRequest;
+import gift.domain.OptionDomain.Option;
 import gift.repository.CategoryRepository;
 import gift.repository.MenuRepository;
 import gift.repository.OptionRepository;
@@ -11,7 +12,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Set;
@@ -30,8 +31,8 @@ public class MenuService {
     }
 
     public MenuResponse save(MenuRequest request) {
-        Menu menu = MapMenuRequestToMenu(request);
-        return MapMenuToMenuResponse(menuRepository.save(menu));
+        Menu menu = mapMenuRequestToMenu(request);
+        return mapMenuToMenuResponse(menuRepository.save(menu));
     }
 
     public List<MenuResponse> findall(
@@ -39,24 +40,24 @@ public class MenuService {
     ) {
         Page<Menu> menus = menuRepository.findAll(pageable);
         return menus.stream()
-                .map(this::MapMenuToMenuResponse)
+                .map(this::mapMenuToMenuResponse)
                 .collect(Collectors.toList());
     }
 
-    public Menu findById(Long id) {
+    public MenuResponse findById(Long id) {
         Menu menu = menuRepository.findById(id)
                 .orElseThrow(() -> new NoSuchElementException("메뉴 정보가 없습니다."));
-        return menu;
+        return mapMenuToMenuResponse(menu);
     }
 
-    public MenuResponse update(Long id, MenuRequest menuRequest) {
+    public MenuResponse update(Long id, MenuUpdateRequest menuUpdateRequest) {
         Menu menu = menuRepository.findById(id)
                 .orElseThrow(() -> new NoSuchElementException("메뉴 정보가 없습니다."));
 
-        menu.update(new Menu(id, menuRequest,
-                categoryRepository.findById(menuRequest.categoryId())
+        menu.update(new Menu(id, menuUpdateRequest,
+                categoryRepository.findById(menuUpdateRequest.categoryId())
                         .orElseThrow(() -> new NoSuchElementException("해당하는 카테고리가 존재하지 않습니다."))));
-        return MapMenuToMenuResponse(menuRepository.save(menu));
+        return mapMenuToMenuResponse(menuRepository.save(menu));
     }
 
     public void delete(Long id) {
@@ -67,12 +68,19 @@ public class MenuService {
         return menuRepository.getOptionsByMenuId(id);
     }
 
-    public Menu MapMenuRequestToMenu(MenuRequest menuRequest) {
-        return new Menu(menuRequest.name(), menuRequest.price(), menuRequest.imageUrl(),categoryRepository.findById(menuRequest.categoryId()).get(),new HashSet<>());
+    public List<MenuResponse> findByCategoryId(Long categoryId,Pageable pageable) {
+        Page<Menu> menus = menuRepository.findByCategoryId(categoryId,pageable);
+        return menus.stream()
+                .map(this::mapMenuToMenuResponse)
+                .collect(Collectors.toList());
     }
 
-    public MenuResponse MapMenuToMenuResponse(Menu menu) {
-        return new MenuResponse(menu.getId(), menu.getName(), menu.getPrice(), menu.getImageUrl(), menu.getCategory(),menu.getOptions());
+    public Menu mapMenuRequestToMenu(MenuRequest menuRequest) {
+        return new Menu(menuRequest.name(), menuRequest.price(), menuRequest.imageUrl(),categoryRepository.findById(menuRequest.categoryId()).get(),new LinkedList<Option>());
+    }
+
+    public MenuResponse mapMenuToMenuResponse(Menu menu) {
+        return new MenuResponse(menu.getId(), menu.getName(), menu.getPrice(), menu.getImageUrl(), menu.getCategory().getId());
     }
 
 }

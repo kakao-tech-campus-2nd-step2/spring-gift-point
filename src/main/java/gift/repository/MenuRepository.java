@@ -1,7 +1,7 @@
 package gift.repository;
 
-import gift.domain.Menu;
-import gift.domain.Option;
+import gift.domain.MenuDomain.Menu;
+import gift.domain.OptionDomain.Option;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -18,4 +18,5 @@ public interface MenuRepository extends JpaRepository<Menu, Long> {
     @Query("SELECT m.options FROM Menu m WHERE m.id = :id")
     Set<Option> getOptionsByMenuId(Long id);
 
+    Page<Menu> findByCategoryId(Long categoryId,Pageable pageable);
 }

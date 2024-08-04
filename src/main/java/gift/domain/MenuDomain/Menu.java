@@ -1,10 +1,12 @@
-package gift.domain;
+package gift.domain.MenuDomain;
 
+import gift.domain.CategoryDomain.Category;
+import gift.domain.OptionDomain.Option;
 import jakarta.persistence.*;
 
-import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Objects;
-import java.util.Set;
 
 @Entity
 public class Menu {
@@ -13,7 +15,7 @@ public class Menu {
     private Long id;
 
     @Column(nullable = false)
-    private String name;
+    private MenuName name;
 
     @Column(nullable = false)
     private int price;
@@ -26,7 +28,7 @@ public class Menu {
     private Category category;
 
     @OneToMany(cascade = CascadeType.ALL)
-    private Set<Option> options;
+    private List<Option> options;
 
     public void setCategory(Category category) {
         this.category = category;
@@ -35,13 +37,13 @@ public class Menu {
     public Menu() {
     }
 
-    public Menu(String name, int price, String imageUrl,Category category,Set<Option> options) {
+    public Menu(String name, int price, String imageUrl,Category category,List<Option> options) {
         this(null, name, price, imageUrl, category, options);
     }
 
-    public Menu(Long id, String name, int price, String imageUrl, Category category, Set<Option> options) {
+    public Menu(Long id, String name, int price, String imageUrl, Category category, List<Option> options) {
         this.id = id;
-        this.name = name;
+        this.name = new MenuName(name);
         this.price = price;
         this.imageUrl = imageUrl;
         this.category = category;
@@ -49,12 +51,11 @@ public class Menu {
     }
 
     public Menu(Long id, MenuRequest menuRequest,Category category) {
-        this.id = id;
-        this.name = menuRequest.name();
-        this.price = menuRequest.price();
-        this.imageUrl = menuRequest.imageUrl();
-        this.category = category;
-        this.options = new HashSet<Option>();
+        this(id, menuRequest.name(), menuRequest.price(), menuRequest.imageUrl(), category,new LinkedList<Option>());
+    }
+
+    public Menu(Long id, MenuUpdateRequest menuUpdateRequest,Category category) {
+        this(id, menuUpdateRequest.name(), menuUpdateRequest.price(), menuUpdateRequest.imageUrl(), category,new LinkedList<>());
     }
 
     public Long getId() {
@@ -62,7 +63,7 @@ public class Menu {
     }
 
     public String getName() {
-        return name;
+        return name.getMenuName();
     }
 
     public int getPrice() {
@@ -73,7 +74,7 @@ public class Menu {
         return imageUrl;
     }
 
-    public Set<Option> getOptions() {return options;}
+    public List<Option> getOptions() {return options;}
 
     public void update(Menu menu) {
         this.id = menu.id;

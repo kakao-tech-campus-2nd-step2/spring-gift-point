@@ -1,4 +1,4 @@
-package gift.domain;
+package gift.domain.OptionDomain;
 
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
@@ -10,7 +10,6 @@ public record OptionRequest(
         String name,
         @Min(1)
         @Max(1000000000)
-        Long quantity,
-        Long menuId
+        Long quantity
 ) {
 }

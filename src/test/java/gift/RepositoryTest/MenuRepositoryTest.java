@@ -1,8 +1,8 @@
 package gift.RepositoryTest;
 
-import gift.domain.Category;
-import gift.domain.Menu;
-import gift.domain.Option;
+import gift.domain.CategoryDomain.Category;
+import gift.domain.MenuDomain.Menu;
+import gift.domain.OptionDomain.Option;
 import gift.repository.CategoryRepository;
 import gift.repository.MenuRepository;
 import gift.repository.OptionRepository;
@@ -41,11 +41,12 @@ class MenuRepositoryTest {
 
     @BeforeEach
     void setUp() {
-        category1 = new Category(null, "양식", new LinkedList<Menu>());
-        category2 = new Category(null, "한식", new LinkedList<Menu>());
+        category1 = new Category(null, "양식","dis","빨강","image.com", new LinkedList<Menu>());
+        category2 = new Category(null, "양식","dis","한식","image.com", new LinkedList<Menu>());
         categoryRepository.save(category1);
         categoryRepository.save(category2);
-        Menu menu = new Menu("파스타", 3000, "naver.com", category1,new HashSet<>());
+        Menu menu = new Menu("파스타", 3000, "naver.com", category1,new LinkedList<>());
+        menuRepository.save(menu);
 
         option1 = new Option(null, "알리오올리오", 3L,menu);
         option2 = new Option(null, "토마토", 4L,menu);
@@ -63,7 +64,7 @@ class MenuRepositoryTest {
     @Transactional
     void testFindById() {
         // Given
-        Set<Option> options = new HashSet<>();
+        List<Option> options = new LinkedList<>();
         options.add(option1);
         options.add(option2);
 
@@ -83,7 +84,7 @@ class MenuRepositoryTest {
     @DisplayName("메뉴 FindAll 테스트")
     void testFindAll() {
         // Given
-        Set<Option> options2 = new HashSet<>();
+        List<Option> options2 = new LinkedList<>();
         options2.add(option3);
         options2.add(option4);
 
@@ -103,7 +104,7 @@ class MenuRepositoryTest {
     @DisplayName("메뉴로 옵션 찾기 테스트")
     void testGetOptionsById() {
         // Given
-        Set<Option> options = new HashSet<>();
+        List<Option> options = new LinkedList<>();
         options.add(option1);
         options.add(option2);
 

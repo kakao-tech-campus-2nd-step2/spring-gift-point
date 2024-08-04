@@ -1,14 +1,16 @@
-package gift.domain;
+package gift.domain.OrderDomain;
 
 import java.util.Map;
 
 public class OrderBodyDto {
+    private String memberId;
     private String object_type;
     private String text;
     private Map<String, Object> link;
     private String button_title;
 
-    public OrderBodyDto(String object_type, String text, Map<String, Object> link, String button_title) {
+    public OrderBodyDto(String memberId,String object_type, String text, Map<String, Object> link, String button_title) {
+        this.memberId = memberId;
         this.object_type = object_type;
         this.text = text;
         this.link = link;

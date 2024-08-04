@@ -2,8 +2,8 @@ package gift.ControllerTest;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import gift.controller.OrderController;
-import gift.domain.Order;
-import gift.domain.OrderRequest;
+import gift.domain.OrderDomain.Order;
+import gift.domain.OrderDomain.OrderRequest;
 import gift.service.OrderService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -38,14 +38,14 @@ public class OrderControllerTest {
     void orderTest() throws Exception {
         OrderRequest orderRequest = new OrderRequest(1L,2L,"문 앞에 놔주세요");
 
-        Order order = new Order(1L, 2L, 3L, new Date(), "message");
+        Order order = new Order(1L, 2L, null,3L, new Date(), "message");
         given(orderService.order(anyString(), any(OrderRequest.class))).willReturn(order);
 
         mockMvc.perform(post("/api/orders")
                         .header("Authorization", "Bearer 5NdKZ6Omw6wox5MWgCDasRvdHe6lVOaLAAAAAQo9cxgAAAGQ-mPU7rG7d-HwzTGR")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(orderRequest)))
-                .andExpect(status().isOk())
+                .andExpect(status().isCreated())
                 .andExpect(content().json(objectMapper.writeValueAsString(order)));
     }
 }

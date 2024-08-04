@@ -1,7 +1,9 @@
-package gift.domain;
+package gift.domain.MemberDomain;
 
+import gift.domain.WishListDomain.WishList;
 import jakarta.persistence.*;
 
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
 
@@ -11,7 +13,6 @@ public class Member {
     @Id
     private String id;
 
-    @Column(name = "name", nullable = false)
     private String name;
 
     @Column(name = "password")
@@ -30,6 +31,13 @@ public class Member {
         this.name = name;
     }
 
+    public Member(String id, String password, LinkedList<WishList> wishLists) {
+        this.id = id;
+        this.password = password;
+        this.wishList = wishList;
+        this.name = null;
+    }
+
 
     public String getPassword() {
         return password;
@@ -45,6 +53,13 @@ public class Member {
 
     public List<WishList> getWishList() {
         return wishList;
+    }
+
+    public boolean checkPassword(String password){
+        if(this.password.equals(password)){
+            return true;
+        }
+        return false;
     }
 
     @Override
