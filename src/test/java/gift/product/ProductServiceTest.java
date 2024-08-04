@@ -92,7 +92,7 @@ class ProductServiceTest {
             .thenReturn(
                 Optional.of(findCategory)
             );
-        Page<ProductPaginationResponseDTO> actual = productService.getAllProducts(pageable, 1L);
+        Page<ProductPaginationResponseDTO> actual = productService.getAllProductsByCategoryId(pageable, 1L);
 
         //then
         assertAll(

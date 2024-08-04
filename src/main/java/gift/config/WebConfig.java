@@ -23,6 +23,12 @@ public class WebConfig {
                     .allowedOrigins("*")
                     .allowedMethods("POST");
 
+                registry.addMapping("/members/point")
+                    .allowedOriginPatterns("*")
+                    .allowedMethods("GET")
+                    .allowedHeaders("Authorization")
+                    .allowCredentials(true);
+
                 registry.addMapping("/api/**")
                     .allowedOrigins("*")
                     .allowedMethods("GET");

@@ -1,7 +1,7 @@
 package gift.category;
 
+import gift.category.dto.CategoryListResponseDTO;
 import gift.category.dto.CategoryResponseDTO;
-import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -15,17 +15,19 @@ public class CategoryService {
     }
 
     @Transactional(readOnly = true)
-    public List<CategoryResponseDTO> getAllCategories() {
-        return categoryRepository.findAll()
-            .stream()
-            .map(category -> new CategoryResponseDTO(
-                category.getId(),
-                category.getName(),
-                category.getColor(),
-                category.getImageUrl(),
-                category.getDescription()
-            ))
-            .toList();
+    public CategoryListResponseDTO getAllCategories() {
+        return new CategoryListResponseDTO(
+            categoryRepository.findAll()
+                .stream()
+                .map(category -> new CategoryResponseDTO(
+                    category.getId(),
+                    category.getName(),
+                    category.getColor(),
+                    category.getImageUrl(),
+                    category.getDescription()
+                ))
+                .toList()
+        );
     }
 
 }

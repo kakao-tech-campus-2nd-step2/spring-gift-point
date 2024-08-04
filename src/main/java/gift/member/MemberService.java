@@ -5,10 +5,14 @@ import static gift.exception.ErrorMessage.MEMBER_NOT_FOUND;
 import static gift.exception.ErrorMessage.WRONG_PASSWORD;
 
 import gift.exception.FailedLoginException;
+import gift.member.dto.MemberChargePointRequestDTO;
+import gift.member.dto.MemberPointResponseDTO;
 import gift.member.dto.MemberRequestDTO;
+import gift.member.dto.MemberResponseDTO;
 import gift.member.entity.Member;
 import gift.token.JwtProvider;
 import gift.token.MemberTokenDTO;
+import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -71,5 +75,29 @@ public class MemberService {
             new Member(memberRequestDTO.getEmail(), memberRequestDTO.getPassword()))) {
             throw new IllegalArgumentException(WRONG_PASSWORD);
         }
+    }
+
+    public void chargePoint(MemberChargePointRequestDTO memberChargePointRequestDTO) {
+        getMember(memberChargePointRequestDTO.getEmail())
+            .chargePoint(memberChargePointRequestDTO.getPoint());
+    }
+
+    @Transactional(readOnly = true)
+    public List<MemberResponseDTO> getAllMembers() {
+        return memberRepository.findAll()
+            .stream()
+            .map(member -> new MemberResponseDTO(
+                member.getEmail(),
+                member.getPoint()
+            )).toList();
+    }
+
+    @Transactional(readOnly = true)
+    public MemberPointResponseDTO getPoint(String token) {
+        Member member = getMember(
+            jwtProvider.getMemberTokenDTOFromToken(token).getEmail()
+        );
+
+        return new MemberPointResponseDTO(member.getPoint());
     }
 }
