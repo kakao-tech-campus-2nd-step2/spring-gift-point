@@ -6,7 +6,7 @@
 </head>
 <body>
 <h2>register</h2>
-<form th:action="@{/api/register-form}" method="post" th:object="${RegisterRequestDTO}">
+<form th:action="@{/api/members/register-form}" method="post" th:object="${RegisterRequestDTO}">
     <div>
         <label for="email">Email:</label>
         <input type="text" id="email" name="email" />

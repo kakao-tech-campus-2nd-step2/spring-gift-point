@@ -32,15 +32,24 @@ public class Order {
     @Column(nullable = false, updatable = false, name = "order_date")
     private LocalDateTime orderDateTime;
 
+    @Column(nullable = false, name = "total_price")
+    private Long totalPrice;
+
+    @Column(nullable = false, name="order_success")
+    private boolean orderSuccess;
+
+
     public Order() {
     }
 
-    public Order(Member member, Option option, Integer orderQuantity, String message, LocalDateTime orderDateTime) {
+    public Order(Member member, Option option, Integer orderQuantity, String message, LocalDateTime orderDateTime, Long totalPrice, boolean orderSuccess) {
         this.member = member;
         this.option = option;
         this.orderQuantity = orderQuantity;
         this.message = message;
         this.orderDateTime = orderDateTime;
+        this.totalPrice = totalPrice;
+        this.orderSuccess = orderSuccess;
     }
 
     public Long getId() {
@@ -66,4 +75,8 @@ public class Order {
     public String getMessage() {
         return message;
     }
+
+    public Long getTotalPrice() { return totalPrice; }
+
+    public boolean getOrderSuccess() { return orderSuccess; }
 }

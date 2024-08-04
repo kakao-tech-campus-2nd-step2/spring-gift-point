@@ -1,16 +1,18 @@
 package gift.service;
 
 import gift.dto.request.LoginMemberDTO;
+import gift.dto.request.OrderPriceRequestDTO;
 import gift.dto.request.OrderRequestDTO;
+import gift.dto.response.OrderPriceResponseDTO;
 import gift.dto.response.OrderResponseDTO;
+import gift.dto.response.OrderSuccessResponseDTO;
 import gift.dto.response.PagingOrderResponseDTO;
 import gift.entity.*;
 import gift.exception.memberException.MemberNotFoundException;
 import gift.exception.optionException.OptionNotFoundException;
-import gift.repository.MemberRepository;
-import gift.repository.OptionRepository;
-import gift.repository.OrderRepository;
-import gift.repository.WishRepository;
+import gift.exception.orderException.DeductPointException;
+import gift.exception.productException.ProductNotFoundException;
+import gift.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -33,18 +35,21 @@ public class OrderService {
     private final MemberRepository memberRepository;
     private final WishRepository wishRepository;
     private final RestTemplate restTemplate;
+    private final ProductRepository productRepository;
 
     @Autowired
     public OrderService(OrderRepository orderRepository,
                         OptionRepository optionRepository,
                         MemberRepository memberRepository,
                         WishRepository wishRepository,
-                        RestTemplate restTemplate) {
+                        RestTemplate restTemplate,
+                        ProductRepository productRepository) {
         this.orderRepository = orderRepository;
         this.optionRepository = optionRepository;
         this.memberRepository = memberRepository;
         this.wishRepository = wishRepository;
         this.restTemplate = restTemplate;
+        this.productRepository = productRepository;
     }
 
     public List<OrderResponseDTO> getAllOrders(LoginMemberDTO loginMemberDTO){
@@ -55,7 +60,7 @@ public class OrderService {
                 .collect(Collectors.toList());
     }
 
-    public PagingOrderResponseDTO getOrders(LoginMemberDTO loginMemberDTO, Pageable pageable){
+    public PagingOrderResponseDTO getPagingOrders(LoginMemberDTO loginMemberDTO, Pageable pageable){
         Long memberId = loginMemberDTO.memberId();
 
         Page<Order> orderPage = orderRepository.findBymemberId(memberId, pageable);
@@ -66,7 +71,7 @@ public class OrderService {
                 .collect(Collectors.toList());
 
         return new PagingOrderResponseDTO(
-                orderResponseDTOs,
+                orderResponseDTOs, //contents
                 orderPage.getNumber(),
                 (int) orderPage.getTotalElements(),
                 orderPage.getSize(),
@@ -87,13 +92,15 @@ public class OrderService {
     * 3. 장바구니에 있네 -> 지우기. 없네? -> 그냥
     * */
 
-
-    public OrderResponseDTO addOrder(LoginMemberDTO loginMemberDTO, OrderRequestDTO orderRequestDTO){
+    /*
+    * 추가 : 포인트 차감 로직 추가. excption 제거 후, boolean값 전달해야 함
+    * */
+    public OrderSuccessResponseDTO addOrder(LoginMemberDTO loginMemberDTO, OrderRequestDTO orderRequestDTO){
 
         Long optionId = orderRequestDTO.optionId();
         Integer quantity = orderRequestDTO.quantity();
         String message = orderRequestDTO.message();
-
+        Long point = orderRequestDTO.point();
         Long memberId = loginMemberDTO.memberId();
 
         Member member = memberRepository.findById(memberId)
@@ -106,22 +113,78 @@ public class OrderService {
         Long productId = product.getId();
         Optional<Wish> wish = wishRepository.findByMemberIdAndProductId(memberId, productId);
 
+        // 주문 entity 만들기 -> 총 얼마나 썼는지 (10% 할인율 적용)
+        Long finalPrice = calculateTotalPrice(orderRequestDTO);
+        // 주문 만들기
+        boolean flag = true;
+        // 포인트 감소
+        try{
+            member.deductPoints(point);
+        }catch(DeductPointException e){
+            flag = false;
+            Order order = new Order(member, option, quantity, message, LocalDateTime.now(), finalPrice, flag);
+            orderRepository.save(order);
+            return toOrderSuccessDto(order, false);
+        }
+        Order order = new Order(member, option, quantity, message, LocalDateTime.now(), finalPrice, flag);
+        // 주문 저장
+        orderRepository.save(order);
+
+        //옵션 수량 빼기
+        option.subtract(quantity);
+
+        //wish 제거 -> exception 터지면 안 되는데 ..
         if(wish.isPresent()){
             wishRepository.delete(wish.get());
         }
 
-        option.subtract(quantity);
+        //최종 결제 금액 10% 포인트 저장
+        Long pointsToAccumulate = (long) (finalPrice * 0.1);
+        member.accumulatePoint(pointsToAccumulate);
 
-        Order order = new Order(member, option, quantity, message, LocalDateTime.now());
-        orderRepository.save(order);
-
-        OrderResponseDTO orderResponseDTO= toDto(order);
+        // dto 보내기
+        OrderSuccessResponseDTO orderSuccessResponseDTO = toOrderSuccessDto(order, flag);
         if(member.getType()==MemberType.KAKAO){
             sendKakaoMessage(member);
         }
 
-        return orderResponseDTO;
+        return orderSuccessResponseDTO;
     }
+
+    private Long calculateTotalPrice(OrderRequestDTO orderRequestDTO){
+        Long productId= orderRequestDTO.productId();
+        Integer quantity = orderRequestDTO.quantity();
+        Product product = productRepository.findById(productId)
+                .orElseThrow(() -> new ProductNotFoundException(productId));
+
+        int price = product.getPrice();
+        Long totalPrice = (long) price * quantity;
+
+        if (totalPrice > 50_000) {
+            totalPrice = (long) (totalPrice * 0.9);
+        }
+
+        return totalPrice - orderRequestDTO.point();
+    }
+
+    public OrderPriceResponseDTO getOrderPrice(OrderPriceRequestDTO orderPriceRequestDTO){
+
+        Long productId= orderPriceRequestDTO.productId();
+        Long optionId = orderPriceRequestDTO.optionId();
+        Integer quantity = orderPriceRequestDTO.quantity();
+        Product product = productRepository.findById(productId)
+                .orElseThrow(() -> new ProductNotFoundException(productId));
+        int price = product.getPrice();
+
+        Long totalPrice = (long) price * quantity;
+
+        if (totalPrice > 50_000) {
+            totalPrice = (long) (totalPrice * 0.9);
+        }
+
+        return new OrderPriceResponseDTO(totalPrice);
+    }
+
 
 
     private void sendKakaoMessage(Member member ){
@@ -158,16 +221,34 @@ public class OrderService {
     }
 
     private OrderResponseDTO toDto(Order order) {
+        Product product =  order.getOption()
+                .getProduct();
+        Option option = order.getOption();
+
         return new OrderResponseDTO(
+                order.getId(),
+                product.getId(),
+                product.getName(),
+                product.getImageUrl(),
+                option.getId(),
+                order.getOrderQuantity(),
+                order.getTotalPrice(),
+                order.getOrderDateTime(),
+                order.getMessage(),
+                order.getOrderSuccess()
+        );
+    }
+
+    private OrderSuccessResponseDTO toOrderSuccessDto(Order order, boolean success) {
+        return new OrderSuccessResponseDTO(
                 order.getId(),
                 order.getOption()
                         .getId(),
                 order.getOrderQuantity(),
                 order.getOrderDateTime(),
-                order.getMessage()
+                order.getMessage(),
+                success
         );
     }
-
-
 
 }
