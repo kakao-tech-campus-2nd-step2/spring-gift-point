@@ -69,4 +69,9 @@ public class OptionService {
         option.subtractQuantity(quantity);
         return new OptionResponse(option);
     }
+
+    public Long getPrice(Long optionID){
+        Option option = optionRepository.findById(optionID).orElseThrow();
+        return option.getProduct().getPrice();
+    }
 }

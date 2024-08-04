@@ -16,7 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Controller
-@RequestMapping("/manager")
+@RequestMapping("/admin")
 public class ProductViewController {
     private final ProductService productService;
     private final CategoryService categoryService;
@@ -35,7 +35,7 @@ public class ProductViewController {
     @DeleteMapping("/products/delete/{id}")
     public String deleteProduct(@PathVariable Long id) {
         productService.deleteProduct(id);
-        return "redirect:/manager/products";
+        return "redirect:/admin/products";
     }
 
     @PostMapping("/products/add")
@@ -49,7 +49,7 @@ public class ProductViewController {
         Product product = productService.insertNewProduct(new ProductOptionRequest(newProduct.getName(), newProduct.getPrice(), newProduct.getImageUrl(), newProduct.getCategoryId(),options));
         redirectAttributes.addAttribute("id", product.getId());
 
-        return "redirect:/manager/products/{id}";
+        return "redirect:/admin/products/{id}";
     }
 
     @PutMapping("/products/update/{id}")
@@ -61,7 +61,7 @@ public class ProductViewController {
         productService.updateProduct(id, product);
 
         redirectAttributes.addAttribute("id", id);
-        return "redirect:/manager/products/{id}";
+        return "redirect:/admin/products/{id}";
     }
 
     @GetMapping("/products")

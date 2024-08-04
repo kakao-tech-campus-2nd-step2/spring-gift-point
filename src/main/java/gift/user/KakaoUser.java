@@ -1,5 +1,6 @@
 package gift.user;
 
+import gift.point.PointDTO;
 import gift.wishList.WishList;
 import jakarta.persistence.*;
 
@@ -22,6 +23,9 @@ public class KakaoUser implements IntegratedUser {
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
+    @Column
+    private Long point = 0L;
+
     public KakaoUser() {
     }
 
@@ -29,6 +33,7 @@ public class KakaoUser implements IntegratedUser {
         this.id = id;
         this.accessToken = accessToken;
         this.refreshToken = refreshToken;
+        this.point = 0L;
     }
 
     public void addWishList(WishList wishList) {
@@ -59,9 +64,12 @@ public class KakaoUser implements IntegratedUser {
         return accessToken;
     }
 
-
     public String getRefreshToken() {
         return refreshToken;
+    }
+
+    public Long getPoint() {
+        return point;
     }
 
     public void setAccessToken(String accessToken) {
@@ -74,5 +82,17 @@ public class KakaoUser implements IntegratedUser {
 
     public void setUser(User user) {
         this.user = user;
+    }
+
+    public void setPoint(Long point) {
+        this.point = point;
+    }
+
+    public void chargePoint(Long point){
+        this.point += point;
+    }
+
+    public void usePoint(Long point){
+        this.point -= point;
     }
 }

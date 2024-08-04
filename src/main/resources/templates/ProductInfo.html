@@ -14,7 +14,7 @@
 <div class="container mt-5">
   <div class="row">
     <div class="col-lg-8">
-      <form th:action="@{/manager/products/delete/{id}(id=${product.id})}" method="post">
+      <form th:action="@{/admin/products/delete/{id}(id=${product.id})}" method="post">
         <div>
           <label for="name">카테고리</label>
           <div>
@@ -45,14 +45,14 @@
           <div class="col">
             <button class="w-100 btn btn-primary btn-lg"
                     onclick="location.href='AddOrUpdateProduct.html'"
-                    th:onclick="|location.href='@{/manager/products/update/{id}(id=${product.id})}'|"
+                    th:onclick="|location.href='@{/admin/products/update/{id}(id=${product.id})}'|"
 
                     type="button">상품 수정</button>
           </div>
           <div class="col">
             <button class="w-100 btn btn-secondary btn-lg"
                     onclick="location.href='items.html'"
-                    th:onclick="|location.href='@{/manager/products}'|"
+                    th:onclick="|location.href='@{/admin/products}'|"
                     type="button">목록으로</button>
           </div>
           <div class="col">

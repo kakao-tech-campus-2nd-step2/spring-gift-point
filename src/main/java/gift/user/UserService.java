@@ -3,6 +3,7 @@ package gift.user;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -65,9 +66,13 @@ public class UserService {
                 .orElseThrow(() -> new IllegalArgumentException("User not found with ID: " + id));
     }
 
-    public KakaoUser getKakaoUserById(Long id){
-        return kakaoUserRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("User not found with ID: " + id));
+    public KakaoUser getKakaoUserByUser(User user){
+        return kakaoUserRepository.findByUser(user)
+                .orElseThrow(() -> new IllegalArgumentException("Kakao User not found with User: " + user.getId()));
+    }
+
+    public List<User> getAllUsers(){
+        return userRepository.findAll();
     }
 
 }
