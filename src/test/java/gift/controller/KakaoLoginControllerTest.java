@@ -80,7 +80,7 @@ class KakaoLoginControllerTest {
     @Test
     void kakaoLoginPageWithoutAuthCodeTest() throws Exception {
         // when & then
-        mockMvc.perform(get("/").contentType(MediaType.APPLICATION_JSON))
+        mockMvc.perform(get("/api/oauth/authorize").contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk()).andExpect(view().name("kakaologin"));
     }
 
