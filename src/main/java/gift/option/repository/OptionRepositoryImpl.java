@@ -3,6 +3,8 @@ package gift.option.repository;
 import gift.option.domain.Option;
 import org.springframework.stereotype.Repository;
 
+import java.util.Optional;
+
 @Repository
 public class OptionRepositoryImpl implements OptionRepository {
     private final OptionJpaRepository optionJpaRepository;
@@ -13,7 +15,9 @@ public class OptionRepositoryImpl implements OptionRepository {
 
     @Override
     public Option findById(Long id) {
-        return optionJpaRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("[ERROR] 다음 id의 옵션은 존재하지 않음 : " + id));
+        return optionJpaRepository.findById(id).orElseThrow(
+                () -> new IllegalArgumentException("[ERROR] 다음 id의 옵션은 존재하지 않음 : " + id)
+        );
     }
 
     @Override

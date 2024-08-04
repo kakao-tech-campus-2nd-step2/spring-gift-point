@@ -1,10 +1,11 @@
 package gift.option.repository;
 
 import gift.option.domain.Option;
-import org.springframework.stereotype.Repository;
 
-@Repository
+import java.util.Optional;
+
 public interface OptionRepository {
-    Option findById(Long id);
-    void save(Option option);
+    public Option findById(Long id);
+
+    public void save(Option option);
 }
