@@ -49,7 +49,7 @@ public class WishController {
         return new ResponseEntity<>(wishResponseDto, HttpStatus.CREATED);
     }
 
-    @GetMapping()
+    @GetMapping("/all")
     @Operation(summary = "멤버가 가진 모든 위시를 조회", description = "토큰값을 이용하여 멤버를 찾고, 해당 멤버의 모든 위시를 가져옵니다.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "위시 조회 성공", content = @Content(schema = @Schema(implementation = WishResponseDto.class))),

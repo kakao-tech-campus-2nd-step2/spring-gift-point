@@ -24,19 +24,20 @@ public class Member {
     @Schema(description = "멤버 고유 id ")
     private Long id;
 
-    @Column(nullable = false, unique = true)
+    @Column(unique = true)
     @Email
     @Schema(description = "멤버 email ")
     private String email;
-    @Column(nullable = false)
+    @Column()
     @Schema(description = "멤버 비밀번호")
     private String password;
+    @Column()
     @Schema(description = "멤버 토큰")
     private String token;
-
+    @Column()
     @Schema(description = "멤버 point")
-    private Long point =0L;
-
+    private Long point;
+    @Column()
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
     @Schema(description = "멤버가 갖고있는 위시 리스트")
     private final List<Wish> wishes = new ArrayList<>();
