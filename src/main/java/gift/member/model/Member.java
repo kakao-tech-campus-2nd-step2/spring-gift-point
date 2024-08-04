@@ -45,11 +45,14 @@ public class Member {
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
     private final List<Wish> wishList = new ArrayList<>();
 
+    private int point;
+
     public Member() {
     }
 
     public Member(String kakaoId) {
         this.kakaoId = kakaoId;
+        this.point = 0;
     }
 
     public Member(String email, String password) throws IllegalEmailException {
@@ -62,6 +65,7 @@ public class Member {
         this.email = email;
         this.password = password;
         this.kakaoId = kakaoId;
+        this.point = 0;
     }
 
 
@@ -87,5 +91,13 @@ public class Member {
 
     public void setKakaoId(String hashedKakaoId) {
         this.kakaoId = hashedKakaoId;
+    }
+
+    public void addPoint(int point) {
+        this.point += point;
+    }
+
+    public void subPoint(int point) {
+        this.point -= point;
     }
 }

@@ -52,18 +52,10 @@ public class OrderController {
         @RequestBody OrderRequest orderRequest) throws JsonProcessingException {
 
         var accessToken = authHead.replace("Bearer ", "");
-
-//        // 멤버 정보 필요
-//        var memberDto = new MemberRequest(member.getEmail(),member.getPassword());
-
-        // orderResponse
-//        var orderResponse = new OrderResponse(orderRequest.getOptionId(),
-//            orderRequest.getQuantity(), orderRequest.getMessage());
-
         var headers = getHttpHeadersForSelfMessage(accessToken);
         // 주문 처리 -> 위시 리스트 삭제, 옵션 수량 감소
         var order = orderService.addOrder(member, orderRequest);
-        System.out.println(member);
+
         if (member.getKakaoId() == null) {
             return ResponseEntity.ok(
                 new OrderResponse(HttpResult.OK, "주문 추가 성공", HttpStatus.OK, order));
@@ -107,7 +99,8 @@ public class OrderController {
         String property = sortParams[0];
         Direction direction =
             sortParams.length > 1 ? Direction.valueOf(sortParams[1]) : Direction.ASC;
-        Page<Order> orderListPage = orderService.getOrderListPage(member,page, size, property, direction);
+        Page<Order> orderListPage = orderService.getOrderListPage(member, page, size, property,
+            direction);
         return ResponseEntity.ok(
             new OrderResponse(HttpResult.OK, "주문 리스트 조회 성공", HttpStatus.OK, orderListPage));
     }
