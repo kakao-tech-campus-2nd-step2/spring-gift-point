@@ -55,6 +55,10 @@ public class Member {
         return name;
     }
 
+    public Integer getPoint() {
+        return memberPoint.getPoint();
+    }
+
     public List<WishList> getWishList() {
         return wishList;
     }
