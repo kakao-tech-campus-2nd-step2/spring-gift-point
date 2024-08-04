@@ -44,7 +44,6 @@ public class OrderController {
      */
     @PostMapping()
     public ResponseEntity<?> orderProduct(@Valid @RequestBody OrderRequest orderRequest, @SessionUser UserVo sessionUserVo) {
-
         //1. 주문 가능한 상태인지 알아보고 해당 옵션 수량 삭제하기
         optionService.removeOptionQuantityFromOrder(orderRequest.optionId(), orderRequest.quantity()); //이 부분을 바꿀까 생각 중
 
@@ -57,6 +56,7 @@ public class OrderController {
         //4. 주문 메시지 보내기 (보내기 전에 토큰 갱신하기)
 //        apiTokenService.renewToken(sessionUserVo);
 //        kakaoService.sendOrderMessage(orderResponse, sessionUserVo);
+
 
         return ResponseEntity.ok(orderResponse);
     }

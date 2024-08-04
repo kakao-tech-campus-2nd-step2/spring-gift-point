@@ -9,6 +9,7 @@ public record WishProductResponse(Long id,
                                   long product_id,
                                   String productName,
                                   int productPrice,
+
                                   String imageUrl) {
 
     public WishProductResponse(WishProduct wishProduct) {

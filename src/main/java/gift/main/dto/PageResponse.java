@@ -9,6 +9,7 @@ import java.util.List;
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public record PageResponse(CustomPage data) {
 
+
     public PageResponse(Page<?> page) {
         this(new CustomPage(page));
     }

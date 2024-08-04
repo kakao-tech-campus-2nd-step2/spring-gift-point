@@ -49,6 +49,7 @@ public class ApiTokenService {
 
         ApiToken apiToken = new ApiToken(user, kakaoToken);
         apiTokenRepository.save(apiToken);
+
     }
 
     //토큰갱신
