@@ -35,8 +35,7 @@ public class WishController {
 
     @PostMapping
     public ResponseEntity<WishAddApiResponse> addWish(@ValidMember Member member, @Valid @RequestBody WishRequest wishRequest) {
-        var created = HttpStatus.CREATED;
-        return SuccessApiResponse.of(new WishAddApiResponse(created, wishService.addWishlist(member, wishRequest)), created);
+        return SuccessApiResponse.of(new WishAddApiResponse(HttpStatus.CREATED, wishService.addWishlist(member, wishRequest)), HttpStatus.CREATED);
     }
 
     @DeleteMapping("/{id}")

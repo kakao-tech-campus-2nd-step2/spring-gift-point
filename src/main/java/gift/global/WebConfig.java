@@ -7,8 +7,10 @@ import gift.domain.service.member.MemberService;
 import gift.global.util.JwtUtil;
 import java.util.Arrays;
 import java.util.List;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration
@@ -26,6 +28,15 @@ public class WebConfig implements WebMvcConfigurer {
     public void addArgumentResolvers(List<HandlerMethodArgumentResolver> resolvers) {
         resolvers.add(new ValidMemberArgumentResolver(memberService, jwtUtil));
         resolvers.add(new ValidAdminMemberArgumentResolver(memberService, jwtUtil));
+    }
+
+    @Override
+    public void addCorsMappings(CorsRegistry registry) {
+        registry.addMapping("/**")
+            .allowedOrigins("*")
+            .allowedMethods("GET", "POST", "PUT", "DELETE")
+            .allowedHeaders("Content-Type", "Authorization")
+            .maxAge(3600);
     }
 
     public static class Constants {

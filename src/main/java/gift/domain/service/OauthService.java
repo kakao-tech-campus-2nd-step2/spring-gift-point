@@ -7,8 +7,8 @@ import gift.domain.dto.response.KakaoUserInfoResponse;
 import gift.domain.dto.response.OauthTokenResponse;
 import gift.domain.entity.Order;
 import gift.domain.entity.Product;
-import gift.domain.exception.badRequest.OauthVendorIllegalException;
-import gift.domain.exception.unauthorized.TokenUnexpectedErrorException;
+import gift.domain.exception.ErrorCode;
+import gift.domain.exception.ServerException;
 import gift.global.WebConfig.Constants.Domain.Member.Type;
 import java.util.Objects;
 import org.springframework.beans.factory.annotation.Value;
@@ -39,7 +39,7 @@ public class OauthService {
         if (Objects.requireNonNull(userType) == Type.KAKAO) {
             return getKakaoOauthToken(authorizationCode);
         }
-        throw new OauthVendorIllegalException();
+        throw new ServerException(ErrorCode.OAUTH_VENDOR_ILLEGAL);
     }
 
     public KakaoUserInfoResponse getKakaoUserInfo(String kakaoUserAccessToken) {
@@ -54,7 +54,7 @@ public class OauthService {
                 .getBody();
         } catch (Exception e) {
             //TODO: 200 응답이 아닐 때를 조금 더 세분화시키기 (https://github.com/kakao-tech-campus-2nd-step2/spring-gift-order/pull/267#discussion_r1692966327)
-            throw new TokenUnexpectedErrorException();
+            throw new ServerException(ErrorCode.TOKEN_UNEXPECTED_ERROR);
         }
     }
 
@@ -141,7 +141,7 @@ public class OauthService {
 
         } catch (Exception e) {
             //TODO: 200 응답이 아닐 때를 조금 더 세분화시키기 (https://github.com/kakao-tech-campus-2nd-step2/spring-gift-order/pull/267#discussion_r1692966327)
-            throw new TokenUnexpectedErrorException();
+            throw new ServerException(ErrorCode.TOKEN_UNEXPECTED_ERROR);
         }
     }
 
@@ -164,7 +164,7 @@ public class OauthService {
 
         } catch (Exception e) {
             //TODO: 200 응답이 아닐 때를 조금 더 세분화시키기 (https://github.com/kakao-tech-campus-2nd-step2/spring-gift-order/pull/267#discussion_r1692966327)
-            throw new TokenUnexpectedErrorException();
+            throw new ServerException(ErrorCode.TOKEN_UNEXPECTED_ERROR);
         }
     }
 }

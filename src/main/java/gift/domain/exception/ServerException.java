@@ -1,6 +1,6 @@
 package gift.domain.exception;
 
-public abstract class ServerException extends RuntimeException {
+public class ServerException extends RuntimeException {
 
     private final ErrorCode errorCode;
 

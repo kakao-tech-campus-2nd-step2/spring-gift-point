@@ -5,9 +5,8 @@ import gift.domain.dto.response.WishResponse;
 import gift.domain.entity.Member;
 import gift.domain.entity.Product;
 import gift.domain.entity.Wish;
-import gift.domain.exception.conflict.ProductAlreadyExistsInWishlistException;
-import gift.domain.exception.forbidden.OtherMembersWishDeletionException;
-import gift.domain.exception.notFound.WishNotFoundException;
+import gift.domain.exception.ErrorCode;
+import gift.domain.exception.ServerException;
 import gift.domain.repository.WishRepository;
 import java.util.List;
 import org.springframework.stereotype.Service;
@@ -36,7 +35,7 @@ public class WishService {
         Product product = productService.getProductById(wishRequest.productId());
 
         wishRepository.findWishByMemberAndProduct(member, product).ifPresent(w -> {
-            throw new ProductAlreadyExistsInWishlistException();
+            throw new ServerException(ErrorCode.PRODUCT_ALREADY_EXISTS_IN_WISHLIST);
         });
 
         return WishResponse.of(wishRepository.save(new Wish(product, member)));
@@ -49,9 +48,9 @@ public class WishService {
     }
 
     public Wish findWishByIdAndMember(Long wishId, Member member) {
-        Wish wish = wishRepository.findById(wishId).orElseThrow(WishNotFoundException::new);
+        Wish wish = wishRepository.findById(wishId).orElseThrow(() -> new ServerException(ErrorCode.WISH_NOT_FOUND));
         if (!wish.getMember().equals(member)) {
-            throw new OtherMembersWishDeletionException();
+            throw new ServerException(ErrorCode.OTHER_MEMBERS_WISH_DELETION);
         }
         return wish;
     }

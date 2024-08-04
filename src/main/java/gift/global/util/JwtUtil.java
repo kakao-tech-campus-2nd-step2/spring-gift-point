@@ -1,10 +1,8 @@
 package gift.global.util;
 
 import gift.domain.entity.Member;
-import gift.domain.exception.unauthorized.TokenExpiredException;
-import gift.domain.exception.unauthorized.TokenNotFoundException;
-import gift.domain.exception.unauthorized.TokenStringInvalidException;
-import gift.domain.exception.unauthorized.TokenUnexpectedErrorException;
+import gift.domain.exception.ErrorCode;
+import gift.domain.exception.ServerException;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.JwtException;
@@ -57,22 +55,22 @@ public class JwtUtil {
         } catch (ExpiredJwtException e) {
             // 토큰이 만료됨
             log.warn("Token '{}' has been expired.", token);
-            throw new TokenExpiredException();
+            throw new ServerException(ErrorCode.TOKEN_EXPIRED);
         } catch (JwtException e) {
             // 알수 없는 Jwt 예외 발생
             log.warn("Token '{}' was invalid.", token);
-            throw new TokenUnexpectedErrorException();
+            throw new ServerException(ErrorCode.TOKEN_UNEXPECTED_ERROR);
         }
     }
 
     private void checkPrefixOrThrow(String authorizationHeader) {
         if (authorizationHeader == null) {
             log.warn("authorizationHeader was null.");
-            throw new TokenNotFoundException();
+            throw new ServerException(ErrorCode.TOKEN_NOT_FOUND);
         }
         if (!authorizationHeader.startsWith(tokenPrefix + " ")) {
             log.warn("header/Authorization's value was not starts with '{}'.", tokenPrefix);
-            throw new TokenStringInvalidException();
+            throw new ServerException(ErrorCode.TOKEN_STRING_INVALID);
         }
     }
 
@@ -80,12 +78,12 @@ public class JwtUtil {
         try {
             return authorizationHeader.substring(tokenPrefix.length() + 1);
         } catch (NullPointerException e) {
-            throw new TokenNotFoundException();
+            throw new ServerException(ErrorCode.TOKEN_NOT_FOUND);
         } catch (ArrayIndexOutOfBoundsException e) {
             log.warn("authorizationHeader.substring(begin) indexes was out of bounds. "
                     + "begin was {}, authorizationHeader.length() was {}.", tokenPrefix.length() + 1,
                 authorizationHeader.length());
-            throw new TokenStringInvalidException();
+            throw new ServerException(ErrorCode.TOKEN_STRING_INVALID);
         }
     }
 

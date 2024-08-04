@@ -4,9 +4,8 @@ import gift.domain.dto.request.member.KakaoOauthMemberRequest;
 import gift.domain.dto.request.member.MemberRequest;
 import gift.domain.entity.KakaoOauthMember;
 import gift.domain.entity.Member;
-import gift.domain.exception.conflict.MemberAlreadyExistsException;
-import gift.domain.exception.forbidden.MemberIncorrectLoginInfoException;
-import gift.domain.exception.notFound.MemberNotFoundException;
+import gift.domain.exception.ErrorCode;
+import gift.domain.exception.ServerException;
 import gift.domain.repository.KakaoOauthMemberRepository;
 import gift.domain.service.OauthService;
 import org.slf4j.Logger;
@@ -31,7 +30,7 @@ public class KakaoOauthMemberService implements DerivedMemberService<KakaoOauthM
     public Member registerMember(MemberRequest requestDto, Member member) {
         Long kakaoIdentifier = getKakaoIdentifier(requestDto);
         kakaoOauthMemberRepository.findByKakaoIdentifier(kakaoIdentifier).ifPresent(o -> {
-                throw new MemberAlreadyExistsException();
+                throw new ServerException(ErrorCode.MEMBER_ALREADY_EXISTS);
         });
         KakaoOauthMember kakaoOauthMember = kakaoOauthMemberRepository.save(convert(requestDto).toEntity(member, kakaoIdentifier));
         member.setKakaoOauthMember(kakaoOauthMember);
@@ -46,7 +45,7 @@ public class KakaoOauthMemberService implements DerivedMemberService<KakaoOauthM
 
         // 카카오 식별자가 다른 경우 에러
         if (!kakaoOauthMember.getKakaoIdentifier().equals(kakaoIdentifier)) {
-            throw new MemberIncorrectLoginInfoException();
+            throw new ServerException(ErrorCode.MEMBER_INCORRECT_LOGIN_INFO);
         }
 
         kakaoOauthMember.setAccessToken(convert(requestDto).getAccessToken());
@@ -56,7 +55,7 @@ public class KakaoOauthMemberService implements DerivedMemberService<KakaoOauthM
     @Override
     @Transactional(readOnly = true)
     public KakaoOauthMember findDerivedMemberBy(Member member) {
-        return kakaoOauthMemberRepository.findByMember(member).orElseThrow(MemberNotFoundException::new);
+        return kakaoOauthMemberRepository.findByMember(member).orElseThrow(() -> new ServerException(ErrorCode.MEMBER_NOT_FOUND));
     }
 
     @Override

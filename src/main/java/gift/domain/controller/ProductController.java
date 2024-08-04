@@ -84,8 +84,7 @@ public class ProductController {
 
     @PostMapping("/{productId}/options")
     public ResponseEntity<OptionAddApiResponse> addProductOption(@PathVariable("productId") Long productId, @Valid @RequestBody OptionAddRequest optionAddRequest) {
-        var created = HttpStatus.CREATED;
-        return SuccessApiResponse.of(new OptionAddApiResponse(created, productService.addProductOption(productId, optionAddRequest)), created);
+        return SuccessApiResponse.of(new OptionAddApiResponse(HttpStatus.CREATED, productService.addProductOption(productId, optionAddRequest)), HttpStatus.CREATED);
     }
 
     @PutMapping("/{productId}/options/{optionId}")
