@@ -83,6 +83,8 @@ public class WishlistServiceTest {
         verify(wishlistJpaRepository, times(1)).save(wishlist);
     }
 
+    /*
+    프론트와 명세를 맞추기 위해 제외한 테스트
     @Test
     @DisplayName("남은 수량이 더 클 때")
     public void testDescendWishlistItem() {
@@ -120,5 +122,7 @@ public class WishlistServiceTest {
         verify(wishlistJpaRepository, times(0)).save(wishlist);
         verify(wishlistJpaRepository, times(1)).delete(wishlist);
     }
+
+ */
 
 }
