@@ -32,18 +32,6 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
     }
 
-    @ExceptionHandler(ConstraintViolationException.class)
-    public ResponseEntity<ErrorResponse> handleConstraintViolationExceptions(ConstraintViolationException ex) {
-        Map<String, String> errors = new HashMap<>();
-        ex.getConstraintViolations().forEach(violation -> {
-            String fieldName = violation.getPropertyPath().toString();
-            String errorMessage = violation.getMessage();
-            errors.put(fieldName, errorMessage);
-        });
-        ErrorResponse errorResponse = new ErrorResponse(errors, 400);
-        return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
-    }
-
     @ExceptionHandler(InvalidProductDataException.class)
     public ResponseEntity<ErrorResponse> handleInvalidProductDataException(InvalidProductDataException ex) {
         return buildErrorResponse("Invalid product data: " + ex.getMessage(), 400, HttpStatus.BAD_REQUEST);
