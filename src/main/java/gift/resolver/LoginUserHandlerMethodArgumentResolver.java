@@ -1,6 +1,10 @@
 package gift.resolver;
 
 import gift.annotation.LoginUser;
+import gift.entity.Member;
+import gift.exception.CustomException;
+import gift.exception.ErrorCode;
+import gift.service.MemberService;
 import gift.util.JwtUtil;
 import jakarta.servlet.http.HttpServletRequest;
 import java.nio.file.AccessDeniedException;
@@ -16,9 +20,11 @@ public class LoginUserHandlerMethodArgumentResolver implements HandlerMethodArgu
 
 
     private final JwtUtil jwtUtil;
+    private final MemberService memberService;
 
-    LoginUserHandlerMethodArgumentResolver(JwtUtil jwtUtil) {
+    public LoginUserHandlerMethodArgumentResolver(JwtUtil jwtUtil, MemberService memberService) {
         this.jwtUtil = jwtUtil;
+        this.memberService = memberService;
     }
 
     @Override
@@ -29,14 +35,24 @@ public class LoginUserHandlerMethodArgumentResolver implements HandlerMethodArgu
     @Override
     public Object resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer,
         NativeWebRequest webRequest, WebDataBinderFactory binderFactory)
-        throws AccessDeniedException {
+        throws CustomException {
         HttpServletRequest request = (HttpServletRequest) webRequest.getNativeRequest();
         String token = request.getHeader("Authorization");
 
-        if (token != null) {
-            return jwtUtil.getEmailFromToken(token);
+        if (token == null) {
+            throw new CustomException(ErrorCode.TOKEN_NOT_EXISTS);
         }
-        throw new AccessDeniedException("권한이 없습니다.");
+
+        if (jwtUtil.isTokenExpired(token)) {
+            throw new CustomException(ErrorCode.TOKEN_EXPIRED);
+        }
+
+        String email = jwtUtil.getEmailFromToken(token);
+        if (memberService.findByEmail(email).getId() == null) {
+            throw new CustomException(ErrorCode.TOKEN_INVALID);
+        }
+
+        return email;
 
     }
 

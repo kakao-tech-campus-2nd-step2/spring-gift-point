@@ -22,9 +22,9 @@ public class LoginController {
 
     @GetMapping("/code")
     public ResponseEntity<String> LoginAndGetAccessToken(String code) {
-        String accessToken = loginService.oauthLogin(code);
+        String token = loginService.oauthLogin(code);
 
-        return new ResponseEntity<>(accessToken, HttpStatus.OK);
+        return new ResponseEntity<>(token, HttpStatus.CREATED);
     }
 
 }

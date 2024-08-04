@@ -2,7 +2,8 @@ package gift.service;
 
 import gift.entity.Option;
 import gift.entity.Product;
-import gift.exception.DataNotFoundException;
+import gift.exception.CustomException;
+import gift.exception.ErrorCode;
 import gift.repository.OptionRepository;
 
 import java.util.List;
@@ -30,7 +31,7 @@ public class OptionService {
 
     public void addOption(Option option) {
         if (isDuplicateName(option)) {
-            throw new IllegalArgumentException("중복Option이름 사용 불가능");
+            throw new CustomException(ErrorCode.OPTION_NAME_DUPLICATED);
         }
         optionRepository.save(option);
     }
@@ -51,7 +52,7 @@ public class OptionService {
         Optional<Option> option = optionRepository.findById(id);
 
         if (option.isEmpty()) {
-            throw new DataNotFoundException("존재하지 않는 Option");
+            throw new CustomException(ErrorCode.OPTION_NOT_FOUND);
         }
         return option.get();
     }
@@ -64,7 +65,7 @@ public class OptionService {
         Option option = getOptionById(id);
         int quantity = option.getQuantity();
         if (quantity < 1) {
-            throw new IllegalStateException("상품 수량 부족");
+            throw new CustomException(ErrorCode.OPTION_NOT_SUBSTRACT);
         }
         option.setQuantity(quantity - 1);
         optionRepository.saveAndFlush(option);
@@ -74,7 +75,7 @@ public class OptionService {
         Option option = getOptionById(id);
         int optionQuantity = option.getQuantity();
         if (optionQuantity < quantity) {
-            throw new IllegalStateException("상품 수량 부족");
+            throw new CustomException(ErrorCode.OPTION_NOT_SUBSTRACT);
         }
         option.setQuantity(optionQuantity - quantity);
         optionRepository.saveAndFlush(option);

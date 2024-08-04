@@ -2,7 +2,9 @@ package gift.service;
 
 import gift.entity.Member;
 import gift.entity.Wish;
-import gift.exception.DataNotFoundException;
+import gift.exception.CustomException;
+
+import gift.exception.ErrorCode;
 import gift.repository.MemberRepository;
 import gift.repository.WishRepository;
 
@@ -18,12 +20,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
-
+@Transactional
 public class WishlistService {
 
     private final WishRepository wishRepository;
     private final MemberService memberService;
-    private final int PAGE_SIZE = 5;
 
     public WishlistService(WishRepository wishRepository, MemberService memberService) {
         this.wishRepository = wishRepository;
@@ -33,6 +34,7 @@ public class WishlistService {
     public void addWishlist(Wish wish, String email) {
         Member wishMember = wish.getMember();
         Member authMember = memberService.findByEmail(email);
+
         if (wishMember.getId().equals(authMember.getId())) {
             wishRepository.save(wish);
         }
@@ -41,18 +43,13 @@ public class WishlistService {
 
     public Wish findById(Long id) {
         return wishRepository.findById(id)
-            .orElseThrow(() -> new DataNotFoundException("위시리스트가 존재하지 않습니다."));
+            .orElseThrow(() -> new CustomException(ErrorCode.WISHLIST_NOT_FOUND));
     }
 
 
-    public void deleteWishlist(Long id, String email) {
+    public void deleteWishlist(Long productId, String email) {
         Member authMember = memberService.findByEmail(email);
-        Wish deletingWish = findById(id);
-
-        //삭제하려는 Wish의 MemberId와 accessToken에서 받은 memberId가 같아야 삭제
-        if (authMember.getId().equals(deletingWish.getMember().getId())) {
-            wishRepository.deleteById(id);
-        }
+        wishRepository.deleteByMemberIdAndProductId(authMember.getId(), productId);
 
     }
 
@@ -62,12 +59,9 @@ public class WishlistService {
     }
 
     @Transactional
-    public Page<Wish> getWishPage(String email, int page) {
-        List<Sort.Order> sorts = new ArrayList<>();
-        sorts.add(Sort.Order.asc("id"));
-        Pageable pageable = PageRequest.of(page, PAGE_SIZE, Sort.by(sorts));
+    public Page<Wish> getWishPage(Pageable pageable, String email) {
         Member member = memberService.findByEmail(email);
-        return wishRepository.findByMemberId(member.getId(), pageable);
+        return wishRepository.findAllByMemberId(pageable, member.getId());
 
     }
 }

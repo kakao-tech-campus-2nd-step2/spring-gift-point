@@ -7,6 +7,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.Lob;
 import jakarta.persistence.ManyToOne;
 import jakarta.validation.constraints.NotNull;
 
@@ -25,6 +26,7 @@ public class Product {
     private int price;
 
     @Column(nullable = false)
+    @Lob
     private String imageUrl;
 
     @NotNull

@@ -33,7 +33,7 @@ public class JwtUtil {
     }
 
     public String generateToken(String email) {
-        return BEARER_PREFIX +
+        return
             Jwts.builder()
                 .setSubject(email) // 주체 설정
                 .setIssuedAt(new Date(System.currentTimeMillis())) // 발행 시간 설정
@@ -54,12 +54,9 @@ public class JwtUtil {
             .getBody();
     }
 
-    public boolean validateToken(String token, String username) {
-        Claims claims = extractClaims(token);
-        return username.equals(claims.getSubject()) && !isTokenExpired(token);
-    }
 
-    private boolean isTokenExpired(String token) {
+
+    public boolean isTokenExpired(String token) {
         Date expiration = extractClaims(token).getExpiration();
         return expiration.before(new Date());
     }

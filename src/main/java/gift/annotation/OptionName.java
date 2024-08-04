@@ -12,7 +12,7 @@ import java.lang.annotation.Target;
 @Constraint(validatedBy = OptionNameValidator.class)
 public @interface OptionName {
 
-    String message() default "Option Name 규칙"; // 기본 메시지 설정
+    String message() default "Option Name 규칙이 일치하지 않습니다."; // 기본 메시지 설정
 
     Class[] groups() default {};
 

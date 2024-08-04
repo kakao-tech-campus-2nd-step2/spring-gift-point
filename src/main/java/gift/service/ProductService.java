@@ -1,19 +1,14 @@
 package gift.service;
 
-import gift.entity.Category;
-import gift.entity.Member;
-import gift.entity.Option;
+
+import gift.dto.ProductResponseDTO;
 import gift.entity.Product;
-
-import gift.exception.DataNotFoundException;
-import gift.exception.DuplicateUserEmailException;
-import gift.repository.CategoryRepository;
+import gift.exception.CustomException;
+import gift.exception.ErrorCode;
 import gift.repository.ProductRepository;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -24,13 +19,19 @@ import org.springframework.stereotype.Service;
 public class ProductService {
 
     private final ProductRepository productRepository;
-    private final int PAGE_SIZE = 5;
 
     public ProductService(ProductRepository productRepository) {
         this.productRepository = productRepository;
     }
 
+    public Optional<Product> findByName(String name){
+        return productRepository.findByName(name);
+    }
+
     public void saveProduct(Product product) {
+        if(findByName(product.getName()).isPresent()){
+            throw new CustomException(ErrorCode.PRODUCT_NAME_DUPLICATED);
+        }
         productRepository.save(product);
     }
 
@@ -41,7 +42,7 @@ public class ProductService {
 
     public Product getProductById(Long id) {
         return productRepository.findById(id).
-            orElseThrow(() -> new DataNotFoundException("존재하지 않는 Product입니다."));
+            orElseThrow(() -> new CustomException(ErrorCode.PRODUCT_NOT_FOUND));
     }
 
 
@@ -63,11 +64,11 @@ public class ProductService {
     }
 
 
-    public Page<Product> getProductPage(int page) {
-        List<Sort.Order> sorts = new ArrayList<>();
-        sorts.add(Sort.Order.asc("id"));
-        Pageable pageable = PageRequest.of(page, PAGE_SIZE, Sort.by(sorts));
-        return productRepository.findAll(pageable);
+    public Page<Product> getProductPage(Pageable pageable,Long categoryId) {
+        if (categoryId == null) {
+            return productRepository.findAll(pageable);
+        }
+        return productRepository.findAllByCategoryId(pageable,categoryId);
     }
 
 
