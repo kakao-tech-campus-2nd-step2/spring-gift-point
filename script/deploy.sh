@@ -6,7 +6,7 @@ echo -e "배포 시작..\n"
 PROJECT_NAME="spring-gift-point"
 PROJECT_JAR_FILE="spring-gift-0.0.1-SNAPSHOT.jar"
 GIT_REPOSITORY="https://github.com/jjt4515/spring-gift-point.git"
-GIT_BRANCH="step1"
+GIT_BRANCH="step3"
 PORT=8080
 
 echo "PID: $(lsof -i :${PORT} -t)"
