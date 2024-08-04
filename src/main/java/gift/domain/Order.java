@@ -19,17 +19,19 @@ public class Order {
     private int quantity;
     private LocalDateTime orderDateTime;
     private String message;
+    private Integer finalPrice;
 
     protected Order() {
     }
 
-    public Order(Long memberId, Long productId, Long optionId, int quantity, String message) {
+    public Order(Long memberId, Long productId, Long optionId, int quantity, String message, Integer finalPrice) {
         this.memberId = memberId;
         this.productId = productId;
         this.optionId = optionId;
         this.quantity = quantity;
         this.message = message;
         this.orderDateTime = LocalDateTime.now();
+        this.finalPrice = finalPrice;
     }
 
     public Order(Long id, Long memberId, Long productId, Long optionId, int quantity, String message) {
@@ -68,5 +70,9 @@ public class Order {
 
     public String getMessage() {
         return message;
+    }
+
+    public Integer getFinalPrice() {
+        return finalPrice;
     }
 }
