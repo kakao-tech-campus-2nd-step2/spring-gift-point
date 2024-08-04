@@ -59,7 +59,7 @@ public class WishService {
     }
 
     public WishResponseDto fromEntity(Wish wish) {
-        return new WishResponseDto(wish.getProductId(),wish.getMemberId());
+        return new WishResponseDto(wish.getProductId(), wish.getMemberId());
     }
 
     private String makeTokenFrom(Long userId) {

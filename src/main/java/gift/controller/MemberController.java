@@ -66,7 +66,7 @@ public class MemberController {
             @ApiResponse(responseCode = "400", description = "로그인 실패", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))})
     public ResponseEntity<MemberResponseDto> login(@ModelAttribute MemberRequestDto memberRequestDto) throws AuthenticationException {
         if (memberService.login(memberRequestDto.getEmail(), memberRequestDto.getPassword())) {
-            return new ResponseEntity<>(new MemberResponseDto(memberRequestDto.getEmail(),memberService.generateTokenFrom(memberRequestDto.getEmail())), HttpStatus.OK);
+            return new ResponseEntity<>(new MemberResponseDto(memberRequestDto.getEmail(), memberService.generateTokenFrom(memberRequestDto.getEmail())), HttpStatus.OK);
         }
         throw new AuthenticationException("로그인 실패");
     }

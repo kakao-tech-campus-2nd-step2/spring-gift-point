@@ -10,10 +10,10 @@ import java.time.LocalDateTime;
 
 @Service
 public class GiftOrderService {
-    private GiftOrderRepository giftOrderRepository;
-    private OptionService optionService;
-    private WishService wishService;
-    private MemberService memberService;
+    private final GiftOrderRepository giftOrderRepository;
+    private final OptionService optionService;
+    private final WishService wishService;
+    private final MemberService memberService;
 
     public GiftOrderService(GiftOrderRepository giftOrderRepository, OptionService optionService, WishService wishService, MemberService memberService) {
         this.giftOrderRepository = giftOrderRepository;

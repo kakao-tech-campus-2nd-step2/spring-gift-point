@@ -7,7 +7,7 @@ public class WishRequestDto {
     @Schema(description = "위시 고유 id")
     private Long id;
     @Schema(description = "위시리스트에 추가된 상품의 id")
-    private Long productId;
+    private final Long productId;
 
     public WishRequestDto(Long productId) {
         this.productId = productId;
