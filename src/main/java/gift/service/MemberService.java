@@ -6,6 +6,7 @@ import gift.model.Member;
 import gift.repository.MemberRepository;
 import gift.util.JwtUtil;
 import gift.util.PasswordUtil;
+import java.util.List;
 import java.util.Optional;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -48,5 +49,11 @@ public class MemberService {
         Member member = memberRepository.findByEmail(kakaoMember.email())
             .orElseGet(() -> memberRepository.save(new Member(kakaoMember.email(), kakaoMember.password())));
         return jwtUtil.generateToken(member.getId(),member.getPassword());
+    }
+
+    public void addPoint(Long memberId, Long point){
+        Member member = memberRepository.findById(memberId).get();
+        member.setPoint(member.getPoint() + point);
+        memberRepository.save(member);
     }
 }
