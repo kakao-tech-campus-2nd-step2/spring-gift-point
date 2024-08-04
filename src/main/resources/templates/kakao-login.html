@@ -6,7 +6,8 @@
 </head>
 <body>
   <h1>카카오 로그인</h1>
-  <form action="/api/members/kakao" method="post">
+  <form action="/api/members/kakao" method="get">
+    <input type="hidden" name="redirect_url" value="http://localhost:8080/kakao/login/page">
     <button type="submit">
       <img src="/kakao_login_medium_narrow.png" alt="kakaoLogin">
     </button>

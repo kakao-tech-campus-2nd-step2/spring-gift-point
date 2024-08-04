@@ -26,7 +26,7 @@ public class MemberController {
     @PostMapping("/register")
     @Operation(summary = "회원 가입", description = "회원을 등록합니다.")
     public ResponseEntity<JwtResponse> register(@Valid @RequestBody MemberDto memberDto) {
-        String newMemberEmail = memberService.registerMember(memberDto);
+        String newMemberEmail = memberService.registerMember(memberDto, null);
         String jwt = memberService.login(memberDto);
         return ResponseEntity.status(HttpStatus.CREATED).body(new JwtResponse(jwt));
     }

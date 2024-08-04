@@ -11,3 +11,5 @@ INSERT INTO member (email, password) VALUES ('user1@example.com', 'password1');
 INSERT INTO member (email, password) VALUES ('user2@example.com', 'password2');
 
 INSERT INTO wish (member_id, product_id) VALUES (1, 1);
+
+INSERT INTO option (name, quantity, product_id) VALUES ('옵션1', 100, 1);

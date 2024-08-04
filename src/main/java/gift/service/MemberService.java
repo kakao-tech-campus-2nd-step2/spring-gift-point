@@ -18,12 +18,12 @@ public class MemberService {
     }
 
     @Transactional
-    public String registerMember(MemberDto memberDto) {
+    public String registerMember(MemberDto memberDto, String accessToken) {
         if (memberRepository.findByEmail(memberDto.email()) != null) {
             throw new RuntimeException("Email already registered");
         }
 
-        Member newMember = new Member(memberDto.email(), memberDto.password(), memberDto.accessToken());
+        Member newMember = new Member(memberDto.email(), memberDto.password(), accessToken);
         memberRepository.save(newMember);
         return newMember.getEmail();
     }
