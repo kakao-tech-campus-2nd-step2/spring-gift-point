@@ -15,11 +15,9 @@ import org.springframework.stereotype.Service;
 public class MemberService {
 
     private final MemberRepository memberRepository;
-    private final JwtUtil jwtUtil;
 
-    public MemberService(MemberRepository memberRepository, JwtUtil jwtUtil) {
+    public MemberService(MemberRepository memberRepository) {
         this.memberRepository = memberRepository;
-        this.jwtUtil = jwtUtil;
     }
 
     public String register(MemberRequest memberRequest) {
@@ -31,24 +29,36 @@ public class MemberService {
         Member member = new Member(memberRequest.getEmail(), memberRequest.getPassword());
         memberRepository.save(member);
 
-        return jwtUtil.createToken(member.getEmail());
+        return JwtUtil.createToken(member.getEmail());
     }
 
     public String login(String email, String password) {
         return memberRepository.findByEmail(email)
             .filter(member -> member.getPassword().equals(password))
-            .map(member -> jwtUtil.createToken(member.getEmail()))
+            .map(member -> JwtUtil.createToken(member.getEmail()))
             .orElseThrow(InvalidCredentialsException::new);
     }
 
     public Member getMemberFromToken(String token) {
         try {
-            String email = jwtUtil.extractEmail(token);
+            String email = JwtUtil.extractEmail(token);
             return memberRepository.findByEmail(email)
                 .orElseThrow(TokenNotFoundException::new);
         } catch (Exception e) {
             throw new TokenErrorException();
         }
+    }
+
+    public String processKakaoLogin(String kakaoEmail, String refreshToken) {
+        Optional<Member> existingMember = findByEmail(kakaoEmail);
+
+        Member member = findByEmail(kakaoEmail)
+            .orElseGet(() -> new Member(kakaoEmail, ""));
+
+        member.setRefreshToken(refreshToken);
+        registerNewMember(member);
+
+        return JwtUtil.createToken(member.getEmail());
     }
 
     // 신규 회원 등록

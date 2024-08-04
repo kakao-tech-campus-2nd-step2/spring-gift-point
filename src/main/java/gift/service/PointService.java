@@ -6,29 +6,29 @@ import gift.common.util.JwtUtil;
 import gift.dto.PointRequest;
 import gift.entity.Member;
 import gift.repository.MemberRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 @Service
 public class PointService {
 
     private final MemberRepository memberRepository;
-    private final JwtUtil jwtUtil;
 
-    public PointService(MemberRepository memberRepository, JwtUtil jwtUtil) {
+    public PointService(MemberRepository memberRepository) {
         this.memberRepository = memberRepository;
-        this.jwtUtil = jwtUtil;
     }
 
     public Long getPoints(String token) {
-        String email = jwtUtil.extractEmail(token);
+        String email = JwtUtil.extractEmail(token);
         Member member = memberRepository.findByEmail(email)
             .orElseThrow(TokenErrorException::new);
 
         return member.getPoints();
     }
 
+    @Transactional
     public Long chargePoints(String token, Long memberId, PointRequest pointRequest) {
-        String email = jwtUtil.extractEmail(token);
+        String email = JwtUtil.extractEmail(token);
         Member admin = memberRepository.findByEmail(email)
             .orElseThrow(TokenErrorException::new);
 
