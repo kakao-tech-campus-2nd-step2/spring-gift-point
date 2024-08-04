@@ -72,7 +72,6 @@ public class UserService {
 
         User user = userRepository.findById(userId)
             .orElseThrow(() -> new UserException(ErrorCode.USER_NOT_FOUND));
-        user.isAdmin();
         user.addPoint(request.depositPoint());
 
         return UserResponse.Point.from(user.getPoint());
