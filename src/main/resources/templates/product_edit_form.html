@@ -29,7 +29,7 @@
     <select id="categoryId" class="form-select">
       <option th:each="category : ${categories}" th:value="${category.id}"
               th:text="${category.name}"
-              th:selected="${category.name == product.categoryName}"></option>
+              th:selected="${category.id == product.categoryId}"></option>
     </select>
   </div>
   <div>

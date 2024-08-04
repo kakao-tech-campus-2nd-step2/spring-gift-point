@@ -7,7 +7,8 @@
 
 0. 이번 주차
    1. [1단계(API 명세)](#1단계API-명세-요구사항)
-
+   1. [2단계(배포하기)](#2단계배포하기-요구사항)
+   
 1. [1주차 - product](#1주차-과제-요구사항spring-gift-product)
    1. [1단계(상품 API)](#1단계상품-api-요구사항)
    2. [2단계(관리자 화면)](#2단계관리자-화면-요구사항)
@@ -47,7 +48,28 @@
 
 ### API 문서
 
-[notion](https://supreme-jewel-53e.notion.site/API-cc0ccfb63a2945d2835a4b330aaa304d?pvs=4)에서 작업했습니다.
+[notion](https://supreme-jewel-53e.notion.site/API-cc0ccfb63a2945d2835a4b330aaa304d?pvs=4)에서 작업
+
+
+
+## 2단계(배포하기) 요구사항
+
+### 기능 요구 사항
+
+지금까지 만든 선물하기 서비스를 배포하고 클라이언트와 연동할 수 있어야 한다.
+
+- 지속적인 배포를 위한 배포 스크립트를 작성한다.
+- 클라이언트와 API 연동 시 발생하는 보안 문제에 대응한다.
+  - 서버와 클라이언트의 `Origin`이 달라 요청을 처리할 수 없는 경우를 해결한다.
+- HTTPS는 필수는 아니지만 팀 내에서 논의하고 필요한 경우 적용한다.
+
+
+### 기능 목록
+
+- [x] CORS 문제 해결
+- [x] 배포 스크립트 작성
+- [x] cors 테스트코드 작성
+
 
 
 ---
@@ -188,6 +210,15 @@ Content-Type: application/json
 
 ## 3단계(데이터베이스 적용) 요구사항
 
+### 기능 요구 사항
+
+자바 컬렉션 프레임워크를 사용하여 메모리에 저장하던 상품 정보를 데이터베이스에 저장한다.
+
+### 프로그래밍 요구 사항
+
+- 메모리에 저장하고 있던 모든 코드를 제거하고 H2 데이터베이스를 사용하도록 변경한다.
+- 사용하는 테이블은 애플리케이션이 실행될 때 구축되어야 한다.
+
 ### 3단계 기능 목록
 
 #### 데이터베이스 구축
@@ -200,19 +231,6 @@ Content-Type: application/json
   - [x] `addProduct`
   - [x] `updateProduct`
   - [x] `deleteProduct`
-
-
-
-### 기능 요구 사항
-
-자바 컬렉션 프레임워크를 사용하여 메모리에 저장하던 상품 정보를 데이터베이스에 저장한다.
-
-### 프로그래밍 요구 사항
-
-- 메모리에 저장하고 있던 모든 코드를 제거하고 H2 데이터베이스를 사용하도록 변경한다.
-- 사용하는 테이블은 애플리케이션이 실행될 때 구축되어야 한다.
-
-
 
 
 ---
@@ -261,105 +279,6 @@ Content-Type: application/json
 * 토큰을 생성하는 방법에는 여러 가지가 있다. 방법 중 하나를 선택한다.
 * (선택) 회원을 조회, 추가, 수정, 삭제할 수 있는 관리자 화면을 구현한다.
 
-아래 예시와 같이 HTTP 메시지를 주고받도록 구현한다.
-
-사용자가 회원 가입, 로그인, 추후 회원별 기능을 이용할 수 있도록 구현한다.
-
-- 회원은 이메일과 비밀번호를 입력하여 가입한다.
-- 토큰을 받으려면 이메일과 비밀번호를 보내야 하며, 가입한 이메일과 비밀번호가 일치하면 토큰이 발급된다.
-- 토큰을 생성하는 방법에는 여러 가지가 있다. 방법 중 하나를 선택한다.
-- (선택) 회원을 조회, 추가, 수정, 삭제할 수 있는 관리자 화면을 구현한다.
-
-아래 예시와 같이 HTTP 메시지를 주고받도록 구현한다.
-
-#### 회원 가입
-
-##### Request
-
-```http
-POST /members/register HTTP/1.1
-content-type: application/json
-host: localhost:8080
-
-{
-    "email": "admin@email.com",
-    "password": "password"
-}
-```
-
-##### Response
-
-```http
-HTTP/1.1 200
-Content-Type: application/json
-
-{
-    "token": ""
-}
-```
-
-#### 로그인
-
-```http
-POST /members/login HTTP/1.1
-content-type: application/json
-host: localhost:8080
-
-{
-    "email": "admin@email.com",
-    "password": "password"
-}
-```
-
-##### Response
-
-```http
-HTTP/1.1 200
-Content-Type: application/json
-
-{
-    "token": ""
-}
-```
-
-### 힌트
-
-#### Basic 인증
-
-Base64로 인코딩된 사용자 ID, 비밀번호 쌍을 인증 정보(credentials) 값으로 사용한다.
-
-```html
-Authorization: Basic base64({EMAIL}:{PASSWORD})
-```
-
-#### JSON Web Token
-
-[JJWT](https://github.com/jwtk/jjwt) 라이브러리를 사용하여 JWT을 쉽게 만들 수 있다.
-
-```java
-dependencies {
-    compileOnly 'io.jsonwebtoken:jjwt-api:0.12.6'
-    runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.12.6'
-    runtimeOnly 'io.jsonwebtoken:jjwt-jackson:0.12.6'
-}
-String secretKey = "Yn2kjibddFAWtnPJ2AFlL8WXmohJMCvigQggaEypa5E=";
-String accessToken = Jwts.builder()
-    .setSubject(member.getId().toString())
-    .claim("name", member.getName())
-    .claim("role", member.getRole())
-    .signWith(Keys.hmacShaKeyFor(secretKey.getBytes()))
-    .compact();
-```
-
-#### 응답 코드
-
-- Authorization 헤더가 유효하지 않거나 토큰이 유효하지 않은 경우 [`401 Unauthorized`](https://developer.mozilla.org/ko/docs/Web/HTTP/Status/401)를 반환한다.
-
-> `401 Unauthorized` 클라이언트 오류 상태 응답 코드는 해당 리소스에 유효한 인증 자격 증명이 없기 때문에 요청이 적용되지 않았음을 나타냅니다. 이 상태는 WWW-Authenticate (en-US) 헤더와 함께 전송되며, 이 헤더는 올바르게 인증하는 방법에 대한 정보를 포함하고 있습니다. 이 상태는 `403`과 비슷하지만, `401 Unauthorized`의 경우에는 인증이 가능합니다.
-
-- 잘못된 로그인, 비밀번호 찾기, 비밀번호 변경 요청은 [`403 Forbidden`](https://developer.mozilla.org/ko/docs/Web/HTTP/Status/403)을 반환한다.
-
-> HTTP `403 Forbidden` 클라이언트 오류 상태 응답 코드는 서버에 요청이 전달되었지만, 권한 때문에 거절되었다는 것을 의미합니다. 이 상태는 `401`과 비슷하지만, 로그인 로직(틀린 비밀번호로 로그인 행위)처럼 반응하여 재인증(re-authenticating)을 하더라도 지속적으로 접속을 거절합니다.
 
 
 
@@ -367,8 +286,54 @@ String accessToken = Jwts.builder()
 
 - 회원 DTO 클래스 (User)
 - 회원 관련 Controller
-  - [x] `POST /api/members/register`: 회원가입
-  - [x] `POST /api/members/login`: 로그인
+  - [x] `POST /api/users/register`: 회원가입
+    ##### Request
+
+    ```http
+    POST /api/users/register HTTP/1.1
+    content-type: application/json
+    host: localhost:8080
+    
+    {
+        "email": "admin@email.com",
+        "password": "password"
+    }
+    ```
+
+    ##### Response
+
+    ```http
+    HTTP/1.1 200
+    Content-Type: application/json
+    
+    {
+        "token": ""
+    }
+    ```
+  - [x] `POST /api/users/login`: 로그인
+    ##### Request
+
+    ```http
+    POST /api/users/login HTTP/1.1
+    content-type: application/json
+    host: localhost:8080
+    
+    {
+        "email": "admin@email.com",
+        "password": "password"
+    }
+    ```
+
+    ##### Response
+
+    ```http
+    HTTP/1.1 200
+    Content-Type: application/json
+    
+    {
+        "token": "jwt token"
+    }
+    ```
 - 회원 관련 Service
   - [x] 회원가입
   - [x] 로그인
@@ -395,58 +360,9 @@ String accessToken = Jwts.builder()
 Authorization: Bearer token
 ```
 
-### 힌트
-
-#### 사용자 시나리오
-
-##### 위시 리스트 상품 추가
-
-![위시 리스트 상품 추가 시나리오](./images/wishlist_add_scenario.png)
-
-##### 위시 리스트 상품 삭제
-
-![위시 리스트 상품 삭제 시나리오](./images/wishlist_delete_scenario.png)
-
-#### HandlerMethodArgumentResolver
-
-컨트롤러 메서드에 진입하기 전에 전처리를 통해 객체를 주입할 수 있다.
-
-```java
-public class LoginMemberArgumentResolver implements HandlerMethodArgumentResolver {
-
-    private final MemberService memberService;
-
-    public LoginMemberArgumentResolver(MemberService memberService) {
-        this.memberService = memberService;
-    }
-
-    @Override
-    public boolean supportsParameter(MethodParameter parameter) {
-        return parameter.getParameterAnnotation(LoginMember.class);
-    }
-
-    @Override
-    public Object resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer,
-        NativeWebRequest webRequest, WebDataBinderFactory binderFactory) throws Exception {
-        // ...
-        return new LoginMember(member.getId(), member.getName(), member.getEmail(),
-            member.getRole());
-    }
-}
-```
-
-```java
-@PostMapping("/wishes")
-public void create(
-    @RequestBody WishRequest request,
-    @LoginMember Member member
-) {
-}
-```
 
 
-
-### 3단계 기능 목록
+### 3단계 기능 목록 To-do
 
 - [x] WishController
 
@@ -495,13 +411,13 @@ public void create(
   - [x] 수정
   - [x] 삭제
 
-- [x] 위시리스트 접근 인가/인증
+- [x] 위시리스트 접근 인가/인증 -> Resolver로 회원 정보만 확인하도록 적용
 
 - [x] 각 기능 예외처리
 
   - [x] 조회
     * wishes 테이블에 해당하는 user_id 레코드가 존재하지 않으면 `WishNotFoundException`발생
-    * user_id가 users 테이블에 존재하지 않는 경우 -> `LoginUserArgumentResolver`에 의해 토큰이 존재하지 않아 reject됨
+    * user_id가 users 테이블에 존재하지 않는 경우 -> `LoginUserIdArgumentResolver`에 의해 토큰이 존재하지 않아 reject됨
 
   - [x] 추가
     * `quantity`가 0이하인 경우`@Positive`으로 인해 자동으로 `400 Bad Request` 반환
@@ -577,31 +493,6 @@ spring.jpa.show-sql=true
 
 [Auto-configured Data JPA Tests](https://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/#features.testing.spring-boot-applications.autoconfigured-spring-data-jpa)
 
-```java
-@DataJpaTest
-class StationRepositoryTest {
-    @Autowired
-    private StationRepository stations;
-    
-    @Test
-    void save() {
-        Station expected = new Station("잠실역");
-        Station actual = stations.save(expected);
-        assertAll(
-                () -> assertThat(actual.getId()).isNotNull(),
-                () -> assertThat(actual.getName()).isEqualTo(expected.getName())
-        );
-    }
-
-    @Test
-    void findByName() {
-        String expected = "잠실역";
-        stations.save(new Station(expected));
-        String actual = stations.findByName(expected).getName();
-        assertThat(actual).isEqualTo(expected);
-    }
-}
-```
 
 H2 데이터베이스를 사용한다면 아래의 프로퍼티를 추가하면 MySQL Dialect을 사용할 수 있다.
 
@@ -726,12 +617,6 @@ Hibernate:
 
 
 
-### 힌트
-
-이를 직접 구현할 수도 있지만, 스프링 데이터는 `Pageable`이라는 객체를 제공하여 쉽게 구현할 수 있다. 또한 `List`, `Slice`, `Page` 등 다양한 반환 타입을 제공한다.
-
-
-
 #### 참고자료
 
 - [Paging, Iterating Large Results, Sorting & Limiting](https://docs.spring.io/spring-data/jpa/reference/repositories/query-methods-details.html#repositories.special-parameters)
@@ -791,10 +676,6 @@ Content-Type: application/json
 ]
 ```
 
-### 프로그래밍 요구 사항
-
-- 구현한 기능에 대해 적절한 테스트 전략을 생각하고 작성한다.
-
 
 
 ### 1단계 기능 목록
@@ -853,7 +734,7 @@ Content-Type: application/json
 
 
 
-### 2단계 기능 목록
+### 2단계 기능 목록 To-do
 
 - [x] Option entity
   - [x] 옵션 이름은 공백을 포함하여 최대 50자
@@ -883,31 +764,19 @@ Content-Type: application/json
 - 별도의 HTTP API를 만들 필요는 없다.
 - 서비스 클래스 또는 엔티티 클래스에서 기능을 구현하고 나중에 사용할 수 있도록 한다.
 
-### 프로그래밍 요구 사항
-
-- 구현한 기능에 대해 적절한 테스트 전략을 생각하고 작성한다.
-- 단위 테스트하기 어려운 코드와 단위 테스트 가능한 코드를 분리해 단위 테스트 가능한 코드에 대해 단위 테스트를 구현한다.
-
-### 힌트
-
-```java
-var option = optionRepository.findByProductId(productId).orElseThrow();
-option.subtract(quantity);
-```
 
 
+### 3단계 기능 목록 To-do
 
-### 3단계 기능 목록
-
-* 테스트 코드 작성
 * [x] 옵션 수량 차감 기능 구현
   * [x] 차감을 원하는 양이 현재 quantity보다 크지 않아야 함
+* 테스트 코드 작성
+  * 옵션 수량 차감은 컨트롤러에 연결되어있지 않아 서비스 테스트만 작성
+  * [x] 옵션 수량 차감 서비스 단위 테스트 작성
 
 ---
 
 # 5주차 과제 요구사항(spring-gift-order)
-
-## 1단계(카카오 로그인) 요구사항
 
 ### 과제 진행 요구 사항
 
@@ -916,6 +785,8 @@ option.subtract(quantity);
   - 내 애플리케이션 > 제품 설정 > 카카오 로그인 > **활성화 설정 ON** ([카카오 로그인 활성화 설정](https://developers.kakao.com/docs/latest/ko/kakaologin/prerequisite#kakao-login-activate))
   - 내 애플리케이션 > 제품 설정 > 카카오 로그인 > **Redirect URI 등록 > `http://localhost:8080` 저장** ([Redirect URI 등록](https://developers.kakao.com/docs/latest/ko/kakaologin/prerequisite#kakao-login-redirect-uri))
   - 내 애플리케이션 > 제품 설정 > 카카오 로그인 > 동의항목 > 접근권한 > **카카오톡 메시지 전송 > 선택 동의** ([접근권한 동의항목](https://developers.kakao.com/docs/latest/ko/kakaologin/prerequisite#permission))
+
+## 1단계(카카오 로그인) 요구사항
 
 ### 기능 요구 사항
 
@@ -926,72 +797,6 @@ option.subtract(quantity);
 - 앱 키, 인가 코드가 절대 유출되지 않도록 한다.
   - 특히 시크릿 키는 GitHub나 클라이언트 코드 등 외부에서 볼 수 있는 곳에 추가하지 않는다.
 - (선택) 인가 코드를 받는 방법이 불편한 경우 카카오 로그인 화면을 구현한다.
-
-실제 카카오 로그인은 아래 그림과 같이 진행된다.
-
-![카카오로그인 프로세스](./images/kakaologin_sequence.png)
-
-하지만 지금과 같이 클라이언트가 없는 상황에서는 아래와 같은 방법으로 인가 코드를 획득한다.
-
-1. 내 애플리케이션 > 앱 설정 > 앱 키로 이동하여 REST API 키를 복사한다.
-2. https://kauth.kakao.com/oauth/authorize?scope=talk_message&response_type=code&redirect_uri=http://localhost:8080&client_id=`{REST_API_KEY}`에 접속하여 **카카오톡 메시지 전송**에 동의한다.
-3. http://localhost:8080/?code=`{AUTHORIZATION_CODE}`에서 인가 코드를 추출한다.
-
-
-
-### 힌트
-
-#### 애플리케이션 등록
-
-카카오 플랫폼 서비스를 이용하여 개발한 애플리케이션은 이름, 아이콘, 상품명, 서비스명, 회사명, 로고, 심벌 등에 카카오의 상표를 사용할 수 없으므로([제17조(상표 사용 시 의무 사항)](https://developers.kakao.com/terms/latest/ko/site-policies#trademark-requirement)), 아래와 같이 간단하게 작성해도 된다.
-
-- 앱 이름: `spring-gift`
-- 회사명: 본인의 이름
-- 카테고리: `교육`
-
-#### 토큰 요청
-
-[토큰 받기](https://developers.kakao.com/docs/latest/ko/kakaologin/rest-api#request-token)에 따르면 아래와 같이 `RequestEntity`를 만들 수 있다.
-
-```java
-var url = "https://kauth.kakao.com/oauth/token";
-var headers = new HttpHeaders();
-headers.add(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_FORM_URLENCODED_VALUE);
-var body = new LinkedMultiValueMap<String, String>();
-body.add("grant_type", "authorization_code");
-body.add("client_id", properties.clientId());
-body.add("redirect_uri", properties.redirectUri());
-body.add("code", authorizationCode);
-var request = new RequestEntity<>(body, headers, HttpMethod.POST, URI.create(url));
-```
-
-#### 오류 처리
-
-- [레퍼런스](https://developers.kakao.com/docs/latest/ko/rest-api/reference)와 [문제 해결](https://developers.kakao.com/docs/latest/ko/kakaologin/trouble-shooting)을 참고하여 발생할 수 있는 다양한 오류를 처리한다.
-- 예를 들어, 아래의 경우 카카오톡 메시지 전송에 동의하지 않았으므로 과제 진행 요구 사항의 안내에 따라 설정한다.
-
-```plaintext
-403 Forbidden: "{"msg":"[spring-gift] App disabled [talk_message] scopes for [TALK_MEMO_DEFAULT_SEND] API on developers.kakao.com. Enable it first.","code":-3}"
-```
-
-- `RestTemplate`을 사용하는 경우 [Spring RestTemplate Error Handling](https://www.baeldung.com/spring-rest-template-error-handling)를 참고한다.
-
-#### HTTP Client
-
-- [REST Clients](https://docs.spring.io/spring-framework/reference/integration/rest-clients.html)
-- 사용할 클라이언트를 선택할 때 어떤 기준을 사용해야 할까?
-- 클라이언트 인스턴스를 효과적으로 생성/관리하는 방법은 무엇인가?
-
-#### 더 적절한 테스트 방법이 있을까?
-
-- 요청을 보내고 응답을 파싱하는 부분만 테스트하려면 어떻게 해야 할까?
-- 비즈니스 로직에 연결할 때 단위/통합 테스트는 어떻게 할까?
-
-#### API 호출에 문제가 발생하면 어떻게 할까?
-
-- 응답 시간이 길면 어떻게 할까? 몇 초가 적당할까?
-- 오류 코드는 어떻게 처리해야 할까?
-- 응답 값을 파싱할 때 문제가 발생하면 어떻게 할까?
 
 
 
@@ -1006,7 +811,7 @@ var request = new RequestEntity<>(body, headers, HttpMethod.POST, URI.create(url
   * 이후 동의 등 로그인 과정은 API에서 처리
   * 인가코드를 쿼리 파라미터로 포함한 리디렉션 url로 이동
 
-- [x] 리디렉션 uri에서 code 추출
+- [x] 리디렉션 uri(`./api/users/auth/kakao/code`)에서 code 추출
 
 - [x] code를 포함한 request body를 만들어 token 발급 요청
 
@@ -1042,28 +847,11 @@ var request = new RequestEntity<>(body, headers, HttpMethod.POST, URI.create(url
 
 현재 코드 구현이 Controller - Client 연결로 되어있음
 
-- [x] Controller - Service - Client 구조로 리팩토링 필요
-
-
-#### [테스트]
-
-- [ ] 서비스 서버 기능 통합 테스트
-  * Kakao API를 mock객체로 주입하여 기능 테스트
-  * [ ] Kakao API에서 에러를 반환하는 경우
-  * [ ] Happy Case
+- [x] Controller - Service - Client 구조로 리팩토링
 
 
 
 ## 2단계(주문하기) 요구사항
-
-### 과제 진행 요구 사항
-
-- 카카오 API를 사용하기 위한 [애플리케이션을 등록](https://developers.kakao.com/docs/latest/ko/getting-started/quick-start#create)한다.
-- 등록한 후 아래 안내에 따라 설정한다.
-  - 내 애플리케이션 > 제품 설정 > 카카오 로그인 > **활성화 설정 ON** ([카카오 로그인 활성화 설정](https://developers.kakao.com/docs/latest/ko/kakaologin/prerequisite#kakao-login-activate))
-  - 내 애플리케이션 > 제품 설정 > 카카오 로그인 > **Redirect URI 등록 > `http://localhost:8080` 저장** ([Redirect URI 등록](https://developers.kakao.com/docs/latest/ko/kakaologin/prerequisite#kakao-login-redirect-uri))
-  - 내 애플리케이션 > 제품 설정 > 카카오 로그인 > 동의항목 > 접근권한 > **카카오톡 메시지 전송 > 선택 동의** ([접근권한 동의항목](https://developers.kakao.com/docs/latest/ko/kakaologin/prerequisite#permission))
-  - 내 애플리케이션 > 앱 설정 > **Web 플랫폼 등록 > `http://localhost:8080` 저장** ([Web](https://developers.kakao.com/docs/latest/ko/getting-started/app#platform-web))
 
 ### 기능 요구 사항
 
@@ -1075,11 +863,7 @@ var request = new RequestEntity<>(body, headers, HttpMethod.POST, URI.create(url
 
 - 해당 상품이 위시 리스트에 있는 경우 위시 리스트에서 삭제한다.
 
-- 나에게 보내기
-
-  를 읽고 주문 내역을 카카오톡 메시지로 전송한다.
-
-  - 메시지는 [메시지 템플릿](https://developers.kakao.com/docs/latest/ko/message/message-template)의 기본 템플릿이나 사용자 정의 템플릿을 사용하여 자유롭게 작성한다.
+- [사용자 정의 템플릿으로 나에게 보내기]()(https://developers.kakao.com/docs/latest/ko/message/rest-api#custom-template-msg-me)를 읽고 주문 내역을 카카오톡 메시지로 전송한다.
 
 아래 예시와 같이 HTTP 메시지를 주고받도록 구현한다.
 
@@ -1112,9 +896,6 @@ Content-Type: application/json
 }
 ```
 
-실제 카카오톡 메시지는 아래와 같이 전송된다. 하지만 이번 미션에서는 수신자가 나이기 때문에 카카오톡 친구 목록 가져오기는 생략한다.
-
-![message talk](./images/message_talk.png)
 
 ### 시나리오
 
@@ -1125,7 +906,7 @@ Content-Type: application/json
 4. 카카오 메시지 api로 메시지 보내기
 
 
-### 기능 목록
+### 2단계 기능 목록 To-do
 
 - 아래 과정은 하나의 Transaction
 - [x] 옵션 수량 차감 (`OptionService.subtractOptionQuantity()` 호출)
@@ -1137,13 +918,11 @@ Content-Type: application/json
     * user entity에 token 필드 추가
   - [x] 메시지 템플릿 request 형식에 맞게 데이터 가공
 
+
+
 ## 3단계(API 문서 만들기) 요구사항
 
-### 기능 요구 사항
-
-API 사양에 관해 클라이언트와 어떻게 소통할 수 있을까? 어떻게 하면 편하게 소통할 수 있을지 고민해 보고 그 방법을 구현한다.
-
-### 구현
+### To-do
 
 API 문서는 Swagger를 이용해 구현
 
