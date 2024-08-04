@@ -59,16 +59,16 @@ INSERT INTO option (name, quantity, product_id) VALUES
 DROP TABLE temp_product_id;
 
 -- Insert Local Users
-INSERT INTO users (email, password, sns) VALUES
-('example1@email.com', '11111', 'local'),
-('example2@email.com', '22222', 'local'),
-('example3@email.com', '33333', 'local');
+INSERT INTO users (email, password, sns, points) VALUES
+('example1@email.com', '11111', 'local', 0),
+('example2@email.com', '22222', 'local', 0),
+('example3@email.com', '33333', 'local', 0);
 
 -- Insert SNS Users
-INSERT INTO users (sns_id, sns) VALUES
-('11111', 'kakao'),
-('22222', 'kakao'),
-('33333', 'kakao');
+INSERT INTO users (sns_id, sns, points) VALUES
+('11111', 'kakao', 0),
+('22222', 'kakao', 0),
+('33333', 'kakao', 0);
 
 -- Insert Wishlist Items
 INSERT INTO wishlist (user_id, product_id, quantity, option_id) VALUES

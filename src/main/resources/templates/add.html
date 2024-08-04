@@ -4,6 +4,52 @@
 <head>
   <meta charset="UTF-8">
   <title>상품 추가</title>
+  <style>
+    .btn {
+      display: inline-block;
+      padding: 6px 12px;
+      font-size: 14px;
+      font-weight: 400;
+      line-height: 1.42857143;
+      text-align: center;
+      white-space: nowrap;
+      vertical-align: middle;
+      touch-action: manipulation;
+      cursor: pointer;
+      border: 1px solid transparent;
+      border-radius: 4px;
+    }
+    .btn-primary {
+      margin-top: 20px;
+      color: #fff;
+      background-color: #007bff;
+      border-color: #007bff;
+    }
+    .btn-primary:hover {
+      background-color: #0056b3;
+      border-color: #004085;
+    }
+    .btn-secondary {
+      margin-top: 10px;
+      color: #fff;
+      background-color: #adb5bd;
+      border-color: #adb5bd;
+    }
+    .btn-secondary:hover {
+      background-color: #9da3a9;
+      border-color: #8d9297;
+    }
+    .btn-third {
+      margin-top: 20px;
+      color: #fff;
+      background-color: #28a745;
+      border-color: #28a745;
+    }
+    .btn-third:hover {
+      background-color: #218838;
+      border-color: #1e7e34;
+    }
+  </style>
 </head>
 <body>
 <h1>상품 추가</h1>
@@ -16,19 +62,55 @@
               th:text="${category.name}">NAME
       </option>
     </select>
-    <div th:if="${#fields.hasErrors('categoryId')}" th:errors="*{categoryId}">Category Error</div>
+    <div th:if="${#fields.hasErrors('categoryId')}" th:errors="*{categoryId}"
+         th:style="'color: red;'">Category Error
+    </div>
   </div>
   <label>이름: <input type="text" id="name" name="name" th:value="*{name}"
                     placeholder="이름을 입력하세요"/></label><br>
-  <div th:if="${#fields.hasErrors('name')}" th:errors="*{name}">Name Error</div>
+  <div th:if="${#fields.hasErrors('name')}" th:errors="*{name}" th:style="'color: red;'">Name
+    Error
+  </div>
   <label>가격: <input type="number" id="price" name="price" th:value="*{price}"
                     placeholder="가격을 입력하세요"/></label><br>
-  <div th:if="${#fields.hasErrors('price')}" th:errors="*{price}">Price Error</div>
+  <div th:if="${#fields.hasErrors('price')}" th:errors="*{price}" th:style="'color: red;'">Price
+    Error
+  </div>
   <label>이미지: <input type="text" id="imageUrl" name="imageUrl" th:value="*{imageUrl}"
                      placeholder="이미지 링크를 입력하세요"/></label><br>
-  <div th:if="${#fields.hasErrors('imageUrl')}" th:errors="*{imageUrl}">imageUrl Error</div>
-  <button type="submit">추가하기</button>
+  <div th:if="${#fields.hasErrors('imageUrl')}" th:errors="*{imageUrl}" th:style="'color: red;'">
+    imageUrl Error
+  </div>
+  <div id="options">
+    <h3>옵션</h3>
+    <div class="form-group" th:each="option, stat : ${productDTO.options}">
+      <label>옵션 이름:</label>
+      <input type="text" th:field="*{options[__${stat.index}__].name}"/>
+      <div th:if="${#fields.hasErrors('options[__${stat.index}__].name')}"
+           th:errors="*{options[__${stat.index}__].name}" th:style="'color: red;'">Option Name Error
+      </div>
+      <label>옵션 수량:</label>
+      <input type="number" th:field="*{options[__${stat.index}__].quantity}"/>
+      <div th:if="${#fields.hasErrors('options[__${stat.index}__].quantity')}"
+           th:errors="*{options[__${stat.index}__].quantity}" th:style="'color: red;'">Option
+        Quantity Error
+      </div>
+    </div>
+  </div>
+  </div>
+  <div th:if="${#fields.hasErrors('options')}" th:errors="*{options}" th:style="'color: red;'">
+    Option Error
+  </div>
+  </div>
+  <button type="submit" th:formaction="@{/products/add/option}" formmethod="post"
+          class="btn btn-secondary">옵션 추가하기
+  </button>
+  </br>
+  <button type="submit" class="btn btn-third">추가하기</button>
 </form>
-<a href="/products">돌아가기</a>
+<button class="btn btn-primary float-end"
+        th:onclick="|location.href='@{/products}'|"
+        type="button">돌아가기
+</button>
 </body>
 </html>

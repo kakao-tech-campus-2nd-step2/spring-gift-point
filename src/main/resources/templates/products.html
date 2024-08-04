@@ -3,6 +3,76 @@
 <head>
   <meta charset="UTF-8">
   <title>상품 목록</title>
+  <style>
+    body{
+      text-align: center;
+      margin: 20px;
+    }
+    table {
+      margin-top: 20px;
+      width: 100%;
+      border-collapse: collapse;
+    }
+    th, td {
+      padding: 10px;
+      border-bottom: 1px solid #ddd;
+      text-align: center;
+    }
+    th {
+      background-color: #f4f4f4;
+    }
+    tr:hover {
+      background-color: #f1f1f1;
+    }
+    .img-cell img {
+      width: 100px;
+      height: auto;
+    }
+    .pagination {
+      display: flex;
+      justify-content: center;
+      list-style: none;
+    }
+    .pagination li {
+      margin: 0 5px;
+    }
+    .pagination button {
+      margin: 0 5px;
+      color: #007bff;
+      background-color: #fff;
+      border: 1px solid #ddd;
+      padding: 6px 12px;
+      cursor: pointer;
+      border-radius: 4px;
+    }
+    .pagination button:hover {
+      background-color: #f1f1f1;
+      border-color: #ccc;
+    }
+    .btn {
+      display: inline-block;
+      padding: 6px 12px;
+      font-size: 14px;
+      font-weight: 400;
+      line-height: 1.42857143;
+      text-align: center;
+      white-space: nowrap;
+      vertical-align: middle;
+      touch-action: manipulation;
+      cursor: pointer;
+      border: 1px solid transparent;
+      border-radius: 4px;
+    }
+    .btn-primary {
+      color: #fff;
+      background-color: #007bff;
+      border-color: #007bff;
+    }
+    .btn-primary:hover {
+      background-color: #0056b3;
+      border-color: #004085;
+    }
+  </style>
 </head>
 <body>
 <h1>상품 목록</h1>
@@ -19,6 +89,7 @@
       <th>가격</th>
       <th>이미지</th>
       <th>카테고리</th>
+      <th></th>
     </tr>
     </thead>
 
@@ -26,11 +97,17 @@
     <tr th:each="product, status:${products}">
       <td th:text="${product.name}">NAME</td>
       <td th:text="${product.price}">PRICE</td>
-      <td th:text="${product.imageUrl}">IMAGE</td>
+      <td class="img-cell"><img th:src="${product.imageUrl}" alt="상품 이미지"></td>
       <td th:text="${categories[status.index]}">CATEGORY</td>
-      <td>
-        <a th:href="@{/products/update/{id}(id=${product.id})}">수정</a>
-        <a th:href="@{/products/delete/{id}(id=${product.id})}">삭제</a>
+      <td class="actions">
+        <button class="btn btn-primary float-end"
+                th:onclick="|location.href='@{/products/update/{id}(id=${product.id})}'|"
+                type="button">수정
+        </button>
+        <button class="btn btn-primary float-end"
+                th:onclick="|location.href='@{/products/delete/{id}(id=${product.id})}'|"
+                type="button">삭제
+        </button>
       </td>
     </tr>
     </tbody>
@@ -39,17 +116,17 @@
 </div>
 <div th:if="${!products.isEmpty()}">
   <ul class="pagination justify-content-center">
-    <li class="page-item" th:classappend="${currentPage == 0} ? 'disabled'">
-      <a class="page-link"
-         th:href="${currentPage == 0} ? '#' : @{'/products?page=' + (${currentPage} - 1) + '&size=' + ${products.size} + '&sortBy=' + ${sortBy} + '&sortDirection=' + ${sortDirection}}">
-        <span>이전</span>
-      </a>
+    <li th:if="${currentPage > 0}">
+      <button class="btn btn-primary"
+              th:onclick="|location.href='@{'/products?page=' + (${currentPage} - 1) + '&size=' + ${products.size} + '&sortBy=' + ${sortBy} + '&sortDirection=' + ${sortDirection}}'|"
+              type="button">이전
+      </button>
     </li>
-    <li class="page-item" th:classappend="${currentPage + 1 >= products.totalPages} ? 'disabled'">
-      <a class="page-link"
-         th:href="${currentPage + 1 >= products.totalPages} ? '#' : @{'/products?page=' + (${currentPage} + 1) + '&size=' + ${products.size} + '&sortBy=' + ${sortBy} + '&sortDirection=' + ${sortDirection}}">
-        <span>다음</span>
-      </a>
+    <li th:if="${currentPage + 1 < products.totalPages}">
+      <button class="btn btn-primary"
+              th:onclick="|location.href='@{'/products?page=' + (${currentPage} + 1) + '&size=' + ${products.size} + '&sortBy=' + ${sortBy} + '&sortDirection=' + ${sortDirection}}'|"
+              type="button">다음
+      </button>
     </li>
   </ul>
 </div>

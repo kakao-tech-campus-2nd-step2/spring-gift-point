@@ -32,14 +32,14 @@ public class ProductService {
         this.categoryService = categoryService;
     }
 
-    public Page<ProductDTO> getAllProducts(int page, int size, String sortBy, Direction direction, Long categoryId) {
+    public Page<ProductDTO> getAllProducts(int page, int size, String sortBy, Direction direction,
+        Long categoryId) {
         Sort sort = Sort.by(direction, sortBy);
         Pageable pageRequest = PageRequest.of(page, size, sort);
         Page<Product> productPage;
-        if(categoryId != null){
+        if (categoryId != null) {
             productPage = productRepository.findAllByCategoryId(categoryId, pageRequest);
-        }
-        else {
+        } else {
             productPage = productRepository.findAll(pageRequest);
         }
         List<ProductDTO> products = productPage.stream()
@@ -60,8 +60,8 @@ public class ProductService {
         return new PageImpl<>(products, pageRequest, productPage.getTotalElements());
     }
 
-    public List<String> getAllCategoryName() {
-        return productRepository.findDistinctCategoryNamesWithProducts();
+    public String getCategoryNameByCategoryId(Long categoryId) {
+        return productRepository.findDistinctCategoryNameWithCategoryId(categoryId);
     }
 
     public ProductDTO getProductById(long id) {
@@ -79,7 +79,7 @@ public class ProductService {
         }
     }
 
-    public Product getNotDTOProductById(long productId){
+    public Product getNotDTOProductById(long productId) {
         return findByProductId(productId);
     }
 
@@ -111,7 +111,7 @@ public class ProductService {
         return ProductDTO.fromProduct(savedProduct);
     }
 
-    public boolean existsByProductId(long productId){
+    public boolean existsByProductId(long productId) {
         return !productRepository.existsById(productId);
     }
 
@@ -119,10 +119,6 @@ public class ProductService {
         if (productRepository.existsByNameAndIdNot(name, productId)) {
             throw new IllegalArgumentException("존재하는 이름입니다.");
         }
-    }
-
-    private List<Option> optionDTOListToOptionList(List<OptionDTO> optionList, Product product) {
-        return optionList.stream().map(optionDTO -> optionDTO.toOption(product)).toList();
     }
 
     private Category updateCategory(long categoryId, Product product) {
@@ -137,12 +133,26 @@ public class ProductService {
         }
     }
 
-    public void existsByNameAddingProducts(ProductDTO productDTO){
-        if(!existsByName(productDTO.getName())){
+    public void existsByNameAddingProducts(ProductDTO productDTO) {
+        if (!existsByName(productDTO.getName())) {
             Set<String> optionNames = new HashSet<>();
             for (OptionDTO option : productDTO.getOptions()) {
                 if (!optionNames.add(option.getName())) {
                     throw new IllegalArgumentException("추가하려는 옵션에 중복된 이름이 있습니다.");
+                }
+            }
+        }
+    }
+
+    public void existsByNameAddingProductsPutResult(ProductDTO productDTO, BindingResult result) {
+        if (!existsByName(productDTO.getName())) {
+            Set<String> optionNames = new HashSet<>();
+            for (OptionDTO option : productDTO.getOptions()) {
+                if (!optionNames.add(option.getName())) {
+                    result.addError(new FieldError("productDTO",
+                        "options[" + productDTO.getOptions().indexOf(option) + "].name",
+                        "같은 상품에는 같은 이름의 옵션이 불가합니다."));
+                    return;
                 }
             }
         }
