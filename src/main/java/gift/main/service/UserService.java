@@ -2,19 +2,21 @@ package gift.main.service;
 
 import gift.main.Exception.CustomException;
 import gift.main.Exception.ErrorCode;
-import gift.main.dto.KakaoProfileRequest;
-import gift.main.dto.KakaoToken;
-import gift.main.dto.UserJoinRequest;
-import gift.main.dto.UserLoginRequest;
+import gift.main.dto.*;
 import gift.main.entity.User;
 import gift.main.repository.UserRepository;
 import gift.main.util.JwtUtil;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 
 @Service
 public class UserService {
+
+    private final static int PAGE_SIZE = 20;
 
     private final ApiTokenService apiTokenService;
     private final JwtUtil jwtUtil;
@@ -53,5 +55,26 @@ public class UserService {
 
         return jwtToken;
 
+    }
+
+    public Page<UserResponse> getUserPage(int pageNum) {
+        Pageable pageable = PageRequest.of(pageNum, PAGE_SIZE);
+        return userRepository.findAll(pageable)
+                .map(UserResponse::new);
+    }
+
+    @Transactional
+    public void addPoint(Long memberId, PointRequest point) {
+        User user = userRepository.findById(memberId)
+                .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_USER));
+
+        user.updatePoint(point.point());
+    }
+
+    public int checkPoint(UserVo sessionUserVo) {
+        User user = userRepository.findById(sessionUserVo.getId())
+                .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_USER));
+
+        return user.getPoint();
     }
 }

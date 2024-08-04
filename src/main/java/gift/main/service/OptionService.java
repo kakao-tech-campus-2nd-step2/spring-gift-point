@@ -58,9 +58,9 @@ public class OptionService {
     }
 
     @Transactional
-    public void updateOption(long productId, long optionId, OptionRequest optionRequest) {
+    public void updateOption(long optionId, OptionRequest optionRequest) {
         Option targetOption = validOption(optionId);
-        List<Option> options = validOptions(productId);
+        List<Option> options = validOptions(targetOption.getProduct().getId());
 
         options.forEach(option -> option.isDuplicate(optionId, optionRequest));
         targetOption.updateValue(optionRequest);

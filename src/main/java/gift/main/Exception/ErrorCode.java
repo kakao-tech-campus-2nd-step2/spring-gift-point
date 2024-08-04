@@ -40,6 +40,10 @@ public enum ErrorCode {
     INVALID_OPTION_NAME_CHARACTERS(HttpStatus.BAD_REQUEST, "Invalid special characters in option name"),
     INVALID_OPTION_QUANTITY(HttpStatus.BAD_REQUEST, "Quantity must be at least one and less than one hundred million"),
 
+    //포인트 관련
+    NOT_ENOUGH_POINT(HttpStatus.BAD_REQUEST,"You have more points than you can use")
+
+
     ;
     //이메일과 비밀번호 코드가 401이 아닌 400인 이유: 코드를 보고 해당 유저가 있다고 판단할 것 같아서
 

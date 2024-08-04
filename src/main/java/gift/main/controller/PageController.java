@@ -25,5 +25,10 @@ public class PageController {
         return "memberWishList";
     }
 
+    @GetMapping("/admin/users")
+    public String memberPage() {
+        return "adminMember";
+    }
+
 
 }

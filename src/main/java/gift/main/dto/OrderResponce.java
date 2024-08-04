@@ -7,7 +7,11 @@ public record OrderResponce(
         String productName,
         String optionName,
         int quantity,
-        String message
+        String message,
+        int payPrice,
+        int usingPoint,
+        int totalPrice
+
 ) {
     //만드는 주체는 누가 가지는게 좋을까??
     public OrderResponce(Order order) {
@@ -16,7 +20,10 @@ public record OrderResponce(
                 order.getProduct().getName(),
                 order.getOption().getOptionName(),
                 order.getQuantity(),
-                order.getMessage()
+                order.getMessage(),
+                order.getPayPrice(),
+                order.getUsingPoint(),
+                order.getTotalPrice()
         );
     }
 

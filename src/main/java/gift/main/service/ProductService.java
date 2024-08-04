@@ -10,6 +10,7 @@ import gift.main.entity.Category;
 import gift.main.entity.Product;
 import gift.main.entity.WishProduct;
 import gift.main.repository.CategoryRepository;
+import gift.main.repository.OptionRepository;
 import gift.main.repository.ProductRepository;
 import gift.main.repository.WishProductRepository;
 import org.springframework.data.domain.Page;
@@ -29,22 +30,21 @@ public class ProductService {
     private final CategoryRepository categoryRepository;
     private final WishProductRepository wishProductRepository;
     private final OptionService optionService;
+    private final OptionRepository optionRepository;
 
     public ProductService(ProductRepository productRepository,
                           CategoryRepository categoryRepository,
                           WishProductRepository wishProductRepository,
-                          OptionService optionService) {
+                          OptionService optionService, OptionRepository optionRepository) {
 
 
         this.productRepository = productRepository;
         this.categoryRepository = categoryRepository;
         this.wishProductRepository = wishProductRepository;
         this.optionService = optionService;
+        this.optionRepository = optionRepository;
     }
 
-    /*
-    페이지를 제공하는 부분도 어디까지가 역할일지
-     */
     public Page<ProductResponse> getProductPage(int pageNum, int categoryId) {
         Pageable pageable = PageRequest.of(pageNum, PAGE_SIZE);
         return productRepository.findAllByCategoryId(pageable, (long) categoryId)
@@ -66,6 +66,7 @@ public class ProductService {
 
     @Transactional
     public void deleteProduct(long id) {
+        optionRepository.deleteAllByProductId(id);
         productRepository.findById(id)
                 .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_PRODUCT));
         productRepository.deleteById(id);

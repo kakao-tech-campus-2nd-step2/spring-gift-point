@@ -20,6 +20,10 @@ public class Order {
 
     private int totalPrice;
 
+    private int usingPoint;
+
+    private int payPrice;
+
     @ManyToOne
     @JoinColumn(name = "seller_id")
     private User buyer;
@@ -41,6 +45,8 @@ public class Order {
         this.quantity = orderRequest.quantity();
         this.message = orderRequest.message();
         this.totalPrice = product.getPrice() * orderRequest.quantity();
+        this.usingPoint = orderRequest.usingPoint();
+        this.payPrice = totalPrice - usingPoint;
         this.buyer = buyer;
         this.option = option;
         this.product = product;
@@ -75,4 +81,11 @@ public class Order {
         return totalPrice;
     }
 
+    public int getUsingPoint() {
+        return usingPoint;
+    }
+
+    public int getPayPrice() {
+        return payPrice;
+    }
 }

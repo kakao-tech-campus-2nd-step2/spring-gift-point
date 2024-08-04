@@ -47,4 +47,14 @@ public class UserVo {
     public Role getRole() {
         return role;
     }
+
+    @Override
+    public String toString() {
+        return "UserVo{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", email='" + email + '\'' +
+                ", role=" + role +
+                '}';
+    }
 }

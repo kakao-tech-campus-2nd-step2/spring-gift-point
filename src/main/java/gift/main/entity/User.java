@@ -1,5 +1,8 @@
 package gift.main.entity;
 
+import gift.main.Exception.CustomException;
+import gift.main.Exception.ErrorCode;
+import gift.main.dto.PointResponse;
 import gift.main.dto.UserJoinRequest;
 import jakarta.persistence.*;
 
@@ -23,6 +26,10 @@ public class User {
     @Column(nullable = false)
     private String password;
 
+
+    @Column
+    private int point;
+
     @Enumerated(EnumType.STRING)
     private Role role;
 
@@ -36,6 +43,7 @@ public class User {
         this.email = email;
         this.password = password;
         this.role = role;
+        this.point = 0;
     }
 
     public User(String name, String email, String password, Role role) {
@@ -43,6 +51,7 @@ public class User {
         this.email = email;
         this.password = password;
         this.role = role;
+        this.point = 0;
     }
 
     public User(long id, String name, String email, String password, String role) {
@@ -51,13 +60,15 @@ public class User {
         this.email = email;
         this.password = password;
         this.role = Role.valueOf(role.toUpperCase());
+        this.point = 0;
     }
 
     public User(UserJoinRequest userJoinRequest) {
-        this.name = userJoinRequest.name();
+        this.name = "유저";
         this.email = userJoinRequest.email();
         this.password = userJoinRequest.password();
-        this.role = userJoinRequest.role();
+        this.role = Role.USER;
+        this.point = 0;
     }
 
     public User(String name, String email, String password, String role) {
@@ -65,6 +76,7 @@ public class User {
         this.email = email;
         this.password = password;
         this.role = Role.valueOf(role.toUpperCase());
+        this.point = 0;
     }
 
     public long getId() {
@@ -87,6 +99,10 @@ public class User {
         return role;
     }
 
+    public int getPoint() {
+        return point;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -100,4 +116,13 @@ public class User {
         return Objects.hash(id);
     }
 
+    public void updatePoint(int point) {
+        this.point += point;
+    }
+
+    public void checkUsingPoint(int point) {
+        if (this.point < point) {
+            throw new CustomException(ErrorCode.NOT_ENOUGH_POINT);
+        }
+    }
 }
