@@ -44,7 +44,8 @@ public class WishlistController {
             throw new AuthorizationFailedException("인증되지 않은 사용자입니다.");
         }
         try {
-            WishlistResponseDTO wishlistResponseDTO = wishlistService.addWishlist(member.getEmail(), wishlistRequestDTO);
+            WishlistResponseDTO wishlistResponseDTO = wishlistService.addWishlist(member.getEmail(),
+                wishlistRequestDTO);
             return ResponseEntity.status(201).body(wishlistResponseDTO);
         } catch (Exception e) {
             throw new ServerErrorException("서버 오류가 발생했습니다.");
@@ -60,8 +61,10 @@ public class WishlistController {
             throw new AuthorizationFailedException("인증되지 않은 사용자입니다.");
         }
         try {
-            Pageable pageable = PageRequest.of(pageRequestDTO.page(), pageRequestDTO.size(), Sort.by(pageRequestDTO.sort()));
-            WishlistPageResponseDTO wishlistPageResponseDTO = wishlistService.getWishlistsByEmail(member.getEmail(), pageable);
+            Pageable pageable = PageRequest.of(pageRequestDTO.page(), pageRequestDTO.size(),
+                Sort.by(pageRequestDTO.sort()));
+            WishlistPageResponseDTO wishlistPageResponseDTO = wishlistService.getWishlistsByEmail(
+                member.getEmail(), pageable);
             return ResponseEntity.ok(wishlistPageResponseDTO);
         } catch (Exception e) {
             throw new ServerErrorException("서버 오류가 발생했습니다.");

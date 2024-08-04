@@ -83,7 +83,8 @@ public class Product {
             throw new InvalidInputValueException("상품 이름은 공백 포함 최대 15자까지 입력할 수 있습니다.");
         }
         if (!name.matches("^[a-zA-Z0-9가-힣ㄱ-ㅎㅏ-ㅣ\\s\\(\\)\\[\\]\\+\\-\\&\\/\\_]*$")) {
-            throw new InvalidInputValueException("상품 이름에 (), [], +, -, &, /, _ 외 특수 문자는 사용할 수 없습니다.");
+            throw new InvalidInputValueException(
+                "상품 이름에 (), [], +, -, &, /, _ 외 특수 문자는 사용할 수 없습니다.");
         }
         if (name.contains("카카오")) {
             throw new InvalidInputValueException("'카카오'가 포함된 문구는 담당 MD와 협의 후 사용 바랍니다.");

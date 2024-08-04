@@ -35,7 +35,8 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(InvalidInputValueException.class)
-    public ResponseEntity<Map<String, String>> handleInvalidInputValueException(InvalidInputValueException ex) {
+    public ResponseEntity<Map<String, String>> handleInvalidInputValueException(
+        InvalidInputValueException ex) {
         Map<String, String> errorResponse = new HashMap<>();
         errorResponse.put("error", ex.getMessage());
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
@@ -63,7 +64,8 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(AuthorizationFailedException.class)
-    public ResponseEntity<Map<String, String>> handleAuthorizationFailedException(AuthorizationFailedException ex) {
+    public ResponseEntity<Map<String, String>> handleAuthorizationFailedException(
+        AuthorizationFailedException ex) {
         Map<String, String> errorResponse = new HashMap<>();
         errorResponse.put("error", ex.getMessage());
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(errorResponse);

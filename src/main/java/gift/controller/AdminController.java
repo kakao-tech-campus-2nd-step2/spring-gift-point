@@ -43,7 +43,8 @@ public class AdminController {
     @Operation(summary = "상품 목록 얻기", description = "모든 상품을 페이지로 조회합니다.")
     public String getAllProducts(Model model, @Valid PageRequestDTO pageRequestDTO) {
         try {
-            Pageable pageable = PageRequest.of(pageRequestDTO.page(), pageRequestDTO.size(), Sort.by(pageRequestDTO.sort()));
+            Pageable pageable = PageRequest.of(pageRequestDTO.page(), pageRequestDTO.size(),
+                Sort.by(pageRequestDTO.sort()));
             ProductPageResponseDTO productPageResponseDTO = productService.getAllProducts(pageable);
             model.addAttribute("products", productPageResponseDTO);
             return "product_list";

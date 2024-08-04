@@ -54,7 +54,8 @@ public class CategoryController {
             throw new AuthorizationFailedException("인증되지 않은 사용자입니다.");
         }
         try {
-            CategoryResponseDTO categoryResponseDTO = categoryService.addCategory(categoryRequestDTO);
+            CategoryResponseDTO categoryResponseDTO = categoryService.addCategory(
+                categoryRequestDTO);
             return ResponseEntity.status(HttpStatus.CREATED).body(categoryResponseDTO);
         } catch (InvalidInputValueException e) {
             throw new InvalidInputValueException("중복된 카테고리 이름입니다.");
@@ -71,7 +72,8 @@ public class CategoryController {
             throw new AuthorizationFailedException("인증되지 않은 사용자입니다.");
         }
         try {
-            CategoryResponseDTO categoryResponseDTO = categoryService.updateCategory(categoryId, categoryRequestDTO);
+            CategoryResponseDTO categoryResponseDTO = categoryService.updateCategory(categoryId,
+                categoryRequestDTO);
             return ResponseEntity.ok(categoryResponseDTO);
         } catch (NotFoundException e) {
             throw new NotFoundException("존재하지 않는 카테고리입니다.");

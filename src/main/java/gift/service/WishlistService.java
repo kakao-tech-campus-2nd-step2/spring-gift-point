@@ -47,7 +47,8 @@ public class WishlistService {
         if (member == null) {
             throw new InvalidInputValueException("유효하지 않은 이메일입니다.");
         }
-        Option option = optionRepository.findById(wishlistRequestDTO.optionId()).orElseThrow(() -> new NotFoundException("옵션을 찾을 수 없습니다."));
+        Option option = optionRepository.findById(wishlistRequestDTO.optionId())
+            .orElseThrow(() -> new NotFoundException("옵션을 찾을 수 없습니다."));
         Wishlist wishlist = new Wishlist(null, member, option);
         wishlistRepository.save(wishlist);
         return new WishlistResponseDTO(wishlist.getId(), option.getProduct().getId());
@@ -55,7 +56,8 @@ public class WishlistService {
 
     @Transactional
     public void removeWishlist(Long wishlistId) {
-        Wishlist wishlist = wishlistRepository.findById(wishlistId).orElseThrow(()-> new NotFoundException("위시리스트를 찾을 수 없습니다."));
+        Wishlist wishlist = wishlistRepository.findById(wishlistId)
+            .orElseThrow(() -> new NotFoundException("위시리스트를 찾을 수 없습니다."));
         wishlistRepository.delete(wishlist);
     }
 
