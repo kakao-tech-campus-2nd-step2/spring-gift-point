@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>Manage Products</title>
+  <link rel="stylesheet"
+        href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+  <script src="/js/product.js"></script>
+</head>
+<body>
+<div class="container">
+  <h2>Manage Products</h2>
+  <button class="btn btn-success" id="addNewProduct">Add New Product</button>
+  <table class="table">
+    <thead>
+    <tr>
+      <th>Name</th>
+      <th>Price</th>
+      <th>ImageUrl</th>
+      <th>Actions</th>
+    </tr>
+    </thead>
+    <tbody id="productTableBody">
+    </tbody>
+  </table>
+  <nav>
+    <ul class="pagination" id="pagination">
+      <li class="page-item" id="previousBlock"><a class="page-link" href="#">Previous</a></li>
+      <!-- Dynamic pagination links will be added here -->
+      <li class="page-item" id="nextBlock"><a class="page-link" href="#">Next</a></li>
+    </ul>
+  </nav>
+</div>
+
+<!-- Add/Edit Product Modal -->
+<div class="modal" id="productModal" tabindex="-1" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Add/Edit Product</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form id="productForm">
+          <input type="hidden" id="productId">
+          <div class="form-group">
+            <label for="name">Name</label>
+            <input type="text" class="form-control" id="name">
+          </div>
+          <div class="form-group">
+            <label for="price">Price</label>
+            <input type="text" class="form-control" id="price">
+          </div>
+          <div class="form-group">
+            <label for="imageUrl">ImageUrl</label>
+            <input type="text" class="form-control" id="imageUrl">
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" id="saveProduct">Save changes</button>
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>
