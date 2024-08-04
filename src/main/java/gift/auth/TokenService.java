@@ -1,6 +1,7 @@
 package gift.auth;
 
 import gift.exception.type.ForbiddenException;
+import gift.exception.type.InvalidTokenException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
@@ -40,7 +41,7 @@ public class TokenService {
                     .getPayload()
                     .get(MEMBER_ID_CLAIM, Long.class);
         } catch (Exception e) {
-            throw new ForbiddenException("유효하지 않은 토큰입니다.");
+            throw new InvalidTokenException("유효하지 않은 토큰입니다.");
         }
     }
 }
