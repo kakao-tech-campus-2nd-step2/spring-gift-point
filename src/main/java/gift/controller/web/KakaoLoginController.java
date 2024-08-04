@@ -33,6 +33,7 @@ import org.slf4j.LoggerFactory;
 public class KakaoLoginController {
 
     private static final Logger logger = LoggerFactory.getLogger(KakaoLoginController.class);
+    private static final int INITIAL_POINTS = 1000;
 
     @Value("${kakao.client-id}")
     private String clientId;
@@ -83,12 +84,7 @@ public class KakaoLoginController {
 
                 Optional<SiteUser> userOptional = userRepository.findByUsername(nickname);
                 if (userOptional.isEmpty()) {
-                    SiteUser newUser = new SiteUser();
-                    newUser.setUsername(nickname);
-                    newUser.setPassword("");
-                    newUser.setEmail("");
-                    newUser.setPoints(1000); // 신규 유저 생성 시 포인트 설정
-                    userRepository.save(newUser);
+                    SiteUser newUser = new SiteUser(nickname , "" , "" ,INITIAL_POINTS  );
                     session.setAttribute("points", newUser.getPoints()); // 포인트 세션에 저장
                 } else {
                     // 기존 유저의 포인트를 세션에 저장
