@@ -42,7 +42,7 @@ public class ProductController {
             return "add-product";
         }
         productService.addProduct(productDto);
-        return "redirect:/view/products";
+        return "redirect:/view/v2/products";
     }
 
     @PostMapping("/edit/{id}")
@@ -62,7 +62,7 @@ public class ProductController {
             return "edit-product";
         }
         productService.updateProduct(id, productDto);
-        return "redirect:/view/products";
+        return "redirect:/view/v2/products";
     }
 
 }

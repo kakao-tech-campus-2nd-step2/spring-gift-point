@@ -23,7 +23,8 @@
 <a href="/view/home">Back to Home</a>
 
 <!-- Modal -->
-<div class="modal fade" id="orderModal" tabindex="-1" role="dialog" aria-labelledby="orderModalLabel" aria-hidden="true">
+<div class="modal fade" id="orderModal" tabindex="-1" role="dialog" aria-labelledby="orderModalLabel"
+     aria-hidden="true">
     <div class="modal-dialog modal-sm modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -164,7 +165,7 @@
                         if (!email) return;
 
                         $.ajax({
-                            url: `/api/v2/products/order/${productId}`,
+                            url: `/api/v2/order/${productId}`,
                             method: 'POST',
                             data: {
                                 email: email,

@@ -10,7 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/v2/products")
+@RequestMapping("/api/v2/order")
 @Tag(name = "Product API", description = "상품 관련 API")
 public class ProductRestController {
 
@@ -28,7 +28,7 @@ public class ProductRestController {
     }
 
     @Transactional
-    @PostMapping("/order/{productId}")
+    @PostMapping("/{productId}")
     @Operation(summary = "상품 주문", description = "상품을 주문하고 메시지를 보냅니다.")
     public ResponseEntity<Void> orderItem(@RequestParam("email") String email, @RequestParam("optionId") Long optionId, @RequestParam("quantity") int quantity, @PathVariable Long productId, @RequestParam("message") String message) {
         optionService.subtractOptionQuantity(optionId, quantity);

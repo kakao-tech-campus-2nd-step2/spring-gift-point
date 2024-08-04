@@ -27,8 +27,15 @@ public class Option {
     public Option() {
     }
 
-    public Option(String name, int quantity, Product product){
-        if(name.length()>50){
+    public Option(String name, int quantity, Product product) {
+        validTest(name, quantity, product);
+        this.name = name;
+        this.quantity = quantity;
+        this.product = product;
+    }
+
+    public void validTest(String name, int quantity, Product product) {
+        if (name.length() > 50) {
             throw new IllegalArgumentException("Option name must be less than 50 characters");
         }
         if (quantity <= 0) {
@@ -37,15 +44,12 @@ public class Option {
         if (quantity > 100_000_000) {
             throw new IllegalArgumentException("Quantity must be less than or equal to 100,000,000");
         }
-        if(product == null) {
+        if (product == null) {
             throw new IllegalArgumentException("Product cannot be null");
         }
-        if(!name.matches("^[\\w\\s\\(\\)\\[\\]\\+\\-\\&\\/\\_]+$")) {
+        if (!name.matches("^[\\w\\s\\(\\)\\[\\]\\+\\-\\&\\/\\_]+$")) {
             throw new IllegalArgumentException("Invalid characters in option name");
         }
-        this.name = name;
-        this.quantity = quantity;
-        this.product = product;
     }
 
     public Long getId() {

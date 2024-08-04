@@ -1,11 +1,8 @@
 package gift.service;
 
-
 import gift.dto.KakaoTokenDto;
 import gift.dto.MemberDto;
 import gift.dto.TokenResponse;
-import gift.entity.KakaoToken;
-
 import gift.exception.MemberNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -60,13 +57,9 @@ public class KakaoService {
         try {
             ResponseEntity<String> response = restTemplate.postForEntity(url, request, String.class);
 
-            System.out.println("Response: " + response.getBody());
-
             if (response.getStatusCode() == HttpStatus.OK) {
                 JSONObject jsonResponse = new JSONObject(response.getBody());
-                String accessToken = jsonResponse.getString("access_token");
-                String refreshToken = jsonResponse.getString("refresh_token");
-                return new TokenResponse(accessToken, refreshToken);
+                return new TokenResponse(jsonResponse.getString("access_token"), jsonResponse.getString("refresh_token"));
             } else {
                 System.err.println("Failed to get Kakao token: " + response.getStatusCode() + " " + response.getBody());
                 throw new RuntimeException("Failed to get Kakao token: " + response.getStatusCode() + " " + response.getBody());
