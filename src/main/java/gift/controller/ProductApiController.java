@@ -1,6 +1,8 @@
 package gift.controller;
 
-import gift.dto.ProductDto;
+import gift.dto.ProductDetailDto;
+import gift.dto.ProductRequestDto;
+import gift.dto.ProductResponseDto;
 import gift.model.Product;
 import gift.service.ProductService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -35,23 +37,23 @@ public class ProductApiController {
 
     @GetMapping
     @Operation(summary = "모든 상품 조회", description = "모든 상품을 조회합니다.")
-    public ResponseEntity<Page<Product>> getAllProducts(
+    public ResponseEntity<Page<ProductResponseDto>> getAllProducts(
             @PageableDefault(sort = "id", direction = Sort.Direction.ASC) Pageable pageable) {
-        Page<Product> productPage = productService.getProducts(pageable);
+        Page<ProductResponseDto> productPage = productService.getApiProducts(pageable);
         return ResponseEntity.ok(productPage);
     }
 
     @GetMapping("/{productId}")
     @Operation(summary = "상품 id로 상품 조회", description = "상품 id로 상품을 조회합니다.")
-    public ResponseEntity<Product> getProductById(@PathVariable Long productId) {
-        Product product = productService.getProductById(productId);
+    public ResponseEntity<ProductDetailDto> getProductById(@PathVariable Long productId) {
+        ProductDetailDto product = productService.getApiProductById(productId);
         return ResponseEntity.ok(product);
     }
 
     @PostMapping
     @Operation(summary = "상품 추가", description = "상품을 추가합니다.")
-    public ResponseEntity<Product> addProduct(@RequestBody @Valid ProductDto productDto) {
-        Product savedProduct = productService.addProduct(productDto);
+    public ResponseEntity<ProductResponseDto> addProduct(@RequestBody @Valid ProductRequestDto productRequestDto) {
+        ProductResponseDto savedProduct = productService.addProduct(productRequestDto);
         URI location = ServletUriComponentsBuilder.fromCurrentRequest()
                 .path("/{id}")
                 .buildAndExpand(savedProduct.getId())
@@ -62,8 +64,8 @@ public class ProductApiController {
     @PutMapping("/{productId}")
     @Operation(summary = "상품 수정", description = "상품 id로 상품을 수정합니다.")
     public ResponseEntity<Product> updateProduct(@PathVariable Long productId,
-                                                 @RequestBody @Valid ProductDto productDto) {
-        Product product = productService.updateProduct(productId, productDto);
+                                                 @RequestBody @Valid ProductRequestDto productRequestDto) {
+        Product product = productService.updateProduct(productId, productRequestDto);
         return ResponseEntity.ok(product);
     }
 

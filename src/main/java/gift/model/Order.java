@@ -54,6 +54,10 @@ public class Order {
         return option;
     }
 
+    public LocalDateTime getOrderDateTime() {
+        return orderDateTime;
+    }
+
     public int getQuantity() {
         return quantity;
     }
