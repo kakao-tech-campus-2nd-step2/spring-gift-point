@@ -8,17 +8,29 @@
     <link href="/css/main.css" rel="stylesheet"/>
 </head>
 <body>
+    <div class="header">
+        <span class="title">Register</span>
+        <button class="btn primary-btn" onclick="history.back()">Back</button>
+    </div>
     <div class="container">
         <form id="member-registration-form">
-            <div>
-                <label for="email">Email:</label>
-                <input type="email" id="email" name="email" required>
+            <table class="product-info">
+                <tr>
+                    <th>Email</th>
+                    <td>
+                        <input id="email" type="text" required>
+                    </td>
+                </tr>
+                <tr>
+                    <th>Password</th>
+                    <td>
+                        <input id="password" type="text" required>
+                    </td>
+                </tr>
+            </table>
+            <div class="btn-container">
+                <button class="btn primary-btn" type="submit">Register</button>
             </div>
-            <div>
-                <label for="password">Password:</label>
-                <input type="password" id="password" name="password" required>
-            </div>
-            <button type="submit">Register</button>
         </form>
     </div>
 </body>

@@ -24,4 +24,9 @@ public class AdminMemberController {
         model.addAttribute("pages", memberService.findMembers(pageable));
         return "members";
     }
+
+    @GetMapping("/register")
+    public String register() {
+        return "register";
+    }
 }
