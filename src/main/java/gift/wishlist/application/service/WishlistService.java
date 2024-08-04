@@ -63,8 +63,8 @@ public class WishlistService {
     }
 
     @Transactional
-    public void deleteWishlist(Long productId, Long memberId) {
-        List<Wishlist> wishlist1 = wishlistRepository.findByProductId(productId);
+    public void deleteWishlist(Long wishId, Long memberId) {
+        List<Wishlist> wishlist1 = wishlistRepository.findById(wishId).stream().toList();
         List<Wishlist> wishlist2 = wishlistRepository.findByMemberId(memberId);
 
         Wishlist wishlistItem = null;
