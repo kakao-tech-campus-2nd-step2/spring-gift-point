@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Update Member Points</title>
+</head>
+<body>
+<h2>포인트 추가</h2>
+
+<form id="addPointsForm" th:action="@{/admin/members/updatePoints}" method="post">
+  <input type="hidden" name="memberId" th:value="${memberId}" />
+  <div>
+    <label for="pointsToAdd">추가할 포인트</label>
+    <input type="number" id="pointsToAdd" name="pointsToAdd" min="0" required />
+  </div>
+  <div>
+    <button type="submit">포인트 추가</button>
+  </div>
+</form>
+
+<div id="errorMessage" style="color: red;"></div>
+
+</body>
+</html>
