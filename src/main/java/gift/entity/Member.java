@@ -33,6 +33,10 @@ public class Member {
     private String password;
     @Schema(description = "멤버 토큰")
     private String token;
+
+    @Schema(description = "멤버 point")
+    private Long point =0L;
+
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
     @Schema(description = "멤버가 갖고있는 위시 리스트")
     private final List<Wish> wishes = new ArrayList<>();
@@ -43,6 +47,13 @@ public class Member {
     public Member(String email, String password) {
         this.email = email;
         this.password = password;
+    }
+
+    public Member(Long id, String email, String token, Long point) {
+        this.id = id;
+        this.email = email;
+        this.token = token;
+        this.point = point;
     }
 
     public Long getId() {
@@ -60,4 +71,9 @@ public class Member {
     public String getToken() {
         return token;
     }
+
+    public Long getPoint() {
+        return point;
+    }
+
 }
