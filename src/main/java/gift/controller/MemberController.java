@@ -18,6 +18,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.ErrorResponse;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
@@ -93,7 +94,7 @@ public class MemberController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "멤버 포인트 충전 성공", content = @Content(schema = @Schema(implementation = MemberResponseDto.class))),
             @ApiResponse(responseCode = "404", description = "존재하지 않는 리소스 접근", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))})
-    @GetMapping("/point")
+    @PatchMapping("/point")
     @Operation(summary = "멤버 포인트 충전", description = "멤버가 가진 포인트를 충전합니다.")
     public ResponseEntity<MemberPointViewResponseDto> ChargeMemberPoint(
             @RequestBody MemberPointChargingRequestDto memberPointChargingRequestDto,
