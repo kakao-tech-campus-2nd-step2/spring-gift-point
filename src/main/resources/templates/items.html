@@ -9,7 +9,7 @@
     <body>
     <h1>Product List</h1>
     <a href="/products/add">상품 등록</a>
-        <table>
+        <table class="table">
             <thead>
             <tr>
                 <th>ID</th>
@@ -23,7 +23,9 @@
                     <td th:text="${product.id}"></td>
                     <td th:text="${product.name}"></td>
                     <td th:text="${product.price}"></td>
-                    <td th:text="${product.imgUrl}"></td>
+                    <td>
+                        <img th:src="@{${product.imageUrl}}" alt="상품 이미지" class="img-thumbnail" style="max-width: 100px; height: auto;">
+                    </td>
                     <td>
                         <form th:action="@{/products/edit/{id}(id=${product.id})}" th:method="get">
                             <button type="submit">Edit</button>
