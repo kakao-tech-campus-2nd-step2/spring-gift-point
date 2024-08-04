@@ -49,7 +49,7 @@ public class MemberController {
         String token = memberService.login(email, password);
 
         if (token == null) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Invalid email or password"); // 403 Forbidden
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("회원가입하지 않은 사용자입니다."); // 403 Forbidden
         }
 
         LoginResponse response = new LoginResponse(email, token);

@@ -33,11 +33,8 @@ public class MemberServiceImpl implements MemberService {
 
     // 로그인
     public String login(String email, String password) {
-        Member member = memberRepository.findByEmail(email).orElseThrow(
-                () -> new IllegalArgumentException("No such member: ")
-        );
-
-        if (!member.getPassword().equals(password)) {
+        Member member = memberRepository.findByEmail(email).orElse(null);
+        if (member == null || !member.getPassword().equals(password)) {
             return null;
         }
 
