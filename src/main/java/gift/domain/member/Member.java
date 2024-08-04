@@ -28,7 +28,7 @@ public class Member {
     private int point;
 
     public Member(String email, String name, String password, int role) {
-        this(email,name,password,null,null,role);
+        this(email, name, password, null, null, role);
     }
 
     public Member(String email, String name, String password, String accessToken, String refreshToken, int role) {
