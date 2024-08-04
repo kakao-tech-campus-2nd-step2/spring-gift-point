@@ -1,12 +1,18 @@
 package gift.order.service;
 
+import gift.exception.IllegalProductException;
 import gift.member.model.Member;
 import gift.member.repository.MemberRepository;
+import gift.option.model.Option;
 import gift.option.repository.OptionRepository;
 import gift.option.service.OptionService;
 import gift.order.dto.OrderRequest;
 import gift.order.model.Order;
 import gift.order.repository.OrderRepository;
+import gift.product.model.Product;
+import gift.product.repository.ProductRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -24,13 +30,16 @@ public class OrderService {
     private final OptionService optionService;
     private final OptionRepository optionRepository;
     private final OrderRepository orderRepository;
+    private final ProductRepository productRepository;
 
     public OrderService(MemberRepository memberRepository, OptionService optionService,
-        OptionRepository optionRepository, OrderRepository orderRepository) {
+        OptionRepository optionRepository, OrderRepository orderRepository,
+        ProductRepository productRepository) {
         this.memberRepository = memberRepository;
         this.optionService = optionService;
         this.optionRepository = optionRepository;
         this.orderRepository = orderRepository;
+        this.productRepository = productRepository;
     }
 
 
@@ -47,9 +56,6 @@ public class OrderService {
         Member member,
         OrderRequest orderRequest
     ) {
-//        var member = memberRepository.findByEmail(memberRequest.getEmail())
-//            .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 회원입니다"));
-
         var selectedWish = member.getWishList().stream()
             .filter(wish -> wish.getProduct().getId().equals(orderRequest.getProductId()))
             .findFirst().orElse(null);
@@ -67,12 +73,60 @@ public class OrderService {
         } catch (Exception e) {
             throw new IllegalArgumentException("옵션 수량 업데이트 중 오류가 발생했습니다: " + e.getMessage());
         }
+        System.out.println("포인트");
+
+        // 포인트 적립
+        addPoint(member, orderRequest);
+        Logger logger = LoggerFactory.getLogger(OrderService.class);
+        logger.atInfo().log(member.toString());
+
+        // 5만원 이상이면 10% 할일
+        int totalPrice = getTotalPrice(orderRequest,
+            productRepository.findById(orderRequest.getProductId())
+                .orElseThrow(() -> new IllegalProductException("존재 하지 않는 상품입니다.")));
+        if (totalPrice > 50000) {
+            totalPrice = (int) (totalPrice * 0.9);
+        }
+
+        logger.atInfo().log(orderRequest.toString());
+        // 현금 영수증 사용 여부
+        if (orderRequest.isCashReceipt()) {
+            // 휴대폰 번호 여부 확인
+            if (orderRequest.getPhoneNumber() != null) {
+                logger.atInfo().log(orderRequest.getPhoneNumber());
+                Order order = new Order(orderRequest.getProductId(), orderRequest.getOptionId(),
+                    orderRequest.getQuantity(), orderRequest.getMessage(), member, totalPrice,
+                    orderRequest.getPhoneNumber());
+                return orderRepository.save(order);
+            }
+        }
 
         return orderRepository.save(new Order(
             orderRequest.getProductId(), orderRequest.getOptionId(), orderRequest.getQuantity(),
-            orderRequest.getMessage(),member
+            orderRequest.getMessage(), member, totalPrice, ""
         ));
     }
+
+    public void addPoint(Member member, OrderRequest orderRequest) {
+        Product product = productRepository.findById(orderRequest.getProductId())
+            .orElseThrow(() -> new IllegalProductException("존재 하지 않는 상품입니다."));
+
+        int totalPrice = getTotalPrice(orderRequest, product);
+
+        int point = totalPrice / 100;
+        member.addPoint(point);
+    }
+
+    private int getTotalPrice(OrderRequest orderRequest, Product product) {
+        return product.getPrice() * orderRequest.getQuantity();
+    }
+
+    public void discountCharge(OrderRequest orderRequest) {
+        Product product = productRepository.findById(orderRequest.getProductId())
+            .orElseThrow(() -> new IllegalProductException("존재 하지 않는 상품입니다."));
+
+    }
+
 
     public MultiValueMap<String, String> makeOrderMessage() {
         // Create the template object as a JSON string
