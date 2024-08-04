@@ -59,7 +59,6 @@
     <label for="p_field"></label>
     <select name="p_field" id="p_field">
         <option value="id">id</option>
-        <option value="userId">userId</option>
         <option value="Email">Email</option>
     </select>
     <button id="search" onclick="getUsers(currentPage)">검색</button>
@@ -72,13 +71,8 @@
 
     function getUsers(page){
         $.ajax({
-            url: '/api/members',
+            url: '/api/members?page=' + page + '&size=' + pageSize + '&sort=' + $('#p_field').val() + ',' + $('#p_sort').val(),
             method: 'GET',
-            data : {
-                page : page,
-                size : pageSize,
-                sort : [$('#p_field').val(), $('#p_sort').val()]
-            },
             headers : {
                 Authorization: 'Bearer ' + localStorage.getItem("token"),
             },
