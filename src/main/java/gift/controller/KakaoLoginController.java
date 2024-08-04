@@ -3,20 +3,15 @@ package gift.controller;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import gift.config.KakaoAuthProperties;
 import gift.domain.KakaoInfo;
+import gift.domain.Member.MemberType;
 import gift.dto.MemberDto;
 import gift.response.JwtResponse;
 import gift.service.KakaoService;
 import gift.service.MemberService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.servlet.http.HttpServletRequest;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.view.RedirectView;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -69,7 +64,12 @@ public class KakaoLoginController {
 
             } else {
                 // 4. 회원이 없으면 회원가입 후 로그인 처리 및 JWT 발급
-                memberService.registerMember(new MemberDto(kakaoInfo.getEmail(), kakaoInfo.getPassword()), accessToken);
+                memberService.registerMember(
+                    new MemberDto(kakaoInfo.getEmail(), kakaoInfo.getPassword()),
+                    accessToken,
+                    kakaoInfo.getId(),
+                    MemberType.KAKAO
+                );
                 String jwt = memberService.login(new MemberDto(kakaoInfo.getEmail(), kakaoInfo.getPassword()));
                 return new RedirectView(baseUrl + "?token=" + jwt);
             }

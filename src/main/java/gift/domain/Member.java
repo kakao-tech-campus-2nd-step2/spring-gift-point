@@ -13,6 +13,13 @@ public class Member {
     @Column(nullable = false)
     private String password;
     private String accessToken;
+
+    private Long memberReferencedId;
+    private MemberType memberType;
+    public enum MemberType {
+        KAKAO,
+        DEFAULT
+    }
     private Integer points = 0;
 
     protected Member() {
@@ -29,10 +36,12 @@ public class Member {
         this.password = password;
     }
 
-    public Member(String email, String password, String accessToken) {
+    public Member(String email, String password, String accessToken, Long memberReferencedId, MemberType memberType) {
         this.email = email;
         this.password = password;
         this.accessToken = accessToken;
+        this.memberReferencedId = (memberType == MemberType.DEFAULT) ? null : memberReferencedId; // 기본 회원의 경우, 이 필드는 사용되지 않음
+        this.memberType = memberType;
     }
 
     public Long getId() {
@@ -65,6 +74,14 @@ public class Member {
 
     public void setAccessToken(String accessToken) {
         this.accessToken = accessToken;
+    }
+
+    public Long getMemberReferencedId() {
+        return memberReferencedId;
+    }
+
+    public MemberType getMemberType() {
+        return memberType;
     }
 
     public Integer getPoints() {

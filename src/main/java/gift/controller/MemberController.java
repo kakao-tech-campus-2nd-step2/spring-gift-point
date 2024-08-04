@@ -2,6 +2,7 @@ package gift.controller;
 
 import gift.annotation.LoginMember;
 import gift.domain.Member;
+import gift.domain.Member.MemberType;
 import gift.dto.MemberDto;
 import gift.dto.PointResponseDto;
 import gift.response.JwtResponse;
@@ -31,7 +32,7 @@ public class MemberController {
     @PostMapping("/register")
     @Operation(summary = "회원 가입", description = "새 회원을 등록하고 토큰을 받는다.")
     public ResponseEntity<JwtResponse> register(@Valid @RequestBody MemberDto memberDto) {
-        String newMemberEmail = memberService.registerMember(memberDto, null);
+        String newMemberEmail = memberService.registerMember(memberDto, null, null, MemberType.DEFAULT);
         String jwt = memberService.login(memberDto);
         return ResponseEntity.status(HttpStatus.CREATED).body(new JwtResponse(jwt));
     }

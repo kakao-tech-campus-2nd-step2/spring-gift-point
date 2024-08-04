@@ -1,6 +1,8 @@
 package gift.service;
 
 import static gift.util.JwtUtil.generateJwtToken;
+
+import gift.domain.Member.MemberType;
 import gift.dto.MemberDto;
 import gift.dto.PointUpdateRequestDto;
 import gift.exception.ForbiddenException;
@@ -20,12 +22,12 @@ public class MemberService {
     }
 
     @Transactional
-    public String registerMember(MemberDto memberDto, String accessToken) {
+    public String registerMember(MemberDto memberDto, String accessToken, Long memberReferencedId, MemberType memberType) {
         if (memberRepository.findByEmail(memberDto.email()) != null) {
             throw new RuntimeException("Email already registered");
         }
 
-        Member newMember = new Member(memberDto.email(), memberDto.password(), accessToken);
+        Member newMember = new Member(memberDto.email(), memberDto.password(), accessToken, memberReferencedId, memberType);
         memberRepository.save(newMember);
         return newMember.getEmail();
     }
