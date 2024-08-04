@@ -48,10 +48,12 @@ public class OrderService {
         wishlistRepository.deleteByMemberIdAndProductId(memberId, product.getId());
         Member member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new NoSuchElementException("존재하지 않는 회원입니다."));
-        Member updatedMember = new Member(member.getId(), member.getEmail(), member.getPassword(), member.getActiveToken(), (int) (orderRequestDto.getPoints() * 0.5));
+        Member updatedMember = new Member(member.getId(), member.getEmail(), member.getPassword(), member.getActiveToken(), member.getPoint() + (int) (product.getPrice() * 0.5));
         memberRepository.save(updatedMember);
 
-        kakaoMessageService.sendMessageToKakao(order, memberId);
+        if (member.getActiveToken() != null) {
+            kakaoMessageService.sendMessageToKakao(order, memberId);
+        }
         return order;
     }
 
