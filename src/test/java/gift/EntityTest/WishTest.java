@@ -23,7 +23,7 @@ public class WishTest {
     void beforEach() {
         category = new Category("식품", "#812f3D", "식품 url", "");
         product1 = new Product("아메리카노", 4000, "아메리카노url", category);
-        member1 = new Member("woo6388@naver.com", "12345678");
+        member1 = new Member("woo6388@naver.com", "12345678", 5000);
         createdDate = LocalDateTime.now();
     }
 
