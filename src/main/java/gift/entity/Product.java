@@ -1,5 +1,6 @@
 package gift.entity;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import gift.dto.product.ProductRequestDto;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
@@ -20,8 +21,10 @@ public class Product {
     @Schema(description = "상품 가격", nullable = false, example = "10000")
     private int price;
     @Schema(description = "상품 이미지 url", nullable = false, example = "https://www.test.com")
+    @JsonProperty("image_url")
     private String imageUrl;
     @Schema(description = "카테고리 id", nullable = false, example = "1")
+    @JsonProperty("category_id")
     private Long categoryId;
 
     @ManyToOne

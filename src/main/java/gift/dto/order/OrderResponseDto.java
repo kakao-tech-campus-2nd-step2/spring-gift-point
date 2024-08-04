@@ -14,8 +14,8 @@ public class OrderResponseDto {
 
     public OrderResponseDto(Order order) {
         this.id = order.getId();
-        this.product_id = order.getProduct_id();
-        this.option_id = order.getOption_id();
+        this.product_id = order.getProductId();
+        this.option_id = order.getOptionId();
         this.quantity = order.getQuantity();
         this.orderDateTime = order.getOrderDateTime();
         this.message = order.getMessage();

@@ -1,5 +1,6 @@
 package gift.entity;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import gift.dto.category.CategoryRequest;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
@@ -16,32 +17,33 @@ public class Category {
     @Schema(description = "카테고리 색상", nullable = false, example = "#FFFFFF")
     private String color;
     @Schema(description = "카테고리 이미지 url", nullable = false, example = "https://www.test.com")
-    private String image_url;
+    @JsonProperty("image_url")
+    private String imageUrl;
     @Schema(description = "카테고리 설명", nullable = false, example = "카테고리 설명 입니다.")
     private String description;
 
     public Category() {
     }
 
-    public Category(Long id, String name, String color, String image_url, String description) {
+    public Category(Long id, String name, String color, String imageUrl, String description) {
         this.id = id;
         this.name = name;
         this.color = color;
-        this.image_url = image_url;
+        this.imageUrl = imageUrl;
         this.description = description;
     }
 
     public Category(CategoryRequest categoryRequest) {
         this.name = categoryRequest.getName();
         this.color = categoryRequest.getColor();
-        this.image_url = categoryRequest.getImage_url();
+        this.imageUrl = categoryRequest.getImage_url();
         this.description = categoryRequest.getDescription();
     }
 
     public void setCategory(CategoryRequest categoryRequest) {
         this.name = categoryRequest.getName();
         this.color = categoryRequest.getColor();
-        this.image_url = categoryRequest.getImage_url();
+        this.imageUrl = categoryRequest.getImage_url();
         this.description = categoryRequest.getDescription();
     }
 
@@ -69,12 +71,12 @@ public class Category {
         this.color = color;
     }
 
-    public String getImage_url() {
-        return image_url;
+    public String getImageUrl() {
+        return imageUrl;
     }
 
-    public void setImage_url(String image_url) {
-        this.image_url = image_url;
+    public void setImageUrl(String image_url) {
+        this.imageUrl = image_url;
     }
 
     public String getDescription() {

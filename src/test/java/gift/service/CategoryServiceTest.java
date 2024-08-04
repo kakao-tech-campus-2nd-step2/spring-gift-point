@@ -47,7 +47,7 @@ public class CategoryServiceTest {
         assertAll(
                 () -> assertThat(expect.getName()).isEqualTo(update.getName()),
                 () -> assertThat(expect.getColor()).isEqualTo(update.getColor()),
-                () -> assertThat(expect.getImage_url()).isEqualTo(update.getImage_url()),
+                () -> assertThat(expect.getImageUrl()).isEqualTo(update.getImage_url()),
                 () -> assertThat(expect.getDescription()).isEqualTo(update.getDescription())
         );
     }
