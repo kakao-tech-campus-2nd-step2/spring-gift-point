@@ -151,13 +151,14 @@ host: localhost:8080
 }
 ###
 POST http://localhost:8080/orders HTTP/1.1
-Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIiwiZW1haWwiOiJwYXNzd29yZCIsImlhdCI6MTcyMjE0MjI2NSwiZXhwIjoxNzIyMTQ0NjY1fQ.4OgdjJSz3whQjZnkvlSvr6S5l-aOgNlhhPXFZmUe4gY
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIiwiZW1haWwiOiJwYXNzd29yZCIsImlhdCI6MTcyMjc2NTc2MCwiZXhwIjoxNzIyNzY4MTYwfQ.EdjF69DrffBpOHMOe6asMjpt7INhLsgn3RLxqbSspT0
 Content-Type: application/json
 
 {
   "option_id": 1,
-  "quantity": 1,
-  "message": "조심하세요."
+  "quantity": 2,
+  "message": "조심하세요.",
+  "using_point": 4000
 }
 ###
 GET http://localhost:8080/api/auth/kakao
