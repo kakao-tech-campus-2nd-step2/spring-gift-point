@@ -5,9 +5,11 @@ import static gift.util.ProductFixture.createProduct;
 import static org.assertj.core.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.*;
 
-import gift.domain.Category;
-import gift.domain.Product;
-import gift.exception.NoSuchProductException;
+import gift.category.entity.Category;
+import gift.category.repository.CategoryRepository;
+import gift.product.entity.Product;
+import gift.product.exception.NoSuchProductException;
+import gift.product.repository.ProductRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

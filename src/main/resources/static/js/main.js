@@ -175,7 +175,7 @@ function editOption(productId, optionId) {
     const row = button.closest('tr');
 
     const optionData = {
-        id: optionId,
+        optionId: optionId,
         name: row.querySelector('.editedOptionName').value,
         quantity: row.querySelector('.editedOptionQuantity').value,
     };

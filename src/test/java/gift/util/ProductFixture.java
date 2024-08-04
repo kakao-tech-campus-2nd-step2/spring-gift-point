@@ -1,7 +1,7 @@
 package gift.util;
 
-import gift.domain.Category;
-import gift.domain.Product;
+import gift.category.entity.Category;
+import gift.product.entity.Product;
 
 public class ProductFixture {
 

@@ -4,8 +4,9 @@ import static gift.util.MemberFixture.createMember;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
-import gift.domain.Member;
-import gift.exception.NoSuchMemberException;
+import gift.member.entity.Member;
+import gift.member.exception.NoSuchMemberException;
+import gift.member.repository.MemberRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -7,10 +7,14 @@ import static gift.util.WishedProductFixture.createWishedProduct;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
-import gift.domain.Category;
-import gift.domain.Member;
-import gift.domain.Product;
-import gift.domain.WishedProduct;
+import gift.category.entity.Category;
+import gift.category.repository.CategoryRepository;
+import gift.member.entity.Member;
+import gift.member.repository.MemberRepository;
+import gift.product.entity.Product;
+import gift.wishedProduct.entity.WishedProduct;
+import gift.product.repository.ProductRepository;
+import gift.wishedProduct.repository.WishedProductRepository;
 import java.util.ArrayList;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;

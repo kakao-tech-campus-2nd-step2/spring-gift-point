@@ -1,7 +1,7 @@
 package gift.util;
 
-import gift.domain.Option;
-import gift.domain.Product;
+import gift.product.entity.Option;
+import gift.product.entity.Product;
 
 public class OptionFixture {
 

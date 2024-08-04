@@ -1,6 +1,6 @@
 package gift.util;
 
-import gift.domain.Category;
+import gift.category.entity.Category;
 
 public class CategoryFixture {
 
