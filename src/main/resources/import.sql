@@ -1,3 +1,4 @@
+
 insert into category(name, color, image_url, description) values('생일', '#5949A3', 'https://img1.kakaocdn.net/thumb/C414x414@2x.fwebp.q82/?fname=https%3A%2F%2Fst.kakaocdn.net%2Fproduct%2Fgift%2Fproduct%2F20240417111629_616eccb9d4cd464fa06d3430947dce15.jpg', '감동을 높여줄 생일 선물 리스트')
 insert into category(name, color, image_url, description) values('스몰럭셔리', '#765241', 'https://img1.kakaocdn.net/thumb/C414x414@2x.fwebp.q82/?fname=https%3A%2F%2Fst.kakaocdn.net%2Fproduct%2Fgift%2Fproduct%2F20240522144720_5db84fb50f0549499b2a69b293d2ee18.jpg', '당신을 위한 작은 사지, 스몰 럭셔리 아이템')
 insert into category(name, color, image_url, description) values('명품선물', '#515C7A', 'https://img1.kakaocdn.net/thumb/C414x414@2x.fwebp.q82/?fname=https%3A%2F%2Fst.kakaocdn.net%2Fproduct%2Fgift%2Fproduct%2F8bw5KMLJqwh42YlfD5kfgg%2FtYRA1iecdsCGRLyaYdVkdUmkZKmLwXV-ftzEJ6IIyHQ', '품격있는 명품 선물 제안')
