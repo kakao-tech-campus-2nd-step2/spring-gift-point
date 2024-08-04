@@ -11,5 +11,6 @@ import java.util.Optional;
 @Repository
 public interface WishRepository extends JpaRepository<Wish, Long> {
     Page<Wish> findByMember_Id(Long memberId, Pageable pageable);
+
     Optional<Wish> findByMember_IdAndProduct_Id(Long memberId, Long productId);
 }

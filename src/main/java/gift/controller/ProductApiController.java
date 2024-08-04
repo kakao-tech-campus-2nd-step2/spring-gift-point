@@ -1,7 +1,7 @@
 package gift.controller;
 
-import gift.dto.productDTOs.CustomProductPageDTO;
 import gift.dto.PageRequestDTO;
+import gift.dto.productDTOs.CustomProductPageDTO;
 import gift.dto.productDTOs.ProductDTO;
 import gift.service.ProductService;
 import jakarta.validation.constraints.Max;

@@ -11,7 +11,7 @@ public class GetOptionDTO {
         this.optionList = new ArrayList<>();
     }
 
-    public GetOptionDTO(Long product_Id, List<String> optionList){
+    public GetOptionDTO(Long product_Id, List<String> optionList) {
         this.product_Id = product_Id;
         this.optionList = optionList;
     }

@@ -21,7 +21,7 @@ public class Category {
     @Column(name = "description", columnDefinition = "varchar(255) not null")
     private String description;
 
-    protected Category(){
+    protected Category() {
     }
 
     public Category(Long id, String name, String color, String imageUrl, String description) {
@@ -31,7 +31,7 @@ public class Category {
         this.imageUrl = imageUrl;
         this.description = description;
     }
-    
+
     public Category(String name, String color, String imageUrl, String description) {
         this.name = name;
         this.color = color;

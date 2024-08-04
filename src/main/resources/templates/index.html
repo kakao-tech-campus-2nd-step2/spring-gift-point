@@ -66,6 +66,11 @@
 
         <button type="submit">Apply</button>
     </form>
+    <form th:action="@{/points}" method="post">
+        memberId: <input type="number" id="memberId" name="memberId">
+        points: <input type="number" id="points" name="points">
+        <button type="submit">Apply</button>
+    </form>
 </div>
     <table>
         <thead>

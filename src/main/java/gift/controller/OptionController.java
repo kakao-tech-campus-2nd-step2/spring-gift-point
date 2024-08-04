@@ -17,7 +17,7 @@ public class OptionController {
     }
 
     @PostMapping("/{productId}")
-    public String option(@PathVariable Long productId, Model model){
+    public String option(@PathVariable Long productId, Model model) {
         GetOptionDTO options = optionService.getOptionsForHtml(productId);
         model.addAttribute("options", options.GetOptionList());
         model.addAttribute("productId", productId);

@@ -27,5 +27,12 @@ echo "프로젝트 빌드."
 BUILD_PATH=$(ls $BUILD_DIR*.jar)
 JAR_NAME=$(basename $BUILD_PATH)
 
+BACKUP_DIR="$PROJECT_DIR/backups"
+mkdir -p $BACKUP_DIR
+echo "백업 디렉토리 생성"
+
+cp $BUILD_PATH $BACKUP_DIR/$JAR_NAME
+echo "백업 완료"
+
 nohup java -jar $JAR_NAME > /dev/null 2> /dev/null < /dev/null &
 echo "프로젝트 실행."

@@ -1,25 +1,27 @@
 package gift.model.valueObject;
 
-import java.util.HashSet;
+import gift.model.entity.Option;
+
 import java.util.List;
-import java.util.Set;
 
 public class OptionList {
-    private final List<String> options;
+    private final List<Option> options;
 
-    public OptionList(List<String> options) {
-        this.options = List.copyOf(options);
+    public OptionList(List<Option> options) {
+        this.options = options;
     }
 
-    public boolean hasDuplicates() {
-        Set<String> optionSet = new HashSet<>(this.options);
-        return this.options.size() != optionSet.size();
+    public boolean canDelete() {
+        if (this.options.size() >= 2) {
+            return true;
+        }
+        throw new IllegalArgumentException("옵션은 한개 이상 존재해야 합니다.");
     }
 
-    @Override
-    public String toString() {
-        return "OptionList{" +
-                "options=" + options +
-                '}';
+    public boolean isContains(Option option) {
+        if (this.options.contains(option)) {
+            throw new IllegalArgumentException("옵션은 중복될 수 없습니다.");
+        }
+        return false;
     }
 }

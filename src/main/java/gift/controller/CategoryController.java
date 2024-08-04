@@ -16,12 +16,12 @@ public class CategoryController {
     }
 
     @PostMapping
-    public void saveCategory(@RequestBody CategoryDTO categoryDTO){
+    public void saveCategory(@RequestBody CategoryDTO categoryDTO) {
         categoryService.saveCategory(categoryDTO);
     }
 
     @GetMapping
-    public List<CategoryDTO> getAllCategory(){
+    public List<CategoryDTO> getAllCategory() {
         return categoryService.getAllCategories();
     }
 }

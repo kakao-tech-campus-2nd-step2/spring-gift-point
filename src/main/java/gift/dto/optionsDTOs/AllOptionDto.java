@@ -15,7 +15,7 @@ public class AllOptionDto {
         this.quantity = quantity;
     }
 
-    public static AllOptionDto getAllOptionDto(Option option){
+    public static AllOptionDto getAllOptionDto(Option option) {
         return new AllOptionDto(option.getId(), option.getProductID(), option.getName(), option.getQuantity());
     }
 

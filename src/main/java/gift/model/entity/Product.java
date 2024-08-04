@@ -43,17 +43,17 @@ public class Product {
     protected Product() {
     }
 
-    public Product update(String name, Integer price, String imageUrl, Category category){
-        if(imageUrl != null && !name.isEmpty()){
+    public Product update(String name, Integer price, String imageUrl, Category category) {
+        if (imageUrl != null && !name.isEmpty()) {
             this.updateName(name);
         }
-        if(price != null){
+        if (price != null) {
             this.price = price;
         }
-        if(imageUrl != null && !imageUrl.isEmpty()){
+        if (imageUrl != null && !imageUrl.isEmpty()) {
             this.imageUrl = imageUrl;
         }
-        if(!category.getName().equals("NONE")){
+        if (!category.getName().equals("NONE")) {
             this.category = category;
         }
         return this;
@@ -67,7 +67,7 @@ public class Product {
         return price;
     }
 
-    public String getName(){
+    public String getName() {
         return this.name;
     }
 
@@ -83,6 +83,7 @@ public class Product {
         ProductName productName = new ProductName(name);
         this.name = productName.getName();
     }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

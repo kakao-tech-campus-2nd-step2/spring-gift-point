@@ -25,14 +25,14 @@ public class InputProductDTO {
     }
 
     public void setCategory(String category) {
-        if(category == null){
+        if (category == null) {
             throw new IllegalArgumentException("카테고리 등록은 필수입니다.");
         }
         this.category = category;
     }
 
-    public void setOption(String option){
-        if(option == null){
+    public void setOption(String option) {
+        if (option == null) {
             throw new IllegalArgumentException("옵션은 한 개 이상 등록해야 합니다.");
         }
         this.option = option;

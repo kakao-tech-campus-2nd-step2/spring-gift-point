@@ -8,17 +8,17 @@ public class Quantity {
     public Quantity(long quantity) {
         this.quantity = quantity;
 
-        if(!isCorrectQuantityUpdate(this.quantity)){
+        if (!isCorrectQuantityUpdate(this.quantity)) {
             throw new IllegalArgumentException("옵션은 1개 이상 1억개 미만이어야 합니다.");
         }
     }
 
-    public long getQuantity(){
+    public long getQuantity() {
         return quantity;
     }
 
-    private boolean isCorrectQuantityUpdate(long quantity){
-        if(quantity < 1 || quantity >= MAX_OPTION_NUM){
+    private boolean isCorrectQuantityUpdate(long quantity) {
+        if (quantity < 1 || quantity >= MAX_OPTION_NUM) {
             return false;
         }
         return true;

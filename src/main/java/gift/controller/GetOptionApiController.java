@@ -17,7 +17,7 @@ public class GetOptionApiController {
     }
 
     @GetMapping("/api/products/{productId}/options")
-    public List<AllOptionDto> getoptions(@PathVariable Long productId){
+    public List<AllOptionDto> getoptions(@PathVariable Long productId) {
         List<AllOptionDto> options = optionService.getAllOptions(productId);
         return options;
     }

@@ -14,9 +14,13 @@ import java.util.Optional;
 @Repository
 public interface OptionRepository extends JpaRepository<Option, Long> {
     List<Option> findAllByProduct_Id(Long productId);
+
     void deleteByName(String name);
+
     Optional<Option> findByName(String name);
+
     Optional<Option> findByNameAndProduct_Id(String name, Long productId);
+
     @Modifying
     @Transactional
     @Query("UPDATE Option o SET o.quantity = o.quantity + :increment WHERE o.product.id = :productId")

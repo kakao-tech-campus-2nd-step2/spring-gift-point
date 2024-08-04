@@ -19,7 +19,7 @@ public class CategoryService {
         this.categoryRepository = categoryRepository;
     }
 
-    public void saveCategory(CategoryDTO categoryDTO){
+    public void saveCategory(CategoryDTO categoryDTO) {
         Optional<Category> existCategory = categoryRepository.findByName(categoryDTO.getName());
         existCategory.ifPresent(category -> {
             throw new IllegalArgumentException("이미 존재하는 카테고리 입니다.");
@@ -28,7 +28,7 @@ public class CategoryService {
         categoryRepository.save(category);
     }
 
-    public List<CategoryDTO> getAllCategories(){
+    public List<CategoryDTO> getAllCategories() {
         List<Category> categories = categoryRepository.findAll();
         List<CategoryDTO> categoryDTOList = categories.stream()
                 .map(CategoryDTO::getCategoryDTO)

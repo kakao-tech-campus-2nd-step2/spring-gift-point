@@ -3,7 +3,7 @@ package gift.model.valueObject;
 public class ProductName {
     private final String name;
 
-    public ProductName(String name){
+    public ProductName(String name) {
         this.name = name;
 
         if (!isCorrectName(this.name)) {
@@ -18,21 +18,21 @@ public class ProductName {
         return name;
     }
 
-    private boolean isCorrectName(String name){
-        if(name.length()>15){
+    private boolean isCorrectName(String name) {
+        if (name.length() > 15) {
             return false;
         }
         String letters = "()[]+-&/_ ";
-        for(int i=0; i<name.length(); i++){
+        for (int i = 0; i < name.length(); i++) {
             char one = name.charAt(i);
-            if(!Character.isLetterOrDigit(one) && !letters.contains(Character.toString(one))){
+            if (!Character.isLetterOrDigit(one) && !letters.contains(Character.toString(one))) {
                 return false;
             }
         }
         return true;
     }
 
-    private boolean isContainsKakao(String name){
+    private boolean isContainsKakao(String name) {
         return name.contains("카카오");
     }
 }

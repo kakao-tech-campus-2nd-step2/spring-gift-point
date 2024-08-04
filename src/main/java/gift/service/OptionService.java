@@ -4,8 +4,9 @@ import gift.dto.optionsDTOs.AddOptionDTO;
 import gift.dto.optionsDTOs.AllOptionDto;
 import gift.dto.optionsDTOs.GetOptionDTO;
 import gift.model.entity.Option;
-import gift.model.valueObject.OptionList;
 import gift.model.entity.Product;
+import gift.model.valueObject.OptionList;
+import gift.model.valueObject.OptionNameList;
 import gift.repository.OptionRepository;
 import gift.repository.ProductRepository;
 import org.springframework.stereotype.Service;
@@ -26,27 +27,24 @@ public class OptionService {
     }
 
     @Transactional
-    public void deleteOption(String option, Long productId){
-        List<Option> optionList = optionRepository.findAllByProduct_Id(productId);
-        if(optionList.size() <= 1){
-            throw new IllegalArgumentException("옵션은 한개 이상 존재해야 합니다.");
+    public void deleteOption(String option, Long productId) {
+        OptionList optionList = new OptionList(optionRepository.findAllByProduct_Id(productId));
+        if (optionList.canDelete()) {
+            optionRepository.deleteByName(option);
         }
-        optionRepository.deleteByName(option);
     }
 
-    public void addOptions(String options, String quantitiy, Long productID){
+    public void addOptions(String options, String quantitiy, Long productID) {
         List<String> optionList = List.of(options.split(","));
-        OptionList optionListWrapper = new OptionList(optionList);
-        if(optionListWrapper.hasDuplicates()){
-            throw new IllegalArgumentException("옵션은 중복될 수 없습니다.");
-        }
+        OptionNameList optionListWrapper = new OptionNameList(optionList);
+
         List<String> optionQuantities = List.of(quantitiy.split(","));
 
         Product product = productRepository.findById(productID)
                 .orElseThrow(() -> new NoSuchElementException("해당 상품이 없습니다."));
 
         List<Option> optionsToSave = new ArrayList<>();
-        for(int i=0; i<optionList.size(); i++){
+        for (int i = 0; i < optionList.size(); i++) {
             Option addOption = new Option(
                     optionList.get(i),
                     Long.parseLong(optionQuantities.get(i)),
@@ -58,14 +56,8 @@ public class OptionService {
     }
 
     @Transactional
-    public void addOption(AddOptionDTO addOptionDTO, Long productId){
-        List<Option> optionList = optionRepository.findAll();
-        List<String> optionNameList = optionList.stream()
-                .map(Option::getName)
-                .toList();
-        if(optionNameList.contains(addOptionDTO.getOptionName())){
-            throw new IllegalArgumentException("옵션은 중복될 수 없습니다.");
-        }
+    public void addOption(AddOptionDTO addOptionDTO, Long productId) {
+        OptionList optionList = new OptionList(optionRepository.findAll());
         Product product = productRepository.findById(productId)
                 .orElseThrow(() -> new NoSuchElementException("해당 상품이 없습니다."));
         Option addOption = new Option(
@@ -73,30 +65,28 @@ public class OptionService {
                 addOptionDTO.getQuantity(),
                 product
         );
-        optionRepository.save(addOption);
+        if (!optionList.isContains(addOption)) {
+            optionRepository.save(addOption);
+        }
     }
 
-        public void updateOption(String oldName, String newName, long productID){
+    public void updateOption(String oldName, String newName, long productID) {
         Option updateOption = optionRepository.findByName(oldName)
                 .orElseThrow(() -> new NoSuchElementException("해당 옵션이 없습니다."));
-        List<Option> optionList = optionRepository.findAllByProduct_Id(productID);
-        List<String> optionNameList = optionList.stream()
-                .map(Option::getName)
-                .toList();
-        if(optionNameList.contains(newName)){
-            throw new IllegalArgumentException("옵션은 중복될 수 없습니다.");
-        }
+        OptionList optionList = new OptionList(optionRepository.findAll());
         Option newOption = updateOption.update(newName);
-        optionRepository.save(newOption);
+        if (!optionList.isContains(newOption)) {
+            optionRepository.save(newOption);
+        }
     }
 
     @Transactional
-    public void removeOption(Option option, int num){
+    public void removeOption(Option option, int num) {
         Option updateOption = option.quantityUpdate(-num);
         optionRepository.save(updateOption);
     }
 
-    public GetOptionDTO getOptionsForHtml(Long productId){
+    public GetOptionDTO getOptionsForHtml(Long productId) {
         List<Option> optionList = optionRepository.findAllByProduct_Id(productId);
         List<String> optionNameList = optionList.stream()
                 .map(Option::getName)
@@ -108,7 +98,7 @@ public class OptionService {
         return getOptionDTO;
     }
 
-    public List<AllOptionDto> getAllOptions(Long productId){
+    public List<AllOptionDto> getAllOptions(Long productId) {
         List<Option> optionListT = optionRepository.findAllByProduct_Id(productId);
         List<AllOptionDto> optionList = optionListT.stream()
                 .map(AllOptionDto::getAllOptionDto)
@@ -116,7 +106,7 @@ public class OptionService {
         return optionList;
     }
 
-    public Option getOption(Long id){
+    public Option getOption(Long id) {
         return optionRepository.findById(id)
                 .orElseThrow(() -> new NoSuchElementException("해당 옵션이 없습니다."));
     }

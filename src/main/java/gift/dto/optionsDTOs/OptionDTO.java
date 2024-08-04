@@ -7,12 +7,12 @@ public class OptionDTO {
     private List<String> optionList;
     private long productID;
 
-    public OptionDTO(String options, long productID){
+    public OptionDTO(String options, long productID) {
         optionList = List.of(options.split(","));
         this.productID = productID;
     }
 
-    public OptionDTO(Long id, List<String> option, long productID){
+    public OptionDTO(Long id, List<String> option, long productID) {
         this.id = id;
         this.optionList = option;
         this.productID = productID;
