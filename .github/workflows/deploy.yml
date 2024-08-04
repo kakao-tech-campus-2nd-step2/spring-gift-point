@@ -18,7 +18,7 @@ jobs:
           java-version: 21
 
      - name: Setup SSH
-        uses: webfactory/ssh-agent@v0.5.0
+        uses: webfactory/ssh-agent@v0.6.0
         with:
           ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
      - name: Connect to EC2 and execute script
