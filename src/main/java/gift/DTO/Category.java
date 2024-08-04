@@ -15,7 +15,7 @@ import java.util.List;
 @Table
 public class Category {
 
-  @OneToMany(mappedBy = "category")
+  @OneToMany(mappedBy = "category",cascade = CascadeType.REMOVE)
   private final List<Product> products = new ArrayList<>();
 
   @Id

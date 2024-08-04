@@ -14,7 +14,6 @@ public class WishListDto {
   }
 
   public WishListDto(ProductDto productDto) {
-
     this.productDto = productDto;
   }
 

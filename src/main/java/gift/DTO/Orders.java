@@ -27,13 +27,13 @@ public class Orders {
   private Option option;
   private int quantity;
 
-  private String orderDateTime;
+  private LocalDateTime orderDateTime;
   private String message;
 
   public Orders(Option option, int quantity, String message) {
     this.option = option;
     this.quantity = quantity;
-    this.orderDateTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+    this.orderDateTime = LocalDateTime.now();
     this.message = message;
   }
 
@@ -41,7 +41,7 @@ public class Orders {
     this.id = id;
     this.option = option;
     this.quantity = quantity;
-    this.orderDateTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+    this.orderDateTime = LocalDateTime.now();
     this.message = message;
   }
 
@@ -60,7 +60,7 @@ public class Orders {
     return quantity;
   }
 
-  public String getOrderDateTime() {
+  public LocalDateTime getOrderDateTime() {
     return orderDateTime;
   }
 
