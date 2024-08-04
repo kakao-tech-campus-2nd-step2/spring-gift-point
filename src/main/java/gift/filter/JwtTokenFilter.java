@@ -44,12 +44,12 @@ public class JwtTokenFilter implements Filter {
     }
 
     private String resolveToken(HttpServletRequest request) {
-
+        String bearer = "Bearer ";
         String bearerToken = request.getHeader("Authorization");
         logger.info("at resolveToken method : {}", bearerToken);
 
-        if (bearerToken != null && bearerToken.startsWith("Bearer ")) {
-            return bearerToken.substring(7);
+        if (bearerToken != null && bearerToken.startsWith(bearer)) {
+            return bearerToken.substring(bearer.length());
         }
         return null;
     }
