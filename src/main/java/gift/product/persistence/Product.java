@@ -1,5 +1,6 @@
 package gift.product.persistence;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import gift.category.persistence.Category;
 import gift.option.persistence.Option;
 import jakarta.persistence.Column;
@@ -34,6 +35,7 @@ public class Product {
     private Category category;
 
     @OneToMany(mappedBy = "product", fetch = FetchType.LAZY)
+    @JsonManagedReference
     private List<Option> options;
 
     protected Product() {
