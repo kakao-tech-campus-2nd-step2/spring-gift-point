@@ -7,7 +7,9 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import java.util.ArrayList;
 import java.util.List;
@@ -30,6 +32,10 @@ public class Member {
 
     @Column(nullable = true)
     private String kakaoToken;
+
+
+    @Column
+    private Long point = 0L;
 
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<WishList> wishlists = new ArrayList<>();
@@ -81,5 +87,13 @@ public class Member {
 
     public void setKakaoToken(String kakaoToken) {
         this.kakaoToken = kakaoToken;
+    }
+
+    public Long getPoint() {
+        return point;
+    }
+
+    public void setPoint(Long point) {
+        this.point = point;
     }
 }
