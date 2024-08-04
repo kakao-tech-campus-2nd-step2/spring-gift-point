@@ -1,8 +1,8 @@
 package gift.service;
 
-import gift.model.category.Category;
-import gift.model.category.CategoryDTO;
-import gift.model.category.CategoryRequest;
+import gift.dto.category.CategoryDTO;
+import gift.dto.category.CategoryRequest;
+import gift.entity.Category;
 import gift.exception.ResourceNotFoundException;
 import gift.repository.CategoryRepository;
 import org.springframework.stereotype.Service;

@@ -1,7 +1,11 @@
 package gift.controller.rest;
 
-import gift.model.response.MessageResponseDTO;
-import gift.model.user.*;
+import gift.dto.response.MessageResponseDTO;
+import gift.dto.user.AccessTokenResponseDto;
+import gift.dto.user.UserPointChargeDTO;
+import gift.dto.user.UserPointChargeRequest;
+import gift.dto.user.UserRequestDTO;
+import gift.entity.User;
 import gift.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -25,15 +29,15 @@ public class UserController {
 
     @Operation(summary = "회원가입", description = "회원가입입니다.")
     @PostMapping("/register")
-    public ResponseEntity<AccessTokenResponse> signup(@RequestBody @Valid UserDTO userDTO, HttpSession session) {
-        String accessToken = userService.signup(userDTO);
-        session.setAttribute("email", userDTO.getEmail());
+    public ResponseEntity<AccessTokenResponseDto> signup(@RequestBody @Valid UserRequestDTO userRequestDTO, HttpSession session) {
+        String accessToken = userService.signup(userRequestDTO);
+        session.setAttribute("email", userRequestDTO.getEmail());
         return ResponseEntity.ok().body(makeAccessTokenResponse(accessToken));
     }
 
     @Operation(summary = "로그인", description = "로그인입니다.")
     @PostMapping("/login")
-    public ResponseEntity<AccessTokenResponse> login(@RequestBody @Valid UserDTO form, HttpSession session) {
+    public ResponseEntity<AccessTokenResponseDto> login(@RequestBody @Valid UserRequestDTO form, HttpSession session) {
         String accessToken = userService.login(form);
         session.setAttribute("email", form.getEmail());
         return ResponseEntity.ok().body(makeAccessTokenResponse(accessToken));
@@ -48,7 +52,7 @@ public class UserController {
 
     @Operation(summary = "카카오 로그인", description = "카카오 로그인입니다.")
     @PostMapping("/kakao")
-    public ResponseEntity<AccessTokenResponse> kakaoLogin(@RequestBody Map<String, String> request, HttpSession session) {
+    public ResponseEntity<AccessTokenResponseDto> kakaoLogin(@RequestBody Map<String, String> request, HttpSession session) {
         String code = request.get("code");
 
         String kakaoAccessToken = userService.kakaoLogin(code);
@@ -77,7 +81,7 @@ public class UserController {
         return ResponseEntity.ok().body(new MessageResponseDTO("point charged successfully"));
     }
 
-    private AccessTokenResponse makeAccessTokenResponse(String accessToken) {
-        return new AccessTokenResponse(accessToken);
+    private AccessTokenResponseDto makeAccessTokenResponse(String accessToken) {
+        return new AccessTokenResponseDto(accessToken);
     }
 }

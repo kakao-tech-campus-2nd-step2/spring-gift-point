@@ -1,8 +1,8 @@
 package gift.service;
 
-import gift.model.middle.ProductOption;
-import gift.model.product.Product;
-import gift.model.user.User;
+import gift.entity.Product;
+import gift.entity.ProductOption;
+import gift.entity.User;
 import gift.repository.ProductOptionRepository;
 import gift.repository.ProductRepository;
 import org.junit.jupiter.api.Test;

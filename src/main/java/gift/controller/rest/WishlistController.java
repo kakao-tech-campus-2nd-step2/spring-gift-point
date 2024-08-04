@@ -1,7 +1,7 @@
 package gift.controller.rest;
 
-import gift.model.response.MessageResponseDTO;
-import gift.model.wishlist.WishlistResponse;
+import gift.dto.response.MessageResponseDTO;
+import gift.dto.wishlist.WishlistResponse;
 import gift.service.WishlistService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;

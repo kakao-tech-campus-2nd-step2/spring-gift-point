@@ -1,6 +1,6 @@
 package gift.controller.view;
 
-import gift.model.product.Product;
+import gift.entity.Product;
 import gift.repository.ProductRepository;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;

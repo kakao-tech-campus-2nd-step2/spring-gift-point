@@ -1,6 +1,6 @@
 package gift.repository;
 
-import gift.model.category.Category;
+import gift.entity.Category;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface CategoryRepository extends JpaRepository<Category, Long> {

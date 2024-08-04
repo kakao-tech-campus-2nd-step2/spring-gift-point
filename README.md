@@ -54,3 +54,10 @@
   * 마이페이지에서 확인
   * /me
   * /api/members/me
+
+## 리뷰 반영 수정 사항
+- [x] 옵션 subtract 낙관적 락 적용
+- [x] 디폴트 카테고리, 옵션 id를 -1로
+- [x] 배포 스크립트
+- [x] aop 적용
+- [ ] entity, dto, response, request 로 나누기 + camelCase, snake_case 수정

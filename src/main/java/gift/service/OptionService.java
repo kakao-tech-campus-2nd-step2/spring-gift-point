@@ -1,8 +1,9 @@
 package gift.service;
 
-import gift.model.option.Option;
-import gift.model.option.OptionDTO;
-import gift.model.user.User;
+import gift.dto.option.OptionRequestDTO;
+import gift.dto.option.OptionResponseDto;
+import gift.entity.Option;
+import gift.entity.User;
 import gift.exception.ResourceNotFoundException;
 import gift.repository.OptionRepository;
 import gift.repository.UserRepository;
@@ -15,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class OptionService {
@@ -31,9 +33,9 @@ public class OptionService {
     }
 
     @Transactional
-    public Option save(OptionDTO optionDTO, String email) {
+    public Option save(OptionRequestDTO optionRequestDTO, String email) {
         User user = userService.findOne(email);
-        Option option = new Option(optionDTO);
+        Option option = new Option(optionRequestDTO);
         option.setUser(user);
         return optionRepository.save(option);
     }
@@ -43,18 +45,20 @@ public class OptionService {
                 .orElseThrow(() -> new ResourceNotFoundException("Option not found with id: " + id));
     }
 
-    public List<Option> findAll() {
-        return optionRepository.findAll();
+    public List<OptionResponseDto> findAll() {
+        return optionRepository.findAll()
+                .stream()
+                .map(option -> new OptionResponseDto(option)).collect(Collectors.toList());
     }
 
     @Transactional
-    public Option update(Long id, OptionDTO optionDTO, String email) {
+    public Option update(Long id, OptionRequestDTO optionRequestDTO, String email) {
         if (!optionMatchesUser(id, email)) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Unauthorized");
         }
 
         Option option = findById(id);
-        option.setOptionDTO(optionDTO);
+        option.setOptionDTO(optionRequestDTO);
 
         return optionRepository.save(option);
     }

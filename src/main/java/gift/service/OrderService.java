@@ -1,13 +1,8 @@
 package gift.service;
 
-import gift.model.kakao.KakaoErrorCode;
-import gift.model.middle.ProductOption;
-import gift.model.option.Option;
-import gift.model.order.Order;
-import gift.model.order.OrderDTO;
-import gift.model.product.Product;
-import gift.model.user.User;
-import gift.model.wishlist.Wishlist;
+import gift.dto.kakao.KakaoErrorCode;
+import gift.dto.order.OrderDTO;
+import gift.entity.*;
 import gift.exception.KakaoException;
 import gift.exception.ResourceNotFoundException;
 import gift.repository.*;

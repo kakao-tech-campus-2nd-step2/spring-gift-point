@@ -2,11 +2,11 @@ package gift.service;
 
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import gift.model.kakao.KakaoErrorCode;
-import gift.model.kakao.KakaoProperties;
-import gift.model.user.User;
-import gift.model.user.UserDTO;
-import gift.model.user.UserPointChargeRequest;
+import gift.dto.kakao.KakaoErrorCode;
+import gift.dto.kakao.KakaoProperties;
+import gift.dto.user.UserPointChargeRequest;
+import gift.dto.user.UserRequestDTO;
+import gift.entity.User;
 import gift.exception.KakaoException;
 import gift.exception.ResourceNotFoundException;
 import gift.repository.UserRepository;
@@ -50,27 +50,27 @@ public class UserService {
     }
 
     @Transactional
-    public String signup(UserDTO userDTO) {
+    public String signup(UserRequestDTO userRequestDTO) {
         // 이미 존재하는 이메일
-        if (userRepository.existsByEmail(userDTO.getEmail())) {
+        if (userRepository.existsByEmail(userRequestDTO.getEmail())) {
             throw new ResponseStatusException(HttpStatus.CONFLICT, "Email already exists");
         }
 
         // pw 암호화해서 저장
-        String hashpw = BCrypt.hashpw(userDTO.getPassword(), BCrypt.gensalt());
-        userDTO.setPassword(hashpw);
+        String hashpw = BCrypt.hashpw(userRequestDTO.getPassword(), BCrypt.gensalt());
+        userRequestDTO.setPassword(hashpw);
 
-        User user = userRepository.save(new User(userDTO));
+        User user = userRepository.save(new User(userRequestDTO));
         return userUtility.makeAccessToken(user);
     }
 
-    public String login(UserDTO userDTO) {
+    public String login(UserRequestDTO userRequestDTO) {
         // 존재하지 않는 이메일
-        User user = userRepository.findByEmail(userDTO.getEmail())
+        User user = userRepository.findByEmail(userRequestDTO.getEmail())
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Email does not exist"));
 
         // pw 틀린 경우
-        if (!BCrypt.checkpw(userDTO.getPassword(), user.getPassword())) {
+        if (!BCrypt.checkpw(userRequestDTO.getPassword(), user.getPassword())) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Incorrect password");
         }
 

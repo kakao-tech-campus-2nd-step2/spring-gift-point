@@ -1,9 +1,9 @@
 package gift.util;
 
-import gift.model.product.Product;
-import gift.model.product.ProductDTO;
-import gift.model.user.UserDTO;
-import gift.model.wishlist.WishlistDTO;
+import gift.dto.product.ProductRequestDto;
+import gift.dto.product.ProductResponseDto;
+import gift.dto.user.UserRequestDTO;
+import gift.dto.wishlist.WishlistDTO;
 import gift.service.ProductService;
 import gift.service.UserService;
 import jakarta.validation.ConstraintViolation;
@@ -23,7 +23,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class ProductIdValidatorTest {
 
     private String email;
-    private Product product;
+    private ProductResponseDto product;
     private WishlistDTO wishlist;
 
     @Autowired
@@ -36,8 +36,8 @@ public class ProductIdValidatorTest {
     @BeforeEach
     void setUp() {
         email = "test@gmail.com";
-        userService.signup(new UserDTO(email, "test"));
-        product = productService.save(new ProductDTO("abc", 123, "www.test.com", -1L), email);
+        userService.signup(new UserRequestDTO(email, "test"));
+        product = productService.save(new ProductRequestDto("abc", 123, "www.test.com", -1L), email);
         wishlist = new WishlistDTO(product.getId());
     }
 

@@ -1,7 +1,7 @@
 package gift.repository;
 
-import gift.model.user.User;
-import gift.model.user.UserDTO;
+import gift.dto.user.UserRequestDTO;
+import gift.entity.User;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,14 +13,14 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class UserRepositoryTest {
 
     private String testEmail = "test@naver.com";
-    private UserDTO user;
+    private UserRequestDTO user;
 
     @Autowired
     private UserRepository userRepository;
 
     @BeforeEach
     void setUp() {
-        user = new UserDTO(testEmail, "123");
+        user = new UserRequestDTO(testEmail, "123");
         userRepository.save(new User(user));
     }
 

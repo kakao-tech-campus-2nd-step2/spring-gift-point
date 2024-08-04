@@ -1,12 +1,13 @@
 package gift.service;
 
-import gift.model.option.Option;
-import gift.model.option.OptionDTO;
-import gift.model.order.OrderDTO;
-import gift.model.product.Product;
-import gift.model.product.ProductDTO;
-import gift.model.user.User;
-import gift.model.user.UserDTO;
+import gift.dto.option.OptionRequestDTO;
+import gift.dto.order.OrderDTO;
+import gift.dto.product.ProductRequestDto;
+import gift.dto.product.ProductResponseDto;
+import gift.dto.user.UserRequestDTO;
+import gift.entity.Option;
+import gift.entity.Product;
+import gift.entity.User;
 import jakarta.servlet.http.HttpSession;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -27,7 +28,7 @@ public class OrderServiceIntegrationTest {
 
     private HttpSession session;
     private String testEmail;
-    private Product product;
+    private ProductResponseDto product;
     private List<Option> options;
 
     @Autowired
@@ -44,16 +45,16 @@ public class OrderServiceIntegrationTest {
     @BeforeEach
     void setUp() {
         testEmail = "test@gmail.com";
-        userService.signup(new UserDTO(testEmail, "test"));
+        userService.signup(new UserRequestDTO(testEmail, "test"));
 
         session = mock(HttpSession.class);
         when(session.getAttribute("email")).thenReturn(testEmail);
 
         // 상품
-        product = productService.save(new ProductDTO("test1", 123, "test.com", -1L), testEmail);
+        product = productService.save(new ProductRequestDto("test1", 123, "test.com", -1L), testEmail);
 
         // 상품에 옵션 추가
-        options = productService.addProductOption(product.getId(), List.of(new OptionDTO("abc", 100)), testEmail);
+        options = productService.addProductOption(product.getId(), List.of(new OptionRequestDTO("abc", 100)), testEmail);
     }
 
     @Test

@@ -81,7 +81,8 @@ create table option
     FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE
 );
 -- option default data
-INSERT INTO option (id, name, quantity) VALUES (-1, 'DefaultOption', 1);
+INSERT INTO option (id, name, quantity)
+VALUES (-1, 'DefaultOption', 1);
 
 -- product_option(중간 테이블)
 drop table if exists product_option CASCADE;

@@ -1,19 +1,13 @@
 package gift.service;
 
-import gift.model.category.Category;
-import gift.model.middle.ProductOption;
-import gift.model.middle.ProductWishlist;
-import gift.model.option.Option;
-import gift.model.option.OptionDTO;
-import gift.model.product.Product;
-import gift.model.product.ProductDTO;
-import gift.model.product.ProductResponse;
-import gift.model.user.User;
-import gift.model.wishlist.Wishlist;
+import gift.dto.option.OptionRequestDTO;
+import gift.dto.product.ProductRequestDto;
+import gift.dto.product.ProductResponseDto;
+import gift.dto.product.ProductResponseWithDetailsDto;
+import gift.entity.*;
 import gift.exception.ResourceNotFoundException;
 import gift.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -48,60 +42,58 @@ public class ProductService {
         this.optionService = optionService;
     }
 
-    public ProductResponse findOne(Long id) {
+    public ProductResponseWithDetailsDto findOne(Long id) {
         Product product = findById(id);
-        Category category = categoryService.findById(product.getCategory_id());
+        Category category = categoryService.findById(product.getCategoryId());
         List<Option> options = productOptionRepository
                 .findByProductId(id)
                 .stream().map(op -> op.getOption())
                 .collect(Collectors.toList());
-        ProductResponse res = new ProductResponse(product, category, options);
-        return res;
+        return new ProductResponseWithDetailsDto(product, category, options);
     }
 
-    public Page<Product> findAll(Pageable pageable) {
-        return productRepository.findAll(pageable);
-    }
-
-    public List<Wishlist> getProductWishlist(Long productId) {
-        List<ProductWishlist> productWishlists = productWishlistRepository.findByProductId(productId);
-        List<Wishlist> wishlists = productWishlists.stream()
-                .map(productWishlist -> productWishlist.getWishlist())
+    public List<ProductResponseDto> findAll(Pageable pageable) {
+        return productRepository.findAll(pageable).getContent()
+                .stream()
+                .map(product -> new ProductResponseDto(product))
                 .collect(Collectors.toList());
-        return wishlists;
     }
 
     // category
-    public Page<Product> getProductsByCategory(Long categoryId, Pageable pageable) {
-        return productRepository.findAllByCategoryId(categoryId, pageable);
+    public List<ProductResponseDto> getProductsByCategory(Long categoryId, Pageable pageable) {
+        return productRepository.findAllByCategoryId(categoryId, pageable).getContent()
+                .stream()
+                .map(product -> new ProductResponseDto(product))
+                .collect(Collectors.toList());
     }
 
     @Transactional
-    public Product save(ProductDTO productDTO, String email) {
+    public ProductResponseDto save(ProductRequestDto productRequestDto, String email) {
         User user = userService.findOne(email);
 
-        Product product = productRepository.save(new Product(productDTO, user));
+        Product product = productRepository.save(new Product(productRequestDto, user));
         Option defaultOption = optionRepository.findById(-1L)
                 .orElseThrow(() -> new IllegalArgumentException("Option not found with id: -1L"));
-        categoryRepository.findById(productDTO.getCategory_id())
-                .orElseThrow(() -> new IllegalArgumentException("Category not found with id: " + productDTO.getCategory_id()));
+        categoryRepository.findById(productRequestDto.getCategory_id())
+                .orElseThrow(() -> new IllegalArgumentException("Category not found with id: " + productRequestDto.getCategory_id()));
 
         productOptionRepository.save(new ProductOption(product, defaultOption, defaultOption.getName()));
 
-        return product;
+        return new ProductResponseDto(product);
     }
 
     @Transactional
-    public Product update(Long id, ProductDTO productDTO, String email) {
+    public ProductResponseDto update(Long id, ProductRequestDto productRequestDto, String email) {
         Product product = findById(id);
-        if (product.getCategory_id() != productDTO.getCategory_id()) {
-            Category category = categoryService.findById(productDTO.getCategory_id());
-            productDTO.setCategory_id(category.getId());
+        if (product.getCategoryId() != productRequestDto.getCategory_id()) {
+            Category category = categoryService.findById(productRequestDto.getCategory_id());
+            productRequestDto.setCategory_id(category.getId());
         }
 
-        product.updateProduct(productDTO);
+        product.updateProduct(productRequestDto);
 
-        return productRepository.save(product);
+        Product updatedProduct = productRepository.save(product);
+        return new ProductResponseDto(updatedProduct);
     }
 
     @Transactional
@@ -121,12 +113,12 @@ public class ProductService {
     }
 
     @Transactional
-    public List<Option> addProductOption(Long productId, List<OptionDTO> optionDTOs, String email) {
+    public List<Option> addProductOption(Long productId, List<OptionRequestDTO> optionRequestDTOS, String email) {
         Product product = findById(productId);
         List<Option> res = new ArrayList<>();
 
-        for (OptionDTO optionDTO : optionDTOs) {
-            Option option = optionService.save(optionDTO, email);
+        for (OptionRequestDTO optionRequestDTO : optionRequestDTOS) {
+            Option option = optionService.save(optionRequestDTO, email);
             productOptionRepository.save(new ProductOption(product, option, option.getName()));
             res.add(option);
         }
@@ -135,9 +127,9 @@ public class ProductService {
     }
 
     @Transactional
-    public void editProductOption(Long productId, Long optionId, OptionDTO optionDTO, String email) {
+    public void editProductOption(Long productId, Long optionId, OptionRequestDTO optionRequestDTO, String email) {
         Product product = findById(productId);
-        optionService.update(optionId, optionDTO, email);
+        optionService.update(optionId, optionRequestDTO, email);
     }
 
     @Transactional

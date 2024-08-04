@@ -1,6 +1,6 @@
 package gift.repository;
 
-import gift.model.order.Order;
+import gift.entity.Order;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;

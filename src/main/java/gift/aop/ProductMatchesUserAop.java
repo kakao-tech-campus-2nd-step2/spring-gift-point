@@ -1,7 +1,7 @@
 package gift.aop;
 
-import gift.model.product.Product;
-import gift.model.user.User;
+import gift.entity.Product;
+import gift.entity.User;
 import gift.service.ProductService;
 import gift.service.UserService;
 import org.aspectj.lang.JoinPoint;

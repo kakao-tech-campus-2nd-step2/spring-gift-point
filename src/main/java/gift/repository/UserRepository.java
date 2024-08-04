@@ -1,6 +1,6 @@
 package gift.repository;
 
-import gift.model.user.User;
+import gift.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;

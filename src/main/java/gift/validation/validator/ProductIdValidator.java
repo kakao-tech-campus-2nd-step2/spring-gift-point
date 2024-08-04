@@ -1,6 +1,6 @@
 package gift.validation.validator;
 
-import gift.model.product.Product;
+import gift.entity.Product;
 import gift.repository.ProductRepository;
 import gift.validation.constraint.ProductIdConstraint;
 import jakarta.validation.ConstraintValidator;

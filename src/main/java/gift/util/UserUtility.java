@@ -1,6 +1,6 @@
 package gift.util;
 
-import gift.model.user.User;
+import gift.entity.User;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.JwtException;

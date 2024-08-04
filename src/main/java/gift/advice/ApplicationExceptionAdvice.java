@@ -1,6 +1,6 @@
 package gift.advice;
 
-import gift.model.response.MessageResponseDTO;
+import gift.dto.response.MessageResponseDTO;
 import gift.exception.ResourceNotFoundException;
 import org.springframework.dao.OptimisticLockingFailureException;
 import org.springframework.http.HttpStatus;
