@@ -52,4 +52,9 @@ public class MemberService {
         return member.map(mapper::memberToDto);
     }
 
+    public void updatePoint(MemberDto memberDto) {
+        Member member = memberJpaRepository.findById(memberDto.getId()).orElseThrow();
+        member.setPoint(memberDto.getPoint());
+        memberJpaRepository.save(member);
+    }
 }
