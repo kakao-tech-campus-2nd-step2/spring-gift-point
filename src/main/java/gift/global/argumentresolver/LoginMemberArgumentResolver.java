@@ -1,9 +1,10 @@
 package gift.global.argumentresolver;
 
 import gift.global.exception.InvalidAccessTokenException;
-import gift.member.dto.MemberDto;
-import gift.member.service.MemberService;
 import gift.global.util.JwtProvider;
+import gift.member.entity.Member;
+import gift.member.exception.NoSuchMemberException;
+import gift.member.repository.MemberRepository;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.MethodParameter;
@@ -16,12 +17,12 @@ import org.springframework.web.method.support.ModelAndViewContainer;
 @Component
 public class LoginMemberArgumentResolver implements HandlerMethodArgumentResolver {
 
-    private final MemberService memberService;
+    private final MemberRepository memberRepository;
     private final JwtProvider jwtProvider;
 
     @Autowired
-    public LoginMemberArgumentResolver(MemberService memberService, JwtProvider jwtProvider) {
-        this.memberService = memberService;
+    public LoginMemberArgumentResolver(MemberRepository memberRepository, JwtProvider jwtProvider) {
+        this.memberRepository = memberRepository;
         this.jwtProvider = jwtProvider;
     }
 
@@ -31,7 +32,7 @@ public class LoginMemberArgumentResolver implements HandlerMethodArgumentResolve
     }
 
     @Override
-    public MemberDto resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer, NativeWebRequest webRequest, WebDataBinderFactory binderFactory) throws Exception {
+    public Member resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer, NativeWebRequest webRequest, WebDataBinderFactory binderFactory) throws Exception {
         HttpServletRequest request = (HttpServletRequest) webRequest.getNativeRequest();
         String authorization = request.getHeader("Authorization");
         if (authorization == null || !authorization.startsWith("Bearer ")) {
@@ -42,6 +43,7 @@ public class LoginMemberArgumentResolver implements HandlerMethodArgumentResolve
         }
         String accessToken = authorization.substring(7);
         String email = jwtProvider.parseAccessToken(accessToken);
-        return memberService.findMember(email);
+        return memberRepository.findById(email)
+            .orElseThrow(NoSuchMemberException::new);
     }
 }

@@ -1,10 +1,10 @@
 package gift.orderOption.controller;
 
 import gift.global.argumentresolver.LoginMember;
-import gift.member.dto.MemberDto;
+import gift.kakao.service.KakaoTalkService;
+import gift.member.entity.Member;
 import gift.orderOption.dto.OrderOptionRequest;
 import gift.orderOption.dto.OrderOptionResponse;
-import gift.kakao.service.KakaoTalkService;
 import gift.orderOption.service.OrderOptionService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -33,9 +33,9 @@ public class OrderOptionController {
     @Operation(summary = "주문", description = "해당 옵션을 주문합니다.")
     @PostMapping
     public ResponseEntity<OrderOptionResponse> order(
-        @LoginMember MemberDto memberDto,
+        @LoginMember Member member,
         @Valid @RequestBody OrderOptionRequest orderOptionRequest
     ) {
-        return ResponseEntity.ok().body(orderOptionService.order(memberDto, orderOptionRequest));
+        return ResponseEntity.ok().body(orderOptionService.order(member, orderOptionRequest));
     }
 }

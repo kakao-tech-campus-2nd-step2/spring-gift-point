@@ -1,7 +1,7 @@
 package gift.product.controller;
 
 import gift.global.argumentresolver.LoginMember;
-import gift.member.dto.MemberDto;
+import gift.member.entity.Member;
 import gift.product.dto.AddProductRequest;
 import gift.product.dto.AddProductResponse;
 import gift.product.dto.GetProductResponse;
@@ -37,14 +37,14 @@ public class ProductController {
 
     @Operation(summary = "모든 상품 조회", description = "모든 상품을 조회합니다.")
     @GetMapping
-    public ResponseEntity<Page<GetProductResponse>> getProducts(@LoginMember MemberDto memberDto, Pageable pageable) {
-        return ResponseEntity.ok().body(productService.getProducts(memberDto, pageable));
+    public ResponseEntity<Page<GetProductResponse>> getProducts(@LoginMember Member member, Pageable pageable) {
+        return ResponseEntity.ok().body(productService.getProducts(member, pageable));
     }
 
     @Operation(summary = "한 상품 조회", description = "해당 id의 상품을 조회합니다.")
     @GetMapping("/{id}")
-    public ResponseEntity<GetProductResponse> getProduct(@LoginMember MemberDto memberDto, @PathVariable("id") long id) {
-        return ResponseEntity.ok().body(productService.getProduct(memberDto, id));
+    public ResponseEntity<GetProductResponse> getProduct(@LoginMember Member member, @PathVariable("id") long id) {
+        return ResponseEntity.ok().body(productService.getProduct(member, id));
     }
 
     @Operation(summary = "상품 추가", description = "상품을 추가합니다.")

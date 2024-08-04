@@ -1,7 +1,7 @@
 package gift.wishedProduct.controller;
 
 import gift.global.argumentresolver.LoginMember;
-import gift.member.dto.MemberDto;
+import gift.member.entity.Member;
 import gift.wishedProduct.dto.AddWishedProductRequest;
 import gift.wishedProduct.dto.GetWishedProductResponse;
 import gift.wishedProduct.dto.WishedProductDto;
@@ -35,22 +35,22 @@ public class WishedProductController {
 
     @Operation(summary = "위시 리스트 조회", description = "해당 회원의 위시 리스트를 조회합니다.")
     @GetMapping
-    public ResponseEntity<Page<GetWishedProductResponse>> getWishedProducts(@LoginMember MemberDto memberDto, Pageable pageable) {
-        return ResponseEntity.ok().body(wishedProductService.getWishedProducts(memberDto, pageable));
+    public ResponseEntity<Page<GetWishedProductResponse>> getWishedProducts(@LoginMember Member member, Pageable pageable) {
+        return ResponseEntity.ok().body(wishedProductService.getWishedProducts(member, pageable));
     }
 
     @Operation(summary = "위시 리스트에 상품 추가", description = "해당 상품을 특정 회원의 위시 리스트에 추가합니다.")
     @PostMapping
     public ResponseEntity<WishedProductDto> addWishedProduct(
-        @LoginMember MemberDto memberDto,
+        @LoginMember Member member,
         @Valid @RequestBody AddWishedProductRequest addWishedProductRequest
     ) {
-        return ResponseEntity.ok().body(wishedProductService.addWishedProduct(memberDto, addWishedProductRequest));
+        return ResponseEntity.ok().body(wishedProductService.addWishedProduct(member, addWishedProductRequest));
     }
 
     @Operation(summary = "위시 리스트의 상품 삭제", description = "해당 상품을 특정 회원의 위시 리스트에서 삭제합니다.")
     @DeleteMapping("/{id}")
-    public ResponseEntity<WishedProductDto> deleteWishedProduct(@LoginMember MemberDto memberDto, @PathVariable("id") long id) {
+    public ResponseEntity<WishedProductDto> deleteWishedProduct(@LoginMember Member member, @PathVariable("id") long id) {
         return ResponseEntity.ok().body(wishedProductService.deleteWishedProduct(id));
     }
 }

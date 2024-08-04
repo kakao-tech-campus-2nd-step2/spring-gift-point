@@ -46,9 +46,9 @@ public class MemberService {
         return new MemberResponse(jwtProvider.createAccessToken(memberDto));
     }
 
-    public MemberResponse changePassword(MemberDto memberDto, MemberPasswordRequest memberPasswordRequest) {
-        checkPassword(memberPasswordRequest.password(), memberDto.password());
-        Member member = new Member(memberDto.email(), memberPasswordRequest.newPassword1());
+    public MemberResponse changePassword(Member member, MemberPasswordRequest memberPasswordRequest) {
+        checkPassword(memberPasswordRequest.password(), member.getPassword());
+        member.changePassword(memberPasswordRequest.newPassword1());
         MemberDto updatedMemberDto = memberRepository.save(member).toDto();
         return new MemberResponse(jwtProvider.createAccessToken(updatedMemberDto));
     }

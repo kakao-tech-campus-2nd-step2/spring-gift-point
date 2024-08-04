@@ -2,12 +2,12 @@ package gift.product.service;
 
 import gift.category.entity.Category;
 import gift.category.service.CategoryService;
-import gift.product.entity.Product;
-import gift.product.dto.OptionDto;
-import gift.member.dto.MemberDto;
+import gift.member.entity.Member;
 import gift.product.dto.AddProductResponse;
 import gift.product.dto.GetProductResponse;
+import gift.product.dto.OptionDto;
 import gift.product.dto.ProductDto;
+import gift.product.entity.Product;
 import gift.product.exception.NoSuchProductException;
 import gift.product.repository.ProductRepository;
 import gift.wishedProduct.repository.WishedProductRepository;
@@ -34,15 +34,15 @@ public class ProductService {
         this.wishedProductRepository = wishedProductRepository;
     }
 
-    public Page<GetProductResponse> getProducts(MemberDto memberDto, Pageable pageable) {
+    public Page<GetProductResponse> getProducts(Member member, Pageable pageable) {
         return productRepository.findAll(pageable)
-            .map(product -> product.toGetProductResponse(isWish(memberDto, product)));
+            .map(product -> product.toGetProductResponse(isWish(member, product)));
     }
 
-    public GetProductResponse getProduct(MemberDto memberDto, Long id) {
+    public GetProductResponse getProduct(Member member, Long id) {
         Product product = productRepository.findById(id)
             .orElseThrow(NoSuchProductException::new);
-        return product.toGetProductResponse(isWish(memberDto, product));
+        return product.toGetProductResponse(isWish(member, product));
     }
 
     public AddProductResponse addProduct(ProductDto productDto, List<OptionDto> optionDtos) {
@@ -69,10 +69,10 @@ public class ProductService {
         return deletedProduct.toDto();
     }
 
-    private boolean isWish(MemberDto memberDto, Product product) {
-        if(memberDto == null) {
+    private boolean isWish(Member member, Product product) {
+        if(member == null) {
             return false;
         }
-        return wishedProductRepository.existsByMemberAndProduct(memberDto.toEntity(), product);
+        return wishedProductRepository.existsByMemberAndProduct(member, product);
     }
 }

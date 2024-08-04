@@ -17,6 +17,9 @@ public class Member {
     @Column(name = "password", nullable = false)
     private String password;
 
+    @Column(name = "point")
+    private int point;
+
     protected Member() {
 
     }
@@ -24,6 +27,10 @@ public class Member {
     public Member(String email, String password) {
         this.email = email;
         this.password = password;
+    }
+
+    public void changePassword(String newPassword) {
+        this.password = newPassword;
     }
 
     public MemberDto toDto() {
@@ -36,5 +43,9 @@ public class Member {
 
     public String getPassword() {
         return password;
+    }
+
+    public int getPoint() {
+        return point;
     }
 }
