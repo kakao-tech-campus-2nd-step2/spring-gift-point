@@ -63,14 +63,15 @@ public class MemberController {
     public ResponseEntity<?> getPoint(
             @Parameter(hidden = true) @RequestHeader("Authorization") String authorizationHeader
     ) {
-        // 토큰 추출 및 검증
+        // 토큰 추출
         String token = jwtUtil.extractToken(authorizationHeader);
         if (token == null || !jwtUtil.isTokenValid(token)) {
             // 401 Unauthorized
             return ResponseEntity.status(401).body(new CommonResponse<>(null, "Invalid or missing token", false));
         }
-
+        System.out.println("KKKKtoken = " + token);
         String memberEmail = jwtUtil.extractEmail(token);
+        System.out.println("KKKKmemberEmail = " + memberEmail);
         Long points = memberService.getPoint(memberEmail);
 
         return ResponseEntity.ok(new CommonResponse<>(new PointResponse(points), "포인트 조회 성공", true));
