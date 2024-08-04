@@ -1,5 +1,6 @@
 package gift.domain.order;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import gift.domain.product.option.ProductOption;
 import gift.domain.user.User;
@@ -26,6 +27,7 @@ public class Order {
     private String message;
 
     @Column(name = "order_date_time")
+    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
     private LocalDateTime orderDateTime;
 
     //실 결제 금액
