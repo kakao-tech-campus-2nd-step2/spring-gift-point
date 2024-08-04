@@ -91,7 +91,7 @@ public class ProductService {
     private ProductAddResponseDTO toAddResponseDTO(Product product, List<Option> options) {
         List<OptionResponseDTO> optionResponseDTOS = options.stream()
             .map(option -> new OptionResponseDTO(option.getId(), option.getName(),
-                option.getQuantity()))
+                option.getQuantity(), option.getProduct().getId()))
             .toList();
         return new ProductAddResponseDTO(product.getId(), product.getName(), product.getPrice(),
             product.getImageUrl(), product.getCategory().getId(), optionResponseDTOS);
@@ -101,7 +101,7 @@ public class ProductService {
         List<OptionResponseDTO> optionResponseDTOS = optionRepository.findAllByProductId(
                 product.getId()).stream()
             .map(option -> new OptionResponseDTO(option.getId(), option.getName(),
-                option.getQuantity()))
+                option.getQuantity(), option.getProduct().getId()))
             .toList();
         return new ProductGetResponseDTO(product.getId(), product.getName(), product.getPrice(),
             product.getImageUrl(), product.getCategory().getId(), optionResponseDTOS);
