@@ -8,6 +8,7 @@ import gift.Service.MemberService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -29,6 +30,9 @@ public class KakaoOAuthController {
     @Autowired
     private MemberService memberService;
 
+    @Autowired
+    private RestTemplate restTemplate;
+
     @GetMapping("/oauth/authorize")
     @Operation(summary = "카카오 로그인 화면", description = "카카오 로그인 화면을 보여줍니다.")
     public void authorize(HttpServletResponse response) throws IOException {
@@ -40,23 +44,27 @@ public class KakaoOAuthController {
         response.sendRedirect(redirectUrl);
     }
 
-
     @GetMapping("/auth/kakao/callback")
     @Operation(summary = "카카오 로그인 수행", description = "인가 코드를 통해 로그인을 수행합니다.")
-    public ResponseEntity<?> callBack(@RequestParam("code") String code, HttpServletResponse response) throws Exception {
+    public ResponseEntity<?> callBack(@RequestParam("code") String code, HttpServletResponse response, HttpServletRequest request) throws Exception {
         //인가 코드로 토큰 받아오기
-        String accessToken = getAccessToken(code);
+        ResponseEntity<String> accessToken = getAccessToken(code);
+
+        if (accessToken.getStatusCode() != HttpStatus.OK) {
+            return accessToken;
+        }
+
+        String validAccessToken = accessToken.getBody();
 
         //토큰을 쿠키에 저장하기
-        Cookie cookie = new Cookie("accessToken", accessToken);
+        Cookie cookie = new Cookie("accessToken", validAccessToken);
         cookie.setHttpOnly(true);
         cookie.setPath("/");
         response.addCookie(cookie);
 
         //토큰을 통해 사용자 정보 받아오기
-        RestTemplate restTemplate = new RestTemplate();
         HttpHeaders headers = new HttpHeaders();
-        headers.add("Authorization", "Bearer " + accessToken);
+        headers.add("Authorization", "Bearer " + validAccessToken);
         headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
 
         HttpEntity<String> entity = new HttpEntity<>(null, headers);
@@ -68,9 +76,11 @@ public class KakaoOAuthController {
         );
 
         ObjectMapper objectMapper = new ObjectMapper();
-        //id는 가능한데 email을 가져오려고 하면 null이 되는 이유??????????
+        //id는 가능한데 email을 가져오려고 하면 null이 되는 이유?????????? -> 권한 동의 필요
         KakaoMemberDto kakaoMemberDto = objectMapper.readValue(responseEntity.getBody(), KakaoMemberDto.class);
         long id = kakaoMemberDto.getId();
+
+        request.getSession().setAttribute("kakaoId", id);
 
         //이미 가입된 회원인지 확인, 가입되지 않은 회원이라면 회원가입 진행
         if (memberService.findByKakaoId(id).isEmpty()) {
@@ -88,8 +98,7 @@ public class KakaoOAuthController {
     }
 
     @Operation(summary = "토큰 발급", description = "토큰을 발급받습니다.")
-    public String getAccessToken(String code) throws Exception {
-        RestTemplate restTemplate = new RestTemplate();
+    public ResponseEntity<String> getAccessToken(String code) throws Exception {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
 
@@ -108,8 +117,14 @@ public class KakaoOAuthController {
                 String.class
         ); //Http 요청 보내고 받기
 
+        HttpStatusCode statusCode = response.getStatusCode();
+
+        if (statusCode != HttpStatus.OK) {
+            return ResponseEntity.status(statusCode).body(statusCode + ": Failed to retrieve access token");
+        }
+
         ObjectMapper objectMapper = new ObjectMapper();
         KakaoAccessTokenDto kakaoAccessTokenDto = objectMapper.readValue(response.getBody(), KakaoAccessTokenDto.class);
-        return kakaoAccessTokenDto.getAccess_token();
+        return ResponseEntity.ok(kakaoAccessTokenDto.getAccess_token());
     }
 }

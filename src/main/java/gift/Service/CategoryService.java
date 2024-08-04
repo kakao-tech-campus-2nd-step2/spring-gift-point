@@ -44,15 +44,4 @@ public class CategoryService {
         return mapper.categoryToDto(category);
     }
 
-    public CategoryDto addCategory(CategoryDto categoryDto) {
-        Category category = mapper.categoryDtoToEntity(categoryDto);
-        Category addedCategory = categoryJpaRepository.save(category);
-        return mapper.categoryToDto(addedCategory);
-    }
-
-    public void updateCategory(CategoryDto categoryDto) {
-        Category category = mapper.categoryDtoToEntity(categoryDto);
-        categoryJpaRepository.save(category);
-    }
-
 }

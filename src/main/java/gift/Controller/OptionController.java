@@ -30,7 +30,7 @@ public class OptionController {
         this.kakaoTalkService = kakaoTalkService;
     }
 
-    @GetMapping("/")
+    @GetMapping
     @Operation(summary = "상품 옵션 목록 조회", description = "상품에 대한 옵션을 보여줍니다.")
     public ResponseEntity<List<OptionDto>> getAllOptionsByProductId(@PathVariable Long productId) {
         List<OptionDto> options = optionService.getAllOptionsByProductId(productId);
@@ -40,7 +40,7 @@ public class OptionController {
         return ResponseEntity.ok(options);
     }
 
-    @PostMapping("/")
+    @PostMapping
     @Operation(summary = "상품 옵션 추가", description = "상품에 대한 옵션을 추가합니다.")
     public ResponseEntity<?> addOption(@RequestBody OptionDto optionDto) {
         OptionDto savedOptionDto = optionService.addOption(optionDto);

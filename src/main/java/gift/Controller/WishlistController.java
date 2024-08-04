@@ -32,7 +32,7 @@ public class WishlistController {
         this.productService = productService;
     }
 
-    @GetMapping("/")
+    @GetMapping
     @Operation(summary = "위시 리스트 조회", description = "위시 리스트를 조회합니다.")
     public ResponseEntity<?> getWishlist(@LoginMemberResolver MemberDto memberDto,
                                          @RequestParam(value = "page", defaultValue = "0") int page,
@@ -42,7 +42,7 @@ public class WishlistController {
         return ResponseEntity.ok(paging);
     }
 
-    @PostMapping("/")
+    @PostMapping
     @Operation(summary = "위시 리스트 추가", description = "위시 리스트에 상품을 추가합니다.")
     public ResponseEntity<?> addWishlistItem(@LoginMemberResolver MemberDto memberDto, @RequestBody WishlistDto wishlistDto) {
         if (memberDto == null) {

@@ -35,7 +35,7 @@ public class ProductController {
         this.categoryService = categoryService;
     }
 
-    @GetMapping("/")
+    @GetMapping
     @Operation(summary = "모든 상품 조회", description = "모든 상품을 조회합니다.")
     public ResponseEntity<Page<ProductDto>> getAllProductsByRoot(
             @RequestParam(value = "page", defaultValue = "0") int page,
@@ -52,7 +52,7 @@ public class ProductController {
         return optionalProduct.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
-    @PostMapping("/")
+    @PostMapping
     @Operation(summary = "상품 생성", description = "상품을 생성합니다.")
     public ResponseEntity<?> createProduct(@Valid @RequestBody ProductDto productDto) {
         ProductDto savedproductDto = productService.saveProduct(productDto);

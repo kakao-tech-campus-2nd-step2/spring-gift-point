@@ -22,14 +22,14 @@ public class CategoryController {
     }
 
     @Operation(summary = "모든 카테고리 조회", description = "모든 카테고리를 조회합니다.")
-    @GetMapping("/")
+    @GetMapping
     public ResponseEntity<List<CategoryDto>> getAllCategories() {
         List<CategoryDto> categoryDtoList = categoryService.getAllCategories();
         return ResponseEntity.ok(categoryDtoList);
     }
 
     @Operation(summary = "카테고리 생성", description = "카테고리를 생성합니다.")
-    @PostMapping("/")
+    @PostMapping
     public ResponseEntity<?> addCategory(CategoryDto categoryDto) {
         CategoryDto savedCategoryDto = categoryService.addCategory(categoryDto);
         return ResponseEntity.status(HttpStatus.CREATED).body(savedCategoryDto);

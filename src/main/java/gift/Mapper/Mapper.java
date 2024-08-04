@@ -29,7 +29,7 @@ public class Mapper {
 
 
     public Wishlist wishlistDtoToEntity(WishlistDto wishlistDto) {
-        Optional<MemberDto> memberDtoOptional = memberService.findByUserId(wishlistDto.getMemberId());
+        Optional<MemberDto> memberDtoOptional = memberService.findByMemberId(wishlistDto.getMemberId());
         MemberDto memberDto = memberDtoOptional.get();
 
         Optional<ProductDto> productDtoOptional = productService.getProductById(wishlistDto.getProductId());
