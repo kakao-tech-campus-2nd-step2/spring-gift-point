@@ -29,9 +29,6 @@ public class User {
     @NotNull
     private Integer point=0;
 
-    @OneToMany(mappedBy = "user")
-    private List<WishlistItem> wishlistItemList = new ArrayList<>();
-
     public User() {
     }
 
@@ -76,13 +73,5 @@ public class User {
 
     public void setPoint(Integer point) {
         this.point = point;
-    }
-
-    public List<WishlistItem> getWishlistItemList() {
-        return wishlistItemList;
-    }
-
-    public void setWishlistItemList(List<WishlistItem> wishlistItemList) {
-        this.wishlistItemList = wishlistItemList;
     }
 }
