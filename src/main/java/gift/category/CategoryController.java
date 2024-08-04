@@ -1,5 +1,6 @@
 package gift.category;
 
+import gift.category.dto.CategoryListResponseDTO;
 import gift.category.dto.CategoryResponseDTO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -24,7 +25,7 @@ public class CategoryController {
     @Operation(summary = "카테고리 목록 조회", description = "전체 카테고리의 목록을 조회합니다.")
     @ApiResponse(responseCode = "200", description = "정상")
     @ApiResponse(responseCode = "500", description = "서버 에러")
-    public List<CategoryResponseDTO> getCategories() {
+    public CategoryListResponseDTO getCategories() {
         return categoryService.getAllCategories();
     }
 }
