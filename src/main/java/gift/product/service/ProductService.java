@@ -56,7 +56,7 @@ public class ProductService {
     }
 
     @Transactional
-    public Product insertProduct(ProductRequest clientProductRequest) {
+    public void insertProduct(ProductRequest clientProductRequest) {
         Category category = getValidatedCategory(clientProductRequest.categoryId());
         Product product = new Product(clientProductRequest.name(),
             clientProductRequest.price(),
@@ -67,19 +67,16 @@ public class ProductService {
         for (OptionDto optionDto : clientProductRequest.options()) {
             optionRepository.save(new Option(optionDto.name(), optionDto.quantity(), savedProduct));
         }
-
-        return savedProduct;
     }
 
     @Transactional
-    public Product updateProduct(Long id, ProductUpdateRequest productUpdateRequest) {
+    public void updateProduct(Long id, ProductUpdateRequest productUpdateRequest) {
         getValidatedProduct(id);
         Category category = getValidatedCategory(productUpdateRequest.categoryId());
 
         Product product = new Product(id, productUpdateRequest.name(), productUpdateRequest.price(),
             productUpdateRequest.imageUrl(), category);
-
-        return productRepository.save(product);
+        productRepository.save(product);
     }
 
     @Transactional

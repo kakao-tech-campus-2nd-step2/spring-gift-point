@@ -1,11 +1,13 @@
 package gift.product.controller.auth;
 
 import gift.product.dto.auth.AccessTokenDto;
-import gift.product.dto.auth.AccountDto;
 import gift.product.dto.auth.LoginMemberIdDto;
 import gift.product.dto.auth.MemberDto;
 import gift.product.dto.auth.OAuthJwt;
+import gift.product.dto.auth.PointRequest;
+import gift.product.dto.auth.PointResponse;
 import gift.product.dto.auth.RegisterSuccessResponse;
+import gift.product.dto.auth.RemainingPointResponse;
 import gift.product.exception.ExceptionResponse;
 import gift.product.service.AuthService;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -14,6 +16,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.Valid;
 import java.net.URI;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -58,10 +61,33 @@ public class AuthController {
         @ApiResponse(responseCode = "401", description = "로그인 실패", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ExceptionResponse.class)))
     })
     @PostMapping("/login")
-    public ResponseEntity<AccessTokenDto> loginMember(@RequestBody AccountDto accountDto) {
-        AccessTokenDto accessTokenDto = authService.login(accountDto);
+    public ResponseEntity<AccessTokenDto> loginMember(@RequestBody MemberDto memberDto) {
+        AccessTokenDto accessTokenDto = authService.login(memberDto);
 
         return ResponseEntity.ok(accessTokenDto);
+    }
+
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "포인트 조회 성공", content = @Content(mediaType = "application/json", schema = @Schema(implementation = PointResponse.class))),
+        @ApiResponse(responseCode = "401", description = "사용자 인증 오류", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ExceptionResponse.class))),
+        @ApiResponse(responseCode = "404", description = "존재하지 않는 회원 정보", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ExceptionResponse.class)))
+    })
+    @GetMapping("/point")
+    public ResponseEntity<PointResponse> getMemberPoint(HttpServletRequest request) {
+        LoginMemberIdDto loginMemberIdDto = getLoginMember(request);
+        return ResponseEntity.ok(authService.getMemberPoint(loginMemberIdDto));
+    }
+
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "포인트 차감(사용) 성공", content = @Content(mediaType = "application/json", schema = @Schema(implementation = RemainingPointResponse.class))),
+        @ApiResponse(responseCode = "400", description = "잘못된 요청", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ExceptionResponse.class))),
+        @ApiResponse(responseCode = "401", description = "사용자 인증 오류", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ExceptionResponse.class)))
+    })
+    @PostMapping("/point")
+    public ResponseEntity<RemainingPointResponse> subtractMemberPoint(@Valid @RequestBody PointRequest pointRequest,
+        HttpServletRequest request) {
+        LoginMemberIdDto loginMemberIdDto = getLoginMember(request);
+        return ResponseEntity.ok(authService.subtractMemberPoint(pointRequest, loginMemberIdDto));
     }
 
     @ApiResponses(value = {

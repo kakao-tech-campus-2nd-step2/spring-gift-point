@@ -1,6 +1,7 @@
 package gift.product.exception;
 
 import com.sun.jdi.request.DuplicateRequestException;
+import java.nio.file.AccessDeniedException;
 import java.util.NoSuchElementException;
 import org.apache.logging.log4j.util.InternalException;
 import org.springframework.http.HttpStatus;
@@ -59,6 +60,12 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ExceptionResponse> handleInternalException(InternalException e) {
         ExceptionResponse exceptionResponse = new ExceptionResponse(e.getMessage());
         return new ResponseEntity<>(exceptionResponse, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    @ExceptionHandler(value = AccessDeniedException.class)
+    public ResponseEntity<ExceptionResponse> handleAccessDeniedException(AccessDeniedException e) {
+        ExceptionResponse exceptionResponse = new ExceptionResponse(e.getMessage());
+        return new ResponseEntity<>(exceptionResponse, HttpStatus.FORBIDDEN);
     }
 
     private String buildErrorMessage(MethodArgumentNotValidException e) {

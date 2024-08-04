@@ -4,10 +4,12 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sun.jdi.request.DuplicateRequestException;
 import gift.product.dto.auth.AccessTokenDto;
-import gift.product.dto.auth.AccountDto;
 import gift.product.dto.auth.LoginMemberIdDto;
 import gift.product.dto.auth.MemberDto;
 import gift.product.dto.auth.OAuthJwt;
+import gift.product.dto.auth.PointRequest;
+import gift.product.dto.auth.PointResponse;
+import gift.product.dto.auth.RemainingPointResponse;
 import gift.product.exception.LoginFailedException;
 import gift.product.model.KakaoToken;
 import gift.product.model.Member;
@@ -20,7 +22,9 @@ import io.jsonwebtoken.io.Encoders;
 import io.jsonwebtoken.security.Keys;
 import java.net.URI;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.AccessDeniedException;
 import java.util.Date;
+import java.util.List;
 import java.util.NoSuchElementException;
 import javax.crypto.SecretKey;
 import org.apache.logging.log4j.util.InternalException;
@@ -52,20 +56,44 @@ public class AuthService {
     }
 
     @Transactional
-    public AccessTokenDto register(MemberDto memberDto) {
+    public void register(MemberDto memberDto) {
         validateMemberExist(memberDto);
 
-        Member member = new Member(memberDto.email(), memberDto.password());
+        Member member = new Member(memberDto.email(), memberDto.password(), 1000);
         authRepository.save(member);
+    }
+
+    public AccessTokenDto login(MemberDto memberDto) {
+        validateMemberInfo(memberDto);
+        Member member = authRepository.findByEmail(memberDto.email());
 
         return new AccessTokenDto(getAccessToken(member));
     }
 
-    public AccessTokenDto login(AccountDto accountDto) {
-        validateMemberInfo(accountDto);
-        Member member = authRepository.findByEmail(accountDto.email());
+    public List<Member> getMemberAll(LoginMemberIdDto loginMemberIdDto)
+        throws AccessDeniedException {
+        validateAdminMember(loginMemberIdDto);
+        return authRepository.findAll();
+    }
 
-        return new AccessTokenDto(getAccessToken(member));
+    public PointResponse getMemberPoint(LoginMemberIdDto loginMemberIdDto) {
+        Member member = getValidatedMember(loginMemberIdDto);
+        return new PointResponse(member.getPoint());
+    }
+
+    @Transactional
+    public RemainingPointResponse subtractMemberPoint(PointRequest pointRequest,
+        LoginMemberIdDto loginMemberIdDto) {
+        Member member = getValidatedMember(loginMemberIdDto);
+        Member resultMember = authRepository.save(member.subtractPoint(pointRequest.point()));
+        return new RemainingPointResponse(resultMember.getPoint());
+    }
+
+    @Transactional
+    public void addMemberPoint(PointRequest pointRequest, LoginMemberIdDto loginMemberIdDto)
+        throws AccessDeniedException {
+        Member member = getValidatedMember(loginMemberIdDto);
+        authRepository.save(member.addPoint(pointRequest.point()));
     }
 
     public String getKakaoAuthCodeUrl() {
@@ -175,16 +203,16 @@ public class AuthService {
         }
     }
 
-    private void validateMemberInfo(AccountDto accountDto) {
-        boolean isMemberExist = authRepository.existsByEmail(accountDto.email());
+    private void validateMemberInfo(MemberDto memberDto) {
+        boolean isMemberExist = authRepository.existsByEmail(memberDto.email());
 
         if (!isMemberExist) {
             throw new LoginFailedException("회원 정보가 존재하지 않습니다.");
         }
 
-        Member member = authRepository.findByEmail(accountDto.email());
+        Member member = authRepository.findByEmail(memberDto.email());
 
-        if (!accountDto.password().equals(member.getPassword())) {
+        if (!memberDto.password().equals(member.getPassword())) {
             throw new LoginFailedException("비밀번호가 일치하지 않습니다.");
         }
     }
@@ -212,5 +240,20 @@ public class AuthService {
     private KakaoToken getKakaoToken(LoginMemberIdDto loginMemberIdDto) {
         return kakaoTokenRepository.findByMemberId(loginMemberIdDto.id())
             .orElseThrow(() -> new NoSuchElementException("카카오 계정 로그인을 수행한 후 다시 시도해주세요."));
+    }
+
+    private Member getValidatedMember(LoginMemberIdDto loginMemberIdDto) {
+        return authRepository.findById(loginMemberIdDto.id())
+            .orElseThrow(() -> new NoSuchElementException("회원 정보가 존재하지 않습니다."));
+    }
+
+    private Member validateAdminMember(LoginMemberIdDto loginMemberIdDto)
+        throws AccessDeniedException {
+        Member member = getValidatedMember(loginMemberIdDto);
+        if (!member.getEmail().equals("admin")) {
+            throw new AccessDeniedException("관리자 계정만 수행 가능한 기능입니다.");
+        }
+
+        return member;
     }
 }

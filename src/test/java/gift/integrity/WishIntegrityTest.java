@@ -2,15 +2,14 @@ package gift.integrity;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import gift.product.dto.auth.AccountDto;
 import gift.product.dto.auth.MemberDto;
-import gift.product.dto.category.CategoryDto;
 import gift.product.dto.option.OptionDto;
 import gift.product.dto.product.ClientProductRequest;
 import gift.product.dto.product.ProductRequest;
 import gift.product.dto.wish.WishDto;
+import gift.product.model.Category;
+import gift.product.repository.CategoryRepository;
 import gift.product.service.AuthService;
-import gift.product.service.CategoryService;
 import gift.product.service.ProductService;
 import gift.product.service.WishService;
 import java.net.URI;
@@ -61,7 +60,7 @@ class WishIntegrityTest {
     WishService wishService;
 
     @Autowired
-    CategoryService categoryService;
+    CategoryRepository categoryRepository;
 
     String accessToken;
 
@@ -69,11 +68,11 @@ class WishIntegrityTest {
     void 멤버_및_상품_셋팅() {
         MemberDto memberDto = new MemberDto("test@test.com", "1234");
         authService.register(memberDto);
-        accessToken = authService.login(new AccountDto(memberDto.email(), memberDto.password()))
+        accessToken = authService.login(new MemberDto(memberDto.email(), memberDto.password()))
             .accessToken();
 
-        CategoryDto categoryDto = new CategoryDto("테스트카테고리", "테스트컬러", "테스트주소", "테스트설명");
-        Long categoryId = categoryService.insertCategory(categoryDto).getId();
+        Category category = new Category("테스트카테고리", "테스트컬러", "테스트주소", "테스트설명");
+        Long categoryId = categoryRepository.save(category).getId();
 
         String url = BASE_URL + port + "/api/products";
         List<OptionDto> options = new ArrayList<>();

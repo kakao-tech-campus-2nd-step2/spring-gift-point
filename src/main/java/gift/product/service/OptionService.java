@@ -38,19 +38,19 @@ public class OptionService {
     }
 
     @Transactional
-    public Option insertOption(OptionDto optionDto, Long productId) {
+    public void insertOption(OptionDto optionDto, Long productId) {
         validateRedundancyOptionName(optionDto.name(), productId);
         Product product = getValidatedProduct(productId);
 
-        return optionRepository.save(new Option(optionDto.name(), optionDto.quantity(), product));
+        optionRepository.save(new Option(optionDto.name(), optionDto.quantity(), product));
     }
 
     @Transactional
-    public Option updateOption(Long optionId, OptionDto optionDto, Long productId) {
+    public void updateOption(Long optionId, OptionDto optionDto, Long productId) {
         Product product = getValidatedProduct(productId);
         getValidatedOption(optionId);
 
-        return optionRepository.save(
+        optionRepository.save(
             new Option(optionId, optionDto.name(), optionDto.quantity(), product));
     }
 

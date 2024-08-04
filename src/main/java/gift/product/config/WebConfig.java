@@ -18,6 +18,7 @@ import gift.product.service.ProductService;
 import gift.product.service.WishService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpHeaders;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
@@ -97,21 +98,24 @@ public class WebConfig implements WebMvcConfigurer {
         registry.addInterceptor(tokenValidationInterceptor())
             .order(2)
             .addPathPatterns("/admin/wishes/**")
+            .addPathPatterns("/admin/members/**")
             .addPathPatterns("/api/wishes/**")
             .addPathPatterns("/api/orders/**")
+            .addPathPatterns("/api/members/point/**")
             .addPathPatterns("/api/members/login/kakao/unlink");
         registry.addInterceptor(new JwtCookieToHeaderInterceptor())
             .order(1)
-            .addPathPatterns("/admin/wishes/**");
+            .addPathPatterns("/admin/wishes/**")
+            .addPathPatterns("/admin/members/**");
     }
 
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/api/**")
             .allowedOrigins("http://localhost:3000")
-            .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
+            .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS", "HEAD")
             .allowedHeaders("*")
-            .exposedHeaders("Location")
+            .exposedHeaders(HttpHeaders.LOCATION)
             .allowCredentials(true)
             .maxAge(1800);
     }

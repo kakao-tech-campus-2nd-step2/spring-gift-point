@@ -28,14 +28,15 @@ class AcceptanceTest {
     @Autowired
     AuthService authService;
 
-    String ALLOWED_METHOD_NAMES = "GET,POST,PUT,DELETE,OPTIONS";
+    String ALLOWED_METHOD_NAMES = "GET,POST,PUT,DELETE,OPTIONS,HEAD";
 
     String CLIENT_ORIGIN = "http://localhost:3000";
 
     @Test
     void CORS_설정_테스트() throws Exception {
-        String accessToken = authService.register(new MemberDto("test@test.com", "test"))
-            .accessToken();
+        MemberDto memberDto = new MemberDto("test@test.com", "test");
+        authService.register(memberDto);
+        String accessToken = authService.login(memberDto).accessToken();
 
         mockMvc.perform(
                 options("/api/products")

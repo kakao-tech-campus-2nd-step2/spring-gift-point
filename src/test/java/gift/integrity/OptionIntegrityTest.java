@@ -5,7 +5,6 @@ import static org.assertj.core.api.SoftAssertions.assertSoftly;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import gift.product.dto.auth.AccountDto;
 import gift.product.dto.auth.MemberDto;
 import gift.product.dto.option.OptionDto;
 import gift.product.model.Category;
@@ -88,7 +87,7 @@ class OptionIntegrityTest {
     void 로그인() {
         MemberDto memberDto = new MemberDto("test@test.com", "1234");
         authService.register(memberDto);
-        accessToken = authService.login(new AccountDto(memberDto.email(), memberDto.password()))
+        accessToken = authService.login(new MemberDto(memberDto.email(), memberDto.password()))
             .accessToken();
     }
 

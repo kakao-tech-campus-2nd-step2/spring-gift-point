@@ -44,9 +44,9 @@ class OptionServiceTest {
         //given
         Category category = new Category("테스트카테고리", "테스트컬러", "테스트주소", "테스트설명");
         Product product = new Product(1L, "테스트상품", 1500, "테스트주소", category);
-        given(productRepository.findById(product.getId())).willReturn(Optional.of(product));
         given(optionRepository.existsByNameAndProductId("테스트옵션", product.getId())).willReturn(
             false);
+        given(productRepository.findById(product.getId())).willReturn(Optional.of(product));
 
         //when
         optionService.insertOption(new OptionDto("테스트옵션", 1), product.getId());
@@ -100,18 +100,11 @@ class OptionServiceTest {
         Product product = new Product(1L, "테스트상품", 1500, "테스트주소", category);
         Option option = new Option(1L, "테스트옵션", 1, product);
         given(productRepository.findById(product.getId())).willReturn(Optional.of(product));
-        given(optionRepository.existsByNameAndProductId("테스트옵션", product.getId())).willReturn(
-            false);
-        given(optionRepository.save(any())).willReturn(option);
-        Long insertedOptionId = optionService.insertOption(
-            new OptionDto("테스트옵션", 1), product.getId()).getId();
-
-        given(optionRepository.findById(insertedOptionId)).willReturn(
-            Optional.of(option));
+        given(optionRepository.findById(option.getId())).willReturn(Optional.of(option));
         clearInvocations(optionRepository);
 
         //when
-        optionService.updateOption(insertedOptionId, new OptionDto("테스트옵션수정", 1), product.getId());
+        optionService.updateOption(option.getId(), new OptionDto("테스트옵션수정", 1), product.getId());
 
         //then
         then(optionRepository).should().save(any());
