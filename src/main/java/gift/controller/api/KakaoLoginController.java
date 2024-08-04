@@ -45,7 +45,7 @@ public class KakaoLoginController {
         KakaoTokenResponse kakaoToken = kakaoApiService.getKakaoToken(code);
 
         String email = kakaoApiService.getMemberEmail(kakaoToken.accessToken());
-        Long memberId = memberService.findMemberIdByEmail(email);
+        Long memberId = memberService.findMemberIdByKakaoEmail(email);
 
         JwtResponse jwtResponse = tokenService.generateJwt(memberId, email);
         tokenService.saveKakaoAccessToken(memberId, kakaoToken);

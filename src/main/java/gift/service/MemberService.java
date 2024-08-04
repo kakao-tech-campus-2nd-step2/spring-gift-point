@@ -41,12 +41,6 @@ public class MemberService {
                 .orElseThrow(MemberNotFoundException::new);
     }
 
-    public Long findMemberIdByEmail(String email) {
-        return memberRepository.findByEmail(email)
-                .map(Member::getId)
-                .orElseThrow(MemberNotFoundException::new);
-    }
-
     public List<MemberInfoResponse> getAllMember() {
         return memberRepository.findAll()
                 .stream()
@@ -54,8 +48,17 @@ public class MemberService {
                 .toList();
     }
 
+    @Transactional
     public void updateMemberPoint(Long memberId, int newPoint) {
         memberRepository.getReferenceById(memberId)
                 .updatePoint(newPoint);
+    }
+
+    public Long findMemberIdByKakaoEmail(String email) {
+        return memberRepository.findByEmail(email)
+                .map(Member::getId)
+                .orElseGet(() ->
+                        memberRepository.save(new Member(email, "kakaoMember")).getId()
+                );
     }
 }
