@@ -6,12 +6,12 @@ public class CreateProductOptionResponse {
 
     private final Long id;
     private final String name;
-    private final Integer stock;
+    private final Integer quantity;
 
-    public CreateProductOptionResponse(Long id, String name, Integer stock) {
+    public CreateProductOptionResponse(Long id, String name, Integer quantity) {
         this.id = id;
         this.name = name;
-        this.stock = stock;
+        this.quantity = quantity;
     }
 
     public static CreateProductOptionResponse fromEntity(ProductOption productOption) {
@@ -30,8 +30,8 @@ public class CreateProductOptionResponse {
         return name;
     }
 
-    public Integer getStock() {
-        return stock;
+    public Integer getQuantity() {
+        return quantity;
     }
 
 }

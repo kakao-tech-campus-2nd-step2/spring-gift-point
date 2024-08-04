@@ -1,32 +1,26 @@
 package gift.web.controller.api;
 
-import gift.authentication.annotation.LoginMember;
-import gift.service.OrderService;
 import gift.service.ProductOptionService;
 import gift.service.ProductService;
-import gift.service.WishProductService;
-import gift.web.dto.MemberDetails;
-import gift.web.dto.request.order.CreateOrderRequest;
 import gift.web.dto.request.product.CreateProductRequest;
 import gift.web.dto.request.product.UpdateProductRequest;
 import gift.web.dto.request.productoption.CreateProductOptionRequest;
 import gift.web.dto.request.productoption.UpdateProductOptionRequest;
-import gift.web.dto.request.wishproduct.CreateWishProductRequest;
-import gift.web.dto.response.order.OrderResponse;
 import gift.web.dto.response.product.CreateProductResponse;
+import gift.web.dto.response.product.ProductResponseByPromise;
 import gift.web.dto.response.product.ReadAllProductsResponse;
-import gift.web.dto.response.product.ReadProductResponse;
 import gift.web.dto.response.product.UpdateProductResponse;
 import gift.web.dto.response.productoption.CreateProductOptionResponse;
 import gift.web.dto.response.productoption.ReadAllProductOptionsResponse;
+import gift.web.dto.response.productoption.ReadProductOptionResponse;
 import gift.web.dto.response.productoption.UpdateProductOptionResponse;
-import gift.web.dto.response.wishproduct.CreateWishProductResponse;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.List;
 import java.util.NoSuchElementException;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -35,7 +29,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -45,16 +38,11 @@ import org.springframework.web.bind.annotation.RestController;
 public class ProductApiController {
 
     private final ProductService productService;
-    private final WishProductService wishProductService;
     private final ProductOptionService productOptionService;
-    private final OrderService orderService;
 
-    public ProductApiController(ProductService productService, WishProductService wishProductService, ProductOptionService productOptionService,
-        OrderService orderService) {
+    public ProductApiController(ProductService productService, ProductOptionService productOptionService) {
         this.productService = productService;
-        this.wishProductService = wishProductService;
         this.productOptionService = productOptionService;
-        this.orderService = orderService;
     }
 
     @GetMapping
@@ -64,8 +52,8 @@ public class ProductApiController {
     }
 
     @GetMapping(params = "categoryId")
-    public ResponseEntity<ReadAllProductsResponse> readProductsByCategoryId(@PageableDefault Pageable pageable, @RequestParam Long categoryId) {
-        ReadAllProductsResponse response = productService.readProductsByCategoryId(categoryId, pageable);
+    public ResponseEntity<Page<ProductResponseByPromise>> readProductsByCategoryId(@PageableDefault Pageable pageable, @RequestParam Long categoryId) {
+        Page<ProductResponseByPromise> response = productService.readProductsByCategoryIdByPromise(categoryId, pageable);
         return ResponseEntity.ok(response);
     }
 
@@ -79,9 +67,8 @@ public class ProductApiController {
     }
 
     @GetMapping("/{productId}")
-    public ResponseEntity<ReadProductResponse> readProduct(@PathVariable Long productId) {
-        ReadProductResponse response;
-        response = productService.readProductById(productId);
+    public ResponseEntity<ProductResponseByPromise> readProduct(@PathVariable Long productId) {
+        ProductResponseByPromise response = productService.readProductByIdByPromise(productId);
         return ResponseEntity.ok(response);
     }
 
@@ -102,16 +89,10 @@ public class ProductApiController {
         return ResponseEntity.noContent().build();
     }
 
-    @PostMapping("/wish")
-    public ResponseEntity<CreateWishProductResponse> createWishProduct(@Validated @RequestBody CreateWishProductRequest request, @LoginMember MemberDetails memberDetails) {
-        CreateWishProductResponse response = wishProductService.createWishProduct(memberDetails.getId(), request);
-        return ResponseEntity.ok(response);
-    }
-
     @GetMapping("/{productId}/options")
-    public ResponseEntity<ReadAllProductOptionsResponse> readOptions(@PathVariable Long productId) {
+    public ResponseEntity<List<ReadProductOptionResponse>> readOptions(@PathVariable Long productId) {
         ReadAllProductOptionsResponse response = productOptionService.readAllOptions(productId);
-        return ResponseEntity.ok(response);
+        return ResponseEntity.ok(response.getOptions());
     }
 
     @PostMapping("/{productId}/options")
@@ -120,17 +101,6 @@ public class ProductApiController {
 
         URI location = URI.create("http://localhost:8080/api/products/" + productId + "/options/" + response.getId());
         return ResponseEntity.created(location).body(response);
-    }
-
-    @PostMapping("/{productId}/order")
-    public ResponseEntity<OrderResponse> orderProduct(
-        @RequestHeader(HttpHeaders.AUTHORIZATION) String accessToken,
-        @PathVariable Long productId,
-        @RequestBody @Validated CreateOrderRequest request,
-        @LoginMember MemberDetails memberDetails
-    ) {
-        OrderResponse response = orderService.createOrder(accessToken, productId, memberDetails.getId(), request);
-        return ResponseEntity.ok(response);
     }
 
     @PutMapping("/{productId}/options/{optionId}")

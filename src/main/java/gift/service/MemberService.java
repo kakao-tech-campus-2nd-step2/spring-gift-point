@@ -35,7 +35,11 @@ public class MemberService {
     @Transactional
     public CreateMemberResponse createMember(CreateMemberRequest request) {
         Member member = request.toEntity();
-        return CreateMemberResponse.fromEntity(memberRepository.save(member));
+        Member savedMember = memberRepository.save(member);
+
+        Token token = jwtProvider.generateToken(savedMember);
+
+        return CreateMemberResponse.of(savedMember, token);
     }
 
     public ReadMemberResponse readMember(Long id) {

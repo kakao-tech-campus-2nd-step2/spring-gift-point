@@ -87,7 +87,6 @@ class CategoryApiControllerTest {
         accessToken = jwtProvider.generateToken(member).getValue();
     }
 
-
     @Test
     @DisplayName("카테고리 생성")
     void createCategory() throws Exception {
@@ -138,7 +137,6 @@ class CategoryApiControllerTest {
         mockMvc
             .perform(
                 get(BASE_URL)
-                    .header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken)
             )
             .andExpect(status().isOk())
             .andDo(
@@ -223,6 +221,7 @@ class CategoryApiControllerTest {
     }
 
     @Test
+    @DisplayName("카테고리 삭제")
     void deleteCategory() throws Exception {
         mockMvc
             .perform(

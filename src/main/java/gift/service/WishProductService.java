@@ -8,11 +8,11 @@ import gift.repository.WishProductRepository;
 import gift.web.dto.request.wishproduct.CreateWishProductRequest;
 import gift.web.dto.request.wishproduct.UpdateWishProductRequest;
 import gift.web.dto.response.wishproduct.CreateWishProductResponse;
-import gift.web.dto.response.wishproduct.ReadAllWishProductsResponse;
-import gift.web.dto.response.wishproduct.ReadWishProductResponse;
+import gift.web.dto.response.wishproduct.ReadWishProductResponseByPromise;
 import gift.web.dto.response.wishproduct.UpdateWishProductResponse;
 import java.util.NoSuchElementException;
 import java.util.Optional;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -64,13 +64,9 @@ public class WishProductService {
         return CreateWishProductResponse.fromEntity(wishProductRepository.save(wishProduct));
     }
 
-    public ReadAllWishProductsResponse readAllWishProducts(Long memberId, Pageable pageable) {
-        return new ReadAllWishProductsResponse(
-            wishProductRepository.findByMemberId(memberId, pageable)
-                .stream()
-                .map(ReadWishProductResponse::fromEntity)
-                .toList()
-        );
+    public Page<ReadWishProductResponseByPromise> readAllWishProducts(Long memberId, Pageable pageable) {
+        return wishProductRepository.findByMemberId(memberId, pageable)
+            .map(ReadWishProductResponseByPromise::fromEntity);
     }
 
     @Transactional

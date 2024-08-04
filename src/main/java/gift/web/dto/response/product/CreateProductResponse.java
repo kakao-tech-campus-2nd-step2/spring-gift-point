@@ -1,7 +1,7 @@
 package gift.web.dto.response.product;
 
 import gift.domain.Product;
-import gift.domain.ProductOption;
+import gift.web.dto.response.productoption.ReadProductOptionResponse;
 import java.util.List;
 
 public class CreateProductResponse {
@@ -14,10 +14,10 @@ public class CreateProductResponse {
 
     private final String imageUrl;
 
-    private final List<ProductOption> options;
+    private final List<ReadProductOptionResponse> options;
 
     public CreateProductResponse(Long id, String name, Integer price, String imageUrl,
-        List<ProductOption> options) {
+        List<ReadProductOptionResponse> options) {
         this.id = id;
         this.name = name;
         this.price = price;
@@ -41,12 +41,19 @@ public class CreateProductResponse {
         return imageUrl;
     }
 
-    public List<ProductOption> getOptions() {
+    public List<ReadProductOptionResponse> getOptions() {
         return options;
     }
 
     public static CreateProductResponse fromEntity(Product product) {
-        return new CreateProductResponse(product.getId(), product.getName(), product.getPrice(),
-            product.getImageUrl().toString(), product.getProductOptions());
+        return new CreateProductResponse(
+            product.getId(),
+            product.getName(),
+            product.getPrice(),
+            product.getImageUrl().toString(),
+            product.getProductOptions()
+                .stream()
+                .map(ReadProductOptionResponse::fromEntity)
+                .toList());
     }
 }

@@ -10,6 +10,8 @@ import gift.web.client.dto.KakaoCommerce;
 import gift.web.dto.request.order.CreateOrderRequest;
 import gift.web.dto.response.order.OrderResponse;
 import gift.web.dto.response.product.ReadProductResponse;
+import java.util.List;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -36,19 +38,34 @@ public class OrderService {
         this.orderRepository = orderRepository;
     }
 
-    /**
-     * 주문을 생성합니다<br>
-     * 카카오 로그인을 통해 서비스를 이용 중인 회원은 나에게 보내기를 통해 알림을 전송합니다.
-     * @param accessToken 우리 서비스의 토큰
-     * @param productId 구매할 상품 ID
-     * @param memberId 구매자 ID
-     * @param request 주문 요청
-     * @return
-     */
+//    /**
+//     * 주문을 생성합니다<br>
+//     * 카카오 로그인을 통해 서비스를 이용 중인 회원은 나에게 보내기를 통해 알림을 전송합니다.
+//     * @param accessToken 우리 서비스의 토큰
+//     * @param productId 구매할 상품 ID
+//     * @param memberId 구매자 ID
+//     * @param request 주문 요청
+//     * @return
+//     */
+//    @Transactional
+//    public OrderResponse createOrder(String accessToken, Long productId, Long memberId, CreateOrderRequest request) {
+//        //상품 옵션 수량 차감
+//        productOptionService.subtractOptionStock(request);
+//
+//        //주문 정보 저장
+//        Order order = orderRepository.save(request.toEntity(memberId, productId));
+//
+//        sendOrderMessageIfSocialMember(accessToken, productId, request);
+//        return OrderResponse.from(order);
+//    }
+
     @Transactional
-    public OrderResponse createOrder(String accessToken, Long productId, Long memberId, CreateOrderRequest request) {
+    public OrderResponse createOrder(String accessToken, Long memberId, CreateOrderRequest request) {
         //상품 옵션 수량 차감
         productOptionService.subtractOptionStock(request);
+
+        Long optionId = request.getOptionId();
+        Long productId = productOptionService.readProductOptionById(optionId).getProductId();
 
         //주문 정보 저장
         Order order = orderRepository.save(request.toEntity(memberId, productId));
@@ -80,5 +97,12 @@ public class OrderService {
 
     private String getBearerToken(String token) {
         return "Bearer " + token;
+    }
+
+    public List<OrderResponse> readOrders(Pageable pageable) {
+        return orderRepository.findAll(pageable)
+            .stream()
+            .map(OrderResponse::from)
+            .toList();
     }
 }

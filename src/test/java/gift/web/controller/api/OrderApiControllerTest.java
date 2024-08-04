@@ -2,11 +2,11 @@ package gift.web.controller.api;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 import static org.springframework.restdocs.payload.PayloadDocumentation.requestFields;
 import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -16,12 +16,11 @@ import gift.domain.Member;
 import gift.domain.Member.Builder;
 import gift.domain.vo.Email;
 import gift.mock.MockLoginMemberArgumentResolver;
-import gift.service.MemberService;
-import gift.web.dto.request.LoginRequest;
-import gift.web.dto.request.member.CreateMemberRequest;
-import gift.web.dto.response.LoginResponse;
-import gift.web.dto.response.member.CreateMemberResponse;
-import gift.web.dto.response.member.ReadMemberResponse;
+import gift.service.OrderService;
+import gift.web.dto.request.order.CreateOrderRequest;
+import gift.web.dto.response.order.OrderResponse;
+import java.time.LocalDateTime;
+import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -46,7 +45,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 @SpringBootTest
 @Import(RestDocsConfiguration.class)
 @ExtendWith(RestDocumentationExtension.class)
-class MemberApiControllerTest {
+class OrderApiControllerTest {
 
     private MockMvc mockMvc;
 
@@ -60,114 +59,91 @@ class MemberApiControllerTest {
     private JwtProvider jwtProvider;
 
     @MockBean
-    private MemberService memberService;
+    private OrderService orderService;
 
     private String accessToken;
 
-    private static final String BASE_URL = "/api/members";
+    private static final String BASE_URL = "/api/orders";
 
     @BeforeEach
     void setUp(
         final RestDocumentationContextProvider provider
     ) {
         mockMvc = MockMvcBuilders
-            .standaloneSetup(new MemberApiController(memberService))
+            .standaloneSetup(new OrderApiController(orderService))
             .setCustomArgumentResolvers(new MockLoginMemberArgumentResolver(), new PageableHandlerMethodArgumentResolver())
             .apply(MockMvcRestDocumentation.documentationConfiguration(provider))
             .alwaysDo(restDocs)
             .build();
 
-        Member member = new Builder().id(1L).name("회원01").email(Email.from("member01@gmail.com"))
-            .build();
+        Member member = new Builder().id(1L).name("회원01").email(Email.from("member01@gmail.com")).build();
         accessToken = jwtProvider.generateToken(member).getValue();
     }
 
     @Test
-    @DisplayName("회원 가입")
-    void createMember() throws Exception {
-        CreateMemberRequest request = new CreateMemberRequest("member01@gmail.com", "password01",
-            "member01");
+    @DisplayName("상품 주문")
+    void orderProduct() throws Exception {
 
+        CreateOrderRequest request = new CreateOrderRequest(1L, 1, "message");
         String content = objectMapper.writeValueAsString(request);
 
-        given(memberService.createMember(any()))
-            .willReturn(new CreateMemberResponse(1L, "member01@gmail.com", "member01", accessToken));
+        given(orderService.createOrder(any(String.class), any(Long.class), any()))
+            .willReturn(new OrderResponse(1L, 1L, 10, "message", LocalDateTime.now()));
 
         mockMvc
             .perform(
-                post(BASE_URL + "/register")
-                    .contentType(MediaType.APPLICATION_JSON)
+                post(BASE_URL)
+                    .header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken)
                     .content(content)
-            )
-            .andExpect(status().isCreated())
-            .andDo(
-                restDocs.document(
-                    requestFields(
-                        fieldWithPath("email").type(JsonFieldType.STRING).description("이메일"),
-                        fieldWithPath("password").type(JsonFieldType.STRING).description("비밀번호"),
-                        fieldWithPath("name").type(JsonFieldType.STRING).description("이름")
-                    ),
-                    responseFields(
-                        fieldWithPath("id").type(JsonFieldType.NUMBER).description("회원 식별자"),
-                        fieldWithPath("email").type(JsonFieldType.STRING).description("이메일"),
-                        fieldWithPath("name").type(JsonFieldType.STRING).description("이름"),
-                        fieldWithPath("token").type(JsonFieldType.STRING).description("Bearer Token")
-                    )
-                )
-            );
-    }
-
-    @Test
-    @DisplayName("로그인")
-    void login() throws Exception {
-        LoginRequest request = new LoginRequest("member01@gmail.com", "password01");
-        String content = objectMapper.writeValueAsString(request);
-
-        given(memberService.login(any()))
-            .willReturn(new LoginResponse(accessToken));
-
-        mockMvc
-            .perform(
-                post(BASE_URL + "/login")
                     .contentType(MediaType.APPLICATION_JSON)
-                    .content(content)
             )
             .andExpect(status().isOk())
             .andDo(
                 restDocs.document(
                     requestFields(
-                        fieldWithPath("email").type(JsonFieldType.STRING).description("이메일"),
-                        fieldWithPath("password").type(JsonFieldType.STRING).description("비밀번호")
+                        fieldWithPath("optionId").type(JsonFieldType.NUMBER).description("상품 옵션 ID"),
+                        fieldWithPath("quantity").type(JsonFieldType.NUMBER).description("주문 수량"),
+                        fieldWithPath("message").type(JsonFieldType.STRING).description("메시지")
                     ),
                     responseFields(
-                        fieldWithPath("accessToken").type(JsonFieldType.STRING).description("Bearer Token")
+                        fieldWithPath("id").type(JsonFieldType.NUMBER).description("주문 ID"),
+                        fieldWithPath("optionId").type(JsonFieldType.NUMBER).description("상품 옵션 ID"),
+                        fieldWithPath("quantity").type(JsonFieldType.NUMBER).description("주문 수량"),
+                        fieldWithPath("message").type(JsonFieldType.STRING).description("메시지"),
+                        fieldWithPath("orderDateTime").type(JsonFieldType.ARRAY).description("주문 일시")
                     )
                 )
             );
     }
 
     @Test
-    @DisplayName("회원 조회")
-    void readMember() throws Exception {
-        given(memberService.readMember(any(Long.class)))
-            .willReturn(new ReadMemberResponse(1L, "member01@gmail.com", "password01", "member01"));
+    @DisplayName("주문 목록 조회")
+    void readOrders() throws Exception {
+
+        given(orderService.readOrders(any()))
+            .willReturn(
+                List.of(
+                    new OrderResponse(1L, 1L, 10, "message", LocalDateTime.now()),
+                    new OrderResponse(2L, 2L, 20, "message", LocalDateTime.now())
+                )
+            );
 
         mockMvc
             .perform(
-                get(BASE_URL + "/{memberId}", 1L)
+                get(BASE_URL)
                     .header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken)
             )
             .andExpect(status().isOk())
             .andDo(
                 restDocs.document(
                     responseFields(
-                        fieldWithPath("id").type(JsonFieldType.NUMBER).description("회원 식별자"),
-                        fieldWithPath("email").type(JsonFieldType.STRING).description("이메일"),
-                        fieldWithPath("password").type(JsonFieldType.STRING).description("비밀번호"),
-                        fieldWithPath("name").type(JsonFieldType.STRING).description("이름")
+                        fieldWithPath("[].id").type(JsonFieldType.NUMBER).description("주문 ID"),
+                        fieldWithPath("[].optionId").type(JsonFieldType.NUMBER).description("상품 옵션 ID"),
+                        fieldWithPath("[].quantity").type(JsonFieldType.NUMBER).description("주문 수량"),
+                        fieldWithPath("[].message").type(JsonFieldType.STRING).description("메시지"),
+                        fieldWithPath("[].orderDateTime").type(JsonFieldType.ARRAY).description("주문 일시")
                     )
                 )
             );
     }
-
 }

@@ -35,14 +35,14 @@ public class CreateProductRequest {
 
     @Valid
     @NotEmpty
-    private final List<CreateProductOptionRequest> productOptions;
+    private final List<CreateProductOptionRequest> options;
 
-    public CreateProductRequest(String name, Integer price, String imageUrl, Long categoryId, List<CreateProductOptionRequest> productOptions) {
+    public CreateProductRequest(String name, Integer price, String imageUrl, Long categoryId, List<CreateProductOptionRequest> options) {
         this.name = name;
         this.price = price;
         this.imageUrl = imageUrl;
         this.categoryId = categoryId;
-        this.productOptions = productOptions;
+        this.options = options;
     }
 
     public String getName() {
@@ -61,12 +61,12 @@ public class CreateProductRequest {
         return categoryId;
     }
 
-    public List<CreateProductOptionRequest> getProductOptions() {
-        return productOptions;
+    public List<CreateProductOptionRequest> getOptions() {
+        return options;
     }
 
     public Product toEntity(Category category) {
-        List<ProductOption> productOptions = this.productOptions.stream()
+        List<ProductOption> productOptions = this.options.stream()
             .map(CreateProductOptionRequest::toEntity)
             .toList();
 

@@ -1,0 +1,14 @@
+== 위시 리스트 API
+
+=== 위시 상품 추가
+operation::wish-api-controller-test/create-wish-product[]
+
+=== 위시 상품 조회
+operation::wish-api-controller-test/read-wish-product[]
+
+=== 위시 상품 수정
+operation::wish-api-controller-test/update-wish-product[]
+
+=== 위시 상품 삭제
+operation::wish-api-controller-test/delete-wish-product[]
+

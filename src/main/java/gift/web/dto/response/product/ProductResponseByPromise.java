@@ -1,11 +1,10 @@
 package gift.web.dto.response.product;
 
 import gift.domain.Product;
-import gift.web.dto.response.category.ReadCategoryResponse;
 import gift.web.dto.response.productoption.ReadProductOptionResponse;
 import java.util.List;
 
-public class UpdateProductResponse {
+public class ProductResponseByPromise {
 
     private final Long id;
     private final String name;
@@ -14,27 +13,23 @@ public class UpdateProductResponse {
     private final Long categoryId;
     private final List<ReadProductOptionResponse> options;
 
-
-    private UpdateProductResponse(Long id, String name, Integer price, String imageUrl, Long categoryId, List<ReadProductOptionResponse> options) {
+    public ProductResponseByPromise(Long id, String name, Integer price, String imageUrl,
+        List<ReadProductOptionResponse> options, Long categoryId) {
         this.id = id;
         this.name = name;
         this.price = price;
         this.imageUrl = imageUrl;
-        this.categoryId = categoryId;
         this.options = options;
+        this.categoryId = categoryId;
     }
 
-    public static UpdateProductResponse from(Product product) {
-        return new UpdateProductResponse(
-            product.getId(),
-            product.getName(),
-            product.getPrice(),
-            product.getImageUrl().toString(),
-            product.getCategory().getId(),
-            product.getProductOptions()
-                .stream()
-                .map(ReadProductOptionResponse::fromEntity)
-                .toList());
+    public static ProductResponseByPromise fromEntity(Product product) {
+        List<ReadProductOptionResponse> productOptions = product.getProductOptions()
+            .stream()
+            .map(ReadProductOptionResponse::fromEntity)
+            .toList();
+
+        return new ProductResponseByPromise(product.getId(), product.getName(), product.getPrice(), product.getImageUrl().toString(), productOptions, product.getCategory().getId());
     }
 
     public Long getId() {
@@ -53,11 +48,12 @@ public class UpdateProductResponse {
         return imageUrl;
     }
 
+    public List<ReadProductOptionResponse> getOptions() {
+        return options;
+    }
+
     public Long getCategoryId() {
         return categoryId;
     }
 
-    public List<ReadProductOptionResponse> getOptions() {
-        return options;
-    }
 }

@@ -8,12 +8,12 @@ public class ReadProductOptionResponse {
 
     private final String name;
 
-    private final Integer stock;
+    private final Integer quantity;
 
-    public ReadProductOptionResponse(Long id, String name, Integer stock) {
+    public ReadProductOptionResponse(Long id, String name, Integer quantity) {
         this.id = id;
         this.name = name;
-        this.stock = stock;
+        this.quantity = quantity;
     }
 
     public static ReadProductOptionResponse fromEntity(ProductOption productOption) {
@@ -28,7 +28,7 @@ public class ReadProductOptionResponse {
         return name;
     }
 
-    public Integer getStock() {
-        return stock;
+    public Integer getQuantity() {
+        return quantity;
     }
 }
