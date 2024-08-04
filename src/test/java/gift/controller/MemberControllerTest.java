@@ -93,8 +93,9 @@ class MemberControllerTest {
                     fieldWithPath("email").description("이메일").optional(),
                     fieldWithPath("kakaoId").description("카카오 ID").optional(),
                     fieldWithPath("wishList").description("위시리스트").optional(),
-                    fieldWithPath("orders").description("주문").optional()
-                ),
+                    fieldWithPath("orders").description("주문").optional(),
+                    fieldWithPath("point").description("멤버 포인트")
+                    ),
                 responseFields(
                     fieldWithPath("result").description("API 호출 결과"),
                     fieldWithPath("message").description("호출 내용"),
@@ -127,7 +128,8 @@ class MemberControllerTest {
                     fieldWithPath("email").description("이메일").optional(),
                     fieldWithPath("kakaoId").description("카카오 ID").optional(),
                     fieldWithPath("wishList").description("위시리스트").optional(),
-                    fieldWithPath("orders").description("주문").optional()
+                    fieldWithPath("orders").description("주문").optional(),
+                    fieldWithPath("point").description("멤버 포인트")
                 ),
                 responseFields(
                     fieldWithPath("result").description("API 호출 결과"),
@@ -158,7 +160,8 @@ class MemberControllerTest {
                     fieldWithPath("email").description("이메일").optional(),
                     fieldWithPath("kakaoId").description("카카오 ID").optional(),
                     fieldWithPath("wishList").description("위시리스트").optional(),
-                    fieldWithPath("orders").description("주문").optional()
+                    fieldWithPath("orders").description("주문").optional(),
+                    fieldWithPath("point").description("멤버 포인트")
                 ),
                 responseFields(
                     fieldWithPath("result").description("API 호출 결과"),
