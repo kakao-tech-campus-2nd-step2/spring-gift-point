@@ -3,6 +3,7 @@ package gift.user.service;
 import gift.user.domain.User;
 import gift.user.domain.dto.LoginRequest;
 import gift.user.domain.dto.LoginResponse;
+import gift.user.domain.dto.PointDTO;
 import gift.user.repository.UserRepository;
 import gift.utility.JwtUtil;
 import jakarta.validation.constraints.Email;
@@ -41,6 +42,15 @@ public class UserService {
             existingUser.setEmail(user.getEmail());
             existingUser.setPassword(user.getPassword());
             existingUser.setPoint(user.getPoint());
+            userRepository.save(existingUser);
+        }
+    }
+    @Transactional
+    public void updateUserPoint(Long id, PointDTO pointDTO) {
+        if(userRepository.existsById(id)){
+            User existingUser = userRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("userId " + id + "가 없습니다."));
+            existingUser.setPoint(pointDTO.getPoint());
             userRepository.save(existingUser);
         }
     }
