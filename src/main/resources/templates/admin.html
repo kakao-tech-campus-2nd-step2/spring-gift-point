@@ -14,9 +14,9 @@
     <th>ID</th>
     <th>Name</th>
     <th>Price</th>
-    <th>Category</th>
     <th>Image</th>
     <th>Actions</th>
+    <th>Category</th>
   </tr>
   </thead>
   <tbody>
@@ -24,7 +24,7 @@
     <td th:text="${product.id}"></td>
     <td th:text="${product.name}"></td>
     <td th:text="${product.price}"></td>
-    <td th:text="${product.categoryName}"></td>
+<!--    <td th:text="${product.categoryName}"></td>-->
     <td><img th:src="${product.imageUrl}" alt="Product Image" width="50"/></td>
     <td>
       <!-- 수정 폼 -->
