@@ -5,20 +5,27 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.security.Keys;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+import javax.crypto.SecretKey;
 import java.util.Date;
 
 @Component
 public class JwtUtil {
 
-    private static final String SECRET_KEY = "N4cYFXz4pYr/sdf9p0sl/j4L8kdKd1gdPv+0Wn4fZ8M7aOg4xqKr4sljxfwHt4Kp7op4l+Jd3ZV4Rmd1Jd7AfQ==JASDJWQDWEWQEKSA"; // 비밀 키
-    private static final long EXPIRATION_TIME = 86400000; // 24시간
+    private final SecretKey key;
+    private final long expirationTime;
 
+    public JwtUtil(@Value("${jwt.secret}") String secretKey, @Value("${jwt.expiration}") long expirationTime) {
+        this.key = Keys.hmacShaKeyFor(secretKey.getBytes());
+        this.expirationTime = expirationTime;
+    }
     // JWT 토큰을 파싱하여 그 안에 포함된 클레임을 반환
     public Claims extractClaims(String token) {
         return Jwts.parser()
-                .setSigningKey(SECRET_KEY)
+                .setSigningKey(key)
                 .build()
                 .parseClaimsJws(token)
                 .getBody();
@@ -28,7 +35,7 @@ public class JwtUtil {
     public boolean isTokenValid(String token) {
         try {
             Jwts.parser()
-                    .setSigningKey(SECRET_KEY)
+                    .setSigningKey(key)
                     .build()
                     .parseClaimsJws(token);
             return true;
@@ -56,8 +63,8 @@ public class JwtUtil {
                 .setSubject(member.getId().toString())
                 .claim("email", member.getEmail()) // 이메일 클레임 추가
                 .setIssuedAt(new Date())
-                .setExpiration(new Date(System.currentTimeMillis() + EXPIRATION_TIME))
-                .signWith(SignatureAlgorithm.HS512, SECRET_KEY)
+                .setExpiration(new Date(System.currentTimeMillis() + expirationTime))
+                .signWith(SignatureAlgorithm.HS512, key)
                 .compact();
     }
 }

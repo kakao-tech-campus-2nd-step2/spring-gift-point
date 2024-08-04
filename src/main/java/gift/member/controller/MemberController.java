@@ -64,7 +64,7 @@ public class MemberController {
             @Parameter(hidden = true) @RequestHeader("Authorization") String authorizationHeader
     ) {
         // 토큰 추출 및 검증
-        String token = authorizationHeader.startsWith("Bearer ") ? authorizationHeader.substring(7) : null;
+        String token = jwtUtil.extractToken(authorizationHeader);
         if (token == null || !jwtUtil.isTokenValid(token)) {
             // 401 Unauthorized
             return ResponseEntity.status(401).body(new CommonResponse<>(null, "Invalid or missing token", false));

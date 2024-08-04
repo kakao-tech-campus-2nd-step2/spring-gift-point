@@ -41,7 +41,7 @@ public class LoginMemberArgumentResolver implements HandlerMethodArgumentResolve
         }
 
         // JWT 토큰 검증
-        String token = header.substring(7); // "Bearer " 접두사 제거
+        String token = jwtUtil.extractToken(header);
         if (!jwtUtil.isTokenValid(token)) {
             throw new UserNotFoundException("Invalid JWT token");
         }

@@ -38,8 +38,7 @@ public class WishController {
             @RequestBody WishCreateRequest wishRequest
     ) {
         System.out.println("authorizationHeader = " + authorizationHeader);
-        String token = authorizationHeader.startsWith("Bearer ") ? authorizationHeader.substring(7) : null;
-
+        String token = jwtUtil.extractToken(authorizationHeader);
         if (token == null || !jwtUtil.isTokenValid(token)) {
             return ResponseEntity.status(401).body(new CommonResponse<>(null, "Invalid or missing token", false));
         }
@@ -57,7 +56,7 @@ public class WishController {
             @PathVariable Long wishId
     ) {
         // 토큰 추출
-        String token = authorizationHeader.startsWith("Bearer ") ? authorizationHeader.substring(7) : null;
+        String token = jwtUtil.extractToken(authorizationHeader);
 
         if (token == null || !jwtUtil.isTokenValid(token)) {
             // 401 Unauthorized
@@ -79,8 +78,7 @@ public class WishController {
                                       @RequestParam(defaultValue = "price,desc") String sort
     ) {
         // 토큰 추출
-        String token = authorizationHeader.startsWith("Bearer ") ? authorizationHeader.substring(7) : null;
-
+        String token = jwtUtil.extractToken(authorizationHeader);
         if (token == null || !jwtUtil.isTokenValid(token)) {
             // 401 Unauthorized
             return ResponseEntity.status(401).body(new CommonResponse<>(null, "Invalid or missing token", false));

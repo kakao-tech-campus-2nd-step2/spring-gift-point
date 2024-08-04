@@ -38,3 +38,7 @@ kakao:
     client_id: 3d31f6bce5e0cff4c999293f5a6a0020 # REST API 키
     grant_type: authorization_code # 인증 타입
     get-message-to-me-uri: "https://kapi.kakao.com/v2/api/talk/memo/default/send"
+
+jwt:
+    secret: N4cYFXz4pYr/sdf9p0sl/j4L8kdKd1gdPv+0Wn4fZ8M7aOg4xqKr4sljxfwHt4Kp7op4l+Jd3ZV4Rmd1Jd7AfQ==JASDJWQDWEWQEKSA # JWT 비밀키
+    expiration: 86400000 # JWT 만료 시간 (24시간)
