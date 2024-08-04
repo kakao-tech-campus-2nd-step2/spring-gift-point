@@ -88,50 +88,23 @@ public class OrderService {
 
         return save(orderRequest);
     }
+
     /*
-     * 주문 기록을 오름차순으로 정렬하여 조회
+     * 주문 기록을 정렬하여 페이지 형식으로 조회
      */
-    public Page<OrderLogResponse> findAllASC(int page, int size, String field){
-        List<OrderLogResponse> orderLogs = new ArrayList<>();
-        List<Order> orders = orderRepository.findAll();
-        for (Order order : orders) {
-            OrderResponse orderResponse = new OrderResponse(order);
+    public Page<OrderLogResponse> findAll(Pageable pageable){
+        List<OrderLogResponse> answer = new ArrayList<>();
+
+        Page<Order> orders = orderRepository.findAll(pageable);
+        List<Order> orderContent = orders.getContent();
+        for (Order order : orderContent) {
             Option option = optionRepository.findById(order.getOptionId()).orElseThrow(NoSuchFieldError::new);
-            ProductResponse productResponse = new ProductResponse(option.getProduct());
-            orderLogs.add(new OrderLogResponse(productResponse, orderResponse));
+            Product product = option.getProduct();
+            OrderLogResponse orderLogResponse = new OrderLogResponse(
+                    new ProductResponse(product), new OrderResponse(order)
+            );
+            answer.add(orderLogResponse);
         }
-
-        List<Sort.Order> sorts = new ArrayList<>();
-        sorts.add(Sort.Order.asc(field));
-        Pageable pageable = PageRequest.of(page, size, Sort.by(sorts));
-
-        int start = (int) pageable.getOffset();
-        int end = Math.min((start + pageable.getPageSize()), orderLogs.size());
-        List<OrderLogResponse> subList = orderLogs.subList(start, end);
-
-        return new PageImpl<>(subList, pageable, orderLogs.size());
-    }
-    /*
-     * 주문 기록을 내림차순으로 정렬하여 조회
-     */
-    public Page<OrderLogResponse> findAllDESC(int page, int size, String field){
-        List<OrderLogResponse> orderLogs = new ArrayList<>();
-        List<Order> orders = orderRepository.findAll();
-        for (Order order : orders) {
-            OrderResponse orderResponse = new OrderResponse(order);
-            Option option = optionRepository.findById(order.getOptionId()).orElseThrow(NoSuchFieldError::new);
-            ProductResponse productResponse = new ProductResponse(option.getProduct());
-            orderLogs.add(new OrderLogResponse(productResponse, orderResponse));
-        }
-
-        List<Sort.Order> sorts = new ArrayList<>();
-        sorts.add(Sort.Order.desc(field));
-        Pageable pageable = PageRequest.of(page, size, Sort.by(sorts));
-
-        int start = (int) pageable.getOffset();
-        int end = Math.min((start + pageable.getPageSize()), orderLogs.size());
-        List<OrderLogResponse> subList = orderLogs.subList(start, end);
-
-        return new PageImpl<>(subList, pageable, orderLogs.size());
+        return new PageImpl<>(answer, pageable, answer.size());
     }
 }
