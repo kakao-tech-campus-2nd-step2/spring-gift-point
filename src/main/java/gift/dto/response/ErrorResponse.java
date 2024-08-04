@@ -16,4 +16,16 @@ public class ErrorResponse {
         this.errors = errors;
         this.status = status;
     }
+
+    public String getMessage() {
+        return message;
+    }
+
+    public Integer getStatus() {
+        return status;
+    }
+
+    public Map<String, String> getErrors() {
+        return errors;
+    }
 }
