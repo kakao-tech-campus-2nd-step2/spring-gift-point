@@ -14,7 +14,6 @@ import java.util.List;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -42,14 +41,14 @@ public class ProductController {
         this.optionService = optionService;
     }
 
-    @Operation(summary = "상품 페이지", description = "테스트용 페이지 였음.")
+    /*@Operation(summary = "상품 페이지", description = "테스트용 페이지 였음.")
     @GetMapping("productpage")
     public String listProducts(Model model) {
         model.addAttribute("products", productRepository.findAll());
         model.addAttribute("newProduct", new Product()); // 새 상품 객체
-        model.addAttribute("product", new Product()); // 편집을 위한 빈 객체*/
+        model.addAttribute("product", new Product()); // 편집을 위한 빈 객체
         return "admin"; // Thymeleaf 템플릿 이름
-    }
+    }*/
 
     @Operation(summary = "상품 생성", description = "생성한 상품 반환함")
     @PostMapping()
@@ -59,7 +58,7 @@ public class ProductController {
         Option option = optionService.addOption(newProduct.getOptionRequest(), product);
         productService.addOption(product.getId(), option);
 
-        return ResponseEntity.status(201).body(new ProductResponse(product));
+        return ResponseEntity.status(HttpStatus.CREATED).body(new ProductResponse(product));
     }
 
     @Operation(summary = "상품 조회", description = "특정 상품 정보 조회", parameters = {
@@ -75,7 +74,7 @@ public class ProductController {
     @PutMapping("/{productId}")
     public ResponseEntity<ProductResponse> updateProduct(
         @Valid @RequestBody ProductRequest changeProduct, @PathVariable Long productId) {
-        return ResponseEntity.ok(
+        return ResponseEntity.status(HttpStatus.OK).body(
             new ProductResponse(productService.updateProduct(changeProduct.toEntity(), productId)));
     }
 
@@ -83,7 +82,7 @@ public class ProductController {
     @DeleteMapping("/{productId}")
     public ResponseEntity<String> deleteProduct(@PathVariable("productId") Long id) {
         productService.deleteProduct(id);
-        return ResponseEntity.status(204).body("delete");
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).body("delete");
     }
 
     // OPTION
@@ -93,14 +92,15 @@ public class ProductController {
     public ResponseEntity<ProductPageResponse> getProductPage(
         @RequestParam(value = "page") int page,
         @RequestParam(value = "size") int size) {
-        return ResponseEntity.ok(productService.getProductPage(page, size));
+        return ResponseEntity.status(HttpStatus.OK).body(productService.getProductPage(page, size));
     }
 
 
     @Operation(summary = "옵션 목록 조회", description = "상품별 옵션 목록 조회")
     @GetMapping("{productId}/options")
     public ResponseEntity<OptionContents> getOptions(@PathVariable("productId") Long productId) {
-        return ResponseEntity.ok(OptionContents.from(optionService.findAllByProductId(productId)));
+        return ResponseEntity.status(HttpStatus.OK)
+            .body(OptionContents.from(optionService.findAllByProductId(productId)));
     }
 
     @Operation(summary = "옵션 생성", description = "상품별 옵션 생성")
@@ -111,7 +111,7 @@ public class ProductController {
         Product product = productService.findById(productId);
         Option option = optionService.addOption(optionRequest, product);
 
-        return ResponseEntity.status(201)
+        return ResponseEntity.status(HttpStatus.CREATED)
             .body(productService.addOption(productId, option));
     }
 
@@ -121,7 +121,7 @@ public class ProductController {
         @PathVariable Long productId, @PathVariable Long optionId) {
         optionService.updateOption(optionRequest, productId, optionId);
 
-        return ResponseEntity.ok("update");
+        return ResponseEntity.status(HttpStatus.OK).body("update");
     }
 
     @Operation(summary = "옵션 삭제", description = "상품에 옵션을 삭제함")
@@ -131,7 +131,7 @@ public class ProductController {
         Option option = optionService.getOption(optionId);
         productService.deleteOption(productId, option);
 
-        return ResponseEntity.status(204)
+        return ResponseEntity.status(HttpStatus.NO_CONTENT)
             .body(productService.deleteOption(productId, option));
     }
 

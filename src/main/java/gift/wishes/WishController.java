@@ -45,7 +45,7 @@ public class WishController {
         @Login UserDTO userDTO) {
         wishService.createWish(userDTO.getUserId(), wishRequest.getProductId(),
             wishRequest.getQuantity());
-        return ResponseEntity.status(201).build();
+        return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
     //수량 변경은 안쓴다고 함
@@ -67,7 +67,7 @@ public class WishController {
     public ResponseEntity<HttpStatus> deleteWish(@PathVariable Long wishId,
         @Login UserDTO userDTO) {
         wishService.deleteWish(wishId, userDTO.getUserId());
-        return ResponseEntity.status(204).build();
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
     @Operation(summary = "장바구니 조회", description = "위시리스트 페이지로 반환함")
@@ -75,6 +75,7 @@ public class WishController {
     public ResponseEntity<WishPageResponse> getWishListPage(@Login UserDTO userDTO,
         @RequestParam(value = "page", defaultValue = "0") int page,
         @RequestParam(value = "size", defaultValue = "10") int size) {
-        return ResponseEntity.ok(wishService.getWishPage(userDTO.getUserId(), page));
+        return ResponseEntity.status(HttpStatus.OK)
+            .body(wishService.getWishPage(userDTO.getUserId(), page));
     }
 }

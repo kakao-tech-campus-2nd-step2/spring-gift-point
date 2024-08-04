@@ -2,6 +2,7 @@ package gift.category;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -25,7 +26,8 @@ public class CategoryController {
     @Operation(summary = "카테고리 조회", description = "모든 카테고리 조회")
     @GetMapping()
     public ResponseEntity<CategoryContents> getAllCategories() {
-        return ResponseEntity.ok(CategoryContents.from(categoryService.getAllCategories()));
+        return ResponseEntity.status(HttpStatus.OK)
+            .body(CategoryContents.from(categoryService.getAllCategories()));
     }
 
     @Operation(summary = "카테고리 추가", description = "카테고리를 생성합니다.")
@@ -33,7 +35,7 @@ public class CategoryController {
     public ResponseEntity<CategoryResponse> addCategory(
         @RequestBody CategoryRequest categoryRequest) {
         Category category = categoryService.createCategory(categoryRequest);
-        return ResponseEntity.status(201).body(new CategoryResponse(category));
+        return ResponseEntity.status(HttpStatus.CREATED).body(new CategoryResponse(category));
     }
 
     @Operation(summary = "카테고리 수정", description = "카테고리 속성 변경")
@@ -41,7 +43,7 @@ public class CategoryController {
     public ResponseEntity<CategoryResponse> updateCategory(
         @RequestBody CategoryRequest categoryRequest, @PathVariable("categoryId") Long id) {
         Category category = categoryService.updateCategory(categoryRequest, id);
-        return ResponseEntity.status(200).body(new CategoryResponse(category));
+        return ResponseEntity.status(HttpStatus.OK).body(new CategoryResponse(category));
     }
 
     // Delete 사용 안함

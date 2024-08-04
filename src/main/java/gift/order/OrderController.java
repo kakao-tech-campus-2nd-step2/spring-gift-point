@@ -10,6 +10,7 @@ import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -50,13 +51,13 @@ public class OrderController {
         orderService.sendMessage(orderRequest, accessToken);
         orderService.deleteOrderedProduct(orderRequest, userDTO.getUserId());
 
-        return ResponseEntity.status(201).body(order);
+        return ResponseEntity.status(HttpStatus.CREATED).body(order);
     }
 
     @Operation(summary = "주문 목록 조회", description = "주문 목록을 조회한다.")
     @GetMapping()
     public ResponseEntity<OrderContents> getOrderList(@Login UserDTO userDTO) {
-        return ResponseEntity.ok(OrderContents.from(orderService.getOrderList(userDTO.getUserId())));
+        return ResponseEntity.status(HttpStatus.OK).body(OrderContents.from(orderService.getOrderList(userDTO.getUserId())));
     }
 
 

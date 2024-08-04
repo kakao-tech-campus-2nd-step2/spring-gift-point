@@ -3,6 +3,7 @@ package gift.member;
 import gift.jwt.JwtService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -36,7 +37,7 @@ public class MemberController {
     public ResponseEntity<LoginResponse> createUser(@RequestBody SighUpRequest newMember) {
         memberService.createMember(newMember.getEmail(), newMember.getEmail(),
             newMember.getPassword());
-        return ResponseEntity.status(200).body(new LoginResponse(""));
+        return ResponseEntity.status(HttpStatus.OK).body(new LoginResponse(""));
     }
 
     @Operation(summary = "로그인", description = "로그인하고 토큰 반환")
@@ -45,7 +46,7 @@ public class MemberController {
         Member member = memberService.findByEmailAndPassword(user.getEmail(), user.getPassword());
         String jwt = jwtService.createJwt(member.getId());
 
-        return ResponseEntity.status(200).body(new LoginResponse(jwt));
+        return ResponseEntity.status(HttpStatus.OK).body(new LoginResponse(jwt));
     }
 
 }
