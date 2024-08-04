@@ -18,8 +18,8 @@ jobs:
           java-version: 21
 
      - name: Setup SSH
-        uses: webfactory/ssh-agent@v0.6.0
-        with:
+       uses: webfactory/ssh-agent@v0.6.0
+       with:
           ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
      - name: Connect to EC2 and execute script
        run: ssh -o StrictHostKeyChecking=no ubuntu@${{ secrets.EC2_IP }} "~/deploy.sh" 
