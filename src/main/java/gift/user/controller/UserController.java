@@ -3,6 +3,7 @@ package gift.user.controller;
 import gift.user.domain.User;
 import gift.user.domain.dto.LoginRequest;
 import gift.user.domain.dto.LoginResponse;
+import gift.user.domain.dto.PointDTO;
 import gift.user.service.UserService;
 import gift.utility.JwtUtil;
 import java.util.HashMap;
@@ -21,10 +22,9 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-//@RestController
-//@RequestMapping("/api/users")
+@RestController
+@RequestMapping("/api/users")
 public class UserController {
-    /*
     private final UserService userService;
 
     public UserController(UserService userService) {
@@ -50,26 +50,6 @@ public class UserController {
             .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
-    @PostMapping("/register")
-    public ResponseEntity<Map<String, String>> register(@RequestBody User user) {
-        userService.save(user);
-        String token = JwtUtil.generateToken(user.getEmail());
-
-        Map<String, String> response = new HashMap<>();
-        response.put("token", token);
-        return new ResponseEntity<>(response, HttpStatus.CREATED);
-    }
-
-    @PostMapping("/login")
-    public ResponseEntity<LoginResponse> login(@RequestBody LoginRequest loginRequest) {
-        Optional<User> userOptional = userService.findByEmail(loginRequest.email());
-        if (userOptional.isPresent() && loginRequest.password().equals(userOptional.get().getPassword())) {
-            String token = JwtUtil.generateToken(loginRequest.email());
-            return ResponseEntity.ok(new LoginResponse(token));
-        }
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
-    }
-
     @PutMapping("/{id}")
     public ResponseEntity<User> updateUser(@PathVariable("id") Long id, @RequestBody User user, @RequestHeader("Authorization") String token) {
         if (!JwtUtil.isValidToken(token)) {
@@ -81,6 +61,18 @@ public class UserController {
         }
         userService.updateUser(id, user);
         return new ResponseEntity<>(user, HttpStatus.OK);
+    }
+    @PutMapping("/{id}/point")
+    public ResponseEntity<Void> updateUser(@PathVariable("id") Long id, @RequestBody PointDTO pointDTO, @RequestHeader("Authorization") String token) {
+        if (!JwtUtil.isValidToken(token)) {
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        }
+        Optional<User> existingUser = userService.findById(id);
+        if (existingUser.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        userService.updateUserPoint(id, pointDTO);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")
@@ -95,6 +87,4 @@ public class UserController {
         userService.deleteUser(id);
         return new ResponseEntity<>(id, HttpStatus.OK);
     }
-
-     */
 }
