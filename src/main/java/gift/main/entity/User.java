@@ -23,6 +23,10 @@ public class User {
     @Column(nullable = false)
     private String password;
 
+
+    @Column
+    private int point;
+
     @Enumerated(EnumType.STRING)
     private Role role;
 
@@ -36,6 +40,7 @@ public class User {
         this.email = email;
         this.password = password;
         this.role = role;
+        this.point = 0;
     }
 
     public User(String name, String email, String password, Role role) {
@@ -43,6 +48,7 @@ public class User {
         this.email = email;
         this.password = password;
         this.role = role;
+        this.point = 0;
     }
 
     public User(long id, String name, String email, String password, String role) {
@@ -51,6 +57,7 @@ public class User {
         this.email = email;
         this.password = password;
         this.role = Role.valueOf(role.toUpperCase());
+        this.point = 0;
     }
 
     public User(UserJoinRequest userJoinRequest) {
@@ -58,6 +65,7 @@ public class User {
         this.email = userJoinRequest.email();
         this.password = userJoinRequest.password();
         this.role = Role.USER;
+        this.point = 0;
     }
 
     public User(String name, String email, String password, String role) {
@@ -65,6 +73,7 @@ public class User {
         this.email = email;
         this.password = password;
         this.role = Role.valueOf(role.toUpperCase());
+        this.point = 0;
     }
 
     public long getId() {
@@ -85,6 +94,10 @@ public class User {
 
     public Role getRole() {
         return role;
+    }
+
+    public int getPoint() {
+        return point;
     }
 
     @Override
