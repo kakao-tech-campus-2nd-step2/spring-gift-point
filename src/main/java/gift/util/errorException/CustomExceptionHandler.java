@@ -1,6 +1,6 @@
 package gift.util.errorException;
 
-import gift.domain.StatusResponse;
+import gift.domain.auth.StatusResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;

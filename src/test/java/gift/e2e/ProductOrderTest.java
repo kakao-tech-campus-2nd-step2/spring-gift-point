@@ -5,8 +5,8 @@ import static org.springframework.http.HttpMethod.POST;
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
 
-import gift.auth.domain.Login;
-import gift.domain.ProductOrder.decreaseProductOption;
+import gift.domain.auth.Login;
+import gift.domain.product.ProductOrder.decreaseProductOption;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

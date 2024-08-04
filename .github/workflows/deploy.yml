@@ -26,6 +26,21 @@ jobs:
           distribution: 'temurin'
           java-version: '21'
 
+      # Gradle 캐시 설정
+      - name: Cache Gradle packages
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-
+
+      # gradlew 실행 권한 부여
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
+
       # gradle로 빌드
       - name: Build with Gradle
         run: ./gradlew bootJar
@@ -74,7 +89,7 @@ jobs:
               sleep 5
             fi
 
-            DEPLOY_PATH=/home/ubuntu/kakao2-6/deploy
+            DEPLOY_PATH=/home/ubuntu/kakao2-6/deploy/
             cp $BUILD_PATH $DEPLOY_PATH
             cd $DEPLOY_PATH
 
