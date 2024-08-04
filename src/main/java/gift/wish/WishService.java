@@ -43,11 +43,13 @@ public class WishService {
 
     @Transactional
     public void updateProductInWishList(Long wishId, WishRequest wishRequest,
-        LoginMemberDto loginMemberDto) throws WishException {
+        LoginMemberDto loginMemberDto) throws WishException, ProductException {
         Wish wish = wishRepository.findById(wishId)
             .orElseThrow(() -> new WishException(WishErrorCode.NOT_FOUND));
         wish.validateMember(loginMemberDto.getId());
-        //api 미사용
+        Product product = productRepository.findById(wishRequest.productId())
+            .orElseThrow(() -> new ProductException(ProductErrorCode.NOT_FOUND));
+        wish.updateProduct(product);
     }
 
     @Transactional
