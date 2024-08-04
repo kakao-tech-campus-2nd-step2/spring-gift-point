@@ -20,8 +20,6 @@ public class Product extends BaseEntity{
             foreignKey = @ForeignKey(name = "fk_product_category_id_ref_category_id"),
             nullable = false)
     private Category category;
-    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Option> options = new ArrayList<>();
 
     protected Product(){
         super();
@@ -54,18 +52,10 @@ public class Product extends BaseEntity{
         return category;
     }
 
-    public List<Option> getOptions(){
-        return options;
-    }
-
     public void updateEntity(String name, int price, String imageUrl, Category category){
         this.name = name;
         this.price = price;
         this.imageUrl = imageUrl;
         this.category = category;
-    }
-
-    public void addOption(Option option){
-        this.options.add(option);
     }
 }
