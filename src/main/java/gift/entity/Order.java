@@ -34,11 +34,7 @@ public class Order extends BaseEntity {
         this.quantity = quantity;
     }
 
-    public LocalDateTime getOrderDateTime() {
-        return orderDateTime;
-    }
-
-    public void setOrderDateTime(LocalDateTime orderDateTime) {
+     public void setOrderDateTime(LocalDateTime orderDateTime) {
         this.orderDateTime = orderDateTime;
     }
 

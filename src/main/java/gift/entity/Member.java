@@ -10,7 +10,7 @@ public class Member extends BaseEntity {
     private Long kakaoId;
     private String nickname;
     private String kakaoToken;
-    private int points; // New field for points balance
+    private int points;
 
     @OneToMany(mappedBy = "member")
     private List<Wish> wishes = new ArrayList<>();
@@ -21,23 +21,11 @@ public class Member extends BaseEntity {
         this.kakaoId = kakaoId;
         this.nickname = nickname;
         this.kakaoToken = kakaoToken;
-        this.points = 0; // Initialize points to zero
-    }
-
-    public Long getKakaoId() {
-        return kakaoId;
-    }
-
-    public void setKakaoId(Long kakaoId) {
-        this.kakaoId = kakaoId;
+        this.points = 0;
     }
 
     public String getNickname() {
         return nickname;
-    }
-
-    public void setNickname(String nickname) {
-        this.nickname = nickname;
     }
 
     public String getKakaoToken() {
@@ -48,20 +36,8 @@ public class Member extends BaseEntity {
         this.kakaoToken = kakaoToken;
     }
 
-    public List<Wish> getWishes() {
-        return wishes;
-    }
-
-    public void setWishes(List<Wish> wishes) {
-        this.wishes = wishes;
-    }
-
     public int getPoints() {
         return points;
-    }
-
-    public void setPoints(int points) {
-        this.points = points;
     }
 
     public void addPoints(int points) {
