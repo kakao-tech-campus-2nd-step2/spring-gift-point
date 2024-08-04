@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import gift.dto.OptionDto;
 import gift.dto.ProductDto;
 import gift.dto.request.ProductRequest;
 import gift.dto.response.ProductPageResponse;
@@ -21,6 +22,8 @@ import jakarta.validation.Valid;
 
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+
+import java.util.List;
 
 @Controller
 @Tag(name = "product", description = "Product API")
@@ -52,7 +55,8 @@ public class ProductViewController {
         @ApiResponse(responseCode = "200", description = "상품 추가 화면 이동 성공")
     })
     public String showProductForm(Model model){
-        model.addAttribute("product", new ProductDto());
+        ProductDto product = new ProductDto(0L, null, 0, null, null, List.of(new OptionDto()));
+        model.addAttribute("product", product);
         model.addAttribute("categories", categoryService.findAll().getCategories());
         return "product_form";
     }

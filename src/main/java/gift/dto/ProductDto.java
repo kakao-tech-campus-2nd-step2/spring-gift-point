@@ -79,8 +79,12 @@ public class ProductDto {
         return categoryId;
     }
 
-    public List<OptionDto> getOptionDtos(){
+    public List<OptionDto> getOptions(){
         return options;
+    }
+
+    public void setOptions(List<OptionDto> options){
+        this.options = options;
     }
 
     public static ProductDto fromEntity(Product product) {

@@ -115,7 +115,7 @@ public class ProductService{
     @Transactional
     public ProductResponse addProduct(ProductRequest productRequest) {
   
-        if(productRepository.findByNameAndPriceAndImageUrl(productRequest.getProductName(), 
+        if(productRepository.findByNameAndPriceAndImageUrl(productRequest.getName(), 
                                                             productRequest.getPrice(),
                                                             productRequest.getImageUrl()).isEmpty()){
                                                                 
@@ -125,7 +125,7 @@ public class ProductService{
             if(productRequest.getOptions().isEmpty()){
                 throw new CustomException("Option must exist", HttpStatus.BAD_REQUEST, -40002);
             }
-            Product product = new Product(productRequest.getProductName(), 
+            Product product = new Product(productRequest.getName(), 
                                           productRequest.getPrice(),
                                           productRequest.getImageUrl(),
                                           category);
@@ -139,7 +139,7 @@ public class ProductService{
             return new ProductResponse(ProductDto.fromEntity(savedProduct));
 
         }else{
-            throw new CustomException("Product with name " + productRequest.getProductName() + "exists", HttpStatus.CONFLICT, -40903);
+            throw new CustomException("Product with name " + productRequest.getName() + "exists", HttpStatus.CONFLICT, -40903);
         }
     }
 
@@ -152,12 +152,12 @@ public class ProductService{
         Category category = categoryRepository.findById(productRequest.getCategoryId())
             .orElseThrow(() -> new CustomException("Category with id" + productRequest.getCategoryId() + "NOT FOUND" , HttpStatus.NOT_FOUND, -40402));
         
-        if(productRepository.findByNameAndPriceAndImageUrl(productRequest.getProductName(), 
+        if(productRepository.findByNameAndPriceAndImageUrl(productRequest.getName(), 
             productRequest.getPrice(),
             productRequest.getImageUrl()).isEmpty()){
                 product.update(productRequest, category);
             }else{
-               throw new CustomException("Product with name " + productRequest.getProductName() + "exists", HttpStatus.CONFLICT, -40903);
+               throw new CustomException("Product with name " + productRequest.getName() + "exists", HttpStatus.CONFLICT, -40903);
             }
     }
 

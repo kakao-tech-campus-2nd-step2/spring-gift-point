@@ -21,6 +21,8 @@ public class OptionDto {
     @Max(value = 99999999, message = "quantity must be less than 100,000,000")
     private int stockQuantity;
 
+    public OptionDto(){}
+    
     @JsonCreator
     public OptionDto(
         @JsonProperty("id")
@@ -42,10 +44,18 @@ public class OptionDto {
         return stockQuantity;
     }
 
+    public void setStockQuantity(int stockQuantity){
+        this.stockQuantity = stockQuantity;
+    }
+
     public String getName() {
         return name;
     }
 
+    public void setName(String name) {
+        this.name = name;
+    }
+ 
     public static OptionDto fromEntity(Option option){
         return new OptionDto(option.getId(), option.getName(), option.getStockQuantity());
     }

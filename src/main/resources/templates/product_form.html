@@ -6,11 +6,11 @@
 </head>
 <body>
     <p>product_form page</p>
-    <form th:action="@{/api/products/new}" th:object="${product}" method="post">
+    <form th:action="@{/products/new}" th:object="${product}" method="post">
         <div>
             <label>product name</label> 
-            <input type="text" id="productName" th:field="*{productName}"/> 
-            <div th:if="${#fields.hasErrors('productName')}" th:errors="*{productName}">product name Error</div>
+            <input type="text" id="name" th:field="*{name}"/> 
+            <div th:if="${#fields.hasErrors('name')}" th:errors="*{name}">product name Error</div>
         </div>
         <div>
             <label>price</label>
@@ -22,20 +22,19 @@
         </div>
         <div>
             <label>category</label>
-            <select th:field="*{category}">
+            <select th:field="*{categoryId}">
                 <option th:each="category : ${categories}" th:value="${category.name}" th:text="${category.name}"></option>
             </select>
         </div>
         <p>Setting basic option</p>
         <div>
             <label>option name</label>
-            <input type="text" id="optionName" th:field="*{optionName}"/> 
-            <div th:if="${#fields.hasErrors('optionName')}" th:errors="*{optionName}">product name Error</div>
-
+            <input type="text" id="optionName" th:field="*{options[0].name}"/> 
+            <div th:if="${#fields.hasErrors('options[0].name')}" th:errors="*{options[0].name}">product name Error</div>
         </div>
         <div>
             <label>quantity</label>
-            <input type="number" name="quantity"/>
+            <input type="number" th:field="*{options[0].stockQuantity}"/>
         </div>
         <div>
             <button type="submit">Save</button>
@@ -44,6 +43,6 @@
     <div th:if="${errorMessage}">
         <p th:text="${errorMessage}"></p>
     </div>
-    <a href="/api/products">Back to Product List</a>
+    <a href="/products">Back to Product List</a>
 </body>
 </html>

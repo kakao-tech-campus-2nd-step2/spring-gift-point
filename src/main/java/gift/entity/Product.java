@@ -77,7 +77,7 @@ public class Product{
     }
 
     public void update(ProductRequest productRequest, Category category){
-        this.name = productRequest.getProductName();
+        this.name = productRequest.getName();
         this.price = productRequest.getPrice();
         this.imageUrl = productRequest.getImageUrl();
         this.category = category;
