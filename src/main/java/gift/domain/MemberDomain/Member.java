@@ -21,6 +21,9 @@ public class Member {
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
     private List<WishList> wishList;
 
+    @Embedded
+    private MemberPoint memberPoint;
+
     public Member() {
     }
 
@@ -31,11 +34,12 @@ public class Member {
         this.name = name;
     }
 
-    public Member(String id, String password, LinkedList<WishList> wishLists) {
+    public Member(String id, String password, LinkedList<WishList> wishLists,MemberPoint memberPoint) {
         this.id = id;
         this.password = password;
         this.wishList = wishList;
         this.name = null;
+        this.memberPoint = memberPoint;
     }
 
 
