@@ -32,11 +32,12 @@ public class Member extends BaseEntity {
         this.role = role;
     }
 
-    public void subtractPoint(Integer point) {
+    public Integer subtractPoint(Integer point) {
         if (this.point < point) {
             throw new NotEnoughPointException();
         }
         this.point -= point;
+        return point;
     }
 
     public void saveKakaoToken(String accessToken) {

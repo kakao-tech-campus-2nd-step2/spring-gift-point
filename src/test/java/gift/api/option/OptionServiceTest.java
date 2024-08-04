@@ -96,7 +96,7 @@ class OptionServiceTest {
             .willReturn(Optional.of(option));
 
         // when
-        optionService.subtract(1L, quantity);
+        optionService.subtractQuantity(1L, quantity);
 
         // then
         assertThat(option.getQuantity())

@@ -1,6 +1,5 @@
 package gift.api.order.service;
 
-import gift.api.member.domain.Member;
 import gift.api.member.service.KakaoService;
 import gift.api.member.service.MemberService;
 import gift.api.option.domain.Option;
@@ -31,12 +30,12 @@ public class OrderFacade {
 
     @Transactional
     public OrderResponse order(Long memberId, OrderRequest orderRequest) {
-        Member member = memberService.findMemberById(memberId);
         Option option = optionService.findOptionById(orderRequest.optionId());
-        memberService.subtractPoint(memberId, orderRequest.point());
-        optionService.subtract(orderRequest.optionId(), orderRequest.quantity());
+        int point = memberService.subtractPoint(memberId, orderRequest.point());
+        optionService.subtractQuantity(orderRequest.optionId(), orderRequest.quantity());
         wishService.deleteIfExists(memberId, option.getProductId());
         kakaoService.sendMessage(memberId, orderService.createBody(orderRequest));
-        return OrderResponse.of(orderService.save(member, option, orderRequest));
+        return OrderResponse.of(
+            orderService.save(memberService.findMemberById(memberId), option, orderRequest), point);
     }
 }

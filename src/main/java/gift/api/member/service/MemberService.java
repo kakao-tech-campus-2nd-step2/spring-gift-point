@@ -50,8 +50,8 @@ public class MemberService {
     }
 
     @Transactional
-    public void subtractPoint(Long id, Integer point) {
-        findMemberById(id).subtractPoint(point);
+    public Integer subtractPoint(Long id, Integer point) {
+        return findMemberById(id).subtractPoint(point);
     }
 
     public String issueAccessToken(String email) {
