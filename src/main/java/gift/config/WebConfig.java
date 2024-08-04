@@ -18,7 +18,6 @@ public class WebConfig implements WebMvcConfigurer {
                         HttpMethod.PUT.name(),
                         HttpMethod.DELETE.name(),
                         HttpMethod.PATCH.name())
-                .allowCredentials(true)
                 .maxAge(3000);
     }
 }
