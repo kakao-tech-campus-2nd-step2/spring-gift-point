@@ -27,6 +27,7 @@ public class JwtInterceptor implements HandlerInterceptor {
             try {
                 Claims claims = jwtUtil.extractClaims(token);
                 request.setAttribute("claims", claims);
+                request.setAttribute("memberId", Long.parseLong(claims.getSubject()));
                 return true;
             } catch (Exception e) {
                 response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
