@@ -18,12 +18,10 @@ class MemberServiceTest {
     private MemberRepository memberRepository;
 
     private MemberService memberService;
-    private JwtUtil jwtUtil;
 
     @BeforeEach
     void setUp() {
-        jwtUtil = new JwtUtil();
-        memberService = new MemberService(memberRepository, jwtUtil);
+        memberService = new MemberService(memberRepository);
     }
 
     @Test
