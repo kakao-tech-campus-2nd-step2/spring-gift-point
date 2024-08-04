@@ -45,3 +45,11 @@ tasks.named('test') {
         excludeTags 'excludeFromBuild'
     }
 }
+
+processResources.dependsOn('copySecret')
+
+tasks.register('copySecret', Copy) {
+    from './spring-gift-submodule'
+    include "application*.properties"
+    into 'src/main/resources'
+}
