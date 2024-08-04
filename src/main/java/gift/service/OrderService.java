@@ -44,27 +44,6 @@ public class OrderService {
         this.orderRepository = orderRepository;
     }
 
-//    /**
-//     * 주문을 생성합니다<br>
-//     * 카카오 로그인을 통해 서비스를 이용 중인 회원은 나에게 보내기를 통해 알림을 전송합니다.
-//     * @param accessToken 우리 서비스의 토큰
-//     * @param productId 구매할 상품 ID
-//     * @param memberId 구매자 ID
-//     * @param request 주문 요청
-//     * @return
-//     */
-//    @Transactional
-//    public OrderResponse createOrder(String accessToken, Long productId, Long memberId, CreateOrderRequest request) {
-//        //상품 옵션 수량 차감
-//        productOptionService.subtractOptionStock(request);
-//
-//        //주문 정보 저장
-//        Order order = orderRepository.save(request.toEntity(memberId, productId));
-//
-//        sendOrderMessageIfSocialMember(accessToken, productId, request);
-//        return OrderResponse.from(order);
-//    }
-
     @Transactional
     public CreateOrderResponse createOrder(String accessToken, Long memberId, CreateOrderRequest request) {
         //상품 옵션 수량 차감
