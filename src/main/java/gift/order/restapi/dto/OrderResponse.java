@@ -13,6 +13,7 @@ import java.time.LocalDateTime;
 public record OrderResponse(
         Long id,
         Long optionId,
+        Long usedPoint,
         Integer quantity,
         @Schema(description = "기간 종료일", example = "2024-08-02 00:00:00", type = "string")
         @JsonProperty("order_date_time")
@@ -24,6 +25,7 @@ public record OrderResponse(
         return new OrderResponse(
                 order.id(),
                 order.optionId(),
+                order.usedPoint(),
                 order.quantity(),
                 order.orderedAt(),
                 order.message()

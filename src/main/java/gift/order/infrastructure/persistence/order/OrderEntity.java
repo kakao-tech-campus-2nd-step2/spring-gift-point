@@ -1,4 +1,4 @@
-package gift.order.infrastructure.persistence;
+package gift.order.infrastructure.persistence.order;
 
 import gift.core.BaseAuditingEntity;
 import gift.core.domain.order.Order;
@@ -15,6 +15,9 @@ public class OrderEntity extends BaseAuditingEntity {
 
     @Column(name = "product_id", nullable = false)
     private Long optionId;
+
+    @Column(name = "used_point", nullable = false)
+    private Long usedPoint;
 
     @Column(name = "quantity", nullable = false)
     private Integer quantity;
@@ -62,6 +65,6 @@ public class OrderEntity extends BaseAuditingEntity {
     }
 
     public Order toDomain() {
-        return Order.of(getId(), userId, optionId, quantity, message, getCreatedAt());
+        return Order.of(getId(), userId, optionId, usedPoint, quantity, message, getCreatedAt());
     }
 }
