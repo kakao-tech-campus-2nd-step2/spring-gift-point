@@ -3,11 +3,11 @@ package gift.doamin.product.repository;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import gift.doamin.category.entity.Category;
-import gift.doamin.category.repository.JpaCategoryRepository;
+import gift.doamin.category.repository.CategoryRepository;
 import gift.doamin.product.entity.Product;
 import gift.doamin.user.entity.User;
 import gift.doamin.user.entity.UserRole;
-import gift.doamin.user.repository.JpaUserRepository;
+import gift.doamin.user.repository.UserRepository;
 import java.util.List;
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
@@ -19,13 +19,13 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 class JpaProductRepositoryTest {
 
     @Autowired
-    private JpaProductRepository jpaProductRepository;
+    private ProductRepository productRepository;
 
     @Autowired
-    private JpaUserRepository jpaUserRepository;
+    private UserRepository jpaUserRepository;
 
     @Autowired
-    private JpaCategoryRepository categoryRepository;
+    private CategoryRepository categoryRepository;
 
     @BeforeEach
     void setUp() {
@@ -39,7 +39,7 @@ class JpaProductRepositoryTest {
         Category category = categoryRepository.findById(1L).get();
         Product product = new Product(user, category, "test", 10000, "test.png");
 
-        Product savedProduct = jpaProductRepository.save(product);
+        Product savedProduct = productRepository.save(product);
 
         assertThat(savedProduct.getId()).isNotNull();
     }
@@ -49,14 +49,15 @@ class JpaProductRepositoryTest {
         User user1 = jpaUserRepository.findByEmail("test1@test.com").get();
         Category category = categoryRepository.findById(1L).get();
         Product product1 = new Product(user1, category, "test1", 10000, "test1.png");
-        jpaProductRepository.save(product1);
+        productRepository.save(product1);
         User user2 = jpaUserRepository.findByEmail("test2@test.com").get();
         Product product2 = new Product(user2, category, "test2", 10000, "test.png2");
-        jpaProductRepository.save(product2);
+        productRepository.save(product2);
 
-        List<Product> allProducts = jpaProductRepository.findAll();
+        List<Product> allProducts = productRepository.findAll();
 
-        assertThat(allProducts.size()).isEqualTo(2);
+        // 목업 데이터 14개 추가
+        assertThat(allProducts.size()).isEqualTo(2+14);
     }
 
     @Test
@@ -64,9 +65,9 @@ class JpaProductRepositoryTest {
         User user = jpaUserRepository.findByEmail("test1@test.com").get();
         Category category = categoryRepository.findById(1L).get();
         Product product = new Product(user, category, "test", 10000, "test.png");
-        Product savedProduct = jpaProductRepository.save(product);
+        Product savedProduct = productRepository.save(product);
 
-        Optional<Product> foundProduct = jpaProductRepository.findById(savedProduct.getId());
+        Optional<Product> foundProduct = productRepository.findById(savedProduct.getId());
 
         assertThat(foundProduct.get()).isEqualTo(savedProduct);
     }
@@ -76,10 +77,10 @@ class JpaProductRepositoryTest {
         User user = jpaUserRepository.findByEmail("test1@test.com").get();
         Category category = categoryRepository.findById(1L).get();
         Product product = new Product(user, category, "test", 10000, "test.png");
-        Product savedProduct = jpaProductRepository.save(product);
+        Product savedProduct = productRepository.save(product);
 
-        jpaProductRepository.deleteById(savedProduct.getId());
-        Optional<Product> foundProduct = jpaProductRepository.findById(savedProduct.getId());
+        productRepository.deleteById(savedProduct.getId());
+        Optional<Product> foundProduct = productRepository.findById(savedProduct.getId());
 
         assertThat(foundProduct.isEmpty()).isTrue();
     }

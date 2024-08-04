@@ -2,7 +2,7 @@ package gift.doamin.product.service;
 
 import gift.doamin.category.entity.Category;
 import gift.doamin.category.exception.CategoryNotFoundException;
-import gift.doamin.category.repository.JpaCategoryRepository;
+import gift.doamin.category.repository.CategoryRepository;
 import gift.doamin.product.dto.OptionRequest;
 import gift.doamin.product.dto.ProductCreateRequest;
 import gift.doamin.product.dto.ProductResponse;
@@ -11,10 +11,10 @@ import gift.doamin.product.entity.Options;
 import gift.doamin.product.entity.Product;
 import gift.doamin.product.exception.NotEnoughAutorityException;
 import gift.doamin.product.exception.ProductNotFoundException;
-import gift.doamin.product.repository.JpaProductRepository;
+import gift.doamin.product.repository.ProductRepository;
 import gift.doamin.user.entity.User;
 import gift.doamin.user.exception.UserNotFoundException;
-import gift.doamin.user.repository.JpaUserRepository;
+import gift.doamin.user.repository.UserRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -25,12 +25,12 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class ProductService {
 
-    private final JpaProductRepository productRepository;
-    private final JpaUserRepository userRepository;
-    private final JpaCategoryRepository categoryRepository;
+    private final ProductRepository productRepository;
+    private final UserRepository userRepository;
+    private final CategoryRepository categoryRepository;
 
-    public ProductService(JpaProductRepository productRepository,
-        JpaUserRepository userRepository, JpaCategoryRepository categoryRepository) {
+    public ProductService(ProductRepository productRepository,
+        UserRepository userRepository, CategoryRepository categoryRepository) {
         this.productRepository = productRepository;
         this.userRepository = userRepository;
         this.categoryRepository = categoryRepository;

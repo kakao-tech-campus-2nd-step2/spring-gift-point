@@ -1,4 +1,4 @@
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
   const accessToken = localStorage.getItem('accessToken');
 
   if (!accessToken) {
@@ -27,33 +27,38 @@ document.addEventListener('DOMContentLoaded', function() {
                     <input type="color" class="colorInput" value="${category.color}" placeholder="색상">
                     <img src="${category.imageUrl}" alt="${category.name}" class="categoryImage">
                     <input type="text" class="imageInput" value="${category.imageUrl}" placeholder="URL">
-                    <input type="text" class="descriptionInput" value="${category.description || ''}" placeholder="설명">
+                    <input type="text" class="descriptionInput" value="${category.description
+        || ''}" placeholder="설명">
                     <input type="hidden" class="idInput" value="${category.id}" class="categoryId">
                     <button class="updateCategoryButton">수정</button>
                     <button class="deleteCategoryButton">삭제</button>
                 `;
         categoriesList.appendChild(categoryItem);
 
-        const updateButton = categoryItem.querySelector('.updateCategoryButton');
-        const deleteButton = categoryItem.querySelector('.deleteCategoryButton');
+        const updateButton = categoryItem.querySelector(
+            '.updateCategoryButton');
+        const deleteButton = categoryItem.querySelector(
+            '.deleteCategoryButton');
 
-        updateButton.addEventListener('click', function() {
+        updateButton.addEventListener('click', function () {
           const newName = categoryItem.querySelector('.nameInput').value;
           const newColor = categoryItem.querySelector('.colorInput').value;
           const newImageUrl = categoryItem.querySelector('.imageInput').value;
-          const newDescription = categoryItem.querySelector('.descriptionInput').value;
+          const newDescription = categoryItem.querySelector(
+              '.descriptionInput').value;
           const categoryId = categoryItem.querySelector('.idInput').value;
 
           if (newName && newColor && newImageUrl) {
             if (confirm('정말로 이 카테고리를 수정하시겠습니까?')) {
-              updateCategory(categoryId, newName, newColor, newDescription, newImageUrl);
+              updateCategory(categoryId, newName, newColor, newDescription,
+                  newImageUrl);
             }
           } else {
             alert('카테고리 이름, 색상, 그리고 이미지 URL은 필수 입력값입니다.');
           }
         });
 
-        deleteButton.addEventListener('click', function() {
+        deleteButton.addEventListener('click', function () {
           const categoryId = categoryItem.querySelector('.categoryId').value;
 
           if (confirm('정말로 이 카테고리를 삭제하시겠습니까?')) {
@@ -75,7 +80,7 @@ document.addEventListener('DOMContentLoaded', function() {
         'Content-Type': 'application/json',
         'Authorization': accessToken
       },
-      body: JSON.stringify({ name, color, description, imageUrl })
+      body: JSON.stringify({name, color, description, imageUrl})
     })
     .then(response => {
       if (response.ok) {
@@ -98,7 +103,7 @@ document.addEventListener('DOMContentLoaded', function() {
         'Content-Type': 'application/json',
         'Authorization': accessToken
       },
-      body: JSON.stringify({ name, color, description, imageUrl })
+      body: JSON.stringify({name, color, description, imageUrl})
     })
     .then(response => {
       if (response.ok) {
@@ -136,23 +141,28 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   }
 
-  document.getElementById('loadCategoriesButton').addEventListener('click', loadCategories);
+  document.getElementById('loadCategoriesButton').addEventListener('click',
+      loadCategories);
 
-  document.getElementById('addCategoryButton').addEventListener('click', function() {
-    const newName = document.getElementById('newCategoryName').value;
-    const newColor = document.getElementById('newCategoryColor').value;
-    const newDescription = document.getElementById('newCategoryDescription').value;
-    const newImageUrl = document.getElementById('newCategoryImageUrl').value;
-    if (newName && newColor && newImageUrl) {
-      addCategory(newName, newColor, newDescription, newImageUrl);
-    } else {
-      alert('카테고리 이름, 색상, 그리고 이미지 URL은 필수 입력값입니다.');
-    }
-  });
+  document.getElementById('addCategoryButton').addEventListener('click',
+      function () {
+        const newName = document.getElementById('newCategoryName').value;
+        const newColor = document.getElementById('newCategoryColor').value;
+        const newDescription = document.getElementById(
+            'newCategoryDescription').value;
+        const newImageUrl = document.getElementById(
+            'newCategoryImageUrl').value;
+        if (newName && newColor && newImageUrl) {
+          addCategory(newName, newColor, newDescription, newImageUrl);
+        } else {
+          alert('카테고리 이름, 색상, 그리고 이미지 URL은 필수 입력값입니다.');
+        }
+      });
 
-  document.getElementById('goToMainPageButton').addEventListener('click', function() {
-    window.location.href = '/admin'; // Redirect to main page
-  });
+  document.getElementById('goToMainPageButton').addEventListener('click',
+      function () {
+        window.location.href = '/admin'; // Redirect to main page
+      });
 
   // Load categories on page load
   loadCategories();

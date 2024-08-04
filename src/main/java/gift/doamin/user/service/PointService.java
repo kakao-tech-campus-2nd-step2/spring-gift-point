@@ -3,16 +3,16 @@ package gift.doamin.user.service;
 import gift.doamin.user.dto.PointResponse;
 import gift.doamin.user.entity.User;
 import gift.doamin.user.exception.UserNotFoundException;
-import gift.doamin.user.repository.JpaUserRepository;
+import gift.doamin.user.repository.UserRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class PointService {
 
-    private final JpaUserRepository userRepository;
+    private final UserRepository userRepository;
 
-    public PointService(JpaUserRepository userRepository) {
+    public PointService(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
 

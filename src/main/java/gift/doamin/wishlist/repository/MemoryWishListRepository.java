@@ -4,8 +4,12 @@ import gift.doamin.wishlist.entity.Wish;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicLong;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 
 public class MemoryWishListRepository implements WishListRepository {
 
@@ -20,7 +24,7 @@ public class MemoryWishListRepository implements WishListRepository {
     }
 
     @Override
-    public List<Wish> findByUserId(Long userId) {
+    public Page<Wish> findAllByUserId(Long userId, Pageable pageable) {
         List<Wish> result = new ArrayList<>();
 
         for (Wish wish : wishLists.values()) {
@@ -29,18 +33,10 @@ public class MemoryWishListRepository implements WishListRepository {
             }
         }
 
-        return result;
-    }
+        int start = (int) pageable.getOffset();
+        int end = Math.min((start + pageable.getPageSize()), result.size());
 
-    @Override
-    public Wish findByUserIdAndProductId(Long userId, Long productId) {
-        for (Wish wish : wishLists.values()) {
-            if (wish.getUser().getId().equals(userId) && wish.getOption().getId()
-                .equals(productId)) {
-                return wish;
-            }
-        }
-        return null;
+        return new PageImpl<>(result.subList(start, end), pageable, result.size());
     }
 
     @Override
@@ -49,18 +45,35 @@ public class MemoryWishListRepository implements WishListRepository {
     }
 
     @Override
+    public Optional<Wish> findById(Long id) {
+        return Optional.ofNullable(wishLists.get(id));
+    }
+
+    @Override
     public void deleteById(Long id) {
         wishLists.remove(id);
     }
 
     @Override
-    public boolean existsByUserIdAndProductId(Long userId, Long productId) {
+    public Optional<Wish> findByUserIdAndOptionId(Long userId, Long optionId) {
         for (Wish wish : wishLists.values()) {
             if (wish.getUser().getId().equals(userId) && wish.getOption().getId()
-                .equals(productId)) {
-                return true;
+                .equals(optionId)) {
+                return Optional.of(wish);
             }
         }
-        return false;
+        return Optional.empty();
+    }
+
+    @Override
+    public boolean existsByUserIdAndOptionId(Long userId, Long optionId) {
+        return wishLists.values().stream().anyMatch(
+            wish -> wish.getUser().getId().equals(userId) && wish.getOption().getId()
+                .equals(optionId));
+    }
+
+    @Override
+    public void delete(Wish wish) {
+        wishLists.remove(wish.getId());
     }
 }

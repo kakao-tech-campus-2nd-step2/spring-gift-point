@@ -1,4 +1,4 @@
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
   const accessToken = localStorage.getItem('accessToken');
 
   if (!accessToken) {
@@ -22,8 +22,10 @@ document.addEventListener('DOMContentLoaded', function() {
     .then(response => response.json())
     .then(data => {
       const categorySelect = document.getElementById('categorySelect');
-      const editProductCategorySelect = document.getElementById('editProductCategory');
-      const addProductCategorySelect = document.getElementById('addProductCategory');
+      const editProductCategorySelect = document.getElementById(
+          'editProductCategory');
+      const addProductCategorySelect = document.getElementById(
+          'addProductCategory');
       data.forEach(category => {
         const option = document.createElement('option');
         option.value = category.id;
@@ -48,13 +50,14 @@ document.addEventListener('DOMContentLoaded', function() {
   function loadProducts() {
     const categoryId = document.getElementById('categorySelect').value;
 
-    fetch(`/api/products?categoryId=${categoryId}&page=${currentPage}&size=10`, {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': accessToken
-      }
-    })
+    fetch(`/api/products?categoryId=${categoryId}&page=${currentPage}&size=10`,
+        {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': accessToken
+          }
+        })
     .then(response => response.json())
     .then(data => {
       totalPages = data.totalPages;
@@ -80,11 +83,11 @@ document.addEventListener('DOMContentLoaded', function() {
         const editButton = productItem.querySelector('.editProductButton');
         const deleteButton = productItem.querySelector('.deleteProductButton');
 
-        editButton.addEventListener('click', function() {
+        editButton.addEventListener('click', function () {
           openEditProductModal(product);
         });
 
-        deleteButton.addEventListener('click', function() {
+        deleteButton.addEventListener('click', function () {
           if (confirm('정말로 이 상품을 삭제하시겠습니까?')) {
             deleteProduct(product.id);
           }
@@ -92,7 +95,8 @@ document.addEventListener('DOMContentLoaded', function() {
       });
 
       document.getElementById('prevPageButton').disabled = currentPage === 0;
-      document.getElementById('nextPageButton').disabled = currentPage === totalPages-1;
+      document.getElementById('nextPageButton').disabled = currentPage
+          === totalPages - 1;
     })
     .catch(error => {
       console.error('Error loading products:', error);
@@ -195,63 +199,76 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   }
 
-  document.getElementById('loadProductsButton').addEventListener('click', loadProducts);
+  document.getElementById('loadProductsButton').addEventListener('click',
+      loadProducts);
 
-  document.getElementById('prevPageButton').addEventListener('click', function() {
-    if (currentPage > 0) {
-      currentPage--;
-      loadProducts();
-    }
-  });
+  document.getElementById('prevPageButton').addEventListener('click',
+      function () {
+        if (currentPage > 0) {
+          currentPage--;
+          loadProducts();
+        }
+      });
 
-  document.getElementById('nextPageButton').addEventListener('click', function() {
-    if (currentPage < totalPages-1) {
-      currentPage++;
-      loadProducts();
-    }
-  });
+  document.getElementById('nextPageButton').addEventListener('click',
+      function () {
+        if (currentPage < totalPages - 1) {
+          currentPage++;
+          loadProducts();
+        }
+      });
 
-  document.getElementById('goToMainPageButton').addEventListener('click', function() {
-    window.location.href = '/admin'; // Redirect to main page
-  });
+  document.getElementById('goToMainPageButton').addEventListener('click',
+      function () {
+        window.location.href = '/admin'; // Redirect to main page
+      });
 
-  document.getElementById('editProductForm').addEventListener('submit', function(event) {
-    event.preventDefault();
+  document.getElementById('editProductForm').addEventListener('submit',
+      function (event) {
+        event.preventDefault();
 
-    const productId = document.getElementById('editProductId').value;
-    const name = document.getElementById('editProductName').value;
-    const price = parseFloat(document.getElementById('editProductPrice').value);
-    const imageUrl = document.getElementById('editProductImageUrl').value;
-    const categoryId = parseInt(document.getElementById('editProductCategory').value);
+        const productId = document.getElementById('editProductId').value;
+        const name = document.getElementById('editProductName').value;
+        const price = parseFloat(
+            document.getElementById('editProductPrice').value);
+        const imageUrl = document.getElementById('editProductImageUrl').value;
+        const categoryId = parseInt(
+            document.getElementById('editProductCategory').value);
 
-    const productData = {
-      productId,
-      name,
-      price,
-      imageUrl,
-      categoryId
-    };
+        const productData = {
+          productId,
+          name,
+          price,
+          imageUrl,
+          categoryId
+        };
 
-    updateProduct(productData);
-  });
+        updateProduct(productData);
+      });
 
-  document.getElementById('addProductForm').addEventListener('submit', function(event) {
-    event.preventDefault();
-    const productData = {
-      name: document.getElementById('addProductName').value,
-      price: parseFloat(document.getElementById('addProductPrice').value),
-      imageUrl: document.getElementById('addProductImageUrl').value,
-      categoryId: parseInt(document.getElementById('addProductCategory').value),
-      options: [{'name': document.getElementById('addProductName').value, 'quantity': 1000},],
-    };
-    createProduct(productData);
-  });
+  document.getElementById('addProductForm').addEventListener('submit',
+      function (event) {
+        event.preventDefault();
+        const productData = {
+          name: document.getElementById('addProductName').value,
+          price: parseFloat(document.getElementById('addProductPrice').value),
+          imageUrl: document.getElementById('addProductImageUrl').value,
+          categoryId: parseInt(
+              document.getElementById('addProductCategory').value),
+          options: [{
+            'name': document.getElementById('addProductName').value,
+            'quantity': 1000
+          },],
+        };
+        createProduct(productData);
+      });
 
-  document.getElementById('openAddProductModalButton').addEventListener('click', openAddProductModal);
+  document.getElementById('openAddProductModalButton').addEventListener('click',
+      openAddProductModal);
 
   const closeButtons = document.querySelectorAll('.close-button');
   closeButtons.forEach(button => {
-    button.addEventListener('click', function() {
+    button.addEventListener('click', function () {
       closeEditProductModal();
       closeAddProductModal();
     });

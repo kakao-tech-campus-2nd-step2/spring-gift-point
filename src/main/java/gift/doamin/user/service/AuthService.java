@@ -8,8 +8,8 @@ import gift.doamin.user.entity.UserRole;
 import gift.doamin.user.exception.InvalidRefreshTokenException;
 import gift.doamin.user.exception.InvalidSignUpFormException;
 import gift.doamin.user.exception.UserNotFoundException;
-import gift.doamin.user.repository.JpaUserRepository;
 import gift.doamin.user.repository.RefreshTokenRepository;
+import gift.doamin.user.repository.UserRepository;
 import gift.global.util.JwtDto;
 import gift.global.util.JwtProvider;
 import java.util.Optional;
@@ -19,12 +19,12 @@ import org.springframework.stereotype.Service;
 @Service
 public class AuthService {
 
-    private final JpaUserRepository userRepository;
+    private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtProvider jwtProvider;
     private final RefreshTokenRepository refreshTokenRepository;
 
-    public AuthService(JpaUserRepository userRepository, PasswordEncoder passwordEncoder,
+    public AuthService(UserRepository userRepository, PasswordEncoder passwordEncoder,
         JwtProvider jwtProvider, RefreshTokenRepository refreshTokenRepository) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;

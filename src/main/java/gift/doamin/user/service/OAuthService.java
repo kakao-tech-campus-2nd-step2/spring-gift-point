@@ -10,9 +10,9 @@ import gift.doamin.user.entity.User;
 import gift.doamin.user.entity.UserRole;
 import gift.doamin.user.properties.KakaoClientProperties;
 import gift.doamin.user.properties.KakaoProviderProperties;
-import gift.doamin.user.repository.JpaUserRepository;
 import gift.doamin.user.repository.KakaoOAuthTokenRepository;
 import gift.doamin.user.repository.RefreshTokenRepository;
+import gift.doamin.user.repository.UserRepository;
 import gift.doamin.user.util.AuthorizationOAuthUriBuilder;
 import gift.global.util.JwtDto;
 import gift.global.util.JwtProvider;
@@ -29,14 +29,14 @@ public class OAuthService {
 
     private final KakaoClientProperties clientProperties;
     private final KakaoProviderProperties providerProperties;
-    private final JpaUserRepository userRepository;
+    private final UserRepository userRepository;
     private final JwtProvider jwtProvider;
     private final RefreshTokenRepository refreshTokenRepository;
     private final KakaoOAuthTokenRepository kakaoOAuthTokenRepository;
     private final RestClient restClient = RestClient.builder().build();
 
     public OAuthService(KakaoClientProperties clientProperties,
-        KakaoProviderProperties providerProperties, JpaUserRepository userRepository,
+        KakaoProviderProperties providerProperties, UserRepository userRepository,
         JwtProvider jwtProvider, RefreshTokenRepository refreshTokenRepository,
         KakaoOAuthTokenRepository kakaoOAuthTokenRepository) {
         this.clientProperties = clientProperties;

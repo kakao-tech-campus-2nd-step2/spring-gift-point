@@ -15,10 +15,10 @@ import gift.doamin.user.dto.UserDto;
 import gift.doamin.user.entity.KakaoOAuthToken;
 import gift.doamin.user.entity.User;
 import gift.doamin.user.exception.UserNotFoundException;
-import gift.doamin.user.repository.JpaUserRepository;
 import gift.doamin.user.repository.KakaoOAuthTokenRepository;
+import gift.doamin.user.repository.UserRepository;
 import gift.doamin.user.service.OAuthService;
-import gift.doamin.wishlist.repository.JpaWishListRepository;
+import gift.doamin.wishlist.repository.WishListRepository;
 import java.util.NoSuchElementException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -36,15 +36,15 @@ public class OrderService {
     private static final Logger log = LoggerFactory.getLogger(OrderService.class);
     private final OptionRepository optionRepository;
     private final OrderRepository orderRepository;
-    private final JpaWishListRepository jpaWishListRepository;
+    private final WishListRepository jpaWishListRepository;
     private final KakaoOAuthTokenRepository oAuthTokenRepository;
-    private final JpaUserRepository userRepository;
+    private final UserRepository userRepository;
     private final OAuthService oAuthService;
     private final RestClient restClient = RestClient.builder().build();
 
     public OrderService(OptionRepository optionRepository, OrderRepository orderRepository,
-        JpaWishListRepository jpaWishListRepository, KakaoOAuthTokenRepository oAuthTokenRepository,
-        JpaUserRepository userRepository, OAuthService oAuthService) {
+        WishListRepository jpaWishListRepository, KakaoOAuthTokenRepository oAuthTokenRepository,
+        UserRepository userRepository, OAuthService oAuthService) {
         this.optionRepository = optionRepository;
         this.orderRepository = orderRepository;
         this.jpaWishListRepository = jpaWishListRepository;

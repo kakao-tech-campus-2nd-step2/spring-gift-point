@@ -4,7 +4,7 @@ import gift.doamin.category.dto.CategoryRequest;
 import gift.doamin.category.dto.CategoryResponse;
 import gift.doamin.category.entity.Category;
 import gift.doamin.category.exception.CategoryNotFoundException;
-import gift.doamin.category.repository.JpaCategoryRepository;
+import gift.doamin.category.repository.CategoryRepository;
 import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -12,9 +12,9 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class CategoryService {
 
-    private final JpaCategoryRepository categoryRepository;
+    private final CategoryRepository categoryRepository;
 
-    public CategoryService(JpaCategoryRepository categoryRepository) {
+    public CategoryService(CategoryRepository categoryRepository) {
         this.categoryRepository = categoryRepository;
     }
 

@@ -11,7 +11,7 @@ import gift.doamin.category.dto.CategoryRequest;
 import gift.doamin.category.dto.CategoryResponse;
 import gift.doamin.category.entity.Category;
 import gift.doamin.category.exception.CategoryNotFoundException;
-import gift.doamin.category.repository.JpaCategoryRepository;
+import gift.doamin.category.repository.CategoryRepository;
 import java.util.List;
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
@@ -19,7 +19,7 @@ import org.junit.jupiter.api.Test;
 
 class CategoryServiceTest {
 
-    private JpaCategoryRepository categoryRepository = mock(JpaCategoryRepository.class);
+    private CategoryRepository categoryRepository = mock(CategoryRepository.class);
     private CategoryService categoryService;
 
     @BeforeEach
