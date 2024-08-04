@@ -4,6 +4,7 @@ import gift.authentication.annotation.LoginMember;
 import gift.service.OrderService;
 import gift.web.dto.MemberDetails;
 import gift.web.dto.request.order.CreateOrderRequest;
+import gift.web.dto.response.order.CreateOrderResponse;
 import gift.web.dto.response.order.OrderResponse;
 import java.util.List;
 import org.springframework.data.domain.Pageable;
@@ -29,12 +30,12 @@ public class OrderApiController {
     }
 
     @PostMapping
-    public ResponseEntity<OrderResponse> orderProduct(
+    public ResponseEntity<CreateOrderResponse> orderProduct(
         @RequestHeader(HttpHeaders.AUTHORIZATION) String accessToken,
         @RequestBody @Validated CreateOrderRequest request,
         @LoginMember MemberDetails memberDetails
     ) {
-        OrderResponse response = orderService.createOrder(accessToken, memberDetails.getId(), request);
+        CreateOrderResponse response = orderService.createOrder(accessToken, memberDetails.getId(), request);
         return ResponseEntity.ok(response);
     }
 
