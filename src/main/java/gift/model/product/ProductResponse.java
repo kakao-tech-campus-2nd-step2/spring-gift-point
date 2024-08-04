@@ -1,6 +1,8 @@
 package gift.model.product;
 
-public record ProductResponse(Long id, String name, int price, String image_url, Long category_id) {
+import com.fasterxml.jackson.annotation.JsonProperty;
+
+public record ProductResponse(Long id, String name, int price, @JsonProperty("image_url") String imageUrl, @JsonProperty("category_id") Long categoryId) {
     public static ProductResponse from(Product product) {
         return new ProductResponse(product.getId(), product.getName(), product.getPrice(),
             product.getImageUrl(), product.getCategory().getId());

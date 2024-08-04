@@ -1,5 +1,7 @@
 package gift.controller;
 
+import gift.common.annotation.LoginMember;
+import gift.model.user.PointResponse;
 import gift.model.user.User;
 import gift.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -7,12 +9,14 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @Tag(name = "유저 API", description = "유저 관련 API")
 @RestController
-@RequestMapping("/user")
+@RequestMapping("api/members")
 public class UserRestController {
     private final UserService userService;
     public UserRestController(UserService userService) {
@@ -26,5 +30,19 @@ public class UserRestController {
         return ResponseEntity.ok().body(user);
     }
 
+    @Operation(summary = "user의 포인트 조회", description = "user의 포인트를 조회한다.")
+    @GetMapping("/me")
+    public ResponseEntity<PointResponse> getPointByUser(@LoginMember User user) {
+        PointResponse response = userService.getPoint(user);
+        return ResponseEntity.ok(response);
+    }
+
+    @Operation(summary = "user의 포인트 충전", description = "user의 포인트를 충전한다.")
+    @PostMapping("/me/point")
+    public ResponseEntity<PointResponse> addPointToUser(@LoginMember User user, @RequestBody int point) {
+        userService.addPoint(user, point);
+        PointResponse response = userService.getPoint(user);
+        return ResponseEntity.ok(response);
+    }
 
 }

@@ -1,7 +1,9 @@
 package gift.model.user;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 public record AuthenticationResponse(
-    String access_token
+    @JsonProperty("access_token") String accessToken
 ) {
 //    private final String access_token;
 //

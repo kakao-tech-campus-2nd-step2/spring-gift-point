@@ -26,6 +26,7 @@ public class User {
     @NotBlank(message = "비밀번호는 필수로 입력하셔야 합니다.")
     private String password;
     private String role;
+    private int point;
     public User() {}
 
     public User(String name, String email, String password, String role) {
@@ -33,10 +34,25 @@ public class User {
         this.email = email;
         this.password = password;
         this.role = role;
+        this.point = 0;
+    }
+
+    // 비밀번호 검증 메서드
+    public boolean validatePassword(String rawPassword) {
+        return this.password.equals(rawPassword);
+    }
+
+    // 포인트 충전
+    public void addPoints(int point) {
+        this.point += point;
+    }
+
+    // 포인트 차감
+    public void subtractPoints(int point) {
+        this.point -= point;
     }
 
     // getters, setters
-
     public Long getId() {
         return id;
     }
@@ -57,10 +73,10 @@ public class User {
         return role;
     }
 
-    // 비밀번호 검증 메서드
-    public boolean validatePassword(String rawPassword) {
-        return this.password.equals(rawPassword);
+    public int getPoint() {
+        return point;
     }
+
 
 
 }

@@ -1,4 +1,5 @@
 #!/bin/bash
+
 # 변수 설정
 DEPLOY_PATH="/home/ubuntu/spring-gift-point"
 REPO_URL="https://github.com/yjhannn/spring-gift-point.git"
