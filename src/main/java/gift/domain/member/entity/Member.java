@@ -1,5 +1,6 @@
 package gift.domain.member.entity;
 
+import gift.exception.IllegalPointUseException;
 import gift.exception.LackOfPointException;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -37,7 +38,7 @@ public class Member {
     private AuthProvider authProvider;
 
     @ColumnDefault("0")
-    private int point;
+    private int point = 0;
 
     protected Member() {
 
@@ -86,10 +87,16 @@ public class Member {
     }
 
     public void rechargePoint(int amount) {
+        if (amount <= 0) {
+            throw new IllegalPointUseException("error.member.negative.point.value");
+        }
         this.point += amount;
     }
 
     public void userPoint(int amount) {
+        if (amount <= 0) {
+            throw new IllegalPointUseException("error.member.negative.point.value");
+        }
         if (this.point < amount) {
             throw new LackOfPointException("error.member.lack.of.point");
         }

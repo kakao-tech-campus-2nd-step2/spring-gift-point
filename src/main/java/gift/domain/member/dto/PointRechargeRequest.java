@@ -4,7 +4,7 @@ import org.hibernate.validator.constraints.Range;
 
 public record PointRechargeRequest(
 
-    @Range(min = 1000, max = 1000000)
+    @Range(min = 1, max = 1000000)
     int amount
 ) {
 
