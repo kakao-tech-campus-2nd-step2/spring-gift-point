@@ -6,20 +6,20 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class OptionResponse {
-    private Long id;
+    private Long optionId;
     private String name;
     private Integer quantity;
     private Long productId;
 
-    public OptionResponse(Long id, String name, Integer quantity, Long productId) {
-        this.id = id;
+    public OptionResponse(Long optionId, String name, Integer quantity, Long productId) {
+        this.optionId = optionId;
         this.name = name;
         this.quantity = quantity;
         this.productId = productId;
     }
 
     public Long getId() {
-        return id;
+        return optionId;
     }
 
     public String getName() {

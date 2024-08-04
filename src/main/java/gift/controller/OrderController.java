@@ -12,6 +12,9 @@ import gift.util.SortUtils;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
@@ -41,7 +44,15 @@ public class OrderController {
 
     @GetMapping("/price")
     @Operation(summary = "결제 금액 조회", description = "결제 직전 페이지에서 금액을 조회한다.")
-    public ResponseEntity<PriceResponse> getOrderPrice(@Valid @RequestBody PriceRequest priceRequest) {
+    public ResponseEntity<PriceResponse> getOrderPrice(
+            @RequestParam("productId") @NotNull(message = "상품 ID를 입력하세요.") Long productId,
+            @RequestParam("optionId") @NotNull(message = "옵션 ID를 입력하세요.") Long optionId,
+            @RequestParam("quantity")
+            @NotNull(message = "옵션 수량을 입력하세요.")
+            @Min(value = 1, message = "옵션 수량은 최소 1개 이상이어야 합니다.")
+            @Max(value = 99999999, message = "옵션 수량은 최대 1억 개 미만이어야 합니다.") Integer quantity
+    ) {
+        PriceRequest priceRequest = new PriceRequest(productId, optionId, quantity);
         PriceResponse priceResponse = orderService.getOrderPrice(priceRequest);
         return ResponseEntity.ok(priceResponse);
     }
