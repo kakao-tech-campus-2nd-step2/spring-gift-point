@@ -146,15 +146,23 @@
             method: 'DELETE',
             headers: getAuthHeaders()
         })
-        .then(() => {
+        .then(response => {
+            if (!response.ok) {
+                return response.text().then(text => { throw new Error(text); });
+            }
             fetchWishlist(currentPage, pageSize);  // Reload wishlist after removal
         })
         .catch(error => {
             console.error('Error removing wishlist item:', error);
-            alert('Failed to remove item from wishlist. Please try again later.');
+            if (error.message.includes('401')) {
+                alert('Failed to remove item: Unauthorized. Please log in again.');
+            } else if (error.message.includes('404')) {
+                alert('Failed to remove item: Item not found.');
+            } else {
+                alert(`Failed to remove item from wishlist. Error: ${error.message}`);
+            }
         });
     }
-
 
     document.addEventListener('DOMContentLoaded', function () {
         fetchWishlist(currentPage, pageSize);
