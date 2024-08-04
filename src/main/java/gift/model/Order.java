@@ -32,6 +32,18 @@ public class Order {
     @Column(name = "order_date_time", nullable = false)
     private LocalDateTime orderDateTime;
 
+    @Column(nullable = false)
+    private boolean cashReceipt;
+
+    @Column(nullable = true)
+    private String phoneNumber;
+
+    @Column(nullable = false)
+    private int paymentAmount;
+
+    @Column(nullable = false)
+    private int pointsUsed;
+
     @Override
     public String toString() {
         return "Order{" +
@@ -41,6 +53,10 @@ public class Order {
             ", quantity=" + quantity +
             ", message='" + message + '\'' +
             ", orderDateTime=" + orderDateTime +
+            ", cashReceipt=" + cashReceipt +
+            ", phoneNumber='" + phoneNumber + '\'' +
+            ", paymentAmount=" + paymentAmount +
+            ", pointsUsed=" + pointsUsed +
             '}';
     }
 }
