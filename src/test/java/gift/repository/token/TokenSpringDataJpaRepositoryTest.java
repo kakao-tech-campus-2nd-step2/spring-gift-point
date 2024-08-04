@@ -54,7 +54,6 @@ public class TokenSpringDataJpaRepositoryTest {
         Member member = new Member("test@example.com", "password", NORMAL);
         memberRepository.save(member);
 
-
         TokenAuth token = new TokenAuth("test-token", member);
         tokenRepository.save(token);
 

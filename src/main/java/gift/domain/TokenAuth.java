@@ -45,4 +45,16 @@ public class TokenAuth {
     public void setToken(String token) {
         this.token = token;
     }
+
+    public Long getMemberId(){
+        return member.getId();
+    }
+
+    @PreRemove
+    private void preRemove() {
+        if (member != null) {
+            member.setTokenAuth(null);
+        }
+    }
+
 }

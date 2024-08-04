@@ -1,28 +1,30 @@
 package gift.controller;
 
 import gift.domain.Option;
-import gift.domain.Product;
 import gift.dto.request.OptionRequest;
+import gift.dto.request.ProductOptionRequest;
 import gift.dto.request.ProductRequest;
 import gift.dto.response.OptionResponse;
+import gift.dto.response.ProductPageResponse;
 import gift.dto.response.ProductResponse;
 import gift.service.CategoryService;
 import gift.service.OptionService;
 import gift.service.ProductService;
+import gift.util.SortUtils;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@Controller
+@RestController
 @RequestMapping("/api/products")
 public class ProductController {
 
@@ -59,18 +61,19 @@ public class ProductController {
     }
 
     @GetMapping
-    @Operation(summary = "상품 목록 조회 (페이지네이션 적용)", description = "모든 상품의 목록을 페이지 단위로 조회한다.")
-    public String getProducts(Model model, Pageable pageable) {
-        Page<Product> products = productService.getProducts(pageable);
-        model.addAttribute("products", products);
-        return "product-list";
+    @Operation(summary = "상품 목록 조회 (페이지네이션 적용)", description = "특정 카테고리의 상품 목록을 페이지 단위로 조회한다.")
+    public ProductPageResponse getProducts(@RequestParam(required = false) Long categoryId,
+                                           @RequestParam(defaultValue = "20") int size,
+                                           @RequestParam(defaultValue = "0") int page,
+                                           @RequestParam(defaultValue = "price,desc") String sort) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by(SortUtils.parseSortParameter(sort)));
+        return productService.getProducts(categoryId, pageable);
     }
 
     @GetMapping("/{id}")
     @Operation(summary = "상품 조회", description = "특정 상품의 정보를 조회한다.")
-    public String getProduct(@PathVariable Long id, Model model) {
-        model.addAttribute("products", productService.findOne(id));
-        return "product-list";
+    public ProductResponse getProduct(@PathVariable Long id) {
+        return productService.findOne(id);
     }
 
     @GetMapping("/new")
@@ -83,16 +86,14 @@ public class ProductController {
 
     @PostMapping
     @Operation(summary = "상품 생성", description = "새 상품을 등록한다.")
-    public String addProduct(@Valid @ModelAttribute ProductRequest productRequest, @Valid @ModelAttribute OptionRequest optionRequest) {
-        productService.register(productRequest, optionRequest);
-        return "redirect:/api/products";
+    public ProductResponse addProduct(@Valid @RequestBody ProductOptionRequest request) {
+        return productService.register(request.getProductRequest(), request.getOptionRequest());
     }
 
     @GetMapping("/edit/{id}")
     @Operation(summary = "상품 수정 화면", description = "상품 수정 화면으로 이동한다.")
     public String editProductForm(@PathVariable long id, Model model) {
-        Product product = productService.findOne(id);
-        ProductResponse productResponse = ProductResponse.EntityToResponse(product);
+        ProductResponse productResponse = productService.findOne(id);
         model.addAttribute("productResponse", productResponse);
         model.addAttribute("categories", categoryService.getCategories());
         return "product-edit-form";

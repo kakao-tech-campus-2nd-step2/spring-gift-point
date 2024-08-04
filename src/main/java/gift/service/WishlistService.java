@@ -5,8 +5,11 @@ import gift.domain.Product;
 import gift.domain.TokenAuth;
 import gift.domain.WishlistItem;
 import gift.dto.request.WishlistRequest;
+import gift.dto.response.WishlistPageResponse;
+import gift.exception.MemberNotFoundException;
 import gift.exception.ProductNotFoundException;
 import gift.exception.WishlistNotFoundException;
+import gift.repository.member.MemberSpringDataJpaRepository;
 import gift.repository.product.ProductSpringDataJpaRepository;
 import gift.repository.wishlist.WishlistSpringDataJpaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,18 +29,20 @@ public class WishlistService {
     private final WishlistSpringDataJpaRepository wishlistRepository;
     private final TokenService tokenService;
     private final ProductSpringDataJpaRepository productRepository;
+    private final MemberSpringDataJpaRepository memberRepository;
 
     @Autowired
-    public WishlistService(WishlistSpringDataJpaRepository wishlistRepository, TokenService tokenService, ProductSpringDataJpaRepository productRepository) {
+    public WishlistService(WishlistSpringDataJpaRepository wishlistRepository, TokenService tokenService, ProductSpringDataJpaRepository productRepository, MemberSpringDataJpaRepository memberRepository) {
         this.wishlistRepository = wishlistRepository;
         this.tokenService = tokenService;
         this.productRepository = productRepository;
+        this.memberRepository = memberRepository;
     }
 
     @Transactional
-    public void addItemToWishlist(WishlistRequest wishlistRequest, String token) {
-        TokenAuth tokenAuth = tokenService.findToken(token);
-        Member member = tokenAuth.getMember();
+    public void addItemToWishlist(WishlistRequest wishlistRequest, Long memberId) {
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new MemberNotFoundException(MEMBER_NOT_FOUND));
         Product product = productRepository.findById(wishlistRequest.getProductId())
                 .orElseThrow(() -> new ProductNotFoundException(PRODUCT_NOT_FOUND));
 
@@ -46,11 +51,8 @@ public class WishlistService {
     }
 
     @Transactional
-    public void deleteItemFromWishlist(Long productId, String token) {
-        TokenAuth tokenAuth = tokenService.findToken(token);
-        Member member = tokenAuth.getMember();
-
-        WishlistItem item = wishlistRepository.findByMemberIdAndProductId(member.getId(), productId)
+    public void deleteItemFromWishlist(Long productId, Long memberId) {
+        WishlistItem item = wishlistRepository.findByMemberIdAndProductId(memberId, productId)
                 .orElseThrow(() -> new WishlistNotFoundException(WISHLIST_NOT_FOUND));
 
         wishlistRepository.delete(item);
@@ -60,8 +62,9 @@ public class WishlistService {
         return wishlistRepository.findByMemberId(memberId);
     }
 
-    public Page<WishlistItem> getWishlistByMemberId(Long memberId, Pageable pageable) {
-        return wishlistRepository.findByMemberId(memberId, pageable);
+    public WishlistPageResponse getWishlistByMemberId(Long memberId, Pageable pageable) {
+        Page<WishlistItem> wishlist = wishlistRepository.findByMemberId(memberId, pageable);
+        return WishlistPageResponse.fromWishlistPage(wishlist);
     }
 
 

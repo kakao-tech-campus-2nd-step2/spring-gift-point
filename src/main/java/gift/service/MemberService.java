@@ -69,14 +69,14 @@ public class MemberService {
     public TokenResponse handleNormalRegister(MemberRequest memberRequest) {
         Member member = register(memberRequest, NORMAL);
         String token = tokenService.saveToken(member);
-        return new TokenResponse(token);
+        return new TokenResponse(member.getEmail(), token);
     }
 
     @Transactional
     public TokenResponse handleNormalAuthenticate(MemberRequest memberRequest) {
         Member member = authenticate(memberRequest, NORMAL);
         String token = tokenService.saveToken(member);
-        return new TokenResponse(token);
+        return new TokenResponse(member.getEmail(), token);
     }
 
     @Transactional

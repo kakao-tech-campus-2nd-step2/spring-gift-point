@@ -59,9 +59,14 @@ class OptionServiceTest {
         Long productId = 1L;
         Option option1 = mock(Option.class);
         Option option2 = mock(Option.class);
+        Product product = mock(Product.class);
 
         when(productRepository.existsById(productId)).thenReturn(true);
         when(optionRepository.findByProductId(productId)).thenReturn(Arrays.asList(option1, option2));
+
+        when(option1.getProduct()).thenReturn(product);
+        when(option2.getProduct()).thenReturn(product);
+        when(product.getId()).thenReturn(productId);
 
         when(option1.getId()).thenReturn(1L);
         when(option1.getName()).thenReturn("옵션1");

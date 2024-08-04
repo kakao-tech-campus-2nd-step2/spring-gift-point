@@ -77,4 +77,7 @@ public class Category {
         this.description = categoryRequest.getDescription();
     }
 
+    public void setId(Long categoryId) {
+        this.id = categoryId;
+    }
 }

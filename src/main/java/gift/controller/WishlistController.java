@@ -2,19 +2,22 @@ package gift.controller;
 
 import gift.annotation.LoginMember;
 import gift.domain.TokenAuth;
-import gift.domain.WishlistItem;
 import gift.dto.request.WishlistRequest;
+import gift.dto.response.WishlistPageResponse;
 import gift.service.WishlistService;
+import gift.util.SortUtils;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/wishlist")
+@RequestMapping("api/wishes")
 public class WishlistController {
 
     private final WishlistService wishlistService;
@@ -26,7 +29,7 @@ public class WishlistController {
 
     @GetMapping("/new")
     @Operation(summary = "위시리스트 추가 화면", description = "위시리스트 추가 화면으로 이동한다.")
-    public String newWishlistItemForm(Model model, @LoginMember TokenAuth tokenAuth) {
+    public String newWishlistItemForm(Model model, @Parameter(hidden = true) @LoginMember TokenAuth tokenAuth) {
         model.addAttribute("wishlistItem", new WishlistRequest());
         model.addAttribute("token", tokenAuth.getToken());
         return "wishlist-add-form";
@@ -34,26 +37,27 @@ public class WishlistController {
 
     @PostMapping
     @Operation(summary = "위시 리스트 상품 추가", description = "회원의 위시 리스트에 상품을 추가한다.")
-    public String addToWishlist(@Valid @ModelAttribute WishlistRequest request, @LoginMember TokenAuth tokenAuth) {
-        wishlistService.addItemToWishlist(request, tokenAuth.getToken());
-        return "redirect:/wishlist";
+    public void addToWishlist(@Valid @RequestBody WishlistRequest request, @Parameter(hidden = true) @LoginMember TokenAuth tokenAuth) {
+        Long memberId = tokenAuth.getMemberId();
+        wishlistService.addItemToWishlist(request, memberId);
     }
 
-    @DeleteMapping("/delete/{productId}")
+    @DeleteMapping("/{productId}")
     @Operation(summary = "위시 리스트 상품 삭제", description = "회원의 위시 리스트에서 상품을 삭제한다.")
-    public String deleteItemFromWishlist(@PathVariable Long productId, @LoginMember TokenAuth tokenAuth) {
-        wishlistService.deleteItemFromWishlist(productId, tokenAuth.getToken());
-        return "redirect:/wishlist";
+    public void deleteItemFromWishlist(@PathVariable Long productId, @Parameter(hidden = true) @LoginMember TokenAuth tokenAuth) {
+        Long memberId = tokenAuth.getMemberId();
+        wishlistService.deleteItemFromWishlist(productId, memberId);
     }
 
     @GetMapping
     @Operation(summary = "위시 리스트 상품 조회 (페이지네이션 적용)", description = "회원의 위시 리스트에 있는 상품을 페이지 단위로 조회한다.")
-    public String getWishlistForCurrentUser(Model model, Pageable pageable, @LoginMember TokenAuth tokenAuth) {
-        Long memberId = tokenAuth.getMember().getId();
-        Page<WishlistItem> wishlist = wishlistService.getWishlistByMemberId(memberId, pageable);
-        model.addAttribute("wishlist", wishlist);
-        model.addAttribute("memberId", memberId);
-        return "wishlist-list";
+    public WishlistPageResponse getWishlistForCurrentUser(@RequestParam(defaultValue = "20") int size,
+                                                          @RequestParam(defaultValue = "0") int page,
+                                                          @RequestParam(defaultValue = "id,desc") String sort,
+                                                          @Parameter(hidden = true) @LoginMember TokenAuth tokenAuth) {
+        Long memberId = tokenAuth.getMemberId();
+        Pageable pageable = PageRequest.of(page, size, Sort.by(SortUtils.parseSortParameter(sort)));
+        return wishlistService.getWishlistByMemberId(memberId, pageable);
     }
 
 }

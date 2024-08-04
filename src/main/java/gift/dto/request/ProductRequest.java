@@ -20,7 +20,7 @@ public class ProductRequest {
 
     private String imageUrl;
 
-    @NotNull(message = "카테고리를 입력하세요")
+    @NotBlank(message = "카테고리를 입력하세요")
     private String categoryName;
 
     public ProductRequest(){
