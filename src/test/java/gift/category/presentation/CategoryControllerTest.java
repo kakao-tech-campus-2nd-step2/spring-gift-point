@@ -64,11 +64,10 @@ public class CategoryControllerTest {
         // Given
         CategoryCreateRequest request = new CategoryCreateRequest("Category", "#FFFFFF", "Description", "http://example.com/image.jpg");
 
-        doNothing().when(categoryService).create(any());
+        when(categoryService.create(any())).thenReturn(anyLong());
 
         // When & Then
         mockMvc.perform(post("/api/categories")
-                        .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
                                 {
@@ -78,7 +77,7 @@ public class CategoryControllerTest {
                                     "imageUrl": "http://example.com/image.jpg"
                                 }
                                 """))
-                .andExpect(status().isOk());
+                .andExpect(status().isCreated());
 
         verify(categoryService, times(1)).create(any());
     }
@@ -86,12 +85,11 @@ public class CategoryControllerTest {
     @Test
     void 모든카테고리_조회_테스트() throws Exception {
         // Given
-        Page<CategoryServiceResponse> page = new PageImpl<>(List.of(categoryServiceResponse), PageRequest.of(0, 10), 1);
-        when(categoryService.findAll(any(Pageable.class))).thenReturn(page);
+        List<CategoryServiceResponse> categoryServiceResponses = List.of(categoryServiceResponse);
+        when(categoryService.findAll()).thenReturn(categoryServiceResponses);
 
         // When
         MvcResult mvcResult = mockMvc.perform(get("/api/categories")
-                        .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
                         .param("page", "0")
                         .param("size", "10"))
                 .andExpect(status().isOk())
@@ -131,7 +129,6 @@ public class CategoryControllerTest {
 
         // When & Then
         mockMvc.perform(put("/api/categories/1")
-                        .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
                                 {
@@ -141,7 +138,7 @@ public class CategoryControllerTest {
                                     "imageUrl": "http://example.com/updated-image.jpg"
                                 }
                                 """))
-                .andExpect(status().isOk());
+                .andExpect(status().isCreated());
 
         verify(categoryService, times(1)).update(any());
     }

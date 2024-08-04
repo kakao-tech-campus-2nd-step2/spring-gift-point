@@ -143,15 +143,12 @@ public class ProductServiceTest {
         Option option2 = new Option(2L, "Option2", 20);
         product.addOption(option1);
         product.addOption(option2);
-        OptionUpdateCommand newOption1 = new OptionUpdateCommand(1L, "newOption1", 100);
-        OptionUpdateCommand newOption2 = new OptionUpdateCommand(2L, "newOption2", 200);
         ProductUpdateCommand updateCommand = new ProductUpdateCommand(
                 1L,
                 "UpdatedProduct",
                 2000,
                 "http://example.com/image2.jpg",
-                newCategory.getId(),
-                List.of(newOption1, newOption2)
+                newCategory.getId()
         );
 
         when(productRepository.findById(any(Long.class))).thenReturn(Optional.of(product));
@@ -169,11 +166,6 @@ public class ProductServiceTest {
         assertThat(product.getPrice()).isEqualTo(2000);
         assertThat(product.getImageUrl()).isEqualTo("http://example.com/image2.jpg");
         assertThat(product.getCategory()).isEqualTo(newCategory);
-        assertThat(product.getOptions()).hasSize(2);
-        assertThat(product.getOptions().get(0).getQuantity()).isEqualTo(100);
-        assertThat(product.getOptions().get(1).getQuantity()).isEqualTo(200);
-        assertThat(product.getOptions().get(0).getName()).isEqualTo("newOption1");
-        assertThat(product.getOptions().get(1).getName()).isEqualTo("newOption2");
     }
 
     @Test
@@ -186,8 +178,7 @@ public class ProductServiceTest {
                 "UpdatedProduct",
                 2000,
                 "http://example.com/image2.jpg",
-                category.getId(),
-                List.of()
+                category.getId()
         );
 
         // When & Then
@@ -248,8 +239,7 @@ public class ProductServiceTest {
                 "카카오가 포함된 이름",
                 2000,
                 "http://example.com/image2.jpg",
-                category.getId(),
-                List.of(new OptionUpdateCommand(1L, "Option1", 10))
+                category.getId()
         );
 
         when(optionRepository.findById(anyLong())).thenReturn(Optional.of(new Option(1L, "Option1", 10)));
@@ -291,8 +281,7 @@ public class ProductServiceTest {
                 "UpdatedProduct",
                 2000,
                 "http://example.com/image2.jpg",
-                category.getId(),
-                List.of()
+                category.getId()
         );
 
         // When & Then

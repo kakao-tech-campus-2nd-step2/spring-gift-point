@@ -6,6 +6,8 @@ import gift.member.domain.Member;
 import gift.member.domain.MemberRepository;
 import gift.product.domain.Product;
 import gift.product.domain.ProductRepository;
+import gift.wishlist.application.command.WishlistCreateCommand;
+import gift.wishlist.application.response.WishlistReadServiceResponse;
 import gift.wishlist.domain.Wishlist;
 import gift.wishlist.domain.WishlistRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -66,9 +68,10 @@ public class WishlistServiceTest {
         // Given
         when(memberRepository.findById(memberId)).thenReturn(Optional.of(member));
         when(productRepository.findById(productId)).thenReturn(Optional.of(product));
+        when(wishlistRepository.save(any(Wishlist.class))).thenReturn(wishlist);
 
         // When
-        wishlistService.save(memberId, productId);
+        wishlistService.save(new WishlistCreateCommand(memberId, productId));
 
         // Then
         verify(wishlistRepository, times(1)).save(any(Wishlist.class));
@@ -80,7 +83,7 @@ public class WishlistServiceTest {
         when(memberRepository.findById(memberId)).thenReturn(Optional.empty());
 
         // When & Then
-        assertThatThrownBy(() -> wishlistService.save(memberId, productId))
+        assertThatThrownBy(() -> wishlistService.save(new WishlistCreateCommand(memberId, productId)))
                 .isInstanceOf(NotFoundException.class)
                 .hasMessage("해당 사용자가 존재하지 않습니다.");
     }
@@ -92,7 +95,7 @@ public class WishlistServiceTest {
         when(productRepository.findById(productId)).thenReturn(Optional.empty());
 
         // When & Then
-        assertThatThrownBy(() -> wishlistService.save(memberId, productId))
+        assertThatThrownBy(() -> wishlistService.save(new WishlistCreateCommand(memberId, productId)))
                 .isInstanceOf(NotFoundException.class)
                 .hasMessage("해당 상품이 존재하지 않습니다.");
     }
@@ -107,12 +110,12 @@ public class WishlistServiceTest {
         Pageable pageable = PageRequest.of(0, 2);
 
         // When
-        Page<WishlistServiceResponse> result = wishlistService.findAllByMemberId(memberId, pageable);
+        Page<WishlistReadServiceResponse> result = wishlistService.findAllByMemberId(memberId, pageable);
 
         // Then
         assertThat(result.getTotalElements()).isEqualTo(2);
         assertThat(result.getContent()).hasSize(2);
-        assertThat(result.getContent().get(0).getMemberId()).isEqualTo(memberId);
+        assertThat(result.getContent().get(0).memberId()).isEqualTo(memberId);
     }
 
     @Test
@@ -125,12 +128,12 @@ public class WishlistServiceTest {
         Pageable pageable = PageRequest.of(0, 2);
 
         // When
-        Page<WishlistServiceResponse> result = wishlistService.findAllByProductId(productId, pageable);
+        Page<WishlistReadServiceResponse> result = wishlistService.findAllByProductId(productId, pageable);
 
         // Then
         assertThat(result.getTotalElements()).isEqualTo(2);
         assertThat(result.getContent()).hasSize(2);
-        assertThat(result.getContent().get(0).getProductId()).isEqualTo(productId);
+        assertThat(result.getContent().get(0).productId()).isEqualTo(productId);
     }
 
     @Test

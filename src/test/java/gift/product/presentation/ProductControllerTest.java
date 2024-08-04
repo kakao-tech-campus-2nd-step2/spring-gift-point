@@ -2,9 +2,12 @@ package gift.product.presentation;
 
 import gift.auth.TokenService;
 import gift.category.application.CategoryService;
+import gift.category.application.CategoryServiceResponse;
 import gift.category.domain.Category;
 import gift.member.application.MemberService;
+import gift.option.application.OptionService;
 import gift.option.application.OptionServiceResponse;
+import gift.option.presentation.request.OptionCreateRequest;
 import gift.product.application.ProductService;
 import gift.product.application.ProductServiceResponse;
 import gift.product.application.command.ProductCreateCommand;
@@ -50,6 +53,10 @@ public class ProductControllerTest {
     @MockBean
     private TokenService tokenService;
 
+    @MockBean
+    private OptionService optionService;
+
+
     private String token;
 
     @BeforeEach
@@ -68,13 +75,12 @@ public class ProductControllerTest {
                     "price": 1000,
                     "imageUrl": "http://example.com/image.jpg",
                     "categoryId": 1,
-                    "optionCreateRequestList": []
+                    "options": []
                 }
                 """;
 
         // When
         MvcResult mvcResult = mockMvc.perform(post("/api/products")
-                        .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(requestBody))
                 .andExpect(status().isBadRequest())
@@ -91,14 +97,13 @@ public class ProductControllerTest {
         Category category = new Category(1L, "Category", "#FFFFFF", "Description", "http://example.com/image.jpg");
         OptionServiceResponse option1 = new OptionServiceResponse(1L, "Option1", 10);
         OptionServiceResponse option2 = new OptionServiceResponse(2L, "Option2", 20);
-        ProductServiceResponse response1 = new ProductServiceResponse(1L, "Product1", 1000, "http://example.com/image1.jpg", category.getId(), List.of(option1, option2));
-        ProductServiceResponse response2 = new ProductServiceResponse(2L, "Product2", 2000, "http://example.com/image2.jpg", category.getId(), List.of(option1, option2));
+        ProductServiceResponse response1 = new ProductServiceResponse(1L, "Product1", 1000, "http://example.com/image1.jpg", CategoryServiceResponse.from(category), List.of(option1, option2));
+        ProductServiceResponse response2 = new ProductServiceResponse(2L, "Product2", 2000, "http://example.com/image2.jpg", CategoryServiceResponse.from(category), List.of(option1, option2));
         Page<ProductServiceResponse> page = new PageImpl<>(List.of(response1, response2), PageRequest.of(0, 2), 2);
         when(productService.findAll(any(Pageable.class))).thenReturn(page);
 
         // When
         MvcResult mvcResult = mockMvc.perform(get("/api/products")
-                        .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
                         .contentType(MediaType.APPLICATION_JSON)
                         .param("page", "0")
                         .param("size", "2"))
@@ -109,21 +114,18 @@ public class ProductControllerTest {
         String responseContent = mvcResult.getResponse().getContentAsString(StandardCharsets.UTF_8);
         Assertions.assertTrue(responseContent.contains("\"id\":1,\"name\":\"Product1\",\"price\":1000,\"imageUrl\":\"http://example.com/image1.jpg\",\"categoryId\":1"));
         Assertions.assertTrue(responseContent.contains("\"id\":2,\"name\":\"Product2\",\"price\":2000,\"imageUrl\":\"http://example.com/image2.jpg\",\"categoryId\":1"));
-        Assertions.assertTrue(responseContent.contains("{\"id\":1,\"name\":\"Option1\",\"quantity\":10},{\"id\":2,\"name\":\"Option2\",\"quantity\":20}"));
     }
 
     @Test
     void 상품아이디로조회시_상품반환() throws Exception {
         // Given
         Category category = new Category(1L, "Category", "#FFFFFF", "Description", "http://example.com/image.jpg");
-        OptionServiceResponse option1 = new OptionServiceResponse(1L, "Option1", 10);
-        OptionServiceResponse option2 = new OptionServiceResponse(2L, "Option2", 20);
-        ProductServiceResponse productServiceResponse = new ProductServiceResponse(1L, "Valid", 1000, "http://example.com/image.jpg", category.getId(), List.of(option1, option2));
+        ProductServiceResponse productServiceResponse = new ProductServiceResponse(1L, "Valid", 1000, "http://example.com/image.jpg", CategoryServiceResponse.from(category), List.of());
+        when(productService.findById(1L)).thenReturn(productServiceResponse);
         when(productService.findById(1L)).thenReturn(productServiceResponse);
 
         // When
         MvcResult mvcResult = mockMvc.perform(get("/api/products/1")
-                        .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andReturn();
@@ -135,7 +137,6 @@ public class ProductControllerTest {
         Assertions.assertTrue(responseContent.contains("\"price\":1000"));
         Assertions.assertTrue(responseContent.contains("\"imageUrl\":\"http://example.com/image.jpg\""));
         Assertions.assertTrue(responseContent.contains("\"categoryId\":1"));
-        Assertions.assertTrue(responseContent.contains("{\"id\":1,\"name\":\"Option1\",\"quantity\":10},{\"id\":2,\"name\":\"Option2\",\"quantity\":20}"));
     }
 
     @Test
@@ -155,10 +156,9 @@ public class ProductControllerTest {
 
         // When & Then
         mockMvc.perform(put("/api/products/1")
-                        .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(requestBody))
-                .andExpect(status().isOk());
+                .andExpect(status().isCreated());
 
         verify(productService, times(1)).update(any(ProductUpdateCommand.class));
     }
@@ -172,18 +172,16 @@ public class ProductControllerTest {
                     "price": 1000,
                     "imageUrl": "http://example.com/image.jpg",
                     "categoryId": 1,
-                    "optionCreateRequestList": []
+                    "options": []
                 }
                 """;
-
-        doNothing().when(productService).save(any(ProductCreateCommand.class));
+        when(productService.save(any(ProductCreateCommand.class))).thenReturn(1L);
 
         // When & Then
         mockMvc.perform(post("/api/products")
-                        .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(requestBody))
-                .andExpect(status().isOk());
+                .andExpect(status().isCreated());
 
         verify(productService, times(1)).save(any(ProductCreateCommand.class));
     }
@@ -197,13 +195,12 @@ public class ProductControllerTest {
                     "price": 2000,
                     "imageUrl": "http://example.com/updated-image.jpg",
                     "categoryId": 1,
-                    "optionUpdateRequestList": []
+                    "options": []
                 }
                 """;
 
         // When
         MvcResult mvcResult = mockMvc.perform(put("/api/products/1")
-                        .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(requestBody))
                 .andExpect(status().isBadRequest())
@@ -221,9 +218,8 @@ public class ProductControllerTest {
 
         // When & Then
         mockMvc.perform(delete("/api/products/1")
-                        .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
                         .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk());
+                .andExpect(status().isNoContent());
 
         verify(productService, times(1)).delete(1L);
     }
