@@ -451,10 +451,11 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div class="content">
 <pre class="highlight"><code class="language-bash" data-lang="bash">$ curl 'http://localhost:8080/api/orders' -i -X POST \
     -H 'Content-Type: application/json' \
-    -H 'Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJtZW1iZXJJZCI6MSwiaWF0IjoxNzIyNjk5NTgzLCJleHAiOjE3MjI3ODU5ODN9.z35qkkuj9RasiIubDTPPXKpIScprmrI33kZ7RIiFCOf0F-j6kCMiA29JprsRGcSk4SHlZvmLeYKCUQcMBSZY5A' \
+    -H 'Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJtZW1iZXJJZCI6MSwiaWF0IjoxNzIyNzQzNTg2LCJleHAiOjE3MjI4Mjk5ODZ9.Yq_ofeERpky6qWkKe7bzyIKcqCW9JPJqclR9TdDrPxvusZhyZcFFJNMjCpGNn_DEDEhizkW4k3tHJ7JYCNT04w' \
     -d '{
   "optionId" : 1,
   "quantity" : 1,
+  "point" : 0,
   "message" : "message"
 }'</code></pre>
 </div>
@@ -466,13 +467,14 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div class="content">
 <pre class="highlight nowrap"><code class="language-http" data-lang="http">POST /api/orders HTTP/1.1
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJtZW1iZXJJZCI6MSwiaWF0IjoxNzIyNjk5NTgzLCJleHAiOjE3MjI3ODU5ODN9.z35qkkuj9RasiIubDTPPXKpIScprmrI33kZ7RIiFCOf0F-j6kCMiA29JprsRGcSk4SHlZvmLeYKCUQcMBSZY5A
-Content-Length: 63
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJtZW1iZXJJZCI6MSwiaWF0IjoxNzIyNzQzNTg2LCJleHAiOjE3MjI4Mjk5ODZ9.Yq_ofeERpky6qWkKe7bzyIKcqCW9JPJqclR9TdDrPxvusZhyZcFFJNMjCpGNn_DEDEhizkW4k3tHJ7JYCNT04w
+Content-Length: 78
 Host: localhost:8080
 
 {
   "optionId" : 1,
   "quantity" : 1,
+  "point" : 0,
   "message" : "message"
 }</code></pre>
 </div>
@@ -484,14 +486,15 @@ Host: localhost:8080
 <div class="content">
 <pre class="highlight nowrap"><code class="language-http" data-lang="http">HTTP/1.1 200 OK
 Content-Type: application/json
-Content-Length: 134
+Content-Length: 148
 
 {
   "id" : 1,
   "optionId" : 1,
   "quantity" : 10,
+  "point" : 0,
   "message" : "message",
-  "orderDateTime" : [ 2024, 8, 4, 0, 39, 43, 187570000 ]
+  "orderDateTime" : [ 2024, 8, 4, 12, 53, 6, 15203000 ]
 }</code></pre>
 </div>
 </div>
@@ -503,10 +506,11 @@ Content-Length: 134
 <pre class="highlight"><code class="language-bash" data-lang="bash">$ echo '{
   "optionId" : 1,
   "quantity" : 1,
+  "point" : 0,
   "message" : "message"
 }' | http POST 'http://localhost:8080/api/orders' \
     'Content-Type:application/json' \
-    'Authorization:Bearer eyJhbGciOiJIUzUxMiJ9.eyJtZW1iZXJJZCI6MSwiaWF0IjoxNzIyNjk5NTgzLCJleHAiOjE3MjI3ODU5ODN9.z35qkkuj9RasiIubDTPPXKpIScprmrI33kZ7RIiFCOf0F-j6kCMiA29JprsRGcSk4SHlZvmLeYKCUQcMBSZY5A'</code></pre>
+    'Authorization:Bearer eyJhbGciOiJIUzUxMiJ9.eyJtZW1iZXJJZCI6MSwiaWF0IjoxNzIyNzQzNTg2LCJleHAiOjE3MjI4Mjk5ODZ9.Yq_ofeERpky6qWkKe7bzyIKcqCW9JPJqclR9TdDrPxvusZhyZcFFJNMjCpGNn_DEDEhizkW4k3tHJ7JYCNT04w'</code></pre>
 </div>
 </div>
 </div>
@@ -517,6 +521,7 @@ Content-Length: 134
 <pre class="highlight nowrap"><code class="language-json" data-lang="json">{
   "optionId" : 1,
   "quantity" : 1,
+  "point" : 0,
   "message" : "message"
 }</code></pre>
 </div>
@@ -549,6 +554,11 @@ Content-Length: 134
 <td class="tableblock halign-left valign-top"><p class="tableblock">주문 수량</p></td>
 </tr>
 <tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>point</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">포인트</p></td>
+</tr>
+<tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>message</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">메시지</p></td>
@@ -564,8 +574,9 @@ Content-Length: 134
   "id" : 1,
   "optionId" : 1,
   "quantity" : 10,
+  "point" : 0,
   "message" : "message",
-  "orderDateTime" : [ 2024, 8, 4, 0, 39, 43, 187570000 ]
+  "orderDateTime" : [ 2024, 8, 4, 12, 53, 6, 15203000 ]
 }</code></pre>
 </div>
 </div>
@@ -607,6 +618,11 @@ Content-Length: 134
 <td class="tableblock halign-left valign-top"><p class="tableblock">메시지</p></td>
 </tr>
 <tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>point</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">포인트</p></td>
+</tr>
+<tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>orderDateTime</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>Array</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">주문 일시</p></td>
@@ -622,7 +638,7 @@ Content-Length: 134
 <div class="listingblock">
 <div class="content">
 <pre class="highlight"><code class="language-bash" data-lang="bash">$ curl 'http://localhost:8080/api/orders' -i -X GET \
-    -H 'Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJtZW1iZXJJZCI6MSwiaWF0IjoxNzIyNjk5NTgzLCJleHAiOjE3MjI3ODU5ODN9.z35qkkuj9RasiIubDTPPXKpIScprmrI33kZ7RIiFCOf0F-j6kCMiA29JprsRGcSk4SHlZvmLeYKCUQcMBSZY5A'</code></pre>
+    -H 'Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJtZW1iZXJJZCI6MSwiaWF0IjoxNzIyNzQzNTg1LCJleHAiOjE3MjI4Mjk5ODV9.iRO-_Q3wJJevz8UC_fj-ivzuEYn4p6TFQIK8s9seExd7ULNNSBRJu2CumD9oTvUweyEnY_1KxiZCuAk7Y-Bpjg'</code></pre>
 </div>
 </div>
 </div>
@@ -631,7 +647,7 @@ Content-Length: 134
 <div class="listingblock">
 <div class="content">
 <pre class="highlight nowrap"><code class="language-http" data-lang="http">GET /api/orders HTTP/1.1
-Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJtZW1iZXJJZCI6MSwiaWF0IjoxNzIyNjk5NTgzLCJleHAiOjE3MjI3ODU5ODN9.z35qkkuj9RasiIubDTPPXKpIScprmrI33kZ7RIiFCOf0F-j6kCMiA29JprsRGcSk4SHlZvmLeYKCUQcMBSZY5A
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJtZW1iZXJJZCI6MSwiaWF0IjoxNzIyNzQzNTg1LCJleHAiOjE3MjI4Mjk5ODV9.iRO-_Q3wJJevz8UC_fj-ivzuEYn4p6TFQIK8s9seExd7ULNNSBRJu2CumD9oTvUweyEnY_1KxiZCuAk7Y-Bpjg
 Host: localhost:8080</code></pre>
 </div>
 </div>
@@ -642,20 +658,20 @@ Host: localhost:8080</code></pre>
 <div class="content">
 <pre class="highlight nowrap"><code class="language-http" data-lang="http">HTTP/1.1 200 OK
 Content-Type: application/json
-Content-Length: 274
+Content-Length: 268
 
 [ {
   "id" : 1,
   "optionId" : 1,
   "quantity" : 10,
   "message" : "message",
-  "orderDateTime" : [ 2024, 8, 4, 0, 39, 43, 175102000 ]
+  "orderDateTime" : [ 2024, 8, 4, 12, 53, 6, 116000 ]
 }, {
   "id" : 2,
   "optionId" : 2,
   "quantity" : 20,
   "message" : "message",
-  "orderDateTime" : [ 2024, 8, 4, 0, 39, 43, 175110000 ]
+  "orderDateTime" : [ 2024, 8, 4, 12, 53, 6, 123000 ]
 } ]</code></pre>
 </div>
 </div>
@@ -665,7 +681,7 @@ Content-Length: 274
 <div class="listingblock">
 <div class="content">
 <pre class="highlight"><code class="language-bash" data-lang="bash">$ http GET 'http://localhost:8080/api/orders' \
-    'Authorization:Bearer eyJhbGciOiJIUzUxMiJ9.eyJtZW1iZXJJZCI6MSwiaWF0IjoxNzIyNjk5NTgzLCJleHAiOjE3MjI3ODU5ODN9.z35qkkuj9RasiIubDTPPXKpIScprmrI33kZ7RIiFCOf0F-j6kCMiA29JprsRGcSk4SHlZvmLeYKCUQcMBSZY5A'</code></pre>
+    'Authorization:Bearer eyJhbGciOiJIUzUxMiJ9.eyJtZW1iZXJJZCI6MSwiaWF0IjoxNzIyNzQzNTg1LCJleHAiOjE3MjI4Mjk5ODV9.iRO-_Q3wJJevz8UC_fj-ivzuEYn4p6TFQIK8s9seExd7ULNNSBRJu2CumD9oTvUweyEnY_1KxiZCuAk7Y-Bpjg'</code></pre>
 </div>
 </div>
 </div>
@@ -686,13 +702,13 @@ Content-Length: 274
   "optionId" : 1,
   "quantity" : 10,
   "message" : "message",
-  "orderDateTime" : [ 2024, 8, 4, 0, 39, 43, 175102000 ]
+  "orderDateTime" : [ 2024, 8, 4, 12, 53, 6, 116000 ]
 }, {
   "id" : 2,
   "optionId" : 2,
   "quantity" : 20,
   "message" : "message",
-  "orderDateTime" : [ 2024, 8, 4, 0, 39, 43, 175110000 ]
+  "orderDateTime" : [ 2024, 8, 4, 12, 53, 6, 123000 ]
 } ]</code></pre>
 </div>
 </div>
