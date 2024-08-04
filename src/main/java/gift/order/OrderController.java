@@ -36,7 +36,7 @@ public class OrderController {
                 name = "X-GATEWAY-TOKEN",
                 required = true,
                 schema = @Schema(type = "string"),
-                description = "카카오톡 메시지를 보내기 위한 액세스 토큰입니다."
+                description = "카카오톡 API 연동을 위한 액세스 토큰입니다."
             )
         },
         requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(

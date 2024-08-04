@@ -6,8 +6,6 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -25,12 +23,12 @@ public class MemberController {
         this.jwtService = jwtService;
     }
 
-    @Operation(summary = "회원가입 페이지", description = "작동하지 않습니다.")
+    /*@Operation(summary = "회원가입 페이지", description = "작동하지 않습니다.")
     @GetMapping("/page")
     public String signup(Model model) {
         model.addAttribute("newSiteUser", new Member());
         return "signup";
-    }
+    }*/
 
     @Operation(summary = "회원가입", description = "회원가입 합니다.")
     @PostMapping("/register")

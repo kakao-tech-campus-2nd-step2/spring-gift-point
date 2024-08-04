@@ -2,14 +2,12 @@ package gift.oauth;
 
 import com.google.gson.Gson;
 import java.net.URI;
-import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.web.client.RestClient;
 
 @Service
-@EnableConfigurationProperties(KakaoOAuthConfigProperties.class)
 public class OauthService {
 
     private final KakaoOAuthConfigProperties configProperties;

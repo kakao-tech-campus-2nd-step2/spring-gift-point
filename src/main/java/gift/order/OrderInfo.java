@@ -10,6 +10,7 @@ import java.time.LocalDateTime;
 
 @Entity
 public class OrderInfo {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -26,13 +27,14 @@ public class OrderInfo {
     @Column(name = "message")
     private String message;
 
+    private Long memberId;
+
     public void setMemberId(Long memberId) {
         this.memberId = memberId;
     }
 
-    private Long memberId;
-
-    protected OrderInfo(){}
+    protected OrderInfo() {
+    }
 
     public OrderInfo(Long optionId, Integer quantity, LocalDateTime orderDateTime, String message) {
         this.optionId = optionId;
