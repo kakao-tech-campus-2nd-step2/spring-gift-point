@@ -2,6 +2,8 @@ package gift.order;
 
 import gift.common.auth.LoginMember;
 import gift.common.auth.LoginMemberDto;
+import gift.order.model.OrderRequest;
+import gift.order.model.OrderResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import java.net.URI;

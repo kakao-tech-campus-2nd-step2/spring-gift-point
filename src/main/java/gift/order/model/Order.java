@@ -1,4 +1,4 @@
-package gift.order;
+package gift.order.model;
 
 import gift.common.model.BaseEntity;
 import gift.member.model.Member;

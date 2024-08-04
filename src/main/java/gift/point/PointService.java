@@ -3,6 +3,8 @@ package gift.point;
 import gift.common.auth.LoginMemberDto;
 import gift.member.MemberRepository;
 import gift.member.model.Member;
+import gift.point.model.PointRequest;
+import gift.point.model.PointResponse;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;

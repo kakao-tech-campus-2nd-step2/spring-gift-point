@@ -1,4 +1,4 @@
-package gift.order;
+package gift.order.model;
 
 public record OrderRequest(Long optionId,
                            Integer quantity,

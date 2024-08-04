@@ -1,4 +1,4 @@
-package gift.order;
+package gift.order.model;
 
 public record OrderResponse(Long id,
                             Integer totalPrice,

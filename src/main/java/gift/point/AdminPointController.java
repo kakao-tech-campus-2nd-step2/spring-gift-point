@@ -2,6 +2,7 @@ package gift.point;
 
 import gift.member.MemberService;
 import gift.member.model.Member;
+import gift.point.model.PointRequest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort.Direction;

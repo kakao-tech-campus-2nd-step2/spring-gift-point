@@ -18,11 +18,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
 @RequestMapping("/admin/products")
-public class AdminController {
+public class AdminProductController {
 
     private final ProductService productService;
 
-    public AdminController(ProductService productService) {
+    public AdminProductController(ProductService productService) {
         this.productService = productService;
     }
 

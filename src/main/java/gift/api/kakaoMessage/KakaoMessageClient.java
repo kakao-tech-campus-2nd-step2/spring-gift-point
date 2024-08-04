@@ -2,7 +2,7 @@ package gift.api.kakaoMessage;
 
 import gift.api.KakaoProperties;
 import gift.api.aop.TokenRefresher;
-import gift.order.Order;
+import gift.order.model.Order;
 import java.net.URI;
 import org.springframework.retry.annotation.Backoff;
 import org.springframework.retry.annotation.Retryable;
