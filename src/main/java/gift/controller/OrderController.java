@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import jakarta.servlet.http.HttpServletRequest;
 
 @RestController
 @RequestMapping("/api/orders")
@@ -23,15 +24,9 @@ public class OrderController {
     }
 
     @PostMapping
-    public ResponseEntity<?> createOrder(@RequestBody OrderRequest orderRequest, @RequestHeader("Authorization") String token) {
-        if (token != null && token.startsWith("Bearer ")) {
-            token = token.substring(7);
-        } else {
-            return ResponseEntity.status(401).body("Missing or invalid Authorization header");
-        }
-
-        Claims claims = jwtUtil.extractClaims(token);
-        Long memberId = Long.parseLong(claims.getSubject());
+    public ResponseEntity<?> createOrder(@RequestBody OrderRequest orderRequest, HttpServletRequest request) {
+        Claims claims = (Claims) request.getAttribute("claims");
+        Long memberId = (Long) request.getAttribute("memberId");
 
         orderService.createOrder(orderRequest, memberId);
         return ResponseEntity.ok().build();
