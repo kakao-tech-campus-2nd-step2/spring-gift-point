@@ -14,8 +14,8 @@ import org.springframework.web.bind.annotation.*;
 @Tag(name = "Product API", description = "상품 관련 API")
 public class ProductRestController {
 
-    private OptionService optionService;
-    private WishlistService wishlistService;
+    private final OptionService optionService;
+    private final WishlistService wishlistService;
     private final KakaoTokenService kakaoTokenService;
     private final KakaoService kakaoService;
 

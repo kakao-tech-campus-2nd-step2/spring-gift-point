@@ -22,7 +22,7 @@ public class ProductController {
 
     private final CategoryService categoryService;
     private final ProductService productService;
-    private OptionService optionService;
+    private final OptionService optionService;
 
 
     @Autowired
