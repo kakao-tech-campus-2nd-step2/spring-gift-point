@@ -1,0 +1,21 @@
+#!/bin/bash
+
+BUILD_PATH = $(ls /repository/spring-gift-point/build/*.jar)
+
+CURRENT_PID = $(pgep -f $JAR_NAME)
+
+if [ -z $CURRENT_PID ]
+then
+  sleep 1
+else
+  kill -15 $CURRENT_PID
+  sleep 5
+fi
+
+DEPLOY_PATH =/deploy/
+cp $BUILD_PATH $DEPLOY_PATH
+cd $DEPLOY_PATH
+
+DEPLOY_JAR = $DEPLOY_PATH$JAR_NAME
+
+nohup java -jar $DEPLOY_JAR > /dev/null 2> /dev/null < /dev/null &
