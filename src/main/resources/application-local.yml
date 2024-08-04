@@ -2,6 +2,10 @@ spring:
   config:
     import: application-secret.yml
 
+  h2:
+    console:
+      enabled: true
+
   sql:
     init:
       mode: always
