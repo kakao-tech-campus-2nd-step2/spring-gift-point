@@ -32,7 +32,7 @@ springdoc:
   use-fqn: true # 패키지 경로 표시 여부
 
 jwt:
-  secret: Yn2kjibddFAWtnPJ2AFlL8WXmohJMCvigQggaEypa5E=
+  secret: N4cYFXz4pYr/sdf9p0sl/j4L8kdKd1gdPv+0Wn4fZ8M7aOg4xqKr4sljxfwHt4Kp7op4l+Jd3ZV4Rmd1Jd7AfQ== # JWT 비밀키
 
 kakao:
   login:

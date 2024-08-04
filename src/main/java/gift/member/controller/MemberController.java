@@ -59,7 +59,7 @@ public class MemberController {
 
     // 특정 회원의 포인트 조회
     @Operation(summary = "포인트 조회", description = "특정 회원의 포인트를 조회한다.")
-    @GetMapping("/point")
+    @GetMapping("/points")
     public ResponseEntity<?> getPoint(
             @Parameter(hidden = true) @RequestHeader("Authorization") String authorizationHeader
     ) {
