@@ -10,4 +10,17 @@ public class KakaoLoginResponse {
         this.accessToken = accessToken;
         this.email = email;
     }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public String getAuthorizationCode() {
+        return authorizationCode;
+    }
+
+    public String getAccessToken() {
+        return accessToken;
+    }
+
 }

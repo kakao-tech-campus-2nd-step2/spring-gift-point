@@ -261,7 +261,7 @@ public class OrderServiceTest {
     void 회원ID로_주문_조회_성공() {
         Long memberId = 1L;
         Pageable pageable = PageRequest.of(0, 10);
-        
+
         Order mockOrder = mock(Order.class);
         when(mockOrder.getId()).thenReturn(1L);
 
