@@ -96,3 +96,15 @@ create table product_option
     FOREIGN KEY (option_id) REFERENCES option (id) ON DELETE CASCADE,
     UNIQUE (product_id, option_name)
 );
+
+-- point_histories
+drop table if exists point_histories CASCADE;
+create table point_histories
+(
+    id bigint AUTO_INCREMENT PRIMARY KEY,
+    user_id bigint,
+    previous_points int,
+    change_points int,
+    current_points int,
+    change_date TIMESTAMP
+);

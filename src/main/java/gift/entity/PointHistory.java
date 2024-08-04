@@ -1,20 +1,26 @@
 package gift.entity;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import gift.dto.PointHistory.PointHistoryDto;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
 
+@Entity
+@Table(name = "point_histories")
 public class PointHistory {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @JsonProperty("user_id")
     private Long userId;
+    @JsonProperty("previous_points")
     private int previousPoints;
+    @JsonProperty("change_points")
     private int changePoints;
+    @JsonProperty("current_points")
     private int currentPoints;
+    @JsonProperty("change_date")
     private LocalDateTime changeDate;
 
     public PointHistory(PointHistoryDto pointHistoryDto) {
