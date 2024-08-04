@@ -9,7 +9,6 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import org.antlr.v4.runtime.Token;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -44,12 +43,12 @@ public class WishController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "위시 등록 성공", content = @Content(schema = @Schema(implementation = WishResponseDto.class))),
             @ApiResponse(responseCode = "404", description = "존재하지 않는 리소스 접근", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))})
-    public ResponseEntity<WishResponseDto> save(@RequestBody WishRequestDto wishRequestDto,@RequestHeader(value="Authorization",required = false) String authorizationHeader) {
+    public ResponseEntity<WishResponseDto> save(@RequestBody WishRequestDto wishRequestDto, @RequestHeader(value = "Authorization", required = false) String authorizationHeader) {
         WishResponseDto wishResponseDto = wishService.save(wishRequestDto.getProductId(), authorizationHeader);
         return new ResponseEntity<>(wishResponseDto, HttpStatus.CREATED);
     }
 
-    @GetMapping()
+    @GetMapping("/all")
     @Operation(summary = "멤버가 가진 모든 위시를 조회", description = "토큰값을 이용하여 멤버를 찾고, 해당 멤버의 모든 위시를 가져옵니다.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "위시 조회 성공", content = @Content(schema = @Schema(implementation = WishResponseDto.class))),

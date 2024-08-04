@@ -52,7 +52,7 @@ public class productController {
         return new ResponseEntity<>(productResponseDto, HttpStatus.OK);
     }
 
-    @GetMapping("")
+    @GetMapping("/all")
     @Operation(summary = "상품 목록 조회", description = "모든 상품 목록을 조회합니다.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "상품 목록 조회 성공", content = @Content(schema = @Schema(implementation = ProductResponseDto.class))),

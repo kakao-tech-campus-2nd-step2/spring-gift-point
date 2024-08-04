@@ -25,10 +25,11 @@ public class MemberResponseDto {
         this.email = actualMember.getEmail();
         this.token = actualMember.getToken();
     }
-    public MemberResponseDto(String email , String token) {
+
+    public MemberResponseDto(String email, String token) {
         this.email = email;
         this.token = token;
-     }
+    }
 
 
     public Long getId() {

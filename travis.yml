@@ -1,0 +1,63 @@
+language: java
+jdk:
+  - openjdk11
+
+branches:
+  only:
+    - main
+
+# Travis CI 서버의 Home
+cache:
+  directories:
+    - '$HOME/.m2/repository'
+    - '$HOME/.gradle'
+
+script: "./gradlew clean build"
+
+# CI 실행 완료 시 메일로 알림
+notifications:
+  email:
+    recipients:
+      - jong9712@naver.com
+
+######################## 새롭게 추가한 코드 ###################################
+
+# deploy 전에 수행 : jar+(기타 설정 파일) .zip으로 압축
+before_deploy:
+  - mkdir -p before-deploy # zip에 포함시킬 파일들을 담을 디렉토리 생성
+  - cp scripts/*.sh before-deploy/ # scripts파일 추가
+  - cp appspec.yml before-deploy/ # appsepc.yml 추가
+  - cp build/libs/*.jar before-deploy/ # build/libs 목록 추가
+  - cd before-deploy && zip -r before-deploy * # before-deploy로 이동 후 전체 압축
+  - cd ../ && mkdir -p deploy # 상위 디렉토리 이동 후 deploy 디렉토리 생성
+  - mv before-deploy/before-deploy.zip deploy/spring_deploy_test.zip # deploy로 zip파일 이동
+
+############################################################################
+
+## (S3로 파일업로드 | CodeDeploy 배포) 외부 서비스와 연동될 행위들을 선언
+deploy:
+  # S3로 파일업로드
+  - provider: s3
+    access_key_id: $AWS_ACCESS_KEY # Travis repo settings에 설정된 값
+    secret_access_key: $AWS_SECRET_KEY # Travis repos settings에 설정된 값
+    bucket: spring-deploy-test-build # s3 버킷
+    region: ap-northeast-2
+    skip_cleanup: true
+    acl: private # zip 파일 접근을 private으로
+    local_dir: deploy # before_deploy에서 생성한 디렉토리
+    wait-until-deployed: true
+    on:
+      all_branches: true # master말고 다른 모든 브런치 허용
+  # CodeDeploy 배포
+  - provider: codedeploy
+    access_key_id: $AWS_ACCESS_KEY # Travis repo settings에 설정된 값
+    secret_access_key: $AWS_SECRET_KEY # Travis repos settings에 설정된 값
+    bucket: spring-deploy-test-build # s3 버킷
+    key: spring_deploy_test.zip # 빌드 파일 압축해서 전달
+    bundle_type: zip # 압축 확장자
+    application: spring-deploy-test # 웹 콘솔에서 등록한 CodeDelpoy 애플리케이션 이름
+    deployment_group: spring-deploy-test-group # 웹 콘솔에서 등록한 CodeDelpoy 배포 그룹 이름
+    region: ap-northeast-2
+    wait-until-deployed: true
+    on:
+      all_branches: true # master말고 다른 모든 브런치 허용

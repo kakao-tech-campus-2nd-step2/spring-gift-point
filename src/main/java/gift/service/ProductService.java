@@ -37,7 +37,7 @@ public class ProductService {
 
     public ProductResponseDto getProductResponseDtoById(Long id) {
         Product newProduct = productRepository.findById(id).get();
-        return new ProductResponseDto(newProduct.getId(), newProduct.getName(), newProduct.getPrice(), newProduct.getUrl());
+        return new ProductResponseDto(newProduct.getId(), newProduct.getName(), newProduct.getPrice(), newProduct.getUrl(), newProduct.getCategory().getId(), newProduct.getCategory().getName());
     }
 
 

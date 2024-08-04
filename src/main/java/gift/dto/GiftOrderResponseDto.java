@@ -10,13 +10,13 @@ public class GiftOrderResponseDto {
     @Schema(description = "선물 주문 고유 id ")
     private Long id;
     @Schema(description = "선택한 옵션 id")
-    private Long optionId;
+    private final Long optionId;
     @Schema(description = "선택한 상품 개수")
-    private Long quantity;
+    private final Long quantity;
     @Schema(description = "선물 주문 일시")
-    private LocalDateTime orderDateTime;
+    private final LocalDateTime orderDateTime;
     @Schema(description = "요청 메세지")
-    private String message;
+    private final String message;
 
 
     public GiftOrderResponseDto(Long id, Long optionId, Long quantity, LocalDateTime orderDateTime, String message) {

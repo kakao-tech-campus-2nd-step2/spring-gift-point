@@ -6,13 +6,16 @@ import jakarta.validation.constraints.Email;
 @Schema(description = "멤버 요청 DTO")
 public class MemberRequestDto {
     @Schema(description = "멤버 고유 id ")
-    private final Long id;
+    private Long id;
     @Email
     @Schema(description = "멤버 email ")
     private String email;
     @Schema(description = "멤버 비밀번호")
-    private final String password;
+    private String password;
 
+
+    public MemberRequestDto() {
+    }
 
     public MemberRequestDto(Long id, String email, String password) {
         this.id = id;
