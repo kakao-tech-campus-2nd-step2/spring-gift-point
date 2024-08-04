@@ -55,7 +55,8 @@ public class OrderServiceTest {
 
     @BeforeEach
     void setUp() {
-        orderService = new OrderService(memberRepository, orderRepository, optionRepository, oauthTokenRepository,
+        orderService = new OrderService(memberRepository, orderRepository, optionRepository,
+            oauthTokenRepository,
             wishRepository, kakaoMessageClient);
     }
 
@@ -74,7 +75,8 @@ public class OrderServiceTest {
             Optional.of(
                 new OauthToken("kakao", "email", "acessToken", 50000, "refreshToken", null)));
 
-        OrderResponse orderResponse = orderService.createOrder(new OrderRequest(1L, 2, "hello", true, 500),
+        OrderResponse orderResponse = orderService.createOrder(
+            new OrderRequest(1L, 2, "hello", true, 500),
             new LoginMemberDto(1L, "test", "test@test.com", "test"));
         then(orderRepository).should().save(any());
         then(kakaoMessageClient).should().sendOrderMessage(any(), any());

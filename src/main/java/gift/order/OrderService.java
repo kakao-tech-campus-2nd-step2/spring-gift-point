@@ -54,7 +54,8 @@ public class OrderService {
         Product product = option.getProduct();
 
         option.subtract(orderRequest.quantity());
-        int accumulatedPoint = (product.getTotalPrice(orderRequest.quantity()) - orderRequest.point()) / 10;
+        int accumulatedPoint =
+            (product.getTotalPrice(orderRequest.quantity()) - orderRequest.point()) / 10;
         Order order = new Order(loginMemberDto.toEntity(), option, orderRequest.quantity(),
             orderRequest.message(), product.getTotalPrice(orderRequest.quantity()),
             orderRequest.point(),
