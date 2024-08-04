@@ -1,5 +1,6 @@
 package gift.main.entity;
 
+import gift.main.dto.PointResponse;
 import gift.main.dto.UserJoinRequest;
 import jakarta.persistence.*;
 
@@ -113,4 +114,7 @@ public class User {
         return Objects.hash(id);
     }
 
+    public void updatePoint(PointResponse point) {
+        this.point += point.point();
+    }
 }

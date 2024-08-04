@@ -62,4 +62,12 @@ public class UserService {
         return userRepository.findAll(pageable)
                 .map(UserResponse::new);
     }
+
+    @Transactional
+    public void addPoint(Long memberId, PointResponse point) {
+        User user = userRepository.findById(memberId)
+                .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_USER));
+
+        user.updatePoint(point);
+    }
 }

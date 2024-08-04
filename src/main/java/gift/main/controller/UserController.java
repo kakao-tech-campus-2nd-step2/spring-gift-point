@@ -42,9 +42,18 @@ public class UserController {
 
 
     @GetMapping("/api/admin/users")
-    public ResponseEntity<?> loinMember(@RequestParam(value = "page") int pageNum) {
+    public ResponseEntity<?> getUserPage(@RequestParam(value = "page") int pageNum) {
         Page<UserResponse> userPage = userService.getUserPage(pageNum);
         return ResponseEntity.ok(new PageResponse(userPage));
+
+    }
+
+
+    @PutMapping("/api/admin/users/{member_id}/point")
+    public ResponseEntity<?> addPoint(@PathVariable(name = "member_id") Long memberId,
+                                      @RequestBody PointResponse point) {
+        userService.addPoint(memberId, point);
+        return ResponseEntity.ok("");
 
     }
 }
