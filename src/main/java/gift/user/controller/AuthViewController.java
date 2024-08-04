@@ -61,4 +61,9 @@ public class AuthViewController {
     public String kakaoLogin(){
         return "kakao_login";
     }
+
+    @GetMapping("/admin")
+    public String adminUsers(){
+        return "users";
+    }
 }
