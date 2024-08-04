@@ -15,10 +15,10 @@ public interface MemberSpringDataJpaRepository extends JpaRepository<Member, Lon
     @Modifying
     @Transactional
     @Query("UPDATE Member m SET m.point = m.point - :points WHERE m.id = :memberId")
-    void subtractPoints(Long memberId, Integer point);
+    void subtractPoints(Long memberId, Integer points);
 
     @Modifying
     @Transactional
     @Query("UPDATE Member m SET m.point = m.point + :points WHERE m.id = :memberId")
-    void addPoints(Long memberId, int point);
+    void addPoints(Long memberId, int points);
 }
