@@ -35,12 +35,12 @@ public class OrderService {
         }
         optionService.decreaseOptionQuantity(orderRequestDto.getOptionId(), orderRequestDto.getQuantity());
 
-        Order order = new Order(option, orderRequestDto.getQuantity(), orderRequestDto.getMessage());
+        Order order = new Order(option, orderRequestDto.getQuantity(), orderRequestDto.getMessage(), orderRequestDto.getPoint());
         orderRepository.save(order);
         Product product = optionService.findProductByOptionId(option.getId());
 
         wishlistRepository.deleteByMemberIdAndProductId(memberId, product.getId());
-        
+
         kakaoMessageService.sendMessageToKakao(order, memberId);
         return order;
     }

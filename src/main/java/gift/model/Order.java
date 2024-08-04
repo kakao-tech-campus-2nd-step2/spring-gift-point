@@ -32,22 +32,22 @@ public class Order {
     @Column(nullable = false)
     private String message;
 
+    @Column(nullable = false)
+    private int point;
+
     public Order() {
     }
 
-    public Order(Option option, int quantity, String message) {
+    public Order(Option option, int quantity, String message, int point) {
         this.option = option;
         this.quantity = quantity;
         this.orderDateTime = LocalDateTime.now();
         this.message = message;
+        this.point = point;
     }
 
     public Long getId() {
         return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 
     public Option getOption() {
@@ -64,5 +64,9 @@ public class Order {
 
     public String getMessage() {
         return message;
+    }
+
+    public int getPoint() {
+        return point;
     }
 }
