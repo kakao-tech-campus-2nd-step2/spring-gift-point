@@ -65,4 +65,8 @@ public class Member {
     public int chargePoint(int charge){
         return this.point+=charge;
     }
+
+    public boolean checkPoint(int usePoint){
+        return this.point >= 1000 && this.point >= usePoint;
+    }
 }

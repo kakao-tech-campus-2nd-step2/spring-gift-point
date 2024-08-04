@@ -57,7 +57,7 @@ public class MemberService {
 
     public RemainingPointsDTO usePoint(String email, int point){
         Member member = memberRepository.findByEmail(email);
-        if(member.getPoint() < 1000 || point > member.getPoint()){ // 가지고 있는 point 1000 미만 or 가지고있는 포인트가 사용할 포인트 보다 더 작을 때
+        if(!member.checkPoint(point)){ // 가지고 있는 point 1000 미만 or 가지고있는 포인트가 사용할 포인트 보다 더 작을 때
             throw new BadRequestException("400 Bad Request : Invalid input");
         }
         int remainingPoint = member.usePoint(point);
