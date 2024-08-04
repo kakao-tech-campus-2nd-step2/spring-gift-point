@@ -8,6 +8,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import java.time.LocalDateTime;
 import java.util.Objects;
 
 @Entity
@@ -26,16 +27,20 @@ public class Wish {
     private Product product;
 
     @Column(nullable = false)
+    private LocalDateTime createdDate;
+
+    @Column(nullable = false)
     private Integer quantity;
 
     protected Wish() {
     }
 
-    public Wish(Member member, Product product, Integer quantity) {
+    public Wish(Member member, Product product, LocalDateTime localDateTime, Integer quantity) {
         validateQuantity(quantity);
 
         this.member = member;
         this.product = product;
+        this.createdDate = localDateTime;
         this.quantity = quantity;
     }
 
@@ -50,6 +55,8 @@ public class Wish {
     public Member getMember() {
         return member;
     }
+
+    public LocalDateTime getCreatedDate() { return createdDate; }
 
     public Integer getQuantity() {
         return quantity;
@@ -68,21 +75,22 @@ public class Wish {
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) {
+    public boolean equals(Object object) {
+        if (this == object) {
             return true;
         }
-        if (o == null || getClass() != o.getClass()) {
+        if (object == null || getClass() != object.getClass()) {
             return false;
         }
-        Wish wish = (Wish) o;
-        return Objects.equals(id, wish.id) && Objects.equals(member, wish.member)
-                && Objects.equals(product, wish.product) && Objects.equals(quantity,
-                wish.quantity);
+        Wish wish = (Wish) object;
+        return Objects.equals(getId(), wish.getId()) && Objects.equals(getMember(),
+                wish.getMember()) && Objects.equals(getProduct(), wish.getProduct())
+                && Objects.equals(getCreatedDate(), wish.getCreatedDate())
+                && Objects.equals(getQuantity(), wish.getQuantity());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, member, product, quantity);
+        return Objects.hash(getId(), getMember(), getProduct(), getCreatedDate(), getQuantity());
     }
 }

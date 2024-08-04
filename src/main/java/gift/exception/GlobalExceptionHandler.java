@@ -3,7 +3,6 @@ package gift.exception;
 import gift.constants.ResponseMsgConstants;
 import gift.dto.betweenClient.ResponseDTO;
 import gift.exception.BadRequestExceptions.BadRequestException;
-import gift.exception.BadRequestExceptions.EmailAlreadyHereException;
 import gift.util.ResponseEntityUtil;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
@@ -61,12 +60,6 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ResponseDTO> handleValidationExceptions(
             MethodArgumentTypeMismatchException ex) {
         return new ResponseEntity<>(new ResponseDTO(true, "가격이나 개수는 숫자로 입력해야 합니다."), HttpStatus.BAD_REQUEST);
-    }
-
-    @ExceptionHandler(EmailAlreadyHereException.class)
-    @ResponseStatus(HttpStatus.CONFLICT)
-    public ResponseEntity<ResponseDTO> handleValidationExceptions(EmailAlreadyHereException ex) {
-        return new ResponseEntity<>(new ResponseDTO(true, ex.getMessage()), HttpStatus.CONFLICT);
     }
 
     @ExceptionHandler(EmptyResultDataAccessException.class)

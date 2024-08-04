@@ -17,6 +17,7 @@ import gift.exception.BadRequestExceptions.BadRequestException;
 import gift.repository.OptionRepository;
 import gift.repository.ProductRepository;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -53,12 +54,13 @@ class OptionServiceTest {
 
     @AfterEach
     void tearDown() {
-
     }
 
     @Test
     void getOneProductIdAllOptions() {
-        given(optionService.getOneProductIdAllOptions(any())).willReturn(new ArrayList<>());
+        List<Option> options = new ArrayList<>();
+        options.add(option1);
+        given(optionRepository.findAllByProductId(any())).willReturn(options);
         assertThat(optionService.getOneProductIdAllOptions(any())).isNotNull();
     }
 

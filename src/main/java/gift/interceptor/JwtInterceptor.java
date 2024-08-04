@@ -20,8 +20,8 @@ public class JwtInterceptor implements HandlerInterceptor {
             Object handler) throws Exception {
         String authHeader = request.getHeader("Authorization");
 
-        if ("GET".equalsIgnoreCase(request.getMethod()) && "/api/products".equals(
-                request.getRequestURI())) {
+        if ("GET".equalsIgnoreCase(request.getMethod()) &&
+                (request.getRequestURI().matches("/api/products(/\\d+)?"))) {
             return true;
         }
 

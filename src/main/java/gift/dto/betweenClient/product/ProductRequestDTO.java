@@ -11,8 +11,6 @@ import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.URL;
 
 public record ProductRequestDTO(
-        Long id,
-
         @NotBlank(message = "상품 이름을 입력해주세요.")
         @Length(min = 1, max = 15, message = "제품명 길이는 1~15자만 가능합니다.")
         @Pattern(regexp = "[a-zA-Z0-9ㄱ-ㅎ가-힣()\\[\\]+\\-&/_ ]+", message = "( ), [ ], +, -, &, /, _을 제외한 특수문자는 입력할 수 없습니다.")

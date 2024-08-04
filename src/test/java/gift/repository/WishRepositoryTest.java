@@ -6,6 +6,7 @@ import gift.entity.Category;
 import gift.entity.Product;
 import gift.entity.Member;
 import gift.entity.Wish;
+import java.time.LocalDateTime;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -59,7 +60,7 @@ class WishRepositoryTest {
     @Test
     @DisplayName("위시리스트 추가")
     void save(){
-        Wish wish = new Wish(member, product, 1);
+        Wish wish = new Wish(member, product, LocalDateTime.now(),1);
         Wish actualWish = wishRepository.save(wish);
 
         assertThat(actualWish.getProduct()).isEqualTo(product);
@@ -75,7 +76,7 @@ class WishRepositoryTest {
     @Test
     @DisplayName("위시리스트 개수 수정")
     void updateQuantity(){
-        Wish wish = new Wish(member, product, 1);
+        Wish wish = new Wish(member, product,  LocalDateTime.now(), 1);
         wishRepository.save(wish);
         assertThat(wishRepository.findByMemberAndProduct(member, product).get().getQuantity()).isEqualTo(1);
         wish.changeQuantity(3);
@@ -87,7 +88,7 @@ class WishRepositoryTest {
     @Test
     @DisplayName("위시리스트 Member & 상품 ID로 제거")
     void delete1(){
-        Wish wish = new Wish(member, product, 1);
+        Wish wish = new Wish(member, product,  LocalDateTime.now(), 1);
         wishRepository.save(wish);
         assertThat(wishRepository.count()).isEqualTo(1);
 
@@ -98,9 +99,9 @@ class WishRepositoryTest {
     @Test
     @DisplayName("위시리스트 상품 ID로 제거")
     void delete2(){
-        Wish wish = new Wish(member, product, 1);
+        Wish wish = new Wish(member, product,  LocalDateTime.now(), 1);
         wishRepository.save(wish);
-        Wish wish2 = new Wish(member2, product, 1);
+        Wish wish2 = new Wish(member2, product,  LocalDateTime.now(), 1);
         wishRepository.save(wish2);
 
 
