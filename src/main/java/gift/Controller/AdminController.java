@@ -4,6 +4,7 @@ import gift.DTO.PointDTO;
 import gift.DTO.ProductDTO;
 import gift.Model.Category;
 import gift.Model.Member;
+
 import gift.Model.Product;
 import gift.Service.AdminService;
 
@@ -16,6 +17,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 
 import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -189,6 +191,7 @@ public class AdminController {
         adminService.chargePoint(memberId,pointDTO.getPoint());
         return "redirect:/admin/members";
     }
+
 }
 
 

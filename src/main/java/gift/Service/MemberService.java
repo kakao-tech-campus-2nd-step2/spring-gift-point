@@ -6,6 +6,7 @@ import gift.DTO.RemainingPointsDTO;
 import gift.Exception.BadRequestException;
 import gift.Exception.ForbiddenException;
 import gift.Exception.UnauthorizedException;
+
 import gift.Model.Member;
 import gift.Repository.MemberRepository;
 import java.util.List;
@@ -66,6 +67,14 @@ public class MemberService {
     }
 
     public void updateMember(Member member){
+
         memberRepository.save(member);
     }
+    public void checkMember(MemberDTO memberDTO){
+        Member checkMember = getMemberByEmail(memberDTO.getEmail());
+        if(!checkMember.getEmail().equals(memberDTO.getEmail()) || !checkMember.getPassword().equals(memberDTO.getPassword())){
+            throw new ForbiddenException("403 Forbidden : Invalid email or password");
+        }
+    }
+
 }

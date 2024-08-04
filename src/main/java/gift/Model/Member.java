@@ -23,6 +23,7 @@ public class Member {
     @Column(name = "password", nullable = false)
     private String password;
     @Column(name = "accessToken")
+
     private String accessToken;
     @Column(name = "point")
     private int point;

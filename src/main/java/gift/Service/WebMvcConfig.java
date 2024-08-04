@@ -16,5 +16,6 @@ public class WebMvcConfig implements WebMvcConfigurer {
         //인터셉터 등록
         registry.addInterceptor(bearerAuthInterceptor).addPathPatterns("/api/wishes/**");
         registry.addInterceptor(bearerAuthInterceptor).addPathPatterns("/api/members/point");
+
     }
 }

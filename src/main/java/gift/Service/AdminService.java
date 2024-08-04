@@ -3,6 +3,7 @@ package gift.Service;
 import gift.DTO.ProductDTO;
 import gift.Model.Category;
 import gift.Model.Member;
+
 import gift.Model.Option;
 import gift.Model.Product;
 import gift.Repository.CategoryRepository;
@@ -20,6 +21,7 @@ public class AdminService {
     public AdminService(ProductService productService, MemberService memberService){
         this.productService = productService;
         this.memberService = memberService;
+
     }
 
     public Page<Product> findAll(Pageable pageable){
@@ -56,5 +58,6 @@ public class AdminService {
         memberService.updateMember(member);
         return point;
     }
+
 
 }

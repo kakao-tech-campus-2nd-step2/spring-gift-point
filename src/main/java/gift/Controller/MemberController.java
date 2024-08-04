@@ -3,6 +3,7 @@ package gift.Controller;
 import gift.DTO.MemberDTO;
 import gift.DTO.PointDTO;
 import gift.DTO.RemainingPointsDTO;
+
 import gift.DTO.SuccessMessageDTO;
 import gift.DTO.TokenDTO;
 import gift.Service.MemberAccessTokenProvider;
@@ -14,11 +15,13 @@ import io.swagger.v3.oas.annotations.Parameters;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
+
 import jakarta.validation.Valid;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -99,5 +102,6 @@ public class MemberController {
         memberService.checkMemberByEmail(email);
         return ResponseEntity.ok().body(memberService.usePoint(email,pointDTO.getPoint()));
     }
+
 
 }
