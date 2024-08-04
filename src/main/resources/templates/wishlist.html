@@ -101,6 +101,7 @@
       <th>Image</th>
       <th>Options</th>
       <th>Total Price</th>
+      <th>Use Points</th>
       <th>Actions</th>
     </tr>
     </thead>
@@ -121,9 +122,12 @@
       </td>
       <td id="total-price-${wish.id}" th:text="${wish.count * wish.productResponseDto.price} + '원'"></td>
       <td>
-        <button class="btn btn-secondary delete-wish" th:data-wish-id="${wish.id}">삭제</button>
-        <button class="btn update-quantity" th:data-wish-id="${wish.id}">수량 변동</button>
-        <button class="btn order-wish" th:data-wish-id="${wish.id}">주문하기</button>
+        <input type="number" class="use-points" th:data-wishlist-id="${wishlist.id}" min="0" max="${session.points}" value="0"/>
+      </td>
+      <td>
+        <button class="btn btn-secondary delete-wishlist" th:data-wishlist-id="${wishlist.id}">삭제</button>
+        <button class="btn update-quantity" th:data-wishlist-id="${wishlist.id}">수량 변동</button>
+        <button class="btn order-wishlist" th:data-wishlist-id="${wishlist.id}">주문하기</button>
       </td>
     </tr>
     </tbody>

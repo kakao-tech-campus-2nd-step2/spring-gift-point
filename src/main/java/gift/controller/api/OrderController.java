@@ -26,7 +26,9 @@ public class OrderController {
 
     @PostMapping("/order/{wishlistId}")
     @Operation(summary = "주문 생성", description = "위시리스트 ID를 사용하여 주문을 생성합니다.")
-    public ResponseEntity<OrderResponseDto> placeOrder(@PathVariable("wishlistId") Long wishlistId, HttpSession session) {
+    public ResponseEntity<OrderDTO> placeOrder(@PathVariable("wishlistId") Long wishlistId,
+        @RequestParam("pointsToUse") int pointsToUse,
+        HttpSession session) {
         KakaoUserDTO kakaoUserDTO = (KakaoUserDTO) session.getAttribute("kakaoUserDTO");
         String accessToken = (String) session.getAttribute("accessToken");
 
@@ -34,7 +36,7 @@ public class OrderController {
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
 
-        OrderResponseDto orderResponseDto = orderService.placeOrder(kakaoUserDTO, wishlistId, accessToken);
+        OrderDTO orderDTO = orderService.placeOrder(kakaoUserDTO, wishlistId, accessToken, pointsToUse);
 
         return new ResponseEntity<>(orderResponseDto, HttpStatus.CREATED);
     }

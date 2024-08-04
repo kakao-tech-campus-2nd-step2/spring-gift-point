@@ -41,10 +41,7 @@
       <ul class="nav-item" sec:authorize="isAuthenticated()">
         <span class="nav-link">
           <span th:if="${session.nickname} != null">
-            [[${session.nickname}]] 님 반갑습니다
-          </span>
-          <span th:if="${session.nickname} == null and ${#authentication.name} != null">
-            [[${#authentication.name}]] 님 반갑습니다
+            [[${session.nickname}]] 님 반갑습니다 (보유 포인트: <span id="points">[[${session.points}]]</span>)
           </span>
         </span>
       </ul>

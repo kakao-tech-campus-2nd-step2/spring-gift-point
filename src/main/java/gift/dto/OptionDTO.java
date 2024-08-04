@@ -24,6 +24,8 @@ public class OptionDTO {
     @Schema(description = "상품 ID", example = "2001")
     @NotNull(message = "상품 ID는 필수 값입니다.")
     private Long productId;
+    @Max(value = 100000000, message = "수량은 최대 1억개 이하이어야 합니다.")
+    private int maxQuantity;
 
     public OptionDTO() {}
 

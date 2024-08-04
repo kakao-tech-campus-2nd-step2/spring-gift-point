@@ -102,7 +102,6 @@ public class KakaoLoginServiceImpl implements KakaoLoginService {
         restTemplate.postForEntity(KAKAO_MESSAGE_URL, request, String.class);
     }
 
-    // 로그인 시 메시지를 보내는 메서드 추가
     public void sendLoginMessage(String accessToken, String nickname) {
         String message = String.format("%s님이 Spring-gift-order에 로그인했습니다.", nickname);
         sendMessage(accessToken, message);
@@ -131,7 +130,6 @@ public class KakaoLoginServiceImpl implements KakaoLoginService {
         return params;
     }
 
-    // 메시지 템플릿 추가
     static class KakaoMessageTemplate {
 
         private String object_type;
@@ -169,7 +167,6 @@ public class KakaoLoginServiceImpl implements KakaoLoginService {
         }
     }
 
-    // KakaoMessageLink 클래스 추가
     static class KakaoMessageLink {
 
         private String web_url;

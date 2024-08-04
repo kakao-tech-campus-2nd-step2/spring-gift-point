@@ -25,10 +25,15 @@ import jakarta.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.Collections;
 import java.util.Optional;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @Controller
 @Tag(name = "Kakao Login API", description = "카카오 로그인 관련 API")
 public class KakaoLoginController {
+
+    private static final Logger logger = LoggerFactory.getLogger(KakaoLoginController.class);
+    private static final int INITIAL_POINTS = 1000;
 
     @Value("${kakao.client-id}")
     private String clientId;
@@ -79,14 +84,19 @@ public class KakaoLoginController {
 
                 Optional<SiteUser> userOptional = userRepository.findByUsername(nickname);
                 if (userOptional.isEmpty()) {
-                    SiteUser newUser = new SiteUser();
-                    newUser.setUsername(nickname);
-                    newUser.setPassword("");
-                    newUser.setEmail("");
+                    SiteUser newUser = new SiteUser(nickname , "" , "" , INITIAL_POINTS );
                     userRepository.save(newUser);
+                    session.setAttribute("points", newUser.getPoints()); // 포인트 세션에 저장
+                } else {
+                    // 기존 유저의 포인트를 세션에 저장
+                    SiteUser existingUser = userOptional.get();
+                    session.setAttribute("points", existingUser.getPoints());
                 }
 
-                return "redirect:/api/products/list";
+                // 포인트를 로그로 출력
+                logger.info("User '{}' logged in with points: {}", nickname, session.getAttribute("points"));
+
+                return "redirect:/web/products/list";
             } else {
                 model.addAttribute("error", "Failed to retrieve user information. User Info: " + userInfo);
                 return "error";
