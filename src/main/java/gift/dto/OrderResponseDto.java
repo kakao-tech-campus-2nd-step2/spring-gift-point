@@ -10,19 +10,19 @@ public class OrderResponseDto {
     private int quantity;
     private LocalDateTime orderDateTime;
     private String message;
-    private int point;
+    private int points;
 
-    public OrderResponseDto(Long id, Long optionId, int quantity, LocalDateTime orderDateTime, String message, int point) {
+    public OrderResponseDto(Long id, Long optionId, int quantity, LocalDateTime orderDateTime, String message, int points) {
         this.id = id;
         this.optionId = optionId;
         this.quantity = quantity;
         this.orderDateTime = orderDateTime;
         this.message = message;
-        this.point = point;
+        this.points = points;
     }
 
     public OrderResponseDto(Order order) {
-        this(order.getId(), order.getOption().getId(), order.getQuantity(), order.getOrderDateTime(), order.getMessage(), order.getPoint());
+        this(order.getId(), order.getOption().getId(), order.getQuantity(), order.getOrderDateTime(), order.getMessage(), order.getPoints());
     }
 
     public Long getId() {
@@ -45,7 +45,7 @@ public class OrderResponseDto {
         return message;
     }
 
-    public int getPoint() {
-        return point;
+    public int getPoints() {
+        return points;
     }
 }

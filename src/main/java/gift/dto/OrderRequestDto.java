@@ -10,7 +10,7 @@ public class OrderRequestDto {
     private int quantity;
     private String message;
     @Min(value = 0, message = "포인트는 최소 0 이상이어야 합니다.")
-    private int point;
+    private int points;
 
     public Long getOptionId() {
         return optionId;
@@ -24,7 +24,7 @@ public class OrderRequestDto {
         return message;
     }
 
-    public int getPoint() {
-        return point;
+    public int getPoints() {
+        return points;
     }
 }

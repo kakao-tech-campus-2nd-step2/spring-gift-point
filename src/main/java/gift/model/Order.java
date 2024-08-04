@@ -33,17 +33,17 @@ public class Order {
     private String message;
 
     @Column(nullable = false)
-    private int point;
+    private int points;
 
     public Order() {
     }
 
-    public Order(Option option, int quantity, String message, int point) {
+    public Order(Option option, int quantity, String message, int points) {
         this.option = option;
         this.quantity = quantity;
         this.orderDateTime = LocalDateTime.now();
         this.message = message;
-        this.point = point;
+        this.points = points;
     }
 
     public Long getId() {
@@ -66,7 +66,7 @@ public class Order {
         return message;
     }
 
-    public int getPoint() {
-        return point;
+    public int getPoints() {
+        return points;
     }
 }
