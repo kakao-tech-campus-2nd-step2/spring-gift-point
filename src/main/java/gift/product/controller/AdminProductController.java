@@ -36,7 +36,7 @@ public class AdminProductController {
         this.categoryService = categoryService;
     }
 
-    @GetMapping("/list")
+    @GetMapping
     public String showProductList(Model model, Pageable pageable) {
         System.out.println("[ProductController] showProductList()");
         model.addAttribute("productList", productService.getAllProducts(pageable));
@@ -53,14 +53,17 @@ public class AdminProductController {
     }
 
     @PostMapping
-    public String registerProduct(@Valid @ModelAttribute ProductDTO productDTO, BindingResult bindingResult, Model model) {
+    public String registerProduct(
+        @Valid @ModelAttribute ProductDTO productDTO,
+        BindingResult bindingResult,
+        Model model) {
         System.out.println("[ProductController] registerProduct()");
         if (bindingResult.hasErrors()) {
             model.addAttribute("product", productDTO);
             return "product-form";
         }
         productService.registerProduct(productDTO);
-        return "redirect:/admin/product/list";
+        return "redirect:/admin/products";
     }
 
     @GetMapping("/{id}")
@@ -74,25 +77,32 @@ public class AdminProductController {
     }
 
     @PutMapping("/{id}")
-    public String updateProduct(@PathVariable Long id, @ModelAttribute ProductDTO productDTO, BindingResult bindingResult, Model model) {
+    public String updateProduct(
+        @PathVariable Long id,
+        @ModelAttribute ProductDTO productDTO,
+        BindingResult bindingResult,
+        Model model) {
         System.out.println("[ProductController] updateProduct()");
         if (bindingResult.hasErrors()) {
             model.addAttribute("product", productDTO);
             return "product-form";
         }
         productService.updateProduct(id, productDTO);
-        return "redirect:/admin/product/list";
+        return "redirect:/admin/products";
     }
 
     @DeleteMapping("/{id}")
-    public String deleteProduct(@PathVariable Long id, Model model) {
+    public String deleteProduct(@PathVariable Long id) {
         System.out.println("[ProductController] deleteProduct()");
         productService.deleteProduct(id);
-        return "redirect:/admin/product/list";
+        return "redirect:/admin/products";
     }
 
     @GetMapping("/search")
-    public String searchProduct(@RequestParam("keyword") String keyword, Model model, Pageable pageable) {
+    public String searchProduct(
+        @RequestParam("keyword") String keyword,
+        Model model,
+        Pageable pageable) {
         System.out.println("[ProductController] searchProduct()");
         model.addAttribute("searchResults", productService.searchProducts(keyword, pageable));
         model.addAttribute("keyword", keyword);

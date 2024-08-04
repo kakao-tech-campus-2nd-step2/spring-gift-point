@@ -4,6 +4,7 @@ import static gift.product.exception.GlobalExceptionHandler.UNKNOWN_VALIDATION_E
 
 import gift.product.docs.MemberControllerDocs;
 import gift.product.dto.MemberDTO;
+import gift.product.dto.PointResponseDTO;
 import gift.product.dto.TokenDTO;
 import gift.product.service.MemberService;
 import jakarta.validation.Valid;
@@ -13,13 +14,15 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/api/member")
+@RequestMapping("/api/members")
 public class ApiMemberController implements MemberControllerDocs {
 
     private final MemberService memberService;
@@ -57,5 +60,11 @@ public class ApiMemberController implements MemberControllerDocs {
         }
         return ResponseEntity.status(HttpStatus.OK)
             .body(memberService.login(memberDTO));
+    }
+
+    @GetMapping("/points")
+    public ResponseEntity<PointResponseDTO> getPoint(@RequestHeader("Authorization") String authorization) {
+        return ResponseEntity.status(HttpStatus.OK)
+            .body(memberService.getPoint(authorization));
     }
 }

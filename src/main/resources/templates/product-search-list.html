@@ -5,7 +5,7 @@
     <title>상품 조회 리스트</title>
 </head>
 <body>
-<a href="/admin/product/list"><- 상품 관리 페이지로 돌아가기</a>
+<a href="/admin/products"><- 상품 관리 페이지로 돌아가기</a>
 <h1>조회된 상품 목록</h1>
 <div th:if="${#lists.isEmpty(searchResults)}">
     "<span th:text="${keyword}"></span>"이(가) 상품명에 포함된 상품이 없습니다.
@@ -41,10 +41,10 @@
                 <span th:text="${product.categoryId}"></span>
             </td>
             <td>
-                <form th:action="@{/admin/product/update/{id}(id=${product.id})}" method="get">
+                <form th:action="@{/admin/products/update/{id}(id=${product.id})}" method="get">
                     <button type="submit">수정</button>
                 </form>
-                <form th:action="@{/admin/product/{id}(id=${product.id})}" method="post">
+                <form th:action="@{/admin/products/{id}(id=${product.id})}" method="post">
                     <input type="hidden" name="_method" value="delete" />
                     <button type="submit">삭제</button>
                 </form>

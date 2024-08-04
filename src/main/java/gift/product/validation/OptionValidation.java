@@ -58,7 +58,7 @@ public class OptionValidation {
 
     private void validateDuplicateName(Collection<Option> options, Option newOption) {
         if(options.stream()
-            .anyMatch(option -> newOption.isSameName(option)))
+            .anyMatch(newOption::isSameName))
             throw new DuplicateException(DUPLICATE_OPTION_NAME);
     }
 

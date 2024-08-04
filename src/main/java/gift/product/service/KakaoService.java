@@ -1,10 +1,9 @@
 package gift.product.service;
 
 import static gift.product.exception.GlobalExceptionHandler.INVALID_HTTP_REQUEST;
-import static gift.product.exception.GlobalExceptionHandler.NOT_EXIST_ID;
 import static gift.product.exception.GlobalExceptionHandler.NOT_RECEIVE_RESPONSE;
 
-import gift.product.exception.InvalidIdException;
+import gift.product.dto.TokenDTO;
 import gift.product.exception.RequestException;
 import gift.product.exception.ResponseException;
 import gift.product.model.Member;
@@ -15,6 +14,7 @@ import gift.product.util.JwtUtil;
 import jakarta.validation.constraints.NotNull;
 import java.net.URI;
 import java.util.Map;
+import java.util.Optional;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
@@ -49,11 +49,11 @@ public class KakaoService {
         this.snsMemberRepository = snsMemberRepository;
     }
 
-    public String login(String authCode) {
+    public TokenDTO login(String authCode) {
         String accessToken = getAccessToken(authCode);
         Long kakaoMemberId = parsingAccessToken(accessToken);
         SnsMember snsMember = signUpAndLogin(kakaoMemberId, accessToken);
-        return jwtUtil.generateToken(snsMember.getKakaoId().toString());
+        return new TokenDTO(jwtUtil.generateToken(snsMember.getKakaoId().toString()));
     }
 
     public String getAuthCode() {
@@ -62,7 +62,7 @@ public class KakaoService {
             + "&client_id=" + properties.clientId();
     }
 
-    public String getAccessToken(String code) {
+    private String getAccessToken(String code) {
         var url = "https://kauth.kakao.com/oauth/token";
         final var body = createBody(code);
         var response = client.post()
@@ -76,7 +76,7 @@ public class KakaoService {
         return response.get("access_token").toString();
     }
 
-    public Long parsingAccessToken(String accessToken) {
+    private Long parsingAccessToken(String accessToken) {
         var url = "https://kapi.kakao.com/v2/user/me";
         var response = client.get()
             .uri(URI.create(url))
@@ -97,18 +97,21 @@ public class KakaoService {
         return body;
     }
 
-    public SnsMember signUpAndLogin(Long kakaoMemberId, String accessToken) {
-        if(!snsMemberRepository.existsByKakaoId(kakaoMemberId)) {
-            SnsMember snsMember = new SnsMember(
-                kakaoMemberId,
-                accessToken,
-                "Kakao"
+    private SnsMember signUpAndLogin(Long kakaoMemberId, String accessToken) {
+        Optional<SnsMember> existMember = snsMemberRepository.findByKakaoId(kakaoMemberId);
+        if(existMember.isEmpty()) {
+            SnsMember newMember = snsMemberRepository.save(
+                new SnsMember(
+                    kakaoMemberId,
+                    accessToken,
+                    "Kakao"
+                )
             );
-            snsMemberRepository.save(snsMember);
-            memberRepository.save(new Member(snsMember));
-            return snsMember;
+            memberRepository.save(new Member(newMember));
+            return newMember;
         }
-        return snsMemberRepository.findByKakaoId(kakaoMemberId)
-            .orElseThrow(() -> new InvalidIdException(NOT_EXIST_ID));
+        SnsMember snsMember = existMember.get();
+        snsMember.setAccessToken(accessToken);
+        return snsMemberRepository.save(snsMember);
     }
 }

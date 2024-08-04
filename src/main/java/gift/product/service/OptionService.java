@@ -1,8 +1,12 @@
 package gift.product.service;
 
+import static gift.product.exception.GlobalExceptionHandler.CANNOT_SUBTRACT_ZERO_OR_NEGATIVE;
 import static gift.product.exception.GlobalExceptionHandler.NOT_EXIST_ID;
+import static gift.product.exception.GlobalExceptionHandler.SUBTRACT_EXCEED_QUANTITY;
 
 import gift.product.dto.OptionDTO;
+import gift.product.dto.OrderRequestDTO;
+import gift.product.exception.InstanceValueException;
 import gift.product.exception.InvalidIdException;
 import gift.product.model.Option;
 import gift.product.repository.OptionRepository;
@@ -60,5 +64,16 @@ public class OptionService {
         System.out.println("[OptionService] findById()");
         return optionRepository.findById(id)
             .orElseThrow(() -> new InvalidIdException(NOT_EXIST_ID));
+    }
+
+    public Option subtractQuantity(OrderRequestDTO orderRequestDTO) {
+        if(orderRequestDTO.getQuantity() < 1)
+            throw new InstanceValueException(CANNOT_SUBTRACT_ZERO_OR_NEGATIVE);
+        Option option = optionRepository.findById(orderRequestDTO.getOptionId())
+            .orElseThrow(() -> new InvalidIdException(NOT_EXIST_ID));
+        if(option.getQuantity() < orderRequestDTO.getQuantity())
+            throw new InstanceValueException(SUBTRACT_EXCEED_QUANTITY);
+        option.subtractQuantity(orderRequestDTO.getQuantity());
+        return optionRepository.save(option);
     }
 }
