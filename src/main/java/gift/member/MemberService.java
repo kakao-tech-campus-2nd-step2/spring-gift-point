@@ -6,6 +6,7 @@ import static gift.exception.ErrorMessage.WRONG_PASSWORD;
 
 import gift.exception.FailedLoginException;
 import gift.member.dto.MemberChargePointRequestDTO;
+import gift.member.dto.MemberPointResponseDTO;
 import gift.member.dto.MemberRequestDTO;
 import gift.member.dto.MemberResponseDTO;
 import gift.member.entity.Member;
@@ -89,5 +90,14 @@ public class MemberService {
                 member.getEmail(),
                 member.getPoint()
             )).toList();
+    }
+
+    @Transactional(readOnly = true)
+    public MemberPointResponseDTO getPoint(String token) {
+        Member member = getMember(
+            jwtProvider.getMemberTokenDTOFromToken(token).getEmail()
+        );
+
+        return new MemberPointResponseDTO(member.getPoint());
     }
 }
