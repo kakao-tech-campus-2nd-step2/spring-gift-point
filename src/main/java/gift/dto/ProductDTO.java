@@ -29,6 +29,11 @@ public class ProductDTO {
 
     public ProductDTO(){}
 
+    public ProductDTO(Long id, List<Long> optionId) {
+        this.id = id;
+        this.optionId = optionId;
+    }
+
     /**
      * id로 상품 객체 전체를 조회할 때 사용되는 생성자
      *

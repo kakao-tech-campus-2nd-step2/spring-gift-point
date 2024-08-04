@@ -33,12 +33,17 @@ public class WishListService {
     }
 
     private WishListEntity dtoToEntity(Long userId, ProductDTO product) throws Exception {
+        if (product.getId() == null) {
+            throw new IllegalArgumentException("상품 id는 null일 수 없습니다.");
+        }
+
         MemberEntity memberEntity = memberRepository.findById(userId)
             .orElseThrow(() -> new EntityNotFoundException("유저가 존재하지 않습니다."));
+        System.out.println("memberEntity:" + memberEntity);
 
         ProductEntity productEntity = productRepository.findById(product.getId())
             .orElseThrow(() -> new EntityNotFoundException("상품이 존재하지 않습니다."));
-
+        System.out.println("productEntity:" + productEntity);
         return new WishListEntity(productEntity, memberEntity);
     }
 

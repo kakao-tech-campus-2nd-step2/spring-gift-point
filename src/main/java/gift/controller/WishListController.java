@@ -57,6 +57,7 @@ public class WishListController {
     @PostMapping
     public ResponseEntity<String> addWishList(@RequestHeader("Authorization") String token,
        @RequestBody ProductDTO product) throws Exception {
+        System.out.println("Received ProductDTO: " + product.getId());
         String parsedToken = token.replace("Bearer ", "");
         Long userId = getUserId(parsedToken);
         wishListService.addProductToWishList(userId, product);
