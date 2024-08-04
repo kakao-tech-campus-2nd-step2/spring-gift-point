@@ -8,4 +8,8 @@ public record User(
     public User(String name, UserAccount account) {
         this(0L, name, account);
     }
+
+    public String email() {
+        return account.principal();
+    }
 }
