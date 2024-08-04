@@ -2,11 +2,21 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Title</title>
+  <title>카카오 로그인</title>
 </head>
 <body>
-<form id="kakao-login-form" action="/api/members/kakao" method="post">
-  <button type="submit">카카오로 로그인하기</button>
-</form>
+<button id="login-kakao-btn" onclick="redirectToKakao()">
+  카카오로 로그인하기
+</button>
+
+<script>
+  function redirectToKakao() {
+    const url = "/api/members/kakao";
+    const redirectUrl = "http://localhost:8080"; // redirect URL
+
+    // GET 요청으로 리디렉션
+    window.location.href = `${url}?redirect_url=${encodeURIComponent(redirectUrl)}`;
+  }
+</script>
 </body>
 </html>
