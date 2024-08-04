@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<html lang="kr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Member</title>
+    <script src="/js/main.js" defer></script>
+    <link href="/css/main.css" rel="stylesheet" />
+</head>
+<body>
+<div class="header">
+    <span class="title">Manage Member</span>
+    <a>
+        <button class="btn primary-btn">Add New Member</button>
+    </a>
+</div>
+<div class="container">
+    <table class="member-list">
+        <tr>
+            <th>Email</th>
+            <th>Point</th>
+        </tr>
+        <tr th:each="member: ${pages.content}">
+            <td th:text="${member.email}"></td>
+            <td>
+                <button class="btn danger-btn">-</button>
+                <label th:text="${member.point}" />
+                <button class="btn primary-btn">+</button>
+            </td>
+        </tr>
+    </table>
+</div>
+<div th:if="${!pages.empty}">
+    <ul class="footer">
+        <li class="page" th:classappend="${pages.first} ? 'disabled'">
+            <a th:href="@{|?page=${pages.number-1}&size=${pages.size}|}">
+                <span>이전</span>
+            </a>
+        </li>
+        <li class="page" th:each="page: ${#numbers.sequence(0, pages.totalPages-1)}"
+            th:classappend="${page == pages.number} ? 'active'">
+            <a th:text="${page}" th:href="@{|?page=${page}&size=${pages.size}|}"></a>
+        </li>
+        <li class="page" th:classappend="${pages.last} ? 'disabled'">
+            <a th:href="@{|?page=${pages.number+1}&size=${pages.size}|}">
+                <span>다음</span>
+            </a>
+        </li>
+    </ul>
+</div>
+</body>
+</html>
