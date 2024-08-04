@@ -25,6 +25,7 @@ public class OrderService {
     private final JpaOrderRepository jpaOrderRepository;
     private final JpaWishRepository jpaWishRepository;
     private final KakaoClient kakaoClient;
+    private static final double DISCOUNT_RATE = 0.05;
 
     public OrderService(JpaOrderRepository jpaOrderRepository, JpaWishRepository jpaWishRepository,
         KakaoClient kakaoClient) {
@@ -41,12 +42,15 @@ public class OrderService {
             .ifPresent(jpaWishRepository::delete);
 
         int orderPrice = orderRequestDTO.quantity() * option.getProduct().getPrice();
+        user.addPoint((int)(orderPrice * DISCOUNT_RATE));
+
         if (orderPrice < orderRequestDTO.point()){
             throw new IllegalArgumentException("사용하려는 포인트가 주문 금액보다 많습니다.");
         }
 
         orderPrice -= orderRequestDTO.point();
         user.usePoint(orderRequestDTO.point());
+
         Order order = orderRequestDTO.toEntity(user, option, orderPrice);
         jpaOrderRepository.save(order);
 

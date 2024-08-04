@@ -65,6 +65,9 @@ public class User {
         }
         this.point -= point;
     }
+    public void addPoint(int point){
+        this.point += point;
+    }
     public void updateRole(Role role) {
         this.role = role.name();
     }
