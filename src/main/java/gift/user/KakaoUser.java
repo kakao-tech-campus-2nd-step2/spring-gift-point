@@ -24,7 +24,7 @@ public class KakaoUser implements IntegratedUser {
     private User user;
 
     @Column
-    Long point;
+    private Long point = 0L;
 
     public KakaoUser() {
     }

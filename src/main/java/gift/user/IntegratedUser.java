@@ -9,4 +9,6 @@ public interface IntegratedUser {
     public void removeWishList(WishList wishList);
 
     public void removeWishLists();
+
+    public Long getPoint();
 }
