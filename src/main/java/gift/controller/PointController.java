@@ -33,6 +33,13 @@ public class PointController {
         this.jwtUtil = jwtUtil;
     }
 
+    @GetMapping("/list")
+    public String getPoints(Model model) {
+        List<Member> points = memberService.getAllMembers();
+        model.addAttribute("points", points);
+        return "point-list";
+    }
+
     @GetMapping
     public ResponseEntity<?> getPointById(@RequestHeader("Authorization") String token ) {
         Claims claims = jwtUtil.extractClaims(token.replace("Bearer ", ""));
@@ -50,3 +57,9 @@ public class PointController {
         return ResponseEntity.ok().build();
     }
 
+    @PutMapping("/plus")
+    public ResponseEntity<?> plusPoint(@RequestBody PointRequest pointRequest) {
+        memberService.updatePoint(pointRequest.getMember_id(), pointRequest.getPoint());
+        return ResponseEntity.ok().build();
+    }
+}

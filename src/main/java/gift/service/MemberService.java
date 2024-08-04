@@ -56,10 +56,20 @@ public class MemberService {
         member.setPoint(member.getPoint() + point);
         memberRepository.save(member);
     }
+
+    public void updatePoint(Long memberId, Long point){
+        Member member = memberRepository.findById(memberId).get();
+        member.setPoint(point);
+        memberRepository.save(member);
+    }
+
     public void subtractPoint(Long memberId, Long point){
         Member member = memberRepository.findById(memberId).get();
         member.setPoint(member.getPoint() - point);
         memberRepository.save(member);
     }
 
+    public List<Member> getAllMembers() {
+        return memberRepository.findAll();
+    }
 }
