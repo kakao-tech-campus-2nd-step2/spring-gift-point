@@ -48,7 +48,7 @@ public class Member {
     }
 
     public MemberDto toDto() {
-        return new MemberDto(email, password);
+        return new MemberDto(email, password, point);
     }
 
     public String getEmail() {
