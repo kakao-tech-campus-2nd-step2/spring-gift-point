@@ -50,7 +50,7 @@ public class OrderController {
         //토큰으로 메시지 보내기
         if (token != null) { //
             try {
-                int totalPrice = orderService.calculateTotalPrice(orderRequestDtoList);
+                int totalPrice = orderService.calculateTotalPrice(orderRequestDtoList) - memberDto.getPoint(); //포인트만큼 차감! -> 사용자는 포인트를 사용만 한다!
                 kakaoTalkService.sendMessageToMe(token, orderRequestDtoList, totalPrice);
             } catch (Exception e) {
                 return ResponseEntity.badRequest().body("Error sending message");
