@@ -62,7 +62,7 @@ public class OrderController {
             Member member = memberRepository.findByEmail(email)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid member email"));
 
-            Order createdOrder = orderService.createOrder(order, kakaoToken);
+            Order createdOrder = orderService.createOrder(order, member);
             option.subtractQuantity(order.getQuantity());
             optionRepository.save(option);
 
