@@ -69,11 +69,6 @@ public class UserService {
     }
 
     @Transactional
-    public void addPoint(User user, Integer pointAmount) {
-        user.addPoint(pointAmount);
-    }
-
-    @Transactional
     public void setAccessToken(String accessToken, String email) {
         User user = userRepository.findByEmail(email)
             .orElseThrow(() -> new UserAuthException("유저가 가입되지 않았습니다."));
