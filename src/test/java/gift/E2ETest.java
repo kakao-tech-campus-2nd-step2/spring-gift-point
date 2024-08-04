@@ -13,7 +13,6 @@ import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.core.annotation.Order;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -62,11 +61,12 @@ class E2ETest {
     void 카테고리_상품_등록_후_조회() {
         CategoryRequestDto request = new CategoryRequestDto("예시", "color", "test", "카테고리임");
         ResponseEntity<SuccessResponse> response = restTemplate.postForEntity(baseUrl + "/categories", request, SuccessResponse.class);
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
         ResponseEntity<RestPageImpl<CategoryResponseDto>> categoryResponse = restTemplate.exchange(
                 baseUrl + "/categories",
                 HttpMethod.GET,
                 null,
-                new ParameterizedTypeReference<RestPageImpl<CategoryResponseDto>>() {
+                new ParameterizedTypeReference<>() {
                 });
         assertThat(categoryResponse.getBody()).isNotNull();
 
@@ -76,6 +76,7 @@ class E2ETest {
         ResponseEntity<SuccessResponse> productPostResponse = restTemplate.postForEntity(baseUrl + "/products", productRequestDto, SuccessResponse.class);
         assertThat(productPostResponse.getStatusCode()).isEqualTo(HttpStatus.OK);
     }
+
     //Page를 받아오기 위한 구현체
     public static class RestPageImpl<T> extends PageImpl<T> {
 
@@ -102,6 +103,7 @@ class E2ETest {
             super(content);
         }
     }
+
     @Order(3)
     @Test
     void 로그인_위시_리스트_등록_후_조회() {
