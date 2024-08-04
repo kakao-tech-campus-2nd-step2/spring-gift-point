@@ -1,5 +1,6 @@
 package gift.common.auth;
 
+import gift.member.model.Member;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
@@ -8,6 +9,7 @@ import org.springframework.stereotype.Component;
 
 import java.nio.charset.StandardCharsets;
 import java.security.Key;
+import java.util.Date;
 
 @Component
 public class JwtUtil {
@@ -50,5 +52,16 @@ public class JwtUtil {
     // 헤더값에서 토큰 추출하기 (Bearer 제거)
     public String extractToken(String authorizationHeader) {
         return authorizationHeader.startsWith("Bearer ") ? authorizationHeader.substring(7) : null;
+    }
+
+    // accesToken 생성
+    public String generateToken(Member member) {
+        return Jwts.builder()
+                .setSubject(member.getId().toString())
+                .claim("email", member.getEmail())  // 이메일 클레임 추가
+                .setIssuedAt(new Date())
+                .setExpiration(new Date(System.currentTimeMillis() + 86400000)) // 26시간 만료
+                .signWith(key)
+                .compact();
     }
 }

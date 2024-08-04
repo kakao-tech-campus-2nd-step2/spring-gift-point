@@ -3,25 +3,17 @@ package gift.member.service;
 import gift.common.auth.JwtUtil;
 import gift.member.model.Member;
 import gift.member.repository.MemberRepository;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.security.Keys;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import java.nio.charset.StandardCharsets;
-import java.util.Date;
 import java.util.Optional;
-import java.security.Key;
 
 @Service
 public class MemberServiceImpl implements MemberService {
     private final MemberRepository memberRepository;
-    private final Key key;
     private final JwtUtil jwtUtil;
 
-    public MemberServiceImpl(MemberRepository memberRepository, @Value("${jwt.secret}") String secretKey, JwtUtil jwtUtil) {
+    public MemberServiceImpl(MemberRepository memberRepository, JwtUtil jwtUtil) {
         this.memberRepository = memberRepository;
-        this.key = Keys.hmacShaKeyFor(secretKey.getBytes(StandardCharsets.UTF_8));
         this.jwtUtil = jwtUtil;
     }
 
@@ -39,17 +31,6 @@ public class MemberServiceImpl implements MemberService {
         memberRepository.save(member);
     }
 
-    // 토큰 생성
-    public String generateToken(Member member) {
-        return Jwts.builder()
-                .setSubject(member.getId().toString())
-                .claim("email", member.getEmail())  // 이메일 클레임 추가
-                .setIssuedAt(new Date())
-                .setExpiration(new Date(System.currentTimeMillis() + 3600000)) // 1시간 만료
-                .signWith(key)
-                .compact();
-    }
-
     // 로그인
     public String login(String email, String password) {
         Member member = memberRepository.findByEmail(email).orElseThrow(
@@ -60,7 +41,7 @@ public class MemberServiceImpl implements MemberService {
             return null;
         }
 
-        return generateToken(member);
+        return jwtUtil.generateToken(member);
     }
 
     // 포인트 조회

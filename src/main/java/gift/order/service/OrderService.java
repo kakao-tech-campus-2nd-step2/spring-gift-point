@@ -1,6 +1,5 @@
 package gift.order.service;
 
-import gift.common.auth.JwtUtil;
 import gift.member.model.Member;
 import gift.member.repository.MemberRepository;
 import gift.member.service.MemberService;
@@ -9,7 +8,6 @@ import gift.option.repository.OptionRepository;
 import gift.order.domain.Order;
 import gift.order.dto.OrderPageResponse;
 import gift.order.dto.OrderResponse;
-import gift.option.repository.OptionJpaRepository;
 import gift.order.dto.OrderRequest;
 import gift.order.repository.OrderJPARepository;
 import gift.product.domain.Product;
