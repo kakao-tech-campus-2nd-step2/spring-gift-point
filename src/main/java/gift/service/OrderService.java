@@ -25,7 +25,8 @@ public class OrderService {
     private final KakaoMessageService kakaoMessageService;
 
     public OrderService(OrderRepository orderRepository, OptionsService optionsService,
-        WishRepository wishRepository, MemberRepository memberRepository, KakaoMessageService kakaoMessageService) {
+        WishRepository wishRepository, MemberRepository memberRepository,
+        KakaoMessageService kakaoMessageService) {
         this.orderRepository = orderRepository;
         this.optionsService = optionsService;
         this.wishRepository = wishRepository;
@@ -40,7 +41,8 @@ public class OrderService {
             .toList();
     }
 
-    public CreatedOrderResponse makeOrder(Long memberId, String accessToken, OrderRequest orderRequest) {
+    public CreatedOrderResponse makeOrder(Long memberId, String accessToken,
+        OrderRequest orderRequest) {
         CreatedOrderResponse response = addOrder(memberId, orderRequest);
         sendKakaoMessageToMe(accessToken, orderRequest.message());
         return response;
@@ -50,7 +52,8 @@ public class OrderService {
     public CreatedOrderResponse addOrder(Long memberId, OrderRequest orderRequest) {
         Options option = optionsService.getOption(orderRequest.optionId());
         Member member = memberRepository.findById(memberId)
-                .orElseThrow(NotFoundOptionsException::new);
+            .orElseThrow(NotFoundOptionsException::new);
+
         optionsService.subtractQuantity(option.getId(), orderRequest.quantity(),
             orderRequest.productId());
         wishRepository.findByMemberIdAndProductId(memberId, orderRequest.productId())
@@ -60,11 +63,11 @@ public class OrderService {
             orderRequest.quantity(), orderRequest.message()));
         member.addPoint(option.getProduct().getPrice() * orderRequest.quantity());
 
-        return CreatedOrderResponse.createOrderResponse(savedOrder, member.getPoint());
+        return CreatedOrderResponse.createOrderResponse(savedOrder, orderRequest.point());
     }
 
     public void sendKakaoMessageToMe(String accessToken, String message) {
-        kakaoMessageService.sendMessageToMe( accessToken, message);
+        kakaoMessageService.sendMessageToMe(accessToken, message);
     }
 
 }

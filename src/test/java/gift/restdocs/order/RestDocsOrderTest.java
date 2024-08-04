@@ -59,7 +59,7 @@ public class RestDocsOrderTest extends AbstractRestDocsTest {
         OrderRequest orderRequest = demoRequest(1L, 1L);
         String content = objectMapper.writeValueAsString(orderRequest);
         CreatedOrderResponse orderResponse = new CreatedOrderResponse(memberId, orderRequest.optionId(),
-            orderRequest.quantity(), "2024.01.01 00:00:00", orderRequest.message(), 900);
+            orderRequest.quantity(), "2024.01.01 00:00:00", orderRequest.message(), orderRequest.point());
         given(orderService.makeOrder(any(Long.class),
                 any(String.class), any(OrderRequest.class)))
             .willReturn(orderResponse);

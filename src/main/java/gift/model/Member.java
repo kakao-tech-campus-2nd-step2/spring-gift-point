@@ -30,6 +30,8 @@ public class Member extends BaseEntity {
     @Column(nullable = false)
     private Integer point;
 
+    private static final int DISCOUNT_RATE = 10;
+
     protected Member() {
     }
 
@@ -86,7 +88,7 @@ public class Member extends BaseEntity {
     }
 
     public void addPoint(Integer price) {
-        int addedPoint = price / 10;
+        int addedPoint = price / DISCOUNT_RATE;
         validPoint(addedPoint);
         this.point += addedPoint;
     }

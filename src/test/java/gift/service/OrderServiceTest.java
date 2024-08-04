@@ -24,6 +24,7 @@ import gift.repository.OptionsRepository;
 import gift.repository.OrderRepository;
 import gift.repository.WishRepository;
 import gift.request.OrderRequest;
+import gift.response.order.CreatedOrderResponse;
 import java.time.LocalDateTime;
 import java.util.Optional;
 import org.assertj.core.api.Assertions;
@@ -78,11 +79,12 @@ class OrderServiceTest {
         //given
         String oAuthToken = "oAuthToken";
         Integer orderQuantity = 1;
+        Integer usedPoint = 250;
         String message = "message";
         Order savedOrder = new Order(1L, 1L,
             option, orderQuantity, message, LocalDateTime.now(), LocalDateTime.now());
         Wish wish = new Wish(member, product, 1);
-        OrderRequest orderRequest = new OrderRequest(1L, 1L, 1, message, 250);
+        OrderRequest orderRequest = new OrderRequest(1L, 1L, 1, message, usedPoint);
 
         given(optionsService.getOption(any(Long.class)))
             .willReturn(option);
@@ -98,7 +100,8 @@ class OrderServiceTest {
         given(orderRepository.save(any(Order.class))).willReturn(savedOrder);
         //doCallRealMethod().when(member).addPoint(any(Integer.class));
         //when
-        orderService.makeOrder(member.getId(), oAuthToken, orderRequest);
+        CreatedOrderResponse returendResponse = orderService.makeOrder(member.getId(),
+            oAuthToken, orderRequest);
 
         //then
         then(optionsService).should().getOption(any(Long.class));
@@ -108,6 +111,7 @@ class OrderServiceTest {
         then(wishRepository).should().findByMemberIdAndProductId(any(Long.class), any(Long.class));
         then(kakaoMessageService).should().sendMessageToMe(any(String.class), any(String.class));
         assertThat(member.getPoint()).isEqualTo(850); // 1000 - 250 + 100(가격 1000/10)
+        assertThat(returendResponse.usedPoint()).isEqualTo(usedPoint);
     }
 
     @DisplayName("주문 실패 테스트 - 재고 부족")
@@ -129,7 +133,7 @@ class OrderServiceTest {
 
         //when //then
         Assertions.assertThatThrownBy(
-            () -> orderService.addOrder(member.getId(), orderRequest))
+                () -> orderService.addOrder(member.getId(), orderRequest))
             .isInstanceOf(OptionsQuantityException.class);
     }
 }
