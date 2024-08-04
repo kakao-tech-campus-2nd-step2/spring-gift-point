@@ -1,11 +1,13 @@
 package gift.controller;
 
+import gift.auth.Token;
 import gift.dto.KakaoMessageRequestDto;
 import gift.dto.OrderRequestDto;
 import gift.dto.OrderResponseDto;
 import gift.auth.JwtUtil;
 import gift.service.KakaoApiService;
 import gift.service.OrderService;
+import gift.vo.Member;
 import gift.vo.Option;
 import gift.vo.Order;
 import gift.vo.Product;
@@ -42,20 +44,20 @@ public class OrderController {
             @Parameter(name = "authorizationHeader", description = "인증을 위한 Authorization 헤더", required = true)
     })
     public ResponseEntity<OrderResponseDto> processOrder(@RequestBody OrderRequestDto orderRequestDto, @RequestHeader("Authorization") String authorizationHeader) {
-        Long memberId = jwtUtil.getMemberIdFromAuthorizationHeader(authorizationHeader);
+        Member member = jwtUtil.getMemberFromAuthorizationHeader(authorizationHeader);
 
-        Order savedOrder = orderService.createOrder(memberId, orderRequestDto);
+        Order savedOrder = orderService.createOrder(member.getId(), orderRequestDto);
 
-        String accessToken = jwtUtil.getBearerTokenFromAuthorizationHeader(authorizationHeader);
+        Token token = jwtUtil.getBearerTokenFromAuthorizationHeader(authorizationHeader);
 
-        if (jwtUtil.isNotJwtToken(accessToken)) {
+        if (jwtUtil.isNotJwtToken(token)) {
             Option option = orderService.getOptionByOptionId(savedOrder.getOptionId());
             Product product = option.getProduct();
             KakaoMessageRequestDto kakaoMessageRequestDto = KakaoMessageRequestDto.toKakaoMessageRequestDto(savedOrder, product.getName(), option.getName());
-            kakaoApiService.sendKakaoMessage(accessToken, kakaoMessageRequestDto);
+            kakaoApiService.sendKakaoMessage(token, kakaoMessageRequestDto);
         }
 
-        return new ResponseEntity<>(OrderResponseDto.toOrderResponseDto(savedOrder), HttpStatus.CREATED);
+        return ResponseEntity.status(HttpStatus.CREATED).body(OrderResponseDto.toOrderResponseDto(savedOrder));
     }
 
 }

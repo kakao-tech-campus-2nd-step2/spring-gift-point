@@ -3,6 +3,8 @@ package gift.vo;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 
+import java.time.LocalDateTime;
+
 @Entity
 public class Wish {
 
@@ -20,6 +22,9 @@ public class Wish {
     @JoinColumn(name = "product_id", referencedColumnName = "id", foreignKey = @ForeignKey(name = "fk_wish_product_id_ref_product_id"))
     private Product product;
 
+    @NotNull
+    private LocalDateTime createdDate = LocalDateTime.now();
+
     public Wish() {}
 
     public Wish(Member member, Product product) {
@@ -30,6 +35,10 @@ public class Wish {
         this.id = id;
         this.member = member;
         this.product = product;
+    }
+
+    public @NotNull LocalDateTime getCreatedDate() {
+        return createdDate;
     }
 
     public Long getId() {

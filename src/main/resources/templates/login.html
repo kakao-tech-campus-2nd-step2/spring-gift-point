@@ -38,14 +38,19 @@
                 password: $('#password').val()
             };
 
-            $.post('/login', formData)
-                .done(function(response) {
-                    localStorage.setItem('token', response.token);
+            $.ajax({
+                url: '/api/members/login',
+                type: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify(formData),
+                success: function(response) {
+                    localStorage.setItem('token', response);
                     window.location.href = '/';
-                })
-                .fail(function() {
-                    alert('Login failed!');
-                });
+                },
+                error: function() {
+                    alert('Login failed!')
+                }
+            })
         });
     });
 

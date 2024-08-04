@@ -90,7 +90,7 @@ class ProductRepositoryTest {
     }
 
     @Test
-    @DisplayName("Find Product by id")
+    @DisplayName("Find Product by wishId")
     void findProductById() {
         // given
         Long expected = savedProduct.getId();

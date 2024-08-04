@@ -2,6 +2,7 @@ package gift.auth;
 
 import gift.service.KakaoApiService;
 import gift.service.MemberService;
+import gift.vo.Member;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.stereotype.Component;
 
@@ -25,7 +26,7 @@ public class JwtUtil {
         this.jwtHelper = jwtHelper;
     }
 
-    private Long getMemberIdFromToken(String token) {
+    private Long getMemberIdFromToken(Token token) {
         return jwtHelper.getClaims(token).get("userId", Long.class);
     }
 
@@ -34,27 +35,32 @@ public class JwtUtil {
      * @param authorizationHeader Authorization 헤더
      * @return Bearer 토큰 추출
      */
-    public String getBearerTokenFromAuthorizationHeader(String authorizationHeader) {
-        return authorizationHeader.replace("Bearer ", "");
+    public Token getBearerTokenFromAuthorizationHeader(String authorizationHeader) {
+        String bearerToken = authorizationHeader.replace("Bearer ", "");
+        return new Token(bearerToken);
     }
 
-    private Long getMemberIdFromKakao(String token) {
+    private Long getMemberIdFromKakao(Token token) {
         String memberEmail = kakaoApiService.getMemberEmailFromKakao(token);
         return memberService.getMemberByEmail(memberEmail).getId();
     }
 
-    public Long getMemberIdFromAuthorizationHeader(String authorizationHeader) {
-        String token = getBearerTokenFromAuthorizationHeader(authorizationHeader);
+    public Member getMemberFromAuthorizationHeader(String authorizationHeader) {
+        Token fetchedToken = getBearerTokenFromAuthorizationHeader(authorizationHeader);
 
-        if (jwtHelper.isJwtToken(token)) {
-            return getMemberIdFromToken(token);
+        Long foundedMemberId;
+
+        if (jwtHelper.isJwtToken(fetchedToken)) {
+            foundedMemberId = getMemberIdFromToken(fetchedToken);
         } else {
-            return getMemberIdFromKakao(token);
+            foundedMemberId = getMemberIdFromKakao(fetchedToken);
         }
+
+        return memberService.getMemberById(foundedMemberId);
     }
 
-    public boolean isNotJwtToken(String token) {
-        return token.split("\\.").length != 3;
+    public boolean isNotJwtToken(Token token) {
+        return token.token().split("\\.").length != 3;
     }
 
 }

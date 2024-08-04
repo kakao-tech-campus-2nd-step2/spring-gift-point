@@ -2,7 +2,7 @@ package gift.vo;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.NotBlank;
 
 @Entity
 @Table(uniqueConstraints = {@UniqueConstraint(name = "uk_member", columnNames = {"email"})})
@@ -12,12 +12,12 @@ public class Member {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotNull
+    @NotBlank
     @Email
     @Column(unique = true)
     private String email;
 
-    @NotNull
+    @NotBlank
     private String password;
 
     public Member(String email, String password) {
