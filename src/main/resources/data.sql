@@ -11,10 +11,10 @@ VALUES
     (1181831, '[선물포장] 소바쥬 오 드 뚜왈렛 60ML', 122000, 'https://st.kakaocdn.net/product/gift/product/20240214150740_ad25267defa64912a7c030a7b57dc090.jpg', 2930),
     (1379982, '[정관장] 홍삼정 에브리타임 리미티드 (10ml x 30포)', 133000, 'https://st.kakaocdn.net/product/gift/product/20240118135914_a6e1a7442ea04aa49add5e02ed62b4c3.jpg', 2920);
 
-INSERT INTO member (email, password, active_token)
+INSERT INTO member (email, password, active_token, point)
 VALUES
-    ('user1@example.com', 'password1', null),
-    ('user2@example.com', 'password2', null);
+    ('user1@example.com', 'password1', null, 0),
+    ('user2@example.com', 'password2', null, 0);
 
 INSERT INTO wishlist (product_id, member_id)
 VALUES
