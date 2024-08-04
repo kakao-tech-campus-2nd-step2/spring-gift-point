@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class ProductService {
@@ -109,6 +110,10 @@ public class ProductService {
         return productOptions.stream()
                 .map(productOption -> new ProductOptionData(productOption.getId(), productOption.getName(), productOption.getQuantity(), productOption.getProduct().getId()))
                 .toList();
+    }
+
+    public Map<Long, Product> getProductsByIds(List<Long> productIds) {
+        return productRepository.getProductsByIds(productIds);
     }
 
 

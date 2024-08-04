@@ -1,6 +1,8 @@
 package gift.order.repository;
 
 import gift.order.domain.Order;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
 @Repository
@@ -21,5 +23,9 @@ public class OrderRepositoryImpl implements OrderRepository {
         return orderJpaRepository.findById(id).orElseThrow(
                 () -> new RuntimeException("Order not found")
         );
+    }
+
+    public Page<Order> findByUserId(Long userId, Pageable pageable) {
+        return orderJpaRepository.findByUserId(userId, pageable);
     }
 }
