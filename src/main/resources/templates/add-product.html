@@ -23,7 +23,7 @@
 </head>
 <body>
 <h1>Add Product</h1>
-<form th:action="@{/api/products/add}" method="post" th:object="${product}">
+<form th:action="@{/api/products/v2/add}" method="post" th:object="${product}">
     <label for="name">Name:</label>
     <input type="text" id="name" th:field="*{name}" /><br/>
 
@@ -47,7 +47,7 @@
     </div>
     <button type="button" onclick="addOptionField()">Add Option</button><br/>
     <button type="submit">Add Product</button>
-    <a href="/view/products">Cancel</a>
+    <a href="/view/v2/products">Cancel</a>
 </form>
 </body>
 </html>

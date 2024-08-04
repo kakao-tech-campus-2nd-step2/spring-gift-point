@@ -10,7 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/products")
+@RequestMapping("/api/products/v2")
 @Tag(name = "Product API", description = "상품 관련 API")
 public class ProductRestController {
 

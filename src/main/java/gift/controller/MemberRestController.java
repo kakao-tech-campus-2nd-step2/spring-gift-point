@@ -11,7 +11,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/members")
+@RequestMapping("/members/v2")
 @Tag(name = "Member API", description = "회원 관련 API")
 public class MemberRestController {
 

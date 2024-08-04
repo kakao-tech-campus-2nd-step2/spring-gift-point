@@ -7,14 +7,14 @@
 </head>
 <body>
 <h1>Login</h1>
-<form id="loginForm" th:action="@{/members/login}" method="post">
+<form id="loginForm" th:action="@{/members/v2/login}" method="post">
     <label for="email">Email:</label><br>
     <input type="email" id="email" name="email"><br>
     <label for="password">Password:</label><br>
     <input type="password" id="password" name="password"><br>
     <button id="loginBtn" type="submit">Login</button>
 </form>
-<a href="/register">Register</a>
+<a href="/view/members/v2/register">Register</a>
 
 <script type="text/javascript">
     document.getElementById('loginForm').addEventListener('submit', function(event) {
@@ -22,7 +22,7 @@
 
         const email = document.getElementById('email').value;
         const password = document.getElementById('password').value;
-        fetch('/members/login', {
+        fetch('/members/v2/login', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/x-www-form-urlencoded'
@@ -39,9 +39,9 @@
                 authSetup.storeToken(data.token);
 
                 if (data.role === 'ADMIN') {
-                    location.href = "/admin";
+                    location.href = "/admin/v2";
                 } else if (data.role === 'USER') {
-                    location.href = "/view/home";
+                    location.href = "/view/v2/home";
                 }
 
             } else {

@@ -16,7 +16,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping("/api/products/{productId}/options")
+@RequestMapping("/api/products/v2/{productId}/options")
 @Tag(name = "[협업]OPTION API", description= "[협업] 옵션 컨트롤러")
 public class OptionNewController {
 

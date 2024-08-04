@@ -8,7 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/options")
+@RequestMapping("/api/options/v2")
 @Tag(name = "Option rest API", description = "옵션 관련 rest API")
 public class OptionRestController {
 

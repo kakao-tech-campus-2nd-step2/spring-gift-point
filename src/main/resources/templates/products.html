@@ -42,7 +42,7 @@
             authSetup.setAuthorizationHeader();
             $.ajax({
                 type: "GET",
-                url: '/view/products/data?page=' + (page - 1) + '&size=' + size,
+                url: '/view/v2/products/data?page=' + (page - 1) + '&size=' + size,
                 dataType: 'json',
                 contentType: 'application/json; charset=UTF-8',
             }).done(function (response) {
@@ -85,8 +85,8 @@
 
 </script>
 <br>
-<a href="/view/products/add">Add Product</a>
-<a href="/view/home">go Home</a>
+<a href="/view/v2/products/add">Add Product</a>
+<a href="/view/v2/home">go Home</a>
 </body>
 </html>
 

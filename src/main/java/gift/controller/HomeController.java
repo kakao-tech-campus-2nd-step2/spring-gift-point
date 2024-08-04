@@ -21,7 +21,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Controller
-@RequestMapping("/view")
+@RequestMapping("/view/v2")
 @Tag(name = "View API", description = "뷰 컨트롤러")
 public class HomeController {
 
