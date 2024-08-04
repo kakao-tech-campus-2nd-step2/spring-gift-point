@@ -22,10 +22,9 @@ public class WebConfig implements WebMvcConfigurer {
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**")
-                .allowedOriginPatterns("http://localhost:3000", "https://geongyu09-step3.react-deploy-d5u.pages.dev")
+                .allowedOrigins("http://localhost:3000", "https://geongyu09-step3.react-deploy-d5u.pages.dev/")
                 .allowedMethods("GET", "POST", "PUT", "DELETE")
                 .allowedHeaders("*")
                 .allowCredentials(true);
     }
-
 }
