@@ -67,6 +67,6 @@ public class OptionService {
         if (!(option.isBelongToProduct(productId)))
             throw new OptionNotFoundException("해당 옵션은 해당 상품에 속하지 않는 옵션입니다");
         optionKeeperService.checkHasAtLeastOneOption(option.getProduct());
-        optionRepository.delete(option);
+        optionRepository.deleteById(option.getId());
     }
 }

@@ -66,22 +66,6 @@ public class OrderController {
         return ResponseEntity.created(URI.create("api/orders/"+response.getId())).body(response);
     }
 
-    @Operation(summary = "주문 수정", description = "주문을 수정합니다")
-    @ApiResponse(responseCode = "200", description = "수정 완료",
-            content = {@Content(mediaType = "application/json")})
-    @ApiResponse(responseCode = "400", description = "잘못된 요청입니다. 입력값을 확인해주세요",
-            content = {@Content(mediaType = "application/json")})
-    @ApiResponse(responseCode = "500", description = "서버 내부 에러 발생",
-            content = {@Content(mediaType = "application/json")})
-    @PutMapping()
-    public ResponseEntity<String> editOrder(@ValidUser Member member,
-                                            @RequestParam("order-id") Long orderId,
-                                            @RequestParam("edit-type") String editType,
-                                            @RequestParam("delta-quantity") int delataQuantity){
-        orderService.editOrder(member, orderId, editType, delataQuantity);
-        return ResponseEntity.ok("주문이 정상적으로 수정되었습니다");
-    }
-
     @Operation(summary = "주문 삭제", description = "주문을 삭제합니다")
     @ApiResponse(responseCode = "200", description = "삭제 완료",
             content = {@Content(mediaType = "application/json", schema = @Schema(implementation = String.class))

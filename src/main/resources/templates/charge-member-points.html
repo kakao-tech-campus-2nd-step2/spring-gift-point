@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Charge Member Points</title>
+</head>
+<body>
+<h1>Charge Points for Member</h1>
+<form th:action="@{/admin/members/charge/{id}(id=${id})}" th:object="${requestAddPointDTO}" method="post">
+    <input type="hidden" name="_method" value="put"/>
+    <div>
+        <label>Charge Points:</label>
+        <input type="number" th:field="*{chargePoint}"/>
+    </div>
+    <div>
+        <button type="submit">Charge Points</button>
+    </div>
+</form>
+</body>
+</html>

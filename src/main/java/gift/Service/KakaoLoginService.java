@@ -7,6 +7,7 @@ import gift.Exception.KaKaoServerErrorException;
 import gift.Model.Entity.Member;
 import gift.Model.Value.Email;
 import gift.Model.Value.Password;
+import gift.Model.Value.Point;
 import gift.Repository.MemberRepository;
 import gift.Util.JwtUtil;
 import gift.Util.KakaoProperties;
@@ -79,7 +80,7 @@ public class KakaoLoginService {
                 .getEmail();
 
         Email email = new Email(userEmail);
-        Member member = memberRepository.findByEmail(email).orElseGet(()->memberRepository.save(new Member(email, new Password("카카오 유저"))));
+        Member member = memberRepository.findByEmail(email).orElseGet(()->memberRepository.save(new Member(email, new Password("카카오 유저"), new Point(0))));
         member.updateAccessToken(kakaoAccessToken);
         return jwtUtill.generateToken(member);
     }

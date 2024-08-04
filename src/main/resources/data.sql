@@ -1,3 +1,6 @@
+insert into member (email, password, point)
+values ('test@test.com', 'test', 1000000);
+
 insert into category (id, name, color, image_url, description)
 values (2920, '생일', '#5949a3',
         'https://img1.daumcdn.net/thumb/S104x104/?fname=https%3A%2F%2Ft1.daumcdn.net%2Fgift%2Fhome%2Ftheme%2F292020231106_MXMUB.png',
@@ -2865,3 +2868,5 @@ values (1, '[NEW] PUMKINI #크리미 #제니PICK', 5569, 2383657),
        (1417, '비타하이디1000(60구미)', 99999, 2574618),
        (1418, '아이케어 루테인구미 3000(70구미)', 99999, 2574618),
        (1419, '네이처메이드 멀티 포 맨 종합비타민 (120정/2개월 분) 아빠 생일 남편 선물', 0, 781280);
+
+       ALTER TABLE option ALTER COLUMN id RESTART WITH 1420; //이후 추가되는 옵션은 1420 번부터 id값을 가지도록 수정

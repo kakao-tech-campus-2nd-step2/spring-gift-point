@@ -3,12 +3,11 @@ package gift.Service;
 import gift.DTO.RequestOrderDTO;
 import gift.DTO.ResponseOrderDTO;
 import gift.Event.EventObject.SendMessageToMeEvent;
-import gift.Exception.InvalidEditTypeException;
 import gift.Exception.OptionNotFoundException;
 import gift.Exception.OrderNotFoundException;
 import gift.Model.Entity.*;
 import gift.Model.Value.AccessToken;
-import gift.Model.Value.Quantity;
+import gift.Model.Value.CashReceipt;
 import gift.Repository.OptionRepository;
 import gift.Repository.OrderRepository;
 import gift.Repository.WishRepository;
@@ -30,14 +29,17 @@ public class OrderService {
     private final OrderRepository orderRepository;
     private final KakaoUtil kakaoUtil;
     private final ApplicationEventPublisher eventPublisher;
+    private final MemberService memberService;
 
-    public OrderService(OptionService optionService, WishRepository wishRepository, OptionRepository optionRepository, OrderRepository orderRepository, KakaoUtil kakaoUtil, ApplicationEventPublisher eventPublisher) {
+    public OrderService(OptionService optionService, WishRepository wishRepository, OptionRepository optionRepository, OrderRepository orderRepository,
+                        KakaoUtil kakaoUtil, ApplicationEventPublisher eventPublisher, MemberService memberService) {
         this.optionService = optionService;
         this.wishRepository = wishRepository;
         this.optionRepository = optionRepository;
         this.orderRepository = orderRepository;
         this.kakaoUtil = kakaoUtil;
         this.eventPublisher = eventPublisher;
+        this.memberService = memberService;
     }
 
     @Transactional
@@ -53,10 +55,16 @@ public class OrderService {
                 .findFirst()
                 .ifPresent(wish->wishRepository.deleteById(wish.getId()));
 
-        Order order = orderRepository.save(
-                new Order(option, member, requestOrderDTO.quantity(), LocalDateTime.now(), requestOrderDTO.message())
-        );
+        int totalPrice = getToalPrice(requestOrderDTO.quantity(), option.getProduct());
+        memberService.subtractPoint(member, totalPrice);
 
+        CashReceipt cashReceipt = null;
+        if (requestOrderDTO.phoneNumber() != null)
+            cashReceipt = new CashReceipt(requestOrderDTO.phoneNumber());
+
+        Order order = orderRepository.save(
+                new Order(option, member, requestOrderDTO.quantity(), LocalDateTime.now(), requestOrderDTO.message(), cashReceipt)
+        );
 
         Optional<AccessToken> accessToken = member.getAccessToken();
         if(accessToken.isPresent()){
@@ -64,6 +72,14 @@ public class OrderService {
         }
 
         return ResponseOrderDTO.of(order);
+    }
+
+    private int getToalPrice(int quantity, Product product) {
+        int totalPrice = product.getPrice().getValue() * quantity;
+        if (totalPrice >= 50000) //주문 금액이 5만원 이상인 경우 10프로 할인
+            totalPrice *= 0.9;
+
+        return totalPrice;
     }
 
     @Transactional(readOnly = true)
@@ -75,30 +91,13 @@ public class OrderService {
     }
 
     @Transactional
-    public void editOrder(Member member, Long orderId, String editType, int deltaQuantity){
-        Order order = orderRepository.findById(orderId).orElseThrow(
-                ()-> new OrderNotFoundException("해당하는 주문을 찾을 수 없습니다"));
-        order.checkOrderBelongsToMember(member);
-
-        if (!(editType.equals("add") || editType.equals("subtract"))) {
-            throw new InvalidEditTypeException("edit-type을 잘못적으셨습니다. add와 subtract 둘 중 하나로 적어주세요");
-        }
-
-        if (editType.equals("add")) {
-            order.addQuantity(new Quantity(deltaQuantity));
-        }
-
-        if (editType.equals("subtract")) {
-            order.subtractQuantity(new Quantity(deltaQuantity));
-        }
-    }
-
-    @Transactional
     public void deleteOrder(Member member, Long orderId) {
         Order order = orderRepository.findById(orderId).orElseThrow(
                 () -> new OrderNotFoundException("해당하는 주문을 찾을 수 없습니다"));
         order.checkOrderBelongsToMember(member);
         order.getOption().addQuantity(order.getQuantity().getValue());
+        int totalPrice = getToalPrice(order.getQuantity().getValue(), order.getOption().getProduct());
+        memberService.refundPoints(member, totalPrice);
         orderRepository.deleteById(orderId);
     }
 }
