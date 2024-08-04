@@ -5,7 +5,6 @@ import gift.Mapper.Mapper;
 import gift.Model.MemberDto;
 import gift.Repository.MemberJpaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -28,7 +27,7 @@ public class MemberService {
         memberJpaRepository.save(member);
     }
 
-    public Optional<MemberDto> findByUserId(long id) {
+    public Optional<MemberDto> findByMemberId(long id) {
         return memberJpaRepository.findById(id)
                 .map(mapper::memberToDto);
     }

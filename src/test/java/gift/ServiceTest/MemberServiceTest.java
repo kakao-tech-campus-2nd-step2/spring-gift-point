@@ -47,7 +47,7 @@ public class MemberServiceTest {
         given(mapper.memberDtoToEntity(memberDto)).willReturn(member);
 
         //when
-        memberService.findByUserId(memberDto.getId());
+        memberService.findByMemberId(memberDto.getId());
 
         //then
         verify(memberJpaRepository, times(1)).findById(memberDto.getId());
