@@ -26,6 +26,9 @@ public class User {
     @NotNull
     private String password="";
 
+    @NotNull
+    private Long point=0L;
+
     @OneToMany(mappedBy = "user")
     private List<WishlistItem> wishlistItemList = new ArrayList<>();
 
@@ -65,6 +68,14 @@ public class User {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public Long getPoint() {
+        return point;
+    }
+
+    public void setPoint(Long point) {
+        this.point = point;
     }
 
     public List<WishlistItem> getWishlistItemList() {
