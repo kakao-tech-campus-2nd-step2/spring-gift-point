@@ -1,6 +1,6 @@
 
 insert into category(name, color, image_url, description) values('생일', '#5949A3', 'https://img1.kakaocdn.net/thumb/C414x414@2x.fwebp.q82/?fname=https%3A%2F%2Fst.kakaocdn.net%2Fproduct%2Fgift%2Fproduct%2F20240417111629_616eccb9d4cd464fa06d3430947dce15.jpg', '감동을 높여줄 생일 선물 리스트')
-insert into category(name, color, image_url, description) values('스몰럭셔리', '#765241', 'https://img1.kakaocdn.net/thumb/C414x414@2x.fwebp.q82/?fname=https%3A%2F%2Fst.kakaocdn.net%2Fproduct%2Fgift%2Fproduct%2F20240522144720_5db84fb50f0549499b2a69b293d2ee18.jpg', '당신을 위한 작은 사지, 스몰 럭셔리 아이템')
+insert into category(name, color, image_url, description) values('스몰럭셔리', '#765241', 'https://img1.kakaocdn.net/thumb/C414x414@2x.fwebp.q82/?fname=https%3A%2F%2Fst.kakaocdn.net%2Fproduct%2Fgift%2Fproduct%2F20240522144720_5db84fb50f0549499b2a69b293d2ee18.jpg', '당신을 위한 작은 사치, 스몰 럭셔리 아이템')
 insert into category(name, color, image_url, description) values('명품선물', '#515C7A', 'https://img1.kakaocdn.net/thumb/C414x414@2x.fwebp.q82/?fname=https%3A%2F%2Fst.kakaocdn.net%2Fproduct%2Fgift%2Fproduct%2F8bw5KMLJqwh42YlfD5kfgg%2FtYRA1iecdsCGRLyaYdVkdUmkZKmLwXV-ftzEJ6IIyHQ', '품격있는 명품 선물 제안')
 insert into category(name, color, image_url, description) values('가벼운선물', '#4B4D50', 'https://img1.kakaocdn.net/thumb/C305x305@2x.fwebp.q82/?fname=https%3A%2F%2Fst.kakaocdn.net%2Fproduct%2Fgift%2Fproduct%2F20240213103359_7a873afe090d4643b96774da928b5c8b.jpg', '예산은 가볍게, 감동은 무겁게')
 insert into category(name, color, image_url, description) values('시원한선물', '#6C95D1', 'https://img1.kakaocdn.net/thumb/C305x305@2x.fwebp.q82/?fname=https%3A%2F%2Fst.kakaocdn.net%2Fproduct%2Fgift%2Fproduct%2F20240528154243_ce80237207fc44e19a40c024d0229bc8.jpg', '어느새 찾아온 무더운 여름')
@@ -10,7 +10,7 @@ insert into category(name, color, image_url, description) values('교환권', '#
 insert into category(name, color, image_url, description) values('건강/비타민', '#FC8197', 'https://img1.kakaocdn.net/thumb/C305x305@2x.fwebp.q82/?fname=https%3A%2F%2Fst.kakaocdn.net%2Fproduct%2Fgift%2Fproduct%2F20240531150628_2af8065733ab449bb81d9d5b55a68c28.jpg', '건강한 기원하는 마음 담아 선물하세요')
 insert into category(name, color, image_url, description) values('과일/한우', '#ED6D59', 'https://img1.kakaocdn.net/thumb/C305x305@2x.fwebp.q82/?fname=https%3A%2F%2Fst.kakaocdn.net%2Fproduct%2Fgift%2Fproduct%2F20240129103642_a5ca62d182ec419285ba708b51cb72c2.jpg', '정성 가득한 선물로 감사한 마음을 전해보세요')
 insert into category(name, color, image_url, description) values('출산/키즈', '#FC8197', 'https://img1.kakaocdn.net/thumb/C414x414@2x.fwebp.q82/?fname=https%3A%2F%2Fst.kakaocdn.net%2Fproduct%2Fgift%2Fproduct%2F20240723154022_4293c778400d4257bd1961c3538899d9.jpg', '엄마와 아이를 위한 세심한 선물')
-insert into category(name, color, image_url, description) values('19금', '#212121', 'https://cdn.imweb.me/thumbnail/20220719/46c95dfc2dae3.jpg', '낚였으면 좋아요')
+insert into category(name, color, image_url, description) values('팬심저격', '#212121', 'https://img1.kakaocdn.net/thumb/C414x414@2x.fwebp.q82/?fname=https%3A%2F%2Fst.kakaocdn.net%2Fproduct%2Fgift%2Fproduct%2F20240719210139_a51b634cb6224485919f18d1b858cdb5.jpg', '최애에 진심인 당신을 위한 굿즈 모음')
 
 insert into product(name, price, image_url, category_id, created_at) values ('하겐다즈(케이크)', 29900, 'https://img1.kakaocdn.net/thumb/C414x414@2x.fwebp.q82/?fname=https%3A%2F%2Fst.kakaocdn.net%2Fproduct%2Fgift%2Fproduct%2F20240417111629_616eccb9d4cd464fa06d3430947dce15.jpg', 1, NOW())
 insert into product(name, price, image_url, category_id, created_at) values ('스타벅스 더블 초콜릿 케이크', 33000, 'https://img1.kakaocdn.net/thumb/C305x305@2x.fwebp.q82/?fname=https%3A%2F%2Fst.kakaocdn.net%2Fproduct%2Fgift%2Fproduct%2F20240517113350_31cb48285fa148c2a08d2f8715a6f94d.jpg', 1, NOW())
@@ -56,9 +56,12 @@ insert into product(name, price, image_url, category_id, created_at) values ('NE
 insert into product(name, price, image_url, category_id, created_at) values ('헤라 센슈얼 누드 밤', 36000, 'https://img1.kakaocdn.net/thumb/C305x305@2x.fwebp.q82/?fname=https%3A%2F%2Fst.kakaocdn.net%2Fproduct%2Fgift%2Fproduct%2F20240722070553_82d2b070f7624e869d7d00cca721844d.jpg', 11, NOW())
 insert into product(name, price, image_url, category_id, created_at) values ('헤어미스트 30ML', 101000, 'https://img1.kakaocdn.net/thumb/C305x305@2x.fwebp.q82/?fname=https%3A%2F%2Fst.kakaocdn.net%2Fproduct%2Fgift%2Fproduct%2F20220105144937_83576e248faa4aad8955f8151ba8f6a1.jpg', 11, NOW())
 insert into product(name, price, image_url, category_id, created_at) values ('핸드 크림 30ML', 33000, 'https://img1.kakaocdn.net/thumb/C305x305@2x.fwebp.q82/?fname=https%3A%2F%2Fst.kakaocdn.net%2Fproduct%2Fgift%2Fproduct%2F20240627200459_ae223bd9d0f14314a9deffd8a6dbfdfd.jpg', 11, NOW())
+insert into product(name, price, image_url, category_id, created_at) values ('NEW 캔디 글로우 립밤 세트', 49000, 'https://img1.kakaocdn.net/thumb/C414x414@2x.fwebp.q82/?fname=https%3A%2F%2Fst.kakaocdn.net%2Fproduct%2Fgift%2Fproduct%2F20240722153108_83122e699fab4247b12590fc6098886b.jpg', 12, NOW())
+insert into product(name, price, image_url, category_id, created_at) values ('헤라 센슈얼 누드 밤', 36000, 'https://img1.kakaocdn.net/thumb/C305x305@2x.fwebp.q82/?fname=https%3A%2F%2Fst.kakaocdn.net%2Fproduct%2Fgift%2Fproduct%2F20240722070553_82d2b070f7624e869d7d00cca721844d.jpg', 12, NOW())
+insert into product(name, price, image_url, category_id, created_at) values ('헤어미스트 30ML', 101000, 'https://img1.kakaocdn.net/thumb/C305x305@2x.fwebp.q82/?fname=https%3A%2F%2Fst.kakaocdn.net%2Fproduct%2Fgift%2Fproduct%2F20220105144937_83576e248faa4aad8955f8151ba8f6a1.jpg', 12, NOW())
+insert into product(name, price, image_url, category_id, created_at) values ('핸드 크림 30ML', 33000, 'https://img1.kakaocdn.net/thumb/C305x305@2x.fwebp.q82/?fname=https%3A%2F%2Fst.kakaocdn.net%2Fproduct%2Fgift%2Fproduct%2F20240627200459_ae223bd9d0f14314a9deffd8a6dbfdfd.jpg', 12, NOW())
 
-insert into product(name, price, image_url, category_id, created_at) values ('20토', 33000, 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTNp5VwhpO7H1tNDHV8NcHic-2heeOndqvuHA&s', 12, NOW())
-insert into product(name, price, image_url, category_id, created_at) values ('20토', 33000, 'https://pbs.twimg.com/media/EoovbUCUUAIH7YG.jpg', 12, NOW())
+
 
 
 
@@ -141,4 +144,9 @@ insert into options(name, quantity, product_id) values('1B 핑크 선라이즈[B
 insert into options(name, quantity, product_id) values('(밤) 101호 할라피뇨', 100, 42)
 insert into options(name, quantity, product_id) values('N5 헤어 미스트 35ml', 100, 43)
 insert into options(name, quantity, product_id) values('블랙베리 앤 베이 핸드 크림 30ML', 100, 44)
+insert into options(name, quantity, product_id) values('44B 누드 라발리에[BEST]', 100, 45)
+insert into options(name, quantity, product_id) values('3B 로즈우드 블러쉬[BEST]', 100, 45)
+insert into options(name, quantity, product_id) values('1B 핑크 선라이즈[BEST]', 100, 45)
+insert into options(name, quantity, product_id) values('(밤) 101호 할라피뇨', 100, 46)
+insert into options(name, quantity, product_id) values('N5 헤어 미스트 35ml', 100, 47)
 
