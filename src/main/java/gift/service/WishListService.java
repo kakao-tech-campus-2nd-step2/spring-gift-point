@@ -38,16 +38,13 @@ public class WishListService {
             System.out.println("Product ID is null: " + product);
             throw new IllegalArgumentException("상품 id는 null일 수 없습니다.");
         }
-        System.out.println("1차");
 
         MemberEntity memberEntity = memberRepository.findById(userId)
             .orElseThrow(() -> new EntityNotFoundException("유저가 존재하지 않습니다."));
-        System.out.println("2차");
 
         ProductEntity productEntity = productRepository.findById(product.getId())
             .orElseThrow(() -> new EntityNotFoundException("상품이 존재하지 않습니다."));
 
-        System.out.println("3차");
         return new WishListEntity(productEntity, memberEntity);
     }
 
