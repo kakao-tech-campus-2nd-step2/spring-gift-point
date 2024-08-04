@@ -1,7 +1,6 @@
 package gift.ServiceTest;
 
 import gift.Entity.Product;
-import gift.Entity.Wishlist;
 import gift.Mapper.Mapper;
 import gift.Model.ProductDto;
 import gift.Repository.CategoryJpaRepository;
@@ -109,10 +108,11 @@ public class ProductServiceTest {
 
         // When
         productService.deleteProduct(1L);
+        productService.getProductById(1L);
 
         // Then
         verify(productJpaRepository, times(1)).findById(1L);
-        verify(productJpaRepository, times(1)).save(product);
+        verify(productJpaRepository, times(1)).deleteById(1L);
     }
 
 }
