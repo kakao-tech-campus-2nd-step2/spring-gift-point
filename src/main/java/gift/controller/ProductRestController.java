@@ -1,6 +1,7 @@
 package gift.controller;
 
 import gift.dto.ProductDTO;
+import gift.dto.ProductRequest;
 import gift.service.ProductService;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
@@ -27,26 +28,10 @@ public class ProductRestController {
 
     @Operation(summary = "모든 상품 가져오기")
     @GetMapping
-    public ResponseEntity<Page<ProductDTO>> getAllProducts(
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size,
-            @RequestParam(defaultValue = "id,asc") String[] sort,
-            @RequestParam(required = false) Long categoryId) {
-
-        Pageable pageable = PageRequest.of(page, size, Sort.by(getSortOrders(sort)));
-        Page<ProductDTO> products = productService.getAllProducts(pageable, categoryId);
+    public ResponseEntity<Page<ProductDTO>> getAllProducts(@Valid ProductRequest productRequest) {
+        Pageable pageable = PageRequest.of(productRequest.getPage(), productRequest.getSize(), productRequest.getSortOrders());
+        Page<ProductDTO> products = productService.getAllProducts(pageable, productRequest.getCategoryId());
         return ResponseEntity.ok(products);
-    }
-
-    private List<Sort.Order> getSortOrders(String[] sort) {
-        return Arrays.stream(sort)
-                .map(this::createSortOrder)
-                .collect(Collectors.toList());
-    }
-
-    private Sort.Order createSortOrder(String sortOrder) {
-        String[] parts = sortOrder.split(",");
-        return new Sort.Order(Sort.Direction.fromString(parts[1]), parts[0]);
     }
 
     @Operation(summary = "ID로 상품 가져오기")
