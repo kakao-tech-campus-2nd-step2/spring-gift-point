@@ -23,4 +23,4 @@ jobs:
        with:
           ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
      - name: Connect to EC2 and execute script
-       run: ssh -o StrictHostKeyChecking=no ubuntu@${{ secrets.EC2_IP }} "chmod +x ~/deploy.sh" 
+       run: ssh -o StrictHostKeyChecking=no ubuntu@${{ secrets.EC2_IP }} "chmod +x ~/deploy.sh > ~/deploy.log 2>&1" 
