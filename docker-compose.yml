@@ -1,0 +1,26 @@
+services:
+  be:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: be
+    ports:
+      - "8080:8080"
+    networks:
+      - spring-gift
+
+  nginx:
+    image: nginx:latest
+    container_name: nginx
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx.conf:/etc/nginx/conf.d/default.conf
+    depends_on:
+      - be
+    networks:
+      - spring-gift
+
+networks:
+  spring-gift:
+    driver: bridge
