@@ -52,7 +52,7 @@ public class OrderService {
         Member updatedMember = new Member(member.getId(), member.getEmail(), member.getPassword(), member.getActiveToken(), (int) (orderRequestDto.getPoints()*0.5));
         memberRepository.save(updatedMember);
 
-        kakaoMessageService.sendMessageToKakao(order, memberId);
+//        kakaoMessageService.sendMessageToKakao(order, memberId);
         return order;
     }
 
