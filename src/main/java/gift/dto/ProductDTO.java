@@ -29,9 +29,8 @@ public class ProductDTO {
 
     public ProductDTO(){}
 
-    public ProductDTO(Long id, List<Long> optionId) {
+    public ProductDTO(Long id) {
         this.id = id;
-        this.optionId = optionId;
     }
 
     /**
