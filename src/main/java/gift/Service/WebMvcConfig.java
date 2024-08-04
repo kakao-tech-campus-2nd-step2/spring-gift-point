@@ -14,6 +14,6 @@ public class WebMvcConfig implements WebMvcConfigurer {
 
     public void addInterceptors(InterceptorRegistry registry){
         //인터셉터 등록
-        registry.addInterceptor(bearerAuthInterceptor).addPathPatterns("/api/wishlist/**");
+        registry.addInterceptor(bearerAuthInterceptor).addPathPatterns("/api/wishes/**");
     }
 }

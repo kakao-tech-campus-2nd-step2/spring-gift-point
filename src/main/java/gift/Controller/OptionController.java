@@ -52,7 +52,7 @@ public class OptionController {
         description = "옵션 추가 성공"
     )
     @Parameters({
-        @Parameter(name = "option", description = "더할 옵션 객체"),
+        @Parameter(name = "optionDTO", description = "더할 옵션 객체"),
         @Parameter(name = "productId", description = "옵션에 해당하는 상품 ID")
     })
     @PostMapping("/api/products/{productId}/options")
@@ -69,7 +69,7 @@ public class OptionController {
         description = "옵션 수정 성공"
     )
     @Parameters({
-        @Parameter(name = "option", description = "수정할 새로운 옵션"),
+        @Parameter(name = "optionDTO", description = "수정할 새로운 옵션"),
         @Parameter(name = "productId", description = "해당되는 상품 ID"),
         @Parameter(name = "optionId", description = "수정 되는 옵션 ID"),
     })
