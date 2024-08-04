@@ -1,8 +1,7 @@
 package gift.service;
 
 import gift.dto.KakaoUserDTO;
-import gift.dto.OrderDTO;
-import gift.dto.WishlistDTO;
+import gift.dto.Response.OrderResponseDto;
 import gift.model.Option;
 import gift.model.Order;
 import gift.model.SiteUser;
@@ -75,10 +74,9 @@ public class OrderServiceImpl implements OrderService {
             Option option = optionRepository.findById(optionDTO.getId())
                 .orElseThrow(() -> new IllegalArgumentException("유효하지 않은 옵션 ID: " + optionDTO.getId()));
             order.setOption(option);
-            order.setQuantity(optionDTO.getQuantity());
+            order.setQuantity(option.getQuantity());
+            order.setMessage("Some message if needed"); // You can customize this part
 
-            option.setMaxQuantity(option.getMaxQuantity() - optionDTO.getQuantity());
-            optionRepository.save(option);
             orderRepository.save(order);
         }
 
@@ -91,7 +89,6 @@ public class OrderServiceImpl implements OrderService {
         kakaoLoginService.sendMessage(accessToken, message);
 
         hideWishlistItem(wishlistId);
-
         OrderDTO orderDTO = OrderDTO.from(order);
         orderDTO.setNewPoints(user.getPoints());
         return orderDTO;
@@ -112,15 +109,15 @@ public class OrderServiceImpl implements OrderService {
         logger.info("포인트 적립: {} -> {}", pointsBeforeEarn, user.getPoints());
     }
 
-    private String createMessage(KakaoUserDTO kakaoUserDTO, WishlistDTO wishlistDTO) {
+    private String createMessage(KakaoUserDTO kakaoUserDTO, Wishlist wishlist) {
         StringBuilder messageBuilder = new StringBuilder();
         messageBuilder.append(String.format("<web 발신> [%s]\n%s 님이 상품을 주문하셨습니다.\n", LocalDateTime.now(), kakaoUserDTO.getProperties().getNickname()));
 
-        for (WishlistDTO.OptionDTO option : wishlistDTO.getOptions()) {
+        for (Option option : wishlist.getOptions()) {
             messageBuilder.append(String.format("%s x %d\n", option.getName(), option.getQuantity()));
         }
 
-        messageBuilder.append(String.format("따라서 총 금액은 %d원 입니다.", wishlistDTO.getTotalPrice()));
+    
 
         return messageBuilder.toString();
     }
@@ -129,6 +126,7 @@ public class OrderServiceImpl implements OrderService {
         Wishlist wishlist = wishlistRepository.findById(wishlistId)
             .orElseThrow(() -> new IllegalArgumentException("유효하지 않은 위시리스트 ID: " + wishlistId));
         wishlist.setHidden(true);
+
         wishlistRepository.save(wishlist);
     }
 }

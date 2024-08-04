@@ -1,7 +1,8 @@
 package gift.controller.api;
 
-import gift.dto.OrderDTO;
+
 import gift.dto.KakaoUserDTO;
+import gift.dto.Response.OrderResponseDto;
 import gift.service.OrderService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -37,6 +38,6 @@ public class OrderController {
 
         OrderDTO orderDTO = orderService.placeOrder(kakaoUserDTO, wishlistId, accessToken, pointsToUse);
 
-        return new ResponseEntity<>(orderDTO, HttpStatus.CREATED);
+        return new ResponseEntity<>(orderResponseDto, HttpStatus.CREATED);
     }
 }
