@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>Product 추가/수정</title>
+  <meta charset="utf-8">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+  <style>
+    .container {
+        max-width: 560px;
+    }
+  </style>
+</head>
+<body>
+<div class="container mt-5">
+  <h1>입력</h1>
+  <form th:action="@{'/admin/members/'+${memberId}}" th:object="${point}" method="post">
+    <div class="form-group">
+      <label for="name">Name: </label>
+      <input type="number" class="form-control" id="name" th:field="*{point}" required>
+    </div>
+    <button type="submit" class="btn btn-primary">충전</button>
+    <button class="btn btn-secondary"
+            onclick="location.href='member.html'"
+            th:onclick="|location.href='@{/admin/members}'|"
+            type="button">취소</button>
+  </form>
+</div>
+</body>
+</html>

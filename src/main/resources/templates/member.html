@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+  <style>
+    table {
+      font-family: arial, sans-serif;
+      border-collapse: collapse;
+      width: 100%;
+    }
+
+    td, th {
+      border: 1px solid #dddddd;
+      text-align: left;
+      padding: 8px;
+    }
+
+    tr:nth-child(even) {
+      background-color: #dddddd;
+    }
+
+  </style>
+  <script>
+    window.onload = function() {
+      console.log("");
+      console.log("[window onload] : [start]");
+      console.log("");
+    };
+  </script>
+</head>
+<body>
+<div class="container mt-5">
+  <h1>관리자 화면</h1>
+  <table class="table table-striped">
+    <thead>
+    <tr>
+      <th>Id</th>
+      <th>Email</th>
+      <th>Point</th>
+      <th>충전</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="member : ${members}">
+      <td th:text="${member.id}"></td>
+      <td th:text="${member.email}"></td>
+      <td th:text="${member.point}"></td>
+      <td>
+        <button class="btn btn-warning" th:onclick="'location.href=\'/admin/members/' + ${member.id} + '\';'">충전</button>
+      </td>
+    </tr>
+    </tbody>
+  </table>
+</div>
+</body>
+</html>
+

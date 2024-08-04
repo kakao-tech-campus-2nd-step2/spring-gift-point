@@ -2,6 +2,8 @@ package gift.Service;
 
 import gift.DTO.ProductDTO;
 import gift.Model.Category;
+import gift.Model.Member;
+
 import gift.Model.Option;
 import gift.Model.Product;
 import gift.Repository.CategoryRepository;
@@ -15,8 +17,11 @@ import org.springframework.stereotype.Service;
 @Service
 public class AdminService {
     private final ProductService productService;
-    public AdminService(ProductService productService){
+    private final MemberService memberService;
+    public AdminService(ProductService productService, MemberService memberService){
         this.productService = productService;
+        this.memberService = memberService;
+
     }
 
     public Page<Product> findAll(Pageable pageable){
@@ -42,4 +47,17 @@ public class AdminService {
     public List<Category> getAllCategory(){
         return productService.getAllCategory();
     }
+
+    public List<Member> getAllMembers(){
+        return memberService.getAllMembers();
+    }
+
+    public int chargePoint(Long memberId, int charge){
+        Member member = memberService.getMemberById(memberId);
+        int point = member.chargePoint(charge);
+        memberService.updateMember(member);
+        return point;
+    }
+
+
 }

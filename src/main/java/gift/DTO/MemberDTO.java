@@ -18,17 +18,23 @@ public class MemberDTO {
     private String password;
     @Schema(description = "멤버의 accessToken", defaultValue = "해당되는 accessToken")
     private String accessToken;
+    @Schema(description = "멤버의 point", defaultValue = "1000")
+    private int point;
+
 
     protected MemberDTO(){
 
     }
 
-    @ConstructorProperties({"id","email","password","accessToken"})
-    public MemberDTO(Long id, String email, String password, String accessToken) {
+    @ConstructorProperties({"id","email","password","accessToken","point"})
+    public MemberDTO(Long id, String email, String password, String accessToken, int point) {
+
         this.id = id;
         this.email = email;
         this.password = password;
         this.accessToken = accessToken;
+        this.point = point;
+
     }
 
     public Long getId() {
@@ -45,6 +51,10 @@ public class MemberDTO {
 
     public String getAccessToken() {
         return accessToken;
+    }
+
+    public int getPoint() {
+        return point;
     }
 
 }
