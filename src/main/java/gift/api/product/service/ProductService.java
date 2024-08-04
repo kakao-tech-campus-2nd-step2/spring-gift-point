@@ -57,6 +57,12 @@ public class ProductService {
         productRepository.deleteById(id);
     }
 
+    public Integer findPriceById(Long id) {
+        return productRepository.findById(id)
+            .orElseThrow(() -> new NoSuchEntityException("product"))
+            .getPrice();
+    }
+
     private Category findCategoryById(Long id) {
         return categoryRepository.findById(id)
             .orElseThrow(() -> new NoSuchEntityException("category"));

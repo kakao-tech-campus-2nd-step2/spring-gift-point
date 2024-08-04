@@ -54,6 +54,11 @@ public class MemberService {
         return findMemberById(id).subtractPoint(point);
     }
 
+    @Transactional
+    public void savePoints(Long id, Integer point) {
+        findMemberById(id).savePoints(point);
+    }
+
     public String issueAccessToken(String email) {
         Member member = findMemberByEmail(email);
         return JwtUtil.generateAccessToken(member.getId(), email, Role.USER);

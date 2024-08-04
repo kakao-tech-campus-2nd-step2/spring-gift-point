@@ -40,6 +40,10 @@ public class Member extends BaseEntity {
         return point;
     }
 
+    public void savePoints(Integer point) {
+        this.point += point;
+    }
+
     public void saveKakaoToken(String accessToken) {
         this.kakaoAccessToken = accessToken;
     }

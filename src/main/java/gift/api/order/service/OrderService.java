@@ -29,13 +29,17 @@ public class OrderService {
     public List<OrderResponse> getOptions(Long memberId) {
         return orderRepository.findAllByMemberId(memberId)
             .stream()
-            .map(OrderResponse::of)
+            .map(order -> OrderResponse.of(order, null))
             .collect(Collectors.toList());
     }
 
     @Transactional
     public Order save(Member member, Option option, OrderRequest orderRequest) {
         return orderRepository.save(orderRequest.toEntity(member, option));
+    }
+
+    public Integer getPointsToSave(Integer price, Integer quantity) {
+        return (int) Math.floor(price * quantity * 0.01);
     }
 
     public LinkedMultiValueMap<Object, Object> createBody(OrderRequest orderRequest) {
