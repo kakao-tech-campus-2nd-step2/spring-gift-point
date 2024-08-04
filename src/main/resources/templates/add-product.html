@@ -23,7 +23,7 @@
 </head>
 <body>
 <h1>Add Product</h1>
-<form th:action="@{/api/products/v2/add}" method="post" th:object="${product}">
+<form th:action="@{/api/v2/products/add}" method="post" th:object="${product}">
     <label for="name">Name:</label>
     <input type="text" id="name" th:field="*{name}" /><br/>
 

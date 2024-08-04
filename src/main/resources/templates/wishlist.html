@@ -142,7 +142,7 @@
             return;
         }
 
-        fetch(`/api/wishlist/v2/${productId}`, {
+        fetch(`/api/v2/wishlist/${productId}`, {
             method: 'DELETE',
             headers: getAuthHeaders()
         })

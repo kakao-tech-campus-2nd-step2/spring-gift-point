@@ -126,7 +126,7 @@
                         if (!email) return;
 
                         $.ajax({
-                            url: `/api/wishlist/v2/${productId}`,
+                            url: `/api/v2/wishlist/${productId}`,
                             method: 'POST',
                             data: {
                                 email: email
@@ -164,7 +164,7 @@
                         if (!email) return;
 
                         $.ajax({
-                            url: `/api/products/v2/order/${productId}`,
+                            url: `/api/v2/products/order/${productId}`,
                             method: 'POST',
                             data: {
                                 email: email,

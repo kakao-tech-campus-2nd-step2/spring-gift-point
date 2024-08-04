@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @Controller
-@RequestMapping("/api/products/v2")
+@RequestMapping("/api/v2/products")
 @Tag(name = "Product API", description = "상품 관련 API")
 public class ProductController {
 

@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import java.util.List;
 
 @Controller
-@RequestMapping("/admin")
+@RequestMapping("/admin/v2")
 @Tag(name = "Admin API", description = "관리자 전용 API")
 public class AdminController {
 

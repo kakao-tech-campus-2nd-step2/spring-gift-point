@@ -9,7 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/wishlist/v2")
+@RequestMapping("/api/v2/wishlist")
 @Tag(name = "Wishlist API", description = "위시리스트 관련 API")
 public class WishlistController {
 
