@@ -35,7 +35,7 @@ public class WebConfig implements WebMvcConfigurer {
     @Override
     public void addCorsMappings(CorsRegistry registry) {    // CORS 설정
         registry.addMapping("/**")
-                .allowedOriginPatterns("https://geongyu09-step1--gorgeous-chebakia-afa13a.netlify.app/")
+                .allowedOriginPatterns("https://geongyu09-step3.react-deploy-d5u.pages.dev/")
                 .allowedMethods("GET", "POST", "PUT", "DELETE")
                 .allowedHeaders("*")
                 .allowCredentials(true);
