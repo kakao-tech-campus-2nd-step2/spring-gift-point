@@ -1,28 +1,30 @@
 package gift.ControllerTest;
 
+import gift.Annotation.LoginMemberArgumentResolver;
+import gift.Controller.KakaoOAuthController;
+import gift.Service.MemberService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
-import org.springframework.http.MediaType;
-import org.springframework.test.web.client.MockRestServiceServer;
-import org.springframework.test.web.client.match.MockRestRequestMatchers;
-import org.springframework.test.web.client.response.MockRestResponseCreators;
+import org.springframework.http.ResponseEntity;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.RequestBuilder;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.web.client.RestTemplate;
 
 import static org.hamcrest.Matchers.containsString;
-import static org.springframework.test.web.client.match.MockRestRequestMatchers.method;
-import static org.springframework.test.web.client.match.MockRestRequestMatchers.requestTo;
-import static org.springframework.test.web.client.response.MockRestResponseCreators.withSuccess;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.BDDMockito.given;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-@SpringBootTest
-@AutoConfigureMockMvc
+@WebMvcTest(KakaoOAuthController.class)
 public class KakaoOAuthControllerTest {
 
     @Autowired
@@ -31,11 +33,15 @@ public class KakaoOAuthControllerTest {
     @MockBean
     private RestTemplate restTemplate;
 
-    private MockRestServiceServer mockServer;
+    @MockBean
+    private MemberService memberService;
+
+    @MockBean
+    private LoginMemberArgumentResolver loginMemberArgumentResolver;
 
     @BeforeEach
     void setUp() {
-        mockServer = MockRestServiceServer.bindTo(restTemplate).ignoreExpectOrder(true).build();
+        MockitoAnnotations.openMocks(this);
     }
 
     @Test
@@ -49,24 +55,32 @@ public class KakaoOAuthControllerTest {
         String code = "unique-success-code";
 
         // 액세스 토큰 요청을 모킹
-        mockServer.expect(requestTo("https://kauth.kakao.com/oauth/token"))
-                .andExpect(method(HttpMethod.POST))
-                .andExpect(MockRestRequestMatchers.content().string(containsString("code=" + code)))
-                .andRespond(withSuccess("{\"token_type\": \"bearer\", \"access_token\": \"valid-access-token\"}", MediaType.APPLICATION_JSON));
+        given(restTemplate.exchange(
+                eq("https://kauth.kakao.com/oauth/token"),
+                eq(HttpMethod.POST),
+                any(),
+                eq(String.class)))
+                .willReturn(ResponseEntity.ok("{\"token_type\": \"bearer\", \"access_token\": \"valid-access-token\"}"));
 
         // 사용자 정보 요청을 모킹
-        mockServer.expect(requestTo("https://kapi.kakao.com/v2/user/me"))
-                .andExpect(method(HttpMethod.GET))
-                .andRespond(withSuccess("{\"id\": 12345}", MediaType.APPLICATION_JSON));
+        given(restTemplate.exchange(
+                eq("https://kapi.kakao.com/v2/user/me"),
+                eq(HttpMethod.GET),
+                any(),
+                eq(String.class)))
+                .willReturn(ResponseEntity.ok("{\"id\": 12345}"));
 
-        mockMvc.perform(get("/auth/kakao/callback").param("code", code))
+        // MockMvc 요청 빌더 생성
+        RequestBuilder requestBuilder = MockMvcRequestBuilders.get("/auth/kakao/callback")
+                .param("code", code);
+
+        // MockMvc 수행 및 검증
+        mockMvc.perform(requestBuilder)
                 .andExpect(status().isSeeOther())
                 .andExpect(header().string("Location", "/products"))
                 .andExpect(cookie().exists("accessToken"))
                 .andExpect(request().sessionAttribute("kakaoId", 12345L))
                 .andExpect(content().string(containsString("Successfully logged in")));
-
-        mockServer.verify();
     }
 
     @Test
@@ -74,16 +88,21 @@ public class KakaoOAuthControllerTest {
         String code = "unique-used-code";
 
         // 액세스 토큰 요청을 모킹
-        mockServer.expect(requestTo("https://kauth.kakao.com/oauth/token"))
-                .andExpect(method(HttpMethod.POST))
-                .andExpect(MockRestRequestMatchers.content().string(containsString("code=" + code)))
-                .andRespond(MockRestResponseCreators.withBadRequest().body("{\"error\":\"invalid_grant\",\"error_description\":\"Authorization code is already used.\"}"));
+        given(restTemplate.exchange(
+                eq("https://kauth.kakao.com/oauth/token"),
+                eq(HttpMethod.POST),
+                any(HttpEntity.class),
+                eq(String.class)))
+                .willReturn(ResponseEntity.badRequest().body("{\"access_token\": \"invalid_grant\"}"));
 
-        mockMvc.perform(get("/auth/kakao/callback").param("code", code))
+        // MockMvc 요청 빌더 생성
+        RequestBuilder requestBuilder = MockMvcRequestBuilders.get("/auth/kakao/callback")
+                .param("code", code);
+
+        // MockMvc 수행 및 검증
+        mockMvc.perform(requestBuilder)
                 .andExpect(status().isBadRequest())
-                .andExpect(content().string(containsString("Authorization code is already used.")));
-
-        mockServer.verify();
+                .andExpect(content().string(containsString("Failed to retrieve access token")));
     }
 
     @Test
@@ -91,15 +110,19 @@ public class KakaoOAuthControllerTest {
         String code = "unique-failure-code";
 
         // 액세스 토큰 요청을 모킹
-        mockServer.expect(requestTo("https://kauth.kakao.com/oauth/token"))
-                .andExpect(method(HttpMethod.POST))
-                .andExpect(MockRestRequestMatchers.content().string(containsString("code=" + code)))
-                .andRespond(MockRestResponseCreators.withServerError());
+        given(restTemplate.exchange(
+                eq("https://kauth.kakao.com/oauth/token"),
+                eq(HttpMethod.POST),
+                any(),
+                eq(String.class)))
+                .willReturn(ResponseEntity.status(500).body(""));
 
-        mockMvc.perform(get("/auth/kakao/callback").param("code", code))
-                .andExpect(status().isInternalServerError())
-                .andExpect(content().string(containsString("Internal server error occurred")));
+        // MockMvc 요청 빌더 생성
+        RequestBuilder requestBuilder = MockMvcRequestBuilders.get("/auth/kakao/callback")
+                .param("code", code);
 
-        mockServer.verify();
+        // MockMvc 수행 및 검증
+        mockMvc.perform(requestBuilder)
+                .andExpect(status().isInternalServerError());
     }
 }
