@@ -84,7 +84,8 @@ public class KakaoLoginController {
 
                 Optional<SiteUser> userOptional = userRepository.findByUsername(nickname);
                 if (userOptional.isEmpty()) {
-                    SiteUser newUser = new SiteUser(nickname , "" , "" ,INITIAL_POINTS  );
+                    SiteUser newUser = new SiteUser(nickname , "" , "" , INITIAL_POINTS );
+                    userRepository.save(newUser);
                     session.setAttribute("points", newUser.getPoints()); // 포인트 세션에 저장
                 } else {
                     // 기존 유저의 포인트를 세션에 저장

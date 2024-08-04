@@ -24,6 +24,8 @@ public class OrderServiceImpl implements OrderService {
 
     private static final Logger logger = LoggerFactory.getLogger(OrderServiceImpl.class);
 
+    private static final double POINTS_EARNING_RATE = 0.1;
+
     private final OrderRepository orderRepository;
     private final OptionRepository optionRepository;
     private final UserRepository userRepository;
@@ -67,7 +69,7 @@ public class OrderServiceImpl implements OrderService {
         order.setOrderDateTime(LocalDateTime.now());
 
         WishlistDTO wishlistDTO = WishlistDTO.convertToDTO(wishlist);
-        int totalPrice = wishlistDTO.getTotalPrice() - pointsToUse; // 포인트 차감하여 총 결제 금액 계산
+        int totalPrice = wishlistDTO.getTotalPrice() - pointsToUse;
 
         for (WishlistDTO.OptionDTO optionDTO : wishlistDTO.getOptions()) {
             Option option = optionRepository.findById(optionDTO.getId())
@@ -80,18 +82,9 @@ public class OrderServiceImpl implements OrderService {
             orderRepository.save(order);
         }
 
-        // 포인트 차감 및 적립
-        int pointsBeforeUse = user.getPoints();
-        user.setPoints(pointsBeforeUse - pointsToUse); // 포인트 차감
-        logger.info("포인트 차감: {} -> {}", pointsBeforeUse, user.getPoints());
+        deductPoints(user, pointsToUse);
+        earnPoints(user, totalPrice);
 
-        int pointsToEarn = (int) (totalPrice * 0.1); // 결제 금액의 10%를 포인트로 적립
-        int pointsBeforeEarn = user.getPoints();
-        user.setPoints(pointsBeforeEarn + pointsToEarn);
-        userRepository.save(user);
-        logger.info("포인트 적립: {} -> {}", pointsBeforeEarn, user.getPoints());
-
-        // 세션에 포인트 업데이트
         session.setAttribute("points", user.getPoints());
 
         String message = createMessage(kakaoUserDTO, wishlistDTO);
@@ -102,6 +95,21 @@ public class OrderServiceImpl implements OrderService {
         OrderDTO orderDTO = OrderDTO.from(order);
         orderDTO.setNewPoints(user.getPoints());
         return orderDTO;
+    }
+
+    private void deductPoints(SiteUser user, int pointsToUse) {
+        int pointsBeforeUse = user.getPoints();
+        user.setPoints(pointsBeforeUse - pointsToUse);
+        userRepository.save(user);
+        logger.info("포인트 차감: {} -> {}", pointsBeforeUse, user.getPoints());
+    }
+
+    private void earnPoints(SiteUser user, int totalPrice) {
+        int pointsToEarn = (int) (totalPrice * POINTS_EARNING_RATE);
+        int pointsBeforeEarn = user.getPoints();
+        user.setPoints(pointsBeforeEarn + pointsToEarn);
+        userRepository.save(user);
+        logger.info("포인트 적립: {} -> {}", pointsBeforeEarn, user.getPoints());
     }
 
     private String createMessage(KakaoUserDTO kakaoUserDTO, WishlistDTO wishlistDTO) {

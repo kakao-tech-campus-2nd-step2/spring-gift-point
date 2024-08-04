@@ -17,6 +17,8 @@ public class SiteUser {
 
 	private int points = 1000; // 초기 포인트 설정
 
+	public SiteUser() {
+	}
 
 	public SiteUser(String username, String password, String email, int points) {
 		this.username = username;
