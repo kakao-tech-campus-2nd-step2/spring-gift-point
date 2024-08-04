@@ -59,6 +59,11 @@ public class Member {
         return memberPoint.getPoint();
     }
 
+    public Integer subtractPoint(int usePoint) throws IllegalAccessException {
+        memberPoint.subtract(usePoint);
+        return memberPoint.getPoint();
+    }
+
     public List<WishList> getWishList() {
         return wishList;
     }

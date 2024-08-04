@@ -16,4 +16,9 @@ public class MemberPointService {
         Member member = memberRepository.findById(jwtId).get();
         return member.getPoint();
     }
+
+    public Integer usePoint(String jwtId,Integer usePoint) throws IllegalAccessException {
+        Member member = memberRepository.findById(jwtId).get();
+        return member.subtractPoint(usePoint);
+    }
 }

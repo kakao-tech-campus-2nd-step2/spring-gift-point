@@ -18,7 +18,7 @@ public class MemberPoint {
         return point;
     }
 
-    public void subtract(Long subtractNumber) throws IllegalAccessException {
+    public void subtract(int subtractNumber) throws IllegalAccessException {
         if(point < 1000){
             throw new IllegalArgumentException("포인트는 1000부터 사용 가능합니다.");
         }
