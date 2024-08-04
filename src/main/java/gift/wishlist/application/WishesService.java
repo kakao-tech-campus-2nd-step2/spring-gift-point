@@ -29,17 +29,17 @@ public class WishesService {
         this.optionRepository = optionRepository;
     }
 
-    public void addProductToWishlist(Long memberId, Long productId) {
-        wishesRepository.findByMember_IdAndOption_Id(memberId, productId)
+    public void addProductToWishlist(Long memberId, Long optionId) {
+        wishesRepository.findByMember_IdAndOption_Id(memberId, optionId)
                 .ifPresent(wish -> {
                     throw new CustomException(ErrorCode.WISH_ALREADY_EXISTS);
                 });
 
-        wishesRepository.save(createWish(memberId, productId));
+        wishesRepository.save(createWish(memberId, optionId));
     }
 
-    public void removeWishIfPresent(Long memberId, Long productId) {
-        wishesRepository.findByMember_IdAndOption_Id(memberId, productId)
+    public void removeWishIfPresent(Long memberId, Long optionId) {
+        wishesRepository.findByMember_IdAndOption_Id(memberId, optionId)
                 .ifPresent(wish -> {
                     wishesRepository.deleteById(wish.getId());
                 });

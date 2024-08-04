@@ -8,7 +8,7 @@ import gift.kakao.client.KakaoClient;
 import gift.member.application.MemberService;
 import gift.member.dao.MemberRepository;
 import gift.member.entity.KakaoTokenInfo;
-import gift.member.dto.MemberDto;
+import gift.member.dto.MemberRequest;
 import gift.member.entity.Member;
 import gift.member.util.MemberMapper;
 import org.junit.jupiter.api.DisplayName;
@@ -47,28 +47,28 @@ class MemberServiceTest {
     @Test
     @DisplayName("회원가입 서비스 테스트")
     void registerMember() {
-        MemberDto memberDto = new MemberDto("test@email.com", "password");
-        Member member = MemberMapper.toEntity(memberDto);
+        MemberRequest memberRequest = new MemberRequest("test@email.com", "password");
+        Member member = MemberMapper.toEntity(memberRequest);
         given(memberRepository.findByEmail(any()))
                 .willReturn(Optional.empty());
         given(memberRepository.save(any()))
                 .willReturn(member);
 
-        memberService.registerMember(memberDto);
+        memberService.registerMember(memberRequest);
 
-        verify(memberRepository).findByEmail(memberDto.email());
+        verify(memberRepository).findByEmail(memberRequest.email());
         verify(memberRepository).save(any());
     }
 
     @Test
     @DisplayName("회원가입 실패 테스트")
     void registerMemberFailed() {
-        MemberDto memberDto = new MemberDto("test@email.com", "password");
-        Member member = MemberMapper.toEntity(memberDto);
+        MemberRequest memberRequest = new MemberRequest("test@email.com", "password");
+        Member member = MemberMapper.toEntity(memberRequest);
         given(memberRepository.findByEmail(any()))
                 .willReturn(Optional.of(member));
 
-        assertThatThrownBy(() -> memberService.registerMember(memberDto))
+        assertThatThrownBy(() -> memberService.registerMember(memberRequest))
                 .isInstanceOf(CustomException.class)
                 .hasMessage(ErrorCode.MEMBER_ALREADY_EXISTS
                                      .getMessage());

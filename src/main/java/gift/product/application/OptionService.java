@@ -68,14 +68,14 @@ public class OptionService {
         option.subtract(quantity);
     }
 
-    public Option getOptionById(Long id) {
+    public Option getOptionByIdOrThrow(Long id) {
         return optionRepository.findById(id)
                 .orElseThrow(() -> new CustomException(ErrorCode.OPTION_NOT_FOUND));
     }
 
     @Transactional
     public OptionResponse updateOptionById(Long id, OptionRequest request) {
-        Option option = getOptionById(id);
+        Option option = getOptionByIdOrThrow(id);
         option.update(request);
 
         return OptionMapper.toResponseDto(option);

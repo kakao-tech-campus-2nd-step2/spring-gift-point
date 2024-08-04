@@ -5,12 +5,15 @@ import gift.global.error.ErrorCode;
 import gift.kakao.auth.dto.KakaoTokenResponse;
 import gift.kakao.client.KakaoClient;
 import gift.member.dao.MemberRepository;
-import gift.member.dto.MemberDto;
+import gift.member.dto.MemberRequest;
+import gift.member.dto.MemberResponse;
 import gift.member.entity.Member;
 import gift.member.util.KakaoTokenMapper;
 import gift.member.util.MemberMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Service
 public class MemberService {
@@ -24,16 +27,14 @@ public class MemberService {
         this.kakaoClient = kakaoClient;
     }
 
-    public MemberDto registerMember(MemberDto memberDto) {
+    public Member registerMember(MemberRequest memberRequest) {
         // 사용자 계정 중복 검증
-        memberRepository.findByEmail(memberDto.email())
+        memberRepository.findByEmail(memberRequest.email())
                         .ifPresent(member -> {
                             throw new CustomException(ErrorCode.MEMBER_ALREADY_EXISTS);
                         });
 
-        return MemberMapper.toDto(
-                memberRepository.save(MemberMapper.toEntity(memberDto))
-        );
+        return memberRepository.save(MemberMapper.toEntity(memberRequest));
     }
 
     public Member getMemberByIdOrThrow(Long id) {
@@ -59,6 +60,28 @@ public class MemberService {
         member.refreshKakaoTokens(
                 KakaoTokenMapper.toTokenInfo(refreshTokenResponse)
         );
+    }
+
+    @Transactional
+    public void saveMemberPoint(Member member, int point) {
+        member.savePoint(point);
+    }
+
+    @Transactional
+    public void subtractMemberPoint(Member member, Integer point) {
+        if (member.isPointDeductible(point)) {
+            member.subtractPoint(point);
+            return;
+        }
+
+        throw new CustomException(ErrorCode.MEMBER_POINT_NOT_DEDUCTIBLE);
+    }
+
+    public List<MemberResponse> getAllMembers() {
+        return memberRepository.findAll()
+                .stream()
+                .map(MemberMapper::toResponseDto)
+                .toList();
     }
 
 }

@@ -1,6 +1,6 @@
 package gift.member.entity;
 
-import gift.member.dto.MemberDto;
+import gift.member.dto.MemberRequest;
 import gift.wishlist.entity.Wish;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
@@ -30,12 +30,15 @@ public class Member {
     @Embedded
     private KakaoTokenInfo kakaoTokenInfo;
 
+    private Integer point;
+
     protected Member() {
     }
 
     public Member(String email, String password) {
         this.email = email;
         this.password = password;
+        this.point = 0;
     }
 
     public Member(String email,
@@ -44,6 +47,7 @@ public class Member {
         this.email = email;
         this.password = password;
         this.kakaoTokenInfo = kakaoTokenInfo;
+        this.point = 0;
     }
 
     public Long getId() {
@@ -70,9 +74,13 @@ public class Member {
         return kakaoTokenInfo.getKakaoRefreshToken();
     }
 
-    public void update(MemberDto memberDto) {
-        email = memberDto.email();
-        password = memberDto.password();
+    public Integer getPoint() {
+        return point;
+    }
+
+    public void update(MemberRequest memberRequest) {
+        email = memberRequest.email();
+        password = memberRequest.password();
     }
 
     public void refreshKakaoTokens(KakaoTokenInfo tokenInfo) {
@@ -85,6 +93,18 @@ public class Member {
 
     public boolean isTokenExpired() {
         return kakaoTokenInfo.isExpired();
+    }
+
+    public boolean isPointDeductible(Integer point) {
+        return this.point <= point;
+    }
+
+    public void savePoint(Integer point) {
+        this.point += point;
+    }
+
+    public void subtractPoint(Integer point) {
+        this.point -= point;
     }
 
 }

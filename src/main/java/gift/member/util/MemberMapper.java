@@ -1,21 +1,23 @@
 package gift.member.util;
 
+import gift.member.dto.MemberResponse;
 import gift.member.entity.Member;
-import gift.member.dto.MemberDto;
+import gift.member.dto.MemberRequest;
 
 public class MemberMapper {
 
-    public static Member toEntity(MemberDto memberDto) {
+    public static Member toEntity(MemberRequest memberRequest) {
         return new Member(
-                memberDto.email(),
-                memberDto.password()
+                memberRequest.email(),
+                memberRequest.password()
         );
     }
 
-    public static MemberDto toDto(Member member) {
-        return new MemberDto(
+    public static MemberResponse toResponseDto(Member member) {
+        return new MemberResponse(
+                member.getId(),
                 member.getEmail(),
-                member.getPassword()
+                member.getPoint()
         );
     }
 

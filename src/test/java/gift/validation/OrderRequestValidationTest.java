@@ -32,7 +32,7 @@ public class OrderRequestValidationTest {
     @Test
     @DisplayName("정상 주문 유효성 검사 테스트")
     void checkNormalOrder() {
-        OrderRequest request = new OrderRequest(1L, 1, "message");
+        OrderRequest request = new OrderRequest(1L, 1, "message", 100);
 
         Set<ConstraintViolation<OrderRequest>> violations = validator.validate(request);
 
@@ -42,11 +42,20 @@ public class OrderRequestValidationTest {
     @Test
     @DisplayName("메시지가 빈 주문 유효성 검사 테스트")
     void checkEmptyMessageOrder() {
-        OrderRequest request = new OrderRequest(1L, 1, "");
+        OrderRequest request = new OrderRequest(1L, 1, "", 100);
 
         Set<ConstraintViolation<OrderRequest>> violations = validator.validate(request);
 
         Assertions.assertThat(violations).isNotEmpty();
     }
 
+    @Test
+    @DisplayName("포인트가 음수의 값인 주문 유효성 검사 테스트")
+    void checkNegativePoint() {
+        OrderRequest request = new OrderRequest(1L, 1, "", -1);
+
+        Set<ConstraintViolation<OrderRequest>> violations = validator.validate(request);
+
+        Assertions.assertThat(violations).isNotEmpty();
+    }
 }

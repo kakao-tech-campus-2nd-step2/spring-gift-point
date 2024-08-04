@@ -1,6 +1,6 @@
 package gift.validation;
 
-import gift.member.dto.MemberDto;
+import gift.member.dto.MemberRequest;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validation;
 import jakarta.validation.Validator;
@@ -32,12 +32,12 @@ public class MemberRequestValidationTest {
     @Test
     @DisplayName("정상 회원 유효성 검사 테스트")
     void checkNormalMember() {
-        MemberDto request = new MemberDto(
+        MemberRequest request = new MemberRequest(
                 "test@email.com",
                 "password"
         );
 
-        Set<ConstraintViolation<MemberDto>> violations = validator.validate(request);
+        Set<ConstraintViolation<MemberRequest>> violations = validator.validate(request);
 
         Assertions.assertThat(violations).isEmpty();
     }
@@ -45,12 +45,12 @@ public class MemberRequestValidationTest {
     @Test
     @DisplayName("이메일이 없는 회원 유효성 검사 테스트")
     void checkEmptyEmailMember() {
-        MemberDto request = new MemberDto(
+        MemberRequest request = new MemberRequest(
                 "",
                 "password"
         );
 
-        Set<ConstraintViolation<MemberDto>> violations = validator.validate(request);
+        Set<ConstraintViolation<MemberRequest>> violations = validator.validate(request);
 
         Assertions.assertThat(violations).isNotEmpty();
     }
@@ -58,12 +58,12 @@ public class MemberRequestValidationTest {
     @Test
     @DisplayName("유효하지 않은 이메일인 회원 유효성 검사 테스트")
     void checkInvalidEmailMember() {
-        MemberDto request = new MemberDto(
+        MemberRequest request = new MemberRequest(
                 "test_email.com",
                 "password"
         );
 
-        Set<ConstraintViolation<MemberDto>> violations = validator.validate(request);
+        Set<ConstraintViolation<MemberRequest>> violations = validator.validate(request);
 
         Assertions.assertThat(violations).isNotEmpty();
     }
@@ -71,12 +71,12 @@ public class MemberRequestValidationTest {
     @Test
     @DisplayName("비밀번호가 없는 회원 유효성 검사 테스트")
     void checkEmptyPasswordMember() {
-        MemberDto request = new MemberDto(
+        MemberRequest request = new MemberRequest(
                 "test@email.com",
                 ""
         );
 
-        Set<ConstraintViolation<MemberDto>> violations = validator.validate(request);
+        Set<ConstraintViolation<MemberRequest>> violations = validator.validate(request);
 
         Assertions.assertThat(violations).isNotEmpty();
     }
