@@ -57,7 +57,7 @@ public class OrderServiceIntegrationTest {
     }
 
     @Test
-    void orderSaveTest() {
+    void orderSaveTest() throws InterruptedException {
         // given
         // 위시리스트에 추가
         wishlistService.addWishlistProduct(testEmail, product.getId());
@@ -101,7 +101,7 @@ public class OrderServiceIntegrationTest {
     }
 
     @Test
-    void 정상적으로_포인트가_사용된_경우() {
+    void 정상적으로_포인트가_사용된_경우() throws InterruptedException {
         // given
         User user = userService.findOne(testEmail);
         int quantity = 30;

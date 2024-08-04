@@ -2,14 +2,13 @@ package gift.advice;
 
 import gift.entity.response.MessageResponseDTO;
 import gift.exception.ResourceNotFoundException;
+import org.springframework.dao.OptimisticLockingFailureException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.server.ResponseStatusException;
-
-import javax.security.sasl.AuthenticationException;
 
 @RestControllerAdvice
 public class ApplicationExceptionAdvice {
@@ -27,6 +26,14 @@ public class ApplicationExceptionAdvice {
     public ResponseEntity<MessageResponseDTO> handleBadRequest(IllegalArgumentException e) {
         return ResponseEntity
                 .status(HttpStatus.BAD_REQUEST)
+                .body(new MessageResponseDTO(e.getMessage()));
+    }
+
+    @ExceptionHandler(OptimisticLockingFailureException.class)
+    @ResponseStatus(HttpStatus.CONFLICT)
+    public ResponseEntity<MessageResponseDTO> handleConflict(OptimisticLockingFailureException e) {
+        return ResponseEntity
+                .status(HttpStatus.CONFLICT)
                 .body(new MessageResponseDTO(e.getMessage()));
     }
 

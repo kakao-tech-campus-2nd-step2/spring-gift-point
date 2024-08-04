@@ -112,7 +112,7 @@ public class OptionServiceTest {
     }
 
     @Test
-    void subtract_성공() {
+    void subtract_성공() throws InterruptedException {
         // given
         int total = 2834;
         int amount = 349;

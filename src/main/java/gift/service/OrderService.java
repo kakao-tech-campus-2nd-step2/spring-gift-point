@@ -53,7 +53,7 @@ public class OrderService {
     }
 
     @Transactional
-    public Order save(HttpSession session, OrderDTO orderDTO) {
+    public Order save(HttpSession session, OrderDTO orderDTO) throws InterruptedException {
         String email = (String) session.getAttribute("email");
 
         ProductOption productOption = productOptionRepository

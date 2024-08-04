@@ -6,7 +6,9 @@ import gift.entity.user.User;
 import gift.exception.ResourceNotFoundException;
 import gift.repository.OptionRepository;
 import gift.repository.UserRepository;
+import jakarta.persistence.LockModeType;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.repository.Lock;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -69,17 +71,12 @@ public class OptionService {
         optionRepository.deleteById(id);
     }
 
-    @Transactional
-    public Option subtract(Long id, int amount) {
-        Option option = findById(id);
-        if (amount <= 0) {
-            throw new IllegalArgumentException("Invalid quantity");
-        }
-        if (option.getQuantity() < amount) {
-            throw new IllegalArgumentException("Not enough quantity");
-        }
+    @Lock(LockModeType.OPTIMISTIC)
+    public synchronized void subtract(Long id, int amount) {
+        Option option = optionRepository.findById(id)
+                .orElseThrow();
         option.subtract(amount);
-        return optionRepository.save(option);
+        optionRepository.saveAndFlush(option);
     }
 
     public boolean optionMatchesUser(Long id, String email) {

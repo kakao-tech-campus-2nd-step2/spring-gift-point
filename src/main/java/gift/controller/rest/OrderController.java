@@ -53,7 +53,7 @@ public class OrderController {
                     content = @Content(schema = @Schema(implementation = MessageResponseDTO.class)))
     })
     @PostMapping()
-    public ResponseEntity<Order> createOrder(@RequestBody OrderDTO orderDTO, HttpSession session) {
+    public ResponseEntity<Order> createOrder(@RequestBody OrderDTO orderDTO, HttpSession session) throws InterruptedException {
         Order order = orderService.save(session, orderDTO);
         return ResponseEntity.ok().body(order);
     }

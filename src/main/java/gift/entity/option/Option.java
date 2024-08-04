@@ -44,8 +44,14 @@ public class Option {
         this.quantity = optionDTO.getQuantity();
     }
 
-    public void subtract(int quantity) {
-        this.quantity -= quantity;
+    public void subtract(int amount) {
+        if (amount <= 0) {
+            throw new IllegalArgumentException("Invalid quantity");
+        }
+        if (this.getQuantity() < amount) {
+            throw new IllegalArgumentException("Not enough quantity");
+        }
+        this.quantity -= amount;
     }
 
     public Long getId() {

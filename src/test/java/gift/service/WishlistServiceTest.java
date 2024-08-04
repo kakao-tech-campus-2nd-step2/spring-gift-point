@@ -3,7 +3,6 @@ package gift.service;
 import gift.entity.product.Product;
 import gift.entity.product.ProductDTO;
 import gift.entity.user.UserDTO;
-import gift.entity.wishlist.WishlistDTO;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
