@@ -10,20 +10,11 @@ import jakarta.persistence.Id;
 
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import jakarta.validation.constraints.Size;
 import java.util.Objects;
-import java.util.regex.Pattern;
 
 
 @Entity
 public class Product {
-
-    private static final Pattern NAME_PATTERN = Pattern.compile(
-            "[a-zA-Z0-9ㄱ-ㅎ가-힣()\\[\\]+\\-&/_ ]+"
-    );
-    private static final Pattern NAME_EXCLUDE_PATTERN = Pattern.compile(
-            "^((?!카카오).)*$"
-    );
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -31,13 +22,11 @@ public class Product {
     private Long id;
 
     @Column(nullable = false)
-    @Size(max = 15)
     private String name;
 
     @Column(nullable = false)
     private Integer price;
 
-    @Size(max = 255)
     @Column(nullable = false)
     private String imageUrl;
 
@@ -82,15 +71,6 @@ public class Product {
     private void validateName(String name) {
         if (name == null || name.isBlank()) {
             throw new BlankContentException("상품 이름을 입력해주세요.");
-        }
-        if (name.length() > 15) {
-            throw new BadRequestException("제품명 길이는 1~15자만 가능합니다.");
-        }
-        if (!NAME_PATTERN.matcher(name).matches()) {
-            throw new BadRequestException("( ), [ ], +, -, &, /, _을 제외한 특수문자는 입력할 수 없습니다.");
-        }
-        if (!NAME_EXCLUDE_PATTERN.matcher(name).matches()) {
-            throw new BadRequestException("카카오가 포함된 문구는 담당 MD와 협의한 후에 사용해주시기 바랍니다.");
         }
     }
 
