@@ -16,26 +16,6 @@ public class OptionDTO {
         this.quantity = quantity;
     }
 
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public int getQuantity() {
-        return quantity;
-    }
-
     public static OptionDTO convertToDto(Option option) {
         return new OptionDTO(option.getId(), option.getName(), option.getQuantity());
     }
