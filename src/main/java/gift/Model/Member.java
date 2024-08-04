@@ -22,19 +22,22 @@ public class Member {
     private String email;
     @Column(name = "password", nullable = false)
     private String password;
-    @Schema(description = "멤버의 accessToken", defaultValue = "해당되는 accessToken")
+    @Column(name = "accessToken")
     private String accessToken;
+    @Column(name = "point")
+    private int point;
 
     protected Member(){
 
     }
 
-    @ConstructorProperties({"id","email","password","accessToken"})
-    public Member(Long id, String email, String password, String accessToken) {
+    @ConstructorProperties({"id","email","password","accessToken","point"})
+    public Member(Long id, String email, String password, String accessToken,int point) {
         this.id = id;
         this.email = email;
         this.password = password;
         this.accessToken = accessToken;
+        this.point = point;
     }
 
     public Long getId() {
@@ -51,5 +54,15 @@ public class Member {
 
     public String getAccessToken() {
         return accessToken;
+    }
+
+    public int getPoint() {
+        return point;
+    }
+    public int usePoint(int use){
+        return this.point-=use;
+    }
+    public int chargePoint(int charge){
+        return this.point+=charge;
     }
 }
