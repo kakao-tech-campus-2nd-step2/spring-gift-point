@@ -8,6 +8,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.net.URI;
+import java.util.List;
+
 @RestController()
 @RequestMapping("/api/categories")
 public class CategoryController implements CategoryApi{
@@ -18,18 +21,18 @@ public class CategoryController implements CategoryApi{
         this.categoryService = categoryService;
     }
 
-    @PostMapping("")
-    public void create(
+    @PostMapping
+    public ResponseEntity<?> create(
             @RequestBody CategoryCreateRequest request
     ) {
-        categoryService.create(request.toCommand());
+        Long categoryId = categoryService.create(request.toCommand());
+
+        return ResponseEntity.created(URI.create("/api/categories/" + categoryId)).build();
     }
 
-    @GetMapping("")
-    public ResponseEntity<Page<CategoryControllerResponse>> findAll(
-            Pageable pageable
-    ) {
-        return ResponseEntity.ok(categoryService.findAll(pageable).map(CategoryControllerResponse::from));
+    @GetMapping
+    public ResponseEntity<List<CategoryControllerResponse>> findAll() {
+        return ResponseEntity.ok(categoryService.findAll().stream().map(CategoryControllerResponse::from).toList());
     }
 
     @GetMapping("/{id}")
@@ -39,11 +42,13 @@ public class CategoryController implements CategoryApi{
     }
 
     @PutMapping("/{id}")
-    public void update(
+    public ResponseEntity<?> update(
             @PathVariable("id") Long categoryId,
             @RequestBody CategoryUpdateRequest request
     ) {
         categoryService.update(request.toCommand(categoryId));
+
+        return ResponseEntity.created(URI.create("/api/categories/" + categoryId)).build();
     }
 
     @DeleteMapping("/{id}")

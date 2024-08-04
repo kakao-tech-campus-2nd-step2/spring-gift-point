@@ -3,12 +3,16 @@ package gift.member.application;
 import gift.auth.KakaoResponse;
 import gift.auth.KakaoService;
 import gift.auth.KakaoToken;
-import gift.exception.type.DuplicateNameException;
+import gift.exception.type.DuplicateException;
 import gift.exception.type.NotFoundException;
+import gift.exception.type.UnAuthorizedException;
 import gift.member.application.command.MemberEmailUpdateCommand;
-import gift.member.application.command.MemberJoinCommand;
+import gift.member.application.command.MemberRegisterCommand;
 import gift.member.application.command.MemberLoginCommand;
 import gift.member.application.command.MemberPasswordUpdateCommand;
+import gift.member.application.response.MemberLoginServiceResponse;
+import gift.member.application.response.MemberRegisterServiceResponse;
+import gift.member.application.response.MemberServiceResponse;
 import gift.member.domain.Member;
 import gift.member.domain.MemberRepository;
 import gift.wishlist.domain.WishlistRepository;
@@ -31,29 +35,37 @@ public class MemberService {
         this.kakaoService = kakaoService;
     }
 
-    public Long join(MemberJoinCommand command) {
-        return memberRepository.save(command.toMember()).getId();
+    public MemberRegisterServiceResponse register(MemberRegisterCommand command) {
+        memberRepository.findByEmail(command.email())
+                .ifPresent(member -> {
+                    throw new DuplicateException("이미 사용중인 이메일입니다.");
+                });
+
+        Member member = memberRepository.save(command.toMember());
+
+        return MemberRegisterServiceResponse.from(member);
     }
 
-    public Long login(MemberLoginCommand command) {
-        return memberRepository
+    public MemberLoginServiceResponse login(MemberLoginCommand command) {
+        Member member = memberRepository
                 .findByEmailAndPassword(command.email(), command.password())
-                .orElseThrow(() -> new NotFoundException("해당 회원이 존재하지 않습니다."))
-                .getId();
+                .orElseThrow(() -> new UnAuthorizedException("이메일 또는 비밀번호가 일치하지 않습니다."));
+
+        return MemberLoginServiceResponse.from(member);
     }
 
     @Transactional
-    public void updateEmail(MemberEmailUpdateCommand command, Long memberId) {
+    public void updateEmail(Long memberId, MemberEmailUpdateCommand command) {
         Member member = getMember(memberId);
 
         if (memberRepository.existsByEmail(command.email()))
-            throw new DuplicateNameException("이미 사용중인 이메일입니다.");
+            throw new DuplicateException("이미 사용중인 이메일입니다.");
 
         member.updateEmail(command.email());
     }
 
     @Transactional
-    public void updatePassword(MemberPasswordUpdateCommand command, Long memberId) {
+    public void updatePassword(Long memberId, MemberPasswordUpdateCommand command) {
         memberRepository.findById(memberId)
                 .orElseThrow(() -> new NotFoundException("해당 회원이 존재하지 않습니다."))
                 .updatePassword(command.password());
@@ -88,20 +100,34 @@ public class MemberService {
     }
 
     @Transactional
-    public Long kakaoLogin(String code) {
+    public MemberLoginServiceResponse kakaoLogin(String code) {
         KakaoToken token = kakaoService.fetchToken(code);
         KakaoResponse memberInfo = kakaoService.fetchMemberInfo(token.accessToken());
         Member newMember = findOrCreateMember(memberInfo);
         kakaoService.saveToken(token, newMember);
 
-        return newMember.getId();
+        return MemberLoginServiceResponse.from(newMember);
     }
 
     private Member findOrCreateMember(KakaoResponse memberInfo) {
         return memberRepository.findByKakaoId(memberInfo.id())
                 .orElseGet(() -> {
-                    Member newMember = Member.ofKakao(memberInfo.id(), memberInfo.kakaoAccount().email());
+                    Member newMember = Member.fromKakao(memberInfo);
                     return memberRepository.save(newMember);
                 });
+    }
+
+    @Transactional
+    public void addPoint(Long memberId, int amount) {
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new IllegalArgumentException("해당 회원이 존재하지 않습니다."));
+        member.addPoint(member.getPoint() + amount);
+    }
+
+    @Transactional(readOnly = true)
+    public int getPoint(Long memberId) {
+        return memberRepository.findById(memberId)
+                .orElseThrow(() -> new NotFoundException("해당 회원이 존재하지 않습니다."))
+                .getPoint();
     }
 }

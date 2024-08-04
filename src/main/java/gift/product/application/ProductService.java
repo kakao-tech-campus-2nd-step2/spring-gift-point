@@ -14,6 +14,7 @@ import gift.product.domain.ProductRepository;
 import gift.wishlist.domain.WishlistRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Range;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -44,6 +45,11 @@ public class ProductService {
                 .map(ProductServiceResponse::from);
     }
 
+    public Page<ProductServiceResponse> findAllByCategoryId(Pageable pageable, Long categoryId) {
+        return productRepository.findAllByCategoryId(pageable, categoryId)
+                .map(ProductServiceResponse::from);
+    }
+
     public ProductServiceResponse findById(Long productId) {
         return productRepository.findById(productId)
                 .map(ProductServiceResponse::from)
@@ -51,7 +57,7 @@ public class ProductService {
     }
 
     @Transactional
-    public void save(ProductCreateCommand command) {
+    public Long save(ProductCreateCommand command) {
         Category category = categoryRepository.findById(command.categoryId())
                 .orElseThrow(() -> new NotFoundException("해당 카테고리가 존재하지 않습니다."));
 
@@ -64,7 +70,7 @@ public class ProductService {
 
         product.validateHasAtLeastOneOption();
 
-        productRepository.save(product);
+        return productRepository.save(product).getId();
     }
 
     @Transactional
@@ -76,20 +82,9 @@ public class ProductService {
                 .orElseThrow(() -> new NotFoundException("해당 카테고리가 존재하지 않습니다."));
 
         product.update(category, command);
-        updateOptions(command, product);
 
         product.validateHasAtLeastOneOption();
         product.validateKakaoInProductName();
-    }
-
-    private void updateOptions(ProductUpdateCommand command, Product product) {
-        command.optionUpdateCommandList().forEach(
-                optionUpdateCommand -> {
-                    Option originalOption = optionRepository.findById(optionUpdateCommand.id())
-                            .orElseThrow(() -> new NotFoundException("해당 옵션이 존재하지 않습니다."));
-                    originalOption.update(optionUpdateCommand.name(), optionUpdateCommand.quantity(), product);
-                }
-        );
     }
 
     @Transactional

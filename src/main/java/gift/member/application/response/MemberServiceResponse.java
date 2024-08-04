@@ -1,4 +1,4 @@
-package gift.member.application;
+package gift.member.application.response;
 
 import gift.member.domain.Member;
 

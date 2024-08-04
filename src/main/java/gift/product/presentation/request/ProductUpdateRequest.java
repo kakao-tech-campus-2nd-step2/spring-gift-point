@@ -14,8 +14,7 @@ public record ProductUpdateRequest(
         String name,
         Integer price,
         String imageUrl,
-        Long categoryId,
-        List<OptionUpdateRequest> optionUpdateRequestList
+        Long categoryId
 ) {
     public ProductUpdateCommand toCommand(Long productId) {
         return new ProductUpdateCommand(
@@ -23,10 +22,7 @@ public record ProductUpdateRequest(
                 name,
                 price,
                 imageUrl,
-                categoryId,
-                optionUpdateRequestList.stream()
-                        .map(OptionUpdateRequest::toCommand)
-                        .toList()
+                categoryId
         );
     }
 }

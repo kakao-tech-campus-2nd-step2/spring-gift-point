@@ -1,6 +1,6 @@
 package gift.member.presentation;
 
-import gift.member.application.MemberServiceResponse;
+import gift.member.application.response.MemberServiceResponse;
 
 public record MemberControllerResponse(
         Long id,

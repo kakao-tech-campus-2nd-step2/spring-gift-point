@@ -4,13 +4,15 @@ import gift.category.application.command.CategoryCreateCommand;
 import gift.category.application.command.CategoryUpdateCommand;
 import gift.category.domain.Category;
 import gift.category.domain.CategoryRepository;
-import gift.exception.type.DuplicateNameException;
+import gift.exception.type.DuplicateException;
 import gift.exception.type.NotFoundException;
 import gift.product.domain.ProductRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Service
 public class CategoryService {
@@ -23,19 +25,19 @@ public class CategoryService {
         this.productRepository = productRepository;
     }
 
-    public Page<CategoryServiceResponse> findAll(Pageable pageable) {
-        return categoryRepository.findAll(pageable)
-                .map(CategoryServiceResponse::from);
+    public List<CategoryServiceResponse> findAll() {
+        return categoryRepository.findAll()
+                .stream().map(CategoryServiceResponse::from).toList();
     }
 
     @Transactional
-    public void create(CategoryCreateCommand command) {
+    public Long create(CategoryCreateCommand command) {
         categoryRepository.findByName(command.name())
                 .ifPresent(category -> {
-                    throw new DuplicateNameException("이미 존재하는 카테고리 이름 입니다.");
+                    throw new DuplicateException("이미 존재하는 카테고리 이름 입니다.");
                 });
 
-        categoryRepository.save(command.toCategory());
+        return categoryRepository.save(command.toCategory()).getId();
     }
 
     public CategoryServiceResponse findById(Long categoryId) {

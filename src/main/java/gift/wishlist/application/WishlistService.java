@@ -5,6 +5,9 @@ import gift.member.domain.Member;
 import gift.member.domain.MemberRepository;
 import gift.product.domain.Product;
 import gift.product.domain.ProductRepository;
+import gift.wishlist.application.command.WishlistCreateCommand;
+import gift.wishlist.application.response.WishlistSaveServiceResponse;
+import gift.wishlist.application.response.WishlistReadServiceResponse;
 import gift.wishlist.domain.Wishlist;
 import gift.wishlist.domain.WishlistRepository;
 import org.springframework.data.domain.Page;
@@ -19,29 +22,34 @@ public class WishlistService {
     private final ProductRepository productRepository;
     private final MemberRepository memberRepository;
 
-    public WishlistService(WishlistRepository wishlistRepository, ProductRepository productRepository, MemberRepository memberRepository) {
+    public WishlistService(
+            WishlistRepository wishlistRepository,
+            ProductRepository productRepository,
+            MemberRepository memberRepository
+    ) {
         this.wishlistRepository = wishlistRepository;
         this.productRepository = productRepository;
         this.memberRepository = memberRepository;
     }
 
     @Transactional
-    public void save(Long memberId, Long productId) {
-        Member member = getMember(memberId);
-        Product product = getProduct(productId);
+    public WishlistSaveServiceResponse save(WishlistCreateCommand command) {
+        Member member = getMember(command.memberId());
+        Product product = getProduct(command.productId());
 
-        Wishlist wishlist = new Wishlist(member, product);
-        wishlistRepository.save(wishlist);
+        Wishlist wish = wishlistRepository.save(new Wishlist(member, product));
+
+        return WishlistSaveServiceResponse.from(wish);
     }
 
-    public Page<WishlistServiceResponse> findAllByMemberId(Long memberId, Pageable pageable) {
+    public Page<WishlistReadServiceResponse> findAllByMemberId(Long memberId, Pageable pageable) {
         return wishlistRepository.findAllByMemberId(memberId, pageable)
-                .map(WishlistServiceResponse::from);
+                .map(WishlistReadServiceResponse::from);
     }
 
-    public Page<WishlistServiceResponse> findAllByProductId(Long productId, Pageable pageable) {
+    public Page<WishlistReadServiceResponse> findAllByProductId(Long productId, Pageable pageable) {
         return wishlistRepository.findAllByProductId(productId, pageable)
-                .map(WishlistServiceResponse::from);
+                .map(WishlistReadServiceResponse::from);
     }
 
     @Transactional
