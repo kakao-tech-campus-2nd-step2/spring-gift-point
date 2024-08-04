@@ -5,16 +5,18 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
 @RequestMapping
 public class rootView {
     @GetMapping
     public String showAdminPageGet(){
-        return "redirect:/admin/products";
+        return "token_save";
     }
     @PostMapping
-    public String showAdminPagePost(){
+    public String showAdminPagePost(@RequestParam("token") String token){
+        System.out.println(token);
         return "redirect:/admin/products";
     }
 }
