@@ -13,6 +13,8 @@ import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import jakarta.servlet.http.HttpServletRequest;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -21,24 +23,15 @@ import java.util.Map;
 public class WishlistController {
 
     private final WishlistService wishlistService;
-    private final JwtUtil jwtUtil;
 
     @Autowired
-    public WishlistController(WishlistService wishlistService, JwtUtil jwtUtil) {
+    public WishlistController(WishlistService wishlistService) {
         this.wishlistService = wishlistService;
-        this.jwtUtil = jwtUtil;
     }
 
     @PostMapping
-    public ResponseEntity<?> addItem(@RequestHeader("Authorization") String token, @RequestBody WishRequest wishRequest) {
-        if (token != null && token.startsWith("Bearer ")) {
-            token = token.substring(7);
-        } else {
-            return ResponseEntity.status(401).body("Missing or invalid Authorization header");
-        }
-
-        Claims claims = jwtUtil.extractClaims(token);
-        Long memberId = Long.parseLong(claims.getSubject());
+    public ResponseEntity<?> addItem(HttpServletRequest request, @RequestBody WishRequest wishRequest) {
+        Long memberId = (Long) request.getAttribute("memberId");
 
         try {
             wishlistService.addProduct(memberId, wishRequest);
@@ -49,17 +42,10 @@ public class WishlistController {
     }
 
     @GetMapping
-    public ResponseEntity<?> getItems(@RequestHeader("Authorization") String token,
+    public ResponseEntity<?> getItems(HttpServletRequest request,
                                       @RequestParam(defaultValue = "0") int page,
                                       @RequestParam(defaultValue = "20") int size) {
-        if (token != null && token.startsWith("Bearer ")) {
-            token = token.substring(7);
-        } else {
-            return ResponseEntity.status(401).body("Missing or invalid Authorization header");
-        }
-
-        Claims claims = jwtUtil.extractClaims(token);
-        Long memberId = Long.parseLong(claims.getSubject());
+        Long memberId = (Long) request.getAttribute("memberId");
 
         PageRequest pageRequest = PageRequest.of(page, size);
         Page<WishResponse> wishPage = wishlistService.getWishesByMemberId(memberId, pageRequest);
