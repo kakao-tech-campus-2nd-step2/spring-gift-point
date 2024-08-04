@@ -31,7 +31,7 @@ public class OptionServiceLockTest {
         Option option = optionRepository.saveAndFlush(new Option(new OptionRequestDTO("test", 100)));
 
         final int threadCount = 100;
-        final ExecutorService executorService = Executors.newFixedThreadPool(32);
+        final ExecutorService executorService = Executors.newFixedThreadPool(threadCount);
         final CountDownLatch countDownLatch = new CountDownLatch(threadCount);
 
         // when
