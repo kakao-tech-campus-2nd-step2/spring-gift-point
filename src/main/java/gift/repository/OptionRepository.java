@@ -14,5 +14,7 @@ public interface OptionRepository extends JpaRepository<Option, Long> {
 
     void deleteAllByProductIdIn(List<Long> productIds);
 
+    void deleteAllByProductId(Long productId);
+
     boolean existsByProductIdAndName(Long productId, String name);
 }
