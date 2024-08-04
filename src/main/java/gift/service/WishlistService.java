@@ -5,6 +5,7 @@ import gift.dto.wishlistDTO.WishlistRequestDTO;
 import gift.dto.wishlistDTO.WishlistResponseDTO;
 import gift.exception.InvalidInputValueException;
 import gift.exception.NotFoundException;
+import gift.exception.ServerErrorException;
 import gift.model.Member;
 import gift.model.Option;
 import gift.model.Wishlist;
@@ -15,6 +16,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
@@ -61,8 +63,12 @@ public class WishlistService {
         wishlistRepository.delete(wishlist);
     }
 
-    @Transactional
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
     public void removeWishlistByOptionId(Long optionId) {
-        wishlistRepository.deleteByOptionId(optionId);
+        try {
+            wishlistRepository.deleteByOptionId(optionId);
+        } catch (Exception e) {
+            throw new ServerErrorException("위시리스트에 없거나 위시리스트에서 지워지지 않았습니다.");
+        }
     }
 }

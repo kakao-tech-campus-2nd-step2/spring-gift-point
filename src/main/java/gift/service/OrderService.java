@@ -52,21 +52,12 @@ public class OrderService {
         Order order = new Order(null, option, orderRequestDTO.quantity(), LocalDateTime.now(),
             orderRequestDTO.message(), member);
         orderRepository.save(order);
-        removeFromWishlistByOptionId(option.getId());
+        wishlistService.removeWishlistByOptionId(option.getId());
         OrderResponseDTO orderResponseDTO = new OrderResponseDTO(order.getId(),
             order.getOption().getProduct().getId(),
             order.getOption().getId(), order.getOrderDateTime().toString(), order.getQuantity(),
             order.getMessage());
         return orderResponseDTO;
-    }
-
-    @Transactional(propagation = Propagation.REQUIRES_NEW)
-    public void removeFromWishlistByOptionId(Long optionId) {
-        try {
-            wishlistService.removeWishlistByOptionId(optionId);
-        } catch (Exception e) {
-            throw new ServerErrorException("위시리스트에 없거나 위시리스트에서 지워지지 않았습니다.");
-        }
     }
 
 }
