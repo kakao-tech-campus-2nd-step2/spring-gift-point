@@ -14,18 +14,22 @@ import org.springframework.stereotype.Component;
 @Component
 public class JwtUtil {
 
-    private Key secretKey = Keys.secretKeyFor(SignatureAlgorithm.HS256);
+    private static final Key secretKey = Keys.secretKeyFor(SignatureAlgorithm.HS256);
 
-    public String extractEmail(String token) {
+    private JwtUtil() {
+
+    }
+
+    public static String extractEmail(String token) {
         return extractClaim(token, Claims::getSubject);
     }
 
-    public <T> T extractClaim(String token, Function<Claims, T> claimsResolver) {
+    public static <T> T extractClaim(String token, Function<Claims, T> claimsResolver) {
         final Claims claims = extractAllClaims(token);
         return claimsResolver.apply(claims);
     }
 
-    private Claims extractAllClaims(String token) {
+    private static Claims extractAllClaims(String token) {
         try {
             return Jwts.parser()
                 .setSigningKey(secretKey)
@@ -37,7 +41,7 @@ public class JwtUtil {
         }
     }
 
-    public String createToken(String email) {
+    public static String createToken(String email) {
         return Jwts.builder()
             .setSubject(email)
             .setIssuedAt(new Date(System.currentTimeMillis()))
