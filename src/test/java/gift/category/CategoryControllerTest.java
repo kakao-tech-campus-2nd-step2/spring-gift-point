@@ -43,7 +43,7 @@ public class CategoryControllerTest {
 
         //when
         ResultActions resultAction = mockMvc.perform(
-            MockMvcRequestBuilders.post("/categories")
+            MockMvcRequestBuilders.post("/api/categories")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(new Gson().toJson(categoryRequest)));
 

@@ -12,12 +12,10 @@ import org.springframework.util.LinkedMultiValueMap;
 
 @SpringBootTest
 public class OauthServiceTest {
-
     @Autowired
     private OauthService oauthService;
-
     @Autowired
-    private KakaoOAuthConfigProperties kakaoOAuthConfigProperties;
+     private KakaoOAuthConfigProperties kakaoOAuthConfigProperties;
 
     private LinkedMultiValueMap<String, String> body;
 

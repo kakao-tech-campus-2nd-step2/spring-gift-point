@@ -7,6 +7,7 @@ import gift.product.Product;
 import gift.wishes.Wish;
 import gift.wishes.WishService;
 import java.net.URI;
+import java.util.List;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
@@ -29,10 +30,12 @@ public class OrderService {
         this.client = client;
     }
 
-    public OrderInfo saveOrder(OrderRequest orderRequest) {
+    public OrderInfo saveOrder(OrderRequest orderRequest, Long memberId) {
         Long optionId = orderRequest.getOptionId();
         Option option = optionService.getOption(optionId);
         option.subtract(orderRequest.getQuantity());
+        OrderInfo orderInfo = orderRequest.toEntity();
+        orderInfo.setMemberId(memberId);
 
         return orderRepository.save(orderRequest.toEntity());
     }
@@ -73,6 +76,10 @@ public class OrderService {
         Product product = optionService.getProduct(optionId);
         Wish wish = wishService.getWish(product.getId(), memberId);
         wishService.deleteWish(wish.getId(), memberId);
+    }
+
+    public List<OrderInfo> getOrderList(Long memberId){
+        return orderRepository.findByMemberId(memberId);
     }
 
 

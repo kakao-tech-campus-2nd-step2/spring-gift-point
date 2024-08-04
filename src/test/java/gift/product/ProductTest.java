@@ -15,7 +15,7 @@ public class ProductTest {
         String name = "카카오123";
 
         //when
-        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, ()-> new Product(null,name,1234,null, 1L));
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, ()-> new Product(name,1234,null, 1L));
 
         //then
         assertThat(exception.getMessage()).isEqualTo("\"카카오\"가 포함된 문구는 담당 MD와 협의한 경우에만 사용할 수 있습니다.");

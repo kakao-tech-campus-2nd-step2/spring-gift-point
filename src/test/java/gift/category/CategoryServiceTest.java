@@ -59,7 +59,7 @@ class CategoryServiceTest {
         CategoryRequest request = categoryRequest();
 
         //when , then
-        assertThrows(NoSuchElementException.class, () -> categoryService.updateCategory(request));
+        assertThrows(NoSuchElementException.class, () -> categoryService.updateCategory(request, 1L));
     }
 
     @Test

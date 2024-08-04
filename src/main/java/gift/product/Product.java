@@ -55,9 +55,17 @@ public class Product {
 
     protected Product(){
     }
-    public Product(Long id, String name, int price, String imageUrl, Long categoryId){
+    public Product(String name, int price, String imageUrl, Long categoryId){
         isValidName(name);
+        this.name = name;
+        this.price = price;
+        this.imageUrl = imageUrl;
+        this.categoryId = categoryId;
+    }
+
+    public Product(Long id, String name, int price, String imageUrl, Long categoryId){
         this.id = id;
+        isValidName(name);
         this.name = name;
         this.price = price;
         this.imageUrl = imageUrl;
