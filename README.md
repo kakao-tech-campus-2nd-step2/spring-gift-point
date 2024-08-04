@@ -11,20 +11,17 @@ Fix: 포인트 데이터 누락 오류 수정 [박한솔]
 * 사용자 생성 시 포인트 데이터가 누락되는 문제 수정
 * 사용자 생성 시 Point 객체를 자동으로 생성하여 PointRepository에 저장
 * 포인트 데이터 초기화 로직 개선
-  
-Refactor: PointService 클래스 개선 [박한솔]
+  PointService 클래스 개선
 * 포인트 충전 및 사용 기능 개선
 * 불필요한 로직 제거 및 코드 정리
 * 포인트 충전 최소 금액 조건 추가 (10,000원 이상 충전 필요)
   
-Chore: OrderRequest에 포인트 사용 필드 추가 [박한솔]
-* OrderRequest 클래스에 포인트 사용 필드 (pointsToUse) 추가
-* 주문 생성 시 포인트 사용 및 적립 로직 추가
-  
-Refactor: KakaoService에서 포인트 사용 및 적립 로직 추가 [박한솔]
+Refactor: KakaoService에서 포인트 사용 및 적립 로직 추가 & Order 포인트 사용 기능 추가 [박한솔]
 * createOrder 메소드에서 포인트 사용 및 적립 기능 추가
 * 주문 시 포인트 차감 및 적립 처리
 * 잔여 포인트에 대한 로직 개선 및 테스트 추가
+* OrderRequest 클래스에 포인트 사용 필드 (pointsToUse) 추가
+* 주문 생성 시 포인트 사용 및 적립 로직 추가
 
 # step2
 - AWS ec2 배포 
