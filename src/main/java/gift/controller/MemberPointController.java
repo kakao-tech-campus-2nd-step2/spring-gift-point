@@ -1,10 +1,8 @@
 package gift.controller;
 
-import gift.domain.MemberDomain.MemberPoint;
 import gift.domain.MemberDomain.PointRequest;
 import gift.domain.MemberDomain.PointResponse;
 import gift.domain.MemberDomain.RemainPointResponse;
-import gift.domain.WishListDomain.WishListResponse;
 import gift.service.JwtService;
 import gift.service.MemberPointService;
 import io.jsonwebtoken.JwtException;
@@ -13,7 +11,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -22,6 +19,11 @@ import java.util.Map;
 public class MemberPointController {
     private MemberPointService memberPointService;
     private JwtService jwtService;
+
+    public MemberPointController(MemberPointService memberPointService, JwtService jwtService) {
+        this.memberPointService = memberPointService;
+        this.jwtService = jwtService;
+    }
 
     @GetMapping
     public ResponseEntity<PointResponse> getMemberPoint(){
