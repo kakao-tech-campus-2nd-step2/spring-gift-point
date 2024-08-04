@@ -50,7 +50,8 @@ public class OrderService {
         // 주문 생성 및 저장
         OrderResponseDto orderResponseDto = createOrder(member.getId(), orderRequestDto, finalPrice);
         // 포인트 적립
-        member.addPoints(product.price(), orderResponseDto.quantity());
+        int amount = (int) Math.round(product.price() * orderResponseDto.quantity() * 0.01);
+        member.addPoints(amount);
 
         // 위시리스트 삭제 & 주문 메시지 발송
         OrderEvent orderEvent = new OrderEvent(orderResponseDto.id(), member, product.id());

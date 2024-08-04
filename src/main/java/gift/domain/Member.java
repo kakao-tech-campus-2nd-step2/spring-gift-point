@@ -71,11 +71,11 @@ public class Member {
         return points;
     }
 
-    public void addPoints(int price, int quantity) {
+    public void addPoints(int amount) {
         if (this.points == null) {
             this.points = 0;
         }
-        this.points += (int) Math.round(price * quantity * 0.01);
+        this.points += amount;
     }
 
     public void subtractPoints(int amount) {
