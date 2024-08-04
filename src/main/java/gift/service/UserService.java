@@ -2,11 +2,11 @@ package gift.service;
 
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import gift.entity.kakao.KakaoErrorCode;
-import gift.entity.kakao.KakaoProperties;
-import gift.entity.user.User;
-import gift.entity.user.UserDTO;
-import gift.entity.user.UserPointChargeRequest;
+import gift.model.kakao.KakaoErrorCode;
+import gift.model.kakao.KakaoProperties;
+import gift.model.user.User;
+import gift.model.user.UserDTO;
+import gift.model.user.UserPointChargeRequest;
 import gift.exception.KakaoException;
 import gift.exception.ResourceNotFoundException;
 import gift.repository.UserRepository;

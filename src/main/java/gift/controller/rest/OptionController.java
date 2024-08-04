@@ -1,8 +1,8 @@
 package gift.controller.rest;
 
-import gift.entity.option.Option;
-import gift.entity.option.OptionDTO;
-import gift.entity.response.MessageResponseDTO;
+import gift.model.option.Option;
+import gift.model.option.OptionDTO;
+import gift.model.response.MessageResponseDTO;
 import gift.service.OptionService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;

@@ -1,7 +1,7 @@
 package gift.repository;
 
-import gift.entity.user.User;
-import gift.entity.user.UserDTO;
+import gift.model.user.User;
+import gift.model.user.UserDTO;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

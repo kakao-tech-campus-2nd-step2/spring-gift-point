@@ -1,8 +1,8 @@
 package gift.repository;
 
-import gift.entity.middle.ProductWishlist;
-import gift.entity.product.Product;
-import gift.entity.wishlist.Wishlist;
+import gift.model.middle.ProductWishlist;
+import gift.model.product.Product;
+import gift.model.wishlist.Wishlist;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

@@ -1,11 +1,11 @@
 package gift.service;
 
-import gift.entity.category.Category;
-import gift.entity.category.CategoryRequest;
-import gift.entity.option.OptionDTO;
-import gift.entity.product.Product;
-import gift.entity.product.ProductDTO;
-import gift.entity.user.UserDTO;
+import gift.model.category.Category;
+import gift.model.category.CategoryRequest;
+import gift.model.option.OptionDTO;
+import gift.model.product.Product;
+import gift.model.product.ProductDTO;
+import gift.model.user.UserDTO;
 import gift.exception.ResourceNotFoundException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;

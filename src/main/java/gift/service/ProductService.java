@@ -1,24 +1,22 @@
 package gift.service;
 
-import gift.entity.category.Category;
-import gift.entity.middle.ProductOption;
-import gift.entity.middle.ProductWishlist;
-import gift.entity.option.Option;
-import gift.entity.option.OptionDTO;
-import gift.entity.product.Product;
-import gift.entity.product.ProductDTO;
-import gift.entity.product.ProductResponse;
-import gift.entity.user.User;
-import gift.entity.wishlist.Wishlist;
+import gift.model.category.Category;
+import gift.model.middle.ProductOption;
+import gift.model.middle.ProductWishlist;
+import gift.model.option.Option;
+import gift.model.option.OptionDTO;
+import gift.model.product.Product;
+import gift.model.product.ProductDTO;
+import gift.model.product.ProductResponse;
+import gift.model.user.User;
+import gift.model.wishlist.Wishlist;
 import gift.exception.ResourceNotFoundException;
 import gift.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.util.ArrayList;
 import java.util.List;

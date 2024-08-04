@@ -1,6 +1,6 @@
 package gift.repository;
 
-import gift.entity.middle.ProductOption;
+import gift.model.middle.ProductOption;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;

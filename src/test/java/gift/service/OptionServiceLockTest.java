@@ -1,7 +1,7 @@
 package gift.service;
 
-import gift.entity.option.Option;
-import gift.entity.option.OptionDTO;
+import gift.model.option.Option;
+import gift.model.option.OptionDTO;
 import gift.repository.OptionRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

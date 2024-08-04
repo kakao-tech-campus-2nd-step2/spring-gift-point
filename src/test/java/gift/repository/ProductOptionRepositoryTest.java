@@ -1,10 +1,10 @@
 package gift.repository;
 
-import gift.entity.middle.ProductOption;
-import gift.entity.option.Option;
-import gift.entity.option.OptionDTO;
-import gift.entity.product.Product;
-import gift.entity.product.ProductDTO;
+import gift.model.middle.ProductOption;
+import gift.model.option.Option;
+import gift.model.option.OptionDTO;
+import gift.model.product.Product;
+import gift.model.product.ProductDTO;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -1,12 +1,12 @@
 package gift.service;
 
-import gift.entity.option.Option;
-import gift.entity.option.OptionDTO;
-import gift.entity.order.OrderDTO;
-import gift.entity.product.Product;
-import gift.entity.product.ProductDTO;
-import gift.entity.user.User;
-import gift.entity.user.UserDTO;
+import gift.model.option.Option;
+import gift.model.option.OptionDTO;
+import gift.model.order.OrderDTO;
+import gift.model.product.Product;
+import gift.model.product.ProductDTO;
+import gift.model.user.User;
+import gift.model.user.UserDTO;
 import jakarta.servlet.http.HttpSession;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

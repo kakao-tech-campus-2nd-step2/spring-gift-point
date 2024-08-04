@@ -1,11 +1,11 @@
 package gift.controller.rest;
 
-import gift.entity.option.Option;
-import gift.entity.option.OptionDTO;
-import gift.entity.product.Product;
-import gift.entity.product.ProductDTO;
-import gift.entity.product.ProductResponse;
-import gift.entity.response.MessageResponseDTO;
+import gift.model.option.Option;
+import gift.model.option.OptionDTO;
+import gift.model.product.Product;
+import gift.model.product.ProductDTO;
+import gift.model.product.ProductResponse;
+import gift.model.response.MessageResponseDTO;
 import gift.service.ProductService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;

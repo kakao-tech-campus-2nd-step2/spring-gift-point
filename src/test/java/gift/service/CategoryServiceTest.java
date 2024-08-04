@@ -1,7 +1,7 @@
 package gift.service;
 
-import gift.entity.category.Category;
-import gift.entity.category.CategoryRequest;
+import gift.model.category.Category;
+import gift.model.category.CategoryRequest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

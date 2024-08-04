@@ -1,7 +1,7 @@
 package gift.controller.rest;
 
-import gift.entity.response.MessageResponseDTO;
-import gift.entity.user.*;
+import gift.model.response.MessageResponseDTO;
+import gift.model.user.*;
 import gift.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;

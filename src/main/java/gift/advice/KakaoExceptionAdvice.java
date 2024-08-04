@@ -1,6 +1,6 @@
 package gift.advice;
 
-import gift.entity.response.MessageResponseDTO;
+import gift.model.response.MessageResponseDTO;
 import gift.exception.KakaoException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;

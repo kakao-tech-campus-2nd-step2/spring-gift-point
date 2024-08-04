@@ -1,8 +1,8 @@
 package gift.service;
 
-import gift.entity.option.Option;
-import gift.entity.option.OptionDTO;
-import gift.entity.user.User;
+import gift.model.option.Option;
+import gift.model.option.OptionDTO;
+import gift.model.user.User;
 import gift.exception.ResourceNotFoundException;
 import gift.repository.OptionRepository;
 import gift.repository.UserRepository;
