@@ -33,6 +33,16 @@ public class PointController {
         this.jwtUtil = jwtUtil;
     }
 
+    @GetMapping
+    public ResponseEntity<?> getPointById(@RequestHeader("Authorization") String token ) {
+        Claims claims = jwtUtil.extractClaims(token.replace("Bearer ", ""));
+        Long memberId = Long.parseLong(claims.getSubject());
+        Long point = memberService.getMemberById(memberId).getPoint();
+        Map<String, Object> response = new HashMap<>();
+        response.put("point", point);
+
+        return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
 
     @PostMapping("/add")
     public ResponseEntity<?> addPoint(@RequestBody PointRequest pointRequest) {
