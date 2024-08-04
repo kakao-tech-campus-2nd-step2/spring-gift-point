@@ -89,11 +89,11 @@ public class ProductController {
         }
     }
 
-    @PostMapping("/delete-batch")
-    public ResponseEntity<?> deleteBatch(@RequestBody Map<String, List<Long>> request) {
+    @DeleteMapping("/delete-batch")
+    public ResponseEntity<?> deleteBatch(@RequestBody List<Long> ids) {
         try {
-            productService.deleteBatch(request.get("ids"));
-            return ResponseEntity.ok("Success");
+            productService.deleteBatch(ids);
+            return ResponseEntity.ok("Batch delete successful");
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
