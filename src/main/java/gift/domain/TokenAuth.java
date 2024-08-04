@@ -10,21 +10,28 @@ public class TokenAuth {
     private Long id;
 
     @Column(nullable = false)
-    private String token;
+    private String accessToken;
+
+    private String refreshToken;
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id", nullable = false)
     private Member member;
 
-    public TokenAuth(String token, Member member) {
-        this.token = token;
-        setMember(member);
+    public TokenAuth(String accessToken, Member member) {
+        this(accessToken, null, member);
     }
 
     public TokenAuth() { }
 
-    public String getToken() {
-        return token;
+    public TokenAuth(String accessToken, String refreshToken, Member member) {
+        this.accessToken = accessToken;
+        this.refreshToken = refreshToken;
+        setMember(member);
+    }
+
+    public String getAccessToken() {
+        return accessToken;
     }
 
     public Member getMember() {
@@ -42,12 +49,20 @@ public class TokenAuth {
         }
     }
 
-    public void setToken(String token) {
-        this.token = token;
+    public void setAccessToken(String accessToken) {
+        this.accessToken = accessToken;
     }
 
     public Long getMemberId(){
         return member.getId();
+    }
+
+    public void setRefreshToken(String refreshToken) {
+        this.refreshToken = refreshToken;
+    }
+
+    public String getRefreshToken() {
+        return refreshToken;
     }
 
     @PreRemove

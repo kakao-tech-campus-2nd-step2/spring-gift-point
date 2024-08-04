@@ -33,7 +33,7 @@ public class WishlistController {
     @Operation(summary = "위시리스트 추가 화면", description = "위시리스트 추가 화면으로 이동한다.")
     public String newWishlistItemForm(Model model, @Parameter(hidden = true) @LoginMember TokenAuth tokenAuth) {
         model.addAttribute("wishlistItem", new WishlistRequest());
-        model.addAttribute("token", tokenAuth.getToken());
+        model.addAttribute("token", tokenAuth.getAccessToken());
         return "wishlist-add-form";
     }
 

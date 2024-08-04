@@ -29,7 +29,7 @@ public class TokenSpringDataJpaRepositoryTest {
         TokenAuth token = new TokenAuth("test-token", member);
         tokenRepository.save(token);
 
-        Optional<TokenAuth> foundToken = tokenRepository.findByToken("test-token");
+        Optional<TokenAuth> foundToken = tokenRepository.findByAccessToken("test-token");
         assertThat(foundToken).isPresent();
         assertThat(foundToken.get().getMember().getEmail()).isEqualTo("test@example.com");
     }
@@ -44,7 +44,7 @@ public class TokenSpringDataJpaRepositoryTest {
         tokenRepository.save(token);
         tokenRepository.save(token);
 
-        Optional<TokenAuth> foundToken = tokenRepository.findByToken("test-token");
+        Optional<TokenAuth> foundToken = tokenRepository.findByAccessToken("test-token");
         assertThat(foundToken).isPresent();
         assertThat(foundToken.get().getMember().getEmail()).isEqualTo("test@example.com");
     }
@@ -59,7 +59,7 @@ public class TokenSpringDataJpaRepositoryTest {
 
         tokenRepository.delete(token);
 
-        Optional<TokenAuth> foundToken = tokenRepository.findByToken("test-token");
+        Optional<TokenAuth> foundToken = tokenRepository.findByAccessToken("test-token");
         assertThat(foundToken).isNotPresent();
     }
 }

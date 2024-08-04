@@ -7,13 +7,10 @@ import gift.domain.WishlistItem;
 import gift.repository.category.CategorySpringDataJpaRepository;
 import gift.repository.member.MemberSpringDataJpaRepository;
 import gift.repository.product.ProductSpringDataJpaRepository;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
-import org.springframework.test.annotation.Rollback;
 
 import java.util.List;
 

@@ -2,18 +2,18 @@ package gift.dto.response;
 
 public class TokenResponse {
     private String email;
-    private String token;
+    private String accessToken;
 
-    public TokenResponse(String email, String token) {
+    public TokenResponse(String email, String accessToken) {
         this.email = email;
-        this.token = token;
+        this.accessToken = accessToken;
     }
 
     public String getEmail() {
         return email;
     }
 
-    public String getToken() {
-        return token;
+    public String getAccessToken() {
+        return accessToken;
     }
 }

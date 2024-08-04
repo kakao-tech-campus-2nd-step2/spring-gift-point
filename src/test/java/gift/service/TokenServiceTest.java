@@ -3,8 +3,6 @@ package gift.service;
 import gift.domain.Member;
 import gift.domain.TokenAuth;
 import gift.repository.token.TokenSpringDataJpaRepository;
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jwts;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -12,7 +10,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.nio.charset.StandardCharsets;
 import java.util.Optional;
 
 import static gift.domain.LoginType.NORMAL;
@@ -54,26 +51,15 @@ public class TokenServiceTest {
         String token = tokenService.saveToken(member);
 
         TokenAuth tokenAuth = new TokenAuth(token, member);
-        assertNotNull(tokenAuth.getToken());
+        assertNotNull(tokenAuth.getAccessToken());
 
-        when(tokenRepository.findByToken(token)).thenReturn(Optional.of(tokenAuth));
+        when(tokenRepository.findByAccessToken(token)).thenReturn(Optional.of(tokenAuth));
 
-        TokenAuth foundToken = tokenService.findToken(token);
+        TokenAuth foundToken = tokenService.findTokenByAccessToken(token);
 
         assertNotNull(foundToken);
         assertEquals(EMAIL, foundToken.getMember().getEmail());
     }
-
-//    @Test
-//    public void testGetMemberIdFromToken() {
-//        Member member = new Member(EMAIL, "password");
-//        member.setId(MEMBER_ID);
-//        String token = tokenService.saveToken(member);
-//
-//        String memberId = tokenService.getMemberIdFromToken(token);
-//
-//        assertEquals(MEMBER_ID.toString(), memberId);
-//    }
 
 }
 

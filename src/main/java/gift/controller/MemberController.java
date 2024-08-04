@@ -30,7 +30,7 @@ public class MemberController {
     public ResponseEntity<TokenResponse> register(@Valid @RequestBody MemberRequest memberRequest) {
         TokenResponse responseBody = memberService.handleNormalRegister(memberRequest);
         return ResponseEntity.ok()
-                .header("Authorization", "Bearer " + responseBody.getToken())
+                .header("Authorization", "Bearer " + responseBody.getAccessToken())
                 .body(responseBody);
     }
 
@@ -39,7 +39,7 @@ public class MemberController {
     public ResponseEntity<TokenResponse> login(@Valid @RequestBody MemberRequest memberRequest) {
         TokenResponse responseBody = memberService.handleNormalAuthenticate(memberRequest);
         return ResponseEntity.ok()
-                .header("Authorization", "Bearer " + responseBody.getToken())
+                .header("Authorization", "Bearer " + responseBody.getAccessToken())
                 .body(responseBody);
     }
 

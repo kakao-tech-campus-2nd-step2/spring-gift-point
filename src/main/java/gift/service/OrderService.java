@@ -85,7 +85,7 @@ public class OrderService {
         orderRepository.save(order);
 
         if (LoginType.KAKAO.equals(member.getLoginType())){
-            kakaoMessageService.sendOrderMessage(tokenAuth.getToken(), order);
+            kakaoMessageService.sendOrderMessage(tokenAuth.getAccessToken(), order);
         }
 
         int earnedPoints = (int) (orderPrice * POINT_EARNING_RATE);

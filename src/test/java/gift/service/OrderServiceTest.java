@@ -11,14 +11,11 @@ import gift.repository.member.MemberSpringDataJpaRepository;
 import gift.repository.order.OrderSpringDataJpaRepository;
 import gift.repository.product.ProductSpringDataJpaRepository;
 import gift.repository.wishlist.WishlistSpringDataJpaRepository;
-import gift.service.KakaoMessageService;
-import gift.service.OptionService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.mockito.stubbing.OngoingStubbing;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
@@ -141,7 +138,7 @@ public class OrderServiceTest {
 
         TokenAuth mockTokenAuth = mock(TokenAuth.class);
         when(mockTokenAuth.getMember()).thenReturn(mockMember);
-        when(mockTokenAuth.getToken()).thenReturn(kakaoToken);
+        when(mockTokenAuth.getAccessToken()).thenReturn(kakaoToken);
 
         OrderResponse orderResponse = orderService.createOrder(mockTokenAuth, mockOrderRequest);
 
