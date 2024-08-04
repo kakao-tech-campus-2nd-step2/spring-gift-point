@@ -35,9 +35,9 @@ public class WishlistServiceTest {
     void setUp() {
         testEmail = "test@gmail.com";
         userService.signup(new UserDTO(testEmail, "test"));
-        product1 = productService.save(new ProductDTO("test1", 123, "test.com", 1L), testEmail);
-        product2 = productService.save(new ProductDTO("test2", 123, "test.com", 1L), testEmail);
-        product3 = productService.save(new ProductDTO("test3", 123, "test.com", 1L), testEmail);
+        product1 = productService.save(new ProductDTO("test1", 123, "test.com", -1L), testEmail);
+        product2 = productService.save(new ProductDTO("test2", 123, "test.com", -1L), testEmail);
+        product3 = productService.save(new ProductDTO("test3", 123, "test.com", -1L), testEmail);
     }
 
     @Test

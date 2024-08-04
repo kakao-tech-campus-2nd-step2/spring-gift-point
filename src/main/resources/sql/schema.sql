@@ -33,8 +33,8 @@ create table category
     description varchar(255)
 );
 -- category default data
-INSERT INTO category (name, color, image_url, description)
-VALUES ('DefaultCategory', '#FFFFFF', '', '');
+INSERT INTO category (id, name, color, image_url, description)
+VALUES (-1, 'DefaultCategory', '#FFFFFF', '', '');
 
 -- wishlist
 drop table if exists wishlist CASCADE;
@@ -81,8 +81,7 @@ create table option
     FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE
 );
 -- option default data
-INSERT INTO option (name, quantity)
-VALUES ('DefaultOption', 1);
+INSERT INTO option (id, name, quantity) VALUES (-1, 'DefaultOption', 1);
 
 -- product_option(중간 테이블)
 drop table if exists product_option CASCADE;

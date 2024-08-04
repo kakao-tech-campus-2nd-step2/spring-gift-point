@@ -37,7 +37,7 @@ public class ProductServiceTest {
     void productDeleteCascadeWishlistTest() {
         // given
         userService.signup(new UserDTO(testEmail, "test"));
-        Product product = productService.save(new ProductDTO("test", 123, "test.com", 1L), testEmail);
+        Product product = productService.save(new ProductDTO("test", 123, "test.com", -1L), testEmail);
         wishlistService.addWishlistProduct(testEmail, product.getId());
 
         // when
@@ -56,7 +56,7 @@ public class ProductServiceTest {
 
         Category category = categoryService.save(new CategoryRequest("test", "#test", "", ""));
 
-        productService.save(new ProductDTO("test1", 111, "test1.com", 1L), testEmail);
+        productService.save(new ProductDTO("test1", 111, "test1.com", -1L), testEmail);
         productService.save(new ProductDTO("test2", 222, "test2.com", category.getId()), testEmail);
         productService.save(new ProductDTO("test3", 333, "test3.com", category.getId()), testEmail);
 

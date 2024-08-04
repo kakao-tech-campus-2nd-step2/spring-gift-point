@@ -50,7 +50,7 @@ public class OrderServiceIntegrationTest {
         when(session.getAttribute("email")).thenReturn(testEmail);
 
         // 상품
-        product = productService.save(new ProductDTO("test1", 123, "test.com", 1L), testEmail);
+        product = productService.save(new ProductDTO("test1", 123, "test.com", -1L), testEmail);
 
         // 상품에 옵션 추가
         options = productService.addProductOption(product.getId(), List.of(new OptionDTO("abc", 100)), testEmail);

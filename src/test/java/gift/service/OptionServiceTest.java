@@ -129,7 +129,7 @@ public class OptionServiceTest {
     @Test
     void 같은_이름의_option이_product에_있을_때() {
         // given
-        Product product = productService.save(new ProductDTO("test", 123, "test.com", 1L), email);
+        Product product = productService.save(new ProductDTO("test", 123, "test.com", -1L), email);
         OptionDTO optionDTO = new OptionDTO("abc", 456);
         OptionDTO sameNameOption = new OptionDTO("abc", 456);
 

@@ -62,6 +62,6 @@ public class CategoryServiceTest {
 
         // then
         Category expect = categoryService.findById(category.getId());
-        assertThat(expect.getId()).isEqualTo(1L);
+        assertThat(expect.getId()).isEqualTo(-1L);
     }
 }

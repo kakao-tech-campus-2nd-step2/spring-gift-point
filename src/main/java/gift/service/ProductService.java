@@ -83,8 +83,8 @@ public class ProductService {
         User user = userService.findOne(email);
 
         Product product = productRepository.save(new Product(productDTO, user));
-        Option defaultOption = optionRepository.findById(1L)
-                .orElseThrow(() -> new IllegalArgumentException("Option not found with id: 1L"));
+        Option defaultOption = optionRepository.findById(-1L)
+                .orElseThrow(() -> new IllegalArgumentException("Option not found with id: -1L"));
         categoryRepository.findById(productDTO.getCategory_id())
                 .orElseThrow(() -> new IllegalArgumentException("Category not found with id: " + productDTO.getCategory_id()));
 

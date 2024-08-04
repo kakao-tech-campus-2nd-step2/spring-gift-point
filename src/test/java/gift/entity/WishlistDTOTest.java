@@ -29,7 +29,7 @@ public class WishlistDTOTest {
 
     @BeforeEach
     void setUp() {
-        wishlist = new WishlistDTO(1L);
+        wishlist = new WishlistDTO(-1L);
     }
 
     @Test

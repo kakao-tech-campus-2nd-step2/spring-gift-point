@@ -37,7 +37,7 @@ public class ProductIdValidatorTest {
     void setUp() {
         email = "test@gmail.com";
         userService.signup(new UserDTO(email, "test"));
-        product = productService.save(new ProductDTO("abc", 123, "www.test.com", 1L), email);
+        product = productService.save(new ProductDTO("abc", 123, "www.test.com", -1L), email);
         wishlist = new WishlistDTO(product.getId());
     }
 
