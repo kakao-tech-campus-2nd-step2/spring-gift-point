@@ -32,6 +32,9 @@ public class Member {
     @OneToOne(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private TokenAuth tokenAuth;
 
+    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Order> orders = new ArrayList<>();
+
     public Member() {
     }
 
@@ -75,5 +78,9 @@ public class Member {
 
     public void setPoint(int point) {
         this.point = point;
+    }
+
+    public List<Order> getOrders() {
+        return orders;
     }
 }

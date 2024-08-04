@@ -43,12 +43,13 @@ public class Order {
     @Column(nullable = false)
     private boolean success;
 
-    @Column(nullable = false)
-    private Long memberId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "member_id", nullable = false)
+    private Member member;
 
     public Order() { }
 
-    public Order(Long optionId, Integer quantity, LocalDateTime orderDateTime, String message, Long productId, Integer point, String phone, Integer price, boolean receipt, boolean success, Long memberId) {
+    public Order(Long optionId, Integer quantity, LocalDateTime orderDateTime, String message, Long productId, Integer point, String phone, Integer price, boolean receipt, boolean success, Member member) {
         this.optionId = optionId;
         this.quantity = quantity;
         this.orderDateTime = orderDateTime;
@@ -59,7 +60,9 @@ public class Order {
         this.price = price;
         this.receipt = receipt;
         this.success = success;
-        this.memberId = memberId;
+        this.member = member;
+        member.getOrders().add(this);
+
     }
 
     public Long getId() {
@@ -106,11 +109,15 @@ public class Order {
         return success;
     }
 
-    public Long getMemberId() {
-        return memberId;
+    public Member getMember() {
+        return member;
     }
 
-    public static Order from(OrderRequest orderRequest, int price, boolean isSuccess, Long memberId) {
+    public Long getMemberId() {
+        return member.getId();
+    }
+
+    public static Order from(OrderRequest orderRequest, int price, boolean isSuccess, Member member) {
         return new Order(orderRequest.getOptionId(),
                 orderRequest.getQuantity(),
                 LocalDateTime.now(),
@@ -121,7 +128,7 @@ public class Order {
                 price,
                 orderRequest.isReceipt(),
                 isSuccess,
-                memberId);
+                member);
     }
 
 }

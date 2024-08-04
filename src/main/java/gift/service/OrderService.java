@@ -80,7 +80,7 @@ public class OrderService {
 
         wishlistRepository.deleteByMemberIdAndProductId(memberId, productId);
 
-        Order order = Order.from(orderRequest, orderPrice, true, memberId);
+        Order order = Order.from(orderRequest, orderPrice, true, member);
 
         orderRepository.save(order);
 
