@@ -18,7 +18,7 @@ public class PointEntity {
     @Column(name = "point")
     private Long point;
 
-    public static PointEntity from(Long userId, Long point) {
+    public static PointEntity of(Long userId, Long point) {
         return new PointEntity(userId, point);
     }
 

@@ -17,7 +17,7 @@ public class PointOperationSupportImpl implements PointOperationSupport {
     public void addPoint(Long userId, Long point) {
         PointEntity pointEntity = jpaPointRepository
                 .findById(userId)
-                .orElseGet(() -> PointEntity.from(userId, 0L));
+                .orElseGet(() -> PointEntity.of(userId, 0L));
         pointEntity.addPoint(point);
         jpaPointRepository.save(pointEntity);
     }
@@ -27,7 +27,7 @@ public class PointOperationSupportImpl implements PointOperationSupport {
     public void subtractPoint(Long userId, Long point) {
         PointEntity pointEntity = jpaPointRepository
                 .findById(userId)
-                .orElseGet(() -> PointEntity.from(userId, 0L));
+                .orElseGet(() -> PointEntity.of(userId, 0L));
         pointEntity.subtractPoint(point);
         jpaPointRepository.save(pointEntity);
     }
