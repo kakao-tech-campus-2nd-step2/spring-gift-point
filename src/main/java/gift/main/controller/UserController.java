@@ -1,5 +1,6 @@
 package gift.main.controller;
 
+import gift.main.annotation.SessionUser;
 import gift.main.dto.*;
 import gift.main.service.UserService;
 import jakarta.servlet.http.HttpServletResponse;
@@ -40,6 +41,14 @@ public class UserController {
 
     }
 
+    @GetMapping("/api/point")
+    public ResponseEntity<?> checkPoint(@SessionUser UserVo sessionUserVo) {
+        System.out.println("sessionUserVo = " + sessionUserVo);
+        PointRequest pointRequest = new PointRequest(userService.checkPoint(sessionUserVo));
+        return ResponseEntity.ok(pointRequest);
+
+    }
+
 
     @GetMapping("/api/admin/users")
     public ResponseEntity<?> getUserPage(@RequestParam(value = "page") int pageNum) {
@@ -51,7 +60,7 @@ public class UserController {
 
     @PutMapping("/api/admin/users/{member_id}/point")
     public ResponseEntity<?> addPoint(@PathVariable(name = "member_id") Long memberId,
-                                      @RequestBody PointResponse point) {
+                                      @RequestBody PointRequest point) {
         userService.addPoint(memberId, point);
         return ResponseEntity.ok("");
 

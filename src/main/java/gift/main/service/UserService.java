@@ -64,10 +64,17 @@ public class UserService {
     }
 
     @Transactional
-    public void addPoint(Long memberId, PointResponse point) {
+    public void addPoint(Long memberId, PointRequest point) {
         User user = userRepository.findById(memberId)
                 .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_USER));
 
-        user.updatePoint(point);
+        user.updatePoint(point.point());
+    }
+
+    public int checkPoint(UserVo sessionUserVo) {
+        User user = userRepository.findById(sessionUserVo.getId())
+                .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_USER));
+
+        return user.getPoint();
     }
 }

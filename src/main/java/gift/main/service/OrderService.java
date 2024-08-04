@@ -9,6 +9,7 @@ import gift.main.entity.Option;
 import gift.main.entity.Order;
 import gift.main.entity.Product;
 import gift.main.entity.User;
+import gift.main.handler.PointPolicy;
 import gift.main.repository.OptionRepository;
 import gift.main.repository.OrderRepository;
 import gift.main.repository.UserRepository;
@@ -40,6 +41,9 @@ public class OrderService {
         //구매자 찾기
         User buyer = userRepository.findByEmail(sessionUserVo.getEmail()).get();
 
+        //포인트 사용가능한지 검사
+        buyer.checkUsingPoint(orderRequest.usingPoint());
+
         //옵션찾기
         Option option = optionRepository.findById(orderRequest.optionId())
                 .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_OPTION));
@@ -49,6 +53,9 @@ public class OrderService {
 
         Order order = new Order(orderRequest, buyer, option, purchasedProduct);
         Order saveOrder = orderRepository.save(order);
+
+        //포인트 적립해주기
+        buyer.updatePoint(PointPolicy.calculatePoints(order));
 
         return new OrderResponse(saveOrder);
     }

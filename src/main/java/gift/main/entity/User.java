@@ -1,5 +1,7 @@
 package gift.main.entity;
 
+import gift.main.Exception.CustomException;
+import gift.main.Exception.ErrorCode;
 import gift.main.dto.PointResponse;
 import gift.main.dto.UserJoinRequest;
 import jakarta.persistence.*;
@@ -114,7 +116,13 @@ public class User {
         return Objects.hash(id);
     }
 
-    public void updatePoint(PointResponse point) {
-        this.point += point.point();
+    public void updatePoint(int point) {
+        this.point += point;
+    }
+
+    public void checkUsingPoint(int point) {
+        if (this.point < point) {
+            throw new CustomException(ErrorCode.NOT_ENOUGH_POINT);
+        }
     }
 }
