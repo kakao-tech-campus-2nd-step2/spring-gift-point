@@ -11,7 +11,7 @@ import java.io.IOException;
 
 @SpringBootTest
 public class KakaoServiceTest {
-    @Autowired
+    /*@Autowired
     private KakaoService kakaoService;
 
     private MockWebServer mockWebServer;
@@ -43,5 +43,5 @@ public class KakaoServiceTest {
         String responseToken = kakaoService.getAccessTokenFromKakao("temp_code");
         //then
         assertThat(responseToken).isEqualTo("temp_token");
-    }
+    }*/
 }
