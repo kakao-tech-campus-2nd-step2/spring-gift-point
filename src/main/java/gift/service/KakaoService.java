@@ -1,7 +1,6 @@
 package gift.service;
 
 
-
 import gift.dto.KakaoTokenDto;
 import gift.dto.MemberDto;
 import gift.dto.TokenResponse;
@@ -14,6 +13,7 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
@@ -39,7 +39,7 @@ public class KakaoService {
 
 
     @Autowired
-    public KakaoService(MemberService memberService,RestTemplate restTemplate, KakaoTokenService kakaoTokenService) {
+    public KakaoService(MemberService memberService, RestTemplate restTemplate, KakaoTokenService kakaoTokenService) {
         this.memberService = memberService;
         this.restTemplate = restTemplate;
         this.kakaoTokenService = kakaoTokenService;
@@ -99,15 +99,13 @@ public class KakaoService {
         String refreshToken = token.getRefreshToken();
         JSONObject userInfo = getUserInfo(accessToken);
 
-        String email= null;
+        String email = null;
         if (userInfo.has("kakao_account")) {
             JSONObject kakaoAccount = userInfo.getJSONObject("kakao_account");
             if (kakaoAccount.has("email")) {
                 email = kakaoAccount.getString("email");
             }
         }
-
-
         if (email == null) {
             throw new MemberNotFoundException("Email not found");
         }
@@ -118,19 +116,19 @@ public class KakaoService {
             KakaoTokenDto kakaoTokenDto = new KakaoTokenDto(email, accessToken, refreshToken);
             register(email, kakaoTokenDto);
         }
-
         return accessToken;
     }
 
-    public void register(String email, KakaoTokenDto kakaoTokenDto){
-        MemberDto memberDto = new MemberDto(email, email+"kakao");
+    @Transactional
+    public void register(String email, KakaoTokenDto kakaoTokenDto) {
+        MemberDto memberDto = new MemberDto(email, email + "kakao");
         memberService.registerMember(memberDto);
-        memberService.login(email, email+"kakao");
+        memberService.login(email, email + "kakao");
         kakaoTokenService.saveToken(kakaoTokenDto);
 
     }
 
-
+    @Transactional
     public void sendKakaoMessage(String accessToken, String message) {
         String url = "https://kapi.kakao.com/v2/api/talk/memo/default/send";
 

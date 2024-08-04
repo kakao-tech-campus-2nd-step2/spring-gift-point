@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
@@ -45,6 +46,7 @@ public class WishlistService {
         return wishlist.map(WishlistResponse::new);
     }
 
+    @Transactional
     public void deleteWishlistItem(String email, Long productId) {
         Long memberId = memberService.getMember(email).getId();
         Wishlist wish = wishlistRepository.findByMemberIdAndProductId(memberId, productId);
@@ -52,7 +54,9 @@ public class WishlistService {
             wishlistRepository.delete(wish);
         }
     }
+
     //WishlistNewController에서 사용
+    @Transactional
     public void deleteWishlistItemById(Long wishId) {
         Optional<Wishlist> wish = wishlistRepository.findById(wishId);
         if (wish.isPresent()) {
@@ -60,6 +64,7 @@ public class WishlistService {
         }
     }
 
+    @Transactional
     public void addWishlistItem(String email, Long productId) {
         Member member = memberService.getMember(email);
         Product product = productService.getProductById(productId);

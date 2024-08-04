@@ -1,12 +1,11 @@
 package gift.controller;
 
 import gift.dto.request.OrderRequest;
-import gift.service.*;
+import gift.service.OptionService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -21,7 +20,7 @@ public class OrderNewController {
         this.optionService = optionService;
     }
 
-    @Transactional
+
     @PostMapping
     @Operation(summary = "상품 주문", description = "상품을 주문")
     public ResponseEntity<Void> orderItem(@RequestBody OrderRequest request,
