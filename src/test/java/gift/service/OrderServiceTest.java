@@ -86,7 +86,7 @@ class OrderServiceTest {
 
         LoginRequestDTO loginRequestDTO = new LoginRequestDTO("test@email.com", "password");
         accessToken = memberService.loginMember(loginRequestDTO);
-        member = memberService.findMemberByEmail(loginRequestDTO.email());
+        member = memberService.getMemberByEmail(loginRequestDTO.email());
     }
 
     @Test

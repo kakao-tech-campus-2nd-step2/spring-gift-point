@@ -87,7 +87,7 @@ public class KakaoService {
         return member;
     }
 
-    public String generateToken(String email, String role) {
+    public String generateJwtToken(String email, String role) {
         String jwtToken = jwtUtil.generateToken(email, role);
         return jwtToken;
     }

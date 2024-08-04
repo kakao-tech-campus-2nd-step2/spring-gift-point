@@ -35,9 +35,9 @@ public class OptionController {
 
     @GetMapping
     @Operation(summary = "옵션 목록 조회", description = "해당 상품의 옵션들을 조회합니다.")
-    public ResponseEntity<List<OptionResponseDTO>> listOptions(@PathVariable Long productId) {
+    public ResponseEntity<List<OptionResponseDTO>> getAllOptions(@PathVariable Long productId) {
         try {
-            List<OptionResponseDTO> options = optionService.findALlByProductId(productId);
+            List<OptionResponseDTO> options = optionService.getAllOptionsByProductId(productId);
             return ResponseEntity.ok(options);
         } catch (Exception e) {
             throw new ServerErrorException("서버 오류가 발생했습니다.");
@@ -53,7 +53,7 @@ public class OptionController {
             throw new AuthorizationFailedException("인증되지 않은 사용자입니다.");
         }
         try {
-            OptionResponseDTO optionResponseDTO = optionService.saveOption(productId,
+            OptionResponseDTO optionResponseDTO = optionService.addOption(productId,
                 optionRequestDTO);
             return ResponseEntity.status(HttpStatus.CREATED).body(optionResponseDTO);
         } catch (Exception e) {

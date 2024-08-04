@@ -41,7 +41,7 @@ public class KakaoLoginController {
             String accessToken = kakaoService.getAccessToken(authorizationCode);
             String email = kakaoService.getUserEmail(accessToken);
             Member member = kakaoService.saveKakaoUser(email);
-            String jwtToken = kakaoService.generateToken(member.getEmail(), member.getRole());
+            String jwtToken = kakaoService.generateJwtToken(member.getEmail(), member.getRole());
             redirectAttributes.addFlashAttribute("accessToken", accessToken);
             redirectAttributes.addFlashAttribute("email", email);
             redirectAttributes.addFlashAttribute("jwtToken", jwtToken);

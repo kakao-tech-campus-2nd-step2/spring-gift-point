@@ -53,7 +53,7 @@ public class WishlistController {
 
     @GetMapping
     @Operation(summary = "위시리스트 조회", description = "위시리스트 목록을 조회합니다.")
-    public ResponseEntity<WishlistPageResponseDTO> getWishlist(
+    public ResponseEntity<WishlistPageResponseDTO> getAllWishlist(
         @Valid PageRequestDTO pageRequestDTO, @LoginMember Member member
     ) {
         if (member == null) {
@@ -61,7 +61,7 @@ public class WishlistController {
         }
         try {
             Pageable pageable = PageRequest.of(pageRequestDTO.page(), pageRequestDTO.size(), Sort.by(pageRequestDTO.sort()));
-            WishlistPageResponseDTO wishlistPageResponseDTO = wishlistService.getWishlists(member.getEmail(), pageable);
+            WishlistPageResponseDTO wishlistPageResponseDTO = wishlistService.getWishlistsByEmail(member.getEmail(), pageable);
             return ResponseEntity.ok(wishlistPageResponseDTO);
         } catch (Exception e) {
             throw new ServerErrorException("서버 오류가 발생했습니다.");

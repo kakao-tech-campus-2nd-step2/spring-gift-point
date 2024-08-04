@@ -33,25 +33,25 @@ public class CategoryService {
         this.optionRepository = optionRepository;
     }
 
-    public List<CategoryResponseDTO> findAllCategories() {
+    public List<CategoryResponseDTO> getAllCategories() {
         return categoryRepository.findAll().stream()
             .map(category -> toDTO(category))
             .toList();
     }
 
-    public CategoryResponseDTO findCategoryById(Long id) {
+    public CategoryResponseDTO getCategoryById(Long id) {
         Category category = categoryRepository.findById(id)
             .orElseThrow(() -> new NotFoundException("카테고리를 찾을 수 없습니다."));
         return toDTO(category);
     }
 
-    public CategoryResponseDTO findCategoryByName(String name) {
+    public CategoryResponseDTO getCategoryByName(String name) {
         Category category = categoryRepository.findByName(name);
         return toDTO(category);
     }
 
     @Transactional
-    public CategoryResponseDTO saveCategory(CategoryRequestDTO categoryRequestDTO) {
+    public CategoryResponseDTO addCategory(CategoryRequestDTO categoryRequestDTO) {
         if (categoryRepository.findByName(categoryRequestDTO.name()) != null) {
             throw new InvalidInputValueException("중복된 카테고리 이름입니다.");
         }

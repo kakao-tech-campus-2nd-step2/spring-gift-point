@@ -55,11 +55,11 @@ class MemberServiceTest {
     }
 
     @Test
-    void testFindMemberByEmail() {
+    void testGetMemberByEmail() {
         Member member = new Member(null, "kbm@kbm.com", "kbm", "user");
         memberRepository.save(member);
 
-        Member foundMember = memberService.findMemberByEmail("kbm@kbm.com");
+        Member foundMember = memberService.getMemberByEmail("kbm@kbm.com");
 
         assertAll(
             () -> assertNotNull(foundMember),

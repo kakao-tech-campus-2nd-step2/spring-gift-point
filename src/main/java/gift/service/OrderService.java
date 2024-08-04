@@ -35,12 +35,12 @@ public class OrderService {
 
     @Transactional
     public OrderResponseDTO createOrder(OrderRequestDTO orderRequestDTO, String email) {
-        OptionResponseDTO optionResponseDTO = optionService.findOptionById(
+        OptionResponseDTO optionResponseDTO = optionService.getOptionById(
             orderRequestDTO.optionId());
         if (optionResponseDTO == null) {
             throw new NotFoundException("존재하지 않는 옵션입니다.");
         }
-        Member member = memberService.findMemberByEmail(email);
+        Member member = memberService.getMemberByEmail(email);
         if (member == null) {
             throw new InvalidInputValueException("유효하지 않은 이메일입니다.");
         }

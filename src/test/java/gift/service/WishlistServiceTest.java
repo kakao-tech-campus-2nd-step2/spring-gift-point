@@ -75,10 +75,10 @@ class WishlistServiceTest {
     }
 
     @Test
-    void testGetWishlists() {
+    void testGetWishlistsByEmail() {
         wishlist = new Wishlist(null, member, option);
         wishlistRepository.save(wishlist);
-        WishlistPageResponseDTO wishlists = wishlistService.getWishlists(member.getEmail(),
+        WishlistPageResponseDTO wishlists = wishlistService.getWishlistsByEmail(member.getEmail(),
             pageable);
         assertAll(
             () -> assertEquals(1, wishlists.wishlists().getTotalElements()),

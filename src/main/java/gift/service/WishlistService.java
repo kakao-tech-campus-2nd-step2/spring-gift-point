@@ -32,7 +32,7 @@ public class WishlistService {
         this.optionRepository = optionRepository;
     }
 
-    public WishlistPageResponseDTO getWishlists(String email, Pageable pageable) {
+    public WishlistPageResponseDTO getWishlistsByEmail(String email, Pageable pageable) {
         Member member = memberRepository.findByEmail(email);
         if (member == null) {
             throw new InvalidInputValueException("유효하지 않은 이메일입니다.");

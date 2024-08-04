@@ -61,15 +61,15 @@ class ProductServiceTest {
     }
 
     @Test
-    void testFindAllProducts() {
-        ProductPageResponseDTO products = productService.findAllProducts(pageable);
+    void testGetAllProducts() {
+        ProductPageResponseDTO products = productService.getAllProducts(pageable);
         assertEquals(2, products.products().getContent().size());
     }
 
     @Test
     void testFindProductsById() {
         Long productId = product1.getId();
-        ProductGetResponseDTO product = productService.findProductById(productId);
+        ProductGetResponseDTO product = productService.getProductById(productId);
         assertAll(
             () -> assertNotNull(product),
             () -> assertEquals(productId, product.id())
@@ -78,11 +78,11 @@ class ProductServiceTest {
 
     @Test
     @Transactional
-    void testSaveProduct() {
+    void testAddProduct() {
         List<OptionRequestDTO> options = List.of(new OptionRequestDTO("옵션", 10L));
         ProductAddRequestDTO productDTO = new ProductAddRequestDTO("상품3", "100", "https://kakao",
             savedCategory.getId(), options);
-        productService.saveProduct(productDTO);
+        productService.addProduct(productDTO);
         List<Product> savedProducts = productRepository.findAll();
         assertAll(
             () -> assertEquals(3, savedProducts.size()),

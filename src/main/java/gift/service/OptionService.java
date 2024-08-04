@@ -24,7 +24,7 @@ public class OptionService {
         this.productRepository = productRepository;
     }
 
-    public List<OptionResponseDTO> findALlByProductId(Long productId) {
+    public List<OptionResponseDTO> getAllOptionsByProductId(Long productId) {
         List<Option> options = optionRepository.findAllByProductId(productId);
         if (options.isEmpty()) {
             throw new NotFoundException("옵션을 찾을 수 없습니다.");
@@ -33,13 +33,13 @@ public class OptionService {
             .map(this::toDTO).toList();
     }
 
-    public OptionResponseDTO findOptionById(Long optionId) {
+    public OptionResponseDTO getOptionById(Long optionId) {
         Option option = optionRepository.findById(optionId).orElseThrow(() -> new NotFoundException("옵션을 찾을 수 없습니다."));
         return toDTO(option);
     }
 
     @Transactional
-    public OptionResponseDTO saveOption(Long productId, OptionRequestDTO optionRequestDTO) {
+    public OptionResponseDTO addOption(Long productId, OptionRequestDTO optionRequestDTO) {
         Product product = productRepository.findById(productId).orElseThrow(() -> new NotFoundException("상품을 찾을 수 없습니다."));
         if (optionRepository.existsByProductIdAndName(productId, optionRequestDTO.name())) {
             throw new InvalidInputValueException("동일한 상품 내의 옵션 이름은 중복될 수 없습니다.");

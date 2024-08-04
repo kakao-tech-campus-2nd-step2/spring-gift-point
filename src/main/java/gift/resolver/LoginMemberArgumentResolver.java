@@ -55,6 +55,6 @@ public class LoginMemberArgumentResolver implements HandlerMethodArgumentResolve
 
     private Member getMemberFromToken(String token) {
         String email = jwtUtil.getSubject(token);
-        return memberService.findMemberByEmail(email);
+        return memberService.getMemberByEmail(email);
     }
 }

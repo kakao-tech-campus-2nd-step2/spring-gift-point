@@ -43,7 +43,7 @@ public class MemberService {
         return jwtUtil.generateToken(member.getEmail(), member.getPassword());
     }
 
-    public Member findMemberByEmail(String email) {
+    public Member getMemberByEmail(String email) {
         return memberRepository.findByEmail(email);
     }
 }

@@ -41,10 +41,10 @@ public class AdminController {
 
     @GetMapping
     @Operation(summary = "상품 목록 얻기", description = "모든 상품을 페이지로 조회합니다.")
-    public String getProducts(Model model, @Valid PageRequestDTO pageRequestDTO) {
+    public String getAllProducts(Model model, @Valid PageRequestDTO pageRequestDTO) {
         try {
             Pageable pageable = PageRequest.of(pageRequestDTO.page(), pageRequestDTO.size(), Sort.by(pageRequestDTO.sort()));
-            ProductPageResponseDTO productPageResponseDTO = productService.findAllProducts(pageable);
+            ProductPageResponseDTO productPageResponseDTO = productService.getAllProducts(pageable);
             model.addAttribute("products", productPageResponseDTO);
             return "product_list";
         } catch (Exception e) {
@@ -56,7 +56,7 @@ public class AdminController {
     @Operation(summary = "상품 추가 폼 보기", description = "상품을 추가할 수 있는 폼으로 이동합니다.")
     public String showAddProductForm(Model model) {
         model.addAttribute("productDTO", new ProductAddRequestDTO("", "0", "", null, null));
-        model.addAttribute("categories", categoryService.findAllCategories());
+        model.addAttribute("categories", categoryService.getAllCategories());
         return "add_product_form";
     }
 
@@ -66,11 +66,11 @@ public class AdminController {
         BindingResult result, Model model) {
         if (result.hasErrors()) {
             model.addAttribute("productDTO", productAddRequestDTO);
-            model.addAttribute("categories", categoryService.findAllCategories());
+            model.addAttribute("categories", categoryService.getAllCategories());
             return "add_product_form";
         }
         try {
-            productService.saveProduct(productAddRequestDTO);
+            productService.addProduct(productAddRequestDTO);
             return "redirect:/admin/products";
         } catch (Exception e) {
             throw new InvalidInputValueException("잘못된 값이 입력되었습니다.");
@@ -79,22 +79,22 @@ public class AdminController {
 
     @GetMapping("/{id}")
     @Operation(summary = "상품 수정 폼 보기", description = "상품을 수정할 수 있는 폼으로 이동합니다.")
-    public String showEditProductForm(@PathVariable("id") long id, Model model) {
-        ProductGetResponseDTO product = productService.findProductById(id);
+    public String showUpdateProductForm(@PathVariable("id") long id, Model model) {
+        ProductGetResponseDTO product = productService.getProductById(id);
         model.addAttribute("productDTO", product);
         model.addAttribute("productID", id);
-        model.addAttribute("categories", categoryService.findAllCategories());
+        model.addAttribute("categories", categoryService.getAllCategories());
         return "edit_product_form";
     }
 
     @PutMapping("/{id}")
     @Operation(summary = "상품 수정", description = "상품을 수정합니다.")
-    public String editProduct(@PathVariable("id") long id,
+    public String updateProduct(@PathVariable("id") long id,
         @ModelAttribute @Valid ProductUpdateRequestDTO productUpdateRequestDTO,
         BindingResult result, Model model) {
         if (result.hasErrors()) {
             model.addAttribute("productID", id);
-            model.addAttribute("categories", categoryService.findAllCategories());
+            model.addAttribute("categories", categoryService.getAllCategories());
             return "edit_product_form";
         }
         try {

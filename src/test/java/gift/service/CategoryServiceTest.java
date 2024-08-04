@@ -50,8 +50,8 @@ class CategoryServiceTest {
     }
 
     @Test
-    void testFindAllCategories() {
-        List<CategoryResponseDTO> categories = categoryService.findAllCategories();
+    void testGetAllCategories() {
+        List<CategoryResponseDTO> categories = categoryService.getAllCategories();
         assertAll(
             () -> assertFalse(categories.isEmpty()),
             () -> assertEquals("테스트", categories.get(2).name())
@@ -59,8 +59,8 @@ class CategoryServiceTest {
     }
 
     @Test
-    void testFindCategoryById() {
-        category = categoryService.findCategoryById(testCategory.getId());
+    void testGetCategoryById() {
+        category = categoryService.getCategoryById(testCategory.getId());
         assertAll(
             () -> assertNotNull(category),
             () -> assertEquals("테스트", category.name())
@@ -68,8 +68,8 @@ class CategoryServiceTest {
     }
 
     @Test
-    void testFindCategoryByName() {
-        category = categoryService.findCategoryByName(testCategory.getName());
+    void testGetCategoryByName() {
+        category = categoryService.getCategoryByName(testCategory.getName());
         assertAll(
             () -> assertNotNull(category),
             () -> assertEquals("테스트", category.name())
@@ -78,10 +78,10 @@ class CategoryServiceTest {
 
     @Test
     @Transactional
-    void testSaveCategory() {
+    void testAddCategory() {
         CategoryRequestDTO categoryRequestDTO = new CategoryRequestDTO("new테스트", "#770077",
             "테스트 이미지2", "테스트 설명2");
-        categoryService.saveCategory(categoryRequestDTO);
+        categoryService.addCategory(categoryRequestDTO);
         Category savedCategory = categoryRepository.findByName("new테스트");
         assertAll(
             () -> assertNotNull(savedCategory),

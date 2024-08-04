@@ -39,19 +39,19 @@ public class ProductService {
         this.categoryService = categoryService;
     }
 
-    public ProductPageResponseDTO findAllProducts(Pageable pageable) {
+    public ProductPageResponseDTO getAllProducts(Pageable pageable) {
         Page<Product> products = productRepository.findAll(pageable);
         return new ProductPageResponseDTO(products);
     }
 
-    public ProductGetResponseDTO findProductById(Long id) {
+    public ProductGetResponseDTO getProductById(Long id) {
         Product product = productRepository.findById(id).orElseThrow(() -> new NotFoundException("상품을 찾을 수 없습니다."));
         return toGetResponseDTO(product);
     }
 
     @Transactional
-    public ProductAddResponseDTO saveProduct(ProductAddRequestDTO productAddRequestDTO) {
-        CategoryResponseDTO categoryResponseDTO = categoryService.findCategoryById(
+    public ProductAddResponseDTO addProduct(ProductAddRequestDTO productAddRequestDTO) {
+        CategoryResponseDTO categoryResponseDTO = categoryService.getCategoryById(
             productAddRequestDTO.categoryId());
         Category category = categoryService.responseToEntity(categoryResponseDTO);
         Product product = new Product(null, productAddRequestDTO.name(),
@@ -70,7 +70,7 @@ public class ProductService {
     public ProductUpdateResponseDTO updateProduct(ProductUpdateRequestDTO productUpdateRequestDTO,
         Long id) {
         Product existingProduct = productRepository.findById(id).orElseThrow(() -> new NotFoundException("상품을 찾을 수 없습니다."));
-        CategoryResponseDTO categoryResponseDTO = categoryService.findCategoryById(
+        CategoryResponseDTO categoryResponseDTO = categoryService.getCategoryById(
             productUpdateRequestDTO.categoryId());
         Category category = categoryService.responseToEntity(categoryResponseDTO);
         existingProduct.updateProduct(productUpdateRequestDTO.name(),

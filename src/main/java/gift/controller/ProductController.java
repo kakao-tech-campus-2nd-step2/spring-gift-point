@@ -46,12 +46,12 @@ public class ProductController {
 
     @GetMapping
     @Operation(summary = "상품 목록 조회", description = "모든 상품을 조회합니다.")
-    public ResponseEntity<ProductPageResponseDTO> getAllProduct(
+    public ResponseEntity<ProductPageResponseDTO> getAllProducts(
         @Valid PageRequestDTO pageRequestDTO) {
         try {
             Pageable pageable = PageRequest.of(pageRequestDTO.page(), pageRequestDTO.size(),
                 Sort.by(pageRequestDTO.sort()));
-            ProductPageResponseDTO productPageResponseDTO = productService.findAllProducts(pageable);
+            ProductPageResponseDTO productPageResponseDTO = productService.getAllProducts(pageable);
             return ResponseEntity.ok(productPageResponseDTO);
         } catch (Exception e) {
             throw new InvalidInputValueException("잘못된 값이 입력되었습니다.");
@@ -61,7 +61,7 @@ public class ProductController {
     @GetMapping("/{productId}")
     @Operation(summary = "상품 조회", description = "ID로 상품을 조회합니다.")
     public ResponseEntity<ProductGetResponseDTO> getProduct(@PathVariable Long productId) {
-        ProductGetResponseDTO productGetResponseDTO = productService.findProductById(productId);
+        ProductGetResponseDTO productGetResponseDTO = productService.getProductById(productId);
         if (productGetResponseDTO == null) {
             throw new NotFoundException("상품을 찾을 수 없습니다.");
         }
@@ -77,7 +77,7 @@ public class ProductController {
             throw new AuthorizationFailedException("인증되지 않은 사용자입니다.");
         }
         try {
-            ProductAddResponseDTO productAddResponseDTO = productService.saveProduct(
+            ProductAddResponseDTO productAddResponseDTO = productService.addProduct(
                 productAddRequestDTO);
             return ResponseEntity.status(201).body(productAddResponseDTO);
         } catch (Exception e) {

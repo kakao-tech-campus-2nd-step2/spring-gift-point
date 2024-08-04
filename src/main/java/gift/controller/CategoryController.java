@@ -37,9 +37,9 @@ public class CategoryController {
 
     @GetMapping
     @Operation(summary = "카테고리 조회", description = "모든 카테고리를 조회합니다.")
-    public ResponseEntity<List<CategoryResponseDTO>> getCategories() {
+    public ResponseEntity<List<CategoryResponseDTO>> getAllCategories() {
         try {
-            List<CategoryResponseDTO> categories = categoryService.findAllCategories();
+            List<CategoryResponseDTO> categories = categoryService.getAllCategories();
             return ResponseEntity.ok(categories);
         } catch (Exception e) {
             throw new ServerErrorException("서버 내부 오류가 발생했습니다.");
@@ -54,7 +54,7 @@ public class CategoryController {
             throw new AuthorizationFailedException("인증되지 않은 사용자입니다.");
         }
         try {
-            CategoryResponseDTO categoryResponseDTO = categoryService.saveCategory(categoryRequestDTO);
+            CategoryResponseDTO categoryResponseDTO = categoryService.addCategory(categoryRequestDTO);
             return ResponseEntity.status(HttpStatus.CREATED).body(categoryResponseDTO);
         } catch (InvalidInputValueException e) {
             throw new InvalidInputValueException("중복된 카테고리 이름입니다.");
