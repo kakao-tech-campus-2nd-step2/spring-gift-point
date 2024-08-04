@@ -11,7 +11,7 @@ java {
 }
 
 tasks.bootJar {
-    archiveFileName.set("application-build-file.jar") // 자바 빌드 후 jar 파일명 명확히 기재
+    archiveFileName.set("spring-gift-1.0-SNAPSHOT.jar") // 자바 빌드 후 jar 파일명 명확히 기재
 }
 
 group = 'camp.nextstep.edu'
