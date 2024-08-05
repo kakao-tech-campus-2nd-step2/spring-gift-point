@@ -45,14 +45,14 @@ public class ProductServiceImpl implements ProductService {
     @Override
     @Transactional
     public void createProductWithCategory(@Nonnull String categoryName, @Nonnull Product product) {
-        if (productRepository.exists(product.id())) {
+        if (product.id() != null && productRepository.exists(product.id())) {
             throw new ProductAlreadyExistsException();
         }
         if (product.price() <= 0) {
             throw new InvalidArgumentException(ErrorCode.NEGATIVE_PRODUCT_PRICE);
         }
         ProductCategory category = productCategoryRepository
-                .findByName(product.categoryName())
+                .findByName(categoryName)
                 .orElseThrow(CategoryNotFoundException::new);
         productRepository.save(product.withCategory(category));
     }
@@ -67,7 +67,7 @@ public class ProductServiceImpl implements ProductService {
             throw new InvalidArgumentException(ErrorCode.NEGATIVE_PRODUCT_PRICE);
         }
         ProductCategory category = productCategoryRepository
-                .findByName(product.categoryName())
+                .findByName(categoryName)
                 .orElseThrow(CategoryNotFoundException::new);
         productRepository.save(product.withCategory(category));
     }
