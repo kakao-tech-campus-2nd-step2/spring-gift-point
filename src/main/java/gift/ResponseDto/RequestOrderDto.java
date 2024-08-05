@@ -1,17 +1,19 @@
 package gift.ResponseDto;
 
+import gift.DTO.PointVo;
+
 public class RequestOrderDto {
 
   private final Long optionId;
   private final int quantity;
   private final String message;
-  private final int usedPoint;
+  private final PointVo pointVo;
 
-  public RequestOrderDto(Long optionId, int quantity, String message, int usedPoint) {
+  public RequestOrderDto(Long optionId, int quantity, String message, PointVo pointVo) {
     this.optionId = optionId;
     this.quantity = quantity;
     this.message = message;
-    this.usedPoint = usedPoint;
+    this.pointVo = pointVo;
   }
 
   public Long getOptionId() {
@@ -26,7 +28,7 @@ public class RequestOrderDto {
     return message;
   }
 
-  public int getUsedPoint() {
-    return usedPoint;
+  public PointVo getUsedPointVo() {
+    return this.pointVo;
   }
 }

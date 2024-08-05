@@ -1,5 +1,6 @@
 package gift.DTO;
 
+import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -25,23 +26,24 @@ public class Orders {
   private LocalDateTime orderDateTime;
   private String message;
 
-  private int usedPoint;
+  @Embedded
+  private PointVo pointVo;
 
-  public Orders(Option option, int quantity, String message, int usedPoint) {
+  public Orders(Option option, int quantity, String message, PointVo pointVo) {
     this.option = option;
     this.quantity = quantity;
     this.orderDateTime = LocalDateTime.now();
     this.message = message;
-    this.usedPoint = usedPoint;
+    this.pointVo = pointVo;
   }
 
-  public Orders(Long id, Option option, int quantity, String message, int usedPoint) {
+  public Orders(Long id, Option option, int quantity, String message, PointVo pointVo) {
     this.id = id;
     this.option = option;
     this.quantity = quantity;
     this.orderDateTime = LocalDateTime.now();
     this.message = message;
-    this.usedPoint = usedPoint;
+    this.pointVo = pointVo;
   }
 
   protected Orders() {
@@ -67,7 +69,7 @@ public class Orders {
     return message;
   }
 
-  public int getUsedPoint() {
-    return usedPoint;
+  public PointVo getPointVo() {
+    return this.pointVo;
   }
 }

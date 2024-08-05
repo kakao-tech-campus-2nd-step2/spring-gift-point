@@ -2,6 +2,7 @@ package gift.Service;
 
 import gift.DTO.Member;
 import gift.DTO.MemberDto;
+import gift.DTO.PointVo;
 import gift.LoginUser;
 import gift.Repository.MemberRepository;
 import gift.ResponseDto.RequestPointDto;
@@ -20,14 +21,17 @@ public class PointService {
   }
 
   public void addPoint(@RequestBody RequestPointDto requestPointDto,
-    @LoginUser MemberDto memberDto) {
-    int point = requestPointDto.getPoint();
+    @LoginUser MemberDto memberDto) throws IllegalAccessException {
+    int point = requestPointDto.point();
+    PointVo pointVo = new PointVo(point);
     Long memberId = memberDto.getId();
     Member member = memberRepository.findById(memberId)
       .orElseThrow(() -> new EmptyResultDataAccessException("해당 고객이 없습니다", 1));
 
-    member.addPoint(point);
-    memberRepository.save(member);
+    PointVo newPointVo = member.addPoint(pointVo);
+    Member newPointMember = new Member(member.getId(), member.getEmail(), member.getPassword(),
+      newPointVo);
+    memberRepository.save(newPointMember);
   }
 
   public ResponsePointDto getPoint(@LoginUser MemberDto memberDto) {
@@ -35,7 +39,7 @@ public class PointService {
     Member member = memberRepository.findById(memberId)
       .orElseThrow(() -> new EmptyResultDataAccessException("해당 고객이 없습니다", 1));
 
-    return new ResponsePointDto(member.getPoint());
+    return new ResponsePointDto(member.getPointVo().getPoint());
 
   }
 }

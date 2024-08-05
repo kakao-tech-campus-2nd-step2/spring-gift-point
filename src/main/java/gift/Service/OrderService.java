@@ -4,6 +4,7 @@ import gift.DTO.Member;
 import gift.DTO.MemberDto;
 import gift.DTO.Option;
 import gift.DTO.Orders;
+import gift.DTO.PointVo;
 import gift.Repository.MemberRepository;
 import gift.Repository.OptionRepository;
 import gift.Repository.OrderRepository;
@@ -46,13 +47,19 @@ public class OrderService {
 
     optionService.optionQuantitySubtract(option.getId(), requestOrderDto.getQuantity());
 
+    PointVo pointVo = new PointVo(requestOrderDto.getUsedPointVo().getPoint());
     Orders order = new Orders(option, requestOrderDto.getQuantity(), requestOrderDto.getMessage(),
-      requestOrderDto.getUsedPoint());
+      pointVo);
 
     Long memberId = memberDto.getId();
     Member member = memberRepository.findById(memberId)
       .orElseThrow(() -> new EmptyResultDataAccessException("해당 고객이 없습니다.", 1));
-    member.subtractPoint(requestOrderDto.getUsedPoint());
+
+    PointVo subtractedPointVo = member.subtractPoint(pointVo);
+    Member newPointMember = new Member(memberId, member.getEmail(), member.getPassword(),
+      subtractedPointVo);
+    memberRepository.save(newPointMember);
+
     Orders savedOrder = orderRepository.save(order);
     ResponseOrderDto responseOrderDto = new ResponseOrderDto(savedOrder.getId(),
       requestOrderDto.getOptionId(), requestOrderDto.getQuantity(),

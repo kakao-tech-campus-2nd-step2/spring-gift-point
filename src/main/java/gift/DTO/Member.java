@@ -1,6 +1,7 @@
 package gift.DTO;
 
 import jakarta.persistence.Column;
+import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -27,24 +28,24 @@ public class Member {
   @Column(nullable = false)
   private String password;
 
-  @PositiveOrZero
-  private int point;
+  @Embedded
+  private PointVo pointVo;
 
   protected Member() {
 
   }
 
-  public Member(Long id, String email, String password) {
+  public Member(Long id, String email, String password, PointVo pointVo) {
     this.id = id;
     this.email = email;
     this.password = password;
-    this.point = 0;
+    this.pointVo = pointVo;
   }
 
-  public Member(String email, String password) {
+  public Member(String email, String password, PointVo pointVo) {
     this.email = email;
     this.password = password;
-    this.point = 0;
+    this.pointVo = pointVo;
   }
 
   public Long getId() {
@@ -59,8 +60,8 @@ public class Member {
     return this.password;
   }
 
-  public int getPoint() {
-    return point;
+  public PointVo getPointVo() {
+    return this.pointVo;
   }
 
   public boolean matchLoginInfo(MemberDto memberDtoByEmail) {
@@ -68,14 +69,18 @@ public class Member {
       memberDtoByEmail.getPassword());
   }
 
-  public void subtractPoint(int point) throws IllegalAccessException {
-    if (point > this.point) {
-      throw new IllegalAccessException();
+  public PointVo subtractPoint(PointVo pointVo) throws IllegalAccessException {
+    if (pointVo.getPoint() > this.pointVo.getPoint()) {
+      throw new IllegalAccessException("보유 포인트가 차감 포인트보다 적습니다.");
     }
-    this.point -= point;
+    return new PointVo(this.pointVo.getPoint()-pointVo.getPoint());
   }
 
-  public void addPoint(int point) {
-    this.point += point;
+  public PointVo addPoint(PointVo pointVo) throws IllegalAccessException {
+    if(pointVo.getPoint()<0){
+      throw new IllegalAccessException("point는 1원 이상 충전 가능합니다");
+    }
+    return new PointVo(this.pointVo.getPoint()+pointVo.getPoint());
   }
+
 }
