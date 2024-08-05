@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
 @RequestMapping("/members/v2")
+
 @Tag(name = "login API", description = "회원 관련 API")
 public class MemberController {
 

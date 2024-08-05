@@ -50,7 +50,7 @@ public class OrderNewController {
         this.pointService = pointService;
     }
 
-    @Transactional
+
     @PostMapping
     @Operation(summary = "상품 주문", description = "상품을 주문하고 메시지를 보냅니다.")
     public ResponseEntity<OrderResponse> orderItem(@RequestBody OrderRequest request) {

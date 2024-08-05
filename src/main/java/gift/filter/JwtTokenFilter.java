@@ -12,11 +12,13 @@ import org.springframework.stereotype.Component;
 import java.io.IOException;
 
 
+
 @Component
 public class JwtTokenFilter implements Filter {
 
     private static final Logger logger = LoggerFactory.getLogger(JwtTokenFilter.class);
     private final JwtTokenProvider jwtTokenProvider;
+    private static final Logger logger = LoggerFactory.getLogger(JwtTokenFilter.class);
 
     @Autowired
     public JwtTokenFilter(JwtTokenProvider jwtTokenProvider) {

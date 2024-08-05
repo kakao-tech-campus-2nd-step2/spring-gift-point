@@ -47,7 +47,6 @@ public class OptionService {
         return optionRepository.findById(id).get().getProduct();
     }
 
-
     public Option saveOption(Option option) {
         return optionRepository.save(option);
     }
