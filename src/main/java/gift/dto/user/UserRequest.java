@@ -3,17 +3,16 @@ package gift.dto.user;
 import gift.common.enums.LoginType;
 import gift.model.user.User;
 import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.*;
 
 public class UserRequest {
     public record Create(
             @Email
-            @NotNull
+            @NotBlank
             String email,
-            @NotNull
+            @NotBlank
             String password,
-            @NotNull
+            @NotBlank
             String name
 
     ) {

@@ -1,7 +1,6 @@
 package gift.dto.order;
 
-import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.*;
 
 public class OrderRequest {
     public record Create(
@@ -12,7 +11,7 @@ public class OrderRequest {
             @Min(1)
             @NotNull
             Integer quantity,
-            @NotNull
+            @NotBlank
             String message,
             @NotNull
             Integer point

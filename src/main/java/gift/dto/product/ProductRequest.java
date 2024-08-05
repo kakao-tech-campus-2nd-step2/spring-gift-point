@@ -11,6 +11,7 @@ public class ProductRequest {
     public record Create(
             @Size(max = 15)
             @Pattern(regexp = "[\\s\\(\\)\\[\\]\\+\\-&/_a-zA-Z0-9\uAC00-\uD7AF]*", message = "특수문자 오류")
+            @NotBlank
             String name,
 
             Integer price,
