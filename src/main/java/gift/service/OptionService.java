@@ -45,6 +45,10 @@ public class OptionService {
                 .orElseThrow(() -> new RuntimeException("Option not found with id " + id));
     }
 
+    public Product getProductById(Long id){
+        return optionRepository.findById(id).get().getProduct();
+    }
+
 
     public Option saveOption(Option option) {
         return optionRepository.save(option);

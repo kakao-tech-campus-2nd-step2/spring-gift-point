@@ -1,4 +1,4 @@
-package gift.dto;
+package gift.dto.response;
 
 public class TokenResponse {
     private String accessToken;

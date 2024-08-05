@@ -2,8 +2,9 @@ package gift.service;
 
 import gift.dto.KakaoTokenDto;
 import gift.dto.MemberDto;
-import gift.dto.TokenResponse;
+import gift.dto.response.TokenResponse;
 import gift.exception.MemberNotFoundException;
+import gift.repository.KakaoTokenRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
@@ -33,13 +34,14 @@ public class KakaoService {
     private final MemberService memberService;
     private final RestTemplate restTemplate;
     private final KakaoTokenService kakaoTokenService;
-
+    private final KakaoTokenRepository kakaoTokenRepository;
 
     @Autowired
-    public KakaoService(MemberService memberService, RestTemplate restTemplate, KakaoTokenService kakaoTokenService) {
+    public KakaoService(MemberService memberService, RestTemplate restTemplate, KakaoTokenService kakaoTokenService, KakaoTokenRepository kakaoTokenRepository) {
         this.memberService = memberService;
         this.restTemplate = restTemplate;
         this.kakaoTokenService = kakaoTokenService;
+        this.kakaoTokenRepository = kakaoTokenRepository;
     }
 
     private TokenResponse getKakaoToken(String code) {
@@ -69,6 +71,7 @@ public class KakaoService {
             throw new RuntimeException("Exception while getting Kakao token", e);
         }
     }
+
 
     public JSONObject getUserInfo(String accessToken) {
         String reqURL = "https://kapi.kakao.com/v2/user/me";

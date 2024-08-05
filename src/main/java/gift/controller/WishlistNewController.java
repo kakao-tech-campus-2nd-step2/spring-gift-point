@@ -1,8 +1,5 @@
 package gift.controller;
 
-import gift.dto.PaginationInfo;
-import gift.dto.ProductDto;
-import gift.dto.response.ProductResponse;
 import gift.dto.response.WishlistResponse;
 
 import gift.service.WishlistService;

@@ -9,9 +9,6 @@ public class ProductResponse {
     private List<ProductDto> content;
     private PaginationInfo pagination;
 
-
-
-    // Getters and Setters
     public List<ProductDto> getContent() {
         return content;
     }

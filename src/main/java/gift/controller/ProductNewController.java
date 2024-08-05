@@ -1,7 +1,10 @@
 package gift.controller;
 
+import gift.dto.KakaoTokenDto;
 import gift.dto.response.ProductNewResponse;
+import gift.entity.Option;
 import gift.entity.Product;
+import gift.service.OptionService;
 import gift.service.ProductService;
 import gift.service.WishlistService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -11,6 +14,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -23,10 +27,11 @@ public class ProductNewController {
 
     private final ProductService productService;
     private final WishlistService wishlistService;
-
-    public ProductNewController(ProductService productService, WishlistService wishlistService) {
+    private final OptionService optionService;
+    public ProductNewController(ProductService productService, WishlistService wishlistService, OptionService optionService) {
         this.productService = productService;
         this.wishlistService= wishlistService;
+        this.optionService = optionService;
     }
 
 
@@ -51,9 +56,5 @@ public class ProductNewController {
                 .collect(Collectors.toList());
         return ResponseEntity.ok(productResponsesList);
     }
-
-
-
-
 
 }

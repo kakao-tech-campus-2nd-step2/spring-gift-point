@@ -7,4 +7,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface KakaoTokenRepository extends JpaRepository<KakaoToken, String> {
     KakaoToken findByAccessToken(String accessToken);
+
+    void getById();
 }
