@@ -38,6 +38,7 @@ public class OrderController {
             orderRequestDto.setMemberId(memberDto.getId());
         }
 
+        /*
         //카카오 토큰 가져오기
         String token = null;
         Cookie[] cookies = request.getCookies();
@@ -49,6 +50,10 @@ public class OrderController {
                 }
             }
         }
+
+         */
+
+        String token = (String) request.getAttribute("token");
 
         //토큰으로 메시지 보내기
         if (token != null) { //
