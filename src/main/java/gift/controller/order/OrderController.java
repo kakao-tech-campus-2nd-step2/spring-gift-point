@@ -26,7 +26,7 @@ public class OrderController {
         this.userService = userService;
     }
 
-    @GetMapping("/orders")
+    @GetMapping
     public ResponseEntity<Page<Order>> getAllOrders(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size,
@@ -47,7 +47,7 @@ public class OrderController {
         return new ResponseEntity<>(createdOrder, HttpStatus.CREATED);
     }
 
-    @GetMapping
+    @GetMapping("/user")
     public ResponseEntity<Page<Order>> getUserOrders(
             @LoginMember User loginUser,  // 로그인한 사용자 정보를 받음
             @RequestParam(defaultValue = "0") int page,
