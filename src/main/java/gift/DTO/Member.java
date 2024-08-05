@@ -9,7 +9,6 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.PositiveOrZero;
 import jakarta.validation.constraints.Size;
 
 @Entity
@@ -73,14 +72,14 @@ public class Member {
     if (pointVo.getPoint() > this.pointVo.getPoint()) {
       throw new IllegalAccessException("보유 포인트가 차감 포인트보다 적습니다.");
     }
-    return new PointVo(this.pointVo.getPoint()-pointVo.getPoint());
+    return new PointVo(this.pointVo.getPoint() - pointVo.getPoint());
   }
 
   public PointVo addPoint(PointVo pointVo) throws IllegalAccessException {
-    if(pointVo.getPoint()<0){
+    if (pointVo.getPoint() < 0) {
       throw new IllegalAccessException("point는 1원 이상 충전 가능합니다");
     }
-    return new PointVo(this.pointVo.getPoint()+pointVo.getPoint());
+    return new PointVo(this.pointVo.getPoint() + pointVo.getPoint());
   }
 
 }
