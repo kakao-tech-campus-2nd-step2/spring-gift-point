@@ -75,4 +75,14 @@ public class ProductJdbcTemplateRepository implements ProductRepository {
         return null;
     }
 
+    @Override
+    public Page<Product> findByCategoryId(Long categoryId, Pageable pageable) {
+        return null;
+    }
+
+    @Override
+    public boolean existsById(Long productId) {
+        return false;
+    }
+
 }

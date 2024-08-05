@@ -30,9 +30,9 @@ public class KakaoTokenApiCaller {
     /**
      * 인가 코드를 사용해서 토큰을 가져옴
      */
-    public KakaoToken getToken(String authorizationCode) {
+    public KakaoToken getToken(String authorizationCode, String redirectUrl) {
         var headers = createFormUrlencodedHttpHeaders();
-        var body = createGetAccessTokenBody(authorizationCode);
+        var body = createGetAccessTokenBody(authorizationCode, redirectUrl);
 
         var request = new RequestEntity<>(body, headers, HttpMethod.POST,
             URI.create(kakaoProperties.tokenRequestUri()));
@@ -41,6 +41,7 @@ public class KakaoTokenApiCaller {
         } catch (ResourceAccessException e) {
             throw new TimeOutException("네트워크 연결이 불안정 합니다.", e);
         } catch (HttpClientErrorException e) {
+            System.out.println("e = " + e.getResponseBodyAsString());
             throw new IllegalArgumentException("카카오 인가 코드가 유효하지 않습니다.", e);
         }
     }
@@ -79,12 +80,13 @@ public class KakaoTokenApiCaller {
     }
 
     private LinkedMultiValueMap<String, String> createGetAccessTokenBody(
-        String authorizationCode) {
+        String authorizationCode, String redirectUrl) {
         var body = new LinkedMultiValueMap<String, String>();
         body.add("grant_type", kakaoProperties.grantType());
         body.add("client_id", kakaoProperties.clientId());
-        body.add("redirect_uri", kakaoProperties.redirectUri());
+        body.add("redirect_uri", redirectUrl);
         body.add("code", authorizationCode);
+        System.out.println("for token redirectUri = " + redirectUrl);
         return body;
     }
 

@@ -3,6 +3,8 @@ package gift.repository.member;
 import gift.model.member.Member;
 import gift.model.member.Role;
 import java.util.Optional;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
@@ -41,6 +43,11 @@ public class MemberJdbcRepository implements MemberRepository {
     @Override
     public void deleteById(Long id) {
 
+    }
+
+    @Override
+    public Page<Member> findAll(Pageable pageable) {
+        return null;
     }
 
     @Override

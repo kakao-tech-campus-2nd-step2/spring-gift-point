@@ -47,13 +47,21 @@ public class OptionRequest {
 
     public record Purchase(
         @NotNull
+        Long productId,
+        @NotNull
         Long optionId,
         @Min(1)
-        Integer quantity
+        @NotNull
+        Integer quantity,
+        @NotBlank
+        String message,
+        @Min(0)
+        @NotNull
+        Integer point
     ) {
 
         public OptionCommand.Purchase toCommand() {
-            return new OptionCommand.Purchase(optionId, quantity);
+            return new OptionCommand.Purchase(productId, optionId, quantity, message, point);
         }
     }
 

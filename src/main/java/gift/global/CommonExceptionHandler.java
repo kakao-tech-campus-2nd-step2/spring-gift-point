@@ -1,8 +1,10 @@
 package gift.global;
 
+import gift.global.validate.AuthorizationException;
 import gift.global.validate.InvalidAuthRequestException;
 import gift.global.validate.NotFoundException;
 import gift.global.validate.TimeOutException;
+import io.jsonwebtoken.JwtException;
 import java.util.HashMap;
 import java.util.Map;
 import org.springframework.http.HttpStatus;
@@ -38,26 +40,32 @@ public class CommonExceptionHandler {
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ProblemDetail> handleValidationExceptions(
         MethodArgumentNotValidException e) {
-        ProblemDetail problemDetail = ProblemDetail.forStatus(HttpStatus.BAD_REQUEST);
-        Map<String, Object> errors = new HashMap<>();
-        for (FieldError error : e.getBindingResult().getFieldErrors()) {
-            errors.put(error.getField(), error.getDefaultMessage());
-        }
-        problemDetail.setProperties(errors);
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-            .body(problemDetail);
+            .body(ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST, "유효하지 않은 입력입니다."));
     }
 
     @ExceptionHandler(InvalidAuthRequestException.class)
     public ResponseEntity<ProblemDetail> invalidAuthRequestExceptionHandler(
         InvalidAuthRequestException e) {
-        return ResponseEntity.status(HttpStatus.FORBIDDEN)
-            .body(ProblemDetail.forStatusAndDetail(HttpStatus.FORBIDDEN, e.getMessage()));
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+            .body(ProblemDetail.forStatusAndDetail(HttpStatus.UNAUTHORIZED, e.getMessage()));
     }
 
     @ExceptionHandler(TimeOutException.class)
     public ResponseEntity<ProblemDetail> timeOutExceptionHandler(TimeOutException e) {
         return ResponseEntity.status(HttpStatus.REQUEST_TIMEOUT)
             .body(ProblemDetail.forStatusAndDetail(HttpStatus.REQUEST_TIMEOUT, e.getMessage()));
+    }
+
+    @ExceptionHandler(JwtException.class)
+    public ResponseEntity<ProblemDetail> jwtExceptionHandler(JwtException e) {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+            .body(ProblemDetail.forStatusAndDetail(HttpStatus.UNAUTHORIZED, e.getMessage()));
+    }
+
+    @ExceptionHandler(AuthorizationException.class)
+    public ResponseEntity<ProblemDetail> authorizationExceptionHandler(AuthorizationException e) {
+        return ResponseEntity.status(HttpStatus.FORBIDDEN)
+            .body(ProblemDetail.forStatusAndDetail(HttpStatus.FORBIDDEN, e.getMessage()));
     }
 }

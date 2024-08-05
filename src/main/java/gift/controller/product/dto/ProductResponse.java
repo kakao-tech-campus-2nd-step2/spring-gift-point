@@ -31,6 +31,25 @@ public class ProductResponse {
         }
     }
 
+    public record ProductSummary(
+        Long productId,
+        String name,
+        Integer price,
+        String imageUrl
+    ) {
+
+        public static ProductSummary from(
+            ProductModel.Info productModel
+        ) {
+            return new ProductSummary(
+                productModel.id(),
+                productModel.name(),
+                productModel.price(),
+                productModel.imageUrl()
+            );
+        }
+    }
+
     public record Summary(
         Long productId,
         String name,

@@ -24,4 +24,8 @@ public interface ProductRepository {
 
     Page<Product> findByCategoryId(String searchValue, Pageable pageable);
 
+    Page<Product> findByCategoryId(Long categoryId, Pageable pageable);
+
+    boolean existsById(Long productId);
+
 }

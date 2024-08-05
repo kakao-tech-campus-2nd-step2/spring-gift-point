@@ -5,6 +5,7 @@ import gift.controller.member.dto.MemberResponse;
 import gift.global.auth.Authenticate;
 import gift.global.auth.Authorization;
 import gift.global.auth.LoginInfo;
+import gift.global.dto.PageResponse;
 import gift.model.member.Role;
 import gift.application.member.service.MemberService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -19,7 +20,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/members")
+@RequestMapping("/api/members")
 public class MemberController {
 
     private final MemberService memberService;
@@ -43,7 +44,9 @@ public class MemberController {
         @RequestBody @Valid MemberRequest.Login request
     ) {
         var response = memberService.login(request.toCommand());
-        return ResponseEntity.ok(MemberResponse.Login.from(response));
+        return ResponseEntity.status(HttpStatus.OK)
+            .header("Authorization", response.jwt())
+            .body(MemberResponse.Login.from(response));
     }
 
     @Operation(summary = "유저 로그아웃", description = "유저 로그아웃 api")
@@ -58,6 +61,14 @@ public class MemberController {
     public ResponseEntity<MemberResponse.Info> getUser(@Authenticate LoginInfo loginInfo) {
         var response = memberService.getUser(loginInfo.memberId());
         return ResponseEntity.ok(MemberResponse.Info.from(response));
+    }
+
+    @Operation(summary = "포인트 조회", description = "포인트 조회 api")
+    @Authorization(role = Role.USER)
+    @GetMapping("/point")
+    public ResponseEntity<MemberResponse.Point> getPoint(@Authenticate LoginInfo loginInfo) {
+        var response = memberService.getUser(loginInfo.memberId());
+        return ResponseEntity.ok(MemberResponse.Point.from(response));
     }
 
 }

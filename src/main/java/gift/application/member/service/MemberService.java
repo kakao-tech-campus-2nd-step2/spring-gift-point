@@ -1,5 +1,6 @@
 package gift.application.member.service;
 
+import gift.application.member.dto.MemberModel.Info;
 import gift.global.auth.jwt.JwtProvider;
 import gift.model.member.Member;
 import gift.global.validate.InvalidAuthRequestException;
@@ -8,6 +9,8 @@ import gift.model.member.Provider;
 import gift.repository.member.MemberRepository;
 import gift.application.member.dto.MemberCommand;
 import gift.application.member.dto.MemberModel;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.util.Pair;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -33,14 +36,15 @@ public class MemberService {
     }
 
     @Transactional(readOnly = true)
-    public String login(MemberCommand.Login command) {
+    public MemberModel.InfoAndJwt login(MemberCommand.Login command) {
         Member member = memberRepository.findByEmail(command.email())
-            .orElseThrow(() -> new NotFoundException("User not found."));
+            .orElseThrow(() -> new InvalidAuthRequestException("아이디 또는 비밀번호가 일치하지 않습니다."));
 
         if (!member.verifyPassword(command.password())) {
-            throw new InvalidAuthRequestException("Password is incorrect.");
+            throw new InvalidAuthRequestException("아이디 또는 비밀번호가 일치하지 않습니다.");
         }
-        return jwtProvider.createToken(member.getId(), member.getRole());
+        String jwt = jwtProvider.createToken(member.getId(), member.getRole());
+        return new MemberModel.InfoAndJwt(MemberModel.Info.from(member), jwt);
     }
 
     @Transactional(readOnly = true)
@@ -50,17 +54,30 @@ public class MemberService {
         return MemberModel.Info.from(member);
     }
 
-    public MemberModel.IdAndJwt socialLogin(MemberCommand.Create create) {
+    @Transactional
+    public MemberModel.InfoAndJwt socialLogin(MemberCommand.Create create) {
         var member = memberRepository.findByEmail(create.email());
         if (member.isPresent()) {
             var originMember = member.get();
             originMember.changeProvider(Provider.KAKAO);
             String jwt = jwtProvider.createToken(originMember.getId(), originMember.getRole());
-            return new MemberModel.IdAndJwt(originMember.getId(), jwt);
+            return new MemberModel.InfoAndJwt(MemberModel.Info.from(originMember), jwt);
         }
 
         var savedMember = memberRepository.save(create.toEntity());
         String jwt = jwtProvider.createToken(savedMember.getId(), savedMember.getRole());
-        return new MemberModel.IdAndJwt(savedMember.getId(), jwt);
+        return new MemberModel.InfoAndJwt(MemberModel.Info.from(savedMember), jwt);
+    }
+
+    public Page<MemberModel.Info> getMemberPaging(Pageable pageable) {
+        var page = memberRepository.findAll(pageable);
+        return page.map(MemberModel.Info::from);
+    }
+
+    @Transactional
+    public Integer depositPoint(Long memberId, Integer point) {
+        var member = memberRepository.findById(memberId)
+            .orElseThrow(() -> new NotFoundException("User not found."));
+        return member.depositPoint(point);
     }
 }

@@ -1,9 +1,11 @@
 package gift.application.product.service;
 
 import gift.global.validate.NotFoundException;
+import gift.model.member.Member;
 import gift.model.product.Option;
 import gift.model.product.Options;
 import gift.model.product.Product;
+import gift.repository.member.MemberRepository;
 import gift.repository.product.OptionRepository;
 import gift.repository.product.ProductRepository;
 import gift.application.product.dto.OptionCommand;
@@ -21,16 +23,19 @@ public class OptionService {
 
     private final OptionRepository optionRepository;
     private final ProductRepository productRepository;
+    private final MemberRepository memberRepository;
 
-    public OptionService(OptionRepository optionRepository, ProductRepository productRepository) {
+    public OptionService(OptionRepository optionRepository, ProductRepository productRepository,
+        MemberRepository memberRepository) {
         this.productRepository = productRepository;
         this.optionRepository = optionRepository;
+        this.memberRepository = memberRepository;
     }
 
     @Transactional
     public List<OptionModel.Info> createOption(Long productId, RegisterMany command) {
         Product product = productRepository.findById(productId)
-            .orElseThrow(() -> new NotFoundException("Product not found"));
+            .orElseThrow(() -> new NotFoundException("존재하지 않는 상품입니다."));
         Options options = command.toOptions(product);
         var originOptions = optionRepository.findAllByProductId(productId);
 
@@ -41,6 +46,10 @@ public class OptionService {
 
     @Transactional(readOnly = true)
     public List<OptionModel.Info> getOptions(Long productId) {
+        if (!productRepository.existsById(productId)) {
+            throw new NotFoundException("존재하지 않는 상품입니다.");
+        }
+
         Options options = optionRepository.findAllByProductId(productId);
         return options.getOptions().stream().map(OptionModel.Info::from).toList();
     }
@@ -78,11 +87,17 @@ public class OptionService {
         backoff = @Backoff(delay = 200)
     )
     @Transactional
-    public OptionModel.Info purchaseOption(OptionCommand.Purchase command) {
+    public OptionModel.PurchaseInfo purchaseOption(Long memberId, OptionCommand.Purchase command) {
         Option option = optionRepository.findById(command.optionId())
-            .orElseThrow(() -> new NotFoundException("Option not found"));
+            .orElseThrow(() -> new NotFoundException("해당 옵션이 존재하지 않습니다."));
+        Product product = productRepository.findById(command.productId())
+            .orElseThrow(() -> new NotFoundException("해당 상품이 존재하지 않습니다."));
+        Member member = memberRepository.findById(memberId)
+            .orElseThrow(() -> new NotFoundException("해당 회원이 존재하지 않습니다."));
+
+        member.usePoint(command.point());
         option.purchase(command.quantity());
-        return OptionModel.Info.from(option);
+        return OptionModel.PurchaseInfo.from(option, product, command.quantity());
     }
 
 

@@ -32,9 +32,9 @@ public class ProductKakaoApiCaller {
         this.objectMapper = objectMapper;
     }
 
-    public void sendMessage(String accessToken, String optionName) {
+    public void sendMessage(String accessToken, String message) {
         var headers = createFormUrlencodedHttpHeaders(accessToken);
-        var body = createSendMessageBody(optionName);
+        var body = createSendMessageBody(message);
         var request = new RequestEntity<>(body, headers, HttpMethod.POST,
             URI.create(kakaoProperties.messageRequestUri()));
 
@@ -50,10 +50,10 @@ public class ProductKakaoApiCaller {
     }
 
     private LinkedMultiValueMap<Object, Object> createSendMessageBody(
-        String optionName) {
+        String message) {
         var body = new LinkedMultiValueMap<>();
 
-        TemplateObject templateObject = new TemplateObject("text", makePurchaseMessage(optionName),
+        TemplateObject templateObject = new TemplateObject("text", message,
             new Link(null, null));
 
         String templateObjectJson;
@@ -71,10 +71,6 @@ public class ProductKakaoApiCaller {
         headers.set("Authorization", "Bearer " + accessToken);
         headers.add(CONTENT_TYPE, MediaType.APPLICATION_FORM_URLENCODED_VALUE);
         return headers;
-    }
-
-    private String makePurchaseMessage(String optionName) {
-        return optionName + " 상품이 구매되었습니다.";
     }
 }
 

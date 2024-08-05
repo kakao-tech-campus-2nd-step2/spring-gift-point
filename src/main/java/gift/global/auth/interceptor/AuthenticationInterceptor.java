@@ -2,6 +2,7 @@ package gift.global.auth.interceptor;
 
 import gift.global.auth.jwt.JwtProvider;
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.JwtException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.stereotype.Component;
@@ -41,6 +42,6 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
 
     private void sendUnauthorizedError(HttpServletResponse response, String message)
         throws Exception {
-        response.sendError(HttpServletResponse.SC_UNAUTHORIZED, message);
+        throw new JwtException(message);
     }
 }
