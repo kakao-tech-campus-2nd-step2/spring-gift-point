@@ -40,7 +40,7 @@ public class CategoryController {
             summary = "카테고리 생성",
             description = "새로운 카테고리를 생성하는 API입니다."
     )
-    @Parameter(name = "category", description = "생성할 카테고리 정보를 포함하는 Dto", required = true)
+    @Parameter(name = "categoryDto", description = "생성할 카테고리 정보를 포함하는 Dto", required = true)
     public ResponseEntity<Void> addCategory(@RequestBody CategoryDto categoryDto) {
         service.addCategory(categoryDto.toCategory());
         return ResponseEntity.status(HttpStatus.CREATED).build();
