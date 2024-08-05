@@ -14,9 +14,11 @@ public record OrderRequestDTO(
     @Min(1)
     int quantity,
     @NotBlank
-    String message) {
+    String message,
+    @Min(0)
+    int point) {
 
-    public Order toEntity(User user, Option option){
-        return new Order(user, option, quantity, message);
+    public Order toEntity(User user, Option option, int orderPrice){
+        return new Order(user, option, quantity, message, orderPrice);
     }
 }

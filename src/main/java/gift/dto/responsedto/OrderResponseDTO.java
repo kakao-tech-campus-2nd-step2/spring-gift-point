@@ -7,10 +7,11 @@ public record OrderResponseDTO(
     Long id,
     OptionResponseDTO optionResponseDTO,
     LocalDateTime orderDateTime,
-    String message
+    String message,
+    int orderPrice
 ) {
     public static OrderResponseDTO from(Order order) {
         return new OrderResponseDTO(order.getId(), OptionResponseDTO.from(order.getOption()),
-            order.getOrderDateTime(), order.getMessage());
+            order.getOrderDateTime(), order.getMessage(), order.getOrderPrice());
     }
 }

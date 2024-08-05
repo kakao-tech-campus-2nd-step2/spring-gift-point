@@ -2,6 +2,7 @@ package gift.domain;
 
 import static jakarta.persistence.FetchType.LAZY;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EntityListeners;
 import jakarta.persistence.GeneratedValue;
@@ -29,19 +30,23 @@ public class Order {
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "option_id", nullable = false)
     private Option option;
+    @Column(nullable = false)
     private int quantity;
+    @Column(nullable = false)
     private String message;
+    @Column(nullable = false)
+    private int orderPrice;
 
     protected Order(){
 
     }
 
-    public Order(User user, Option option, int quantity,
-        String message) {
+    public Order(User user, Option option, int quantity, String message, int orderPrice) {
         this.user = user;
         this.option = option;
         this.quantity = quantity;
         this.message = message;
+        this.orderPrice = orderPrice;
     }
 
     public Long getId() {
@@ -60,11 +65,10 @@ public class Order {
         return option;
     }
 
-    public int getQuantity() {
-        return quantity;
-    }
-
     public String getMessage() {
         return message;
+    }
+    public int getOrderPrice() {
+        return orderPrice;
     }
 }

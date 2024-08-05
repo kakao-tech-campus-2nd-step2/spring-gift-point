@@ -23,6 +23,7 @@ public class User {
     private String password;
     private String role;
     private String accessToken;
+    private int point;
 
     @OneToMany(mappedBy = "user")
     private List<Wish> wishList = new ArrayList<>();
@@ -58,7 +59,15 @@ public class User {
     public String getAccessToken() {
         return accessToken;
     }
-
+    public void usePoint(int point){
+        if (this.point < point){
+            throw new IllegalArgumentException("남은 포인트가 사용하려는 포인트보다 적습니다.");
+        }
+        this.point -= point;
+    }
+    public void addPoint(int point){
+        this.point += point;
+    }
     public void updateRole(Role role) {
         this.role = role.name();
     }
