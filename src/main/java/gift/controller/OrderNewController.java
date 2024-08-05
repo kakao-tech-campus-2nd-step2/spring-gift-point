@@ -19,13 +19,13 @@ import org.springframework.web.bind.annotation.*;
 @Tag(name = "[협업] ORDER API", description = "[협업] 주문 컨트롤러")
 public class OrderNewController {
 
-    private OptionService optionService;
-    private WishlistService wishlistService;
-    private KakaoTokenService kakaoTokenService;
-    private KakaoService kakaoService;
-    private OrderService orderService;
-    private MemberService memberService;
-    private PointService pointService;
+    private final OptionService optionService;
+    private final WishlistService wishlistService;
+    private final KakaoTokenService kakaoTokenService;
+    private final KakaoService kakaoService;
+    private final OrderService orderService;
+    private final MemberService memberService;
+    private final PointService pointService;
 
     @Autowired
     public OrderNewController(

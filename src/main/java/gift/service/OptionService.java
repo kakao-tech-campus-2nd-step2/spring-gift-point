@@ -1,6 +1,5 @@
 package gift.service;
 
-import gift.dto.OptionDto;
 import gift.dto.response.OptionResponse;
 import gift.entity.Option;
 import gift.entity.Product;
@@ -9,9 +8,6 @@ import gift.repository.ProductRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.util.*;
-import java.util.stream.Collectors;
 
 import java.util.*;
 import java.util.stream.Collectors;

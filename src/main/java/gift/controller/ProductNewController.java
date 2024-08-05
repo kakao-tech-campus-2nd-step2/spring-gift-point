@@ -27,11 +27,12 @@ public class ProductNewController {
 
     private final ProductService productService;
     private final WishlistService wishlistService;
-    private final OptionService optionService;
-    public ProductNewController(ProductService productService, WishlistService wishlistService, OptionService optionService) {
+
+
+    public ProductNewController(ProductService productService, WishlistService wishlistService) {
         this.productService = productService;
         this.wishlistService= wishlistService;
-        this.optionService = optionService;
+
     }
 
 
