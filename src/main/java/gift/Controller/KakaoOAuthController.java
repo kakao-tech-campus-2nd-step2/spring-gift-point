@@ -57,7 +57,7 @@ public class KakaoOAuthController {
         String validAccessToken = accessToken.getBody();
 
         //토큰을 쿠키에 저장하기
-        Cookie cookie = new Cookie("accessToken", validAccessToken);
+        Cookie cookie = new Cookie("token", validAccessToken);
         cookie.setHttpOnly(true);
         cookie.setPath("/");
         response.addCookie(cookie);
@@ -76,16 +76,15 @@ public class KakaoOAuthController {
         );
 
         ObjectMapper objectMapper = new ObjectMapper();
-        //id는 가능한데 email을 가져오려고 하면 null이 되는 이유?????????? -> 권한 동의 필요
         KakaoMemberDto kakaoMemberDto = objectMapper.readValue(responseEntity.getBody(), KakaoMemberDto.class);
-        long id = kakaoMemberDto.getId();
+        String email = kakaoMemberDto.getKakaoAccount().getEmail();
 
-        request.getSession().setAttribute("kakaoId", id);
+        request.getSession().setAttribute("email", email);
 
         //이미 가입된 회원인지 확인, 가입되지 않은 회원이라면 회원가입 진행
-        if (memberService.findByKakaoId(id).isEmpty()) {
+        if (memberService.findByEmail(email).isEmpty()) {
             MemberDto memberDto = new MemberDto();
-            memberDto.setKakaoId(id);
+            memberDto.setEmail(email);
             memberService.register(memberDto);
         }
 
