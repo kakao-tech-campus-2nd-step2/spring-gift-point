@@ -24,8 +24,7 @@ public class Point {
         return balance;
     }
 
-    public void subtractBalance(int totalPrice) {
-        int discountedPrice = (int) (0.95 * totalPrice);
+    public void subtractBalance(int discountedPrice) {
         if (discountedPrice > balance) {
             throw new InsufficientPointException();
         }

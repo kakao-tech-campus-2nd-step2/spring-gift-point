@@ -40,8 +40,8 @@ public class Member {
         return point.getBalance();
     }
 
-    public void subtractPoint(int totalPrice) {
-        point.subtractBalance(totalPrice);
+    public void subtractPoint(int discountedPrice) {
+        point.subtractBalance(discountedPrice);
     }
 
     public void updatePoint(int newPoint) {

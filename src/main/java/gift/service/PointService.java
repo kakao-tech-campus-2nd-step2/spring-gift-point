@@ -7,6 +7,8 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class PointService {
+
+    private static final double POINT_USAGE_DISCOUNT_RATE = 0.95;
     private final MemberService memberService;
     private final OptionService optionService;
 
@@ -23,8 +25,13 @@ public class PointService {
     public void subtractPoint(Long memberId, OrderRequest orderRequest) {
         int productPrice = optionService.getProductPrice(orderRequest.optionId());
         int totalPrice = productPrice * orderRequest.quantity();
+        int discountedPrice = applyDiscountWhenUsingPoint(totalPrice);
 
         memberService.getMember(memberId)
-                .subtractPoint(totalPrice);
+                .subtractPoint(discountedPrice);
+    }
+
+    private int applyDiscountWhenUsingPoint(int totalPrice) {
+        return (int) (POINT_USAGE_DISCOUNT_RATE * totalPrice);
     }
 }
