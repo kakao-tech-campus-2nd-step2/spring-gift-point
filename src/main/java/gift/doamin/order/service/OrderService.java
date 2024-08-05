@@ -1,14 +1,10 @@
 package gift.doamin.order.service;
 
-import static org.springframework.http.MediaType.APPLICATION_FORM_URLENCODED;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
-import gift.doamin.order.dto.Link;
-import gift.doamin.order.dto.MessageTemplate;
 import gift.doamin.order.dto.OrderRequest;
 import gift.doamin.order.dto.OrderResponse;
 import gift.doamin.order.entity.Order;
 import gift.doamin.order.repository.OrderRepository;
+import gift.doamin.order.util.KakaoMessageRestClient;
 import gift.doamin.product.entity.Option;
 import gift.doamin.product.repository.OptionRepository;
 import gift.doamin.user.dto.UserDto;
@@ -26,9 +22,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
-import org.springframework.web.client.RestClient;
 
 @Service
 public class OrderService {
@@ -36,21 +29,23 @@ public class OrderService {
     private static final Logger log = LoggerFactory.getLogger(OrderService.class);
     private final OptionRepository optionRepository;
     private final OrderRepository orderRepository;
-    private final WishListRepository jpaWishListRepository;
-    private final KakaoOAuthTokenRepository oAuthTokenRepository;
+    private final WishListRepository wishListRepository;
     private final UserRepository userRepository;
+    private final KakaoOAuthTokenRepository oAuthTokenRepository;
     private final OAuthService oAuthService;
-    private final RestClient restClient = RestClient.builder().build();
+    private final KakaoMessageRestClient kakaoMessageRestClient;
 
     public OrderService(OptionRepository optionRepository, OrderRepository orderRepository,
-        WishListRepository jpaWishListRepository, KakaoOAuthTokenRepository oAuthTokenRepository,
-        UserRepository userRepository, OAuthService oAuthService) {
+        WishListRepository wishListRepository, UserRepository userRepository,
+        KakaoOAuthTokenRepository oAuthTokenRepository, OAuthService oAuthService,
+        KakaoMessageRestClient kakaoMessageRestClient) {
         this.optionRepository = optionRepository;
         this.orderRepository = orderRepository;
-        this.jpaWishListRepository = jpaWishListRepository;
-        this.oAuthTokenRepository = oAuthTokenRepository;
+        this.wishListRepository = wishListRepository;
         this.userRepository = userRepository;
+        this.oAuthTokenRepository = oAuthTokenRepository;
         this.oAuthService = oAuthService;
+        this.kakaoMessageRestClient = kakaoMessageRestClient;
     }
 
     @Transactional
@@ -80,52 +75,25 @@ public class OrderService {
 
     @Transactional
     public void subtractWishList(User user, Option option, Integer quantity) {
-        jpaWishListRepository.findByUserIdAndOptionId(user.getId(), option.getId())
+        wishListRepository.findByUserIdAndOptionId(user.getId(), option.getId())
             .ifPresent(wish -> {
                 try {
                     wish.subtract(quantity);
                 } catch (IllegalArgumentException e) {
-                    jpaWishListRepository.delete(wish);
+                    wishListRepository.delete(wish);
                 }
             });
     }
 
     @Transactional
     public void sendKakaoTalkMessage(Order order) {
-        String url = "https://kapi.kakao.com/v2/api/talk/memo/default/send";
-
         KakaoOAuthToken kakaoOAuthToken = oAuthTokenRepository.findByUser(order.getReceiver())
             .orElseThrow(() ->
                 new IllegalArgumentException("카카오톡 사용자에게만 선물할 수 있습니다."));
 
         oAuthService.renewOAuthTokens(kakaoOAuthToken);
 
-        MultiValueMap<String, Object> body = getMessageRequestBody(order);
-
-        restClient.post()
-            .uri(url)
-            .contentType(APPLICATION_FORM_URLENCODED)
-            .header("Authorization", "Bearer " + kakaoOAuthToken.getAccessToken())
-            .body(body)
-            .retrieve()
-            .toEntity(String.class);
-    }
-
-    private static MultiValueMap<String, Object> getMessageRequestBody(Order order) {
-        ObjectMapper objectMapper = new ObjectMapper();
-        MessageTemplate messageTemplate = new MessageTemplate("text", order.getMessage(),
-            new Link(""));
-        String messageJson;
-        try {
-            messageJson = objectMapper.writeValueAsString(messageTemplate);
-        } catch (Exception e) {
-            throw new IllegalArgumentException();
-        }
-
-        MultiValueMap<String, Object> body = new LinkedMultiValueMap<>();
-        body.add("template_object", messageJson);
-
-        return body;
+        kakaoMessageRestClient.sendMessage(kakaoOAuthToken.getAccessToken(), order.getMessage());
     }
 
     public Page<OrderResponse> getPage(Long userId, Pageable pageable) {
