@@ -6,7 +6,9 @@ public interface MemberService {
 
     void registerMember(String email, String password);
 
-    String generateToken(Member member);
-
     String login(String email, String password);
+
+    Long getPoint(String memberEmail);
+
+    Member getMemberByToken(String token);
 }

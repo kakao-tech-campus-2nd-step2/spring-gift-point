@@ -11,7 +11,7 @@ import java.util.List;
 public interface WishService {
     WishCreateResponse createWish(String token, Long productId);
     List<WishDTO> getWishlistByMemberId(Member member);
-    void deleteWish(Long wishId);
+    void deleteWish(Long productId);
     Page<WishDTO> getWishlistByPage(int page, int size, String sortBy, String direction);
 
     Wish getWishByProductId(Long productId);

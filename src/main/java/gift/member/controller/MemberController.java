@@ -1,20 +1,16 @@
 package gift.member.controller;
 
+import gift.common.auth.JwtUtil;
 import gift.common.util.CommonResponse;
-import gift.member.dto.LoginRequest;
-import gift.member.dto.LoginResponse;
-import gift.member.dto.SignUpReqeust;
-import gift.member.dto.SignUpResponse;
+import gift.member.dto.*;
 import gift.member.service.MemberService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/members")
@@ -22,9 +18,11 @@ import org.springframework.web.bind.annotation.RestController;
 public class MemberController {
 
     private final MemberService memberService;
+    private final JwtUtil jwtUtil;
 
-    public MemberController(MemberService memberService) {
+    public MemberController(MemberService memberService, JwtUtil jwtUtil) {
         this.memberService = memberService;
+        this.jwtUtil = jwtUtil;
     }
 
     // 회원가입
@@ -51,11 +49,31 @@ public class MemberController {
         String token = memberService.login(email, password);
 
         if (token == null) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Invalid email or password"); // 403 Forbidden
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("회원가입하지 않은 사용자입니다."); // 403 Forbidden
         }
 
         LoginResponse response = new LoginResponse(email, token);
 
         return ResponseEntity.ok(new CommonResponse<>(response, "로그인 후 토큰 발기 성공", true));
+    }
+
+    // 특정 회원의 포인트 조회
+    @Operation(summary = "포인트 조회", description = "특정 회원의 포인트를 조회한다.")
+    @GetMapping("/points")
+    public ResponseEntity<?> getPoint(
+            @Parameter(hidden = true) @RequestHeader("Authorization") String authorizationHeader
+    ) {
+        // 토큰 추출
+        String token = jwtUtil.extractToken(authorizationHeader);
+        if (token == null || !jwtUtil.isTokenValid(token)) {
+            // 401 Unauthorized
+            return ResponseEntity.status(401).body(new CommonResponse<>(null, "Invalid or missing token", false));
+        }
+        System.out.println("KKKKtoken = " + token);
+        String memberEmail = jwtUtil.extractEmail(token);
+        System.out.println("KKKKmemberEmail = " + memberEmail);
+        Long points = memberService.getPoint(memberEmail);
+
+        return ResponseEntity.ok(new CommonResponse<>(new PointResponse(points), "포인트 조회 성공", true));
     }
 }
