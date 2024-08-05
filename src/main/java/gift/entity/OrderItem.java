@@ -7,7 +7,7 @@ import jakarta.persistence.Id;
 
 
 @Entity
-public class Order {
+public class OrderItem {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -28,7 +28,7 @@ public class Order {
     @Column(name = "message", nullable = false)
     private String message;
 
-    public Order(){
+    public OrderItem(){
 
     }
 

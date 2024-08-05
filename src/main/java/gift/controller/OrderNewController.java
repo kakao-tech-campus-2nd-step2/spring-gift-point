@@ -3,7 +3,8 @@ package gift.controller;
 import gift.dto.KakaoTokenDto;
 import gift.dto.request.OrderRequest;
 import gift.dto.response.OrderResponse;
-import gift.entity.Order;
+import gift.entity.Member;
+import gift.entity.OrderItem;
 import gift.entity.Product;
 import gift.service.*;
 import io.swagger.v3.oas.annotations.Operation;
@@ -23,13 +24,18 @@ public class OrderNewController {
     private KakaoTokenService kakaoTokenService;
     private KakaoService kakaoService;
     private OrderService orderService;
+    private MemberService memberService;
+    private PointService pointService;
+
     @Autowired
     public OrderNewController(
             OptionService optionService,
             WishlistService wishlistService,
             KakaoTokenService kakaoTokenService,
             KakaoService kakaoService,
-            OrderService orderService
+            OrderService orderService,
+            MemberService memberService,
+            PointService pointService
 
     ) {
         this.optionService = optionService;
@@ -37,31 +43,31 @@ public class OrderNewController {
         this.kakaoService = kakaoService;
         this.kakaoTokenService = kakaoTokenService;
         this.orderService = orderService;
-    }
-
-
-    @PostMapping
-    @Operation(summary = "상품 주문", description = "상품을 주문")
-    public ResponseEntity<Void> orderItem(@RequestBody OrderRequest request,
-                                          @RequestAttribute("userId") Long userId) {
-        Long optionId = request.getOptionId();
-        int quantity = request.getQuantity();
-        optionService.subtractOptionQuantity(optionId, quantity);
-        return ResponseEntity.ok().build();
+        this.memberService = memberService;
+        this.pointService = pointService;
     }
 
     @Transactional
     @PostMapping
     @Operation(summary = "상품 주문", description = "상품을 주문하고 메시지를 보냅니다.")
-    public ResponseEntity<OrderResponse> orderItem(@RequestParam("email") String email, @RequestBody OrderRequest request) {
+    public ResponseEntity<OrderResponse> orderItem(@RequestBody OrderRequest request) {
+        Long userId = Long.valueOf("1");
+
         optionService.subtractOptionQuantity(request.getOptionId(), request.getQuantity());
+
+        Member member = memberService.getMemberById(userId);
+
+        pointService.subtractPoint(member, request.getPoint());
+
         Product product = optionService.getProductById(request.getOptionId());
         int price = product.getPrice();
-        wishlistService.deleteWishlistItem(email, product.getId());
-        KakaoTokenDto tokenDto = kakaoTokenService.getTokenByEmail(email);
+        pointService.addPoint(member,(int) ((price - request.getPoint()) * 0.1));
+
+        wishlistService.deleteWishlistItem(member.getEmail(), product.getId());
+        KakaoTokenDto tokenDto = kakaoTokenService.getTokenByEmail(member.getEmail());
         String accessToken = tokenDto.getAccessToken();
         kakaoService.sendKakaoMessage(accessToken, request.getMessage());
-        Order order = orderService.getOrder(request.getOptionId());
-        return ResponseEntity.ok().body(new OrderResponse(order.getId(), request.getOptionId(), request.getQuantity(), request.getMessage()));
+        OrderItem order = orderService.getOrder(request.getOptionId());
+        return ResponseEntity.ok().body(new OrderResponse(request.getOptionId()));
     }
 }

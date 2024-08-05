@@ -15,22 +15,18 @@ public class Point {
 
     private int point;
 
-
-    private Long memberId;
+    @OneToOne
+    Member member;
 
 
     public Point() {
     }
 
     public Point(Member member, int point){
-        this.memberId = member.getId();
+        this.member = member;
         this.point = point;
     }
 
-    public Point(Long memberId, int point){
-        this.memberId = memberId;
-        this.point = point;
-    }
 
     public Long getId() {
         return id;
@@ -40,12 +36,12 @@ public class Point {
         this.id = id;
     }
 
-    public void setMemberId(Long memberId) {
-        this.memberId = memberId;
+    public void setMemberId(Member member) {
+        this.member = member;
     }
 
-    public Long getMemberId() {
-        return memberId;
+    public Member getMember() {
+        return member;
     }
 
     public void setPoint(int point) {
@@ -61,5 +57,9 @@ public class Point {
             throw new RuntimeException("Not enough point available");
         }
         this.point -= point;
+    }
+
+    public void addPoint(int point) {
+        this.point += point;
     }
 }

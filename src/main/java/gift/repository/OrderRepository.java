@@ -1,10 +1,10 @@
 package gift.repository;
 
 
-import gift.entity.Order;
+import gift.entity.OrderItem;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 
-public interface OrderRepository extends JpaRepository<Order, Long> {
-    Order findByOptionId(Long optionId);
+public interface OrderRepository extends JpaRepository<OrderItem, Long> {
+    OrderItem findByOptionId(Long optionId);
 }
