@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="utf-8">
+  <title>유저 리스트</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reset-css@5.0.2/reset.min.css">
+  <link rel="stylesheet" type="text/css" href="/css/user_list.css">
+</head>
+<body>
+<header>
+  <a class="home-button" th:href="@{/}">메인 페이지로</a>
+  <h1>유저 리스트</h1>
+</header>
+<main>
+  <table border="1">
+    <thead>
+    <tr>
+      <th>유저 ID</th>
+      <th>Email</th>
+      <th>포인트</th>
+      <th>Actions</th>
+    </tr>
+    </thead>
+    <tbody th:remove="all-but-first">
+    <tr th:each="user : ${userPage}">
+      <td class="userId" th:text="${user.id}">1</td>
+      <td class="userEmail" th:text="${user.email}">example@example.com</td>
+      <td class="userPoint" th:text="${user.point}">1000</td>
+      <td>
+        <button type="button" class="delete-button" th:data-id="${user.id}">Delete</button>
+        <button type="button" class="charge-button" th:data-id="${user.id}">Charge</button>
+      </td>
+    </tr>
+    <tr>
+      <td class="userId">1</td>
+      <td class="userEmail">example@example.com</td>
+      <td class="userPoint">1000</td>
+      <td>
+        <button type="button">Delete</button>
+        <button type="button">Charge</button>
+      </td>
+    </tr>
+    <tr>
+      <td class="userId">2</td>
+      <td class="userEmail">example2@example.com</td>
+      <td class="userPoint">2000</td>
+      <td>
+        <button type="button">Delete</button>
+        <button type="button">Charge</button>
+      </td>
+    </tr>
+    </tbody>
+  </table>
+
+  <nav aria-label="Page navigation">
+    <ul class="pagination"
+        th:with="start=${(userPage.number/maxPage) * maxPage + 1}, end=(${(userPage.totalPages == 0) ? 1 : (start + (maxPage - 1) < userPage.totalPages ? start + (maxPage - 1) : userPage.totalPages)})">
+      <li th:if="${start > 1}">
+        <a th:href="@{/users(page=0)}" th:text="'<<'"></a>
+      </li>
+      <li th:if="${start > 1}">
+        <a th:href="@{/users(page=${start - maxPage})}" th:text="'<'"></a>
+      </li>
+
+      <li th:each="page: ${#numbers.sequence(start, end)}">
+        <a th:text="${page}" th:href="@{/users(page=${page - 1})}"></a>
+      </li>
+
+      <li th:if="${end < userPage.totalPages}">
+        <a th:href="@{/users(page=${start + maxPage})}" th:text="'>'"></a>
+      </li>
+      <li th:if="${end < userPage.totalPages}">
+        <a th:href="@{/users(page=${userPage.totalPages - 1})}" th:text="'>>'"></a>
+      </li>
+    </ul>
+  </nav>
+</main>
+
+<script>
+  document.querySelectorAll('.delete-button').forEach(button => {
+    button.addEventListener('click', async function (event) {
+      const userId = this.getAttribute('data-id');
+      if (confirm(`ID ${userId} 유저를 삭제하시겠습니까?`)) {
+        const response = await fetch(`/api/users/${userId}`, {
+          method: 'DELETE'
+        });
+
+        if (response.ok) {
+          alert('성공적으로 삭제되었습니다.');
+          window.location.reload();
+        } else {
+          const errorData = response.json();
+          alert(errorData.detail);
+        }
+      }
+    })
+  });
+
+  document.querySelectorAll('.charge-button').forEach(button => {
+    button.addEventListener('click', async function (event) {
+      const userId = this.getAttribute('data-id');
+      const amount = prompt(`충전할 포인트를 입력하세요 (유저 ID: ${userId})`);
+      if (amount !== null) {
+        const response = await fetch(`/api/points`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ userId: parseInt(userId), point: parseInt(amount) })
+        });
+
+        if (response.ok) {
+          alert('성공적으로 충전되었습니다.');
+          window.location.reload();
+        } else {
+          const errorData = response.json();
+          alert(errorData.detail);
+        }
+      }
+    })
+  });
+</script>
+</body>
+</html>
