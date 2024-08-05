@@ -68,7 +68,7 @@ public class KakaoOAuthControllerTest {
                 eq(HttpMethod.GET),
                 any(),
                 eq(String.class)))
-                .willReturn(ResponseEntity.ok("{\"id\": 12345}"));
+                .willReturn(ResponseEntity.ok("{\"id\": 12345, \"kakao_account\": {\"email\": \"1234@naver.com\"}}"));
 
         // MockMvc 요청 빌더 생성
         RequestBuilder requestBuilder = MockMvcRequestBuilders.get("/auth/kakao/callback")
@@ -79,7 +79,7 @@ public class KakaoOAuthControllerTest {
                 .andExpect(status().isSeeOther())
                 .andExpect(header().string("Location", "/products"))
                 .andExpect(cookie().exists("accessToken"))
-                .andExpect(request().sessionAttribute("kakaoId", 12345L))
+                .andExpect(request().sessionAttribute("email", "1234@naver.com"))
                 .andExpect(content().string(containsString("Successfully logged in")));
     }
 
