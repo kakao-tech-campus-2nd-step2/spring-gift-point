@@ -76,6 +76,14 @@ public class OrderService {
             .orElseThrow(() -> new CustomException("Member with token not exist", HttpStatus.UNAUTHORIZED, -40101));
         Option option = optionService.subtractQuantity(orderRequest.getOptionId(), orderRequest.getQuantity());
 
+        
+        if(orderRequest.pointAmount() == 0){
+            int totalPrice = option.getProduct().getPrice() * orderRequest.getQuantity();
+            member.chargePoint((int)totalPrice * 0.03);
+        } else{
+            member.subtractPoint(orderRequest.getPointAmount());
+        }
+
         Order order = new Order(member, option, orderRequest.getQuantity(), orderRequest.getMessage(), LocalDateTime.now());
         Order savedOrder = orderRepository.save(order);
         
