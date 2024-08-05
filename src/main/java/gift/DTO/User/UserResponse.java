@@ -7,6 +7,7 @@ public class UserResponse {
     String email;
     String password;
     String token;
+    int point;
 
     public UserResponse(){
 
@@ -17,6 +18,7 @@ public class UserResponse {
         this.email = user.getEmail();
         this.password = user.getPassword();
         this.token = user.getToken();
+        this.point = user.getPoint();
     }
 
     public Long getId() {
@@ -30,7 +32,12 @@ public class UserResponse {
     public String getPassword() {
         return password;
     }
+
     public String getToken(){
         return token;
+    }
+
+    public int getPoint(){
+        return point;
     }
 }
