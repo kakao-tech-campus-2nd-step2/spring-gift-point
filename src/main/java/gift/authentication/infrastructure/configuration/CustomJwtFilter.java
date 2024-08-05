@@ -71,6 +71,7 @@ public class CustomJwtFilter extends OncePerRequestFilter {
         return path.startsWith("/api/members/login")
                 || path.startsWith("/api/members/register")
                 || path.startsWith("/api/oauth2")
+                || path.startsWith("/api/categories")
                 || path.startsWith("/swagger-ui")
                 || path.startsWith("/v3/api-docs");
     }
