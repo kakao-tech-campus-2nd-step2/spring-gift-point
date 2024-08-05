@@ -26,6 +26,8 @@ public class Order {
     public LocalDateTime orderDateTime;
     @JsonProperty("total_price")
     public Long totalPrice;
+    @JsonProperty("using_point")
+    public Long usingPoint;
 
     public Long getId() {
         return id;
@@ -73,5 +75,13 @@ public class Order {
 
     public void setTotalPrice(Long totalPrice) {
         this.totalPrice = totalPrice;
+    }
+
+    public Long getUsingPoint() {
+        return usingPoint;
+    }
+
+    public void setUsingPoint(Long usingPoint) {
+        this.usingPoint = usingPoint;
     }
 }

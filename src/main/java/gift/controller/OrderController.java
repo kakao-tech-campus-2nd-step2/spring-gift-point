@@ -2,7 +2,9 @@ package gift.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import gift.model.Member;
+import gift.model.Option;
 import gift.model.Order;
+import gift.model.Product;
 import gift.service.MemberService;
 import gift.service.OptionService;
 import gift.service.OrderService;
@@ -43,11 +45,17 @@ public class OrderController {
     @PostMapping
     public ResponseEntity<?> addOrder(@RequestHeader("Authorization") String token,@RequestBody Order order)
         throws JsonProcessingException {
+        Option option = optionService.getOptionById(order.getOptionId()).get();
+        Product product =option.getProduct();
+        Long price = (long) product.getPrice();
+        Long totalPrice = order.getQuantity() * price;
         orderService.save(order);
         Claims claims = jwtUtil.extractClaims(token.replace("Bearer ", ""));
         Long memberId = Long.parseLong(claims.getSubject());
         Member member = memberService.getMemberById(memberId);// 토큰에서 멤버 정보 추출
         orderService.sendMessage(order, member);
+        memberService.subtractPoint(memberId, order.usingPoint);
+        memberService.addPoint(memberId, (long) (totalPrice * 0.005));
 
         return ResponseEntity.ok().build();
     }

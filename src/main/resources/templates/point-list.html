@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Member Points</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+</head>
+<body>
+<div class="container mt-5">
+  <h2>Member Points</h2>
+  <table class="table table-bordered">
+    <thead>
+    <tr>
+      <th>Member ID</th>
+      <th>Member Email</th>
+      <th>Points</th>
+      <th>Action</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="member : ${points}">
+      <td th:text="${member.id}"></td>
+      <td th:text="${member.email}"></td>
+      <td>
+        <input type="number" th:value="${member.point}" class="form-control" th:id="'point_' + ${member.id}">
+      </td>
+      <td>
+        <button class="btn btn-primary" th:attr="onclick='updatePoint(' + ${member.id} + ')'">포인트추가</button>
+      </td>
+    </tr>
+    </tbody>
+  </table>
+</div>
+
+<script>
+  function updatePoint(memberId) {
+    var point = $('#point_' + memberId).val();
+    $.ajax({
+      url: '/api/points/plus',
+      type: 'PUT',
+      contentType: 'application/json',
+      data: JSON.stringify({ member_id: memberId, point: point }),
+      success: function(response) {
+        alert('Point updated successfully!');
+      },
+      error: function(error) {
+        alert('Error updating point: ' + error.responseText);
+      }
+    });
+  }
+</script>
+
+</body>
+</html>

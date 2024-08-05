@@ -21,7 +21,7 @@ public class Kakao {
     private String client_id = "8b0993ea8425d3f401667223d8d6b1a7";
 
     @Column(unique = true, nullable = false)
-    private String redirect_uri = "http://localhost:8080";
+    private String redirect_uri = "http://13.125.235.182:8080";
 
     @Column(unique = true, nullable = false)
     private String code;

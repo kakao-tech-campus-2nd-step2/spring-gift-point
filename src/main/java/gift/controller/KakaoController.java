@@ -40,7 +40,7 @@ public class KakaoController {
 
     @GetMapping("/kakao")
     public void authorize(HttpServletResponse response) throws IOException {
-        response.sendRedirect("https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=8b0993ea8425d3f401667223d8d6b1a7&redirect_uri=http://localhost:8080/api/auth/kakao/callback");
+        response.sendRedirect("https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=8b0993ea8425d3f401667223d8d6b1a7&redirect_uri=http://13.125.235.182:8080/api/auth/kakao/callback");
 
     }
 
