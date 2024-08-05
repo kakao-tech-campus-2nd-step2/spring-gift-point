@@ -58,21 +58,17 @@ public class Category {
     return this.id;
   }
 
-
   public String getName() {
     return this.name;
   }
-
 
   public String getColor() {
     return this.color;
   }
 
-
   public String getImageUrl() {
     return this.imageUrl;
   }
-
 
   public String getDescription() {
     return this.description;

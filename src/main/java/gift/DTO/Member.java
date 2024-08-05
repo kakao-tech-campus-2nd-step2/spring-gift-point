@@ -65,7 +65,7 @@ public class Member {
 
   public boolean matchLoginInfo(MemberDto memberDtoByEmail) {
     return this.email.equals(memberDtoByEmail.getEmail()) && this.password.equals(
-      memberDtoByEmail.getPassword());
+        memberDtoByEmail.getPassword());
   }
 
   public PointVo subtractPoint(PointVo pointVo) throws IllegalAccessException {

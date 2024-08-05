@@ -37,14 +37,14 @@ class OptionControllerTest {
   void addOption() throws Exception {
 
     OptionDto optionDto = new OptionDto(1L, "옵션1", 2,
-      new ProductDto(1L, "product1", 300, "fadsklf",
-        new CategoryDto(1L, "교환권", "#6c95d1", "image_url", "교환권 카테고리")));
+        new ProductDto(1L, "product1", 300, "fadsklf",
+            new CategoryDto(1L, "교환권", "#6c95d1", "image_url", "교환권 카테고리")));
 
     String optionDtoJson = objectMapper.writeValueAsString(optionDto);
     mockMvc.perform(post("/api/options")
         .contentType(MediaType.APPLICATION_JSON)
         .content(optionDtoJson))
-      .andExpect(status().isCreated());
+        .andExpect(status().isCreated());
   }
 
   @Test
@@ -56,28 +56,28 @@ class OptionControllerTest {
   void getOptionById() throws Exception {
     Long productsId = 1L;
     mockMvc.perform(get("/api/products/{productId}/options", productsId))
-      .andExpect(status().isOk());
+        .andExpect(status().isOk());
   }
 
   @Test
   void deleteOption() throws Exception {
     Long productsId = 1L;
     mockMvc.perform(delete("/api/products/{productId}/options", productsId))
-      .andExpect(status().isNoContent());
+        .andExpect(status().isNoContent());
   }
 
   @Test
   void updateOption() throws Exception {
     Long id = 1L;
     OptionDto optionDto = new OptionDto(1L, "옵션2", 2,
-      new ProductDto(1L, "product1", 300, "fadsklf",
-        new CategoryDto(1L, "교환권", "#6c95d1", "image_url", "교환권 카테고리")));
+        new ProductDto(1L, "product1", 300, "fadsklf",
+            new CategoryDto(1L, "교환권", "#6c95d1", "image_url", "교환권 카테고리")));
 
     String optionDtoJson = objectMapper.writeValueAsString(optionDto);
 
     mockMvc.perform(put("/api/{optionsId}", id)
         .contentType(MediaType.APPLICATION_JSON)
         .content(optionDtoJson))
-      .andExpect(status().isOk());
+        .andExpect(status().isOk());
   }
 }

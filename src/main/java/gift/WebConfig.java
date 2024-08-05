@@ -11,7 +11,6 @@ public class WebConfig implements WebMvcConfigurer {
 
   private final LoginUserArgumentResolver loginUserArgumentResolver;
 
-
   public WebConfig(LoginUserArgumentResolver loginUserArgumentResolver) {
     this.loginUserArgumentResolver = loginUserArgumentResolver;
   }
@@ -19,10 +18,10 @@ public class WebConfig implements WebMvcConfigurer {
   @Override
   public void addCorsMappings(CorsRegistry registry) {
     registry.addMapping("/**")
-      .allowedOrigins("http://localhost:3000")
-      .allowedMethods("*")
-      .allowedOriginPatterns("*")
-      .exposedHeaders("*");
+        .allowedOrigins("http://localhost:3000")
+        .allowedMethods("*")
+        .allowedOriginPatterns("*")
+        .exposedHeaders("*");
   }
 
   @Override

@@ -1,6 +1,5 @@
 package gift.Controller;
 
-
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -85,7 +84,7 @@ class CategoryControllerTest {
 
     CategoryDto updateCategoryDto = new CategoryDto(1L, "c6", "#ffffff", "imageUrl", "설명칸");
     CategoryDto updatedCategoryDto = categoryController.updateCategory(1L, updateCategoryDto)
-      .getBody();
+        .getBody();
 
     assertThat(updateCategoryDto.getId()).isEqualTo(updatedCategoryDto.getId());
     assertThat(updateCategoryDto.getName()).isEqualTo(updatedCategoryDto.getName());
