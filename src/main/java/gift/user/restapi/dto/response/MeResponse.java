@@ -6,10 +6,11 @@ import gift.user.service.UserInfoDto;
 
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public record MeResponse(
+        Long id,
         String email,
         Long remainPoint
 ){
     public static MeResponse of(UserInfoDto userInfo) {
-        return new MeResponse(userInfo.email(), userInfo.remainPoint());
+        return new MeResponse(userInfo.id(), userInfo.email(), userInfo.remainPoint());
     }
 }
