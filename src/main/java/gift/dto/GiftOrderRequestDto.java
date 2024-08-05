@@ -5,11 +5,11 @@ import io.swagger.v3.oas.annotations.media.Schema;
 @Schema(description = "선물 주문 요청 DTO")
 public class GiftOrderRequestDto {
     @Schema(description = "선택한 옵션 id")
-    private Long optionId;
+    private final Long optionId;
     @Schema(description = "선택한 상품 개수")
-    private Long quantity;
+    private final Long quantity;
     @Schema(description = "선물과 함께 보낼 메세지")
-    private String message;
+    private final String message;
 
     public GiftOrderRequestDto(Long optionId, Long quantity, String message) {
         this.optionId = optionId;

@@ -9,16 +9,16 @@ public class WishResponseDto {
     @Schema(description = "위시리스트에 추가된 상품의 id")
     private final Long productId;
     @Schema(description = "해당 위시 요청하는 사람의 id 값")
-    private Long memberId;
+    private final Long memberId;
 
-    public WishResponseDto(Long id, Long productId,Long memberId) {
+    public WishResponseDto(Long id, Long productId, Long memberId) {
         this.id = id;
         this.productId = productId;
         this.memberId = memberId;
     }
 
     public WishResponseDto(Long productId, Long memberId) {
-        this(null, productId,memberId);
+        this(null, productId, memberId);
     }
 
     public Long getId() {

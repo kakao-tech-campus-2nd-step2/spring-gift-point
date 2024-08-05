@@ -13,7 +13,14 @@ public class MemberRequestDto {
     @Schema(description = "멤버 비밀번호")
     private String password;
 
+
     public MemberRequestDto() {
+    }
+
+    public MemberRequestDto(Long id, String email, String password) {
+        this.id = id;
+        this.email = email;
+        this.password = password;
     }
 
     public MemberRequestDto(String email, String password) {
