@@ -2,6 +2,7 @@ package gift.controller;
 
 import gift.dto.WishListRequestDTO;
 import gift.dto.WishListResponseDTO;
+import gift.enums.SortDirection;
 import gift.service.WishListService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -26,11 +27,12 @@ public class WishListController {
     public ResponseEntity<Page<WishListResponseDTO>> getWishlist(
         @RequestParam(defaultValue = "0") int page,
         @RequestParam(defaultValue = "10") int size,
-        @RequestParam(defaultValue = "createdDate,desc") String sort,
+        @RequestParam(defaultValue = "createdDate") String sortBy,
+        @RequestParam(defaultValue = "DESC") SortDirection direction,
         @RequestHeader("Authorization") String token) {
-        String[] sortParams = sort.split(",");
-        Sort sorting = Sort.by(Sort.Direction.fromString(sortParams[1]), sortParams[0]);
-        PageRequest pageRequest = PageRequest.of(page, size, sorting);
+
+        Sort sort = Sort.by(direction == SortDirection.DESC ? Sort.Direction.DESC : Sort.Direction.ASC, sortBy);
+        PageRequest pageRequest = PageRequest.of(page, size, sort);
         Page<WishListResponseDTO> wishlist = wishListService.getWishlist(token, pageRequest);
         return ResponseEntity.ok(wishlist);
     }

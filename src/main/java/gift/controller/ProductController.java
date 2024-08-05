@@ -4,6 +4,7 @@ import gift.dto.ProductCreateRequestDTO;
 import gift.dto.ProductCreateResponseDTO;
 import gift.dto.ProductRequestDTO;
 import gift.dto.ProductResponseDTO;
+import gift.enums.SortDirection;
 import gift.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -24,15 +25,13 @@ public class ProductController {
     public ResponseEntity<Page<ProductResponseDTO>> getAllProducts(
         @RequestParam(defaultValue = "0") int page,
         @RequestParam(defaultValue = "10") int size,
-        @RequestParam(defaultValue = "name,asc") String sort,
-        @RequestParam Long categoryId) { // 명세에 따른 수정: categoryId 필드 추가
-        Sort sortObj = Sort.by(Sort.Order.asc(sort.split(",")[0]));
-        if (sort.split(",")[1].equalsIgnoreCase("desc")) {
-            sortObj = sortObj.descending();
-        }
+        @RequestParam(defaultValue = "name") String sortBy,
+        @RequestParam(defaultValue = "ASC") SortDirection direction,
+        @RequestParam Long categoryId) {
 
-        PageRequest pageRequest = PageRequest.of(page, size, sortObj);
-        Page<ProductResponseDTO> products = productService.getAllProducts(categoryId, pageRequest); // 명세에 따른 수정: categoryId 추가
+        Sort sort = Sort.by(direction == SortDirection.DESC ? Sort.Direction.DESC : Sort.Direction.ASC, sortBy);
+        PageRequest pageRequest = PageRequest.of(page, size, sort);
+        Page<ProductResponseDTO> products = productService.getAllProducts(categoryId, pageRequest);
         return ResponseEntity.ok(products);
     }
 
