@@ -1,5 +1,7 @@
 package gift.domain.member;
 
+import gift.exception.CustomException;
+import gift.exception.ErrorCode;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 
@@ -62,5 +64,18 @@ public class Member {
 
     public boolean isMatch(String password) {
         return password.equals(this.password);
+    }
+
+    public void buyProduct(int price) {
+        if (checkPoint(price)) {
+            point = point - price;
+        }
+    }
+
+    public boolean checkPoint(int price) {
+        if (price > this.point) {
+            throw new CustomException(ErrorCode.NOT_ENOUGH_POINT);
+        }
+        return true;
     }
 }

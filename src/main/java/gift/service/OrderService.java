@@ -45,18 +45,17 @@ public class OrderService {
     public void handleOrder(Long memberId, OrderRequestDto request) {
         Member member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new CustomException(ErrorCode.INVALID_MEMBER, memberId));
-        Option option = subtractOption(request.optionId(), request.quantity());
+        Option option = optionRepository.findById(request.optionId())
+                .orElseThrow(() -> new CustomException(ErrorCode.INVALID_OPTION, request.optionId()));
+        int totalPoint = (int) (option.getProduct().getPrice() * request.quantity() * 0.95);
+
+        if ((option.checkValidate(request.quantity()) && member.checkPoint(totalPoint))) {
+            option.subtract(request.quantity());
+            member.buyProduct(totalPoint);
+        }
         Optional<Wish> wish = wishRepository.findByMemberIdAndProductId(memberId, option.getProduct().getId());
         wish.ifPresent(wishRepository::delete);
-
         sendMessage(member.getAccessToken());
-    }
-
-    private Option subtractOption(Long optionId, Integer quantity) {
-        Option option = optionRepository.findById(optionId)
-                .orElseThrow(() -> new CustomException(ErrorCode.INVALID_OPTION, optionId));
-        option.subtract(quantity);
-        return option;
     }
 
     private void sendMessage(String accessToken) {

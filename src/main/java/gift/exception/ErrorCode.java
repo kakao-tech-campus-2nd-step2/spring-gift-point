@@ -12,7 +12,8 @@ public enum ErrorCode {
     INVALID_QUANTITY(HttpStatus.BAD_REQUEST, "현재 재고인 %d보다 더 큰 값을 차감할 수 없습니다."),
     DUPLICATE_OPTION(HttpStatus.BAD_REQUEST, "옵션 이름은 중복될 수 없습니다."),
     UNAUTHORIZED_KAKAO(HttpStatus.UNAUTHORIZED, "카카오 사용자 권한이 유효하지 않습니다."),
-    NO_OPTIONS(HttpStatus.BAD_REQUEST, "옵션은 최소 하나 이상 필요합니다.");
+    NO_OPTIONS(HttpStatus.BAD_REQUEST, "옵션은 최소 하나 이상 필요합니다."),
+    NOT_ENOUGH_POINT(HttpStatus.BAD_REQUEST, "포인트가 부족합니다");
     private final HttpStatus error;
 
     private final String message;
