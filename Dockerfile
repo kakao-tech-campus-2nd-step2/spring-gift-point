@@ -1,11 +1,9 @@
-# Use the OpenJDK 21 image
 FROM openjdk:21-jdk-oraclelinux7
 
-# Set the working directory
 WORKDIR /app
 
-# Copy the built JAR file into the image
-COPY build/libs/*.jar app.jar
+COPY ./build/libs/spring-gift-0.0.1-SNAPSHOT.jar /app/spring-gift.jar
 
-# Specify the command to run the JAR file
-ENTRYPOINT ["java", "-jar", "/app/app.jar"]
+ENV TZ=Asia/Seoul
+
+CMD ["java", "-jar", "spring-gift.jar"]

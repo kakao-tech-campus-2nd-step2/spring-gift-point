@@ -1,5 +1,6 @@
 package gift.product.application;
 
+import gift.category.application.CategoryServiceResponse;
 import gift.option.application.OptionServiceResponse;
 import gift.product.domain.Product;
 
@@ -10,7 +11,7 @@ public record ProductServiceResponse(
         String name,
         Integer price,
         String imageUrl,
-        Long categoryId,
+        CategoryServiceResponse categoryServiceResponse,
         List<OptionServiceResponse> optionServiceResponseList
 ){
     public static ProductServiceResponse from(Product product) {
@@ -19,7 +20,7 @@ public record ProductServiceResponse(
                 product.getName(),
                 product.getPrice(),
                 product.getImageUrl(),
-                product.getCategory().getId(),
+                CategoryServiceResponse.from(product.getCategory()),
                 product.getOptions().stream()
                         .map(OptionServiceResponse::from)
                         .toList()

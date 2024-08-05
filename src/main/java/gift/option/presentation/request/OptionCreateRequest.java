@@ -14,7 +14,16 @@ public record OptionCreateRequest(
         public OptionCreateCommand toCommand() {
                 return new OptionCreateCommand(
                         name,
-                        quantity
+                        quantity,
+                        null
+                );
+        }
+
+        public OptionCreateCommand toCommand(Long productId) {
+                return new OptionCreateCommand(
+                        name,
+                        quantity,
+                        productId
                 );
         }
 }

@@ -5,9 +5,12 @@ import gift.auth.KakaoService;
 import gift.auth.KakaoToken;
 import gift.exception.type.NotFoundException;
 import gift.member.application.command.MemberEmailUpdateCommand;
-import gift.member.application.command.MemberJoinCommand;
 import gift.member.application.command.MemberLoginCommand;
 import gift.member.application.command.MemberPasswordUpdateCommand;
+import gift.member.application.command.MemberRegisterCommand;
+import gift.member.application.response.MemberLoginServiceResponse;
+import gift.member.application.response.MemberRegisterServiceResponse;
+import gift.member.application.response.MemberServiceResponse;
 import gift.member.domain.Member;
 import gift.member.domain.MemberRepository;
 import gift.member.presentation.request.ResolvedMember;
@@ -49,20 +52,20 @@ public class MemberServiceTest {
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
-        member = new Member(1L, "test@example.com", "password",  COMMON);
+        member = new Member(1L, "test@example.com", "password", COMMON);
     }
 
     @Test
     void 회원가입_테스트() {
         // Given
-        MemberJoinCommand command = new MemberJoinCommand("test@example.com", "password");
+        MemberRegisterCommand command = new MemberRegisterCommand("test@example.com", "password");
         when(memberRepository.save(any())).thenReturn(member);
 
         // When
-        Long memberId = memberService.join(command);
+        MemberRegisterServiceResponse memberRegisterServiceResponse = memberService.register(command);
 
         // Then
-        assertEquals(member.getId(), memberId);
+        assertEquals(member.getId(), memberRegisterServiceResponse.id());
         verify(memberRepository, times(1)).save(any());
     }
 
@@ -73,10 +76,10 @@ public class MemberServiceTest {
         when(memberRepository.findByEmailAndPassword(any(), any())).thenReturn(Optional.of(member));
 
         // When
-        Long memberId = memberService.login(command);
+        MemberLoginServiceResponse memberLoginServiceResponse = memberService.login(command);
 
         // Then
-        assertEquals(member.getId(), memberId);
+        assertEquals(member.getId(), memberLoginServiceResponse.id());
         verify(memberRepository, times(1)).findByEmailAndPassword(any(), any());
     }
 
@@ -89,7 +92,7 @@ public class MemberServiceTest {
         when(memberRepository.existsByEmail(command.email())).thenReturn(false);
 
         // When
-        assertDoesNotThrow(() -> memberService.updateEmail(command, resolvedMember.id()));
+        assertDoesNotThrow(() -> memberService.updateEmail(resolvedMember.id(), command));
 
         // Then
         assertThat(member.getEmail()).isEqualTo("new@example.com");
@@ -103,7 +106,7 @@ public class MemberServiceTest {
         when(memberRepository.findById(resolvedMember.id())).thenReturn(Optional.of(this.member));
 
         // When
-        assertDoesNotThrow(() -> memberService.updatePassword(command, resolvedMember.id()));
+        assertDoesNotThrow(() -> memberService.updatePassword(resolvedMember.id(), command));
 
         // Then
         assertThat(memberService.findById(resolvedMember.id()).password()).isEqualTo("newPassword");
@@ -167,7 +170,7 @@ public class MemberServiceTest {
     @Test
     void 카카오_회원_삭제_테스트() {
         // Given
-        Member member = new Member(1L, "test@example.com", null,  COMMON, 12345L);
+        Member member = new Member(1L, "test@example.com", null, COMMON, 12345L);
         doNothing().when(memberRepository).delete(member);
         doNothing().when(wishlistRepository).deleteAllByMemberId(member.getId());
         doNothing().when(kakaoService).unlink(any());
@@ -187,8 +190,15 @@ public class MemberServiceTest {
     void 카카오_회원_생성_테스트() {
         // Given
         String code = "valid_authorization_code";
-        KakaoToken kakaoToken = new KakaoToken("bearer", "new_access_token", null, 3600, "refresh_token", 5184000, "scope");
-        KakaoResponse kakaoResponse = new KakaoResponse(12345L, new KakaoResponse.KakaoAccount(new KakaoResponse.KakaoProfile("yugyeom"), "test@example.com"));
+        KakaoToken kakaoToken = new KakaoToken("bearer",
+                "new_access_token",
+                null,
+                3600,
+                "refresh_token",
+                5184000,
+                "scope");
+        KakaoResponse kakaoResponse = new KakaoResponse(12345L,
+                new KakaoResponse.KakaoAccount(new KakaoResponse.KakaoProfile("yugyeom"), "test@example.com"));
         Member newMember = new Member(null, "test@example.com", null, KAKAO, kakaoResponse.id());
         Member savedMember = new Member(1L, "test@example.com", null, KAKAO, kakaoResponse.id());
         when(kakaoService.fetchToken(eq(code))).thenReturn(kakaoToken);
@@ -197,35 +207,71 @@ public class MemberServiceTest {
         when(memberRepository.save(any(Member.class))).thenReturn(savedMember);
 
         // When
-        Long memberId = memberService.kakaoLogin(code);
+        MemberLoginServiceResponse memberLoginServiceResponse = memberService.kakaoLogin(code);
 
         // Then
         verify(kakaoService, times(1)).fetchToken(eq(code));
         verify(kakaoService, times(1)).fetchMemberInfo(eq(kakaoToken.accessToken()));
         verify(memberRepository, times(1)).findByKakaoId(eq(kakaoResponse.id()));
         verify(memberRepository, times(1)).save(any(Member.class));
-        assertThat(memberId).isNotNull();
+        assertThat(memberLoginServiceResponse.id()).isNotNull();
     }
 
     @Test
     void 카카오_기존_회원_테스트() {
         // Given
         String code = "valid_authorization_code";
-        KakaoToken kakaoToken = new KakaoToken("bearer", "new_access_token", null, 3600, "refresh_token", 5184000, "scope");
-        KakaoResponse kakaoResponse = new KakaoResponse(12345L, new KakaoResponse.KakaoAccount(new KakaoResponse.KakaoProfile("yugyeom"), "test@example.com"));
+        KakaoToken kakaoToken = new KakaoToken("bearer",
+                "new_access_token",
+                null,
+                3600,
+                "refresh_token",
+                5184000,
+                "scope");
+        KakaoResponse kakaoResponse = new KakaoResponse(12345L,
+                new KakaoResponse.KakaoAccount(new KakaoResponse.KakaoProfile("yugyeom"), "test@example.com"));
         Member existingMember = new Member(1L, "test@example.com", null, KAKAO, 12345L);
         when(kakaoService.fetchToken(eq(code))).thenReturn(kakaoToken);
         when(kakaoService.fetchMemberInfo(eq(kakaoToken.accessToken()))).thenReturn(kakaoResponse);
         when(memberRepository.findByKakaoId(eq(kakaoResponse.id()))).thenReturn(Optional.of(existingMember));
 
         // When
-        Long memberId = memberService.kakaoLogin(code);
+        MemberLoginServiceResponse memberLoginServiceResponse = memberService.kakaoLogin(code);
 
         // Then
         verify(kakaoService, times(1)).fetchToken(eq(code));
         verify(kakaoService, times(1)).fetchMemberInfo(eq(kakaoToken.accessToken()));
         verify(memberRepository, times(1)).findByKakaoId(eq(kakaoResponse.id()));
         verify(memberRepository, times(0)).save(any(Member.class));
-        assertThat(memberId).isEqualTo(existingMember.getId());
+        assertThat(memberLoginServiceResponse.id()).isEqualTo(existingMember.getId());
+    }
+
+    @Test
+    void 포인트_추가_테스트() {
+        // Given
+        ResolvedMember resolvedMember = new ResolvedMember(member.getId());
+        when(memberRepository.findById(resolvedMember.id())).thenReturn(Optional.of(member));
+
+        // When
+        memberService.addPoint(resolvedMember.id(), 100);
+
+        // Then
+        assertEquals(100, member.getPoint());
+        verify(memberRepository, times(1)).findById(resolvedMember.id());
+    }
+
+    @Test
+    void 포인트_조회_테스트() {
+        // Given
+        member.addPoint(200);
+        ResolvedMember resolvedMember = new ResolvedMember(member.getId());
+        when(memberRepository.findById(resolvedMember.id())).thenReturn(Optional.of(member));
+
+        // When
+        int point = memberService.getPoint(resolvedMember.id());
+
+        // Then
+        assertEquals(200, point);
+        verify(memberRepository, times(1)).findById(resolvedMember.id());
     }
 }

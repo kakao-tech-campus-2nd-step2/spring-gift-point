@@ -1,0 +1,3 @@
+[submodule "spring-gift-submodule"]
+	path = spring-gift-submodule
+	url = https://github.com/rladbrua0207/spring-gift-submodule.git

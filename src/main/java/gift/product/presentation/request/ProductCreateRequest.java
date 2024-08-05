@@ -1,5 +1,6 @@
 package gift.product.presentation.request;
 
+import gift.option.application.command.OptionCreateCommand;
 import gift.option.presentation.request.OptionCreateRequest;
 import gift.product.application.command.ProductCreateCommand;
 import jakarta.validation.constraints.NotNull;
@@ -8,6 +9,8 @@ import jakarta.validation.constraints.Size;
 
 import java.util.List;
 
+import static java.util.stream.Collectors.toList;
+
 public record ProductCreateRequest(
         @NotNull @Size(max = 15, message = "상품 이름은 최대 15자까지 입력할 수 있습니다.")
         @Pattern(regexp = "^[a-zA-Z0-9가-힣()\\[\\]+\\-\\&\\/\\_\\s]*$", message = "상품 이름에 허용되지 않는 특수 문자가 포함되어 있습니다.")
@@ -15,7 +18,7 @@ public record ProductCreateRequest(
         Integer price,
         String imageUrl,
         Long categoryId,
-        List<OptionCreateRequest> optionCreateRequestList
+        List<OptionCreateRequest> options
 ) {
     public ProductCreateCommand toCommand() {
         return new ProductCreateCommand(
@@ -23,9 +26,7 @@ public record ProductCreateRequest(
                 price,
                 imageUrl,
                 categoryId,
-                optionCreateRequestList.stream()
-                        .map(OptionCreateRequest::toCommand)
-                        .toList()
+                options.stream().map(OptionCreateRequest::toCommand).toList()
         );
     }
 }

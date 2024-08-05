@@ -4,7 +4,7 @@ import gift.category.application.command.CategoryCreateCommand;
 import gift.category.application.command.CategoryUpdateCommand;
 import gift.category.domain.Category;
 import gift.category.domain.CategoryRepository;
-import gift.exception.type.DuplicateNameException;
+import gift.exception.type.DuplicateException;
 import gift.exception.type.NotFoundException;
 import gift.product.domain.ProductRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -49,15 +49,15 @@ public class CategoryServiceTest {
     public void 모든카테고리_조회() {
         // Given
         Pageable pageable = PageRequest.of(0, 10);
-        Page<Category> page = new PageImpl<>(List.of(category), pageable, 1);
-        when(categoryRepository.findAll(pageable)).thenReturn(page);
+        List<Category> categories = List.of(new Category(categoryId, "Category", "#FFFFFF", "Description", "http://example.com/image.jpg"));
+        when(categoryRepository.findAll()).thenReturn(categories);
 
         // When
-        Page<CategoryServiceResponse> result = categoryService.findAll(pageable);
+        List<CategoryServiceResponse> result = categoryService.findAll();
 
         // Then
-        assertThat(result.getTotalElements()).isEqualTo(1);
-        assertThat(result.getContent().get(0).name()).isEqualTo("Category");
+        assertThat(result.size()).isEqualTo(1);
+        assertThat(result.get(0).name()).isEqualTo("Category");
     }
 
     @Test
@@ -68,7 +68,7 @@ public class CategoryServiceTest {
 
         // When & Then
         assertThatThrownBy(() -> categoryService.create(command))
-                .isInstanceOf(DuplicateNameException.class)
+                .isInstanceOf(DuplicateException.class)
                 .hasMessage("이미 존재하는 카테고리 이름 입니다.");
     }
 
@@ -77,6 +77,7 @@ public class CategoryServiceTest {
         // Given
         CategoryCreateCommand command = new CategoryCreateCommand("Category", "#FFFFFF", "Description", "http://example.com/image.jpg");
         when(categoryRepository.findByName(command.name())).thenReturn(Optional.empty());
+        when(categoryRepository.save(any(Category.class))).thenReturn(new Category(1L, "Category", "#FFFFFF", "Description", "http://example.com/image.jpg"));
 
         // When
         categoryService.create(command);

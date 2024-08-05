@@ -4,7 +4,7 @@ import gift.member.domain.Member;
 
 import static gift.member.domain.OauthProvider.COMMON;
 
-public record MemberJoinCommand(
+public record MemberRegisterCommand(
         String email,
         String password
 ) {

@@ -74,10 +74,17 @@ public class Product {
     }
 
     public void addOption(Option option) {
-        validateOptionDoesNotExist(option);
+        validateDuplicateOptionName(option);
 
         options.add(option);
         option.setProduct(this);
+    }
+
+    public void removeOption(Option option) {
+        options.remove(option);
+        option.setProduct(null);
+
+        validateHasAtLeastOneOption();
     }
 
     public void update(Category category, ProductUpdateCommand command) {
@@ -99,7 +106,7 @@ public class Product {
         }
     }
 
-    private void validateOptionDoesNotExist(Option option) {
+    private void validateDuplicateOptionName(Option option) {
         options.stream().filter(o -> o.getName().equals(option.getName()))
                 .findAny()
                 .ifPresent(o -> {

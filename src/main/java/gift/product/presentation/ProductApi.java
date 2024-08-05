@@ -1,7 +1,10 @@
 package gift.product.presentation;
 
 import gift.option.application.OptionServiceResponse;
+import gift.option.presentation.request.OptionCreateRequest;
+import gift.option.presentation.request.OptionUpdateRequest;
 import gift.product.presentation.request.ProductCreateRequest;
+import gift.product.presentation.response.ProductReadResponse;
 import gift.product.presentation.request.ProductUpdateRequest;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -19,21 +22,22 @@ import java.util.List;
 public interface ProductApi {
 
     @Operation(summary = "상품 생성")
-    @PostMapping("")
-    void create(
+    @PostMapping
+    ResponseEntity<?> create(
             @Parameter(description = "상품 생성 요청 정보", required = true)
             @Valid @RequestBody ProductCreateRequest request
     );
 
     @Operation(summary = "상품 목록 조회")
-    @GetMapping("")
-    ResponseEntity<Page<ProductControllerResponse>> findAll(
-            @Parameter(description = "페이징 정보", in = ParameterIn.QUERY) Pageable pageable
+    @GetMapping
+    ResponseEntity<Page<ProductReadResponse>> findAll(
+            @Parameter(description = "페이징 정보", in = ParameterIn.QUERY) Pageable pageable,
+            @Parameter(required = false, description = "카테고리 ID", in = ParameterIn.QUERY) Long categoryId
     );
 
     @Operation(summary = "상품 상세 조회")
     @GetMapping("/{id}")
-    ResponseEntity<ProductControllerResponse> findById(
+    ResponseEntity<ProductReadResponse> findById(
             @Parameter(
                     description = "상품 ID",
                     in = ParameterIn.PATH,
@@ -44,7 +48,7 @@ public interface ProductApi {
 
     @Operation(summary = "상품 수정")
     @PutMapping("/{id}")
-    void update(
+    ResponseEntity<?> update(
             @Parameter(
                     description = "상품 ID",
                     in = ParameterIn.PATH,
@@ -57,7 +61,7 @@ public interface ProductApi {
 
     @Operation(summary = "상품 삭제")
     @DeleteMapping("/{id}")
-    void delete(
+    ResponseEntity<?> delete(
             @Parameter(
                     description = "상품 ID",
                     in = ParameterIn.PATH,
@@ -75,5 +79,54 @@ public interface ProductApi {
                     required = true
             )
             @PathVariable("id") Long productId
+    );
+
+    @Operation(summary = "상품 옵션 추가")
+    @PostMapping("/{id}/options")
+    ResponseEntity<?> addOption(
+            @Parameter(
+                    description = "상품 ID",
+                    in = ParameterIn.PATH,
+                    required = true
+            )
+            @PathVariable("id") Long productId,
+            @Parameter(description = "상품 옵션 추가 요청 정보", required = true)
+            @Valid @RequestBody OptionCreateRequest request
+    );
+
+    @Operation(summary = "상품 옵션 수정")
+    @PutMapping("/{productId}/options/{optionId}")
+    ResponseEntity<?> updateOption(
+            @Parameter(
+                    description = "상품 ID",
+                    in = ParameterIn.PATH,
+                    required = true
+            )
+            @PathVariable("productId") Long productId,
+            @Parameter(
+                    description = "상품 옵션 ID",
+                    in = ParameterIn.PATH,
+                    required = true
+            )
+            @PathVariable("optionId") Long optionId,
+            @Parameter(description = "상품 옵션 수정 요청 정보", required = true)
+            @Valid @RequestBody OptionUpdateRequest request
+    );
+
+    @Operation(summary = "상품 옵션 삭제")
+    @DeleteMapping("/{productId}/options/{optionId}")
+    ResponseEntity<?> deleteOption(
+            @Parameter(
+                    description = "상품 ID",
+                    in = ParameterIn.PATH,
+                    required = true
+            )
+            @PathVariable("productId") Long productId,
+            @Parameter(
+                    description = "상품 옵션 ID",
+                    in = ParameterIn.PATH,
+                    required = true
+            )
+            @PathVariable("optionId") Long optionId
     );
 }

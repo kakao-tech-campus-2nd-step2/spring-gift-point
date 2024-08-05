@@ -3,13 +3,17 @@ package gift.auth;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import gift.exception.type.InvalidTokenException;
+import gift.exception.type.UnAuthorizedException;
 import gift.member.domain.Member;
 import gift.member.domain.MemberRepository;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
+import org.springframework.web.client.ResponseErrorHandler;
 import org.springframework.web.client.RestClient;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -56,6 +60,11 @@ public class KakaoService {
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .body(formData)
                 .retrieve()
+                .onStatus(HttpStatusCode::isError, (req, res) -> {
+                    if (res.getStatusCode().equals(HttpStatus.UNAUTHORIZED)) {
+                        throw new UnAuthorizedException("code가 유효하지 않습니다.");
+                    }
+                })
                 .body(KakaoToken.class);
     }
 
@@ -70,6 +79,11 @@ public class KakaoService {
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .body(formData)
                 .retrieve()
+                .onStatus(HttpStatusCode::isError, (req, res) -> {
+                    if (res.getStatusCode().equals(HttpStatus.UNAUTHORIZED)) {
+                        throw new UnAuthorizedException("refresh token이 유효하지 않습니다.");
+                    }
+                })
                 .body(KakaoToken.class);
     }
 
@@ -88,6 +102,11 @@ public class KakaoService {
                 .uri("https://kapi.kakao.com/v2/user/me")
                 .header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken)
                 .retrieve()
+                .onStatus(HttpStatusCode::isError, (req, res) -> {
+                    if (res.getStatusCode().equals(HttpStatus.UNAUTHORIZED)) {
+                        throw new UnAuthorizedException("access token이 유효하지 않습니다.");
+                    }
+                })
                 .body(KakaoResponse.class);
     }
 
@@ -102,6 +121,11 @@ public class KakaoService {
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .body(formData)
                 .retrieve()
+                .onStatus(HttpStatusCode::isError, (req, res) -> {
+                    if (res.getStatusCode().equals(HttpStatus.UNAUTHORIZED)) {
+                        throw new UnAuthorizedException("admin key가 유효하지 않습니다.");
+                    }
+                })
                 .body(String.class);
     }
 
@@ -119,6 +143,11 @@ public class KakaoService {
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .body(formData)
                 .retrieve()
+                .onStatus(HttpStatusCode::isError, (req, res) -> {
+                    if (res.getStatusCode().equals(HttpStatus.UNAUTHORIZED)) {
+                        throw new UnAuthorizedException("access token이 유효하지 않습니다.");
+                    }
+                })
                 .body(String.class);
     }
 
@@ -144,7 +173,7 @@ public class KakaoService {
 
     private static void validateRefreshTokenExpiry(Member member, LocalDateTime now) {
         if (member.getKakaoRefreshTokenExpiresAt().isBefore(now)) {
-            throw new InvalidTokenException("카카오 토큰 갱신이 불가능합니다.");
+            throw new InvalidTokenException("refresh token이 만료되었습니다. 다시 로그인해주세요.");
         }
     }
 }
