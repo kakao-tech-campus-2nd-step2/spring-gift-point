@@ -11,6 +11,8 @@ public enum MemberErrorCode implements ErrorCode {
     MEMBER_CREATE_FAILED("M003", HttpStatus.INTERNAL_SERVER_ERROR, "회원 생성에 실패했습니다."),
     MEMBER_UPDATE_FAILED("M004", HttpStatus.INTERNAL_SERVER_ERROR, "회원 정보 수정에 실패했습니다."),
     MEMBER_DELETE_FAILED("M005", HttpStatus.INTERNAL_SERVER_ERROR, "회원 삭제에 실패했습니다."),
+
+    MEMBER_NOT_ENOUGH_POINT("M006", HttpStatus.BAD_REQUEST, "포인트가 부족합니다."),
     ;
 
     private final String code;
