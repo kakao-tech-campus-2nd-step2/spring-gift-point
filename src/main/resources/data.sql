@@ -207,9 +207,9 @@ VALUES ('파스텔 스카이 + 그린', 500, 13);
 
 -- Product 14
 INSERT INTO options (name, quantity, product_id)
-VALUES ('딸기 케이크 + 아메리카노', 969, 13);
+VALUES ('딸기 케이크 + 아메리카노', 969, 14);
 INSERT INTO options (name, quantity, product_id)
-VALUES ('오레오 케이크 + 아메리카노', 500, 13);
+VALUES ('오레오 케이크 + 아메리카노', 500, 14);
 
 -- Product 15
 INSERT INTO options (name, quantity, product_id)
