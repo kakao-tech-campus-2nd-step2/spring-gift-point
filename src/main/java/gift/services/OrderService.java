@@ -74,7 +74,7 @@ public class OrderService {
             new Order(member, option, requestOrderDto.getQuantity(),
                 requestOrderDto.getMessage()));
 
-        member.earnPoint(option.getProduct().getPrice(), requestOrderDto.getQuantity());
+        member.addPoint(option.getProduct().getPrice(), requestOrderDto.getQuantity());
 
 //        sendKaKaoMessage(requestOrderDto, token);
 
