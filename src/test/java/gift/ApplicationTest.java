@@ -1,6 +1,6 @@
 package gift;
 
-import org.apache.catalina.core.ApplicationContext;
+import org.springframework.context.ApplicationContext;  // 올바른 ApplicationContext import
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -12,13 +12,12 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class ApplicationTest {
 
     @Autowired
-    private ApplicationContext context;
+    private ApplicationContext context;  // Spring ApplicationContext 사용
 
     @Test
-    void test1(){
+    void test1() {
         System.out.println(this);
         System.out.println(context);
         assertThat(context).isNotNull();
     }
-
 }

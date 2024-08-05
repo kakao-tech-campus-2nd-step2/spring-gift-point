@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
-@RequestMapping("/kakao")
+@RequestMapping("/kakao/v2")
 @Tag(name = "Kakao Login API", description = "카카오 로그인 관련 API")
 public class KakaoLoginController {
 

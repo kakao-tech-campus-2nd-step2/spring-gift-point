@@ -13,8 +13,10 @@ import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import gift.entity.Member;
+
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
+
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -49,7 +51,6 @@ public class KakaoControllerTest {
     }
 
 
-
     // 유효한 코드로 카카오 로그인을 시도하고, 성공 시 DB에 토큰 정보가 저장되는지 확인하는 테스트
     @Test
     @Transactional
@@ -81,7 +82,6 @@ public class KakaoControllerTest {
     }
 
 
-
     // 회원을 찾을 수 없는 경우
     @Test
     public void testCallbackKakaoMemberNotFound() {
@@ -98,3 +98,4 @@ public class KakaoControllerTest {
         assertThat(response.getBody()).contains("register");
     }
 
+}
