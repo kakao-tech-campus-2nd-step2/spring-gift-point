@@ -21,6 +21,8 @@ public class Member {
     private String password;
     @Column(name = "access_token", nullable = true)
     private String accessToken;
+    @Column(name = "points")
+    private int points;
 
     public Member() {
     }
@@ -29,17 +31,20 @@ public class Member {
         this.id = id;
         this.email = email;
         this.password = password;
+        this.points = 0;
     }
 
     public Member(String email, String password) {
         this.email = email;
         this.password = password;
+        this.points = 0;
     }
 
     public Member(String email, String password, String accessToken) {
         this.email = email;
         this.password = password;
         this.accessToken = accessToken;
+        this.points = 0;
     }
 
     public Long getId() {
@@ -60,5 +65,9 @@ public class Member {
 
     public void setAccessToken(String accessToken) {
         this.accessToken = accessToken;
+    }
+
+    public int getPoints() {
+        return points;
     }
 }

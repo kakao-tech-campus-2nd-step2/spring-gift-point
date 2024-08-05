@@ -3,6 +3,7 @@ package gift.service;
 import gift.constants.Messages;
 import gift.domain.Member;
 import gift.dto.MemberRequestDto;
+import gift.dto.PointsResponseDto;
 import gift.exception.MemberNotFoundException;
 import gift.repository.MemberRepository;
 import org.aspectj.bridge.Message;
@@ -32,5 +33,10 @@ public class MemberService {
     public Member findByEmail(String email){
         return memberRepository.findByEmail(email).orElseThrow(()->new MemberNotFoundException(
             Messages.NOT_FOUND_MEMBER_BY_EMAIL_MESSAGE));
+    }
+
+    public PointsResponseDto getPoints(String userEmail) {
+        Member member = memberRepository.findByEmail(userEmail).orElseThrow(()-> new MemberNotFoundException(Messages.NOT_FOUND_MEMBER_BY_EMAIL_MESSAGE));
+        return new PointsResponseDto(userEmail,member.getPoints());
     }
 }

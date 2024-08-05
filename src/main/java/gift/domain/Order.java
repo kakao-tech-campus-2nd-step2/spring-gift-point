@@ -23,16 +23,22 @@ public class Order {
     @Column(nullable = false, updatable = false)
     private LocalDateTime orderDateTime;
     private String message;
+    @Column(name="points_received")
+    private int pointsReceived;
+    @Column(name="payment")
+    private int payment;
 
     public Order() {
     }
 
-    public Order(Long optionId,Long memberId,int quantity,String message) {
+    public Order(Long optionId,Long memberId,int quantity,String message,int pointsReceived,int payment) {
         this.optionId = optionId;
         this.memberId = memberId;
         this.quantity = quantity;
         this.orderDateTime = LocalDateTime.now();
         this.message = message;
+        this.pointsReceived = pointsReceived;
+        this.payment = payment;
     }
 
     public Order(Long id, Long optionId, Long memberId,int quantity, LocalDateTime orderDateTime,
@@ -63,5 +69,13 @@ public class Order {
 
     public String getMessage() {
         return message;
+    }
+
+    public int getPointsReceived() {
+        return pointsReceived;
+    }
+
+    public int getPayment() {
+        return payment;
     }
 }

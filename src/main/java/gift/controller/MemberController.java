@@ -1,14 +1,19 @@
 package gift.controller;
 
+import gift.domain.Member;
 import gift.dto.MemberRequestDto;
 import gift.dto.MemberResponseDto;
+import gift.dto.PointsResponseDto;
+import gift.dto.WishRequestDto;
 import gift.service.JwtProvider;
 import gift.service.MemberService;
 import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -43,5 +48,13 @@ public class MemberController {
         //response.put("token",token);
 
         return ResponseEntity.status(HttpStatus.OK).body(new MemberResponseDto(requestDto.getEmail(),token));
+    }
+
+    @Operation(summary = "회원 points 조회")
+    @GetMapping ("/points")
+    public ResponseEntity<PointsResponseDto> getPoints(@RequestHeader("Authorization") String fullToken,
+        @RequestBody WishRequestDto wishRequestDto){
+        String userEmail = jwtProvider.getMemberEmail(fullToken.substring(7));
+        return ResponseEntity.status(HttpStatus.CREATED).body(memberService.getPoints(userEmail));
     }
 }

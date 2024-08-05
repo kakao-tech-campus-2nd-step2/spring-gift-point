@@ -8,6 +8,7 @@ public class WishRequestDto {
 
     public WishRequestDto(Long productId) {
         this.productId = productId;
+
     }
 
     public Long getProductId() {

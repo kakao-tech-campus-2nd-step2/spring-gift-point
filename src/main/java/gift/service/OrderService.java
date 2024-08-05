@@ -54,6 +54,10 @@ public class OrderService {
 
     public OrderResponseDto order(OrderRequestDto orderRequestDto, String memberEmail) {
         Member member = memberService.findByEmail(memberEmail);
+        // 포인트 사용하여 계산한 금액
+        int payment = usePoints(member.getPoints(),orderRequestDto.getOptionId());
+        // 페이벡 구현
+        int payback = getPayback(payment);
         optionService.subtractQuantity(orderRequestDto.getOptionId(),
             orderRequestDto.getQuantity());
         Long productId = optionService.findById(orderRequestDto.getOptionId()).getProduct().getId();
@@ -64,9 +68,23 @@ public class OrderService {
         }
 
         Order order = new Order(orderRequestDto.getOptionId(), member.getId(),
-            orderRequestDto.getQuantity(), orderRequestDto.getMessage());
+            orderRequestDto.getQuantity(), orderRequestDto.getMessage(),payback,payment);
         orderRepository.save(order);
         return convertToOrderResponseDto(order);
+    }
+
+    private int usePoints(int points, Long optionId) {
+        int payment = optionService.getOption(optionId).getProduct().getPrice() - points;
+
+        if (payment < 0) {
+            throw new IllegalArgumentException("순 가격은 음수가 될 수 없습니다");
+        }
+
+        return payment;
+    }
+
+    private int getPayback(int netPrice) {
+        return (int) (netPrice * 0.10);
     }
 
     public List<OrderResponseDto> findByEmail(String memberEmail) {
@@ -89,7 +107,9 @@ public class OrderService {
             order.getOptionId(),
             order.getQuantity(),
             order.getOrderDateTime(),
-            order.getMessage()
+            order.getMessage(),
+            order.getPayment(),
+            order.getPointsReceived()
         );
     }
 

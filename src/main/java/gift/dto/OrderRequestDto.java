@@ -5,6 +5,7 @@ public class OrderRequestDto {
     private Long optionId;
     private int quantity;
     private String message;
+    private int points;
 
     public OrderRequestDto() {
     }
@@ -19,5 +20,9 @@ public class OrderRequestDto {
 
     public String getMessage() {
         return message;
+    }
+
+    public int getPoints() {
+        return points;
     }
 }
